@@ -108,6 +108,7 @@ final class EverAccounting {
         global $wpdb;
         $tables = array(
             'ea_accounts',
+            'ea_taxes',
         );
         foreach ( $tables as $table ) {
             $wpdb->$table   = $wpdb->prefix . $table;
