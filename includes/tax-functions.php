@@ -27,16 +27,16 @@ function eaccounting_insert_tax( $args ) {
 		$args = array_merge( $item_before, $args );
 	}
 
-
+	error_log(print_r($args, true ));
 	$data = array(
 		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'name'            => isset( $args['name'] ) ? '' : sanitize_text_field( $args['id'] ),
-		'number'          => isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
-		'currency_code'   => isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
-		'opening_balance' => isset( $args['opening_balance'] ) ? '0.00' : (double) $args['opening_balance'],
-		'bank_name'       => isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
-		'bank_phone'      => isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
-		'bank_address'    => isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
+		'name'            => !isset( $args['name'] ) ? '' : sanitize_text_field( $args['id'] ),
+		'number'          => !isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
+		'currency_code'   => !isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
+		'opening_balance' => !isset( $args['opening_balance'] ) ? '0.00' : (double) $args['opening_balance'],
+		'bank_name'       => !isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
+		'bank_phone'      => !isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
+		'bank_address'    => !isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
 		'enabled'         => '1' == $args['enabled'] ? '1' : '0',
 		'updated_at'      => empty( $args['updated_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['updated_at'],
 		'created_at'      => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
@@ -44,7 +44,11 @@ function eaccounting_insert_tax( $args ) {
 
 
 	if ( empty( $data['name'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Empty name is not permitted', 'wp-ever-crm' ) );
+		return new WP_Error( 'empty_content', __( 'Empty name is not permitted', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data['currency_code'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
 
 	$where = array( 'id' => $id );
@@ -76,7 +80,7 @@ function eaccounting_insert_tax( $args ) {
  * @return object|null
  * @since 1.0.0
  */
-function eaccounting_get_account( $id ) {
+function eaccounting_get_tax( $id ) {
 	global $wpdb;
 
 	return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->ea_accounts} where id=%s", $id ) );
@@ -90,7 +94,7 @@ function eaccounting_get_account( $id ) {
  * @return bool
  * @since 1.0.0
  */
-function eaccounting_delete_account( $id ) {
+function eaccounting_delete_tax( $id ) {
 	global $wpdb;
 	$id = absint( $id );
 

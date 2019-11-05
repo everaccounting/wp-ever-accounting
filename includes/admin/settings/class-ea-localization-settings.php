@@ -22,7 +22,7 @@ class EAccounting_Localisation_Settings {
 	public function add_section( $sections ) {
 		$section = array(
 			array(
-				'id'    => 'localisation',
+				'id'    => 'eaccounting_localisation',
 				'title' => __( 'Localisation', 'wp-ever-accounting' )
 
 			)
@@ -41,69 +41,44 @@ class EAccounting_Localisation_Settings {
 	 */
 	public function add_fields( $fields ) {
 		$localisation_fields = array(
-			'localisation' => array(
+			'eaccounting_localisation' => array(
 				array(
-					'name'        => 'name',
-					'label'       => __( 'Name', 'wp-ever-accounting' ),
+					'name'        => 'financial_start',
+					'label'       => __( 'Financial Year Start', 'wp-ever-accounting' ),
 					'placeholder' => __( 'XYZ Company', 'wp-ever-accounting' ),
-					'default'     => '',
+					'default'     => '01-01',
 					'type'        => 'text',
 				),
 				array(
-					'name'        => 'email',
-					'label'       => __( 'Email', 'wp-ever-accounting' ),
-					'placeholder' => __( 'email@domain.com', 'wp-ever-accounting' ),
-					'default'     => get_option('admin_email'),
-					'type'        => 'text',
+					'name'        => 'percent_position',
+					'label'       => __( 'Percent (%) Position', 'wp-ever-accounting' ),
+					'default'     => 'after',
+					'type'        => 'select',
+					'options' => array(
+						'before' => __('Before Number', 'wp-ever-accounting'),
+						'after' => __('After Number', 'wp-ever-accounting'),
+					)
 				),
 				array(
-					'name'        => 'tax_number',
-					'label'       => __( 'Tax Number', 'wp-ever-accounting' ),
-					'placeholder' => __( 'xxxxxxx', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
+					'name'    => 'currency_position',
+					'label'   => __( 'Currency Position', 'wp-ever-hrm' ),
+					'type'    => 'select',
+					'options' => array(
+						'before' => __( 'Before - $10', 'wp-ever-hrm' ),
+						'after'  => __( 'After - 10$', 'wp-ever-hrm' ),
+					),
 				),
 				array(
-					'name'        => 'phone',
-					'label'       => __( 'Phone Number', 'wp-ever-accounting' ),
-					'placeholder' => __( '0987654321', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
+					'name'    => 'thousand_separator',
+					'label'   => __( 'Thousands Separator', 'wp-ever-hrm' ),
+					'type'    => 'text',
+					'default' => ',',
 				),
 				array(
-					'name'        => 'address',
-					'label'       => __( 'Address', 'wp-ever-accounting' ),
-					'placeholder' => __( '', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
-				),
-				array(
-					'name'        => 'city',
-					'label'       => __( 'City', 'wp-ever-accounting' ),
-					'placeholder' => __( '', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
-				),
-				array(
-					'name'        => 'state',
-					'label'       => __( 'State', 'wp-ever-accounting' ),
-					'placeholder' => __( '', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
-				),
-				array(
-					'name'        => 'postcode',
-					'label'       => __( 'Postcode', 'wp-ever-accounting' ),
-					'placeholder' => __( '', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
-				),
-				array(
-					'name'        => 'country',
-					'label'       => __( 'Country', 'wp-ever-accounting' ),
-					'placeholder' => __( '', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
+					'name'    => 'decimal_separator',
+					'label'   => __( 'Decimal Separator', 'wp-ever-hrm' ),
+					'type'    => 'text',
+					'default' => '.',
 				),
 			)
 		);

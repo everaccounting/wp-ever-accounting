@@ -22,9 +22,8 @@ class EAccounting_General_Settings {
 	public function add_section( $sections ) {
 		$section = array(
 			array(
-				'id'    => 'general',
+				'id'    => 'eaccounting_general',
 				'title' => __( 'General', 'wp-ever-accounting' )
-
 			)
 		);
 
@@ -41,7 +40,13 @@ class EAccounting_General_Settings {
 	 */
 	public function add_fields( $fields ) {
 		$general_fields = array(
-			'general' => array(
+			'eaccounting_general' => array(
+				array(
+					'name'    => 'logo',
+					'label'   => __( 'Logo', 'wp-ever-accounting' ),
+					'default' => '',
+					'type'    => 'file',
+				),
 				array(
 					'name'        => 'name',
 					'label'       => __( 'Name', 'wp-ever-accounting' ),
@@ -53,7 +58,7 @@ class EAccounting_General_Settings {
 					'name'        => 'email',
 					'label'       => __( 'Email', 'wp-ever-accounting' ),
 					'placeholder' => __( 'email@domain.com', 'wp-ever-accounting' ),
-					'default'     => get_option('admin_email'),
+					'default'     => get_option( 'admin_email' ),
 					'type'        => 'text',
 				),
 				array(
@@ -102,13 +107,14 @@ class EAccounting_General_Settings {
 					'name'        => 'country',
 					'label'       => __( 'Country', 'wp-ever-accounting' ),
 					'placeholder' => __( '', 'wp-ever-accounting' ),
-					'default'     => '',
-					'type'        => 'text',
+					'default'     => 'US',
+					'type'        => 'select',
+					'options'     => eaccounting_get_countries(),
 				),
 			)
 		);
 
-		return array_merge($fields, $general_fields);
+		return array_merge( $fields, $general_fields );
 	}
 
 }

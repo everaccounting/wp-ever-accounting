@@ -108,6 +108,7 @@ final class EverAccounting {
         global $wpdb;
         $tables = array(
             'ea_accounts',
+            'ea_products',
             'ea_taxes',
         );
         foreach ( $tables as $table ) {
@@ -125,10 +126,17 @@ final class EverAccounting {
      */
     public function includes() {
         require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
+        require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
+        require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+        require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/template-functions.php' );
 
-        if(is_admin()){
+        if( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ){
             require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
         }
+
+	    if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		    require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-cli.php' );
+	    }
     }
 
     /**
