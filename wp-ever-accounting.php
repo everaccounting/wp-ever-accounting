@@ -123,7 +123,11 @@ final class EverAccounting {
      * @return void
      */
     public function includes() {
-        require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/class-install.php' );
+        require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
+
+        if(is_admin()){
+            require_once ( EVER_ACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
+        }
     }
 
     /**
