@@ -1,0 +1,36 @@
+node_modules
+.config.json
+/.vscode
+.idea
+/dist
+/yarn-error.log
+/api-doc
+/assets/js/bundle.js
+/assets/js/bundle.js.map
+
+/assets/css/ever-crm.css
+/assets/js/ever-crm.css.map
+.DS_Store
+package-lock.json
+
+dist
+build
+build-module
+build-style
+languages/*
+!languages/README.md
+wp-ever-crm.zip
+
+# Directories/files that may appear in your environment
+.DS_Store
+Thumbs.db
+wp-cli.local.yml
+*.sql
+*.tar.gz
+*.tgz
+*.zip
+.idea
+.vscode/
+
+# Composer
+/vendor/
