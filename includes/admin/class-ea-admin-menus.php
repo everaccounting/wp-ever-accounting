@@ -10,6 +10,7 @@ class EAccounting_Admin_Menus{
 	public function __construct() {
 		// Add menus.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -36,12 +37,37 @@ class EAccounting_Admin_Menus{
 		add_submenu_page( 'ever-accounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'ea-reports', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Addons', 'wp-ever-accounting' ), __( 'Addons', 'wp-ever-accounting' ), 'manage_options', 'ea-addons', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Helps', 'wp-ever-accounting' ), __( 'Helps', 'wp-ever-accounting' ), 'manage_options', 'ea-helps', array( $this, 'dashboard_page' ) );
-		add_submenu_page( 'ever-accounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_options', 'ea-settings', array( $this, 'dashboard_page' ) );
+		add_submenu_page( 'ever-accounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_options', 'ea-settings', array( $this, 'settings_page' ) );
+
 	}
 
 	public function dashboard_page(){
 
 	}
+
+	/**
+	 * Init the settings page.
+	 */
+	public function settings_page() {
+		echo '<div class="wrap">';
+		echo sprintf( "<h2>%s</h2>", __( 'Ever Accounting - Settings', 'wp-ever-accounting' ) );
+		$settings = new EAccounting_Settings_Page();
+		$settings->print_settings_pages();
+		echo '</div>';
+	}
+
+	/**
+	 * Enqueue scripts
+	 * @since 1.0.0
+	 */
+	public function enqueue_scripts(){
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_media();
+		wp_enqueue_script( 'wp-color-picker' );
+		wp_enqueue_script( 'jquery' );
+	}
+
+
 }
 
 new EAccounting_Admin_Menus();

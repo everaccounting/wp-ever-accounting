@@ -24,6 +24,10 @@ class EAccounting_Admin{
 	 */
 	public function includes() {
 		include_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
+		include_once dirname( __FILE__ ) . '/class-ea-settings-api.php';
+		include_once dirname( __FILE__ ) . '/class-ea-settings-page.php';
+		include_once dirname( __FILE__ ) . '/settings/class-ea-general-settings.php';
+		include_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
 	}
 }
 
