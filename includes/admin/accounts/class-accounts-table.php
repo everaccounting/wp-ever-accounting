@@ -97,7 +97,7 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	public function get_views() {
-		$base = admin_url( 'admin.php?page=ea-accounts' );
+		$base = admin_url( 'admin.php?page=eaccounting-accounts' );
 
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
@@ -208,12 +208,12 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 				'account'            => $item->id
 			), $base) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 
-		if ( strtolower( $item->status ) == 'active' ) {
+		if ( strtolower( $item->status ) == '1' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'eaccounting-action' => 'deactivate_account',
 					'discount'           => $item->id
 				), $base ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
-		} elseif ( strtolower( $item->status ) == 'inactive' ) {
+		} elseif ( strtolower( $item->status ) == '0' ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'eaccounting-action' => 'activate_account',
 					'discount'           => $item->id
@@ -240,6 +240,18 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	 */
 	function column_current_balance( $item ) {
 		return '';
+	}
+
+	/**
+	 * Render the current balance column
+	 *
+	 * @param array $item Contains all the data for the checkbox column
+	 *
+	 * @return string Displays current balance
+	 * @since 1.0.0
+	 */
+	function column_opening_balance( $item ) {
+		return eaccounting_amount($item->opening_balance);
 	}
 
 	/**

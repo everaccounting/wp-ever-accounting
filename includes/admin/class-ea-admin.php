@@ -10,6 +10,7 @@ class EAccounting_Admin{
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ));
 	}
 
 	/**
@@ -30,8 +31,10 @@ class EAccounting_Admin{
 		require_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
 
 		require_once dirname( __FILE__ ) . '/accounts/account-page.php';
+	}
 
-
+	public function enqueue_scripts(){
+		wp_enqueue_style('eaccounting-admin', ever_accounting()->plugin_url(). '/assets/css/ever-accounting-admin.css', time());
 	}
 }
 
