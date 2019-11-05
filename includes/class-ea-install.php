@@ -44,16 +44,16 @@ class EAccounting_Install{
 		    PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
-//            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transfers(
-//            `id` bigint(20) NOT NULL AUTO_INCREMENT,
-//            `company_id` int(11) NOT NULL,
-//            `payment_id` int(11) NOT NULL,
-//            `revenue_id` int(11) NOT NULL,
-//		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
-//		    PRIMARY KEY (`id`),
-//		    KEY `company_id` (`company_id`)
-//            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_taxes(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`name` VARCHAR(191) NOT NULL COMMENT 'Taxes Name',
+			`rate` DOUBLE(15,4) NOT NULL COMMENT 'Taxes Rate',
+			`type` VARCHAR(191) NOT NULL DEFAULT 'normal' COMMENT 'Taxes Type',
+			`enabled` TINYINT(1) NOT NULL COMMENT 'Tax enable or disable',
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 //            "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_invoices(
 //            `id` bigint(20) NOT NULL AUTO_INCREMENT,
 //            `invoice_number` varchar(191) NOT NULL,
