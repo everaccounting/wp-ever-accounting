@@ -204,25 +204,25 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	function column_name( $item ) {
 		$base = admin_url('admin.php?page=eaccounting-accounts');
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-				'eaccounting-action' => 'edit_account',
+				'eaccounting_action' => 'edit_account',
 				'account'            => $item->id
 			), $base) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 
 		if ( strtolower( $item->status ) == '1' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting-action' => 'deactivate_account',
-					'discount'           => $item->id
+					'eaccounting_action' => 'deactivate_account',
+					'account'           => $item->id
 				), $base ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
 		} elseif ( strtolower( $item->status ) == '0' ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting-action' => 'activate_account',
-					'discount'           => $item->id
+					'eaccounting_action' => 'activate_account',
+					'account'           => $item->id
 				), $base ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Activate', 'wp-ever-accounting' ) . '</a>';
 		}
 
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'edd-action' => 'delete_discount',
-				'discount'   => $item->id
+				'eaccounting_action' => 'delete_account',
+				'account'   => $item->id
 			), $base ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
 		$row_actions = apply_filters( 'eaccounting_row_actions', $row_actions, $item );
@@ -291,11 +291,11 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-discounts' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-accounts' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['discount'] ) ? $_GET['discount'] : false;
+		$ids = isset( $_GET['account'] ) ? $_GET['account'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -304,13 +304,13 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
-				edd_remove_discount( $id );
+				eaccounting_delete_account( $id );
 			}
 			if ( 'activate' === $this->current_action() ) {
-				edd_update_discount_status( $id, 'active' );
+				eaccounting_insert_account( ['id' => $id, 'status' => '1'] );
 			}
 			if ( 'deactivate' === $this->current_action() ) {
-				edd_update_discount_status( $id, 'inactive' );
+				eaccounting_insert_account( ['id' => $id, 'status' => '0'] );
 			}
 		}
 
@@ -329,7 +329,7 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 
 		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
 		$order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$status   = isset( $_GET['status'] ) ? $_GET['status'] : array( 'active', 'inactive' );
+		$status   = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$meta_key = isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : null;
 		$search   = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 

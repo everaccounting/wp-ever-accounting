@@ -159,6 +159,7 @@ final class EverAccounting {
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
 		add_action( 'init', array( $this, 'init' ), 0 );
 		add_action( 'init', array( $this, 'localization_setup' ) );
+		add_action( 'init', array( $this, 'set_get_actions' ) );
 		add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
 		add_action( 'deactivated_plugin', array( $this, 'deactivated_plugin' ) );
 	}
@@ -198,6 +199,21 @@ final class EverAccounting {
 	 */
 	public function localization_setup() {
 		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages/' );
+	}
+
+	/**
+	 * Hooks Accounting actions, when present in the $_GET superglobal. Every eaccounting_action
+	 * present in $_GET is called using WordPress's do_action function. These
+	 * functions are called on init.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function set_get_actions(){
+		$key = ! empty( $_GET['eaccounting_action'] ) ? sanitize_key( $_GET['eaccounting_action'] ) : false;
+		if ( ! empty( $key ) ) {
+			do_action( "eaccounting_{$key}" , $_GET );
+		}
 	}
 
 	/**

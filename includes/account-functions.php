@@ -238,3 +238,67 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 
 	return $wpdb->get_col( $request );
 }
+
+
+function eaccounting_deactivate_account( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_accounts_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	$account_id = absint( $data['account'] );
+	if ( $account_id ) {
+		eaccounting_insert_account( [
+			'id'     => $account_id,
+			'status' => '0'
+		] );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
+}
+
+add_action( 'eaccounting_deactivate_account', 'eaccounting_deactivate_account' );
+
+
+function eaccounting_activate_account( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_accounts_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	$account_id = absint( $data['account'] );
+	if ( $account_id ) {
+		eaccounting_insert_account( [
+			'id'     => $account_id,
+			'status' => '1'
+		] );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
+}
+
+add_action( 'eaccounting_activate_account', 'eaccounting_activate_account' );
+
+function eaccounting_delete_account_handler( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_accounts_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( $account_id = absint( $data['account'] ) ) {
+		eaccounting_delete_account( $account_id );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
+}
+
+add_action( 'eaccounting_delete_account', 'eaccounting_delete_account_handler' );
