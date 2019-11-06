@@ -183,7 +183,7 @@ class EAccounting_Taxes_Table extends WP_List_Table {
 	function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ 'discount',
+			/*$1%s*/ 'tax',
 			/*$2%s*/ $item->id
 		);
 	}
@@ -198,7 +198,7 @@ class EAccounting_Taxes_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_name( $item ) {
-		$base                = admin_url( 'admin.php?page=eaccounting-taxes' );
+		$base                = admin_url( 'admin-post.php' );
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
 				'eaccounting_action' => 'edit_tax',
 				'tax'            => $item->id
@@ -206,18 +206,18 @@ class EAccounting_Taxes_Table extends WP_List_Table {
 
 		if ( strtolower( $item->status ) == '1' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting_action' => 'deactivate_tax',
+					'action' => 'eaccounting_deactivate_tax',
 					'tax'            => $item->id
 				), $base ), 'eaccounting_taxes_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
 		} elseif ( strtolower( $item->status ) == '0' ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting_action' => 'activate_tax',
+					'action' => 'eaccounting_activate_tax',
 					'tax'            => $item->id
 				), $base ), 'eaccounting_taxes_nonce' ) ) . '">' . __( 'Activate', 'wp-ever-accounting' ) . '</a>';
 		}
 
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'eaccounting_action' => 'delete_tax',
+				'action' => 'eaccounting_delete_tax',
 				'tax'            => $item->id
 			), $base ), 'eaccounting_taxes_nonce' ) ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
@@ -287,16 +287,11 @@ class EAccounting_Taxes_Table extends WP_List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-accounts' ) ) {
-			return;
-		}
-
 		$ids = isset( $_GET['tax'] ) ? $_GET['tax'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
-
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {

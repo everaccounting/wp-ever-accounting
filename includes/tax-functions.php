@@ -214,7 +214,8 @@ function eaccounting_get_taxes( $args = array(), $count = false ) {
 	return $wpdb->get_col( $request );
 }
 
-function eaccounting_deactivate_tax( $data ) {
+function eaccounting_deactivate_tax(  ) {
+	$data = $_GET;
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_taxes_nonce' ) ) {
 		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
@@ -234,10 +235,11 @@ function eaccounting_deactivate_tax( $data ) {
 	wp_redirect( admin_url( 'admin.php?page=eaccounting-taxes' ) );
 }
 
-add_action( 'eaccounting_deactivate_tax', 'eaccounting_deactivate_tax' );
+add_action( 'admin_post_eaccounting_deactivate_tax', 'eaccounting_deactivate_tax' );
 
 
-function eaccounting_activate_tax( $data ) {
+function eaccounting_activate_tax(  ) {
+	$data = $_GET;
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_taxes_nonce' ) ) {
 		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
@@ -257,9 +259,11 @@ function eaccounting_activate_tax( $data ) {
 	wp_redirect( admin_url( 'admin.php?page=eaccounting-taxes' ) );
 }
 
-add_action( 'eaccounting_activate_tax', 'eaccounting_activate_tax' );
+add_action( 'admin_post_eaccounting_activate_tax', 'eaccounting_activate_tax' );
 
-function eaccounting_delete_tax_handler( $data ) {
+function eaccounting_delete_tax_handler( ) {
+	error_log(12);
+	$data = $_GET;
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_taxes_nonce' ) ) {
 		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
@@ -268,11 +272,11 @@ function eaccounting_delete_tax_handler( $data ) {
 		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
-	if ( $account_id = absint( $data['account'] ) ) {
-		eaccounting_delete_product( $account_id );
+	if ( $tax_id = absint( $data['tax'] ) ) {
+		eaccounting_delete_tax( $tax_id );
 	}
 
 	wp_redirect( admin_url( 'admin.php?page=eaccounting-taxes' ) );
 }
 
-add_action( 'eaccounting_delete_tax', 'eaccounting_delete_tax_handler' );
+add_action( 'admin_post_eaccounting_delete_tax', 'eaccounting_delete_tax_handler' );

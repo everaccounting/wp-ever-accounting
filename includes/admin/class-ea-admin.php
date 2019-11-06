@@ -26,6 +26,7 @@ class EAccounting_Admin {
 	public function includes() {
 
 		require_once dirname( __FILE__ ) . '/class-ea-ajax-account.php';
+		require_once dirname( __FILE__ ) . '/class-ea-ajax-tax.php';
 
 		require_once dirname( __FILE__ ) . '/class-ea-settings-api.php';
 		require_once dirname( __FILE__ ) . '/class-ea-settings-page.php';
@@ -41,6 +42,7 @@ class EAccounting_Admin {
 		wp_enqueue_style( 'eaccounting-admin', ever_accounting()->plugin_url() . '/assets/css/ever-accounting-admin.css', time() );
 		wp_enqueue_style( 'eaccounting-fontawesome', ever_accounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css', time() );
 		wp_register_script( 'eaccounting-accounts', ever_accounting()->plugin_url() . '/assets/js/eaccounting-accounts.js', array( 'jquery' ), time(), true );
+		wp_register_script( 'eaccounting-taxes', ever_accounting()->plugin_url() . '/assets/js/eaccounting-taxes.js', array( 'jquery' ), time(), true );
 	}
 }
 
