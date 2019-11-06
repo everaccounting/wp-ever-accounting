@@ -4,7 +4,7 @@ defined('ABSPATH') || exit();
 
 <h1><?php _e( 'New Account', 'wp-ever-accounting' ); ?><a href="<?php echo esc_url( admin_url('admin.php?page=eaccounting-accounts') ); ?>" class="add-new-h2"><?php _e( 'All Accounts', 'wp-ever-accounting' ); ?></a></h1>
 <div class="ea-card">
-	<form action="">
+	<form id="ea-add-account" action="" method="post">
 		<?php do_action( 'eaccounting_add_account_form_top' ); ?>
 		<div class="ea-row">
 			<div class="ea-col-6 required">
@@ -13,7 +13,7 @@ defined('ABSPATH') || exit();
 					<div class="ea-input-group-addon">
 						<i class="fa fa-id-card-o"></i>
 					</div>
-					<input class="ea-form-control" id='account_name' type="text" name="name" placeholder="<?php _e('Account Name', 'wp-ever-accounting');?>" required>
+					<input class="ea-form-control" id='account_name' type="text" name="name" placeholder="<?php _e('Account Name', 'wp-ever-accounting');?>">
 				</div>
 			</div>
 
@@ -23,7 +23,7 @@ defined('ABSPATH') || exit();
 					<div class="ea-input-group-addon">
 						<i class="fa fa-pencil"></i>
 					</div>
-					<input class="ea-form-control" id='account_number' type="text" name="number" placeholder="<?php _e('Account Number', 'wp-ever-accounting');?>" required>
+					<input class="ea-form-control" id='account_number' type="text" name="number" placeholder="<?php _e('Account Number', 'wp-ever-accounting');?>">
 				</div>
 			</div>
 
@@ -34,7 +34,7 @@ defined('ABSPATH') || exit();
 					<div class="ea-input-group-addon">
 						<i class="fa fa-exchange"></i>
 					</div>
-					<input class="ea-form-control" id='currency_code' type="text" name="currency_code" required>
+					<input class="ea-form-control" id='currency_code' type="text" name="currency_code">
 				</div>
 			</div>
 
@@ -45,7 +45,7 @@ defined('ABSPATH') || exit();
 					<div class="ea-input-group-addon">
 						<i class="fa fa-money"></i>
 					</div>
-					<input class="ea-form-control" id='opening_balance' type="text" name="opening_balance" placeholder="<?php _e('Enter Opening Balance', 'wp-ever-accounting');?>" required>
+					<input class="ea-form-control" id='opening_balance' type="text" name="opening_balance" placeholder="<?php _e('Enter Opening Balance', 'wp-ever-accounting');?>">
 				</div>
 			</div>
 
@@ -105,9 +105,8 @@ defined('ABSPATH') || exit();
 
 		<?php do_action( 'eaccounting_add_account_form_bottom' ); ?>
 		<p>
-			<input type="hidden" name="eaccounting_action" value="add_account"/>
-			<input type="hidden" name="eaccounting-redirect" value="<?php echo esc_url( admin_url( 'admin.php?page=eaccounting-accounts' ) ); ?>"/>
-			<input type="hidden" name="eaccounting-account-nonce" value="<?php echo wp_create_nonce( 'eaccounting_account_nonce' ); ?>"/>
+			<input type="hidden" name="action" value="eaccounting_add_account"/>
+			<?php wp_nonce_field('eaccounting_account_nonce', 'nonce');?>
 			<input class="button button-primary" type="submit" value="<?php _e('Submit', 'wp-ever-accounting');?>">
 		</p>
 

@@ -7,6 +7,8 @@ defined('ABSPATH') || exit();
  * since 1.0.0
  */
 function eaccount_accounts_page() {
+	wp_enqueue_script('eaccounting-accounts');
+
 	eaccounting_page_wrapper_open('accounts-page');
 	if ( isset( $_GET['eaccounting_action'] ) && $_GET['eaccounting_action'] == 'edit_account' ) {
 		require_once EVER_ACCOUNTING_ABSPATH . '/includes/admin/accounts/edit-account.php';

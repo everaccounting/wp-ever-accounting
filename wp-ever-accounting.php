@@ -134,14 +134,16 @@ final class EverAccounting {
 	public function includes() {
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-caching.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/product-functions.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/template-functions.php' );
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/product-functions.php' );
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/template-functions.php' );
 
-		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/abstracts/class-ea-ajax.php' );
+
+        if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EVER_ACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 		}
 
@@ -214,7 +216,7 @@ final class EverAccounting {
 	public function set_get_actions() {
 		$key = ! empty( $_GET['eaccounting_action'] ) ? sanitize_key( $_GET['eaccounting_action'] ) : false;
 		if ( ! empty( $key ) ) {
-			do_action( "eaccounting_{$key}", $_GET );
+			do_action( "eaccounting_action_{$key}", $_GET );
 		}
 	}
 
