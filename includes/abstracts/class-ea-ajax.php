@@ -3,6 +3,20 @@
 defined( 'ABSPATH' ) || exit();
 
 abstract class EAccounting_Ajax{
+
+	/**
+	 * Add action
+	 *
+	 * @since 1.0.0
+	 * @param $tag
+	 * @param $callback
+	 * @param bool $public
+	 */
+	public function action($tag, $callback, $public = false ){
+		$function = sanitize_key(sprintf('wp_ajax_%s', $tag));
+		add_action( $function, [ $this, $callback ] );
+	}
+
 	/**
 	 * Send success data
 	 * since 1.0.0

@@ -33,11 +33,11 @@ function eaccounting_insert_account( $args ) {
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
 		'currency_code'   => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
-		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : (double) $args['opening_balance'],
+		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : (double) eaccounting_sanitize_amount($args['opening_balance']),
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
-		'status'          => '1' == $args['status'] ? '1' : '0',
+		'status'          => ! empty( $args['status'] ) ? '1' : '0',
 		'updated_at'      => empty( $args['updated_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['updated_at'],
 		'created_at'      => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -60,13 +60,13 @@ function eaccounting_insert_account( $args ) {
 
 	if ( $update ) {
 		do_action( 'eaccounting_pre_account_update', $id, $data );
-		if ( false === $wpdb->update( $wpdb->ea_taxes, $data, $where ) ) {
+		if ( false === $wpdb->update( $wpdb->ea_accounts, $data, $where ) ) {
 			return new WP_Error( 'db_update_error', __( 'Could not update note in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		do_action( 'eaccounting_account_update', $id, $data, $item_before );
 	} else {
 		do_action( 'eaccounting_pre_account_insert', $id, $data );
-		if ( false === $wpdb->insert( $wpdb->ea_taxes, $data ) ) {
+		if ( false === $wpdb->insert( $wpdb->ea_accounts, $data ) ) {
 			error_log( $wpdb->last_error );
 
 			return new WP_Error( 'db_insert_error', __( 'Could not insert account into the database', 'wp-ever-accounting' ), $wpdb->last_error );
