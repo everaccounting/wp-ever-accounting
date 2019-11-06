@@ -93,7 +93,7 @@ defined('ABSPATH') || exit();
 				<div class="ea-form-group ea-switch">
 					<fieldset>
 						<label for="status">
-							<input type="checkbox" class="" id="status" name="status" value="1" />
+							<input type="checkbox" class="" id="status" name="status" value="1" checked="checked" />
 							<span class="ea-switch-view"></span>
 						</label>
 					</fieldset>
