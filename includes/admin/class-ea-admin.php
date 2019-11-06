@@ -35,6 +35,7 @@ class EAccounting_Admin{
 
 	public function enqueue_scripts(){
 		wp_enqueue_style('eaccounting-admin', ever_accounting()->plugin_url(). '/assets/css/ever-accounting-admin.css', time());
+		wp_enqueue_style('eaccounting-fontawesome', ever_accounting()->plugin_url(). '/assets/vendor/font-awesome/css/font-awesome.css', time());
 	}
 }
 
