@@ -36,6 +36,7 @@ class EAccounting_Admin {
 
 		require_once dirname( __FILE__ ) . '/accounts/account-page.php';
 		require_once dirname( __FILE__ ) . '/taxes/tax-page.php';
+		require_once dirname( __FILE__ ) . '/products/product-page.php';
 	}
 
 	public function enqueue_scripts() {
