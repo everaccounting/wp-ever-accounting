@@ -50,18 +50,18 @@ function eaccounting_insert_tax( $args ) {
 	$data  = wp_unslash( $data );
 
 	if ( $update ) {
-		do_action( 'eaccounting_pre_tax_update', $id, $data );
+		do_action( 'ever_accounting_pre_tax_update', $id, $data );
 		if ( false === $wpdb->update( $wpdb->ea_taxes, $data, $where ) ) {
 			return new WP_Error( 'db_update_error', __( 'Could not update Tax Rate in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
-		do_action( 'eaccounting_tax_update', $id, $data, $item_before );
+		do_action( 'ever_accounting_tax_update', $id, $data, $item_before );
 	} else {
-		do_action( 'eaccounting_pre_tax_insert', $id, $data );
+		do_action( 'ever_accounting_pre_tax_insert', $id, $data );
 		if ( false === $wpdb->insert( $wpdb->ea_taxes, $data ) ) {
 			return new WP_Error( 'db_insert_error', __( 'Could not insert Tax Rate into the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		$id = (int) $wpdb->insert_id;
-		do_action( 'eaccounting_tax_insert', $id, $data );
+		do_action( 'ever_accounting_tax_insert', $id, $data );
 	}
 
 	return $id;
@@ -98,11 +98,11 @@ function eaccounting_delete_tax( $id ) {
 		return false;
 	}
 
-	do_action( 'eaccounting_pre_tax_delete', $id, $tax );
+	do_action( 'ever_accounting_pre_tax_delete', $id, $tax );
 	if ( false == $wpdb->delete( $wpdb->ea_taxes, array( 'id' => $id ), array( '%d' ) ) ) {
 		return false;
 	}
-	do_action( 'eaccounting_tax_delete', $id, $tax );
+	do_action( 'ever_accounting_tax_delete', $id, $tax );
 
 	return true;
 }
@@ -213,3 +213,66 @@ function eaccounting_get_taxes( $args = array(), $count = false ) {
 
 	return $wpdb->get_col( $request );
 }
+
+function eaccounting_deactivate_tax( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_taxes_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	$tax_id = absint( $data['tax'] );
+	if ( $tax_id ) {
+		eaccounting_insert_tax( [
+			'id'     => $tax_id,
+			'status' => '0'
+		] );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-taxes' ) );
+}
+
+add_action( 'eaccounting_deactivate_tax', 'eaccounting_deactivate_tax' );
+
+
+function eaccounting_activate_tax( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_taxes_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	$tax_id = absint( $data['tax'] );
+	if ( $tax_id ) {
+		eaccounting_insert_tax( [
+			'id'     => $tax_id,
+			'status' => '1'
+		] );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-taxes' ) );
+}
+
+add_action( 'eaccounting_activate_tax', 'eaccounting_activate_tax' );
+
+function eaccounting_delete_tax_handler( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_taxes_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( $account_id = absint( $data['account'] ) ) {
+		eaccounting_delete_product( $account_id );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-taxes' ) );
+}
+
+add_action( 'eaccounting_delete_tax', 'eaccounting_delete_tax_handler' );

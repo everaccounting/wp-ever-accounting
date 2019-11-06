@@ -5,10 +5,10 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Insert Account
  *
- * @since 1.0.0
  * @param $args
  *
  * @return int|WP_Error
+ * @since 1.0.0
  */
 function eaccounting_insert_product( $args ) {
 	global $wpdb;
@@ -29,17 +29,18 @@ function eaccounting_insert_product( $args ) {
 
 
 	$data = array(
-		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'name'            => isset( $args['name'] ) ? '' : sanitize_text_field( $args['id'] ),
-		'number'          => isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
-		'currency_code'   => isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
-		'opening_balance' => isset( $args['opening_balance'] ) ? '0.00' : (double) $args['opening_balance'],
-		'bank_name'       => isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
-		'bank_phone'      => isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
-		'bank_address'    => isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
-		'enabled'         => '1' == $args['enabled'] ? '1' : '0',
-		'updated_at'      => empty( $args['updated_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['updated_at'],
-		'created_at'      => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
+		'id'             => empty( $args['id'] ) ? null : absint( $args['id'] ),
+		'name'           => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
+		'sku'            => ! isset( $args['sku'] ) ? '' : sanitize_text_field( $args['sku'] ),
+		'description'    => ! isset( $args['description'] ) ? '' : sanitize_text_field( $args['description'] ),
+		'sale_price'     => ! isset( $args['sale_price'] ) ? '' : (double) $args['sale_price'],
+		'purchase_price' => ! isset( $args['purchase_price'] ) ? '0.00' : (double) $args['purchase_price'],
+		'quantity'       => ! isset( $args['quantity'] ) ? '' : intval( $args['quantity'] ),
+		'category_id'    => ! isset( $args['category_id'] ) ? '' : intval( $args['category_id'] ),
+		'tax_id'         => ! isset( $args['tax_id'] ) ? '' : intval( $args['tax_id'] ),
+		'status'         => '1' == $args['status'] ? '1' : '0',
+		'updated_at'     => empty( $args['updated_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['updated_at'],
+		'created_at'     => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 
@@ -47,8 +48,16 @@ function eaccounting_insert_product( $args ) {
 		return new WP_Error( 'empty_content', __( 'Empty name is not permitted', 'wp-ever-accounting' ) );
 	}
 
-	$where         = array( 'id' => $id );
-	$data = wp_unslash($data);
+	if ( empty( $data['sku'] ) ) {
+		return new WP_Error( 'empty_content', __( 'SKU is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data['sale_price'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Sale Price is required', 'wp-ever-accounting' ) );
+	}
+
+	$where = array( 'id' => $id );
+	$data  = wp_unslash( $data );
 
 	if ( $update ) {
 		do_action( 'ever_accounting_pre_product_update', $id, $data );
@@ -57,12 +66,12 @@ function eaccounting_insert_product( $args ) {
 		}
 		do_action( 'ever_accounting_product_update', $id, $data, $item_before );
 	} else {
-		do_action( 'ever_accounting_pre_note_insert', $id, $data );
+		do_action( 'ever_accounting_pre_product_insert', $id, $data );
 		if ( false === $wpdb->insert( $wpdb->ea_products, $data ) ) {
 			return new WP_Error( 'db_insert_error', __( 'Could not insert product into the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		$id = (int) $wpdb->insert_id;
-		do_action( 'ever_accounting_note_insert', $id, $data );
+		do_action( 'ever_accounting_product_insert', $id, $data );
 	}
 
 	return $id;
@@ -71,27 +80,28 @@ function eaccounting_insert_product( $args ) {
 /**
  * Get account
  *
- * @since 1.0.0
  * @param $id
  *
  * @return object|null
+ * @since 1.0.0
  */
 function eaccounting_get_product( $id ) {
 	global $wpdb;
+
 	return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->ea_products} where id=%s", $id ) );
 }
 
 /**
  * Delete account
  *
- * @since 1.0.0
  * @param $id
  *
  * @return bool
+ * @since 1.0.0
  */
 function eaccounting_delete_product( $id ) {
 	global $wpdb;
-	$id    = absint( $id );
+	$id = absint( $id );
 
 	$account = eaccounting_get_product( $id );
 	if ( is_null( $account ) ) {
@@ -107,6 +117,174 @@ function eaccounting_delete_product( $id ) {
 	return true;
 }
 
-function eaccounting_get_products( $args = true, $counts = false ) {
+function eaccounting_get_products( $args = array(), $count = false ) {
+	global $wpdb;
+	$query_fields  = '';
+	$query_from    = '';
+	$query_where   = '';
+	$query_orderby = '';
+	$query_limit   = '';
 
+	$default = array(
+		'include'        => array(),
+		'exclude'        => array(),
+		'status'         => '',
+		'search'         => '',
+		'orderby'        => 'id',
+		'order'          => 'DESC',
+		'fields'         => 'all',
+		'search_columns' => array( 'name', 'sku' ),
+		'per_page'       => 20,
+		'page'           => 1,
+		'offset'         => 0,
+	);
+
+	$args        = wp_parse_args( $args, $default );
+	$query_from  = "FROM $wpdb->ea_products";
+	$query_where = 'WHERE 1=1';
+
+	//enabled
+	if ( ! empty( $args['status'] ) ) {
+		$query_where .= $wpdb->prepare( " AND $wpdb->ea_products.status= %s", absint( $args['status'] ) );
+	}
+
+	//fields
+	if ( is_array( $args['fields'] ) ) {
+		$args['fields'] = array_unique( $args['fields'] );
+
+		$query_fields = array();
+		foreach ( $args['fields'] as $field ) {
+			$field          = 'id' === $field ? 'id' : sanitize_key( $field );
+			$query_fields[] = "$wpdb->ea_products.$field";
+		}
+		$query_fields = implode( ',', $query_fields );
+	} elseif ( 'all' == $args['fields'] ) {
+		$query_fields = "$wpdb->ea_products.*";
+	} else {
+		$query_fields = "$wpdb->ea_products.id";
+	}
+
+	//include
+	$include = false;
+	if ( ! empty( $args['include'] ) ) {
+		$include = wp_parse_id_list( $args['include'] );
+	}
+
+	if ( ! empty( $include ) ) {
+		// Sanitized earlier.
+		$ids         = implode( ',', $include );
+		$query_where .= " AND $wpdb->ea_products.id IN ($ids)";
+	} elseif ( ! empty( $args['exclude'] ) ) {
+		$ids         = implode( ',', wp_parse_id_list( $args['exclude'] ) );
+		$query_where .= " AND $wpdb->ea_products.id NOT IN ($ids)";
+	}
+
+	//search
+	$search = '';
+	if ( isset( $args['search'] ) ) {
+		$search = trim( $args['search'] );
+	}
+	if ( $search ) {
+		$searches = array();
+		$cols     = array_map( 'sanitize_key', $args['search_columns'] );
+		$like     = '%' . $wpdb->esc_like( $search ) . '%';
+		foreach ( $cols as $col ) {
+			$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
+		}
+
+		$query_where .= ' AND (' . implode( ' OR ', $searches ) . ')';
+	}
+
+
+	//ordering
+	$order         = isset( $args['order'] ) ? esc_sql( strtoupper( $args['order'] ) ) : 'ASC';
+	$order_by      = esc_sql( $args['orderby'] );
+	$query_orderby = sprintf( " ORDER BY %s %s ", $order_by, $order );
+
+	// limit
+	if ( isset( $args['per_page'] ) && $args['per_page'] > 0 ) {
+		if ( $args['offset'] ) {
+			$query_limit = $wpdb->prepare( 'LIMIT %d, %d', $args['offset'], $args['per_page'] );
+		} else {
+			$query_limit = $wpdb->prepare( 'LIMIT %d, %d', $args['per_page'] * ( $args['page'] - 1 ), $args['per_page'] );
+		}
+	}
+
+	if ( $count ) {
+		return $wpdb->get_var( "SELECT count($wpdb->ea_products.id) $query_from $query_where" );
+	}
+
+
+	$request = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+	if ( is_array( $args['fields'] ) || 'all' == $args['fields'] ) {
+		return $wpdb->get_results( $request );
+	}
+
+	return $wpdb->get_col( $request );
 }
+
+
+function eaccounting_deactivate_product( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_products_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	$account_id = absint( $data['account'] );
+	if ( $account_id ) {
+		eaccounting_insert_product( [
+			'id'     => $account_id,
+			'status' => '0'
+		] );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-products' ) );
+}
+
+add_action( 'eaccounting_deactivate_product', 'eaccounting_deactivate_product' );
+
+
+function eaccounting_activate_product( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_products_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	$account_id = absint( $data['account'] );
+	if ( $account_id ) {
+		eaccounting_insert_product( [
+			'id'     => $account_id,
+			'status' => '1'
+		] );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-products' ) );
+}
+
+add_action( 'eaccounting_activate_product', 'eaccounting_activate_product' );
+
+function eaccounting_delete_product_handler( $data ) {
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_products_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( $account_id = absint( $data['account'] ) ) {
+		eaccounting_delete_product( $account_id );
+	}
+
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-products' ) );
+}
+
+add_action( 'eaccounting_delete_product', 'eaccounting_delete_product_handler' );
+

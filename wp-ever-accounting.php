@@ -136,6 +136,7 @@ final class EverAccounting {
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-caching.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/product-functions.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/template-functions.php' );
@@ -185,7 +186,7 @@ final class EverAccounting {
 		do_action( 'before_ever_accounting_init' );
 
 		//setup our caching
-		$this->cache = 	new EAccounting_Cache( 'eaccounting' );
+		$this->cache = new EAccounting_Cache( 'eaccounting' );
 
 		// Init action.
 		do_action( 'ever_accounting_init' );
@@ -207,13 +208,13 @@ final class EverAccounting {
 	 * present in $_GET is called using WordPress's do_action function. These
 	 * functions are called on init.
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
-	public function set_get_actions(){
+	public function set_get_actions() {
 		$key = ! empty( $_GET['eaccounting_action'] ) ? sanitize_key( $_GET['eaccounting_action'] ) : false;
 		if ( ! empty( $key ) ) {
-			do_action( "eaccounting_{$key}" , $_GET );
+			do_action( "eaccounting_{$key}", $_GET );
 		}
 	}
 
