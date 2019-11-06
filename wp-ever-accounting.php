@@ -136,6 +136,7 @@ final class EverAccounting {
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-caching.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/template-functions.php' );
 

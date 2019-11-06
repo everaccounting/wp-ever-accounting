@@ -60,13 +60,13 @@ function eaccounting_insert_account( $args ) {
 
 	if ( $update ) {
 		do_action( 'eaccounting_pre_account_update', $id, $data );
-		if ( false === $wpdb->update( $wpdb->ea_accounts, $data, $where ) ) {
+		if ( false === $wpdb->update( $wpdb->ea_taxes, $data, $where ) ) {
 			return new WP_Error( 'db_update_error', __( 'Could not update note in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		do_action( 'eaccounting_account_update', $id, $data, $item_before );
 	} else {
 		do_action( 'eaccounting_pre_account_insert', $id, $data );
-		if ( false === $wpdb->insert( $wpdb->ea_accounts, $data ) ) {
+		if ( false === $wpdb->insert( $wpdb->ea_taxes, $data ) ) {
 			error_log( $wpdb->last_error );
 
 			return new WP_Error( 'db_insert_error', __( 'Could not insert account into the database', 'wp-ever-accounting' ), $wpdb->last_error );
