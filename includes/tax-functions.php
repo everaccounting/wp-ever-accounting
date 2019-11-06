@@ -32,7 +32,7 @@ function eaccounting_insert_tax( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'rate'       => ! isset( $args['rate'] ) ? '' : (double) $args['rate'],
 		'type'       => ! isset( $args['type'] ) ? '' : sanitize_text_field( $args['type'] ),
-		'status'    => '1' == $args['status'] ? '1' : '0',
+		'status'          => ! empty( $args['status'] ) ? '1' : '0',
 		'updated_at' => empty( $args['updated_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['updated_at'],
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);

@@ -117,6 +117,7 @@ final class EverAccounting {
 			'ea_accounts',
 			'ea_products',
 			'ea_taxes',
+			'ea_categories',
 		);
 		foreach ( $tables as $table ) {
 			$wpdb->$table   = $wpdb->prefix . $table;
@@ -137,6 +138,7 @@ final class EverAccounting {
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/product-functions.php' );
+        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/category-functions.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/template-functions.php' );

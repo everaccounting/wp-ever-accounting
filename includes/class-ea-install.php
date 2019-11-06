@@ -283,7 +283,6 @@ class EAccounting_Install {
 		    PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
-
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transfers(
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
   			`payment_id` int(11) NOT NULL,
@@ -295,6 +294,17 @@ class EAccounting_Install {
 		    KEY `transaction_id` (`transaction_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_categories(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  		  	`name` varchar(191) NOT NULL,
+		  	`type` varchar(50) NOT NULL,
+		  	`color` varchar(20) NOT NULL,
+		    `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT 'enable or disable',
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`),
+		    KEY `type` (`type`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
 
 

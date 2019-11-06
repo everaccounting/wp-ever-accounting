@@ -67,7 +67,6 @@ function eaccounting_insert_account( $args ) {
 	} else {
 		do_action( 'eaccounting_pre_account_insert', $id, $data );
 		if ( false === $wpdb->insert( $wpdb->ea_accounts, $data ) ) {
-			error_log( $wpdb->last_error );
 
 			return new WP_Error( 'db_insert_error', __( 'Could not insert account into the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}

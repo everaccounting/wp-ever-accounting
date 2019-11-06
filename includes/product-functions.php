@@ -38,7 +38,7 @@ function eaccounting_insert_product( $args ) {
 		'quantity'       => ! isset( $args['quantity'] ) ? '' : intval( $args['quantity'] ),
 		'category_id'    => ! isset( $args['category_id'] ) ? '' : intval( $args['category_id'] ),
 		'tax_id'         => ! isset( $args['tax_id'] ) ? '' : intval( $args['tax_id'] ),
-		'status'         => '1' == $args['status'] ? '1' : '0',
+		'status'          => ! empty( $args['status'] ) ? '1' : '0',
 		'updated_at'     => empty( $args['updated_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['updated_at'],
 		'created_at'     => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);

@@ -21,7 +21,7 @@ class EAccounting_Ajax_Taxes extends EAccounting_Ajax{
 		}
 
 		if( ! current_user_can( 'manage_options' ) ) {
-			$this->error(__( 'You do not have permission to create discount codes', 'wp-ever-accounting' ));
+			$this->error(__( 'You do not have permission to create tax', 'wp-ever-accounting' ));
 		}
 
 		$created = eaccounting_insert_tax($_REQUEST);
@@ -29,8 +29,7 @@ class EAccounting_Ajax_Taxes extends EAccounting_Ajax{
 			$this->error($created->get_error_message());
 		}
 
-		$this->success(__('New Tax Rate has been created', 'wp-ever-accounting'));
-
+		$this->success(__('New Tax rate has been created', 'wp-ever-accounting'));
 
 	}
 

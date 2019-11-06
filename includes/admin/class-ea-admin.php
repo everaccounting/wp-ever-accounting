@@ -41,9 +41,15 @@ class EAccounting_Admin {
 
 	public function enqueue_scripts() {
 		wp_enqueue_style( 'eaccounting-admin', ever_accounting()->plugin_url() . '/assets/css/ever-accounting-admin.css', time() );
+		wp_enqueue_style( 'eaccounting-select2', ever_accounting()->plugin_url() . '/assets/vendor/select2/select2.css', time() );
 		wp_enqueue_style( 'eaccounting-fontawesome', ever_accounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css', time() );
+
 		wp_register_script( 'eaccounting-accounts', ever_accounting()->plugin_url() . '/assets/js/eaccounting-accounts.js', array( 'jquery' ), time(), true );
+		wp_register_script( 'eaccounting-select2', ever_accounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );
 		wp_register_script( 'eaccounting-taxes', ever_accounting()->plugin_url() . '/assets/js/eaccounting-taxes.js', array( 'jquery' ), time(), true );
+		wp_register_script( 'eaccounting-form', ever_accounting()->plugin_url() . '/assets/js/eaccounting-form.js', array( 'jquery', 'eaccounting-select2' ), time(), true );
+
+		wp_enqueue_script('eaccounting-form');
 	}
 }
 

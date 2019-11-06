@@ -20,7 +20,7 @@ function eaccounting_products_page() {
 		$products_table->prepare_items();
 		?>
 
-		<h1><?php _e( 'Products', 'wp-ever-accounting' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'eaccounting_action' => 'add_product' ), admin_url('admin.php?page=eaccounting-accounts') ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a></h1>
+		<h1><?php _e( 'Products', 'wp-ever-accounting' ); ?><a href="<?php echo esc_url( add_query_arg( array( 'eaccounting_action' => 'add_product' ), admin_url('admin.php?page=eaccounting-products') ) ); ?>" class="add-new-h2"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a></h1>
 		<?php do_action( 'eaccounting_products_page_top' ); ?>
 		<form id="eaccounting-products-filter" method="get" action="<?php echo admin_url( 'admin.php?page=eaccounting-accounts' ); ?>">
 			<?php $products_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-accounts' ); ?>
