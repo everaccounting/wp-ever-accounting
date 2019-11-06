@@ -26,12 +26,13 @@ class EAccounting_Admin_Menus{
 		add_menu_page( __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounting', 'wp-ever-accounting' ), 'manage_options', 'ever-accounting', null, 'dashicons-chart-area', '55.5' );
 		add_submenu_page( 'ever-accounting', __( 'Dashboard', 'wp-ever-accounting' ), __( 'Dashboard', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-dashboard', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Transactions', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transactions', array( $this, 'dashboard_page' ) );
-		add_submenu_page( 'ever-accounting', __( 'Products', 'wp-ever-accounting' ), __( 'Products', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-products', array( $this, 'dashboard_page' ) );
+		add_submenu_page( 'ever-accounting', __( 'Products', 'wp-ever-accounting' ), __( 'Products', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-products',  'eaccounting_products_page'  );
 		add_submenu_page( 'ever-accounting', __( 'Invoices', 'wp-ever-accounting' ), __( 'Invoices', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-invoices', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Revenues', 'wp-ever-accounting' ), __( 'Revenues', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-revenues', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Bills', 'wp-ever-accounting' ), __( 'Bills', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-bills', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Payments', 'wp-ever-accounting' ), __( 'Payments', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-payments', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Accounts', 'wp-ever-accounting' ), __( 'Accounts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-accounts', 'eaccount_accounts_page' );
+		add_submenu_page( 'ever-accounting', __( 'Taxes', 'wp-ever-accounting' ), __( 'Taxes', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-taxes', 'eaccount_taxes_page' );
 		add_submenu_page( 'ever-accounting', __( 'Transfers', 'wp-ever-accounting' ), __( 'Transfers', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transfers', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Reconciliations', 'wp-ever-accounting' ), __( 'Reconciliations', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reconciliations', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reports', array( $this, 'dashboard_page' ) );

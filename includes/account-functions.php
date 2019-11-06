@@ -301,4 +301,4 @@ function eaccounting_delete_account_handler( $data ) {
 	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
 }
 
-add_action( 'eaccounting_delete_account', 'eaccounting_delete_account_handler' );
+add_action( 'eaccounting_action_delete_account', 'eaccounting_delete_account_handler' );
