@@ -24,9 +24,10 @@ class EAccounting_Admin{
 	 * Include any classes we need within admin.
 	 */
 	public function includes() {
-		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
+
 		require_once dirname( __FILE__ ) . '/class-ea-settings-api.php';
 		require_once dirname( __FILE__ ) . '/class-ea-settings-page.php';
+		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
 		require_once dirname( __FILE__ ) . '/settings/class-ea-general-settings.php';
 		require_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
 

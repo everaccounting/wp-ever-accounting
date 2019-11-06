@@ -14,7 +14,8 @@ if ( ! class_exists( 'EAccounting_Settings_Page', false ) ) :
 		 */
 		public function __construct() {
 			$this->settings = new \EAccounting_Settings_Api();
-			$this->admin_init();
+			add_action( 'admin_init', array( $this, 'admin_init' ) );
+			add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 		}
 
 		/**
@@ -30,34 +31,44 @@ if ( ! class_exists( 'EAccounting_Settings_Page', false ) ) :
 			$this->settings->admin_init();
 		}
 
+		function admin_menu() {
+			add_submenu_page( 'ever-accounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-settings', array( $this, 'settings_page' ) );
+		}
+
 		/**
-		 * @since 1.0.0
 		 * @return void
+		 * @since 1.0.0
 		 */
-		public function print_settings_pages() {
+		public function settings_page() {
+			echo '<div class="wrap">';
+			echo sprintf( "<h2>%s</h2>", __( 'Ever Accounting - Settings', 'wp-ever-accounting' ) );
 			$this->settings->show_settings();
+			echo '</div>';
 		}
 
 		/**
 		 * Setup sections
 		 *
-		 * @since 1.0.0
 		 * @return mixed|void
+		 * @since 1.0.0
 		 */
 		public function get_settings_sections() {
 			$sections = array();
+
 			return apply_filters( 'ever_accounting_settings_sections', $sections );
 		}
 
 		/**
 		 * Setup fields
 		 *
-		 * @since 1.0.0
 		 * @return mixed|void
+		 * @since 1.0.0
 		 */
 		public function get_settings_fields() {
 			$settings_fields = array();
+
 			return apply_filters( 'ever_accounting_settings_fields', $settings_fields );
 		}
 	}
+	new EAccounting_Settings_Page();
 endif;

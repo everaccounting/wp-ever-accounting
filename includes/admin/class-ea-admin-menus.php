@@ -37,7 +37,6 @@ class EAccounting_Admin_Menus{
 		add_submenu_page( 'ever-accounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reports', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Addons', 'wp-ever-accounting' ), __( 'Addons', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-addons', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Helps', 'wp-ever-accounting' ), __( 'Helps', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-helps', array( $this, 'dashboard_page' ) );
-		add_submenu_page( 'ever-accounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-settings', array( $this, 'settings_page' ) );
 
 	}
 
@@ -45,16 +44,6 @@ class EAccounting_Admin_Menus{
 
 	}
 
-	/**
-	 * Init the settings page.
-	 */
-	public function settings_page() {
-		echo '<div class="wrap">';
-		echo sprintf( "<h2>%s</h2>", __( 'Ever Accounting - Settings', 'wp-ever-accounting' ) );
-		$settings = new EAccounting_Settings_Page();
-		$settings->print_settings_pages();
-		echo '</div>';
-	}
 
 	/**
 	 * Enqueue scripts
