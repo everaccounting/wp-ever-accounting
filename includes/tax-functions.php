@@ -133,7 +133,7 @@ function eaccounting_get_taxes( $args = array(), $count = false ) {
 	$query_from  = "FROM $wpdb->ea_taxes";
 	$query_where = 'WHERE 1=1';
 
-	//enabled
+	//status
 	if ( ! empty( $args['status'] ) ) {
 		$query_where .= $wpdb->prepare( " AND $wpdb->ea_taxes.status= %s", absint( $args['status'] ) );
 	}
