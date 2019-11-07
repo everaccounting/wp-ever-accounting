@@ -11,13 +11,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
 			eAccountingAccounts.disableForm();
 			var formData = $(e.target).serializeArray();
 
-			console.log($(e.target).serializeArray());
 			jQuery.ajax({
 				url: window.ajaxurl,
 				type: 'POST',
 				data: formData,
 				success: function(response) {
-					$.notify(response.data.message, 'success');
 					eAccountingAccounts.redirect(response);
 				},
 				error: function(response) {

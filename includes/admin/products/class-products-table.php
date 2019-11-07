@@ -51,10 +51,11 @@ class EAccounting_Products_Table extends WP_List_Table {
 		global $status, $page;
 
 		parent::__construct( array(
-			'singular' => 'account',
-			'plural'   => 'accounts',
+			'singular' => 'product',
+			'plural'   => 'products',
 			'ajax'     => false,
 		) );
+		$this->process_bulk_action();
 	}
 
 	/**
@@ -128,7 +129,6 @@ class EAccounting_Products_Table extends WP_List_Table {
 			'sale_price'     => __( 'Sale Price', 'wp-ever-accounting' ),
 			'purchase_price' => __( 'Purchase Price', 'wp-ever-accounting' ),
 			'status'         => __( 'Status', 'wp-ever-accounting' ),
-			'action'         => __( 'Action', 'wp-ever-accounting' )
 		);
 
 		return $columns;
@@ -215,40 +215,31 @@ class EAccounting_Products_Table extends WP_List_Table {
 	function column_name( $item ) {
 		$base                = admin_url( 'admin.php?page=eaccounting-products' );
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-				'eaccounting_action' => 'edit_product',
-				'account'            => $item->id
+				'eaccounting-action' => 'edit_product',
+				'product'            => $item->id
 			), $base ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 
-		if ( strtolower( $item->status ) == '1' ) {
+		if ( strtolower( $item->status ) == 'active' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting_action' => 'deactivate_product',
-					'account'            => $item->id
+					'eaccounting-action' => 'deactivate_product',
+					'product'            => $item->id
 				), $base ), 'eaccounting_products_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
-		} elseif ( strtolower( $item->status ) == '0' ) {
+		} elseif ( strtolower( $item->status ) == 'inactive' ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting_action' => 'activate_product',
-					'account'            => $item->id
+					'eaccounting-action' => 'activate_product',
+					'product'            => $item->id
 				), $base ), 'eaccounting_products_nonce' ) ) . '">' . __( 'Activate', 'wp-ever-accounting' ) . '</a>';
 		}
 
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'eaccounting_action' => 'delete_product',
-				'account'            => $item->id
+				'eaccounting-action' => 'delete_product',
+				'product'            => $item->id
 			), $base ), 'eaccounting_products_nonce' ) ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
 		$row_actions = apply_filters( 'eaccounting_row_actions', $row_actions, $item );
 
 		return sprintf( '<strong>%s</strong>', stripslashes( $item->name ) ) . $this->row_actions( $row_actions );
 	}
-
-	/**
-	 * Render the current balance column
-	 *
-	 * @param array $item Contains all the data for the checkbox column
-	 *
-	 * @return string Displays current balance
-	 * @since 1.0.0
-	 */
 
 
 	/**
@@ -260,7 +251,24 @@ class EAccounting_Products_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_sale_price( $item ) {
-		return eaccounting_amount( $item->sale_price );
+		return eaccounting_price( $item->sale_price );
+	}
+
+
+	/**
+	 * Render the current balance column
+	 *
+	 * @param array $item Contains all the data for the checkbox column
+	 *
+	 * @return string Displays current balance
+	 * @since 1.0.0
+	 */
+	function column_purchase_price( $item ) {
+		return eaccounting_price( $item->purchase_price );
+	}
+
+	function column_status( $item ) {
+		return sprintf('<span class="ea-item-status %1$s">%1$s</span>', $item->status  );
 	}
 
 	/**
@@ -300,9 +308,9 @@ class EAccounting_Products_Table extends WP_List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-products' ) ) {
-			return;
-		}
+//		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-products' ) ) {
+//			return;
+//		}
 
 		$ids = isset( $_GET['product'] ) ? $_GET['product'] : false;
 
@@ -339,7 +347,6 @@ class EAccounting_Products_Table extends WP_List_Table {
 		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
 		$order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$status   = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$meta_key = isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : null;
 		$search   = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
@@ -348,7 +355,6 @@ class EAccounting_Products_Table extends WP_List_Table {
 			'orderby'  => $orderby,
 			'order'    => $order,
 			'status'   => $status,
-			'meta_key' => $meta_key,
 			'search'   => $search
 		);
 
@@ -356,8 +362,8 @@ class EAccounting_Products_Table extends WP_List_Table {
 			$args['orderby'] = $orderby;
 		}
 
-		$this->active_count   = eaccounting_get_products( array_merge( $args, array( 'status' => '1' ) ), true );
-		$this->inactive_count = eaccounting_get_products( array_merge( $args, array( 'status' => '0' ) ), true );
+		$this->active_count   = eaccounting_get_products( array_merge( $args, array( 'status' => 'active' ) ), true );
+		$this->inactive_count = eaccounting_get_products( array_merge( $args, array( 'status' => 'inactive' ) ), true );
 		$this->total_count    = eaccounting_get_products( array_merge( $args, array( 'status' => '' ) ), true );
 
 		$results = eaccounting_get_products( $args );

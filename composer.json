@@ -14,14 +14,10 @@
 			"email": "support@pluginever.com"
 		}
 	],
-	"config": {
-		"platform": {
-			"php": "5.6.1"
-		}
-	},
 	"require": {
 		"php": ">=5.6.0",
-		"fzaninotto/faker": "^1.8"
+		"fzaninotto/faker": "^1.8",
+		"mbezhanov/faker-provider-collection": "^1.2"
 	},
 	"extra": {
 		"cleaner-ignore": {

@@ -254,7 +254,7 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_opening_balance( $item ) {
-		return eaccounting_amount($item->opening_balance);
+		return eaccounting_price($item->opening_balance);
 	}
 
 	/**

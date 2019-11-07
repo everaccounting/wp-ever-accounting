@@ -7,8 +7,8 @@ class EAccounting_Localisation_Settings {
 	 * EAccounting_Localisation_Settings constructor.
 	 */
 	public function __construct() {
-		add_filter( 'ever_accounting_settings_sections', array( $this, 'add_section' ) );
-		add_filter( 'ever_accounting_settings_fields', array( $this, 'add_fields' ) );
+		add_filter( 'eaccounting_settings_sections', array( $this, 'add_section' ) );
+		add_filter( 'eaccounting_settings_fields', array( $this, 'add_fields' ) );
 	}
 
 	/**

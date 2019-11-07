@@ -105,17 +105,24 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 
 	public static function make_products( $args ) {
 		list( $amount ) = $args;
-		$progress  = \WP_CLI\Utils\make_progress_bar( 'Generating products', $amount );
-		$faker     = \Faker\Factory::create( 'en_US' );
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Generating products', $amount );
+		$faker    = \Faker\Factory::create();
+		$faker->addProvider( new \Bezhanov\Faker\Provider\Commerce( $faker ) );
+
 		$generated = 0;
 		for ( $i = 1; $i <= $amount; $i ++ ) {
 			$created = eaccounting_insert_product( array(
-				'name'       => $faker->name,
-				'type'       => $faker->randomElement( array_keys( eaccounting_get_category_types() ) ),
-				'color'      => $faker->hexColor,
-				'status'     => $faker->numberBetween( 0, 1 ),
-				'updated_at' => $faker->date(),
-				'created_at' => $faker->date(),
+				'name'           => $faker->productName,
+				'sku'            => '',
+				'description'    => $faker->realText( 100 ),
+				'sale_price'     => $faker->randomNumber( 2 ),
+				'purchase_price' => $faker->randomNumber( 2 ),
+				'quantity'       => $faker->randomNumber( 2 ),
+				'category_id'    => '',
+				'tax_id'         => '',
+				'status'         => $faker->randomElement(['active', 'inactive']),
+				'updated_at'     => $faker->date(),
+				'created_at'     => $faker->date(),
 			) );
 
 			if ( is_wp_error( $created ) ) {

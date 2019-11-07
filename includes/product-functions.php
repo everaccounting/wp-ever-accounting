@@ -14,7 +14,7 @@ function eaccounting_insert_product( $args ) {
 	global $wpdb;
 	$update = false;
 	$id     = null;
-	$args   = (array) apply_filters( 'ever_accounting_create_product', $args );
+	$args   = (array) apply_filters( 'eaccounting_create_product', $args );
 
 	if ( isset( $args['id'] ) && ! empty( trim( $args['id'] ) ) ) {
 		$id          = absint($args['id']);
@@ -34,10 +34,10 @@ function eaccounting_insert_product( $args ) {
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_text_field( $args['description'] ),
 		'sale_price'     => ! isset( $args['sale_price'] ) ? '' : (double) $args['sale_price'],
 		'purchase_price' => ! isset( $args['purchase_price'] ) ? '0.00' : (double) $args['purchase_price'],
-		'quantity'       => ! isset( $args['quantity'] ) ? '' : intval( $args['quantity'] ),
+		'quantity'       => ! isset( $args['quantity'] ) ? '0' : intval( $args['quantity'] ),
 		'category_id'    => ! isset( $args['category_id'] ) ? '' : intval( $args['category_id'] ),
 		'tax_id'         => ! isset( $args['tax_id'] ) ? '' : intval( $args['tax_id'] ),
-		'status'         => ! empty( $args['status'] ) ? '1' : '0',
+		'status'         => sanitize_key($args['status']),
 		'updated_at'     => date( 'Y-m-d H:i:s' ),
 		'created_at'     => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -47,19 +47,15 @@ function eaccounting_insert_product( $args ) {
 		return new WP_Error( 'empty_content', __( 'Empty name is not permitted', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['sku'] ) ) {
-		return new WP_Error( 'empty_content', __( 'SKU is required', 'wp-ever-accounting' ) );
-	}
-
 	if ( empty( $data['sale_price'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Sale Price is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['quantity'] ) ) {
+	if ( !isset( $data['quantity'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Quantity is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( ! eaccounting_is_sku_available( $data['sku'], $id ) ) {
+	if ( !empty($data['sku']) && ! eaccounting_is_sku_available( $data['sku'], $id ) ) {
 		return new WP_Error( 'invalid_content', __( 'SKU is taken by other product', 'wp-ever-accounting' ) );
 	}
 
@@ -67,18 +63,18 @@ function eaccounting_insert_product( $args ) {
 	$data  = wp_unslash( $data );
 
 	if ( $update ) {
-		do_action( 'ever_accounting_pre_product_update', $id, $data );
+		do_action( 'eaccounting_pre_product_update', $id, $data );
 		if ( false === $wpdb->update( $wpdb->ea_products, $data, $where ) ) {
 			return new WP_Error( 'db_update_error', __( 'Could not update product in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
-		do_action( 'ever_accounting_product_update', $id, $data, $item_before );
+		do_action( 'eaccounting_product_update', $id, $data, $item_before );
 	} else {
-		do_action( 'ever_accounting_pre_product_insert', $id, $data );
+		do_action( 'eaccounting_pre_product_insert', $id, $data );
 		if ( false === $wpdb->insert( $wpdb->ea_products, $data ) ) {
 			return new WP_Error( 'db_insert_error', __( 'Could not insert product into the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		$id = (int) $wpdb->insert_id;
-		do_action( 'ever_accounting_product_insert', $id, $data );
+		do_action( 'eaccounting_product_insert', $id, $data );
 	}
 
 	return $id;
@@ -122,9 +118,9 @@ function eaccounting_get_product( $id ) {
  */
 function eaccounting_is_sku_available( $sku, $product_id = null ) {
 	global $wpdb;
-	$exist = $wpdb->get_var( $wpdb->prepare( "SELECT id from $wpdb->ea_products WHRE sku=%s", sanitize_text_field( $sku ) ) );
+	$exist = $wpdb->get_var( $wpdb->prepare( "SELECT id from $wpdb->ea_products WHERE sku=%s", sanitize_text_field( $sku ) ) );
 
-	return ! $exist || $exist !== $product_id;
+	return ! $exist || $exist == $product_id;
 }
 
 /**
@@ -144,11 +140,11 @@ function eaccounting_delete_product( $id ) {
 		return false;
 	}
 
-	do_action( 'ever_accounting_pre_product_delete', $id, $account );
+	do_action( 'eaccounting_pre_product_delete', $id, $account );
 	if ( false == $wpdb->delete( $wpdb->ea_products, array( 'id' => $id ), array( '%d' ) ) ) {
 		return false;
 	}
-	do_action( 'ever_accounting_product_delete', $id, $account );
+	do_action( 'eaccounting_product_delete', $id, $account );
 
 	return true;
 }
@@ -181,7 +177,7 @@ function eaccounting_get_products( $args = array(), $count = false ) {
 
 	//enabled
 	if ( ! empty( $args['status'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_products.status= %s", absint( $args['status'] ) );
+		$query_where .= $wpdb->prepare( " AND $wpdb->ea_products.status= %s", sanitize_key( $args['status'] ) );
 	}
 
 	//fields
@@ -261,66 +257,5 @@ function eaccounting_get_products( $args = array(), $count = false ) {
 }
 
 
-function eaccounting_deactivate_product( $data ) {
-	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_products_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
-	}
 
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
-	}
-
-	$account_id = absint( $data['account'] );
-	if ( $account_id ) {
-		eaccounting_insert_product( [
-			'id'     => $account_id,
-			'status' => '0'
-		] );
-	}
-
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-products' ) );
-}
-
-add_action( 'eaccounting_deactivate_product', 'eaccounting_deactivate_product' );
-
-
-function eaccounting_activate_product( $data ) {
-	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_products_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
-	}
-
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
-	}
-
-	$account_id = absint( $data['account'] );
-	if ( $account_id ) {
-		eaccounting_insert_product( [
-			'id'     => $account_id,
-			'status' => '1'
-		] );
-	}
-
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-products' ) );
-}
-
-add_action( 'eaccounting_activate_product', 'eaccounting_activate_product' );
-
-function eaccounting_delete_product_handler( $data ) {
-	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_products_nonce' ) ) {
-		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
-	}
-
-	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
-	}
-
-	if ( $account_id = absint( $data['account'] ) ) {
-		eaccounting_delete_product( $account_id );
-	}
-
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-products' ) );
-}
-
-add_action( 'eaccounting_delete_product', 'eaccounting_delete_product_handler' );
 

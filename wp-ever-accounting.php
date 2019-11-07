@@ -34,11 +34,11 @@ final class EverAccounting {
 	protected static $_instance = null;
 
 	/**
-	 * Wrapper for custom cache
+	 * Wrapper for admin notices
 	 *
-	 * @var EAccounting_Cache
+	 * @var EAccounting_Notices
 	 */
-	public $cache;
+	public $notices;
 
 	/**
 	 * Main EverAccounting Instance.
@@ -134,7 +134,7 @@ final class EverAccounting {
 	 */
 	public function includes() {
 		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-caching.php' );
+		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-notices.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
         require_once( EVER_ACCOUNTING_ABSPATH . '/includes/product-functions.php' );
@@ -165,21 +165,21 @@ final class EverAccounting {
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
 		add_action( 'init', array( $this, 'init' ), 0 );
 		add_action( 'init', array( $this, 'localization_setup' ) );
-		add_action( 'init', array( $this, 'set_get_actions' ) );
+		add_action( 'init', array( $this, 'set_eaccounting_actions' ) );
 		add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
 		add_action( 'deactivated_plugin', array( $this, 'deactivated_plugin' ) );
 	}
 
 	/**
-	 * When WP has loaded all plugins, trigger the `ever_accounting_loaded` hook.
+	 * When WP has loaded all plugins, trigger the `eaccounting_loaded` hook.
 	 *
-	 * This ensures `ever_accounting_loaded` is called only after all other plugins
+	 * This ensures `eaccounting_loaded` is called only after all other plugins
 	 * are loaded, to avoid issues caused by plugin directory naming changing
 	 *
 	 * @since 1.0.0
 	 */
 	public function on_plugins_loaded() {
-		do_action( 'ever_accounting_loaded' );
+		do_action( 'eaccounting_loaded' );
 	}
 
 	/**
@@ -187,13 +187,13 @@ final class EverAccounting {
 	 */
 	public function init() {
 		// Before init action.
-		do_action( 'before_ever_accounting_init' );
+		do_action( 'before_eaccounting_init' );
 
 		//setup our caching
-		$this->cache = new EAccounting_Cache( 'eaccounting' );
+		$this->notices = EAccounting_Notices::instance('eaccounting_notices');
 
 		// Init action.
-		do_action( 'ever_accounting_init' );
+		do_action( 'eaccounting_init' );
 	}
 
 	/**
@@ -215,10 +215,17 @@ final class EverAccounting {
 	 * @return void
 	 * @since 1.0.0
 	 */
-	public function set_get_actions() {
+	public function set_eaccounting_actions() {
 		$key = ! empty( $_GET['eaccounting_action'] ) ? sanitize_key( $_GET['eaccounting_action'] ) : false;
-		if ( ! empty( $key ) ) {
-			do_action( "eaccounting_action_{$key}", $_GET );
+
+		if ( !empty($key)) {
+			do_action( 'eaccounting_action_' . $key, $_GET );
+		}
+
+		$key = ! empty( $_POST['eaccounting_action'] ) ? sanitize_key( $_POST['eaccounting_action'] ) : false;
+
+		if ( !empty($key) ) {
+			do_action( 'eaccounting_action_' . $key, $_GET );
 		}
 	}
 
@@ -268,7 +275,7 @@ final class EverAccounting {
 	 * @return string
 	 */
 	public function template_path() {
-		return apply_filters( 'ever_accounting_template_path', 'ever-accounting/' );
+		return apply_filters( 'eaccounting_template_path', 'ever-accounting/' );
 	}
 }
 
@@ -279,8 +286,8 @@ final class EverAccounting {
  * @return EverAccounting
  * @since  1.0.0
  */
-function ever_accounting() {
+function eaccounting() {
 	return EverAccounting::instance();
 }
 
-ever_accounting();
+eaccounting();

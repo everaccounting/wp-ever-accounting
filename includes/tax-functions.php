@@ -14,7 +14,7 @@ function eaccounting_insert_tax( $args ) {
 	global $wpdb;
 	$update = false;
 	$id     = null;
-	$args   = (array) apply_filters( 'ever_accounting_create_tax', $args );
+	$args   = (array) apply_filters( 'eaccounting_create_tax', $args );
 
 	if ( isset( $args['id'] ) && ! empty( trim( $args['id'] ) ) ) {
 		$id          = (int) $args['id'];
@@ -50,18 +50,18 @@ function eaccounting_insert_tax( $args ) {
 	$data  = wp_unslash( $data );
 
 	if ( $update ) {
-		do_action( 'ever_accounting_pre_tax_update', $id, $data );
+		do_action( 'eaccounting_pre_tax_update', $id, $data );
 		if ( false === $wpdb->update( $wpdb->ea_taxes, $data, $where ) ) {
 			return new WP_Error( 'db_update_error', __( 'Could not update Tax Rate in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
-		do_action( 'ever_accounting_tax_update', $id, $data, $item_before );
+		do_action( 'eaccounting_tax_update', $id, $data, $item_before );
 	} else {
-		do_action( 'ever_accounting_pre_tax_insert', $id, $data );
+		do_action( 'eaccounting_pre_tax_insert', $id, $data );
 		if ( false === $wpdb->insert( $wpdb->ea_taxes, $data ) ) {
 			return new WP_Error( 'db_insert_error', __( 'Could not insert Tax Rate into the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		$id = (int) $wpdb->insert_id;
-		do_action( 'ever_accounting_tax_insert', $id, $data );
+		do_action( 'eaccounting_tax_insert', $id, $data );
 	}
 
 	return $id;
@@ -98,11 +98,11 @@ function eaccounting_delete_tax( $id ) {
 		return false;
 	}
 
-	do_action( 'ever_accounting_pre_tax_delete', $id, $tax );
+	do_action( 'eaccounting_pre_tax_delete', $id, $tax );
 	if ( false == $wpdb->delete( $wpdb->ea_taxes, array( 'id' => $id ), array( '%d' ) ) ) {
 		return false;
 	}
-	do_action( 'ever_accounting_tax_delete', $id, $tax );
+	do_action( 'eaccounting_tax_delete', $id, $tax );
 
 	return true;
 }

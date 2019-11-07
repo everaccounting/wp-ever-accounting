@@ -26,8 +26,9 @@ abstract class EAccounting_Ajax {
 	 * @param array $data
 	 * @param string $code
 	 */
-	public function success( $message, $redirect= '', $data = array(), $code = '' ) {
-		wp_send_json_success( array_merge( $data, array( 'message' => $message, 'redirect' => $redirect ) ) );
+	public function success( $message,  $data = array(), $code = '' ) {
+		$data['message'] = $message;
+		wp_send_json_success( $data );
 	}
 
 	/**

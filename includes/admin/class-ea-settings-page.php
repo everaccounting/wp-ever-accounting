@@ -55,7 +55,7 @@ if ( ! class_exists( 'EAccounting_Settings_Page', false ) ) :
 		public function get_settings_sections() {
 			$sections = array();
 
-			return apply_filters( 'ever_accounting_settings_sections', $sections );
+			return apply_filters( 'eaccounting_settings_sections', $sections );
 		}
 
 		/**
@@ -67,7 +67,7 @@ if ( ! class_exists( 'EAccounting_Settings_Page', false ) ) :
 		public function get_settings_fields() {
 			$settings_fields = array();
 
-			return apply_filters( 'ever_accounting_settings_fields', $settings_fields );
+			return apply_filters( 'eaccounting_settings_fields', $settings_fields );
 		}
 	}
 	new EAccounting_Settings_Page();

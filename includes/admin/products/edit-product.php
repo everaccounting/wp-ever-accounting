@@ -14,7 +14,7 @@ $title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-acco
 <hr class="wp-header-end">
 
 <div class="ea-card">
-	<form id="ea-product-form" action="" method="post">
+	<form id="ea-product-form" class="eaccouting-ajax-form" action="" method="post">
 		<?php wp_enqueue_script( 'eaccounting-products' ); ?>
 		<?php do_action( 'eaccounting_add_product_form_top' ); ?>
 		<div class="ea-row">
@@ -22,7 +22,7 @@ $title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-acco
 			echo eaccounting_input_field( array(
 				'label'         => __( 'Name', 'wp-ever-accounting' ),
 				'name'          => 'name',
-				'value'         => isset( $product->id ) ? $product->id : '',
+				'value'         => isset( $product->name ) ? $product->name : '',
 				'placeholder'   => __( 'Product Name', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-shopping-basket',
 				'required'      => true,
@@ -35,14 +35,14 @@ $title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-acco
 				'value'         => isset( $product->sku ) ? $product->sku : '',
 				'placeholder'   => __( 'Product SKU', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-key',
-				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
 			) );
 
 			echo eaccounting_input_field( array(
 				'label'         => __( 'Sale Price', 'wp-ever-accounting' ),
 				'name'          => 'sale_price',
-				'value'         => isset( $product->sale_price ) ? $product->sale_price : '',
+				'class'          => 'ea-price',
+				'value'         => isset( $product->sale_price ) ? eaccounting_price($product->sale_price) : '',
 				'placeholder'   => __( '$120', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-money',
 				'required'      => true,
@@ -52,7 +52,8 @@ $title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-acco
 			echo eaccounting_input_field( array(
 				'label'         => __( 'Purchase Price', 'wp-ever-accounting' ),
 				'name'          => 'purchase_price',
-				'value'         => isset( $product->purchase_price ) ? $product->purchase_price : '',
+				'class'          => 'ea-price',
+				'value'         => isset( $product->purchase_price ) ? eaccounting_price($product->purchase_price) : '',
 				'placeholder'   => __( '$100', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-money',
 				'required'      => true,
@@ -62,7 +63,7 @@ $title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-acco
 			echo eaccounting_input_field( array(
 				'label'         => __( 'Quantity', 'wp-ever-accounting' ),
 				'name'          => 'quantity',
-				'value'         => isset( $product->quantity ) ? $product->quantity : '',
+				'value'         => isset( $product->quantity ) ? $product->quantity : '0',
 				'placeholder'   => __( '100', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-cubes',
 				'required'      => true,
@@ -79,11 +80,12 @@ $title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-acco
 				'wrapper_class' => 'ea-col-6',
 				'value'         => isset( $product->tax_id ) ? $product->tax_id : '',
 			) );
+
 			echo eaccounting_switch_field( array(
 				'label'         => __( 'Status', 'wp-ever-accounting' ),
 				'name'          => 'status',
-				'check'         => '1',
-				'value'         => isset( $product->status ) ? $product->status : '0',
+				'check'         => 'active',
+				'value'         => isset( $product->status ) ? $product->status : 'active',
 				'wrapper_class' => 'ea-col-6',
 			) );
 
@@ -102,9 +104,9 @@ $title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-acco
 		<?php do_action( 'eaccounting_add_product_form_bottom' ); ?>
 		<p>
 			<input type="hidden" name="id" value="<?php echo $product_id;?>">
-			<input type="hidden" name="action" value="eaccounting_add_product"/>
-			<?php wp_nonce_field( 'eaccounting_product_nonce', 'nonce' ); ?>
-			<input class="button button-primary" type="submit" value="<?php _e( 'Submit', 'wp-ever-accounting' ); ?>">
+			<input type="hidden" name="action" value="eaccounting_edit_product">
+			<?php wp_nonce_field( 'eaccounting_product_nonce' ); ?>
+			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-ever-accounting' ); ?>">
 		</p>
 
 	</form>

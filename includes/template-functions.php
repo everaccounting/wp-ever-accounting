@@ -9,7 +9,8 @@ defined( 'ABSPATH' ) || exit();
  * @param string $class
  */
 function eaccounting_page_wrapper_open( $class = ' ' ) {
-	$classes = 'wrap ea-main-wrapper ' . sanitize_html_class( $class );
+	$classes = 'ea-main-wrapper ' . sanitize_html_class( $class );
+	echo '<div class="wrap">';
 	echo '<div class="' . $classes . '">';
 	do_action( 'eaccounting_page_top' );
 	echo '<div class="ea-page-wrapper">';
@@ -22,12 +23,13 @@ function eaccounting_page_wrapper_open( $class = ' ' ) {
  */
 function eaccounting_page_wrapper_close() {
 	echo '<div><!--.ea-page-wrapper-->';
-	echo '<div><!--.ea-wrapper-->';
+	echo '<div><!--.ea-main-wrapper-->';
+	echo '<div><!--.wrap-->';
 }
 
 function eaccounting_add_page_header() {
 	ob_start();
-	include ever_accounting()->plugin_path() . '/templates/header.php';
+	include eaccounting()->plugin_path() . '/templates/header.php';
 	$html = ob_get_contents();
 	ob_get_clean();
 	echo $html;
@@ -162,7 +164,7 @@ function eaccounting_input_field( $args, $type = 'text' ) {
 	$args                     = wp_parse_args( $args, $defaults );
 	$name                     = sanitize_key( ! empty( $args['name'] ) ? $args['name'] : '' );
 	$id                       = sanitize_key( ! empty( $args['id'] ) ? $args['id'] : $name );
-	$value                    = ! empty( $args['value'] ) ? $args['value'] : $args['default'];
+	$value                    = isset( $args['value'] ) ? $args['value'] : $args['default'];
 	$class                    = isset( $args['class'] ) && ! empty( $args['class'] ) ? sanitize_html_class( $args['class'] ) : '';
 	$size                     = ! empty( $args['size'] ) ? $args['size'] : 'regular';
 	$data_attr                = $args['data'];
@@ -387,7 +389,7 @@ function eaccounting_categories_dropdown( $args = array(), $type = 'product' ) {
 function eaccounting_taxes_dropdown( $args = array(), $type = 'product' ) {
 	$args  = wp_parse_args( $args, array(
 		'label'    => __( 'Product Tax', 'wp-ever-accounting' ),
-		'name'     => 'tax',
+		'name'     => 'tax_id',
 		'class'    => '',
 		'icon'    => 'fa fa-percent',
 		'selected' => '',
