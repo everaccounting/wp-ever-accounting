@@ -32,23 +32,18 @@ function eaccounting_insert_account( $args ) {
 		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
-		'currency_code'   => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
 		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : (double) eaccounting_sanitize_amount($args['opening_balance']),
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
 		'status'          => ! empty( $args['status'] ) ? '1' : '0',
-		'updated_at'      => empty( $args['updated_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['updated_at'],
+		'updated_at'      => date( 'Y-m-d H:i:s' ) ,
 		'created_at'      => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 
 	if ( empty( $data['name'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Name is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data['currency_code'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['opening_balance'] ) ) {
@@ -76,6 +71,7 @@ function eaccounting_insert_account( $args ) {
 
 	return $id;
 }
+
 
 /**
  * Get account
@@ -256,10 +252,10 @@ function eaccounting_deactivate_account( $data ) {
 		] );
 	}
 
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-banking&tab=accounts' ) );
 }
 
-add_action( 'eaccounting_deactivate_account', 'eaccounting_deactivate_account' );
+add_action( 'eaccounting_action_deactivate_account', 'eaccounting_deactivate_account' );
 
 
 function eaccounting_activate_account( $data ) {
@@ -279,10 +275,10 @@ function eaccounting_activate_account( $data ) {
 		] );
 	}
 
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-banking&tab=accounts' ) );
 }
 
-add_action( 'eaccounting_activate_account', 'eaccounting_activate_account' );
+add_action( 'eaccounting_action_activate_account', 'eaccounting_activate_account' );
 
 function eaccounting_delete_account_handler( $data ) {
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_accounts_nonce' ) ) {
@@ -297,7 +293,7 @@ function eaccounting_delete_account_handler( $data ) {
 		eaccounting_delete_account( $account_id );
 	}
 
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-banking&tab=accounts' ) );
 }
 
 add_action( 'eaccounting_action_delete_account', 'eaccounting_delete_account_handler' );

@@ -19,7 +19,6 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 			$created = eaccounting_insert_account( array(
 				'name'            => $faker->name,
 				'number'          => $faker->numberBetween( 1, 10 ),
-				'currency_code'   => $faker->currencyCode,
 				'opening_balance' => $faker->randomNumber(),
 				'bank_name'       => $faker->name,
 				'bank_phone'      => $faker->phoneNumber,
@@ -83,7 +82,36 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 		for ( $i = 1; $i <= $amount; $i ++ ) {
 			$created = eaccounting_insert_category( array(
 				'name'       => $faker->name,
-				'type'       => $faker->randomElement(array_keys(eaccounting_get_category_types())),
+				'type'       => $faker->randomElement( array_keys( eaccounting_get_category_types() ) ),
+				'color'      => $faker->hexColor,
+				'status'     => $faker->numberBetween( 0, 1 ),
+				'updated_at' => $faker->date(),
+				'created_at' => $faker->date(),
+			) );
+
+			if ( is_wp_error( $created ) ) {
+				global $wpdb;
+				\WP_CLI::error( $created->get_error_message() );
+			}
+
+			if ( ! is_wp_error( $created ) && $created ) {
+				$generated ++;
+			}
+		}
+
+
+		WP_CLI::success( sprintf( "Total generated : %d", $generated ) );
+	}
+
+	public static function make_products( $args ) {
+		list( $amount ) = $args;
+		$progress  = \WP_CLI\Utils\make_progress_bar( 'Generating products', $amount );
+		$faker     = \Faker\Factory::create( 'en_US' );
+		$generated = 0;
+		for ( $i = 1; $i <= $amount; $i ++ ) {
+			$created = eaccounting_insert_product( array(
+				'name'       => $faker->name,
+				'type'       => $faker->randomElement( array_keys( eaccounting_get_category_types() ) ),
 				'color'      => $faker->hexColor,
 				'status'     => $faker->numberBetween( 0, 1 ),
 				'updated_at' => $faker->date(),

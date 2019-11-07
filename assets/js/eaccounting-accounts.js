@@ -17,10 +17,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
 				type: 'POST',
 				data: formData,
 				success: function(response) {
-					console.log(response);
+					$.notify(response.data.message, 'success');
+					eAccountingAccounts.redirect(response);
 				},
 				error: function(response) {
-					console.log(response);
+					$.notify(response.data.message, 'error');
 				},
 				complete: function() {
 					eAccountingAccounts.enableForm();
@@ -34,6 +35,11 @@ document.addEventListener('DOMContentLoaded', function(event) {
 		},
 		enableForm:function(){
 			this.form.find('input[type="submit"]').removeAttr("disabled");
+		},
+		redirect:function(response){
+			if(response.data && response.data.redirect){
+				window.location.replace(response.data.redirect);
+			}
 		},
 		init:function () {
 			this.bindSubmit();

@@ -33,7 +33,6 @@ class EAccounting_Install {
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
 		    `name` varchar(191) NOT NULL COMMENT 'Account Name',
 		    `number` varchar(191) NOT NULL COMMENT 'Account Number',
-		    `currency_code` varchar(10) NOT NULL,
 		    `opening_balance` double(15,4) NOT NULL DEFAULT '0.0000',
 		    `bank_name` varchar(191) DEFAULT NULL,
 		    `bank_phone` varchar(20) DEFAULT NULL,

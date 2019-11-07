@@ -25,6 +25,7 @@ class EAccounting_Admin {
 	 */
 	public function includes() {
 
+		require_once dirname( __FILE__ ) . '/class-ea-ajax-product.php';
 		require_once dirname( __FILE__ ) . '/class-ea-ajax-account.php';
 		require_once dirname( __FILE__ ) . '/class-ea-ajax-tax.php';
 
@@ -34,9 +35,20 @@ class EAccounting_Admin {
 		require_once dirname( __FILE__ ) . '/settings/class-ea-general-settings.php';
 		require_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
 
-		require_once dirname( __FILE__ ) . '/accounts/account-page.php';
-		require_once dirname( __FILE__ ) . '/taxes/tax-page.php';
-		require_once dirname( __FILE__ ) . '/products/product-page.php';
+		//pages
+		require_once dirname( __FILE__ ) . '/expense/expense-page.php';
+		require_once dirname( __FILE__ ) . '/income/income-page.php';
+		require_once dirname( __FILE__ ) . '/banking/banking-page.php';
+		require_once dirname( __FILE__ ) . '/contacts/contacts-page.php';
+		require_once dirname( __FILE__ ) . '/tools/tools-page.php';
+
+		//banking tabs
+		require_once dirname( __FILE__ ) . '/banking/accounts/accounts-tab.php';
+
+//		require_once dirname( __FILE__ ) . '/expense/expense-page.php';
+//		require_once dirname( __FILE__ ) . '/accounts/account-page.php';
+//		require_once dirname( __FILE__ ) . '/taxes/tax-page.php';
+		require_once dirname( __FILE__ ) . '/products/products-page.php';
 	}
 
 	public function enqueue_scripts() {
@@ -44,10 +56,13 @@ class EAccounting_Admin {
 		wp_enqueue_style( 'eaccounting-select2', ever_accounting()->plugin_url() . '/assets/vendor/select2/select2.css', time() );
 		wp_enqueue_style( 'eaccounting-fontawesome', ever_accounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css', time() );
 
-		wp_register_script( 'eaccounting-accounts', ever_accounting()->plugin_url() . '/assets/js/eaccounting-accounts.js', array( 'jquery' ), time(), true );
 		wp_register_script( 'eaccounting-select2', ever_accounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );
+		wp_register_script( 'eaccounting-mask-money', ever_accounting()->plugin_url() . '/assets/vendor/mask-money/mask-money.js', array( 'jquery' ), time(), true );
+		wp_register_script( 'eaccounting-notify', ever_accounting()->plugin_url() . '/assets/vendor/notify/notify.js', array( 'jquery' ), time(), true );
+		wp_register_script( 'eaccounting-products', ever_accounting()->plugin_url() . '/assets/js/eaccounting-products.js', array( 'jquery', 'wp-util' ), time(), true );
+		wp_register_script( 'eaccounting-accounts', ever_accounting()->plugin_url() . '/assets/js/eaccounting-accounts.js', array( 'jquery', 'eaccounting-notify' ), time(), true );
 		wp_register_script( 'eaccounting-taxes', ever_accounting()->plugin_url() . '/assets/js/eaccounting-taxes.js', array( 'jquery' ), time(), true );
-		wp_register_script( 'eaccounting-form', ever_accounting()->plugin_url() . '/assets/js/eaccounting-form.js', array( 'jquery', 'eaccounting-select2' ), time(), true );
+		wp_register_script( 'eaccounting-form', ever_accounting()->plugin_url() . '/assets/js/eaccounting-form.js', array( 'jquery', 'eaccounting-select2', 'eaccounting-mask-money' ), time(), true );
 
 		wp_enqueue_script('eaccounting-form');
 	}

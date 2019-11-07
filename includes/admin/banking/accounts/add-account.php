@@ -1,10 +1,12 @@
 <?php
 defined( 'ABSPATH' ) || exit();
+$accounts_url = admin_url('admin.php?page=eaccounting-banking&tab=accounts');
 ?>
 
-<h1><?php _e( 'New Account', 'wp-ever-accounting' ); ?><a
-		href="<?php echo esc_url( admin_url( 'admin.php?page=eaccounting-accounts' ) ); ?>"
-		class="add-new-h2"><?php _e( 'All Accounts', 'wp-ever-accounting' ); ?></a></h1>
+<h1 class="wp-heading-inline"><?php _e( 'New Account', 'wp-ever-accounting' ); ?></h1>
+<a href="<?php echo esc_url( $accounts_url ); ?>" class="page-title-action"><?php _e( 'All Accounts', 'wp-ever-accounting' ); ?></a>
+<hr class="wp-header-end">
+
 <div class="ea-card">
 	<form id="ea-add-account" action="" method="post">
 		<?php do_action( 'eaccounting_add_account_form_top' ); ?>
@@ -29,18 +31,8 @@ defined( 'ABSPATH' ) || exit();
 			) );
 
 			echo eaccounting_input_field( array(
-				'label'         => __( 'Currency', 'wp-ever-accounting' ),
-				'name'          => 'currency_code',
-				'placeholder'   => __( 'Currency Code', 'wp-ever-accounting' ),
-				'icon'          => 'fa fa-exchange',
-				'required'      => true,
-				'wrapper_class' => 'ea-col-6',
-			) );
-
-			echo eaccounting_input_field( array(
 				'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
 				'name'          => 'opening_balance',
-				//'placeholder'   => __( 'Currency Code', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-money',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
@@ -60,24 +52,18 @@ defined( 'ABSPATH' ) || exit();
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo eaccounting_textarea_field( array(
-				'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
-				'name'          => 'bank_address',
-				'wrapper_class' => 'ea-col-12',
-			) );
-
-			echo eaccounting_switch_field( array(
-				'label'         => __( 'Default Account', 'wp-ever-accounting' ),
-				'name'          => 'default_account',
-				'wrapper_class' => 'ea-col-6',
-			) );
-
 			echo eaccounting_switch_field( array(
 				'label'         => __( 'Status', 'wp-ever-accounting' ),
 				'name'          => 'status',
 				'check'          => '1',
 				'value'          => '1',
 				'wrapper_class' => 'ea-col-6',
+			) );
+
+			echo eaccounting_textarea_field( array(
+				'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
+				'name'          => 'bank_address',
+				'wrapper_class' => 'ea-col-12',
 			) );
 
 			?>

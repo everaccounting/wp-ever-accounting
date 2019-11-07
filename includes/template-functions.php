@@ -58,6 +58,7 @@ function eaccounting_select_field( $args ) {
 		'placeholder'   => __( '-- Please Select --', 'wp-ever-accounting' ),
 		'multiple'      => false,
 		'data'          => array(),
+		'required'      => false,
 		'readonly'      => false,
 		'disabled'      => false,
 	);
@@ -105,7 +106,7 @@ function eaccounting_select_field( $args ) {
 	if ( $icon ) {
 		$html .= sprintf( '<div class="ea-input-group-addon">%s</div>', $icon );
 	}
-
+	$class           = implode( ' ', array_map( 'trim', explode( ' ', $class ) ) );
 	$html            .= sprintf( '<select class=" ea-form-control %1$s" name="%2$s" id="%3$s" %4$s>', $class, $name, $id, $attributes );
 	$args['options'] = array_merge( array( '' => $args['placeholder'] ), $args['options'] );
 	foreach ( $args['options'] as $key => $label ) {
@@ -352,6 +353,63 @@ function eaccounting_make_field_attributes( $data ) {
 	}
 
 	return $data_elements;
+}
+
+
+function eaccounting_categories_dropdown( $args = array(), $type = 'product' ) {
+	$args       = wp_parse_args( $args, array(
+		'label'    => __( 'Product Category', 'wp-ever-accounting' ),
+		'name'     => 'category',
+		'icon'    => 'fa fa-folder-open-o',
+		'class'    => '',
+		'selected' => '',
+		'select2'  => true,
+	) );
+	$categories = eaccounting_get_categories( array(
+		'per_page' => '-1',
+		'fields'   => array( 'id', 'name' ),
+		'status'   => '1',
+		'type'     => $type
+	) );
+
+	$categories      = wp_list_pluck( $categories, 'name', 'id' );
+	$args['options'] = $categories;
+	$args['class']   .= 'ea-category-dropdown';
+	$args['data']    = array(
+		'type'   => $type,
+		'nonce'  => wp_create_nonce( 'eaccounting_search_categories' ),
+		'action' => 'eaccounting_search_categories_dropdown',
+	);
+
+	return eaccounting_select_field( $args );
+}
+
+function eaccounting_taxes_dropdown( $args = array(), $type = 'product' ) {
+	$args  = wp_parse_args( $args, array(
+		'label'    => __( 'Product Tax', 'wp-ever-accounting' ),
+		'name'     => 'tax',
+		'class'    => '',
+		'icon'    => 'fa fa-percent',
+		'selected' => '',
+		'select2'  => true,
+	) );
+	$taxes = eaccounting_get_taxes( array(
+		'per_page' => '-1',
+		'fields'   => array( 'id', 'name' ),
+		'status'   => '1',
+		'type'     => $type
+	) );
+
+	$taxes           = wp_list_pluck( $taxes, 'name', 'id' );
+	$args['options'] = $taxes;
+	$args['class']   .= 'ea-taxes-dropdown';
+	$args['data']    = array(
+		'type'   => $type,
+		'nonce'  => wp_create_nonce( 'eaccounting_search_taxes' ),
+		'action' => 'eaccounting_search_taxes_dropdown',
+	);
+
+	return eaccounting_select_field( $args );
 }
 
 

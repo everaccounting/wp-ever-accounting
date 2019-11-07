@@ -41,6 +41,11 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	public $inactive_count;
 
 	/**
+	 * @var string $base_url
+	 */
+	public $base_url;
+
+	/**
 	 * Get things started
 	 *
 	 * @since 1.0.0
@@ -49,12 +54,12 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	 */
 	public function __construct() {
 		global $status, $page;
-
 		parent::__construct( array(
 			'singular' => 'account',
 			'plural'   => 'accounts',
 			'ajax'     => false,
 		) );
+		$this->base_url = admin_url('admin.php?page=eaccounting-banking&tab=accounts');
 	}
 
 	/**
@@ -97,17 +102,15 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	public function get_views() {
-		$base = admin_url( 'admin.php?page=eaccounting-accounts' );
-
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $this->base_url ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $this->base_url ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $this->base_url ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -202,28 +205,28 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_name( $item ) {
-		$base = admin_url('admin.php?page=eaccounting-accounts');
+
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
 				'eaccounting_action' => 'edit_account',
 				'account'            => $item->id
-			), $base) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
+			), $this->base_url) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 
 		if ( strtolower( $item->status ) == '1' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'eaccounting_action' => 'deactivate_account',
 					'account'           => $item->id
-				), $base ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
+				), $this->base_url ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
 		} elseif ( strtolower( $item->status ) == '0' ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 					'eaccounting_action' => 'activate_account',
 					'account'           => $item->id
-				), $base ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Activate', 'wp-ever-accounting' ) . '</a>';
+				), $this->base_url ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Activate', 'wp-ever-accounting' ) . '</a>';
 		}
 
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 				'eaccounting_action' => 'delete_account',
 				'account'   => $item->id
-			), $base ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
+			), $this->base_url ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
 		$row_actions = apply_filters( 'eaccounting_row_actions', $row_actions, $item );
 
