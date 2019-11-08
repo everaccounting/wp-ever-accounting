@@ -17,7 +17,7 @@ function eaccounting_banking_page() {
 		'reconciliations'   => __( 'Reconciliations', 'wp-ever-accounting' ),
 	) );
 
-	echo '<hr class="wp-header-end">';
+	//echo '<hr class="wp-header-end">';
 	echo '<h2 class="nav-tab-wrapper ea-tab-wrapper">';
 
 	foreach ( $banking_tabs as $tab_id => $label ) {

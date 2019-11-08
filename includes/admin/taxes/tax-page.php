@@ -10,11 +10,11 @@ function eaccount_taxes_page() {
 	wp_enqueue_script('eaccounting-taxes');
 	eaccounting_page_wrapper_open('taxes-page');
 	if ( isset( $_GET['eaccounting_action'] ) && $_GET['eaccounting_action'] == 'edit_tax' ) {
-		require_once EVER_ACCOUNTING_ABSPATH . '/includes/admin/taxes/edit-taxes.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/taxes/edit-taxes.php';
 	} elseif ( isset( $_GET['eaccounting_action'] ) && $_GET['eaccounting_action'] == 'add_tax' ) {
-		require_once EVER_ACCOUNTING_ABSPATH . '/includes/admin/taxes/add-tax.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/taxes/add-tax.php';
 	} else {
-		require_once EVER_ACCOUNTING_ABSPATH . '/includes/admin/taxes/class-taxes-table.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/taxes/class-taxes-table.php';
 		$taxes_table = new EAccounting_Taxes_Table();
 		$taxes_table->prepare_items();
 		?>

@@ -2,15 +2,11 @@
 defined( 'ABSPATH' ) || exit();
 
 class EAccounting_Notices {
+
 	/**
 	 * @var array
 	 */
 	protected $notices = array();
-
-	/**
-	 * @var string
-	 */
-	protected $notice_key;
 
 	/**
 	 * The single instance of the class.
@@ -29,9 +25,9 @@ class EAccounting_Notices {
 	 * @since 1.0.0
 	 * @static
 	 */
-	public static function instance($notice_key) {
+	public static function instance() {
 		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self($notice_key);
+			self::$_instance = new self();
 		}
 
 		return self::$_instance;
@@ -40,12 +36,39 @@ class EAccounting_Notices {
 
 	/**
 	 * EAccounting_Notice constructor.
-	 *
-	 * @param string $notice_key
 	 */
-	public function __construct( $notice_key ) {
-		$this->notice_key = $notice_key;
-		add_action( 'shutdown', array( $this, 'save_notices' ) );
+	public function __construct() {
+		add_action( 'admin_notices', array( $this, 'print_admin_notices' ), 99 );
+	}
+
+	/**
+	 * Show success message
+	 *
+	 * @since 1.0.0
+	 * @param $message
+	 */
+	public function success($message){
+		$this->add($message, 'warning');
+	}
+
+	/**
+	 * Show info message
+	 *
+	 * @since 1.0.0
+	 * @param $message
+	 */
+	public function info($message){
+		$this->add($message, 'info');
+	}
+
+	/**
+	 * show error message
+	 *
+	 * @since 1.0.0
+	 * @param $message
+	 */
+	public function error($message){
+		$this->add($message, 'error');
 	}
 
 
@@ -76,49 +99,20 @@ class EAccounting_Notices {
 	 * since 1.0.0
 	 * @return string
 	 */
-	public function show(){
-		$notices = $this->get_notices();
+	public function print_admin_notices(){
+
 		$html = '';
-		if(!empty($notices) && is_array($notices)){
-			foreach ($notices as $notice){
+		if(!empty($this->notices) && is_array($this->notices)){
+			foreach ($this->notices as $notice){
 				$notice = wp_parse_args($notice, array(
 					'message' => '',
 					'type' => 'success',
 				));
+
 				$html .= sprintf('<div class="notice notice-%s"><p>%s</p></div>',$notice['type'], $notice['message'] );
 			}
 		}
 
-		$this->clear();
-
-		return $html;
+		echo $html;
 	}
-
-	/**
-	 * since 1.0.0
-	 */
-	public function save_notices() {
-		if ( ! empty( $this->notices ) && is_array( $this->notices ) ) {
-			update_option( $this->notice_key, serialize( $this->notices ) );
-		}
-	}
-
-	/**
-	 * Get notices
-	 * since 1.0.0
-	 * @return array
-	 */
-	protected function get_notices() {
-		return maybe_unserialize( get_option( $this->notice_key, array() ) );
-	}
-
-	/**
-	 * Clear
-	 * since 1.0.0
-	 */
-	protected function clear(){
-		update_option( $this->notice_key, serialize( $this->notices ) );
-	}
-
-
 }

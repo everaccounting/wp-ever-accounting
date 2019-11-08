@@ -3,9 +3,9 @@ defined( 'ABSPATH' ) || exit();
 $base_url   = admin_url( 'admin.php?page=eaccounting-contacts' );
 $contact_id = empty( $_GET['contact'] ) ? false : absint( $_GET['contact'] );
 $contact    = new StdClass();
-//if ( $contact_id ) {
-//	$contact = eaccounting_get_contact( $contact_id );
-//}
+if ( $contact_id ) {
+	$contact = eaccounting_get_contact( $contact_id );
+}
 $title = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-ever-accounting' );
 ?>
 
@@ -19,6 +19,7 @@ $title = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-ever-acco
 		<?php do_action( 'eaccounting_add_contact_form_top' ); ?>
 		<div class="ea-row">
 			<?php
+			var_dump($_POST);
 			echo eaccounting_input_field( array(
 				'label'         => __( 'First Name', 'wp-ever-accounting' ),
 				'name'          => 'first_name',

@@ -1,8 +1,8 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( 'Faker\Factory' ) && file_exists( EVER_ACCOUNTING_ABSPATH . '/vendor/autoload.php' ) ) {
-	require_once( EVER_ACCOUNTING_ABSPATH . '/vendor/autoload.php' );
+if ( ! class_exists( 'Faker\Factory' ) && file_exists( EACCOUNTING_ABSPATH . '/vendor/autoload.php' ) ) {
+	require_once( EACCOUNTING_ABSPATH . '/vendor/autoload.php' );
 }
 
 class_exists( 'Faker\Factory' ) || exit();

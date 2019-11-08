@@ -97,15 +97,15 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function define_constants() {
-		define( 'EVER_ACCOUNTING_VERSION', $this->version );
-		define( 'EVER_ACCOUNTING_DB_VERSION', '20181123' );
-		define( 'EVER_ACCOUNTING_PLUGIN_FILE', __FILE__ );
-		define( 'EVER_ACCOUNTING_ABSPATH', dirname( EVER_ACCOUNTING_PLUGIN_FILE ) );
-		define( 'EVER_ACCOUNTING_URL', plugins_url( '', EVER_ACCOUNTING_PLUGIN_FILE ) );
-		define( 'EVER_ACCOUNTING_ASSETS_URL', EVER_ACCOUNTING_URL . '/assets' );
-		define( 'EVER_ACCOUNTING_TEMPLATES_DIR', EVER_ACCOUNTING_ABSPATH . '/templates' );
-		define( 'EVER_ACCOUNTING_CACHE_KEY', 'eacc' );
-		define( 'EVER_ACCOUNTING_DB_PREFIX', 'eacc_' );
+		define( 'EACCOUNTING_VERSION', $this->version );
+		define( 'EACCOUNTING_DB_VERSION', '20181123' );
+		define( 'EACCOUNTING_PLUGIN_FILE', __FILE__ );
+		define( 'EACCOUNTING_ABSPATH', dirname( EACCOUNTING_PLUGIN_FILE ) );
+		define( 'EACCOUNTING_URL', plugins_url( '', EACCOUNTING_PLUGIN_FILE ) );
+		define( 'EACCOUNTING_ASSETS_URL', EACCOUNTING_URL . '/assets' );
+		define( 'EACCOUNTING_TEMPLATES_DIR', EACCOUNTING_ABSPATH . '/templates' );
+		define( 'EACCOUNTING_CACHE_KEY', 'eacc' );
+		define( 'EACCOUNTING_DB_PREFIX', 'eacc_' );
 	}
 
 	/**
@@ -133,24 +133,24 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-notices.php' );
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/account-functions.php' );
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/product-functions.php' );
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/category-functions.php' );
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/template-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-notices.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/product-functions.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/category-functions.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/template-functions.php' );
 
-        require_once( EVER_ACCOUNTING_ABSPATH . '/includes/abstracts/class-ea-ajax.php' );
+        require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/class-ea-ajax.php' );
 
         if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once( EVER_ACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
+			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 		}
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			require_once( EVER_ACCOUNTING_ABSPATH . '/includes/class-ea-cli.php' );
+			require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-cli.php' );
 		}
 	}
 
@@ -160,7 +160,7 @@ final class EverAccounting {
 	 * @since 1.0.0
 	 */
 	private function init_hooks() {
-		register_activation_hook( EVER_ACCOUNTING_PLUGIN_FILE, array( 'EAccounting_Install', 'install' ) );
+		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting_Install', 'install' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
 		add_action( 'init', array( $this, 'init' ), 0 );
@@ -190,7 +190,7 @@ final class EverAccounting {
 		do_action( 'before_eaccounting_init' );
 
 		//setup our caching
-		$this->notices = EAccounting_Notices::instance('eaccounting_notices');
+		$this->notices = EAccounting_Notices::instance();
 
 		// Init action.
 		do_action( 'eaccounting_init' );
@@ -257,7 +257,7 @@ final class EverAccounting {
 	 * @return string
 	 */
 	public function plugin_url() {
-		return untrailingslashit( plugins_url( '/', EVER_ACCOUNTING_PLUGIN_FILE ) );
+		return untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
 	}
 
 	/**
@@ -266,7 +266,7 @@ final class EverAccounting {
 	 * @return string
 	 */
 	public function plugin_path() {
-		return untrailingslashit( plugin_dir_path( EVER_ACCOUNTING_PLUGIN_FILE ) );
+		return untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 	}
 
 	/**

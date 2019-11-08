@@ -32,7 +32,7 @@ function eaccounting_insert_account( $args ) {
 		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
-		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : (double) eaccounting_sanitize_amount($args['opening_balance']),
+		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : (double) eaccounting_sanitize_price($args['opening_balance']),
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),

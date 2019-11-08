@@ -207,24 +207,24 @@ class EAccounting_Accounts_Table extends WP_List_Table {
 	function column_name( $item ) {
 
 		$row_actions['edit'] = '<a href="' . add_query_arg( array(
-				'eaccounting_action' => 'edit_account',
+				'eaccounting-action' => 'edit_account',
 				'account'            => $item->id
 			), $this->base_url) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 
 		if ( strtolower( $item->status ) == '1' ) {
 			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting_action' => 'deactivate_account',
+					'eaccounting-action' => 'deactivate_account',
 					'account'           => $item->id
 				), $this->base_url ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
 		} elseif ( strtolower( $item->status ) == '0' ) {
 			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-					'eaccounting_action' => 'activate_account',
+					'eaccounting-action' => 'activate_account',
 					'account'           => $item->id
 				), $this->base_url ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Activate', 'wp-ever-accounting' ) . '</a>';
 		}
 
 		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-				'eaccounting_action' => 'delete_account',
+				'eaccounting-action' => 'delete_account',
 				'account'   => $item->id
 			), $this->base_url ), 'eaccounting_accounts_nonce' ) ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 

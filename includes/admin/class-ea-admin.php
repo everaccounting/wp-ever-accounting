@@ -27,6 +27,7 @@ class EAccounting_Admin {
 	 * since 1.0.0
 	 */
 	public function set_eaccounting_actions() {
+
 		$key = ! empty( $_GET['eaccounting-action'] ) ? sanitize_key( $_GET['eaccounting-action'] ) : false;
 
 		if ( !empty($key)) {
@@ -38,6 +39,7 @@ class EAccounting_Admin {
 		if ( !empty($key) ) {
 			do_action( 'eaccounting_admin_post_' . $key, $_POST );
 		}
+
 	}
 
 	/**
@@ -67,6 +69,7 @@ class EAccounting_Admin {
 		require_once dirname( __FILE__ ) . '/tools/tools-page.php';
 
 		//banking tabs
+		require_once dirname( __FILE__ ) . '/banking/accounts/account-actions.php';
 		require_once dirname( __FILE__ ) . '/banking/accounts/accounts-tab.php';
 
 //		require_once dirname( __FILE__ ) . '/expense/expense-page.php';
