@@ -17,7 +17,7 @@ function eaccounting_insert_product( $args ) {
 	$args   = (array) apply_filters( 'eaccounting_create_product', $args );
 
 	if ( isset( $args['id'] ) && ! empty( trim( $args['id'] ) ) ) {
-		$id          = absint($args['id']);
+		$id          = absint( $args['id'] );
 		$update      = true;
 		$item_before = (array) eaccounting_get_product( $id );
 		if ( is_null( $item_before ) ) {
@@ -31,31 +31,30 @@ function eaccounting_insert_product( $args ) {
 		'id'             => $id,
 		'name'           => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'sku'            => ! isset( $args['sku'] ) ? '' : sanitize_text_field( $args['sku'] ),
-		'description'    => ! isset( $args['description'] ) ? '' : sanitize_text_field( $args['description'] ),
+		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'sale_price'     => ! isset( $args['sale_price'] ) ? '' : (double) $args['sale_price'],
 		'purchase_price' => ! isset( $args['purchase_price'] ) ? '0.00' : (double) $args['purchase_price'],
 		'quantity'       => ! isset( $args['quantity'] ) ? '0' : intval( $args['quantity'] ),
 		'category_id'    => ! isset( $args['category_id'] ) ? '' : intval( $args['category_id'] ),
-		'tax_id'         => ! isset( $args['tax_id'] ) ? '' : intval( $args['tax_id'] ),
-		'status'         => sanitize_key($args['status']),
+		'status'         => eaccounting_sanitize_status( $args['status'] ),
 		'updated_at'     => date( 'Y-m-d H:i:s' ),
 		'created_at'     => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 
 	if ( empty( $data['name'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Empty name is not permitted', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Product name is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['sale_price'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Sale Price is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( !isset( $data['quantity'] ) ) {
+	if ( ! isset( $data['quantity'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Quantity is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( !empty($data['sku']) && ! eaccounting_is_sku_available( $data['sku'], $id ) ) {
+	if ( ! empty( $data['sku'] ) && ! eaccounting_is_sku_available( $data['sku'], $id ) ) {
 		return new WP_Error( 'invalid_content', __( 'SKU is taken by other product', 'wp-ever-accounting' ) );
 	}
 
@@ -83,13 +82,13 @@ function eaccounting_insert_product( $args ) {
 /**
  * get products by sku
  *
- * @since 1.0.0
  * @param $sku
  *
  * @return array|object|string|null
+ * @since 1.0.0
  */
 function eaccounting_get_products_by_sku( $sku ) {
-	return eaccounting_get_products(array('sku' => $sku, 'fields' => 'id'));
+	return eaccounting_get_products( array( 'sku' => $sku, 'fields' => 'id' ) );
 }
 
 
@@ -101,7 +100,7 @@ function eaccounting_get_products_by_sku( $sku ) {
  * @return object|null
  * @since 1.0.0
  */
-function eaccounting_get_product( $id ) {
+function eaccounting_get_product( $id, $return = OBJECT ) {
 	global $wpdb;
 
 	return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->ea_products} where id=%s", $id ) );
@@ -149,6 +148,15 @@ function eaccounting_delete_product( $id ) {
 	return true;
 }
 
+/**
+ * Get products
+ *
+ * since 1.0.0
+ * @param array $args
+ * @param bool $count
+ *
+ * @return array|object|string|null
+ */
 function eaccounting_get_products( $args = array(), $count = false ) {
 	global $wpdb;
 	$query_fields  = '';

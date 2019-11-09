@@ -1,27 +1,35 @@
-.ea-item-status{
-	background: #2ecc71;
-	border: 1px solid #27ae60;
-	width: 50px;
-	display: inline-block;
-	text-align: center;
-	padding: 3px 20px;
-	color: #ffff;
-	text-transform: capitalize;
-	line-height: 1;
-	&.inactive{
-		background: #95a5a6;
-		border: 1px solid #7f8c8d;
+
+
+.ea-list-table{
+	.column-quantity{
+
 	}
-}
 
-.ea-page-wrapper{
-	.wp-list-table{
-		.column-quantity{
+	.column-name{
+		width: 25%;
+	}
 
-		}
+	//.column-status{
+	//	width: 130px;
+	//}
+	//
+	//.column-color{
+	//	width: 130px;
+	//}
 
-		.column-name{
-			width: 25%;
+	.ea-item-status{
+		background: #2ecc71;
+		border: 1px solid #27ae60;
+		width: 50px;
+		display: inline-block;
+		text-align: center;
+		padding: 3px 20px;
+		color: #ffff;
+		text-transform: capitalize;
+		line-height: 1;
+		&.inactive{
+			background: #95a5a6;
+			border: 1px solid #7f8c8d;
 		}
 	}
 }

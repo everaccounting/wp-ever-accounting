@@ -17,7 +17,7 @@ function eaccounting_misc_page() {
 		'payment_methods'   => __( 'Payment Methods', 'wp-ever-accounting' ),
 	) );
 
-	echo '<h2 class="nav-tab-wrapper ea-tab-wrapper">';
+	echo '<h2 class="nav-tab-wrapper ea-tab-nav-wrapper">';
 
 	foreach ( $misc_tabs as $tab_id => $label ) {
 		$tab_url = add_query_arg( array(
@@ -29,7 +29,7 @@ function eaccounting_misc_page() {
 
 	echo '</h2>';
 
-	echo sprintf( '<div class="ea-misc-tab-section %s">', $active_tab );
+	echo sprintf( '<div class="ea-tab-section-wrapper ea-misc-tab-section %s">', $active_tab );
 	do_action( 'eaccounting_misc_tab_' . $active_tab );
 	echo '</div>';
 	eaccounting_page_wrapper_close();

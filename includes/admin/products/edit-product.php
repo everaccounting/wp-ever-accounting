@@ -6,109 +6,91 @@ $product    = new StdClass();
 if ( $product_id ) {
 	$product = eaccounting_get_product( $product_id );
 }
-$title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-ever-accounting' );
+$title = $product_id ? __( 'Update Product' ) : __( 'Add Product', 'wp-eaccounting' );
 ?>
-
 <?php echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title ); ?>
-<?php echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Products', 'wp-ever-accounting' ) ); ?>
-<hr class="wp-header-end">
-
+<?php echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Products', 'wp-eaccounting' ) ); ?>
 <div class="ea-card">
-	<form id="ea-product-form" class="eaccouting-ajax-form" action="" method="post">
-		<?php wp_enqueue_script( 'eaccounting-products' ); ?>
+	<form action="" method="post">
 		<?php do_action( 'eaccounting_add_product_form_top' ); ?>
+
 		<div class="ea-row">
 			<?php
-			echo eaccounting_input_field( array(
-				'label'         => __( 'Name', 'wp-ever-accounting' ),
+
+			echo EAccounting_Form::input_control( array(
+				'label'         => __( 'Name', 'wp-eaccounting' ),
 				'name'          => 'name',
-				'value'         => isset( $product->name ) ? $product->name : '',
-				'placeholder'   => __( 'Product Name', 'wp-ever-accounting' ),
+				'value'         => isset( $product->name ) ? $product->name : eaccounting_get_posted_value( 'name' ),
+				'placeholder'   => __( 'Product Name', 'wp-eaccounting' ),
 				'icon'          => 'fa fa-shopping-basket',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo eaccounting_input_field( array(
-				'label'         => __( 'SKU', 'wp-ever-accounting' ),
+			echo EAccounting_Form::input_control( array(
+				'label'         => __( 'SKU', 'wp-eaccounting' ),
 				'name'          => 'sku',
-				'value'         => isset( $product->sku ) ? $product->sku : '',
-				'placeholder'   => __( 'Product SKU', 'wp-ever-accounting' ),
+				'value'         => isset( $product->sku ) ? $product->sku : eaccounting_get_posted_value( 'sku' ),
 				'icon'          => 'fa fa-key',
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo eaccounting_input_field( array(
-				'label'         => __( 'Sale Price', 'wp-ever-accounting' ),
+			echo EAccounting_Form::price_control( array(
+				'label'         => __( 'Sale Price', 'wp-eaccounting' ),
 				'name'          => 'sale_price',
-				'class'          => 'ea-price',
-				'value'         => isset( $product->sale_price ) ? eaccounting_price($product->sale_price) : '',
-				'placeholder'   => __( '$120', 'wp-ever-accounting' ),
+				'value'         => isset( $product->sale_price ) ? eaccounting_price( $product->sale_price ) : eaccounting_get_posted_value( 'sale_price', 'eaccounting_sanitize_price' ),
 				'icon'          => 'fa fa-money',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo eaccounting_input_field( array(
-				'label'         => __( 'Purchase Price', 'wp-ever-accounting' ),
+			echo EAccounting_Form::price_control( array(
+				'label'         => __( 'Purchase Price', 'wp-eaccounting' ),
 				'name'          => 'purchase_price',
-				'class'          => 'ea-price',
-				'value'         => isset( $product->purchase_price ) ? eaccounting_price($product->purchase_price) : '',
-				'placeholder'   => __( '$100', 'wp-ever-accounting' ),
+				'value'         => isset( $product->purchase_price ) ? eaccounting_price( $product->purchase_price ) : eaccounting_get_posted_value( 'purchase_price', 'eaccounting_sanitize_price' ),
 				'icon'          => 'fa fa-money',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo eaccounting_input_field( array(
-				'label'         => __( 'Quantity', 'wp-ever-accounting' ),
+			echo EAccounting_Form::input_control( array(
+				'label'         => __( 'Quantity', 'wp-eaccounting' ),
 				'name'          => 'quantity',
-				'value'         => isset( $product->quantity ) ? $product->quantity : '0',
-				'placeholder'   => __( '100', 'wp-ever-accounting' ),
-				'icon'          => 'fa fa-cubes',
 				'required'      => true,
+				'value'         => isset( $product->quantity ) ? $product->quantity : eaccounting_get_posted_value( 'quantity', 'intval' ),
+				'icon'          => 'fa fa-cubes',
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo eaccounting_categories_dropdown( array(
+			echo EAccounting_Form::categories_dropdown( array(
 				'name'          => 'category_id',
-				'value'         => isset( $product->category_id ) ? $product->category_id : '',
+				'value'         => isset( $product->category_id ) ? $product->category_id : eaccounting_get_posted_value( 'category_id', 'intval' ),
 				'wrapper_class' => 'ea-col-6',
+				'icon'          => 'fa fa-folder-open-o',
 			) );
 
-			echo eaccounting_taxes_dropdown( array(
-				'wrapper_class' => 'ea-col-6',
-				'value'         => isset( $product->tax_id ) ? $product->tax_id : '',
-			) );
-
-			echo eaccounting_switch_field( array(
-				'label'         => __( 'Status', 'wp-ever-accounting' ),
-				'name'          => 'status',
-				'check'         => 'active',
-				'value'         => isset( $product->status ) ? $product->status : 'active',
-				'wrapper_class' => 'ea-col-6',
-			) );
-
-			echo eaccounting_textarea_field( array(
-				'label'         => __( 'Description', 'wp-ever-accounting' ),
+			echo EAccounting_Form::textarea_control( array(
+				'label'         => __( 'Description', 'wp-eaccounting' ),
 				'name'          => 'description',
-				'value'         => isset( $product->description ) ? $product->description : '',
+				'value'         => isset( $product->description ) ? $product->description : eaccounting_get_posted_value( 'description', 'sanitize_textarea_field' ),
 				'wrapper_class' => 'ea-col-12',
 			) );
 
+			echo EAccounting_Form::status_control( array(
+				'name'          => 'status',
+				'value'         => isset( $product->status ) ? $product->status : eaccounting_get_posted_value( 'status', 'eaccounting_sanitize_status' ),
+				'wrapper_class' => 'ea-col-6',
+			) );
 
 			?>
 		</div>
 
-
 		<?php do_action( 'eaccounting_add_product_form_bottom' ); ?>
 		<p>
-			<input type="hidden" name="id" value="<?php echo $product_id;?>">
+			<input type="hidden" name="id" value="<?php echo $product_id; ?>">
 			<input type="hidden" name="action" value="eaccounting_edit_product">
 			<?php wp_nonce_field( 'eaccounting_product_nonce' ); ?>
-			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-ever-accounting' ); ?>">
+			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-eaccounting' ); ?>">
 		</p>
-
 	</form>
 </div>
-

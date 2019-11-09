@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: WP Ever Accounting
+ * Plugin Name: WP eAccounting
  * Plugin URI: https://pluginever.com/plugins/wp-ever-crm
  * Description: Best WordPress CRM plugin
  * Version: 1.0.0
@@ -8,7 +8,7 @@
  * Author URI: https://pluginever.com/
  * Requires at least: 4.7.0
  * Tested up to: 5.1
- * Text Domain: wp-ever-accounting
+ * Text Domain: wp-eaccounting
  * Domain Path: /languages/
  * License: GPL2+
  *
@@ -17,9 +17,9 @@
 
 defined( 'ABSPATH' ) || exit();
 
-final class EverAccounting {
+final class eAccounting {
 	/**
-	 * EverAccounting version.
+	 * EAccounting version.
 	 *
 	 * @var string
 	 */
@@ -28,24 +28,17 @@ final class EverAccounting {
 	/**
 	 * The single instance of the class.
 	 *
-	 * @var EverAccounting
+	 * @var EAccounting
 	 * @since 1.0.0
 	 */
 	protected static $_instance = null;
 
 	/**
-	 * Wrapper for admin notices
+	 * Main EAccounting Instance.
 	 *
-	 * @var EAccounting_Notices
-	 */
-	public $notices;
-
-	/**
-	 * Main EverAccounting Instance.
+	 * Ensures only one instance of EAccounting is loaded or can be loaded.
 	 *
-	 * Ensures only one instance of EverAccounting is loaded or can be loaded.
-	 *
-	 * @return EverAccounting - Main instance.
+	 * @return EAccounting - Main instance.
 	 * @since 1.0.0
 	 * @static
 	 */
@@ -114,6 +107,7 @@ final class EverAccounting {
 	private function define_tables() {
 		global $wpdb;
 		$tables = array(
+			'ea_contacts',
 			'ea_accounts',
 			'ea_products',
 			'ea_taxes',
@@ -134,18 +128,20 @@ final class EverAccounting {
 	 */
 	public function includes() {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-notices.php' );
-        require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
-        require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
-        require_once( EACCOUNTING_ABSPATH . '/includes/product-functions.php' );
-        require_once( EACCOUNTING_ABSPATH . '/includes/category-functions.php' );
-        require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
-        require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
-        require_once( EACCOUNTING_ABSPATH . '/includes/template-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-eaccounting-form.php' );
 
-        require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/class-ea-ajax.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/contact-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/product-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/category-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/template-functions.php' );
 
-        if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/class-ea-ajax.php' );
+
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 		}
 
@@ -183,14 +179,11 @@ final class EverAccounting {
 	}
 
 	/**
-	 * Init EverAccounting when WordPress Initialises.
+	 * Init EAccounting when WordPress Initialises.
 	 */
 	public function init() {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
-
-		//setup our caching
-		$this->notices = EAccounting_Notices::instance();
 
 		// Init action.
 		do_action( 'eaccounting_init' );
@@ -204,7 +197,7 @@ final class EverAccounting {
 	 *
 	 */
 	public function localization_setup() {
-		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages/' );
+		load_plugin_textdomain( 'wp-eaccounting', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages/' );
 	}
 
 	/**
@@ -218,13 +211,13 @@ final class EverAccounting {
 	public function set_eaccounting_actions() {
 		$key = ! empty( $_GET['eaccounting_action'] ) ? sanitize_key( $_GET['eaccounting_action'] ) : false;
 
-		if ( !empty($key)) {
+		if ( ! empty( $key ) ) {
 			do_action( 'eaccounting_action_' . $key, $_GET );
 		}
 
 		$key = ! empty( $_POST['eaccounting_action'] ) ? sanitize_key( $_POST['eaccounting_action'] ) : false;
 
-		if ( !empty($key) ) {
+		if ( ! empty( $key ) ) {
 			do_action( 'eaccounting_action_' . $key, $_GET );
 		}
 	}
@@ -283,11 +276,11 @@ final class EverAccounting {
 /**
  * Returns the main instance of Plugin.
  *
- * @return EverAccounting
+ * @return EAccounting
  * @since  1.0.0
  */
 function eaccounting() {
-	return EverAccounting::instance();
+	return eAccounting::instance();
 }
 
 eaccounting();

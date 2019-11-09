@@ -88,8 +88,8 @@ function eaccounting_get_template_part( $slug, $name = '', $template_path = 'job
  */
 function eaccounting_page_wrapper_open( $class = ' ' ) {
 	$classes = 'ea-main-wrapper ' . sanitize_html_class( $class );
-	echo '<div class="wrap">';
-	echo '<div class="' . $classes . '">';
+	//echo '<div class="wrap">';
+	echo '<div class="wrap ' . $classes . '">';
 	//do_action( 'eaccounting_page_top' );
 	echo '<div class="ea-page-wrapper">';
 	echo '<hr class="wp-header-end">';
@@ -102,7 +102,7 @@ function eaccounting_page_wrapper_open( $class = ' ' ) {
  */
 function eaccounting_page_wrapper_close() {
 	echo '<div><!--.ea-page-wrapper-->';
-	echo '<div><!--.ea-main-wrapper-->';
+	//echo '<div><!--.ea-main-wrapper-->';
 	echo '<div><!--.wrap-->';
 }
 

@@ -7,14 +7,14 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-class EAccounting_Categories_List_Table extends WP_List_Table {
+class EAccounting_Taxes_Table extends WP_List_Table {
 	/**
 	 * Number of results to show per page
 	 *
 	 * @var string
 	 * @since 1.0.0
 	 */
-	public $per_page = 20;
+	public $per_page = 30;
 
 	/**
 	 *
@@ -41,12 +41,6 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 	public $inactive_count;
 
 	/**
-	 * Base URL
-	 * @var string
-	 */
-	public $base_url;
-
-	/**
 	 * Get things started
 	 *
 	 * @since 1.0.0
@@ -57,12 +51,10 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 		global $status, $page;
 
 		parent::__construct( array(
-			'singular' => 'category',
-			'plural'   => 'Categories',
+			'singular' => 'tax',
+			'plural'   => 'taxes',
 			'ajax'     => false,
 		) );
-		$this->base_url = admin_url( 'admin.php?page=eaccounting-misc&tab=categories' );
-		$this->process_bulk_action();
 	}
 
 	/**
@@ -105,15 +97,17 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	public function get_views() {
+		$base = admin_url( 'admin.php?page=eaccounting-taxes' );
+
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $this->base_url ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $this->base_url ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $this->base_url ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', remove_query_arg( 'status', $base ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'active', $base ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', add_query_arg( 'status', 'inactive', $base ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -129,8 +123,8 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 		$columns = array(
 			'cb'     => '<input type="checkbox" />',
 			'name'   => __( 'Name', 'wp-ever-accounting' ),
+			'rate'   => __( 'Rate(%)', 'wp-ever-accounting' ),
 			'type'   => __( 'Type', 'wp-ever-accounting' ),
-			'color'  => __( 'Color', 'wp-ever-accounting' ),
 			'status' => __( 'Status', 'wp-ever-accounting' ),
 		);
 
@@ -146,8 +140,8 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 	public function get_sortable_columns() {
 		return array(
 			'name'   => array( 'name', false ),
+			'rate'   => array( 'rate', false ),
 			'type'   => array( 'type', false ),
-			'color'  => array( 'color', false ),
 			'status' => array( 'status', false ),
 		);
 	}
@@ -165,6 +159,20 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * This function renders most of the columns in the list table.
+	 *
+	 * @param array $item Contains all the data of the discount code
+	 * @param string $column_name The name of the column
+	 *
+	 * @return string Column Name
+	 * @since 1.0.0
+	 *
+	 */
+	function column_default( $item, $column_name ) {
+		return $item->$column_name;
+	}
+
+	/**
 	 * Render the checkbox column
 	 *
 	 * @param array $item Contains all the data for the checkbox column
@@ -175,7 +183,7 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 	function column_cb( $item ) {
 		return sprintf(
 			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
-			/*$1%s*/ 'category',
+			/*$1%s*/ 'tax',
 			/*$2%s*/ $item->id
 		);
 	}
@@ -190,73 +198,65 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_name( $item ) {
-		$product_url    = add_query_arg( array( 'category' => $item->id ), $this->base_url );
-		$edit_url       = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'edit_category' ], $product_url ), 'eaccounting_categories_nonce' );
-		$activate_url   = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'activate_category' ], $product_url ), 'eaccounting_categories_nonce' );
-		$deactivate_url = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'deactivate_category' ], $product_url ), 'eaccounting_categories_nonce' );
-		$delete_url     = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_category' ], $product_url ), 'eaccounting_categories_nonce' );
+		$base                = admin_url( 'admin-post.php' );
+		$row_actions['edit'] = '<a href="' . add_query_arg( array(
+				'eaccounting_action' => 'edit_tax',
+				'tax'            => $item->id
+			), $base ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 
-		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-ever-accounting' ) );
-
-		if ( strtolower( $item->status ) == 'active' ) {
-			$row_actions['deactivate'] = sprintf( '<a href="%1$s">%2$s</a>', $deactivate_url, __( 'Deactivate', 'wp-ever-accounting' ) );
-		} elseif ( strtolower( $item->status ) == 'inactive' ) {
-			$row_actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', $activate_url, __( 'Activate', 'wp-ever-accounting' ) );
+		if ( strtolower( $item->status ) == '1' ) {
+			$row_actions['deactivate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+					'action' => 'eaccounting_deactivate_tax',
+					'tax'            => $item->id
+				), $base ), 'eaccounting_taxes_nonce' ) ) . '">' . __( 'Deactivate', 'wp-ever-accounting' ) . '</a>';
+		} elseif ( strtolower( $item->status ) == '0' ) {
+			$row_actions['activate'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+					'action' => 'eaccounting_activate_tax',
+					'tax'            => $item->id
+				), $base ), 'eaccounting_taxes_nonce' ) ) . '">' . __( 'Activate', 'wp-ever-accounting' ) . '</a>';
 		}
-		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-ever-accounting' ) );
 
-		$row_actions = apply_filters( 'eaccounting_categories_row_actions', $row_actions, $item );
+		$row_actions['delete'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
+				'action' => 'eaccounting_delete_tax_rate',
+				'tax'            => $item->id
+			), $base ), 'eaccounting_taxes_nonce' ) ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
-		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, stripslashes( $item->name ) ) . $this->row_actions( $row_actions );
+		$row_actions = apply_filters( 'eaccounting_row_actions', $row_actions, $item );
+
+		return sprintf( '<strong>%s</strong>', stripslashes( $item->name ) ) . $this->row_actions( $row_actions );
 	}
 
 	/**
-	 * Shows status of the item
+	 * Render the current balance column
 	 *
-	 * @param $item
+	 * @param array $item Contains all the data for the checkbox column
 	 *
-	 * @return string
+	 * @return string Displays current balance
 	 * @since 1.0.0
 	 */
-	function column_status( $item ) {
-		return sprintf( '<span class="ea-item-status %1$s">%1$s</span>', $item->status );
+	function column_current_balance( $item ) {
+		return '';
 	}
 
 	/**
-	 * Types of category
+	 * Render the current balance column
 	 *
-	 * @param $item
+	 * @param array $item Contains all the data for the checkbox column
 	 *
-	 * @return string
+	 * @return string Displays current balance
 	 * @since 1.0.0
 	 */
-	function column_type( $item ) {
-		$types = eaccounting_get_category_types();
-
-		return array_key_exists( $item->type, $types ) ? $types[ $item->type ] : '-';
-	}
-
-	/**
-	 * Color of the category
-	 *
-	 * @param $item
-	 *
-	 * @return string
-	 * @since 1.0.0
-	 */
-	function column_color( $item ) {
-		$color = $item->color ? sanitize_hex_color( $item->color ) : '';
-
-		return sprintf( '<i class="fa fa-2x fa-circle" style="color:%s"></i>', $color );
+	function column_opening_balance( $item ) {
+		return eaccounting_price( $item->opening_balance );
 	}
 
 	/**
 	 * Message to be displayed when there are no items
 	 *
-	 * @since 1.0.1
+	 * @since 1.7.2
 	 */
 	function no_items() {
-		_e( 'No categories found.', 'wp-ever-accounting' );
+		_e( 'No accounts found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -287,26 +287,21 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-categories' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['category'] ) ? $_GET['category'] : false;
+		$ids = isset( $_GET['tax'] ) ? $_GET['tax'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
 
-
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
-				eaccounting_delete_category( $id );
+				eaccounting_delete_tax_rate( $id );
 			}
 			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_category( [ 'id' => $id, 'status' => 'active' ] );
+				eaccounting_insert_tax( [ 'id' => $id, 'status' => '1' ] );
 			}
 			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_category( [ 'id' => $id, 'status' => 'deactivate' ] );
+				eaccounting_insert_tax( [ 'id' => $id, 'status' => '0' ] );
 			}
 		}
 
@@ -323,17 +318,19 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 		$results  = array();
 		$per_page = $this->per_page;
 
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
-
+		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
+		$order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$status   = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$meta_key = isset( $_GET['meta_key'] ) ? $_GET['meta_key'] : null;
+		$search   = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
+		$status = ($status=='active')?1:0;
 		$args = array(
 			'per_page' => $per_page,
 			'paged'    => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
 			'orderby'  => $orderby,
 			'order'    => $order,
 			'status'   => $status,
+			'meta_key' => $meta_key,
 			'search'   => $search
 		);
 
@@ -341,11 +338,11 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 			$args['orderby'] = $orderby;
 		}
 
-		$this->active_count   = eaccounting_get_categories( array_merge( $args, array( 'status' => 'active' ) ), true );
-		$this->inactive_count = eaccounting_get_categories( array_merge( $args, array( 'status' => 'inactive' ) ), true );
-		$this->total_count    = eaccounting_get_categories( array_merge( $args, array( 'status' => '' ) ), true );
+		$this->active_count   = eaccounting_get_taxes( array_merge( $args, array( 'status' => '1' ) ), true );
+		$this->inactive_count = eaccounting_get_taxes( array_merge( $args, array( 'status' => '0' ) ), true );
+		$this->total_count    = eaccounting_get_taxes( array_merge( $args, array( 'status' => '' ) ), true );
 
-		$results = eaccounting_get_categories( $args );
+		$results = eaccounting_get_taxes( $args );
 
 		return $results;
 	}

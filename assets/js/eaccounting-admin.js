@@ -1,18 +1,21 @@
 (function ($, window, wp, document, undefined) {
 	'use strict';
 	var eAccounting = {
-		ajaxForms: $('.eaccouting-ajax-form'),
+		$select2Control:$('.ea-select2-control'),
+		$priceControl:$('.ea-price-control'),
+		$colorControl:$('.ea-color-control'),
 		initializePlugins: function () {
-			console.log(eAccountingi18n);
-			$('select.ea-select2').select2();
-			$('input.ea-price').maskMoney({
+			this.$select2Control.select2();
+			this.$priceControl.maskMoney({
 				thousands: eAccountingi18n.localization.thousands_separator,
 				decimal: eAccountingi18n.localization.decimal_mark,
 				precision: eAccountingi18n.localization.precision,
 				allowZero: true,
 				prefix: eAccountingi18n.localization.price_symbol,
 			});
-			$('input.ea-price').trigger('click');
+			this.$colorControl.wpColorPicker();
+			this.$priceControl.trigger('focus');
+			this.$priceControl.trigger('blur');
 		},
 		init: function () {
 			this.initializePlugins();

@@ -22,10 +22,10 @@ function eaccounting_get_category_types() {
 /**
  * Create category
  *
- * @since 1.0.0
  * @param $args
  *
  * @return int|WP_Error|null
+ * @since 1.0.0
  */
 function eaccounting_insert_category( $args ) {
 	global $wpdb;
@@ -49,8 +49,8 @@ function eaccounting_insert_category( $args ) {
 		'id'         => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'type'       => ! isset( $args['type'] ) ? '' : sanitize_text_field( $args['type'] ),
-		'color'      => ! isset( $args['color'] ) ? '' : sanitize_text_field( $args['color'] ),
-		'status'     => ! empty( $args['status'] ) ? '1' : '0',
+		'color'      => ! isset( $args['color'] ) ? '' : sanitize_hex_color( $args['color'] ),
+		'status'     => 'active' == $args['status'] ? 'active' : 'inactive',
 		'updated_at' => date( 'Y-m-d H:i:s' ),
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -61,6 +61,10 @@ function eaccounting_insert_category( $args ) {
 
 	if ( empty( $data['type'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Category type is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data['color'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Category color is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( ! array_key_exists( $data['type'], eaccounting_get_category_types() ) ) {
@@ -74,7 +78,7 @@ function eaccounting_insert_category( $args ) {
 	if ( $update ) {
 		do_action( 'eaccounting_pre_category_update', $id, $data );
 		if ( false === $wpdb->update( $wpdb->ea_categories, $data, $where ) ) {
-			return new WP_Error( 'db_update_error', sprintf(__( 'Could not update category in the database - (%s)', 'wp-ever-accounting' ), $wpdb->last_error ), $wpdb->last_error );
+			return new WP_Error( 'db_update_error', sprintf( __( 'Could not update category in the database - (%s)', 'wp-ever-accounting' ), $wpdb->last_error ), $wpdb->last_error );
 		}
 		do_action( 'eaccounting_category_update', $id, $data, $item_before );
 	} else {
@@ -135,11 +139,12 @@ function eaccounting_delete_category( $id ) {
 
 /**
  * Get categories
- * @since 1.0.0
+ *
  * @param array $args
  * @param bool $count
  *
  * @return array|null|int
+ * @since 1.0.0
  */
 function eaccounting_get_categories( $args = array(), $count = false ) {
 	global $wpdb;

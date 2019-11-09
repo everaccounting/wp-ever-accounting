@@ -14,11 +14,12 @@ function eaccounting_get_price_currency() {
  * @return array|string
  */
 function eaccounting_get_price_currency_symbol() {
-	$symbol =  eaccounting_get_option( 'symbol', 'eaccounting_localization', 'USD' );
-	$symbols =  eaccounting_get_currency_symbols();
-	if(array_key_exists($symbol, $symbols)){
-		return $symbols[$symbol];
+	$symbol  = eaccounting_get_option( 'symbol', 'eaccounting_localization', 'USD' );
+	$symbols = eaccounting_get_currency_symbols();
+	if ( array_key_exists( $symbol, $symbols ) ) {
+		return $symbols[ $symbol ];
 	}
+
 	return $symbols['USD'];
 }
 
@@ -28,9 +29,10 @@ function eaccounting_get_price_currency_symbol() {
  * since 1.0.0
  * @return int
  */
-function eaccounting_get_price_precision(){
+function eaccounting_get_price_precision() {
 	return eaccounting_get_option( 'precision', 'eaccounting_localization', '2' );
 }
+
 /**
  * Decimal sep
  * since 1.0.0
@@ -111,7 +113,7 @@ function eaccounting_sanitize_price( $price ) {
 	$price = preg_replace( '/[^0-9\.]/', '', $price );
 
 	$precision = eaccounting_get_price_precision();
-	$price   = number_format( (double) $price, $precision, '.', '' );
+	$price     = number_format( (double) $price, $precision, '.', '' );
 
 	if ( $is_negative ) {
 		$price *= - 1;
@@ -145,8 +147,8 @@ function eaccounting_format_price( $price, $decimals = true ) {
 
 	// Format the price
 	if ( $decimal_sep == ',' && false !== ( $sep_found = strpos( $price, $decimal_sep ) ) ) {
-		$whole  = substr( $price, 0, $sep_found );
-		$part   = substr( $price, $sep_found + 1, ( strlen( $price ) - 1 ) );
+		$whole = substr( $price, 0, $sep_found );
+		$part  = substr( $price, $sep_found + 1, ( strlen( $price ) - 1 ) );
 		$price = $whole . '.' . $part;
 	}
 
@@ -172,13 +174,13 @@ function eaccounting_format_price( $price, $decimals = true ) {
 
 
 function eaccounting_price( $price, $currency = false ) {
-	if(!$currency){
+	if ( ! $currency ) {
 		$currency = eaccounting_get_price_currency();
 	}
-	$format = eaccounting_get_price_format();
+	$format          = eaccounting_get_price_format();
 	$currency_symbol = eaccounting_get_price_currency_symbol();
 
-	return sprintf($format, eaccounting_format_price($price), $currency_symbol);
+	return sprintf( $format, eaccounting_format_price( $price ), $currency_symbol );
 }
 
 function eaccounting_get_currency_symbols() {
@@ -345,4 +347,48 @@ function eaccounting_get_currency_symbols() {
 	);
 
 	return apply_filters( 'eaccounting_currency_symbols', $currency_symbols );
+}
+
+
+/**
+ * Sanitizes a string key
+ *
+ * Keys are used as internal identifiers. Alphanumeric characters, dashes, underscores, stops, colons and slashes are allowed
+ *
+ * @param string $key String key
+ *
+ * @return string Sanitized key
+ * @since  1.0.0
+ */
+function eaccounting_sanitize_key( $key ) {
+	return preg_replace( '/[^a-zA-Z0-9_\-\.\:\/]/', '', $key );
+}
+
+/*
+ * Status status
+ */
+function eaccounting_sanitize_status( $status, $context = 'edit' ) {
+	$status = in_array( $status, [ 'active', 'inactive' ] ) ? $status : 'inactive';
+
+	return $context == 'edit' ? $status : ucfirst( $status );
+}
+
+/**
+ * Get value from post and return after sanitization
+ * since 1.0.0
+ * @param $key
+ * @param string $sanitizer
+ * @param string $default
+ *
+ * @return array|mixed|string
+ */
+function eaccounting_get_posted_value( $key, $sanitizer = 'sanitize_text_field', $default = '' ) {
+	$value = $default;
+	if ( isset( $_POST[ $key ] ) && is_array( $_POST[ $key ] ) ) {
+		$value = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $key ] ) );
+	} elseif ( isset( $_POST[ $key ] ) ) {
+		$value = call_user_func( $sanitizer, wp_unslash( $_POST[ $key ] ) );
+	}
+
+	return $value;
 }

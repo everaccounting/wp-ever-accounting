@@ -84,7 +84,7 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 				'name'       => $faker->name,
 				'type'       => $faker->randomElement( array_keys( eaccounting_get_category_types() ) ),
 				'color'      => $faker->hexColor,
-				'status'     => $faker->randomElement(['active', 'inactive']),
+				'status'     => $faker->randomElement( [ 'active', 'inactive' ] ),
 				'updated_at' => $faker->date(),
 				'created_at' => $faker->date(),
 			) );
@@ -119,8 +119,7 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 				'purchase_price' => $faker->randomNumber( 2 ),
 				'quantity'       => $faker->randomNumber( 2 ),
 				'category_id'    => '',
-				'tax_id'         => '',
-				'status'         => $faker->randomElement(['active', 'inactive']),
+				'status'         => $faker->randomElement( [ 'active', 'inactive' ] ),
 				'updated_at'     => $faker->date(),
 				'created_at'     => $faker->date(),
 			) );
@@ -129,6 +128,47 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 				global $wpdb;
 				\WP_CLI::error( $created->get_error_message() );
 			}
+
+			if ( ! is_wp_error( $created ) && $created ) {
+				$generated ++;
+			}
+		}
+
+
+		WP_CLI::success( sprintf( "Total generated : %d", $generated ) );
+	}
+
+
+	public static function make_contacts( $args ) {
+		list( $amount ) = $args;
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Generating products', $amount );
+		$faker    = \Faker\Factory::create();
+		$generated = 0;
+		for ( $i = 1; $i <= $amount; $i ++ ) {
+			$created = eaccounting_insert_contact( array(
+				'first_name' => $faker->firstName,
+				'last_name'  => $faker->lastName,
+				'tax_number' => $faker->bankAccountNumber,
+				'email'      => $faker->safeEmail,
+				'phone'      => $faker->phoneNumber,
+				'address'    => $faker->address,
+				'city'       => $faker->city,
+				'state'      => $faker->country,
+				'postcode'   => $faker->postcode,
+				'country'    => $faker->countryCode,
+				'website'    => $faker->url,
+				'status'     => $faker->randomElement(['active', 'inactive']),
+				'note'       => $faker->realText(10),
+				'roles'      => $faker->randomElement(array_keys(eaccounting_get_contact_roles())),
+				'created_at' => $faker->date(),
+				'updated_at' => $faker->date(),
+			) );
+
+//			if ( is_wp_error( $created ) ) {
+//				global $wpdb;
+//				error_log($wpdb->last_error);
+//				\WP_CLI::error( $created->get_error_message() );
+//			}
 
 			if ( ! is_wp_error( $created ) && $created ) {
 				$generated ++;

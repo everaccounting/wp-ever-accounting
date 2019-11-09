@@ -32,10 +32,11 @@ class EAccounting_Admin_Menus {
 			'dashboard_page'
 		) );
 		add_submenu_page( 'ever-accounting', __( 'Products', 'wp-ever-accounting' ), __( 'Products', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-products', 'eaccounting_products_page' );
+		add_submenu_page( 'ever-accounting', __( 'Contacts', 'wp-ever-accounting' ), __( 'Contacts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-contacts', 'eaccounting_contacts_page' );
 		add_submenu_page( 'ever-accounting', __( 'Income', 'wp-ever-accounting' ), __( 'Income', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-income', 'eaccounting_income_page' );
 		add_submenu_page( 'ever-accounting', __( 'Expense', 'wp-ever-accounting' ), __( 'Expense', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-expense', 'eaccounting_expense_page' );
 		add_submenu_page( 'ever-accounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-banking', 'eaccounting_banking_page' );
-		add_submenu_page( 'ever-accounting', __( 'Contacts', 'wp-ever-accounting' ), __( 'Contacts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-contacts', 'eaccounting_contacts_page' );
+		//add_submenu_page( 'ever-accounting', __( 'Contacts', 'wp-ever-accounting' ), __( 'Contacts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-contacts', 'eaccounting_contacts_page' );
 		add_submenu_page( 'ever-accounting', __( 'Misc', 'wp-ever-accounting' ), __( 'Misc', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-misc', 'eaccounting_misc_page' );
 		add_submenu_page( 'ever-accounting', __( 'Tools', 'wp-ever-accounting' ), __( 'Tools', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-tools', 'eaccounting_tools_page' );
 		add_submenu_page( 'ever-accounting', __( 'Import/Export', 'wp-ever-accounting' ), __( 'Import/Export', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-import-export', 'eaccounting_importing_page' );

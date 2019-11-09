@@ -3,7 +3,8 @@ defined( 'ABSPATH' ) || exit();
 
 
 function eaccounting_tab_categories() {
-	if ( isset( $_GET['eaccounting-action'] ) && $_GET['eaccounting-action'] == 'edit_category' ) {
+
+	if ( isset( $_GET['eaccounting-action'] ) && $_GET['eaccounting-action'] == 'add_category' ) {
 		require_once dirname( __FILE__ ) . '/edit-category.php';
 	} elseif ( isset( $_GET['eaccounting-action'] ) && $_GET['eaccounting-action'] == 'edit_category' ) {
 		require_once dirname( __FILE__ ) . '/edit-category.php';
@@ -20,13 +21,13 @@ function eaccounting_tab_categories() {
 
 		<?php do_action( 'eaccounting_categories_page_top' ); ?>
 		<form method="get" action="<?php echo esc_url( $base_url ); ?>">
-			<?php $accounts_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-accounts' ); ?>
-
-			<input type="hidden" name="page" value="eaccounting-misc"/>
-			<input type="hidden" name="tab" value="categories"/>
-
-			<?php $accounts_table->views() ?>
-			<?php $accounts_table->display() ?>
+			<div class="ea-list-table">
+				<?php $accounts_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-accounts' ); ?>
+				<input type="hidden" name="page" value="eaccounting-misc"/>
+				<input type="hidden" name="tab" value="categories"/>
+				<?php $accounts_table->views() ?>
+				<?php $accounts_table->display() ?>
+			</div>
 		</form>
 		<?php
 		do_action( 'eaccounting_categories_page_bottom' );
