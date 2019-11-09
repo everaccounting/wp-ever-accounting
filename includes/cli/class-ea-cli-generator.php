@@ -84,7 +84,7 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 				'name'       => $faker->name,
 				'type'       => $faker->randomElement( array_keys( eaccounting_get_category_types() ) ),
 				'color'      => $faker->hexColor,
-				'status'     => $faker->numberBetween( 0, 1 ),
+				'status'     => $faker->randomElement(['active', 'inactive']),
 				'updated_at' => $faker->date(),
 				'created_at' => $faker->date(),
 			) );

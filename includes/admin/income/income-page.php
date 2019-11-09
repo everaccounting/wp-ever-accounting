@@ -17,7 +17,6 @@ function eaccounting_income_page() {
 		'customers'   => __( 'Customers', 'wp-ever-accounting' ),
 	) );
 
-	echo '<hr class="wp-header-end">';
 	echo '<h2 class="nav-tab-wrapper ea-tab-wrapper">';
 
 	foreach ( $income_tabs as $tab_id => $label ) {

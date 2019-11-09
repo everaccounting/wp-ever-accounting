@@ -92,6 +92,7 @@ function eaccounting_page_wrapper_open( $class = ' ' ) {
 	echo '<div class="' . $classes . '">';
 	//do_action( 'eaccounting_page_top' );
 	echo '<div class="ea-page-wrapper">';
+	echo '<hr class="wp-header-end">';
 }
 
 /**
@@ -492,6 +493,34 @@ function eaccounting_taxes_dropdown( $args = array(), $type = 'product' ) {
 	return eaccounting_select_field( $args );
 }
 
+
+function eaccounting_accounts_dropdown( $args = array(), $type = 'product' ) {
+	$args  = wp_parse_args( $args, array(
+		'label'    => __( 'Account', 'wp-ever-accounting' ),
+		'name'     => 'account_id',
+		'class'    => '',
+		'icon'    => 'fa fa-university',
+		'selected' => '',
+		'select2'  => true,
+	) );
+	$taxes = eaccounting_get_accounts( array(
+		'per_page' => '-1',
+		'fields'   => array( 'id', 'name' ),
+		'status'   => '1',
+		'type'     => $type
+	) );
+
+	$taxes           = wp_list_pluck( $taxes, 'name', 'id' );
+	$args['options'] = $taxes;
+	$args['class']   .= 'ea-accounts-dropdown';
+	$args['data']    = array(
+		'type'   => $type,
+		'nonce'  => wp_create_nonce( 'eaccounting_search_accounts' ),
+		'action' => 'eaccounting_search_accounts',
+	);
+
+	return eaccounting_select_field( $args );
+}
 
 function eaccounting_get_taxes_dropdown( $args = array() ) {
 	$args = wp_parse_args( $args, array() );
