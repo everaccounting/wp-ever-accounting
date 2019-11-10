@@ -173,14 +173,14 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 	public function get_results() {
 		$per_page = $this->per_page;
 
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'ID';
+		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_at';
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
 			'per_page' => $per_page,
-			'paged'    => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
+			'page'    => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
 			'orderby'  => $orderby,
 			'order'    => $order,
 			'status'   => $status,

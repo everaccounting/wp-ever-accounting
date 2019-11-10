@@ -172,6 +172,16 @@ if(isset($_GET['feedback'])){
 				'value'         => isset( $contact->note ) ? $contact->note : eaccounting_get_posted_value('note'),
 				'wrapper_class' => 'ea-col-12',
 			) );
+
+			echo EAccounting_Form::checkboxes_control( array(
+				'label'         => __( 'Roles', 'wp-ever-accounting' ),
+				'name'          => 'roles',
+				'value'         => ['customer'],
+				'options'         => eaccounting_get_contact_roles(),
+				'wrapper_class' => 'ea-col-12',
+			) );
+
+
 			?>
 		</div>
 

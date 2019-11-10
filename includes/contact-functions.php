@@ -314,8 +314,8 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 		return $wpdb->get_var( "SELECT count($wpdb->ea_contacts.id) $query_from $query_where" );
 	}
 
-
 	$request = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
 
 	if ( is_array( $args['fields'] ) || 'all' == $args['fields'] ) {
 		return $wpdb->get_results( $request );

@@ -128,7 +128,7 @@ final class eAccounting {
 	 */
 	public function includes() {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-eaccounting-form.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-form.php' );
 
 		require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/contact-functions.php' );
@@ -184,7 +184,6 @@ final class eAccounting {
 	public function init() {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
-
 		// Init action.
 		do_action( 'eaccounting_init' );
 	}

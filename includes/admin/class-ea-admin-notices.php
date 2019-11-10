@@ -3,6 +3,16 @@ defined( 'ABSPATH' ) || exit();
 
 class EAccounting_Admin_Notices {
 	/**
+	 * @var
+	 */
+	private $transient;
+
+	/**
+	 * @var array
+	 */
+	public $notices = [];
+
+	/**
 	 * The single instance of the class.
 	 *
 	 * @var EAccounting_Admin_Notices
@@ -32,43 +42,11 @@ class EAccounting_Admin_Notices {
 	 * EAccounting_Notice constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_notices', array( $this, 'admin_notices' ), 99 );
-		//add_action( 'shutdown', array( $this, 'shutdown' ), 99 );
+		global $current_user;
+		$this->transient = sprintf("ea_notice_%s", $current_user->ID);
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'shutdown', array( $this, 'shutdown' ) );
 	}
-
-	/**
-	 * Show success message
-	 *
-	 * @param $message
-	 *
-	 * @since 1.0.0
-	 */
-	public function success( $message ) {
-		$this->add( $message, 'warning' );
-	}
-
-	/**
-	 * Show info message
-	 *
-	 * @param $message
-	 *
-	 * @since 1.0.0
-	 */
-	public function info( $message ) {
-		$this->add( $message, 'info' );
-	}
-
-	/**
-	 * show error message
-	 *
-	 * @param $message
-	 *
-	 * @since 1.0.0
-	 */
-	public function error( $message ) {
-		$this->add( $message, 'error' );
-	}
-
 
 	/**
 	 * since 1.0.0
@@ -78,9 +56,8 @@ class EAccounting_Admin_Notices {
 	 * @param bool $dismissible
 	 */
 	public function add( $notice, $type = 'success', $dismissible = true ) {
-		$notices          = get_option( '_eaccounting_admin_notices', array() );
 		$dismissible_text = ( $dismissible ) ? "is-dismissible" : "";
-		array_push( $notices, array(
+		array_push( $this->notices, array(
 			"notice"      => wp_kses( $notice, array(
 				'strong' => array(),
 				'span'   => array( 'class' => true ),
@@ -90,17 +67,22 @@ class EAccounting_Admin_Notices {
 			"type"        => $type,
 			"dismissible" => $dismissible_text
 		) );
-
-		update_option( "_eaccounting_admin_notices", $notices );
 	}
 
 	/**
 	 * since 1.0.0
 	 */
 	public function admin_notices() {
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
 
-		$notices = get_option( '_eaccounting_admin_notices', array() );
+		$notices = array();
+		if(false !== get_transient( $this->transient )){
+			$notices = get_transient( $this->transient );
+		}
 
+		$notices = array_merge( $this->notices, $notices );
 		foreach ( $notices as $notice ) {
 			echo sprintf( '<div class="notice notice-%1$s %2$s"><p>%3$s</p></div>',
 				$notice['type'],
@@ -108,13 +90,15 @@ class EAccounting_Admin_Notices {
 				$notice['notice']
 			);
 		}
-
+		delete_transient($this->transient);
 	}
 
 	public function shutdown() {
-		$notices = get_option( '_eaccounting_admin_notices', array() );
-		if ( ! empty( $notices ) ) {
-			update_option( '_eaccounting_admin_notices', array() );
+		if ( ! empty( $this->notices ) ) {
+			set_transient( $this->transient, $this->notices, 60 * 60 );
 		}
 	}
+
 }
+
+EAccounting_Admin_Notices::instance();

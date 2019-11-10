@@ -97,9 +97,6 @@ class EAccounting_Form {
 			'required'      => false,
 			'readonly'      => false,
 			'disabled'      => false,
-			'sanitizer'     => 'intval',
-			'post'          => true,
-			'object'        => new StdClass(),
 		) );
 
 		//general
@@ -128,14 +125,6 @@ class EAccounting_Form {
 		$wrapper_classes = array_filter( $wrapper_classes );
 		$wrapper_classes = array_map( 'sanitize_html_class', $wrapper_classes );
 
-		//value calc
-		if ( empty( $args['selected'] ) && is_object( $args['object'] ) && isset( $args['object']->$name ) ) {
-			$args['selected'] = (array) $args['object']->$name;
-		} elseif ( empty( $args['selected'] ) && $args['post'] == true && isset( $_POST[ $name ] ) ) {
-			$args['selected'] = is_array( $_POST[ $name ] ) ? array_map( $args['sanitizer'], $_POST[ $name ] ) : [ call_user_func( $args['sanitizer'], $_POST[ $name ] ) ];
-		} else if ( empty( $args['selected'] ) ) {
-			$args['selected'] = (array) $args['default'];
-		}
 
 		if ( ! empty( $placeholder ) ) {
 			$options = [ '' => $placeholder ] + $options;
@@ -284,7 +273,49 @@ class EAccounting_Form {
 	}
 
 	public static function checkboxes_control( $args ) {
+		$args = wp_parse_args( $args, array(
+			'label'          => '',
+			'name'          => null,
+			'options'       => array(),
+			'selected'      => array(),
+			'default'       => array(),
+			'class'         => '',
+			'wrapper_class' => '',
+			'id'            => '',
+			'required'      => false,
+			'readonly'      => false,
+			'disabled'      => false,
+		) );
+		$name              = esc_attr( ! empty( $args['name'] ) ? $args['name'] : '' );
+		$id                = esc_attr( ! empty( $args['id'] ) ? $args['id'] : $name );
+		$label             = empty( $args['label'] ) ? false : strip_tags( $args['label'] );
+		$value             = ! empty( $args['selected'] ) ? $args['selected'] : $args['default'];
+		$input_classes     = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
+		$wrapper_classes   = is_array( $args['wrapper_class'] ) ? $args['wrapper_class'] : explode( ' ', $args['wrapper_class'] );
+		$wrapper_classes[] = ( true == $args['required'] ) ? 'required' : '';
 
+		//sanitization
+		$input_classes   = array_filter( $input_classes );
+		$input_classes   = array_map( 'sanitize_html_class', $input_classes );
+		$input_classes   = implode( ' ', $input_classes );
+		$wrapper_classes = array_filter( $wrapper_classes );
+		$wrapper_classes = array_map( 'sanitize_html_class', $wrapper_classes );
+
+		$html = sprintf( '<div class="ea-form-group ea-checkbox-group %s">', implode( ' ', $wrapper_classes ) );
+		$html .= ! empty( $label ) ? sprintf( '<label for="%1$s" class="ea-control-label">%2$s</label>', $id, $label ) : '';
+		$html .= '<fieldset>';
+		foreach ( $args['options'] as $key => $label ) {
+			$checked = isset( $value[ $key ] ) ? $value[ $key ] : '0';
+			error_log($key);
+			error_log($value);
+			error_log($checked);
+			$html    .= sprintf( '<label for="%1$s[%2$s]">', $id, $key );
+			$html    .= sprintf( '<input type="checkbox" class="checkbox ea-check-control" id="%1$s[%3$s]" name="%2$s[%3$s]" value="%3$s" %4$s />', $id, $name, $key, checked( $checked, $key, false ) );
+			$html    .= sprintf( ' %1$s</label>', $label );
+		}
+		$html .= '</fieldset>';
+		$html .= '</div><!--.ea-form-group-->';
+		return $html;
 	}
 
 	public static function radios_control( $args ) {

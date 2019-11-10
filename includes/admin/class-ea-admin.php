@@ -40,6 +40,7 @@ class EAccounting_Admin {
 	 */
 	public function includes() {
 		//functions
+		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
 		require_once dirname( __FILE__ ) . '/admin-functions.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-list-table.php';
 
