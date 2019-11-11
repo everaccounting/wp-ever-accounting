@@ -3,39 +3,36 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Insert Account
+ * Insert payment method
  *
  * @param $args
  *
  * @return int|WP_Error
  * @since 1.0.0
  */
-function eaccounting_insert_account( $args ) {
+function eaccounting_insert_payment_method( $args ) {
 	global $wpdb;
 	$update = false;
 	$id     = null;
-	$args   = (array) apply_filters( 'eaccounting_create_account', $args );
+	$args   = (array) apply_filters( 'eaccounting_create_payment_method', $args );
 
 	if ( isset( $args['id'] ) && ! empty( trim( $args['id'] ) ) ) {
 		$id          = (int) $args['id'];
 		$update      = true;
-		$item_before = (array) eaccounting_get_account( $id );
+		$item_before = (array) eaccounting_get_payment_method( $id );
 		if ( is_null( $item_before ) ) {
-			return new \WP_Error( 'invalid_action', __( 'Could not find the item to  update', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'invalid_action', __( 'Could not find the item to  update', 'wp-eaccounting' ) );
 		}
 
 		$args = array_merge( $item_before, $args );
 	}
 
-
 	$data = array(
 		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
-		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
-		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : eaccounting_sanitize_price( $args['opening_balance'] ),
-		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
-		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
-		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
+		'code'            => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
+		'order'           => empty( $args['order'] ) ? '' : absint( $args['order'] ),
+		'description'     => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'status'          => 'active' == $args['status'] ? 'active' : 'inactive',
 		'updated_at'      => current_time( 'Y-m-d H:i:s' ),
 		'created_at'      => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
@@ -43,30 +40,30 @@ function eaccounting_insert_account( $args ) {
 
 
 	if ( empty( $data['name'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Name is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Payment method name is required', 'wp-eaccounting' ) );
 	}
 
-	if ( !isset( $data['opening_balance'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Opening balance is required', 'wp-ever-accounting' ) );
+	if ( empty( $data['code'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Payment method code is required', 'wp-eaccounting' ) );
 	}
 
 	$where = array( 'id' => $id );
 	$data  = wp_unslash( $data );
 
 	if ( $update ) {
-		do_action( 'eaccounting_pre_account_update', $id, $data );
-		if ( false === $wpdb->update( $wpdb->ea_accounts, $data, $where ) ) {
-			return new WP_Error( 'db_update_error', __( 'Could not update account in the database', 'wp-ever-accounting' ), $wpdb->last_error );
+		do_action( 'eaccounting_pre_payment_method_update', $id, $data );
+		if ( false === $wpdb->update( $wpdb->ea_payment_methods, $data, $where ) ) {
+			return new WP_Error( 'db_update_error', __( 'Could not update payment method in the database', 'wp-eaccounting' ), $wpdb->last_error );
 		}
-		do_action( 'eaccounting_account_update', $id, $data, $item_before );
+		do_action( 'eaccounting_payment_method_update', $id, $data, $item_before );
 	} else {
-		do_action( 'eaccounting_pre_account_insert', $id, $data );
-		if ( false === $wpdb->insert( $wpdb->ea_accounts, $data ) ) {
+		do_action( 'eaccounting_pre_payment_method_insert', $id, $data );
+		if ( false === $wpdb->insert( $wpdb->ea_payment_methods, $data ) ) {
 
-			return new WP_Error( 'db_insert_error', __( 'Could not insert account into the database', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new WP_Error( 'db_insert_error', __( 'Could not insert payment method into the database', 'wp-eaccounting' ), $wpdb->last_error );
 		}
 		$id = (int) $wpdb->insert_id;
-		do_action( 'eaccounting_account_insert', $id, $data );
+		do_action( 'eaccounting_payment_method_insert', $id, $data );
 	}
 
 	return $id;
@@ -74,47 +71,47 @@ function eaccounting_insert_account( $args ) {
 
 
 /**
- * Get account
+ * Get payment method
  *
  * @param $id
  *
  * @return object|null
  * @since 1.0.0
  */
-function eaccounting_get_account( $id ) {
+function eaccounting_get_payment_method( $id ) {
 	global $wpdb;
 
-	return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->ea_accounts} where id=%s", $id ) );
+	return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->ea_payment_methods} where id=%s", $id ) );
 }
 
 /**
- * Delete account
+ * Delete revenue
  *
  * @param $id
  *
  * @return bool
  * @since 1.0.0
  */
-function eaccounting_delete_account( $id ) {
+function eaccounting_delete_payment_method( $id ) {
 	global $wpdb;
 	$id = absint( $id );
 
-	$account = eaccounting_get_account( $id );
+	$account = eaccounting_get_payment_method( $id );
 	if ( is_null( $account ) ) {
 		return false;
 	}
 
-	do_action( 'eaccounting_pre_account_delete', $id, $account );
-	if ( false == $wpdb->delete( $wpdb->ea_accounts, array( 'id' => $id ), array( '%d' ) ) ) {
+	do_action( 'eaccounting_pre_payment_method_delete', $id, $account );
+	if ( false == $wpdb->delete( $wpdb->ea_payment_methods, array( 'id' => $id ), array( '%d' ) ) ) {
 		return false;
 	}
-	do_action( 'eaccounting_account_delete', $id, $account );
+	do_action( 'eaccounting_payment_method_delete', $id, $account );
 
 	return true;
 }
 
 /**
- * Get all accounts
+ * Get all payment methods
  *
  * @param array $args
  * @param bool $count
@@ -122,7 +119,7 @@ function eaccounting_delete_account( $id ) {
  * @return array|null|object|string
  * since 1.0.0
  */
-function eaccounting_get_accounts( $args = array(), $count = false ) {
+function eaccounting_get_payment_methods( $args = array(), $count = false ) {
 	global $wpdb;
 	$query_fields  = '';
 	$query_from    = '';
@@ -138,33 +135,19 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 		'orderby'        => 'id',
 		'order'          => 'DESC',
 		'fields'         => 'all',
-		'search_columns' => array( 'name', 'bank_name' ),
+		'search_columns' => array( 'name', 'code', 'description' ),
 		'per_page'       => 20,
 		'page'           => 1,
 		'offset'         => 0,
 	);
 
 	$args        = wp_parse_args( $args, $default );
-	$query_from  = "FROM $wpdb->ea_accounts";
+	$query_from  = "FROM $wpdb->ea_payment_methods";
 	$query_where = 'WHERE 1=1';
 
 	//status
 	if ( ! empty( $args['status'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_accounts.status= %s", eaccounting_sanitize_status( $args['status'] ) );
-	}
-
-	//opening_balance
-	if ( ! empty( $args['opening_balance'] ) ) {
-		$balance = trim( $args['opening_balance'] );
-		$number  = preg_replace( '#[^0-9\.]#', '', $balance );
-
-		if ( strpos( $balance, '>' ) !== false ) {
-			$query_where .= $wpdb->prepare( " AND $wpdb->ea_accounts.opening_balance > %f ", $number );
-		} elseif ( strpos( $balance, '<' ) !== false ) {
-			$query_where .= $wpdb->prepare( " AND $wpdb->ea_accounts.opening_balance < %f ", $number );
-		} else {
-			$query_where .= $wpdb->prepare( " AND $wpdb->ea_accounts.opening_balance = %f ", $number );
-		}
+		$query_where .= $wpdb->prepare( " AND $wpdb->ea_payment_methods.status= %s", eaccounting_sanitize_status( $args['status'] ) );
 	}
 
 	//fields
@@ -174,13 +157,13 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 		$query_fields = array();
 		foreach ( $args['fields'] as $field ) {
 			$field          = 'id' === $field ? 'id' : sanitize_key( $field );
-			$query_fields[] = "$wpdb->ea_accounts.$field";
+			$query_fields[] = "$wpdb->ea_payment_methods.$field";
 		}
 		$query_fields = implode( ',', $query_fields );
 	} elseif ( 'all' == $args['fields'] ) {
-		$query_fields = "$wpdb->ea_accounts.*";
+		$query_fields = "$wpdb->ea_payment_methods.*";
 	} else {
-		$query_fields = "$wpdb->ea_accounts.id";
+		$query_fields = "$wpdb->ea_payment_methods.id";
 	}
 
 	//include
@@ -192,10 +175,10 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 	if ( ! empty( $include ) ) {
 		// Sanitized earlier.
 		$ids         = implode( ',', $include );
-		$query_where .= " AND $wpdb->ea_accounts.id IN ($ids)";
+		$query_where .= " AND $wpdb->ea_payment_methods.id IN ($ids)";
 	} elseif ( ! empty( $args['exclude'] ) ) {
 		$ids         = implode( ',', wp_parse_id_list( $args['exclude'] ) );
-		$query_where .= " AND $wpdb->ea_accounts.id NOT IN ($ids)";
+		$query_where .= " AND $wpdb->ea_payment_methods.id NOT IN ($ids)";
 	}
 
 	//search
@@ -230,7 +213,7 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 	}
 
 	if ( $count ) {
-		return $wpdb->get_var( "SELECT count($wpdb->ea_accounts.id) $query_from $query_where" );
+		return $wpdb->get_var( "SELECT count($wpdb->ea_payment_methods.id) $query_from $query_where" );
 	}
 
 

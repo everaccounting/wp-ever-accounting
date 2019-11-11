@@ -178,4 +178,49 @@ class EAccounting_CLI_Generator extends \WP_CLI_Command {
 
 		WP_CLI::success( sprintf( "Total generated : %d", $generated ) );
 	}
+
+
+	public static function make_revenues( $args ) {
+		list( $amount ) = $args;
+		$progress = \WP_CLI\Utils\make_progress_bar( 'Generating revenues', $amount );
+		$faker    = \Faker\Factory::create();
+		$generated = 0;
+		for ( $i = 1; $i <= $amount; $i ++ ) {
+			$created = eaccounting_insert_revenue( array(
+				'account_id' => self::get_random_account(),
+				'paid_at'    => $faker->date(),
+				'amount'     => $faker->randomNumber(),
+				'contact_id' => self::get_random_contact(),
+				'description'=> $faker->realText( 100 ),
+				'category_id'=> self::get_random_category(),
+				'reference'  => $faker->realText(10),
+				'parent_id'  => '',
+				'reconciled'  => '',
+				'created_at' => $faker->date(),
+				'updated_at' => $faker->date(),
+			) );
+
+			if ( ! is_wp_error( $created ) && $created ) {
+				$generated ++;
+			}
+		}
+
+
+		WP_CLI::success( sprintf( "Total generated : %d", $generated ) );
+	}
+
+	public static function get_random_account(){
+		global $wpdb;
+		return $wpdb->get_var("SELECT id from $wpdb->ea_accounts ORDER by rand() LIMIT 1");
+	}
+
+	public static function get_random_contact(){
+		global $wpdb;
+		return $wpdb->get_var("SELECT id from $wpdb->ea_contacts ORDER by rand() LIMIT 1");
+	}
+
+	public static function get_random_category(){
+		global $wpdb;
+		return $wpdb->get_var("SELECT id from $wpdb->ea_categories ORDER by rand() LIMIT 1");
+	}
 }

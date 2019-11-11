@@ -112,6 +112,8 @@ final class eAccounting {
 			'ea_products',
 			'ea_taxes',
 			'ea_categories',
+			'ea_revenues',
+			'ea_payment_methods',
 		);
 		foreach ( $tables as $table ) {
 			$wpdb->$table   = $wpdb->prefix . $table;
@@ -135,6 +137,8 @@ final class eAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/product-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/category-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/revenue-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/payment-method-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/template-functions.php' );
