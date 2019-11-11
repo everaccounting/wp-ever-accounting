@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
 			eAccountingTaxes.disableForm();
 			var formData = $(e.target).serializeArray();
 
-			console.log($(e.target).serializeArray());
 			jQuery.ajax({
 				url: window.ajaxurl,
 				type: 'POST',

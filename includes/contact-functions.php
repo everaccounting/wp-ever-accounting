@@ -6,8 +6,8 @@ defined( 'ABSPATH' ) || exit();
  * since 1.0.0
  * @return array
  */
-function eaccounting_get_contact_roles() {
-	return apply_filters( 'eaccounting_contact_roles', array(
+function eaccounting_get_contact_types() {
+	return apply_filters( 'eaccounting_contact_types', array(
 		'customer' => __( 'Customer', 'wp-eaccounting' ),
 		'vendor'   => __( 'Vendor', 'wp-eaccounting' ),
 	) );
@@ -55,7 +55,7 @@ function eaccounting_insert_contact( $args ) {
 		'website'    => empty( $args['website'] ) ? '' : esc_url_raw( $args['website'] ),
 		'status'     => empty( $args['status'] ) ? 'inactive' : eaccounting_sanitize_status( $args['status'] ),
 		'note'       => empty( $args['note'] ) ? '' : sanitize_textarea_field( $args['note'] ),
-		'roles'      => empty( $args['roles'] ) ? array() : (array) $args['roles'],
+		'types'      => empty( $args['types'] ) ? array( 'customer' ) :  $args['types'],
 		'created_at' => empty( $args['created_at'] ) ? current_time( 'mysql' ) : sanitize_text_field( $args['created_at'] ),
 		'updated_at' => current_time( 'mysql' ),
 	);
@@ -76,17 +76,18 @@ function eaccounting_insert_contact( $args ) {
 		return new WP_Error( 'empty_name', __( 'First Name & Last Name is required', 'wp-eaccounting' ) );
 	}
 
-	//prepare roles
-	$roles = [];
-	foreach ( $data['roles'] as $role ) {
-		if ( in_array( $role, eaccounting_get_contact_roles() ) ) {
-			$roles[] = $role;
+	//prepare types
+
+	$types = [];
+	foreach ( $data['types'] as $role ) {
+		if ( array_key_exists( $role, eaccounting_get_contact_types() ) ) {
+			$types[] = $role;
 		}
 	}
-	if ( $roles ) {
-		$roles = [ 'customer' ];
+	if ( empty($types) ) {
+		$types = [ 'customer' ];
 	}
-	$data['roles'] = maybe_serialize( $roles );
+	$data['types'] = maybe_serialize( $types );
 
 	//user id
 	if ( empty( $data['user_id'] ) ) {
@@ -118,17 +119,34 @@ function eaccounting_insert_contact( $args ) {
 
 
 /**
- * Get Contact
- *
- * @param $id
- *
- * @return object|null
  * @since 1.0.0
+ * @param $id
+ * @param string $by
+ *
+ * @return array|object|void|null
  */
-function eaccounting_get_contact( $id ) {
+function eaccounting_get_contact( $id, $by = 'id' ) {
 	global $wpdb;
-
-	return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->ea_contacts} where id=%s", $id ) );
+	switch ($by) {
+		case 'user_id':
+			$user_id = absint($id);
+			$sql = "SELECT * FROM $wpdb->ea_contacts WHERE user_id = {$user_id} ";
+			break;
+		case 'email':
+			$email = (string)$id;
+			$sql = "SELECT * FROM $wpdb->ea_contacts WHERE email = '{$email}'";
+			break;
+		case 'phone':
+			$phone = (string)$id;
+			$sql = "SELECT * FROM $wpdb->ea_contacts WHERE phone = '{$phone}'";
+			break;
+		case 'id':
+		default:
+			$id = absint($id);
+			$sql = "SELECT * FROM $wpdb->ea_contacts WHERE id = {$id} ";
+			break;
+	}
+	return $wpdb->get_row($sql);
 }
 
 /**
@@ -196,8 +214,30 @@ function eaccounting_get_contact_name( $contact ) {
 }
 
 /**
+ * Contact type
+ * @since 1.0.0
+ * @param $contact
+ *
+ * @return array|mixed
+ */
+function eaccounting_get_contact_type($contact){
+	var_dump($contact);
+	if ( is_object( $contact ) && isset( $contact->types ) && is_string($contact)) {
+		return maybe_unserialize($contact->types);
+	}elseif (is_object( $contact ) && isset( $contact->types ) && is_array($contact) ){
+		return $contact->types;
+	}elseif (is_numeric($contact)){
+		return eaccounting_get_contact_type($contact);
+	}else{
+		return [];
+	}
+}
+
+
+/**
  * Get contacts
  * since 1.0.0
+ *
  * @param array $args
  * @param bool $count
  *

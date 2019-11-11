@@ -28,4 +28,3 @@
 
 })(jQuery, window, window.wp, document, undefined);
 
-

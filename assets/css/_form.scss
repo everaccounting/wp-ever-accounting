@@ -1,33 +1,14 @@
-input[type="text"],
-input[type="password"],
-input[type="color"],
-input[type="date"],
-input[type="datetime"],
-input[type="datetime-local"],
-input[type="email"],
-input[type="month"],
-input[type="number"],
-input[type="search"],
-input[type="tel"],
-input[type="text"],
-input[type="time"],
-input[type="url"],
-input[type="week"],
-input[type="number"],
-select,
-textarea{
-	&.ea-form-control{
-		width: 100%;
-		margin: 0;
-		-webkit-box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		box-sizing: border-box;
-		vertical-align: middle;
-		height:auto;
+.ea-form-control{
+	width: 100%;
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	vertical-align: middle;
+	height:auto;
 
-		&.has-error{
-			border:1px solid red;
-		}
+	&.has-error{
+		border:1px solid red;
 	}
 }
 
@@ -111,6 +92,14 @@ textarea{
 		}
 	}
 }
+.ea-checkboxes{
+	.ea-check-input{
+		font-weight: 500;
+		display: inline-block;
+		line-height: 1.5;
+		margin-right: 20px;
+	}
+}
 
 .ea-control-label{
 	display: block;
@@ -130,6 +119,8 @@ textarea{
 	margin-bottom: 15px;
 	box-sizing: border-box;
 }
+
+
 
 .ea-input-group{
 	position: relative;

@@ -89,7 +89,7 @@ class EAccounting_Install {
 			`website` VARCHAR(191) DEFAULT NULL,
 			`note` TEXT DEFAULT NULL,
   			`status` ENUM ('active', 'inactive') DEFAULT 'active',
-  			`roles` VARCHAR(191) DEFAULT NULL COMMENT 'Customer or vendor',
+  			`types` VARCHAR(191) DEFAULT NULL COMMENT 'Customer or vendor',
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),

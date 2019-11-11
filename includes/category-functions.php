@@ -158,6 +158,7 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 		'include'        => array(),
 		'exclude'        => array(),
 		'status'         => '',
+		'type'           => '',
 		'search'         => '',
 		'orderby'        => 'id',
 		'order'          => 'DESC',
@@ -175,6 +176,11 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 	//status
 	if ( ! empty( $args['status'] ) ) {
 		$query_where .= $wpdb->prepare( " AND $wpdb->ea_categories.status= %s", sanitize_key( $args['status'] ) );
+	}
+
+	//type
+	if ( ! empty( $args['type'] ) ) {
+		$query_where .= $wpdb->prepare( " AND $wpdb->ea_categories.type= %s", sanitize_key( $args['type'] ) );
 	}
 
 	//fields

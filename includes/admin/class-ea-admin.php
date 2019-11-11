@@ -29,6 +29,7 @@ class EAccounting_Admin {
 	 * EAccounting_Admin constructor.
 	 */
 	public function __construct() {
+		$this->define_constants();
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
 		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ));
@@ -36,41 +37,89 @@ class EAccounting_Admin {
 	}
 
 	/**
+	 * define all required constants
+	 *
+	 * since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function define_constants() {
+		define( 'EACCOUNTING_ADMIN_ABSPATH', dirname( __FILE__ ) );
+	}
+
+	/**
 	 * Include any classes we need within admin.
 	 */
 	public function includes() {
-		//functions
-		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
 		require_once dirname( __FILE__ ) . '/admin-functions.php';
+		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
+		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-list-table.php';
 
-		//menus
-		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
-		//settings
-		require_once dirname( __FILE__ ) . '/class-ea-settings-api.php';
-		require_once dirname( __FILE__ ) . '/class-ea-settings-page.php';
-		require_once dirname( __FILE__ ) . '/settings/class-ea-general-settings.php';
-		require_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
-
-		//income
-//		require_once dirname( __FILE__ ) . '/income/income-page.php';
-//		require_once dirname( __FILE__ ) . '/income/invoices/invoices-tab.php';
-//		require_once dirname( __FILE__ ) . '/income/revenues/revenues-tab.php';
-
-		//misc
-		require_once dirname( __FILE__ ) . '/misc/misc-page.php';
-		require_once dirname( __FILE__ ) . '/misc/categories/category-actions.php';
-		require_once dirname( __FILE__ ) . '/misc/categories/categories-tab.php';
-		require_once dirname( __FILE__ ) . '/misc/tax-rates/tax-rates-actions.php';
-		require_once dirname( __FILE__ ) . '/misc/tax-rates/tax-rates-tab.php';
 
 		//product
-		require_once dirname( __FILE__ ) . '/products/product-actions.php';
-		require_once dirname( __FILE__ ) . '/products/products-page.php';
+		require_once dirname( __FILE__ ) . '/views/products-page.php';
+		require_once dirname( __FILE__ ) . '/actions/product-actions.php';
 
 		//contact
-		require_once dirname( __FILE__ ) . '/contacts/contact-actions.php';
-		require_once dirname( __FILE__ ) . '/contacts/contacts-page.php';
+		require_once dirname( __FILE__ ) . '/views/contacts-page.php';
+		require_once dirname( __FILE__ ) . '/actions/contact-actions.php';
+
+		//misc
+		require_once dirname( __FILE__ ) . '/views/misc-page.php';
+		require_once dirname( __FILE__ ) . '/views/categories-tab.php';
+		require_once dirname( __FILE__ ) . '/actions/category-actions.php';
+		require_once dirname( __FILE__ ) . '/views/tax-rates-tab.php';
+		require_once dirname( __FILE__ ) . '/actions/tax-rates-actions.php';
+
+		//banking
+		require_once dirname( __FILE__ ) . '/views/banking-page.php';
+		require_once dirname( __FILE__ ) . '/views/accounts-tab.php';
+		require_once dirname( __FILE__ ) . '/actions/account-actions.php';
+
+		//expense
+		require_once dirname( __FILE__ ) . '/views/expense-page.php';
+		require_once dirname( __FILE__ ) . '/views/payments-tab.php';
+
+		//income
+		require_once dirname( __FILE__ ) . '/views/income-page.php';
+
+		//tools
+		require_once dirname( __FILE__ ) . '/views/tools-page.php';
+
+
+//		//functions
+//		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
+//		require_once dirname( __FILE__ ) . '/admin-functions.php';
+//		require_once dirname( __FILE__ ) . '/class-ea-admin-list-table.php';
+//
+//		//menus
+//		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
+//		//settings
+//		require_once dirname( __FILE__ ) . '/class-ea-settings-api.php';
+//		require_once dirname( __FILE__ ) . '/class-ea-settings-page.php';
+//		require_once dirname( __FILE__ ) . '/settings/class-ea-general-settings.php';
+//		require_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
+//
+//		//income
+////		require_once dirname( __FILE__ ) . '/income/income-page.php';
+////		require_once dirname( __FILE__ ) . '/income/invoices/invoices-tab.php';
+////		require_once dirname( __FILE__ ) . '/income/revenues/revenues-tab.php';
+//
+//		//misc
+//		require_once dirname( __FILE__ ) . '/misc/misc-page.php';
+//		require_once dirname( __FILE__ ) . '/misc/categories/category-actions.php';
+//		require_once dirname( __FILE__ ) . '/misc/categories/categories-tab.php';
+//		require_once dirname( __FILE__ ) . '/misc/tax-rates/tax-rates-actions.php';
+//		require_once dirname( __FILE__ ) . '/misc/tax-rates/tax-rates-tab.php';
+//
+//		//product
+//		require_once dirname( __FILE__ ) . '/products/product-actions.php';
+//		require_once dirname( __FILE__ ) . '/products/products-page.php';
+//
+//		//contact
+//		require_once dirname( __FILE__ ) . '/contacts/contact-actions.php';
+//		require_once dirname( __FILE__ ) . '/contacts/contacts-page.php';
 	}
 
 	/**
@@ -114,9 +163,9 @@ class EAccounting_Admin {
 		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
 		wp_register_style( 'jquery-ui', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.min.css', [], $jquery_version );
 
-		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css', time() );
-		wp_enqueue_style( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.css', time() );
-		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css', time() );
+		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css',['jquery-ui'], time() );
+		wp_enqueue_style( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.css',[], time() );
+		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css',[], time() );
 
 		wp_enqueue_script( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'eaccounting-mask-money', eaccounting()->plugin_url() . '/assets/vendor/mask-money/mask-money.js', array( 'jquery' ), time(), true );
@@ -125,7 +174,8 @@ class EAccounting_Admin {
 			'jquery',
 			'eaccounting-select2',
 			'eaccounting-mask-money',
-			'wp-util'
+			'wp-color-picker',
+			'eaccounting-datepicker'
 		), time(), true );
 
 		wp_localize_script( 'eaccounting-admin', 'eAccountingi18n', array(
@@ -137,9 +187,7 @@ class EAccounting_Admin {
 				'symbol_first'        => true,
 			)
 		) );
-		wp_enqueue_script( 'eaccounting-datepicker' );
-		wp_enqueue_style( 'jquery-ui' );
-		wp_enqueue_style( 'wp-color-picker' );
+
 		wp_enqueue_media();
 	}
 

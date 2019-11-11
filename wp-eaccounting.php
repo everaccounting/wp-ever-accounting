@@ -139,6 +139,9 @@ final class eAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/template-functions.php' );
 
+		//object
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
+
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/class-ea-ajax.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {

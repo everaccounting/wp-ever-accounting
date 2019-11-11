@@ -32,13 +32,13 @@ function eaccounting_insert_product( $args ) {
 		'name'           => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'sku'            => ! isset( $args['sku'] ) ? '' : sanitize_text_field( $args['sku'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
-		'sale_price'     => ! isset( $args['sale_price'] ) ? '' : (double) $args['sale_price'],
-		'purchase_price' => ! isset( $args['purchase_price'] ) ? '0.00' : (double) $args['purchase_price'],
-		'quantity'       => ! isset( $args['quantity'] ) ? '0' : intval( $args['quantity'] ),
-		'category_id'    => ! isset( $args['category_id'] ) ? '' : intval( $args['category_id'] ),
+		'sale_price'     => ! isset( $args['sale_price'] ) ? '' : eaccounting_sanitize_price($args['sale_price']),
+		'purchase_price' => ! isset( $args['purchase_price'] ) ? '0.00' : eaccounting_sanitize_price($args['purchase_price']),
+		'quantity'       => ! isset( $args['quantity'] ) ? '0' : absint( $args['quantity'] ),
+		'category_id'    => ! isset( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
 		'status'         => eaccounting_sanitize_status( $args['status'] ),
-		'updated_at'     => date( 'Y-m-d H:i:s' ),
-		'created_at'     => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
+		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
+		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 
@@ -46,8 +46,12 @@ function eaccounting_insert_product( $args ) {
 		return new WP_Error( 'empty_content', __( 'Product name is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['sale_price'] ) ) {
+	if ( !isset( $data['sale_price'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Sale Price is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( !isset( $data['purchase_price'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Purchase Price is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( ! isset( $data['quantity'] ) ) {

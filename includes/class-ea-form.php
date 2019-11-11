@@ -273,8 +273,8 @@ class EAccounting_Form {
 	}
 
 	public static function checkboxes_control( $args ) {
-		$args = wp_parse_args( $args, array(
-			'label'          => '',
+		$args              = wp_parse_args( $args, array(
+			'label'         => '',
 			'name'          => null,
 			'options'       => array(),
 			'selected'      => array(),
@@ -303,18 +303,18 @@ class EAccounting_Form {
 
 		$html = sprintf( '<div class="ea-form-group ea-checkbox-group %s">', implode( ' ', $wrapper_classes ) );
 		$html .= ! empty( $label ) ? sprintf( '<label for="%1$s" class="ea-control-label">%2$s</label>', $id, $label ) : '';
-		$html .= '<fieldset>';
+		$html .= '<fieldset class="ea-checkboxes">';
 		foreach ( $args['options'] as $key => $label ) {
-			$checked = isset( $value[ $key ] ) ? $value[ $key ] : '0';
-			error_log($key);
-			error_log($value);
-			error_log($checked);
+			$checked = in_array( $key, $value ) ? $key : '0';
+			$html    .= sprintf( '<div class="ea-check-input">' );
 			$html    .= sprintf( '<label for="%1$s[%2$s]">', $id, $key );
-			$html    .= sprintf( '<input type="checkbox" class="checkbox ea-check-control" id="%1$s[%3$s]" name="%2$s[%3$s]" value="%3$s" %4$s />', $id, $name, $key, checked( $checked, $key, false ) );
+			$html    .= sprintf( '<input type="checkbox" class="checkbox ea-check-control" id="%1$s[%3$s]" name="%2$s[]" value="%3$s" %4$s />', $id, $name, $key, checked( $checked, $key, false ) );
 			$html    .= sprintf( ' %1$s</label>', $label );
+			$html    .= sprintf( '</div>' );
 		}
 		$html .= '</fieldset>';
 		$html .= '</div><!--.ea-form-group-->';
+
 		return $html;
 	}
 
@@ -404,11 +404,13 @@ class EAccounting_Form {
 	 * Get categories dropdown
 	 *
 	 * since 1.0.0
+	 *
 	 * @param $args
 	 *
 	 * @return string
 	 */
 	public static function categories_dropdown( $args ) {
+		$type = isset($args['type'])? $args['type']: '';
 		$args = wp_parse_args( $args, array(
 			'label'   => __( 'Category', 'wp-eaccounting' ),
 			'name'    => 'category_id',
@@ -417,6 +419,7 @@ class EAccounting_Form {
 			'options' => wp_list_pluck( eaccounting_get_categories( array(
 				'per_page' => '-1',
 				'status'   => 'active',
+				'type'   => $type,
 				'fields'   => array( 'id', 'name' ),
 			) ), 'name', 'id' ),
 		) );
@@ -428,8 +431,47 @@ class EAccounting_Form {
 
 	}
 
-	public static function accounts_dropdown( $args ) {
+	public static function customer_dropdown( $args ) {
+		$args = wp_parse_args( $args, array(
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_contacts( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'type'     => 'customer',
+				'fields'   => array( 'id', 'name' ),
+			) ), 'name', 'id' ),
+		) );
 
+		return self::select_control( $args );
+	}
+
+
+	public static function vendor_dropdown( $args ) {
+		$args = wp_parse_args( $args, array(
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_contacts( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'type'     => 'vendor',
+				'fields'   => array( 'id', 'first_name' ),
+			) ), 'first_name', 'id' ),
+		) );
+
+		return self::select_control( $args );
+	}
+
+
+	public static function accounts_dropdown( $args ) {
+		$args = wp_parse_args( $args, array(
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_accounts( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'fields'   => array( 'id', 'name' ),
+			) ), 'name', 'id' ),
+		) );
+
+		return self::select_control( $args );
 	}
 
 	public static function submit() {
