@@ -132,6 +132,7 @@ final class eAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-form.php' );
 
+		require_once( EACCOUNTING_ABSPATH . '/includes/eaccounting-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/contact-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );

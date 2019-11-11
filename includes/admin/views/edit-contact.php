@@ -151,6 +151,8 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 
 
 			?>
+			<div class="ea-uploaded-files"></div>
+			<input type="file" class="ea-file-upload">
 		</div>
 
 		<?php do_action( 'eaccounting_add_contact_form_bottom' ); ?>
