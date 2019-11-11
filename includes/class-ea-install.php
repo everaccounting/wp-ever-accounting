@@ -293,6 +293,19 @@ class EAccounting_Install {
 		    PRIMARY KEY (`id`),
 		    KEY `type` (`type`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_payment_methods(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  		  	`name` varchar(191) NOT NULL,
+		  	`code` varchar(50) NOT NULL,
+			`order` int(11) NOT NULL,
+			`description` TEXT DEFAULT NULL,
+		    `status` ENUM ('active', 'inactive') DEFAULT 'active',
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`),
+		    KEY `type` (`type`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
 
 
