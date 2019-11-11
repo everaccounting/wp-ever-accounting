@@ -335,4 +335,20 @@ class EAccounting_Contact {
 		return empty($types)? ['customer', 'vendor']: $types;
 	}
 
+	/**
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_created_at() {
+		return $this->created_at;
+	}
+
+	/**
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_updated_at() {
+		return $this->updated_at;
+	}
+
 }

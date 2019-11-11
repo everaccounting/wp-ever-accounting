@@ -27,7 +27,6 @@ function eaccounting_insert_payment_method( $args ) {
 		$args = array_merge( $item_before, $args );
 	}
 
-
 	$data = array(
 		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
