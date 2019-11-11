@@ -144,7 +144,7 @@ class EAccounting_Install {
             `account_id` int(11) NOT NULL,
             `amount` double(15,4) NOT NULL,
             `description` text,
-            `payment_method` varchar(50) NOT NULL,
+            `payment_method_id` int(11) NOT NULL,
             `reference` varchar(191) DEFAULT NULL,
             `paid_at` datetime NOT NULL,
             `reconciled` tinyint(1) NOT NULL DEFAULT '0',
@@ -209,7 +209,7 @@ class EAccounting_Install {
 		  	`contact_id` int(11) DEFAULT NULL,
 		  	`description` text COLLATE utf8mb4_unicode_ci,
 		  	`category_id` int(11) NOT NULL,
-		  	`payment_method` varchar(191) NOT NULL,
+		  	`payment_method_id` int(11) NOT NULL,
 		  	`reference` varchar(191) DEFAULT NULL,
 		  	`parent_id` int(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyint(1) NOT NULL DEFAULT '0',
@@ -229,7 +229,7 @@ class EAccounting_Install {
 		  	`contact_id` int(11) DEFAULT NULL,
 		  	`description` text COLLATE utf8mb4_unicode_ci,
 		  	`category_id` int(11) NOT NULL,
-		  	`payment_method` varchar(191) NOT NULL,
+		  	`payment_method_id` int(11) NOT NULL,
 		  	`reference` varchar(191) DEFAULT NULL,
 		  	`parent_id` int(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyint(1) NOT NULL DEFAULT '0',
@@ -304,7 +304,7 @@ class EAccounting_Install {
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
-		    KEY `type` (`type`)
+		    KEY `status` (`status`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
 

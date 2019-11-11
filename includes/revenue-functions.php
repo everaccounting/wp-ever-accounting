@@ -3,7 +3,7 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Insert Revenue
+ * Insert revenue
  *
  * @param $args
  *
@@ -29,19 +29,19 @@ function eaccounting_insert_revenue( $args ) {
 
 
 	$data = array(
-		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'account_id'      => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
-		'paid_at'         => empty( $args['paid_at'] ) ? '' : $args['paid_at'],
-		'amount'          => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
-		'contact_id'      => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
-		'description'     => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
-		'category_id'     => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
-		'reference'       => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
-//		'method_id'       => empty( $args['method_id'] ) ? '' : absint( $args['method_id'] ),
-		'parent_id'       => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
-		'reconciled'      => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
-		'updated_at'      => current_time( 'Y-m-d H:i:s' ),
-		'created_at'      => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
+		'id'                => empty( $args['id'] ) ? null : absint( $args['id'] ),
+		'account_id'        => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
+		'paid_at'           => empty( $args['paid_at'] ) ? '' : $args['paid_at'],
+		'amount'            => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
+		'contact_id'        => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
+		'description'       => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
+		'category_id'       => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
+		'reference'         => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
+		'payment_method_id' => empty( $args['method_id'] ) ? '' : absint( $args['method_id'] ),
+		'parent_id'         => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
+		'reconciled'        => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
+		'updated_at'        => current_time( 'Y-m-d H:i:s' ),
+		'created_at'        => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 
@@ -144,9 +144,8 @@ function eaccounting_get_revenues( $args = array(), $count = false ) {
 	$default = array(
 		'include'        => array(),
 		'exclude'        => array(),
-		'status'         => '',
 		'search'         => '',
-		'orderby'        => 'id',
+		'orderby'        => 'created_at',
 		'order'          => 'DESC',
 		'fields'         => 'all',
 		'search_columns' => array( 'description', 'reference' ),
