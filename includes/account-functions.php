@@ -56,7 +56,7 @@ function eaccounting_insert_account( $args ) {
 	if ( $update ) {
 		do_action( 'eaccounting_pre_account_update', $id, $data );
 		if ( false === $wpdb->update( $wpdb->ea_accounts, $data, $where ) ) {
-			return new WP_Error( 'db_update_error', __( 'Could not update note in the database', 'wp-ever-accounting' ), $wpdb->last_error );
+			return new WP_Error( 'db_update_error', __( 'Could not update account in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		do_action( 'eaccounting_account_update', $id, $data, $item_before );
 	} else {
@@ -113,6 +113,15 @@ function eaccounting_delete_account( $id ) {
 	return true;
 }
 
+/**
+ * Get all accounts
+ *
+ * @param array $args
+ * @param bool $count
+ *
+ * @return array|null|object|string
+ * since 1.0.0
+ */
 function eaccounting_get_accounts( $args = array(), $count = false ) {
 	global $wpdb;
 	$query_fields  = '';

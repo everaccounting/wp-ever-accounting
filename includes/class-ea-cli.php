@@ -28,6 +28,7 @@ class EAccounting_CLI{
 		WP_CLI::add_command( 'ea make categories', array( 'EAccounting_CLI_Generator', 'make_categories') );
 		WP_CLI::add_command( 'ea make products', array( 'EAccounting_CLI_Generator', 'make_products') );
 		WP_CLI::add_command( 'ea make contacts', array( 'EAccounting_CLI_Generator', 'make_contacts') );
+		WP_CLI::add_command( 'ea make revenues', array( 'EAccounting_CLI_Generator', 'make_revenues') );
 	}
 }
 
