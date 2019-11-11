@@ -33,7 +33,7 @@ class EAccounting_Form {
 		//general
 		$name                = esc_attr( ! empty( $args['name'] ) ? $args['name'] : '' );
 		$id                  = esc_attr( ! empty( $args['id'] ) ? $args['id'] : $name );
-		$value               = $args['value'];
+		$value               = empty($args['value'])? $args['default']: $args['value'];
 		$label               = empty( $args['label'] ) ? false : strip_tags( $args['label'] );
 		$type                = ! empty( $args['type'] ) ? $args['type'] : 'text';
 		$size                = ! empty( $args['size'] ) ? $args['size'] : 'regular';

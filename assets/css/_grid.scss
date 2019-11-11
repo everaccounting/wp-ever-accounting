@@ -5,7 +5,7 @@
 	margin-right: -15px;
 	margin-left: -15px;
 
-	&.no-gutters>.ea-col,&.no-gutters [class*=col-] {
+	.ea-no-gutters>.ea-col, .ea-no-gutters [class*=ea-col-] {
 		padding-right: 0;
 		padding-left: 0
 	}

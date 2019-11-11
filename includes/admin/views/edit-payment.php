@@ -6,7 +6,7 @@ $payment    = new StdClass();
 if ( $payment_id ) {
 	$payment = eaccounting_get_payment( $payment_id );
 }
-$title = ! empty( $payment->id ) ? __( 'Update Category' ) : __( 'Add Category', 'wp-eaccounting' );
+$title = ! empty( $payment->id ) ? __( 'Update Category' ) : __( 'Add Payment', 'wp-eaccounting' );
 echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title );
 echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Categories', 'wp-ever-accounting' ) ); ?>
 
@@ -24,7 +24,7 @@ echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'A
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::date_control( array(
+			echo EAccounting_Form::price_control( array(
 				'label'         => __( 'Amount', 'wp-eaccounting' ),
 				'name'          => 'amount',
 				'value'         => isset( $payment->amount ) ? $payment->amount : '',
@@ -60,12 +60,41 @@ echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'A
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::status_control( array(
+			?>
+			<div class="ea-col-6 ea-input-group-recurring ea-row ea-no-gutters">
+				<?php
+				echo EAccounting_Form::select_control( array(
+					'label'   => __( 'Recurring', 'wp-eaccounting' ),
+					'name'    => 'recurring_frequency',
+					//'select2' => true,
+					'options' => array(
+						'no'      => __( 'No', 'wp-eaccounting' ),
+						'daily'   => __( 'Daily', 'wp-eaccounting' ),
+						'weekly'  => __( 'Weekly', 'wp-eaccounting' ),
+						'monthly' => __( 'Monthly', 'wp-eaccounting' ),
+						'yearly'  => __( 'Yearly', 'wp-eaccounting' ),
+					),
+					'icon'    => 'fa fa-refresh',
+					//'wrapper_class' => 'ea-col-12',
+				) );
+
+				echo EAccounting_Form::input_control( array(
+					'label'         => __( 'Times', 'wp-eaccounting' ),
+					'name'          => 'recurring_count',
+					'type'          => 'number',
+					'default'          => '0',
+					//'icon'          => 'fa fa-refresh',
+					'wrapper_class' => 'ea-col-2 ea-hidden',
+				) );
+				?>
+			</div>
+			<?php
+
+			echo EAccountcing_Form::status_control( array(
 				'label'         => __( 'Status', 'wp-eaccounting' ),
 				'value'         => isset( $payment->status ) ? $payment->status : 'active',
 				'wrapper_class' => 'ea-col-6',
 			) );
-
 
 
 			?>

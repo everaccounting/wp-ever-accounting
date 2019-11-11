@@ -285,4 +285,14 @@ textarea{
 	}
 }
 
+//reucrring
+.ea-hidden{
+	display: none;
+}
 
+.ea-input-group-recurring{
+	margin: 0 !important;
+	.ea-form-group:nth-child(2){
+		padding-left: 10px;
+	}
+}
