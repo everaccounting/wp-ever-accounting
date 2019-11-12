@@ -73,6 +73,8 @@ class EAccounting_Admin {
 		require_once dirname( __FILE__ ) . '/actions/tax-rates-actions.php';
 		require_once dirname( __FILE__ ) . '/views/payment-methods-tab.php';
 		require_once dirname( __FILE__ ) . '/actions/payment-method-actions.php';
+		require_once dirname( __FILE__ ) . '/views/revenues-tab.php';
+		require_once dirname( __FILE__ ) . '/actions/revenue-actions.php';
 
 		//banking
 		require_once dirname( __FILE__ ) . '/views/banking-page.php';

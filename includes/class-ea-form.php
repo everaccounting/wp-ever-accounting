@@ -473,6 +473,18 @@ class EAccounting_Form {
 
 		return self::select_control( $args );
 	}
+	public static function payment_methods_dropdown( $args ) {
+		$args = wp_parse_args( $args, array(
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_payment_methods( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'fields'   => array( 'id', 'name' ),
+			) ), 'name', 'id' ),
+		) );
+
+		return self::select_control( $args );
+	}
 
 	public static function submit() {
 
