@@ -131,7 +131,7 @@ module.exports = function (grunt) {
 			},
 			dist: {
 				options: {
-					potFilename: 'wc-serial-numbers.pot',
+					potFilename: 'wp-ever-accounting.pot',
 					exclude: [
 						'includes/class-updater.php',
 						'apigen/.*',

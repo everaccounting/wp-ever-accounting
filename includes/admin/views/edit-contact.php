@@ -1,24 +1,20 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-$base_url   = admin_url( 'admin.php?page=eaccounting-contacts' );
-$contact_id = empty( $_GET['contact'] ) ? null : absint( $_GET['contact'] );
-$contact    = new EAccounting_Contact( $contact_id );
-$title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eaccounting' );
+$base_url = admin_url( 'admin.php?page=eaccounting-contacts' );
+$title    = $id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eaccounting' );
+printf( '<h1 class="wp-heading-inline">%s</h1>', $title );
+printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Contacts', 'wp-eaccounting' ) );
 ?>
-<?php echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title ); ?>
-<?php echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Contacts', 'wp-eaccounting' ) ); ?>
-
 <div class="ea-card">
 	<form id="ea-contact-form" action="" method="post">
 		<?php do_action( 'eaccounting_add_contact_form_top' ); ?>
-
 		<div class="ea-row">
 			<?php
 
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'First Name', 'wp-ever-accounting' ),
 				'name'          => 'first_name',
-				'value'         => $contact->get_first_name(),
+				'value'         => $first_name,
 				'placeholder'   => __( 'John', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-user-circle-o',
 				'required'      => true,
@@ -28,7 +24,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Last Name', 'wp-ever-accounting' ),
 				'name'          => 'last_name',
-				'value'         => $contact->get_last_name(),
+				'value'         => $last_name,
 				'placeholder'   => __( 'Doe', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-user-circle',
 				'required'      => true,
@@ -39,7 +35,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 				'label'         => __( 'Email', 'wp-ever-accounting' ),
 				'tyoe'          => 'email',
 				'name'          => 'email',
-				'value'         => $contact->get_email(),
+				'value'         => $email,
 				'placeholder'   => __( 'john@doe.com', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-envelope',
 				'required'      => false,
@@ -50,7 +46,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Phone', 'wp-ever-accounting' ),
 				'name'          => 'phone',
-				'value'         => $contact->get_phone(),
+				'value'         => $phone,
 				'placeholder'   => __( '0987654321', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-phone',
 				'required'      => false,
@@ -60,7 +56,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Tax Number', 'wp-ever-accounting' ),
 				'name'          => 'tax_number',
-				'value'         => $contact->get_tax_number(),
+				'value'         => $tax_number,
 				'placeholder'   => __( 'xxxxxxx', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-percent',
 				'required'      => false,
@@ -70,7 +66,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Address', 'wp-ever-accounting' ),
 				'name'          => 'address',
-				'value'         => $contact->get_address(),
+				'value'         => $address,
 				'placeholder'   => __( 'Contact address', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-address-card-o',
 				'required'      => false,
@@ -80,7 +76,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'City', 'wp-ever-accounting' ),
 				'name'          => 'city',
-				'value'         => $contact->get_city(),
+				'value'         => $city,
 				'placeholder'   => __( 'City', 'wp-ever-accounting' ),
 				'icon'          => 'fa  fa-map-marker',
 				'required'      => false,
@@ -90,7 +86,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'State', 'wp-ever-accounting' ),
 				'name'          => 'state',
-				'value'         => $contact->get_state(),
+				'value'         => $state,
 				'placeholder'   => __( 'State', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-location-arrow',
 				'required'      => false,
@@ -100,7 +96,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Postcode', 'wp-ever-accounting' ),
 				'name'          => 'postcode',
-				'value'         => $contact->get_postcode(),
+				'value'         => $postcode,
 				'placeholder'   => __( 'Contact postcode', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-map-signs',
 				'required'      => false,
@@ -110,7 +106,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Country', 'wp-ever-accounting' ),
 				'name'          => 'country',
-				'value'         => $contact->get_country(),
+				'value'         => $country,
 				'placeholder'   => __( 'Country', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-map',
 				'required'      => false,
@@ -120,7 +116,7 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Website', 'wp-ever-accounting' ),
 				'name'          => 'website',
-				'value'         => $contact->get_website(),
+				'value'         => $website,
 				'placeholder'   => __( 'example.com', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-globe',
 				'required'      => false,
@@ -130,37 +126,33 @@ $title      = $contact_id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eacc
 
 			echo EAccounting_Form::status_control( array(
 				'name'          => 'status',
-				'value'         => $contact->get_status(),
+				'value'         => $status,
 				'wrapper_class' => 'ea-col-6',
 			) );
 
 			echo EAccounting_Form::textarea_control( array(
 				'label'         => __( 'Note', 'wp-ever-accounting' ),
 				'name'          => 'note',
-				'value'         => $contact->get_note(),
+				'value'         => $note,
 				'wrapper_class' => 'ea-col-12',
 			) );
 
 			echo EAccounting_Form::checkboxes_control( array(
 				'label'         => __( 'Roles', 'wp-ever-accounting' ),
 				'name'          => 'types',
-				'selected'      => $contact->get_types(),
+				'selected'      => maybe_unserialize($types),
 				'options'       => eaccounting_get_contact_types(),
 				'wrapper_class' => 'ea-col-12',
 			) );
 
-
 			?>
-			<div class="ea-uploaded-files"></div>
-			<input type="file" class="ea-file-upload">
 		</div>
-
 		<?php do_action( 'eaccounting_add_contact_form_bottom' ); ?>
 		<p>
-			<input type="hidden" name="id" value="<?php echo $contact->get_id(); ?>">
-			<input type="hidden" name="eaccounting-action" value="edit_contact">
-			<?php wp_nonce_field( 'eaccounting_contact_nonce' ); ?>
+			<input type="hidden" name="id" value="<?php echo $id ?>">
+			<?php wp_nonce_field( 'eaccounting_edit_contact' ); ?>
 			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-eaccounting' ); ?>">
 		</p>
 	</form>
 </div>
+

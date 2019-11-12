@@ -1,8 +1,6 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-
 class EAccounting_Form {
-
 	/**
 	 * Input Control
 	 *
@@ -71,6 +69,7 @@ class EAccounting_Form {
 
 		return $html;
 	}
+
 
 	/**
 	 * since 1.0.0
@@ -154,6 +153,12 @@ class EAccounting_Form {
 		return $html;
 	}
 
+	/**
+	 * since 1.0.0
+	 * @param $args
+	 *
+	 * @return string
+	 */
 	public static function textarea_control( $args ) {
 		$args = wp_parse_args( $args, array(
 			'label'         => '',
@@ -217,6 +222,12 @@ class EAccounting_Form {
 
 	}
 
+	/**
+	 * since 1.0.0
+	 * @param $args
+	 *
+	 * @return string
+	 */
 	public static function switch_control( $args ) {
 		$args = wp_parse_args( $args, array(
 			'label'         => '',
@@ -272,6 +283,12 @@ class EAccounting_Form {
 
 	}
 
+	/**
+	 * since 1.0.0
+	 * @param $args
+	 *
+	 * @return string
+	 */
 	public static function checkboxes_control( $args ) {
 		$args              = wp_parse_args( $args, array(
 			'label'         => '',
@@ -363,6 +380,12 @@ class EAccounting_Form {
 		return self::input_control( $args );
 	}
 
+	/**
+	 * since 1.0.0
+	 * @param $args
+	 *
+	 * @return string
+	 */
 	public static function color_control( $args ) {
 		$args          = wp_parse_args( $args, array(
 			'class' => '',
@@ -392,109 +415,19 @@ class EAccounting_Form {
 		) ) );
 	}
 
+	/**
+	 * since 1.0.0
+	 * @param $args
+	 */
 	public static function recurring_control( $args ) {
 
 	}
 
-	public static function file_control( $args ) {
-
-	}
-
 	/**
-	 * Get categories dropdown
-	 *
 	 * since 1.0.0
-	 *
 	 * @param $args
-	 *
-	 * @return string
 	 */
-	public static function categories_dropdown( $args ) {
-		$type = isset($args['type'])? $args['type']: '';
-		$args = wp_parse_args( $args, array(
-			'label'   => __( 'Category', 'wp-eaccounting' ),
-			'name'    => 'category_id',
-			'icon'    => 'fa fa-folder-open-o',
-			'select2' => true,
-			'options' => wp_list_pluck( eaccounting_get_categories( array(
-				'per_page' => '-1',
-				'status'   => 'active',
-				'type'   => $type,
-				'fields'   => array( 'id', 'name' ),
-			) ), 'name', 'id' ),
-		) );
-
-		return self::select_control( $args );
-	}
-
-	public static function tax_rates_dropdown( $args ) {
-
-	}
-
-	public static function customer_dropdown( $args ) {
-		$args = wp_parse_args( $args, array(
-			'select2' => true,
-			'options' => wp_list_pluck( eaccounting_get_contacts( array(
-				'per_page' => '-1',
-				'status'   => 'active',
-				'type'     => 'customer',
-				'fields'   => array( 'id', 'name' ),
-			) ), 'name', 'id' ),
-		) );
-
-		return self::select_control( $args );
-	}
-
-
-	public static function vendor_dropdown( $args ) {
-		$args = wp_parse_args( $args, array(
-			'select2' => true,
-			'options' => wp_list_pluck( eaccounting_get_contacts( array(
-				'per_page' => '-1',
-				'status'   => 'active',
-				'type'     => 'vendor',
-				'fields'   => array( 'id', 'first_name' ),
-			) ), 'first_name', 'id' ),
-		) );
-
-		return self::select_control( $args );
-	}
-
-
-	public static function accounts_dropdown( $args ) {
-		$args = wp_parse_args( $args, array(
-			'select2' => true,
-			'options' => wp_list_pluck( eaccounting_get_accounts( array(
-				'per_page' => '-1',
-				'status'   => 'active',
-				'fields'   => array( 'id', 'name' ),
-			) ), 'name', 'id' ),
-		) );
-
-		return self::select_control( $args );
-	}
-	public static function payment_methods_dropdown( $args ) {
-		$args = wp_parse_args( $args, array(
-			'select2' => true,
-			'options' => wp_list_pluck( eaccounting_get_payment_methods( array(
-				'per_page' => '-1',
-				'status'   => 'active',
-				'fields'   => array( 'id', 'name' ),
-			) ), 'name', 'id' ),
-		) );
-
-		return self::select_control( $args );
-	}
-
-	public static function submit() {
-
-	}
-
-	public static function nonce() {
-
-	}
-
-	public static function sanitize_name() {
+	public static function file_control( $args ) {
 
 	}
 
