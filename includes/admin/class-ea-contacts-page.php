@@ -3,6 +3,8 @@ defined( 'ABSPATH' ) || exit();
 
 class EAccounting_Contacts_Page {
 
+
+
 	public static function output() {
 		ob_start();
 		echo '<div class="wrap ea-page-wrap">';

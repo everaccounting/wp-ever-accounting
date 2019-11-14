@@ -16,3 +16,9 @@ function eaccounting_get_views( $template_name, $args = [] ) {
 		include EACCOUNTING_ADMIN_ABSPATH . '/views/' . $template_name;
 	}
 }
+
+
+add_action('eaccounting_admin_post_edit_contact', function(){
+	$_SESSION["firstname"] = "Peter";
+	error_log(print_r($_SESSION, true));
+});

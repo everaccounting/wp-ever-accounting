@@ -10,7 +10,6 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 		<?php do_action( 'eaccounting_add_contact_form_top' ); ?>
 		<div class="ea-row">
 			<?php
-
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'First Name', 'wp-ever-accounting' ),
 				'name'          => 'first_name',
@@ -134,22 +133,41 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 				'label'         => __( 'Note', 'wp-ever-accounting' ),
 				'name'          => 'note',
 				'value'         => $note,
-				'wrapper_class' => 'ea-col-12',
+				'wrapper_class' => 'ea-col-6',
 			) );
+			?>
+			<div class="ea-form-group ea-col-6">
+				<label for="avatar" class="ea-control-label">Note</label>
+				<div class="ea-file-upload-field">
+					<div class="ea-uploaded-files">
+						<div class="ea-uploaded-file">
+							<span class="ea-uploaded-file-preview"></span>
+							<img src="" alt="">
+							<a class="ea-remove-uploaded-file"></a>
+						</div>
+						<input type="hidden" name="avatar_id" value="">
+					</div>
+					<input type="file" class="ea-file-upload" data-file_types="jpg|jpeg|png" name="contact_avatar" data-nonce="<?php echo wp_create_nonce('eaccounting_file_upload');?>">
+				</div>
+			</div>
 
+
+			<?php
 			echo EAccounting_Form::checkboxes_control( array(
 				'label'         => __( 'Roles', 'wp-ever-accounting' ),
 				'name'          => 'types',
 				'selected'      => maybe_unserialize($types),
 				'options'       => eaccounting_get_contact_types(),
-				'wrapper_class' => 'ea-col-12',
+				'wrapper_class' => 'ea-col-6',
 			) );
-
 			?>
+
+
 		</div>
 		<?php do_action( 'eaccounting_add_contact_form_bottom' ); ?>
 		<p>
 			<input type="hidden" name="id" value="<?php echo $id ?>">
+			<input type="hidden" name="eaccounting-action" value="edit_contact">
 			<?php wp_nonce_field( 'eaccounting_edit_contact' ); ?>
 			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-eaccounting' ); ?>">
 		</p>

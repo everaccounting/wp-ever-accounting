@@ -8,6 +8,7 @@ class EAccounting_Ajax {
 	 */
 	public function __construct() {
 		add_action( 'wp_ajax_eaccounting_edit_contact', array( $this, 'edit_contact' ) );
+		add_action( 'wp_ajax_eaccounting_file_upload', array( $this, 'upload_file' ) );
 	}
 
 
@@ -47,6 +48,42 @@ class EAccounting_Ajax {
 	}
 
 	/**
+	 * @since 1.0.0
+	 */
+	public function upload_file(){
+		$this->verify_nonce('eaccounting_file_upload', 'nonce');
+		$this->check_permission();
+		$data = [
+			'files' => [],
+		];
+
+		if ( ! empty( $_FILES ) ) {
+			foreach ( $_FILES as $file_key => $file ) {
+				$files_to_upload = eaccounting_prepare_uploaded_files( $file );
+				foreach ( $files_to_upload as $file_to_upload ) {
+					$uploaded_file = eaccounting_upload_file(
+						$file_to_upload,
+						[
+							'file_key' => $file_key,
+						]
+					);
+
+					if ( is_wp_error( $uploaded_file ) ) {
+						$data['files'][] = [
+							'error' => $uploaded_file->get_error_message(),
+						];
+					} else {
+						$data['files'][] = $uploaded_file;
+					}
+				}
+			}
+		}
+
+		wp_send_json( $data );
+
+	}
+
+	/**
 	 * Check permission
 	 *
 	 * since 1.0.0
@@ -63,8 +100,8 @@ class EAccounting_Ajax {
 	 *
 	 * @param $action
 	 */
-	public function verify_nonce( $action ) {
-		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], $action ) ) {
+	public function verify_nonce( $action, $field= '_wpnonce' ) {
+		if ( ! isset( $_REQUEST[$field] ) || ! wp_verify_nonce( $_REQUEST[$field], $action ) ) {
 			$this->send_error( __( 'Error: Nonce verification failed', 'wp-ever-accounting' ) );
 		}
 	}
