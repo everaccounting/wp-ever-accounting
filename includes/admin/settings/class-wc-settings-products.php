@@ -47,7 +47,6 @@ class EAccounting_Settings_Products extends EAccounting_Settings_Page {
 	 * @return array
 	 */
 	public function get_settings( $current_section = '' ) {
-		error_log($current_section);
 		if ( 'inventory' === $current_section ) {
 			$settings = apply_filters(
 				'woocommerce_inventory_settings',

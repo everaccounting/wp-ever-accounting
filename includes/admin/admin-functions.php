@@ -18,7 +18,15 @@ function eaccounting_get_views( $template_name, $args = [] ) {
 }
 
 
-add_action('eaccounting_admin_post_edit_contact', function(){
-	$_SESSION["firstname"] = "Peter";
-	error_log(print_r($_SESSION, true));
-});
+
+/**
+ * Add admin notice
+ * since 1.0.0
+ * @param $notice
+ * @param string $type
+ * @param bool $dismissible
+ */
+function eaccounting_admin_notice( $notice, $type = 'success', $dismissible = true ) {
+	$notices = EAccounting_Admin_Notices::instance();
+	$notices->add($notice, $type, $dismissible);
+}

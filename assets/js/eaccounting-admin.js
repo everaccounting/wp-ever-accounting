@@ -1,74 +1,31 @@
-window.eAccounting = window.eAccounting || {};
-(function ($) {
-	$.eAccountingFormHandler = function (form, options) {
-
-		var defaults = {
-			action: undefined,
-			redirect: true
-		};
-
-		var plugin = this;
-
-		plugin.settings = {};
-
-		var $form = $(form),
-			form = form;
-
-		plugin.init = function () {
-			plugin.settings = $.extend({}, defaults, options);
-			if (this.settings.action === undefined || this.settings.action === '') {
-				alert('Please define a action');
-			}
-			$form.on('submit', this.handleForm);
-
-
-		};
-		plugin.handleForm = function (e) {
-			e.preventDefault();
-			plugin.disableSubmit();
-			var form = $(this).serializeObject();
-			wp.ajax.send(plugin.settings.action, {
-				data: form,
-				success: function (res) {
-					if (res.id && res.redirect) {
-						window.location.href = res.redirect;
-					}
-				},
-				error: function (response) {
-					alert(response);
-				}
-			});
-
-		};
-		plugin.disableSubmit = function () {
-			$form.find('[type="submit"]').attr('disabled', 'disabled');
-		};
-
-		plugin.enableSubmit = function () {
-			$form.find('[type="submit"]').removeAttr('disabled');
-		};
-
-		plugin.init();
-
-	};
-
-	$.fn.eAccountingFormHandler = function (options) {
-
-		return this.each(function () {
-			if (undefined === $(this).data('eAccountingFormHandler')) {
-				var plugin = new $.eAccountingFormHandler(this, options);
-				$(this).data('handler', plugin);
-			}
-		});
-
-	};
-
-})(jQuery);
-
 (function ($, window, wp, document, undefined) {
 	'use strict';
-	$('#ea-contact-form').eAccountingFormHandler({action: 'eaccounting_edit_contact'});
+	var eAccounting = {
+		$select2Control: $('.ea-select2-control'),
+		$priceControl: $('.ea-price-control'),
+		$colorControl: $('.ea-color-control'),
+		$recurringControl: $('#recurring_frequency'),
+		initializePlugins: function () {
+			this.$select2Control.select2();
+			this.$priceControl.maskMoney({
+				thousands: eAccountingi18n.localization.thousands_separator,
+				decimal: eAccountingi18n.localization.decimal_mark,
+				precision: eAccountingi18n.localization.precision,
+				allowZero: true,
+				prefix: eAccountingi18n.localization.price_symbol,
+			});
+			this.$colorControl.wpColorPicker();
+			this.$priceControl.trigger('focus');
+			this.$priceControl.trigger('blur');
+		},
+		init: function () {
+			this.initializePlugins();
+		}
+	};
 
+	document.addEventListener('DOMContentLoaded', function () {
+		eAccounting.init();
+	});
 
 })(jQuery, window, window.wp, document, undefined);
 

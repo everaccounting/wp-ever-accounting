@@ -55,7 +55,15 @@ class EAccounting_Admin {
 		require_once dirname( __FILE__ ) . '/admin-functions.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-settings.php';
+		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
+		require_once dirname( __FILE__ ) . '/tables/class-ea-admin-list-table.php';
 		require_once dirname( __FILE__ ) . '/class-ea-contacts-page.php';
+
+		require_once dirname( __FILE__ ) . '/actions/contact-actions.php';
+		require_once dirname( __FILE__ ) . '/actions/category-actions.php';
+		require_once dirname( __FILE__ ) . '/actions/revenue-actions.php';
+		require_once dirname( __FILE__ ) . '/actions/payment-actions.php';
+		require_once dirname( __FILE__ ) . '/actions/account-actions.php';
 	}
 
 	/**
@@ -97,7 +105,8 @@ class EAccounting_Admin {
 		}
 		global $wp_scripts;
 		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
-		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css',[], time() );
+		wp_register_style( 'jquery-ui', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.min.css', [], $jquery_version );
+		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css',['jquery-ui'], time() );
 		wp_enqueue_style( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.css',[], time() );
 		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css',[], time() );
 
@@ -118,11 +127,11 @@ class EAccounting_Admin {
 
 		wp_localize_script( 'eaccounting-admin', 'eAccountingi18n', array(
 			'localization' => array(
-//				'thousands_separator' => eaccounting_get_price_thousands_separator(),
-//				'decimal_separator'   => eaccounting_get_price_decimal_separator(),
-//				'precision'           => (int) eaccounting_get_price_precision(),
-//				'price_symbol'        => html_entity_decode( eaccounting_get_price_currency_symbol() ),
-//				'symbol_first'        => true,
+				'thousands_separator' => eaccounting_get_price_thousands_separator(),
+				'decimal_separator'   => eaccounting_get_price_decimal_separator(),
+				'precision'           => (int) eaccounting_get_price_precision(),
+				'price_symbol'        => html_entity_decode( eaccounting_get_price_currency_symbol() ),
+				'symbol_first'        => true,
 			)
 		) );
 	}

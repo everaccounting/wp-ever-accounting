@@ -1,7 +1,9 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 $base_url = admin_url( 'admin.php?page=eaccounting-contacts' );
-$title    = $id ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eaccounting' );
+$id       = empty( $_GET['contact'] ) ? null : absint( $_GET['contact'] );
+$contact  = new EAccounting_Contact($id);
+$title    = $contact->get_id() ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eaccounting' );
 printf( '<h1 class="wp-heading-inline">%s</h1>', $title );
 printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Contacts', 'wp-eaccounting' ) );
 ?>
@@ -13,7 +15,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'First Name', 'wp-ever-accounting' ),
 				'name'          => 'first_name',
-				'value'         => $first_name,
+				'value'         => $contact->get_first_name(),
 				'placeholder'   => __( 'John', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-user-circle-o',
 				'required'      => true,
@@ -23,7 +25,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Last Name', 'wp-ever-accounting' ),
 				'name'          => 'last_name',
-				'value'         => $last_name,
+				'value'         => $contact->get_last_name(),
 				'placeholder'   => __( 'Doe', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-user-circle',
 				'required'      => true,
@@ -34,7 +36,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 				'label'         => __( 'Email', 'wp-ever-accounting' ),
 				'tyoe'          => 'email',
 				'name'          => 'email',
-				'value'         => $email,
+				'value'         => $contact->get_email(),
 				'placeholder'   => __( 'john@doe.com', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-envelope',
 				'required'      => false,
@@ -45,7 +47,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Phone', 'wp-ever-accounting' ),
 				'name'          => 'phone',
-				'value'         => $phone,
+				'value'         => $contact->get_phone(),
 				'placeholder'   => __( '0987654321', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-phone',
 				'required'      => false,
@@ -55,7 +57,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Tax Number', 'wp-ever-accounting' ),
 				'name'          => 'tax_number',
-				'value'         => $tax_number,
+				'value'         => $contact->get_tax_number(),
 				'placeholder'   => __( 'xxxxxxx', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-percent',
 				'required'      => false,
@@ -65,7 +67,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Address', 'wp-ever-accounting' ),
 				'name'          => 'address',
-				'value'         => $address,
+				'value'         => $contact->get_address(),
 				'placeholder'   => __( 'Contact address', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-address-card-o',
 				'required'      => false,
@@ -75,7 +77,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'City', 'wp-ever-accounting' ),
 				'name'          => 'city',
-				'value'         => $city,
+				'value'         => $contact->get_city(),
 				'placeholder'   => __( 'City', 'wp-ever-accounting' ),
 				'icon'          => 'fa  fa-map-marker',
 				'required'      => false,
@@ -85,7 +87,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'State', 'wp-ever-accounting' ),
 				'name'          => 'state',
-				'value'         => $state,
+				'value'         => $contact->get_state(),
 				'placeholder'   => __( 'State', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-location-arrow',
 				'required'      => false,
@@ -95,7 +97,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Postcode', 'wp-ever-accounting' ),
 				'name'          => 'postcode',
-				'value'         => $postcode,
+				'value'         => $contact->get_postcode(),
 				'placeholder'   => __( 'Contact postcode', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-map-signs',
 				'required'      => false,
@@ -105,7 +107,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Country', 'wp-ever-accounting' ),
 				'name'          => 'country',
-				'value'         => $country,
+				'value'         => $contact->get_country(),
 				'placeholder'   => __( 'Country', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-map',
 				'required'      => false,
@@ -115,7 +117,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::input_control( array(
 				'label'         => __( 'Website', 'wp-ever-accounting' ),
 				'name'          => 'website',
-				'value'         => $website,
+				'value'         => $contact->get_website(),
 				'placeholder'   => __( 'example.com', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-globe',
 				'required'      => false,
@@ -125,29 +127,25 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 
 			echo EAccounting_Form::status_control( array(
 				'name'          => 'status',
-				'value'         => $status,
+				'value'         => $contact->get_status(),
 				'wrapper_class' => 'ea-col-6',
 			) );
 
 			echo EAccounting_Form::textarea_control( array(
 				'label'         => __( 'Note', 'wp-ever-accounting' ),
 				'name'          => 'note',
-				'value'         => $note,
+				'value'         => $contact->get_note(),
 				'wrapper_class' => 'ea-col-6',
 			) );
 			?>
 			<div class="ea-form-group ea-col-6">
-				<label for="avatar" class="ea-control-label">Note</label>
+				<label for="avatar" class="ea-control-label">Avatar</label>
 				<div class="ea-file-upload-field">
 					<div class="ea-uploaded-files">
-						<div class="ea-uploaded-file">
-							<span class="ea-uploaded-file-preview"></span>
-							<img src="" alt="">
-							<a class="ea-remove-uploaded-file"></a>
-						</div>
-						<input type="hidden" name="avatar_id" value="">
+						<div class="ea-uploaded-file"></div>
 					</div>
-					<input type="file" class="ea-file-upload" data-file_types="jpg|jpeg|png" name="contact_avatar" data-nonce="<?php echo wp_create_nonce('eaccounting_file_upload');?>">
+					<input id="avatar_id" type="hidden" name="avatar_id" value="">
+					<input type="file" class="ea-file-upload" data-file_types="jpg|jpeg|png" name="avatar-file-input" data-nonce="<?php echo wp_create_nonce( 'eaccounting_file_upload' ); ?>">
 				</div>
 			</div>
 
@@ -156,7 +154,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			echo EAccounting_Form::checkboxes_control( array(
 				'label'         => __( 'Roles', 'wp-ever-accounting' ),
 				'name'          => 'types',
-				'selected'      => maybe_unserialize($types),
+				'selected'      => $contact->get_types(),
 				'options'       => eaccounting_get_contact_types(),
 				'wrapper_class' => 'ea-col-6',
 			) );

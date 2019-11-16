@@ -67,7 +67,7 @@ function eaccounting_insert_contact( $args ) {
 
 	//check if email duplicate
 	if ( ! empty( $data['email'] ) ) {
-		$email_duplicate = eaccounting_get_contact_by_email( $data['email'] );
+		$email_duplicate = eaccounting_get_contact( $data['email'], 'email' );
 		if ( $email_duplicate && $email_duplicate->id != $id ) {
 			return new WP_Error( 'duplicate_email', __( 'The email address is already in used', 'wp-eaccounting' ) );
 		}
@@ -80,7 +80,7 @@ function eaccounting_insert_contact( $args ) {
 	//prepare types
 
 	$types = [];
-	if(is_array($data['types'])){
+	if ( is_array( $data['types'] ) ) {
 		foreach ( $data['types'] as $role ) {
 			if ( array_key_exists( $role, eaccounting_get_contact_types() ) ) {
 				$types[] = $role;
@@ -153,20 +153,168 @@ function eaccounting_get_contact( $id, $by = 'id' ) {
 	return $wpdb->get_row( $sql );
 }
 
+
 /**
- * Get Contact by email
+ * Delete Contact
  *
- * since 1.0.0
+ * @param $id
  *
- * @param $email
- *
- * @return array|bool|object|void|null
+ * @return bool
+ * @since 1.0.0
  */
-function eaccounting_get_contact_by_email( $email ) {
+function eaccounting_delete_contact( $id ) {
 	global $wpdb;
-	if ( ! $email = sanitize_email( $email ) ) {
+	$id = absint( $id );
+
+	$account = eaccounting_get_contact( $id );
+	if ( is_null( $account ) ) {
 		return false;
 	}
 
-	return $wpdb->get_row( $wpdb->prepare( "select * from {$wpdb->ea_contacts} where email=%s", $email ) );
+	do_action( 'eaccounting_pre_contact_delete', $id, $account );
+	if ( false == $wpdb->delete( $wpdb->ea_contacts, array( 'id' => $id ), array( '%d' ) ) ) {
+		return false;
+	}
+	do_action( 'eaccounting_contact_delete', $id, $account );
+
+	return true;
 }
+
+
+/**
+ * Get contacts
+ * since 1.0.0
+ *
+ * @param array $args
+ * @param bool $count
+ *
+ * @return array|object|string|null
+ */
+function eaccounting_get_contacts( $args = array(), $count = false ) {
+	global $wpdb;
+	$query_fields  = '';
+	$query_from    = '';
+	$query_where   = '';
+	$query_orderby = '';
+	$query_limit   = '';
+
+	$default = array(
+		'include'        => array(),
+		'exclude'        => array(),
+		'status'         => '',
+		'search'         => '',
+		'type'         => '',
+		'orderby'        => 'id',
+		'order'          => 'DESC',
+		'fields'         => 'all',
+		'search_columns' => array( 'first_name', 'first_name', 'email', 'phone', 'address', 'note' ),
+		'per_page'       => 20,
+		'page'           => 1,
+		'offset'         => 0,
+	);
+
+	$args        = wp_parse_args( $args, $default );
+	$query_from  = "FROM $wpdb->ea_contacts";
+	$query_where = 'WHERE 1=1';
+
+	//status
+	if ( ! empty( $args['status'] ) && in_array( $args['status'], [ 'active', 'inactive' ] ) ) {
+		$query_where .= $wpdb->prepare( " AND $wpdb->ea_contacts.status= %s", $args['status'] );
+	}
+
+	//type
+	if ( ! empty( $args['type'] ) && array_key_exists( $args['type'], eaccounting_get_contact_types() ) ) {
+		$type     = '%' . $wpdb->esc_like( $args['type']  ) . '%';
+		$query_where .= $wpdb->prepare(" AND $wpdb->ea_contacts.types LIKE %s ", $type);
+	}
+
+
+	//opening_balance
+	if ( ! empty( $args['date_created'] ) ) {
+		$date_created_check = trim( $args['date_created'] );
+		$date_created       = preg_replace( '#[^0-9\-]#', '', $date_created_check );
+
+		if ( strpos( $date_created_check, '>' ) !== false ) {
+			$query_where .= $wpdb->prepare( " AND $wpdb->ea_contacts.created_at > %f ", $date_created );
+		} elseif ( strpos( $date_created_check, '<' ) !== false ) {
+			$query_where .= $wpdb->prepare( " AND $wpdb->ea_contacts.created_at < %f ", $date_created );
+		} else {
+			$query_where .= $wpdb->prepare( " AND $wpdb->ea_contacts.created_at = %f ", $date_created );
+		}
+	}
+
+	//fields
+	if ( is_array( $args['fields'] ) ) {
+		$args['fields'] = array_unique( $args['fields'] );
+
+		$query_fields = array();
+		foreach ( $args['fields'] as $field ) {
+			$field          = 'id' === $field ? 'id' : sanitize_key( $field );
+			$query_fields[] = "$wpdb->ea_contacts.$field";
+		}
+		$query_fields = implode( ',', $query_fields );
+	} elseif ( 'all' == $args['fields'] ) {
+		$query_fields = "$wpdb->ea_contacts.*";
+	} else {
+		$query_fields = "$wpdb->ea_contacts.id";
+	}
+
+	//include
+	$include = false;
+	if ( ! empty( $args['include'] ) ) {
+		$include = wp_parse_id_list( $args['include'] );
+	}
+
+	if ( ! empty( $include ) ) {
+		// Sanitized earlier.
+		$ids         = implode( ',', $include );
+		$query_where .= " AND $wpdb->ea_contacts.id IN ($ids)";
+	} elseif ( ! empty( $args['exclude'] ) ) {
+		$ids         = implode( ',', wp_parse_id_list( $args['exclude'] ) );
+		$query_where .= " AND $wpdb->ea_contacts.id NOT IN ($ids)";
+	}
+
+	//search
+	$search = '';
+	if ( isset( $args['search'] ) ) {
+		$search = trim( $args['search'] );
+	}
+	if ( $search ) {
+		$searches = array();
+		$cols     = array_map( 'sanitize_key', $args['search_columns'] );
+		$like     = '%' . $wpdb->esc_like( $search ) . '%';
+		foreach ( $cols as $col ) {
+			$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
+		}
+
+		$query_where .= ' AND (' . implode( ' OR ', $searches ) . ')';
+	}
+
+
+	//ordering
+	$order         = isset( $args['order'] ) ? esc_sql( strtoupper( $args['order'] ) ) : 'ASC';
+	$order_by      = esc_sql( $args['orderby'] );
+	$query_orderby = sprintf( " ORDER BY %s %s ", $order_by, $order );
+
+	// limit
+	if ( isset( $args['per_page'] ) && $args['per_page'] > 0 ) {
+		if ( $args['offset'] ) {
+			$query_limit = $wpdb->prepare( 'LIMIT %d, %d', $args['offset'], $args['per_page'] );
+		} else {
+			$query_limit = $wpdb->prepare( 'LIMIT %d, %d', $args['per_page'] * ( $args['page'] - 1 ), $args['per_page'] );
+		}
+	}
+
+	if ( $count ) {
+		return $wpdb->get_var( "SELECT count($wpdb->ea_contacts.id) $query_from $query_where" );
+	}
+
+	$request = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+	if ( is_array( $args['fields'] ) || 'all' == $args['fields'] ) {
+		return $wpdb->get_results( $request );
+	}
+
+	return $wpdb->get_col( $request );
+}
+

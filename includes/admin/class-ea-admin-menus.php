@@ -27,9 +27,11 @@ class EAccounting_Admin_Menus {
 		add_menu_page( __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounting', 'wp-ever-accounting' ), 'manage_options', 'ever-accounting', null, 'dashicons-chart-area', '55.5' );
 		add_submenu_page( 'ever-accounting', __( 'Dashboard', 'wp-ever-accounting' ), __( 'Dashboard', 'wp-ever-accounting' ), 'manage_options', 'ever-accounting', array( $this, 'dashboard_page' ) );
 		add_submenu_page( 'ever-accounting', __( 'Transactions', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transactions', array( $this, 'dashboard_page' ) );
-		add_submenu_page( 'ever-accounting', __( 'Contacts', 'wp-ever-accounting' ), __( 'Contacts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-contacts', array('EAccounting_Contacts_Page', 'output') );
-		add_submenu_page( 'ever-accounting', __( 'Income', 'wp-ever-accounting' ), __( 'Income', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-income', 'eaccounting_income_page' );
-		add_submenu_page( 'ever-accounting', __( 'Expense', 'wp-ever-accounting' ), __( 'Expense', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-expense', 'eaccounting_expense_page' );
+		add_submenu_page( 'ever-accounting', __( 'Contacts', 'wp-ever-accounting' ), __( 'Contacts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-contacts', array($this, 'contacts_page') );
+		add_submenu_page( 'ever-accounting', __( 'Payments', 'wp-ever-accounting' ), __( 'Payments', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-payments', array( $this, 'payments_page') );
+		add_submenu_page( 'ever-accounting', __( 'Revenues', 'wp-ever-accounting' ), __( 'Revenues', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-revenues', array( $this, 'revenues_page') );
+		add_submenu_page( 'ever-accounting', __( 'Accounts', 'wp-ever-accounting' ), __( 'Accounts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-accounts', array( $this, 'accounts_page') );
+		add_submenu_page( 'ever-accounting', __( 'Categories', 'wp-ever-accounting' ), __( 'Categories', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-categories', array( $this, 'categories_page') );
 	}
 
 	public function settings_menu(){
@@ -80,6 +82,35 @@ class EAccounting_Admin_Menus {
 		} elseif ( '' === $current_section && apply_filters( "woocommerce_save_settings_{$current_tab}", ! empty( $_POST['save'] ) ) ) {
 			EAccounting_Admin_Settings::save();
 		}
+	}
+
+
+	public function transaction_page(){
+
+	}
+
+	/**
+	 * render contact page
+	 * since 1.0.0
+	 */
+	public function contacts_page(){
+		eaccounting_get_views('contacts-page.php');
+	}
+
+	public function revenues_page(){
+		eaccounting_get_views('revenue-page.php');
+	}
+
+	public function payments_page(){
+		eaccounting_get_views('payment-page.php');
+	}
+
+	public function accounts_page(){
+		eaccounting_get_views('accounts-page.php');
+	}
+
+	public function categories_page(){
+		eaccounting_get_views('categories-page.php');
 	}
 
 }

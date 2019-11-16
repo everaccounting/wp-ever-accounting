@@ -1,5 +1,6 @@
 <?php
 defined( 'ABSPATH' ) || exit();
+
 class EAccounting_Form {
 	/**
 	 * Input Control
@@ -31,7 +32,7 @@ class EAccounting_Form {
 		//general
 		$name                = esc_attr( ! empty( $args['name'] ) ? $args['name'] : '' );
 		$id                  = esc_attr( ! empty( $args['id'] ) ? $args['id'] : $name );
-		$value               = empty($args['value'])? $args['default']: $args['value'];
+		$value               = empty( $args['value'] ) ? $args['default'] : $args['value'];
 		$label               = empty( $args['label'] ) ? false : strip_tags( $args['label'] );
 		$type                = ! empty( $args['type'] ) ? $args['type'] : 'text';
 		$size                = ! empty( $args['size'] ) ? $args['size'] : 'regular';
@@ -155,6 +156,7 @@ class EAccounting_Form {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $args
 	 *
 	 * @return string
@@ -224,6 +226,7 @@ class EAccounting_Form {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $args
 	 *
 	 * @return string
@@ -285,6 +288,7 @@ class EAccounting_Form {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $args
 	 *
 	 * @return string
@@ -382,6 +386,7 @@ class EAccounting_Form {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $args
 	 *
 	 * @return string
@@ -417,6 +422,104 @@ class EAccounting_Form {
 
 	/**
 	 * since 1.0.0
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public static function accounts_dropdown( $args ) {
+		$accounts = eaccounting_get_accounts( array(
+			'per_page' => '9999',
+			'status'   => 'active',
+			'fields'   => array( 'id', 'name' ),
+		) );
+
+		$args = wp_parse_args( $args, array(
+			'select2' => true,
+			'options' => wp_list_pluck( $accounts, 'name', 'id' ),
+		) );
+
+		return self::select_control( $args );
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public static function customer_dropdown( $args ) {
+		$contacts = eaccounting_get_contacts( array(
+			'per_page' => '9999',
+			'status'   => 'active',
+			'type'     => 'customer',
+		) );
+		$dropdown = [];
+		foreach ( $contacts as $contact ) {
+			$item                        = new EAccounting_Contact( $contact );
+			$dropdown[ $item->get_id() ] = $item->get_name();
+		}
+
+		$args = wp_parse_args( $args, array(
+			'select2' => true,
+			'options' => $dropdown,
+		) );
+
+		return self::select_control( $args );
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public static function vendor_dropdown( $args ) {
+		$args = wp_parse_args( $args, array(
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_contacts( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'type'     => 'vendor',
+				'fields'   => array( 'id', 'first_name' ),
+			) ), 'first_name', 'id' ),
+		) );
+
+		return self::select_control( $args );
+	}
+
+	/**
+	 * Get categories dropdown
+	 *
+	 * since 1.0.0
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public static function categories_dropdown( $args ) {
+		$type = isset( $args['type'] ) ? $args['type'] : '';
+		$args = wp_parse_args( $args, array(
+			'label'   => __( 'Category', 'wp-eaccounting' ),
+			'name'    => 'category_id',
+			'icon'    => 'fa fa-folder-open-o',
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_categories( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'type'     => $type,
+				'fields'   => array( 'id', 'name' ),
+			) ), 'name', 'id' ),
+		) );
+
+		return self::select_control( $args );
+	}
+
+	/**
+	 * since 1.0.0
+	 *
 	 * @param $args
 	 */
 	public static function recurring_control( $args ) {
@@ -425,6 +528,7 @@ class EAccounting_Form {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $args
 	 */
 	public static function file_control( $args ) {

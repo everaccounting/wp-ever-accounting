@@ -109,11 +109,10 @@ final class EverAccounting {
 		$tables = array(
 			'ea_contacts',
 			'ea_accounts',
-			'ea_products',
-			'ea_taxes',
 			'ea_categories',
+			'ea_payments',
 			'ea_revenues',
-			'ea_payment_methods',
+			'ea_files',
 		);
 		foreach ( $tables as $table ) {
 			$wpdb->$table   = $wpdb->prefix . $table;
@@ -133,14 +132,28 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-form.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-revenue.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-payment.php' );
 
 		//functions
 		require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/eaccounting-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/contact-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/category-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/file-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/income-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/expense-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
 
-		if(is_admin()){
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
+		}
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-cli.php' );
 		}
 	}
 

@@ -95,8 +95,9 @@ class EAccounting_Install {
 		  	`contact_id` int(11) DEFAULT NULL,
 		  	`description` text COLLATE utf8mb4_unicode_ci,
 		  	`category_id` int(11) NOT NULL,
-		  	`payment_method_id` int(11) NOT NULL,
+		  	`method_id` int(11) NOT NULL,
 		  	`reference` varchar(191) DEFAULT NULL,
+		  	`file_id` int(11) NOT NULL DEFAULT '0',
 		  	`parent_id` int(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyint(1) NOT NULL DEFAULT '0',
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -115,8 +116,9 @@ class EAccounting_Install {
 		  	`contact_id` int(11) DEFAULT NULL,
 		  	`description` text COLLATE utf8mb4_unicode_ci,
 		  	`category_id` int(11) NOT NULL,
-		  	`payment_method_id` int(11) NOT NULL,
+		  	`method_id` int(11) NOT NULL,
 		  	`reference` varchar(191) DEFAULT NULL,
+		  	`file_id` int(11) NOT NULL DEFAULT '0',
 		  	`parent_id` int(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyint(1) NOT NULL DEFAULT '0',
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -137,6 +139,32 @@ class EAccounting_Install {
 		    KEY `payment_id` (`payment_id`),
 		    KEY `transaction_id` (`transaction_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_categories(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  		  	`name` varchar(191) NOT NULL,
+		  	`type` varchar(50) NOT NULL,
+		  	`color` varchar(20) NOT NULL,
+		    `status` ENUM ('active', 'inactive') DEFAULT 'active',
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`),
+		    KEY `type` (`type`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_files(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  		  	`filename` varchar(191) NOT NULL,
+		  	`url` varchar(191) NOT NULL,
+		  	`path` varchar(191) NOT NULL,
+		  	`extension` varchar(20) NOT NULL,
+		  	`mime_type` varchar(20) NOT NULL,
+		  	`size` int(10) unsigned NOT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `extension` (`extension`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
 		];
 
 

@@ -107,7 +107,7 @@ if ( ! class_exists( 'EAccounting_Settings_Page', false ) ) :
 		 */
 		public function output() {
 			global $current_section;
-			error_log($current_section);
+
 			$settings = $this->get_settings();
 
 			self::output_fields( $settings );
@@ -597,7 +597,7 @@ if ( ! class_exists( 'EAccounting_Settings_Page', false ) ) :
 			if ( is_null( $data ) ) {
 				$data = $_POST; // WPCS: input var okay, CSRF ok.
 			}
-			error_log(print_r($data, true));
+
 			if ( empty( $data ) ) {
 				return false;
 			}

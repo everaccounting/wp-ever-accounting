@@ -7,8 +7,8 @@ jQuery(function ($) {
 			url: ajaxurl,
 			formData: {
 				script: true,
-				action:'eaccounting_file_upload',
-				nonce:$(this).data('nonce')
+				action: 'eaccounting_file_upload',
+				nonce: $(this).data('nonce')
 			},
 			change: function () {
 				this.validation_errors = [];
@@ -34,7 +34,7 @@ jQuery(function ($) {
 					if ($file_field.data('file_limit_message')) {
 						message = $file_field.data('file_limit_message');
 					} else if (typeof job_manager_job_submission !== 'undefined') {
-						message = job_manager_job_submission.i18n_over_upload_limit;
+						message = 'You are only allowed to upload a maximum of %d files.';
 					}
 					message = message.replace('%d', fileLimit);
 
@@ -95,20 +95,23 @@ jQuery(function ($) {
 				}
 
 				$.each(data.result.files, function (index, file) {
+					console.log(file);
 					if (file.error) {
 						this.validation_errors.push(file.error);
 					} else {
 						var html;
 						if ($.inArray(file.extension, image_types) >= 0) {
-							html = $.parseHTML(job_manager_ajax_file_upload.js_field_html_img);
-							$(html).find('.ea-uploaded-file-preview img').attr('src', file.url);
+							html = $.parseHTML('<span class="ea-uploaded-file-preview"><a href="#" class="ea-file-review"><img src="http://example.com"/></a><a class="ea-remove-uploaded-file" href="#"></a></span>');
+							$(html).find('img').attr('src', file.url);
+							$(html).find('a').attr('href', file.url);
 						} else {
-							html = $.parseHTML(job_manager_ajax_file_upload.js_field_html);
-							$(html).find('.ea-uploaded-file-name code').text(file.name);
+							html = $.parseHTML('<span class="ea-uploaded-file-name"><code></code><a class="ea-remove-uploaded-file" href="#"></a></span>');
+							$(html).find('code').text(file.name);
+							$(html).find('a').attr('href', file.url);
 						}
 
-						$(html).find('.input-text').val(file.url);
-						$(html).find('.input-text').attr('name', 'current_' + $file_field.attr('name'));
+						// $(html).find('.input-text').val(file.url);
+						// $(html).find('.input-text').attr('name', 'current_' + $file_field.attr('name'));
 
 						if (multiple) {
 							$uploaded_files.append(html);
