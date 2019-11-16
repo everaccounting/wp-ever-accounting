@@ -54,10 +54,12 @@ class EAccounting_Admin {
 	public function includes() {
 		require_once dirname( __FILE__ ) . '/admin-functions.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
-		require_once dirname( __FILE__ ) . '/class-ea-admin-settings.php';
+		require_once dirname( __FILE__ ) . '/class-ea-settings-api.php';
+		require_once dirname( __FILE__ ) . '/class-ea-settings-page.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
 		require_once dirname( __FILE__ ) . '/tables/class-ea-admin-list-table.php';
-		require_once dirname( __FILE__ ) . '/class-ea-contacts-page.php';
+//		require_once dirname( __FILE__ ) . '/settings/class-ea-general-settings.php';
+		require_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
 
 		require_once dirname( __FILE__ ) . '/actions/contact-actions.php';
 		require_once dirname( __FILE__ ) . '/actions/category-actions.php';

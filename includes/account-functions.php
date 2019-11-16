@@ -46,10 +46,6 @@ function eaccounting_insert_account( $args ) {
 		return new WP_Error( 'empty_content', __( 'Name is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( !isset( $data['opening_balance'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Opening balance is required', 'wp-ever-accounting' ) );
-	}
-
 	$where = array( 'id' => $id );
 	$data  = wp_unslash( $data );
 

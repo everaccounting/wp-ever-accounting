@@ -26,9 +26,9 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 		$columns = array(
 			'cb'              => '<input type="checkbox" />',
 			'name'            => __( 'Name', 'wp-ever-accounting' ),
-			'number'          => __( 'Number', 'wp-ever-accounting' ),
-			'bank_name'       => __( 'Bank Name', 'wp-ever-accounting' ),
 			'current_balance' => __( 'Current Balance', 'wp-ever-accounting' ),
+			'number'          => __( 'Account Number', 'wp-ever-accounting' ),
+			'bank_name'       => __( 'Bank Name', 'wp-ever-accounting' ),
 			'opening_balance' => __( 'Opening Balance', 'wp-ever-accounting' ),
 			'status'          => __( 'Status', 'wp-ever-accounting' ),
 		);
@@ -47,7 +47,6 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 			'name'            => array( 'name', false ),
 			'number'          => array( 'number', false ),
 			'bank_name'       => array( 'bank_name', false ),
-			'current_balance' => array( 'current_balance', false ),
 			'opening_balance' => array( 'opening_balance', false ),
 			'status'          => array( 'status', false ),
 		);
@@ -122,7 +121,7 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_current_balance( $item ) {
-		return '&mdash;';
+		return $item->get_current_balance('view');
 	}
 
 	/**
@@ -134,7 +133,7 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_opening_balance( $item ) {
-		return ! empty( $item->get_opening_balance() ) ? eaccounting_price( $item->get_opening_balance() ) : '&mdash;';
+		return ! empty( $item->get_opening_balance() ) ? $item->get_opening_balance() : '&mdash;';
 	}
 
 	/**

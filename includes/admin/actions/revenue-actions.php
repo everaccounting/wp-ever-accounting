@@ -1,6 +1,32 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Delete
+ * since 1.0.0
+ *
+ * @param $data
+ */
+function eaccounting_action_delete_revenue( $data ) {
+
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_revenues_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( $revenue_id = absint( $data['revenue'] ) ) {
+		eaccounting_delete_revenue( $revenue_id );
+	}
+
+	wp_redirect( add_query_arg( [ 'revenue' => $revenue_id ], admin_url( 'admin.php?page=eaccounting-revenues' ) ) );
+	exit;
+}
+
+add_action( 'eaccounting_admin_get_delete_revenue', 'eaccounting_action_delete_revenue' );
+
 
 function eaccounting_action_edit_revenue( $data ) {
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_revenue_nonce' ) ) {

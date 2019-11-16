@@ -2,15 +2,13 @@
 defined( 'ABSPATH' ) || exit();
 
 
-class EAccounting_Payments_List_Table extends EAccounting_List_Table {
+class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => 'payment',
-			'plural'   => 'payments',
+			'singular' => 'transaction',
+			'plural'   => 'transaction',
 			'ajax'     => false,
 		) );
-		$this->base_url = admin_url( 'admin.php?page=eaccounting-payments' );
-		$this->process_bulk_action();
 	}
 
 
@@ -31,11 +29,7 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	public function get_bulk_actions() {
-		$actions = array(
-			'delete' => __( 'Delete', 'wp-ever-accounting' ),
-		);
-
-		return $actions;
+		return array();
 	}
 
 	/**
@@ -46,12 +40,11 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'        => '<input type="checkbox" />',
 			'date'      => __( 'Date', 'wp-eaccounting' ),
 			'amount'    => __( 'Amount', 'wp-eaccounting' ),
-			'vendor'    => __( 'Vendor', 'wp-eaccounting' ),
+			'account'   => __( 'Account Name', 'wp-eaccounting' ),
+			'type'      => __( 'Type', 'wp-eaccounting' ),
 			'category'  => __( 'Category', 'wp-eaccounting' ),
-			'account'   => __( 'Account', 'wp-eaccounting' ),
 			'reference' => __( 'Reference', 'wp-eaccounting' ),
 		);
 
@@ -68,9 +61,9 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 		return array(
 			'date'     => array( 'paid_at', false ),
 			'amount'   => array( 'amount', false ),
-			'vendor'   => array( 'contact_id', false ),
-			'category' => array( 'category_id', false ),
 			'account'  => array( 'account_id', false ),
+			'type'     => array( 'type', false ),
+			'category' => array( 'category_id', false ),
 		);
 	}
 
@@ -83,17 +76,17 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_date( $item ) {
-		$payment_url = add_query_arg( array( 'payment' => $item->get_id() ), $this->base_url );
-		$edit_url    = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'edit_payment' ], $payment_url ), 'eaccounting_payments_nonce' );
-		$delete_url  = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_payment' ], $payment_url ), 'eaccounting_payments_nonce' );
-
-		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-eaccounting' ) );
-
-		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-eaccounting' ) );
-
-		$row_actions = apply_filters( 'eaccounting_payments_row_actions', $row_actions, $item );
-
-		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, stripslashes( $item->get_paid_at() ) ) . $this->row_actions( $row_actions );
+		$edit_url = '';
+		switch ($item->type){
+			case 'income':
+				$edit_url = add_query_arg([ 'revenue' => $item->id, 'eaccounting-action' => 'edit_revenue' ], admin_url('admin.php?page=eaccounting-revenues'));
+				break;
+			case 'expense':
+				$edit_url = add_query_arg([ 'payment' => $item->id, 'eaccounting-action' => 'edit_payment' ], admin_url('admin.php?page=eaccounting-payments'));
+				break;
+		}
+		$paid_at = date('Y-m-d', strtotime($item->paid_at));
+		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, $paid_at);
 	}
 
 	/**
@@ -103,19 +96,7 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_amount( $item ) {
-		return $item->get_amount( 'view' );
-	}
-
-	/**
-	 * @param EAccounting_Revenue $item
-	 *
-	 * @return string;
-	 * @since 1.0.0
-	 */
-	function column_vendor( $item ) {
-		$customer = $item->get_contact( 'view' );
-
-		return $customer ? $customer->get_name() : '&mdash;';
+		return $item->amount ? eaccounting_price($item->amount) : '&mdash;';
 	}
 
 	/**
@@ -125,9 +106,11 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_category( $item ) {
-		$category = $item->get_category( 'view' );
+		if($item->category_id && $category = eaccounting_get_category($item->category_id)){
+			return $category->name;
+		}
 
-		return $category ? $category->name : '&mdash;';
+		return '&mdash;';
 	}
 
 	/**
@@ -137,9 +120,11 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_account( $item ) {
-		$account = $item->get_account( 'view' );
+		if($item->account_id && $account = eaccounting_get_account($item->account_id)){
+			return $account->name;
+		}
 
-		return $account ? $account->name : '&mdash;';
+		return '&mdash;';
 	}
 
 	/**
@@ -149,62 +134,15 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_reference( $item ) {
-		return $item->get_reference() ? $item->get_reference() : '&mdash;';
-	}
-
-	/**
-	 * @param object $item
-	 * @param string $column_name
-	 *
-	 * @return string;
-	 * @since 1.0.0
-	 */
-	function column_default( $item, $column_name ) {
-		return $item->$column_name;
+		return $item->reference ? $item->reference : '&mdash;';
 	}
 
 	/**
 	 * @return string
 	 * @since 1.0.0
 	 */
-	function column_unpaid() {
-		return '&mdash;';
-	}
-
-	/**
-	 * Process the bulk actions
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	public function process_bulk_action() {
-
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
-			return;
-		}
-
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-payments' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['contact'] ) ? $_GET['contact'] : false;
-
-		if ( ! is_array( $ids ) ) {
-			$ids = array( $ids );
-		}
-
-
-		foreach ( $ids as $id ) {
-			if ( 'delete' === $this->current_action() ) {
-				eaccounting_delete_contact( $id );
-			}
-			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '1' ] );
-			}
-			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '0' ] );
-			}
-		}
+	function column_type($item) {
+		return ucfirst($item->type);
 	}
 
 	/**
@@ -226,7 +164,6 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
 			'orderby'  => $orderby,
 			'order'    => $order,
-			'status'   => $status,
 			'search'   => $search
 		);
 
@@ -234,9 +171,9 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 			$args['orderby'] = $orderby;
 		}
 
-		$this->total_count    = eaccounting_get_payments( array_merge( $args, array( 'status' => '' ) ), true );
+		$this->total_count = eaccounting_get_transactions($args, true );
 
-		$results = eaccounting_get_payments( $args );
+		$results = eaccounting_get_transactions( $args );
 
 		return $results;
 	}
@@ -259,17 +196,15 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 
-		$this->process_bulk_action();
-
 		$items = $this->get_results();
 
-		$data = array_map( function ( $item ) {
-			return new EAccounting_Payment( $item );
-		}, $items );
+//		$data = array_map( function ( $item ) {
+//			return new EAccounting_Payment( $item );
+//		}, $items );
 
 		$total_items = $this->total_count;
 
-		$this->items = $data;
+		$this->items = $items;
 
 		$this->set_pagination_args( array(
 				'total_items' => $total_items,

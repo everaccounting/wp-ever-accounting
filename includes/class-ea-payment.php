@@ -74,37 +74,37 @@ class EAccounting_Payment {
 	/**
 	 * @var null
 	 */
-	public $revenue = null;
+	public $payment = null;
 
 	/**
 	 * EAccounting_Account constructor.
 	 *
-	 * @param int $revenue
+	 * @param int $payment
 	 */
-	public function __construct( $revenue = 0 ) {
-		$this->init( $revenue );
+	public function __construct( $payment = 0 ) {
+		$this->init( $payment );
 	}
 
 	/**
-	 * Init/load the revenue object. Called from the constructor.
+	 * Init/load the payment object. Called from the constructor.
 	 *
-	 * @param $revenue
+	 * @param $payment
 	 *
 	 * @since 1.0.0
 	 */
-	protected function init( $revenue ) {
-		if ( is_numeric( $revenue ) ) {
-			$this->id      = absint( $revenue );
-			$this->revenue = eaccounting_get_revenue( $revenue );
-			$this->get_revenue( $this->id );
-		} elseif ( $revenue instanceof EAccounting_Revenue ) {
-			$this->id      = absint( $revenue->id );
-			$this->revenue = $revenue->revenue;
-			$this->get_revenue( $this->id );
-		} elseif ( isset( $revenue->id ) ) {
-			$this->revenue = $revenue;
-			$this->id      = absint( $this->revenue->id );
-			$this->populate( $revenue );
+	protected function init( $payment ) {
+		if ( is_numeric( $payment ) ) {
+			$this->id      = absint( $payment );
+			$this->payment = eaccounting_get_payment( $payment );
+			$this->get_payment( $this->id );
+		} elseif ( $payment instanceof EAccounting_Revenue ) {
+			$this->id      = absint( $payment->id );
+			$this->payment = $payment->payment;
+			$this->get_payment( $this->id );
+		} elseif ( isset( $payment->id ) ) {
+			$this->payment = $payment;
+			$this->id      = absint( $this->payment->id );
+			$this->populate( $payment );
 		}
 	}
 
@@ -115,14 +115,14 @@ class EAccounting_Payment {
 	 *
 	 * @return bool
 	 */
-	public function get_revenue( $id = 0 ) {
+	public function get_payment( $id = 0 ) {
 
 		if ( ! $id ) {
 			return false;
 		}
 
-		if ( $revenue = eaccounting_get_revenue( $id ) ) {
-			$this->populate( $revenue );
+		if ( $payment = eaccounting_get_payment( $id ) ) {
+			$this->populate( $payment );
 
 			return true;
 		}
@@ -133,11 +133,11 @@ class EAccounting_Payment {
 	/**
 	 * Populates an call from the loaded post data.
 	 *
-	 * @param mixed $revenue
+	 * @param mixed $payment
 	 */
-	public function populate( $revenue ) {
-		$this->id = $revenue->id;
-		foreach ( $revenue as $key => $value ) {
+	public function populate( $payment ) {
+		$this->id = $payment->id;
+		foreach ( $payment as $key => $value ) {
 			$this->$key = $value;
 		}
 	}
@@ -153,7 +153,7 @@ class EAccounting_Payment {
 		} else if ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 		} else {
-			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-erevenueing' ), $key ) );
+			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-epaymenting' ), $key ) );
 		}
 
 	}

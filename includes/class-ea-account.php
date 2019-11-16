@@ -222,4 +222,23 @@ class EAccounting_Account {
 		return $this->updated_at;
 	}
 
+	/**
+	 * Get current balance
+	 * since 1.0.0
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_current_balance( $context = 'edit' ) {
+		global $wpdb;
+		// Opening Balance
+		$total = $this->opening_balance;
+		// Sum Incomes
+		$total += $wpdb->get_var( "SELECT SUM(amount) from $wpdb->ea_revenues" );
+
+		$total -= $wpdb->get_var( "SELECT SUM(amount) from $wpdb->ea_payments" );
+
+		return 'edit' == $context ? eaccounting_format_price( $total ) : eaccounting_price( $total );
+	}
+
 }

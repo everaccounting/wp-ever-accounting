@@ -9,6 +9,7 @@ class EAccounting_Install {
 	 */
 	public static function install() {
 		self::create_tables();
+		self::create_default_data();
 	}
 
 	/**
@@ -171,5 +172,37 @@ class EAccounting_Install {
 		foreach ( $tables as $table ) {
 			dbDelta( $table );
 		}
+	}
+
+	/**
+	 * since 1.0.0
+	 */
+	public static function create_default_data() {
+		eaccounting_insert_account( [
+			'name'            => __( 'Cash', 'wp-ever-accounting' ),
+			'number'          => '',
+			'opening_balance' => '0',
+			'status'          => 'active',
+		] );
+
+		eaccounting_insert_category( [
+			'name'   => __( 'Deposit', 'wp-ever-accounting' ),
+			'type'   => 'income',
+			'status' => 'active',
+		] );
+
+		eaccounting_insert_category( [
+			'name'   => __( 'Other', 'wp-ever-accounting' ),
+			'type'   => 'expense',
+			'status' => 'active',
+		] );
+
+		eaccounting_insert_category( [
+			'name'   => __( 'Sales', 'wp-ever-accounting' ),
+			'type'   => 'income',
+			'status' => 'active',
+		] );
+
+
 	}
 }

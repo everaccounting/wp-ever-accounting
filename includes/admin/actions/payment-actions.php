@@ -1,6 +1,33 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Delete
+ * since 1.0.0
+ *
+ * @param $data
+ */
+function eaccounting_action_delete_payment( $data ) {
+
+	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_payments_nonce' ) ) {
+		wp_die( __( 'Trying to cheat or something?', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+	}
+
+	if ( $payment_id = absint( $data['payment'] ) ) {
+		eaccounting_delete_payment( $payment_id );
+	}
+
+	wp_redirect( add_query_arg( [ 'payment' => $payment_id ], admin_url( 'admin.php?page=eaccounting-payments' ) ) );
+	exit;
+}
+
+add_action( 'eaccounting_admin_get_delete_payment', 'eaccounting_action_delete_payment' );
+
+
 
 function eaccounting_action_edit_payment( $data ) {
 	if ( ! isset( $data['_wpnonce'] ) || ! wp_verify_nonce( $data['_wpnonce'], 'eaccounting_payment_nonce' ) ) {
@@ -38,9 +65,9 @@ function eaccounting_action_edit_payment( $data ) {
 	}
 
 	if ( empty( $data['id'] ) ) {
-		$message = __( 'Revenue created successfully.', 'wp-eaccounting' );
+		$message = __( 'Payment created successfully.', 'wp-eaccounting' );
 	} else {
-		$message = __( 'Revenue updated successfully.', 'wp-eaccounting' );
+		$message = __( 'Payment updated successfully.', 'wp-eaccounting' );
 	}
 	eaccounting_admin_notice( $message );
 	wp_redirect( $redirect );

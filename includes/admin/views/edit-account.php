@@ -28,22 +28,22 @@ $title = $account_id ? __( 'Update  Account' ) : __( 'Add Account', 'wp-ever-acc
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::input_control( array(
-				'label'         => __( 'Number', 'wp-ever-accounting' ),
-				'name'          => 'number',
-				'value'         => isset( $account->number ) ? $account->number : '',
-				'placeholder'   => __( 'Account Number', 'wp-ever-accounting' ),
-				'icon'          => 'fa fa-pencil',
-				'required'      => true,
-				'wrapper_class' => 'ea-col-6',
-			) );
-
 			echo EAccounting_Form::price_control( array(
 				'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
 				'name'          => 'opening_balance',
 				'value'         => isset( $account->opening_balance ) ? eaccounting_price($account->opening_balance) : '',
 				'icon'          => 'fa fa-money',
 				'required'      => true,
+				'wrapper_class' => 'ea-col-6',
+			) );
+
+			echo EAccounting_Form::input_control( array(
+				'label'         => __( 'Account Number', 'wp-ever-accounting' ),
+				'name'          => 'number',
+				'value'         => isset( $account->number ) ? $account->number : '',
+				'placeholder'   => __( 'Account Number', 'wp-ever-accounting' ),
+				'icon'          => 'fa fa-pencil',
+				'required'      => false,
 				'wrapper_class' => 'ea-col-6',
 			) );
 

@@ -28,8 +28,8 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 			'name'   => __( 'Name', 'wp-eaccounting' ),
 			'email'  => __( 'Email', 'wp-eaccounting' ),
 			'phone'  => __( 'Phone', 'wp-eaccounting' ),
-			'unpaid' => __( 'Unpaid', 'wp-eaccounting' ),
-			'types'  => __( 'Types', 'wp-eaccounting' ),
+//			'unpaid' => __( 'Unpaid', 'wp-eaccounting' ),
+//			'types'  => __( 'Types', 'wp-eaccounting' ),
 			'status' => __( 'Status', 'wp-eaccounting' ),
 		);
 

@@ -41,7 +41,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 			) );
 
 			echo EAccounting_Form::customer_dropdown( array(
-				'label'         => __( 'Customer', 'wp-ever-accounting' ),
+				'label'         => __( 'Vendor', 'wp-ever-accounting' ),
 				'name'          => 'contact_id',
 				'icon'          => 'fa fa-user',
 				'selected'         => $payment->get_contact(),
@@ -52,7 +52,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 			echo EAccounting_Form::categories_dropdown( array(
 				'label'         => __( 'Category', 'wp-ever-accounting' ),
 				'name'          => 'category_id',
-				'type'          => 'income',
+				'type'          => 'expense',
 				'selected'         => $payment->get_category(),
 				'icon'          => 'fa fa-folder-open-o',
 				'required'      => true,

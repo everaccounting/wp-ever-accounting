@@ -42,11 +42,10 @@ function eaccounting_sanitize_date( $date, $format = 'Y-m-d' ) {
  *
  * @return string|array
  */
-function eaccounting_get_option( $key = '', $section = 'ever_hrm_hr_company', $default = false ) {
+function eaccounting_get_option( $key = '', $section = 'eaccounting_general', $default = false ) {
 	$option = get_option( $section, [] );
 	$value  = ! empty( $option[ $key ] ) ? $option[ $key ] : $default;
 	$value  = apply_filters( 'eaccounting_get_option', $value, $key, $default );
-
 	return apply_filters( 'eaccounting_get_option_' . $key, $value, $key, $default );
 }
 
@@ -56,7 +55,7 @@ function eaccounting_get_option( $key = '', $section = 'ever_hrm_hr_company', $d
  * @return array|string
  */
 function eaccounting_get_price_currency() {
-	return eaccounting_get_option( 'currency', 'eaccounting_localization', 'USD' );
+	return eaccounting_get_option( 'currency', 'eaccounting_localisation', 'USD' );
 }
 
 /**
@@ -65,10 +64,10 @@ function eaccounting_get_price_currency() {
  * @return array|string
  */
 function eaccounting_get_price_currency_symbol() {
-	$symbol  = eaccounting_get_option( 'symbol', 'eaccounting_localization', 'USD' );
+	$currency  = eaccounting_get_price_currency();
 	$symbols = eaccounting_get_currency_symbols();
-	if ( array_key_exists( $symbol, $symbols ) ) {
-		return $symbols[ $symbol ];
+	if ( array_key_exists( $currency, $symbols ) ) {
+		return $symbols[ $currency ];
 	}
 
 	return $symbols['USD'];
@@ -239,6 +238,7 @@ function eaccounting_price( $price, $currency = false ) {
 	if ( ! $currency ) {
 		$currency = eaccounting_get_price_currency();
 	}
+
 	$format          = eaccounting_get_price_format();
 	$currency_symbol = eaccounting_get_price_currency_symbol();
 

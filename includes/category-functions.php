@@ -12,8 +12,8 @@ function eaccounting_get_category_types() {
 	$types = array(
 		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 		'income'  => __( 'Income', 'wp-ever-accounting' ),
-		'product' => __( 'Product', 'wp-ever-accounting' ),
-		'other'   => __( 'Other', 'wp-ever-accounting' ),
+//		'product' => __( 'Product', 'wp-ever-accounting' ),
+//		'other'   => __( 'Other', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_category_types', $types );

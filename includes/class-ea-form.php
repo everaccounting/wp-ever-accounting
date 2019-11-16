@@ -62,7 +62,7 @@ class EAccounting_Form {
 		$html .= ! empty( $label ) ? sprintf( '<label for="%1$s" class="ea-control-label">%2$s</label>', $id, $label ) : '';
 		$html .= $button || $icon ? '<div class="ea-input-group">' : '';
 		$html .= sprintf( '<div class="ea-input-group-addon">%s</div>', $icon );
-		$html .= sprintf( '<input type="%1$s" class="ea-form-control %2$s-text %7$s" id="%3$s" name="%4$s" value="%5$s" %6$s/>', $type, $size, $id, $name, $value, $attributes, $input_classes );
+		$html .= sprintf( '<input type="%1$s" class="ea-form-control %2$s-text %7$s" id="%3$s" name="%4$s" value="%5$s" %6$s autocomplete="off"/>', $type, $size, $id, $name, $value, $attributes, $input_classes );
 		$html .= $button ? $html .= sprintf( '<div class="ea-input-group-btn">%s</div>', $button ) : '';
 		$html .= $button || $icon ? '</div><!--.ea-input-group-->' : '';
 		$html .= $description ? $description : '';

@@ -10,7 +10,7 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 <?php echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $invoices_page_url, __( 'All Revenues', 'wp-ever-accounting' ) ); ?>
 
 <div class="ea-card">
-	<form id="ea-revenue-form" action="" method="post">
+	<form id="ea-revenue-form" action="" method="post" autocomplete="off">
 		<div class="ea-row">
 			<?php
 			echo EAccounting_Form::date_control( array(

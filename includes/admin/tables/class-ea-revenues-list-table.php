@@ -25,6 +25,20 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
+	 * Retrieve the bulk actions
+	 *
+	 * @return array $actions Array of the bulk actions
+	 * @since 1.0.0
+	 */
+	public function get_bulk_actions() {
+		$actions = array(
+			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
+		);
+
+		return $actions;
+	}
+
+	/**
 	 * Retrieve the table columns
 	 *
 	 * @return array $columns Array of all the list table columns
@@ -161,7 +175,7 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['contact'] ) ? $_GET['contact'] : false;
+		$ids = isset( $_GET['revenue'] ) ? $_GET['revenue'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -170,13 +184,7 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
-				eaccounting_delete_contact( $id );
-			}
-			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '1' ] );
-			}
-			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '0' ] );
+				eaccounting_delete_revenue( $id );
 			}
 		}
 	}
