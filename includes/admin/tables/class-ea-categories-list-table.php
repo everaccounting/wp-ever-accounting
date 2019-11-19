@@ -144,10 +144,10 @@ class EAccounting_Categories_List_Table extends EAccounting_List_Table {
 				eaccounting_delete_category( $id );
 			}
 			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_category( [ 'id' => $id, 'status' => '1' ] );
+				eaccounting_insert_category( [ 'id' => $id, 'status' => 'active' ] );
 			}
 			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_category( [ 'id' => $id, 'status' => '0' ] );
+				eaccounting_insert_category( [ 'id' => $id, 'status' => 'inactive' ] );
 			}
 		}
 	}
