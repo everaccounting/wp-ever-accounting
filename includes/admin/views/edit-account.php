@@ -1,6 +1,6 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-$base_url   = admin_url( 'admin.php?page=eaccounting-banking&tab=accounts' );
+$base_url   = admin_url( 'admin.php?page=eaccounting-accounts&tab=accounts' );
 $account_id = empty( $_GET['account'] ) ? false : absint( $_GET['account'] );
 $account    = new StdClass();
 if ( $account_id ) {
