@@ -40,7 +40,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::customer_dropdown( array(
+			echo EAccounting_Form::vendor_dropdown( array(
 				'label'         => __( 'Vendor', 'wp-ever-accounting' ),
 				'name'          => 'contact_id',
 				'icon'          => 'fa fa-user',

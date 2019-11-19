@@ -234,9 +234,9 @@ class EAccounting_Account {
 		// Opening Balance
 		$total = $this->opening_balance;
 		// Sum Incomes
-		$total += $wpdb->get_var( "SELECT SUM(amount) from $wpdb->ea_revenues" );
-
-		$total -= $wpdb->get_var( "SELECT SUM(amount) from $wpdb->ea_payments" );
+		$total += $wpdb->get_var( $wpdb->prepare("SELECT SUM(amount) from $wpdb->ea_revenues WHERE account_id=%d", $this->get_id()) );
+		//sum expense
+		$total -= $wpdb->get_var( $wpdb->prepare("SELECT SUM(amount) from $wpdb->ea_payments WHERE account_id=%d", $this->get_id()) );
 
 		return 'edit' == $context ? eaccounting_format_price( $total ) : eaccounting_price( $total );
 	}
