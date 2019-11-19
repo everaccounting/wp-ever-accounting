@@ -78,7 +78,7 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::input_control( array(
+			echo EAccounting_Form::file_control( array(
 				'label'         => __( 'Attachment', 'wp-ever-accounting' ),
 				'name'          => 'attachment',
 				'type'          => 'file',
@@ -86,6 +86,8 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 				'required'      => false,
 				'wrapper_class' => 'ea-col-6',
 			) );
+
+
 
 			echo EAccounting_Form::textarea_control( array(
 				'label'         => __( 'Description', 'wp-ever-accounting' ),

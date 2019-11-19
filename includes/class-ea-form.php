@@ -532,6 +532,77 @@ class EAccounting_Form {
 	 * @param $args
 	 */
 	public static function file_control( $args ) {
+		$args = wp_parse_args( $args, array(
+			'label'         => '',
+			'name'          => '',
+			'value'         => '',
+			'default'       => '',
+			'size'          => '',
+			'icon'          => '',
+			'class'         => '',
+			'wrapper_class' => '',
+			'id'            => '',
+			'placeholder'   => '',
+			'file_types'    => array( 'jpg', 'jpeg', 'png' ),
+			'file_limit'      => '2024',
+			'data'          => array(),
+			'required'      => false,
+			'readonly'      => false,
+			'disabled'      => false,
+		) );
+
+		//general
+		$name                    = esc_attr( ! empty( $args['name'] ) ? $args['name'] : '' );
+		$id                      = esc_attr( ! empty( $args['id'] ) ? $args['id'] : $name );
+		$label                   = empty( $args['label'] ) ? false : strip_tags( $args['label'] );
+		$input_classes           = is_array( $args['class'] ) ? $args['class'] : explode( ' ', $args['class'] );
+		$wrapper_classes         = is_array( $args['wrapper_class'] ) ? $args['wrapper_class'] : explode( ' ', $args['wrapper_class'] );
+		$wrapper_classes[]       = ( true == $args['required'] ) ? 'required' : '';
+		$icon                    = empty( $args['icon'] ) ? false : sprintf( '<i class="%s"></i>', $args['icon'] );
+		$button                  = empty( $args['button'] ) ? false : self::sanitize_button( $args['button'] );
+		$description             = empty( $args['description'] ) ? false : self::get_description( $args['description'] );
+		$data                    = $args['data'];
+		$data['required']        = ( true == $args['required'] ) ? 'required' : '';
+		$data['readonly']        = ( true == $args['readonly'] ) ? 'readonly' : '';
+		$data['disabled']        = ( true == $args['disabled'] ) ? 'disabled' : '';
+		$data['data-file_types'] = implode( '|', $args['file_types'] );
+		$data['data-nonce']      = wp_create_nonce( 'eaccounting_file_upload' );
+		$data['data-file_limit'] = $args['file_limit'];
+		$attributes              = implode( ' ', self::generate_attributes( $data ) );
+
+		//class sanitization
+		$input_classes   = array_filter( $input_classes );
+		$input_classes   = array_map( 'sanitize_html_class', $input_classes );
+		$input_classes   = implode( ' ', $input_classes );
+		$wrapper_classes = array_filter( $wrapper_classes );
+		$wrapper_classes = array_map( 'sanitize_html_class', $wrapper_classes );
+		$default         = array(
+			'id'        => '',
+			'extension' => '',
+			'file'      => '',
+			'name'      => '',
+			'size'      => '',
+			'type'      => '',
+			'url'       => ''
+		);
+
+		$value = isset( $args['value'] ) ? wp_parse_args( $args['value'], $default ) : $default;
+
+
+		$html = sprintf( '<div class="ea-form-group %s">', implode( ' ', $wrapper_classes ) );
+		$html .= ! empty( $label ) ? sprintf( '<label for="%1$s" class="ea-control-label">%2$s</label>', $id, $label ) : '';
+		$html .= '<div class="ea-file-upload-field">';
+		$html .= '<div class="ea-uploaded-files">';
+		$html .= '<div class="ea-uploaded-file"></div>';
+		$html .= '</div><!--.ea-uploaded-files-->';
+		$html .= sprintf('<input id="%1$s" type="hidden" name="%2$s" value="%3$s">', $id, $name, $value['id']);
+		$html .= sprintf( '<input type="file" class="ea-file-control ea-file-upload %1$s" id="%2$s" %3$s autocomplete="off"/>', $input_classes, $id, $attributes );
+		$html .= '</div><!--.ea-file-upload-field-->';
+		$html .= $description ? $description : '';
+		$html .= '</div><!--.ea-form-group-->';
+
+		return $html;
+
 
 	}
 

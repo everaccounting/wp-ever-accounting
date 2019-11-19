@@ -1,6 +1,5 @@
 jQuery(function ($) {
 	$('.ea-file-upload').each(function () {
-		console.log(this);
 		$(this).fileupload({
 			dataType: 'json',
 			dropZone: $(this),
