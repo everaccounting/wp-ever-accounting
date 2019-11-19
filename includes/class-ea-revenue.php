@@ -153,7 +153,7 @@ class EAccounting_Revenue {
 		} else if ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 		} else {
-			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-erevenueing' ), $key ) );
+			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-ever-accounting' ), $key ) );
 		}
 
 	}

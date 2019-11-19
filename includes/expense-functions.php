@@ -36,19 +36,19 @@ function eaccounting_insert_payment( $args ) {
 	);
 
 	if ( empty( $data['paid_at'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-eaccounting' ) );
+		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['amount'] ) || $data['amount'] == '0.00') {
-		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-eaccounting' ) );
+		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['category_id'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-eaccounting' ) );
+		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['method_id'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-eaccounting' ) );
+		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-ever-accounting' ) );
 	}
 
 	$where = array( 'id' => $id );
@@ -57,14 +57,14 @@ function eaccounting_insert_payment( $args ) {
 	if ( $update ) {
 		do_action( 'eaccounting_pre_payment_update', $id, $data );
 		if ( false === $wpdb->update( $wpdb->ea_payments, $data, $where ) ) {
-			return new WP_Error( 'db_update_error', __( 'Could not update payment in the database', 'wp-eaccounting' ), $wpdb->last_error );
+			return new WP_Error( 'db_update_error', __( 'Could not update payment in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		do_action( 'eaccounting_payment_update', $id, $data, $item_before );
 	} else {
 		do_action( 'eaccounting_pre_payment_insert', $id, $data );
 		if ( false === $wpdb->insert( $wpdb->ea_payments, $data ) ) {
 
-			return new WP_Error( 'db_insert_error', __( 'Could not insert payment into the database', 'wp-eaccounting' ), $wpdb->last_error );
+			return new WP_Error( 'db_insert_error', __( 'Could not insert payment into the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		$id = (int) $wpdb->insert_id;
 		do_action( 'eaccounting_payment_insert', $id, $data );

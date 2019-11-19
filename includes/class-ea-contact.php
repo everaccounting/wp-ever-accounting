@@ -184,7 +184,7 @@ class EAccounting_Contact {
 				$this->user_url   = $data->user_url;
 			}
 		} else {
-			$this->user_login = __( 'Guest', 'wp-eaccounting' );
+			$this->user_login = __( 'Guest', 'wp-ever-accounting' );
 			$this->user_email = $this->email;
 		}
 	}
@@ -200,7 +200,7 @@ class EAccounting_Contact {
 		} else if ( property_exists( $this, $key ) ) {
 			return $this->{$key};
 		} else {
-			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-eaccounting' ), $key ) );
+			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-ever-accounting' ), $key ) );
 		}
 
 	}

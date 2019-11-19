@@ -77,13 +77,13 @@ class EAccounting_Localisation_Settings {
 //				),
 				array(
 					'name'    => 'thousand_separator',
-					'label'   => __( 'Thousands Separator', 'wp-ever-hrm' ),
+					'label'   => __( 'Thousands Separator', 'wp-ever-accounting' ),
 					'type'    => 'text',
 					'default' => ',',
 				),
 				array(
 					'name'    => 'decimal_separator',
-					'label'   => __( 'Decimal Separator', 'wp-ever-hrm' ),
+					'label'   => __( 'Decimal Separator', 'wp-ever-accounting' ),
 					'type'    => 'text',
 					'default' => '.',
 				),

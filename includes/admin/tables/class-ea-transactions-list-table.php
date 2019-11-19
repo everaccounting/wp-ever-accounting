@@ -40,12 +40,12 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'date'      => __( 'Date', 'wp-eaccounting' ),
-			'amount'    => __( 'Amount', 'wp-eaccounting' ),
-			'account'   => __( 'Account Name', 'wp-eaccounting' ),
-			'type'      => __( 'Type', 'wp-eaccounting' ),
-			'category'  => __( 'Category', 'wp-eaccounting' ),
-			'reference' => __( 'Reference', 'wp-eaccounting' ),
+			'date'      => __( 'Date', 'wp-ever-accounting' ),
+			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
+			'account'   => __( 'Account Name', 'wp-ever-accounting' ),
+			'type'      => __( 'Type', 'wp-ever-accounting' ),
+			'category'  => __( 'Category', 'wp-ever-accounting' ),
+			'reference' => __( 'Reference', 'wp-ever-accounting' ),
 		);
 
 		return $columns;

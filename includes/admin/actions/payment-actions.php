@@ -65,9 +65,9 @@ function eaccounting_action_edit_payment( $data ) {
 	}
 
 	if ( empty( $data['id'] ) ) {
-		$message = __( 'Payment created successfully.', 'wp-eaccounting' );
+		$message = __( 'Payment created successfully.', 'wp-ever-accounting' );
 	} else {
-		$message = __( 'Payment updated successfully.', 'wp-eaccounting' );
+		$message = __( 'Payment updated successfully.', 'wp-ever-accounting' );
 	}
 	eaccounting_admin_notice( $message );
 	wp_redirect( $redirect );

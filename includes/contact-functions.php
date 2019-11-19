@@ -8,8 +8,8 @@ defined( 'ABSPATH' ) || exit();
  */
 function eaccounting_get_contact_types() {
 	return apply_filters( 'eaccounting_contact_types', array(
-		'customer' => __( 'Customer', 'wp-eaccounting' ),
-		'vendor'   => __( 'Vendor', 'wp-eaccounting' ),
+		'customer' => __( 'Customer', 'wp-ever-accounting' ),
+		'vendor'   => __( 'Vendor', 'wp-ever-accounting' ),
 	) );
 }
 
@@ -62,19 +62,19 @@ function eaccounting_insert_contact( $args ) {
 	);
 
 	if ( ! empty( $user_id ) && ! get_user_by( 'ID', $user_id ) ) {
-		return new WP_Error( 'invalid_wp_user_id', __( 'Invalid WP User ID', 'wp-eaccounting' ) );
+		return new WP_Error( 'invalid_wp_user_id', __( 'Invalid WP User ID', 'wp-ever-accounting' ) );
 	}
 
 	//check if email duplicate
 	if ( ! empty( $data['email'] ) ) {
 		$email_duplicate = eaccounting_get_contact( $data['email'], 'email' );
 		if ( $email_duplicate && $email_duplicate->id != $id ) {
-			return new WP_Error( 'duplicate_email', __( 'The email address is already in used', 'wp-eaccounting' ) );
+			return new WP_Error( 'duplicate_email', __( 'The email address is already in used', 'wp-ever-accounting' ) );
 		}
 	}
 
 	if ( empty( $data['first_name'] ) || empty( $data['last_name'] ) ) {
-		return new WP_Error( 'empty_name', __( 'First Name & Last Name is required', 'wp-eaccounting' ) );
+		return new WP_Error( 'empty_name', __( 'First Name & Last Name is required', 'wp-ever-accounting' ) );
 	}
 
 	//prepare types

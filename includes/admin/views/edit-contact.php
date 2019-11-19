@@ -3,9 +3,9 @@ defined( 'ABSPATH' ) || exit();
 $base_url = admin_url( 'admin.php?page=eaccounting-contacts' );
 $id       = empty( $_GET['contact'] ) ? null : absint( $_GET['contact'] );
 $contact  = new EAccounting_Contact($id);
-$title    = $contact->get_id() ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eaccounting' );
+$title    = $contact->get_id() ? __( 'Update Contact', 'wp-ever-accounting' ) : __( 'Add Contact', 'wp-ever-accounting' );
 printf( '<h1 class="wp-heading-inline">%s</h1>', $title );
-printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Contacts', 'wp-eaccounting' ) );
+printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Contacts', 'wp-ever-accounting' ) );
 ?>
 <div class="ea-card">
 	<form id="ea-contact-form" action="" method="post">
@@ -167,7 +167,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			<input type="hidden" name="id" value="<?php echo $id ?>">
 			<input type="hidden" name="eaccounting-action" value="edit_contact">
 			<?php wp_nonce_field( 'eaccounting_edit_contact' ); ?>
-			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-eaccounting' ); ?>">
+			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-ever-accounting' ); ?>">
 		</p>
 	</form>
 </div>

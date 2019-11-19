@@ -64,14 +64,14 @@ class EAccounting_Categories_List_Table extends EAccounting_List_Table {
 		$deactivate_url = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'deactivate_category' ], $category_url ), 'eaccounting_categories_nonce' );
 		$delete_url     = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_category' ], $category_url ), 'eaccounting_categories_nonce' );
 
-		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-eaccounting' ) );
+		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-ever-accounting' ) );
 
 		if ( strtolower( $item->status ) == 'active' ) {
-			$row_actions['deactivate'] = sprintf( '<a href="%1$s">%2$s</a>', $deactivate_url, __( 'Deactivate', 'wp-eaccounting' ) );
+			$row_actions['deactivate'] = sprintf( '<a href="%1$s">%2$s</a>', $deactivate_url, __( 'Deactivate', 'wp-ever-accounting' ) );
 		} elseif ( strtolower( $item->status ) == 'inactive' ) {
-			$row_actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', $activate_url, __( 'Activate', 'wp-eaccounting' ) );
+			$row_actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', $activate_url, __( 'Activate', 'wp-ever-accounting' ) );
 		}
-		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-eaccounting' ) );
+		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-ever-accounting' ) );
 
 		$row_actions = apply_filters( 'eaccounting_categories_row_actions', $row_actions, $item );
 
