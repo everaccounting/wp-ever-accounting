@@ -94,7 +94,7 @@ function eaccounting_edit_account( $data ) {
 		'bank_phone'      => $data['bank_phone'],
 		'bank_address'    => $data['bank_address'],
 		'opening_balance' => $data['opening_balance'],
-		'status'          => isset( $data['status'] ) ? $data['status'] : 'active',
+		'status'          => isset( $data['status'] ) ? $data['status'] : 'inactive',
 	) );
 
 	if ( is_wp_error( $created ) ) {
