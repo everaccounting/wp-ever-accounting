@@ -164,10 +164,10 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 				eaccounting_delete_account( $id );
 			}
 			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_account( [ 'id' => $id, 'status' => '1' ] );
+				eaccounting_insert_account( [ 'id' => $id, 'status' => 'active' ] );
 			}
 			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_account( [ 'id' => $id, 'status' => '0' ] );
+				eaccounting_insert_account( [ 'id' => $id, 'status' => 'inactive' ] );
 			}
 		}
 	}

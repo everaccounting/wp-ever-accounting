@@ -156,10 +156,10 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 				eaccounting_delete_contact( $id );
 			}
 			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '1' ] );
+				eaccounting_insert_contact( [ 'id' => $id, 'status' => 'active' ] );
 			}
 			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '0' ] );
+				eaccounting_insert_contact( [ 'id' => $id, 'status' => 'inactive' ] );
 			}
 		}
 	}
