@@ -159,7 +159,7 @@ class EAccounting_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function no_items() {
-		echo sprintf( __( 'No %s found.', 'wp-eaccounting' ), $this->_args['plural'] );
+		echo sprintf( __( 'No %s found.', 'wp-ever-accounting' ), $this->_args['plural'] );
 	}
 
 	/**

@@ -6,7 +6,7 @@ $account    = new StdClass();
 if ( $account_id ) {
 	$account = eaccounting_get_account( $account_id );
 }
-$title = $account_id ? __( 'Update  Account' ) : __( 'Add Account', 'wp-ever-accounting' );
+$title = $account_id ? __( 'Update  Account', 'wp-ever-accounting' ) : __( 'Add Account', 'wp-ever-accounting' );
 
 ?>
 
@@ -64,7 +64,7 @@ $title = $account_id ? __( 'Update  Account' ) : __( 'Add Account', 'wp-ever-acc
 			) );
 
 			echo EAccounting_Form::status_control( array(
-				'label'         => __( 'Status', 'wp-eaccounting' ),
+				'label'         => __( 'Status', 'wp-ever-accounting' ),
 				'value'         => isset( $account->status ) ? $account->status : 'active',
 				'wrapper_class' => 'ea-col-6',
 			) );

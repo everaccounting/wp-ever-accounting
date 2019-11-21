@@ -9,11 +9,11 @@ defined( 'ABSPATH' ) || exit();
 	$base_url = admin_url( 'admin.php?page=eaccounting-transactions' );
 	?>
 
-	<h1 class="wp-heading-inline"><?php _e( 'Transactions', 'wp-eaccounting' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php _e( 'Transactions', 'wp-ever-accounting' ); ?></h1>
 	<?php do_action( 'eaccounting_transactions_page_top' ); ?>
 	<form method="get" action="<?php echo esc_url( $base_url ); ?>">
 		<div class="ea-list-table">
-			<?php $list_table->search_box( __( 'Search', 'wp-eaccounting' ), 'eaccounting-contacts' ); ?>
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-contacts' ); ?>
 			<input type="hidden" name="page" value="eaccounting-transactions"/>
 			<?php $list_table->views() ?>
 			<?php $list_table->display() ?>

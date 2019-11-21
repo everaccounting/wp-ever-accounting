@@ -91,7 +91,7 @@ class EAccounting_Form {
 			'wrapper_class' => '',
 			'id'            => '',
 			'select2'       => false,
-			'placeholder'   => __( '-- Please Select --', 'wp-eaccounting' ),
+			'placeholder'   => __( '-- Please Select --', 'wp-ever-accounting' ),
 			'multiple'      => false,
 			'data'          => array(),
 			'required'      => false,
@@ -414,7 +414,7 @@ class EAccounting_Form {
 	 */
 	public static function status_control( $args ) {
 		return self::switch_control( wp_parse_args( $args, array(
-			'label' => __( 'Status', 'wp-eaccounting' ),
+			'label' => __( 'Status', 'wp-ever-accounting' ),
 			'name'  => 'status',
 			'check' => 'active',
 		) ) );
@@ -502,7 +502,7 @@ class EAccounting_Form {
 	public static function categories_dropdown( $args ) {
 		$type = isset( $args['type'] ) ? $args['type'] : '';
 		$args = wp_parse_args( $args, array(
-			'label'   => __( 'Category', 'wp-eaccounting' ),
+			'label'   => __( 'Category', 'wp-ever-accounting' ),
 			'name'    => 'category_id',
 			'icon'    => 'fa fa-folder-open-o',
 			'select2' => true,

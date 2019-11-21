@@ -126,9 +126,9 @@ function eaccounting_action_edit_contact( $data ) {
 	}
 
 	if ( empty( $data['id'] ) ) {
-		$message = __( 'Contact created successfully.', 'wp-eaccounting' );
+		$message = __( 'Contact created successfully.', 'wp-ever-accounting' );
 	} else {
-		$message = __( 'Contact updated successfully.', 'wp-eaccounting' );
+		$message = __( 'Contact updated successfully.', 'wp-ever-accounting' );
 	}
 	eaccounting_admin_notice( $message );
 	wp_redirect( $redirect );

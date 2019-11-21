@@ -25,12 +25,12 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'     => '<input type="checkbox" />',
-			'name'   => __( 'Name', 'wp-eaccounting' ),
-			'email'  => __( 'Email', 'wp-eaccounting' ),
-			'phone'  => __( 'Phone', 'wp-eaccounting' ),
-//			'unpaid' => __( 'Unpaid', 'wp-eaccounting' ),
-//			'types'  => __( 'Types', 'wp-eaccounting' ),
-			'status' => __( 'Status', 'wp-eaccounting' ),
+			'name'   => __( 'Name', 'wp-ever-accounting' ),
+			'email'  => __( 'Email', 'wp-ever-accounting' ),
+			'phone'  => __( 'Phone', 'wp-ever-accounting' ),
+//			'unpaid' => __( 'Unpaid', 'wp-ever-accounting' ),
+//			'types'  => __( 'Types', 'wp-ever-accounting' ),
+			'status' => __( 'Status', 'wp-ever-accounting' ),
 		);
 
 		return $columns;
@@ -66,14 +66,14 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 		$deactivate_url = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'deactivate_contact' ], $contact_url ), 'eaccounting_contacts_nonce' );
 		$delete_url     = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_contact' ], $contact_url ), 'eaccounting_contacts_nonce' );
 
-		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-eaccounting' ) );
+		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-ever-accounting' ) );
 
 		if ( strtolower( $item->get_status() ) == 'active' ) {
-			$row_actions['deactivate'] = sprintf( '<a href="%1$s">%2$s</a>', $deactivate_url, __( 'Deactivate', 'wp-eaccounting' ) );
+			$row_actions['deactivate'] = sprintf( '<a href="%1$s">%2$s</a>', $deactivate_url, __( 'Deactivate', 'wp-ever-accounting' ) );
 		} elseif ( strtolower( $item->get_status() ) == 'inactive' ) {
-			$row_actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', $activate_url, __( 'Activate', 'wp-eaccounting' ) );
+			$row_actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', $activate_url, __( 'Activate', 'wp-ever-accounting' ) );
 		}
-		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-eaccounting' ) );
+		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-ever-accounting' ) );
 
 		$row_actions = apply_filters( 'eaccounting_contacts_row_actions', $row_actions, $item );
 

@@ -3,7 +3,7 @@ defined( 'ABSPATH' ) || exit();
 $id                = empty( $_GET['payment'] ) ? null : absint( $_GET['payment'] );
 $payment           = new EAccounting_Payment( $id );
 $invoices_page_url = admin_url( 'admin.php?page=eaccounting-payments' );
-$title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Payments', 'wp-eaccounting' );
+$title             = $payment->get_id() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payments', 'wp-ever-accounting' );
 ?>
 
 <?php echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title ); ?>

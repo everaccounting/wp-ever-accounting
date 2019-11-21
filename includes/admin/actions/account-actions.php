@@ -19,7 +19,7 @@ function eaccounting_activate_account( $data ) {
 		] );
 	}
 
-	eaccounting_admin_notice( __( 'Account Activated.', 'wp-eaccounting' ) );
+	eaccounting_admin_notice( __( 'Account Activated.', 'wp-ever-accounting' ) );
 
 	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
 	exit;
@@ -46,7 +46,7 @@ function eaccounting_deactivate_account( $data ) {
 		] );
 	}
 
-	eaccounting_admin_notice( __( 'Account Deactivated', 'wp-eaccounting' ) );
+	eaccounting_admin_notice( __( 'Account Deactivated', 'wp-ever-accounting' ) );
 
 	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
 	exit;
@@ -69,7 +69,7 @@ function eaccounting_delete_account_handler( $data ) {
 		eaccounting_delete_account( $account_id );
 	}
 
-	eaccounting_admin_notice( __( 'Account Deleted', 'wp-eaccounting' ) );
+	eaccounting_admin_notice( __( 'Account Deleted', 'wp-ever-accounting' ) );
 
 	wp_redirect( admin_url( 'admin.php?page=eaccounting-accounts' ) );
 	exit;
@@ -104,9 +104,9 @@ function eaccounting_edit_account( $data ) {
 	}
 
 	if ( empty( $data['id'] ) ) {
-		$message = __( 'Account created successfully.', 'wp-eaccounting' );
+		$message = __( 'Account created successfully.', 'wp-ever-accounting' );
 	} else {
-		$message = __( 'Account updated successfully.', 'wp-eaccounting' );
+		$message = __( 'Account updated successfully.', 'wp-ever-accounting' );
 	}
 
 	eaccounting_admin_notice( $message );

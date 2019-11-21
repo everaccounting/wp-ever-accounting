@@ -47,12 +47,12 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	public function get_columns() {
 		$columns = array(
 			'cb'        => '<input type="checkbox" />',
-			'date'      => __( 'Date', 'wp-eaccounting' ),
-			'amount'    => __( 'Amount', 'wp-eaccounting' ),
-			'customer'  => __( 'Customer', 'wp-eaccounting' ),
-			'category'  => __( 'Category', 'wp-eaccounting' ),
-			'account'   => __( 'Account', 'wp-eaccounting' ),
-			'reference' => __( 'Reference', 'wp-eaccounting' ),
+			'date'      => __( 'Date', 'wp-ever-accounting' ),
+			'amount'    => __( 'Amount', 'wp-ever-accounting' ),
+			'customer'  => __( 'Customer', 'wp-ever-accounting' ),
+			'category'  => __( 'Category', 'wp-ever-accounting' ),
+			'account'   => __( 'Account', 'wp-ever-accounting' ),
+			'reference' => __( 'Reference', 'wp-ever-accounting' ),
 		);
 
 		return $columns;
@@ -87,9 +87,9 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 		$edit_url    = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'edit_revenue' ], $revenue_url ), 'eaccounting_revenues_nonce' );
 		$delete_url  = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_revenue' ], $revenue_url ), 'eaccounting_revenues_nonce' );
 
-		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-eaccounting' ) );
+		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-ever-accounting' ) );
 
-		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-eaccounting' ) );
+		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-ever-accounting' ) );
 
 		$row_actions = apply_filters( 'eaccounting_revenues_row_actions', $row_actions, $item );
 

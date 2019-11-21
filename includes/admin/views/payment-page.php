@@ -14,15 +14,15 @@ defined( 'ABSPATH' ) || exit();
 		$base_url = admin_url( 'admin.php?page=eaccounting-payments' );
 		?>
 
-		<h1 class="wp-heading-inline"><?php _e( 'Payments', 'wp-eaccounting' ); ?></h1>
+		<h1 class="wp-heading-inline"><?php _e( 'Payments', 'wp-ever-accounting' ); ?></h1>
 		<a href="<?php echo esc_url( add_query_arg( array( 'eaccounting-action' => 'add_payment' ), $base_url ) ); ?>"
 		   class="page-title-action">
-			<?php _e( 'Add New', 'wp-eaccounting' ); ?>
+			<?php _e( 'Add New', 'wp-ever-accounting' ); ?>
 		</a>
 		<?php do_action( 'eaccounting_payments_page_top' ); ?>
 		<form method="get" action="<?php echo esc_url( $base_url ); ?>">
 			<div class="ea-list-table">
-				<?php $list_table->search_box( __( 'Search', 'wp-eaccounting' ), 'eaccounting-payments' ); ?>
+				<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-payments' ); ?>
 				<input type="hidden" name="page" value="eaccounting-payments"/>
 				<?php $list_table->views() ?>
 				<?php $list_table->display() ?>
