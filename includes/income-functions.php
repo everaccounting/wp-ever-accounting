@@ -27,10 +27,10 @@ function eaccounting_insert_revenue( $args ) {
 		'description' => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id' => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
 		'reference'   => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
-		'method_id'   => empty( $args['method_id'] ) && in_array( $args['method_id'], eaccounting_get_payment_methods() ) ? '' : absint( $args['method_id'] ),
+		'payment_method' => empty( $args['payment_method'] ) || ! array_key_exists( $args['payment_method'], eaccounting_get_payment_methods() ) ? '' : sanitize_key( $args['payment_method'] ),
+		'attachment_url' => ! empty( $args['attachment_url'] ) ? esc_url( $args['attachment_url'] ) : '',
 		'parent_id'   => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
 		'reconciled'  => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
-		'file_id'     => empty( $args['file_id'] ) ? '' : absint( $args['file_id'] ),
 		'updated_at'  => current_time( 'Y-m-d H:i:s' ),
 		'created_at'  => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -47,7 +47,7 @@ function eaccounting_insert_revenue( $args ) {
 		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-eaccounting' ) );
 	}
 
-	if ( empty( $data['method_id'] ) ) {
+	if ( empty( $data['payment_method'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-eaccounting' ) );
 	}
 

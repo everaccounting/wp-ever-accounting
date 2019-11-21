@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
  * @return string
  */
 function eaccounting_get_random_hex_color() {
-	return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+	return '#' . str_pad( dechex( mt_rand( 0, 0xFFFFFF ) ), 6, '0', STR_PAD_LEFT );
 }
 
 /**
@@ -268,7 +268,7 @@ function eaccounting_get_countries() {
  * @return array
  */
 function eaccounting_get_currencies() {
-	return apply_filters('eaccounting_currencies', array (
+	return apply_filters( 'eaccounting_currencies', array(
 		'ALL' => 'Albania Lek',
 		'AFN' => 'Afghanistan Afghani',
 		'ARS' => 'Argentina Peso',
@@ -384,7 +384,7 @@ function eaccounting_get_currencies() {
 		'VND' => 'Viet Nam Dong',
 		'YER' => 'Yemen Rial',
 		'ZWD' => 'Zimbabwe Dollar'
-	));
+	) );
 }
 
 /**
@@ -564,9 +564,10 @@ function eaccounting_get_currency_symbols() {
  * since 1.0.0
  * @return array
  */
-function eaccounting_get_payment_methods(){
-	return apply_filters('eaccounting_payment_methods', [
-		'1' => __('Cash', 'wp-ever-accounting'),
-		'2' => __('Bank Transfer', 'wp-ever-accounting'),
-	]);
+function eaccounting_get_payment_methods() {
+	return apply_filters( 'eaccounting_payment_methods', [
+		'cash'          => __( 'Cash', 'wp-ever-accounting' ),
+		'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
+		'check'         => __( 'Check', 'wp-ever-accounting' ),
+	] );
 }

@@ -6,73 +6,78 @@ defined( 'ABSPATH' ) || exit();
  */
 class EAccounting_Payment {
 	/**
-	 * @var
+	 * @var int
 	 */
 	protected $id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $account_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $paid_at;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $amount;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $contact_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $description;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $category_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
-	protected $method_id;
+	protected $payment_method;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $reference;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $parent_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $reconciled;
 
 	/**
-	 * @var
+	 * @var string
+	 */
+	protected $attachment_url;
+
+	/**
+	 * @var string
 	 */
 	protected $created_at;
 
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $updated_at;
 
 	/**
-	 * @var null
+	 * @var string null
 	 */
 	public $payment = null;
 
@@ -214,8 +219,8 @@ class EAccounting_Payment {
 	 */
 	public function get_payment_method($context = 'edit') {
 		$methods = eaccounting_get_payment_methods();
-		$display = array_key_exists($this->method_id, $methods)? $methods[$this->method_id]: '';
-		return 'edit' == $context ? $this->method_id : $display;
+		$display = array_key_exists($this->payment_method, $methods)? $methods[$this->payment_method]: '';
+		return 'edit' == $context ? $this->payment_method : $display;
 	}
 
 	/**
@@ -232,6 +237,14 @@ class EAccounting_Payment {
 	 */
 	public function get_description() {
 		return $this->description;
+	}
+
+	/**
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_attachment_url(){
+		return empty( $this->attachment_url ) ? '' : esc_url($this->attachment_url);
 	}
 
 	/**

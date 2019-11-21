@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-$id      = empty( $_GET['payment'] ) ? null : absint( $_GET['payment'] );
-$payment = new EAccounting_Payment($id);
+$id                = empty( $_GET['payment'] ) ? null : absint( $_GET['payment'] );
+$payment           = new EAccounting_Payment( $id );
 $invoices_page_url = admin_url( 'admin.php?page=eaccounting-payments' );
 $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Payments', 'wp-eaccounting' );
 ?>
@@ -16,7 +16,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 			echo EAccounting_Form::date_control( array(
 				'label'         => __( 'Date', 'wp-ever-accounting' ),
 				'name'          => 'paid_at',
-				'value'         => $payment->get_paid_at() ,
+				'value'         => $payment->get_paid_at(),
 				'icon'          => 'fa fa-calendar',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
@@ -34,7 +34,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 			echo EAccounting_Form::accounts_dropdown( array(
 				'label'         => __( 'Account', 'wp-ever-accounting' ),
 				'name'          => 'account_id',
-				'selected'         => $payment->get_account(),
+				'selected'      => $payment->get_account(),
 				'icon'          => 'fa fa-university',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
@@ -44,7 +44,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 				'label'         => __( 'Vendor', 'wp-ever-accounting' ),
 				'name'          => 'contact_id',
 				'icon'          => 'fa fa-user',
-				'selected'         => $payment->get_contact(),
+				'selected'      => $payment->get_contact(),
 				'required'      => false,
 				'wrapper_class' => 'ea-col-6',
 			) );
@@ -53,7 +53,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 				'label'         => __( 'Category', 'wp-ever-accounting' ),
 				'name'          => 'category_id',
 				'type'          => 'expense',
-				'selected'         => $payment->get_category(),
+				'selected'      => $payment->get_category(),
 				'icon'          => 'fa fa-folder-open-o',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
@@ -61,7 +61,7 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 
 			echo EAccounting_Form::select_control( array(
 				'label'         => __( 'Payment Method', 'wp-ever-accounting' ),
-				'name'          => 'method_id',
+				'name'          => 'payment_method',
 				'selected'      => $payment->get_payment_method(),
 				'icon'          => 'fa fa-credit-card',
 				'required'      => true,
@@ -78,21 +78,23 @@ $title             = $payment->get_id() ? __( 'Update Payment' ) : __( 'Add Paym
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::input_control( array(
-				'label'         => __( 'Attachment', 'wp-ever-accounting' ),
-				'name'          => 'attachment',
-				'type'          => 'file',
-				'icon'          => 'fa fa-file-text-o',
-				'required'      => false,
-				'wrapper_class' => 'ea-col-6',
-			) );
-
 			echo EAccounting_Form::textarea_control( array(
 				'label'         => __( 'Description', 'wp-ever-accounting' ),
 				'name'          => 'description',
 				'value'         => $payment->get_description(),
 				'required'      => false,
 				'wrapper_class' => 'ea-col-12',
+			) );
+
+
+			echo EAccounting_Form::file_control( array(
+				'label'         => __( 'Attachment', 'wp-ever-accounting' ),
+				'name'          => 'attachment_url',
+				'value'         => $payment->get_attachment_url(),
+				'file_types'    => array( 'pdf', 'jpg', 'jpeg', 'png' ),
+				'icon'          => 'fa fa-file-text-o',
+				'required'      => false,
+				'wrapper_class' => 'ea-col-6',
 			) );
 
 			?>

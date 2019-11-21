@@ -38,23 +38,23 @@ function eaccounting_action_edit_revenue( $data ) {
 	}
 
 	$revenue_id = eaccounting_insert_revenue( array(
-		'id'          => isset( $data['id'] ) ? absint( $data['id'] ) : '',
-		'account_id'  => isset( $data['account_id'] ) ? absint( $data['account_id'] ) : '',
-		'paid_at'     => isset( $data['paid_at'] ) ? eaccounting_sanitize_date( $data['paid_at'] ) : '',
-		'amount'      => isset( $data['amount'] ) ? eaccounting_sanitize_price( $data['amount'] ) : '',
-		'contact_id'  => isset( $data['contact_id'] ) ? absint( $data['contact_id'] ) : '',
-		'description' => isset( $data['description'] ) ? sanitize_text_field( $data['description'] ) : '',
-		'category_id' => isset( $data['category_id'] ) ? absint( $data['category_id'] ) : '',
-		'reference'   => isset( $data['reference'] ) ? sanitize_text_field( $data['reference'] ) : '',
-		'method_id'   => isset( $data['method_id'] ) ? absint( $data['method_id'] ) : '',
-		'parent_id'   => isset( $data['parent_id'] ) ? absint( $data['parent_id'] ) : '',
-		'reconciled'  => isset( $data['reconciled'] ) ? absint( $data['reconciled'] ) : '',
-		'file_id'     => isset( $data['file_id'] ) ? absint( $data['file_id'] ) : '',
+		'id'             => isset( $data['id'] ) ? absint( $data['id'] ) : '',
+		'account_id'     => isset( $data['account_id'] ) ? absint( $data['account_id'] ) : '',
+		'paid_at'        => isset( $data['paid_at'] ) ? eaccounting_sanitize_date( $data['paid_at'] ) : '',
+		'amount'         => isset( $data['amount'] ) ? eaccounting_sanitize_price( $data['amount'] ) : '',
+		'contact_id'     => isset( $data['contact_id'] ) ? absint( $data['contact_id'] ) : '',
+		'description'    => isset( $data['description'] ) ? sanitize_text_field( $data['description'] ) : '',
+		'category_id'    => isset( $data['category_id'] ) ? absint( $data['category_id'] ) : '',
+		'reference'      => isset( $data['reference'] ) ? sanitize_text_field( $data['reference'] ) : '',
+		'payment_method' => isset( $data['payment_method'] ) ? sanitize_key( $data['payment_method'] ) : '',
+		'attachment_url' => isset( $data['attachment_url'] ) ? esc_url( $data['attachment_url'] ) : '',
+		'parent_id'      => isset( $data['parent_id'] ) ? absint( $data['parent_id'] ) : '',
+		'reconciled'     => isset( $data['reconciled'] ) ? absint( $data['reconciled'] ) : '',
 	) );
 
 	$redirect = add_query_arg( [
 		'eaccounting-action' => 'edit_revenue',
-		'revenue'            => !is_wp_error($revenue_id)? $revenue_id:'',
+		'revenue'            => ! is_wp_error( $revenue_id ) ? $revenue_id : '',
 	], admin_url( 'admin.php?page=eaccounting-revenues' ) );
 
 	if ( is_wp_error( $revenue_id ) ) {

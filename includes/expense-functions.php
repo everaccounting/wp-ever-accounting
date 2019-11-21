@@ -19,36 +19,36 @@ function eaccounting_insert_payment( $args ) {
 	}
 
 	$data = array(
-		'id'          => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'account_id'  => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
-		'paid_at'     => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
-		'amount'      => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
-		'contact_id'  => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
-		'description' => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
-		'category_id' => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
-		'reference'   => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
-		'method_id'   => empty( $args['method_id'] ) && in_array( $args['method_id'], eaccounting_get_payment_methods() ) ? '' : absint( $args['method_id'] ),
-		'parent_id'   => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
-		'reconciled'  => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
-		'file_id'     => empty( $args['file_id'] ) ? '' : absint( $args['file_id'] ),
-		'updated_at'  => current_time( 'Y-m-d H:i:s' ),
-		'created_at'  => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
+		'id'             => empty( $args['id'] ) ? null : absint( $args['id'] ),
+		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
+		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
+		'amount'         => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
+		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
+		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
+		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
+		'reference'      => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
+		'payment_method' => empty( $args['payment_method'] ) || ! array_key_exists( $args['payment_method'], eaccounting_get_payment_methods() ) ? '' : sanitize_key( $args['payment_method'] ),
+		'attachment_url' => ! empty( $args['attachment_url'] ) ? esc_url( $args['attachment_url'] ) : '',
+		'parent_id'      => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
+		'reconciled'     => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
+		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
+		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 	if ( empty( $data['paid_at'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-eaccounting' ) );
+		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['amount'] ) || $data['amount'] == '0.00') {
-		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-eaccounting' ) );
+	if ( empty( $data['amount'] ) || $data['amount'] == '0.00' ) {
+		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['category_id'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-eaccounting' ) );
+		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['method_id'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-eaccounting' ) );
+	if ( empty( $data['payment_method'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-ever-accounting' ) );
 	}
 
 	$where = array( 'id' => $id );
@@ -57,14 +57,14 @@ function eaccounting_insert_payment( $args ) {
 	if ( $update ) {
 		do_action( 'eaccounting_pre_payment_update', $id, $data );
 		if ( false === $wpdb->update( $wpdb->ea_payments, $data, $where ) ) {
-			return new WP_Error( 'db_update_error', __( 'Could not update payment in the database', 'wp-eaccounting' ), $wpdb->last_error );
+			return new WP_Error( 'db_update_error', __( 'Could not update payment in the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		do_action( 'eaccounting_payment_update', $id, $data, $item_before );
 	} else {
 		do_action( 'eaccounting_pre_payment_insert', $id, $data );
 		if ( false === $wpdb->insert( $wpdb->ea_payments, $data ) ) {
 
-			return new WP_Error( 'db_insert_error', __( 'Could not insert payment into the database', 'wp-eaccounting' ), $wpdb->last_error );
+			return new WP_Error( 'db_insert_error', __( 'Could not insert payment into the database', 'wp-ever-accounting' ), $wpdb->last_error );
 		}
 		$id = (int) $wpdb->insert_id;
 		do_action( 'eaccounting_payment_insert', $id, $data );
@@ -157,7 +157,7 @@ function eaccounting_get_payments( $args = array(), $count = false ) {
 	//amount
 	if ( ! empty( $args['amount'] ) ) {
 		$amount = trim( $args['amount'] );
-		$number  = preg_replace( '#[^0-9\.]#', '', $amount );
+		$number = preg_replace( '#[^0-9\.]#', '', $amount );
 
 		if ( strpos( $amount, '>' ) !== false ) {
 			$query_where .= $wpdb->prepare( " AND $wpdb->ea_payments.amount > %f ", $number );

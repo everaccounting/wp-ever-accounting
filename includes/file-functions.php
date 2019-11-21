@@ -94,16 +94,6 @@ function eaccounting_upload_file( $file, $args = [] ) {
 			$uploaded_file->type      = $upload['type'];
 			$uploaded_file->size      = $file['size'];
 			$uploaded_file->extension = substr( strrchr( $uploaded_file->name, '.' ), 1 );
-			$file_id                  = eaccounting_insert_file( [
-				'filename'  => $uploaded_file->name,
-				'url'       => $uploaded_file->url,
-				'path'      => $uploaded_file->file,
-				'extension' => $uploaded_file->extension,
-				'mime_type' => $file['type'],
-				'size'      => $uploaded_file->size,
-			] );
-			$uploaded_file->id        = $file_id;
-
 		}
 	}
 
@@ -138,43 +128,4 @@ function eaccounting_get_allowed_mime_types( $field = '' ) {
 	}
 
 	return apply_filters( 'eaccounting_mime_types', $allowed_mime_types, $field );
-}
-
-/**
- * since 1.0.0
- *
- * @param $args
- *
- * @return int|WP_Error
- */
-function eaccounting_insert_file( $args ) {
-	$args = wp_parse_args( $args, array(
-		'filename',
-		'url',
-		'path',
-		'extension',
-		'mime_type',
-		'size',
-		'created_at',
-	) );
-
-
-	$data = array(
-		'filename'   => ! isset( $args['filename'] ) ? '' : $args['filename'],
-		'url'        => ! isset( $args['url'] ) ? '' : $args['url'],
-		'path'       => ! isset( $args['path'] ) ? '' : $args['path'],
-		'extension'  => ! isset( $args['extension'] ) ? '' : $args['extension'],
-		'size'       => ! isset( $args['size'] ) ? '' : $args['size'],
-		'mime_type'  => ! isset( $args['mime_type'] ) ? '' : $args['mime_type'],
-		'created_at' => date( 'Y-m-d H:i:s' ),
-	);
-	global $wpdb;
-	do_action( 'eaccounting_pre_file_insert', $data );
-	if ( false === $wpdb->insert( $wpdb->ea_files, $data ) ) {
-		return new WP_Error( 'db_insert_error', __( 'Could not insert file into the database', 'wp-ever-accounting' ), $wpdb->last_error );
-	}
-	$id = (int) $wpdb->insert_id;
-	do_action( 'eaccounting_file_insert', $id, $data );
-
-	return $id;
 }

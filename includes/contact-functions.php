@@ -54,6 +54,7 @@ function eaccounting_insert_contact( $args ) {
 		'postcode'   => empty( $args['postcode'] ) ? '' : sanitize_text_field( $args['postcode'] ),
 		'country'    => empty( $args['country'] ) ? '' : sanitize_text_field( $args['country'] ),
 		'website'    => empty( $args['website'] ) ? '' : esc_url_raw( $args['website'] ),
+		'avatar_url' => isset( $args['avatar_url'] ) ? esc_url_raw( $args['avatar_url'] ) : '',
 		'status'     => empty( $args['status'] ) ? 'inactive' : sanitize_key( $args['status'] ),
 		'note'       => empty( $args['note'] ) ? '' : sanitize_textarea_field( $args['note'] ),
 		'types'      => empty( $args['types'] ) ? array( 'customer' ) : $args['types'],
@@ -203,7 +204,7 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 		'exclude'        => array(),
 		'status'         => '',
 		'search'         => '',
-		'type'         => '',
+		'type'           => '',
 		'orderby'        => 'id',
 		'order'          => 'DESC',
 		'fields'         => 'all',
@@ -224,8 +225,8 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 
 	//type
 	if ( ! empty( $args['type'] ) && array_key_exists( $args['type'], eaccounting_get_contact_types() ) ) {
-		$type     = '%' . $wpdb->esc_like( $args['type']  ) . '%';
-		$query_where .= $wpdb->prepare(" AND $wpdb->ea_contacts.types LIKE %s ", $type);
+		$type        = '%' . $wpdb->esc_like( $args['type'] ) . '%';
+		$query_where .= $wpdb->prepare( " AND $wpdb->ea_contacts.types LIKE %s ", $type );
 	}
 
 

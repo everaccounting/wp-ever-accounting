@@ -13,32 +13,10 @@ jQuery(function ($) {
 				this.validation_errors = [];
 			},
 			add: function (e, data) {
-				var $file_field = $(this);
-				var $form = $file_field.closest('form');
-				var $uploaded_files = $file_field.parent().find('.ea-uploaded-files');
+				var $file_field = $(this).closest('.ea-file-field');
+				var $file_upload = $(this);
+				var $form = $file_upload.closest('form');
 				var uploadErrors = [];
-				var fileLimitLeft = false;
-				var fileLimit = parseInt($file_field.data('file_limit'), 10);
-
-				if (typeof $file_field.data('file_limit_left') !== 'undefined') {
-					fileLimitLeft = parseInt($file_field.data('file_limit_left'), 10);
-				} else if (typeof fileLimit !== 'undefined') {
-					var currentFiles = parseInt($uploaded_files.children('.ea-uploaded-file').length, 10);
-					fileLimitLeft = fileLimit - currentFiles;
-					$file_field.data('file_limit_left', fileLimitLeft);
-				}
-
-				if (false !== fileLimitLeft && fileLimitLeft <= 0) {
-					var message = 'Exceeded upload limit';
-					if ($file_field.data('file_limit_message')) {
-						message = $file_field.data('file_limit_message');
-					} else if (typeof job_manager_job_submission !== 'undefined') {
-						message = 'You are only allowed to upload a maximum of %d files.';
-					}
-					message = message.replace('%d', fileLimit);
-
-					uploadErrors.push(message);
-				}
 
 				// Validate type
 				var allowed_types = $(this).data('file_types');
@@ -54,11 +32,8 @@ jQuery(function ($) {
 				if (uploadErrors.length > 0) {
 					this.validation_errors = this.validation_errors.concat(uploadErrors);
 				} else {
-					if (false !== fileLimitLeft) {
-						$file_field.data('file_limit_left', fileLimitLeft - 1);
-					}
 					$form.find(':input[type="submit"]').attr('disabled', 'disabled');
-					data.context = $('<progress value="" max="100"></progress>').appendTo($uploaded_files);
+					data.context = $('<progress value="" max="100"></progress>').appendTo($file_field);
 					data.submit();
 				}
 			},
@@ -67,8 +42,8 @@ jQuery(function ($) {
 				data.context.val(progress);
 			},
 			fail: function (e, data) {
-				var $file_field = $(this);
-				var $form = $file_field.closest('form');
+				var $file_upload = $(this);
+				var $form = $file_upload.closest('form');
 
 				if (data.errorThrown) {
 					window.alert(data.errorThrown);
@@ -77,13 +52,12 @@ jQuery(function ($) {
 				data.context.remove();
 
 				$form.find(':input[type="submit"]').removeAttr('disabled');
-				$file_field.trigger('update_status');
+				$file_upload.trigger('update_status');
 			},
 			done: function (e, data) {
-				var $file_field = $(this);
-				var $form = $file_field.closest('form');
-				var $uploaded_files = $file_field.parent().find('.ea-uploaded-files');
-				var multiple = $file_field.attr('multiple') ? 1 : 0;
+				var $file_upload = $(this);
+				var $file_field = $(this).closest('.ea-file-field');
+				var $form = $file_upload.closest('form');
 				var image_types = ['jpg', 'gif', 'png', 'jpeg', 'jpe'];
 
 				data.context.remove();
@@ -94,29 +68,23 @@ jQuery(function ($) {
 				}
 
 				$.each(data.result.files, function (index, file) {
-					console.log(file);
+					$file_upload.val('');
 					if (file.error) {
 						this.validation_errors.push(file.error);
 					} else {
-						var html;
+						$file_field.addClass('has-value');
+						$file_field.find('input[type="hidden"]').val(file.url);
+						$file_field.find('.ea-file-link').attr('href', file.url).text(file.name.substring(0, 20));
+
 						if ($.inArray(file.extension, image_types) >= 0) {
-							html = $.parseHTML('<span class="ea-uploaded-file-preview"><a href="#" class="ea-file-review"><img src="http://example.com"/></a><a class="ea-remove-uploaded-file" href="#"></a></span>');
-							$(html).find('img').attr('src', file.url);
-							$(html).find('a').attr('href', file.url);
+							$file_field.css('background-image', 'url(' + file.url + ')');
+							$file_field.removeClass('file-type-file');
+
 						} else {
-							html = $.parseHTML('<span class="ea-uploaded-file-name"><code></code><a class="ea-remove-uploaded-file" href="#"></a></span>');
-							$(html).find('code').text(file.name);
-							$(html).find('a').attr('href', file.url);
+							$file_field.addClass('file-type-file');
+							$file_field.css('background-image', '');
 						}
 
-						// $(html).find('.input-text').val(file.url);
-						// $(html).find('.input-text').attr('name', 'current_' + $file_field.attr('name'));
-
-						if (multiple) {
-							$uploaded_files.append(html);
-						} else {
-							$uploaded_files.html(html);
-						}
 					}
 				});
 
@@ -128,10 +96,22 @@ jQuery(function ($) {
 				}
 
 				$form.find(':input[type="submit"]').removeAttr('disabled');
-				$file_field.trigger('update_status');
+				$file_upload.trigger('update_status');
 			}
-
-
 		});
 	});
+
+	//handle file remove
+	$(document).on('click', '.ea-file-remove', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		var $file_field = $(this).closest('.ea-file-field');
+		$file_field.find('.ea-file-value').val();
+		$file_field.find('.ea-file-link').attr('href', '#').text('');
+		$file_field.css('background-image', '');
+		$file_field.removeClass('has-value');
+		$file_field.removeClass('file-type-file');
+	});
+
+
 });

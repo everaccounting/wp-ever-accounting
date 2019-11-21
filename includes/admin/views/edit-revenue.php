@@ -1,9 +1,9 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-$id      = empty( $_GET['revenue'] ) ? null : absint( $_GET['revenue'] );
-$revenue = new EAccounting_Revenue($id);
+$id                = empty( $_GET['revenue'] ) ? null : absint( $_GET['revenue'] );
+$revenue           = new EAccounting_Revenue( $id );
 $invoices_page_url = admin_url( 'admin.php?page=eaccounting-revenues' );
-$title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Revenues', 'wp-eaccounting' );
+$title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Revenue', 'wp-eaccounting' );
 ?>
 
 <?php echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title ); ?>
@@ -16,7 +16,7 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 			echo EAccounting_Form::date_control( array(
 				'label'         => __( 'Date', 'wp-ever-accounting' ),
 				'name'          => 'paid_at',
-				'value'         => $revenue->get_paid_at() ,
+				'value'         => $revenue->get_paid_at(),
 				'icon'          => 'fa fa-calendar',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
@@ -34,7 +34,7 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 			echo EAccounting_Form::accounts_dropdown( array(
 				'label'         => __( 'Account', 'wp-ever-accounting' ),
 				'name'          => 'account_id',
-				'selected'         => $revenue->get_account(),
+				'selected'      => $revenue->get_account(),
 				'icon'          => 'fa fa-university',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
@@ -44,7 +44,7 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 				'label'         => __( 'Customer', 'wp-ever-accounting' ),
 				'name'          => 'contact_id',
 				'icon'          => 'fa fa-user',
-				'selected'         => $revenue->get_contact(),
+				'selected'      => $revenue->get_contact(),
 				'required'      => false,
 				'wrapper_class' => 'ea-col-6',
 			) );
@@ -53,7 +53,7 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 				'label'         => __( 'Category', 'wp-ever-accounting' ),
 				'name'          => 'category_id',
 				'type'          => 'income',
-				'selected'         => $revenue->get_category(),
+				'selected'      => $revenue->get_category(),
 				'icon'          => 'fa fa-folder-open-o',
 				'required'      => true,
 				'wrapper_class' => 'ea-col-6',
@@ -61,7 +61,7 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 
 			echo EAccounting_Form::select_control( array(
 				'label'         => __( 'Payment Method', 'wp-ever-accounting' ),
-				'name'          => 'method_id',
+				'name'          => 'payment_method',
 				'selected'      => $revenue->get_payment_method(),
 				'icon'          => 'fa fa-credit-card',
 				'required'      => true,
@@ -78,23 +78,22 @@ $title             = $revenue->get_id() ? __( 'Update Revenue' ) : __( 'Add Reve
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::file_control( array(
-				'label'         => __( 'Attachment', 'wp-ever-accounting' ),
-				'name'          => 'attachment',
-				'type'          => 'file',
-				'icon'          => 'fa fa-file-text-o',
-				'required'      => false,
-				'wrapper_class' => 'ea-col-6',
-			) );
-
-
-
 			echo EAccounting_Form::textarea_control( array(
 				'label'         => __( 'Description', 'wp-ever-accounting' ),
 				'name'          => 'description',
 				'value'         => $revenue->get_description(),
 				'required'      => false,
 				'wrapper_class' => 'ea-col-12',
+			) );
+
+			echo EAccounting_Form::file_control( array(
+				'label'         => __( 'Attachment', 'wp-ever-accounting' ),
+				'name'          => 'attachment_url',
+				'value'         => $revenue->get_attachment_url(),
+				'file_types'    => array( 'pdf', 'jpg', 'jpeg', 'png' ),
+				'icon'          => 'fa fa-file-text-o',
+				'required'      => false,
+				'wrapper_class' => 'ea-col-6',
 			) );
 
 			?>

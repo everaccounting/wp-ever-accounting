@@ -109,13 +109,14 @@ function eaccounting_action_edit_contact( $data ) {
 		'country'    => isset( $data['country'] ) ? $data['country'] : '',
 		'website'    => isset( $data['website'] ) ? $data['website'] : '',
 		'note'       => isset( $data['note'] ) ? $data['note'] : '',
+		'avatar_url' => isset( $data['avatar_url'] ) ? esc_url( $data['avatar_url'] ) : '',
 		'status'     => isset( $data['status'] ) ? $data['status'] : 'inactive',
-		'types'      => isset( $data['types'] ) && is_array($data['types']) ? $data['types'] : [ 'customer' ],
+		'types'      => isset( $data['types'] ) && is_array( $data['types'] ) ? $data['types'] : [ 'customer' ],
 	) );
 
 	$redirect = add_query_arg( [
 		'eaccounting-action' => 'edit_contact',
-		'contact'            => !is_wp_error($contact_id)? $contact_id:'',
+		'contact'            => ! is_wp_error( $contact_id ) ? $contact_id : '',
 	], admin_url( 'admin.php?page=eaccounting-contacts' ) );
 
 	if ( is_wp_error( $contact_id ) ) {

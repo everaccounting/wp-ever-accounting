@@ -6,68 +6,73 @@ defined( 'ABSPATH' ) || exit();
  */
 class EAccounting_Revenue {
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $account_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $paid_at;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $amount;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $contact_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $description;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $category_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $method_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $reference;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $parent_id;
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $reconciled;
 
 	/**
-	 * @var
+	 * @var string
+	 */
+	protected $attachment_url;
+
+	/**
+	 * @var string
 	 */
 	protected $created_at;
 
 
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $updated_at;
 
@@ -232,6 +237,14 @@ class EAccounting_Revenue {
 	 */
 	public function get_description() {
 		return $this->description;
+	}
+
+	/**
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_attachment_url(){
+		return empty( $this->attachment_url ) ? '' : esc_url($this->attachment_url);
 	}
 
 	/**

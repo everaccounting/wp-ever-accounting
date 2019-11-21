@@ -6,87 +6,92 @@ defined( 'ABSPATH' ) || exit();
  */
 class EAccounting_Contact {
 	/**
-	 * @var
+	 * @var int
 	 */
 	protected $id;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $user_id;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $first_name;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $last_name;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $email;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $phone;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $tax_number;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $address;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $city;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $state;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $postcode;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $country;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $website;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $note;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $status;
 
 	/**
-	 * @var
+	 * @var static
 	 */
 	protected $types;
 
 	/**
-	 * @var
+	 * @var static
+	 */
+	protected $avatar_url;
+
+	/**
+	 * @var static
 	 */
 	protected $created_at;
 
@@ -324,6 +329,14 @@ class EAccounting_Contact {
 	 */
 	public function get_status() {
 		return empty( $this->status ) ? 'active' : $this->status;
+	}
+
+	/**
+	 * @since 1.0.0
+	 * @return string
+	 */
+	public function get_avatar_url(){
+		return empty( $this->avatar_url ) ? '' : esc_url($this->avatar_url);
 	}
 
 	/**

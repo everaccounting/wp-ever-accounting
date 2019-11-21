@@ -2,7 +2,7 @@
 defined( 'ABSPATH' ) || exit();
 $base_url = admin_url( 'admin.php?page=eaccounting-contacts' );
 $id       = empty( $_GET['contact'] ) ? null : absint( $_GET['contact'] );
-$contact  = new EAccounting_Contact($id);
+$contact  = new EAccounting_Contact( $id );
 $title    = $contact->get_id() ? __( 'Update Contact' ) : __( 'Add Contact', 'wp-eaccounting' );
 printf( '<h1 class="wp-heading-inline">%s</h1>', $title );
 printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Contacts', 'wp-eaccounting' ) );
@@ -104,13 +104,16 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::input_control( array(
+			echo EAccounting_Form::select_control( array(
 				'label'         => __( 'Country', 'wp-ever-accounting' ),
 				'name'          => 'country',
-				'value'         => $contact->get_country(),
+				'default'       => 'US',
+				'selected'      => $contact->get_country(),
+				'options'       => eaccounting_get_countries(),
 				'placeholder'   => __( 'Country', 'wp-ever-accounting' ),
 				'icon'          => 'fa fa-map',
 				'required'      => false,
+				'select2'       => true,
 				'wrapper_class' => 'ea-col-6',
 			) );
 
@@ -131,31 +134,28 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 				'wrapper_class' => 'ea-col-6',
 			) );
 
-			echo EAccounting_Form::textarea_control( array(
-				'label'         => __( 'Note', 'wp-ever-accounting' ),
-				'name'          => 'note',
-				'value'         => $contact->get_note(),
-				'wrapper_class' => 'ea-col-6',
-			) );
-			?>
-			<div class="ea-form-group ea-col-6">
-				<label for="avatar" class="ea-control-label">Avatar</label>
-				<div class="ea-file-upload-field">
-					<div class="ea-uploaded-files">
-						<div class="ea-uploaded-file"></div>
-					</div>
-					<input id="avatar_id" type="hidden" name="avatar_id" value="">
-					<input type="file" class="ea-file-upload" data-file_types="jpg|jpeg|png" name="avatar-file-input" data-nonce="<?php echo wp_create_nonce( 'eaccounting_file_upload' ); ?>">
-				</div>
-			</div>
-
-
-			<?php
 			echo EAccounting_Form::checkboxes_control( array(
 				'label'         => __( 'Roles', 'wp-ever-accounting' ),
 				'name'          => 'types',
 				'selected'      => $contact->get_types(),
 				'options'       => eaccounting_get_contact_types(),
+				'wrapper_class' => 'ea-col-12',
+			) );
+
+
+			echo EAccounting_Form::textarea_control( array(
+				'label'         => __( 'Note', 'wp-ever-accounting' ),
+				'name'          => 'note',
+				'value'         => $contact->get_note(),
+				'wrapper_class' => 'ea-col-12',
+			) );
+
+			echo EAccounting_Form::file_control( array(
+				'label'         => __( 'Avatar', 'wp-ever-accounting' ),
+				'name'          => 'avatar_url',
+				'value'         => $contact->get_avatar_url(),
+				'icon'          => 'fa fa-file-text-o',
+				'required'      => false,
 				'wrapper_class' => 'ea-col-6',
 			) );
 			?>
@@ -167,7 +167,8 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 			<input type="hidden" name="id" value="<?php echo $id ?>">
 			<input type="hidden" name="eaccounting-action" value="edit_contact">
 			<?php wp_nonce_field( 'eaccounting_edit_contact' ); ?>
-			<input class="button button-primary ea-submit" type="submit" value="<?php _e( 'Submit', 'wp-eaccounting' ); ?>">
+			<input class="button button-primary ea-submit" type="submit"
+			       value="<?php _e( 'Submit', 'wp-eaccounting' ); ?>">
 		</p>
 	</form>
 </div>
