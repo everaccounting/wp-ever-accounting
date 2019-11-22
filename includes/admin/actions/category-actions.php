@@ -8,7 +8,7 @@ function eaccounting_activate_category( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update category', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	$category_id = absint( $data['category'] );
@@ -34,7 +34,7 @@ function eaccounting_deactivate_category( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update category', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	$category_id = absint( $data['category'] );
@@ -62,7 +62,7 @@ function eaccounting_delete_category_handler( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update category', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	if ( $category_id = absint( $data['category'] ) ) {
@@ -83,7 +83,7 @@ function eaccounting_edit_category( $posted ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update category', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	$created = eaccounting_insert_category( array(
@@ -100,7 +100,13 @@ function eaccounting_edit_category( $posted ) {
 		exit();
 	}
 
-	eaccounting_admin_notice( __( 'Category saved', 'wp-ever-accounting' ) );
+	if ( empty( $posted['id'] ) ) {
+		$message = __( 'Category created successfully.', 'wp-ever-accounting' );
+	} else {
+		$message = __( 'Category updated successfully.', 'wp-ever-accounting' );
+	}
+
+	eaccounting_admin_notice($message );
 	wp_redirect( add_query_arg( [ 'eaccounting-action' => 'edit_category', 'category' => $created ] ) );
 	exit();
 }

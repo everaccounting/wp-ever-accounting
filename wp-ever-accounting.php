@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Ever Accounting
  * Plugin URI: https://pluginever.com/plugins/wp-ever-crm
- * Description: Best WordPress CRM plugin
+ * Description: Best WordPress Accounting plugin for small office
  * Version: 1.0.0
  * Author: pluginever
  * Author URI: https://pluginever.com/
@@ -97,8 +97,7 @@ final class EverAccounting {
 		define( 'EACCOUNTING_URL', plugins_url( '', EACCOUNTING_PLUGIN_FILE ) );
 		define( 'EACCOUNTING_ASSETS_URL', EACCOUNTING_URL . '/assets' );
 		define( 'EACCOUNTING_TEMPLATES_DIR', EACCOUNTING_ABSPATH . '/templates' );
-		define( 'EACCOUNTING_CACHE_KEY', 'eacc' );
-		define( 'EACCOUNTING_DB_PREFIX', 'eacc_' );
+		define( 'EACCOUNTING_DB_PREFIX', 'ea_' );
 	}
 
 	/**

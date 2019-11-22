@@ -55,26 +55,7 @@ class EAccounting_Install {
 		    KEY `phone`(`phone`),
 		    KEY `status`(`status`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
-//
-//			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_products(
-//            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-//			`name` VARCHAR(191) NOT NULL,
-//			`sku` VARCHAR(50) DEFAULT NULL,
-//			`description` TEXT DEFAULT NULL,
-//			`sale_price` DOUBLE(15,4) NOT NULL,
-//			`purchase_price` DOUBLE(15,4) NOT NULL,
-//			`quantity` INT(11) NOT NULL,
-//  			`category_id` INT(11) DEFAULT NULL,
-//  			`status` ENUM ('active', 'inactive') DEFAULT 'active',
-//		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
-//		    PRIMARY KEY (`id`),
-//		    KEY `sale_price`(`sale_price`),
-//		    KEY `purchase_price`(`purchase_price`),
-//		    KEY `quantity`(`quantity`),
-//		    KEY `status`(`status`)
-//            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
-//
+
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_accounts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
 		    `name` VARCHAR(191) NOT NULL COMMENT 'Account Name',

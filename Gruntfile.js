@@ -261,6 +261,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-phpcs');
 	grunt.loadNpmTasks('grunt-postcss');
 	grunt.loadNpmTasks('grunt-stylelint');
+	grunt.loadNpmTasks('grunt-phpcs');
 	grunt.loadNpmTasks('grunt-wp-i18n');
 	grunt.loadNpmTasks('grunt-checktextdomain');
 	grunt.loadNpmTasks('grunt-contrib-jshint');

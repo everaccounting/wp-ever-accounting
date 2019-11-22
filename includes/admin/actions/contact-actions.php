@@ -12,7 +12,7 @@ function eaccounting_action_activate_contact( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update contact', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	$contact_id = absint( $data['contact'] );
@@ -40,7 +40,7 @@ function eaccounting_action_deactivate_contact( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update contact', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	$contact_id = absint( $data['contact'] );
@@ -67,7 +67,7 @@ function eaccounting_action_delete_contact( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update contact', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	if ( $contact_id = absint( $data['contact'] ) ) {
@@ -92,7 +92,7 @@ function eaccounting_action_edit_contact( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update contact', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	$contact_id = eaccounting_insert_contact( array(

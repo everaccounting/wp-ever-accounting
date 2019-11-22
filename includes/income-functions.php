@@ -1,6 +1,12 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * @since 1.0.0
+ * @param $args
+ *
+ * @return int|WP_Error|null
+ */
 function eaccounting_insert_revenue( $args ) {
 	global $wpdb;
 	$update = false;
