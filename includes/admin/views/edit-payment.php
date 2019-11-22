@@ -1,18 +1,19 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-$id                = empty( $_GET['payment'] ) ? null : absint( $_GET['payment'] );
-$payment           = new EAccounting_Payment( $id );
-$invoices_page_url = admin_url( 'admin.php?page=eaccounting-payments' );
-$title             = $payment->get_id() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payments', 'wp-ever-accounting' );
+$id       = empty( $_GET['payment'] ) ? null : absint( $_GET['payment'] );
+$payment  = new EAccounting_Payment( $id );
+$base_url = admin_url( 'admin.php?page=eaccounting-payments' );
+$title    = $payment->get_id() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payments', 'wp-ever-accounting' );
 ?>
 
 <?php echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title ); ?>
-<?php echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $invoices_page_url, __( 'All Payments', 'wp-ever-accounting' ) ); ?>
-<?php if(!empty($payment->get_id())):?>
-	<a href="<?php echo esc_url( add_query_arg( array( 'eaccounting-action' => 'add_payment' ), $base_url ) ); ?>" class="page-title-action">
+<?php echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Payments', 'wp-ever-accounting' ) ); ?>
+<?php if ( ! empty( $payment->get_id() ) ): ?>
+	<a href="<?php echo esc_url( add_query_arg( array( 'eaccounting-action' => 'add_payment'  ), $base_url )); ?>"
+	   class="page-title-action">
 		<?php _e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
-<?php endif;?>
+<?php endif; ?>
 <div class="ea-card">
 	<div class="ea-card-body">
 		<form id="ea-payment-form" action="" method="post">
