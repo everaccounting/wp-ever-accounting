@@ -114,7 +114,7 @@ defined( 'ABSPATH' ) || exit();
 							</thead>
 							<?php
 							foreach ( $payments as $payment ) {
-								$item = new EAccounting_Payment( $income );
+								$item = new EAccounting_Payment( $payment );
 								echo sprintf( '<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td></tr>', $item->get_paid_at(), $item->get_category('view'), $item->get_amount('view') );
 							} ?>
 							<tbody>
