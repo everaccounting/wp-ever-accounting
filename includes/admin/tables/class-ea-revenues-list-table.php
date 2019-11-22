@@ -127,7 +127,7 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	function column_category( $item ) {
 		$category = $item->get_category( 'view' );
 
-		return $category ? $category->name : '&mdash;';
+		return $category ? $category : '&mdash;';
 	}
 
 	/**
@@ -138,6 +138,16 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	 */
 	function column_reference( $item ) {
 		return $item->get_reference() ? $item->get_reference() : '&mdash;';
+	}
+
+	/**
+	 * @param EAccounting_Revenue $item
+	 *
+	 * @return string;
+	 * @since 1.0.0
+	 */
+	function column_account( $item ) {
+		return $item->get_account('view') ? $item->get_account('view') : '&mdash;';
 	}
 
 	/**

@@ -190,11 +190,21 @@ class EAccounting_Revenue {
 	}
 
 	/**
-	 * @return string
 	 * @since 1.0.0
+	 * @param string $context
+	 *
+	 * @return bool|string
 	 */
-	public function get_account($context = 'edit') {
-		return 'edit' == $context ? $this->account_id : eaccounting_get_account($this->account_id);
+	public function get_account( $context = 'edit' ) {
+		if ( 'edit' == $context ) {
+			return $this->account_id;
+		}
+
+		if ( $this->account_id && $account = eaccounting_get_account( $this->account_id ) ) {
+			return $account->name;
+		}
+
+		return false;
 	}
 
 	/**
@@ -205,13 +215,25 @@ class EAccounting_Revenue {
 		return 'edit' == $context ? $this->contact_id : new EAccounting_Contact($this->contact_id);
 	}
 
+
 	/**
-	 * @return string
 	 * @since 1.0.0
+	 * @param string $context
+	 *
+	 * @return bool|string
 	 */
-	public function get_category($context = 'edit') {
-		return 'edit' == $context ? $this->category_id : eaccounting_get_category($this->category_id);
+	public function get_category( $context = 'edit' ) {
+		if ( 'edit' == $context ) {
+			return $this->category_id;
+		}
+
+		if ( $this->category_id && $category = eaccounting_get_category( $this->category_id ) ) {
+			return $category->name;
+		}
+
+		return false;
 	}
+
 
 	/**
 	 * @return string

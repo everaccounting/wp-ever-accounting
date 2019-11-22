@@ -154,6 +154,9 @@ function eaccounting_get_revenues( $args = array(), $count = false ) {
 		$query_where .= $wpdb->prepare( " AND $wpdb->ea_revenues.account_id= %s", absint( $args['account_id'] ) );
 	}
 
+	//exclude from others category
+	$query_where .= " AND $wpdb->ea_revenues.category_id NOT IN ( SELECT id from $wpdb->ea_categories WHERE type='other') ";
+
 	//amount
 	if ( ! empty( $args['amount'] ) ) {
 		$amount = trim( $args['amount'] );
@@ -242,4 +245,15 @@ function eaccounting_get_revenues( $args = array(), $count = false ) {
 	}
 
 	return $wpdb->get_col( $request );
+}
+
+
+/**
+ * Get total income
+ * @since 1.0.0
+ * @return string|null
+ */
+function eaccounting_get_total_income(){
+	global $wpdb;
+	return $wpdb->get_var("SELECT SUM(amount) from $wpdb->ea_revenues WHERE category_id IN (SELECT id FROM $wpdb->ea_categories WHERE type='income')");
 }

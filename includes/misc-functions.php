@@ -571,3 +571,13 @@ function eaccounting_get_payment_methods() {
 		'check'         => __( 'Check', 'wp-ever-accounting' ),
 	] );
 }
+
+
+/**
+ * Get total income
+ * @since 1.0.0
+ * @return string|null
+ */
+function eaccounting_get_total_profit(){
+	return eaccounting_get_total_income() - eaccounting_get_total_expense();
+}

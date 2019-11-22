@@ -66,6 +66,10 @@ function eaccounting_get_transactions($args, $count = false ){
 		$query_where .= $wpdb->prepare( " AND $transaction_table.account_id= %s", absint( $args['account_id'] ) );
 	}
 
+	//exclude from others category
+	$query_where .= " AND $transaction_table.category_id NOT IN ( SELECT id from $wpdb->ea_categories WHERE type='other') ";
+
+
 	//amount
 	if ( ! empty( $args['amount'] ) ) {
 		$amount = trim( $args['amount'] );

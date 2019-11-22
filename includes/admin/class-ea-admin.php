@@ -66,6 +66,7 @@ class EAccounting_Admin {
 		require_once dirname( __FILE__ ) . '/actions/revenue-actions.php';
 		require_once dirname( __FILE__ ) . '/actions/payment-actions.php';
 		require_once dirname( __FILE__ ) . '/actions/account-actions.php';
+		require_once dirname( __FILE__ ) . '/actions/transfer-actions.php';
 	}
 
 	/**
@@ -114,6 +115,7 @@ class EAccounting_Admin {
 
 		wp_enqueue_script( 'jquery-iframe-transport', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-widget' ), time(), true );
 		wp_enqueue_script( 'jquery-fileupload', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-core', 'jquery-iframe-transport' ), time(), true );
+		wp_enqueue_script( 'jquery-chartjs', eaccounting()->plugin_url() . '/assets/vendor/chartjs/chart.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'eaccounting-mask-money', eaccounting()->plugin_url() . '/assets/vendor/mask-money/mask-money.js', array( 'jquery' ), time(), true );
 		wp_register_script( 'eaccounting-datepicker', eaccounting()->plugin_url() . '/assets/js/eaccounting-datepicker.js', [ 'jquery', 'jquery-ui-datepicker' ], time(), true );
@@ -125,6 +127,7 @@ class EAccounting_Admin {
 			'eaccounting-mask-money',
 			'wp-color-picker',
 			'eaccounting-datepicker',
+			'jquery-chartjs'
 		), time(), true );
 
 		wp_localize_script( 'eaccounting-admin', 'eAccountingi18n', array(

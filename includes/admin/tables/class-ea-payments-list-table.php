@@ -127,7 +127,7 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	function column_category( $item ) {
 		$category = $item->get_category( 'view' );
 
-		return $category ? $category->name : '&mdash;';
+		return $category ? $category : '&mdash;';
 	}
 
 	/**
@@ -137,9 +137,7 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_account( $item ) {
-		$account = $item->get_account( 'view' );
-
-		return $account ? $account->name : '&mdash;';
+		return $item->get_account('view') ? $item->get_account('view') : '&mdash;';
 	}
 
 	/**

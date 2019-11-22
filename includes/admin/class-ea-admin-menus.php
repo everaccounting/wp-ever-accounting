@@ -29,6 +29,7 @@ class EAccounting_Admin_Menus {
 		add_submenu_page( 'ever-accounting', __( 'Payments', 'wp-ever-accounting' ), __( 'Payments', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-payments', array( $this, 'payments_page') );
 		add_submenu_page( 'ever-accounting', __( 'Revenues', 'wp-ever-accounting' ), __( 'Revenues', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-revenues', array( $this, 'revenues_page') );
 		add_submenu_page( 'ever-accounting', __( 'Accounts', 'wp-ever-accounting' ), __( 'Accounts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-accounts', array( $this, 'accounts_page') );
+		add_submenu_page( 'ever-accounting', __( 'Transfers', 'wp-ever-accounting' ), __( 'Transfers', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transfers', array( $this, 'transfers_page') );
 		add_submenu_page( 'ever-accounting', __( 'Categories', 'wp-ever-accounting' ), __( 'Categories', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-categories', array( $this, 'categories_page') );
 	}
 
@@ -38,7 +39,7 @@ class EAccounting_Admin_Menus {
 	 * since 1.0.0
 	 */
 	public function dashboard_page(){
-
+		eaccounting_get_views('dashboard-page.php');
 	}
 
 	public function transaction_page(){
@@ -63,6 +64,10 @@ class EAccounting_Admin_Menus {
 
 	public function accounts_page(){
 		eaccounting_get_views('accounts-page.php');
+	}
+
+	public function transfers_page(){
+		eaccounting_get_views('transfers-page.php');
 	}
 
 	public function categories_page(){

@@ -176,50 +176,71 @@ class EAccounting_Payment {
 	 * @since 1.0.0
 	 */
 	public function get_paid_at() {
-		return isset($this->paid_at)? date('Y-m-d', strtotime($this->paid_at)): '';
+		return isset( $this->paid_at ) ? date( 'Y-m-d', strtotime( $this->paid_at ) ) : '';
 	}
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_amount($context = 'edit') {
-		return 'edit' == $context ? eaccounting_format_price($this->amount) : eaccounting_price($this->amount);
+	public function get_amount( $context = 'edit' ) {
+		return 'edit' == $context ? eaccounting_format_price( $this->amount ) : eaccounting_price( $this->amount );
+	}
+
+	/**
+	 * @since 1.0.0
+	 * @param string $context
+	 *
+	 * @return bool|string
+	 */
+	public function get_account( $context = 'edit' ) {
+		if ( 'edit' == $context ) {
+			return $this->account_id;
+		}
+
+		if ( $this->account_id && $account = eaccounting_get_account( $this->account_id ) ) {
+			return $account->name;
+		}
+
+		return false;
+	}
+	/**
+	 * @return string
+	 * @since 1.0.0
+	 */
+	public function get_contact( $context = 'edit' ) {
+		return 'edit' == $context ? $this->contact_id : new EAccounting_Contact( $this->contact_id );
+	}
+
+	/**
+	 * @since 1.0.0
+	 * @param string $context
+	 *
+	 * @return bool|string
+	 */
+	public function get_category( $context = 'edit' ) {
+		if ( 'edit' == $context ) {
+			return $this->category_id;
+		}
+
+		if ( $this->category_id && $category = eaccounting_get_category( $this->category_id ) ) {
+			return $category->name;
+		}
+
+		return false;
 	}
 
 	/**
 	 * @return string
 	 * @since 1.0.0
 	 */
-	public function get_account($context = 'edit') {
-		return 'edit' == $context ? $this->account_id : eaccounting_get_account($this->account_id);
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_contact($context = 'edit') {
-		return 'edit' == $context ? $this->contact_id : new EAccounting_Contact($this->contact_id);
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_category($context = 'edit') {
-		return 'edit' == $context ? $this->category_id : eaccounting_get_category($this->category_id);
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_payment_method($context = 'edit') {
+	public function get_payment_method( $context = 'edit' ) {
 		$methods = eaccounting_get_payment_methods();
-		$display = array_key_exists($this->payment_method, $methods)? $methods[$this->payment_method]: '';
+		$display = array_key_exists( $this->payment_method, $methods ) ? $methods[ $this->payment_method ] : '';
+
 		return 'edit' == $context ? $this->payment_method : $display;
 	}
 
@@ -240,11 +261,11 @@ class EAccounting_Payment {
 	}
 
 	/**
-	 * @since 1.0.0
 	 * @return string
+	 * @since 1.0.0
 	 */
-	public function get_attachment_url(){
-		return empty( $this->attachment_url ) ? '' : esc_url($this->attachment_url);
+	public function get_attachment_url() {
+		return empty( $this->attachment_url ) ? '' : esc_url( $this->attachment_url );
 	}
 
 	/**

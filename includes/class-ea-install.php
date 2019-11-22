@@ -130,18 +130,18 @@ class EAccounting_Install {
 		    KEY `amount` (`amount`),
 		    KEY `contact_id` (`contact_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
-//
-//			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transfers(
-//            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-//  			`payment_id` INT(11) NOT NULL,
-//  			`transaction_id` INT(11) NOT NULL,
-//		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
-//		    PRIMARY KEY (`id`),
-//		    KEY `payment_id` (`payment_id`),
-//		    KEY `transaction_id` (`transaction_id`)
-//            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
-//
+
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transfers(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+  			`payment_id` INT(11) NOT NULL,
+  			`revenue_id` INT(11) NOT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`),
+		    KEY `payment_id` (`payment_id`),
+		    KEY `revenue_id` (`revenue_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_categories(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   		  	`name` VARCHAR(191) NOT NULL,
@@ -166,31 +166,62 @@ class EAccounting_Install {
 	 * since 1.0.0
 	 */
 	public static function create_default_data() {
-		eaccounting_insert_account( [
-			'name'            => __( 'Cash', 'wp-ever-accounting' ),
-			'number'          => '',
-			'opening_balance' => '0',
-			'status'          => 'active',
-		] );
+		if ( ! eaccounting_get_categories() ) {
+			eaccounting_insert_category( [
+				'name'   => __( 'Deposit', 'wp-ever-accounting' ),
+				'type'   => 'income',
+				'status' => 'active',
+			] );
 
-		eaccounting_insert_category( [
-			'name'   => __( 'Deposit', 'wp-ever-accounting' ),
-			'type'   => 'income',
-			'status' => 'active',
-		] );
+			eaccounting_insert_category( [
+				'name'   => __( 'Other', 'wp-ever-accounting' ),
+				'type'   => 'expense',
+				'status' => 'active',
+			] );
 
-		eaccounting_insert_category( [
-			'name'   => __( 'Other', 'wp-ever-accounting' ),
-			'type'   => 'expense',
-			'status' => 'active',
-		] );
+			eaccounting_insert_category( [
+				'name'   => __( 'Sales', 'wp-ever-accounting' ),
+				'type'   => 'income',
+				'status' => 'active',
+			] );
+		}
 
-		eaccounting_insert_category( [
-			'name'   => __( 'Sales', 'wp-ever-accounting' ),
-			'type'   => 'income',
-			'status' => 'active',
-		] );
+		//create transfer category
+		if ( ! eaccounting_get_category( 'Transfer', 'name' ) ) {
+			eaccounting_insert_category( [
+				'name'   => __( 'Transfer', 'wp-ever-accounting' ),
+				'type'   => 'other',
+				'status' => 'active',
+			] );
+		}
 
+		if ( ! eaccounting_get_accounts() ) {
+			eaccounting_insert_account( [
+				'name'            => __( 'Cash', 'wp-ever-accounting' ),
+				'number'          => '',
+				'opening_balance' => '0',
+				'status'          => 'active',
+			] );
+		}
 
+		if ( ! eaccounting_get_contacts() ) {
+			eaccounting_insert_contact( [
+				'first_name' => 'Demo',
+				'last_name'  => 'User',
+				'tax_number' => 'XXX-XX-XXXX',
+				'email'      => 'demo@user.com',
+				'phone'      => '1234567890',
+				'address'    => 'Brannan Street',
+				'city'       => 'San Francisco',
+				'state'      => 'California',
+				'postcode'   => '94107',
+				'country'    => 'US',
+				'website'    => 'http://pluginever.com',
+				'avatar_url' => '',
+				'status'     => 'active',
+				'note'       => 'demo user',
+				'types'      => [ 'vendor', 'customer' ],
+			] );
+		}
 	}
 }

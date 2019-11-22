@@ -112,7 +112,7 @@ final class EverAccounting {
 			'ea_categories',
 			'ea_payments',
 			'ea_revenues',
-			'ea_files',
+			'ea_transfers',
 		);
 		foreach ( $tables as $table ) {
 			$wpdb->$table   = $wpdb->prefix . $table;
@@ -147,6 +147,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/income-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/expense-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/transfer-functions.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
