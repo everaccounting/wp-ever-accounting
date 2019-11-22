@@ -14,7 +14,7 @@ function eaccounting_action_delete_revenue( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update revenue', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	if ( $revenue_id = absint( $data['revenue'] ) ) {
@@ -34,7 +34,7 @@ function eaccounting_action_edit_revenue( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update revenue', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	$revenue_id = eaccounting_insert_revenue( array(

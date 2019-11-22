@@ -14,7 +14,7 @@ function eaccounting_action_delete_transfer( $data ) {
 	}
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( __( 'You do not have permission to update account', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
+		wp_die( __( 'You do not have permission to update transfer', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
 
 	if ( $transfer_id = absint( $data['transfer'] ) ) {

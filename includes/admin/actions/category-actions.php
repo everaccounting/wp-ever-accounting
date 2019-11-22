@@ -87,11 +87,11 @@ function eaccounting_edit_category( $posted ) {
 	}
 
 	$created = eaccounting_insert_category( array(
-		'id'     => $posted['id'],
-		'name'   => $posted['name'],
-		'type'   => $posted['type'],
-		'color'  => $posted['color'],
-		'status' => isset( $posted['status'] ) ? $posted['status'] : 'inactive',
+		'id'     => absint($posted['id']),
+		'name'   => sanitize_text_field($posted['name']),
+		'type'   => sanitize_text_field($posted['type']),
+		'color'  => sanitize_text_field($posted['color']),
+		'status' => isset( $posted['status'] ) ? sanitize_text_field($posted['status']) : 'inactive',
 	) );
 
 	if ( is_wp_error( $posted ) ) {

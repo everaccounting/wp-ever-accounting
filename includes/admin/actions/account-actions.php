@@ -87,14 +87,14 @@ function eaccounting_edit_account( $data ) {
 	}
 
 	$created = eaccounting_insert_account( array(
-		'id'              => $data['id'],
-		'name'            => $data['name'],
-		'number'          => $data['number'],
-		'bank_name'       => $data['bank_name'],
-		'bank_phone'      => $data['bank_phone'],
-		'bank_address'    => $data['bank_address'],
-		'opening_balance' => $data['opening_balance'],
-		'status'          => isset( $data['status'] ) ? $data['status'] : 'inactive',
+		'id'              => absint($data['id']),
+		'name'            => sanitize_text_field($data['name']),
+		'number'          => sanitize_text_field($data['number']),
+		'bank_name'       => sanitize_text_field($data['bank_name']),
+		'bank_phone'      => sanitize_text_field($data['bank_phone']),
+		'bank_address'    => sanitize_text_field($data['bank_address']),
+		'opening_balance' => eaccounting_sanitize_price($data['opening_balance']),
+		'status'          => isset( $data['status'] ) ? sanitize_text_field($data['status']) : 'inactive',
 	) );
 
 	if ( is_wp_error( $created ) ) {
