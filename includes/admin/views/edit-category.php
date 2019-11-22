@@ -9,7 +9,11 @@ if ( $category_id ) {
 $title = ! empty( $category->id ) ? __( 'Update Category', 'wp-ever-accounting' ) : __( 'Add Category', 'wp-ever-accounting' );
 echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title );
 echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Categories', 'wp-ever-accounting' ) ); ?>
-
+<?php if(!empty($category->id)):?>
+	<a href="<?php echo esc_url( add_query_arg( array( 'eaccounting-action' => 'add_category' ), $base_url ) ); ?>" class="page-title-action">
+		<?php _e( 'Add New', 'wp-ever-accounting' ); ?>
+	</a>
+<?php  endif; ?>
 <div class="ea-card">
 	<div class="ea-card-body">
 		<form action="<?php echo add_query_arg( [ 'eaccounting-action' => 'add_category' ], $base_url ); ?>"

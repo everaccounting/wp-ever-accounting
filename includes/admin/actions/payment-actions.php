@@ -36,7 +36,7 @@ function eaccounting_action_edit_payment( $data ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( __( 'You do not have permission to update contact', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 	}
-	error_log(print_r($data, true ));
+
 	$payment_id = eaccounting_insert_payment( array(
 		'id'             => isset( $data['id'] ) ? absint( $data['id'] ) : '',
 		'account_id'     => isset( $data['account_id'] ) ? absint( $data['account_id'] ) : '',
