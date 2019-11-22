@@ -151,10 +151,6 @@ final class EverAccounting {
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 		}
-
-		if ( defined( 'WP_CLI' ) && WP_CLI ) {
-			require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-cli.php' );
-		}
 	}
 
 	/**
