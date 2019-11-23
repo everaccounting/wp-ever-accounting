@@ -12,7 +12,7 @@
 				decimal: eAccountingi18n.localization.decimal_mark,
 				precision: eAccountingi18n.localization.precision,
 				allowZero: true,
-				prefix: eAccountingi18n.localization.price_symbol,
+				prefix: eAccountingi18n.localization.price_symbol
 			});
 			this.$colorControl.wpColorPicker();
 			this.$priceControl.trigger('focus');

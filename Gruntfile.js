@@ -109,7 +109,7 @@ module.exports = function (grunt) {
 		watch: {
 			css: {
 				files: ['<%= dirs.css %>/**/*.scss'],
-				tasks: ['sass', 'postcss', 'cssmin',]
+				tasks: ['sass', 'postcss', 'cssmin']
 			},
 			js: {
 				files: [
@@ -203,11 +203,9 @@ module.exports = function (grunt) {
 				src: [
 					'**',
 					'!node_modules/**',
-					'!**/js/src/**',
-					'!**/css/src/**',
 					'!**/js/vendor/**',
 					'!**/css/vendor/**',
-					'!**/css/*.scss',
+					'!**/css/**/*.scss',
 					'!**/images/src/**',
 					'!**/sass/**',
 					'!build/**',
@@ -218,6 +216,7 @@ module.exports = function (grunt) {
 					'!bin/**',
 					'!.git/**',
 					'!Gruntfile.js',
+					'!phpunit.xml.dist',
 					'!package.json',
 					'!composer.json',
 					'!composer.lock',
@@ -288,7 +287,12 @@ module.exports = function (grunt) {
 	grunt.registerTask('css', [
 		'sass',
 		'postcss',
-		'cssmin',
+		'cssmin'
+	]);
+
+	grunt.registerTask('i18n', [
+		'checktextdomain',
+		'makepot'
 	]);
 
 	grunt.registerTask('release',

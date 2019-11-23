@@ -20,6 +20,7 @@
 		"jQuery": false,
 		"JSON": false,
 		"wp": false,
+		"ajaxurl": false,
 		"eAccountingi18n": false
 	}
 }
