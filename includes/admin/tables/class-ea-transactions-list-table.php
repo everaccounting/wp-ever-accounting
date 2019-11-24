@@ -77,16 +77,21 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	 */
 	function column_date( $item ) {
 		$edit_url = '';
-		switch ($item->type){
+		switch ( $item->type ) {
 			case 'income':
-				$edit_url = add_query_arg([ 'revenue' => $item->id, 'eaccounting-action' => 'edit_revenue' ], admin_url('admin.php?page=eaccounting-revenues'));
+				$edit_url = add_query_arg( [ 'revenue'            => $item->id,
+				                             'eaccounting-action' => 'edit_revenue'
+				], admin_url( 'admin.php?page=eaccounting-revenues' ) );
 				break;
 			case 'expense':
-				$edit_url = add_query_arg([ 'payment' => $item->id, 'eaccounting-action' => 'edit_payment' ], admin_url('admin.php?page=eaccounting-payments'));
+				$edit_url = add_query_arg( [ 'payment'            => $item->id,
+				                             'eaccounting-action' => 'edit_payment'
+				], admin_url( 'admin.php?page=eaccounting-payments' ) );
 				break;
 		}
-		$paid_at = date('Y-m-d', strtotime($item->paid_at));
-		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, $paid_at);
+		$paid_at = date( 'Y-m-d', strtotime( $item->paid_at ) );
+
+		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, $paid_at );
 	}
 
 	/**
@@ -96,7 +101,7 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_amount( $item ) {
-		return $item->amount ? eaccounting_price($item->amount) : '&mdash;';
+		return $item->amount ? eaccounting_price( $item->amount ) : '&mdash;';
 	}
 
 	/**
@@ -106,7 +111,7 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_category( $item ) {
-		if($item->category_id && $category = eaccounting_get_category($item->category_id)){
+		if ( $item->category_id && $category = eaccounting_get_category( $item->category_id ) ) {
 			return $category->name;
 		}
 
@@ -120,7 +125,7 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_account( $item ) {
-		if($item->account_id && $account = eaccounting_get_account($item->account_id)){
+		if ( $item->account_id && $account = eaccounting_get_account( $item->account_id ) ) {
 			return $account->name;
 		}
 
@@ -141,8 +146,8 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	 * @return string
 	 * @since 1.0.0
 	 */
-	function column_type($item) {
-		return ucfirst($item->type);
+	function column_type( $item ) {
+		return ucfirst( $item->type );
 	}
 
 	/**
@@ -154,14 +159,13 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 	public function get_results() {
 		$per_page = $this->per_page;
 
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_at';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
+		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
 			'per_page' => $per_page,
-			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
+			'page'     => isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1,
 			'orderby'  => $orderby,
 			'order'    => $order,
 			'search'   => $search
@@ -171,7 +175,7 @@ class EAccounting_TransactionS_List_Table extends EAccounting_List_Table {
 			$args['orderby'] = $orderby;
 		}
 
-		$this->total_count = eaccounting_get_transactions($args, true );
+		$this->total_count = eaccounting_get_transactions( $args, true );
 
 		$results = eaccounting_get_transactions( $args );
 

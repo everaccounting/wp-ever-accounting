@@ -83,22 +83,24 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $item EAccounting_Account
 	 *
 	 * @return string
 	 */
 	function column_number( $item ) {
-		return !empty( $item->get_number() ) ? $item->get_number() : '&mdash;';
+		return ! empty( $item->get_number() ) ? $item->get_number() : '&mdash;';
 	}
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $item EAccounting_Account
 	 *
 	 * @return string
 	 */
 	function column_bank_name( $item ) {
-		return !empty( $item->get_bank_name() ) ? $item->get_bank_name() : '&mdash;';
+		return ! empty( $item->get_bank_name() ) ? $item->get_bank_name() : '&mdash;';
 	}
 
 	/**
@@ -121,7 +123,7 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_current_balance( $item ) {
-		return $item->get_current_balance('view');
+		return $item->get_current_balance( 'view' );
 	}
 
 	/**
@@ -157,7 +159,7 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
-
+		$ids = array_map( 'intval', $ids );
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
@@ -181,9 +183,9 @@ class EAccounting_Accounts_List_Table extends EAccounting_List_Table {
 	public function get_results() {
 		$per_page = $this->per_page;
 
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_at';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
+		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
+		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(

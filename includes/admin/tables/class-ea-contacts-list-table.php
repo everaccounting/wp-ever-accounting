@@ -93,22 +93,24 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $item EAccounting_Contact
 	 *
 	 * @return bool
 	 */
-	function column_email($item) {
-		return empty($item->get_email())? '&mdash;': $item->get_email();
+	function column_email( $item ) {
+		return empty( $item->get_email() ) ? '&mdash;' : $item->get_email();
 	}
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $item EAccounting_Contact
 	 *
 	 * @return bool
 	 */
-	function column_phone($item) {
-		return empty($item->get_phone())? '&mdash;': $item->get_phone();
+	function column_phone( $item ) {
+		return empty( $item->get_phone() ) ? '&mdash;' : $item->get_phone();
 	}
 
 
@@ -149,7 +151,7 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
-
+		$ids = array_map( 'intval', $ids );
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
@@ -173,9 +175,9 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 	public function get_results() {
 		$per_page = $this->per_page;
 
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_at';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
+		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
+		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(

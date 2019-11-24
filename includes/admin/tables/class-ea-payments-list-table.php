@@ -137,7 +137,7 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_account( $item ) {
-		return $item->get_account('view') ? $item->get_account('view') : '&mdash;';
+		return $item->get_account( 'view' ) ? $item->get_account( 'view' ) : '&mdash;';
 	}
 
 	/**
@@ -190,7 +190,7 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
-
+		$ids = array_map( 'intval', $ids );
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
@@ -214,14 +214,14 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 	public function get_results() {
 		$per_page = $this->per_page;
 
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_at';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
+		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
+		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
 			'per_page' => $per_page,
-			'page'     => isset( $_GET['paged'] ) ? $_GET['paged'] : 1,
+			'page'     => isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1,
 			'orderby'  => $orderby,
 			'order'    => $order,
 			'status'   => $status,
@@ -232,7 +232,7 @@ class EAccounting_Payments_List_Table extends EAccounting_List_Table {
 			$args['orderby'] = $orderby;
 		}
 
-		$this->total_count    = eaccounting_get_payments( array_merge( $args, array( 'status' => '' ) ), true );
+		$this->total_count = eaccounting_get_payments( array_merge( $args, array( 'status' => '' ) ), true );
 
 		$results = eaccounting_get_payments( $args );
 

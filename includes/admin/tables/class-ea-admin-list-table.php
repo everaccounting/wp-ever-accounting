@@ -98,7 +98,7 @@ class EAccounting_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	public function get_views() {
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$current        = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';

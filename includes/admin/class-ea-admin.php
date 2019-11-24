@@ -106,16 +106,14 @@ class EAccounting_Admin {
 		if ( ! preg_match( '/accounting/', $hook ) ) {
 			return;
 		}
-		global $wp_scripts;
-		$jquery_version = isset( $wp_scripts->registered['jquery-ui-core']->ver ) ? $wp_scripts->registered['jquery-ui-core']->ver : '1.9.2';
-		wp_register_style( 'jquery-ui', '//code.jquery.com/ui/' . $jquery_version . '/themes/smoothness/jquery-ui.min.css', [], $jquery_version );
-		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css',['jquery-ui'], time() );
+
+		wp_enqueue_style( 'eaccounting-jquery-ui', eaccounting()->plugin_url() . '/assets/vendor/jquery-ui/jquery-ui.css', false, time() );
 		wp_enqueue_style( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.css',[], time() );
 		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css',[], time() );
+		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css',['eaccounting-select2', 'eaccounting-fontawesome'], time() );
 
 		wp_enqueue_script( 'jquery-iframe-transport', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-widget' ), time(), true );
 		wp_enqueue_script( 'jquery-fileupload', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-core', 'jquery-iframe-transport' ), time(), true );
-		wp_enqueue_script( 'jquery-chartjs', eaccounting()->plugin_url() . '/assets/vendor/chartjs/chart.min.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'eaccounting-mask-money', eaccounting()->plugin_url() . '/assets/vendor/mask-money/mask-money.js', array( 'jquery' ), time(), true );
 		wp_register_script( 'eaccounting-datepicker', eaccounting()->plugin_url() . '/assets/js/eaccounting-datepicker.js', [ 'jquery', 'jquery-ui-datepicker' ], time(), true );
@@ -126,8 +124,7 @@ class EAccounting_Admin {
 			'eaccounting-select2',
 			'eaccounting-mask-money',
 			'wp-color-picker',
-			'eaccounting-datepicker',
-			'jquery-chartjs'
+			'eaccounting-datepicker'
 		), time(), true );
 
 		wp_localize_script( 'eaccounting-admin', 'eAccountingi18n', array(
