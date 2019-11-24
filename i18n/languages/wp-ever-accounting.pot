@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: WP Ever Accounting 1.0.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2019-11-23 13:56:53+00:00\n"
+"POT-Creation-Date: 2019-11-24 04:16:02+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,47 +14,24 @@ msgstr ""
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: build/includes/account-functions.php:24
-#: build/includes/contact-functions.php:36
-#: build/includes/expense-functions.php:15
-#: build/includes/income-functions.php:21
-#: build/includes/transfer-functions.php:22 includes/account-functions.php:24
-#: includes/contact-functions.php:36 includes/expense-functions.php:15
-#: includes/income-functions.php:21 includes/transfer-functions.php:22
+#: includes/account-functions.php:24 includes/contact-functions.php:36
+#: includes/expense-functions.php:15 includes/income-functions.php:21
+#: includes/transfer-functions.php:22
 msgid "Could not find the item to  update"
 msgstr ""
 
-#: build/includes/account-functions.php:46 includes/account-functions.php:46
+#: includes/account-functions.php:46
 msgid "Name is required"
 msgstr ""
 
-#: build/includes/account-functions.php:55 includes/account-functions.php:55
+#: includes/account-functions.php:55
 msgid "Could not update account in the database"
 msgstr ""
 
-#: build/includes/account-functions.php:62
-#: build/includes/contact-functions.php:115 includes/account-functions.php:62
-#: includes/contact-functions.php:115
+#: includes/account-functions.php:62 includes/contact-functions.php:115
 msgid "Could not insert account into the database"
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:7
-#: build/includes/admin/actions/account-actions.php:33
-#: build/includes/admin/actions/account-actions.php:61
-#: build/includes/admin/actions/account-actions.php:82
-#: build/includes/admin/actions/category-actions.php:7
-#: build/includes/admin/actions/category-actions.php:33
-#: build/includes/admin/actions/category-actions.php:61
-#: build/includes/admin/actions/category-actions.php:82
-#: build/includes/admin/actions/contact-actions.php:11
-#: build/includes/admin/actions/contact-actions.php:39
-#: build/includes/admin/actions/contact-actions.php:66
-#: build/includes/admin/actions/payment-actions.php:13
-#: build/includes/admin/actions/payment-actions.php:33
-#: build/includes/admin/actions/revenue-actions.php:13
-#: build/includes/admin/actions/revenue-actions.php:33
-#: build/includes/admin/actions/transfer-actions.php:13
-#: build/includes/admin/actions/transfer-actions.php:33
 #: includes/admin/actions/account-actions.php:7
 #: includes/admin/actions/account-actions.php:33
 #: includes/admin/actions/account-actions.php:61
@@ -75,41 +52,6 @@ msgstr ""
 msgid "Trying to cheat or something?"
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:7
-#: build/includes/admin/actions/account-actions.php:11
-#: build/includes/admin/actions/account-actions.php:33
-#: build/includes/admin/actions/account-actions.php:37
-#: build/includes/admin/actions/account-actions.php:61
-#: build/includes/admin/actions/account-actions.php:65
-#: build/includes/admin/actions/account-actions.php:82
-#: build/includes/admin/actions/account-actions.php:86
-#: build/includes/admin/actions/category-actions.php:7
-#: build/includes/admin/actions/category-actions.php:11
-#: build/includes/admin/actions/category-actions.php:33
-#: build/includes/admin/actions/category-actions.php:37
-#: build/includes/admin/actions/category-actions.php:61
-#: build/includes/admin/actions/category-actions.php:65
-#: build/includes/admin/actions/category-actions.php:82
-#: build/includes/admin/actions/category-actions.php:86
-#: build/includes/admin/actions/contact-actions.php:11
-#: build/includes/admin/actions/contact-actions.php:15
-#: build/includes/admin/actions/contact-actions.php:39
-#: build/includes/admin/actions/contact-actions.php:43
-#: build/includes/admin/actions/contact-actions.php:66
-#: build/includes/admin/actions/contact-actions.php:70
-#: build/includes/admin/actions/contact-actions.php:95
-#: build/includes/admin/actions/payment-actions.php:13
-#: build/includes/admin/actions/payment-actions.php:17
-#: build/includes/admin/actions/payment-actions.php:33
-#: build/includes/admin/actions/payment-actions.php:37
-#: build/includes/admin/actions/revenue-actions.php:13
-#: build/includes/admin/actions/revenue-actions.php:17
-#: build/includes/admin/actions/revenue-actions.php:33
-#: build/includes/admin/actions/revenue-actions.php:37
-#: build/includes/admin/actions/transfer-actions.php:13
-#: build/includes/admin/actions/transfer-actions.php:17
-#: build/includes/admin/actions/transfer-actions.php:33
-#: build/includes/admin/actions/transfer-actions.php:37
 #: includes/admin/actions/account-actions.php:7
 #: includes/admin/actions/account-actions.php:11
 #: includes/admin/actions/account-actions.php:33
@@ -148,10 +90,6 @@ msgstr ""
 msgid "Error"
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:11
-#: build/includes/admin/actions/account-actions.php:37
-#: build/includes/admin/actions/account-actions.php:65
-#: build/includes/admin/actions/account-actions.php:86
 #: includes/admin/actions/account-actions.php:11
 #: includes/admin/actions/account-actions.php:37
 #: includes/admin/actions/account-actions.php:65
@@ -159,35 +97,26 @@ msgstr ""
 msgid "You do not have permission to update account"
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:22
 #: includes/admin/actions/account-actions.php:22
 msgid "Account Activated."
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:49
 #: includes/admin/actions/account-actions.php:49
 msgid "Account Deactivated"
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:72
 #: includes/admin/actions/account-actions.php:72
 msgid "Account Deleted"
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:107
 #: includes/admin/actions/account-actions.php:107
 msgid "Account created successfully."
 msgstr ""
 
-#: build/includes/admin/actions/account-actions.php:109
 #: includes/admin/actions/account-actions.php:109
 msgid "Account updated successfully."
 msgstr ""
 
-#: build/includes/admin/actions/category-actions.php:11
-#: build/includes/admin/actions/category-actions.php:37
-#: build/includes/admin/actions/category-actions.php:65
-#: build/includes/admin/actions/category-actions.php:86
 #: includes/admin/actions/category-actions.php:11
 #: includes/admin/actions/category-actions.php:37
 #: includes/admin/actions/category-actions.php:65
@@ -195,35 +124,26 @@ msgstr ""
 msgid "You do not have permission to update category"
 msgstr ""
 
-#: build/includes/admin/actions/category-actions.php:22
 #: includes/admin/actions/category-actions.php:22
 msgid "Category Activated."
 msgstr ""
 
-#: build/includes/admin/actions/category-actions.php:49
 #: includes/admin/actions/category-actions.php:49
 msgid "Category Deactivated"
 msgstr ""
 
-#: build/includes/admin/actions/category-actions.php:72
 #: includes/admin/actions/category-actions.php:72
 msgid "Category Deleted"
 msgstr ""
 
-#: build/includes/admin/actions/category-actions.php:104
 #: includes/admin/actions/category-actions.php:104
 msgid "Category created successfully."
 msgstr ""
 
-#: build/includes/admin/actions/category-actions.php:106
 #: includes/admin/actions/category-actions.php:106
 msgid "Category updated successfully."
 msgstr ""
 
-#: build/includes/admin/actions/contact-actions.php:15
-#: build/includes/admin/actions/contact-actions.php:43
-#: build/includes/admin/actions/contact-actions.php:70
-#: build/includes/admin/actions/contact-actions.php:95
 #: includes/admin/actions/contact-actions.php:15
 #: includes/admin/actions/contact-actions.php:43
 #: includes/admin/actions/contact-actions.php:70
@@ -231,159 +151,117 @@ msgstr ""
 msgid "You do not have permission to update contact"
 msgstr ""
 
-#: build/includes/admin/actions/contact-actions.php:129
 #: includes/admin/actions/contact-actions.php:129
 msgid "Contact created successfully."
 msgstr ""
 
-#: build/includes/admin/actions/contact-actions.php:131
 #: includes/admin/actions/contact-actions.php:131
 msgid "Contact updated successfully."
 msgstr ""
 
-#: build/includes/admin/actions/payment-actions.php:17
-#: build/includes/admin/actions/payment-actions.php:37
 #: includes/admin/actions/payment-actions.php:17
 #: includes/admin/actions/payment-actions.php:37
 msgid "You do not have permission to update payment"
 msgstr ""
 
-#: build/includes/admin/actions/payment-actions.php:68
 #: includes/admin/actions/payment-actions.php:68
 msgid "Payment created successfully."
 msgstr ""
 
-#: build/includes/admin/actions/payment-actions.php:70
 #: includes/admin/actions/payment-actions.php:70
 msgid "Payment updated successfully."
 msgstr ""
 
-#: build/includes/admin/actions/revenue-actions.php:17
-#: build/includes/admin/actions/revenue-actions.php:37
 #: includes/admin/actions/revenue-actions.php:17
 #: includes/admin/actions/revenue-actions.php:37
 msgid "You do not have permission to update revenue"
 msgstr ""
 
-#: build/includes/admin/actions/revenue-actions.php:67
 #: includes/admin/actions/revenue-actions.php:67
 msgid "Revenue created successfully."
 msgstr ""
 
-#: build/includes/admin/actions/revenue-actions.php:69
 #: includes/admin/actions/revenue-actions.php:69
 msgid "Revenue updated successfully."
 msgstr ""
 
-#: build/includes/admin/actions/transfer-actions.php:17
-#: build/includes/admin/actions/transfer-actions.php:37
 #: includes/admin/actions/transfer-actions.php:17
 #: includes/admin/actions/transfer-actions.php:37
 msgid "You do not have permission to update transfer"
 msgstr ""
 
-#: build/includes/admin/actions/transfer-actions.php:63
 #: includes/admin/actions/transfer-actions.php:63
 msgid "Transfer created successfully."
 msgstr ""
 
-#: build/includes/admin/actions/transfer-actions.php:65
 #: includes/admin/actions/transfer-actions.php:65
 msgid "Transfer updated successfully."
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:25
 #: includes/admin/class-ea-admin-menus.php:25
 msgid "Accounting"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:26
-#: build/includes/admin/views/dashboard-page.php:5 build/templates/header.php:5
 #: includes/admin/class-ea-admin-menus.php:26
 #: includes/admin/views/dashboard-page.php:5 templates/header.php:5
 msgid "Dashboard"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:27
-#: build/includes/admin/views/transactions-page.php:12
 #: includes/admin/class-ea-admin-menus.php:27
 #: includes/admin/views/transactions-page.php:12
 msgid "Transactions"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:28
-#: build/includes/admin/views/contacts-page.php:17
 #: includes/admin/class-ea-admin-menus.php:28
 #: includes/admin/views/contacts-page.php:17
 msgid "Contacts"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:29
-#: build/includes/admin/views/payment-page.php:17
 #: includes/admin/class-ea-admin-menus.php:29
 #: includes/admin/views/payment-page.php:17
 msgid "Payments"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:30
-#: build/includes/admin/views/revenue-page.php:17
 #: includes/admin/class-ea-admin-menus.php:30
 #: includes/admin/views/revenue-page.php:17
 msgid "Revenues"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:31
-#: build/includes/admin/views/accounts-page.php:17
-#: build/templates/header.php:10 includes/admin/class-ea-admin-menus.php:31
+#: includes/admin/class-ea-admin-menus.php:31
 #: includes/admin/views/accounts-page.php:17 templates/header.php:10
 msgid "Accounts"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:32
-#: build/includes/admin/views/transfers-page.php:16
 #: includes/admin/class-ea-admin-menus.php:32
 #: includes/admin/views/transfers-page.php:16
 msgid "Transfers"
 msgstr ""
 
-#: build/includes/admin/class-ea-admin-menus.php:33
-#: build/includes/admin/views/categories-page.php:17
 #: includes/admin/class-ea-admin-menus.php:33
 #: includes/admin/views/categories-page.php:17
 msgid "Categories"
 msgstr ""
 
-#: build/includes/admin/class-ea-settings-api.php:368
 #: includes/admin/class-ea-settings-api.php:368
 msgid "Choose File"
 msgstr ""
 
-#: build/includes/admin/class-ea-settings-page.php:35
 #: includes/admin/class-ea-settings-page.php:35
 msgid "Settings"
 msgstr ""
 
-#: build/includes/admin/class-ea-settings-page.php:44
 #: includes/admin/class-ea-settings-page.php:44
 msgid "Ever Accounting - Settings"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:26
 #: includes/admin/settings/class-ea-general-settings.php:26
 msgid "General"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:46
 #: includes/admin/settings/class-ea-general-settings.php:46
 msgid "Logo"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:52
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:28
-#: build/includes/admin/tables/class-ea-categories-list-table.php:28
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:28
-#: build/includes/admin/views/edit-account.php:23
-#: build/includes/admin/views/edit-category.php:25
 #: includes/admin/settings/class-ea-general-settings.php:52
 #: includes/admin/tables/class-ea-accounts-list-table.php:28
 #: includes/admin/tables/class-ea-categories-list-table.php:28
@@ -393,146 +271,103 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:53
 #: includes/admin/settings/class-ea-general-settings.php:53
 msgid "XYZ Company"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:59
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:29
-#: build/includes/admin/views/edit-contact.php:44
 #: includes/admin/settings/class-ea-general-settings.php:59
 #: includes/admin/tables/class-ea-contacts-list-table.php:29
 #: includes/admin/views/edit-contact.php:44
 msgid "Email"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:60
 #: includes/admin/settings/class-ea-general-settings.php:60
 msgid "email@domain.com"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:66
-#: build/includes/admin/views/edit-contact.php:66
 #: includes/admin/settings/class-ea-general-settings.php:66
 #: includes/admin/views/edit-contact.php:66
 msgid "Tax Number"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:67
-#: build/includes/admin/views/edit-contact.php:69
 #: includes/admin/settings/class-ea-general-settings.php:67
 #: includes/admin/views/edit-contact.php:69
 msgid "xxxxxxx"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:73
 #: includes/admin/settings/class-ea-general-settings.php:73
 msgid "Phone Number"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:74
-#: build/includes/admin/views/edit-contact.php:59
 #: includes/admin/settings/class-ea-general-settings.php:74
 #: includes/admin/views/edit-contact.php:59
 msgid "0987654321"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:80
-#: build/includes/admin/views/edit-contact.php:76
 #: includes/admin/settings/class-ea-general-settings.php:80
 #: includes/admin/views/edit-contact.php:76
 msgid "Address"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:87
-#: build/includes/admin/views/edit-contact.php:86
-#: build/includes/admin/views/edit-contact.php:89
 #: includes/admin/settings/class-ea-general-settings.php:87
 #: includes/admin/views/edit-contact.php:86
 #: includes/admin/views/edit-contact.php:89
 msgid "City"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:94
-#: build/includes/admin/views/edit-contact.php:96
-#: build/includes/admin/views/edit-contact.php:99
 #: includes/admin/settings/class-ea-general-settings.php:94
 #: includes/admin/views/edit-contact.php:96
 #: includes/admin/views/edit-contact.php:99
 msgid "State"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:101
-#: build/includes/admin/views/edit-contact.php:106
 #: includes/admin/settings/class-ea-general-settings.php:101
 #: includes/admin/views/edit-contact.php:106
 msgid "Postcode"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-general-settings.php:108
-#: build/includes/admin/views/edit-contact.php:116
-#: build/includes/admin/views/edit-contact.php:121
 #: includes/admin/settings/class-ea-general-settings.php:108
 #: includes/admin/views/edit-contact.php:116
 #: includes/admin/views/edit-contact.php:121
 msgid "Country"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-localization-settings.php:26
 #: includes/admin/settings/class-ea-localization-settings.php:26
 msgid "Localisation"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-localization-settings.php:64
 #: includes/admin/settings/class-ea-localization-settings.php:64
 msgid "Currency"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-localization-settings.php:80
 #: includes/admin/settings/class-ea-localization-settings.php:80
 msgid "Thousands Separator"
 msgstr ""
 
-#: build/includes/admin/settings/class-ea-localization-settings.php:86
 #: includes/admin/settings/class-ea-localization-settings.php:86
 msgid "Decimal Separator"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:29
 #: includes/admin/tables/class-ea-accounts-list-table.php:29
 msgid "Current Balance"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:30
-#: build/includes/admin/views/edit-account.php:42
-#: build/includes/admin/views/edit-account.php:45
 #: includes/admin/tables/class-ea-accounts-list-table.php:30
 #: includes/admin/views/edit-account.php:42
 #: includes/admin/views/edit-account.php:45
 msgid "Account Number"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:31
-#: build/includes/admin/views/edit-account.php:52
 #: includes/admin/tables/class-ea-accounts-list-table.php:31
 #: includes/admin/views/edit-account.php:52
 msgid "Bank Name"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:32
-#: build/includes/admin/views/edit-account.php:33
 #: includes/admin/tables/class-ea-accounts-list-table.php:32
 #: includes/admin/views/edit-account.php:33
 msgid "Opening Balance"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:33
-#: build/includes/admin/tables/class-ea-categories-list-table.php:31
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:33
-#: build/includes/admin/views/edit-account.php:68
-#: build/includes/admin/views/edit-category.php:53
-#: build/includes/class-ea-form.php:417
 #: includes/admin/tables/class-ea-accounts-list-table.php:33
 #: includes/admin/tables/class-ea-categories-list-table.php:31
 #: includes/admin/tables/class-ea-contacts-list-table.php:33
@@ -541,12 +376,6 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:70
-#: build/includes/admin/tables/class-ea-categories-list-table.php:67
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:69
-#: build/includes/admin/tables/class-ea-payments-list-table.php:90
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:90
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:89
 #: includes/admin/tables/class-ea-accounts-list-table.php:70
 #: includes/admin/tables/class-ea-categories-list-table.php:67
 #: includes/admin/tables/class-ea-contacts-list-table.php:69
@@ -556,10 +385,6 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:73
-#: build/includes/admin/tables/class-ea-admin-list-table.php:174
-#: build/includes/admin/tables/class-ea-categories-list-table.php:70
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:72
 #: includes/admin/tables/class-ea-accounts-list-table.php:73
 #: includes/admin/tables/class-ea-admin-list-table.php:174
 #: includes/admin/tables/class-ea-categories-list-table.php:70
@@ -567,10 +392,6 @@ msgstr ""
 msgid "Deactivate"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:75
-#: build/includes/admin/tables/class-ea-admin-list-table.php:173
-#: build/includes/admin/tables/class-ea-categories-list-table.php:72
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:74
 #: includes/admin/tables/class-ea-accounts-list-table.php:75
 #: includes/admin/tables/class-ea-admin-list-table.php:173
 #: includes/admin/tables/class-ea-categories-list-table.php:72
@@ -578,16 +399,6 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-accounts-list-table.php:77
-#: build/includes/admin/tables/class-ea-admin-list-table.php:175
-#: build/includes/admin/tables/class-ea-categories-list-table.php:74
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:76
-#: build/includes/admin/tables/class-ea-payments-list-table.php:35
-#: build/includes/admin/tables/class-ea-payments-list-table.php:92
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:35
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:92
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:35
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:91
 #: includes/admin/tables/class-ea-accounts-list-table.php:77
 #: includes/admin/tables/class-ea-admin-list-table.php:175
 #: includes/admin/tables/class-ea-categories-list-table.php:74
@@ -601,58 +412,38 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-admin-list-table.php:107
 #: includes/admin/tables/class-ea-admin-list-table.php:107
 msgid "All"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-admin-list-table.php:108
 #: includes/admin/tables/class-ea-admin-list-table.php:108
 msgid "Active"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-admin-list-table.php:109
 #: includes/admin/tables/class-ea-admin-list-table.php:109
 msgid "Inactive"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-admin-list-table.php:162
 #: includes/admin/tables/class-ea-admin-list-table.php:162
 msgid "No %s found."
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-categories-list-table.php:29
-#: build/includes/admin/tables/class-ea-transactions-list-table.php:46
-#: build/includes/admin/views/edit-category.php:34
 #: includes/admin/tables/class-ea-categories-list-table.php:29
 #: includes/admin/tables/class-ea-transactions-list-table.php:46
 #: includes/admin/views/edit-category.php:34
 msgid "Type"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-categories-list-table.php:30
-#: build/includes/admin/views/edit-category.php:45
 #: includes/admin/tables/class-ea-categories-list-table.php:30
 #: includes/admin/views/edit-category.php:45
 msgid "Color"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-contacts-list-table.php:30
-#: build/includes/admin/views/edit-contact.php:56
 #: includes/admin/tables/class-ea-contacts-list-table.php:30
 #: includes/admin/views/edit-contact.php:56
 msgid "Phone"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-payments-list-table.php:50
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:50
-#: build/includes/admin/tables/class-ea-transactions-list-table.php:43
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:50
-#: build/includes/admin/views/dashboard-page.php:73
-#: build/includes/admin/views/dashboard-page.php:110
-#: build/includes/admin/views/edit-payment.php:23
-#: build/includes/admin/views/edit-revenue.php:25
-#: build/includes/admin/views/edit-transfer.php:49
 #: includes/admin/tables/class-ea-payments-list-table.php:50
 #: includes/admin/tables/class-ea-revenues-list-table.php:50
 #: includes/admin/tables/class-ea-transactions-list-table.php:43
@@ -665,15 +456,6 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-payments-list-table.php:51
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:51
-#: build/includes/admin/tables/class-ea-transactions-list-table.php:44
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:51
-#: build/includes/admin/views/dashboard-page.php:75
-#: build/includes/admin/views/dashboard-page.php:112
-#: build/includes/admin/views/edit-payment.php:32
-#: build/includes/admin/views/edit-revenue.php:34
-#: build/includes/admin/views/edit-transfer.php:40
 #: includes/admin/tables/class-ea-payments-list-table.php:51
 #: includes/admin/tables/class-ea-revenues-list-table.php:51
 #: includes/admin/tables/class-ea-transactions-list-table.php:44
@@ -686,22 +468,11 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-payments-list-table.php:52
-#: build/includes/admin/views/edit-payment.php:50
-#: build/includes/contact-functions.php:12
 #: includes/admin/tables/class-ea-payments-list-table.php:52
 #: includes/admin/views/edit-payment.php:50 includes/contact-functions.php:12
 msgid "Vendor"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-payments-list-table.php:53
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:53
-#: build/includes/admin/tables/class-ea-transactions-list-table.php:47
-#: build/includes/admin/views/dashboard-page.php:74
-#: build/includes/admin/views/dashboard-page.php:111
-#: build/includes/admin/views/edit-payment.php:59
-#: build/includes/admin/views/edit-revenue.php:61
-#: build/includes/class-ea-form.php:505
 #: includes/admin/tables/class-ea-payments-list-table.php:53
 #: includes/admin/tables/class-ea-revenues-list-table.php:53
 #: includes/admin/tables/class-ea-transactions-list-table.php:47
@@ -712,10 +483,6 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-payments-list-table.php:54
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:54
-#: build/includes/admin/views/edit-payment.php:41
-#: build/includes/admin/views/edit-revenue.php:43
 #: includes/admin/tables/class-ea-payments-list-table.php:54
 #: includes/admin/tables/class-ea-revenues-list-table.php:54
 #: includes/admin/views/edit-payment.php:41
@@ -723,13 +490,6 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-payments-list-table.php:55
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:55
-#: build/includes/admin/tables/class-ea-transactions-list-table.php:48
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:55
-#: build/includes/admin/views/edit-payment.php:79
-#: build/includes/admin/views/edit-revenue.php:81
-#: build/includes/admin/views/edit-transfer.php:68
 #: includes/admin/tables/class-ea-payments-list-table.php:55
 #: includes/admin/tables/class-ea-revenues-list-table.php:55
 #: includes/admin/tables/class-ea-transactions-list-table.php:48
@@ -740,35 +500,24 @@ msgstr ""
 msgid "Reference"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-revenues-list-table.php:52
-#: build/includes/admin/views/edit-revenue.php:52
-#: build/includes/contact-functions.php:11
 #: includes/admin/tables/class-ea-revenues-list-table.php:52
 #: includes/admin/views/edit-revenue.php:52 includes/contact-functions.php:11
 msgid "Customer"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-transactions-list-table.php:45
-#: build/includes/admin/views/edit-account.php:26
 #: includes/admin/tables/class-ea-transactions-list-table.php:45
 #: includes/admin/views/edit-account.php:26
 msgid "Account Name"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:52
 #: includes/admin/tables/class-ea-transfers-list-table.php:52
 msgid "From Bank"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:53
 #: includes/admin/tables/class-ea-transfers-list-table.php:53
 msgid "To Bank"
 msgstr ""
 
-#: build/includes/admin/tables/class-ea-transfers-list-table.php:54
-#: build/includes/admin/views/edit-payment.php:69
-#: build/includes/admin/views/edit-revenue.php:71
-#: build/includes/admin/views/edit-transfer.php:58
 #: includes/admin/tables/class-ea-transfers-list-table.php:54
 #: includes/admin/views/edit-payment.php:69
 #: includes/admin/views/edit-revenue.php:71
@@ -776,15 +525,6 @@ msgstr ""
 msgid "Payment Method"
 msgstr ""
 
-#: build/includes/admin/views/accounts-page.php:20
-#: build/includes/admin/views/categories-page.php:20
-#: build/includes/admin/views/contacts-page.php:20
-#: build/includes/admin/views/edit-category.php:14
-#: build/includes/admin/views/edit-contact.php:13
-#: build/includes/admin/views/edit-payment.php:14
-#: build/includes/admin/views/edit-revenue.php:15
-#: build/includes/admin/views/payment-page.php:20
-#: build/includes/admin/views/revenue-page.php:20
 #: includes/admin/views/accounts-page.php:20
 #: includes/admin/views/categories-page.php:20
 #: includes/admin/views/contacts-page.php:20
@@ -797,12 +537,6 @@ msgstr ""
 msgid "Add New"
 msgstr ""
 
-#: build/includes/admin/views/accounts-page.php:25
-#: build/includes/admin/views/categories-page.php:25
-#: build/includes/admin/views/contacts-page.php:25
-#: build/includes/admin/views/payment-page.php:25
-#: build/includes/admin/views/revenue-page.php:25
-#: build/includes/admin/views/transactions-page.php:25
 #: includes/admin/views/accounts-page.php:25
 #: includes/admin/views/categories-page.php:25
 #: includes/admin/views/contacts-page.php:25
@@ -812,62 +546,46 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: build/includes/admin/views/cashflow-chart.php:17
 #: includes/admin/views/cashflow-chart.php:17
 msgid "Cash Flow"
 msgstr ""
 
-#: build/includes/admin/views/dashboard-page.php:61
 #: includes/admin/views/dashboard-page.php:61
 msgid "Latest Income"
 msgstr ""
 
-#: build/includes/admin/views/dashboard-page.php:67
 #: includes/admin/views/dashboard-page.php:67
 msgid "No incomes found"
 msgstr ""
 
-#: build/includes/admin/views/dashboard-page.php:98
 #: includes/admin/views/dashboard-page.php:98
 msgid "Latest Expense"
 msgstr ""
 
-#: build/includes/admin/views/dashboard-page.php:104
 #: includes/admin/views/dashboard-page.php:104
 msgid "No expenses found"
 msgstr ""
 
-#: build/includes/admin/views/edit-account.php:9
 #: includes/admin/views/edit-account.php:9
 msgid "Update  Account"
 msgstr ""
 
-#: build/includes/admin/views/edit-account.php:9
 #: includes/admin/views/edit-account.php:9
 msgid "Add Account"
 msgstr ""
 
-#: build/includes/admin/views/edit-account.php:14
 #: includes/admin/views/edit-account.php:14
 msgid "All Accounts"
 msgstr ""
 
-#: build/includes/admin/views/edit-account.php:60
 #: includes/admin/views/edit-account.php:60
 msgid "Bank Phone"
 msgstr ""
 
-#: build/includes/admin/views/edit-account.php:74
 #: includes/admin/views/edit-account.php:74
 msgid "Bank Address"
 msgstr ""
 
-#: build/includes/admin/views/edit-account.php:89
-#: build/includes/admin/views/edit-category.php:66
-#: build/includes/admin/views/edit-contact.php:179
-#: build/includes/admin/views/edit-payment.php:115
-#: build/includes/admin/views/edit-revenue.php:116
-#: build/includes/admin/views/edit-transfer.php:93
 #: includes/admin/views/edit-account.php:89
 #: includes/admin/views/edit-category.php:66
 #: includes/admin/views/edit-contact.php:179
@@ -877,375 +595,318 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: build/includes/admin/views/edit-category.php:9
 #: includes/admin/views/edit-category.php:9
 msgid "Update Category"
 msgstr ""
 
-#: build/includes/admin/views/edit-category.php:9
 #: includes/admin/views/edit-category.php:9
 msgid "Add Category"
 msgstr ""
 
-#: build/includes/admin/views/edit-category.php:11
 #: includes/admin/views/edit-category.php:11
 msgid "All Categories"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:6
 #: includes/admin/views/edit-contact.php:6
 msgid "Update Contact"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:6
 #: includes/admin/views/edit-contact.php:6
 msgid "Add Contact"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:8
 #: includes/admin/views/edit-contact.php:8
 msgid "All Contacts"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:24
 #: includes/admin/views/edit-contact.php:24
 msgid "First Name"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:27
 #: includes/admin/views/edit-contact.php:27
 msgid "John"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:34
 #: includes/admin/views/edit-contact.php:34
 msgid "Last Name"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:37
 #: includes/admin/views/edit-contact.php:37
 msgid "Doe"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:48
 #: includes/admin/views/edit-contact.php:48
 msgid "john@doe.com"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:79
 #: includes/admin/views/edit-contact.php:79
 msgid "Contact address"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:109
 #: includes/admin/views/edit-contact.php:109
 msgid "Contact postcode"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:129
 #: includes/admin/views/edit-contact.php:129
 msgid "Website"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:132
 #: includes/admin/views/edit-contact.php:132
 msgid "example.com"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:146
 #: includes/admin/views/edit-contact.php:146
 msgid "Roles"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:155
 #: includes/admin/views/edit-contact.php:155
 msgid "Note"
 msgstr ""
 
-#: build/includes/admin/views/edit-contact.php:162
 #: includes/admin/views/edit-contact.php:162
 msgid "Avatar"
 msgstr ""
 
-#: build/includes/admin/views/edit-payment.php:6
 #: includes/admin/views/edit-payment.php:6
 msgid "Update Payment"
 msgstr ""
 
-#: build/includes/admin/views/edit-payment.php:6
 #: includes/admin/views/edit-payment.php:6
 msgid "Add Payments"
 msgstr ""
 
-#: build/includes/admin/views/edit-payment.php:10
 #: includes/admin/views/edit-payment.php:10
 msgid "All Payments"
 msgstr ""
 
-#: build/includes/admin/views/edit-payment.php:88
-#: build/includes/admin/views/edit-revenue.php:90
-#: build/includes/admin/views/edit-transfer.php:77
 #: includes/admin/views/edit-payment.php:88
 #: includes/admin/views/edit-revenue.php:90
 #: includes/admin/views/edit-transfer.php:77
 msgid "Description"
 msgstr ""
 
-#: build/includes/admin/views/edit-payment.php:97
-#: build/includes/admin/views/edit-revenue.php:98
 #: includes/admin/views/edit-payment.php:97
 #: includes/admin/views/edit-revenue.php:98
 msgid "Attachment"
 msgstr ""
 
-#: build/includes/admin/views/edit-revenue.php:6
 #: includes/admin/views/edit-revenue.php:6
 msgid "Update Revenue"
 msgstr ""
 
-#: build/includes/admin/views/edit-revenue.php:6
-#: build/includes/admin/views/transactions-page.php:15
 #: includes/admin/views/edit-revenue.php:6
 #: includes/admin/views/transactions-page.php:15
 msgid "Add Revenue"
 msgstr ""
 
-#: build/includes/admin/views/edit-revenue.php:10
 #: includes/admin/views/edit-revenue.php:10
 msgid "All Revenues"
 msgstr ""
 
-#: build/includes/admin/views/edit-transfer.php:10
 #: includes/admin/views/edit-transfer.php:10
 msgid "Update Transfer"
 msgstr ""
 
-#: build/includes/admin/views/edit-transfer.php:10
-#: build/includes/admin/views/transfers-page.php:19
 #: includes/admin/views/edit-transfer.php:10
 #: includes/admin/views/transfers-page.php:19
 msgid "Add Transfer"
 msgstr ""
 
-#: build/includes/admin/views/edit-transfer.php:14
 #: includes/admin/views/edit-transfer.php:14
 msgid "All Transfers"
 msgstr ""
 
-#: build/includes/admin/views/edit-transfer.php:22
 #: includes/admin/views/edit-transfer.php:22
 msgid "From Account"
 msgstr ""
 
-#: build/includes/admin/views/edit-transfer.php:31
 #: includes/admin/views/edit-transfer.php:31
 msgid "To Account"
 msgstr ""
 
-#: build/includes/admin/views/transactions-page.php:19
 #: includes/admin/views/transactions-page.php:19
 msgid "Add Payment"
 msgstr ""
 
-#: build/includes/category-functions.php:13 includes/category-functions.php:13
+#: includes/category-functions.php:13
 msgid "Expense"
 msgstr ""
 
-#: build/includes/category-functions.php:14 includes/category-functions.php:14
+#: includes/category-functions.php:14
 msgid "Income"
 msgstr ""
 
-#: build/includes/category-functions.php:16
-#: build/includes/class-ea-install.php:158 includes/category-functions.php:16
-#: includes/class-ea-install.php:158
+#: includes/category-functions.php:16 includes/class-ea-install.php:158
 msgid "Other"
 msgstr ""
 
-#: build/includes/category-functions.php:42 includes/category-functions.php:42
+#: includes/category-functions.php:42
 msgid "Could not find the item to  pdate"
 msgstr ""
 
-#: build/includes/category-functions.php:59 includes/category-functions.php:59
+#: includes/category-functions.php:59
 msgid "Category name is required"
 msgstr ""
 
-#: build/includes/category-functions.php:63 includes/category-functions.php:63
+#: includes/category-functions.php:63
 msgid "Category type is required"
 msgstr ""
 
-#: build/includes/category-functions.php:68 includes/category-functions.php:68
+#: includes/category-functions.php:68
 msgid "Category name already exist"
 msgstr ""
 
-#: build/includes/category-functions.php:72 includes/category-functions.php:72
+#: includes/category-functions.php:72
 msgid "Invalid category type"
 msgstr ""
 
-#: build/includes/category-functions.php:81 includes/category-functions.php:81
+#: includes/category-functions.php:81
 msgid "Could not update category in the database - (%s)"
 msgstr ""
 
-#: build/includes/category-functions.php:88 includes/category-functions.php:88
+#: includes/category-functions.php:88
 msgid "Could not insert category into the database"
 msgstr ""
 
-#: build/includes/class-ea-account.php:140
-#: build/includes/class-ea-contact.php:208
-#: build/includes/class-ea-payment.php:161
-#: build/includes/class-ea-revenue.php:161 includes/class-ea-account.php:140
-#: includes/class-ea-contact.php:208 includes/class-ea-payment.php:161
-#: includes/class-ea-revenue.php:161
+#: includes/class-ea-account.php:140 includes/class-ea-contact.php:208
+#: includes/class-ea-payment.php:161 includes/class-ea-revenue.php:161
 msgid "Can't get property %s"
 msgstr ""
 
-#: build/includes/class-ea-ajax.php:55 includes/class-ea-ajax.php:55
+#: includes/class-ea-ajax.php:55
 msgid "Error: You are not allowed to do this."
 msgstr ""
 
-#: build/includes/class-ea-ajax.php:67 includes/class-ea-ajax.php:67
+#: includes/class-ea-ajax.php:67
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: build/includes/class-ea-contact.php:192 includes/class-ea-contact.php:192
+#: includes/class-ea-contact.php:192
 msgid "Guest"
 msgstr ""
 
-#: build/includes/class-ea-form.php:94 includes/class-ea-form.php:94
+#: includes/class-ea-form.php:94
 msgid "-- Please Select --"
 msgstr ""
 
-#: build/includes/class-ea-install.php:152 includes/class-ea-install.php:152
+#: includes/class-ea-install.php:152
 msgid "Deposit"
 msgstr ""
 
-#: build/includes/class-ea-install.php:164 includes/class-ea-install.php:164
+#: includes/class-ea-install.php:164
 msgid "Sales"
 msgstr ""
 
-#: build/includes/class-ea-install.php:173
-#: build/includes/transfer-functions.php:74 includes/class-ea-install.php:173
-#: includes/transfer-functions.php:74
+#: includes/class-ea-install.php:173 includes/transfer-functions.php:74
 msgid "Transfer"
 msgstr ""
 
-#: build/includes/class-ea-install.php:181
-#: build/includes/misc-functions.php:569 includes/class-ea-install.php:181
-#: includes/misc-functions.php:569
+#: includes/class-ea-install.php:181 includes/misc-functions.php:569
 msgid "Cash"
 msgstr ""
 
-#: build/includes/contact-functions.php:66 includes/contact-functions.php:66
+#: includes/contact-functions.php:66
 msgid "Invalid WP User ID"
 msgstr ""
 
-#: build/includes/contact-functions.php:73 includes/contact-functions.php:73
+#: includes/contact-functions.php:73
 msgid "The email address is already in used"
 msgstr ""
 
-#: build/includes/contact-functions.php:78 includes/contact-functions.php:78
+#: includes/contact-functions.php:78
 msgid "First Name & Last Name is required"
 msgstr ""
 
-#: build/includes/contact-functions.php:108 includes/contact-functions.php:108
+#: includes/contact-functions.php:108
 msgid "Could not update note in the database"
 msgstr ""
 
-#: build/includes/expense-functions.php:39
-#: build/includes/income-functions.php:45 includes/expense-functions.php:39
-#: includes/income-functions.php:45
+#: includes/expense-functions.php:39 includes/income-functions.php:45
 msgid "Payment date is required"
 msgstr ""
 
-#: build/includes/expense-functions.php:43
-#: build/includes/income-functions.php:49
-#: build/includes/transfer-functions.php:57 includes/expense-functions.php:43
-#: includes/income-functions.php:49 includes/transfer-functions.php:57
+#: includes/expense-functions.php:43 includes/income-functions.php:49
+#: includes/transfer-functions.php:57
 msgid "Amount is required"
 msgstr ""
 
-#: build/includes/expense-functions.php:47
-#: build/includes/income-functions.php:53 includes/expense-functions.php:47
-#: includes/income-functions.php:53
+#: includes/expense-functions.php:47 includes/income-functions.php:53
 msgid "Revenue category is required"
 msgstr ""
 
-#: build/includes/expense-functions.php:51
-#: build/includes/income-functions.php:57
-#: build/includes/transfer-functions.php:61 includes/expense-functions.php:51
-#: includes/income-functions.php:57 includes/transfer-functions.php:61
+#: includes/expense-functions.php:51 includes/income-functions.php:57
+#: includes/transfer-functions.php:61
 msgid "Payment method is required"
 msgstr ""
 
-#: build/includes/expense-functions.php:60 includes/expense-functions.php:60
+#: includes/expense-functions.php:60
 msgid "Could not update payment in the database"
 msgstr ""
 
-#: build/includes/expense-functions.php:67 includes/expense-functions.php:67
+#: includes/expense-functions.php:67
 msgid "Could not insert payment into the database"
 msgstr ""
 
-#: build/includes/file-functions.php:81 includes/file-functions.php:81
+#: includes/file-functions.php:81
 #. translators: %1$s is the file field label; %2$s is the file type; %3$s is
 #. the list of allowed file types.
 msgid "\"%1$s\" (filetype %2$s) needs to be one of the following file types: %3$s"
 msgstr ""
 
-#: build/includes/file-functions.php:84 includes/file-functions.php:84
+#: includes/file-functions.php:84
 #. translators: %s is the list of allowed file types.
 msgid "Uploaded files need to be one of the following file types: %s"
 msgstr ""
 
-#: build/includes/income-functions.php:66 includes/income-functions.php:66
+#: includes/income-functions.php:66
 msgid "Could not update revenue in the database"
 msgstr ""
 
-#: build/includes/income-functions.php:73 includes/income-functions.php:73
+#: includes/income-functions.php:73
 msgid "Could not insert revenue into the database"
 msgstr ""
 
-#: build/includes/misc-functions.php:570 includes/misc-functions.php:570
+#: includes/misc-functions.php:570
 msgid "Bank Transfer"
 msgstr ""
 
-#: build/includes/misc-functions.php:571 includes/misc-functions.php:571
+#: includes/misc-functions.php:571
 msgid "Check"
 msgstr ""
 
-#: build/includes/transfer-functions.php:45 includes/transfer-functions.php:45
+#: includes/transfer-functions.php:45
 msgid "From account is required"
 msgstr ""
 
-#: build/includes/transfer-functions.php:49 includes/transfer-functions.php:49
+#: includes/transfer-functions.php:49
 msgid "To account is required"
 msgstr ""
 
-#: build/includes/transfer-functions.php:53 includes/transfer-functions.php:53
+#: includes/transfer-functions.php:53
 msgid "Transfer date is required"
 msgstr ""
 
-#: build/includes/transfer-functions.php:67 includes/transfer-functions.php:67
+#: includes/transfer-functions.php:67
 msgid "Amount is higher than the available fund in source account"
 msgstr ""
 
-#: build/includes/transfer-functions.php:81 includes/transfer-functions.php:81
+#: includes/transfer-functions.php:81
 msgid "Seems transfer category is missing from database"
 msgstr ""
 
-#: build/includes/transfer-functions.php:129
 #: includes/transfer-functions.php:129
 msgid "Could not update transfer in the database - (%s)"
 msgstr ""
 
-#: build/includes/transfer-functions.php:136
 #: includes/transfer-functions.php:136
 msgid "Could not insert transfer into the database"
 msgstr ""
 
-#: build/wp-ever-accounting.php:61 wp-ever-accounting.php:61
+#: wp-ever-accounting.php:61
 msgid "Cloning is forbidden."
 msgstr ""
 
-#: build/wp-ever-accounting.php:71 wp-ever-accounting.php:71
+#: wp-ever-accounting.php:71
 msgid "Unserializing instances of this class is forbidden."
 msgstr ""
 

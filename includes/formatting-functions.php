@@ -81,7 +81,7 @@ function eaccounting_get_price_currency_symbol() {
  * @return int
  */
 function eaccounting_get_price_precision() {
-	return eaccounting_get_option( 'precision', 'eaccounting_localization', '2' );
+	return eaccounting_get_option( 'precision', 'eaccounting_localisation', '2' );
 }
 
 
@@ -91,7 +91,7 @@ function eaccounting_get_price_precision() {
  * @return array|string
  */
 function eaccounting_get_price_decimal_separator() {
-	return eaccounting_get_option( 'decimal_separator', 'eaccounting_localization', '.' );
+	return eaccounting_get_option( 'decimal_separator', 'eaccounting_localisation', '.' );
 }
 
 /**
@@ -100,7 +100,7 @@ function eaccounting_get_price_decimal_separator() {
  * @return array|string
  */
 function eaccounting_get_price_thousands_separator() {
-	return eaccounting_get_option( 'thousands_separator', 'eaccounting_localization', ',' );
+	return eaccounting_get_option( 'thousand_separator', 'eaccounting_localisation', ',' );
 }
 
 /**
@@ -109,7 +109,7 @@ function eaccounting_get_price_thousands_separator() {
  * @return string
  */
 function eaccounting_get_price_format() {
-	$currency_pos = eaccounting_get_option( 'currency_pos', 'eaccounting_localization', 'right' );
+	$currency_pos = eaccounting_get_option( 'currency_pos', 'eaccounting_localisation', 'right' );
 
 	$format = '%1$s%2$s';
 
