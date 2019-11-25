@@ -4,7 +4,7 @@
  * Plugin URI: https://pluginever.com/plugins/wp-ever-crm
  * Description: Best WordPress Accounting plugin for small office
  * Version: 1.0.0
- * Author: manikmist09
+ * Author: pluginever
  * Author URI: https://pluginever.com/
  * Requires at least: 4.7.0
  * Tested up to: 5.1
