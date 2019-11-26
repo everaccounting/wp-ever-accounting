@@ -1,6 +1,91 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Set upload directory for Accounting
+ * @return array
+ * @since 1.0.0
+ */
+function eaccounting_get_upload_dir() {
+	$upload            = wp_upload_dir();
+	$upload['basedir'] = $upload['basedir'] . '/eaccounting';
+	$upload['path']    = $upload['basedir'] . $upload['subdir'];
+	$upload['baseurl'] = $upload['baseurl'] . '/eaccounting';
+	$upload['url']     = $upload['baseurl'] . $upload['subdir'];
+
+	return $upload;
+}
+
+/**
+ * Scan folders
+ *
+ * @param string $path
+ * @param array $return
+ *
+ * @return array
+ * @since 1.0.0
+ */
+function eaccounting_scan_folders( $path = '', $return = array() ) {
+	$path  = $path == '' ? dirname( __FILE__ ) : $path;
+	$lists = @scandir( $path );
+
+	if ( ! empty( $lists ) ) {
+		foreach ( $lists as $f ) {
+			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != "." && $f != ".." ) {
+				if ( ! in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) ) {
+					$return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
+				}
+
+				eaccounting_scan_folders( $path . DIRECTORY_SEPARATOR . $f, $return );
+			}
+		}
+	}
+
+	return $return;
+}
+
+/**
+ * Protect accounting files
+ *
+ * @param bool $force
+ *
+ * @since 1.0.0
+ */
+function eaccounting_protect_files( $force = false ) {
+
+	if ( false === get_transient( 'eaccounting_check_protection_files' ) || $force ) {
+		$upload_dir = eaccounting_get_upload_dir();
+		if ( ! is_dir( $upload_dir['path'] ) ) {
+			wp_mkdir_p( $upload_dir['path'] );
+		}
+
+		$base_dir = $upload_dir['basedir'];
+
+		$htaccess = trailingslashit( $base_dir ) . '.htaccess';
+		if ( ! file_exists( $htaccess ) ) {
+			$rule = "order deny,allow\n";
+			$rule .= "deny from all\n";
+			$rule .= "allow from 127.0.0.1\n";
+			@file_put_contents( $htaccess, $rule );
+		}
+
+		// Top level blank index.php
+		if ( ! file_exists( $base_dir . '/index.php' ) && wp_is_writable( $base_dir ) ) {
+			@file_put_contents( $base_dir . '/index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+		}
+
+		$folders = eaccounting_scan_folders( $base_dir );
+		foreach ( $folders as $folder ) {
+			// Create index.php, if it doesn't exist
+			if ( ! file_exists( $folder . 'index.php' ) && wp_is_writable( $folder ) ) {
+				@file_put_contents( $folder . 'index.php', '<?php' . PHP_EOL . '// Silence is golden.' );
+			}
+		}
+
+		// Check for the files once per day
+		set_transient( 'eaccounting_check_protection_files', true, 3600 * 24 );
+	}
+}
 
 /**
  * Prepares files for upload by standardizing them into an array. This adds support for multiple file upload fields.
@@ -84,16 +169,22 @@ function eaccounting_upload_file( $file, $args = [] ) {
 			return new WP_Error( 'upload', sprintf( __( 'Uploaded files need to be one of the following file types: %s', 'wp-ever-accounting' ), $allowed_file_extensions ) );
 		}
 	} else {
-		$upload = wp_handle_upload( $file, apply_filters( 'eaccounting_handle_upload_overrides', [ 'test_form' => false ] ) );
-		if ( ! empty( $upload['error'] ) ) {
-			return new WP_Error( 'upload', $upload['error'] );
+		$upload_dir = eaccounting_get_upload_dir();
+		$file_name  = substr( md5( time() ), 0, 10 ) . '-' . sanitize_file_name( $file['name'] );
+
+		$file_path = trailingslashit( $upload_dir['path'] ) . $file_name;
+		$file_url  = trailingslashit( $upload_dir['url'] ) . $file_name;
+		$uploaded  = move_uploaded_file( $file['tmp_name'], $file_path );
+
+		if ( ! $uploaded ) {
+			return new WP_Error( 'upload', __( 'Could not upload file', 'wp-ever-accounting' ) );
 		} else {
-			$uploaded_file->url       = $upload['url'];
-			$uploaded_file->file      = $upload['file'];
-			$uploaded_file->name      = basename( $upload['file'] );
-			$uploaded_file->type      = $upload['type'];
+			$uploaded_file->url       = $file_url;
+			$uploaded_file->file      = $file_path;
+			$uploaded_file->name      = $file_name;
+			$uploaded_file->type      = $file['type'];
 			$uploaded_file->size      = $file['size'];
-			$uploaded_file->extension = substr( strrchr( $uploaded_file->name, '.' ), 1 );
+			$uploaded_file->extension = substr( strrchr( $file_path, '.' ), 1 );
 		}
 	}
 

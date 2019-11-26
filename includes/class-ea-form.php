@@ -597,7 +597,7 @@ class EAccounting_Form {
 		$html .= sprintf( '<input id="%1$s" class="ea-file-value" type="hidden" name="%2$s" value="%3$s">', $id, $name, $value );
 		$html .= sprintf( '<input type="file" class="ea-file-control ea-file-upload %1$s" id="ea-file-%2$s" %3$s autocomplete="off"/>', $input_classes, $id, $attributes );
 		$html .= sprintf( '<a href="#" class="ea-file-remove"><span class="dashicons dashicons-no-alt"></span></a>' );
-		$html .= sprintf( '<a href="%1$s" class="ea-file-link" target="_blank">%2$s</a>', esc_url($value), substr($file_name, 0, 20) );
+		$html .= sprintf( '<a href="%1$s" class="ea-file-link" target="_blank">%2$s</a>', esc_url($value), substr($file_name, 11) );
 		$html .= '</div>';
 		$html .= $description ? $description : '';
 		$html .= '</div><!--.ea-form-group-->';

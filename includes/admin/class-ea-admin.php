@@ -33,7 +33,8 @@ class EAccounting_Admin {
 		$this->define_constants();
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
-		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ));
+		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ) );
+		add_action( 'admin_init', array( $this, 'setup_files' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
@@ -85,22 +86,32 @@ class EAccounting_Admin {
 
 		$key = ! empty( $_GET['eaccounting-action'] ) ? sanitize_key( $_GET['eaccounting-action'] ) : false;
 
-		if ( !empty($key)) {
+		if ( ! empty( $key ) ) {
 			do_action( 'eaccounting_admin_get_' . $key, $_GET );
 		}
 
 		$key = ! empty( $_POST['eaccounting-action'] ) ? sanitize_key( $_POST['eaccounting-action'] ) : false;
 
-		if ( !empty($key) ) {
+		if ( ! empty( $key ) ) {
 			do_action( 'eaccounting_admin_post_' . $key, $_POST );
 		}
 	}
 
 	/**
-	 * Enqueue admin related assets
+	 * Set up files
 	 *
 	 * @since 1.0.0
+	 */
+	public function setup_files() {
+		eaccounting_protect_files();
+	}
+
+	/**
+	 * Enqueue admin related assets
+	 *
 	 * @param $hook
+	 *
+	 * @since 1.0.0
 	 */
 	public function enqueue_scripts( $hook ) {
 		if ( ! preg_match( '/accounting/', $hook ) ) {
@@ -108,17 +119,33 @@ class EAccounting_Admin {
 		}
 
 		wp_enqueue_style( 'eaccounting-jquery-ui', eaccounting()->plugin_url() . '/assets/vendor/jquery-ui/jquery-ui.css', false, time() );
-		wp_enqueue_style( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.css',[], time() );
-		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css',[], time() );
-		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css',['eaccounting-select2', 'eaccounting-fontawesome'], time() );
+		wp_enqueue_style( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.css', [], time() );
+		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css', [], time() );
+		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css', [
+			'eaccounting-select2',
+			'eaccounting-fontawesome'
+		], time() );
 
-		wp_register_script( 'chart-js', eaccounting()->plugin_url() . '/assets/vendor/chartjs/chart.bundle.min.js', array( 'jquery'), time(), true );
-		wp_enqueue_script( 'jquery-iframe-transport', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-widget' ), time(), true );
-		wp_enqueue_script( 'jquery-fileupload', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-core', 'jquery-iframe-transport' ), time(), true );
+		wp_register_script( 'chart-js', eaccounting()->plugin_url() . '/assets/vendor/chartjs/chart.bundle.min.js', array( 'jquery' ), time(), true );
+		wp_enqueue_script( 'jquery-iframe-transport', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array(
+			'jquery',
+			'jquery-ui-widget'
+		), time(), true );
+		wp_enqueue_script( 'jquery-fileupload', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array(
+			'jquery',
+			'jquery-ui-core',
+			'jquery-iframe-transport'
+		), time(), true );
 		wp_enqueue_script( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );
 		wp_enqueue_script( 'eaccounting-mask-money', eaccounting()->plugin_url() . '/assets/vendor/mask-money/mask-money.js', array( 'jquery' ), time(), true );
-		wp_register_script( 'eaccounting-datepicker', eaccounting()->plugin_url() . '/assets/js/eaccounting-datepicker.js', [ 'jquery', 'jquery-ui-datepicker' ], time(), true );
-		wp_enqueue_script( 'eaccounting-fileupload', eaccounting()->plugin_url() . '/assets/js/eaccounting-fileupload.js', array('jquery', 'jquery-fileupload'), time(), true);
+		wp_register_script( 'eaccounting-datepicker', eaccounting()->plugin_url() . '/assets/js/eaccounting-datepicker.js', [
+			'jquery',
+			'jquery-ui-datepicker'
+		], time(), true );
+		wp_enqueue_script( 'eaccounting-fileupload', eaccounting()->plugin_url() . '/assets/js/eaccounting-fileupload.js', array(
+			'jquery',
+			'jquery-fileupload'
+		), time(), true );
 		wp_enqueue_script( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/js/eaccounting-admin.js', array(
 			'jquery',
 			'wp-util',

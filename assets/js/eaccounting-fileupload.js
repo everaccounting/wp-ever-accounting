@@ -74,7 +74,7 @@ jQuery(function ($) {
 					} else {
 						$file_field.addClass('has-value');
 						$file_field.find('input[type="hidden"]').val(file.url);
-						$file_field.find('.ea-file-link').attr('href', file.url).text(file.name.substring(0, 20));
+						$file_field.find('.ea-file-link').attr('href', file.url).text(file.name.substring(11));
 
 						if ($.inArray(file.extension, image_types) >= 0) {
 							$file_field.css('background-image', 'url(' + file.url + ')');
