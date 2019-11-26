@@ -17,7 +17,8 @@ defined( 'ABSPATH' ) || exit();
 
 				<div class="ea-summery-box-content">
 					<span class="ea-summery-box-text">Total Incomes</span>
-					<span class="ea-summery-box-number"><?php echo eaccounting_price(eaccounting_get_total_income());?></span>
+					<span
+						class="ea-summery-box-number"><?php echo eaccounting_price( eaccounting_get_total_income() ); ?></span>
 				</div>
 
 			</div>
@@ -33,7 +34,8 @@ defined( 'ABSPATH' ) || exit();
 
 				<div class="ea-summery-box-content">
 					<span class="ea-summery-box-text">Total Expenses</span>
-					<span class="ea-summery-box-number"><?php echo eaccounting_price(eaccounting_get_total_expense());?></span>
+					<span
+						class="ea-summery-box-number"><?php echo eaccounting_price( eaccounting_get_total_expense() ); ?></span>
 				</div>
 
 			</div>
@@ -49,9 +51,68 @@ defined( 'ABSPATH' ) || exit();
 
 				<div class="ea-summery-box-content">
 					<span class="ea-summery-box-text">Total Profit</span>
-					<span class="ea-summery-box-number"><?php echo eaccounting_price(eaccounting_get_total_profit());?></span>
+					<span
+						class="ea-summery-box-number"><?php echo eaccounting_price( eaccounting_get_total_profit() ); ?></span>
 				</div>
 
+			</div>
+		</div>
+
+		<div class="ea-col-6">
+			<div class="ea-card">
+				<div class="ea-card-header">
+					<h3 class="ea-card-title"><?php _e( 'Expense By Categories', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="ea-card-body">
+					<?php var_dump( eaccounting_get_expense_by_categories() ); ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="ea-col-6">
+			<div class="ea-card">
+				<div class="ea-card-header">
+					<h3 class="ea-card-title"><?php _e( 'Income By Categories', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="ea-card-body">
+					<?php var_dump( eaccounting_get_income_by_categories() ); ?>
+				</div>
+			</div>
+		</div>
+
+		<div class="ea-col-6">
+			<div class="ea-card">
+				<div class="ea-card-header">
+					<h3 class="ea-card-title"><?php _e( 'Latest Expense', 'wp-ever-accounting' ); ?></h3>
+				</div>
+				<div class="ea-card-body">
+					<?php
+					$payments = eaccounting_get_payments( [ 'per_page' => 5 ] );
+					if ( empty( $payments ) ) {
+						echo sprintf( '<p>%s</p>', __( 'No expenses found', 'wp-ever-accounting' ) );
+					} else {
+						?>
+						<table class="ea-table">
+							<thead>
+							<tr>
+								<th><?php _e( 'Date', 'wp-ever-accounting' ); ?></th>
+								<th><?php _e( 'Category', 'wp-ever-accounting' ); ?></th>
+								<th><?php _e( 'Amount', 'wp-ever-accounting' ); ?></th>
+							</tr>
+							</thead>
+							<?php
+							foreach ( $payments as $payment ) {
+								$item = new EAccounting_Payment( $payment );
+								echo sprintf( '<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td></tr>', $item->get_paid_at(), $item->get_category( 'view' ), $item->get_amount( 'view' ) );
+							} ?>
+							<tbody>
+
+							</tbody>
+
+						</table>
+						<?php
+					} ?>
+				</div>
 			</div>
 		</div>
 
@@ -78,44 +139,7 @@ defined( 'ABSPATH' ) || exit();
 							<?php
 							foreach ( $incomes as $income ) {
 								$item = new EAccounting_Revenue( $income );
-								echo sprintf( '<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td></tr>', $item->get_paid_at(), $item->get_category('view'), $item->get_amount('view') );
-							} ?>
-							<tbody>
-
-							</tbody>
-
-						</table>
-						<?php
-					} ?>
-				</div>
-			</div>
-		</div>
-
-
-		<div class="ea-col-6">
-			<div class="ea-card">
-				<div class="ea-card-header">
-					<h3 class="ea-card-title"><?php _e( 'Latest Expense', 'wp-ever-accounting' ); ?></h3>
-				</div>
-				<div class="ea-card-body">
-					<?php
-					$payments = eaccounting_get_payments( [ 'per_page' => 5 ] );
-					if ( empty( $payments ) ) {
-						echo sprintf( '<p>%s</p>', __( 'No expenses found', 'wp-ever-accounting' ) );
-					} else {
-						?>
-						<table class="ea-table">
-							<thead>
-							<tr>
-								<th><?php _e( 'Date', 'wp-ever-accounting' ); ?></th>
-								<th><?php _e( 'Category', 'wp-ever-accounting' ); ?></th>
-								<th><?php _e( 'Amount', 'wp-ever-accounting' ); ?></th>
-							</tr>
-							</thead>
-							<?php
-							foreach ( $payments as $payment ) {
-								$item = new EAccounting_Payment( $payment );
-								echo sprintf( '<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td></tr>', $item->get_paid_at(), $item->get_category('view'), $item->get_amount('view') );
+								echo sprintf( '<tr><td>%1$s</td><td>%2$s</td><td>%3$s</td></tr>', $item->get_paid_at(), $item->get_category( 'view' ), $item->get_amount( 'view' ) );
 							} ?>
 							<tbody>
 

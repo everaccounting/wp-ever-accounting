@@ -4,11 +4,12 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Display a WooCommerce help tip.
  *
+ * @param string $tip Help tip text.
+ * @param bool $allow_html Allow sanitized HTML if true or escape.
+ *
+ * @return string
  * @since  1.0.0
  *
- * @param  string $tip        Help tip text.
- * @param  bool   $allow_html Allow sanitized HTML if true or escape.
- * @return string
  */
 function eaccounting_help_tip( $tip, $allow_html = false ) {
 	if ( $allow_html ) {
@@ -36,8 +37,7 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
 }
 
 
-
-function eaccounting_get_transactions($args, $count = false ){
+function eaccounting_get_transactions( $args, $count = false ) {
 	global $wpdb;
 	$query_fields  = '';
 	$query_from    = '';
@@ -56,10 +56,10 @@ function eaccounting_get_transactions($args, $count = false ){
 		'offset'         => 0,
 	);
 
-	$args        = wp_parse_args( $args, $default );
+	$args              = wp_parse_args( $args, $default );
 	$transaction_table = 'transactions';
-	$query_from  = "FROM ( SELECT *, 'expense' as type FROM $wpdb->ea_payments as payments UNION ALL SELECT *, 'income' as type FROM $wpdb->ea_revenues as revenues ) as transactions ";
-	$query_where = 'WHERE 1=1';
+	$query_from        = "FROM ( SELECT *, 'expense' as type FROM $wpdb->ea_payments as payments UNION ALL SELECT *, 'income' as type FROM $wpdb->ea_revenues as revenues ) as transactions ";
+	$query_where       = 'WHERE 1=1';
 
 	//account_id
 	if ( ! empty( $args['account_id'] ) ) {
@@ -73,7 +73,7 @@ function eaccounting_get_transactions($args, $count = false ){
 	//amount
 	if ( ! empty( $args['amount'] ) ) {
 		$amount = trim( $args['amount'] );
-		$number  = preg_replace( '#[^0-9\.]#', '', $amount );
+		$number = preg_replace( '#[^0-9\.]#', '', $amount );
 
 		if ( strpos( $amount, '>' ) !== false ) {
 			$query_where .= $wpdb->prepare( " AND $transaction_table.amount > %f ", $number );
@@ -143,4 +143,76 @@ function eaccounting_get_transactions($args, $count = false ){
 	}
 
 	return $wpdb->get_col( $request );
+}
+
+/**
+ * Get expense by category
+ *
+ * @since 1.0.0
+ * @param null $start
+ * @param null $end
+ *
+ * @return array
+ */
+function eaccounting_get_expense_by_categories( $start = null, $end = null ) {
+	if ( empty( $start ) ) {
+		$start = date( "1-1-Y" );
+	}
+
+	if ( empty( $end ) ) {
+		$end = date( "31-12-Y" );
+	}
+	global $wpdb;
+	$query_results = $wpdb->get_results( $wpdb->prepare( "select category_id, SUM(amount) total 
+														  from $wpdb->ea_payments WHERE paid_at >= DATE(%s) AND paid_at <= DATE(%s) 
+														  AND category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') 
+														  group by category_id order by total desc", date( 'Y-m-d', strtotime( $start ) ), date( 'Y-m-d', strtotime( $end ) ) ) );
+	$results       = [];
+	foreach ( $query_results as $query_result ) {
+		$category  = eaccounting_get_category( $query_result->category_id );
+		$results[] = array(
+			'category_id' => $category->id,
+			'color'       => $category->color,
+			'name'        => $category->name,
+			'total'       => $query_result->total,
+		);
+	}
+
+	return $results;
+}
+
+
+/**
+ * Get income by category
+ * @since 1.0.0
+ * @param null $start
+ * @param null $end
+ *
+ * @return array
+ */
+function eaccounting_get_income_by_categories( $start = null, $end = null ) {
+	if ( empty( $start ) ) {
+		$start = date( "1-1-Y" );
+	}
+
+	if ( empty( $end ) ) {
+		$end = date( "31-12-Y" );
+	}
+	global $wpdb;
+	$query_results = $wpdb->get_results( $wpdb->prepare( "select category_id, SUM(amount) total 
+														  from $wpdb->ea_revenues WHERE paid_at >= DATE(%s) AND paid_at <= DATE(%s) 
+														  AND category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') 
+														  group by category_id order by total desc", date( 'Y-m-d', strtotime( $start ) ), date( 'Y-m-d', strtotime( $end ) ) ) );
+	$results       = [];
+	foreach ( $query_results as $query_result ) {
+		$category  = eaccounting_get_category( $query_result->category_id );
+		$results[] = array(
+			'category_id' => $category->id,
+			'color'       => $category->color,
+			'name'        => $category->name,
+			'total'       => $query_result->total,
+		);
+	}
+
+	return $results;
 }
