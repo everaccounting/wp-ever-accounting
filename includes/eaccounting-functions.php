@@ -216,3 +216,16 @@ function eaccounting_get_income_by_categories( $start = null, $end = null ) {
 
 	return $results;
 }
+
+
+function eaccounting_cashflow_income( $start = null, $end = null ){
+	if ( empty( $start ) ) {
+		$start = date( "1-1-Y" );
+	}
+
+	if ( empty( $end ) ) {
+		$end = date( "31-12-Y" );
+	}
+	global $wpdb;
+
+}
