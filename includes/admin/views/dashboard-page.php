@@ -64,7 +64,7 @@ defined( 'ABSPATH' ) || exit();
 					<h3 class="ea-card-title"><?php _e( 'Expense By Categories', 'wp-ever-accounting' ); ?></h3>
 				</div>
 				<div class="ea-card-body">
-					<?php var_dump( eaccounting_get_expense_by_categories() ); ?>
+					<canvas id="ea-expense-by-categories"></canvas>
 				</div>
 			</div>
 		</div>
@@ -75,7 +75,7 @@ defined( 'ABSPATH' ) || exit();
 					<h3 class="ea-card-title"><?php _e( 'Income By Categories', 'wp-ever-accounting' ); ?></h3>
 				</div>
 				<div class="ea-card-body">
-					<?php var_dump( eaccounting_get_income_by_categories() ); ?>
+					<canvas id="ea-income-by-categories"></canvas>
 				</div>
 			</div>
 		</div>
@@ -157,3 +157,113 @@ defined( 'ABSPATH' ) || exit();
 
 
 </div>
+
+<script>
+	<?php
+	$expenses = eaccounting_get_expense_by_categories();
+	$expenses_labels = [];
+	$expenses_colors = [];
+	$expenses_data = [];
+	foreach ( $expenses as $expense ) {
+		$expenses_labels[] = sprintf( "%s - %s", html_entity_decode( eaccounting_price( $expense['total'] ) ), $expense['name'] );
+		$expenses_colors[] = $expense['color'];
+		$expenses_data[]   = $expense['total'];
+	}
+
+	$incomes = eaccounting_get_income_by_categories();
+	$incomes_labels = [];
+	$incomes_colors = [];
+	$incomes_data = [];
+	foreach ( $incomes as $income ) {
+		$incomes_labels[] = sprintf( "%s - %s", html_entity_decode( eaccounting_price( $income['total'] ) ), $income['name'] );
+		$incomes_colors[] = $income['color'];
+		$incomes_data[]   = $income['total'];
+	}
+
+	?>
+	jQuery(document).ready(function ($) {
+		var ea_expenses = document.getElementById('ea-expense-by-categories');
+		new Chart(ea_expenses, {
+			type: 'doughnut',
+			data: {
+				labels: <?php echo json_encode( $expenses_labels );?>,
+				datasets: [{
+					data: <?php echo json_encode( $expenses_data );?>,
+					backgroundColor: <?php echo json_encode( $expenses_colors );?>,
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					display: true,
+					fullWidth: true,
+					position: 'right',
+				},
+				tooltips: {
+					callbacks: {
+						label: function (tooltipItem, data) {
+							var allData = data.datasets[tooltipItem.datasetIndex].data;
+							var tooltipLabel = data.labels[tooltipItem.index];
+							var tooltipData = allData[tooltipItem.index];
+							var total = 0;
+
+							var label = tooltipLabel.split(" - ");
+
+							for (var i in allData) {
+								total += allData[i];
+							}
+
+							var tooltipPercentage = Math.round((tooltipData / total) * 100);
+
+							return label[1] + ': ' + label[0] + ' (' + tooltipPercentage + '%)';
+						}
+					}
+				},
+			}
+		});
+
+		var ea_incomes = document.getElementById('ea-income-by-categories');
+		new Chart(ea_incomes, {
+			type: 'doughnut',
+			data: {
+				labels: <?php echo json_encode( $incomes_labels );?>,
+				datasets: [{
+					data: <?php echo json_encode( $incomes_data );?>,
+					backgroundColor: <?php echo json_encode( $incomes_colors );?>,
+				}]
+			},
+			options: {
+				responsive: true,
+				maintainAspectRatio: false,
+				legend: {
+					display: true,
+					fullWidth: true,
+					position: 'right',
+				},
+				tooltips: {
+					callbacks: {
+						label: function (tooltipItem, data) {
+							var allData = data.datasets[tooltipItem.datasetIndex].data;
+							var tooltipLabel = data.labels[tooltipItem.index];
+							var tooltipData = allData[tooltipItem.index];
+							var total = 0;
+
+							var label = tooltipLabel.split(" - ");
+
+							for (var i in allData) {
+								total += allData[i];
+							}
+
+							var tooltipPercentage = Math.round((tooltipData / total) * 100);
+
+							return label[1] + ': ' + label[0] + ' (' + tooltipPercentage + '%)';
+						}
+					}
+				},
+			}
+		});
+
+
+	})
+</script>

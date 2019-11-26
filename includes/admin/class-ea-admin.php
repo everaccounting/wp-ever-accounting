@@ -112,6 +112,7 @@ class EAccounting_Admin {
 		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css',[], time() );
 		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css',['eaccounting-select2', 'eaccounting-fontawesome'], time() );
 
+		wp_register_script( 'chart-js', eaccounting()->plugin_url() . '/assets/vendor/chartjs/chart.bundle.min.js', array( 'jquery'), time(), true );
 		wp_enqueue_script( 'jquery-iframe-transport', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-widget' ), time(), true );
 		wp_enqueue_script( 'jquery-fileupload', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array( 'jquery', 'jquery-ui-core', 'jquery-iframe-transport' ), time(), true );
 		wp_enqueue_script( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );

@@ -39,6 +39,7 @@ class EAccounting_Admin_Menus {
 	 * since 1.0.0
 	 */
 	public function dashboard_page(){
+		wp_enqueue_script('chart-js');
 		eaccounting_get_views('dashboard-page.php');
 	}
 
