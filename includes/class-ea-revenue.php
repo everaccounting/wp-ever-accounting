@@ -43,7 +43,7 @@ class EAccounting_Revenue {
 	/**
 	 * @var string
 	 */
-	protected $method_id;
+	protected $payment_method;
 
 	/**
 	 * @var string
@@ -241,8 +241,8 @@ class EAccounting_Revenue {
 	 */
 	public function get_payment_method($context = 'edit') {
 		$methods = eaccounting_get_payment_methods();
-		$display = array_key_exists($this->method_id, $methods)? $methods[$this->method_id]: '';
-		return 'edit' == $context ? $this->method_id : $display;
+		$display = array_key_exists($this->payment_method, $methods)? $methods[$this->payment_method]: '';
+		return 'edit' == $context ? $this->payment_method : $display;
 	}
 
 	/**
