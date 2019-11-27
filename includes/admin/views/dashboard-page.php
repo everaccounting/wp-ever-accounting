@@ -1,6 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 $periods = array(
+	'all_time'      => __( 'All Time', 'wp-ever-accounting' ),
 	'this_month'    => __( 'This Month', 'wp-ever-accounting' ),
 	'this_year'     => __( 'This Year', 'wp-ever-accounting' ),
 	'last_year'     => __( 'Last Year', 'wp-ever-accounting' ),
@@ -8,7 +9,6 @@ $periods = array(
 	'last_quarter'  => __( 'Last Quarter', 'wp-ever-accounting' ),
 	'last_12_month' => __( 'Last 12 Months', 'wp-ever-accounting' ),
 	'this_week'     => __( 'This Week', 'wp-ever-accounting' ),
-	'all_time'      => __( 'All Time', 'wp-ever-accounting' ),
 );
 ?>
 <div class="wrap ea-wrapper">
