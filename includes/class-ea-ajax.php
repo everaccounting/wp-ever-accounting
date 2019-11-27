@@ -7,13 +7,22 @@ class EAccounting_Ajax {
 	 * EAccounting_Ajax constructor.
 	 */
 	public function __construct() {
+		add_action( 'wp_ajax_eaccounting_get_expense_by_category_chart', array( $this, 'expense_by_category_chart' ) );
 		add_action( 'wp_ajax_eaccounting_file_upload', array( $this, 'upload_file' ) );
 	}
+
+	public function expense_by_category_chart(){
+		$this->verify_nonce( 'ea_expense_filter', 'nonce' );
+		$this->check_permission();
+
+
+	}
+
 	/**
 	 * @since 1.0.0
 	 */
-	public function upload_file(){
-		$this->verify_nonce('eaccounting_file_upload', 'nonce');
+	public function upload_file() {
+		$this->verify_nonce( 'eaccounting_file_upload', 'nonce' );
 		$this->check_permission();
 		$data = [
 			'files' => [],
@@ -62,8 +71,8 @@ class EAccounting_Ajax {
 	 *
 	 * @param $action
 	 */
-	public function verify_nonce( $action, $field= '_wpnonce' ) {
-		if ( ! isset( $_REQUEST[$field] ) || ! wp_verify_nonce( $_REQUEST[$field], $action ) ) {
+	public function verify_nonce( $action, $field = '_wpnonce' ) {
+		if ( ! isset( $_REQUEST[ $field ] ) || ! wp_verify_nonce( $_REQUEST[ $field ], $action ) ) {
 			$this->send_error( __( 'Error: Nonce verification failed', 'wp-ever-accounting' ) );
 		}
 	}

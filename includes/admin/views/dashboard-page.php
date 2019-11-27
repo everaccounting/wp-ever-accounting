@@ -1,5 +1,15 @@
 <?php
 defined( 'ABSPATH' ) || exit();
+$periods = array(
+	'this_month'    => __( 'This Month', 'wp-ever-accounting' ),
+	'this_year'     => __( 'This Year', 'wp-ever-accounting' ),
+	'last_year'     => __( 'Last Year', 'wp-ever-accounting' ),
+	'this_quarter'  => __( 'This Quarter', 'wp-ever-accounting' ),
+	'last_quarter'  => __( 'Last Quarter', 'wp-ever-accounting' ),
+	'last_12_month' => __( 'Last 12 Months', 'wp-ever-accounting' ),
+	'this_week'     => __( 'This Week', 'wp-ever-accounting' ),
+	'all_time'      => __( 'All Time', 'wp-ever-accounting' ),
+);
 ?>
 <div class="wrap ea-wrapper">
 	<h1 class="wp-heading-inline ea-mb-10"><?php _e( 'Dashboard', 'wp-ever-accounting' ); ?></h1>
@@ -62,6 +72,11 @@ defined( 'ABSPATH' ) || exit();
 			<div class="ea-card">
 				<div class="ea-card-header">
 					<h3 class="ea-card-title"><?php _e( 'Expense By Categories', 'wp-ever-accounting' ); ?></h3>
+					<select id="expense-by-category-filter" data-nonce="<?php echo wp_create_nonce('ea_expense_filter');?>">
+						<?php foreach ($periods as $key => $value){
+							echo sprintf('<option value="%s">%s</option>', $key, $value);
+						}?>
+					</select>
 				</div>
 				<div class="ea-card-body">
 					<canvas id="ea-expense-by-categories"></canvas>
@@ -73,6 +88,11 @@ defined( 'ABSPATH' ) || exit();
 			<div class="ea-card">
 				<div class="ea-card-header">
 					<h3 class="ea-card-title"><?php _e( 'Income By Categories', 'wp-ever-accounting' ); ?></h3>
+					<select id="income-by-category-filter" data-nonce="<?php echo wp_create_nonce('ea_income_filter');?>">
+						<?php foreach ($periods as $key => $value){
+							echo sprintf('<option value="%s">%s</option>', $key, $value);
+						}?>
+					</select>
 				</div>
 				<div class="ea-card-body">
 					<canvas id="ea-income-by-categories"></canvas>

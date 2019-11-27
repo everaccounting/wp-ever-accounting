@@ -146,6 +146,7 @@ class EAccounting_Admin {
 			'jquery',
 			'jquery-fileupload'
 		), time(), true );
+		wp_register_script( 'eaccounting-dashboard', eaccounting()->plugin_url() . '/assets/js/eaccounting-dashboard.js', array( 'jquery', 'chart-js' ), time(), true );
 		wp_enqueue_script( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/js/eaccounting-admin.js', array(
 			'jquery',
 			'wp-util',
