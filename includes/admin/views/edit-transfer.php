@@ -12,6 +12,12 @@ $title        = ! empty( $transfer->id ) ? __( 'Update Transfer', 'wp-ever-accou
 
 <?php echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title ); ?>
 <?php echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $transfer_url, __( 'All Transfers', 'wp-ever-accounting' ) ); ?>
+<?php if ( ! empty( $transfer->id ) ): ?>
+	<a href="<?php echo esc_url( add_query_arg( array( 'eaccounting-action' => 'add_transfer'  ), $transfer_url )); ?>"
+	   class="page-title-action">
+		<?php _e( 'Add New', 'wp-ever-accounting' ); ?>
+	</a>
+<?php endif; ?>
 <div class="ea-mb-20"></div>
 <div class="ea-card">
 	<div class="ea-card-body">
