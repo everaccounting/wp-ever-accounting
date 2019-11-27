@@ -165,6 +165,12 @@ class EAccounting_Admin {
 				'symbol_first'        => true,
 			)
 		) );
+
+		wp_localize_script( 'eaccounting-dashboard', 'eAccountingi18n', array(
+			'localization' => array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+			)
+		) );
 	}
 
 }

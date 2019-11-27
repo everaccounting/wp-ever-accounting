@@ -584,11 +584,12 @@ function eaccounting_get_total_profit() {
 
 /**
  * Get dates in range
- * @since 1.0.0
+ *
  * @param string $period
  * @param array $args
  *
  * @return array
+ * @since 1.0.0
  */
 function eaccounting_get_dates_from_period( $period = 'last_30_days', $args = array() ) {
 	$dates        = array();
@@ -599,9 +600,9 @@ function eaccounting_get_dates_from_period( $period = 'last_30_days', $args = ar
 			$dates['m_start']  = date( 'n', $current_time );
 			$dates['m_end']    = date( 'n', $current_time );
 			$dates['day']      = 1;
-			$dates['day_end']  = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 			$dates['year']     = date( 'Y' );
 			$dates['year_end'] = date( 'Y' );
+			$dates['day_end']  = cal_days_in_month( CAL_GREGORIAN, $dates['m_end'], $dates['year'] );
 			break;
 
 		case 'last_month' :
@@ -653,7 +654,7 @@ function eaccounting_get_dates_from_period( $period = 'last_30_days', $args = ar
 
 		case 'this_week' :
 		case 'last_week' :
-			$base_time = $dates['range'] === 'this_week' ? current_time( 'mysql' ) : date( 'Y-m-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
+			$base_time = $period === 'this_week' ? current_time( 'mysql' ) : date( 'Y-m-d h:i:s', current_time( 'timestamp' ) - WEEK_IN_SECONDS );
 			$start_end = get_weekstartend( $base_time, get_option( 'start_of_week' ) );
 
 			$dates['day']     = date( 'd', $start_end['start'] );
@@ -728,8 +729,21 @@ function eaccounting_get_dates_from_period( $period = 'last_30_days', $args = ar
 			$dates['year_end'] = $dates['year'];
 			break;
 
+		case 'last_12_month' :
+			$date_start = strtotime( '-12 month' );
+
+			$dates['day']     = date( 'd', $date_start );
+			$dates['m_start'] = date( 'n', $date_start );
+			$dates['year']    = date( 'Y', $date_start );
+
+			$dates['day_end']  = date( 'd', $current_time );
+			$dates['m_end']    = date( 'n', $current_time );
+			$dates['year_end'] = date( 'Y', $current_time );
+			break;
+
 		case 'this_year' :
 			$dates['day']      = 1;
+			$dates['day_end']  = 31;
 			$dates['m_start']  = 1;
 			$dates['m_end']    = 12;
 			$dates['year']     = date( 'Y', $current_time );
@@ -738,10 +752,19 @@ function eaccounting_get_dates_from_period( $period = 'last_30_days', $args = ar
 
 		case 'last_year' :
 			$dates['day']      = 1;
+			$dates['day_end']  = 31;
 			$dates['m_start']  = 1;
 			$dates['m_end']    = 12;
 			$dates['year']     = date( 'Y', $current_time ) - 1;
 			$dates['year_end'] = date( 'Y', $current_time ) - 1;
+			break;
+		case 'all_time' :
+			$dates['day']      = 1;
+			$dates['day_end']  = 31;
+			$dates['m_start']  = 1;
+			$dates['m_end']    = 12;
+			$dates['year']     = 1970;
+			$dates['year_end'] = date( 'Y', $current_time );
 			break;
 
 		case 'custom' :

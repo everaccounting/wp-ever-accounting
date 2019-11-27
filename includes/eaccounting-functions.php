@@ -148,25 +148,27 @@ function eaccounting_get_transactions( $args, $count = false ) {
 /**
  * Get expense by category
  *
- * @since 1.0.0
  * @param null $start
  * @param null $end
  *
  * @return array
+ * @since 1.0.0
  */
 function eaccounting_get_expense_by_categories( $start = null, $end = null ) {
-	if ( empty( $start ) ) {
-		$start = date( "1-1-Y" );
+
+	global $wpdb;
+	$query_fields = " category_id, SUM(amount) total ";
+	$query_from   = " from $wpdb->ea_payments ";
+	$query_where  = "WHERE category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') ";
+
+	if ( ! empty( $start ) ) {
+		$query_where .= $wpdb->prepare( " AND paid_at >= DATE(%s)", date( 'Y-m-d', strtotime( $start ) ) );
 	}
 
-	if ( empty( $end ) ) {
-		$end = date( "31-12-Y" );
+	if ( ! empty( $end ) ) {
+		$query_where .= $wpdb->prepare( " AND paid_at <= DATE(%s)", date( 'Y-m-d', strtotime( $end ) ) );
 	}
-	global $wpdb;
-	$query_results = $wpdb->get_results( $wpdb->prepare( "select category_id, SUM(amount) total 
-														  from $wpdb->ea_payments WHERE paid_at >= DATE(%s) AND paid_at <= DATE(%s) 
-														  AND category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') 
-														  group by category_id order by total desc", date( 'Y-m-d', strtotime( $start ) ), date( 'Y-m-d', strtotime( $end ) ) ) );
+	$query_results = $wpdb->get_results("select $query_fields $query_from $query_where group by category_id order by total desc" );
 	$results       = [];
 	foreach ( $query_results as $query_result ) {
 		$category  = eaccounting_get_category( $query_result->category_id );
@@ -184,25 +186,28 @@ function eaccounting_get_expense_by_categories( $start = null, $end = null ) {
 
 /**
  * Get income by category
- * @since 1.0.0
+ *
  * @param null $start
  * @param null $end
  *
  * @return array
+ * @since 1.0.0
  */
 function eaccounting_get_income_by_categories( $start = null, $end = null ) {
-	if ( empty( $start ) ) {
-		$start = date( "1-1-Y" );
+
+	global $wpdb;
+	$query_fields = " category_id, SUM(amount) total ";
+	$query_from   = " from $wpdb->ea_revenues ";
+	$query_where  = "WHERE category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') ";
+
+	if ( ! empty( $start ) ) {
+		$query_where .= $wpdb->prepare( " AND paid_at >= DATE(%s)", date( 'Y-m-d', strtotime( $start ) ) );
 	}
 
-	if ( empty( $end ) ) {
-		$end = date( "31-12-Y" );
+	if ( ! empty( $end ) ) {
+		$query_where .= $wpdb->prepare( " AND paid_at <= DATE(%s)", date( 'Y-m-d', strtotime( $end ) ) );
 	}
-	global $wpdb;
-	$query_results = $wpdb->get_results( $wpdb->prepare( "select category_id, SUM(amount) total 
-														  from $wpdb->ea_revenues WHERE paid_at >= DATE(%s) AND paid_at <= DATE(%s) 
-														  AND category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') 
-														  group by category_id order by total desc", date( 'Y-m-d', strtotime( $start ) ), date( 'Y-m-d', strtotime( $end ) ) ) );
+	$query_results = $wpdb->get_results("select $query_fields $query_from $query_where group by category_id order by total desc" );
 	$results       = [];
 	foreach ( $query_results as $query_result ) {
 		$category  = eaccounting_get_category( $query_result->category_id );
@@ -218,7 +223,7 @@ function eaccounting_get_income_by_categories( $start = null, $end = null ) {
 }
 
 
-function eaccounting_cashflow_income( $start = null, $end = null ){
+function eaccounting_cashflow_income( $start = null, $end = null ) {
 	if ( empty( $start ) ) {
 		$start = date( "1-1-Y" );
 	}
