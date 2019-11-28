@@ -270,7 +270,7 @@ function eaccounting_get_transfers( $args = array(), $count = false ) {
 	if ( in_array( $order_by, [
 		'from_account_id',
 		'amount',
-		'transferred_at',
+		'paid_at',
 		'payment_method',
 		'reference',
 		'payment_id'
