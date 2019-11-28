@@ -42,7 +42,7 @@ function eaccounting_action_edit_transfer( $data ) {
 		'from_account_id' => isset( $data['from_account_id'] ) ? absint( $data['from_account_id'] ) : '',
 		'to_account_id'   => isset( $data['to_account_id'] ) ? absint( $data['to_account_id'] ) : '',
 		'amount'          => isset( $data['amount'] ) ? eaccounting_sanitize_price( $data['amount'] ) : '',
-		'transferred_at'  => isset( $data['transferred_at'] ) ? eaccounting_sanitize_date( $data['amount'] ) : '',
+		'transferred_at'  => isset( $data['transferred_at'] ) ? eaccounting_sanitize_date( $data['transferred_at'] ) : '',
 		'description'     => isset( $data['description'] ) ? sanitize_textarea_field( $data['description'] ) : '',
 		'payment_method'  => isset( $data['payment_method'] ) ? sanitize_text_field( $data['payment_method'] ) : '',
 		'reference'       => isset( $data['reference'] ) ? sanitize_text_field( $data['reference'] ) : '',
