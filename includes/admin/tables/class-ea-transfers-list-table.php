@@ -66,7 +66,7 @@ class EAccounting_Transfers_List_Table extends EAccounting_List_Table {
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'date'           => array( 'paid_at', false ),
+			'date'           => array( 'transferred_at', false ),
 			'amount'         => array( 'amount', false ),
 			'from_bank'      => array( 'from_bank_id', false ),
 			'to_bank'        => array( 'to_bank_id', false ),
