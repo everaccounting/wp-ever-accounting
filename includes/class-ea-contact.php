@@ -364,6 +364,21 @@ class EAccounting_Contact {
 		return $this->updated_at;
 	}
 
+	/**
+	 * @since 1.0.1
+	 * @return float|string|null
+	 */
+	public function get_total_payment(){
+		return eaccounting_get_contact_payment_total($this->id);
+	}
+
+	/**
+	 * @since 1.0.1
+	 * @return float|string|null
+	 */
+	public function get_total_revenue(){
+		return eaccounting_get_contact_revenue_total($this->id);
+	}
 
 	/**
 	 * Deactivate contact

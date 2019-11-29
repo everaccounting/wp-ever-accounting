@@ -234,3 +234,31 @@ function eaccounting_cashflow_income( $start = null, $end = null ) {
 	global $wpdb;
 
 }
+
+/**
+ * @since 1.0.1
+ * @param $contact_id
+ *
+ * @return float|string|null
+ */
+function eaccounting_get_contact_payment_total( $contact_id ) {
+	global $wpdb;
+	if ( empty( $contact_id ) ) {
+		return 0.00;
+	}
+	return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) FROM $wpdb->ea_payments WHERE contact_id=%d", absint( $contact_id ) ) );
+}
+
+/**
+ * @since 1.0.1
+ * @param $contact_id
+ *
+ * @return float|string|null
+ */
+function eaccounting_get_contact_revenue_total( $contact_id ) {
+	global $wpdb;
+	if ( empty( $contact_id ) ) {
+		return 0.00;
+	}
+	return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) FROM $wpdb->ea_revenues WHERE contact_id=%d", absint( $contact_id ) ) );
+}
