@@ -160,6 +160,11 @@ function eaccounting_get_revenues( $args = array(), $count = false ) {
 		$query_where .= $wpdb->prepare( " AND $wpdb->ea_revenues.account_id= %s", absint( $args['account_id'] ) );
 	}
 
+	//contact_id
+	if ( ! empty( $args['contact_id'] ) ) {
+		$query_where .= $wpdb->prepare( " AND $wpdb->ea_revenues.contact_id= %s", absint( $args['contact_id'] ) );
+	}
+
 	//exclude from others category
 	$query_where .= " AND $wpdb->ea_revenues.category_id NOT IN ( SELECT id from $wpdb->ea_categories WHERE type='other') ";
 
