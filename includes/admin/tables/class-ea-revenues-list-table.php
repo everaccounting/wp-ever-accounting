@@ -170,6 +170,34 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
+	 * since 1.0.0
+	 *
+	 * @param string $which
+	 */
+	function extra_tablenav( $which ) {
+		if ( $which == "top" ) {
+			$customers     = eaccounting_get_contacts();
+			$s_customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
+			?>
+			<div class="alignleft actions bulkactions">
+				<select name="customer_id">
+					<?php echo sprintf( '<option value="%s" %s>%s</option>', '', selected( '', $s_customer_id, false ), __( 'Customer', 'wp-ever-accounting' ) ); ?>
+					<?php foreach ( $customers as $customer ) {
+						$name = sprintf( '%s %s', $customer->first_name, $customer->last_name );
+						echo sprintf( '<option value="%s" %s>%s</option>', $customer->id, selected( $customer->id, $s_customer_id, false ), $name );
+					} ?>
+				</select>
+				<button type="submit" class="button-secondary"><?php _e( 'Filter', 'wp-ever-accounting' ); ?></button>
+			</div>
+			<?php
+		}
+		if ( $which == "bottom" ) {
+			//The code that goes after the table is there
+
+		}
+	}
+
+	/**
 	 * Process the bulk actions
 	 *
 	 * @return void
@@ -208,18 +236,19 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	public function get_results() {
 		$per_page = $this->per_page;
 
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
-		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
-		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
-		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
-
-		$args = array(
-			'per_page' => $per_page,
-			'page'     => isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1,
-			'orderby'  => $orderby,
-			'order'    => $order,
-			'status'   => $status,
-			'search'   => $search
+		$orderby    = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
+		$order      = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
+		$status     = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+		$search     = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
+		$contact_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
+		$args       = array(
+			'per_page'   => $per_page,
+			'page'       => isset( $_GET['paged'] ) ? intval( $_GET['paged'] ) : 1,
+			'orderby'    => $orderby,
+			'contact_id' => $contact_id,
+			'order'      => $order,
+			'status'     => $status,
+			'search'     => $search
 		);
 
 		if ( array_key_exists( $orderby, $this->get_sortable_columns() ) && 'name' != $orderby ) {

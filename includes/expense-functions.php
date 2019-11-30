@@ -48,7 +48,7 @@ function eaccounting_insert_payment( $args ) {
 	}
 
 	if ( empty( $data['payment_method'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Revenue method is required', 'wp-ever-accounting' ) );
 	}
 
 	$where = array( 'id' => $id );
