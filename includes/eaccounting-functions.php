@@ -37,7 +37,7 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
 }
 
 
-function eaccounting_get_transactions( $args, $count = false ) {
+function eaccounting_get_transactions( $args = array(), $count = false ) {
 	global $wpdb;
 	$query_fields  = '';
 	$query_from    = '';
@@ -49,6 +49,8 @@ function eaccounting_get_transactions( $args, $count = false ) {
 		'search'         => '',
 		'orderby'        => 'created_at',
 		'order'          => 'DESC',
+		'date_before'         => '',
+		'date_after'          => '',
 		'fields'         => 'all',
 		'search_columns' => array( 'description', 'reference' ),
 		'per_page'       => 20,
@@ -82,6 +84,16 @@ function eaccounting_get_transactions( $args, $count = false ) {
 		} else {
 			$query_where .= $wpdb->prepare( " AND $transaction_table.amount = %f ", $number );
 		}
+	}
+
+	//after date
+	if(!empty($args['date_after'])){
+		$query_where .= $wpdb->prepare( " AND $transaction_table.paid_at >= date(%s) ", sanitize_text_field($args['date_after']) );
+	}
+
+	//before date
+	if(!empty($args['date_before'])){
+		$query_where .= $wpdb->prepare( " AND $transaction_table.paid_at <= date(%s) ", sanitize_text_field($args['date_before']) );
 	}
 
 	//fields
@@ -168,7 +180,7 @@ function eaccounting_get_expense_by_categories( $start = null, $end = null ) {
 	if ( ! empty( $end ) ) {
 		$query_where .= $wpdb->prepare( " AND paid_at <= DATE(%s)", date( 'Y-m-d', strtotime( $end ) ) );
 	}
-	$query_results = $wpdb->get_results("select $query_fields $query_from $query_where group by category_id order by total desc" );
+	$query_results = $wpdb->get_results( "select $query_fields $query_from $query_where group by category_id order by total desc" );
 	$results       = [];
 	foreach ( $query_results as $query_result ) {
 		$category  = eaccounting_get_category( $query_result->category_id );
@@ -207,7 +219,7 @@ function eaccounting_get_income_by_categories( $start = null, $end = null ) {
 	if ( ! empty( $end ) ) {
 		$query_where .= $wpdb->prepare( " AND paid_at <= DATE(%s)", date( 'Y-m-d', strtotime( $end ) ) );
 	}
-	$query_results = $wpdb->get_results("select $query_fields $query_from $query_where group by category_id order by total desc" );
+	$query_results = $wpdb->get_results( "select $query_fields $query_from $query_where group by category_id order by total desc" );
 	$results       = [];
 	foreach ( $query_results as $query_result ) {
 		$category  = eaccounting_get_category( $query_result->category_id );
@@ -236,29 +248,31 @@ function eaccounting_cashflow_income( $start = null, $end = null ) {
 }
 
 /**
- * @since 1.0.1
  * @param $contact_id
  *
  * @return float|string|null
+ * @since 1.0.1
  */
 function eaccounting_get_contact_payment_total( $contact_id ) {
 	global $wpdb;
 	if ( empty( $contact_id ) ) {
 		return 0.00;
 	}
+
 	return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) FROM $wpdb->ea_payments WHERE contact_id=%d", absint( $contact_id ) ) );
 }
 
 /**
- * @since 1.0.1
  * @param $contact_id
  *
  * @return float|string|null
+ * @since 1.0.1
  */
 function eaccounting_get_contact_revenue_total( $contact_id ) {
 	global $wpdb;
 	if ( empty( $contact_id ) ) {
 		return 0.00;
 	}
+
 	return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) FROM $wpdb->ea_revenues WHERE contact_id=%d", absint( $contact_id ) ) );
 }
