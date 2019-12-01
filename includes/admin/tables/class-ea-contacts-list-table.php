@@ -197,6 +197,22 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Render the checkbox column
+	 *
+	 * @param array $item Contains all the data for the checkbox column
+	 *
+	 * @return string Displays a checkbox
+	 * @since 1.0.0
+	 */
+	function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ $this->_args['singular'],
+			/*$2%s*/ $item->id
+		);
+	}
+
+	/**
 	 * since 1.0.0
 	 *
 	 * @param $item

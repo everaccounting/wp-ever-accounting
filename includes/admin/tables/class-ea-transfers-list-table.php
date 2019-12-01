@@ -44,7 +44,7 @@ class EAccounting_Transfers_List_Table extends WP_List_Table {
 	 * @var string
 	 */
 	public $base_url;
-	
+
 	/**
 	 * EAccounting_Transfers_List_Table constructor.
 	 */
@@ -187,6 +187,22 @@ class EAccounting_Transfers_List_Table extends WP_List_Table {
 				return '&mdash;';
 				break;
 		}
+	}
+
+	/**
+	 * Render the checkbox column
+	 *
+	 * @param array $item Contains all the data for the checkbox column
+	 *
+	 * @return string Displays a checkbox
+	 * @since 1.0.0
+	 */
+	function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s" />',
+			/*$1%s*/ $this->_args['singular'],
+			/*$2%s*/ $item->id
+		);
 	}
 
 
