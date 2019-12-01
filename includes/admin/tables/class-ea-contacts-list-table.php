@@ -66,17 +66,11 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 	 */
 	public function prepare_items() {
 		$per_page = $this->per_page;
-
 		$columns = $this->get_columns();
-
 		$hidden = array();
-
 		$sortable = $this->get_sortable_columns();
-
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-
 		$this->process_bulk_action();
-
 		$data = $this->get_results();
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
@@ -102,47 +96,6 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
-	}
-
-	/**
-	 * Message to be displayed when there are no items
-	 *
-	 * @since 1.0.0
-	 */
-	function no_items() {
-		echo sprintf( __( 'No %s found.', 'wp-ever-accounting' ), $this->_args['plural'] );
-	}
-
-	/**
-	 * Show the search field
-	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 *
-	 */
-	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-		?>
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
-			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-		</p>
-		<?php
 	}
 
 	/**
@@ -192,8 +145,7 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 		$columns = array(
 			'cb'     => '<input type="checkbox" />',
 			'name'   => __( 'Name', 'wp-ever-accounting' ),
-			'payment'  => __( 'Payment', 'wp-ever-accounting' ),
-			'revenue'  => __( 'Revenue', 'wp-ever-accounting' ),
+			'email'  => __( 'Email', 'wp-ever-accounting' ),
 			'phone'  => __( 'Phone', 'wp-ever-accounting' ),
 //			'unpaid' => __( 'Unpaid', 'wp-ever-accounting' ),
 //			'types'  => __( 'Types', 'wp-ever-accounting' ),
@@ -216,33 +168,6 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 			'email'  => array( 'email', false ),
 			'phone'  => array( 'phone', false )
 		);
-	}
-
-	/**
-	 * @param object $item
-	 * @param string $column_name
-	 *
-	 * @return string;
-	 * @since 1.0.0
-	 */
-	function column_default( $item, $column_name ) {
-		switch ($column_name){
-			case 'email':
-				return empty( $item->get_email() ) ? '&mdash;' : $item->get_email();
-				break;
-			case 'phone':
-				return empty( $item->get_phone() ) ? '&mdash;' : $item->get_phone();
-				break;
-			case 'payment':
-				return eaccounting_price($item->get_total_payment());
-				break;
-			case 'revenue':
-				return eaccounting_price($item->get_total_revenue());
-				break;
-			default:
-				return isset($item->$column_name)? $item->$column_name: '&mdash;';
-
-		}
 	}
 
 	/**
@@ -291,14 +216,53 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * @param object $item
+	 * @param string $column_name
+	 *
+	 * @return string;
+	 * @since 1.0.0
+	 */
+	function column_default( $item, $column_name ) {
+		return $item->$column_name;
+	}
+
+	/**
 	 * since 1.0.0
 	 *
-	 * @param $item
+	 * @param $item EAccounting_Contact
 	 *
-	 * @return EAccounting_Contact
+	 * @return bool
 	 */
-	protected function map_to_object( $item ) {
-		return new EAccounting_Contact( $item );
+	function column_email( $item ) {
+		return empty( $item->get_email() ) ? '&mdash;' : $item->get_email();
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $item EAccounting_Contact
+	 *
+	 * @return bool
+	 */
+	function column_phone( $item ) {
+		return empty( $item->get_phone() ) ? '&mdash;' : $item->get_phone();
+	}
+
+
+	/**
+	 * @return string
+	 * @since 1.0.0
+	 */
+	function column_unpaid() {
+		return '&mdash;';
+	}
+
+	/**
+	 * @return string
+	 * @since 1.0.0
+	 */
+	function column_types() {
+		return '&mdash;';
 	}
 
 	/**
@@ -372,5 +336,19 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 
 		return $results;
 	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $item
+	 *
+	 * @return EAccounting_Contact
+	 */
+	protected function map_to_object( $item ) {
+		return new EAccounting_Contact( $item );
+	}
+
+
+
 
 }
