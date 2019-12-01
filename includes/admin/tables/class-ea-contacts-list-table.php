@@ -1,8 +1,50 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+// Load WP_List_Table if not loaded
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
 
-class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
+class EAccounting_Contacts_List_Table extends WP_List_Table {
+	/**
+	 * Number of results to show per page
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $per_page = 20;
+
+	/**
+	 *
+	 * Total number of discounts
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $total_count;
+
+	/**
+	 * Active number of account
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $active_count;
+
+	/**
+	 * Inactive number of account
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $inactive_count;
+
+	/**
+	 * Base URL
+	 * @var string
+	 */
+	public $base_url;
+
 	/**
 	 * EAccounting_Products_List_Table constructor.
 	 */
@@ -14,6 +56,52 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 		) );
 		$this->base_url = admin_url( 'admin.php?page=eaccounting-contacts' );
 		$this->process_bulk_action();
+	}
+
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function prepare_items() {
+		$per_page = $this->per_page;
+
+		$columns = $this->get_columns();
+
+		$hidden = array();
+
+		$sortable = $this->get_sortable_columns();
+
+		$this->_column_headers = array( $columns, $hidden, $sortable );
+
+		$this->process_bulk_action();
+
+		$data = $this->get_results();
+
+		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+
+		switch ( $status ) {
+			case 'active':
+				$total_items = $this->active_count;
+				break;
+			case 'inactive':
+				$total_items = $this->inactive_count;
+				break;
+			case 'any':
+			default:
+				$total_items = $this->total_count;
+				break;
+		}
+
+		$this->items = array_map( array( $this, 'map_to_object' ), $data );
+
+		$this->set_pagination_args( array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
 	}
 
 	/**
@@ -53,6 +141,33 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
+	 * @param object $item
+	 * @param string $column_name
+	 *
+	 * @return string;
+	 * @since 1.0.0
+	 */
+	function column_default( $item, $column_name ) {
+		switch ($column_name){
+			case 'email':
+				return empty( $item->get_email() ) ? '&mdash;' : $item->get_email();
+				break;
+			case 'phone':
+				return empty( $item->get_phone() ) ? '&mdash;' : $item->get_phone();
+				break;
+			case 'payment':
+				return eaccounting_price($item->get_total_payment());
+				break;
+			case 'revenue':
+				return eaccounting_price($item->get_total_revenue());
+				break;
+			default:
+				return isset($item->$column_name)? $item->$column_name: '&mdash;';
+
+		}
+	}
+
+	/**
 	 * Render the Name Column
 	 *
 	 * @param EAccounting_Contact $item Contains all the data of the discount code
@@ -82,32 +197,15 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * @param object $item
-	 * @param string $column_name
+	 * since 1.0.0
 	 *
-	 * @return string;
-	 * @since 1.0.0
+	 * @param $item
+	 *
+	 * @return EAccounting_Contact
 	 */
-	function column_default( $item, $column_name ) {
-		switch ($column_name){
-			case 'email':
-				return empty( $item->get_email() ) ? '&mdash;' : $item->get_email();
-				break;
-			case 'phone':
-				return empty( $item->get_phone() ) ? '&mdash;' : $item->get_phone();
-				break;
-			case 'payment':
-				return eaccounting_price($item->get_total_payment());
-				break;
-			case 'revenue':
-				return eaccounting_price($item->get_total_revenue());
-				break;
-			default:
-				return isset($item->$column_name)? $item->$column_name: '&mdash;';
-
-		}
+	protected function map_to_object( $item ) {
+		return new EAccounting_Contact( $item );
 	}
-
 
 	/**
 	 * Process the bulk actions
@@ -179,64 +277,6 @@ class EAccounting_Contacts_List_Table extends EAccounting_List_Table {
 		$results = eaccounting_get_contacts( $args );
 
 		return $results;
-	}
-
-	/**
-	 * since 1.0.0
-	 *
-	 * @param $item
-	 *
-	 * @return EAccounting_Contact
-	 */
-	protected function map_to_object( $item ) {
-		return new EAccounting_Contact( $item );
-	}
-
-
-	/**
-	 * Setup the final data for the table
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	public function prepare_items() {
-		$per_page = $this->per_page;
-
-		$columns = $this->get_columns();
-
-		$hidden = array();
-
-		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$this->process_bulk_action();
-
-		$data = $this->get_results();
-
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
-
-		switch ( $status ) {
-			case 'active':
-				$total_items = $this->active_count;
-				break;
-			case 'inactive':
-				$total_items = $this->inactive_count;
-				break;
-			case 'any':
-			default:
-				$total_items = $this->total_count;
-				break;
-		}
-
-		$this->items = array_map( array( $this, 'map_to_object' ), $data );
-
-		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page ),
-			)
-		);
 	}
 
 }

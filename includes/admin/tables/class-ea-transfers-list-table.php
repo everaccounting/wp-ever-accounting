@@ -1,8 +1,53 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+// Load WP_List_Table if not loaded
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
 
-class EAccounting_Transfers_List_Table extends EAccounting_List_Table {
+class EAccounting_Transfers_List_Table extends WP_List_Table {
+	/**
+	 * Number of results to show per page
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $per_page = 20;
+
+	/**
+	 *
+	 * Total number of discounts
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $total_count;
+
+	/**
+	 * Active number of account
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $active_count;
+
+	/**
+	 * Inactive number of account
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $inactive_count;
+
+	/**
+	 * Base URL
+	 * @var string
+	 */
+	public $base_url;
+	
+	/**
+	 * EAccounting_Transfers_List_Table constructor.
+	 */
 	public function __construct() {
 		parent::__construct( array(
 			'singular' => 'transfer',
@@ -13,6 +58,38 @@ class EAccounting_Transfers_List_Table extends EAccounting_List_Table {
 		$this->process_bulk_action();
 	}
 
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function prepare_items() {
+		$per_page = $this->per_page;
+
+		$columns = $this->get_columns();
+
+		$hidden = array();
+
+		$sortable = $this->get_sortable_columns();
+
+		$this->_column_headers = array( $columns, $hidden, $sortable );
+
+		$this->process_bulk_action();
+
+		$items = $this->get_results();
+
+		$total_items = $this->total_count;
+
+		$this->items = $items;
+
+		$this->set_pagination_args( array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
+	}
 
 	/**
 	 * Retrieve the view types
@@ -76,26 +153,6 @@ class EAccounting_Transfers_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * @param $item
-	 *
-	 * @return string
-	 * @since 1.0.0
-	 */
-	function column_date( $item ) {
-		$transfer_url        = add_query_arg( array( 'transfer' => $item->id ), $this->base_url );
-		$edit_url            = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'edit_transfer' ], $transfer_url ), 'eaccounting_transfers_nonce' );
-		$delete_url          = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_transfer' ], $transfer_url ), 'eaccounting_transfers_nonce' );
-		$transferred_at      = date( 'Y-m-d', strtotime( $item->transferred_at ) );
-		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-ever-accounting' ) );
-
-		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-ever-accounting' ) );
-
-		$row_actions = apply_filters( 'eaccounting_transfers_row_actions', $row_actions, $item );
-
-		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, $transferred_at ) . $this->row_actions( $row_actions );
-	}
-
-	/**
 	 * @param object $item
 	 * @param string $column_name
 	 *
@@ -131,6 +188,29 @@ class EAccounting_Transfers_List_Table extends EAccounting_List_Table {
 				break;
 		}
 	}
+
+
+	/**
+	 * @param $item
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	function column_date( $item ) {
+		$transfer_url        = add_query_arg( array( 'transfer' => $item->id ), $this->base_url );
+		$edit_url            = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'edit_transfer' ], $transfer_url ), 'eaccounting_transfers_nonce' );
+		$delete_url          = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_transfer' ], $transfer_url ), 'eaccounting_transfers_nonce' );
+		$transferred_at      = date( 'Y-m-d', strtotime( $item->transferred_at ) );
+		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-ever-accounting' ) );
+
+		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-ever-accounting' ) );
+
+		$row_actions = apply_filters( 'eaccounting_transfers_row_actions', $row_actions, $item );
+
+		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, $transferred_at ) . $this->row_actions( $row_actions );
+	}
+
+
 
 	/**
 	 * Process the bulk actions
@@ -195,40 +275,6 @@ class EAccounting_Transfers_List_Table extends EAccounting_List_Table {
 		$results = eaccounting_get_transfers( $args );
 
 		return $results;
-	}
-
-
-	/**
-	 * Setup the final data for the table
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	public function prepare_items() {
-		$per_page = $this->per_page;
-
-		$columns = $this->get_columns();
-
-		$hidden = array();
-
-		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$this->process_bulk_action();
-
-		$items = $this->get_results();
-
-		$total_items = $this->total_count;
-
-		$this->items = $items;
-
-		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page ),
-			)
-		);
 	}
 
 }

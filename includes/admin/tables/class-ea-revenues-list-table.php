@@ -1,8 +1,53 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+// Load WP_List_Table if not loaded
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
 
-class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
+class EAccounting_Revenues_List_Table extends WP_List_Table {
+	/**
+	 * Number of results to show per page
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $per_page = 20;
+
+	/**
+	 *
+	 * Total number of discounts
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $total_count;
+
+	/**
+	 * Active number of account
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $active_count;
+
+	/**
+	 * Inactive number of account
+	 *
+	 * @var string
+	 * @since 1.0.0
+	 */
+	public $inactive_count;
+
+	/**
+	 * Base URL
+	 * @var string
+	 */
+	public $base_url;
+
+	/**
+	 * EAccounting_Revenues_List_Table constructor.
+	 */
 	public function __construct() {
 		parent::__construct( array(
 			'singular' => 'revenue',
@@ -13,6 +58,55 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 		$this->process_bulk_action();
 	}
 
+	/**
+	 * Setup the final data for the table
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 */
+	public function prepare_items() {
+		$per_page = $this->per_page;
+
+		$columns = $this->get_columns();
+
+		$hidden = array();
+
+		$sortable = $this->get_sortable_columns();
+
+		$this->_column_headers = array( $columns, $hidden, $sortable );
+
+		$this->process_bulk_action();
+
+		$items = $this->get_results();
+
+		$data = array_map( function ( $item ) {
+			return new EAccounting_Revenue( $item );
+		}, $items );
+
+		$status = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : 'any';
+
+		switch ( $status ) {
+			case 'active':
+				$total_items = $this->active_count;
+				break;
+			case 'inactive':
+				$total_items = $this->inactive_count;
+				break;
+			case 'any':
+			default:
+				$total_items = $this->total_count;
+				break;
+		}
+
+		$this->items = $data;
+
+		$this->set_pagination_args( array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
+	}
 
 	/**
 	 * Retrieve the view types
@@ -72,6 +166,17 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 			'category' => array( 'category_id', false ),
 			'account'  => array( 'account_id', false ),
 		);
+	}
+
+	/**
+	 * @param object $item
+	 * @param string $column_name
+	 *
+	 * @return string;
+	 * @since 1.0.0
+	 */
+	function column_default( $item, $column_name ) {
+		return $item->$column_name;
 	}
 
 	/**
@@ -148,17 +253,6 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	 */
 	function column_account( $item ) {
 		return $item->get_account( 'view' ) ? $item->get_account( 'view' ) : '&mdash;';
-	}
-
-	/**
-	 * @param object $item
-	 * @param string $column_name
-	 *
-	 * @return string;
-	 * @since 1.0.0
-	 */
-	function column_default( $item, $column_name ) {
-		return $item->$column_name;
 	}
 
 	/**
@@ -265,54 +359,6 @@ class EAccounting_Revenues_List_Table extends EAccounting_List_Table {
 	}
 
 
-	/**
-	 * Setup the final data for the table
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	public function prepare_items() {
-		$per_page = $this->per_page;
 
-		$columns = $this->get_columns();
-
-		$hidden = array();
-
-		$sortable = $this->get_sortable_columns();
-
-		$this->_column_headers = array( $columns, $hidden, $sortable );
-
-		$this->process_bulk_action();
-
-		$items = $this->get_results();
-
-		$data = array_map( function ( $item ) {
-			return new EAccounting_Revenue( $item );
-		}, $items );
-
-		$status = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : 'any';
-
-		switch ( $status ) {
-			case 'active':
-				$total_items = $this->active_count;
-				break;
-			case 'inactive':
-				$total_items = $this->inactive_count;
-				break;
-			case 'any':
-			default:
-				$total_items = $this->total_count;
-				break;
-		}
-
-		$this->items = $data;
-
-		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page ),
-			)
-		);
-	}
 
 }
