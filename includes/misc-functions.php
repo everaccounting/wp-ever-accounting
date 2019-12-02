@@ -568,7 +568,7 @@ function eaccounting_get_payment_methods() {
 	return apply_filters( 'eaccounting_payment_methods', [
 		'cash'          => __( 'Cash', 'wp-ever-accounting' ),
 		'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
-		'check'         => __( 'Check', 'wp-ever-accounting' ),
+		'check'         => __( 'Cheque', 'wp-ever-accounting' ),
 	] );
 }
 
