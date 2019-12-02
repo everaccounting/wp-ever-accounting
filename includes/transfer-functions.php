@@ -189,7 +189,7 @@ function eaccounting_delete_transfer( $id ) {
 	}
 
 	do_action( 'eaccounting_pre_transfer_delete', $id, $transfer );
-	if ( false == $wpdb->delete( $wpdb->ea_transfer, array( 'id' => $id ), array( '%d' ) ) ) {
+	if ( false == $wpdb->delete( $wpdb->prefix . "ea_transfers", array( 'id' => $id ), array( '%d' ) ) ) {
 		return false;
 	}
 	do_action( 'eaccounting_transfer_delete', $id, $transfer );

@@ -246,9 +246,11 @@ class EAccounting_Transfers_List_Table extends WP_List_Table {
 
 		$ids = isset( $_GET['transfer'] ) ? $_GET['transfer'] : false;
 
+
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
+
 		$ids = array_map( 'intval', $ids );
 
 		foreach ( $ids as $id ) {
