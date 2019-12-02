@@ -278,6 +278,19 @@ class EAccounting_Categories_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Shows status of the item
+	 *
+	 * @param $item
+	 *
+	 * @return string
+	 * @since 1.0.0
+	 */
+	function column_status( $item ) {
+		return sprintf( '<span class="ea-item-status %1$s">%1$s</span>', $item->status );
+	}
+
+
+	/**
 	 * Color of the category
 	 *
 	 * @param $item
