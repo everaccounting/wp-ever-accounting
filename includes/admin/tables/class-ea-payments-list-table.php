@@ -282,22 +282,24 @@ class EAccounting_Payments_List_Table extends WP_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['contact'] ) ? $_GET['contact'] : false;
+		$ids = isset( $_GET['payment'] ) ? $_GET['payment'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
+
 		$ids = array_map( 'intval', $ids );
+
 
 		foreach ( $ids as $id ) {
 			if ( 'delete' === $this->current_action() ) {
-				eaccounting_delete_contact( $id );
+				eaccounting_delete_payment( $id );
 			}
 			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '1' ] );
+				eaccounting_insert_payment( [ 'id' => $id, 'status' => '1' ] );
 			}
 			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_contact( [ 'id' => $id, 'status' => '0' ] );
+				eaccounting_insert_payment( [ 'id' => $id, 'status' => '0' ] );
 			}
 		}
 	}

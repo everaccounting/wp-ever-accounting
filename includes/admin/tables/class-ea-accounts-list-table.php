@@ -359,18 +359,19 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
-			$ids = array_map( 'intval', $ids );
+		}
 
-			foreach ( $ids as $id ) {
-				if ( 'delete' === $this->current_action() ) {
-					eaccounting_delete_account( $id );
-				}
-				if ( 'activate' === $this->current_action() ) {
-					eaccounting_insert_account( [ 'id' => $id, 'status' => 'active' ] );
-				}
-				if ( 'deactivate' === $this->current_action() ) {
-					eaccounting_insert_account( [ 'id' => $id, 'status' => 'inactive' ] );
-				}
+		$ids = array_map( 'intval', $ids );
+
+		foreach ( $ids as $id ) {
+			if ( 'delete' === $this->current_action() ) {
+				eaccounting_delete_account( $id );
+			}
+			if ( 'activate' === $this->current_action() ) {
+				eaccounting_insert_account( [ 'id' => $id, 'status' => 'active' ] );
+			}
+			if ( 'deactivate' === $this->current_action() ) {
+				eaccounting_insert_account( [ 'id' => $id, 'status' => 'inactive' ] );
 			}
 		}
 	}
