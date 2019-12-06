@@ -32,6 +32,8 @@ class EAccounting_Admin_Menus {
 		add_submenu_page( 'ever-accounting', __( 'Transfers', 'wp-ever-accounting' ), __( 'Transfers', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transfers', array( $this, 'transfers_page') );
 		add_submenu_page( 'ever-accounting', __( 'Categories', 'wp-ever-accounting' ), __( 'Categories', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-categories', array( $this, 'categories_page') );
 		add_submenu_page( 'ever-accounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reports', array( $this, 'reports_page') );
+		$help = '<span style="color:#ff7a03;">' . __( 'Help', 'wp-ever-accounting' ) . '</span>';
+		add_submenu_page( 'ever-accounting', '', $help, 'manage_options', 'eaccounting-help', array( $this, 'help_page') );
 	}
 
 
@@ -81,6 +83,12 @@ class EAccounting_Admin_Menus {
 		eaccounting_get_views('reports-page.php');
 	}
 
+	public function help_page(){
+		if ( isset( $_GET['page'] ) && 'eaccounting-help' === $_GET['page'] ) {
+			wp_redirect(  'https://pluginever.com/docs/wp-ever-accounting?utm_source=wpmenu&utm_medium=admindash&utm_campaign=eaccounting' );
+			die;
+		}
+	}
 }
 
 new EAccounting_Admin_Menus();

@@ -147,6 +147,8 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 			'name'   => __( 'Name', 'wp-ever-accounting' ),
 			'email'  => __( 'Email', 'wp-ever-accounting' ),
 			'phone'  => __( 'Phone', 'wp-ever-accounting' ),
+			'payment'  => __( 'Payment', 'wp-ever-accounting' ),
+			'revenue'  => __( 'Revenue', 'wp-ever-accounting' ),
 //			'unpaid' => __( 'Unpaid', 'wp-ever-accounting' ),
 //			'types'  => __( 'Types', 'wp-ever-accounting' ),
 			'status' => __( 'Status', 'wp-ever-accounting' ),
@@ -223,48 +225,24 @@ class EAccounting_Contacts_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_default( $item, $column_name ) {
-		return $item->$column_name;
+		switch ($column_name){
+			case 'email':
+				return empty( $item->get_email() ) ? '&mdash;' : $item->get_email();
+				break;
+			case 'phone':
+				return empty( $item->get_phone() ) ? '&mdash;' : $item->get_phone();
+				break;
+			case 'payment':
+				return eaccounting_price($item->get_total_payment());
+				break;
+			case 'revenue':
+				return eaccounting_price($item->get_total_revenue());
+				break;
+			default:
+				return isset($item->$column_name)? $item->$column_name: '&mdash;';
+
+		}
 	}
-
-	/**
-	 * since 1.0.0
-	 *
-	 * @param $item EAccounting_Contact
-	 *
-	 * @return bool
-	 */
-	function column_email( $item ) {
-		return empty( $item->get_email() ) ? '&mdash;' : $item->get_email();
-	}
-
-	/**
-	 * since 1.0.0
-	 *
-	 * @param $item EAccounting_Contact
-	 *
-	 * @return bool
-	 */
-	function column_phone( $item ) {
-		return empty( $item->get_phone() ) ? '&mdash;' : $item->get_phone();
-	}
-
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	function column_unpaid() {
-		return '&mdash;';
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	function column_types() {
-		return '&mdash;';
-	}
-
 	/**
 	 * Shows status of the item
 	 *

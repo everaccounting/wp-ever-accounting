@@ -41,15 +41,32 @@ The installation of WP Ever Accounting is very straightforward like other WordPr
 How does WP Ever Accounting Work:
 WP Ever Accounting creates a new menu option called **Accounting** on the dashboard. Under this new menu, you will find several sub-menus titled as Dashboard, Transactions, Contacts, Payments, Revenues, Accounts, Transfers, Categories, and settings. The dashboard is dedicated to a detailed summary with highlights of the most important and recent accounting events.
 
-**Transactions:** Find all your company transactions here. You can also add new **Revenue** and **Payment** from here.
-**Contacts:** List all your contacts with important details like email and phone number. Apart from that, you can activate and deactivate contacts from here.
-**Payments:** All your payments will be listed here. You can add new **Payment** from here too.
-**Revenues:** Here you will get all the revenue details with customer and category information.
-**Accounts:** The account section is responsible for listing all your company accounts along with the details like **Account Number** and **Bank Name**.
-**Transfers:** A section dedicated to all the transfers that your company has made. Include details like **Transfer Method** and **Bank** details.
-**Categories:** Add and manage all of your **Income** and **Expense** categories with custom colors to distinguish them. You can also activate and deactivate a category from here.
-**Settings:** The settings section provides localization options like switching a **Currency**.
+**Transactions:**
+Find all your company transactions here. You can also add new **Revenue** and **Payment** from here.
 
+**Contacts:**
+List all your contacts with important details like email and phone number. Apart from that, you can activate and deactivate contacts from here.
+
+**Payments:**
+All your payments will be listed here. You can add new **Payment** from here too.
+
+**Revenues:**
+Here you will get all the revenue details with customer and category information.
+
+**Accounts:**
+The account section is responsible for listing all your company accounts along with the details like **Account Number** and **Bank Name**.
+
+**Transfers:**
+A section dedicated to all the transfers that your company has made. Include details like **Transfer Method** and **Bank** details.
+
+**Categories:**
+Add and manage all of your **Income** and **Expense** categories with custom colors to distinguish them. You can also activate and deactivate a category from here.
+
+**Settings:**
+The settings section provides localization options like switching a **Currency**.
+
+**Reports:**
+Report give you a summary of where your business income, expense stands, month by month and categorised details.
 
 == Installation ==
 1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.
@@ -65,6 +82,16 @@ To enjoy the sweet features of this powerful plugin you have to at least have PH
 Yes, of course. We do not create products for ourselves. You are always welcome to suggest new features and improvements.
 
 == Changelog ==
+= 1.0.1 (7 December,2019) =
+* Fix - revenue payment method is not showing
+* Fix - transfer date is not saving
+* Feature - upload files to own directory
+* Feature - Expense by categories dashboard widget
+* Feature - Income by categories dashboard widget
+* Feature - Contact table payment & expense visibility
+* Feature - Income summary report
+* Feature - Expense summary report
+* Feature - Income vs Expense summary report
 
 = 1.0 (23 November,2019) =
-Initial release
+* Initial release
