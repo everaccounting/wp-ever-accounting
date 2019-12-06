@@ -1,11 +1,11 @@
-# Copyright (C) 2019 manikmist09
+# Copyright (C) 2019 pluginever
 # This file is distributed under the GPL2+.
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Ever Accounting 1.0.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2019-11-24 04:16:02+00:00\n"
+"POT-Creation-Date: 2019-12-06 19:07:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -203,7 +203,7 @@ msgid "Accounting"
 msgstr ""
 
 #: includes/admin/class-ea-admin-menus.php:26
-#: includes/admin/views/dashboard-page.php:5 templates/header.php:5
+#: includes/admin/views/dashboard-page.php:15 templates/header.php:5
 msgid "Dashboard"
 msgstr ""
 
@@ -239,7 +239,19 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-menus.php:33
 #: includes/admin/views/categories-page.php:17
+#: includes/admin/views/reports/expense-summery.php:51
+#: includes/admin/views/reports/income-expense-summery.php:33
+#: includes/admin/views/reports/income-summery.php:51
 msgid "Categories"
+msgstr ""
+
+#: includes/admin/class-ea-admin-menus.php:34
+#: includes/admin/views/reports-page.php:14
+msgid "Reports"
+msgstr ""
+
+#: includes/admin/class-ea-admin-menus.php:35
+msgid "Help"
 msgstr ""
 
 #: includes/admin/class-ea-settings-api.php:368
@@ -263,9 +275,9 @@ msgid "Logo"
 msgstr ""
 
 #: includes/admin/settings/class-ea-general-settings.php:52
-#: includes/admin/tables/class-ea-accounts-list-table.php:28
-#: includes/admin/tables/class-ea-categories-list-table.php:28
-#: includes/admin/tables/class-ea-contacts-list-table.php:28
+#: includes/admin/tables/class-ea-accounts-list-table.php:188
+#: includes/admin/tables/class-ea-categories-list-table.php:187
+#: includes/admin/tables/class-ea-contacts-list-table.php:147
 #: includes/admin/views/edit-account.php:23
 #: includes/admin/views/edit-category.php:25
 msgid "Name"
@@ -276,7 +288,7 @@ msgid "XYZ Company"
 msgstr ""
 
 #: includes/admin/settings/class-ea-general-settings.php:59
-#: includes/admin/tables/class-ea-contacts-list-table.php:29
+#: includes/admin/tables/class-ea-contacts-list-table.php:148
 #: includes/admin/views/edit-contact.php:44
 msgid "Email"
 msgstr ""
@@ -348,180 +360,224 @@ msgstr ""
 msgid "Decimal Separator"
 msgstr ""
 
-#: includes/admin/tables/class-ea-accounts-list-table.php:29
+#: includes/admin/tables/class-ea-accounts-list-table.php:107
+#: includes/admin/tables/class-ea-admin-list-table.php:162
+#: includes/admin/tables/class-ea-categories-list-table.php:106
+msgid "No %s found."
+msgstr ""
+
+#: includes/admin/tables/class-ea-accounts-list-table.php:155
+#: includes/admin/tables/class-ea-admin-list-table.php:107
+#: includes/admin/tables/class-ea-categories-list-table.php:154
+#: includes/admin/tables/class-ea-contacts-list-table.php:114
+msgid "All"
+msgstr ""
+
+#: includes/admin/tables/class-ea-accounts-list-table.php:156
+#: includes/admin/tables/class-ea-admin-list-table.php:108
+#: includes/admin/tables/class-ea-categories-list-table.php:155
+#: includes/admin/tables/class-ea-contacts-list-table.php:115
+msgid "Active"
+msgstr ""
+
+#: includes/admin/tables/class-ea-accounts-list-table.php:157
+#: includes/admin/tables/class-ea-admin-list-table.php:109
+#: includes/admin/tables/class-ea-categories-list-table.php:156
+#: includes/admin/tables/class-ea-contacts-list-table.php:116
+msgid "Inactive"
+msgstr ""
+
+#: includes/admin/tables/class-ea-accounts-list-table.php:171
+#: includes/admin/tables/class-ea-accounts-list-table.php:257
+#: includes/admin/tables/class-ea-admin-list-table.php:173
+#: includes/admin/tables/class-ea-categories-list-table.php:170
+#: includes/admin/tables/class-ea-categories-list-table.php:241
+#: includes/admin/tables/class-ea-contacts-list-table.php:130
+#: includes/admin/tables/class-ea-contacts-list-table.php:195
+msgid "Activate"
+msgstr ""
+
+#: includes/admin/tables/class-ea-accounts-list-table.php:172
+#: includes/admin/tables/class-ea-accounts-list-table.php:255
+#: includes/admin/tables/class-ea-admin-list-table.php:174
+#: includes/admin/tables/class-ea-categories-list-table.php:171
+#: includes/admin/tables/class-ea-categories-list-table.php:239
+#: includes/admin/tables/class-ea-contacts-list-table.php:131
+#: includes/admin/tables/class-ea-contacts-list-table.php:193
+msgid "Deactivate"
+msgstr ""
+
+#: includes/admin/tables/class-ea-accounts-list-table.php:173
+#: includes/admin/tables/class-ea-accounts-list-table.php:259
+#: includes/admin/tables/class-ea-admin-list-table.php:175
+#: includes/admin/tables/class-ea-categories-list-table.php:172
+#: includes/admin/tables/class-ea-categories-list-table.php:243
+#: includes/admin/tables/class-ea-contacts-list-table.php:132
+#: includes/admin/tables/class-ea-contacts-list-table.php:197
+#: includes/admin/tables/class-ea-payments-list-table.php:116
+#: includes/admin/tables/class-ea-payments-list-table.php:200
+#: includes/admin/tables/class-ea-revenues-list-table.php:129
+#: includes/admin/tables/class-ea-revenues-list-table.php:213
+#: includes/admin/tables/class-ea-transfers-list-table.php:112
+#: includes/admin/tables/class-ea-transfers-list-table.php:222
+msgid "Delete"
+msgstr ""
+
+#: includes/admin/tables/class-ea-accounts-list-table.php:189
 msgid "Current Balance"
 msgstr ""
 
-#: includes/admin/tables/class-ea-accounts-list-table.php:30
+#: includes/admin/tables/class-ea-accounts-list-table.php:190
 #: includes/admin/views/edit-account.php:42
 #: includes/admin/views/edit-account.php:45
 msgid "Account Number"
 msgstr ""
 
-#: includes/admin/tables/class-ea-accounts-list-table.php:31
+#: includes/admin/tables/class-ea-accounts-list-table.php:191
 #: includes/admin/views/edit-account.php:52
 msgid "Bank Name"
 msgstr ""
 
-#: includes/admin/tables/class-ea-accounts-list-table.php:32
+#: includes/admin/tables/class-ea-accounts-list-table.php:192
 #: includes/admin/views/edit-account.php:33
 msgid "Opening Balance"
 msgstr ""
 
-#: includes/admin/tables/class-ea-accounts-list-table.php:33
-#: includes/admin/tables/class-ea-categories-list-table.php:31
-#: includes/admin/tables/class-ea-contacts-list-table.php:33
+#: includes/admin/tables/class-ea-accounts-list-table.php:193
+#: includes/admin/tables/class-ea-categories-list-table.php:190
+#: includes/admin/tables/class-ea-contacts-list-table.php:154
 #: includes/admin/views/edit-account.php:68
 #: includes/admin/views/edit-category.php:53 includes/class-ea-form.php:417
 msgid "Status"
 msgstr ""
 
-#: includes/admin/tables/class-ea-accounts-list-table.php:70
-#: includes/admin/tables/class-ea-categories-list-table.php:67
-#: includes/admin/tables/class-ea-contacts-list-table.php:69
-#: includes/admin/tables/class-ea-payments-list-table.php:90
-#: includes/admin/tables/class-ea-revenues-list-table.php:90
-#: includes/admin/tables/class-ea-transfers-list-table.php:89
+#: includes/admin/tables/class-ea-accounts-list-table.php:253
+#: includes/admin/tables/class-ea-categories-list-table.php:236
+#: includes/admin/tables/class-ea-contacts-list-table.php:190
+#: includes/admin/tables/class-ea-payments-list-table.php:198
+#: includes/admin/tables/class-ea-revenues-list-table.php:211
+#: includes/admin/tables/class-ea-transfers-list-table.php:220
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/tables/class-ea-accounts-list-table.php:73
-#: includes/admin/tables/class-ea-admin-list-table.php:174
-#: includes/admin/tables/class-ea-categories-list-table.php:70
-#: includes/admin/tables/class-ea-contacts-list-table.php:72
-msgid "Deactivate"
-msgstr ""
-
-#: includes/admin/tables/class-ea-accounts-list-table.php:75
-#: includes/admin/tables/class-ea-admin-list-table.php:173
-#: includes/admin/tables/class-ea-categories-list-table.php:72
-#: includes/admin/tables/class-ea-contacts-list-table.php:74
-msgid "Activate"
-msgstr ""
-
-#: includes/admin/tables/class-ea-accounts-list-table.php:77
-#: includes/admin/tables/class-ea-admin-list-table.php:175
-#: includes/admin/tables/class-ea-categories-list-table.php:74
-#: includes/admin/tables/class-ea-contacts-list-table.php:76
-#: includes/admin/tables/class-ea-payments-list-table.php:35
-#: includes/admin/tables/class-ea-payments-list-table.php:92
-#: includes/admin/tables/class-ea-revenues-list-table.php:35
-#: includes/admin/tables/class-ea-revenues-list-table.php:92
-#: includes/admin/tables/class-ea-transfers-list-table.php:35
-#: includes/admin/tables/class-ea-transfers-list-table.php:91
-msgid "Delete"
-msgstr ""
-
-#: includes/admin/tables/class-ea-admin-list-table.php:107
-msgid "All"
-msgstr ""
-
-#: includes/admin/tables/class-ea-admin-list-table.php:108
-msgid "Active"
-msgstr ""
-
-#: includes/admin/tables/class-ea-admin-list-table.php:109
-msgid "Inactive"
-msgstr ""
-
-#: includes/admin/tables/class-ea-admin-list-table.php:162
-msgid "No %s found."
-msgstr ""
-
-#: includes/admin/tables/class-ea-categories-list-table.php:29
-#: includes/admin/tables/class-ea-transactions-list-table.php:46
+#: includes/admin/tables/class-ea-categories-list-table.php:188
+#: includes/admin/tables/class-ea-transactions-list-table.php:126
 #: includes/admin/views/edit-category.php:34
 msgid "Type"
 msgstr ""
 
-#: includes/admin/tables/class-ea-categories-list-table.php:30
+#: includes/admin/tables/class-ea-categories-list-table.php:189
 #: includes/admin/views/edit-category.php:45
 msgid "Color"
 msgstr ""
 
-#: includes/admin/tables/class-ea-contacts-list-table.php:30
+#: includes/admin/tables/class-ea-contacts-list-table.php:149
 #: includes/admin/views/edit-contact.php:56
 msgid "Phone"
 msgstr ""
 
-#: includes/admin/tables/class-ea-payments-list-table.php:50
-#: includes/admin/tables/class-ea-revenues-list-table.php:50
-#: includes/admin/tables/class-ea-transactions-list-table.php:43
-#: includes/admin/tables/class-ea-transfers-list-table.php:50
-#: includes/admin/views/dashboard-page.php:73
-#: includes/admin/views/dashboard-page.php:110
+#: includes/admin/tables/class-ea-contacts-list-table.php:150
+msgid "Payment"
+msgstr ""
+
+#: includes/admin/tables/class-ea-contacts-list-table.php:151
+msgid "Revenue"
+msgstr ""
+
+#: includes/admin/tables/class-ea-payments-list-table.php:131
+#: includes/admin/tables/class-ea-revenues-list-table.php:144
+#: includes/admin/tables/class-ea-transactions-list-table.php:123
+#: includes/admin/tables/class-ea-transfers-list-table.php:127
+#: includes/admin/views/dashboard-page.php:118
+#: includes/admin/views/dashboard-page.php:154
 #: includes/admin/views/edit-payment.php:23
 #: includes/admin/views/edit-revenue.php:25
-#: includes/admin/views/edit-transfer.php:49
+#: includes/admin/views/edit-transfer.php:55
 msgid "Date"
 msgstr ""
 
-#: includes/admin/tables/class-ea-payments-list-table.php:51
-#: includes/admin/tables/class-ea-revenues-list-table.php:51
-#: includes/admin/tables/class-ea-transactions-list-table.php:44
-#: includes/admin/tables/class-ea-transfers-list-table.php:51
-#: includes/admin/views/dashboard-page.php:75
-#: includes/admin/views/dashboard-page.php:112
+#: includes/admin/tables/class-ea-payments-list-table.php:132
+#: includes/admin/tables/class-ea-revenues-list-table.php:145
+#: includes/admin/tables/class-ea-transactions-list-table.php:124
+#: includes/admin/tables/class-ea-transfers-list-table.php:128
+#: includes/admin/views/dashboard-page.php:120
+#: includes/admin/views/dashboard-page.php:156
 #: includes/admin/views/edit-payment.php:32
 #: includes/admin/views/edit-revenue.php:34
-#: includes/admin/views/edit-transfer.php:40
+#: includes/admin/views/edit-transfer.php:46
 msgid "Amount"
 msgstr ""
 
-#: includes/admin/tables/class-ea-payments-list-table.php:52
-#: includes/admin/views/edit-payment.php:50 includes/contact-functions.php:12
+#: includes/admin/tables/class-ea-payments-list-table.php:133
+#: includes/admin/views/edit-payment.php:50
+#: includes/admin/views/reports/expense-summery.php:22
+#: includes/contact-functions.php:12
 msgid "Vendor"
 msgstr ""
 
-#: includes/admin/tables/class-ea-payments-list-table.php:53
-#: includes/admin/tables/class-ea-revenues-list-table.php:53
-#: includes/admin/tables/class-ea-transactions-list-table.php:47
-#: includes/admin/views/dashboard-page.php:74
-#: includes/admin/views/dashboard-page.php:111
+#: includes/admin/tables/class-ea-payments-list-table.php:134
+#: includes/admin/tables/class-ea-revenues-list-table.php:147
+#: includes/admin/tables/class-ea-transactions-list-table.php:127
+#: includes/admin/views/dashboard-page.php:119
+#: includes/admin/views/dashboard-page.php:155
 #: includes/admin/views/edit-payment.php:59
-#: includes/admin/views/edit-revenue.php:61 includes/class-ea-form.php:505
+#: includes/admin/views/edit-revenue.php:61
+#: includes/admin/views/reports/expense-summery.php:27
+#: includes/admin/views/reports/income-summery.php:27
 msgid "Category"
 msgstr ""
 
-#: includes/admin/tables/class-ea-payments-list-table.php:54
-#: includes/admin/tables/class-ea-revenues-list-table.php:54
+#: includes/admin/tables/class-ea-payments-list-table.php:135
+#: includes/admin/tables/class-ea-revenues-list-table.php:148
 #: includes/admin/views/edit-payment.php:41
 #: includes/admin/views/edit-revenue.php:43
+#: includes/admin/views/reports/expense-summery.php:17
+#: includes/admin/views/reports/income-summery.php:17
 msgid "Account"
 msgstr ""
 
-#: includes/admin/tables/class-ea-payments-list-table.php:55
-#: includes/admin/tables/class-ea-revenues-list-table.php:55
-#: includes/admin/tables/class-ea-transactions-list-table.php:48
-#: includes/admin/tables/class-ea-transfers-list-table.php:55
+#: includes/admin/tables/class-ea-payments-list-table.php:136
+#: includes/admin/tables/class-ea-revenues-list-table.php:149
+#: includes/admin/tables/class-ea-transactions-list-table.php:128
+#: includes/admin/tables/class-ea-transfers-list-table.php:132
 #: includes/admin/views/edit-payment.php:79
 #: includes/admin/views/edit-revenue.php:81
-#: includes/admin/views/edit-transfer.php:68
+#: includes/admin/views/edit-transfer.php:74
 msgid "Reference"
 msgstr ""
 
-#: includes/admin/tables/class-ea-revenues-list-table.php:52
-#: includes/admin/views/edit-revenue.php:52 includes/contact-functions.php:11
+#: includes/admin/tables/class-ea-revenues-list-table.php:146
+#: includes/admin/tables/class-ea-revenues-list-table.php:294
+#: includes/admin/views/edit-revenue.php:52
+#: includes/admin/views/reports/income-summery.php:22
+#: includes/contact-functions.php:11
 msgid "Customer"
 msgstr ""
 
-#: includes/admin/tables/class-ea-transactions-list-table.php:45
+#: includes/admin/tables/class-ea-revenues-list-table.php:300
+#: includes/admin/views/reports/expense-summery.php:32
+#: includes/admin/views/reports/income-expense-summery.php:13
+#: includes/admin/views/reports/income-summery.php:32
+msgid "Filter"
+msgstr ""
+
+#: includes/admin/tables/class-ea-transactions-list-table.php:125
 #: includes/admin/views/edit-account.php:26
 msgid "Account Name"
 msgstr ""
 
-#: includes/admin/tables/class-ea-transfers-list-table.php:52
+#: includes/admin/tables/class-ea-transfers-list-table.php:129
 msgid "From Bank"
 msgstr ""
 
-#: includes/admin/tables/class-ea-transfers-list-table.php:53
+#: includes/admin/tables/class-ea-transfers-list-table.php:130
 msgid "To Bank"
 msgstr ""
 
-#: includes/admin/tables/class-ea-transfers-list-table.php:54
+#: includes/admin/tables/class-ea-transfers-list-table.php:131
 #: includes/admin/views/edit-payment.php:69
 #: includes/admin/views/edit-revenue.php:71
-#: includes/admin/views/edit-transfer.php:58
+#: includes/admin/views/edit-transfer.php:64
 msgid "Payment Method"
 msgstr ""
 
@@ -532,6 +588,7 @@ msgstr ""
 #: includes/admin/views/edit-contact.php:13
 #: includes/admin/views/edit-payment.php:14
 #: includes/admin/views/edit-revenue.php:15
+#: includes/admin/views/edit-transfer.php:18
 #: includes/admin/views/payment-page.php:20
 #: includes/admin/views/revenue-page.php:20
 msgid "Add New"
@@ -550,20 +607,60 @@ msgstr ""
 msgid "Cash Flow"
 msgstr ""
 
-#: includes/admin/views/dashboard-page.php:61
-msgid "Latest Income"
+#: includes/admin/views/dashboard-page.php:4
+msgid "All Time"
 msgstr ""
 
-#: includes/admin/views/dashboard-page.php:67
-msgid "No incomes found"
+#: includes/admin/views/dashboard-page.php:5
+msgid "This Month"
 msgstr ""
 
-#: includes/admin/views/dashboard-page.php:98
+#: includes/admin/views/dashboard-page.php:6
+msgid "This Year"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:7
+msgid "Last Year"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:8
+msgid "This Quarter"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:9
+msgid "Last Quarter"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:10
+msgid "Last 12 Months"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:11
+msgid "This Week"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:74
+msgid "Expense By Categories"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:90
+msgid "Income By Categories"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:106
 msgid "Latest Expense"
 msgstr ""
 
-#: includes/admin/views/dashboard-page.php:104
+#: includes/admin/views/dashboard-page.php:112
 msgid "No expenses found"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:142
+msgid "Latest Income"
+msgstr ""
+
+#: includes/admin/views/dashboard-page.php:148
+msgid "No incomes found"
 msgstr ""
 
 #: includes/admin/views/edit-account.php:9
@@ -591,7 +688,7 @@ msgstr ""
 #: includes/admin/views/edit-contact.php:179
 #: includes/admin/views/edit-payment.php:115
 #: includes/admin/views/edit-revenue.php:116
-#: includes/admin/views/edit-transfer.php:93
+#: includes/admin/views/edit-transfer.php:99 includes/class-ea-form.php:616
 msgid "Submit"
 msgstr ""
 
@@ -681,7 +778,7 @@ msgstr ""
 
 #: includes/admin/views/edit-payment.php:88
 #: includes/admin/views/edit-revenue.php:90
-#: includes/admin/views/edit-transfer.php:77
+#: includes/admin/views/edit-transfer.php:83
 msgid "Description"
 msgstr ""
 
@@ -716,12 +813,42 @@ msgstr ""
 msgid "All Transfers"
 msgstr ""
 
-#: includes/admin/views/edit-transfer.php:22
+#: includes/admin/views/edit-transfer.php:28
 msgid "From Account"
 msgstr ""
 
-#: includes/admin/views/edit-transfer.php:31
+#: includes/admin/views/edit-transfer.php:37
 msgid "To Account"
+msgstr ""
+
+#: includes/admin/views/reports/expense-summery.php:13
+#: includes/admin/views/reports/income-expense-summery.php:10
+#: includes/admin/views/reports/income-summery.php:13
+msgid "Year"
+msgstr ""
+
+#: includes/admin/views/reports/expense-summery.php:71
+#: includes/admin/views/reports/income-expense-summery.php:65
+#: includes/admin/views/reports/income-summery.php:71
+msgid "No records found"
+msgstr ""
+
+#: includes/admin/views/reports/expense-summery.php:79
+#: includes/admin/views/reports/income-expense-summery.php:73
+#: includes/admin/views/reports/income-summery.php:79
+msgid "Total"
+msgstr ""
+
+#: includes/admin/views/reports-page.php:6
+msgid "Income Summery"
+msgstr ""
+
+#: includes/admin/views/reports-page.php:7
+msgid "Expense Summery"
+msgstr ""
+
+#: includes/admin/views/reports-page.php:8
+msgid "Income vs Expense"
 msgstr ""
 
 #: includes/admin/views/transactions-page.php:19
@@ -736,7 +863,7 @@ msgstr ""
 msgid "Income"
 msgstr ""
 
-#: includes/category-functions.php:16 includes/class-ea-install.php:158
+#: includes/category-functions.php:16 includes/class-ea-install.php:161
 msgid "Other"
 msgstr ""
 
@@ -773,11 +900,11 @@ msgstr ""
 msgid "Can't get property %s"
 msgstr ""
 
-#: includes/class-ea-ajax.php:55
+#: includes/class-ea-ajax.php:128
 msgid "Error: You are not allowed to do this."
 msgstr ""
 
-#: includes/class-ea-ajax.php:67
+#: includes/class-ea-ajax.php:140
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -789,19 +916,19 @@ msgstr ""
 msgid "-- Please Select --"
 msgstr ""
 
-#: includes/class-ea-install.php:152
+#: includes/class-ea-install.php:155
 msgid "Deposit"
 msgstr ""
 
-#: includes/class-ea-install.php:164
+#: includes/class-ea-install.php:167
 msgid "Sales"
 msgstr ""
 
-#: includes/class-ea-install.php:173 includes/transfer-functions.php:74
+#: includes/class-ea-install.php:176 includes/transfer-functions.php:74
 msgid "Transfer"
 msgstr ""
 
-#: includes/class-ea-install.php:181 includes/misc-functions.php:569
+#: includes/class-ea-install.php:184 includes/misc-functions.php:569
 msgid "Cash"
 msgstr ""
 
@@ -834,9 +961,8 @@ msgstr ""
 msgid "Revenue category is required"
 msgstr ""
 
-#: includes/expense-functions.php:51 includes/income-functions.php:57
-#: includes/transfer-functions.php:61
-msgid "Payment method is required"
+#: includes/expense-functions.php:51
+msgid "Revenue method is required"
 msgstr ""
 
 #: includes/expense-functions.php:60
@@ -847,15 +973,23 @@ msgstr ""
 msgid "Could not insert payment into the database"
 msgstr ""
 
-#: includes/file-functions.php:81
+#: includes/file-functions.php:166
 #. translators: %1$s is the file field label; %2$s is the file type; %3$s is
 #. the list of allowed file types.
 msgid "\"%1$s\" (filetype %2$s) needs to be one of the following file types: %3$s"
 msgstr ""
 
-#: includes/file-functions.php:84
+#: includes/file-functions.php:169
 #. translators: %s is the list of allowed file types.
 msgid "Uploaded files need to be one of the following file types: %s"
+msgstr ""
+
+#: includes/file-functions.php:182
+msgid "Could not upload file"
+msgstr ""
+
+#: includes/income-functions.php:57 includes/transfer-functions.php:61
+msgid "Payment method is required"
 msgstr ""
 
 #: includes/income-functions.php:66
@@ -871,7 +1005,7 @@ msgid "Bank Transfer"
 msgstr ""
 
 #: includes/misc-functions.php:571
-msgid "Check"
+msgid "Cheque"
 msgstr ""
 
 #: includes/transfer-functions.php:45
@@ -923,7 +1057,7 @@ msgid "Best WordPress Accounting plugin for small office"
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "manikmist09"
+msgid "pluginever"
 msgstr ""
 
 #. Author URI of the plugin/theme

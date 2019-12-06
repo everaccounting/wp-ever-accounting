@@ -1,6 +1,6 @@
 (function ($, window, wp, document, undefined) {
 	var eAccountingDashboard = {
-		renderExpenseByCategories: function (e) {
+		renderExpenseByCategories: function () {
 			var period = $(this).val(), nonce = $(this).data('nonce');
 
 			$.ajax({
@@ -8,7 +8,7 @@
 				data: {
 					action: 'eaccounting_get_expense_by_category_chart',
 					period: period,
-					nonce: nonce,
+					nonce: nonce
 				},
 				success: function (res) {
 					if (res.success) {
@@ -21,7 +21,7 @@
 			});
 
 		},
-		renderIncomeByCategories: function (e) {
+		renderIncomeByCategories: function () {
 			var period = $(this).val(), nonce = $(this).data('nonce');
 
 			$.ajax({
@@ -29,7 +29,7 @@
 				data: {
 					action: 'eaccounting_get_income_by_category_chart',
 					period: period,
-					nonce: nonce,
+					nonce: nonce
 				},
 				success: function (res) {
 					if (res.success) {
@@ -50,7 +50,7 @@
 					labels: response.labels,
 					datasets: [{
 						data: response.data,
-						backgroundColor: response.background_color,
+						backgroundColor: response.background_color
 					}]
 				},
 				options: {
@@ -59,7 +59,7 @@
 					legend: {
 						display: true,
 						fullWidth: true,
-						position: 'right',
+						position: 'right'
 					},
 					tooltips: {
 						callbacks: {
@@ -69,7 +69,7 @@
 								var tooltipData = allData[tooltipItem.index];
 								var total = 0;
 
-								var label = tooltipLabel.split(" - ");
+								var label = tooltipLabel.split(' - ');
 
 								for (var i in allData) {
 									total += allData[i];
@@ -80,7 +80,7 @@
 								return label[1] + ': ' + label[0] + ' (' + tooltipPercentage + '%)';
 							}
 						}
-					},
+					}
 				}
 			});
 		},

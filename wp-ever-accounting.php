@@ -3,13 +3,13 @@
  * Plugin Name: WP Ever Accounting
  * Plugin URI: https://pluginever.com/plugins/wp-ever-crm
  * Description: Best WordPress Accounting plugin for small office
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: pluginever
  * Author URI: https://pluginever.com/
  * Requires at least: 4.7.0
- * Tested up to: 5.1
+ * Tested up to: 5.3
  * Text Domain: wp-ever-accounting
- * Domain Path: /languages/
+ * Domain Path: /i18n/languages/
  * License: GPL2+
  *
  * @package wp-ever-accounting
@@ -23,7 +23,7 @@ final class EverAccounting {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.0';
+	public $version = '1.0.1';
 
 	/**
 	 * The single instance of the class.

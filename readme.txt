@@ -1,6 +1,6 @@
-=== WP Ever Accounting ===
+=== WP Ever Accounting - Accounting for small business ===
 Contributors: pluginever
-Tags: accounting, income, expense, accounts, transfer, customer, vendor
+Tags: accounting, income, expense, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
@@ -35,12 +35,6 @@ With the ability to create multiple types of expense or income you will be on to
 &#9989; Fund transfer between accounts.
 &#9989; Vendor and Customer management.
 
-== Installation: ==
-The installation of WP Ever Accounting is very straightforward like other WordPress plugins. Once you are done with the installation you should find a new menu option called **Accounting** in your dashboard. Apart from WordPress, the plugin does not have any dependency. You need to have a minimum WordPress version of 4.7.0 to ensure the right environment for WP Ever Accounting.
-
-How does WP Ever Accounting Work:
-WP Ever Accounting creates a new menu option called **Accounting** on the dashboard. Under this new menu, you will find several sub-menus titled as Dashboard, Transactions, Contacts, Payments, Revenues, Accounts, Transfers, Categories, and settings. The dashboard is dedicated to a detailed summary with highlights of the most important and recent accounting events.
-
 **Transactions:**
 Find all your company transactions here. You can also add new **Revenue** and **Payment** from here.
 
@@ -67,6 +61,10 @@ The settings section provides localization options like switching a **Currency**
 
 **Reports:**
 Report give you a summary of where your business income, expense stands, month by month and categorised details.
+
+== How does WP Ever Accounting Work: ==
+WP Ever Accounting creates a new menu option called **Accounting** on the dashboard. Under this new menu, you will find several sub-menus titled as Dashboard, Transactions, Contacts, Payments, Revenues, Accounts, Transfers, Categories, and settings. The dashboard is dedicated to a detailed summary with highlights of the most important and recent accounting events.
+
 
 == Installation ==
 1. Upload the plugin files to the `/wp-content/plugins/plugin-name` directory, or install the plugin through the WordPress plugins screen directly.

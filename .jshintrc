@@ -21,6 +21,7 @@
 		"JSON": false,
 		"wp": false,
 		"ajaxurl": false,
-		"eAccountingi18n": false
+		"eAccountingi18n": false,
+		"Chart": false
 	}
 }
