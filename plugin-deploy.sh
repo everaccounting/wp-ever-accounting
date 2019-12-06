@@ -2,7 +2,7 @@
 
 # args
 MSG=${1-'deploy from git'}
-MAINFILE="wc-serial-numbers.php" # for version checking
+MAINFILE="wp-ever-accounting.php" # for version checking
 
 # paths
 SRC_DIR=$(git rev-parse --show-toplevel)
