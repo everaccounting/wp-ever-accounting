@@ -6,7 +6,9 @@
 		$colorControl: $('.ea-color-control'),
 		$recurringControl: $('#recurring_frequency'),
 		initializePlugins: function () {
-			this.$select2Control.select2();
+			this.$select2Control.select2({
+				theme: 'default eaccounting-select2'
+			});
 			this.$priceControl.maskMoney({
 				thousands: eAccountingi18n.localization.thousands_separator,
 				decimal: eAccountingi18n.localization.decimal_mark,

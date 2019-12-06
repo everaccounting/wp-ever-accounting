@@ -147,6 +147,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/expense-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/transfer-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/report-functions.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );

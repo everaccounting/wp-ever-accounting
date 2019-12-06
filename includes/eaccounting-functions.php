@@ -2,6 +2,26 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
+ * Get financial Start
+ *
+ * since 1.0.0
+ * @return array
+ */
+function eaccounting_get_financial_start( $year = null ) {
+	$financial_start = apply_filters( 'eaccounting_financial_start', '01-01' );
+	$setting         = explode( '-', $financial_start );
+	$day             = ! empty( $setting[0] ) ? $setting[0] : '01';
+	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
+	$year            = empty( $year ) ? date( 'Y' ) : $year;
+
+	return array(
+		'year'  => $year,
+		'month' => $month,
+		'day'   => $day,
+	);
+}
+
+/**
  * Display a WooCommerce help tip.
  *
  * @param string $tip Help tip text.
@@ -49,8 +69,8 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 		'search'         => '',
 		'orderby'        => 'created_at',
 		'order'          => 'DESC',
-		'date_before'         => '',
-		'date_after'          => '',
+		'date_before'    => '',
+		'date_after'     => '',
 		'fields'         => 'all',
 		'search_columns' => array( 'description', 'reference' ),
 		'per_page'       => 20,
@@ -87,13 +107,13 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 	}
 
 	//after date
-	if(!empty($args['date_after'])){
-		$query_where .= $wpdb->prepare( " AND $transaction_table.paid_at >= date(%s) ", sanitize_text_field($args['date_after']) );
+	if ( ! empty( $args['date_after'] ) ) {
+		$query_where .= $wpdb->prepare( " AND $transaction_table.paid_at >= date(%s) ", sanitize_text_field( $args['date_after'] ) );
 	}
 
 	//before date
-	if(!empty($args['date_before'])){
-		$query_where .= $wpdb->prepare( " AND $transaction_table.paid_at <= date(%s) ", sanitize_text_field($args['date_before']) );
+	if ( ! empty( $args['date_before'] ) ) {
+		$query_where .= $wpdb->prepare( " AND $transaction_table.paid_at <= date(%s) ", sanitize_text_field( $args['date_before'] ) );
 	}
 
 	//fields
@@ -166,13 +186,13 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
  * @return array
  * @since 1.0.0
  */
-function eaccounting_get_expense_by_categories( $start = null, $end = null ) {
+function eaccounting_get_expense_by_categories( $start = null, $end = null, $limit = 6 ) {
 
 	global $wpdb;
 	$query_fields = " category_id, SUM(amount) total ";
 	$query_from   = " from $wpdb->ea_payments ";
 	$query_where  = "WHERE category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') ";
-
+	$limit        = " LIMIT $limit";
 	if ( ! empty( $start ) ) {
 		$query_where .= $wpdb->prepare( " AND paid_at >= DATE(%s)", date( 'Y-m-d', strtotime( $start ) ) );
 	}
@@ -180,7 +200,8 @@ function eaccounting_get_expense_by_categories( $start = null, $end = null ) {
 	if ( ! empty( $end ) ) {
 		$query_where .= $wpdb->prepare( " AND paid_at <= DATE(%s)", date( 'Y-m-d', strtotime( $end ) ) );
 	}
-	$query_results = $wpdb->get_results( "select $query_fields $query_from $query_where group by category_id order by total desc" );
+
+	$query_results = $wpdb->get_results( "select $query_fields $query_from $query_where group by category_id order by total desc $limit" );
 	$results       = [];
 	foreach ( $query_results as $query_result ) {
 		$category  = eaccounting_get_category( $query_result->category_id );

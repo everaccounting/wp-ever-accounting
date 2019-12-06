@@ -5,7 +5,8 @@
 	font-size: inherit;
 	border-spacing: 0;
 	border-collapse: collapse;
-
+	border: 1px solid #f4f4f4;
+	font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
 	thead {
 		tr {
 			th {
@@ -21,13 +22,29 @@
 		background-color: #f9f9f9;
 	}
 
-	& > tbody > tr > td, & > tfoot > tr > td {
-		border-top: 1px solid #f4f4f4;
+
+	thead>tr>th, tbody>tr>th, tfoot>tr>th, thead>tr>td, tbody>tr>td, tfoot>tr>td {
+		border: 1px solid #f4f4f4;
 	}
 
-	& > thead > tr > td, & > thead > tr > td, & > tbody > tr > td {
+	tbody tr td {
+		vertical-align: middle;
+	}
+
+	tbody>tr>td, tbody>tr>th, tfoot>tr>td, tfoot>tr>th, thead>tr>td, thead>tr>th {
 		padding: 8px;
 		line-height: 1.42857143;
-		vertical-align: top;
+	}
+
+	thead>tr>th, thead>tr>td {
+		border-bottom-width: 2px;
+	}
+
+	thead:first-child>tr:first-child>td, thead:first-child>tr:first-child>th {
+		border-top: 0;
+	}
+
+	.align-right{
+		text-align: right;
 	}
 }

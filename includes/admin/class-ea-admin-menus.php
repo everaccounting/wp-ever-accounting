@@ -31,6 +31,7 @@ class EAccounting_Admin_Menus {
 		add_submenu_page( 'ever-accounting', __( 'Accounts', 'wp-ever-accounting' ), __( 'Accounts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-accounts', array( $this, 'accounts_page') );
 		add_submenu_page( 'ever-accounting', __( 'Transfers', 'wp-ever-accounting' ), __( 'Transfers', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transfers', array( $this, 'transfers_page') );
 		add_submenu_page( 'ever-accounting', __( 'Categories', 'wp-ever-accounting' ), __( 'Categories', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-categories', array( $this, 'categories_page') );
+		add_submenu_page( 'ever-accounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reports', array( $this, 'reports_page') );
 	}
 
 
@@ -73,6 +74,11 @@ class EAccounting_Admin_Menus {
 
 	public function categories_page(){
 		eaccounting_get_views('categories-page.php');
+	}
+
+	public function reports_page(){
+		wp_enqueue_script('chart-js');
+		eaccounting_get_views('reports-page.php');
 	}
 
 }

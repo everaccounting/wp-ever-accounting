@@ -502,9 +502,9 @@ class EAccounting_Form {
 	public static function categories_dropdown( $args ) {
 		$type = isset( $args['type'] ) ? $args['type'] : '';
 		$args = wp_parse_args( $args, array(
-			'label'   => __( 'Category', 'wp-ever-accounting' ),
+//			'label'   => __( 'Category', 'wp-ever-accounting' ),
 			'name'    => 'category_id',
-			'icon'    => 'fa fa-folder-open-o',
+//			'icon'    => 'fa fa-folder-open-o',
 			'select2' => true,
 			'options' => wp_list_pluck( eaccounting_get_categories( array(
 				'per_page' => '-1',
@@ -577,18 +577,18 @@ class EAccounting_Form {
 		$wrapper_classes = array_filter( $wrapper_classes );
 		$wrapper_classes = array_map( 'sanitize_html_class', $wrapper_classes );
 
-		$value            = isset( $args['value'] ) ? esc_url( $args['value'] ) : '';
-		$field_class      = empty( $value ) ? '' : 'has-value';
-		$extension_class  = 'file-type-file';
-		preg_match("/\.(jpg|jpeg|gif|png)(\?.*)?$/m", $value, $matches);
+		$value           = isset( $args['value'] ) ? esc_url( $args['value'] ) : '';
+		$field_class     = empty( $value ) ? '' : 'has-value';
+		$extension_class = 'file-type-file';
+		preg_match( "/\.(jpg|jpeg|gif|png)(\?.*)?$/m", $value, $matches );
 		$style = '';
-		if(!empty($matches)){
-			$style = sprintf( 'style="background-image:url(\'%s\')"', $value  );
-			$extension_class  = 'file-type-img';
+		if ( ! empty( $matches ) ) {
+			$style           = sprintf( 'style="background-image:url(\'%s\')"', $value );
+			$extension_class = 'file-type-img';
 		}
 		$file_name = '';
-		if(!empty($value)){
-			$file_name = 	basename($value);
+		if ( ! empty( $value ) ) {
+			$file_name = basename( $value );
 		}
 
 		$html = sprintf( '<div class="ea-form-group %s">', implode( ' ', $wrapper_classes ) );
@@ -597,14 +597,44 @@ class EAccounting_Form {
 		$html .= sprintf( '<input id="%1$s" class="ea-file-value" type="hidden" name="%2$s" value="%3$s">', $id, $name, $value );
 		$html .= sprintf( '<input type="file" class="ea-file-control ea-file-upload %1$s" id="ea-file-%2$s" %3$s autocomplete="off"/>', $input_classes, $id, $attributes );
 		$html .= sprintf( '<a href="#" class="ea-file-remove"><span class="dashicons dashicons-no-alt"></span></a>' );
-		$html .= sprintf( '<a href="%1$s" class="ea-file-link" target="_blank">%2$s</a>', esc_url($value), substr($file_name, 11) );
+		$html .= sprintf( '<a href="%1$s" class="ea-file-link" target="_blank">%2$s</a>', esc_url( $value ), substr( $file_name, 11 ) );
 		$html .= '</div>';
 		$html .= $description ? $description : '';
 		$html .= '</div><!--.ea-form-group-->';
 
 		return $html;
+	}
+
+	/**
+	 * since 1.0.0
+	 * @param string $type
+	 * @param null $label
+	 *
+	 * @return string
+	 */
+	public static function button( $label = null, $type = 'submit' ) {
+		$label = empty( $label ) ? __( 'Submit', 'wp-ever-accounting' ) : $label;
+		return sprintf( '<button type="%s" class="button button-primary">%s</button>', $type, $label );
+	}
 
 
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $args
+	 * @param int $ago
+	 *
+	 * @return string
+	 */
+	public static function year_dropdown( $args, $ago = 5 ) {
+		$end   = date( "Y" ) - 5;
+		$years = array_combine( range( date( "Y" ), $end ), range( date( "Y" ), $end ) );
+		$args  = wp_parse_args( $args, array(
+			'name'    => 'year',
+			'options' => $years
+		) );
+
+		return self::select_control( $args );
 	}
 
 	/**
