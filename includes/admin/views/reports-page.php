@@ -6,7 +6,7 @@ $reports_tabs = apply_filters( 'eaccounting_reports_page_tabs', array(
 	'income_summery'         => __( 'Income Summery', 'wp-ever-accounting' ),
 	'expense_summery'        => __( 'Expense Summery', 'wp-ever-accounting' ),
 	'income_expense_summary' => __( 'Income vs Expense', 'wp-ever-accounting' ),
-	'profit_loss'            => __( 'Profit & Loss', 'wp-ever-accounting' ),
+//	'profit_loss'            => __( 'Profit & Loss', 'wp-ever-accounting' ),
 ) );
 
 ?>
