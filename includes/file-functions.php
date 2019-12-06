@@ -171,7 +171,9 @@ function eaccounting_upload_file( $file, $args = [] ) {
 	} else {
 		$upload_dir = eaccounting_get_upload_dir();
 		$file_name  = substr( md5( time() ), 0, 10 ) . '-' . sanitize_file_name( $file['name'] );
-
+		if(!is_dir($upload_dir['path'])){
+			wp_mkdir_p($upload_dir['path']);
+		}
 		$file_path = trailingslashit( $upload_dir['path'] ) . $file_name;
 		$file_url  = trailingslashit( $upload_dir['url'] ) . $file_name;
 		$uploaded  = move_uploaded_file( $file['tmp_name'], $file_path );
