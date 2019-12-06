@@ -3,7 +3,23 @@ $year = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : '';
 ?>
 	<div class="ea-card ea-report-card">
 		<div class="ea-card-header">
+
+			<form action="" class="ea-report-filter">
+				<?php
+				echo EAccounting_Form::year_dropdown( [
+					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
+					'selected'    => $year
+				] );
+				echo EAccounting_Form::button( __( 'Filter', 'wp-ever-accounting' ) );
+				?>
+
+				<input type="hidden" name="page" value="eaccounting-reports">
+				<input type="hidden" name="tab" value="income_expense_summary">
+			</form>
+
 		</div>
+
+
 		<div class="ea-card-body">
 
 			<div class="ea-report-graph">
