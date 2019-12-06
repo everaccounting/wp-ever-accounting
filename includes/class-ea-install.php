@@ -8,8 +8,8 @@ class EAccounting_Install {
 	 * @since 1.0.0
 	 */
 	public static function install() {
-		self::create_tables();
 		self::create_default_data();
+		self::create_tables();
 	}
 
 	/**
@@ -147,6 +147,9 @@ class EAccounting_Install {
 	 * since 1.0.0
 	 */
 	public static function create_default_data() {
+		update_option( 'eaccounting_version', EACCOUNTING_VERSION );
+		update_option( 'eaccounting_install_date', date( 'timestamp' ) );
+
 		if ( ! eaccounting_get_categories() ) {
 			eaccounting_insert_category( [
 				'name'   => __( 'Deposit', 'wp-ever-accounting' ),
