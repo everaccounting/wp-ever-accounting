@@ -10,6 +10,7 @@ class EAccounting_Ajax {
 		add_action( 'wp_ajax_eaccounting_get_expense_by_category_chart', array( $this, 'expense_by_category_chart' ) );
 		add_action( 'wp_ajax_eaccounting_get_income_by_category_chart', array( $this, 'income_by_category_chart' ) );
 		add_action( 'wp_ajax_eaccounting_file_upload', array( $this, 'upload_file' ) );
+		add_action( 'wp_ajax_eaccounting_get_transaction_item', array( $this, 'get_transaction_item' ) );
 	}
 
 	public function expense_by_category_chart() {
@@ -115,6 +116,13 @@ class EAccounting_Ajax {
 		}
 
 		wp_send_json( $data );
+
+	}
+
+	/**
+	 * @since 1.0.0
+	 */
+	public function get_transaction_item() {
 
 	}
 

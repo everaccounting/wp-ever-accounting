@@ -19,6 +19,9 @@
 			this.$colorControl.wpColorPicker();
 			this.$priceControl.trigger('focus');
 			this.$priceControl.trigger('blur');
+
+			$('.ea-transaction-table').eAccountingInvoiceTable();
+
 		},
 		init: function () {
 			this.initializePlugins();
