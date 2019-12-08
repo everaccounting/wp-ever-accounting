@@ -10,7 +10,7 @@ class EAccounting_Ajax {
 		add_action( 'wp_ajax_eaccounting_get_expense_by_category_chart', array( $this, 'expense_by_category_chart' ) );
 		add_action( 'wp_ajax_eaccounting_get_income_by_category_chart', array( $this, 'income_by_category_chart' ) );
 		add_action( 'wp_ajax_eaccounting_file_upload', array( $this, 'upload_file' ) );
-		add_action( 'wp_ajax_eaccounting_get_transaction_item', array( $this, 'get_transaction_item' ) );
+		add_action( 'wp_ajax_eaccounting_get_invoice_total_item', array( $this, 'get_invoice_total_item' ) );
 	}
 
 	public function expense_by_category_chart() {
@@ -122,8 +122,94 @@ class EAccounting_Ajax {
 	/**
 	 * @since 1.0.0
 	 */
-	public function get_transaction_item() {
+	public function get_invoice_total_item() {
+		$this->verify_nonce( 'invoice_total_item', 'nonce' );
+		$this->check_permission();
+		$input_items = isset( $_REQUEST['item'] ) ? $_REQUEST['item'] : [];
+		$discount    = isset( $_REQUEST['discount'] ) ? (double) $_REQUEST['discount'] : 00.00;
+		$shipping    = isset( $_REQUEST['shipping'] ) ? (double) $_REQUEST['shipping'] : 00.00;
+		$result      = [];
 
+		$sub_total      = 0;
+		$tax_total      = 0;
+		$discount_total = 0;
+
+		if ( $input_items ) {
+			foreach ( $input_items as $key => $item ) {
+
+				$price           = (double) eaccounting_sanitize_price( $item['price'] );
+				$quantity        = (double) absint($item['quantity']);
+				$item_tax_total  = 0;
+				$item_tax_amount = 0;
+				$item_sub_total  = ( $price * $quantity );
+
+				$item_discount_total = $item_sub_total;
+				// Apply discount to item
+				if ( $discount ) {
+					$item_discount_total = $item_sub_total - ( $item_sub_total * ( $discount / 100 ) );
+				}
+
+				if ( ! empty( $item['tax_id'] ) ) {
+					$inclusives = $compounds = $taxes = [];
+
+					foreach ( $item['tax_id'] as $tax_id ) {
+						$tax = eaccounting_get_tax_rate( $tax_id );
+
+						switch ( $tax->type ) {
+							case 'inclusive':
+								$inclusives[] = $tax;
+								break;
+							case 'compound':
+								$compounds[] = $tax;
+								break;
+							case 'normal':
+							default:
+								$taxes[] = $tax;
+
+								$item_tax_amount = ( $item_discount_total / 100 ) * $tax->rate;
+
+								$item_tax_total += $item_tax_amount;
+								break;
+						}
+					}
+
+					if ( $inclusives ) {
+						$item_sub_and_tax_total = $item_discount_total + $item_tax_total;
+
+						$item_base_rate = $item_sub_and_tax_total / ( 1 + collect( $inclusives )->sum( 'rate' ) / 100 );
+						$item_tax_total = $item_sub_and_tax_total - $item_base_rate;
+
+						$item_sub_total = $item_base_rate + $discount;
+					}
+
+					if ( $compounds ) {
+						foreach ( $compounds as $compound ) {
+							$item_tax_total += ( ( $item_discount_total + $item_tax_total ) / 100 ) * $compound->rate;
+						}
+					}
+				}
+
+				$sub_total     += $item_sub_total;
+				$tax_total     += $item_tax_total;
+				$items[ $key ] = eaccounting_price( $item_sub_total );
+			}
+		}
+
+		$result['items']    = $items;
+		$result['subtotal'] = eaccounting_price( $sub_total );
+
+		// Apply discount to total
+		if ( $discount ) {
+			$discount_total = $sub_total * ( $discount / 100 );
+
+			$sub_total = $sub_total - ( $sub_total * ( $discount / 100 ) );
+		}
+		$grand_total              = $sub_total + $tax_total;
+		$result['grand_total']    = eaccounting_price( $grand_total );
+		$result['shipping']       = eaccounting_price( $shipping );
+		$result['discount_total'] = eaccounting_price( $discount_total );
+
+		wp_send_json_success( $result );
 	}
 
 	/**

@@ -20,14 +20,12 @@
 			this.$priceControl.trigger('focus');
 			this.$priceControl.trigger('blur');
 
-			$('.ea-transaction-table').eAccountingInvoiceTable();
-
 		},
 		init: function () {
 			this.initializePlugins();
 		}
 	};
-
+	window.eAccounting =  eAccounting|| {} ;
 	document.addEventListener('DOMContentLoaded', function () {
 		eAccounting.init();
 	});

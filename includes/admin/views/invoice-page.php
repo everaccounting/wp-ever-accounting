@@ -78,29 +78,39 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 					?>
 					<div class="ea-col-12">
 						<span class="ea-control-label"><?php _e( 'Items', 'wp-ever-accounting' ); ?></span>
-						<div class="ea-transaction-table-wrap">
-							<table class="ea-transaction-table" id="transaction-items">
+						<div class="ea-invoice-table-wrap">
+							<table class="ea-invoice-table" id="ea-invoice-table">
 								<thead>
 								<tr>
-									<th><?php _e( 'Actions', 'wp-ever-accounting' ); ?></th>
-									<th><?php _e( 'Name', 'wp-ever-accounting' ); ?></th>
-									<th><?php _e( 'Quantity', 'wp-ever-accounting' ); ?></th>
-									<th><?php _e( 'Price', 'wp-ever-accounting' ); ?></th>
-									<th><?php _e( 'Total', 'wp-ever-accounting' ); ?></th>
+									<th class="ea-invoice-table-actions"><?php _e( 'Actions', 'wp-ever-accounting' ); ?></th>
+									<th class="ea-invoice-table-names"><?php _e( 'Name', 'wp-ever-accounting' ); ?></th>
+									<th class="ea-invoice-table-quantities"><?php _e( 'Quantity', 'wp-ever-accounting' ); ?></th>
+									<th class="ea-invoice-table-prices"><?php _e( 'Price', 'wp-ever-accounting' ); ?></th>
+									<th class="ea-invoice-table-totals"><?php _e( 'Total', 'wp-ever-accounting' ); ?></th>
 								</tr>
 								</thead>
 								<tbody>
 
-								<?php eaccounting_get_views('invoice/line-item.php', [
-									'item_row'   => '0',
-									'item'       => '',
-									'qty'        => '0',
-									'unit_price' => '0',
-								]);?>
+								<?php
+								$item_row = 0;
+								for ( $i = 0; $i <= 4; $i ++ ) {
+									eaccounting_get_views( 'invoice/line-item.php', [
+										'item_row' => $i,
+										'line_id'  => null,
+										'item_id'  => null,
+										'name'     => '',
+										'quantity' => $i * 2,
+										'price'    => $i * 5,
+									] );
+								}
+
+
+								?>
 
 								<tr>
 									<td class="text-center" style="vertical-align: middle;">
-										<button type="button" id="ea-invoice-add-line-item" class="btn btn-xs btn-danger"><i class="fa fa-plus"></i></button>
+										<button type="button" id="add-line-item" class="btn btn-xs btn-danger"><i
+												class="fa fa-plus"></i></button>
 									</td>
 								</tr>
 
@@ -109,26 +119,41 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 								<tfoot>
 								<tr id="tr-subtotal">
 									<td colspan="4"><strong>Subtotal</strong></td>
-									<td><span id="sub-total">$10,000.00</span></td>
+									<td><span id="sub-total"><?php echo eaccounting_price( '0' ); ?></span></td>
 								</tr>
 
 								<tr id="tr-discount">
 									<td colspan="4">Add Discount</td>
 									<td>
-										<span id="discount-total"></span>
-										<input id="discount" class="ea-form-control" name="discount" type="text"
-										       value="">
+										<input id="discount" class="ea-form-control ea-price-control" name="discount" type="text" value="00">
 									</td>
+								</tr>
+
+								<tr id="tr-shipping-input">
+									<td colspan="4">Add Shipping</td>
+									<td>
+										<input id="shipping" class="ea-form-control ea-price-control" name="shipping" type="text" value="00">
+									</td>
+								</tr>
+
+								<tr id="tr-discount">
+									<td colspan="4"><strong>Discount</strong></td>
+									<td><span id="discount-total"><?php echo eaccounting_price( '0' ); ?></span></td>
+								</tr>
+
+								<tr id="tr-shipping">
+									<td colspan="4"><strong>Shipping</strong></td>
+									<td><span id="shipping-total"><?php echo eaccounting_price( '0' ); ?></span></td>
 								</tr>
 
 								<tr id="tr-tax">
 									<td colspan="4"><strong>Tax</strong></td>
-									<td><span id="tax-total">$100.00</span></td>
+									<td><span id="tax-total"><?php echo eaccounting_price( '0' ); ?></span></td>
 								</tr>
 
 								<tr id="tr-total">
 									<td colspan="4"><strong>Total</strong></td>
-									<td><span id="grand-total">$10,100.00</span></td>
+									<td><span id="grand-total"><?php echo eaccounting_price( '0' ); ?></span></td>
 								</tr>
 								</tfoot>
 							</table>
@@ -146,6 +171,95 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 </div>
 
 <script type="text/javascript">
+	jQuery(document).ready(function ($) {
+		var total_updating = false;
+		var focus = false;
+		var item_row = '<?php echo $item_row;?>';
+		var ajax_url = '<?php echo admin_url( 'admin-ajax.php' );?>';
+		itemTableResize();
+		totalItem();
+
+		$(document).on('change', '#ea-invoice-table #discount, #ea-invoice-table #shipping', function (e) {
+			e.preventDefault();
+			totalItem();
+		});
+
+		$(document).on('click', '#ea-invoice-table .item-line-remove', function (e) {
+			e.preventDefault();
+			$(this).closest('tr').remove();
+			totalItem();
+		});
+
+
+		function itemTableResize() {
+			colspan = $('#ea-invoice-table thead tr th').length - 1;
+
+			$('#ea-invoice-table tbody #add-line-item').attr('colspan', colspan);
+			$('#ea-invoice-table tbody #tr-subtotal td:first').attr('colspan', colspan);
+			$('#ea-invoice-table tbody #tr-discount td:first').attr('colspan', colspan);
+			$('#ea-invoice-table tbody #tr-tax td:first').attr('colspan', colspan);
+			$('#ea-invoice-table tbody #tr-total td:first').attr('colspan', colspan);
+		}
+
+		$(document).on('blur', '#ea-invoice-table .ea-price-control', function () {
+			totalItem();
+		});
+
+		function totalItem() {
+			// if (total_updating) {
+			// 	return false;
+			// }
+
+			total_updating = true;
+			var nonce = "<?php echo wp_create_nonce( 'invoice_total_item' );?>";
+			var data = $.extend({},
+				{action: 'eaccounting_get_invoice_total_item'},
+				$('#ea-invoice-table .line-item input, #ea-invoice-table .line-item select, #ea-invoice-table .line-item textarea').serializeObject(),
+				{discount: $('#ea-invoice-table #discount').val()},
+				{shipping: $('#ea-invoice-table #shipping').val()},
+				{nonce: nonce}
+			);
+
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				dataType: 'JSON',
+				data: data,
+				success: function (res) {
+					$.each(res.data.items, function (key, value) {
+						$('#item-total-' + key).html(value);
+					});
+					$('#sub-total').html(res.data.subtotal);
+					$('#discount-total').html(res.data.discount_total);
+					$('#tax-total').html(res.data.tax_total);
+					$('#grand-total').html(res.data.grand_total);
+					$('#shipping-total').html(res.data.shipping);
+
+
+					$('.ea-price-control').each(function(){
+						var amount = $(this).maskMoney('unmasked')[0];
+						$(this).maskMoney({
+							thousands: eAccountingi18n.localization.thousands_separator,
+							decimal: eAccountingi18n.localization.decimal_mark,
+							precision: eAccountingi18n.localization.precision,
+							allowZero: true,
+							prefix: eAccountingi18n.localization.price_symbol
+						});
+
+						$(this).val(amount);
+						$(this).trigger('focusout');
+					})
+				},
+				error: function (errorThrown) {
+					total_updating = false;
+					console.log(errorThrown);
+				}
+			});
+
+		}
+
+
+	});
 
 
 </script>

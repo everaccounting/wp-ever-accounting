@@ -1,8 +1,8 @@
-.ea-transaction-table-wrap{
+.ea-invoice-table-wrap{
 	overflow-x: visible;
 	min-height: .01%;
 	box-sizing: border-box;
-	.ea-transaction-table{
+	.ea-invoice-table{
 		font-size: 14px;
 		font-weight: 400;
 		border: 1px solid #f4f4f4;
@@ -49,8 +49,8 @@
 		}
 	}
 	th,td{
-		border-top: 0;
 		border: 1px solid #f4f4f4;
+		//border-top: 0;
 		vertical-align: middle;
 		padding: 8px;
 		line-height: 1.42857143;
@@ -58,13 +58,13 @@
 
 	.ea-form-control{
 		font-size: 14px !important;
-		min-height: 0 !important;
 	}
 
 
-	#tr-subtotal, #tr-discount, #tr-tax, #tr-total{
+	#tr-subtotal, #tr-discount, #tr-tax, #tr-total, #tr-shipping, #tr-shipping-input{
 		td{
 			text-align: right;
 		}
 	}
 }
+

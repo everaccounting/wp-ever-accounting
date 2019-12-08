@@ -64,7 +64,7 @@ class EAccounting_Admin_Menus {
 	}
 
 	public function invoices_page(){
-		wp_enqueue_script('eaccounting-invoice');
+		//wp_enqueue_script('eaccounting-invoice');
 		eaccounting_get_views('invoice-page.php');
 	}
 
