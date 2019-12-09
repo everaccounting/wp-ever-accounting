@@ -11,6 +11,7 @@ class EAccounting_Ajax {
 		add_action( 'wp_ajax_eaccounting_get_income_by_category_chart', array( $this, 'income_by_category_chart' ) );
 		add_action( 'wp_ajax_eaccounting_file_upload', array( $this, 'upload_file' ) );
 		add_action( 'wp_ajax_eaccounting_get_invoice_total_item', array( $this, 'get_invoice_total_item' ) );
+		add_action( 'wp_ajax_eaccounting_invoice_add_item', array( $this, 'invoice_add_item' ) );
 	}
 
 	public function expense_by_category_chart() {
@@ -138,7 +139,7 @@ class EAccounting_Ajax {
 			foreach ( $input_items as $key => $item ) {
 
 				$price           = (double) eaccounting_sanitize_price( $item['price'] );
-				$quantity        = (double) absint($item['quantity']);
+				$quantity        = (double) absint( $item['quantity'] );
 				$item_tax_total  = 0;
 				$item_tax_amount = 0;
 				$item_sub_total  = ( $price * $quantity );
@@ -210,6 +211,26 @@ class EAccounting_Ajax {
 		$result['discount_total'] = eaccounting_price( $discount_total );
 
 		wp_send_json_success( $result );
+	}
+
+	/**
+	 * @since 1.0.0
+	 */
+	public function invoice_add_item() {
+		$this->verify_nonce( 'invoice_add_item', 'nonce' );
+		$this->check_permission();
+		$item_row = isset( $_REQUEST['item_row'] ) ? absint( $_REQUEST['item_row'] ) : 0;
+		ob_start();
+		eaccounting_get_views( 'invoice/line-item.php', array(
+			'item_row' => $item_row,
+			'line_id'  => null,
+			'item_id'  => null,
+			'name'     => '',
+			'quantity' => 0,
+			'price'    => 0,
+		) );
+
+
 	}
 
 	/**
