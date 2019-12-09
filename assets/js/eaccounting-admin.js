@@ -1,31 +1,30 @@
+window.eAccounting =  window.eAccounting|| {} ;
+
 (function ($, window, wp, document, undefined) {
 	'use strict';
 	var eAccounting = {
-		$select2Control: $('.ea-select2-control'),
-		$priceControl: $('.ea-price-control'),
-		$colorControl: $('.ea-color-control'),
-		$recurringControl: $('#recurring_frequency'),
 		initializePlugins: function () {
-			this.$select2Control.select2({
+			$('.ea-select2-control').select2({
 				theme: 'default eaccounting-select2'
 			});
-			this.$priceControl.maskMoney({
+			$('.ea-price-control').maskMoney({
 				thousands: eAccountingi18n.localization.thousands_separator,
 				decimal: eAccountingi18n.localization.decimal_mark,
 				precision: eAccountingi18n.localization.precision,
 				allowZero: true,
 				prefix: eAccountingi18n.localization.price_symbol
 			});
-			this.$colorControl.wpColorPicker();
-			this.$priceControl.trigger('focus');
-			this.$priceControl.trigger('blur');
 
+			$('.ea-color-control').wpColorPicker();
+			$('.ea-price-control').trigger('focus');
+			$('.ea-price-control').trigger('blur');
 		},
 		init: function () {
 			this.initializePlugins();
+			$(document).on('eAccountingInvoiceUpdated', this.initializePlugins);
 		}
 	};
-	window.eAccounting =  eAccounting|| {} ;
+
 	document.addEventListener('DOMContentLoaded', function () {
 		eAccounting.init();
 	});

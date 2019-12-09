@@ -107,7 +107,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 
 								?>
 
-								<tr>
+								<tr id="add-item-row">
 									<td class="text-center" style="vertical-align: middle;">
 										<button type="button" id="add-line-item" class="btn btn-xs btn-danger"><i
 												class="fa fa-plus"></i></button>
@@ -125,16 +125,14 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 								<tr id="tr-discount">
 									<td colspan="4">Add Discount</td>
 									<td>
-										<input id="discount" class="ea-form-control ea-price-control" name="discount"
-										       type="text" value="00">
+										<input id="discount" class="ea-form-control" name="discount" type="text" value="0">
 									</td>
 								</tr>
 
 								<tr id="tr-shipping-input">
 									<td colspan="4">Add Shipping</td>
 									<td>
-										<input id="shipping" class="ea-form-control ea-price-control" name="shipping"
-										       type="text" value="00">
+										<input id="shipping" class="ea-form-control ea-price-control" name="shipping" type="text" value="0">
 									</td>
 								</tr>
 
@@ -178,10 +176,13 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 		var focus = false;
 		var item_row = '<?php echo $item_row;?>';
 		var ajax_url = '<?php echo admin_url( 'admin-ajax.php' );?>';
+
 		itemTableResize();
 		totalItem();
 
 		$(document).on('click', '#ea-invoice-table #add-line-item', function (e) {
+			e.preventDefault();
+
 			var nonce = "<?php echo wp_create_nonce( 'invoice_add_item' );?>";
 			$.ajax({
 				url: ajaxurl,
@@ -190,66 +191,39 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 				data: {
 					action: 'eaccounting_invoice_add_item',
 					item_row: item_row,
-					nonce:nonce
+					nonce: nonce
 				},
-				success: function(json) {
-					if (json['success']) {
-						$('#items tbody #addItem').before(json['html']);
-						//$('[rel=tooltip]').tooltip();
-
-						$('[data-toggle="tooltip"]').tooltip('hide');
-
-						$('#item-row-' + item_row + ' .tax-select2').select2({
-							placeholder: {
-								id: '-1', // the value of the option
-								text: "{{ trans('general.form.select.field', ['field' => trans_choice('general.taxes', 1)]) }}"
-							},
-							escapeMarkup: function (markup) {
-								return markup;
-							},
-							language: {
-								noResults: function () {
-									return '<span id="tax-add-new"><i class="fa fa-plus-circle"></i> {{ trans('general.title.new', ['type' => trans_choice('general.tax_rates', 1)]) }}</span>';
-								}
-							}
-						});
-
-						var currency = json['data']['currency'];
-
-						$('#item-price-' + item_row).maskMoney({
-							thousands : currency.thousands_separator,
-							decimal : currency.decimal_mark,
-							precision : currency.precision,
-							allowZero : true,
-							prefix : (currency.symbol_first) ? currency.symbol : '',
-							suffix : (currency.symbol_first) ? '' : currency.symbol
-						});
-
-						$('#item-price-' + item_row).trigger('focusout');
-
-						item_row++;
-					}
-
-
+				success: function (res) {
+					$('#ea-invoice-table tbody #add-item-row').before(res.data.html);
+					$(document).trigger('eAccountingInvoiceUpdated');
+					item_row++;
 				}
 			});
 		});
 
-		//
-		//$(document).on('blur', '#ea-invoice-table #discount, #ea-invoice-table #shipping', function (e) {
-		//	e.preventDefault();
-		//	totalItem();
-		//});
-		//
-		//$(document).on('keyup', '#ea-invoice-table .item-line-remove', function (e) {
-		//	e.preventDefault();
-		//	$(this).closest('tr').remove();
-		//	totalItem();
-		//});
-		//
-		//$(document).on('blur', '#ea-invoice-table .ea-price-control', function () {
-		//	totalItem();
-		//});
+
+		$(document).on('change', '#ea-invoice-table #discount', function (e) {
+			e.preventDefault();
+			totalItem();
+		});
+
+		$(document).on('change', '#ea-invoice-table tbody select', function(){
+			totalItem();
+		});
+
+		$(document).on('focusin', '#items .input-price', function(){
+			focus = true;
+		});
+
+		// $(document).on('keyup', '#ea-invoice-table .item-line-remove', function (e) {
+		// 	e.preventDefault();
+		// 	$(this).closest('tr').remove();
+		// 	totalItem();
+		// });
+		// //
+		// $(document).on('change', '#ea-invoice-table .ea-price-control, #ea-invoice-table .ea-price-control', function () {
+		// 	totalItem();
+		// });
 		//
 
 		//
@@ -262,6 +236,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 			$('#ea-invoice-table tbody #tr-tax td:first').attr('colspan', colspan);
 			$('#ea-invoice-table tbody #tr-total td:first').attr('colspan', colspan);
 		}
+
 		function totalItem() {
 			// if (requesting) {
 			// 	return false;
@@ -291,7 +266,9 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 					$('#tax-total').html(res.data.tax_total);
 					$('#grand-total').html(res.data.grand_total);
 					$('#shipping-total').html(res.data.shipping);
-					eAccounting.initializePlugins();
+
+					$(document).trigger('eAccountingInvoiceUpdated');
+
 					requesting = false;
 				},
 				error: function (errorThrown) {
@@ -300,6 +277,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 				}
 			});
 		}
+
 		//
 		//eAccounting.initializePlugins();
 

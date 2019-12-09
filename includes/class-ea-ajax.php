@@ -127,8 +127,8 @@ class EAccounting_Ajax {
 		$this->verify_nonce( 'invoice_total_item', 'nonce' );
 		$this->check_permission();
 		$input_items = isset( $_REQUEST['item'] ) ? $_REQUEST['item'] : [];
-		$discount    = isset( $_REQUEST['discount'] ) ? (double) $_REQUEST['discount'] : 00.00;
-		$shipping    = isset( $_REQUEST['shipping'] ) ? (double) $_REQUEST['shipping'] : 00.00;
+		$discount    = isset( $_REQUEST['discount'] ) ? (double) eaccounting_sanitize_price($_REQUEST['discount']) : 00.00;
+		$shipping    = isset( $_REQUEST['shipping'] ) ? (double) eaccounting_sanitize_price($_REQUEST['shipping']) : 00.00;
 		$result      = [];
 
 		$sub_total      = 0;
@@ -209,7 +209,7 @@ class EAccounting_Ajax {
 		$result['grand_total']    = eaccounting_price( $grand_total );
 		$result['shipping']       = eaccounting_price( $shipping );
 		$result['discount_total'] = eaccounting_price( $discount_total );
-
+		error_log(print_r($result, true ));
 		wp_send_json_success( $result );
 	}
 
@@ -229,7 +229,11 @@ class EAccounting_Ajax {
 			'quantity' => 0,
 			'price'    => 0,
 		) );
-
+		$html = ob_get_contents();
+		ob_get_clean();
+		$this->send_success([
+			'html' => $html
+		]);
 
 	}
 

@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit();
 		<input type="hidden" name="item[<?php echo $item_row; ?>][item_id]" id="item-id-<?php echo $item_row; ?>">
 	</td>
 	<td>
-		<input class="ea-form-control" type="text" class="line-item-qty" name="item[<?php echo $item_row; ?>][quantity]"
+		<input class="ea-form-control item-quantity" type="text" name="item[<?php echo $item_row; ?>][quantity]"
 		       value="<?php echo $quantity; ?>">
 	</td>
 	<td>
