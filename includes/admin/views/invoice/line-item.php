@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit();
 	</td>
 
 	<td>
-		<span id="item-total-<?php echo $item_row; ?>">0</span>
+		<span id="item-total-<?php echo $item_row; ?>"><?php echo eaccounting_price(0);?></span>
 	</td>
 
 </tr>

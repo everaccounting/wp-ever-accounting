@@ -7,17 +7,31 @@ window.eAccounting =  window.eAccounting|| {} ;
 			$('.ea-select2-control').select2({
 				theme: 'default eaccounting-select2'
 			});
-			$('.ea-price-control').maskMoney({
-				thousands: eAccountingi18n.localization.thousands_separator,
-				decimal: eAccountingi18n.localization.decimal_mark,
-				precision: eAccountingi18n.localization.precision,
-				allowZero: true,
-				prefix: eAccountingi18n.localization.price_symbol
+			$('.ea-price-control').inputmask('decimal', {
+				alias: 'numeric',
+				groupSeparator:  eAccountingi18n.localization.thousands_separator,
+				autoGroup: true,
+				digits: eAccountingi18n.localization.precision,
+				radixPoint: eAccountingi18n.localization.decimal_mark,
+				digitsOptional: false,
+				allowMinus: false,
+				prefix: eAccountingi18n.localization.price_symbol,
+				placeholder: '0',
+				rightAlign:0
+				// 'alias': 'numeric',
+				// 'groupSeparator': ',',
+				// 'autoGroup': true,
+				// 'digits': 2,
+				// 'radixPoint': ".",
+				// 'digitsOptional': false,
+				// 'allowMinus': false,
+				// 'prefix': '$ ',
+				// 'placeholder': '0'
 			});
 
 			$('.ea-color-control').wpColorPicker();
-			$('.ea-price-control').trigger('focus');
-			$('.ea-price-control').trigger('blur');
+			// $('.ea-price-control').trigger('focus');
+			// $('.ea-price-control').trigger('blur');
 		},
 		init: function () {
 			this.initializePlugins();

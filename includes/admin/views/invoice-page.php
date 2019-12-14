@@ -102,6 +102,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 										'quantity' => $i * 2,
 										'price'    => $i * 5,
 									] );
+									$item_row++;
 								}
 
 
@@ -173,9 +174,8 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 <script type="text/javascript">
 	jQuery(document).ready(function ($) {
 		var requesting = false;
-		var focus = false;
 		var item_row = '<?php echo $item_row;?>';
-		var ajax_url = '<?php echo admin_url( 'admin-ajax.php' );?>';
+		var ajaxurl = '<?php echo admin_url( 'admin-ajax.php' );?>';
 
 		itemTableResize();
 		totalItem();
@@ -211,22 +211,20 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 			totalItem();
 		});
 
-		$(document).on('focusin', '#items .input-price', function(){
-			focus = true;
+		$(document).on('change', '#ea-invoice-table .ea-price-control', function(){
+			totalItem();
 		});
 
-		// $(document).on('keyup', '#ea-invoice-table .item-line-remove', function (e) {
-		// 	e.preventDefault();
-		// 	$(this).closest('tr').remove();
-		// 	totalItem();
-		// });
-		// //
-		// $(document).on('change', '#ea-invoice-table .ea-price-control, #ea-invoice-table .ea-price-control', function () {
-		// 	totalItem();
-		// });
-		//
+		$(document).on('click', '#ea-invoice-table .item-line-remove', function (e) {
+			e.preventDefault();
+			$(this).closest('tr').remove();
+			totalItem();
+		});
 
-		//
+		$(document).on('keyup', '#ea-invoice-table .item-quantity', function () {
+			totalItem();
+		});
+
 		function itemTableResize() {
 			colspan = $('#ea-invoice-table thead tr th').length - 1;
 
@@ -238,11 +236,11 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 		}
 
 		function totalItem() {
-			// if (requesting) {
-			// 	return false;
-			// }
-			//
-			// requesting = true;
+			if (requesting) {
+				return false;
+			}
+
+			requesting = true;
 			var nonce = "<?php echo wp_create_nonce( 'invoice_total_item' );?>";
 			var data = $.extend({},
 				{action: 'eaccounting_get_invoice_total_item'},
@@ -277,9 +275,6 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 				}
 			});
 		}
-
-		//
-		//eAccounting.initializePlugins();
 
 	});
 
