@@ -135,6 +135,17 @@ class EAccounting_Install {
 		    KEY `type` (`type`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_taxes(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`name` VARCHAR(191) NOT NULL COMMENT 'Taxes Name',
+			`rate` DOUBLE(15,4) NOT NULL COMMENT 'Taxes Rate',
+			`type` VARCHAR(191) NOT NULL DEFAULT 'normal' COMMENT 'Taxes Type',
+			`status` ENUM ('active', 'inactive') DEFAULT 'active',
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
 		];
 
 

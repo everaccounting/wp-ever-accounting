@@ -10,6 +10,7 @@ class EAccounting_Admin_Menus {
 	public function __construct() {
 		// Add menus.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 10 );
+		add_action('eaccounting_misc_tab_taxes', array($this, 'taxes_page'));
 	}
 
 	/**
@@ -32,6 +33,7 @@ class EAccounting_Admin_Menus {
 		add_submenu_page( 'ever-accounting', __( 'Accounts', 'wp-ever-accounting' ), __( 'Accounts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-accounts', array( $this, 'accounts_page') );
 		add_submenu_page( 'ever-accounting', __( 'Transfers', 'wp-ever-accounting' ), __( 'Transfers', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transfers', array( $this, 'transfers_page') );
 		add_submenu_page( 'ever-accounting', __( 'Categories', 'wp-ever-accounting' ), __( 'Categories', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-categories', array( $this, 'categories_page') );
+		add_submenu_page( 'ever-accounting', __( 'Misc', 'wp-ever-accounting' ), __( 'Misc', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-misc', array( $this, 'misc_page') );
 		add_submenu_page( 'ever-accounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reports', array( $this, 'reports_page') );
 		$help = '<span style="color:#ff7a03;">' . __( 'Help', 'wp-ever-accounting' ) . '</span>';
 		add_submenu_page( 'ever-accounting', '', $help, 'manage_options', 'eaccounting-help', array( $this, 'help_page') );
@@ -64,7 +66,6 @@ class EAccounting_Admin_Menus {
 	}
 
 	public function invoices_page(){
-		//wp_enqueue_script('eaccounting-invoice');
 		eaccounting_get_views('invoice-page.php');
 	}
 
@@ -84,6 +85,10 @@ class EAccounting_Admin_Menus {
 		eaccounting_get_views('categories-page.php');
 	}
 
+	public function misc_page(){
+		eaccounting_get_views('misc-page.php');
+	}
+
 	public function reports_page(){
 		wp_enqueue_script('chart-js');
 		eaccounting_get_views('reports-page.php');
@@ -94,6 +99,10 @@ class EAccounting_Admin_Menus {
 			wp_redirect(  'https://pluginever.com/docs/wp-ever-accounting?utm_source=wpmenu&utm_medium=admindash&utm_campaign=eaccounting' );
 			die;
 		}
+	}
+
+	public function taxes_page(){
+		eaccounting_get_views('misc/tax-page.php');
 	}
 }
 

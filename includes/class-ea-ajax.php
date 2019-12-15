@@ -209,7 +209,7 @@ class EAccounting_Ajax {
 		$result['grand_total']    = eaccounting_price( $grand_total );
 		$result['shipping']       = eaccounting_price( $shipping );
 		$result['discount_total'] = eaccounting_price( $discount_total );
-		error_log(print_r($result, true ));
+
 		wp_send_json_success( $result );
 	}
 
