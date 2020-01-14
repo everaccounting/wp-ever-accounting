@@ -75,6 +75,15 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 					//						'wrapper_class' => 'ea-col-6',
 					//					) );
 
+					echo EAccounting_Form::taxes_dropdown( array(
+						'label'         => __( 'Order Number', 'wp-ever-accounting' ),
+						'name'          => 'order_number',
+						//				'value'         => isset( $account['order_number'] ) ? $account['order_number'] : '',
+						'placeholder'   => '',
+						'icon'          => 'fa fa-shopping-cart',
+						'wrapper_class' => 'ea-col-6',
+					) );
+
 					?>
 					<div class="ea-col-12">
 						<span class="ea-control-label"><?php _e( 'Items', 'wp-ever-accounting' ); ?></span>
@@ -86,6 +95,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 									<th class="ea-invoice-table-names"><?php _e( 'Name', 'wp-ever-accounting' ); ?></th>
 									<th class="ea-invoice-table-quantities"><?php _e( 'Quantity', 'wp-ever-accounting' ); ?></th>
 									<th class="ea-invoice-table-prices"><?php _e( 'Price', 'wp-ever-accounting' ); ?></th>
+									<th class="ea-invoice-table-taxes"><?php _e( 'Tax', 'wp-ever-accounting' ); ?></th>
 									<th class="ea-invoice-table-totals"><?php _e( 'Total', 'wp-ever-accounting' ); ?></th>
 								</tr>
 								</thead>
@@ -102,7 +112,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 										'quantity' => $i * 2,
 										'price'    => $i * 5,
 									] );
-									$item_row++;
+									$item_row ++;
 								}
 
 
@@ -124,16 +134,18 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 								</tr>
 
 								<tr id="tr-discount">
-									<td colspan="4">Add Discount</td>
+									<td colspan="4">Add Discount (%)</td>
 									<td>
-										<input id="discount" class="ea-form-control" name="discount" type="text" value="0">
+										<input id="discount" class="ea-form-control" name="discount" type="text"
+										       value="0">
 									</td>
 								</tr>
 
 								<tr id="tr-shipping-input">
 									<td colspan="4">Add Shipping</td>
 									<td>
-										<input id="shipping" class="ea-form-control ea-price-control" name="shipping" type="text" value="0">
+										<input id="shipping" class="ea-form-control ea-price-control" name="shipping"
+										       type="text" value="0">
 									</td>
 								</tr>
 
@@ -179,6 +191,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 
 		itemTableResize();
 		totalItem();
+		init_tax_dropdown();
 
 		$(document).on('click', '#ea-invoice-table #add-line-item', function (e) {
 			e.preventDefault();
@@ -196,6 +209,7 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 				success: function (res) {
 					$('#ea-invoice-table tbody #add-item-row').before(res.data.html);
 					$(document).trigger('eAccountingInvoiceUpdated');
+					init_tax_dropdown();
 					item_row++;
 				}
 			});
@@ -207,11 +221,11 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 			totalItem();
 		});
 
-		$(document).on('change', '#ea-invoice-table tbody select', function(){
+		$(document).on('change', '#ea-invoice-table tbody select', function () {
 			totalItem();
 		});
 
-		$(document).on('change', '#ea-invoice-table .ea-price-control', function(){
+		$(document).on('change', '#ea-invoice-table .ea-price-control', function () {
 			totalItem();
 		});
 
@@ -276,6 +290,23 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 			});
 		}
 
+		function  init_tax_dropdown() {
+			$('.ea-tax-control').select2({
+				theme: 'default eaccounting-select2',
+				placeholder: {
+					id: '-1',
+					text: '<?php echo __('Select Tax', 'wp-ever-accounting');?>'
+				},
+				escapeMarkup: function (markup) {
+					return markup;
+				},
+				language: {
+					noResults: function () {
+						return '<?php echo sprintf('<span id="tax-add-new"><i class="fa fa-plus"></i>%s</span>',__('Add Tax', 'wp-ever-accounting')); ?>';
+					}
+				}
+			});
+		}
 	});
 
 

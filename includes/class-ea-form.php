@@ -420,6 +420,51 @@ class EAccounting_Form {
 		) ) );
 	}
 
+	public static function media_control( $args ) {
+		$args = wp_parse_args( $args, array(
+			'title'         => __( 'Set product image', 'wp-ever-accounting' ),
+			'label'         => '',
+			'name'          => '',
+			'value'         => '',
+			'default'       => '',
+			'class'         => '',
+			'required'      => '',
+			'wrapper_class' => '',
+		) );
+
+		$name              = esc_attr( ! empty( $args['name'] ) ? $args['name'] : '' );
+		$value             = empty( $args['value'] ) ? $args['default'] : $args['value'];
+		$label             = empty( $args['label'] ) ? false : strip_tags( $args['label'] );
+		$wrapper_classes   = is_array( $args['wrapper_class'] ) ? $args['wrapper_class'] : explode( ' ', $args['wrapper_class'] );
+		$wrapper_classes[] = ( true == $args['required'] ) ? 'required' : '';
+		$description       = empty( $args['description'] ) ? false : self::get_description( $args['description'] );
+
+		//class sanitization
+		$wrapper_classes = array_filter( $wrapper_classes );
+		$wrapper_classes = array_map( 'sanitize_html_class', $wrapper_classes );
+
+		$style     = '';
+		$image_url = '';
+		if ( ! empty( $args['value'] ) ) {
+			$image_url = wp_get_attachment_url( $args['value'] );
+		}
+		if ( ! empty( $image_url ) ) {
+			$style = sprintf( 'background-image:url(%s)', esc_url( $image_url ) );
+		}
+
+		$html = sprintf( '<div class="ea-form-group %s">', implode( ' ', $wrapper_classes ) );
+		$html .= ! empty( $label ) ? sprintf( '<label class="ea-control-label">%1$s</label>', $label ) : '';
+		$html .= sprintf( '<div class="ea-wp-file-upload-wrap" style="%s">', $style );
+		$html .= '<a href="#" class="ea-wp-file-upload-btn"></a>';
+		$html .= sprintf( '<input type="hidden"  name="%1$s" value="%2$s"/>', $name, $value );
+		$html .= '</div><!--.ea-wp-file-upload-wrap-->';
+		$html .= $description ? $description : '';
+		$html .= '</div><!--.ea-form-group-->';
+
+		return $html;
+
+	}
+
 	/**
 	 * since 1.0.0
 	 *
@@ -518,6 +563,29 @@ class EAccounting_Form {
 	}
 
 	/**
+	 * Get taxes dropdown
+	 *
+	 * since 1.0.0
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public static function taxes_dropdown( $args ) {
+		$args = wp_parse_args( $args, array(
+			'name'    => 'tax_id',
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_taxes( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'fields'   => array( 'id', 'name' ),
+			) ), 'name', 'id' ),
+		) );
+
+		return self::select_control( $args );
+	}
+
+	/**
 	 * since 1.0.0
 	 *
 	 * @param $args
@@ -607,6 +675,7 @@ class EAccounting_Form {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param string $type
 	 * @param null $label
 	 *
@@ -614,6 +683,7 @@ class EAccounting_Form {
 	 */
 	public static function button( $label = null, $type = 'submit' ) {
 		$label = empty( $label ) ? __( 'Submit', 'wp-ever-accounting' ) : $label;
+
 		return sprintf( '<button type="%s" class="button button-primary">%s</button>', $type, $label );
 	}
 

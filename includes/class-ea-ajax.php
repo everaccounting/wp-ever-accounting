@@ -127,8 +127,8 @@ class EAccounting_Ajax {
 		$this->verify_nonce( 'invoice_total_item', 'nonce' );
 		$this->check_permission();
 		$input_items = isset( $_REQUEST['item'] ) ? $_REQUEST['item'] : [];
-		$discount    = isset( $_REQUEST['discount'] ) ? (double) eaccounting_sanitize_price($_REQUEST['discount']) : 00.00;
-		$shipping    = isset( $_REQUEST['shipping'] ) ? (double) eaccounting_sanitize_price($_REQUEST['shipping']) : 00.00;
+		$discount    = isset( $_REQUEST['discount'] ) ? (double) eaccounting_sanitize_price( $_REQUEST['discount'] ) : 00.00;
+		$shipping    = isset( $_REQUEST['shipping'] ) ? (double) eaccounting_sanitize_price( $_REQUEST['shipping'] ) : 00.00;
 		$result      = [];
 
 		$sub_total      = 0;
@@ -154,7 +154,7 @@ class EAccounting_Ajax {
 					$inclusives = $compounds = $taxes = [];
 
 					foreach ( $item['tax_id'] as $tax_id ) {
-						$tax = eaccounting_get_tax_rate( $tax_id );
+						$tax = eaccounting_get_tax( $tax_id );
 
 						switch ( $tax->type ) {
 							case 'inclusive':
@@ -177,7 +177,7 @@ class EAccounting_Ajax {
 					if ( $inclusives ) {
 						$item_sub_and_tax_total = $item_discount_total + $item_tax_total;
 
-						$item_base_rate = $item_sub_and_tax_total / ( 1 + collect( $inclusives )->sum( 'rate' ) / 100 );
+						$item_base_rate = $item_sub_and_tax_total / ( 1 + array_sum( wp_list_pluck( $inclusives, 'rate' ) ) / 100 );
 						$item_tax_total = $item_sub_and_tax_total - $item_base_rate;
 
 						$item_sub_total = $item_base_rate + $discount;
@@ -209,6 +209,7 @@ class EAccounting_Ajax {
 		$result['grand_total']    = eaccounting_price( $grand_total );
 		$result['shipping']       = eaccounting_price( $shipping );
 		$result['discount_total'] = eaccounting_price( $discount_total );
+		$result['tax_total']      = eaccounting_price( $tax_total );
 
 		wp_send_json_success( $result );
 	}
@@ -231,9 +232,9 @@ class EAccounting_Ajax {
 		) );
 		$html = ob_get_contents();
 		ob_get_clean();
-		$this->send_success([
+		$this->send_success( [
 			'html' => $html
-		]);
+		] );
 
 	}
 

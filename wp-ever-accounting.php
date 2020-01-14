@@ -113,6 +113,7 @@ final class EverAccounting {
 			'ea_revenues',
 			'ea_transfers',
 			'ea_taxes',
+			'ea_products',
 		);
 		foreach ( $tables as $table ) {
 			$wpdb->$table   = $wpdb->prefix . $table;
@@ -148,6 +149,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/expense-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/product-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/transfer-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/report-functions.php' );
 

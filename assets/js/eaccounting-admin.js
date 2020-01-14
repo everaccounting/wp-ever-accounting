@@ -1,4 +1,4 @@
-window.eAccounting =  window.eAccounting|| {} ;
+window.eAccounting = window.eAccounting || {};
 
 (function ($, window, wp, document, undefined) {
 	'use strict';
@@ -9,7 +9,7 @@ window.eAccounting =  window.eAccounting|| {} ;
 			});
 			$('.ea-price-control').inputmask('decimal', {
 				alias: 'numeric',
-				groupSeparator:  eAccountingi18n.localization.thousands_separator,
+				groupSeparator: eAccountingi18n.localization.thousands_separator,
 				autoGroup: true,
 				digits: eAccountingi18n.localization.precision,
 				radixPoint: eAccountingi18n.localization.decimal_mark,
@@ -17,7 +17,7 @@ window.eAccounting =  window.eAccounting|| {} ;
 				allowMinus: false,
 				prefix: eAccountingi18n.localization.price_symbol,
 				placeholder: '0',
-				rightAlign:0
+				rightAlign: 0
 				// 'alias': 'numeric',
 				// 'groupSeparator': ',',
 				// 'autoGroup': true,
@@ -30,8 +30,22 @@ window.eAccounting =  window.eAccounting|| {} ;
 			});
 
 			$('.ea-color-control').wpColorPicker();
-			// $('.ea-price-control').trigger('focus');
-			// $('.ea-price-control').trigger('blur');
+			$('.ea-wp-file-upload-btn').on('click', eAccounting.handleMediaUpload);
+
+		},
+		handleMediaUpload: function (e) {
+			e.preventDefault();
+			var that = $(e.target);
+			var image = wp.media({
+				title: 'Upload Image',
+				multiple: false
+			}).open()
+				.on('select', function () {
+					var uploaded_image = image.state().get('selection').first();
+					var image_url = uploaded_image.toJSON().url;
+					$(that).closest('div').find('input').val(uploaded_image.toJSON().id);
+					$(that).closest('div').css('background-image', 'url(' + image_url + ')');
+				});
 		},
 		init: function () {
 			this.initializePlugins();
