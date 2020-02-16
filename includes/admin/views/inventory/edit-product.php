@@ -101,15 +101,6 @@ echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'A
 				])
 				?>
 
-				<div class="ea-form-group ea-col-6">
-					<label for="description" class="ea-control-label">Image</label>
-					<div class="ea-wp-file-upload-wrap">
-						<a href="#" class="ea-wp-file-upload-btn"></a>
-						<input type="hidden" name="image_id" value="">
-					</div>
-				</div>
-
-
 			</div>
 			<?php do_action( 'eaccounting_add_item_form_bottom' ); ?>
 

@@ -1,6 +1,6 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-$base_url    = admin_url( 'admin.php?page=eaccounting-categories' );
+$base_url    = admin_url( 'admin.php?page=eaccounting-misc&tab=categories' );
 $category_id = empty( $_GET['category'] ) ? false : absint( $_GET['category'] );
 $category    = new StdClass();
 if ( $category_id ) {

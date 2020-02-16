@@ -6,7 +6,7 @@ if ( ! empty( $id ) ) {
 	$transfer = eaccounting_get_transfer( $id );
 }
 
-$transfer_url = admin_url( 'admin.php?page=eaccounting-transfers' );
+$transfer_url = admin_url( 'admin.php?page=eaccounting-banking&tab=transfers' );
 $title        = ! empty( $transfer->id ) ? __( 'Update Transfer', 'wp-ever-accounting' ) : __( 'Add Transfer', 'wp-ever-accounting' );
 ?>
 

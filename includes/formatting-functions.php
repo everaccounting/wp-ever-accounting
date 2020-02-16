@@ -46,6 +46,7 @@ function eaccounting_get_option( $key = '', $section = 'eaccounting_general', $d
 	$option = get_option( $section, [] );
 	$value  = ! empty( $option[ $key ] ) ? $option[ $key ] : $default;
 	$value  = apply_filters( 'eaccounting_get_option', $value, $key, $default );
+
 	return apply_filters( 'eaccounting_get_option_' . $key, $value, $key, $default );
 }
 
@@ -64,13 +65,13 @@ function eaccounting_get_price_currency() {
  * @return array|string
  */
 function eaccounting_get_price_currency_symbol() {
-	$currency  = eaccounting_get_price_currency();
-	$symbols = eaccounting_get_currency_symbols();
-	if ( array_key_exists( $currency, $symbols ) ) {
-		return $symbols[ $currency ];
-	}
+	$currency = eaccounting_get_price_currency();
+//	$symbols = eaccounting_get_currency_symbols();
+//	if ( array_key_exists( $currency, $symbols ) ) {
+//		return $symbols[ $currency ];
+//	}
 
-	return $symbols['USD'];
+//	return $symbols['USD'];
 }
 
 
@@ -243,4 +244,28 @@ function eaccounting_price( $price, $currency = false ) {
 	$currency_symbol = eaccounting_get_price_currency_symbol();
 
 	return sprintf( $format, eaccounting_format_price( $price ), $currency_symbol );
+}
+
+/**
+ * Instance of money class.
+ *
+ * @param mixed $amount
+ * @param string $currency
+ * @param bool $convert
+ *
+ * @return EAccounting_Money
+ */
+function eaccounting_money( $amount, $currency = 'USD', $convert = false ) {
+	return new EAccounting_Money( $amount, eaccounting_currency( $currency ), $convert );
+}
+
+/**
+ * Instance of currency class.
+ *
+ * @param string $currency
+ *
+ * @return EAccounting_Currency
+ */
+function eaccounting_currency( $currency ) {
+	return new EAccounting_Currency( $currency );
 }

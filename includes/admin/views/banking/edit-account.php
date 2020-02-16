@@ -15,7 +15,7 @@ $title = $account_id ? __( 'Update  Account', 'wp-ever-accounting' ) : __( 'Add 
 
 <div class="ea-card">
 	<div class="ea-card-body">
-		<form id="ea-add-account" action="" method="post">
+		<form class="ea-account-form" id="ea-add-account" action="" method="post">
 			<?php do_action( 'eaccounting_add_account_form_top' ); ?>
 			<div class="ea-row">
 				<?php
@@ -28,6 +28,16 @@ $title = $account_id ? __( 'Update  Account', 'wp-ever-accounting' ) : __( 'Add 
 					'required'      => true,
 					'wrapper_class' => 'ea-col-6',
 				) );
+
+				echo EAccounting_Form::currencies_dropdown( array(
+					'label'         => __( 'Currency', 'wp-ever-accounting' ),
+					'name'          => 'currency_code',
+					'value'         => !empty( $account->currency_code ) ? $account->currency_code : 'USD',
+					'icon'          => 'fa fa-exchange',
+					'required'      => true,
+					'wrapper_class' => 'ea-col-6',
+				) );
+
 
 				echo EAccounting_Form::price_control( array(
 					'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
@@ -63,6 +73,7 @@ $title = $account_id ? __( 'Update  Account', 'wp-ever-accounting' ) : __( 'Add 
 					'icon'          => 'fa fa-phone',
 					'wrapper_class' => 'ea-col-6',
 				) );
+
 
 				echo EAccounting_Form::status_control( array(
 					'label'         => __( 'Status', 'wp-ever-accounting' ),

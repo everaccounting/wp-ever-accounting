@@ -33,6 +33,7 @@ function eaccounting_insert_account( $args ) {
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
 		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : eaccounting_sanitize_price( $args['opening_balance'] ),
+		'currency_code'       => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo set default account
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
@@ -44,6 +45,9 @@ function eaccounting_insert_account( $args ) {
 
 	if ( empty( $data['name'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Name is required', 'wp-ever-accounting' ) );
+	}
+	if ( empty( $data['currency_code'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
 
 	$where = array( 'id' => $id );

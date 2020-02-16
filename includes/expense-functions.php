@@ -1,6 +1,14 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Outgoing amount must same currency as assigned account
+ *
+ * @since 1.0.0
+ * @param $args
+ *
+ * @return int|WP_Error|null
+ */
 function eaccounting_insert_payment( $args ) {
 	global $wpdb;
 	$update = false;
@@ -23,6 +31,8 @@ function eaccounting_insert_payment( $args ) {
 		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
 		'amount'         => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
+		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo if not set default
+		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),//todo if not set default
 		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
@@ -43,8 +53,16 @@ function eaccounting_insert_payment( $args ) {
 		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
 
+	if ( empty( $data['currency_code'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data['currency_rate'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Currency rate is required', 'wp-ever-accounting' ) );
+	}
+
 	if ( empty( $data['category_id'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Payment category is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['payment_method'] ) ) {
@@ -250,10 +268,11 @@ function eaccounting_get_payments( $args = array(), $count = false ) {
 
 /**
  * Get total income
- * @since 1.0.0
  * @return string|null
+ * @since 1.0.0
  */
-function eaccounting_get_total_expense(){
+function eaccounting_get_total_expense() {
 	global $wpdb;
-	return $wpdb->get_var("SELECT SUM(amount) from $wpdb->ea_payments WHERE category_id IN (SELECT id FROM $wpdb->ea_categories WHERE type='expense')");
+
+	return $wpdb->get_var( "SELECT SUM(amount) from $wpdb->ea_payments WHERE category_id IN (SELECT id FROM $wpdb->ea_categories WHERE type='expense')" );
 }

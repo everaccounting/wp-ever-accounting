@@ -21,7 +21,7 @@ function eaccounting_activate_category( $data ) {
 
 	eaccounting_admin_notice( __( 'Category Activated.', 'wp-ever-accounting' ) );
 
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-categories' ) );
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-misc&tab=categories' ) );
 	exit;
 }
 
@@ -48,7 +48,7 @@ function eaccounting_deactivate_category( $data ) {
 
 	eaccounting_admin_notice( __( 'Category Deactivated', 'wp-ever-accounting' ) );
 
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-categories' ) );
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-misc&tab=categories' ) );
 	exit;
 }
 
@@ -71,7 +71,7 @@ function eaccounting_delete_category_handler( $data ) {
 
 	eaccounting_admin_notice( __( 'Category Deleted', 'wp-ever-accounting' ) );
 
-	wp_redirect( admin_url( 'admin.php?page=eaccounting-categories' ) );
+	wp_redirect( admin_url( 'admin.php?page=eaccounting-misc&tab=categories' ) );
 	exit;
 }
 
@@ -96,7 +96,7 @@ function eaccounting_edit_category( $posted ) {
 
 	if ( is_wp_error( $posted ) ) {
 		eaccounting_admin_notice( $created->get_error_message(), 'error' );
-		wp_redirect( admin_url( 'admin.php?page=eaccounting-categories' ) );
+		wp_redirect( admin_url( 'admin.php?page=eaccounting-misc&tab=categories' ) );
 		exit();
 	}
 

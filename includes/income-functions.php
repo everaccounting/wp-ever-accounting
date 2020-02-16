@@ -2,6 +2,8 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
+ * Incoming amount must same as account currency
+ *
  * @since 1.0.0
  * @param $args
  *
@@ -29,6 +31,8 @@ function eaccounting_insert_revenue( $args ) {
 		'account_id'  => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'     => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
 		'amount'      => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
+		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo if not set default
+		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),//todo if not set default
 		'contact_id'  => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description' => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id' => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
@@ -48,7 +52,13 @@ function eaccounting_insert_revenue( $args ) {
 	if ( empty( $data['amount'] ) || $data['amount'] == '0.00') {
 		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
+	if ( empty( $data['currency_code'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
+	}
 
+	if ( empty( $data['currency_rate'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Currency rate is required', 'wp-ever-accounting' ) );
+	}
 	if ( empty( $data['category_id'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
 	}

@@ -11,15 +11,14 @@
   transition: 0.3s border;
   max-width: none !important;
 
-  &.has-error {
-	border: 1px solid red;
-  }
-
-
   &:focus {
 	box-shadow: none !important;
 	outline: 0 !important;
 	border: 1px solid $color__primary !important;
+  }
+
+  &.error {
+	border: 1px solid red !important;
   }
 }
 

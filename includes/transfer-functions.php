@@ -3,6 +3,9 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
+ * Amount must be of currency from account and convert
+ * to other account currency
+ *
  * @param $args
  *
  * @return array|int|WP_Error|null
@@ -61,11 +64,10 @@ function eaccounting_insert_transfer( $args ) {
 		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-ever-accounting' ) );
 	}
 
-	$from_account = new EAccounting_Account( $data['from_account_id'] );
-
-	if ( $from_account->get_current_balance() < $data['amount'] ) {
-		return new WP_Error( 'invalid_amount', __( 'Amount is higher than the available fund in source account', 'wp-ever-accounting' ) );
-	}
+//	$from_account = new EAccounting_Account( $data['from_account_id'] );
+//	if ( $from_account->get_current_balance() < $data['amount'] ) {
+//		return new WP_Error( 'invalid_amount', __( 'Amount is higher than the available fund in source account', 'wp-ever-accounting' ) );
+//	}
 
 	$category    = eaccounting_get_category( 'Transfer', 'name' );
 	$category_id = $category ? $category->id : false;
@@ -81,12 +83,19 @@ function eaccounting_insert_transfer( $args ) {
 		return new WP_Error( 'empty_content', __( 'Seems transfer category is missing from database', 'wp-ever-accounting' ) );
 	}
 
+	$payment_account  = eaccounting_get_account( $data['from_account_id'] );
+	$revenue_account  = eaccounting_get_account( $data['to_account_id'] );
+	$payment_currency = eaccounting_get_currency( $payment_account->currency_code, 'code' );
+	$revenue_currency = eaccounting_get_currency( $revenue_account->currency_code, 'code' );
+
 
 	$payment_id = eaccounting_insert_payment( [
 		'id'             => $data['payment_id'],
 		'account_id'     => $data['from_account_id'],
 		'paid_at'        => $data['transferred_at'],
 		'amount'         => $data['amount'],
+		'currency_code'  => $payment_currency->code,
+		'currency_rate'  => $payment_currency->rate,
 		'vendor_id'      => 0,
 		'description'    => $data['description'],
 		'category_id'    => $category_id,
@@ -98,11 +107,24 @@ function eaccounting_insert_transfer( $args ) {
 		return $payment_id;
 	}
 
+	if ( $payment_currency->code != $revenue_currency->code ) {
+		$default_currency = eaccounting_get_default_currency();
+		$default_amount   = $data['amount'];
+		if ( $payment_currency->code != $default_currency->code ) {
+			$default_amount = eaccounting_money( $default_amount, $payment_currency->code )->divide( (double) $payment_currency->rate )->getAmount();
+		}
+		$amount = eaccounting_money( $default_amount, $revenue_currency->code )->divide( (double) $revenue_currency->rate )->getAmount();
+	} else {
+		$amount = $data['amount'];
+	}
+
 	$revenue_id = eaccounting_insert_revenue( [
 		'id'             => $data['revenue_id'],
 		'account_id'     => $data['to_account_id'],
 		'paid_at'        => $data['transferred_at'],
-		'amount'         => $data['amount'],
+		'amount'         => $amount,
+		'currency_code'  => $revenue_currency->code,
+		'currency_rate'  => $revenue_currency->rate,
 		'customer_id'    => 0,
 		'description'    => $data['description'],
 		'category_id'    => $category_id,
@@ -113,7 +135,6 @@ function eaccounting_insert_transfer( $args ) {
 	if ( is_wp_error( $revenue_id ) ) {
 		return $revenue_id;
 	}
-
 
 	$where = array( 'id' => $id );
 	$data  = wp_unslash( array(
@@ -154,20 +175,20 @@ function eaccounting_insert_transfer( $args ) {
 function eaccounting_get_transfer( $id ) {
 	global $wpdb;
 
-	return $wpdb->get_row( $wpdb->prepare( "SELECT t.id, 
-		       p.account_id from_account_id, 
-		       r.account_id to_account_id, 
+	return $wpdb->get_row( $wpdb->prepare( "SELECT t.id,
+		       p.account_id from_account_id,
+		       r.account_id to_account_id,
 		       p.id payment_id,
 		       p.amount,
 		       p.paid_at transferred_at,
-		       p.description description, 
-		       p.payment_method payment_method, 
-		       p.reference reference, 
-		       r.id revenue_id 
-		FROM   {$wpdb->ea_transfers} t 
-		       LEFT JOIN {$wpdb->ea_payments} p 
-		              ON p.id = t.payment_id 
-		       LEFT JOIN {$wpdb->ea_revenues} r 
+		       p.description description,
+		       p.payment_method payment_method,
+		       p.reference reference,
+		       r.id revenue_id
+		FROM   {$wpdb->ea_transfers} t
+		       LEFT JOIN {$wpdb->ea_payments} p
+		              ON p.id = t.payment_id
+		       LEFT JOIN {$wpdb->ea_revenues} r
               ON r.id = t.revenue_id WHERE t.id=%d", $id ) );
 }
 
@@ -232,15 +253,15 @@ function eaccounting_get_transfers( $args = array(), $count = false ) {
 	$args         = wp_parse_args( $args, $default );
 	$query_from   = "FROM $wpdb->ea_transfers t ";
 	$query_where  = 'WHERE 1=1';
-	$query_fields = " t.id, 
-			       p.account_id from_account_id, 
-			       r.account_id to_account_id, 
+	$query_fields = " t.id,
+			       p.account_id from_account_id,
+			       r.account_id to_account_id,
 			       p.id payment_id,
 			       p.amount,
 			       p.paid_at transferred_at,
-			       p.description description, 
-			       p.payment_method payment_method, 
-			       p.reference reference, 
+			       p.description description,
+			       p.payment_method payment_method,
+			       p.reference reference,
 			       r.id revenue_id,
 			       t.created_at,
 			       t.updated_at";

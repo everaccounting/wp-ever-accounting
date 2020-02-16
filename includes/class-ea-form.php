@@ -586,6 +586,29 @@ class EAccounting_Form {
 	}
 
 	/**
+	 * Get taxes dropdown
+	 *
+	 * since 1.0.0
+	 *
+	 * @param $args
+	 *
+	 * @return string
+	 */
+	public static function currencies_dropdown( $args ) {
+		$args = wp_parse_args( $args, array(
+			'name'    => 'currency',
+			'select2' => true,
+			'options' => wp_list_pluck( eaccounting_get_currencies( array(
+				'per_page' => '-1',
+				'status'   => 'active',
+				'fields'   => array( 'code', 'name' ),
+			) ), 'name', 'code' ),
+		) );
+
+		return self::select_control( $args );
+	}
+
+	/**
 	 * since 1.0.0
 	 *
 	 * @param $args

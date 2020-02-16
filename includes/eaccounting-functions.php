@@ -297,3 +297,13 @@ function eaccounting_get_contact_revenue_total( $contact_id ) {
 
 	return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) FROM $wpdb->ea_revenues WHERE contact_id=%d", absint( $contact_id ) ) );
 }
+
+/**
+ * @since 1.0.2
+ * @return array|object|void|null
+ */
+function eaccounting_get_default_currency() {
+	$default_currency_code = get_option( 'ea_default_currency', 'USD' );
+
+	return eaccounting_get_currency( $default_currency_code, 'code' );
+}

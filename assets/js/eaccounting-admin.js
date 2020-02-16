@@ -7,31 +7,21 @@ window.eAccounting = window.eAccounting || {};
 			$('.ea-select2-control').select2({
 				theme: 'default eaccounting-select2'
 			});
-			$('.ea-price-control').inputmask('decimal', {
-				alias: 'numeric',
-				groupSeparator: eAccountingi18n.localization.thousands_separator,
-				autoGroup: true,
-				digits: eAccountingi18n.localization.precision,
-				radixPoint: eAccountingi18n.localization.decimal_mark,
-				digitsOptional: false,
-				allowMinus: false,
-				prefix: eAccountingi18n.localization.price_symbol,
-				placeholder: '0',
-				rightAlign: 0
-				// 'alias': 'numeric',
-				// 'groupSeparator': ',',
-				// 'autoGroup': true,
-				// 'digits': 2,
-				// 'radixPoint': ".",
-				// 'digitsOptional': false,
-				// 'allowMinus': false,
-				// 'prefix': '$ ',
-				// 'placeholder': '0'
-			});
+			// $('.ea-price-control').inputmask('decimal', {
+			// 	alias: 'numeric',
+			// 	groupSeparator: eAccountingi18n.localization.thousands_separator,
+			// 	autoGroup: true,
+			// 	digits: eAccountingi18n.localization.precision,
+			// 	radixPoint: eAccountingi18n.localization.decimal_mark,
+			// 	digitsOptional: false,
+			// 	allowMinus: false,
+			// 	prefix: eAccountingi18n.localization.price_symbol,
+			// 	placeholder: '0',
+			// 	rightAlign: 0
+			// });
 
 			$('.ea-color-control').wpColorPicker();
 			$('.ea-wp-file-upload-btn').on('click', eAccounting.handleMediaUpload);
-
 		},
 		handleMediaUpload: function (e) {
 			e.preventDefault();
@@ -50,6 +40,18 @@ window.eAccounting = window.eAccounting || {};
 		init: function () {
 			this.initializePlugins();
 			$(document).on('eAccountingInvoiceUpdated', this.initializePlugins);
+
+			$('.open-eaccounting-modal').on('click', function (event) {
+				event.preventDefault();
+				console.log('clicked');
+				$( this ).WCBackboneModal({
+					template : 'wc-modal-add-shipping-method',
+					variable : {
+						zone_id : 'data.zone_id'
+					}
+				});
+			});
+
 		}
 	};
 

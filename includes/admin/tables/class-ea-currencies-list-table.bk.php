@@ -6,7 +6,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-class EAccounting_Accounts_List_Table extends WP_List_Table {
+class EAccounting_Currencies_List_Table extends WP_List_Table {
 	/**
 	 * Number of results to show per page
 	 *
@@ -46,16 +46,15 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 	public $base_url;
 
 	/**
-	 * EAccounting_Products_List_Table constructor.
+	 * EAccounting_Currencies_List_Table constructor.
 	 */
 	public function __construct() {
 		parent::__construct( array(
-			'singular' => 'account',
-			'plural'   => 'accounts',
+			'singular' => 'currency',
+			'plural'   => 'currencies',
 			'ajax'     => false,
 		) );
-		$this->base_url = admin_url( 'admin.php?page=eaccounting-banking&tab=accounts' );
-		$this->process_bulk_action();
+		$this->base_url = admin_url( 'admin.php?page=eaccounting-misc&tab=currencies' );
 	}
 
 	/**
@@ -65,14 +64,13 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	public function prepare_items() {
-		$per_page = $this->per_page;
-		$columns = $this->get_columns();
-		$hidden = array();
-		$sortable = $this->get_sortable_columns();
+		$per_page              = $this->per_page;
+		$columns               = $this->get_columns();
+		$hidden                = array();
+		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-		$this->process_bulk_action();
-		$data = $this->get_results();
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+		$data                  = $this->get_results();
+		$status                = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
 		switch ( $status ) {
 			case 'active':
@@ -87,15 +85,14 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 				break;
 		}
 
-		$this->items = array_map( function ( $item ) {
-			return new EAccounting_Account( $item );
-		}, $data );
+		$this->items = $data;
 
 		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $total_items / $per_page ),
-		));
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
 	}
 
 	/**
@@ -184,13 +181,10 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-			'cb'              => '<input type="checkbox" />',
-			'name'            => __( 'Name', 'wp-ever-accounting' ),
-			'current_balance' => __( 'Current Balance', 'wp-ever-accounting' ),
-			'number'          => __( 'Account Number', 'wp-ever-accounting' ),
-			'bank_name'       => __( 'Bank Name', 'wp-ever-accounting' ),
-			'opening_balance' => __( 'Opening Balance', 'wp-ever-accounting' ),
-			'status'          => __( 'Status', 'wp-ever-accounting' ),
+			'cb'       => '<input type="checkbox" />',
+			'currency' => __( 'Currency', 'wp-ever-accounting' ),
+			'rate'     => __( 'Rate', 'wp-ever-accounting' ),
+			'status'   => __( 'Status', 'wp-ever-accounting' ),
 		);
 
 		return $columns;
@@ -200,29 +194,14 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 	 * Retrieve the table's sortable columns
 	 *
 	 * @return array Array of all the sortable columns
-	 *
 	 * @since 1.0.0
 	 */
 	public function get_sortable_columns() {
 		return array(
-			'name'            => array( 'name', false ),
-			'number'          => array( 'number', false ),
-			'bank_name'       => array( 'bank_name', false ),
-			'opening_balance' => array( 'opening_balance', false ),
-			'status'          => array( 'status', false ),
+			'currency' => array( 'currency', false ),
+			'rate'     => array( 'rate', false ),
+			'status'   => array( 'status', false ),
 		);
-	}
-
-	/**
-	 * Gets the name of the primary column.
-	 *
-	 * @return string Name of the primary column.
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 */
-	protected function get_primary_column_name() {
-		return 'name';
 	}
 
 	/**
@@ -233,24 +212,26 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 	 * @since 1.0.0
 	 */
 	function column_default( $item, $column_name ) {
-		return ! empty( $item->$column_name ) ? $item->$column_name : '&mdash;';
+		return $item->$column_name;
 	}
 
 	/**
 	 * Render the Name Column
 	 *
-	 * @param EAccounting_Account $item Contains all the data of the discount code
+	 * @param array $item Contains all the data of the discount code
 	 *
 	 * @return string Data shown in the Name column
 	 * @since 1.0.0
 	 */
 	function column_name( $item ) {
-		$account_url    = add_query_arg( array( 'account' => $item->get_id() ), $this->base_url );
-		$edit_url       = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'edit_account' ], $account_url ), 'eaccounting_accounts_nonce' );
-		$activate_url   = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'activate_account' ], $account_url ), 'eaccounting_accounts_nonce' );
-		$deactivate_url = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'deactivate_account' ], $account_url ), 'eaccounting_accounts_nonce' );
-		$delete_url     = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_account' ], $account_url ), 'eaccounting_accounts_nonce' );
+		$category_url   = add_query_arg( array( 'category' => $item->id ), $this->base_url );
+		$edit_url       = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'edit_category' ], $category_url ), 'eaccounting_currencies_nonce' );
+		$activate_url   = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'activate_category' ], $category_url ), 'eaccounting_currencies_nonce' );
+		$deactivate_url = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'deactivate_category' ], $category_url ), 'eaccounting_currencies_nonce' );
+		$delete_url     = wp_nonce_url( add_query_arg( [ 'eaccounting-action' => 'delete_category' ], $category_url ), 'eaccounting_currencies_nonce' );
+
 		$row_actions['edit'] = sprintf( '<a href="%1$s">%2$s</a>', $edit_url, __( 'Edit', 'wp-ever-accounting' ) );
+
 		if ( strtolower( $item->status ) == 'active' ) {
 			$row_actions['deactivate'] = sprintf( '<a href="%1$s">%2$s</a>', $deactivate_url, __( 'Deactivate', 'wp-ever-accounting' ) );
 		} elseif ( strtolower( $item->status ) == 'inactive' ) {
@@ -258,11 +239,10 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 		}
 		$row_actions['delete'] = sprintf( '<a href="%1$s">%2$s</a>', $delete_url, __( 'Delete', 'wp-ever-accounting' ) );
 
-		$row_actions = apply_filters( 'eaccounting_accounts_row_actions', $row_actions, $item );
+		$row_actions = apply_filters( 'eaccounting_currencies_row_actions', $row_actions, $item );
 
-		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, stripslashes( $item->get_name() ) ) . $this->row_actions( $row_actions );
+		return sprintf( '<strong><a href="%1$s">%2$s</a></strong>', $edit_url, stripslashes( $item->name ) ) . $this->row_actions( $row_actions );
 	}
-
 
 	/**
 	 * Render the checkbox column
@@ -281,49 +261,17 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * since 1.0.0
+	 * Types of category
 	 *
-	 * @param $item EAccounting_Account
-	 *
-	 * @return string
-	 */
-	function column_number( $item ) {
-		return ! empty( $item->get_number() ) ? $item->get_number() : '&mdash;';
-	}
-
-	/**
-	 * since 1.0.0
-	 *
-	 * @param $item EAccounting_Account
+	 * @param $item
 	 *
 	 * @return string
-	 */
-	function column_bank_name( $item ) {
-		return ! empty( $item->get_bank_name() ) ? $item->get_bank_name() : '&mdash;';
-	}
-
-	/**
-	 * Render the current balance column
-	 *
-	 * @param array $item Contains all the data for the checkbox column
-	 *
-	 * @return string Displays current balance
 	 * @since 1.0.0
 	 */
-	function column_current_balance( $item ) {
-		return $item->get_current_balance( 'view' );
-	}
+	function column_type( $item ) {
+		$types = eaccounting_get_category_types();
 
-	/**
-	 * Render the current balance column
-	 *
-	 * @param EAccounting_Account $item Contains all the data for the checkbox column
-	 *
-	 * @return string Displays current balance
-	 * @since 1.0.0
-	 */
-	function column_opening_balance( $item ) {
-		return ! empty( $item->get_opening_balance() ) ? $item->get_opening_balance() : '&mdash;';
+		return array_key_exists( $item->type, $types ) ? $types[ $item->type ] : '-';
 	}
 
 	/**
@@ -338,43 +286,6 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 		return sprintf( '<span class="ea-item-status %1$s">%1$s</span>', $item->status );
 	}
 
-	/**
-	 * Process the bulk actions
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 *
-	 */
-	public function process_bulk_action() {
-
-		if ( empty( $_REQUEST['_wpnonce'] ) ) {
-			return;
-		}
-
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-accounts' ) ) {
-			return;
-		}
-
-		$ids = isset( $_GET['account'] ) ? $_GET['account'] : false;
-
-		if ( ! is_array( $ids ) ) {
-			$ids = array( $ids );
-		}
-
-		$ids = array_map( 'intval', $ids );
-
-		foreach ( $ids as $id ) {
-			if ( 'delete' === $this->current_action() ) {
-				eaccounting_delete_account( $id );
-			}
-			if ( 'activate' === $this->current_action() ) {
-				eaccounting_insert_account( [ 'id' => $id, 'status' => 'active' ] );
-			}
-			if ( 'deactivate' === $this->current_action() ) {
-				eaccounting_insert_account( [ 'id' => $id, 'status' => 'inactive' ] );
-			}
-		}
-	}
 
 	/**
 	 * Retrieve all the data for all the discount codes
@@ -384,9 +295,10 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 	 */
 	public function get_results() {
 		$per_page = $this->per_page;
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( $_GET['orderby'] ) : 'created_at';
-		$order   = isset( $_GET['order'] ) ? sanitize_key( $_GET['order'] ) : 'DESC';
-		$status  = isset( $_GET['status'] ) ? sanitize_key( $_GET['status'] ) : '';
+
+		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'created_at';
+		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$search  = isset( $_GET['s'] ) ? sanitize_text_field( $_GET['s'] ) : null;
 
 		$args = array(
@@ -398,16 +310,15 @@ class EAccounting_Accounts_List_Table extends WP_List_Table {
 			'search'   => $search
 		);
 
-
 		if ( array_key_exists( $orderby, $this->get_sortable_columns() ) && 'name' != $orderby ) {
 			$args['orderby'] = $orderby;
 		}
 
-		$this->active_count   = eaccounting_get_accounts( array_merge( $args, array( 'status' => 'active' ) ), true );
-		$this->inactive_count = eaccounting_get_accounts( array_merge( $args, array( 'status' => 'inactive' ) ), true );
-		$this->total_count    = eaccounting_get_accounts( array_merge( $args, array( 'status' => '' ) ), true );
+		$this->active_count   = eaccounting_get_currencies( array_merge( $args, array( 'status' => 'active' ) ), true );
+		$this->inactive_count = eaccounting_get_currencies( array_merge( $args, array( 'status' => 'inactive' ) ), true );
+		$this->total_count    = eaccounting_get_currencies( array_merge( $args, array( 'status' => '' ) ), true );
 
-		$results = eaccounting_get_accounts( $args );
+		$results = eaccounting_get_currencies( $args );
 
 		return $results;
 	}

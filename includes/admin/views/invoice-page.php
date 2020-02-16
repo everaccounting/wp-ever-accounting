@@ -14,75 +14,67 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 			<form action="">
 				<div class="ea-row">
 					<?php
-					//					echo EAccounting_Form::customer_dropdown( array(
-					//						'label'         => __( 'Customer', 'wp-ever-accounting' ),
-					//						'name'          => 'customer_id',
-					////				'value'         => isset( $account['customer_id'] ) ? $account['customer_id'] : '',
-					//						'placeholder'   => __( 'Select Customer', 'wp-ever-accounting' ),
-					//						'icon'          => 'fa fa-user',
-					//						'required'      => true,
-					//						'wrapper_class' => 'ea-col-6',
-					//					) );
-					//
-					//					echo EAccounting_Form::input_control( array(
-					//						'label'         => __( 'Invoice Number', 'wp-ever-accounting' ),
-					//						'name'          => 'invoice_number',
-					////				'value'         => isset( $account['invoice_number'] ) ? $account['invoice_number'] : '',
-					//						'placeholder'   => __( 'INV-0001', 'wp-ever-accounting' ),
-					//						'icon'          => 'fa fa-file-text-o',
-					//						'required'      => true,
-					//						'readonly'      => true,
-					//						'wrapper_class' => 'ea-col-6',
-					//					) );
-					//
-					//					echo EAccounting_Form::date_control( array(
-					//						'label'         => __( 'Invoice Date', 'wp-ever-accounting' ),
-					//						'name'          => 'issued_at',
-					////				'value'         => isset( $account['issued_at'] ) ? $account['issued_at'] : '',
-					//						'placeholder'   => date( 'Y-m-d', current_time( 'timestamp' ) ),
-					//						'icon'          => 'fa fa-calendar',
-					//						'required'      => true,
-					//						'wrapper_class' => 'ea-col-6',
-					//					) );
-					//
-					//					echo EAccounting_Form::date_control( array(
-					//						'label'         => __( 'Due Date', 'wp-ever-accounting' ),
-					//						'name'          => 'issued_at',
-					////				'value'         => isset( $account['due_at'] ) ? $account['due_at'] : '',
-					//						'placeholder'   => date( 'Y-m-d', strtotime( '+15 days' ) ),
-					//						'icon'          => 'fa fa-calendar',
-					//						'required'      => true,
-					//						'wrapper_class' => 'ea-col-6',
-					//					) );
-					//
-					//					echo EAccounting_Form::categories_dropdown( array(
-					//						'label'         => __( 'Category', 'wp-ever-accounting' ),
-					//						'name'          => 'category',
-					//						'type'          => 'income',
-					////				'value'         => isset( $account['category'] ) ? $account['category'] : '',
-					//						'placeholder'   => '',
-					//						'icon'          => 'fa fa-folder',
-					//						'required'      => true,
-					//						'wrapper_class' => 'ea-col-6',
-					//					) );
-					//
-					//					echo EAccounting_Form::input_control( array(
-					//						'label'         => __( 'Order Number', 'wp-ever-accounting' ),
-					//						'name'          => 'order_number',
-					////				'value'         => isset( $account['order_number'] ) ? $account['order_number'] : '',
-					//						'placeholder'   => '',
-					//						'icon'          => 'fa fa-shopping-cart',
-					//						'wrapper_class' => 'ea-col-6',
-					//					) );
+					echo EAccounting_Form::customer_dropdown( array(
+						'label'         => __( 'Customer', 'wp-ever-accounting' ),
+						'name'          => 'customer_id',
+						'value'         => isset( $account['customer_id'] ) ? $account['customer_id'] : '',
+						'placeholder'   => __( 'Select Customer', 'wp-ever-accounting' ),
+						'icon'          => 'fa fa-user',
+						'required'      => true,
+						'wrapper_class' => 'ea-col-6',
+					) );
 
-					echo EAccounting_Form::taxes_dropdown( array(
+					echo EAccounting_Form::input_control( array(
+						'label'         => __( 'Invoice Number', 'wp-ever-accounting' ),
+						'name'          => 'invoice_number',
+						'value'         => isset( $account['invoice_number'] ) ? $account['invoice_number'] : '',
+						'placeholder'   => __( 'INV-0001', 'wp-ever-accounting' ),
+						'icon'          => 'fa fa-file-text-o',
+						'required'      => true,
+						'readonly'      => true,
+						'wrapper_class' => 'ea-col-6',
+					) );
+
+					echo EAccounting_Form::date_control( array(
+						'label'         => __( 'Invoice Date', 'wp-ever-accounting' ),
+						'name'          => 'issued_at',
+						'value'         => isset( $account['issued_at'] ) ? $account['issued_at'] : '',
+						'placeholder'   => date( 'Y-m-d', current_time( 'timestamp' ) ),
+						'icon'          => 'fa fa-calendar',
+						'required'      => true,
+						'wrapper_class' => 'ea-col-6',
+					) );
+
+					echo EAccounting_Form::date_control( array(
+						'label'         => __( 'Due Date', 'wp-ever-accounting' ),
+						'name'          => 'due_at',
+						'value'         => isset( $account['due_at'] ) ? $account['due_at'] : '',
+						'placeholder'   => date( 'Y-m-d', strtotime( '+15 days' ) ),
+						'icon'          => 'fa fa-calendar',
+						'required'      => true,
+						'wrapper_class' => 'ea-col-6',
+					) );
+
+					echo EAccounting_Form::categories_dropdown( array(
+						'label'         => __( 'Category', 'wp-ever-accounting' ),
+						'name'          => 'category',
+						'type'          => 'income',
+						'value'         => isset( $account['category'] ) ? $account['category'] : '',
+						'placeholder'   => '',
+						'icon'          => 'fa fa-folder',
+						'required'      => true,
+						'wrapper_class' => 'ea-col-6',
+					) );
+
+					echo EAccounting_Form::input_control( array(
 						'label'         => __( 'Order Number', 'wp-ever-accounting' ),
 						'name'          => 'order_number',
-						//				'value'         => isset( $account['order_number'] ) ? $account['order_number'] : '',
+						'value'         => isset( $account['order_number'] ) ? $account['order_number'] : '',
 						'placeholder'   => '',
 						'icon'          => 'fa fa-shopping-cart',
 						'wrapper_class' => 'ea-col-6',
 					) );
+
 
 					?>
 					<div class="ea-col-12">
@@ -290,19 +282,19 @@ $title             = __( 'Add Invoice', 'wp-ever-accounting' );
 			});
 		}
 
-		function  init_tax_dropdown() {
+		function init_tax_dropdown() {
 			$('.ea-tax-control').select2({
 				theme: 'default eaccounting-select2',
 				placeholder: {
 					id: '-1',
-					text: '<?php echo __('Select Tax', 'wp-ever-accounting');?>'
+					text: '<?php echo __( 'Select Tax', 'wp-ever-accounting' );?>'
 				},
 				escapeMarkup: function (markup) {
 					return markup;
 				},
 				language: {
 					noResults: function () {
-						return '<?php echo sprintf('<span id="tax-add-new"><i class="fa fa-plus"></i>%s</span>',__('Add Tax', 'wp-ever-accounting')); ?>';
+						return '<?php echo sprintf( '<span id="tax-add-new"><i class="fa fa-plus"></i>%s</span>', __( 'Add Tax', 'wp-ever-accounting' ) ); ?>';
 					}
 				}
 			});

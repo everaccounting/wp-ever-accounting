@@ -11,7 +11,6 @@
 	eAccountingInvoiceTable.prototype = {
 		defaults: {},
 		init: function () {
-			var self = this;
 			this.options = $.extend({}, this.defaults, this.options);
 			this.bindEvents();
 			return this;
@@ -27,7 +26,7 @@
 			var lineItem = this.lineItem.find('input').each(function () {
 				$(this).val('');
 			});
-			console.log(lineItem.)
+
 			this.table.find('tbody').append(lineItem);
 			return false;
 		}

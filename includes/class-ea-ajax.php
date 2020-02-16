@@ -12,6 +12,7 @@ class EAccounting_Ajax {
 		add_action( 'wp_ajax_eaccounting_file_upload', array( $this, 'upload_file' ) );
 		add_action( 'wp_ajax_eaccounting_get_invoice_total_item', array( $this, 'get_invoice_total_item' ) );
 		add_action( 'wp_ajax_eaccounting_invoice_add_item', array( $this, 'invoice_add_item' ) );
+		add_action( 'wp_ajax_eaccounting_get_currency', array($this, 'get_currency'));
 	}
 
 	public function expense_by_category_chart() {
@@ -237,6 +238,11 @@ class EAccounting_Ajax {
 		] );
 
 	}
+
+	public function get_currency(){
+//		$code =
+	}
+
 
 	/**
 	 * Check permission

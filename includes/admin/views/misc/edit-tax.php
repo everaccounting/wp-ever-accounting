@@ -12,7 +12,7 @@ echo sprintf( '<h1 class="wp-heading-inline">%s</h1>', $title );
 echo sprintf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Taxes', 'wp-ever-accounting' ) ); ?>
 <div class="ea-card">
 	<div class="ea-card-body">
-		<form action="<?php echo add_query_arg( [ 'eaccounting-action' => 'add_tax_rate' ], $base_url ); ?>" method="post">
+		<form class="ea-tax-form" action="<?php echo add_query_arg( [ 'eaccounting-action' => 'add_tax_rate' ], $base_url ); ?>" method="post">
 			<?php do_action( 'eaccounting_add_tax_form_top' ); ?>
 			<div class="ea-row">
 				<?php

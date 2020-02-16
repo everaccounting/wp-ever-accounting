@@ -1,10 +1,11 @@
 <?php
 defined( 'ABSPATH' ) || exit();
-$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'taxes';
+$active_tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'categories';
 $base       = admin_url( 'admin.php?page=eaccounting-misc' );
 $misc_tabs  = apply_filters( 'eaccounting_misc_page_tabs', array(
+	'categories' => __( 'Categories', 'wp-ever-accounting' ),
+	'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 	'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
-	'categories' => __( 'Categories', 'wp-ever-accounting' )
 ) );
 
 ?>
