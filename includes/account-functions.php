@@ -37,7 +37,7 @@ function eaccounting_insert_account( $args ) {
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
-		'status'          => 'active' == $args['status'] ? 'active' : 'inactive',
+		'status'          => !empty($args['status']) && 'active' == $args['status'] ? 'active' : 'inactive',
 		'updated_at'      => current_time( 'Y-m-d H:i:s' ),
 		'created_at'      => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);

@@ -46,7 +46,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the object.', 'wp-ever-crm' ),
+						'description' => __( 'Unique identifier for the object.', 'wp-ever-accounting' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -103,8 +103,8 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		$total_contacts = eaccounting_get_contacts( $args, true );
 		$response       = array();
 
-		foreach ( $query_result as $tag ) {
-			$data       = $this->prepare_item_for_response( $tag, $request );
+		foreach ( $query_result as $item ) {
+			$data       = $this->prepare_item_for_response( $item, $request );
 			$response[] = $this->prepare_response_for_collection( $data );
 		}
 
@@ -160,9 +160,9 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
 		$request->set_param( 'context', 'view' );
-		$item = eaccounting_get_contact(  $item_id );
+		$item = eaccounting_get_contact( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-crm' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -183,9 +183,9 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 
 		$item = eaccounting_get_contact( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-crm' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
 		}
-		$prepared_args     = $this->prepare_item_for_database( $request );
+		$prepared_args = $this->prepare_item_for_database( $request );
 
 		$prepared_args->id = $item_id;
 
@@ -198,7 +198,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		}
 
 		$request->set_param( 'context', 'view' );
-		$item     = eaccounting_get_contact(  $item_id );
+		$item     = eaccounting_get_contact( $item_id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
@@ -213,9 +213,9 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
-		$item    = eaccounting_get_contact(  $item_id );
+		$item    = eaccounting_get_contact( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-crm' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -223,7 +223,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_contact( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-crm' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -259,6 +259,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'state'         => $item->state,
 			'postcode'      => $item->postcode,
 			'country'       => $item->country,
+			'website'       => $item->website,
 			'note'          => $item->note,
 			'avatar_url'    => $item->avatar_url,
 			'status'        => $item->status,
@@ -279,6 +280,74 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return object|stdClass|WP_Error
+	 */
+	public function prepare_item_for_database( $request ) {
+		$prepared_item = new stdClass();
+		$schema        = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
+			$prepared_item->id = $request['id'];
+		}
+		if ( ! empty( $schema['properties']['user_id'] ) && isset( $request['user_id'] ) ) {
+			$prepared_item->user_id = $request['user_id'];
+		}
+		if ( ! empty( $schema['properties']['first_name'] ) && isset( $request['first_name'] ) ) {
+			$prepared_item->first_name = $request['first_name'];
+		}
+		if ( ! empty( $schema['properties']['last_name'] ) && isset( $request['last_name'] ) ) {
+			$prepared_item->last_name = $request['last_name'];
+		}
+		if ( ! empty( $schema['properties']['email'] ) && isset( $request['email'] ) ) {
+			$prepared_item->email = $request['email'];
+		}
+		if ( ! empty( $schema['properties']['phone'] ) && isset( $request['phone'] ) ) {
+			$prepared_item->phone = $request['phone'];
+		}
+		if ( ! empty( $schema['properties']['address'] ) && isset( $request['address'] ) ) {
+			$prepared_item->address = $request['address'];
+		}
+		if ( ! empty( $schema['properties']['city'] ) && isset( $request['city'] ) ) {
+			$prepared_item->city = $request['city'];
+		}
+		if ( ! empty( $schema['properties']['state'] ) && isset( $request['state'] ) ) {
+			$prepared_item->state = $request['state'];
+		}
+		if ( ! empty( $schema['properties']['post_code'] ) && isset( $request['post_code'] ) ) {
+			$prepared_item->post_code = $request['post_code'];
+		}
+		if ( ! empty( $schema['properties']['country'] ) && isset( $request['country'] ) ) {
+			$prepared_item->country = $request['country'];
+		}
+		if ( ! empty( $schema['properties']['website'] ) && isset( $request['website'] ) ) {
+			$prepared_item->website = $request['website'];
+		}
+		if ( ! empty( $schema['properties']['note'] ) && isset( $request['note'] ) ) {
+			$prepared_item->note = $request['note'];
+		}
+		if ( ! empty( $schema['properties']['avatar_url'] ) && isset( $request['avatar_url'] ) ) {
+			$prepared_item->avatar_url = $request['avatar_url'];
+		}
+		if ( ! empty( $schema['properties']['tax_url'] ) && isset( $request['tax_url'] ) ) {
+			$prepared_item->tax_url = $request['tax_url'];
+		}
+		if ( ! empty( $schema['properties']['country_code'] ) && isset( $request['country_code'] ) ) {
+			$prepared_item->country_code = $request['country_code'];
+		}
+		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
+			$prepared_item->status = $request['status'];
+		}
+		if ( ! empty( $schema['properties']['types'] ) && isset( $request['types'] ) ) {
+			$prepared_item->types = $request['types'];
+		}
+
+		return $prepared_item;
+	}
 
 	/**
 	 * since 1.0.0
@@ -334,6 +403,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
+					'required'    => true,
 				),
 				'first_name'    => array(
 					'description' => __( 'First name for the user.', 'wp-ever-accounting' ),
@@ -342,7 +412,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => false,
+					'required'    => true,
 				),
 				'last_name'     => array(
 					'description' => __( 'Last name for the user.', 'wp-ever-accounting' ),
@@ -351,7 +421,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => false,
+					'required'    => true,
 				),
 				'tax_number'    => array(
 					'description' => __( 'Tax number of the user', 'wp-ever-accounting' ),
@@ -370,6 +440,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_email',
 					),
+					'required'    => true,
 				),
 				'phone'         => array(
 					'description' => __( 'Phone number for the user.', 'wp-ever-accounting' ),
@@ -508,6 +579,12 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 				'type' => 'integer',
 			),
 			'default'     => array(),
+		);
+
+		$query_params['search'] = array(
+			'description' => __( 'Limit result set to specific search.', 'wp-ever-accounting' ),
+			'type'        => 'string',
+			'default'     => '',
 		);
 
 		$params['status'] = array(
