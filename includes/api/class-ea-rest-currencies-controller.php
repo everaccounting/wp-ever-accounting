@@ -1,4 +1,4 @@
-gti<?php
+<?php
 defined( 'ABSPATH' ) || exit();
 
 class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
@@ -228,24 +228,6 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		);
 
 		return $response;
-	}
-
-	/**
-	 * since 1.0.0
-	 *
-	 * @param WP_REST_Request $request
-	 *
-	 * @return object|stdClass|WP_Error
-	 */
-	public function prepare_item_for_database( $request ) {
-		$prepared_item = new stdClass();
-		$schema        = $this->get_item_schema();
-
-		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
-			$prepared_item->id = $request['id'];
-		}
-
-		return $prepared_item;
 	}
 
 	/**

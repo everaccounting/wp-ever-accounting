@@ -196,5 +196,8 @@ export const eAccountingApi = {
 		update: ( id, data ) => postApiRequest( 'accounts/' + id, data ),
 		list: params => getApiRequest('accounts', params),
 		bulk: ( action, data, table ) => postApiRequest( 'accounts/bulk' + action, data, table ),
+	},
+	currencies: {
+		list: params => getApiRequest('currencies', params),
 	}
 };

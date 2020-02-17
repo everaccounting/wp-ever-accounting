@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import Highlighter from 'react-highlight-words';
 import {Modal, Form} from '@eaccounting/components';
 import {Button, TextControl} from '@wordpress/components';
+import CurrencyInput from 'react-currency-input';
 
 /**
  * Internal dependencies
@@ -19,7 +20,8 @@ import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
 import Spinner from 'component/spinner';
 import Column from 'component/table/column';
 import RowActions from 'component/table/row-action';
-
+import {eAccountingApi, getApi} from "../../lib/api";
+import {getApiRequest} from 'lib/api';
 class AccountsRow extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
@@ -34,12 +36,16 @@ class AccountsRow extends Component {
 		this.state = {
 			editing: false,
 			name: props.item.name,
+			currencies:[],
 		};
 	}
 
 	onEdit = ev => {
 		ev.preventDefault();
 		this.setState({editing: !this.state.editing});
+		getApi(eAccountingApi.currencies.list()).then(json => {
+			console.log(json);
+		});
 	};
 
 	onDelete = ev => {
@@ -75,6 +81,7 @@ class AccountsRow extends Component {
 
 	onSubmit = item => {
 		this.props.onSaveAccount(this.props.item.id, item);
+		this.onClose();
 	};
 
 	onClose = () => {
@@ -153,7 +160,7 @@ class AccountsRow extends Component {
 								<TextControl label={__('Account Number')} {...getInputProps('number')} required/>
 								<TextControl label={__('Bank Name')} {...getInputProps('bank_name')} required/>
 								<TextControl label={__('Bank Phone')} {...getInputProps('bank_phone')} required/>
-
+								<CurrencyInput decimalSeparator="," thousandSeparator="." />
 								<Button isPrimary isBusy={isSaving} onClick={handleSubmit}
 										disabled={Object.keys(errors).length}>
 									{__('Submit')}

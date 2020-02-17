@@ -18,7 +18,6 @@ import { setTableSelected, setTableAllSelected, clearSelected } from 'lib/table'
 import { setTable, setRows, setTotal, setItem, setSaving, removeSaving, restoreToOriginal } from 'lib/store';
 
 export default function accounts( state = {}, action ) {
-
 	switch ( action.type ) {
 		case ACCOUNTS_LOADING:
 			return { ... state, table: setTable( state, action ), status: STATUS_IN_PROGRESS, saving: [] };
