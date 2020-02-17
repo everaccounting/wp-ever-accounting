@@ -133,7 +133,7 @@ class EAccounting_Money{
 	/**
 	 * assertSameCurrency.
 	 *
-	 * @param \Akaunting\Money\Money $other
+	 * @param EAccounting_Money $other
 	 *
 	 * @throws \InvalidArgumentException
 	 */

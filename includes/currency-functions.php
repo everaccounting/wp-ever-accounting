@@ -264,8 +264,3 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 
 	return $wpdb->get_col( $request );
 }
-
-
-function eaccounting_convert_currency( $amount, $from_currency, $to_currency ) {
-
-}

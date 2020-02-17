@@ -1,0 +1,39 @@
+// Convert px to rem in a readable fashion.
+$root-font-size: 16px;
+@function rem( $pixels, $context: $root-font-size ) {
+	@return $pixels / $context * 1rem;
+}
+
+//fonts
+@mixin clear-text-icon {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+// Clear fix mixin (clearfix)
+@mixin clear-fix {
+	&:after {
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+	}
+}
+
+// ==========================================================================
+// Placeholder mixin
+// Adds animation to placeholder section
+// ==========================================================================
+$placeholder_color: lighten(#888, 20%);
+@mixin placeholder( $color-property: $placeholder_color ) {
+	animation: loading-fade 1.6s ease-in-out infinite;
+	background: $color-property;
+	color: transparent;
+
+	&::after {
+		content: '\00a0';
+	}
+}

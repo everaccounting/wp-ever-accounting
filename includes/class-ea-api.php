@@ -35,11 +35,19 @@ class EAccounting_API {
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
 	}
 
+	/**
+	 * Register our rest controllers.
+	 * s
+	 * @since 1.0.0
+	 */
 	public function register_rest_routes() {
 		require_once( dirname( __FILE__ ) . '/api/class-ea-rest-controller.php' );
 
 		$rest_handlers = array(
-			dirname( __FILE__ ) . '/api/class-ea-rest-contacts-controller.php' => 'EAccounting_Contacts_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-contacts-controller.php'   => 'EAccounting_Contacts_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php' => 'EAccounting_Categories_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php' => 'EAccounting_Currencies_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-accounts-controller.php' => 'EAccounting_Accounts_Controller',
 		);
 
 		foreach ( $rest_handlers as $file_name => $controller ) {
