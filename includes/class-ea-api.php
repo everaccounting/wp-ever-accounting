@@ -49,6 +49,7 @@ class EAccounting_API {
 			dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php' => 'EAccounting_Currencies_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-accounts-controller.php' => 'EAccounting_Accounts_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-payments-controller.php' => 'EAccounting_Payments_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-revenues-controller.php' => 'EAccounting_Revenues_Controller',
 		);
 
 		foreach ( $rest_handlers as $file_name => $controller ) {
