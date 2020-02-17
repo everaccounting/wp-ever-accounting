@@ -45,8 +45,6 @@ function eaccounting_insert_contact( $args ) {
 		'user_id'       => empty( $args['user_id'] ) ? '' : absint( $args['user_id'] ),
 		'first_name'    => empty( $args['first_name'] ) ? '' : sanitize_text_field( $args['first_name'] ),
 		'last_name'     => empty( $args['last_name'] ) ? '' : sanitize_text_field( $args['last_name'] ),
-		'tax_number'    => empty( $args['tax_number'] ) ? '' : sanitize_text_field( $args['tax_number'] ),
-		'currency_code' => empty( $args['currency_code'] ) ? 'USD' : sanitize_text_field( $args['currency_code'] ),
 		'email'         => empty( $args['email'] ) ? '' : sanitize_email( $args['email'] ),
 		'phone'         => empty( $args['phone'] ) ? '' : sanitize_text_field( $args['phone'] ),
 		'address'       => empty( $args['address'] ) ? '' : sanitize_text_field( $args['address'] ),
@@ -55,12 +53,17 @@ function eaccounting_insert_contact( $args ) {
 		'postcode'      => empty( $args['postcode'] ) ? '' : sanitize_text_field( $args['postcode'] ),
 		'country'       => empty( $args['country'] ) ? '' : sanitize_text_field( $args['country'] ),
 		'website'       => empty( $args['website'] ) ? '' : esc_url_raw( $args['website'] ),
-		'avatar_url'    => isset( $args['avatar_url'] ) ? esc_url_raw( $args['avatar_url'] ) : '',
-		'status'        => empty( $args['status'] ) ? 'inactive' : sanitize_key( $args['status'] ),
 		'note'          => empty( $args['note'] ) ? '' : sanitize_textarea_field( $args['note'] ),
+		'avatar_url'    => isset( $args['avatar_url'] ) ? esc_url_raw( $args['avatar_url'] ) : '',
+
+		'tax_number'    => empty( $args['tax_number'] ) ? '' : sanitize_text_field( $args['tax_number'] ),
+		'currency_code' => empty( $args['currency_code'] ) ? 'USD' : sanitize_text_field( $args['currency_code'] ),
+
+		'status'        => empty( $args['status'] ) ? 'inactive' : sanitize_key( $args['status'] ),
+
 		'types'         => empty( $args['types'] ) ? array( 'customer' ) : $args['types'],
-		'created_at'    => empty( $args['created_at'] ) ? current_time( 'mysql' ) : sanitize_text_field( $args['created_at'] ),
-		'updated_at'    => current_time( 'mysql' ),
+		'created_at'    => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : sanitize_text_field( $args['created_at'] ),
+		'updated_at'    => date( 'Y-m-d H:i:s' ),
 	);
 
 	if ( ! empty( $user_id ) && ! get_user_by( 'ID', $user_id ) ) {
@@ -209,7 +212,7 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 		'orderby'        => 'id',
 		'order'          => 'DESC',
 		'fields'         => 'all',
-		'search_columns' => array( 'first_name', 'first_name', 'email', 'phone', 'address', 'note' ),
+		'search_columns' => array( 'first_name', 'last_name', 'email', 'phone', 'address', 'note' ),
 		'per_page'       => 20,
 		'page'           => 1,
 		'offset'         => 0,
