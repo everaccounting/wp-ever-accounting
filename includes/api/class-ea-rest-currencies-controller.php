@@ -1,4 +1,4 @@
-<?php
+gti<?php
 defined( 'ABSPATH' ) || exit();
 
 class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
@@ -96,8 +96,8 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$total_items  = eaccounting_get_currencies( $args, true );
 		$response     = array();
 
-		foreach ( $query_result as $tag ) {
-			$data       = $this->prepare_item_for_response( $tag, $request );
+		foreach ( $query_result as $item ) {
+			$data       = $this->prepare_item_for_response( $item, $request );
 			$response[] = $this->prepare_response_for_collection( $data );
 		}
 
@@ -127,12 +127,12 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 
 		$prepared = $this->prepare_item_for_database( $request );
 
-		$item_id = eaccounting_delete_currency( (array) $prepared );
+		$item_id = eaccounting_insert_currency( (array) $prepared );
 		if ( is_wp_error( $item_id ) ) {
 			return $item_id;
 		}
 
-		$item = eaccounting_delete_currency( $item_id );
+		$item = eaccounting_get_currency( $item_id );
 
 		$request->set_param( 'context', 'view' );
 
@@ -174,7 +174,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 		$item_id = intval( $request['id'] );
 
-		$item = eaccounting_delete_currency( $item_id );
+		$item = eaccounting_get_currency( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -183,7 +183,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$prepared_args->id = $item_id;
 
 		if ( ! empty( $prepared_args ) ) {
-			$updated = eaccounting_delete_currency( (array) $prepared_args );
+			$updated = eaccounting_insert_currency( (array) $prepared_args );
 
 			if ( is_wp_error( $updated ) ) {
 				return $updated;
@@ -191,7 +191,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		}
 
 		$request->set_param( 'context', 'view' );
-		$item     = eaccounting_delete_currency( $item_id );
+		$item     = eaccounting_get_currency( $item_id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
@@ -206,7 +206,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
-		$item    = eaccounting_delete_currency( $item_id );
+		$item    = eaccounting_get_currency( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -265,6 +265,57 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return object|stdClass|WP_Error
+	 */
+	public function prepare_item_for_database( $request ) {
+		$prepared_item = new stdClass();
+		$schema        = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
+			$prepared_item->id = $request['id'];
+		}
+		if ( ! empty( $schema['properties']['name'] ) && isset( $request['name'] ) ) {
+			$prepared_item->name = $request['name'];
+		}
+		if ( ! empty( $schema['properties']['code'] ) && isset( $request['code'] ) ) {
+			$prepared_item->code = $request['code'];
+		}
+		if ( ! empty( $schema['properties']['rate'] ) && isset( $request['rate'] ) ) {
+			$prepared_item->rate = $request['rate'];
+		}
+		if ( ! empty( $schema['properties']['precision'] ) && isset( $request['precision'] ) ) {
+			$prepared_item->precision = $request['precision'];
+		}
+		if ( ! empty( $schema['properties']['symbol'] ) && isset( $request['symbol'] ) ) {
+			$prepared_item->symbol = $request['symbol'];
+		}
+		if ( ! empty( $schema['properties']['decimal_mark'] ) && isset( $request['decimal_mark'] ) ) {
+			$prepared_item->decimal_mark = $request['decimal_mark'];
+		}
+		if ( ! empty( $schema['properties']['thousands_separator'] ) && isset( $request['thousands_separator'] ) ) {
+			$prepared_item->thousands_separator = $request['thousands_separator'];
+		}
+		if ( ! empty( $schema['properties']['symbol_position'] ) && isset( $request['symbol_position'] ) ) {
+			$prepared_item->symbol_position = $request['symbol_position'];
+		}
+		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
+			$prepared_item->status = $request['status'];
+		}
+		if ( ! empty( $schema['properties']['created_at'] ) && isset( $request['created_at'] ) ) {
+			$prepared_item->created_at = $request['created_at'];
+		}
+		if ( ! empty( $schema['properties']['updated_at'] ) && isset( $request['updated_at'] ) ) {
+			$prepared_item->updated_at = $request['updated_at'];
+		}
+
+		return $prepared_item;
+	}
+
 
 	/**
 	 * since 1.0.0
@@ -303,7 +354,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			'title'      => __( 'Item', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'           => array(
+				'id'                  => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -312,13 +363,75 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'status'       => array(
+				'name'                => array(
+					'description' => __( 'Unique Name for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'code'                => array(
+					'description' => __( 'Unique code for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'rate'                => array(
+					'description' => __( 'Current rate for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'precision'           => array(
+					'description' => __( 'Precision for the item.', 'wp-ever-accounting' ),
+					'type'        => 'int',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'symbol'              => array(
+					'description' => __( 'Unique symbol for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'symbol_position'     => array(
+					'description' => __( 'Symbol position for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'enum'        => array( 'before', 'after' ),
+				),
+				'decimal_mark'        => array(
+					'description' => __( 'Decimal mark for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'thousands_separator' => array(
+					'description' => __( 'Thousands separator for the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'status'              => array(
 					'description' => __( 'Status of the user.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'enum'        => array( 'active', 'inactive' ),
 				),
-				'date_created' => array(
+				'date_created'        => array(
 					'description' => __( 'Created date of the user.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -359,6 +472,12 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 				'type' => 'integer',
 			),
 			'default'     => array(),
+		);
+
+		$query_params['search'] = array(
+			'description' => __( 'Search items for specific results.', 'wp-ever-accounting' ),
+			'type'        => 'string',
+			'default'     => '',
 		);
 
 		$params['status'] = array(

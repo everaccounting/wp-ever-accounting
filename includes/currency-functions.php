@@ -174,7 +174,7 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 		'orderby'        => 'id',
 		'order'          => 'DESC',
 		'fields'         => 'all',
-		'search_columns' => array( 'currency', 'rate' ),
+		'search_columns' => array( 'name', 'code', 'symbol' ),
 		'per_page'       => 20,
 		'page'           => 1,
 		'offset'         => 0,
@@ -254,7 +254,6 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 	if ( $count ) {
 		return $wpdb->get_var( "SELECT count($wpdb->ea_currencies.id) $query_from $query_where" );
 	}
-
 
 	$request = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
 
