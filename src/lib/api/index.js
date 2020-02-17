@@ -1,3 +1,12 @@
+/* global eAccountingi10n */
+/**
+ *
+ * @format
+ */
+
+/**
+ * Internal dependencies
+ */
 import querystring from 'qs';
 
 const removeEmpty = item =>
@@ -45,9 +54,20 @@ const apiRequest = url => ({
 });
 
 const getApiRequest = (path, params = {}) => ({
+	headers: apiRequest(),
 	...apiRequest(getRequestUrl(path, params)),
 	method: 'get',
 });
+
+const uploadApiRequest = ( path, file ) => {
+	const request = { headers: postApiheaders(), ...apiRequest( getRedirectionUrl( path ) ), method: 'post' };
+
+	request.headers.delete( 'Content-Type' );
+	request.body = new FormData();
+	request.body.append( 'file', file );
+
+	return request;
+};
 
 const postApiRequest = (path, params = {}, query = {}) => {
 	const request = {...apiRequest(getRequestUrl(path, query)), method: 'post', params};
@@ -156,7 +176,7 @@ export const getApi = request => {
 				}
 
 				return {
-					data,
+					items:data,
 					total: parseInt(headers.get('x-wp-total'), 10),
 					total_page: parseInt(headers.get('x-wp-totalpages'), 10),
 					headers
@@ -170,9 +190,11 @@ export const getApi = request => {
 };
 
 
-export const eAccountingAPI = {
+export const eAccountingApi = {
 	accounts: {
 		get: (id, data = {}) => getApiRequest('accounts/' + id, data),
+		update: ( id, data ) => postApiRequest( 'accounts/' + id, data ),
 		list: params => getApiRequest('accounts', params),
+		bulk: ( action, data, table ) => postApiRequest( 'accounts/bulk' + action, data, table ),
 	}
 };

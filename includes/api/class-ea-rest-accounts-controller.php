@@ -245,20 +245,20 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$o_balance = eaccounting_money( $item->opening_balance, $item->currency_code, true  )->format();
+		$o_balance = eaccounting_money( $item->opening_balance, $item->currency_code, true )->format();
 		$data      = array(
-			'id'                        => $item->id,
-			'name'                      => $item->name,
-			'number'                    => $item->number,
-			'opening_balance'           => $item->opening_balance,
-			'opening_balance_formatted' => $o_balance,
-			'currency_code'             => $item->currency_code,
-			'bank_name'                 => $item->bank_name,
-			'bank_phone'                => $item->bank_phone,
-			'bank_address'              => $item->bank_address,
-			'status'                    => $item->status,
-			'created_at'                => $this->prepare_date_response( $item->created_at ),
-			'updated_at'                => $this->prepare_date_response( $item->updated_at ),
+			'id'              => $item->id,
+			'name'            => $item->name,
+			'number'          => $item->number,
+			'opening_balance' => $item->opening_balance,
+			'balance'         => $o_balance,//todo update this
+			'currency_code'   => $item->currency_code,
+			'bank_name'       => $item->bank_name,
+			'bank_phone'      => $item->bank_phone,
+			'bank_address'    => $item->bank_address,
+			'enabled'         => $item->status == 'active',
+			'created_at'      => $this->prepare_date_response( $item->created_at ),
+			'updated_at'      => $this->prepare_date_response( $item->updated_at ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

@@ -51,7 +51,7 @@ eAccountingPackages.forEach(name => {
 const webpackConfig = {
 	mode: NODE_ENV,
 	entry: {
-		app: './src/index.js',
+		app: './src',
 		...entryPoints,
 	},
 	output: {

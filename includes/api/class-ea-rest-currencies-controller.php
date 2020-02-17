@@ -96,8 +96,8 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$total_items  = eaccounting_get_currencies( $args, true );
 		$response     = array();
 
-		foreach ( $query_result as $tag ) {
-			$data       = $this->prepare_item_for_response( $tag, $request );
+		foreach ( $query_result as $item ) {
+			$data       = $this->prepare_item_for_response( $item, $request );
 			$response[] = $this->prepare_response_for_collection( $data );
 		}
 
@@ -127,12 +127,12 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 
 		$prepared = $this->prepare_item_for_database( $request );
 
-		$item_id = eaccounting_delete_currency( (array) $prepared );
+		$item_id = eaccounting_insert_currency( (array) $prepared );
 		if ( is_wp_error( $item_id ) ) {
 			return $item_id;
 		}
 
-		$item = eaccounting_delete_currency( $item_id );
+		$item = eaccounting_get_currency( $item_id );
 
 		$request->set_param( 'context', 'view' );
 
@@ -174,7 +174,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 		$item_id = intval( $request['id'] );
 
-		$item = eaccounting_delete_currency( $item_id );
+		$item = eaccounting_get_currency( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -183,7 +183,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$prepared_args->id = $item_id;
 
 		if ( ! empty( $prepared_args ) ) {
-			$updated = eaccounting_delete_currency( (array) $prepared_args );
+			$updated = eaccounting_insert_currency( (array) $prepared_args );
 
 			if ( is_wp_error( $updated ) ) {
 				return $updated;
@@ -191,7 +191,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		}
 
 		$request->set_param( 'context', 'view' );
-		$item     = eaccounting_delete_currency( $item_id );
+		$item     = eaccounting_get_currency( $item_id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
@@ -206,7 +206,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
-		$item    = eaccounting_delete_currency( $item_id );
+		$item    = eaccounting_get_currency( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -230,6 +230,23 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return object|stdClass|WP_Error
+	 */
+	public function prepare_item_for_database( $request ) {
+		$prepared_item = new stdClass();
+		$schema        = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
+			$prepared_item->id = $request['id'];
+		}
+
+		return $prepared_item;
+	}
 
 	/**
 	 * since 1.0.0

@@ -1,2 +1,3 @@
-export {default as Table} from './table';
-export {default as Pagination} from './pagination';
+export {default as Modal} from './modal';
+export {default as Form} from './form';
+export {default as TextControl} from './text-control';

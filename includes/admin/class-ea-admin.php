@@ -162,14 +162,14 @@ class EAccounting_Admin {
 		wp_register_script(
 			'eaccounting',
 			$dist . '/app/index.js',
-		array_merge( $app_dependencies, array(
-			'wp-hooks',
-			'wp-element',
-			'wp-editor',
-			'wp-i18n',
-			'wp-tinymce',
-			'eaccounting-components',
-		) ),
+			array_merge( $app_dependencies, array(
+				'wp-hooks',
+				'wp-element',
+				'wp-editor',
+				'wp-i18n',
+				'wp-tinymce',
+				'eaccounting-components',
+			) ),
 			time(),
 			true
 		);
@@ -181,6 +181,7 @@ class EAccounting_Admin {
 			],
 			'pluginBaseUrl' => plugins_url( '', EACCOUNTING_PLUGIN_FILE ),
 			'pluginRoot'    => admin_url( 'admin.php?page=eaccounting' ),
+			'per_page'      => 20,
 		] );
 
 		wp_enqueue_script( 'eaccounting' );

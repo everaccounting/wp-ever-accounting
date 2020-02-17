@@ -1,17 +1,4 @@
-// Set up animation
-@keyframes loading-fade {
-	0% {
-		opacity: 0.7;
-	}
-	50% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0.7;
-	}
-}
-
-//placeholder
-.is-placeholder{
-	@include placeholder;
+.eaccounting{
+  max-width: 85rem;
+  margin: 0 auto;
 }
