@@ -306,12 +306,6 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
 			$prepared_item->status = $request['status'];
 		}
-		if ( ! empty( $schema['properties']['created_at'] ) && isset( $request['created_at'] ) ) {
-			$prepared_item->created_at = $request['created_at'];
-		}
-		if ( ! empty( $schema['properties']['updated_at'] ) && isset( $request['updated_at'] ) ) {
-			$prepared_item->updated_at = $request['updated_at'];
-		}
 
 		return $prepared_item;
 	}

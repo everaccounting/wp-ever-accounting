@@ -50,7 +50,7 @@ function eaccounting_insert_category( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'type'       => ! isset( $args['type'] ) ? '' : sanitize_text_field( $args['type'] ),
 		'color'      => ! isset( $args['color'] ) ? eaccounting_get_random_hex_color() : sanitize_hex_color( $args['color'] ),
-		'status'     => 'active' == $args['status'] ? 'active' : 'inactive',
+		'status'     => !empty($args['status']) &&  'active' == $args['status'] ? 'active' : 'inactive',
 		'updated_at' => date( 'Y-m-d H:i:s' ),
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);

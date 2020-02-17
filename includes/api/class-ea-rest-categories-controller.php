@@ -96,8 +96,8 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		$total_items = eaccounting_get_categories( $args, true );
 		$response         = array();
 
-		foreach ( $query_result as $tag ) {
-			$data       = $this->prepare_item_for_response( $tag, $request );
+		foreach ( $query_result as $item ) {
+			$data       = $this->prepare_item_for_response( $item, $request );
 			$response[] = $this->prepare_response_for_collection( $data );
 		}
 
@@ -127,12 +127,12 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 
 		$prepared = $this->prepare_item_for_database( $request );
 
-		$item_id = eaccounting_delete_category( (array) $prepared );
+		$item_id = eaccounting_insert_category( (array) $prepared );
 		if ( is_wp_error( $item_id ) ) {
 			return $item_id;
 		}
 
-		$item = eaccounting_delete_category( $item_id );
+		$item = eaccounting_get_category( $item_id );
 
 		$request->set_param( 'context', 'view' );
 
@@ -174,7 +174,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 		$item_id = intval( $request['id'] );
 
-		$item = eaccounting_delete_category( $item_id );
+		$item = eaccounting_get_category( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -183,7 +183,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		$prepared_args->id = $item_id;
 
 		if ( ! empty( $prepared_args ) ) {
-			$updated = eaccounting_delete_category( (array) $prepared_args );
+			$updated = eaccounting_insert_category( (array) $prepared_args );
 
 			if ( is_wp_error( $updated ) ) {
 				return $updated;
@@ -191,7 +191,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		}
 
 		$request->set_param( 'context', 'view' );
-		$item     = eaccounting_delete_category( $item_id );
+		$item     = eaccounting_get_category( $item_id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
@@ -206,7 +206,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
-		$item    = eaccounting_delete_category( $item_id );
+		$item    = eaccounting_get_category( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -228,6 +228,36 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		);
 
 		return $response;
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return object|stdClass|WP_Error
+	 */
+	public function prepare_item_for_database( $request ) {
+		$prepared_item = new stdClass();
+		$schema        = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
+			$prepared_item->id = $request['id'];
+		}
+		if ( ! empty( $schema['properties']['name'] ) && isset( $request['name'] ) ) {
+			$prepared_item->name = $request['name'];
+		}
+		if ( ! empty( $schema['properties']['type'] ) && isset( $request['type'] ) ) {
+			$prepared_item->type = $request['type'];
+		}
+		if ( ! empty( $schema['properties']['color'] ) && isset( $request['color'] ) ) {
+			$prepared_item->color = $request['color'];
+		}
+		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
+			$prepared_item->status = $request['status'];
+		}
+
+		return $prepared_item;
 	}
 
 
@@ -307,15 +337,27 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
+				'name'          => array(
+					'description' => __( 'Name of the category.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'required'    => true,
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field'
+					),
+				),
 				'type'          => array(
-					'description' => __( 'Type of the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Type of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'required'    => true,
 					'enum'        => array_keys( eaccounting_get_category_types() ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field'
+					),
 				),
 				'color'    => array(
-					'description' => __( 'First name for the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Color of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -324,13 +366,14 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 					'required'    => false,
 				),
 				'status'        => array(
-					'description' => __( 'Status of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Status of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'enum'        => array( 'active', 'inactive' ),
+
 				),
 				'date_created'  => array(
-					'description' => __( 'Created date of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
@@ -371,6 +414,13 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 			),
 			'default'     => array(),
 		);
+
+		$query_params['search'] = array(
+			'description' => __( 'Limit result set to specific search.', 'wp-ever-accounting' ),
+			'type'        => 'string',
+			'default'     => '',
+		);
+
 
 		$params['status'] = array(
 			'description'       => __( 'Limit the result with active or inactive type', 'wp-ever-accounting' ),
