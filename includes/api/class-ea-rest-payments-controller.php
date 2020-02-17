@@ -368,7 +368,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 			'title'      => __( 'Contact', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'            => array(
+				'id'             => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -377,7 +377,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'account_id'        => array(
+				'account_id'     => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -390,36 +390,36 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'required' => true,
+					'required'    => true,
 				),
-				'amount'        => array(
+				'amount'         => array(
 					'description' => __( 'Amount of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'eaccounting_sanitize_price',
 					),
-					'required' =>true,
+					'required'    => true,
 				),
-				'currency_code'        => array(
+				'currency_code'  => array(
 					'description' => __( 'Currency code of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
-				'currency_rate'        => array(
+				'currency_rate'  => array(
 					'description' => __( 'Currency rate of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
-				'contact_id'        => array(
+				'contact_id'     => array(
 					'description' => __( 'Contact id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -427,7 +427,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'description'        => array(
+				'description'    => array(
 					'description' => __( 'Description of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -435,16 +435,16 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'category_id'        => array(
+				'category_id'    => array(
 					'description' => __( 'Category id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
-				'reference'        => array(
+				'reference'      => array(
 					'description' => __( 'Reference of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -452,16 +452,16 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'payment_method'        => array(
+				'payment_method' => array(
 					'description' => __( 'Method of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_key',
 					),
-					'required' => true,
+					'required'    => true,
 				),
-				'attachment_url'        => array(
+				'attachment_url' => array(
 					'description' => __( 'Attachment url of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -469,7 +469,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'esc_url',
 					),
 				),
-				'parent_id'        => array(
+				'parent_id'      => array(
 					'description' => __( 'Parent id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -477,7 +477,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'reconciled'        => array(
+				'reconciled'     => array(
 					'description' => __( 'Reconciliation of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -485,7 +485,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'date_created'  => array(
+				'date_created'   => array(
 					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',

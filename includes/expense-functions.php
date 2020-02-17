@@ -4,10 +4,10 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Outgoing amount must same currency as assigned account
  *
- * @since 1.0.0
  * @param $args
  *
  * @return int|WP_Error|null
+ * @since 1.0.0
  */
 function eaccounting_insert_payment( $args ) {
 	global $wpdb;
@@ -31,8 +31,10 @@ function eaccounting_insert_payment( $args ) {
 		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
 		'amount'         => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
-		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo if not set default
-		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),//todo if not set default
+		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
+		//todo if not set default
+		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),
+		//todo if not set default
 		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
