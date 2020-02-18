@@ -175,13 +175,14 @@ class EAccounting_Admin {
 		);
 
 		wp_localize_script( 'eaccounting', 'eAccountingi10n', [
-			'api'           => [
+			'api'              => [
 				'WP_API_root'  => esc_url_raw( get_rest_url() ),
 				'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
 			],
-			'pluginBaseUrl' => plugins_url( '', EACCOUNTING_PLUGIN_FILE ),
-			'pluginRoot'    => admin_url( 'admin.php?page=eaccounting' ),
-			'per_page'      => 20,
+			'pluginBaseUrl'    => plugins_url( '', EACCOUNTING_PLUGIN_FILE ),
+			'pluginRoot'       => admin_url( 'admin.php?page=eaccounting' ),
+			'per_page'         => 20,
+			'default_currency' => eaccounting_get_default_currency(),
 		] );
 
 		wp_enqueue_script( 'eaccounting' );

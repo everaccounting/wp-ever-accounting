@@ -1,51 +1,64 @@
-import classnames from 'classnames';
 import {Component} from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {noop} from 'lodash';
 import {BaseControl} from '@wordpress/components';
-import CurrencyInput from 'react-currency-input';
+import classnames from 'classnames';
+
+
+import CurrencyInput from "react-currency-input";
 
 export default class CurrencyControl extends Component {
-	static propTypes = {
-		className: PropTypes.string,
-		disabled: PropTypes.bool,
-		label: PropTypes.string,
-		onClick: PropTypes.func,
-		onChange: PropTypes.func,
-		value: PropTypes.string,
-		decimalSeparator: PropTypes.string,
-		thousandSeparator: PropTypes.string,
-		precision: PropTypes.number,
-		prefix: PropTypes.string,
-		suffix: PropTypes.string,
-	};
-
-	static defaultProps = {
-		type: 'text',
-		onClick: noop,
-		onChange: noop,
-		decimalSeparator: '.',
-		thousandSeparator: ',',
-		precision: 2,
-		prefix: '$',
-		suffix: '',
-	};
-
 	render() {
-		const {className, onClick, decimalSeparator, thousandSeparator, precision, prefix, suffix, ...otherProps} = this.props;
+		const {label, value, help, className, instanceId, onChange, before, after, type, required, ...props} = this.props;
+		const classes = classnames('ea-form-group', 'ea-currency-field', className, {
+			required: !!required,
+		});
+		const {symbol_position, symbol} = props;
+		const suffix = ('before' !== symbol_position) ? symbol : '';
+		const prefix = ('before' === symbol_position) ? symbol : '';
 
-		const {label, value, disabled} = otherProps;
 		return (
-			<BaseControl
-				className={classnames('ea-field ea-text-control', className, {
-					disabled: disabled,
-				})}
-				placeholder={label}
-				{...otherProps}
-			>
-				<CurrencyInput decimalSeparator={decimalSeparator} thousandSeparator={thousandSeparator} precision={2}
-							   prefix={prefix} suffix={suffix} value={value}/>
+			<BaseControl label={label} help={help} className={classes}>
+				<div className="ea-input-group">
+					{before && (
+						<span className="ea-input-group__before">
+							{before}
+						</span>
+					)}
+					<CurrencyInput{...this.props} suffix={suffix} prefix={prefix} selectAllOnFocus className='components-text-control__input ea-input-group__input'/>
+					{after && (
+						<span className="ea-input-group__after">
+							{after}
+						</span>
+					)}
+				</div>
 			</BaseControl>
-		);
+		)
 	}
 }
+
+CurrencyControl.defaultProps = {
+	type: 'text',
+	decimalSeparator: '.',
+	thousandSeparator: ',',
+	precision: 2,
+	symbol: '$',
+	symbol_position: 'before',
+	suffix: '',
+	value: '',
+};
+
+CurrencyControl.propTypes = {
+	label: PropTypes.string,
+	help: PropTypes.string,
+	type: PropTypes.string,
+	value: PropTypes.string,
+	className: PropTypes.string,
+	onChange: PropTypes.func,
+	symbol: PropTypes.string,
+	symbol_position: PropTypes.string,
+	required: PropTypes.bool,
+	before: PropTypes.node,
+	after: PropTypes.node,
+};
+
+

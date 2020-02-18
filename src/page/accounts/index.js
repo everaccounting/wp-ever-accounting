@@ -38,13 +38,13 @@ import {
 	getBulk,
 	getSearchOptions
 } from './constants';
-import Account from "../account";
+import AddAccount from "./add-account";
 
 class Accounts extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAdding:false
+			isAdding:true
 		};
 		window.addEventListener('popstate', this.onPageChanged);
 	}
@@ -102,6 +102,10 @@ class Accounts extends Component {
 		this.setState({isAdding:!this.state.isAdding});
 	};
 
+	onClose = () =>{
+		this.setState({isAdding:!this.state.isAdding});
+	};
+
 	render() {
 		const {status, total, table, rows, saving} = this.props.accounts;
 		const {isAdding} = this.state;
@@ -111,7 +115,7 @@ class Accounts extends Component {
 				<h1 className="wp-heading-inline">{__('Accounts')}</h1>
 				<a href="#" className="page-title-action" onClick={this.onAdd}>{__('Add New')}</a>
 				<hr className="wp-header-end"/>
-				{isAdding && <Account/>}
+				{isAdding && <AddAccount onClose={this.onClose}/>}
 
 				<div className="redirect-table-display">
 					<TableDisplay

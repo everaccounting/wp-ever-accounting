@@ -250,9 +250,6 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['number'] ) && isset( $request['number'] ) ) {
 			$prepared_item->number = $request['number'];
 		}
-		if ( ! empty( $schema['properties']['opening_balance'] ) && isset( $request['opening_balance'] ) ) {
-			$prepared_item->opening_balance = $request['opening_balance'];
-		}
 		if ( ! empty( $schema['properties']['currency_code'] ) && isset( $request['currency_code'] ) ) {
 			$prepared_item->currency_code = $request['currency_code'];
 		}
@@ -265,9 +262,16 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['bank_address'] ) && isset( $request['bank_address'] ) ) {
 			$prepared_item->bank_address = $request['bank_address'];
 		}
+
+		if ( ! empty( $schema['properties']['opening_balance'] ) && isset( $request['opening_balance'] ) ) {
+			$prepared_item->opening_balance = eaccounting_money(  $request['opening_balance'], $request['currency_code'], false   )->getAmount();
+		}
 		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
 			$prepared_item->status = $request['status'];
 		}
+
+
+
 
 
 		return $prepared_item;
@@ -382,7 +386,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 				),
 				'opening_balance'   => array(
 					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',

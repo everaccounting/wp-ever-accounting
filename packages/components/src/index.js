@@ -1,7 +1,9 @@
-export {default as Modal} from './modal';
+export {default as CurrencyControl} from './currency-control';
 export {default as Form} from './form';
 export {default as Icon} from './icon';
-export {default as IconInput} from './icon-input';
-export {default as CurrencyControl} from './currency-control';
-export {default as TextField} from './text-field';
+export {default as Modal} from './modal';
+export {default as ReactSelect} from './react-select';
+export {default as SelectControl} from './select-control';
 export {default as TextControl} from './text-control';
+export {default as TextareaControl} from './textarea-control';
+export {default as ToggleControl} from './toggle-control';

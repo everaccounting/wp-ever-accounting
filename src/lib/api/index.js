@@ -193,6 +193,7 @@ export const getApi = request => {
 export const eAccountingApi = {
 	accounts: {
 		get: (id, data = {}) => getApiRequest('accounts/' + id, data),
+		create: ( data ) => postApiRequest( 'accounts/', data ),
 		update: ( id, data ) => postApiRequest( 'accounts/' + id, data ),
 		list: params => getApiRequest('accounts', params),
 		bulk: ( action, data, table ) => postApiRequest( 'accounts/bulk' + action, data, table ),

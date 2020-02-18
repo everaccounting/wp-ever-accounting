@@ -53,7 +53,7 @@ class EAccounting_Money{
 			return (float) round( $this->convertAmount( $amount, $convert ), $this->currency->getPrecision() );
 		}
 
-		throw new UnexpectedValueException( 'Invalid amount "' . $amount . '"' );
+		return 0;
 	}
 
 	/**

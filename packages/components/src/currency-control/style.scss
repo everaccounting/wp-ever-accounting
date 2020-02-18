@@ -1,19 +1,8 @@
-.ea-text-control{
-	margin-bottom: 16px;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	vertical-align: middle;
-	height:auto;
-
-	label, .components-base-control__label{
-		font-weight: 600 !important;
-	}
-
-	&.has-error{
-		.components-base-control__help{
-			color:red;
-			margin-bottom: 0;
-		}
-	}
+.ea-currency-field{
+  .components-base-control__label {
+	display: block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	font-weight: 700;
+  }
 }

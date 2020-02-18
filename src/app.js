@@ -15,9 +15,9 @@ import Home from './page/home';
 
 const App = () => (
 	<Provider store={createReduxStore(getInitialState())}>
-		<React.StrictMode>
+		{/*<React.StrictMode>*/}
 			<Home/>
-		</React.StrictMode>
+		{/*</React.StrictMode>*/}
 	</Provider>
 );
 
