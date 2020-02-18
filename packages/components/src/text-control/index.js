@@ -14,6 +14,7 @@ export default class TextControl extends Component {
 		onClick: PropTypes.func,
 		onChange: PropTypes.func,
 		value: PropTypes.string,
+		icon:PropTypes.string,
 	};
 
 	static defaultProps = {

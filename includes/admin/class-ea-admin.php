@@ -186,11 +186,11 @@ class EAccounting_Admin {
 
 		wp_enqueue_script( 'eaccounting' );
 
+		wp_enqueue_style( 'eaccounting-fontawesome', $vendor . '/font-awesome/css/font-awesome.css', [], time() );
 
 		//styles
 //		wp_enqueue_style( 'eaccounting-jquery-ui', $vendor . '/jquery-ui/jquery-ui.css', false, time() );
 //		wp_enqueue_style( 'eaccounting-select2', $vendor . '/vendor/select2/select2.css', [], time() );
-//		wp_enqueue_style( 'eaccounting-fontawesome', $vendor . '/font-awesome/css/font-awesome.css', [], time() );
 //		wp_enqueue_style( 'eaccounting-admin', $css . '/eaccounting-admin.css', array(), time() );
 //
 //

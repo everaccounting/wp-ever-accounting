@@ -7,10 +7,8 @@ import {translate as __, numberFormat} from 'lib/locale';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import Highlighter from 'react-highlight-words';
-import {Modal, Form} from '@eaccounting/components';
-import {Button, TextControl} from '@wordpress/components';
-import CurrencyInput from 'react-currency-input';
+import {Modal, Form, CurrencyControl} from '@eaccounting/components';
+import {Button, TextControl, FormToggle} from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -130,7 +128,7 @@ class AccountsRow extends Component {
 				</th>
 
 				<Column enabled="name" className="column-primary column-name" selected={currentDisplaySelected}>
-					{name}
+					<strong><a href="#" onClick={this.onEdit}>{name}</a></strong>
 					{this.renderActions(isSaving)}
 				</Column>
 
@@ -151,16 +149,16 @@ class AccountsRow extends Component {
 						<span className='ea-item-status disabled'>{__('Disabled')}</span>}
 				</Column>
 
-				{this.state.editing && <Modal title={__('Edit')} onRequestClose={this.onClose}>
+				{this.state.editing && <Modal title={__('Edit Account')} onRequestClose={this.onClose}>
 					<Form validate={this.onValidate} onSubmitCallback={this.onSubmit} initialValues={this.props.item}>
 						{({getInputProps, values, errors, handleSubmit}) => (
 							<Fragment>
 								<TextControl label={__('Name')} {...getInputProps('name')} required/>
-								<TextControl label={__('Opening Balance')} {...getInputProps('opening_balance')} required/>
 								<TextControl label={__('Account Number')} {...getInputProps('number')} required/>
+								<CurrencyControl label={__('Opening Balance')} {...getInputProps('opening_balance')} required/>
 								<TextControl label={__('Bank Name')} {...getInputProps('bank_name')} required/>
 								<TextControl label={__('Bank Phone')} {...getInputProps('bank_phone')} required/>
-								<CurrencyInput decimalSeparator="," thousandSeparator="." />
+								<FormToggle label={__('Status')} {...getInputProps('enabled')}/>
 								<Button isPrimary isBusy={isSaving} onClick={handleSubmit}
 										disabled={Object.keys(errors).length}>
 									{__('Submit')}

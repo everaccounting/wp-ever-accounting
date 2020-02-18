@@ -1,0 +1,181 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"X-Generator: babel-plugin-makepot\n"
+
+#: src/component/table/header/check-column.js:14
+msgid "Select All"
+msgstr ""
+
+#: src/component/table/navigation-pages.js:100
+msgid "Last page"
+msgstr ""
+
+#: src/component/table/navigation-pages.js:118
+msgid "%s item"
+msgstr ""
+
+#: src/component/table/navigation-pages.js:74
+msgid "First page"
+msgstr ""
+
+#: src/component/table/navigation-pages.js:76
+msgid "Prev page"
+msgstr ""
+
+#: src/component/table/navigation-pages.js:81
+msgid "Current Page"
+msgstr ""
+
+#: src/component/table/navigation-pages.js:87
+msgid "of %(page)s"
+msgstr ""
+
+#: src/component/table/navigation-pages.js:98
+msgid "Next page"
+msgstr ""
+
+#: src/component/table/navigation.js:53
+msgid "Select bulk action"
+msgstr ""
+
+#: src/component/table/navigation.js:56
+msgid "Bulk Actions"
+msgstr ""
+
+#: src/component/table/navigation.js:61
+msgid "Apply"
+msgstr ""
+
+#: src/component/table/row/empty-row.js:15
+msgid "No results"
+msgstr ""
+
+#: src/component/table/row/failed-row.js:16
+msgid "Sorry, something went wrong loading the data - please try again"
+msgstr ""
+
+#: src/component/table/table-display.js:64
+msgid "Display All"
+msgstr ""
+
+#: src/component/table/table-display.js:75
+msgid "Custom Display"
+msgstr ""
+
+#: src/component/table/table-display.js:90
+msgid "Pre-defined"
+msgstr ""
+
+#: src/component/table/table-display.js:95
+msgid "Custom"
+msgstr ""
+
+#: src/lib/store/index.js:20
+msgid "Are you sure you want to delete this item?"
+msgstr ""
+
+#: src/page/accounts/constants.js:17
+msgid "Standard Display"
+msgstr ""
+
+#: src/page/accounts/constants.js:22
+msgid "Compact Display"
+msgstr ""
+
+#: src/page/accounts/constants.js:33
+#: src/page/accounts/row.js:149
+msgid "Enabled"
+msgstr ""
+
+#: src/page/accounts/constants.js:37
+#: src/page/accounts/row.js:150
+msgid "Disabled"
+msgstr ""
+
+#: src/page/accounts/constants.js:51
+#: src/page/accounts/row.js:157
+msgid "Name"
+msgstr ""
+
+#: src/page/accounts/constants.js:56
+msgid "Balance"
+msgstr ""
+
+#: src/page/accounts/constants.js:61
+#: src/page/accounts/row.js:159
+msgid "Account Number"
+msgstr ""
+
+#: src/page/accounts/constants.js:66
+#: src/page/accounts/row.js:160
+msgid "Bank Name"
+msgstr ""
+
+#: src/page/accounts/constants.js:71
+#: src/page/accounts/row.js:158
+msgid "Opening Balance"
+msgstr ""
+
+#: src/page/accounts/constants.js:76
+msgid "Status"
+msgstr ""
+
+#: src/page/accounts/constants.js:84
+#: src/page/accounts/row.js:94
+msgid "Delete"
+msgstr ""
+
+#: src/page/accounts/constants.js:88
+#: src/page/accounts/row.js:98
+msgid "Enable"
+msgstr ""
+
+#: src/page/accounts/constants.js:9
+msgid "Number"
+msgstr ""
+
+#: src/page/accounts/constants.js:92
+#: src/page/accounts/row.js:96
+msgid "Disable"
+msgstr ""
+
+#: src/page/accounts/constants.js:99
+msgid "Search"
+msgstr ""
+
+#: src/page/accounts/index.js:102
+msgid "Accounts"
+msgstr ""
+
+#: src/page/accounts/index.js:133
+msgid "Filters"
+msgstr ""
+
+#: src/page/accounts/row.js:153
+msgid "Edit"
+msgstr ""
+
+#: src/page/accounts/row.js:161
+msgid "Bank Phone"
+msgstr ""
+
+#: src/page/accounts/row.js:165
+msgid "Submit"
+msgstr ""
+
+#: src/page/contacts/index.js:33
+msgid "Contacts"
+msgstr ""
+
+#: src/page/payments/index.js:33
+msgid "Payments"
+msgstr ""
+
+#: src/page/revenues/index.js:33
+msgid "Revenues"
+msgstr ""
+
+#: src/page/transactions/index.js:33
+msgid "Transactions"
+msgstr ""

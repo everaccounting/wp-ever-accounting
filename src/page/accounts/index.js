@@ -38,11 +38,14 @@ import {
 	getBulk,
 	getSearchOptions
 } from './constants';
+import Account from "../account";
 
 class Accounts extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			isAdding:false
+		};
 		window.addEventListener('popstate', this.onPageChanged);
 	}
 
@@ -94,14 +97,23 @@ class Accounts extends Component {
 		return getHeaders().filter( header => isEnabled( selected, header.name ) || header.name === 'cb' || header.name === 'name' );
 	}
 
+	onAdd = ev =>{
+		ev.preventDefault();
+		this.setState({isAdding:!this.state.isAdding});
+	};
+
 	render() {
 		const {status, total, table, rows, saving} = this.props.accounts;
+		const {isAdding} = this.state;
 		const isSaving = saving.indexOf(0) !== -1;
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Accounts')}</h1>
-				<div className="redirect-table-display">
+				<a href="#" className="page-title-action" onClick={this.onAdd}>{__('Add New')}</a>
+				<hr className="wp-header-end"/>
+				{isAdding && <Account/>}
 
+				<div className="redirect-table-display">
 					<TableDisplay
 						disable={ status === STATUS_IN_PROGRESS }
 						options={ getDisplayOptions() }
