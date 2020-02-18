@@ -156,7 +156,7 @@ function eaccounting_get_taxes( $args = array(), $count = false ) {
 		'orderby'        => 'id',
 		'order'          => 'DESC',
 		'fields'         => 'all',
-		'search_columns' => array( 'name', 'type' ),
+		'search_columns' => array( 'name', 'type', 'rate' ),
 		'per_page'       => 20,
 		'page'           => 1,
 		'offset'         => 0,
