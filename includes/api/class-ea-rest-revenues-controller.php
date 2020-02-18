@@ -85,6 +85,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 			'include'  => $request['include'],
 			'exclude'  => $request['exclude'],
 			'search'   => $request['search'],
+			'amount'   => $request['amount'],
 			'orderby'  => $request['orderby'],
 			'order'    => $request['order'],
 			'per_page' => $request['per_page'],
@@ -230,59 +231,6 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
-	/**
-	 * since 1.0.0
-	 *
-	 * @param WP_REST_Request $request
-	 *
-	 * @return object|stdClass|WP_Error
-	 */
-	public function prepare_item_for_database( $request ) {
-		$prepared_item = new stdClass();
-		$schema        = $this->get_item_schema();
-
-		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
-			$prepared_item->id = $request['id'];
-		}
-		if ( ! empty( $schema['properties']['account_id'] ) && isset( $request['account_id'] ) ) {
-			$prepared_item->account_id = $request['account_id'];
-		}
-		if ( ! empty( $schema['properties']['paid_at'] ) && isset( $request['paid_at'] ) ) {
-			$prepared_item->paid_at = $request['paid_at'];
-		}
-		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
-			$prepared_item->amount = $request['amount'];
-		}
-		if ( ! empty( $schema['properties']['currency_code'] ) && isset( $request['currency_code'] ) ) {
-			$prepared_item->currency_code = $request['currency_code'];
-		}
-		if ( ! empty( $schema['properties']['currency_rate'] ) && isset( $request['currency_rate'] ) ) {
-			$prepared_item->currency_rate = $request['currency_rate'];
-		}
-		if ( ! empty( $schema['properties']['contact_id'] ) && isset( $request['contact_id'] ) ) {
-			$prepared_item->contact_id = $request['contact_id'];
-		}
-		if ( ! empty( $schema['properties']['description'] ) && isset( $request['description'] ) ) {
-			$prepared_item->description = $request['description'];
-		}
-		if ( ! empty( $schema['properties']['reference'] ) && isset( $request['reference'] ) ) {
-			$prepared_item->reference = $request['reference'];
-		}
-		if ( ! empty( $schema['properties']['payment_method'] ) && isset( $request['payment_method'] ) ) {
-			$prepared_item->payment_method = $request['payment_method'];
-		}
-		if ( ! empty( $schema['properties']['attachment_url'] ) && isset( $request['attachment_url'] ) ) {
-			$prepared_item->attachment_url = $request['attachment_url'];
-		}
-		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
-			$prepared_item->parent_id = $request['parent_id'];
-		}
-		if ( ! empty( $schema['properties']['reconciled'] ) && isset( $request['reconciled'] ) ) {
-			$prepared_item->reconciled = $request['reconciled'];
-		}
-
-		return $prepared_item;
-	}
 
 	/**
 	 * since 1.0.0
@@ -322,6 +270,63 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return object|stdClass|WP_Error
+	 */
+	public function prepare_item_for_database( $request ) {
+		$prepared_item = new stdClass();
+		$schema        = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
+			$prepared_item->id = $request['id'];
+		}
+		if ( ! empty( $schema['properties']['account_id'] ) && isset( $request['account_id'] ) ) {
+			$prepared_item->account_id = $request['account_id'];
+		}
+		if ( ! empty( $schema['properties']['paid_at'] ) && isset( $request['paid_at'] ) ) {
+			$prepared_item->paid_at = $request['paid_at'];
+		}
+		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
+			$prepared_item->amount = $request['amount'];
+		}
+		if ( ! empty( $schema['properties']['currency_code'] ) && isset( $request['currency_code'] ) ) {
+			$prepared_item->currency_code = $request['currency_code'];
+		}
+		if ( ! empty( $schema['properties']['currency_rate'] ) && isset( $request['currency_rate'] ) ) {
+			$prepared_item->currency_rate = $request['currency_rate'];
+		}
+		if ( ! empty( $schema['properties']['contact_id'] ) && isset( $request['contact_id'] ) ) {
+			$prepared_item->contact_id = $request['contact_id'];
+		}
+		if ( ! empty( $schema['properties']['description'] ) && isset( $request['description'] ) ) {
+			$prepared_item->description = $request['description'];
+		}
+		if ( ! empty( $schema['properties']['category_id'] ) && isset( $request['category_id'] ) ) {
+			$prepared_item->category_id = $request['category_id'];
+		}
+		if ( ! empty( $schema['properties']['reference'] ) && isset( $request['reference'] ) ) {
+			$prepared_item->reference = $request['reference'];
+		}
+		if ( ! empty( $schema['properties']['payment_method'] ) && isset( $request['payment_method'] ) ) {
+			$prepared_item->payment_method = $request['payment_method'];
+		}
+		if ( ! empty( $schema['properties']['attachment_url'] ) && isset( $request['attachment_url'] ) ) {
+			$prepared_item->attachment_url = $request['attachment_url'];
+		}
+		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
+			$prepared_item->parent_id = $request['parent_id'];
+		}
+		if ( ! empty( $schema['properties']['reconciled'] ) && isset( $request['reconciled'] ) ) {
+			$prepared_item->reconciled = $request['reconciled'];
+		}
+
+		return $prepared_item;
+	}
 
 	/**
 	 * since 1.0.0
@@ -371,10 +376,10 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 				),
 				'account_id'     => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'paid_at'        => array(
@@ -520,8 +525,14 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 			'default'     => array(),
 		);
 
+		$query_params['amount'] = array(
+			'description' => __( 'Limit result set to specific amount.', 'wp-ever-accounting' ),
+			'type'        => 'string',
+			'default'     => '',
+		);
+
 		$query_params['search'] = array(
-			'description' => __( 'Limit result set to specific searched.', 'wp-ever-accounting' ),
+			'description' => __( 'Limit result set to specific searches.', 'wp-ever-accounting' ),
 			'type'        => 'string',
 			'default'     => '',
 		);
