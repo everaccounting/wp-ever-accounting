@@ -2,11 +2,9 @@
  * External dependencies
  */
 
-import {Component, Fragment} from 'react';
+import {Component} from 'react';
 import {translate as __} from 'lib/locale';
 import PropTypes from 'prop-types';
-import {Button} from "@wordpress/components";
-import {find} from 'lodash';
 import {connect} from 'react-redux';
 /**
  * Internal dependencies
@@ -15,13 +13,12 @@ import './style.scss';
 import {
 	Modal,
 	TextControl,
-	ReactSelect,
-	CurrencyControl,
+	PriceControl,
 	TextareaControl,
 	ToggleControl,
 	Icon
 } from '@eaccounting/components';
-import {eAccountingApi, getApi} from "lib/api";
+import CurrencyControl from 'component/currency-control';
 import {createAccount} from 'state/accounts/action'
 import notify from "lib/notify";
 
@@ -35,84 +32,43 @@ class AddAccount extends Component {
 			bank_name: '',
 			bank_phone: '',
 			bank_address: '',
-			currency: {
-				label: eAccountingi10n.default_currency.name,
-				value: eAccountingi10n.default_currency.code
-			},
-			currencies: [eAccountingi10n.default_currency],
-			status: true,
+			currency: eAccountingi10n.default_currency,
+			enabled: true,
 			isSaving: false,
 		};
-		window.addEventListener('popstate', this.onPageChanged);
-	}
-
-	componentDidCatch(error, info) {
-		this.setState({error: true, stack: error, info});
-	}
-
-	componentDidMount() {
-		getApi(eAccountingApi.currencies.list({per_page: 100})).then(res => {
-			this.setState({
-				// options: res.items.map((currency) => {
-				// 	return {
-				// 		label: currency.name,
-				// 		value: currency.code
-				// 	}
-				// }),
-				currencies: res.items
-			});
-		})
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('popstate', this.onPageChanged);
 	}
 
 	onSubmit = ev => {
 		ev.preventDefault();
 		this.setState({isSaving: true});
-		const {name, number, opening_balance, currency, bank_name, bank_phone, bank_address, status} = this.state;
-		if (!name || !number || !currency) {
+		if (!this.state.name || !this.state.number || !this.state.currency) {
 			this.setState({isSaving: false});
 			notify(__('One or more required value missing, please correct & submit again'), 'error');
 			return false;
 		}
-		let enabled = (status === true) ? 'active' : 'inactive';
-		const item = {
-			name,
-			number,
-			opening_balance,
-			currency_code:currency.value,
-			bank_name,
-			bank_phone,
-			bank_address,
-			status: enabled
-		};
-		console.log(item);
-		this.props.onCreate(item);
+		this.props.onCreate({
+			id: 0,
+			name: this.state.name,
+			number: this.state.number,
+			opening_balance: this.state.opening_balance,
+			currency_code: this.state.currency.code,
+			bank_name: this.state.bank_name,
+			bank_phone: this.state.bank_phone,
+			bank_address: this.state.bank_address,
+			status: (this.state.enabled === true) ? 'active' : 'inactive'
+		});
 		this.props.onClose();
 	};
 
 	render() {
 		const {
 			currency,
-			currencies,
 			isSaving
 		} = this.state;
-
-		const currencyCode = currency.value;
-		const selectedCurrency = find(currencies, {code: currencyCode});
-		const {precision = 2, symbol = '$', decimal_mark = '.', thousands_separator = '', rate = '1', symbol_position = 'before'} = selectedCurrency;
-		const options = currencies.map((currency) => {
-			return {
-				label: currency.name,
-				value: currency.code
-			}
-		});
 		return (
 			<Modal title={__('Add Account')} onRequestClose={this.props.onClose}>
 				<form onSubmit={this.onSubmit}>
-					<TextControl label={__('Name')}
+					<TextControl label={__('Account Name')}
 								 value={this.state.name}
 								 before={<Icon icon='id-card-o'/>}
 								 required
@@ -120,7 +76,7 @@ class AddAccount extends Component {
 									 this.setState({name})
 								 }}/>
 
-					<TextControl label={__('Number')}
+					<TextControl label={__('Account Number')}
 								 value={this.state.number}
 								 before={<Icon icon='pencil'/>}
 								 required
@@ -128,27 +84,21 @@ class AddAccount extends Component {
 									 this.setState({number})
 								 }}/>
 
-					<ReactSelect label={__('Currency')}
-								 value={currency}
-								 before={<Icon icon='exchange'/>}
-								 required
-								 onChange={(currency) => {
-									 this.setState({currency})
-								 }}
-								 options={options}/>
-
-					<CurrencyControl label={__('Opening Balance')}
-									 value={this.state.opening_balance}
-									 before={<Icon icon='money'/>}
-									 precision={precision}
-									 symbol={symbol}
-									 decimal_mark={decimal_mark}
-									 thousands_separator={thousands_separator}
-									 symbol_position={symbol_position}
+					<CurrencyControl label={__('Account Currency')}
+									 value={currency}
 									 required
-									 onChange={(opening_balance) => {
-										 this.setState({opening_balance})
-									 }} options={this.state.currencies}/>
+									 onChange={(currency) => {
+										 this.setState({currency})
+									 }}/>
+
+					<PriceControl label={__('Opening Balance')}
+								  value={this.state.opening_balance}
+								  before={<Icon icon='money'/>}
+								  currency={currency}
+								  required
+								  onChange={(opening_balance) => {
+									  this.setState({opening_balance})
+								  }} options={this.state.currencies}/>
 					<TextControl label={__('Bank Name')}
 								 value={this.state.bank_name}
 								 before={<Icon icon='university'/>}
@@ -167,11 +117,10 @@ class AddAccount extends Component {
 										 this.setState({bank_address})
 									 }}/>
 					<ToggleControl label={__('Enabled')}
-								   checked={this.state.status}
+								   checked={this.state.enabled}
 								   onChange={() => {
-									   this.setState({status: !this.state.status})
+									   this.setState({enabled: !this.state.enabled})
 								   }}/>
-
 					<input className="button-primary" type="submit" name="add" value={__('Add Account')}
 						   disabled={isSaving || this.state.name === ''}/>
 				</form>

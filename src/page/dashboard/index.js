@@ -5,6 +5,8 @@
 import {Component} from 'react';
 import { translate as __ } from 'lib/locale';
 import { Icon, TextControl,SelectControl, ReactSelect, TextareaControl, CurrencyControl, ToggleControl} from '@eaccounting/components';
+import EditAccount from 'component/edit-account';
+import {initialAccount} from 'state/accounts/selection';
 
 /**
  * Internal dependencies
@@ -29,6 +31,8 @@ export default class Dashboard extends Component {
 	render() {
 		return (
 			<div>
+				{/*<EditAccount item={initialAccount}/>*/}
+
 				<TextareaControl
 					label="Text field with both affixes"
 					help="Text field with both affixes"

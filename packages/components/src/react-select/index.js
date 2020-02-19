@@ -26,6 +26,7 @@ export default class ReactSelect extends Component {
 					<Select
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
+						required={required}
 						{...props}
 					/>
 

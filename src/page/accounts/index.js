@@ -38,7 +38,8 @@ import {
 	getBulk,
 	getSearchOptions
 } from './constants';
-import AddAccount from "./add-account";
+import EditAccount from 'component/edit-account';
+import {initialAccount} from 'state/accounts/selection';
 
 class Accounts extends Component {
 	constructor(props) {
@@ -115,7 +116,7 @@ class Accounts extends Component {
 				<h1 className="wp-heading-inline">{__('Accounts')}</h1>
 				<a href="#" className="page-title-action" onClick={this.onAdd}>{__('Add New')}</a>
 				<hr className="wp-header-end"/>
-				{isAdding && <AddAccount onClose={this.onClose}/>}
+				{isAdding && <EditAccount item={initialAccount} onClose={this.onClose}/>}
 
 				<div className="redirect-table-display">
 					<TableDisplay

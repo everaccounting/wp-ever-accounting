@@ -42,6 +42,7 @@ class TextControl extends Component {
 						id={id}
 						value={value}
 						onChange={onChangeValue}
+						required={required}
 						aria-describedby={describedby.join(' ')}
 						{...props}
 					/>

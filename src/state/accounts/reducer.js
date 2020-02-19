@@ -18,13 +18,11 @@ import { setTableSelected, setTableAllSelected, clearSelected } from 'lib/table'
 import { setTable, setRows, setTotal, setItem, setSaving, removeSaving, restoreToOriginal } from 'lib/store';
 import notify from "../../lib/notify";
 export default function accounts( state = {}, action ) {
-	console.log(action);
 	switch ( action.type ) {
 		case ACCOUNTS_LOADING:
 			return { ... state, table: setTable( state, action ), status: STATUS_IN_PROGRESS, saving: [] };
 
 		case ACCOUNTS_LOADED:
-			notify('Loaded');
 			return { ... state, rows: setRows( state, action ), status: STATUS_COMPLETE, total: setTotal( state, action ), table: clearSelected( state.table ) };
 
 		case ACCOUNTS_ITEM_SAVING:

@@ -38,6 +38,7 @@ export const tableAction = ( endpoint, bulk, ids, status, extra = {} ) => ( disp
 const doAction = ( endpoint, table, item, status, dispatch ) => {
 	getApi( endpoint )
 		.then( json => {
+			console.log(json);
 			dispatch( { type: status.saved, item: json.items, items: json.items, total: json.total, saving: [ item.id ] } );
 		} )
 		.catch( error => {
@@ -124,11 +125,15 @@ const copyReplace = ( data, item, cb ) => {
 	const dupe = data.slice( 0 );
 
 	for ( let x = 0; x < data.length; x++ ) {
-		if ( parseInt( data[ x ].id, 10 ) === parseInt(item.id, 10) ) {
+		console.log(data[ x ].name, data[ x ].id, parseInt( data[ x ].id, 10 ));
+		console.log(item.name, item.id, parseInt(item.id, 10) );
+
+		if ( parseInt( data[ x ].id, 10 ) === parseInt(item.id, 10)) {
+			console.log('callback', cb( data[ x ] ));
 			dupe[ x ] = cb( data[ x ] );
 		}
 	}
-
+	console.log(dupe);
 	return dupe;
 };
 

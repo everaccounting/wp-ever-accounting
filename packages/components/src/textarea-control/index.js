@@ -14,7 +14,7 @@ export default class TextareaControl extends Component {
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
-					<BaseToggle {...props} required/>
+					<BaseToggle {...props} required={required}/>
 				</div>
 			</BaseControl>
 		)

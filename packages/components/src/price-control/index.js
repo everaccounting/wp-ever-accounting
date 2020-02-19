@@ -34,6 +34,7 @@ export default class PriceControl extends Component {
 						decimal_mark={decimal_mark}
 						thousands_separator={thousands_separator}
 						selectAllOnFocus
+						required={required}
 						className='components-text-control__input ea-input-group__input'/>
 					{after && (
 						<span className="ea-input-group__after">
