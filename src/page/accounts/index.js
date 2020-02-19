@@ -44,7 +44,7 @@ class Accounts extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAdding:true
+			isAdding:false
 		};
 		window.addEventListener('popstate', this.onPageChanged);
 	}
@@ -70,7 +70,7 @@ class Accounts extends Component {
 				item={ row }
 				key={ row.id }
 				selected={ status.isSelected }
-				status={ rowStatus }
+				rowstatus={ rowStatus }
 				currentDisplayType={ currentDisplayType }
 				currentDisplaySelected={ currentDisplaySelected }
 				setFilter={ this.setFilter }

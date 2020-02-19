@@ -2,6 +2,7 @@ export {default as CurrencyControl} from './currency-control';
 export {default as Form} from './form';
 export {default as Icon} from './icon';
 export {default as Modal} from './modal';
+export {default as PriceControl} from './price-control';
 export {default as ReactSelect} from './react-select';
 export {default as SelectControl} from './select-control';
 export {default as TextControl} from './text-control';

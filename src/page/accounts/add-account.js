@@ -29,16 +29,17 @@ class AddAccount extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			currencies: [eAccountingi10n.default_currency],
-			options: [],
 			name: '',
 			number: '',
 			opening_balance: '',
-			currency_code: eAccountingi10n.default_currency.code,
-			currency: undefined,
 			bank_name: '',
 			bank_phone: '',
 			bank_address: '',
+			currency: {
+				label: eAccountingi10n.default_currency.name,
+				value: eAccountingi10n.default_currency.code
+			},
+			currencies: [eAccountingi10n.default_currency],
 			status: true,
 			isSaving: false,
 		};
@@ -52,12 +53,12 @@ class AddAccount extends Component {
 	componentDidMount() {
 		getApi(eAccountingApi.currencies.list({per_page: 100})).then(res => {
 			this.setState({
-				options: res.items.map((currency) => {
-					return {
-						label: currency.name,
-						value: currency.code
-					}
-				}),
+				// options: res.items.map((currency) => {
+				// 	return {
+				// 		label: currency.name,
+				// 		value: currency.code
+				// 	}
+				// }),
 				currencies: res.items
 			});
 		})
@@ -70,8 +71,8 @@ class AddAccount extends Component {
 	onSubmit = ev => {
 		ev.preventDefault();
 		this.setState({isSaving: true});
-		const {name, number, opening_balance, currency_code, bank_name, bank_phone, bank_address, status} = this.state;
-		if (!name || !number || !currency_code) {
+		const {name, number, opening_balance, currency, bank_name, bank_phone, bank_address, status} = this.state;
+		if (!name || !number || !currency) {
 			this.setState({isSaving: false});
 			notify(__('One or more required value missing, please correct & submit again'), 'error');
 			return false;
@@ -81,7 +82,7 @@ class AddAccount extends Component {
 			name,
 			number,
 			opening_balance,
-			currency_code,
+			currency_code:currency.value,
 			bank_name,
 			bank_phone,
 			bank_address,
@@ -94,10 +95,7 @@ class AddAccount extends Component {
 
 	render() {
 		const {
-			currency = {
-				label: eAccountingi10n.default_currency.name,
-				value: eAccountingi10n.default_currency.code
-			},
+			currency,
 			currencies,
 			isSaving
 		} = this.state;
@@ -105,7 +103,12 @@ class AddAccount extends Component {
 		const currencyCode = currency.value;
 		const selectedCurrency = find(currencies, {code: currencyCode});
 		const {precision = 2, symbol = '$', decimal_mark = '.', thousands_separator = '', rate = '1', symbol_position = 'before'} = selectedCurrency;
-
+		const options = currencies.map((currency) => {
+			return {
+				label: currency.name,
+				value: currency.code
+			}
+		});
 		return (
 			<Modal title={__('Add Account')} onRequestClose={this.props.onClose}>
 				<form onSubmit={this.onSubmit}>
@@ -131,7 +134,8 @@ class AddAccount extends Component {
 								 required
 								 onChange={(currency) => {
 									 this.setState({currency})
-								 }} options={this.state.options}/>
+								 }}
+								 options={options}/>
 
 					<CurrencyControl label={__('Opening Balance')}
 									 value={this.state.opening_balance}

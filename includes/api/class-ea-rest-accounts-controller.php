@@ -82,14 +82,14 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 	 */
 	public function get_items( $request ) {
 		$args = array(
-			'include'      => $request['include'],
-			'exclude'      => $request['exclude'],
-			'search'       => $request['search'],
-			'orderby'      => $request['orderby'],
-			'order'        => $request['order'],
-			'per_page'     => $request['per_page'],
-			'page'         => $request['page'],
-			'offset'       => $request['offset'],
+			'include'  => $request['include'],
+			'exclude'  => $request['exclude'],
+			'search'   => $request['search'],
+			'orderby'  => $request['orderby'],
+			'order'    => $request['order'],
+			'per_page' => $request['per_page'],
+			'page'     => $request['page'],
+			'offset'   => $request['offset'],
 		);
 
 		$query_result = eaccounting_get_accounts( $args );
@@ -264,14 +264,11 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		}
 
 		if ( ! empty( $schema['properties']['opening_balance'] ) && isset( $request['opening_balance'] ) ) {
-			$prepared_item->opening_balance = eaccounting_money(  $request['opening_balance'], $request['currency_code'], false   )->getAmount();
+			$prepared_item->opening_balance = eaccounting_money( $request['opening_balance'], $request['currency_code'], false )->getAmount();
 		}
 		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
 			$prepared_item->status = $request['status'];
 		}
-
-
-
 
 
 		return $prepared_item;
@@ -293,6 +290,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'number'          => $item->number,
 			'opening_balance' => $item->opening_balance,
 			'balance'         => $o_balance,//todo update this
+			'currency'        => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'   => $item->currency_code,
 			'bank_name'       => $item->bank_name,
 			'bank_phone'      => $item->bank_phone,
@@ -350,7 +348,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'title'      => __( 'Item', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'           => array(
+				'id'              => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -359,7 +357,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'account_id'   => array(
+				'account_id'      => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -367,16 +365,16 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'   => array(
+				'name'            => array(
 					'description' => __( 'Name of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
-				'number'   => array(
+				'number'          => array(
 					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -384,7 +382,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'opening_balance'   => array(
+				'opening_balance' => array(
 					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -399,9 +397,9 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
-				'bank_name'   => array(
+				'bank_name'       => array(
 					'description' => __( 'Bank name of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -409,7 +407,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_phone'   => array(
+				'bank_phone'      => array(
 					'description' => __( 'Phone number of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -417,7 +415,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_address'   => array(
+				'bank_address'    => array(
 					'description' => __( 'Address of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -425,13 +423,13 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'status'       => array(
+				'status'          => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'enum'        => array( 'active', 'inactive' ),
 				),
-				'date_created' => array(
+				'date_created'    => array(
 					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',

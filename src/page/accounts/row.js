@@ -2,13 +2,20 @@
  * External dependencies
  */
 
-import {Component, Fragment} from 'react';
-import {translate as __, numberFormat} from 'lib/locale';
+import {Component} from 'react';
+import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
-import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import {Modal, Form, CurrencyControl} from '@eaccounting/components';
-import {Button, TextControl, FormToggle} from '@wordpress/components';
+import {find} from 'lodash';
+import {
+	Modal,
+	TextControl,
+	PriceControl,
+	TextareaControl,
+	ToggleControl,
+	Icon
+} from '@eaccounting/components';
+import CurrencyControl from 'component/currency-control';
 
 /**
  * Internal dependencies
@@ -18,13 +25,12 @@ import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
 import Spinner from 'component/spinner';
 import Column from 'component/table/column';
 import RowActions from 'component/table/row-action';
-import {eAccountingApi, getApi} from "../../lib/api";
-import {getApiRequest} from 'lib/api';
+
 class AccountsRow extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
 		selected: PropTypes.bool.isRequired,
-		status: PropTypes.string.isRequired,
+		rowstatus: PropTypes.string.isRequired,
 		defaultFlags: PropTypes.object,
 	};
 
@@ -34,16 +40,21 @@ class AccountsRow extends Component {
 		this.state = {
 			editing: false,
 			name: props.item.name,
-			currencies:[],
+			number: props.item.number,
+			opening_balance: props.item.opening_balance,
+			bank_name: props.item.bank_name,
+			bank_phone: props.item.bank_phone,
+			bank_address: props.item.bank_address,
+			currency: props.item.currency,
+			currencies: [],
+			enabled: props.item.enabled,
+			isSaving: false,
 		};
 	}
 
 	onEdit = ev => {
 		ev.preventDefault();
 		this.setState({editing: !this.state.editing});
-		getApi(eAccountingApi.currencies.list()).then(json => {
-			console.log(json);
-		});
 	};
 
 	onDelete = ev => {
@@ -65,20 +76,26 @@ class AccountsRow extends Component {
 		this.props.onSetSelected([this.props.item.id]);
 	};
 
-	onValidate = (values) => {
-		const errors = {};
-
-		// if (values.company.length < 3) {
-		// 	errors.company = __('Company Name is required', 'wp-ever-crm');
-		// }
-		// if (values.email.length < 3) {
-		// 	errors.email = __('Email is required', 'wp-ever-crm');
-		// }
-		return errors;
-	};
-
-	onSubmit = item => {
-		this.props.onSaveAccount(this.props.item.id, item);
+	onSubmit = ev => {
+		ev.preventDefault();
+		this.setState({isSaving: true});
+		if (!this.state.name || !this.state.number || !this.state.currency) {
+			this.setState({isSaving: false});
+			notify(__('One or more required value missing, please correct & submit again'), 'error');
+			return false;
+		}
+		let status = (this.state.enabled === true) ? 'active' : 'inactive';
+		console.log(this.state);
+		this.props.onSaveAccount(this.props.item.id, {
+			name: this.state.name,
+			number: this.state.number,
+			opening_balance: this.state.opening_balance,
+			currency_code: this.state.currency.code,
+			bank_name: this.state.bank_name,
+			bank_phone: this.state.bank_phone,
+			bank_address: this.state.bank_address,
+			status
+		});
 		this.onClose();
 	};
 
@@ -110,13 +127,81 @@ class AccountsRow extends Component {
 		);
 	}
 
+	getEditModal() {
+		const {
+			currency,
+			isSaving
+		} = this.state;
+		return (
+			<Modal title={__('Edit Account')} onRequestClose={this.onClose}>
+				<form onSubmit={this.onSubmit}>
+					<TextControl label={__('Account Name')}
+								 value={this.state.name}
+								 before={<Icon icon='id-card-o'/>}
+								 required
+								 onChange={(name) => {
+									 this.setState({name})
+								 }}/>
+
+					<TextControl label={__('Account Number')}
+								 value={this.state.number}
+								 before={<Icon icon='pencil'/>}
+								 required
+								 onChange={(number) => {
+									 this.setState({number})
+								 }}/>
+
+					<CurrencyControl label={__('Account Currency')}
+									 value={currency}
+									 required
+									 onChange={(currency) => {
+										 this.setState({currency})
+									 }}/>
+
+					<PriceControl label={__('Opening Balance')}
+								  value={this.state.opening_balance}
+								  before={<Icon icon='money'/>}
+								  currency={currency}
+								  required
+								  onChange={(opening_balance) => {
+									  this.setState({opening_balance})
+								  }} options={this.state.currencies}/>
+					<TextControl label={__('Bank Name')}
+								 value={this.state.bank_name}
+								 before={<Icon icon='university'/>}
+								 onChange={(bank_name) => {
+									 this.setState({bank_name})
+								 }}/>
+					<TextControl label={__('Bank Phone')}
+								 value={this.state.bank_phone}
+								 before={<Icon icon='phone'/>}
+								 onChange={(bank_phone) => {
+									 this.setState({bank_phone})
+								 }}/>
+					<TextareaControl label={__('Bank Address')}
+									 value={this.state.bank_address}
+									 onChange={(bank_address) => {
+										 this.setState({bank_address})
+									 }}/>
+					<ToggleControl label={__('Enabled')}
+								   checked={this.state.enabled}
+								   onChange={() => {
+									   this.setState({enabled: !this.state.enabled})
+								   }}/>
+
+					<input className="button-primary" type="submit" name="update" value={__('Update Account')}
+						   disabled={isSaving || this.state.name === ''}/>
+				</form>
+			</Modal>
+		)
+	}
+
 	render() {
 		const {id, name, balance, number, bank_name, enabled} = this.props.item;
-		const {selected, status, currentDisplaySelected} = this.props;
-		const isLoading = status === STATUS_IN_PROGRESS;
-		const isSaving = status === STATUS_SAVING;
-		const hideRow = !enabled || isLoading || isSaving;
-
+		const {selected, rowstatus, currentDisplaySelected} = this.props;
+		const isLoading = rowstatus === STATUS_IN_PROGRESS;
+		const isSaving = rowstatus === STATUS_SAVING;
+		const hideRow = isLoading || isSaving;
 		return (
 			<tr className={hideRow ? 'disabled' : ''}>
 
@@ -149,24 +234,7 @@ class AccountsRow extends Component {
 						<span className='ea-item-status disabled'>{__('Disabled')}</span>}
 				</Column>
 
-				{this.state.editing && <Modal title={__('Edit Account')} onRequestClose={this.onClose}>
-					<Form validate={this.onValidate} onSubmitCallback={this.onSubmit} initialValues={this.props.item}>
-						{({getInputProps, values, errors, handleSubmit}) => (
-							<Fragment>
-								<TextControl label={__('Name')} {...getInputProps('name')} required/>
-								<TextControl label={__('Account Number')} {...getInputProps('number')} required/>
-								<CurrencyControl label={__('Opening Balance')} {...getInputProps('opening_balance')} required/>
-								<TextControl label={__('Bank Name')} {...getInputProps('bank_name')} required/>
-								<TextControl label={__('Bank Phone')} {...getInputProps('bank_phone')} required/>
-								<FormToggle label={__('Status')} {...getInputProps('enabled')}/>
-								<Button isPrimary isBusy={isSaving} onClick={handleSubmit}
-										disabled={Object.keys(errors).length}>
-									{__('Submit')}
-								</Button>
-							</Fragment>
-						)}
-					</Form>
-				</Modal>}
+				{this.state.editing && this.getEditModal()}
 			</tr>
 		)
 	}
@@ -178,7 +246,7 @@ function mapDispatchToProps(dispatch) {
 		onSetSelected: items => {
 			dispatch(setSelected(items));
 		},
-		onSaveAccount:(id, item) =>{
+		onSaveAccount: (id, item) => {
 			dispatch(updateAccount(id, item));
 		},
 		onTableAction: (action, ids) => {
