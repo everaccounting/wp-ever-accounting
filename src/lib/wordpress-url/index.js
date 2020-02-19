@@ -35,7 +35,6 @@ export function getWordPressUrl( query, defaults, url ) {
 
 export function getPluginPage( url ) {
 	const params = getPageUrl( url );
-	console.log(location.pathname.slice(0, location.pathname.lastIndexOf('/')));
 	if ( ALLOWED_PAGES.indexOf( params.sub ) !== -1 ) {
 		return params.sub;
 	}
@@ -51,4 +50,4 @@ export function getServerUrl( domain, path ) {
 	return domain.replace( /\/$/, '' ) + '/' + path.replace( /^\//, '' );
 }
 
-export const isRedirection = headers => headers.find( item => ( item.name === 'x-redirect-agent' || item.name === 'x-redirect-by' ) && item.value.toLowerCase() === 'eaccounting' );
+export const isRedirection = headers => headers.find( item => ( item.name === 'x-ea-agent' || item.name === 'x-ea-by' ) && item.value.toLowerCase() === 'eaccounting' );

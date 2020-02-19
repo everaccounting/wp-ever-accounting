@@ -19,7 +19,7 @@ const Badge = props => {
 	};
 
 	return (
-		<div className={ classnames( 'redirect-badge', className, onClick ? 'redirect-badge__click' : null ) } { ...extra }>
+		<div className={ classnames( 'ea-badge', className, onClick ? 'ea-badge__click' : null ) } { ...extra }>
 			<div>
 				{ children }
 				{ onCancel && <span onClick={ onCancel }>⨯</span> }

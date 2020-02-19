@@ -63,7 +63,7 @@ class MultiOptionGroup extends React.Component {
 
 		if ( options ) {
 			return (
-				<div className="redirect-multioption__group">
+				<div className="ea-multioption__group">
 					<h5>{ label }</h5>
 
 					{ options.map( option => (

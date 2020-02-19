@@ -26,7 +26,7 @@ class Popover extends React.Component {
 	}
 
 	handleClickOutside = ev => {
-		const toggle = ev.target.closest( '.redirect-popover__toggle' );
+		const toggle = ev.target.closest( '.ea-popover__toggle' );
 
 		if ( ! toggle || ( toggle && toggle !== this.props.toggleRef ) ) {
 			this.props.onHide();
@@ -82,15 +82,15 @@ class Popover extends React.Component {
 		const { className, content } = this.props;
 		const width = this.getPopoverWidth();
 		const classes = classnames(
-			'redirect-popover',
+			'ea-popover',
 			{
-				'redirect-popover__right': this.isRightAligned(),
+				'ea-popover__right': this.isRightAligned(),
 			},
 		);
 
 		return (
 			<div className={ classes }>
-				<div className={ classnames( 'redirect-popover__content', className ) } style={ width } ref={ this.ref }>
+				<div className={ classnames( 'ea-popover__content', className ) } style={ width } ref={ this.ref }>
 					{ content() }
 				</div>
 			</div>

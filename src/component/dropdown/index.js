@@ -33,8 +33,8 @@ class Dropdown extends React.Component {
 		const { showing } = this.state;
 
 		return (
-			<div className={ classnames( 'redirect-popover__container', className ) }>
-				<div className="redirect-popover__toggle" ref={ this.toggleRef }>
+			<div className={ classnames( 'ea-popover__container', className ) }>
+				<div className="ea-popover__toggle" ref={ this.toggleRef }>
 					{ renderToggle( showing, this.onToggle ) }
 				</div>
 

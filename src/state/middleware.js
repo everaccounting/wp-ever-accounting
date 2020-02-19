@@ -33,7 +33,6 @@ const setUrlForPage = ( action, table ) => {
 };
 
 export const urlMiddleware = () => next => action => {
-	// console.log(action);
 	// switch ( action.type ) {
 	// 	// case REDIRECT_ITEM_SAVING:
 	// 	// case GROUP_ITEM_SAVING:

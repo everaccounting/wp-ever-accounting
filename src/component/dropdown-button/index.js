@@ -34,7 +34,7 @@ class DropdownButton extends React.Component {
 			<Dropdown
 				renderToggle={ ( isOpen, toggle ) => (
 					<button
-						className={ classnames( 'button', 'action', isEnabled ? null : 'redirect-dropdownbutton__disabled', isOpen ? 'redirect-dropdownbutton__button_enabled' : null ) }
+						className={ classnames( 'button', 'action', isEnabled ? null : 'ea-dropdownbutton__disabled', isOpen ? 'ea-dropdownbutton__button_enabled' : null ) }
 						disabled={ ! isEnabled }
 						onClick={ this.onButton }
 					>
@@ -44,16 +44,16 @@ class DropdownButton extends React.Component {
 					</button>
 				) }
 				position="right"
-				className={ classnames( 'redirect-dropdownbutton', options.length <= 1 ? 'redirect-dropdownbutton__single' : null ) }
+				className={ classnames( 'ea-dropdownbutton', options.length <= 1 ? 'ea-dropdownbutton__single' : null ) }
 				renderContent={ ( toggle ) => (
 					<ul>
 						{ options.map( ( { title, name } ) => (
 							<li key={ name } className={ classnames( {
-								'redirect-dropdownbutton__selected': selectedItem.name === name,
-								[ 'redirect-dropdownbutton__' + name ]: true,
+								'ea-dropdownbutton__selected': selectedItem.name === name,
+								[ 'ea-dropdownbutton__' + name ]: true,
 							} ) }>
 								<a href="#" onClick={ ev => this.onChange( ev, name, toggle ) }>
-									<span className="redirect-dropdownbutton__check">{ selectedItem.name === name && '✓' }</span>
+									<span className="ea-dropdownbutton__check">{ selectedItem.name === name && '✓' }</span>
 									{ title }
 								</a>
 							</li>

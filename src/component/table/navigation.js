@@ -69,7 +69,7 @@ class TableNav extends React.Component {
 
 		return (
 			<div className="tablenav top">
-				<div className="redirect-table__actions">
+				<div className="ea-table__actions">
 					{ bulk && this.getBulk( bulk ) }
 
 					{ this.props.children ? this.props.children : null }

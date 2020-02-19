@@ -1,4 +1,4 @@
-.redirect-badge {
+.ea-badge {
 	display: inline-block;
 
 	> div {
@@ -14,7 +14,7 @@
 	white-space: nowrap;
 	color: black;
 
-	&.redirect-badge__click {
+	&.ea-badge__click {
 		cursor: pointer;
 		border: 1px solid transparent;
 
@@ -42,6 +42,6 @@
 	}
 }
 
-.redirect-badge:not(:last-child) {
+.ea-badge:not(:last-child) {
 	margin-right: 5px;
 }

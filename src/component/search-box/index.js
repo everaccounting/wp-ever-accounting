@@ -81,7 +81,7 @@ class SearchBox extends React.Component {
 		const disabled = status === STATUS_IN_PROGRESS || ( this.state.search === '' && this.props.table.filter === '' );
 
 		return (
-			<form onSubmit={ this.onSubmit } className="redirect-searchbox">
+			<form onSubmit={ this.onSubmit } className="ea-searchbox">
 				<input type="search" name="s" value={ this.state.search } onChange={ this.onSearch } />
 
 				{ searchTypes && (

@@ -34,14 +34,10 @@ class EAccounting_Admin_Menus {
 		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Dashboard', 'wp-ever-accounting' ), 'manage_options', 'eaccounting', array( __CLASS__, 'page_wrapper' ) );
 		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/transactions', array( $this, 'page_wrapper' ) );
 		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Contacts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/contacts', array( $this, 'page_wrapper' ) );
-//		add_submenu_page( 'ever-accounting', __( 'Inventory', 'wp-ever-accounting' ), __( 'Inventory', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-inventory', array( $this, 'inventory_page' ) );
-//		add_submenu_page( 'ever-accounting', __( 'Invoices', 'wp-ever-accounting' ), __( 'Invoices', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-invoices', array( $this, 'invoices_page' ) );
-		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Payments', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/payments', array( $this, 'page_wrapper' ) );
-		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Revenues', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/revenues', array( $this, 'page_wrapper' ) );
-		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/accounts', array( $this, 'page_wrapper' ) );
-//		add_submenu_page( 'ever-accounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-banking', array( $this, 'banking_page' ) );
-//		add_submenu_page( 'ever-accounting', __( 'Transfers', 'wp-ever-accounting' ), __( 'Transfers', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transfers', array( $this, 'transfers_page' ) );
-//		add_submenu_page( 'ever-accounting', __( 'Misc', 'wp-ever-accounting' ), __( 'Misc', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-misc', array( $this, 'misc_page' ) );
+		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Incomes', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/incomes', array( $this, 'page_wrapper' ) );
+		add_submenu_page( 'eaccounting', __( 'Accounting', 'wp-ever-accounting' ), __( 'Expenses', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/expenses', array( $this, 'page_wrapper' ) );
+		add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/banking', array( $this, 'page_wrapper' ) );
+		add_submenu_page( 'eaccounting', __( 'Misc', 'wp-ever-accounting' ), __( 'Misc', 'wp-ever-accounting' ), 'manage_options', 'eaccounting#/misc', array( $this, 'page_wrapper' ) );
 		add_submenu_page( 'eaccounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reports', array( $this, 'reports_page' ) );
 		$help = '<span style="color:#ff7a03;">' . __( 'Help', 'wp-ever-accounting' ) . '</span>';
 		add_submenu_page( 'eaccounting', '', $help, 'manage_options', 'eaccounting-help', array( $this, 'help_page' ) );

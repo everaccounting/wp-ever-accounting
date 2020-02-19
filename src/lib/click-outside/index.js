@@ -17,14 +17,14 @@ export default ( WrappedComponent ) => {
 		}
 
 		onClick = ev => {
-			if ( this.node.current && ev.target.closest( '.redirect-click-outside' ) === null ) {
+			if ( this.node.current && ev.target.closest( '.ea-click-outside' ) === null ) {
 				this.node.current.handleClickOutside( ev );
 			}
 		}
 
 		render() {
 			return (
-				<div className="redirect-click-outside">
+				<div className="ea-click-outside">
 					<WrappedComponent { ...this.props } ref={ this.node } />
 				</div>
 			);

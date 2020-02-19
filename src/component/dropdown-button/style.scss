@@ -1,4 +1,4 @@
-.redirect-dropdownbutton .redirect-popover__content {
+.ea-dropdownbutton .ea-popover__content {
 	h4 {
 		margin-top: 5px;
 	}
@@ -13,7 +13,7 @@
 	}
 }
 
-.redirect-dropdownbutton {
+.ea-dropdownbutton {
 	ul,
 	li {
 		white-space: nowrap;
@@ -53,7 +53,7 @@
 	}
 }
 
-.redirect-dropdownbutton .button {
+.ea-dropdownbutton .button {
 	background-color: #fff;
 	border-color: #7e8993;
 	color: #32373c;
@@ -62,17 +62,17 @@
 	min-height: 30px;
 }
 
-.redirect-dropdownbutton__single h5 {
+.ea-dropdownbutton__single h5 {
 	text-align: center;
 	margin-right: 0;
 }
 
-.redirect-dropdownbutton__check {
+.ea-dropdownbutton__check {
 	width: 16px;
 	display: inline-block;
 }
 
-.redirect-dropdownbutton .redirect-dropdownbutton__button_enabled {
+.ea-dropdownbutton .ea-dropdownbutton__button_enabled {
 	svg {
 		transform: rotate(180deg);
 		border-right: 1px solid #ddd;

@@ -23,7 +23,6 @@ const strOrInt = value => parseInt(value, 10) > 0 || value === '0' ? parseInt(va
 
 function filterFilters(query, filters) {
 	const filteredQuery = {};
-
 	Object.keys(query).map(key => {
 		if (filters[key] && Array.isArray(filters[key]) && filters[key].indexOf(strOrInt(query[key])) !== -1) {
 			filteredQuery[key] = strOrInt(query[key]);

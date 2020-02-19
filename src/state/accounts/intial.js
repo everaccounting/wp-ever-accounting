@@ -1,6 +1,6 @@
 import {STATUS_IN_PROGRESS} from 'lib/status';
 import {getDefaultTable, toFilter} from 'lib/table';
-import { getFilterOptions, getDisplayGroups } from 'page/accounts/constants';
+import { getFilterOptions, getDisplayGroups } from 'page/banking/components/accounts/constants';
 let table = getDefaultTable( [ 'name', 'number' ], toFilter( getFilterOptions(), { name: true } ), getDisplayGroups(), 'name', [ 'accounts' ], 'account', getDisplayGroups() );
 
 export function getInitialAccounts() {

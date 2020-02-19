@@ -71,6 +71,8 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 				'schema' => $this->get_item_schema(),
 			)
 		);
+
+
 	}
 
 	/**
@@ -91,6 +93,12 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'page'     => $request['page'],
 			'offset'   => $request['offset'],
 		);
+		if ( isset( $request['filterBy'] ) && is_array( $request['filterBy'] ) ) {
+			foreach ( $request['filterBy'] as $filter => $value ) {
+				$args[ $filter ] = sanitize_text_field( $value );
+			}
+		}
+
 
 		$query_result = eaccounting_get_accounts( $args );
 		$total_items  = eaccounting_get_accounts( $args, true );

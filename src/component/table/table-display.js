@@ -101,7 +101,7 @@ class TableDisplay extends React.Component {
 
 		return (
 			<MultiOptionDropdown
-				className="redirect-table-display__filter"
+				className="ea-table-display__filter"
 				options={ groupedOptions }
 				selected={ this.getSelected( currentDisplaySelected ) }
 				onApply={ this.onChange }
