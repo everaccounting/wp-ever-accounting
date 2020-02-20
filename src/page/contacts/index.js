@@ -39,7 +39,7 @@ import {
 	getSearchOptions
 } from './constants';
 import EditContact from 'component/edit-account';
-import {initialContact} from 'state/accounts/selection';
+import {initialContact} from 'state/contacts/selection';
 
 class Contacts extends Component {
 	constructor(props) {
@@ -63,7 +63,7 @@ class Contacts extends Component {
 	}
 
 	onRenderRow = ( row, key, status, currentDisplayType, currentDisplaySelected ) => {
-		const { saving } = this.props.accounts;
+		const { saving } = this.props.contacts;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf( row.id ) !== -1 ? STATUS_SAVING : loadingStatus;
 		return (
@@ -75,7 +75,7 @@ class Contacts extends Component {
 				currentDisplayType={ currentDisplayType }
 				currentDisplaySelected={ currentDisplaySelected }
 				setFilter={ this.setFilter }
-				filters={ this.props.accounts.table.filterBy }
+				filters={ this.props.contacts.table.filterBy }
 			/>
 		);
 	};
@@ -89,7 +89,7 @@ class Contacts extends Component {
 	}
 
 	setFilter = ( filterName, filterValue ) => {
-		const { filterBy } = this.props.accounts.table;
+		const { filterBy } = this.props.contacts.table;
 
 		this.props.onFilter( { ...filterBy, [ filterName ]: filterValue ? filterValue : undefined } );
 	};
@@ -108,7 +108,8 @@ class Contacts extends Component {
 	};
 
 	render() {
-		const {status, total, table, rows, saving} = this.props.accounts;
+		console.log(this.props);
+		const {status, total, table, rows, saving} = this.props.contacts;
 		const {isAdding} = this.state;
 		const isSaving = saving.indexOf(0) !== -1;
 		return (
@@ -123,7 +124,7 @@ class Contacts extends Component {
 						disable={ status === STATUS_IN_PROGRESS }
 						options={ getDisplayOptions() }
 						groups={ getDisplayGroups() }
-						store="accounts"
+						store="contacts"
 						currentDisplayType={ table.displayType }
 						currentDisplaySelected={ table.displaySelected }
 						setDisplay={ this.props.onSetDisplay }
@@ -136,7 +137,6 @@ class Contacts extends Component {
 						selected={ table.filterBy }
 						searchTypes={ getSearchOptions() }
 					/>
-
 				</div>
 
 				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } bulk={ getBulk() }>
@@ -149,6 +149,13 @@ class Contacts extends Component {
 							isEnabled={ status !== STATUS_IN_PROGRESS }
 						/>
 					</BulkAction>
+
+					<div className="alignleft actions">
+						Jello
+					</div>
+
+
+
 				</TableNav>
 
 				<Table
@@ -174,9 +181,9 @@ class Contacts extends Component {
 }
 
 function mapStateToProps(state) {
-	const {accounts} = state;
+	const {contacts} = state;
 	return {
-		accounts,
+		contacts,
 	};
 }
 

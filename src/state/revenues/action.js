@@ -14,7 +14,7 @@ import {
 } from './type';
 
 import { tableAction, createAction, updateAction, processRequest } from 'lib/store';
-import { eRevenueingApi } from 'lib/api';
+import { eAccountingApi } from 'lib/api';
 
 const STATUS_REVENUES_ITEM = {
 	store: 'revenues',
@@ -31,10 +31,10 @@ const STATUS_REVENUE = {
 	order: 'name',
 };
 
-export const createRevenue = item => createAction( eRevenueingApi.revenues.create, item, STATUS_REVENUES_ITEM );
-export const updateRevenue = ( id, item ) => updateAction( eRevenueingApi.revenues.update, id, item, STATUS_REVENUES_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( eRevenueingApi.revenues.bulk, action, ids, STATUS_REVENUES_ITEM );
-export const getRevenues = args => ( dispatch, getState ) => processRequest( eRevenueingApi.revenues.list, dispatch, STATUS_REVENUE, args, getState().revenues );
+export const createRevenue = item => createAction( eAccountingApi.revenues.create, item, STATUS_REVENUES_ITEM );
+export const updateRevenue = ( id, item ) => updateAction( eAccountingApi.revenues.update, id, item, STATUS_REVENUES_ITEM );
+export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.revenues.bulk, action, ids, STATUS_REVENUES_ITEM );
+export const getRevenues = args => ( dispatch, getState ) => processRequest( eAccountingApi.revenues.list, dispatch, STATUS_REVENUE, args, getState().revenues );
 export const setOrderBy = ( orderby, order ) => getRevenues( { orderby, order } );
 export const setPage = page => getRevenues( { page } );
 export const setFilter = ( filterBy ) => getRevenues( { filterBy, orderby: '', page: 0 } );

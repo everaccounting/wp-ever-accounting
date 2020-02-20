@@ -15,12 +15,12 @@ export const getDisplayGroups = () => [
 	{
 		value: 'standard',
 		label: __( 'Standard Display' ),
-		grouping: [ 'name', 'number', 'balance', 'bank_name', 'status' ],
+		grouping: [ 'name', 'email', 'phone', 'status' ],
 	},
 	{
 		value: 'minimal',
 		label: __( 'Compact Display' ),
-		grouping: [ 'name', 'balance', 'status' ],
+		grouping: [ 'name', 'email', 'phone' ],
 	},
 ];
 
@@ -52,23 +52,13 @@ export const getHeaders = () => [
 		primary: true,
 	},
 	{
-		name: 'balance',
-		title: __( 'Balance' ),
+		name: 'email',
+		title: __( 'Email' ),
 		sortable: false,
 	},
 	{
-		name: 'number',
-		title: __( 'Account Number' ),
-		sortable: true,
-	},
-	{
-		name: 'bank_name',
-		title: __( 'Bank Name' ),
-		sortable: true,
-	},
-	{
-		name: 'opening_balance',
-		title: __( 'Opening Balance' ),
+		name: 'phone',
+		title: __( 'Phone' ),
 		sortable: true,
 	},
 	{

@@ -3,6 +3,71 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
+#: src/component/currency-control/index.js:39
+#: src/component/edit-account/index.js:132
+msgid "Account Currency"
+msgstr ""
+
+#: src/component/currency-control/index.js:52
+msgid "Currency"
+msgstr ""
+
+#: src/component/edit-account/index.js:117
+msgid "Account Name"
+msgstr ""
+
+#: src/component/edit-account/index.js:125
+#: src/page/banking/components/accounts/constants.js:61
+#: src/page/contacts/constants.js:61
+#: src/page/transactions/constants.js:61
+msgid "Account Number"
+msgstr ""
+
+#: src/component/edit-account/index.js:138
+#: src/page/banking/components/accounts/constants.js:71
+#: src/page/contacts/constants.js:71
+#: src/page/dashboard/index.js:107
+#: src/page/transactions/constants.js:71
+msgid "Opening Balance"
+msgstr ""
+
+#: src/component/edit-account/index.js:147
+#: src/page/banking/components/accounts/constants.js:66
+#: src/page/contacts/constants.js:66
+#: src/page/transactions/constants.js:66
+msgid "Bank Name"
+msgstr ""
+
+#: src/component/edit-account/index.js:153
+msgid "Bank Phone"
+msgstr ""
+
+#: src/component/edit-account/index.js:159
+msgid "Bank Address"
+msgstr ""
+
+#: src/component/edit-account/index.js:164
+#: src/page/banking/components/accounts/constants.js:33
+#: src/page/banking/components/accounts/row.js:121
+#: src/page/contacts/constants.js:33
+#: src/page/contacts/row.js:121
+#: src/page/transactions/constants.js:33
+#: src/page/transactions/row.js:115
+msgid "Enabled"
+msgstr ""
+
+#: src/component/edit-account/index.js:67
+msgid "One or more required value missing, please correct & submit again"
+msgstr ""
+
+#: src/component/edit-account/index.js:99
+msgid "Add Account"
+msgstr ""
+
+#: src/component/edit-account/index.js:99
+msgid "Save"
+msgstr ""
+
 #: src/component/table/header/check-column.js:14
 msgid "Select All"
 msgstr ""
@@ -71,111 +136,170 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
+#: src/lib/notify/index.js:10
+msgid "Success"
+msgstr ""
+
+#: src/lib/notify/index.js:13
+msgid "Warning"
+msgstr ""
+
+#: src/lib/notify/index.js:16
+msgid "Error"
+msgstr ""
+
 #: src/lib/store/index.js:20
 msgid "Are you sure you want to delete this item?"
 msgstr ""
 
-#: src/page/accounts/constants.js:17
+#: src/page/banking/components/accounts/constants.js:17
+#: src/page/contacts/constants.js:17
+#: src/page/transactions/constants.js:17
 msgid "Standard Display"
 msgstr ""
 
-#: src/page/accounts/constants.js:22
+#: src/page/banking/components/accounts/constants.js:22
+#: src/page/contacts/constants.js:22
+#: src/page/transactions/constants.js:22
 msgid "Compact Display"
 msgstr ""
 
-#: src/page/accounts/constants.js:33
-#: src/page/accounts/row.js:149
-msgid "Enabled"
-msgstr ""
-
-#: src/page/accounts/constants.js:37
-#: src/page/accounts/row.js:150
+#: src/page/banking/components/accounts/constants.js:37
+#: src/page/banking/components/accounts/row.js:122
+#: src/page/contacts/constants.js:37
+#: src/page/contacts/row.js:122
+#: src/page/transactions/constants.js:37
+#: src/page/transactions/row.js:116
 msgid "Disabled"
 msgstr ""
 
-#: src/page/accounts/constants.js:51
-#: src/page/accounts/row.js:157
+#: src/page/banking/components/accounts/constants.js:51
+#: src/page/contacts/constants.js:51
+#: src/page/transactions/constants.js:51
 msgid "Name"
 msgstr ""
 
-#: src/page/accounts/constants.js:56
+#: src/page/banking/components/accounts/constants.js:56
+#: src/page/contacts/constants.js:56
+#: src/page/transactions/constants.js:56
 msgid "Balance"
 msgstr ""
 
-#: src/page/accounts/constants.js:61
-#: src/page/accounts/row.js:159
-msgid "Account Number"
-msgstr ""
-
-#: src/page/accounts/constants.js:66
-#: src/page/accounts/row.js:160
-msgid "Bank Name"
-msgstr ""
-
-#: src/page/accounts/constants.js:71
-#: src/page/accounts/row.js:158
-msgid "Opening Balance"
-msgstr ""
-
-#: src/page/accounts/constants.js:76
+#: src/page/banking/components/accounts/constants.js:76
+#: src/page/contacts/constants.js:76
+#: src/page/transactions/constants.js:76
 msgid "Status"
 msgstr ""
 
-#: src/page/accounts/constants.js:84
-#: src/page/accounts/row.js:94
+#: src/page/banking/components/accounts/constants.js:84
+#: src/page/banking/components/accounts/row.js:66
+#: src/page/contacts/constants.js:84
+#: src/page/contacts/row.js:66
+#: src/page/transactions/constants.js:84
+#: src/page/transactions/row.js:60
 msgid "Delete"
 msgstr ""
 
-#: src/page/accounts/constants.js:88
-#: src/page/accounts/row.js:98
+#: src/page/banking/components/accounts/constants.js:88
+#: src/page/banking/components/accounts/row.js:70
+#: src/page/contacts/constants.js:88
+#: src/page/contacts/row.js:70
+#: src/page/transactions/constants.js:88
+#: src/page/transactions/row.js:64
 msgid "Enable"
 msgstr ""
 
-#: src/page/accounts/constants.js:9
+#: src/page/banking/components/accounts/constants.js:9
+#: src/page/contacts/constants.js:9
+#: src/page/transactions/constants.js:9
 msgid "Number"
 msgstr ""
 
-#: src/page/accounts/constants.js:92
-#: src/page/accounts/row.js:96
+#: src/page/banking/components/accounts/constants.js:92
+#: src/page/banking/components/accounts/row.js:68
+#: src/page/contacts/constants.js:92
+#: src/page/contacts/row.js:68
+#: src/page/transactions/constants.js:92
+#: src/page/transactions/row.js:62
 msgid "Disable"
 msgstr ""
 
-#: src/page/accounts/constants.js:99
+#: src/page/banking/components/accounts/constants.js:99
+#: src/page/contacts/constants.js:99
+#: src/page/transactions/constants.js:99
 msgid "Search"
 msgstr ""
 
-#: src/page/accounts/index.js:102
+#: src/page/banking/components/accounts/index.js:115
+#: src/page/banking/index.js:32
 msgid "Accounts"
 msgstr ""
 
-#: src/page/accounts/index.js:133
+#: src/page/banking/components/accounts/index.js:116
+#: src/page/contacts/index.js:117
+#: src/page/transactions/index.js:117
+msgid "Add New"
+msgstr ""
+
+#: src/page/banking/components/accounts/index.js:147
+#: src/page/contacts/index.js:148
+#: src/page/transactions/index.js:148
 msgid "Filters"
 msgstr ""
 
-#: src/page/accounts/row.js:153
+#: src/page/banking/components/accounts/row.js:123
+msgid "Update Account"
+msgstr ""
+
+#: src/page/banking/components/accounts/row.js:123
+#: src/page/contacts/row.js:123
+#: src/page/transactions/row.js:117
+msgid "Update"
+msgstr ""
+
+#: src/page/banking/components/accounts/row.js:65
+#: src/page/contacts/row.js:65
+#: src/page/transactions/row.js:59
 msgid "Edit"
 msgstr ""
 
-#: src/page/accounts/row.js:161
-msgid "Bank Phone"
+#: src/page/banking/index.js:34
+msgid "Transfers"
 msgstr ""
 
-#: src/page/accounts/row.js:165
-msgid "Submit"
+#: src/page/banking/index.js:36
+msgid "Reconciliations"
 msgstr ""
 
-#: src/page/contacts/index.js:33
+#: src/page/contacts/index.js:116
 msgid "Contacts"
 msgstr ""
 
-#: src/page/payments/index.js:33
-msgid "Payments"
+#: src/page/contacts/row.js:123
+#: src/page/transactions/row.js:117
+msgid "Update Contact"
 msgstr ""
 
-#: src/page/revenues/index.js:33
-msgid "Revenues"
+#: src/page/expenses/index.js:33
+msgid "Expenses"
 msgstr ""
 
-#: src/page/transactions/index.js:33
+#: src/page/incomes/index.js:33
+msgid "Incomes"
+msgstr ""
+
+#: src/page/misc/index.js:32
+msgid "Categories"
+msgstr ""
+
+#: src/page/misc/index.js:34
+msgid "Currencies"
+msgstr ""
+
+#: src/page/misc/index.js:36
+msgid "Tax Rates"
+msgstr ""
+
+#: src/page/transactions/index.js:116
 msgid "Transactions"
 msgstr ""

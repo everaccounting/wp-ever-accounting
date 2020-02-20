@@ -5,6 +5,6 @@ export const initialRevenue = {
 	bank_name: '',
 	bank_phone: '',
 	bank_address: '',
-	currency: eRevenueingi10n.default_currency,
+	currency: eAccountingi10n.default_currency,
 	enabled: true,
 };

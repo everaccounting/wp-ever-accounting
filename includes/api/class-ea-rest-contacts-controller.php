@@ -99,6 +99,10 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'offset'       => $request['offset'],
 		);
 
+		if ( $args['orderby'] == 'name' ) {
+			$args['orderby'] = 'first_name';
+		}
+
 		$query_result   = eaccounting_get_contacts( $args );
 		$total_contacts = eaccounting_get_contacts( $args, true );
 		$response       = array();
@@ -262,7 +266,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'website'       => $item->website,
 			'note'          => $item->note,
 			'avatar_url'    => $item->avatar_url,
-			'status'        => $item->status,
+			'enabled'       => $item->status == 'active',
 			'types'         => maybe_unserialize( $item->types ),
 			'tax_number'    => $item->tax_number,
 			'currency_code' => $item->currency_code,

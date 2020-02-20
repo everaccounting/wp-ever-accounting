@@ -84,7 +84,7 @@ class ContactsRow extends Component {
 	}
 
 	render() {
-		const {id, name, balance, number, bank_name, enabled} = this.props.item;
+		const {id, first_name, last_name, email, phone, enabled} = this.props.item;
 		const {selected, rowstatus, currentDisplaySelected} = this.props;
 		const isLoading = rowstatus === STATUS_IN_PROGRESS;
 		const isSaving = rowstatus === STATUS_SAVING;
@@ -101,22 +101,17 @@ class ContactsRow extends Component {
 					</th>
 
 					<Column enabled="name" className="column-primary column-name" selected={currentDisplaySelected}>
-						<strong><a href="#" onClick={this.onEdit}>{name}</a></strong>
+						<strong><a href="#" onClick={this.onEdit}>{`${first_name} ${last_name}`}</a></strong>
 						{this.renderActions(isSaving)}
 					</Column>
 
-					<Column enabled="balance" className="column-balance" selected={currentDisplaySelected}>
-						<span className='ea-money'>{balance}</span>
+					<Column enabled="email" className="column-email" selected={currentDisplaySelected}>
+						{email || '-'}
 					</Column>
 
-					<Column enabled="number" className="column-number" selected={currentDisplaySelected}>
-						{number || '-'}
+					<Column enabled="phone" className="column-phone" selected={currentDisplaySelected}>
+						{phone || '-'}
 					</Column>
-
-					<Column enabled="bank_name" className="column-bank-name" selected={currentDisplaySelected}>
-						{bank_name || '-'}
-					</Column>
-
 					<Column enabled="status" className="column-status" selected={currentDisplaySelected}>
 						{enabled ? <span className='ea-item-status enabled'>{__('Enabled')}</span> :
 							<span className='ea-item-status disabled'>{__('Disabled')}</span>}

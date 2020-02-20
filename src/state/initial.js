@@ -5,7 +5,7 @@ import {getInitialContacts} from 'state/contacts/intial';
 // import {getInitialCurrencies} from 'state/currencies/intial';
 // import {getInitialInvoices} from 'state/invoices/intial';
 // import {getInitialPayments} from 'state/payments/intial';
-// import {getInitialRevenues} from 'state/revenues/intial';
+import {getInitialRevenues} from 'state/revenues/intial';
 // import {getInitialTaxrates} from 'state/taxrates/intial';
 import {getInitialTransactions} from 'state/transactions/intial';
 
@@ -22,7 +22,7 @@ export function getInitialState() {
 		// currencies: getInitialCurrencies(),
 		// invoices: getInitialInvoices(),
 		// payments: getInitialPayments(),
-		// revenues: getInitialRevenues(),
+		revenues: getInitialRevenues(),
 		// taxrates: getInitialTaxrates(),
 		transactions: getInitialTransactions(),
 	};

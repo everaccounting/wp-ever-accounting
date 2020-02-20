@@ -1,0 +1,21 @@
+import {Component, Fragment} from "react";
+import {translate as __} from 'lib/locale';
+export default class Payments extends Component {
+	constructor( props ) {
+		super(props);
+		this.state = {};
+	}
+
+	componentDidCatch( error, info ) {
+		this.setState( { error: true, stack: error, info } );
+	}
+
+	render() {
+		console.log(this.props);
+		return(
+			<Fragment>
+				<h1 className="wp-heading-inline">{__('Payment')}</h1>
+			</Fragment>
+		)
+	}
+}
