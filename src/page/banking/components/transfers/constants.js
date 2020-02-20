@@ -47,25 +47,31 @@ export const getHeaders = () => [
 		check: true,
 	},
 	{
-		name: 'name',
-		title: __( 'Name' ),
+		name: 'date',
+		title: __( 'Date' ),
 		primary: true,
-	},
-	{
-		name: 'type',
-		title: __( 'Type' ),
 		sortable: true,
 	},
 	{
-		name: 'color',
-		title: __( 'Color' ),
-		sortable: false,
+		name: 'from_account',
+		title: __( 'From Account' ),
+		sortable: true,
 	},
 	{
-		name: 'status',
-		title: __( 'Status' ),
+		name: 'number',
+		title: __( 'Account Number' ),
 		sortable: true,
-	}
+	},
+	{
+		name: 'to_account',
+		title: __( 'To account' ),
+		sortable: true,
+	},
+	{
+		name: 'amount',
+		title: __( 'Amount' ),
+		sortable: true,
+	},
 ];
 
 export const getBulk = () => [
