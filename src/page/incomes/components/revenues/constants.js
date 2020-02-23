@@ -16,10 +16,10 @@ export const getDisplayGroups = () => [];
 export const getFilterOptions = () => [];
 
 export const getHeaders = () => [
-    {
-        name: 'cb',
-        check: true,
-    },
+    // {
+    //     name: 'cb',
+    //     check: true,
+    // },
     {
         name: 'date',
         title: __('Date'),

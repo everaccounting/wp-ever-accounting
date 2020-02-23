@@ -3,99 +3,35 @@
  */
 
 import { translate as __ } from 'lib/locale';
-
-export const getDisplayOptions = () => [
-	{ value: 'name', label: __( 'Name' ) },
-	{ value: 'number', label: __( 'Number' ) },
-	{ value: 'balance', label: __( 'Balance' ) },
-	{ value: 'status', label: __( 'Status' ) },
-];
-
-export const getDisplayGroups = () => [
-	{
-		value: 'standard',
-		label: __( 'Standard Display' ),
-		grouping: [ 'name', 'number', 'balance', 'bank_name', 'status' ],
-	},
-	{
-		value: 'minimal',
-		label: __( 'Compact Display' ),
-		grouping: [ 'name', 'balance', 'status' ],
-	},
-];
-
-export const getFilterOptions = () => [
-	{
-		label: __( 'Status' ),
-		value: 'status',
-		options: [
-			{
-				label: __( 'Enabled' ),
-				value: 'enabled',
-			},
-			{
-				label: __( 'Disabled' ),
-				value: 'disabled',
-			},
-		],
-	}
-];
-
 export const getHeaders = () => [
 	{
-		name: 'cb',
-		check: true,
-	},
-	{
-		name: 'name',
-		title: __( 'Name' ),
-		primary: true,
-	},
-	{
-		name: 'balance',
-		title: __( 'Balance' ),
-		sortable: false,
-	},
-	{
-		name: 'number',
-		title: __( 'Account Number' ),
+		name: 'paid_at',
+		title: __( 'Date' ),
 		sortable: true,
 	},
 	{
-		name: 'bank_name',
-		title: __( 'Bank Name' ),
+		name: 'account_id',
+		title: __( 'Account' ),
 		sortable: true,
 	},
 	{
-		name: 'opening_balance',
-		title: __( 'Opening Balance' ),
+		name: 'type',
+		title: __( 'Type' ),
 		sortable: true,
 	},
 	{
-		name: 'status',
-		title: __( 'Status' ),
+		name: 'category_id',
+		title: __( 'Category' ),
+		sortable: true,
+	},
+	{
+		name: 'reference',
+		title: __( 'Reference' ),
+		sortable: true,
+	},
+	{
+		name: 'amount',
+		title: __( 'Amount' ),
 		sortable: true,
 	}
-];
-
-export const getBulk = () => [
-	{
-		id: 'delete',
-		name: __( 'Delete' ),
-	},
-	{
-		id: 'enable',
-		name: __( 'Enable' ),
-	},
-	{
-		id: 'disable',
-		name: __( 'Disable' ),
-	},
-];
-
-export const getSearchOptions = () => [
-	{
-		name: 'name',
-		title: __( 'Search' ),
-	},
 ];

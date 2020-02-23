@@ -34,7 +34,7 @@ function filterFilters(query, filters) {
 	return filteredQuery;
 }
 
-export const getDefaultTable = (allowedOrder = [], allowedFilter = [], allowedGroup = [], defaultOrder = '', subParams = [], displayName = '', displayGroups = []) => {
+export const getDefaultTable = (allowedOrder = [], allowedFilter = [], allowedGroup = [], defaultOrder = '') => {
 	const query = getPageUrl();
 	const defaults = {
 		orderby: defaultOrder,
@@ -44,9 +44,6 @@ export const getDefaultTable = (allowedOrder = [], allowedFilter = [], allowedGr
 		selected: [],
 		filterBy: {},
 		search: '',
-		groupBy: '',
-		displayType: '',
-		displaySelected: [],
 	};
 
 	//this was set for one page type like sub=log
@@ -55,28 +52,28 @@ export const getDefaultTable = (allowedOrder = [], allowedFilter = [], allowedGr
 	// 	return defaults;
 	// }
 
-	let displayType = 'standard';
-	let displaySelected = displayGroups.length > 0 ? displayGroups[0].grouping : [];
+	// let displayType = 'standard';
+	// let displaySelected = displayGroups.length > 0 ? displayGroups[0].grouping : [];
+	//
+	// if (localStorage.getItem(displayName + '_displayType')) {
+	// 	displayType = localStorage.getItem(displayName + '_displayType');
+	// }
+	//
+	// if (localStorage.getItem(displayName + '_displaySelected')) {
+	// 	displaySelected = localStorage.getItem(displayName + '_displaySelected').split(',');
+	// }
 
-	if (localStorage.getItem(displayName + '_displayType')) {
-		displayType = localStorage.getItem(displayName + '_displayType');
-	}
-
-	if (localStorage.getItem(displayName + '_displaySelected')) {
-		displaySelected = localStorage.getItem(displayName + '_displaySelected').split(',');
-	}
-
-	return {
-		...defaults,
-		orderby: query.orderby && allowedOrder.indexOf(query.orderby) !== -1 ? query.orderby : defaults.orderby,
-		order: query.order && query.order === 'asc' ? 'asc' : defaults.order,
-		page: query.offset && parseInt(query.offset, 10) > 0 ? parseInt(query.offset, 10) : defaults.page,
-		per_page: eAccountingi10n.per_page ? parseInt(eAccountingi10n.per_page, 10) : defaults.per_page,
-		filterBy: query.filterby ? filterFilters(query.filterby, allowedFilter) : defaults.filterBy,
-		groupBy: query.groupby && allowedGroup.indexOf(query.groupby) !== -1 ? query.groupby : defaults.groupBy,
-		displayType,
-		displaySelected,
-	};
+	// return {
+	// 	...defaults,
+	// 	orderby: query.orderby && allowedOrder.indexOf(query.orderby) !== -1 ? query.orderby : defaults.orderby,
+	// 	order: query.order && query.order === 'asc' ? 'asc' : defaults.order,
+	// 	page: query.offset && parseInt(query.offset, 10) > 0 ? parseInt(query.offset, 10) : defaults.page,
+	// 	per_page: eAccountingi10n.per_page ? parseInt(eAccountingi10n.per_page, 10) : defaults.per_page,
+	// 	filterBy: query.filterby ? filterFilters(query.filterby, allowedFilter) : defaults.filterBy,
+	// 	groupBy: query.groupby && allowedGroup.indexOf(query.groupby) !== -1 ? query.groupby : defaults.groupBy,
+	// 	displayType,
+	// 	displaySelected,
+	// };
 };
 
 export const mergeWithTable = (state, params) => {

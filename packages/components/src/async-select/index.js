@@ -1,18 +1,23 @@
-import {Component} from '@wordpress/element';
-import PropTypes from 'prop-types';
+import {Component} from 'react';
+import {AsyncSelect} from 'react-select';
+import propTypes from 'prop-types';
 import {BaseControl} from '@wordpress/components';
 import classnames from 'classnames';
-import Select from 'react-select';
 
+export default class AsyncSelect extends Component {
+	constructor(props, context) {
+		super(props, context);
+		this.state = {
+			selected: [],
+		};
+	}
 
-
-export default class ReactSelect extends Component {
 	render() {
 		const {label, help, className, before, after, required, ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-rs-field', className, {
 			required: !!required,
 		});
-
+		console.log(this.props);
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
@@ -22,10 +27,9 @@ export default class ReactSelect extends Component {
 						</span>
 					)}
 
-					<Select
+					<AsyncSelect
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
-						required={required}
 						{...props}
 					/>
 
@@ -39,24 +43,3 @@ export default class ReactSelect extends Component {
 		);
 	}
 }
-ReactSelect.propTypes = {
-	autoload:PropTypes.bool,
-	className: PropTypes.string,
-	label: PropTypes.string,
-	name: PropTypes.string,
-	clearable: PropTypes.bool,
-	placeholder: PropTypes.string,
-	searchable: PropTypes.bool,
-	multi: PropTypes.bool,
-	options: PropTypes.arrayOf(PropTypes.object).isRequired,
-	value: PropTypes.any,
-	onChange: PropTypes.func,
-	onInputChange: PropTypes.func,
-	before: PropTypes.node,
-	after: PropTypes.node,
-	required: PropTypes.bool,
-};
-
-ReactSelect.defaultProps = {
-	autoload: false,
-};

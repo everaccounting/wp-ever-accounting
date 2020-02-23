@@ -11,8 +11,8 @@ const EmptyRow = props => {
 	return (
 		<tbody>
 			<tr>
-				<td />
-				<td colSpan={ headers.length - 1 }>{ __( 'No results' ) }</td>
+				<td colSpan={ headers.length}>{ __( 'No results' ) }</td>
+
 			</tr>
 		</tbody>
 	);

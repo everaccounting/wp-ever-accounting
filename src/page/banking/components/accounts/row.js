@@ -102,7 +102,7 @@ class AccountsRow extends Component {
 
 					<Column enabled="name" className="column-primary column-name" selected={currentDisplaySelected}>
 						<strong><a href="#" onClick={this.onEdit}>{name}</a></strong>
-						{this.renderActions(isSaving)}
+						{/*{this.renderActions(isSaving)}*/}
 					</Column>
 
 					<Column enabled="balance" className="column-balance" selected={currentDisplaySelected}>

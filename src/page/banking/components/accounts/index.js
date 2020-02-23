@@ -14,7 +14,7 @@ import Table from 'component/table';
 import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
-import TableDisplay from 'component/table/table-display';
+// import TableDisplay from 'component/table/table-display';
 import MultiOptionDropdown from 'component/multi-option-dropdown';
 import AccountsRow from './row';
 import {

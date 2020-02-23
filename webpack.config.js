@@ -90,8 +90,8 @@ const webpackConfig = {
 				exclude: /node_modules/,
 			},
 			{
-				test: /\.scss$/,
-				exclude: /node_modules/,
+				test: /\.s?css$/,
+				// exclude: /node_modules/,
 				use: [MiniCssExtractPlugin.loader, 'css-loader',
 					{
 						// postcss loader so we can use autoprefixer and theme Gutenberg components

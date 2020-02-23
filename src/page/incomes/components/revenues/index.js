@@ -14,7 +14,6 @@ import Table from 'component/table';
 import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
-import TableDisplay from 'component/table/table-display';
 import MultiOptionDropdown from 'component/multi-option-dropdown';
 // import RevenuesRow from './row';
 import {
@@ -38,8 +37,7 @@ import {
 	getBulk,
 	getSearchOptions
 } from './constants';
-// import EditRevenue from 'component/edit-account';
-import {initialRevenue} from 'state/revenues/selection';
+import RevenuesRow from './row';
 
 class Revenues extends Component {
 	constructor(props) {
@@ -66,27 +64,19 @@ class Revenues extends Component {
 		const { saving } = this.props.revenues;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf( row.id ) !== -1 ? STATUS_SAVING : loadingStatus;
-		// return (
-		// 	// <RevenuesRow
-		// 	// 	item={ row }
-		// 	// 	key={ row.id }
-		// 	// 	selected={ status.isSelected }
-		// 	// 	rowstatus={ rowStatus }
-		// 	// 	currentDisplayType={ currentDisplayType }
-		// 	// 	currentDisplaySelected={ currentDisplaySelected }
-		// 	// 	setFilter={ this.setFilter }
-		// 	// 	filters={ this.props.revenues.table.filterBy }
-		// 	// />
-		// );
+		return (
+			<RevenuesRow
+				item={ row }
+				key={ row.id }
+				selected={ status.isSelected }
+				rowstatus={ rowStatus }
+				currentDisplayType={ currentDisplayType }
+				currentDisplaySelected={ currentDisplaySelected }
+				setFilter={ this.setFilter }
+				filters={ this.props.revenues.table.filterBy }
+			/>
+		);
 	};
-
-	validateDisplay( selected ) {
-		// Ensure we have at least source or title
-		if ( selected.indexOf( 'name' ) === -1 ) {
-			return selected.concat( [ 'name' ] );
-		}
-		return selected;
-	}
 
 	setFilter = ( filterName, filterValue ) => {
 		const { filterBy } = this.props.revenues.table;
@@ -94,39 +84,13 @@ class Revenues extends Component {
 		this.props.onFilter( { ...filterBy, [ filterName ]: filterValue ? filterValue : undefined } );
 	};
 
-	getHeaders( selected ) {
-		return getHeaders().filter( header => isEnabled( selected, header.name ) || header.name === 'cb' || header.name === 'name' );
-	}
-
-	onAdd = ev =>{
-		ev.preventDefault();
-		this.setState({isAdding:!this.state.isAdding});
-	};
-
-	onClose = () =>{
-		this.setState({isAdding:!this.state.isAdding});
-	};
-
 	render() {
 		console.log(this.props);
 		const {status, total, table, rows, saving} = this.props.revenues;
-		const {isAdding} = this.state;
 		const isSaving = saving.indexOf(0) !== -1;
 		return (
 			<Fragment>
-				{isAdding && <EditRevenue item={initialRevenue} onClose={this.onClose}/>}
-
 				<div className="ea-table-display">
-					<TableDisplay
-						disable={ status === STATUS_IN_PROGRESS }
-						options={ getDisplayOptions() }
-						groups={ getDisplayGroups() }
-						store="revenues"
-						currentDisplayType={ table.displayType }
-						currentDisplaySelected={ table.displaySelected }
-						setDisplay={ this.props.onSetDisplay }
-						validation={ this.validateDisplay }
-					/>
 					<SearchBox
 						status={ status }
 						table={ table }
@@ -138,25 +102,12 @@ class Revenues extends Component {
 
 				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } bulk={ getBulk() }>
 					<BulkAction>
-						<MultiOptionDropdown
-							options={ getFilterOptions() }
-							selected={ table.filterBy ? table.filterBy : {} }
-							onApply={ this.props.onFilter }
-							title={ __( 'Filters' ) }
-							isEnabled={ status !== STATUS_IN_PROGRESS }
-						/>
+
 					</BulkAction>
-
-					<div className="alignleft actions">
-						Jello
-					</div>
-
-
-
 				</TableNav>
 
 				<Table
-					headers={ this.getHeaders( table.displaySelected ) }
+					headers={ getHeaders() }
 					rows={ rows }
 					total={ total }
 					row={ this.onRenderRow }
@@ -168,9 +119,7 @@ class Revenues extends Component {
 					currentDisplaySelected={ table.displaySelected }
 				/>
 
-
 				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } />
-
 
 			</Fragment>
 		);

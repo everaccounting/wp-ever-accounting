@@ -14,7 +14,7 @@ import Table from 'component/table';
 import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
-import TableDisplay from 'component/table/table-display';
+// import TableDisplay from 'component/table/table-display';
 import MultiOptionDropdown from 'component/multi-option-dropdown';
 import ContactsRow from './row';
 import {
@@ -31,15 +31,13 @@ import {
 import {isEnabled} from 'component/table/utils';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
 import {
-	getFilterOptions,
-	getDisplayGroups,
-	getDisplayOptions,
 	getHeaders,
-	getBulk,
-	getSearchOptions
+	getBulk
 } from './constants';
 import EditContact from 'component/edit-account';
 import {initialContact} from 'state/contacts/selection';
+import {ReactSelect} from "@eaccounting/components";
+import DateFilter from 'component/date-filter';
 
 class Contacts extends Component {
 	constructor(props) {
@@ -59,7 +57,7 @@ class Contacts extends Component {
 	}
 
 	componentDidMount() {
-		this.props.onLoadContacts();
+		//this.props.onLoadContacts();
 	}
 
 	onRenderRow = ( row, key, status, currentDisplayType, currentDisplaySelected ) => {
@@ -112,6 +110,11 @@ class Contacts extends Component {
 		const {status, total, table, rows, saving} = this.props.contacts;
 		const {isAdding} = this.state;
 		const isSaving = saving.indexOf(0) !== -1;
+		const options = [
+			{ value: 'chocolate', label: 'Chocolate' },
+			{ value: 'strawberry', label: 'Strawberry' },
+			{ value: 'vanilla', label: 'Vanilla' },
+		];
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
@@ -119,42 +122,35 @@ class Contacts extends Component {
 				<hr className="wp-header-end"/>
 				{isAdding && <EditContact item={initialContact} onClose={this.onClose}/>}
 
-				<div className="ea-table-display">
-					<TableDisplay
-						disable={ status === STATUS_IN_PROGRESS }
-						options={ getDisplayOptions() }
-						groups={ getDisplayGroups() }
-						store="contacts"
-						currentDisplayType={ table.displayType }
-						currentDisplaySelected={ table.displaySelected }
-						setDisplay={ this.props.onSetDisplay }
-						validation={ this.validateDisplay }
-					/>
-					<SearchBox
-						status={ status }
-						table={ table }
-						onSearch={ this.props.onSearch }
-						selected={ table.filterBy }
-						searchTypes={ getSearchOptions() }
-					/>
-				</div>
 
 				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } bulk={ getBulk() }>
 					<BulkAction>
-						<MultiOptionDropdown
-							options={ getFilterOptions() }
-							selected={ table.filterBy ? table.filterBy : {} }
-							onApply={ this.props.onFilter }
-							title={ __( 'Filters' ) }
-							isEnabled={ status !== STATUS_IN_PROGRESS }
-						/>
+						{/*<MultiOptionDropdown*/}
+						{/*	options={ getFilterOptions() }*/}
+						{/*	selected={ table.filterBy ? table.filterBy : {} }*/}
+						{/*	onApply={ this.props.onFilter }*/}
+						{/*	title={ __( 'Filters' ) }*/}
+						{/*	isEnabled={ status !== STATUS_IN_PROGRESS }*/}
+						{/*/>*/}
+						{/*<SearchBox*/}
+						{/*	status={ status }*/}
+						{/*	table={ table }*/}
+						{/*	onSearch={ this.props.onSearch }*/}
+						{/*	selected={ table.filterBy }*/}
+						{/*	searchTypes={ getSearchOptions() }*/}
+						{/*/>*/}
+
 					</BulkAction>
 
-					<div className="alignleft actions">
-						Jello
+					<div className='alignleft actions'>
+						<DateFilter/>
 					</div>
-
-
+					<div className='alignleft actions'>
+						<ReactSelect options={options} placeholder={'search'} isMulti/>
+					</div>
+					<div className='alignleft actions'>
+						<ReactSelect options={options} placeholder={'search'}/>
+					</div>
 
 				</TableNav>
 
