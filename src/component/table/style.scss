@@ -160,15 +160,18 @@
   overflow: visible;
 }
 
-.ea-table__actions .actions {
-  .button {
-	height: 28px;
-	margin-top: 1px;
+.ea-table__actions {
+  //margin-bottom: 20px;
+  .actions {
+	.button {
+	  height: 28px;
+	  margin-top: 1px;
+	}
   }
 
-  .ea-form-group{
-	margin-bottom: 0;
-	width: 180px;
+  .ea-form-group {
+	margin-bottom: 9px;
+	width: 200px;
   }
 }
 

@@ -25,7 +25,6 @@ const setApiNonce = nonce => eAccountingi10n.api.WP_API_nonce = nonce;
 
 const getRequestUrl = (path, params = {}) => {
 	const base = getApiUrl() + 'ea/v1/' + path + '/';
-
 	// Some servers dont pass the X-WP-Nonce through to PHP
 	params._wpnonce = getApiNonce();
 

@@ -13,8 +13,8 @@ import {
 	TRANSACTIONS_DISPLAY_SET,
 } from './type';
 
-import { tableAction, createAction, updateAction, processRequest } from 'lib/store';
-import { eAccountingApi } from 'lib/api';
+import {tableAction, createAction, updateAction, processRequest} from 'lib/store';
+import {eAccountingApi} from 'lib/api';
 
 const STATUS_TRANSACTIONS_ITEM = {
 	store: 'transactions',
@@ -31,13 +31,17 @@ const STATUS_TRANSACTION = {
 	order: 'name',
 };
 
-export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.transactions.bulk, action, ids, STATUS_TRANSACTIONS_ITEM );
-export const getTransactions = args => ( dispatch, getState ) => processRequest( eAccountingApi.transactions.list, dispatch, STATUS_TRANSACTION, args, getState().transactions );
-export const setOrderBy = ( orderby, order ) => getTransactions( { orderby, order } );
-export const setPage = page => getTransactions( { page } );
-export const setFilter = ( filterBy ) => getTransactions( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getTransactions( { search, orderby: '', page: 0 } );
-export const setSelected = items => ( { type: TRANSACTIONS_SET_SELECTED, items: items.map( parseInt ) } );
-export const setAllSelected = onoff => ( { type: TRANSACTIONS_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getTransactions( table );
-export const setDisplay = ( displayType, displaySelected ) => ( { type: TRANSACTIONS_DISPLAY_SET, displayType, displaySelected } );
+export const performTableAction = (action, ids) => tableAction(eAccountingApi.transactions.bulk, action, ids, STATUS_TRANSACTIONS_ITEM);
+export const getTransactions = args => (dispatch, getState) => processRequest(eAccountingApi.transactions.list, dispatch, STATUS_TRANSACTION, args, getState().transactions);
+export const setOrderBy = (orderby, order) => getTransactions({orderby, order});
+export const setPage = page => getTransactions({page});
+export const setFilter = (filter) => getTransactions({filter, orderby: '', page: 0});
+export const setSearch = (search) => getTransactions({search, orderby: '', page: 0});
+export const setSelected = items => ({type: TRANSACTIONS_SET_SELECTED, items: items.map(parseInt)});
+export const setAllSelected = onoff => ({type: TRANSACTIONS_SET_ALL_SELECTED, onoff});
+export const setTable = table => getTransactions(table);
+export const setDisplay = (displayType, displaySelected) => ({
+	type: TRANSACTIONS_DISPLAY_SET,
+	displayType,
+	displaySelected
+});

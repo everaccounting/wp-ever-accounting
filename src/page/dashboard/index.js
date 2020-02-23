@@ -10,10 +10,12 @@ import {
 	SelectControl,
 	ReactSelect,
 	TextareaControl,
-	CurrencyControl,
 	ToggleControl
 } from '@eaccounting/components';
-
+import AccountControl from "component/account-control";
+import ContactControl from "component/contact-control";
+import CategoryControl from "component/category-control";
+import CurrencyControl from "component/currency-control";
 
 /**
  * Internal dependencies
@@ -42,6 +44,64 @@ export default class Dashboard extends Component {
 		return (
 			<div>
 				{/*<EditAccount item={initialAccount}/>*/}
+
+				<AccountControl selected={[91, 92]}/>
+				<AccountControl
+					placeholder={__('Select Account')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					selected={[91, 92]}/>
+
+				<AccountControl
+					placeholder={__('Select Account')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					isMulti
+					selected={[91, 92]}/>
+
+				<ContactControl selected={[91, 92]}/>
+				<ContactControl
+					placeholder={__('Select contact')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					selected={[91, 92]}/>
+
+				<ContactControl
+					placeholder={__('Select contact')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					isMulti
+					selected={[91, 92]}/>
+
+				<CategoryControl selected={[91, 92]}/>
+				<CategoryControl
+					placeholder={__('Select category')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					selected={[40, 41]}/>
+
+				<CategoryControl
+					placeholder={__('Select contact')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					isMulti
+					selected={[40, 41]}/>
+
+
+				<CurrencyControl selected={[1, 2]}/>
+				<CurrencyControl
+					placeholder={__('Select category')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					selected={[1, 2]}/>
+
+				<CurrencyControl
+					placeholder={__('Select contact')}
+					before={<Icon icon={'pencil'}/>}
+					after="Suffix"
+					isMulti
+					selected={[1, 2]}/>
+
 
 
 				<TextareaControl

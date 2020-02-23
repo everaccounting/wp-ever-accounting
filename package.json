@@ -138,6 +138,6 @@
 				"grunt-stylelint": "~0.10.0",
 				"grunt-wp-i18n": "^1.0.3",
 				"state": "^0.2.0",
-				"stylelint": "~9.2.1"
+				"stylelint": "^13.2.0"
 		}
 }

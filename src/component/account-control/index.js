@@ -4,7 +4,7 @@ import {getApi, eAccountingApi} from "lib/api";
 import {AsyncSelect} from '@eaccounting/components'
 import PropTypes from "prop-types";
 
-export default class CurrencyControl extends Component {
+export default class AccountControl extends Component {
 	static propTypes = {
 		label: PropTypes.string,
 		placeholder: PropTypes.string,
@@ -25,34 +25,31 @@ export default class CurrencyControl extends Component {
 	componentDidMount() {
 		const {selected} = this.props;
 
-		selected && this.getCurrencies({include: selected}, (options) => {
+		selected && selected.length && this.getAccounts({include: selected}, (options) => {
 			this.setState({
 				value: options
 			})
 		});
 
-		this.getCurrencies({}, (options) => {
+		this.getAccounts({}, (options) => {
 			this.setState({
 				defaultOptions: options
 			})
 		});
 	}
 
-	getCurrencies = (params, callback) => {
-		getApi(eAccountingApi.currencies.list(params)).then((res) => {
+	getAccounts = (params, callback) => {
+		getApi(eAccountingApi.accounts.list(params)).then((res) => {
 			callback(res.items.map(item => {
 				return {
-					label: `${item.name}(${item.symbol})`,
-					value: item.code,
+					label: `${item.name}`,
+					value: item.id,
 				};
 			}))
 		});
 	};
 
 	onChange = (value) => {
-		this.setState({
-			value
-		});
 		this.props.onChange && this.props.onChange(value);
 	};
 
@@ -61,7 +58,7 @@ export default class CurrencyControl extends Component {
 		return (
 			<Fragment>
 				<AsyncSelect
-					placeholder={__('Select Currency')}
+					placeholder={__('Select Account')}
 					defaultOptions={defaultOptions}
 					value={value}
 					onChange={this.onChange}
@@ -69,7 +66,7 @@ export default class CurrencyControl extends Component {
 						__('No items')
 					}}
 					loadOptions={(search, callback) => {
-						this.getCategory({search}, callback);
+						this.getAccounts({search}, callback);
 					}}
 					{...this.props}
 				/>

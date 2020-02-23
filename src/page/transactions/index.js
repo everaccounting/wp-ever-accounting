@@ -5,7 +5,7 @@
 import {Component, Fragment} from 'react';
 import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
-
+import {map} from 'lodash';
 /**
  * Internal dependencies
  */
@@ -28,19 +28,22 @@ import {
 	setFilter,
 	setDisplay
 } from 'state/transactions/action';
-import {isEnabled} from 'component/table/utils';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
 import {getHeaders} from './constants';
-import EditTransaction from 'component/edit-account';
-import {initialTransaction} from 'state/accounts/selection';
-import AccountSelection from 'component/account-selection';
-
+import AccountControl from 'component/account-control';
+import CategoryControl from 'component/category-control';
+import moment from 'moment';
+import {DateRange, TextControl} from "@eaccounting/components";
 class Transactions extends Component {
 	constructor(props) {
 		super(props);
-		// this.state = {
-		// 	isAdding:false
-		// };
+		this.state = {
+			isAdding:false,
+			accountFilters:[],
+			startDate: moment().subtract(29, 'days'),
+			endDate  : moment(),
+			dateFilter:''
+		};
 		// window.addEventListener('popstate', this.onPageChanged);
 	}
 
@@ -87,6 +90,8 @@ class Transactions extends Component {
 
 	render() {
 		const {status, total, table, rows} = this.props.transactions;
+		const {accountFilters, dateFilter, startDate, endDate} = this.state;
+		// const inputval = startDate.format('DD MMM YYYY') + '-' + endDate.format('DD MMM YYYY');
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
@@ -105,15 +110,27 @@ class Transactions extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}>
-					<Filter>
-						{__('Filter')}
-					</Filter>
-					<Filter>
-						<DateFilter/>
-					</Filter>
-					<Filter>
-						<AccountSelection/>
-					</Filter>
+
+					<DateFilter className={'alignleft actions'} startDate={startDate} endDate={endDate} onChange={(startDate, endDate)=> {
+						this.setState({
+							startDate,
+							endDate,
+							dateFilter:startDate.format('DD MMM YYYY') + '-' + endDate.format('DD MMM YYYY')
+						})
+
+					}}>
+						<TextControl autoComplete='off' placeholder={__('Date Search')} value={dateFilter} onChange={()=>{}}/>
+					</DateFilter>
+
+					<AccountControl className={'alignleft actions'} isMulti isClearable selected={accountFilters} onChange={(accounts)=> {
+						console.log(map(accounts, 'value'));
+						this.props.onFilter({account_id: map(accounts, 'value')});
+						this.setState({accountFilters:accounts});
+					}}/>
+
+					<CategoryControl className={'alignleft actions'} isMulti isClearable/>
+					{/*<AccountControl/>*/}
+
 				</TableNav>
 
 				<Table
@@ -165,8 +182,8 @@ function mapDispatchToProps(dispatch) {
 		onSetOrderBy: (column, order) => {
 			dispatch(setOrderBy(column, order));
 		},
-		onFilter: (filterBy) => {
-			dispatch(setFilter(filterBy));
+		onFilter: (filter) => {
+			dispatch(setFilter(filter));
 		},
 		onSearch: (search) => {
 			dispatch(setSearch(search));
