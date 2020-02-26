@@ -85,6 +85,7 @@ class EAccounting_Admin {
 		$key = ! empty( $_GET['eaccounting-action'] ) ? sanitize_key( $_GET['eaccounting-action'] ) : false;
 
 		if ( ! empty( $key ) ) {
+			error_log( 'eaccounting_admin_get_' . $key);
 			do_action( 'eaccounting_admin_get_' . $key, $_GET );
 		}
 

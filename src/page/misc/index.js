@@ -11,12 +11,31 @@ import { translate as __ } from 'lib/locale';
  */
 import './style.scss';
 import {HashRouter as Router, NavLink, Route, Switch} from "react-router-dom";
+import Categories from "./components/categories";
+import Currencies from "./components/currencies";
+import TaxRates from "./components/taxrates";
 
 
+const getTabs = [
+	{
+		path: '/misc',
+		component: Categories,
+		name: __('Categories'),
+	},
+	{
+		path: '/misc/currencies',
+		component: Currencies,
+		name: __('Currencies'),
+	},
+	{
+		path: '/misc/taxrates',
+		component: TaxRates,
+		name: __('TaxRates'),
+	}
+];
 export default class Misc extends Component {
 	constructor( props ) {
 		super(props);
-		this.state = {};
 	}
 
 	componentDidCatch( error, info ) {
@@ -26,21 +45,20 @@ export default class Misc extends Component {
 	render() {
 		return (
 			<Router>
-
+				<h1 className="wp-heading-inline">{__('Miscellaneous')}</h1>
 				<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
-					<NavLink exact to='/misc' className={'nav-tab'}
-							 activeClassName={'nav-tab-active'}>{__('Categories')}</NavLink>
-					<NavLink exact to='/misc/currencies' className={'nav-tab'}
-							 activeClassName={'nav-tab-active'}>{__('Currencies')}</NavLink>
-					<NavLink exact to='/misc/tax-rates' className={'nav-tab'}
-							 activeClassName={'nav-tab-active'}>{__('Tax Rates')}</NavLink>
+					{getTabs.map((tab, index) => {
+						return (<NavLink key={index} exact to={tab.path} className={'nav-tab'}
+										 activeClassName={'nav-tab-active'}>{tab.name}</NavLink>);
+					})}
 				</nav>
 
 				<Switch>
-					{/*<Route exact path={'/banking'} component={Accounts}/>*/}
-					{/*<Route exact path={'/banking/transfers'} component={Transfers}/>*/}
-					{/*<Route exact path={'/banking/reconciliations'} component={Reconciliations}/>*/}
+					{getTabs.map((tab, index) => {
+						return(<Route exact key={index}  path={tab.path} component={(props) => <tab.component {...props}/>}/>);
+					})}
 				</Switch>
+
 			</Router>
 		);
 	}

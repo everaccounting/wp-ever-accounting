@@ -14,7 +14,6 @@ import Table from 'component/table';
 import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
-import MultiOptionDropdown from 'component/multi-option-dropdown';
 // import RevenuesRow from './row';
 import {
 	getRevenues,
@@ -85,7 +84,6 @@ class Revenues extends Component {
 	};
 
 	render() {
-		console.log(this.props);
 		const {status, total, table, rows, saving} = this.props.revenues;
 		const isSaving = saving.indexOf(0) !== -1;
 		return (

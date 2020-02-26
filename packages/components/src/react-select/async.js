@@ -70,6 +70,7 @@ export default class AsyncSelect extends Component {
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
 						id={id}
+						isLoading
 						loadOptions={loadOptions}
 						{...props}
 					/>

@@ -10,10 +10,13 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 	$query_limit   = '';
 
 	$default = array(
+		'type'           => '',
+		'paid_at'        => '',
+		'account_id'     => '',
+		'category_id'    => '',
 		'search'         => '',
-		'orderby'        => 'created_at',
 		'order'          => 'DESC',
-		'date'           => '',
+		'orderby'        => 'paid_at',
 		'fields'         => 'all',
 		'search_columns' => array( 'description', 'reference' ),
 		'per_page'       => 20,
@@ -21,27 +24,40 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 		'offset'         => 0,
 	);
 
-	$args              = wp_parse_args( $args, $default );
+	$args = wp_parse_args( $args, $default );
+
 	$transaction_table = 'transactions';
 	$query_from        = "FROM ( SELECT *, 'expense' as type FROM $wpdb->ea_payments as payments UNION ALL SELECT *, 'income' as type FROM $wpdb->ea_revenues as revenues ) as transactions ";
 	$query_where       = 'WHERE 1=1';
 
 	//account_id
 	if ( ! empty( $args['account_id'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $transaction_table.account_id= %d", absint( $args['account_id'] ) );
+		$account_ids = implode( ',', wp_parse_id_list( $args['account_id'] ) );
+		$query_where .= " AND $transaction_table.account_id IN( {$account_ids} ) ";
 	}
-	//account_id
+
+	//contact_id
 	if ( ! empty( $args['contact_id'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $transaction_table.contact_id= %d", absint( $args['contact_id'] ) );
+		$contact_ids = implode( ',', wp_parse_id_list( $args['contact_id'] ) );
+		$query_where .= " AND $transaction_table.contact_id IN( {$contact_ids} ) ";
+	}
+
+	//category_id
+	if ( ! empty( $args['category_id'] ) ) {
+		$category_ids = implode( ',', wp_parse_id_list( $args['category_id'] ) );
+		$query_where  .= " AND $transaction_table.category_id IN( {$category_ids} ) ";
 	}
 
 	//type
 	if ( ! empty( $args['type'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $transaction_table.type= %s", sanitize_text_field( $args['type'] ) );
+		$types = implode( "','", wp_parse_list($args['type']));
+		$query_where  .= " AND $transaction_table.type IN( '$types' ) ";
 	}
 
-	//exclude from others category
-	$query_where .= " AND $transaction_table.category_id NOT IN ( SELECT id from $wpdb->ea_categories WHERE type='other') ";
+	//paid_at
+	if ( ! empty( $args['paid_at'] ) ) {
+		$query_where .= eaccounting_parse_date_query( $args['paid_at'], 'paid_at', $transaction_table );
+	}
 
 
 	//amount
@@ -104,7 +120,7 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 	//ordering
 	$order         = isset( $args['order'] ) ? esc_sql( strtoupper( $args['order'] ) ) : 'ASC';
 	$order_by      = esc_sql( $args['orderby'] );
-	$query_orderby = sprintf( " ORDER BY %s %s ", $order_by, $order );
+	$query_orderby = sprintf( " ORDER BY $transaction_table.%s %s ", $order_by, $order );
 
 	// limit
 	if ( isset( $args['per_page'] ) && $args['per_page'] > 0 ) {
@@ -119,9 +135,7 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 		return $wpdb->get_var( "SELECT count($transaction_table.id) $query_from $query_where" );
 	}
 
-
 	$request = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
-
 	if ( is_array( $args['fields'] ) || 'all' == $args['fields'] ) {
 		return $wpdb->get_results( $request );
 	}

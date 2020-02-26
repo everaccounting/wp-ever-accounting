@@ -269,3 +269,28 @@ function eaccounting_money( $amount, $currency = 'USD', $convert = false ) {
 function eaccounting_currency( $currency ) {
 	return new EAccounting_Currency( $currency );
 }
+
+/**
+ * @param $args
+ * @param $column
+ * @param $table
+ *
+ * @return string
+ * @since 1.0.1
+ */
+function eaccounting_parse_date_query( $args, $column, $table ) {
+	global $wpdb;
+	$query = '';
+	if ( ! empty( $query ) && is_string( $query ) ) {
+		$query = $wpdb->prepare( " AND $table.$column= %s", sanitize_text_field( $args ) );
+	} elseif ( is_array( $args ) ) {
+		if ( ! empty( $args['start'] ) ) {
+			$query .= $wpdb->prepare( " AND $table.$column >= %s", sanitize_text_field( $args['start'] ) );
+		}
+		if ( is_array( $args ) && ! empty( $args['end'] ) ) {
+			$query .= $wpdb->prepare( " AND $table.$column <= %s", sanitize_text_field( $args['end'] ) );
+		}
+	}
+
+	return $query;
+}

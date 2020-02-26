@@ -5,7 +5,7 @@
 
 import {getPageUrl} from 'lib/wordpress-url';
 
-const tableParams = ['orderby', 'order', 'page', 'search', 'per_page', 'filterBy', 'groupBy', 'group', 'displayType', 'displaySelected'];
+const tableParams = ['orderby', 'order', 'page', 'search', 'per_page', 'filter'];
 
 const removeIfExists = (current, newItems) => {
 	const newArray = [];
@@ -34,7 +34,7 @@ function filterFilters(query, filters) {
 	return filteredQuery;
 }
 
-export const getDefaultTable = (allowedOrder = [], allowedFilter = [], allowedGroup = [], defaultOrder = '') => {
+export const getDefaultTable = (allowedOrder = [], allowedFilter = [], defaultOrder = '') => {
 	const query = getPageUrl();
 	const defaults = {
 		orderby: defaultOrder,
@@ -42,49 +42,30 @@ export const getDefaultTable = (allowedOrder = [], allowedFilter = [], allowedGr
 		page: 1,
 		per_page: parseInt(eAccountingi10n.per_page, 10),
 		selected: [],
-		filterBy: {},
+		filter: [],
 		search: '',
 	};
 
-	//this was set for one page type like sub=log
-	// const sub = query.sub === undefined ? '' : query.sub;
-	// if ( subParams.indexOf( sub ) === -1 ) {
-	// 	return defaults;
-	// }
-
-	// let displayType = 'standard';
-	// let displaySelected = displayGroups.length > 0 ? displayGroups[0].grouping : [];
-	//
-	// if (localStorage.getItem(displayName + '_displayType')) {
-	// 	displayType = localStorage.getItem(displayName + '_displayType');
-	// }
-	//
-	// if (localStorage.getItem(displayName + '_displaySelected')) {
-	// 	displaySelected = localStorage.getItem(displayName + '_displaySelected').split(',');
-	// }
-
-	// return {
-	// 	...defaults,
-	// 	orderby: query.orderby && allowedOrder.indexOf(query.orderby) !== -1 ? query.orderby : defaults.orderby,
-	// 	order: query.order && query.order === 'asc' ? 'asc' : defaults.order,
-	// 	page: query.offset && parseInt(query.offset, 10) > 0 ? parseInt(query.offset, 10) : defaults.page,
-	// 	per_page: eAccountingi10n.per_page ? parseInt(eAccountingi10n.per_page, 10) : defaults.per_page,
-	// 	filterBy: query.filterby ? filterFilters(query.filterby, allowedFilter) : defaults.filterBy,
-	// 	groupBy: query.groupby && allowedGroup.indexOf(query.groupby) !== -1 ? query.groupby : defaults.groupBy,
-	// 	displayType,
-	// 	displaySelected,
-	// };
+	return {
+		...defaults,
+		orderby: query.orderby && allowedOrder.indexOf(query.orderby) !== -1 ? query.orderby : defaults.orderby,
+		order: query.order && query.order === 'asc' ? 'asc' : defaults.order,
+		page: query.offset && parseInt(query.offset, 10) > 0 ? parseInt(query.offset, 10) : defaults.page,
+		per_page: eAccountingi10n.per_page ? parseInt(eAccountingi10n.per_page, 10) : defaults.per_page,
+		filter: query.filter ? filterFilters(query.filter, allowedFilter) : defaults.filter,
+	};
 };
 
 export const mergeWithTable = (state, params) => {
 	const newState = Object.assign({}, state);
-
+	const {filter = {}} = state;
+	const {filter:paramFilter = {} } = params;
+	params = {...params, filter:{...filter, ...paramFilter}};
 	for (let x = 0; x < tableParams.length; x++) {
 		if (params[tableParams[x]] !== undefined) {
 			newState[tableParams[x]] = params[tableParams[x]];
 		}
 	}
-
 	return newState;
 };
 
@@ -103,16 +84,6 @@ export const removeDefaults = (table, defaultOrder) => {
 
 	if (table.per_page === parseInt(eAccountingi10n.per_page, 10)) {
 		delete table.per_page;
-	}
-
-	if (table.filterBy === '' && table.filter === '') {
-		delete table.filterBy;
-		delete table.filter;
-	}
-
-	if (table.groupBy === '' && table.group === '') {
-		delete table.groupBy;
-		delete table.group;
 	}
 
 	if (parseInt(eAccountingi10n.per_page, 10) !== 20) {

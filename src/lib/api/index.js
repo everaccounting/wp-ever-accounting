@@ -59,7 +59,7 @@ const getApiRequest = (path, params = {}) => ({
 });
 
 const uploadApiRequest = ( path, file ) => {
-	const request = { headers: postApiheaders(), ...apiRequest( getRedirectionUrl( path ) ), method: 'post' };
+	const request = { headers: postApiheaders(), ...apiRequest( getAccountingUrl( path ) ), method: 'post' };
 
 	request.headers.delete( 'Content-Type' );
 	request.body = new FormData();
@@ -219,11 +219,11 @@ export const eAccountingApi = {
 		bulk: ( action, data, table ) => postApiRequest( 'bulk' + action, data, table ),
 	},
 	categories: {
-		get: (id, data = {}) => getApiRequest('categories/' + id, data),
-		create: ( data ) => postApiRequest( 'categories/', data ),
+		get: (id, data = {}) => getApiRequest('categories' + id, data),
+		create: ( data ) => postApiRequest( 'categories', data ),
 		update: ( id, data ) => postApiRequest( 'categories/' + id, data ),
 		list: params => getApiRequest('categories', params),
-		bulk: ( action, data, table ) => postApiRequest( 'bulk' + action, data, table ),
+		bulk: ( action, data, table ) => postApiRequest( 'categories/bulk', data, table ),
 	},
 	invoices: {
 		get: (id, data = {}) => getApiRequest('invoices/' + id, data),

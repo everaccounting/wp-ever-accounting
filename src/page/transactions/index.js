@@ -11,49 +11,49 @@ import {map} from 'lodash';
  */
 import './style.scss';
 import Table from 'component/table';
-import Filter from 'component/table/filter';
 import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import DateFilter from 'component/date-filter';
 import TransactionsRow from './row';
-import Placeholder from "../../component/placeholder";
 import {
 	getTransactions,
-	createTransaction,
 	setPage,
 	performTableAction,
-	setAllSelected,
 	setOrderBy,
 	setSearch,
 	setFilter,
-	setDisplay
 } from 'state/transactions/action';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
 import {getHeaders} from './constants';
 import AccountControl from 'component/account-control';
 import CategoryControl from 'component/category-control';
 import moment from 'moment';
-import {DateRange, TextControl} from "@eaccounting/components";
+import { TextControl, ReactSelect} from "@eaccounting/components";
+import {Button} from "@wordpress/components";
+
+
+const typeFilter = [
+	{
+		label: __('Income'),
+		value: 'income',
+	},
+	{
+		label: __('Expense'),
+		value: 'expense',
+	}
+];
+
 class Transactions extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAdding:false,
-			accountFilters:[],
-			startDate: moment().subtract(29, 'days'),
-			endDate  : moment(),
-			dateFilter:''
+			isAdding: false
 		};
-		// window.addEventListener('popstate', this.onPageChanged);
+		window.addEventListener('popstate', this.onPageChanged);
 	}
 
-	// componentDidCatch(error, info) {
-	// 	this.setState({error: true, stack: error, info});
-	// }
-	//
-	// componentWillUnmount() {
-	// 	window.removeEventListener('popstate', this.onPageChanged);
-	// }
+	componentDidCatch(error, info) {
+		this.setState({error: true, stack: error, info});
+	}
 
 	componentDidMount() {
 		this.props.onLoadTransactions();
@@ -68,32 +68,53 @@ class Transactions extends Component {
 		);
 	};
 
+	onFilterAccount = (accounts) => {
+		this.props.onFilter({account_id: map(accounts, 'value')});
+	};
 
-	// setFilter = (filterName, filterValue) => {
-	// 	const {filterBy} = this.props.accounts.table;
-	//
-	// 	this.props.onFilter({...filterBy, [filterName]: filterValue ? filterValue : undefined});
-	// };
+	onFilterCategory = (categories) => {
+		this.props.onFilter({category_id: map(categories, 'value')});
+	};
 
-	// getHeaders( selected ) {
-	// 	return getHeaders().filter( header => isEnabled( selected, header.name ) || header.name === 'cb' || header.name === 'name' );
-	// }
-	//
-	// onAdd = ev =>{
-	// 	ev.preventDefault();
-	// 	this.setState({isAdding:!this.state.isAdding});
-	// };
-	//
-	// onClose = () =>{
-	// 	this.setState({isAdding:!this.state.isAdding});
-	// };
+	onFilterDate = (start, end) => {
+		let start_date, end_date;
+		start_date = start.format('YYYY-MM-DD');
+		end_date = end.format('YYYY-MM-DD');
+		this.props.onFilter({date: `${start_date}_${end_date}`});
+	};
+
+	onFilterType = (types) => {
+		this.props.onFilter({type: map(types, 'value')});
+	};
+
+	onResetFilter = () => {
+		this.props.onLoadTransactions({filter:{}});
+	}
 
 	render() {
 		const {status, total, table, rows} = this.props.transactions;
-		const {accountFilters, dateFilter, startDate, endDate} = this.state;
-		// const inputval = startDate.format('DD MMM YYYY') + '-' + endDate.format('DD MMM YYYY');
+		const {account_id = [], category_id = [], type = [], date = ''} = table.filter;
+
+		const isFilterApplied = Object.keys(table.filter).length > 0;
+
+		const types = typeFilter.filter((filter, index) => {
+			return type.includes(filter.value) === true;
+		});
+		let dates = date.split('_', 2);
+
+		let startDate = dates['0'] !== undefined ? moment(dates['0']) : moment().subtract(29, 'days');
+		let endDate = dates['1'] !== undefined ? moment(dates['1']) : moment();
+		let date_range = '';
+		if (date && startDate && endDate) {
+			date_range = startDate.format('D MMM Y');
+			date_range += ' - ' + endDate.format('D MMM Y');
+		}
+
 		return (
 			<Fragment>
+				<pre>
+						{JSON.stringify(table.filter)}
+				</pre>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
 				<hr className="wp-header-end"/>
 				<div className="ea-table-display">
@@ -111,26 +132,46 @@ class Transactions extends Component {
 					onAction={this.props.onAction}
 					status={status}>
 
-					<DateFilter className={'alignleft actions'} startDate={startDate} endDate={endDate} onChange={(startDate, endDate)=> {
-						this.setState({
-							startDate,
-							endDate,
-							dateFilter:startDate.format('DD MMM YYYY') + '-' + endDate.format('DD MMM YYYY')
-						})
+					<DateFilter
+						className={'alignleft actions'}
+						startDate={startDate}
+						endDate={endDate}
+						onChange={this.onFilterDate}>
 
-					}}>
-						<TextControl autoComplete='off' placeholder={__('Date Search')} value={dateFilter} onChange={()=>{}}/>
+						<TextControl
+							autoComplete='off'
+							placeholder={__('Select Date')}
+							value={date_range}
+							onChange={() => {
+							}}/>
 					</DateFilter>
 
-					<AccountControl className={'alignleft actions'} isMulti isClearable selected={accountFilters} onChange={(accounts)=> {
-						console.log(map(accounts, 'value'));
-						this.props.onFilter({account_id: map(accounts, 'value')});
-						this.setState({accountFilters:accounts});
-					}}/>
+					<AccountControl
+						className={'alignleft actions'}
+						isMulti
+						isClearable
+						selected={account_id}
+						onChange={this.onFilterAccount}/>
 
-					<CategoryControl className={'alignleft actions'} isMulti isClearable/>
-					{/*<AccountControl/>*/}
+					<CategoryControl
+						className={'alignleft actions'}
+						isMulti
+						isClearable
+						selected={category_id}
+						onChange={this.onFilterCategory}/>
 
+
+					<ReactSelect
+						className={'alignleft actions'}
+						placeholder={__('Select Type')}
+						options={typeFilter}
+						isMulti
+						value={types}
+						onChange={this.onFilterType}/>
+					{isFilterApplied && <Button
+						onClick={this.onResetFilter}
+						className={'alignleft actions'}
+						isDefault>{__('Reset')}</Button>}
 				</TableNav>
 
 				<Table
@@ -176,24 +217,15 @@ function mapDispatchToProps(dispatch) {
 		onAction: action => {
 			dispatch(performTableAction(action));
 		},
-		onSetAllSelected: onoff => {
-			dispatch(setAllSelected(onoff));
-		},
 		onSetOrderBy: (column, order) => {
 			dispatch(setOrderBy(column, order));
 		},
 		onFilter: (filter) => {
-			dispatch(setFilter(filter));
+			dispatch(setFilter({filter}));
 		},
 		onSearch: (search) => {
 			dispatch(setSearch(search));
-		},
-		onCreate: item => {
-			dispatch(createTransaction(item));
-		},
-		onSetDisplay: (displayType, displaySelected) => {
-			dispatch(setDisplay(displayType, displaySelected));
-		},
+		}
 	}
 }
 

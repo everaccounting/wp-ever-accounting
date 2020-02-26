@@ -268,3 +268,17 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 
 	return $wpdb->get_col( $request );
 }
+function eaccounting_category_export(){
+	if(! current_user_can( 'manage_options')){
+		wp_die('cheating??');
+		exit();
+	}
+	global $wpdb;
+	$categories = $wpdb->get_results("SELECT name, type, status from $wpdb->ea_categories order by id", ARRAY_N);
+	$data = array_merge( array(array('name', 'type', 'status')), $categories);
+	$exporter = new EAccounting_CSV_Writer( $data );
+	$exporter->headers( sprintf( 'eaccounting-categories-%s', date( 'dmyhis')));
+	$exporter->output();
+	exit();
+}
+add_action('eaccounting_admin_get_category-export', 'eaccounting_category_export');

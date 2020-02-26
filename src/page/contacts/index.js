@@ -15,7 +15,6 @@ import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
 // import TableDisplay from 'component/table/table-display';
-import MultiOptionDropdown from 'component/multi-option-dropdown';
 import ContactsRow from './row';
 import {
 	getContacts,
@@ -106,7 +105,6 @@ class Contacts extends Component {
 	};
 
 	render() {
-		console.log(this.props);
 		const {status, total, table, rows, saving} = this.props.contacts;
 		const {isAdding} = this.state;
 		const isSaving = saving.indexOf(0) !== -1;

@@ -25,11 +25,12 @@ export default class CurrencyControl extends Component {
 	componentDidMount() {
 		const {selected} = this.props;
 
-		selected && this.getCurrencies({include: selected}, (options) => {
+		selected && selected.length && this.getCurrencies({include: selected}, (options) => {
 			this.setState({
 				value: options
 			})
 		});
+
 
 		this.getCurrencies({}, (options) => {
 			this.setState({

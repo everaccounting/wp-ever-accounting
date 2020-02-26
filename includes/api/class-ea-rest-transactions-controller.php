@@ -65,20 +65,23 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 	 */
 	public function get_items( $request ) {
 		$args = array(
-			'account_id'   => $request['account_id'],
-			'paid_at'      => $request['paid_at'],
-			'category_id'  => $request['category_id'],
-			'parent_id'    => $request['parent_id'],
-			'date_created' => $request['date_created'],
-			'include'      => $request['include'],
-			'exclude'      => $request['exclude'],
-			'search'       => $request['search'],
-			'orderby'      => $request['orderby'],
-			'order'        => $request['order'],
-			'per_page'     => $request['per_page'],
-			'page'         => $request['page'],
-			'offset'       => $request['offset'],
+			'account_id'  => $request['account_id'],
+			'category_id' => $request['category_id'],
+			'parent_id'   => $request['parent_id'],
+			'type'        => $request['type'],
+			'include'     => $request['include'],
+			'exclude'     => $request['exclude'],
+			'search'      => $request['search'],
+			'orderby'     => $request['orderby'],
+			'paid_at'     => $this->get_query_dates( $request['date'] ),
+			'order'       => $request['order'],
+			'per_page'    => $request['per_page'],
+			'page'        => $request['page'],
+			'offset'      => $request['offset'],
 		);
+		if ( $args['orderby'] == 'id' ) {
+			$args['orderby'] = 'paid_at';
+		}
 
 		$query_result = eaccounting_get_transactions( $args );
 		$total_items  = eaccounting_get_transactions( $args, true );
@@ -136,7 +139,7 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 			'account'        => eaccounting_get_account( $item->account_id ),
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
 			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
-			'contact'        => eaccounting_get_contact( $item->contact_id ),
+			//'contact'        => eaccounting_get_contact( $item->contact_id ),
 			'description'    => $item->description,
 			'category'       => eaccounting_get_category( $item->category_id ),
 			'payment_method' => $item->payment_method,
@@ -359,6 +362,19 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 			'description' => __( 'Limit result set to specific search.', 'wp-ever-accounting' ),
 			'type'        => 'string',
 			'default'     => '',
+		);
+
+		$params['type'] = array(
+			'description'       => __( 'Limit the result with active or inactive type', 'wp-ever-accounting' ),
+			'default'           => '',
+			'type'              => 'string',
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+
+		$params['orderby'] = array(
+			'description' => __( 'Sort collection by contact attribute.', 'wp-ever-accounting' ),
+			'type'        => 'string',
+			'default'     => 'paid_at',
 		);
 
 		return $query_params;

@@ -5,12 +5,14 @@
 import { getApi } from 'lib/api';
 import { mergeWithTable, removeDefaults } from 'lib/table';
 import { translate as __ } from 'lib/locale';
+import { mergeWith, isEqual } from 'lodash';
+import notify from 'lib/notify';
 
 export const tableAction = ( endpoint, bulk, ids, status, extra = {} ) => ( dispatch, getState ) => {
 	const { table, total } = getState()[ status.store ];
 	const params = {
 		items: ids ? [ ids ] : table.selected,
-		bulk,
+		action:bulk,
 	};
 
 	if ( bulk === 'delete' && table.page > 0 && table.per_page * table.page === total - 1 ) {
@@ -22,7 +24,7 @@ export const tableAction = ( endpoint, bulk, ids, status, extra = {} ) => ( disp
 	}
 
 	const tableData = mergeWithTable( table, params );
-	const data = { ... { items: params.items.join( ',' ) }, ... extra };
+	const data = { ...params, ... extra };
 
 	getApi( endpoint( bulk, data, removeDefaults( table, status.order ) ) )
 		.then( json => {
@@ -41,6 +43,7 @@ const doAction = ( endpoint, table, item, status, dispatch ) => {
 			dispatch( { type: status.saved, item: json.items, items: json.items, total: json.total, saving: [ item.id ] } );
 		} )
 		.catch( error => {
+			notify(error.message, 'error');
 			dispatch( { type: status.failed, error, item, saving: [ item.id ] } );
 		} );
 
@@ -88,14 +91,16 @@ const deepCompare = ( first, second ) => {
 export const processRequest = ( endpoint, dispatch, status, params = {}, state = {}, reduxer = s => s ) => {
 	const { table = {}, rows } = state;
 	const tableData = reduxer( mergeWithTable( table, params ) );
-	const data = removeDefaults( { ... table, ... params }, status.order );
-
+	const data = tableData; //removeDefaults( { ... table, ... params }, status.order );
 	// If it's the same as our current store then ignore
 	if ( deepCompare( tableData, table ) && rows.length > 0 && deepCompare( params, {} ) ) {
 		return;
 	}
 
-	getApi( endpoint( data ) )
+	const {filter, ...query} = data;
+
+	//explode filter
+	getApi( endpoint( {...filter, ...query} ) )
 		.then( json => {
 			dispatch( { type: status.saved, ... json } );
 		} )

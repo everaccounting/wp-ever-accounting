@@ -15,7 +15,6 @@ import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
 // import TableDisplay from 'component/table/table-display';
-import MultiOptionDropdown from 'component/multi-option-dropdown';
 import AccountsRow from './row';
 import {
 	getAccounts,
@@ -140,13 +139,6 @@ class Accounts extends Component {
 
 				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } bulk={ getBulk() }>
 					<BulkAction>
-						<MultiOptionDropdown
-							options={ getFilterOptions() }
-							selected={ table.filterBy ? table.filterBy : {} }
-							onApply={ this.props.onFilter }
-							title={ __( 'Filters' ) }
-							isEnabled={ status !== STATUS_IN_PROGRESS }
-						/>
 					</BulkAction>
 				</TableNav>
 

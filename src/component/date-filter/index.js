@@ -3,7 +3,9 @@ import {translate as __} from 'lib/locale';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import {DateRange, TextControl} from "@eaccounting/components";
-// import classnames from 'classnames';
+import classnames from 'classnames';
+
+import './style.scss';
 
 export default class DateFilter extends Component {
 	static propTypes = {
@@ -47,6 +49,7 @@ export default class DateFilter extends Component {
 			"sundayFirst": false
 		};
 
+		let classes = classnames('ea-date-filter', className);
 		return (
 			<Fragment>
 				<DateRange
@@ -56,7 +59,7 @@ export default class DateFilter extends Component {
 					endDate={startDate}
 					onApply={this.onChange}
 					autoUpdateInput={true}
-					className={className}
+					className={classes}
 				>
 					{this.props.children && this.props.children}
 				</DateRange>

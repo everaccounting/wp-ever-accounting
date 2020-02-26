@@ -11,7 +11,6 @@ export default class Payments extends Component {
 	}
 
 	render() {
-		console.log(this.props);
 		return(
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Payment')}</h1>

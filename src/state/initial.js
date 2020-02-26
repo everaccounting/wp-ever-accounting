@@ -1,6 +1,6 @@
 import {getInitialAccounts} from 'state/accounts/intial';
 // import {getInitialBills} from 'state/bills/intial';
-// import {getInitialCategories} from 'state/categories/intial';
+import {getInitialCategories} from 'state/categories/initial';
 import {getInitialContacts} from 'state/contacts/intial';
 // import {getInitialCurrencies} from 'state/currencies/intial';
 // import {getInitialInvoices} from 'state/invoices/intial';
@@ -17,7 +17,7 @@ export function getInitialState() {
 	return {
 		accounts: getInitialAccounts(),
 		// bills: getInitialBills(),
-		// categories: getInitialCategories(),
+		categories: getInitialCategories(),
 		contacts: getInitialContacts(),
 		// currencies: getInitialCurrencies(),
 		// invoices: getInitialInvoices(),

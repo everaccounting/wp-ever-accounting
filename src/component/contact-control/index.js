@@ -25,7 +25,7 @@ export default class ContactControl extends Component {
 	componentDidMount() {
 		const {selected} = this.props;
 
-		selected && this.getContacts({include: selected}, (options) => {
+		selected && selected.length && this.getContacts({include: selected}, (options) => {
 			this.setState({
 				value: options
 			})

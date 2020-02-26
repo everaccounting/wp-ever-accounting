@@ -5,28 +5,31 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param WP_REST_Request $request
 	 *
 	 * @return bool|WP_Error
 	 */
-	public function get_items_permissions_check( $request ){
+	public function get_items_permissions_check( $request ) {
 		//return current_user_can('manage_options');
 		return true;
 	}
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param WP_REST_Request $request
 	 *
 	 * @return bool|WP_Error
 	 */
-	public function get_item_permissions_check( $request ){
+	public function get_item_permissions_check( $request ) {
 //		return current_user_can('manage_options');
 		return true;
 	}
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param WP_REST_Request $request
 	 *
 	 * @return bool|WP_Error
@@ -38,6 +41,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param WP_REST_Request $request
 	 *
 	 * @return bool|WP_Error
@@ -49,6 +53,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param WP_REST_Request $request
 	 *
 	 * @return bool|WP_Error
@@ -118,7 +123,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @return string|null
 	 * @since 1.0.0
 	 */
-	protected function prepare_date_response(  $date = null ) {
+	protected function prepare_date_response( $date = null ) {
 		if ( '0000-00-00 00:00:00' === $date ) {
 			return null;
 		}
@@ -127,21 +132,46 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * @since 1.0.1
 	 * @param $user_id
 	 *
 	 * @return array
+	 * @since 1.0.1
 	 */
-	protected function get_wp_user_data($user_id){
+	protected function get_wp_user_data( $user_id ) {
 		$user = get_user_by( 'ID', $user_id );
 
 		$data = [
-			'id'    => isset($user->ID)? $user->ID: '',
-			'name'  => isset($user->display_name)?$user->display_name: '',
-			'email' => isset($user->user_email)?$user->user_email: '',
-			'photo' => isset($user->ID)? get_avatar_url( $user->ID ): get_avatar_url(null),
+			'id'    => isset( $user->ID ) ? $user->ID : '',
+			'name'  => isset( $user->display_name ) ? $user->display_name : '',
+			'email' => isset( $user->user_email ) ? $user->user_email : '',
+			'photo' => isset( $user->ID ) ? get_avatar_url( $user->ID ) : get_avatar_url( null ),
 		];
+
 		return $data;
+	}
+
+	/**
+	 * @param $date
+	 *
+	 * @return array|bool
+	 * @since 1.0.1
+	 */
+	protected function get_query_dates( $date ) {
+		$dates = explode( '_', $date, 2 );
+		$start = eaccounting_sanitize_date( $dates[0] );
+		$end   = isset( $dates[1] ) ? eaccounting_sanitize_date( $dates[1] ) : date( 'Y-m-d', current_time( 'timestamp' ) );
+		if ( ! $start || ! $end ) {
+			return array(
+				'start' => '',
+				'end'   => '',
+			);
+		}
+
+		return [
+			'start' => sanitize_text_field( $start ),
+			'end'   => sanitize_text_field( $end ),
+		];
+
 	}
 
 }

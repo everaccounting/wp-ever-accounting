@@ -10,7 +10,7 @@ export function getInitialTransactions() {
 			order: '',
 			page: 1,
 			per_page: parseInt(eAccountingi10n.per_page, 10),
-			filterBy: [],
+			filter: [],
 			selected: []
 		},
 	};

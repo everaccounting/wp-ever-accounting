@@ -25,7 +25,7 @@ export default class CategoryControl extends Component {
 	componentDidMount() {
 		const {selected} = this.props;
 
-		selected && this.getCategory({include: selected}, (options) => {
+		selected && selected.length && this.getCategory({include: selected}, (options) => {
 			this.setState({
 				value: options
 			})
