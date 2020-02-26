@@ -68,42 +68,48 @@ class Transactions extends Component {
 		);
 	};
 
+	setFilter = (filter, value) => {
+		const { filterBy } = this.props.transactions.table;
+		this.props.onFilter( { ...filterBy, [ filter ]: value ? value : undefined } );
+	};
+
 	onFilterAccount = (accounts) => {
-		this.props.onFilter({account_id: map(accounts, 'value')});
+		this.setFilter('account_id', map(accounts, 'value'));
 	};
 
 	onFilterCategory = (categories) => {
-		this.props.onFilter({category_id: map(categories, 'value')});
+		this.setFilter('category_id', map(categories, 'value'));
 	};
 
 	onFilterDate = (start, end) => {
 		let start_date, end_date;
 		start_date = start.format('YYYY-MM-DD');
 		end_date = end.format('YYYY-MM-DD');
-		this.props.onFilter({date: `${start_date}_${end_date}`});
+		this.setFilter('date', `${start_date}_${end_date}` );
 	};
 
 	onFilterType = (types) => {
-		this.props.onFilter({type: map(types, 'value')});
+		this.setFilter('type', map(types, 'value'));
 	};
 
 	onResetFilter = () => {
 		this.props.onLoadTransactions({filter:{}});
-	}
+	};
 
 	render() {
 		const {status, total, table, rows} = this.props.transactions;
-		const {account_id = [], category_id = [], type = [], date = ''} = table.filter;
-
-		const isFilterApplied = Object.keys(table.filter).length > 0;
-
+		const {type = [], date = ''} = table.filterBy;
+		//
+		// const isFilterApplied = Object.keys(table.filter).length > 0;
+		//
 		const types = typeFilter.filter((filter, index) => {
 			return type.includes(filter.value) === true;
 		});
+
 		let dates = date.split('_', 2);
 
-		let startDate = dates['0'] !== undefined ? moment(dates['0']) : moment().subtract(29, 'days');
-		let endDate = dates['1'] !== undefined ? moment(dates['1']) : moment();
+		let startDate = dates['0'] !== undefined ? moment(dates['0']) : undefined;
+		let endDate = dates['1'] !== undefined ? moment(dates['1']) : undefined;
 		let date_range = '';
 		if (date && startDate && endDate) {
 			date_range = startDate.format('D MMM Y');
@@ -113,7 +119,7 @@ class Transactions extends Component {
 		return (
 			<Fragment>
 				<pre>
-						{JSON.stringify(table.filter)}
+						{JSON.stringify(table)}
 				</pre>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
 				<hr className="wp-header-end"/>
@@ -150,14 +156,14 @@ class Transactions extends Component {
 						className={'alignleft actions'}
 						isMulti
 						isClearable
-						selected={account_id}
+						selected={table.filterBy.account_id?table.filterBy.account_id:[]}
 						onChange={this.onFilterAccount}/>
 
 					<CategoryControl
 						className={'alignleft actions'}
 						isMulti
 						isClearable
-						selected={category_id}
+						selected={table.filterBy.category_id?table.filterBy.category_id:[]}
 						onChange={this.onFilterCategory}/>
 
 
@@ -168,10 +174,10 @@ class Transactions extends Component {
 						isMulti
 						value={types}
 						onChange={this.onFilterType}/>
-					{isFilterApplied && <Button
-						onClick={this.onResetFilter}
-						className={'alignleft actions'}
-						isDefault>{__('Reset')}</Button>}
+					{/*{isFilterApplied && <Button*/}
+					{/*	onClick={this.onResetFilter}*/}
+					{/*	className={'alignleft actions'}*/}
+					{/*	isDefault>{__('Reset')}</Button>}*/}
 				</TableNav>
 
 				<Table
@@ -221,7 +227,7 @@ function mapDispatchToProps(dispatch) {
 			dispatch(setOrderBy(column, order));
 		},
 		onFilter: (filter) => {
-			dispatch(setFilter({filter}));
+			dispatch(setFilter(filter));
 		},
 		onSearch: (search) => {
 			dispatch(setSearch(search));

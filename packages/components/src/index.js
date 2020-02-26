@@ -9,4 +9,4 @@ export {default as SelectControl} from './select-control';
 export {default as TextControl} from './text-control';
 export {default as TextareaControl} from './textarea-control';
 export {default as ToggleControl} from './toggle-control';
-export {default as DateRange} from './date-range';
+export {default as DateRangePicker} from './date-range';

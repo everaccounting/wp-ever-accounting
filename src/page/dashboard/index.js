@@ -10,7 +10,8 @@ import {
 	SelectControl,
 	ReactSelect,
 	TextareaControl,
-	ToggleControl
+	ToggleControl,
+	DateRangePicker
 } from '@eaccounting/components';
 import AccountControl from "component/account-control";
 import ContactControl from "component/contact-control";
@@ -21,6 +22,7 @@ import CurrencyControl from "component/currency-control";
  * Internal dependencies
  */
 import './style.scss';
+import moment from "moment";
 
 export default class Dashboard extends Component {
 	constructor(props) {
@@ -44,6 +46,16 @@ export default class Dashboard extends Component {
 		return (
 			<div>
 				{/*<EditAccount item={initialAccount}/>*/}
+				<DateRangePicker startDate={undefined} endDate={undefined} ranges={{
+					'Today': [moment(), moment()],
+					'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+					'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+					'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+					'This Month': [moment().startOf('month'), moment().endOf('month')],
+					'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+				}}>
+					<button>Click Me To Open Picker!</button>
+				</DateRangePicker>
 
 				<AccountControl selected={[91, 92]}/>
 				<AccountControl

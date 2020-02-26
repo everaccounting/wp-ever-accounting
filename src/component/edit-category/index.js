@@ -101,7 +101,7 @@ class EditCategory extends Component {
 		const {tittle = __('Add Category'), buttonTittle = __('Save'), onClose} = this.props;
 		const {
 			name,
-			type,
+			type = {},
 			enabled,
 			isSaving
 		} = this.state;
@@ -138,7 +138,7 @@ class EditCategory extends Component {
 									   }}/>
 						{this.props.children && this.props.children}
 						<input className="button-primary" type="submit" name="add" value={buttonTittle}
-							   disabled={isSaving || name === ''}/>
+							   disabled={isSaving || name === '' || !type.hasOwnProperty('value')}/>
 					</form>
 				</Modal>
 			</form>

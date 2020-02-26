@@ -322,7 +322,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
-			'id'         => $item->id,
+			'id'         => intval( $item->id ),
 			'name'       => $item->name,
 			'type'       => $item->type,
 			'color'      => sanitize_hex_color( $item->color ),

@@ -1,8 +1,6 @@
 import {STATUS_IN_PROGRESS} from 'lib/status';
-import {getDefaultTable, toFilter} from 'lib/table';
-import { getFilterOptions, getDisplayGroups } from 'page/contacts/constants';
-let table = getDefaultTable( [ 'name', 'number' ], toFilter( getFilterOptions(), { name: true } ), getDisplayGroups(), 'name', [ 'contacts' ], 'contact', getDisplayGroups() );
-
+import {getDefaultTable} from 'lib/table';
+let table = getDefaultTable( [ 'name', 'type' ], ['type'], 'name');
 export function getInitialContacts() {
 	return {
 		rows: [],

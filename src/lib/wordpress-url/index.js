@@ -50,4 +50,4 @@ export function getServerUrl( domain, path ) {
 	return domain.replace( /\/$/, '' ) + '/' + path.replace( /^\//, '' );
 }
 
-export const isRedirection = headers => headers.find( item => ( item.name === 'x-ea-agent' || item.name === 'x-ea-by' ) && item.value.toLowerCase() === 'eaccounting' );
+export const isReorder = headers => headers.find( item => ( item.name === 'x-ea-agent' || item.name === 'x-ea-by' ) && item.value.toLowerCase() === 'eaccounting' );
