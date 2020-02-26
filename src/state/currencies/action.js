@@ -31,15 +31,15 @@ const STATUS_CURRENCY = {
 	order: 'name',
 };
 
-export const createCurrency = item => createAction( eAccountingApi.currencies.create, item, STATUS_CURRENCIES_ITEM );
-export const updateCurrency = ( id, item ) => updateAction( eAccountingApi.currencies.update, id, item, STATUS_CURRENCIES_ITEM );
+export const createItem = item => createAction( eAccountingApi.currencies.create, item, STATUS_CURRENCIES_ITEM );
+export const updateItem = ( id, item ) => updateAction( eAccountingApi.currencies.update, id, item, STATUS_CURRENCIES_ITEM );
 export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.currencies.bulk, action, ids, STATUS_CURRENCIES_ITEM );
-export const getCurrencies = args => ( dispatch, getState ) => processRequest( eAccountingApi.currencies.list, dispatch, STATUS_CURRENCY, args, getState().currencies );
-export const setOrderBy = ( orderby, order ) => getCurrencies( { orderby, order } );
-export const setPage = page => getCurrencies( { page } );
-export const setFilter = ( filterBy ) => getCurrencies( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getCurrencies( { search, orderby: '', page: 0 } );
+export const getItems = args => ( dispatch, getState ) => processRequest( eAccountingApi.currencies.list, dispatch, STATUS_CURRENCY, args, getState().currencies );
+export const setOrderBy = ( orderby, order ) => getItems( { orderby, order } );
+export const setPage = page => getItems( { page } );
+export const setFilter = ( filterBy ) => getItems( { filterBy, orderby: '', page: 0 } );
+export const setSearch = ( search ) => getItems( { search, orderby: '', page: 0 } );
 export const setSelected = items => ( { type: CURRENCIES_SET_SELECTED, items: items.map( parseInt ) } );
 export const setAllSelected = onoff => ( { type: CURRENCIES_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getCurrencies( table );
+export const setTable = table => getItems( table );
 export const setDisplay = ( displayType, displaySelected ) => ( { type: CURRENCIES_DISPLAY_SET, displayType, displaySelected } );

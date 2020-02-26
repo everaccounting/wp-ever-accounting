@@ -1,43 +1,36 @@
-import classnames from 'classnames';
 import {Component} from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {noop} from 'lodash';
-import {SelectControl as BaseSelect, BaseControl} from '@wordpress/components';
-import {withInstanceId} from '@wordpress/compose';
+import {BaseControl} from '@wordpress/components';
+import classnames from 'classnames';
+import Select from 'react-select';
 
 
-class SelectControl extends Component {
 
+export default class SelectControl extends Component {
 	render() {
-		const {label, value, help, className, instanceId, onChange, before, after, type, required, ...props} = this.props;
-		const classes = classnames('ea-form-group','ea-select-field', className, {
+		const {label, help, className, before, after, required, ...props} = this.props;
+		const classes = classnames('ea-form-group', 'ea-select-field', className, {
 			required: !!required,
 		});
-		const id = `inspector-ea-input-group-${instanceId}`;
-		const describedby = [];
-		if (help) {
-			describedby.push(`${id}__help`);
-		}
-		if (before) {
-			describedby.push(`${id}__before`);
-		}
-		if (after) {
-			describedby.push(`${id}__after`);
-		}
 
 		return (
-			<BaseControl label={label} id={id} help={help} className={classes}>
+			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
 					{before && (
-						<span id={`${id}__before`} className="ea-input-group__before">
+						<span className="ea-input-group__before">
 							{before}
 						</span>
 					)}
 
-					<BaseSelect {...props} aria-describedby={describedby.join(' ')}/>
+					<Select
+						classNamePrefix="ea-react-select"
+						className="ea-react-select"
+						required={required}
+						{...props}
+					/>
 
 					{after && (
-						<span id={`${id}__after`} className="ea-input-group__after">
+						<span className="ea-input-group__after">
 							{after}
 						</span>
 					)}
@@ -46,22 +39,24 @@ class SelectControl extends Component {
 		);
 	}
 }
-
 SelectControl.propTypes = {
+	autoload:PropTypes.bool,
 	className: PropTypes.string,
-	disabled: PropTypes.bool,
 	label: PropTypes.string,
-	help: PropTypes.string,
-	onClick: PropTypes.func,
+	name: PropTypes.string,
+	clearable: PropTypes.bool,
+	placeholder: PropTypes.string,
+	searchable: PropTypes.bool,
+	multi: PropTypes.bool,
+	options: PropTypes.arrayOf(PropTypes.object).isRequired,
+	value: PropTypes.any,
 	onChange: PropTypes.func,
-	options: PropTypes.arrayOf(PropTypes.object),
-	value: PropTypes.string,
+	onInputChange: PropTypes.func,
 	before: PropTypes.node,
 	after: PropTypes.node,
 	required: PropTypes.bool,
 };
+
 SelectControl.defaultProps = {
-	onClick: noop,
-	onChange: noop,
+	autoload: false,
 };
-export default withInstanceId(SelectControl);

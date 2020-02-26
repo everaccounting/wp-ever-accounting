@@ -10,13 +10,13 @@ import {HashRouter as Router, Route, Switch} from 'react-router-dom';
  * Internal dependencies
  */
 import './style.scss';
-import Dashboard from "../dashboard";
-import Contacts from "../contacts";
-import Transactions from "../transactions";
-import Banking from "../banking";
+// import Dashboard from "../dashboard";
+// import Contacts from "../contacts";
+// import Transactions from "../transactions";
+// import Banking from "../banking";
 import Misc from "../misc";
-import Incomes from "../incomes";
-import Expenses from "../expenses";
+// import Incomes from "../incomes";
+// import Expenses from "../expenses";
 
 
 export default class Home extends Component {
@@ -39,18 +39,18 @@ export default class Home extends Component {
 			<Fragment>
 				<Router>
 					<Switch>
-						<Route exact path='/' component={Dashboard}/>
-						<Route path='/dashboard' component={Dashboard}/>
-						<Route path='/transactions' component={Transactions}/>
-						<Route path='/contacts' component={Contacts}/>
-						<Route path='/incomes:tab' component={Incomes}/>
-						<Route path='/incomes' component={Incomes}/>
-						<Route path='/expenses:tab' component={Expenses}/>
-						<Route path='/expenses' component={Expenses}/>
-						<Route path='/banking:tab' component={Banking}/>
-						<Route path='/banking' component={Banking}/>
+						{/*<Route exact path='/' component={Dashboard}/>*/}
+						{/*<Route path='/dashboard' component={Dashboard}/>*/}
+						{/*<Route path='/transactions' component={Transactions}/>*/}
+						{/*<Route path='/contacts' component={Contacts}/>*/}
+						{/*<Route path='/incomes:tab' component={Incomes}/>*/}
+						{/*<Route path='/incomes' component={Incomes}/>*/}
+						{/*<Route path='/expenses:tab' component={Expenses}/>*/}
+						{/*<Route path='/expenses' component={Expenses}/>*/}
+						{/*<Route path='/banking:tab' component={Banking}/>*/}
+						{/*<Route path='/banking' component={Banking}/>*/}
 						<Route  path='/misc' component={Misc}/>
-						<Route  path='/misc:tab' component={Misc}/>
+						{/*<Route  path='/misc:tab' component={Misc}/>*/}
 					</Switch>
 					<NotificationContainer/>
 				</Router>

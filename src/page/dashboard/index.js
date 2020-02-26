@@ -17,6 +17,7 @@ import AccountControl from "component/account-control";
 import ContactControl from "component/contact-control";
 import CategoryControl from "component/category-control";
 import CurrencyControl from "component/currency-control";
+import DateRangeControl from "component/date-range-control";
 
 /**
  * Internal dependencies
@@ -29,6 +30,8 @@ export default class Dashboard extends Component {
 		super(props);
 		this.state = {
 			isVisible: false,
+			start:undefined,
+			end:undefined,
 		};
 		window.addEventListener('popstate', this.onPageChanged);
 	}
@@ -42,9 +45,16 @@ export default class Dashboard extends Component {
 	}
 
 	render() {
-		const {isVisible} = this.state;
+		const {isVisible, start, end} = this.state;
 		return (
 			<div>
+				<DateRangeControl startDate={start} endDate={end} onChange={(start, end)=> {
+					this.setState({
+						start,
+						end
+					})
+				}}/>
+
 				{/*<EditAccount item={initialAccount}/>*/}
 				<DateRangePicker startDate={undefined} endDate={undefined} ranges={{
 					'Today': [moment(), moment()],

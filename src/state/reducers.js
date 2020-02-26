@@ -4,26 +4,26 @@
 import {combineReducers} from 'redux';
 
 // import transactions from 'state/transactions/reducer';
-import contacts from 'state/contacts/reducer';
+// import contacts from 'state/contacts/reducer';
 // import invoices from 'state/invoices/reducer';
-import revenues from 'state/revenues/reducer';
+// import revenues from 'state/revenues/reducer';
 // import bills from 'state/bills/reducer';
 // import payments from 'state/payments/reducer';
-import accounts from 'state/accounts/reducer';
-import categories from 'state/categories/reducer';
-// import currencies from 'state/currencies/reducer';
-// import taxrates from 'state/taxrates/reducer';
-import transactions from 'state/transactions/reducer';
-
+// import accounts from 'state/accounts/reducer';
+// import categories from 'state/categories/reducer';
+// import transactions from 'state/transactions/reducer';
+import currencies from 'state/currencies/reducer';
+import taxrates from 'state/taxrates/reducer';
 const reducer = combineReducers({
-	accounts,
+	// accounts,
 	// bills,
-	categories,
-	contacts,
+	// categories,
+	// contacts,
 	// invoices,
-	revenues,
-	// taxrates,
-	transactions,
+	// revenues,
+	currencies,
+	taxrates,
+	// transactions,
 	// payments,
 	// currencies,
 });

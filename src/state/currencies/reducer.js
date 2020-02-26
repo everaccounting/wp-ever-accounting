@@ -16,7 +16,6 @@ import {
 import { STATUS_IN_PROGRESS, STATUS_FAILED, STATUS_COMPLETE } from 'lib/status';
 import { setTableSelected, setTableAllSelected, clearSelected } from 'lib/table';
 import { setTable, setRows, setTotal, setItem, setSaving, removeSaving, restoreToOriginal } from 'lib/store';
-import notify from "../../lib/notify";
 export default function accounts( state = {}, action ) {
 	switch ( action.type ) {
 		case CURRENCIES_LOADING:

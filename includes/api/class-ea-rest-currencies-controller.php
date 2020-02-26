@@ -249,7 +249,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			'decimal_mark'        => $item->decimal_mark,
 			'thousands_separator' => $item->thousands_separator,
 			'symbol_position'     => $item->symbol_position,
-			'status'              => $item->status,
+			'enabled'    => $item->status == 'active',
 			'created_at'          => $this->prepare_date_response( $item->created_at ),
 			'updated_at'          => $this->prepare_date_response( $item->updated_at ),
 		);

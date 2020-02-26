@@ -13,7 +13,7 @@ import './style.scss';
 import Table from 'component/table';
 import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
-import DateFilter from 'component/date-filter';
+import DateRangeControl from "component/date-range-control";
 import TransactionsRow from './row';
 import {
 	getTransactions,
@@ -27,7 +27,7 @@ import {getHeaders} from './constants';
 import AccountControl from 'component/account-control';
 import CategoryControl from 'component/category-control';
 import moment from 'moment';
-import { TextControl, ReactSelect} from "@eaccounting/components";
+import {TextControl, ReactSelect} from "@eaccounting/components";
 import {Button} from "@wordpress/components";
 
 
@@ -69,23 +69,21 @@ class Transactions extends Component {
 	};
 
 	setFilter = (filter, value) => {
-		const { filterBy } = this.props.transactions.table;
-		this.props.onFilter( { ...filterBy, [ filter ]: value ? value : undefined } );
+		const {filterBy} = this.props.transactions.table;
+		this.props.onFilter({...filterBy, [filter]: value ? value : undefined});
 	};
 
 	onFilterAccount = (accounts) => {
-		this.setFilter('account_id', map(accounts, 'value'));
+		let filter = map(accounts, 'value') || undefined;
+		this.setFilter('account_id', filter);
 	};
 
 	onFilterCategory = (categories) => {
 		this.setFilter('category_id', map(categories, 'value'));
 	};
 
-	onFilterDate = (start, end) => {
-		let start_date, end_date;
-		start_date = start.format('YYYY-MM-DD');
-		end_date = end.format('YYYY-MM-DD');
-		this.setFilter('date', `${start_date}_${end_date}` );
+	onFilterDate = (date) => {
+		this.setFilter('date', date);
 	};
 
 	onFilterType = (types) => {
@@ -93,28 +91,17 @@ class Transactions extends Component {
 	};
 
 	onResetFilter = () => {
-		this.props.onLoadTransactions({filter:{}});
+		this.props.onFilter({});
 	};
 
 	render() {
 		const {status, total, table, rows} = this.props.transactions;
-		const {type = [], date = ''} = table.filterBy;
-		//
-		// const isFilterApplied = Object.keys(table.filter).length > 0;
-		//
+		const {type = [], date = '', category_id, account_id} = table.filterBy;
+		const isFiltered = Object.keys(table.filterBy).length > 0;
 		const types = typeFilter.filter((filter, index) => {
 			return type.includes(filter.value) === true;
 		});
 
-		let dates = date.split('_', 2);
-
-		let startDate = dates['0'] !== undefined ? moment(dates['0']) : undefined;
-		let endDate = dates['1'] !== undefined ? moment(dates['1']) : undefined;
-		let date_range = '';
-		if (date && startDate && endDate) {
-			date_range = startDate.format('D MMM Y');
-			date_range += ' - ' + endDate.format('D MMM Y');
-		}
 
 		return (
 			<Fragment>
@@ -123,9 +110,9 @@ class Transactions extends Component {
 				</pre>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
 				<hr className="wp-header-end"/>
+
 				<div className="ea-table-display">
-					<SearchBox
-						status={status}
+					<SearchBox status={status}
 						onSearch={this.props.onSearch}
 					/>
 				</div>
@@ -138,35 +125,24 @@ class Transactions extends Component {
 					onAction={this.props.onAction}
 					status={status}>
 
-					<DateFilter
+					<DateRangeControl
 						className={'alignleft actions'}
-						startDate={startDate}
-						endDate={endDate}
-						onChange={this.onFilterDate}>
-
-						<TextControl
-							autoComplete='off'
-							placeholder={__('Select Date')}
-							value={date_range}
-							onChange={() => {
-							}}/>
-					</DateFilter>
+						date={date}
+						onChange={this.onFilterDate}/>
 
 					<AccountControl
 						className={'alignleft actions'}
 						isMulti
 						isClearable
-						selected={table.filterBy.account_id?table.filterBy.account_id:[]}
+						selected={account_id}
 						onChange={this.onFilterAccount}/>
 
 					<CategoryControl
 						className={'alignleft actions'}
 						isMulti
 						isClearable
-						selected={table.filterBy.category_id?table.filterBy.category_id:[]}
+						selected={category_id}
 						onChange={this.onFilterCategory}/>
-
-
 					<ReactSelect
 						className={'alignleft actions'}
 						placeholder={__('Select Type')}
@@ -174,10 +150,6 @@ class Transactions extends Component {
 						isMulti
 						value={types}
 						onChange={this.onFilterType}/>
-					{/*{isFilterApplied && <Button*/}
-					{/*	onClick={this.onResetFilter}*/}
-					{/*	className={'alignleft actions'}*/}
-					{/*	isDefault>{__('Reset')}</Button>}*/}
 				</TableNav>
 
 				<Table

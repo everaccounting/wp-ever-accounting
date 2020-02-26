@@ -1,7 +1,7 @@
 import {STATUS_IN_PROGRESS} from 'lib/status';
 import {getDefaultTable} from 'lib/table';
-let table = getDefaultTable( [ 'name', 'type' ], ['type'], 'name');
-export function getInitialCurrencies() {
+let table = getDefaultTable( [ 'name', 'rate', 'type', 'status' ], ['type'], 'name');
+export function getInitialTaxRates() {
 	return {
 		rows: [],
 		saving: [],

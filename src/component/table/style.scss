@@ -167,13 +167,18 @@
 	}
 }
 
-.tablenav .actions {
+.tablenav{
+  .actions {
 	overflow: visible;
+  }
+  &.top{
+	margin-bottom: 9px;
+  }
 }
 
 .ea-table__actions {
-	display: inline-flex;
-	align-items: center;
+	//display: inline-flex;
+	//align-items: center;
 
 	.actions {
 		.button {
@@ -184,7 +189,7 @@
 
 	.ea-form-group {
 		margin-bottom: 9px;
-		min-width: 180px;
+		min-width: 200px;
 	}
 
 	&>button{

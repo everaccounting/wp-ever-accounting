@@ -31,15 +31,15 @@ const STATUS_TAXRATE = {
 	order: 'name',
 };
 
-export const createTaxrate = item => createAction( eAccountingApi.taxrates.create, item, STATUS_TAXRATES_ITEM );
-export const updateTaxrate = ( id, item ) => updateAction( eAccountingApi.taxrates.update, id, item, STATUS_TAXRATES_ITEM );
+export const createItem = item => createAction( eAccountingApi.taxrates.create, item, STATUS_TAXRATES_ITEM );
+export const updateItem = ( id, item ) => updateAction( eAccountingApi.taxrates.update, id, item, STATUS_TAXRATES_ITEM );
 export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.taxrates.bulk, action, ids, STATUS_TAXRATES_ITEM );
-export const getTaxrates = args => ( dispatch, getState ) => processRequest( eAccountingApi.taxrates.list, dispatch, STATUS_TAXRATE, args, getState().taxrates );
-export const setOrderBy = ( orderby, order ) => getTaxrates( { orderby, order } );
-export const setPage = page => getTaxrates( { page } );
-export const setFilter = ( filterBy ) => getTaxrates( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getTaxrates( { search, orderby: '', page: 0 } );
+export const getItems = args => ( dispatch, getState ) => processRequest( eAccountingApi.taxrates.list, dispatch, STATUS_TAXRATE, args, getState().taxrates );
+export const setOrderBy = ( orderby, order ) => getItems( { orderby, order } );
+export const setPage = page => getItems( { page } );
+export const setFilter = ( filterBy ) => getItems( { filterBy, orderby: '', page: 0 } );
+export const setSearch = ( search ) => getItems( { search, orderby: '', page: 0 } );
 export const setSelected = items => ( { type: TAXRATES_SET_SELECTED, items: items.map( parseInt ) } );
 export const setAllSelected = onoff => ( { type: TAXRATES_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getTaxrates( table );
+export const setTable = table => getItems( table );
 export const setDisplay = ( displayType, displaySelected ) => ( { type: TAXRATES_DISPLAY_SET, displayType, displaySelected } );

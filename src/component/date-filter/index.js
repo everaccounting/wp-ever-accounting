@@ -11,7 +11,6 @@ export default class DateFilter extends Component {
 	static propTypes = {
 		startDate: PropTypes.object,
 		endDate: PropTypes.object,
-		ranges: PropTypes.object,
 		value: PropTypes.string,
 		className: PropTypes.string,
 		onChange: PropTypes.func,

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
@@ -8,11 +8,14 @@ import {
 	TextControl,
 	ReactSelect,
 	ToggleControl,
-	Icon
+	Form,
+	Icon,
+	Button
 } from '@eaccounting/components';
 import {includes} from 'lodash';
 import {createCategory, updateCategory} from 'state/categories/action'
 import {initialCategory} from 'state/categories/selection';
+
 const Types = [
 	{
 		label: __('Expense'),
@@ -48,100 +51,81 @@ class EditCategory extends Component {
 		const {name, type, enabled = true} = props.item;
 		this.state = {
 			name,
-			type,
 			enabled,
 			isSaving: false,
 		};
-		this.ref = React.createRef();
 	}
 
-	reset = () => {
-		this.setState( {
-			... initialCategory,
-		} );
-	};
-
-	onSubmit = ev => {
-		ev.preventDefault();
-		const {
-			name,
-			type,
-			enabled
-		} = this.state;
-
-		if (name === '' || type === '') {
-			this.setState({isSaving: false});
-			notify(__('One or more required value missing, please correct & submit again'), 'error');
-			return false;
+	validate = values => {
+		const errors = {};
+		console.log(values);
+		console.log(values.type);
+		if (!values.name) {
+			errors.name = __('Name is required');
 		}
 
-		const item = {
-			id: parseInt(this.props.item.id, 10),
-			name,
-			type:type.value,
-			status: (enabled === true) ? 'active' : 'inactive'
-		};
+		if (('object' !== typeof values.type) || !values.type.length) {
+			errors.type = __('Type is required');
+		}
+		return errors;
+	};
 
-		if (item.id) {
-			this.props.onSave(item.id, item);
+	onSubmit = data => {
+		const item = {...data, type: data.type.value, status: data.enabled ? 'active' : 'inactive', enabled: undefined};
+		const {id = null} = this.props.item;
+		if (id) {
+			this.props.onSave(id, item);
 		} else {
 			this.props.onCreate(item);
 		}
 
-		this.props.onClose ? this.props.onClose(ev) : () => {
+		this.props.onClose ? this.props.onClose(data) : () => {
 		};
-
-		if (this.props.childSave) {
-			this.props.childSave();
-		}
 
 	};
 
 	render() {
-		const {tittle = __('Add Category'), buttonTittle = __('Save'), onClose} = this.props;
-		const {
-			name,
-			type = {},
-			enabled,
-			isSaving
-		} = this.state;
-
+		const {tittle = __('Add Category'), buttonTittle = __('Submit'), onClose} = this.props;
+		const {isSaving} = this.state;
+		const {name, type, enabled = true} = this.props.item;
 		const categoryType = Types.filter((filter, index) => {
 			return includes(type, filter.value) === true;
 		});
+		const props = {
+			name,
+			type: categoryType,
+			enabled
+		};
 
 		return (
-			<form onSubmit={this.onSave} ref={this.ref}>
-				<Modal title={tittle} onRequestClose={onClose}>
-					<form onSubmit={this.onSubmit}>
+			<Modal title={tittle} onRequestClose={onClose}>
+				<Form validate={this.validate} onSubmitCallback={this.onSubmit} initialValues={props}>
+					{({getInputProps, values, errors, handleSubmit}) => (
+						<Fragment>
 
-						<TextControl label={__('Category Name')}
-									 value={name}
-									 before={<Icon icon='id-card-o'/>}
-									 required
-									 onChange={(name) => {
-										 this.setState({name})
-									 }}/>
+							<TextControl label={__('Category Name')}
+										 before={<Icon icon='id-card-o'/>}
+										 required
+										 {...getInputProps('name')}/>
 
-						<ReactSelect label={__('Category Type')}
-									 value={categoryType}
-									 before={<Icon icon='bars'/>}
-									 options={Types}
-									 required
-									 onChange={(type) => {
-										 this.setState({type})
-									 }}/>
-						<ToggleControl label={__('Enabled')}
-									   checked={enabled}
-									   onChange={() => {
-										   this.setState({enabled: !this.state.enabled})
-									   }}/>
-						{this.props.children && this.props.children}
-						<input className="button-primary" type="submit" name="add" value={buttonTittle}
-							   disabled={isSaving || name === '' || !type.hasOwnProperty('value')}/>
-					</form>
-				</Modal>
-			</form>
+							<ReactSelect label={__('Category Type')}
+										 before={<Icon icon='bars'/>}
+										 options={Types}
+										 required
+										 {...getInputProps('type')}/>
+							<ToggleControl
+								label={__('Enabled')}
+								{...getInputProps('enabled')}/>
+							<Button isPrimary
+									isBusy={isSaving}
+									onClick={handleSubmit}
+									disabled={Object.keys(errors).length}>
+								{buttonTittle}
+							</Button>
+						</Fragment>
+					)}
+				</Form>
+			</Modal>
 		)
 	}
 }

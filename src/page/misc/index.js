@@ -17,11 +17,11 @@ import TaxRates from "./components/taxrates";
 
 
 const getTabs = [
-	{
-		path: '/misc',
-		component: Categories,
-		name: __('Categories'),
-	},
+	// {
+	// 	path: '/misc',
+	// 	component: Categories,
+	// 	name: __('Categories'),
+	// },
 	{
 		path: '/misc/currencies',
 		component: Currencies,
@@ -30,7 +30,7 @@ const getTabs = [
 	{
 		path: '/misc/taxrates',
 		component: TaxRates,
-		name: __('TaxRates'),
+		name: __('Tax Rates'),
 	}
 ];
 export default class Misc extends Component {

@@ -53,7 +53,7 @@ export default class AsyncSelect extends Component {
 
 	render() {
 		const {label, help, className, before, after, required,loadOptions, ...props} = this.props;
-		const classes = classnames('ea-form-group', 'ea-rs-field async', className, {
+		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
 			required: !!required,
 		});
 		const id = Math.random().toString(36).substring(7);

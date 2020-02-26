@@ -174,17 +174,25 @@ export const getApi = request => {
 					throw {message: 'Failed to get data', code: 'json-zero'};
 				}
 
-				let total = parseInt(headers.get('x-wp-total'), 10);
-				if(null === headers.get('x-wp-total') || undefined === headers.get('x-wp-total')){
-					total = data.length?data.length:0 ;
-				}
-
-				return {
+				const response = {
 					items:data,
-					total:total,
-					//total_page: parseInt(headers.get('x-wp-totalpages'), 10),
+					total:undefined,
 					headers
 				};
+
+				let total = parseInt(headers.get('x-wp-total'), 10);
+				if(!isNaN(total)){
+					response.total = total;
+				}
+				return response;
+
+				// return {
+				// 	items:data,
+				// 	total: parseInt(headers.get('x-wp-total'), 10),
+				// 	total_page: parseInt(headers.get('x-wp-totalpages'), 10),
+				// 	headers
+				// };
+
 			} catch (error) {
 				error.request = request;
 				error.code = error.code || error.name;
@@ -256,7 +264,7 @@ export const eAccountingApi = {
 		create: ( data ) => postApiRequest( 'taxrates/', data ),
 		update: ( id, data ) => postApiRequest( 'taxrates/' + id, data ),
 		list: params => getApiRequest('taxrates', params),
-		bulk: ( action, data, table ) => postApiRequest( 'bulk' + action, data, table ),
+		bulk: ( action, data, table ) => postApiRequest( 'taxrates/bulk', data, table ),
 	},
 	transactions: {
 		get: (id, data = {}) => getApiRequest('transactions/' + id, data),
