@@ -21,6 +21,7 @@ export const createRequest = (endpoint, params = {}, data = {}, config = {}) => 
 		url: 'ea/v1/' + endpoint + (endpoint.indexOf('?') === -1 ? '?' : '&') + qs.stringify(query),
 		method: 'GET',
 		credentials: 'same-origin',
+		data,
 		headers: {
 			'X-WP-Nonce': eAccountingi10n.api.WP_API_nonce,
 			'x-wp-nonce': eAccountingi10n.api.WP_API_nonce,
@@ -43,11 +44,11 @@ export const getApiRequest = (endpoint, params) => {
 /**
  * prepare post request
  * @param endpoint
- * @param params
  * @param data
+ * @param params
  * @returns {AxiosInstance}
  */
-export const postApiRequest = (endpoint, params = {}, data = {}) => {
+export const postApiRequest = (endpoint, data = {}, params = {}) => {
 	return createRequest(endpoint, params, data, {method: 'POST'})
 };
 
@@ -76,6 +77,41 @@ export const apiUploadRequest = (endpoint, file, params = {}) => {
 	data.append('file', file);
 };
 
+/**
+ * get error message
+ *
+ * @param response
+ * @returns {string|*}
+ */
+const getErrorMessage = (response) => {
+	if(response.data && response.data.message){
+		return response.data.message;
+	}
+
+	if(response.statusText){
+		return response.statusText;
+	}
+
+	return 'No data or status object returned in request';
+};
+
+/**
+ * get error code
+ *
+ * @param response
+ * @returns {string}
+ */
+const getErrorCode = (response) => {
+	if(response.data && response.data.code){
+		return response.data.code;
+	}
+
+	if(response.status){
+		return response.status;
+	}
+
+	return 'unknown';
+};
 
 /**
  * Main api request wrapper;
@@ -84,9 +120,13 @@ export const apiUploadRequest = (endpoint, file, params = {}) => {
  */
 export const apiRequest = (request) => {
 	axios.interceptors.response.use(function (response) {
-		response.total = response.headers['x-wp-total'] && parseInt(response.headers['x-wp-total'], 10) || undefined;
+		response.total = response.headers && response.headers['x-wp-total'] ?  parseInt(response.headers['x-wp-total'], 10) : undefined;
 		return response;
 	}, function (error) {
+		const response = error.response;
+		error.message = getErrorMessage(response);
+		error.code = getErrorCode(response);
+
 		return Promise.reject(error);
 	});
 	return axios.request(request);
@@ -128,7 +168,7 @@ export const eAccountingApi = {
 	},
 	categories: {
 		get: (id, data = {}) => getApiRequest('categories' + id, data),
-		create: (data) => postApiRequest('categories', data),
+		create: data => postApiRequest('categories', data),
 		update: (id, data) => postApiRequest('categories/' + id, data),
 		list: params => getApiRequest('categories', params),
 		bulk: (action, data, table) => postApiRequest('categories/bulk', data, table),

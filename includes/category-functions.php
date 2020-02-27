@@ -12,7 +12,7 @@ function eaccounting_get_category_types() {
 	$types = array(
 		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 		'income'  => __( 'Income', 'wp-ever-accounting' ),
-//		'product' => __( 'Product', 'wp-ever-accounting' ),
+		'product' => __( 'Product', 'wp-ever-accounting' ),
 		'other'   => __( 'Other', 'wp-ever-accounting' ),
 	);
 
@@ -50,7 +50,6 @@ function eaccounting_insert_category( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'type'       => ! isset( $args['type'] ) ? '' : sanitize_text_field( $args['type'] ),
 		'color'      => ! isset( $args['color'] ) ? eaccounting_get_random_hex_color() : sanitize_hex_color( $args['color'] ),
-		'status'     => !empty($args['status']) &&  'active' == $args['status'] ? 'active' : 'inactive',
 		'updated_at' => date( 'Y-m-d H:i:s' ),
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -63,8 +62,8 @@ function eaccounting_insert_category( $args ) {
 		return new WP_Error( 'empty_content', __( 'Category type is required', 'wp-ever-accounting' ) );
 	}
 
-	$name_exist = eaccounting_get_category($data['name'], 'name');
-	if($name_exist && $name_exist->id != $id){
+	$name_exist = eaccounting_get_category( $data['name'], 'name' );
+	if ( $name_exist && $name_exist->id != $id ) {
 		return new WP_Error( 'invalid_name', __( 'Category name already exist', 'wp-ever-accounting' ) );
 	}
 
@@ -97,6 +96,7 @@ function eaccounting_insert_category( $args ) {
 /**
  * Get Category
  * since 1.0.0
+ *
  * @param $id
  * @param string $by
  *
@@ -167,10 +167,9 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 	$default = array(
 		'include'        => array(),
 		'exclude'        => array(),
-		'status'         => '',
 		'type'           => '',
 		'search'         => '',
-		'orderby'        => 'id',
+		'orderby'        => 'name',
 		'order'          => 'DESC',
 		'fields'         => 'all',
 		'search_columns' => array( 'name', 'type' ),
@@ -190,7 +189,8 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 
 	//type
 	if ( ! empty( $args['type'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_categories.type= %s", sanitize_key( $args['type'] ) );
+		$types       = implode( "','", wp_parse_list( $args['type'] ) );
+		$query_where .= " AND $wpdb->ea_categories.type IN( '$types' ) ";
 	}
 
 	//fields
@@ -268,17 +268,19 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 
 	return $wpdb->get_col( $request );
 }
-function eaccounting_category_export(){
-	if(! current_user_can( 'manage_options')){
-		wp_die('cheating??');
+
+function eaccounting_category_export() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( 'cheating??' );
 		exit();
 	}
 	global $wpdb;
-	$categories = $wpdb->get_results("SELECT name, type, status from $wpdb->ea_categories order by id", ARRAY_N);
-	$data = array_merge( array(array('name', 'type', 'status')), $categories);
-	$exporter = new EAccounting_CSV_Writer( $data );
-	$exporter->headers( sprintf( 'eaccounting-categories-%s', date( 'dmyhis')));
+	$categories = $wpdb->get_results( "SELECT name, type, status from $wpdb->ea_categories order by id", ARRAY_N );
+	$data       = array_merge( array( array( 'name', 'type', 'status' ) ), $categories );
+	$exporter   = new EAccounting_CSV_Writer( $data );
+	$exporter->headers( sprintf( 'eaccounting-categories-%s', date( 'dmyhis' ) ) );
 	$exporter->output();
 	exit();
 }
-add_action('eaccounting_admin_get_category-export', 'eaccounting_category_export');
+
+add_action( 'eaccounting_admin_get_category-export', 'eaccounting_category_export' );

@@ -98,6 +98,15 @@ class Currencies extends Component {
 						  onAction={this.props.onAction} status={status} bulk={getBulk()}>
 					<BulkAction/>
 
+					<SelectControl
+						className={'alignleft actions'}
+						placeholder={__('Select Type')}
+						options={taxTypes}
+						isMulti
+						value={typeFilter}
+						onChange={this.onFilterType}
+					/>
+
 				</TableNav>
 
 				<Table

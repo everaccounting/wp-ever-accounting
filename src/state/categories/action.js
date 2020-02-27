@@ -6,7 +6,7 @@
 /**
  * Internal dependencies
  */
-import {getItems as loadItems} from "lib/store";
+import {getItems, updateItem, bulkAction} from "lib/store";
 import {eAccountingApi} from "lib/api";
 
 import {
@@ -26,7 +26,6 @@ const STATUS_CATEGORIES_ITEM = {
 	saving: CATEGORIES_ITEM_SAVING,
 	saved: CATEGORIES_ITEM_SAVED,
 	failed: CATEGORIES_ITEM_FAILED,
-	added: CATEGORIES_ITEM_ADDED,
 	order: 'name',
 };
 const STATUS_CATEGORY = {
@@ -36,12 +35,14 @@ const STATUS_CATEGORY = {
 	failed: CATEGORIES_FAILED,
 	order: 'name',
 };
+export const setCreateItem = item => ({type: CATEGORIES_ITEM_ADDED, item});
+export const setUpdateItem = (id, item) => (dispatch, getState) => updateItem(eAccountingApi.categories.update, id, item, STATUS_CATEGORIES_ITEM, dispatch, getState().categories);
+export const setGetItems = args => (dispatch, getState) => getItems(eAccountingApi.categories.list, dispatch, STATUS_CATEGORY, args, getState().categories);
+export const setOrderBy = (orderby, order) => setGetItems({orderby, order});
+export const setPage = page => setGetItems({page});
+export const setFilter = (filterBy) => setGetItems({filterBy, orderby: '', page: 1});
+export const setSearch = (search) => setGetItems({search, orderby: '', page: 1});
+export const setSelected = items => ({type: CATEGORIES_SET_SELECTED, items: items.map(parseInt)});
+export const setAllSelected = onoff => ({type: CATEGORIES_SET_ALL_SELECTED, onoff});
+export const setBulkAction = (action, ids ) =>  (dispatch, getState) => bulkAction(eAccountingApi.categories.bulk, action, ids, STATUS_CATEGORY, dispatch, getState().categories);
 
-export const getItems = args => ( dispatch, getState ) => loadItems( eAccountingApi.categories.list, dispatch, STATUS_CATEGORY, args, getState().categories );
-export const setOrderBy = ( orderby, order ) => getItems( { orderby, order } );
-export const setPage = page => getItems( { page } );
-export const setFilter = ( filterBy ) => getItems( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getItems( { search, orderby: '', page: 0 } );
-export const setSelected = items => ( { type: CATEGORIES_SET_SELECTED, items: items.map( parseInt ) } );
-export const setAllSelected = onoff => ( { type: CATEGORIES_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getItems( table );

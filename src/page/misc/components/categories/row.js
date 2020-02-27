@@ -1,12 +1,12 @@
 import {Component, Fragment} from "react";
 import PropTypes from "prop-types";
 
-import {setSelected, performTableAction, updateCategory} from 'state/categories/action';
+import {setSelected, setBulkAction, setUpdateItem} from 'state/categories/action';
 import RowActions from 'component/table/row-action';
 import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
 import Column from 'component/table/column';
 import {translate as __} from 'lib/locale';
-// import EditCategory from "component/edit-category";
+import EditCategory from "component/edit-category";
 import {connect} from "react-redux";
 import Spinner from "component/spinner";
 
@@ -17,7 +17,9 @@ class Row extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			editing: false
+		};
 	}
 
 	renderActions(saving) {
@@ -30,16 +32,10 @@ class Row extends Component {
 
 
 	getActions() {
-		const {id, enabled} = this.props.item;
+		const {id} = this.props.item;
 		const actions = [];
 		actions.push([__('Edit'), this.onEdit]);
 		actions.push([__('Delete'), this.onDelete]);
-		if (enabled) {
-			actions.push([__('Disable'), this.onDisable]);
-		} else {
-			actions.push([__('Enable'), this.onEnable]);
-		}
-
 		return actions
 			.map((item, pos) => <a key={pos} href={item[2] ? item[2] : '#'} onClick={item[1]}>{item[0]}</a>)
 			.reduce((prev, curr) => [prev, ' | ', curr]);
@@ -74,7 +70,8 @@ class Row extends Component {
 	};
 
 	render() {
-		const {id, name, type, enabled} = this.props.item;
+		const {id, name, type, color} = this.props.item;
+		const {editing} = this.state;
 		const {status, selected} = this.props;
 		const isLoading = status === STATUS_IN_PROGRESS;
 		const isSaving = status === STATUS_SAVING;
@@ -87,6 +84,13 @@ class Row extends Component {
 					<input type="checkbox" name="item[]" value={id} disabled={isLoading} checked={selected}
 						   onChange={this.onSelected}/>}
 					{isSaving && <Spinner size="small"/>}
+
+					{editing && <EditCategory
+						item={this.props.item}
+						onClose={this.onClose}
+						buttonTittle={__('Update')}
+						tittle={__('Update Category')}/>}
+
 				</th>
 
 				<Column className="column-primary column-name">
@@ -94,8 +98,12 @@ class Row extends Component {
 					{this.renderActions(isSaving)}
 				</Column>
 
-				<Column className="column-type">
+				<Column className="column-type ea-capitalize">
 					{type}
+				</Column>
+
+				<Column className="column-type">
+					<span style={{color:color}} className='fa fa-2x fa-circle'/>
 				</Column>
 			</tr>
 		)
@@ -109,10 +117,10 @@ function mapDispatchToProps(dispatch) {
 			dispatch(setSelected(items));
 		},
 		onSaveCategory: (id, item) => {
-			dispatch(updateCategory(id, item));
+			dispatch(setUpdateItem(id, item));
 		},
 		onTableAction: (action, ids) => {
-			dispatch(performTableAction(action, ids));
+			dispatch(setBulkAction(action, ids));
 		},
 	};
 }

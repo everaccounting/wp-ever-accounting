@@ -6,17 +6,16 @@ import notify from "lib/notify";
 import {
 	Modal,
 	TextControl,
-	ReactSelect,
-	ToggleControl,
-	Form,
+	SelectControl,
 	Icon,
 	Button
 } from '@eaccounting/components';
-import {includes} from 'lodash';
-import {createCategory, updateCategory} from 'state/categories/action'
-import {initialCategory} from 'state/categories/selection';
+import {find} from 'lodash';
+import {setCreateItem, setUpdateItem} from 'state/categories/action'
+import {apiRequest, eAccountingApi} from "lib/api";
+import {ColorPicker, Popover} from '@wordpress/components';
 
-const Types = [
+const categoryTypes = [
 	{
 		label: __('Expense'),
 		value: 'expense',
@@ -35,6 +34,12 @@ const Types = [
 	}
 ];
 
+const initial = {
+	id: 0,
+	name: '',
+	color: '',
+	type: undefined
+};
 
 class EditCategory extends Component {
 	static propTypes = {
@@ -46,85 +51,116 @@ class EditCategory extends Component {
 		callback: PropTypes.func,
 	};
 
+	static defaultProps = {
+		item: {},
+	};
+
 	constructor(props) {
 		super(props);
-		const {name, type, enabled = true} = props.item;
+
 		this.state = {
-			name,
-			enabled,
+			...initial,
+			...props.item,
+			type: find(categoryTypes, {value: (props.item.type || 'income')}),
 			isSaving: false,
 		};
 	}
 
-	validate = values => {
-		const errors = {};
-		console.log(values);
-		console.log(values.type);
-		if (!values.name) {
-			errors.name = __('Name is required');
-		}
-
-		if (('object' !== typeof values.type) || !values.type.length) {
-			errors.type = __('Type is required');
-		}
-		return errors;
+	reset = () => {
+		this.setState({
+			...initial,
+			colorPickerOpen: false,
+		});
 	};
 
-	onSubmit = data => {
-		const item = {...data, type: data.type.value, status: data.enabled ? 'active' : 'inactive', enabled: undefined};
-		const {id = null} = this.props.item;
-		if (id) {
-			this.props.onSave(id, item);
-		} else {
-			this.props.onCreate(item);
-		}
 
-		this.props.onClose ? this.props.onClose(data) : () => {
+	onSubmit = ev => {
+		ev.preventDefault();
+		const {id, name, type = {}, color} = this.state;
+		this.setState({isSaving: true});
+
+		const item = {
+			id: parseInt(id, 10),
+			name,
+			color,
+			type: type.value
 		};
 
+		if (item.id) {
+			this.props.onSave(item.id, item);
+			return this.props.onClose(ev);
+		}
+		apiRequest(eAccountingApi.categories.create({...item, type: type.value})).then(res => {
+			notify(__('Category created successfully'));
+			this.props.onCreate(res.data);
+			this.setState({isSaving: false});
+			this.props.onClose(ev);
+		}).catch(error => {
+			this.setState({isSaving: false});
+			notify(error.message, 'error');
+		})
+	};
+
+	onSetColor = (color) => {
+		this.setState({
+			color: color.hex,
+			colorPickerOpen: false,
+		})
+	};
+
+	colorInput = () => {
+		const {color, colorPickerOpen} = this.state;
+		return (<Fragment>
+			<span className="ea-color-preview" style={{backgroundColor: color}}/>
+		</Fragment>)
 	};
 
 	render() {
 		const {tittle = __('Add Category'), buttonTittle = __('Submit'), onClose} = this.props;
-		const {isSaving} = this.state;
-		const {name, type, enabled = true} = this.props.item;
-		const categoryType = Types.filter((filter, index) => {
-			return includes(type, filter.value) === true;
-		});
-		const props = {
-			name,
-			type: categoryType,
-			enabled
-		};
+		const {name, type, color,colorPickerOpen, isSaving} = this.state;
 
 		return (
 			<Modal title={tittle} onRequestClose={onClose}>
-				<Form validate={this.validate} onSubmitCallback={this.onSubmit} initialValues={props}>
-					{({getInputProps, values, errors, handleSubmit}) => (
-						<Fragment>
+				<form onSubmit={this.onSubmit}>
+					<TextControl label={__('Category Name')}
+								 before={<Icon icon='id-card-o'/>}
+								 value={name}
+								 required
+								 onChange={(name) => {
+									 this.setState({name})
+								 }}/>
 
-							<TextControl label={__('Category Name')}
-										 before={<Icon icon='id-card-o'/>}
-										 required
-										 {...getInputProps('name')}/>
+					<SelectControl label={__('Category Type')}
+								   before={<Icon icon='bars'/>}
+								   options={categoryTypes}
+								   value={type}
+								   required
+								   onChange={(type) => {
+									   this.setState({type})
+								   }}/>
 
-							<ReactSelect label={__('Category Type')}
-										 before={<Icon icon='bars'/>}
-										 options={Types}
-										 required
-										 {...getInputProps('type')}/>
-							<ToggleControl
-								label={__('Enabled')}
-								{...getInputProps('enabled')}/>
-							<Button isPrimary
-									isBusy={isSaving}
-									onClick={handleSubmit}
-									disabled={Object.keys(errors).length}>
-								{buttonTittle}
-							</Button>
-						</Fragment>
-					)}
-				</Form>
+					<TextControl label={__('Color')}
+								 value={color}
+								 before={this.colorInput()}
+								 className={'ea-color-picker'}
+								 onClick={()=>{this.setState({colorPickerOpen: !this.state.colorPickerOpen})}}
+								 onChange={()=>{}}/>
+					{colorPickerOpen && <Popover
+						poistion="middle-right"
+						className="ea-modal-color-picker" style={{position:'initial'}}>
+						<ColorPicker
+							color={color}
+							onChangeComplete={this.onSetColor}
+							disableAlpha
+						/>
+					</Popover>}
+
+					<Button isPrimary
+							isBusy={isSaving}
+							onClick={this.onSubmit}>
+						{buttonTittle}
+					</Button>
+				</form>
 			</Modal>
 		)
 	}
@@ -133,10 +169,10 @@ class EditCategory extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSave: (id, item) => {
-			dispatch(updateCategory(id, item));
+			dispatch(setUpdateItem(id, item));
 		},
 		onCreate: item => {
-			dispatch(createCategory(item));
+			dispatch(setCreateItem(item));
 		}
 	};
 }

@@ -18,6 +18,11 @@ export const getHeaders = () => [
 		name: 'type',
 		title: __('Type'),
 		sortable: true,
+	},
+	{
+		name: 'color',
+		title: __('Color'),
+		sortable: true,
 	}
 ];
 

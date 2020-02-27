@@ -95,6 +95,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 			'include'  => $request['include'],
 			'exclude'  => $request['exclude'],
 			'search'   => $request['search'],
+			'type'     => $request['type'],
 			'orderby'  => $request['orderby'],
 			'order'    => $request['order'],
 			'per_page' => $request['per_page'],
@@ -243,8 +244,6 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 	public function handle_bulk_actions( $request ) {
 		$actions = [
 			'delete',
-			'enable',
-			'disable'
 		];
 		$action  = $request['action'];
 		$items   = $request['items'];
@@ -256,22 +255,6 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 			case 'delete':
 				foreach ( $items as $item ) {
 					eaccounting_delete_category( $item );
-				}
-				break;
-			case 'enable':
-				foreach ( $items as $item ) {
-					eaccounting_insert_category( [
-						'id'     => $item,
-						'status' => 'active'
-					] );
-				}
-				break;
-			case 'disable':
-				foreach ( $items as $item ) {
-					eaccounting_insert_category( [
-						'id'     => $item,
-						'status' => 'inactive'
-					] );
 				}
 				break;
 		}
@@ -304,10 +287,6 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['color'] ) && isset( $request['color'] ) ) {
 			$prepared_item->color = $request['color'];
 		}
-		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
-			$prepared_item->status = $request['status'];
-		}
-
 		return $prepared_item;
 	}
 
@@ -326,7 +305,6 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 			'name'       => $item->name,
 			'type'       => $item->type,
 			'color'      => sanitize_hex_color( $item->color ),
-			'enabled'    => $item->status == 'active',
 			'created_at' => $this->prepare_date_response( $item->created_at ),
 			'updated_at' => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -416,13 +394,6 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => false,
 				),
-				'status'       => array(
-					'description' => __( 'Status of the category.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'enum'        => array( 'active', 'inactive' ),
-
-				),
 				'date_created' => array(
 					'description' => __( 'Created date of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -470,14 +441,6 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 			'description' => __( 'Limit result set to specific search.', 'wp-ever-accounting' ),
 			'type'        => 'string',
 			'default'     => '',
-		);
-
-
-		$params['status'] = array(
-			'description'       => __( 'Limit the result with active or inactive type', 'wp-ever-accounting' ),
-			'default'           => 'all',
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;

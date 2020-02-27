@@ -1,6 +1,7 @@
 import {STATUS_IN_PROGRESS} from 'lib/status';
 import {getDefaultTable} from 'lib/table';
-let table = getDefaultTable( [ 'name', 'type' ], ['type'], 'name');
+import {translate as __} from 'lib/locale';
+let table = getDefaultTable(['name', 'type'], ['type'], 'name');
 
 export function getInitialCategories() {
 	return {
@@ -13,3 +14,22 @@ export function getInitialCategories() {
 		test: 1,
 	};
 }
+
+export const categoryTypes = [
+	{
+		label: __('Expense'),
+		value: 'expense',
+	},
+	{
+		label: __('Income'),
+		value: 'income',
+	},
+	{
+		label: __('Item'),
+		value: 'item',
+	},
+	{
+		label: __('Other'),
+		value: 'other',
+	}
+];

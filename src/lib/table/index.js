@@ -1,5 +1,6 @@
 /* global eAccountingi10n */
 import {getPageUrl} from 'lib/wordpress-url';
+import {xor} from "lodash";
 
 /**
  * Merge table data with params
@@ -109,7 +110,6 @@ export const getDefaultTable = (allowedOrder = [], allowedFilter = [], defaultOr
 export const setTable = (state, action) => (action.table ? {...state.table, ...action.table} : state.table);
 
 
-
 /**
  * Set total from api response
  * @param state
@@ -117,8 +117,25 @@ export const setTable = (state, action) => (action.table ? {...state.table, ...a
  * @returns {number}
  */
 export const setTotal = (state, action) => {
-	return action.total || state.total;
+	return !isNaN(action.total) ? action.total : state.total;
 };
+
+/**
+ * Set item saving
+ * @param state
+ * @param action
+ * @returns {*[]}
+ */
+export const setSaving = (state, action) => [...state.saving, ...action.saving];
+
+/**
+ * Remove from saving
+ * @param state
+ * @param action
+ * @returns {*}
+ */
+export const removeSaving = (state, action) => state.saving.filter(item => action.saving.indexOf(item) === -1);
+
 
 /**
  * Clear selected values
@@ -126,7 +143,7 @@ export const setTotal = (state, action) => {
  * @returns {any}
  */
 export const clearSelected = state => {
-	return Object.assign( {}, state, { selected: [] } );
+	return Object.assign({}, state, {selected: []});
 };
 
 
@@ -144,10 +161,37 @@ export const setTableAllSelected = (table, rows, onoff) => ({
 
 
 /**
- * Setup selected items
- *
+ * Toggle item
  * @param table
- * @param newItems
- * @returns {{selected: (Array|*[])}}
+ * @param ids
+ * @returns {{selected: *}}
  */
-export const setTableSelected = (table, newItems) => ({ ...table, selected: toggleSelected(table.selected, newItems) });
+export const setTableSelected = (table, ids) => ({...table, selected: xor(table.selected, ids)});
+
+/**
+ * Set updated items
+ * @param rows
+ * @param action
+ * @returns {*}
+ */
+export const setUpdatedItem = (rows, action) => rows.map(row => (parseInt(row.id, 10) === parseInt(action.item.id, 10) ? {...row, ...action.item} : row));
+
+/**
+ * Set deleted Item
+ * @param rows
+ * @param item
+ * @returns {*}
+ */
+export const setDeletedItem = (rows, item) => rows.filter(obj => obj.id !== item.id);
+
+/**
+ *
+ * @param options
+ * @param value
+ * @returns {*[]}
+ */
+export const getSelectedOptions = (options = [], value = []) => {
+	return options.filter((filter) => {
+		return value.includes(filter.value) === true;
+	})
+};

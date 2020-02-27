@@ -155,7 +155,6 @@ class EAccounting_Install {
   		  	`name` VARCHAR(191) NOT NULL,
 		  	`type` VARCHAR(50) NOT NULL,
 		  	`color` VARCHAR(20) NOT NULL,
-		    `status` ENUM ('active', 'inactive') DEFAULT 'active',
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
