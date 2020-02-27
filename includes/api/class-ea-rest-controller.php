@@ -11,7 +11,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	public function get_items_permissions_check( $request ) {
-		//return current_user_can('manage_options');
+		return current_user_can('manage_options');
 		return true;
 	}
 

@@ -9,5 +9,7 @@ export function getInitialCategories() {
 		total: 0,
 		status: STATUS_IN_PROGRESS,
 		table: table,
+		undefined: undefined,
+		test: 1,
 	};
 }

@@ -17,11 +17,11 @@ import TaxRates from "./components/taxrates";
 
 
 const getTabs = [
-	// {
-	// 	path: '/misc',
-	// 	component: Categories,
-	// 	name: __('Categories'),
-	// },
+	{
+		path: '/misc',
+		component: Categories,
+		name: __('Categories'),
+	},
 	{
 		path: '/misc/currencies',
 		component: Currencies,

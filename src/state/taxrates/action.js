@@ -42,4 +42,3 @@ export const setSearch = ( search ) => getItems( { search, orderby: '', page: 0 
 export const setSelected = items => ( { type: TAXRATES_SET_SELECTED, items: items.map( parseInt ) } );
 export const setAllSelected = onoff => ( { type: TAXRATES_SET_ALL_SELECTED, onoff } );
 export const setTable = table => getItems( table );
-export const setDisplay = ( displayType, displaySelected ) => ( { type: TAXRATES_DISPLAY_SET, displayType, displaySelected } );

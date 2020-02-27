@@ -29,15 +29,10 @@ class Row extends Component {
 	}
 
 	getActions() {
-		const {id, enabled} = this.props.item;
+		const {id} = this.props.item;
 		const actions = [];
 		actions.push([__('Edit'), this.onEdit]);
 		actions.push([__('Delete'), this.onDelete]);
-		if (enabled) {
-			actions.push([__('Disable'), this.onDisable]);
-		} else {
-			actions.push([__('Enable'), this.onEnable]);
-		}
 
 		return actions
 			.map((item, pos) => <a key={pos} href={item[2] ? item[2] : '#'} onClick={item[1]}>{item[0]}</a>)
@@ -53,17 +48,6 @@ class Row extends Component {
 		ev.preventDefault();
 		this.props.onTableAction('delete', this.props.item.id);
 	};
-
-	onDisable = ev => {
-		ev.preventDefault();
-		this.props.onTableAction('disable', this.props.item.id);
-	};
-
-	onEnable = ev => {
-		ev.preventDefault();
-		this.props.onTableAction('enable', this.props.item.id);
-	};
-
 	onSelected = () => {
 		this.props.onSetSelected([this.props.item.id]);
 	};
@@ -73,7 +57,7 @@ class Row extends Component {
 	};
 
 	render() {
-		const {id, name, rate, type, enabled} = this.props.item;
+		const {id, name, rate, type} = this.props.item;
 		const {status, selected} = this.props;
 		const isLoading = status === STATUS_IN_PROGRESS;
 		const isSaving = status === STATUS_SAVING;
@@ -92,6 +76,10 @@ class Row extends Component {
 				<Column className="column-primary column-name">
 					<strong><a href="#" onClick={this.onEdit}>{name}</a></strong>
 					{this.renderActions(isSaving)}
+
+					{this.state.editing &&
+					<EditTaxRate item={this.props.item} tittle={__('Update Item')} buttonTittle={__('Update')}
+								 onClose={this.onClose}/>}
 				</Column>
 
 				<Column className="column-rate">
@@ -100,14 +88,6 @@ class Row extends Component {
 
 				<Column className="column-type ea-capitalize">
 					{type}
-				</Column>
-
-				<Column className="column-status">
-					{enabled ? <span className='ea-item-status enabled'>{__('Enabled')}</span> :
-						<span className='ea-item-status disabled'>{__('Disabled')}</span>}
-					{this.state.editing &&
-					<EditTaxRate item={this.props.item} tittle={__('Update Item')} buttonTittle={__('Update')}
-								 onClose={this.onClose}/>}
 				</Column>
 			</tr>
 		)

@@ -1,48 +1,42 @@
-import {Component, Fragment} from 'react';
-import {translate as __} from 'lib/locale';
-import {connect} from 'react-redux';
-import {map} from 'lodash';
+/**
+ * External dependencies
+ */
+import {Component, Fragment} from "react";
+import {connect} from "react-redux";
 
 /**
  * Internal dependencies
  */
+import {translate as __} from 'lib/locale';
 import {
-	getCategories,
-	createContact,
+	getItems,
+	createItem,
 	setPage,
 	performTableAction,
 	setAllSelected,
 	setOrderBy,
 	setSearch,
 	setFilter,
-	setDisplay
 } from 'state/categories/action';
-import {Button} from "@wordpress/components";
-import {getBulk, getHeaders} from "./constants";
 import Table from 'component/table';
 import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
-import CategoriesRow from "./row";
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
-import {initialCategory} from 'state/categories/selection';
-import EditCategory from "component/edit-category";
-import CategoryImporter from "./importer";
+import Row from "./row";
+import {getHeaders} from "./constants";
+import { STATUS_IN_PROGRESS, STATUS_FAILED, STATUS_COMPLETE } from 'lib/status';
+import {getBulk} from "../currencies/constants";
+
 class Categories extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAdding:false,
-			isImporting:false,
+			isAdding: false,
 		};
 	}
 
-	componentDidCatch(error, info) {
-		this.setState({error: true, stack: error, info});
-	}
-
 	componentDidMount() {
-		this.props.onLoadCategories({});
+		this.props.onMount();
 	}
 
 	onRenderRow = (item, pos, status, search) => {
@@ -50,7 +44,7 @@ class Categories extends Component {
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf( item.id ) !== -1 ? STATUS_SAVING : loadingStatus;
 		return (
-			<CategoriesRow
+			<Row
 				item={item}
 				key={pos}
 				status={rowStatus}
@@ -60,44 +54,22 @@ class Categories extends Component {
 		);
 	};
 
-	onAdd = ev =>{
-		ev.preventDefault();
-		this.setState({isAdding:!this.state.isAdding});
-	};
-
-	onClose = () =>{
-		this.setState({isAdding:!this.state.isAdding});
-	};
-
-	toggleImport = (e) => {
-		e.preventDefault();
-		this.setState({isImporting:!this.state.isImporting});
-	};
 
 	render() {
 		const {status, total, table, rows, saving} = this.props.categories;
-		const {isAdding, isImporting} = this.state;
-		return (
+		const {isAdding,} = this.state;
+
+		return(
 			<Fragment>
+				<TableNav
+					total={total}
+					selected={table.selected}
+					table={table}
+					onChangePage={this.props.onChangePage}
+					onAction={this.props.onAction}
+					status={status}
+					bulk={getBulk()}>
 
-				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Category')}</Button>
-					<Button className="page-title-action" onClick={this.toggleImport}>{__('Import')}</Button>
-					<a href={`${eAccountingi10n.pluginRoot}&eaccounting-action=category-export`}
-					   className="page-title-action" target='_blank'>{__('Export')}</a>
-					{isAdding && <EditCategory item={initialCategory} onClose={this.onClose}/>}
-
-					<SearchBox
-						status={ status }
-						table={ table }
-						onSearch={ this.props.onSearch }
-					/>
-				</div>
-
-				{isImporting && <CategoryImporter onClose={this.toggleImport}/>}
-
-				<TableNav total={total} selected={table.selected} table={table} onChangePage={this.props.onChangePage}
-						  onAction={this.props.onAction} status={status} bulk={getBulk()}>
 					<BulkAction/>
 				</TableNav>
 
@@ -111,17 +83,10 @@ class Categories extends Component {
 					onSetAllSelected={this.props.onSetAllSelected}
 					onSetOrderBy={this.props.onSetOrderBy}
 				/>
-
-				<TableNav
-					total={total}
-					selected={table.selected}
-					table={table}
-					onChangePage={this.props.onChangePage}
-					onAction={this.props.onAction}
-					status={status}/>
 			</Fragment>
 		)
 	}
+
 }
 
 
@@ -134,8 +99,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onLoadCategories: () => {
-			dispatch(getCategories());
+		onMount: () => {
+			dispatch(getItems());
 		},
 		onChangePage: page => {
 			dispatch(setPage(page));
@@ -156,14 +121,10 @@ function mapDispatchToProps(dispatch) {
 			dispatch(setSearch(search));
 		},
 		onCreate: item => {
-			dispatch(createContact(item));
-		},
-		onSetDisplay: (displayType, displaySelected) => {
-			dispatch(setDisplay(displayType, displaySelected));
+			//dispatch(createItem(item));
 		},
 	}
 }
-
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,

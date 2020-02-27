@@ -44,7 +44,6 @@ function eaccounting_insert_tax( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'rate'       => ! isset( $args['rate'] ) ? '' : (float) $args['rate'],
 		'type'       => ! isset( $args['type'] ) ? '' : sanitize_text_field( $args['type'] ),
-		'status'     => ! isset( $args['status'] ) ? 'inactive' : sanitize_key( $args['status'] ),
 		'updated_at' => current_time( 'mysql' ),
 		'created_at' => empty( $args['created_at'] ) ? current_time( 'mysql' ) : $args['created_at'],
 	);
@@ -151,7 +150,6 @@ function eaccounting_get_taxes( $args = array(), $count = false ) {
 	$default = array(
 		'include'        => array(),
 		'exclude'        => array(),
-		'status'         => '',
 		'search'         => '',
 		'orderby'        => 'id',
 		'order'          => 'DESC',
@@ -165,11 +163,6 @@ function eaccounting_get_taxes( $args = array(), $count = false ) {
 	$args        = wp_parse_args( $args, $default );
 	$query_from  = "FROM $wpdb->ea_taxes";
 	$query_where = 'WHERE 1=1';
-
-	//status
-	if ( ! empty( $args['status'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_taxes.status= %s", sanitize_key( $args['status'] ) );
-	}
 
 	//type
 	if ( ! empty( $args['type'] ) ) {

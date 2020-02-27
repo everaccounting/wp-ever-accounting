@@ -6,11 +6,11 @@ import RowActions from 'component/table/row-action';
 import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
 import Column from 'component/table/column';
 import {translate as __} from 'lib/locale';
-import EditCategory from "component/edit-category";
+// import EditCategory from "component/edit-category";
 import {connect} from "react-redux";
 import Spinner from "component/spinner";
 
-class CategoriesRow extends Component {
+class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
 	};
@@ -97,15 +97,6 @@ class CategoriesRow extends Component {
 				<Column className="column-type">
 					{type}
 				</Column>
-
-				<Column className="column-status">
-					{enabled ? <span className='ea-item-status enabled'>{__('Enabled')}</span> :
-						<span className='ea-item-status disabled'>{__('Disabled')}</span>}
-					{this.state.editing &&
-					<EditCategory item={this.props.item} tittle={__('Update Category')} buttonTittle={__('Update')}
-								  onClose={this.onClose}/>}
-				</Column>
-
 			</tr>
 		)
 
@@ -129,4 +120,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	null,
 	mapDispatchToProps,
-)(CategoriesRow);
+)(Row);

@@ -247,9 +247,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 	 */
 	public function handle_bulk_actions( $request ) {
 		$actions = [
-			'delete',
-			'enable',
-			'disable'
+			'delete'
 		];
 		$action  = $request['action'];
 		$items   = $request['items'];
@@ -261,22 +259,6 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 			case 'delete':
 				foreach ( $items as $item ) {
 					eaccounting_delete_tax( $item );
-				}
-				break;
-			case 'enable':
-				foreach ( $items as $item ) {
-					eaccounting_insert_tax( [
-						'id'     => $item,
-						'status' => 'active'
-					] );
-				}
-				break;
-			case 'disable':
-				foreach ( $items as $item ) {
-					eaccounting_insert_tax( [
-						'id'     => $item,
-						'status' => 'inactive'
-					] );
 				}
 				break;
 		}
@@ -298,9 +280,8 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 		$data = array(
 			'id'         => intval($item->id),
 			'name'       => $item->name,
-			'rate'       => $item->rate,
+			'rate'       => floatval( $item->rate),
 			'type'       => $item->type,
-			'enabled'    => $item->status == 'active',
 			'created_at' => $this->prepare_date_response( $item->created_at ),
 			'updated_at' => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -338,9 +319,6 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 		}
 		if ( ! empty( $schema['properties']['type'] ) && isset( $request['type'] ) ) {
 			$prepared_item->type = $request['type'];
-		}
-		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
-			$prepared_item->status = $request['status'];
 		}
 
 		return $prepared_item;
@@ -420,12 +398,6 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'status'       => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'enum'        => array( 'active', 'inactive' ),
-				),
 				'date_created' => array(
 					'description' => __( 'Created date of the user.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -474,14 +446,6 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 			'type'        => 'string',
 			'default'     => '',
 		);
-
-		$params['status'] = array(
-			'description'       => __( 'Limit the result with active or inactive type', 'wp-ever-accounting' ),
-			'default'           => 'all',
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
-
 		return $query_params;
 	}
 

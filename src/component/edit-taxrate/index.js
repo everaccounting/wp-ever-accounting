@@ -12,7 +12,6 @@ import {
 	Modal,
 	TextControl,
 	SelectControl,
-	ToggleControl,
 	Icon,
 	Button
 } from '@eaccounting/components';
@@ -21,8 +20,7 @@ const initial = {
 	id: undefined,
 	name: '',
 	rate: '',
-	type: undefined,
-	enabled: true
+	type: undefined
 };
 
 const taxTypes = [
@@ -69,7 +67,7 @@ class EditTaxRate extends Component {
 
 	onSubmit = ev => {
 		ev.preventDefault();
-		const {id, name, rate, type = {}, enabled} = this.state;
+		const {id, name, rate, type = {}} = this.state;
 		this.setState({isSaving: true});
 		if (name.trim() === '' || rate.trim() === '' || !Object.keys(type).length) {
 			this.setState({isSaving: false});
@@ -82,8 +80,7 @@ class EditTaxRate extends Component {
 			id: parseInt(id, 10),
 			name,
 			rate,
-			type: type.value,
-			status: (enabled === true) ? 'active' : 'inactive'
+			type: type.value
 		};
 
 		if (item.id) {
@@ -130,13 +127,6 @@ class EditTaxRate extends Component {
 								   onChange={(type) => {
 									   this.setState({type})
 								   }}/>
-
-					<ToggleControl label={__('Enabled')}
-								   checked={enabled}
-								   onChange={() => {
-									   this.setState({enabled: !this.state.enabled})
-								   }}/>
-
 					<Button isPrimary
 							isBusy={isSaving}
 							onClick={this.onSubmit}>

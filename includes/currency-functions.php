@@ -28,18 +28,14 @@ function eaccounting_insert_currency( $args ) {
 	}
 
 	$data = array(
-		'id'                  => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'name'                => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
-		'code'                => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
-		'rate'                => ! isset( $args['rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['rate'] ),
-		'precision'           => ! isset( $args['precision'] ) ? 0 : intval( $args['precision'] ),
-		'symbol'              => ! isset( $args['symbol'] ) ? '' : sanitize_text_field( $args['symbol'] ),
-		'symbol_position'     => isset( $args['symbol_position'] ) && 'before' == $args['symbol_position'] ? 'before' : 'after',
-		'decimal_mark'        => ! isset( $args['decimal_mark'] ) ? '.' : sanitize_text_field( $args['decimal_mark'] ),
-		'thousands_separator' => ! isset( $args['thousands_separator'] ) ? ',' : sanitize_text_field( $args['thousands_separator'] ),
-		'status'              => isset( $args['status'] ) && 'active' == $args['status'] ? 'active' : 'inactive',
-		'updated_at'          => date( 'Y-m-d H:i:s' ),
-		'created_at'          => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
+		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
+		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
+		'code'            => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
+		'rate'            => ! isset( $args['rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['rate'] ),
+		'precision'       => ! isset( $args['precision'] ) ? 0 : intval( $args['precision'] ),
+		'symbol_position' => isset( $args['symbol_position'] ) && 'before' == $args['symbol_position'] ? 'before' : 'after',
+		'updated_at'      => date( 'Y-m-d H:i:s' ),
+		'created_at'      => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 	$required = array(
@@ -49,7 +45,6 @@ function eaccounting_insert_currency( $args ) {
 		'symbol_position'     => __( 'Symbol position', 'wp-ever-accounting' ),
 		'decimal_mark'        => __( 'Decimal mark', 'wp-ever-accounting' ),
 		'thousands_separator' => __( 'Thousands separator', 'wp-ever-accounting' ),
-		'status'              => __( 'Status', 'wp-ever-accounting' ),
 	);
 
 	foreach ( $required as $prop => $label ) {
