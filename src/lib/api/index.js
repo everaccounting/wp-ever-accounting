@@ -164,7 +164,7 @@ export const eAccountingApi = {
 		create: (data) => postApiRequest('currencies/', data),
 		update: (id, data) => postApiRequest('currencies/' + id, data),
 		list: params => getApiRequest('currencies', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+		bulk: (action, data, table) => postApiRequest('currencies/bulk', data, table),
 	},
 	categories: {
 		get: (id, data = {}) => getApiRequest('categories' + id, data),

@@ -1,6 +1,14 @@
 /**
+ * External dependencies
+ */
+
+
+/**
  * Internal dependencies
  */
+import {getItems, updateItem, bulkAction} from "lib/store";
+import {eAccountingApi} from "lib/api";
+
 import {
 	TAXRATES_LOADING,
 	TAXRATES_LOADED,
@@ -10,11 +18,8 @@ import {
 	TAXRATES_ITEM_SAVED,
 	TAXRATES_SET_SELECTED,
 	TAXRATES_SET_ALL_SELECTED,
-	TAXRATES_DISPLAY_SET,
+	TAXRATES_ITEM_ADDED
 } from './type';
-
-import { tableAction, createAction, updateAction, processRequest } from 'lib/store';
-import { eAccountingApi } from 'lib/api';
 
 const STATUS_TAXRATES_ITEM = {
 	store: 'taxrates',
@@ -25,20 +30,19 @@ const STATUS_TAXRATES_ITEM = {
 };
 const STATUS_TAXRATE = {
 	store: 'taxrates',
-	saving: TAXRATES_LOADING,
-	saved: TAXRATES_LOADED,
+	loading: TAXRATES_LOADING,
+	loaded: TAXRATES_LOADED,
 	failed: TAXRATES_FAILED,
 	order: 'name',
 };
+export const setCreateItem = item => ({type: TAXRATES_ITEM_ADDED, item});
+export const setUpdateItem = (id, item) => (dispatch, getState) => updateItem(eAccountingApi.taxrates.update, id, item, STATUS_TAXRATES_ITEM, dispatch, getState().taxrates);
+export const setGetItems = args => (dispatch, getState) => getItems(eAccountingApi.taxrates.list, dispatch, STATUS_TAXRATE, args, getState().taxrates);
+export const setOrderBy = (orderby, order) => setGetItems({orderby, order});
+export const setPage = page => setGetItems({page});
+export const setFilter = (filterBy) => setGetItems({filterBy, orderby: '', page: 1});
+export const setSearch = (search) => setGetItems({search, orderby: '', page: 1});
+export const setSelected = items => ({type: TAXRATES_SET_SELECTED, items: items.map(parseInt)});
+export const setAllSelected = onoff => ({type: TAXRATES_SET_ALL_SELECTED, onoff});
+export const setBulkAction = (action, ids ) =>  (dispatch, getState) => bulkAction(eAccountingApi.taxrates.bulk, action, ids, STATUS_TAXRATE, dispatch, getState().taxrates);
 
-export const createItem = item => createAction( eAccountingApi.taxrates.create, item, STATUS_TAXRATES_ITEM );
-export const updateItem = ( id, item ) => updateAction( eAccountingApi.taxrates.update, id, item, STATUS_TAXRATES_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.taxrates.bulk, action, ids, STATUS_TAXRATES_ITEM );
-export const getItems = args => ( dispatch, getState ) => processRequest( eAccountingApi.taxrates.list, dispatch, STATUS_TAXRATE, args, getState().taxrates );
-export const setOrderBy = ( orderby, order ) => getItems( { orderby, order } );
-export const setPage = page => getItems( { page } );
-export const setFilter = ( filterBy ) => getItems( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getItems( { search, orderby: '', page: 0 } );
-export const setSelected = items => ( { type: TAXRATES_SET_SELECTED, items: items.map( parseInt ) } );
-export const setAllSelected = onoff => ( { type: TAXRATES_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getItems( table );

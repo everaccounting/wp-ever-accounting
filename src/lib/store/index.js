@@ -14,6 +14,7 @@ import {translate as __} from 'lib/locale';
  * @returns {boolean|*}
  */
 export const getItems = (endpoint, dispatch, statuses, params = {}, state = {}, reduxer = s => s) => {
+	console.log(statuses);
 	const {table = {}, rows} = state;
 	const tableData = reduxer(mergeWithTable(table, params));
 	const data = removeDefaults({...table, ...params}, statuses.order);
@@ -33,6 +34,16 @@ export const getItems = (endpoint, dispatch, statuses, params = {}, state = {}, 
 	return dispatch({table: tableData, type: statuses.loading, ...data, saving: []});
 };
 
+/**
+ * Update items
+ * @param endpoint
+ * @param id
+ * @param item
+ * @param statuses
+ * @param dispatch
+ * @param state
+ * @returns {*}
+ */
 export const updateItem = (endpoint, id, item, statuses, dispatch, state) => {
 	const {table} = state;
 	apiRequest(endpoint(id, item))
@@ -46,7 +57,16 @@ export const updateItem = (endpoint, id, item, statuses, dispatch, state) => {
 	return dispatch({type: statuses.saving, table, item, saving: [item.id]});
 };
 
-
+/**
+ * Handle bulk actions
+ * @param endpoint
+ * @param action
+ * @param ids
+ * @param statuses
+ * @param dispatch
+ * @param state
+ * @param extra
+ */
 export const bulkAction = (endpoint, action, ids, statuses, dispatch, state, extra = {}) => {
 	const {table, total} = state;
 	const params = {

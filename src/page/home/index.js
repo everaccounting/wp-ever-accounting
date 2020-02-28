@@ -12,7 +12,7 @@ import {HashRouter as Router, Route, Switch} from 'react-router-dom';
 import './style.scss';
 // import Dashboard from "../dashboard";
 // import Contacts from "../contacts";
-// import Transactions from "../transactions";
+import Transactions from "../transactions";
 // import Banking from "../banking";
 import Misc from "../misc";
 // import Incomes from "../incomes";
@@ -41,7 +41,7 @@ export default class Home extends Component {
 					<Switch>
 						{/*<Route exact path='/' component={Dashboard}/>*/}
 						{/*<Route path='/dashboard' component={Dashboard}/>*/}
-						{/*<Route path='/transactions' component={Transactions}/>*/}
+						<Route path='/transactions' component={Transactions}/>
 						{/*<Route path='/contacts' component={Contacts}/>*/}
 						{/*<Route path='/incomes:tab' component={Incomes}/>*/}
 						{/*<Route path='/incomes' component={Incomes}/>*/}

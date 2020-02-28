@@ -7,7 +7,7 @@ import {getInitialCategories} from 'state/categories/initial';
 // import {getInitialInvoices} from 'state/invoices/intial';
 // import {getInitialPayments} from 'state/payments/intial';
 // import {getInitialRevenues} from 'state/revenues/intial';
-// import {getInitialTransactions} from 'state/transactions/intial';
+import {getInitialTransactions} from 'state/transactions/initial';
 
 export function initialActions(store) {
 	return store;
@@ -24,6 +24,6 @@ export function getInitialState() {
 		// payments: getInitialPayments(),
 		// revenues: getInitialRevenues(),
 		taxrates: getInitialTaxRates(),
-		// transactions: getInitialTransactions(),
+		transactions: getInitialTransactions(),
 	};
 }

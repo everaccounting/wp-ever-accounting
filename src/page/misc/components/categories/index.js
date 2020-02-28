@@ -4,10 +4,15 @@
 import {Component, Fragment} from "react";
 import {connect} from "react-redux";
 import {map} from 'lodash';
+
 /**
  * Internal dependencies
  */
 import {translate as __} from 'lib/locale';
+import {getSelectedOptions} from "lib/table";
+import {categoryTypes} from 'state/categories/initial';
+import EditCategory from "component/edit-category";
+import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'lib/status';
 import {
 	setGetItems,
 	setPage,
@@ -17,18 +22,9 @@ import {
 	setSearch,
 	setFilter,
 } from 'state/categories/action';
-import Table from 'component/table';
-import TableNav from 'component/table/navigation';
-import SearchBox from 'component/search-box';
-import BulkAction from 'component/table/bulk-action';
+import {SelectControl, Table, Navigation, SearchBox, BulkAction, Button} from "@eaccounting/components";
 import Row from "./row";
 import {getHeaders, getBulk} from "./constants";
-import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'lib/status';
-import {Button} from "@wordpress/components";
-import EditCategory from "component/edit-category";
-import {categoryTypes} from 'state/categories/initial';
-import {SelectControl} from "@eaccounting/components";
-import {getSelectedOptions} from "lib/table";
 import './style.scss';
 
 class Categories extends Component {
@@ -43,13 +39,13 @@ class Categories extends Component {
 		this.props.onMount();
 	}
 
-	onAdd = ev =>{
+	onAdd = ev => {
 		ev.preventDefault();
-		this.setState({isAdding:!this.state.isAdding});
+		this.setState({isAdding: !this.state.isAdding});
 	};
 
-	onClose = () =>{
-		this.setState({isAdding:!this.state.isAdding});
+	onClose = () => {
+		this.setState({isAdding: !this.state.isAdding});
 	};
 
 	setFilter = (filter, value) => {
@@ -88,13 +84,13 @@ class Categories extends Component {
 				<div className="ea-table-display">
 					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Category')}</Button>
 					<SearchBox
-						status={ status }
-						table={ table }
-						onSearch={ this.props.onSearch }
+						status={status}
+						table={table}
+						onSearch={this.props.onSearch}
 					/>
 				</div>
 
-				<TableNav
+				<Navigation
 					total={total}
 					selected={table.selected}
 					table={table}
@@ -115,7 +111,7 @@ class Categories extends Component {
 						onChange={this.onFilterType}
 					/>
 
-				</TableNav>
+				</Navigation>
 
 				<Table
 					headers={getHeaders()}
@@ -128,7 +124,7 @@ class Categories extends Component {
 					onSetOrderBy={this.props.onSetOrderBy}
 				/>
 
-				<TableNav
+				<Navigation
 					total={total}
 					selected={table.selected}
 					table={table}

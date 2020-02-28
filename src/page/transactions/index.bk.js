@@ -1,33 +1,31 @@
 /**
  * External dependencies
  */
+
 import {Component, Fragment} from 'react';
+import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
 import {map} from 'lodash';
 /**
- * Accounting dependencies
- */
-import { Button, Navigation, SearchBox, SelectControl, Table, DateFilter} from "@eaccounting/components";
-
-/**
  * Internal dependencies
  */
+import './style.scss';
+import {SelectControl, Table, Navigation, SearchBox, BulkAction, Button} from "@eaccounting/components";
+import DateRangeControl from "component/date-range-control";
+import TransactionsRow from './row';
 import {
 	setGetItems,
 	setPage,
+	setBulkAction,
 	setOrderBy,
 	setSearch,
 	setFilter,
 } from 'state/transactions/action';
-import {translate as __} from 'lib/locale';
-import {getHeaders} from "./constants";
-import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'lib/status';
-import Row from "./row";
-import {transactionTypes} from "state/transactions/initial";
-import {getSelectedOptions} from "lib/table";
-import AccountControl from "component/account-control";
-import CategoryControl from "component/category-control";
-// import DateRangeControl from "component/date-range-control";
+import {getHeaders} from './constants';
+import AccountControl from 'component/account-control';
+import CategoryControl from 'component/category-control';
+import moment from 'moment';
+
 
 class Transactions extends Component {
 	constructor(props) {
@@ -38,9 +36,22 @@ class Transactions extends Component {
 		window.addEventListener('popstate', this.onPageChanged);
 	}
 
-	componentDidMount() {
-		this.props.onLoadItems();
+	componentDidCatch(error, info) {
+		this.setState({error: true, stack: error, info});
 	}
+
+	componentDidMount() {
+		this.props.onLoadTransactions();
+	}
+
+	onRenderRow = (item, pos, status, search) => {
+		return (
+			<TransactionsRow
+				item={item}
+				key={pos}
+			/>
+		);
+	};
 
 	setFilter = (filter, value) => {
 		const {filterBy} = this.props.transactions.table;
@@ -64,38 +75,29 @@ class Transactions extends Component {
 		this.setFilter('type', map(types, 'value'));
 	};
 
-	onRenderRow = (item, pos, status, search) => {
-		const {saving} = this.props.transactions;
-		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
-		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
-		return (
-			<Row
-				item={item}
-				key={pos}
-				status={rowStatus}
-				search={search}
-			/>
-		);
+	onResetFilter = () => {
+		this.props.onFilter({});
 	};
-
 
 	render() {
 		const {status, total, table, rows} = this.props.transactions;
 		const {type = [], date = '', category_id, account_id} = table.filterBy;
+		const isFiltered = Object.keys(table.filterBy).length > 0;
+		const types = typeFilter.filter((filter, index) => {
+			return type.includes(filter.value) === true;
+		});
+
+
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
-				<Button className="page-title-action" onClick={this.onAdd}>{__('Income')}</Button>
-				<Button className="page-title-action" onClick={this.onAdd}>{__('Payments')}</Button>
-				<hr className="wp-header-end"/>
 				<pre>
 						{JSON.stringify(table)}
 				</pre>
+				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
+				<hr className="wp-header-end"/>
 
 				<div className="ea-table-display">
-					<SearchBox
-						status={status}
-						table={table}
+					<SearchBox status={status}
 						onSearch={this.props.onSearch}
 					/>
 				</div>
@@ -108,37 +110,31 @@ class Transactions extends Component {
 					onAction={this.props.onAction}
 					status={status}>
 
-					<DateFilter
-						className={'alignleft actions'}
-						date={date}
-						onChange={this.onFilterDate}/>
+					{/*<DateRangeControl*/}
+					{/*	className={'alignleft actions'}*/}
+					{/*	date={date}*/}
+					{/*	onChange={this.onFilterDate}/>*/}
 
-					<SelectControl
-						className={'alignleft actions'}
-						placeholder={__('Filter Type')}
-						options={transactionTypes}
-						isMulti
-						isDisabled={status !== STATUS_COMPLETE}
-						value={getSelectedOptions(transactionTypes, type)}
-						onChange={this.onFilterType}
-					/>
+					{/*<AccountControl*/}
+					{/*	className={'alignleft actions'}*/}
+					{/*	isMulti*/}
+					{/*	isClearable*/}
+					{/*	selected={account_id}*/}
+					{/*	onChange={this.onFilterAccount}/>*/}
 
-					<AccountControl
-						className={'alignleft actions'}
-						isMulti
-						isClearable
-						isDisabled={status !== STATUS_COMPLETE}
-						selected={account_id}
-						onChange={this.onFilterAccount}/>
-
-					<CategoryControl
-						className={'alignleft actions'}
-						isMulti
-						isClearable
-						isDisabled={status !== STATUS_COMPLETE}
-						selected={category_id}
-						onChange={this.onFilterCategory}/>
-
+					{/*<CategoryControl*/}
+					{/*	className={'alignleft actions'}*/}
+					{/*	isMulti*/}
+					{/*	isClearable*/}
+					{/*	selected={category_id}*/}
+					{/*	onChange={this.onFilterCategory}/>*/}
+					{/*<SelectControl*/}
+					{/*	className={'alignleft actions'}*/}
+					{/*	placeholder={__('Select Type')}*/}
+					{/*	options={typeFilter}*/}
+					{/*	isMulti*/}
+					{/*	value={types}*/}
+					{/*	onChange={this.onFilterType}/>*/}
 				</Navigation>
 
 				<Table
@@ -148,6 +144,7 @@ class Transactions extends Component {
 					row={this.onRenderRow}
 					table={table}
 					status={status}
+					onSetAllSelected={this.props.onSetAllSelected}
 					onSetOrderBy={this.props.onSetOrderBy}
 				/>
 
@@ -174,14 +171,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onLoadItems: () => {
+		onLoadTransactions: () => {
 			dispatch(setGetItems());
 		},
 		onChangePage: page => {
 			dispatch(setPage(page));
 		},
 		onAction: action => {
-			dispatch(setBulkAction(action));
+			dispatch(performTableAction(action));
 		},
 		onSetOrderBy: (column, order) => {
 			dispatch(setOrderBy(column, order));

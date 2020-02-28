@@ -1,14 +1,12 @@
-import {Component} from "react";
+import {Component, Fragment} from "react";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
 
-import RowActions from 'component/table/row-action';
-import Spinner from "component/spinner";
+import {setSelected, setBulkAction, setUpdateItem} from 'state/currencies/action';
 import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
-import Column from 'component/table/column';
+import {Column, Spinner, RowAction} from "@eaccounting/components";
 import {translate as __} from 'lib/locale';
-import {setSelected, performTableAction, updateItem} from 'state/taxrates/action';
-import EditCurrency from 'component/edit-currency';
+import EditCurrency from "component/edit-currency";
+import {connect} from "react-redux";
 
 class Row extends Component {
 	static propTypes = {
@@ -17,28 +15,25 @@ class Row extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			editing: false
+		};
 	}
 
 	renderActions(saving) {
 		return (
-			<RowActions disabled={saving}>
+			<RowAction disabled={saving}>
 				{this.getActions()}
-			</RowActions>
+			</RowAction>
 		);
 	}
 
+
 	getActions() {
-		const {id, enabled} = this.props.item;
+		const {id} = this.props.item;
 		const actions = [];
 		actions.push([__('Edit'), this.onEdit]);
 		actions.push([__('Delete'), this.onDelete]);
-		if (enabled) {
-			actions.push([__('Disable'), this.onDisable]);
-		} else {
-			actions.push([__('Enable'), this.onEnable]);
-		}
-
 		return actions
 			.map((item, pos) => <a key={pos} href={item[2] ? item[2] : '#'} onClick={item[1]}>{item[0]}</a>)
 			.reduce((prev, curr) => [prev, ' | ', curr]);
@@ -73,12 +68,12 @@ class Row extends Component {
 	};
 
 	render() {
-		const {id, name, code, rate, enabled} = this.props.item;
+		const {id, name, code, rate} = this.props.item;
+		const {editing} = this.state;
 		const {status, selected} = this.props;
 		const isLoading = status === STATUS_IN_PROGRESS;
 		const isSaving = status === STATUS_SAVING;
 		const hideRow = isLoading || isSaving;
-
 
 		return (
 			<tr className={hideRow ? 'disabled' : ''}>
@@ -87,6 +82,13 @@ class Row extends Component {
 					<input type="checkbox" name="item[]" value={id} disabled={isLoading} checked={selected}
 						   onChange={this.onSelected}/>}
 					{isSaving && <Spinner size="small"/>}
+
+					{editing && <EditCurrency
+						item={this.props.item}
+						onClose={this.onClose}
+						buttonTittle={__('Update')}
+						tittle={__('Update Currency')}/>}
+
 				</th>
 
 				<Column className="column-primary column-name">
@@ -98,21 +100,13 @@ class Row extends Component {
 					{code}
 				</Column>
 
-				<Column className="column-rate">
-					{parseFloat(rate)}
-				</Column>
-
-				<Column className="column-status">
-					{enabled ? <span className='ea-item-status enabled'>{__('Enabled')}</span> :
-						<span className='ea-item-status disabled'>{__('Disabled')}</span>}
-					{this.state.editing &&
-					<EditCurrency item={this.props.item} tittle={__('Update Currency')} buttonTittle={__('Update')}
-								 onClose={this.onClose}/>}
+				<Column className="column-type">
+					{rate}
 				</Column>
 			</tr>
 		)
-	}
 
+	}
 }
 
 function mapDispatchToProps(dispatch) {
@@ -120,11 +114,11 @@ function mapDispatchToProps(dispatch) {
 		onSetSelected: items => {
 			dispatch(setSelected(items));
 		},
-		onSaveItem: (id, item) => {
-			dispatch(updateItem(id, item));
+		onSaveCurrency: (id, item) => {
+			dispatch(setUpdateItem(id, item));
 		},
 		onTableAction: (action, ids) => {
-			dispatch(performTableAction(action, ids));
+			dispatch(setBulkAction(action, ids));
 		},
 	};
 }

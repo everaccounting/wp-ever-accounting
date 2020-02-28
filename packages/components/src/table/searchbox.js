@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
  * Internal dependencies
  */
 import {STATUS_IN_PROGRESS} from 'lib/status';
-import './style.scss';
 import {__} from "@wordpress/i18n";
 
 class SearchBox extends React.Component {

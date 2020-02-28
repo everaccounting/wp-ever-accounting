@@ -197,3 +197,11 @@
 	}
 }
 
+.ea-searchbox {
+  display: flex;
+  align-items: center;
+
+  .ea-popover__container {
+	margin-top: -1px;
+  }
+}

@@ -4,10 +4,7 @@ import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
 import notify from "lib/notify";
 import {find} from 'lodash';
-import {
-	createItem,
-	updateItem
-} from 'state/taxrates/action';
+import {setCreateItem, setUpdateItem} from 'state/taxrates/action';
 import {
 	Modal,
 	TextControl,
@@ -15,28 +12,17 @@ import {
 	Icon,
 	Button
 } from '@eaccounting/components';
+import {taxTypes} from "state/taxrates/initial";
+import {getSelectedOption} from "lib/table";
+import {apiRequest, eAccountingApi} from "lib/api";
 
 const initial = {
 	id: undefined,
 	name: '',
 	rate: '',
-	type: undefined
+	type: 'normal'
 };
 
-const taxTypes = [
-	{
-		label: __('Normal'),
-		value: 'normal',
-	},
-	{
-		label: __('Inclusive'),
-		value: 'inclusive',
-	},
-	{
-		label: __('Compound'),
-		value: 'compound',
-	}
-];
 
 class EditTaxRate extends Component {
 	static propTypes = {
@@ -54,9 +40,12 @@ class EditTaxRate extends Component {
 		this.state = {
 			...initial,
 			...props.item,
-			type:find(taxTypes, {value:(props.type||'normal')}),
 			isSaving: false,
 		};
+	}
+
+	componentWillUnmount() {
+		this.reset();
 	}
 
 	reset = () => {
@@ -65,32 +54,35 @@ class EditTaxRate extends Component {
 		});
 	};
 
+	onChangeType = (type) => {
+		this.setState({type: type.value});
+	};
+
 	onSubmit = ev => {
 		ev.preventDefault();
-		const {id, name, rate, type = {}} = this.state;
+		const {id, name, rate, type } = this.state;
 		this.setState({isSaving: true});
-		if (name.trim() === '' || rate.trim() === '' || !Object.keys(type).length) {
-			this.setState({isSaving: false});
-			notify(__('One or more required value missing, please correct & submit again'), 'error');
-			return false;
-		}
-
 
 		const item = {
 			id: parseInt(id, 10),
 			name,
 			rate,
-			type: type.value
+			type
 		};
 
 		if (item.id) {
 			this.props.onSave(item.id, item);
-		} else {
-			this.props.onCreate(item);
+			return this.props.onClose(ev);
 		}
-
-		this.props.onClose ? this.props.onClose(ev) : () => {
-		};
+		apiRequest(eAccountingApi.taxrates.create(item)).then(res => {
+			notify(__('Tax Rate created successfully'));
+			this.props.onCreate(res.data);
+			this.setState({isSaving: false});
+			this.props.onClose(ev);
+		}).catch(error => {
+			this.setState({isSaving: false});
+			notify(error.message, 'error');
+		})
 	};
 
 
@@ -116,17 +108,15 @@ class EditTaxRate extends Component {
 								 placeholder={__('Enter Rate')}
 								 required
 								 onChange={(rate) => {
-									 this.setState({rate:rate.replace(/[^\d.]+/g, '')})
+									 this.setState({rate: rate.replace(/[^\d.]+/g, '')})
 								 }}/>
 
 					<SelectControl label={__('Type')}
 								   options={taxTypes}
-								   value={type}
+								   value={getSelectedOption(taxTypes, type, 'normal')}
 								   before={<Icon icon='bars'/>}
 								   required
-								   onChange={(type) => {
-									   this.setState({type})
-								   }}/>
+								   onChange={this.onChangeType}/>
 					<Button isPrimary
 							isBusy={isSaving}
 							onClick={this.onSubmit}>
@@ -142,10 +132,10 @@ class EditTaxRate extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSave: (id, item) => {
-			dispatch(updateItem(id, item));
+			dispatch(setUpdateItem(id, item));
 		},
 		onCreate: item => {
-			dispatch(createItem(item));
+			dispatch(setCreateItem(item));
 		}
 	};
 }

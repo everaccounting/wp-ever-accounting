@@ -10,7 +10,7 @@ import {combineReducers} from 'redux';
 // import bills from 'state/bills/reducer';
 // import payments from 'state/payments/reducer';
 // import accounts from 'state/accounts/reducer';
-// import transactions from 'state/transactions/reducer';
+import transactions from 'state/transactions/reducer';
 import categories from 'state/categories/reducer';
 import currencies from 'state/currencies/reducer';
 import taxrates from 'state/taxrates/reducer';
@@ -23,7 +23,7 @@ const reducer = combineReducers({
 	// contacts,
 	// invoices,
 	// revenues,
-	// transactions,
+	transactions,
 	// payments,
 	// currencies,
 });

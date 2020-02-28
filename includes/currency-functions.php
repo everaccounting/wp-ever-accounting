@@ -28,23 +28,20 @@ function eaccounting_insert_currency( $args ) {
 	}
 
 	$data = array(
-		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
-		'code'            => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
-		'rate'            => ! isset( $args['rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['rate'] ),
-		'precision'       => ! isset( $args['precision'] ) ? 0 : intval( $args['precision'] ),
-		'symbol_position' => isset( $args['symbol_position'] ) && 'before' == $args['symbol_position'] ? 'before' : 'after',
-		'updated_at'      => date( 'Y-m-d H:i:s' ),
-		'created_at'      => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
+		'id'         => empty( $args['id'] ) ? null : absint( $args['id'] ),
+		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
+		'code'       => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
+		'rate'       => ! isset( $args['rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['rate'] ),
+		'precision'  => ! isset( $args['precision'] ) ? 0 : intval( $args['precision'] ),
+		'position'   => isset( $args['position'] ) && 'before' == $args['position'] ? 'before' : 'after',
+		'updated_at' => date( 'Y-m-d H:i:s' ),
+		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 	$required = array(
 		'code'                => __( 'code', 'wp-ever-accounting' ),
 		'rate'                => __( 'Rate', 'wp-ever-accounting' ),
-		'symbol'              => __( 'Symbol', 'wp-ever-accounting' ),
-		'symbol_position'     => __( 'Symbol position', 'wp-ever-accounting' ),
-		'decimal_mark'        => __( 'Decimal mark', 'wp-ever-accounting' ),
-		'thousands_separator' => __( 'Thousands separator', 'wp-ever-accounting' ),
+		'position'            => __( 'Symbol position', 'wp-ever-accounting' ),
 	);
 
 	foreach ( $required as $prop => $label ) {
@@ -169,7 +166,7 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 		'orderby'        => 'id',
 		'order'          => 'DESC',
 		'fields'         => 'all',
-		'search_columns' => array( 'name', 'code', 'symbol' ),
+		'search_columns' => array( 'name', 'code' ),
 		'per_page'       => 20,
 		'page'           => 1,
 		'offset'         => 0,

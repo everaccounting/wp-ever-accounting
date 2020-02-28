@@ -13,10 +13,10 @@ export default class PriceControl extends Component {
 			required: !!required,
 		});
 
-		const {precision = 2, symbol = '$', decimal_mark = '.', thousands_separator = '', rate = '1', symbol_position = 'before'} = currency;
+		const {precision = 2, symbol = '$', decimal_mark = '.', thousands_separator = '', rate = '1', position = 'before'} = currency;
 
-		const suffix = ('before' !== symbol_position) ? symbol : '';
-		const prefix = ('before' === symbol_position) ? symbol : '';
+		const suffix = ('before' !== position) ? symbol : '';
+		const prefix = ('before' === position) ? symbol : '';
 
 		return (
 			<BaseControl label={label} help={help} className={classes}>

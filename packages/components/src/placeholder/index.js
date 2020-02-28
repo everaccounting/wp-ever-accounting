@@ -8,8 +8,6 @@ import React from 'react';
  * Internal dependencies
  */
 
-import './index.scss';
-
 const Placeholder = () => {
 	return (
 		<div className="placeholder-container">

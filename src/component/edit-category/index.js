@@ -66,6 +66,10 @@ class EditCategory extends Component {
 		};
 	}
 
+	componentWillUnmount() {
+		this.reset();
+	}
+
 	reset = () => {
 		this.setState({
 			...initial,

@@ -1,11 +1,11 @@
 'use strict';
 import React, { Component } from 'react';
 import $ from 'jquery';
-import getOptions from './getoptions.js';
+import getOptions from './getOptions';
 import PropTypes from 'prop-types';
 import 'bootstrap-daterangepicker';
 
-export class DateRangePicker extends Component {
+export class DatePicker extends Component {
 	constructor(props) {
 		super(props);
 		this.$picker = null;
@@ -91,14 +91,14 @@ export class DateRangePicker extends Component {
 	}
 }
 
-DateRangePicker.defaultProps = {
+DatePicker.defaultProps = {
 	containerClass: 'react-bootstrap-daterangepicker-container',
 	containerStyles: {
 		display: 'inline-block'
 	}
 };
 
-DateRangePicker.propTypes = {
+DatePicker.propTypes = {
 	'<input>': PropTypes.any,
 	alwaysShowCalendars: PropTypes.bool,
 	applyClass: PropTypes.string,
@@ -141,4 +141,4 @@ DateRangePicker.propTypes = {
 	timePickerSeconds: PropTypes.bool
 };
 
-export default DateRangePicker;
+export default DatePicker;

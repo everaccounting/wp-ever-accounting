@@ -2,13 +2,11 @@ import {Component, Fragment} from "react";
 import PropTypes from "prop-types";
 
 import {setSelected, setBulkAction, setUpdateItem} from 'state/categories/action';
-import RowActions from 'component/table/row-action';
 import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
-import Column from 'component/table/column';
+import {RowAction, Column, Spinner} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import EditCategory from "component/edit-category";
 import {connect} from "react-redux";
-import Spinner from "component/spinner";
 
 class Row extends Component {
 	static propTypes = {
@@ -24,9 +22,9 @@ class Row extends Component {
 
 	renderActions(saving) {
 		return (
-			<RowActions disabled={saving}>
+			<RowAction disabled={saving}>
 				{this.getActions()}
-			</RowActions>
+			</RowAction>
 		);
 	}
 

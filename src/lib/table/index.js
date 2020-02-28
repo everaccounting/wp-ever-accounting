@@ -1,6 +1,6 @@
 /* global eAccountingi10n */
 import {getPageUrl} from 'lib/wordpress-url';
-import {xor} from "lodash";
+import {xor, find} from "lodash";
 
 /**
  * Merge table data with params
@@ -194,4 +194,8 @@ export const getSelectedOptions = (options = [], value = []) => {
 	return options.filter((filter) => {
 		return value.includes(filter.value) === true;
 	})
+};
+
+export const getSelectedOption = (options = [], selected = '', initial = '') => {
+	return find(options, {value: (selected || initial)});
 };

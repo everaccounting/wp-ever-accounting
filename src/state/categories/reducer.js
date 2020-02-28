@@ -27,7 +27,6 @@ import {
 } from 'lib/table';
 
 export default function categories(state = {}, action) {
-	console.log(action);
 	switch (action.type) {
 		case CATEGORIES_LOADING:
 			return {...state, table: setTable(state, action), status: STATUS_IN_PROGRESS, saving: setSaving(state, action)};

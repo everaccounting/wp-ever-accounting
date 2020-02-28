@@ -1,6 +1,8 @@
 import {STATUS_IN_PROGRESS} from 'lib/status';
 import {getDefaultTable} from 'lib/table';
 let table = getDefaultTable( [ 'name', 'rate', 'type', 'status' ], ['type'], 'name');
+import {translate as __} from 'lib/locale';
+
 export function getInitialTaxRates() {
 	return {
 		rows: [],
@@ -10,3 +12,18 @@ export function getInitialTaxRates() {
 		table: table,
 	};
 }
+
+export const taxTypes = [
+	{
+		label: __('Normal'),
+		value: 'normal',
+	},
+	{
+		label: __('Inclusive'),
+		value: 'inclusive',
+	},
+	{
+		label: __('Compound'),
+		value: 'compound',
+	}
+];

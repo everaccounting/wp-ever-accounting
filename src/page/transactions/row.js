@@ -1,20 +1,15 @@
 /**
  * External dependencies
  */
-
 import {Component, Fragment} from 'react';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment'
+
 /**
  * Internal dependencies
  */
-import {setSelected, performTableAction} from 'state/transactions/action';
-import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
-import Spinner from 'component/spinner';
-import Column from 'component/table/column';
-import RowActions from 'component/table/row-action';
-import {translate as __} from 'lib/locale';
+import {Column} from "@eaccounting/components";
+
 
 export default class TransactionsRow extends Component {
 	static propTypes = {

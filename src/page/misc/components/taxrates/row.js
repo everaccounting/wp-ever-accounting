@@ -2,12 +2,10 @@ import {Component} from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 
-import RowActions from 'component/table/row-action';
-import Spinner from "component/spinner";
+import {RowAction, Column, Spinner} from '@eaccounting/components';
 import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
-import Column from 'component/table/column';
 import {translate as __} from 'lib/locale';
-import {setSelected, performTableAction, updateItem} from 'state/taxrates/action';
+import {setSelected, setBulkAction, setUpdateItem} from 'state/taxrates/action';
 import EditTaxRate from 'component/edit-taxrate';
 
 class Row extends Component {
@@ -22,9 +20,9 @@ class Row extends Component {
 
 	renderActions(saving) {
 		return (
-			<RowActions disabled={saving}>
+			<RowAction disabled={saving}>
 				{this.getActions()}
-			</RowActions>
+			</RowAction>
 		);
 	}
 
@@ -101,10 +99,10 @@ function mapDispatchToProps(dispatch) {
 			dispatch(setSelected(items));
 		},
 		onSaveItem: (id, item) => {
-			dispatch(updateItem(id, item));
+			dispatch(setUpdateItem(id, item));
 		},
 		onTableAction: (action, ids) => {
-			dispatch(performTableAction(action, ids));
+			dispatch(setBulkAction(action, ids));
 		},
 	};
 }

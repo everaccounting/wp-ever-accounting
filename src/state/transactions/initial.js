@@ -1,4 +1,6 @@
 import {STATUS_IN_PROGRESS} from 'lib/status';
+import {translate as __} from 'lib/locale';
+
 export function getInitialTransactions() {
 	return {
 		rows: [],
@@ -15,3 +17,14 @@ export function getInitialTransactions() {
 		},
 	};
 }
+
+export const transactionTypes = [
+	{
+		label: __('Income'),
+		value: 'income',
+	},
+	{
+		label: __('Expense'),
+		value: 'expense',
+	}
+];
