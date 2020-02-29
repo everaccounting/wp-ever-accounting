@@ -88,9 +88,6 @@ class Transactions extends Component {
 				<Button className="page-title-action" onClick={this.onAdd}>{__('Income')}</Button>
 				<Button className="page-title-action" onClick={this.onAdd}>{__('Payments')}</Button>
 				<hr className="wp-header-end"/>
-				<pre>
-						{JSON.stringify(table)}
-				</pre>
 
 				<div className="ea-table-display">
 					<SearchBox

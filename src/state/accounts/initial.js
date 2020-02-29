@@ -1,7 +1,8 @@
 import {STATUS_IN_PROGRESS} from 'lib/status';
 import {getDefaultTable} from 'lib/table';
-let table = getDefaultTable( [ 'name', 'type' ], ['type'], 'name');
-export function getInitialContacts() {
+let table = getDefaultTable(['name', 'number', 'current_balance'], ['type'], 'name');
+
+export function getInitialAccounts() {
 	return {
 		rows: [],
 		saving: [],
@@ -11,7 +12,7 @@ export function getInitialContacts() {
 	};
 }
 
-export const initialContact = {
+export const initialAccount = {
 	name: '',
 	number: '',
 	opening_balance: '0',
@@ -19,5 +20,4 @@ export const initialContact = {
 	bank_phone: '',
 	bank_address: '',
 	currency: eAccountingi10n.default_currency,
-	enabled: true,
 };

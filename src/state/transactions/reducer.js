@@ -5,24 +5,12 @@
 import {
 	TRANSACTIONS_LOADED,
 	TRANSACTIONS_LOADING,
-	TRANSACTIONS_FAILED,
-	TRANSACTIONS_SET_SELECTED,
-	TRANSACTIONS_SET_ALL_SELECTED,
-	TRANSACTIONS_ITEM_SAVING,
-	TRANSACTIONS_ITEM_SAVED,
-	TRANSACTIONS_ITEM_FAILED,
-	TRANSACTIONS_DISPLAY_SET,
 } from './type';
-import {STATUS_IN_PROGRESS, STATUS_FAILED, STATUS_COMPLETE} from 'lib/status';
+import {STATUS_IN_PROGRESS, STATUS_COMPLETE} from 'lib/status';
 import {
 	setTable,
 	setTotal,
-	setUpdatedItem,
 	setSaving,
-	removeSaving,
-	restoreToOriginal,
-	setTableSelected,
-	setTableAllSelected,
 	clearSelected
 } from 'lib/table';
 

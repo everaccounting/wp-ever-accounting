@@ -30,7 +30,6 @@ function filterFilters( query, filters ) {
 			filteredQuery[ key ] = query[ key ];
 		}
 	} );
-	console.log(filteredQuery);
 	return filteredQuery;
 }
 

@@ -43,7 +43,7 @@ export default class CurrencyControl extends Component {
 		apiRequest(eAccountingApi.currencies.list(params)).then((res) => {
 			callback(res.data.map(item => {
 				return {
-					label: `${item.name}(${item.symbol})`,
+					label: `${item.name}`,
 					value: item.code,
 				};
 			}))
@@ -51,6 +51,7 @@ export default class CurrencyControl extends Component {
 	};
 
 	onChange = (value) => {
+		console.log(value);
 		this.setState({
 			value
 		});
@@ -59,6 +60,7 @@ export default class CurrencyControl extends Component {
 
 	render() {
 		const {value, defaultOptions} = this.state;
+
 		return (
 			<Fragment>
 				<AsyncSelect
@@ -70,7 +72,7 @@ export default class CurrencyControl extends Component {
 						__('No items')
 					}}
 					loadOptions={(search, callback) => {
-						this.getCategory({search}, callback);
+						this.getCurrencies({search}, callback);
 					}}
 					{...this.props}
 				/>

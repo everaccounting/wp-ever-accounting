@@ -274,10 +274,6 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['opening_balance'] ) && isset( $request['opening_balance'] ) ) {
 			$prepared_item->opening_balance = eaccounting_money( $request['opening_balance'], $request['currency_code'], false )->getAmount();
 		}
-		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
-			$prepared_item->status = $request['status'];
-		}
-
 
 		return $prepared_item;
 	}
@@ -293,7 +289,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$o_balance = eaccounting_money( $item->opening_balance, $item->currency_code, true )->format();
 		$data      = array(
-			'id'              => $item->id,
+			'id'              => intval($item->id),
 			'name'            => $item->name,
 			'number'          => $item->number,
 			'opening_balance' => $item->opening_balance,
@@ -303,7 +299,6 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'bank_name'       => $item->bank_name,
 			'bank_phone'      => $item->bank_phone,
 			'bank_address'    => $item->bank_address,
-			'enabled'         => $item->status == 'active',
 			'created_at'      => $this->prepare_date_response( $item->created_at ),
 			'updated_at'      => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -431,12 +426,6 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'status'          => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'enum'        => array( 'active', 'inactive' ),
-				),
 				'date_created'    => array(
 					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -484,13 +473,6 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'description' => __( 'Limit result set to specific searched.', 'wp-ever-accounting' ),
 			'type'        => 'string',
 			'default'     => '',
-		);
-
-		$params['status'] = array(
-			'description'       => __( 'Limit the result with active or inactive type', 'wp-ever-accounting' ),
-			'default'           => 'all',
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;

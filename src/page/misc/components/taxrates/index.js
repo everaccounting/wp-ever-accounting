@@ -77,7 +77,6 @@ class TaxRates extends Component {
 		const {status, total, table, rows, saving} = this.props.taxrates;
 		const {isAdding,} = this.state;
 		const {type=[]} = table.filterBy;
-		console.log(status);
 		return (
 			<Fragment>
 				{isAdding && <EditTaxRate onClose={this.onClose}/>}

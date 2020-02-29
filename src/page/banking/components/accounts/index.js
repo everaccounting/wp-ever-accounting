@@ -1,168 +1,99 @@
-/**
- * External dependencies
- */
-
-import {Component, Fragment} from 'react';
+import {Component, Fragment} from "react";
+import {connect} from "react-redux";
 import {translate as __} from 'lib/locale';
-import {connect} from 'react-redux';
-
-/**
- * Internal dependencies
- */
-import './style.scss';
-import Table from 'component/table';
-import TableNav from 'component/table/navigation';
-import SearchBox from 'component/search-box';
-import BulkAction from 'component/table/bulk-action';
-// import TableDisplay from 'component/table/table-display';
-import AccountsRow from './row';
+import {STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED} from 'lib/status';
 import {
-	getAccounts,
-	createAccount,
+	setGetItems,
 	setPage,
-	performTableAction,
+	setBulkAction,
 	setAllSelected,
 	setOrderBy,
 	setSearch,
 	setFilter,
-	setDisplay
 } from 'state/accounts/action';
-import {isEnabled} from 'component/table/utils';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
-import {
-	getFilterOptions,
-	getDisplayGroups,
-	getDisplayOptions,
-	getHeaders,
-	getBulk,
-	getSearchOptions
-} from './constants';
-import EditAccount from 'component/edit-account';
-import {initialAccount} from 'state/accounts/selection';
+import {getHeaders, getBulk} from "./constants";
+import {SelectControl, Table, Navigation, SearchBox, BulkAction, Button} from "@eaccounting/components";
+import Row from './row';
+import EditAccount from "component/edit-account";
+
 
 class Accounts extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAdding:false
+			isAdding: false,
 		};
-		window.addEventListener('popstate', this.onPageChanged);
-	}
-
-	componentDidCatch(error, info) {
-		this.setState({error: true, stack: error, info});
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('popstate', this.onPageChanged);
 	}
 
 	componentDidMount() {
-		this.props.onLoadAccounts();
+		this.props.onMount();
 	}
 
-	onRenderRow = ( row, key, status, currentDisplayType, currentDisplaySelected ) => {
-		const { saving } = this.props.accounts;
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({isAdding: !this.state.isAdding});
+	};
+
+	onClose = () => {
+		this.setState({isAdding: !this.state.isAdding});
+	};
+
+	onRenderRow = (item, pos, status, search) => {
+		const {saving} = this.props.accounts;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
-		const rowStatus = saving.indexOf( row.id ) !== -1 ? STATUS_SAVING : loadingStatus;
+		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
 		return (
-			<AccountsRow
-				item={ row }
-				key={ row.id }
-				selected={ status.isSelected }
-				rowstatus={ rowStatus }
-				currentDisplayType={ currentDisplayType }
-				currentDisplaySelected={ currentDisplaySelected }
-				setFilter={ this.setFilter }
-				filters={ this.props.accounts.table.filterBy }
-			/>
+			<Row
+				item={item}
+				key={pos}
+				status={rowStatus}
+				search={search}/>
 		);
 	};
 
-	validateDisplay( selected ) {
-		// Ensure we have at least source or title
-		if ( selected.indexOf( 'name' ) === -1 ) {
-			return selected.concat( [ 'name' ] );
-		}
-		return selected;
-	}
-
-	setFilter = ( filterName, filterValue ) => {
-		const { filterBy } = this.props.accounts.table;
-		this.props.onFilter( { ...filterBy, [ filterName ]: filterValue ? filterValue : undefined } );
-	};
-
-	getHeaders( selected ) {
-		return getHeaders().filter( header => isEnabled( selected, header.name ) || header.name === 'cb' || header.name === 'name' );
-	}
-
-	onAdd = ev =>{
-		ev.preventDefault();
-		this.setState({isAdding:!this.state.isAdding});
-	};
-
-	onClose = () =>{
-		this.setState({isAdding:!this.state.isAdding});
-	};
 
 	render() {
+		console.log(this.props);
 		const {status, total, table, rows, saving} = this.props.accounts;
-		const {isAdding} = this.state;
-		const isSaving = saving.indexOf(0) !== -1;
+		const {isAdding,} = this.state;
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Accounts')}</h1>
-				<a href="#" className="page-title-action" onClick={this.onAdd}>{__('Add New')}</a>
-				<hr className="wp-header-end"/>
-				{isAdding && <EditAccount item={initialAccount} onClose={this.onClose}/>}
+				{isAdding && <EditAccount onClose={this.onClose}/>}
 
 				<div className="ea-table-display">
-					<TableDisplay
-						disable={ status === STATUS_IN_PROGRESS }
-						options={ getDisplayOptions() }
-						groups={ getDisplayGroups() }
-						store="accounts"
-						currentDisplayType={ table.displayType }
-						currentDisplaySelected={ table.displaySelected }
-						setDisplay={ this.props.onSetDisplay }
-						validation={ this.validateDisplay }
-					/>
+					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Account')}</Button>
 					<SearchBox
-						status={ status }
-						table={ table }
-						onSearch={ this.props.onSearch }
-						selected={ table.filterBy }
-						searchTypes={ getSearchOptions() }
+						status={status}
+						table={table}
+						onSearch={this.props.onSearch}
 					/>
-
 				</div>
 
-				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } bulk={ getBulk() }>
-					<BulkAction>
-					</BulkAction>
-				</TableNav>
+				<Navigation
+					total={total}
+					selected={table.selected}
+					table={table}
+					onChangePage={this.props.onChangePage}
+					onAction={this.props.onAction}
+					status={status}
+					bulk={getBulk()}/>
 
 				<Table
-					headers={ this.getHeaders( table.displaySelected ) }
-					rows={ rows }
-					total={ total }
-					row={ this.onRenderRow }
-					table={ table }
-					status={ status }
-					onSetAllSelected={ this.props.onSetAllSelected }
-					onSetOrderBy={ this.props.onSetOrderBy }
-					currentDisplayType={ table.displayType }
-					currentDisplaySelected={ table.displaySelected }
+					headers={getHeaders()}
+					rows={rows}
+					total={total}
+					row={this.onRenderRow}
+					table={table}
+					status={status}
+					onSetAllSelected={this.props.onSetAllSelected}
+					onSetOrderBy={this.props.onSetOrderBy}
 				/>
 
-
-				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } />
-
-
 			</Fragment>
-		);
+		)
 	}
 }
+
 
 function mapStateToProps(state) {
 	const {accounts} = state;
@@ -173,14 +104,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onLoadAccounts: () => {
-			dispatch(getAccounts());
+		onMount: () => {
+			dispatch(setGetItems());
 		},
 		onChangePage: page => {
 			dispatch(setPage(page));
 		},
-		onAction: action => {
-			dispatch(performTableAction(action));
+		onAction: (action) => {
+			dispatch(setBulkAction(action));
 		},
 		onSetAllSelected: onoff => {
 			dispatch(setAllSelected(onoff));
@@ -193,13 +124,7 @@ function mapDispatchToProps(dispatch) {
 		},
 		onSearch: (search) => {
 			dispatch(setSearch(search));
-		},
-		onCreate: item => {
-			dispatch(createAccount(item));
-		},
-		onSetDisplay: (displayType, displaySelected) => {
-			dispatch(setDisplay(displayType, displaySelected));
-		},
+		}
 	}
 }
 

@@ -59,7 +59,6 @@ export const tableAction = (endpoint, bulk, ids, status, extra = {}) => (dispatc
 const doAction = (endpoint, table, item, status, dispatch) => {
 	getApi(endpoint)
 		.then(json => {
-			console.log(json);
 			dispatch({type: status.saved, item: json.items, items: json.items, total: json.total, saving: [item.id]});
 		})
 		.catch(error => {

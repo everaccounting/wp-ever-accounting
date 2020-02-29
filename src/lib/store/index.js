@@ -14,7 +14,6 @@ import {translate as __} from 'lib/locale';
  * @returns {boolean|*}
  */
 export const getItems = (endpoint, dispatch, statuses, params = {}, state = {}, reduxer = s => s) => {
-	console.log(statuses);
 	const {table = {}, rows} = state;
 	const tableData = reduxer(mergeWithTable(table, params));
 	const data = removeDefaults({...table, ...params}, statuses.order);

@@ -120,8 +120,7 @@ class EditCurrency extends Component {
 		const {tittle = __('Add Currency'), buttonTittle = __('Submit'), onClose} = this.props;
 		const {code = 'USD'} = this.state;
 		const {name, rate, precision, symbol, decimal_mark, thousands_separator, position = 'before', isSaving} = this.state;
-		console.log(this.state);
-		console.log('Render');
+
 		return (
 			<Modal title={tittle} onRequestClose={onClose}>
 				<form onSubmit={this.onSubmit}>

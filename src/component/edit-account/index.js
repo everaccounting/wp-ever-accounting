@@ -8,12 +8,20 @@ import {
 	TextControl,
 	PriceControl,
 	TextareaControl,
-	ToggleControl,
-	Icon
+	Icon, Button
 } from '@eaccounting/components';
 import CurrencyControl from 'component/currency-control';
-import {createAccount, updateAccount} from 'state/accounts/action'
-import {initialAccount} from 'state/accounts/selection';
+import {setCreateItem, setUpdateItem} from 'state/categories/action'
+
+const initial = {
+	name: '',
+	number: '',
+	opening_balance: '0',
+	bank_name: '',
+	bank_phone: '',
+	bank_address: '',
+	currency: eAccountingi10n.default_currency,
+};
 
 class EditAccount extends Component {
 	static propTypes = {
@@ -24,96 +32,36 @@ class EditAccount extends Component {
 		childSave: PropTypes.func,
 		callback: PropTypes.func,
 	};
+	static defaultProps = {
+		item: {},
+	};
 
 	constructor(props) {
 		super(props);
-		const {name, number, opening_balance, bank_name, bank_phone, currency_code, bank_address, currency = eAccountingi10n.default_currency, enabled = true} = props.item;
 		this.state = {
-			name,
-			number,
-			opening_balance,
-			bank_name,
-			bank_phone,
-			currency_code,
-			bank_address,
-			currency,
-			enabled,
+			...initial,
+			...props.item,
 			isSaving: false,
 		};
-		this.ref = React.createRef();
 	}
 
 	reset = () => {
-		this.setState( {
-			... initialAccount,
-		} );
+		this.setState({
+			...initialAccount,
+		});
 	};
 
 	onSubmit = ev => {
-		ev.preventDefault();
-		const {
-			name,
-			number,
-			opening_balance,
-			bank_name,
-			bank_phone,
-			bank_address,
-			currency,
-			enabled
-		} = this.state;
-
-		if (name === '' || number === '' || !currency) {
-			this.setState({isSaving: false});
-			notify(__('One or more required value missing, please correct & submit again'), 'error');
-			return false;
-		}
-
-		const item = {
-			id: parseInt(this.props.item.id, 10),
-			name,
-			number,
-			opening_balance,
-			bank_name,
-			bank_phone,
-			currency_code: currency.code,
-			bank_address,
-			status: (enabled === true) ? 'active' : 'inactive'
-		};
-
-		if (item.id) {
-			this.props.onSave(item.id, item);
-		} else {
-			this.props.onCreate(item);
-		}
-
-		this.props.onClose ? this.props.onClose(ev) : () => {
-		};
-
-		if (this.props.childSave) {
-			this.props.childSave();
-		}
-
 	};
 
 	render() {
 		const {tittle = __('Add Account'), buttonTittle = __('Save'), onClose} = this.props;
-		const {
-			name,
-			number,
-			opening_balance,
-			bank_name,
-			bank_phone,
-			bank_address,
-			currency,
-			enabled,
-			isSaving
-		} = this.state;
+		const {name, number, opening_balance, bank_name, bank_phone, bank_address, currency, isSaving} = this.state;
 
 		return (
 			<form onSubmit={this.onSave} ref={this.ref}>
 				<Modal title={tittle} onRequestClose={onClose}>
 					<form onSubmit={this.onSubmit}>
-
 						<TextControl label={__('Account Name')}
 									 value={name}
 									 before={<Icon icon='id-card-o'/>}
@@ -130,7 +78,7 @@ class EditAccount extends Component {
 										 this.setState({number})
 									 }}/>
 						<CurrencyControl label={__('Account Currency')}
-										 value={currency}
+										 selected={currency.id}
 										 required
 										 onChange={(currency) => {
 											 this.setState({currency})
@@ -161,14 +109,13 @@ class EditAccount extends Component {
 										 onChange={(bank_address) => {
 											 this.setState({bank_address})
 										 }}/>
-						<ToggleControl label={__('Enabled')}
-									   checked={enabled}
-									   onChange={() => {
-										   this.setState({enabled: !this.state.enabled})
-									   }}/>
-						{this.props.children && this.props.children}
-						<input className="button-primary" type="submit" name="add" value={buttonTittle}
-							   disabled={isSaving || name === ''}/>
+
+						<Button isPrimary
+								isBusy={isSaving}
+								onClick={this.onSubmit}>
+							{buttonTittle}
+						</Button>
+
 					</form>
 				</Modal>
 			</form>
@@ -179,10 +126,10 @@ class EditAccount extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSave: (id, item) => {
-			dispatch(updateAccount(id, item));
+			dispatch(setCreateItem(id, item));
 		},
 		onCreate: item => {
-			dispatch(createAccount(item));
+			dispatch(setUpdateItem(item));
 		}
 	};
 }

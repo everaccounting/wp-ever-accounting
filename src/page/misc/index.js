@@ -4,16 +4,15 @@
 
 import React, {Component, Fragment} from 'react';
 import { translate as __ } from 'lib/locale';
-
+import {HashRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 
 /**
  * Internal dependencies
  */
-import './style.scss';
-import {HashRouter as Router, NavLink, Route, Switch} from "react-router-dom";
 import Categories from "./components/categories";
 import Currencies from "./components/currencies";
 import TaxRates from "./components/taxrates";
+import './style.scss';
 
 
 const getTabs = [

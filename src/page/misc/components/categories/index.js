@@ -77,7 +77,6 @@ class Categories extends Component {
 		const {status, total, table, rows, saving} = this.props.categories;
 		const {isAdding,} = this.state;
 		const {type = []} = table.filterBy;
-		console.log(status);
 		return (
 			<Fragment>
 				{isAdding && <EditCategory onClose={this.onClose}/>}

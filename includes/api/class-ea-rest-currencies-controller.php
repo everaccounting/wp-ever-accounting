@@ -42,12 +42,12 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->rest_base . '/(?P<id>[\d]+)',
+			'/' . $this->rest_base . '/(?P<id>[\w]+)',
 			array(
 				'args'   => array(
 					'id' => array(
 						'description' => __( 'Unique identifier for the object.', 'wp-ever-accounting' ),
-						'type'        => 'integer',
+						'type'        => 'string',
 						'required'    => true,
 					),
 				),
@@ -151,9 +151,13 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function get_item( $request ) {
-		$item_id = intval( $request['id'] );
+		$item_id = sanitize_text_field( $request['id'] );
 		$request->set_param( 'context', 'view' );
-		$item = eaccounting_get_currency( $item_id );
+		$by = 'id';
+		if(!is_numeric($item_id)){
+			$by = 'code';
+		}
+		$item = eaccounting_get_currency( $item_id, $by );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -239,16 +243,21 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = array(
-			'id'         => intval( $item->id ),
-			'name'       => $item->name,
-			'code'       => $item->code,
-			'rate'       => floatval($item->rate),
-			'precision'  => $item->precision,
-			'position'   => $item->position,
-			'created_at' => $this->prepare_date_response( $item->created_at ),
-			'updated_at' => $this->prepare_date_response( $item->updated_at ),
+		$currency = eaccounting_get_currency_config()[ $item->code ];
+		$data     = array(
+			'id'                  => intval( $item->id ),
+			'name'                => $item->name,
+			'code'                => $item->code,
+			'rate'                => floatval( $item->rate ),
+			'precision'           => $item->precision,
+			'position'            => $item->position,
+			'symbol'              => $currency['symbol'],
+			'decimal_mark'        => $currency['decimal_mark'],
+			'thousands_separator' => $currency['thousands_separator'],
+			'created_at'          => $this->prepare_date_response( $item->created_at ),
+			'updated_at'          => $this->prepare_date_response( $item->updated_at ),
 		);
+
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );

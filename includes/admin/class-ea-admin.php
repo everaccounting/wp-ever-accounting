@@ -147,6 +147,14 @@ class EAccounting_Admin {
 
 
 		wp_register_script(
+			'eaccounting-navigation',
+			$dist . '/navigation/index.js',
+			[],
+			time(),
+			true
+		);
+
+		wp_register_script(
 			'eaccounting-components',
 			$dist . '/components/index.js',
 			array_merge( $component_dependencies, array(
@@ -170,6 +178,7 @@ class EAccounting_Admin {
 				'wp-i18n',
 				'wp-tinymce',
 				'eaccounting-components',
+				'eaccounting-navigation'
 			) ),
 			time(),
 			true

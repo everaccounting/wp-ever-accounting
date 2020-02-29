@@ -1,7 +1,7 @@
 import {getInitialCurrencies} from 'state/currencies/initial';
 import {getInitialTaxRates} from 'state/taxrates/initial';
 import {getInitialCategories} from 'state/categories/initial';
-// import {getInitialAccounts} from 'state/accounts/intial';
+import {getInitialAccounts} from 'state/accounts/initial';
 // import {getInitialBills} from 'state/bills/intial';
 // import {getInitialContacts} from 'state/contacts/intial';
 // import {getInitialInvoices} from 'state/invoices/intial';
@@ -15,7 +15,7 @@ export function initialActions(store) {
 
 export function getInitialState() {
 	return {
-		// accounts: getInitialAccounts(),
+		accounts: getInitialAccounts(),
 		// bills: getInitialBills(),
 		categories: getInitialCategories(),
 		// contacts: getInitialContacts(),
