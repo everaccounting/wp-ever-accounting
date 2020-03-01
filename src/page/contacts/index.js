@@ -34,7 +34,6 @@ import {
 	getBulk
 } from './constants';
 import EditContact from 'component/edit-account';
-import {initialContact} from 'state/contacts/selection';
 import {ReactSelect} from "@eaccounting/components";
 import DateFilter from 'component/date-filter';
 

@@ -30,3 +30,14 @@ function eaccounting_admin_notice( $notice, $type = 'success', $dismissible = tr
 	$notices = EAccounting_Admin_Notices::instance();
 	$notices->add($notice, $type, $dismissible);
 }
+
+/**
+ * Register JS-powered EAccounting Page.
+ * Passthrough to EAccounting_Page_Controller::register_page().
+ *
+ * @param array $options Options for PageController::register_page().
+ */
+function eaccounting_register_page( $options ) {
+	$controller = EAccounting_Page_Controller::get_instance();
+	$controller->register_page( $options );
+}

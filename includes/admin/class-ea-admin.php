@@ -32,8 +32,8 @@ class EAccounting_Admin {
 	public function __construct() {
 		$this->define_constants();
 		add_action( 'init', array( $this, 'includes' ) );
-		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
-		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ) );
+		add_action( 'admin_menu', array( $this, 'register_pages' ), 20 );
+//		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ) );
 		add_action( 'admin_init', array( $this, 'setup_files' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
@@ -54,7 +54,7 @@ class EAccounting_Admin {
 	 */
 	public function includes() {
 		require_once dirname( __FILE__ ) . '/admin-functions.php';
-		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
+		require_once dirname( __FILE__ ) . '/class-ea-menu-controller.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
 		require_once dirname( __FILE__ ) . '/tables/class-ea-admin-list-table.php';
 		require_once dirname( __FILE__ ) . '/settings/class-ea-settings.php';
@@ -68,11 +68,68 @@ class EAccounting_Admin {
 		require_once dirname( __FILE__ ) . '/actions/tax-actions.php';
 	}
 
-	/**
-	 * Output buffering allows admin screens to make redirects later on.
-	 */
-	public function buffer() {
-		ob_start();
+
+	public function register_pages() {
+		$pages = array(
+			array(
+				'id'       => 'eaccounting',
+				'title'    => __( 'Accounting', 'wp-ever-accounting' ),
+				'path'     => 'eaccounting',
+				'icon'     => 'dashicons-chart-area',
+				'position' => 55.5,
+			),
+			array(
+				'id'     => 'eaccounting-dashboard',
+				'parent' => 'eaccounting',
+				'title'  => 'Dashboard',
+				'path'   => 'eaccounting',
+			),
+			array(
+				'id'         => 'eaccounting-transactions',
+				'title'      => __( 'Transactions', 'wp-ever-accounting' ),
+				'parent'     => 'eaccounting',
+				'path'       => '/transactions',
+			),
+			array(
+				'id'         => 'eaccounting-contacts',
+				'title'      => __( 'Contacts', 'wp-ever-accounting' ),
+				'parent'     => 'eaccounting',
+				'path'       => '/contacts',
+			),
+			array(
+				'id'         => 'eaccounting-incomes',
+				'title'      => __( 'Incomes', 'wp-ever-accounting' ),
+				'parent'     => 'eaccounting',
+				'path'       => '/incomes',
+			),
+			array(
+				'id'         => 'eaccounting-expenses',
+				'title'      => __( 'Expenses', 'wp-ever-accounting' ),
+				'parent'     => 'eaccounting',
+				'path'       => '/expenses',
+			),
+			array(
+				'id'         => 'eaccounting-banking',
+				'title'      => __( 'Banking', 'wp-ever-accounting' ),
+				'parent'     => 'eaccounting',
+				'path'       => '/banking',
+			),
+			array(
+				'id'         => 'eaccounting-misc',
+				'title'      => __( 'Misc', 'wp-ever-accounting' ),
+				'parent'     => 'eaccounting',
+				'path'       => '/misc',
+			),
+		);
+
+		$admin_pages = apply_filters( 'woocommerce_analytics_report_menu_items', $pages );
+
+
+		foreach ( $admin_pages as $page ) {
+			if ( ! is_null( $page ) ) {
+				eaccounting_register_page( $page );
+			}
+		}
 	}
 
 	/**
@@ -85,7 +142,7 @@ class EAccounting_Admin {
 		$key = ! empty( $_GET['eaccounting-action'] ) ? sanitize_key( $_GET['eaccounting-action'] ) : false;
 
 		if ( ! empty( $key ) ) {
-			error_log( 'eaccounting_admin_get_' . $key);
+			error_log( 'eaccounting_admin_get_' . $key );
 			do_action( 'eaccounting_admin_get_' . $key, $_GET );
 		}
 
@@ -265,6 +322,16 @@ class EAccounting_Admin {
 
 	}
 
+	/**
+	 * Set up a div for the app to render into.
+	 */
+	public static function page_wrapper() {
+		?>
+		<div class="wrap eaccounting">
+			<div id="eaccounting"></div>
+		</div>
+		<?php
+	}
 }
 
 EAccounting_Admin::instance();

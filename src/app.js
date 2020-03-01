@@ -11,11 +11,11 @@ import {Provider} from 'react-redux';
 
 import createReduxStore from 'state';
 import { getInitialState } from 'state/initial';
-import Home from './page/home';
+import Layout from './layout';
 
 const App = () => (
 	<Provider store={createReduxStore(getInitialState())}>
-			<Home/>
+			<Layout/>
 	</Provider>
 );
 
