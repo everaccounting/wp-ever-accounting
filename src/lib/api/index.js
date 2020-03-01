@@ -192,7 +192,7 @@ export const eAccountingApi = {
 		create: (data) => postApiRequest('revenues/', data),
 		update: (id, data) => postApiRequest('revenues/' + id, data),
 		list: params => getApiRequest('revenues', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+		bulk: (action, data, table) => postApiRequest('revenues/bulk', data, table),
 	},
 	taxrates: {
 		get: (id, data = {}) => getApiRequest('taxrates/' + id, data),

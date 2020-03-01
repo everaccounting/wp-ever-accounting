@@ -12,11 +12,10 @@ import './style.scss';
 import Accounts from "./components/accounts";
 import Transfers from "./components/transfers";
 import Reconciliations from "./components/reconciliations";
-import {getPath, updateQueryString} from "@eaccounting/navigation";
 
 const getTabs = [
 	{
-		path: '/banking/accounts',
+		path: '/banking',
 		component: Accounts,
 		name: __('Accounts'),
 	},
@@ -47,7 +46,7 @@ export default class Banking extends Component {
 				<h1 className="wp-heading-inline">{__('Banking')}</h1>
 				<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
 					{getTabs.map((tab, index) => {
-						return (<NavLink key={index}  to={tab.path} className={'nav-tab'}
+						return (<NavLink key={index} exact to={tab.path} className={'nav-tab'}
 										 activeClassName={'nav-tab-active'}>{tab.name}</NavLink>);
 					})}
 				</nav>
@@ -56,8 +55,6 @@ export default class Banking extends Component {
 					{getTabs.map((tab, index) => {
 						return(<Route exact key={index}  path={tab.path} component={(props) => <tab.component {...props}/>}/>);
 					})}
-					{/*{console.log(getPath())}*/}
-					{/*{updateQueryString(null, getPath())}*/}
 				</Switch>
 
 			</Router>

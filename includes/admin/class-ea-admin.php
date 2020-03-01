@@ -91,6 +91,12 @@ class EAccounting_Admin {
 				'path'       => '/transactions',
 			),
 			array(
+				'id'         => 'eaccounting-items',
+				'title'      => __( 'Items', 'wp-ever-accounting' ),
+				'parent'     => 'eaccounting',
+				'path'       => '/items',
+			),
+			array(
 				'id'         => 'eaccounting-contacts',
 				'title'      => __( 'Contacts', 'wp-ever-accounting' ),
 				'parent'     => 'eaccounting',

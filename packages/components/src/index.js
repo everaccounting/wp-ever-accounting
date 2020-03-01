@@ -15,6 +15,7 @@ export {default as BulkAction} from './table/bulk-action';
 export {default as Column} from './table/column';
 export {default as Group} from './table/group';
 export {default as Navigation} from './table/navigation';
+export {default as RowActions} from './table/row-actions';
 export {default as RowAction} from './table/row-action';
 export {default as SearchBox} from './table/searchbox';
 export {default as TextControl} from './text-control';

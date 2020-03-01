@@ -1,42 +1,20 @@
-/**
- * External dependencies
- */
-
-import {Component, Fragment} from 'react';
+import {Component, Fragment} from "react";
+import {connect} from "react-redux";
 import {translate as __} from 'lib/locale';
-import {connect} from 'react-redux';
-
-/**
- * Internal dependencies
- */
-import './style.scss';
-import Table from 'component/table';
-import TableNav from 'component/table/navigation';
-import SearchBox from 'component/search-box';
-import BulkAction from 'component/table/bulk-action';
-// import RevenuesRow from './row';
+import {STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED, STATUS_SAVING} from 'lib/status';
 import {
-	getRevenues,
-	createRevenue,
+	setGetItems,
 	setPage,
-	performTableAction,
+	setBulkAction,
 	setAllSelected,
 	setOrderBy,
 	setSearch,
 	setFilter,
-	setDisplay
 } from 'state/revenues/action';
-import {isEnabled} from 'component/table/utils';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
-import {
-	getFilterOptions,
-	getDisplayGroups,
-	getDisplayOptions,
-	getHeaders,
-	getBulk,
-	getSearchOptions
-} from './constants';
-import RevenuesRow from './row';
+import {getHeaders, getBulk} from "./constants";
+import {SelectControl, Table, Navigation, SearchBox, BulkAction, Button} from "@eaccounting/components";
+import Row from './row';
+import {Link} from "react-router-dom";
 
 class Revenues extends Component {
 	constructor(props) {
@@ -44,80 +22,71 @@ class Revenues extends Component {
 		this.state = {
 			isAdding:false
 		};
-		window.addEventListener('popstate', this.onPageChanged);
-	}
-
-	componentDidCatch(error, info) {
-		this.setState({error: true, stack: error, info});
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('popstate', this.onPageChanged);
 	}
 
 	componentDidMount() {
-		this.props.onLoadRevenues();
+		this.props.onMount();
 	}
 
-	onRenderRow = ( row, key, status, currentDisplayType, currentDisplaySelected ) => {
-		const { saving } = this.props.revenues;
-		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
-		const rowStatus = saving.indexOf( row.id ) !== -1 ? STATUS_SAVING : loadingStatus;
-		return (
-			<RevenuesRow
-				item={ row }
-				key={ row.id }
-				selected={ status.isSelected }
-				rowstatus={ rowStatus }
-				currentDisplayType={ currentDisplayType }
-				currentDisplaySelected={ currentDisplaySelected }
-				setFilter={ this.setFilter }
-				filters={ this.props.revenues.table.filterBy }
-			/>
-		);
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({isAdding: !this.state.isAdding});
 	};
 
-	setFilter = ( filterName, filterValue ) => {
-		const { filterBy } = this.props.revenues.table;
+	onClose = () => {
+		this.setState({isAdding: !this.state.isAdding});
+	};
 
-		this.props.onFilter( { ...filterBy, [ filterName ]: filterValue ? filterValue : undefined } );
+	onRenderRow = (item, pos, status, search) => {
+		const {saving} = this.props.revenues;
+		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
+		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
+		return (
+			<Row
+				item={item}
+				key={pos}
+				status={rowStatus}
+				search={search}
+				{...this.props}/>
+		);
 	};
 
 	render() {
 		const {status, total, table, rows, saving} = this.props.revenues;
-		const isSaving = saving.indexOf(0) !== -1;
+		const {isAdding,} = this.state;
+		const {match} = this.props;
 		return (
 			<Fragment>
+				{/*{isAdding && <EditAccount onClose={this.onClose}/>}*/}
+
 				<div className="ea-table-display">
+					<Link className="page-title-action" to={`${match.path}/revenues/add`}>{__('Add Revenue')}</Link>
 					<SearchBox
-						status={ status }
-						table={ table }
-						onSearch={ this.props.onSearch }
-						selected={ table.filterBy }
-						searchTypes={ getSearchOptions() }
+						status={status}
+						table={table}
+						onSearch={this.props.onSearch}
 					/>
 				</div>
 
-				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } bulk={ getBulk() }>
-					<BulkAction>
-
-					</BulkAction>
-				</TableNav>
+				<Navigation
+					total={total}
+					selected={table.selected}
+					table={table}
+					onChangePage={this.props.onChangePage}
+					onAction={this.props.onAction}
+					status={status}
+					bulk={getBulk()}/>
 
 				<Table
-					headers={ getHeaders() }
-					rows={ rows }
-					total={ total }
-					row={ this.onRenderRow }
-					table={ table }
-					status={ status }
-					onSetAllSelected={ this.props.onSetAllSelected }
-					onSetOrderBy={ this.props.onSetOrderBy }
-					currentDisplayType={ table.displayType }
-					currentDisplaySelected={ table.displaySelected }
+					headers={getHeaders()}
+					rows={rows}
+					total={total}
+					row={this.onRenderRow}
+					table={table}
+					status={status}
+					onSetAllSelected={this.props.onSetAllSelected}
+					onSetOrderBy={this.props.onSetOrderBy}
 				/>
-
-				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } />
 
 			</Fragment>
 		);
@@ -133,14 +102,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onLoadRevenues: () => {
-			dispatch(getRevenues());
+		onMount: () => {
+			dispatch(setGetItems());
 		},
 		onChangePage: page => {
 			dispatch(setPage(page));
 		},
-		onAction: action => {
-			dispatch(performTableAction(action));
+		onAction: (action) => {
+			dispatch(setBulkAction(action));
 		},
 		onSetAllSelected: onoff => {
 			dispatch(setAllSelected(onoff));
@@ -153,13 +122,7 @@ function mapDispatchToProps(dispatch) {
 		},
 		onSearch: (search) => {
 			dispatch(setSearch(search));
-		},
-		onCreate: item => {
-			dispatch(createRevenue(item));
-		},
-		onSetDisplay: (displayType, displaySelected) => {
-			dispatch(setDisplay(displayType, displaySelected));
-		},
+		}
 	}
 }
 

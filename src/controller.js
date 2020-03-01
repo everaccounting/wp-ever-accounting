@@ -10,6 +10,7 @@ import {
 
 import {applyFilters} from "@wordpress/hooks";
 import Dashboard from "./page/dashboard";
+import Incomes from "./page/incomes";
 import Banking from "./page/banking";
 import Transactions from "./page/transactions";
 import Misc from "./page/misc";
@@ -29,8 +30,38 @@ export const getPages = () => {
 			wpOpenMenu: 'toplevel_page_eaccounting'
 		},
 		{
+			container: Incomes,
+			path: '/incomes/:section/add',
+			wpOpenMenu: 'toplevel_page_eaccounting'
+		},
+		{
+			container: Incomes,
+			path: '/incomes/:section/:id',
+			wpOpenMenu: 'toplevel_page_eaccounting'
+		},
+		{
+			container: Incomes,
+			path: '/incomes/:section',
+			wpOpenMenu: 'toplevel_page_eaccounting'
+		},
+		{
+			container: Incomes,
+			path: '/incomes',
+			wpOpenMenu: 'toplevel_page_eaccounting'
+		},
+		{
+			container: Banking,
+			path: '/banking/:section',
+			wpOpenMenu: 'toplevel_page_eaccounting'
+		},
+		{
 			container: Banking,
 			path: '/banking',
+			wpOpenMenu: 'toplevel_page_eaccounting'
+		},
+		{
+			container: Misc,
+			path: '/misc/:section',
 			wpOpenMenu: 'toplevel_page_eaccounting'
 		},
 		{
@@ -87,7 +118,7 @@ export class Controller extends Component {
 		const {page, match, location} = this.props;
 		const {url, params} = match;
 		const query = this.getQuery(location.search);
-		window.wpNavMenuUrlUpdate( query );
+		// window.wpNavMenuUrlUpdate( query );
 		window.wpNavMenuClassChange( page, url );
 		return (
 			<Fragment>
@@ -109,22 +140,22 @@ export function updateLinkHref( item, nextQuery, excludedScreens ) {
 	const isAccounting = /admin.php\?page=eaccounting/.test( item.href );
 	if ( isAccounting ) {
 		const search = last( item.href.split( '?' ) );
+		const page = last( item.href.split( '#' ) );
 		const query = parse( search );
-		const path = query.path || 'dashboard';
-		const screen = path.replace( '/analytics', '' ).replace( '/', '' );
+		const screen = path.replace( 'eaccounting', '' ).replace( '/', '' );
 		const isExcludedScreen = excludedScreens.includes( screen );
 		const href =
 			'admin.php?' +
 			stringify(
 				Object.assign( query, isExcludedScreen ? {} : nextQuery )
 			);
-
+		console.log(href);
 		// Replace the href so you can see the url on hover.
 		item.href = href;
-		item.onclick = ( e ) => {
-			e.preventDefault();
-			getHistory().push( href );
-		};
+		// item.onclick = ( e ) => {
+		// 	e.preventDefault();
+		// 	getHistory().push( href );
+		// };
 	}
 }
 
@@ -133,7 +164,7 @@ export function updateLinkHref( item, nextQuery, excludedScreens ) {
 window.wpNavMenuUrlUpdate = function( query ) {
 	const excludedScreens = [];
 	const nextQuery = getPersistedQuery( query );
-
+	console.log(nextQuery);
 	Array.from(
 		document.querySelectorAll( '#adminmenu a' )
 	).forEach( ( item ) => updateLinkHref( item, nextQuery, excludedScreens ) );
@@ -141,8 +172,6 @@ window.wpNavMenuUrlUpdate = function( query ) {
 
 // When the route changes, we need to update wp-admin's menu with the correct section & current link
 window.wpNavMenuClassChange = function( page, url ) {
-	console.log(page);
-	console.log(url);
 	Array.from( document.getElementsByClassName( 'current' ) ).forEach(
 		function( item ) {
 			item.classList.remove( 'current' );
@@ -163,9 +192,7 @@ window.wpNavMenuClassChange = function( page, url ) {
 	const pageUrl =
 		url === '/'
 			? 'admin.php?page=eaccounting'
-			: 'admin.php?page=eaccounting&path=' + encodeURIComponent( url );
-
-		console.log(pageUrl);
+			: 'admin.php?page=eaccounting#' + url;
 	const currentItemsSelector =
 		url === '/'
 			? `li > a[href$="${ pageUrl }"], li > a[href*="${ pageUrl }?"]`
@@ -183,7 +210,4 @@ window.wpNavMenuClassChange = function( page, url ) {
 		currentMenu.classList.add( 'wp-menu-open' );
 		currentMenu.classList.add( 'current' );
 	}
-
-	// const wpWrap = document.querySelector( '#wpwrap' );
-	// wpWrap.classList.remove( 'wp-responsive-open' );
 };

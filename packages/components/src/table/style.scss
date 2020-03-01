@@ -15,6 +15,10 @@
 		}
 	}
 
+  	td{
+	  vertical-align: middle;
+	}
+
 	.column-status {
 		width: 150px;
 	}
@@ -40,6 +44,36 @@
 
 	.ea-money {
 		font-family: sans-serif;
+	}
+
+
+	.column-actions{
+	  width:110px;
+	  .components-dropdown-menu{
+		padding: 0;
+	  }
+	  .components-popover__content{
+		min-width: 0;
+		width: 160px;
+	  }
+	  .components-popover{
+		margin-left: -33px;
+	  }
+	}
+
+  	//dropdown button
+  	.components-dropdown-menu__toggle{
+	  color: #444;
+	  border: 0;
+	  padding: 3px 8px;
+	  border-radius: 0;
+	  &:hover,&:focus,&:active{
+		box-shadow: none !important;
+		outline: none !important;
+	  }
+	  svg{
+		width: 16px;
+	  }
 	}
 
 }

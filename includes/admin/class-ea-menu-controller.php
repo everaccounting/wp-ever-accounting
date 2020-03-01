@@ -128,7 +128,7 @@ class EAccounting_Page_Controller {
 		$options = wp_parse_args( $options, $defaults );
 
 		if ( 0 !== strpos( $options['path'], self::PAGE_ROOT ) ) {
-			$options['path'] = self::PAGE_ROOT . '&path=' . $options['path'];
+			$options['path'] = self::PAGE_ROOT . '#/' . $options['path'];
 		}
 		if ( is_null( $options['parent'] ) ) {
 			add_menu_page(

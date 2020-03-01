@@ -13,8 +13,9 @@ import {
 	REVENUES_DISPLAY_SET,
 } from './type';
 
-import { tableAction, createAction, updateAction, processRequest } from 'lib/store';
-import { eAccountingApi } from 'lib/api';
+import {getItems, updateItem, bulkAction} from "lib/store";
+import {eAccountingApi} from "lib/api";
+
 
 const STATUS_REVENUES_ITEM = {
 	store: 'revenues',
@@ -25,21 +26,20 @@ const STATUS_REVENUES_ITEM = {
 };
 const STATUS_REVENUE = {
 	store: 'revenues',
-	saving: REVENUES_LOADING,
-	saved: REVENUES_LOADED,
+	loading: REVENUES_LOADING,
+	loaded: REVENUES_LOADED,
 	failed: REVENUES_FAILED,
 	order: 'name',
 };
 
-export const createRevenue = item => createAction( eAccountingApi.revenues.create, item, STATUS_REVENUES_ITEM );
-export const updateRevenue = ( id, item ) => updateAction( eAccountingApi.revenues.update, id, item, STATUS_REVENUES_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.revenues.bulk, action, ids, STATUS_REVENUES_ITEM );
-export const getRevenues = args => ( dispatch, getState ) => processRequest( eAccountingApi.revenues.list, dispatch, STATUS_REVENUE, args, getState().revenues );
-export const setOrderBy = ( orderby, order ) => getRevenues( { orderby, order } );
-export const setPage = page => getRevenues( { page } );
-export const setFilter = ( filterBy ) => getRevenues( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getRevenues( { search, orderby: '', page: 0 } );
-export const setSelected = items => ( { type: REVENUES_SET_SELECTED, items: items.map( parseInt ) } );
-export const setAllSelected = onoff => ( { type: REVENUES_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getRevenues( table );
-export const setDisplay = ( displayType, displaySelected ) => ( { type: REVENUES_DISPLAY_SET, displayType, displaySelected } );
+export const setCreateItem = item => ({type: REVENUES_ITEM_ADDED, item});
+export const setUpdateItem = (id, item) => (dispatch, getState) => updateItem(eAccountingApi.revenues.update, id, item, STATUS_REVENUES_ITEM, dispatch, getState().revenues);
+export const setGetItems = args => (dispatch, getState) => getItems(eAccountingApi.revenues.list, dispatch, STATUS_REVENUE, args, getState().revenues);
+export const setOrderBy = (orderby, order) => setGetItems({orderby, order});
+export const setPage = page => setGetItems({page});
+export const setFilter = (filterBy) => setGetItems({filterBy, orderby: '', page: 1});
+export const setSearch = (search) => setGetItems({search, orderby: '', page: 1});
+export const setSelected = items => ({type: REVENUES_SET_SELECTED, items: items.map(parseInt)});
+export const setAllSelected = onoff => ({type: REVENUES_SET_ALL_SELECTED, onoff});
+export const setBulkAction = (action, ids ) =>  (dispatch, getState) => bulkAction(eAccountingApi.revenues.bulk, action, ids, STATUS_REVENUE, dispatch, getState().revenues);
+

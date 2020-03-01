@@ -242,15 +242,18 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
-			'id'             => $item->id,
+			'id'             => intval( $item->id ),
 			'account_id'     => $item->account_id,
+			'account'        => eaccounting_get_account( $item->account_id ),
 			'paid_at'        => $item->paid_at,
-			'amount'         => $item->amount,
+			'amount'         => eaccounting_money($item->amount, $item->currency_code, true )->format(),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
 			'contact_id'     => $item->contact_id,
+			'contact'        => eaccounting_get_contact( $item->contact_id ),
 			'description'    => $item->description,
 			'category_id'    => $item->category_id,
+			'category'       => eaccounting_get_category( $item->category_id ),
 			'reference'      => $item->reference,
 			'payment_method' => $item->payment_method,
 			'attachment_url' => $item->attachment_url,
