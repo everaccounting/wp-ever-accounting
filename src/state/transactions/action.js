@@ -8,7 +8,7 @@ import {
 } from './type';
 
 import {getItems} from "lib/store";
-import {eAccountingApi} from "lib/api";
+import {accountingApi} from "lib/api";
 
 const STATUS_TRANSACTION = {
 	store: 'transactions',
@@ -18,7 +18,7 @@ const STATUS_TRANSACTION = {
 	order: 'paid_at',
 };
 
-export const setGetItems = args => (dispatch, getState) => getItems(eAccountingApi.transactions.list, dispatch, STATUS_TRANSACTION, args, getState().transactions);
+export const setGetItems = args => (dispatch, getState) => getItems(accountingApi.transactions.list, dispatch, STATUS_TRANSACTION, args, getState().transactions);
 export const setOrderBy = (orderby, order) => setGetItems({orderby, order});
 export const setPage = page => setGetItems({page});
 export const setFilter = (filterBy) => setGetItems({filterBy,orderby: '', page: 1});

@@ -106,7 +106,7 @@ class EAccounting_Admin {
 				'id'         => 'eaccounting-incomes',
 				'title'      => __( 'Incomes', 'wp-ever-accounting' ),
 				'parent'     => 'eaccounting',
-				'path'       => '/incomes',
+				'path'       => '/incomes/revenues',
 			),
 			array(
 				'id'         => 'eaccounting-expenses',
@@ -124,7 +124,7 @@ class EAccounting_Admin {
 				'id'         => 'eaccounting-misc',
 				'title'      => __( 'Misc', 'wp-ever-accounting' ),
 				'parent'     => 'eaccounting',
-				'path'       => '/misc',
+				'path'       => '/misc/categories',
 			),
 		);
 

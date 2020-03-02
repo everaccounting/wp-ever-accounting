@@ -14,7 +14,7 @@ import {
 } from './type';
 
 import { tableAction, createAction, updateAction, processRequest } from 'lib/store';
-import { eAccountingApi } from 'lib/api';
+import { accountingApi } from 'lib/api';
 
 const STATUS_INVOICES_ITEM = {
 	store: 'invoices',
@@ -31,10 +31,10 @@ const STATUS_INVOICE = {
 	order: 'name',
 };
 
-export const createInvoice = item => createAction( eAccountingApi.invoices.create, item, STATUS_INVOICES_ITEM );
-export const updateInvoice = ( id, item ) => updateAction( eAccountingApi.invoices.update, id, item, STATUS_INVOICES_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.invoices.bulk, action, ids, STATUS_INVOICES_ITEM );
-export const getInvoices = args => ( dispatch, getState ) => processRequest( eAccountingApi.invoices.list, dispatch, STATUS_INVOICE, args, getState().invoices );
+export const createInvoice = item => createAction( accountingApi.invoices.create, item, STATUS_INVOICES_ITEM );
+export const updateInvoice = ( id, item ) => updateAction( accountingApi.invoices.update, id, item, STATUS_INVOICES_ITEM );
+export const performTableAction = ( action, ids ) => tableAction( accountingApi.invoices.bulk, action, ids, STATUS_INVOICES_ITEM );
+export const getInvoices = args => ( dispatch, getState ) => processRequest( accountingApi.invoices.list, dispatch, STATUS_INVOICE, args, getState().invoices );
 export const setOrderBy = ( orderby, order ) => getInvoices( { orderby, order } );
 export const setPage = page => getInvoices( { page } );
 export const setFilter = ( filterBy ) => getInvoices( { filterBy, orderby: '', page: 0 } );

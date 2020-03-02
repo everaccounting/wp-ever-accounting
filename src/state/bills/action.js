@@ -14,7 +14,7 @@ import {
 } from './type';
 
 import { tableAction, createAction, updateAction, processRequest } from 'lib/store';
-import { eAccountingApi } from 'lib/api';
+import { accountingApi } from 'lib/api';
 
 const STATUS_BILLS_ITEM = {
 	store: 'bills',
@@ -31,10 +31,10 @@ const STATUS_BILL = {
 	order: 'name',
 };
 
-export const createBill = item => createAction( eAccountingApi.bills.create, item, STATUS_BILLS_ITEM );
-export const updateBill = ( id, item ) => updateAction( eAccountingApi.bills.update, id, item, STATUS_BILLS_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( eAccountingApi.bills.bulk, action, ids, STATUS_BILLS_ITEM );
-export const getBills = args => ( dispatch, getState ) => processRequest( eAccountingApi.bills.list, dispatch, STATUS_BILL, args, getState().bills );
+export const createBill = item => createAction( accountingApi.bills.create, item, STATUS_BILLS_ITEM );
+export const updateBill = ( id, item ) => updateAction( accountingApi.bills.update, id, item, STATUS_BILLS_ITEM );
+export const performTableAction = ( action, ids ) => tableAction( accountingApi.bills.bulk, action, ids, STATUS_BILLS_ITEM );
+export const getBills = args => ( dispatch, getState ) => processRequest( accountingApi.bills.list, dispatch, STATUS_BILL, args, getState().bills );
 export const setOrderBy = ( orderby, order ) => getBills( { orderby, order } );
 export const setPage = page => getBills( { page } );
 export const setFilter = ( filterBy ) => getBills( { filterBy, orderby: '', page: 0 } );

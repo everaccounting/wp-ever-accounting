@@ -4,36 +4,43 @@
 
 import React, {Component, Fragment} from 'react';
 import {translate as __} from 'lib/locale';
-import {HashRouter as Router, Route, Switch, NavLink, Link} from 'react-router-dom';
+import {HashRouter as Router, Route, Switch, NavLink, Link, Redirect} from 'react-router-dom';
 
 /**
  * Internal dependencies
  */
 import './style.scss';
 import Revenues from './components/revenues';
+import EditRevenue from "../../component/edit-revenue";
 // import Invoices from "./components/invoices";
 
 const getTabs = [
-	{
-		path: '/incomes',
-		component: Revenues,
-		name: __('Revenues'),
-	},
 	{
 		path: '/incomes/revenues',
 		component: Revenues,
 		name: __('Revenues'),
 	},
 	{
+		path: '/incomes/revenues/new',
+		component: EditRevenue,
+	},
+	{
+		path: '/incomes/revenues/:id',
+		component: EditRevenue,
+	},
+	{
 		path: '/incomes/invoices',
 		component: Revenues,
 		name: __('Invoices'),
 	},
-	// {
-	// 	path: '/incomes/invoices',
-	// 	component: Invoices,
-	// 	name: __('Invoices'),
-	// }
+	{
+		path: '/incomes/invoices/new',
+		component: Revenues,
+	},
+	{
+		path: '/incomes/invoices/:id',
+		component: Revenues,
+	},
 ];
 
 export default class Incomes extends Component {
@@ -43,22 +50,15 @@ export default class Incomes extends Component {
 	}
 
 	render() {
-		const {params} = this.props;
-		const {section = 'revenues'} = params;
-		console.log(this.props);
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Incomes')}</h1>
 				<Router>
 					<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
 						{getTabs.map((tab, index) => {
-							// return (tab.name  && <Link key={index} to={tab.path} className={'nav-tab'}
-							// 							  exact
-							// 				 activeClassName={'nav-tab-active'} isActive={(match, location)=> {
-							// 				 	console.log(location);
-							// 				 	console.log(match);
-							// }}>{tab.name}</Link>);
-							return (tab.name  && <Link key={index} to={tab.path} className={'nav-tab'}>{tab.name}</Link>);
+							return (tab.name && <NavLink key={index} to={tab.path} className={'nav-tab'} activeClassName={'nav-tab-active'} isActive={(match, location)=> {
+								return location.pathname.includes(tab.path);
+							}}>{tab.name}</NavLink>);
 						})}
 					</nav>
 
@@ -66,6 +66,7 @@ export default class Incomes extends Component {
 						{getTabs.map((tab, index) => {
 							return(<Route exact key={index}  path={tab.path} component={(props) => <tab.component {...props}/>}/>);
 						})}
+						<Redirect to="/incomes/revenues"  from="/incomes" exact/>
 					</Switch>
 
 				</Router>

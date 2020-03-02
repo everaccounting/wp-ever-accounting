@@ -12,7 +12,7 @@ import {
 } from '@eaccounting/components';
 import {find} from 'lodash';
 import {setCreateItem, setUpdateItem} from 'state/categories/action'
-import {apiRequest, eAccountingApi} from "lib/api";
+import {apiRequest, accountingApi} from "lib/api";
 import {ColorPicker, Popover} from '@wordpress/components';
 
 const categoryTypes = [
@@ -94,7 +94,7 @@ class EditCategory extends Component {
 			this.props.onSave(item.id, item);
 			return this.props.onClose(ev);
 		}
-		apiRequest(eAccountingApi.categories.create({...item, type: type.value})).then(res => {
+		apiRequest(accountingApi.categories.create({...item, type: type.value})).then(res => {
 			notify(__('Category created successfully'));
 			this.props.onCreate(res.data);
 			this.setState({isSaving: false});

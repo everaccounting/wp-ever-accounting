@@ -1,6 +1,6 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
-import {apiRequest, eAccountingApi} from "lib/api";
+import {apiRequest, accountingApi} from "lib/api";
 import {AsyncSelect} from '@eaccounting/components'
 import PropTypes from "prop-types";
 
@@ -39,7 +39,7 @@ export default class AccountControl extends Component {
 	}
 
 	getAccounts = (params, callback) => {
-		apiRequest(eAccountingApi.accounts.list(params)).then((res) => {
+		apiRequest(accountingApi.accounts.list(params)).then((res) => {
 			callback(res.data.map(item => {
 				return {
 					label: `${item.name}`,

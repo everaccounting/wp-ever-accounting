@@ -14,7 +14,7 @@ import {
 } from '@eaccounting/components';
 import {taxTypes} from "state/taxrates/initial";
 import {getSelectedOption} from "lib/table";
-import {apiRequest, eAccountingApi} from "lib/api";
+import {apiRequest, accountingApi} from "lib/api";
 
 const initial = {
 	id: undefined,
@@ -74,7 +74,7 @@ class EditTaxRate extends Component {
 			this.props.onSave(item.id, item);
 			return this.props.onClose(ev);
 		}
-		apiRequest(eAccountingApi.taxrates.create(item)).then(res => {
+		apiRequest(accountingApi.taxrates.create(item)).then(res => {
 			notify(__('Tax Rate created successfully'));
 			this.props.onCreate(res.data);
 			this.setState({isSaving: false});

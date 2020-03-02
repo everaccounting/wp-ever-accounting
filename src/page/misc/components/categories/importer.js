@@ -5,7 +5,7 @@ import {Button, Placeholder, DropZoneProvider, DropZone, FormFileUpload, Spinner
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_FAILED} from 'lib/status';
 import Papa from 'papaparse';
 import {validateFileExt, getValidRows} from 'lib/import'
-import {eAccountingApi, getApi} from "lib/api";
+import {accountingApi, getApi} from "lib/api";
 
 const validCols = [
 	'name',
@@ -44,7 +44,7 @@ export default class CategoryImporter extends Component {
 			});
 		}
 
-		getApi(eAccountingApi.categories.create(item)).then(res => {
+		getApi(accountingApi.categories.create(item)).then(res => {
 			this.setState({
 				imported: this.state.imported + 1,
 				processed: this.state.processed + 1,

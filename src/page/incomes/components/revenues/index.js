@@ -60,7 +60,7 @@ class Revenues extends Component {
 				{/*{isAdding && <EditAccount onClose={this.onClose}/>}*/}
 
 				<div className="ea-table-display">
-					<Link className="page-title-action" to={`${match.path}/revenues/add`}>{__('Add Revenue')}</Link>
+					<Link className="page-title-action" to={`${match.path}/new`}>{__('Add Revenue')}</Link>
 					<SearchBox
 						status={status}
 						table={table}

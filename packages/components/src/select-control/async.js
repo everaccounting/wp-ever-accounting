@@ -31,7 +31,8 @@ export default class AsyncSelect extends Component {
 				value: item.id,
 			};
 		},
-		onChange: options => {},
+		onChange: options => {
+		},
 	};
 
 	constructor(props) {
@@ -45,17 +46,12 @@ export default class AsyncSelect extends Component {
 		return value.replace(/\W/g, '');
 	};
 
-	onChange = selected => {
-		this.setState({selected});
-		const {value = ''} = selected;
-		this.props.onChange(value);
-	};
-
 	render() {
-		const {label, help, className, before, after, required,loadOptions, ...props} = this.props;
+		const {label, help, className, before, after, required, loadOptions, ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
 			required: !!required,
 		});
+
 		const id = Math.random().toString(36).substring(7);
 		return (
 			<BaseControl label={label} help={help} className={classes}>

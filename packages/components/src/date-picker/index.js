@@ -94,7 +94,7 @@ export class DatePicker extends Component {
 DatePicker.defaultProps = {
 	containerClass: 'react-bootstrap-daterangepicker-container',
 	containerStyles: {
-		display: 'inline-block'
+		display: 'block'
 	}
 };
 

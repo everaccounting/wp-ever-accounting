@@ -1,6 +1,6 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
-import {apiRequest, eAccountingApi} from "lib/api";
+import {apiRequest, accountingApi} from "lib/api";
 import {AsyncSelect} from '@eaccounting/components'
 import PropTypes from "prop-types";
 
@@ -31,7 +31,6 @@ export default class CurrencyControl extends Component {
 			})
 		});
 
-
 		this.getCurrencies({}, (options) => {
 			this.setState({
 				defaultOptions: options
@@ -40,7 +39,7 @@ export default class CurrencyControl extends Component {
 	}
 
 	getCurrencies = (params, callback) => {
-		apiRequest(eAccountingApi.currencies.list(params)).then((res) => {
+		apiRequest(accountingApi.currencies.list(params)).then((res) => {
 			callback(res.data.map(item => {
 				return {
 					label: `${item.name}`,

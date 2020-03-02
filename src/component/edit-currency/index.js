@@ -12,7 +12,7 @@ import {
 	Button
 } from '@eaccounting/components';
 import {setCreateItem, setUpdateItem} from 'state/currencies/action'
-import {apiRequest, eAccountingApi} from "lib/api";
+import {apiRequest, accountingApi} from "lib/api";
 import {getSelectedOption} from "lib/table";
 
 const initial = {
@@ -100,7 +100,7 @@ class EditCurrency extends Component {
 			this.props.onSave(item.id, item);
 			return this.props.onClose(ev);
 		}
-		apiRequest(eAccountingApi.currencies.create(item)).then(res => {
+		apiRequest(accountingApi.currencies.create(item)).then(res => {
 			notify(__('Currency created successfully'));
 			this.props.onCreate(res.data);
 			this.setState({isSaving: false});

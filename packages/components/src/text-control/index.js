@@ -6,11 +6,12 @@ import PropTypes from 'prop-types';
 import {BaseControl} from '@wordpress/components';
 import {withInstanceId} from '@wordpress/compose';
 import classnames from 'classnames';
+import {__} from "@wordpress/i18n";
 
 
 class TextControl extends Component {
 	render() {
-		const {label, value, help, className, instanceId, onChange, before, after, type, required, ...props} = this.props;
+		const {label, value, help, className, instanceId, onChange, before, after, type, placeholder, required, ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-text-field', className, {
 			required: !!required,
 		});
@@ -26,6 +27,8 @@ class TextControl extends Component {
 		if (after) {
 			describedby.push(`${id}__after`);
 		}
+
+		const newPlaceholder = !placeholder && label ? __(`Enter ${label}`):placeholder;
 
 		return (
 			<BaseControl label={label} id={id} help={help} className={classes}>
@@ -43,6 +46,8 @@ class TextControl extends Component {
 						value={value}
 						onChange={onChangeValue}
 						required={required}
+						autoComplete="off"
+						placeholder={newPlaceholder}
 						aria-describedby={describedby.join(' ')}
 						{...props}
 					/>
@@ -66,7 +71,7 @@ TextControl.propTypes = {
 	label: PropTypes.string,
 	help: PropTypes.string,
 	type: PropTypes.string,
-	value: PropTypes.any.isRequired,
+	value: PropTypes.any,
 	className: PropTypes.string,
 	onChange: PropTypes.func.isRequired,
 	before: PropTypes.node,

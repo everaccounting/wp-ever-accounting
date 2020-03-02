@@ -2,7 +2,7 @@
  * Internal dependencies
  */
 import {getItems, updateItem, bulkAction} from "lib/store";
-import {eAccountingApi} from "lib/api";
+import {accountingApi} from "lib/api";
 
 import {
 	TRANSFERS_LOADING,
@@ -32,12 +32,12 @@ const STATUS_TRANSFER = {
 };
 
 export const setCreateItem = item => ({type: TRANSFERS_ITEM_ADDED, item});
-export const setUpdateItem = (id, item) => (dispatch, getState) => updateItem(eAccountingApi.transfers.update, id, item, STATUS_TRANSFERS_ITEM, dispatch, getState().transfers);
-export const setGetItems = args => (dispatch, getState) => getItems(eAccountingApi.transfers.list, dispatch, STATUS_TRANSFER, args, getState().transfers);
+export const setUpdateItem = (id, item) => (dispatch, getState) => updateItem(accountingApi.transfers.update, id, item, STATUS_TRANSFERS_ITEM, dispatch, getState().transfers);
+export const setGetItems = args => (dispatch, getState) => getItems(accountingApi.transfers.list, dispatch, STATUS_TRANSFER, args, getState().transfers);
 export const setOrderBy = (orderby, order) => setGetItems({orderby, order});
 export const setPage = page => setGetItems({page});
 export const setFilter = (filterBy) => setGetItems({filterBy, orderby: '', page: 1});
 export const setSearch = (search) => setGetItems({search, orderby: '', page: 1});
 export const setSelected = items => ({type: TRANSFERS_SET_SELECTED, items: items.map(parseInt)});
 export const setAllSelected = onoff => ({type: TRANSFERS_SET_ALL_SELECTED, onoff});
-export const setBulkAction = (action, ids ) =>  (dispatch, getState) => bulkAction(eAccountingApi.transfers.bulk, action, ids, STATUS_TRANSFER, dispatch, getState().transfers);
+export const setBulkAction = (action, ids ) =>  (dispatch, getState) => bulkAction(accountingApi.transfers.bulk, action, ids, STATUS_TRANSFER, dispatch, getState().transfers);
