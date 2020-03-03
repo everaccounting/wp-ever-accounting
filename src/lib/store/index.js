@@ -16,7 +16,7 @@ import {translate as __} from 'lib/locale';
 export const getItems = (endpoint, dispatch, statuses, params = {}, state = {}, reduxer = s => s) => {
 	const {table = {}, rows} = state;
 	const tableData = reduxer(mergeWithTable(table, params));
-	const data = removeDefaults({...table, ...params}, statuses.order);
+	const data = removeDefaults({...table, ...params});
 
 	// If it's the same as our current store then ignore
 	// if (isEqual(data, table) && rows.length > 0 && isEqual(params, {})) {

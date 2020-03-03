@@ -1,21 +1,23 @@
 /**
  * External dependencies
  */
-
 import React from 'react';
 import {Provider} from 'react-redux';
+import {ConnectedRouter} from 'connected-react-router'
+import configureStore, {history} from './store';
+import Revenues from "./page/revenues";
+import getInitialState from "store/initial";
+import routes from "./routes";
 
 /**
  * Internal dependencies
  */
-
-import createReduxStore from 'state';
-import { getInitialState } from 'state/initial';
-import Layout from './layout';
-
+const store = configureStore(getInitialState());
 const App = () => (
-	<Provider store={createReduxStore(getInitialState())}>
-			<Layout/>
+	<Provider store={store}>
+		<ConnectedRouter history={history}>
+				{routes}
+		</ConnectedRouter>
 	</Provider>
 );
 

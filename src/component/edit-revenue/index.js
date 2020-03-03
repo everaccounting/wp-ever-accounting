@@ -1,10 +1,21 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
 import {apiRequest, accountingApi} from "../../lib/api";
-import {Card, CompactCard, DatePicker, Icon, TextareaControl, TextControl, DateControl} from "@eaccounting/components";
+import {
+	Card,
+	CompactCard,
+	DatePicker,
+	Icon,
+	TextareaControl,
+	TextControl,
+	DateControl,
+	Spinner
+} from "@eaccounting/components";
 import AccountControl from "../account-control";
 import CategoryControl from "../category-control";
 import ContactControl from "../contact-control";
+import {STATUS_COMPLETE, STATUS_IN_PROGRESS} from "../../lib/status";
+
 
 const initial = {
 	id: undefined,
@@ -22,6 +33,7 @@ const initial = {
 	reconciled: '',
 };
 export default class EditRevenue extends Component {
+	_isMounted = false;
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -30,25 +42,29 @@ export default class EditRevenue extends Component {
 	}
 
 	componentDidMount() {
-		const {match} = this.props;
-		const {params} = match;
-		const {id} = params;
-		if (id) {
-			apiRequest(accountingApi.revenues.get(id)).then(res => {
-				this.setState({
-					...this.state,
-					...res.data
-				})
-			});
-		}
+		this._isMounted = true;
+		this.props.match.params.id && this.setItem(this.props.match.params.id);
 	}
 
+	setItem = (id = undefined) => {
+		id && apiRequest(accountingApi.revenues.get(id)).then(res => {
+			this._isMounted && this.setState({
+				...this.state,
+				...res.data
+			})
+		});
+	};
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
 
 	render() {
-		const {account_id, category_id, description, reference, contact_id, paid_at} = this.state;
+		const {id, account, category_id, description, reference, contact_id, paid_at, status} = this.state;
+
 		return (
 			<Fragment>
-
+				{JSON.stringify(this.state.contact_id)}
 				<CompactCard tagName="h3">{__('Add Revenue')}</CompactCard>
 				<Card>
 					<div className="ea-row">
@@ -88,28 +104,28 @@ export default class EditRevenue extends Component {
 						</div>
 
 						<div className="ea-col-6">
-							<ContactControl
-								label={__('Customer')}
-								before={<Icon icon={'user'}/>}
-								value={[account_id]}
-								isMulti
-								onChange={(account_id) => this.setState({account_id})}/>
+							{/*<ContactControl*/}
+							{/*	label={__('Customer')}*/}
+							{/*	before={<Icon icon={'user'}/>}*/}
+							{/*	value={account_id}*/}
+							{/*	isMulti*/}
+							{/*	onChange={(account_id) => this.setState({account_id})}/>*/}
 						</div>
 
-						<div className="ea-col-6">
-							<TextControl
-								label={__('Reference')}
-								before={<Icon icon={'file-text-o'}/>}
-								selected={reference}
-								onChange={(reference) => console.log(reference)}/>
-						</div>
+						{/*<div className="ea-col-6">*/}
+						{/*	<TextControl*/}
+						{/*		label={__('Reference')}*/}
+						{/*		before={<Icon icon={'file-text-o'}/>}*/}
+						{/*		selected={reference}*/}
+						{/*		onChange={(reference) => console.log(reference)}/>*/}
+						{/*</div>*/}
 
-						<div className="ea-col-12">
-							<TextareaControl
-								label={__('Description')}
-								onChange={description => console.log(description)}
-								value={description}/>
-						</div>
+						{/*<div className="ea-col-12">*/}
+						{/*	<TextareaControl*/}
+						{/*		label={__('Description')}*/}
+						{/*		onChange={description => console.log(description)}*/}
+						{/*		value={description}/>*/}
+						{/*</div>*/}
 
 
 					</div>

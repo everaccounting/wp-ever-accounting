@@ -38,7 +38,7 @@ export default class AsyncSelect extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selected: [],
+			value: [],
 		};
 	}
 
@@ -53,6 +53,7 @@ export default class AsyncSelect extends Component {
 		});
 
 		const id = Math.random().toString(36).substring(7);
+		console.log(props);
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
@@ -66,7 +67,6 @@ export default class AsyncSelect extends Component {
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
 						id={id}
-						isLoading
 						loadOptions={loadOptions}
 						{...props}
 					/>

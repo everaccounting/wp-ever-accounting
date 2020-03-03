@@ -10,5 +10,4 @@ if (document.getElementById('eaccounting')) {
 		<App/>,
 		document.getElementById('eaccounting')
 	);
-
 }

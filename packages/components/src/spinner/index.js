@@ -1,27 +1,35 @@
-/**
- * External dependencies
- */
+import { Component } from 'react';
+import { Spinner as Base } from '@wordpress/components';
+import classnames from 'classnames';
+import propTypes from 'prop-types';
 
-import React from 'react';
-import PropTypes from 'prop-types';
+export default class Spinner extends Component {
+	static propTypes = {
+		className: propTypes.string,
+		text: propTypes.string,
+		padding: propTypes.number,
+		align:propTypes.string,
+	};
 
-/**
- * Internal dependencies
- */
+	static defaultProps = {
+		text: '',
+		padding: 20,
+		align: 'center',
+	};
 
-const Spinner = props => {
-	const { size = '' } = props;
-	const klasses = 'spinner-container' + ( size ? ' spinner-' + size : '' );
-
-	return (
-		<div className={ klasses }>
-			<span className="css-spinner" />
-		</div>
-	);
-};
-
-Spinner.propTypes = {
-	size: PropTypes.string,
-};
-
-export default Spinner;
+	render() {
+		const classes = classnames({
+			'ea-spinner': true,
+		});
+		const style = {
+			padding: this.props.padding + 'px',
+			textAlign:this.props.align
+		};
+		return (
+			<div className={classes} style={style}>
+				<Base/>
+				<p>{this.props.text}</p>
+			</div>
+		);
+	}
+}
