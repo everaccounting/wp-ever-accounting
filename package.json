@@ -62,7 +62,6 @@
 				"@babel/preset-env": "7.4.5",
 				"@babel/preset-react": "^7.6.3",
 				"@eaccounting/components": "file:./packages/components",
-				"@eaccounting/navigation": "file:./packages/navigation",
 				"@wordpress/babel-plugin-import-jsx-pragma": "^2.2.0",
 				"@wordpress/babel-plugin-makepot": "^3.2.0",
 				"@wordpress/babel-preset-default": "^4.6.2",

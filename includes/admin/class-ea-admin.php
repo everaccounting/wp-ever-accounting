@@ -209,13 +209,6 @@ class EAccounting_Admin {
 		), time() );
 
 
-		wp_register_script(
-			'eaccounting-navigation',
-			$dist . '/navigation/index.js',
-			[],
-			time(),
-			true
-		);
 
 		wp_register_script(
 			'eaccounting-components',
@@ -241,7 +234,6 @@ class EAccounting_Admin {
 				'wp-i18n',
 				'wp-tinymce',
 				'eaccounting-components',
-				'eaccounting-navigation'
 			) ),
 			time(),
 			true

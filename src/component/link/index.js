@@ -2,11 +2,10 @@ import { push } from 'connected-react-router'
 import {connect} from "react-redux";
 
 export const Link = (props) => {
-	const {href, className ='', children} = props;
-
+	const {href, className ='', children, push} = props;
 	const handleClick = (e, link) => {
 		e.preventDefault();
-		props.push(link);
+		push(link);
 	};
 
 	return (
@@ -17,3 +16,4 @@ export const Link = (props) => {
 };
 
 export default connect(null, { push })(Link);
+

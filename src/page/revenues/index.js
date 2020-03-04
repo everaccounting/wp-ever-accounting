@@ -35,16 +35,16 @@ class Revenues extends Component {
 
 	goTo = (ev, route) => {
 		ev.preventDefault();
+		console.log(this.props)
 		this.props.history.push(route);
 	};
 
 	render() {
-		console.log(this.props);
-		const {status, total, table, rows, saving} = this.props;
+		const {status, total, table, rows, saving, match} = this.props;
 		return (
 			<Fragment>
 				<div className="ea-table-display">
-					<a className="page-title-action" href="#" onClick={(e)=> this.goTo( e, `/new`)}>{__('Add Revenue')}</a>
+					<a className="page-title-action" onClick={(e)=> this.goTo(e, `${match.url}/new`)} >{__('Add Revenue')}</a>
 					<SearchBox
 						status={status}
 						table={table}

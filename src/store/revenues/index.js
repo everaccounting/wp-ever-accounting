@@ -9,5 +9,6 @@ export const initialRevenues = {
 	table: getDefaultTable(['name', 'paid_at'], ['type'], 'paid_at'),
 };
 
+
 export {default as revenues} from './reducers';
 export * from './actions';

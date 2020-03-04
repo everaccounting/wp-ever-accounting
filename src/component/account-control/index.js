@@ -25,11 +25,11 @@ export default class AccountControl extends Component {
 	componentDidMount() {
 		const {selected} = this.props;
 
-		selected && selected.length && this.getAccounts({include: selected}, (options) => {
-			this.setState({
-				value: options
-			})
-		});
+		// selected && selected.length && this.getAccounts({include: selected}, (options) => {
+		// 	this.setState({
+		// 		value: options
+		// 	})
+		// });
 
 		this.getAccounts({}, (options) => {
 			this.setState({

@@ -55,7 +55,7 @@ class Row extends Component {
 		const isLoading = status === STATUS_IN_PROGRESS;
 		const isSaving = status === STATUS_SAVING;
 		const disabled = isLoading || isSaving;
-
+		const {match} = this.props;
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
@@ -67,7 +67,7 @@ class Row extends Component {
 
 
 					<td className="column-primary column-paid_at">
-						<Link href={`/${id}`} ><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
+						<Link href={`${match.url}/${id}`} ><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
 						{/*<a href="#" onClick={(e)=> this.goTo( e, `/${id}`)}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></a>*/}
 					</td>
 
@@ -127,5 +127,4 @@ function mapDispatchToProps(dispatch) {
 function mapStateToProps({router}) {
 	return {router};
 }
-
 export default withRouter(connect()(Row));

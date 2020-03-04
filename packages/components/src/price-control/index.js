@@ -55,7 +55,7 @@ PriceControl.defaultProps = {
 PriceControl.propTypes = {
 	label: PropTypes.string,
 	help: PropTypes.string,
-	value: PropTypes.string,
+	value: PropTypes.any,
 	currency: PropTypes.object,
 	className: PropTypes.string,
 	onChange: PropTypes.func,

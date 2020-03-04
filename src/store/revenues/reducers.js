@@ -10,8 +10,7 @@ const revenues = (state = initialRevenues, action) => {
 		case "REVENUES_SUCCESS":
 			return {...state, status:STATUS_COMPLETE, rows: action.payload.data, total: action.payload.total || state.total, table: {...state.table, selected:[]}};
 
-		case "REVENUE_SUCCESS":
-			console.log(action);
+		case "REVENUES_FAILED":
 			return {...state, revenue: action.payload.data};
 		default:
 			return state;

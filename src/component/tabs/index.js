@@ -1,61 +1,30 @@
 import React from 'react';
-import { translate as __ } from 'lib/locale';
+import {translate as __} from 'lib/locale';
 import PropTypes from 'prop-types';
+import Link from "../link";
+import classNames from 'classnames';
+import {connect} from "react-redux";
 
-const isCurrent = ( page, item ) => page === item.path || page === 'redirect' && item.path === '';
-const tabs = () => [
-	{
-		name: __( 'Redirects' ),
-		value: '',
-	},
-	{
-		name: __( 'Groups' ),
-		value: 'groups',
-	},
-	{
-		name: __( 'Site' ),
-		value: 'site',
-	},
-	{
-		name: __( 'Log' ),
-		value: 'log',
-	},
-	{
-		name: __( '404s' ),
-		value: '404s',
-	},
-	{
-		name: __( 'Import/Export' ),
-		value: 'io',
-	},
-	{
-		name: __( 'Options' ),
-		value: 'options',
-	},
-	{
-		name: __( 'Support' ),
-		value: 'support',
-	},
-];
 
-const Tabs = props => {
-	const { onChangePage, } = props;
-	const menu = tabs().filter(option=> option.path !== '');
-	if ( menu.length < 2 ) {
-		return null;
-	}
+const Tabs = (props) => {
+	const {tabs, pathname} = props;
 
-	return(
+	const classes = (path) => {
+		return classNames('nav-tab', {
+			'nav-tab-active':pathname.includes(path)
+		});
+	};
+
+	return (
 		<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
-			{
-				menu.map( ( item, pos ) => <MenuItem key={ pos } item={ item } isCurrent={ isCurrent( page, item ) } onClick={ onChangePage } /> )
-			}
+			{tabs.map((tab, index) => {
+				return <Link key={index} className={classes(tab.path)} href={tab.path}>{tab.name}</Link>
+			})}
 		</nav>
 	)
-
 };
-Tabs.propTypes = {
-	onChangePage: PropTypes.func.isRequired,
-};
+const mapStateToProps = state => ({
+	pathname: state.router.location.pathname,
+});
 
-export default Tabs;
+export default connect(mapStateToProps)(Tabs)

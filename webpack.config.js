@@ -36,7 +36,7 @@ const eAccountingPackages = [
 	// 'csv-export',
 	// 'currency',
 	// 'date',
-	'navigation',
+	// 'navigation',
 	// 'number',
 ];
 

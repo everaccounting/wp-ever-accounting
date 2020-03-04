@@ -6,7 +6,7 @@ import {Component, Fragment} from 'react';
 // import { translate as __ } from 'lib/locale';
 import {NotificationContainer} from 'react-notifications';
 import {HashRouter as Router, Route, Switch} from 'react-router-dom';
-import { getHistory } from '@eaccounting/navigation';
+
 /**
  * Internal dependencies
  */
