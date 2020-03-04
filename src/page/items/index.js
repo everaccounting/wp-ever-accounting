@@ -1,6 +1,6 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
-export default class Payments extends Component {
+export default class Items extends Component {
 	constructor( props ) {
 		super(props);
 		this.state = {};
@@ -10,10 +10,11 @@ export default class Payments extends Component {
 		this.setState( { error: true, stack: error, info } );
 	}
 
+
 	render() {
 		return(
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Payment')}</h1>
+				<h1 className="wp-heading-inline">{__('Items')}</h1>
 			</Fragment>
 		)
 	}

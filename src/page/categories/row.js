@@ -3,9 +3,8 @@ import PropTypes from "prop-types";
 import {RowActions} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";
-import Moment from 'react-moment';
-import {Link} from "react-router-dom"
-
+import {BulkAction} from "store/categories";
+import EditCategory from "component/edit-category";
 class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
@@ -22,11 +21,10 @@ class Row extends Component {
 	}
 
 	onEdit = () => {
-		console.log('edit');
+		this.setState({editing: !this.state.editing});
 	};
 
-	onDelete = ev => {
-		ev.preventDefault();
+	onDelete = () => {
 		this.props.onTableAction('delete', this.props.item.id);
 	};
 
@@ -38,12 +36,11 @@ class Row extends Component {
 		this.setState({editing: !this.state.editing});
 	};
 
-
 	render() {
 		const {isSelected, disabled, item} = this.props;
-		const {id, first_name, last_name, email, phone} = item;
+		const {id, name, type, color} = item;
 		const {editing} = this.state;
-		const {match} = this.props;
+
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
@@ -56,18 +53,27 @@ class Row extends Component {
 							disabled={disabled}
 							checked={isSelected}
 							onChange={() => this.props.onSetSelected(item.id)}/>
+
+						{editing && <EditCategory
+							item={this.props.item}
+							onClose={this.onClose}
+							buttonTittle={__('Update')}
+							tittle={__('Update Category')}/>}
+
 					</th>
 
-					<td className="column-name">
-						<a href="#" onClick={this.onEdit}>{`${first_name} ${last_name}`}</a>
+
+					<td className="column-primary column-name">
+						{name}
 					</td>
 
-					<td className="column-email">{email}</td>
+					<td className="column-type ea-capitalize">
+						{type}
+					</td>
 
-					<td className="column-phone">{phone}</td>
-
-
-
+					<td className="column-type">
+						<span style={{color:color}} className='fa fa-2x fa-circle'/>
+					</td>
 
 					<td className="column-actions">
 						<RowActions controls={[
@@ -78,7 +84,7 @@ class Row extends Component {
 							},
 							{
 								title: __('Delete'),
-								onClick: this.onEdit,
+								onClick: this.onDelete,
 								disabled: disabled,
 							}
 						]}/>
@@ -95,8 +101,11 @@ class Row extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({type: "CONTACTS_SELECTED", ids: [ids]});
-		}
+			dispatch({type: "CATEGORIES_SELECTED", ids: [ids]});
+		},
+		onTableAction: (action, ids) => {
+			dispatch(BulkAction(action, ids));
+		},
 	};
 }
 

@@ -2,7 +2,7 @@
  * External dependencies
  */
 
-import { translate as __ } from 'lib/locale';
+import {translate as __} from 'lib/locale';
 
 export const getHeaders = () => [
 	{
@@ -11,17 +11,22 @@ export const getHeaders = () => [
 	},
 	{
 		name: 'name',
-		title: __( 'Name' ),
+		title: __('Name'),
 		primary: true,
 	},
 	{
-		name: 'number',
-		title: __( 'Number' ),
+		name: 'rate',
+		title: __('Rate %'),
 		sortable: true,
 	},
 	{
-		name: 'balance',
-		title: __( 'Balance' ),
+		name: 'type',
+		title: __('Type'),
+		sortable: true,
+	},
+	{
+		name: 'actions',
+		title: __('Actions'),
 		sortable: false,
 	}
 ];

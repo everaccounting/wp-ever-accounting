@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import {setSelected, setBulkAction, setUpdateItem} from 'state/categories/action';
 import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
-import {RowAction, Column, Spinner} from '@eaccounting/components';
+import {RowAction, td, Spinner} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import EditCategory from "component/edit-category";
 import {connect} from "react-redux";
@@ -91,18 +91,18 @@ class Row extends Component {
 
 				</th>
 
-				<Column className="column-primary column-name">
+				<td className="column-primary column-name">
 					<strong><a href="#" onClick={this.onEdit}>{name}</a></strong>
 					{this.renderActions(isSaving)}
-				</Column>
+				</td>
 
-				<Column className="column-type ea-capitalize">
+				<td className="column-type ea-capitalize">
 					{type}
-				</Column>
+				</td>
 
-				<Column className="column-type">
+				<td className="column-type">
 					<span style={{color:color}} className='fa fa-2x fa-circle'/>
-				</Column>
+				</td>
 			</tr>
 		)
 

@@ -7,9 +7,16 @@ import TextControl from "../text-control";
 import {noop} from "lodash";
 
 export default class DateControl extends Component {
+	static propTypes = {
+		format: PropTypes.string,
+	};
+
+	constructor(props) {
+		super(props);
+	}
 
 	onChange = (event, picker) => {
-		const value = picker.startDate.format('DD-MM-YYYY') || undefined;
+		const value = picker.startDate.format('YYYY-MM-DD') || undefined;
 		this.props.onChange && this.props.onChange(value);
 	};
 
@@ -17,8 +24,8 @@ export default class DateControl extends Component {
 		const {onChange, value, className, ...restProps} = this.props;
 		const classes = classnames('ea-date-field', className);
 		const date = value || undefined;
-		const startDate = date !== undefined ? moment(date, 'DD-MM-YYYY'): undefined;
-		const inputVal = startDate !== undefined ? startDate.format('DD-MM-YYYY'): '';
+		const startDate = date !== undefined ? moment(date, "YYYY-MM-DD") : undefined;
+		const inputVal = startDate !== undefined ? startDate.format('YYYY-MM-DD') : '';
 		return (
 			<Fragment>
 				<DatePicker
@@ -26,11 +33,10 @@ export default class DateControl extends Component {
 					singleDatePicker
 					startDate={startDate}
 					onApply={this.onChange}
-							containerClass="ea-date-field-container">
+					containerClass="ea-date-field-container">
 					<TextControl value={inputVal} onChange={noop} className={classes} {...restProps}/>
 				</DatePicker>
 			</Fragment>
 		)
-
 	}
 }

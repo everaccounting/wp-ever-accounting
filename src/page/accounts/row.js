@@ -1,6 +1,6 @@
 import {Component, Fragment} from "react";
 import PropTypes from "prop-types";
-import {RowActions} from '@eaccounting/components';
+import {Column, RowActions} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";
 import Moment from 'react-moment';
@@ -23,6 +23,7 @@ class Row extends Component {
 
 	onEdit = () => {
 		console.log('edit');
+		// this.setState({editing: !this.state.editing});
 	};
 
 	onDelete = ev => {
@@ -38,12 +39,17 @@ class Row extends Component {
 		this.setState({editing: !this.state.editing});
 	};
 
+	goTo = (ev, route) => {
+		ev.preventDefault();
+		this.props.history.push(route);
+	};
 
 	render() {
 		const {isSelected, disabled, item} = this.props;
-		const {id, first_name, last_name, email, phone} = item;
+		const {id, name, balance, number, bank_name} = item;
 		const {editing} = this.state;
 		const {match} = this.props;
+
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
@@ -58,16 +64,19 @@ class Row extends Component {
 							onChange={() => this.props.onSetSelected(item.id)}/>
 					</th>
 
-					<td className="column-name">
-						<a href="#" onClick={this.onEdit}>{`${first_name} ${last_name}`}</a>
+
+					<td className="column-primary column-name">
+						{name}
 					</td>
 
-					<td className="column-email">{email}</td>
 
-					<td className="column-phone">{phone}</td>
+					<td className="column-number">
+						{number || '-'}
+					</td>
 
-
-
+					<td className="column-money">
+						{balance}
+					</td>
 
 					<td className="column-actions">
 						<RowActions controls={[
@@ -95,7 +104,7 @@ class Row extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({type: "CONTACTS_SELECTED", ids: [ids]});
+			dispatch({type: "ACCOUNTS_SELECTED", ids: [ids]});
 		}
 	};
 }

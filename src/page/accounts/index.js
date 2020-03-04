@@ -1,19 +1,15 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
-import {connect} from "react-redux";
-import {fetchContacts, BulkAction} from "store/contacts";
+import {connect} from 'react-redux';
+import {fetchAccounts, BulkAction} from "store/accounts";
 import {getHeaders, getBulk} from "./constants";
 import {Navigation, SearchBox, Table} from "@eaccounting/components";
 import Row from './row';
 
-class Contacts extends Component {
-	constructor( props ) {
+class Accounts extends Component {
+	constructor(props) {
 		super(props);
 		this.state = {};
-	}
-
-	componentDidCatch( error, info ) {
-		this.setState( { error: true, stack: error, info } );
 	}
 
 	componentDidMount() {
@@ -33,15 +29,13 @@ class Contacts extends Component {
 		);
 	};
 
+
 	render() {
 		const {status, total, table, rows, match} = this.props;
-
-		return(
+		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
-				<a className="page-title-action">{__('Add Contact')}</a>
-
 				<div className="ea-table-display">
+
 					<SearchBox
 						status={status}
 						table={table}
@@ -76,31 +70,33 @@ class Contacts extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}/>
+
+
 			</Fragment>
 		)
 	}
 }
 
 const mapStateToProps = (state) => {
-	return state.contacts
+	return state.accounts
 };
 
 function mapDispatchToProps(dispatch) {
 	return {
 		onMount: (params) => {
-			dispatch(fetchContacts(params));
+			dispatch(fetchAccounts(params));
 		},
 		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchContacts({order_by, order}));
+			dispatch(fetchAccounts({order_by, order}));
 		},
 		onChangePage: (page) => {
-			dispatch(fetchContacts({page}));
+			dispatch(fetchAccounts({page}));
 		},
 		onSearch: (search) => {
-			dispatch(fetchContacts({search}));
+			dispatch(fetchAccounts({search}));
 		},
 		onSetAllSelected: (onoff) => {
-			dispatch({type: "CONTACTS_ALL_SELECTED", payload: onoff});
+			dispatch({type: "ACCOUNTS_ALL_SELECTED", payload: onoff});
 		},
 		onAction: (action) => {
 			dispatch(BulkAction(action));
@@ -111,4 +107,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Contacts);
+)(Accounts);

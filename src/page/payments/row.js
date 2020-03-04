@@ -23,6 +23,7 @@ class Row extends Component {
 
 	onEdit = () => {
 		console.log('edit');
+		// this.setState({editing: !this.state.editing});
 	};
 
 	onDelete = ev => {
@@ -38,12 +39,12 @@ class Row extends Component {
 		this.setState({editing: !this.state.editing});
 	};
 
-
 	render() {
 		const {isSelected, disabled, item} = this.props;
-		const {id, first_name, last_name, email, phone} = item;
+		const {id, paid_at, amount, account, contact, category} = item;
 		const {editing} = this.state;
 		const {match} = this.props;
+
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
@@ -58,16 +59,28 @@ class Row extends Component {
 							onChange={() => this.props.onSetSelected(item.id)}/>
 					</th>
 
-					<td className="column-name">
-						<a href="#" onClick={this.onEdit}>{`${first_name} ${last_name}`}</a>
+
+					<td className="column-primary column-paid_at">
+						<Link to={`${match.url}/${id}`}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
 					</td>
 
-					<td className="column-email">{email}</td>
 
-					<td className="column-phone">{phone}</td>
+					<td className="column-amount">
+						{amount}
+					</td>
+
+					<td className="column-category">
+
+					</td>
 
 
+					<td className="column-account">
+					</td>
 
+
+					<td className="column-customer">
+
+					</td>
 
 					<td className="column-actions">
 						<RowActions controls={[
@@ -95,7 +108,7 @@ class Row extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({type: "CONTACTS_SELECTED", ids: [ids]});
+			dispatch({type: "PAYMENTS_SELECTED", ids: [ids]});
 		}
 	};
 }

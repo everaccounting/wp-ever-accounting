@@ -1,30 +1,22 @@
-import React from 'react';
-import {translate as __} from 'lib/locale';
-import PropTypes from 'prop-types';
-import Link from "../link";
-import classNames from 'classnames';
-import {connect} from "react-redux";
+import {Fragment} from 'react';
+import {NavLink} from 'react-router-dom';
+import "./style.scss";
 
+export const Tabs = (props) => {
+	const {tabs} = props;
 
-const Tabs = (props) => {
-	const {tabs, pathname} = props;
-
-	const classes = (path) => {
-		return classNames('nav-tab', {
-			'nav-tab-active':pathname.includes(path)
-		});
-	};
 
 	return (
-		<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
-			{tabs.map((tab, index) => {
-				return <Link key={index} className={classes(tab.path)} href={tab.path}>{tab.name}</Link>
-			})}
-		</nav>
+		<Fragment>
+			<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
+				{tabs.map((tab, index) => {
+					return <NavLink key={index} className="nav-tab" activeClassName="nav-tab-active" to={tab.path}
+									isActive={(match, location,) => (location.pathname.includes(tab.path))}>{tab.name}</NavLink>
+				})}
+			</nav>
+			<div className="clearfix"/>
+		</Fragment>
 	)
 };
-const mapStateToProps = state => ({
-	pathname: state.router.location.pathname,
-});
 
-export default connect(mapStateToProps)(Tabs)
+export default Tabs;

@@ -4,20 +4,19 @@
 
 import React, {Component, Fragment} from 'react';
 import { translate as __ } from 'lib/locale';
-import {HashRouter as Router, NavLink, Route, Switch} from "react-router-dom";
+import {HashRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 
 /**
  * Internal dependencies
  */
-import Categories from "./components/categories";
-import Currencies from "./components/currencies";
-import TaxRates from "./components/taxrates";
-import './style.scss';
-
+import Categories from "../categories";
+import Currencies from "../currencies";
+import TaxRates from "../taxrates";
+import Tabs from "component/tabs";
 
 const getTabs = [
 	{
-		path: '/misc',
+		path: '/misc/categories',
 		component: Categories,
 		name: __('Categories'),
 	},
@@ -32,34 +31,22 @@ const getTabs = [
 		name: __('Tax Rates'),
 	}
 ];
-export default class Misc extends Component {
-	constructor( props ) {
-		super(props);
-	}
 
-	componentDidCatch( error, info ) {
-		this.setState( { error: true, stack: error, info } );
-	}
-
-	render() {
-		console.log(this.props);
-		return (
+const Misc = (props) => {
+	return (
+		<Fragment>
+			<Tabs tabs={getTabs}/>
 			<Router>
-				<h1 className="wp-heading-inline">{__('Miscellaneous')}</h1>
-				<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
-					{getTabs.map((tab, index) => {
-						return (<NavLink key={index} exact to={tab.path} className={'nav-tab'}
-										 activeClassName={'nav-tab-active'}>{tab.name}</NavLink>);
-					})}
-				</nav>
-
 				<Switch>
-					{getTabs.map((tab, index) => {
-						return(<Route exact key={index}  path={tab.path} component={(props) => <tab.component {...props}/>}/>);
-					})}
+					<Route exact path="/misc/categories" component={Categories}/>
+					<Route exact path="/misc/currencies" component={Currencies}/>
+					<Route exact path="/misc/taxrates" component={TaxRates}/>
+					<Redirect from="/misc" to="/mic/categories"/>
 				</Switch>
-
 			</Router>
-		);
-	}
-}
+
+		</Fragment>
+	)
+};
+
+export default Misc

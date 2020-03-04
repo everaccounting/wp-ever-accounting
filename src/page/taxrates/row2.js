@@ -84,9 +84,9 @@ class Row extends Component {
 					{parseFloat(rate)}
 				</Column>
 
-				<Column className="column-type ea-capitalize">
+				<td className="column-type ea-capitalize">
 					{type}
-				</Column>
+				</td>
 			</tr>
 		)
 	}

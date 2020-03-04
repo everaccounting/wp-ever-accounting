@@ -4,7 +4,7 @@ import {RowActions} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";
 import Moment from 'react-moment';
-import Link from "component/link";
+import {Link} from "react-router-dom"
 
 class Row extends Component {
 	static propTypes = {
@@ -49,6 +49,7 @@ class Row extends Component {
 		const {id, paid_at, amount, account, contact, category} = item;
 		const {editing} = this.state;
 		const {match} = this.props;
+
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
@@ -65,8 +66,7 @@ class Row extends Component {
 
 
 					<td className="column-primary column-paid_at">
-						<Link href={`${match.url}/${id}`}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
-						{/*<a href="#" onClick={(e)=> this.goTo( e, `/${id}`)}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></a>*/}
+						<Link to={`${match.url}/${id}`}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
 					</td>
 
 

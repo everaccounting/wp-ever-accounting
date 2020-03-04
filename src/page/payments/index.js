@@ -1,12 +1,13 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";
-import {fetchContacts, BulkAction} from "store/contacts";
+import {fetchPayments, BulkAction} from "store/payments";
 import {getHeaders, getBulk} from "./constants";
 import {Navigation, SearchBox, Table} from "@eaccounting/components";
 import Row from './row';
 
-class Contacts extends Component {
+
+class Payments extends Component {
 	constructor( props ) {
 		super(props);
 		this.state = {};
@@ -38,8 +39,7 @@ class Contacts extends Component {
 
 		return(
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
-				<a className="page-title-action">{__('Add Contact')}</a>
+				<h1 className="wp-heading-inline">{__('Payments')}</h1>
 
 				<div className="ea-table-display">
 					<SearchBox
@@ -81,26 +81,28 @@ class Contacts extends Component {
 	}
 }
 
+
+
 const mapStateToProps = (state) => {
-	return state.contacts
+	return state.payments
 };
 
 function mapDispatchToProps(dispatch) {
 	return {
 		onMount: (params) => {
-			dispatch(fetchContacts(params));
+			dispatch(fetchPayments(params));
 		},
 		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchContacts({order_by, order}));
+			dispatch(fetchPayments({order_by, order}));
 		},
 		onChangePage: (page) => {
-			dispatch(fetchContacts({page}));
+			dispatch(fetchPayments({page}));
 		},
 		onSearch: (search) => {
-			dispatch(fetchContacts({search}));
+			dispatch(fetchPayments({search}));
 		},
 		onSetAllSelected: (onoff) => {
-			dispatch({type: "CONTACTS_ALL_SELECTED", payload: onoff});
+			dispatch({type: "PAYMENTS_ALL_SELECTED", payload: onoff});
 		},
 		onAction: (action) => {
 			dispatch(BulkAction(action));
@@ -111,4 +113,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Contacts);
+)(Payments);

@@ -1,0 +1,8 @@
+.eaccounting-nav-tab-wrapper{
+  a{
+	&:focus{
+	  box-shadow: none;
+	  outline: none;
+	}
+  }
+}

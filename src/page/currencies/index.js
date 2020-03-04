@@ -1,12 +1,12 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";
-import {fetchContacts, BulkAction} from "store/contacts";
+import {fetchCurrencies, BulkAction} from "store/currencies";
 import {getHeaders, getBulk} from "./constants";
 import {Navigation, SearchBox, Table} from "@eaccounting/components";
 import Row from './row';
 
-class Contacts extends Component {
+class Currencies extends Component {
 	constructor( props ) {
 		super(props);
 		this.state = {};
@@ -33,13 +33,12 @@ class Contacts extends Component {
 		);
 	};
 
+
 	render() {
 		const {status, total, table, rows, match} = this.props;
-
 		return(
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
-				<a className="page-title-action">{__('Add Contact')}</a>
+				<a className="page-title-action">{__('Add Category')}</a>
 
 				<div className="ea-table-display">
 					<SearchBox
@@ -76,31 +75,33 @@ class Contacts extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}/>
+
 			</Fragment>
 		)
 	}
 }
 
+
 const mapStateToProps = (state) => {
-	return state.contacts
+	return state.currencies
 };
 
 function mapDispatchToProps(dispatch) {
 	return {
 		onMount: (params) => {
-			dispatch(fetchContacts(params));
+			dispatch(fetchCurrencies(params));
 		},
 		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchContacts({order_by, order}));
+			dispatch(fetchCurrencies({order_by, order}));
 		},
 		onChangePage: (page) => {
-			dispatch(fetchContacts({page}));
+			dispatch(fetchCurrencies({page}));
 		},
 		onSearch: (search) => {
-			dispatch(fetchContacts({search}));
+			dispatch(fetchCurrencies({search}));
 		},
 		onSetAllSelected: (onoff) => {
-			dispatch({type: "CONTACTS_ALL_SELECTED", payload: onoff});
+			dispatch({type: "CURRENCIES_ALL_SELECTED", payload: onoff});
 		},
 		onAction: (action) => {
 			dispatch(BulkAction(action));
@@ -111,4 +112,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(Contacts);
+)(Currencies);

@@ -15,10 +15,10 @@ import TableNav from 'component/table/navigation';
 import SearchBox from 'component/search-box';
 import BulkAction from 'component/table/bulk-action';
 // import TableDisplay from 'component/table/table-display';
-import AccountsRow from './row';
+import ContactsRow from './row';
 import {
-	getAccounts,
-	createAccount,
+	getContacts,
+	createContact,
 	setPage,
 	performTableAction,
 	setAllSelected,
@@ -26,21 +26,18 @@ import {
 	setSearch,
 	setFilter,
 	setDisplay
-} from 'state/accounts/action';
+} from 'state/contacts/action';
 import {isEnabled} from 'component/table/utils';
 import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
 import {
-	getFilterOptions,
-	getDisplayGroups,
-	getDisplayOptions,
 	getHeaders,
-	getBulk,
-	getSearchOptions
+	getBulk
 } from './constants';
-import EditAccount from 'component/edit-account';
-import {initialAccount} from 'state/accounts/selection';
+import EditContact from 'component/edit-account';
+import {ReactSelect} from "@eaccounting/components";
+import DateFilter from 'component/date-filter';
 
-class Accounts extends Component {
+class Contacts extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -58,15 +55,15 @@ class Accounts extends Component {
 	}
 
 	componentDidMount() {
-		this.props.onLoadAccounts();
+		//this.props.onLoadContacts();
 	}
 
 	onRenderRow = ( row, key, status, currentDisplayType, currentDisplaySelected ) => {
-		const { saving } = this.props.accounts;
+		const { saving } = this.props.contacts;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf( row.id ) !== -1 ? STATUS_SAVING : loadingStatus;
 		return (
-			<AccountsRow
+			<ContactsRow
 				item={ row }
 				key={ row.id }
 				selected={ status.isSelected }
@@ -74,7 +71,7 @@ class Accounts extends Component {
 				currentDisplayType={ currentDisplayType }
 				currentDisplaySelected={ currentDisplaySelected }
 				setFilter={ this.setFilter }
-				filters={ this.props.accounts.table.filterBy }
+				filters={ this.props.contacts.table.filterBy }
 			/>
 		);
 	};
@@ -88,7 +85,8 @@ class Accounts extends Component {
 	}
 
 	setFilter = ( filterName, filterValue ) => {
-		const { filterBy } = this.props.accounts.table;
+		const { filterBy } = this.props.contacts.table;
+
 		this.props.onFilter( { ...filterBy, [ filterName ]: filterValue ? filterValue : undefined } );
 	};
 
@@ -106,40 +104,51 @@ class Accounts extends Component {
 	};
 
 	render() {
-		const {status, total, table, rows, saving} = this.props.accounts;
+		const {status, total, table, rows, saving} = this.props.contacts;
 		const {isAdding} = this.state;
 		const isSaving = saving.indexOf(0) !== -1;
+		const options = [
+			{ value: 'chocolate', label: 'Chocolate' },
+			{ value: 'strawberry', label: 'Strawberry' },
+			{ value: 'vanilla', label: 'Vanilla' },
+		];
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Accounts')}</h1>
+				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
 				<a href="#" className="page-title-action" onClick={this.onAdd}>{__('Add New')}</a>
 				<hr className="wp-header-end"/>
-				{isAdding && <EditAccount item={initialAccount} onClose={this.onClose}/>}
+				{isAdding && <EditContact item={initialContact} onClose={this.onClose}/>}
 
-				<div className="ea-table-display">
-					<TableDisplay
-						disable={ status === STATUS_IN_PROGRESS }
-						options={ getDisplayOptions() }
-						groups={ getDisplayGroups() }
-						store="accounts"
-						currentDisplayType={ table.displayType }
-						currentDisplaySelected={ table.displaySelected }
-						setDisplay={ this.props.onSetDisplay }
-						validation={ this.validateDisplay }
-					/>
-					<SearchBox
-						status={ status }
-						table={ table }
-						onSearch={ this.props.onSearch }
-						selected={ table.filterBy }
-						searchTypes={ getSearchOptions() }
-					/>
-
-				</div>
 
 				<TableNav total={ total } selected={ table.selected } table={ table } onChangePage={ this.props.onChangePage } onAction={ this.props.onAction } status={ status } bulk={ getBulk() }>
 					<BulkAction>
+						{/*<MultiOptionDropdown*/}
+						{/*	options={ getFilterOptions() }*/}
+						{/*	selected={ table.filterBy ? table.filterBy : {} }*/}
+						{/*	onApply={ this.props.onFilter }*/}
+						{/*	title={ __( 'Filters' ) }*/}
+						{/*	isEnabled={ status !== STATUS_IN_PROGRESS }*/}
+						{/*/>*/}
+						{/*<SearchBox*/}
+						{/*	status={ status }*/}
+						{/*	table={ table }*/}
+						{/*	onSearch={ this.props.onSearch }*/}
+						{/*	selected={ table.filterBy }*/}
+						{/*	searchTypes={ getSearchOptions() }*/}
+						{/*/>*/}
+
 					</BulkAction>
+
+					<div className='alignleft actions'>
+						<DateFilter/>
+					</div>
+					<div className='alignleft actions'>
+						<ReactSelect options={options} placeholder={'search'} isMulti/>
+					</div>
+					<div className='alignleft actions'>
+						<ReactSelect options={options} placeholder={'search'}/>
+					</div>
+
 				</TableNav>
 
 				<Table
@@ -165,16 +174,16 @@ class Accounts extends Component {
 }
 
 function mapStateToProps(state) {
-	const {accounts} = state;
+	const {contacts} = state;
 	return {
-		accounts,
+		contacts,
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onLoadAccounts: () => {
-			dispatch(getAccounts());
+		onLoadContacts: () => {
+			dispatch(getContacts());
 		},
 		onChangePage: page => {
 			dispatch(setPage(page));
@@ -195,7 +204,7 @@ function mapDispatchToProps(dispatch) {
 			dispatch(setSearch(search));
 		},
 		onCreate: item => {
-			dispatch(createAccount(item));
+			dispatch(createContact(item));
 		},
 		onSetDisplay: (displayType, displaySelected) => {
 			dispatch(setDisplay(displayType, displaySelected));
@@ -206,4 +215,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps,
-)(Accounts);
+)(Contacts);

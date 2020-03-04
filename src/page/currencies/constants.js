@@ -23,6 +23,11 @@ export const getHeaders = () => [
 		name: 'rate',
 		title: __('Rate'),
 		sortable: true,
+	},
+	{
+		name: 'actions',
+		title: __('Actions'),
+		sortable: false,
 	}
 ];
 

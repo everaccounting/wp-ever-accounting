@@ -2,10 +2,10 @@ import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
 import {fetchRevenues, BulkAction} from "store/revenues";
-import {getHeaders} from "./constants";
+import {getHeaders, getBulk} from "./constants";
 import {Navigation, SearchBox, Table} from "@eaccounting/components";
+import {Link} from 'react-router-dom';
 import Row from './row';
-import {getBulk} from "../incomes/components/revenues/constants";
 
 class Revenues extends Component {
 	constructor(props) {
@@ -30,18 +30,13 @@ class Revenues extends Component {
 		);
 	};
 
-	goTo = (ev, route) => {
-		ev.preventDefault();
-		this.props.history.push(route);
-	};
 
 	render() {
 		const {status, total, table, rows, match} = this.props;
 		return (
 			<Fragment>
 				<div className="ea-table-display">
-					<a className="page-title-action"
-					   onClick={(e) => this.goTo(e, `${match.url}/new`)}>{__('Add Revenue')}</a>
+					<Link className="page-title-action" to={`${match.url}/new`}>{__('Add Revenue')}</Link>
 					<SearchBox
 						status={status}
 						table={table}
