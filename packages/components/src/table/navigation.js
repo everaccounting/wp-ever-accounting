@@ -17,7 +17,7 @@ class TableNav extends React.Component {
 		total: PropTypes.number.isRequired,
 		selected: PropTypes.array.isRequired,
 		table: PropTypes.object.isRequired,
-		onAction: PropTypes.func.isRequired,
+		onAction: PropTypes.func,
 		onChangePage: PropTypes.func.isRequired,
 		bulk: PropTypes.array,
 		status: PropTypes.string.isRequired,

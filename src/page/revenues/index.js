@@ -1,12 +1,10 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
-import {loadRevenues} from "store/revenues";
+import {fetchRevenues, BulkAction} from "store/revenues";
 import {getHeaders} from "./constants";
 import {Navigation, SearchBox, Table} from "@eaccounting/components";
-import {STATUS_IN_PROGRESS, STATUS_COMPLETE} from 'lib/status';
 import Row from './row';
-import {Link} from "component/link";
 import {getBulk} from "../incomes/components/revenues/constants";
 
 class Revenues extends Component {
@@ -20,31 +18,30 @@ class Revenues extends Component {
 	}
 
 	onRenderRow = (item, pos, status, search) => {
-		const {saving} = this.props;
-		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
-		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
+		const {selected} = this.props.table;
 		return (
 			<Row
 				item={item}
 				key={pos}
-				status={rowStatus}
+				disabled={status.isLoading}
 				search={search}
+				isSelected={selected.includes(item.id)}
 				{...this.props}/>
 		);
 	};
 
 	goTo = (ev, route) => {
 		ev.preventDefault();
-		console.log(this.props)
 		this.props.history.push(route);
 	};
 
 	render() {
-		const {status, total, table, rows, saving, match} = this.props;
+		const {status, total, table, rows, match} = this.props;
 		return (
 			<Fragment>
 				<div className="ea-table-display">
-					<a className="page-title-action" onClick={(e)=> this.goTo(e, `${match.url}/new`)} >{__('Add Revenue')}</a>
+					<a className="page-title-action"
+					   onClick={(e) => this.goTo(e, `${match.url}/new`)}>{__('Add Revenue')}</a>
 					<SearchBox
 						status={status}
 						table={table}
@@ -78,8 +75,7 @@ class Revenues extends Component {
 					table={table}
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
-					status={status}
-					bulk={getBulk()}/>
+					status={status}/>
 
 
 			</Fragment>
@@ -94,19 +90,22 @@ const mapStateToProps = (state) => {
 function mapDispatchToProps(dispatch) {
 	return {
 		onMount: (params) => {
-			dispatch(loadRevenues(params));
+			dispatch(fetchRevenues(params));
 		},
 		onSetOrderBy: (order_by, order) => {
-			dispatch(loadRevenues({order_by, order}));
+			dispatch(fetchRevenues({order_by, order}));
 		},
 		onChangePage: (page) => {
-			dispatch(loadRevenues({page}));
+			dispatch(fetchRevenues({page}));
 		},
 		onSearch: (search) => {
-			dispatch(loadRevenues({search}));
+			dispatch(fetchRevenues({search}));
 		},
-		onAction: (search) => {
-			dispatch(loadRevenues({search}));
+		onSetAllSelected: (onoff) => {
+			dispatch({type: "REVENUES_ALL_SELECTED", payload: onoff});
+		},
+		onAction: (action) => {
+			dispatch(BulkAction(action));
 		}
 	}
 }

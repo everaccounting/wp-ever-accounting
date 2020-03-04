@@ -1,24 +1,18 @@
-/**
- * External dependencies
- */
-import {Component, Fragment} from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment'
+import {Component, Fragment} from "react";
+import PropTypes from "prop-types";
+import {translate as __} from 'lib/locale';
+import Moment from 'react-moment';
+import moment from "moment";
 
-/**
- * Internal dependencies
- */
-import {Column} from "@eaccounting/components";
-
-
-export default class TransactionsRow extends Component {
+export default class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
+		disabled: PropTypes.bool.isRequired,
+		isSelected: PropTypes.bool,
 	};
 
 	constructor(props) {
 		super(props);
-		this.state = {};
 	}
 
 	getProp = (prop, properties, initial='-') => {
@@ -29,35 +23,38 @@ export default class TransactionsRow extends Component {
 	};
 
 	render() {
+		const {isSelected, disabled, item} = this.props;
 		const {paid_at, account, type = '', category = {name: '-'}, reference = '-', amount = ''} = this.props.item;
+
 		return (
 			<Fragment>
-				<tr>
-					<Column className="column-primary column-date">
+				<tr className={disabled ? 'disabled' : ''}>
+					<td className="column-primary column-date">
 						{moment(paid_at).format("d MMM Y")}
-					</Column>
+					</td>
 
-					<Column className="column-primary column-account">
+					<td className="column-primary column-account">
 						{this.getProp('name', account)}
-					</Column>
+					</td>
 
-					<Column className="column-primary column-type">
+					<td className="column-primary column-type">
 						{type}
-					</Column>
+					</td>
 
-					<Column className="column-primary column-category">
+					<td className="column-primary column-category">
 						{this.getProp('name', category)}
-					</Column>
+					</td>
 
-					<Column className="column-primary column-reference">
+					<td className="column-primary column-reference">
 						{reference}
-					</Column>
+					</td>
 
-					<Column className="column-primary column-amount">
+					<td className="column-primary column-amount">
 						{amount}
-					</Column>
+					</td>
 				</tr>
 			</Fragment>
+
 		)
 	}
 }

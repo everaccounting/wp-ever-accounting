@@ -1,20 +1,16 @@
 import {Component, Fragment} from "react";
 import PropTypes from "prop-types";
-
-import {setSelected, setBulkAction, setUpdateItem} from 'state/categories/action';
-import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
-import {RowAction, Column, Spinner, Icon, RowActions} from '@eaccounting/components';
+import {RowActions} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";
 import Moment from 'react-moment';
-import {withRouter} from 'react-router';
 import Link from "component/link";
 
 class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
-		// selected: PropTypes.bool.isRequired,
-		status: PropTypes.string.isRequired,
+		disabled: PropTypes.bool.isRequired,
+		isSelected: PropTypes.bool,
 	};
 
 	constructor(props) {
@@ -49,25 +45,27 @@ class Row extends Component {
 	};
 
 	render() {
-		const {id, paid_at, amount, account, contact, category} = this.props.item;
+		const {isSelected, disabled, item} = this.props;
+		const {id, paid_at, amount, account, contact, category} = item;
 		const {editing} = this.state;
-		const {status, selected} = this.props;
-		const isLoading = status === STATUS_IN_PROGRESS;
-		const isSaving = status === STATUS_SAVING;
-		const disabled = isLoading || isSaving;
 		const {match} = this.props;
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
 
 					<th scope="row" className="check-column">
-						{!isSaving && <input type="checkbox" name="item[]" value={id} disabled={isLoading} checked={selected} onChange={this.onSelected}/>}
-						{isSaving && <Spinner size="small"/>}
+						<input
+							type="checkbox"
+							name="item[]"
+							value={id}
+							disabled={disabled}
+							checked={isSelected}
+							onChange={() => this.props.onSetSelected(item.id)}/>
 					</th>
 
 
 					<td className="column-primary column-paid_at">
-						<Link href={`${match.url}/${id}`} ><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
+						<Link href={`${match.url}/${id}`}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
 						{/*<a href="#" onClick={(e)=> this.goTo( e, `/${id}`)}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></a>*/}
 					</td>
 
@@ -90,14 +88,16 @@ class Row extends Component {
 					</td>
 
 					<td className="column-actions">
-						<RowActions disabled={disabled} actions={[
+						<RowActions controls={[
 							{
 								title: __('Edit'),
-								onClick: this.onEdit
+								onClick: this.onEdit,
+								disabled: disabled,
 							},
 							{
 								title: __('Delete'),
-								onClick: this.onEdit
+								onClick: this.onEdit,
+								disabled: disabled,
 							}
 						]}/>
 					</td>
@@ -112,19 +112,13 @@ class Row extends Component {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onSetSelected: items => {
-			dispatch(setSelected(items));
-		},
-		onSaveCategory: (id, item) => {
-			dispatch(setUpdateItem(id, item));
-		},
-		onTableAction: (action, ids) => {
-			dispatch(setBulkAction(action, ids));
-		},
+		onSetSelected: ids => {
+			dispatch({type: "REVENUES_SELECTED", ids: [ids]});
+		}
 	};
 }
 
-function mapStateToProps({router}) {
-	return {router};
-}
-export default withRouter(connect()(Row));
+export default connect(
+	null,
+	mapDispatchToProps
+)(Row);

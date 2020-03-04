@@ -1,10 +1,10 @@
 import {combineReducers} from 'redux';
-import {connectRouter} from 'connected-react-router'
+import {transactions} from "./transactions";
 import {revenues} from "./revenues";
 import {revenue} from "./revenue";
 
-const createRootReducer = (history) => combineReducers({
-	router: connectRouter(history),
+const createRootReducer = combineReducers({
+	transactions,
 	revenues,
 	revenue
 });

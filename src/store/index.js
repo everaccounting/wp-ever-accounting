@@ -1,14 +1,14 @@
 /* global eAccountingi10n */
-import { createHashHistory } from 'history'
-import { applyMiddleware, compose, createStore } from 'redux'
-import { routerMiddleware } from 'connected-react-router'
-import createRootReducer from './reducers';
+import {applyMiddleware, createStore,} from 'redux';
+import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
-import logger from 'redux-logger'
+import reducers from './reducers';
 import {createPromise} from 'redux-promise-middleware';
-const siteBaseUrl = window.location.href.replace(['http://','https://'],'').replace(eAccountingi10n.baseUrl.replace(['http://','https://'],''), '');
-console.log(siteBaseUrl);
-export const history = createHashHistory();
+import logger from 'redux-logger'
+
+const composeEnhancers = composeWithDevTools( {
+	name: 'eaccounting',
+} );
 
 var middlewares = [
 	createPromise({
@@ -17,19 +17,15 @@ var middlewares = [
 	thunk,
 ];
 
-if ( process.env.NODE_ENV === 'development' ) {
+if (process.env.NODE_ENV === 'development') {
 	middlewares.push(logger);
 }
 
-export default function configureStore(preloadedState) {
+export default function createReduxStore(initialState = {}) {
 	return createStore(
-		createRootReducer(history),
-		preloadedState,
-		compose(
-			applyMiddleware(
-				routerMiddleware(history),
-				...middlewares,
-			),
-		),
+		reducers,
+		initialState,
+		composeEnhancers(applyMiddleware(...middlewares))
 	);
 }
+
