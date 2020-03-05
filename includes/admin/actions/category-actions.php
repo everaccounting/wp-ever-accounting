@@ -14,8 +14,7 @@ function eaccounting_activate_category( $data ) {
 	$category_id = absint( $data['category'] );
 	if ( $category_id ) {
 		eaccounting_insert_category( [
-			'id'     => $category_id,
-			'status' => 'active'
+			'id' => $category_id,
 		] );
 	}
 
@@ -41,8 +40,7 @@ function eaccounting_deactivate_category( $data ) {
 
 	if ( $category_id ) {
 		eaccounting_insert_category( [
-			'id'     => $category_id,
-			'status' => 'inactive'
+			'id' => $category_id,
 		] );
 	}
 
@@ -87,11 +85,10 @@ function eaccounting_edit_category( $posted ) {
 	}
 
 	$created = eaccounting_insert_category( array(
-		'id'     => absint($posted['id']),
-		'name'   => sanitize_text_field($posted['name']),
-		'type'   => sanitize_text_field($posted['type']),
-		'color'  => sanitize_text_field($posted['color']),
-		'status' => isset( $posted['status'] ) ? sanitize_text_field($posted['status']) : 'inactive',
+		'id'    => absint( $posted['id'] ),
+		'name'  => sanitize_text_field( $posted['name'] ),
+		'type'  => sanitize_text_field( $posted['type'] ),
+		'color' => sanitize_text_field( $posted['color'] ),
 	) );
 
 	if ( is_wp_error( $posted ) ) {
@@ -106,7 +103,7 @@ function eaccounting_edit_category( $posted ) {
 		$message = __( 'Category updated successfully.', 'wp-ever-accounting' );
 	}
 
-	eaccounting_admin_notice($message );
+	eaccounting_admin_notice( $message );
 	wp_redirect( add_query_arg( [ 'eaccounting-action' => 'edit_category', 'category' => $created ] ) );
 	exit();
 }

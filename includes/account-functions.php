@@ -37,7 +37,6 @@ function eaccounting_insert_account( $args ) {
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
-		'status'          => !empty($args['status']) && 'active' == $args['status'] ? 'active' : 'inactive',
 		'updated_at'      => current_time( 'Y-m-d H:i:s' ),
 		'created_at'      => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -144,7 +143,6 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 	$default = array(
 		'include'        => array(),
 		'exclude'        => array(),
-		'status'         => '',
 		'search'         => '',
 		'orderby'        => 'id',
 		'order'          => 'DESC',
@@ -159,10 +157,6 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 	$query_from  = "FROM $wpdb->ea_accounts";
 	$query_where = 'WHERE 1=1';
 
-	//status
-	if ( ! empty( $args['status'] ) && in_array( $args['status'], [ 'active', 'inactive' ] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_accounts.status= %s", $args['status'] );
-	}
 
 	//opening_balance
 	if ( ! empty( $args['opening_balance'] ) ) {

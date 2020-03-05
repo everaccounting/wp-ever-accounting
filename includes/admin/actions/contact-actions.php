@@ -110,7 +110,6 @@ function eaccounting_action_edit_contact( $data ) {
 		'website'    => isset( $data['website'] ) ? esc_url( $data['website'] ) : '',
 		'note'       => isset( $data['note'] ) ? sanitize_text_field( $data['note'] ) : '',
 		'avatar_url' => isset( $data['avatar_url'] ) ? esc_url( $data['avatar_url'] ) : '',
-		'status'     => isset( $data['status'] ) ? sanitize_key( $data['status'] ) : 'inactive',
 		'types'      => isset( $data['types'] ) && is_array( $data['types'] ) ? $data['types'] : [ 'customer' ],
 	) );
 

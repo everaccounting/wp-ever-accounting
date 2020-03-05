@@ -135,13 +135,7 @@ printf( '<a href="%s" class="page-title-action">%s</a>', $base_url, __( 'All Con
 					'wrapper_class' => 'ea-col-6',
 				) );
 
-
-				echo EAccounting_Form::status_control( array(
-					'name'          => 'status',
-					'value'         => $contact->get_status(),
-					'wrapper_class' => 'ea-col-6',
-				) );
-
+				
 				echo EAccounting_Form::checkboxes_control( array(
 					'label'         => __( 'Roles', 'wp-ever-accounting' ),
 					'name'          => 'types',

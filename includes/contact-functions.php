@@ -59,8 +59,6 @@ function eaccounting_insert_contact( $args ) {
 		'tax_number'    => empty( $args['tax_number'] ) ? '' : sanitize_text_field( $args['tax_number'] ),
 		'currency_code' => empty( $args['currency_code'] ) ? 'USD' : sanitize_text_field( $args['currency_code'] ),
 
-		'status' => empty( $args['status'] ) ? 'inactive' : sanitize_key( $args['status'] ),
-
 		'types'      => empty( $args['types'] ) ? array( 'customer' ) : $args['types'],
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : sanitize_text_field( $args['created_at'] ),
 		'updated_at' => date( 'Y-m-d H:i:s' ),
@@ -209,7 +207,6 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 	$default = array(
 		'include'        => array(),
 		'exclude'        => array(),
-		'status'         => '',
 		'search'         => '',
 		'type'           => '',
 		'orderby'        => 'first_name',
@@ -225,10 +222,7 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 	$query_from  = "FROM $wpdb->ea_contacts";
 	$query_where = 'WHERE 1=1';
 
-	//status
-	if ( ! empty( $args['status'] ) && in_array( $args['status'], [ 'active', 'inactive' ] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_contacts.status= %s", $args['status'] );
-	}
+
 
 	//type
 	if ( ! empty( $args['type'] ) && array_key_exists( $args['type'], eaccounting_get_contact_types() ) ) {

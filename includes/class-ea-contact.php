@@ -75,10 +75,6 @@ class EAccounting_Contact {
 	 */
 	protected $note;
 
-	/**
-	 * @var static
-	 */
-	protected $status;
 
 	/**
 	 * @var static
@@ -211,10 +207,10 @@ class EAccounting_Contact {
 	}
 
 	/**
-	 * @since 1.0.0
 	 * @return mixed
+	 * @since 1.0.0
 	 */
-	public function get_id(){
+	public function get_id() {
 		return $this->id;
 	}
 
@@ -327,16 +323,8 @@ class EAccounting_Contact {
 	 * @return string
 	 * @since 1.0.0
 	 */
-	public function get_status() {
-		return empty( $this->status ) ? 'active' : $this->status;
-	}
-
-	/**
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_avatar_url(){
-		return empty( $this->avatar_url ) ? '' : esc_url($this->avatar_url);
+	public function get_avatar_url() {
+		return empty( $this->avatar_url ) ? '' : esc_url( $this->avatar_url );
 	}
 
 	/**
@@ -345,7 +333,8 @@ class EAccounting_Contact {
 	 */
 	public function get_types() {
 		$types = maybe_unserialize( $this->types );
-		return empty($types)? ['customer', 'vendor']: $types;
+
+		return empty( $types ) ? [ 'customer', 'vendor' ] : $types;
 	}
 
 	/**
@@ -365,41 +354,39 @@ class EAccounting_Contact {
 	}
 
 	/**
-	 * @since 1.0.1
 	 * @return float|string|null
+	 * @since 1.0.1
 	 */
-	public function get_total_payment(){
-		return eaccounting_get_contact_payment_total($this->id);
+	public function get_total_payment() {
+		return eaccounting_get_contact_payment_total( $this->id );
 	}
 
 	/**
-	 * @since 1.0.1
 	 * @return float|string|null
+	 * @since 1.0.1
 	 */
-	public function get_total_revenue(){
-		return eaccounting_get_contact_revenue_total($this->id);
+	public function get_total_revenue() {
+		return eaccounting_get_contact_revenue_total( $this->id );
 	}
 
 	/**
 	 * Deactivate contact
 	 * since 1.0.0
 	 */
-	public function deactivate(){
-		eaccounting_insert_contact([
+	public function deactivate() {
+		eaccounting_insert_contact( [
 			'id' => $this->id,
-			'status' => 'inactive'
-		]);
+		] );
 	}
 
 	/**
 	 * Activate contact
 	 * since 1.0.0
 	 */
-	public function activate(){
-		eaccounting_insert_contact([
+	public function activate() {
+		eaccounting_insert_contact( [
 			'id' => $this->id,
-			'status' => 'active'
-		]);
+		] );
 	}
 
 }

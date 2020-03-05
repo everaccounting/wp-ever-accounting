@@ -542,12 +542,6 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 			'default'     => '',
 		);
 
-		$params['status'] = array(
-			'description'       => __( 'Limit the result with active or inactive type', 'wp-ever-accounting' ),
-			'default'           => 'all',
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
-		);
 
 		return $query_params;
 	}

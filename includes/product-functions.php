@@ -36,7 +36,6 @@ function eaccounting_insert_product( $args ) {
 		'quantity'       => ! isset( $args['quantity'] ) ? '0' : absint( $args['quantity'] ),
 		'image_id'       => ! isset( $args['image_id'] ) ? '' : absint( $args['image_id'] ),
 		'category_id'    => ! isset( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
-		'status'         => empty( $args['status'] ) ? 'inactive' : sanitize_key( $args['status'] ),
 		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
 		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -162,7 +161,6 @@ function eaccounting_get_products( $args = array(), $count = false ) {
 	$default = array(
 		'include'        => array(),
 		'exclude'        => array(),
-		'status'         => '',
 		'search'         => '',
 		'orderby'        => 'id',
 		'order'          => 'DESC',
@@ -177,10 +175,6 @@ function eaccounting_get_products( $args = array(), $count = false ) {
 	$query_from  = "FROM $wpdb->ea_products";
 	$query_where = 'WHERE 1=1';
 
-	//enabled
-	if ( ! empty( $args['status'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_products.status= %s", sanitize_key( $args['status'] ) );
-	}
 
 	//fields
 	if ( is_array( $args['fields'] ) ) {

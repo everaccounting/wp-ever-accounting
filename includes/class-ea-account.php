@@ -40,10 +40,6 @@ class EAccounting_Account {
 	 */
 	protected $bank_address;
 
-	/**
-	 * @var
-	 */
-	protected $status;
 
 	/**
 	 * @var
@@ -202,14 +198,6 @@ class EAccounting_Account {
 	 * @return string
 	 * @since 1.0.0
 	 */
-	public function get_status() {
-		return empty( $this->status ) ? 'active' : $this->status;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
 	public function get_created_at() {
 		return $this->created_at;
 	}
@@ -225,6 +213,7 @@ class EAccounting_Account {
 	/**
 	 * Get current balance
 	 * since 1.0.0
+	 *
 	 * @param string $context
 	 *
 	 * @return string
@@ -234,9 +223,9 @@ class EAccounting_Account {
 		// Opening Balance
 		$total = $this->opening_balance;
 		// Sum Incomes
-		$total += $wpdb->get_var( $wpdb->prepare("SELECT SUM(amount) from $wpdb->ea_revenues WHERE account_id=%d", $this->get_id()) );
+		$total += $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_revenues WHERE account_id=%d", $this->get_id() ) );
 		//sum expense
-		$total -= $wpdb->get_var( $wpdb->prepare("SELECT SUM(amount) from $wpdb->ea_payments WHERE account_id=%d", $this->get_id()) );
+		$total -= $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_payments WHERE account_id=%d", $this->get_id() ) );
 
 		return 'edit' == $context ? eaccounting_sanitize_price( $total ) : eaccounting_price( $total );
 	}

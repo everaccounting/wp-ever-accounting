@@ -160,7 +160,6 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 	$default = array(
 		'include'        => array(),
 		'exclude'        => array(),
-		'status'         => '',
 		'type'           => '',
 		'search'         => '',
 		'orderby'        => 'id',
@@ -176,10 +175,7 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 	$query_from  = "FROM $wpdb->ea_currencies";
 	$query_where = 'WHERE 1=1';
 
-	//status
-	if ( ! empty( $args['status'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_currencies.status= %s", sanitize_key( $args['status'] ) );
-	}
+
 
 	//fields
 	if ( is_array( $args['fields'] ) ) {
