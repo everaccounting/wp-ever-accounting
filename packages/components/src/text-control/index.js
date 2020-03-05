@@ -1,17 +1,29 @@
 /**
  * External dependencies
  */
-import {Component} from '@wordpress/element';
+import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {BaseControl} from '@wordpress/components';
-import {withInstanceId} from '@wordpress/compose';
+import { BaseControl } from '@wordpress/components';
+import { withInstanceId } from '@wordpress/compose';
 import classnames from 'classnames';
-import {__} from "@wordpress/i18n";
-
+import { __ } from '@wordpress/i18n';
 
 class TextControl extends Component {
 	render() {
-		const {label, value, help, className, instanceId, onChange, before, after, type, placeholder, required, ...props} = this.props;
+		const {
+			label,
+			value,
+			help,
+			className,
+			instanceId,
+			onChange,
+			before,
+			after,
+			type,
+			placeholder,
+			required,
+			...props
+		} = this.props;
 		const classes = classnames('ea-form-group', 'ea-text-field', className, {
 			required: !!required,
 		});
@@ -28,7 +40,7 @@ class TextControl extends Component {
 			describedby.push(`${id}__after`);
 		}
 
-		const newPlaceholder = !placeholder && label ? __(`Enter ${label}`):placeholder;
+		const newPlaceholder = !placeholder && label ? __(`Enter ${label}`) : placeholder;
 
 		return (
 			<BaseControl label={label} id={id} help={help} className={classes}>

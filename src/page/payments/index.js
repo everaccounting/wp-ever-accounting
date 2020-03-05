@@ -1,20 +1,19 @@
-import {Component, Fragment} from "react";
-import {translate as __} from 'lib/locale';
-import {connect} from "react-redux";
-import {fetchPayments, BulkAction} from "store/payments";
-import {getHeaders, getBulk} from "./constants";
-import {Navigation, SearchBox, Table} from "@eaccounting/components";
+import { Component, Fragment } from 'react';
+import { translate as __ } from 'lib/locale';
+import { connect } from 'react-redux';
+import { fetchPayments, BulkAction } from 'store/payments';
+import { getHeaders, getBulk } from './constants';
+import { Navigation, SearchBox, Table } from '@eaccounting/components';
 import Row from './row';
 
-
 class Payments extends Component {
-	constructor( props ) {
+	constructor(props) {
 		super(props);
 		this.state = {};
 	}
 
-	componentDidCatch( error, info ) {
-		this.setState( { error: true, stack: error, info } );
+	componentDidCatch(error, info) {
+		this.setState({ error: true, stack: error, info });
 	}
 
 	componentDidMount() {
@@ -22,7 +21,7 @@ class Payments extends Component {
 	}
 
 	onRenderRow = (item, pos, status, search) => {
-		const {selected} = this.props.table;
+		const { selected } = this.props.table;
 		return (
 			<Row
 				item={item}
@@ -30,23 +29,20 @@ class Payments extends Component {
 				disabled={status.isLoading}
 				search={search}
 				isSelected={selected.includes(item.id)}
-				{...this.props}/>
+				{...this.props}
+			/>
 		);
 	};
 
 	render() {
-		const {status, total, table, rows, match} = this.props;
+		const { status, total, table, rows, match } = this.props;
 
-		return(
+		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Payments')}</h1>
 
 				<div className="ea-table-display">
-					<SearchBox
-						status={status}
-						table={table}
-						onSearch={this.props.onSearch}
-					/>
+					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
 				<Navigation
@@ -56,7 +52,8 @@ class Payments extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}
-					bulk={getBulk()}/>
+					bulk={getBulk()}
+				/>
 
 				<Table
 					headers={getHeaders()}
@@ -75,42 +72,38 @@ class Payments extends Component {
 					table={table}
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
-					status={status}/>
+					status={status}
+				/>
 			</Fragment>
-		)
+		);
 	}
 }
 
-
-
-const mapStateToProps = (state) => {
-	return state.payments
+const mapStateToProps = state => {
+	return state.payments;
 };
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onMount: (params) => {
+		onMount: params => {
 			dispatch(fetchPayments(params));
 		},
 		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchPayments({order_by, order}));
+			dispatch(fetchPayments({ order_by, order }));
 		},
-		onChangePage: (page) => {
-			dispatch(fetchPayments({page}));
+		onChangePage: page => {
+			dispatch(fetchPayments({ page }));
 		},
-		onSearch: (search) => {
-			dispatch(fetchPayments({search}));
+		onSearch: search => {
+			dispatch(fetchPayments({ search }));
 		},
-		onSetAllSelected: (onoff) => {
-			dispatch({type: "PAYMENTS_ALL_SELECTED", payload: onoff});
+		onSetAllSelected: onoff => {
+			dispatch({ type: 'PAYMENTS_ALL_SELECTED', payload: onoff });
 		},
-		onAction: (action) => {
+		onAction: action => {
 			dispatch(BulkAction(action));
-		}
-	}
+		},
+	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Payments);
+export default connect(mapStateToProps, mapDispatchToProps)(Payments);

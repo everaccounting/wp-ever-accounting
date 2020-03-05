@@ -14,7 +14,7 @@ import {
 	REVENUES_ITEM_ADDED,
 	REVENUES_DISPLAY_SET,
 } from './type';
-import {STATUS_IN_PROGRESS, STATUS_FAILED, STATUS_COMPLETE} from 'status';
+import { STATUS_IN_PROGRESS, STATUS_FAILED, STATUS_COMPLETE } from 'status';
 import {
 	setTable,
 	setTotal,
@@ -24,12 +24,12 @@ import {
 	restoreToOriginal,
 	setTableSelected,
 	setTableAllSelected,
-	clearSelected
+	clearSelected,
 } from 'lib/table';
-export default function accounts( state = {}, action ) {
-	switch ( action.type ) {
+export default function accounts(state = {}, action) {
+	switch (action.type) {
 		case REVENUES_LOADING:
-			return {...state, table: setTable(state, action), status: STATUS_IN_PROGRESS, saving: setSaving(state, action)};
+			return { ...state, table: setTable(state, action), status: STATUS_IN_PROGRESS, saving: setSaving(state, action) };
 
 		case REVENUES_LOADED:
 			return {
@@ -37,7 +37,7 @@ export default function accounts( state = {}, action ) {
 				rows: action.data,
 				status: STATUS_COMPLETE,
 				total: setTotal(state, action),
-				table: clearSelected(state.table)
+				table: clearSelected(state.table),
 			};
 
 		case REVENUES_ITEM_SAVING:
@@ -45,26 +45,26 @@ export default function accounts( state = {}, action ) {
 				...state,
 				table: clearSelected(setTable(state, action)),
 				saving: setSaving(state, action),
-				rows: setUpdatedItem(state.rows, action)
+				rows: setUpdatedItem(state.rows, action),
 			};
 
 		case REVENUES_ITEM_SAVED:
-			return {...state, saving: removeSaving(state, action)};
+			return { ...state, saving: removeSaving(state, action) };
 
 		case REVENUES_ITEM_ADDED:
-			return {...state, rows: [action.item, ...state.rows], total: state.total + 1};
+			return { ...state, rows: [action.item, ...state.rows], total: state.total + 1 };
 
 		case REVENUES_SET_ALL_SELECTED:
-			return {...state, table: setTableAllSelected(state.table, state.rows, action.onoff)};
+			return { ...state, table: setTableAllSelected(state.table, state.rows, action.onoff) };
 
 		case REVENUES_SET_SELECTED:
-			return {...state, table: setTableSelected(state.table, action.items)};
+			return { ...state, table: setTableSelected(state.table, action.items) };
 
 		case REVENUES_FAILED:
-			return {...state, status: STATUS_FAILED, saving: []};
+			return { ...state, status: STATUS_FAILED, saving: [] };
 
 		case REVENUES_ITEM_FAILED:
-			return {...state, saving: removeSaving(state, action), rows: restoreToOriginal(state, action)};
+			return { ...state, saving: removeSaving(state, action), rows: restoreToOriginal(state, action) };
 	}
 
 	return state;

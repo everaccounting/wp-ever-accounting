@@ -5,13 +5,13 @@ const validFileTypes = [
 	'application/vnd.ms-excel',
 ];
 
-export const getFileExt = (fileName) => {
+export const getFileExt = fileName => {
 	const index = fileName.lastIndexOf('.');
 
 	return index < 1 ? '' : fileName.substr(index + 1);
 };
 
-export const validateFileExt = (file) => {
+export const validateFileExt = file => {
 	const ext = getFileExt(file.name);
 	return 'csv' === ext && validFileTypes.indexOf(file.type) !== -1;
 };
@@ -36,7 +36,7 @@ export const getValidRows = (rows, headers, validHeaders) => {
 		const sanitizedRow = {};
 		row.forEach((rowItem, index) => {
 			const head = headers[index] || false;
-			if (head && (validHeaders.indexOf(head.trim()) !== -1)) {
+			if (head && validHeaders.indexOf(head.trim()) !== -1) {
 				sanitizedRow[head] = rowItem;
 			}
 		});

@@ -1,6 +1,6 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable, toFilter} from 'lib/table';
-let table = getDefaultTable( [ 'name', 'type' ], ['type'], 'name');
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable, toFilter } from 'lib/table';
+let table = getDefaultTable(['name', 'type'], ['type'], 'name');
 export function getInitialInvoices() {
 	return {
 		rows: [],

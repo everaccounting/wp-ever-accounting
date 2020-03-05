@@ -31,15 +31,17 @@ const STATUS_BILL = {
 	order: 'name',
 };
 
-export const createBill = item => createAction( accountingApi.bills.create, item, STATUS_BILLS_ITEM );
-export const updateBill = ( id, item ) => updateAction( accountingApi.bills.update, id, item, STATUS_BILLS_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( accountingApi.bills.bulk, action, ids, STATUS_BILLS_ITEM );
-export const getBills = args => ( dispatch, getState ) => processRequest( accountingApi.bills.list, dispatch, STATUS_BILL, args, getState().bills );
-export const setOrderBy = ( orderby, order ) => getBills( { orderby, order } );
-export const setPage = page => getBills( { page } );
-export const setFilter = ( filterBy ) => getBills( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getBills( { search, orderby: '', page: 0 } );
-export const setSelected = items => ( { type: BILLS_SET_SELECTED, items: items.map( parseInt ) } );
-export const setAllSelected = onoff => ( { type: BILLS_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getBills( table );
-export const setDisplay = ( displayType, displaySelected ) => ( { type: BILLS_DISPLAY_SET, displayType, displaySelected } );
+export const createBill = item => createAction(accountingApi.bills.create, item, STATUS_BILLS_ITEM);
+export const updateBill = (id, item) => updateAction(accountingApi.bills.update, id, item, STATUS_BILLS_ITEM);
+export const performTableAction = (action, ids) =>
+	tableAction(accountingApi.bills.bulk, action, ids, STATUS_BILLS_ITEM);
+export const getBills = args => (dispatch, getState) =>
+	processRequest(accountingApi.bills.list, dispatch, STATUS_BILL, args, getState().bills);
+export const setOrderBy = (orderby, order) => getBills({ orderby, order });
+export const setPage = page => getBills({ page });
+export const setFilter = filterBy => getBills({ filterBy, orderby: '', page: 0 });
+export const setSearch = search => getBills({ search, orderby: '', page: 0 });
+export const setSelected = items => ({ type: BILLS_SET_SELECTED, items: items.map(parseInt) });
+export const setAllSelected = onoff => ({ type: BILLS_SET_ALL_SELECTED, onoff });
+export const setTable = table => getBills(table);
+export const setDisplay = (displayType, displaySelected) => ({ type: BILLS_DISPLAY_SET, displayType, displaySelected });

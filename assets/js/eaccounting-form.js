@@ -1,4 +1,4 @@
-jQuery(function ($) {
+jQuery(function($) {
 	$.blockUI.defaults.overlayCSS.cursor = 'default';
 
 	// var eaccounting_tax_form = {
@@ -66,46 +66,40 @@ jQuery(function ($) {
 
 	$.eaccounting_account_form = {
 		$account_form: $('form.ea-account-form'),
-		init: function () {
-			$(document).change('#currency_code', this.handleCurrency).change();
+		init: function() {
+			$(document)
+				.change('#currency_code', this.handleCurrency)
+				.change();
 		},
-		handleCurrency: function (e) {
+		handleCurrency: function(e) {
 			$.ajax({
 				url: eAccountingi18n.ajax_url,
 				data: {
 					action: 'eaccounting_get_currency',
-					code: $(this).val()
+					code: $(this).val(),
 				},
 				type: 'POST',
-				success: function (response) {
+				success: function(response) {
 					console.log(response);
-				}
+				},
 			});
 		},
-		block: function () {
+		block: function() {
 			$('#woocommerce-order-items').block({
 				message: null,
 				overlayCSS: {
 					background: '#fff',
-					opacity: 0.6
-				}
+					opacity: 0.6,
+				},
 			});
 		},
 
-		unblock: function () {
+		unblock: function() {
 			$('#woocommerce-order-items').unblock();
 		},
-		submit: function () {
-
-		}
+		submit: function() {},
 	};
 	$.eaccounting_account_form.init();
 });
 
-jQuery(document).ready(function ($) {
-
-});
-
-
-
-
+jQuery(document).ready(function($) {});

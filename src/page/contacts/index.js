@@ -1,19 +1,19 @@
-import {Component, Fragment} from "react";
-import {translate as __} from 'lib/locale';
-import {connect} from "react-redux";
-import {fetchContacts, BulkAction} from "store/contacts";
-import {getHeaders, getBulk} from "./constants";
-import {Navigation, SearchBox, Table} from "@eaccounting/components";
+import { Component, Fragment } from 'react';
+import { translate as __ } from 'lib/locale';
+import { connect } from 'react-redux';
+import { fetchContacts, BulkAction } from 'store/contacts';
+import { getHeaders, getBulk } from './constants';
+import { Navigation, SearchBox, Table } from '@eaccounting/components';
 import Row from './row';
 
 class Contacts extends Component {
-	constructor( props ) {
+	constructor(props) {
 		super(props);
 		this.state = {};
 	}
 
-	componentDidCatch( error, info ) {
-		this.setState( { error: true, stack: error, info } );
+	componentDidCatch(error, info) {
+		this.setState({ error: true, stack: error, info });
 	}
 
 	componentDidMount() {
@@ -21,7 +21,7 @@ class Contacts extends Component {
 	}
 
 	onRenderRow = (item, pos, status, search) => {
-		const {selected} = this.props.table;
+		const { selected } = this.props.table;
 		return (
 			<Row
 				item={item}
@@ -29,24 +29,21 @@ class Contacts extends Component {
 				disabled={status.isLoading}
 				search={search}
 				isSelected={selected.includes(item.id)}
-				{...this.props}/>
+				{...this.props}
+			/>
 		);
 	};
 
 	render() {
-		const {status, total, table, rows, match} = this.props;
+		const { status, total, table, rows, match } = this.props;
 
-		return(
+		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
 				<a className="page-title-action">{__('Add Contact')}</a>
 
 				<div className="ea-table-display">
-					<SearchBox
-						status={status}
-						table={table}
-						onSearch={this.props.onSearch}
-					/>
+					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
 				<Navigation
@@ -56,7 +53,8 @@ class Contacts extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}
-					bulk={getBulk()}/>
+					bulk={getBulk()}
+				/>
 
 				<Table
 					headers={getHeaders()}
@@ -75,40 +73,38 @@ class Contacts extends Component {
 					table={table}
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
-					status={status}/>
+					status={status}
+				/>
 			</Fragment>
-		)
+		);
 	}
 }
 
-const mapStateToProps = (state) => {
-	return state.contacts
+const mapStateToProps = state => {
+	return state.contacts;
 };
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onMount: (params) => {
+		onMount: params => {
 			dispatch(fetchContacts(params));
 		},
 		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchContacts({order_by, order}));
+			dispatch(fetchContacts({ order_by, order }));
 		},
-		onChangePage: (page) => {
-			dispatch(fetchContacts({page}));
+		onChangePage: page => {
+			dispatch(fetchContacts({ page }));
 		},
-		onSearch: (search) => {
-			dispatch(fetchContacts({search}));
+		onSearch: search => {
+			dispatch(fetchContacts({ search }));
 		},
-		onSetAllSelected: (onoff) => {
-			dispatch({type: "CONTACTS_ALL_SELECTED", payload: onoff});
+		onSetAllSelected: onoff => {
+			dispatch({ type: 'CONTACTS_ALL_SELECTED', payload: onoff });
 		},
-		onAction: (action) => {
+		onAction: action => {
 			dispatch(BulkAction(action));
-		}
-	}
+		},
+	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Contacts);
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);

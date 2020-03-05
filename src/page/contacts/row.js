@@ -1,10 +1,10 @@
-import {Component, Fragment} from "react";
-import PropTypes from "prop-types";
-import {RowActions} from '@eaccounting/components';
-import {translate as __} from 'lib/locale';
-import {connect} from "react-redux";
+import { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { RowActions } from '@eaccounting/components';
+import { translate as __ } from 'lib/locale';
+import { connect } from 'react-redux';
 import Moment from 'react-moment';
-import {Link} from "react-router-dom"
+import { Link } from 'react-router-dom';
 
 class Row extends Component {
 	static propTypes = {
@@ -17,7 +17,7 @@ class Row extends Component {
 		super(props);
 
 		this.state = {
-			editing: false
+			editing: false,
 		};
 	}
 
@@ -35,19 +35,17 @@ class Row extends Component {
 	};
 
 	onClose = () => {
-		this.setState({editing: !this.state.editing});
+		this.setState({ editing: !this.state.editing });
 	};
 
-
 	render() {
-		const {isSelected, disabled, item} = this.props;
-		const {id, first_name, last_name, email, phone} = item;
-		const {editing} = this.state;
-		const {match} = this.props;
+		const { isSelected, disabled, item } = this.props;
+		const { id, first_name, last_name, email, phone } = item;
+		const { editing } = this.state;
+		const { match } = this.props;
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
-
 					<th scope="row" className="check-column">
 						<input
 							type="checkbox"
@@ -55,7 +53,8 @@ class Row extends Component {
 							value={id}
 							disabled={disabled}
 							checked={isSelected}
-							onChange={() => this.props.onSetSelected(item.id)}/>
+							onChange={() => this.props.onSetSelected(item.id)}
+						/>
 					</th>
 
 					<td className="column-name">
@@ -66,41 +65,34 @@ class Row extends Component {
 
 					<td className="column-phone">{phone}</td>
 
-
-
-
 					<td className="column-actions">
-						<RowActions controls={[
-							{
-								title: __('Edit'),
-								onClick: this.onEdit,
-								disabled: disabled,
-							},
-							{
-								title: __('Delete'),
-								onClick: this.onEdit,
-								disabled: disabled,
-							}
-						]}/>
+						<RowActions
+							controls={[
+								{
+									title: __('Edit'),
+									onClick: this.onEdit,
+									disabled: disabled,
+								},
+								{
+									title: __('Delete'),
+									onClick: this.onEdit,
+									disabled: disabled,
+								},
+							]}
+						/>
 					</td>
-
 				</tr>
 			</Fragment>
-
-		)
+		);
 	}
 }
-
 
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({type: "CONTACTS_SELECTED", ids: [ids]});
-		}
+			dispatch({ type: 'CONTACTS_SELECTED', ids: [ids] });
+		},
 	};
 }
 
-export default connect(
-	null,
-	mapDispatchToProps
-)(Row);
+export default connect(null, mapDispatchToProps)(Row);

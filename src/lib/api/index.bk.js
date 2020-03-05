@@ -17,11 +17,11 @@ const removeEmpty = item =>
 			return newObj;
 		}, {});
 
-export const getApiUrl = () => eAccountingi10n.api && eAccountingi10n.api.WP_API_root ? eAccountingi10n.api.WP_API_root : '/wp-json/';
-export const setApiUrl = url => eAccountingi10n.api.WP_API_root = url;
+export const getApiUrl = () =>
+	eAccountingi10n.api && eAccountingi10n.api.WP_API_root ? eAccountingi10n.api.WP_API_root : '/wp-json/';
+export const setApiUrl = url => (eAccountingi10n.api.WP_API_root = url);
 export const getApiNonce = () => eAccountingi10n.api.WP_API_nonce;
-const setApiNonce = nonce => eAccountingi10n.api.WP_API_nonce = nonce;
-
+const setApiNonce = nonce => (eAccountingi10n.api.WP_API_nonce = nonce);
 
 const getRequestUrl = (path, params = {}) => {
 	const base = getApiUrl() + 'ea/v1/' + path + '/';
@@ -58,18 +58,18 @@ const getApiRequest = (path, params = {}) => ({
 	method: 'get',
 });
 
-const uploadApiRequest = ( path, file ) => {
-	const request = { headers: postApiheaders(), ...apiRequest( getAccountingUrl( path ) ), method: 'post' };
+const uploadApiRequest = (path, file) => {
+	const request = { headers: postApiheaders(), ...apiRequest(getAccountingUrl(path)), method: 'post' };
 
-	request.headers.delete( 'Content-Type' );
+	request.headers.delete('Content-Type');
 	request.body = new FormData();
-	request.body.append( 'file', file );
+	request.body.append('file', file);
 
 	return request;
 };
 
 const postApiRequest = (path, params = {}, query = {}) => {
-	const request = {...apiRequest(getRequestUrl(path, query)), method: 'post', params};
+	const request = { ...apiRequest(getRequestUrl(path, query)), method: 'post', params };
 
 	request.body = '{}';
 	if (Object.keys(params).length > 0) {
@@ -80,7 +80,7 @@ const postApiRequest = (path, params = {}, query = {}) => {
 };
 
 const deleteApiRequest = (path, params) => {
-	const query = {...params};
+	const query = { ...params };
 	const body = {};
 
 	if (params && params.items) {
@@ -95,11 +95,8 @@ const deleteApiRequest = (path, params) => {
 	};
 };
 
-
 const getAction = request =>
-	request.url.replace(getApiUrl(), '').replace(/[\?&]_wpnonce=[a-f0-9]*/, '') +
-	' ' +
-	request.method.toUpperCase();
+	request.url.replace(getApiUrl(), '').replace(/[\?&]_wpnonce=[a-f0-9]*/, '') + ' ' + request.method.toUpperCase();
 
 const getErrorMessage = json => {
 	if (json === 0) {
@@ -133,15 +130,13 @@ const getErrorCode = json => {
 	return 'unknown';
 };
 
-
 export const getApi = request => {
 	request.action = getAction(request);
 	let headers = {};
 	return fetch(request.url, request)
 		.then(data => {
-
 			if (!data || !data.status) {
-				throw {message: 'No data or status object returned in request', code: 0};
+				throw { message: 'No data or status object returned in request', code: 0 };
 			}
 
 			if (data.status && data.statusText !== undefined) {
@@ -171,17 +166,17 @@ export const getApi = request => {
 				}
 
 				if (data === 0) {
-					throw {message: 'Failed to get data', code: 'json-zero'};
+					throw { message: 'Failed to get data', code: 'json-zero' };
 				}
 
 				const response = {
-					items:data,
-					total:undefined,
-					headers
+					items: data,
+					total: undefined,
+					headers,
 				};
 
 				let total = parseInt(headers.get('x-wp-total'), 10);
-				if(!isNaN(total)){
+				if (!isNaN(total)) {
 					response.total = total;
 				}
 				return response;
@@ -192,7 +187,6 @@ export const getApi = request => {
 				// 	total_page: parseInt(headers.get('x-wp-totalpages'), 10),
 				// 	headers
 				// };
-
 			} catch (error) {
 				error.request = request;
 				error.code = error.code || error.name;

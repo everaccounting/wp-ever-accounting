@@ -35,7 +35,7 @@ class EAccounting_Admin {
 		add_action( 'admin_menu', array( $this, 'register_pages' ), 20 );
 //		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ) );
 		add_action( 'admin_init', array( $this, 'setup_files' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+//		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**

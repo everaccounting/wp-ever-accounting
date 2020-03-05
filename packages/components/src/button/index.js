@@ -23,7 +23,7 @@ export default class Button extends PureComponent {
 	};
 
 	render() {
-		const className = classNames('ecrm-button',this.props.className, {
+		const className = classNames('ecrm-button', this.props.className, {
 			'is-compact': this.props.compact,
 			'is-borderless': this.props.borderless,
 		});

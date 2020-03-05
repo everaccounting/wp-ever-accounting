@@ -1,6 +1,6 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable} from 'lib/table';
-let table = getDefaultTable( [ 'name', 'code', 'rate', 'status' ], ['type'], 'name');
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable } from 'lib/table';
+let table = getDefaultTable(['name', 'code', 'rate', 'status'], ['type'], 'name');
 export function getInitialCurrencies() {
 	return {
 		rows: [],

@@ -33,7 +33,8 @@ function eaccounting_insert_account( $args ) {
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
 		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : eaccounting_sanitize_price( $args['opening_balance'] ),
-		'currency_code'       => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo set default account
+		'currency_code'   => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
+		//todo set default account
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
@@ -107,9 +108,9 @@ function eaccounting_delete_account( $id ) {
 		$wpdb->ea_revenues => 'account_id',
 	];
 
-	foreach ($tables as $table => $column){
-		if($wpdb->get_var($wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id))){
-			return new WP_Error('not-permitted', __('Account have records on', 'wp-ever-accounting'));
+	foreach ( $tables as $table => $column ) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
+			return new WP_Error( 'not-permitted', __( 'Account have records on', 'wp-ever-accounting' ) );
 		}
 	}
 
@@ -246,4 +247,22 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 	}
 
 	return $wpdb->get_col( $request );
+}
+
+/**
+ * since 1.0.0
+ * @param $account_id
+ * @param bool $formatted
+ *
+ * @return string|null
+ */
+function eaccounting_get_account_current_balance( $account_id, $formatted = false ) {
+	global $wpdb;
+	$account = eaccounting_get_account( $account_id );
+	$total   = $account->opening_balance;
+	// Sum Incomes
+	$total += $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_revenues WHERE account_id=%d", $account_id ) );
+	$total -= $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_payments WHERE account_id=%d", $account_id ) );
+
+	return $formatted ? eaccounting_money( $total, $account->currency_code, true )->format() : $total;
 }

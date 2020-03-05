@@ -1,22 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {translate as __} from 'lib/locale';
-import {connect} from 'react-redux';
-import notify from "lib/notify";
-import {find} from 'lodash';
-import {currencies, getCurrencyDefaults} from "lib/currency";
-import {
-	createItem,
-	updateItem
-} from 'state/currencies/action';
-import {
-	Modal,
-	TextControl,
-	SelectControl,
-	ToggleControl,
-	Icon,
-	Button
-} from '@eaccounting/components';
+import { translate as __ } from 'lib/locale';
+import { connect } from 'react-redux';
+import notify from 'lib/notify';
+import { find } from 'lodash';
+import { currencies, getCurrencyDefaults } from 'lib/currency';
+import { createItem, updateItem } from 'state/currencies/action';
+import { Modal, TextControl, SelectControl, ToggleControl, Icon, Button } from '@eaccounting/components';
 
 const initial = {
 	id: undefined,
@@ -28,14 +18,14 @@ const initial = {
 	decimalSeparator: '.',
 	thousandSeparator: ',',
 	position: 'before',
-	enabled: true
+	enabled: true,
 };
 
-const currenciesList = Object.keys(currencies).map((code) => {
+const currenciesList = Object.keys(currencies).map(code => {
 	return {
 		label: code,
 		value: code,
-	}
+	};
 });
 
 const positions = [
@@ -46,7 +36,7 @@ const positions = [
 	{
 		label: __('After'),
 		value: 'after',
-	}
+	},
 ];
 
 class EditCurrency extends Component {
@@ -58,7 +48,6 @@ class EditCurrency extends Component {
 		childSave: PropTypes.func,
 		callback: PropTypes.func,
 	};
-
 
 	constructor(props) {
 		super(props);
@@ -76,15 +65,14 @@ class EditCurrency extends Component {
 		});
 	};
 
-	onChangeCode = (code) => {
+	onChangeCode = code => {
 		const defaults = getCurrencyDefaults(code);
-		const {precision, symbol, decimalSeparator, thousandSeparator} = defaults;
-		this.setState({code});
-		this.setState({precision});
-		this.setState({symbol});
-		this.setState({decimalSeparator});
-		this.setState({thousandSeparator});
-
+		const { precision, symbol, decimalSeparator, thousandSeparator } = defaults;
+		this.setState({ code });
+		this.setState({ precision });
+		this.setState({ symbol });
+		this.setState({ decimalSeparator });
+		this.setState({ thousandSeparator });
 	};
 
 	onSubmit = ev => {
@@ -117,95 +105,115 @@ class EditCurrency extends Component {
 	};
 
 	render() {
-		const {tittle = __('Add Currency'), buttonTittle = __('Submit'), onClose} = this.props;
-		const {code = 'USD'} = this.state;
-		const {name, rate, precision, symbol, decimalSeparator, thousandSeparator, position = 'before', isSaving} = this.state;
+		const { tittle = __('Add Currency'), buttonTittle = __('Submit'), onClose } = this.props;
+		const { code = 'USD' } = this.state;
+		const {
+			name,
+			rate,
+			precision,
+			symbol,
+			decimalSeparator,
+			thousandSeparator,
+			position = 'before',
+			isSaving,
+		} = this.state;
 
 		return (
 			<Modal title={tittle} onRequestClose={onClose}>
 				<form onSubmit={this.onSubmit}>
-					<TextControl label={__('Name')}
-								 value={name}
-								 before={<Icon icon='id-card-o'/>}
-								 placeholder={__('Enter Name')}
-								 required
-								 onChange={(name) => {
-									 this.setState({name})
-								 }}/>
+					<TextControl
+						label={__('Name')}
+						value={name}
+						before={<Icon icon="id-card-o" />}
+						placeholder={__('Enter Name')}
+						required
+						onChange={name => {
+							this.setState({ name });
+						}}
+					/>
 
-					<SelectControl label={__('Code')}
-								   options={currenciesList}
-								   value={find(currenciesList, {value: code})}
-								   before={<Icon icon='code'/>}
-								   required
-								   onChange={this.onChangeCode}/>
+					<SelectControl
+						label={__('Code')}
+						options={currenciesList}
+						value={find(currenciesList, { value: code })}
+						before={<Icon icon="code" />}
+						required
+						onChange={this.onChangeCode}
+					/>
 
-					<TextControl label={__('Rate')}
-								 value={rate}
-								 before={<Icon icon='money'/>}
-								 placeholder={__('Enter Rate')}
-								 required
-								 onChange={(rate) => {
-									 this.setState({rate: rate.replace(/[^\d.]+/g, '')})
-								 }}/>
+					<TextControl
+						label={__('Rate')}
+						value={rate}
+						before={<Icon icon="money" />}
+						placeholder={__('Enter Rate')}
+						required
+						onChange={rate => {
+							this.setState({ rate: rate.replace(/[^\d.]+/g, '') });
+						}}
+					/>
 
-					<TextControl label={__('Precision')}
-								 value={precision}
-								 before={<Icon icon='bullseye'/>}
-								 placeholder={__('Enter Precision')}
-								 required
-								 onChange={(precision) => {
-									 this.setState({precision: precision.replace(/[^\d]+/g, '')})
-								 }}/>
+					<TextControl
+						label={__('Precision')}
+						value={precision}
+						before={<Icon icon="bullseye" />}
+						placeholder={__('Enter Precision')}
+						required
+						onChange={precision => {
+							this.setState({ precision: precision.replace(/[^\d]+/g, '') });
+						}}
+					/>
 
-					<TextControl label={__('Symbol')}
-								 value={symbol}
-								 before={<Icon icon='font'/>}
-								 placeholder={__('Enter Symbol')}
-								 required
-								 onChange={(symbol) => {
-									 this.setState({symbol})
-								 }}/>
+					<TextControl
+						label={__('Symbol')}
+						value={symbol}
+						before={<Icon icon="font" />}
+						placeholder={__('Enter Symbol')}
+						required
+						onChange={symbol => {
+							this.setState({ symbol });
+						}}
+					/>
 
-					<SelectControl label={__('Symbol Position')}
-								   options={positions}
-								   value={find(positions, {value: position})}
-								   before={<Icon icon='text-width'/>}
-								   required
-								   onChange={(position) => {
-									   this.setState({position})
-								   }}/>
+					<SelectControl
+						label={__('Symbol Position')}
+						options={positions}
+						value={find(positions, { value: position })}
+						before={<Icon icon="text-width" />}
+						required
+						onChange={position => {
+							this.setState({ position });
+						}}
+					/>
 
-					<TextControl label={__('Decimal Mark')}
-								 value={decimalSeparator}
-								 before={<Icon icon='font'/>}
-								 placeholder={__('Decimal Mark')}
-								 required
-								 onChange={(decimalSeparator) => {
-									 this.setState({decimalSeparator})
-								 }}/>
+					<TextControl
+						label={__('Decimal Mark')}
+						value={decimalSeparator}
+						before={<Icon icon="font" />}
+						placeholder={__('Decimal Mark')}
+						required
+						onChange={decimalSeparator => {
+							this.setState({ decimalSeparator });
+						}}
+					/>
 
-					<TextControl label={__('Thousands Separator')}
-								 value={thousandSeparator}
-								 before={<Icon icon='columns'/>}
-								 placeholder={__('Enter Thousands Separator')}
-								 required
-								 onChange={(thousandSeparator) => {
-									 this.setState({thousandSeparator})
-								 }}/>
+					<TextControl
+						label={__('Thousands Separator')}
+						value={thousandSeparator}
+						before={<Icon icon="columns" />}
+						placeholder={__('Enter Thousands Separator')}
+						required
+						onChange={thousandSeparator => {
+							this.setState({ thousandSeparator });
+						}}
+					/>
 
-					<Button isPrimary
-							isBusy={isSaving}
-							onClick={this.onSubmit}>
+					<Button isPrimary isBusy={isSaving} onClick={this.onSubmit}>
 						{buttonTittle}
 					</Button>
-
 				</form>
 			</Modal>
-		)
+		);
 	}
-
-
 }
 
 function mapDispatchToProps(dispatch) {
@@ -215,11 +223,8 @@ function mapDispatchToProps(dispatch) {
 		},
 		onCreate: item => {
 			dispatch(createItem(item));
-		}
+		},
 	};
 }
 
-export default connect(
-	null,
-	mapDispatchToProps,
-)(EditCurrency);
+export default connect(null, mapDispatchToProps)(EditCurrency);

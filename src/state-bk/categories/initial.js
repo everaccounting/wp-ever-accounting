@@ -1,6 +1,6 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable} from 'lib/table';
-import {translate as __} from 'lib/locale';
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable } from 'lib/table';
+import { translate as __ } from 'lib/locale';
 let table = getDefaultTable(['name', 'type'], ['type'], 'name');
 
 export function getInitialCategories() {
@@ -31,5 +31,5 @@ export const categoryTypes = [
 	{
 		label: __('Other'),
 		value: 'other',
-	}
+	},
 ];

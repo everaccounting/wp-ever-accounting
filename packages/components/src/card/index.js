@@ -46,9 +46,7 @@ class Card extends PureComponent {
 			</a>
 		) : (
 			<TagName {...props} className={getClassName(this.props)}>
-				{displayAsLink && (
-					<Gridicon className="ea-card__link-indicator" icon={target ? 'external' : 'chevron-right'} />
-				)}
+				{displayAsLink && <Gridicon className="ea-card__link-indicator" icon={target ? 'external' : 'chevron-right'} />}
 				{children}
 			</TagName>
 		);

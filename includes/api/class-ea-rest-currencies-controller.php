@@ -243,7 +243,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$currency = eaccounting_get_currency_config()[ $item->code ];
+		$currency = eaccounting_get_currencies_data()[ $item->code ];
 		$data     = array(
 			'id'                  => intval( $item->id ),
 			'name'                => $item->name,

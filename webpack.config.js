@@ -1,8 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
-const {get} = require('lodash');
+const { get } = require('lodash');
 const TerserPlugin = require('terser-webpack-plugin');
-const WordPressExternalDependenciesPlugin = require('@automattic/wordpress-external-dependencies-plugin');
+const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 // PostCSS plugins
 const postcssPresetEnv = require('postcss-preset-env');
 const postcssFocus = require('postcss-focus');
@@ -17,13 +17,13 @@ const pkg = require('./package.json');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const externals = {
-	'@wordpress/blocks': {this: ['wp', 'blocks']},
-	'@wordpress/element': {this: ['wp', 'element']},
-	'@wordpress/hooks': {this: ['wp', 'hooks']},
-	'@wordpress/url': {this: ['wp', 'url']},
-	'@wordpress/html-entities': {this: ['wp', 'htmlEntities']},
-	'@wordpress/i18n': {this: ['wp', 'i18n']},
-	'@wordpress/keycodes': {this: ['wp', 'keycodes']},
+	'@wordpress/blocks': { this: ['wp', 'blocks'] },
+	'@wordpress/element': { this: ['wp', 'element'] },
+	'@wordpress/hooks': { this: ['wp', 'hooks'] },
+	'@wordpress/url': { this: ['wp', 'url'] },
+	'@wordpress/html-entities': { this: ['wp', 'htmlEntities'] },
+	'@wordpress/i18n': { this: ['wp', 'i18n'] },
+	'@wordpress/keycodes': { this: ['wp', 'keycodes'] },
 	tinymce: 'tinymce',
 	moment: 'moment',
 	react: 'React',
@@ -92,7 +92,9 @@ const webpackConfig = {
 			{
 				test: /\.s?css$/,
 				// exclude: /node_modules/,
-				use: [MiniCssExtractPlugin.loader, 'css-loader',
+				use: [
+					MiniCssExtractPlugin.loader,
+					'css-loader',
 					{
 						// postcss loader so we can use autoprefixer and theme Gutenberg components
 						loader: 'postcss-loader',
@@ -107,12 +109,10 @@ const webpackConfig = {
 						query: {
 							includePaths: ['src/stylesheets/abstracts'],
 							data:
-								'@import "_colors"; ' +
-								'@import "_variables"; ' +
-								'@import "_breakpoints"; ' +
-								'@import "_mixins"; ',
+								'@import "_colors"; ' + '@import "_variables"; ' + '@import "_breakpoints"; ' + '@import "_mixins"; ',
 						},
-					}]
+					},
+				],
 			},
 			{
 				test: /\.(?:gif|jpg|jpeg|png|svg)$/,
@@ -149,7 +149,7 @@ const webpackConfig = {
 		new FixStyleOnlyEntriesPlugin(),
 		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
 		new webpack.DefinePlugin({
-			'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')},
+			'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') },
 			EACCOUNTING_VERSION: "'" + pkg.version + "'",
 		}),
 		new CustomTemplatedPathPlugin({
@@ -161,7 +161,7 @@ const webpackConfig = {
 				return outputPath;
 			},
 		}),
-		new WordPressExternalDependenciesPlugin(),
+		new DependencyExtractionWebpackPlugin(),
 		new webpack.LoaderOptionsPlugin({
 			options: {
 				postcss: [

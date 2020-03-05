@@ -11,8 +11,8 @@ const CheckColumn = props => {
 
 	return (
 		<td className="manage-column column-cb check-column-red">
-			<label className="screen-reader-text">{ __( 'Select All' ) }</label>
-			<input type="checkbox" disabled={ isDisabled } checked={ isSelected } onChange={ onSetAllSelected } />
+			<label className="screen-reader-text">{__('Select All')}</label>
+			<input type="checkbox" disabled={isDisabled} checked={isSelected} onChange={onSetAllSelected} />
 		</td>
 	);
 };

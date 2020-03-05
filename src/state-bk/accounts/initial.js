@@ -1,5 +1,5 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable} from 'lib/table';
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable } from 'lib/table';
 let table = getDefaultTable(['name', 'number', 'current_balance'], ['type'], 'name');
 
 export function getInitialAccounts() {

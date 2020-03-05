@@ -12,8 +12,8 @@ const FailedRow = props => {
 	return (
 		<tbody>
 			<tr>
-				<td colSpan={ headers.length }>
-					<p>{ __( 'Sorry, something went wrong loading the data - please try again' ) }</p>
+				<td colSpan={headers.length}>
+					<p>{__('Sorry, something went wrong loading the data - please try again')}</p>
 				</td>
 			</tr>
 		</tbody>

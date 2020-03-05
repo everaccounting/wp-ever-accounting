@@ -15,15 +15,10 @@ export class DatePicker extends Component {
 		// initialize
 		this.$picker.daterangepicker(this.getOptionsFromProps());
 		// attach event listeners
-		['Show', 'Hide', 'ShowCalendar', 'HideCalendar', 'Apply', 'Cancel'].forEach(
-			event => {
-				const lcase = event.toLowerCase();
-				this.$picker.on(
-					lcase + '.daterangepicker',
-					this.makeEventHandler('on' + event)
-				);
-			}
-		);
+		['Show', 'Hide', 'ShowCalendar', 'HideCalendar', 'Apply', 'Cancel'].forEach(event => {
+			const lcase = event.toLowerCase();
+			this.$picker.on(lcase + '.daterangepicker', this.makeEventHandler('on' + event));
+		});
 	}
 	componentWillReceiveProps(nextProps) {
 		const currentOptions = this.getOptionsFromProps();
@@ -94,8 +89,8 @@ export class DatePicker extends Component {
 DatePicker.defaultProps = {
 	containerClass: 'react-bootstrap-daterangepicker-container',
 	containerStyles: {
-		display: 'block'
-	}
+		display: 'block',
+	},
 };
 
 DatePicker.propTypes = {
@@ -138,7 +133,7 @@ DatePicker.propTypes = {
 	timePicker: PropTypes.bool,
 	timePickerIncrement: PropTypes.number,
 	timePicker24Hour: PropTypes.bool,
-	timePickerSeconds: PropTypes.bool
+	timePickerSeconds: PropTypes.bool,
 };
 
 export default DatePicker;

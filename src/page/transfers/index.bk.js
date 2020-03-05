@@ -2,9 +2,8 @@
  * External dependencies
  */
 
-import {Component} from 'react';
+import { Component } from 'react';
 import { translate as __ } from 'lib/locale';
-
 
 /**
  * Internal dependencies
@@ -12,27 +11,22 @@ import { translate as __ } from 'lib/locale';
 import './style.scss';
 
 export default class Accounts extends Component {
-	constructor( props ) {
+	constructor(props) {
 		super(props);
 		this.state = {};
-		window.addEventListener( 'popstate', this.onPageChanged );
+		window.addEventListener('popstate', this.onPageChanged);
 	}
 
-	componentDidCatch( error, info ) {
-		this.setState( { error: true, stack: error, info } );
+	componentDidCatch(error, info) {
+		this.setState({ error: true, stack: error, info });
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener( 'popstate', this.onPageChanged );
+		window.removeEventListener('popstate', this.onPageChanged);
 	}
 
-
 	render() {
-		return (
-			<div>
-				TRAS
-			</div>
-		);
+		return <div>TRAS</div>;
 	}
 }
 

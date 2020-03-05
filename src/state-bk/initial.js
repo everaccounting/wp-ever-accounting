@@ -1,13 +1,13 @@
-import {getInitialCurrencies} from 'state/currencies/initial';
-import {getInitialTaxRates} from 'state/taxrates/initial';
-import {getInitialCategories} from 'state/categories/initial';
-import {getInitialAccounts} from 'state/accounts/initial';
+import { getInitialCurrencies } from 'state/currencies/initial';
+import { getInitialTaxRates } from 'state/taxrates/initial';
+import { getInitialCategories } from 'state/categories/initial';
+import { getInitialAccounts } from 'state/accounts/initial';
 // import {getInitialBills} from 'state/bills/intial';
 // import {getInitialContacts} from 'state/contacts/intial';
 // import {getInitialInvoices} from 'state/invoices/intial';
 // import {getInitialPayments} from 'state/payments/intial';
-import {getInitialRevenues} from 'state/revenues/initial';
-import {getInitialTransactions} from 'state/transactions/initial';
+import { getInitialRevenues } from 'state/revenues/initial';
+import { getInitialTransactions } from 'state/transactions/initial';
 
 export function initialActions(store) {
 	return store;

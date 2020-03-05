@@ -11,21 +11,21 @@ const SortableColumn = props => {
 	const { order, orderby } = table;
 	const click = ev => {
 		ev.preventDefault();
-		props.onSetOrderBy( name, orderby === name && order === 'desc' ? 'asc' : 'desc' );
+		props.onSetOrderBy(name, orderby === name && order === 'desc' ? 'asc' : 'desc');
 	};
-	const classes = classnames( {
+	const classes = classnames({
 		'manage-column': true,
 		sortable: true,
 		asc: orderby === name && order === 'asc',
-		desc: orderby === name && order === 'desc' || orderby !== name,
+		desc: (orderby === name && order === 'desc') || orderby !== name,
 		'column-primary': primary,
-		[ 'column-' + name ]: true,
-	} );
+		['column-' + name]: true,
+	});
 
 	return (
-		<th scope="col" className={ classes } onClick={ click }>
+		<th scope="col" className={classes} onClick={click}>
 			<a href="#">
-				<span>{ text }</span>
+				<span>{text}</span>
 				<span className="sorting-indicator"></span>
 			</a>
 		</th>

@@ -2,7 +2,7 @@
  * External dependencies
  */
 
-import {translate as __} from 'lib/locale';
+import { translate as __ } from 'lib/locale';
 
 export const getHeaders = () => [
 	{
@@ -46,5 +46,5 @@ export const getBulk = () => [
 	{
 		id: 'delete',
 		name: __('Delete'),
-	}
+	},
 ];

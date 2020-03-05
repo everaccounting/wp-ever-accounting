@@ -15,28 +15,36 @@ class TableGroup extends React.Component {
 		onGroup: PropTypes.func.isRequired,
 	};
 
-	constructor( props ) {
-		super( props );
+	constructor(props) {
+		super(props);
 
 		this.state = { selected: props.selected };
 	}
 
 	onChange = ev => {
-		this.setState( { selected: ev.target.value } );
-	}
+		this.setState({ selected: ev.target.value });
+	};
 
 	onSubmit = () => {
-		this.props.onGroup( this.state.selected );
-	}
+		this.props.onGroup(this.state.selected);
+	};
 
 	render() {
 		const { options, isEnabled } = this.props;
 
 		return (
 			<div className="alignleft actions">
-				<Select items={ options } value={ this.state.selected } name="filter" onChange={ this.onChange } isEnabled={ isEnabled } />
+				<Select
+					items={options}
+					value={this.state.selected}
+					name="filter"
+					onChange={this.onChange}
+					isEnabled={isEnabled}
+				/>
 
-				<button className="button" onClick={ this.onSubmit } disabled={ ! isEnabled }>{ __( 'Apply' ) }</button>
+				<button className="button" onClick={this.onSubmit} disabled={!isEnabled}>
+					{__('Apply')}
+				</button>
 			</div>
 		);
 	}

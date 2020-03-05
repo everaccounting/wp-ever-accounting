@@ -1,7 +1,7 @@
-import {Component, Fragment} from "react";
-import {connect} from "react-redux";
-import {translate as __} from 'lib/locale';
-import {STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED, STATUS_SAVING} from 'status';
+import { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { translate as __ } from 'lib/locale';
+import { STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED, STATUS_SAVING } from 'status';
 import {
 	setGetItems,
 	setPage,
@@ -11,16 +11,16 @@ import {
 	setSearch,
 	setFilter,
 } from 'state/revenues/action';
-import {getHeaders, getBulk} from "./constants";
-import {SelectControl, Table, Navigation, SearchBox, BulkAction, Button} from "@eaccounting/components";
+import { getHeaders, getBulk } from './constants';
+import { SelectControl, Table, Navigation, SearchBox, BulkAction, Button } from '@eaccounting/components';
 import Row from './row';
-import {Link} from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 class Revenues extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAdding:false
+			isAdding: false,
 		};
 	}
 
@@ -30,42 +30,33 @@ class Revenues extends Component {
 
 	onAdd = ev => {
 		ev.preventDefault();
-		this.setState({isAdding: !this.state.isAdding});
+		this.setState({ isAdding: !this.state.isAdding });
 	};
 
 	onClose = () => {
-		this.setState({isAdding: !this.state.isAdding});
+		this.setState({ isAdding: !this.state.isAdding });
 	};
 
 	onRenderRow = (item, pos, status, search) => {
-		const {saving} = this.props.revenues;
+		const { saving } = this.props.revenues;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
-		return (
-			<Row
-				item={item}
-				key={pos}
-				status={rowStatus}
-				search={search}
-				{...this.props}/>
-		);
+		return <Row item={item} key={pos} status={rowStatus} search={search} {...this.props} />;
 	};
 
 	render() {
-		const {status, total, table, rows, saving} = this.props.revenues;
-		const {isAdding,} = this.state;
-		const {match} = this.props;
+		const { status, total, table, rows, saving } = this.props.revenues;
+		const { isAdding } = this.state;
+		const { match } = this.props;
 		return (
 			<Fragment>
 				{/*{isAdding && <EditAccount onClose={this.onClose}/>}*/}
 
 				<div className="ea-table-display">
-					<Link className="page-title-action" to={`${match.path}/new`}>{__('Add Revenue')}</Link>
-					<SearchBox
-						status={status}
-						table={table}
-						onSearch={this.props.onSearch}
-					/>
+					<Link className="page-title-action" to={`${match.path}/new`}>
+						{__('Add Revenue')}
+					</Link>
+					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
 				<Navigation
@@ -75,7 +66,8 @@ class Revenues extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}
-					bulk={getBulk()}/>
+					bulk={getBulk()}
+				/>
 
 				<Table
 					headers={getHeaders()}
@@ -87,14 +79,13 @@ class Revenues extends Component {
 					onSetAllSelected={this.props.onSetAllSelected}
 					onSetOrderBy={this.props.onSetOrderBy}
 				/>
-
 			</Fragment>
 		);
 	}
 }
 
 function mapStateToProps(state) {
-	const {revenues} = state;
+	const { revenues } = state;
 	return {
 		revenues,
 	};
@@ -108,7 +99,7 @@ function mapDispatchToProps(dispatch) {
 		onChangePage: page => {
 			dispatch(setPage(page));
 		},
-		onAction: (action) => {
+		onAction: action => {
 			dispatch(setBulkAction(action));
 		},
 		onSetAllSelected: onoff => {
@@ -117,16 +108,13 @@ function mapDispatchToProps(dispatch) {
 		onSetOrderBy: (column, order) => {
 			dispatch(setOrderBy(column, order));
 		},
-		onFilter: (filterBy) => {
+		onFilter: filterBy => {
 			dispatch(setFilter(filterBy));
 		},
-		onSearch: (search) => {
+		onSearch: search => {
 			dispatch(setSearch(search));
-		}
-	}
+		},
+	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(Revenues);
+export default connect(mapStateToProps, mapDispatchToProps)(Revenues);

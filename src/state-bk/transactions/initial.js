@@ -1,5 +1,5 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {translate as __} from 'lib/locale';
+import { STATUS_IN_PROGRESS } from 'status';
+import { translate as __ } from 'lib/locale';
 
 export function getInitialTransactions() {
 	return {
@@ -13,7 +13,7 @@ export function getInitialTransactions() {
 			page: 1,
 			per_page: parseInt(eAccountingi10n.per_page, 10),
 			filterBy: {},
-			selected: []
+			selected: [],
 		},
 	};
 }
@@ -26,5 +26,5 @@ export const transactionTypes = [
 	{
 		label: __('Expense'),
 		value: 'expense',
-	}
+	},
 ];

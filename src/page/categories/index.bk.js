@@ -1,18 +1,18 @@
 /**
  * External dependencies
  */
-import {Component, Fragment} from "react";
-import {connect} from "react-redux";
-import {map} from 'lodash';
+import { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { map } from 'lodash';
 
 /**
  * Internal dependencies
  */
-import {translate as __} from 'lib/locale';
-import {getSelectedOptions} from "lib/table";
-import {categoryTypes} from 'state/categories/initial';
-import EditCategory from "component/edit-category";
-import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'status';
+import { translate as __ } from 'lib/locale';
+import { getSelectedOptions } from 'lib/table';
+import { categoryTypes } from 'state/categories/initial';
+import EditCategory from 'component/edit-category';
+import { STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE } from 'status';
 import {
 	setGetItems,
 	setPage,
@@ -22,9 +22,9 @@ import {
 	setSearch,
 	setFilter,
 } from 'state/categories/action';
-import {SelectControl, Table, Navigation, SearchBox, BulkAction, Button} from "@eaccounting/components";
-import Row from "./row";
-import {getHeaders, getBulk} from "./constants";
+import { SelectControl, Table, Navigation, SearchBox, BulkAction, Button } from '@eaccounting/components';
+import Row from './row';
+import { getHeaders, getBulk } from './constants';
 import './style.scss';
 
 class Categories extends Component {
@@ -41,52 +41,41 @@ class Categories extends Component {
 
 	onAdd = ev => {
 		ev.preventDefault();
-		this.setState({isAdding: !this.state.isAdding});
+		this.setState({ isAdding: !this.state.isAdding });
 	};
 
 	onClose = () => {
-		this.setState({isAdding: !this.state.isAdding});
+		this.setState({ isAdding: !this.state.isAdding });
 	};
 
 	setFilter = (filter, value) => {
-		const {filterBy} = this.props.categories.table;
-		this.props.onFilter({...filterBy, [filter]: value ? value : undefined});
+		const { filterBy } = this.props.categories.table;
+		this.props.onFilter({ ...filterBy, [filter]: value ? value : undefined });
 	};
 
-	onFilterType = (types) => {
+	onFilterType = types => {
 		this.setFilter('type', map(types, 'value'));
 	};
 
 	onRenderRow = (item, pos, status, search) => {
-		const {saving} = this.props.categories;
+		const { saving } = this.props.categories;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
-		return (
-			<Row
-				item={item}
-				key={pos}
-				status={rowStatus}
-				search={search}
-				selected={status.isSelected}
-			/>
-		);
+		return <Row item={item} key={pos} status={rowStatus} search={search} selected={status.isSelected} />;
 	};
 
-
 	render() {
-		const {status, total, table, rows, saving} = this.props.categories;
-		const {isAdding,} = this.state;
-		const {type = []} = table.filterBy;
+		const { status, total, table, rows, saving } = this.props.categories;
+		const { isAdding } = this.state;
+		const { type = [] } = table.filterBy;
 		return (
 			<Fragment>
-				{isAdding && <EditCategory onClose={this.onClose}/>}
+				{isAdding && <EditCategory onClose={this.onClose} />}
 				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Category')}</Button>
-					<SearchBox
-						status={status}
-						table={table}
-						onSearch={this.props.onSearch}
-					/>
+					<Button className="page-title-action" onClick={this.onAdd}>
+						{__('Add Category')}
+					</Button>
+					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
 				<Navigation
@@ -96,9 +85,9 @@ class Categories extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}
-					bulk={getBulk()}>
-
-					<BulkAction/>
+					bulk={getBulk()}
+				>
+					<BulkAction />
 
 					<SelectControl
 						className={'alignleft actions'}
@@ -109,7 +98,6 @@ class Categories extends Component {
 						value={getSelectedOptions(categoryTypes, type)}
 						onChange={this.onFilterType}
 					/>
-
 				</Navigation>
 
 				<Table
@@ -129,16 +117,15 @@ class Categories extends Component {
 					table={table}
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
-					status={status}/>
+					status={status}
+				/>
 			</Fragment>
-		)
+		);
 	}
-
 }
 
-
 function mapStateToProps(state) {
-	const {categories} = state;
+	const { categories } = state;
 	return {
 		categories,
 	};
@@ -152,7 +139,7 @@ function mapDispatchToProps(dispatch) {
 		onChangePage: page => {
 			dispatch(setPage(page));
 		},
-		onAction: (action) => {
+		onAction: action => {
 			dispatch(setBulkAction(action));
 		},
 		onSetAllSelected: onoff => {
@@ -161,16 +148,13 @@ function mapDispatchToProps(dispatch) {
 		onSetOrderBy: (column, order) => {
 			dispatch(setOrderBy(column, order));
 		},
-		onFilter: (filterBy) => {
+		onFilter: filterBy => {
 			dispatch(setFilter(filterBy));
 		},
-		onSearch: (search) => {
+		onSearch: search => {
 			dispatch(setSearch(search));
-		}
-	}
+		},
+	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(Categories);
+export default connect(mapStateToProps, mapDispatchToProps)(Categories);

@@ -1,9 +1,9 @@
 /**
  * External dependencies
  */
-import {sprintf} from '@wordpress/i18n';
-import {numberFormat} from './numbers';
-import {getCurrencyData} from "./currencies";
+import { sprintf } from '@wordpress/i18n';
+import { numberFormat } from './numbers';
+import { getCurrencyData } from './currencies';
 
 export default class Currency {
 	constructor(currency = null) {
@@ -17,11 +17,11 @@ export default class Currency {
 	 *
 	 * @param {Object} currency An object containing currency configuration settings.
 	 */
-	setCurrency(currency = "USD") {
+	setCurrency(currency = 'USD') {
 		const config = getCurrencyData(currency);
 		this.code = config.code.toString();
 		this.symbol = config.symbol.toString();
-		this.position = "before";
+		this.position = 'before';
 		//this.position = config.position.toString() || "before";//todo uncomment this
 		this.decimalSeparator = config.decimalSeparator.toString();
 		this.priceFormat = this.getPriceFormat(config);
@@ -91,10 +91,7 @@ export default class Currency {
 		if (Number.isNaN(number)) {
 			return 0;
 		}
-		return (
-			Math.round(number * Math.pow(10, this.precision)) /
-			Math.pow(10, this.precision)
-		);
+		return Math.round(number * Math.pow(10, this.precision)) / Math.pow(10, this.precision);
 	}
 
 	/**
@@ -125,11 +122,7 @@ export default class Currency {
 			number = parseFloat(number);
 		}
 		if (number < 0) {
-			return (
-				<span className="is-negative">
-					{this.formatCurrency(number)}
-				</span>
-			);
+			return <span className="is-negative">{this.formatCurrency(number)}</span>;
 		}
 		return this.formatCurrency(number);
 	}

@@ -5,40 +5,40 @@
 import { translate as __ } from 'lib/locale';
 
 export const getDisplayOptions = () => [
-	{ value: 'name', label: __( 'Name' ) },
-	{ value: 'number', label: __( 'Number' ) },
-	{ value: 'balance', label: __( 'Balance' ) },
-	{ value: 'status', label: __( 'Status' ) },
+	{ value: 'name', label: __('Name') },
+	{ value: 'number', label: __('Number') },
+	{ value: 'balance', label: __('Balance') },
+	{ value: 'status', label: __('Status') },
 ];
 
 export const getDisplayGroups = () => [
 	{
 		value: 'standard',
-		label: __( 'Standard Display' ),
-		grouping: [ 'name', 'number', 'balance', 'bank_name', 'status' ],
+		label: __('Standard Display'),
+		grouping: ['name', 'number', 'balance', 'bank_name', 'status'],
 	},
 	{
 		value: 'minimal',
-		label: __( 'Compact Display' ),
-		grouping: [ 'name', 'balance', 'status' ],
+		label: __('Compact Display'),
+		grouping: ['name', 'balance', 'status'],
 	},
 ];
 
 export const getFilterOptions = () => [
 	{
-		label: __( 'Status' ),
+		label: __('Status'),
 		value: 'status',
 		options: [
 			{
-				label: __( 'Enabled' ),
+				label: __('Enabled'),
 				value: 'active',
 			},
 			{
-				label: __( 'Disabled' ),
+				label: __('Disabled'),
 				value: 'inactive',
 			},
 		],
-	}
+	},
 ];
 
 export const getHeaders = () => [
@@ -48,50 +48,50 @@ export const getHeaders = () => [
 	},
 	{
 		name: 'created_date',
-		title: __( 'Created Date' ),
+		title: __('Created Date'),
 		primary: true,
 		sortable: true,
 	},
 	{
 		name: 'account',
-		title: __( 'Account' ),
+		title: __('Account'),
 		sortable: true,
 	},
 	{
 		name: 'period',
-		title: __( 'Period' ),
+		title: __('Period'),
 		sortable: false,
 	},
 	{
 		name: 'closing_balance',
-		title: __( 'Closing Balance' ),
+		title: __('Closing Balance'),
 		sortable: true,
 	},
 	{
 		name: 'status',
-		title: __( 'Status' ),
+		title: __('Status'),
 		sortable: true,
-	}
+	},
 ];
 
 export const getBulk = () => [
 	{
 		id: 'delete',
-		name: __( 'Delete' ),
+		name: __('Delete'),
 	},
 	{
 		id: 'enable',
-		name: __( 'Enable' ),
+		name: __('Enable'),
 	},
 	{
 		id: 'disable',
-		name: __( 'Disable' ),
+		name: __('Disable'),
 	},
 ];
 
 export const getSearchOptions = () => [
 	{
 		name: 'name',
-		title: __( 'Search' ),
+		title: __('Search'),
 	},
 ];

@@ -1,4 +1,1 @@
-module.exports = [
-	require('autoprefixer')({ grid: true }),
-	require('precss'),
-];
+module.exports = [require('autoprefixer')({ grid: true }), require('precss')];

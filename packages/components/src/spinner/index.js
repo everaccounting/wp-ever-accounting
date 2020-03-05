@@ -8,7 +8,7 @@ export default class Spinner extends Component {
 		className: propTypes.string,
 		text: propTypes.string,
 		padding: propTypes.number,
-		align:propTypes.string,
+		align: propTypes.string,
 	};
 
 	static defaultProps = {
@@ -23,11 +23,11 @@ export default class Spinner extends Component {
 		});
 		const style = {
 			padding: this.props.padding + 'px',
-			textAlign:this.props.align
+			textAlign: this.props.align,
 		};
 		return (
 			<div className={classes} style={style}>
-				<Base/>
+				<Base />
 				<p>{this.props.text}</p>
 			</div>
 		);

@@ -20,7 +20,6 @@
 		"mbezhanov/faker-provider-collection": "^1.2"
 	},
 	"extra": {
-		"cleaner-ignore": {
-		}
+		"cleaner-ignore": {}
 	}
 }

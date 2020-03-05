@@ -1,5 +1,5 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable} from "../util";
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable } from '../util';
 
 export const initialPayments = {
 	rows: [],
@@ -9,6 +9,5 @@ export const initialPayments = {
 	table: getDefaultTable(['name', 'id'], ['type'], 'id'),
 };
 
-
-export {default as payments} from './reducers';
+export { default as payments } from './reducers';
 export * from './actions';

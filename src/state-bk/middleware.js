@@ -10,26 +10,25 @@ import { ACCOUNTS_LOADING, ACCOUNTS_LOADDED } from 'state/accounts/type';
 // import { ERROR_LOADING } from 'state/error/type';
 import { getPluginPage, setPageUrl } from 'lib/wordpress-url';
 //
-const setUrlForPage = ( action, table ) => {
+const setUrlForPage = (action, table) => {
+	// 	if ( currentPage[ pluginPage ] && action === currentPage[ pluginPage ][ 0 ].find( item => item === action ) ) {
+	const { orderby, order, page, per_page, filterBy, groupBy } = table;
+	const query = { orderby, order, offset: page, per_page, filterBy, groupBy };
+	const defaults = {
+		orderby: orderby,
+		order: 'desc',
+		offset: 0,
+		filterBy: {},
+		per_page: parseInt(eAccountingi10n.per_page, 10),
+		groupBy: '',
+	};
 
-// 	if ( currentPage[ pluginPage ] && action === currentPage[ pluginPage ][ 0 ].find( item => item === action ) ) {
-		const { orderby, order, page, per_page, filterBy, groupBy } = table;
-		const query = { orderby, order, offset: page, per_page, filterBy, groupBy };
-		const defaults = {
-			orderby: orderby,
-			order: 'desc',
-			offset: 0,
-			filterBy: {},
-			per_page: parseInt( eAccountingi10n.per_page, 10 ),
-			groupBy: '',
-		};
-
-		if ( groupBy ) {
-			defaults.orderby = 'total';
-		}
-//
-		setPageUrl( query, defaults );
-// 	}
+	if (groupBy) {
+		defaults.orderby = 'total';
+	}
+	//
+	setPageUrl(query, defaults);
+	// 	}
 };
 
 export const urlMiddleware = () => next => action => {
@@ -44,5 +43,5 @@ export const urlMiddleware = () => next => action => {
 	// 		break;
 	// }
 
-	return next( action );
+	return next(action);
 };

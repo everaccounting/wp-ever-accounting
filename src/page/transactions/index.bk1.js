@@ -1,39 +1,33 @@
 /**
  * External dependencies
  */
-import {Component, Fragment} from 'react';
-import {connect} from 'react-redux';
-import {map} from 'lodash';
+import { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { map } from 'lodash';
 /**
  * Accounting dependencies
  */
-import { Button, Navigation, SearchBox, SelectControl, Table, DateFilter} from "@eaccounting/components";
+import { Button, Navigation, SearchBox, SelectControl, Table, DateFilter } from '@eaccounting/components';
 
 /**
  * Internal dependencies
  */
-import {
-	setGetItems,
-	setPage,
-	setOrderBy,
-	setSearch,
-	setFilter,
-} from 'state/transactions/action';
-import {translate as __} from 'lib/locale';
-import {getHeaders} from "./constants";
-import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'status';
-import Row from "./row";
-import {transactionTypes} from "state/transactions/initial";
-import {getSelectedOptions} from "lib/table";
-import AccountControl from "component/account-control";
-import CategoryControl from "component/category-control";
+import { setGetItems, setPage, setOrderBy, setSearch, setFilter } from 'state/transactions/action';
+import { translate as __ } from 'lib/locale';
+import { getHeaders } from './constants';
+import { STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE } from 'status';
+import Row from './row';
+import { transactionTypes } from 'state/transactions/initial';
+import { getSelectedOptions } from 'lib/table';
+import AccountControl from 'component/account-control';
+import CategoryControl from 'component/category-control';
 // import DateRangeControl from "component/date-range-control";
 
 class Transactions extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAdding: false
+			isAdding: false,
 		};
 		window.addEventListener('popstate', this.onPageChanged);
 	}
@@ -43,58 +37,50 @@ class Transactions extends Component {
 	}
 
 	setFilter = (filter, value) => {
-		const {filterBy} = this.props.transactions.table;
-		this.props.onFilter({...filterBy, [filter]: value ? value : undefined});
+		const { filterBy } = this.props.transactions.table;
+		this.props.onFilter({ ...filterBy, [filter]: value ? value : undefined });
 	};
 
-	onFilterAccount = (accounts) => {
+	onFilterAccount = accounts => {
 		let filter = map(accounts, 'value') || undefined;
 		this.setFilter('account_id', filter);
 	};
 
-	onFilterCategory = (categories) => {
+	onFilterCategory = categories => {
 		this.setFilter('category_id', map(categories, 'value'));
 	};
 
-	onFilterDate = (date) => {
+	onFilterDate = date => {
 		this.setFilter('date', date);
 	};
 
-	onFilterType = (types) => {
+	onFilterType = types => {
 		this.setFilter('type', map(types, 'value'));
 	};
 
 	onRenderRow = (item, pos, status, search) => {
-		const {saving} = this.props.transactions;
+		const { saving } = this.props.transactions;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
-		return (
-			<Row
-				item={item}
-				key={pos}
-				status={rowStatus}
-				search={search}
-			/>
-		);
+		return <Row item={item} key={pos} status={rowStatus} search={search} />;
 	};
 
-
 	render() {
-		const {status, total, table, rows} = this.props.transactions;
-		const {type = [], date = '', category_id, account_id} = table.filterBy;
+		const { status, total, table, rows } = this.props.transactions;
+		const { type = [], date = '', category_id, account_id } = table.filterBy;
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
-				<Button className="page-title-action" onClick={this.onAdd}>{__('Income')}</Button>
-				<Button className="page-title-action" onClick={this.onAdd}>{__('Payments')}</Button>
-				<hr className="wp-header-end"/>
+				<Button className="page-title-action" onClick={this.onAdd}>
+					{__('Income')}
+				</Button>
+				<Button className="page-title-action" onClick={this.onAdd}>
+					{__('Payments')}
+				</Button>
+				<hr className="wp-header-end" />
 
 				<div className="ea-table-display">
-					<SearchBox
-						status={status}
-						table={table}
-						onSearch={this.props.onSearch}
-					/>
+					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
 				<Navigation
@@ -103,12 +89,9 @@ class Transactions extends Component {
 					table={table}
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
-					status={status}>
-
-					<DateFilter
-						className={'alignleft actions'}
-						date={date}
-						onChange={this.onFilterDate}/>
+					status={status}
+				>
+					<DateFilter className={'alignleft actions'} date={date} onChange={this.onFilterDate} />
 
 					<SelectControl
 						className={'alignleft actions'}
@@ -126,7 +109,8 @@ class Transactions extends Component {
 						isClearable
 						isDisabled={status !== STATUS_COMPLETE}
 						selected={account_id}
-						onChange={this.onFilterAccount}/>
+						onChange={this.onFilterAccount}
+					/>
 
 					<CategoryControl
 						className={'alignleft actions'}
@@ -134,8 +118,8 @@ class Transactions extends Component {
 						isClearable
 						isDisabled={status !== STATUS_COMPLETE}
 						selected={category_id}
-						onChange={this.onFilterCategory}/>
-
+						onChange={this.onFilterCategory}
+					/>
 				</Navigation>
 
 				<Table
@@ -154,16 +138,15 @@ class Transactions extends Component {
 					table={table}
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
-					status={status}/>
-
-
+					status={status}
+				/>
 			</Fragment>
 		);
 	}
 }
 
 function mapStateToProps(state) {
-	const {transactions} = state;
+	const { transactions } = state;
 	return {
 		transactions,
 	};
@@ -183,16 +166,13 @@ function mapDispatchToProps(dispatch) {
 		onSetOrderBy: (column, order) => {
 			dispatch(setOrderBy(column, order));
 		},
-		onFilter: (filter) => {
+		onFilter: filter => {
 			dispatch(setFilter(filter));
 		},
-		onSearch: (search) => {
+		onSearch: search => {
 			dispatch(setSearch(search));
-		}
-	}
+		},
+	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(Transactions);
+export default connect(mapStateToProps, mapDispatchToProps)(Transactions);

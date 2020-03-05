@@ -1,7 +1,15 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable, toFilter} from 'lib/table';
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable, toFilter } from 'lib/table';
 import { getFilterOptions, getDisplayGroups } from 'page/misc/components/payments/constants';
-let table = getDefaultTable( [ 'name', 'number' ], toFilter( getFilterOptions(), { name: true } ), getDisplayGroups(), 'name', [ 'payments' ], 'payment', getDisplayGroups() );
+let table = getDefaultTable(
+	['name', 'number'],
+	toFilter(getFilterOptions(), { name: true }),
+	getDisplayGroups(),
+	'name',
+	['payments'],
+	'payment',
+	getDisplayGroups()
+);
 
 export function getInitialPayments() {
 	return {

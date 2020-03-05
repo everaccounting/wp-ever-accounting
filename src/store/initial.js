@@ -1,12 +1,12 @@
-import {initialRevenues} from "./revenues";
-import {initialRevenue} from "./revenue";
-import {initialTransactions} from "./transactions";
-import {initialContacts} from "./contacts";
-import {initialCategories} from "./categories";
-import {initialAccounts} from "./accounts";
-import {initialPayments} from "./payments";
-import {initialCurrencies} from "./currencies";
-import {initialTaxRates} from "./taxrates";
+import { initialRevenues } from './revenues';
+import { initialRevenue } from './revenue';
+import { initialTransactions } from './transactions';
+import { initialContacts } from './contacts';
+import { initialCategories } from './categories';
+import { initialAccounts } from './accounts';
+import { initialPayments } from './payments';
+import { initialCurrencies } from './currencies';
+import { initialTaxRates } from './taxrates';
 
 export default function getInitialState() {
 	return {
@@ -19,5 +19,5 @@ export default function getInitialState() {
 		taxrates: initialTaxRates,
 		categories: initialCategories,
 		payments: initialPayments,
-	}
+	};
 }
