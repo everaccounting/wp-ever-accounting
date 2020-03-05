@@ -75,11 +75,12 @@ class Row extends Component {
 					</td>
 
 					<td className="column-category">
-
+						{category.name || '-'}
 					</td>
 
 
 					<td className="column-account">
+						{account.name || '-'}
 					</td>
 
 

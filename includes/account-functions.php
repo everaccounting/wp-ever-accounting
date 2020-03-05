@@ -92,7 +92,7 @@ function eaccounting_get_account( $id ) {
  *
  * @param $id
  *
- * @return bool
+ * @return bool|WP_Error
  * @since 1.0.0
  */
 function eaccounting_delete_account( $id ) {
@@ -103,6 +103,17 @@ function eaccounting_delete_account( $id ) {
 	if ( is_null( $account ) ) {
 		return false;
 	}
+
+	$tables = [
+		$wpdb->ea_revenues => 'account_id',
+	];
+
+	foreach ($tables as $table => $column){
+		if($wpdb->get_var($wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id))){
+			return new WP_Error('not-permitted', __('Account have records on', 'wp-ever-accounting'));
+		}
+	}
+
 
 	do_action( 'eaccounting_pre_account_delete', $id, $account );
 	if ( false == $wpdb->delete( $wpdb->ea_accounts, array( 'id' => $id ), array( '%d' ) ) ) {

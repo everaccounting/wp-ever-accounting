@@ -249,6 +249,9 @@ class EAccounting_Admin {
 			'baseUrl'          => get_site_url(),
 			'per_page'         => 20,
 			'default_currency' => eaccounting_get_default_currency(),
+			'defaults' => [
+				//'account' =>
+			]
 		] );
 
 		wp_enqueue_script( 'eaccounting' );

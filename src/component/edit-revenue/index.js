@@ -7,38 +7,63 @@ import {
 	TextareaControl,
 	TextControl,
 	DateControl,
-	PriceControl,
 	Spinner
 } from "@eaccounting/components";
+import PriceControl from "./price-control";
 import AccountControl from "../account-control";
 import CategoryControl from "../category-control";
 import ContactControl from "../contact-control";
-import {connect} from "react-redux";
-import {loadRevenue} from "store/revenue";
-import {STATUS_COMPLETE} from "../../status";
+import {accountingApi, apiRequest} from "../../lib/api";
 
-class EditRevenue extends Component {
+export default class EditRevenue extends Component {
+	_isMounted = false;
+
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			id: null,
+			paid_at: '',
+			account: {},
+			amount: '',
+			contact: {},
+			description: '',
+			category: {},
+			reference: '',
+			payment_method: '',
+			attachment_url: '',
+			parent_id: '',
+			reconciled: '0',
+		};
 	}
 
 	componentDidMount() {
+		this._isMounted = true;
 		const {match} = this.props;
 		const id = match.params.id || undefined;
-		id && this.props.onMount(id);
+		id && this.loadRevenue(id);
 	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+	}
+
+	loadRevenue = (id) => {
+		apiRequest(accountingApi.revenues.get(id)).then(res => {
+			this._isMounted && this.setState({
+				...this.state,
+				...res.data
+			})
+		});
+	};
 
 
 	render() {
-		const {id, paid_at, amount, currency_code, currency, account_id, category_id, description, contact_id, reference, status} = this.props;
-
+		const {id, paid_at, amount, account} = this.state;
+		const accountOption = {label: account.name, value: account};
+		const {currency = {}, currency_code} = account;
 		return (
 			<Fragment>
-				<pre>
-					{paid_at}
-					{JSON.stringify(this.props)}
-				</pre>
+				{currency_code}
 				{!id && <CompactCard tagName="h3">{__('Add Revenue')}</CompactCard>}
 				{!!id && <CompactCard tagName="h3">{__('Update Revenue')}</CompactCard>}
 				<Card>
@@ -57,23 +82,31 @@ class EditRevenue extends Component {
 						</div>
 
 						<div className="ea-col-6">
-							<PriceControl
-								label={__('Amount')}
-								before={<Icon icon={'university'}/>}
-								currency={currency}
-								required
-								selected={amount}
-								onChange={(amount) => console.log(amount)}/>
+							<PriceControl/>
+							{/*<PriceControl*/}
+							{/*	label={__('Amount')}*/}
+							{/*	before={<Icon icon={'university'}/>}*/}
+							{/*	currency={currency}*/}
+							{/*	required*/}
+							{/*	value={amount}*/}
+							{/*	onChange={(amount) => {*/}
+							{/*		this.setState({amount})*/}
+							{/*	}}/>*/}
 						</div>
+
 						<div className="ea-col-6">
 							<AccountControl
 								label={__('Account')}
 								before={<Icon icon={'university'}/>}
 								after={currency_code}
 								required
-								value={{}}
-								onChange={(account) => console.log(account)}/>
+								value={{label:account.name || '', value:account}}
+								onChange={(account) => {
+									console.log(account);
+									this.setState({account: account.value})
+								}}/>
 						</div>
+
 
 					</div>
 
@@ -82,16 +115,3 @@ class EditRevenue extends Component {
 		)
 	}
 }
-
-function mapDispatchToProps(dispatch) {
-	return {
-		onMount: (id) => {
-			dispatch(loadRevenue(id));
-		}
-	}
-}
-
-export default connect(
-	(state) => ({...state.revenue}),
-	mapDispatchToProps
-)(EditRevenue);

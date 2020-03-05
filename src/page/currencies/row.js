@@ -4,7 +4,7 @@ import {Column, RowActions} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";
 import {BulkAction} from "store/categories";
-import EditCategory from "component/edit-category";
+import EditCurrency from "component/edit-currency";
 class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
@@ -54,7 +54,7 @@ class Row extends Component {
 							checked={isSelected}
 							onChange={() => this.props.onSetSelected(item.id)}/>
 
-						{editing && <EditCategory
+						{editing && <EditCurrency
 							item={this.props.item}
 							onClose={this.onClose}
 							buttonTittle={__('Update')}

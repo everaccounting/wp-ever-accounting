@@ -23,14 +23,6 @@ export default class AccountControl extends Component {
 	}
 
 	componentDidMount() {
-		const {selected} = this.props;
-
-		// selected && selected.length && this.getAccounts({include: selected}, (options) => {
-		// 	this.setState({
-		// 		value: options
-		// 	})
-		// });
-
 		this.getAccounts({}, (options) => {
 			this.setState({
 				defaultOptions: options
@@ -43,7 +35,7 @@ export default class AccountControl extends Component {
 			callback(res.data.map(item => {
 				return {
 					label: `${item.name}`,
-					value: item.id,
+					value: item,
 				};
 			}))
 		});
@@ -54,14 +46,12 @@ export default class AccountControl extends Component {
 	};
 
 	render() {
-		const {value, defaultOptions} = this.state;
+		const {defaultOptions} = this.state;
 		return (
 			<Fragment>
 				<AsyncSelect
 					placeholder={__('Select Account')}
 					defaultOptions={defaultOptions}
-					value={value}
-					onChange={this.onChange}
 					noOptionsMessage={() => {
 						__('No items')
 					}}

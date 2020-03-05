@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import {BaseControl} from '@wordpress/components';
 import classnames from 'classnames';
 
-
-import CurrencyInput from "react-currency-input";
-
 export default class PriceControl extends Component {
 	render() {
 		const {label, currency, help, className, onChange, before, after, required, ...props} = this.props;

@@ -72,7 +72,7 @@ class EAccounting_Install {
 		    PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
-			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_products(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_items(
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
 			`name` VARCHAR(191) NOT NULL,
 			`sku` VARCHAR(50) DEFAULT NULL,
@@ -83,7 +83,6 @@ class EAccounting_Install {
 			`tax_id` int(11) DEFAULT NULL,
 			`image_id` int(11) DEFAULT NULL,
   			`category_id` int(11) DEFAULT NULL,
-  			`status` ENUM ('active', 'inactive') DEFAULT 'active',
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
