@@ -44,6 +44,7 @@ export default class PriceControl extends Component {
 
 					<MaskedInput
 						required={required}
+						placeholder={`${currency.symbol}0.00`}
 						className='components-text-control__input ea-input-group__input'
 						mask={currencyMask}
 						{...props}

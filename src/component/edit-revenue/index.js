@@ -7,9 +7,9 @@ import {
 	TextareaControl,
 	TextControl,
 	DateControl,
-	Spinner
+	PriceControl,
+	Spinner, Button
 } from "@eaccounting/components";
-import PriceControl from "./price-control";
 import AccountControl from "../account-control";
 import CategoryControl from "../category-control";
 import ContactControl from "../contact-control";
@@ -25,7 +25,10 @@ export default class EditRevenue extends Component {
 			paid_at: '',
 			account: {},
 			amount: '',
-			contact: {},
+			contact: {
+				first_name:'',
+				last_name:'',
+			},
 			description: '',
 			category: {},
 			reference: '',
@@ -56,14 +59,16 @@ export default class EditRevenue extends Component {
 		});
 	};
 
+	addContactBtn = () => {
+		return (<Icon icon="plus"/>)
+	};
 
 	render() {
-		const {id, paid_at, amount, account} = this.state;
-		const accountOption = {label: account.name, value: account};
-		const {currency = {}, currency_code} = account;
+		const {id, paid_at, amount, account, category, contact, reference, description} = this.state;
+		const {currency_code} = account;
 		return (
 			<Fragment>
-				{currency_code}
+
 				{!id && <CompactCard tagName="h3">{__('Add Revenue')}</CompactCard>}
 				{!!id && <CompactCard tagName="h3">{__('Update Revenue')}</CompactCard>}
 				<Card>
@@ -82,16 +87,15 @@ export default class EditRevenue extends Component {
 						</div>
 
 						<div className="ea-col-6">
-							<PriceControl/>
-							{/*<PriceControl*/}
-							{/*	label={__('Amount')}*/}
-							{/*	before={<Icon icon={'university'}/>}*/}
-							{/*	currency={currency}*/}
-							{/*	required*/}
-							{/*	value={amount}*/}
-							{/*	onChange={(amount) => {*/}
-							{/*		this.setState({amount})*/}
-							{/*	}}/>*/}
+							<PriceControl
+								label={__('Amount')}
+								before={<Icon icon={'university'}/>}
+								code={currency_code}
+								required
+								value={amount}
+								onChange={(amount) => {
+									this.setState({amount})
+								}}/>
 						</div>
 
 						<div className="ea-col-6">
@@ -100,11 +104,48 @@ export default class EditRevenue extends Component {
 								before={<Icon icon={'university'}/>}
 								after={currency_code}
 								required
-								value={{label:account.name || '', value:account}}
+								value={account}
 								onChange={(account) => {
-									console.log(account);
-									this.setState({account: account.value})
+									this.setState({account})
 								}}/>
+						</div>
+
+						<div className="ea-col-6">
+							<CategoryControl
+								label={__('Category')}
+								before={<Icon icon={'folder-open-o'}/>}
+								required
+								type="income"
+								value={category}
+								onChange={(category) => {
+									this.setState({category})
+								}}/>
+						</div>
+
+						<div className="ea-col-6">
+							<ContactControl
+								label={__('Customer')}
+								before={<Icon icon={'user'}/>}
+								after={this.addContactBtn()}
+								type="customer"
+								value={contact}
+								onChange={(contact) => this.setState({contact})}/>
+						</div>
+
+
+						<div className="ea-col-6">
+							<TextControl
+								label={__('Reference')}
+								before={<Icon icon={'file-text-o'}/>}
+								value={reference}
+								onChange={(reference) => this.setState({reference})}/>
+						</div>
+
+						<div className="ea-col-12">
+							<TextareaControl
+								label={__('Description')}
+								value={description}
+								onChange={(description) => this.setState({description})}/>
 						</div>
 
 

@@ -45,9 +45,9 @@ export default class ContactControl extends Component {
 				<AsyncSelect
 					defaultOptions={defaultOptions}
 					noOptionsMessage={() => {
-						__('No Categories')
+						__('No Items')
 					}}
-					getOptionLabel={option => `${option.first_name} ${option.last_name}`}
+					getOptionLabel={option => Object.keys(option) ? `${option.first_name} ${option.last_name}` : ''}
 					getOptionValue={option => option.id}
 					loadOptions={(search, callback) => {
 						this.getAccounts({search}, callback);
