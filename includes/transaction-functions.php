@@ -1,5 +1,19 @@
 <?php
+defined( 'ABSPATH' ) || exit();
 
+/**
+ * @since 1.0.2
+ * @return array
+ */
+function eaccounting_get_transaction_types() {
+	$types = array(
+		'income'   => __( 'Income', 'wp-ever-accounting' ),
+		'expense'  => __( 'Expense', 'wp-ever-accounting' ),
+		'transfer' => __( 'Transfer', 'wp-ever-accounting' ),
+	);
+
+	return $types;
+}
 
 function eaccounting_get_transactions( $args = array(), $count = false ) {
 	global $wpdb;
@@ -50,8 +64,8 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 
 	//type
 	if ( ! empty( $args['type'] ) ) {
-		$types = implode( "','", wp_parse_list($args['type']));
-		$query_where  .= " AND $transaction_table.type IN( '$types' ) ";
+		$types       = implode( "','", wp_parse_list( $args['type'] ) );
+		$query_where .= " AND $transaction_table.type IN( '$types' ) ";
 	}
 
 	//paid_at

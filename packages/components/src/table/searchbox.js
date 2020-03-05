@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 /**
  * Internal dependencies
  */
-import {STATUS_IN_PROGRESS} from 'lib/status';
 import {__} from "@wordpress/i18n";
 
 class SearchBox extends React.Component {
@@ -38,7 +37,7 @@ class SearchBox extends React.Component {
 
 	render() {
 		const {status} = this.props;
-		const disabled = status === STATUS_IN_PROGRESS || (this.state.search === '');
+		const disabled = status === "STATUS_IN_PROGRESS" || (this.state.search === '');
 
 		return (
 			<form onSubmit={this.onSubmit} className="ea-searchbox">

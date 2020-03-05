@@ -12,7 +12,7 @@ export default class CategoryControl extends Component {
 		onChange: PropTypes.func,
 		before: PropTypes.node,
 		after: PropTypes.node,
-		selected: PropTypes.any
+		type: PropTypes.string
 	};
 
 	constructor(props) {
@@ -23,47 +23,34 @@ export default class CategoryControl extends Component {
 	}
 
 	componentDidMount() {
-		const {selected} = this.props;
-
-		this.getCategory({}, (options) => {
+		this.getAccounts({}, (options) => {
 			this.setState({
 				defaultOptions: options
 			})
 		});
 	}
 
-	getCategory = (params, callback) => {
-		apiRequest(accountingApi.categories.list(params)).then((res) => {
-			callback(res.data.map(item => {
-				return {
-					label: `${item.name}`,
-					value: item.id,
-				};
-			}))
+	getAccounts = (params, callback) => {
+		const {type=''} = this.props;
+		apiRequest(accountingApi.categories.list({...params, type})).then((res) => {
+			callback(res.data);
 		});
 	};
 
-	onChange = (value) => {
-		this.setState({
-			value
-		});
-		this.props.onChange && this.props.onChange(value);
-	};
 
 	render() {
-		const {value, defaultOptions} = this.state;
+		const {defaultOptions} = this.state;
 		return (
 			<Fragment>
 				<AsyncSelect
-					placeholder={__('Select Category')}
 					defaultOptions={defaultOptions}
-					value={value}
-					onChange={this.onChange}
 					noOptionsMessage={() => {
-						__('No items')
+						__('No Categories')
 					}}
+					getOptionLabel={option => option.name}
+					getOptionValue={option => option.id}
 					loadOptions={(search, callback) => {
-						this.getCategory({search}, callback);
+						this.getAccounts({search}, callback);
 					}}
 					{...this.props}
 				/>

@@ -252,8 +252,8 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			'precision'           => $item->precision,
 			'position'            => $item->position,
 			'symbol'              => $currency['symbol'],
-			'decimal_mark'        => $currency['decimal_mark'],
-			'thousands_separator' => $currency['thousands_separator'],
+			'decimalSeparator'        => $currency['decimalSeparator'],
+			'thousandSeparator' => $currency['thousandSeparator'],
 			'created_at'          => $this->prepare_date_response( $item->created_at ),
 			'updated_at'          => $this->prepare_date_response( $item->updated_at ),
 		);

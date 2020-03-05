@@ -12,7 +12,7 @@ import {translate as __} from 'lib/locale';
 import {getSelectedOptions} from "lib/table";
 import {categoryTypes} from 'state/currencies/initial';
 import EditCurrency from "component/edit-currency";
-import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'lib/status';
+import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'status';
 import {
 	setGetItems,
 	setPage,

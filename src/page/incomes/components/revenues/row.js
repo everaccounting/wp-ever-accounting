@@ -2,7 +2,7 @@ import {Component, Fragment} from "react";
 import PropTypes from "prop-types";
 
 import {setSelected, setBulkAction, setUpdateItem} from 'state/categories/action';
-import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
+import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'status';
 import {RowAction, Column, Spinner, Icon, RowActions} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
 import {connect} from "react-redux";

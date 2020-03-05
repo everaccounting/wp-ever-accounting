@@ -28,7 +28,7 @@ import {
 	setDisplay
 } from 'state/contacts/action';
 import {isEnabled} from 'component/table/utils';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
+import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_SAVING} from 'status';
 import {
 	getHeaders,
 	getBulk

@@ -9,10 +9,10 @@ window.eAccounting = window.eAccounting || {};
 			});
 			// $('.ea-price-control').inputmask('decimal', {
 			// 	alias: 'numeric',
-			// 	groupSeparator: eAccountingi18n.localization.thousands_separator,
+			// 	groupSeparator: eAccountingi18n.localization.thousandSeparator,
 			// 	autoGroup: true,
 			// 	digits: eAccountingi18n.localization.precision,
-			// 	radixPoint: eAccountingi18n.localization.decimal_mark,
+			// 	radixPoint: eAccountingi18n.localization.decimalSeparator,
 			// 	digitsOptional: false,
 			// 	allowMinus: false,
 			// 	prefix: eAccountingi18n.localization.price_symbol,

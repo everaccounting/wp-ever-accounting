@@ -11,7 +11,7 @@ import {map} from 'lodash';
 import {translate as __} from 'lib/locale';
 import {getSelectedOptions} from "lib/table";
 import EditTaxRate from "component/edit-taxrate";
-import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'lib/status';
+import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'status';
 import {
 	setGetItems,
 	setPage,

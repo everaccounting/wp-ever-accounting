@@ -1,20 +1,44 @@
 import {Component, Fragment} from "react";
 import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
-import {fetchTransactions} from "store/transactions";
+import {fetchTransactions, setFilter} from "store/transactions";
 import {getHeaders} from "./constants";
-import {Navigation, SearchBox, Table} from "@eaccounting/components";
+import {DateFilter, Navigation, SearchBox, Table, SelectControl} from "@eaccounting/components";
 import Row from './row';
+import {map} from "lodash";
+import clean from "lodash-clean";
+import AccountControl from "component/account-control";
+import CategoryControl from "component/category-control";
 
 class Transactions extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			filters: {},
+		};
 	}
 
 	componentDidMount() {
 		this.props.onMount({});
 	}
+
+	setFilter = (filter, value) => {
+		const {filters} = this.props.table;
+		const newFilter = clean({...filters, [filter]: value ? value : undefined});
+		console.log(newFilter);
+		this.props.onFilter(newFilter);
+	};
+
+	onFilterAccount = (accounts) => {
+		let filter = map(accounts, 'value') || undefined;
+		let account_ids = map(filter, 'id') || undefined;
+		this.setFilter('account_id', account_ids);
+	};
+
+	onFilterDate = (date) => {
+		this.setFilter('date', date);
+	};
+
 
 	onRenderRow = (item, pos, status, search) => {
 		const {selected} = this.props.table;
@@ -29,13 +53,9 @@ class Transactions extends Component {
 		);
 	};
 
-	goTo = (ev, route) => {
-		ev.preventDefault();
-		this.props.history.push(route);
-	};
-
 	render() {
 		const {status, total, table, rows, match} = this.props;
+
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
@@ -43,7 +63,6 @@ class Transactions extends Component {
 
 
 				<div className="ea-table-display">
-
 					<SearchBox
 						status={status}
 						table={table}
@@ -55,7 +74,39 @@ class Transactions extends Component {
 					selected={table.selected}
 					table={table}
 					onChangePage={this.props.onChangePage}
-					status={status}/>
+					status={status}>
+
+					<DateFilter
+						className={'alignleft actions'}
+						date=""
+						onChange={this.onFilterDate}/>
+
+					<AccountControl
+						placeholder={__('Filter Accounts')}
+						className={'alignleft actions'}
+						isMulti
+						isClearable
+						onChange={this.onFilterAccount}/>
+
+					<CategoryControl
+						placeholder={__('Filter Categories')}
+						className={'alignleft actions'}
+						isMulti
+						isClearable
+						onChange={this.onFilterAccount}/>
+
+					<SelectControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Types')}
+						options={Object.keys(eAccountingi10n.data.transactionTypes).map((key)=> {
+							return {value: key, label:eAccountingi10n.data.transactionTypes[key]}
+						})}
+						isMulti
+						onChange={this.onFilterType}
+					/>
+
+
+				</Navigation>
 
 				<Table
 					headers={getHeaders()}
@@ -98,6 +149,9 @@ function mapDispatchToProps(dispatch) {
 		},
 		onSearch: (search) => {
 			dispatch(fetchTransactions({search}));
+		},
+		onFilter: (filter) => {
+			dispatch(setFilter(filter));
 		},
 	}
 }

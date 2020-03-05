@@ -307,26 +307,26 @@ class EAccounting_Install {
 
 		if ( ! eaccounting_get_categories() ) {
 			eaccounting_insert_category( [
-				'name'   => __( 'Deposit', 'wp-ever-accounting' ),
-				'type'   => 'income',
+				'name' => __( 'Deposit', 'wp-ever-accounting' ),
+				'type' => 'income',
 			] );
 
 			eaccounting_insert_category( [
-				'name'   => __( 'Other', 'wp-ever-accounting' ),
-				'type'   => 'expense',
+				'name' => __( 'Other', 'wp-ever-accounting' ),
+				'type' => 'expense',
 			] );
 
 			eaccounting_insert_category( [
-				'name'   => __( 'Sales', 'wp-ever-accounting' ),
-				'type'   => 'income',
+				'name' => __( 'Sales', 'wp-ever-accounting' ),
+				'type' => 'income',
 			] );
 		}
 
 		//create transfer category
 		if ( ! eaccounting_get_category( 'Transfer', 'name' ) ) {
 			eaccounting_insert_category( [
-				'name'   => __( 'Transfer', 'wp-ever-accounting' ),
-				'type'   => 'other',
+				'name' => __( 'Transfer', 'wp-ever-accounting' ),
+				'type' => 'other',
 			] );
 		}
 
@@ -359,24 +359,24 @@ class EAccounting_Install {
 
 		if ( ! eaccounting_get_currencies() ) {
 			eaccounting_insert_currency( array(
-				'name'                => 'US Dollar',
-				'code'                => 'USD',
-				'rate'                => '1',
-				'precision'           => 2,
-				'symbol'              => '$',
-				'position'     => 'before',
-				'decimal_mark'        => '.',
-				'thousands_separator' => ',',
+				'name'              => 'US Dollar',
+				'code'              => 'USD',
+				'rate'              => '1',
+				'precision'         => 2,
+				'symbol'            => '$',
+				'position'          => 'before',
+				'decimalSeparator'  => '.',
+				'thousandSeparator' => ',',
 			) );
 			eaccounting_insert_currency( array(
-				'name'                => 'Taka',
-				'code'                => 'BDT',
-				'rate'                => '84.89',
-				'precision'           => 2,
-				'symbol'              => '৳',
-				'position'     => 'before',
-				'decimal_mark'        => '.',
-				'thousands_separator' => ',',
+				'name'              => 'Taka',
+				'code'              => 'BDT',
+				'rate'              => '84.89',
+				'precision'         => 2,
+				'symbol'            => '৳',
+				'position'          => 'before',
+				'decimalSeparator'  => '.',
+				'thousandSeparator' => ',',
 			) );
 		}
 

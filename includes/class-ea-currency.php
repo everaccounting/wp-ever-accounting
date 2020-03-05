@@ -74,8 +74,8 @@ class EAccounting_Currency {
 		$this->subunit            = (int) $attributes['subunit'];
 		$this->symbol             = (string) $attributes['symbol'];
 		$this->symbolPosition        = (bool) $attributes['position'];
-		$this->decimalMark        = (string) $attributes['decimal_mark'];
-		$this->thousandsSeparator = (string) $attributes['thousands_separator'];
+		$this->decimalMark        = (string) $attributes['decimalSeparator'];
+		$this->thousandsSeparator = (string) $attributes['thousandSeparator'];
 	}
 
 	/**
@@ -247,8 +247,8 @@ class EAccounting_Currency {
 				'subunit'             => $this->subunit,
 				'symbol'              => $this->symbol,
 				'position'        => $this->symbolPosition,
-				'decimal_mark'        => $this->decimalMark,
-				'thousands_separator' => $this->thousandsSeparator,
+				'decimalSeparator'        => $this->decimalMark,
+				'thousandSeparator' => $this->thousandsSeparator,
 				'prefix'              => $this->getPrefix(),
 				'suffix'              => $this->getSuffix(),
 			]

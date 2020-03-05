@@ -13,8 +13,8 @@ import {pickBy, isEmpty, isNumber} from 'lodash';
  */
 export const createRequest = (endpoint, params = {}, data = {}, config = {}) => {
 	params._wpnonce = eAccountingi10n.api.WP_API_nonce;
-	const {filterBy = {}, ...paramsProps} = params;
-	const query = pickBy({...paramsProps, ...filterBy}, (value) => (isNumber(value) || !isEmpty(value)));
+	const {filters = {}, ...paramsProps} = params;
+	const query = pickBy({...paramsProps, ...filters}, (value) => (isNumber(value) || !isEmpty(value)));
 	return {
 		timeout: 1000,
 		baseURL: eAccountingi10n.api && eAccountingi10n.api.WP_API_root ? eAccountingi10n.api.WP_API_root : '/wp-json/',

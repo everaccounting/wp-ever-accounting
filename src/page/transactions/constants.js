@@ -10,6 +10,11 @@ export const getHeaders = () => [
 		sortable: true,
 	},
 	{
+		name: 'amount',
+		title: __( 'Amount' ),
+		sortable: true,
+	},
+	{
 		name: 'account_id',
 		title: __( 'Account' ),
 		sortable: true,
@@ -27,11 +32,6 @@ export const getHeaders = () => [
 	{
 		name: 'reference',
 		title: __( 'Reference' ),
-		sortable: true,
-	},
-	{
-		name: 'amount',
-		title: __( 'Amount' ),
 		sortable: true,
 	}
 ];
