@@ -49,10 +49,10 @@ class EAccounting_Tax_Settings extends EAccounting_Settings_Page {
 				foreach ( $ids as $id ) {
 					switch ( $action ) {
 						case 'activate':
-							eaccounting_insert_tax( [ 'id' => $id, 'status' => 'active' ] );
+							eaccounting_insert_tax( [ 'id' => $id ] );
 							break;
 						case 'deactivate':
-							eaccounting_insert_tax( [ 'id' => $id, 'status' => 'inactive' ] );
+							eaccounting_insert_tax( [ 'id' => $id ] );
 							break;
 						case 'delete':
 							eaccounting_delete_tax( $id );

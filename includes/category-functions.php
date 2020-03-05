@@ -182,10 +182,7 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 	$query_from  = "FROM $wpdb->ea_categories";
 	$query_where = 'WHERE 1=1';
 
-	//status
-	if ( ! empty( $args['status'] ) ) {
-		$query_where .= $wpdb->prepare( " AND $wpdb->ea_categories.status= %s", sanitize_key( $args['status'] ) );
-	}
+
 
 	//type
 	if ( ! empty( $args['type'] ) ) {
@@ -275,8 +272,8 @@ function eaccounting_category_export() {
 		exit();
 	}
 	global $wpdb;
-	$categories = $wpdb->get_results( "SELECT name, type, status from $wpdb->ea_categories order by id", ARRAY_N );
-	$data       = array_merge( array( array( 'name', 'type', 'status' ) ), $categories );
+	$categories = $wpdb->get_results( "SELECT name, type from $wpdb->ea_categories order by id", ARRAY_N );
+	$data       = array_merge( array( array( 'name', 'type' ) ), $categories );
 	$exporter   = new EAccounting_CSV_Writer( $data );
 	$exporter->headers( sprintf( 'eaccounting-categories-%s', date( 'dmyhis' ) ) );
 	$exporter->output();

@@ -75,7 +75,6 @@ function eaccounting_insert_transfer( $args ) {
 		$category_id = eaccounting_insert_category( [
 			'name'   => __( 'Transfer', 'wp-ever-accounting' ),
 			'type'   => 'other',
-			'status' => 'active',
 		] );
 	}
 

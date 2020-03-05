@@ -15,7 +15,6 @@ function eaccounting_action_edit_tax( $data ) {
 		'name'   => ! isset( $data['name'] ) ? '' : sanitize_text_field( $data['name'] ),
 		'rate'   => ! isset( $data['rate'] ) ? '' : (double) $data['rate'],
 		'type'   => ! isset( $data['type'] ) ? '' : sanitize_key( $data['type'] ),
-		'status' => isset( $data['status'] ) ? sanitize_text_field( $data['status'] ) : 'inactive',
 	) );
 
 	$redirect = add_query_arg( [
@@ -86,7 +85,6 @@ function eaccounting_activate_tax( $data ) {
 	if ( $tax ) {
 		eaccounting_insert_tax( [
 			'id'     => $tax,
-			'status' => 'active'
 		] );
 	}
 
@@ -116,7 +114,6 @@ function eaccounting_deactivate_tax( $data ) {
 	if ( $tax ) {
 		eaccounting_insert_tax( [
 			'id'     => $tax,
-			'status' => 'inactive'
 		] );
 	}
 

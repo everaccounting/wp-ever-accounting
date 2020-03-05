@@ -47,14 +47,12 @@ class EAccounting_Install {
 			`avatar_url` VARCHAR(2083) DEFAULT NULL,
 			`tax_number` VARCHAR(50) DEFAULT NULL,
 			`currency_code` varchar(191) NOT NULL DEFAULT 'USD',
-  			`status` ENUM ('active', 'inactive') DEFAULT 'active',
   			`types` VARCHAR(191) DEFAULT NULL COMMENT 'Customer or vendor',
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `email`(`email`),
 		    KEY `phone`(`phone`),
-		    KEY `status`(`status`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_accounts(
@@ -66,7 +64,6 @@ class EAccounting_Install {
 		    `bank_name` VARCHAR(191) DEFAULT NULL,
 		    `bank_phone` VARCHAR(20) DEFAULT NULL,
 		    `bank_address` VARCHAR(191) DEFAULT NULL,
-		    `status` ENUM ('active', 'inactive') DEFAULT 'active',
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`)
@@ -89,7 +86,6 @@ class EAccounting_Install {
 		    KEY `sale_price`(`sale_price`),
 		    KEY `purchase_price`(`purchase_price`),
 		    KEY `quantity`(`quantity`),
-		    KEY `status`(`status`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_payments(
@@ -174,7 +170,6 @@ class EAccounting_Install {
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
 			`invoice_number` varchar(191) NOT NULL,
 			`order_number` varchar(191) NOT NULL,
-			`status` varchar(20) NOT NULL,
 			`invoiced_at` datetime NOT NULL,
 		    `due_at` datetime NOT NULL,
 		    `amount` double(15,4) NOT NULL,
@@ -213,7 +208,6 @@ class EAccounting_Install {
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_invoice_statuses(
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
 			`name` varchar(191) NOT NULL,
-			`status` varchar(20) NOT NULL,
 			`created_at` timestamp NULL DEFAULT NULL,
 			`updated_at` timestamp NULL DEFAULT NULL,
 		    PRIMARY KEY (`id`)
@@ -275,7 +269,6 @@ class EAccounting_Install {
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_invoice_histories(
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
             `invoice_id` int(11) NOT NULL,
-            `status` varchar(120) NOT NULL,
             `notify` tinyint(1) NOT NULL,
             `description` text,
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -314,30 +307,26 @@ class EAccounting_Install {
 
 		if ( ! eaccounting_get_categories() ) {
 			eaccounting_insert_category( [
-				'name'   => __( 'Deposit', 'wp-ever-accounting' ),
-				'type'   => 'income',
-				'status' => 'active',
+				'name' => __( 'Deposit', 'wp-ever-accounting' ),
+				'type' => 'income',
 			] );
 
 			eaccounting_insert_category( [
-				'name'   => __( 'Other', 'wp-ever-accounting' ),
-				'type'   => 'expense',
-				'status' => 'active',
+				'name' => __( 'Other', 'wp-ever-accounting' ),
+				'type' => 'expense',
 			] );
 
 			eaccounting_insert_category( [
-				'name'   => __( 'Sales', 'wp-ever-accounting' ),
-				'type'   => 'income',
-				'status' => 'active',
+				'name' => __( 'Sales', 'wp-ever-accounting' ),
+				'type' => 'income',
 			] );
 		}
 
 		//create transfer category
 		if ( ! eaccounting_get_category( 'Transfer', 'name' ) ) {
 			eaccounting_insert_category( [
-				'name'   => __( 'Transfer', 'wp-ever-accounting' ),
-				'type'   => 'other',
-				'status' => 'active',
+				'name' => __( 'Transfer', 'wp-ever-accounting' ),
+				'type' => 'other',
 			] );
 		}
 
@@ -346,7 +335,6 @@ class EAccounting_Install {
 				'name'            => __( 'Cash', 'wp-ever-accounting' ),
 				'number'          => '',
 				'opening_balance' => '0',
-				'status'          => 'active',
 			] );
 		}
 
@@ -364,7 +352,6 @@ class EAccounting_Install {
 				'country'    => 'US',
 				'website'    => 'http://pluginever.com',
 				'avatar_url' => '',
-				'status'     => 'active',
 				'note'       => 'demo user',
 				'types'      => [ 'vendor', 'customer' ],
 			] );
@@ -372,26 +359,24 @@ class EAccounting_Install {
 
 		if ( ! eaccounting_get_currencies() ) {
 			eaccounting_insert_currency( array(
-				'name'                => 'US Dollar',
-				'code'                => 'USD',
-				'rate'                => '1',
-				'precision'           => 2,
-				'symbol'              => '$',
-				'position'     => 'before',
-				'decimalSeparator'        => '.',
+				'name'              => 'US Dollar',
+				'code'              => 'USD',
+				'rate'              => '1',
+				'precision'         => 2,
+				'symbol'            => '$',
+				'position'          => 'before',
+				'decimalSeparator'  => '.',
 				'thousandSeparator' => ',',
-				'status'              => 'active',
 			) );
 			eaccounting_insert_currency( array(
-				'name'                => 'Taka',
-				'code'                => 'BDT',
-				'rate'                => '84.89',
-				'precision'           => 2,
-				'symbol'              => '৳',
-				'position'     => 'before',
-				'decimalSeparator'        => '.',
+				'name'              => 'Taka',
+				'code'              => 'BDT',
+				'rate'              => '84.89',
+				'precision'         => 2,
+				'symbol'            => '৳',
+				'position'          => 'before',
+				'decimalSeparator'  => '.',
 				'thousandSeparator' => ',',
-				'status'              => 'active',
 			) );
 		}
 

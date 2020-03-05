@@ -83,7 +83,6 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 	public function get_items( $request ) {
 		$args = array(
 			'type'         => $request['type'],
-			'status'       => $request['status'],
 			'city'         => $request['city'],
 			'state'        => $request['state'],
 			'postcode'     => $request['postcode'],
@@ -266,7 +265,6 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'website'       => $item->website,
 			'note'          => $item->note,
 			'avatar_url'    => $item->avatar_url,
-			'enabled'       => $item->status == 'active',
 			'types'         => maybe_unserialize( $item->types ),
 			'tax_number'    => $item->tax_number,
 			'currency_code' => $item->currency_code,
@@ -342,9 +340,6 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		}
 		if ( ! empty( $schema['properties']['country_code'] ) && isset( $request['country_code'] ) ) {
 			$prepared_item->country_code = $request['country_code'];
-		}
-		if ( ! empty( $schema['properties']['status'] ) && isset( $request['status'] ) ) {
-			$prepared_item->status = $request['status'];
 		}
 		if ( ! empty( $schema['properties']['types'] ) && isset( $request['types'] ) ) {
 			$prepared_item->types = $request['types'];
@@ -528,12 +523,6 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'esc_url',
 					),
 				),
-				'status'        => array(
-					'description' => __( 'Status of the user.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'enum'        => array( 'active', 'inactive' ),
-				),
 				'types'         => array(
 					'description' => __( 'Types of the contact', 'wp-ever-accounting' ),
 					'type'        => 'array',
@@ -589,13 +578,6 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'description' => __( 'Limit result set to specific search.', 'wp-ever-accounting' ),
 			'type'        => 'string',
 			'default'     => '',
-		);
-
-		$params['status'] = array(
-			'description'       => __( 'Limit the result with active or inactive type', 'wp-ever-accounting' ),
-			'default'           => 'all',
-			'type'              => 'string',
-			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;

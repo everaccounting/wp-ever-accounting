@@ -403,22 +403,6 @@ class EAccounting_Form {
 		return self::input_control( $args );
 	}
 
-	/**
-	 * Status control
-	 *
-	 * since 1.0.0
-	 *
-	 * @param $args
-	 *
-	 * @return string
-	 */
-	public static function status_control( $args ) {
-		return self::switch_control( wp_parse_args( $args, array(
-			'label' => __( 'Status', 'wp-ever-accounting' ),
-			'name'  => 'status',
-			'check' => 'active',
-		) ) );
-	}
 
 	public static function media_control( $args ) {
 		$args = wp_parse_args( $args, array(
@@ -475,7 +459,6 @@ class EAccounting_Form {
 	public static function accounts_dropdown( $args ) {
 		$accounts = eaccounting_get_accounts( array(
 			'per_page' => '9999',
-			'status'   => 'active',
 			'fields'   => array( 'id', 'name' ),
 		) );
 
@@ -497,7 +480,6 @@ class EAccounting_Form {
 	public static function customer_dropdown( $args ) {
 		$contacts = eaccounting_get_contacts( array(
 			'per_page' => '9999',
-			'status'   => 'active',
 			'type'     => 'customer',
 		) );
 		$dropdown = [];
@@ -526,7 +508,6 @@ class EAccounting_Form {
 			'select2' => true,
 			'options' => wp_list_pluck( eaccounting_get_contacts( array(
 				'per_page' => '-1',
-				'status'   => 'active',
 				'type'     => 'vendor',
 				'fields'   => array( 'id', 'first_name' ),
 			) ), 'first_name', 'id' ),
@@ -553,7 +534,6 @@ class EAccounting_Form {
 			'select2' => true,
 			'options' => wp_list_pluck( eaccounting_get_categories( array(
 				'per_page' => '-1',
-				'status'   => 'active',
 				'type'     => $type,
 				'fields'   => array( 'id', 'name' ),
 			) ), 'name', 'id' ),
@@ -577,7 +557,6 @@ class EAccounting_Form {
 			'select2' => true,
 			'options' => wp_list_pluck( eaccounting_get_taxes( array(
 				'per_page' => '-1',
-				'status'   => 'active',
 				'fields'   => array( 'id', 'name' ),
 			) ), 'name', 'id' ),
 		) );
@@ -600,7 +579,6 @@ class EAccounting_Form {
 			'select2' => true,
 			'options' => wp_list_pluck( eaccounting_get_currencies( array(
 				'per_page' => '-1',
-				'status'   => 'active',
 				'fields'   => array( 'code', 'name' ),
 			) ), 'name', 'code' ),
 		) );

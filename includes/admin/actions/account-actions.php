@@ -14,8 +14,7 @@ function eaccounting_activate_account( $data ) {
 	$account_id = absint( $data['account'] );
 	if ( $account_id ) {
 		eaccounting_insert_account( [
-			'id'     => $account_id,
-			'status' => 'active'
+			'id' => $account_id,
 		] );
 	}
 
@@ -41,8 +40,7 @@ function eaccounting_deactivate_account( $data ) {
 
 	if ( $account_id ) {
 		eaccounting_insert_account( [
-			'id'     => $account_id,
-			'status' => 'inactive'
+			'id' => $account_id,
 		] );
 	}
 
@@ -87,14 +85,13 @@ function eaccounting_edit_account( $data ) {
 	}
 
 	$created = eaccounting_insert_account( array(
-		'id'              => absint($data['id']),
-		'name'            => sanitize_text_field($data['name']),
-		'number'          => sanitize_text_field($data['number']),
-		'bank_name'       => sanitize_text_field($data['bank_name']),
-		'bank_phone'      => sanitize_text_field($data['bank_phone']),
-		'bank_address'    => sanitize_text_field($data['bank_address']),
-		'opening_balance' => eaccounting_sanitize_price($data['opening_balance']),
-		'status'          => isset( $data['status'] ) ? sanitize_text_field($data['status']) : 'inactive',
+		'id'              => absint( $data['id'] ),
+		'name'            => sanitize_text_field( $data['name'] ),
+		'number'          => sanitize_text_field( $data['number'] ),
+		'bank_name'       => sanitize_text_field( $data['bank_name'] ),
+		'bank_phone'      => sanitize_text_field( $data['bank_phone'] ),
+		'bank_address'    => sanitize_text_field( $data['bank_address'] ),
+		'opening_balance' => eaccounting_sanitize_price( $data['opening_balance'] ),
 	) );
 
 	if ( is_wp_error( $created ) ) {
