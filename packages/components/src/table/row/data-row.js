@@ -7,12 +7,11 @@ import React from 'react';
 /**
  * Internal dependencies
  */
-import { STATUS_IN_PROGRESS } from 'lib/status';
 
 const isSelected = ( selected, id ) => selected.indexOf( parseInt(id, 10) ) !== -1;
 
 const getRowStatus = ( status, selected, item ) => ( {
-	isLoading: status === STATUS_IN_PROGRESS,
+	isLoading: status === "STATUS_IN_PROGRESS",
 	isSelected: isSelected( selected, item.id ),
 } );
 

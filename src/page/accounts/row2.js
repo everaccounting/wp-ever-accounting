@@ -9,7 +9,7 @@ import {connect} from "react-redux";
 /**
  * Internal dependencies
  */
-import {STATUS_IN_PROGRESS, STATUS_SAVING} from 'lib/status';
+import {STATUS_IN_PROGRESS, STATUS_SAVING} from 'status';
 import EditAccount from "component/edit-account";
 class Row extends Component {
 	static propTypes = {

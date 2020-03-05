@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
  * Internal dependencies
  */
 import NavigationPages from './navigation-pages';
-import { STATUS_IN_PROGRESS } from 'lib/status';
 
 class TableNav extends React.Component {
 	static propTypes = {
@@ -75,7 +74,7 @@ class TableNav extends React.Component {
 					{ this.props.children ? this.props.children : null }
 				</div>
 
-				{ total > 0 && <NavigationPages per_page={ table.per_page } page={ table.page } total={ total } onChangePage={ this.props.onChangePage } inProgress= { status === STATUS_IN_PROGRESS } /> }
+				{ total > 0 && <NavigationPages per_page={ table.per_page } page={ table.page } total={ total } onChangePage={ this.props.onChangePage } inProgress= { status === "STATUS_IN_PROGRESS" } /> }
 			</div>
 		);
 	}

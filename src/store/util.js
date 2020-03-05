@@ -9,7 +9,7 @@ import {xor, find} from "lodash";
  * @returns {any}
  */
 export const mergeWithTable = (table, params) => {
-	const tableParams = ['orderby', 'order', 'page', 'per_page', 'filterBy'];
+	const tableParams = ['orderby', 'order', 'page', 'per_page', 'filters'];
 	const data = Object.assign({}, table);
 	for (let x = 0; x < tableParams.length; x++) {
 		if (params[tableParams[x]] !== undefined) {
@@ -59,8 +59,8 @@ export const removeDefaults = (table, defaultOrder) => {
 		delete table.per_page;
 	}
 
-	if (table.filterBy === '' || table.filterBy === {}) {
-		delete table.filterBy;
+	if (table.filters === '' || table.filters === {}) {
+		delete table.filters;
 	}
 
 	if (parseInt(eAccountingi10n.per_page, 10) !== 20) {
@@ -87,7 +87,7 @@ export const getDefaultTable = (allowedOrder = [], allowedFilter = [], defaultOr
 		page: 1,
 		per_page: parseInt(eAccountingi10n.per_page, 10),
 		selected: [],
-		filterBy: {},
+		filters: {},
 	};
 
 	return {
@@ -96,7 +96,7 @@ export const getDefaultTable = (allowedOrder = [], allowedFilter = [], defaultOr
 		order: query.order && query.order === 'asc' ? 'asc' : defaults.order,
 		page: query.offset && parseInt(query.offset, 10) > 0 ? parseInt(query.offset, 10) : defaults.page,
 		per_page: eAccountingi10n.per_page ? parseInt(eAccountingi10n.per_page, 10) : defaults.per_page,
-		filterBy: query.filterby ? pickByKeys(query.filterby, allowedFilter) : defaults.filterBy,
+		filters: query.filters ? pickByKeys(query.filters, allowedFilter) : defaults.filters,
 	};
 };
 

@@ -21,7 +21,7 @@ import {
 } from 'state/transactions/action';
 import {translate as __} from 'lib/locale';
 import {getHeaders} from "./constants";
-import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'lib/status';
+import {STATUS_IN_PROGRESS, STATUS_SAVING, STATUS_COMPLETE} from 'status';
 import Row from "./row";
 import {transactionTypes} from "state/transactions/initial";
 import {getSelectedOptions} from "lib/table";

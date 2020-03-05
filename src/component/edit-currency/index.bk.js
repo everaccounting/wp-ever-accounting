@@ -25,8 +25,8 @@ const initial = {
 	rate: '1',
 	precision: '2',
 	symbol: '$',
-	decimal_mark: '.',
-	thousands_separator: ',',
+	decimalSeparator: '.',
+	thousandSeparator: ',',
 	position: 'before',
 	enabled: true
 };
@@ -78,12 +78,12 @@ class EditCurrency extends Component {
 
 	onChangeCode = (code) => {
 		const defaults = getCurrencyDefaults(code);
-		const {precision, symbol, decimal_mark, thousands_separator} = defaults;
+		const {precision, symbol, decimalSeparator, thousandSeparator} = defaults;
 		this.setState({code});
 		this.setState({precision});
 		this.setState({symbol});
-		this.setState({decimal_mark});
-		this.setState({thousands_separator});
+		this.setState({decimalSeparator});
+		this.setState({thousandSeparator});
 
 	};
 
@@ -119,7 +119,7 @@ class EditCurrency extends Component {
 	render() {
 		const {tittle = __('Add Currency'), buttonTittle = __('Submit'), onClose} = this.props;
 		const {code = 'USD'} = this.state;
-		const {name, rate, precision, symbol, decimal_mark, thousands_separator, position = 'before', isSaving} = this.state;
+		const {name, rate, precision, symbol, decimalSeparator, thousandSeparator, position = 'before', isSaving} = this.state;
 
 		return (
 			<Modal title={tittle} onRequestClose={onClose}>
@@ -177,21 +177,21 @@ class EditCurrency extends Component {
 								   }}/>
 
 					<TextControl label={__('Decimal Mark')}
-								 value={decimal_mark}
+								 value={decimalSeparator}
 								 before={<Icon icon='font'/>}
 								 placeholder={__('Decimal Mark')}
 								 required
-								 onChange={(decimal_mark) => {
-									 this.setState({decimal_mark})
+								 onChange={(decimalSeparator) => {
+									 this.setState({decimalSeparator})
 								 }}/>
 
 					<TextControl label={__('Thousands Separator')}
-								 value={thousands_separator}
+								 value={thousandSeparator}
 								 before={<Icon icon='columns'/>}
 								 placeholder={__('Enter Thousands Separator')}
 								 required
-								 onChange={(thousands_separator) => {
-									 this.setState({thousands_separator})
+								 onChange={(thousandSeparator) => {
+									 this.setState({thousandSeparator})
 								 }}/>
 
 					<Button isPrimary

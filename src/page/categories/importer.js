@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import {translate as __} from 'lib/locale';
 import {sprintf} from '@wordpress/i18n';
 import {Button, Placeholder, DropZoneProvider, DropZone, FormFileUpload, Spinner} from '@wordpress/components';
-import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_FAILED} from 'lib/status';
+import {STATUS_COMPLETE, STATUS_IN_PROGRESS, STATUS_FAILED} from 'status';
 import Papa from 'papaparse';
 import {validateFileExt, getValidRows} from 'lib/import'
 import {accountingApi, getApi} from "lib/api";

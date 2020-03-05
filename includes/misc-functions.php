@@ -275,8 +275,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'د.إ',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'AFN' => [
@@ -286,8 +286,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '؋',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ALL' => [
@@ -297,8 +297,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'L',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'AMD' => [
@@ -308,8 +308,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'դր.',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ANG' => [
@@ -319,8 +319,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ƒ',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'AOA' => [
@@ -330,8 +330,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Kz',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ARS' => [
@@ -341,8 +341,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'AUD' => [
@@ -352,8 +352,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ' ',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ' ',
 		],
 
 		'AWG' => [
@@ -363,8 +363,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ƒ',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'AZN' => [
@@ -374,8 +374,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₼',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BAM' => [
@@ -385,8 +385,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'КМ',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BBD' => [
@@ -396,8 +396,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BDT' => [
@@ -407,8 +407,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '৳',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BGN' => [
@@ -418,8 +418,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'лв',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BHD' => [
@@ -429,8 +429,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1000,
 			'symbol'              => 'ب.د',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BIF' => [
@@ -440,8 +440,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Fr',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BMD' => [
@@ -451,8 +451,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BND' => [
@@ -462,8 +462,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BOB' => [
@@ -473,8 +473,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Bs.',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BOV' => [
@@ -484,8 +484,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Bs.',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BRL' => [
@@ -495,8 +495,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'R$',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'BSD' => [
@@ -506,8 +506,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BTN' => [
@@ -517,8 +517,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Nu.',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BWP' => [
@@ -528,8 +528,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'P',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'BYN' => [
@@ -539,8 +539,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Br',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => ' ',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => ' ',
 		],
 
 		'BZD' => [
@@ -550,8 +550,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'CAD' => [
@@ -561,8 +561,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'CDF' => [
@@ -572,8 +572,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Fr',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'CHF' => [
@@ -583,8 +583,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'CHF',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'CLF' => [
@@ -594,8 +594,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'UF',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'CLP' => [
@@ -605,8 +605,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'CNY' => [
@@ -616,8 +616,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '¥',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'COP' => [
@@ -627,8 +627,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'CRC' => [
@@ -638,8 +638,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₡',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'CUC' => [
@@ -649,8 +649,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'CUP' => [
@@ -660,8 +660,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'CVE' => [
@@ -671,8 +671,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'CZK' => [
@@ -682,8 +682,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Kč',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'DJF' => [
@@ -693,8 +693,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Fdj',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'DKK' => [
@@ -704,8 +704,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'kr',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'DOP' => [
@@ -715,8 +715,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'DZD' => [
@@ -726,8 +726,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'د.ج',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'EGP' => [
@@ -737,8 +737,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ج.م',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ERN' => [
@@ -748,8 +748,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Nfk',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ETB' => [
@@ -759,8 +759,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Br',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'EUR' => [
@@ -770,8 +770,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '€',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'FJD' => [
@@ -781,8 +781,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'FKP' => [
@@ -792,8 +792,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '£',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GBP' => [
@@ -803,8 +803,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '£',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GEL' => [
@@ -814,8 +814,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ლ',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GHS' => [
@@ -825,8 +825,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₵',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GIP' => [
@@ -836,8 +836,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '£',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GMD' => [
@@ -847,8 +847,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'D',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GNF' => [
@@ -858,8 +858,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Fr',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GTQ' => [
@@ -869,8 +869,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Q',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'GYD' => [
@@ -880,8 +880,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'HKD' => [
@@ -891,8 +891,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'HNL' => [
@@ -902,8 +902,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'L',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'HRK' => [
@@ -913,8 +913,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'kn',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'HTG' => [
@@ -924,8 +924,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'G',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'HUF' => [
@@ -935,8 +935,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Ft',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'IDR' => [
@@ -946,8 +946,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Rp',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'ILS' => [
@@ -957,8 +957,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₪',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'INR' => [
@@ -968,8 +968,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₹',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'IQD' => [
@@ -979,8 +979,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1000,
 			'symbol'              => 'ع.د',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'IRR' => [
@@ -990,8 +990,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '﷼',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ISK' => [
@@ -1001,8 +1001,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'kr',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'JMD' => [
@@ -1012,8 +1012,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'JOD' => [
@@ -1023,8 +1023,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'د.ا',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'JPY' => [
@@ -1034,8 +1034,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => '¥',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KES' => [
@@ -1045,8 +1045,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'KSh',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KGS' => [
@@ -1056,8 +1056,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'som',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KHR' => [
@@ -1067,8 +1067,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '៛',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KMF' => [
@@ -1078,8 +1078,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Fr',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KPW' => [
@@ -1089,8 +1089,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₩',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KRW' => [
@@ -1100,8 +1100,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => '₩',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KWD' => [
@@ -1111,8 +1111,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1000,
 			'symbol'              => 'د.ك',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KYD' => [
@@ -1122,8 +1122,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'KZT' => [
@@ -1133,8 +1133,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '〒',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LAK' => [
@@ -1144,8 +1144,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₭',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LBP' => [
@@ -1155,8 +1155,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ل.ل',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LKR' => [
@@ -1166,8 +1166,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₨',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LRD' => [
@@ -1177,8 +1177,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LSL' => [
@@ -1188,8 +1188,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'L',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LTL' => [
@@ -1199,8 +1199,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Lt',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LVL' => [
@@ -1210,8 +1210,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Ls',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'LYD' => [
@@ -1221,8 +1221,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1000,
 			'symbol'              => 'ل.د',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MAD' => [
@@ -1232,8 +1232,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'د.م.',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MDL' => [
@@ -1243,8 +1243,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'L',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MGA' => [
@@ -1254,8 +1254,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 5,
 			'symbol'              => 'Ar',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MKD' => [
@@ -1265,8 +1265,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ден',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MMK' => [
@@ -1276,8 +1276,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'K',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MNT' => [
@@ -1287,8 +1287,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₮',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MOP' => [
@@ -1298,8 +1298,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'P',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MRO' => [
@@ -1309,8 +1309,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 5,
 			'symbol'              => 'UM',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MUR' => [
@@ -1320,8 +1320,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₨',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MVR' => [
@@ -1331,8 +1331,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'MVR',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MWK' => [
@@ -1342,8 +1342,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'MK',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MXN' => [
@@ -1353,8 +1353,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MYR' => [
@@ -1364,8 +1364,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'RM',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'MZN' => [
@@ -1375,8 +1375,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'MTn',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'NAD' => [
@@ -1386,8 +1386,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'NGN' => [
@@ -1397,8 +1397,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₦',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'NIO' => [
@@ -1408,8 +1408,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'C$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'NOK' => [
@@ -1419,8 +1419,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'kr',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'NPR' => [
@@ -1430,8 +1430,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₨',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'NZD' => [
@@ -1441,8 +1441,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'OMR' => [
@@ -1452,8 +1452,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1000,
 			'symbol'              => 'ر.ع.',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'PAB' => [
@@ -1463,8 +1463,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'B/.',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'PEN' => [
@@ -1474,8 +1474,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'S/',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'PGK' => [
@@ -1485,8 +1485,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'K',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'PHP' => [
@@ -1496,8 +1496,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₱',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'PKR' => [
@@ -1507,8 +1507,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₨',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'PLN' => [
@@ -1518,8 +1518,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'zł',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => ' ',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => ' ',
 		],
 
 		'PYG' => [
@@ -1529,8 +1529,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => '₲',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'QAR' => [
@@ -1540,8 +1540,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ر.ق',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'RON' => [
@@ -1551,8 +1551,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Lei',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'RSD' => [
@@ -1562,8 +1562,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'РСД',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'RUB' => [
@@ -1573,8 +1573,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₽',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'RWF' => [
@@ -1584,8 +1584,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'FRw',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SAR' => [
@@ -1595,8 +1595,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ر.س',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SBD' => [
@@ -1606,8 +1606,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SCR' => [
@@ -1617,8 +1617,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₨',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SDG' => [
@@ -1628,8 +1628,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '£',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SEK' => [
@@ -1639,8 +1639,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'kr',
 			'position'            => 'after',
-			'decimal_mark'        => ',',
-			'thousands_separator' => ' ',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => ' ',
 		],
 
 		'SGD' => [
@@ -1650,8 +1650,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SHP' => [
@@ -1661,8 +1661,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '£',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SLL' => [
@@ -1672,8 +1672,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Le',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SOS' => [
@@ -1683,8 +1683,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Sh',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SRD' => [
@@ -1694,8 +1694,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SSP' => [
@@ -1705,8 +1705,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '£',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'STD' => [
@@ -1716,8 +1716,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Db',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SVC' => [
@@ -1727,8 +1727,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₡',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SYP' => [
@@ -1738,8 +1738,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '£S',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'SZL' => [
@@ -1749,8 +1749,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'E',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'THB' => [
@@ -1760,8 +1760,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '฿',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'TJS' => [
@@ -1771,8 +1771,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ЅМ',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'TMT' => [
@@ -1782,8 +1782,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'T',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'TND' => [
@@ -1793,8 +1793,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1000,
 			'symbol'              => 'د.ت',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'TOP' => [
@@ -1804,8 +1804,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'T$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'TRY' => [
@@ -1815,8 +1815,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₺',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'TTD' => [
@@ -1826,8 +1826,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'TWD' => [
@@ -1837,8 +1837,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'TZS' => [
@@ -1848,8 +1848,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Sh',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'UAH' => [
@@ -1859,8 +1859,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '₴',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'UGX' => [
@@ -1870,8 +1870,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'USh',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'USD' => [
@@ -1881,8 +1881,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'UYU' => [
@@ -1892,8 +1892,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'UZS' => [
@@ -1903,8 +1903,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => null,
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'VEF' => [
@@ -1914,8 +1914,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'Bs F',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'VND' => [
@@ -1925,8 +1925,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => '₫',
 			'position'            => 'before',
-			'decimal_mark'        => ',',
-			'thousands_separator' => '.',
+			'decimalSeparator'        => ',',
+			'thousandSeparator' => '.',
 		],
 
 		'VUV' => [
@@ -1936,8 +1936,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Vt',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'WST' => [
@@ -1947,8 +1947,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'T',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'XAF' => [
@@ -1958,8 +1958,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Fr',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'XAG' => [
@@ -1969,8 +1969,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'oz t',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'XAU' => [
@@ -1980,8 +1980,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'oz t',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'XCD' => [
@@ -1991,8 +1991,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'XDR' => [
@@ -2002,8 +2002,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'SDR',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'XOF' => [
@@ -2013,8 +2013,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Fr',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'XPF' => [
@@ -2024,8 +2024,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 1,
 			'symbol'              => 'Fr',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'YER' => [
@@ -2035,8 +2035,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '﷼',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ZAR' => [
@@ -2046,8 +2046,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'R',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ZMW' => [
@@ -2057,8 +2057,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => 'ZK',
 			'position'            => 'after',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 
 		'ZWL' => [
@@ -2068,8 +2068,8 @@ function eaccounting_get_currency_config() {
 			'subunit'             => 100,
 			'symbol'              => '$',
 			'position'            => 'before',
-			'decimal_mark'        => '.',
-			'thousands_separator' => ',',
+			'decimalSeparator'        => '.',
+			'thousandSeparator' => ',',
 		],
 	);
 

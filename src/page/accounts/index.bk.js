@@ -1,7 +1,7 @@
 import {Component, Fragment} from "react";
 import {connect} from "react-redux";
 import {translate as __} from 'lib/locale';
-import {STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED} from 'lib/status';
+import {STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED} from 'status';
 import {
 	setGetItems,
 	setPage,

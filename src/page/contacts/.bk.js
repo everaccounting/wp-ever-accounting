@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
  * Internal dependencies
  */
 import {setSelected, performTableAction, updateContact} from 'state/accounts/action';
-import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
+import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'status';
 import Spinner from 'component/spinner';
 import Column from 'component/table/column';
 import RowActions from 'component/table/row-action';

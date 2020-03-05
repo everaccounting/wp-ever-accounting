@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import {connect} from "react-redux";
 
 import {RowAction, Column, Spinner} from '@eaccounting/components';
-import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'lib/status';
+import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'status';
 import {translate as __} from 'lib/locale';
 import {setSelected, setBulkAction, setUpdateItem} from 'state/taxrates/action';
 import EditTaxRate from 'component/edit-taxrate';

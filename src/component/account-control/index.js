@@ -12,7 +12,7 @@ export default class AccountControl extends Component {
 		onChange: PropTypes.func,
 		before: PropTypes.node,
 		after: PropTypes.node,
-		selected: PropTypes.any
+		value: PropTypes.any
 	};
 
 	constructor(props) {
@@ -32,29 +32,22 @@ export default class AccountControl extends Component {
 
 	getAccounts = (params, callback) => {
 		apiRequest(accountingApi.accounts.list(params)).then((res) => {
-			callback(res.data.map(item => {
-				return {
-					label: `${item.name}`,
-					value: item,
-				};
-			}))
+			callback(res.data);
 		});
 	};
 
-	onChange = (value) => {
-		this.props.onChange && this.props.onChange(value);
-	};
 
 	render() {
 		const {defaultOptions} = this.state;
 		return (
 			<Fragment>
 				<AsyncSelect
-					placeholder={__('Select Account')}
 					defaultOptions={defaultOptions}
 					noOptionsMessage={() => {
 						__('No items')
 					}}
+					getOptionLabel={option => option.name}
+					getOptionValue={option => option.id}
 					loadOptions={(search, callback) => {
 						this.getAccounts({search}, callback);
 					}}

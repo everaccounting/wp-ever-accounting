@@ -33,11 +33,15 @@ export default class Row extends Component {
 						{moment(paid_at).format("d MMM Y")}
 					</td>
 
+					<td className="column-primary column-amount">
+						{amount}
+					</td>
+
 					<td className="column-primary column-account">
 						{this.getProp('name', account)}
 					</td>
 
-					<td className="column-primary column-type">
+					<td className="column-primary column-type ea-capitalize">
 						{type}
 					</td>
 
@@ -47,10 +51,6 @@ export default class Row extends Component {
 
 					<td className="column-primary column-reference">
 						{reference}
-					</td>
-
-					<td className="column-primary column-amount">
-						{amount}
 					</td>
 				</tr>
 			</Fragment>

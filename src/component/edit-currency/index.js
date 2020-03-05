@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {translate as __} from 'lib/locale';
 import {connect} from 'react-redux';
 import notify from "lib/notify";
-import {currencies, getCurrencyDefaults} from "lib/currency";
+// import {currencies, getCurrencyDefaults} from "lib/currency";
 import {
 	Modal,
 	TextControl,
@@ -11,9 +11,9 @@ import {
 	Icon,
 	Button
 } from '@eaccounting/components';
-import {setCreateItem, setUpdateItem} from 'state/currencies/action'
+
 import {apiRequest, accountingApi} from "lib/api";
-import {getSelectedOption} from "lib/table";
+// import {getSelectedOption} from "lib/table";
 
 const initial = {
 	id: undefined,
@@ -24,12 +24,12 @@ const initial = {
 	position: 'before',
 };
 
-const currenciesOptions = Object.keys(currencies).map((code) => {
-	return {
-		label: code,
-		value: code,
-	}
-});
+// const currenciesOptions = Object.keys(currencies).map((code) => {
+// 	return {
+// 		label: code,
+// 		value: code,
+// 	}
+// });
 
 const positions = [
 	{

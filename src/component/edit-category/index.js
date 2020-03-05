@@ -11,7 +11,7 @@ import {
 	Button
 } from '@eaccounting/components';
 import {find} from 'lodash';
-import {setCreateItem, setUpdateItem} from 'state/categories/action'
+// import {setCreateItem, setUpdateItem} from 'state/categories/action'
 import {apiRequest, accountingApi} from "lib/api";
 import {ColorPicker, Popover} from '@wordpress/components';
 

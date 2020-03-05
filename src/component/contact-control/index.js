@@ -4,7 +4,7 @@ import {apiRequest, accountingApi} from "lib/api";
 import {AsyncSelect} from '@eaccounting/components'
 import PropTypes from "prop-types";
 
-export default class AccountControl extends Component {
+export default class ContactControl extends Component {
 	static propTypes = {
 		label: PropTypes.string,
 		placeholder: PropTypes.string,
@@ -12,7 +12,7 @@ export default class AccountControl extends Component {
 		onChange: PropTypes.func,
 		before: PropTypes.node,
 		after: PropTypes.node,
-		value: PropTypes.any
+		type: PropTypes.string
 	};
 
 	constructor(props) {
@@ -23,34 +23,20 @@ export default class AccountControl extends Component {
 	}
 
 	componentDidMount() {
-		this.getContacts({}, (options) => {
+		this.getAccounts({}, (options) => {
 			this.setState({
 				defaultOptions: options
 			})
 		});
 	}
 
-
-	// componentDidUpdate(prevProps) {
-	// 	if (prevProps.value !== this.props.value && this.props.value) {
-	// 		this.getContacts({include: this.props.value}, (options) => {
-	// 			this.setState({
-	// 				value: options
-	// 			});
-	// 		});
-	// 	}
-	// }
-
-	getContacts = (params, callback) => {
-		apiRequest(accountingApi.contacts.list(params)).then((res) => {
-			callback(res.data.map(item => {
-				return {
-					label: `${item.first_name} ${item.last_name}`,
-					value: item.id,
-				};
-			}))
+	getAccounts = (params, callback) => {
+		const {type=''} = this.props;
+		apiRequest(accountingApi.contacts.list({...params, type})).then((res) => {
+			callback(res.data);
 		});
 	};
+
 
 	render() {
 		const {defaultOptions} = this.state;
@@ -59,8 +45,10 @@ export default class AccountControl extends Component {
 				<AsyncSelect
 					defaultOptions={defaultOptions}
 					noOptionsMessage={() => {
-						__('No items')
+						__('No Categories')
 					}}
+					getOptionLabel={option => `${option.first_name} ${option.last_name}`}
+					getOptionValue={option => option.id}
 					loadOptions={(search, callback) => {
 						this.getAccounts({search}, callback);
 					}}

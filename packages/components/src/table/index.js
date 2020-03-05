@@ -8,14 +8,13 @@ import PropTypes from 'prop-types';
 /**
  * Internal dependencies
  */
-import { STATUS_IN_PROGRESS, STATUS_FAILED, STATUS_COMPLETE } from 'lib/status';
 import TableHeader from './header';
 import DataRow from './row/data-row';
 import LoadingRow from './row/loading-row';
 import EmptyRow from './row/empty-row';
 import FailedRow from './row/failed-row';
 
-const isDisabledHeader = ( status, rows ) => status !== STATUS_COMPLETE || rows.length === 0;
+const isDisabledHeader = ( status, rows ) => status !== "STATUS_COMPLETE" || rows.length === 0;
 const isSelectedHeader = ( selected, rows ) => selected.length === rows.length && rows.length !== 0;
 
 const Table = props => {
@@ -25,11 +24,11 @@ const Table = props => {
 
 	let content = null;
 
-	if ( status === STATUS_IN_PROGRESS && rows.length === 0 ) {
+	if ( status === "STATUS_IN_PROGRESS" && rows.length === 0 ) {
 		content = <LoadingRow headers={ headers } rows={ rows } />;
-	} else if ( rows.length === 0 && status === STATUS_COMPLETE ) {
+	} else if ( rows.length === 0 && status === "STATUS_COMPLETE" ) {
 		content = <EmptyRow headers={ headers } />;
-	} else if ( status === STATUS_FAILED ) {
+	} else if ( status === "STATUS_FAILED" ) {
 		content = <FailedRow headers={ headers } />;
 	} else if ( rows.length > 0 ) {
 		content = <DataRow rows={ rows } status={ status } selected={ table.selected } row={ row } />;

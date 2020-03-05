@@ -378,8 +378,8 @@ class EAccounting_Install {
 				'precision'           => 2,
 				'symbol'              => '$',
 				'position'     => 'before',
-				'decimal_mark'        => '.',
-				'thousands_separator' => ',',
+				'decimalSeparator'        => '.',
+				'thousandSeparator' => ',',
 				'status'              => 'active',
 			) );
 			eaccounting_insert_currency( array(
@@ -389,8 +389,8 @@ class EAccounting_Install {
 				'precision'           => 2,
 				'symbol'              => '৳',
 				'position'     => 'before',
-				'decimal_mark'        => '.',
-				'thousands_separator' => ',',
+				'decimalSeparator'        => '.',
+				'thousandSeparator' => ',',
 				'status'              => 'active',
 			) );
 		}

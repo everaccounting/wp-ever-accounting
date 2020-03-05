@@ -12,7 +12,7 @@ export default class CurrencyControl extends Component {
 		onChange: PropTypes.func,
 		before: PropTypes.node,
 		after: PropTypes.node,
-		selected: PropTypes.any
+		value: PropTypes.any
 	};
 
 	constructor(props) {
@@ -23,55 +23,33 @@ export default class CurrencyControl extends Component {
 	}
 
 	componentDidMount() {
-		const {selected} = this.props;
-
-		selected && selected.length && this.getCurrencies({include: selected}, (options) => {
-			this.setState({
-				value: options
-			})
-		});
-
-		this.getCurrencies({}, (options) => {
+		this.getAccounts({}, (options) => {
 			this.setState({
 				defaultOptions: options
 			})
 		});
 	}
 
-	getCurrencies = (params, callback) => {
+	getAccounts = (params, callback) => {
 		apiRequest(accountingApi.currencies.list(params)).then((res) => {
-			callback(res.data.map(item => {
-				return {
-					label: `${item.name}`,
-					value: item.code,
-				};
-			}))
+			callback(res.data);
 		});
 	};
 
-	onChange = (value) => {
-		console.log(value);
-		this.setState({
-			value
-		});
-		this.props.onChange && this.props.onChange(value);
-	};
 
 	render() {
-		const {value, defaultOptions} = this.state;
-
+		const {defaultOptions} = this.state;
 		return (
 			<Fragment>
 				<AsyncSelect
-					placeholder={__('Select Currency')}
 					defaultOptions={defaultOptions}
-					value={value}
-					onChange={this.onChange}
 					noOptionsMessage={() => {
 						__('No items')
 					}}
+					getOptionLabel={option => option.name}
+					getOptionValue={option => option.id}
 					loadOptions={(search, callback) => {
-						this.getCurrencies({search}, callback);
+						this.getAccounts({search}, callback);
 					}}
 					{...this.props}
 				/>

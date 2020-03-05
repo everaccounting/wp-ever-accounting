@@ -100,7 +100,7 @@ function eaccounting_get_price_decimal_separator() {
  * since 1.0.0
  * @return array|string
  */
-function eaccounting_get_price_thousands_separator() {
+function eaccounting_get_price_thousandSeparator() {
 	return eaccounting_get_option( 'thousand_separator', 'eaccounting_localisation', ',' );
 }
 
@@ -144,7 +144,7 @@ function eaccounting_get_price_format() {
  */
 function eaccounting_sanitize_price( $price ) {
 	$is_negative   = false;
-	$thousands_sep = eaccounting_get_price_thousands_separator();
+	$thousands_sep = eaccounting_get_price_thousandSeparator();
 	$decimal_sep   = eaccounting_get_price_decimal_separator();
 
 	// Sanitize the price
@@ -197,7 +197,7 @@ function eaccounting_sanitize_price( $price ) {
  */
 function eaccounting_format_price( $price, $decimals = true ) {
 	$price         = eaccounting_sanitize_price( $price );
-	$thousands_sep = eaccounting_get_price_thousands_separator();
+	$thousands_sep = eaccounting_get_price_thousandSeparator();
 	$decimal_sep   = eaccounting_get_price_decimal_separator();
 
 	// Format the price
