@@ -53,6 +53,7 @@ class EAccounting_API {
 			dirname( __FILE__ ) . '/api/class-ea-rest-transfers-controller.php'    => 'EAccounting_Transfers_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-taxes-controller.php'        => 'EAccounting_Taxes_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-transactions-controller.php' => 'EAccounting_Transactions_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-items-controller.php'        => 'EAccounting_Items_Controller',
 		);
 
 		foreach ( $rest_handlers as $file_name => $controller ) {
