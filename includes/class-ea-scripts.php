@@ -160,6 +160,7 @@ class EAccounting_Scripts {
 				'paymentMethods'   => eaccounting_get_payment_methods(),
 				'account'          => eaccounting_get_default_account(),
 				'currencies'       => eaccounting_get_currencies_data(),
+				'categoryTypes'    => eaccounting_get_category_types(),
 			]
 		];
 

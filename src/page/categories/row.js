@@ -1,10 +1,11 @@
-import { Component, Fragment } from 'react';
+import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
-import { RowActions } from '@eaccounting/components';
-import { translate as __ } from 'lib/locale';
-import { connect } from 'react-redux';
-import { BulkAction } from 'store/categories';
+import {RowActions} from '@eaccounting/components';
+import {translate as __} from 'lib/locale';
+import {connect} from 'react-redux';
+import {BulkAction} from 'store/categories';
 import EditCategory from 'component/edit-category';
+
 class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
@@ -21,7 +22,7 @@ class Row extends Component {
 	}
 
 	onEdit = () => {
-		this.setState({ editing: !this.state.editing });
+		this.setState({editing: !this.state.editing});
 	};
 
 	onDelete = () => {
@@ -33,13 +34,17 @@ class Row extends Component {
 	};
 
 	onClose = () => {
-		this.setState({ editing: !this.state.editing });
+		this.setState({editing: !this.state.editing});
+	};
+
+	OnSave = (item) => {
+		this.props.onUpdate(item);
 	};
 
 	render() {
-		const { isSelected, disabled, item } = this.props;
-		const { id, name, type, color } = item;
-		const { editing } = this.state;
+		const {isSelected, disabled, item} = this.props;
+		const {id, name, type, color} = item;
+		const {editing} = this.state;
 
 		return (
 			<Fragment>
@@ -57,6 +62,7 @@ class Row extends Component {
 						{editing && (
 							<EditCategory
 								item={this.props.item}
+								onCreate={this.OnSave}
 								onClose={this.onClose}
 								buttonTittle={__('Update')}
 								tittle={__('Update Category')}
@@ -69,7 +75,7 @@ class Row extends Component {
 					<td className="column-type ea-capitalize">{type}</td>
 
 					<td className="column-type">
-						<span style={{ color: color }} className="fa fa-2x fa-circle" />
+						<span style={{color: color}} className="fa fa-2x fa-circle"/>
 					</td>
 
 					<td className="column-actions">
@@ -97,10 +103,13 @@ class Row extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({ type: 'CATEGORIES_SELECTED', ids: [ids] });
+			dispatch({type: 'CATEGORIES_SELECTED', ids: [ids]});
 		},
 		onTableAction: (action, ids) => {
 			dispatch(BulkAction(action, ids));
+		},
+		onUpdate: (item) => {
+			dispatch({type: "CATEGORIES_UPDATED", item});
 		},
 	};
 }

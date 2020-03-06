@@ -3,13 +3,15 @@ import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
 import { fetchCategories, BulkAction } from 'store/categories';
 import { getHeaders, getBulk } from './constants';
-import { Navigation, SearchBox, Table } from '@eaccounting/components';
+import {Button, Navigation, SearchBox, Table} from '@eaccounting/components';
 import Row from './row';
-
+import EditCategory from "component/edit-category";
 class Categories extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			isAdding:false
+		};
 	}
 
 	componentDidCatch(error, info) {
@@ -19,6 +21,20 @@ class Categories extends Component {
 	componentDidMount() {
 		this.props.onMount({});
 	}
+
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
+	onCreate = () => {
+		this.props.onMount({});
+	};
+
+	onClose = () => {
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
 
 	onRenderRow = (item, pos, status, search) => {
 		const { selected } = this.props.table;
@@ -38,8 +54,11 @@ class Categories extends Component {
 		const { status, total, table, rows, match } = this.props;
 		return (
 			<Fragment>
-				<a className="page-title-action">{__('Add Category')}</a>
+				<Button className="page-title-action" onClick={this.onAdd}>
+					{__('Add Category')}
+				</Button>
 
+				{this.state.isAdding && <EditCategory onClose={this.onClose} onCreate={this.onCreate}/>}
 				<div className="ea-table-display">
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
@@ -87,8 +106,8 @@ function mapDispatchToProps(dispatch) {
 		onMount: params => {
 			dispatch(fetchCategories(params));
 		},
-		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchCategories({ order_by, order }));
+		onSetOrderBy: (orderby, order) => {
+			dispatch(fetchCategories({ orderby, order }));
 		},
 		onChangePage: page => {
 			dispatch(fetchCategories({ page }));

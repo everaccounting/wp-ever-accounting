@@ -89,8 +89,8 @@ function mapDispatchToProps(dispatch) {
 		onMount: params => {
 			dispatch(fetchContacts(params));
 		},
-		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchContacts({ order_by, order }));
+		onSetOrderBy: (orderby, order) => {
+			dispatch(fetchContacts({ orderby, order }));
 		},
 		onChangePage: page => {
 			dispatch(fetchContacts({ page }));

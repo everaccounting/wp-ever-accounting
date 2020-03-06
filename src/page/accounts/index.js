@@ -81,8 +81,8 @@ function mapDispatchToProps(dispatch) {
 		onMount: params => {
 			dispatch(fetchAccounts(params));
 		},
-		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchAccounts({ order_by, order }));
+		onSetOrderBy: (orderby, order) => {
+			dispatch(fetchAccounts({ orderby, order }));
 		},
 		onChangePage: page => {
 			dispatch(fetchAccounts({ page }));

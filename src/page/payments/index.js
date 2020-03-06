@@ -88,8 +88,8 @@ function mapDispatchToProps(dispatch) {
 		onMount: params => {
 			dispatch(fetchPayments(params));
 		},
-		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchPayments({ order_by, order }));
+		onSetOrderBy: (orderby, order) => {
+			dispatch(fetchPayments({ orderby, order }));
 		},
 		onChangePage: page => {
 			dispatch(fetchPayments({ page }));

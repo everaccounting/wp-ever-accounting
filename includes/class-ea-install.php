@@ -52,7 +52,7 @@ class EAccounting_Install {
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `email`(`email`),
-		    KEY `phone`(`phone`),
+		    KEY `phone`(`phone`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_accounts(
@@ -85,7 +85,7 @@ class EAccounting_Install {
 		    PRIMARY KEY (`id`),
 		    KEY `sale_price`(`sale_price`),
 		    KEY `purchase_price`(`purchase_price`),
-		    KEY `quantity`(`quantity`),
+		    KEY `quantity`(`quantity`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_payments(
@@ -282,8 +282,6 @@ class EAccounting_Install {
 			`name` varchar(100) NOT NULL,
 			`code` varchar(10) NOT NULL,
 			`rate` double(15,8) NOT NULL,
-			`precision` tinyint(1) DEFAULT '0',
-			`position` ENUM ('before', 'after') DEFAULT 'before',
 	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),

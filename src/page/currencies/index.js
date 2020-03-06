@@ -3,9 +3,9 @@ import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
 import { fetchCurrencies, BulkAction } from 'store/currencies';
 import { getHeaders, getBulk } from './constants';
-import { Navigation, SearchBox, Table } from '@eaccounting/components';
+import {Button, Navigation, SearchBox, Table} from '@eaccounting/components';
 import Row from './row';
-
+import EditCurrency from "component/edit-currency";
 class Currencies extends Component {
 	constructor(props) {
 		super(props);
@@ -34,11 +34,25 @@ class Currencies extends Component {
 		);
 	};
 
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
+	onCreate = () => {
+		this.props.onMount({});
+	};
+
+	onClose = () => {
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
 	render() {
 		const { status, total, table, rows, match } = this.props;
 		return (
 			<Fragment>
-				<a className="page-title-action">{__('Add Category')}</a>
+				<a className="page-title-action" onClick={this.onAdd}>{__('Add Currency')}</a>
+				{this.state.isAdding && <EditCurrency onClose={this.onClose} onCreate={this.onCreate}/>}
 
 				<div className="ea-table-display">
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
@@ -87,8 +101,8 @@ function mapDispatchToProps(dispatch) {
 		onMount: params => {
 			dispatch(fetchCurrencies(params));
 		},
-		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchCurrencies({ order_by, order }));
+		onSetOrderBy: (orderby, order) => {
+			dispatch(fetchCurrencies({ orderby, order }));
 		},
 		onChangePage: page => {
 			dispatch(fetchCurrencies({ page }));

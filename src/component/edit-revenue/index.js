@@ -25,7 +25,7 @@ export default class EditRevenue extends Component {
 		this.state = {
 			id: null,
 			paid_at: '',
-			account: eAccountingi10n.data.account,
+			account: eAccountingi10n.data.account || {},
 			amount: 0,
 			contact: {
 				first_name: '',
@@ -103,7 +103,7 @@ export default class EditRevenue extends Component {
 
 	render() {
 		const {id, paid_at, amount, account, category, contact, reference, description, isSaving, payment_method} = this.state;
-		const {currency_code} = account;
+		const {currency_code = ''} = account;
 		return (
 			<Fragment>
 				{!id && <CompactCard tagName="h3">{__('Add Revenue')}</CompactCard>}

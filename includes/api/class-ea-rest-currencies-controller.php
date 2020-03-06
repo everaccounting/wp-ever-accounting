@@ -47,7 +47,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 				'args'   => array(
 					'id' => array(
 						'description' => __( 'Unique identifier for the object.', 'wp-ever-accounting' ),
-						'type'        => 'string',
+						'type'        => ['string', 'integer'],
 						'required'    => true,
 					),
 				),
@@ -249,11 +249,6 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			'name'                => $item->name,
 			'code'                => $item->code,
 			'rate'                => floatval( $item->rate ),
-			'precision'           => $item->precision,
-			'position'            => $item->position,
-			'symbol'              => $currency['symbol'],
-			'decimalSeparator'        => $currency['decimalSeparator'],
-			'thousandSeparator' => $currency['thousandSeparator'],
 			'created_at'          => $this->prepare_date_response( $item->created_at ),
 			'updated_at'          => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -291,12 +286,6 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		}
 		if ( ! empty( $schema['properties']['rate'] ) && isset( $request['rate'] ) ) {
 			$prepared_item->rate = $request['rate'];
-		}
-		if ( ! empty( $schema['properties']['precision'] ) && isset( $request['precision'] ) ) {
-			$prepared_item->precision = $request['precision'];
-		}
-		if ( ! empty( $schema['properties']['position'] ) && isset( $request['position'] ) ) {
-			$prepared_item->position = $request['position'];
 		}
 
 		return $prepared_item;
@@ -367,25 +356,11 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 				),
 				'rate'         => array(
 					'description' => __( 'Current rate for the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => ['string', 'numeric'],
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-				),
-				'precision'    => array(
-					'description' => __( 'Precision for the item.', 'wp-ever-accounting' ),
-					'type'        => 'int',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'position'     => array(
-					'description' => __( 'Symbol position for the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'enum'        => array( 'before', 'after' ),
 				),
 				'date_created' => array(
 					'description' => __( 'Created date of the user.', 'wp-ever-accounting' ),

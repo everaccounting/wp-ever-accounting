@@ -87,8 +87,8 @@ function mapDispatchToProps(dispatch) {
 		onMount: params => {
 			dispatch(fetchTaxRates(params));
 		},
-		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchTaxRates({ order_by, order }));
+		onSetOrderBy: (orderby, order) => {
+			dispatch(fetchTaxRates({ orderby, order }));
 		},
 		onChangePage: page => {
 			dispatch(fetchTaxRates({ page }));

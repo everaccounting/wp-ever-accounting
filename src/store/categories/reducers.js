@@ -1,6 +1,6 @@
 import { initialCategories } from './index';
 import { STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED } from 'status';
-import { setTable, setSaving, setTableAllSelected, setTableSelected } from '../util';
+import { setTable, setSaving, setTableAllSelected, setTableSelected, setUpdatedItem } from '../util';
 
 const revenues = (state = initialCategories, action) => {
 	switch (action.type) {
@@ -25,6 +25,11 @@ const revenues = (state = initialCategories, action) => {
 		case 'CATEGORIES_SELECTED':
 			return { ...state, table: setTableSelected(state.table, action.ids) };
 
+		case 'CATEGORIES_UPDATED':
+			return { ...state, rows: setUpdatedItem(state.rows, action) };
+
+		case 'CATEGORIES_ADDED':
+			return { ...state, rows: [action.item, ...state.rows]};
 		default:
 			return state;
 	}
