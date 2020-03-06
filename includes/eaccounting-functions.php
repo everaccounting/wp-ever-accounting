@@ -142,8 +142,10 @@ function eaccounting_get_contact_revenue_total( $contact_id ) {
  * @return array|object|void|null
  */
 function eaccounting_get_default_currency() {
-	$default_currency_code = get_option( 'ea_default_currency', 'USD' );
-
+	$default_currency_code = get_option( 'ea_default_currency');
+	if(empty($default_currency_code)){
+		eaccounting_get_currencies_data();
+	}
 	return eaccounting_get_currency( $default_currency_code, 'code' );
 }
 

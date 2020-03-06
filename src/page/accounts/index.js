@@ -3,18 +3,29 @@ import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
 import { fetchAccounts, BulkAction } from 'store/accounts';
 import { getHeaders, getBulk } from './constants';
-import { Navigation, SearchBox, Table } from '@eaccounting/components';
+import {Button, Navigation, SearchBox, Table} from '@eaccounting/components';
 import Row from './row';
-
+import EditAccount from "component/edit-account";
 class Accounts extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			isAdding:false
+		};
 	}
 
 	componentDidMount() {
 		this.props.onMount({});
 	}
+
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
+	onClose = () => {
+		this.setState({ isAdding: !this.state.isAdding });
+	};
 
 	onRenderRow = (item, pos, status, search) => {
 		const { selected } = this.props.table;
@@ -34,6 +45,11 @@ class Accounts extends Component {
 		const { status, total, table, rows, match } = this.props;
 		return (
 			<Fragment>
+				<Button className="page-title-action" onClick={this.onAdd}>
+					{__('Add Account')}
+				</Button>
+
+				{this.state.isAdding && <EditAccount onClose={this.onClose} onCreate={this.props.onAdd}/>}
 				<div className="ea-table-display">
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>

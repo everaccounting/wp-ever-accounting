@@ -4,7 +4,7 @@ import { Column, RowActions } from '@eaccounting/components';
 import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
 import { BulkAction } from 'store/categories';
-import EditCategory from 'component/edit-category';
+import EditTaxRate from 'component/edit-taxrate';
 class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
@@ -36,6 +36,10 @@ class Row extends Component {
 		this.setState({ editing: !this.state.editing });
 	};
 
+	OnSave = (item) => {
+		this.props.onUpdate(item);
+	};
+
 	render() {
 		const { isSelected, disabled, item } = this.props;
 		const { id, name, rate, type } = item;
@@ -55,11 +59,12 @@ class Row extends Component {
 						/>
 
 						{editing && (
-							<EditCategory
+							<EditTaxRate
 								item={this.props.item}
+								onCreate={this.OnSave}
 								onClose={this.onClose}
 								buttonTittle={__('Update')}
-								tittle={__('Update Category')}
+								tittle={__('Update Tax Rate')}
 							/>
 						)}
 					</th>
@@ -99,6 +104,9 @@ function mapDispatchToProps(dispatch) {
 		},
 		onTableAction: (action, ids) => {
 			dispatch(BulkAction(action, ids));
+		},
+		onUpdate: (item) => {
+			dispatch({type: "TAXRATES_UPDATED", item});
 		},
 	};
 }

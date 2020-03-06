@@ -161,6 +161,7 @@ class EAccounting_Scripts {
 				'account'          => eaccounting_get_default_account(),
 				'currencies'       => eaccounting_get_currencies_data(),
 				'categoryTypes'    => eaccounting_get_category_types(),
+				'taxRateTypes'     => eaccounting_get_tax_types(),
 			]
 		];
 

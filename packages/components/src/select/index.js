@@ -7,7 +7,7 @@ import { withInstanceId } from '@wordpress/compose';
 
 class Select extends Component {
 	render() {
-		const { label, value, help, className, instanceId, before, after, type, required, ...props } = this.props;
+		const { label, help, className, instanceId, before, after, type, required, ...props } = this.props;
 		const classes = classnames('ea-form-group', 'ea-select', className, {
 			required: !!required,
 		});

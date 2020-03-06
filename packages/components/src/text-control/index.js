@@ -55,7 +55,7 @@ class TextControl extends Component {
 						className="ea-input-group__input components-text-control__input"
 						type={type}
 						id={id}
-						value={value}
+						value={value && value ||  ""}
 						onChange={onChangeValue}
 						required={required}
 						autoComplete="off"

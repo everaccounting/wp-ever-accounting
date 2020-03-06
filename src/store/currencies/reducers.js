@@ -1,6 +1,6 @@
 import { initialCurrencies } from './index';
 import { STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED } from 'status';
-import { setTable, setSaving, setTableAllSelected, setTableSelected } from '../util';
+import {setTable, setSaving, setTableAllSelected, setTableSelected, setUpdatedItem} from '../util';
 
 const revenues = (state = initialCurrencies, action) => {
 	switch (action.type) {
@@ -24,6 +24,12 @@ const revenues = (state = initialCurrencies, action) => {
 
 		case 'CURRENCIES_SELECTED':
 			return { ...state, table: setTableSelected(state.table, action.ids) };
+
+		case 'CURRENCIES_UPDATED':
+			return { ...state, rows: setUpdatedItem(state.rows, action) };
+
+		case 'CURRENCIES_ADDED':
+			return { ...state, rows: [action.item, ...state.rows]};
 
 		default:
 			return state;

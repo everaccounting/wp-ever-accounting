@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
-
 export default class PriceControl extends Component {
 
 	onChange = (e) => {
@@ -20,20 +19,20 @@ export default class PriceControl extends Component {
 
 		const currency = eAccountingi10n.data.currencies[code];
 
-		const suffix = 'before' !== currency.position ? currency.symbol : '';
-		const prefix = 'before' === currency.position ? currency.symbol : '';
+		const suffix = currency && 'before' !== currency.position ? currency.symbol : '';
+		const prefix = currency && 'before' === currency.position ? currency.symbol : '';
 
 		const maskOptions = {
 			prefix:prefix,
 			suffix:suffix,
-			allowDecimal: !!currency.precision,
-			decimalSymbol: currency.decimalSeparator,
-			decimalLimit: currency.precision,
-			thousandsSeparatorSymbol: currency.thousandSeparator,
+			allowDecimal: !! currency && currency.precision,
+			decimalSymbol: currency && currency.decimalSeparator,
+			decimalLimit: currency && currency.precision,
+			thousandsSeparatorSymbol: currency && currency.thousandSeparator,
 		};
 
 		const currencyMask = createNumberMask(maskOptions);
-
+		const symbol = currency && currency.symbol;
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
@@ -41,10 +40,10 @@ export default class PriceControl extends Component {
 
 					<MaskedInput
 						required={required}
-						placeholder={`${currency.symbol} 0.00`}
+						placeholder={`${symbol} 0.00`}
 						className="components-text-control__input ea-input-group__input"
 						mask={currencyMask}
-						value={value}
+						value={value && value || ""}
 						onChange={this.onChange}
 						inputMode="numeric"
 					/>

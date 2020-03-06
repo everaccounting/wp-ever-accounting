@@ -70,7 +70,7 @@ export default class EditCurrency extends Component {
 	render() {
 		const {tittle = __('Add Currency'), buttonTittle = __('Submit'), onClose} = this.props;
 		const {name, rate, code, isSaving} = this.state;
-		console.log(this.state);
+
 		return (
 			<Modal title={tittle} onRequestClose={onClose}>
 				<form onSubmit={this.onSubmit}>

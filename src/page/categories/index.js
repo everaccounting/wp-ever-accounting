@@ -27,10 +27,6 @@ class Categories extends Component {
 		this.setState({ isAdding: !this.state.isAdding });
 	};
 
-	onCreate = () => {
-		this.props.onMount({});
-	};
-
 	onClose = () => {
 		this.setState({ isAdding: !this.state.isAdding });
 	};
@@ -58,7 +54,7 @@ class Categories extends Component {
 					{__('Add Category')}
 				</Button>
 
-				{this.state.isAdding && <EditCategory onClose={this.onClose} onCreate={this.onCreate}/>}
+				{this.state.isAdding && <EditCategory onClose={this.onClose} onCreate={this.props.onAdd}/>}
 				<div className="ea-table-display">
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
@@ -117,6 +113,9 @@ function mapDispatchToProps(dispatch) {
 		},
 		onSetAllSelected: onoff => {
 			dispatch({ type: 'CATEGORIES_ALL_SELECTED', payload: onoff });
+		},
+		onAdd: item => {
+			dispatch({ type: 'CATEGORIES_ADDED', item });
 		},
 		onAction: action => {
 			dispatch(BulkAction(action));

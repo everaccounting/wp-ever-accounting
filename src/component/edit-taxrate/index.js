@@ -1,51 +1,38 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { translate as __ } from 'lib/locale';
-import { connect } from 'react-redux';
 import notify from 'lib/notify';
-import { find } from 'lodash';
-import { setCreateItem, setUpdateItem } from 'state/taxrates/action';
-import { Modal, TextControl, SelectControl, Icon, Button } from '@eaccounting/components';
-import { taxTypes } from 'state/taxrates/initial';
-import { getSelectedOption } from 'lib/table';
+import { Modal, TextControl, Select, Icon, Button } from '@eaccounting/components';
 import { apiRequest, accountingApi } from 'lib/api';
+import {isEmpty} from "lodash";
 
-const initial = {
-	id: undefined,
-	name: '',
-	rate: '',
-	type: 'normal',
-};
-
-class EditTaxRate extends Component {
+export default class EditTaxRate extends Component {
 	static propTypes = {
 		item: PropTypes.object,
 		onClose: PropTypes.func,
+		onCreate: PropTypes.func,
 		tittle: PropTypes.string,
 		buttonTittle: PropTypes.string,
-		childSave: PropTypes.func,
-		callback: PropTypes.func,
 	};
 
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			...initial,
-			...props.item,
-			isSaving: false,
+			id: null,
+			name: '',
+			rate: '',
+			type: 'normal',
 		};
 	}
 
-	componentWillUnmount() {
-		this.reset();
+	componentDidMount() {
+		const {item} = this.props;
+		item && this.setState({
+			...this.state,
+			...item,
+		})
 	}
-
-	reset = () => {
-		this.setState({
-			...initial,
-		});
-	};
 
 	onChangeType = type => {
 		this.setState({ type: type.value });
@@ -56,33 +43,32 @@ class EditTaxRate extends Component {
 		const { id, name, rate, type } = this.state;
 		this.setState({ isSaving: true });
 
-		const item = {
-			id: parseInt(id, 10),
+		const data = {
+			id,
 			name,
 			rate,
 			type,
 		};
 
-		if (item.id) {
-			this.props.onSave(item.id, item);
-			return this.props.onClose(ev);
+		let endpoint = accountingApi.taxrates.create(data);
+		if (id) {
+			endpoint = accountingApi.taxrates.update(id, data);
 		}
-		apiRequest(accountingApi.taxrates.create(item))
-			.then(res => {
-				notify(__('Tax Rate created successfully'));
-				this.props.onCreate(res.data);
-				this.setState({ isSaving: false });
-				this.props.onClose(ev);
-			})
-			.catch(error => {
-				this.setState({ isSaving: false });
-				notify(error.message, 'error');
-			});
+
+		apiRequest(endpoint).then(res => {
+			notify(__('Tax Rates saved successfully'));
+			this.props.onCreate && this.props.onCreate(res.data);
+			this.setState({isSaving: false});
+			this.props.onClose(ev);
+		}).catch(error => {
+			this.setState({isSaving: false});
+			notify(error.message, 'error');
+		});
 	};
 
 	render() {
 		const { tittle = __('Add Tax Rate'), buttonTittle = __('Submit'), onClose } = this.props;
-		const { name, rate, type, enabled, isSaving } = this.state;
+		const { name, rate, type, isSaving } = this.state;
 
 		return (
 			<Modal title={tittle} onRequestClose={onClose}>
@@ -109,13 +95,17 @@ class EditTaxRate extends Component {
 						}}
 					/>
 
-					<SelectControl
+					<Select
 						label={__('Type')}
-						options={taxTypes}
-						value={getSelectedOption(taxTypes, type, 'normal')}
+						options={Object.keys(eAccountingi10n.data.taxRateTypes).map(key => {
+							return { value: key, label: eAccountingi10n.data.taxRateTypes[key] };
+						})}
+						value={type}
 						before={<Icon icon="bars" />}
 						required
-						onChange={this.onChangeType}
+						onChange={type => {
+							this.setState({ type });
+						}}
 					/>
 					<Button isPrimary isBusy={isSaving} onClick={this.onSubmit}>
 						{buttonTittle}
@@ -125,16 +115,3 @@ class EditTaxRate extends Component {
 		);
 	}
 }
-
-function mapDispatchToProps(dispatch) {
-	return {
-		onSave: (id, item) => {
-			dispatch(setUpdateItem(id, item));
-		},
-		onCreate: item => {
-			dispatch(setCreateItem(item));
-		},
-	};
-}
-
-export default connect(null, mapDispatchToProps)(EditTaxRate);

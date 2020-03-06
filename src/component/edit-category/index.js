@@ -2,11 +2,11 @@ import React, {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {translate as __} from 'lib/locale';
 import notify from 'lib/notify';
-import {Modal, TextControl, Select, Icon, Button} from '@eaccounting/components';
-
+import {Modal, TextControl, Select, Icon, Button, SelectControl} from '@eaccounting/components';
 import {apiRequest, accountingApi} from 'lib/api';
 import {ColorPicker, Popover} from '@wordpress/components';
 import "./style.scss";
+
 
 export default class EditCategory extends Component {
 	static propTypes = {
@@ -35,7 +35,7 @@ export default class EditCategory extends Component {
 
 	componentDidMount() {
 		const {item} = this.props;
-		this.setState({
+		item && this.setState({
 			...this.state,
 			...item
 		})
@@ -51,7 +51,7 @@ export default class EditCategory extends Component {
 			id,
 			name,
 			color,
-			type
+			type:type
 		};
 
 		let endpoint = accountingApi.categories.create(data);
@@ -108,7 +108,7 @@ export default class EditCategory extends Component {
 						label={__('Category Type')}
 						before={<Icon icon="bars"/>}
 						options={Object.keys(eAccountingi10n.data.categoryTypes).map(key => {
-							return { value: key, label: eAccountingi10n.data.categoryTypes[key] };
+							return {value: key, label: eAccountingi10n.data.categoryTypes[key]};
 						})}
 						value={type}
 						required

@@ -121,7 +121,7 @@ function eaccounting_get_currency( $id, $by = 'id' ) {
 function eaccounting_delete_currency( $id ) {
 	global $wpdb;
 	$id = absint( $id );
-
+	error_log($id);
 	$currency = eaccounting_get_currency( $id );
 	if ( is_null( $currency ) ) {
 		return false;

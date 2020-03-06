@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Column, RowActions } from '@eaccounting/components';
 import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
-import { BulkAction } from 'store/categories';
+import { BulkAction } from 'store/currencies';
 import EditCurrency from 'component/edit-currency';
 class Row extends Component {
 	static propTypes = {
@@ -36,6 +36,10 @@ class Row extends Component {
 		this.setState({ editing: !this.state.editing });
 	};
 
+	OnSave = (item) => {
+		this.props.onUpdate(item);
+	};
+
 	render() {
 		const { isSelected, disabled, item } = this.props;
 		const { id, name, code, rate } = item;
@@ -57,6 +61,7 @@ class Row extends Component {
 						{editing && (
 							<EditCurrency
 								item={this.props.item}
+								onCreate={this.OnSave}
 								onClose={this.onClose}
 								buttonTittle={__('Update')}
 								tittle={__('Update Category')}
@@ -99,6 +104,9 @@ function mapDispatchToProps(dispatch) {
 		},
 		onTableAction: (action, ids) => {
 			dispatch(BulkAction(action, ids));
+		},
+		onUpdate: (item) => {
+			dispatch({type: "CURRENCIES_UPDATED", item});
 		},
 	};
 }

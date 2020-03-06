@@ -5,7 +5,7 @@ import classnames from 'classnames';
 
 export default class TextareaControl extends Component {
 	render() {
-		const { label, help, className, required, ...props } = this.props;
+		const { label, help, className, required, value, ...props } = this.props;
 		const classes = classnames('ea-form-group', 'ea-textarea-field', className, {
 			required: !!required,
 		});
@@ -13,7 +13,7 @@ export default class TextareaControl extends Component {
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
-					<BaseToggle {...props} required={required} />
+					<BaseToggle value={value && value ||  ""} {...props} required={required} />
 				</div>
 			</BaseControl>
 		);

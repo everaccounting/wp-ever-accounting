@@ -40,9 +40,18 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 		);
 
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => [ $this, 'handle_bulk_actions' ],
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+		) );
+
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->rest_base . '/(?P<id>[\w]+)',
+			'/' . $this->rest_base . '/(?P<id>[\d]+)',
 			array(
 				'args'   => array(
 					'id' => array(
@@ -71,6 +80,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 				'schema' => $this->get_item_schema(),
 			)
 		);
+
 	}
 
 	/**
@@ -236,6 +246,43 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 
 	/**
 	 * since 1.0.0
+	 * @param $request
+	 *
+	 * @return mixed|WP_Error|WP_REST_Response
+	 */
+	public function handle_bulk_actions( $request ) {
+		$actions = [
+			'delete',
+		];
+		$action  = $request['action'];
+		$items   = $request['items'];
+		if ( empty( $action ) || ! in_array( $action, $actions ) ) {
+			return new WP_Error( 'invalid_bulk_action', __( 'Invalid bulk action', 'wp-ever-accounting' ) );
+		}
+
+		error_log(print_r($items, true ));
+		error_log(print_r($action, true ));
+
+		switch ( $action ) {
+			case 'delete':
+				foreach ( $items as $item ) {
+					error_log($item);
+					$error = eaccounting_delete_currency( $item );
+					if(is_wp_error($error)){
+						return $error;
+					}
+				}
+				break;
+		}
+
+		unset( $request['action'] );
+		unset( $request['items'] );
+
+		return $this->get_items( $request );
+	}
+
+	/**
+	 * since 1.0.0
 	 *
 	 * @param mixed $item
 	 * @param WP_REST_Request $request
@@ -243,7 +290,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$currency = eaccounting_get_currencies_data()[ $item->code ];
+
 		$data     = array(
 			'id'                  => intval( $item->id ),
 			'name'                => $item->name,

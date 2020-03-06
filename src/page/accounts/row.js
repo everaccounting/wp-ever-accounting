@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { Column, RowActions } from '@eaccounting/components';
 import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
-import Moment from 'react-moment';
-import { Link } from 'react-router-dom';
+import EditAccount from "component/edit-account";
 
 class Row extends Component {
 	static propTypes = {
@@ -22,8 +21,7 @@ class Row extends Component {
 	}
 
 	onEdit = () => {
-		console.log('edit');
-		// this.setState({editing: !this.state.editing});
+		this.setState({editing: !this.state.editing});
 	};
 
 	onDelete = ev => {
@@ -39,16 +37,10 @@ class Row extends Component {
 		this.setState({ editing: !this.state.editing });
 	};
 
-	goTo = (ev, route) => {
-		ev.preventDefault();
-		this.props.history.push(route);
-	};
-
 	render() {
 		const { isSelected, disabled, item } = this.props;
-		const { id, name, balance, number, bank_name } = item;
+		const { id, name, balance, number } = item;
 		const { editing } = this.state;
-		const { match } = this.props;
 
 		return (
 			<Fragment>
@@ -62,6 +54,17 @@ class Row extends Component {
 							checked={isSelected}
 							onChange={() => this.props.onSetSelected(item.id)}
 						/>
+
+						{editing && (
+							<EditAccount
+								item={this.props.item}
+								onCreate={this.OnSave}
+								onClose={this.onClose}
+								buttonTittle={__('Update')}
+								tittle={__('Update Account')}
+							/>
+						)}
+
 					</th>
 
 					<td className="column-primary column-name">{name}</td>

@@ -39,10 +39,6 @@ class Currencies extends Component {
 		this.setState({ isAdding: !this.state.isAdding });
 	};
 
-	onCreate = () => {
-		this.props.onMount({});
-	};
-
 	onClose = () => {
 		this.setState({ isAdding: !this.state.isAdding });
 	};
@@ -52,7 +48,7 @@ class Currencies extends Component {
 		return (
 			<Fragment>
 				<a className="page-title-action" onClick={this.onAdd}>{__('Add Currency')}</a>
-				{this.state.isAdding && <EditCurrency onClose={this.onClose} onCreate={this.onCreate}/>}
+				{this.state.isAdding && <EditCurrency onClose={this.onClose} onCreate={this.props.onAdd}/>}
 
 				<div className="ea-table-display">
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
@@ -112,6 +108,9 @@ function mapDispatchToProps(dispatch) {
 		},
 		onSetAllSelected: onoff => {
 			dispatch({ type: 'CURRENCIES_ALL_SELECTED', payload: onoff });
+		},
+		onAdd: item => {
+			dispatch({ type: 'CURRENCIES_ADDED', item });
 		},
 		onAction: action => {
 			dispatch(BulkAction(action));

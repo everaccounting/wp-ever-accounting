@@ -382,7 +382,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 				),
 				'rate'         => array(
 					'description' => __( 'Current rate for the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => 'numeric',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',

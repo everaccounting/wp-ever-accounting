@@ -3,13 +3,16 @@ import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
 import { fetchTaxRates, BulkAction } from 'store/taxrates';
 import { getHeaders, getBulk } from './constants';
-import { Navigation, SearchBox, Table } from '@eaccounting/components';
+import {Button, Navigation, SearchBox, Table} from '@eaccounting/components';
 import Row from './row';
+import EditTaxRate from "component/edit-taxrate";
 
 class TaxRates extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			isAdding:false
+		};
 	}
 
 	componentDidCatch(error, info) {
@@ -19,6 +22,19 @@ class TaxRates extends Component {
 	componentDidMount() {
 		this.props.onMount({});
 	}
+
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
+	onCreate = () => {
+		this.props.onMount({});
+	};
+
+	onClose = () => {
+		this.setState({ isAdding: !this.state.isAdding });
+	};
 
 	onRenderRow = (item, pos, status, search) => {
 		const { selected } = this.props.table;
@@ -35,10 +51,14 @@ class TaxRates extends Component {
 	};
 
 	render() {
-		const { status, total, table, rows, match } = this.props;
+		const { status, total, table, rows } = this.props;
 		return (
 			<Fragment>
-				<a className="page-title-action">{__('Add Category')}</a>
+				<Button className="page-title-action" onClick={this.onAdd}>
+					{__('Add Tax Rate')}
+				</Button>
+
+				{this.state.isAdding && <EditTaxRate onClose={this.onClose} onCreate={this.onCreate}/>}
 
 				<div className="ea-table-display">
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
