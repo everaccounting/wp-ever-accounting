@@ -1,10 +1,10 @@
 /* global document, eAccountingi10n */
-import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from '@wordpress/element';
 import App from './app';
-
+import domReady from '@wordpress/dom-ready';
 import './stylesheets/main.scss';
 
-if (document.getElementById('eaccounting')) {
-	ReactDOM.render(<App />, document.getElementById('eaccounting'));
-}
+domReady( () => {
+	const root = document.getElementById( 'eaccounting' );
+	return render( <App/>, root );
+});
