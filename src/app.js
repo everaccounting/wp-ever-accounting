@@ -24,7 +24,7 @@ const App = () => (
 						<Route key={page.path} path={page.path} exact render={props => <page.container page={page} {...props} />} />
 					);
 				})}
-				<Redirect from="*" to="/" />
+				{/*<Redirect from="*" to="/" />*/}
 			</Switch>
 		</Router>
 		<NotificationContainer />

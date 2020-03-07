@@ -31,8 +31,6 @@ function eaccounting_insert_revenue( $args ) {
 		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
 		'amount'         => empty( $args['amount'] ) ? '' : $args['amount'],
-//		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo if not set default
-//		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),//todo if not set default
 		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
@@ -94,11 +92,9 @@ function eaccounting_insert_revenue( $args ) {
 	}
 
 	//sanitize amount before inserting
-	error_log($data['amount']);
 	$data['amount'] = eaccounting_money($data['amount'], $account->currency_code)->getAmount();
 	$data['currency_rate'] = $currency->rate;
 	$data['currency_code'] = $currency->code;
-	error_log(print_r($data, true ));
 	$where = array( 'id' => $id );
 	$data  = wp_unslash( $data );
 

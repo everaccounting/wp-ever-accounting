@@ -30,11 +30,7 @@ function eaccounting_insert_payment( $args ) {
 		'id'             => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
-		'amount'         => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
-		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
-		//todo if not set default
-		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),
-		//todo if not set default
+		'amount'         => empty( $args['amount'] ) ? '' : $args['amount'],
 		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
@@ -51,26 +47,54 @@ function eaccounting_insert_payment( $args ) {
 		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['amount'] ) || $data['amount'] == '0.00' ) {
+	$amount = $data['amount'];
+	if ( empty(preg_replace( '/[^0-9]/', '', $amount ))  ) {
 		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['currency_code'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data['currency_rate'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Currency rate is required', 'wp-ever-accounting' ) );
-	}
-
 	if ( empty( $data['category_id'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Payment category is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data['payment_method'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Revenue method is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-ever-accounting' ) );
 	}
 
+
+	$account = eaccounting_get_account( $data['account_id'] );
+	if ( ! $account ) {
+		return new WP_Error( 'invalid_data', __( 'Account does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	$currency = eaccounting_get_currency($account->currency_code, 'code');
+	if ( ! $currency ) {
+		return new WP_Error( 'invalid_data', __( 'Account associated currency does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	$category = eaccounting_get_category( $data['category_id'] );
+	if ( ! $category ) {
+		return new WP_Error( 'invalid_data', __( 'Category does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	if ( $category->type != 'expense' ) {
+		return new WP_Error( 'invalid_data', __( 'Invalid category type category type must be expense.', 'wp-ever-accounting' ) );
+	}
+
+	$contact = eaccounting_get_contact( $data['contact_id'] );
+	if ( ! $contact ) {
+		return new WP_Error( 'invalid_data', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	if(!in_array('customer', $contact->types)){
+		eaccounting_insert_contact(array(
+			'id' => $id,
+			'types' => array_merge($contact->types, ['vendor'])
+		));
+	}
+
+	$data['amount'] = eaccounting_money($data['amount'], $account->currency_code)->getAmount();
+	$data['currency_rate'] = $currency->rate;
+	$data['currency_code'] = $currency->code;
 	$where = array( 'id' => $id );
 	$data  = wp_unslash( $data );
 

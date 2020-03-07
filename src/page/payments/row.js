@@ -21,11 +21,6 @@ class Row extends Component {
 		};
 	}
 
-	onEdit = () => {
-		console.log('edit');
-		// this.setState({editing: !this.state.editing});
-	};
-
 	onDelete = ev => {
 		ev.preventDefault();
 		this.props.onTableAction('delete', this.props.item.id);
@@ -67,11 +62,17 @@ class Row extends Component {
 
 					<td className="column-amount">{amount}</td>
 
-					<td className="column-category"></td>
+					<td className="column-category">
+						{contact && contact.first_name && contact.last_name && `${contact.first_name} ${contact.last_name}` || "-"}
+					</td>
 
-					<td className="column-account"></td>
+					<td className="column-account">
+						{category && category.name && category.name || "-"}
+					</td>
 
-					<td className="column-customer"></td>
+					<td className="column-customer">
+						{account && account.name && account.name || "-"}
+					</td>
 
 					<td className="column-actions">
 						<RowActions

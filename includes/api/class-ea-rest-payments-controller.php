@@ -248,13 +248,17 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 		$data = array(
 			'id'             => $item->id,
 			'account_id'     => $item->account_id,
+			'account'        => eaccounting_get_account( $item->account_id ),
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
-			'amount'         => $item->amount,
-			'contact_id'     => $item->contact_id,
-			'description'    => $item->description,
-			'category_id'    => $item->category_id,
+			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
+			'currency'       => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
+			'contact_id'     => $item->contact_id,
+			'description'    => $item->description,
+			'contact'        => eaccounting_get_contact( $item->contact_id ),
+			'category_id'    => $item->category_id,
+			'category'       => eaccounting_get_category( $item->category_id ),
 			'payment_method' => $item->payment_method,
 			'reference'      => $item->reference,
 			'attachment_url' => $item->attachment_url,
@@ -295,12 +299,6 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 		}
 		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
 			$prepared_item->amount = $request['amount'];
-		}
-		if ( ! empty( $schema['properties']['currency_code'] ) && isset( $request['currency_code'] ) ) {
-			$prepared_item->currency_code = $request['currency_code'];
-		}
-		if ( ! empty( $schema['properties']['currency_rate'] ) && isset( $request['currency_rate'] ) ) {
-			$prepared_item->currency_rate = $request['currency_rate'];
 		}
 		if ( ! empty( $schema['properties']['contact_id'] ) && isset( $request['contact_id'] ) ) {
 			$prepared_item->contact_id = $request['contact_id'];
@@ -388,7 +386,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				'paid_at'        => array(
 					'description' => __( 'Payment Date of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'format'      => 'date-time',
+					'format'      => 'date',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
@@ -398,24 +396,6 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'eaccounting_sanitize_price',
-					),
-					'required'    => true,
-				),
-				'currency_code'  => array(
-					'description' => __( 'Currency code of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'currency_rate'  => array(
-					'description' => __( 'Currency rate of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),

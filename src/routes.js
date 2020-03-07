@@ -7,6 +7,7 @@ import Contacts from './page/contacts';
 import Items from './page/items';
 import Banking from './page/banking';
 import Misc from './page/misc';
+import Settings from "./page/settings";
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
@@ -82,6 +83,14 @@ export const routes = [
 	{
 		container: Misc,
 		path: '/misc/',
+	},
+	{
+		container: Settings,
+		path: '/settings/:section',
+	},
+	{
+		container: Settings,
+		path: '/settings/',
 	},
 ];
 
