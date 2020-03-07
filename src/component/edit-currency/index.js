@@ -86,8 +86,8 @@ export default class EditCurrency extends Component {
 					/>
 					<SelectControl
 						label={__('Code')}
-						getOptionLabel={option => option.currency}
-						getOptionValue={option => option.currency}
+						getOptionLabel={option => option && option.currency && option.currency}
+						getOptionValue={option => option && option.currency && option.currency}
 						options={Object.values(eAccountingi10n.data.currencies)}
 						value={code}
 						before={<Icon icon="code"/>}

@@ -1,10 +1,10 @@
-import { Component, Fragment } from 'react';
+import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
-import { RowActions } from '@eaccounting/components';
-import { translate as __ } from 'lib/locale';
-import { connect } from 'react-redux';
-import EditAccount from "component/edit-account";
-import {BulkAction} from 'store/accounts';
+import {RowActions} from '@eaccounting/components';
+import {translate as __} from 'lib/locale';
+import {connect} from 'react-redux';
+import {BulkAction} from 'store/categories';
+import EditTransfers from 'component/edit-transfer';
 
 class Row extends Component {
 	static propTypes = {
@@ -25,8 +25,7 @@ class Row extends Component {
 		this.setState({editing: !this.state.editing});
 	};
 
-	onDelete = ev => {
-		ev.preventDefault();
+	onDelete = () => {
 		this.props.onTableAction('delete', this.props.item.id);
 	};
 
@@ -35,13 +34,17 @@ class Row extends Component {
 	};
 
 	onClose = () => {
-		this.setState({ editing: !this.state.editing });
+		this.setState({editing: !this.state.editing});
+	};
+
+	OnSave = (item) => {
+		this.props.onUpdate(item);
 	};
 
 	render() {
-		const { isSelected, disabled, item } = this.props;
-		const { id, name, balance, number } = item;
-		const { editing } = this.state;
+		const {isSelected, disabled, item} = this.props;
+		const {id, name, type, color} = item;
+		const {editing} = this.state;
 
 		return (
 			<Fragment>
@@ -57,22 +60,23 @@ class Row extends Component {
 						/>
 
 						{editing && (
-							<EditAccount
+							<EditTransfers
 								item={this.props.item}
-								onCreate={this.props.onUpdate}
+								onCreate={this.OnSave}
 								onClose={this.onClose}
 								buttonTittle={__('Update')}
-								tittle={__('Update Account')}
+								tittle={__('Update Transfers')}
 							/>
 						)}
-
 					</th>
 
 					<td className="column-primary column-name">{name}</td>
 
-					<td className="column-number">{number || '-'}</td>
+					<td className="column-type ea-capitalize">{type}</td>
 
-					<td className="column-money">{balance}</td>
+					<td className="column-type">
+						<span style={{color: color}} className="fa fa-2x fa-circle"/>
+					</td>
 
 					<td className="column-actions">
 						<RowActions
@@ -84,7 +88,7 @@ class Row extends Component {
 								},
 								{
 									title: __('Delete'),
-									onClick: this.onEdit,
+									onClick: this.onDelete,
 									disabled: disabled,
 								},
 							]}
@@ -99,13 +103,13 @@ class Row extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({type: 'ACCOUNTS_SELECTED', ids: [ids]});
+			dispatch({type: 'TRANSFERS_SELECTED', ids: [ids]});
 		},
 		onTableAction: (action, ids) => {
 			dispatch(BulkAction(action, ids));
 		},
 		onUpdate: (item) => {
-			dispatch({type: "ACCOUNTS_UPDATED", item});
+			dispatch({type: "TRANSFERS_UPDATED", item});
 		},
 	};
 }

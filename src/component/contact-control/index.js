@@ -53,8 +53,8 @@ export default class ContactControl extends Component {
 					noOptionsMessage={() => {
 						__('No Items');
 					}}
-					getOptionLabel={option => (Object.keys(option) ? `${option.first_name} ${option.last_name}` : '')}
-					getOptionValue={option => option.id}
+					getOptionLabel={option => option && option.first_name && option.last_name && `${option.first_name} ${option.last_name}`}
+					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
 						this.getAccounts({ search }, callback);
 					}}

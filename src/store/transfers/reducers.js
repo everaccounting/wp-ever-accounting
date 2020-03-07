@@ -1,13 +1,13 @@
-import { initialAccounts } from './index';
+import { initialTransfers } from './index';
 import { STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED } from 'status';
 import {setTable, setSaving, setTableAllSelected, setTableSelected, setUpdatedItem} from '../util';
 
-const revenues = (state = initialAccounts, action) => {
+const transfers = (state = initialTransfers, action) => {
 	switch (action.type) {
-		case 'ACCOUNTS_LOADING':
+		case 'TRANSFERS_LOADING':
 			return { ...state, table: setTable(state, action), status: STATUS_IN_PROGRESS, saving: setSaving(state, action) };
 
-		case 'ACCOUNTS_SUCCESS':
+		case 'TRANSFERS_SUCCESS':
 			return {
 				...state,
 				status: STATUS_COMPLETE,
@@ -16,18 +16,23 @@ const revenues = (state = initialAccounts, action) => {
 				table: { ...state.table, selected: [] },
 			};
 
-		case 'ACCOUNTS_FAILED':
+		case 'TRANSFERS_FAILED':
 			return { ...state, status: STATUS_FAILED };
 
-		case 'ACCOUNTS_UPDATED':
+		case 'TRANSFERS_ALL_SELECTED':
+			return { ...state, table: setTableAllSelected(state.table, state.rows, action.payload) };
+
+		case 'TRANSFERS_SELECTED':
+			return { ...state, table: setTableSelected(state.table, action.ids) };
+
+		case 'TRANSFERS_UPDATED':
 			return { ...state, rows: setUpdatedItem(state.rows, action) };
 
-		case 'ACCOUNTS_ADDED':
+		case 'TRANSFERS_ADDED':
 			return { ...state, rows: [action.item, ...state.rows]};
-
 		default:
 			return state;
 	}
 };
 
-export default revenues;
+export default transfers;

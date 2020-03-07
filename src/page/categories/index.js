@@ -50,12 +50,12 @@ class Categories extends Component {
 		const { status, total, table, rows, match } = this.props;
 		return (
 			<Fragment>
-				<Button className="page-title-action" onClick={this.onAdd}>
-					{__('Add Category')}
-				</Button>
 
 				{this.state.isAdding && <EditCategory onClose={this.onClose} onCreate={this.props.onAdd}/>}
 				<div className="ea-table-display">
+					<Button className="page-title-action" onClick={this.onAdd}>
+						{__('Add Category')}
+					</Button>
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 

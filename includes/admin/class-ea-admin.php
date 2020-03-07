@@ -126,6 +126,18 @@ class EAccounting_Admin {
 				'parent' => 'eaccounting',
 				'path'   => '/misc/categories',
 			),
+			array(
+				'id'     => 'eaccounting-reports',
+				'title'  => __( 'Reports', 'wp-ever-accounting' ),
+				'parent' => 'eaccounting',
+				'path'   => '/reports',
+			),
+			array(
+				'id'     => 'eaccounting-settings',
+				'title'  => __( 'Settings', 'wp-ever-accounting' ),
+				'parent' => 'eaccounting',
+				'path'   => '/settings',
+			),
 		);
 
 		$admin_pages = apply_filters( 'woocommerce_analytics_report_menu_items', $pages );

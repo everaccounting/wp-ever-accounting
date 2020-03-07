@@ -1,13 +1,13 @@
-import { initialAccounts } from './index';
+import { initialReconciliations } from './index';
 import { STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED } from 'status';
 import {setTable, setSaving, setTableAllSelected, setTableSelected, setUpdatedItem} from '../util';
 
-const revenues = (state = initialAccounts, action) => {
+const revenues = (state = initialReconciliations, action) => {
 	switch (action.type) {
-		case 'ACCOUNTS_LOADING':
+		case 'RECONCILIATIONS_LOADING':
 			return { ...state, table: setTable(state, action), status: STATUS_IN_PROGRESS, saving: setSaving(state, action) };
 
-		case 'ACCOUNTS_SUCCESS':
+		case 'RECONCILIATIONS_SUCCESS':
 			return {
 				...state,
 				status: STATUS_COMPLETE,
@@ -16,13 +16,13 @@ const revenues = (state = initialAccounts, action) => {
 				table: { ...state.table, selected: [] },
 			};
 
-		case 'ACCOUNTS_FAILED':
+		case 'RECONCILIATIONS_FAILED':
 			return { ...state, status: STATUS_FAILED };
 
-		case 'ACCOUNTS_UPDATED':
+		case 'RECONCILIATIONS_UPDATED':
 			return { ...state, rows: setUpdatedItem(state.rows, action) };
 
-		case 'ACCOUNTS_ADDED':
+		case 'RECONCILIATIONS_ADDED':
 			return { ...state, rows: [action.item, ...state.rows]};
 
 		default:

@@ -61,6 +61,14 @@ export const routes = [
 	},
 	{
 		container: Banking,
+		path: '/banking/:tab/add',
+	},
+	{
+		container: Banking,
+		path: '/banking/:tab/:id',
+	},
+	{
+		container: Banking,
 		path: '/banking/:tab',
 	},
 	{

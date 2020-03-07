@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {translate as __} from 'lib/locale';
 import notify from 'lib/notify';
+import {accountingApi, apiRequest} from "lib/api";
 import {Modal, TextControl, PriceControl, TextareaControl, Icon, Button} from '@eaccounting/components';
 import CurrencyControl from 'component/currency-control';
 import {mergeWith} from "lodash";
@@ -24,7 +25,7 @@ export default class EditAccount extends Component {
 		this.state = {
 			name: '',
 			number: '',
-			opening_balance: '0',
+			opening_balance: '',
 			bank_name: '',
 			bank_phone: '',
 			bank_address: '',
@@ -45,14 +46,18 @@ export default class EditAccount extends Component {
 
 	onSubmit = ev => {
 		ev.preventDefault();
-		const {id, name, type = {}, color} = this.state;
+		const {id, name, number, opening_balance, bank_name, bank_phone, bank_address, currency} = this.state;
 		this.setState({isSaving: true});
 
 		const data = {
 			id,
 			name,
-			color,
-			type:type
+			number,
+			opening_balance,
+			bank_name,
+			bank_phone,
+			bank_address,
+			currency_code:currency && currency.code && currency.code
 		};
 
 		let endpoint = accountingApi.accounts.create(data);
@@ -61,7 +66,7 @@ export default class EditAccount extends Component {
 		}
 
 		apiRequest(endpoint).then(res => {
-			notify(__('Category saved successfully'));
+			notify(__('Account saved successfully'));
 			this.props.onCreate && this.props.onCreate(res.data);
 			this.setState({isSaving: false});
 			this.props.onClose(ev);

@@ -54,13 +54,13 @@ class TaxRates extends Component {
 		const { status, total, table, rows } = this.props;
 		return (
 			<Fragment>
-				<Button className="page-title-action" onClick={this.onAdd}>
-					{__('Add Tax Rate')}
-				</Button>
 
 				{this.state.isAdding && <EditTaxRate onClose={this.onClose} onCreate={this.onCreate}/>}
 
 				<div className="ea-table-display">
+					<Button className="page-title-action" onClick={this.onAdd}>
+						{__('Add Tax Rate')}
+					</Button>
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 

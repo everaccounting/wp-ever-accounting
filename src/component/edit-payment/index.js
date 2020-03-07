@@ -8,15 +8,16 @@ import {
 	TextControl,
 	DateControl,
 	PriceControl,
+	Spinner,
 	Select,
-	Button,
+	Button, SelectControl, Navigation,
 } from '@eaccounting/components';
 import AccountControl from '../account-control';
 import CategoryControl from '../category-control';
 import ContactControl from '../contact-control';
 import {accountingApi, apiRequest} from '../../lib/api';
 
-export default class EditRevenue extends Component {
+export default class EditPayment extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -45,14 +46,14 @@ export default class EditRevenue extends Component {
 		this._isMounted = true;
 		const {match} = this.props;
 		const id = match.params.id || undefined;
-		id && this.loadRevenue(id);
+		id && this.loadPayment(id);
 	}
 
 	componentWillUnmount() {
 		this._isMounted = false;
 	}
 
-	loadRevenue = id => {
+	loadPayment = id => {
 		apiRequest(accountingApi.revenues.get(id)).then(res => {
 			this._isMounted &&
 			this.setState({
@@ -72,9 +73,9 @@ export default class EditRevenue extends Component {
 			id,
 			paid_at,
 			amount,
-			account_id: account && account.id && account.id,
-			category_id: category && category.id && category.id,
-			contact_id: contact && contact.id && contact.id,
+			account_id: account && account.id ? account.id : undefined,
+			category_id: category && category.id ? category.id : undefined,
+			contact_id: contact && contact.id ? contact.id : undefined,
 			reference,
 			payment_method,
 			description
@@ -84,13 +85,12 @@ export default class EditRevenue extends Component {
 			isSaving: !this.state.isSaving
 		});
 
-		let endpoint = accountingApi.revenues.create(data);
+		let endpoint = accountingApi.payments.create(data);
 		if (id) {
-			endpoint = accountingApi.revenues.update(id, data);
+			endpoint = accountingApi.payments.update(id, data);
 		}
 
 		this._isMounted && apiRequest(endpoint).then(res => {
-			console.log(res);
 			this._isMounted && this.setState({
 				isSaving: !this.state.isSaving
 			});
@@ -102,10 +102,11 @@ export default class EditRevenue extends Component {
 
 	render() {
 		const {id, paid_at, amount, account, category, contact, reference, description, isSaving, payment_method} = this.state;
+
 		return (
 			<Fragment>
-				{!id && <CompactCard tagName="h3">{__('Add Revenue')}</CompactCard>}
-				{!!id && <CompactCard tagName="h3">{__('Update Revenue')}</CompactCard>}
+				{!id && <CompactCard tagName="h3">{__('Add Payment')}</CompactCard>}
+				{!!id && <CompactCard tagName="h3">{__('Update Payment')}</CompactCard>}
 				<Card>
 					<form onSubmit={this.onSubmit}>
 						<div className="ea-row">
@@ -153,7 +154,7 @@ export default class EditRevenue extends Component {
 									before={<Icon icon={'folder-open-o'}/>}
 									after={this.addContactBtn()}
 									required
-									type="income"
+									type="expense"
 									value={category}
 									onChange={category => {
 										this.setState({category});
@@ -166,7 +167,7 @@ export default class EditRevenue extends Component {
 									label={__('Customer')}
 									before={<Icon icon={'user'}/>}
 									after={this.addContactBtn()}
-									type="customer"
+									type="vendor"
 									value={contact}
 									onChange={contact => this.setState({contact})}
 								/>

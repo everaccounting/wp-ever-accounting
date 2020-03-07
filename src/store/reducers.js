@@ -8,6 +8,8 @@ import { accounts } from './accounts';
 import { payments } from './payments';
 import { currencies } from './currencies';
 import { taxrates } from './taxrates';
+import { transfers } from './transfers';
+import { reconciliations } from './reconciliations';
 
 const createRootReducer = combineReducers({
 	transactions,
@@ -19,6 +21,8 @@ const createRootReducer = combineReducers({
 	payments,
 	currencies,
 	taxrates,
+	transfers,
+	reconciliations,
 });
 
 export default createRootReducer;

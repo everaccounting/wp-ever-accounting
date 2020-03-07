@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { RowActions } from '@eaccounting/components';
 import { translate as __ } from 'lib/locale';
 import { connect } from 'react-redux';
-import EditAccount from "component/edit-account";
-import {BulkAction} from 'store/accounts';
+import Moment from 'react-moment';
+import { Link } from 'react-router-dom';
 
 class Row extends Component {
 	static propTypes = {
@@ -22,7 +22,8 @@ class Row extends Component {
 	}
 
 	onEdit = () => {
-		this.setState({editing: !this.state.editing});
+		console.log('edit');
+		// this.setState({editing: !this.state.editing});
 	};
 
 	onDelete = ev => {
@@ -40,8 +41,9 @@ class Row extends Component {
 
 	render() {
 		const { isSelected, disabled, item } = this.props;
-		const { id, name, balance, number } = item;
+		const { id, paid_at, amount, account, contact, category } = item;
 		const { editing } = this.state;
+		const { match } = this.props;
 
 		return (
 			<Fragment>
@@ -55,24 +57,21 @@ class Row extends Component {
 							checked={isSelected}
 							onChange={() => this.props.onSetSelected(item.id)}
 						/>
-
-						{editing && (
-							<EditAccount
-								item={this.props.item}
-								onCreate={this.props.onUpdate}
-								onClose={this.onClose}
-								buttonTittle={__('Update')}
-								tittle={__('Update Account')}
-							/>
-						)}
-
 					</th>
 
-					<td className="column-primary column-name">{name}</td>
+					<td className="column-primary column-paid_at">
+						<Link to={`${match.url}/${id}`}>
+							<Moment format={'DD-MM-YYYY'}>{paid_at}</Moment>
+						</Link>
+					</td>
 
-					<td className="column-number">{number || '-'}</td>
+					<td className="column-amount">{amount}</td>
 
-					<td className="column-money">{balance}</td>
+					<td className="column-category"></td>
+
+					<td className="column-account"></td>
+
+					<td className="column-customer"></td>
 
 					<td className="column-actions">
 						<RowActions
@@ -99,13 +98,7 @@ class Row extends Component {
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({type: 'ACCOUNTS_SELECTED', ids: [ids]});
-		},
-		onTableAction: (action, ids) => {
-			dispatch(BulkAction(action, ids));
-		},
-		onUpdate: (item) => {
-			dispatch({type: "ACCOUNTS_UPDATED", item});
+			dispatch({ type: 'RECONCILIATIONS_SELECTED', ids: [ids] });
 		},
 	};
 }

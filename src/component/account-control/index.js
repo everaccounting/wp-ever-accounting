@@ -52,8 +52,8 @@ export default class AccountControl extends Component {
 					noOptionsMessage={() => {
 						__('No items');
 					}}
-					getOptionLabel={option => option.name}
-					getOptionValue={option => option.id}
+					getOptionLabel={option => option && option.name && option.name }
+					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
 						this.getAccounts({ search }, callback);
 					}}

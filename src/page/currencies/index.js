@@ -47,10 +47,10 @@ class Currencies extends Component {
 		const { status, total, table, rows, match } = this.props;
 		return (
 			<Fragment>
-				<a className="page-title-action" onClick={this.onAdd}>{__('Add Currency')}</a>
 				{this.state.isAdding && <EditCurrency onClose={this.onClose} onCreate={this.props.onAdd}/>}
 
 				<div className="ea-table-display">
+					<a className="page-title-action" onClick={this.onAdd}>{__('Add Currency')}</a>
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 

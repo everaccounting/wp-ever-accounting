@@ -12,6 +12,7 @@ import Accounts from '../accounts';
 import Transfers from '../transfers';
 import Reconciliations from '../reconciliations';
 import Tabs from 'component/tabs';
+import EditTransfer from "component/edit-transfer";
 
 const getTabs = [
 	{
@@ -31,11 +32,11 @@ const getTabs = [
 const Banking = props => {
 	return (
 		<Fragment>
-			<h1 className="wp-heading-inline">{__('Banking')}</h1>
 			<Tabs tabs={getTabs} />
 			<Router>
 				<Switch>
 					<Route exact path="/banking/accounts" component={Accounts} />
+					<Route exact path="/banking/transfers/new" component={EditTransfer} />
 					<Route exact path="/banking/transfers" component={Transfers} />
 					<Route exact path="/banking/reconciliations" component={Reconciliations} />
 					<Redirect from="/banking" to="/banking/accounts" />

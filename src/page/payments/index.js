@@ -5,6 +5,7 @@ import { fetchPayments, BulkAction } from 'store/payments';
 import { getHeaders, getBulk } from './constants';
 import { Navigation, SearchBox, Table } from '@eaccounting/components';
 import Row from './row';
+import {Link} from "react-router-dom";
 
 class Payments extends Component {
 	constructor(props) {
@@ -39,9 +40,11 @@ class Payments extends Component {
 
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Payments')}</h1>
 
 				<div className="ea-table-display">
+					<Link className="page-title-action" to={`${match.url}/new`}>
+						{__('Add Payment')}
+					</Link>
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 

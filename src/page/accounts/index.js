@@ -45,12 +45,12 @@ class Accounts extends Component {
 		const { status, total, table, rows, match } = this.props;
 		return (
 			<Fragment>
-				<Button className="page-title-action" onClick={this.onAdd}>
-					{__('Add Account')}
-				</Button>
 
 				{this.state.isAdding && <EditAccount onClose={this.onClose} onCreate={this.props.onAdd}/>}
 				<div className="ea-table-display">
+					<Button className="page-title-action" onClick={this.onAdd}>
+						{__('Add Account')}
+					</Button>
 					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
@@ -108,6 +108,9 @@ function mapDispatchToProps(dispatch) {
 		},
 		onSetAllSelected: onoff => {
 			dispatch({ type: 'ACCOUNTS_ALL_SELECTED', payload: onoff });
+		},
+		onAdd: item => {
+			dispatch({ type: 'ACCOUNTS_ADDED', item });
 		},
 		onAction: action => {
 			dispatch(BulkAction(action));

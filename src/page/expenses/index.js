@@ -8,6 +8,7 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Tabs from 'component/tabs';
 import Payments from '../payments';
 import Bills from '../bills';
+import EditPayment from "../../component/edit-payment";
 
 /**
  * Internal dependencies
@@ -30,8 +31,8 @@ const Expenses = props => {
 			<Tabs tabs={getTabs} />
 			<Router>
 				<Switch>
-					<Route exact path="/expenses/payments/new" component={Payments} />
-					<Route exact path="/expenses/payments/:id" component={Payments} />
+					<Route exact path="/expenses/payments/new" component={EditPayment} />
+					<Route exact path="/expenses/payments/:id" component={EditPayment} />
 					<Route exact path="/expenses/payments" component={Payments} />
 					<Route exact path="/expenses/bills" component={Bills} />
 					<Redirect from="/expenses" to="/expenses/payments" />

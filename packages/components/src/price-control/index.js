@@ -32,7 +32,7 @@ export default class PriceControl extends Component {
 		};
 
 		const currencyMask = createNumberMask(maskOptions);
-		const symbol = currency && currency.symbol;
+		const placeholder = currency && currency.symbol && `${currency.symbol} 0.00`;
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
@@ -40,7 +40,7 @@ export default class PriceControl extends Component {
 
 					<MaskedInput
 						required={required}
-						placeholder={`${symbol} 0.00`}
+						placeholder={placeholder}
 						className="components-text-control__input ea-input-group__input"
 						mask={currencyMask}
 						value={value && value || ""}
