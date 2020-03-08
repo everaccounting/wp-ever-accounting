@@ -113,7 +113,7 @@ function eaccounting_get_payment( $id ) {
  *
  * @param $id
  *
- * @return bool
+ * @return bool|WP_Error
  * @since 1.0.0
  */
 function eaccounting_delete_payment( $id ) {
@@ -123,6 +123,16 @@ function eaccounting_delete_payment( $id ) {
 	$account = eaccounting_get_payment( $id );
 	if ( is_null( $account ) ) {
 		return false;
+	}
+
+	$tables = [
+		$wpdb->ea_transfers => 'payment_id',
+	];
+
+	foreach ( $tables as $table => $column ) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) FROM $table WHERE $column = %d", $id ) ) ) {
+			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with payments, you are not permitted to delete them.', 'wp-ever-accounting' ) );
+		}
 	}
 
 	do_action( 'eaccounting_pre_payment_delete', $id, $account );

@@ -33,7 +33,8 @@ function eaccounting_insert_account( $args ) {
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
 		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : eaccounting_sanitize_price( $args['opening_balance'] ),
-		'currency_code'       => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo set default account
+		'currency_code'   => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
+		//todo set default account
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
@@ -105,11 +106,15 @@ function eaccounting_delete_account( $id ) {
 
 	$tables = [
 		$wpdb->ea_revenues => 'account_id',
+		$wpdb->ea_payments => 'account_id',
+		$wpdb->ea_invoice_payments => 'account_id',
 	];
 
-	foreach ($tables as $table => $column){
-		if($wpdb->get_var($wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id))){
-			return new WP_Error('not-permitted', __('Account have records on', 'wp-ever-accounting'));
+
+
+	foreach ( $tables as $table => $column ) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
+			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with accounts, you are not permitted to delete them.', 'wp-ever-accounting' ) );
 		}
 	}
 

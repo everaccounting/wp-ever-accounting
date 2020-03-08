@@ -125,7 +125,7 @@ function eaccounting_get_category( $id, $by = 'id' ) {
  *
  * @param $id
  *
- * @return bool
+ * @return bool|WP_ERROR
  * @since 1.0.0
  */
 function eaccounting_delete_category( $id ) {
@@ -136,6 +136,19 @@ function eaccounting_delete_category( $id ) {
 	if ( is_null( $category ) ) {
 		return false;
 	}
+
+	$tables = [
+		$wpdb->ea_items    => 'category_id',
+		$wpdb->ea_revenues => 'category_id',
+		$wpdb->ea_payments => 'category_id',
+	];
+
+	foreach ( $tables as $table => $column ) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
+			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with category, you are not permitted to delete them.', 'wp-ever-accounting' ) );
+		}
+	}
+
 
 	do_action( 'eaccounting_pre_category_delete', $id, $category );
 	if ( false == $wpdb->delete( $wpdb->ea_categories, array( 'id' => $id ), array( '%d' ) ) ) {
@@ -181,7 +194,6 @@ function eaccounting_get_categories( $args = array(), $count = false ) {
 	$args        = wp_parse_args( $args, $default );
 	$query_from  = "FROM $wpdb->ea_categories";
 	$query_where = 'WHERE 1=1';
-
 
 
 	//type

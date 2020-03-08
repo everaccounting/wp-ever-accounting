@@ -4,10 +4,10 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Incoming amount must same as account currency
  *
- * @since 1.0.0
  * @param $args
  *
  * @return int|WP_Error|null
+ * @since 1.0.0
  */
 function eaccounting_insert_revenue( $args ) {
 	global $wpdb;
@@ -27,29 +27,31 @@ function eaccounting_insert_revenue( $args ) {
 	}
 
 	$data = array(
-		'id'          => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'account_id'  => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
-		'paid_at'     => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
-		'amount'      => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
-		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo if not set default
-		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),//todo if not set default
-		'contact_id'  => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
-		'description' => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
-		'category_id' => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
-		'reference'   => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
+		'id'             => empty( $args['id'] ) ? null : absint( $args['id'] ),
+		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
+		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
+		'amount'         => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
+		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
+		//todo if not set default
+		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),
+		//todo if not set default
+		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
+		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
+		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
+		'reference'      => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
 		'payment_method' => empty( $args['payment_method'] ) || ! array_key_exists( $args['payment_method'], eaccounting_get_payment_methods() ) ? '' : sanitize_key( $args['payment_method'] ),
 		'attachment_url' => ! empty( $args['attachment_url'] ) ? esc_url( $args['attachment_url'] ) : '',
-		'parent_id'   => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
-		'reconciled'  => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
-		'updated_at'  => current_time( 'Y-m-d H:i:s' ),
-		'created_at'  => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
+		'parent_id'      => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
+		'reconciled'     => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
+		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
+		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 	if ( empty( $data['paid_at'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['amount'] ) || $data['amount'] == '0.00') {
+	if ( empty( $data['amount'] ) || $data['amount'] == '0.00' ) {
 		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
 	if ( empty( $data['currency_code'] ) ) {
@@ -109,7 +111,7 @@ function eaccounting_get_revenue( $id ) {
  *
  * @param $id
  *
- * @return bool
+ * @return bool|WP_Error
  * @since 1.0.0
  */
 function eaccounting_delete_revenue( $id ) {
@@ -119,6 +121,17 @@ function eaccounting_delete_revenue( $id ) {
 	$account = eaccounting_get_revenue( $id );
 	if ( is_null( $account ) ) {
 		return false;
+	}
+
+	$tables = [
+		$wpdb->ea_transfers => 'revenue_id',
+	];
+
+	foreach ( $tables as $table => $column ) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) FROM $table WHERE $column = %d", $id ) ) ) {
+
+			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with payments, you are not permitted to delete them.', 'wp-ever-accounting' ) );
+		}
 	}
 
 	do_action( 'eaccounting_pre_revenue_delete', $id, $account );
@@ -181,7 +194,7 @@ function eaccounting_get_revenues( $args = array(), $count = false ) {
 	//amount
 	if ( ! empty( $args['amount'] ) ) {
 		$amount = trim( $args['amount'] );
-		$number  = preg_replace( '#[^0-9\.]#', '', $amount );
+		$number = preg_replace( '#[^0-9\.]#', '', $amount );
 
 		if ( strpos( $amount, '>' ) !== false ) {
 			$query_where .= $wpdb->prepare( " AND $wpdb->ea_revenues.amount > %f ", $number );
@@ -271,10 +284,11 @@ function eaccounting_get_revenues( $args = array(), $count = false ) {
 
 /**
  * Get total income
- * @since 1.0.0
  * @return string|null
+ * @since 1.0.0
  */
-function eaccounting_get_total_income(){
+function eaccounting_get_total_income() {
 	global $wpdb;
-	return $wpdb->get_var("SELECT SUM(amount) from $wpdb->ea_revenues WHERE category_id IN (SELECT id FROM $wpdb->ea_categories WHERE type='income')");
+
+	return $wpdb->get_var( "SELECT SUM(amount) from $wpdb->ea_revenues WHERE category_id IN (SELECT id FROM $wpdb->ea_categories WHERE type='income')" );
 }

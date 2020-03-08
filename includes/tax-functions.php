@@ -26,7 +26,7 @@ function eaccounting_insert_tax( $args ) {
 	global $wpdb;
 	$update = false;
 	$id     = null;
-	$args   = (array) apply_filters( 'eaccounting_create_tax', wp_parse_args($args) );
+	$args   = (array) apply_filters( 'eaccounting_create_tax', wp_parse_args( $args ) );
 
 	if ( isset( $args['id'] ) && ! empty( trim( $args['id'] ) ) ) {
 		$id          = (int) $args['id'];
@@ -61,9 +61,9 @@ function eaccounting_insert_tax( $args ) {
 		return new WP_Error( 'empty_content', __( 'Tax Type is required', 'wp-ever-accounting' ) );
 	}
 
-	$name_exist = eaccounting_get_tax($data['name'], 'name');
+	$name_exist = eaccounting_get_tax( $data['name'], 'name' );
 
-	if(isset($name_exist->id) && $name_exist->id != $id){
+	if ( isset( $name_exist->id ) && $name_exist->id != $id ) {
 		return new WP_Error( 'invalid_name', __( 'Tax rate name already exist', 'wp-ever-accounting' ) );
 	}
 
@@ -90,13 +90,14 @@ function eaccounting_insert_tax( $args ) {
 
 /**
  * Get tax rate
- * @since 1.0.2
+ *
  * @param $id
  * @param string $by
  *
  * @return array|object|void|null
+ * @since 1.0.2
  */
-function eaccounting_get_tax( $id, $by ='id' ) {
+function eaccounting_get_tax( $id, $by = 'id' ) {
 	global $wpdb;
 	switch ( $by ) {
 		case 'name':
@@ -118,7 +119,7 @@ function eaccounting_get_tax( $id, $by ='id' ) {
  *
  * @param $id
  *
- * @return bool
+ * @return bool|WP_Error
  * @since 1.0.0
  */
 function eaccounting_delete_tax( $id ) {
@@ -128,6 +129,16 @@ function eaccounting_delete_tax( $id ) {
 	$tax = eaccounting_get_tax( $id );
 	if ( is_null( $tax ) ) {
 		return false;
+	}
+
+	$tables = [
+		$wpdb->ea_invoice_item_taxes => 'tax_id',
+	];
+
+	foreach ( $tables as $table => $column_name ) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column_name = %d", $id ) ) ) {
+			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with taxes, you are not permitted to delete them.', 'wp-ever-accounting' ) );
+		}
 	}
 
 	do_action( 'eaccounting_pre_tax_delete', $id, $tax );
