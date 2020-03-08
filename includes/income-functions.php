@@ -30,17 +30,17 @@ function eaccounting_insert_revenue( $args ) {
 		'id'             => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
-<<<<<<< HEAD
+
 		'amount'         => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
 		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
 		//todo if not set default
 		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),
 		//todo if not set default
-=======
+
 		'amount'         => empty( $args['amount'] ) ? '' : $args['amount'],
 //		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo if not set default
 //		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),//todo if not set default
->>>>>>> e4851ab3a08578fcb7045233cbeecd27de777396
+
 		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
@@ -57,19 +57,19 @@ function eaccounting_insert_revenue( $args ) {
 		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-ever-accounting' ) );
 	}
 
-<<<<<<< HEAD
+
 	if ( empty( $data['amount'] ) || $data['amount'] == '0.00' ) {
 		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
 	if ( empty( $data['currency_code'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
-=======
+
 //	$amount = $data['amount'];
 //	if ( empty(preg_replace( '/[^0-9]/', '', $amount ))  ) {
 //		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 //	}
->>>>>>> e4851ab3a08578fcb7045233cbeecd27de777396
+
 
 	if ( empty( $data['category_id'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
