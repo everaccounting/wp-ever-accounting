@@ -105,25 +105,17 @@ function eaccounting_delete_account( $id ) {
 	}
 
 	$tables = [
-		$wpdb->ea_revenues => 'account_id',
-		$wpdb->ea_payments => 'account_id',
+		$wpdb->ea_revenues         => 'account_id',
+		$wpdb->ea_payments         => 'account_id',
 		$wpdb->ea_invoice_payments => 'account_id',
 	];
-
-<<<<<<< HEAD
 
 
 	foreach ( $tables as $table => $column ) {
 		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
 			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with accounts, you are not permitted to delete them.', 'wp-ever-accounting' ) );
-=======
-	foreach ( $tables as $table => $column ) {
-		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
-			return new WP_Error( 'not-permitted', __( 'Account have records on', 'wp-ever-accounting' ) );
->>>>>>> e4851ab3a08578fcb7045233cbeecd27de777396
 		}
 	}
-
 
 	do_action( 'eaccounting_pre_account_delete', $id, $account );
 	if ( false == $wpdb->delete( $wpdb->ea_accounts, array( 'id' => $id ), array( '%d' ) ) ) {
@@ -261,6 +253,7 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 
 /**
  * since 1.0.0
+ *
  * @param $account_id
  * @param bool $formatted
  *
