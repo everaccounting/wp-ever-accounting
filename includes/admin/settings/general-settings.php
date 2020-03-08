@@ -81,7 +81,7 @@ class EAccounting_General_Settings extends EAccounting_Settings_Page {
 				'id'      => 'currency',
 				'title'   => __( 'Currency', 'wp-ever-accounting' ),
 				//'tooltip' => __( 'Your company country', 'wp-ever-accounting' ),
-				'options' => wp_list_pluck( eaccounting_get_currency_config(), 'name'),
+				'options' => wp_list_pluck( eaccounting_get_currencies_data(), 'name'),
 				'class'   => 'ea-select2-control',
 				'type'    => 'select',
 			),

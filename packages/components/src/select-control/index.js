@@ -1,14 +1,12 @@
-import {Component} from '@wordpress/element';
+import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {BaseControl} from '@wordpress/components';
+import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
 import Select from 'react-select';
 
-
-
 export default class SelectControl extends Component {
 	render() {
-		const {label, help, className, before, after, required, ...props} = this.props;
+		const { label, help, className, before, after, required, ...props } = this.props;
 		const classes = classnames('ea-form-group', 'ea-select-field', className, {
 			required: !!required,
 		});
@@ -16,31 +14,18 @@ export default class SelectControl extends Component {
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
-					{before && (
-						<span className="ea-input-group__before">
-							{before}
-						</span>
-					)}
+					{before && <span className="ea-input-group__before">{before}</span>}
 
-					<Select
-						classNamePrefix="ea-react-select"
-						className="ea-react-select"
-						required={required}
-						{...props}
-					/>
+					<Select classNamePrefix="ea-react-select" className="ea-react-select" required={required} {...props} />
 
-					{after && (
-						<span className="ea-input-group__after">
-							{after}
-						</span>
-					)}
+					{after && <span className="ea-input-group__after">{after}</span>}
 				</div>
 			</BaseControl>
 		);
 	}
 }
 SelectControl.propTypes = {
-	autoload:PropTypes.bool,
+	autoload: PropTypes.bool,
 	className: PropTypes.string,
 	label: PropTypes.string,
 	name: PropTypes.string,

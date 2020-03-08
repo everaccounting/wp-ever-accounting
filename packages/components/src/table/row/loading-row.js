@@ -10,7 +10,11 @@ const Row = props => {
 
 	return (
 		<tr className="is-placeholder">
-			{ columns.map( ( item, pos ) => <td key={ pos }><div className="placeholder-loading"></div></td> ) }
+			{columns.map((item, pos) => (
+				<td key={pos}>
+					<div className="placeholder-loading"></div>
+				</td>
+			))}
 		</tr>
 	);
 };
@@ -20,9 +24,11 @@ const LoadingRow = props => {
 
 	return (
 		<tbody>
-			<Row columns={ headers } />
+			<Row columns={headers} />
 
-			{ rows.slice( 0, -1 ).map( ( item, pos ) => <Row columns={ headers } key={ pos } /> ) }
+			{rows.slice(0, -1).map((item, pos) => (
+				<Row columns={headers} key={pos} />
+			))}
 		</tbody>
 	);
 };

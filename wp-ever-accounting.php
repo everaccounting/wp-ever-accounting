@@ -145,6 +145,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-revenue.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-payment.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-scripts.php' );
 
 		//functions
 		require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );

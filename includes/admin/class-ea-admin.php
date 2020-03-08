@@ -35,7 +35,7 @@ class EAccounting_Admin {
 		add_action( 'admin_menu', array( $this, 'register_pages' ), 20 );
 //		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ) );
 		add_action( 'admin_init', array( $this, 'setup_files' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+//		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -125,6 +125,18 @@ class EAccounting_Admin {
 				'title'  => __( 'Misc', 'wp-ever-accounting' ),
 				'parent' => 'eaccounting',
 				'path'   => '/misc/categories',
+			),
+			array(
+				'id'     => 'eaccounting-reports',
+				'title'  => __( 'Reports', 'wp-ever-accounting' ),
+				'parent' => 'eaccounting',
+				'path'   => '/reports',
+			),
+			array(
+				'id'     => 'eaccounting-settings',
+				'title'  => __( 'Settings', 'wp-ever-accounting' ),
+				'parent' => 'eaccounting',
+				'path'   => '/settings',
 			),
 		);
 

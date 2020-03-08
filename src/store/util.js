@@ -1,6 +1,6 @@
 /* global eAccountingi10n */
-import {getPageUrl} from 'lib/wordpress-url';
-import {xor, find} from "lodash";
+import { getPageUrl } from 'lib/wordpress-url';
+import { xor, find } from 'lodash';
 
 /**
  * Merge table data with params
@@ -28,7 +28,7 @@ export const mergeWithTable = (table, params) => {
  */
 function isEqual(a, b) {
 	for (const name in a) {
-		if (a [name] !== b[name]) {
+		if (a[name] !== b[name]) {
 			return false;
 		}
 	}
@@ -100,15 +100,13 @@ export const getDefaultTable = (allowedOrder = [], allowedFilter = [], defaultOr
 	};
 };
 
-
 /**
  * Set table
  * @param state
  * @param action
  * @returns {*}
  */
-export const setTable = (state, action) => (action.meta.table ? {...state.table, ...action.meta.table} : state.table);
-
+export const setTable = (state, action) => (action.meta.table ? { ...state.table, ...action.meta.table } : state.table);
 
 /**
  * Set total from api response
@@ -136,16 +134,14 @@ export const setSaving = (state, action) => [...state.saving, ...action.meta.sav
  */
 export const removeSaving = (state, action) => state.saving.filter(item => action.saving.indexOf(item) === -1);
 
-
 /**
  * Clear selected values
  * @param state
  * @returns {any}
  */
 export const clearSelected = state => {
-	return Object.assign({}, state, {selected: []});
+	return Object.assign({}, state, { selected: [] });
 };
-
 
 /**
  * Set all selected
@@ -159,14 +155,13 @@ export const setTableAllSelected = (table, rows, onoff) => ({
 	selected: onoff ? rows.map(item => item.id) : [],
 });
 
-
 /**
  * Toggle item
  * @param table
  * @param ids
  * @returns {{selected: *}}
  */
-export const setTableSelected = (table, ids) => ({...table, selected: xor(table.selected, ids)});
+export const setTableSelected = (table, ids) => ({ ...table, selected: xor(table.selected, ids) });
 
 /**
  * Set updated items
@@ -174,7 +169,8 @@ export const setTableSelected = (table, ids) => ({...table, selected: xor(table.
  * @param action
  * @returns {*}
  */
-export const setUpdatedItem = (rows, action) => rows.map(row => (parseInt(row.id, 10) === parseInt(action.item.id, 10) ? {...row, ...action.item} : row));
+export const setUpdatedItem = (rows, action) =>
+	rows.map(row => (parseInt(row.id, 10) === parseInt(action.item.id, 10) ? { ...row, ...action.item } : row));
 
 /**
  * Set deleted Item
@@ -191,11 +187,11 @@ export const setDeletedItem = (rows, item) => rows.filter(obj => obj.id !== item
  * @returns {*[]}
  */
 export const getSelectedOptions = (options = [], value = []) => {
-	return options.filter((filter) => {
+	return options.filter(filter => {
 		return value.includes(filter.value) === true;
-	})
+	});
 };
 
 export const getSelectedOption = (options = [], selected = '', initial = '') => {
-	return find(options, {value: (selected || initial)});
+	return find(options, { value: selected || initial });
 };

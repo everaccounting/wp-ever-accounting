@@ -1,1 +1,1 @@
-export const isEnabled = ( selected, display ) => selected.indexOf( display ) !== -1;
+export const isEnabled = (selected, display) => selected.indexOf(display) !== -1;

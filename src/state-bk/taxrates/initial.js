@@ -1,7 +1,7 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable} from 'lib/table';
-let table = getDefaultTable( [ 'name', 'rate', 'type', 'status' ], ['type'], 'name');
-import {translate as __} from 'lib/locale';
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable } from 'lib/table';
+let table = getDefaultTable(['name', 'rate', 'type', 'status'], ['type'], 'name');
+import { translate as __ } from 'lib/locale';
 
 export function getInitialTaxRates() {
 	return {
@@ -25,5 +25,5 @@ export const taxTypes = [
 	{
 		label: __('Compound'),
 		value: 'compound',
-	}
+	},
 ];

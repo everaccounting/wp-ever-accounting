@@ -2,14 +2,14 @@
  * External dependencies
  */
 
-import {Component, Fragment} from 'react';
-import {connect} from 'react-redux';
+import { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 /**
  * Internal dependencies
  */
-import {setSelected, performTableAction, updateContact} from 'state/accounts/action';
-import {STATUS_SAVING, STATUS_IN_PROGRESS} from 'status';
+import { setSelected, performTableAction, updateContact } from 'state/accounts/action';
+import { STATUS_SAVING, STATUS_IN_PROGRESS } from 'status';
 import Spinner from 'component/spinner';
 import Column from 'component/table/column';
 import RowActions from 'component/table/row-action';
@@ -27,13 +27,13 @@ class ContactsRow extends Component {
 		super(props);
 
 		this.state = {
-			editing: false
+			editing: false,
 		};
 	}
 
 	onEdit = ev => {
 		ev.preventDefault();
-		this.setState({editing: !this.state.editing});
+		this.setState({ editing: !this.state.editing });
 	};
 
 	onDelete = ev => {
@@ -56,11 +56,11 @@ class ContactsRow extends Component {
 	};
 
 	onClose = () => {
-		this.setState({editing: !this.state.editing});
+		this.setState({ editing: !this.state.editing });
 	};
 
 	getActions() {
-		const {id, enabled} = this.props.item;
+		const { id, enabled } = this.props.item;
 		const actions = [];
 		actions.push([__('Edit'), this.onEdit]);
 		actions.push([__('Delete'), this.onDelete]);
@@ -71,37 +71,45 @@ class ContactsRow extends Component {
 		}
 
 		return actions
-			.map((item, pos) => <a key={pos} href={item[2] ? item[2] : '#'} onClick={item[1]}>{item[0]}</a>)
+			.map((item, pos) => (
+				<a key={pos} href={item[2] ? item[2] : '#'} onClick={item[1]}>
+					{item[0]}
+				</a>
+			))
 			.reduce((prev, curr) => [prev, ' | ', curr]);
 	}
 
 	renderActions(saving) {
-		return (
-			<RowActions disabled={saving}>
-				{this.getActions()}
-			</RowActions>
-		);
+		return <RowActions disabled={saving}>{this.getActions()}</RowActions>;
 	}
 
 	render() {
-		const {id, first_name, last_name, email, phone, enabled} = this.props.item;
-		const {selected, rowstatus, currentDisplaySelected} = this.props;
+		const { id, first_name, last_name, email, phone, enabled } = this.props.item;
+		const { selected, rowstatus, currentDisplaySelected } = this.props;
 		const isLoading = rowstatus === STATUS_IN_PROGRESS;
 		const isSaving = rowstatus === STATUS_SAVING;
 		const hideRow = isLoading || isSaving;
 		return (
 			<Fragment>
 				<tr className={hideRow ? 'disabled' : ''}>
-
 					<th scope="row" className="check-column">
-						{!isSaving &&
-						<input type="checkbox" name="item[]" value={id} disabled={isLoading} checked={selected}
-							   onChange={this.onSelected}/>}
-						{isSaving && <Spinner size="small"/>}
+						{!isSaving && (
+							<input
+								type="checkbox"
+								name="item[]"
+								value={id}
+								disabled={isLoading}
+								checked={selected}
+								onChange={this.onSelected}
+							/>
+						)}
+						{isSaving && <Spinner size="small" />}
 					</th>
 
 					<Column enabled="name" className="column-primary column-name" selected={currentDisplaySelected}>
-						<strong><a href="#" onClick={this.onEdit}>{`${first_name} ${last_name}`}</a></strong>
+						<strong>
+							<a href="#" onClick={this.onEdit}>{`${first_name} ${last_name}`}</a>
+						</strong>
 						{this.renderActions(isSaving)}
 					</Column>
 
@@ -113,17 +121,25 @@ class ContactsRow extends Component {
 						{phone || '-'}
 					</Column>
 					<Column enabled="status" className="column-status" selected={currentDisplaySelected}>
-						{enabled ? <span className='ea-item-status enabled'>{__('Enabled')}</span> :
-							<span className='ea-item-status disabled'>{__('Disabled')}</span>}
-						{this.state.editing && <EditContact item={this.props.item} tittle={__('Update Contact')} buttonTittle={__('Update')} onClose={this.onClose}/>}
+						{enabled ? (
+							<span className="ea-item-status enabled">{__('Enabled')}</span>
+						) : (
+							<span className="ea-item-status disabled">{__('Disabled')}</span>
+						)}
+						{this.state.editing && (
+							<EditContact
+								item={this.props.item}
+								tittle={__('Update Contact')}
+								buttonTittle={__('Update')}
+								onClose={this.onClose}
+							/>
+						)}
 					</Column>
 				</tr>
 			</Fragment>
-
-		)
+		);
 	}
 }
-
 
 function mapDispatchToProps(dispatch) {
 	return {
@@ -140,14 +156,11 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps(state) {
-	const {accounts} = state;
+	const { accounts } = state;
 
 	return {
 		accounts,
 	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(ContactsRow);
+export default connect(mapStateToProps, mapDispatchToProps)(ContactsRow);

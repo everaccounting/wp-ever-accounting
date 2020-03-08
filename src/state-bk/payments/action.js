@@ -31,15 +31,21 @@ const STATUS_PAYMENT = {
 	order: 'name',
 };
 
-export const createPayment = item => createAction( accountingApi.payments.create, item, STATUS_PAYMENTS_ITEM );
-export const updatePayment = ( id, item ) => updateAction( accountingApi.payments.update, id, item, STATUS_PAYMENTS_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( accountingApi.payments.bulk, action, ids, STATUS_PAYMENTS_ITEM );
-export const getPayments = args => ( dispatch, getState ) => processRequest( accountingApi.payments.list, dispatch, STATUS_PAYMENT, args, getState().payments );
-export const setOrderBy = ( orderby, order ) => getPayments( { orderby, order } );
-export const setPage = page => getPayments( { page } );
-export const setFilter = ( filterBy ) => getPayments( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getPayments( { search, orderby: '', page: 0 } );
-export const setSelected = items => ( { type: PAYMENTS_SET_SELECTED, items: items.map( parseInt ) } );
-export const setAllSelected = onoff => ( { type: PAYMENTS_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getPayments( table );
-export const setDisplay = ( displayType, displaySelected ) => ( { type: PAYMENTS_DISPLAY_SET, displayType, displaySelected } );
+export const createPayment = item => createAction(accountingApi.payments.create, item, STATUS_PAYMENTS_ITEM);
+export const updatePayment = (id, item) => updateAction(accountingApi.payments.update, id, item, STATUS_PAYMENTS_ITEM);
+export const performTableAction = (action, ids) =>
+	tableAction(accountingApi.payments.bulk, action, ids, STATUS_PAYMENTS_ITEM);
+export const getPayments = args => (dispatch, getState) =>
+	processRequest(accountingApi.payments.list, dispatch, STATUS_PAYMENT, args, getState().payments);
+export const setOrderBy = (orderby, order) => getPayments({ orderby, order });
+export const setPage = page => getPayments({ page });
+export const setFilter = filterBy => getPayments({ filterBy, orderby: '', page: 0 });
+export const setSearch = search => getPayments({ search, orderby: '', page: 0 });
+export const setSelected = items => ({ type: PAYMENTS_SET_SELECTED, items: items.map(parseInt) });
+export const setAllSelected = onoff => ({ type: PAYMENTS_SET_ALL_SELECTED, onoff });
+export const setTable = table => getPayments(table);
+export const setDisplay = (displayType, displaySelected) => ({
+	type: PAYMENTS_DISPLAY_SET,
+	displayType,
+	displaySelected,
+});

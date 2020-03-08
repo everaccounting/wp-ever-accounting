@@ -2,6 +2,7 @@ export const currencies = {
 	AED: {
 		code: "AED",
 		symbol: 'د.إ.‏',
+		position:"before",
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -9,6 +10,7 @@ export const currencies = {
 	AFN: {
 		code: "AFN",
 		symbol: '؋',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -16,6 +18,7 @@ export const currencies = {
 	ALL: {
 		code: "ALL",
 		symbol: 'Lek',
+		position: 'after',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -23,6 +26,7 @@ export const currencies = {
 	AMD: {
 		code: "AMD",
 		symbol: '֏',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -30,6 +34,7 @@ export const currencies = {
 	ANG: {
 		code: "ANG",
 		symbol: 'ƒ',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -37,6 +42,7 @@ export const currencies = {
 	AOA: {
 		code: "AOA",
 		symbol: 'Kz',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -44,6 +50,7 @@ export const currencies = {
 	ARS: {
 		code: "ARS",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -51,6 +58,7 @@ export const currencies = {
 	AUD: {
 		code: "AUD",
 		symbol: 'A$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -58,6 +66,7 @@ export const currencies = {
 	AWG: {
 		code: "AWG",
 		symbol: 'ƒ',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -65,6 +74,7 @@ export const currencies = {
 	AZN: {
 		code: "AZN",
 		symbol: '₼',
+		position: 'before',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -72,6 +82,7 @@ export const currencies = {
 	BAM: {
 		code: "BAM",
 		symbol: 'КМ',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -79,6 +90,7 @@ export const currencies = {
 	BBD: {
 		code: "BBD",
 		symbol: 'Bds$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -86,6 +98,7 @@ export const currencies = {
 	BDT: {
 		code: "BDT",
 		symbol: '৳',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -93,6 +106,7 @@ export const currencies = {
 	BGN: {
 		code: "BGN",
 		symbol: 'лв.',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -100,6 +114,7 @@ export const currencies = {
 	BHD: {
 		code: "BHD",
 		symbol: 'د.ب.‏',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 3,
@@ -107,6 +122,7 @@ export const currencies = {
 	BIF: {
 		code: "BIF",
 		symbol: 'FBu',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -114,6 +130,7 @@ export const currencies = {
 	BMD: {
 		code: "BMD",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -121,6 +138,7 @@ export const currencies = {
 	BND: {
 		code: "BND",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 0,
@@ -128,6 +146,15 @@ export const currencies = {
 	BOB: {
 		code: "BOB",
 		symbol: 'Bs',
+		position: 'before',
+		thousandSeparator: '.',
+		decimalSeparator: ',',
+		precision: 2,
+	},
+	BOV: {
+		code: "BOV",
+		symbol: 'Bs.',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -135,6 +162,7 @@ export const currencies = {
 	BRL: {
 		code: "BRL",
 		symbol: 'R$',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -142,6 +170,7 @@ export const currencies = {
 	BSD: {
 		code: "BSD",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -149,6 +178,7 @@ export const currencies = {
 	BTC: {
 		code: "BTC",
 		symbol: 'Ƀ',
+		//position: 'before', not found in php
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -156,6 +186,7 @@ export const currencies = {
 	BTN: {
 		code: "BTN",
 		symbol: 'Nu.',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 1,
@@ -163,6 +194,15 @@ export const currencies = {
 	BWP: {
 		code: "BWP",
 		symbol: 'P',
+		position: 'before',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 2,
+	},
+	BYN: {
+		code: "BWP",
+		symbol: 'Br',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -170,6 +210,7 @@ export const currencies = {
 	BYR: {
 		code: "BYR",
 		symbol: 'р.',
+		position: 'before',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -177,6 +218,7 @@ export const currencies = {
 	BZD: {
 		code: "BZD",
 		symbol: 'BZ$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -184,6 +226,7 @@ export const currencies = {
 	CAD: {
 		code: "CAD",
 		symbol: 'C$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -191,6 +234,7 @@ export const currencies = {
 	CDF: {
 		code: "CDF",
 		symbol: 'FC',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -198,6 +242,15 @@ export const currencies = {
 	CHF: {
 		code: "CHF",
 		symbol: 'CHF',
+		position: 'before',
+		thousandSeparator: "'",
+		decimalSeparator: '.',
+		precision: 2,
+	},
+	CLF: {
+		code: "CLF",
+		symbol: 'UF',
+		position: 'before',
 		thousandSeparator: "'",
 		decimalSeparator: '.',
 		precision: 2,
@@ -205,6 +258,7 @@ export const currencies = {
 	CLP: {
 		code: "CLP",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -212,6 +266,7 @@ export const currencies = {
 	CNY: {
 		code: "CNY",
 		symbol: '¥',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -219,6 +274,7 @@ export const currencies = {
 	COP: {
 		code: "COP",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -226,6 +282,7 @@ export const currencies = {
 	CRC: {
 		code: "CRC",
 		symbol: '₡',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -233,6 +290,7 @@ export const currencies = {
 	CUC: {
 		code: "CUC",
 		symbol: 'CUC',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -240,6 +298,7 @@ export const currencies = {
 	CUP: {
 		code: "CUP",
 		symbol: '$MN',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -247,6 +306,7 @@ export const currencies = {
 	CVE: {
 		code: "CVE",
 		symbol: '$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -254,6 +314,7 @@ export const currencies = {
 	CZK: {
 		code: "CZK",
 		symbol: 'Kč',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -261,6 +322,7 @@ export const currencies = {
 	DJF: {
 		code: "DJF",
 		symbol: 'Fdj',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -268,6 +330,7 @@ export const currencies = {
 	DKK: {
 		code: "DKK",
 		symbol: 'kr.',
+		position: 'after',
 		thousandSeparator: '',
 		decimalSeparator: ',',
 		precision: 2,
@@ -275,6 +338,7 @@ export const currencies = {
 	DOP: {
 		code: "DOP",
 		symbol: 'RD$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -282,6 +346,7 @@ export const currencies = {
 	DZD: {
 		code: "DZD",
 		symbol: 'د.ج.‏',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -289,6 +354,7 @@ export const currencies = {
 	EGP: {
 		code: "EGP",
 		symbol: 'ج.م.‏',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -296,13 +362,15 @@ export const currencies = {
 	ERN: {
 		code: "ERN",
 		symbol: 'Nfk',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
 	ETB: {
 		code: "ETB",
-		symbol: 'ETB',
+		symbol: 'Br',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -310,6 +378,7 @@ export const currencies = {
 	EUR: {
 		code: "EUR",
 		symbol: '€',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -317,6 +386,7 @@ export const currencies = {
 	FJD: {
 		code: "FJD",
 		symbol: 'FJ$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -324,6 +394,7 @@ export const currencies = {
 	FKP: {
 		code: "FKP",
 		symbol: '£',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -331,13 +402,15 @@ export const currencies = {
 	GBP: {
 		code: "GBP",
 		symbol: '£',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
 	GEL: {
 		code: "GEL",
-		symbol: 'Lari',
+		symbol: 'ლ',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -345,6 +418,7 @@ export const currencies = {
 	GHS: {
 		code: "GHS",
 		symbol: '₵',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -352,6 +426,7 @@ export const currencies = {
 	GIP: {
 		code: "GIP",
 		symbol: '£',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -359,13 +434,15 @@ export const currencies = {
 	GMD: {
 		code: "GMD",
 		symbol: 'D',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
 	GNF: {
 		code: "GNF",
-		symbol: 'FG',
+		symbol: 'Fr',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -373,6 +450,7 @@ export const currencies = {
 	GTQ: {
 		code: "GTQ",
 		symbol: 'Q',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -380,6 +458,7 @@ export const currencies = {
 	GYD: {
 		code: "GYD",
 		symbol: 'G$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -387,6 +466,7 @@ export const currencies = {
 	HKD: {
 		code: "HKD",
 		symbol: 'HK$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -394,6 +474,7 @@ export const currencies = {
 	HNL: {
 		code: "HNL",
 		symbol: 'L.',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -401,6 +482,7 @@ export const currencies = {
 	HRK: {
 		code: "HRK",
 		symbol: 'kn',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -408,6 +490,7 @@ export const currencies = {
 	HTG: {
 		code: "HTG",
 		symbol: 'G',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -415,6 +498,7 @@ export const currencies = {
 	HUF: {
 		code: "HUF",
 		symbol: 'Ft',
+		position: 'after',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 0,
@@ -422,6 +506,7 @@ export const currencies = {
 	IDR: {
 		code: "IDR",
 		symbol: 'Rp',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 0,
@@ -429,6 +514,7 @@ export const currencies = {
 	ILS: {
 		code: "ILS",
 		symbol: '₪',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -436,6 +522,7 @@ export const currencies = {
 	INR: {
 		code: "INR",
 		symbol: '₹',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -443,6 +530,7 @@ export const currencies = {
 	IQD: {
 		code: "IQD",
 		symbol: 'د.ع.‏',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -450,13 +538,15 @@ export const currencies = {
 	IRR: {
 		code: "IRR",
 		symbol: '﷼',
+		position: 'before',
 		thousandSeparator: ',',
-		decimalSeparator: '/',
+		decimalSeparator: '.',
 		precision: 2,
 	},
 	ISK: {
 		code: "ISK",
 		symbol: 'kr.',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 0,
@@ -464,6 +554,7 @@ export const currencies = {
 	JMD: {
 		code: "JMD",
 		symbol: 'J$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -471,6 +562,7 @@ export const currencies = {
 	JOD: {
 		code: "JOD",
 		symbol: 'د.ا.‏',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 3,
@@ -478,6 +570,7 @@ export const currencies = {
 	JPY: {
 		code: "JPY",
 		symbol: '¥',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -485,6 +578,7 @@ export const currencies = {
 	KES: {
 		code: "KES",
 		symbol: 'S',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -492,6 +586,7 @@ export const currencies = {
 	KGS: {
 		code: "KGS",
 		symbol: 'сом',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: '-',
 		precision: 2,
@@ -499,6 +594,7 @@ export const currencies = {
 	KHR: {
 		code: "KHR",
 		symbol: '៛',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -506,6 +602,7 @@ export const currencies = {
 	KMF: {
 		code: "KMF",
 		symbol: 'CF',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -513,6 +610,7 @@ export const currencies = {
 	KPW: {
 		code: "KPW",
 		symbol: '₩',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -520,6 +618,7 @@ export const currencies = {
 	KRW: {
 		code: "KRW",
 		symbol: '₩',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -527,6 +626,7 @@ export const currencies = {
 	KWD: {
 		code: "KWD",
 		symbol: 'د.ك.‏',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 3,
@@ -534,6 +634,7 @@ export const currencies = {
 	KYD: {
 		code: "KYD",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -541,6 +642,7 @@ export const currencies = {
 	KZT: {
 		code: "KZT",
 		symbol: '₸',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: '-',
 		precision: 2,
@@ -548,6 +650,7 @@ export const currencies = {
 	LAK: {
 		code: "LAK",
 		symbol: '₭',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -555,6 +658,7 @@ export const currencies = {
 	LBP: {
 		code: "LBP",
 		symbol: 'ل.ل.‏',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -562,6 +666,7 @@ export const currencies = {
 	LKR: {
 		code: "LKR",
 		symbol: '₨',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -569,13 +674,31 @@ export const currencies = {
 	LRD: {
 		code: "LRD",
 		symbol: 'L$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
 	LSL: {
 		code: "LSL",
-		symbol: 'M',
+		symbol: 'LM',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 2,
+	},
+	LTL: {
+		code: "LTL",
+		symbol: 'Lt',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 2,
+	},
+	LVL: {
+		code: "LVL",
+		symbol: 'Ls',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -583,6 +706,7 @@ export const currencies = {
 	LYD: {
 		code: "LYD",
 		symbol: 'د.ل.‏',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 3,
@@ -590,6 +714,7 @@ export const currencies = {
 	MAD: {
 		code: "MAD",
 		symbol: 'د.م.‏',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -597,6 +722,7 @@ export const currencies = {
 	MDL: {
 		code: "MDL",
 		symbol: 'lei',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -604,6 +730,7 @@ export const currencies = {
 	MGA: {
 		code: "MGA",
 		symbol: 'Ar',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -611,6 +738,7 @@ export const currencies = {
 	MKD: {
 		code: "MKD",
 		symbol: 'ден.',
+		position: 'after',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -618,6 +746,7 @@ export const currencies = {
 	MMK: {
 		code: "MMK",
 		symbol: 'K',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -625,6 +754,7 @@ export const currencies = {
 	MNT: {
 		code: "MNT",
 		symbol: '₮',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -632,6 +762,7 @@ export const currencies = {
 	MOP: {
 		code: "MOP",
 		symbol: 'MOP$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -639,6 +770,7 @@ export const currencies = {
 	MRO: {
 		code: "MRO",
 		symbol: 'UM',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -646,6 +778,7 @@ export const currencies = {
 	MTL: {
 		code: "MTL",
 		symbol: '₤',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -653,6 +786,7 @@ export const currencies = {
 	MUR: {
 		code: "MUR",
 		symbol: '₨',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -660,6 +794,7 @@ export const currencies = {
 	MVR: {
 		code: "MVR",
 		symbol: 'MVR',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 1,
@@ -667,6 +802,7 @@ export const currencies = {
 	MWK: {
 		code: "MWK",
 		symbol: 'MK',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -674,6 +810,7 @@ export const currencies = {
 	MXN: {
 		code: "MXN",
 		symbol: 'MX$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -681,6 +818,7 @@ export const currencies = {
 	MYR: {
 		code: "MYR",
 		symbol: 'RM',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -688,6 +826,7 @@ export const currencies = {
 	MZN: {
 		code: "MZN",
 		symbol: 'MT',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -695,6 +834,7 @@ export const currencies = {
 	NAD: {
 		code: "NAD",
 		symbol: 'N$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -702,6 +842,7 @@ export const currencies = {
 	NGN: {
 		code: "NGN",
 		symbol: '₦',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -709,6 +850,7 @@ export const currencies = {
 	NIO: {
 		code: "NIO",
 		symbol: 'C$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -716,6 +858,7 @@ export const currencies = {
 	NOK: {
 		code: "NOK",
 		symbol: 'kr',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -723,6 +866,7 @@ export const currencies = {
 	NPR: {
 		code: "NPR",
 		symbol: '₨',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -730,6 +874,7 @@ export const currencies = {
 	NZD: {
 		code: "NZD",
 		symbol: 'NZ$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -737,6 +882,7 @@ export const currencies = {
 	OMR: {
 		code: "OMR",
 		symbol: '﷼',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 3,
@@ -744,6 +890,7 @@ export const currencies = {
 	PAB: {
 		code: "PAB",
 		symbol: 'B/.',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -751,6 +898,7 @@ export const currencies = {
 	PEN: {
 		code: "PEN",
 		symbol: 'S/.',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -758,6 +906,7 @@ export const currencies = {
 	PGK: {
 		code: "PGK",
 		symbol: 'K',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -765,6 +914,7 @@ export const currencies = {
 	PHP: {
 		code: "PHP",
 		symbol: '₱',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -772,6 +922,7 @@ export const currencies = {
 	PKR: {
 		code: "PKR",
 		symbol: '₨',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -779,6 +930,7 @@ export const currencies = {
 	PLN: {
 		code: "PLN",
 		symbol: 'zł',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -786,6 +938,7 @@ export const currencies = {
 	PYG: {
 		code: "PYG",
 		symbol: '₲',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -793,6 +946,7 @@ export const currencies = {
 	QAR: {
 		code: "QAR",
 		symbol: '﷼',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -800,6 +954,7 @@ export const currencies = {
 	RON: {
 		code: "RON",
 		symbol: 'lei',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -807,6 +962,7 @@ export const currencies = {
 	RSD: {
 		code: "RSD",
 		symbol: 'Дин.',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -814,6 +970,7 @@ export const currencies = {
 	RUB: {
 		code: "RUB",
 		symbol: '₽',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -821,6 +978,7 @@ export const currencies = {
 	RWF: {
 		code: "RWF",
 		symbol: 'RWF',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -828,6 +986,7 @@ export const currencies = {
 	SAR: {
 		code: "SAR",
 		symbol: '﷼',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -835,6 +994,7 @@ export const currencies = {
 	SBD: {
 		code: "SBD",
 		symbol: 'S$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -842,6 +1002,15 @@ export const currencies = {
 	SCR: {
 		code: "SCR",
 		symbol: '₨',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 2,
+	},
+	SDG: {
+		code: "SDG",
+		symbol: '£',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -849,20 +1018,16 @@ export const currencies = {
 	SDD: {
 		code: "SDD",
 		symbol: 'LSd',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
-	SDG: {
-		code: "SDG",
-		symbol: '£‏',
-		thousandSeparator: ',',
-		decimalSeparator: '.',
-		precision: 2,
-	},
+
 	SEK: {
 		code: "SEK",
 		symbol: 'kr',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -870,6 +1035,7 @@ export const currencies = {
 	SGD: {
 		code: "SGD",
 		symbol: 'S$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -877,6 +1043,7 @@ export const currencies = {
 	SHP: {
 		code: "SHP",
 		symbol: '£',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -884,6 +1051,7 @@ export const currencies = {
 	SLL: {
 		code: "SLL",
 		symbol: 'Le',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -891,6 +1059,7 @@ export const currencies = {
 	SOS: {
 		code: "SOS",
 		symbol: 'S',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -898,6 +1067,15 @@ export const currencies = {
 	SRD: {
 		code: "SRD",
 		symbol: '$',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 2,
+	},
+	SSP: {
+		code: "SSP",
+		symbol: '£',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -905,6 +1083,7 @@ export const currencies = {
 	STD: {
 		code: "STD",
 		symbol: 'Db',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -912,6 +1091,7 @@ export const currencies = {
 	SVC: {
 		code: "SVC",
 		symbol: '₡',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -919,6 +1099,7 @@ export const currencies = {
 	SYP: {
 		code: "SYP",
 		symbol: '£',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -926,6 +1107,7 @@ export const currencies = {
 	SZL: {
 		code: "SZL",
 		symbol: 'E',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -933,6 +1115,7 @@ export const currencies = {
 	THB: {
 		code: "THB",
 		symbol: '฿',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -940,6 +1123,7 @@ export const currencies = {
 	TJS: {
 		code: "TJS",
 		symbol: 'TJS',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ';',
 		precision: 2,
@@ -947,6 +1131,7 @@ export const currencies = {
 	TMT: {
 		code: "TMT",
 		symbol: 'm',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 0,
@@ -954,6 +1139,7 @@ export const currencies = {
 	TND: {
 		code: "TND",
 		symbol: 'د.ت.‏',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 3,
@@ -961,6 +1147,7 @@ export const currencies = {
 	TOP: {
 		code: "TOP",
 		symbol: 'T$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -968,6 +1155,7 @@ export const currencies = {
 	TRY: {
 		code: "TRY",
 		symbol: 'TL',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -975,27 +1163,24 @@ export const currencies = {
 	TTD: {
 		code: "TTD",
 		symbol: 'TT$',
-		thousandSeparator: ',',
-		decimalSeparator: '.',
-		precision: 2,
-	},
-	TVD: {
-		code: "TVD",
-		symbol: '$T',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
 	TWD: {
 		code: "TWD",
-		symbol: 'NT$',
+		symbol: '$T',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
+
 	TZS: {
 		code: "TZS",
 		symbol: 'TSh',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1003,6 +1188,7 @@ export const currencies = {
 	UAH: {
 		code: "UAH",
 		symbol: '₴',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -1010,6 +1196,7 @@ export const currencies = {
 	UGX: {
 		code: "UGX",
 		symbol: 'USh',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1017,6 +1204,7 @@ export const currencies = {
 	USD: {
 		code: "USD",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1024,6 +1212,7 @@ export const currencies = {
 	UYU: {
 		code: "UYU",
 		symbol: '$U',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -1031,6 +1220,7 @@ export const currencies = {
 	UZS: {
 		code: "UZS",
 		symbol: 'сўм',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -1038,6 +1228,7 @@ export const currencies = {
 	VEB: {
 		code: "VEB",
 		symbol: 'Bs.',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1045,6 +1236,7 @@ export const currencies = {
 	VEF: {
 		code: "VEF",
 		symbol: 'Bs. F.',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 2,
@@ -1052,6 +1244,7 @@ export const currencies = {
 	VND: {
 		code: "VND",
 		symbol: '₫',
+		position: 'before',
 		thousandSeparator: '.',
 		decimalSeparator: ',',
 		precision: 1,
@@ -1059,6 +1252,7 @@ export const currencies = {
 	VUV: {
 		code: "VUV",
 		symbol: 'VT',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 0,
@@ -1066,6 +1260,7 @@ export const currencies = {
 	WST: {
 		code: "WST",
 		symbol: 'WS$',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1073,20 +1268,47 @@ export const currencies = {
 	XAF: {
 		code: "XAF",
 		symbol: 'F',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
-		precision: 2,
+		precision: 0,
+	},
+	XAG: {
+		code: "XAG",
+		symbol: 'oz t',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 0,
+	},
+	XAU: {
+		code: "XAF",
+		symbol: 'oz t',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 0,
 	},
 	XCD: {
 		code: "XCD",
 		symbol: '$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
 	},
+	XDR: {
+		code: "XDR",
+		symbol: 'SDR',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 0,
+	},
 	XOF: {
 		code: "XOF",
-		symbol: 'F',
+		symbol: 'Fr',
+		position: 'after',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -1094,6 +1316,7 @@ export const currencies = {
 	XPF: {
 		code: "XPF",
 		symbol: 'F',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1101,6 +1324,7 @@ export const currencies = {
 	YER: {
 		code: "YER",
 		symbol: '﷼',
+		position: 'after',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1108,6 +1332,7 @@ export const currencies = {
 	ZAR: {
 		code: "ZAR",
 		symbol: 'R',
+		position: 'before',
 		thousandSeparator: ' ',
 		decimalSeparator: ',',
 		precision: 2,
@@ -1115,6 +1340,15 @@ export const currencies = {
 	ZMW: {
 		code: "ZMW",
 		symbol: 'ZK',
+		position: 'after',
+		thousandSeparator: ',',
+		decimalSeparator: '.',
+		precision: 2,
+	},
+	ZWL: {
+		code: "ZWL",
+		symbol: '$',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1122,6 +1356,7 @@ export const currencies = {
 	WON: {
 		code: "WON",
 		symbol: '₩',
+		position: 'before',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
 		precision: 2,
@@ -1139,7 +1374,7 @@ export function getCurrencyData(code) {
 		symbol: '$',
 		thousandSeparator: ',',
 		decimalSeparator: '.',
-		position:'before',
+		position: 'before',
 		precision: 2,
 	};
 

@@ -1,5 +1,5 @@
 /* jshint node:true */
-module.exports = function (grunt) {
+module.exports = function(grunt) {
 	'use strict';
 	var pkg = grunt.file.readJSON('package.json');
 
@@ -9,71 +9,66 @@ module.exports = function (grunt) {
 			css: 'assets/css',
 			fonts: 'assets/fonts',
 			images: 'assets/images',
-			js: 'assets/js'
+			js: 'assets/js',
 		},
 		// JavaScript linting with JSHint.
 		jshint: {
 			options: {
-				jshintrc: '.jshintrc'
+				jshintrc: '.jshintrc',
 			},
-			all: [
-				'Gruntfile.js',
-				'<%= dirs.js %>/*.js',
-				'!<%= dirs.js %>/*.min.js'
-			]
+			all: ['Gruntfile.js', '<%= dirs.js %>/*.js', '!<%= dirs.js %>/*.min.js'],
 		},
 		// Minify .js files.
 		uglify: {
 			options: {
 				ie8: true,
 				parse: {
-					strict: false
+					strict: false,
 				},
 				output: {
-					comments: /@license|@preserve|^!/
-				}
+					comments: /@license|@preserve|^!/,
+				},
 			},
 			all: {
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.js %>/',
-					src: [
-						'*.js',
-						'!*.min.js'
-					],
-					dest: '<%= dirs.js %>/',
-					ext: '.min.js'
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.js %>/',
+						src: ['*.js', '!*.min.js'],
+						dest: '<%= dirs.js %>/',
+						ext: '.min.js',
+					},
+				],
 			},
 			vendor: {
 				files: {
 					// '<%= dirs.js %>/file.min.js': ['<%= dirs.js %>/file.js'],
-				}
-			}
+				},
+			},
 		},
 		// Sass linting with Stylelint.
 		stylelint: {
 			options: {
-				configFile: '.stylelintrc'
+				configFile: '.stylelintrc',
 			},
-			all: [
-				'<%= dirs.css %>/*.scss'
-			]
+			all: ['<%= dirs.css %>/*.scss'],
 		},
 		// Compile all .scss files.
 		sass: {
 			compile: {
 				options: {
-					sourceMap: false
+					sourceMap: false,
 				},
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.css %>/',
-					src: ['*.scss'],
-					dest: '<%= dirs.css %>/',
-					ext: '.css'
-				}]
-			}
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.css %>/',
+						src: ['*.scss'],
+						dest: '<%= dirs.css %>/',
+						ext: '.css',
+					},
+				],
+			},
 		},
 
 		// Autoprefixer.
@@ -81,19 +76,13 @@ module.exports = function (grunt) {
 			options: {
 				processors: [
 					require('autoprefixer')({
-						browsers: [
-							'> 0.1%',
-							'ie 8',
-							'ie 9'
-						]
-					})
-				]
+						browsers: ['> 0.1%', 'ie 8', 'ie 9'],
+					}),
+				],
 			},
 			dist: {
-				src: [
-					'<%= dirs.css %>/*.css'
-				]
-			}
+				src: ['<%= dirs.css %>/*.css'],
+			},
 		},
 		// Minify all .css files.
 		cssmin: {
@@ -102,23 +91,19 @@ module.exports = function (grunt) {
 				cwd: '<%= dirs.css %>/',
 				src: ['*.css'],
 				dest: '<%= dirs.css %>/',
-				ext: '.css'
-			}
+				ext: '.css',
+			},
 		},
 		// Watch changes for assets.
 		watch: {
 			css: {
 				files: ['<%= dirs.css %>/**/*.scss'],
-				tasks: ['sass', 'postcss', 'cssmin']
+				tasks: ['sass', 'postcss', 'cssmin'],
 			},
 			js: {
-				files: [
-					'<%= dirs.js %>/*js',
-					'<%= dirs.js %>/*js',
-					'!<%= dirs.js %>/*.min.js'
-				],
-				tasks: ['jshint', 'uglify']
-			}
+				files: ['<%= dirs.js %>/*js', '<%= dirs.js %>/*js', '!<%= dirs.js %>/*.min.js'],
+				tasks: ['jshint', 'uglify'],
+			},
 		},
 		// Generate POT files.
 		makepot: {
@@ -126,21 +111,15 @@ module.exports = function (grunt) {
 				type: 'wp-plugin',
 				domainPath: 'i18n/languages',
 				potHeaders: {
-					'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
-				}
+					'language-team': 'LANGUAGE <EMAIL@ADDRESS>',
+				},
 			},
 			dist: {
 				options: {
 					potFilename: 'wp-ever-accounting.pot',
-					exclude: [
-						'includes/class-updater.php',
-						'apigen/.*',
-						'vendor/.*',
-						'tests/.*',
-						'tmp/.*'
-					]
-				}
-			}
+					exclude: ['includes/class-updater.php', 'apigen/.*', 'vendor/.*', 'tests/.*', 'tmp/.*'],
+				},
+			},
 		},
 
 		// Check textdomain errors.
@@ -161,42 +140,42 @@ module.exports = function (grunt) {
 					'_n:1,2,4d',
 					'_nx:1,2,4c,5d',
 					'_n_noop:1,2,3d',
-					'_nx_noop:1,2,3c,4d'
-				]
+					'_nx_noop:1,2,3c,4d',
+				],
 			},
 			files: {
 				src: [
-					'**/*.php',               // Include all files
-					'!apigen/**',             // Exclude apigen/
+					'**/*.php', // Include all files
+					'!apigen/**', // Exclude apigen/
 					'!includes/libraries/**', // Exclude libraries/
-					'!node_modules/**',       // Exclude node_modules/
-					'!tests/**',              // Exclude tests/
-					'!vendor/**',             // Exclude vendor/
-					'!tmp/**'                 // Exclude tmp/
+					'!node_modules/**', // Exclude node_modules/
+					'!tests/**', // Exclude tests/
+					'!vendor/**', // Exclude vendor/
+					'!tmp/**', // Exclude tmp/
 				],
-				expand: true
-			}
+				expand: true,
+			},
 		},
 
 		// PHP Code Sniffer.
 		phpcs: {
 			options: {
-				bin: 'vendor/bin/phpcs'
+				bin: 'vendor/bin/phpcs',
 			},
 			dist: {
 				src: [
-					'**/*.php',                                                  // Include all files
-					'!includes/libraries/**',                                    // Exclude libraries/
-					'!node_modules/**',                                          // Exclude node_modules/
-					'!tests/cli/**',                                             // Exclude tests/cli/
-					'!tmp/**',                                                   // Exclude tmp/
-					'!vendor/**'                                                 // Exclude vendor/
-				]
-			}
+					'**/*.php', // Include all files
+					'!includes/libraries/**', // Exclude libraries/
+					'!node_modules/**', // Exclude node_modules/
+					'!tests/cli/**', // Exclude tests/cli/
+					'!tmp/**', // Exclude tmp/
+					'!vendor/**', // Exclude vendor/
+				],
+			},
 		},
 		// Clean up build directory
 		clean: {
-			main: ['build/']
+			main: ['build/'],
 		},
 		copy: {
 			main: {
@@ -235,24 +214,24 @@ module.exports = function (grunt) {
 					'!.csscomb.json',
 					'!.editorconfig',
 					'!.jshintrc',
-					'!.tmp'
+					'!.tmp',
 				],
-				dest: 'build/'
-			}
+				dest: 'build/',
+			},
 		},
 
 		compress: {
 			main: {
 				options: {
 					mode: 'zip',
-					archive: './build/' + pkg.name + '-v' + pkg.version + '.zip'
+					archive: './build/' + pkg.name + '-v' + pkg.version + '.zip',
 				},
 				expand: true,
 				cwd: 'build/',
 				src: ['**/*'],
-				dest: pkg.name
-			}
-		}
+				dest: pkg.name,
+			},
+		},
 	});
 
 	// Load NPM tasks to be used here.
@@ -274,44 +253,17 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-prompt');
 
 	// Register tasks.
-	grunt.registerTask('default', [
-		'js',
-		'css',
-		'i18n'
-	]);
+	grunt.registerTask('default', ['js', 'css', 'i18n']);
 
-	grunt.registerTask('js', [
-		'jshint'
-	]);
+	grunt.registerTask('js', ['jshint']);
 
-	grunt.registerTask('css', [
-		'sass',
-		'postcss',
-		'cssmin'
-	]);
+	grunt.registerTask('css', ['sass', 'postcss', 'cssmin']);
 
-	grunt.registerTask('i18n', [
-		'checktextdomain',
-		'makepot'
-	]);
+	grunt.registerTask('i18n', ['checktextdomain', 'makepot']);
 
-	grunt.registerTask('release',
-		[
-			'default',
-			'i18n'
-		]);
+	grunt.registerTask('release', ['default', 'i18n']);
 
-	grunt.registerTask('build',
-		[
-			'clean',
-			'clean',
-			'copy'
-		]);
+	grunt.registerTask('build', ['clean', 'clean', 'copy']);
 
-	grunt.registerTask('zip',
-		[
-			'compress'
-		]);
-
-
+	grunt.registerTask('zip', ['compress']);
 };

@@ -2,12 +2,11 @@
  * External dependencies
  */
 
-
 /**
  * Internal dependencies
  */
-import {getItems, updateItem, bulkAction} from "lib/store";
-import {accountingApi} from "lib/api";
+import { getItems, updateItem, bulkAction } from 'lib/store';
+import { accountingApi } from 'lib/api';
 
 import {
 	CURRENCIES_LOADING,
@@ -18,7 +17,7 @@ import {
 	CURRENCIES_ITEM_SAVED,
 	CURRENCIES_SET_SELECTED,
 	CURRENCIES_SET_ALL_SELECTED,
-	CURRENCIES_ITEM_ADDED
+	CURRENCIES_ITEM_ADDED,
 } from './type';
 
 const STATUS_CURRENCIES_ITEM = {
@@ -35,14 +34,16 @@ const STATUS_CURRENCY = {
 	failed: CURRENCIES_FAILED,
 	order: 'name',
 };
-export const setCreateItem = item => ({type: CURRENCIES_ITEM_ADDED, item});
-export const setUpdateItem = (id, item) => (dispatch, getState) => updateItem(accountingApi.currencies.update, id, item, STATUS_CURRENCIES_ITEM, dispatch, getState().currencies);
-export const setGetItems = args => (dispatch, getState) => getItems(accountingApi.currencies.list, dispatch, STATUS_CURRENCY, args, getState().currencies);
-export const setOrderBy = (orderby, order) => setGetItems({orderby, order});
-export const setPage = page => setGetItems({page});
-export const setFilter = (filterBy) => setGetItems({filterBy, orderby: '', page: 1});
-export const setSearch = (search) => setGetItems({search, orderby: '', page: 1});
-export const setSelected = items => ({type: CURRENCIES_SET_SELECTED, items: items.map(parseInt)});
-export const setAllSelected = onoff => ({type: CURRENCIES_SET_ALL_SELECTED, onoff});
-export const setBulkAction = (action, ids ) =>  (dispatch, getState) => bulkAction(accountingApi.currencies.bulk, action, ids, STATUS_CURRENCY, dispatch, getState().currencies);
-
+export const setCreateItem = item => ({ type: CURRENCIES_ITEM_ADDED, item });
+export const setUpdateItem = (id, item) => (dispatch, getState) =>
+	updateItem(accountingApi.currencies.update, id, item, STATUS_CURRENCIES_ITEM, dispatch, getState().currencies);
+export const setGetItems = args => (dispatch, getState) =>
+	getItems(accountingApi.currencies.list, dispatch, STATUS_CURRENCY, args, getState().currencies);
+export const setOrderBy = (orderby, order) => setGetItems({ orderby, order });
+export const setPage = page => setGetItems({ page });
+export const setFilter = filterBy => setGetItems({ filterBy, orderby: '', page: 1 });
+export const setSearch = search => setGetItems({ search, orderby: '', page: 1 });
+export const setSelected = items => ({ type: CURRENCIES_SET_SELECTED, items: items.map(parseInt) });
+export const setAllSelected = onoff => ({ type: CURRENCIES_SET_ALL_SELECTED, onoff });
+export const setBulkAction = (action, ids) => (dispatch, getState) =>
+	bulkAction(accountingApi.currencies.bulk, action, ids, STATUS_CURRENCY, dispatch, getState().currencies);

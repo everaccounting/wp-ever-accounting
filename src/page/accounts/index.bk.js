@@ -1,7 +1,7 @@
-import {Component, Fragment} from "react";
-import {connect} from "react-redux";
-import {translate as __} from 'lib/locale';
-import {STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED} from 'status';
+import { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import { translate as __ } from 'lib/locale';
+import { STATUS_IN_PROGRESS, STATUS_COMPLETE, STATUS_FAILED } from 'status';
 import {
 	setGetItems,
 	setPage,
@@ -11,11 +11,10 @@ import {
 	setSearch,
 	setFilter,
 } from 'state/accounts/action';
-import {getHeaders, getBulk} from "./constants";
-import {SelectControl, Table, Navigation, SearchBox, BulkAction, Button} from "@eaccounting/components";
+import { getHeaders, getBulk } from './constants';
+import { SelectControl, Table, Navigation, SearchBox, BulkAction, Button } from '@eaccounting/components';
 import Row from './row';
-import EditAccount from "component/edit-account";
-
+import EditAccount from 'component/edit-account';
 
 class Accounts extends Component {
 	constructor(props) {
@@ -31,42 +30,33 @@ class Accounts extends Component {
 
 	onAdd = ev => {
 		ev.preventDefault();
-		this.setState({isAdding: !this.state.isAdding});
+		this.setState({ isAdding: !this.state.isAdding });
 	};
 
 	onClose = () => {
-		this.setState({isAdding: !this.state.isAdding});
+		this.setState({ isAdding: !this.state.isAdding });
 	};
 
 	onRenderRow = (item, pos, status, search) => {
-		const {saving} = this.props.accounts;
+		const { saving } = this.props.accounts;
 		const loadingStatus = status.isLoading ? STATUS_IN_PROGRESS : STATUS_COMPLETE;
 		const rowStatus = saving.indexOf(item.id) !== -1 ? STATUS_SAVING : loadingStatus;
-		return (
-			<Row
-				item={item}
-				key={pos}
-				status={rowStatus}
-				search={search}/>
-		);
+		return <Row item={item} key={pos} status={rowStatus} search={search} />;
 	};
-
 
 	render() {
 		console.log(this.props);
-		const {status, total, table, rows, saving} = this.props.accounts;
-		const {isAdding,} = this.state;
+		const { status, total, table, rows, saving } = this.props.accounts;
+		const { isAdding } = this.state;
 		return (
 			<Fragment>
-				{isAdding && <EditAccount onClose={this.onClose}/>}
+				{isAdding && <EditAccount onClose={this.onClose} />}
 
 				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Account')}</Button>
-					<SearchBox
-						status={status}
-						table={table}
-						onSearch={this.props.onSearch}
-					/>
+					<Button className="page-title-action" onClick={this.onAdd}>
+						{__('Add Account')}
+					</Button>
+					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
 				<Navigation
@@ -76,7 +66,8 @@ class Accounts extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}
-					bulk={getBulk()}/>
+					bulk={getBulk()}
+				/>
 
 				<Table
 					headers={getHeaders()}
@@ -88,15 +79,13 @@ class Accounts extends Component {
 					onSetAllSelected={this.props.onSetAllSelected}
 					onSetOrderBy={this.props.onSetOrderBy}
 				/>
-
 			</Fragment>
-		)
+		);
 	}
 }
 
-
 function mapStateToProps(state) {
-	const {accounts} = state;
+	const { accounts } = state;
 	return {
 		accounts,
 	};
@@ -110,7 +99,7 @@ function mapDispatchToProps(dispatch) {
 		onChangePage: page => {
 			dispatch(setPage(page));
 		},
-		onAction: (action) => {
+		onAction: action => {
 			dispatch(setBulkAction(action));
 		},
 		onSetAllSelected: onoff => {
@@ -119,16 +108,13 @@ function mapDispatchToProps(dispatch) {
 		onSetOrderBy: (column, order) => {
 			dispatch(setOrderBy(column, order));
 		},
-		onFilter: (filterBy) => {
+		onFilter: filterBy => {
 			dispatch(setFilter(filterBy));
 		},
-		onSearch: (search) => {
+		onSearch: search => {
 			dispatch(setSearch(search));
-		}
-	}
+		},
+	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps,
-)(Accounts);
+export default connect(mapStateToProps, mapDispatchToProps)(Accounts);

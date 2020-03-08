@@ -1,6 +1,6 @@
-import {Component, Fragment} from 'react';
-import {Modal as BaseElement} from '@wordpress/components';
-import PropTypes from "prop-types";
+import { Component, Fragment } from 'react';
+import { Modal as BaseElement } from '@wordpress/components';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 export default class Modal extends Component {
@@ -12,7 +12,6 @@ export default class Modal extends Component {
 		width: PropTypes.string,
 		overlayClassName: PropTypes.string,
 	};
-
 
 	static defaultProps = {
 		shouldCloseOnClickOutside: false,
@@ -26,6 +25,6 @@ export default class Modal extends Component {
 					{this.props.children}
 				</BaseElement>
 			</Fragment>
-		)
+		);
 	}
 }

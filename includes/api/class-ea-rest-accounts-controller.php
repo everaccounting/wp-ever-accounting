@@ -287,15 +287,14 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$o_balance = eaccounting_money( $item->opening_balance, $item->currency_code, true )->format();
+
 		$data      = array(
 			'id'              => intval($item->id),
 			'name'            => $item->name,
 			'number'          => $item->number,
 			'opening_balance' => $item->opening_balance,
-			'balance'         => $o_balance,//todo update this
+			'balance'         => eaccounting_get_account_current_balance($item->id, true ),
 			'currency'        => eaccounting_get_currency( $item->currency_code, 'code' ),
-			'currency_code'   => $item->currency_code,
 			'bank_name'       => $item->bank_name,
 			'bank_phone'      => $item->bank_phone,
 			'bank_address'    => $item->bank_address,

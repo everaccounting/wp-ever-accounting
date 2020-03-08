@@ -299,9 +299,6 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
 			$prepared_item->amount = $request['amount'];
 		}
-		if ( ! empty( $schema['properties']['currency_code'] ) && isset( $request['currency_code'] ) ) {
-			$prepared_item->currency_code = $request['currency_code'];
-		}
 		if ( ! empty( $schema['properties']['currency_rate'] ) && isset( $request['currency_rate'] ) ) {
 			$prepared_item->currency_rate = $request['currency_rate'];
 		}
@@ -381,7 +378,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 				),
 				'account_id'     => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => ['string', 'integer'],
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -390,30 +387,12 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 				'paid_at'        => array(
 					'description' => __( 'Payment Date of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'format'      => 'date-time',
+					'format'      => 'date',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
 				'amount'         => array(
 					'description' => __( 'Amount of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'eaccounting_sanitize_price',
-					),
-					'required'    => true,
-				),
-				'currency_code'  => array(
-					'description' => __( 'Currency code of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'currency_rate'  => array(
-					'description' => __( 'Currency rate of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(

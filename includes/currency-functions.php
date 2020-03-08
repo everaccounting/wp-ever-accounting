@@ -32,8 +32,6 @@ function eaccounting_insert_currency( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'code'       => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
 		'rate'       => ! isset( $args['rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['rate'] ),
-		'precision'  => ! isset( $args['precision'] ) ? 0 : intval( $args['precision'] ),
-		'position'   => isset( $args['position'] ) && 'before' == $args['position'] ? 'before' : 'after',
 		'updated_at' => date( 'Y-m-d H:i:s' ),
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
@@ -41,7 +39,6 @@ function eaccounting_insert_currency( $args ) {
 	$required = array(
 		'code'                => __( 'code', 'wp-ever-accounting' ),
 		'rate'                => __( 'Rate', 'wp-ever-accounting' ),
-		'position'            => __( 'Symbol position', 'wp-ever-accounting' ),
 	);
 
 	foreach ( $required as $prop => $label ) {
@@ -124,7 +121,7 @@ function eaccounting_get_currency( $id, $by = 'id' ) {
 function eaccounting_delete_currency( $id ) {
 	global $wpdb;
 	$id = absint( $id );
-
+	error_log($id);
 	$currency = eaccounting_get_currency( $id );
 	if ( is_null( $currency ) ) {
 		return false;

@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 
 // import transactions from 'state/transactions/reducer';
 // import contacts from 'state/contacts/reducer';

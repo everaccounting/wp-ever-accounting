@@ -8,18 +8,11 @@ import PropTypes from 'prop-types';
 const RowActions = props => {
 	const { children, disabled = false } = props;
 
-	return (
-		<div className="row-actions">
-			{ disabled ? <span>&nbsp;</span> : children }
-		</div>
-	);
+	return <div className="row-actions">{disabled ? <span>&nbsp;</span> : children}</div>;
 };
 
 RowActions.propTypes = {
-	children: PropTypes.oneOfType( [
-		PropTypes.array,
-		PropTypes.object,
-	] ).isRequired,
+	children: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
 	disabled: PropTypes.bool,
 };
 

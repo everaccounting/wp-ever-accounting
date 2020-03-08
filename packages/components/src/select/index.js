@@ -1,16 +1,14 @@
 import classnames from 'classnames';
-import {Component} from '@wordpress/element';
+import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {noop} from 'lodash';
-import {SelectControl as BaseSelect, BaseControl} from '@wordpress/components';
-import {withInstanceId} from '@wordpress/compose';
-
+import { noop } from 'lodash';
+import { SelectControl as BaseSelect, BaseControl } from '@wordpress/components';
+import { withInstanceId } from '@wordpress/compose';
 
 class Select extends Component {
-
 	render() {
-		const {label, value, help, className, instanceId, onChange, before, after, type, required, ...props} = this.props;
-		const classes = classnames('ea-form-group','ea-select', className, {
+		const { label, help, className, instanceId, before, after, type, required, ...props } = this.props;
+		const classes = classnames('ea-form-group', 'ea-select', className, {
 			required: !!required,
 		});
 		const id = `inspector-ea-input-group-${instanceId}`;
@@ -34,7 +32,7 @@ class Select extends Component {
 						</span>
 					)}
 
-					<BaseSelect {...props} aria-describedby={describedby.join(' ')}/>
+					<BaseSelect {...props} aria-describedby={describedby.join(' ')} />
 
 					{after && (
 						<span id={`${id}__after`} className="ea-input-group__after">

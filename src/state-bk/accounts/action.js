@@ -1,8 +1,8 @@
 /**
  * Internal dependencies
  */
-import {getItems, updateItem, bulkAction} from "lib/store";
-import {accountingApi} from "lib/api";
+import { getItems, updateItem, bulkAction } from 'lib/store';
+import { accountingApi } from 'lib/api';
 
 import {
 	ACCOUNTS_LOADING,
@@ -13,7 +13,7 @@ import {
 	ACCOUNTS_ITEM_SAVED,
 	ACCOUNTS_SET_SELECTED,
 	ACCOUNTS_SET_ALL_SELECTED,
-	ACCOUNTS_ITEM_ADDED
+	ACCOUNTS_ITEM_ADDED,
 } from './type';
 
 const STATUS_ACCOUNTS_ITEM = {
@@ -31,13 +31,16 @@ const STATUS_ACCOUNT = {
 	order: 'name',
 };
 
-export const setCreateItem = item => ({type: ACCOUNTS_ITEM_ADDED, item});
-export const setUpdateItem = (id, item) => (dispatch, getState) => updateItem(accountingApi.accounts.update, id, item, STATUS_ACCOUNTS_ITEM, dispatch, getState().accounts);
-export const setGetItems = args => (dispatch, getState) => getItems(accountingApi.accounts.list, dispatch, STATUS_ACCOUNT, args, getState().accounts);
-export const setOrderBy = (orderby, order) => setGetItems({orderby, order});
-export const setPage = page => setGetItems({page});
-export const setFilter = (filterBy) => setGetItems({filterBy, orderby: '', page: 1});
-export const setSearch = (search) => setGetItems({search, orderby: '', page: 1});
-export const setSelected = items => ({type: ACCOUNTS_SET_SELECTED, items: items.map(parseInt)});
-export const setAllSelected = onoff => ({type: ACCOUNTS_SET_ALL_SELECTED, onoff});
-export const setBulkAction = (action, ids ) =>  (dispatch, getState) => bulkAction(accountingApi.accounts.bulk, action, ids, STATUS_ACCOUNT, dispatch, getState().accounts);
+export const setCreateItem = item => ({ type: ACCOUNTS_ITEM_ADDED, item });
+export const setUpdateItem = (id, item) => (dispatch, getState) =>
+	updateItem(accountingApi.accounts.update, id, item, STATUS_ACCOUNTS_ITEM, dispatch, getState().accounts);
+export const setGetItems = args => (dispatch, getState) =>
+	getItems(accountingApi.accounts.list, dispatch, STATUS_ACCOUNT, args, getState().accounts);
+export const setOrderBy = (orderby, order) => setGetItems({ orderby, order });
+export const setPage = page => setGetItems({ page });
+export const setFilter = filterBy => setGetItems({ filterBy, orderby: '', page: 1 });
+export const setSearch = search => setGetItems({ search, orderby: '', page: 1 });
+export const setSelected = items => ({ type: ACCOUNTS_SET_SELECTED, items: items.map(parseInt) });
+export const setAllSelected = onoff => ({ type: ACCOUNTS_SET_ALL_SELECTED, onoff });
+export const setBulkAction = (action, ids) => (dispatch, getState) =>
+	bulkAction(accountingApi.accounts.bulk, action, ids, STATUS_ACCOUNT, dispatch, getState().accounts);

@@ -2,13 +2,13 @@
  * External dependencies
  */
 
-import {translate as __} from 'lib/locale';
+import { translate as __ } from 'lib/locale';
 
 export const getDisplayOptions = () => [
-	{value: 'name', label: __('Name')},
-	{value: 'type', label: __('Type')},
-	{value: 'color', label: __('Color')},
-	{value: 'status', label: __('Status')},
+	{ value: 'name', label: __('Name') },
+	{ value: 'type', label: __('Type') },
+	{ value: 'color', label: __('Color') },
+	{ value: 'status', label: __('Status') },
 ];
 
 export const getDisplayGroups = () => [];
@@ -50,7 +50,7 @@ export const getHeaders = () => [
 		name: 'status',
 		title: __('Status'),
 		sortable: true,
-	}
+	},
 ];
 
 export const getBulk = () => [

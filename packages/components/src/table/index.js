@@ -14,36 +14,54 @@ import LoadingRow from './row/loading-row';
 import EmptyRow from './row/empty-row';
 import FailedRow from './row/failed-row';
 
-const isDisabledHeader = ( status, rows ) => status !== "STATUS_COMPLETE" || rows.length === 0;
-const isSelectedHeader = ( selected, rows ) => selected.length === rows.length && rows.length !== 0;
+const isDisabledHeader = (status, rows) => status !== 'STATUS_COMPLETE' || rows.length === 0;
+const isSelectedHeader = (selected, rows) => selected.length === rows.length && rows.length !== 0;
 
 const Table = props => {
 	const { headers, row, rows, total, table, status, onSetAllSelected, onSetOrderBy } = props;
-	const isDisabled = isDisabledHeader( status, rows );
-	const isSelected = isSelectedHeader( table.selected, rows );
+	const isDisabled = isDisabledHeader(status, rows);
+	const isSelected = isSelectedHeader(table.selected, rows);
 
 	let content = null;
 
-	if ( status === "STATUS_IN_PROGRESS" && rows.length === 0 ) {
-		content = <LoadingRow headers={ headers } rows={ rows } />;
-	} else if ( rows.length === 0 && status === "STATUS_COMPLETE" ) {
-		content = <EmptyRow headers={ headers } />;
-	} else if ( status === "STATUS_FAILED" ) {
-		content = <FailedRow headers={ headers } />;
-	} else if ( rows.length > 0 ) {
-		content = <DataRow rows={ rows } status={ status } selected={ table.selected } row={ row } />;
+	if (status === 'STATUS_IN_PROGRESS' && rows.length === 0) {
+		content = <LoadingRow headers={headers} rows={rows} />;
+	} else if (rows.length === 0 && status === 'STATUS_COMPLETE') {
+		content = <EmptyRow headers={headers} />;
+	} else if (status === 'STATUS_FAILED') {
+		content = <FailedRow headers={headers} />;
+	} else if (rows.length > 0) {
+		content = <DataRow rows={rows} status={status} selected={table.selected} row={row} />;
 	}
 
 	return (
 		<table className="wp-list-table widefat fixed striped items">
 			<thead>
-				<TableHeader table={ table } isDisabled={ isDisabled } isSelected={ isSelected } headers={ headers } rows={ rows } total={ total } onSetOrderBy={ onSetOrderBy } onSetAllSelected={ onSetAllSelected } />
+				<TableHeader
+					table={table}
+					isDisabled={isDisabled}
+					isSelected={isSelected}
+					headers={headers}
+					rows={rows}
+					total={total}
+					onSetOrderBy={onSetOrderBy}
+					onSetAllSelected={onSetAllSelected}
+				/>
 			</thead>
 
-			{ content }
+			{content}
 
 			<tfoot>
-				<TableHeader table={ table } isDisabled={ isDisabled } isSelected={ isSelected } headers={ headers } rows={ rows } total={ total } onSetOrderBy={ onSetOrderBy } onSetAllSelected={ onSetAllSelected } />
+				<TableHeader
+					table={table}
+					isDisabled={isDisabled}
+					isSelected={isSelected}
+					headers={headers}
+					rows={rows}
+					total={total}
+					onSetOrderBy={onSetOrderBy}
+					onSetAllSelected={onSetAllSelected}
+				/>
 			</tfoot>
 		</table>
 	);

@@ -1,5 +1,5 @@
-import {STATUS_IN_PROGRESS} from 'status';
-import {getDefaultTable} from "../util";
+import { STATUS_IN_PROGRESS } from 'status';
+import { getDefaultTable } from '../util';
 
 export const initialCategories = {
 	rows: [],
@@ -9,6 +9,5 @@ export const initialCategories = {
 	table: getDefaultTable(['name', 'id'], ['type'], 'id'),
 };
 
-
-export {default as categories} from './reducers';
+export { default as categories } from './reducers';
 export * from './actions';

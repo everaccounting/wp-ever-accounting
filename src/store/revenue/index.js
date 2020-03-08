@@ -1,4 +1,4 @@
-import {STATUS_COMPLETE} from "status";
+import { STATUS_COMPLETE } from 'status';
 
 export const initialRevenue = {
 	id: null,
@@ -14,8 +14,8 @@ export const initialRevenue = {
 	attachment_url: '',
 	parent_id: '',
 	reconciled: '0',
-	status: STATUS_COMPLETE
+	status: STATUS_COMPLETE,
 };
 
-export {default as revenue} from './reducers';
+export { default as revenue } from './reducers';
 export * from './actions';

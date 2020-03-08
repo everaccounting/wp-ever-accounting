@@ -1,16 +1,16 @@
 /**
  * External dependencies
  */
-var debug = require( 'debug' )( 'lib/locale' ),
-	Jed = require( 'jed' ),
-	EventEmitter = require( 'events' ).EventEmitter,
-	interpolateComponents = require( 'interpolate-components' ).default,
-	LRU = require( 'lru' );
+var debug = require('debug')('lib/locale'),
+	Jed = require('jed'),
+	EventEmitter = require('events').EventEmitter,
+	interpolateComponents = require('interpolate-components').default,
+	LRU = require('lru');
 
 /**
  * Internal dependencies
  */
-var numberFormatPHPJS = require( './number-format' );
+var numberFormatPHPJS = require('./number-format');
 
 /**
  * Constants
@@ -20,17 +20,17 @@ var decimal_point_translation_key = 'number_format_decimals',
 
 // raise a console warning
 function warn() {
-	if ( ! I18N.throwErrors ) {
+	if (!I18N.throwErrors) {
 		return;
 	}
-	if ( 'undefined' !== typeof window && window.console && window.console.warn ) {
-		window.console.warn.apply( window.console, arguments );
+	if ('undefined' !== typeof window && window.console && window.console.warn) {
+		window.console.warn.apply(window.console, arguments);
 	}
 }
 
 // turns Function.arguments into an array
-function simpleArguments( args ) {
-	return Array.prototype.slice.call( args );
+function simpleArguments(args) {
+	return Array.prototype.slice.call(args);
 }
 
 /**
@@ -38,42 +38,53 @@ function simpleArguments( args ) {
  * @param  {arguments} args - arguments passed in from `translate()`
  * @return {object}         - a single object describing translation needs
  */
-function normalizeTranslateArguments( args ) {
-	var original = args[ 0 ],
+function normalizeTranslateArguments(args) {
+	var original = args[0],
 		options = {},
 		i;
 
 	// warn about older deprecated syntax
-	if ( typeof original !== 'string' || args.length > 3 || ( args.length > 2 && typeof args[ 1 ] === 'object' && typeof args[ 2 ] === 'object' ) ) {
-		warn( 'Deprecated Invocation: `translate()` accepts ( string, [string], [object] ). These arguments passed:', simpleArguments( args ), '. See https://github.com/Automattic/i18n-calypso#translate-method' );
+	if (
+		typeof original !== 'string' ||
+		args.length > 3 ||
+		(args.length > 2 && typeof args[1] === 'object' && typeof args[2] === 'object')
+	) {
+		warn(
+			'Deprecated Invocation: `translate()` accepts ( string, [string], [object] ). These arguments passed:',
+			simpleArguments(args),
+			'. See https://github.com/Automattic/i18n-calypso#translate-method'
+		);
 	}
-	if ( args.length === 2 && typeof original === 'string' && typeof args[ 1 ] === 'string' ) {
-		warn( 'Invalid Invocation: `translate()` requires an options object for plural translations, but passed:', simpleArguments( args ) );
+	if (args.length === 2 && typeof original === 'string' && typeof args[1] === 'string') {
+		warn(
+			'Invalid Invocation: `translate()` requires an options object for plural translations, but passed:',
+			simpleArguments(args)
+		);
 	}
 
 	// options could be in position 0, 1, or 2
 	// sending options as the first object is deprecated and will raise a warning
-	for ( i = 0; i < args.length; i++ ) {
-		if ( typeof args[ i ] === 'object' ) {
-			options = args[ i ];
+	for (i = 0; i < args.length; i++) {
+		if (typeof args[i] === 'object') {
+			options = args[i];
 		}
 	}
 
 	// `original` can be passed as first parameter or as part of the options object
 	// though passing original as part of the options is a deprecated approach and will be removed
-	if ( typeof original === 'string' ) {
+	if (typeof original === 'string') {
 		options.original = original;
-	} else if ( typeof options.original === 'object' ) {
+	} else if (typeof options.original === 'object') {
 		options.plural = options.original.plural;
 		options.count = options.original.count;
 		options.original = options.original.single;
 	}
-	if ( typeof args[ 1 ] === 'string' ) {
-		options.plural = args[ 1 ];
+	if (typeof args[1] === 'string') {
+		options.plural = args[1];
 	}
 
-	if ( typeof options.original === 'undefined' ) {
-		throw new Error( 'Translate called without a `string` value as first argument.' );
+	if (typeof options.original === 'undefined') {
+		throw new Error('Translate called without a `string` value as first argument.');
 	}
 
 	return options;
@@ -85,14 +96,14 @@ function normalizeTranslateArguments( args ) {
  * @param  {[object]} props     properties passed into `translate()` method
  * @return {[array]}           array of properties to pass into gettext-style method
  */
-function getJedArgs( jedMethod, props ) {
+function getJedArgs(jedMethod, props) {
 	var argsByMethod = {
-		gettext: [ props.original ],
-		ngettext: [ props.original, props.plural, props.count ],
-		npgettext: [ props.context, props.original, props.plural, props.count ],
-		pgettext: [ props.context, props.original ]
+		gettext: [props.original],
+		ngettext: [props.original, props.plural, props.count],
+		npgettext: [props.context, props.original, props.plural, props.count],
+		pgettext: [props.context, props.original],
 	};
-	return argsByMethod[ jedMethod ] || [];
+	return argsByMethod[jedMethod] || [];
 }
 
 /**
@@ -101,26 +112,25 @@ function getJedArgs( jedMethod, props ) {
  * @param  {object} options - object describing translation
  * @return {string}         - the returned translation from Jed
  */
-function getTranslationFromJed( jed, options ) {
+function getTranslationFromJed(jed, options) {
 	var jedMethod = 'gettext',
 		jedArgs;
 
-	if ( options.context ) {
+	if (options.context) {
 		jedMethod = 'p' + jedMethod;
 	}
 
-	if ( typeof options.original === 'string' && typeof options.plural === 'string' ) {
+	if (typeof options.original === 'string' && typeof options.plural === 'string') {
 		jedMethod = 'n' + jedMethod;
 	}
 
-	jedArgs = getJedArgs( jedMethod, options );
+	jedArgs = getJedArgs(jedMethod, options);
 
-	return jed[ jedMethod ].apply( jed, jedArgs );
+	return jed[jedMethod].apply(jed, jedArgs);
 }
 
-
 function I18N() {
-	if( ! ( this instanceof I18N ) ) {
+	if (!(this instanceof I18N)) {
 		return new I18N();
 	}
 	this.defaultLocaleSlug = 'en';
@@ -129,14 +139,14 @@ function I18N() {
 		jed: undefined,
 		locale: undefined,
 		localeSlug: undefined,
-		translations: LRU( { max: 100 } )
+		translations: LRU({ max: 100 }),
 	};
 	this.componentUpdateHooks = [];
 	this.translateHooks = [];
 	this.stateObserver = new EventEmitter();
 	// Because the mixin can be injected into a ton of React components,
 	// we need to bump the number of listeners to infinity and beyond
-	this.stateObserver.setMaxListeners( 0 );
+	this.stateObserver.setMaxListeners(0);
 	// default configuration
 	this.configure();
 }
@@ -149,65 +159,65 @@ I18N.throwErrors = false;
  * @param  {Int|object} options  Number of decimal places or options object (optional)
  * @return {string}         Formatted number as string
  */
-I18N.prototype.numberFormat = function( number ) {
-	var options = arguments[ 1 ] || {},
-		decimals = ( typeof options === 'number' ) ? options : options.decimals || 0,
+I18N.prototype.numberFormat = function(number) {
+	var options = arguments[1] || {},
+		decimals = typeof options === 'number' ? options : options.decimals || 0,
 		decPoint = options.decPoint || this.state.numberFormatSettings.decimal_point || '.',
 		thousandsSep = options.thousandsSep || this.state.numberFormatSettings.thousands_sep || ',';
 
-	return numberFormatPHPJS( number, decimals, decPoint, thousandsSep );
+	return numberFormatPHPJS(number, decimals, decPoint, thousandsSep);
 };
 
-I18N.prototype.configure = function( options ) {
-	Object.assign( this, options || {} );
+I18N.prototype.configure = function(options) {
+	Object.assign(this, options || {});
 	this.setLocale();
 };
 
-I18N.prototype.setLocale = function( localeData ) {
+I18N.prototype.setLocale = function(localeData) {
 	var localeSlug;
 
 	// if localeData is not given, assumes default locale
-	if ( ! localeData || ! localeData[ '' ].localeSlug ) {
-		localeData = { '': { localeSlug: this.defaultLocaleSlug } }
+	if (!localeData || !localeData[''].localeSlug) {
+		localeData = { '': { localeSlug: this.defaultLocaleSlug } };
 	}
 
-	localeSlug = localeData[ '' ].localeSlug;
+	localeSlug = localeData[''].localeSlug;
 
 	// Don't change if same locale as current, except for default locale
-	if ( localeSlug !== this.defaultLocaleSlug && localeSlug === this.state.localeSlug ) {
+	if (localeSlug !== this.defaultLocaleSlug && localeSlug === this.state.localeSlug) {
 		return;
 	}
 
 	this.state.localeSlug = localeSlug;
 	this.state.locale = localeData;
 
-	this.state.jed = new Jed( {
+	this.state.jed = new Jed({
 		locale_data: {
-			messages: localeData
-		}
-	} );
+			messages: localeData,
+		},
+	});
 
 	// Updates numberFormat preferences with settings from translations
 	this.state.numberFormatSettings.decimal_point = getTranslationFromJed(
 		this.state.jed,
-		normalizeTranslateArguments( [ decimal_point_translation_key ] )
+		normalizeTranslateArguments([decimal_point_translation_key])
 	);
 	this.state.numberFormatSettings.thousands_sep = getTranslationFromJed(
 		this.state.jed,
-		normalizeTranslateArguments( [ thousands_sep_translation_key ] )
+		normalizeTranslateArguments([thousands_sep_translation_key])
 	);
 
 	// If translation isn't set, define defaults.
-	if ( this.state.numberFormatSettings.decimal_point === decimal_point_translation_key ) {
+	if (this.state.numberFormatSettings.decimal_point === decimal_point_translation_key) {
 		this.state.numberFormatSettings.decimal_point = '.';
 	}
 
-	if ( this.state.numberFormatSettings.thousands_sep === thousands_sep_translation_key ) {
+	if (this.state.numberFormatSettings.thousands_sep === thousands_sep_translation_key) {
 		this.state.numberFormatSettings.thousands_sep = ',';
 	}
 
 	this.state.translations.clear();
-	this.stateObserver.emit( 'change' );
+	this.stateObserver.emit('change');
 };
 
 I18N.prototype.getLocale = function() {
@@ -222,21 +232,19 @@ I18N.prototype.getLocaleSlug = function() {
 	return this.state.localeSlug;
 };
 
-
 /**
  * Adds new translations to the locale data, overwriting any existing translations with a matching key
  **/
-I18N.prototype.addTranslations = function( localeData ) {
-	for ( var prop in localeData ) {
-		if ( prop !== '' ) {
+I18N.prototype.addTranslations = function(localeData) {
+	for (var prop in localeData) {
+		if (prop !== '') {
 			this.state.jed.options.locale_data.messages[prop] = localeData[prop];
 		}
 	}
 
 	this.state.translations.clear();
-	this.stateObserver.emit( 'change' );
+	this.stateObserver.emit('change');
 };
-
 
 /**
  * Exposes single translation method, which is converted into its respective Jed method.
@@ -249,56 +257,56 @@ I18N.prototype.addTranslations = function( localeData ) {
 I18N.prototype.translate = function() {
 	var options, translation, sprintfArgs, errorMethod, optionsString, cacheable;
 
-	options = normalizeTranslateArguments( arguments );
+	options = normalizeTranslateArguments(arguments);
 
-	cacheable = ! options.components;
+	cacheable = !options.components;
 
-	if ( cacheable ) {
-		optionsString = JSON.stringify( options );
+	if (cacheable) {
+		optionsString = JSON.stringify(options);
 
-		translation = this.state.translations.get( optionsString );
-		if ( translation ) {
+		translation = this.state.translations.get(optionsString);
+		if (translation) {
 			return translation;
 		}
 	}
 
-	translation = getTranslationFromJed( this.state.jed, options );
+	translation = getTranslationFromJed(this.state.jed, options);
 
 	// handle any string substitution
-	if ( options.args ) {
-		sprintfArgs = ( Array.isArray( options.args ) ) ? options.args.slice( 0 ) : [ options.args ];
-		sprintfArgs.unshift( translation );
+	if (options.args) {
+		sprintfArgs = Array.isArray(options.args) ? options.args.slice(0) : [options.args];
+		sprintfArgs.unshift(translation);
 		try {
-			translation = Jed.sprintf.apply( Jed, sprintfArgs );
-		} catch ( error ) {
-			if ( ! window || ! window.console ) {
+			translation = Jed.sprintf.apply(Jed, sprintfArgs);
+		} catch (error) {
+			if (!window || !window.console) {
 				return;
 			}
 			errorMethod = this.throwErrors ? 'error' : 'warn';
-			if ( typeof error !== 'string' ) {
-				window.console[ errorMethod ]( error );
+			if (typeof error !== 'string') {
+				window.console[errorMethod](error);
 			} else {
-				window.console[ errorMethod ]( 'i18n sprintf error:', sprintfArgs );
+				window.console[errorMethod]('i18n sprintf error:', sprintfArgs);
 			}
 		}
 	}
 
 	// interpolate any components
-	if ( options.components ) {
-		translation = interpolateComponents( {
+	if (options.components) {
+		translation = interpolateComponents({
 			mixedString: translation,
 			components: options.components,
-			throwErrors: this.throwErrors
-		} );
+			throwErrors: this.throwErrors,
+		});
 	}
 
 	// run any necessary hooks
-	this.translateHooks.forEach( function( hook ) {
-		translation = hook( translation, options );
-	} );
+	this.translateHooks.forEach(function(hook) {
+		translation = hook(translation, options);
+	});
 
-	if ( cacheable ) {
-		this.state.translations.set( optionsString, translation );
+	if (cacheable) {
+		this.state.translations.set(optionsString, translation);
 	}
 
 	return translation;
@@ -315,17 +323,17 @@ I18N.prototype.translate = function() {
  * updateTranslation() function inherited from the mixin.
  */
 I18N.prototype.reRenderTranslations = function() {
-	debug( 'Re-rendering all translations due to external request' );
+	debug('Re-rendering all translations due to external request');
 	this.state.translations.clear();
-	this.stateObserver.emit( 'change' );
+	this.stateObserver.emit('change');
 };
 
-I18N.prototype.registerComponentUpdateHook = function( callback ) {
-	this.componentUpdateHooks.push( callback );
+I18N.prototype.registerComponentUpdateHook = function(callback) {
+	this.componentUpdateHooks.push(callback);
 };
 
-I18N.prototype.registerTranslateHook = function( callback ) {
-	this.translateHooks.push( callback );
+I18N.prototype.registerTranslateHook = function(callback) {
+	this.translateHooks.push(callback);
 };
 
 module.exports = I18N;

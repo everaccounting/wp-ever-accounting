@@ -1,10 +1,10 @@
-import {Component, Fragment} from "react";
-import PropTypes from "prop-types";
+import {Component, Fragment} from 'react';
+import PropTypes from 'prop-types';
 import {RowActions} from '@eaccounting/components';
 import {translate as __} from 'lib/locale';
-import {connect} from "react-redux";
+import {connect} from 'react-redux';
 import Moment from 'react-moment';
-import {Link} from "react-router-dom"
+import {Link} from 'react-router-dom';
 
 class Row extends Component {
 	static propTypes = {
@@ -17,7 +17,7 @@ class Row extends Component {
 		super(props);
 
 		this.state = {
-			editing: false
+			editing: false,
 		};
 	}
 
@@ -53,7 +53,6 @@ class Row extends Component {
 		return (
 			<Fragment>
 				<tr className={disabled ? 'disabled' : ''}>
-
 					<th scope="row" className="check-column">
 						<input
 							type="checkbox"
@@ -61,65 +60,52 @@ class Row extends Component {
 							value={id}
 							disabled={disabled}
 							checked={isSelected}
-							onChange={() => this.props.onSetSelected(item.id)}/>
+							onChange={() => this.props.onSetSelected(item.id)}
+						/>
 					</th>
 
-
 					<td className="column-primary column-paid_at">
-						<Link to={`${match.url}/${id}`}><Moment format={"DD-MM-YYYY"}>{paid_at}</Moment></Link>
+						<Link to={`${match.url}/${id}`}>
+							<Moment format={'DD-MM-YYYY'}>{paid_at}</Moment>
+						</Link>
 					</td>
 
+					<td className="column-amount">{amount}</td>
 
-					<td className="column-amount">
-						{amount}
-					</td>
+					<td className="column-category">{category && category.name ? category.name : '-'}</td>
 
-					<td className="column-category">
-						{category.name || '-'}
-					</td>
+					<td className="column-account">{account && account.name ? account.name : '-'}</td>
 
-
-					<td className="column-account">
-						{account.name || '-'}
-					</td>
-
-
-					<td className="column-customer">
-
-					</td>
+					<td className="column-customer">{contact && contact.first_name ? `${contact.first_name} ${contact.last_name}` : '-'}</td>
 
 					<td className="column-actions">
-						<RowActions controls={[
-							{
-								title: __('Edit'),
-								onClick: this.onEdit,
-								disabled: disabled,
-							},
-							{
-								title: __('Delete'),
-								onClick: this.onEdit,
-								disabled: disabled,
-							}
-						]}/>
+						<RowActions
+							controls={[
+								{
+									title: __('Edit'),
+									onClick: this.onEdit,
+									disabled: disabled,
+								},
+								{
+									title: __('Delete'),
+									onClick: this.onEdit,
+									disabled: disabled,
+								},
+							]}
+						/>
 					</td>
-
 				</tr>
 			</Fragment>
-
-		)
+		);
 	}
 }
-
 
 function mapDispatchToProps(dispatch) {
 	return {
 		onSetSelected: ids => {
-			dispatch({type: "REVENUES_SELECTED", ids: [ids]});
-		}
+			dispatch({type: 'REVENUES_SELECTED', ids: [ids]});
+		},
 	};
 }
 
-export default connect(
-	null,
-	mapDispatchToProps
-)(Row);
+export default connect(null, mapDispatchToProps)(Row);

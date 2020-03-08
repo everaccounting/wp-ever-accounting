@@ -108,7 +108,7 @@ class EAccounting_Currency {
 	 */
 	public static function getCurrencies() {
 		if ( ! isset( static::$currencies ) ) {
-			static::$currencies = eaccounting_get_currency_config();
+			static::$currencies = eaccounting_get_currencies_data();
 		}
 
 		return (array) static::$currencies;

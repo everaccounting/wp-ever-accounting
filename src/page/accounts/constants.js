@@ -11,29 +11,29 @@ export const getHeaders = () => [
 	},
 	{
 		name: 'name',
-		title: __( 'Name' ),
+		title: __('Name'),
 		primary: true,
 	},
 	{
 		name: 'number',
-		title: __( 'Number' ),
+		title: __('Number'),
 		sortable: true,
 	},
 	{
 		name: 'balance',
-		title: __( 'Balance' ),
+		title: __('Balance'),
 		sortable: false,
 	},
 	{
 		name: 'actions',
-		title: __( 'Actions' ),
+		title: __('Actions'),
 		sortable: false,
-	}
+	},
 ];
 
 export const getBulk = () => [
 	{
 		id: 'delete',
 		name: __('Delete'),
-	}
+	},
 ];

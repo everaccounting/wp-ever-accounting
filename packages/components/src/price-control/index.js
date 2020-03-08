@@ -1,67 +1,61 @@
-import {Component} from '@wordpress/element';
+import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {BaseControl} from '@wordpress/components';
+import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
-import MaskedInput from 'react-text-mask'
-import createNumberMask from 'text-mask-addons/dist/createNumberMask'
-import {getCurrencyData} from "lib/currency/currencies";
+import MaskedInput from 'react-text-mask';
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
 export default class PriceControl extends Component {
+
+	onChange = (e) => {
+		this.props.onChange && this.props.onChange(e.target.value);
+	};
+
 	render() {
-		const {label, code = "USD", help, className, onChange, before, after, required, ...props} = this.props;
+		const { label, code = 'USD', help, className, before, after, required, value, ...props } = this.props;
 		const classes = classnames('ea-form-group', 'ea-price-field', className, {
 			required: !!required,
 		});
 
-		const currency = getCurrencyData(code);
-		console.log(currency);
+		const currency = eAccountingi10n.data.currencies[code];
 
-		const suffix = ('before' !== currency.position) ? currency.symbol : '';
-		const prefix = ('before' === currency.position) ? currency.symbol : '';
+		const suffix = currency && 'before' !== currency.position ? currency.symbol : '';
+		const prefix = currency && 'before' === currency.position ? currency.symbol : '';
 
 		const maskOptions = {
-			prefix,
-			suffix,
-			allowDecimal: !!currency.precision,
-			decimalSymbol: currency.decimalSeparator,
-			decimalLimit: currency.precision,
-			thousandsSeparatorSymbol: currency.thousandSeparator,
+			prefix:prefix,
+			suffix:suffix,
+			allowDecimal: !! currency && currency.precision,
+			decimalSymbol: currency && currency.decimalSeparator,
+			decimalLimit: currency && currency.precision,
+			thousandsSeparatorSymbol: currency && currency.thousandSeparator,
 		};
 
-		const currencyMask = createNumberMask({
-			...maskOptions,
-		});
-
-
+		const currencyMask = createNumberMask(maskOptions);
+		const placeholder = currency && currency.symbol && `${currency.symbol} 0.00`;
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
-					{before && (
-						<span className="ea-input-group__before">
-							{before}
-						</span>
-					)}
+					{before && <span className="ea-input-group__before">{before}</span>}
 
 					<MaskedInput
 						required={required}
-						className='components-text-control__input ea-input-group__input'
+						placeholder={placeholder}
+						className="components-text-control__input ea-input-group__input"
 						mask={currencyMask}
-						{...props}
-						inputMode="numeric"/>
-					{after && (
-						<span className="ea-input-group__after">
-							{after}
-						</span>
-					)}
+						value={value && value || ""}
+						onChange={this.onChange}
+						inputMode="numeric"
+					/>
+					{after && <span className="ea-input-group__after">{after}</span>}
 				</div>
 			</BaseControl>
-		)
+		);
 	}
 }
 
 PriceControl.defaultProps = {
-	code: "USD",
-	value: 0,
+	code: 'USD',
 };
 
 PriceControl.propTypes = {
@@ -75,5 +69,3 @@ PriceControl.propTypes = {
 	before: PropTypes.node,
 	after: PropTypes.node,
 };
-
-

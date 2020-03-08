@@ -25,16 +25,22 @@ function eaccounting_insert_revenue( $args ) {
 
 		$args = array_merge( $item_before, $args );
 	}
-
+	error_log(print_r($args, true ));
 	$data = array(
 		'id'             => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
+<<<<<<< HEAD
 		'amount'         => empty( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
 		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
 		//todo if not set default
 		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),
 		//todo if not set default
+=======
+		'amount'         => empty( $args['amount'] ) ? '' : $args['amount'],
+//		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),//todo if not set default
+//		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),//todo if not set default
+>>>>>>> e4851ab3a08578fcb7045233cbeecd27de777396
 		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
@@ -51,16 +57,20 @@ function eaccounting_insert_revenue( $args ) {
 		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-ever-accounting' ) );
 	}
 
+<<<<<<< HEAD
 	if ( empty( $data['amount'] ) || $data['amount'] == '0.00' ) {
 		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
 	if ( empty( $data['currency_code'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
+=======
+//	$amount = $data['amount'];
+//	if ( empty(preg_replace( '/[^0-9]/', '', $amount ))  ) {
+//		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
+//	}
+>>>>>>> e4851ab3a08578fcb7045233cbeecd27de777396
 
-	if ( empty( $data['currency_rate'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Currency rate is required', 'wp-ever-accounting' ) );
-	}
 	if ( empty( $data['category_id'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
 	}
@@ -69,6 +79,43 @@ function eaccounting_insert_revenue( $args ) {
 		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-ever-accounting' ) );
 	}
 
+	$account = eaccounting_get_account( $data['account_id'] );
+	if ( ! $account ) {
+		return new WP_Error( 'invalid_data', __( 'Account does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	$currency = eaccounting_get_currency($account->currency_code, 'code');
+	if ( ! $currency ) {
+		return new WP_Error( 'invalid_data', __( 'Account associated currency does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	$category = eaccounting_get_category( $data['category_id'] );
+	if ( ! $category ) {
+		return new WP_Error( 'invalid_data', __( 'Category does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	if ( $category->type != 'income' ) {
+		return new WP_Error( 'invalid_data', __( 'Invalid category type category type must be income.', 'wp-ever-accounting' ) );
+	}
+
+	$contact = eaccounting_get_contact( $data['contact_id'] );
+	if ( ! $contact ) {
+		return new WP_Error( 'invalid_data', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	if(!in_array('customer', $contact->types)){
+		eaccounting_insert_contact(array(
+			'id' => $id,
+			'types' => array_merge($contact->types, ['customer'])
+		));
+	}
+
+	//sanitize amount before inserting
+	error_log($data['amount']);
+	$data['amount'] = eaccounting_money($data['amount'], $account->currency_code)->getAmount();
+	$data['currency_rate'] = $currency->rate;
+	$data['currency_code'] = $currency->code;
+	error_log(print_r($data, true ));
 	$where = array( 'id' => $id );
 	$data  = wp_unslash( $data );
 

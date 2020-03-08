@@ -1,7 +1,7 @@
 /* global eAccountingi10n */
 import axios from 'axios';
 import qs from 'qs';
-import {pickBy, isEmpty, isNumber} from 'lodash';
+import { pickBy, isEmpty, isNumber } from 'lodash';
 
 /**
  * Create api instance
@@ -13,8 +13,8 @@ import {pickBy, isEmpty, isNumber} from 'lodash';
  */
 export const createRequest = (endpoint, params = {}, data = {}, config = {}) => {
 	params._wpnonce = eAccountingi10n.api.WP_API_nonce;
-	const {filters = {}, ...paramsProps} = params;
-	const query = pickBy({...paramsProps, ...filters}, (value) => (isNumber(value) || !isEmpty(value)));
+	const { filters = {}, ...paramsProps } = params;
+	const query = pickBy({ ...paramsProps, ...filters }, value => isNumber(value) || !isEmpty(value));
 	return {
 		timeout: 1000,
 		baseURL: eAccountingi10n.api && eAccountingi10n.api.WP_API_root ? eAccountingi10n.api.WP_API_root : '/wp-json/',
@@ -38,7 +38,7 @@ export const createRequest = (endpoint, params = {}, data = {}, config = {}) => 
  * @returns {AxiosInstance}
  */
 export const getApiRequest = (endpoint, params) => {
-	return createRequest(endpoint, params, {}, {method: 'GET'});
+	return createRequest(endpoint, params, {}, { method: 'GET' });
 };
 
 /**
@@ -49,7 +49,7 @@ export const getApiRequest = (endpoint, params) => {
  * @returns {AxiosInstance}
  */
 export const postApiRequest = (endpoint, data = {}, params = {}) => {
-	return createRequest(endpoint, params, data, {method: 'POST'})
+	return createRequest(endpoint, params, data, { method: 'POST' });
 };
 
 /**
@@ -61,7 +61,7 @@ export const postApiRequest = (endpoint, data = {}, params = {}) => {
  * @returns {AxiosInstance}
  */
 export const apiDeleteRequest = (endpoint, params = {}, data = {}) => {
-	return createRequest(endpoint, params, data, {method: 'DELETE'})
+	return createRequest(endpoint, params, data, { method: 'DELETE' });
 };
 
 /**
@@ -71,7 +71,7 @@ export const apiDeleteRequest = (endpoint, params = {}, data = {}) => {
  * @param params
  */
 export const apiUploadRequest = (endpoint, file, params = {}) => {
-	const request = createRequest(endpoint, params, data, {method: 'POST'});
+	const request = createRequest(endpoint, params, data, { method: 'POST' });
 	request.headers['Content-Type'] = 'multipart/form-data';
 	const data = new FormData();
 	data.append('file', file);
@@ -83,12 +83,12 @@ export const apiUploadRequest = (endpoint, file, params = {}) => {
  * @param response
  * @returns {string|*}
  */
-const getErrorMessage = (response) => {
-	if(response.data && response.data.message){
+const getErrorMessage = response => {
+	if (response.data && response.data.message) {
 		return response.data.message;
 	}
 
-	if(response.statusText){
+	if (response.statusText) {
 		return response.statusText;
 	}
 
@@ -101,12 +101,12 @@ const getErrorMessage = (response) => {
  * @param response
  * @returns {string}
  */
-const getErrorCode = (response) => {
-	if(response.data && response.data.code){
+const getErrorCode = response => {
+	if (response.data && response.data.code) {
 		return response.data.code;
 	}
 
-	if(response.status){
+	if (response.status) {
 		return response.status;
 	}
 
@@ -118,20 +118,23 @@ const getErrorCode = (response) => {
  * @param request
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const apiRequest = (request) => {
-	axios.interceptors.response.use(function (response) {
-		response.total = response.headers && response.headers['x-wp-total'] ?  parseInt(response.headers['x-wp-total'], 10) : undefined;
-		return response;
-	}, function (error) {
-		const response = error.response;
-		error.message = getErrorMessage(response);
-		error.code = getErrorCode(response);
+export const apiRequest = request => {
+	axios.interceptors.response.use(
+		function(response) {
+			response.total =
+				response.headers && response.headers['x-wp-total'] ? parseInt(response.headers['x-wp-total'], 10) : undefined;
+			return response;
+		},
+		function(error) {
+			const response = error.response;
+			error.message = getErrorMessage(response);
+			error.code = getErrorCode(response);
 
-		return Promise.reject(error);
-	});
+			return Promise.reject(error);
+		}
+	);
 	return axios.request(request);
 };
-
 
 /**
  *
@@ -140,28 +143,28 @@ export const apiRequest = (request) => {
 export const accountingApi = {
 	accounts: {
 		get: (id, data = {}) => getApiRequest('accounts/' + id, data),
-		create: (data) => postApiRequest('accounts/', data),
+		create: data => postApiRequest('accounts/', data),
 		update: (id, data) => postApiRequest('accounts/' + id, data),
 		list: params => getApiRequest('accounts', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+		bulk: (action, data, table) => postApiRequest('accounts/bulk', data, table),
 	},
 	bills: {
 		get: (id, data = {}) => getApiRequest('bills/' + id, data),
-		create: (data) => postApiRequest('bills/', data),
+		create: data => postApiRequest('bills/', data),
 		update: (id, data) => postApiRequest('bills/' + id, data),
 		list: params => getApiRequest('bills', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+		bulk: (action, data, table) => postApiRequest('bills/bulk', data, table),
 	},
 	contacts: {
 		get: (id, data = {}) => getApiRequest('contacts/' + id, data),
-		create: (data) => postApiRequest('contacts/', data),
+		create: data => postApiRequest('contacts/', data),
 		update: (id, data) => postApiRequest('contacts/' + id, data),
 		list: params => getApiRequest('contacts', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+		bulk: (action, data, table) => postApiRequest('contacts/bulk', data, table),
 	},
 	currencies: {
 		get: (id, data = {}) => getApiRequest('currencies/' + id, data),
-		create: (data) => postApiRequest('currencies/', data),
+		create: data => postApiRequest('currencies/', data),
 		update: (id, data) => postApiRequest('currencies/' + id, data),
 		list: params => getApiRequest('currencies', params),
 		bulk: (action, data, table) => postApiRequest('currencies/bulk', data, table),
@@ -175,37 +178,47 @@ export const accountingApi = {
 	},
 	invoices: {
 		get: (id, data = {}) => getApiRequest('invoices/' + id, data),
-		create: (data) => postApiRequest('invoices/', data),
+		create: data => postApiRequest('invoices/', data),
 		update: (id, data) => postApiRequest('invoices/' + id, data),
 		list: params => getApiRequest('invoices', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+		bulk: (action, data, table) => postApiRequest('invoices/bulk', data, table),
 	},
 	payments: {
 		get: (id, data = {}) => getApiRequest('payments/' + id, data),
-		create: (data) => postApiRequest('payments/', data),
+		create: data => postApiRequest('payments/', data),
 		update: (id, data) => postApiRequest('payments/' + id, data),
 		list: params => getApiRequest('payments', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+		bulk: (action, data, table) => postApiRequest('payments/bulk', data, table),
+	},
+	reconciliations: {
+		get: (id, data = {}) => getApiRequest('reconciliations/' + id, data),
+		create: data => postApiRequest('reconciliations/', data),
+		update: (id, data) => postApiRequest('reconciliations/' + id, data),
+		list: params => getApiRequest('reconciliations', params),
+		bulk: (action, data, table) => postApiRequest('reconciliations/bulk', data, table),
 	},
 	revenues: {
 		get: (id, data = {}) => getApiRequest('revenues/' + id, data),
-		create: (data) => postApiRequest('revenues/', data),
+		create: data => postApiRequest('revenues/', data),
 		update: (id, data) => postApiRequest('revenues/' + id, data),
 		list: params => getApiRequest('revenues', params),
 		bulk: (action, data, table) => postApiRequest('revenues/bulk', data, table),
 	},
 	taxrates: {
 		get: (id, data = {}) => getApiRequest('taxrates/' + id, data),
-		create: (data) => postApiRequest('taxrates/', data),
+		create: data => postApiRequest('taxrates/', data),
 		update: (id, data) => postApiRequest('taxrates/' + id, data),
 		list: params => getApiRequest('taxrates', params),
 		bulk: (action, data, table) => postApiRequest('taxrates/bulk', data, table),
 	},
 	transactions: {
-		get: (id, data = {}) => getApiRequest('transactions/' + id, data),
-		create: (data) => postApiRequest('transactions/', data),
-		update: (id, data) => postApiRequest('transactions/' + id, data),
 		list: params => getApiRequest('transactions', params),
-		bulk: (action, data, table) => postApiRequest('bulk' + action, data, table),
+	},
+	transfers: {
+		get: (id, data = {}) => getApiRequest('transfers/' + id, data),
+		create: data => postApiRequest('transfers/', data),
+		update: (id, data) => postApiRequest('transfers/' + id, data),
+		list: params => getApiRequest('transfers', params),
+		bulk: (action, data, table) => postApiRequest('transfers/bulk', data, table),
 	},
 };

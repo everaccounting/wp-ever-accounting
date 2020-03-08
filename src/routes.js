@@ -1,12 +1,12 @@
-import Dashboard from "./page/dashboard";
-import Transactions from "./page/transactions";
-import Incomes from "./page/incomes";
-import Expenses from "./page/expenses";
-import {applyFilters} from "@wordpress/hooks";
-import Contacts from "./page/contacts";
-import Items from "./page/items";
-import Banking from "./page/banking";
-import Misc from "./page/misc";
+import Dashboard from './page/dashboard';
+import Transactions from './page/transactions';
+import Incomes from './page/incomes';
+import Expenses from './page/expenses';
+import { applyFilters } from '@wordpress/hooks';
+import Contacts from './page/contacts';
+import Items from './page/items';
+import Banking from './page/banking';
+import Misc from './page/misc';
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
@@ -58,6 +58,14 @@ export const routes = [
 	{
 		container: Expenses,
 		path: '/expenses/',
+	},
+	{
+		container: Banking,
+		path: '/banking/:tab/add',
+	},
+	{
+		container: Banking,
+		path: '/banking/:tab/:id',
 	},
 	{
 		container: Banking,

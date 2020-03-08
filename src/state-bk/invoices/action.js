@@ -31,15 +31,21 @@ const STATUS_INVOICE = {
 	order: 'name',
 };
 
-export const createInvoice = item => createAction( accountingApi.invoices.create, item, STATUS_INVOICES_ITEM );
-export const updateInvoice = ( id, item ) => updateAction( accountingApi.invoices.update, id, item, STATUS_INVOICES_ITEM );
-export const performTableAction = ( action, ids ) => tableAction( accountingApi.invoices.bulk, action, ids, STATUS_INVOICES_ITEM );
-export const getInvoices = args => ( dispatch, getState ) => processRequest( accountingApi.invoices.list, dispatch, STATUS_INVOICE, args, getState().invoices );
-export const setOrderBy = ( orderby, order ) => getInvoices( { orderby, order } );
-export const setPage = page => getInvoices( { page } );
-export const setFilter = ( filterBy ) => getInvoices( { filterBy, orderby: '', page: 0 } );
-export const setSearch = ( search ) => getInvoices( { search, orderby: '', page: 0 } );
-export const setSelected = items => ( { type: INVOICES_SET_SELECTED, items: items.map( parseInt ) } );
-export const setAllSelected = onoff => ( { type: INVOICES_SET_ALL_SELECTED, onoff } );
-export const setTable = table => getInvoices( table );
-export const setDisplay = ( displayType, displaySelected ) => ( { type: INVOICES_DISPLAY_SET, displayType, displaySelected } );
+export const createInvoice = item => createAction(accountingApi.invoices.create, item, STATUS_INVOICES_ITEM);
+export const updateInvoice = (id, item) => updateAction(accountingApi.invoices.update, id, item, STATUS_INVOICES_ITEM);
+export const performTableAction = (action, ids) =>
+	tableAction(accountingApi.invoices.bulk, action, ids, STATUS_INVOICES_ITEM);
+export const getInvoices = args => (dispatch, getState) =>
+	processRequest(accountingApi.invoices.list, dispatch, STATUS_INVOICE, args, getState().invoices);
+export const setOrderBy = (orderby, order) => getInvoices({ orderby, order });
+export const setPage = page => getInvoices({ page });
+export const setFilter = filterBy => getInvoices({ filterBy, orderby: '', page: 0 });
+export const setSearch = search => getInvoices({ search, orderby: '', page: 0 });
+export const setSelected = items => ({ type: INVOICES_SET_SELECTED, items: items.map(parseInt) });
+export const setAllSelected = onoff => ({ type: INVOICES_SET_ALL_SELECTED, onoff });
+export const setTable = table => getInvoices(table);
+export const setDisplay = (displayType, displaySelected) => ({
+	type: INVOICES_DISPLAY_SET,
+	displayType,
+	displaySelected,
+});

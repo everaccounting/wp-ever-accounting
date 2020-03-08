@@ -1,4 +1,4 @@
-import {HashRouter as Router, Route, Switch} from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Component } from 'react';
 import { get, isFunction } from 'lodash';
 
@@ -9,18 +9,11 @@ export default class Layout extends Component {
 		return (
 			<Router>
 				<Switch>
-					{ getPages().map( ( page ) => {
+					{getPages().map(page => {
 						return (
-							<Route
-								key={ page.path }
-								path={ page.path }
-								exact
-								render={ ( props ) => (
-									<Controller page={ page } { ...props } />
-								) }
-							/>
+							<Route key={page.path} path={page.path} exact render={props => <Controller page={page} {...props} />} />
 						);
-					} ) }
+					})}
 				</Switch>
 			</Router>
 		);

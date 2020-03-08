@@ -1,27 +1,39 @@
-import {Component, Fragment} from "react";
-import {translate as __} from 'lib/locale';
-import {connect} from "react-redux";
-import {fetchCategories, BulkAction} from "store/categories";
-import {getHeaders, getBulk} from "./constants";
-import {Navigation, SearchBox, Table} from "@eaccounting/components";
+import { Component, Fragment } from 'react';
+import { translate as __ } from 'lib/locale';
+import { connect } from 'react-redux';
+import { fetchCategories, BulkAction } from 'store/categories';
+import { getHeaders, getBulk } from './constants';
+import {Button, Navigation, SearchBox, Table} from '@eaccounting/components';
 import Row from './row';
-
+import EditCategory from "component/edit-category";
 class Categories extends Component {
-	constructor( props ) {
+	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			isAdding:false
+		};
 	}
 
-	componentDidCatch( error, info ) {
-		this.setState( { error: true, stack: error, info } );
+	componentDidCatch(error, info) {
+		this.setState({ error: true, stack: error, info });
 	}
 
 	componentDidMount() {
 		this.props.onMount({});
 	}
 
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
+	onClose = () => {
+		this.setState({ isAdding: !this.state.isAdding });
+	};
+
+
 	onRenderRow = (item, pos, status, search) => {
-		const {selected} = this.props.table;
+		const { selected } = this.props.table;
 		return (
 			<Row
 				item={item}
@@ -29,23 +41,22 @@ class Categories extends Component {
 				disabled={status.isLoading}
 				search={search}
 				isSelected={selected.includes(item.id)}
-				{...this.props}/>
+				{...this.props}
+			/>
 		);
 	};
 
-
 	render() {
-		const {status, total, table, rows, match} = this.props;
-		return(
+		const { status, total, table, rows, match } = this.props;
+		return (
 			<Fragment>
-				<a className="page-title-action">{__('Add Category')}</a>
 
+				{this.state.isAdding && <EditCategory onClose={this.onClose} onCreate={this.props.onAdd}/>}
 				<div className="ea-table-display">
-					<SearchBox
-						status={status}
-						table={table}
-						onSearch={this.props.onSearch}
-					/>
+					<Button className="page-title-action" onClick={this.onAdd}>
+						{__('Add Category')}
+					</Button>
+					<SearchBox status={status} table={table} onSearch={this.props.onSearch} />
 				</div>
 
 				<Navigation
@@ -55,7 +66,8 @@ class Categories extends Component {
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
 					status={status}
-					bulk={getBulk()}/>
+					bulk={getBulk()}
+				/>
 
 				<Table
 					headers={getHeaders()}
@@ -74,42 +86,41 @@ class Categories extends Component {
 					table={table}
 					onChangePage={this.props.onChangePage}
 					onAction={this.props.onAction}
-					status={status}/>
-
+					status={status}
+				/>
 			</Fragment>
-		)
+		);
 	}
 }
 
-
-const mapStateToProps = (state) => {
-	return state.categories
+const mapStateToProps = state => {
+	return state.categories;
 };
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onMount: (params) => {
+		onMount: params => {
 			dispatch(fetchCategories(params));
 		},
-		onSetOrderBy: (order_by, order) => {
-			dispatch(fetchCategories({order_by, order}));
+		onSetOrderBy: (orderby, order) => {
+			dispatch(fetchCategories({ orderby, order }));
 		},
-		onChangePage: (page) => {
-			dispatch(fetchCategories({page}));
+		onChangePage: page => {
+			dispatch(fetchCategories({ page }));
 		},
-		onSearch: (search) => {
-			dispatch(fetchCategories({search}));
+		onSearch: search => {
+			dispatch(fetchCategories({ search }));
 		},
-		onSetAllSelected: (onoff) => {
-			dispatch({type: "CATEGORIES_ALL_SELECTED", payload: onoff});
+		onSetAllSelected: onoff => {
+			dispatch({ type: 'CATEGORIES_ALL_SELECTED', payload: onoff });
 		},
-		onAction: (action) => {
+		onAdd: item => {
+			dispatch({ type: 'CATEGORIES_ADDED', item });
+		},
+		onAction: action => {
 			dispatch(BulkAction(action));
-		}
-	}
+		},
+	};
 }
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(Categories);
+export default connect(mapStateToProps, mapDispatchToProps)(Categories);

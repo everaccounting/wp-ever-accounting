@@ -110,11 +110,17 @@ function eaccounting_delete_account( $id ) {
 		$wpdb->ea_invoice_payments => 'account_id',
 	];
 
+<<<<<<< HEAD
 
 
 	foreach ( $tables as $table => $column ) {
 		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
 			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with accounts, you are not permitted to delete them.', 'wp-ever-accounting' ) );
+=======
+	foreach ( $tables as $table => $column ) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
+			return new WP_Error( 'not-permitted', __( 'Account have records on', 'wp-ever-accounting' ) );
+>>>>>>> e4851ab3a08578fcb7045233cbeecd27de777396
 		}
 	}
 
@@ -251,4 +257,22 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 	}
 
 	return $wpdb->get_col( $request );
+}
+
+/**
+ * since 1.0.0
+ * @param $account_id
+ * @param bool $formatted
+ *
+ * @return string|null
+ */
+function eaccounting_get_account_current_balance( $account_id, $formatted = false ) {
+	global $wpdb;
+	$account = eaccounting_get_account( $account_id );
+	$total   = $account->opening_balance;
+	// Sum Incomes
+	$total += $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_revenues WHERE account_id=%d", $account_id ) );
+	$total -= $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_payments WHERE account_id=%d", $account_id ) );
+
+	return $formatted ? eaccounting_money( $total, $account->currency_code, true )->format() : $total;
 }
