@@ -42,48 +42,48 @@ class EAccounting_Scripts {
 	public function register_scripts() {
 
 		$app_dependencies  = require_once EACCOUNTING_ABSPATH . '/dist/app/index.asset.php';
-		$comp_dependencies = require_once EACCOUNTING_ABSPATH . '/dist/components/index.asset.php';
+//		$comp_dependencies = require_once EACCOUNTING_ABSPATH . '/dist/components/index.asset.php';
 
-		wp_register_script(
-			'eaccounting-components',
-			self::get_url( 'components/index.js' ),
-			$comp_dependencies['dependencies'],
-			self::get_file_version( 'components/index.js' ),
-			true
-		);
+//		wp_register_script(
+//			'eaccounting-components',
+//			self::get_url( 'components/index.js' ),
+//			$comp_dependencies['dependencies'],
+//			self::get_file_version( 'components/index.js' ),
+//			true
+//		);
 
-		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
+//		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
 
 		wp_register_script(
 			'eaccounting',
 			self::get_url( 'app/index.js' ),
-			array_merge( $app_dependencies['dependencies'], [ 'eaccounting-components' ] ),
+			array_merge( $app_dependencies['dependencies'], ['wp-element'] ),
 			self::get_file_version( 'app/index.js' ),
 			true
 		);
 
 		wp_set_script_translations( 'eaccounting', 'wp-ever-accounting' );
 
-		wp_register_style(
-			'eaccounting-components',
-			self::get_url( 'components/style.css' ),
-			array( 'wp-components' ),
-			self::get_file_version( 'components/style.css' )
-		);
+//		wp_register_style(
+//			'eaccounting-components',
+//			self::get_url( 'components/style.css' ),
+//			array( 'wp-components' ),
+//			self::get_file_version( 'components/style.css' )
+//		);
 
 		wp_register_style(
 			'eaccounting',
 			self::get_url( 'app/style.css' ),
-			array( 'wp-components', 'eaccounting-components' ),
+			array( 'wp-components'),
 			self::get_file_version( 'app/style.css' )
 		);
 
-		wp_enqueue_style(
-			'eaccounting-fontawesome',
-			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
-			array(),
-			self::get_file_version( 'app/style.css' )
-		);
+//		wp_enqueue_style(
+//			'eaccounting-fontawesome',
+//			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
+//			array(),
+//			self::get_file_version( 'app/style.css' )
+//		);
 
 	}
 

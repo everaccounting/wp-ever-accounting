@@ -31,14 +31,7 @@ const externals = {
 	'react-dom': 'ReactDOM',
 };
 
-const eAccountingPackages = [
-	'components',
-	// 'csv-export',
-	// 'currency',
-	// 'date',
-	// 'navigation',
-	// 'number',
-];
+const eAccountingPackages = [];
 
 const entryPoints = {};
 eAccountingPackages.forEach(name => {

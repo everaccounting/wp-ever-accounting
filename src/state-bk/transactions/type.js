@@ -1,7 +1,0 @@
-/**
- * Internal dependencies
- */
-
-export const TRANSACTIONS_LOADING = 'TRANSACTIONS_LOADING';
-export const TRANSACTIONS_LOADED = 'TRANSACTIONS_LOADED';
-export const TRANSACTIONS_FAILED = 'TRANSACTIONS_FAILED';
