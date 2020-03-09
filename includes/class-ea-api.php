@@ -63,8 +63,28 @@ class EAccounting_API {
 				$this->$controller->register_routes();
 			}
 		}
-
 	}
+
+	/**
+	 * Get routes for a namespace.
+	 *
+	 * @param string $namespace Namespace to retrieve.
+	 * @return array|null
+	 */
+	public static function get_routes_from_namespace( $namespace ) {
+		$rest_server     = rest_get_server();
+		$namespace_index = $rest_server->get_namespace_index(
+			[
+				'namespace' => $namespace,
+				'context'   => 'view',
+			]
+		);
+
+		$response_data = $namespace_index->get_data();
+
+		return isset( $response_data['routes'] ) ? $response_data['routes'] : null;
+	}
+
 }
 
 EAccounting_API::instance();

@@ -154,6 +154,9 @@ class EAccounting_Scripts {
 			'pluginRoot'    => admin_url( 'admin.php?page=eaccounting' ),
 			'baseUrl'       => get_site_url(),
 			'per_page'      => 20,
+			'restApiRoutes'      => [
+				'/ea/v1' => EAccounting_API::get_routes_from_namespace( 'ea/v1')
+			],
 			'data'          => [
 				'transactionTypes' => eaccounting_get_transaction_types(),
 				'currency'         => eaccounting_get_default_currency(),
