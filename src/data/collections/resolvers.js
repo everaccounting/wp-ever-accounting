@@ -37,18 +37,20 @@ function* invalidateModifiedCollection( timestamp ) {
  * @param {Array}  ids
  */
 export function* getCollection( namespace, resourceName, query, ids ) {
-	const route = yield select(
-		SCHEMA_STORE_KEY,
-		'getRoute',
-		namespace,
-		resourceName,
-		ids
-	);
+	// const route = yield select(
+	// 	SCHEMA_STORE_KEY,
+	// 	'getRoute',
+	// 	namespace,
+	// 	resourceName,
+	// 	ids
+	// );
 	const queryString = addQueryArgs( '', query );
-	if ( ! route ) {
-		yield receiveCollection( namespace, resourceName, queryString, ids );
-		return;
-	}
+	// if ( ! route ) {
+	// 	yield receiveCollection( namespace, resourceName, queryString, ids );
+	// 	return;
+	// }
+
+	const route = '/ea/v1/contacts';
 
 	try {
 		const {

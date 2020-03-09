@@ -38,6 +38,7 @@ export const getRoute = createRegistrySelector(
 			[ namespace ]
 		);
 		state = state.routes;
+		console.log(state);
 		let error = '';
 		if ( ! state[ namespace ] ) {
 			error = sprintf(
@@ -125,6 +126,7 @@ export const getRoutes = createRegistrySelector(
  */
 const getRouteFromResourceEntries = ( stateSlice, ids = [] ) => {
 	// convert to array for easier discovery
+	console.log(stateSlice);
 	stateSlice = Object.entries( stateSlice );
 	const match = stateSlice.find( ( [ , idNames ] ) => {
 		return ids.length === idNames.length;

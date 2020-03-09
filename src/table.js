@@ -18,20 +18,5 @@ class Table extends Component{
 	}
 }
 
-const Data = [
-	{
-		id: 1,
-		name: 'Krunal'
 
-	},
-	{
-		id: 2,
-		name: 'Ankit'
-	},
-	{
-		id: 3,
-		name: 'Rushabh'
-	}
-];
-
-export default withTable(Table, Data);
+export default withTable(Table);

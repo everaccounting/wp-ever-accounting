@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import {debounce} from 'lodash';
 
 const withTable = createHigherOrderComponent((OriginalComponent) => {
-	console.log(OriginalComponent);
-
 	class WrappedComponent extends Component {
 		constructor() {
 			super(...arguments);
