@@ -3,4 +3,4 @@
  *
  * @type {string}
  */
-export const STORE_KEY = 'wc/store/schema';
+export const STORE_KEY = 'ea/store/schema';
