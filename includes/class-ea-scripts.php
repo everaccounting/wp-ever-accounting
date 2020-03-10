@@ -41,7 +41,7 @@ class EAccounting_Scripts {
 	 */
 	public function register_scripts() {
 
-		$app_dependencies  = require_once EACCOUNTING_ABSPATH . '/dist/app/index.asset.php';
+		$app_dependencies  = require_once EACCOUNTING_ABSPATH . '/assets/dist/eaccounting.asset.php';
 //		$comp_dependencies = require_once EACCOUNTING_ABSPATH . '/dist/components/index.asset.php';
 
 //		wp_register_script(
@@ -56,9 +56,9 @@ class EAccounting_Scripts {
 
 		wp_register_script(
 			'eaccounting',
-			self::get_url( 'app/index.js' ),
+			self::get_url( 'eaccounting.js' ),
 			array_merge( $app_dependencies['dependencies'], ['wp-element'] ),
-			self::get_file_version( 'app/index.js' ),
+			self::get_file_version( 'eaccounting.js' ),
 			true
 		);
 
@@ -109,7 +109,7 @@ class EAccounting_Scripts {
 	 * @return string Folder path of asset.
 	 */
 	private static function get_path() {
-		return '/dist/';
+		return '/assets/dist/';
 	}
 
 	/**
