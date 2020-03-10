@@ -22,24 +22,14 @@ const overrideOptions = (target, targetName, options) => {
 
 const babelConfigs = {
 	main: Object.assign({}, babelDefaultConfig, {
-		plugins,
-		presets: map(babelDefaultConfig.presets, preset =>
-			overrideOptions(preset, '@babel/preset-env', {
-				modules: 'commonjs',
-			})
-		),
+		plugins
 	}),
 	module: Object.assign({}, babelDefaultConfig, {
 		plugins: map(plugins, plugin =>
 			overrideOptions(plugin, '@babel/plugin-transform-runtime', {
 				useESModules: true,
 			})
-		),
-		presets: map(babelDefaultConfig.presets, preset =>
-			overrideOptions(preset, '@babel/preset-env', {
-				modules: false,
-			})
-		),
+		)
 	}),
 };
 

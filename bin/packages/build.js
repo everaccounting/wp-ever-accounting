@@ -1,5 +1,5 @@
 /**
- * script to build packages into `build/` directory.
+ * script to build packages into `assets/dist/` directory.
  *
  * Example:
  *  node ./bin/packages/build.js
@@ -123,15 +123,15 @@ function buildScssFile(styleFile) {
 	mkdirp.sync(path.dirname(outputFile));
 	const builtSass = sass.renderSync({
 		file: styleFile,
-		includePaths: [path.resolve(__dirname, '../../src/stylesheets/abstracts')],
+		includePaths: [path.resolve(__dirname, '../../client/stylesheets/abstracts')],
 		data:
 			['colors', 'variables', 'breakpoints', 'mixins'].map(imported => `@import "_${imported}";`).join(' ') +
 			fs.readFileSync(styleFile, 'utf8'),
 	});
 
 	const postCSSSync = callback => {
-		postcss(require('./post-css-config'))
-			.process(builtSass.css, { from: 'src/app.css', to: 'dist/app.css' })
+		postcss(require('../../postcss.config'))
+			.process(builtSass.css, { from: 'client/app.css', to: 'assets/dist/app.css' })
 			.then(result => callback(null, result));
 	};
 

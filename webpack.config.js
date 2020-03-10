@@ -21,7 +21,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const externals = [];
 
-const packages = [];
+const packages = [
+	'settings'
+];
 const entryPoints = {};
 packages.forEach(name => {
 	externals[`@eaccounting/${name}`] = {
