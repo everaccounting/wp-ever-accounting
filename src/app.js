@@ -10,7 +10,7 @@ import {compose} from '@wordpress/compose';
  */
 
 import Table from './table';
-import store from './demostore';
+// import store from './demostore';
 
 
 class App extends React.Component {
