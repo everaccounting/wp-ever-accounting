@@ -2,7 +2,7 @@ const path = require('path');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const pkg = require('./package.json');
-const { get } = require('lodash');
+const {get} = require('lodash');
 const TerserPlugin = require('terser-webpack-plugin');
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -22,7 +22,9 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const externals = [];
 
 const packages = [
-	'settings'
+	'settings',
+	'components',
+	'data',
 ];
 const entryPoints = {};
 packages.forEach(name => {
@@ -130,15 +132,15 @@ module.exports = {
 		],
 	},
 	plugins: [
-		new ProgressBarPlugin( {
-			format: chalk.blue( 'Build core script' ) +
-				' [:bar] ' + chalk.green( ':percent' ) +
+		new ProgressBarPlugin({
+			format: chalk.blue('Build core script') +
+				' [:bar] ' + chalk.green(':percent') +
 				' :msg (:elapsed seconds)',
-		} ),
+		}),
 		new DependencyExtractionWebpackPlugin({injectPolyfill: true}),
 		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
 		new webpack.DefinePlugin({
-			'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') },
+			'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')},
 			EACCOUNTING_VERSION: "'" + pkg.version + "'",
 		}),
 		new FixStyleOnlyEntriesPlugin(),
@@ -174,7 +176,7 @@ module.exports = {
 		new CopyWebpackPlugin(
 			packages.map(packageName => ({
 				from: `./packages/${packageName}/build-style/*.css`,
-				to: `./assets/dist/${packageName}/`,
+				to: `./assets/dist/`,
 				flatten: true,
 				transform: content => content,
 			}))

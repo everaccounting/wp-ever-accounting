@@ -10,7 +10,17 @@ module.exports = {
 		],
 	],
 	plugins: [
-		'@babel/plugin-proposal-class-properties',
-		'@wordpress/babel-plugin-makepot',
-	]
+		'@babel/plugin-proposal-class-properties'
+	],
+	env: {
+		production: {
+			plugins: [
+				'transform-react-remove-prop-types',
+				// '@babel/plugin-transform-react-inline-elements',
+				// '@babel/plugin-transform-react-constant-elements',
+				// '@babel/plugin-proposal-class-properties',
+				'@wordpress/babel-plugin-makepot',
+			],
+		},
+	},
 };

@@ -14,6 +14,6 @@ import { allSettings } from './settings-init';
  *                                               to sanitize the setting (eg.
  *                                               ensure it's a number)
  */
-export function setSetting( name, value, filter = ( val ) => val ) {
-	allSettings[ name ] = filter( value );
+export function setSetting(name, value, filter = val => val) {
+	allSettings[name] = filter(value);
 }

@@ -1,7 +1,7 @@
 /**
  * Internal dependencies
  */
-import {allSettings} from './settings-init';
+import { allSettings } from './settings-init';
 
 /**
  * Retrieves a setting value from the setting state.
@@ -18,9 +18,7 @@ import {allSettings} from './settings-init';
  *                                                the provided fallback arg.
  * @return {*} The setting value.
  */
-export function getSetting(name, fallback = false, filter = (val) => val) {
-	const value = allSettings.hasOwnProperty(name)
-		? allSettings[name]
-		: fallback;
+export function getSetting(name, fallback = false, filter = val => val) {
+	const value = allSettings.hasOwnProperty(name) ? allSettings[name] : fallback;
 	return filter(value, fallback);
 }

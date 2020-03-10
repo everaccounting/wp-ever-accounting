@@ -42,34 +42,44 @@ class EAccounting_Scripts {
 	public function register_scripts() {
 
 		$app_dependencies  = require_once EACCOUNTING_ABSPATH . '/assets/dist/eaccounting.asset.php';
-//		$comp_dependencies = require_once EACCOUNTING_ABSPATH . '/dist/components/index.asset.php';
+		$comp_dependencies = require_once EACCOUNTING_ABSPATH . '/assets/dist/components.asset.php';
+		$data_dependencies = require_once EACCOUNTING_ABSPATH . '/assets/dist/data.asset.php';
 
-//		wp_register_script(
-//			'eaccounting-components',
-//			self::get_url( 'components/index.js' ),
-//			$comp_dependencies['dependencies'],
-//			self::get_file_version( 'components/index.js' ),
-//			true
-//		);
+		wp_register_script(
+			'eaccounting-components',
+			self::get_url( 'components.js' ),
+			$comp_dependencies['dependencies'],
+			self::get_file_version( 'components.js' ),
+			true
+		);
+		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
 
-//		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
+		wp_register_script(
+			'eaccounting-data',
+			self::get_url( 'data.js' ),
+			array_merge( $data_dependencies['dependencies']),
+			self::get_file_version( 'data.js' ),
+			true
+		);
 
 		wp_register_script(
 			'eaccounting',
 			self::get_url( 'eaccounting.js' ),
-			array_merge( $app_dependencies['dependencies'], ['wp-element'] ),
+			array_merge( $app_dependencies['dependencies'], ['eaccounting-data'] ),
 			self::get_file_version( 'eaccounting.js' ),
 			true
 		);
 
 		wp_set_script_translations( 'eaccounting', 'wp-ever-accounting' );
 
-//		wp_register_style(
-//			'eaccounting-components',
-//			self::get_url( 'components/style.css' ),
-//			array( 'wp-components' ),
-//			self::get_file_version( 'components/style.css' )
-//		);
+		wp_register_style(
+			'eaccounting-components',
+			self::get_url( 'components/style.css' ),
+			array( 'wp-components' ),
+			self::get_file_version( 'components/style.css' )
+		);
+
+
 
 		wp_register_style(
 			'eaccounting',

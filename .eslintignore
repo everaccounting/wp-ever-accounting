@@ -2,6 +2,7 @@ bin/*
 !bin/generate-docs
 !.eslintrc.js
 dist
+build
 build-module
 coverage
 languages
