@@ -14,20 +14,13 @@ import { getStateForContext } from './utils';
  *
  * @return {*} The currently stored value or the defaultValue if not present.
  */
-export const getValueForQueryKey = (
-	state,
-	context,
-	queryKey,
-	defaultValue = {}
-) => {
-	let stateContext = getStateForContext( state, context );
-	if ( stateContext === null ) {
+export const getValueForQueryKey = (state, context, queryKey, defaultValue = {}) => {
+	let stateContext = getStateForContext(state, context);
+	if (stateContext === null) {
 		return defaultValue;
 	}
-	stateContext = JSON.parse( stateContext );
-	return typeof stateContext[ queryKey ] !== 'undefined'
-		? stateContext[ queryKey ]
-		: defaultValue;
+	stateContext = JSON.parse(stateContext);
+	return typeof stateContext[queryKey] !== 'undefined' ? stateContext[queryKey] : defaultValue;
 };
 
 /**
@@ -41,11 +34,7 @@ export const getValueForQueryKey = (
  * @return {*} The currently stored query-state for the given context or
  *             defaultValue if not present in state.
  */
-export const getValueForQueryContext = (
-	state,
-	context,
-	defaultValue = {}
-) => {
-	const stateContext = getStateForContext( state, context );
-	return stateContext === null ? defaultValue : JSON.parse( stateContext );
+export const getValueForQueryContext = (state, context, defaultValue = {}) => {
+	const stateContext = getStateForContext(state, context);
+	return stateContext === null ? defaultValue : JSON.parse(stateContext);
 };

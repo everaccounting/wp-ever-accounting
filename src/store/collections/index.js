@@ -14,12 +14,12 @@ import * as resolvers from './resolvers';
 import reducer from './reducers';
 import { controls } from './controls';
 
-registerStore( STORE_KEY, {
+registerStore(STORE_KEY, {
 	reducer,
 	actions,
 	controls: { ...dataControls, ...controls },
 	selectors,
 	resolvers,
-} );
+});
 
 export const COLLECTIONS_STORE_KEY = STORE_KEY;

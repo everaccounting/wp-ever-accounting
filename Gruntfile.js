@@ -1,128 +1,26 @@
-/* jshint node:true */
+/* eslint-disable */
 module.exports = function(grunt) {
 	'use strict';
-	var pkg = grunt.file.readJSON('package.json');
 
+	// Project configuration
 	grunt.initConfig({
-		// Setting folder templates.
-		dirs: {
-			css: 'assets/css',
-			fonts: 'assets/fonts',
-			images: 'assets/images',
-			js: 'assets/js',
-		},
-		// JavaScript linting with JSHint.
-		jshint: {
-			options: {
-				jshintrc: '.jshintrc',
-			},
-			all: ['Gruntfile.js', '<%= dirs.js %>/*.js', '!<%= dirs.js %>/*.min.js'],
-		},
-		// Minify .js files.
-		uglify: {
-			options: {
-				ie8: true,
-				parse: {
-					strict: false,
-				},
-				output: {
-					comments: /@license|@preserve|^!/,
-				},
-			},
-			all: {
-				files: [
-					{
-						expand: true,
-						cwd: '<%= dirs.js %>/',
-						src: ['*.js', '!*.min.js'],
-						dest: '<%= dirs.js %>/',
-						ext: '.min.js',
-					},
-				],
-			},
-			vendor: {
-				files: {
-					// '<%= dirs.js %>/file.min.js': ['<%= dirs.js %>/file.js'],
-				},
-			},
-		},
-		// Sass linting with Stylelint.
-		stylelint: {
-			options: {
-				configFile: '.stylelintrc',
-			},
-			all: ['<%= dirs.css %>/*.scss'],
-		},
-		// Compile all .scss files.
-		sass: {
-			compile: {
-				options: {
-					sourceMap: false,
-				},
-				files: [
-					{
-						expand: true,
-						cwd: '<%= dirs.css %>/',
-						src: ['*.scss'],
-						dest: '<%= dirs.css %>/',
-						ext: '.css',
-					},
-				],
-			},
-		},
-
-		// Autoprefixer.
-		postcss: {
-			options: {
-				processors: [
-					require('autoprefixer')({
-						browsers: ['> 0.1%', 'ie 8', 'ie 9'],
-					}),
-				],
-			},
-			dist: {
-				src: ['<%= dirs.css %>/*.css'],
-			},
-		},
-		// Minify all .css files.
-		cssmin: {
-			minify: {
-				expand: true,
-				cwd: '<%= dirs.css %>/',
-				src: ['*.css'],
-				dest: '<%= dirs.css %>/',
-				ext: '.css',
-			},
-		},
-		// Watch changes for assets.
-		watch: {
-			css: {
-				files: ['<%= dirs.css %>/**/*.scss'],
-				tasks: ['sass', 'postcss', 'cssmin'],
-			},
-			js: {
-				files: ['<%= dirs.js %>/*js', '<%= dirs.js %>/*js', '!<%= dirs.js %>/*.min.js'],
-				tasks: ['jshint', 'uglify'],
-			},
-		},
-		// Generate POT files.
 		makepot: {
-			options: {
-				type: 'wp-plugin',
-				domainPath: 'i18n/languages',
-				potHeaders: {
-					'language-team': 'LANGUAGE <EMAIL@ADDRESS>',
-				},
-			},
-			dist: {
+			target: {
 				options: {
+					domainPath: '/languages',
+					exclude: ['.git/*', 'bin/*', 'node_modules/*', 'tests/*'],
+					mainFile: 'wp-ever-accounting.php',
 					potFilename: 'wp-ever-accounting.pot',
-					exclude: ['includes/class-updater.php', 'apigen/.*', 'vendor/.*', 'tests/.*', 'tmp/.*'],
+					potHeaders: {
+						poedit: true,
+						'x-poedit-keywordslist': true,
+					},
+					type: 'wp-plugin',
+					updateTimestamp: true,
 				},
 			},
 		},
 
-		// Check textdomain errors.
 		checktextdomain: {
 			options: {
 				text_domain: 'wp-ever-accounting',
@@ -145,9 +43,7 @@ module.exports = function(grunt) {
 			},
 			files: {
 				src: [
-					'**/*.php', // Include all files
-					'!apigen/**', // Exclude apigen/
-					'!includes/libraries/**', // Exclude libraries/
+					'**/*.php', // Include all files/
 					'!node_modules/**', // Exclude node_modules/
 					'!tests/**', // Exclude tests/
 					'!vendor/**', // Exclude vendor/
@@ -156,114 +52,11 @@ module.exports = function(grunt) {
 				expand: true,
 			},
 		},
-
-		// PHP Code Sniffer.
-		phpcs: {
-			options: {
-				bin: 'vendor/bin/phpcs',
-			},
-			dist: {
-				src: [
-					'**/*.php', // Include all files
-					'!includes/libraries/**', // Exclude libraries/
-					'!node_modules/**', // Exclude node_modules/
-					'!tests/cli/**', // Exclude tests/cli/
-					'!tmp/**', // Exclude tmp/
-					'!vendor/**', // Exclude vendor/
-				],
-			},
-		},
-		// Clean up build directory
-		clean: {
-			main: ['build/'],
-		},
-		copy: {
-			main: {
-				src: [
-					'**',
-					'!node_modules/**',
-					'!**/js/vendor/**',
-					'!**/css/vendor/**',
-					'!**/css/**/*.scss',
-					'!**/images/src/**',
-					'!**/sass/**',
-					'!build/**',
-					'!**/*.md',
-					'!**/*.map',
-					'!**/*.sh',
-					'!.idea/**',
-					'!bin/**',
-					'!.git/**',
-					'!Gruntfile.js',
-					'!phpunit.xml.dist',
-					'!package.json',
-					'!composer.json',
-					'!composer.lock',
-					'!package-lock.json',
-					'!debug.log',
-					'!none',
-					'!.gitignore',
-					'!.gitmodules',
-					'!phpcs.xml.dist',
-					'!npm-debug.log',
-					'!plugin-deploy.sh',
-					'!export.sh',
-					'!config.codekit',
-					'!nbproject/*',
-					'!tests/**',
-					'!.csscomb.json',
-					'!.editorconfig',
-					'!.jshintrc',
-					'!.tmp',
-				],
-				dest: 'build/',
-			},
-		},
-
-		compress: {
-			main: {
-				options: {
-					mode: 'zip',
-					archive: './build/' + pkg.name + '-v' + pkg.version + '.zip',
-				},
-				expand: true,
-				cwd: 'build/',
-				src: ['**/*'],
-				dest: pkg.name,
-			},
-		},
 	});
 
 	// Load NPM tasks to be used here.
-	grunt.loadNpmTasks('grunt-sass');
-	grunt.loadNpmTasks('grunt-phpcs');
-	grunt.loadNpmTasks('grunt-postcss');
-	grunt.loadNpmTasks('grunt-stylelint');
-	grunt.loadNpmTasks('grunt-phpcs');
 	grunt.loadNpmTasks('grunt-wp-i18n');
 	grunt.loadNpmTasks('grunt-checktextdomain');
-	grunt.loadNpmTasks('grunt-contrib-jshint');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-compress');
-	grunt.loadNpmTasks('grunt-prompt');
 
-	// Register tasks.
-	grunt.registerTask('default', ['js', 'css', 'i18n']);
-
-	grunt.registerTask('js', ['jshint']);
-
-	grunt.registerTask('css', ['sass', 'postcss', 'cssmin']);
-
-	grunt.registerTask('i18n', ['checktextdomain', 'makepot']);
-
-	grunt.registerTask('release', ['default', 'i18n']);
-
-	grunt.registerTask('build', ['clean', 'clean', 'copy']);
-
-	grunt.registerTask('zip', ['compress']);
+	grunt.util.linefeed = '\n';
 };

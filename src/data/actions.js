@@ -1,18 +1,15 @@
 /**
  * External dependencies
  */
-import {apiFetch, select} from '@wordpress/data-controls';
+import { apiFetch, select } from '@wordpress/data-controls';
 
 /**
  * Internal dependencies
  */
-import {ACTION_TYPES as types} from './constants';
+import { ACTION_TYPES as types } from './constants';
 
 let Headers = window.Headers || null;
-Headers = Headers
-	? new Headers()
-	: {get: () => undefined, has: () => undefined};
-
+Headers = Headers ? new Headers() : { get: () => undefined, has: () => undefined };
 
 /**
  * Returns an action object used in updating the store with the provided items
@@ -49,10 +46,10 @@ export function receiveCollection(
 	resourceName,
 	queryString = '',
 	ids = [],
-	response = {items: [], headers: Headers},
+	response = { items: [], headers: Headers },
 	replace = false
 ) {
-	console.group("Action");
+	console.group('Action');
 	console.log('receiveCollection', arguments);
 	console.groupEnd();
 	return {
@@ -65,13 +62,7 @@ export function receiveCollection(
 	};
 }
 
-export function receiveCollectionError(
-	namespace,
-	resourceName,
-	queryString,
-	ids,
-	error
-) {
+export function receiveCollectionError(namespace, resourceName, queryString, ids, error) {
 	return {
 		type: 'ERROR',
 		namespace,
@@ -86,11 +77,9 @@ export function receiveCollectionError(
 	};
 }
 
-export function receiveLastModified( timestamp ) {
+export function receiveLastModified(timestamp) {
 	return {
 		type: types.RECEIVE_LAST_MODIFIED,
 		timestamp,
 	};
 }
-
-

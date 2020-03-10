@@ -2,7 +2,7 @@
  * External dependencies
  */
 import triggerFetch from '@wordpress/api-fetch';
-import {mapObject} from "lodash";
+import { mapObject } from 'lodash';
 
 /**
  * Dispatched a control action for triggering an api fetch call with no parsing.
@@ -12,7 +12,7 @@ import {mapObject} from "lodash";
  *
  * @return {Object} The control action descriptor.
  */
-export const apiFetchWithHeaders = ( path ) => {
+export const apiFetchWithHeaders = path => {
 	return {
 		type: 'API_FETCH_WITH_HEADERS',
 		path,
@@ -26,17 +26,17 @@ export const apiFetchWithHeaders = ( path ) => {
  *                  the controls property of the registration object.
  */
 export const controls = {
-	API_FETCH_WITH_HEADERS( { path } ) {
-		return new Promise( ( resolve, reject ) => {
-			triggerFetch( { path, parse: false } )
-				.then( ( response ) => {
-					response.json().then( ( items ) => {
-						resolve( { items, headers: response.headers} );
-					} );
-				} )
-				.catch( ( error ) => {
-					reject( error );
-				} );
-		} );
+	API_FETCH_WITH_HEADERS({ path }) {
+		return new Promise((resolve, reject) => {
+			triggerFetch({ path, parse: false })
+				.then(response => {
+					response.json().then(items => {
+						resolve({ items, headers: response.headers });
+					});
+				})
+				.catch(error => {
+					reject(error);
+				});
+		});
 	},
 };

@@ -1,18 +1,16 @@
 /**
  * External dependencies
  */
-import {apiFetch, select} from '@wordpress/data-controls';
+import { apiFetch, select } from '@wordpress/data-controls';
 
 /**
  * Internal dependencies
  */
-import {ACTION_TYPES as types} from './action-types';
-import {STORE_KEY as SCHEMA_STORE_KEY} from '../schema/constants';
+import { ACTION_TYPES as types } from './action-types';
+import { STORE_KEY as SCHEMA_STORE_KEY } from '../schema/constants';
 
 let Headers = window.Headers || null;
-Headers = Headers
-	? new Headers()
-	: {get: () => undefined, has: () => undefined};
+Headers = Headers ? new Headers() : { get: () => undefined, has: () => undefined };
 
 /**
  * Returns an action object used in updating the store with the provided items
@@ -49,7 +47,7 @@ export function receiveCollection(
 	resourceName,
 	queryString = '',
 	ids = [],
-	response = {items: [], headers: Headers},
+	response = { items: [], headers: Headers },
 	replace = false
 ) {
 	return {
@@ -62,12 +60,13 @@ export function receiveCollection(
 	};
 }
 
-export const resetCollection = (namespace,
-								resourceName,
-								queryString,
-								ids = [],
-								response = {items: [], headers: Headers}
-								) => {
+export const resetCollection = (
+	namespace,
+	resourceName,
+	queryString,
+	ids = [],
+	response = { items: [], headers: Headers }
+) => {
 	return {
 		type: types.RESET_COLLECTION,
 		namespace,
@@ -75,26 +74,14 @@ export const resetCollection = (namespace,
 		queryString,
 		ids,
 		response,
-	}
+	};
 };
 
-export const updateItem = (namespace, resourceName, queryString, item) => {
+export const updateItem = (namespace, resourceName, queryString, item) => {};
 
-};
-
-export function* __experimentalPersistItemToCollection(
-	namespace,
-	resourceName,
-	currentCollection,
-	data = {}
-) {
+export function* __experimentalPersistItemToCollection(namespace, resourceName, currentCollection, data = {}) {
 	const newCollection = [...currentCollection];
-	const route = yield select(
-		SCHEMA_STORE_KEY,
-		'getRoute',
-		namespace,
-		resourceName
-	);
+	const route = yield select(SCHEMA_STORE_KEY, 'getRoute', namespace, resourceName);
 	if (!route) {
 		return;
 	}
@@ -126,13 +113,7 @@ export function* __experimentalPersistItemToCollection(
 	}
 }
 
-export function receiveCollectionError(
-	namespace,
-	resourceName,
-	queryString,
-	ids,
-	error
-) {
+export function receiveCollectionError(namespace, resourceName, queryString, ids, error) {
 	return {
 		type: 'ERROR',
 		namespace,

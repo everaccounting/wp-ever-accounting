@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
-import { registerStore } from "@wordpress/data";
+import { registerStore } from '@wordpress/data';
 
 const DEFAULT_STATE = {
 	posts: {},
@@ -7,7 +7,7 @@ const DEFAULT_STATE = {
 };
 
 const actions = {
-	setPost( item, post ) {
+	setPost(item, post) {
 		return {
 			type: 'SET_PRICE',
 			item,
@@ -15,14 +15,14 @@ const actions = {
 		};
 	},
 
-	startSale( discountPercent ) {
+	startSale(discountPercent) {
 		return {
 			type: 'START_SALE',
 			discountPercent,
 		};
 	},
 
-	fetchFromAPI( path ) {
+	fetchFromAPI(path) {
 		return {
 			type: 'FETCH_FROM_API',
 			path,
@@ -30,15 +30,15 @@ const actions = {
 	},
 };
 
-registerStore( 'demostore', {
-	reducer( state = DEFAULT_STATE, action ) {
-		switch ( action.type ) {
+registerStore('demostore', {
+	reducer(state = DEFAULT_STATE, action) {
+		switch (action.type) {
 			case 'SET_PRICE':
 				return {
 					...state,
 					posts: {
 						...state.posts,
-						[ action.item ]: action.post,
+						[action.item]: action.post,
 					},
 				};
 
@@ -55,23 +55,23 @@ registerStore( 'demostore', {
 	actions,
 
 	selectors: {
-		getPost( state, item ) {
+		getPost(state, item) {
 			const { posts } = state;
-			return posts[ item ];
+			return posts[item];
 		},
 	},
 
 	controls: {
-		FETCH_FROM_API( action ) {
-			return apiFetch( { path: action.path } )
+		FETCH_FROM_API(action) {
+			return apiFetch({ path: action.path });
 		},
 	},
 
 	resolvers: {
-		* getPost( item ) {
+		*getPost(item) {
 			const path = '/wp/v2/posts/' + item;
-			const post = yield actions.fetchFromAPI( path );
-			return actions.setPost( item, post );
+			const post = yield actions.fetchFromAPI(path);
+			return actions.setPost(item, post);
 		},
 	},
-} );
+});
