@@ -1,18 +1,18 @@
 /**
  * External dependencies
  */
-import { apiFetch, select } from '@wordpress/data-controls';
+import {apiFetch, select} from '@wordpress/data-controls';
 
 /**
  * Internal dependencies
  */
-import { ACTION_TYPES as types } from './action-types';
-import { STORE_KEY as SCHEMA_STORE_KEY } from '../schema/constants';
+import {ACTION_TYPES as types} from './action-types';
+import {STORE_KEY as SCHEMA_STORE_KEY} from '../schema/constants';
 
 let Headers = window.Headers || null;
 Headers = Headers
 	? new Headers()
-	: { get: () => undefined, has: () => undefined };
+	: {get: () => undefined, has: () => undefined};
 
 /**
  * Returns an action object used in updating the store with the provided items
@@ -49,7 +49,7 @@ export function receiveCollection(
 	resourceName,
 	queryString = '',
 	ids = [],
-	response = { items: [], headers: Headers },
+	response = {items: [], headers: Headers},
 	replace = false
 ) {
 	return {
@@ -62,33 +62,53 @@ export function receiveCollection(
 	};
 }
 
+export const resetCollection = (namespace,
+								resourceName,
+								queryString,
+								ids = [],
+								response = {items: [], headers: Headers}
+								) => {
+	return {
+		type: types.RESET_COLLECTION,
+		namespace,
+		resourceName,
+		queryString,
+		ids,
+		response,
+	}
+};
+
+export const updateItem = (namespace, resourceName, queryString, item) => {
+
+};
+
 export function* __experimentalPersistItemToCollection(
 	namespace,
 	resourceName,
 	currentCollection,
 	data = {}
 ) {
-	const newCollection = [ ...currentCollection ];
+	const newCollection = [...currentCollection];
 	const route = yield select(
 		SCHEMA_STORE_KEY,
 		'getRoute',
 		namespace,
 		resourceName
 	);
-	if ( ! route ) {
+	if (!route) {
 		return;
 	}
 
 	try {
-		const item = yield apiFetch( {
+		const item = yield apiFetch({
 			path: route,
 			method: 'POST',
 			data,
 			cache: 'no-store',
-		} );
+		});
 
-		if ( item ) {
-			newCollection.push( item );
+		if (item) {
+			newCollection.push(item);
 			yield receiveCollection(
 				namespace,
 				resourceName,
@@ -101,8 +121,8 @@ export function* __experimentalPersistItemToCollection(
 				true
 			);
 		}
-	} catch ( error ) {
-		yield receiveCollectionError( namespace, resourceName, '', [], error );
+	} catch (error) {
+		yield receiveCollectionError(namespace, resourceName, '', [], error);
 	}
 }
 
@@ -127,7 +147,7 @@ export function receiveCollectionError(
 	};
 }
 
-export function receiveLastModified( timestamp ) {
+export function receiveLastModified(timestamp) {
 	return {
 		type: types.RECEIVE_LAST_MODIFIED,
 		timestamp,

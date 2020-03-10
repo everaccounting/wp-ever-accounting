@@ -12,12 +12,13 @@ const withTable = createHigherOrderComponent((OriginalComponent) => {
 			super(props);
 		}
 
+
 		onOrderBy = (orderby, order) => {
 			this.props.setQuery(this.props.resourceName, orderby, order);
 		};
 
 		onPageChange = (page) => {
-			this.props.setQuery(this.props.resourceName, 'page', page);
+			this.props.setQuery(this.props.resourceName, 'page', page || 1);
 		};
 
 		onSearch = (search) => {
@@ -36,9 +37,14 @@ const withTable = createHigherOrderComponent((OriginalComponent) => {
 
 		};
 
+		onDelete = (item) => {
+			this.props.resetCollection('/ea/v1', this.props.resourceName, {}, [item.id], true )
+			// this.props.setQuery(this.props.resourceName, {repalce});
+		};
 
 		render() {
-			const {items, query, isLoading} = this.props;
+			const {items, query, total, isLoading} = this.props;
+			const {page} = query;
 			return (
 				<OriginalComponent
 					setOrderBy={this.onOrderBy}
@@ -46,10 +52,13 @@ const withTable = createHigherOrderComponent((OriginalComponent) => {
 					setSearch={this.onSearch}
 					setSelected={this.onSelected}
 					setAllSelected={this.onAllSelected}
-					setonAction={this.onAction}
+					setAction={this.onAction}
+					setDelete={this.onDelete}
+					total={total}
 					items={items}
 					isLoading={isLoading}
 					query={query}
+					page={page}
 				/>
 			)
 		}
@@ -57,33 +66,37 @@ const withTable = createHigherOrderComponent((OriginalComponent) => {
 
 	WrappedComponent.propTypes = {
 		selected: PropTypes.array,
+		query: PropTypes.object,
 	};
 	WrappedComponent.defaultProps = {
 		selected: [],
+		query: {},
 	};
 
 	return compose(
 		withSelect((select, ownProps) => {
-			const {resourceName} = ownProps;
-
-			if (!resourceName) {
-				throw new Error('You must pass resource name');
-			}
-			const currentQuery = select(QUERY_STATE_STORE_KEY).getValueForQueryContext(resourceName);
+			const {resourceName, query} = ownProps;
+			const currentQuery = {
+				...query, ...select(QUERY_STATE_STORE_KEY).getValueForQueryContext(resourceName)
+			};
+			console.log(currentQuery);
 			const namespace = '/ea/v1';
 			const headerKey = 'X-WP-Total';
 			const currentResourceValues = [];
 			const store = select(COLLECTIONS_STORE_KEY);
-
+			const replace = true;
 			const args = [
 				namespace,
 				resourceName,
 				currentQuery,
 				currentResourceValues,
+				replace
 			];
 
+			//console.log(select(COLLECTIONS_STORE_KEY).getCollection(namespace, resourceName, currentQuery, currentResourceValues, ['headers']));
+
 			return {
-				items: select(COLLECTIONS_STORE_KEY).getCollection(namespace, resourceName, currentQuery, currentResourceValues),
+				items: select(COLLECTIONS_STORE_KEY).getCollection(namespace, resourceName, currentQuery, currentResourceValues, replace),
 				total: select(COLLECTIONS_STORE_KEY).getCollectionHeader(headerKey, namespace, resourceName, currentQuery),
 				isLoading: store.hasFinishedResolution('getCollection', args) !== true,
 				query: currentQuery,
@@ -91,7 +104,10 @@ const withTable = createHigherOrderComponent((OriginalComponent) => {
 		}),
 		withDispatch(dispatch => {
 			return {
+				//resetCollection: dispatch(COLLECTIONS_STORE_KEY).setQueryValue,
+				resetCollection: dispatch(COLLECTIONS_STORE_KEY).getCollection,
 				setQuery: dispatch(QUERY_STATE_STORE_KEY).setQueryValue,
+				setQueries: dispatch(QUERY_STATE_STORE_KEY).setValueForQueryContext,
 			}
 		})
 	)(WrappedComponent);

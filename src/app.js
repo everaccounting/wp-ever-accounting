@@ -38,7 +38,7 @@ class App extends React.Component {
 			<div>
 				<button onClick={this.onClick}>CLICK</button>
 				<br/>
-				<Table resourceName={'contacts'}/>
+				<Table resourceName={'contacts'} query={{orderby:'name', order:'asc', page:1}}/>
 				<br/>
 				{/*<ul>*/}
 				{/*	{accounts.map((account)=> {*/}

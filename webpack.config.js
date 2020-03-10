@@ -12,7 +12,8 @@ const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
-
+const ProgressBarPlugin = require( 'progress-bar-webpack-plugin' );
+const chalk = require( 'chalk' );
 const pkg = require('./package.json');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -139,6 +140,13 @@ const webpackConfig = {
 		modules: [path.resolve(__dirname, 'src'), 'node_modules'],
 	},
 	plugins: [
+		new ProgressBarPlugin( {
+			format:
+				chalk.blue( 'Build core script' ) +
+				' [:bar] ' +
+				chalk.green( ':percent' ) +
+				' :msg (:elapsed seconds)',
+		} ),
 		new FixStyleOnlyEntriesPlugin(),
 		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
 		new webpack.DefinePlugin({
