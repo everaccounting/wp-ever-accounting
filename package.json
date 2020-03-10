@@ -14,7 +14,15 @@
 		"start": "wp-scripts start",
 		"check-engines": "wp-scripts check-engines",
 		"check-licenses": "wp-scripts check-licenses --prod --gpl2 --ignore=abab",
-		"format:js": "wp-scripts format-js ./client"
+		"format:js": "wp-scripts format-js ./client",
+		"lint": "npm run lint:js && npm run lint:css",
+		"lint:css": "stylelint 'client/**/*.scss'",
+		"lint:css-fix": "stylelint '**/*.scss' --fix",
+		"lint:js": "eslint packages --ext=js,jsx && eslint client --ext=js,jsx",
+		"lint:js-fix": "wp-scripts lint-js packages --ext=js,jsx --fix && wp-scripts lint-js client --ext=js,jsx --fix",
+		"lint:php": "./vendor/bin/phpcs --standard=phpcs.xml.dist $(git ls-files | grep .php$)",
+		"lint:php-fix": "./vendor/bin/phpcbf --standard=phpcs.xml.dist $(git ls-files | grep .php$)",
+		"reformat-files": "prettier --ignore-path .eslintignore --write \"**/*.{js,jsx,json,ts,tsx}\""
 	},
 	"dependencies": {
 		"@babel/plugin-proposal-class-properties": "^7.8.3",
@@ -27,6 +35,9 @@
 		"css-loader": "^3.4.2",
 		"duplicate-package-checker-webpack-plugin": "^3.0.0",
 		"file-loader": "^5.1.0",
+		"grunt": "^1.0.4",
+		"grunt-checktextdomain": "^1.0.1",
+		"grunt-wp-i18n": "^1.0.3",
 		"mini-css-extract-plugin": "^0.9.0",
 		"node-sass": "^4.13.1",
 		"postcss-color-function": "^4.1.0",
@@ -35,8 +46,11 @@
 		"postcss-preset-env": "^6.7.0",
 		"postcss-reporter": "^6.0.1",
 		"precss": "^4.0.0",
+		"prettier": "npm:wp-prettier@^1.19.1",
 		"progress-bar-webpack-plugin": "^2.1.0",
 		"sass-loader": "^8.0.2",
+		"stylelint": "^13.2.1",
+		"stylelint-config-wordpress": "^16.0.0",
 		"terser-webpack-plugin": "^2.3.5",
 		"webpack-bundle-size-analyzer": "^3.1.0",
 		"webpack-fix-style-only-entries": "^0.4.0"

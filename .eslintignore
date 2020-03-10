@@ -1,0 +1,9 @@
+bin/*
+!bin/generate-docs
+!.eslintrc.js
+dist
+build-module
+coverage
+languages
+node_modules
+vendor

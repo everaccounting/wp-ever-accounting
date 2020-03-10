@@ -1,7 +1,15 @@
 /* global document, eAccountingi10n */
+/**
+ * WordPress dependencies
+ */
 import { render } from '@wordpress/element';
-import App from './app';
 import domReady from '@wordpress/dom-ready';
+
+/**
+ * Internal dependencies
+ */
+import App from './app';
+
 import './style.scss';
 
 domReady(() => {
