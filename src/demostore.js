@@ -63,7 +63,6 @@ registerStore( 'demostore', {
 
 	controls: {
 		FETCH_FROM_API( action ) {
-			console.log(action.path);
 			return apiFetch( { path: action.path } )
 		},
 	},

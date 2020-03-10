@@ -8,7 +8,6 @@ import { addQueryArgs } from '@wordpress/url';
  * Internal dependencies
  */
 import { receiveCollection, receiveCollectionError } from './actions';
-import { STORE_KEY as SCHEMA_STORE_KEY } from '../schema/constants';
 import { STORE_KEY, DEFAULT_EMPTY_ARRAY } from './constants';
 import { apiFetchWithHeaders } from './controls';
 
@@ -37,14 +36,11 @@ function* invalidateModifiedCollection( timestamp ) {
  * @param {Array}  ids
  */
 export function* getCollection( namespace, resourceName, query, ids ) {
-	// const route = yield select(
-	// 	SCHEMA_STORE_KEY,
-	// 	'getRoute',
-	// 	namespace,
-	// 	resourceName,
-	// 	ids
-	// );
 	const queryString = addQueryArgs( '', query );
+	console.group("Resolver");
+	console.log('getCollection', arguments);
+	console.log('queryString', queryString);
+
 	// if ( ! route ) {
 	// 	yield receiveCollection( namespace, resourceName, queryString, ids );
 	// 	return;
@@ -65,11 +61,12 @@ export function* getCollection( namespace, resourceName, query, ids ) {
 				parseInt( headers.get( 'last-modified' ), 10 )
 			);
 		}
-
-		yield receiveCollection( namespace, resourceName, queryString, ids, {
+		console.groupEnd();
+		yield receiveCollection( namespace, resourceName, query,  ids, {
 			items,
 			headers,
 		} );
+
 	} catch ( error ) {
 		yield receiveCollectionError(
 			namespace,

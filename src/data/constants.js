@@ -1,6 +1,15 @@
+export const DEFAULT_EMPTY_ARRAY = [];
+export const ACTION_TYPES = {
+	RECEIVE_COLLECTION: 'RECEIVE_COLLECTION',
+	RESET_COLLECTION: 'RESET_COLLECTION',
+	ERROR: 'ERROR',
+	RECEIVE_LAST_MODIFIED: 'RECEIVE_LAST_MODIFIED',
+	INVALIDATE_RESOLUTION_FOR_STORE: 'INVALIDATE_RESOLUTION_FOR_STORE',
+};
+
 /**
  * REST API namespace for rest requests against blocks namespace.
  *
  * @member  {string}
  */
-export const API_BLOCK_NAMESPACE = 'wc/blocks';
+export const API_NAMESPACE = 'ea/v1';

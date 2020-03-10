@@ -5,14 +5,20 @@ class Table extends Component{
 
 	constructor(props) {
 		super(props);
-		props.setMount('contacts', {});
 	}
 
 	render() {
-		console.log(this.props);
+		const {items = [] } = this.props;
 		return(
 			<div>
-				FROM Table
+				<input type="number" onChange={(e)=> {
+					this.props.setPageChange(e.target.value)
+				}}/>
+				<ul>
+					{items.map((item)=> {
+						return(<li key={item.id}>{item.first_name} {item.last_name}</li>)
+					})}
+				</ul>
 			</div>
 		)
 	}

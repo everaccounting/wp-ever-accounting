@@ -1,28 +1,36 @@
 /**
  * External dependencies
  */
-import { addQueryArgs } from '@wordpress/url';
+import {addQueryArgs} from '@wordpress/url';
 
 /**
  * Internal dependencies
  */
-import { hasInState } from '../utils';
-import { DEFAULT_EMPTY_ARRAY } from './constants';
+import {hasInState} from './utils';
+import {DEFAULT_EMPTY_ARRAY} from './constants';
 
-const getFromState = ( {
-	state,
-	namespace,
-	resourceName,
-	query,
-	ids,
-	type = 'items',
-	fallback = DEFAULT_EMPTY_ARRAY,
-} ) => {
+const getFromState = ({
+						  state,
+						  namespace,
+						  resourceName,
+						  query,
+						  ids,
+						  type = 'items',
+						  fallback = DEFAULT_EMPTY_ARRAY,
+					  }) => {
 	// prep ids and query for state retrieval
-	ids = JSON.stringify( ids );
-	query = query !== null ? addQueryArgs( '', query ) : '';
-	if ( hasInState( state, [ namespace, resourceName, ids, query, type ] ) ) {
-		return state[ namespace ][ resourceName ][ ids ][ query ][ type ];
+	ids = JSON.stringify(ids);
+	query = query !== null ? addQueryArgs('', query) : '';
+	console.group("getFromState");
+	console.log("resourceName", resourceName);
+	console.log("query", query);
+	console.log("hasInState", hasInState(state, [namespace, resourceName, ids, query, type]));
+	console.log(state);
+	console.groupEnd();
+
+
+	if (hasInState(state, [namespace, resourceName, ids, query, type])) {
+		return state[namespace][resourceName][ids][query][type];
 	}
 	return fallback;
 };
@@ -34,7 +42,7 @@ const getCollectionHeaders = (
 	query = null,
 	ids = DEFAULT_EMPTY_ARRAY
 ) => {
-	return getFromState( {
+	return getFromState({
 		state,
 		namespace,
 		resourceName,
@@ -42,7 +50,7 @@ const getCollectionHeaders = (
 		ids,
 		type: 'headers',
 		fallback: undefined,
-	} );
+	});
 };
 
 /**
@@ -64,7 +72,7 @@ export const getCollection = (
 	query = null,
 	ids = DEFAULT_EMPTY_ARRAY
 ) => {
-	return getFromState( { state, namespace, resourceName, query, ids } );
+	return getFromState({state, namespace, resourceName, query, ids});
 };
 
 export const getCollectionError = (
@@ -74,7 +82,11 @@ export const getCollectionError = (
 	query = null,
 	ids = DEFAULT_EMPTY_ARRAY
 ) => {
-	return getFromState( {
+
+	console.group("Selector");
+	console.log('getCollection', arguments);
+	console.groupEnd();
+	return getFromState({
 		state,
 		namespace,
 		resourceName,
@@ -82,7 +94,7 @@ export const getCollectionError = (
 		ids,
 		type: 'error',
 		fallback: null,
-	} );
+	});
 };
 
 /**
@@ -127,8 +139,8 @@ export const getCollectionHeader = (
 	// Can't just do a truthy check because `getCollectionHeaders` resolver
 	// invokes the `getCollection` selector to trigger the resolution of the
 	// collection request. Its fallback is an empty array.
-	if ( headers && headers.get ) {
-		return headers.has( header ) ? headers.get( header ) : undefined;
+	if (headers && headers.get) {
+		return headers.has(header) ? headers.get(header) : undefined;
 	}
 	return null;
 };
@@ -139,6 +151,6 @@ export const getCollectionHeader = (
  * @param {string} state The current collection state.
  * @return {number} Timestamp.
  */
-export const getCollectionLastModified = ( state ) => {
+export const getCollectionLastModified = (state) => {
 	return state.lastModified || 0;
 };
