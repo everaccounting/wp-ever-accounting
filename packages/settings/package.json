@@ -1,0 +1,25 @@
+{
+	"name": "@eaccounting/settings",
+	"version": "1.0.0",
+	"description": "Settings Package for ever accounting.",
+	"author": "pluginever",
+	"license": "GPL-3.0-or-later",
+	"keywords": [
+		"wordpress",
+		"accounting",
+		"pluginever"
+	],
+	"homepage": "https://bitbucket.org/pluginever/wp-ever-accounting/src/master/",
+	"repository": {
+		"type": "git",
+		"url": "https://pluginever@bitbucket.org/pluginever/wp-ever-accounting.git"
+	},
+	"main": "build/index.js",
+	"module": "build-module/index.js",
+	"react-native": "src/index",
+	"dependencies": {
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

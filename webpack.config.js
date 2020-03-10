@@ -16,14 +16,26 @@ const postcssFocus = require('postcss-focus');
 const postcssReporter = require('postcss-reporter');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const externals = [];
+
+const packages = [];
+const entryPoints = {};
+packages.forEach(name => {
+	externals[`@eaccounting/${name}`] = {
+		this: ['eaccounting', name.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase())],
+	};
+	entryPoints[name] = `./packages/${name}`;
+});
 
 module.exports = {
 	mode: NODE_ENV,
 	devtool: NODE_ENV === 'development' ? 'source-map' : false,
 	entry: {
 		eaccounting: './client',
+		...entryPoints
 	},
 	output: {
 		filename: './assets/dist/[name].js',
@@ -157,6 +169,14 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: './assets/dist/[name].css',
 		}),
+		new CopyWebpackPlugin(
+			packages.map(packageName => ({
+				from: `./packages/${packageName}/build-style/*.css`,
+				to: `./assets/dist/${packageName}/`,
+				flatten: true,
+				transform: content => content,
+			}))
+		),
 		new WebpackBundleSizeAnalyzerPlugin('./assets/dist/[name].txt'),
 	],
 	stats: {
