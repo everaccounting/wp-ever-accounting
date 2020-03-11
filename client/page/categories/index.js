@@ -1,8 +1,9 @@
 import Table from "./table";
+import {STORE_COLLECTION_KEY} from "@eaccounting/data";
 
 const Categories = (props) => {
 	// return null;
-	return (<Table resourceName={'categories'} {...props}/>)
+	return (<div>HELLO</div>)
 };
 
 export default Categories
