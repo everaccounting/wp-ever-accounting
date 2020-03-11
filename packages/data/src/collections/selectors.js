@@ -4,33 +4,32 @@
 /**
  * WordPress dependencies
  */
-import { addQueryArgs } from '@wordpress/url';
+import {addQueryArgs} from '@wordpress/url';
 
 /**
  * Internal dependencies
  */
-import { hasInState } from '../utils';
-import { DEFAULT_EMPTY_ARRAY } from './constants';
+import {hasInState} from '../utils';
+import {DEFAULT_EMPTY_ARRAY} from './constants';
 
 const getFromState = ({
-	state,
-	namespace,
-	resourceName,
-	query,
-	ids,
-	type = 'items',
-	fallback = DEFAULT_EMPTY_ARRAY,
-}) => {
+						  state,
+						  namespace,
+						  resourceName,
+						  query,
+						  ids,
+						  fallback = {items: [], headers: {}},
+					  }) => {
 	// prep ids and query for state retrieval
 	ids = JSON.stringify(ids);
 	query = query !== null ? addQueryArgs('', query) : '';
-	if (hasInState(state, [namespace, resourceName, ids, query, type])) {
-		return state[namespace][resourceName][ids][query][type];
+	if (hasInState(state, [namespace, resourceName, ids, query])) {
+		return state[namespace][resourceName][ids][query];
 	}
 	return fallback;
 };
 
-const getCollectionHeaders = (state, namespace, resourceName, query = null, ids = DEFAULT_EMPTY_ARRAY) => {
+export const getCollectionHeaders = (state, namespace, resourceName, query = null, ids = DEFAULT_EMPTY_ARRAY) => {
 	return getFromState({
 		state,
 		namespace,
@@ -55,7 +54,7 @@ const getCollectionHeaders = (state, namespace, resourceName, query = null, ids 
  * @return {Array} an array of items stored in the collection.
  */
 export const getCollection = (state, namespace, resourceName, query = null, ids = DEFAULT_EMPTY_ARRAY) => {
-	return getFromState({ state, namespace, resourceName, query, ids });
+	return getFromState({state, namespace, resourceName, query, ids});
 };
 
 export const getCollectionError = (state, namespace, resourceName, query = null, ids = DEFAULT_EMPTY_ARRAY) => {

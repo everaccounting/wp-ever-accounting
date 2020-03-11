@@ -1,17 +1,18 @@
 {
-	"name": "@eaccounting/components",
-	"version": "0.0.1",
-	"description": "UI components for Ever Accounting.",
-	"author": "Pluginever",
-	"license": "GPL-3.0-or-later",
-	"homepage": "https://github.com/",
-	"main": "build/index.js",
-	"module": "build-module/index.js",
-	"react-native": "src/index",
-	"dependencies": {
-		"@wordpress/components": "7.4.0"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "@eaccounting/components",
+  "version": "0.0.1",
+  "description": "UI components for Ever Accounting.",
+  "author": "Pluginever",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/",
+  "main": "build/index.js",
+  "module": "build-module/index.js",
+  "react-native": "src/index",
+  "dependencies": {
+	"@wordpress/components": "7.4.0",
+	"prop-types": "^15.7.2"
+  },
+  "publishConfig": {
+	"access": "public"
+  }
 }

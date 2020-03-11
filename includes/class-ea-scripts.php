@@ -74,18 +74,18 @@ class EAccounting_Scripts {
 
 		wp_register_style(
 			'eaccounting-components',
-			self::get_url( 'components/style.css' ),
+			self::get_url( 'components.css' ),
 			array( 'wp-components' ),
-			self::get_file_version( 'components/style.css' )
+			self::get_file_version( 'components.css' )
 		);
 
 
 
 		wp_register_style(
 			'eaccounting',
-			self::get_url( 'app/style.css' ),
+			self::get_url( 'eaccounting.css' ),
 			array( 'wp-components'),
-			self::get_file_version( 'app/style.css' )
+			self::get_file_version( 'eaccounting.css' )
 		);
 
 //		wp_enqueue_style(

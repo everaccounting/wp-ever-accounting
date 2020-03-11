@@ -4,13 +4,18 @@
 import { ACTION_TYPES as types } from './action-types';
 import { getStateForContext } from './utils';
 
+const DEFAULT_STATE = {
+	page: 1,
+	per_page: 20,
+};
+
 /**
  * Reducer for processing actions related to the query state store.
  *
  * @param {Object} state  Current state in store.
  * @param {Object} action Action being processed.
  */
-const queryStateReducer = (state = {}, action) => {
+const queryStateReducer = (state = DEFAULT_STATE, action) => {
 	const { type, context, queryKey, value } = action;
 	const prevState = getStateForContext(state, context);
 	let newState;

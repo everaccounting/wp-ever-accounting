@@ -1,12 +1,19 @@
-import { Button } from '@wordpress/components';
-import { getSetting } from '@eaccounting/settings';
+import {routes} from './routes';
+import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 
 const App = () => {
-	console.log(getSetting('currency'));
 	return (
-		<div style={{ backgroundColor: 'red', height: '200px', display: 'block' }}>
-			Hello JELLO DEMO 1<Button isPrimary={true}>Click NEW</Button>
-		</div>
+		<Router>
+			<Switch>
+				{routes.map(page => {
+					return (
+						<Route key={page.path} path={page.path} exact
+							   render={props => <page.container page={page} {...props} />}/>
+					);
+				})}
+				<Redirect from="*" to="/"/>
+			</Switch>
+		</Router>
 	);
 };
 

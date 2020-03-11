@@ -176,7 +176,7 @@ module.exports = {
 		new CopyWebpackPlugin(
 			packages.map(packageName => ({
 				from: `./packages/${packageName}/build-style/*.css`,
-				to: `./assets/dist/`,
+				to: `./assets/dist/${packageName}.css`,
 				flatten: true,
 				transform: content => content,
 			}))

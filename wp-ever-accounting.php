@@ -72,7 +72,7 @@ final class EverAccounting {
 	}
 
 	/**
-	 * WooCommerce Constructor.
+	 * EverAccounting Constructor.
 	 */
 	public function __construct() {
 		$this->define_constants();

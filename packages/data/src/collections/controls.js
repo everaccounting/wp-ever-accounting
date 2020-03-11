@@ -5,7 +5,7 @@
  * WordPress dependencies
  */
 import triggerFetch from '@wordpress/api-fetch';
-import { mapObject } from 'lodash';
+import {mapObject} from 'lodash';
 
 /**
  * Dispatched a control action for triggering an api fetch call with no parsing.
@@ -29,12 +29,17 @@ export const apiFetchWithHeaders = path => {
  *                  the controls property of the registration object.
  */
 export const controls = {
-	API_FETCH_WITH_HEADERS({ path }) {
+	API_FETCH_WITH_HEADERS({path}) {
 		return new Promise((resolve, reject) => {
-			triggerFetch({ path, parse: false })
+			triggerFetch({path, parse: false})
 				.then(response => {
+					const headers = {
+						...response.headers,
+						'last-modified': response.headers.get('last-modified'),
+						'x-wp-total': response.headers.get('x-wp-total')
+					};
 					response.json().then(items => {
-						resolve({ items, headers: response.headers });
+						resolve({items, headers: headers});
 					});
 				})
 				.catch(error => {

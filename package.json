@@ -41,12 +41,18 @@
 		"lint:php-fix": "./vendor/bin/phpcbf --standard=phpcs.xml.dist $(git ls-files | grep .php$)",
 		"reformat-files": "prettier --ignore-path .eslintignore --write \"**/*.{js,jsx,json,ts,tsx}\"",
 		"create-extension": "node ./bin/starter-pack/starter-pack.js",
-	  "format": "wp-scripts format-js ./client"
+		"format": "wp-scripts format-js ./client"
 	},
 	"dependencies": {
+		"react-router-dom": "^5.1.2"
+	},
+	"devDependencies": {
 		"@babel/core": "^7.8.7",
 		"@babel/plugin-proposal-class-properties": "^7.8.3",
 		"@babel/plugin-transform-runtime": "^7.8.3",
+		"@eaccounting/components": "file:./packages/components",
+		"@eaccounting/data": "file:./packages/data",
+		"@eaccounting/settings": "file:./packages/settings",
 		"@wordpress/babel-plugin-makepot": "^3.4.0",
 		"@wordpress/babel-preset-default": "^4.10.0",
 		"@wordpress/custom-templated-path-webpack-plugin": "^1.6.0",
@@ -77,6 +83,7 @@
 		"precss": "^4.0.0",
 		"prettier": "npm:wp-prettier@^1.19.1",
 		"progress-bar-webpack-plugin": "^2.1.0",
+		"prop-types": "^15.7.2",
 		"rimraf": "^3.0.2",
 		"sass-loader": "^8.0.2",
 		"stylelint": "^13.2.1",
@@ -84,10 +91,6 @@
 		"terser-webpack-plugin": "^2.3.5",
 		"webpack-bundle-size-analyzer": "^3.1.0",
 		"webpack-fix-style-only-entries": "^0.4.0"
-	},
-	"devDependencies": {
-		"@eaccounting/settings": "file:./packages/settings",
-		"@eaccounting/components": "file:./packages/components"
 	},
 	"publishConfig": {
 		"access": "public"
