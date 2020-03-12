@@ -1,3 +1,5 @@
+import { lazy } from '@wordpress/element';
+
 // import Dashboard from './page/dashboard';
 // import Transactions from './page/transactions';
 // import Incomes from './page/incomes';
@@ -7,6 +9,7 @@ import { applyFilters } from '@wordpress/hooks';
 // import Items from './page/items';
 // import Banking from './page/banking';
 import Misc from './page/misc';
+// const Misc = lazy( () => import( './page/misc' ) );
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 

@@ -1,29 +1,17 @@
 import {registerStore} from '@wordpress/data';
 import {controls as dataControls} from '@wordpress/data-controls';
-export const TABLE_KEY = 'table';
+
+export const STORE_COLLECTION_KEY = 'ea/table';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import * as resolvers from './resolvers';
 import reducer from './reducers';
 import {controls} from './controls';
-export const TABLE_STORE = "ea/store/table";
-const initialState = {
-	rows: [],
-	saving: [],
-	total: 0,
-	status: "STATUS_IN_PROGRESS",
-	table:{
-		page: 1,
-		per_page: 20,
-		selected: [],
-	}
-};
 
-registerStore(TABLE_STORE, {
+registerStore(STORE_COLLECTION_KEY, {
 	reducer,
 	actions,
 	controls: {...dataControls, ...controls},
 	selectors,
-	initialState,
 	resolvers,
 });

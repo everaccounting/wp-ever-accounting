@@ -6,7 +6,7 @@
 import {__} from '@wordpress/i18n';
 import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import {Fragment} from "@wordpress/element";
-import {Tabs} from "@eaccounting/components";
+// import {Tabs} from "@eaccounting/components";
 /**
  * Internal dependencies
  */
@@ -19,31 +19,29 @@ const tabs = [
 		path: '/misc/categories',
 		component: Categories,
 		name: __('Categories'),
-		props: {query: {orderby: 'name', order: 'asc'}, resourceName: 'categories'}
 	},
-	{
-		path: '/misc/currencies',
-		// component: Currencies,
-		name: __('Currencies'),
-	},
-	{
-		path: '/misc/taxrates',
-		// component: TaxRates,
-		name: __('Tax Rates'),
-	},
+	// {
+	// 	path: '/misc/currencies',
+	// 	// component: Currencies,
+	// 	name: __('Currencies'),
+	// },
+	// {
+	// 	path: '/misc/taxrates',
+	// 	// component: TaxRates,
+	// 	name: __('Tax Rates'),
+	// },
 ];
 
 const Misc = props => {
 	return (
 		<Fragment>
-			<Tabs tabs={tabs}/>
+			{/*<Tabs tabs={tabs}/>*/}
 			<Router>
 				<Switch>
 					{tabs.map(tab => {
-						const tabProps = tab.props || {};
 						return (
 							<Route key={tab.path} path={tab.path} exact
-								   render={props => <tab.component  {...props} {...tabProps} />}/>
+								   render={props => <tab.component  {...props}/>}/>
 						);
 					})}
 					<Redirect from="/misc" to="/misc/categories"/>

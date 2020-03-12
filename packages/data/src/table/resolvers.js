@@ -1,19 +1,23 @@
-import {receiveCollectionError} from './actions';
-import {apiFetchWithHeaders} from "../table/controls";
-import {receiveCollection} from "../table/actions";
-import {addQueryArgs} from '@wordpress/url';
+import {receiveResponse, receiveError} from "./actions";
+import {fetchFromAPI} from "./controls";
+import { dispatch } from '@wordpress/data-controls';
+import {TABLE_STORE} from './index';
 
-export function* getCollection(endpoint, query) {
-	const queryString = addQueryArgs('', query);
-	const path = '/ea/v1/' + endpoint;
+function* invalidateCollection() {
+	yield dispatch( TABLE_STORE, 'invalidateResolutionForStore' );
+	return '';
+}
+
+export function* getItems(endpoint, query) {
 	try {
-		const {items = [], headers = {}} = yield apiFetchWithHeaders(path + queryString);
-		yield receiveCollection(endpoint, queryString, {
-			items,
-			headers
-		});
-
+		const {items = [], headers} = yield fetchFromAPI(endpoint, query);
+		yield invalidateCollection();
+		yield receiveResponse(items, headers);
 	} catch (error) {
-		yield receiveCollectionError(endpoint, query, error);
+		yield receiveError(
+			endpoint,
+			query,
+			error
+		);
 	}
 }

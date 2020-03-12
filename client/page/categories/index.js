@@ -1,5 +1,5 @@
 import {Component, Fragment} from "@wordpress/element";
-import {STORE_COLLECTION_KEY, QUERY_STATE_STORE_KEY} from "@eaccounting/data";
+import {QUERY_STATE_STORE_KEY, TABLE_KEY} from "@eaccounting/data";
 import {withDispatch, withSelect, select} from '@wordpress/data';
 import {compose} from '@wordpress/compose';
 import {withTable, Spinner, SearchBox, Button, TableNav, ListTable} from "@eaccounting/components";
@@ -82,14 +82,14 @@ class Categories extends Component {
 
 export default compose(withSelect(select => {
 	const query = select(QUERY_STATE_STORE_KEY).getValueForQueryContext(endpoint);
-	const store = select(STORE_COLLECTION_KEY);
+	const store = select(TABLE_KEY);
 	const {page = 1, orderby = 'name', order = 'desc'} = query;
-	const isLoading = store.hasFinishedResolution('getCollection', [endpoint, query]) === false;
-	const status = isLoading ? "IN_PROGRESS" :store.getStatus(endpoint);
+	// const isLoading = store.hasFinishedResolution('getItems', [endpoint, query]) === false;
+	// const status = isLoading ? "IN_PROGRESS" :store.getStatus(endpoint);
 	return {
-		items: store.getCollection(endpoint, query),
-		total: store.getTotal(endpoint, query),
-		selected:store.getSelected(endpoint, query),
+		items: store.getItems(endpoint, query),
+		// total: store.getTotal(endpoint, query),
+		// selected:store.getSelected(endpoint, query),
 		query: query,
 		status,
 		per_page: 20,
