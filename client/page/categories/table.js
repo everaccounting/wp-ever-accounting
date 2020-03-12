@@ -18,6 +18,7 @@ class Table extends Component {
 		const {items,selected,page,per_page, total, isLoading} = this.props;
 		return (
 			<Fragment>
+				{total}
 				{isLoading && <Spinner/>}
 				<div className="ea-table-display">
 					<Button className="page-title-action" onClick={this.onAdd}>

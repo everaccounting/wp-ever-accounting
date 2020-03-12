@@ -27,12 +27,13 @@ export const controls = {
 			triggerFetch({path, parse: false})
 				.then(response => {
 					response.json().then(items => {
-						resolve({items, total: parseInt(response.headers.get('x-wp-total'), 10)});
+						//const total = parseInt(response.headers.get('x-wp-total'), 10);
+						resolve({items, headers:response.headers});
 					});
 				})
 				.catch(error => {
 					reject(error);
 				});
 		});
-	},
+	}
 };

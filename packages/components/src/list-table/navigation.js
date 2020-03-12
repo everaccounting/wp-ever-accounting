@@ -13,14 +13,14 @@ import NavigationPages from './navigation-pages';
 
 class TableNav extends Component {
 	static propTypes = {
-		total: PropTypes.any,
-		selected: PropTypes.array,
-		page: PropTypes.any,
-		per_page: PropTypes.number,
+		total: PropTypes.number.isRequired,
+		selected: PropTypes.array.isRequired,
+		per_page: PropTypes.any.isRequired,
+		page: PropTypes.any.isRequired,
 		onAction: PropTypes.func,
-		onChangePage: PropTypes.func,
+		onChangePage: PropTypes.func.isRequired,
 		bulk: PropTypes.array,
-		isLoading: PropTypes.bool,
+		status: PropTypes.string.isRequired,
 	};
 
 	constructor(props) {
@@ -83,7 +83,7 @@ class TableNav extends Component {
 	}
 
 	render() {
-		const { total, bulk,per_page, page, isLoading } = this.props;
+		const { total, per_page, page, bulk, status } = this.props;
 
 		return (
 			<div className="tablenav top">
@@ -93,13 +93,13 @@ class TableNav extends Component {
 					{this.props.children ? this.props.children : null}
 				</div>
 
-				{total > 0 || isLoading && (
+				{total > 0 && (
 					<NavigationPages
 						per_page={per_page}
 						page={page}
 						total={total}
 						onChangePage={this.props.onChangePage}
-						isLoading={isLoading}
+						inProgress={status === 'IN_PROGRESS'}
 					/>
 				)}
 			</div>

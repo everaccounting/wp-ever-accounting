@@ -121,9 +121,8 @@ class PaginationLinks extends Component {
 
 class NavigationPages extends React.Component {
 	render() {
-		const { total, per_page, page, onChangePage, isLoading } = this.props;
-		const onePage = total <= per_page && !isLoading;
-		console.log('onePage', onePage);
+		const { total, per_page, page, onChangePage, inProgress } = this.props;
+		const onePage = total <= per_page;
 		const classes = classnames({
 			'tablenav-pages': true,
 			'one-page': onePage,
@@ -144,7 +143,7 @@ class NavigationPages extends React.Component {
 						total={total}
 						per_page={per_page}
 						page={page}
-						isLoading={isLoading}
+						inProgress={inProgress}
 						key={page}
 					/>
 				)}
@@ -158,7 +157,7 @@ NavigationPages.propTypes = {
 	per_page: PropTypes.number.isRequired,
 	page: PropTypes.number.isRequired,
 	onChangePage: PropTypes.func.isRequired,
-	isLoading: PropTypes.bool.isRequired,
+	inProgress: PropTypes.bool.isRequired,
 };
 
 export default NavigationPages;

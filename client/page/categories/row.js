@@ -1,12 +1,10 @@
 import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
-import {RowActions} from '@eaccounting/components';
-import {translate as __} from 'lib/locale';
-import {connect} from 'react-redux';
-import {BulkAction} from 'store/categories';
-import EditCategory from 'component/edit-category';
+import {__} from '@wordpress/i18n';
+import {RowAction} from '@eaccounting/components';
+// import EditCategory from 'component/edit-category';
 
-class Row extends Component {
+export default class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
 		disabled: PropTypes.bool.isRequired,
@@ -79,7 +77,7 @@ class Row extends Component {
 					</td>
 
 					<td className="column-actions">
-						<RowActions
+						<RowAction
 							controls={[
 								{
 									title: __('Edit'),
@@ -99,19 +97,3 @@ class Row extends Component {
 		);
 	}
 }
-
-function mapDispatchToProps(dispatch) {
-	return {
-		onSetSelected: ids => {
-			dispatch({type: 'CATEGORIES_SELECTED', ids: [ids]});
-		},
-		onTableAction: (action, ids) => {
-			dispatch(BulkAction(action, ids));
-		},
-		onUpdate: (item) => {
-			dispatch({type: "CATEGORIES_UPDATED", item});
-		},
-	};
-}
-
-export default connect(null, mapDispatchToProps)(Row);

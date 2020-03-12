@@ -12,7 +12,7 @@ import Column from './column';
 import CheckColumn from './check-column';
 
 const TableHeader = props => {
-	const { isDisabled, onSetAllSelected, onSetOrderBy, isSelected, headers } = props;
+	const { isDisabled, onSetAllSelected, onSetOrderBy, isSelected, headers, orderby, order } = props;
 	const setSelected = ev => {
 		onSetAllSelected(ev.target.checked);
 	};
@@ -40,6 +40,8 @@ const TableHeader = props => {
 				return (
 					<SortableColumn
 						name={item.name}
+						orderby={orderby}
+						order={order}
 						text={item.title}
 						key={item.name}
 						onSetOrderBy={onSetOrderBy}

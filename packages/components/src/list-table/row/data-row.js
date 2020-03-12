@@ -9,7 +9,7 @@
 const isSelected = (selected, id) => selected.indexOf(parseInt(id, 10)) !== -1;
 
 const getRowStatus = (isLoading, selected, item) => ({
-	isLoading: isLoading,
+	isLoading: status === 'IN_PROGRESS',
 	isSelected: isSelected(selected, item.id),
 });
 

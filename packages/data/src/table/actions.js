@@ -5,11 +5,7 @@ let Headers = window.Headers || null;
 Headers = Headers ? new Headers() : { get: () => undefined, has: () => undefined };
 
 
-export const receiveCollection = (endpoint, query, response = { items: [], total: 0 },) => {
-	console.group("receiveCollection");
-	console.log(endpoint);
-	console.log(query);
-	console.groupEnd();
+export const receiveCollection = (endpoint, query, response = { items: [], headers: {} }) => {
 	return {
 		type: types.RECEIVE_COLLECTION,
 		endpoint,
@@ -25,11 +21,12 @@ export const resetCollection = (endpoint) => {
 	};
 };
 
-export const receiveSelectedItem = (endpoint, item) => {
-	console.group("receiveSelectedItem");
-	console.log(endpoint);
-	console.log(item);
-	console.groupEnd();
+export const receiveSelectedItem = (endpoint, id) => {
+	return {
+		type: types.SELECT_COLLECTION_ITEM,
+		endpoint,
+		id
+	};
 };
 
 export const receiveSelectedItems = (endpoint, onoff) => {
@@ -55,18 +52,13 @@ export const receiveBulkAction = (endpoint, action, ids) =>{
 };
 
 export const receiveCollectionError = (endpoint, queryString, error) =>{
-	console.group("receiveCollectionError");
-	console.log(endpoint);
-	console.log(queryString);
-	console.log(error);
-	console.groupEnd();
 	return {
-		type: 'ERROR',
+		type: 'FAILED',
 		endpoint,
 		queryString,
 		response: {
 			items: [],
-			headers: Headers,
+			meta: {},
 			error,
 		},
 	};

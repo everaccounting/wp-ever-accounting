@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n';
 class SearchBox extends Component {
 	static propTypes = {
 		onSearch: PropTypes.func.isRequired,
-		isLoading: PropTypes.bool,
+		status: PropTypes.string,
 	};
 
 	constructor(props) {
@@ -36,8 +36,8 @@ class SearchBox extends Component {
 	};
 
 	render() {
-		const { isLoading } = this.props;
-		const disabled = isLoading || this.state.search === '';
+		const { status } = this.props;
+		const disabled = status === 'IN_PROGRESS' || this.state.search === '';
 
 		return (
 			<form onSubmit={this.onSubmit} className="ea-searchbox">
