@@ -3,11 +3,17 @@ import {xor} from "lodash";
 
 const reducers = (state = {}, action) => {
 	switch (action.type) {
+		case types.TABLE_LOADING:
+			state = {
+				...state,
+				status: "STATUS_IN_PROGRESS",
+			};
+			break;
 		case types.TABLE_ITEMS_LOADED:
 			state = {
 				...state,
 				items: action.items,
-				total: action.headers.get('x-wp-total') || state.total,
+				total: parseInt(action.headers.get('x-wp-total'), 10) || parseInt(state.total, 10),
 				table: { ...state.table, selected: [] },
 				status: "STATUS_COMPLETE",
 			};

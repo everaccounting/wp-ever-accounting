@@ -7,4 +7,4 @@
 export {QUERY_STATE_STORE_KEY} from './query-state';
 // export {API_NAMESPACE} from './constants';
 // export {STORE_COLLECTION_KEY} from "./table";
-export {TABLE_KEY} from "./table";
+export {TABLE_STORE_KEY} from "./table";

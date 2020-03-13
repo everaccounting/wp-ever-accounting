@@ -6,7 +6,7 @@ import * as actions from './actions';
 import * as resolvers from './resolvers';
 import reducer from './reducers';
 import {controls} from './controls';
-export const TABLE_STORE = "ea/store/table";
+export const TABLE_STORE_KEY = "ea/store/table";
 const initialState = {
 	rows: [],
 	saving: [],
@@ -19,7 +19,7 @@ const initialState = {
 	}
 };
 
-registerStore(TABLE_STORE, {
+registerStore(TABLE_STORE_KEY, {
 	reducer,
 	actions,
 	controls: {...dataControls, ...controls},

@@ -30,7 +30,7 @@ export const getCollection = (state, endpoint, query = {}) => {
  */
 export const getTotal = (state, endpoint) => {
 	if (hasInState(state, [endpoint, 'total'])) {
-		return state[endpoint]['total'];
+		return parseInt(state[endpoint]['total'], 10);
 	}
 	return 0
 };
@@ -38,25 +38,17 @@ export const getTotal = (state, endpoint) => {
 /**
  *
  * @param state
- * @param endpoint
  * @returns {*[]|*}
  */
-export const getSelected = (state, endpoint) => {
-	if (hasInState(state, [endpoint, 'selected'])) {
-		return state[endpoint]['selected'];
-	}
-	return [];
+export const getTable = (state) => {
+	return state['table']
 };
 
 /**
  *
  * @param state
- * @param endpoint
  * @returns {*[]|*}
  */
-export const getStatus = (state, endpoint) => {
-	if (hasInState(state, [endpoint, 'status'])) {
-		return state[endpoint]['status'];
-	}
-	return "IN_PROGRESS";
+export const getStatus = (state) => {
+	return state['status'] || "STATUS_IN_PROGRESS";
 };

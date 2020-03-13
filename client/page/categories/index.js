@@ -1,11 +1,12 @@
 import {Component, Fragment} from "@wordpress/element";
-import {QUERY_STATE_STORE_KEY, TABLE_KEY} from "@eaccounting/data";
+import {QUERY_STATE_STORE_KEY, TABLE_STORE_KEY} from "@eaccounting/data";
 import {withDispatch, withSelect, select} from '@wordpress/data';
 import {compose} from '@wordpress/compose';
-import {withTable, Spinner, SearchBox, Button, TableNav, ListTable} from "@eaccounting/components";
+import {Button, TableNav, SearchBox, Table} from '@eaccounting/components';
 import {getHeaders, getBulk} from './constants';
 import {__} from "@wordpress/i18n";
-const endpoint = 'categories';
+
+const endpoint = 'ea/v1/categories';
 import Row from "./row";
 
 class Categories extends Component {
@@ -14,8 +15,12 @@ class Categories extends Component {
 		super(props);
 	}
 
+	componentDidMount() {
+		this.props.loadItems(endpoint, {});
+	}
+
 	onRenderRow = (item, pos, status, search) => {
-		const { selected } = this.props;
+		const {selected} = this.props.table;
 		return (
 			<Row
 				item={item}
@@ -29,42 +34,39 @@ class Categories extends Component {
 	};
 
 	render() {
-		const {items, total, page, orderby, order, status, selected, per_page} = this.props;
-		console.log(items);
-		console.log(selected);
+		const {status, total, table, items, match} = this.props;
 		return (
 			<Fragment>
 
 
-				{/*<div className="ea-table-display">*/}
-				{/*	<Button className="page-title-action" onClick={this.onAdd}>*/}
-				{/*		{__('Add Category')}*/}
-				{/*	</Button>*/}
-				{/*	<SearchBox status={status} onSearch={(search)=> {this.props.setQuery(endpoint, 'search', search)}}/>*/}
-				{/*</div>*/}
+				<div className="ea-table-display">
+					<Button className="page-title-action" onClick={this.onAdd}>
+						{__('Add Category')}
+					</Button>
+					<SearchBox status={status} table={table} onSearch={(search)=> this.props.loadItems(endpoint, {search})}/>
+				</div>
 
 
-				{/*<TableNav*/}
-				{/*	page={page}*/}
-				{/*	per_page={per_page}*/}
-				{/*	total={total}*/}
-				{/*	selected={selected}*/}
-				{/*	onChangePage={(page)=>  {this.props.setQuery(endpoint, 'page', page)}}*/}
-				{/*	status={status}*/}
-				{/*	bulk={getBulk()}*/}
-				{/*/>*/}
+				<TableNav
+					total={total}
+					selected={table.selected}
+					table={table}
+					onChangePage={(page)=> this.props.loadItems(endpoint, {page})}
+					onAction={this.props.onAction}
+					status={status}
+					bulk={getBulk()}
+				/>
 
-				{/*<ListTable*/}
-				{/*	headers={getHeaders()}*/}
-				{/*	rows={items}*/}
-				{/*	selected={selected}*/}
-				{/*	orderby={'id'}*/}
-				{/*	order={'desc'}*/}
-				{/*	total={total}*/}
-				{/*	status={status}*/}
-				{/*	onSetOrderBy={(orderby, order)=> {}}*/}
-				{/*	row={this.onRenderRow}*/}
-				{/*/>*/}
+				<Table
+					headers={getHeaders()}
+					rows={items}
+					total={total}
+					row={this.onRenderRow}
+					table={table}
+					status={status}
+					onSetAllSelected={this.props.onSetAllSelected}
+					onSetOrderBy={(orderby, order)=> this.props.loadItems(endpoint, {orderby, order})}
+				/>
 
 				{/*<TableNav*/}
 				{/*	page={page}*/}
@@ -81,25 +83,35 @@ class Categories extends Component {
 }
 
 export default compose(withSelect(select => {
-	const query = select(QUERY_STATE_STORE_KEY).getValueForQueryContext(endpoint);
-	const store = select(TABLE_KEY);
-	const {page = 1, orderby = 'name', order = 'desc'} = query;
+	const store = select(TABLE_STORE_KEY);
+	// const {page = 1, orderby = 'name', order = 'desc'} = query;
 	// const isLoading = store.hasFinishedResolution('getItems', [endpoint, query]) === false;
 	// const status = isLoading ? "IN_PROGRESS" :store.getStatus(endpoint);
 	return {
-		items: store.getItems(endpoint, query),
-		// total: store.getTotal(endpoint, query),
-		// selected:store.getSelected(endpoint, query),
-		query: query,
-		status,
+		items: store.getItems(),
+		total: store.getTotal(),
+		table: store.getTable(),
+		status: store.getStatus(),
 		per_page: 20,
-		page,
-		orderby,
-		order
+		page: 1,
+		orderby: 'id',
+		order: 'desc'
 	}
 
 }), withDispatch(dispatch => {
 	return {
-		setQuery: dispatch(QUERY_STATE_STORE_KEY).setQueryValue,
+		loadItems: dispatch(TABLE_STORE_KEY).loadItems,
+		onSearch: () => {
+		},
+		onChangePage: () => {
+		},
+		onSetOrderBy: () => {
+		},
+		onSetAllSelected: () => {
+		},
+		onAdd: () => {
+		},
+		onAction: () => {
+		},
 	}
 }))(Categories)
