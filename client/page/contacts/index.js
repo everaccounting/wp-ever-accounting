@@ -24,6 +24,10 @@ class Contacts extends Component {
 		this.state = {};
 	}
 
+	setQuery = (queryKey, queryValue) => {
+		this.props.setQuery('contacts', queryKey, queryValue)
+	};
+
 	onRenderRow = (item, pos, isSelected, isLoading, search) => {
 		return (
 			<Row
@@ -38,18 +42,36 @@ class Contacts extends Component {
 	};
 
 	render() {
-		const {items, headers} = this.props;
+		const {items, total} = this.props;
+		const {page = 1} = this.props.query;
+		const selected = [];
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
 				<hr className="wp-header-end"/>
+				<div className="ea-table-display">
+					<SearchBox status={status} onSearch={search => { this.setQuery('search', search)}}/>
+				</div>
+
+				<TableNav
+					status={status}
+					total={total}
+					page={page}
+					selected={selected}
+					onChangePage={(page) => {
+						this.setQuery('page', page)
+					}}
+					onAction={this.props.onAction}
+					bulk={getBulk()}
+				/>
+
 				<Table
 					headers={getHeaders()}
 					orderby={'name'}
 					selected={[]}
 					order={'desc'}
 					rows={items}
-					total={100}
+					total={total}
 					row={this.onRenderRow}
 					status={"STATUS_COMPLETE"}
 					onSetAllSelected={this.props.onSetAllSelected}
@@ -62,15 +84,17 @@ class Contacts extends Component {
 }
 
 export default compose(withSelect((select) => {
-	const {getCollection, getCollectionHeaders, getCollectionHeader,hasStartedResolution, isResolving} = select(COLLECTIONS_STORE_KEY);
-	console.log(getCollectionHeader('x-wp-total', '/ea/v1', 'contacts'));
-	//console.log(isResolving);
-	console.log(isResolving('getCollection'));
-	console.log(hasStartedResolution('getCollection'));
+	const {getCollection, getCollectionHeader} = select(COLLECTIONS_STORE_KEY);
+	const {getValueForQueryContext} = select(QUERY_STATE_STORE_KEY);
+	const query = getValueForQueryContext('contacts');
 	return {
-		items: getCollection('/ea/v1', 'contacts'),
-		headers: getCollectionHeaders('/ea/v1', 'contacts'),
+		items: getCollection('/ea/v1', 'contacts', query),
+		query: query,
+		total: parseInt(getCollectionHeader('x-wp-total', '/ea/v1', 'contacts', query), 10),
 	}
 }), withDispatch((dispatch) => {
-
+	const {setQueryValue} = dispatch(QUERY_STATE_STORE_KEY);
+	return {
+		setQuery: setQueryValue
+	}
 }))(Contacts);
