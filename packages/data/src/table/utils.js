@@ -28,3 +28,50 @@ export function hasInState(state, path) {
 export function updateState(state, path, value) {
 	return setWith(clone(state), path, value, clone);
 }
+
+
+/**
+ * Merge table data with params
+ * @param table
+ * @param params
+ * @returns {any}
+ */
+export const mergeWithTable = (table, params) => {
+	const tableParams = ['orderby', 'order', 'page', 'per_page', 'filters'];
+	const data = Object.assign({}, table);
+	for (let x = 0; x < tableParams.length; x++) {
+		if (params[tableParams[x]] !== undefined) {
+			data[tableParams[x]] = params[tableParams[x]];
+		}
+	}
+	return data;
+};
+
+
+/**
+ * Remove default properties
+ * @param table
+ * @returns {*}
+ */
+export const removeDefaults = (table) => {
+	if (table.order === 'desc') {
+		delete table.order;
+	}
+
+	if (table.page === 1) {
+		delete table.page;
+	}
+
+	if (table.per_page === 20) {
+		delete table.per_page;
+	}
+
+	if (table.filters === '' || table.filters === {}) {
+		delete table.filters;
+	}
+
+	delete table.selected;
+
+	return table;
+};
+

@@ -18,12 +18,11 @@ const isDisabledHeader = (status, rows) => status !== 'STATUS_COMPLETE' || rows.
 const isSelectedHeader = (selected, rows) => selected.length === rows.length && rows.length !== 0;
 
 const Table = props => {
-	const { headers, row, rows, total, table, status, onSetAllSelected, onSetOrderBy } = props;
+	const { headers, row, rows, total, selected, orderby, order, status, onSetAllSelected, onSetOrderBy } = props;
 	const isDisabled = isDisabledHeader(status, rows);
-	const isSelected = isSelectedHeader(table.selected, rows);
+	const isSelected = isSelectedHeader(selected, rows);
 
 	let content = null;
-
 	if (status === 'STATUS_IN_PROGRESS' && rows.length === 0) {
 		content = <LoadingRow headers={headers} rows={rows} />;
 	} else if (rows.length === 0 && status === 'STATUS_COMPLETE') {
@@ -31,14 +30,15 @@ const Table = props => {
 	} else if (status === 'STATUS_FAILED') {
 		content = <FailedRow headers={headers} />;
 	} else if (rows.length > 0) {
-		content = <DataRow rows={rows} status={status} selected={table.selected} row={row} />;
+		content = <DataRow rows={rows} status={status} selected={selected} row={row} />;
 	}
 
 	return (
 		<table className="wp-list-table widefat fixed striped items">
 			<thead>
 				<TableHeader
-					table={table}
+					orderby={orderby}
+					order={order}
 					isDisabled={isDisabled}
 					isSelected={isSelected}
 					headers={headers}
@@ -53,7 +53,8 @@ const Table = props => {
 
 			<tfoot>
 				<TableHeader
-					table={table}
+					orderby={orderby}
+					order={order}
 					isDisabled={isDisabled}
 					isSelected={isSelected}
 					headers={headers}
@@ -71,11 +72,17 @@ Table.propTypes = {
 	headers: PropTypes.array.isRequired,
 	row: PropTypes.func.isRequired,
 	rows: PropTypes.array.isRequired,
-	table: PropTypes.object.isRequired,
+	selected: PropTypes.array.isRequired,
+	orderby: PropTypes.string.isRequired,
+	order: PropTypes.string.isRequired,
 	onSetAllSelected: PropTypes.func,
 	onSetOrderBy: PropTypes.func,
 	status: PropTypes.string.isRequired,
 	total: PropTypes.number.isRequired,
 };
+
+Table.defaultProps = {
+	order: 'desc',
+}
 
 export default Table;

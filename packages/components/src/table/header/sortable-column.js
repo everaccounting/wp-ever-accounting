@@ -7,8 +7,7 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 const SortableColumn = props => {
-	const { name, text, table, primary } = props;
-	const { order, orderby } = table;
+	const { name, text, primary, order, orderby } = props;
 	const click = ev => {
 		ev.preventDefault();
 		props.onSetOrderBy(name, orderby === name && order === 'desc' ? 'asc' : 'desc');
@@ -26,14 +25,15 @@ const SortableColumn = props => {
 		<th scope="col" className={classes} onClick={click}>
 			<a href="#">
 				<span>{text}</span>
-				<span className="sorting-indicator"></span>
+				<span className="sorting-indicator"/>
 			</a>
 		</th>
 	);
 };
 
 SortableColumn.propTypes = {
-	table: PropTypes.object.isRequired,
+	orderby: PropTypes.string.isRequired,
+	order: PropTypes.string.isRequired,
 	name: PropTypes.string.isRequired,
 	text: PropTypes.string.isRequired,
 	onSetOrderBy: PropTypes.func.isRequired,

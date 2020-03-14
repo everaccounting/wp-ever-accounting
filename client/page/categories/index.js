@@ -1,117 +1,83 @@
-import {Component, Fragment} from "@wordpress/element";
-import {QUERY_STATE_STORE_KEY, TABLE_STORE_KEY} from "@eaccounting/data";
-import {withDispatch, withSelect, select} from '@wordpress/data';
-import {compose} from '@wordpress/compose';
-import {Button, TableNav, SearchBox, Table} from '@eaccounting/components';
+import {Component, Fragment} from 'react';
+import withCategories from "hocs/with-categories";
+import {SearchBox, TableNav, Table,SelectControl} from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
-import {__} from "@wordpress/i18n";
-
-const endpoint = 'ea/v1/categories';
 import Row from "./row";
-
+import {getOptions} from "options";
+import {__} from '@wordpress/i18n';
+import {map} from "lodash"
 class Categories extends Component {
-
 	constructor(props) {
 		super(props);
+		this.state = {};
 	}
 
-	componentDidMount() {
-		this.props.loadItems(endpoint, {});
-	}
-
-	onRenderRow = (item, pos, status, search) => {
-		const {selected} = this.props.table;
-		return (
+	onRenderRow = (item, pos, isSelected, isLoading, search) => {
+		return(
 			<Row
 				item={item}
 				key={pos}
-				disabled={status.isLoading}
+				isLoading={isLoading}
 				search={search}
-				isSelected={selected.includes(item.id)}
+				isSelected={isSelected}
 				{...this.props}
 			/>
-		);
+		)
 	};
 
 	render() {
-		const {status, total, table, items, match} = this.props;
+		const {status, total, items, query, selected} = this.props;
+		const {page = 1, orderby = 'name', order = 'desc'} = query;
+
 		return (
 			<Fragment>
-
-
 				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.onAdd}>
-						{__('Add Category')}
-					</Button>
-					<SearchBox status={status} table={table} onSearch={(search)=> this.props.loadItems(endpoint, {search})}/>
+					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
 
-
 				<TableNav
-					total={total}
-					selected={table.selected}
-					table={table}
-					onChangePage={(page)=> this.props.loadItems(endpoint, {page})}
-					onAction={this.props.onAction}
 					status={status}
+					total={total}
+					page={page}
+					selected={selected}
+					onChangePage={this.props.onChangePage}
+					onAction={this.props.onAction}
 					bulk={getBulk()}
-				/>
+				>
+					<SelectControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Types')}
+						options={getOptions('categoryTypes', [])}
+						isMulti
+						onChange={(types) => {this.props.onFilter({type: map(types, 'value')})}}
+					/>
+				</TableNav>
 
 				<Table
 					headers={getHeaders()}
+					orderby={orderby}
+					selected={selected}
+					order={order}
 					rows={items}
 					total={total}
 					row={this.onRenderRow}
-					table={table}
 					status={status}
 					onSetAllSelected={this.props.onSetAllSelected}
-					onSetOrderBy={(orderby, order)=> this.props.loadItems(endpoint, {orderby, order})}
+					onSetOrderBy={this.props.onSetOrderBy}
 				/>
 
-				{/*<TableNav*/}
-				{/*	page={page}*/}
-				{/*	per_page={per_page}*/}
-				{/*	total={total}*/}
-				{/*	selected={selected}*/}
-				{/*	onChangePage={(page)=>  {this.props.setQuery(endpoint, 'page', page)}}*/}
-				{/*	status={status}*/}
-				{/*/>*/}
+				<TableNav
+					status={status}
+					total={total}
+					page={page}
+					selected={selected}
+					onChangePage={this.props.onChangePage}
+					onAction={this.props.onAction}
+				/>
 
 			</Fragment>
-		)
+		);
 	}
 }
 
-export default compose(withSelect(select => {
-	const store = select(TABLE_STORE_KEY);
-	// const {page = 1, orderby = 'name', order = 'desc'} = query;
-	// const isLoading = store.hasFinishedResolution('getItems', [endpoint, query]) === false;
-	// const status = isLoading ? "IN_PROGRESS" :store.getStatus(endpoint);
-	return {
-		items: store.getItems(),
-		total: store.getTotal(),
-		table: store.getTable(),
-		status: store.getStatus(),
-		per_page: 20,
-		page: 1,
-		orderby: 'id',
-		order: 'desc'
-	}
-
-}), withDispatch(dispatch => {
-	return {
-		loadItems: dispatch(TABLE_STORE_KEY).loadItems,
-		onSearch: () => {
-		},
-		onChangePage: () => {
-		},
-		onSetOrderBy: () => {
-		},
-		onSetAllSelected: () => {
-		},
-		onAdd: () => {
-		},
-		onAction: () => {
-		},
-	}
-}))(Categories)
+export default withCategories(Categories);

@@ -1,13 +1,13 @@
 import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {__} from '@wordpress/i18n';
-import {RowAction} from '@eaccounting/components';
+import {RowActions} from '@eaccounting/components';
 // import EditCategory from 'component/edit-category';
 
-export default class Row extends Component {
+export default  class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
-		disabled: PropTypes.bool.isRequired,
+		isLoading: PropTypes.bool.isRequired,
 		isSelected: PropTypes.bool,
 	};
 
@@ -23,10 +23,6 @@ export default class Row extends Component {
 		this.setState({editing: !this.state.editing});
 	};
 
-	onDelete = () => {
-		this.props.onTableAction('delete', this.props.item.id);
-	};
-
 	onSelected = () => {
 		this.props.onSetSelected([this.props.item.id]);
 	};
@@ -40,32 +36,31 @@ export default class Row extends Component {
 	};
 
 	render() {
-		const {isSelected, disabled, item} = this.props;
+		const {isSelected, isLoading, item} = this.props;
 		const {id, name, type, color} = item;
 		const {editing} = this.state;
-
 		return (
 			<Fragment>
-				<tr className={disabled ? 'disabled' : ''}>
+				<tr className={isLoading ? 'disabled' : ''}>
 					<th scope="row" className="check-column">
 						<input
 							type="checkbox"
 							name="item[]"
 							value={id}
-							disabled={disabled}
+							disabled={isLoading}
 							checked={isSelected}
 							onChange={() => this.props.onSetSelected(item.id)}
 						/>
 
-						{editing && (
-							<EditCategory
-								item={this.props.item}
-								onCreate={this.OnSave}
-								onClose={this.onClose}
-								buttonTittle={__('Update')}
-								tittle={__('Update Category')}
-							/>
-						)}
+						{/*{editing && (*/}
+						{/*	<EditCategory*/}
+						{/*		item={this.props.item}*/}
+						{/*		onCreate={this.OnSave}*/}
+						{/*		onClose={this.onClose}*/}
+						{/*		buttonTittle={__('Update')}*/}
+						{/*		tittle={__('Update Category')}*/}
+						{/*	/>*/}
+						{/*)}*/}
 					</th>
 
 					<td className="column-primary column-name">{name}</td>
@@ -77,17 +72,17 @@ export default class Row extends Component {
 					</td>
 
 					<td className="column-actions">
-						<RowAction
+						<RowActions
 							controls={[
 								{
 									title: __('Edit'),
 									onClick: this.onEdit,
-									disabled: disabled,
+									disabled: isLoading,
 								},
 								{
 									title: __('Delete'),
-									onClick: this.onDelete,
-									disabled: disabled,
+									onClick: ()=>this.props.onAction('delete', item.id),
+									disabled: isLoading,
 								},
 							]}
 						/>
@@ -97,3 +92,4 @@ export default class Row extends Component {
 		);
 	}
 }
+

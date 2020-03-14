@@ -6,7 +6,7 @@
 import {__} from '@wordpress/i18n';
 import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import {Fragment} from "@wordpress/element";
-// import {Tabs} from "@eaccounting/components";
+import Tabs from "components/tabs";
 /**
  * Internal dependencies
  */
@@ -35,7 +35,7 @@ const tabs = [
 const Misc = props => {
 	return (
 		<Fragment>
-			{/*<Tabs tabs={tabs}/>*/}
+			<Tabs tabs={tabs}/>
 			<Router>
 				<Switch>
 					{tabs.map(tab => {

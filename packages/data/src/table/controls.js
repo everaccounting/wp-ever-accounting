@@ -18,6 +18,15 @@ export const fetchFromAPI = (endpoint, query) => {
 	};
 };
 
+export const bulkAction = (endpoint, action, ids) => {
+	return {
+		type: 'TABLE_BULK_ACTION',
+		endpoint,
+		action,
+		ids
+	};
+};
+
 export const controls = {
 	FETCH_FROM_API(action) {
 		const queryString = addQueryArgs('', action.query);
@@ -33,5 +42,8 @@ export const controls = {
 					reject(error);
 				});
 		});
+	},
+	TABLE_BULK_ACTION(action){
+
 	}
 };

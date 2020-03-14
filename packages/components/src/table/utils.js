@@ -1,6 +1,12 @@
 export const isEnabled = (selected, display) => selected.indexOf(display) !== -1;
-
-export function numberFormat(number, decimals, dec_point, thousands_sep) {
+/**
+ * Exposes number format capability through i18n mixin
+ *
+ * @copyright Copyright (c) 2013 Kevin van Zonneveld (http://kvz.io) and Contributors (http://phpjs.org/authors).
+ * @license See CREDITS.md
+ * @see https://github.com/kvz/phpjs/blob/ffe1356af23a6f2512c84c954dd4e828e92579fa/functions/strings/number_format.js
+ */
+export const numberFormat= (number, decimals, dec_point, thousands_sep) => {
 	number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
 	var n = !isFinite(+number) ? 0 : +number,
 		prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
@@ -21,4 +27,4 @@ export function numberFormat(number, decimals, dec_point, thousands_sep) {
 		s[1] += new Array(prec - s[1].length + 1).join('0');
 	}
 	return s.join(dec);
-}
+};

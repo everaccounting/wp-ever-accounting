@@ -1,6 +1,6 @@
 import {hasInState} from "./utils";
 
-export const getItems = (state) => {
+export const getRows = (state) => {
 	if (hasInState(state, ['items'])) {
 		return state['items'];
 	}

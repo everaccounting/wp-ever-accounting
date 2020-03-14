@@ -57,7 +57,7 @@ class EAccounting_Scripts {
 		wp_register_script(
 			'eaccounting-data',
 			self::get_url( 'data.js' ),
-			array_merge( $data_dependencies['dependencies']),
+			array_merge( $data_dependencies['dependencies'] ),
 			self::get_file_version( 'data.js' ),
 			true
 		);
@@ -65,7 +65,7 @@ class EAccounting_Scripts {
 		wp_register_script(
 			'eaccounting',
 			self::get_url( 'eaccounting.js' ),
-			array_merge( $app_dependencies['dependencies'], ['eaccounting-data'] ),
+			array_merge( $app_dependencies['dependencies'], [ 'eaccounting-data' ] ),
 			self::get_file_version( 'eaccounting.js' ),
 			true
 		);
@@ -80,20 +80,19 @@ class EAccounting_Scripts {
 		);
 
 
-
 		wp_register_style(
 			'eaccounting',
 			self::get_url( 'eaccounting.css' ),
-			array( 'wp-components'),
+			array( 'wp-components' ),
 			self::get_file_version( 'eaccounting.css' )
 		);
 
-//		wp_enqueue_style(
-//			'eaccounting-fontawesome',
-//			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
-//			array(),
-//			self::get_file_version( 'app/style.css' )
-//		);
+		wp_enqueue_style(
+			'eaccounting-fontawesome',
+			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
+			array(),
+			self::get_file_version( 'app/style.css' )
+		);
 
 	}
 
@@ -164,9 +163,6 @@ class EAccounting_Scripts {
 			'pluginRoot'    => admin_url( 'admin.php?page=eaccounting' ),
 			'baseUrl'       => get_site_url(),
 			'per_page'      => 20,
-			'restApiRoutes'      => [
-				'/ea/v1' => EAccounting_API::get_routes_from_namespace( 'ea/v1')
-			],
 			'data'          => [
 				'transactionTypes' => eaccounting_get_transaction_types(),
 				'currency'         => eaccounting_get_default_currency(),

@@ -12,7 +12,7 @@ const Row = props => {
 		<tr className="is-placeholder">
 			{columns.map((item, pos) => (
 				<td key={pos}>
-					<div className="placeholder-loading"></div>
+					<div className="placeholder-loading"/>
 				</td>
 			))}
 		</tr>

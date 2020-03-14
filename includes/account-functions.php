@@ -110,7 +110,7 @@ function eaccounting_delete_account( $id ) {
 
 	foreach ( $tables as $table => $column ) {
 		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
-			return new WP_Error( 'not-permitted', __( 'Account have records on', 'wp-ever-accounting' ) );
+			return new WP_Error( 'not-permitted', __( 'Account(s) have records with other entities', 'wp-ever-accounting' ) );
 		}
 	}
 

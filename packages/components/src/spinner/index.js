@@ -1,4 +1,4 @@
-import { Component } from '@wordpress/element';
+import { Component } from 'react';
 import { Spinner as Base } from '@wordpress/components';
 import classnames from 'classnames';
 import propTypes from 'prop-types';

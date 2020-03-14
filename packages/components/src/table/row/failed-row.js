@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { __ } from '@wordpress/i18n';;
+import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
 const FailedRow = props => {

@@ -11,9 +11,9 @@ import PropTypes from 'prop-types';
 import SortableColumn from './sortable-column';
 import Column from './column';
 import CheckColumn from './check-column';
-import { __ } from '@wordpress/i18n';
+
 const TableHeader = props => {
-	const { isDisabled, onSetAllSelected, onSetOrderBy, isSelected, headers, table } = props;
+	const { isDisabled, onSetAllSelected, onSetOrderBy, isSelected, headers, orderby, order } = props;
 	const setSelected = ev => {
 		onSetAllSelected(ev.target.checked);
 	};
@@ -40,7 +40,8 @@ const TableHeader = props => {
 
 				return (
 					<SortableColumn
-						table={table}
+						orderby={orderby}
+						order={order}
 						name={item.name}
 						text={item.title}
 						key={item.name}
@@ -54,7 +55,8 @@ const TableHeader = props => {
 };
 
 TableHeader.propTypes = {
-	table: PropTypes.object.isRequired,
+	orderby: PropTypes.string.isRequired,
+	order: PropTypes.string.isRequired,
 	isDisabled: PropTypes.bool.isRequired,
 	isSelected: PropTypes.bool.isRequired,
 	headers: PropTypes.array.isRequired,

@@ -1,0 +1,24 @@
+.ea-textarea-field{
+  .components-base-control{
+	width:100%
+  }
+  textarea{
+	margin: 0;
+	box-sizing: border-box;
+	vertical-align: middle;
+	height: auto;
+	-webkit-transition: .3s border;
+	transition: .3s border;
+	max-width: none!important;
+	min-height: 100px;
+	width: 100%;
+	border: 1px solid #d2d6de;
+	border-radius: 0;
+
+	&:focus {
+	  box-shadow: none !important;
+	  outline: 0 !important;
+	  border: 1px solid #007cba !important;
+	}
+  }
+}

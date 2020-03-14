@@ -4,13 +4,13 @@
  */
 import { render } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
-
+import "@wordpress/notices";
 /**
  * Internal dependencies
  */
 import App from './app';
 
-import './style.scss';
+import './stylesheets/main.scss';
 
 domReady(() => {
 	const root = document.getElementById('eaccounting');

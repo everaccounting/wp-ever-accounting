@@ -14,28 +14,36 @@ const reducers = (state = {}, action) => {
 				...state,
 				items: action.items,
 				total: parseInt(action.headers.get('x-wp-total'), 10) || parseInt(state.total, 10),
-				table: { ...state.table, selected: [] },
+				table: {...state.table, ...action.table, selected: []},
 				status: "STATUS_COMPLETE",
+				error: ''
 			};
 			break;
 		case types.TABLE_ITEM_SELECTED:
 			state = {
 				...state,
-				table:{...state.table, selected: xor(state.table.selected, [action.id])}
+				table: {...state.table, selected: xor(state.table.selected, [action.id])}
+			};
+			break;
+		case types.TABLE_PAGE_CHANGED:
+			state = {
+				...state,
+				table: {...state.table, page: action.page}
 			};
 			break;
 		case types.TABLE_ALL_SELECTED:
 			state = {
 				...state,
-				table:{...state.table, selected: action.onoff ? state.rows.map(item => item.id) : []}
+				table: {...state.table, selected: action.onoff ? state.items.map(item => item.id) : []}
 			};
 			break;
 		case types.TABLE_FAILED:
-		state = {
-			...state,
-			status: "STATUS_FAILED",
-		};
-		break;
+			state = {
+				...state,
+				status: "STATUS_FAILED",
+				error: action.error
+			};
+			break;
 
 	}
 	return state;

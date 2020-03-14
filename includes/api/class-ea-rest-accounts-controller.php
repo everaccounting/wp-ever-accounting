@@ -72,7 +72,14 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			)
 		);
 
-
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => [ $this, 'handle_bulk_actions' ],
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+		) );
 	}
 
 	/**
@@ -238,6 +245,32 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+	public function handle_bulk_actions( $request ) {
+		$actions = [
+			'delete',
+		];
+		$action  = $request['action'];
+		$items   = $request['items'];
+		if ( empty( $action ) || ! in_array( $action, $actions ) ) {
+			return new WP_Error( 'invalid_bulk_action', __( 'Invalid bulk action', 'wp-ever-accounting' ) );
+		}
+		$deleted = [];
+		switch ( $action ) {
+			case 'delete':
+				foreach ( $items as $item ) {
+					$is_wp_error = eaccounting_delete_account( $item );
+					if($is_wp_error){
+						return $is_wp_error;
+						break;
+					}
+					$deleted[$item] = $is_wp_error;
+				}
+				break;
+		}
+
+		return rest_ensure_response($deleted);
+	}
+
 	/**
 	 * since 1.0.0
 	 *
@@ -288,12 +321,12 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 
-		$data      = array(
-			'id'              => intval($item->id),
+		$data = array(
+			'id'              => intval( $item->id ),
 			'name'            => $item->name,
 			'number'          => $item->number,
 			'opening_balance' => $item->opening_balance,
-			'balance'         => eaccounting_get_account_current_balance($item->id, true ),
+			'balance'         => eaccounting_get_account_current_balance( $item->id, true ),
 			'currency'        => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'bank_name'       => $item->bank_name,
 			'bank_phone'      => $item->bank_phone,
