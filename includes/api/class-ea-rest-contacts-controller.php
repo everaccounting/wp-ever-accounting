@@ -251,7 +251,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
-			'id'            => $item->id,
+			'id'            => intval( $item->id ),
 			'user_id'       => $item->user_id,
 			'first_name'    => $item->first_name,
 			'last_name'     => $item->last_name,

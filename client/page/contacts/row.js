@@ -47,7 +47,7 @@ export default class Row extends Component {
 							value={id}
 							disabled={isLoading}
 							checked={isSelected}
-							onChange={() => this.props.onSetSelected(item.id)}
+							onChange={() => this.props.onSelected(item.id)}
 						/>
 					</th>
 
