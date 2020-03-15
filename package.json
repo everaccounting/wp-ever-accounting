@@ -46,6 +46,7 @@
 	"dependencies": {
 		"bootstrap-daterangepicker": "^3.0.5",
 		"react-currency-input": "^1.3.6",
+		"react-notifications": "^1.5.0-beta.0",
 		"react-router-dom": "^5.1.2",
 		"react-select": "^3.0.8",
 		"text-mask-addons": "^3.8.0"
@@ -56,6 +57,7 @@
 		"@babel/plugin-transform-runtime": "^7.8.3",
 		"@eaccounting/components": "file:./packages/components",
 		"@eaccounting/data": "file:./packages/data",
+		"@eaccounting/navigation": "file:./packages/navigation",
 		"@eaccounting/settings": "file:./packages/settings",
 		"@wordpress/babel-plugin-makepot": "^3.4.0",
 		"@wordpress/babel-preset-default": "^4.10.0",

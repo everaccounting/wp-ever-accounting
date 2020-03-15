@@ -1,13 +1,17 @@
 /**
  * External dependencies
  */
-import {apiFetch, select} from '@wordpress/data-controls';
+import {apiFetch, select, dispatch} from '@wordpress/data-controls';
+import {isArray, isEmpty} from "lodash";
+import {__} from "@wordpress/i18n";
+import { NotificationManager} from 'react-notifications';
 
 /**
  * Internal dependencies
  */
 import {ACTION_TYPES as types} from './action-types';
 import {STORE_KEY as SCHEMA_STORE_KEY} from '../schema/constants';
+import {STORE_KEY} from "./constants";
 
 let Headers = window.Headers || null;
 Headers = Headers
@@ -44,14 +48,10 @@ Headers = Headers
  *	}
  * } Object for action.
  */
-export function receiveCollection(
-	namespace,
-	resourceName,
-	queryString = '',
-	ids = [],
-	response = {items: [], headers: Headers, table: {}},
-	replace = false
-) {
+export function receiveCollection(namespace, resourceName, queryString = '', ids = [], response = {
+	items: [],
+	headers: Headers
+}, replace = false) {
 	return {
 		type: replace ? types.RESET_COLLECTION : types.RECEIVE_COLLECTION,
 		namespace,
@@ -62,19 +62,14 @@ export function receiveCollection(
 	};
 }
 
-export function* __experimentalPersistItemToCollection(
-	namespace,
-	resourceName,
-	currentCollection,
-	data = {}
-) {
-	const newCollection = [...currentCollection];
+export function* create(namespace, resourceName, data = {}) {
 	const route = yield select(
 		SCHEMA_STORE_KEY,
 		'getRoute',
 		namespace,
 		resourceName
 	);
+
 	if (!route) {
 		return;
 	}
@@ -87,32 +82,91 @@ export function* __experimentalPersistItemToCollection(
 			cache: 'no-store',
 		});
 
-		if (item) {
-			newCollection.push(item);
-			yield receiveCollection(
-				namespace,
-				resourceName,
-				'',
-				[],
-				{
-					items: newCollection,
-					headers: Headers,
-				},
-				true
-			);
-		}
+		yield invalidateCollection(new Date().getTime());
+
 	} catch (error) {
-		yield receiveCollectionError(namespace, resourceName, '', [], error);
+		NotificationManager.error(error.message);
 	}
 }
 
-export function receiveCollectionError(
-	namespace,
-	resourceName,
-	queryString,
-	ids,
-	error
-) {
+export function* update(namespace, resourceName, id, data = {}) {
+	const route = yield select(
+		SCHEMA_STORE_KEY,
+		'getRoute',
+		namespace,
+		resourceName,
+		[id]
+	);
+
+	if (!route) {
+		return;
+	}
+
+	try {
+		const item = yield apiFetch({
+			path: route,
+			method: 'POST',
+			data,
+			cache: 'no-store',
+		});
+
+		yield invalidateCollection(new Date().getTime());
+
+	} catch (error) {
+		NotificationManager.error(error.message);
+	}
+
+}
+
+export function* remove(namespace, resourceName, id) {
+	const ids = isArray(id) ? id : [id];
+	const resource = ids.length > 1 ? `${resourceName}/bulk` : resourceName;
+	const routeIds = ids.length > 1 ? [] : [1];
+	console.log(ids);
+	if (isEmpty(ids)) {
+		return;
+	}
+
+	if (!confirm(__('Are you sure you want to delete the items?'))) {
+		return;
+	}
+
+	const route = yield select(
+		SCHEMA_STORE_KEY,
+		'getRoute',
+		namespace,
+		resource,
+		routeIds
+	);
+
+	if (!route) {
+		return;
+	}
+
+	console.log({
+		path: route,
+		method: ids.length > 1 ? 'POST' : 'DELETE',
+		cache: 'no-store',
+		data: ids.length > 1 ? {action: 'delete', items: ids} : {}
+	});
+
+	try {
+		yield apiFetch({
+			path: route,
+			method: ids.length > 1 ? 'POST' : 'DELETE',
+			cache: 'no-store',
+			data: ids.length > 1 ? {action: 'delete', items: ids} : {}
+		});
+
+		yield invalidateCollection(new Date().getTime());
+		return true;
+	} catch (error) {
+		NotificationManager.error(error.message);
+	}
+}
+
+
+export function receiveCollectionError(namespace, resourceName, queryString, ids, error) {
 	return {
 		type: 'ERROR',
 		namespace,
@@ -132,4 +186,13 @@ export function receiveLastModified(timestamp) {
 		type: types.RECEIVE_LAST_MODIFIED,
 		timestamp,
 	};
+}
+
+
+/**
+ * Check if the store needs invalidating due to a change in last modified headers.
+ *
+ */
+export function* invalidateCollection() {
+	yield dispatch(STORE_KEY, 'invalidateResolutionForStore');
 }

@@ -25,6 +25,7 @@ const packages = [
 	'settings',
 	'components',
 	'data',
+	'navigation',
 ];
 const entryPoints = {};
 packages.forEach(name => {

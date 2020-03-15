@@ -9,7 +9,7 @@ import Company from "./sections/company";
 import Defaults from "./sections/defaults";
 import Tabs from 'components/tabs';
 
-
+import { getHistory } from '@eaccounting/navigation';
 const getTabs = [
 	{
 		path: '/settings/general',
@@ -33,7 +33,7 @@ const Settings = props => {
 	return (
 		<Fragment>
 			<Tabs tabs={getTabs} />
-			<Router>
+			<Router history={ getHistory() }>
 				<Switch>
 					{getTabs.map((page)=> {
 						return (

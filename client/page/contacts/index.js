@@ -7,69 +7,12 @@ import {
 	SelectControl,
 	AccountControl,
 	CategoryControl,
-	DateFilter
+	DateFilter,
+	ContactTypesControl
 } from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
-import {getOptions} from "options";
 import {__} from '@wordpress/i18n';
-import {map} from "lodash"
-import {COLLECTIONS_STORE_KEY, QUERY_STATE_STORE_KEY} from "data";
-import {withDispatch, withSelect} from '@wordpress/data';
-import {compose} from '@wordpress/compose';
-//
-// class Contacts extends Component {
-// 	constructor(props) {
-// 		super(props);
-// 		this.state = {};
-// 	}
-//
-//
-// 	onRenderRow = (item, pos, isSelected, isLoading, search) => {
-// 		return (
-// 			<Row
-// 				item={item}
-// 				key={pos}
-// 				isLoading={isLoading}
-// 				search={search}
-// 				isSelected={isSelected}
-// 				{...this.props}
-// 			/>
-// 		)
-// 	};
-//
-// 	render() {
-// 		const {items, total} = this.props;
-// 		const {page = 1} = this.props.query;
-// 		const selected = [];
-// 		return (
-// 			<Fragment>
-// 				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
-// 				<hr className="wp-header-end"/>
-// 				<div className="ea-table-display">
-// 					<SearchBox status={status} onSearch={search => { this.setQuery('search', search)}}/>
-// 				</div>
-//
-
-//
-// 				<Table
-// 					headers={getHeaders()}
-// 					orderby={'name'}
-// 					selected={[]}
-// 					order={'desc'}
-// 					rows={items}
-// 					total={total}
-// 					row={this.onRenderRow}
-// 					status={"STATUS_COMPLETE"}
-// 					onSetAllSelected={this.props.onSetAllSelected}
-// 					onSetOrderBy={this.props.onSetOrderBy}
-// 				/>
-//
-// 			</Fragment>
-// 		);
-// 	}
-// }
-
 class Contacts extends Component {
 	constructor(props) {
 		super(props);
@@ -107,9 +50,13 @@ class Contacts extends Component {
 					onChangePage={(page) => {
 						this.props.setQuery('page', page)
 					}}
-					onAction={this.props.onAction}
+					onAction={this.props.onBulkAction}
 					bulk={getBulk()}
-				/>
+				>
+					<ContactTypesControl
+						className={'alignleft actions'}/>
+						
+				</TableNav>
 				<Table
 					headers={getHeaders()}
 					orderby={'name'}

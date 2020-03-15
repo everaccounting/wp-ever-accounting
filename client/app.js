@@ -2,6 +2,7 @@ import {routes} from './routes';
 import {Fragment} from "@wordpress/element";
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import {COLLECTIONS_STORE_KEY} from "data";
+import { NotificationContainer } from 'react-notifications';
 
 const App = () => {
 	return (
@@ -17,6 +18,7 @@ const App = () => {
 					<Redirect from="*" to="/"/>
 				</Switch>
 			</Router>
+			<NotificationContainer/>
 		</Fragment>
 	);
 };

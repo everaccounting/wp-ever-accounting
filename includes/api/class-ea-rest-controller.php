@@ -132,6 +132,24 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * since 1.0.0
+	 * @param $keyvalues
+	 *
+	 * @return array
+	 */
+	protected function assoc_to_options($keyvalues){
+		$options = [];
+		foreach ($keyvalues as $key => $value){
+			$options[] = [
+				'label' => $value,
+				'value' => $key,
+			];
+		}
+
+		return $options;
+	}
+
+	/**
 	 * @param $user_id
 	 *
 	 * @return array

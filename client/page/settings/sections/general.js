@@ -14,7 +14,7 @@ import {
 	Col
 } from "@eaccounting/components";
 import apiFetch from "@wordpress/api-fetch";
-
+import {getPath} from "@eaccounting/navigation"
 export default class General extends Component {
 	constructor(props) {
 		super(props);
@@ -56,6 +56,7 @@ export default class General extends Component {
 	};
 
 	render() {
+		{console.log(getPath())}
 		const disabled = false;
 		const {isLoading} = this.state;
 		return (

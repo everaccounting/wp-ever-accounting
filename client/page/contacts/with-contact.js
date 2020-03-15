@@ -6,6 +6,8 @@ import {COLLECTIONS_STORE_KEY, QUERY_STATE_STORE_KEY} from "data";
 import {withDispatch, withSelect} from '@wordpress/data';
 import {compose} from '@wordpress/compose';
 import {removeDefaultQueries} from "./utils";
+import {getNewPath, updateQueryString} from '@eaccounting/navigation';
+import isShallowEqual from '@wordpress/is-shallow-equal';
 
 function withContacts(resourceName, defaultQuery = {}) {
 
@@ -25,10 +27,6 @@ function withContacts(resourceName, defaultQuery = {}) {
 						total: this.props.total
 					});
 				}
-
-				if(JSON.stringify(prevProps.query) !==  JSON.stringify(this.props.query)){
-					this.props.history.push({ pathname: this.props.location.pathname, query:this.props.query });
-				}
 			}
 
 			setQuery = (queryKey, queryValue) => {
@@ -47,6 +45,11 @@ function withContacts(resourceName, defaultQuery = {}) {
 				})
 			};
 
+			setBulkAction = (action) => {
+				this.props.remove('/ea/v1', resourceName, this.props.selected);
+			};
+
+
 			render() {
 				const {total, selected} = this.state;
 				return <WrappedComponent
@@ -55,6 +58,7 @@ function withContacts(resourceName, defaultQuery = {}) {
 					selected={selected}
 					onSelected={this.onSelected}
 					onAllSelected={this.onAllSelected}
+					onBulkAction={this.setBulkAction}
 					setQuery={this.setQuery}/>;
 			}
 		}
@@ -71,7 +75,6 @@ function withContacts(resourceName, defaultQuery = {}) {
 					status = "STATUS_FAILED"
 				}
 				const {page = 1} = query;
-
 				return {
 					items: getCollection(namespace, resourceName, query),
 					total: parseInt(getCollectionHeader('x-wp-total', namespace, resourceName, query), 10),
@@ -80,10 +83,15 @@ function withContacts(resourceName, defaultQuery = {}) {
 					query: query
 				}
 			}),
+
 			withDispatch((dispatch) => {
+				const {create, update, remove} = dispatch(COLLECTIONS_STORE_KEY);
 				const {setQueryValue} = dispatch(QUERY_STATE_STORE_KEY);
 				return {
-					setQueryValue
+					setQueryValue,
+					create,
+					update,
+					remove
 				};
 			})
 		])(Wrapper);

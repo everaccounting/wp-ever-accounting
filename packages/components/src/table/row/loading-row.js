@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Row = props => {
-	const { columns } = props;
+	const {columns} = props;
 
 	return (
 		<tr className="is-placeholder">
@@ -20,22 +20,21 @@ const Row = props => {
 };
 
 const LoadingRow = props => {
-	const { headers, rows } = props;
-
+	const {headers, per_page} = props;
 	return (
 		<tbody>
-			<Row columns={headers} />
+		<Row columns={headers}/>
 
-			{rows.slice(0, -1).map((item, pos) => (
-				<Row columns={headers} key={pos} />
-			))}
+		{[...Array(per_page).keys()].map((item, pos) => (
+			<Row columns={headers} key={pos}/>
+		))}
 		</tbody>
 	);
 };
 
 LoadingRow.propTypes = {
 	headers: PropTypes.array.isRequired,
-	rows: PropTypes.array.isRequired,
+	per_page: PropTypes.number.isRequired,
 };
 
 export default LoadingRow;
