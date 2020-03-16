@@ -58,6 +58,7 @@ function getHistory() {
 			},
 		};
 	}
+
 	return _history;
 }
 

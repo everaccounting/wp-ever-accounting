@@ -1,9 +1,6 @@
-import {Component, Fragment} from 'react';
-import {__} from '@wordpress/element';
-import SelectControl from '../select-control/async';
-import PropTypes from 'prop-types';
+import {Component, Fragment} from '@wordpress/element';
+import SelectControl from '../select-control';
 import apiFetch from "@wordpress/api-fetch";
-import { addQueryArgs } from '@wordpress/url';
 
 export default class ContactTypesControl extends Component {
 

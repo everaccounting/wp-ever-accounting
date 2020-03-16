@@ -55,7 +55,7 @@ class Contacts extends Component {
 				>
 					<ContactTypesControl
 						className={'alignleft actions'}/>
-						
+
 				</TableNav>
 				<Table
 					headers={getHeaders()}

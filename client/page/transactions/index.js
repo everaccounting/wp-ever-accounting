@@ -1,11 +1,19 @@
 import {Component, Fragment} from 'react';
-import withTransactions from "hocs/with-transactions";
-import {SearchBox, TableNav, Table,SelectControl, AccountControl,CategoryControl, DateFilter} from "@eaccounting/components"
+import {
+	SearchBox,
+	TableNav,
+	Table,
+	SelectControl,
+	AccountControl,
+	CategoryControl,
+	DateFilter,
+	withTable,
+} from "@eaccounting/components"
 import {getHeaders} from './constants';
 import Row from "./row";
-import {getOptions} from "options";
 import {__} from '@wordpress/i18n';
 import {map} from "lodash"
+import {getBulk} from "../contacts/constants";
 
 class Transactions extends Component {
 	constructor(props) {
@@ -44,18 +52,17 @@ class Transactions extends Component {
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onChangePage}
-					onAction={this.props.onAction}
-				>
+					onChangePage={this.props.onPageChange}>
+
 					<DateFilter
 						className={'alignleft actions'}
-						onChange={date => {this.props.onFilter({date})}}/>
+						onChange={date => this.props.onFilter('date', date)}/>
 
 					<AccountControl
 						className={'alignleft actions'}
 						placeholder={__('Filter Account')}
 						isMulti
-						onChange={(accounts)=> {this.props.onFilter({account_id: map(accounts, 'id')})}}
+						onChange={(accounts)=> this.props.onFilter('account_id', map(accounts, 'id'))}
 					/>
 
 					<CategoryControl
@@ -63,8 +70,9 @@ class Transactions extends Component {
 						placeholder={__('Filter Category')}
 						isMulti
 						type={['income', 'expense']}
-						onChange={(categories)=> {this.props.onFilter({category_id: map(categories, 'id')})}}
+						onChange={(categories)=> this.props.onFilter('category_id', map(categories, 'id'))}
 					/>
+
 					<SelectControl
 						className={'alignleft actions'}
 						placeholder={__('Filter Type')}
@@ -83,8 +91,8 @@ class Transactions extends Component {
 							}
 						]}
 						isMulti
-						onChange={(types) => {this.props.onFilter({type: map(types, 'value')})}}
-					/>
+						onChange={(types)=> this.props.onFilter('type', map(types, 'value'))}/>
+
 				</TableNav>
 
 				<Table
@@ -96,8 +104,7 @@ class Transactions extends Component {
 					total={total}
 					row={this.onRenderRow}
 					status={status}
-					onSetAllSelected={this.props.onSetAllSelected}
-					onSetOrderBy={this.props.onSetOrderBy}
+					onSetOrderBy={this.props.onOrderBy}
 				/>
 
 				<TableNav
@@ -105,7 +112,7 @@ class Transactions extends Component {
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onChangePage}
+					onChangePage={this.props.onPageChange}
 					onAction={this.props.onAction}
 				/>
 
@@ -114,4 +121,4 @@ class Transactions extends Component {
 	}
 }
 
-export default withTransactions(Transactions);
+export default withTable('transactions',{orderby:'paid_at'})(Transactions);

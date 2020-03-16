@@ -1,111 +1,127 @@
 import {Component} from '@wordpress/element';
 import {createHigherOrderComponent} from '@wordpress/compose';
-import PropTypes from 'prop-types';
-import {debounce} from 'lodash';
-import {withDispatch, withSelect, select} from '@wordpress/data';
+import {xor, pickBy, isNumber, isEmpty} from "lodash";
+import {__} from "@wordpress/i18n";
+import {COLLECTIONS_STORE_KEY, QUERY_STATE_STORE_KEY} from "data";
+import {withDispatch, withSelect} from '@wordpress/data';
 import {compose} from '@wordpress/compose';
-import {COLLECTIONS_STORE_KEY, QUERY_STATE_STORE_KEY} from '@eaccounting/data';
+import {removeDefaultQueries} from "./utils";
+import isShallowEqual from '@wordpress/is-shallow-equal';
 
-const withTable = createHigherOrderComponent(OriginalComponent => {
-	class WrappedComponent extends Component {
-		constructor(props) {
-			super(props);
-			this.state = {
-				total: 0
+function withTable(resourceName, defaultQuery = {orderby: 'id'}) {
+
+	return createHigherOrderComponent((WrappedComponent) => {
+		class Wrapper extends Component {
+			constructor() {
+				super(...arguments);
+				this.state = {
+					selected: [],
+					total: 0,
+				}
+			}
+
+			componentDidUpdate(prevProps) {
+				if (!isNaN(this.props.total) && !isShallowEqual(this.state.total, this.props.total)) {
+					this.setState({
+						total: this.props.total
+					});
+				}
+			}
+
+			setQuery = (queryKey, queryValue) => {
+				this.props.setQueryValue(resourceName, queryKey, queryValue)
 			};
-		}
 
-		onOrderBy = (orderby, order) => {
-			this.props.setQuery(this.props.resourceName, orderby, order);
-		};
+			onSelected = id => {
+				this.setState({
+					selected: xor(this.state.selected, [id])
+				})
+			};
 
-		onPageChange = page => {
-			this.props.setQuery(this.props.resourceName, 'page', page || 1);
-		};
+			onAllSelected = onoff => {
+				this.setState({
+					selected: onoff ? this.props.items.map(item => item.id) : []
+				})
+			};
 
-		onSearch = search => {
-			this.props.setQuery(this.props.resourceName, {search});
-		};
+			setBulkAction = (action) => {
+				this.props.remove('/ea/v1', resourceName, this.props.selected);
+			};
 
-		onSelected = ids => {
-		};
+			setPageChange = (page) => {
+				this.props.setQueryValue(resourceName, 'page', page)
+			};
 
-		onAllSelected = onoff => {
-		};
+			setSearch = (search) => {
+				this.props.setQueryValue(resourceName, 'search', search)
+			};
 
-		onAction = (action, ids) => {
-		};
+			setOrderByOrder = (orderby, order) => {
+				this.props.setQueryValue(resourceName, 'orderby', orderby)
+				this.props.setQueryValue(resourceName, 'order', order)
+			};
 
-		onDelete = item => {
-			this.props.resetCollection('/ea/v1', this.props.resourceName, {}, [item.id], true);
-			// this.props.setQuery(this.props.resourceName, {repalce});
-		};
+			setFilter = (filterby, filter) => {
+				console.log(filterby);
+				console.log(filter);
+				this.props.setQueryValue(resourceName, filterby, filter)
+			};
 
-		render() {
-			const {items, query, total, isLoading, selected, page, per_page = 20} = this.props;
+			resetFilter = () => {
 
-			console.log(total);
-			return (
-				<OriginalComponent
-					setOrderBy={this.onOrderBy}
-					setPageChange={this.onPageChange}
-					setSearch={this.onSearch}
-					setSelected={this.onSelected}
-					setAllSelected={this.onAllSelected}
-					setAction={this.onAction}
-					setDelete={this.onDelete}
+			};
+
+			render() {
+				const {total, selected} = this.state;
+				return <WrappedComponent
+					{...this.props}
 					total={total}
 					selected={selected}
-					per_page={per_page}
-					items={items}
-					isLoading={isLoading}
-					query={query}
-					page={page}
-				/>
-			);
+					onOrderBy={this.setOrderByOrder}
+					onPageChange={this.setPageChange}
+					onFilter={this.setFilter}
+					onSearch={this.setSearch}
+					onSelected={this.onSelected}
+					onAllSelected={this.onAllSelected}
+					onBulkAction={this.setBulkAction}
+					setQuery={this.setQuery}/>;
+			}
 		}
-	}
 
-	WrappedComponent.propTypes = {
-		selected: PropTypes.array,
-		query: PropTypes.object,
-	};
-	WrappedComponent.defaultProps = {
-		selected: [],
-		query: {},
-	};
+		return compose([
+			withSelect((select) => {
+				const namespace = '/ea/v1';
+				const {getCollection, getCollectionHeader, getCollectionError, hasFinishedResolution} = select(COLLECTIONS_STORE_KEY);
+				const {getValueForQueryContext} = select(QUERY_STATE_STORE_KEY);
+				const query = removeDefaultQueries(pickBy({...defaultQuery, ...getValueForQueryContext(resourceName)}, value => isNumber(value) || !isEmpty(value)), defaultQuery.orderby);
+				const args = [namespace, resourceName, query];
+				let status = hasFinishedResolution('getCollection', args) !== true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE";
+				if (getCollectionError('getCollection', namespace, resourceName, query)) {
+					status = "STATUS_FAILED"
+				}
+				const {page = 1} = query;
 
-	return compose(
-		withSelect((select, ownProps) => {
-			const {resourceName, query} = ownProps;
-			const currentQuery = {
-				...query,
-				...select(QUERY_STATE_STORE_KEY).getValueForQueryContext(resourceName),
-			};
+				return {
+					items: getCollection(namespace, resourceName, query),
+					total: parseInt(getCollectionHeader('x-wp-total', namespace, resourceName, query), 10),
+					status: status,
+					page: page,
+					query: query
+				}
+			}),
 
-			const namespace = '/ea/v1';
-			const store = select(COLLECTIONS_STORE_KEY);
-			const args = [namespace, resourceName, currentQuery];
-			const {items, headers} = select(COLLECTIONS_STORE_KEY).getCollection(namespace, resourceName, currentQuery);
-			const isLoading = store.hasFinishedResolution('getCollection', args) === false;
-			const total = parseInt(headers['x-wp-total'], 10) || 0;
-			const {page = 1} = currentQuery;
-			return {
-				items,
-				total,
-				isLoading,
-				page,
-				query: currentQuery,
-			};
-		}),
-		withDispatch(dispatch => {
-			return {
-				//resetCollection: dispatch(COLLECTIONS_STORE_KEY).setQueryValue,
-				// resetCollection: dispatch(COLLECTIONS_STORE_KEY).getCollection,
-				setQuery: dispatch(QUERY_STATE_STORE_KEY).setQueryValue,
-				// setQueries: dispatch(QUERY_STATE_STORE_KEY).setValueForQueryContext,
-			};
-		})
-	)(WrappedComponent);
-}, 'withTable');
+			withDispatch((dispatch) => {
+				const {create, update, remove} = dispatch(COLLECTIONS_STORE_KEY);
+				const {setQueryValue} = dispatch(QUERY_STATE_STORE_KEY);
+				return {
+					setQueryValue,
+					create,
+					update,
+					remove
+				};
+			})
+		])(Wrapper);
+	}, 'withTable');
+}
+
 export default withTable;

@@ -1,6 +1,7 @@
-import {Component, Fragment} from 'react';
+import {Component, Fragment} from '@wordpress/element';
 import PropTypes from 'prop-types';
 import {__} from '@wordpress/i18n';
+import {TextHighlight} from "@wordpress/components";
 import moment from 'moment';
 
 export default class Row extends Component {
@@ -35,7 +36,7 @@ export default class Row extends Component {
 	};
 
 	render() {
-		const {isSelected, isLoading, item} = this.props;
+		const {isSelected, isLoading, item, search} = this.props;
 		const {paid_at, account, type, category, reference, amount} = this.props.item;
 		return (
 			<Fragment>
