@@ -1,18 +1,19 @@
 /**
  * External dependencies
  */
-import { combineReducers } from '@wordpress/data';
+import {combineReducers} from '@wordpress/data';
 
 /**
  * Internal dependencies
  */
-import { ACTION_TYPES as types } from './action-types';
+import {ACTION_TYPES as types} from './action-types';
 import {
 	extractResourceNameFromRoute,
 	getRouteIds,
 	simplifyRouteWithId,
 } from './utils';
-import { hasInState, updateState } from '../utils';
+import {hasInState, updateState} from '../utils';
+import {API_NAMESPACE} from "./constants";
 
 /**
  * Reducer for routes
@@ -22,36 +23,32 @@ import { hasInState, updateState } from '../utils';
  *
  * @return {Object} The new (or original) state.
  */
-export const receiveRoutes = ( state = {}, action ) => {
-	const { type, routes, namespace } = action;
-	if ( type === types.RECEIVE_MODEL_ROUTES ) {
-		routes.forEach( ( route ) => {
-			const resourceName = extractResourceNameFromRoute(
-				namespace,
-				route
-			);
-			if ( resourceName && resourceName !== namespace ) {
-				const routeIdNames = getRouteIds( route );
-				const savedRoute = simplifyRouteWithId( route, routeIdNames );
+export const receiveRoutes = (state = {}, action) => {
+	const {type, routes} = action;
+	if (type === types.RECEIVE_MODEL_ROUTES) {
+		routes.forEach((route) => {
+			const resourceName = extractResourceNameFromRoute(API_NAMESPACE, route);
+			if (resourceName && resourceName !== API_NAMESPACE) {
+				const routeIdNames = getRouteIds(route);
+				const savedRoute = simplifyRouteWithId(route, routeIdNames);
 				if (
-					! hasInState( state, [
-						namespace,
+					!hasInState(state, [
 						resourceName,
 						savedRoute,
-					] )
+					])
 				) {
 					state = updateState(
 						state,
-						[ namespace, resourceName, savedRoute ],
+						[resourceName, savedRoute],
 						routeIdNames
 					);
 				}
 			}
-		} );
+		});
 	}
 	return state;
 };
 
-export default combineReducers( {
+export default combineReducers({
 	routes: receiveRoutes,
-} );
+});

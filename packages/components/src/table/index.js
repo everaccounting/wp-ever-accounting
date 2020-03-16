@@ -23,7 +23,7 @@ const Table = props => {
 	const isSelected = isSelectedHeader(selected, rows);
 
 	let content = null;
-	if (status === 'STATUS_IN_PROGRESS' && rows.length === 0) {
+	if (status === 'STATUS_IN_PROGRESS') {
 		content = <LoadingRow headers={headers} rows={rows} per_page={per_page}/>;
 	} else if (rows.length === 0 && status === 'STATUS_COMPLETE') {
 		content = <EmptyRow headers={headers}/>;

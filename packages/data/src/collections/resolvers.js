@@ -1,16 +1,16 @@
 /**
  * External dependencies
  */
-import { select } from '@wordpress/data-controls';
-import { addQueryArgs } from '@wordpress/url';
+import {select} from '@wordpress/data-controls';
+import {addQueryArgs} from '@wordpress/url';
 
 /**
  * Internal dependencies
  */
-import { receiveCollection, receiveCollectionError } from './actions';
-import { STORE_KEY as SCHEMA_STORE_KEY } from '../schema/constants';
-import { STORE_KEY, DEFAULT_EMPTY_ARRAY } from './constants';
-import { apiFetchWithHeaders } from './controls';
+import {receiveCollection, receiveCollectionError} from './actions';
+import {STORE_KEY as SCHEMA_STORE_KEY} from '../schema/constants';
+import {STORE_KEY, DEFAULT_EMPTY_ARRAY} from './constants';
+import {apiFetchWithHeaders} from './controls';
 import {invalidateCollection} from './actions';
 
 /**
@@ -21,17 +21,16 @@ import {invalidateCollection} from './actions';
  * @param {Object} query
  * @param {Array}  ids
  */
-export function* getCollection( namespace, resourceName, query, ids ) {
+export function* getCollection(resourceName, query, ids= []) {
 	const route = yield select(
 		SCHEMA_STORE_KEY,
 		'getRoute',
-		namespace,
 		resourceName,
 		ids
 	);
-	const queryString = addQueryArgs( '', query );
-	if ( ! route ) {
-		yield receiveCollection( namespace, resourceName, queryString, ids );
+	const queryString = addQueryArgs('', query);
+	if (!route) {
+		yield receiveCollection(resourceName, queryString, ids);
 		return;
 	}
 
@@ -39,23 +38,22 @@ export function* getCollection( namespace, resourceName, query, ids ) {
 		const {
 			items = DEFAULT_EMPTY_ARRAY,
 			headers,
-		} = yield apiFetchWithHeaders( route + queryString );
+		} = yield apiFetchWithHeaders(route + queryString);
 
-		if ( headers && headers.get && headers.has( 'last-modified' ) ) {
+		if (headers && headers.get && headers.has('last-modified')) {
 			// Do any invalidation before the collection is received to prevent
 			// this query running again.
 			yield invalidateCollection(
-				parseInt( headers.get( 'last-modified' ), 10 )
+				parseInt(headers.get('last-modified'), 10)
 			);
 		}
 
-		yield receiveCollection( namespace, resourceName, queryString, ids, {
+		yield receiveCollection(resourceName, queryString, ids, {
 			items,
 			headers,
-		} );
-	} catch ( error ) {
+		});
+	} catch (error) {
 		yield receiveCollectionError(
-			namespace,
 			resourceName,
 			queryString,
 			ids,
@@ -78,17 +76,17 @@ export function* getCollection( namespace, resourceName, query, ids ) {
  */
 export function* getCollectionHeader(
 	header,
-	namespace,
 	resourceName,
 	query,
-	ids
+	ids=[]
 ) {
 	// feed the correct number of args in for the select so we don't resolve
 	// unnecessarily. Any undefined args will be excluded. This is important
 	// because resolver resolution is cached by both number and value of args.
-	const args = [ namespace, resourceName, query, ids ].filter(
-		( arg ) => typeof arg !== 'undefined'
+	const args = [resourceName, query].filter(
+		(arg) => typeof arg !== 'undefined'
 	);
+	console.log(args);
 	//we call this simply to do any resolution of the collection if necessary.
-	yield select( STORE_KEY, 'getCollection', ...args );
+	yield select(STORE_KEY, 'getCollection', ...args);
 }

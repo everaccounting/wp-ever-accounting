@@ -1,8 +1,7 @@
 import {Component} from '@wordpress/element';
 import {createHigherOrderComponent} from '@wordpress/compose';
 import {xor, pickBy, isNumber, isEmpty} from "lodash";
-import {__} from "@wordpress/i18n";
-import {COLLECTIONS_STORE_KEY, QUERY_STATE_STORE_KEY} from "data";
+import {COLLECTIONS_STORE_KEY, QUERY_STATE_STORE_KEY} from "@eaccounting/data";
 import {withDispatch, withSelect} from '@wordpress/data';
 import {compose} from '@wordpress/compose';
 import {removeDefaultQueries} from "./utils";
@@ -53,18 +52,16 @@ function withTable(resourceName, defaultQuery = {orderby: 'id'}) {
 			};
 
 			setSearch = (search) => {
-				this.props.setQueryValue(resourceName, 'search', search)
+				this.props.setQueryValue(resourceName, 'search', search);
 			};
 
 			setOrderByOrder = (orderby, order) => {
-				this.props.setQueryValue(resourceName, 'orderby', orderby)
-				this.props.setQueryValue(resourceName, 'order', order)
+				this.props.setQueryValue(resourceName, 'orderby', orderby);
+				this.props.setQueryValue(resourceName, 'order', order);
 			};
 
-			setFilter = (filterby, filter) => {
-				console.log(filterby);
-				console.log(filter);
-				this.props.setQueryValue(resourceName, filterby, filter)
+			setFilter = (filter) => {
+				this.props.setValueForQueryContext(resourceName, Object.assign({}, {...this.props.query,page:1}, filter))
 			};
 
 			resetFilter = () => {
@@ -73,7 +70,7 @@ function withTable(resourceName, defaultQuery = {orderby: 'id'}) {
 
 			render() {
 				const {total, selected} = this.state;
-				return <WrappedComponent
+				return (<WrappedComponent
 					{...this.props}
 					total={total}
 					selected={selected}
@@ -84,26 +81,25 @@ function withTable(resourceName, defaultQuery = {orderby: 'id'}) {
 					onSelected={this.onSelected}
 					onAllSelected={this.onAllSelected}
 					onBulkAction={this.setBulkAction}
-					setQuery={this.setQuery}/>;
+					setQuery={this.setQuery}/>);
 			}
 		}
 
 		return compose([
 			withSelect((select) => {
-				const namespace = '/ea/v1';
 				const {getCollection, getCollectionHeader, getCollectionError, hasFinishedResolution} = select(COLLECTIONS_STORE_KEY);
 				const {getValueForQueryContext} = select(QUERY_STATE_STORE_KEY);
 				const query = removeDefaultQueries(pickBy({...defaultQuery, ...getValueForQueryContext(resourceName)}, value => isNumber(value) || !isEmpty(value)), defaultQuery.orderby);
-				const args = [namespace, resourceName, query];
+				const args = [resourceName, query];
 				let status = hasFinishedResolution('getCollection', args) !== true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE";
-				if (getCollectionError('getCollection', namespace, resourceName, query)) {
+				if (getCollectionError('getCollection', resourceName, query)) {
 					status = "STATUS_FAILED"
 				}
 				const {page = 1} = query;
 
 				return {
-					items: getCollection(namespace, resourceName, query),
-					total: parseInt(getCollectionHeader('x-wp-total', namespace, resourceName, query), 10),
+					items: getCollection(resourceName, query),
+					total: parseInt(getCollectionHeader('x-wp-total',  resourceName, query), 10),
 					status: status,
 					page: page,
 					query: query
@@ -112,8 +108,9 @@ function withTable(resourceName, defaultQuery = {orderby: 'id'}) {
 
 			withDispatch((dispatch) => {
 				const {create, update, remove} = dispatch(COLLECTIONS_STORE_KEY);
-				const {setQueryValue} = dispatch(QUERY_STATE_STORE_KEY);
+				const {setQueryValue, setValueForQueryContext} = dispatch(QUERY_STATE_STORE_KEY);
 				return {
+					setValueForQueryContext,
 					setQueryValue,
 					create,
 					update,

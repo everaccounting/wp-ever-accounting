@@ -30,13 +30,12 @@ const receiveCollection = (state = {}, action) => {
 		return {};
 	}
 
-	const {type, namespace, resourceName, queryString, response} = action;
+	const {type, resourceName, queryString, response} = action;
 	// ids are stringified so they can be used as an index.
 	const ids = action.ids ? JSON.stringify(action.ids) : '[]';
 	switch (type) {
 		case types.RECEIVE_COLLECTION:
 			if (!hasInState(state, [
-				namespace,
 				resourceName,
 				ids,
 				queryString,
@@ -44,7 +43,7 @@ const receiveCollection = (state = {}, action) => {
 			) {
 				state = updateState(
 					state,
-					[namespace, resourceName, ids, queryString],
+					[resourceName, ids, queryString],
 					response
 				);
 			}
@@ -53,14 +52,14 @@ const receiveCollection = (state = {}, action) => {
 		case types.RESET_COLLECTION:
 			state = updateState(
 				state,
-				[namespace, resourceName, ids, queryString],
+				[resourceName, ids, queryString],
 				response
 			);
 			break;
 		case types.ERROR:
 			state = updateState(
 				state,
-				[namespace, resourceName, ids, queryString],
+				[resourceName, ids, queryString],
 				response
 			);
 			break;

@@ -61,6 +61,24 @@
 	  }
 	}
 
+  .is-placeholder {
+	td {
+	  position: relative;
+	  height: 20px;
+	}
+  }
+
+  .placeholder-loading {
+	top: 8px;
+	right: 10px;
+	bottom: 8px;
+	left: 10px;
+  }
+
+  .item-loading {
+	opacity: 0.3;
+  }
+
   	//dropdown button
   	.components-dropdown-menu__toggle{
 	  color: #444;

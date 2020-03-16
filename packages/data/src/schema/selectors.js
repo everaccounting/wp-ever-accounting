@@ -1,13 +1,13 @@
 /**
  * External dependencies
  */
-import { sprintf } from '@wordpress/i18n';
-import { createRegistrySelector } from '@wordpress/data';
+import {sprintf} from '@wordpress/i18n';
+import {createRegistrySelector} from '@wordpress/data';
 
 /**
  * Internal dependencies
  */
-import { STORE_KEY } from './constants';
+import {API_NAMESPACE, STORE_KEY} from './constants';
 
 /**
  * Returns the requested route for the given arguments.
@@ -32,42 +32,33 @@ import { STORE_KEY } from './constants';
  * @return {string} The route if it is available.
  */
 export const getRoute = createRegistrySelector(
-	( select ) => ( state, namespace, resourceName, ids = [] ) => {
-		const hasResolved = select( STORE_KEY ).hasFinishedResolution(
-			'getRoutes',
-			[ namespace ]
-		);
+	(select) => (state, resourceName, ids = []) => {
+		const hasResolved = select(STORE_KEY).hasFinishedResolution('getRoutes');
 		state = state.routes;
 		let error = '';
-		if ( ! state[ namespace ] ) {
-			error = sprintf(
-				'There is no route for the given namespace (%s) in the store',
-				namespace
-			);
-		} else if ( ! state[ namespace ][ resourceName ] ) {
+		if (!state[resourceName]) {
 			error = sprintf(
 				'There is no route for the given resource name (%s) in the store',
 				resourceName
 			);
 		}
-		if ( error !== '' ) {
-			if ( hasResolved ) {
-				throw new Error( error );
+		if (error !== '') {
+			if (hasResolved) {
+				throw new Error(error);
 			}
 			return '';
 		}
 		const route = getRouteFromResourceEntries(
-			state[ namespace ][ resourceName ],
+			state[resourceName],
 			ids
 		);
-		if ( route === '' ) {
-			if ( hasResolved ) {
+		if (route === '') {
+			if (hasResolved) {
 				throw new Error(
 					sprintf(
-						'While there is a route for the given namespace (%s) and resource name (%s), there is no route utilizing the number of ids you included in the select arguments. The available routes are: (%s)',
-						namespace,
+						'While there is a route for the given  resource name (%s), there is no route utilizing the number of ids you included in the select arguments. The available routes are: (%s)',
 						resourceName,
-						JSON.stringify( state[ namespace ][ resourceName ] )
+						JSON.stringify(state[resourceName])
 					)
 				);
 			}
@@ -85,28 +76,25 @@ export const getRoute = createRegistrySelector(
  * @return {Array} An array of all routes for the given namespace.
  */
 export const getRoutes = createRegistrySelector(
-	( select ) => ( state, namespace ) => {
-		const hasResolved = select( STORE_KEY ).hasFinishedResolution(
-			'getRoutes',
-			[ namespace ]
-		);
-		const routes = state.routes[ namespace ];
-		if ( ! routes ) {
-			if ( hasResolved ) {
+	(select) => (state) => {
+		const hasResolved = select(STORE_KEY).hasFinishedResolution('getRoutes');
+		const routes = state.routes;
+		if (!routes) {
+			if (hasResolved) {
 				throw new Error(
 					sprintf(
 						'There is no route for the given namespace (%s) in the store',
-						namespace
+						API_NAMESPACE
 					)
 				);
 			}
 			return [];
 		}
 		let namespaceRoutes = [];
-		for ( const resourceName in routes ) {
+		for (const resourceName in routes) {
 			namespaceRoutes = [
 				...namespaceRoutes,
-				...Object.keys( routes[ resourceName ] ),
+				...Object.keys(routes[resourceName]),
 			];
 		}
 		return namespaceRoutes;
@@ -123,22 +111,22 @@ export const getRoutes = createRegistrySelector(
  *
  * @return {string}  The route or an empty string if nothing found.
  */
-const getRouteFromResourceEntries = ( stateSlice, ids = [] ) => {
+const getRouteFromResourceEntries = (stateSlice, ids = []) => {
 	// convert to array for easier discovery
-	stateSlice = Object.entries( stateSlice );
-	const match = stateSlice.find( ( [ , idNames ] ) => {
+	stateSlice = Object.entries(stateSlice);
+	const match = stateSlice.find(([, idNames]) => {
 		return ids.length === idNames.length;
-	} );
-	const [ matchingRoute, routePlaceholders ] = match || [];
+	});
+	const [matchingRoute, routePlaceholders] = match || [];
 	// if we have a matching route, let's return it.
-	if ( matchingRoute ) {
+	if (matchingRoute) {
 		return ids.length === 0
 			? matchingRoute
 			: assembleRouteWithPlaceholders(
-					matchingRoute,
-					routePlaceholders,
-					ids
-			  );
+				matchingRoute,
+				routePlaceholders,
+				ids
+			);
 	}
 	return '';
 };
@@ -152,9 +140,9 @@ const getRouteFromResourceEntries = ( stateSlice, ids = [] ) => {
  *
  * @return {string} Assembled route.
  */
-const assembleRouteWithPlaceholders = ( route, routePlaceholders, ids ) => {
-	routePlaceholders.forEach( ( part, index ) => {
-		route = route.replace( `{${ part }}`, ids[ index ] );
-	} );
+const assembleRouteWithPlaceholders = (route, routePlaceholders, ids) => {
+	routePlaceholders.forEach((part, index) => {
+		route = route.replace(`{${part}}`, ids[index]);
+	});
 	return route;
 };

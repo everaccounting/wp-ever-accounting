@@ -8,6 +8,7 @@ import { select, apiFetch } from '@wordpress/data-controls';
  */
 import { receiveRoutes } from './actions';
 import { STORE_KEY } from './constants';
+import {API_NAMESPACE} from "./constants";
 
 /**
  * Resolver for the getRoute selector.
@@ -15,24 +16,22 @@ import { STORE_KEY } from './constants';
  * Note: All this essentially does is ensure the routes for the given namespace
  * have been resolved.
  *
- * @param {string} namespace  The namespace of the route being resolved.
  */
-export function* getRoute( namespace ) {
+export function* getRoute() {
 	// we call this simply to do any resolution of all endpoints if necessary.
 	// allows for jit population of routes for a given namespace.
-	yield select( STORE_KEY, 'getRoutes', namespace );
+	yield select( STORE_KEY, 'getRoutes');
 }
 
 /**
  * Resolver for the getRoutes selector.
  *
- * @param {string} namespace  The namespace of the routes being resolved.
  */
-export function* getRoutes( namespace ) {
-	const routeResponse = yield apiFetch( { path: namespace } );
+export function* getRoutes() {
+	const routeResponse = yield apiFetch( { path: API_NAMESPACE} );
 	const routes =
 		routeResponse && routeResponse.routes
 			? Object.keys( routeResponse.routes )
 			: [];
-	yield receiveRoutes( routes, namespace );
+	yield receiveRoutes( routes);
 }

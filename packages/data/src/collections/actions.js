@@ -24,7 +24,6 @@ Headers = Headers
  *
  * This is a generic response action.
  *
- * @param {string}   namespace        The namespace for the collection route.
  * @param {string}   resourceName     The resource name for the collection route.
  * @param {string}   [queryString=''] The query string for the collection
  * @param {Array}    [ids=[]]         An array of ids (in correct order) for the
@@ -48,13 +47,12 @@ Headers = Headers
  *	}
  * } Object for action.
  */
-export function receiveCollection(namespace, resourceName, queryString = '', ids = [], response = {
+export function receiveCollection(resourceName, queryString = '', ids = [], response = {
 	items: [],
 	headers: Headers
 }, replace = false) {
 	return {
 		type: replace ? types.RESET_COLLECTION : types.RECEIVE_COLLECTION,
-		namespace,
 		resourceName,
 		queryString,
 		ids,
@@ -62,11 +60,10 @@ export function receiveCollection(namespace, resourceName, queryString = '', ids
 	};
 }
 
-export function* create(namespace, resourceName, data = {}) {
+export function* create(resourceName, data = {}) {
 	const route = yield select(
 		SCHEMA_STORE_KEY,
 		'getRoute',
-		namespace,
 		resourceName
 	);
 
@@ -89,11 +86,10 @@ export function* create(namespace, resourceName, data = {}) {
 	}
 }
 
-export function* update(namespace, resourceName, id, data = {}) {
+export function* update(resourceName, id, data = {}) {
 	const route = yield select(
 		SCHEMA_STORE_KEY,
 		'getRoute',
-		namespace,
 		resourceName,
 		[id]
 	);
@@ -118,11 +114,11 @@ export function* update(namespace, resourceName, id, data = {}) {
 
 }
 
-export function* remove(namespace, resourceName, id) {
+export function* remove(resourceName, id) {
 	const ids = isArray(id) ? id : [id];
 	const resource = ids.length > 1 ? `${resourceName}/bulk` : resourceName;
 	const routeIds = ids.length > 1 ? [] : [1];
-	console.log(ids);
+
 	if (isEmpty(ids)) {
 		return;
 	}
@@ -134,7 +130,6 @@ export function* remove(namespace, resourceName, id) {
 	const route = yield select(
 		SCHEMA_STORE_KEY,
 		'getRoute',
-		namespace,
 		resource,
 		routeIds
 	);
@@ -142,13 +137,6 @@ export function* remove(namespace, resourceName, id) {
 	if (!route) {
 		return;
 	}
-
-	console.log({
-		path: route,
-		method: ids.length > 1 ? 'POST' : 'DELETE',
-		cache: 'no-store',
-		data: ids.length > 1 ? {action: 'delete', items: ids} : {}
-	});
 
 	try {
 		yield apiFetch({
@@ -166,10 +154,9 @@ export function* remove(namespace, resourceName, id) {
 }
 
 
-export function receiveCollectionError(namespace, resourceName, queryString, ids, error) {
+export function receiveCollectionError(resourceName, queryString, ids, error) {
 	return {
 		type: 'ERROR',
-		namespace,
 		resourceName,
 		queryString,
 		ids,

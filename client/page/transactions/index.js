@@ -13,7 +13,6 @@ import {getHeaders} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
 import {map} from "lodash"
-import {getBulk} from "../contacts/constants";
 
 class Transactions extends Component {
 	constructor(props) {
@@ -22,7 +21,7 @@ class Transactions extends Component {
 	}
 
 	onRenderRow = (item, pos, isSelected, isLoading, search) => {
-		return(
+		return (
 			<Row
 				item={item}
 				key={pos}
@@ -41,7 +40,7 @@ class Transactions extends Component {
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
-				<hr className="wp-header-end" />
+				<hr className="wp-header-end"/>
 
 				<div className="ea-table-display">
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
@@ -56,13 +55,13 @@ class Transactions extends Component {
 
 					<DateFilter
 						className={'alignleft actions'}
-						onChange={date => this.props.onFilter('date', date)}/>
+						onChange={date => this.props.onFilter({date})}/>
 
 					<AccountControl
 						className={'alignleft actions'}
 						placeholder={__('Filter Account')}
 						isMulti
-						onChange={(accounts)=> this.props.onFilter('account_id', map(accounts, 'id'))}
+						onChange={(accounts) => this.props.onFilter({account_id: map(accounts, 'id')})}
 					/>
 
 					<CategoryControl
@@ -70,7 +69,7 @@ class Transactions extends Component {
 						placeholder={__('Filter Category')}
 						isMulti
 						type={['income', 'expense']}
-						onChange={(categories)=> this.props.onFilter('category_id', map(categories, 'id'))}
+						onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}
 					/>
 
 					<SelectControl
@@ -91,7 +90,7 @@ class Transactions extends Component {
 							}
 						]}
 						isMulti
-						onChange={(types)=> this.props.onFilter('type', map(types, 'value'))}/>
+						onChange={(types) => this.props.onFilter({type: map(types, 'value')})}/>
 
 				</TableNav>
 
@@ -121,4 +120,4 @@ class Transactions extends Component {
 	}
 }
 
-export default withTable('transactions',{orderby:'paid_at'})(Transactions);
+export default withTable('transactions', {orderby: 'paid_at'})(Transactions);

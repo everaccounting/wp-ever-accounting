@@ -11,7 +11,6 @@ import { DEFAULT_EMPTY_ARRAY } from './constants';
 
 const getFromState = ( {
 	state,
-	namespace,
 	resourceName,
 	query,
 	ids,
@@ -21,22 +20,20 @@ const getFromState = ( {
 	// prep ids and query for state retrieval
 	ids = JSON.stringify( ids );
 	query = query !== null ? addQueryArgs( '', query ) : '';
-	if ( hasInState( state, [ namespace, resourceName, ids, query, type ] ) ) {
-		return state[ namespace ][ resourceName ][ ids ][ query ][ type ];
+	if ( hasInState( state, [ resourceName, ids, query, type ] ) ) {
+		return state[ resourceName ][ ids ][ query ][ type ];
 	}
 	return fallback;
 };
 
 export const getCollectionHeaders = (
 	state,
-	namespace,
 	resourceName,
 	query = null,
 	ids = DEFAULT_EMPTY_ARRAY
 ) => {
 	return getFromState( {
 		state,
-		namespace,
 		resourceName,
 		query,
 		ids,
@@ -59,24 +56,21 @@ export const getCollectionHeaders = (
  */
 export const getCollection = (
 	state,
-	namespace,
 	resourceName,
 	query = null,
 	ids = DEFAULT_EMPTY_ARRAY
 ) => {
-	return getFromState( { state, namespace, resourceName, query, ids } );
+	return getFromState( { state, resourceName, query, ids } );
 };
 
 export const getCollectionError = (
 	state,
-	namespace,
 	resourceName,
 	query = null,
 	ids = DEFAULT_EMPTY_ARRAY
 ) => {
 	return getFromState( {
 		state,
-		namespace,
 		resourceName,
 		query,
 		ids,
@@ -112,14 +106,12 @@ export const getCollectionError = (
 export const getCollectionHeader = (
 	state,
 	header,
-	namespace,
 	resourceName,
 	query = null,
 	ids = DEFAULT_EMPTY_ARRAY
 ) => {
 	const headers = getCollectionHeaders(
 		state,
-		namespace,
 		resourceName,
 		query,
 		ids
