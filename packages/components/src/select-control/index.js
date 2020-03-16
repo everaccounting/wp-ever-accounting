@@ -1,4 +1,10 @@
+/**
+ * WordPress dependencies
+ */
 import { Component } from '@wordpress/element';
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
 import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';

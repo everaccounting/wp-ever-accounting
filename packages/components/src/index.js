@@ -22,9 +22,9 @@ export { default as SearchBox } from './table/searchbox';
 export { default as TextControl } from './text-control';
 export { default as TextareaControl } from './textarea-control';
 export { default as withTable } from './with-table';
-export { Row as Row } from './grid';
-export { Col as Col } from './grid';
+export { Row } from './grid';
+export { Col } from './grid';
 
-export {default as AccountControl} from './account-control';
-export {default as CategoryControl} from './category-control';
-export {default as ContactTypesControl} from './contact-types-control';
+export { default as AccountControl } from './account-control';
+export { default as CategoryControl } from './category-control';
+export { default as ContactTypesControl } from './contact-types-control';

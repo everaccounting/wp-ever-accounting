@@ -1,7 +1,10 @@
 /**
  * External dependencies
  */
-import {registerStore} from '@wordpress/data';
+/**
+ * WordPress dependencies
+ */
+import { registerStore } from '@wordpress/data';
 
 /**
  * Internal dependencies
@@ -20,5 +23,5 @@ registerStore(QUERY_STATE_STORE_KEY, {
 	reducer,
 	actions,
 	selectors,
-	initialState
+	initialState,
 });

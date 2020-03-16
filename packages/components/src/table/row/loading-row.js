@@ -6,13 +6,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Row = props => {
-	const {columns} = props;
+	const { columns } = props;
 
 	return (
 		<tr className="is-placeholder">
 			{columns.map((item, pos) => (
 				<td key={pos}>
-					<div className="placeholder-loading"/>
+					<div className="placeholder-loading" />
 				</td>
 			))}
 		</tr>
@@ -20,14 +20,14 @@ const Row = props => {
 };
 
 const LoadingRow = props => {
-	const {headers, per_page} = props;
+	const { headers, per_page } = props;
 	return (
 		<tbody>
-		<Row columns={headers}/>
+			<Row columns={headers} />
 
-		{[...Array(per_page).keys()].map((item, pos) => (
-			<Row columns={headers} key={pos}/>
-		))}
+			{[...Array(per_page).keys()].map((item, pos) => (
+				<Row columns={headers} key={pos} />
+			))}
 		</tbody>
 	);
 };

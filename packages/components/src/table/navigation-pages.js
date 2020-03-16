@@ -3,13 +3,19 @@
  */
 
 import React from 'react';
-import {__,sprintf, _n} from '@wordpress/i18n';
-import {numberFormat} from './utils';
+/**
+ * WordPress dependencies
+ */
+import { __, sprintf, _n } from '@wordpress/i18n';
+/**
+ * Internal dependencies
+ */
+import { numberFormat } from './utils';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 const Nav = props => {
-	const {title, button, className, enabled, onClick} = props;
+	const { title, button, className, enabled, onClick } = props;
 
 	if (enabled) {
 		return (
@@ -34,7 +40,7 @@ class PaginationLinks extends React.Component {
 		this.onChange = this.handleChange.bind(this);
 		this.onSetPage = this.handleSetPage.bind(this);
 		this.setClickers(props);
-		this.state = {currentPage: props.page || 1};
+		this.state = { currentPage: props.page || 1 };
 	}
 
 	setClickers(props) {
@@ -46,7 +52,7 @@ class PaginationLinks extends React.Component {
 
 	handleClick(page, ev) {
 		ev.preventDefault();
-		this.setState({currentPage: page});
+		this.setState({ currentPage: page });
 		this.props.onChangePage(page);
 	}
 
@@ -54,7 +60,7 @@ class PaginationLinks extends React.Component {
 		const value = parseInt(ev.target.value, 10);
 		const totalPage = this.getTotalPages();
 		if (value !== this.state.currentPage && !isNaN(value) && value > 0 && value <= totalPage) {
-			this.setState({currentPage: value});
+			this.setState({ currentPage: value });
 		}
 	}
 
@@ -63,13 +69,13 @@ class PaginationLinks extends React.Component {
 	}
 
 	getTotalPages(props) {
-		const {total, per_page} = props;
+		const { total, per_page } = props;
 
 		return Math.ceil(total / per_page);
 	}
 
 	render() {
-		const {page} = this.props;
+		const { page } = this.props;
 		const max = this.getTotalPages(this.props);
 
 		return (
@@ -107,15 +113,13 @@ class PaginationLinks extends React.Component {
 						onChange={this.onChange}
 					/>
 					<span className="tablenav-paging-text">
-							{sprintf(_n('of %d page', 'of %d pages', numberFormat(max), 'wp-ever-accounting'), max)}
+						{sprintf(_n('of %d page', 'of %d pages', numberFormat(max), 'wp-ever-accounting'), max)}
 					</span>
 				</span>
 				&nbsp;
-				<Nav title={__('Next page')} button="›" className="next-page" enabled={page < max}
-					 onClick={this.onNext}/>
+				<Nav title={__('Next page')} button="›" className="next-page" enabled={page < max} onClick={this.onNext} />
 				&nbsp;
-				<Nav title={__('Last page')} button="»" className="last-page" enabled={page < max - 1}
-					 onClick={this.onLast}/>
+				<Nav title={__('Last page')} button="»" className="last-page" enabled={page < max - 1} onClick={this.onLast} />
 			</span>
 		);
 	}
@@ -123,7 +127,7 @@ class PaginationLinks extends React.Component {
 
 class NavigationPages extends React.Component {
 	render() {
-		const {total, per_page, page, onChangePage, inProgress} = this.props;
+		const { total, per_page, page, onChangePage, inProgress } = this.props;
 		const onePage = total <= per_page;
 		const classes = classnames({
 			'tablenav-pages': true,

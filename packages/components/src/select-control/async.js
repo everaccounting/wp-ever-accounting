@@ -1,6 +1,12 @@
+/**
+ * External dependencies
+ */
 import { Component } from 'react';
 import Async from 'react-select/async';
 import PropTypes from 'prop-types';
+/**
+ * WordPress dependencies
+ */
 import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
 

@@ -1,8 +1,8 @@
 /**
  * Internal dependencies
  */
-import {ACTION_TYPES as types} from './action-types';
-import {hasInState, updateState} from '../utils';
+import { ACTION_TYPES as types } from './action-types';
+import { hasInState, updateState } from '../utils';
 
 /**
  * Reducer for receiving items to a collection.
@@ -30,38 +30,21 @@ const receiveCollection = (state = {}, action) => {
 		return {};
 	}
 
-	const {type, resourceName, queryString, response} = action;
+	const { type, resourceName, queryString, response } = action;
 	// ids are stringified so they can be used as an index.
 	const ids = action.ids ? JSON.stringify(action.ids) : '[]';
 	switch (type) {
 		case types.RECEIVE_COLLECTION:
-			if (!hasInState(state, [
-				resourceName,
-				ids,
-				queryString,
-			])
-			) {
-				state = updateState(
-					state,
-					[resourceName, ids, queryString],
-					response
-				);
+			if (!hasInState(state, [resourceName, ids, queryString])) {
+				state = updateState(state, [resourceName, ids, queryString], response);
 			}
 
 			break;
 		case types.RESET_COLLECTION:
-			state = updateState(
-				state,
-				[resourceName, ids, queryString],
-				response
-			);
+			state = updateState(state, [resourceName, ids, queryString], response);
 			break;
 		case types.ERROR:
-			state = updateState(
-				state,
-				[resourceName, ids, queryString],
-				response
-			);
+			state = updateState(state, [resourceName, ids, queryString], response);
 			break;
 	}
 	return state;

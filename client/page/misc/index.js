@@ -11,8 +11,8 @@ import Tabs from "components/tabs";
  * Internal dependencies
  */
 import Categories from '../categories';
-// import Currencies from '../currencies';
-// import TaxRates from '../taxrates';
+import Currencies from '../currencies';
+import TaxRates from '../taxrates';
 
 const tabs = [
 	{
@@ -20,16 +20,16 @@ const tabs = [
 		component: Categories,
 		name: __('Categories'),
 	},
-	// {
-	// 	path: '/misc/currencies',
-	// 	// component: Currencies,
-	// 	name: __('Currencies'),
-	// },
-	// {
-	// 	path: '/misc/taxrates',
-	// 	// component: TaxRates,
-	// 	name: __('Tax Rates'),
-	// },
+	{
+		path: '/misc/currencies',
+		component: Currencies,
+		name: __('Currencies'),
+	},
+	{
+		path: '/misc/taxrates',
+		component: TaxRates,
+		name: __('Tax Rates'),
+	},
 ];
 
 const Misc = props => {

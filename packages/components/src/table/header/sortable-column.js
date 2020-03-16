@@ -25,7 +25,7 @@ const SortableColumn = props => {
 		<th scope="col" className={classes} onClick={click}>
 			<a href="#">
 				<span>{text}</span>
-				<span className="sorting-indicator"/>
+				<span className="sorting-indicator" />
 			</a>
 		</th>
 	);

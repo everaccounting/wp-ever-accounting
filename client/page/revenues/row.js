@@ -1,7 +1,9 @@
-import {Component, Fragment} from 'react';
+import {Component, Fragment} from '@wordpress/element';
 import PropTypes from 'prop-types';
 import {__} from '@wordpress/i18n';
-import {RowActions} from "@eaccounting/components"
+import {RowActions} from "@eaccounting/components";
+import { Link } from 'react-router-dom';
+import Moment from 'react-moment';
 
 export default class Row extends Component {
 	static propTypes = {
@@ -35,8 +37,9 @@ export default class Row extends Component {
 	};
 
 	render() {
-		const {isSelected, isLoading, item} = this.props;
-		const { id, first_name, last_name, email, phone } = item;
+		const {isSelected, isLoading, item, search} = this.props;
+		const {id, paid_at, amount, account, contact, category} = item;
+		const {match} = this.props;
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
@@ -47,17 +50,23 @@ export default class Row extends Component {
 							value={id}
 							disabled={isLoading}
 							checked={isSelected}
-							onChange={() => this.props.onSetSelected(item.id)}
-						/>
+							onChange={() => this.props.onSelected(id)}/>
+
 					</th>
 
-					<td className="column-name">
-						<a href="#" onClick={this.onEdit}>{`${first_name} ${last_name}`}</a>
+					<td className="column-primary column-paid_at">
+						<Link to={`${match.url}/${id}`}>
+							<Moment format={'DD-MM-YYYY'}>{paid_at}</Moment>
+						</Link>
 					</td>
 
-					<td className="column-email">{email}</td>
+					<td className="column-amount">{amount}</td>
 
-					<td className="column-phone">{phone}</td>
+					<td className="column-category">{category && category.name ? category.name : '-'}</td>
+
+					<td className="column-account">{account && account.name ? account.name : '-'}</td>
+
+					<td className="column-customer">{contact && contact.first_name ? `${contact.first_name} ${contact.last_name}` : '-'}</td>
 
 
 					<td className="column-actions">

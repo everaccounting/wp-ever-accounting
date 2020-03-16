@@ -11,9 +11,9 @@ import { ACTION_TYPES as types } from './action-types.js';
  *
  * @return  {Object}             The action object.
  */
-export function receiveRoutes( routes) {
+export function receiveRoutes(routes) {
 	return {
 		type: types.RECEIVE_MODEL_ROUTES,
-		routes
+		routes,
 	};
 }

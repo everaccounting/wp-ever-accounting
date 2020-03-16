@@ -1,13 +1,16 @@
 /**
  * External dependencies
  */
-import {sprintf} from '@wordpress/i18n';
-import {createRegistrySelector} from '@wordpress/data';
+/**
+ * WordPress dependencies
+ */
+import { sprintf } from '@wordpress/i18n';
+import { createRegistrySelector } from '@wordpress/data';
 
 /**
  * Internal dependencies
  */
-import {API_NAMESPACE, STORE_KEY} from './constants';
+import { API_NAMESPACE, STORE_KEY } from './constants';
 
 /**
  * Returns the requested route for the given arguments.
@@ -31,41 +34,33 @@ import {API_NAMESPACE, STORE_KEY} from './constants';
  *
  * @return {string} The route if it is available.
  */
-export const getRoute = createRegistrySelector(
-	(select) => (state, resourceName, ids = []) => {
-		const hasResolved = select(STORE_KEY).hasFinishedResolution('getRoutes');
-		state = state.routes;
-		let error = '';
-		if (!state[resourceName]) {
-			error = sprintf(
-				'There is no route for the given resource name (%s) in the store',
-				resourceName
+export const getRoute = createRegistrySelector(select => (state, resourceName, ids = []) => {
+	const hasResolved = select(STORE_KEY).hasFinishedResolution('getRoutes');
+	state = state.routes;
+	let error = '';
+	if (!state[resourceName]) {
+		error = sprintf('There is no route for the given resource name (%s) in the store', resourceName);
+	}
+	if (error !== '') {
+		if (hasResolved) {
+			throw new Error(error);
+		}
+		return '';
+	}
+	const route = getRouteFromResourceEntries(state[resourceName], ids);
+	if (route === '') {
+		if (hasResolved) {
+			throw new Error(
+				sprintf(
+					'While there is a route for the given  resource name (%s), there is no route utilizing the number of ids you included in the select arguments. The available routes are: (%s)',
+					resourceName,
+					JSON.stringify(state[resourceName])
+				)
 			);
 		}
-		if (error !== '') {
-			if (hasResolved) {
-				throw new Error(error);
-			}
-			return '';
-		}
-		const route = getRouteFromResourceEntries(
-			state[resourceName],
-			ids
-		);
-		if (route === '') {
-			if (hasResolved) {
-				throw new Error(
-					sprintf(
-						'While there is a route for the given  resource name (%s), there is no route utilizing the number of ids you included in the select arguments. The available routes are: (%s)',
-						resourceName,
-						JSON.stringify(state[resourceName])
-					)
-				);
-			}
-		}
-		return route;
 	}
-);
+	return route;
+});
 
 /**
  * Return all the routes for a given namespace.
@@ -75,31 +70,21 @@ export const getRoute = createRegistrySelector(
  *
  * @return {Array} An array of all routes for the given namespace.
  */
-export const getRoutes = createRegistrySelector(
-	(select) => (state) => {
-		const hasResolved = select(STORE_KEY).hasFinishedResolution('getRoutes');
-		const routes = state.routes;
-		if (!routes) {
-			if (hasResolved) {
-				throw new Error(
-					sprintf(
-						'There is no route for the given namespace (%s) in the store',
-						API_NAMESPACE
-					)
-				);
-			}
-			return [];
+export const getRoutes = createRegistrySelector(select => state => {
+	const hasResolved = select(STORE_KEY).hasFinishedResolution('getRoutes');
+	const routes = state.routes;
+	if (!routes) {
+		if (hasResolved) {
+			throw new Error(sprintf('There is no route for the given namespace (%s) in the store', API_NAMESPACE));
 		}
-		let namespaceRoutes = [];
-		for (const resourceName in routes) {
-			namespaceRoutes = [
-				...namespaceRoutes,
-				...Object.keys(routes[resourceName]),
-			];
-		}
-		return namespaceRoutes;
+		return [];
 	}
-);
+	let namespaceRoutes = [];
+	for (const resourceName in routes) {
+		namespaceRoutes = [...namespaceRoutes, ...Object.keys(routes[resourceName])];
+	}
+	return namespaceRoutes;
+});
 
 /**
  * Returns the route from the given slice of the route state.
@@ -120,13 +105,7 @@ const getRouteFromResourceEntries = (stateSlice, ids = []) => {
 	const [matchingRoute, routePlaceholders] = match || [];
 	// if we have a matching route, let's return it.
 	if (matchingRoute) {
-		return ids.length === 0
-			? matchingRoute
-			: assembleRouteWithPlaceholders(
-				matchingRoute,
-				routePlaceholders,
-				ids
-			);
+		return ids.length === 0 ? matchingRoute : assembleRouteWithPlaceholders(matchingRoute, routePlaceholders, ids);
 	}
 	return '';
 };

@@ -12,6 +12,6 @@ import { setWith, clone } from 'lodash';
  *
  * @return {Object} The new state
  */
-export default function updateState( state, path, value ) {
-	return setWith( clone( state ), path, value, clone );
+export default function updateState(state, path, value) {
+	return setWith(clone(state), path, value, clone);
 }

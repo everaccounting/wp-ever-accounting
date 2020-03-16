@@ -1,4 +1,10 @@
+/**
+ * WordPress dependencies
+ */
 import { Component } from '@wordpress/element';
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
 import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
@@ -6,8 +12,7 @@ import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
 export default class PriceControl extends Component {
-
-	onChange = (e) => {
+	onChange = e => {
 		this.props.onChange && this.props.onChange(e.target.value);
 	};
 
@@ -19,13 +24,13 @@ export default class PriceControl extends Component {
 
 		const currency = eAccountingi10n.data.currencies[code];
 
-		const suffix = currency && 'before' !== currency.position ? currency.symbol : '';
-		const prefix = currency && 'before' === currency.position ? currency.symbol : '';
+		const suffix = currency && currency.position !== 'before' ? currency.symbol : '';
+		const prefix = currency && currency.position === 'before' ? currency.symbol : '';
 
 		const maskOptions = {
-			prefix:prefix,
-			suffix:suffix,
-			allowDecimal: !! currency && currency.precision,
+			prefix,
+			suffix,
+			allowDecimal: !!currency && currency.precision,
 			decimalSymbol: currency && currency.decimalSeparator,
 			decimalLimit: currency && currency.precision,
 			thousandsSeparatorSymbol: currency && currency.thousandSeparator,
@@ -43,7 +48,7 @@ export default class PriceControl extends Component {
 						placeholder={placeholder}
 						className="components-text-control__input ea-input-group__input"
 						mask={currencyMask}
-						value={value && value || ""}
+						value={(value && value) || ''}
 						onChange={this.onChange}
 						inputMode="numeric"
 					/>

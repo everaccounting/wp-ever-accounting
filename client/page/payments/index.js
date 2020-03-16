@@ -1,20 +1,22 @@
 import {Component, Fragment} from 'react';
-import withContacts from "hocs/with-contacts";
-import {SearchBox, TableNav, Table,SelectControl, AccountControl,CategoryControl, DateFilter} from "@eaccounting/components"
+import {
+	SearchBox,
+	TableNav,
+	Table,
+	withTable, DateFilter, AccountControl, CategoryControl
+} from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
-import {getOptions} from "options";
 import {__} from '@wordpress/i18n';
 import {map} from "lodash"
 
-class Contacts extends Component {
+class Payments extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
 	}
 
 	onRenderRow = (item, pos, isSelected, isLoading, search) => {
-		return(
+		return (
 			<Row
 				item={item}
 				key={pos}
@@ -28,13 +30,12 @@ class Contacts extends Component {
 
 	render() {
 		const {status, total, items, query, selected} = this.props;
-		const {page = 1, orderby = 'paid_at', order = 'desc'} = query;
-
+		const {page = 1, orderby = 'created_at', order = 'desc'} = query;
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
-				<hr className="wp-header-end" />
-
+				<h1 className="wp-heading-inline">{__('Payments')}</h1>
+				<a className="page-title-action">{__('Add payment')}</a>
+				<hr className="wp-header-end"/>
 				<div className="ea-table-display">
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
@@ -44,26 +45,29 @@ class Contacts extends Component {
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onChangePage}
+					onChangePage={this.props.onPageChange}
 					onAction={this.props.onAction}
-					bulk={getBulk()}
-				>
-					<SelectControl
+					bulk={getBulk()}>
+
+					<DateFilter
 						className={'alignleft actions'}
-						placeholder={__('Filter Type')}
-						options={[
-							{
-								label: __('Customer'),
-								value: 'customer'
-							},
-							{
-								label: __('Vendor'),
-								value: 'vendor'
-							}
-						]}
+						onChange={date => this.props.onFilter({date})}/>
+
+					<AccountControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Account')}
 						isMulti
-						onChange={(types) => {this.props.onFilter({types: map(types, 'value')})}}
+						onChange={(accounts) => this.props.onFilter({account_id: map(accounts, 'id')})}
 					/>
+
+					<CategoryControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Category')}
+						isMulti
+						type={['income', 'expense']}
+						onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}
+					/>
+
 				</TableNav>
 
 				<Table
@@ -75,8 +79,8 @@ class Contacts extends Component {
 					total={total}
 					row={this.onRenderRow}
 					status={status}
-					onSetAllSelected={this.props.onSetAllSelected}
-					onSetOrderBy={this.props.onSetOrderBy}
+					onSetAllSelected={this.props.onAllSelected}
+					onSetOrderBy={this.props.onOrderBy}
 				/>
 
 				<TableNav
@@ -84,13 +88,13 @@ class Contacts extends Component {
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onChangePage}
+					onChangePage={this.props.onPageChange}
 					onAction={this.props.onAction}
 				/>
 
 			</Fragment>
-		);
+		)
 	}
 }
+export default withTable('payments', {orderby:'created_at'})(Payments);
 
-export default withContacts(Contacts);

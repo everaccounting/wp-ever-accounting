@@ -1,22 +1,23 @@
 /**
  * External dependencies
  */
-import {apiFetch, select, dispatch} from '@wordpress/data-controls';
-import {isArray, isEmpty} from "lodash";
-import {__} from "@wordpress/i18n";
-import { NotificationManager} from 'react-notifications';
+/**
+ * WordPress dependencies
+ */
+import { apiFetch, select, dispatch } from '@wordpress/data-controls';
+import { isArray, isEmpty } from 'lodash';
+import { __ } from '@wordpress/i18n';
+import { NotificationManager } from 'react-notifications';
 
 /**
  * Internal dependencies
  */
-import {ACTION_TYPES as types} from './action-types';
-import {STORE_KEY as SCHEMA_STORE_KEY} from '../schema/constants';
-import {STORE_KEY} from "./constants";
+import { ACTION_TYPES as types } from './action-types';
+import { STORE_KEY as SCHEMA_STORE_KEY } from '../schema/constants';
+import { STORE_KEY } from './constants';
 
 let Headers = window.Headers || null;
-Headers = Headers
-	? new Headers()
-	: {get: () => undefined, has: () => undefined};
+Headers = Headers ? new Headers() : { get: () => undefined, has: () => undefined };
 
 /**
  * Returns an action object used in updating the store with the provided items
@@ -47,10 +48,16 @@ Headers = Headers
  *	}
  * } Object for action.
  */
-export function receiveCollection(resourceName, queryString = '', ids = [], response = {
-	items: [],
-	headers: Headers
-}, replace = false) {
+export function receiveCollection(
+	resourceName,
+	queryString = '',
+	ids = [],
+	response = {
+		items: [],
+		headers: Headers,
+	},
+	replace = false
+) {
 	return {
 		type: replace ? types.RESET_COLLECTION : types.RECEIVE_COLLECTION,
 		resourceName,
@@ -61,11 +68,7 @@ export function receiveCollection(resourceName, queryString = '', ids = [], resp
 }
 
 export function* create(resourceName, data = {}) {
-	const route = yield select(
-		SCHEMA_STORE_KEY,
-		'getRoute',
-		resourceName
-	);
+	const route = yield select(SCHEMA_STORE_KEY, 'getRoute', resourceName);
 
 	if (!route) {
 		return;
@@ -80,19 +83,13 @@ export function* create(resourceName, data = {}) {
 		});
 
 		yield invalidateCollection(new Date().getTime());
-
 	} catch (error) {
 		NotificationManager.error(error.message);
 	}
 }
 
 export function* update(resourceName, id, data = {}) {
-	const route = yield select(
-		SCHEMA_STORE_KEY,
-		'getRoute',
-		resourceName,
-		[id]
-	);
+	const route = yield select(SCHEMA_STORE_KEY, 'getRoute', resourceName, [id]);
 
 	if (!route) {
 		return;
@@ -107,11 +104,9 @@ export function* update(resourceName, id, data = {}) {
 		});
 
 		yield invalidateCollection(new Date().getTime());
-
 	} catch (error) {
 		NotificationManager.error(error.message);
 	}
-
 }
 
 export function* remove(resourceName, id) {
@@ -127,12 +122,7 @@ export function* remove(resourceName, id) {
 		return;
 	}
 
-	const route = yield select(
-		SCHEMA_STORE_KEY,
-		'getRoute',
-		resource,
-		routeIds
-	);
+	const route = yield select(SCHEMA_STORE_KEY, 'getRoute', resource, routeIds);
 
 	if (!route) {
 		return;
@@ -142,7 +132,7 @@ export function* remove(resourceName, id) {
 		path: route,
 		method: ids.length > 1 ? 'POST' : 'DELETE',
 		cache: 'no-store',
-		data: ids.length > 1 ? {action: 'delete', items: ids} : null
+		data: ids.length > 1 ? { action: 'delete', items: ids } : null,
 	});
 
 	try {
@@ -150,7 +140,7 @@ export function* remove(resourceName, id) {
 			path: route,
 			method: ids.length > 1 ? 'POST' : 'DELETE',
 			cache: 'no-store',
-			data: ids.length > 1 ? {action: 'delete', items: ids} : {}
+			data: ids.length > 1 ? { action: 'delete', items: ids } : {},
 		});
 
 		yield invalidateCollection(new Date().getTime());
@@ -159,7 +149,6 @@ export function* remove(resourceName, id) {
 		NotificationManager.error(error.message);
 	}
 }
-
 
 export function receiveCollectionError(resourceName, queryString, ids, error) {
 	return {
@@ -181,7 +170,6 @@ export function receiveLastModified(timestamp) {
 		timestamp,
 	};
 }
-
 
 /**
  * Check if the store needs invalidating due to a change in last modified headers.

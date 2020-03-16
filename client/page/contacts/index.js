@@ -3,10 +3,6 @@ import {
 	SearchBox,
 	TableNav,
 	Table,
-	SelectControl,
-	AccountControl,
-	CategoryControl,
-	DateFilter,
 	ContactTypesControl,
 	withTable
 } from "@eaccounting/components"

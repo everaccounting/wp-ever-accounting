@@ -1,11 +1,20 @@
-import {Component, Fragment} from 'react';
-import {__} from '@wordpress/i18n';
+/**
+ * External dependencies
+ */
+import { Component, Fragment } from 'react';
+/**
+ * WordPress dependencies
+ */
+import { __ } from '@wordpress/i18n';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+/**
+ * Internal dependencies
+ */
 import DatePicker from '../date-picker';
 import TextControl from '../text-control';
 import classnames from 'classnames';
-import {SVG, Path} from "@wordpress/components"
+import { SVG, Path } from '@wordpress/components';
 
 export default class DateRangeControl extends Component {
 	static propTypes = {
@@ -24,13 +33,13 @@ export default class DateRangeControl extends Component {
 		this.state = {
 			statDate: undefined,
 			endDate: undefined,
-		}
+		};
 	}
 
-	makeRange = (start, end, format = "DD MMM YYYY", sep = '-') => {
-		const startDate = start && start.format(format) || undefined;
-		const endDate = end && end.format(format) || undefined;
-		return startDate && endDate && `${startDate}${sep}${endDate}` || '';
+	makeRange = (start, end, format = 'DD MMM YYYY', sep = '-') => {
+		const startDate = (start && start.format(format)) || undefined;
+		const endDate = (end && end.format(format)) || undefined;
+		return (startDate && endDate && `${startDate}${sep}${endDate}`) || '';
 	};
 
 	onChange = (event, picker) => {
@@ -39,7 +48,7 @@ export default class DateRangeControl extends Component {
 			end: picker.endDate,
 		});
 
-		this.props.onChange && this.props.onChange(this.makeRange(picker.startDate, picker.endDate, "YYYY-MM-DD", '_'));
+		this.props.onChange && this.props.onChange(this.makeRange(picker.startDate, picker.endDate, 'YYYY-MM-DD', '_'));
 	};
 
 	onCancel = () => {
@@ -47,7 +56,7 @@ export default class DateRangeControl extends Component {
 	};
 
 	render() {
-		const {className} = this.props;
+		const { className } = this.props;
 		const range = {
 			Today: [moment(), moment()],
 			Yesterday: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -63,8 +72,8 @@ export default class DateRangeControl extends Component {
 					.endOf('month'),
 			],
 		};
-		let classes = classnames('ea-date-filter', className);
-		const {start, end} = this.state;
+		const classes = classnames('ea-date-filter', className);
+		const { start, end } = this.state;
 		return (
 			<Fragment>
 				<DatePicker
@@ -75,14 +84,13 @@ export default class DateRangeControl extends Component {
 					onCancel={this.onCancel}
 					autoUpdateInput={false}
 				>
-						<TextControl
-							placeholder={__('Select Date')}
-							className={classes}
-							autoComplete="off"
-							value={this.makeRange(start, end)}
-							onChange={() => {
-							}}
-						/>
+					<TextControl
+						placeholder={__('Select Date')}
+						className={classes}
+						autoComplete="off"
+						value={this.makeRange(start, end)}
+						onChange={() => {}}
+					/>
 				</DatePicker>
 			</Fragment>
 		);

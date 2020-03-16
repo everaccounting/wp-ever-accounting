@@ -1,4 +1,10 @@
+/**
+ * External dependencies
+ */
 import classnames from 'classnames';
+/**
+ * WordPress dependencies
+ */
 import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
 import { noop } from 'lodash';

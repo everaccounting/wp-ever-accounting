@@ -11,6 +11,6 @@ import { has } from 'lodash';
  *
  * @return {boolean} True means this exists in the state.
  */
-export default function hasInState( state, path ) {
-	return has( state, path );
+export default function hasInState(state, path) {
+	return has(state, path);
 }

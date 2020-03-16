@@ -3,6 +3,9 @@
  */
 
 import React from 'react';
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
@@ -27,7 +30,7 @@ class TableNav extends React.Component {
 		total: 0,
 		selected: [],
 		per_page: 20,
-		page: 1
+		page: 1,
 	};
 
 	constructor(props) {
@@ -90,7 +93,7 @@ class TableNav extends React.Component {
 	}
 
 	render() {
-		const { total, per_page,page, bulk, status } = this.props;
+		const { total, per_page, page, bulk, status } = this.props;
 
 		return (
 			<div className="tablenav top">

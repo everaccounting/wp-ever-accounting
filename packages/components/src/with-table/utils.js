@@ -1,4 +1,4 @@
-export const removeDefaultQueries = (query, defaultOrderBy='id') => {
+export const removeDefaultQueries = (query, defaultOrderBy = 'id') => {
 	if (query.order === 'desc') {
 		delete query.order;
 	}

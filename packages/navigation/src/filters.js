@@ -9,17 +9,17 @@ import { compact, find, get, omit } from 'lodash';
  * @param {Array} filters Set of filters with possible subfilters.
  * @return {Array} Flattened array of all filters.
  */
-export function flattenFilters( filters ) {
+export function flattenFilters(filters) {
 	const allFilters = [];
-	filters.forEach( ( f ) => {
-		if ( ! f.subFilters ) {
-			allFilters.push( f );
+	filters.forEach(f => {
+		if (!f.subFilters) {
+			allFilters.push(f);
 		} else {
-			allFilters.push( omit( f, 'subFilters' ) );
-			const subFilters = flattenFilters( f.subFilters );
-			allFilters.push( ...subFilters );
+			allFilters.push(omit(f, 'subFilters'));
+			const subFilters = flattenFilters(f.subFilters);
+			allFilters.push(...subFilters);
 		}
-	} );
+	});
 	return allFilters;
 }
 
@@ -39,19 +39,17 @@ export function flattenFilters( filters ) {
  * @param {Object} config - config object
  * @return {activeFilters[]} - array of activeFilters
  */
-export function getActiveFiltersFromQuery( query, config ) {
+export function getActiveFiltersFromQuery(query, config) {
 	return compact(
-		Object.keys( config ).map( ( configKey ) => {
-			const filter = config[ configKey ];
-			if ( filter.rules ) {
-				const match = find( filter.rules, ( rule ) => {
-					return query.hasOwnProperty(
-						getUrlKey( configKey, rule.value )
-					);
-				} );
+		Object.keys(config).map(configKey => {
+			const filter = config[configKey];
+			if (filter.rules) {
+				const match = find(filter.rules, rule => {
+					return query.hasOwnProperty(getUrlKey(configKey, rule.value));
+				});
 
-				if ( match ) {
-					const value = query[ getUrlKey( configKey, match.value ) ];
+				if (match) {
+					const value = query[getUrlKey(configKey, match.value)];
 					return {
 						key: configKey,
 						rule: match.value,
@@ -60,14 +58,14 @@ export function getActiveFiltersFromQuery( query, config ) {
 				}
 				return null;
 			}
-			if ( query[ configKey ] ) {
+			if (query[configKey]) {
 				return {
 					key: configKey,
-					value: query[ configKey ],
+					value: query[configKey],
 				};
 			}
 			return null;
-		} )
+		})
 	);
 }
 
@@ -79,21 +77,19 @@ export function getActiveFiltersFromQuery( query, config ) {
  * @param {Array} options - select options.
  * @return {string|undefined}  - the value of the default option.
  */
-export function getDefaultOptionValue( config, options ) {
+export function getDefaultOptionValue(config, options) {
 	const { defaultOption } = config.input;
-	if ( config.input.defaultOption ) {
-		const option = find( options, { value: defaultOption } );
-		if ( ! option ) {
+	if (config.input.defaultOption) {
+		const option = find(options, { value: defaultOption });
+		if (!option) {
 			/* eslint-disable no-console */
-			console.warn(
-				`invalid defaultOption ${ defaultOption } supplied to ${ config.labels.add }`
-			);
+			console.warn(`invalid defaultOption ${defaultOption} supplied to ${config.labels.add}`);
 			/* eslint-enable */
 			return undefined;
 		}
 		return option.value;
 	}
-	return get( options, [ 0, 'value' ] );
+	return get(options, [0, 'value']);
 }
 
 /**
@@ -109,26 +105,22 @@ export function getDefaultOptionValue( config, options ) {
  * @param {Object} config - config object
  * @return {Object} - query object representing the new parameters
  */
-export function getQueryFromActiveFilters( activeFilters, query, config ) {
-	const previousFilters = getActiveFiltersFromQuery( query, config );
-	const previousData = previousFilters.reduce( ( data, filter ) => {
-		data[ getUrlKey( filter.key, filter.rule ) ] = undefined;
+export function getQueryFromActiveFilters(activeFilters, query, config) {
+	const previousFilters = getActiveFiltersFromQuery(query, config);
+	const previousData = previousFilters.reduce((data, filter) => {
+		data[getUrlKey(filter.key, filter.rule)] = undefined;
 		return data;
-	}, {} );
-	const nextData = activeFilters.reduce( ( data, filter ) => {
-		if (
-			filter.rule === 'between' &&
-			( ! Array.isArray( filter.value ) ||
-				filter.value.some( ( value ) => ! value ) )
-		) {
+	}, {});
+	const nextData = activeFilters.reduce((data, filter) => {
+		if (filter.rule === 'between' && (!Array.isArray(filter.value) || filter.value.some(value => !value))) {
 			return data;
 		}
 
-		if ( filter.value ) {
-			data[ getUrlKey( filter.key, filter.rule ) ] = filter.value;
+		if (filter.value) {
+			data[getUrlKey(filter.key, filter.rule)] = filter.value;
 		}
 		return data;
-	}, {} );
+	}, {});
 
 	return { ...previousData, ...nextData };
 }
@@ -140,9 +132,9 @@ export function getQueryFromActiveFilters( activeFilters, query, config ) {
  * @param {string} rule - filter rule.
  * @return {string} - url query key.
  */
-export function getUrlKey( key, rule ) {
-	if ( rule && rule.length ) {
-		return `${ key }_${ rule }`;
+export function getUrlKey(key, rule) {
+	if (rule && rule.length) {
+		return `${key}_${rule}`;
 	}
 	return key;
 }

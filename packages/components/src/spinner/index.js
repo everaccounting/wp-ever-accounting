@@ -1,4 +1,10 @@
+/**
+ * External dependencies
+ */
 import { Component } from 'react';
+/**
+ * WordPress dependencies
+ */
 import { Spinner as Base } from '@wordpress/components';
 import classnames from 'classnames';
 import propTypes from 'prop-types';

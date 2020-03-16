@@ -10,6 +10,8 @@ import Tabs from "components/tabs";
  */
 
 import Accounts from '../accounts';
+import Transfers from '../transfers';
+import Reconciliations from '../reconciliations';
 
 const tabs = [
 	{
@@ -19,12 +21,12 @@ const tabs = [
 	},
 	{
 		path: '/banking/transfers',
-		component: Accounts,
+		component: Transfers,
 		name: __('Transfers'),
 	},
 	{
 		path: '/banking/reconciliations',
-		component: Accounts,
+		component: Reconciliations,
 		name: __('Reconciliations'),
 	},
 ];

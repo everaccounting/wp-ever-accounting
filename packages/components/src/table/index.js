@@ -18,51 +18,63 @@ const isDisabledHeader = (status, rows) => status !== 'STATUS_COMPLETE' || rows.
 const isSelectedHeader = (selected, rows) => selected.length === rows.length && rows.length !== 0;
 
 const Table = props => {
-	const {headers, row, rows, total, selected, orderby, order, status, onSetAllSelected, onSetOrderBy, per_page=20} = props;
+	const {
+		headers,
+		row,
+		rows,
+		total,
+		selected,
+		orderby,
+		order,
+		status,
+		onSetAllSelected,
+		onSetOrderBy,
+		per_page = 20,
+	} = props;
 	const isDisabled = isDisabledHeader(status, rows);
 	const isSelected = isSelectedHeader(selected, rows);
 
 	let content = null;
 	if (status === 'STATUS_IN_PROGRESS') {
-		content = <LoadingRow headers={headers} rows={rows} per_page={per_page}/>;
+		content = <LoadingRow headers={headers} rows={rows} per_page={per_page} />;
 	} else if (rows.length === 0 && status === 'STATUS_COMPLETE') {
-		content = <EmptyRow headers={headers}/>;
+		content = <EmptyRow headers={headers} />;
 	} else if (status === 'STATUS_FAILED') {
-		content = <FailedRow headers={headers}/>;
+		content = <FailedRow headers={headers} />;
 	} else if (rows.length > 0) {
-		content = <DataRow rows={rows} status={status} selected={selected} row={row}/>;
+		content = <DataRow rows={rows} status={status} selected={selected} row={row} />;
 	}
 
 	return (
 		<table className="wp-list-table widefat fixed striped items">
 			<thead>
-			<TableHeader
-				orderby={orderby}
-				order={order}
-				isDisabled={isDisabled}
-				isSelected={isSelected}
-				headers={headers}
-				rows={rows}
-				total={total}
-				onSetOrderBy={onSetOrderBy}
-				onSetAllSelected={onSetAllSelected}
-			/>
+				<TableHeader
+					orderby={orderby}
+					order={order}
+					isDisabled={isDisabled}
+					isSelected={isSelected}
+					headers={headers}
+					rows={rows}
+					total={total}
+					onSetOrderBy={onSetOrderBy}
+					onSetAllSelected={onSetAllSelected}
+				/>
 			</thead>
 
 			{content}
 
 			<tfoot>
-			<TableHeader
-				orderby={orderby}
-				order={order}
-				isDisabled={isDisabled}
-				isSelected={isSelected}
-				headers={headers}
-				rows={rows}
-				total={total}
-				onSetOrderBy={onSetOrderBy}
-				onSetAllSelected={onSetAllSelected}
-			/>
+				<TableHeader
+					orderby={orderby}
+					order={order}
+					isDisabled={isDisabled}
+					isSelected={isSelected}
+					headers={headers}
+					rows={rows}
+					total={total}
+					onSetOrderBy={onSetOrderBy}
+					onSetAllSelected={onSetAllSelected}
+				/>
 			</tfoot>
 		</table>
 	);
@@ -84,10 +96,8 @@ Table.propTypes = {
 Table.defaultProps = {
 	order: 'desc',
 	total: 0,
-	onSetAllSelected: () => {
-	},
-	onSetOrderBy: () => {
-	}
-}
+	onSetAllSelected: () => {},
+	onSetOrderBy: () => {},
+};
 
 export default Table;

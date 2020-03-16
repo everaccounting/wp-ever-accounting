@@ -3,6 +3,9 @@
  */
 
 import React from 'react';
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 

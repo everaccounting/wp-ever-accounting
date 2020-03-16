@@ -1,6 +1,9 @@
 /**
  * External dependencies
  */
+/**
+ * WordPress dependencies
+ */
 import { select, apiFetch } from '@wordpress/data-controls';
 
 /**
@@ -8,7 +11,7 @@ import { select, apiFetch } from '@wordpress/data-controls';
  */
 import { receiveRoutes } from './actions';
 import { STORE_KEY } from './constants';
-import {API_NAMESPACE} from "./constants";
+import { API_NAMESPACE } from './constants';
 
 /**
  * Resolver for the getRoute selector.
@@ -20,7 +23,7 @@ import {API_NAMESPACE} from "./constants";
 export function* getRoute() {
 	// we call this simply to do any resolution of all endpoints if necessary.
 	// allows for jit population of routes for a given namespace.
-	yield select( STORE_KEY, 'getRoutes');
+	yield select(STORE_KEY, 'getRoutes');
 }
 
 /**
@@ -28,10 +31,7 @@ export function* getRoute() {
  *
  */
 export function* getRoutes() {
-	const routeResponse = yield apiFetch( { path: API_NAMESPACE} );
-	const routes =
-		routeResponse && routeResponse.routes
-			? Object.keys( routeResponse.routes )
-			: [];
-	yield receiveRoutes( routes);
+	const routeResponse = yield apiFetch({ path: API_NAMESPACE });
+	const routes = routeResponse && routeResponse.routes ? Object.keys(routeResponse.routes) : [];
+	yield receiveRoutes(routes);
 }
