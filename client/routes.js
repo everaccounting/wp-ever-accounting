@@ -2,10 +2,10 @@ import { lazy } from '@wordpress/element';
 
 // import Dashboard from './page/dashboard';
 import Transactions from './page/transactions';
+import Contacts from './page/contacts';
 // import Incomes from './page/incomes';
 // import Expenses from './page/expenses';
 import { applyFilters } from '@wordpress/hooks';
-// import Contacts from './page/contacts';
 // import Items from './page/items';
 // import Banking from './page/banking';
 // import Misc from './page/misc';
@@ -26,10 +26,10 @@ export const routes = [
 	// 	container: Items,
 	// 	path: '/items',
 	// },
-	// {
-	// 	container: Contacts,
-	// 	path: '/contacts',
-	// },
+	{
+		container: Contacts,
+		path: '/contacts',
+	},
 	// {
 	// 	container: Incomes,
 	// 	path: '/incomes/:tab/add',

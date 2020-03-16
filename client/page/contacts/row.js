@@ -36,7 +36,7 @@ export default class Row extends Component {
 
 	render() {
 		const {isSelected, isLoading, item} = this.props;
-		const { id, first_name, last_name, email, phone } = item;
+		const {id, first_name, last_name, email, phone} = item;
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
@@ -47,8 +47,8 @@ export default class Row extends Component {
 							value={id}
 							disabled={isLoading}
 							checked={isSelected}
-							onChange={() => this.props.onSelected(item.id)}
-						/>
+							onChange={() => this.props.onSelected(id)}/>
+
 					</th>
 
 					<td className="column-name">
@@ -70,7 +70,7 @@ export default class Row extends Component {
 								},
 								{
 									title: __('Delete'),
-									onClick: ()=> this.props.remove('/ea/v1', 'contacts', id),
+									onClick: () => this.props.remove('contacts', id),
 									disabled: isLoading,
 								},
 							]}

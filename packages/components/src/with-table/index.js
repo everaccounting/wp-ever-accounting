@@ -44,7 +44,7 @@ function withTable(resourceName, defaultQuery = {orderby: 'id'}) {
 			};
 
 			setBulkAction = (action) => {
-				this.props.remove('/ea/v1', resourceName, this.props.selected);
+				this.props.remove( resourceName, this.props.selected);
 			};
 
 			setPageChange = (page) => {

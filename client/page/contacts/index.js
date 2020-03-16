@@ -1,5 +1,4 @@
 import {Component, Fragment} from 'react';
-import withContacts from "./with-contact";
 import {
 	SearchBox,
 	TableNav,
@@ -8,7 +7,8 @@ import {
 	AccountControl,
 	CategoryControl,
 	DateFilter,
-	ContactTypesControl
+	ContactTypesControl,
+	withTable
 } from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
@@ -32,47 +32,56 @@ class Contacts extends Component {
 	};
 
 	render() {
-		const {status, items, page, total, selected = []} = this.props;
+		const {status, total, items, query, selected} = this.props;
+		const {page = 1, orderby = 'created_at', order = 'desc'} = query;
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
+				<a className="page-title-action">{__('Add Contact')}</a>
 				<hr className="wp-header-end"/>
 				<div className="ea-table-display">
-					<SearchBox status={status} onSearch={search => {
-						this.props.setQuery('search', search)
-					}}/>
+					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
+
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={(page) => {
-						this.props.setQuery('page', page)
-					}}
-					onAction={this.props.onBulkAction}
-					bulk={getBulk()}
-				>
+					onChangePage={this.props.onPageChange}
+					onAction={this.props.onAction}
+					bulk={getBulk()}>
+
 					<ContactTypesControl
-						className={'alignleft actions'}/>
+						className={'alignleft actions'}
+						onChange={(type) => this.props.onFilter({type: type.value})}/>
 
 				</TableNav>
+
 				<Table
 					headers={getHeaders()}
-					orderby={'name'}
+					orderby={orderby}
 					selected={selected}
-					order={'desc'}
+					order={order}
 					rows={items}
 					total={total}
 					row={this.onRenderRow}
 					status={status}
 					onSetAllSelected={this.props.onAllSelected}
-					onSetOrderBy={(orderby, order) => this.props.setQuery(orderby, order)}
+					onSetOrderBy={this.props.onOrderBy}
+				/>
+
+				<TableNav
+					status={status}
+					total={total}
+					page={page}
+					selected={selected}
+					onChangePage={this.props.onPageChange}
+					onAction={this.props.onAction}
 				/>
 
 			</Fragment>
 		)
 	}
 }
-
-export default withContacts('contacts')(Contacts);
+export default withTable('contacts', {orderby:'created_at'})(Contacts);

@@ -138,6 +138,13 @@ export function* remove(resourceName, id) {
 		return;
 	}
 
+	console.log({
+		path: route,
+		method: ids.length > 1 ? 'POST' : 'DELETE',
+		cache: 'no-store',
+		data: ids.length > 1 ? {action: 'delete', items: ids} : null
+	});
+
 	try {
 		yield apiFetch({
 			path: route,
