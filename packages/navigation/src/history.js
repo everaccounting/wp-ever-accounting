@@ -1,8 +1,8 @@
 /**
  * External dependencies
  */
-import { createHashHistory } from 'history';
-import { parse } from 'qs';
+import {createHashHistory} from 'history';
+import {parse} from 'qs';
 
 // See https://github.com/ReactTraining/react-router/blob/master/FAQ.md#how-do-i-access-the-history-object-outside-of-components
 
@@ -20,40 +20,38 @@ let _history;
  * @return {Object} React-router history object with `get location` modified.
  */
 function getHistory() {
-	if (!_history) {
-		const browserHistory = createHashHistory();
-		console.log(browserHistory);
-		_history = {
-			get length() {
-				return browserHistory.length;
-			},
-			get action() {
-				return browserHistory.action;
-			},
-			get location() {
-				const { location } = browserHistory;
-				const pathname = location.pathname;
-				return {
-					...location,
-					pathname,
-				};
-			},
-			createHref: (...args) => browserHistory.createHref.apply(browserHistory, args),
-			push: (...args) => browserHistory.push.apply(browserHistory, args),
-			replace: (...args) => browserHistory.replace.apply(browserHistory, args),
-			go: (...args) => browserHistory.go.apply(browserHistory, args),
-			goBack: (...args) => browserHistory.goBack.apply(browserHistory, args),
-			goForward: (...args) => browserHistory.goForward.apply(browserHistory, args),
-			block: (...args) => browserHistory.block.apply(browserHistory, args),
-			listen(listener) {
-				return browserHistory.listen(() => {
-					listener(this.location, this.action);
-				});
-			},
-		};
-	}
+	const browserHistory = createHashHistory();
+
+	_history = {
+		get length() {
+			return browserHistory.length;
+		},
+		get action() {
+			return browserHistory.action;
+		},
+		get location() {
+			const {location} = browserHistory;
+			const pathname = location.pathname;
+			return {
+				...location,
+				pathname,
+			};
+		},
+		createHref: (...args) => browserHistory.createHref.apply(browserHistory, args),
+		push: (...args) => browserHistory.push.apply(browserHistory, args),
+		replace: (...args) => browserHistory.replace.apply(browserHistory, args),
+		go: (...args) => browserHistory.go.apply(browserHistory, args),
+		goBack: (...args) => browserHistory.goBack.apply(browserHistory, args),
+		goForward: (...args) => browserHistory.goForward.apply(browserHistory, args),
+		block: (...args) => browserHistory.block.apply(browserHistory, args),
+		listen(listener) {
+			return browserHistory.listen(() => {
+				listener(this.location, this.action);
+			});
+		},
+	};
 
 	return _history;
 }
 
-export { getHistory };
+export {getHistory};

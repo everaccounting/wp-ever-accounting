@@ -3,6 +3,8 @@
  */
 import { Component } from '@wordpress/element';
 import { createHigherOrderComponent } from '@wordpress/compose';
+import {__} from "@wordpress/i18n";
+
 /**
  * External dependencies
  */
@@ -61,9 +63,22 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 				});
 			};
 
-			setBulkAction = action => {
-				this.props.remove(resourceName, this.props.selected);
+			setRemove = (id) => {
+				if (!confirm(__('Are you sure you want to delete the items?'))) {
+					return;
+				}
+				console.log(id);
+				this.props.remove(resourceName, id);
 			};
+
+
+			setBulkAction = action => {
+				this.setRemove(this.state.selected);
+				this.setState({
+					selected:[]
+				});
+			};
+
 
 			setPageChange = page => {
 				this.props.setQueryValue(resourceName, 'page', page);
@@ -79,6 +94,7 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 			};
 
 			setFilter = filter => {
+				console.log(filter);
 				this.props.setValueForQueryContext(resourceName, Object.assign({}, { ...this.props.query, page: 1 }, filter));
 			};
 
@@ -95,6 +111,7 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 						onPageChange={this.setPageChange}
 						onFilter={this.setFilter}
 						onSearch={this.setSearch}
+						onRemove={this.setRemove}
 						onSelected={this.onSelected}
 						onAllSelected={this.onAllSelected}
 						onBulkAction={this.setBulkAction}
@@ -123,7 +140,6 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 					status = 'STATUS_FAILED';
 				}
 				const { page = 1 } = query;
-
 				return {
 					items: getCollection(resourceName, query),
 					total: parseInt(getCollectionHeader('x-wp-total', resourceName, query), 10),
@@ -134,7 +150,7 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 			}),
 
 			withDispatch(dispatch => {
-				const { create, update, remove } = dispatch(COLLECTIONS_STORE_KEY);
+				const { create, update, remove,invalidateCollection } = dispatch(COLLECTIONS_STORE_KEY);
 				const { setQueryValue, setValueForQueryContext } = dispatch(QUERY_STATE_STORE_KEY);
 				return {
 					setValueForQueryContext,
@@ -142,6 +158,7 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 					create,
 					update,
 					remove,
+					invalidateCollection
 				};
 			}),
 		])(Wrapper);

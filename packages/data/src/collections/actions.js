@@ -111,42 +111,29 @@ export function* update(resourceName, id, data = {}) {
 
 export function* remove(resourceName, id) {
 	const ids = isArray(id) ? id : [id];
-	const resource = ids.length > 1 ? `${resourceName}/bulk` : resourceName;
-	const routeIds = ids.length > 1 ? [] : [1];
+	const resource = `${resourceName}/bulk`;
 
 	if (isEmpty(ids)) {
 		return;
 	}
 
-	if (!confirm(__('Are you sure you want to delete the items?'))) {
-		return;
-	}
-
-	const route = yield select(SCHEMA_STORE_KEY, 'getRoute', resource, routeIds);
+	const route = yield select(SCHEMA_STORE_KEY, 'getRoute', resource);
 
 	if (!route) {
 		return;
 	}
 
-	console.log({
-		path: route,
-		method: ids.length > 1 ? 'POST' : 'DELETE',
-		cache: 'no-store',
-		data: ids.length > 1 ? { action: 'delete', items: ids } : null,
-	});
-
 	try {
 		yield apiFetch({
 			path: route,
-			method: ids.length > 1 ? 'POST' : 'DELETE',
+			method: 'POST',
 			cache: 'no-store',
-			data: ids.length > 1 ? { action: 'delete', items: ids } : {},
+			data: { action: 'delete', items: ids }
 		});
 
-		yield invalidateCollection(new Date().getTime());
-		return true;
+		yield invalidateCollection();
 	} catch (error) {
-		NotificationManager.error(error.message);
+		console.log(error);
 	}
 }
 

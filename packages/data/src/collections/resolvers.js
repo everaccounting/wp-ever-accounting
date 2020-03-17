@@ -67,7 +67,6 @@ export function* getCollectionHeader(header, resourceName, query, ids = []) {
 	// unnecessarily. Any undefined args will be excluded. This is important
 	// because resolver resolution is cached by both number and value of args.
 	const args = [resourceName, query].filter(arg => typeof arg !== 'undefined');
-	console.log(args);
 	//we call this simply to do any resolution of the collection if necessary.
 	yield select(STORE_KEY, 'getCollection', ...args);
 }

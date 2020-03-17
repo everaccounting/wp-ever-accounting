@@ -95,12 +95,9 @@ export function getSearchWords(query = navUtils.getQuery()) {
  * @param {Object} currentQuery object of current query params (defaults to current querystring).
  * @return {string}  Updated URL merging query params into existing params.
  */
-export function getNewPath(query, path = getPath(), currentQuery = getQuery()) {
-	const args = { page: 'wc-admin', ...currentQuery, ...query };
-	if (path !== '/') {
-		args.path = path;
-	}
-	return addQueryArgs('admin.php', args);
+export function getNewPath(query, currentQuery = getQuery()) {
+	const args = { ...currentQuery, ...query };
+	return addQueryArgs( args);
 }
 
 /**
@@ -151,7 +148,9 @@ export function onQueryChange(param, path = getPath(), query = getQuery()) {
  * @param {string} path Relative path (defaults to current path).
  * @param {Object} currentQuery object of current query params (defaults to current querystring).
  */
-export function updateQueryString(query, path = getPath(), currentQuery = getQuery()) {
-	const newPath = getNewPath(query, path, currentQuery);
+export function updateQueryString(query, currentQuery = getQuery()) {
+	// console.log(query);
+	// console.log(currentQuery);
+	const newPath = getNewPath(query,  currentQuery);
 	getHistory().push(newPath);
 }
