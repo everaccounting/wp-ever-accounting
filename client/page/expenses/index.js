@@ -12,8 +12,13 @@ import Tabs from "components/tabs";
  */
 import Payments from '../payments';
 import Bills from '../bills';
+import EditPayment from "components/edit-payment";
 
 const tabs = [
+	{
+		path: '/expenses/payments/:id',
+		component:EditPayment,
+	},
 	{
 		path: '/expenses/payments',
 		name: __('Payments'),

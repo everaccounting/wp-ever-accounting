@@ -80,6 +80,15 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 				'args'                => $this->get_collection_params(),
 			),
 		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_types' ],
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+		) );
 	}
 
 	/**
@@ -267,6 +276,19 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 
 		return $this->get_items( $request );
 	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $request
+	 *
+	 * @return mixed|WP_REST_Response
+	 */
+	public function get_types( $request ) {
+		$types = eaccounting_get_tax_types();
+		return rest_ensure_response( $this->assoc_to_options( $types ) );
+	}
+
 
 	/**
 	 * since 1.0.0

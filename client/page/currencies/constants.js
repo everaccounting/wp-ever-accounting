@@ -15,13 +15,13 @@ export const getHeaders = () => [
 		primary: true,
 	},
 	{
-		name: 'type',
-		title: __('Type'),
+		name: 'code',
+		title: __('Code'),
 		sortable: true,
 	},
 	{
-		name: 'color',
-		title: __('Color'),
+		name: 'rate',
+		title: __('Rate'),
 		sortable: true,
 	},
 	{

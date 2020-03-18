@@ -26,6 +26,7 @@ export { Row } from './grid';
 export { Col } from './grid';
 
 export { default as AccountControl } from './account-control';
+export { default as ContactControl } from './contact-control';
 export { default as CategoryControl } from './category-control';
 export { default as CategoryTypesControl } from './category-types-control';
 export { default as ContactTypesControl } from './contact-types-control';

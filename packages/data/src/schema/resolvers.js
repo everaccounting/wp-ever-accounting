@@ -32,6 +32,7 @@ export function* getRoute() {
  */
 export function* getRoutes() {
 	const routeResponse = yield apiFetch({ path: API_NAMESPACE });
+	console.log(routeResponse);
 	const routes = routeResponse && routeResponse.routes ? Object.keys(routeResponse.routes) : [];
 	yield receiveRoutes(routes);
 }

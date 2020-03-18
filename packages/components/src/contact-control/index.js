@@ -13,8 +13,8 @@ import AsyncSelect from '../select-control/async';
 import PropTypes from 'prop-types';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-
-export default class ContactControl extends Component {
+import {withSelect} from '@wordpress/data';
+class ContactControl extends Component {
 	static propTypes = {
 		label: PropTypes.string,
 		placeholder: PropTypes.string,
@@ -30,16 +30,6 @@ export default class ContactControl extends Component {
 		this.state = {
 			defaultOptions: [],
 		};
-
-		this.fetchAPI = this.fetchAPI.bind(this);
-	}
-
-	componentDidMount() {
-		this.fetchAPI({}, options => {
-			this.setState({
-				defaultOptions: options,
-			});
-		});
 	}
 
 	fetchAPI(params, callback) {
@@ -58,7 +48,7 @@ export default class ContactControl extends Component {
 					noOptionsMessage={() => {
 						__('No items');
 					}}
-					getOptionLabel={option => option && option.name && option.name}
+					getOptionLabel={option => option && option.first_name && option.last_name && `${option.first_name} ${option.last_name}`}
 					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
 						this.fetchAPI({ search }, callback);
@@ -69,3 +59,8 @@ export default class ContactControl extends Component {
 		);
 	}
 }
+export default withSelect(select => {
+	return {
+		defaultOptions: select('ea/store/collections').getCollection('contacts')
+	}
+})(ContactControl)

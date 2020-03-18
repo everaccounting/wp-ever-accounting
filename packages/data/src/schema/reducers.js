@@ -39,6 +39,11 @@ export const receiveRoutes = (state = {}, action) => {
 	return state;
 };
 
+export const receiveSchema = (state = {}, action) => {
+
+	return state;
+};
 export default combineReducers({
 	routes: receiveRoutes,
+	schema: receiveSchema
 });

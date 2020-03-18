@@ -32,7 +32,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -68,7 +68,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 	}
@@ -371,6 +371,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
+					'default'     => null,
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
@@ -379,14 +380,16 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'default'     => null,
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 				),
 				'paid_at'        => array(
 					'description' => __( 'Payment Date of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
+					'default'     => current_time('mysql'),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
@@ -476,7 +479,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 			)
 		);
 
-		return $this->add_additional_fields_schema( $schema );
+		return $schema;
 	}
 
 

@@ -1,10 +1,10 @@
 import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
-import {__} from '@wordpress/i18n';
 import {RowActions} from '@eaccounting/components';
-// import EditCategory from 'component/edit-category';
+import {__} from '@wordpress/i18n';
+import EditTaxRate from "components/edit-taxrate";
 
-export default  class Row extends Component {
+export default class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
 		isLoading: PropTypes.bool.isRequired,
@@ -13,7 +13,6 @@ export default  class Row extends Component {
 
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			editing: false,
 		};
@@ -32,13 +31,15 @@ export default  class Row extends Component {
 	};
 
 	OnSave = (item) => {
-		this.props.onUpdate(item);
+		this.onEdit();
+		this.props.invalidateCollection();
 	};
 
 	render() {
 		const {isSelected, isLoading, item} = this.props;
-		const {id, name, type, color} = item;
+		const { id, name, rate, type } = item;
 		const {editing} = this.state;
+
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
@@ -49,27 +50,25 @@ export default  class Row extends Component {
 							value={id}
 							disabled={isLoading}
 							checked={isSelected}
-							onChange={() => this.props.onSetSelected(item.id)}
-						/>
+							onChange={() => this.props.onSelected(id)}/>
 
-						{/*{editing && (*/}
-						{/*	<EditCategory*/}
-						{/*		item={this.props.item}*/}
-						{/*		onCreate={this.OnSave}*/}
-						{/*		onClose={this.onClose}*/}
-						{/*		buttonTittle={__('Update')}*/}
-						{/*		tittle={__('Update Category')}*/}
-						{/*	/>*/}
-						{/*)}*/}
+						{editing && (
+							<EditTaxRate
+								item={this.props.item}
+								onCreate={this.OnSave}
+								onClose={this.onClose}
+								buttonTittle={__('Update')}
+								tittle={__('Update Tax Rate')}/>
+						)}
+
 					</th>
 
 					<td className="column-primary column-name">{name}</td>
 
+					<td className="column-rates">{parseFloat(rate)}</td>
+
 					<td className="column-type ea-capitalize">{type}</td>
 
-					<td className="column-type">
-						<span style={{color: color}} className="fa fa-2x fa-circle"/>
-					</td>
 
 					<td className="column-actions">
 						<RowActions
@@ -81,7 +80,7 @@ export default  class Row extends Component {
 								},
 								{
 									title: __('Delete'),
-									onClick: ()=>this.props.onAction('delete', item.id),
+									onClick: () => this.props.onRemove(id),
 									disabled: isLoading,
 								},
 							]}
@@ -92,4 +91,3 @@ export default  class Row extends Component {
 		);
 	}
 }
-

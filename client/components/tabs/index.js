@@ -8,6 +8,9 @@ export const Tabs = props => {
 		<Fragment>
 			<nav className="nav-tab-wrapper eaccounting-nav-tab-wrapper">
 				{tabs.map((tab, index) => {
+					if(!tab.name){
+						return ;
+					}
 					return (
 						<NavLink
 							key={index}

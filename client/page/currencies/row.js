@@ -2,16 +2,13 @@ import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {RowActions} from '@eaccounting/components';
 import {__} from '@wordpress/i18n';
-
-// import EditAccount from "component/edit-account";
+import EditCurrency from "components/edit-currency";
 
 export default class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
 		isLoading: PropTypes.bool.isRequired,
 		isSelected: PropTypes.bool,
-		onAction: PropTypes.func.isRequired,
-		onSetSelected: PropTypes.func.isRequired,
 	};
 
 	constructor(props) {
@@ -25,11 +22,6 @@ export default class Row extends Component {
 		this.setState({editing: !this.state.editing});
 	};
 
-	onDelete = ev => {
-		ev.preventDefault();
-		this.props.onTableAction('delete', this.props.item.id);
-	};
-
 	onSelected = () => {
 		this.props.onSetSelected([this.props.item.id]);
 	};
@@ -38,9 +30,14 @@ export default class Row extends Component {
 		this.setState({editing: !this.state.editing});
 	};
 
+	OnSave = (item) => {
+		this.onEdit();
+		this.props.invalidateCollection();
+	};
+
 	render() {
 		const {isSelected, isLoading, item} = this.props;
-		const {id, name, balance, number} = item;
+		const { id, name, code, rate } = item;
 		const {editing} = this.state;
 
 		return (
@@ -53,26 +50,24 @@ export default class Row extends Component {
 							value={id}
 							disabled={isLoading}
 							checked={isSelected}
-							onChange={() => this.props.onSetSelected(item.id)}
-						/>
+							onChange={() => this.props.onSelected(id)}/>
 
-						{/*{editing && (*/}
-						{/*	<EditAccount*/}
-						{/*		item={this.props.item}*/}
-						{/*		onCreate={this.props.onUpdate}*/}
-						{/*		onClose={this.onClose}*/}
-						{/*		buttonTittle={__('Update')}*/}
-						{/*		tittle={__('Update Account')}*/}
-						{/*	/>*/}
-						{/*)}*/}
+						{editing && (
+							<EditCurrency
+								item={this.props.item}
+								onCreate={this.OnSave}
+								onClose={this.onClose}
+								buttonTittle={__('Update')}
+								tittle={__('Update Currency')}/>
+						)}
 
 					</th>
 
 					<td className="column-primary column-name">{name}</td>
 
-					<td className="column-number">{number || '-'}</td>
+					<td className="column-code">{code}</td>
 
-					<td className="column-money">{balance}</td>
+					<td className="column-rate">{rate}</td>
 
 					<td className="column-actions">
 						<RowActions
@@ -84,7 +79,7 @@ export default class Row extends Component {
 								},
 								{
 									title: __('Delete'),
-									onClick: ()=> this.props.onAction('delete', item.id),
+									onClick: () => this.props.onRemove(id),
 									disabled: isLoading,
 								},
 							]}
