@@ -27,22 +27,7 @@ class EditPayment extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			id: null,
-			paid_at: '',
-			account: eAccountingi10n.data.account || {},
-			amount: 0,
-			contact: {
-				first_name: '',
-				last_name: '',
-			},
-			description: '',
-			category: {},
-			reference: '',
-			payment_method: 'cash',
-			attachment_url: '',
-			parent_id: '',
-			reconciled: '0',
-			isSaving: false,
+			...props.model
 		};
 	}
 
@@ -109,7 +94,7 @@ class EditPayment extends Component {
 
 	render() {
 		const {id, paid_at, amount, account, category, contact, reference, description, isSaving, payment_method} = this.state;
-
+		console.log(this.props.model);
 		return (
 			<Fragment>
 				{!id && <CompactCard tagName="h3">{__('Add Payment')}</CompactCard>}

@@ -366,7 +366,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 			'title'      => __( 'Contact', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'             => array(
+				'id'          => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -376,7 +376,12 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'account_id'     => array(
+				'account'     => array(
+					'description' => __( 'Account object of the item.', 'wp-ever-accounting' ),
+					'readonly'    => true,
+					'type'        => 'object',
+				),
+				'account_id'  => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -385,15 +390,15 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'paid_at'        => array(
+				'paid_at'     => array(
 					'description' => __( 'Payment Date of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
-					'default'     => current_time('mysql'),
+					'default'     => current_time( 'mysql' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
-				'amount'         => array(
+				'amount'      => array(
 					'description' => __( 'Amount of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -402,7 +407,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'contact_id'     => array(
+				'contact_id'  => array(
 					'description' => __( 'Contact id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -410,7 +415,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'description'    => array(
+				'description' => array(
 					'description' => __( 'Description of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -418,6 +423,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
+
 				'category_id'    => array(
 					'description' => __( 'Category id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
@@ -430,6 +436,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				'reference'      => array(
 					'description' => __( 'Reference of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
+					'default'     => 'test',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -455,6 +462,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				'parent_id'      => array(
 					'description' => __( 'Parent id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
+					'default'     => 0,
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -463,6 +471,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				'reconciled'     => array(
 					'description' => __( 'Reconciliation of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
+					'default'     => 0,
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -480,6 +489,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 		);
 
 		$this->schema = $schema;
+
 		return $this->add_additional_fields_schema( $this->schema );
 	}
 

@@ -9,6 +9,7 @@ import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
 import {map} from "lodash"
+import {Link} from "react-router-dom"
 
 class Payments extends Component {
 	constructor(props) {
@@ -31,10 +32,11 @@ class Payments extends Component {
 	render() {
 		const {status, total, items, query, selected} = this.props;
 		const {page = 1, orderby = 'created_at', order = 'desc'} = query;
+		const {match} = this.props;
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Payments')}</h1>
-				<a className="page-title-action">{__('Add payment')}</a>
+				<Link className="page-title-action" to={`${match.path}/new`}>{__('Add payment')}</Link>
 				<hr className="wp-header-end"/>
 				<div className="ea-table-display">
 					<SearchBox status={status} onSearch={this.props.onSearch}/>

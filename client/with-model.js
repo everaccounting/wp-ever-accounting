@@ -10,6 +10,20 @@ import {__} from "@wordpress/i18n";
  */
 import {SCHEMA_STORE_KEY} from '@eaccounting/data';
 import {withSelect} from '@wordpress/data';
+import {each} from "lodash"
+import {createEntityFactory} from "model";
+const extractModel = (schema) => {
+	if (schema && schema.properties) {
+		let model = {};
+
+		each(schema.properties, (prop, key) => {
+			model[key] = prop.default
+		});
+
+		return model;
+	}
+	return {};
+};
 
 /**
  * Internal dependencies
@@ -23,34 +37,28 @@ function withModel(resourceName) {
 			}
 
 			render() {
+				const {schema} = this.props;
 				return (
 					<WrappedComponent
 						{...this.props}
+						model={extractModel(schema)}
 					/>
 				);
 			}
 		}
 
 		return withSelect((select) => {
-			console.log(this);
 			const {getSchema, hasFinishedResolution} = select(SCHEMA_STORE_KEY);
+			const isLoading = hasFinishedResolution('getSchema', [resourceName]) !== true;
 			const schema = getSchema(resourceName);
-			const model = {};
-			const isLoading = hasFinishedResolution('getSchema', [resourceName]);
-			if (!isLoading && schema.properties) {
-				const properties = schema.properties;
-				for (let key in properties) {
-					console.log(key);
-					if (properties.hasOwnProperty(key)) {
-						model.key = properties[key] && properties[key]['default'] && properties[key]['default'] || '';
-					}
-				}
-				console.log(model);
+			if(!isLoading){
+				const model = createEntityFactory('payment', schema);
+				console.log(model.createNew({}));
 			}
 
 			return {
 				isLoading,
-				model
+				schema
 			}
 
 		})(Wrapper);
