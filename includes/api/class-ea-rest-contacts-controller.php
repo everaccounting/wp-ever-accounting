@@ -32,7 +32,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -68,7 +68,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 

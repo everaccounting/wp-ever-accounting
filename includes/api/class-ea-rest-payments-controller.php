@@ -479,7 +479,8 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 			)
 		);
 
-		return $schema;
+		$this->schema = $schema;
+		return $this->add_additional_fields_schema( $this->schema );
 	}
 
 

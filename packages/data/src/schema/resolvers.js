@@ -4,14 +4,14 @@
 /**
  * WordPress dependencies
  */
-import { select, apiFetch } from '@wordpress/data-controls';
+import {select, apiFetch} from '@wordpress/data-controls';
 
 /**
  * Internal dependencies
  */
-import { receiveRoutes } from './actions';
-import { STORE_KEY } from './constants';
-import { API_NAMESPACE } from './constants';
+import {receiveRoutes, receiveSchema} from './actions';
+import {STORE_KEY} from './constants';
+import {API_NAMESPACE} from './constants';
 
 /**
  * Resolver for the getRoute selector.
@@ -31,8 +31,14 @@ export function* getRoute() {
  *
  */
 export function* getRoutes() {
-	const routeResponse = yield apiFetch({ path: API_NAMESPACE });
-	console.log(routeResponse);
+	const routeResponse = yield apiFetch({path: API_NAMESPACE});
 	const routes = routeResponse && routeResponse.routes ? Object.keys(routeResponse.routes) : [];
 	yield receiveRoutes(routes);
+}
+
+
+export function* getSchema(resourceName) {
+	const schemaResponse = yield apiFetch({path: `${API_NAMESPACE}/${resourceName}`, method: "OPTIONS"});
+	const schema = schemaResponse && schemaResponse.schema && schemaResponse.schema ? schemaResponse.schema : {};
+	yield receiveSchema(resourceName,schema)
 }

@@ -46,7 +46,7 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 	}
@@ -54,15 +54,13 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 
 	public function get_settings( $request ) {
 		$section = sanitize_text_field( $request['section'] );
-		switch ( $section ) {
-			case 'general':
-				return $this->get_general_settings( $request );
-				break;
-		}
+		$settings = eaccounting_get_section_settings($section);
+		return rest_ensure_response( $settings );
 	}
 
 
 	public function update_settings( $request ) {
+		$section = sanitize_text_field( $request['section'] );
 
 	}
 

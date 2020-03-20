@@ -4,15 +4,15 @@
 /**
  * WordPress dependencies
  */
-import { combineReducers } from '@wordpress/data';
+import {combineReducers} from '@wordpress/data';
 
 /**
  * Internal dependencies
  */
-import { ACTION_TYPES as types } from './action-types';
-import { extractResourceNameFromRoute, getRouteIds, simplifyRouteWithId } from './utils';
-import { hasInState, updateState } from '../utils';
-import { API_NAMESPACE } from './constants';
+import {ACTION_TYPES as types} from './action-types';
+import {extractResourceNameFromRoute, getRouteIds, simplifyRouteWithId} from './utils';
+import {hasInState, updateState} from '../utils';
+import {API_NAMESPACE} from './constants';
 
 /**
  * Reducer for routes
@@ -23,7 +23,7 @@ import { API_NAMESPACE } from './constants';
  * @return {Object} The new (or original) state.
  */
 export const receiveRoutes = (state = {}, action) => {
-	const { type, routes } = action;
+	const {type, routes} = action;
 	if (type === types.RECEIVE_MODEL_ROUTES) {
 		routes.forEach(route => {
 			const resourceName = extractResourceNameFromRoute(API_NAMESPACE, route);
@@ -40,7 +40,12 @@ export const receiveRoutes = (state = {}, action) => {
 };
 
 export const receiveSchema = (state = {}, action) => {
-
+	const {type, resourceName, schema} = action;
+	if (type === types.RECEIVE_MODEL_SCHEMA) {
+		if (!hasInState(state, [resourceName])) {
+			state = updateState(state, [resourceName], schema)
+		}
+	}
 	return state;
 };
 export default combineReducers({

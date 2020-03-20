@@ -6,11 +6,12 @@
  */
 import { sprintf } from '@wordpress/i18n';
 import { createRegistrySelector } from '@wordpress/data';
-
+import { hasInState } from '../utils';
 /**
  * Internal dependencies
  */
 import { API_NAMESPACE, STORE_KEY } from './constants';
+import {DEFAULT_EMPTY_ARRAY} from "../collections/constants";
 
 /**
  * Returns the requested route for the given arguments.
@@ -85,6 +86,17 @@ export const getRoutes = createRegistrySelector(select => state => {
 	}
 	return namespaceRoutes;
 });
+
+
+
+export const getSchema = (state, resourceName) => {
+	if(hasInState(state.schema, [resourceName])){
+		return state.schema[resourceName];
+	}
+	return {}
+};
+
+
 
 /**
  * Returns the route from the given slice of the route state.

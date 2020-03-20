@@ -17,3 +17,12 @@ export function receiveRoutes(routes) {
 		routes,
 	};
 }
+
+
+export function receiveSchema(resourceName, schema) {
+	return {
+		type: types.RECEIVE_MODEL_SCHEMA,
+		resourceName,
+		schema
+	};
+}

@@ -18,8 +18,10 @@ import {
 	Row,
 	Col
 } from '@eaccounting/components';
+import withModel from "../../with-model";
+
 import apiFetch from '@wordpress/api-fetch';
-export default class EditPayment extends Component {
+class EditPayment extends Component {
 	_isMounted = false;
 
 	constructor(props) {
@@ -49,9 +51,9 @@ export default class EditPayment extends Component {
 		// const {match} = this.props;
 		// const id = match.params.id || undefined;
 		// id && this.loadPayment(id);
-		apiFetch({path:'/ea/v1/payments/', method:'OPTIONS'}).then(res=> {
-			console.log(res);
-		})
+		// apiFetch({path:'/ea/v1/payments/', method:'OPTIONS'}).then(res=> {
+		// 	console.log(res);
+		// })
 	}
 
 	componentWillUnmount() {
@@ -213,3 +215,5 @@ export default class EditPayment extends Component {
 		);
 	}
 }
+
+export default withModel('payments')(EditPayment)
