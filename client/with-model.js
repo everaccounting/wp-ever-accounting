@@ -11,7 +11,7 @@ import {__} from "@wordpress/i18n";
 import {SCHEMA_STORE_KEY} from '@eaccounting/data';
 import {withSelect} from '@wordpress/data';
 import {each} from "lodash"
-import {createEntityFactory} from "model";
+// import {createEntityFactory} from "model";
 const extractModel = (schema) => {
 	if (schema && schema.properties) {
 		let model = {};
@@ -51,10 +51,10 @@ function withModel(resourceName) {
 			const {getSchema, hasFinishedResolution} = select(SCHEMA_STORE_KEY);
 			const isLoading = hasFinishedResolution('getSchema', [resourceName]) !== true;
 			const schema = getSchema(resourceName);
-			if(!isLoading){
-				const model = createEntityFactory('payment', schema);
-				console.log(model.createNew({}));
-			}
+			// if(!isLoading){
+			// 	const model = createEntityFactory('payment', schema);
+			// 	console.log(model.createNew({}));
+			// }
 
 			return {
 				isLoading,

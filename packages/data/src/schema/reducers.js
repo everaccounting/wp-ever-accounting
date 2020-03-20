@@ -39,6 +39,12 @@ export const receiveRoutes = (state = {}, action) => {
 	return state;
 };
 
+/**
+ * Reducer for Schema
+ * @param state
+ * @param action
+ * @returns {{}}
+ */
 export const receiveSchema = (state = {}, action) => {
 	const {type, resourceName, schema} = action;
 	if (type === types.RECEIVE_MODEL_SCHEMA) {
@@ -48,7 +54,31 @@ export const receiveSchema = (state = {}, action) => {
 	}
 	return state;
 };
+
+/**
+ * Reducer for models
+ * @param state
+ * @param action
+ * @returns {{}}
+ */
+
+export const receiveModels = (state = {}, action) => {
+	const {type, modelName, model} = action;
+	if (type === types.RECEIVE_FACTORY_FOR_MODEL) {
+
+		if (!hasInState(state, [modelName])) {
+			state = updateState(state, [modelName], model)
+		}
+	}
+
+	return state;
+};
+
+/**
+ * Combined reducers
+ */
 export default combineReducers({
 	routes: receiveRoutes,
-	schema: receiveSchema
+	schema: receiveSchema,
+	models: receiveModels,
 });

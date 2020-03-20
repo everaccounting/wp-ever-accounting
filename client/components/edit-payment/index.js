@@ -18,27 +18,29 @@ import {
 	Row,
 	Col
 } from '@eaccounting/components';
-import withModel from "../../with-model";
-
+import {withSelect} from "@wordpress/data";
 import apiFetch from '@wordpress/api-fetch';
+
 class EditPayment extends Component {
 	_isMounted = false;
+	payment = false;
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			...props.model
-		};
+			isLoading: true
+		}
 	}
 
 	componentDidMount() {
-		// this._isMounted = true;
-		// const {match} = this.props;
-		// const id = match.params.id || undefined;
-		// id && this.loadPayment(id);
-		// apiFetch({path:'/ea/v1/payments/', method:'OPTIONS'}).then(res=> {
-		// 	console.log(res);
-		// })
+		const {match} = this.props;
+		match && match.params && match.params.id && apiFetch({path: `/ea/v1/payments/${match.params.id}`}).then(res => {
+			// console.log(res);
+			this.payment = res && this.props.model.fromExisting(res);
+			this.setState({
+				isLoading: false
+			})
+		})
 	}
 
 	componentWillUnmount() {
@@ -93,73 +95,74 @@ class EditPayment extends Component {
 
 
 	render() {
-		const {id, paid_at, amount, account, category, contact, reference, description, isSaving, payment_method} = this.state;
-		console.log(this.props.model);
+		const {model} = this.props;
+		const {isLoading} = this.state;
+		window.model = this.payment;
+		console.log(model);
+		// const {id, paid_at, amount, account, category, contact, reference, description, isSaving, payment_method} = this.state;
 		return (
-			<Fragment>
-				{!id && <CompactCard tagName="h3">{__('Add Payment')}</CompactCard>}
-				{!!id && <CompactCard tagName="h3">{__('Update Payment')}</CompactCard>}
+			isLoading && <Fragment>
+				{/*{!id && <CompactCard tagName="h3">{__('Add Payment')}</CompactCard>}*/}
+				{/*{!!id && <CompactCard tagName="h3">{__('Update Payment')}</CompactCard>}*/}
 				<Card>
 					<form onSubmit={this.onSubmit}>
 						<Row>
-							<Col>
-								<DateControl
-									label={__('Date')}
-									before={<Icon icon={'calendar'}/>}
-									value={paid_at}
-									required
-									onChange={paid_at => {
-										{
-											this.setState({paid_at});
-										}
-									}}
-								/>
-							</Col>
-							<Col>
-								<PriceControl
-									label={__('Amount')}
-									before={<Icon icon={'money'}/>}
-									code={account && account.currency_code && account.currency_code}
-									required
-									value={amount}
-									onChange={amount => {
-										this.setState({amount})
-									}}/>
-							</Col>
-							<Col>
-								<AccountControl
-									label={__('Account')}
-									before={<Icon icon={'university'}/>}
-									after={account && account.currency_code && account.currency_code}
-									required
-									value={account}
-									onChange={account => {
-										this.setState({account});
-									}}
-								/>
-							</Col>
-							<Col>
-								<CategoryControl
-									label={__('Category')}
-									before={<Icon icon={'folder-open-o'}/>}
-									after={this.addContactBtn()}
-									required
-									type="expense"
-									value={category}
-									onChange={category => {
-										this.setState({category});
-									}}
-								/>
-							</Col>
-							<Col>
-								<ContactControl
-									label={__('Customer')}
-									before={<Icon icon={'user'}/>}
-									type="vendor"
-									value={contact}
-									onChange={contact => this.setState({contact})}
-								/>
-							</Col>
+							{/*<Col>*/}
+							{/*	<DateControl*/}
+							{/*		label={__('Date')}*/}
+							{/*		before={<Icon icon={'calendar'}/>}*/}
+							{/*		value={paid_at}*/}
+							{/*		required*/}
+							{/*		onChange={paid_at => {*/}
+							{/*			{*/}
+							{/*				this.setState({paid_at});*/}
+							{/*			}*/}
+							{/*		}}*/}
+							{/*	/>*/}
+							{/*</Col>*/}
+							{/*<Col>*/}
+							{/*	<PriceControl*/}
+							{/*		label={__('Amount')}*/}
+							{/*		before={<Icon icon={'money'}/>}*/}
+							{/*		code={account && account.currency_code && account.currency_code}*/}
+							{/*		required*/}
+							{/*		value={amount}*/}
+							{/*		onChange={amount => {*/}
+							{/*			this.setState({amount})*/}
+							{/*		}}/>*/}
+							{/*</Col>*/}
+							{/*<Col>*/}
+							{/*	<AccountControl*/}
+							{/*		label={__('Account')}*/}
+							{/*		before={<Icon icon={'university'}/>}*/}
+							{/*		after={account && account.currency_code && account.currency_code}*/}
+							{/*		required*/}
+							{/*		value={account}*/}
+							{/*		onChange={account => {*/}
+							{/*			this.setState({account});*/}
+							{/*		}}*/}
+							{/*	/>*/}
+							{/*</Col>*/}
+							{/*<Col>*/}
+							{/*<CategoryControl*/}
+							{/*	label={__('Category')}*/}
+							{/*	before={<Icon icon={'folder-open-o'}/>}*/}
+							{/*	//after={this.addContactBtn()}*/}
+							{/*	required*/}
+							{/*	type="expense"*/}
+							{/*	value={model.category}*/}
+							{/*	onChange={model.setCategory}*/}
+							{/*/>*/}
+							{/*</Col>*/}
+							{/*<Col>*/}
+							{/*	<ContactControl*/}
+							{/*		label={__('Customer')}*/}
+							{/*		before={<Icon icon={'user'}/>}*/}
+							{/*		type="vendor"*/}
+							{/*		value={contact}*/}
+							{/*		onChange={contact => this.setState({contact})}*/}
+							{/*	/>*/}
+							{/*</Col>*/}
 
 							{/*<Col>*/}
 							{/*	<Select*/}
@@ -190,9 +193,9 @@ class EditPayment extends Component {
 							{/*</Col>*/}
 						</Row>
 
-						<Button isPrimary isBusy={isSaving} onClick={this.onSubmit}>
-							{__('Submit')}
-						</Button>
+						{/*<Button isPrimary isBusy={isSaving} onClick={this.onSubmit}>*/}
+						{/*	{__('Submit')}*/}
+						{/*</Button>*/}
 
 					</form>
 				</Card>
@@ -201,4 +204,10 @@ class EditPayment extends Component {
 	}
 }
 
-export default withModel('payments')(EditPayment)
+export default withSelect(select => {
+	const {getModel} = select('ea/store/schema');
+	return {
+		model: getModel('payment'),
+		isLoading: false
+	}
+})(EditPayment)

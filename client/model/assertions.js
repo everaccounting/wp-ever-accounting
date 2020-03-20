@@ -29,7 +29,6 @@ import { maybeConvertFromValueObjectWithAssertions } from './extractors';
  * @throws InvalidSchema
  */
 export const assertValidSchema = ( schema ) => {
-	console.log(schema);
 	if ( ! isSchema( schema ) ) {
 		throw new InvalidSchema(
 			'This is an invalid schema for a model.',

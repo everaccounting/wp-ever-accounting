@@ -1,3 +1,5 @@
+import pluralize from 'pluralize';
+import memoize from 'memize';
 /**
  * This returns a resource name string as an index for a given route.
  *
@@ -63,3 +65,21 @@ export const simplifyRouteWithId = (route, matchIds) => {
 	});
 	return route;
 };
+
+/**
+ * Used to normalize the plural form of a given model name.
+ * @param {string} modelName
+ * @return {string}  Ensures the given modelName is its plural form.
+ */
+export const pluralModelName = memoize(
+	( modelName ) => pluralize( modelName )
+);
+
+/**
+ * Used to normalize the singular form of a given model name.
+ * @param {string} modelName
+ * @return {string} Ensures the given modelName is in its singular form.
+ */
+export const singularModelName = memoize(
+	( modelName ) => pluralize.singular( modelName )
+);

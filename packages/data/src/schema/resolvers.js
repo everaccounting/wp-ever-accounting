@@ -9,9 +9,12 @@ import {select, apiFetch} from '@wordpress/data-controls';
 /**
  * Internal dependencies
  */
-import {receiveRoutes, receiveSchema} from './actions';
-import {STORE_KEY} from './constants';
+import {receiveModel, receiveRoutes, receiveSchema} from './actions';
+import {STORE_KEY as SCHEMA_STORE_KEY, STORE_KEY} from './constants';
 import {API_NAMESPACE} from './constants';
+import {pluralModelName} from "./utils";
+import {isSchemaResponseOfModel} from "./model/validator";
+import {createEntityFactory} from "./model";
 
 /**
  * Resolver for the getRoute selector.
@@ -40,5 +43,21 @@ export function* getRoutes() {
 export function* getSchema(resourceName) {
 	const schemaResponse = yield apiFetch({path: `${API_NAMESPACE}/${resourceName}`, method: "OPTIONS"});
 	const schema = schemaResponse && schemaResponse.schema && schemaResponse.schema ? schemaResponse.schema : {};
-	yield receiveSchema(resourceName,schema)
+	yield receiveSchema(resourceName, schema)
+}
+
+export function* getModel(modelName) {
+	const resourceName = pluralModelName(modelName);
+	const response = yield apiFetch({path: `${API_NAMESPACE}/${resourceName}`, method: "OPTIONS"});
+	if (!isSchemaResponseOfModel(response, modelName)) {
+		return null;
+	}
+
+	const model = createEntityFactory(
+		modelName,
+		response.schema
+	);
+
+	yield receiveModel(modelName, model);
+	return model;
 }

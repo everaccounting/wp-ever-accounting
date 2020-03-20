@@ -11,7 +11,7 @@ import { hasInState } from '../utils';
  * Internal dependencies
  */
 import { API_NAMESPACE, STORE_KEY } from './constants';
-import {DEFAULT_EMPTY_ARRAY} from "../collections/constants";
+import {pluralModelName} from "./utils";
 
 /**
  * Returns the requested route for the given arguments.
@@ -96,6 +96,21 @@ export const getSchema = (state, resourceName) => {
 	return {}
 };
 
+/**
+ * Selector for returning the model entity object for a given
+ * model name from the state.
+ *
+ * @param {Object} state
+ * @param {string} modelName
+ * @return {Object} Returns the model entity or null if it doesn't
+ * exist.
+ */
+export const getModel = (state, modelName) => {
+	if(hasInState(state.models, [modelName])){
+		return state.models[modelName];
+	}
+	return null;
+};
 
 
 /**

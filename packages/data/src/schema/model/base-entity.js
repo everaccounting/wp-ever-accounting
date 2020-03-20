@@ -162,6 +162,7 @@ const createEntityFactory = ( modelName, schema, fieldPrefixes = [] ) => {
 		upperFirst( camelCase( modelName ) ),
 		BaseEntity
 	);
+	console.log(Entity);
 	return {
 		/**
 		 * Exposes modelName so client code can derive what model this factory

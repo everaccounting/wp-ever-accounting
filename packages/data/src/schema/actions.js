@@ -26,3 +26,11 @@ export function receiveSchema(resourceName, schema) {
 		schema
 	};
 }
+
+export function receiveModel(modelName, model) {
+	return {
+		type: types.RECEIVE_FACTORY_FOR_MODEL,
+		modelName,
+		model
+	};
+}

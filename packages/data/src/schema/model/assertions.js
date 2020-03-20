@@ -1,49 +1,19 @@
-/**
- * External imports
- */
 import { isUndefined } from 'lodash';
-import { sprintf } from '@eventespresso/i18n';
-import { InvalidSchema } from '@eventespresso/eejs';
-import { isSchema } from '@eventespresso/validators';
-import {
-	Money,
-	ServerDateTime as DateTime,
-} from '@eventespresso/value-objects';
+import {isSchema} from "./validator";
+import {InvalidSchema} from "./exceptions";
+import { sprintf } from '@wordpress/i18n';
+
 /**
  * Internal imports
  */
-import {
-	isDateTimeField,
-	isMoneyField,
-} from './booleans';
 import {
 	isShallowValidValueForField,
 	validateEnumType,
 	validateType,
 	validateTypeForField,
 } from './validators';
-import { maybeConvertFromValueObjectWithAssertions } from './extractors';
+import { maybeConvertFromValueObjectWithAssertions } from './exceptions';
 
-/**
- * Asserts whether the provided field value is a known value object.
- *
- * Note: this only asserts known value objects, if the value is not detected as
- * a known value object it is passed back as is.
- *
- * @param {string} fieldName
- * @param {*} fieldValue
- * @param {Object} schema
- * @throws InvalidDateTime
- * @throws TypeError
- */
-export const maybeAssertValueObject = ( fieldName, fieldValue, schema ) => {
-	if ( isDateTimeField( fieldName, schema ) ) {
-		DateTime.assertIsDateTime( fieldValue );
-	}
-	if ( isMoneyField( fieldName, schema ) ) {
-		Money.assertMoney( fieldValue );
-	}
-};
 
 /**
  * Asserts whether the provided object is a valid model schema object.

@@ -247,22 +247,22 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
 			'id'             => $item->id,
-			'account_id'     => $item->account_id,
+			'account_id'     => intval($item->account_id),
 			'account'        => eaccounting_get_account( $item->account_id ),
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
 			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
 			'currency'       => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
-			'contact_id'     => $item->contact_id,
+			'contact_id'     => intval($item->contact_id),
 			'description'    => $item->description,
 			'contact'        => eaccounting_get_contact( $item->contact_id ),
-			'category_id'    => $item->category_id,
+			'category_id'    => intval($item->category_id),
 			'category'       => eaccounting_get_category( $item->category_id ),
 			'payment_method' => $item->payment_method,
 			'reference'      => $item->reference,
 			'attachment_url' => $item->attachment_url,
-			'reconciled'     => $item->reconciled,
+			'reconciled'     => intval($item->reconciled),
 			'created_at'     => $this->prepare_date_response( $item->created_at ),
 			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -363,7 +363,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Contact', 'wp-ever-accounting' ),
+			'title'      => __( 'Payment', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'          => array(
@@ -409,7 +409,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				),
 				'contact_id'  => array(
 					'description' => __( 'Contact id of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
