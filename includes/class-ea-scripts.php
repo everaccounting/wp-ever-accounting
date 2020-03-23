@@ -44,8 +44,6 @@ class EAccounting_Scripts {
 		$app_dependencies  = require_once EACCOUNTING_ABSPATH . '/assets/dist/eaccounting.asset.php';
 		$comp_dependencies = require_once EACCOUNTING_ABSPATH . '/assets/dist/components.asset.php';
 		$data_dependencies = require_once EACCOUNTING_ABSPATH . '/assets/dist/data.asset.php';
-		$nav_dependencies = require_once EACCOUNTING_ABSPATH . '/assets/dist/navigation.asset.php';
-
 		wp_register_script(
 			'eaccounting-components',
 			self::get_url( 'components.js' ),
@@ -63,14 +61,6 @@ class EAccounting_Scripts {
 			true
 		);
 
-		wp_register_script(
-			'eaccounting-navigation',
-			self::get_url( 'navigation.js' ),
-			array_merge( $nav_dependencies['dependencies']),
-			$nav_dependencies['version'],
-			true
-		);
-		wp_set_script_translations( 'eaccounting-navigation', 'wp-ever-accounting' );
 
 		wp_register_script(
 			'eaccounting',

@@ -56,9 +56,6 @@ export const isSchemaResponseOfModel = ( response, modelName ) => {
  * name.
  */
 export const isSchemaOfModel = ( schema, modelName ) => {
-	// console.log(isSchema( schema ));
-	// console.log(! isUndefined( schema.title ));
-	// console.log(lowerCase( modelName ) === lowerCase( schema.title ));
 	return (
 		isSchema( schema ) &&
 		! isUndefined( schema.title ) &&

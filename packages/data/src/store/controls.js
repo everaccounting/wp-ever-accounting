@@ -1,7 +1,4 @@
 /**
- * External dependencies
- */
-/**
  * WordPress dependencies
  */
 import triggerFetch from '@wordpress/api-fetch';
@@ -14,9 +11,9 @@ import triggerFetch from '@wordpress/api-fetch';
  *
  * @return {Object} The control action descriptor.
  */
-export const apiFetchWithHeaders = path => {
+export const apiFetchCollection = path => {
 	return {
-		type: 'API_FETCH_WITH_HEADERS',
+		type: 'API_FETCH_COLLECTION',
 		path,
 	};
 };
@@ -28,7 +25,7 @@ export const apiFetchWithHeaders = path => {
  *                  the controls property of the registration object.
  */
 export const controls = {
-	API_FETCH_WITH_HEADERS({ path }) {
+	API_FETCH_COLLECTION({ path }) {
 		return new Promise((resolve, reject) => {
 			triggerFetch({ path, parse: false })
 				.then(response => {

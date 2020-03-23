@@ -2,7 +2,7 @@ import {routes} from './routes';
 import {Fragment, Component} from "@wordpress/element";
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import {NotificationContainer} from 'react-notifications';
-import { getHistory, getPath } from '@eaccounting/navigation';
+//todo add preloader
 class Page extends Component {
 	constructor(props) {
 		super(props);
@@ -21,7 +21,7 @@ class Page extends Component {
 const App = () => {
 	return (
 		<Fragment>
-			<Router history={getHistory()}>
+			<Router>
 				<Switch>
 					{routes.map(page => {
 						return (

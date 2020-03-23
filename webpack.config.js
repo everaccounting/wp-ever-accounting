@@ -9,7 +9,6 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
 const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
-const WebpackBundleSizeAnalyzerPlugin = require('webpack-bundle-size-analyzer').WebpackBundleSizeAnalyzerPlugin;
 
 const postcssPresetEnv = require('postcss-preset-env');
 const postcssFocus = require('postcss-focus');
@@ -24,8 +23,7 @@ const externals = [];
 const packages = [
 	'settings',
 	'components',
-	'data',
-	'navigation',
+	'data'
 ];
 const entryPoints = {};
 packages.forEach(name => {
@@ -37,7 +35,7 @@ packages.forEach(name => {
 
 module.exports = {
 	mode: NODE_ENV,
-	devtool: NODE_ENV === 'development' ? 'source-map' : false,
+	devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
 	entry: {
 		eaccounting: './client',
 		...entryPoints
@@ -78,7 +76,7 @@ module.exports = {
 			},
 			{
 				test: /\.s?css$/,
-				// exclude: /node_modules/,
+				exclude: /node_modules/,
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',
@@ -181,8 +179,7 @@ module.exports = {
 				flatten: true,
 				transform: content => content,
 			}))
-		),
-		new WebpackBundleSizeAnalyzerPlugin('./assets/dist/[name].txt'),
+		)
 	],
 	stats: {
 		all: false,
