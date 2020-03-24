@@ -21,7 +21,6 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const externals = [];
 
 const packages = [
-	'settings',
 	'components',
 	'data'
 ];
