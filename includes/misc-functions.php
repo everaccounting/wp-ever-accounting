@@ -2241,6 +2241,17 @@ function eaccounting_get_currencies_data() {
 }
 
 /**
+ * since 1.0.0
+ * @param string $currency
+ *
+ * @return mixed
+ */
+function eaccounting_get_currency_config($currency = 'USD'){
+	$data = eaccounting_get_currencies_data();
+	return array_key_exists($currency, $data)? $data[$currency]: $data['USD'];
+}
+
+/**
  * Get payment methods
  * since 1.0.0
  * @return array

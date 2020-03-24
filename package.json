@@ -44,10 +44,14 @@
 		"format": "wp-scripts format-js ./client"
 	},
 	"dependencies": {
+		"accounting-js": "^1.1.1",
 		"bootstrap-daterangepicker": "^3.0.5",
 		"cuid": "^2.1.8",
+		"decimal.js-light": "^2.5.0",
 		"immutable": "^4.0.0-rc.12",
 		"memorize": "0.0.4",
+		"moment-duration-format": "^2.3.2",
+		"moment-timezone": "^0.5.28",
 		"pluralize": "^8.0.0",
 		"react-currency-input": "^1.3.6",
 		"react-notifications": "^1.5.0-beta.0",

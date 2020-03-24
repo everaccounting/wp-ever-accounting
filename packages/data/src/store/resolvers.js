@@ -5,7 +5,7 @@ import {receiveCollection, receiveCollectionError} from "./actions";
 import {apiFetchCollection} from "./controls";
 import {addQueryArgs} from '@wordpress/url';
 import {pluralModelName} from "./utils";
-import {isSchemaResponseOfModel} from "../validators";
+import {isSchemaResponseOfModel} from "../data";
 import {createEntityFactory} from "../factory";
 import {receiveModel} from "./actions";
 

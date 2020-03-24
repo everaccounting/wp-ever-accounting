@@ -23,7 +23,7 @@ import {
 	isPrimaryKeyField,
 	isEntityField,
 } from './booleans';
-import { validateTypeForField } from '../validators';
+import { validateTypeForField } from '../data';
 import { VALIDATE_TYPE } from './constants';
 
 /**

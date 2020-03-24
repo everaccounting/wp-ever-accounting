@@ -1,7 +1,6 @@
 import {hasInState, getRouteFromResourceEntries, getFromState} from "./utils";
 import {STORE_KEY} from "./constants";
 import {createRegistrySelector, select} from '@wordpress/data';
-import {addQueryArgs} from '@wordpress/url';
 import {isEmpty} from "lodash";
 
 
@@ -214,9 +213,9 @@ export const getTotal = (state, resourceName, query = null, ids = []) => {
  * @param query
  * @param ids
  */
-export const getCollectionStatus = (state, resourceName, query = null, ids = []) => {
+export const getCollectionStatus = (state, resourceName, query = {}, ids = []) => {
 	const error = getCollectionError(state, resourceName, query, ids);
-	const args = [resourceName, query, ids].filter(arg => !isEmpty(arg));
+	const args = [resourceName, query];
 	const resolving = select(STORE_KEY).isResolving('getCollection', args);
 	let status;
 	if (!error && resolving === true) {

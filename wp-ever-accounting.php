@@ -162,6 +162,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/transaction-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/transfer-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/report-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/helper-functions.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
@@ -180,6 +181,7 @@ final class EverAccounting {
 		add_action( 'init', array( $this, 'init' ), 0 );
 		add_action( 'init', array( $this, 'localization_setup' ) );
 		add_action( 'init', array( $this, 'set_eaccounting_actions' ) );
+		add_action( 'init', 'eaccounting_register_initial_settings' );
 		add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
 		add_action( 'deactivated_plugin', array( $this, 'deactivated_plugin' ) );
 	}

@@ -41,61 +41,76 @@ class EAccounting_Scripts {
 	 */
 	public function register_scripts() {
 
-		$app_dependencies  = require_once EACCOUNTING_ABSPATH . '/assets/dist/eaccounting.asset.php';
-		$comp_dependencies = require_once EACCOUNTING_ABSPATH . '/assets/dist/components.asset.php';
-		$data_dependencies = require_once EACCOUNTING_ABSPATH . '/assets/dist/data.asset.php';
-		wp_register_script(
-			'eaccounting-components',
-			self::get_url( 'components.js' ),
-			$comp_dependencies['dependencies'],
-			self::get_file_version( 'components.js' ),
-			true
-		);
-		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
-
-		wp_register_script(
-			'eaccounting-data',
-			self::get_url( 'data.js' ),
-			array_merge( $data_dependencies['dependencies'] ),
-			self::get_file_version( 'data.js' ),
-			true
-		);
-
-
-		wp_register_script(
-			'eaccounting',
-			self::get_url( 'eaccounting.js' ),
-			array_merge( $app_dependencies['dependencies'], [ 'eaccounting-data' ] ),
-			self::get_file_version( 'eaccounting.js' ),
-			true
-		);
-		wp_set_script_translations( 'eaccounting', 'wp-ever-accounting' );
-
-
-
-		wp_register_style(
-			'eaccounting-components',
-			self::get_url( 'components.css' ),
-			array( 'wp-components' ),
-			self::get_file_version( 'components.css' )
-		);
-
-
-		wp_register_style(
-			'eaccounting',
-			self::get_url( 'eaccounting.css' ),
-			array( 'wp-components' ),
-			self::get_file_version( 'eaccounting.css' )
-		);
-
-		wp_enqueue_style(
-			'eaccounting-fontawesome',
-			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
-			array(),
-			self::get_file_version( 'app/style.css' )
-		);
+//		wp_register_script(
+//			'eaccounting-components',
+//			self::get_url( 'components.js' ),
+//			$comp_dependencies['dependencies'],
+//			self::get_file_version( 'components.js' ),
+//			true
+//		);
+//		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
+//
+//		wp_register_script(
+//			'eaccounting-data',
+//			self::get_url( 'data.js' ),
+//			array_merge( $data_dependencies['dependencies'] ),
+//			self::get_file_version( 'data.js' ),
+//			true
+//		);
+//
+//
+//		wp_register_script(
+//			'eaccounting',
+//			self::get_url( 'eaccounting.js' ),
+//			array_merge( $app_dependencies['dependencies'], [ 'eaccounting-data' ] ),
+//			self::get_file_version( 'eaccounting.js' ),
+//			true
+//		);
+//		wp_set_script_translations( 'eaccounting', 'wp-ever-accounting' );
+//
+//
+//		wp_register_style(
+//			'eaccounting-components',
+//			self::get_url( 'components.css' ),
+//			array( 'wp-components' ),
+//			self::get_file_version( 'components.css' )
+//		);
+//
+//
+//		wp_register_style(
+//			'eaccounting',
+//			self::get_url( 'eaccounting.css' ),
+//			array( 'wp-components' ),
+//			self::get_file_version( 'eaccounting.css' )
+//		);
+//
+//		wp_enqueue_style(
+//			'eaccounting-fontawesome',
+//			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
+//			array(),
+//			self::get_file_version( 'app/style.css' )
+//		);
 
 	}
+
+	/**
+	 * since 1.0.0
+	 * @param $file
+	 * @param $prop
+	 *
+	 * @return mixed|null
+	 */
+	public function get_asset_prop( $file, $prop ) {
+		$file_path = EACCOUNTING_ABSPATH . '/assets/dist/data.' . $file . '.php';
+		if ( file_exists( $file_path ) ) {
+			$props = require $file_path;
+
+			return $props[ $prop ];
+		}
+
+		return null;
+	}
+
 
 	/**
 	 * since 1.0.0
@@ -106,7 +121,7 @@ class EAccounting_Scripts {
 		if ( ! preg_match( '/accounting/', $hook ) ) {
 			return;
 		}
-		wp_localize_script( 'eaccounting', 'eAccountingi10n', $this->get_localized_data() );
+		wp_localize_script( 'eaccounting', 'eAccounting', $this->get_localized_data() );
 		wp_enqueue_script( 'eaccounting-components' );
 		wp_enqueue_script( 'eaccounting' );
 		wp_enqueue_style( 'eaccounting-components' );
@@ -165,13 +180,17 @@ class EAccounting_Scripts {
 			'baseUrl'       => get_site_url(),
 			'per_page'      => 20,
 			'data'          => [
-				'transactionTypes' => eaccounting_get_transaction_types(),
-				'currency'         => eaccounting_get_default_currency(),
-				'paymentMethods'   => eaccounting_get_payment_methods(),
-				'account'          => eaccounting_get_default_account(),
-				'currencies'       => eaccounting_get_currencies_data(),
-				'categoryTypes'    => eaccounting_get_category_types(),
-				'taxRateTypes'     => eaccounting_get_tax_types(),
+				'site_formats'    => array(
+					'date_formats' => eaccounting_convert_php_to_moment_formats()
+				),
+				'currency_config' => eaccounting_get_currency_config()
+//				'transactionTypes' => eaccounting_get_transaction_types(),
+//				'currency'         => eaccounting_get_default_currency(),
+//				'paymentMethods'   => eaccounting_get_payment_methods(),
+//				'account'          => eaccounting_get_default_account(),
+//				'currencies'       => eaccounting_get_currencies_data(),
+//				'categoryTypes'    => eaccounting_get_category_types(),
+//				'taxRateTypes'     => eaccounting_get_tax_types(),
 			]
 		];
 

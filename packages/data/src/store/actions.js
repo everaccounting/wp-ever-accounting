@@ -10,15 +10,17 @@ import {isArray, isEmpty} from 'lodash';
  * Action creator for setting a single query-state value for a given context.
  *
  * @param {string} context  Context for query state being stored.
- * @param {string} query Key for query item.
+ * @param {string} queryKey Key for query item.
+ * @param {*}      value    The value for the query item.
  *
  * @return {Object} The action object.
  */
-export const setQuery = (context, query) => {
+export const setQuery = (context, queryKey, value) => {
 	return {
 		type: types.SET_QUERY,
 		context,
-		query
+		queryKey,
+		value,
 	};
 };
 
@@ -26,15 +28,15 @@ export const setQuery = (context, query) => {
  * Action creator for setting query-state for a given context.
  *
  * @param {string} context Context for query state being stored.
- * @param {*}      query   Query state being stored for the given context.
+ * @param {*}      value   Query state being stored for the given context.
  *
  * @return {Object} The action object.
  */
-export const setContextQuery = (context, query) => {
+export const setContextQuery = (context, value) => {
 	return {
 		type: types.SET_CONTEXT_QUERY,
 		context,
-		query,
+		value,
 	};
 };
 

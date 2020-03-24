@@ -9,9 +9,10 @@ import {
 	validateEnumType,
 	validateType,
 	validateTypeForField,
-	isSchema
-} from '../validators';
-import {maybeConvertFromValueObjectWithAssertions, InvalidSchema} from '../exceptions';
+	isSchema,
+	maybeConvertFromValueObjectWithAssertions,
+	InvalidSchema
+} from '../data';
 
 
 /**

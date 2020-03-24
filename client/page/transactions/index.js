@@ -36,7 +36,6 @@ class Transactions extends Component {
 	render() {
 		const {status, total, items, query, selected} = this.props;
 		const {page = 1, orderby = 'paid_at', order = 'desc'} = query;
-
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
@@ -53,44 +52,44 @@ class Transactions extends Component {
 					selected={selected}
 					onChangePage={this.props.onPageChange}>
 
-					<DateFilter
-						className={'alignleft actions'}
-						onChange={date => this.props.onFilter({date})}/>
+				{/*	<DateFilter*/}
+				{/*		className={'alignleft actions'}*/}
+				{/*		onChange={date => this.props.onFilter({date})}/>*/}
 
-					<AccountControl
-						className={'alignleft actions'}
-						placeholder={__('Filter Account')}
-						isMulti
-						onChange={(accounts) => this.props.onFilter({account_id: map(accounts, 'id')})}
-					/>
+				{/*	<AccountControl*/}
+				{/*		className={'alignleft actions'}*/}
+				{/*		placeholder={__('Filter Account')}*/}
+				{/*		isMulti*/}
+				{/*		onChange={(accounts) => this.props.onFilter({account_id: map(accounts, 'id')})}*/}
+				{/*	/>*/}
 
-					<CategoryControl
-						className={'alignleft actions'}
-						placeholder={__('Filter Category')}
-						isMulti
-						type={['income', 'expense']}
-						onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}
-					/>
+				{/*	<CategoryControl*/}
+				{/*		className={'alignleft actions'}*/}
+				{/*		placeholder={__('Filter Category')}*/}
+				{/*		isMulti*/}
+				{/*		type={['income', 'expense']}*/}
+				{/*		onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}*/}
+				{/*	/>*/}
 
-					<SelectControl
-						className={'alignleft actions'}
-						placeholder={__('Filter Type')}
-						options={[
-							{
-								label: __('Income'),
-								value: 'income'
-							},
-							{
-								label: __('Expense'),
-								value: 'expense'
-							},
-							{
-								label: __('Transfer'),
-								value: 'transfer'
-							}
-						]}
-						isMulti
-						onChange={(types) => this.props.onFilter({type: map(types, 'value')})}/>
+				{/*	<SelectControl*/}
+				{/*		className={'alignleft actions'}*/}
+				{/*		placeholder={__('Filter Type')}*/}
+				{/*		options={[*/}
+				{/*			{*/}
+				{/*				label: __('Income'),*/}
+				{/*				value: 'income'*/}
+				{/*			},*/}
+				{/*			{*/}
+				{/*				label: __('Expense'),*/}
+				{/*				value: 'expense'*/}
+				{/*			},*/}
+				{/*			{*/}
+				{/*				label: __('Transfer'),*/}
+				{/*				value: 'transfer'*/}
+				{/*			}*/}
+				{/*		]}*/}
+				{/*		isMulti*/}
+				{/*		onChange={(types) => this.props.onFilter({type: map(types, 'value')})}/>*/}
 
 				</TableNav>
 

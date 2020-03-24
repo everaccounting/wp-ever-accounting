@@ -1,83 +1,176 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
-/**
- * Get settings from a section
- * since 1.0.0
- *
- * @param $section
- *
- * @return array
- */
-function eaccounting_get_section_settings( $section ) {
-	switch ( $section ) {
-		case 'ea_general_settings':
-			$site    = site_url();
-			$host    = parse_url( $site )['host'];
-			$default = [
-				'company_name'       => $host,
-				'company_phone'      => '',
-				'company_email'      => get_option( 'admin_email' ),
-				'company_address'    => '',
-				'company_tax_number' => '',
-				'company_logo'       => '',
-			];
-			break;
-		default:
-			$default = [];
+function eaccounting_register_setting( $option_group, $option_name, $args = array() ) {
+	global $eaccounting_settings;
+
+	$defaults = array(
+		'type'              => 'string',
+		'group'             => $option_group,
+		'description'       => '',
+		'sanitize_callback' => null,
+		'show_in_rest'      => false,
+	);
+
+	$args = apply_filters( 'eaccounting_register_setting_args', $args, $defaults, $option_group, $option_name );
+	$args = wp_parse_args( $args, $defaults );
+
+	if ( ! is_array( $eaccounting_settings ) ) {
+		$eaccounting_settings = array();
 	}
 
-	$settings = wp_parse_args( get_option( $section, [] ), $default );
+	if ( ! empty( $args['sanitize_callback'] ) ) {
+		add_filter( "eaccounting_sanitize_option_{$option_name}", $args['sanitize_callback'] );
+	}
+	if ( array_key_exists( 'default', $args ) ) {
+		add_filter( "eaccounting_default_option_{$option_name}", 'filter_default_option', 10, 3 );
+	}
 
-	return apply_filters( 'eaccounting_section_settings', $settings, $section );
+	$eaccounting_settings[ $option_name ] = $args;
 }
 
 /**
+ * Register default settings available in plugin.
+ *
  * since 1.0.0
+ */
+function eaccounting_register_initial_settings() {
+	eaccounting_register_setting(
+		'general',
+		'ea_company_name',
+		array(
+			'show_in_rest' => array(
+				'name' => 'ea_company_name',
+			),
+			'type'         => 'string',
+			'description'  => __( 'Company name.' ),
+			'default'      => site_url(),
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_phone',
+		array(
+			'show_in_rest' => array(
+				'name' => 'company_phone',
+			),
+			'type'         => 'string',
+			'description'  => __( 'Company phone.' ),
+			'default'      => '',
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_email',
+		array(
+			'show_in_rest' => array(
+				'name'   => 'company_email',
+				'schema' => array(
+					'format' => 'email',
+				),
+			),
+			'type'         => 'string',
+			'description'  => __( 'Company email.' ),
+			'default'      => get_option( 'admin_email' ),
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_date_format',
+		array(
+			'show_in_rest' => array(
+				'name'   => 'date_format',
+				'schema' => array(
+					'format' => 'date',
+				),
+			),
+			'type'         => 'string',
+			'default'      => get_option( 'date_format' ),
+			'description'  => __( 'A date format for all date strings.' ),
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_time_format',
+		array(
+			'show_in_rest' => array(
+				'name'   => 'time_format',
+				'schema' => array(
+					'format' => 'time',
+				),
+			),
+			'type'         => 'string',
+			'default'      => get_option( 'time_format' ),
+			'description'  => __( 'A time format for all time strings.' ),
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_start_of_week',
+		array(
+			'show_in_rest' => true,
+			'type'         => 'integer',
+			'default'      => get_option( 'start_of_week' ),
+			'description'  => __( 'A day number of the week that the week should start on.' ),
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_logo',
+		array(
+			'show_in_rest' => array(
+				'name'   => 'logo',
+				'schema' => array(
+					'format' => 'uri',
+				),
+			),
+			'type'         => 'string',
+			'description'  => __( 'Logo URL.' ),
+		)
+	);
+
+}
+
+
+/**
+ * Retrieves an array of registered settings.
  *
- * @param $settings
- * @param $section
- *
+ * since 1.0.0
  * @return array
  */
-function eaccounting_update_section_settings( $settings, $section ) {
-	$saved_settings  = eaccounting_get_section_settings( $section );
-	$merged_settings = wp_parse_args( $settings, $saved_settings );
+function eaccounting_get_registered_settings() {
+	global $eaccounting_settings;
 
-	update_option( $section, $merged_settings );
+	if ( ! is_array( $eaccounting_settings ) ) {
+		return array();
+	}
 
-	return $merged_settings;
+	return $eaccounting_settings;
 }
 
 /**
+ * Retrieve plugin settings
  * since 1.0.0
+ * @param $name
  *
- * @param $field
- * @param bool $default
- * @param string $section
- *
- * @return string
+ * @return bool|mixed|void
  */
-function eaccounting_get_settings( $field, $default = false, $section = 'ea_general_settings' ) {
-	$section_settings = eaccounting_get_section_settings( $section );
+function eaccounting_get_setting( $name ) {
+	$settings = eaccounting_get_registered_settings();
+	$name = ltrim($name, 'ea_');
+	$name = 'ea_'.$name;
+	if ( ! array_key_exists( $name, $settings ) ) {
+		return false;
+	}
 
-	return array_key_exists( $field, $section_settings ) && isset( $section_settings[ $field ] ) ? $section_settings[ $field ] : $default;
+	$setting = $settings[ $name ];
+	$default = isset( $setting['default'] ) ? $setting['default'] : false;
+
+	return get_option( $name, $default );
 }
-
-/**
- * since 1.0.0
- *
- * @param $field
- * @param $value
- * @param string $section
- *
- * @return array
- */
-function eaccounting_update_settings( $field, $value, $section = 'ea_general_settings' ) {
-	$section_settings           = eaccounting_get_section_settings( $section );
-	$section_settings[ $field ] = $value;
-
-	return eaccounting_update_section_settings( $section_settings, $section );
-}
-
-

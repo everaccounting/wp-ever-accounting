@@ -1,0 +1,389 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"X-Generator: babel-plugin-makepot\n"
+
+#: client/components/edit-category/index.js:36
+#: client/components/edit-currency/index.js:64
+#: client/components/edit-taxrate/index.js:61
+msgid "Name is required"
+msgstr ""
+
+#: client/components/edit-category/index.js:39
+#: client/components/edit-taxrate/index.js:64
+msgid "Type is required"
+msgstr ""
+
+#: client/components/edit-category/index.js:55
+msgid "Category saved"
+msgstr ""
+
+#: client/components/edit-category/index.js:65
+#: client/page/categories/index.js:61
+msgid "Add Category"
+msgstr ""
+
+#: client/components/edit-category/index.js:65
+#: client/components/edit-currency/index.js:95
+#: client/components/edit-taxrate/index.js:92
+msgid "Submit"
+msgstr ""
+
+#: client/components/edit-category/index.js:78
+msgid "Category Name"
+msgstr ""
+
+#: client/components/edit-category/index.js:85
+msgid "Category Type"
+msgstr ""
+
+#: client/components/edit-category/index.js:93
+#: client/page/categories/constants.js:24
+msgid "Color"
+msgstr ""
+
+#: client/components/edit-currency/index.js:14
+#: client/components/edit-taxrate/index.js:15
+#: client/page/categories/constants.js:14
+#: client/page/contacts/constants.js:14
+#: client/page/currencies/constants.js:14
+#: client/page/taxrates/constants.js:15
+msgid "Name"
+msgstr ""
+
+#: client/components/edit-currency/index.js:20
+#: client/page/currencies/constants.js:19
+msgid "Code"
+msgstr ""
+
+#: client/components/edit-currency/index.js:30
+#: client/components/edit-taxrate/index.js:21
+#: client/page/currencies/constants.js:24
+msgid "Rate"
+msgstr ""
+
+#: client/components/edit-currency/index.js:32
+#: client/components/edit-taxrate/index.js:23
+msgid "Enter Rate"
+msgstr ""
+
+#: client/components/edit-currency/index.js:34
+#: client/components/edit-taxrate/index.js:25
+msgid "Rate against default currency"
+msgstr ""
+
+#: client/components/edit-currency/index.js:67
+msgid "Code is required"
+msgstr ""
+
+#: client/components/edit-currency/index.js:70
+#: client/components/edit-taxrate/index.js:67
+msgid "Rate is required"
+msgstr ""
+
+#: client/components/edit-currency/index.js:86
+msgid "Currency saved"
+msgstr ""
+
+#: client/components/edit-currency/index.js:95
+#: client/components/edit-taxrate/index.js:92
+#: client/page/currencies/index.js:62
+msgid "Add Currency"
+msgstr ""
+
+#: client/components/edit-taxrate/index.js:28
+#: client/page/categories/constants.js:19
+#: client/page/taxrates/constants.js:25
+#: client/page/transactions/constants.js:24
+msgid "Type"
+msgstr ""
+
+#: client/components/edit-taxrate/index.js:83
+msgid "Tax rate saved"
+msgstr ""
+
+#: client/page/accounts/index.js:16
+#: client/page/banking/index.js:20
+msgid "Accounts"
+msgstr ""
+
+#: client/page/banking/index.js:25
+#: client/page/transfers/index.js:16
+msgid "Transfers"
+msgstr ""
+
+#: client/page/banking/index.js:30
+#: client/page/reconciliations/index.js:16
+msgid "Reconciliations"
+msgstr ""
+
+#: client/page/bills/index.js:16
+#: client/page/expenses/index.js:29
+msgid "Bills"
+msgstr ""
+
+#: client/page/categories/constants.js:29
+#: client/page/contacts/constants.js:29
+#: client/page/currencies/constants.js:29
+#: client/page/payments/constants.js:40
+#: client/page/revenues/constants.js:40
+#: client/page/taxrates/constants.js:30
+msgid "Actions"
+msgstr ""
+
+#: client/page/categories/constants.js:37
+#: client/page/categories/row.js:84
+#: client/page/contacts/constants.js:37
+#: client/page/contacts/row.js:72
+#: client/page/currencies/constants.js:37
+#: client/page/currencies/row.js:81
+#: client/page/payments/constants.js:48
+#: client/page/payments/row.js:86
+#: client/page/revenues/constants.js:48
+#: client/page/revenues/row.js:81
+#: client/page/taxrates/constants.js:38
+#: client/page/taxrates/row.js:82
+msgid "Delete"
+msgstr ""
+
+#: client/page/categories/index.js:58
+#: client/page/currencies/index.js:59
+#: client/page/taxrates/index.js:59
+msgid "Add"
+msgstr ""
+
+#: client/page/categories/index.js:76
+#: client/page/payments/index.js:67
+#: client/page/revenues/index.js:65
+#: client/page/transactions/index.js:69
+msgid "Filter Category"
+msgstr ""
+
+#: client/page/categories/row.js:60
+#: client/page/currencies/row.js:60
+#: client/page/taxrates/row.js:60
+msgid "Update"
+msgstr ""
+
+#: client/page/categories/row.js:61
+msgid "Update Category"
+msgstr ""
+
+#: client/page/categories/row.js:79
+#: client/page/contacts/row.js:67
+#: client/page/currencies/row.js:76
+#: client/page/payments/row.js:81
+#: client/page/revenues/row.js:76
+#: client/page/taxrates/row.js:77
+msgid "Edit"
+msgstr ""
+
+#: client/page/contacts/constants.js:19
+msgid "Email"
+msgstr ""
+
+#: client/page/contacts/constants.js:24
+msgid "Phone"
+msgstr ""
+
+#: client/page/contacts/index.js:35
+msgid "Contacts"
+msgstr ""
+
+#: client/page/contacts/index.js:36
+msgid "Add Contact"
+msgstr ""
+
+#: client/page/currencies/row.js:61
+msgid "Update Currency"
+msgstr ""
+
+#: client/page/dashboard/index.js:18
+msgid "Dashboard"
+msgstr ""
+
+#: client/page/expenses/index.js:24
+#: client/page/payments/index.js:38
+msgid "Payments"
+msgstr ""
+
+#: client/page/incomes/index.js:19
+#: client/page/revenues/index.js:36
+msgid "Revenues"
+msgstr ""
+
+#: client/page/incomes/index.js:24
+#: client/page/invoices/index.js:16
+msgid "Invoices"
+msgstr ""
+
+#: client/page/items/index.js:16
+msgid "Items"
+msgstr ""
+
+#: client/page/misc/index.js:21
+msgid "Categories"
+msgstr ""
+
+#: client/page/misc/index.js:26
+msgid "Currencies"
+msgstr ""
+
+#: client/page/misc/index.js:31
+msgid "Tax Rates"
+msgstr ""
+
+#: client/page/payments/constants.js:14
+#: client/page/revenues/constants.js:14
+#: client/page/transactions/constants.js:9
+msgid "Date"
+msgstr ""
+
+#: client/page/payments/constants.js:20
+#: client/page/revenues/constants.js:20
+#: client/page/transactions/constants.js:14
+msgid "Amount"
+msgstr ""
+
+#: client/page/payments/constants.js:25
+msgid "Vendor"
+msgstr ""
+
+#: client/page/payments/constants.js:30
+#: client/page/revenues/constants.js:25
+#: client/page/transactions/constants.js:29
+msgid "Category"
+msgstr ""
+
+#: client/page/payments/constants.js:35
+#: client/page/revenues/constants.js:30
+#: client/page/transactions/constants.js:19
+msgid "Account"
+msgstr ""
+
+#: client/page/payments/index.js:39
+#: client/page/revenues/index.js:37
+msgid "Add payment"
+msgstr ""
+
+#: client/page/payments/index.js:60
+#: client/page/revenues/index.js:58
+#: client/page/transactions/index.js:62
+msgid "Filter Account"
+msgstr ""
+
+#: client/page/reports/index.js:16
+msgid "Reports"
+msgstr ""
+
+#: client/page/revenues/constants.js:35
+msgid "Customer"
+msgstr ""
+
+#: client/page/taxrates/constants.js:20
+msgid "Rate %"
+msgstr ""
+
+#: client/page/taxrates/index.js:62
+msgid "Add Tax Rate"
+msgstr ""
+
+#: client/page/taxrates/row.js:61
+msgid "Update Tax Rate"
+msgstr ""
+
+#: client/page/transactions/constants.js:34
+msgid "Reference"
+msgstr ""
+
+#: client/page/transactions/index.js:42
+msgid "Transactions"
+msgstr ""
+
+#: client/page/transactions/index.js:77
+msgid "Filter Type"
+msgstr ""
+
+#: client/page/transactions/index.js:80
+msgid "Income"
+msgstr ""
+
+#: client/page/transactions/index.js:84
+msgid "Expense"
+msgstr ""
+
+#: client/page/transactions/index.js:88
+msgid "Transfer"
+msgstr ""
+
+#: packages/components/build-module/contact-control/index.js:70
+msgid "No items"
+msgstr ""
+
+#: packages/components/build-module/date-filter/index.js:92
+msgid "Select Date"
+msgstr ""
+
+#: packages/components/build-module/table/header/check-column.js:22
+msgid "Select All"
+msgstr ""
+
+#: packages/components/build-module/table/navigation-pages.js:120
+msgid "First page"
+msgstr ""
+
+#: packages/components/build-module/table/navigation-pages.js:126
+msgid "Prev page"
+msgstr ""
+
+#: packages/components/build-module/table/navigation-pages.js:136
+msgid "Current Page"
+msgstr ""
+
+#: packages/components/build-module/table/navigation-pages.js:149
+msgid "of %d page"
+msgid_plural "of %d pages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: packages/components/build-module/table/navigation-pages.js:150
+msgid "Next page"
+msgstr ""
+
+#: packages/components/build-module/table/navigation-pages.js:156
+msgid "Last page"
+msgstr ""
+
+#: packages/components/build-module/table/navigation-pages.js:195
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#: packages/components/build-module/table/row/empty-row.js:17
+msgid "No results"
+msgstr ""
+
+#: packages/components/build-module/table/row/failed-row.js:18
+msgid "Sorry, something went wrong loading the data - please try again"
+msgstr ""
+
+#: packages/components/build-module/table/searchbox.js:73
+msgid "Search"
+msgstr ""
+
+#: packages/components/build-module/table/table-nav.js:71
+msgid "Select bulk action"
+msgstr ""
+
+#: packages/components/build-module/table/table-nav.js:79
+msgid "Bulk Actions"
+msgstr ""
+
+#: packages/components/build-module/table/table-nav.js:88
+msgid "Apply"
+msgstr ""
+
+#: packages/components/build-module/with-table/index.js:70
+msgid "Are you sure you want to delete the items?"
+msgstr ""

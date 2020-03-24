@@ -3,7 +3,7 @@ import {combineReducers} from '@wordpress/data';
 import {isEmpty} from "lodash";
 import {extractResourceNameFromRoute, getRouteIds, simplifyRouteWithId} from './utils';
 import {API_NAMESPACE} from "./constants";
-import {hasInState, updateState} from "../utils";
+import {hasInState, updateState} from "./utils";
 
 /**
  * Reducer for processing actions related to the query state store.
@@ -12,19 +12,17 @@ import {hasInState, updateState} from "../utils";
  * @param {Object} action Action being processed.
  */
 export const queryReducer = (state = {}, action) => {
-	const {type, context, query = {}} = action;
-	const queryKey = Object.keys(query)[0];
-	const queryValue = Object.values(query)[0];
+	const {type, context, queryKey, value } = action;
 	const prevState = typeof state[context] === 'undefined' ? null : state[context];
 
 	let newState;
 	switch (type) {
 		case types.SET_QUERY:
 			const prevStateObject = prevState !== null ? JSON.parse(prevState) : {};
-			if (isEmpty(queryValue)) {
+			if (isEmpty(value)) {
 				delete prevStateObject[queryKey];
 			} else {
-				prevStateObject[queryKey] = queryValue;
+				prevStateObject[queryKey] = value;
 			}
 			newState = JSON.stringify(prevStateObject);
 			if (prevState !== newState) {
@@ -32,7 +30,7 @@ export const queryReducer = (state = {}, action) => {
 			}
 			break;
 		case types.SET_CONTEXT_QUERY:
-			newState = JSON.stringify(queryValue);
+			newState = JSON.stringify(value);
 			if (prevState !== newState) {
 				state = {...state, [context]: newState};
 			}

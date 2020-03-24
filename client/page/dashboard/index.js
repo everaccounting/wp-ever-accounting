@@ -27,12 +27,11 @@ class Dashboard extends Component {
 }
 
 export default withSelect((select) => {
-	const {getCollection, getTotal, getStatus} = select('ea/store');
+	const {getCollection, getTotal, getCollectionStatus} = select('ea/store');
 	const query = {page: 2};
-	getStatus('contacts', query);
 	return {
 		items: getCollection('contacts', query),
 		total: getTotal('contacts', query),
-		status: getStatus('contacts', query),
+		status: getCollectionStatus('contacts', query),
 	}
 })(Dashboard)
