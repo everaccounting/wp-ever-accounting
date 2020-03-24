@@ -40,7 +40,7 @@ function eaccounting_register_initial_settings() {
 		'ea_company_name',
 		array(
 			'show_in_rest' => array(
-				'name' => 'ea_company_name',
+				'name' => 'company_name',
 			),
 			'type'         => 'string',
 			'description'  => __( 'Company name.' ),
@@ -113,7 +113,12 @@ function eaccounting_register_initial_settings() {
 		'general',
 		'ea_start_of_week',
 		array(
-			'show_in_rest' => true,
+			'show_in_rest' => array(
+				'name'   => 'start_of_week',
+				'schema' => array(
+					'format' => 'string',
+				),
+			),
 			'type'         => 'integer',
 			'default'      => get_option( 'start_of_week' ),
 			'description'  => __( 'A day number of the week that the week should start on.' ),
@@ -131,6 +136,7 @@ function eaccounting_register_initial_settings() {
 				),
 			),
 			'type'         => 'string',
+			'default'      => '',
 			'description'  => __( 'Logo URL.' ),
 		)
 	);
@@ -157,14 +163,15 @@ function eaccounting_get_registered_settings() {
 /**
  * Retrieve plugin settings
  * since 1.0.0
+ *
  * @param $name
  *
  * @return bool|mixed|void
  */
 function eaccounting_get_setting( $name ) {
 	$settings = eaccounting_get_registered_settings();
-	$name = ltrim($name, 'ea_');
-	$name = 'ea_'.$name;
+	$name     = ltrim( $name, 'ea_' );
+	$name     = 'ea_' . $name;
 	if ( ! array_key_exists( $name, $settings ) ) {
 		return false;
 	}

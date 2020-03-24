@@ -24,7 +24,7 @@ class ContactTypesControl extends Component {
 
 export default withSelect(select => {
 	return {
-		options: select('ea/store/collections').getCollection('contacts/types')
+		options: select('ea/store').getCollection('contacts/types')
 	}
 })(ContactTypesControl)
 

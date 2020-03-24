@@ -24,7 +24,7 @@ class CategoryTypesControl extends Component {
 
 export default withSelect(select => {
 	return {
-		options: select('ea/store/collections').getCollection('categories/types')
+		options: select('ea/store').getCollection('categories/types')
 	}
 })(CategoryTypesControl)
 

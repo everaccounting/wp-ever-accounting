@@ -1,6 +1,9 @@
 import {isUndefined} from 'lodash';
 import {sprintf} from '@wordpress/i18n';
-
+import {
+	isDateTimeField,
+	isMoneyField,
+} from './booleans';
 /**
  * Internal imports
  */
@@ -9,11 +12,10 @@ import {
 	validateEnumType,
 	validateType,
 	validateTypeForField,
-	isSchema,
-	maybeConvertFromValueObjectWithAssertions,
-	InvalidSchema
-} from '../data';
-
+} from './validators';
+import { maybeConvertFromValueObjectWithAssertions } from './extractors';
+import { InvalidSchema } from '../exceptions';
+import { isSchema } from '../validators';
 
 /**
  * Asserts whether the provided object is a valid model schema object.

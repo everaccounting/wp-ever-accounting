@@ -9,6 +9,8 @@ import {
 	DateFilter,
 	withTable,
 } from "@eaccounting/components"
+import {data} from "@eaccounting/data";
+
 import {getHeaders} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
@@ -34,6 +36,7 @@ class Transactions extends Component {
 	};
 
 	render() {
+		console.log(data);
 		const {status, total, items, query, selected} = this.props;
 		const {page = 1, orderby = 'paid_at', order = 'desc'} = query;
 		return (
@@ -56,20 +59,20 @@ class Transactions extends Component {
 				{/*		className={'alignleft actions'}*/}
 				{/*		onChange={date => this.props.onFilter({date})}/>*/}
 
-				{/*	<AccountControl*/}
-				{/*		className={'alignleft actions'}*/}
-				{/*		placeholder={__('Filter Account')}*/}
-				{/*		isMulti*/}
-				{/*		onChange={(accounts) => this.props.onFilter({account_id: map(accounts, 'id')})}*/}
-				{/*	/>*/}
+					<AccountControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Account')}
+						isMulti
+						onChange={(accounts) => this.props.onFilter({account_id: map(accounts, 'id')})}
+					/>
 
-				{/*	<CategoryControl*/}
-				{/*		className={'alignleft actions'}*/}
-				{/*		placeholder={__('Filter Category')}*/}
-				{/*		isMulti*/}
-				{/*		type={['income', 'expense']}*/}
-				{/*		onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}*/}
-				{/*	/>*/}
+					<CategoryControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Category')}
+						isMulti
+						type={['income', 'expense']}
+						onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}
+					/>
 
 				{/*	<SelectControl*/}
 				{/*		className={'alignleft actions'}*/}

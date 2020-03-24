@@ -40,57 +40,54 @@ class EAccounting_Scripts {
 	 * @param $hook
 	 */
 	public function register_scripts() {
+		//scripts
+		wp_register_script(
+			'eaccounting-components',
+			self::get_url( 'components.js' ),
+			self::get_asset_prop( 'components', 'dependencies' ),
+			self::get_asset_prop( 'components', 'version' ),
+			true
+		);
+		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
 
-//		wp_register_script(
-//			'eaccounting-components',
-//			self::get_url( 'components.js' ),
-//			$comp_dependencies['dependencies'],
-//			self::get_file_version( 'components.js' ),
-//			true
-//		);
-//		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
-//
-//		wp_register_script(
-//			'eaccounting-data',
-//			self::get_url( 'data.js' ),
-//			array_merge( $data_dependencies['dependencies'] ),
-//			self::get_file_version( 'data.js' ),
-//			true
-//		);
-//
-//
-//		wp_register_script(
-//			'eaccounting',
-//			self::get_url( 'eaccounting.js' ),
-//			array_merge( $app_dependencies['dependencies'], [ 'eaccounting-data' ] ),
-//			self::get_file_version( 'eaccounting.js' ),
-//			true
-//		);
-//		wp_set_script_translations( 'eaccounting', 'wp-ever-accounting' );
-//
-//
-//		wp_register_style(
-//			'eaccounting-components',
-//			self::get_url( 'components.css' ),
-//			array( 'wp-components' ),
-//			self::get_file_version( 'components.css' )
-//		);
-//
-//
-//		wp_register_style(
-//			'eaccounting',
-//			self::get_url( 'eaccounting.css' ),
-//			array( 'wp-components' ),
-//			self::get_file_version( 'eaccounting.css' )
-//		);
-//
-//		wp_enqueue_style(
-//			'eaccounting-fontawesome',
-//			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
-//			array(),
-//			self::get_file_version( 'app/style.css' )
-//		);
+		wp_register_script(
+			'eaccounting-data',
+			self::get_url( 'data.js' ),
+			self::get_asset_prop( 'data', 'dependencies' ),
+			self::get_asset_prop( 'data', 'version' ),
+			true
+		);
+		wp_set_script_translations( 'eaccounting-data', 'wp-ever-accounting' );
 
+		wp_register_script(
+			'eaccounting',
+			self::get_url( 'eaccounting.js' ),
+			array_merge( self::get_asset_prop( 'data', 'dependencies' ), [ 'eaccounting-data', 'eaccounting-components' ] ),
+			self::get_asset_prop( 'data', 'version' ),
+			true
+		);
+		wp_set_script_translations( 'eaccounting', 'wp-ever-accounting' );
+
+		wp_register_style(
+			'eaccounting-components',
+			self::get_url( 'components.css' ),
+			array( 'wp-components' ),
+			self::get_asset_prop( 'components', 'version' )
+		);
+
+		wp_register_style(
+			'eaccounting',
+			self::get_url( 'eaccounting.css' ),
+			array( 'wp-components' ),
+			self::get_asset_prop( 'eaccounting', 'version' )
+		);
+
+		wp_enqueue_style(
+			'eaccounting-fontawesome',
+			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
+			array(),
+			self::get_asset_prop( 'eaccounting', 'version' )
+		);
 	}
 
 	/**
@@ -98,17 +95,17 @@ class EAccounting_Scripts {
 	 * @param $file
 	 * @param $prop
 	 *
-	 * @return mixed|null
+	 * @return mixed
 	 */
-	public function get_asset_prop( $file, $prop ) {
-		$file_path = EACCOUNTING_ABSPATH . '/assets/dist/data.' . $file . '.php';
-		if ( file_exists( $file_path ) ) {
+	public static function get_asset_prop( $file, $prop ) {
+		$file_path = EACCOUNTING_ABSPATH . '/assets/dist/' . $file . '.asset.php';
+		try {
 			$props = require $file_path;
 
 			return $props[ $prop ];
+		} catch ( Exception $exception ) {
+			wp_die( $exception );
 		}
-
-		return null;
 	}
 
 
@@ -121,20 +118,11 @@ class EAccounting_Scripts {
 		if ( ! preg_match( '/accounting/', $hook ) ) {
 			return;
 		}
+
 		wp_localize_script( 'eaccounting', 'eAccounting', $this->get_localized_data() );
-		wp_enqueue_script( 'eaccounting-components' );
 		wp_enqueue_script( 'eaccounting' );
 		wp_enqueue_style( 'eaccounting-components' );
 		wp_enqueue_style( 'eaccounting' );
-	}
-
-	/**
-	 * Gets the path for the asset depending on file type.
-	 *
-	 * @return string Folder path of asset.
-	 */
-	private static function get_path() {
-		return '/assets/dist/';
 	}
 
 	/**
@@ -145,23 +133,7 @@ class EAccounting_Scripts {
 	 * @return string URL to asset.
 	 */
 	public static function get_url( $file ) {
-		return plugins_url( self::get_path() . $file, EACCOUNTING_PLUGIN_FILE );
-	}
-
-	/**
-	 * Gets the file modified time as a cache buster if we're in dev mode, or the plugin version otherwise.
-	 *
-	 * @param $file string path to the file.
-	 *
-	 * @return string
-	 * @since 1.0.2
-	 */
-	public static function get_file_version( $file ) {
-		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
-			return filemtime( EACCOUNTING_PLUGIN_FILE );
-		}
-
-		return EACCOUNTING_VERSION;
+		return plugins_url( '/assets/dist/' . $file, EACCOUNTING_PLUGIN_FILE );
 	}
 
 

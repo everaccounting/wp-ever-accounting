@@ -19,11 +19,7 @@ export const queryReducer = (state = {}, action) => {
 	switch (type) {
 		case types.SET_QUERY:
 			const prevStateObject = prevState !== null ? JSON.parse(prevState) : {};
-			if (isEmpty(value)) {
-				delete prevStateObject[queryKey];
-			} else {
-				prevStateObject[queryKey] = value;
-			}
+			prevStateObject[queryKey] = value;
 			newState = JSON.stringify(prevStateObject);
 			if (prevState !== newState) {
 				state = {...state, [context]: newState};

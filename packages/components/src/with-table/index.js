@@ -46,8 +46,8 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 				this._Mounted = false;
 			}
 
-			setQuery = (query) => {
-				this.props.setQuery(resourceName, query);
+			setQuery = (queryKey, queryValue) => {
+				this.props.setQuery(resourceName, queryKey, queryValue);
 			};
 
 			onSelected = id => {
@@ -77,11 +77,16 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 					selected:[]
 				});
 			};
-			
+
 			setPageChange = page => {
-				this.setQuery(resourceName, 'page', page);
+				console.log(page);
+				this.setQuery( 'page', page);
 			};
 
+			/**
+			 * When search need to reset all queries so calling directly
+			 * @param search
+			 */
 			setSearch = search => {
 				this.props.setQuery(resourceName, 'search', search);
 			};
@@ -129,13 +134,15 @@ function withTable(resourceName, defaultQuery = { orderby: 'id' }) {
 					),
 					defaultQuery.orderby
 				)||{};
+
+
 				const { page = 1 } = query;
 				return {
 					items: getCollection(resourceName, query),
 					total: parseInt(getTotal(resourceName, query), 10),
 					status:getCollectionStatus(resourceName, query),
 					page:page,
-					query:getQuery,
+					query:query,
 				};
 			}),
 

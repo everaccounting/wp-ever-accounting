@@ -61,6 +61,6 @@ class ContactControl extends Component {
 }
 export default withSelect(select => {
 	return {
-		defaultOptions: select('ea/store/collections').getCollection('contacts')
+		defaultOptions: select('ea/store').getCollection('contacts')
 	}
 })(ContactControl)

@@ -57,6 +57,6 @@ class CategoryControl extends Component {
 
 export default withSelect(select => {
 	return {
-		defaultOptions: select('ea/store/collections').getCollection('categories')
+		defaultOptions: select('ea/store').getCollection('categories')
 	}
 })(CategoryControl)

@@ -4,8 +4,6 @@
 /**
  * WordPress dependencies
  */
-import '@wordpress/notices';
-
 /**
  * Internal dependencies
  */
@@ -15,7 +13,7 @@ export const API_NAMESPACE = '/ea/v1';
 //Store key
 export {STORE_KEY} from "./store";
 //factory
-export * from './factory';
+export * from './model';
 //helpers
 export * from './helpers';
 //locale

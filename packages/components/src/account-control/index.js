@@ -44,6 +44,6 @@ class AccountControl extends Component {
 
 export default withSelect(select => {
 	return {
-		defaultOptions: select('ea/store/collections').getCollection('accounts')
+		defaultOptions: select('ea/store').getCollection('accounts')
 	}
 })(AccountControl)

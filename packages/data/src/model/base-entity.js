@@ -159,7 +159,7 @@ const nameClass = ( name, extendedClass ) => {
  */
 const createEntityFactory = ( modelName, schema, fieldPrefixes = [] ) => {
 	const Entity = nameClass(
-		upperFirst( camelCase( modelName ) ),
+		upperFirst( camelCase( modelName.replace('\W', '') ) ),
 		BaseEntity
 	);
 	return {

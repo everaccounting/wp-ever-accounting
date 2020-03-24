@@ -5,8 +5,8 @@ import {receiveCollection, receiveCollectionError} from "./actions";
 import {apiFetchCollection} from "./controls";
 import {addQueryArgs} from '@wordpress/url';
 import {pluralModelName} from "./utils";
-import {isSchemaResponseOfModel} from "../data";
-import {createEntityFactory} from "../factory";
+import {isSchemaResponseOfModel} from "../validators";
+import {createEntityFactory} from "../model";
 import {receiveModel} from "./actions";
 
 /**
@@ -116,4 +116,16 @@ export function* getModel(modelName) {
 
 	yield receiveModel(modelName, model);
 	return model;
+}
+
+
+/**
+ * Resolver for get model Status
+ *
+ * @param modelName
+ * @returns {Generator<*, void, ?>}
+ */
+export function* getModelStatus(modelName) {
+	const args = [modelName];
+	yield select(STORE_KEY, 'getModel', ...args);
 }

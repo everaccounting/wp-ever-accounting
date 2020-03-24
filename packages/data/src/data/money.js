@@ -4,9 +4,9 @@
 import { Decimal } from 'decimal.js-light';
 import * as Accounting from 'accounting-js';
 import isShallowEqual from '@wordpress/is-shallow-equal';
-import { Exception } from './exceptions';
+import { Exception } from '../exceptions';
 import { isEmpty } from 'lodash';
-import { instanceOf } from './validators';
+import { instanceOf } from '../validators';
 import { sprintf } from '@wordpress/i18n';
 
 /**

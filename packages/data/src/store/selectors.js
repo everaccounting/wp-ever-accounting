@@ -246,3 +246,21 @@ export const getModel = (state, modelName) => {
 	}
 	return null;
 };
+
+/**
+ * getModel status
+ * @param state
+ * @param modelName
+ * @returns {string}
+ */
+export const getModelStatus = (state, modelName) => {
+	const args = [modelName];
+	const resolving = select(STORE_KEY).isResolving('getModel', args);
+	let status;
+	if (resolving === true) {
+		status = "STATUS_IN_PROGRESS";
+	} else {
+		status = "STATUS_COMPLETE"
+	}
+	return status;
+};

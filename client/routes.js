@@ -8,7 +8,7 @@ import Items from './page/items';
 import Banking from './page/banking';
 import Reports from './page/reports';
 import Misc from './page/misc';
-// import Settings from './page/settings';
+import Settings from './page/settings';
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
@@ -89,14 +89,10 @@ export const routes = [
 		container: Reports,
 		path: '/reports/',
 	},
-	// {
-	// 	container: Settings,
-	// 	path: '/settings/:tab',
-	// },
-	// {
-	// 	container: Settings,
-	// 	path: '/settings/',
-	// },
+	{
+		container: Settings,
+		path: '/settings/',
+	},
 ];
 
 export default applyFilters(PAGES_FILTER, routes);
