@@ -29,8 +29,23 @@ class EAccounting_Scripts {
 	 * EAccounting_Scripts constructor.
 	 */
 	private function __construct() {
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'init', array( __CLASS__, 'register_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
+	}
+
+	/**
+	 * Register scripts & styles.
+	 *
+	 * @since 1.0.0
+	 * Moved data related enqueuing to new AssetDataRegistry class
+	 * as part of ongoing refactoring.
+	 */
+	public static function register_assets() {
+		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array() );
+		$client_dependencies = array();
+
+		self::register_script( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client' ), __DIR__ ), $client_dependencies );
+
 	}
 
 
@@ -39,137 +54,91 @@ class EAccounting_Scripts {
 	 *
 	 * @param $hook
 	 */
-	public function register_scripts() {
-		//scripts
-		wp_register_script(
-			'eaccounting-components',
-			self::get_url( 'components.js' ),
-			self::get_asset_prop( 'components', 'dependencies' ),
-			self::get_asset_prop( 'components', 'version' ),
-			true
-		);
-		wp_set_script_translations( 'eaccounting-components', 'wp-ever-accounting' );
-
-		wp_register_script(
-			'eaccounting-data',
-			self::get_url( 'data.js' ),
-			self::get_asset_prop( 'data', 'dependencies' ),
-			self::get_asset_prop( 'data', 'version' ),
-			true
-		);
-		wp_set_script_translations( 'eaccounting-data', 'wp-ever-accounting' );
-
-		wp_register_script(
-			'eaccounting',
-			self::get_url( 'eaccounting.js' ),
-			array_merge( self::get_asset_prop( 'data', 'dependencies' ), [ 'eaccounting-data', 'eaccounting-components' ] ),
-			self::get_asset_prop( 'data', 'version' ),
-			true
-		);
-		wp_set_script_translations( 'eaccounting', 'wp-ever-accounting' );
-
-		wp_register_style(
-			'eaccounting-components',
-			self::get_url( 'components.css' ),
-			array( 'wp-components' ),
-			self::get_asset_prop( 'components', 'version' )
-		);
-
-		wp_register_style(
-			'eaccounting',
-			self::get_url( 'eaccounting.css' ),
-			array( 'wp-components' ),
-			self::get_asset_prop( 'eaccounting', 'version' )
-		);
-
-		wp_enqueue_style(
-			'eaccounting-fontawesome',
-			EACCOUNTING_ASSETS_URL . '/vendor/font-awesome/css/font-awesome.css',
-			array(),
-			self::get_asset_prop( 'eaccounting', 'version' )
-		);
-	}
-
-	/**
-	 * since 1.0.0
-	 * @param $file
-	 * @param $prop
-	 *
-	 * @return mixed
-	 */
-	public static function get_asset_prop( $file, $prop ) {
-		$file_path = EACCOUNTING_ABSPATH . '/assets/dist/' . $file . '.asset.php';
-		try {
-			$props = require $file_path;
-
-			return $props[ $prop ];
-		} catch ( Exception $exception ) {
-			wp_die( $exception );
-		}
-	}
-
-
-	/**
-	 * since 1.0.0
-	 *
-	 * @param $hook
-	 */
-	public function enqueue_scripts( $hook ) {
+	public static function enqueue_scripts( $hook ) {
 		if ( ! preg_match( '/accounting/', $hook ) ) {
 			return;
 		}
 
-		wp_localize_script( 'eaccounting', 'eAccounting', $this->get_localized_data() );
-		wp_enqueue_script( 'eaccounting' );
-		wp_enqueue_style( 'eaccounting-components' );
-		wp_enqueue_style( 'eaccounting' );
+		wp_enqueue_script( 'ea-client' );
+		wp_enqueue_style( 'ea-client' );
 	}
 
 	/**
-	 * Gets the URL to an asset file.
+	 * Registers a style according to `wp_register_style`.
 	 *
-	 * @param string $file name.
+	 * @param string $handle Name of the stylesheet. Should be unique.
+	 * @param string $src Full URL of the stylesheet, or path of the stylesheet relative to the WordPress root directory.
+	 * @param array $deps Optional. An array of registered stylesheet handles this stylesheet depends on. Default empty array.
+	 * @param string $media Optional. The media for which this stylesheet has been defined. Default 'all'. Accepts media types like
+	 *                       'all', 'print' and 'screen', or media queries like '(orientation: portrait)' and '(max-width: 640px)'.
 	 *
-	 * @return string URL to asset.
+	 * @since 1.0.0
+	 *
 	 */
-	public static function get_url( $file ) {
-		return plugins_url( '/assets/dist/' . $file, EACCOUNTING_PLUGIN_FILE );
+	protected static function register_style( $handle, $src, $deps = [], $media = 'all' ) {
+		$filename = str_replace( plugins_url( '/', __DIR__ ), '', $src );
+		$ver      = self::get_file_version( $filename );
+		wp_register_style( $handle, $src, $deps, $ver, $media );
+	}
+
+	/**
+	 * Registers a script according to `wp_register_script`, additionally loading the translations for the file.
+	 *
+	 * @param string $handle Name of the script. Should be unique.
+	 * @param string $src Full URL of the script, or path of the script relative to the WordPress root directory.
+	 * @param array $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
+	 * @param bool $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
+	 *
+	 * @since 1.0.0
+	 *
+	 */
+	protected static function register_script( $handle, $src, $dependencies = [], $has_i18n = true ) {
+		$relative_src = str_replace( plugins_url( '/', __DIR__ ), '', $src );
+		$asset_path   = dirname( __DIR__ ) . '/' . str_replace( '.js', '.asset.php', $relative_src );
+
+		if ( file_exists( $asset_path ) ) {
+			$asset        = require $asset_path;
+			$dependencies = isset( $asset['dependencies'] ) ? array_merge( $asset['dependencies'], $dependencies ) : $dependencies;
+			$version      = ! empty( $asset['version'] ) ? $asset['version'] : self::get_file_version( $relative_src );
+		} else {
+			$version = self::get_file_version( $relative_src );
+		}
+
+		wp_register_script( $handle, $src, $dependencies, $version, true );
+
+		if ( $has_i18n && function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( $handle, 'wp-ever-accounting', dirname( __DIR__ ) . '/languages' );
+		}
+	}
+
+	/**
+	 * Get the file modified time as a cache buster if we're in dev mode.
+	 *
+	 * @param string $file Local path to the file.
+	 *
+	 * @return string The cache buster value to use for the given file.
+	 */
+	protected static function get_file_version( $file ) {
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			return time();
+		}
+
+		return eaccounting()->version;
 	}
 
 
 	/**
-	 * since 1.0.0
-	 * @return mixed|void
+	 * Returns the appropriate asset path for loading either legacy builds or
+	 * current builds.
+	 *
+	 * @param string $filename Filename for asset path (without extension).
+	 * @param string $type File type (.css or .js).
+	 *
+	 * @return  string             The generated path.
 	 */
-	private function get_localized_data() {
-		$data = [
-			'api'           => [
-				'WP_API_root'  => esc_url_raw( get_rest_url() ),
-				'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
-			],
-			'pluginBaseUrl' => plugins_url( '', EACCOUNTING_PLUGIN_FILE ),
-			'pluginRoot'    => admin_url( 'admin.php?page=eaccounting' ),
-			'baseUrl'       => get_site_url(),
-			'per_page'      => 20,
-			'data'          => [
-				'site_formats'    => array(
-					'date_formats' => eaccounting_convert_php_to_moment_formats()
-				),
-				'currency_config' => eaccounting_get_currency_config()
-//				'transactionTypes' => eaccounting_get_transaction_types(),
-//				'currency'         => eaccounting_get_default_currency(),
-//				'paymentMethods'   => eaccounting_get_payment_methods(),
-//				'account'          => eaccounting_get_default_account(),
-//				'currencies'       => eaccounting_get_currencies_data(),
-//				'categoryTypes'    => eaccounting_get_category_types(),
-//				'taxRateTypes'     => eaccounting_get_tax_types(),
-			]
-		];
-
-
-		return apply_filters( 'eaccounting_localized_data', $data );
+	protected static function get_block_asset_dist_path( $filename, $type = 'js' ) {
+		return "assets/dist/$filename.$type";
 	}
-
 }
 
 EAccounting_Scripts::instance();

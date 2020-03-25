@@ -36,7 +36,7 @@ module.exports = {
 	mode: NODE_ENV,
 	devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
 	entry: {
-		eaccounting: './client',
+		client: './client',
 		...entryPoints
 	},
 	output: {
