@@ -1,7 +1,7 @@
 {
-	"name": "@eaccounting/data",
+	"name": "@eaccounting/hoc",
 	"version": "0.0.1",
-	"description": "Data package for Ever Accounting.",
+	"description": "Higher order components package for Ever Accounting.",
 	"author": "Pluginever",
 	"license": "GPL-3.0-or-later",
 	"homepage": "https://github.com/",
