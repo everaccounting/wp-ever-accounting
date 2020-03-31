@@ -12,17 +12,16 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import * as resolvers from './resolvers';
 import controls from '../base-controls';
-import * as actionGenerators from './action-generators';
 
 
 /**
- * Registers the store for the 'ea/lists` reducer.
+ * Registers the store for the 'ea/collection` reducer.
  */
 export default registerStore(REDUCER_KEY, {
 	reducer,
-	actions: {...actions, ...actionGenerators},
-	selectors: selectors,
-	resolvers: resolvers,
+	actions,
+	selectors,
+	resolvers,
 	controls,
 });
 

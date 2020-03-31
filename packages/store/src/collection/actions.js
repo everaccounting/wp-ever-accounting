@@ -1,13 +1,7 @@
-/**
- * External imports
- */
-
-/**
- * Internal imports
- */
-import {ACTION_TYPES as types} from './action-types';
-import {dispatch, select} from '../base-controls';
-import {REDUCER_KEY} from './constants';
+import {ACTION_TYPES as types} from "./action-types";
+import {dispatch, fetch, resolveSelect, select} from "../base-controls";
+import {REDUCER_KEY} from "./constants";
+import {REDUCER_KEY as SCHEMA_REDUCER_KEY} from "../schema/constants";
 
 /**
  * Returns an action object used in updating the store with the provided items
@@ -17,18 +11,29 @@ import {REDUCER_KEY} from './constants';
  *
  * @param {string} resourceName
  * @param {string} queryString  Results are stored indexed by the query
- * string generating them.
- * @param {Array<*>} response     items attached with the list.
- * @return {
- * 	{
- * 		type: string,
- * 		identifier: string,
- * 		queryString: string,
- * 		response: Array<*>
- *	}
- * } Object for action.
+ * @param {Object} response
+ * @returns {{response: {}, resourceName: *, type: string, queryString: *}}
  */
-export function receiveResponse( resourceName, queryString, response = [] ) {
+export function receiveResponse(resourceName, queryString, response = {}) {
+	return {
+		type: types.RECEIVE_COLLECTION,
+		resourceName,
+		queryString,
+		response,
+	};
+}
+
+
+/**
+ * Returns an action object used in updating the store with the provided items & total
+ * retrieved from a request using the given query string.
+ *
+ * @param {string} resourceName
+ * @param {string} queryString  Results are stored indexed by the query
+ * @param {Object} response
+ * @returns {{response: {total: number, items: []}, resourceName: *, type: string, queryString: *}}
+ */
+export function receiveCollection(resourceName, queryString, response = {items: [], total: NaN}) {
 	return {
 		type: types.RECEIVE_COLLECTION,
 		resourceName,
@@ -38,44 +43,84 @@ export function receiveResponse( resourceName, queryString, response = [] ) {
 }
 
 /**
- * Returns an action object used in updating the store with the provided entity
- * items retrieved from a request using the given query string.
+ * Returns an action object used in updating the store with the provided items & total
+ * retrieved from a request using the given query string & url parts
  *
- * @param {string} resourceName
- * @param {string} queryString
- * @param {Object}response
- * @return {{type: string, identifier: string, queryString: string, items:
- *   Array<BaseEntity>}} An action object.
+ * @param resourceName
+ * @param parts
+ * @param {String} queryString
+ * @param response
+ * @returns {{response: {total: number, items: []}, resourceName: *, type: string, queryString: *, group: *}}
  */
-export function receiveEntityResponse( resourceName, queryString, response = {}) {
+export function receiveCollectionWithRouteParts(resourceName, parts, queryString, response = {items: [], total: NaN}) {
 	return {
 		type: types.RECEIVE_COLLECTION,
 		resourceName,
+		group: parts,
 		queryString,
-		response
+		response,
+	};
+}
+
+
+/**
+ * Returns an action object used in updating the store with the provided entity
+ * item retrieved from a request using the given query string.
+ *
+ * @param resourceName
+ * @param id
+ * @param {String} queryString
+ * @param response
+ * @returns {{response: {}, resourceName: *, type: string, queryString: *, group: [*]}}
+ */
+export function receiveEntity(resourceName, id, queryString, response = {}) {
+	return {
+		type: types.RECEIVE_COLLECTION,
+		resourceName,
+		group: [id],
+		queryString,
+		response,
 	};
 }
 
 /**
- * Returns an action object used in updating the store with the provided entity
- * items retrieved from a request using the given query string.
  *
- * @param {string} resourceName
- * @param {Array<any>}ids
- * @param {string} queryString
- * @param {Object}response
- * @return {{type: string, identifier: string, queryString: string, items:
- *   Array<BaseEntity>}} An action object.
+ * @param {String} resourceName
+ * @param {Array} parts
+ * @param {number} id
+ * @param {String} queryString
+ * @param {Object} response
+ * @returns {{response: {}, resourceName: *, type: string, queryString: *, group: *}}
  */
-export function receiveEntitiesById( resourceName,ids,  queryString, response = {}) {
+export function receiveEntitiesWithRouteParts(resourceName, parts, id, queryString, response = {}) {
 	return {
 		type: types.RECEIVE_COLLECTION,
 		resourceName,
-		ids,
+		group: parts.concat([id]),
 		queryString,
-		response
+		response,
 	};
 }
+
+
+
+/**
+ * Action generator yielding actions for queuing an entity delete record
+ * in the state.
+ *
+ * @param {string} resourceName
+ * @param {number} entityId
+ * @param {boolean} refresh
+ */
+export function* deleteEntityById(resourceName, entityId, refresh = true) {
+	const route = yield resolveSelect(SCHEMA_REDUCER_KEY, 'getRoute', resourceName, [entityId]);
+	const item = yield fetch({path: route, method: 'DELETE'});
+	if (refresh)
+		yield resetAllState();
+	return item;
+}
+
+
 
 
 /**
@@ -117,14 +162,15 @@ export function* resetAllState() {
 	}
 }
 
+
 /**
  * Action triggering resetting state in the store for the given selector name and
- * identifier
+ * ResourceName
  *
  * @param {string} selectorName
  * @param {string} identifier
  */
-export function* resetForSelectorAndIdentifier( selectorName, identifier ) {
+export function* resetForSelectorAndResourceName( selectorName, identifier ) {
 	yield {
 		type: types.RESET_COLLECTION,
 		identifier,
@@ -161,42 +207,17 @@ export function* resetForSelectorAndIdentifier( selectorName, identifier ) {
 }
 
 /**
- * Action triggering the state reset for the "generic" selector ('fetchAPI') and
- * it's identifier
- *
- * @param {string} identifier
- */
-export function* resetGenericItemsWithIdentifier( identifier ) {
-	yield* resetForSelectorAndIdentifier( 'fetchAPI', identifier );
-}
-
-/**
- * Action triggering the state reset for the entity selectors for the given
- * modelName
- *
- * @param {string} modelName
- */
-export function* resetEntitiesForModelName( modelName ) {
-	yield* resetForSelectorAndIdentifier( 'getEntities', modelName );
-	yield* resetForSelectorAndIdentifier( 'getEntitiesByIds', modelName );
-}
-
-/**
  * Action triggering the state reset for the specific selector name, identifier
  * and query string.
  *
  * @param {string} selectorName
- * @param {string} identifier
+ * @param {string} resourceName
  * @param {string} queryString
  */
-export function* resetSpecificStateForSelector(
-	selectorName,
-	identifier,
-	queryString
-) {
+export function* resetSpecificStateForSelector( selectorName, resourceName, queryString) {
 	yield {
 		type: types.RESET_COLLECTION,
-		identifier,
+		resourceName,
 		queryString,
 	};
 
@@ -205,18 +226,9 @@ export function* resetSpecificStateForSelector(
 		'invalidateResolution',
 		REDUCER_KEY,
 		selectorName,
-		[ identifier, queryString ]
+		[ resourceName, queryString ]
 	);
 }
-
-/**
- * Helper for determining if actions are available in the `core/data` package.
- *
- * @return {boolean}  True means additional invalidation actions available.
- */
-const invalidateActionsAvailable = () => {
-	return select( 'core/data' ).invalidateResolutionForStore !== undefined;
-};
 
 /**
  * Helper for determining whether the given identifier is found in the given
@@ -232,4 +244,14 @@ const identifierInSelector = ( selectorName, identifier ) => {
 	}
 
 	return selectorName.indexOf( identifier ) > -1;
+};
+
+
+/**
+ * Helper for determining if actions are available in the `core/data` package.
+ *
+ * @return {boolean}  True means additional invalidation actions available.
+ */
+const invalidateActionsAvailable = () => {
+	return select( 'core/data' ).invalidateResolutionForStore !== undefined;
 };

@@ -9,7 +9,9 @@ import {
 	CompactCard,
 	Card,
 	SelectControl,
-	Spinner, Field
+	Spinner,
+	Field,
+	Blocker
 } from "@eaccounting/components";
 
 export default class Defaults extends Component {
@@ -49,7 +51,11 @@ export default class Defaults extends Component {
 		return (
 			<Fragment>
 				<CompactCard tagName="h3">{__('General Settings')}</CompactCard>
-				<Card> {isLoading ? <Spinner/> : this.form()}</Card>
+				<Card>
+					<Blocker isBlocked={isLoading}>
+						{this.form()}
+					</Blocker>
+				</Card>
 			</Fragment>
 		)
 	}

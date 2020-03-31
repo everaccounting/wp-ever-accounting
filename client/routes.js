@@ -13,10 +13,10 @@ import Settings from './page/settings';
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
 export const routes = [
-	{
-		container: Dashboard,
-		path: '/',
-	},
+	// {
+	// 	container: Dashboard,
+	// 	path: '/',
+	// },
 	// {
 	// 	container: Transactions,
 	// 	path: '/transactions',
@@ -25,10 +25,10 @@ export const routes = [
 	// 	container: Items,
 	// 	path: '/items',
 	// },
-	{
-		container: Contacts,
-		path: '/contacts',
-	},
+	// {
+	// 	container: Contacts,
+	// 	path: '/contacts',
+	// },
 	// {
 	// 	container: Incomes,
 	// 	path: '/incomes/:tab/add',
@@ -45,34 +45,34 @@ export const routes = [
 	// 	container: Incomes,
 	// 	path: '/incomes/',
 	// },
-	{
-		container: Expenses,
-		path: '/expenses/:tab/:id(\\d+)',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/:tab/:action',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/:tab',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/',
-	},
-	{
-		container: Banking,
-		path: '/banking/:tab/add',
-	},
-	{
-		container: Banking,
-		path: '/banking/:tab/:id',
-	},
-	{
-		container: Banking,
-		path: '/banking/:tab',
-	},
+	// {
+	// 	container: Expenses,
+	// 	path: '/expenses/:tab/:id(\\d+)',
+	// },
+	// {
+	// 	container: Expenses,
+	// 	path: '/expenses/:tab/:action',
+	// },
+	// {
+	// 	container: Expenses,
+	// 	path: '/expenses/:tab',
+	// },
+	// {
+	// 	container: Expenses,
+	// 	path: '/expenses/',
+	// },
+	// {
+	// 	container: Banking,
+	// 	path: '/banking/:tab/add',
+	// },
+	// {
+	// 	container: Banking,
+	// 	path: '/banking/:tab/:id',
+	// },
+	// {
+	// 	container: Banking,
+	// 	path: '/banking/:tab',
+	// },
 	// {
 	// 	container: Banking,
 	// 	path: '/banking/',
@@ -89,10 +89,10 @@ export const routes = [
 	// 	container: Reports,
 	// 	path: '/reports/',
 	// },
-	{
-		container: Settings,
-		path: '/settings/',
-	},
+	// {
+	// 	container: Settings,
+	// 	path: '/settings/',
+	// },
 ];
 
 export default applyFilters(PAGES_FILTER, routes);

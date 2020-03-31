@@ -1,116 +1,99 @@
-import {get} from "lodash";
-
-/**
- * Internal dependencies
- */
-import {isResolving} from '../base-selectors';
-import {REDUCER_KEY} from './constants';
+import {hasInState} from "../utils";
 import {addQueryArgs} from '@wordpress/url';
-import {hasInState} from "../utils"
-
-const DEFAULT_EMPTY_ARRAY = [];
-
 
 /**
- * Get specific entry from store
- *
+ * A generic function to retrieve from store
  * @param state
  * @param resourceName
  * @param query
- * @param ids
- * @param type
+ * @param group
  * @param fallback
  * @returns {*}
  */
-export const getFromState = ({state, resourceName, query, ids = [], fallback = []}) => {
+const getFromState = ({state, resourceName, query, group = [], fallback = []}) => {
 	// prep ids and query for state retrieval
-	ids = JSON.stringify(ids);
+	group = JSON.stringify(group);
 	query = query !== null ? addQueryArgs('', query) : '';
-	if (hasInState(state, [resourceName, ids, query])) {
-		return state[resourceName][ids][query];
+	if (hasInState(state, [resourceName, group, query])) {
+		return state[resourceName][group][query];
 	}
 	return fallback;
 };
 
 
 /**
- * Returns all the items for the given resourceName and queryString
+ * Resolver for generic items returned from an endpoint.
+ *
+ *  @param {Object} state Data state.
+ * @param {string} resourceName  The identifier for the items.
+ * @param {Object} query
+ * the REST request.
+ */
+export function fetchAPI(state, resourceName, query = null) {
+	return getFromState({state, resourceName, query, group: [], fallback: {}});
+}
+
+
+/**
+ * Resolver for getCollection selection this is used in the situation
+ * where items with total is needed it automatically detects x-wp-total header
+ * Best use case is when need all contacts with total may be in list table
+ *
+ * getCollection('contacts', {type='customer'})
  *
  * @param {Object} state Data state.
- * @param {string} resourceName The resourceName the items are being retrieved for.
+ * @param {String} resourceName
  * @param {Object} query
- * @return {Array} Returns an array of items for the given model and query.
+ * @returns {Generator<Immutable.Map|{path: string, type: string}|{args: Array[], reducerKey: string, selectorName: string, type: string}, *, ?>}
  */
-export const fetchAPI = (state, resourceName, query = null) => {
-	return getFromState({state, resourceName, query});
-};
-
-
-/**
- * Returns all the model entities for the given modelName and query string.
- *
- * @param {Immutable.Map} state
- * @param {string} resourceName
- * @param {Object} query
- * @return {Array<BaseEntity>} Returns array of entities.
- */
-export const getEntities = (state, resourceName, query = null) => {
-	return getFromState({state, resourceName, query, ids: [], fallback: {items: [], total: NaN}});
-};
-
-/**
- * Returns all the model entities for the given modelName and query string.
- *
- * @param {Immutable.Map} state
- * @param {string} resourceName
- * @param {Array}  [ids=[]]     Any ids for the collection request (these are
- *                              values that would be added to the route for a
- *                              route with id placeholders)
- * @param {Object} query
- * @return {Array<BaseEntity>} An array of entities.
- */
-export const getEntitiesByIds = (state, resourceName, ids = [], query = null) => {
-	return getFromState({state, resourceName, query, ids, fallback: {}});
-};
-
-/**
- * Helper indicating whether the given resourceName, selectorName, and queryString
- * is being resolved or not.
- *
- * @param {Immutable.Map} state
- * @param {string} resourceName
- * @param {string} selectorName
- * @param {Object} query
- * @return {boolean} Returns true if the selector is currently requesting items.
- */
-function isRequesting(state, resourceName, selectorName, query = null) {
-	return isResolving(REDUCER_KEY, selectorName, resourceName, query);
+export function getCollection(state, resourceName, query = null) {
+	return getFromState({state, resourceName, query, group: [], fallback: {items: [], total: NaN}});
 }
 
 
 /**
- * Returns whether the items for the given resourceName and query string are being
- * requested.
+ * This is same like getCollection but with the feature of calling from url parts
+ * like from this url customer/customers
  *
- * @param {Immutable.Map} state Data state.
- * @param {string} resourceName  The resourceName for the items being requested
+ * getCollection('contacts', ['customers'], {type='customer'})
+
+ * @param {Object} state Data state.
+ * @param {String} resourceName
+ * @param {Array} parts
  * @param {Object} query
- * @return {boolean} Whether items are being requested or not.
+ * @returns {Generator<Immutable.Map|{path: string, type: string}|{args: Array[], reducerKey: string, selectorName: string, type: string}, *, ?>}
  */
-export function isRequestingFetchAPI(state, resourceName, query = null) {
-	return isRequesting(state, resourceName, 'fetchAPI', query);
+export function getCollectionWithRouteParts(state, resourceName, parts = [], query = null) {
+	return getFromState({state, resourceName, query, group: parts, fallback: {items: [], total: NaN}});
 }
 
 
 /**
- * Returns whether the get entities request is in the process of being resolved
- * or not.
- * @param {Immutable.Map} state
- * @param {string} resourceName
+ * This is for Calling a single Entry from any simple route
+ *
+ * getEntityById('contacts', 10, {include:'address'})
+
+ * @param {Object} state Data state.
+ * @param resourceName
+ * @param {Number} id
  * @param {Object} query
- * @return {boolean} True means entities (for the given model) are being
- * requested.
+ * @returns {Generator<Immutable.Map|{args: Array[], reducerKey: string, selectorName: string, type: string}|{type: string, request: Object}, *, ?>}
  */
-export function isRequestingEntities(state, resourceName, query = null) {
-	return isRequesting(state, resourceName, 'getEntities', query);
+export function getEntityById(state, resourceName, id = null, query = null) {
+	return getFromState({state, resourceName, query, group: [id], fallback: {}});
+}
+
+
+/**
+ * This is same as getEntityById with the featured address from complex endpoint
+
+ * @param {Object} state Data state.
+ * @param {String} resourceName
+ * @param {Array} parts
+ * @param {Number} id
+ * @param {Object} query
+ * @returns {Generator<Immutable.Map|{args: Array[], reducerKey: string, selectorName: string, type: string}|{type: string, request: Object}, *, ?>}
+ */
+export function getEntitiesWithRouteParts(state, resourceName, parts = [], id = null, query = null) {
+	return getFromState({state, resourceName, query, group: [parts].concat([id]), fallback: {}});
 }

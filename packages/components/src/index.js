@@ -12,7 +12,7 @@ export {default as Modal} from './modal';
 export {default as Placeholder} from './placeholder';
 export {default as Select} from './select';
 export {default as SelectControl} from './select-control';
-// export { default as Tabs } from './tabs';
+export { default as Blocker } from './blocker';
 export {default as AsyncSelect} from './select-control/async';
 export {default as Spinner} from './spinner';
 export {default as Table} from './table';

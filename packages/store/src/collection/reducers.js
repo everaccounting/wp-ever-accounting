@@ -2,7 +2,7 @@
  * Internal dependencies
  */
 import {ACTION_TYPES as types} from './action-types';
-import {hasInState, updateState} from "../utils";
+import {updateState} from "../utils";
 /**
  * External dependencies
  */
@@ -18,16 +18,17 @@ const DEFAULT_LISTS_STATE = {};
  */
 export function receiveCollection(state = DEFAULT_LISTS_STATE, action) {
 	let {type, resourceName, queryString,  response} = action;
-	const ids = action.ids ? JSON.stringify(action.ids) : '[]';
+	const group = action.group ? JSON.stringify(action.group) : '[]';
+	console.log(action);
 	switch (type) {
 		case types.RECEIVE_COLLECTION:
-			state = updateState(state, [resourceName, ids, queryString], response);
+			state = updateState(state, [resourceName, group, queryString], response);
 			break;
 		case types.RESET_COLLECTION:
-			state = updateState(state, [resourceName, ids, queryString], {});
+			state = updateState(state, [resourceName, group, queryString], {});
 			break;
 		case types.COLLECTION_ERROR:
-			state = updateState(state, [resourceName, ids, queryString], response);
+			state = updateState(state, [resourceName, group, queryString], response);
 			break;
 	}
 	return state;
