@@ -130,7 +130,7 @@ function eaccounting_register_initial_settings() {
 		'ea_company_logo',
 		array(
 			'show_in_rest' => array(
-				'name'   => 'logo',
+				'name'   => 'company_logo',
 				'schema' => array(
 					'format' => 'uri',
 				),
@@ -138,6 +138,120 @@ function eaccounting_register_initial_settings() {
 			'type'         => 'string',
 			'default'      => '',
 			'description'  => __( 'Logo URL.' ),
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_tax_number',
+		array(
+			'show_in_rest' => array(
+				'name' => 'company_tax_number',
+				'type' => 'string',
+			),
+			'default'      => '',
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_address',
+		array(
+			'show_in_rest' => array(
+				'name' => 'company_address',
+				'type' => 'string',
+			),
+			'default'      => '',
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_city',
+		array(
+			'show_in_rest' => array(
+				'name' => 'company_city',
+				'type' => 'string',
+			),
+			'default'      => '',
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_state',
+		array(
+			'show_in_rest' => array(
+				'name' => 'company_state',
+				'type' => 'string',
+			),
+			'default'      => '',
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_postcode',
+		array(
+			'show_in_rest' => array(
+				'name' => 'company_postcode',
+				'type' => 'string',
+			),
+			'default'      => '',
+		)
+	);
+
+	eaccounting_register_setting(
+		'general',
+		'ea_company_country',
+		array(
+			'show_in_rest' => array(
+				'name'   => 'company_country',
+				'schema' => array(
+					'format' => 'string',
+				),
+			),
+			'default'      => 'US',
+			'description'  => __( 'Company Country.' ),
+		)
+	);
+
+	eaccounting_register_setting(
+		'defaults',
+		'ea_default_account',
+		array(
+			'show_in_rest' => array(
+				'name' => 'default_account',
+			),
+			'arg_options'  => array(
+				'sanitize_callback' => 'intval',
+			),
+			'type'         => 'integer',
+			'default'      => 0,
+		)
+	);
+
+	eaccounting_register_setting(
+		'defaults',
+		'ea_default_currency',
+		array(
+			'show_in_rest' => array(
+				'name' => 'default_currency',
+			),
+			'type'         => 'string',
+			'default'      => 'USD',
+		)
+	);
+
+	eaccounting_register_setting(
+		'defaults',
+		'ea_default_payment_method',
+		array(
+			'show_in_rest' => array(
+				'name'   => 'default_payment_method',
+				'format' => 'string',
+			),
+			'default'      => 'cash',
 		)
 	);
 
@@ -168,10 +282,10 @@ function eaccounting_get_registered_settings() {
  *
  * @return bool|mixed|void
  */
-function eaccounting_get_setting( $name ) {
+function eaccounting_get_settings( $name ) {
 	$settings = eaccounting_get_registered_settings();
-	$name     = ltrim( $name, 'ea_' );
-	$name     = 'ea_' . $name;
+	$raw_name = ltrim( $name, 'ea_' );
+	$name     = 'ea_' . $raw_name;
 	if ( ! array_key_exists( $name, $settings ) ) {
 		return false;
 	}
@@ -179,5 +293,49 @@ function eaccounting_get_setting( $name ) {
 	$setting = $settings[ $name ];
 	$default = isset( $setting['default'] ) ? $setting['default'] : false;
 
-	return get_option( $name, $default );
+	return apply_filters( "eaccounting_settings_field_$raw_name", get_option( $name, $default ) );
+}
+
+/**
+ * since 1.0.0
+ *
+ * @param $currency
+ *
+ * @return array
+ */
+function eaccounting_get_settings_field_currency( $currency ) {
+	if ( is_numeric( $currency ) ) {
+		return (array) eaccounting_get_currency( $currency );
+	}
+
+	return $currency;
+}
+
+add_filter( 'eaccounting_settings_field_currency', 'eaccounting_get_settings_field_currency' );
+
+
+/**
+ * @return array|object|void|null
+ * @since 1.0.2
+ */
+function eaccounting_get_default_currency() {
+	$default_currency = (string) eaccounting_get_settings( 'default_currency' );
+	$currency         = (object) eaccounting_get_currency_config( $default_currency );
+
+	return $currency;
+}
+
+/**
+ * @return array|object|void|null
+ * @since 1.0.2
+ */
+function eaccounting_get_default_account() {
+	$default_account = eaccounting_get_settings( 'default_account');
+	if ( empty( $default_account ) ) {
+		global $wpdb;
+
+		return $wpdb->get_row( "SELECT * FROM $wpdb->ea_accounts order by id ASC limit 1" );
+	}
+
+	return eaccounting_get_account( $default_account );
 }

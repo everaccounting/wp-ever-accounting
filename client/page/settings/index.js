@@ -1,45 +1,56 @@
 /**
  * External dependencies
  */
-import {Fragment} from "@wordpress/element";
+import {Fragment, Component} from "@wordpress/element";
 import {__} from '@wordpress/i18n';
 import General from "./sections/general";
+import Defaults from "./sections/defaults";
 import Company from "./sections/company";
 import {withSelect, withDispatch} from "@wordpress/data";
 import {compose} from '@wordpress/compose';
-import {Spinner} from "@eaccounting/components";
+import apiFetch from "@wordpress/api-fetch";
 
+class Settings extends Component {
+	constructor(props) {
+		super(props);
+	}
 
-const Sections = (props) => {
-	return (
-		<Company {...props}/>
-	)
-};
+	onSubmit = (form) => {
+		form.default_account = form.default_account && form.default_account.id && form.default_account.id;
+		form.default_currency = form.default_currency && form.default_currency.code && form.default_currency.code;
+		apiFetch({path: '/ea/v1/settings', method: 'POST', data: form}).then(res => {
+			this.props.resetSettings('fetchAPI', 'settings');
+		}).catch(error => {
+			alert(error.message)
+		});
+	};
 
-const Settings = props => {
-	const {isComplete} = props;
+	render() {
+		return (
+			<Fragment>
+				<h1 className="wp-heading-inline">{__('Settings')}</h1>
+				<hr className="wp-header-end"/>
+				<div style={{height: '30px'}}/>
+				<Company {...this.props} onSubmit={this.onSubmit}/>
+				<Defaults {...this.props} onSubmit={this.onSubmit}/>
 
-	return (
-		<Fragment>
-			<h1 className="wp-heading-inline">{__('Settings')}</h1>
-			<hr className="wp-header-end"/>
-			<div style={{height:'30px'}}/>
-			{!isComplete && <Spinner/>}
-			{isComplete && <Sections {...props}/>}
-		</Fragment>
-	);
-};
+			</Fragment>
+		)
+	}
+}
 
 export default compose([
 	withSelect((select) => {
-		const {getCollection, getCollectionStatus, getModel, getModelStatus} = select('ea/store');
+		const {fetchAPI, isRequestingFetchAPI} = select('ea/collection');
 		return {
-			model: getModel('settings'),
-			settings: getCollection('settings', {}),
-			isComplete: getCollectionStatus('settings', {}) === "STATUS_COMPLETE" && "STATUS_COMPLETE" === getModelStatus('settings'),
+			settings: fetchAPI('settings', {}),
+			isLoading: isRequestingFetchAPI('settings', {}),
 		}
 	}),
 	withDispatch((dispatch) => {
-
+		const {resetForSelectorAndIdentifier} = dispatch('ea/collection');
+		return {
+			resetSettings: resetForSelectorAndIdentifier
+		}
 	})
 ])(Settings);

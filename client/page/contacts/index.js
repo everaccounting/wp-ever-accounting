@@ -4,15 +4,31 @@ import {
 	TableNav,
 	Table,
 	ContactTypesControl,
-	withTable
+	Button
 } from "@eaccounting/components"
+import {withTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
+import {get} from "lodash";
+import EditContact from "components/edit-contact";
+
 class Contacts extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			isAdding: false
+		};
 	}
+
+	onAdd = ev => {
+		ev.preventDefault();
+		this.setState({isAdding: !this.state.isAdding});
+	};
+
+	onClose = () => {
+		this.setState({isAdding: !this.state.isAdding});
+	};
 
 	onRenderRow = (item, pos, isSelected, isLoading, search) => {
 		return (
@@ -28,12 +44,13 @@ class Contacts extends Component {
 	};
 
 	render() {
-		const {status, total, items, query, selected} = this.props;
-		const {page = 1, orderby = 'created_at', order = 'desc'} = query;
+		const {status, total, items, page, order, orderby, query, selected} = this.props;
+
 		return (
 			<Fragment>
+				{this.state.isAdding && <EditContact onClose={this.onClose} onCreate={this.onCreate} tittle={__('Add Contact')} buttonTittle={__('Submit')}/>}
 				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
-				<a className="page-title-action">{__('Add Contact')}</a>
+				<Button className="page-title-action" onClick={this.onAdd}>{__('Add Contact')}</Button>
 				<hr className="wp-header-end"/>
 				<div className="ea-table-display">
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
@@ -47,11 +64,10 @@ class Contacts extends Component {
 					onChangePage={this.props.onPageChange}
 					onAction={this.props.onAction}
 					bulk={getBulk()}>
-
 					<ContactTypesControl
 						className={'alignleft actions'}
-						onChange={(type) => this.props.onFilter({type: type.value})}/>
-
+						isClearable
+						onChange={(type) => this.props.onFilter({type})}/>
 				</TableNav>
 
 				<Table
@@ -73,11 +89,11 @@ class Contacts extends Component {
 					page={page}
 					selected={selected}
 					onChangePage={this.props.onPageChange}
-					onAction={this.props.onAction}
 				/>
 
 			</Fragment>
 		)
 	}
 }
-export default withTable('contacts', {orderby:'created_at'})(Contacts);
+
+export default withTable('contacts', {orderby: 'created_at'})(Contacts);

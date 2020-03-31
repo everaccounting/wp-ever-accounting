@@ -6,7 +6,7 @@ import data from './data';
  * the default locale settings from the server.
  * @type {{}}
  */
-export const { locale = {
+export const { locale: SERVER_LOCALE = {
 	user: 'en',
 	site: 'en',
 } } = data;

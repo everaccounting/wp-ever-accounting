@@ -54,9 +54,10 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 
 			if ( is_null( $response[ $name ] ) ) {
 				// Default to a null value as "null" in the response means "not set".
-				$response[ $name ] = get_option( $args['option_name'], $args['schema']['default'] );
+				$response[ $name ] = eaccounting_get_settings( $args['option_name']);
+				$response[ $name ] = $this->prepare_value( $response[ $name ], $args['schema'] );
 			}
-			$response[ $name ] = $this->prepare_value( $response[ $name ], $args['schema'] );
+
 		}
 
 		return $response;

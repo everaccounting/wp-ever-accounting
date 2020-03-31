@@ -40,7 +40,7 @@ class ContactControl extends Component {
 	}
 
 	render() {
-		const { defaultOptions } = this.state;
+		const { defaultOptions } = this.props;
 		return (
 			<Fragment>
 				<AsyncSelect
@@ -61,6 +61,6 @@ class ContactControl extends Component {
 }
 export default withSelect(select => {
 	return {
-		defaultOptions: select('ea/store').getCollection('contacts')
+		defaultOptions: select('ea/collection').fetchAPI('contacts')
 	}
 })(ContactControl)

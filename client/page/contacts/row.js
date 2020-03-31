@@ -70,7 +70,7 @@ export default class Row extends Component {
 								},
 								{
 									title: __('Delete'),
-									onClick: () => this.props.remove('contacts', id),
+									onClick: () => this.props.onDelete(id),
 									disabled: isLoading,
 								},
 							]}

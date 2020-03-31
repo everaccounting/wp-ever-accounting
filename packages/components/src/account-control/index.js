@@ -5,7 +5,7 @@ import {Component, Fragment} from 'react';
 /**
  * WordPress dependencies
  */
-import {__} from '@wordpress/element';
+
 /**
  * Internal dependencies
  */
@@ -44,6 +44,6 @@ class AccountControl extends Component {
 
 export default withSelect(select => {
 	return {
-		defaultOptions: select('ea/store').getCollection('accounts')
+		defaultOptions: select('ea/collection').fetchAPI('accounts')
 	}
 })(AccountControl)

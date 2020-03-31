@@ -2,24 +2,18 @@
 /**
  * WordPress dependencies
  */
-import { render } from '@wordpress/element';
+import {render} from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import "@wordpress/notices";
 /**
  * Internal dependencies
  */
-// import App from './app';
+import App from './app';
+import './stylesheets/main.scss';
 
-// import './stylesheets/main.scss';
 
-const App = () => {
-	return(
-		<div>
-			HELLO
-		</div>
-	)
-};
 domReady(() => {
 	const root = document.getElementById('eaccounting');
-	return render(<App />, root);
+	return render(<App/>, root);
 });
+

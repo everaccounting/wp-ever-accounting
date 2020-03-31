@@ -22,7 +22,9 @@ const externals = [];
 
 const packages = [
 	'components',
-	'data'
+	'data',
+	'hoc',
+	'store',
 ];
 const entryPoints = {};
 packages.forEach(name => {

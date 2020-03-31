@@ -1,13 +1,13 @@
-import Dashboard from './page/dashboard';
-import Transactions from './page/transactions';
-import Contacts from './page/contacts';
-import Incomes from './page/incomes';
-import Expenses from './page/expenses';
 import { applyFilters } from '@wordpress/hooks';
-import Items from './page/items';
+import Dashboard from './page/dashboard';
+// import Transactions from './page/transactions';
+import Contacts from './page/contacts';
+// import Incomes from './page/incomes';
+import Expenses from './page/expenses';
+// import Items from './page/items';
 import Banking from './page/banking';
-import Reports from './page/reports';
-import Misc from './page/misc';
+// import Reports from './page/reports';
+// import Misc from './page/misc';
 import Settings from './page/settings';
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
@@ -17,41 +17,41 @@ export const routes = [
 		container: Dashboard,
 		path: '/',
 	},
-	{
-		container: Transactions,
-		path: '/transactions',
-	},
-	{
-		container: Items,
-		path: '/items',
-	},
+	// {
+	// 	container: Transactions,
+	// 	path: '/transactions',
+	// },
+	// {
+	// 	container: Items,
+	// 	path: '/items',
+	// },
 	{
 		container: Contacts,
 		path: '/contacts',
 	},
+	// {
+	// 	container: Incomes,
+	// 	path: '/incomes/:tab/add',
+	// },
+	// {
+	// 	container: Incomes,
+	// 	path: '/incomes/:tab/:id',
+	// },
+	// {
+	// 	container: Incomes,
+	// 	path: '/incomes/:tab',
+	// },
+	// {
+	// 	container: Incomes,
+	// 	path: '/incomes/',
+	// },
 	{
-		container: Incomes,
-		path: '/incomes/:tab/add',
-	},
-	{
-		container: Incomes,
-		path: '/incomes/:tab/:id',
-	},
-	{
-		container: Incomes,
-		path: '/incomes/:tab',
-	},
-	{
-		container: Incomes,
-		path: '/incomes/',
+		container: Expenses,
+		path: '/expenses/:tab/:id(\\d+)',
 	},
 	{
 		container: Expenses,
-		path: '/expenses/:tab/add',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/:tab/:id',
+		path: '/expenses/:tab/:action',
 	},
 	{
 		container: Expenses,
@@ -73,22 +73,22 @@ export const routes = [
 		container: Banking,
 		path: '/banking/:tab',
 	},
-	{
-		container: Banking,
-		path: '/banking/',
-	},
-	{
-		container: Misc,
-		path: '/misc/:tab',
-	},
-	{
-		container: Misc,
-		path: '/misc/',
-	},
-	{
-		container: Reports,
-		path: '/reports/',
-	},
+	// {
+	// 	container: Banking,
+	// 	path: '/banking/',
+	// },
+	// {
+	// 	container: Misc,
+	// 	path: '/misc/:tab',
+	// },
+	// {
+	// 	container: Misc,
+	// 	path: '/misc/',
+	// },
+	// {
+	// 	container: Reports,
+	// 	path: '/reports/',
+	// },
 	{
 		container: Settings,
 		path: '/settings/',

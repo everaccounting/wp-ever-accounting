@@ -354,7 +354,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'title'      => __( 'Currency', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'              => array(

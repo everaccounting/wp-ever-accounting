@@ -5,7 +5,7 @@ import {Component, Fragment} from 'react';
 /**
  * WordPress dependencies
  */
-import {__} from '@wordpress/element';
+
 /**
  * Internal dependencies
  */
@@ -57,6 +57,6 @@ class CategoryControl extends Component {
 
 export default withSelect(select => {
 	return {
-		defaultOptions: select('ea/store').getCollection('categories')
+		defaultOptions: select('ea/collection').fetchAPI('categories')
 	}
 })(CategoryControl)

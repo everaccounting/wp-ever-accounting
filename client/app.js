@@ -2,6 +2,8 @@ import {routes} from './routes';
 import {Fragment, Component} from "@wordpress/element";
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import {NotificationContainer} from 'react-notifications';
+import {withSelect, withDispatch} from "@wordpress/data";
+
 //todo add preloader
 class Page extends Component {
 	constructor(props) {

@@ -259,16 +259,16 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			case 'delete':
 				foreach ( $items as $item ) {
 					$is_wp_error = eaccounting_delete_account( $item );
-					if($is_wp_error){
+					if ( $is_wp_error ) {
 						return $is_wp_error;
 						break;
 					}
-					$deleted[$item] = $is_wp_error;
+					$deleted[ $item ] = $is_wp_error;
 				}
 				break;
 		}
 
-		return rest_ensure_response($deleted);
+		return rest_ensure_response( $deleted );
 	}
 
 	/**
@@ -380,7 +380,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'title'      => __( 'Account', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'              => array(
@@ -408,6 +408,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
+					'default'     => 'Man',
 				),
 				'number'          => array(
 					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
@@ -421,6 +422,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'default'     => '0',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),

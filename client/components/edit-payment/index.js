@@ -16,15 +16,15 @@ import {
 	Button,
 	SelectControl,
 	Row,
-	Col
+	Col,
+	Form,
+	Field
 } from '@eaccounting/components';
-import {withSelect} from "@wordpress/data";
-import apiFetch from '@wordpress/api-fetch';
+import {withSelect, withDispatch} from "@wordpress/data";
+import {compose} from "@wordpress/compose";
+import {get} from "lodash";
 
 class EditPayment extends Component {
-	_isMounted = false;
-	payment = false;
-
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -32,34 +32,7 @@ class EditPayment extends Component {
 		}
 	}
 
-	componentDidMount() {
-		const {match} = this.props;
-		match && match.params && match.params.id && apiFetch({path: `/ea/v1/payments/${match.params.id}`}).then(res => {
-			// console.log(res);
-			this.payment = res && this.props.model.fromExisting(res);
-			this.setState({
-				isLoading: false
-			})
-		})
-	}
 
-	componentWillUnmount() {
-		this._isMounted = false;
-	}
-
-	// loadPayment = id => {
-	// 	apiRequest(accountingApi.revenues.get(id)).then(res => {
-	// 		this._isMounted &&
-	// 		this.setState({
-	// 			...this.state,
-	// 			...res.data,
-	// 		});
-	// 	});
-	// };
-	//
-	addContactBtn = () => {
-		return <Icon icon="plus"/>;
-	};
 	//
 	// onSubmit = () => {
 	// 	const {id, paid_at, amount, account, category, contact, reference, payment_method, description} = this.state;
@@ -92,20 +65,41 @@ class EditPayment extends Component {
 	// 	})
 	//
 	// };
-
+	onSubmit = (data) => {
+		console.log(data);
+	};
 
 	render() {
-		const {model} = this.props;
+		const {payment, match} = this.props;
+		const isAdd = get(match, ['params', 'id'], '') === 'add';
 		const {isLoading} = this.state;
-		window.model = this.payment;
-		console.log(model);
-		// const {id, paid_at, amount, account, category, contact, reference, description, isSaving, payment_method} = this.state;
+
 		return (
-			isLoading && <Fragment>
-				{/*{!id && <CompactCard tagName="h3">{__('Add Payment')}</CompactCard>}*/}
-				{/*{!!id && <CompactCard tagName="h3">{__('Update Payment')}</CompactCard>}*/}
+			<Fragment>
+				{isAdd && <CompactCard tagName="h3">{__('Add Payment')}</CompactCard>}
+				{!isAdd && <CompactCard tagName="h3">{__('Update Payment')}</CompactCard>}
 				<Card>
-					<form onSubmit={this.onSubmit}>
+					<Form onSubmit={this.onSubmit} initialValues={payment}>
+						<div className="ea-double-columns">
+							<Field
+								name="account"
+								label={__('Account', 'wp-ever-accounting')}
+								before={<Icon icon={'university'}/>}>
+								{props => (
+									<AccountControl {...props.input} {...props}/>
+								)}
+							</Field>
+
+							<Field
+								name="category"
+								label={__('Category', 'wp-ever-accounting')}
+								before={<Icon icon={'university'}/>}>
+								{props => (
+									<CategoryControl {...props.input} {...props}/>
+								)}
+							</Field>
+
+						</div>
 						<Row>
 							{/*<Col>*/}
 							{/*	<DateControl*/}
@@ -197,17 +191,23 @@ class EditPayment extends Component {
 						{/*	{__('Submit')}*/}
 						{/*</Button>*/}
 
-					</form>
+					</Form>
 				</Card>
 			</Fragment>
 		);
 	}
 }
 
-export default withSelect(select => {
-	const {getModel} = select('ea/store/schema');
-	return {
-		model: getModel('payment'),
-		isLoading: false
-	}
-})(EditPayment)
+
+export default compose([
+	withSelect((select, ownProps) => {
+		const id = get(ownProps, ['match', 'params', 'id'], undefined);
+		const {getEntitiesByIds} = select('ea/collection');
+		return {
+			payment: !isNaN(id) ? getEntitiesByIds('payments', [id]) : {}
+		}
+	}),
+	withDispatch(dispatch => {
+
+	}),
+])(EditPayment);

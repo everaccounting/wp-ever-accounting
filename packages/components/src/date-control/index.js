@@ -14,10 +14,16 @@ import moment from 'moment';
 import DatePicker from '../date-picker';
 import TextControl from '../text-control';
 import { noop } from 'lodash';
-
+import {FORMAT_SITE_DATE} from "@eaccounting/data";
 export default class DateControl extends Component {
 	static propTypes = {
-		format: PropTypes.string,
+		renderFormat: PropTypes.string,
+		returnFormat: PropTypes.string,
+	};
+
+	static defaultTypes = {
+		renderFormat: FORMAT_SITE_DATE,
+		returnFormat: FORMAT_SITE_DATE,
 	};
 
 	constructor(props) {
@@ -33,8 +39,8 @@ export default class DateControl extends Component {
 		const { onChange, value, className, ...restProps } = this.props;
 		const classes = classnames('ea-date-field', className);
 		const date = value || undefined;
-		const startDate = date !== undefined ? moment(date, 'YYYY-MM-DD') : undefined;
-		const inputVal = startDate !== undefined ? startDate.format('YYYY-MM-DD') : '';
+		const startDate = date !== undefined ? moment(date, this.props.returnFormat) : undefined;
+		const inputVal = startDate !== undefined ? startDate.format(this.props.renderFormat) : '';
 		return (
 			<Fragment>
 				<DatePicker
@@ -42,8 +48,7 @@ export default class DateControl extends Component {
 					singleDatePicker
 					startDate={startDate}
 					onApply={this.onChange}
-					containerClass="ea-date-field-container"
-				>
+					containerClass="ea-date-field-container">
 					<TextControl value={inputVal} onChange={noop} className={classes} {...restProps} />
 				</DatePicker>
 			</Fragment>

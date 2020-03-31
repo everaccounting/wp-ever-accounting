@@ -250,24 +250,24 @@ class EAccounting_Admin {
 			true
 		);
 
-		wp_localize_script( 'eaccounting', 'eAccountingi10n', [
-			'api'              => [
-				'WP_API_root'  => esc_url_raw( get_rest_url() ),
-				'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
-			],
-			'pluginBaseUrl'    => plugins_url( '', EACCOUNTING_PLUGIN_FILE ),
-			'pluginRoot'       => admin_url( 'admin.php?page=eaccounting' ),
-			'baseUrl'          => get_site_url(),
-			'per_page'         => 20,
-			'default_currency' => eaccounting_get_default_currency(),
-			'defaults'         => [
-				//'account' =>
-			],
-			'data'             => [
-				'transactionTypes' => eaccounting_get_transaction_types(),
-				'currency'         => eaccounting_get_default_currency(),
-			]
-		] );
+//		wp_localize_script( 'eaccounting', 'eAccountingi10n', [
+//			'api'              => [
+//				'WP_API_root'  => esc_url_raw( get_rest_url() ),
+//				'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
+//			],
+//			'pluginBaseUrl'    => plugins_url( '', EACCOUNTING_PLUGIN_FILE ),
+//			'pluginRoot'       => admin_url( 'admin.php?page=eaccounting' ),
+//			'baseUrl'          => get_site_url(),
+//			'per_page'         => 20,
+//			'default_currency' => eaccounting_get_default_currency(),
+//			'defaults'         => [
+//				//'account' =>
+//			],
+//			'data'             => [
+//				'transactionTypes' => eaccounting_get_transaction_types(),
+//				'currency'         => eaccounting_get_default_currency(),
+//			]
+//		] );
 
 		wp_enqueue_script( 'eaccounting' );
 

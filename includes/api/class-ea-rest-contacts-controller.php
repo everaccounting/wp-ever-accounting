@@ -466,6 +466,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'First name for the user.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
+					'default'     => 'John',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -475,6 +476,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'Last name for the user.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
+					'default'     => 'Doe',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),

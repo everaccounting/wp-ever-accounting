@@ -1,1 +1,1 @@
-console.log('FROM HOC');
+export {default as withTable} from './with-table';

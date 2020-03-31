@@ -29,7 +29,8 @@ class EAccounting_Scripts {
 	 * EAccounting_Scripts constructor.
 	 */
 	private function __construct() {
-		add_action( 'init', array( __CLASS__, 'register_assets' ) );
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_assets' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_scripts' ) );
 	}
 
@@ -41,9 +42,22 @@ class EAccounting_Scripts {
 	 * as part of ongoing refactoring.
 	 */
 	public static function register_assets() {
-		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array() );
-		$client_dependencies = array();
+		//styles
+		self::register_style( 'ea-components', plugins_url( self::get_block_asset_dist_path( 'components', 'css' ), __DIR__ ), array( 'wp-components' ) );
+		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array( 'ea-components' ) );
 
+		//scripts
+		self::register_script( 'ea-data', plugins_url( self::get_block_asset_dist_path( 'data' ), __DIR__ ) );
+		self::register_script( 'ea-components', plugins_url( self::get_block_asset_dist_path( 'components' ), __DIR__ ) );
+		self::register_script( 'ea-hoc', plugins_url( self::get_block_asset_dist_path( 'hoc' ), __DIR__ ) );
+		self::register_script( 'ea-store', plugins_url( self::get_block_asset_dist_path( 'store' ), __DIR__ ) );
+
+		$client_dependencies = array(
+			'ea-data',
+			'ea-components',
+			'ea-hoc',
+			'ea-store'
+		);
 		self::register_script( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client' ), __DIR__ ), $client_dependencies );
 
 	}
@@ -58,7 +72,7 @@ class EAccounting_Scripts {
 		if ( ! preg_match( '/accounting/', $hook ) ) {
 			return;
 		}
-
+		wp_localize_script( 'ea-data', 'eajsdata', self::get_data() );
 		wp_enqueue_script( 'ea-client' );
 		wp_enqueue_style( 'ea-client' );
 	}
@@ -138,6 +152,67 @@ class EAccounting_Scripts {
 	 */
 	protected static function get_block_asset_dist_path( $filename, $type = 'js' ) {
 		return "assets/dist/$filename.$type";
+	}
+
+	/**
+	 * Returns all the data registered for localization
+	 *
+	 * since 1.0.0
+	 */
+	protected static function get_data() {
+		$date_format = eaccounting_get_settings('ea_date_format');
+		$time_format = eaccounting_get_settings('ea_time_format');
+		$locale_data = [
+			'data' => [
+				'site_title'       => get_bloginfo( 'name ' ),
+				'wp_version'       => get_bloginfo( 'version' ),
+				'ea_version'       => eaccounting()->version,
+				'api_nonce'        => wp_create_nonce( 'wp_rest' ),
+				'per_page'         => 50,
+				'paths'            => [
+					'site_url'        => site_url(),
+					'admin_url'       => admin_url(),
+					'asset_url'       => EACCOUNTING_ASSETS_URL,
+					'base_rest_route' => rest_url(),
+					'rest_route'      => rest_url( '/ea/v1/' ),
+					'namespace'       => '/ea/v1',
+				],
+				'locale'           => [
+					'user' => get_user_locale(),
+					'site' => get_locale()
+				],
+				'date_formats'     => eaccounting_convert_php_to_moment_formats($date_format, $time_format),
+				'currency'         => eaccounting_get_default_currency(),
+				'currency_configs' => eaccounting_get_currencies_data(),
+				'countries'        => self::to_js_options( eaccounting_get_countries() ),
+				'contact_types'    => self::to_js_options( eaccounting_get_contact_types() ),
+				'category_types'   => self::to_js_options( eaccounting_get_category_types() ),
+				'tax_rate_types'   => self::to_js_options( eaccounting_get_tax_types() ),
+				'payment_methods'  => self::to_js_options( eaccounting_get_payment_methods() ),
+			]
+		];
+
+		return apply_filters( 'eaccounting_localized_data', $locale_data );
+	}
+
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $keyvalues
+	 *
+	 * @return array
+	 */
+	public static function to_js_options( $keyvalues ) {
+		$options = [];
+		foreach ( $keyvalues as $key => $value ) {
+			$options[] = [
+				'label' => $value,
+				'value' => $key,
+			];
+		}
+
+		return $options;
 	}
 }
 

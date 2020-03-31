@@ -10,6 +10,7 @@ import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
 import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
+import {getCurrencyConfig} from "@eaccounting/data";
 
 export default class PriceControl extends Component {
 	onChange = e => {
@@ -17,13 +18,12 @@ export default class PriceControl extends Component {
 	};
 
 	render() {
-		const { label, code = 'USD', help, className, before, after, required, value, ...props } = this.props;
+		const { label, code = 'USD' , help, className, before, after, required, value, ...props } = this.props;
 		const classes = classnames('ea-form-group', 'ea-price-field', className, {
 			required: !!required,
 		});
 
-		const currency = eAccountingi10n.data.currencies[code];
-
+		const currency = getCurrencyConfig(code);
 		const suffix = currency && currency.position !== 'before' ? currency.symbol : '';
 		const prefix = currency && currency.position === 'before' ? currency.symbol : '';
 

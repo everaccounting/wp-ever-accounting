@@ -4,40 +4,31 @@
 export { default as data } from './data';
 
 /**
- * Server locale configuration.
+ * Server Currency data.
  */
-export { locale as SERVER_LOCALE } from './locale';
+export * from './currencies';
 
 /**
- * Currency Configuration for the default currency from the server
+ * Server Defaults data.
  */
-export { currencyConfig as CURRENCY_CONFIG } from './currency_config';
+export * from './defaults';
+
 
 /**
- * Default timezone configuration for the default timezone settings from the
- * server
+ * Server Formats data.
  */
-export { timezoneConfig as TIMEZONE_CONFIG } from './timezone-config';
+export * from './formats';
 
 /**
- * Miscellaneous Data from the server
+ * Server Paths data.
  */
-export * from './miscellaneous';
+export * from './paths';
 
 /**
- * Routes
+ * Server locale data.
  */
-export * from './routes';
+export * from './locale';
 
-/**
- * Custom validators
- */
-export * from './validators';
-
-/**
- * Custom exceptions
- */
-export * from './exceptions';
 
 
 /**

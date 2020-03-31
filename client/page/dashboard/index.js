@@ -1,8 +1,20 @@
 import {Component, Fragment} from 'react';
 import {__} from '@wordpress/i18n';
-import {withSelect} from "@wordpress/data";
+import {
+	AccountControl,
+	CategoryControl,
+	CategoryTypesControl,
+	ContactControl,
+	ContactTypesControl,
+	CountryControl,
+	CurrencyControl,
+	DateControl,
+	PriceControl,
+	PaymentMethodControl
 
-class Dashboard extends Component {
+} from "@eaccounting/components";
+
+export default class Dashboard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
@@ -12,26 +24,47 @@ class Dashboard extends Component {
 		this.setState({error: true, stack: error, info});
 	}
 
+	onChange = (value) =>{
+		console.log(value);
+	};
+
 	render() {
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Dashboard')}</h1>
-				{this.props.status}
-				<br/>
-				{this.props.total}
-				<br/>
-				{JSON.stringify(this.props.items)}
+				Account
+				<AccountControl
+				onChange={this.onChange}/>
+				Category
+				<CategoryControl
+					onChange={this.onChange}/>
+					Category type
+				<CategoryTypesControl
+					onChange={this.onChange}/>
+					Contact
+				<ContactControl
+					onChange={this.onChange}/>
+					contact type
+				<ContactTypesControl
+					onChange={this.onChange}/>
+					Country
+				<CountryControl
+					onChange={this.onChange}/>
+					Currency
+				<CurrencyControl
+					value={2}
+					onChange={this.onChange}/>
+					Date
+				<DateControl
+					onChange={this.onChange}/>
+					Price
+				<PriceControl
+					onChange={this.onChange}/>
+					Payment method
+				<PaymentMethodControl
+					onChange={this.onChange}/>
 			</Fragment>
 		);
 	}
 }
 
-export default withSelect((select) => {
-	const {getCollection, getTotal, getCollectionStatus} = select('ea/store');
-	const query = {page: 2};
-	return {
-		items: getCollection('contacts', query),
-		total: getTotal('contacts', query),
-		status: getCollectionStatus('contacts', query),
-	}
-})(Dashboard)

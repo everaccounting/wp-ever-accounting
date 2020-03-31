@@ -6,9 +6,9 @@ import {Component, Fragment} from '@wordpress/element';
  * Internal dependencies
  */
 import SelectControl from '../select-control';
-import {withSelect} from '@wordpress/data';
+import {CONTACT_TYPES} from '@eaccounting/data';
 
-class ContactTypesControl extends Component {
+export default class ContactTypesControl extends Component {
 	constructor(props) {
 		super(props);
 	}
@@ -16,16 +16,10 @@ class ContactTypesControl extends Component {
 	render() {
 		return (
 			<Fragment>
-				<SelectControl options={this.props.options} {...this.props} />
+				<SelectControl options={CONTACT_TYPES} {...this.props} />
 			</Fragment>
 		);
 	}
 }
-
-export default withSelect(select => {
-	return {
-		options: select('ea/store').getCollection('contacts/types')
-	}
-})(ContactTypesControl)
 
 
