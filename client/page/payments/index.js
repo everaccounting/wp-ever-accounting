@@ -31,8 +31,7 @@ class Payments extends Component {
 	};
 
 	render() {
-		const {status, total, items, page, order, orderby, query, selected} = this.props;
-		const {match} = this.props;
+		const {status, total, items, page, order, orderby, query, selected, match} = this.props;
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Payments')}</h1>

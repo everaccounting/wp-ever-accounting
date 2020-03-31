@@ -22,7 +22,6 @@ export {default as RowActions} from './table/row-actions';
 export {default as SearchBox} from './table/searchbox';
 export {default as TextControl} from './text-control';
 export {default as TextareaControl} from './textarea-control';
-export {default as withTable} from './with-table';
 export {Row} from './grid';
 export {Col} from './grid';
 

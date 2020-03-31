@@ -10,7 +10,6 @@ import {withTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
-import {get} from "lodash";
 import EditContact from "components/edit-contact";
 
 class Contacts extends Component {

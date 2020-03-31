@@ -3,13 +3,15 @@ import {
 	SearchBox,
 	TableNav,
 	Table,
-	withTable, DateFilter, AccountControl, CategoryControl
+	DateFilter,
+	AccountControl,
+	CategoryControl
 } from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
 import {map} from "lodash"
-
+import {withTable} from "@eaccounting/hoc"
 class Revenues extends Component {
 	constructor(props) {
 		super(props);
@@ -29,8 +31,7 @@ class Revenues extends Component {
 	};
 
 	render() {
-		const {status, total, items, query, selected} = this.props;
-		const {page = 1, orderby = 'created_at', order = 'desc'} = query;
+		const {status, total, items, page, order, orderby, query, selected} = this.props;
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Revenues')}</h1>

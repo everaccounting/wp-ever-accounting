@@ -1,5 +1,7 @@
 import {hasInState} from "../utils";
 import {addQueryArgs} from '@wordpress/url';
+import {isResolving} from "../base-selectors";
+import {REDUCER_KEY} from "./constants";
 
 /**
  * A generic function to retrieve from store
@@ -96,4 +98,61 @@ export function getEntityById(state, resourceName, id = null, query = null) {
  */
 export function getEntitiesWithRouteParts(state, resourceName, parts = [], id = null, query = null) {
 	return getFromState({state, resourceName, query, group: [parts].concat([id]), fallback: {}});
+}
+
+
+
+/**
+ * Helper indicating whether the given resourceName, selectorName, and queryString
+ * is being resolved or not.
+ *
+ * @param {Object} state
+ * @param {string} resourceName
+ * @param {string} selectorName
+ * @param {Object} query
+ * @return {boolean} Returns true if the selector is currently requesting items.
+ */
+export function isRequesting(state, resourceName, selectorName, query = null) {
+	return isResolving(REDUCER_KEY, selectorName, resourceName, query);
+}
+
+/**
+ * Returns whether the items for the given resourceName and query string are being
+ * requested.
+ *
+ * @param {Object} state Data state.
+ * @param {string} resourceName  The resourceName for the items being requested
+ * @param {Object} query
+ * @return {boolean} Whether items are being requested or not.
+ */
+export function isRequestingFetchAPI(state, resourceName, query = null) {
+	return isRequesting(state, resourceName, 'fetchAPI', query);
+}
+
+
+/**
+ * Returns whether the get entities request is in the process of being resolved
+ * or not.
+ * @param {Object} state
+ * @param {string} resourceName
+ * @param {Object} query
+ * @return {boolean} True means entities (for the given model) are being
+ * requested.
+ */
+export function isRequestingGetCollection(state, resourceName, query = null) {
+	return isRequesting(state, resourceName, 'getCollection', query);
+}
+
+/**
+ * Returns whether the get entities request is in the process of being resolved
+ * or not.
+ * @param {Object} state
+ * @param {string} resourceName
+ * @param {Number} id
+ * @param {Object} query
+ * @return {boolean} True means entities (for the given model) are being
+ * requested.
+ */
+export function isRequestingGetEntityById(state, resourceName,id,  query = null) {
+	return isRequesting(state, resourceName, 'getEntityById', id,  query);
 }

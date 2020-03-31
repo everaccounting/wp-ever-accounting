@@ -3,9 +3,9 @@ import {
 	SearchBox,
 	TableNav,
 	Table,
-	withTable,
 	Button
 } from "@eaccounting/components"
+import {withTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
@@ -47,8 +47,7 @@ class TaxRates extends Component {
 	};
 
 	render() {
-		const {status, total, items, query, selected} = this.props;
-		const {page = 1, orderby = 'created_at', order = 'desc'} = query;
+		const {status, total, items, page, order, orderby, query, selected} = this.props;
 		return (
 			<Fragment>
 
@@ -56,7 +55,8 @@ class TaxRates extends Component {
 					onClose={this.onClose}
 					onCreate={this.onCreate}
 					tittle={__('Add Tax Rate')}
-					buttonTittle={__('Add')}/>}
+					buttonTittle={__('Add')}/>
+				}
 
 				<div className="ea-table-display">
 					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Tax Rate')}</Button>

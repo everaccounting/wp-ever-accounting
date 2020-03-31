@@ -19,7 +19,6 @@ const DEFAULT_LISTS_STATE = {};
 export function receiveCollection(state = DEFAULT_LISTS_STATE, action) {
 	let {type, resourceName, queryString,  response} = action;
 	const group = action.group ? JSON.stringify(action.group) : '[]';
-	console.log(action);
 	switch (type) {
 		case types.RECEIVE_COLLECTION:
 			state = updateState(state, [resourceName, group, queryString], response);

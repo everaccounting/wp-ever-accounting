@@ -7,12 +7,10 @@ import {
 	AccountControl,
 	CategoryControl,
 	DateFilter,
-	withTable,
 } from "@eaccounting/components"
-import {data} from "@eaccounting/data";
-
 import {getHeaders} from './constants';
 import Row from "./row";
+import {withTable} from "@eaccounting/hoc";
 import {__} from '@wordpress/i18n';
 import {map} from "lodash"
 
@@ -36,9 +34,7 @@ class Transactions extends Component {
 	};
 
 	render() {
-		console.log(data);
-		const {status, total, items, query, selected} = this.props;
-		const {page = 1, orderby = 'paid_at', order = 'desc'} = query;
+		const {status, total, items, page, order, orderby, query, selected} = this.props;
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
@@ -55,9 +51,9 @@ class Transactions extends Component {
 					selected={selected}
 					onChangePage={this.props.onPageChange}>
 
-				{/*	<DateFilter*/}
-				{/*		className={'alignleft actions'}*/}
-				{/*		onChange={date => this.props.onFilter({date})}/>*/}
+					<DateFilter
+						className={'alignleft actions'}
+						onChange={date => this.props.onFilter({date})}/>
 
 					<AccountControl
 						className={'alignleft actions'}
@@ -74,25 +70,25 @@ class Transactions extends Component {
 						onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}
 					/>
 
-				{/*	<SelectControl*/}
-				{/*		className={'alignleft actions'}*/}
-				{/*		placeholder={__('Filter Type')}*/}
-				{/*		options={[*/}
-				{/*			{*/}
-				{/*				label: __('Income'),*/}
-				{/*				value: 'income'*/}
-				{/*			},*/}
-				{/*			{*/}
-				{/*				label: __('Expense'),*/}
-				{/*				value: 'expense'*/}
-				{/*			},*/}
-				{/*			{*/}
-				{/*				label: __('Transfer'),*/}
-				{/*				value: 'transfer'*/}
-				{/*			}*/}
-				{/*		]}*/}
-				{/*		isMulti*/}
-				{/*		onChange={(types) => this.props.onFilter({type: map(types, 'value')})}/>*/}
+					<SelectControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Type')}
+						options={[
+							{
+								label: __('Income'),
+								value: 'income'
+							},
+							{
+								label: __('Expense'),
+								value: 'expense'
+							},
+							{
+								label: __('Transfer'),
+								value: 'transfer'
+							}
+						]}
+						isMulti
+						onChange={(types) => this.props.onFilter({types})}/>
 
 				</TableNav>
 
@@ -105,6 +101,7 @@ class Transactions extends Component {
 					total={total}
 					row={this.onRenderRow}
 					status={status}
+					onSetAllSelected={this.props.onAllSelected}
 					onSetOrderBy={this.props.onOrderBy}
 				/>
 
@@ -113,9 +110,7 @@ class Transactions extends Component {
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onAction}
-				/>
+					onChangePage={this.props.onPageChange}/>
 
 			</Fragment>
 		);

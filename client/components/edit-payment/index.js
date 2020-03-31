@@ -8,190 +8,165 @@ import {
 	TextControl,
 	DateControl,
 	PriceControl,
-	Spinner,
-	Select,
 	AccountControl,
 	CategoryControl,
 	ContactControl,
 	Button,
-	SelectControl,
-	Row,
-	Col,
-	Form,
-	Field
+	Blocker,
+	PaymentMethodControl
 } from '@eaccounting/components';
 import {withSelect, withDispatch} from "@wordpress/data";
 import {compose} from "@wordpress/compose";
+import {Form, Field} from "react-final-form";
 import {get} from "lodash";
+import apiFetch from "@wordpress/api-fetch";
 
 class EditPayment extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isLoading: true
+			isSaving: false
 		}
 	}
 
-
-	//
-	// onSubmit = () => {
-	// 	const {id, paid_at, amount, account, category, contact, reference, payment_method, description} = this.state;
-	// 	const data = {
-	// 		id,
-	// 		paid_at,
-	// 		amount,
-	// 		account_id: account && account.id ? account.id : undefined,
-	// 		category_id: category && category.id ? category.id : undefined,
-	// 		contact_id: contact && contact.id ? contact.id : undefined,
-	// 		reference,
-	// 		payment_method,
-	// 		description
-	// 	};
-	//
-	// 	this._isMounted && this.setState({
-	// 		isSaving: !this.state.isSaving
-	// 	});
-	//
-	// 	let endpoint = accountingApi.payments.create(data);
-	// 	if (id) {
-	// 		endpoint = accountingApi.payments.update(id, data);
-	// 	}
-	//
-	// 	this._isMounted && apiRequest(endpoint).then(res => {
-	// 		this._isMounted && this.setState({
-	// 			isSaving: !this.state.isSaving
-	// 		});
-	//
-	// 	})
-	//
-	// };
 	onSubmit = (data) => {
-		console.log(data);
+		data.account_id = data.account && data.account.id && data.account.id;
+		data.currency = data.currency && data.currency.code && data.currency.code;
+		data.contact_id = data.contact && data.contact.id && data.contact.id;
+		data.category_id = data.category && data.category.id && data.category.id;
+		apiFetch({path:'ea/v1/payments', method:'POST', data}).then(res=> {
+			console.log(res)
+		}).catch(error => {
+			console.log(error);
+		})
 	};
 
 	render() {
-		const {payment, match} = this.props;
+		const {payment,settings, match, isLoading, isSettingsLoading} = this.props;
 		const isAdd = get(match, ['params', 'id'], '') === 'add';
-		const {isLoading} = this.state;
-
 		return (
 			<Fragment>
 				{isAdd && <CompactCard tagName="h3">{__('Add Payment')}</CompactCard>}
 				{!isAdd && <CompactCard tagName="h3">{__('Update Payment')}</CompactCard>}
 				<Card>
-					<Form onSubmit={this.onSubmit} initialValues={payment}>
-						<div className="ea-double-columns">
-							<Field
-								name="account"
-								label={__('Account', 'wp-ever-accounting')}
-								before={<Icon icon={'university'}/>}>
-								{props => (
-									<AccountControl {...props.input} {...props}/>
-								)}
-							</Field>
+					<Blocker isBlocked={isLoading || isSettingsLoading}>
+						<Form
+							onSubmit={this.onSubmit}
+							initialValues={payment}
+							render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
+								<form onSubmit={handleSubmit}>
+									<div className="ea-row">
+										<div className="ea-col-6">
+											<Field
+												label={__('Date', 'wp-ever-accounting')}
+												name="paid_at"
+												before={<Icon icon={'calendar'}/>}
+												required>
+												{props => (
+													<DateControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
 
-							<Field
-								name="category"
-								label={__('Category', 'wp-ever-accounting')}
-								before={<Icon icon={'university'}/>}>
-								{props => (
-									<CategoryControl {...props.input} {...props}/>
-								)}
-							</Field>
+										<div className="ea-col-6">
+											<Field
+												label={__('Account', 'wp-ever-accounting')}
+												name="account"
+												defaultValue={settings && settings.default_account && settings.default_account}
+												before={<Icon icon={'university'}/>}
+												required>
+												{props => (
+													<AccountControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
 
-						</div>
-						<Row>
-							{/*<Col>*/}
-							{/*	<DateControl*/}
-							{/*		label={__('Date')}*/}
-							{/*		before={<Icon icon={'calendar'}/>}*/}
-							{/*		value={paid_at}*/}
-							{/*		required*/}
-							{/*		onChange={paid_at => {*/}
-							{/*			{*/}
-							{/*				this.setState({paid_at});*/}
-							{/*			}*/}
-							{/*		}}*/}
-							{/*	/>*/}
-							{/*</Col>*/}
-							{/*<Col>*/}
-							{/*	<PriceControl*/}
-							{/*		label={__('Amount')}*/}
-							{/*		before={<Icon icon={'money'}/>}*/}
-							{/*		code={account && account.currency_code && account.currency_code}*/}
-							{/*		required*/}
-							{/*		value={amount}*/}
-							{/*		onChange={amount => {*/}
-							{/*			this.setState({amount})*/}
-							{/*		}}/>*/}
-							{/*</Col>*/}
-							{/*<Col>*/}
-							{/*	<AccountControl*/}
-							{/*		label={__('Account')}*/}
-							{/*		before={<Icon icon={'university'}/>}*/}
-							{/*		after={account && account.currency_code && account.currency_code}*/}
-							{/*		required*/}
-							{/*		value={account}*/}
-							{/*		onChange={account => {*/}
-							{/*			this.setState({account});*/}
-							{/*		}}*/}
-							{/*	/>*/}
-							{/*</Col>*/}
-							{/*<Col>*/}
-							{/*<CategoryControl*/}
-							{/*	label={__('Category')}*/}
-							{/*	before={<Icon icon={'folder-open-o'}/>}*/}
-							{/*	//after={this.addContactBtn()}*/}
-							{/*	required*/}
-							{/*	type="expense"*/}
-							{/*	value={model.category}*/}
-							{/*	onChange={model.setCategory}*/}
-							{/*/>*/}
-							{/*</Col>*/}
-							{/*<Col>*/}
-							{/*	<ContactControl*/}
-							{/*		label={__('Customer')}*/}
-							{/*		before={<Icon icon={'user'}/>}*/}
-							{/*		type="vendor"*/}
-							{/*		value={contact}*/}
-							{/*		onChange={contact => this.setState({contact})}*/}
-							{/*	/>*/}
-							{/*</Col>*/}
+										<div className="ea-col-6">
+											<Field
+												label={__('Amount', 'wp-ever-accounting')}
+												name="amount"
+												before={<Icon icon={'money'}/>}
+												required>
+												{props => (
+													<PriceControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
 
-							{/*<Col>*/}
-							{/*	<Select*/}
-							{/*		label={__('Payment Method')}*/}
-							{/*		before={<Icon icon={'credit-card'}/>}*/}
-							{/*		required*/}
-							{/*		value={payment_method}*/}
-							{/*		options={Object.keys(eAccountingi10n.data.paymentMethods).map(key => {*/}
-							{/*			return {value: key, label: eAccountingi10n.data.paymentMethods[key]};*/}
-							{/*		})}*/}
-							{/*		onChange={payment_method => this.setState({payment_method})}*/}
-							{/*	/>*/}
-							{/*</Col>*/}
-							{/*<Col>*/}
-							{/*	<TextControl*/}
-							{/*		label={__('Reference')}*/}
-							{/*		before={<Icon icon={'file-text-o'}/>}*/}
-							{/*		value={reference}*/}
-							{/*		onChange={reference => this.setState({reference})}*/}
-							{/*	/>*/}
-							{/*</Col>*/}
-							{/*<Col>*/}
-							{/*	<TextareaControl*/}
-							{/*		label={__('Description')}*/}
-							{/*		value={description}*/}
-							{/*		onChange={description => this.setState({description})}*/}
-							{/*	/>*/}
-							{/*</Col>*/}
-						</Row>
 
-						{/*<Button isPrimary isBusy={isSaving} onClick={this.onSubmit}>*/}
-						{/*	{__('Submit')}*/}
-						{/*</Button>*/}
+										<div className="ea-col-6">
+											<Field
+												label={__('Category', 'wp-ever-accounting')}
+												name="category"
+												before={<Icon icon={'folder-open-o'}/>}
+												required>
+												{props => (
+													<CategoryControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
 
-					</Form>
+										<div className="ea-col-6">
+											<Field
+												label={__('Vendor', 'wp-ever-accounting')}
+												name="contact"
+												before={<Icon icon={'user'}/>}>
+												{props => (
+													<ContactControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
+
+										<div className="ea-col-6">
+											<Field
+												label={__('Payment Method', 'wp-ever-accounting')}
+												name="payment_method"
+												defaultValue={settings && settings.default_payment_method && settings.default_payment_method}
+												before={<Icon icon={'credit-card'}/>}
+												required>
+												{props => (
+													<PaymentMethodControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
+
+										<div className="ea-col-12">
+											<Field
+												label={__('Description', 'wp-ever-accounting')}
+												name="description">
+												{props => (
+													<TextareaControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
+
+										<div className="ea-col-6">
+											<Field
+												label={__('Reference', 'wp-ever-accounting')}
+												name="reference"
+												before={<Icon icon={'file-text-o'}/>}>
+												{props => (
+													<TextControl {...props.input} {...props}/>
+												)}
+											</Field>
+										</div>
+
+
+									</div>
+
+
+
+
+									{submitError && <div className="error">{submitError}</div>}
+									<p>
+										<Button isPrimary isBusy={submitting} type="submit">{__('Submit')}</Button>
+									</p>
+
+								</form>
+							)}
+						/>
+
+					</Blocker>
 				</Card>
 			</Fragment>
 		);
@@ -202,9 +177,13 @@ class EditPayment extends Component {
 export default compose([
 	withSelect((select, ownProps) => {
 		const id = get(ownProps, ['match', 'params', 'id'], undefined);
-		const {getEntitiesByIds} = select('ea/collection');
+		const {getEntityById, isRequestingGetEntityById, fetchAPI, isRequestingFetchAPI} = select('ea/collection');
+		const shouldLoad = !isNaN(id);
 		return {
-			payment: !isNaN(id) ? getEntitiesByIds('payments', [id]) : {}
+			payment: shouldLoad ? getEntityById('payments', id, {}) : {},
+			isLoading: shouldLoad ? isRequestingGetEntityById('payments', id, {}) : false,
+			settings:fetchAPI('settings', {}),
+			isSettingsLoading: isRequestingFetchAPI('settings', {}),
 		}
 	}),
 	withDispatch(dispatch => {

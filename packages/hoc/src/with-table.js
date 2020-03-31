@@ -84,14 +84,14 @@ function withTable(resourceName, defaultQuery = {orderby: 'id'}) {
 
 		return compose([
 			withSelect((select) => {
-				const {getEntities, isRequestingEntities,} = select('ea/collection');
+				const {getCollection, isRequestingGetCollection,} = select('ea/collection');
 				const {getPage, getSearch, getOrder, getOrderBy, getQuery} = select('ea/query');
 				const query = getQuery(resourceName, defaultQuery);
-				const {items, total} = getEntities(resourceName, query);
+				const {items = [], total = NaN} = getCollection(resourceName, query);
 				return {
 					items: items,
 					total: total,
-					status: isRequestingEntities(resourceName, query) === true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE",
+					status: isRequestingGetCollection(resourceName, query) === true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE",
 					page: getPage(resourceName),
 					per_page: 20,
 					search: getSearch(resourceName),

@@ -44,7 +44,8 @@ class EAccounting_Scripts {
 	public static function register_assets() {
 		//styles
 		self::register_style( 'ea-components', plugins_url( self::get_block_asset_dist_path( 'components', 'css' ), __DIR__ ), array( 'wp-components' ) );
-		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array( 'ea-components' ) );
+		self::register_style( 'ea-fontawesome', plugins_url( '/assets/vendor/font-awesome/css/font-awesome.min.css', __DIR__ ), array() );
+		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array( 'ea-components','ea-fontawesome' ) );
 
 		//scripts
 		self::register_script( 'ea-data', plugins_url( self::get_block_asset_dist_path( 'data' ), __DIR__ ) );
@@ -160,8 +161,8 @@ class EAccounting_Scripts {
 	 * since 1.0.0
 	 */
 	protected static function get_data() {
-		$date_format = eaccounting_get_settings('ea_date_format');
-		$time_format = eaccounting_get_settings('ea_time_format');
+		$date_format = eaccounting_get_settings( 'ea_date_format' );
+		$time_format = eaccounting_get_settings( 'ea_time_format' );
 		$locale_data = [
 			'data' => [
 				'site_title'       => get_bloginfo( 'name ' ),
@@ -181,7 +182,7 @@ class EAccounting_Scripts {
 					'user' => get_user_locale(),
 					'site' => get_locale()
 				],
-				'date_formats'     => eaccounting_convert_php_to_moment_formats($date_format, $time_format),
+				'date_formats'     => eaccounting_convert_php_to_moment_formats( $date_format, $time_format ),
 				'currency'         => eaccounting_get_default_currency(),
 				'currency_configs' => eaccounting_get_currencies_data(),
 				'countries'        => self::to_js_options( eaccounting_get_countries() ),

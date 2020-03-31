@@ -3,10 +3,10 @@ import {
 	SearchBox,
 	TableNav,
 	Table,
-	withTable,
 	Button,
 	CategoryTypesControl
 } from "@eaccounting/components"
+import {withTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
@@ -49,8 +49,7 @@ class Categories extends Component {
 	};
 
 	render() {
-		const {status, total, items, query, selected} = this.props;
-		const {page = 1, orderby = 'created_at', order = 'desc'} = query;
+		const {status, total, items, page, order, orderby, query, selected} = this.props;
 		return (
 			<Fragment>
 				{this.state.isAdding &&
