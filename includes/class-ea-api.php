@@ -33,6 +33,7 @@ class EAccounting_API {
 	 */
 	public function __construct() {
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
+		add_filter( 'eaccounting_rest_pre_get_setting', array( $this, 'customized_rest_settings_output'), 10, 3);
 	}
 
 	/**
@@ -54,6 +55,8 @@ class EAccounting_API {
 			dirname( __FILE__ ) . '/api/class-ea-rest-taxes-controller.php'        => 'EAccounting_Taxes_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-transactions-controller.php' => 'EAccounting_Transactions_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-items-controller.php'        => 'EAccounting_Items_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-attachment-controller.php'   => 'EAccounting_Attachment_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-settings-controller.php'     => 'EAccounting_Settings_Controller',
 		);
 
 		foreach ( $rest_handlers as $file_name => $controller ) {
@@ -63,8 +66,33 @@ class EAccounting_API {
 				$this->$controller->register_routes();
 			}
 		}
-
 	}
+
+	/**
+	 * This is a workaround for fixing JS related problem
+	 * Our JS select wants object as value but PHP saving string/id so we are hooking here to output
+	 * Object instead of string/id
+	 * since 1.0.0
+	 * @param $value
+	 * @param $name
+	 * @param $args
+	 *
+	 * @return array|object|void|null
+	 */
+	public function customized_rest_settings_output($value, $name, $args){
+
+		switch ($name){
+			case 'default_account':
+				$value = eaccounting_get_default_account();
+				break;
+			case 'default_currency':
+				$value = eaccounting_get_default_currency();
+				break;
+		}
+
+		return $value;
+	}
+
 }
 
 EAccounting_API::instance();

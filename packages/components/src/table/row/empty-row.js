@@ -3,7 +3,10 @@
  */
 
 import React from 'react';
-import { translate as __ } from 'lib/locale';
+/**
+ * WordPress dependencies
+ */
+import { __ } from '@wordpress/i18n';
 
 const EmptyRow = props => {
 	const { headers } = props;

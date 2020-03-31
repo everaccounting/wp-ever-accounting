@@ -2,7 +2,10 @@
 /**
  * External dependencies
  */
-import React, { PureComponent } from 'react';
+/**
+ * WordPress dependencies
+ */
+import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { Button as BaseElement } from '@wordpress/components';
@@ -10,7 +13,7 @@ import { Button as BaseElement } from '@wordpress/components';
  * Style dependencies
  */
 
-export default class Button extends PureComponent {
+export default class Button extends Component {
 	static propTypes = {
 		compact: PropTypes.bool,
 		primary: PropTypes.bool,

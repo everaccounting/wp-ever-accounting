@@ -1,68 +1,59 @@
 const path = require('path');
+const chalk = require('chalk');
 const webpack = require('webpack');
-const { get } = require('lodash');
+const pkg = require('./package.json');
+const {get} = require('lodash');
 const TerserPlugin = require('terser-webpack-plugin');
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
-// PostCSS plugins
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
+
 const postcssPresetEnv = require('postcss-preset-env');
 const postcssFocus = require('postcss-focus');
 const postcssReporter = require('postcss-reporter');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
 
-const pkg = require('./package.json');
 const NODE_ENV = process.env.NODE_ENV || 'development';
+const externals = [];
 
-const externals = {
-	'@wordpress/blocks': { this: ['wp', 'blocks'] },
-	'@wordpress/element': { this: ['wp', 'element'] },
-	'@wordpress/hooks': { this: ['wp', 'hooks'] },
-	'@wordpress/url': { this: ['wp', 'url'] },
-	'@wordpress/html-entities': { this: ['wp', 'htmlEntities'] },
-	'@wordpress/i18n': { this: ['wp', 'i18n'] },
-	'@wordpress/keycodes': { this: ['wp', 'keycodes'] },
-	tinymce: 'tinymce',
-	moment: 'moment',
-	react: 'React',
-	lodash: 'lodash',
-	'react-dom': 'ReactDOM',
-};
-
-const eAccountingPackages = [
+const packages = [
 	'components',
-	// 'csv-export',
-	// 'currency',
-	// 'date',
-	// 'navigation',
-	// 'number',
+	'data',
+	'hoc',
+	'store',
 ];
-
 const entryPoints = {};
-eAccountingPackages.forEach(name => {
+packages.forEach(name => {
 	externals[`@eaccounting/${name}`] = {
 		this: ['eaccounting', name.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase())],
 	};
 	entryPoints[name] = `./packages/${name}`;
 });
 
-const webpackConfig = {
+module.exports = {
 	mode: NODE_ENV,
+	devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
 	entry: {
-		app: './src',
-		...entryPoints,
+		client: './client',
+		...entryPoints
 	},
 	output: {
-		filename: './dist/[name]/index.js',
+		filename: './assets/dist/[name].js',
 		path: __dirname,
 		library: ['eaccounting', '[modulename]'],
 		libraryTarget: 'this',
 	},
 	externals,
+	resolve: {
+		extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
+		modules: [path.resolve(__dirname, 'client'), 'node_modules'],
+	},
 	optimization: {
-		minimize: 'production' === process.env.NODE_ENV,
+		minimize: 'production' === NODE_ENV,
 		minimizer: [
 			new TerserPlugin({
 				cache: true,
@@ -70,7 +61,7 @@ const webpackConfig = {
 				terserOptions: {
 					ecma: 5,
 					mangle: {
-						reserved: 'production' === process.env.NODE_ENV ? [] : ['translate'],
+						reserved: 'production' === NODE_ENV ? [] : ['translate'],
 						safari10: true,
 					},
 				},
@@ -80,18 +71,13 @@ const webpackConfig = {
 	module: {
 		rules: [
 			{
-				parser: {
-					amd: false,
-				},
-			},
-			{
 				test: /\.(js|jsx)$/,
 				loader: 'babel-loader',
 				exclude: /node_modules/,
 			},
 			{
 				test: /\.s?css$/,
-				// exclude: /node_modules/,
+				exclude: /node_modules/,
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',
@@ -106,11 +92,11 @@ const webpackConfig = {
 					},
 					{
 						loader: 'sass-loader',
-						query: {
-							includePaths: ['src/stylesheets/abstracts'],
-							data:
-								'@import "_colors"; ' + '@import "_variables"; ' + '@import "_breakpoints"; ' + '@import "_mixins"; ',
-						},
+						// query: {
+						// 	includePaths: ['src/stylesheets/abstracts'],
+						// 	data:
+						// 		'@import "_colors"; ' + '@import "_variables"; ' + '@import "_breakpoints"; ' + '@import "_mixins"; ',
+						// },
 					},
 				],
 			},
@@ -122,7 +108,7 @@ const webpackConfig = {
 						options: {
 							emitFile: true, // On the server side, don't actually copy files
 							name: '[name].[ext]',
-							outputPath: '/dist/images/app',
+							outputPath: '/assets/dist',
 						},
 					},
 				],
@@ -134,24 +120,30 @@ const webpackConfig = {
 						loader: 'file-loader',
 						options: {
 							name: '[name].[ext]',
-							outputPath: 'fonts/',
+							outputPath: '/assets/dist/',
 						},
 					},
 				],
 			},
+			{
+				test: /\.svg$/,
+				use: ['@svgr/webpack', 'url-loader'],
+			},
 		],
 	},
-	resolve: {
-		extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
-		modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-	},
 	plugins: [
-		new FixStyleOnlyEntriesPlugin(),
+		new ProgressBarPlugin({
+			format: chalk.blue('Build core script') +
+				' [:bar] ' + chalk.green(':percent') +
+				' :msg (:elapsed seconds)',
+		}),
+		new DependencyExtractionWebpackPlugin({injectPolyfill: true}),
 		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
 		new webpack.DefinePlugin({
-			'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') },
+			'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')},
 			EACCOUNTING_VERSION: "'" + pkg.version + "'",
 		}),
+		new FixStyleOnlyEntriesPlugin(),
 		new CustomTemplatedPathPlugin({
 			modulename(outputPath, data) {
 				const entryName = get(data, ['chunk', 'name']);
@@ -161,7 +153,7 @@ const webpackConfig = {
 				return outputPath;
 			},
 		}),
-		new DependencyExtractionWebpackPlugin(),
+		new DuplicatePackageCheckerPlugin(),
 		new webpack.LoaderOptionsPlugin({
 			options: {
 				postcss: [
@@ -175,33 +167,35 @@ const webpackConfig = {
 				],
 			},
 			output: {
-				path: path.join(__dirname, 'dist'),
+				path: path.join(__dirname, 'assets/dist'),
 			},
 		}),
-		new DuplicatePackageCheckerPlugin(),
 		new MiniCssExtractPlugin({
-			filename: './dist/[name]/style.css',
+			filename: './assets/dist/[name].css',
 		}),
 		new CopyWebpackPlugin(
-			eAccountingPackages.map(packageName => ({
+			packages.map(packageName => ({
 				from: `./packages/${packageName}/build-style/*.css`,
-				to: `./dist/${packageName}/`,
+				to: `./assets/dist/${packageName}.css`,
 				flatten: true,
 				transform: content => content,
 			}))
-		),
+		)
 	],
+	stats: {
+		all: false,
+		assets: true,
+		builtAt: true,
+		colors: true,
+		errors: true,
+		hash: true,
+		timings: true,
+	},
 	watchOptions: {
 		ignored: [/node_modules/],
 	},
 	performance: {
 		hints: false,
 	},
-	watch: true,
+	watch: true
 };
-
-if (webpackConfig.mode !== 'production') {
-	webpackConfig.devtool = process.env.SOURCEMAP || 'source-map';
-}
-
-module.exports = webpackConfig;

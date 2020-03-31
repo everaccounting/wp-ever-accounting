@@ -32,7 +32,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -68,7 +68,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 	}
@@ -247,18 +247,19 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
 			'id'             => $item->id,
-			'account_id'     => $item->account_id,
+			'account'        => eaccounting_get_account( $item->account_id ),
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
-			'amount'         => $item->amount,
-			'contact_id'     => $item->contact_id,
-			'description'    => $item->description,
-			'category_id'    => $item->category_id,
+			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
+			'currency'       => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
+			'description'    => $item->description,
+			'contact'        => eaccounting_get_contact( $item->contact_id ),
+			'category'       => eaccounting_get_category( $item->category_id ),
 			'payment_method' => $item->payment_method,
 			'reference'      => $item->reference,
 			'attachment_url' => $item->attachment_url,
-			'reconciled'     => $item->reconciled,
+			'reconciled'     => intval( $item->reconciled ),
 			'created_at'     => $this->prepare_date_response( $item->created_at ),
 			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -295,12 +296,6 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 		}
 		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
 			$prepared_item->amount = $request['amount'];
-		}
-		if ( ! empty( $schema['properties']['currency_code'] ) && isset( $request['currency_code'] ) ) {
-			$prepared_item->currency_code = $request['currency_code'];
-		}
-		if ( ! empty( $schema['properties']['currency_rate'] ) && isset( $request['currency_rate'] ) ) {
-			$prepared_item->currency_rate = $request['currency_rate'];
 		}
 		if ( ! empty( $schema['properties']['contact_id'] ) && isset( $request['contact_id'] ) ) {
 			$prepared_item->contact_id = $request['contact_id'];
@@ -365,34 +360,43 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Contact', 'wp-ever-accounting' ),
+			'title'      => __( 'Payment', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'             => array(
+				'id'          => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
+					'default'     => null,
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'account_id'     => array(
+				'account'     => array(
+					'description' => __( 'Account object of the item.', 'wp-ever-accounting' ),
+					'readonly'    => true,
+					'type'        => 'object',
+				),
+				'account_id'  => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'edit' ),
+					'required'    => true,
+					'default'     => null,
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 				),
-				'paid_at'        => array(
+				'paid_at'     => array(
 					'description' => __( 'Payment Date of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'format'      => 'date-time',
+					'format'      => 'date',
+					'default'     => current_time( 'mysql' ),
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
-				'amount'         => array(
+				'amount'      => array(
 					'description' => __( 'Amount of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -401,33 +405,15 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'currency_code'  => array(
-					'description' => __( 'Currency code of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'currency_rate'  => array(
-					'description' => __( 'Currency rate of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'contact_id'     => array(
+				'contact_id'  => array(
 					'description' => __( 'Contact id of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'description'    => array(
+				'description' => array(
 					'description' => __( 'Description of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -435,6 +421,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
+
 				'category_id'    => array(
 					'description' => __( 'Category id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
@@ -447,6 +434,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				'reference'      => array(
 					'description' => __( 'Reference of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
+					'default'     => 'test',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -472,6 +460,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				'parent_id'      => array(
 					'description' => __( 'Parent id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
+					'default'     => 0,
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -480,6 +469,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 				'reconciled'     => array(
 					'description' => __( 'Reconciliation of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
+					'default'     => 0,
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -496,7 +486,9 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 			)
 		);
 
-		return $this->add_additional_fields_schema( $schema );
+		$this->schema = $schema;
+
+		return $this->add_additional_fields_schema( $this->schema );
 	}
 
 

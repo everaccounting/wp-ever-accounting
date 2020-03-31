@@ -4,6 +4,9 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+/**
+ * WordPress dependencies
+ */
 import { DropdownMenu } from '@wordpress/components';
 
 const RowActions = props => {

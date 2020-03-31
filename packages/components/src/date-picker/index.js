@@ -1,6 +1,12 @@
 'use strict';
+/**
+ * External dependencies
+ */
 import React, { Component } from 'react';
 import $ from 'jquery';
+/**
+ * Internal dependencies
+ */
 import getOptions from './getOptions';
 import PropTypes from 'prop-types';
 import 'bootstrap-daterangepicker';

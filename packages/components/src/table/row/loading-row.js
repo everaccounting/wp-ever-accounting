@@ -12,7 +12,7 @@ const Row = props => {
 		<tr className="is-placeholder">
 			{columns.map((item, pos) => (
 				<td key={pos}>
-					<div className="placeholder-loading"></div>
+					<div className="placeholder-loading" />
 				</td>
 			))}
 		</tr>
@@ -20,13 +20,12 @@ const Row = props => {
 };
 
 const LoadingRow = props => {
-	const { headers, rows } = props;
-
+	const { headers, per_page } = props;
 	return (
 		<tbody>
 			<Row columns={headers} />
 
-			{rows.slice(0, -1).map((item, pos) => (
+			{[...Array(per_page).keys()].map((item, pos) => (
 				<Row columns={headers} key={pos} />
 			))}
 		</tbody>
@@ -35,7 +34,7 @@ const LoadingRow = props => {
 
 LoadingRow.propTypes = {
 	headers: PropTypes.array.isRequired,
-	rows: PropTypes.array.isRequired,
+	per_page: PropTypes.number.isRequired,
 };
 
 export default LoadingRow;

@@ -1,0 +1,3 @@
+export const ACTION_TYPES = {
+	RECEIVE_ROUTES: 'RECEIVE_ROUTES',
+};

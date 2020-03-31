@@ -270,8 +270,8 @@ function eaccounting_get_currencies_data() {
 	$config = array(
 		'AED' => [
 			'name'              => 'UAE Dirham',
-			'currency'          => 'AED',
-			'code'              => 784,
+			'code'              => 'AED',
+			'number'            => 784,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'د.إ',
@@ -282,8 +282,8 @@ function eaccounting_get_currencies_data() {
 
 		'AFN' => [
 			'name'              => 'Afghani',
-			'currency'          => 'AFN',
-			'code'              => 971,
+			'code'              => 'AFN',
+			'number'            => 971,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '؋',
@@ -294,8 +294,8 @@ function eaccounting_get_currencies_data() {
 
 		'ALL' => [
 			'name'              => 'Lek',
-			'currency'          => 'ALL',
-			'code'              => 8,
+			'code'              => 'ALL',
+			'number'            => 8,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'L',
@@ -306,8 +306,8 @@ function eaccounting_get_currencies_data() {
 
 		'AMD' => [
 			'name'              => 'Armenian Dram',
-			'currency'          => 'AMD',
-			'code'              => 51,
+			'code'              => 'AMD',
+			'number'            => 51,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'դր.',
@@ -318,8 +318,8 @@ function eaccounting_get_currencies_data() {
 
 		'ANG' => [
 			'name'              => 'Netherlands Antillean Guilder',
-			'currency'          => 'ANG',
-			'code'              => 532,
+			'code'              => 'ANG',
+			'number'            => 532,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ƒ',
@@ -330,8 +330,8 @@ function eaccounting_get_currencies_data() {
 
 		'AOA' => [
 			'name'              => 'Kwanza',
-			'currency'          => 'AOA',
-			'code'              => 973,
+			'code'              => 'AOA',
+			'number'            => 973,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Kz',
@@ -342,8 +342,8 @@ function eaccounting_get_currencies_data() {
 
 		'ARS' => [
 			'name'              => 'Argentine Peso',
-			'currency'          => 'ARS',
-			'code'              => 32,
+			'code'              => 'ARS',
+			'number'            => 32,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -354,8 +354,8 @@ function eaccounting_get_currencies_data() {
 
 		'AUD' => [
 			'name'              => 'Australian Dollar',
-			'currency'          => 'AUD',
-			'code'              => 36,
+			'code'              => 'AUD',
+			'number'            => 36,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -366,8 +366,8 @@ function eaccounting_get_currencies_data() {
 
 		'AWG' => [
 			'name'              => 'Aruban Florin',
-			'currency'          => 'AWG',
-			'code'              => 533,
+			'code'              => 'AWG',
+			'number'            => 533,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ƒ',
@@ -378,8 +378,8 @@ function eaccounting_get_currencies_data() {
 
 		'AZN' => [
 			'name'              => 'Azerbaijanian Manat',
-			'currency'          => 'AZN',
-			'code'              => 944,
+			'code'              => 'AZN',
+			'number'            => 944,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₼',
@@ -390,8 +390,8 @@ function eaccounting_get_currencies_data() {
 
 		'BAM' => [
 			'name'              => 'Convertible Mark',
-			'currency'          => 'BAM',
-			'code'              => 977,
+			'code'              => 'BAM',
+			'number'            => 977,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'КМ',
@@ -402,8 +402,8 @@ function eaccounting_get_currencies_data() {
 
 		'BBD' => [
 			'name'              => 'Barbados Dollar',
-			'currency'          => 'BBD',
-			'code'              => 52,
+			'code'              => 'BBD',
+			'number'            => 52,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -414,8 +414,8 @@ function eaccounting_get_currencies_data() {
 
 		'BDT' => [
 			'name'              => 'Taka',
-			'currency'          => 'BDT',
-			'code'              => 50,
+			'code'              => 'BDT',
+			'number'            => 50,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '৳',
@@ -426,8 +426,8 @@ function eaccounting_get_currencies_data() {
 
 		'BGN' => [
 			'name'              => 'Bulgarian Lev',
-			'currency'          => 'BGN',
-			'code'              => 975,
+			'code'              => 'BGN',
+			'number'            => 975,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'лв',
@@ -438,8 +438,8 @@ function eaccounting_get_currencies_data() {
 
 		'BHD' => [
 			'name'              => 'Bahraini Dinar',
-			'currency'          => 'BHD',
-			'code'              => 48,
+			'code'              => 'BHD',
+			'number'            => 48,
 			'precision'         => 3,
 			'subunit'           => 1000,
 			'symbol'            => 'ب.د',
@@ -450,8 +450,8 @@ function eaccounting_get_currencies_data() {
 
 		'BIF' => [
 			'name'              => 'Burundi Franc',
-			'currency'          => 'BIF',
-			'code'              => 108,
+			'code'              => 'BIF',
+			'number'            => 108,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Fr',
@@ -462,8 +462,8 @@ function eaccounting_get_currencies_data() {
 
 		'BMD' => [
 			'name'              => 'Bermudian Dollar',
-			'currency'          => 'BMD',
-			'code'              => 60,
+			'code'              => 'BMD',
+			'number'            => 60,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -474,8 +474,8 @@ function eaccounting_get_currencies_data() {
 
 		'BND' => [
 			'name'              => 'Brunei Dollar',
-			'currency'          => 'BND',
-			'code'              => 96,
+			'code'              => 'BND',
+			'number'            => 96,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -486,8 +486,8 @@ function eaccounting_get_currencies_data() {
 
 		'BOB' => [
 			'name'              => 'Boliviano',
-			'currency'          => 'BOB',
-			'code'              => 68,
+			'code'              => 'BOB',
+			'number'            => 68,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Bs.',
@@ -498,8 +498,8 @@ function eaccounting_get_currencies_data() {
 
 		'BOV' => [
 			'name'              => 'Mvdol',
-			'currency'          => 'BOV',
-			'code'              => 984,
+			'code'              => 'BOV',
+			'number'            => 984,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Bs.',
@@ -510,8 +510,8 @@ function eaccounting_get_currencies_data() {
 
 		'BRL' => [
 			'name'              => 'Brazilian Real',
-			'currency'          => 'BRL',
-			'code'              => 986,
+			'code'              => 'BRL',
+			'number'            => 986,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'R$',
@@ -522,8 +522,8 @@ function eaccounting_get_currencies_data() {
 
 		'BSD' => [
 			'name'              => 'Bahamian Dollar',
-			'currency'          => 'BSD',
-			'code'              => 44,
+			'code'              => 'BSD',
+			'number'            => 44,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -534,8 +534,8 @@ function eaccounting_get_currencies_data() {
 
 		'BTN' => [
 			'name'              => 'Ngultrum',
-			'currency'          => 'BTN',
-			'code'              => 64,
+			'code'              => 'BTN',
+			'number'            => 64,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Nu.',
@@ -546,8 +546,8 @@ function eaccounting_get_currencies_data() {
 
 		'BWP' => [
 			'name'              => 'Pula',
-			'currency'          => 'BWP',
-			'code'              => 72,
+			'code'              => 'BWP',
+			'number'            => 72,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'P',
@@ -558,8 +558,8 @@ function eaccounting_get_currencies_data() {
 
 		'BYN' => [
 			'name'              => 'Belarussian Ruble',
-			'currency'          => 'BYN',
-			'code'              => 974,
+			'code'              => 'BYN',
+			'number'            => 974,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Br',
@@ -570,8 +570,8 @@ function eaccounting_get_currencies_data() {
 
 		'BZD' => [
 			'name'              => 'Belize Dollar',
-			'currency'          => 'BZD',
-			'code'              => 84,
+			'code'              => 'BZD',
+			'number'            => 84,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -582,8 +582,8 @@ function eaccounting_get_currencies_data() {
 
 		'CAD' => [
 			'name'              => 'Canadian Dollar',
-			'currency'          => 'CAD',
-			'code'              => 124,
+			'code'              => 'CAD',
+			'number'            => 124,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -594,8 +594,8 @@ function eaccounting_get_currencies_data() {
 
 		'CDF' => [
 			'name'              => 'Congolese Franc',
-			'currency'          => 'CDF',
-			'code'              => 976,
+			'code'              => 'CDF',
+			'number'            => 976,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Fr',
@@ -606,8 +606,8 @@ function eaccounting_get_currencies_data() {
 
 		'CHF' => [
 			'name'              => 'Swiss Franc',
-			'currency'          => 'CHF',
-			'code'              => 756,
+			'code'              => 'CHF',
+			'number'            => 756,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'CHF',
@@ -618,8 +618,8 @@ function eaccounting_get_currencies_data() {
 
 		'CLF' => [
 			'name'              => 'Unidades de fomento',
-			'currency'          => 'CLF',
-			'code'              => 990,
+			'code'              => 'CLF',
+			'number'            => 990,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'UF',
@@ -630,8 +630,8 @@ function eaccounting_get_currencies_data() {
 
 		'CLP' => [
 			'name'              => 'Chilean Peso',
-			'currency'          => 'CLP',
-			'code'              => 152,
+			'code'              => 'CLP',
+			'number'            => 152,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => '$',
@@ -642,8 +642,8 @@ function eaccounting_get_currencies_data() {
 
 		'CNY' => [
 			'name'              => 'Yuan Renminbi',
-			'currency'          => 'CNY',
-			'code'              => 156,
+			'code'              => 'CNY',
+			'number'            => 156,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '¥',
@@ -654,8 +654,8 @@ function eaccounting_get_currencies_data() {
 
 		'COP' => [
 			'name'              => 'Colombian Peso',
-			'currency'          => 'COP',
-			'code'              => 170,
+			'code'              => 'COP',
+			'number'            => 170,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -666,8 +666,8 @@ function eaccounting_get_currencies_data() {
 
 		'CRC' => [
 			'name'              => 'Costa Rican Colon',
-			'currency'          => 'CRC',
-			'code'              => 188,
+			'code'              => 'CRC',
+			'number'            => 188,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₡',
@@ -678,8 +678,8 @@ function eaccounting_get_currencies_data() {
 
 		'CUC' => [
 			'name'              => 'Peso Convertible',
-			'currency'          => 'CUC',
-			'code'              => 931,
+			'code'              => 'CUC',
+			'number'            => 931,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -690,8 +690,8 @@ function eaccounting_get_currencies_data() {
 
 		'CUP' => [
 			'name'              => 'Cuban Peso',
-			'currency'          => 'CUP',
-			'code'              => 192,
+			'code'              => 'CUP',
+			'number'            => 192,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -702,8 +702,8 @@ function eaccounting_get_currencies_data() {
 
 		'CVE' => [
 			'name'              => 'Cape Verde Escudo',
-			'currency'          => 'CVE',
-			'code'              => 132,
+			'code'              => 'CVE',
+			'number'            => 132,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -714,8 +714,8 @@ function eaccounting_get_currencies_data() {
 
 		'CZK' => [
 			'name'              => 'Czech Koruna',
-			'currency'          => 'CZK',
-			'code'              => 203,
+			'code'              => 'CZK',
+			'number'            => 203,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Kč',
@@ -726,8 +726,8 @@ function eaccounting_get_currencies_data() {
 
 		'DJF' => [
 			'name'              => 'Djibouti Franc',
-			'currency'          => 'DJF',
-			'code'              => 262,
+			'code'              => 'DJF',
+			'number'            => 262,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Fdj',
@@ -738,8 +738,8 @@ function eaccounting_get_currencies_data() {
 
 		'DKK' => [
 			'name'              => 'Danish Krone',
-			'currency'          => 'DKK',
-			'code'              => 208,
+			'code'              => 'DKK',
+			'number'            => 208,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'kr',
@@ -750,8 +750,8 @@ function eaccounting_get_currencies_data() {
 
 		'DOP' => [
 			'name'              => 'Dominican Peso',
-			'currency'          => 'DOP',
-			'code'              => 214,
+			'code'              => 'DOP',
+			'number'            => 214,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -762,8 +762,8 @@ function eaccounting_get_currencies_data() {
 
 		'DZD' => [
 			'name'              => 'Algerian Dinar',
-			'currency'          => 'DZD',
-			'code'              => 12,
+			'code'              => 'DZD',
+			'number'            => 12,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'د.ج',
@@ -774,8 +774,8 @@ function eaccounting_get_currencies_data() {
 
 		'EGP' => [
 			'name'              => 'Egyptian Pound',
-			'currency'          => 'EGP',
-			'code'              => 818,
+			'code'              => 'EGP',
+			'number'            => 818,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ج.م',
@@ -786,8 +786,8 @@ function eaccounting_get_currencies_data() {
 
 		'ERN' => [
 			'name'              => 'Nakfa',
-			'currency'          => 'ERN',
-			'code'              => 232,
+			'code'              => 'ERN',
+			'number'            => 232,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Nfk',
@@ -798,8 +798,8 @@ function eaccounting_get_currencies_data() {
 
 		'ETB' => [
 			'name'              => 'Ethiopian Birr',
-			'currency'          => 'ETB',
-			'code'              => 230,
+			'code'              => 'ETB',
+			'number'            => 230,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Br',
@@ -810,8 +810,8 @@ function eaccounting_get_currencies_data() {
 
 		'EUR' => [
 			'name'              => 'Euro',
-			'currency'          => 'EUR',
-			'code'              => 978,
+			'code'              => 'EUR',
+			'number'            => 978,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '€',
@@ -822,8 +822,8 @@ function eaccounting_get_currencies_data() {
 
 		'FJD' => [
 			'name'              => 'Fiji Dollar',
-			'currency'          => 'FJD',
-			'code'              => 242,
+			'code'              => 'FJD',
+			'number'            => 242,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -834,8 +834,8 @@ function eaccounting_get_currencies_data() {
 
 		'FKP' => [
 			'name'              => 'Falkland Islands Pound',
-			'currency'          => 'FKP',
-			'code'              => 238,
+			'code'              => 'FKP',
+			'number'            => 238,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '£',
@@ -846,8 +846,8 @@ function eaccounting_get_currencies_data() {
 
 		'GBP' => [
 			'name'              => 'Pound Sterling',
-			'currency'          => 'GBP',
-			'code'              => 826,
+			'code'              => 'GBP',
+			'number'            => 826,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '£',
@@ -858,8 +858,8 @@ function eaccounting_get_currencies_data() {
 
 		'GEL' => [
 			'name'              => 'Lari',
-			'currency'          => 'GEL',
-			'code'              => 981,
+			'code'              => 'GEL',
+			'number'            => 981,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ლ',
@@ -870,8 +870,8 @@ function eaccounting_get_currencies_data() {
 
 		'GHS' => [
 			'name'              => 'Ghana Cedi',
-			'currency'          => 'GHS',
-			'code'              => 936,
+			'code'              => 'GHS',
+			'number'            => 936,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₵',
@@ -882,8 +882,8 @@ function eaccounting_get_currencies_data() {
 
 		'GIP' => [
 			'name'              => 'Gibraltar Pound',
-			'currency'          => 'GIP',
-			'code'              => 292,
+			'code'              => 'GIP',
+			'number'            => 292,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '£',
@@ -894,8 +894,8 @@ function eaccounting_get_currencies_data() {
 
 		'GMD' => [
 			'name'              => 'Dalasi',
-			'currency'          => 'GMD',
-			'code'              => 270,
+			'code'              => 'GMD',
+			'number'            => 270,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'D',
@@ -906,8 +906,8 @@ function eaccounting_get_currencies_data() {
 
 		'GNF' => [
 			'name'              => 'Guinea Franc',
-			'currency'          => 'GNF',
-			'code'              => 324,
+			'code'              => 'GNF',
+			'number'            => 324,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Fr',
@@ -918,8 +918,8 @@ function eaccounting_get_currencies_data() {
 
 		'GTQ' => [
 			'name'              => 'Quetzal',
-			'currency'          => 'GTQ',
-			'code'              => 320,
+			'code'              => 'GTQ',
+			'number'            => 320,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Q',
@@ -930,8 +930,8 @@ function eaccounting_get_currencies_data() {
 
 		'GYD' => [
 			'name'              => 'Guyana Dollar',
-			'currency'          => 'GYD',
-			'code'              => 328,
+			'code'              => 'GYD',
+			'number'            => 328,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -942,8 +942,8 @@ function eaccounting_get_currencies_data() {
 
 		'HKD' => [
 			'name'              => 'Hong Kong Dollar',
-			'currency'          => 'HKD',
-			'code'              => 344,
+			'code'              => 'HKD',
+			'number'            => 344,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -954,8 +954,8 @@ function eaccounting_get_currencies_data() {
 
 		'HNL' => [
 			'name'              => 'Lempira',
-			'currency'          => 'HNL',
-			'code'              => 340,
+			'code'              => 'HNL',
+			'number'            => 340,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'L',
@@ -966,8 +966,8 @@ function eaccounting_get_currencies_data() {
 
 		'HRK' => [
 			'name'              => 'Croatian Kuna',
-			'currency'          => 'HRK',
-			'code'              => 191,
+			'code'              => 'HRK',
+			'number'            => 191,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'kn',
@@ -978,8 +978,8 @@ function eaccounting_get_currencies_data() {
 
 		'HTG' => [
 			'name'              => 'Gourde',
-			'currency'          => 'HTG',
-			'code'              => 332,
+			'code'              => 'HTG',
+			'number'            => 332,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'G',
@@ -990,8 +990,8 @@ function eaccounting_get_currencies_data() {
 
 		'HUF' => [
 			'name'              => 'Forint',
-			'currency'          => 'HUF',
-			'code'              => 348,
+			'code'              => 'HUF',
+			'number'            => 348,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Ft',
@@ -1002,8 +1002,8 @@ function eaccounting_get_currencies_data() {
 
 		'IDR' => [
 			'name'              => 'Rupiah',
-			'currency'          => 'IDR',
-			'code'              => 360,
+			'code'              => 'IDR',
+			'number'            => 360,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Rp',
@@ -1014,8 +1014,8 @@ function eaccounting_get_currencies_data() {
 
 		'ILS' => [
 			'name'              => 'New Israeli Sheqel',
-			'currency'          => 'ILS',
-			'code'              => 376,
+			'code'              => 'ILS',
+			'number'            => 376,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₪',
@@ -1026,8 +1026,8 @@ function eaccounting_get_currencies_data() {
 
 		'INR' => [
 			'name'              => 'Indian Rupee',
-			'currency'          => 'INR',
-			'code'              => 356,
+			'code'              => 'INR',
+			'number'            => 356,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₹',
@@ -1038,8 +1038,8 @@ function eaccounting_get_currencies_data() {
 
 		'IQD' => [
 			'name'              => 'Iraqi Dinar',
-			'currency'          => 'IQD',
-			'code'              => 368,
+			'code'              => 'IQD',
+			'number'            => 368,
 			'precision'         => 3,
 			'subunit'           => 1000,
 			'symbol'            => 'ع.د',
@@ -1050,8 +1050,8 @@ function eaccounting_get_currencies_data() {
 
 		'IRR' => [
 			'name'              => 'Iranian Rial',
-			'currency'          => 'IRR',
-			'code'              => 364,
+			'code'              => 'IRR',
+			'number'            => 364,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '﷼',
@@ -1062,8 +1062,8 @@ function eaccounting_get_currencies_data() {
 
 		'ISK' => [
 			'name'              => 'Iceland Krona',
-			'currency'          => 'ISK',
-			'code'              => 352,
+			'code'              => 'ISK',
+			'number'            => 352,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'kr',
@@ -1074,8 +1074,8 @@ function eaccounting_get_currencies_data() {
 
 		'JMD' => [
 			'name'              => 'Jamaican Dollar',
-			'currency'          => 'JMD',
-			'code'              => 388,
+			'code'              => 'JMD',
+			'number'            => 388,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1086,8 +1086,8 @@ function eaccounting_get_currencies_data() {
 
 		'JOD' => [
 			'name'              => 'Jordanian Dinar',
-			'currency'          => 'JOD',
-			'code'              => 400,
+			'code'              => 'JOD',
+			'number'            => 400,
 			'precision'         => 3,
 			'subunit'           => 100,
 			'symbol'            => 'د.ا',
@@ -1098,8 +1098,8 @@ function eaccounting_get_currencies_data() {
 
 		'JPY' => [
 			'name'              => 'Yen',
-			'currency'          => 'JPY',
-			'code'              => 392,
+			'code'              => 'JPY',
+			'number'            => 392,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => '¥',
@@ -1110,8 +1110,8 @@ function eaccounting_get_currencies_data() {
 
 		'KES' => [
 			'name'              => 'Kenyan Shilling',
-			'currency'          => 'KES',
-			'code'              => 404,
+			'code'              => 'KES',
+			'number'            => 404,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'KSh',
@@ -1122,8 +1122,8 @@ function eaccounting_get_currencies_data() {
 
 		'KGS' => [
 			'name'              => 'Som',
-			'currency'          => 'KGS',
-			'code'              => 417,
+			'code'              => 'KGS',
+			'number'            => 417,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'som',
@@ -1134,8 +1134,8 @@ function eaccounting_get_currencies_data() {
 
 		'KHR' => [
 			'name'              => 'Riel',
-			'currency'          => 'KHR',
-			'code'              => 116,
+			'code'              => 'KHR',
+			'number'            => 116,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '៛',
@@ -1146,8 +1146,8 @@ function eaccounting_get_currencies_data() {
 
 		'KMF' => [
 			'name'              => 'Comoro Franc',
-			'currency'          => 'KMF',
-			'code'              => 174,
+			'code'              => 'KMF',
+			'number'            => 174,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Fr',
@@ -1158,8 +1158,8 @@ function eaccounting_get_currencies_data() {
 
 		'KPW' => [
 			'name'              => 'North Korean Won',
-			'currency'          => 'KPW',
-			'code'              => 408,
+			'code'              => 'KPW',
+			'number'            => 408,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₩',
@@ -1170,8 +1170,8 @@ function eaccounting_get_currencies_data() {
 
 		'KRW' => [
 			'name'              => 'Won',
-			'currency'          => 'KRW',
-			'code'              => 410,
+			'code'              => 'KRW',
+			'number'            => 410,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => '₩',
@@ -1182,8 +1182,8 @@ function eaccounting_get_currencies_data() {
 
 		'KWD' => [
 			'name'              => 'Kuwaiti Dinar',
-			'currency'          => 'KWD',
-			'code'              => 414,
+			'code'              => 'KWD',
+			'number'            => 414,
 			'precision'         => 3,
 			'subunit'           => 1000,
 			'symbol'            => 'د.ك',
@@ -1194,8 +1194,8 @@ function eaccounting_get_currencies_data() {
 
 		'KYD' => [
 			'name'              => 'Cayman Islands Dollar',
-			'currency'          => 'KYD',
-			'code'              => 136,
+			'code'              => 'KYD',
+			'number'            => 136,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1206,8 +1206,8 @@ function eaccounting_get_currencies_data() {
 
 		'KZT' => [
 			'name'              => 'Tenge',
-			'currency'          => 'KZT',
-			'code'              => 398,
+			'code'              => 'KZT',
+			'number'            => 398,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '〒',
@@ -1218,8 +1218,8 @@ function eaccounting_get_currencies_data() {
 
 		'LAK' => [
 			'name'              => 'Kip',
-			'currency'          => 'LAK',
-			'code'              => 418,
+			'code'              => 'LAK',
+			'number'            => 418,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₭',
@@ -1230,8 +1230,8 @@ function eaccounting_get_currencies_data() {
 
 		'LBP' => [
 			'name'              => 'Lebanese Pound',
-			'currency'          => 'LBP',
-			'code'              => 422,
+			'code'              => 'LBP',
+			'number'            => 422,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ل.ل',
@@ -1242,8 +1242,8 @@ function eaccounting_get_currencies_data() {
 
 		'LKR' => [
 			'name'              => 'Sri Lanka Rupee',
-			'currency'          => 'LKR',
-			'code'              => 144,
+			'code'              => 'LKR',
+			'number'            => 144,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₨',
@@ -1254,8 +1254,8 @@ function eaccounting_get_currencies_data() {
 
 		'LRD' => [
 			'name'              => 'Liberian Dollar',
-			'currency'          => 'LRD',
-			'code'              => 430,
+			'code'              => 'LRD',
+			'number'            => 430,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1266,8 +1266,8 @@ function eaccounting_get_currencies_data() {
 
 		'LSL' => [
 			'name'              => 'Loti',
-			'currency'          => 'LSL',
-			'code'              => 426,
+			'code'              => 'LSL',
+			'number'            => 426,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'L',
@@ -1278,8 +1278,8 @@ function eaccounting_get_currencies_data() {
 
 		'LTL' => [
 			'name'              => 'Lithuanian Litas',
-			'currency'          => 'LTL',
-			'code'              => 440,
+			'code'              => 'LTL',
+			'number'            => 440,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Lt',
@@ -1290,8 +1290,8 @@ function eaccounting_get_currencies_data() {
 
 		'LVL' => [
 			'name'              => 'Latvian Lats',
-			'currency'          => 'LVL',
-			'code'              => 428,
+			'code'              => 'LVL',
+			'number'            => 428,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Ls',
@@ -1302,8 +1302,8 @@ function eaccounting_get_currencies_data() {
 
 		'LYD' => [
 			'name'              => 'Libyan Dinar',
-			'currency'          => 'LYD',
-			'code'              => 434,
+			'code'              => 'LYD',
+			'number'            => 434,
 			'precision'         => 3,
 			'subunit'           => 1000,
 			'symbol'            => 'ل.د',
@@ -1314,8 +1314,8 @@ function eaccounting_get_currencies_data() {
 
 		'MAD' => [
 			'name'              => 'Moroccan Dirham',
-			'currency'          => 'MAD',
-			'code'              => 504,
+			'code'              => 'MAD',
+			'number'            => 504,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'د.م.',
@@ -1326,8 +1326,8 @@ function eaccounting_get_currencies_data() {
 
 		'MDL' => [
 			'name'              => 'Moldovan Leu',
-			'currency'          => 'MDL',
-			'code'              => 498,
+			'code'              => 'MDL',
+			'number'            => 498,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'L',
@@ -1338,8 +1338,8 @@ function eaccounting_get_currencies_data() {
 
 		'MGA' => [
 			'name'              => 'Malagasy Ariary',
-			'currency'          => 'MGA',
-			'code'              => 969,
+			'code'              => 'MGA',
+			'number'            => 969,
 			'precision'         => 2,
 			'subunit'           => 5,
 			'symbol'            => 'Ar',
@@ -1350,8 +1350,8 @@ function eaccounting_get_currencies_data() {
 
 		'MKD' => [
 			'name'              => 'Denar',
-			'currency'          => 'MKD',
-			'code'              => 807,
+			'code'              => 'MKD',
+			'number'            => 807,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ден',
@@ -1362,8 +1362,8 @@ function eaccounting_get_currencies_data() {
 
 		'MMK' => [
 			'name'              => 'Kyat',
-			'currency'          => 'MMK',
-			'code'              => 104,
+			'code'              => 'MMK',
+			'number'            => 104,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'K',
@@ -1374,8 +1374,8 @@ function eaccounting_get_currencies_data() {
 
 		'MNT' => [
 			'name'              => 'Tugrik',
-			'currency'          => 'MNT',
-			'code'              => 496,
+			'code'              => 'MNT',
+			'number'            => 496,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₮',
@@ -1386,8 +1386,8 @@ function eaccounting_get_currencies_data() {
 
 		'MOP' => [
 			'name'              => 'Pataca',
-			'currency'          => 'MOP',
-			'code'              => 446,
+			'code'              => 'MOP',
+			'number'            => 446,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'P',
@@ -1398,8 +1398,8 @@ function eaccounting_get_currencies_data() {
 
 		'MRO' => [
 			'name'              => 'Ouguiya',
-			'currency'          => 'MRO',
-			'code'              => 478,
+			'code'              => 'MRO',
+			'number'            => 478,
 			'precision'         => 2,
 			'subunit'           => 5,
 			'symbol'            => 'UM',
@@ -1410,8 +1410,8 @@ function eaccounting_get_currencies_data() {
 
 		'MUR' => [
 			'name'              => 'Mauritius Rupee',
-			'currency'          => 'MUR',
-			'code'              => 480,
+			'code'              => 'MUR',
+			'number'            => 480,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₨',
@@ -1422,8 +1422,8 @@ function eaccounting_get_currencies_data() {
 
 		'MVR' => [
 			'name'              => 'Rufiyaa',
-			'currency'          => 'MVR',
-			'code'              => 462,
+			'code'              => 'MVR',
+			'number'            => 462,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'MVR',
@@ -1434,8 +1434,8 @@ function eaccounting_get_currencies_data() {
 
 		'MWK' => [
 			'name'              => 'Kwacha',
-			'currency'          => 'MWK',
-			'code'              => 454,
+			'code'              => 'MWK',
+			'number'            => 454,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'MK',
@@ -1446,8 +1446,8 @@ function eaccounting_get_currencies_data() {
 
 		'MXN' => [
 			'name'              => 'Mexican Peso',
-			'currency'          => 'MXN',
-			'code'              => 484,
+			'code'              => 'MXN',
+			'number'            => 484,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1458,8 +1458,8 @@ function eaccounting_get_currencies_data() {
 
 		'MYR' => [
 			'name'              => 'Malaysian Ringgit',
-			'currency'          => 'MYR',
-			'code'              => 458,
+			'code'              => 'MYR',
+			'number'            => 458,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'RM',
@@ -1470,8 +1470,8 @@ function eaccounting_get_currencies_data() {
 
 		'MZN' => [
 			'name'              => 'Mozambique Metical',
-			'currency'          => 'MZN',
-			'code'              => 943,
+			'code'              => 'MZN',
+			'number'            => 943,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'MTn',
@@ -1482,8 +1482,8 @@ function eaccounting_get_currencies_data() {
 
 		'NAD' => [
 			'name'              => 'Namibia Dollar',
-			'currency'          => 'NAD',
-			'code'              => 516,
+			'code'              => 'NAD',
+			'number'            => 516,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1494,8 +1494,8 @@ function eaccounting_get_currencies_data() {
 
 		'NGN' => [
 			'name'              => 'Naira',
-			'currency'          => 'NGN',
-			'code'              => 566,
+			'code'              => 'NGN',
+			'number'            => 566,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₦',
@@ -1506,8 +1506,8 @@ function eaccounting_get_currencies_data() {
 
 		'NIO' => [
 			'name'              => 'Cordoba Oro',
-			'currency'          => 'NIO',
-			'code'              => 558,
+			'code'              => 'NIO',
+			'number'            => 558,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'C$',
@@ -1518,8 +1518,8 @@ function eaccounting_get_currencies_data() {
 
 		'NOK' => [
 			'name'              => 'Norwegian Krone',
-			'currency'          => 'NOK',
-			'code'              => 578,
+			'code'              => 'NOK',
+			'number'            => 578,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'kr',
@@ -1530,8 +1530,8 @@ function eaccounting_get_currencies_data() {
 
 		'NPR' => [
 			'name'              => 'Nepalese Rupee',
-			'currency'          => 'NPR',
-			'code'              => 524,
+			'code'              => 'NPR',
+			'number'            => 524,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₨',
@@ -1542,8 +1542,8 @@ function eaccounting_get_currencies_data() {
 
 		'NZD' => [
 			'name'              => 'New Zealand Dollar',
-			'currency'          => 'NZD',
-			'code'              => 554,
+			'code'              => 'NZD',
+			'number'            => 554,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1554,8 +1554,8 @@ function eaccounting_get_currencies_data() {
 
 		'OMR' => [
 			'name'              => 'Rial Omani',
-			'currency'          => 'OMR',
-			'code'              => 512,
+			'code'              => 'OMR',
+			'number'            => 512,
 			'precision'         => 3,
 			'subunit'           => 1000,
 			'symbol'            => 'ر.ع.',
@@ -1566,8 +1566,8 @@ function eaccounting_get_currencies_data() {
 
 		'PAB' => [
 			'name'              => 'Balboa',
-			'currency'          => 'PAB',
-			'code'              => 590,
+			'code'              => 'PAB',
+			'number'            => 590,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'B/.',
@@ -1578,8 +1578,8 @@ function eaccounting_get_currencies_data() {
 
 		'PEN' => [
 			'name'              => 'Sol',
-			'currency'          => 'PEN',
-			'code'              => 604,
+			'code'              => 'PEN',
+			'number'            => 604,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'S/',
@@ -1590,8 +1590,8 @@ function eaccounting_get_currencies_data() {
 
 		'PGK' => [
 			'name'              => 'Kina',
-			'currency'          => 'PGK',
-			'code'              => 598,
+			'code'              => 'PGK',
+			'number'            => 598,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'K',
@@ -1602,8 +1602,8 @@ function eaccounting_get_currencies_data() {
 
 		'PHP' => [
 			'name'              => 'Philippine Peso',
-			'currency'          => 'PHP',
-			'code'              => 608,
+			'code'              => 'PHP',
+			'number'            => 608,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₱',
@@ -1614,8 +1614,8 @@ function eaccounting_get_currencies_data() {
 
 		'PKR' => [
 			'name'              => 'Pakistan Rupee',
-			'currency'          => 'PKR',
-			'code'              => 586,
+			'code'              => 'PKR',
+			'number'            => 586,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₨',
@@ -1626,8 +1626,8 @@ function eaccounting_get_currencies_data() {
 
 		'PLN' => [
 			'name'              => 'Zloty',
-			'currency'          => 'PLN',
-			'code'              => 985,
+			'code'              => 'PLN',
+			'number'            => 985,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'zł',
@@ -1638,8 +1638,8 @@ function eaccounting_get_currencies_data() {
 
 		'PYG' => [
 			'name'              => 'Guarani',
-			'currency'          => 'PYG',
-			'code'              => 600,
+			'code'              => 'PYG',
+			'number'            => 600,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => '₲',
@@ -1650,8 +1650,8 @@ function eaccounting_get_currencies_data() {
 
 		'QAR' => [
 			'name'              => 'Qatari Rial',
-			'currency'          => 'QAR',
-			'code'              => 634,
+			'code'              => 'QAR',
+			'number'            => 634,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ر.ق',
@@ -1662,8 +1662,8 @@ function eaccounting_get_currencies_data() {
 
 		'RON' => [
 			'name'              => 'New Romanian Leu',
-			'currency'          => 'RON',
-			'code'              => 946,
+			'code'              => 'RON',
+			'number'            => 946,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Lei',
@@ -1674,8 +1674,8 @@ function eaccounting_get_currencies_data() {
 
 		'RSD' => [
 			'name'              => 'Serbian Dinar',
-			'currency'          => 'RSD',
-			'code'              => 941,
+			'code'              => 'RSD',
+			'number'            => 941,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'РСД',
@@ -1686,8 +1686,8 @@ function eaccounting_get_currencies_data() {
 
 		'RUB' => [
 			'name'              => 'Russian Ruble',
-			'currency'          => 'RUB',
-			'code'              => 643,
+			'code'              => 'RUB',
+			'number'            => 643,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₽',
@@ -1698,8 +1698,8 @@ function eaccounting_get_currencies_data() {
 
 		'RWF' => [
 			'name'              => 'Rwanda Franc',
-			'currency'          => 'RWF',
-			'code'              => 646,
+			'code'              => 'RWF',
+			'number'            => 646,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'FRw',
@@ -1710,8 +1710,8 @@ function eaccounting_get_currencies_data() {
 
 		'SAR' => [
 			'name'              => 'Saudi Riyal',
-			'currency'          => 'SAR',
-			'code'              => 682,
+			'code'              => 'SAR',
+			'number'            => 682,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ر.س',
@@ -1722,8 +1722,8 @@ function eaccounting_get_currencies_data() {
 
 		'SBD' => [
 			'name'              => 'Solomon Islands Dollar',
-			'currency'          => 'SBD',
-			'code'              => 90,
+			'code'              => 'SBD',
+			'number'            => 90,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1734,8 +1734,8 @@ function eaccounting_get_currencies_data() {
 
 		'SCR' => [
 			'name'              => 'Seychelles Rupee',
-			'currency'          => 'SCR',
-			'code'              => 690,
+			'code'              => 'SCR',
+			'number'            => 690,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₨',
@@ -1746,8 +1746,8 @@ function eaccounting_get_currencies_data() {
 
 		'SDG' => [
 			'name'              => 'Sudanese Pound',
-			'currency'          => 'SDG',
-			'code'              => 938,
+			'code'              => 'SDG',
+			'number'            => 938,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '£',
@@ -1758,8 +1758,8 @@ function eaccounting_get_currencies_data() {
 
 		'SEK' => [
 			'name'              => 'Swedish Krona',
-			'currency'          => 'SEK',
-			'code'              => 752,
+			'code'              => 'SEK',
+			'number'            => 752,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'kr',
@@ -1770,8 +1770,8 @@ function eaccounting_get_currencies_data() {
 
 		'SGD' => [
 			'name'              => 'Singapore Dollar',
-			'currency'          => 'SGD',
-			'code'              => 702,
+			'code'              => 'SGD',
+			'number'            => 702,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1782,8 +1782,8 @@ function eaccounting_get_currencies_data() {
 
 		'SHP' => [
 			'name'              => 'Saint Helena Pound',
-			'currency'          => 'SHP',
-			'code'              => 654,
+			'code'              => 'SHP',
+			'number'            => 654,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '£',
@@ -1794,8 +1794,8 @@ function eaccounting_get_currencies_data() {
 
 		'SLL' => [
 			'name'              => 'Leone',
-			'currency'          => 'SLL',
-			'code'              => 694,
+			'code'              => 'SLL',
+			'number'            => 694,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Le',
@@ -1806,8 +1806,8 @@ function eaccounting_get_currencies_data() {
 
 		'SOS' => [
 			'name'              => 'Somali Shilling',
-			'currency'          => 'SOS',
-			'code'              => 706,
+			'code'              => 'SOS',
+			'number'            => 706,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Sh',
@@ -1818,8 +1818,8 @@ function eaccounting_get_currencies_data() {
 
 		'SRD' => [
 			'name'              => 'Surinam Dollar',
-			'currency'          => 'SRD',
-			'code'              => 968,
+			'code'              => 'SRD',
+			'number'            => 968,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1830,8 +1830,8 @@ function eaccounting_get_currencies_data() {
 
 		'SSP' => [
 			'name'              => 'South Sudanese Pound',
-			'currency'          => 'SSP',
-			'code'              => 728,
+			'code'              => 'SSP',
+			'number'            => 728,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '£',
@@ -1842,8 +1842,8 @@ function eaccounting_get_currencies_data() {
 
 		'STD' => [
 			'name'              => 'Dobra',
-			'currency'          => 'STD',
-			'code'              => 678,
+			'code'              => 'STD',
+			'number'            => 678,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Db',
@@ -1854,8 +1854,8 @@ function eaccounting_get_currencies_data() {
 
 		'SVC' => [
 			'name'              => 'El Salvador Colon',
-			'currency'          => 'SVC',
-			'code'              => 222,
+			'code'              => 'SVC',
+			'number'            => 222,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₡',
@@ -1866,8 +1866,8 @@ function eaccounting_get_currencies_data() {
 
 		'SYP' => [
 			'name'              => 'Syrian Pound',
-			'currency'          => 'SYP',
-			'code'              => 760,
+			'code'              => 'SYP',
+			'number'            => 760,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '£S',
@@ -1878,8 +1878,8 @@ function eaccounting_get_currencies_data() {
 
 		'SZL' => [
 			'name'              => 'Lilangeni',
-			'currency'          => 'SZL',
-			'code'              => 748,
+			'code'              => 'SZL',
+			'number'            => 748,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'E',
@@ -1890,8 +1890,8 @@ function eaccounting_get_currencies_data() {
 
 		'THB' => [
 			'name'              => 'Baht',
-			'currency'          => 'THB',
-			'code'              => 764,
+			'code'              => 'THB',
+			'number'            => 764,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '฿',
@@ -1902,8 +1902,8 @@ function eaccounting_get_currencies_data() {
 
 		'TJS' => [
 			'name'              => 'Somoni',
-			'currency'          => 'TJS',
-			'code'              => 972,
+			'code'              => 'TJS',
+			'number'            => 972,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ЅМ',
@@ -1914,8 +1914,8 @@ function eaccounting_get_currencies_data() {
 
 		'TMT' => [
 			'name'              => 'Turkmenistan New Manat',
-			'currency'          => 'TMT',
-			'code'              => 934,
+			'code'              => 'TMT',
+			'number'            => 934,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'T',
@@ -1926,8 +1926,8 @@ function eaccounting_get_currencies_data() {
 
 		'TND' => [
 			'name'              => 'Tunisian Dinar',
-			'currency'          => 'TND',
-			'code'              => 788,
+			'code'              => 'TND',
+			'number'            => 788,
 			'precision'         => 3,
 			'subunit'           => 1000,
 			'symbol'            => 'د.ت',
@@ -1938,8 +1938,8 @@ function eaccounting_get_currencies_data() {
 
 		'TOP' => [
 			'name'              => 'Pa’anga',
-			'currency'          => 'TOP',
-			'code'              => 776,
+			'code'              => 'TOP',
+			'number'            => 776,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'T$',
@@ -1950,8 +1950,8 @@ function eaccounting_get_currencies_data() {
 
 		'TRY' => [
 			'name'              => 'Turkish Lira',
-			'currency'          => 'TRY',
-			'code'              => 949,
+			'code'              => 'TRY',
+			'number'            => 949,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₺',
@@ -1962,8 +1962,8 @@ function eaccounting_get_currencies_data() {
 
 		'TTD' => [
 			'name'              => 'Trinidad and Tobago Dollar',
-			'currency'          => 'TTD',
-			'code'              => 780,
+			'code'              => 'TTD',
+			'number'            => 780,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1974,8 +1974,8 @@ function eaccounting_get_currencies_data() {
 
 		'TWD' => [
 			'name'              => 'New Taiwan Dollar',
-			'currency'          => 'TWD',
-			'code'              => 901,
+			'code'              => 'TWD',
+			'number'            => 901,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -1986,8 +1986,8 @@ function eaccounting_get_currencies_data() {
 
 		'TZS' => [
 			'name'              => 'Tanzanian Shilling',
-			'currency'          => 'TZS',
-			'code'              => 834,
+			'code'              => 'TZS',
+			'number'            => 834,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Sh',
@@ -1998,8 +1998,8 @@ function eaccounting_get_currencies_data() {
 
 		'UAH' => [
 			'name'              => 'Hryvnia',
-			'currency'          => 'UAH',
-			'code'              => 980,
+			'code'              => 'UAH',
+			'number'            => 980,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '₴',
@@ -2010,8 +2010,8 @@ function eaccounting_get_currencies_data() {
 
 		'UGX' => [
 			'name'              => 'Uganda Shilling',
-			'currency'          => 'UGX',
-			'code'              => 800,
+			'code'              => 'UGX',
+			'number'            => 800,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'USh',
@@ -2022,8 +2022,8 @@ function eaccounting_get_currencies_data() {
 
 		'USD' => [
 			'name'              => 'US Dollar',
-			'currency'          => 'USD',
-			'code'              => 840,
+			'code'              => 'USD',
+			'number'            => 840,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -2034,8 +2034,8 @@ function eaccounting_get_currencies_data() {
 
 		'UYU' => [
 			'name'              => 'Peso Uruguayo',
-			'currency'          => 'UYU',
-			'code'              => 858,
+			'code'              => 'UYU',
+			'number'            => 858,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -2046,8 +2046,8 @@ function eaccounting_get_currencies_data() {
 
 		'UZS' => [
 			'name'              => 'Uzbekistan Sum',
-			'currency'          => 'UZS',
-			'code'              => 860,
+			'code'              => 'UZS',
+			'number'            => 860,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => null,
@@ -2058,8 +2058,8 @@ function eaccounting_get_currencies_data() {
 
 		'VEF' => [
 			'name'              => 'Bolivar',
-			'currency'          => 'VEF',
-			'code'              => 937,
+			'code'              => 'VEF',
+			'number'            => 937,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'Bs F',
@@ -2070,8 +2070,8 @@ function eaccounting_get_currencies_data() {
 
 		'VND' => [
 			'name'              => 'Dong',
-			'currency'          => 'VND',
-			'code'              => 704,
+			'code'              => 'VND',
+			'number'            => 704,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => '₫',
@@ -2082,8 +2082,8 @@ function eaccounting_get_currencies_data() {
 
 		'VUV' => [
 			'name'              => 'Vatu',
-			'currency'          => 'VUV',
-			'code'              => 548,
+			'code'              => 'VUV',
+			'number'            => 548,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Vt',
@@ -2094,8 +2094,8 @@ function eaccounting_get_currencies_data() {
 
 		'WST' => [
 			'name'              => 'Tala',
-			'currency'          => 'WST',
-			'code'              => 882,
+			'code'              => 'WST',
+			'number'            => 882,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'T',
@@ -2106,8 +2106,8 @@ function eaccounting_get_currencies_data() {
 
 		'XAF' => [
 			'name'              => 'CFA Franc BEAC',
-			'currency'          => 'XAF',
-			'code'              => 950,
+			'code'              => 'XAF',
+			'number'            => 950,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Fr',
@@ -2118,8 +2118,8 @@ function eaccounting_get_currencies_data() {
 
 		'XAG' => [
 			'name'              => 'Silver',
-			'currency'          => 'XAG',
-			'code'              => 961,
+			'code'              => 'XAG',
+			'number'            => 961,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'oz t',
@@ -2130,8 +2130,8 @@ function eaccounting_get_currencies_data() {
 
 		'XAU' => [
 			'name'              => 'Gold',
-			'currency'          => 'XAU',
-			'code'              => 959,
+			'code'              => 'XAU',
+			'number'            => 959,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'oz t',
@@ -2142,8 +2142,8 @@ function eaccounting_get_currencies_data() {
 
 		'XCD' => [
 			'name'              => 'East Caribbean Dollar',
-			'currency'          => 'XCD',
-			'code'              => 951,
+			'code'              => 'XCD',
+			'number'            => 951,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -2154,8 +2154,8 @@ function eaccounting_get_currencies_data() {
 
 		'XDR' => [
 			'name'              => 'SDR (Special Drawing Right)',
-			'currency'          => 'XDR',
-			'code'              => 960,
+			'code'              => 'XDR',
+			'number'            => 960,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'SDR',
@@ -2166,8 +2166,8 @@ function eaccounting_get_currencies_data() {
 
 		'XOF' => [
 			'name'              => 'CFA Franc BCEAO',
-			'currency'          => 'XOF',
-			'code'              => 952,
+			'code'              => 'XOF',
+			'number'            => 952,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Fr',
@@ -2178,8 +2178,8 @@ function eaccounting_get_currencies_data() {
 
 		'XPF' => [
 			'name'              => 'CFP Franc',
-			'currency'          => 'XPF',
-			'code'              => 953,
+			'code'              => 'XPF',
+			'number'            => 953,
 			'precision'         => 0,
 			'subunit'           => 1,
 			'symbol'            => 'Fr',
@@ -2190,8 +2190,8 @@ function eaccounting_get_currencies_data() {
 
 		'YER' => [
 			'name'              => 'Yemeni Rial',
-			'currency'          => 'YER',
-			'code'              => 886,
+			'code'              => 'YER',
+			'number'            => 886,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '﷼',
@@ -2202,8 +2202,8 @@ function eaccounting_get_currencies_data() {
 
 		'ZAR' => [
 			'name'              => 'Rand',
-			'currency'          => 'ZAR',
-			'code'              => 710,
+			'code'              => 'ZAR',
+			'number'            => 710,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'R',
@@ -2214,8 +2214,8 @@ function eaccounting_get_currencies_data() {
 
 		'ZMW' => [
 			'name'              => 'Zambian Kwacha',
-			'currency'          => 'ZMW',
-			'code'              => 967,
+			'code'              => 'ZMW',
+			'number'            => 967,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => 'ZK',
@@ -2226,8 +2226,8 @@ function eaccounting_get_currencies_data() {
 
 		'ZWL' => [
 			'name'              => 'Zimbabwe Dollar',
-			'currency'          => 'ZWL',
-			'code'              => 932,
+			'code'              => 'ZWL',
+			'number'            => 932,
 			'precision'         => 2,
 			'subunit'           => 100,
 			'symbol'            => '$',
@@ -2238,6 +2238,19 @@ function eaccounting_get_currencies_data() {
 	);
 
 	return apply_filters( 'wpcp_currency_config', $config );
+}
+
+/**
+ * since 1.0.0
+ *
+ * @param string $currency
+ *
+ * @return mixed
+ */
+function eaccounting_get_currency_config( $currency = 'USD' ) {
+	$data = eaccounting_get_currencies_data();
+
+	return array_key_exists( $currency, $data ) ? $data[ $currency ] : $data['USD'];
 }
 
 /**

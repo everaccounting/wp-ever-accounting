@@ -1,10 +1,20 @@
+/**
+ * External dependencies
+ */
 import { Component, Fragment } from 'react';
-import { translate as __ } from 'lib/locale';
+/**
+ * WordPress dependencies
+ */
+import { __ } from '@wordpress/i18n';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+/**
+ * Internal dependencies
+ */
 import DatePicker from '../date-picker';
 import TextControl from '../text-control';
 import classnames from 'classnames';
+import { SVG, Path } from '@wordpress/components';
 
 export default class DateRangeControl extends Component {
 	static propTypes = {
@@ -20,13 +30,25 @@ export default class DateRangeControl extends Component {
 
 	constructor(props) {
 		super(props);
+		this.state = {
+			statDate: undefined,
+			endDate: undefined,
+		};
 	}
 
+	makeRange = (start, end, format = 'DD MMM YYYY', sep = '-') => {
+		const startDate = (start && start.format(format)) || undefined;
+		const endDate = (end && end.format(format)) || undefined;
+		return (startDate && endDate && `${startDate}${sep}${endDate}`) || '';
+	};
+
 	onChange = (event, picker) => {
-		const start = picker.startDate.format('YYYY-MM-DD') || undefined;
-		const end = picker.endDate.format('YYYY-MM-DD') || undefined;
-		let date = start && end && `${start}_${end}`;
-		this.props.onChange && this.props.onChange(date);
+		this.setState({
+			start: picker.startDate,
+			end: picker.endDate,
+		});
+
+		this.props.onChange && this.props.onChange(this.makeRange(picker.startDate, picker.endDate, 'YYYY-MM-DD', '_'));
 	};
 
 	onCancel = () => {
@@ -34,8 +56,9 @@ export default class DateRangeControl extends Component {
 	};
 
 	render() {
-		const { date, className } = this.props;
+		const { className } = this.props;
 		const range = {
+			'All Time': [null, null],
 			Today: [moment(), moment()],
 			Yesterday: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
 			'Last 7 Days': [moment().subtract(6, 'days'), moment()],
@@ -50,20 +73,8 @@ export default class DateRangeControl extends Component {
 					.endOf('month'),
 			],
 		};
-		let classes = classnames('ea-date-filter', className);
-
-		let dates, startDate, endDate;
-		dates = date.split('_', 2);
-		startDate = dates[0] || undefined;
-		endDate = dates[1] || undefined;
-		let start = startDate !== undefined ? moment(startDate) : undefined;
-		let end = endDate !== undefined ? moment(endDate) : undefined;
-		let date_range = '';
-		if (start && end) {
-			date_range = start.format('D MMM Y');
-			date_range += ' - ' + end.format('D MMM Y');
-		}
-
+		const classes = classnames('ea-date-filter', className);
+		const { start, end } = this.state;
 		return (
 			<Fragment>
 				<DatePicker
@@ -78,7 +89,7 @@ export default class DateRangeControl extends Component {
 						placeholder={__('Select Date')}
 						className={classes}
 						autoComplete="off"
-						value={date_range}
+						value={this.makeRange(start, end)}
 						onChange={() => {}}
 					/>
 				</DatePicker>

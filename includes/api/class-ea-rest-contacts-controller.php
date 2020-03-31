@@ -32,7 +32,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -68,9 +68,30 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_contact_types' ],
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+		) );
+
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => [ $this, 'handle_bulk_actions' ],
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+		) );
+
+
 	}
 
 	/**
@@ -240,6 +261,43 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+	/**
+	 * since 1.0.0
+	 *
+	 * @param $request
+	 *
+	 * @return mixed|WP_REST_Response
+	 */
+	public function get_contact_types( $request ) {
+		return rest_ensure_response( $this->assoc_to_options( eaccounting_get_contact_types() ) );
+	}
+
+	public function handle_bulk_actions( $request ) {
+		$actions = [
+			'delete',
+		];
+		$action  = $request['action'];
+		$items   = $request['items'];
+		if ( empty( $action ) || ! in_array( $action, $actions ) ) {
+			return new WP_Error( 'invalid_bulk_action', __( 'Invalid bulk action', 'wp-ever-accounting' ) );
+		}
+		$deleted = [];
+		switch ( $action ) {
+			case 'delete':
+				foreach ( $items as $item ) {
+					$is_wp_error = eaccounting_delete_contact( $item );
+					if ( $is_wp_error ) {
+						return $is_wp_error;
+						break;
+					}
+					$deleted[ $item ] = $is_wp_error;
+				}
+				break;
+		}
+
+		return rest_ensure_response( $deleted );
+	}
+
 
 	/**
 	 * since 1.0.0
@@ -251,7 +309,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
-			'id'            => $item->id,
+			'id'            => intval( $item->id ),
 			'user_id'       => $item->user_id,
 			'first_name'    => $item->first_name,
 			'last_name'     => $item->last_name,
@@ -408,6 +466,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'First name for the user.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
+					'default'     => 'John',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -417,6 +476,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'Last name for the user.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
+					'default'     => 'Doe',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),

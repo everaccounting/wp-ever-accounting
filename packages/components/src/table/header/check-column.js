@@ -3,7 +3,10 @@
  */
 
 import React from 'react';
-import { translate as __ } from 'lib/locale';
+/**
+ * WordPress dependencies
+ */
+import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
 const CheckColumn = props => {

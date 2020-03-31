@@ -1,4 +1,10 @@
+/**
+ * External dependencies
+ */
 import { Component, Fragment } from 'react';
+/**
+ * WordPress dependencies
+ */
 import { Modal as BaseElement } from '@wordpress/components';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';

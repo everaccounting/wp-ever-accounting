@@ -32,7 +32,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -68,7 +68,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
-				'schema' => $this->get_item_schema(),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 
@@ -76,6 +76,15 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => [ $this, 'handle_bulk_actions' ],
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+		) );
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_types' ],
 				'permission_callback' => array( $this, 'get_item_permissions_check' ),
 				'args'                => $this->get_collection_params(),
 			),
@@ -267,6 +276,18 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 	/**
 	 * since 1.0.0
 	 *
+	 * @param $request
+	 *
+	 * @return mixed|WP_REST_Response
+	 */
+	public function get_types( $request ) {
+		$types = eaccounting_get_category_types();
+		return rest_ensure_response( $this->assoc_to_options( $types ) );
+	}
+
+	/**
+	 * since 1.0.0
+	 *
 	 * @param WP_REST_Request $request
 	 *
 	 * @return object|stdClass|WP_Error
@@ -354,7 +375,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'title'      => __( 'Category', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(

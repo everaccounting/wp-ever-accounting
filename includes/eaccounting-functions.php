@@ -136,28 +136,3 @@ function eaccounting_get_contact_revenue_total( $contact_id ) {
 
 	return $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) FROM $wpdb->ea_revenues WHERE contact_id=%d", absint( $contact_id ) ) );
 }
-
-/**
- * @since 1.0.2
- * @return array|object|void|null
- */
-function eaccounting_get_default_currency() {
-	$default_currency_code = get_option( 'ea_default_currency');
-	if(empty($default_currency_code)){
-		eaccounting_get_currencies_data();
-	}
-	return eaccounting_get_currency( $default_currency_code, 'code' );
-}
-
-/**
- * @since 1.0.2
- * @return array|object|void|null
- */
-function eaccounting_get_default_account() {
-	$default_account = get_option( 'ea_default_account', '' );
-	if(empty($default_account)){
-		global $wpdb;
-		return $wpdb->get_row("SELECT * FROM $wpdb->ea_accounts order by id ASC limit 1");
-	}
-	return eaccounting_get_account( $default_account );
-}

@@ -3,7 +3,14 @@
  */
 
 import React from 'react';
-import { translate as __, numberFormat } from 'lib/locale';
+/**
+ * WordPress dependencies
+ */
+import { __, sprintf, _n } from '@wordpress/i18n';
+/**
+ * Internal dependencies
+ */
+import { numberFormat } from './utils';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -106,14 +113,7 @@ class PaginationLinks extends React.Component {
 						onChange={this.onChange}
 					/>
 					<span className="tablenav-paging-text">
-						{__('of %(page)s', {
-							components: {
-								total: <span className="total-pages" />,
-							},
-							args: {
-								page: numberFormat(max),
-							},
-						})}
+						{sprintf(_n('of %d page', 'of %d pages', numberFormat(max), 'wp-ever-accounting'), max)}
 					</span>
 				</span>
 				&nbsp;
@@ -137,10 +137,7 @@ class NavigationPages extends React.Component {
 		return (
 			<div className={classes}>
 				<span className="displaying-num">
-					{__('%s item', '%s items', {
-						count: total,
-						args: numberFormat(total),
-					})}
+					{sprintf(_n('%d item', '%d items', numberFormat(total), 'wp-ever-accounting'), total)}
 				</span>
 
 				{!onePage && (

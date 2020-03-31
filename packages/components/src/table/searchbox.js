@@ -8,6 +8,9 @@ import PropTypes from 'prop-types';
 /**
  * Internal dependencies
  */
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
 
 class SearchBox extends React.Component {

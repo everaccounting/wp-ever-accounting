@@ -1,4 +1,10 @@
+/**
+ * WordPress dependencies
+ */
 import { Component } from '@wordpress/element';
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
 import { BaseControl, TextareaControl as BaseToggle } from '@wordpress/components';
 import classnames from 'classnames';
@@ -13,7 +19,7 @@ export default class TextareaControl extends Component {
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
-					<BaseToggle value={value && value ||  ""} {...props} required={required} />
+					<BaseToggle value={(value && value) || ''} {...props} required={required} />
 				</div>
 			</BaseControl>
 		);

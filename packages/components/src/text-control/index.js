@@ -1,6 +1,9 @@
 /**
  * External dependencies
  */
+/**
+ * WordPress dependencies
+ */
 import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
 import { BaseControl } from '@wordpress/components';
@@ -55,7 +58,7 @@ class TextControl extends Component {
 						className="ea-input-group__input components-text-control__input"
 						type={type}
 						id={id}
-						value={value && value ||  ""}
+						value={(value && value) || ''}
 						onChange={onChangeValue}
 						required={required}
 						autoComplete="off"

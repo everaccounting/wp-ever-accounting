@@ -63,19 +63,3 @@ input.current-page {
 	height: 100px;
 }
 
-/**
- * Loading for tables
- */
-
-.wp-list-table {
-	.is-placeholder {
-		td {
-			position: relative;
-			height: 50px;
-		}
-	}
-
-	.item-loading {
-		opacity: 0.3;
-	}
-}
