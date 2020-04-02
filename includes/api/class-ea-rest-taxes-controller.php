@@ -173,7 +173,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_tax( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the tax rate', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -194,7 +194,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 
 		$item = eaccounting_get_tax( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the tax rate', 'wp-ever-accounting' ) );
 		}
 		$prepared_args = $this->prepare_item_for_database( $request );
 
@@ -226,7 +226,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_tax( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the tax rate', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -234,7 +234,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_tax( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'This tax rate cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -385,7 +385,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the tax rate.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -394,7 +394,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'name'         => array(
-					'description' => __( 'Unique Name for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique Name for the tax rate.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -403,7 +403,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'rate'         => array(
-					'description' => __( 'Current rate for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Current rate for the tax rate.', 'wp-ever-accounting' ),
 					'type'        => 'numeric',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -412,7 +412,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'type'         => array(
-					'description' => __( 'Type for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Type of the tax rate.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -421,7 +421,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'date_created' => array(
-					'description' => __( 'Created date of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the tax rate.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
