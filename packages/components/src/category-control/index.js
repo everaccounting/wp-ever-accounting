@@ -55,8 +55,9 @@ class CategoryControl extends Component {
 	}
 }
 
-export default withSelect(select => {
+export default withSelect((select, ownProps) => {
+	const query = {type: ownProps.type || ''};
 	return {
-		defaultOptions: select('ea/collection').fetchAPI('categories')
+		defaultOptions: select('ea/collection').fetchAPI('categories', query)
 	}
 })(CategoryControl)

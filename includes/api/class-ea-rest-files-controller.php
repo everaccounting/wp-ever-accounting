@@ -173,7 +173,6 @@ class EAccounting_Files_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-
 		$data = array(
 			'id'         => intval( $item->id ),
 			'name'       => $item->name,
@@ -194,5 +193,78 @@ class EAccounting_Files_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+	/**
+	 * Retrieves the items's schema, conforming to JSON Schema.
+	 *
+	 * @return array Item schema data.
+	 * @since 1.0.0
+	 *
+	 */
+	public function get_item_schema() {
+		$schema = array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => __( 'File', 'wp-ever-accounting' ),
+			'type'       => 'object',
+			'properties' => array(
+				'id'           => array(
+					'description' => __( 'Unique identifier for the file.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'readonly'    => true,
+					'arg_options' => array(
+						'sanitize_callback' => 'intval',
+					),
+				),
+				'name'         => array(
+					'description' => __( 'Name of the file.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field'
+					),
+				),
+				'url'          => array(
+					'description' => __( 'URL of the file.', 'wp-ever-accounting' ),
+					'type'        => 'uri',
+					'context'     => array( 'view', 'embed' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field'
+					),
+				),
+				'extension'    => array(
+					'description' => __( 'Extension of the file.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'mime_type'    => array(
+					'description' => __( 'Mime type of the file.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'size'         => array(
+					'description' => __( 'Size of the file.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'date_created' => array(
+					'description' => __( 'Created date of the category.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date-time',
+					'context'     => array( 'view' ),
+				),
 
+			)
+		);
+
+		return $this->add_additional_fields_schema( $schema );
+	}
 }

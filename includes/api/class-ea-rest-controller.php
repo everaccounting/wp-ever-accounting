@@ -11,7 +11,8 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	public function get_items_permissions_check( $request ) {
-		return current_user_can('manage_options');
+		return current_user_can( 'manage_options' );
+
 		return true;
 	}
 
@@ -35,8 +36,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	public function create_item_permissions_check( $request ) {
-//		return current_user_can('manage_options');
-		return true;
+		return current_user_can( 'manage_options' );
 	}
 
 	/**
@@ -47,8 +47,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	public function update_item_permissions_check( $request ) {
-//		return current_user_can('manage_options');
-		return true;
+		return current_user_can( 'manage_options' );
 	}
 
 	/**
@@ -59,8 +58,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	public function delete_item_permissions_check( $request ) {
-//		return current_user_can('manage_options');
-		return true;
+		return current_user_can( 'manage_options' );
 	}
 
 	/**
@@ -133,13 +131,14 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $keyvalues
 	 *
 	 * @return array
 	 */
-	protected function assoc_to_options($keyvalues){
+	protected function assoc_to_options( $keyvalues ) {
 		$options = [];
-		foreach ($keyvalues as $key => $value){
+		foreach ( $keyvalues as $key => $value ) {
 			$options[] = [
 				'label' => $value,
 				'value' => $key,
@@ -190,6 +189,26 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 			'end'   => sanitize_text_field( $end ),
 		];
 
+	}
+
+	/**
+	 * Helper method for calling internally
+	 *
+	 * since 1.0.0
+	 *
+	 * @param $endpoint
+	 * @param array $args
+	 * @param string $method
+	 *
+	 * @return array
+	 */
+	protected function internal_request( $endpoint, $args = array(), $method = 'GET' ) {
+		$request = new WP_REST_Request( $method, $endpoint );
+		$request->set_query_params( $args );
+		$response = rest_do_request( $request );
+		$server   = rest_get_server();
+
+		return $server->response_to_data( $response, false );
 	}
 
 }

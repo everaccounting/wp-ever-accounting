@@ -131,7 +131,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 
 
 		$prepared = $this->prepare_item_for_database( $request );
-
+		error_log(print_r($prepared, true ));
 		$item_id = eaccounting_insert_payment( (array) $prepared );
 		if ( is_wp_error( $item_id ) ) {
 			return $item_id;
@@ -245,7 +245,8 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$data = array(
+		$file_ids = wp_parse_id_list( $item->file_ids );
+		$data     = array(
 			'id'             => $item->id,
 			'account'        => eaccounting_get_account( $item->account_id ),
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
@@ -258,11 +259,12 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 			'category'       => eaccounting_get_category( $item->category_id ),
 			'payment_method' => $item->payment_method,
 			'reference'      => $item->reference,
-			'attachment_url' => $item->attachment_url,
+			'files'          => $this->internal_request( '/ea/v1/files', array( 'include' => $file_ids ) ),
 			'reconciled'     => intval( $item->reconciled ),
 			'created_at'     => $this->prepare_date_response( $item->created_at ),
 			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
 		);
+
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );
@@ -284,7 +286,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_database( $request ) {
 		$prepared_item = new stdClass();
 		$schema        = $this->get_item_schema();
-
+		error_log(print_r($request->get_params(), true ));
 		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
 			$prepared_item->id = $request['id'];
 		}
@@ -312,8 +314,8 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['payment_method'] ) && isset( $request['payment_method'] ) ) {
 			$prepared_item->payment_method = $request['payment_method'];
 		}
-		if ( ! empty( $schema['properties']['attachment_url'] ) && isset( $request['attachment_url'] ) ) {
-			$prepared_item->attachment_url = $request['attachment_url'];
+		if ( ! empty( $schema['properties']['file_ids'] ) && isset( $request['file_ids'] ) ) {
+			$prepared_item->file_ids = $request['file_ids'];
 		}
 		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
 			$prepared_item->parent_id = $request['parent_id'];
@@ -368,10 +370,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
-					'default'     => null,
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
+
 				),
 				'account_id'  => array(
 					'description' => __( 'Account id of the payment.', 'wp-ever-accounting' ),
@@ -379,9 +378,6 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'required'    => true,
 					'default'     => null,
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
 				),
 				'paid_at'     => array(
 					'description' => __( 'Date of the payment', 'wp-ever-accounting' ),
@@ -405,9 +401,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'Contact id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
+
 				),
 				'description' => array(
 					'description' => __( 'Description of the payment', 'wp-ever-accounting' ),
@@ -422,9 +416,6 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'Category id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
 					'required'    => true,
 				),
 				'reference'      => array(
@@ -445,31 +436,31 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'attachment_url' => array(
-					'description' => __( 'Attachment url of the payment', 'wp-ever-accounting' ),
+				'file_ids'       => array(
+					'description' => __( 'File ids of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'esc_url',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
+				),
+				'files'          => array(
+					'description' => __( 'File ids of the payment', 'wp-ever-accounting' ),
+					'type'        => 'array',
+					'context'     => array( 'embed', 'view' ),
 				),
 				'parent_id'      => array(
 					'description' => __( 'Parent id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'default'     => 0,
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
 				),
 				'reconciled'     => array(
 					'description' => __( 'Reconciliation of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'default'     => 0,
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
+
 				),
 				'date_created'   => array(
 					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),

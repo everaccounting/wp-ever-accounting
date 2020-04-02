@@ -359,13 +359,13 @@ function eaccounting_get_files( $args, $count = false ) {
 		$query_fields = array();
 		foreach ( $args['fields'] as $field ) {
 			$field          = 'id' === $field ? 'id' : sanitize_key( $field );
-			$query_fields[] = "$wpdb->ea_accounts.$field";
+			$query_fields[] = "$wpdb->ea_files.$field";
 		}
 		$query_fields = implode( ',', $query_fields );
 	} elseif ( 'all' == $args['fields'] ) {
-		$query_fields = "$wpdb->ea_accounts.*";
+		$query_fields = "$wpdb->ea_files.*";
 	} else {
-		$query_fields = "$wpdb->ea_accounts.id";
+		$query_fields = "$wpdb->ea_files.id";
 	}
 
 	//include
@@ -377,10 +377,10 @@ function eaccounting_get_files( $args, $count = false ) {
 	if ( ! empty( $include ) ) {
 		// Sanitized earlier.
 		$ids         = implode( ',', $include );
-		$query_where .= " AND $wpdb->ea_accounts.id IN ($ids)";
+		$query_where .= " AND $wpdb->ea_files.id IN ($ids)";
 	} elseif ( ! empty( $args['exclude'] ) ) {
 		$ids         = implode( ',', wp_parse_id_list( $args['exclude'] ) );
-		$query_where .= " AND $wpdb->ea_accounts.id NOT IN ($ids)";
+		$query_where .= " AND $wpdb->ea_files.id NOT IN ($ids)";
 	}
 
 	//search
@@ -415,7 +415,7 @@ function eaccounting_get_files( $args, $count = false ) {
 	}
 
 	if ( $count ) {
-		return $wpdb->get_var( "SELECT count($wpdb->ea_accounts.id) $query_from $query_where" );
+		return $wpdb->get_var( "SELECT count($wpdb->ea_files.id) $query_from $query_where" );
 	}
 
 
