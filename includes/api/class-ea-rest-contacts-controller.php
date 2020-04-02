@@ -46,7 +46,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the object.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the contact.', 'wp-ever-accounting' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -247,7 +247,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_contact( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'This contact cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -444,7 +444,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'            => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -455,7 +455,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 				'user_id'       => array(
 					'description' => __( 'WP user ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'view', 'embed', 'edit' ),
+					'context'     => array( 'view', 'embed' ),
 					'readonly'    => true,
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
@@ -463,7 +463,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'first_name'    => array(
-					'description' => __( 'First name for the user.', 'wp-ever-accounting' ),
+					'description' => __( 'First name for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'default'     => 'John',
@@ -473,7 +473,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'last_name'     => array(
-					'description' => __( 'Last name for the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Last name for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'default'     => 'Doe',
@@ -483,16 +483,15 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'tax_number'    => array(
-					'description' => __( 'Tax number of the user', 'wp-ever-accounting' ),
+					'description' => __( 'Tax number of the contact', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => false,
 				),
 				'email'         => array(
-					'description' => __( 'The email address for the user.', 'wp-ever-accounting' ),
+					'description' => __( 'The email address for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'email',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -502,7 +501,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'phone'         => array(
-					'description' => __( 'Phone number for the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Phone number for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -510,15 +509,15 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'currency_code' => array(
-					'description' => __( 'Currency code for user.', 'wp-ever-accounting' ),
+					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'address'       => array(
-					'description' => __( 'Address 1 of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Address 1 of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -526,7 +525,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'city'          => array(
-					'description' => __( 'City of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'City of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -534,7 +533,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'state'         => array(
-					'description' => __( 'State of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'State of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -542,7 +541,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'postcode'      => array(
-					'description' => __( 'Postcode of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Postcode of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -550,7 +549,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'country'       => array(
-					'description' => __( 'Country of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Country of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -558,7 +557,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'website'       => array(
-					'description' => __( 'website of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'website of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'uri',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -567,7 +566,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'note'          => array(
-					'description' => __( 'Note for the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -576,7 +575,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'avatar_url'    => array(
-					'description' => __( 'Photo of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Photo of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'uri',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -592,7 +591,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'context'     => array( 'edit', 'view', 'embed' ),
 				),
 				'date_created'  => array(
-					'description' => __( 'Created date of the user.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
