@@ -46,7 +46,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the object.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -170,7 +170,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_account( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -191,7 +191,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 
 		$item = eaccounting_get_account( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
 		}
 		$prepared_args = $this->prepare_item_for_database( $request );
 
@@ -223,7 +223,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_account( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -231,7 +231,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_account( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'This account cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -384,7 +384,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'              => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -395,7 +395,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 				'account_id'      => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
@@ -414,12 +414,13 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
-					'default'     => 'Man',
+					'default'     => 'John Doe',
 				),
 				'number'          => array(
 					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
+					'readonly'    => true,
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -427,8 +428,9 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 				'opening_balance' => array(
 					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
 					'default'     => '0',
+					'readonly'    => true,
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -467,7 +469,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'date_created'    => array(
-					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),

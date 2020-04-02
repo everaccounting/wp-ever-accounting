@@ -56,7 +56,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 				'args'   => array(
 					'id' => array(
 						'description' => __( 'Unique identifier for the object.', 'wp-ever-accounting' ),
-						'type'        => ['string', 'integer'],
+						'type'        => [ 'string', 'integer' ],
 						'required'    => true,
 					),
 				),
@@ -164,12 +164,12 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$item_id = sanitize_text_field( $request['id'] );
 		$request->set_param( 'context', 'view' );
 		$by = 'id';
-		if(!is_numeric($item_id)){
+		if ( ! is_numeric( $item_id ) ) {
 			$by = 'code';
 		}
 		$item = eaccounting_get_currency( $item_id, $by );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the currency', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -190,7 +190,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 
 		$item = eaccounting_get_currency( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the currency', 'wp-ever-accounting' ) );
 		}
 		$prepared_args = $this->prepare_item_for_database( $request );
 
@@ -222,7 +222,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_currency( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the currency', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -230,7 +230,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_currency( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'This currency cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -246,6 +246,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 
 	/**
 	 * since 1.0.0
+	 *
 	 * @param $request
 	 *
 	 * @return mixed|WP_Error|WP_REST_Response
@@ -260,15 +261,15 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			return new WP_Error( 'invalid_bulk_action', __( 'Invalid bulk action', 'wp-ever-accounting' ) );
 		}
 
-		error_log(print_r($items, true ));
-		error_log(print_r($action, true ));
+		error_log( print_r( $items, true ) );
+		error_log( print_r( $action, true ) );
 
 		switch ( $action ) {
 			case 'delete':
 				foreach ( $items as $item ) {
-					error_log($item);
+					error_log( $item );
 					$error = eaccounting_delete_currency( $item );
-					if(is_wp_error($error)){
+					if ( is_wp_error( $error ) ) {
 						return $error;
 					}
 				}
@@ -291,13 +292,13 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 
-		$data     = array(
-			'id'                  => intval( $item->id ),
-			'name'                => $item->name,
-			'code'                => $item->code,
-			'rate'                => floatval( $item->rate ),
-			'created_at'          => $this->prepare_date_response( $item->created_at ),
-			'updated_at'          => $this->prepare_date_response( $item->updated_at ),
+		$data = array(
+			'id'         => intval( $item->id ),
+			'name'       => $item->name,
+			'code'       => $item->code,
+			'rate'       => floatval( $item->rate ),
+			'created_at' => $this->prepare_date_response( $item->created_at ),
+			'updated_at' => $this->prepare_date_response( $item->updated_at ),
 		);
 
 
@@ -377,7 +378,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the currency.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -386,7 +387,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'name'         => array(
-					'description' => __( 'Unique Name for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique Name for the currency.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -400,14 +401,16 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required'    => true,
 				),
 				'rate'         => array(
 					'description' => __( 'Current rate for the item.', 'wp-ever-accounting' ),
-					'type'        => ['string', 'numeric'],
+					'type'        => [ 'string', 'numeric' ],
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required'    => true,
 				),
 				'date_created' => array(
 					'description' => __( 'Created date of the user.', 'wp-ever-accounting' ),

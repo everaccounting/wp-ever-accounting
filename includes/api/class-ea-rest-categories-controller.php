@@ -175,7 +175,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_category( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the category', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -196,7 +196,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 
 		$item = eaccounting_get_category( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the category', 'wp-ever-accounting' ) );
 		}
 		$prepared_args = $this->prepare_item_for_database( $request );
 
@@ -228,7 +228,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_category( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the category', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -236,7 +236,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_category( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'This category cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -379,7 +379,7 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the category.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -413,7 +413,6 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_hex_color',
 					),
-					'required'    => false,
 				),
 				'date_created' => array(
 					'description' => __( 'Created date of the category.', 'wp-ever-accounting' ),

@@ -156,7 +156,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_revenue( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the revenue', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -177,7 +177,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 
 		$item = eaccounting_get_revenue( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the revenue', 'wp-ever-accounting' ) );
 		}
 		$prepared_args = $this->prepare_item_for_database( $request );
 
@@ -209,7 +209,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_revenue( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the revenue', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -217,7 +217,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_revenue( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'The revenue cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -243,18 +243,14 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
 			'id'             => intval( $item->id ),
-			'account_id'     => $item->account_id,
 			'account'        => eaccounting_get_account( $item->account_id ),
-			'paid_at'        => $item->paid_at,
-			'amount_raw'     => $item->amount,
+			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
 			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
 			'currency'       => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
-			'contact_id'     => $item->contact_id,
 			'contact'        => eaccounting_get_contact( $item->contact_id ),
 			'description'    => $item->description,
-			'category_id'    => $item->category_id,
 			'category'       => eaccounting_get_category( $item->category_id ),
 			'reference'      => $item->reference,
 			'payment_method' => $item->payment_method,
@@ -368,7 +364,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'             => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the revenue.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -377,22 +373,24 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'account_id'     => array(
-					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
-					'type'        => ['string', 'integer'],
-					'context'     => array( 'edit' ),
+
+					'description' => __( 'Account id of the revenue.', 'wp-ever-accounting' ),
+					'type'        => [ 'string', 'integer' ],
+					'context'     => array( 'embed', 'view' ),
+					'readonly'    => true,
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
 				),
 				'paid_at'        => array(
-					'description' => __( 'Payment Date of the item', 'wp-ever-accounting' ),
+					'description' => __( 'Payment Date of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
 				'amount'         => array(
-					'description' => __( 'Amount of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Amount of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -401,15 +399,16 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'contact_id'     => array(
-					'description' => __( 'Contact id of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Contact id of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
+					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 				),
 				'description'    => array(
-					'description' => __( 'Description of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Description of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -417,16 +416,17 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'category_id'    => array(
-					'description' => __( 'Category id of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Category id of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
+					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 					'required'    => true,
 				),
 				'reference'      => array(
-					'description' => __( 'Reference of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Reference of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -443,7 +443,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					'required'    => true,
 				),
 				'attachment_url' => array(
-					'description' => __( 'Attachment url of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Attachment url of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -451,15 +451,16 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'parent_id'      => array(
-					'description' => __( 'Parent id of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Parent id of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
+					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 				),
 				'reconciled'     => array(
-					'description' => __( 'Reconciliation of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Reconciliation of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(

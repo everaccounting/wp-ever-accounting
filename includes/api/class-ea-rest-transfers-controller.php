@@ -156,7 +156,7 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_transfer( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the transfer', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -177,7 +177,7 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 
 		$item = eaccounting_get_transfer( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the transfer', 'wp-ever-accounting' ) );
 		}
 		$prepared_args = $this->prepare_item_for_database( $request );
 
@@ -209,7 +209,7 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_transfer( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the transfer', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -217,7 +217,7 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_transfer( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'This transfer cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -243,19 +243,15 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
 			'id'             => $item->id,
-			'account_id'     => $item->account_id,
-			'paid_at'        => $item->paid_at,
-			'amount'         => $item->amount,
-			'currency_code'  => $item->currency_code,
-			'currency_rate'  => $item->currency_rate,
-			'contact_id'     => $item->contact_id,
+			'from_account'   => eaccounting_get_account( $item->from_account_id ),
+			'to_account'     => eaccounting_get_account( $item->to_account_id ),
+			'payment'        => eaccounting_get_payment( $item->payment_id ),
+			'revenue'        => eaccounting_get_revenue( $item->revenue_id ),
+			'amount'         => eaccounting_money( $item->amount, $item->currecncy_code, true )->format(),
+			'transferred_at' => $this->prepare_date_response( $item->transferred_at ),
 			'description'    => $item->description,
-			'category_id'    => $item->category_id,
-			'reference'      => $item->reference,
 			'payment_method' => $item->payment_method,
-			'attachment_url' => $item->attachment_url,
-			'parent_id'      => $item->parent_id,
-			'reconciled'     => $item->reconciled,
+			'reference'      => $item->reference,
 			'created_at'     => $this->prepare_date_response( $item->created_at ),
 			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -285,44 +281,32 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
 			$prepared_item->id = $request['id'];
 		}
-		if ( ! empty( $schema['properties']['account_id'] ) && isset( $request['account_id'] ) ) {
-			$prepared_item->account_id = $request['account_id'];
+		if ( ! empty( $schema['properties']['from_account_id'] ) && isset( $request['from_account_id'] ) ) {
+			$prepared_item->from_account_id = $request['from_account_id'];
 		}
-		if ( ! empty( $schema['properties']['paid_at'] ) && isset( $request['paid_at'] ) ) {
-			$prepared_item->paid_at = $request['paid_at'];
+		if ( ! empty( $schema['properties']['to_account_id'] ) && isset( $request['to_account_id'] ) ) {
+			$prepared_item->to_account_id = $request['to_account_id'];
+		}
+		if ( ! empty( $schema['properties']['payment_id'] ) && isset( $request['payment_id'] ) ) {
+			$prepared_item->payment_id = $request['payment_id'];
+		}
+		if ( ! empty( $schema['properties']['revenue_id'] ) && isset( $request['revenue_id'] ) ) {
+			$prepared_item->revenue_id = $request['revenue_id'];
 		}
 		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
 			$prepared_item->amount = $request['amount'];
 		}
-		if ( ! empty( $schema['properties']['currency_code'] ) && isset( $request['currency_code'] ) ) {
-			$prepared_item->currency_code = $request['currency_code'];
-		}
-		if ( ! empty( $schema['properties']['currency_rate'] ) && isset( $request['currency_rate'] ) ) {
-			$prepared_item->currency_rate = $request['currency_rate'];
-		}
-		if ( ! empty( $schema['properties']['contact_id'] ) && isset( $request['contact_id'] ) ) {
-			$prepared_item->contact_id = $request['contact_id'];
+		if ( ! empty( $schema['properties']['transferred_at'] ) && isset( $request['transferred_at'] ) ) {
+			$prepared_item->transferred_at = $request['transferred_at'];
 		}
 		if ( ! empty( $schema['properties']['description'] ) && isset( $request['description'] ) ) {
 			$prepared_item->description = $request['description'];
 		}
-		if ( ! empty( $schema['properties']['category_id'] ) && isset( $request['category_id'] ) ) {
-			$prepared_item->category_id = $request['category_id'];
-		}
-		if ( ! empty( $schema['properties']['reference'] ) && isset( $request['reference'] ) ) {
-			$prepared_item->reference = $request['reference'];
-		}
 		if ( ! empty( $schema['properties']['payment_method'] ) && isset( $request['payment_method'] ) ) {
 			$prepared_item->payment_method = $request['payment_method'];
 		}
-		if ( ! empty( $schema['properties']['attachment_url'] ) && isset( $request['attachment_url'] ) ) {
-			$prepared_item->attachment_url = $request['attachment_url'];
-		}
-		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
-			$prepared_item->parent_id = $request['parent_id'];
-		}
-		if ( ! empty( $schema['properties']['reconciled'] ) && isset( $request['reconciled'] ) ) {
-			$prepared_item->reconciled = $request['reconciled'];
+		if ( ! empty( $schema['properties']['reference'] ) && isset( $request['reference'] ) ) {
+			$prepared_item->reference = $request['reference'];
 		}
 
 		return $prepared_item;
@@ -365,8 +349,8 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 			'title'      => __( 'Transfer', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'             => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+				'id'              => array(
+					'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -374,22 +358,39 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'account_id'     => array(
-					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+				'from_account_id' => array(
+					'description' => __( 'From Account id of the transfer.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 				),
-				'paid_at'        => array(
-					'description' => __( 'Payment Date of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'date-time',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'required'    => true,
+				'to_account_id'   => array(
+					'description' => __( 'To Account id of the transfer.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'intval',
+					),
 				),
-				'amount'         => array(
+				'payment_id'      => array(
+					'description' => __( 'Payment id the transfer', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'intval',
+					),
+				),
+				'revenue_id'      => array(
+					'description' => __( 'Revenue id the transfer', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'intval',
+					),
+				),
+				'amount'          => array(
 					'description' => __( 'Amount of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -398,33 +399,15 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'currency_code'  => array(
-					'description' => __( 'Currency code of the payment', 'wp-ever-accounting' ),
+				'transferred_at'  => array(
+					'description' => __( 'Date of the transfer', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
+					'format'      => 'date-time',
+					'context'     => array( 'view' ),
 					'required'    => true,
+					'readonly'    => true,
 				),
-				'currency_rate'  => array(
-					'description' => __( 'Currency rate of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'contact_id'     => array(
-					'description' => __( 'Contact id of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'description'    => array(
+				'description'     => array(
 					'description' => __( 'Description of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -432,24 +415,7 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'category_id'    => array(
-					'description' => __( 'Category id of the payment', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'reference'      => array(
-					'description' => __( 'Reference of the payment', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'payment_method' => array(
+				'payment_method'  => array(
 					'description' => __( 'Method of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -458,31 +424,16 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'attachment_url' => array(
-					'description' => __( 'Attachment url of the payment', 'wp-ever-accounting' ),
+				'reference'       => array(
+					'description' => __( 'Reference of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'esc_url',
+						'sanitize_callback' => 'sanitize_textarea_field',
 					),
+					'readonly'    => true,
 				),
-				'parent_id'      => array(
-					'description' => __( 'Parent id of the payment', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'reconciled'     => array(
-					'description' => __( 'Reconciliation of the payment', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'date_created'   => array(
+				'date_created'    => array(
 					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
