@@ -379,9 +379,9 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 				'account_id'     => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => ['string', 'integer'],
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 				),
 				'paid_at'        => array(

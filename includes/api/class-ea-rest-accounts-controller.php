@@ -400,6 +400,12 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
+				'account'      => array(
+					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view'),
+					'readonly'    => true,
+				),
 				'name'            => array(
 					'description' => __( 'Name of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',

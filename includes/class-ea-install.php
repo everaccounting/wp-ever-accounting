@@ -288,6 +288,20 @@ class EAccounting_Install {
 		    KEY `rate` (`rate`),
 		    KEY `code` (`code`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_files(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`name` varchar(199) NOT NULL,
+			`path` varchar(199) NOT NULL,
+			`extension` varchar(28) NOT NULL,
+			`mime_type` varchar(128) NOT NULL,
+			`size` int(10) unsigned NOT NULL,
+	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`),
+		    KEY `name` (`name`),
+		    KEY `path` (`path`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
 
 

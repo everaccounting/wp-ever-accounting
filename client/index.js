@@ -11,7 +11,6 @@ import "@wordpress/notices";
 import App from './app';
 import './stylesheets/main.scss';
 
-
 domReady(() => {
 	const root = document.getElementById('eaccounting');
 	return render(<App/>, root);

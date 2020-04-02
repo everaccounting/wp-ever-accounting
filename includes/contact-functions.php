@@ -153,8 +153,10 @@ function eaccounting_get_contact( $id, $by = 'id' ) {
 			break;
 	}
 
-	$contact        = $wpdb->get_row( $sql );
-	$contact->types = maybe_unserialize( $contact->types );
+	$contact = $wpdb->get_row( $sql );
+	if ( $contact ) {
+		$contact->types = maybe_unserialize( $contact->types );
+	}
 
 	return $contact;
 }
@@ -183,7 +185,7 @@ function eaccounting_delete_contact( $id ) {
 		$wpdb->ea_invoices => 'contact_id'
 	];
 	foreach ( $tables as $table => $column ) {
-		if($wpdb->get_var($wpdb->prepare("SELECT count(id) FROM $table WHERE $column = %d", $id))) {
+		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) FROM $table WHERE $column = %d", $id ) ) ) {
 			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with contacts, you are not permitted to delete them.', 'wp-ever-accounting' ) );
 		}
 

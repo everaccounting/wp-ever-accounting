@@ -117,6 +117,7 @@ final class EverAccounting {
 			'ea_invoices',
 			'ea_currencies',
 			'ea_invoice_item_taxes',
+			'ea_files',
 		);
 		foreach ( $tables as $table ) {
 			$wpdb->$table   = $wpdb->prefix . $table;

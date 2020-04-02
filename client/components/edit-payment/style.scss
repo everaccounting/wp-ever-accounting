@@ -1,0 +1,46 @@
+
+.ea-file-list {
+  margin: 0;
+  padding: 0;
+  max-width: 670px;
+
+  li {
+	overflow: hidden;
+	border-top: 1px solid #DFE1E6;
+	margin: 0;
+	padding: 5px 10px;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	&:last-child {
+	  margin-bottom: 10px;
+	  border-bottom: 1px solid #DFE1E6;
+	}
+  }
+
+  .ea-file-name{
+	max-width: 90%;
+  }
+
+  .ea-file-delete {
+	color: #505F79;
+	line-height: 20px;
+	height: 20px;
+  }
+}
+
+.ea-file-upload {
+  color: #505F79;
+  background: #F4F5F7;
+  border: none;
+  outline: 0;
+
+  &:hover {
+	background: #EBECF0;
+	border: 0 !important;
+	box-shadow: none !important;
+	color: #505F79 !important;
+  }
+}
