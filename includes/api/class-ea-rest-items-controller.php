@@ -225,7 +225,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_item( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'The item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new WP_Error( 'rest_cannot_delete', __( 'This item cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new WP_REST_Response();
@@ -357,7 +357,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 			'title'      => __( 'Currency', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'              => array(
+				'id'             => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -366,7 +366,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'            => array(
+				'name'           => array(
 					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -375,7 +375,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'sku'          => array(
+				'sku'            => array(
 					'description' => __( 'Sku of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -384,15 +384,16 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'description'          => array(
+				'description'    => array(
 					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'sale_price' => array(
+				'sale_price'     => array(
 					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -401,10 +402,11 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'purchase_price'   => array(
-					'description' => __( 'Purchase price of the account', 'wp-ever-accounting' ),
+				'purchase_price' => array(
+					'description' => __( 'Purchase price of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'eaccounting_sanitize_price',
 					),
@@ -412,19 +414,19 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 				),
 				'quantity'       => array(
 					'description' => __( 'Quantity of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 					'required'    => true,
 				),
-				'category_id'       => array(
+				'category_id'    => array(
 					'description' => __( 'Category id of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 					'required'    => true,
 				),
@@ -436,7 +438,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'date_created'    => array(
+				'date_created'   => array(
 					'description' => __( 'Created date of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
