@@ -244,8 +244,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		$data = array(
 			'id'             => intval( $item->id ),
 			'account'        => eaccounting_get_account( $item->account_id ),
-			'paid_at'        => $item->paid_at,
-			'amount_raw'     => $item->amount,
+			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
 			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
 			'currency'       => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'  => $item->currency_code,
