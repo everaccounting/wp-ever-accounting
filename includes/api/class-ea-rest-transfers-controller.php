@@ -359,7 +359,7 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'from_account_id' => array(
-					'description' => __( 'Account id of the transfer.', 'wp-ever-accounting' ),
+					'description' => __( 'From Account id of the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
@@ -367,7 +367,7 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'to_account_id'   => array(
-					'description' => __( 'Account id of the transfer.', 'wp-ever-accounting' ),
+					'description' => __( 'To Account id of the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
