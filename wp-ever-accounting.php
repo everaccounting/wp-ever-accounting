@@ -210,7 +210,6 @@ final class EverAccounting {
 		// Init action.
 		do_action( 'eaccounting_init' );
 	}
-
 	/**
 	 * Initialize plugin for localization
 	 *

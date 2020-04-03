@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import {has, setWith, clone} from 'lodash';
+import {has, setWith, clone, forOwn} from 'lodash';
 
 /**
  * Utility for returning whether the given path exists in the state.
@@ -25,4 +25,11 @@ export const hasInState = (state, path) => {
  */
 export const updateState = (state, path, value) => {
 	return setWith(clone(state), path, value, clone);
+};
+
+export const replaceItem = (collection, item) => {
+	window.collection = collection;
+	return forOwn(collection, (val, key) => {
+		// val.map(i => i.id === item.id ? item : i);
+	});
 };

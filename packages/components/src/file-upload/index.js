@@ -3,10 +3,9 @@ import {FormFileUpload, BaseControl, Dashicon} from '@wordpress/components';
 import {__} from "@wordpress/i18n";
 import PropTypes from "prop-types";
 import apiFetch from "@wordpress/api-fetch";
-import isShallowEqual from '@wordpress/is-shallow-equal';
-import {concat, remove, forEach} from "lodash";
-
-export default class Files extends Component {
+import {concat, remove, forEach, merge} from "lodash";
+import {removeObject} from "find-and";
+export default class FileUpload extends Component {
 	constructor(props) {
 		super(props);
 	}
@@ -20,30 +19,25 @@ export default class Files extends Component {
 				body: data,
 				method: 'POST',
 			}).then(res => {
-				this.props.onChange(concat(this.props.value, res))
+				const {value = []} = this.props;
+				this.props.onChange(value.concat(res).filter(file => ("object" === typeof file)));
 			}).catch(error => alert(error.message));
 		});
 	};
 
 
 	onRemoveFile = file => {
+		console.log(file);
 		if (true === confirm(__('Do you really want to delete the file'))) {
 			apiFetch({path: `/ea/v1/files/${file.id}`, method: 'DELETE'}).then(res => {
-				this.props.onChange(remove(this.props.value, item => {
-					return item.id === file.id
-				}))
+				this.props.onChange(removeObject(this.props.value, file))
 			}).catch(error => alert(error.message));
 		}
 	};
 
-	triggerChange = () => {
-		const {files} = this.state;
-		this.props.onChange(files.map(file => file.id).join(','))
-	};
-
 
 	render() {
-		const {label, accept, value:files} = this.props;
+		const {label, accept, value: files} = this.props;
 
 		return (
 			<BaseControl label={label} className='ea-form-group'>
@@ -54,7 +48,10 @@ export default class Files extends Component {
 								<a href={file.url} className="ea-file-name" title={file.name}
 								   target="_blank">{file.name}</a>
 								<a href="#" title={__('Delete')} className='ea-file-delete'
-								   onClick={(e) => {e.preventDefault(); this.onRemoveFile(file)}}><Dashicon icon={'no-alt'}/></a>
+								   onClick={(e) => {
+									   e.preventDefault();
+									   this.onRemoveFile(file)
+								   }}><Dashicon icon={'no-alt'}/></a>
 							</li>
 						)
 					})}
@@ -73,14 +70,14 @@ export default class Files extends Component {
 
 }
 
-Files.propTypes = {
+FileUpload.propTypes = {
 	value: PropTypes.any,
 	label: PropTypes.string,
 	accept: PropTypes.string,
 	onChange: PropTypes.func,
 };
 
-Files.defaultProps = {
+FileUpload.defaultProps = {
 	label: __('Files'),
 	accept: 'image/*, .pdf, .doc',
 };

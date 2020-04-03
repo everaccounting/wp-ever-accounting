@@ -47,11 +47,11 @@ export const routes = [
 	},
 	{
 		container: Expenses,
-		path: '/expenses/:tab/:id(\\d+)',
+		path: '/expenses/:tab/:action',
 	},
 	{
 		container: Expenses,
-		path: '/expenses/:tab/:action',
+		path: '/expenses/:tab/:id(\\d+)',
 	},
 	{
 		container: Expenses,

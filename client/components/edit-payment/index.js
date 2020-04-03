@@ -14,7 +14,7 @@ import {
 	Button,
 	Blocker,
 	PaymentMethodControl,
-	Files
+	FileUpload
 } from '@eaccounting/components';
 import {withData} from '@eaccounting/hoc';
 import {withSelect, withDispatch} from "@wordpress/data";
@@ -33,7 +33,7 @@ class EditPayment extends Component {
 		}
 	}
 
-	onSubmit = (data) => {
+	onSubmit = async data => {
 		data.account_id = data.account && data.account.id && data.account.id;
 		data.currency = data.currency && data.currency.code && data.currency.code;
 		data.contact_id = data.contact && data.contact.id && data.contact.id;
@@ -44,24 +44,20 @@ class EditPayment extends Component {
 		delete data.contact;
 		delete data.category;
 
-		apiFetch({path: 'ea/v1/payments', method: 'POST', data}).then(res => {
-			this.props.resetStore();
+		await apiFetch({path: 'ea/v1/payments', method: 'POST', data}).then(res => {
+			this.props.replaceEntity('payments', res);
 			this.setState({
 				changed: true
 			})
 		}).catch(error => {
 			alert(error.message);
 		});
-		this.props.hi
 	};
 
 
 	render() {
-		const {payment, settings, match, isLoading, isSettingsLoading} = this.props;
+		const {payment, settings, match, isLoading} = this.props;
 		const isAdd = get(match, ['params', 'id'], '') === 'add';
-		if (this.state.changed === true) {
-			return <Redirect to='/expenses/payments'/>
-		}
 
 		return (
 			<Fragment>
@@ -73,6 +69,8 @@ class EditPayment extends Component {
 						initialValues={payment}
 						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
 							<Blocker isBlocked={isLoading || submitting}>
+								{console.log(values)}
+								{console.log(form)}
 								<form onSubmit={handleSubmit}>
 									<div className="ea-row">
 										<div className="ea-col-6">
@@ -104,6 +102,7 @@ class EditPayment extends Component {
 											<Field
 												label={__('Amount', 'wp-ever-accounting')}
 												name="amount"
+												code={values.account && values.account.currency && values.account.currency.code||''}
 												before={<Icon icon={'money'}/>}
 												required>
 												{props => (
@@ -174,18 +173,16 @@ class EditPayment extends Component {
 											<Field
 												name="files">
 												{props => (
-													<Files {...props.input}/>
+													<FileUpload {...props.input}/>
 												)}
 											</Field>
 
 										</div>
 
-
 									</div>
 
-									{submitError && <div className="error">{submitError}</div>}
 									<p>
-										<Button isPrimary isBusy={submitting} type="submit">{__('Submit')}</Button>
+										<Button isPrimary disabled={submitting || pristine} type="submit">{__('Submit')}</Button>
 									</p>
 
 								</form>
@@ -204,16 +201,16 @@ export default compose([
 	withSelect((select, ownProps) => {
 		const id = get(ownProps, ['match', 'params', 'id'], undefined);
 		const {getEntityById, isRequestingGetEntityById} = select('ea/collection');
-		const shouldLoad = !isNaN(id);
+		const isNew = isNaN(id);
 		return {
-			payment: shouldLoad ? getEntityById('payments', id, {}) : {},
-			isLoading: shouldLoad ? isRequestingGetEntityById('payments', id, {}) : false,
+			payment: !isNew ? getEntityById('payments', id, {files:[]}) : {files:[]},
+			isLoading: !isNew ? isRequestingGetEntityById('payments', id, {}) : false,
 		}
 	}),
 	withDispatch(dispatch => {
-		const {resetAllState} = dispatch('ea/collection');
+		const {replaceEntity} = dispatch('ea/collection');
 		return {
-			resetStore: resetAllState
+			replaceEntity
 		}
 	}),
 ])(withData(EditPayment));

@@ -102,6 +102,19 @@ export function receiveEntitiesWithRouteParts(resourceName, parts, id, queryStri
 	};
 }
 
+/**
+ *
+ * @param resourceName
+ * @param response
+ * @returns {{response: *, resourceName: *, type: string}}
+ */
+export function replaceEntity(resourceName, response) {
+	return {
+		type: types.REPLACE_ENTITY,
+		resourceName,
+		response,
+	}
+}
 
 
 /**
@@ -121,8 +134,6 @@ export function* deleteEntityById(resourceName, entityId, refresh = true) {
 }
 
 
-
-
 /**
  * Action triggering resetting all state in the store.
  */
@@ -132,7 +143,7 @@ export function* resetAllState() {
 		type: types.RESET_COLLECTION,
 	};
 
-	if ( invalidateActionsAvailable() ) {
+	if (invalidateActionsAvailable()) {
 		yield dispatch(
 			'core/data',
 			'invalidateResolutionForStore',
@@ -149,14 +160,14 @@ export function* resetAllState() {
 	);
 
 	// dispatch invalidation of the cached resolvers
-	for ( const selector in resolvers ) {
-		for ( const entry of resolvers[ selector ]._map ) {
+	for (const selector in resolvers) {
+		for (const entry of resolvers[selector]._map) {
 			yield dispatch(
 				'core/data',
 				'invalidateResolution',
 				REDUCER_KEY,
 				selector,
-				entry[ 0 ]
+				entry[0]
 			);
 		}
 	}
@@ -170,7 +181,7 @@ export function* resetAllState() {
  * @param {string} selectorName
  * @param {string} identifier
  */
-export function* resetForSelectorAndResourceName( selectorName, identifier ) {
+export function* resetForSelectorAndResourceName(selectorName, identifier) {
 	yield {
 		type: types.RESET_COLLECTION,
 		identifier,
@@ -186,19 +197,19 @@ export function* resetForSelectorAndResourceName( selectorName, identifier ) {
 	// dispatch invalidation of the cached resolvers for any resolver that
 	// has a variation of modelName in the selector name or in the args for the
 	// cached resolver.
-	for ( const selector in resolvers ) {
+	for (const selector in resolvers) {
 		if (
 			selectorName === selector ||
-			identifierInSelector( selector, identifier )
+			identifierInSelector(selector, identifier)
 		) {
-			for ( const entry of resolvers[ selector ]._map ) {
-				if ( entry[ 0 ][ 0 ] === identifier ) {
+			for (const entry of resolvers[selector]._map) {
+				if (entry[0][0] === identifier) {
 					yield dispatch(
 						'core/data',
 						'invalidateResolution',
 						REDUCER_KEY,
 						selector,
-						entry[ 0 ],
+						entry[0],
 					);
 				}
 			}
@@ -214,7 +225,7 @@ export function* resetForSelectorAndResourceName( selectorName, identifier ) {
  * @param {string} resourceName
  * @param {string} queryString
  */
-export function* resetSpecificStateForSelector( selectorName, resourceName, queryString) {
+export function* resetSpecificStateForSelector(selectorName, resourceName, queryString) {
 	yield {
 		type: types.RESET_COLLECTION,
 		resourceName,
@@ -226,7 +237,7 @@ export function* resetSpecificStateForSelector( selectorName, resourceName, quer
 		'invalidateResolution',
 		REDUCER_KEY,
 		selectorName,
-		[ resourceName, queryString ]
+		[resourceName, queryString]
 	);
 }
 
@@ -238,12 +249,12 @@ export function* resetSpecificStateForSelector( selectorName, resourceName, quer
  * @param {string} identifier
  * @return {boolean} True means it is present, false means it isn't
  */
-const identifierInSelector = ( selectorName, identifier ) => {
-	if ( selectorName === 'fetchAPI' ) {
+const identifierInSelector = (selectorName, identifier) => {
+	if (selectorName === 'fetchAPI') {
 		return false;
 	}
 
-	return selectorName.indexOf( identifier ) > -1;
+	return selectorName.indexOf(identifier) > -1;
 };
 
 
@@ -253,5 +264,5 @@ const identifierInSelector = ( selectorName, identifier ) => {
  * @return {boolean}  True means additional invalidation actions available.
  */
 const invalidateActionsAvailable = () => {
-	return select( 'core/data' ).invalidateResolutionForStore !== undefined;
+	return select('core/data').invalidateResolutionForStore !== undefined;
 };

@@ -1,46 +1,51 @@
 /**
  * WordPress dependencies
  */
-import { Component, Fragment } from '@wordpress/element';
+import {Component, Fragment} from '@wordpress/element';
 /**
  * External dependencies
  */
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import moment from 'moment';
+import {isEmpty} from "lodash";
+
 /**
  * Internal dependencies
  */
 import DatePicker from '../date-picker';
 import TextControl from '../text-control';
-import { noop } from 'lodash';
+import {noop} from 'lodash';
 import {FORMAT_SITE_DATE} from "@eaccounting/data";
+
 export default class DateControl extends Component {
 	static propTypes = {
 		renderFormat: PropTypes.string,
-		returnFormat: PropTypes.string,
+		returnformat: PropTypes.string,
 	};
 
-	static defaultTypes = {
-		renderFormat: FORMAT_SITE_DATE,
-		returnFormat: FORMAT_SITE_DATE,
+	static defaultProps = {
+		returnformat:'YYYY-MM-DD'
 	};
+
 
 	constructor(props) {
 		super(props);
 	}
 
 	onChange = (event, picker) => {
-		const value = picker.startDate.format('YYYY-MM-DD') || undefined;
+		const {returnformat = FORMAT_SITE_DATE} = this.props;
+		const value = picker.startDate.format(returnformat) || undefined;
 		this.props.onChange && this.props.onChange(value);
 	};
 
 	render() {
-		const { onChange, value, className, ...restProps } = this.props;
+		const {onChange, value, className, renderFormat = FORMAT_SITE_DATE, ...restProps} = this.props;
 		const classes = classnames('ea-date-field', className);
-		const date = value || undefined;
-		const startDate = date !== undefined ? moment(date, this.props.returnFormat) : undefined;
-		const inputVal = startDate !== undefined ? startDate.format(this.props.renderFormat) : '';
+
+		const startDate = !isEmpty(value) ? moment(new Date(value)) : undefined;
+		const inputVal = !isEmpty(startDate) ? startDate.format(renderFormat) : undefined;
+
 		return (
 			<Fragment>
 				<DatePicker

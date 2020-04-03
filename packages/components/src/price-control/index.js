@@ -8,10 +8,8 @@ import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
 import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
-import MaskedInput from 'react-text-mask';
-import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import {getCurrencyConfig} from "@eaccounting/data";
-
+import NumberFormat from 'react-number-format';
 export default class PriceControl extends Component {
 	onChange = e => {
 		this.props.onChange && this.props.onChange(e.target.value);
@@ -26,31 +24,22 @@ export default class PriceControl extends Component {
 		const currency = getCurrencyConfig(code);
 		const suffix = currency && currency.position !== 'before' ? currency.symbol : '';
 		const prefix = currency && currency.position === 'before' ? currency.symbol : '';
-
-		const maskOptions = {
-			prefix,
-			suffix,
-			allowDecimal: !!currency && currency.precision,
-			decimalSymbol: currency && currency.decimalSeparator,
-			decimalLimit: currency && currency.precision,
-			thousandsSeparatorSymbol: currency && currency.thousandSeparator,
-		};
-
-		const currencyMask = createNumberMask(maskOptions);
-		const placeholder = currency && currency.symbol && `${currency.symbol} 0.00`;
+		const placeholder = currency && currency.symbol && `${currency.symbol}0.00`;
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
 					{before && <span className="ea-input-group__before">{before}</span>}
-
-					<MaskedInput
+					<NumberFormat
+						suffix={suffix}
+						prefix={prefix}
 						required={required}
 						placeholder={placeholder}
 						className="components-text-control__input ea-input-group__input"
-						mask={currencyMask}
+						thousandsGroupStyle='thousand'
+						decimalSeparator={currency && currency.decimalSeparator}
+						thousandSeparator={currency && currency.thousandSeparator}
 						value={(value && value) || ''}
 						onChange={this.onChange}
-						inputMode="numeric"
 					/>
 					{after && <span className="ea-input-group__after">{after}</span>}
 				</div>

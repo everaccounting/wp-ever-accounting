@@ -8,7 +8,6 @@ const withData = createHigherOrderComponent(
 	compose([
 		withSelect(
 			(select, ownProps) => {
-				console.log(ownProps);
 				const {fetchAPI, isRequestingFetchAPI} = select('ea/collection');
 				return {
 					settings: fetchAPI('settings', {}),

@@ -16,6 +16,10 @@ import EditPayment from "components/edit-payment";
 
 const tabs = [
 	{
+		path: '/expenses/payments/add',
+		component:EditPayment,
+	},
+	{
 		path: '/expenses/payments/:id',
 		component:EditPayment,
 	},
@@ -25,7 +29,7 @@ const tabs = [
 		component:Payments,
 	},
 	{
-		path: '/incomes/invoices',
+		path: '/expenses/bills',
 		name: __('Bills'),
 		component:Bills,
 	},

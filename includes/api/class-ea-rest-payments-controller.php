@@ -387,6 +387,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					'context'     => array( 'view' ),
 					'required'    => true,
 					'readonly'    => true,
+
 				),
 				'amount'      => array(
 					'description' => __( 'Amount of the payment', 'wp-ever-accounting' ),
