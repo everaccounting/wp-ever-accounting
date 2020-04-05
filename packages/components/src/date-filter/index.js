@@ -58,7 +58,6 @@ export default class DateRangeControl extends Component {
 	render() {
 		const { className } = this.props;
 		const range = {
-			'All Time': [null, null],
 			Today: [moment(), moment()],
 			Yesterday: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
 			'Last 7 Days': [moment().subtract(6, 'days'), moment()],

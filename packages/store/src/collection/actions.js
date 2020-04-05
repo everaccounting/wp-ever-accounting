@@ -179,12 +179,12 @@ export function* resetAllState() {
  * ResourceName
  *
  * @param {string} selectorName
- * @param {string} identifier
+ * @param {string} resourceName
  */
-export function* resetForSelectorAndResourceName(selectorName, identifier) {
+export function* resetForSelectorAndResource(selectorName, resourceName) {
 	yield {
 		type: types.RESET_COLLECTION,
-		identifier,
+		resourceName,
 	};
 
 	// get resolvers from core/data
@@ -200,10 +200,10 @@ export function* resetForSelectorAndResourceName(selectorName, identifier) {
 	for (const selector in resolvers) {
 		if (
 			selectorName === selector ||
-			identifierInSelector(selector, identifier)
+			resourceNameInSelector(selector, resourceName)
 		) {
 			for (const entry of resolvers[selector]._map) {
-				if (entry[0][0] === identifier) {
+				if (entry[0][0] === resourceName) {
 					yield dispatch(
 						'core/data',
 						'invalidateResolution',
@@ -218,7 +218,7 @@ export function* resetForSelectorAndResourceName(selectorName, identifier) {
 }
 
 /**
- * Action triggering the state reset for the specific selector name, identifier
+ * Action triggering the state reset for the specific selector name, resourceName
  * and query string.
  *
  * @param {string} selectorName
@@ -242,19 +242,19 @@ export function* resetSpecificStateForSelector(selectorName, resourceName, query
 }
 
 /**
- * Helper for determining whether the given identifier is found in the given
+ * Helper for determining whether the given resourceName is found in the given
  * selectorName.
  *
  * @param {string} selectorName
- * @param {string} identifier
+ * @param {string} resourceName
  * @return {boolean} True means it is present, false means it isn't
  */
-const identifierInSelector = (selectorName, identifier) => {
+const resourceNameInSelector = (selectorName, resourceName) => {
 	if (selectorName === 'fetchAPI') {
 		return false;
 	}
 
-	return selectorName.indexOf(identifier) > -1;
+	return selectorName.indexOf(resourceName) > -1;
 };
 
 

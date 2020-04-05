@@ -36,9 +36,6 @@ class Transactions extends Component {
 
 	render() {
 		const {status, total, items, page, order, orderby, query, selected} = this.props;
-		// console.group("Transaction");
-		// console.log(this.props);
-		// console.groupEnd();
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
@@ -92,6 +89,7 @@ class Transactions extends Component {
 							}
 						]}
 						isMulti
+						clearable
 						onChange={(types) => this.props.onFilter({types})}/>
 
 				</TableNav>

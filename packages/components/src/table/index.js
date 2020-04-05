@@ -96,6 +96,7 @@ Table.propTypes = {
 Table.defaultProps = {
 	order: 'desc',
 	total: 0,
+	selected:[],
 	onSetAllSelected: () => {},
 	onSetOrderBy: () => {},
 };

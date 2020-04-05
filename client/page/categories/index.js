@@ -10,8 +10,7 @@ import {withTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
-import {map} from "lodash"
-import EditCategory from "components/edit-category";
+import EditCategory from "./edit-category";
 
 class Categories extends Component {
 	constructor(props) {
@@ -31,7 +30,6 @@ class Categories extends Component {
 	};
 
 	onCreate = () => {
-		this.props.invalidateCollection();
 		this.setState({isAdding: !this.state.isAdding});
 	};
 
@@ -53,8 +51,14 @@ class Categories extends Component {
 		return (
 			<Fragment>
 				{this.state.isAdding &&
-				<EditCategory onClose={this.onClose} onCreate={this.onCreate} tittle={__('Add Category')}
-							  buttonTittle={__('Add')}/>}
+				<EditCategory
+					onClose={this.onClose}
+					onSubmit={(data)=> this.props.handleSubmit(data, (item)=> {
+						console.log(item);
+						this.onClose()
+					})}
+					tittle={__('Add Category')}
+					buttonTittle={__('Add')}/>}
 
 				<div className="ea-table-display">
 					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Category')}</Button>
@@ -65,40 +69,32 @@ class Categories extends Component {
 					status={status}
 					total={total}
 					page={page}
-					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onBulkAction}
-					bulk={getBulk()}>
+					onChangePage={this.props.onPageChange}>
 
 					<CategoryTypesControl
 						className={'alignleft actions'}
 						placeholder={__('Filter Category')}
 						isMulti
-						onChange={(categories) => this.props.onFilter({type: map(categories, 'value')})}/>
+						onChange={(category) => this.props.onFilter({type:category})}/>
 
 				</TableNav>
 
 				<Table
 					headers={getHeaders()}
 					orderby={orderby}
-					selected={selected}
 					order={order}
 					rows={items}
 					total={total}
 					row={this.onRenderRow}
 					status={status}
-					onSetAllSelected={this.props.onAllSelected}
-					onSetOrderBy={this.props.onOrderBy}
-				/>
+					onSetOrderBy={this.props.onOrderBy}/>
 
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onAction}
-				/>
+					onChangePage={this.props.onPageChange}/>
 
 			</Fragment>
 		)

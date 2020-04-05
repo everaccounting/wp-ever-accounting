@@ -29,7 +29,7 @@ export default class SelectControl extends Component {
 	};
 
 	multiChangeHandler = (values) => {
-		this.props.onChange && this.props.onChange(values.map(value => value.value))
+		this.props.onChange && this.props.onChange(values && values.map(value => value.value)|| [])
 	};
 
 	render() {
@@ -48,7 +48,7 @@ export default class SelectControl extends Component {
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
 						required={required}
-						value={this.transformValue(value, options, isMulti)}
+						defaultValue={this.transformValue(value, options, isMulti)}
 						options={options}
 						isMulti={isMulti}
 						onChange={isMulti
