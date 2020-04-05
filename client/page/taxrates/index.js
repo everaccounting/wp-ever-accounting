@@ -3,37 +3,35 @@ import {
 	SearchBox,
 	TableNav,
 	Table,
-	Button
+	Button, SelectControl
 } from "@eaccounting/components"
 import {withTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
-import EditTaxRate from "components/edit-taxrate";
-
+import EditTaxRate from "./edit-taxrate";
+import {TAX_RATE_TYPES} from "@eaccounting/data"
 class TaxRates extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			isAdding: false
 		};
+
+		this.openModal = this.openModal.bind(this);
+		this.closeModal = this.closeModal.bind(this);
+		this.onRenderRow = this.onRenderRow.bind(this);
 	}
 
-	onAdd = ev => {
-		ev.preventDefault();
-		this.setState({isAdding: !this.state.isAdding});
+	openModal() {
+		this.setState({isAdding: true});
 	};
 
-	onClose = () => {
-		this.setState({isAdding: !this.state.isAdding});
+	closeModal() {
+		this.setState({isAdding: false});
 	};
 
-	onCreate = () => {
-		this.props.invalidateCollection();
-		this.setState({isAdding: !this.state.isAdding});
-	};
-
-	onRenderRow = (item, pos, isSelected, isLoading, search) => {
+	onRenderRow(item, pos, isSelected, isLoading, search) {
 		return (
 			<Row
 				item={item}
@@ -52,14 +50,13 @@ class TaxRates extends Component {
 			<Fragment>
 
 				{this.state.isAdding && <EditTaxRate
-					onClose={this.onClose}
-					onCreate={this.onCreate}
+					onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}
+					onClose={this.closeModal}
 					tittle={__('Add Tax Rate')}
-					buttonTittle={__('Add')}/>
-				}
+					buttonTittle={__('Submit')}/>}
 
 				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Tax Rate')}</Button>
+					<Button className="page-title-action" onClick={this.openModal}>{__('Add Tax Rate')}</Button>
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
 
@@ -67,32 +64,32 @@ class TaxRates extends Component {
 					status={status}
 					total={total}
 					page={page}
-					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onBulkAction}
-					bulk={getBulk()}/>
+					onChangePage={this.props.onPageChange}>
+
+					<SelectControl
+						className={'alignleft actions'}
+						placeholder={__('Filter by type')}
+						isMulti
+						options={TAX_RATE_TYPES}
+						onChange={(type) => this.props.onFilter({type: type})}/>
+				</TableNav>
 
 				<Table
 					headers={getHeaders()}
 					orderby={orderby}
-					selected={selected}
 					order={order}
 					rows={items}
 					total={total}
 					row={this.onRenderRow}
 					status={status}
-					onSetAllSelected={this.props.onAllSelected}
-					onSetOrderBy={this.props.onOrderBy}
-				/>
+					onSetOrderBy={this.props.onOrderBy}/>
 
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onAction}
-				/>
+					onChangePage={this.props.onPageChange}/>
 
 			</Fragment>
 		)

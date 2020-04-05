@@ -2,7 +2,7 @@ import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {RowActions} from '@eaccounting/components';
 import {__} from '@wordpress/i18n';
-import EditCurrency from "components/edit-currency";
+import EditCurrency from "./edit-currency";
 
 export default class Row extends Component {
 	static propTypes = {
@@ -16,54 +16,36 @@ export default class Row extends Component {
 		this.state = {
 			editing: false,
 		};
+
+		this.openModal = this.openModal.bind(this);
+		this.closeModal = this.closeModal.bind(this);
 	}
 
-	onEdit = () => {
-		this.setState({editing: !this.state.editing});
+	openModal() {
+		this.setState({editing: true});
 	};
 
-	onSelected = () => {
-		this.props.onSetSelected([this.props.item.id]);
+	closeModal() {
+		this.setState({editing: false});
 	};
 
-	onClose = () => {
-		this.setState({editing: !this.state.editing});
-	};
-
-	OnSave = (item) => {
-		this.onEdit();
-		this.props.invalidateCollection();
-	};
 
 	render() {
-		const {isSelected, isLoading, item} = this.props;
+		const {isLoading, item} = this.props;
 		const { id, name, code, rate } = item;
-		const {editing} = this.state;
 
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
-					<th scope="row" className="check-column">
-						<input
-							type="checkbox"
-							name="item[]"
-							value={id}
-							disabled={isLoading}
-							checked={isSelected}
-							onChange={() => this.props.onSelected(id)}/>
-
-						{editing && (
-							<EditCurrency
-								item={this.props.item}
-								onCreate={this.OnSave}
-								onClose={this.onClose}
-								buttonTittle={__('Update')}
-								tittle={__('Update Currency')}/>
-						)}
-
+					<th className="column-primary column-name">
+						{name}
+						{this.state.editing && <EditCurrency
+							onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}
+							onClose={this.closeModal}
+							buttonTittle={__('Update')}
+							tittle={__('Update Currency')}
+							item={item}/>}
 					</th>
-
-					<td className="column-primary column-name">{name}</td>
 
 					<td className="column-code">{code}</td>
 
@@ -74,12 +56,12 @@ export default class Row extends Component {
 							controls={[
 								{
 									title: __('Edit'),
-									onClick: this.onEdit,
+									onClick: () => this.openModal(),
 									disabled: isLoading,
 								},
 								{
 									title: __('Delete'),
-									onClick: () => this.props.onRemove(id),
+									onClick: () => this.props.handleDelete(id),
 									disabled: isLoading,
 								},
 							]}

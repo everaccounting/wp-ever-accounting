@@ -7,17 +7,13 @@ import { __ } from '@wordpress/i18n';
 
 export const getHeaders = () => [
 	{
-		name: 'cb',
-		check: true,
-	},
-	{
 		name: 'name',
 		title: __('Name'),
 		primary: true,
 	},
 	{
 		name: 'rate',
-		title: __('Rate %'),
+		title: __('Rate'),
 		sortable: true,
 	},
 	{

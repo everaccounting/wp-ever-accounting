@@ -2,13 +2,12 @@ import {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {RowActions} from '@eaccounting/components';
 import {__} from '@wordpress/i18n';
-import EditTaxRate from "components/edit-taxrate";
+import EditTaxRate from "./edit-taxrate";
 
 export default class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
 		isLoading: PropTypes.bool.isRequired,
-		isSelected: PropTypes.bool,
 	};
 
 	constructor(props) {
@@ -16,71 +15,48 @@ export default class Row extends Component {
 		this.state = {
 			editing: false,
 		};
+		this.openModal = this.openModal.bind(this);
+		this.closeModal = this.closeModal.bind(this);
 	}
 
-	onEdit = () => {
-		this.setState({editing: !this.state.editing});
+	openModal() {
+		this.setState({editing: true});
 	};
 
-	onSelected = () => {
-		this.props.onSetSelected([this.props.item.id]);
+	closeModal() {
+		this.setState({editing: false});
 	};
 
-	onClose = () => {
-		this.setState({editing: !this.state.editing});
-	};
-
-	OnSave = (item) => {
-		this.onEdit();
-		this.props.invalidateCollection();
-	};
 
 	render() {
-		const {isSelected, isLoading, item} = this.props;
+		const {isLoading, item} = this.props;
 		const { id, name, rate, type } = item;
-		const {editing} = this.state;
 
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
-					<th scope="row" className="check-column">
-						<input
-							type="checkbox"
-							name="item[]"
-							value={id}
-							disabled={isLoading}
-							checked={isSelected}
-							onChange={() => this.props.onSelected(id)}/>
-
-						{editing && (
-							<EditTaxRate
-								item={this.props.item}
-								onCreate={this.OnSave}
-								onClose={this.onClose}
-								buttonTittle={__('Update')}
-								tittle={__('Update Tax Rate')}/>
-						)}
-
+					<th className="column-primary column-name">
+						{name}
+						{this.state.editing && <EditTaxRate
+							onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}
+							onClose={this.closeModal}
+							buttonTittle={__('Update')}
+							tittle={__('Update Tax Rate')}
+							item={item}/>}
 					</th>
-
-					<td className="column-primary column-name">{name}</td>
-
-					<td className="column-rates">{parseFloat(rate)}</td>
-
+					<td className="column-rates">{parseFloat(rate)}%</td>
 					<td className="column-type ea-capitalize">{type}</td>
-
-
 					<td className="column-actions">
 						<RowActions
 							controls={[
 								{
 									title: __('Edit'),
-									onClick: this.onEdit,
+									onClick: () => this.openModal(),
 									disabled: isLoading,
 								},
 								{
 									title: __('Delete'),
-									onClick: () => this.props.onRemove(id),
+									onClick: () => this.props.handleDelete(id),
 									disabled: isLoading,
 								},
 							]}

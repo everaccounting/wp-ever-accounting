@@ -50,20 +50,15 @@ export default App;
  * Hack for changing the sub-nav menu core classes for 'pages' And update menu link
  */
 window.wpNavMenuClassChange = function (pathname) {
-	// let hash = window.location.hash;
-	// Clear currents
 	Array.from(document.getElementsByClassName('current')).forEach(
 		function (item) {
 			item.classList.remove('current');
 		}
 	);
-	console.log(pathname);
 	const pageUrl = pathname === '/' ? 'admin.php?page=eaccounting#/' : 'admin.php?page=eaccounting#/' + pathname.split('/')[1];
-	console.log(pageUrl);
 	const currentItemsSelector = pathname === '/' ? `li > a[href$="${pageUrl}"], li > a[href*="${pageUrl}?"]` : `li > a[href*="${pageUrl}"]`;
-	console.log(currentItemsSelector);
 	const currentItems = document.querySelectorAll(currentItemsSelector);
-	console.log(currentItems);
+
 
 	Array.from(currentItems).forEach(function (item) {
 		item.parentElement.classList.add('current');

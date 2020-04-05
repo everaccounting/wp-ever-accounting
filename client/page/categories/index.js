@@ -11,6 +11,7 @@ import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
 import EditCategory from "./edit-category";
+import EditCurrency from "../currencies/edit-currency";
 
 class Categories extends Component {
 	constructor(props) {
@@ -18,22 +19,21 @@ class Categories extends Component {
 		this.state = {
 			isAdding: false
 		};
+
+		this.openModal = this.openModal.bind(this);
+		this.closeModal = this.closeModal.bind(this);
+		this.onRenderRow = this.onRenderRow.bind(this);
 	}
 
-	onAdd = ev => {
-		ev.preventDefault();
-		this.setState({isAdding: !this.state.isAdding});
+	openModal() {
+		this.setState({isAdding: true});
 	};
 
-	onClose = () => {
-		this.setState({isAdding: !this.state.isAdding});
+	closeModal() {
+		this.setState({isAdding: false});
 	};
 
-	onCreate = () => {
-		this.setState({isAdding: !this.state.isAdding});
-	};
-
-	onRenderRow = (item, pos, isSelected, isLoading, search) => {
+	onRenderRow(item, pos, isSelected, isLoading, search) {
 		return (
 			<Row
 				item={item}
@@ -52,16 +52,13 @@ class Categories extends Component {
 			<Fragment>
 				{this.state.isAdding &&
 				<EditCategory
-					onClose={this.onClose}
-					onSubmit={(data)=> this.props.handleSubmit(data, (item)=> {
-						console.log(item);
-						this.onClose()
-					})}
+					onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}
+					onClose={this.closeModal}
 					tittle={__('Add Category')}
-					buttonTittle={__('Add')}/>}
+					buttonTittle={__('Submit')}/>}
 
 				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Category')}</Button>
+					<Button className="page-title-action" onClick={this.openModal}>{__('Add Category')}</Button>
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
 
@@ -75,7 +72,7 @@ class Categories extends Component {
 						className={'alignleft actions'}
 						placeholder={__('Filter Category')}
 						isMulti
-						onChange={(category) => this.props.onFilter({type:category})}/>
+						onChange={(category) => this.props.onFilter({type: category})}/>
 
 				</TableNav>
 

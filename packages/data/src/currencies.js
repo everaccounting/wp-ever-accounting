@@ -1,5 +1,5 @@
 import data from './data';
-
+import {forOwn} from "lodash"
 /**
  * Provided via the data passed along by the server.
  * This data a configuration object passed along from the server that indicates
@@ -35,4 +35,18 @@ export const {currency_configs: CURRENCY_CONFIGS = []} = data;
  */
 export const getCurrencyConfig = (code) => {
 	return CURRENCY_CONFIGS[code] || CURRENCY;
+};
+
+/**
+ * return a select list
+ * @returns {{label: string, value: string}[]}
+ */
+export const getGlobalCurrencies = () => {
+	return Object.keys(CURRENCY_CONFIGS).map((key) => {
+		const value = CURRENCY_CONFIGS[key];
+		return {
+			label: `${value.name} (${value.code})`,
+			value: key
+		}
+	});
 };

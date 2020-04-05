@@ -9,7 +9,7 @@ import {withTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
-import EditCurrency from "components/edit-currency";
+import EditCurrency from "./edit-currency";
 
 class Currencies extends Component {
 	constructor(props) {
@@ -17,23 +17,21 @@ class Currencies extends Component {
 		this.state = {
 			isAdding: false
 		};
+
+		this.openModal = this.openModal.bind(this);
+		this.closeModal = this.closeModal.bind(this);
+		this.onRenderRow = this.onRenderRow.bind(this);
 	}
 
-	onAdd = ev => {
-		ev.preventDefault();
-		this.setState({isAdding: !this.state.isAdding});
+	openModal() {
+		this.setState({isAdding: true});
 	};
 
-	onClose = () => {
-		this.setState({isAdding: !this.state.isAdding});
+	closeModal() {
+		this.setState({isAdding: false});
 	};
 
-	onCreate = () => {
-		this.props.invalidateCollection();
-		this.setState({isAdding: !this.state.isAdding});
-	};
-
-	onRenderRow = (item, pos, isSelected, isLoading, search) => {
+	onRenderRow(item, pos, isSelected, isLoading, search) {
 		return (
 			<Row
 				item={item}
@@ -53,13 +51,13 @@ class Currencies extends Component {
 			<Fragment>
 
 				{this.state.isAdding && <EditCurrency
-					onClose={this.onClose}
-					onCreate={this.onCreate}
+					onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}
+					onClose={this.closeModal}
 					tittle={__('Add Currency')}
-					buttonTittle={__('Add')}/>}
+					buttonTittle={__('Submit')}/>}
 
 				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.onAdd}>{__('Add Currency')}</Button>
+					<Button className="page-title-action" onClick={this.openModal}>{__('Add Currency')}</Button>
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
 
@@ -67,32 +65,24 @@ class Currencies extends Component {
 					status={status}
 					total={total}
 					page={page}
-					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onBulkAction}
-					bulk={getBulk()}/>
+					onChangePage={this.props.onPageChange}/>
 
 				<Table
 					headers={getHeaders()}
 					orderby={orderby}
-					selected={selected}
 					order={order}
 					rows={items}
 					total={total}
 					row={this.onRenderRow}
 					status={status}
-					onSetAllSelected={this.props.onAllSelected}
-					onSetOrderBy={this.props.onOrderBy}
-				/>
+					onSetOrderBy={this.props.onOrderBy}/>
 
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onAction}
-				/>
+					onChangePage={this.props.onPageChange}/>
 
 			</Fragment>
 		)

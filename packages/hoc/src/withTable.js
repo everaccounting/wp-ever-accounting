@@ -60,8 +60,7 @@ const withTable = (resourceName, initQuery = {}) => {
 			 * @param autoUpdateStore
 			 * @returns {Promise<void>}
 			 */
-			async handleSubmit(data, after = (res) => {
-			}, autoUpdateStore = true) {
+			async handleSubmit(data, after = (res) => {}, autoUpdateStore = true) {
 				await apiFetch({path: `ea/v1/${resourceName}`, method: 'POST', data}).then(res => {
 					after(res);
 					data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
