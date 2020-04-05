@@ -7,6 +7,7 @@ import {
 	AccountControl,
 	CategoryControl,
 	DateFilter,
+	Button
 } from "@eaccounting/components"
 import {getHeaders} from './constants';
 import Row from "./row";
@@ -35,11 +36,14 @@ class Transactions extends Component {
 
 	render() {
 		const {status, total, items, page, order, orderby, query, selected} = this.props;
+		// console.group("Transaction");
+		// console.log(this.props);
+		// console.groupEnd();
 		return (
 			<Fragment>
 				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
 				<hr className="wp-header-end"/>
-
+				<Button onClick={this.props.resetFilter}>Reset</Button>
 				<div className="ea-table-display">
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>

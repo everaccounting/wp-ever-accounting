@@ -25,6 +25,7 @@ const packages = [
 	'data',
 	'hoc',
 	'store',
+	'helpers',
 ];
 const entryPoints = {};
 packages.forEach(name => {

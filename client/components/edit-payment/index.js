@@ -24,6 +24,7 @@ import {get} from "lodash";
 import apiFetch from "@wordpress/api-fetch";
 import {Redirect} from 'react-router-dom';
 import './style.scss';
+import {normalizeResponseBody} from "@eaccounting/helpers";
 
 class EditPayment extends Component {
 	constructor(props) {
@@ -34,30 +35,33 @@ class EditPayment extends Component {
 	}
 
 	onSubmit = async data => {
-		data.account_id = data.account && data.account.id && data.account.id;
-		data.currency = data.currency && data.currency.code && data.currency.code;
-		data.contact_id = data.contact && data.contact.id && data.contact.id;
-		data.category_id = data.category && data.category.id && data.category.id;
-		data.file_ids = data.files.map(file => file.id).join(',');
-		delete data.currency;
-		delete data.account;
-		delete data.contact;
-		delete data.category;
-
-		await apiFetch({path: 'ea/v1/payments', method: 'POST', data}).then(res => {
-			this.props.replaceEntity('payments', res);
-			this.setState({
-				changed: true
-			})
-		}).catch(error => {
-			alert(error.message);
-		});
+		console.log(data);
+		// data.account_id = data.account && data.account.id && data.account.id;
+		// data.currency = data.currency && data.currency.code && data.currency.code;
+		// data.contact_id = data.contact && data.contact.id && data.contact.id;
+		// data.category_id = data.category && data.category.id && data.category.id;
+		// data.file_ids = data.files.map(file => file.id).join(',');
+		// delete data.currency;
+		// delete data.account;
+		// delete data.contact;
+		// delete data.category;
+		//
+		// await apiFetch({path: 'ea/v1/payments', method: 'POST', data}).then(res => {
+		// 	this.props.replaceEntity('payments', res);
+		// 	this.setState({
+		// 		changed: true
+		// 	})
+		// }).catch(error => {
+		// 	alert(error.message);
+		// });
 	};
 
 
 	render() {
 		const {payment, settings, match, isLoading} = this.props;
 		const isAdd = get(match, ['params', 'id'], '') === 'add';
+		var edit = {};
+
 
 		return (
 			<Fragment>
@@ -69,8 +73,6 @@ class EditPayment extends Component {
 						initialValues={payment}
 						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
 							<Blocker isBlocked={isLoading || submitting}>
-								{console.log(values)}
-								{console.log(form)}
 								<form onSubmit={handleSubmit}>
 									<div className="ea-row">
 										<div className="ea-col-6">
@@ -102,7 +104,7 @@ class EditPayment extends Component {
 											<Field
 												label={__('Amount', 'wp-ever-accounting')}
 												name="amount"
-												code={values.account && values.account.currency && values.account.currency.code||''}
+												code={values.account && values.account.currency && values.account.currency.code || ''}
 												before={<Icon icon={'money'}/>}
 												required>
 												{props => (
@@ -182,7 +184,8 @@ class EditPayment extends Component {
 									</div>
 
 									<p>
-										<Button isPrimary disabled={submitting || pristine} type="submit">{__('Submit')}</Button>
+										<Button isPrimary disabled={submitting || pristine}
+												type="submit">{__('Submit')}</Button>
 									</p>
 
 								</form>
@@ -203,7 +206,7 @@ export default compose([
 		const {getEntityById, isRequestingGetEntityById} = select('ea/collection');
 		const isNew = isNaN(id);
 		return {
-			payment: !isNew ? getEntityById('payments', id, {files:[]}) : {files:[]},
+			payment: !isNew ? getEntityById('payments', id, {files: []}) : {files: []},
 			isLoading: !isNew ? isRequestingGetEntityById('payments', id, {}) : false,
 		}
 	}),
@@ -213,4 +216,4 @@ export default compose([
 			replaceEntity
 		}
 	}),
-])(withData(EditPayment));
+])(EditPayment);

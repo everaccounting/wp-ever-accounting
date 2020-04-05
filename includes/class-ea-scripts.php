@@ -52,12 +52,14 @@ class EAccounting_Scripts {
 		self::register_script( 'ea-components', plugins_url( self::get_block_asset_dist_path( 'components' ), __DIR__ ) );
 		self::register_script( 'ea-hoc', plugins_url( self::get_block_asset_dist_path( 'hoc' ), __DIR__ ) );
 		self::register_script( 'ea-store', plugins_url( self::get_block_asset_dist_path( 'store' ), __DIR__ ) );
+		self::register_script( 'ea-helpers', plugins_url( self::get_block_asset_dist_path( 'helpers' ), __DIR__ ) );
 
 		$client_dependencies = array(
 			'ea-data',
 			'ea-components',
 			'ea-hoc',
-			'ea-store'
+			'ea-store',
+			'ea-helpers',
 		);
 		self::register_script( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client' ), __DIR__ ), $client_dependencies );
 
