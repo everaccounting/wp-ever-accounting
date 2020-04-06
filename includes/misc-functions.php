@@ -266,7 +266,7 @@ function eaccounting_get_countries() {
  * @return mixed|void
  * @since 1.0.2
  */
-function eaccounting_get_currencies_data() {
+function eaccounting_get_global_currencies() {
 	$config = array(
 		'AED' => [
 			'name'              => 'UAE Dirham',
@@ -2248,7 +2248,7 @@ function eaccounting_get_currencies_data() {
  * @return mixed
  */
 function eaccounting_get_currency_config( $currency = 'USD' ) {
-	$data = eaccounting_get_currencies_data();
+	$data = eaccounting_get_global_currencies();
 
 	return array_key_exists( $currency, $data ) ? $data[ $currency ] : $data['USD'];
 }

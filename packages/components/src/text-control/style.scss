@@ -27,6 +27,21 @@
   .components-base-control__field{
 	margin-bottom: 0;
   }
+
+  &.has-button{
+	.ea-input-group__after{
+	  padding: 0;
+	  cursor:pointer;
+	  transition: background-color 0.3s;
+	  .ea-icon{
+		padding: 8px 14px;
+	  }
+
+	  &:hover{
+		background-color: #e7e7e7;
+	  }
+	}
+  }
 }
 
 .ea-input-group {

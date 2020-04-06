@@ -48,7 +48,7 @@ export default class SelectControl extends Component {
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
 						required={required}
-						defaultValue={this.transformValue(value, options, isMulti)}
+						value={this.transformValue(value, options, isMulti)}
 						options={options}
 						isMulti={isMulti}
 						onChange={isMulti

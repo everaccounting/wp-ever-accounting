@@ -120,6 +120,7 @@ const withTableNavigation = (initQuery = {}) => {
 				const query = this.getPageQueries(false);
 				const {per_page, page, orderby, order} = this.state;
 				return <WrappedComponent
+					{...this.props}
 					queries={this.getPageQueries()}
 					per_page={per_page}
 					page={page}

@@ -24,7 +24,7 @@ export const {
  * Exports all the currency configs from server
  * @type {*[]}
  */
-export const {currency_configs: CURRENCY_CONFIGS = []} = data;
+export const {global_currencies: GLOBAL_CURRENCIES = []} = data;
 
 
 /**
@@ -34,7 +34,7 @@ export const {currency_configs: CURRENCY_CONFIGS = []} = data;
  * @returns {*|{symbol: string, thousandSeparator: string, code: string, decimalSeparator: string, precision: number, name: string, subunit: number, position: string, currency_code: number}}
  */
 export const getCurrencyConfig = (code) => {
-	return CURRENCY_CONFIGS[code] || CURRENCY;
+	return GLOBAL_CURRENCIES[code] || CURRENCY;
 };
 
 /**
@@ -42,8 +42,8 @@ export const getCurrencyConfig = (code) => {
  * @returns {{label: string, value: string}[]}
  */
 export const getGlobalCurrencies = () => {
-	return Object.keys(CURRENCY_CONFIGS).map((key) => {
-		const value = CURRENCY_CONFIGS[key];
+	return Object.keys(GLOBAL_CURRENCIES).map((key) => {
+		const value = GLOBAL_CURRENCIES[key];
 		return {
 			label: `${value.name} (${value.code})`,
 			value: key

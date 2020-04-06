@@ -45,7 +45,10 @@ class EAccounting_Scripts {
 		//styles
 		self::register_style( 'ea-components', plugins_url( self::get_block_asset_dist_path( 'components', 'css' ), __DIR__ ), array( 'wp-components' ) );
 		self::register_style( 'ea-fontawesome', plugins_url( '/assets/vendor/font-awesome/css/font-awesome.min.css', __DIR__ ), array() );
-		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array( 'ea-components','ea-fontawesome' ) );
+		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array(
+			'ea-components',
+			'ea-fontawesome'
+		) );
 
 		//scripts
 		self::register_script( 'ea-data', plugins_url( self::get_block_asset_dist_path( 'data' ), __DIR__ ) );
@@ -163,16 +166,16 @@ class EAccounting_Scripts {
 	 * since 1.0.0
 	 */
 	protected static function get_data() {
-		$date_format = eaccounting_get_settings( 'ea_date_format' );
-		$time_format = eaccounting_get_settings( 'ea_time_format' );
+//		$date_format = eaccounting_get_settings( 'ea_date_format' );
+//		$time_format = eaccounting_get_settings( 'ea_time_format' );
 		$locale_data = [
 			'data' => [
-				'site_title'       => get_bloginfo( 'name ' ),
-				'wp_version'       => get_bloginfo( 'version' ),
-				'ea_version'       => eaccounting()->version,
-				'api_nonce'        => wp_create_nonce( 'wp_rest' ),
-				'per_page'         => 50,
-				'paths'            => [
+				'site_title'        => get_bloginfo( 'name ' ),
+				'wp_version'        => get_bloginfo( 'version' ),
+				'ea_version'        => eaccounting()->version,
+				'api_nonce'         => wp_create_nonce( 'wp_rest' ),
+				'per_page'          => 50,
+				'paths'             => [
 					'site_url'        => site_url(),
 					'admin_url'       => admin_url(),
 					'asset_url'       => EACCOUNTING_ASSETS_URL,
@@ -180,18 +183,17 @@ class EAccounting_Scripts {
 					'rest_route'      => rest_url( '/ea/v1/' ),
 					'namespace'       => '/ea/v1',
 				],
-				'locale'           => [
+				'locale'            => [
 					'user' => get_user_locale(),
 					'site' => get_locale()
 				],
-				'date_formats'     => eaccounting_convert_php_to_moment_formats( $date_format, $time_format ),
-				'currency'         => eaccounting_get_default_currency(),
-				'currency_configs' => eaccounting_get_currencies_data(),
-				'countries'        => self::to_js_options( eaccounting_get_countries() ),
-				'contact_types'    => self::to_js_options( eaccounting_get_contact_types() ),
-				'category_types'   => self::to_js_options( eaccounting_get_category_types() ),
-				'tax_rate_types'   => self::to_js_options( eaccounting_get_tax_types() ),
-				'payment_methods'  => self::to_js_options( eaccounting_get_payment_methods() ),
+				'date_formats'      => eaccounting_convert_php_to_moment_formats(),
+				'global_currencies' => eaccounting_get_global_currencies(),
+				'countries'         => self::to_js_options( eaccounting_get_countries() ),
+				'contact_types'     => self::to_js_options( eaccounting_get_contact_types() ),
+				'category_types'    => self::to_js_options( eaccounting_get_category_types() ),
+				'tax_rate_types'    => self::to_js_options( eaccounting_get_tax_types() ),
+				'payment_methods'   => self::to_js_options( eaccounting_get_payment_methods() ),
 			]
 		];
 

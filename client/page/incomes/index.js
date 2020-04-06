@@ -12,12 +12,22 @@ import Tabs from "components/tabs";
  */
 import Revenues from '../revenues';
 import Invoices from '../invoices';
+import EditRevenue from '../revenues/edit-revenue';
 
 const tabs = [
+
+	{
+		path: '/incomes/revenues/edit/:id(\\d+)',
+		component: EditRevenue,
+	},
+	{
+		path: '/incomes/revenues/add',
+		component: EditRevenue,
+	},
 	{
 		path: '/incomes/revenues',
+		component: Revenues,
 		name: __('Revenues'),
-		component:Revenues,
 	},
 	{
 		path: '/incomes/invoices',

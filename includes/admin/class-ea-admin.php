@@ -33,9 +33,8 @@ class EAccounting_Admin {
 		$this->define_constants();
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'admin_menu', array( $this, 'register_pages' ), 20 );
-//		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ) );
 		add_action( 'admin_init', array( $this, 'setup_files' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'admin_head', array($this,'hide_notices'), 1 );
 	}
 
 	/**
@@ -140,34 +139,13 @@ class EAccounting_Admin {
 			),
 		);
 
-		$admin_pages = apply_filters( 'woocommerce_analytics_report_menu_items', $pages );
+		$admin_pages = apply_filters( 'eaccounting_menu_items', $pages );
 
 
 		foreach ( $admin_pages as $page ) {
 			if ( ! is_null( $page ) ) {
 				eaccounting_register_page( $page );
 			}
-		}
-	}
-
-	/**
-	 * Setup eaccounting actions
-	 *
-	 * since 1.0.0
-	 */
-	public function set_eaccounting_actions() {
-
-		$key = ! empty( $_GET['eaccounting-action'] ) ? sanitize_key( $_GET['eaccounting-action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			error_log( 'eaccounting_admin_get_' . $key );
-			do_action( 'eaccounting_admin_get_' . $key, $_GET );
-		}
-
-		$key = ! empty( $_POST['eaccounting-action'] ) ? sanitize_key( $_POST['eaccounting-action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( 'eaccounting_admin_post_' . $key, $_POST );
 		}
 	}
 
@@ -181,165 +159,6 @@ class EAccounting_Admin {
 	}
 
 	/**
-	 * Enqueue admin related assets
-	 *
-	 * @param $hook
-	 *
-	 * @since 1.0.0
-	 */
-	public function enqueue_scripts( $hook ) {
-		if ( ! preg_match( '/accounting/', $hook ) ) {
-			return;
-		}
-		$assets = untrailingslashit( eaccounting()->plugin_url() ) . '/assets';
-		$js     = $assets . '/js';
-		$css    = $assets . '/css';
-		$vendor = $assets . '/vendor';
-		$dist   = eaccounting()->plugin_url() . '/dist';
-
-		$app_deps_path        = EACCOUNTING_ABSPATH . '/dist/app/index.deps.json';
-		$components_deps_path = EACCOUNTING_ABSPATH . '/dist/components/index.deps.json';
-		$app_dependencies     = file_exists( $app_deps_path )
-			? json_decode( file_get_contents( $app_deps_path ) )
-			: array();
-
-		$component_dependencies = file_exists( $components_deps_path )
-			? json_decode( file_get_contents( $components_deps_path ) )
-			: array();
-
-		wp_enqueue_style( 'eaccounting-components', $dist . '/components/style.css', array(
-			'wp-components',
-			'editor-buttons',
-			'wp-editor'
-		), time() );
-
-		wp_enqueue_style( 'eaccounting', $dist . '/app/style.css', array(
-			'wp-components',
-			'editor-buttons',
-			'wp-editor',
-			'eaccounting-components'
-		), time() );
-
-
-		wp_register_script(
-			'eaccounting-components',
-			$dist . '/components/index.js',
-			array_merge( $component_dependencies, array(
-				'wp-hooks',
-				'wp-element',
-				'wp-editor',
-				'wp-i18n',
-				'wp-tinymce',
-			) ),
-			time(),
-			true
-		);
-
-		wp_register_script(
-			'eaccounting',
-			$dist . '/app/index.js',
-			array_merge( $app_dependencies, array(
-				'wp-hooks',
-				'wp-element',
-				'wp-editor',
-				'wp-i18n',
-				'wp-tinymce',
-				'eaccounting-components',
-			) ),
-			time(),
-			true
-		);
-
-//		wp_localize_script( 'eaccounting', 'eAccountingi10n', [
-//			'api'              => [
-//				'WP_API_root'  => esc_url_raw( get_rest_url() ),
-//				'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
-//			],
-//			'pluginBaseUrl'    => plugins_url( '', EACCOUNTING_PLUGIN_FILE ),
-//			'pluginRoot'       => admin_url( 'admin.php?page=eaccounting' ),
-//			'baseUrl'          => get_site_url(),
-//			'per_page'         => 20,
-//			'default_currency' => eaccounting_get_default_currency(),
-//			'defaults'         => [
-//				//'account' =>
-//			],
-//			'data'             => [
-//				'transactionTypes' => eaccounting_get_transaction_types(),
-//				'currency'         => eaccounting_get_default_currency(),
-//			]
-//		] );
-
-		wp_enqueue_script( 'eaccounting' );
-
-		wp_enqueue_style( 'eaccounting-fontawesome', $vendor . '/font-awesome/css/font-awesome.css', [], time() );
-
-		//styles
-//		wp_enqueue_style( 'eaccounting-jquery-ui', $vendor . '/jquery-ui/jquery-ui.css', false, time() );
-//		wp_enqueue_style( 'eaccounting-select2', $vendor . '/vendor/select2/select2.css', [], time() );
-//		wp_enqueue_style( 'eaccounting-admin', $css . '/eaccounting-admin.css', array(), time() );
-//
-//
-//		//scripts
-//		wp_register_script( 'chart-js', $vendor . '/chartjs/chart.bundle.min.js', array( 'jquery' ), time(), true );
-//		wp_enqueue_script( 'jquery-iframe-transport', $vendor . '/fileupload/jquery.fileupload.js', array(
-//			'jquery',
-//			'jquery-ui-widget'
-//		), time(), true );
-//		wp_enqueue_script( 'jquery-fileupload', $vendor . '/fileupload/jquery.fileupload.js', array(
-//			'jquery',
-//			'jquery-ui-core',
-//			'jquery-iframe-transport'
-//		), time(), true );
-//		wp_enqueue_script( 'eaccounting-select2', $vendor . '/select2/select2.js', array( 'jquery' ), time(), true );
-//		wp_enqueue_script( 'eaccounting-validate', $vendor . '/validate/jquery.validate.js', array( 'jquery' ), time(), true );
-//		wp_enqueue_script( 'eaccounting-inputmask', $vendor . '/inputmask/jquery.inputmask.js', array( 'jquery' ), time(), true );
-//		wp_register_script( 'eaccounting-datepicker', $js . '/eaccounting-datepicker.js', [
-//			'jquery',
-//			'jquery-ui-datepicker'
-//		], time(), true );
-//		wp_enqueue_script( 'eaccounting-fileupload', $js . '/eaccounting-fileupload.js', array(
-//			'jquery',
-//			'jquery-fileupload'
-//		), time(), true );
-//		wp_register_script( 'eaccounting-invoice', $js . '/eaccounting-invoice.js', array( 'jquery' ), time(), true );
-//		wp_register_script( 'eaccounting-dashboard', $js . '/eaccounting-dashboard.js', array(
-//			'jquery',
-//			'chart-js'
-//		), time(), true );
-//		wp_enqueue_script( 'eaccounting-form', $js . '/eaccounting-modal.js', array( 'jquery', 'wp-util', 'underscore', 'backbone' ), time(), true );
-//		wp_enqueue_script( 'eaccounting-form', $js . '/eaccounting-form.js', array( 'jquery' ), time(), true );
-//		wp_enqueue_script( 'eaccounting-admin', $js . '/eaccounting-admin.js', array(
-//			'jquery',
-//			'wp-util',
-//			'eaccounting-select2',
-//			'eaccounting-inputmask',
-//			'wp-color-picker',
-//			'eaccounting-datepicker'
-//		), time(), true );
-
-//		wp_localize_script( 'eaccounting-admin', 'eAccountingi18n', array(
-//			'localization' => array(
-//				'thousandSeparator' => eaccounting_get_price_thousandSeparator(),
-//				'decimal_separator'   => eaccounting_get_price_decimal_separator(),
-//				'precision'           => (int) eaccounting_get_price_precision(),
-//				'price_symbol'        => html_entity_decode( eaccounting_get_price_currency_symbol() ),
-//				'symbol_first'        => true,
-//			),
-//		) );
-
-//		wp_localize_script( 'eaccounting-dashboard', 'eAccountingi18n', array(
-//			'localization' => array(
-//				'ajax_url' => admin_url( 'admin-ajax.php' ),
-//			)
-//		) );
-//
-//		wp_localize_script( 'eaccounting-form', 'eAccountingi18n', array(
-//			'ajax_url' => admin_url( 'admin-ajax.php' ),
-//		) );
-
-	}
-
-	/**
 	 * Set up a div for the app to render into.
 	 */
 	public static function page_wrapper() {
@@ -348,6 +167,17 @@ class EAccounting_Admin {
 			<div id="eaccounting"></div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Remove all notices from out plugin page
+	 * @since 1.0.0
+	 */
+	function hide_notices() {
+		global $current_screen;
+		if( is_object( $current_screen ) && $current_screen->id == 'toplevel_page_eaccounting' ){
+			remove_all_actions( 'admin_notices' );
+		}
 	}
 }
 

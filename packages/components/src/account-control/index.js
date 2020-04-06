@@ -19,7 +19,7 @@ class AccountControl extends Component {
 		super(props);
 	}
 
-	fetchAPI(params, callback) {
+	apiFetch(params, callback) {
 		apiFetch({path: addQueryArgs('/ea/v1/accounts', params)}).then(res => {
 			callback(res);
 		});
@@ -33,7 +33,7 @@ class AccountControl extends Component {
 					getOptionLabel={option => option && option.name && option.name}
 					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
-						this.fetchAPI({search}, callback);
+						this.apiFetch({search}, callback);
 					}}
 					{...this.props}
 				/>

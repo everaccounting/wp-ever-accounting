@@ -1,13 +1,13 @@
 /**
  * External dependencies
  */
-import { Component } from 'react';
+import {Component} from 'react';
 import Async from 'react-select/async';
 import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import { BaseControl } from '@wordpress/components';
+import {BaseControl} from '@wordpress/components';
 import classnames from 'classnames';
 
 export default class AsyncSelect extends Component {
@@ -37,7 +37,8 @@ export default class AsyncSelect extends Component {
 				value: item.id,
 			};
 		},
-		onChange: options => {},
+		onChange: options => {
+		},
 	};
 
 	constructor(props) {
@@ -52,9 +53,10 @@ export default class AsyncSelect extends Component {
 	};
 
 	render() {
-		const { label, help, className, before, after, required, loadOptions, ...props } = this.props;
+		const {label, help, className, before, after, hasButton, required, loadOptions, ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
 			required: !!required,
+			'has-button': !!hasButton,
 		});
 
 		const id = Math.random()

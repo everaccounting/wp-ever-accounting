@@ -233,6 +233,21 @@ class EAccounting_Install {
 		    KEY `amount` (`amount`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_reconciliations(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`account_id` int(11) NOT NULL,
+			`started_at` datetime NOT NULL,
+			`ended_at` datetime NOT NULL,
+		  	`closing_balance` double(15,4) NOT NULL DEFAULT '0.0000',
+		  	`reconciled` tinyint(1) NOT NULL,
+	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
+		    PRIMARY KEY (`id`),
+		    KEY `account_id` (`account_id`),
+		    KEY `started_at` (`started_at`),
+		    KEY `ended_at` (`ended_at`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_invoice_items(
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
             `invoice_id` int(11) NOT NULL,

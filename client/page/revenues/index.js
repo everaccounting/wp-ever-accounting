@@ -3,21 +3,20 @@ import {
 	SearchBox,
 	TableNav,
 	Table,
-	DateFilter,
-	AccountControl,
-	CategoryControl
+	Button
 } from "@eaccounting/components"
-import {getHeaders, getBulk} from './constants';
+import {withTable} from "@eaccounting/hoc";
+import {getHeaders} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
-import {map} from "lodash"
-import {withTable} from "@eaccounting/hoc"
+
 class Revenues extends Component {
 	constructor(props) {
 		super(props);
+		this.onRenderRow = this.onRenderRow.bind(this);
 	}
 
-	onRenderRow = (item, pos, isSelected, isLoading, search) => {
+	onRenderRow(item, pos, isSelected, isLoading, search) {
 		return (
 			<Row
 				item={item}
@@ -31,13 +30,11 @@ class Revenues extends Component {
 	};
 
 	render() {
-		const {status, total, items, page, order, orderby, query, selected} = this.props;
+		const {status, total, items, page, order, orderby, query, selected, history} = this.props;
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Revenues')}</h1>
-				<a className="page-title-action">{__('Add payment')}</a>
-				<hr className="wp-header-end"/>
 				<div className="ea-table-display">
+					<Button className="page-title-action" onClick={()=> history.push(`${history.location.pathname}/add`)}>{__('Add Revenue')}</Button>
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
 
@@ -45,53 +42,24 @@ class Revenues extends Component {
 					status={status}
 					total={total}
 					page={page}
-					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onAction}
-					bulk={getBulk()}>
-
-					<DateFilter
-						className={'alignleft actions'}
-						onChange={date => this.props.onFilter({date})}/>
-
-					<AccountControl
-						className={'alignleft actions'}
-						placeholder={__('Filter Account')}
-						isMulti
-						onChange={(accounts) => this.props.onFilter({account_id: map(accounts, 'id')})}
-					/>
-
-					<CategoryControl
-						className={'alignleft actions'}
-						placeholder={__('Filter Category')}
-						isMulti
-						type={['income', 'expense']}
-						onChange={(categories) => this.props.onFilter({category_id: map(categories, 'id')})}
-					/>
-
-				</TableNav>
+					onChangePage={this.props.onPageChange}/>
 
 				<Table
 					headers={getHeaders()}
 					orderby={orderby}
-					selected={selected}
 					order={order}
 					rows={items}
 					total={total}
 					row={this.onRenderRow}
 					status={status}
-					onSetAllSelected={this.props.onAllSelected}
-					onSetOrderBy={this.props.onOrderBy}
-				/>
+					onSetOrderBy={this.props.onOrderBy}/>
 
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onPageChange}
-					onAction={this.props.onAction}
-				/>
+					onChangePage={this.props.onPageChange}/>
 
 			</Fragment>
 		)

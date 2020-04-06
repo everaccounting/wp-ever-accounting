@@ -1,56 +1,54 @@
 /**
  * External dependencies
  */
-import {Fragment, Component} from "@wordpress/element";
 import {__} from '@wordpress/i18n';
-import General from "./sections/general";
-import Defaults from "./sections/defaults";
-import Company from "./sections/company";
-import {withSelect, withDispatch} from "@wordpress/data";
-import {compose} from '@wordpress/compose';
-import apiFetch from "@wordpress/api-fetch";
+import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {Fragment} from "@wordpress/element";
+import Tabs from "components/tabs";
 
-class Settings extends Component {
-	constructor(props) {
-		super(props);
-	}
+/**
+ * Internal dependencies
+ */
+import General from './sections/general';
+import Defaults from './sections/defaults';
+import Invoice from './sections/invoice';
 
-	onSubmit = (form) => {
-		form.default_account = form.default_account && form.default_account.id && form.default_account.id;
-		form.default_currency = form.default_currency && form.default_currency.code && form.default_currency.code;
-		apiFetch({path: '/ea/v1/settings', method: 'POST', data: form}).then(res => {
-			this.props.resetSettings('fetchAPI', 'settings');
-		}).catch(error => {
-			alert(error.message)
-		});
-	};
+const tabs = [
+	{
+		path: '/settings/general',
+		component: General,
+		name: __('General'),
+	},
+	{
+		path: '/settings/defaults',
+		component: Defaults,
+		name: __('Defaults'),
+	},
+	{
+		path: '/settings/invoice',
+		component: Invoice,
+		name: __('Invoice'),
+	},
+];
 
-	render() {
-		return (
-			<Fragment>
-				<h1 className="wp-heading-inline">{__('Settings')}</h1>
-				<hr className="wp-header-end"/>
-				<div style={{height: '30px'}}/>
-				<Company {...this.props} onSubmit={this.onSubmit}/>
-				<Defaults {...this.props} onSubmit={this.onSubmit}/>
+const Settings = props => {
 
-			</Fragment>
-		)
-	}
-}
+	return (
+		<Fragment>
+			<Tabs tabs={tabs}/>
+			<Router>
+				<Switch>
+					{tabs.map(tab => {
+						return (
+							<Route key={tab.path} path={tab.path} exact
+								   render={props => <tab.component  {...props}/>}/>
+						);
+					})}
+					<Redirect from="/settings" to="/settings/general"/>
+				</Switch>
+			</Router>
+		</Fragment>
+	);
+};
 
-export default compose([
-	withSelect((select) => {
-		const {fetchAPI, isRequestingFetchAPI} = select('ea/collection');
-		return {
-			settings: fetchAPI('settings', {}),
-			isLoading: isRequestingFetchAPI('settings', {}),
-		}
-	}),
-	withDispatch((dispatch) => {
-		const {resetForSelectorAndIdentifier} = dispatch('ea/collection');
-		return {
-			resetSettings: resetForSelectorAndIdentifier
-		}
-	})
-])(Settings);
+export default Settings;

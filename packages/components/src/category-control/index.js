@@ -30,7 +30,7 @@ class CategoryControl extends Component {
 		super(props);
 	}
 
-	fetchAPI(params, callback) {
+	apiFetch(params, callback) {
 		const {type = ''} = this.props;
 		apiFetch({path: addQueryArgs('/ea/v1/categories', {...params, type})}).then(res => {
 			callback(res);
@@ -46,7 +46,7 @@ class CategoryControl extends Component {
 					getOptionLabel={option => option && option.name && option.name}
 					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
-						this.fetchAPI({search}, callback);
+						this.apiFetch({search}, callback);
 					}}
 					{...this.props}
 				/>

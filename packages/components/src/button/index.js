@@ -26,13 +26,12 @@ export default class Button extends Component {
 	};
 
 	render() {
-		const className = classNames('ecrm-button', this.props.className, {
+		const { compact, primary, scary, busy, borderless, target, rel, ...props } = this.props;
+		const className = classNames('ea-button', this.props.className, {
 			'is-compact': this.props.compact,
+			'button-secondary': ! this.props.primary,
 			'is-borderless': this.props.borderless,
 		});
-
-		const { compact, primary, scary, busy, borderless, target, rel, ...props } = this.props;
-
 		return <BaseElement {...props} className={className} />;
 	}
 }

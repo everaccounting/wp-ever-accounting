@@ -11,6 +11,7 @@ import Tabs from "components/tabs";
 
 import Accounts from '../accounts';
 import Transfers from '../transfers';
+import EditTransfer from '../transfers/edit-transfer';
 import Reconciliations from '../reconciliations';
 
 const tabs = [
@@ -18,6 +19,14 @@ const tabs = [
 		path: '/banking/accounts',
 		component: Accounts,
 		name: __('Accounts'),
+	},
+	{
+		path: '/banking/transfers/edit/:id(\\d+)',
+		component: EditTransfer,
+	},
+	{
+		path: '/banking/transfers/add',
+		component: EditTransfer,
 	},
 	{
 		path: '/banking/transfers',

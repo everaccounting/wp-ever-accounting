@@ -11,7 +11,6 @@ import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
 import EditCategory from "./edit-category";
-import EditCurrency from "../currencies/edit-currency";
 
 class Categories extends Component {
 	constructor(props) {

@@ -100,8 +100,8 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 		}
 
 
-		$query_result = eaccounting_get_accounts( $args );
-		$total_items  = eaccounting_get_accounts( $args, true );
+		$query_result = eaccounting_get_items( $args );
+		$total_items  = eaccounting_get_items( $args, true );
 		$response     = array();
 
 		foreach ( $query_result as $tag ) {
@@ -183,7 +183,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'edit' );
 		$item_id = intval( $request['id'] );
 
-		$item = eaccounting_get_account( $item_id );
+		$item = eaccounting_get_item( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the item', 'wp-ever-accounting' ) );
 		}
@@ -299,12 +299,12 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 			'name'           => $item->name,
 			'sku'            => $item->sku,
 			'description'    => $item->description,
-			'tax_id'         => eaccounting_get_tax( $item->tax_id ),
+			'tax'            => eaccounting_get_tax( $item->tax_id ),
 			'sale_price'     => eaccounting_format_price( $item->sale_price, true ),
 			'purchase_price' => eaccounting_format_price( $item->purchase_price, true ),
 			'quantity'       => $item->quantity,
 			'category'       => eaccounting_get_category( $item->category_id ),
-			'image_id'       => $item->image_id,
+			'image'          => eaccounting_rest_request( 'ea/v1/files', [ 'id' => $item->image_id ] ),
 			'created_at'     => $this->prepare_date_response( $item->created_at ),
 			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
 		);
@@ -362,9 +362,6 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
 				),
 				'name'           => array(
 					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
@@ -398,9 +395,6 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'eaccounting_sanitize_price',
-					),
 					'required'    => true,
 				),
 				'purchase_price' => array(
@@ -408,27 +402,18 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 					'type'        => 'string',
 					'readonly'    => true,
 					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'eaccounting_sanitize_price',
-					),
 					'required'    => true,
 				),
 				'quantity'       => array(
 					'description' => __( 'Quantity of the item', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
 					'required'    => true,
 				),
 				'category_id'    => array(
 					'description' => __( 'Category id of the item', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
 				'image_id'       => array(

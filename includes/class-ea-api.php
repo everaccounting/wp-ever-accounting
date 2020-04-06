@@ -33,7 +33,6 @@ class EAccounting_API {
 	 */
 	public function __construct() {
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
-		add_filter( 'eaccounting_rest_pre_get_setting', array( $this, 'customized_rest_settings_output' ), 10, 3 );
 	}
 
 	/**
@@ -68,31 +67,6 @@ class EAccounting_API {
 		}
 	}
 
-	/**
-	 * This is a workaround for fixing JS related problem
-	 * Our JS select wants object as value but PHP saving string/id so we are hooking here to output
-	 * Object instead of string/id
-	 * since 1.0.0
-	 *
-	 * @param $value
-	 * @param $name
-	 * @param $args
-	 *
-	 * @return array|object|void|null
-	 */
-	public function customized_rest_settings_output( $value, $name, $args ) {
-
-		switch ( $name ) {
-			case 'default_account':
-				$value = eaccounting_get_default_account();
-				break;
-			case 'default_currency':
-				$value = eaccounting_get_default_currency();
-				break;
-		}
-
-		return $value;
-	}
 
 }
 

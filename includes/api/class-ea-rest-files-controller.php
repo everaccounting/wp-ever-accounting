@@ -48,6 +48,11 @@ class EAccounting_Files_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				),
+				array(
 					'methods'             => WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
@@ -129,6 +134,27 @@ class EAccounting_Files_Controller extends EAccounting_REST_Controller {
 
 		return rest_ensure_response( $response );
 	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return mixed|WP_Error|WP_REST_Response
+	 */
+	public function get_item( $request ) {
+		$item_id = intval( $request['id'] );
+		$request->set_param( 'context', 'view' );
+		$item = eaccounting_get_file( $item_id );
+		if ( is_null( $item ) ) {
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
+		}
+
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		return rest_ensure_response( $response );
+	}
+
 
 
 	/**

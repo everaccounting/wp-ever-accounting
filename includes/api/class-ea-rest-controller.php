@@ -202,13 +202,8 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 *
 	 * @return array
 	 */
-	protected function internal_request( $endpoint, $args = array(), $method = 'GET' ) {
-		$request = new WP_REST_Request( $method, $endpoint );
-		$request->set_query_params( $args );
-		$response = rest_do_request( $request );
-		$server   = rest_get_server();
-
-		return $server->response_to_data( $response, false );
+	protected static function internal_request( $endpoint, $args = array(), $method = 'GET' ) {
+		return eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' );
 	}
 
 }

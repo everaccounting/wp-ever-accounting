@@ -40,7 +40,7 @@ export default class DateControl extends Component {
 	};
 
 	render() {
-		const {onChange, value, className, renderFormat = FORMAT_SITE_DATE, ...restProps} = this.props;
+		const {onChange, value, containerClass, className, renderFormat = FORMAT_SITE_DATE, ...restProps} = this.props;
 		const classes = classnames('ea-date-field', className);
 
 		const startDate = !isEmpty(value) ? moment(new Date(value)) : undefined;
@@ -53,8 +53,8 @@ export default class DateControl extends Component {
 					singleDatePicker
 					startDate={startDate}
 					onApply={this.onChange}
-					containerClass="ea-date-field-container">
-					<TextControl value={inputVal} onChange={noop} className={classes} {...restProps} />
+					containerClass={classnames('ea-date-field-container', containerClass)}>
+					<TextControl value={inputVal} className={classes} onChange={noop} {...restProps} />
 				</DatePicker>
 			</Fragment>
 		);

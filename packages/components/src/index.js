@@ -26,6 +26,8 @@ export {default as TextareaControl} from './textarea-control';
 export {Row} from './grid';
 export {Col} from './grid';
 
+export {default as FileControl} from './file-control';
+export {default as TaxRateControl} from './tax-rate-control';
 export {default as AccountControl} from './account-control';
 export {default as ContactControl} from './contact-control';
 export {default as CategoryControl} from './category-control';

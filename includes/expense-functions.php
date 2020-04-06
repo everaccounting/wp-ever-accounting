@@ -76,16 +76,16 @@ function eaccounting_insert_payment( $args ) {
 		return new WP_Error( 'invalid_data', __( 'Category does not exist.', 'wp-ever-accounting' ) );
 	}
 
-	if ( $category->type != 'expense' ) {
+	if ( !in_array($category->type, ['expense', 'other'])) {
 		return new WP_Error( 'invalid_data', __( 'Invalid category type category type must be expense.', 'wp-ever-accounting' ) );
 	}
 
 	$contact = eaccounting_get_contact( $data['contact_id'] );
-	if ( ! $contact ) {
+	if ( ! empty( $data['contact_id'] ) && empty($contact) ) {
 		return new WP_Error( 'invalid_data', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
 	}
 
-	if ( ! in_array( 'customer', $contact->types ) ) {
+	if ( ! empty( $data['contact_id'] ) && ! in_array( 'customer', $contact->types ) ) {
 		eaccounting_insert_contact( array(
 			'id'    => $id,
 			'types' => array_merge( $contact->types, [ 'vendor' ] )

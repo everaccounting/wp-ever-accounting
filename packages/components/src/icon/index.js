@@ -10,7 +10,7 @@ export default class Icon extends Component {
 	}
 
 	render() {
-		const { icon } = this.props;
-		return <i className={classNames('fa', 'ea-icon', `fa-${icon}`)} />;
+		const { icon, ...rest } = this.props;
+		return <i className={classNames('fa', 'ea-icon', `fa-${icon}`)} {...rest} />;
 	}
 }

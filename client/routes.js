@@ -9,7 +9,7 @@ import Banking from './page/banking';
 import Reports from './page/reports';
 import Misc from './page/misc';
 import Settings from './page/settings';
-
+import EditItem from "./page/items/edit-item"
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
 export const routes = [
@@ -22,6 +22,14 @@ export const routes = [
 		path: '/transactions',
 	},
 	{
+		container: EditItem,
+		path: '/items/edit/:id',
+	},
+	{
+		container: EditItem,
+		path: '/items/add',
+	},
+	{
 		container: Items,
 		path: '/items',
 	},
@@ -31,11 +39,11 @@ export const routes = [
 	},
 	{
 		container: Incomes,
-		path: '/incomes/:tab/add',
+		path: '/incomes/:tab/:action/:id',
 	},
 	{
 		container: Incomes,
-		path: '/incomes/:tab/:id',
+		path: '/incomes/:tab/:action',
 	},
 	{
 		container: Incomes,
@@ -63,11 +71,11 @@ export const routes = [
 	},
 	{
 		container: Banking,
-		path: '/banking/:tab/add',
+		path: '/banking/:tab/:action/:id',
 	},
 	{
 		container: Banking,
-		path: '/banking/:tab/:id',
+		path: '/banking/:tab/:action',
 	},
 	{
 		container: Banking,
@@ -88,6 +96,10 @@ export const routes = [
 	{
 		container: Reports,
 		path: '/reports/',
+	},
+	{
+		container: Settings,
+		path: '/settings/:section',
 	},
 	{
 		container: Settings,

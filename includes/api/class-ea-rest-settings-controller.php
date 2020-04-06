@@ -22,13 +22,13 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 			array(
 				array(
 					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
+					'callback'            => array( $this, 'get_items' ),
 					'args'                => array(),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 				),
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
+					'callback'            => array( $this, 'update_items' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 				),
@@ -40,22 +40,43 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 	/**
 	 * Retrieves the settings.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return array|WP_Error Array on success, or WP_Error object on failure.
 	 * @since 1.0.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return array|WP_Error Array on success, or WP_Error object on failure.
 	 */
-	public function get_item( $request ) {
-		$options  = $this->get_registered_options();
+	public function get_items( $request ) {
+		$section = isset( $request['section'] ) ? $request['section'] : null;
+		$options = $this->get_registered_options( $section );
 		$response = array();
 
 		foreach ( $options as $name => $args ) {
-			$response[ $name ] = apply_filters( 'eaccounting_rest_pre_get_setting', null, $name, $args );
 
-			if ( is_null( $response[ $name ] ) ) {
-				// Default to a null value as "null" in the response means "not set".
-				$response[ $name ] = eaccounting_get_settings( $args['option_name']);
-				$response[ $name ] = $this->prepare_value( $response[ $name ], $args['schema'] );
+			switch ( $name ) {
+				case 'default_account_id':
+					$default_account_id          = eaccounting_get_option( 'default_account_id' );
+					$response['default_account'] = empty( $default_account_id ) ? [] : eaccounting_rest_request( '/ea/v1/accounts/'.$default_account_id );
+					break;
+				case 'default_currency_code':
+					$default_currency_code        = eaccounting_get_option( 'default_currency_code' );
+					$response['default_currency'] = empty( $default_currency_code ) ? [] : eaccounting_get_currency( $default_currency_code, 'code' );
+					break;
+				case 'logo_id':
+					$logo_id  = (int) eaccounting_get_option( 'logo_id' );
+					$response['logo'] = empty( $logo_id ) ? [] : eaccounting_rest_request( "/ea/v1/files/".$logo_id );
+					break;
+				case 'default_tax_rate_id':
+					$default_tax_rate_id  = (int) eaccounting_get_option( 'default_tax_rate_id' );
+					$response['default_tax_rate'] = empty( $default_tax_rate_id ) ? [] : eaccounting_rest_request( "/ea/v1/taxrates/".$default_tax_rate_id );
+					break;
+				default:
+					$response[ $name ] = apply_filters( 'eaccounting_rest_pre_get_setting', null, $name, $args );
+					if ( is_null( $response[ $name ] ) ) {
+						// Default to a null value as "null" in the response means "not set".
+						$response[ $name ] = eaccounting_get_option( $args['option_name'] );
+						$response[ $name ] = $this->prepare_value( $response[ $name ], $args['schema'] );
+					}
 			}
 
 		}
@@ -66,11 +87,12 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 	/**
 	 * Prepares a value for output based off a schema array.
 	 *
+	 * @param mixed $value Value to prepare.
+	 * @param array $schema Schema to match.
+	 *
+	 * @return mixed The prepared value.
 	 * @since 1.0.0
 	 *
-	 * @param mixed $value  Value to prepare.
-	 * @param array $schema Schema to match.
-	 * @return mixed The prepared value.
 	 */
 	protected function prepare_value( $value, $schema ) {
 		/*
@@ -81,6 +103,7 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 		if ( is_wp_error( rest_validate_value_from_schema( $value, $schema ) ) ) {
 			return null;
 		}
+
 		return rest_sanitize_value_from_schema( $value, $schema );
 	}
 
@@ -88,13 +111,15 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 	/**
 	 * Updates settings for the settings object.
 	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 *
+	 * @return array|WP_Error Array on success, or error object on failure.
 	 * @since 1.0.0
 	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return array|WP_Error Array on success, or error object on failure.
 	 */
-	public function update_item( $request ) {
-		$options = $this->get_registered_options();
+	public function update_items( $request ) {
+		$section = isset( $request['section'] ) ? $request['section'] : null;
+		$options = $this->get_registered_options( $section );
 
 		$params = $request->get_params();
 
@@ -110,33 +135,26 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 			}
 
 			if ( is_null( $request[ $name ] ) ) {
-				if ( is_wp_error( rest_validate_value_from_schema( get_option( $args['option_name'], false ), $args['schema'] ) ) ) {
-					return new WP_Error(
-						'rest_invalid_stored_value',
-						sprintf( __( 'The %s property has an invalid stored value, and cannot be updated to null.' ), $name ),
-						array( 'status' => 500 )
-					);
-				}
 				delete_option( $args['option_name'] );
 			} else {
 				update_option( $args['option_name'], $request[ $name ] );
 			}
 		}
 
-		return $this->get_item( $request );
+		return $this->get_items( $request );
 	}
 
 	/**
 	 * Retrieves all of the registered options for the Settings API.
 	 *
+	 * @return array Array of registered options.
 	 * @since 1.0.0
 	 *
-	 * @return array Array of registered options.
 	 */
-	protected function get_registered_options() {
+	protected function get_registered_options( $section = null ) {
 		$rest_options = array();
 
-		foreach ( eaccounting_get_registered_settings() as $name => $args ) {
+		foreach ( eaccounting_get_setting_options() as $name => $args ) {
 			if ( empty( $args['show_in_rest'] ) ) {
 				continue;
 			}
@@ -161,8 +179,8 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 			);
 
 			$rest_args['schema']      = array_merge( $default_schema, $rest_args['schema'] );
-			$rest_args['option_name'] = $name;
-
+			$rest_args['option_name'] = "ea_{$name}";
+			$rest_args['section']     = $args['section'];
 			// Skip over settings that don't have a defined type in the schema.
 			if ( empty( $rest_args['schema']['type'] ) ) {
 				continue;
@@ -172,13 +190,26 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 			 * Whitelist the supported types for settings, as we don't want invalid types
 			 * to be updated with arbitrary values that we can't do decent sanitizing for.
 			 */
-			if ( ! in_array( $rest_args['schema']['type'], array( 'number', 'integer', 'string', 'boolean', 'array', 'object' ), true ) ) {
+			if ( ! in_array( $rest_args['schema']['type'], array(
+				'number',
+				'integer',
+				'string',
+				'boolean',
+				'array',
+				'object'
+			), true ) ) {
 				continue;
 			}
 
 			$rest_args['schema'] = $this->set_additional_properties_to_false( $rest_args['schema'] );
 
 			$rest_options[ $rest_args['name'] ] = $rest_args;
+
+		}
+
+
+		if ( $section !== null ) {
+			return wp_list_filter( $rest_options, [ 'section' => sanitize_key( $section ) ] );
 		}
 
 		return $rest_options;
@@ -187,9 +218,9 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 	/**
 	 * Retrieves the site setting schema, conforming to JSON Schema.
 	 *
+	 * @return array Item schema data.
 	 * @since 1.0.0
 	 *
-	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		if ( $this->schema ) {
@@ -213,6 +244,7 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 		}
 
 		$this->schema = $schema;
+
 		return $this->add_additional_fields_schema( $this->schema );
 	}
 
@@ -223,17 +255,19 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 	 * `null` as it's not a valid value for something like "type => string". We
 	 * provide a wrapper sanitizer to whitelist the use of `null`.
 	 *
+	 * @param mixed $value The value for the setting.
+	 * @param WP_REST_Request $request The request object.
+	 * @param string $param The parameter name.
+	 *
+	 * @return mixed|WP_Error
 	 * @since 1.0.0
 	 *
-	 * @param mixed           $value   The value for the setting.
-	 * @param WP_REST_Request $request The request object.
-	 * @param string          $param   The parameter name.
-	 * @return mixed|WP_Error
 	 */
 	public function sanitize_callback( $value, $request, $param ) {
 		if ( is_null( $value ) ) {
 			return $value;
 		}
+
 		return rest_parse_request_arg( $value, $request, $param );
 	}
 
@@ -244,10 +278,11 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 	 * registered items, as the REST API will allow additional properties by
 	 * default.
 	 *
-	 * @since 4.9.0
-	 *
 	 * @param array $schema The schema array.
+	 *
 	 * @return array
+	 * @since 1.0.0
+	 *
 	 */
 	protected function set_additional_properties_to_false( $schema ) {
 		switch ( $schema['type'] ) {

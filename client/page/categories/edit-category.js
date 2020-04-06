@@ -19,6 +19,7 @@ export default class EditCategory extends Component {
 	};
 
 	render() {
+		const {defaultCategory='income'} = this.props;
 		return (
 			<Modal title={this.props.tittle} onRequestClose={this.props.onClose}>
 				<Form
@@ -39,7 +40,7 @@ export default class EditCategory extends Component {
 							<Field
 								label={__('Category Type', 'wp-ever-accounting')}
 								name="type"
-								defaultValue={'income'}
+								defaultValue={defaultCategory}
 								before={<Icon icon={'bars'}/>}
 								required>
 								{props => (
