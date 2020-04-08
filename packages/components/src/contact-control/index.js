@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import {withSelect} from '@wordpress/data';
+
 class ContactControl extends Component {
 	static propTypes = {
 		label: PropTypes.string,
@@ -45,9 +46,6 @@ class ContactControl extends Component {
 			<Fragment>
 				<AsyncSelect
 					defaultOptions={defaultOptions}
-					noOptionsMessage={() => {
-						__('No items');
-					}}
 					getOptionLabel={option => option && option.first_name && option.last_name && `${option.first_name} ${option.last_name}`}
 					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {

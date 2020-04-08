@@ -327,7 +327,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'number'          => $item->number,
 			'opening_balance' => $item->opening_balance,
 			'balance'         => eaccounting_get_account_current_balance( $item->id, true ),
-			'currency'        => eaccounting_get_currency( $item->currency_code, 'code' ),
+			'currency_code'   => $item->currency_code,
 			'bank_name'       => $item->bank_name,
 			'bank_phone'      => $item->bank_phone,
 			'bank_address'    => $item->bank_address,
@@ -400,10 +400,10 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'account'      => array(
+				'account'         => array(
 					'description' => __( 'Account id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'object',
-					'context'     => array( 'embed', 'view'),
+					'context'     => array( 'embed', 'view' ),
 					'readonly'    => true,
 				),
 				'name'            => array(

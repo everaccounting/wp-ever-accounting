@@ -32,7 +32,7 @@ const withPreloader = () => {
 			}
 
 			isLoading() {
-				return this.props.isRequesting || this.state.isLoading;
+				return this.props.isRequesting || this.props.isLoading || this.state.isLoading;
 			}
 
 			render() {

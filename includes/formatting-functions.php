@@ -35,6 +35,11 @@ function eaccounting_sanitize_date( $date, $format = 'Y-m-d' ) {
 /**
  * Instance of money class.
  *
+ * For formatting with currency code
+ * eaccounting_money( 100000, 'USD', true )->format()
+ * For inserting into database
+ * eaccounting_money( "$100,000", "USD", false )->getAmount()
+ *
  * @param mixed $amount
  * @param string $currency
  * @param bool $convert
@@ -54,6 +59,31 @@ function eaccounting_money( $amount, $currency = 'USD', $convert = false ) {
  */
 function eaccounting_currency( $currency ) {
 	return new EAccounting_Currency( $currency );
+}
+
+/**
+ * Sanitize price for inserting into database
+ * since 1.0.0
+ * @param $amount
+ * @param $code
+ *
+ * @return float|int
+ */
+function eaccounting_sanitize_price($amount, $code){
+	return eaccounting_money( $amount, $code, false )->getAmount();
+}
+
+/**
+ * Format price with currency code & number format
+ *
+ * since 1.0.0
+ * @param $amount
+ * @param $code
+ *
+ * @return string
+ */
+function eaccounting_format_price($amount, $code){
+	return eaccounting_money( $amount, $code, true )->format();
 }
 
 /**

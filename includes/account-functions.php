@@ -32,9 +32,8 @@ function eaccounting_insert_account( $args ) {
 		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
 		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
-		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : eaccounting_sanitize_price( $args['opening_balance'] ),
+		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : $args['opening_balance'],
 		'currency_code'   => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
-		//todo set default account
 		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
@@ -49,6 +48,8 @@ function eaccounting_insert_account( $args ) {
 	if ( empty( $data['currency_code'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
+
+	$data['opening_balance'] = eaccounting_money( $data['opening_balance'], $data['currency_code'], false )->getAmount();
 
 	$where = array( 'id' => $id );
 	$data  = wp_unslash( $data );
@@ -249,6 +250,18 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 	}
 
 	return $wpdb->get_col( $request );
+}
+
+/**
+ * Get account currency
+ * since 1.0.0
+ * @param $id
+ *
+ * @return string|null
+ */
+function eaccounting_get_account_currency_code($id){
+	global $wpdb;
+	return $wpdb->get_var($wpdb->prepare("SELECT currency_code from $wpdb->ea_accounts WHERE id=%d", $id));
 }
 
 /**

@@ -55,16 +55,6 @@ class EAccounting_Admin {
 		require_once dirname( __FILE__ ) . '/admin-functions.php';
 		require_once dirname( __FILE__ ) . '/class-ea-menu-controller.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
-		require_once dirname( __FILE__ ) . '/tables/class-ea-admin-list-table.php';
-		require_once dirname( __FILE__ ) . '/settings/class-ea-settings.php';
-
-		require_once dirname( __FILE__ ) . '/actions/contact-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/category-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/revenue-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/payment-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/account-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/transfer-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/tax-actions.php';
 	}
 
 

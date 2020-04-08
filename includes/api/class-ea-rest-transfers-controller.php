@@ -241,13 +241,15 @@ class EAccounting_Transfers_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		$from_account = eaccounting_get_account( $item->from_account_id );
+		$from_account = eaccounting_rest_request("/ea/v1/accounts/{$item->from_account_id}");
+		$to_account = eaccounting_rest_request("/ea/v1/accounts/{$item->to_account_id}");
+		$from_account_currency = eaccounting_get_account_currency_code($item->from_account_id);
 
 		$data = array(
 			'id'             => $item->id,
 			'from_account'   => $from_account,
-			'to_account'     => eaccounting_get_account( $item->to_account_id ),
-			'amount'         => eaccounting_money( $item->amount, $from_account->currency_code, true )->format(),
+			'to_account'     => $to_account,
+			'amount'         => eaccounting_money( $item->amount, $from_account_currency, true )->format(),
 			'transferred_at' => $this->prepare_date_response( $item->transferred_at ),
 			'description'    => $item->description,
 			'payment_method' => $item->payment_method,

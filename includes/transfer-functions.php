@@ -35,7 +35,7 @@ function eaccounting_insert_transfer( $args ) {
 		'to_account_id'   => empty( $args['to_account_id'] ) ? '' : absint( $args['to_account_id'] ),
 		'payment_id'      => empty( $args['payment_id'] ) ? null : absint( $args['payment_id'] ),
 		'revenue_id'      => empty( $args['revenue_id'] ) ? null : absint( $args['revenue_id'] ),
-		'amount'          => ! isset( $args['amount'] ) ? '' : eaccounting_sanitize_price( $args['amount'] ),
+		'amount'          => ! isset( $args['amount'] ) ? '' : sanitize_text_field($args['amount']),
 		'transferred_at'  => empty( $args['transferred_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['transferred_at'],
 		'description'     => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'payment_method'  => empty( $args['payment_method'] ) || ! array_key_exists( $args['payment_method'], eaccounting_get_payment_methods() ) ? '' : sanitize_key( $args['payment_method'] ),
@@ -64,17 +64,13 @@ function eaccounting_insert_transfer( $args ) {
 		return new WP_Error( 'empty_content', __( 'Payment method is required', 'wp-ever-accounting' ) );
 	}
 
-//	$from_account = new EAccounting_Account( $data['from_account_id'] );
-//	if ( $from_account->get_current_balance() < $data['amount'] ) {
-//		return new WP_Error( 'invalid_amount', __( 'Amount is higher than the available fund in source account', 'wp-ever-accounting' ) );
-//	}
 
 	$category    = eaccounting_get_category( 'Transfer', 'name' );
 	$category_id = $category ? $category->id : false;
 	if ( empty( $category ) ) {
 		$category_id = eaccounting_insert_category( [
-			'name'   => __( 'Transfer', 'wp-ever-accounting' ),
-			'type'   => 'other',
+			'name' => __( 'Transfer', 'wp-ever-accounting' ),
+			'type' => 'other',
 		] );
 	}
 
@@ -86,7 +82,6 @@ function eaccounting_insert_transfer( $args ) {
 	$revenue_account  = eaccounting_get_account( $data['to_account_id'] );
 	$payment_currency = eaccounting_get_currency( $payment_account->currency_code, 'code' );
 	$revenue_currency = eaccounting_get_currency( $revenue_account->currency_code, 'code' );
-
 
 	$payment_id = eaccounting_insert_payment( [
 		'id'             => $data['payment_id'],
@@ -108,7 +103,10 @@ function eaccounting_insert_transfer( $args ) {
 
 	if ( $payment_currency->code != $revenue_currency->code ) {
 		$default_currency = eaccounting_get_default_currency();
-		$default_amount   = $data['amount'];
+		if ( is_wp_error( $default_currency ) ) {
+			return $default_currency;
+		}
+		$default_amount = $data['amount'];
 		if ( $payment_currency->code != $default_currency->code ) {
 			$default_amount = eaccounting_money( $default_amount, $payment_currency->code )->divide( (double) $payment_currency->rate )->getAmount();
 		}
@@ -183,7 +181,9 @@ function eaccounting_get_transfer( $id ) {
 		       p.description description,
 		       p.payment_method payment_method,
 		       p.reference reference,
-		       r.id revenue_id
+		       r.id revenue_id,
+		       t.created_at,
+		       t.updated_at
 		FROM   {$wpdb->ea_transfers} t
 		       LEFT JOIN {$wpdb->ea_payments} p
 		              ON p.id = t.payment_id

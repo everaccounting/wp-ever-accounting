@@ -243,15 +243,15 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
 			'id'             => intval( $item->id ),
-			'account'        => eaccounting_get_account( $item->account_id ),
+			'account'        => eaccounting_rest_request( "/ea/v1/accounts/{$item->account_id}" ),
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
-			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
+			'amount'         => eaccounting_format_price( $item->amount, $item->currency_code ),
 			'currency'       => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
-			'contact'        => eaccounting_get_contact( $item->contact_id ),
 			'description'    => $item->description,
-			'category'       => eaccounting_get_category( $item->category_id ),
+			'contact'        => eaccounting_rest_request( "/ea/v1/contacts/{$item->contact_id}" ),
+			'category'       => eaccounting_rest_request( "/ea/v1/categories/{$item->category_id}" ),
 			'reference'      => $item->reference,
 			'payment_method' => $item->payment_method,
 			'attachment_url' => $item->attachment_url,
@@ -313,8 +313,8 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['payment_method'] ) && isset( $request['payment_method'] ) ) {
 			$prepared_item->payment_method = $request['payment_method'];
 		}
-		if ( ! empty( $schema['properties']['attachment_url'] ) && isset( $request['attachment_url'] ) ) {
-			$prepared_item->attachment_url = $request['attachment_url'];
+		if ( ! empty( $schema['properties']['file_id'] ) && isset( $request['file_id'] ) ) {
+			$prepared_item->file_id = $request['file_id'];
 		}
 		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
 			$prepared_item->parent_id = $request['parent_id'];
@@ -434,7 +434,7 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					),
 				),
 				'payment_method' => array(
-					'description' => __( 'Method of the payment', 'wp-ever-accounting' ),
+					'description' => __( 'Method of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -442,13 +442,15 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'attachment_url' => array(
-					'description' => __( 'Attachment url of the revenue', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'esc_url',
-					),
+				'file_id'       => array(
+					'description' => __( 'File id of the revenue', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'edit' ),
+				),
+				'file'          => array(
+					'description' => __( 'File ids of the revenue', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view' ),
 				),
 				'parent_id'      => array(
 					'description' => __( 'Parent id of the revenue', 'wp-ever-accounting' ),

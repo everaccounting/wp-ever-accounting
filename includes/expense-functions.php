@@ -36,7 +36,7 @@ function eaccounting_insert_payment( $args ) {
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
 		'reference'      => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
 		'payment_method' => empty( $args['payment_method'] ) || ! array_key_exists( $args['payment_method'], eaccounting_get_payment_methods() ) ? '' : sanitize_key( $args['payment_method'] ),
-		'file_ids'       => ! empty( $args['file_ids'] ) ? sanitize_text_field( $args['file_ids'] ) : '',
+		'file_id'        => ! empty( $args['file_id'] ) ? intval( $args['file_id'] ) : '',
 		'parent_id'      => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
 		'reconciled'     => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
 		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
@@ -76,12 +76,12 @@ function eaccounting_insert_payment( $args ) {
 		return new WP_Error( 'invalid_data', __( 'Category does not exist.', 'wp-ever-accounting' ) );
 	}
 
-	if ( !in_array($category->type, ['expense', 'other'])) {
+	if ( ! in_array( $category->type, [ 'expense', 'other' ] ) ) {
 		return new WP_Error( 'invalid_data', __( 'Invalid category type category type must be expense.', 'wp-ever-accounting' ) );
 	}
 
 	$contact = eaccounting_get_contact( $data['contact_id'] );
-	if ( ! empty( $data['contact_id'] ) && empty($contact) ) {
+	if ( ! empty( $data['contact_id'] ) && empty( $contact ) ) {
 		return new WP_Error( 'invalid_data', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
 	}
 
@@ -92,8 +92,7 @@ function eaccounting_insert_payment( $args ) {
 		) );
 	}
 
-	$file_ids              = array_unique( wp_parse_id_list( $data['file_ids'] ) );
-	$data['file_ids']      = implode( ',', $file_ids );
+
 	$data['amount']        = eaccounting_money( $data['amount'], $account->currency_code )->getAmount();
 	$data['currency_rate'] = $currency->rate;
 	$data['currency_code'] = $currency->code;

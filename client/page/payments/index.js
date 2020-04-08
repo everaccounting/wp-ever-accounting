@@ -3,21 +3,20 @@ import {
 	SearchBox,
 	TableNav,
 	Table,
-	// DateFilter, AccountControl, CategoryControl
 } from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
-import {map} from "lodash"
 import {Link} from "react-router-dom"
 import {withTable} from "@eaccounting/hoc"
 
 class Payments extends Component {
 	constructor(props) {
 		super(props);
+		this.onRenderRow = this.onRenderRow.bind(this);
 	}
 
-	onRenderRow = (item, pos, isSelected, isLoading, search) => {
+	onRenderRow(item, pos, isSelected, isLoading, search) {
 		return (
 			<Row
 				item={item}
@@ -37,6 +36,7 @@ class Payments extends Component {
 				<h1 className="wp-heading-inline">{__('Payments')}</h1>
 				<Link className="page-title-action" to={`${match.path}/add`}>{__('Add payment')}</Link>
 				<hr className="wp-header-end"/>
+
 				<div className="ea-table-display">
 					<SearchBox status={status} onSearch={this.props.onSearch}/>
 				</div>
@@ -74,23 +74,19 @@ class Payments extends Component {
 				<Table
 					headers={getHeaders()}
 					orderby={orderby}
-					selected={selected}
 					order={order}
 					rows={items}
 					total={total}
 					row={this.onRenderRow}
 					status={status}
-					onSetAllSelected={this.props.onAllSelected}
-					onSetOrderBy={this.props.onOrderBy}
-				/>
+					onSetOrderBy={this.props.onOrderBy}/>
 
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onPageChange}
-				/>
+					onChangePage={this.props.onPageChange}/>
 
 			</Fragment>
 		)

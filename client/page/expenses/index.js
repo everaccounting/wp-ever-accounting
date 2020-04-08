@@ -12,7 +12,7 @@ import Tabs from "components/tabs";
  */
 import Payments from '../payments';
 import Bills from '../bills';
-import EditPayment from "components/edit-payment";
+import EditPayment from "../payments/edit-pagement";
 
 const tabs = [
 	{

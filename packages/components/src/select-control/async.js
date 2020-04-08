@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
  */
 import {BaseControl} from '@wordpress/components';
 import classnames from 'classnames';
+import isShallowEqual from '@wordpress/is-shallow-equal';
 
 export default class AsyncSelect extends Component {
 	static propTypes = {
@@ -21,6 +22,7 @@ export default class AsyncSelect extends Component {
 		searchable: PropTypes.bool,
 		isMulti: PropTypes.bool,
 		options: PropTypes.arrayOf(PropTypes.object),
+		disabledOption: PropTypes.object,
 		value: PropTypes.any,
 		onChange: PropTypes.func,
 		onInputChange: PropTypes.func,
@@ -48,17 +50,21 @@ export default class AsyncSelect extends Component {
 		};
 	}
 
+	shouldComponentUpdate(nextProps, nextState, nextContext) {
+		return !isShallowEqual(nextProps, this.props)
+	}
+
 	onInputChange = value => {
 		return value.replace(/\W/g, '');
 	};
 
 	render() {
-		const {label, help, className, before, after, hasButton, required, loadOptions, ...props} = this.props;
+		const {label, help, className, before, after, hasButton, required, loadOptions, disabledOption = {}, ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
 			required: !!required,
 			'has-button': !!hasButton,
 		});
-
+		console.log(disabledOption);
 		const id = Math.random()
 			.toString(36)
 			.substring(7);
@@ -71,6 +77,8 @@ export default class AsyncSelect extends Component {
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
 						id={id}
+						// isOptionDisabled={(option) => disabledOption && isShallowEqual(option && disabledOption)}
+						isOptionDisabled={(option) => option && option.id && disabledOption && disabledOption.id && option.id === disabledOption.id}
 						loadOptions={loadOptions}
 						{...props}
 					/>

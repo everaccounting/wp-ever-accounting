@@ -58,9 +58,9 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 					$default_account_id          = eaccounting_get_option( 'default_account_id' );
 					$response['default_account'] = empty( $default_account_id ) ? [] : eaccounting_rest_request( '/ea/v1/accounts/'.$default_account_id );
 					break;
-				case 'default_currency_code':
-					$default_currency_code        = eaccounting_get_option( 'default_currency_code' );
-					$response['default_currency'] = empty( $default_currency_code ) ? [] : eaccounting_get_currency( $default_currency_code, 'code' );
+				case 'default_currency_id':
+					$default_currency_id        = eaccounting_get_option( 'default_currency_id' );
+					$response['default_currency'] = empty( $default_currency_id ) ? [] : eaccounting_rest_request( '/ea/v1/currencies/'.$default_currency_id );
 					break;
 				case 'logo_id':
 					$logo_id  = (int) eaccounting_get_option( 'logo_id' );

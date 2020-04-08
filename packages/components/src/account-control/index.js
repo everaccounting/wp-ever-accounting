@@ -10,13 +10,24 @@ import {Component, Fragment} from 'react';
  * Internal dependencies
  */
 import AsyncSelect from '../select-control/async';
-import {withSelect} from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import {addQueryArgs} from '@wordpress/url';
 
-class AccountControl extends Component {
+export default class AccountControl extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			defaults : []
+		};
+		this.apiFetch = this.apiFetch.bind(this);
+	}
+
+	componentDidMount() {
+		apiFetch({path: '/ea/v1/accounts'}).then(defaults => {
+			this.setState({
+				defaults
+			})
+		})
 	}
 
 	apiFetch(params, callback) {
@@ -29,7 +40,7 @@ class AccountControl extends Component {
 		return (
 			<Fragment>
 				<AsyncSelect
-					defaultOptions={this.props.defaultOptions}
+					defaultOptions={this.state.defaults}
 					getOptionLabel={option => option && option.name && option.name}
 					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
@@ -42,8 +53,3 @@ class AccountControl extends Component {
 	}
 }
 
-export default withSelect(select => {
-	return {
-		defaultOptions: select('ea/collection').fetchAPI('accounts')
-	}
-})(AccountControl)

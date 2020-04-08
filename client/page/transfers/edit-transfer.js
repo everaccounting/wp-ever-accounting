@@ -1,6 +1,6 @@
 import {Component, Fragment} from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {__} from '@wordpress/i18n';
+import {__, sprintf} from '@wordpress/i18n';
 import {Form, Field} from "react-final-form";
 import {
 	TextControl,
@@ -12,6 +12,7 @@ import {
 	TextareaControl, PriceControl, DateControl, PaymentMethodControl
 } from "@eaccounting/components";
 import {withEntity} from "@eaccounting/hoc";
+import {get} from "lodash";
 
 class EditTransfer extends Component {
 	constructor(props) {
@@ -30,12 +31,12 @@ class EditTransfer extends Component {
 		this.props.handleSubmit(form, (data)=> {
 			const path = isNew ? `/banking/transfers/edit/${data.id}` : `/banking/transfers`;
 			history.push(path)
-		});
+		}, true , true );
 	}
 
 	render() {
 		const {isNew, item, settings, history} = this.props;
-		const {default_payment_method} = settings;
+		const {default_payment_method, default_account} = settings;
 		return (
 			<Fragment>
 				<CompactCard tagName="h3">{ !isNew ? __('Add Transfer') : __('Update Transfer')}</CompactCard>
@@ -44,13 +45,17 @@ class EditTransfer extends Component {
 						onSubmit={this.onSubmit}
 						initialValues={item}
 						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
+
 							<form onSubmit={handleSubmit}>
 								<div className="ea-row">
 								<Field
 									label={__('From Account', 'wp-ever-accounting')}
 									name="from_account"
+									defaultValue={default_account}
 									className="ea-col-6"
+									disabledOption={get(values, ['to_account'], {})}
 									before={<Icon icon={'university'}/>}
+									help={ get(values, ['from_account', 'balance'], false ) ? sprintf('Account balance is %s', get(values, ['from_account', 'balance'], '0' )): '' }
 									required>
 									{props => (
 										<AccountControl {...props.input} {...props}/>
@@ -60,7 +65,9 @@ class EditTransfer extends Component {
 									label={__('To Account', 'wp-ever-accounting')}
 									name="to_account"
 									className="ea-col-6"
+									disabledOption={get(values, ['from_account'], {})}
 									before={<Icon icon={'university'}/>}
+									help={ get(values, ['to_account', 'balance'], false ) ? sprintf('Account balance is %s', get(values, ['to_account', 'balance'], '0' )): '' }
 									required>
 									{props => (
 										<AccountControl {...props.input} {...props}/>
@@ -72,7 +79,7 @@ class EditTransfer extends Component {
 									name="amount"
 									className="ea-col-6"
 									defaultValue={0}
-									code={values && values.from_account && values.from_account.currency && values.from_account.currency.code}
+									code={values && values.from_account && values.from_account.currency_code && values.from_account.currency_code}
 									before={<Icon icon={'money'}/>}
 									required>
 									{props => (
@@ -96,7 +103,7 @@ class EditTransfer extends Component {
 									label={__('Payment Method', 'wp-ever-accounting')}
 									name="payment_method"
 									className="ea-col-6"
-									defaultValue={'cash'}
+									defaultValue={default_payment_method}
 									required
 									before={<Icon icon={'credit-card'}/>}>
 									{props => (

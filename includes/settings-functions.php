@@ -26,9 +26,9 @@ function eaccounting_get_setting_options( $section = null ) {
 			'type'    => 'integer',
 			'section' => 'defaults',
 		],
-		'default_currency_code'  => [
-			'default' => 'USD',
+		'default_currency_id'  => [
 			'section' => 'defaults',
+			'type'    => 'integer',
 		],
 		'default_payment_method' => [
 			'default' => 'check',
@@ -130,70 +130,30 @@ function eaccounting_set_option( $name, $value ) {
 	return update_option( $name, $value );
 }
 
+/**
+ * since 1.0.0
+ * @return object|WP_Error
+ */
+function eaccounting_get_default_currency() {
+	$default_currency_id = (int) eaccounting_get_option( 'default_currency_id' );
+	$currency   = (object) eaccounting_get_currency( $default_currency_id );
+	if(empty($default_currency_id) || empty($currency)){
+		return new WP_Error('invalid', __('Default currency is not set transaction on hold', 'wp-ever-accounting'));
+	}
 
+	return $currency;
+}
 
-//
-///**
-// * Retrieve plugin settings
-// * since 1.0.0
-// *
-// * @param $name
-// *
-// * @return bool|mixed|void
-// */
-//function eaccounting_get_settings( $name ) {
-//	$settings = eaccounting_get_registered_settings();
-//	$raw_name = ltrim( $name, 'ea_' );
-//	$name     = 'ea_' . $raw_name;
-//	if ( ! array_key_exists( $name, $settings ) ) {
-//		return false;
-//	}
-//	$setting = $settings[ $name ];
-//	$default = isset( $setting['default'] ) ? $setting['default'] : false;
-//
-//	return apply_filters( "eaccounting_settings_field_$raw_name", get_option( $name, $default ) );
-//}
-//
-///**
-// * since 1.0.0
-// *
-// * @param $currency
-// *
-// * @return array
-// */
-//function eaccounting_get_settings_field_currency( $currency ) {
-//	if ( is_numeric( $currency ) ) {
-//		return (array) eaccounting_get_currency( $currency );
-//	}
-//
-//	return $currency;
-//}
-//
-//add_filter( 'eaccounting_settings_field_currency', 'eaccounting_get_settings_field_currency' );
-//
-//
-///**
-// * @return array|object|void|null
-// * @since 1.0.2
-// */
-//function eaccounting_get_default_currency() {
-//	$default_currency = (string) eaccounting_get_settings( 'default_currency' );
-//	$currency         = (object) eaccounting_get_currency_config( $default_currency );
-//
-//	return $currency;
-//}
-//
-///**
-// * @return array|object|void|null
-// * @since 1.0.2
-// */
-//function eaccounting_get_default_account() {
-//	$default_account = eaccounting_get_settings( 'default_account' );
-//	if ( empty( $default_account ) ) {
-//		global $wpdb;
-//
-//		return $wpdb->get_row( "SELECT * FROM $wpdb->ea_accounts order by id ASC limit 1" );
-//	}
-//
-//	return eaccounting_get_account( $default_account );
-//}
+/**
+ * @return array|object|void|null
+ * @since 1.0.2
+ */
+function eaccounting_get_default_account() {
+	$default_account_id = (int) eaccounting_get_option( 'default_account_id' );
+	$account = eaccounting_get_account( $default_account_id );
+	if(empty($default_account_id) || empty($account)){
+		return new WP_Error('invalid', __('Default account is not set transaction on hold', 'wp-ever-accounting'));
+	}
+
+	return $account;
+}
