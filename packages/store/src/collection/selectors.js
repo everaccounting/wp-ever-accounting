@@ -76,7 +76,7 @@ export function getCollectionWithRouteParts(state, resourceName, parts = [], que
  * getEntityById('contacts', 10, {include:'address'})
 
  * @param {Object} state Data state.
- * @param resourceName
+ * @param {String} resourceName
  * @param {Number} id
  * @param {Object} query
  * @returns {Generator<Immutable.Map|{args: Array[], reducerKey: string, selectorName: string, type: string}|{type: string, request: Object}, *, ?>}
@@ -153,6 +153,6 @@ export function isRequestingGetCollection(state, resourceName, query = null) {
  * @return {boolean} True means entities (for the given model) are being
  * requested.
  */
-export function isRequestingGetEntityById(state, resourceName,id,  query = null) {
+export function isRequestingGetEntityById(state, resourceName, id,  query = null) {
 	return isRequesting(state, resourceName, 'getEntityById', id,  query);
 }

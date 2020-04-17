@@ -10,34 +10,24 @@ export const getHeaders = () => [
 		check: true,
 	},
 	{
-		name: 'photo',
-		title: __('Photo'),
+		name: 'transferred_at',
+		title: __('Date'),
 		primary: true,
-		sortable: false,
-	},
-	{
-		name: 'name',
-		title: __('Name'),
 		sortable: true,
 	},
 	{
-		name: 'category',
-		title: __('Category'),
+		name: 'amount',
+		title: __('Amount'),
 		sortable: true,
 	},
 	{
-		name: 'quantity',
-		title: __('Quantity'),
+		name: 'from_account',
+		title: __('From Account'),
 		sortable: true,
 	},
 	{
-		name: 'sale_price',
-		title: __('Sale Price'),
-		sortable: true,
-	},
-	{
-		name: 'purchase_price',
-		title: __('Purchase Price'),
+		name: 'to_account',
+		title: __('To Account'),
 		sortable: true,
 	},
 	{
@@ -54,5 +44,5 @@ export const getBulk = () => [
 	{
 		id: 'export',
 		name: __('Export'),
-	}
+	},
 ];

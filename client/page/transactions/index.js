@@ -1,14 +1,124 @@
-import { Component, Fragment } from 'react';
+import {Component, Fragment} from 'react';
 import {__} from '@wordpress/i18n';
-export default class Transactions extends Component {
+import {Link} from "react-router-dom";
+import {withListTable} from "@eaccounting/hoc";
+import {
+	SearchBox,
+	TableNav,
+	Table,
+	SelectControl,
+	AccountSelect,
+	AccountControl,
+	CategorySelect, CategoryControl, DateFilter
+} from "@eaccounting/components"
+import {map} from "lodash";
+import {getHeaders} from './constants';
+import Row from "./row";
+
+class Transactions extends Component {
 	constructor(props) {
 		super(props);
+		this.renderRow = this.renderRow.bind(this);
+		this.renderTable = this.renderTable.bind(this);
 	}
-	render() {
+
+	renderRow(item, pos, isSelected, isLoading, search) {
+		return (
+			<Row
+				item={item}
+				key={pos}
+				isLoading={isLoading}
+				search={search}
+				isSelected={isSelected}
+				{...this.props}
+			/>
+		)
+	};
+
+	renderTable() {
+		const {status, total, page, match, orderby, order, items, selected} = this.props;
+		console.log(this.props);
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Transactions')}</h1>
+				<div className="ea-table-display">
+					<h1 className="wp-heading-inline">{__('Transactions')}</h1>
+					<Link className="page-title-action" to={`${match.path}/add`}>{__('Add Account')}</Link>
+					<a className="page-title-action" href="/">{__('Export')}</a>
+					<a className="page-title-action" href="/">{__('Import')}</a>
+					<SearchBox status={status} onSearch={this.props.setSearch}/>
+				</div>
+
+				<TableNav
+					status={status}
+					total={total}
+					page={page}
+					selected={selected}
+					onChangePage={this.props.setPage}>
+
+					<DateFilter
+						className={'alignleft actions'}
+						onChange={date => this.props.setFilter({date})}/>
+					<AccountSelect
+						className={'alignleft actions'}
+						placeholder={__('Filter Account')}
+						isMulti
+						onChange={(accounts) => this.props.setFilter({account_id: map(accounts, 'id')})}/>
+
+					<CategorySelect
+						className={'alignleft actions'}
+						placeholder={__('Filter Category')}
+						isMulti
+						type={['income', 'expense']}
+						onChange={(categories) => this.props.setFilter({category_id: map(categories, 'id')})}/>
+
+					<SelectControl
+						className={'alignleft actions'}
+						placeholder={__('Filter Type')}
+						options={['income', 'expense'].map(key => ({label: key, value: key}))}
+						isMulti
+						clearable
+						onChange={(types) => this.props.setFilter({types})}/>
+
+				</TableNav>
+
+				<Table
+					headers={getHeaders()}
+					orderby={orderby}
+					order={order}
+					rows={items}
+					total={total}
+					selected={selected}
+					onSetAllSelected={this.props.setAllSelected}
+					onSetSelected={this.props.setSelected}
+					row={this.renderRow}
+					status={status}
+					onSetOrderBy={this.props.setOrderBy}/>
+
+				<TableNav
+					status={status}
+					total={total}
+					page={page}
+					selected={selected}
+					onChangePage={this.props.setPage}/>
+			</Fragment>
+		)
+	}
+
+	render() {
+		const {status, total} = this.props;
+		return (
+			<Fragment>
+				{this.renderTable()}
 			</Fragment>
 		);
 	}
 }
+
+export default withListTable({
+	queryFilter: (query) => {
+		if (query.order && query.order === 'desc') {
+			delete query.order;
+		}
+		return query;
+	}
+})(Transactions);

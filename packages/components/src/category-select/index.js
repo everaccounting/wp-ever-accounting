@@ -84,7 +84,7 @@ export default class CategorySelect extends Component {
 		after: PropTypes.node,
 		value: PropTypes.any,
 		enableCreate: PropTypes.bool,
-		type: PropTypes.string.isRequired,
+		type: PropTypes.any.isRequired,
 	};
 
 	constructor(props) {

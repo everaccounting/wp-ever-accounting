@@ -2,11 +2,11 @@
  * External dependencies
  */
 
-import React from 'react';
+import {Component} from '@wordpress/element';
 /**
  * WordPress dependencies
  */
-import { __ } from '@wordpress/i18n';
+import {__} from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
 /**
@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
  */
 import NavigationPages from './navigation-pages';
 
-class TableNav extends React.Component {
+class TableNav extends Component {
 	static propTypes = {
 		total: PropTypes.number.isRequired,
 		selected: PropTypes.array.isRequired,
@@ -28,7 +28,6 @@ class TableNav extends React.Component {
 
 	static defaultProps = {
 		total: 0,
-		selected: [],
 		per_page: 20,
 		page: 1,
 	};
@@ -39,11 +38,11 @@ class TableNav extends React.Component {
 		this.handleClick = this.onClick.bind(this);
 		this.handleChange = this.onChange.bind(this);
 
-		this.state = { action: -1 };
+		this.state = {action: -1};
 	}
 
 	onChange(ev) {
-		this.setState({ action: ev.target.value });
+		this.setState({action: ev.target.value});
 	}
 
 	onClick(ev) {
@@ -51,13 +50,12 @@ class TableNav extends React.Component {
 
 		if (parseInt(this.state.action, 10) !== -1) {
 			this.props.onAction(this.state.action);
-			this.setState({ action: -1 });
+			this.setState({action: -1});
 		}
 	}
 
 	getBulk(bulk) {
-		const { selected } = this.props;
-
+		const {selected} = this.props;
 		return (
 			<div className="alignleft actions bulkactions">
 				<label htmlFor="bulk-action-selector-top" className="screen-reader-text">
@@ -93,13 +91,12 @@ class TableNav extends React.Component {
 	}
 
 	render() {
-		const { total, per_page, page, bulk, status } = this.props;
-
+		const {total, per_page, page, bulk, status} = this.props;
 		return (
 			<div className="tablenav top">
 				<div className="ea-table__actions">
-					{bulk && this.getBulk(bulk)}
 
+					{bulk && this.getBulk(bulk)}
 					{this.props.children ? this.props.children : null}
 				</div>
 

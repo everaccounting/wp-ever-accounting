@@ -32,7 +32,8 @@ const withPreloader = () => {
 			}
 
 			isLoading() {
-				return this.props.isRequesting || this.props.isLoading || this.state.isLoading;
+				const {isRequesting, isLoading, status} = this.props;
+				return isLoading || isRequesting || this.state.isLoading || status === "STATUS_IN_PROGRESS";
 			}
 
 			render() {
@@ -40,9 +41,10 @@ const withPreloader = () => {
 					'is-loading': this.isLoading()
 				});
 
-				console.group("withPreloader");
-				console.log(this.props);
-				console.groupEnd();
+				// console.group("withPreloader");
+				// console.log(this.props);
+				console.log('isloading', this.isLoading());
+				// console.groupEnd();
 				return (
 					<div className={className}>
 						<WrappedComponent

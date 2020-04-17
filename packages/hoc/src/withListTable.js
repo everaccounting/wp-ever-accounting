@@ -8,9 +8,9 @@ import {__} from "@wordpress/i18n";
 import {addQueryArgs} from "@wordpress/url"
 import isShallowEqual from '@wordpress/is-shallow-equal';
 import {xor} from 'lodash';
-import qs from "querystring";
 import apiFetch from "@wordpress/api-fetch";
-import {SearchBox, TableNav, Table, Button} from "@eaccounting/components"
+import {NotificationManager} from 'react-notifications';
+import {get, pickBy, isObject, clone, isEmpty} from "lodash";
 
 const withListTable = (table = {}) => {
 	return createHigherOrderComponent(WrappedComponent => {
@@ -26,6 +26,7 @@ const withListTable = (table = {}) => {
 				this.handleDelete = this.handleDelete.bind(this);
 				this.setSelected = this.setSelected.bind(this);
 				this.setAllSelected = this.setAllSelected.bind(this);
+				this.setAction = this.setAction.bind(this);
 			}
 
 			/**
@@ -59,7 +60,7 @@ const withListTable = (table = {}) => {
 					data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
 					data && !data.id && autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
 				}).catch(error => {
-					alert(error.message);
+					NotificationManager.error(error.message);
 				});
 			}
 
@@ -74,11 +75,11 @@ const withListTable = (table = {}) => {
 			async handleDelete(id, after = (res) => {
 			}, autoUpdateStore = true) {
 				if (true === confirm(__('Are you sure you want to delete this item?'))) {
-					await apiFetch({path: `ea/v1/${resourceName}/${id}`, method: 'DELETE'}).then(res => {
+					await apiFetch({path: `ea/v1/${this.props.resourceName}/${id}`, method: 'DELETE'}).then(res => {
 						after(res);
-						autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
+						autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
 					}).catch(error => {
-						alert(error.message);
+						NotificationManager.error(error.message);
 					});
 				}
 			}
@@ -104,6 +105,49 @@ const withListTable = (table = {}) => {
 				});
 			}
 
+			/**
+			 * This method handles bulk action
+			 * @param action
+			 */
+			setAction(action) {
+				const {selected} = this.state;
+				switch (action) {
+					case 'delete':
+						if (true === confirm(__('Are you sure you want to delete these selected item?'))) {
+							selected.map(id => {
+								apiFetch({
+									path: `ea/v1/${this.props.resourceName}/${id}`,
+									method: 'DELETE'
+								}).then(res => {
+								}).catch(error => {
+									NotificationManager.error(error.message)
+								});
+								this.setState({selected: []});
+								this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
+							})
+						}
+						break;
+					default:
+						const {
+							actions = () => {
+							}
+						} = table;
+						actions(action, this.props);
+						break;
+				}
+			}
+
+			/**
+			 * extract table props
+			 * @param value
+			 * @param path
+			 * @param defaults
+			 * @returns {*}
+			 */
+			getTableProp(value, path, defaults = '&mdash') {
+				return isObject(value) ? get(value, path, defaults) : isEmpty(value) ? defaults : value;
+			}
+
 
 			render() {
 				const {items, status, resourceName} = this.props;
@@ -123,6 +167,8 @@ const withListTable = (table = {}) => {
 							handleDelete={this.handleDelete}
 							setSelected={this.setSelected}
 							setAllSelected={this.setAllSelected}
+							setAction={this.setAction}
+							getTableProp={this.getTableProp}
 							setPage={(page, removeSelected = true) => {
 								this.props.setQuery(resourceName, 'page', page);
 								removeSelected && this.setState({selected: []});
@@ -132,6 +178,9 @@ const withListTable = (table = {}) => {
 							}}
 							setSearch={(search) => {
 								this.props.setContextQuery(resourceName, {...this.props.query, search, page: 1})
+							}}
+							setFilter={(filter) => {
+								this.props.setContextQuery(resourceName, {...{...this.props.query, page: 1}, ...filter})
 							}}
 						/>
 					</Fragment>
@@ -146,14 +195,15 @@ const withListTable = (table = {}) => {
 				const {resourceName = page, queryFilter = (x) => x} = table;
 				const {getCollection, isRequestingGetCollection} = select('ea/collection');
 				const {getQuery} = select('ea/query');
-				const queries = queryFilter(getQuery(resourceName));
-				const {items = [], total = NaN} = getCollection(resourceName, queries);
+				const queries = getQuery(resourceName);
+				const pageQuery = queryFilter(clone(queries));
+				const {items = [], total = NaN} = getCollection(resourceName, pageQuery);
 				return {
 					items: items,
 					total: total,
 					resourceName,
-					query: getQuery(resourceName),
-					status: isRequestingGetCollection(resourceName, queries) === true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE",
+					query: queries,
+					status: isRequestingGetCollection(resourceName, pageQuery) === true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE",
 				}
 			}),
 			withDispatch((dispatch => {

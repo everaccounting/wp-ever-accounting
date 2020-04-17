@@ -25,26 +25,32 @@ function eaccounting_insert_account( $args ) {
 		}
 
 		$args = array_merge( $item_before, $args );
+		error_log( print_r( $args, true ) );
 	}
 
 
 	$data = array(
 		'id'              => empty( $args['id'] ) ? null : absint( $args['id'] ),
-		'name'            => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
-		'number'          => ! isset( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
-		'opening_balance' => ! isset( $args['opening_balance'] ) ? '0.00' : $args['opening_balance'],
-		'currency_code'   => ! isset( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
-		'bank_name'       => ! isset( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
-		'bank_phone'      => ! isset( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
-		'bank_address'    => ! isset( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
+		'name'            => empty( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
+		'number'          => empty( $args['number'] ) ? '' : sanitize_text_field( $args['number'] ),
+		'opening_balance' => empty( $args['opening_balance'] ) ? '0.00' : $args['opening_balance'],
+		'currency_code'   => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
+		'bank_name'       => empty( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
+		'bank_phone'      => empty( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
+		'bank_address'    => empty( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
 		'updated_at'      => current_time( 'Y-m-d H:i:s' ),
 		'created_at'      => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 
 	if ( empty( $data['name'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Name is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Account Name is required', 'wp-ever-accounting' ) );
 	}
+
+	if ( empty( $data['number'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Account number is required', 'wp-ever-accounting' ) );
+	}
+
 	if ( empty( $data['currency_code'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
 	}
@@ -255,13 +261,15 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 /**
  * Get account currency
  * since 1.0.0
+ *
  * @param $id
  *
  * @return string|null
  */
-function eaccounting_get_account_currency_code($id){
+function eaccounting_get_account_currency_code( $id ) {
 	global $wpdb;
-	return $wpdb->get_var($wpdb->prepare("SELECT currency_code from $wpdb->ea_accounts WHERE id=%d", $id));
+
+	return $wpdb->get_var( $wpdb->prepare( "SELECT currency_code from $wpdb->ea_accounts WHERE id=%d", $id ) );
 }
 
 /**

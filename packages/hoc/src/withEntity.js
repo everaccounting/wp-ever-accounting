@@ -2,11 +2,13 @@
  * WordPress dependencies
  */
 import {Component} from '@wordpress/element';
+import {__} from '@wordpress/i18n';
 import {createHigherOrderComponent, compose} from '@wordpress/compose';
 import {withSelect, withDispatch} from '@wordpress/data';
-import {get} from "lodash";
-import withSettings from "./withSettings";
+import {get, pickBy, isObject} from "lodash";
 import apiFetch from "@wordpress/api-fetch";
+import {NotificationManager} from 'react-notifications';
+// import withSettings from "./withSettings";
 import withPreloader from "./withPreloader";
 
 const withEntity = (resourceName) => {
@@ -17,6 +19,7 @@ const withEntity = (resourceName) => {
 				this.handleSubmit = this.handleSubmit.bind(this);
 				this.handleDelete = this.handleDelete.bind(this);
 			}
+
 			/**
 			 * This is a helper function for updating and creating entities
 			 * callback after() can be used do after ward processing
@@ -25,17 +28,17 @@ const withEntity = (resourceName) => {
 			 * @param {Function} after
 			 * @param {Boolean} autoUpdateStore
 			 * @param {string} resetAllStore
-			 * @param {string} resource
 			 * @returns {Promise<void>}
 			 */
-			async handleSubmit(data, after = (res) => {}, autoUpdateStore = true, resetAllStore = false, resource = resourceName) {
-				await apiFetch({path: `ea/v1/${resource}`, method: 'POST', data}).then(res => {
+			async handleSubmit(data, after = (res) => {}, autoUpdateStore = true, resetAllStore = false) {
+				data = pickBy(data, value => !isObject(value));
+				await apiFetch({path: `ea/v1/${resourceName}`, method: 'POST', data}).then(res => {
 					after(res);
-					data && data.id && autoUpdateStore && this.props.replaceEntity(resource, res);
-					data && !data.id && autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resource);
+					data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
+					data && !data.id && autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
 					resetAllStore && this.props.resetAllState();
 				}).catch(error => {
-					alert(error.message);
+					NotificationManager.error(error.message);
 				});
 			}
 
@@ -48,14 +51,15 @@ const withEntity = (resourceName) => {
 			 * @param resetAllStore
 			 * @returns {Promise<void>}
 			 */
-			async handleDelete(id, after = (res) => {}, autoUpdateStore = true, resetAllStore = false) {
-				if(true === confirm(__('Are you sure you want to delete this item?'))){
+			async handleDelete(id, after = (res) => {
+			}, autoUpdateStore = true, resetAllStore = false) {
+				if (true === confirm(__('Are you sure you want to delete this item?'))) {
 					await apiFetch({path: `ea/v1/${resourceName}/${id}`, method: 'DELETE'}).then(res => {
 						after(res);
 						autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
 						resetAllStore && this.props.resetAllState();
 					}).catch(error => {
-						alert(error.message);
+						NotificationManager.error(error.message);
 					});
 				}
 			}
@@ -71,12 +75,14 @@ const withEntity = (resourceName) => {
 		return compose(
 			withSelect((select, ownProps) => {
 				const id = get(ownProps, ['match', 'params', 'id'], null);
+				const action = get(ownProps, ['match', 'params', 'action'], 'add');
 				const {getEntityById, isRequestingGetEntityById} = select('ea/collection');
-
+				console.log('isRequestingGetEntityById', isRequestingGetEntityById(resourceName, id, null));
 				return {
 					item: id ? getEntityById(resourceName, id, null) : {},
 					isRequesting: id ? isRequestingGetEntityById(resourceName, id, null) : false,
-					isNew: !id
+					isAdd: !id,
+					action: action
 				}
 			}),
 			withDispatch((dispatch => {
@@ -88,7 +94,7 @@ const withEntity = (resourceName) => {
 					resetAllState
 				}
 			})),
-			withSettings(),
+			// withSettings(),
 			withPreloader(),
 		)(Hoc);
 	}, 'withEntity');

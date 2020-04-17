@@ -15,9 +15,8 @@ export default class Row extends Component {
 	}
 
 	render() {
-		const {isLoading, item, isSelected, match} = this.props;
+		const {isLoading, item, isSelected, match, history} = this.props;
 		const {id, name, balance, number} = item;
-		console.log(`/${match.path}/${id}/edit`);
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
@@ -29,16 +28,30 @@ export default class Row extends Component {
 							value={id}
 							disabled={isLoading}
 							checked={isSelected}
-							onChange={() => this.props.onSetSelected(item.id)}
+							onChange={() => this.props.setSelected(item.id)}
 						/>
 					</th>
 
 					<td scope="row" className="column-primary column-name">
-						<strong><Link to={`${match.path}/${id}/edit`}>{name}</Link></strong>
+						<Link to={`${match.path}/${id}/edit`}>{this.props.getTableProp(name)}</Link>
 					</td>
-					<td className="column-number">{number || '-'}</td>
-					<td className="column-money">{balance}</td>
-					<td className="column-actions">mmm</td>
+					<td className="column-number">{this.props.getTableProp(number)}</td>
+					<td className="column-money">{this.props.getTableProp(balance)}</td>
+					<td className="column-actions">
+						<RowActions controls={[
+								{
+									title: __('Edit'),
+									onClick: () => history.push(`${match.path}/${id}/edit`),
+									disabled: isLoading,
+								},
+								{
+									title: __('Delete'),
+									onClick: () => this.props.handleDelete(id),
+									disabled: isLoading,
+								},
+							]}
+						/>
+					</td>
 				</tr>
 			</Fragment>
 		);

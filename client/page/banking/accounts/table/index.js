@@ -26,20 +26,26 @@ class Accounts extends Component {
 		)
 	};
 
-	renderTable(){
+	renderTable() {
 		const {status, total, page, match, orderby, order, items, selected} = this.props;
-		return(
+		console.log(this.props);
+		return (
 			<Fragment>
 				<div className="ea-table-display">
 					<Link className="page-title-action" to={`${match.path}/add`}>{__('Add Account')}</Link>
+					<a className="page-title-action" href="/">{__('Export')}</a>
+					<a className="page-title-action" href="/">{__('Import')}</a>
 					<SearchBox status={status} onSearch={this.props.setSearch}/>
 				</div>
+
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
+					selected={selected}
 					bulk={getBulk()}
-					onChangePage={this.props.setPage}/>
+					onChangePage={this.props.setPage}
+					onAction={this.props.setAction}/>
 
 				<Table
 					headers={getHeaders()}
@@ -58,17 +64,19 @@ class Accounts extends Component {
 					status={status}
 					total={total}
 					page={page}
+					selected={selected}
 					bulk={getBulk()}
-					onChangePage={this.props.setPage}/>
+					onChangePage={this.props.setPage}
+					onAction={this.props.setAction}/>
 			</Fragment>
 		)
 	}
 
 	render() {
-		const {status, total } = this.props;
+		const {status, total} = this.props;
 		return (
 			<Fragment>
-				{ this.renderTable()}
+				{this.renderTable()}
 			</Fragment>
 		);
 	}
@@ -76,7 +84,7 @@ class Accounts extends Component {
 
 export default withListTable({
 	queryFilter: (query) => {
-		if(query.order && query.order === 'desc'){
+		if (query.order && query.order === 'desc') {
 			delete query.order;
 		}
 		return query;
