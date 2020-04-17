@@ -159,9 +159,7 @@ class EAccounting_Page_Controller {
 	 */
 	public static function page_wrapper() {
 		?>
-		<div class="wrap eaccounting">
-			<div id="eaccounting"></div>
-		</div>
+		<div id="eaccounting"></div>
 		<?php
 	}
 }

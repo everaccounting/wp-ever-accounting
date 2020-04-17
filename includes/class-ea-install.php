@@ -33,26 +33,25 @@ class EAccounting_Install {
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_contacts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `user_id` INT(11) DEFAULT NULL,
-			`first_name` VARCHAR(191) NOT NULL,
-			`last_name` VARCHAR(191) NOT NULL,
+			`name` VARCHAR(191) NOT NULL,
 			`email` VARCHAR(191) DEFAULT NULL,
 			`phone` VARCHAR(20) DEFAULT NULL,
-			`address` VARCHAR(191) DEFAULT NULL,
-			`city` VARCHAR(50) DEFAULT NULL,
-			`state` VARCHAR(50) DEFAULT NULL,
-			`postcode` VARCHAR(20) DEFAULT NULL,
-			`country` VARCHAR(20) DEFAULT NULL,
+			`address` TEXT DEFAULT NULL,
+			`country` VARCHAR(3) DEFAULT NULL,
 			`website` VARCHAR(191) DEFAULT NULL,
-			`note` TEXT DEFAULT NULL,
-			`avatar_id` INT(11) DEFAULT NULL,
+			`reference` VARCHAR(191) DEFAULT NULL,
+			`file_id` INT(11) DEFAULT NULL,
 			`tax_number` VARCHAR(50) DEFAULT NULL,
-			`currency_code` varchar(191) NOT NULL DEFAULT 'USD',
-  			`types` VARCHAR(191) DEFAULT NULL COMMENT 'Customer or vendor',
+			`currency_code` varchar(3),
+  			`type` VARCHAR(191) DEFAULT NULL COMMENT 'Customer or vendor',
+			`enabled` tinyint(1) NOT NULL,
+			`creator_id` INT(11) DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
+		    KEY `name`(`name`),
 		    KEY `email`(`email`),
-		    KEY `phone`(`phone`)
+		    KEY `phone`(`phone`),
+		    KEY `reference`(`reference`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_accounts(
@@ -366,44 +365,11 @@ class EAccounting_Install {
 			] );
 		}
 
-		if ( ! eaccounting_get_contacts() ) {
-			eaccounting_insert_contact( [
-				'first_name' => 'Demo',
-				'last_name'  => 'User',
-				'tax_number' => 'XXX-XX-XXXX',
-				'email'      => 'demo@user.com',
-				'phone'      => '1234567890',
-				'address'    => 'Brannan Street',
-				'city'       => 'San Francisco',
-				'state'      => 'California',
-				'postcode'   => '94107',
-				'country'    => 'US',
-				'website'    => 'http://pluginever.com',
-				'note'       => 'demo user',
-				'types'      => [ 'vendor', 'customer' ],
-			] );
-		}
-
 		if ( ! eaccounting_get_currencies() ) {
 			eaccounting_insert_currency( array(
-				'name'              => 'US Dollar',
-				'code'              => 'USD',
-				'rate'              => '1',
-				'precision'         => 2,
-				'symbol'            => '$',
-				'position'          => 'before',
-				'decimalSeparator'  => '.',
-				'thousandSeparator' => ',',
-			) );
-			eaccounting_insert_currency( array(
-				'name'              => 'Taka',
-				'code'              => 'BDT',
-				'rate'              => '84.89',
-				'precision'         => 2,
-				'symbol'            => '৳',
-				'position'          => 'before',
-				'decimalSeparator'  => '.',
-				'thousandSeparator' => ',',
+				'name' => 'US Dollar',
+				'code' => 'USD',
+				'rate' => 1,
 			) );
 		}
 

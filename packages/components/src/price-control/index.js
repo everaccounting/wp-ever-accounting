@@ -11,8 +11,8 @@ import classnames from 'classnames';
 import {getCurrencyConfig} from "@eaccounting/data";
 import NumberFormat from 'react-number-format';
 export default class PriceControl extends Component {
-	onChange = e => {
-		this.props.onChange && this.props.onChange(e.target.value);
+	onChange = price => {
+		this.props.onChange  && this.props.onChange(price.value);
 	};
 
 	render() {
@@ -39,7 +39,8 @@ export default class PriceControl extends Component {
 						decimalSeparator={currency && currency.decimalSeparator}
 						thousandSeparator={currency && currency.thousandSeparator}
 						value={(value && value) || ''}
-						onChange={this.onChange}
+						onValueChange={this.onChange}
+						//onChange={this.onChange}
 					/>
 					{after && <span className="ea-input-group__after">{after}</span>}
 				</div>

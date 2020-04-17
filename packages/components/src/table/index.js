@@ -82,7 +82,7 @@ const Table = props => {
 
 Table.propTypes = {
 	headers: PropTypes.array.isRequired,
-	row: PropTypes.func.isRequired,
+	row: PropTypes.func,
 	rows: PropTypes.array.isRequired,
 	selected: PropTypes.array.isRequired,
 	orderby: PropTypes.string.isRequired,

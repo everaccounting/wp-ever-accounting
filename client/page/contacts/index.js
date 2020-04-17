@@ -49,7 +49,7 @@ class Contacts extends Component {
 			<Fragment>
 				{this.state.isAdding && <EditContact onClose={this.onClose} onCreate={this.onCreate} tittle={__('Add Contact')} buttonTittle={__('Submit')}/>}
 				<h1 className="wp-heading-inline">{__('Contacts')}</h1>
-				<Button className="page-title-action" onClick={this.onAdd}>{__('Add Contact')}</Button>
+				<button className="page-title-action" onClick={this.onAdd}>{__('Add Contact')}</button>
 				<hr className="wp-header-end"/>
 				<div className="ea-table-display">
 					<SearchBox status={status} onSearch={this.props.onSearch}/>

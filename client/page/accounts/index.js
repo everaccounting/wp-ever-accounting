@@ -5,7 +5,7 @@ import {
 	Table,
 	Button
 } from "@eaccounting/components"
-import {withTable} from "@eaccounting/hoc";
+import {withListTable} from "@eaccounting/hoc";
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
 import {__} from '@wordpress/i18n';
@@ -20,7 +20,7 @@ class Accounts extends Component {
 
 		this.openModal = this.openModal.bind(this);
 		this.closeModal = this.closeModal.bind(this);
-		this.onRenderRow = this.onRenderRow.bind(this);
+		this.renderRow = this.renderRow.bind(this);
 	}
 
 	openModal() {
@@ -31,7 +31,8 @@ class Accounts extends Component {
 		this.setState({isAdding: false});
 	};
 
-	onRenderRow(item, pos, isSelected, isLoading, search) {
+	renderRow(item, pos, isSelected, isLoading, search) {
+		console.log(isSelected);
 		return (
 			<Row
 				item={item}
@@ -44,27 +45,33 @@ class Accounts extends Component {
 		)
 	};
 
+	getTableFilters() {
+		return "HELLO";
+	}
+
 	render() {
-		const {status, total, items, page, order, orderby, query, selected} = this.props;
+		console.log(this.props);
+
+		const {status, total, items, page, order, orderby = 'created_at', query, selected} = this.props;
 		return (
 			<Fragment>
-				{this.state.isAdding &&
-				<EditAccount
-					onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}
-					onClose={this.closeModal}
-					tittle={__('Add Account')}
-					buttonTittle={__('Submit')}/>}
+				{/*{this.state.isAdding &&*/}
+				{/*<EditAccount*/}
+				{/*	onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}*/}
+				{/*	onClose={this.closeModal}*/}
+				{/*	tittle={__('Add Account')}*/}
+				{/*	buttonTittle={__('Submit')}/>}*/}
 
 				<div className="ea-table-display">
-					<Button className="page-title-action" onClick={this.openModal}>{__('Add Account')}</Button>
-					<SearchBox status={status} onSearch={this.props.onSearch}/>
+					<button className="page-title-action" onClick={this.openModal}>{__('Add Account')}</button>
+					<SearchBox status={status} onSearch={this.props.setSearch}/>
 				</div>
 
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
-					onChangePage={this.props.onPageChange}/>
+					onChangePage={this.props.setPageChange}/>
 
 				<Table
 					headers={getHeaders()}
@@ -72,20 +79,26 @@ class Accounts extends Component {
 					order={order}
 					rows={items}
 					total={total}
-					row={this.onRenderRow}
+					selected={selected}
+					onSetAllSelected={this.props.setAllSelected}
+					onSetSelected={this.props.setSelected}
+					row={this.renderRow}
 					status={status}
-					onSetOrderBy={this.props.onOrderBy}/>
+					onSetOrderBy={this.props.setOrderBy}/>
 
 				<TableNav
 					status={status}
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.onPageChange}/>
+					onChangePage={this.props.setPageChange}/>
 
 			</Fragment>
 		);
 	}
 }
 
-export default withTable('accounts', {orderby:'name'})(Accounts)
+export default withListTable({
+	bulks: getBulk(),
+	headers: getHeaders(),
+})(Accounts)

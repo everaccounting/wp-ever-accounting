@@ -46,5 +46,9 @@ export const getBulk = () => [
 	{
 		id: 'delete',
 		name: __('Delete'),
+	},
+	{
+		id: 'export',
+		name: __('Export'),
 	}
 ];

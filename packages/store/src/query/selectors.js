@@ -25,10 +25,9 @@ const removeDefaultQueries = (query, defaults = {}) => {
  * @param defaultQuery
  * @returns {*}
  */
-export const getQuery = (state, context, defaultQuery = {}) => {
-	const stateContext = typeof state[context] === 'undefined' ? {} : JSON.parse(state[context]);
-	const query = pickBy({...defaultQuery, ...stateContext}, value => isNumber(value) || !isEmpty(value));
-	return removeDefaultQueries(query, defaultQuery);
+export const getQuery = (state, context) => {
+	return typeof state[context] === 'undefined' ? {} : JSON.parse(state[context]);
+	// const query = pickBy({...defaultQuery, ...stateContext}, value => isNumber(value) || !isEmpty(value));
 };
 
 /**

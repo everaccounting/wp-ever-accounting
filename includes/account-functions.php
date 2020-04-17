@@ -148,7 +148,7 @@ function eaccounting_get_accounts( $args = array(), $count = false ) {
 		'include'        => array(),
 		'exclude'        => array(),
 		'search'         => '',
-		'orderby'        => 'id',
+		'orderby'        => 'created_at',
 		'order'          => 'DESC',
 		'fields'         => 'all',
 		'search_columns' => array( 'name', 'bank_name' ),

@@ -1,0 +1,24 @@
+.ea-empty-content{
+	max-width: 960px;
+	overflow: hidden;
+	margin: 35px auto 0;
+	padding-top: 20px;
+	text-align: center;
+	&__title{
+		color: #3c434a;
+		font-size: 34px;
+		font-weight: 300;
+	}
+
+	&__subtitle{
+		color: #646970;
+		font-size: 22px;
+		font-weight: 300;
+		margin-bottom: 40px;
+	}
+
+	.gridicon{
+		fill: #646970;
+	}
+
+}

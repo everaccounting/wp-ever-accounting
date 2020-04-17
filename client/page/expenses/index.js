@@ -13,6 +13,7 @@ import Tabs from "components/tabs";
 import Payments from '../payments';
 import Bills from '../bills';
 import EditPayment from "../payments/edit-pagement";
+import EditBill from "../bills/edit-bill";
 
 const tabs = [
 	{
@@ -27,6 +28,10 @@ const tabs = [
 		path: '/expenses/payments',
 		name: __('Payments'),
 		component:Payments,
+	},
+	{
+		path: '/expenses/bills/add',
+		component:Bills,
 	},
 	{
 		path: '/expenses/bills',

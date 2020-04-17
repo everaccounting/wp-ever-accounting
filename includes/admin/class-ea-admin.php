@@ -35,6 +35,7 @@ class EAccounting_Admin {
 		add_action( 'admin_menu', array( $this, 'register_pages' ), 20 );
 		add_action( 'admin_init', array( $this, 'setup_files' ) );
 		add_action( 'admin_head', array($this,'hide_notices'), 1 );
+		add_action( 'admin_body_class', array( $this, 'add_body_class'));
 	}
 
 	/**
@@ -85,23 +86,23 @@ class EAccounting_Admin {
 				'parent' => 'eaccounting',
 				'path'   => '/items',
 			),
+//			array(
+//				'id'     => 'eaccounting-contacts',
+//				'title'  => __( 'Contacts', 'wp-ever-accounting' ),
+//				'parent' => 'eaccounting',
+//				'path'   => '/contacts',
+//			),
 			array(
-				'id'     => 'eaccounting-contacts',
-				'title'  => __( 'Contacts', 'wp-ever-accounting' ),
+				'id'     => 'eaccounting-sales',
+				'title'  => __( 'Sales', 'wp-ever-accounting' ),
 				'parent' => 'eaccounting',
-				'path'   => '/contacts',
+				'path'   => '/sales/invoices',
 			),
 			array(
-				'id'     => 'eaccounting-incomes',
-				'title'  => __( 'Incomes', 'wp-ever-accounting' ),
+				'id'     => 'eaccounting-purchases',
+				'title'  => __( 'Purchases', 'wp-ever-accounting' ),
 				'parent' => 'eaccounting',
-				'path'   => '/incomes/revenues',
-			),
-			array(
-				'id'     => 'eaccounting-expenses',
-				'title'  => __( 'Expenses', 'wp-ever-accounting' ),
-				'parent' => 'eaccounting',
-				'path'   => '/expenses',
+				'path'   => '/purchases/bills',
 			),
 			array(
 				'id'     => 'eaccounting-banking',
@@ -109,17 +110,23 @@ class EAccounting_Admin {
 				'parent' => 'eaccounting',
 				'path'   => '/banking',
 			),
+//			array(
+//				'id'     => 'eaccounting-misc',
+//				'title'  => __( 'Misc', 'wp-ever-accounting' ),
+//				'parent' => 'eaccounting',
+//				'path'   => '/misc/categories',
+//			),
+//			array(
+//				'id'     => 'eaccounting-reports',
+//				'title'  => __( 'Reports', 'wp-ever-accounting' ),
+//				'parent' => 'eaccounting',
+//				'path'   => '/reports',
+//			),
 			array(
-				'id'     => 'eaccounting-misc',
-				'title'  => __( 'Misc', 'wp-ever-accounting' ),
+				'id'     => 'eaccounting-example',
+				'title'  => __( 'Example', 'wp-ever-accounting' ),
 				'parent' => 'eaccounting',
-				'path'   => '/misc/categories',
-			),
-			array(
-				'id'     => 'eaccounting-reports',
-				'title'  => __( 'Reports', 'wp-ever-accounting' ),
-				'parent' => 'eaccounting',
-				'path'   => '/reports',
+				'path'   => '/example',
 			),
 			array(
 				'id'     => 'eaccounting-settings',
@@ -153,9 +160,7 @@ class EAccounting_Admin {
 	 */
 	public static function page_wrapper() {
 		?>
-		<div class="wrap eaccounting">
-			<div id="eaccounting"></div>
-		</div>
+		<div id="eaccounting"></div>
 		<?php
 	}
 
@@ -169,6 +174,26 @@ class EAccounting_Admin {
 			remove_all_actions( 'admin_notices' );
 		}
 	}
+
+
+	/**
+	 * Set custom class for body when in eaccounting page
+	 * @since 1.0.0
+	 * @return bool|string
+	 */
+	public function add_body_class(){
+		$current_screen = get_current_screen();
+		if(!isset( $current_screen->base)){
+			return false;
+		}
+		if($current_screen->base !== 'toplevel_page_eaccounting'){
+			return false ;
+		}
+
+		return 'eaccounting';
+	}
+
+
 }
 
 EAccounting_Admin::instance();

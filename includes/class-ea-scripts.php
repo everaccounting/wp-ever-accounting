@@ -45,7 +45,9 @@ class EAccounting_Scripts {
 		//styles
 		self::register_style( 'ea-components', plugins_url( self::get_block_asset_dist_path( 'components', 'css' ), __DIR__ ), array( 'wp-components' ) );
 		self::register_style( 'ea-fontawesome', plugins_url( '/assets/vendor/font-awesome/css/font-awesome.min.css', __DIR__ ), array() );
+		self::register_style( 'ea-admin', plugins_url( '/assets/css/eaccounting-admin.css', __DIR__ ), array() );
 		self::register_style( 'ea-client', plugins_url( self::get_block_asset_dist_path( 'client', 'css' ), __DIR__ ), array(
+			'ea-admin',
 			'ea-components',
 			'ea-fontawesome'
 		) );

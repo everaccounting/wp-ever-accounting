@@ -15,14 +15,6 @@ class EAccounting_Admin_Menus {
 
 	public function register_pages() {
 		$pages = array(
-//			array(
-//				'id'         => 'eaccounting',
-//				'title'      => __( 'Accounting', 'wp-ever-accounting' ),
-//				'path'       => 'dashboard',
-//				'capability' => 'manage_options',
-//				'icon'       => 'dashicons-chart-area',
-//				'position'   => 55.5,
-//			),
 			array(
 				'id'         => 'eaccounting-dashboard',
 				'title'      => __( 'Dashboard', 'wp-ever-accounting' ),

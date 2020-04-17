@@ -1,0 +1,55 @@
+.ea-action-panel {
+	padding-bottom: 16px;
+	display: flex;
+	align-items: center;
+
+	&.is-primary{
+		background-color: #f3f5f6;
+	}
+
+	&__figure {
+		width: 100%;
+		margin: 24px 0;
+		text-align: center
+	}
+
+	&__title {
+		margin:0 0 16px 0;
+		font-size: 21px;
+		font-weight: 300;
+		line-height: 24px;
+		color: #3d4145;
+		clear: none
+	}
+	&__body {
+		font-size: 14px;
+		line-height: 20px;
+		color: #636d75;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		p {
+			margin: 0 0 20px 0;
+			flex-grow: 1
+		}
+	}
+
+	@media (min-width: 481px) {
+		&__figure {
+			float:right;
+			max-width: 208px;
+			margin: 0 0 20px 24px
+		}
+
+		&__figure.is-inline-body-text {
+			margin-top: 40px
+		}
+
+		&__figure.align-left {
+			float: left;
+			margin-left: 0;
+			margin-right: 24px
+		}
+	}
+}

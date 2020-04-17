@@ -6,6 +6,10 @@ import {__} from '@wordpress/i18n';
 
 export const getHeaders = () => [
 	{
+		name: 'cb',
+		check: true,
+	},
+	{
 		name: 'name',
 		title: __('Name'),
 		primary: true,

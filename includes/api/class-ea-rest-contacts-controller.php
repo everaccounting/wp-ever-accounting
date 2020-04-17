@@ -119,10 +119,6 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'offset'       => $request['offset'],
 		);
 
-		if ( $args['orderby'] == 'name' ) {
-			$args['orderby'] = 'first_name';
-		}
-
 		$query_result   = eaccounting_get_contacts( $args );
 		$total_contacts = eaccounting_get_contacts( $args, true );
 		$response       = array();
@@ -311,23 +307,18 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		$data = array(
 			'id'            => intval( $item->id ),
 			'user_id'       => $item->user_id,
-			'first_name'    => $item->first_name,
-			'last_name'     => $item->last_name,
+			'name'          => $item->name,
 			'email'         => $item->email,
 			'phone'         => $item->phone,
 			'address'       => $item->address,
-			'city'          => $item->city,
-			'state'         => $item->state,
-			'postcode'      => $item->postcode,
 			'country'       => $item->country,
 			'website'       => $item->website,
-			'note'          => $item->note,
-			'avatar_url'    => $item->avatar_url,
-			'types'         => maybe_unserialize( $item->types ),
+			'reference'     => $item->reference,
+			'file_id'       => $item->file_id,
+			'type'          => $item->type,
 			'tax_number'    => $item->tax_number,
 			'currency_code' => $item->currency_code,
 			'created_at'    => $this->prepare_date_response( $item->created_at ),
-			'updated_at'    => $this->prepare_date_response( $item->updated_at ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -357,11 +348,8 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['user_id'] ) && isset( $request['user_id'] ) ) {
 			$prepared_item->user_id = $request['user_id'];
 		}
-		if ( ! empty( $schema['properties']['first_name'] ) && isset( $request['first_name'] ) ) {
-			$prepared_item->first_name = $request['first_name'];
-		}
-		if ( ! empty( $schema['properties']['last_name'] ) && isset( $request['last_name'] ) ) {
-			$prepared_item->last_name = $request['last_name'];
+		if ( ! empty( $schema['properties']['name'] ) && isset( $request['name'] ) ) {
+			$prepared_item->name = $request['name'];
 		}
 		if ( ! empty( $schema['properties']['email'] ) && isset( $request['email'] ) ) {
 			$prepared_item->email = $request['email'];
@@ -372,35 +360,26 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['address'] ) && isset( $request['address'] ) ) {
 			$prepared_item->address = $request['address'];
 		}
-		if ( ! empty( $schema['properties']['city'] ) && isset( $request['city'] ) ) {
-			$prepared_item->city = $request['city'];
-		}
-		if ( ! empty( $schema['properties']['state'] ) && isset( $request['state'] ) ) {
-			$prepared_item->state = $request['state'];
-		}
-		if ( ! empty( $schema['properties']['post_code'] ) && isset( $request['post_code'] ) ) {
-			$prepared_item->post_code = $request['post_code'];
-		}
 		if ( ! empty( $schema['properties']['country'] ) && isset( $request['country'] ) ) {
 			$prepared_item->country = $request['country'];
 		}
 		if ( ! empty( $schema['properties']['website'] ) && isset( $request['website'] ) ) {
 			$prepared_item->website = $request['website'];
 		}
-		if ( ! empty( $schema['properties']['note'] ) && isset( $request['note'] ) ) {
-			$prepared_item->note = $request['note'];
+		if ( ! empty( $schema['properties']['reference'] ) && isset( $request['reference'] ) ) {
+			$prepared_item->reference = $request['reference'];
 		}
-		if ( ! empty( $schema['properties']['avatar_url'] ) && isset( $request['avatar_url'] ) ) {
-			$prepared_item->avatar_url = $request['avatar_url'];
+		if ( ! empty( $schema['properties']['file_id'] ) && isset( $request['file_id'] ) ) {
+			$prepared_item->file_id = $request['file_id'];
 		}
-		if ( ! empty( $schema['properties']['tax_url'] ) && isset( $request['tax_url'] ) ) {
-			$prepared_item->tax_url = $request['tax_url'];
+		if ( ! empty( $schema['properties']['tax_number'] ) && isset( $request['tax_number'] ) ) {
+			$prepared_item->tax_number = $request['tax_number'];
 		}
 		if ( ! empty( $schema['properties']['country_code'] ) && isset( $request['country_code'] ) ) {
 			$prepared_item->country_code = $request['country_code'];
 		}
-		if ( ! empty( $schema['properties']['types'] ) && isset( $request['types'] ) ) {
-			$prepared_item->types = $request['types'];
+		if ( ! empty( $schema['properties']['type'] ) && isset( $request['type'] ) ) {
+			$prepared_item->type = $request['type'];
 		}
 
 		return $prepared_item;
@@ -462,21 +441,11 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'first_name'    => array(
-					'description' => __( 'First name for the contact.', 'wp-ever-accounting' ),
+				'name'          => array(
+					'description' => __( 'Name for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
-					'default'     => 'John',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'last_name'     => array(
-					'description' => __( 'Last name for the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'default'     => 'Doe',
+					'default'     => '',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -515,33 +484,10 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required'    => true,
 				),
 				'address'       => array(
 					'description' => __( 'Address 1 of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'city'          => array(
-					'description' => __( 'City of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'state'         => array(
-					'description' => __( 'State of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'postcode'      => array(
-					'description' => __( 'Postcode of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -565,7 +511,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'esc_url_raw',
 					),
 				),
-				'note'          => array(
+				'reference'     => array(
 					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'string',
@@ -574,30 +520,17 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'avatar_url'    => array(
+				'file_id'       => array(
 					'description' => __( 'Photo of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'uri',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'esc_url',
-					),
 				),
-				'types'         => array(
+				'type'          => array(
 					'description' => __( 'Types of the contact', 'wp-ever-accounting' ),
-					'type'        => 'array',
-					'items'       => array(
-						'type' => 'string',
-					),
-					'context'     => array( 'edit', 'view', 'embed' ),
-				),
-				'date_created'  => array(
-					'description' => __( 'Created date of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'format'      => 'date-time',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
-
+					'context'     => array( 'edit', 'view', 'embed' ),
+					'required'    => true,
+				)
 			)
 		);
 

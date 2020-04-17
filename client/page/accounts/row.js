@@ -29,13 +29,25 @@ export default class Row extends Component {
 	};
 
 	render() {
-		const {isLoading, item} = this.props;
+		const {isLoading, item, isSelected} = this.props;
 		const { id, name, balance, number } = item;
 
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
-					<th scope="row" className="column-primary column-name">
+
+					<th scope="row" className="check-column">
+						<input
+							type="checkbox"
+							name="item[]"
+							value={id}
+							disabled={isLoading}
+							checked={isSelected}
+							onChange={() => this.props.onSetSelected(item.id)}
+						/>
+					</th>
+
+					<td scope="row" className="column-primary column-name">
 						{name}
 						{this.state.editing && <EditAccount
 							onSubmit={(data) => this.props.handleSubmit(data, this.closeModal)}
@@ -43,7 +55,7 @@ export default class Row extends Component {
 							buttonTittle={__('Update')}
 							tittle={__('Update Account')}
 							item={item}/>}
-					</th>
+					</td>
 
 					<td className="column-number">{number || '-'}</td>
 					<td className="column-money">{balance}</td>

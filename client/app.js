@@ -2,9 +2,8 @@ import {routes} from './routes';
 import {Fragment, Component} from "@wordpress/element";
 import {HashRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import {NotificationContainer} from 'react-notifications';
+import Header from "./components/header";
 
-
-//todo add preloader
 class Page extends Component {
 	constructor(props) {
 		super(props);
@@ -17,7 +16,12 @@ class Page extends Component {
 	render() {
 		window.wpNavMenuClassChange(this.props.history.location.pathname);
 		return (
-			<this.props.container {...this.props}/>
+			<Fragment>
+				<Header/>
+				<div className="eaccounting-page wrap">
+					<this.props.container {...this.props}/>
+				</div>
+			</Fragment>
 		);
 	}
 }

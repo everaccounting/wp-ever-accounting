@@ -44,6 +44,9 @@
 		"format": "wp-scripts format-js ./client"
 	},
 	"dependencies": {
+		"@fortawesome/fontawesome-svg-core": "^1.2.28",
+		"@fortawesome/free-solid-svg-icons": "^5.13.0",
+		"@fortawesome/react-fontawesome": "^0.1.9",
 		"accounting-js": "^1.1.1",
 		"bootstrap-daterangepicker": "^3.0.5",
 		"cuid": "^2.1.8",
@@ -51,13 +54,15 @@
 		"final-form": "^4.18.7",
 		"find-and": "^1.3.0",
 		"gridicons": "^3.3.1",
+		"puppeteer": "^2.1.1",
 		"react-final-form": "^6.3.5",
 		"react-moment": "^0.9.7",
 		"react-notifications": "^1.5.0-beta.0",
 		"react-number-format": "^4.4.1",
 		"react-router": "^5.1.2",
 		"react-router-dom": "^5.1.2",
-		"react-select": "^3.0.8"
+		"react-select": "^3.0.8",
+		"warning": "^4.0.3"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.8.7",
@@ -65,10 +70,12 @@
 		"@babel/plugin-transform-runtime": "^7.8.3",
 		"@eaccounting/components": "file:./packages/components",
 		"@eaccounting/data": "file:./packages/data",
+		"@eaccounting/hoc": "file:./packages/hoc",
+		"@eaccounting/store": "file:./packages/store",
 		"@wordpress/babel-plugin-makepot": "^3.4.0",
 		"@wordpress/babel-preset-default": "^4.10.0",
 		"@wordpress/custom-templated-path-webpack-plugin": "^1.6.0",
-		"@wordpress/scripts": "^7.1.2",
+		"@wordpress/scripts": "^7.2.0",
 		"autoprefixer": "^9.7.4",
 		"chalk": "^3.0.0",
 		"concurrently": "^5.1.0",

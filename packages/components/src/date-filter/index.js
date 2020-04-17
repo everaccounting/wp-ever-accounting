@@ -14,7 +14,6 @@ import PropTypes from 'prop-types';
 import DatePicker from '../date-picker';
 import TextControl from '../text-control';
 import classnames from 'classnames';
-import { SVG, Path } from '@wordpress/components';
 
 export default class DateRangeControl extends Component {
 	static propTypes = {

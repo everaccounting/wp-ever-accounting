@@ -13,7 +13,7 @@ export default class Modal extends Component {
 	static propTypes = {
 		className: PropTypes.string,
 		title: PropTypes.string,
-		onRequestClose: PropTypes.func,
+		onClose: PropTypes.func,
 		shouldCloseOnClickOutside: PropTypes.bool,
 		width: PropTypes.string,
 		overlayClassName: PropTypes.string,
@@ -25,9 +25,10 @@ export default class Modal extends Component {
 
 	render() {
 		const classes = classNames('ea-modal');
+		const {onClose} = this.props;
 		return (
 			<Fragment>
-				<BaseElement {...this.props} className={classes} overlayClassName="ea-modal-overlay">
+				<BaseElement {...this.props} className={classes} overlayClassName="ea-modal-overlay" onRequestClose={onClose}>
 					{this.props.children}
 				</BaseElement>
 			</Fragment>

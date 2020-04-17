@@ -113,7 +113,7 @@ class PaginationLinks extends React.Component {
 						onChange={this.onChange}
 					/>
 					<span className="tablenav-paging-text">
-						{sprintf(_n('of %d page', 'of %d pages', numberFormat(max), 'wp-ever-accounting'), max)}
+						{sprintf(_n('of %d', 'of %d', numberFormat(max), 'wp-ever-accounting'), max)}
 					</span>
 				</span>
 				&nbsp;

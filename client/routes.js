@@ -1,15 +1,13 @@
-import { applyFilters } from '@wordpress/hooks';
+import {applyFilters} from '@wordpress/hooks';
 import Dashboard from './page/dashboard';
 import Transactions from './page/transactions';
-import Contacts from './page/contacts';
-import Incomes from './page/incomes';
-import Expenses from './page/expenses';
 import Items from './page/items';
+import Sales from './page/sales';
+import Purchases from './page/purchases';
 import Banking from './page/banking';
-import Reports from './page/reports';
-import Misc from './page/misc';
 import Settings from './page/settings';
-import EditItem from "./page/items/edit-item"
+import Example from "./page/example";
+
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
 export const routes = [
@@ -22,84 +20,44 @@ export const routes = [
 		path: '/transactions',
 	},
 	{
-		container: EditItem,
-		path: '/items/edit/:id',
-	},
-	{
-		container: EditItem,
-		path: '/items/add',
+		container: Items,
+		path: '/items/*',
 	},
 	{
 		container: Items,
 		path: '/items',
 	},
 	{
-		container: Contacts,
-		path: '/contacts',
+		container: Sales,
+		path: '/sales/*',
 	},
 	{
-		container: Incomes,
-		path: '/incomes/:tab/:action/:id',
+		container: Sales,
+		path: '/sales',
 	},
 	{
-		container: Incomes,
-		path: '/incomes/:tab/:action',
+		container: Purchases,
+		path: '/purchases/*',
 	},
 	{
-		container: Incomes,
-		path: '/incomes/:tab',
-	},
-	{
-		container: Incomes,
-		path: '/incomes/',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/:tab/:action',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/:tab/:id(\\d+)',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/:tab',
-	},
-	{
-		container: Expenses,
-		path: '/expenses/',
+		container: Purchases,
+		path: '/purchases',
 	},
 	{
 		container: Banking,
-		path: '/banking/:tab/:action/:id',
+		path: '/banking/*',
 	},
 	{
 		container: Banking,
-		path: '/banking/:tab/:action',
+		path: '/banking',
 	},
 	{
-		container: Banking,
-		path: '/banking/:tab',
-	},
-	{
-		container: Banking,
-		path: '/banking/',
-	},
-	{
-		container: Misc,
-		path: '/misc/:tab',
-	},
-	{
-		container: Misc,
-		path: '/misc/',
-	},
-	{
-		container: Reports,
-		path: '/reports/',
+		container: Example,
+		path: '/example',
 	},
 	{
 		container: Settings,
-		path: '/settings/:section',
+		path: '/settings/*',
 	},
 	{
 		container: Settings,

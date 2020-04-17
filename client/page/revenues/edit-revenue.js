@@ -2,6 +2,7 @@ import {Component, Fragment} from '@wordpress/element';
 import PropTypes from 'prop-types';
 import {__} from '@wordpress/i18n';
 import {Form, Field} from "react-final-form";
+import {NotificationManager} from "react-notifications";
 import {
 	TextControl,
 	Icon,
@@ -29,7 +30,9 @@ class EditRevenue extends Component {
 
 		this.props.handleSubmit(form, (data)=> {
 			const path = isNew ? `/banking/transfers/edit/${data.id}` : `/banking/transfers`;
-			history.push(path)
+			history.push(path);
+			const message = isNew ? __('Revenues has been inserted'): __('Revenue has been updated');
+			//NotificationManager.succes(message);
 		});
 	}
 
@@ -46,82 +49,82 @@ class EditRevenue extends Component {
 						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
 							<form onSubmit={handleSubmit}>
 								<div className="ea-row">
-									<Field
-										label={__('From Account', 'wp-ever-accounting')}
-										name="from_account"
-										className="ea-col-6"
-										before={<Icon icon={'university'}/>}
-										required>
-										{props => (
-											<AccountControl {...props.input} {...props}/>
-										)}
-									</Field>
-									<Field
-										label={__('To Account', 'wp-ever-accounting')}
-										name="to_account"
-										className="ea-col-6"
-										before={<Icon icon={'university'}/>}
-										required>
-										{props => (
-											<AccountControl {...props.input} {...props}/>
-										)}
-									</Field>
+									{/*<Field*/}
+									{/*	label={__('From Account', 'wp-ever-accounting')}*/}
+									{/*	name="from_account"*/}
+									{/*	className="ea-col-6"*/}
+									{/*	before={<Icon icon={'university'}/>}*/}
+									{/*	required>*/}
+									{/*	{props => (*/}
+									{/*		<AccountControl {...props.input} {...props}/>*/}
+									{/*	)}*/}
+									{/*</Field>*/}
+									{/*<Field*/}
+									{/*	label={__('To Account', 'wp-ever-accounting')}*/}
+									{/*	name="to_account"*/}
+									{/*	className="ea-col-6"*/}
+									{/*	before={<Icon icon={'university'}/>}*/}
+									{/*	required>*/}
+									{/*	{props => (*/}
+									{/*		<AccountControl {...props.input} {...props}/>*/}
+									{/*	)}*/}
+									{/*</Field>*/}
 
-									<Field
-										label={__('Amount', 'wp-ever-accounting')}
-										name="amount"
-										className="ea-col-6"
-										defaultValue={0}
-										code={values && values.from_account && values.from_account.currency && values.from_account.currency.code}
-										before={<Icon icon={'money'}/>}
-										required>
-										{props => (
-											<PriceControl {...props.input} {...props}/>
-										)}
-									</Field>
+									{/*<Field*/}
+									{/*	label={__('Amount', 'wp-ever-accounting')}*/}
+									{/*	name="amount"*/}
+									{/*	className="ea-col-6"*/}
+									{/*	defaultValue={0}*/}
+									{/*	code={values && values.from_account && values.from_account.currency && values.from_account.currency.code}*/}
+									{/*	before={<Icon icon={'money'}/>}*/}
+									{/*	required>*/}
+									{/*	{props => (*/}
+									{/*		<PriceControl {...props.input} {...props}/>*/}
+									{/*	)}*/}
+									{/*</Field>*/}
 
 
-									<Field
-										label={__('Date', 'wp-ever-accounting')}
-										name="transferred_at"
-										containerClass="ea-col-6"
-										required
-										before={<Icon icon={'calendar'}/>}>
-										{props => (
-											<DateControl {...props.input} {...props}/>
-										)}
-									</Field>
+									{/*<Field*/}
+									{/*	label={__('Date', 'wp-ever-accounting')}*/}
+									{/*	name="transferred_at"*/}
+									{/*	containerClass="ea-col-6"*/}
+									{/*	required*/}
+									{/*	before={<Icon icon={'calendar'}/>}>*/}
+									{/*	{props => (*/}
+									{/*		<DateControl {...props.input} {...props}/>*/}
+									{/*	)}*/}
+									{/*</Field>*/}
 
-									<Field
-										label={__('Payment Method', 'wp-ever-accounting')}
-										name="payment_method"
-										className="ea-col-6"
-										defaultValue={'cash'}
-										required
-										before={<Icon icon={'credit-card'}/>}>
-										{props => (
-											<PaymentMethodControl {...props.input} {...props}/>
-										)}
-									</Field>
+									{/*<Field*/}
+									{/*	label={__('Payment Method', 'wp-ever-accounting')}*/}
+									{/*	name="payment_method"*/}
+									{/*	className="ea-col-6"*/}
+									{/*	defaultValue={'cash'}*/}
+									{/*	required*/}
+									{/*	before={<Icon icon={'credit-card'}/>}>*/}
+									{/*	{props => (*/}
+									{/*		<PaymentMethodControl {...props.input} {...props}/>*/}
+									{/*	)}*/}
+									{/*</Field>*/}
 
-									<Field
-										label={__('Reference', 'wp-ever-accounting')}
-										name="reference"
-										className="ea-col-6"
-										before={<Icon icon={'file-text-o'}/>}>
-										{props => (
-											<TextControl {...props.input} {...props}/>
-										)}
-									</Field>
+									{/*<Field*/}
+									{/*	label={__('Reference', 'wp-ever-accounting')}*/}
+									{/*	name="reference"*/}
+									{/*	className="ea-col-6"*/}
+									{/*	before={<Icon icon={'file-text-o'}/>}>*/}
+									{/*	{props => (*/}
+									{/*		<TextControl {...props.input} {...props}/>*/}
+									{/*	)}*/}
+									{/*</Field>*/}
 
-									<Field
-										label={__('Description', 'wp-ever-accounting')}
-										className="ea-col-12"
-										name="description">
-										{props => (
-											<TextareaControl {...props.input} {...props}/>
-										)}
-									</Field>
+									{/*<Field*/}
+									{/*	label={__('Description', 'wp-ever-accounting')}*/}
+									{/*	className="ea-col-12"*/}
+									{/*	name="description">*/}
+									{/*	{props => (*/}
+									{/*		<TextareaControl {...props.input} {...props}/>*/}
+									{/*	)}*/}
+									{/*</Field>*/}
 								</div>
 								<p style={{marginTop: '20px'}}>
 									<Button
