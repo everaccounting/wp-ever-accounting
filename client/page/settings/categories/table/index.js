@@ -2,20 +2,12 @@ import {Component, Fragment} from 'react';
 import {__} from '@wordpress/i18n';
 import {Link} from "react-router-dom";
 import {withListTable} from "@eaccounting/hoc";
-import {
-	SearchBox,
-	TableNav,
-	Table,
-	SelectControl,
-	AccountSelect,
-	AccountControl,
-	CategorySelect, CategoryControl, DateFilter
-} from "@eaccounting/components"
-import {map} from "lodash";
-import {getHeaders} from './constants';
+import {SearchBox, TableNav, Table, SelectControl} from "@eaccounting/components"
+import {getHeaders, getBulk} from './constants';
 import Row from "./row";
+import {CATEGORY_TYPES} from "@eaccounting/data";
 
-class Transactions extends Component {
+class Categories extends Component {
 	constructor(props) {
 		super(props);
 		this.renderRow = this.renderRow.bind(this);
@@ -37,12 +29,10 @@ class Transactions extends Component {
 
 	renderTable() {
 		const {status, total, page, match, orderby, order, items, selected} = this.props;
-		console.log(this.props);
 		return (
 			<Fragment>
 				<div className="ea-table-display">
-					<h1 className="wp-heading-inline">{__('Transactions')}</h1>
-					<Link className="page-title-action" to={`${match.path}/add`}>{__('Add Account')}</Link>
+					<Link className="page-title-action" to={`${match.path}/add`}>{__('Add Category')}</Link>
 					<a className="page-title-action" href="/">{__('Export')}</a>
 					<a className="page-title-action" href="/">{__('Import')}</a>
 					<SearchBox status={status} onSearch={this.props.setSearch}/>
@@ -53,31 +43,15 @@ class Transactions extends Component {
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.setPage}>
-
-					<DateFilter
-						className={'alignleft actions'}
-						onChange={date => this.props.setFilter({date})}/>
-					<AccountSelect
-						className={'alignleft actions'}
-						placeholder={__('Filter Account')}
-						isMulti
-						onChange={(accounts) => this.props.setFilter({account_id: map(accounts, 'id')})}/>
-
-					<CategorySelect
-						className={'alignleft actions'}
-						placeholder={__('Filter Category')}
-						isMulti
-						type={['income', 'expense']}
-						onChange={(categories) => this.props.setFilter({category_id: map(categories, 'id')})}/>
-
+					bulk={getBulk()}
+					onChangePage={this.props.setPage}
+					onAction={this.props.setAction}>
 					<SelectControl
 						className={'alignleft actions'}
 						placeholder={__('Filter Type')}
-						options={['All', 'income', 'expense'].map(key => ({label: key, value: key}))}
+						options={CATEGORY_TYPES}
 						clearable
-						onChange={(types) => this.props.setFilter({types})}/>
-
+						onChange={(type) => this.props.setFilter({type})}/>
 				</TableNav>
 
 				<Table
@@ -98,7 +72,9 @@ class Transactions extends Component {
 					total={total}
 					page={page}
 					selected={selected}
-					onChangePage={this.props.setPage}/>
+					bulk={getBulk()}
+					onChangePage={this.props.setPage}
+					onAction={this.props.setAction}/>
 			</Fragment>
 		)
 	}
@@ -120,4 +96,4 @@ export default withListTable({
 		}
 		return query;
 	}
-})(Transactions);
+})(Categories);

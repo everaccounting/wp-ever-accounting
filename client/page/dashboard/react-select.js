@@ -23,7 +23,6 @@ export default class ReactSelectControl extends Component {
 			);
 		};
 		const cleanInput = (inputValue) =>{
-			console.log(inputValue);
 			// Strip all non-number characters from the input
 			return inputValue.replace(/[^0-9]/g, "");
 		}

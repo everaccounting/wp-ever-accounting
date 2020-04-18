@@ -8,7 +8,7 @@ import {withSelect, withDispatch} from '@wordpress/data';
 import {get, pickBy, isObject} from "lodash";
 import apiFetch from "@wordpress/api-fetch";
 import {NotificationManager} from 'react-notifications';
-// import withSettings from "./withSettings";
+import withSettings from "./withSettings";
 import withPreloader from "./withPreloader";
 
 const withEntity = (resourceName) => {
@@ -94,7 +94,7 @@ const withEntity = (resourceName) => {
 					resetAllState
 				}
 			})),
-			// withSettings(),
+			withSettings(),
 			withPreloader(),
 		)(Hoc);
 	}, 'withEntity');

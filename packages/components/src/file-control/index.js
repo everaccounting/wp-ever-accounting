@@ -47,14 +47,14 @@ export default class FileControl extends Component {
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
-					{!isEmpty(value) && <Fragment>
+					{!isEmpty(value.url) && <Fragment>
 						<a href={value.url} target="_blank" className="ea-file-link">
-							<div className="ea-file-image-preview" style={{backgroundImage:`url(${value.url})`}}/>
+							<div className="ea-file-image-preview" style={{backgroundImage:`url("${value.url}")`}}/>
 						</a>
 						<span onClick={() => this.removeFile(value)} className="ea-file-remove">{__(`Remove ${label}`)}</span>
 					</Fragment>}
 
-					{isEmpty(value) && <FormFileUpload
+					{isEmpty(value.url) && <FormFileUpload
 						className="ea-file-upload"
 						accept={accept} onChange={e => {
 						this.handleFileUpload(e.target.files);

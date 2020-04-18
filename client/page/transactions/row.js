@@ -19,7 +19,7 @@ export default class Row extends Component {
 
 	render() {
 		const {isLoading, item, match, getTableProp} = this.props;
-		const {paid_at, account, type, category, reference, amount} = this.props.item;
+		const {id, paid_at, account, type, category, reference, amount} = this.props.item;
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>

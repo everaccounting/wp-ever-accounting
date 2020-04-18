@@ -147,7 +147,7 @@ class EAccounting_Files_Controller extends EAccounting_REST_Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_file( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the file', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );

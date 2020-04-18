@@ -119,13 +119,16 @@ const withListTable = (table = {}) => {
 									path: `ea/v1/${this.props.resourceName}/${id}`,
 									method: 'DELETE'
 								}).then(res => {
+
 								}).catch(error => {
 									NotificationManager.error(error.message)
 								});
-								this.setState({selected: []});
-								this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
-							})
+							});
+
+							this.setState({selected: []});
+							this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
 						}
+
 						break;
 					default:
 						const {
@@ -144,7 +147,7 @@ const withListTable = (table = {}) => {
 			 * @param defaults
 			 * @returns {*}
 			 */
-			getTableProp(value, path, defaults = '&mdash') {
+			getTableProp(value, path, defaults = '-') {
 				return isObject(value) ? get(value, path, defaults) : isEmpty(value) ? defaults : value;
 			}
 

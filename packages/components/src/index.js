@@ -15,15 +15,15 @@ export {default as Spinner} from './spinner';
 export {default as Modal} from './modal';
 export {default as SectionTitle} from './section-title';
 export {default as EmptyContent} from './empty-content';
+export {default as FileControl} from './file-control';
 export {default as ActionPanel} from './action-panel';
-
 export {default as Table} from './table';
 export {default as BulkAction} from './table/bulk-action';
 export {default as TableNav} from './table/table-nav';
 export {default as RowActions} from './table/row-actions';
+
+
 export {default as SearchBox} from './table/searchbox';
-
-
 //selectors
 export {default as CurrencySelect} from './currency-select';
 export {default as AccountSelect} from './account-select';
@@ -31,12 +31,5 @@ export {default as CountrySelect} from './country-select';
 export {default as CategorySelect} from './category-select';
 export {default as CustomerSelect} from './customer-select';
 export {default as VendorSelect} from './vendor-select';
-export {default as PaymentMethodSelect} from './payment-method-select';
 
-// export {default as FileControl} from './file-control';
-// export {default as Modal} from './modal';
-// export {default as Placeholder} from './placeholder';
-// export {default as Spinner} from './spinner';
-// export {default as SelectControl} from './select-control';
-// export {default as AsyncSelect} from './select-control/async';
-// export {default as AccountSelect} from './account-select';
+export {default as PaymentMethodSelect} from './payment-method-select';

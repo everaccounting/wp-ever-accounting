@@ -5,9 +5,8 @@ import Tabs from "components/tabs";
 import "./accounts";
 import "./transfers";
 
-const tabs = applyFilters('EA_BANKING_PAGE_TABS', []);
+const tabs = applyFilters('EA_BANKING_PAGES', []);
 
-console.log(tabs);
 export default class Banking extends Component {
 	constructor(props) {
 		super(props);

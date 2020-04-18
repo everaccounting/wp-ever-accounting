@@ -1,13 +1,31 @@
-import { Component, Fragment } from 'react';
-import {__} from '@wordpress/i18n';
-export default class Sales extends Component {
+import {Component, Fragment} from 'react';
+import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {applyFilters} from "@wordpress/hooks"
+import Tabs from "components/tabs";
+import "./revenues";
+
+const tabs = applyFilters('EA_SALES_PAGES', []);
+
+export default class Banking extends Component {
 	constructor(props) {
 		super(props);
 	}
+
 	render() {
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Sales')}</h1>
+				<Tabs tabs={tabs}/>
+				<Router>
+					<Switch>
+						{tabs.map(tab => {
+							return (
+								<Route key={tab.path} path={tab.path} exact
+									   render={props => <tab.component  {...props}/>}/>
+							);
+						})}
+						<Redirect from="/sales" to="/sales/revenues"/>
+					</Switch>
+				</Router>
 			</Fragment>
 		);
 	}

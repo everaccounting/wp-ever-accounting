@@ -26,8 +26,7 @@ export default class Row extends Component {
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
 					<th scope="row" className="column-primary column-date">
-						<Link
-							to={`${history.location.pathname}/edit/${id}`}>{moment(paid_at).format(FORMAT_SITE_DATE)}</Link>
+						<Link to={`${history.location.pathname}/view/${id}`}>{moment(paid_at).format(FORMAT_SITE_DATE)}</Link>
 					</th>
 
 					<td className="column-amount">{amount}</td>

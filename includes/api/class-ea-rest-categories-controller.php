@@ -235,8 +235,8 @@ class EAccounting_Categories_Controller extends EAccounting_REST_Controller {
 
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_category( $item_id );
-		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'This category cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+		if ( is_wp_error( $retval) ) {
+			return $retval;
 		}
 
 		$response = new WP_REST_Response();
