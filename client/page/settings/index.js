@@ -6,10 +6,7 @@ import {__} from '@wordpress/i18n';
 import Tabs from "components/tabs";
 import General from "./general";
 import Defaults from "./defaults";
-import Invoice from "./invoice";
-import TaxRates from "./taxrates";
-import Currencies from "./currencies";
-// import Categories from "./categories";
+import "./currencies";
 import "./categories";
 
 const tabs = applyFilters('EA_SETTINGS_PAGES', [
@@ -23,21 +20,16 @@ const tabs = applyFilters('EA_SETTINGS_PAGES', [
 		component: Defaults,
 		name: __('Defaults'),
 	},
-	{
-		path: '/settings/invoice',
-		component: Invoice,
-		name: __('Invoice'),
-	},
-	{
-		path: '/settings/currencies',
-		component: Currencies,
-		name: __('Currencies'),
-	},
-	{
-		path: '/settings/taxrates',
-		component: TaxRates,
-		name: __('TaxRates'),
-	}
+	// {
+	// 	path: '/settings/invoice',
+	// 	component: Invoice,
+	// 	name: __('Invoice'),
+	// },
+	// {
+	// 	path: '/settings/taxrates',
+	// 	component: TaxRates,
+	// 	name: __('TaxRates'),
+	// }
 ]);
 
 export default class Banking extends Component {

@@ -1,7 +1,7 @@
 import {applyFilters} from '@wordpress/hooks';
 import Dashboard from './page/dashboard';
 import Transactions from './page/transactions';
-import Items from './page/items';
+// import Items from './page/items';
 import Sales from './page/sales';
 import Purchases from './page/purchases';
 import Banking from './page/banking';
@@ -19,14 +19,14 @@ export const routes = [
 		container: Transactions,
 		path: '/transactions',
 	},
-	{
-		container: Items,
-		path: '/items/*',
-	},
-	{
-		container: Items,
-		path: '/items',
-	},
+	// {
+	// 	container: Items,
+	// 	path: '/items/*',
+	// },
+	// {
+	// 	container: Items,
+	// 	path: '/items',
+	// },
 	{
 		container: Sales,
 		path: '/sales/*',

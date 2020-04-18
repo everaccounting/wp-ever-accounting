@@ -194,7 +194,7 @@ class EAccounting_Scripts {
 				'countries'         => self::to_js_options( eaccounting_get_countries() ),
 				'contact_types'     => self::to_js_options( eaccounting_get_contact_types() ),
 				'category_types'    => self::to_js_options( eaccounting_get_category_types() ),
-				'tax_rate_types'    => self::to_js_options( eaccounting_get_tax_types() ),
+//				'tax_rate_types'    => self::to_js_options( eaccounting_get_tax_types() ),
 				'payment_methods'   => self::to_js_options( eaccounting_get_payment_methods() ),
 			]
 		];

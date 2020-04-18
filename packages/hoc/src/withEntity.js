@@ -77,7 +77,6 @@ const withEntity = (resourceName) => {
 				const id = get(ownProps, ['match', 'params', 'id'], null);
 				const action = get(ownProps, ['match', 'params', 'action'], 'add');
 				const {getEntityById, isRequestingGetEntityById} = select('ea/collection');
-				console.log('isRequestingGetEntityById', isRequestingGetEntityById(resourceName, id, null));
 				return {
 					item: id ? getEntityById(resourceName, id, null) : {},
 					isRequesting: id ? isRequestingGetEntityById(resourceName, id, null) : false,

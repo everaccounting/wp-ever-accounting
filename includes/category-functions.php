@@ -12,7 +12,7 @@ function eaccounting_get_category_types() {
 	$types = array(
 		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 		'income'  => __( 'Income', 'wp-ever-accounting' ),
-		'item'    => __( 'Item', 'wp-ever-accounting' ),
+//		'item'    => __( 'Item', 'wp-ever-accounting' ),
 		'other'   => __( 'Other', 'wp-ever-accounting' ),
 	);
 

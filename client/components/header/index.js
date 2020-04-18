@@ -9,10 +9,10 @@ const navigations = [
 		name:__('Dashboard'),
 		path:'/'
 	},
-	{
-		name:__('Items'),
-		path:'/items'
-	},
+	// {
+	// 	name:__('Items'),
+	// 	path:'/items'
+	// },
 	{
 		name:__('Sales'),
 		path:'/sales'

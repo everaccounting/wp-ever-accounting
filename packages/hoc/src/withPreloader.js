@@ -40,11 +40,6 @@ const withPreloader = () => {
 				const className = classNames('ea-preloader', {
 					'is-loading': this.isLoading()
 				});
-
-				// console.group("withPreloader");
-				// console.log(this.props);
-				console.log('isloading', this.isLoading());
-				// console.groupEnd();
 				return (
 					<div className={className}>
 						<WrappedComponent

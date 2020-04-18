@@ -112,11 +112,11 @@ final class EverAccounting {
 			'ea_payments',
 			'ea_revenues',
 			'ea_transfers',
-			'ea_taxes',
-			'ea_items',
-			'ea_invoices',
+//			'ea_taxes',
+//			'ea_items',
+//			'ea_invoices',
 			'ea_currencies',
-			'ea_invoice_item_taxes',
+//			'ea_invoice_item_taxes',
 			'ea_files',
 		);
 		foreach ( $tables as $table ) {
@@ -143,7 +143,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-csv-exporter.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-revenue.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-payment.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-scripts.php' );
@@ -157,7 +157,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/file-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/income-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/expense-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/item-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/currency-functions.php' );

@@ -80,17 +80,11 @@ class EAccounting_Admin {
 				'parent' => 'eaccounting',
 				'path'   => '/transactions',
 			),
-			array(
-				'id'     => 'eaccounting-items',
-				'title'  => __( 'Items', 'wp-ever-accounting' ),
-				'parent' => 'eaccounting',
-				'path'   => '/items',
-			),
 //			array(
-//				'id'     => 'eaccounting-contacts',
-//				'title'  => __( 'Contacts', 'wp-ever-accounting' ),
+//				'id'     => 'eaccounting-items',
+//				'title'  => __( 'Items', 'wp-ever-accounting' ),
 //				'parent' => 'eaccounting',
-//				'path'   => '/contacts',
+//				'path'   => '/items',
 //			),
 			array(
 				'id'     => 'eaccounting-sales',
@@ -110,18 +104,12 @@ class EAccounting_Admin {
 				'parent' => 'eaccounting',
 				'path'   => '/banking',
 			),
-//			array(
-//				'id'     => 'eaccounting-misc',
-//				'title'  => __( 'Misc', 'wp-ever-accounting' ),
-//				'parent' => 'eaccounting',
-//				'path'   => '/misc/categories',
-//			),
-//			array(
-//				'id'     => 'eaccounting-reports',
-//				'title'  => __( 'Reports', 'wp-ever-accounting' ),
-//				'parent' => 'eaccounting',
-//				'path'   => '/reports',
-//			),
+			array(
+				'id'     => 'eaccounting-reports',
+				'title'  => __( 'Reports', 'wp-ever-accounting' ),
+				'parent' => 'eaccounting',
+				'path'   => '/reports',
+			),
 			array(
 				'id'     => 'eaccounting-example',
 				'title'  => __( 'Example', 'wp-ever-accounting' ),
