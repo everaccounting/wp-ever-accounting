@@ -22,12 +22,13 @@
 		display: none;
 	}
 
-	.gridicon {
+	.gridicon, .dashicon {
 		position: relative;
 		top: 4px;
 		margin-top: -2px;
 		width: 18px;
 		height: 18px;
+	  	margin-right: 7px;
 
 		&:not( :last-child ) {
 			margin-right: 4px;
@@ -36,10 +37,8 @@
 
 	&:active,
 	&.is-active {
-		border-width: 2px 1px 1px;
+	  top: 0;
 	}
-
-	background-color: #fff;
 
 	&:hover {
 
@@ -66,12 +65,7 @@
 	}
 
 	&.is-compact {
-		padding: 7px;
-		font-size: 12px;
-		line-height: 1;
-
-		&:disabled {
-		}
+	  	height: auto;
 		.gridicon {
 			top: 5px;
 			margin-top: -8px;

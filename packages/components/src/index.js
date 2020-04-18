@@ -7,6 +7,7 @@ export {default as SelectControl} from './select-control';
 export {default as AsyncSelect} from './select-control/async';
 export {default as Card} from './card';
 export {default as CompactCard} from './compact-card';
+export {default as FormCard} from './form-card';
 export {default as Button} from './button';
 export {default as BackButton} from './back-button';
 export {default as PriceControl} from './price-control';
@@ -29,7 +30,7 @@ export {default as CurrencySelect} from './currency-select';
 export {default as AccountSelect} from './account-select';
 export {default as CountrySelect} from './country-select';
 export {default as CategorySelect} from './category-select';
-export {default as CustomerSelect} from './customer-select';
-export {default as VendorSelect} from './vendor-select';
+export {default as ContactSelect} from './contact-select';
+
 
 export {default as PaymentMethodSelect} from './payment-method-select';

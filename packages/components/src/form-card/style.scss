@@ -1,0 +1,27 @@
+.ea-form-card {
+  &__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	align-content: space-between;
+	flex-wrap: wrap;
+	margin: 0 auto 10px;
+	margin-top: 20px;
+
+	&:after {
+	  display: none;
+	}
+  }
+
+  &__header-title {
+	margin: 0;
+  }
+
+  @media (min-width: 481px) {
+	.ea-form-card__header {
+	  padding: 10px 24px;
+	}
+  }
+
+
+}

@@ -39,22 +39,23 @@ function eaccounting_insert_contact( $args ) {
 		$args = array_merge( $item_before, $args );
 	}
 
-
 	$data = array(
 		'id'            => $id,
 		'user_id'       => empty( $args['user_id'] ) ? '' : absint( $args['user_id'] ),
 		'name'          => empty( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'email'         => empty( $args['email'] ) ? '' : sanitize_email( $args['email'] ),
 		'phone'         => empty( $args['phone'] ) ? '' : sanitize_text_field( $args['phone'] ),
+		'fax_number'    => empty( $args['fax_number'] ) ? '' : sanitize_text_field( $args['fax_number'] ),
+		'birth_date'    => empty( $args['birth_date'] ) ? '' : sanitize_text_field( $args['birth_date'] ),
 		'address'       => empty( $args['address'] ) ? '' : sanitize_textarea_field( $args['address'] ),
 		'country'       => empty( $args['country'] ) ? '' : sanitize_text_field( $args['country'] ),
 		'website'       => empty( $args['website'] ) ? '' : esc_url_raw( $args['website'] ),
-		'reference'     => empty( $args['reference'] ) ? '' : sanitize_textarea_field( $args['reference'] ),
+		'note'          => empty( $args['note'] ) ? '' : sanitize_textarea_field( $args['note'] ),
 		'tax_number'    => empty( $args['tax_number'] ) ? '' : sanitize_text_field( $args['tax_number'] ),
 		'currency_code' => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
 		'type'          => empty( $args['type'] ) ? 'customer' : sanitize_text_field( $args['type'] ),
 		'file_id'       => empty( $args['file_id'] ) ? '' : intval( $args['file_id'] ),
-		'enabled'       => empty( $args['creator_id'] ) ? 0 : 1,
+		'enabled'       => isset( $args['enabled'] ) ? intval( $args['enabled'] ) : 1,
 		'creator_id'    => empty( $args['creator_id'] ) ? get_current_user_id() : $args['creator_id'],
 		'created_at'    => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : sanitize_text_field( $args['created_at'] ),
 	);

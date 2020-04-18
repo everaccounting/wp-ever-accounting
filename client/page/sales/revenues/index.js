@@ -1,5 +1,5 @@
 import Revenues from "./table";
-import ViewRevenue from "./view";
+import EditRevenue from "./edit";
 import {__} from '@wordpress/i18n';
 import {addFilter} from "@wordpress/hooks"
 
@@ -7,12 +7,12 @@ import {addFilter} from "@wordpress/hooks"
 addFilter('EA_SALES_PAGES', 'eaccounting', (pages)=> {
 	pages.push({
 		path: '/sales/revenues/:id/view',
-		component: ViewRevenue,
+		component: EditRevenue,
 	});
-	// pages.push({
-	// 	path: '/sales/revenues/add',
-	// 	component: EditAccount,
-	// });
+	pages.push({
+		path: '/sales/revenues/add',
+		component: EditRevenue,
+	});
 	pages.push({
 		path: '/sales/revenues',
 		component: Revenues,
