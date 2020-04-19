@@ -61,8 +61,8 @@ class EAccounting_Scripts {
 
 		$client_dependencies = array(
 			'ea-data',
-			'ea-components',
 			'ea-hoc',
+			'ea-components',
 			'ea-store',
 			'ea-helpers',
 		);

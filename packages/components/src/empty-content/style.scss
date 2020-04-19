@@ -1,24 +1,35 @@
-.ea-empty-content{
-	max-width: 960px;
+.ea-empty-content {
 	overflow: hidden;
 	margin: 35px auto 0;
-	padding-top: 20px;
+	padding: 3rem;
 	text-align: center;
-	&__title{
+
+	&__title {
 		color: #3c434a;
-		font-size: 34px;
+		font-size: 32px;
 		font-weight: 300;
+		margin: 0 0 10px 0;
+		line-height: 1;
+	}
+	p{
+		color: inherit;
+		font-size: inherit;
+		font-weight: inherit;
+		margin-top: 0;
 	}
 
-	&__subtitle{
+	&__subtitle {
 		color: #646970;
-		font-size: 22px;
+		font-size: 18px;
 		font-weight: 300;
-		margin-bottom: 40px;
+		margin: 0 0 20px 0;
 	}
 
-	.gridicon{
+	.gridicon {
 		fill: #646970;
 	}
 
+	&__right {
+		text-align: left;
+	}
 }

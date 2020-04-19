@@ -193,15 +193,13 @@ export function* resetForSelectorAndResource(selectorName, resourceName) {
 		'getCachedResolvers',
 		REDUCER_KEY
 	);
-
+	console.log(resolvers);
 	// dispatch invalidation of the cached resolvers for any resolver that
 	// has a variation of modelName in the selector name or in the args for the
 	// cached resolver.
 	for (const selector in resolvers) {
-		if (
-			selectorName === selector ||
-			resourceNameInSelector(selector, resourceName)
-		) {
+		console.log(selector);
+		if (selectorName === selector || resourceNameInSelector(selector, resourceName)) {
 			for (const entry of resolvers[selector]._map) {
 				if (entry[0][0] === resourceName) {
 					yield dispatch(

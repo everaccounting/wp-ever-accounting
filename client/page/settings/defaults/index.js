@@ -5,16 +5,22 @@ import {withPreloader} from "@eaccounting/hoc";
 import {compose} from '@wordpress/compose';
 import {Form, Field, FormSpy} from "react-final-form";
 import {
-	Card,
 	Button,
-	CompactCard,
+	FormCard,
 	AccountSelect,
 	CurrencySelect,
-	TaxRateSelect,
 	PaymentMethodSelect
 } from "@eaccounting/components";
 import apiFetch from "@wordpress/api-fetch";
 import {NotificationManager} from "react-notifications";
+
+import {get, pickBy, isObject} from "lodash";
+
+const processFormData = (data) => (pickBy({
+	...data,
+	default_account_id: get(data, 'default_account.id'),
+	default_currency_id: get(data, 'default_currency.id')
+}, value => !isObject(value)));
 
 
 class Defaults extends Component {
@@ -36,10 +42,9 @@ class Defaults extends Component {
 	render() {
 		return (
 			<Fragment>
-				<CompactCard tagName="h3">{__('Defaults Settings')}</CompactCard>
-				<Card>
+				<FormCard title={__('Defaults Settings')}>
 					<Form
-						onSubmit={this.onSubmit}
+						onSubmit={(data) => this.onSubmit(processFormData(data))}
 						initialValues={this.props.settings}
 						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
 							<form onSubmit={handleSubmit}>
@@ -100,7 +105,7 @@ class Defaults extends Component {
 
 							</form>
 						)}/>
-				</Card>
+				</FormCard>
 			</Fragment>
 		)
 	}

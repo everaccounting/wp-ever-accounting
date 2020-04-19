@@ -2,14 +2,14 @@ import {Component, Fragment} from 'react';
 import {__, sprintf} from '@wordpress/i18n';
 import {withEntity} from "@eaccounting/hoc";
 import {
-	Card,
-	CompactCard,
+	FormCard,
 	SelectControl,
 	TextControl,
 	BackButton,
 	Button,
+
 } from "@eaccounting/components";
-import {Form, Field, FormSpy} from "react-final-form";
+import {Form, Field} from "react-final-form";
 import {NotificationManager} from "react-notifications";
 import {CATEGORY_TYPES} from "@eaccounting/data";
 
@@ -31,8 +31,7 @@ class EditCategory extends Component {
 		const {isAdd, item} = this.props;
 		return (
 			<Fragment>
-				<CompactCard tagName="h3">{isAdd ? __('Add Category') : __('Update Category')}</CompactCard>
-				<Card>
+				<FormCard title={isAdd ? __('Add Category') : __('Update Category')}>
 					<Form
 						onSubmit={this.onSubmit}
 						initialValues={item}
@@ -69,11 +68,11 @@ class EditCategory extends Component {
 									type="submit">{__('Submit')}
 								</Button>
 
-								<BackButton title={__('Cancel')}/>
+								<BackButton>{__('Cancel')}</BackButton>
 
 							</form>
 						)}/>
-				</Card>
+				</FormCard>
 			</Fragment>
 		);
 	}

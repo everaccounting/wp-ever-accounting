@@ -9,12 +9,12 @@ class BackButton extends Component {
 	}
 
 	render() {
-		const {history, className, compact, ...props} = this.props;
+		const {history, className, compact = false , ...props} = this.props;
 
 		return (
 			<Button
 				secondary
-				compact
+				compact={compact}
 				className={className}
 				onClick={() => history.goBack()}>
 				{this.props.children && this.props.children}

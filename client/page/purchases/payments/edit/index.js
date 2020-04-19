@@ -25,7 +25,7 @@ const processFormData = (data) => (pickBy({
 }, value => !isObject(value)));
 
 
-class ViewRevenue extends Component {
+class EditPayment extends Component {
 	constructor(props) {
 		super(props);
 		this.onSubmit = this.onSubmit.bind(this);
@@ -34,8 +34,8 @@ class ViewRevenue extends Component {
 	onSubmit(form) {
 		const {history, isAdd} = this.props;
 		this.props.handleSubmit(form, function (res) {
-			NotificationManager.success(sprintf(__('Revenue %s.'), isAdd ? __('created') : __('updated')));
-			history.push('/sales/revenues');
+			NotificationManager.success(sprintf(__('Payment %s.'), isAdd ? __('created') : __('updated')));
+			history.push('/purchases/payments');
 		}, true );
 	}
 
@@ -43,7 +43,7 @@ class ViewRevenue extends Component {
 		const {isAdd, item, settings} = this.props;
 		const {default_account, default_payment_method} = settings;
 		return (
-			<FormCard title={isAdd ? __('Add Revenue') : __('Update Revenue')}>
+			<FormCard title={isAdd ? __('Add Payment') : __('Update Payment')}>
 
 				<Form
 					onSubmit={data => this.onSubmit(processFormData(data))}
@@ -86,12 +86,12 @@ class ViewRevenue extends Component {
 							</Field>
 
 							<Field
-								label={__('Customer', 'wp-ever-accounting')}
+								label={__('Vendor', 'wp-ever-accounting')}
 								name="contact"
 								className="ea-col-6"
 								required>
 								{props => (
-									<ContactSelect create={true} type={'customer'} {...props.input} {...props}/>
+									<ContactSelect create={true} type={'vendor'} {...props.input} {...props}/>
 								)}
 							</Field>
 
@@ -101,7 +101,7 @@ class ViewRevenue extends Component {
 								className="ea-col-6"
 								required>
 								{props => (
-									<CategorySelect create={true} type="income" {...props.input} {...props}/>
+									<CategorySelect create={true} type="expense" {...props.input} {...props}/>
 								)}
 							</Field>
 
@@ -164,4 +164,4 @@ class ViewRevenue extends Component {
 	}
 }
 
-export default withEntity('revenues')(ViewRevenue);
+export default withEntity('payments')(EditPayment);

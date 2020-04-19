@@ -18,8 +18,8 @@ export default class Row extends Component {
 	}
 
 	render() {
-		const {isLoading, item, isSelected, match, history, getTableProp} = this.props;
-		const {id, from_account, to_account, amount, transferred_at} = item;
+		const {isLoading, item, isSelected, match, history} = this.props;
+		const {id, name, email, phone} = item;
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
@@ -35,13 +35,12 @@ export default class Row extends Component {
 						/>
 					</th>
 
-					<td scope="row" className="column-primary column-date">
-						<Link to={`${match.path}/${id}/edit`}>{moment(transferred_at).format(FORMAT_SITE_DATE)}</Link>
+					<td scope="row" className="column-primary column-name">
+						<Link to={`${history.location.pathname}/${id}/view`}>{this.props.getTableProp(name)}</Link>
 					</td>
 
-					<td className="column-amount">{getTableProp(amount)}</td>
-					<td className="column-from_account">{getTableProp(from_account, ['name'])}</td>
-					<td className="column-to_account">{getTableProp(to_account, ['name'])}</td>
+					<td className="column-email">{this.props.getTableProp(email)}</td>
+					<td className="column-phone">{this.props.getTableProp(phone)}</td>
 					<td className="column-actions">
 						<RowActions controls={[
 							{

@@ -26,16 +26,15 @@ const withEntity = (resourceName) => {
 			 *
 			 * @param {Object} data
 			 * @param {Function} after
-			 * @param {Boolean} autoUpdateStore
 			 * @param {string} resetAllStore
 			 * @returns {Promise<void>}
 			 */
-			async handleSubmit(data, after = (res) => {}, autoUpdateStore = true, resetAllStore = false) {
+			async handleSubmit(data, after = (res) => {}, resetAllStore = false) {
 				data = pickBy(data, value => !isObject(value));
 				await apiFetch({path: `ea/v1/${resourceName}`, method: 'POST', data}).then(res => {
 					after(res);
-					data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
-					data && !data.id && autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
+					!resetAllStore && data && data.id  && this.props.replaceEntity(resourceName, res);
+					!resetAllStore && data && !data.id && autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
 					resetAllStore && this.props.resetAllState();
 				}).catch(error => {
 					NotificationManager.error(error.message);
@@ -47,16 +46,14 @@ const withEntity = (resourceName) => {
 			 * callback after() can be used do after ward processing
 			 * @param id
 			 * @param after
-			 * @param autoUpdateStore
 			 * @param resetAllStore
 			 * @returns {Promise<void>}
 			 */
-			async handleDelete(id, after = (res) => {
-			}, autoUpdateStore = true, resetAllStore = false) {
+			async handleDelete(id, after = (res) => {}, resetAllStore = false) {
 				if (true === confirm(__('Are you sure you want to delete this item?'))) {
 					await apiFetch({path: `ea/v1/${resourceName}/${id}`, method: 'DELETE'}).then(res => {
 						after(res);
-						autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
+						!resetAllStore  && this.props.resetForSelectorAndResource('getCollection', resourceName);
 						resetAllStore && this.props.resetAllState();
 					}).catch(error => {
 						NotificationManager.error(error.message);

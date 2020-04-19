@@ -28,7 +28,6 @@ class Items extends Component {
 
 	renderTable() {
 		const {status, total, page, match, orderby, order, items, selected} = this.props;
-		console.log(this.props);
 		return (
 			<Fragment>
 				<div className="ea-table-display">

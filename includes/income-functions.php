@@ -4,12 +4,13 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Incoming amount must same as account currency
  *
- * @param $args
+ * @param $args array
+ * @param $transfer boolean
  *
  * @return int|WP_Error|null
  * @since 1.0.0
  */
-function eaccounting_insert_revenue( $args ) {
+function eaccounting_insert_revenue( $args, $transfer = false ) {
 	global $wpdb;
 	$update = false;
 	$id     = null;
@@ -31,8 +32,6 @@ function eaccounting_insert_revenue( $args ) {
 		'account_id'     => empty( $args['account_id'] ) ? '' : absint( $args['account_id'] ),
 		'paid_at'        => empty( $args['paid_at'] ) && eaccounting_sanitize_date( $args['paid_at'] ) ? '' : $args['paid_at'],
 		'amount'         => empty( $args['amount'] ) ? '' : $args['amount'],
-		'currency_code'  => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
-		'currency_rate'  => empty( $args['currency_rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['currency_rate'] ),
 		'contact_id'     => empty( $args['contact_id'] ) ? '' : absint( $args['contact_id'] ),
 		'description'    => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'category_id'    => empty( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
@@ -41,26 +40,16 @@ function eaccounting_insert_revenue( $args ) {
 		'file_id'        => ! empty( $args['file_id'] ) ? intval( $args['file_id'] ) : '',
 		'parent_id'      => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
 		'reconciled'     => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
-		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
 		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 	if ( empty( $data['paid_at'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Payment date is required', 'wp-ever-accounting' ) );
+		return new WP_Error( 'empty_content', __( 'Revenue date is required', 'wp-ever-accounting' ) );
 	}
 
-	if ( empty( $data['amount'] ) || $data['amount'] == '0.00' ) {
+	if ( empty( preg_replace( '/[^0-9]/', '', $args['amount'] ) ) ) {
 		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
 	}
-	if ( empty( $data['currency_code'] ) ) {
-		return new WP_Error( 'empty_content', __( 'Currency code is required', 'wp-ever-accounting' ) );
-	}
-
-//	$amount = $data['amount'];
-//	if ( empty(preg_replace( '/[^0-9]/', '', $amount ))  ) {
-//		return new WP_Error( 'empty_content', __( 'Amount is required', 'wp-ever-accounting' ) );
-//	}
-
 
 	if ( empty( $data['category_id'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Revenue category is required', 'wp-ever-accounting' ) );
@@ -75,30 +64,24 @@ function eaccounting_insert_revenue( $args ) {
 		return new WP_Error( 'invalid_data', __( 'Account does not exist.', 'wp-ever-accounting' ) );
 	}
 
-	$currency = eaccounting_get_currency( $account->currency_code, 'code' );
-	if ( ! $currency ) {
-		return new WP_Error( 'invalid_data', __( 'Account associated currency does not exist.', 'wp-ever-accounting' ) );
-	}
-
 	$category = eaccounting_get_category( $data['category_id'] );
 	if ( ! $category ) {
 		return new WP_Error( 'invalid_data', __( 'Category does not exist.', 'wp-ever-accounting' ) );
+	}
+
+	$currency = eaccounting_get_currency( $account->currency_code, 'code' );
+	if ( ! $currency ) {
+		return new WP_Error( 'invalid_data', __( 'Account associated currency does not exist.', 'wp-ever-accounting' ) );
 	}
 
 	//other type is required for transfer
 	if ( ! in_array( $category->type, [ 'income', 'other' ] ) ) {
 		return new WP_Error( 'invalid_data', __( 'Invalid category type category type must be income.', 'wp-ever-accounting' ) );
 	}
+
 	$contact = eaccounting_get_contact( $data['contact_id'] );
 	if ( ! empty( $data['contact_id'] ) && empty( $contact ) ) {
 		return new WP_Error( 'invalid_data', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
-	}
-
-	if ( ! empty( $data['contact_id'] ) && ! in_array( 'customer', $contact->types ) ) {
-		eaccounting_insert_contact( array(
-			'id'    => $id,
-			'types' => array_merge( $contact->types, [ 'customer' ] )
-		) );
 	}
 
 	//sanitize amount before inserting

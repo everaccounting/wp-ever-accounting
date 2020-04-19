@@ -11,7 +11,7 @@ addFilter('EA_SALES_PAGES', 'eaccounting', (pages)=> {
 	});
 	pages.push({
 		path: '/sales/customers/add',
-		component: EditAccount,
+		component: ViewCustomer,
 	});
 	pages.push({
 		path: '/sales/customers',

@@ -313,7 +313,7 @@ class EAccounting_Contacts_Controller extends EAccounting_REST_Controller {
 			'address'       => $item->address,
 			'country'       => $item->country,
 			'website'       => $item->website,
-			'reference'     => $item->reference,
+			'note'          => $item->note,
 			'file_id'       => $item->file_id,
 			'type'          => $item->type,
 			'tax_number'    => $item->tax_number,

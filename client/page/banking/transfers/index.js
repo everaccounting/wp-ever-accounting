@@ -5,6 +5,14 @@ import {addFilter} from "@wordpress/hooks"
 
 addFilter('EA_BANKING_PAGES', 'eaccounting', (pages)=> {
 	pages.push({
+		path: '/banking/transfers/:id/edit',
+		component: EditTransfer,
+	});
+	pages.push({
+		path: '/banking/transfers/add',
+		component: EditTransfer,
+	});
+	pages.push({
 		path: '/banking/transfers',
 		component: Transfers,
 		name: __('Transfers'),

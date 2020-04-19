@@ -254,11 +254,10 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 			'category'       => eaccounting_rest_request( "/ea/v1/categories/{$item->category_id}" ),
 			'reference'      => $item->reference,
 			'payment_method' => $item->payment_method,
-			'attachment_url' => $item->attachment_url,
+			'file'           => eaccounting_rest_request( "/ea/v1/files/{$item->file_id}" ),
 			'parent_id'      => $item->parent_id,
 			'reconciled'     => $item->reconciled,
 			'created_at'     => $this->prepare_date_response( $item->created_at ),
-			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -294,9 +293,6 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 		}
 		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
 			$prepared_item->amount = $request['amount'];
-		}
-		if ( ! empty( $schema['properties']['currency_rate'] ) && isset( $request['currency_rate'] ) ) {
-			$prepared_item->currency_rate = $request['currency_rate'];
 		}
 		if ( ! empty( $schema['properties']['contact_id'] ) && isset( $request['contact_id'] ) ) {
 			$prepared_item->contact_id = $request['contact_id'];
@@ -442,12 +438,12 @@ class EAccounting_Revenues_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'file_id'       => array(
+				'file_id'        => array(
 					'description' => __( 'File id of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'edit' ),
 				),
-				'file'          => array(
+				'file'           => array(
 					'description' => __( 'File ids of the revenue', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),

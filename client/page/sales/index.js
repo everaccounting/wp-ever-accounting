@@ -3,6 +3,7 @@ import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
 import {applyFilters} from "@wordpress/hooks"
 import Tabs from "components/tabs";
 import "./revenues";
+import "./customers";
 
 const tabs = applyFilters('EA_SALES_PAGES', []);
 

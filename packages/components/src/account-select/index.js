@@ -6,6 +6,8 @@ import {Component, Fragment, createRef} from '@wordpress/element';
  * WordPress dependencies
  */
 import {__, sprintf} from '@wordpress/i18n';
+import {withDispatch, withSelect} from '@wordpress/data';
+import {compose} from '@wordpress/compose';
 /**
  * Internal dependencies
  */
@@ -13,100 +15,10 @@ import AsyncSelect from '../select-control/async';
 import PropTypes from 'prop-types';
 import {addQueryArgs} from '@wordpress/url';
 import apiFetch from '@wordpress/api-fetch';
-import Modal from "../modal";
-import {Form, Field, FormSpy} from "react-final-form";
-import TextControl from "../text-control";
-import Button from "../button";
 import {NotificationManager} from 'react-notifications';
-import CurrencySelect from '../currency-select';
-import PriceControl from '../price-control';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-	faFont,
-	faPencilAlt,
-	faMoneyBillAlt,
-	faExchangeAlt
-} from '@fortawesome/free-solid-svg-icons'
+import Create from "./create";
 
-class CreateAccountModal extends Component {
-	render() {
-		return (
-			<Fragment>
-
-				<Modal title={__('New Account')} onClose={this.props.onClose}>
-					<Form
-						onSubmit={this.props.onSubmit}
-						initialValues={{}}
-						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
-							<form onSubmit={handleSubmit}>
-								<Field
-									label={__('Account Name', 'wp-ever-accounting')}
-									name="name"
-									before={<FontAwesomeIcon icon={faFont}/>}
-									required>
-									{props => (
-										<TextControl {...props.input} {...props}/>
-									)}
-								</Field>
-
-								<Field
-									label={__('Account Number', 'wp-ever-accounting')}
-									name="number"
-									before={<FontAwesomeIcon icon={faPencilAlt}/>}
-									required>
-									{props => (
-										<TextControl {...props.input} {...props}/>
-									)}
-								</Field>
-
-								<Field
-									label={__('Account Currency', 'wp-ever-accounting')}
-									name="currency"
-									before={<FontAwesomeIcon icon={faExchangeAlt}/>}
-									required>
-									{props => (
-										<CurrencySelect {...props.input} {...props}/>
-									)}
-								</Field>
-
-								<Field
-									label={__('Opening Balance', 'wp-ever-accounting')}
-									name="opening_balance"
-									defaultValue={0}
-									before={<FontAwesomeIcon icon={faMoneyBillAlt}/>}
-									code={values && values.currency && values.currency.code && values.currency.code}
-									required>
-									{props => (
-										<PriceControl {...props.input} {...props}/>
-									)}
-								</Field>
-
-								<p style={{marginTop: '20px'}}>
-									<Button
-										isPrimary
-										disabled={submitting || pristine}
-										type="submit">{__('Submit')}
-									</Button>
-								</p>
-
-
-								<FormSpy subscription={{values: true}}>
-									{({values}) => {
-										values.currency_code = values.currency && values.currency.code && values.currency.code;
-										return null;
-									}}
-								</FormSpy>
-							</form>
-						)}/>
-				</Modal>
-
-			</Fragment>
-		)
-	}
-}
-
-
-export default class AccountSelect extends Component {
+class AccountSelect extends Component {
 	static propTypes = {
 		label: PropTypes.string,
 		placeholder: PropTypes.string,
@@ -121,17 +33,12 @@ export default class AccountSelect extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			defaultOptions: [],
 			isAdding: false,
 		};
 		this.ref = createRef();
-		this.fetchAPI = this.fetchAPI.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	componentDidMount() {
-		this.fetchAPI({}, (res) => this.setState({defaultOptions: res}))
-	}
 
 	fetchAPI(params, callback) {
 		apiFetch({path: addQueryArgs('/ea/v1/accounts', params)}).then(res => {
@@ -142,20 +49,20 @@ export default class AccountSelect extends Component {
 	handleSubmit(data) {
 		apiFetch({path: '/ea/v1/accounts', method: 'POST', data}).then(res => {
 			NotificationManager.success(sprintf(__('"%s" account created.'), res.name));
-			this.setState({defaultOptions: [res, ...this.state.defaultOptions]});
 			this.setState({isAdding: !this.state.isAdding});
 			this.ref.current.select.select.setValue(res);
+			this.props.resetForSelectorAndResource('getCollection', 'accounts');
 		}).catch(error => NotificationManager.error(error.message))
 	}
 
 	render() {
 		return (
 			<Fragment>
-				{this.state.isAdding && <CreateAccountModal
+				{this.state.isAdding && <Create
 					onSubmit={this.handleSubmit}
 					onClose={() => this.setState({isAdding: !this.state.isAdding})}/>}
 				<AsyncSelect
-					defaultOptions={this.state.defaultOptions}
+					defaultOptions={this.props.defaultOptions}
 					getOptionLabel={option => option && option.name && option.name}
 					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
@@ -163,8 +70,8 @@ export default class AccountSelect extends Component {
 					}}
 					innerRef={this.ref}
 					noOptionsMessage={() => __('No accounts')}
-					withFooter={this.props.enableCreate}
-					onAddClick={() => {
+					footer={this.props.create}
+					onFooterClick={() => {
 						this.ref.current.select.select.blur();
 						this.setState({isAdding: !this.state.isAdding});
 					}}
@@ -174,4 +81,33 @@ export default class AccountSelect extends Component {
 		);
 	}
 }
+
+
+AccountSelect.propTypes = {
+	label: PropTypes.string,
+	placeholder: PropTypes.string,
+	isMulti: PropTypes.bool,
+	onChange: PropTypes.func,
+	before: PropTypes.node,
+	after: PropTypes.node,
+	value: PropTypes.any,
+	create: PropTypes.bool,
+};
+
+export default compose(
+	withSelect((select, ownProps) => {
+		const {include = []} = ownProps;
+		const {getCollection} = select('ea/collection');
+		const {items} = getCollection('accounts', {include});
+		return {
+			defaultOptions: items,
+		}
+	}),
+	withDispatch(dispatch => {
+		const {resetForSelectorAndResource} = dispatch('ea/collection');
+		return {
+			resetForSelectorAndResource,
+		}
+	})
+)(AccountSelect);
 

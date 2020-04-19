@@ -6,7 +6,7 @@ import {Component, Fragment} from '@wordpress/element';
  * External dependencies
  */
 import PropTypes from 'prop-types';
-import {BaseControl, FormFileUpload} from '@wordpress/components';
+import {BaseControl, FormFileUpload, Dashicon} from '@wordpress/components';
 import classnames from 'classnames';
 import {__} from "@wordpress/i18n";
 import apiFetch from "@wordpress/api-fetch";
@@ -39,7 +39,7 @@ export default class FileControl extends Component {
 	};
 
 	render() {
-		const {label, help, className, required, value, accept = 'image/*', ...props} = this.props;
+		const {label, help, className, required, value, preview = true, accept = 'image/*', ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-file-field', className, {
 			required: !!required,
 		});
@@ -48,10 +48,25 @@ export default class FileControl extends Component {
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
 					{!isEmpty(value.url) && <Fragment>
-						<a href={value.url} target="_blank" className="ea-file-link">
-							<div className="ea-file-image-preview" style={{backgroundImage:`url("${value.url}")`}}/>
-						</a>
-						<span onClick={() => this.removeFile(value)} className="ea-file-remove">{__(`Remove ${label}`)}</span>
+						{preview ? <Fragment>
+								<a href={value.url} target="_blank" className="ea-file-link">
+									<div className="ea-file-image-preview"
+										 style={{backgroundImage: `url("${value.url}")`}}/>
+								</a>
+								<span onClick={() => this.removeFile(value)}
+									  className="ea-file-remove">{__(`Remove ${label}`)}</span>
+							</Fragment> :
+							<span className="ea-file-preview">
+							<a href={value.url} target="_blank" className="ea-file-link">{value.name}</a>
+							<a href="#"
+							   title={__('Delete')}
+							   className='ea-file-delete' onClick={(e) => {
+								e.preventDefault();
+								this.removeFile(value)
+							}}>
+							<Dashicon icon={'no-alt'}/>
+							</a>
+							</span>}
 					</Fragment>}
 
 					{isEmpty(value.url) && <FormFileUpload
@@ -75,4 +90,5 @@ FileControl.propTypes = {
 	className: PropTypes.string,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
+	preview: PropTypes.bool,
 };

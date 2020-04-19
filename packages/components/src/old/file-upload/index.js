@@ -27,7 +27,6 @@ export default class FileUpload extends Component {
 
 
 	onRemoveFile = file => {
-		console.log(file);
 		if (true === confirm(__('Do you really want to delete the file'))) {
 			apiFetch({path: `/ea/v1/files/${file.id}`, method: 'DELETE'}).then(res => {
 				this.props.onChange(removeObject(this.props.value, file))

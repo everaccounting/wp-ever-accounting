@@ -32,17 +32,17 @@ export default class AsyncSelect extends Component {
 		after: PropTypes.node,
 		required: PropTypes.bool,
 		loadOptions: PropTypes.func,
-		onAddClick: PropTypes.func,
-		withFooter: PropTypes.bool,
-		addText:PropTypes.string,
-		addIcon:PropTypes.string,
+		onFooterClick: PropTypes.func,
+		footer: PropTypes.bool,
+		addText: PropTypes.string,
+		addIcon: PropTypes.string,
 	};
 
 	static defaultProps = {
 		onChange: options => {
 		},
-		addText:__('Add New'),
-		addIcon:'plus',
+		addText: __('Add New'),
+		addIcon: 'plus',
 	};
 
 	constructor(props) {
@@ -62,11 +62,11 @@ export default class AsyncSelect extends Component {
 	};
 
 	onClick = () => {
-		this.props.onAddClick && this.props.onAddClick()
+		this.props.onFooterClick && this.props.onFooterClick()
 	};
 
 	render() {
-		const {label, help, className, before, after, required, loadOptions, withFooter, addText, addIcon, disabledOption = {}, innerRef, ...props} = this.props;
+		const {label, help, className, before, after, required, loadOptions, footer, addText, addIcon, disabledOption = {}, innerRef, ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
 			required: !!required,
 		});
@@ -77,7 +77,8 @@ export default class AsyncSelect extends Component {
 					<components.MenuList {...props}>
 						{props.children}
 					</components.MenuList>
-					{withFooter && <div className="ea-react-select__footer ea-react-select__option" onClick={this.onClick}>
+					{footer && this.props.onFooterClick &&
+					<div className="ea-react-select__footer ea-react-select__option" onClick={this.onClick}>
 						<Dashicon icon={addIcon} size={20}/> <span>{addText}</span>
 					</div>}
 				</Fragment>
@@ -85,8 +86,7 @@ export default class AsyncSelect extends Component {
 		};
 
 		const Option = props => {
-			const { data, getStyles, innerRef, innerProps } = props;
-			console.log(props);
+			const {data, getStyles, innerRef, innerProps} = props;
 			return null;
 		};
 

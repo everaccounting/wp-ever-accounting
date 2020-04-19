@@ -28,11 +28,10 @@ class Revenues extends Component {
 
 	renderTable() {
 		const {status, total, page, match, orderby, order, items, selected} = this.props;
-		console.log(this.props);
 		return (
 			<Fragment>
 				<div className="ea-table-display">
-					<Link className="page-title-action" to={`${match.path}/add`}>{__('Add Account')}</Link>
+					<Link className="page-title-action" to={`${match.path}/add`}>{__('Add Revenue')}</Link>
 					<a className="page-title-action" href="/">{__('Export')}</a>
 					<a className="page-title-action" href="/">{__('Import')}</a>
 					<SearchBox status={status} onSearch={this.props.setSearch}/>

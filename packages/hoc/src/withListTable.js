@@ -126,6 +126,7 @@ const withListTable = (table = {}) => {
 							});
 
 							this.setState({selected: []});
+							this.props.setContextQuery(resourceName, {...this.props.query, search, page: 1});
 							this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
 						}
 
@@ -154,11 +155,13 @@ const withListTable = (table = {}) => {
 
 			render() {
 				const {items, status, resourceName} = this.props;
-				const {page = 1, per_page = 50, orderby = '', order = ''} = this.props.query;
+				const {page = 1, per_page = 50, orderby = '', order = '', ...filters} = this.props.query;
 				return (
 					<Fragment>
 						<WrappedComponent
 							{...this.props}
+							filters={{...filters}}
+							hasFilter={!isEmpty({...filters})}
 							selected={this.state.selected}
 							total={this.state.total}
 							page={page}

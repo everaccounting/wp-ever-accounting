@@ -39,19 +39,22 @@ export default class FileControl extends Component {
 	};
 
 	render() {
-		const {label, help, className, required, value, accept = 'image/*', ...props} = this.props;
+		const {label, help, className, required, value, preview = true, accept = 'image/*', ...props} = this.props;
 		const classes = classnames('ea-form-group', 'ea-file-field', className, {
 			required: !!required,
 		});
+		console.log(this.props);
 
 		return (
 			<BaseControl label={label} help={help} className={classes}>
 				<div className="ea-input-group">
 					{!isEmpty(value) && <Fragment>
-						<a href={value.url} target="_blank" className="ea-file-link">
-							<div className="ea-file-image-preview" style={{backgroundImage:`url(${value.url})`}}/>
-						</a>
-						<span onClick={() => this.removeFile(value)} className="ea-file-remove">{__(`Remove ${label}`)}</span>
+						{preview && <a href={value.url} target="_blank" className="ea-file-link">
+							<div className="ea-file-image-preview" style={{backgroundImage: `url(${value.url})`}}/>
+						</a>}
+
+						<span onClick={() => this.removeFile(value)}
+							  className="ea-file-remove">{__(`Remove ${label}`)}</span>
 					</Fragment>}
 
 					{isEmpty(value) && <FormFileUpload
@@ -75,4 +78,5 @@ FileControl.propTypes = {
 	className: PropTypes.string,
 	onChange: PropTypes.func,
 	required: PropTypes.bool,
+	preview: PropTypes.bool
 };

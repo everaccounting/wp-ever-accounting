@@ -2,6 +2,8 @@
  * External dependencies
  */
 import {Component, Fragment, createRef} from '@wordpress/element';
+import {withDispatch, withSelect} from '@wordpress/data';
+import {compose} from '@wordpress/compose';
 /**
  * WordPress dependencies
  */
@@ -13,84 +15,14 @@ import AsyncSelect from '../select-control/async';
 import PropTypes from 'prop-types';
 import {addQueryArgs} from '@wordpress/url';
 import apiFetch from '@wordpress/api-fetch';
-import Modal from "../modal";
-import {Form, Field, FormSpy} from "react-final-form";
-import TextControl from "../text-control";
-import Button from "../button";
 import {NotificationManager} from 'react-notifications';
-import CurrencySelect from '../currency-select';
-import PriceControl from '../price-control';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {
-	faFont,
-	faPencilAlt,
-	faMoneyBillAlt,
-	faExchangeAlt
-} from '@fortawesome/free-solid-svg-icons'
+import Create from "./create";
 
-class CreateCategoryModal extends Component {
-	render() {
-		return (
-			<Fragment>
-
-				<Modal title={__('New Category')} onClose={this.props.onClose}>
-					<Form
-						onSubmit={this.props.onSubmit}
-						initialValues={{}}
-						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
-							<form onSubmit={handleSubmit}>
-								<Field
-									label={__('Category Name', 'wp-ever-accounting')}
-									name="name"
-									before={<FontAwesomeIcon icon={faFont}/>}
-									required>
-									{props => (
-										<TextControl {...props.input} {...props}/>
-									)}
-								</Field>
-
-								<p style={{marginTop: '20px'}}>
-									<Button
-										isPrimary
-										disabled={submitting || pristine}
-										type="submit">{__('Submit')}
-									</Button>
-								</p>
-
-
-								<FormSpy subscription={{values: true}}>
-									{({values}) => {
-										values.currency_code = values.currency && values.currency.code && values.currency.code;
-										return null;
-									}}
-								</FormSpy>
-							</form>
-						)}/>
-				</Modal>
-
-			</Fragment>
-		)
-	}
-}
-
-
-export default class CategorySelect extends Component {
-	static propTypes = {
-		label: PropTypes.string,
-		placeholder: PropTypes.string,
-		isMulti: PropTypes.bool,
-		onChange: PropTypes.func,
-		before: PropTypes.node,
-		after: PropTypes.node,
-		value: PropTypes.any,
-		enableCreate: PropTypes.bool,
-		type: PropTypes.any.isRequired,
-	};
+class CategorySelect extends Component {
 
 	constructor(props) {
 		super(props);
 		this.state = {
-			defaultOptions: [],
 			isAdding: false,
 		};
 		this.ref = createRef();
@@ -98,21 +30,18 @@ export default class CategorySelect extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	componentDidMount() {
-		this.fetchAPI({}, (res) => this.setState({defaultOptions: res}))
-	}
-
 	fetchAPI(params, callback) {
-		apiFetch({path: addQueryArgs('/ea/v1/categories', {...params, type: this.props.type})}).then(res => {
+		const {type} = this.props;
+		apiFetch({path: addQueryArgs('/ea/v1/categories', {...params, type})}).then(res => {
 			callback(res);
 		});
 	}
 
 	handleSubmit(data) {
-		data.type = this.props.type;
-		apiFetch({path: '/ea/v1/categories', method: 'POST', data}).then(res => {
+		const {type} = this.props;
+		apiFetch({path: '/ea/v1/categories', method: 'POST', data: {...data, type}}).then(res => {
 			NotificationManager.success(sprintf(__('"%s" category created.'), res.name));
-			this.setState({defaultOptions: [res, ...this.state.defaultOptions]});
+			this.props.resetForSelectorAndResource('getCollection', 'categories');
 			this.setState({isAdding: !this.state.isAdding});
 			this.ref.current.select.select.setValue(res);
 		}).catch(error => NotificationManager.error(error.message))
@@ -121,11 +50,12 @@ export default class CategorySelect extends Component {
 	render() {
 		return (
 			<Fragment>
-				{this.state.isAdding && <CreateCategoryModal
+				{this.state.isAdding && <Create
 					onSubmit={this.handleSubmit}
 					onClose={() => this.setState({isAdding: !this.state.isAdding})}/>}
+
 				<AsyncSelect
-					defaultOptions={this.state.defaultOptions}
+					defaultOptions={this.props.defaultOptions}
 					getOptionLabel={option => option && option.name && option.name}
 					getOptionValue={option => option && option.id && option.id}
 					loadOptions={(search, callback) => {
@@ -133,8 +63,8 @@ export default class CategorySelect extends Component {
 					}}
 					innerRef={this.ref}
 					noOptionsMessage={() => __('No categories')}
-					withFooter={this.props.enableCreate}
-					onAddClick={() => {
+					footer={this.props.create}
+					onFooterClick={() => {
 						this.ref.current.select.select.blur();
 						this.setState({isAdding: !this.state.isAdding});
 					}}
@@ -144,4 +74,34 @@ export default class CategorySelect extends Component {
 		);
 	}
 }
+
+export default compose(
+	withSelect((select, ownProps) => {
+		const {include = [], type = 'income'} = ownProps;
+		const {getCollection} = select('ea/collection');
+		const {items} = getCollection('categories', {include, type});
+		return {
+			defaultOptions: items,
+			type
+		}
+	}),
+	withDispatch(dispatch => {
+		const {resetForSelectorAndResource} = dispatch('ea/collection');
+		return {
+			resetForSelectorAndResource,
+		}
+	})
+)(CategorySelect);
+
+CategorySelect.propTypes = {
+	label: PropTypes.string,
+	placeholder: PropTypes.string,
+	isMulti: PropTypes.bool,
+	onChange: PropTypes.func,
+	before: PropTypes.node,
+	after: PropTypes.node,
+	value: PropTypes.any,
+	create: PropTypes.bool,
+	type: PropTypes.any.isRequired,
+};
 

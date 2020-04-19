@@ -1,16 +1,32 @@
-import { Component, Fragment } from 'react';
-import {__} from '@wordpress/i18n';
-import {FormCard} from "@eaccounting/components";
+import {Component, Fragment} from 'react';
+import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {applyFilters} from "@wordpress/hooks"
+import Tabs from "components/tabs";
+import "./payments";
+import "./vendors";
 
-export default class Purchases extends Component {
+const tabs = applyFilters('EA_PURCHASES_PAGES', []);
+
+export default class Banking extends Component {
 	constructor(props) {
 		super(props);
 	}
+
 	render() {
 		return (
 			<Fragment>
-				<h1 className="wp-heading-inline">{__('Purchases')}</h1>
-				<FormCard title="Card">Hello</FormCard>
+				<Tabs tabs={tabs}/>
+				<Router>
+					<Switch>
+						{tabs.map(tab => {
+							return (
+								<Route key={tab.path} path={tab.path} exact
+									   render={props => <tab.component  {...props}/>}/>
+							);
+						})}
+						<Redirect from="/purchases" to="/purchases/payments"/>
+					</Switch>
+				</Router>
 			</Fragment>
 		);
 	}

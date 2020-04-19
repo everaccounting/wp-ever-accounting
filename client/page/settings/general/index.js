@@ -8,8 +8,7 @@ import {NotificationManager} from "react-notifications";
 import {
 	TextControl,
 	FileControl,
-	Card,
-	CompactCard,
+	FormCard,
 	Button,
 	CountrySelect
 } from "@eaccounting/components";
@@ -34,8 +33,7 @@ class General extends Component {
 	render() {
 		return (
 			<Fragment>
-				<CompactCard tagName="h3">{__('General Settings')}</CompactCard>
-				<Card>
+				<FormCard title={__('General Settings')}>
 					<Form
 						onSubmit={this.onSubmit}
 						initialValues={this.props.settings}
@@ -151,7 +149,7 @@ class General extends Component {
 
 							</form>
 						)}/>
-				</Card>
+				</FormCard>
 			</Fragment>
 		)
 	}
