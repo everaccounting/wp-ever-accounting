@@ -243,7 +243,6 @@ function eaccounting_insert_file( $args ) {
 		'extension'  => ! isset( $args['extension'] ) ? '' : sanitize_text_field( $args['extension'] ),
 		'mime_type'  => ! isset( $args['mime_type'] ) ? '' : sanitize_text_field( $args['mime_type'] ),
 		'size'       => ! isset( $args['size'] ) ? '' : intval( $args['size'] ),
-		'updated_at' => current_time( 'Y-m-d H:i:s' ),
 		'created_at' => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 

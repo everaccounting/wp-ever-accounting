@@ -297,8 +297,7 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			'name'       => $item->name,
 			'code'       => $item->code,
 			'rate'       => floatval( $item->rate ),
-			'created_at' => $this->prepare_date_response( $item->created_at ),
-			'updated_at' => $this->prepare_date_response( $item->updated_at ),
+			'created_at' => $this->prepare_date_response( $item->created_at )
 		);
 
 

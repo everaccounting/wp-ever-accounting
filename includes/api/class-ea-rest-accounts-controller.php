@@ -332,8 +332,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
 			'bank_name'       => $item->bank_name,
 			'bank_phone'      => $item->bank_phone,
 			'bank_address'    => $item->bank_address,
-			'created_at'      => $this->prepare_date_response( $item->created_at ),
-			'updated_at'      => $this->prepare_date_response( $item->updated_at ),
+			'created_at'      => $this->prepare_date_response( $item->created_at )
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

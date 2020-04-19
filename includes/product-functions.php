@@ -36,7 +36,6 @@ function eaccounting_insert_product( $args ) {
 		'quantity'       => ! isset( $args['quantity'] ) ? '0' : absint( $args['quantity'] ),
 		'image_id'       => ! isset( $args['image_id'] ) ? '' : absint( $args['image_id'] ),
 		'category_id'    => ! isset( $args['category_id'] ) ? '' : absint( $args['category_id'] ),
-		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
 		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 

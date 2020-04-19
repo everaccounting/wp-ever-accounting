@@ -304,8 +304,7 @@ class EAccounting_Taxes_Controller extends EAccounting_REST_Controller {
 			'name'       => $item->name,
 			'rate'       => floatval( $item->rate),
 			'type'       => $item->type,
-			'created_at' => $this->prepare_date_response( $item->created_at ),
-			'updated_at' => $this->prepare_date_response( $item->updated_at ),
+			'created_at' => $this->prepare_date_response( $item->created_at )
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

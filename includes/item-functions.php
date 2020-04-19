@@ -40,7 +40,6 @@ function eaccounting_insert_item( $args ) {
 		'quantity'       => ! isset( $args['quantity'] ) ? '1' : eaccounting_sanitize_price( $args['quantity'] ),
 		'category_id'    => ! isset( $args['category_id'] ) ? '' : sanitize_text_field( $args['category_id'] ),
 		'image_id'       => ! isset( $args['image_id'] ) ? '' : sanitize_text_field( $args['image_id'] ),
-		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
 		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 

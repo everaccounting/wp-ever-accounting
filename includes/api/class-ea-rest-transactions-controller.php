@@ -146,8 +146,7 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 			'reference'      => $item->reference,
 			'reconciled'     => $item->reconciled,
 			'type'           => $item->type,
-			'created_at'     => $this->prepare_date_response( $item->created_at ),
-			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
+			'created_at'     => $this->prepare_date_response( $item->created_at )
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

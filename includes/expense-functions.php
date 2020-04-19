@@ -39,7 +39,6 @@ function eaccounting_insert_payment( $args ) {
 		'file_id'        => ! empty( $args['file_id'] ) ? intval( $args['file_id'] ) : '',
 		'parent_id'      => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
 		'reconciled'     => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
-		'updated_at'     => current_time( 'Y-m-d H:i:s' ),
 		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 

@@ -32,7 +32,6 @@ function eaccounting_insert_currency( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'code'       => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
 		'rate'       => ! isset( $args['rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['rate'] ),
-		'updated_at' => date( 'Y-m-d H:i:s' ),
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 

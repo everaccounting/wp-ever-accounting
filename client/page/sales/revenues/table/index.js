@@ -2,9 +2,10 @@ import {Component, Fragment} from 'react';
 import {__} from '@wordpress/i18n';
 import {Link} from "react-router-dom";
 import {withListTable} from "@eaccounting/hoc";
-import {SearchBox, TableNav, Table} from "@eaccounting/components"
+import {SearchBox, TableNav, Table, ContactSelect} from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
 import Row from "./row";
+import {map} from "lodash";
 
 class Revenues extends Component {
 	constructor(props) {
@@ -44,7 +45,14 @@ class Revenues extends Component {
 					selected={selected}
 					bulk={getBulk()}
 					onChangePage={this.props.setPage}
-					onAction={this.props.setAction}/>
+					onAction={this.props.setAction}>
+					<ContactSelect
+						className={'alignleft actions'}
+						placeholder={__('Filter Customer')}
+						isMulti
+						type='customer'
+						onChange={(contact) => this.props.setFilter({contact_id: map(contact, 'id')})}/>
+				</TableNav>
 
 				<Table
 					headers={getHeaders()}

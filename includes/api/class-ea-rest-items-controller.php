@@ -305,8 +305,7 @@ class EAccounting_Items_Controller extends EAccounting_REST_Controller {
 			'quantity'       => $item->quantity,
 			'category'       => eaccounting_get_category( $item->category_id ),
 			'image'          => eaccounting_rest_request( 'ea/v1/files', [ 'id' => $item->image_id ] ),
-			'created_at'     => $this->prepare_date_response( $item->created_at ),
-			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
+			'created_at'     => $this->prepare_date_response( $item->created_at )
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

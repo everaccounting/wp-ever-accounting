@@ -52,8 +52,7 @@ class EAccounting_Install {
 		    KEY `name`(`name`),
 		    KEY `email`(`email`),
 		    KEY `phone`(`phone`),
-		    KEY `type`(`type`),
-		    KEY `enabled`(`enabled`)
+		    KEY `type`(`type`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_accounts(
@@ -110,7 +109,7 @@ class EAccounting_Install {
 		    KEY `account_id` (`account_id`),
 		    KEY `amount` (`amount`),
 		    KEY `contact_id` (`contact_id`),
-		    KEY `creator_id`(`creator_id`),
+		    KEY `creator_id`(`creator_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_revenues(

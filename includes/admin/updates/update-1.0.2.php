@@ -3,7 +3,7 @@ defined( 'ABSPATH') || exit();
 
 function eaccounting_update_1_0_2() {
 	EAccounting_Install::install();
-
+	error_log( "UPDATING");
 	global $wpdb;
 	$prefix          = $wpdb->prefix;
 	$localization  = get_option( 'eaccounting_localisation', [] );
@@ -16,10 +16,10 @@ function eaccounting_update_1_0_2() {
 	] );
 
 	update_option( 'ea_default_payment_method', 'cash');
-	update_option( 'ea_default_currency_id', $currency_id);
+	update_option( 'ea_default_currency_id', intval( $currency_id));
 
 	$account_id = $wpdb->get_row("SELECT id from $wpdb->ea_accounts order by id asc");
-	update_option( 'ea_default_account_id', $account_id);
+	update_option( 'ea_default_account_id', intval( $account_id));
 
 	$current_user_id = eaccounting_get_creator_id();
 
@@ -153,3 +153,6 @@ function eaccounting_update_insert_file_1_0_2( $url, $user_id = 1 ) {
 
 	return 0;
 }
+
+
+eaccounting_update_1_0_2();

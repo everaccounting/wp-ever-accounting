@@ -206,8 +206,7 @@ class EAccounting_Files_Controller extends EAccounting_REST_Controller {
 			'extension'  => $item->extension,
 			'mime_type'  => $item->mime_type,
 			'size'       => $item->size,
-			'created_at' => $this->prepare_date_response( $item->created_at ),
-			'updated_at' => $this->prepare_date_response( $item->updated_at ),
+			'created_at' => $this->prepare_date_response( $item->created_at )
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';

@@ -40,7 +40,6 @@ function eaccounting_insert_transfer( $args ) {
 		'description'     => ! isset( $args['description'] ) ? '' : sanitize_textarea_field( $args['description'] ),
 		'payment_method'  => empty( $args['payment_method'] ) || ! array_key_exists( $args['payment_method'], eaccounting_get_payment_methods() ) ? '' : sanitize_key( $args['payment_method'] ),
 		'reference'       => ! isset( $args['reference'] ) ? '' : sanitize_text_field( $args['reference'] ),
-		'updated_at'      => current_time( 'Y-m-d H:i:s' ),
 		'created_at'      => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 

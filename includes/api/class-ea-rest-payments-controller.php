@@ -260,8 +260,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 			'reference'      => $item->reference,
 			'file'           => $item->file_id ? eaccounting_rest_request( "/ea/v1/files/{$item->file_id}" ) : [],
 			'reconciled'     => intval( $item->reconciled ),
-			'created_at'     => $this->prepare_date_response( $item->created_at ),
-			'updated_at'     => $this->prepare_date_response( $item->updated_at ),
+			'created_at'     => $this->prepare_date_response( $item->created_at )
 		);
 
 

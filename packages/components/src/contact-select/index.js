@@ -63,7 +63,7 @@ class ContactSelect extends Component {
 					}}
 					innerRef={this.ref}
 					//noOptionsMessage={() => __('No customers')}
-					footer={true}
+					footer={this.props.create}
 					onFooterClick={() => {
 						this.ref.current.select.select.blur();
 						this.setState({isAdding: !this.state.isAdding});

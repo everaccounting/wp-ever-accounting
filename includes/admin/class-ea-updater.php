@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Updater{
+class EAccounting_Updater {
 	/**
 	 * The upgrades
 	 *

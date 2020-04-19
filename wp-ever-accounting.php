@@ -23,7 +23,7 @@ final class EverAccounting {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.1';
+	public $version = '1.0.2';
 
 	/**
 	 * The single instance of the class.

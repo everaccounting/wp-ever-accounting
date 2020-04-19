@@ -44,7 +44,6 @@ function eaccounting_insert_tax( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'rate'       => ! isset( $args['rate'] ) ? '' : (float) $args['rate'],
 		'type'       => ! isset( $args['type'] ) ? '' : sanitize_text_field( $args['type'] ),
-		'updated_at' => current_time( 'mysql' ),
 		'created_at' => empty( $args['created_at'] ) ? current_time( 'mysql' ) : $args['created_at'],
 	);
 
