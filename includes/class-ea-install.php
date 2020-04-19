@@ -44,7 +44,6 @@ class EAccounting_Install {
 			`tax_number` VARCHAR(50) DEFAULT NULL,
 			`currency_code` varchar(3),
   			`type` VARCHAR(100) DEFAULT NULL COMMENT 'Customer or vendor',
-			`enabled` tinyint(1) NOT NULL DEFAULT 1,
 			`note` TEXT DEFAULT NULL,
 			`file_id` INT(11) DEFAULT NULL,
 			`creator_id` INT(11) DEFAULT NULL,
@@ -66,9 +65,10 @@ class EAccounting_Install {
 		    `bank_name` VARCHAR(191) DEFAULT NULL,
 		    `bank_phone` VARCHAR(20) DEFAULT NULL,
 		    `bank_address` VARCHAR(191) DEFAULT NULL,
+		   	`creator_id` INT(11) DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
-		    PRIMARY KEY (`id`)
+		    PRIMARY KEY (`id`),
+		    KEY `creator_id`(`creator_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 //			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_items(
@@ -83,7 +83,6 @@ class EAccounting_Install {
 //			`image_id` int(11) DEFAULT NULL,
 //  			`category_id` int(11) DEFAULT NULL,
 //		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`),
 //		    KEY `sale_price`(`sale_price`),
 //		    KEY `purchase_price`(`purchase_price`),
@@ -98,19 +97,20 @@ class EAccounting_Install {
 		  	`contact_id` INT(11) DEFAULT NULL,
 		  	`description` text,
 		  	`category_id` INT(11) NOT NULL,
-		  	`currency_code` varchar(191) NOT NULL DEFAULT 'USD',
+		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
 		  	`payment_method` VARCHAR(100) DEFAULT NULL,
 		  	`reference` VARCHAR(191) DEFAULT NULL,
 			`file_id` INT(11) DEFAULT NULL,
 		  	`parent_id` INT(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
+		    `creator_id` INT(11) DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `account_id` (`account_id`),
 		    KEY `amount` (`amount`),
-		    KEY `contact_id` (`contact_id`)
+		    KEY `contact_id` (`contact_id`),
+		    KEY `creator_id`(`creator_id`),
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_revenues(
@@ -121,18 +121,19 @@ class EAccounting_Install {
 		  	`contact_id` INT(11) DEFAULT NULL,
 		  	`description` text,
 		  	`category_id` INT(11) NOT NULL,
-		  	`currency_code` varchar(191) NOT NULL DEFAULT 'USD',
+		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
 	  		`payment_method` VARCHAR(100) DEFAULT NULL,
 		  	`reference` VARCHAR(191) DEFAULT NULL,
 			`file_id` INT(11) DEFAULT NULL,
 		  	`parent_id` INT(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
+		    `creator_id` INT(11) DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `account_id` (`account_id`),
 		    KEY `amount` (`amount`),
+		    KEY `creator_id` (`creator_id`),
 		    KEY `contact_id` (`contact_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
@@ -140,10 +141,11 @@ class EAccounting_Install {
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`payment_id` INT(11) NOT NULL,
   			`revenue_id` INT(11) NOT NULL,
+  			`creator_id` INT(11) DEFAULT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `payment_id` (`payment_id`),
+		    KEY `creator_id` (`creator_id`),
 		    KEY `revenue_id` (`revenue_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
@@ -153,7 +155,6 @@ class EAccounting_Install {
 		  	`type` VARCHAR(50) NOT NULL,
 		  	`color` VARCHAR(20) NOT NULL,
 		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `type` (`type`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
@@ -164,7 +165,6 @@ class EAccounting_Install {
 //			`rate` DOUBLE(15,4) NOT NULL COMMENT 'Taxes Rate',
 //			`type` VARCHAR(191) NOT NULL DEFAULT 'normal' COMMENT 'Taxes Type',
 //		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`)
 //            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 //
@@ -186,7 +186,6 @@ class EAccounting_Install {
 //		    `notes` text,
 //		    `file_id` INT(11) DEFAULT NULL,
 //		    `created_at` timestamp NULL DEFAULT NULL,
-//		    `updated_at` timestamp NULL DEFAULT NULL,
 //		    `category_id` int(11) NOT NULL DEFAULT '1',
 //		    `parent_id` int(11) NOT NULL DEFAULT '0',
 //		    PRIMARY KEY (`id`),
@@ -201,7 +200,6 @@ class EAccounting_Install {
 //            `amount` double(15,4) NOT NULL,
 //            `sort_order` int(11) NOT NULL,
 //		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`),
 //		    KEY `invoice_id` (`invoice_id`),
 //		    KEY `type` (`type`),
@@ -212,7 +210,6 @@ class EAccounting_Install {
 //            `id` bigint(20) NOT NULL AUTO_INCREMENT,
 //			`name` varchar(191) NOT NULL,
 //			`created_at` timestamp NULL DEFAULT NULL,
-//			`updated_at` timestamp NULL DEFAULT NULL,
 //		    PRIMARY KEY (`id`)
 //            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 //
@@ -229,7 +226,6 @@ class EAccounting_Install {
 //            `reference` varchar(191) DEFAULT NULL,
 //            `reconciled` tinyint(1) NOT NULL DEFAULT '0',
 //		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`),
 //		    KEY `invoice_id` (`invoice_id`),
 //		    KEY `account_id` (`account_id`),
@@ -244,7 +240,6 @@ class EAccounting_Install {
 //		  	`closing_balance` double(15,4) NOT NULL DEFAULT '0.0000',
 //		  	`reconciled` tinyint(1) NOT NULL,
 //	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`),
 //		    KEY `account_id` (`account_id`),
 //		    KEY `started_at` (`started_at`),
@@ -262,7 +257,6 @@ class EAccounting_Install {
 //            `total` double(15,4) NOT NULL,
 //            `tax` double(15,4) NOT NULL DEFAULT '0.0000',
 //		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`),
 //		    KEY `invoice_id` (`invoice_id`),
 //		    KEY `price` (`price`),
@@ -277,7 +271,6 @@ class EAccounting_Install {
 //            `name` varchar(191) NOT NULL,
 //            `amount` double(15,4) NOT NULL DEFAULT '0.0000',
 //		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`),
 //		    KEY `invoice_id` (`invoice_id`),
 //		    KEY `invoice_item_id` (`invoice_item_id`),
@@ -290,7 +283,6 @@ class EAccounting_Install {
 //            `notify` tinyint(1) NOT NULL,
 //            `description` text,
 //		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-//		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 //		    PRIMARY KEY (`id`),
 //		    KEY `invoice_id` (`invoice_id`)
 //            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
@@ -298,12 +290,13 @@ class EAccounting_Install {
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_currencies(
             `id` bigint(20) NOT NULL AUTO_INCREMENT,
 			`name` varchar(100) NOT NULL,
-			`code` varchar(10) NOT NULL,
+			`code` varchar(3) NOT NULL,
 			`rate` double(15,8) NOT NULL,
+			`creator_id` INT(11) DEFAULT NULL,
 	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `rate` (`rate`),
+		    KEY `creator_id` (`creator_id`),
 		    KEY `code` (`code`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
@@ -314,10 +307,11 @@ class EAccounting_Install {
 			`extension` varchar(28) NOT NULL,
 			`mime_type` varchar(128) NOT NULL,
 			`size` int(10) unsigned NOT NULL,
+			`creator_id` INT(11) DEFAULT NULL,
 	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    `updated_at` DATETIME NULL DEFAULT NULL COMMENT 'Update Date',
 		    PRIMARY KEY (`id`),
 		    KEY `name` (`name`),
+		    KEY `creator_id` (`creator_id`),
 		    KEY `path` (`path`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
@@ -373,6 +367,16 @@ class EAccounting_Install {
 				'name' => 'US Dollar',
 				'code' => 'USD',
 				'rate' => 1,
+			) );
+			eaccounting_insert_currency( array(
+				'name' => 'British Pound',
+				'code' => 'GBP',
+				'rate' => 1.6,
+			) );
+			eaccounting_insert_currency( array(
+				'name' => 'Euro',
+				'code' => 'EUR',
+				'rate' => 1.25,
 			) );
 		}
 

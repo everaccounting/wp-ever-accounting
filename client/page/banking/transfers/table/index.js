@@ -2,8 +2,9 @@ import {Component, Fragment} from 'react';
 import {__} from '@wordpress/i18n';
 import {Link} from "react-router-dom";
 import {withListTable} from "@eaccounting/hoc";
-import {SearchBox, TableNav, Table} from "@eaccounting/components"
+import {SearchBox, TableNav, Table, EmptyContent} from "@eaccounting/components"
 import {getHeaders, getBulk} from './constants';
+import {Dashicon} from "@wordpress/components"
 import Row from "./row";
 
 class Transfers extends Component {
@@ -11,6 +12,7 @@ class Transfers extends Component {
 		super(props);
 		this.renderRow = this.renderRow.bind(this);
 		this.renderTable = this.renderTable.bind(this);
+		this.emptyTable = this.emptyTable.bind(this);
 	}
 
 	renderRow(item, pos, isSelected, isLoading, search) {
@@ -71,11 +73,23 @@ class Transfers extends Component {
 		)
 	}
 
+	emptyTable(){
+		const {match} = this.props;
+		return(
+			<EmptyContent  icon={"info"} title={"Transfers"}>
+				<div className="ea-empty-content__subtitle">
+					<p>Transfers allow you to move money from one account to another, whether they use the same currency or not. Check out the documentation for more details.</p>
+				</div>
+				<Link to={`${match.path}/add`} className="ea-button button"><Dashicon icon="plus"/>{__('Add Transfer')}</Link>
+			</EmptyContent>
+		)
+	}
+
 	render() {
-		const {status, total} = this.props;
+		const {status, total, hasFilter} = this.props;
 		return (
 			<Fragment>
-				{this.renderTable()}
+				{!hasFilter && status === "STATUS_COMPLETE" && total === 0 ? this.emptyTable() : this.renderTable()}
 			</Fragment>
 		);
 	}

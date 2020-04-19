@@ -1,12 +1,13 @@
 .ea-empty-content {
 	overflow: hidden;
 	margin: 35px auto 0;
-	padding: 3rem;
+	padding: 3.5rem;
 	text-align: center;
+	max-width:1120px;
 
 	&__title {
 		color: #3c434a;
-		font-size: 32px;
+		font-size: 30px;
 		font-weight: 300;
 		margin: 0 0 10px 0;
 		line-height: 1;
@@ -20,7 +21,7 @@
 
 	&__subtitle {
 		color: #646970;
-		font-size: 18px;
+		font-size: 16px;
 		font-weight: 300;
 		margin: 0 0 20px 0;
 	}

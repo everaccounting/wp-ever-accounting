@@ -36,6 +36,7 @@ class EAccounting_Admin {
 		add_action( 'admin_init', array( $this, 'setup_files' ) );
 		add_action( 'admin_head', array($this,'hide_notices'), 1 );
 		add_action( 'admin_body_class', array( $this, 'add_body_class'));
+		add_action( 'admin_init', array( $this, 'plugin_upgrades' ) );
 	}
 
 	/**
@@ -53,6 +54,7 @@ class EAccounting_Admin {
 	 * Include any classes we need within admin.
 	 */
 	public function includes() {
+		require_once ( dirname( __FILE__ ). '/class-ea-updater.php');
 		require_once dirname( __FILE__ ) . '/admin-functions.php';
 		require_once dirname( __FILE__ ) . '/class-ea-menu-controller.php';
 		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
@@ -110,12 +112,12 @@ class EAccounting_Admin {
 				'parent' => 'eaccounting',
 				'path'   => '/reports',
 			),
-			array(
-				'id'     => 'eaccounting-example',
-				'title'  => __( 'Example', 'wp-ever-accounting' ),
-				'parent' => 'eaccounting',
-				'path'   => '/example',
-			),
+//			array(
+//				'id'     => 'eaccounting-example',
+//				'title'  => __( 'Example', 'wp-ever-accounting' ),
+//				'parent' => 'eaccounting',
+//				'path'   => '/example',
+//			),
 			array(
 				'id'     => 'eaccounting-settings',
 				'title'  => __( 'Settings', 'wp-ever-accounting' ),
@@ -179,6 +181,24 @@ class EAccounting_Admin {
 		}
 
 		return 'eaccounting';
+	}
+
+	/**
+	 * Do plugin upgrades
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 *
+	 */
+	public function plugin_upgrades() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$upgrader = new EAccounting_Updater();
+
+		if ( $upgrader->needs_update() ) {
+			$upgrader->perform_updates();
+		}
 	}
 
 

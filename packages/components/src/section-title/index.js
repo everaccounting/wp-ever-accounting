@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { Component } from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 export default class SectionTitle extends Component {
@@ -12,11 +12,12 @@ export default class SectionTitle extends Component {
 	};
 
 	render() {
-		const classes = classNames(this.props.className, 'ea-section-title');
+		const {title, className} = this.props;
+		const classes = classNames(className, 'ea-section-title');
 
 		return (
 			<div className={classes}>
-				<h1 className="ea-section-title__title">{this.props.title}</h1>
+				{title && <h1 className="ea-section-title__title">{title}</h1>}
 				{this.props.children && <div className="ea-section-title__children">{this.props.children}</div>}
 			</div>
 		);

@@ -56,7 +56,7 @@ class Defaults extends Component {
 										enableCreate={true}
 										required>
 										{props => (
-											<AccountSelect {...props.input} {...props}/>
+											<AccountSelect create={true} {...props.input} {...props}/>
 										)}
 									</Field>
 									<Field
@@ -66,7 +66,7 @@ class Defaults extends Component {
 										className="ea-col-6"
 										required>
 										{props => (
-											<CurrencySelect {...props.input} {...props}/>
+											<CurrencySelect create={true} {...props.input} {...props}/>
 										)}
 									</Field>
 									{/*<Field*/}

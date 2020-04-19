@@ -13,7 +13,7 @@ export default class Create extends Component {
 	render() {
 		const currencies = getGlobalCurrencies();
 		return (
-			<Modal title={__('New Category')} onClose={this.props.onClose}>
+			<Modal title={__('New Currency')} onClose={this.props.onClose}>
 				<Form
 					onSubmit={this.props.onSubmit}
 					initialValues={{}}
@@ -23,6 +23,7 @@ export default class Create extends Component {
 							<Field
 								label={__('Name', 'wp-ever-accounting')}
 								name="name"
+								className="ea-col-12"
 								required>
 								{props => (
 									<TextControl {...props.input} {...props}/>
@@ -32,6 +33,7 @@ export default class Create extends Component {
 							<Field
 								label={__('Code', 'wp-ever-accounting')}
 								name="code"
+								className="ea-col-12"
 								options={currencies}
 								required>
 								{props => (
@@ -42,6 +44,7 @@ export default class Create extends Component {
 							<Field
 								label={__('Rate', 'wp-ever-accounting')}
 								name="rate"
+								className="ea-col-12"
 								defaultValue={1}
 								parse={value => value.replace(/[^\d.]+/g, '')}
 								help={__('Rate against default currency. NOTE: Default currency rate is always 1')}

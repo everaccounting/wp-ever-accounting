@@ -141,17 +141,43 @@ function eaccounting_get_contact_revenue_total( $contact_id ) {
  * Makes internal API request for usages within PHP
  *
  * since 1.0.0
+ *
  * @param $endpoint
  * @param array $args
  * @param string $method
  *
  * @return array
  */
-function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET'  ){
+function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' ) {
 	$request = new WP_REST_Request( $method, $endpoint );
 	$request->set_query_params( $args );
 	$response = rest_do_request( $request );
 	$server   = rest_get_server();
 
 	return $server->response_to_data( $response, false );
+}
+
+/**
+ * @return int|mixed
+ * @since 1.0.2
+ */
+function eaccounting_get_creator_id() {
+
+	$user_id = get_current_user_id();
+	if ( empty( $user_id ) ) {
+		$user = get_user_by( 'email', get_option( 'admin_email' ) );
+		if ( $user && in_array( 'administrator', $user->roles ) ) {
+			$user_id = $user->ID;
+		}
+	}
+
+	if ( empty( $user_id ) ) {
+		$users   = get_users( [
+			'role'   => 'administrator',
+			'fields' => 'ID'
+		] );
+		$user_id = reset( $users );
+	}
+
+	return $user_id;
 }

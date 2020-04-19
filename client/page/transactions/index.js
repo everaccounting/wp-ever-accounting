@@ -8,8 +8,8 @@ import {
 	Table,
 	SelectControl,
 	AccountSelect,
-	AccountControl,
-	CategorySelect, CategoryControl, DateFilter
+	CategorySelect,
+	DateFilter
 } from "@eaccounting/components"
 import {map} from "lodash";
 import {getHeaders} from './constants';

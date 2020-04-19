@@ -6,7 +6,6 @@ import Sales from './page/sales';
 import Purchases from './page/purchases';
 import Banking from './page/banking';
 import Settings from './page/settings';
-import Example from "./page/example";
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
@@ -50,10 +49,6 @@ export const routes = [
 	{
 		container: Banking,
 		path: '/banking',
-	},
-	{
-		container: Example,
-		path: '/example',
 	},
 	{
 		container: Settings,

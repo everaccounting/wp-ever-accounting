@@ -20,6 +20,11 @@ export * from './defaults';
 export * from './formats';
 
 /**
+ * Date data.
+ */
+export * from './date';
+
+/**
  * Server Paths data.
  */
 export * from './paths';

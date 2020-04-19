@@ -15,7 +15,7 @@ import DatePicker from '../date-picker';
 import TextControl from '../text-control';
 import classnames from 'classnames';
 
-export default class DateRangeControl extends Component {
+export default class DateFilter extends Component {
 	static propTypes = {
 		date: PropTypes.string,
 		className: PropTypes.string,

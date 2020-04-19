@@ -81,7 +81,7 @@ class Accounts extends Component {
 				<div className="ea-empty-content__subtitle">
 					<p>Transfers allow you to move money from one account to another, whether they use the same currency or not. Check out the documentation for more details.</p>
 				</div>
-				<Link to={`${match.path}/add`} className="ea-button button button-hero button-large"><Dashicon icon="plus"/>{__('Add Account')}</Link>
+				<Link to={`${match.path}/add`} className="ea-button button"><Dashicon icon="plus"/>{__('Add Account')}</Link>
 			</EmptyContent>
 		)
 	}
