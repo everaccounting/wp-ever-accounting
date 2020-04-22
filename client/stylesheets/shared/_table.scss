@@ -6,7 +6,7 @@
 	border-spacing: 0;
 	border-collapse: collapse;
 	border: 1px solid #f4f4f4;
-	font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+	font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	thead {
 		tr {
 			th {
@@ -23,7 +23,12 @@
 	}
 
 
-	thead>tr>th, tbody>tr>th, tfoot>tr>th, thead>tr>td, tbody>tr>td, tfoot>tr>td {
+	thead > tr > th,
+	tbody > tr > th,
+	tfoot > tr > th,
+	thead > tr > td,
+	tbody > tr > td,
+	tfoot > tr > td {
 		border: 1px solid #f4f4f4;
 	}
 
@@ -31,20 +36,39 @@
 		vertical-align: middle;
 	}
 
-	tbody>tr>td, tbody>tr>th, tfoot>tr>td, tfoot>tr>th, thead>tr>td, thead>tr>th {
+	tbody > tr > td,
+	tbody > tr > th,
+	tfoot > tr > td,
+	tfoot > tr > th,
+	thead > tr > td,
+	thead > tr > th {
 		padding: 8px;
 		line-height: 1.42857143;
 	}
 
-	thead>tr>th, thead>tr>td {
+	thead > tr > th,
+	thead > tr > td {
 		border-bottom-width: 2px;
 	}
 
-	thead:first-child>tr:first-child>td, thead:first-child>tr:first-child>th {
+	thead:first-child > tr:first-child > td,
+	thead:first-child > tr:first-child > th {
 		border-top: 0;
 	}
 
-	.align-right{
+	.align-right {
 		text-align: right;
 	}
+}
+.ea-table-report{
+	display: block;
+	width: 100%;
+	-webkit-overflow-scrolling: touch;
+	overflow-x: visible !important;
+}
+
+.ea-report-graph {
+	padding-bottom: 30px;
+	margin-bottom: 43px;
+	border-bottom: 1px solid #eee;
 }

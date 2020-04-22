@@ -1,6 +1,12 @@
-import {REDUCER_KEY} from "./constants";
-import {getRouteFromResourceEntries} from "./utils";
-import {createRegistrySelector} from '@wordpress/data';
+/**
+ * Internal dependencies
+ */
+import { REDUCER_KEY } from './constants';
+import { getRouteFromResourceEntries } from './utils';
+/**
+ * WordPress dependencies
+ */
+import { createRegistrySelector } from '@wordpress/data';
 
 /**
  * returns route for the resource name & id is the url part of the request
@@ -15,9 +21,9 @@ import {createRegistrySelector} from '@wordpress/data';
  * @param state
  * @param resourceName
  * @param ids
- * @returns {string|*}
+ * @return {string|*}
  */
-export const getRoute = createRegistrySelector( select => (state, resourceName, ids = []) => {
+export const getRoute = createRegistrySelector(select => (state, resourceName, ids = []) => {
 	const hasResolved = select(REDUCER_KEY).hasFinishedResolution('getRoutes');
 	state = state.routes;
 	let error = '';
@@ -48,10 +54,9 @@ export const getRoute = createRegistrySelector( select => (state, resourceName, 
 	return route;
 });
 
-
-
 /**
  * Return all the routes in store.
+ *
  * @param state
  * @return {Array} An array of all routes.
  */

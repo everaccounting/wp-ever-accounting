@@ -1,11 +1,11 @@
-import {applyFilters} from '@wordpress/hooks';
+import { applyFilters } from '@wordpress/hooks';
 import Dashboard from './page/dashboard';
 import Transactions from './page/transactions';
-// import Items from './page/items';
 import Sales from './page/sales';
 import Purchases from './page/purchases';
 import Banking from './page/banking';
 import Settings from './page/settings';
+import Reports from "./page/reports";
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 
@@ -49,6 +49,14 @@ export const routes = [
 	{
 		container: Banking,
 		path: '/banking',
+	},
+	{
+		container: Reports,
+		path: '/reports/*',
+	},
+	{
+		container: Reports,
+		path: '/reports',
 	},
 	{
 		container: Settings,

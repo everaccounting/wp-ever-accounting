@@ -70,6 +70,35 @@ class EAccounting_Install {
 		    KEY `creator_id`(`creator_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transactions(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+            `type` VARCHAR(100) DEFAULT NULL,
+		  	`paid_at` datetime NOT NULL,
+		  	`amount` DOUBLE(15,4) NOT NULL,
+		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
+            `account_id` INT(11) NOT NULL,
+            `invoice_id` INT(11) DEFAULT NULL,
+		  	`contact_id` INT(11) DEFAULT NULL,
+		  	`category_id` INT(11) NOT NULL,
+		  	`description` text,
+	  		`payment_method` VARCHAR(100) DEFAULT NULL,
+		  	`reference` VARCHAR(191) DEFAULT NULL,
+			`file_id` INT(11) DEFAULT NULL,
+			`company_id` int(11) NOT NULL DEFAULT 1,
+		  	`parent_id` INT(11) NOT NULL DEFAULT '0',
+		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
+		    `creator_id` INT(11) DEFAULT NULL,
+		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `account_id` (`account_id`),
+		    KEY `amount` (`amount`),
+		    KEY `currency_code` (`currency_code`),
+		    KEY `type` (`type`),
+		    KEY `creator_id` (`creator_id`),
+		    KEY `contact_id` (`contact_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+
 //			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_items(
 //            `id` bigint(20) NOT NULL AUTO_INCREMENT,
 //			`name` VARCHAR(191) NOT NULL,
@@ -328,7 +357,7 @@ class EAccounting_Install {
 		update_option( 'eaccounting_version', EACCOUNTING_VERSION );
 		update_option( 'eaccounting_install_date', date( 'timestamp' ) );
 
-		if ( ! eaccounting_get_categories() ) {
+		if ( empty( eaccounting_get_categories() ) ) {
 			eaccounting_insert_category( [
 				'name' => __( 'Deposit', 'wp-ever-accounting' ),
 				'type' => 'income',
@@ -346,27 +375,37 @@ class EAccounting_Install {
 		}
 
 		//create transfer category
-		if ( ! eaccounting_get_category( 'Transfer', 'name' ) ) {
+		if ( empty( eaccounting_get_category( 'Transfer', 'name' ) ) ) {
 			eaccounting_insert_category( [
 				'name' => __( 'Transfer', 'wp-ever-accounting' ),
 				'type' => 'other',
 			] );
 		}
 
-		if ( ! eaccounting_get_accounts() ) {
-			eaccounting_insert_account( [
+		if ( empty( eaccounting_get_accounts() ) ) {
+			$account_id = eaccounting_insert_account( [
 				'name'            => __( 'Cash', 'wp-ever-accounting' ),
-				'number'          => '',
+				'number'          => '0001',
 				'opening_balance' => '0',
+				'currency_code'   => 'USD',
 			] );
+
+			if ( ! is_wp_error( $account_id ) ) {
+				eaccounting_set_option( 'default_account_id', $account_id );
+			}
 		}
 
-		if ( ! eaccounting_get_currencies() ) {
-			eaccounting_insert_currency( array(
+		if ( empty( eaccounting_get_currencies() ) ) {
+			$currency_id = eaccounting_insert_currency( array(
 				'name' => 'US Dollar',
 				'code' => 'USD',
 				'rate' => 1,
 			) );
+
+			if ( ! is_wp_error( $currency_id ) ) {
+				eaccounting_set_option( 'default_currency_id', $currency_id );
+			}
+
 			eaccounting_insert_currency( array(
 				'name' => 'British Pound',
 				'code' => 'GBP',

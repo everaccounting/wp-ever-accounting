@@ -12,8 +12,6 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		return current_user_can( 'manage_options' );
-
-		return true;
 	}
 
 	/**
@@ -24,8 +22,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @return bool|WP_Error
 	 */
 	public function get_item_permissions_check( $request ) {
-//		return current_user_can('manage_options');
-		return true;
+		return current_user_can( 'manage_options' );
 	}
 
 	/**
@@ -192,18 +189,23 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Helper method for calling internally
-	 *
-	 * since 1.0.0
-	 *
+	 * The method is used for retriving single object from rest request
+	 * @since 1.0.2
 	 * @param $endpoint
-	 * @param array $args
-	 * @param string $method
+	 * @param $id
+	 * @param null $default
+	 * @param string $base
 	 *
-	 * @return array
+	 * @return array|null
 	 */
-	protected static function internal_request( $endpoint, $args = array(), $method = 'GET' ) {
-		return eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' );
-	}
+	protected static function get_rest_object( $endpoint, $id, $default = null, $base = '/ea/v1/' ) {
+		if ( empty( $id ) ) {
+			return $default;
+		}
 
+		$endpoint = $base. untrailingslashit( ltrim( $endpoint, '/') ) . '/' . intval( $id );
+		$response = eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' );
+
+		return is_wp_error( $response ) ? $default : $response;
+	}
 }

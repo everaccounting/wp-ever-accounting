@@ -131,7 +131,6 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 
 
 		$prepared = $this->prepare_item_for_database( $request );
-		error_log( print_r( $prepared, true ) );
 		$item_id = eaccounting_insert_payment( (array) $prepared );
 		if ( is_wp_error( $item_id ) ) {
 			return $item_id;
@@ -245,20 +244,21 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
+
 		$data = array(
 			'id'             => $item->id,
-			'account'        => eaccounting_rest_request( "/ea/v1/accounts/{$item->account_id}" ),
+			'account'        => self::get_rest_object( 'accounts', $item->account_id),
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
 			'amount'         => eaccounting_format_price( $item->amount, $item->currency_code ),
 			'currency'       => eaccounting_get_currency( $item->currency_code, 'code' ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
 			'description'    => $item->description,
-			'contact'        => eaccounting_rest_request( "/ea/v1/contacts/{$item->contact_id}" ),
-			'category'       => eaccounting_rest_request( "/ea/v1/categories/{$item->category_id}" ),
+			'contact'        => self::get_rest_object( 'contacts', $item->contact_id ),
+			'category'       => self::get_rest_object( 'categories', $item->category_id),
 			'payment_method' => $item->payment_method,
 			'reference'      => $item->reference,
-			'file'           => $item->file_id ? eaccounting_rest_request( "/ea/v1/files/{$item->file_id}" ) : [],
+			'file'           => self::get_rest_object( 'files', $item->file_id),
 			'reconciled'     => intval( $item->reconciled ),
 			'created_at'     => $this->prepare_date_response( $item->created_at )
 		);
@@ -284,7 +284,7 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_database( $request ) {
 		$prepared_item = new stdClass();
 		$schema        = $this->get_item_schema();
-		error_log( print_r( $request->get_params(), true ) );
+
 		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
 			$prepared_item->id = $request['id'];
 		}
@@ -432,12 +432,12 @@ class EAccounting_Payments_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'file_id'       => array(
+				'file_id'        => array(
 					'description' => __( 'File id of the payment', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'edit' ),
 				),
-				'file'          => array(
+				'file'           => array(
 					'description' => __( 'File ids of the payment', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),

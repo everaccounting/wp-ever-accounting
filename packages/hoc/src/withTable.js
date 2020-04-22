@@ -1,26 +1,32 @@
 /**
  * WordPress dependencies
  */
-import {Component} from '@wordpress/element';
-import {createHigherOrderComponent, compose} from '@wordpress/compose';
-import {withDispatch, withSelect} from '@wordpress/data';
-import {__} from "@wordpress/i18n";
-import withTableNavigation from "./withTableNavigation";
-import {addQueryArgs} from "@wordpress/url"
+import { Component } from '@wordpress/element';
+import { createHigherOrderComponent, compose } from '@wordpress/compose';
+import { withDispatch, withSelect } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
+/**
+ * Internal dependencies
+ */
+import withTableNavigation from './withTableNavigation';
+import { addQueryArgs } from '@wordpress/url';
 import isShallowEqual from '@wordpress/is-shallow-equal';
-import {xor} from 'lodash';
-import qs from "querystring";
-import apiFetch from "@wordpress/api-fetch";
+/**
+ * External dependencies
+ */
+import { xor } from 'lodash';
+import qs from 'querystring';
+import apiFetch from '@wordpress/api-fetch';
 
 /**
  * A HOC for table
+ *
  * @param resourceName
  * @param initQuery
- * @returns {withTable}
+ * @return {withTable}
  */
 const withTable = (resourceName, initQuery = {}) => {
-	if (!resourceName)
-		throw 'No resourceName in child component';
+	if (!resourceName) throw 'No resourceName in child component';
 	return createHigherOrderComponent(WrappedComponent => {
 		class Hoc extends Component {
 			constructor(props) {
@@ -50,7 +56,6 @@ const withTable = (resourceName, initQuery = {}) => {
 				}
 			}
 
-
 			/**
 			 * This is a helper function for updating and creating entities
 			 * callback after() can be used do after ward processing
@@ -58,34 +63,42 @@ const withTable = (resourceName, initQuery = {}) => {
 			 * @param data
 			 * @param after
 			 * @param autoUpdateStore
-			 * @returns {Promise<void>}
+			 * @return {Promise<void>}
 			 */
-			async handleSubmit(data, after = (res) => {}, autoUpdateStore = true) {
-				await apiFetch({path: `ea/v1/${resourceName}`, method: 'POST', data}).then(res => {
-					after(res);
-					data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
-					data && !data.id && autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
-				}).catch(error => {
-					alert(error.message);
-				});
+			async handleSubmit(data, after = res => {}, autoUpdateStore = true) {
+				await apiFetch({ path: `ea/v1/${resourceName}`, method: 'POST', data })
+					.then(res => {
+						after(res);
+						data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
+						data &&
+							!data.id &&
+							autoUpdateStore &&
+							this.props.resetForSelectorAndResource('getCollection', resourceName);
+					})
+					.catch(error => {
+						alert(error.message);
+					});
 			}
 
 			/**
 			 * This handles delete of the table items
 			 * callback after() can be used do after ward processing
+			 *
 			 * @param id
 			 * @param after
 			 * @param autoUpdateStore
-			 * @returns {Promise<void>}
+			 * @return {Promise<void>}
 			 */
-			async handleDelete(id, after = (res) => {}, autoUpdateStore = true) {
-				if(true === confirm(__('Are you sure you want to delete this item?'))){
-					await apiFetch({path: `ea/v1/${resourceName}/${id}`, method: 'DELETE'}).then(res => {
-						after(res);
-						autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
-					}).catch(error => {
-						alert(error.message);
-					});
+			async handleDelete(id, after = res => {}, autoUpdateStore = true) {
+				if (confirm(__('Are you sure you want to delete this item?')) === true) {
+					await apiFetch({ path: `ea/v1/${resourceName}/${id}`, method: 'DELETE' })
+						.then(res => {
+							after(res);
+							autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
+						})
+						.catch(error => {
+							alert(error.message);
+						});
 				}
 			}
 
@@ -102,6 +115,7 @@ const withTable = (resourceName, initQuery = {}) => {
 
 			/**
 			 * Set all item toggle select
+			 *
 			 * @param onoff
 			 */
 			setAllSelected(onoff) {
@@ -110,41 +124,41 @@ const withTable = (resourceName, initQuery = {}) => {
 				});
 			}
 
-
 			render() {
-				return <WrappedComponent
-					{...this.props}
-					selected={this.state.selected}
-					total={this.state.total}
-					handleSubmit={this.handleSubmit}
-					handleDelete={this.handleDelete}/>;
+				return (
+					<WrappedComponent
+						{...this.props}
+						selected={this.state.selected}
+						total={this.state.total}
+						handleSubmit={this.handleSubmit}
+						handleDelete={this.handleDelete}
+					/>
+				);
 			}
-
 		}
 
 		return compose(
 			withTableNavigation(initQuery),
 			withSelect((select, ownProp) => {
-				const {getCollection, isRequestingGetCollection} = select('ea/collection');
-				const {queries = {}} = ownProp;
-				const {items = [], total = NaN} = getCollection(resourceName, queries);
+				const { getCollection, isRequestingGetCollection } = select('ea/collection');
+				const { queries = {} } = ownProp;
+				const { items = [], total = NaN } = getCollection(resourceName, queries);
 				return {
-					items: items,
-					total: total,
-					status: isRequestingGetCollection(resourceName, queries) === true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE",
-				}
+					items,
+					total,
+					status: isRequestingGetCollection(resourceName, queries) === true ? 'STATUS_IN_PROGRESS' : 'STATUS_COMPLETE',
+				};
 			}),
-			withDispatch((dispatch => {
-				const {replaceEntity, deleteEntityById, resetForSelectorAndResource} = dispatch('ea/collection');
+			withDispatch(dispatch => {
+				const { replaceEntity, deleteEntityById, resetForSelectorAndResource } = dispatch('ea/collection');
 				return {
 					replaceEntity,
 					deleteEntityById,
 					resetForSelectorAndResource,
-				}
-			}))
-		)(Hoc)
+				};
+			})
+		)(Hoc);
 	}, 'withTable');
 };
-
 
 export default withTable;

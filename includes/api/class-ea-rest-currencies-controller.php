@@ -261,13 +261,9 @@ class EAccounting_Currencies_Controller extends EAccounting_REST_Controller {
 			return new WP_Error( 'invalid_bulk_action', __( 'Invalid bulk action', 'wp-ever-accounting' ) );
 		}
 
-		error_log( print_r( $items, true ) );
-		error_log( print_r( $action, true ) );
-
 		switch ( $action ) {
 			case 'delete':
 				foreach ( $items as $item ) {
-					error_log( $item );
 					$error = eaccounting_delete_currency( $item );
 					if ( is_wp_error( $error ) ) {
 						return $error;

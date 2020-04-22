@@ -1,6 +1,9 @@
 /**
  * Internal imports
  */
+/**
+ * Internal dependencies
+ */
 import { ACTION_TYPES as types } from './action-types';
 
 /**
@@ -8,7 +11,7 @@ import { ACTION_TYPES as types } from './action-types';
  * of model routes.
  *
  * @param {Object} routes An array of routes to add to the store state.
- * @returns {{routes: *, type: string}}
+ * @return {{routes: *, type: string}}
  */
 export function receiveRoutes(routes) {
 	return {

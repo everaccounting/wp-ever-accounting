@@ -39,6 +39,7 @@ function eaccounting_insert_payment( $args ) {
 		'file_id'        => ! empty( $args['file_id'] ) ? intval( $args['file_id'] ) : '',
 		'parent_id'      => empty( $args['parent_id'] ) ? '' : absint( $args['parent_id'] ),
 		'reconciled'     => empty( $args['reconciled'] ) ? '' : absint( $args['reconciled'] ),
+		'creator_id'     => empty( $args['creator_id'] ) ? eaccounting_get_creator_id() : $args['creator_id'],
 		'created_at'     => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
@@ -299,16 +300,4 @@ function eaccounting_get_payments( $args = array(), $count = false ) {
 	}
 
 	return $wpdb->get_col( $request );
-}
-
-
-/**
- * Get total income
- * @return string|null
- * @since 1.0.0
- */
-function eaccounting_get_total_expense() {
-	global $wpdb;
-
-	return $wpdb->get_var( "SELECT SUM(amount) from $wpdb->ea_payments WHERE category_id IN (SELECT id FROM $wpdb->ea_categories WHERE type='expense')" );
 }

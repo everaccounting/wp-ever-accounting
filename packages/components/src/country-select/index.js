@@ -1,12 +1,15 @@
 /**
  * WordPress dependencies
  */
-import {Component, Fragment} from '@wordpress/element';
+import { Component, Fragment } from '@wordpress/element';
 /**
  * Internal dependencies
  */
 import SelectControl from '../select-control';
-import {COUNTRIES} from '@eaccounting/data';
+/**
+ * External dependencies
+ */
+import { COUNTRIES } from '@eaccounting/data';
 
 export default class CountrySelect extends Component {
 	constructor(props) {
@@ -21,5 +24,3 @@ export default class CountrySelect extends Component {
 		);
 	}
 }
-
-

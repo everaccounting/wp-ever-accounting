@@ -1,5 +1,8 @@
-import {pickBy, isNumber, isEmpty} from "lodash";
-import {PER_PAGE} from "@eaccounting/data";
+/**
+ * External dependencies
+ */
+import { pickBy, isNumber, isEmpty } from 'lodash';
+import { PER_PAGE } from '@eaccounting/data';
 
 const removeDefaultQueries = (query, defaults = {}) => {
 	if (query.order === defaults.order) {
@@ -17,13 +20,13 @@ const removeDefaultQueries = (query, defaults = {}) => {
 	return query;
 };
 
-
 /**
  * Selector for retrieving the query state for the give context
+ *
  * @param state
  * @param context
  * @param defaultQuery
- * @returns {*}
+ * @return {*}
  */
 export const getQuery = (state, context) => {
 	return typeof state[context] === 'undefined' ? {} : JSON.parse(state[context]);
@@ -55,7 +58,7 @@ export const getQueryByKey = (state, context, queryKey, defaultValue = {}) => {
  *
  * @param state
  * @param context
- * @returns {*}
+ * @return {*}
  */
 export const getPage = (state, context) => {
 	return getQueryByKey(state, context, 'page', 1);
@@ -65,7 +68,7 @@ export const getPage = (state, context) => {
  *
  * @param state
  * @param context
- * @returns {*}
+ * @return {*}
  */
 export const getSearch = (state, context) => {
 	return getQueryByKey(state, context, 'search', '');
@@ -75,7 +78,7 @@ export const getSearch = (state, context) => {
  *
  * @param state
  * @param context
- * @returns {*}
+ * @return {*}
  */
 export const getOrder = (state, context) => {
 	return getQueryByKey(state, context, 'order', '');
@@ -85,7 +88,7 @@ export const getOrder = (state, context) => {
  *
  * @param state
  * @param context
- * @returns {*}
+ * @return {*}
  */
 export const getOrderBy = (state, context) => {
 	return getQueryByKey(state, context, 'orderby', '');

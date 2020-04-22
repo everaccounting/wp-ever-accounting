@@ -2,15 +2,19 @@
  * External imports
  */
 
+/**
+ * WordPress dependencies
+ */
 import apiFetch from '@wordpress/api-fetch';
-import { select as selectData, dispatch as dispatchData, subscribe} from '@wordpress/data';
+import { select as selectData, dispatch as dispatchData, subscribe } from '@wordpress/data';
 
 /**
  * Returns the action object for a fetch control.
+ *
  * @param {Object} request
  * @return {{type: string, request: Object}} An action object
  */
-export function fetch( request ) {
+export function fetch(request) {
 	return {
 		type: 'FETCH_FROM_API',
 		request,
@@ -32,16 +36,16 @@ export const fetchFromAPIWithTotal = path => {
 	};
 };
 
-
 /**
  * Returns the action object for a select control.
+ *
  * @param {string} reducerKey
  * @param {string} selectorName
  * @param {*[]} args
  * @return {{type: string, reducerKey: string, selectorName: string, args: *[]}}
  * Returns an action object.
  */
-export function select( reducerKey, selectorName, ...args ) {
+export function select(reducerKey, selectorName, ...args) {
 	return {
 		type: 'SELECT',
 		reducerKey,
@@ -52,12 +56,13 @@ export function select( reducerKey, selectorName, ...args ) {
 
 /**
  * Returns the action object for resolving a selector that has a resolver.
+ *
  * @param {string} reducerKey
  * @param {string} selectorName
  * @param {Array} args
  * @return {Object} An action object.
  */
-export function resolveSelect( reducerKey, selectorName, ...args ) {
+export function resolveSelect(reducerKey, selectorName, ...args) {
 	return {
 		type: 'RESOLVE_SELECT',
 		reducerKey,
@@ -68,13 +73,14 @@ export function resolveSelect( reducerKey, selectorName, ...args ) {
 
 /**
  * Returns the action object for a dispatch control.
+ *
  * @param {string} reducerKey
  * @param {string} dispatchName
  * @param {*[]} args
  * @return {{type: string, reducerKey: string, dispatchName: string, args: *[]}}
  * An action object
  */
-export function dispatch( reducerKey, dispatchName, ...args ) {
+export function dispatch(reducerKey, dispatchName, ...args) {
 	return {
 		type: 'DISPATCH',
 		reducerKey,
@@ -91,7 +97,7 @@ export function dispatch( reducerKey, dispatchName, ...args ) {
  * @param {Array} args
  * @return {Object} The action object.
  */
-export function resolveDispatch( reducerKey, dispatchName, ...args ) {
+export function resolveDispatch(reducerKey, dispatchName, ...args) {
 	return {
 		type: 'RESOLVE_DISPATCH',
 		reducerKey,
@@ -101,17 +107,17 @@ export function resolveDispatch( reducerKey, dispatchName, ...args ) {
 }
 
 const controls = {
-	FETCH_FROM_API( { request } ) {
-		return apiFetch( request );
+	FETCH_FROM_API({ request }) {
+		return apiFetch(request);
 	},
-	SELECT( { reducerKey, selectorName, args } ) {
-		return selectData( reducerKey )[ selectorName ]( ...args );
+	SELECT({ reducerKey, selectorName, args }) {
+		return selectData(reducerKey)[selectorName](...args);
 	},
-	DISPATCH( { reducerKey, dispatchName, args } ) {
-		return dispatchData( reducerKey )[ dispatchName ]( ...args );
+	DISPATCH({ reducerKey, dispatchName, args }) {
+		return dispatchData(reducerKey)[dispatchName](...args);
 	},
-	async RESOLVE_DISPATCH( { reducerKey, dispatchName, args } ) {
-		return await dispatchData( reducerKey )[ dispatchName ]( ...args );
+	async RESOLVE_DISPATCH({ reducerKey, dispatchName, args }) {
+		return await dispatchData(reducerKey)[dispatchName](...args);
 	},
 	FETCH_FROM_API_WITH_TOTAL({ path }) {
 		return new Promise((resolve, reject) => {
@@ -126,27 +132,25 @@ const controls = {
 				});
 		});
 	},
-	RESOLVE_SELECT( { reducerKey, selectorName, args } ) {
-		return new Promise( ( resolve ) => {
-			const hasFinished = () => selectData( 'core/data' )
-				.hasFinishedResolution( reducerKey, selectorName, args );
-			const getResult = () => selectData( reducerKey )[ selectorName ]
-				.apply( null, args );
+	RESOLVE_SELECT({ reducerKey, selectorName, args }) {
+		return new Promise(resolve => {
+			const hasFinished = () => selectData('core/data').hasFinishedResolution(reducerKey, selectorName, args);
+			const getResult = () => selectData(reducerKey)[selectorName].apply(null, args);
 
 			// trigger the selector (to trigger the resolver)
 			const result = getResult();
-			if ( hasFinished() ) {
-				return resolve( result );
+			if (hasFinished()) {
+				return resolve(result);
 			}
 
-			const unsubscribe = subscribe( () => {
-				if ( hasFinished() ) {
+			const unsubscribe = subscribe(() => {
+				if (hasFinished()) {
 					unsubscribe();
-					resolve( getResult() );
+					resolve(getResult());
 				}
-			} );
-		} );
-	}
+			});
+		});
+	},
 };
 
 export default controls;

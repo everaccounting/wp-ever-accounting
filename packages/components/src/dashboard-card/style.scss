@@ -10,18 +10,23 @@
 		line-height: 1.4;
 		padding: 8px 10px !important;
 
-		&:after{
-			display:none;
+		&::after {
+			display: none;
 		}
 	}
 
-	&__title{
+	&__title {
 		font-weight: 600;
 		color: #23282d;
 	}
 
-	&__body{
+	&__body {
 		padding: 10px;
+		min-height: 230px;
+	}
+
+	.no-result{
+
 	}
 
 }

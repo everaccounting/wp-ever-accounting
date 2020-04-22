@@ -1,17 +1,10 @@
-import {Component, Fragment} from 'react';
-import {__, sprintf} from '@wordpress/i18n';
-import {withEntity} from "@eaccounting/hoc";
-import {
-	FormCard,
-	SelectControl,
-	TextControl,
-	BackButton,
-	Button,
-
-} from "@eaccounting/components";
-import {Form, Field} from "react-final-form";
-import {NotificationManager} from "react-notifications";
-import {CATEGORY_TYPES} from "@eaccounting/data";
+import { Component, Fragment } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
+import { withEntity } from '@eaccounting/hoc';
+import { FormCard, SelectControl, TextControl, BackButton, Button } from '@eaccounting/components';
+import { Form, Field } from 'react-final-form';
+import { NotificationManager } from 'react-notifications';
+import { CATEGORY_TYPES } from '@eaccounting/data';
 
 class EditCategory extends Component {
 	constructor(props) {
@@ -20,33 +13,26 @@ class EditCategory extends Component {
 	}
 
 	onSubmit(form) {
-		const {history, isAdd} = this.props;
-		this.props.handleSubmit(form, function (res) {
+		const { history, isAdd } = this.props;
+		this.props.handleSubmit(form, function(res) {
 			NotificationManager.success(sprintf(__('"%s" category %s.'), res.name, isAdd ? __('created') : __('updated')));
-			history.push('/settings/categories')
+			history.push('/settings/categories');
 		});
 	}
 
 	render() {
-		const {isAdd, item} = this.props;
+		const { isAdd, item } = this.props;
 		return (
 			<Fragment>
 				<FormCard title={isAdd ? __('Add Category') : __('Update Category')}>
 					<Form
 						onSubmit={this.onSubmit}
 						initialValues={item}
-						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
+						render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
 							<form onSubmit={handleSubmit}>
-
 								<div className="ea-row">
-									<Field
-										label={__('Name', 'wp-ever-accounting')}
-										name="name"
-										className="ea-col-6"
-										required>
-										{props => (
-											<TextControl {...props.input} {...props}/>
-										)}
+									<Field label={__('Name', 'wp-ever-accounting')} name="name" className="ea-col-6" required>
+										{props => <TextControl {...props.input} {...props} />}
 									</Field>
 
 									<Field
@@ -54,24 +40,20 @@ class EditCategory extends Component {
 										name="type"
 										className="ea-col-6"
 										options={CATEGORY_TYPES}
-										required>
-										{props => (
-											<SelectControl {...props.input} {...props}/>
-										)}
+										required
+									>
+										{props => <SelectControl {...props.input} {...props} />}
 									</Field>
-
 								</div>
 
-								<Button
-									isPrimary
-									disabled={submitting || pristine}
-									type="submit">{__('Submit')}
+								<Button isPrimary disabled={submitting || pristine} type="submit">
+									{__('Submit')}
 								</Button>
 
 								<BackButton>{__('Cancel')}</BackButton>
-
 							</form>
-						)}/>
+						)}
+					/>
 				</FormCard>
 			</Fragment>
 		);

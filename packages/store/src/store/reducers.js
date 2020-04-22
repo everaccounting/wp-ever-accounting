@@ -1,6 +1,15 @@
-import {ACTION_TYPES as types} from "./action-types";
-import {combineReducers} from '@wordpress/data';
-import {xor} from 'lodash';
+/**
+ * Internal dependencies
+ */
+import { ACTION_TYPES as types } from './action-types';
+/**
+ * WordPress dependencies
+ */
+import { combineReducers } from '@wordpress/data';
+/**
+ * External dependencies
+ */
+import { xor } from 'lodash';
 
 const DEFAULT_TABLE_STATE = {
 	rows: [],
@@ -14,28 +23,28 @@ const DEFAULT_TABLE_STATE = {
  *
  * @param state
  * @param action
- * @returns {{total: number, rows: [], selected: [], status: *}|{total: number, rows: [], selected: [], status: string}|{total: *, rows: *, selected: [], status: string}|{total: number, rows: [], selected: [], status: *}}
+ * @return {{total: number, rows: [], selected: [], status: *}|{total: number, rows: [], selected: [], status: string}|{total: *, rows: *, selected: [], status: string}|{total: number, rows: [], selected: [], status: *}}
  */
 export const receiveTable = (state = DEFAULT_TABLE_STATE, action) => {
-	const {type, payload} = action;
+	const { type, payload } = action;
 	switch (type) {
 		case types.TABLE_LOADING:
-			return {...state, status: "STATUS_IN_PROGRESS"};
+			return { ...state, status: 'STATUS_IN_PROGRESS' };
 		case types.TABLE_FAILED:
-			return {...state, status: "STATUS_FAILED"};
+			return { ...state, status: 'STATUS_FAILED' };
 		case types.TABLE_LOADED:
 			return {
 				...state,
 				rows: payload.rows,
 				total: !isNaN(payload.total) ? payload.total : state.total,
-				status: "STATUS_COMPLETE"
+				status: 'STATUS_COMPLETE',
 			};
 		case types.TABLE_RESET:
-			return {...state, ...DEFAULT_TABLE_STATE};
+			return { ...state, ...DEFAULT_TABLE_STATE };
 		case types.TABLE_ITEM_SELECTED:
-			return {...state, selected: xor(state.selected, [payload.id])};
+			return { ...state, selected: xor(state.selected, [payload.id]) };
 		case types.TABLE_ALL_SELECTED:
-			return {...state, selected: payload.onoff ? state.rows.map(item => item.id) : []};
+			return { ...state, selected: payload.onoff ? state.rows.map(item => item.id) : [] };
 		default:
 			return state;
 	}
@@ -45,7 +54,7 @@ export const receiveTable = (state = DEFAULT_TABLE_STATE, action) => {
  *
  * @param state
  * @param action
- * @returns {{}}
+ * @return {{}}
  */
 export const receiveSettings = (state = {}, action) => {
 	return state;
@@ -55,18 +64,17 @@ export const receiveSettings = (state = {}, action) => {
  *
  * @param state
  * @param action
- * @returns {{}}
+ * @return {{}}
  */
 export const receiveEntities = (state = {}, action) => {
 	return state;
 };
 
-
 /**
  *
  * @param state
  * @param action
- * @returns {{}}
+ * @return {{}}
  */
 export const receiveCollection = (state = {}, action) => {
 	return state;
@@ -76,18 +84,17 @@ export const receiveCollection = (state = {}, action) => {
  *
  * @param state
  * @param action
- * @returns {{}}
+ * @return {{}}
  */
 export const receiveForm = (state = {}, action) => {
 	return state;
 };
 
-
 /**
  *
  * @param state
  * @param action
- * @returns {{}}
+ * @return {{}}
  */
 
 const DEFAULT_QUERY_STATE = {
@@ -98,19 +105,18 @@ const DEFAULT_QUERY_STATE = {
 };
 
 export const receiveQuery = (state = DEFAULT_QUERY_STATE, action) => {
-	const {type, payload} = action;
+	const { type, payload } = action;
 	switch (type) {
 		case types.SET_QUERY:
-			return {...state, ...payload.query};
+			return { ...state, ...payload.query };
 		case types.SET_QUERIES:
-			return {...state, ...payload.queries};
+			return { ...state, ...payload.queries };
 		case types.RESET_QUERIES:
-			return {...state, ...DEFAULT_QUERY_STATE};
+			return { ...state, ...DEFAULT_QUERY_STATE };
 		default:
 			return state;
 	}
 };
-
 
 export default combineReducers({
 	table: receiveTable,

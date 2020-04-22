@@ -1,4 +1,7 @@
-import {ACTION_TYPES as types} from "./action-types";
+/**
+ * Internal dependencies
+ */
+import { ACTION_TYPES as types } from './action-types';
 
 /**
  * Action creator for setting a single query-state value for a given context.
@@ -99,10 +102,9 @@ export const setFilter = (context, filter, query = {}) => {
 	return {
 		type: types.SET_CONTEXT_QUERY,
 		context,
-		value: Object.assign({}, {...query, page: 1}, filter),
+		value: Object.assign({}, { ...query, page: 1 }, filter),
 	};
 };
-
 
 /**
  * Action creator for setting query-state for a given context.
@@ -122,12 +124,13 @@ export const setContextQuery = (context, value) => {
 
 /**
  * Action creator for resetting query-state for a given context.
+ *
  * @param context Context for query state being stored.
- * @returns {{context: *, type: string}}
+ * @return {{context: *, type: string}}
  */
-export const resetQuery = (context) => {
+export const resetQuery = context => {
 	return {
 		type: types.RESET_CONTEXT_QUERY,
-		context
+		context,
 	};
 };

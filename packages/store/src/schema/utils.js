@@ -1,4 +1,3 @@
-
 /**
  * This replaces regex placeholders in routes with the relevant named string
  * found in the matchIds.
@@ -25,7 +24,6 @@ export const simplifyRouteWithId = (route, matchIds) => {
 	return route;
 };
 
-
 /**
  * Returns an array of the identifier for the named capture groups in a given
  * route.
@@ -48,12 +46,11 @@ export const getRouteIds = route => {
 	return matches.map(match => match.replace(/<|>/g, ''));
 };
 
-
 /**
  *
  * @param stateSlice
  * @param ids
- * @returns {string|any}
+ * @return {string|any}
  */
 export const getRouteFromResourceEntries = (stateSlice, ids = []) => {
 	// convert to array for easier discovery
@@ -71,10 +68,11 @@ export const getRouteFromResourceEntries = (stateSlice, ids = []) => {
 
 /**
  * For a given route, route parts and ids
+ *
  * @param {string} route
  * @param {Array}  routePlaceholders
  * @param {Array}  ids
- * @returns {string} Assembled route.
+ * @return {string} Assembled route.
  */
 const assembleRouteWithPlaceholders = (route, routePlaceholders, ids) => {
 	routePlaceholders.forEach((part, index) => {

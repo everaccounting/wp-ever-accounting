@@ -1,11 +1,17 @@
 /**
  * Internal imports
  */
-import {combineReducers} from '@wordpress/data';
-import {ACTION_TYPES as types} from './action-types';
-import {API_NAMESPACE} from "./constants";
-import {getRouteIds, simplifyRouteWithId} from "./utils";
-import {hasInState, updateState} from "../utils";
+/**
+ * WordPress dependencies
+ */
+import { combineReducers } from '@wordpress/data';
+/**
+ * Internal dependencies
+ */
+import { ACTION_TYPES as types } from './action-types';
+import { API_NAMESPACE } from './constants';
+import { getRouteIds, simplifyRouteWithId } from './utils';
+import { hasInState, updateState } from '../utils';
 
 /**
  * Reducer for processing actions related to the routes store.
@@ -14,7 +20,7 @@ import {hasInState, updateState} from "../utils";
  * @param {Object} action Action being processed.
  */
 export const receiveRoutes = (state = {}, action) => {
-	const {type, routes} = action;
+	const { type, routes } = action;
 	switch (type) {
 		case types.RECEIVE_ROUTES:
 			routes.forEach(route => {
@@ -32,7 +38,6 @@ export const receiveRoutes = (state = {}, action) => {
 			return state;
 	}
 };
-
 
 /**
  * Be aware that the root state is a plain object but each slice ('schema',

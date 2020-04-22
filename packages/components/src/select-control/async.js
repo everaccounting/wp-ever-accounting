@@ -1,18 +1,21 @@
 /**
  * External dependencies
  */
-import {Component, Fragment} from '@wordpress/element';
+/**
+ * WordPress dependencies
+ */
+import { Component, Fragment } from '@wordpress/element';
 import Async from 'react-select/async';
 import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import {BaseControl, Dashicon} from '@wordpress/components';
+import { BaseControl, Dashicon } from '@wordpress/components';
 import classnames from 'classnames';
-import {__} from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 import isShallowEqual from '@wordpress/is-shallow-equal';
-import cuid from "cuid";
-import {components} from "react-select";
+import cuid from 'cuid';
+import { components } from 'react-select';
 
 export default class AsyncSelect extends Component {
 	static propTypes = {
@@ -39,8 +42,7 @@ export default class AsyncSelect extends Component {
 	};
 
 	static defaultProps = {
-		onChange: options => {
-		},
+		onChange: options => {},
 		addText: __('Add New'),
 		addIcon: 'plus',
 	};
@@ -50,11 +52,10 @@ export default class AsyncSelect extends Component {
 		this.state = {
 			value: [],
 		};
-
 	}
 
 	shouldComponentUpdate(nextProps, nextState, nextContext) {
-		return !isShallowEqual(nextProps, this.props)
+		return !isShallowEqual(nextProps, this.props);
 	}
 
 	onInputChange = value => {
@@ -62,11 +63,25 @@ export default class AsyncSelect extends Component {
 	};
 
 	onClick = () => {
-		this.props.onFooterClick && this.props.onFooterClick()
+		this.props.onFooterClick && this.props.onFooterClick();
 	};
 
 	render() {
-		const {label, help, className, before, after, required, loadOptions, footer, addText, addIcon, disabledOption = {}, innerRef, ...props} = this.props;
+		const {
+			label,
+			help,
+			className,
+			before,
+			after,
+			required,
+			loadOptions,
+			footer,
+			addText,
+			addIcon,
+			disabledOption = {},
+			innerRef,
+			...props
+		} = this.props;
 		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
 			required: !!required,
 		});
@@ -74,19 +89,18 @@ export default class AsyncSelect extends Component {
 		const MenuList = props => {
 			return (
 				<Fragment>
-					<components.MenuList {...props}>
-						{props.children}
-					</components.MenuList>
-					{footer && this.props.onFooterClick &&
-					<div className="ea-react-select__footer ea-react-select__option" onClick={this.onClick}>
-						<Dashicon icon={addIcon} size={20}/> <span>{addText}</span>
-					</div>}
+					<components.MenuList {...props}>{props.children}</components.MenuList>
+					{footer && this.props.onFooterClick && (
+						<div className="ea-react-select__footer ea-react-select__option" onClick={this.onClick}>
+							<Dashicon icon={addIcon} size={20} /> <span>{addText}</span>
+						</div>
+					)}
 				</Fragment>
 			);
 		};
 
 		const Option = props => {
-			const {data, getStyles, innerRef, innerProps} = props;
+			const { data, getStyles, innerRef, innerProps } = props;
 			return null;
 		};
 
@@ -100,9 +114,11 @@ export default class AsyncSelect extends Component {
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
 						id={id}
-						components={{MenuList}}
+						components={{ MenuList }}
 						ref={this.props.innerRef}
-						isOptionDisabled={(option) => option && option.id && disabledOption && disabledOption.id && option.id === disabledOption.id}
+						isOptionDisabled={option =>
+							option && option.id && disabledOption && disabledOption.id && option.id === disabledOption.id
+						}
 						loadOptions={loadOptions}
 						{...props}
 					/>

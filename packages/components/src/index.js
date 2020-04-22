@@ -24,7 +24,7 @@ export {default as Table} from './table';
 export {default as BulkAction} from './table/bulk-action';
 export {default as TableNav} from './table/table-nav';
 export {default as RowActions} from './table/row-actions';
-
+export {default as Form} from './form';
 
 export {default as SearchBox} from './table/searchbox';
 //selectors
@@ -33,6 +33,5 @@ export {default as AccountSelect} from './account-select';
 export {default as CountrySelect} from './country-select';
 export {default as CategorySelect} from './category-select';
 export {default as ContactSelect} from './contact-select';
-
 
 export {default as PaymentMethodSelect} from './payment-method-select';

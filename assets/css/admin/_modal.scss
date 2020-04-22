@@ -1,72 +1,72 @@
 
 /* Thickbox for the Plugin details modal. */
 #TB_window.eaccounting-modal {
-  background: #fcfcfc;
+	background: #fcfcfc;
 }
 
-#TB_window.eaccounting-modal.thickbox-loading:before {
-  content: "";
-  display: block;
-  width: 20px;
-  height: 20px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  z-index: -1;
-  margin: -10px 0 0 -10px;
-  background: #fcfcfc url(../images/spinner.gif) no-repeat center;
-  background-size: 20px 20px;
-  transform: translateZ(0);
+#TB_window.eaccounting-modal.thickbox-loading::before {
+	content: "";
+	display: block;
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	z-index: -1;
+	margin: -10px 0 0 -10px;
+	background: #fcfcfc url(../images/spinner.gif) no-repeat center;
+	background-size: 20px 20px;
+	transform: translateZ(0);
 }
 
 @media print,
-(-webkit-min-device-pixel-ratio: 1.25),
+	(-webkit-min-device-pixel-ratio: 1.25),
 (min-resolution: 120dpi) {
 
-  #TB_window.eaccounting-modal.thickbox-loading:before {
-	background-image: url(../images/spinner-2x.gif);
-  }
+	#TB_window.eaccounting-modal.thickbox-loading::before {
+		background-image: url(../images/spinner-2x.gif);
+	}
 }
 
 .eaccounting-modal #TB_title {
-  float: left;
-  height: 1px;
+	float: left;
+	height: 1px;
 }
 
 .eaccounting-modal #TB_ajaxWindowTitle {
-  display: none;
+	display: none;
 }
 
 .eaccounting-modal #TB_closeWindowButton {
-  left: auto;
-  right: -30px;
-  color: #eee;
+	left: auto;
+	right: -30px;
+	color: #eee;
 }
 
 .eaccounting-modal #TB_closeWindowButton:hover,
 .eaccounting-modal #TB_closeWindowButton:focus {
-  color: #00a0d2;
-  outline: none;
-  box-shadow: none;
+	color: #00a0d2;
+	outline: none;
+	box-shadow: none;
 }
 
 .eaccounting-modal .tb-close-icon {
-  display: none;
+	display: none;
 }
 
-.eaccounting-modal #TB_closeWindowButton:after {
-  content: "\f335";
-  font: normal 32px/29px 'dashicons';
-  speak: none;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.eaccounting-modal #TB_closeWindowButton::after {
+	content: "\f335";
+	font: normal 32px/29px "dashicons";
+	speak: none;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 
 /* move plugin install close icon to top on narrow screens */
 @media screen and (max-width: 830px) {
-  .eaccounting-modal #TB_closeWindowButton {
-	right: 0;
-	top: -30px;
-  }
+	.eaccounting-modal #TB_closeWindowButton {
+		right: 0;
+		top: -30px;
+	}
 }

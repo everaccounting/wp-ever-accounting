@@ -1,5 +1,5 @@
 import { Component, Fragment } from 'react';
-import {__} from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 export default class TaxRates extends Component {
 	constructor(props) {
 		super(props);

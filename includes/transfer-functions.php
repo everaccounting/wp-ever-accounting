@@ -137,7 +137,7 @@ function eaccounting_insert_transfer( $args ) {
 		'payment_id' => $payment_id,
 		'revenue_id' => $revenue_id,
 		'created_at' => $data['created_at'],
-		'updated_at' => $data['updated_at'],
+
 	) );
 
 	if ( $update ) {
@@ -181,8 +181,7 @@ function eaccounting_get_transfer( $id ) {
 		       p.payment_method payment_method,
 		       p.reference reference,
 		       r.id revenue_id,
-		       t.created_at,
-		       t.updated_at
+		       t.created_at
 		FROM   {$wpdb->ea_transfers} t
 		       LEFT JOIN {$wpdb->ea_payments} p
 		              ON p.id = t.payment_id
@@ -261,8 +260,7 @@ function eaccounting_get_transfers( $args = array(), $count = false ) {
 			       p.payment_method payment_method,
 			       p.reference reference,
 			       r.id revenue_id,
-			       t.created_at,
-			       t.updated_at";
+			       t.created_at";
 
 	$query_join = " LEFT JOIN {$wpdb->ea_payments} p ON p.id = t.payment_id ";
 	$query_join .= " LEFT JOIN {$wpdb->ea_revenues} r ON r.id = t.revenue_id ";

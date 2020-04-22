@@ -1,5 +1,8 @@
+/**
+ * External dependencies
+ */
 import classNames from 'classnames';
-import {Component} from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class SectionTitle extends Component {
@@ -12,7 +15,7 @@ export default class SectionTitle extends Component {
 	};
 
 	render() {
-		const {title, className} = this.props;
+		const { title, className } = this.props;
 		const classes = classNames(className, 'ea-section-title');
 
 		return (

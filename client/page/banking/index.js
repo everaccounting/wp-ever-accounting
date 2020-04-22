@@ -1,9 +1,9 @@
-import {Component, Fragment} from 'react';
-import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
-import {applyFilters} from "@wordpress/hooks"
-import Tabs from "components/tabs";
-import "./accounts";
-import "./transfers";
+import { Component, Fragment } from 'react';
+import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { applyFilters } from '@wordpress/hooks';
+import Tabs from 'components/tabs';
+import './accounts';
+import './transfers';
 
 const tabs = applyFilters('EA_BANKING_PAGES', []);
 
@@ -15,16 +15,13 @@ export default class Banking extends Component {
 	render() {
 		return (
 			<Fragment>
-				<Tabs tabs={tabs}/>
+				<Tabs tabs={tabs} />
 				<Router>
 					<Switch>
 						{tabs.map(tab => {
-							return (
-								<Route key={tab.path} path={tab.path} exact
-									   render={props => <tab.component  {...props}/>}/>
-							);
+							return <Route key={tab.path} path={tab.path} exact render={props => <tab.component {...props} />} />;
 						})}
-						<Redirect from="/banking" to="/banking/accounts"/>
+						<Redirect from="/banking" to="/banking/accounts" />
 					</Switch>
 				</Router>
 			</Fragment>

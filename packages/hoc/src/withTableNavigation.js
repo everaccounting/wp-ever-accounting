@@ -1,14 +1,17 @@
 /**
  * WordPress dependencies
  */
-import {Component} from '@wordpress/element';
-import {createHigherOrderComponent, compose} from '@wordpress/compose';
-import {withDispatch, withSelect} from '@wordpress/data';
-import {PER_PAGE} from "@eaccounting/data";
-import {addQueryArgs} from "@wordpress/url"
+import { Component } from '@wordpress/element';
+import { createHigherOrderComponent, compose } from '@wordpress/compose';
+import { withDispatch, withSelect } from '@wordpress/data';
+/**
+ * External dependencies
+ */
+import { PER_PAGE } from '@eaccounting/data';
+import { addQueryArgs } from '@wordpress/url';
 import isShallowEqual from '@wordpress/is-shallow-equal';
-import qs from "querystring";
-import {forOwn, clone, pickBy, isNumber, isEmpty} from "lodash";
+import qs from 'querystring';
+import { forOwn, clone, pickBy, isNumber, isEmpty } from 'lodash';
 
 const defaultQueries = {
 	per_page: 20,
@@ -17,10 +20,10 @@ const defaultQueries = {
 	order: 'desc',
 };
 
-const parseNumber = (obj) => {
+const parseNumber = obj => {
 	const prepared = {};
 	forOwn(obj, (value, key) => {
-		prepared[key] = !isNaN(value) && '' !== value ? parseInt(value, 10) : value;
+		prepared[key] = !isNaN(value) && value !== '' ? parseInt(value, 10) : value;
 	});
 	return prepared;
 };
@@ -37,7 +40,7 @@ const withTableNavigation = (initQuery = {}) => {
 				const urlArgs = qs.parse(props.history.location.search.substring(1));
 				const pageArgs = parseNumber(Object.assign({}, defaultQueries, initQuery, urlArgs));
 				this.state = {
-					...pageArgs
+					...pageArgs,
 				};
 
 				this.getPageQueries = this.getPageQueries.bind(this);
@@ -53,11 +56,11 @@ const withTableNavigation = (initQuery = {}) => {
 			}
 
 			shouldComponentUpdate(nextProps, nextState, nextContext) {
-				return !isShallowEqual(nextState, this.state)
+				return !isShallowEqual(nextState, this.state);
 			}
 
 			componentDidUpdate() {
-				const {history, location} = this.props;
+				const { history, location } = this.props;
 				history.push(decodeURIComponent(addQueryArgs(location.pathname, this.getPageQueries())));
 			}
 
@@ -73,74 +76,68 @@ const withTableNavigation = (initQuery = {}) => {
 			}
 
 			setSearch(search) {
-				this.setState({...this.state, search})
+				this.setState({ ...this.state, search });
 			}
 
 			setPage(page) {
-				this.setState({...this.state, page})
+				this.setState({ ...this.state, page });
 			}
 
 			setOrderBy(orderby, order) {
-				this.setState({...this.state, orderby, order})
+				this.setState({ ...this.state, orderby, order });
 			}
 
-			setSelected(id) {
+			setSelected(id) {}
 
-			}
-
-			setAllSelected(onoff) {
-
-			}
+			setAllSelected(onoff) {}
 
 			setFilter(filter) {
-				this.setState({...{...this.state, page: 1}, ...filter});
+				this.setState({ ...{ ...this.state, page: 1 }, ...filter });
 			}
 
-			hasFilter(){
-				const {page, per_page, order, orderby, ...filter} = this.getPageQueries();
-				return !isEmpty({...filter});
+			hasFilter() {
+				const { page, per_page, order, orderby, ...filter } = this.getPageQueries();
+				return !isEmpty({ ...filter });
 			}
 
-			resetFilter(){
+			resetFilter() {
 				forOwn(this.state, (value, key) => {
-					if(['page', 'per_page', 'order', 'orderby'].indexOf(key) === -1){
-						delete this.state.key
+					if (['page', 'per_page', 'order', 'orderby'].indexOf(key) === -1) {
+						delete this.state.key;
 					}
 				});
 
 				// console.log(this.state);
 			}
 
-			setDelete(id) {
-
-			}
-
+			setDelete(id) {}
 
 			render() {
 				const query = this.getPageQueries(false);
-				const {per_page, page, orderby, order} = this.state;
-				return <WrappedComponent
-					{...this.props}
-					queries={this.getPageQueries()}
-					per_page={per_page}
-					page={page}
-					orderby={orderby}
-					order={order}
-					resetFilter={this.resetFilter}
-					onSearch={this.setSearch}
-					onPageChange={this.setPage}
-					onOrderBy={this.setOrderBy}
-					onSelected={this.setSelected}
-					onAllSelected={this.setAllSelected}
-					onFilter={this.setFilter}
-					onDelete={this.setDelete}/>;
+				const { per_page, page, orderby, order } = this.state;
+				return (
+					<WrappedComponent
+						{...this.props}
+						queries={this.getPageQueries()}
+						per_page={per_page}
+						page={page}
+						orderby={orderby}
+						order={order}
+						resetFilter={this.resetFilter}
+						onSearch={this.setSearch}
+						onPageChange={this.setPage}
+						onOrderBy={this.setOrderBy}
+						onSelected={this.setSelected}
+						onAllSelected={this.setAllSelected}
+						onFilter={this.setFilter}
+						onDelete={this.setDelete}
+					/>
+				);
 			}
-
 		}
 
 		return Hoc;
 	}, 'withTableNavigation');
 };
-
 
 export default withTableNavigation;

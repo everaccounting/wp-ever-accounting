@@ -2,7 +2,7 @@ const path = require('path');
 const chalk = require('chalk');
 const webpack = require('webpack');
 const pkg = require('./package.json');
-const {get} = require('lodash');
+const { get } = require('lodash');
 const TerserPlugin = require('terser-webpack-plugin');
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -20,13 +20,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const externals = [];
 
-const packages = [
-	'components',
-	'data',
-	'hoc',
-	'store',
-	'helpers',
-];
+const packages = ['components', 'data', 'hoc', 'store', 'helpers'];
 const entryPoints = {};
 packages.forEach(name => {
 	externals[`@eaccounting/${name}`] = {
@@ -40,7 +34,7 @@ module.exports = {
 	devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
 	entry: {
 		client: './client',
-		...entryPoints
+		...entryPoints,
 	},
 	output: {
 		filename: './assets/dist/[name].js',
@@ -134,14 +128,12 @@ module.exports = {
 	},
 	plugins: [
 		new ProgressBarPlugin({
-			format: chalk.blue('Build core script') +
-				' [:bar] ' + chalk.green(':percent') +
-				' :msg (:elapsed seconds)',
+			format: chalk.blue('Build core script') + ' [:bar] ' + chalk.green(':percent') + ' :msg (:elapsed seconds)',
 		}),
-		new DependencyExtractionWebpackPlugin({injectPolyfill: true}),
+		new DependencyExtractionWebpackPlugin({ injectPolyfill: true }),
 		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
 		new webpack.DefinePlugin({
-			'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development')},
+			'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development') },
 			EACCOUNTING_VERSION: "'" + pkg.version + "'",
 		}),
 		new FixStyleOnlyEntriesPlugin(),
@@ -181,7 +173,7 @@ module.exports = {
 				flatten: true,
 				transform: content => content,
 			}))
-		)
+		),
 	],
 	stats: {
 		all: false,
@@ -198,5 +190,5 @@ module.exports = {
 	performance: {
 		hints: false,
 	},
-	watch: true
+	watch: true,
 };

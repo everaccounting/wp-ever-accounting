@@ -47,28 +47,28 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 	 *
 	 */
 	public function get_items( $request ) {
-		$section = isset( $request['section'] ) ? $request['section'] : null;
-		$options = $this->get_registered_options( $section );
+		$section  = isset( $request['section'] ) ? $request['section'] : null;
+		$options  = $this->get_registered_options( $section );
 		$response = array();
 
 		foreach ( $options as $name => $args ) {
 
 			switch ( $name ) {
 				case 'default_account_id':
-					$default_account_id          = eaccounting_get_option( 'default_account_id' );
-					$response['default_account'] = empty( $default_account_id ) ? [] : eaccounting_rest_request( '/ea/v1/accounts/'.$default_account_id );
+					$account  =  eaccounting_get_default_account();
+					$response['default_account'] = empty( $account ) ? [] : self::get_rest_object( 'accounts', $account->id );
 					break;
 				case 'default_currency_id':
-					$default_currency_id        = eaccounting_get_option( 'default_currency_id' );
-					$response['default_currency'] = empty( $default_currency_id ) ? [] : eaccounting_rest_request( '/ea/v1/currencies/'.$default_currency_id );
+					$currency  =  eaccounting_get_default_currency();
+					$response['default_currency'] = empty( $currency ) ? [] : self::get_rest_object( 'currencies', $currency->id );
 					break;
 				case 'logo_id':
-					$logo_id  = (int) eaccounting_get_option( 'logo_id' );
-					$response['logo'] = empty( $logo_id ) ? [] : eaccounting_rest_request( "/ea/v1/files/".$logo_id );
+					$logo_id          = (int) eaccounting_get_option( 'logo_id' );
+					$response['logo'] = empty( $logo_id ) ? [] : self::get_rest_object( 'files', $logo_id );
 					break;
 				case 'default_tax_rate_id':
-					$default_tax_rate_id  = (int) eaccounting_get_option( 'default_tax_rate_id' );
-					$response['default_tax_rate'] = empty( $default_tax_rate_id ) ? [] : eaccounting_rest_request( "/ea/v1/taxrates/".$default_tax_rate_id );
+					$default_tax_rate_id          = (int) eaccounting_get_option( 'default_tax_rate_id' );
+					$response['default_tax_rate'] = null; //empty( $default_tax_rate_id ) ? [] : eaccounting_rest_request( "/ea/v1/taxrates/".$default_tax_rate_id );
 					break;
 				default:
 					$response[ $name ] = apply_filters( 'eaccounting_rest_pre_get_setting', null, $name, $args );
@@ -128,16 +128,31 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 				continue;
 			}
 
-			$updated = apply_filters( 'eaccounting_rest_pre_update_setting', false, $name, $request[ $name ], $args );
+			switch ( $name ) {
+				case 'default_account':
+					$currency_id = intval( $request[ $name ] );
+					if ( ! empty( $request[ $name ] ) ) {
+						$currency = eaccounting_get_currency( $currency_id );
+						if ( ! empty( $currency ) ) {
+							update_option( 'default_currency_id', $currency_id );
+							eaccounting_insert_currency( [ 'id' => $currency_id, 'rate' => 1 ] );
+						}
+					}
+					break;
 
-			if ( $updated ) {
-				continue;
-			}
+				default:
+					$updated = apply_filters( 'eaccounting_rest_pre_update_setting', false, $name, $request[ $name ], $args );
 
-			if ( is_null( $request[ $name ] ) ) {
-				delete_option( $args['option_name'] );
-			} else {
-				update_option( $args['option_name'], $request[ $name ] );
+					if ( $updated ) {
+						continue;
+					}
+
+					if ( is_null( $request[ $name ] ) ) {
+						delete_option( $args['option_name'] );
+					} else {
+						update_option( $args['option_name'], $request[ $name ] );
+					}
+					break;
 			}
 		}
 

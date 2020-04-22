@@ -46,7 +46,7 @@ function eaccounting_insert_contact( $args ) {
 		'email'         => empty( $args['email'] ) ? '' : sanitize_email( $args['email'] ),
 		'phone'         => empty( $args['phone'] ) ? '' : sanitize_text_field( $args['phone'] ),
 		'fax_number'    => empty( $args['fax_number'] ) ? '' : sanitize_text_field( $args['fax_number'] ),
-		'birth_date'    => empty( $args['birth_date'] ) ? '' : sanitize_text_field( $args['birth_date'] ),
+		'birth_date'    => empty( $args['birth_date'] ) ? '' : eaccounting_sanitize_date( $args['birth_date'], '' ),
 		'address'       => empty( $args['address'] ) ? '' : sanitize_textarea_field( $args['address'] ),
 		'country'       => empty( $args['country'] ) ? '' : sanitize_text_field( $args['country'] ),
 		'website'       => empty( $args['website'] ) ? '' : esc_url_raw( $args['website'] ),
@@ -55,10 +55,12 @@ function eaccounting_insert_contact( $args ) {
 		'currency_code' => empty( $args['currency_code'] ) ? '' : sanitize_text_field( $args['currency_code'] ),
 		'type'          => empty( $args['type'] ) ? 'customer' : sanitize_text_field( $args['type'] ),
 		'file_id'       => empty( $args['file_id'] ) ? '' : intval( $args['file_id'] ),
-		'enabled'       => isset( $args['enabled'] ) ? intval( $args['enabled'] ) : 1,
-		'creator_id'    => empty( $args['creator_id'] ) ? get_current_user_id() : $args['creator_id'],
+		'creator_id'    => empty( $args['creator_id'] ) ? eaccounting_get_creator_id() : $args['creator_id'],
 		'created_at'    => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : sanitize_text_field( $args['created_at'] ),
 	);
+	if ( empty( $data['name'] ) ) {
+		return new WP_Error( 'empty_content', __( 'Contact Name is required', 'wp-ever-accounting' ) );
+	}
 
 	if ( ! empty( $user_id ) && ! get_user_by( 'ID', $user_id ) ) {
 		return new WP_Error( 'invalid_wp_user_id', __( 'Invalid WP User ID', 'wp-ever-accounting' ) );
@@ -270,9 +272,12 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 	if ( $search ) {
 		$searches = array();
 		$cols     = array_map( 'sanitize_key', $args['search_columns'] );
-		$like     = '%' . $wpdb->esc_like( $search ) . '%';
 		foreach ( $cols as $col ) {
-			$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
+			$search_words = explode( ' ', $search);
+			foreach ($search_words as $search_word){
+				$like     = '%' . $wpdb->esc_like( $search_word ) . '%';
+				$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
+			}
 		}
 
 		$query_where .= ' AND (' . implode( ' OR ', $searches ) . ')';

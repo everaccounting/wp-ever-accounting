@@ -1,9 +1,12 @@
 /**
  * WordPress dependencies
  */
-import {Component} from '@wordpress/element';
-import {createHigherOrderComponent} from '@wordpress/compose';
-import {Spinner} from "@eaccounting/components";
+import { Component } from '@wordpress/element';
+import { createHigherOrderComponent } from '@wordpress/compose';
+/**
+ * External dependencies
+ */
+import { Spinner } from '@eaccounting/components';
 import classNames from 'classnames';
 
 const withPreloader = () => {
@@ -12,7 +15,7 @@ const withPreloader = () => {
 			constructor(props) {
 				super(props);
 				this.state = {
-					isLoading: false
+					isLoading: false,
 				};
 				this.startLoading = this.startLoading.bind(this);
 				this.finisLoading = this.finisLoading.bind(this);
@@ -21,24 +24,24 @@ const withPreloader = () => {
 
 			startLoading() {
 				this.setState({
-					isLoading: true
-				})
+					isLoading: true,
+				});
 			}
 
 			finisLoading() {
 				this.setState({
-					isLoading: false
-				})
+					isLoading: false,
+				});
 			}
 
 			isLoading() {
-				const {isRequesting, isLoading, status} = this.props;
-				return isLoading || isRequesting || this.state.isLoading || status === "STATUS_IN_PROGRESS";
+				const { isRequesting, isLoading, status } = this.props;
+				return isLoading || isRequesting || this.state.isLoading || status === 'STATUS_IN_PROGRESS';
 			}
 
 			render() {
 				const className = classNames('ea-preloader', {
-					'is-loading': this.isLoading()
+					'is-loading': this.isLoading(),
 				});
 				return (
 					<div className={className}>
@@ -46,11 +49,16 @@ const withPreloader = () => {
 							{...this.props}
 							isLoading={this.isLoading()}
 							startLoading={this.startLoading}
-							finisLoading={this.finisLoading}/>
-						{this.isLoading() && <div className="ea-preloader-inner"><Spinner/></div>}
+							finisLoading={this.finisLoading}
+						/>
+						{this.isLoading() && (
+							<div className="ea-preloader-inner">
+								<Spinner />
+							</div>
+						)}
 					</div>
-				)
-			};
+				);
+			}
 		}
 
 		return Hoc;

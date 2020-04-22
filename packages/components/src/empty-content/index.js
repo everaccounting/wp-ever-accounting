@@ -1,8 +1,14 @@
-import {Component, Fragment} from 'react';
-import PropTypes from "prop-types";
-import Gridicon from "gridicons";
+/**
+ * External dependencies
+ */
+import { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import Gridicon from 'gridicons';
 import classNames from 'classnames';
-import Card from "../card";
+/**
+ * Internal dependencies
+ */
+import Card from '../card';
 
 export default class EmptyContent extends Component {
 	static propTypes = {
@@ -20,12 +26,16 @@ export default class EmptyContent extends Component {
 	};
 
 	render() {
-		const {className, icon, iconSize, title, subtitle} = this.props;
+		const { className, icon, iconSize, title, subtitle } = this.props;
 		return (
 			<Fragment>
 				<Card className={classNames('ea-empty-content', className)}>
 					<div className="ea-row">
-						{icon && iconSize && <div className="ea-col ea-empty-content__left"><Gridicon icon={icon} size={iconSize}/></div>}
+						{icon && iconSize && (
+							<div className="ea-col ea-empty-content__left">
+								<Gridicon icon={icon} size={iconSize} />
+							</div>
+						)}
 						<div className="ea-col ea-empty-content__right">
 							{title && <h2 className="ea-empty-content__title">{title}</h2>}
 							{subtitle && <h2 className="ea-empty-content__subtitle">{subtitle}</h2>}
@@ -34,6 +44,6 @@ export default class EmptyContent extends Component {
 					</div>
 				</Card>
 			</Fragment>
-		)
+		);
 	}
 }

@@ -1,37 +1,35 @@
 import { Component, Fragment } from 'react';
-import {__} from '@wordpress/i18n';
-import {Dashicon} from "@wordpress/components";
+import { __ } from '@wordpress/i18n';
+import { Dashicon } from '@wordpress/components';
 import './style.scss';
 import { NavLink } from 'react-router-dom';
 
 const navigations = [
 	{
-		name:__('Dashboard'),
-		path:'/'
+		name: __('Dashboard'),
+		path: '/',
 	},
 	// {
 	// 	name:__('Items'),
 	// 	path:'/items'
 	// },
 	{
-		name:__('Sales'),
-		path:'/sales'
+		name: __('Sales'),
+		path: '/sales',
 	},
 	{
-		name:__('Purchases'),
-		path:'/purchases'
+		name: __('Purchases'),
+		path: '/purchases',
 	},
 	{
-		name:__('Banking'),
-		path:'/banking'
+		name: __('Banking'),
+		path: '/banking',
 	},
 	{
-		name:__('Settings'),
-		path:'/settings'
-	}
+		name: __('Settings'),
+		path: '/settings',
+	},
 ];
-
-
 
 export default class Header extends Component {
 	constructor(props) {
@@ -39,7 +37,7 @@ export default class Header extends Component {
 		this.isActive = this.isActive.bind(this);
 	}
 
-	isActive(location, path){
+	isActive(location, path) {
 		const pathname = location.pathname.split('/')[1];
 		const menuName = path.split('/')[1];
 		return pathname === menuName;
@@ -49,7 +47,7 @@ export default class Header extends Component {
 		return (
 			<div className="eaccounting-header">
 				<div className="eaccounting-header__left">
-					<Dashicon icon="chart-area" size={22} className="eaccounting-logo"/>
+					<Dashicon icon="chart-area" size={22} className="eaccounting-logo" />
 					<span className="eaccounting-title">EAccounting</span>
 				</div>
 				<div className="eaccounting-header__right">
@@ -62,13 +60,16 @@ export default class Header extends Component {
 									className="eaccounting-navigation-item"
 									activeClassName="active"
 									to={tab.path}
-									isActive={(match, location)=> this.isActive(location, tab.path)}>
+									isActive={(match, location) => this.isActive(location, tab.path)}
+								>
 									{tab.name}
 								</NavLink>
 							);
 						})}
 
-						<a href="#" className="eaccounting-navigation-item">Support</a>
+						<a href="#" className="eaccounting-navigation-item">
+							Support
+						</a>
 					</nav>
 				</div>
 			</div>

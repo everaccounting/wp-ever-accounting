@@ -1,7 +1,10 @@
-import {ACTION_TYPES as types} from "./action-types";
-import {dispatch, fetch, resolveSelect, select} from "../base-controls";
-import {REDUCER_KEY} from "./constants";
-import {REDUCER_KEY as SCHEMA_REDUCER_KEY} from "../schema/constants";
+/**
+ * Internal dependencies
+ */
+import { ACTION_TYPES as types } from './action-types';
+import { dispatch, fetch, resolveSelect, select } from '../base-controls';
+import { REDUCER_KEY } from './constants';
+import { REDUCER_KEY as SCHEMA_REDUCER_KEY } from '../schema/constants';
 
 /**
  * Returns an action object used in updating the store with the provided items
@@ -12,7 +15,7 @@ import {REDUCER_KEY as SCHEMA_REDUCER_KEY} from "../schema/constants";
  * @param {string} resourceName
  * @param {string} queryString  Results are stored indexed by the query
  * @param {Object} response
- * @returns {{response: {}, resourceName: *, type: string, queryString: *}}
+ * @return {{response: {}, resourceName: *, type: string, queryString: *}}
  */
 export function receiveResponse(resourceName, queryString, response = {}) {
 	return {
@@ -23,7 +26,6 @@ export function receiveResponse(resourceName, queryString, response = {}) {
 	};
 }
 
-
 /**
  * Returns an action object used in updating the store with the provided items & total
  * retrieved from a request using the given query string.
@@ -31,9 +33,9 @@ export function receiveResponse(resourceName, queryString, response = {}) {
  * @param {string} resourceName
  * @param {string} queryString  Results are stored indexed by the query
  * @param {Object} response
- * @returns {{response: {total: number, items: []}, resourceName: *, type: string, queryString: *}}
+ * @return {{response: {total: number, items: []}, resourceName: *, type: string, queryString: *}}
  */
-export function receiveCollection(resourceName, queryString, response = {items: [], total: NaN}) {
+export function receiveCollection(resourceName, queryString, response = { items: [], total: NaN }) {
 	return {
 		type: types.RECEIVE_COLLECTION,
 		resourceName,
@@ -48,11 +50,16 @@ export function receiveCollection(resourceName, queryString, response = {items: 
  *
  * @param resourceName
  * @param parts
- * @param {String} queryString
+ * @param {string} queryString
  * @param response
- * @returns {{response: {total: number, items: []}, resourceName: *, type: string, queryString: *, group: *}}
+ * @return {{response: {total: number, items: []}, resourceName: *, type: string, queryString: *, group: *}}
  */
-export function receiveCollectionWithRouteParts(resourceName, parts, queryString, response = {items: [], total: NaN}) {
+export function receiveCollectionWithRouteParts(
+	resourceName,
+	parts,
+	queryString,
+	response = { items: [], total: NaN }
+) {
 	return {
 		type: types.RECEIVE_COLLECTION,
 		resourceName,
@@ -62,16 +69,15 @@ export function receiveCollectionWithRouteParts(resourceName, parts, queryString
 	};
 }
 
-
 /**
  * Returns an action object used in updating the store with the provided entity
  * item retrieved from a request using the given query string.
  *
  * @param resourceName
  * @param id
- * @param {String} queryString
+ * @param {string} queryString
  * @param response
- * @returns {{response: {}, resourceName: *, type: string, queryString: *, group: [*]}}
+ * @return {{response: {}, resourceName: *, type: string, queryString: *, group: [*]}}
  */
 export function receiveEntity(resourceName, id, queryString, response = {}) {
 	return {
@@ -85,12 +91,12 @@ export function receiveEntity(resourceName, id, queryString, response = {}) {
 
 /**
  *
- * @param {String} resourceName
+ * @param {string} resourceName
  * @param {Array} parts
  * @param {number} id
- * @param {String} queryString
+ * @param {string} queryString
  * @param {Object} response
- * @returns {{response: {}, resourceName: *, type: string, queryString: *, group: *}}
+ * @return {{response: {}, resourceName: *, type: string, queryString: *, group: *}}
  */
 export function receiveEntitiesWithRouteParts(resourceName, parts, id, queryString, response = {}) {
 	return {
@@ -106,16 +112,15 @@ export function receiveEntitiesWithRouteParts(resourceName, parts, id, queryStri
  *
  * @param resourceName
  * @param response
- * @returns {{response: *, resourceName: *, type: string}}
+ * @return {{response: *, resourceName: *, type: string}}
  */
 export function replaceEntity(resourceName, response) {
 	return {
 		type: types.REPLACE_ENTITY,
 		resourceName,
 		response,
-	}
+	};
 }
-
 
 /**
  * Action generator yielding actions for queuing an entity delete record
@@ -127,12 +132,10 @@ export function replaceEntity(resourceName, response) {
  */
 export function* deleteEntityById(resourceName, entityId, refresh = true) {
 	const route = yield resolveSelect(SCHEMA_REDUCER_KEY, 'getRoute', resourceName, [entityId]);
-	const item = yield fetch({path: route, method: 'DELETE'});
-	if (refresh)
-		yield resetAllState();
+	const item = yield fetch({ path: route, method: 'DELETE' });
+	if (refresh) yield resetAllState();
 	return item;
 }
-
 
 /**
  * Action triggering resetting all state in the store.
@@ -144,35 +147,20 @@ export function* resetAllState() {
 	};
 
 	if (invalidateActionsAvailable()) {
-		yield dispatch(
-			'core/data',
-			'invalidateResolutionForStore',
-			REDUCER_KEY,
-		);
+		yield dispatch('core/data', 'invalidateResolutionForStore', REDUCER_KEY);
 		return;
 	}
 
 	// get resolvers from core/data and dispatch invalidation of each resolver.
-	const resolvers = yield select(
-		'core/data',
-		'getCachedResolvers',
-		REDUCER_KEY
-	);
+	const resolvers = yield select('core/data', 'getCachedResolvers', REDUCER_KEY);
 
 	// dispatch invalidation of the cached resolvers
 	for (const selector in resolvers) {
 		for (const entry of resolvers[selector]._map) {
-			yield dispatch(
-				'core/data',
-				'invalidateResolution',
-				REDUCER_KEY,
-				selector,
-				entry[0]
-			);
+			yield dispatch('core/data', 'invalidateResolution', REDUCER_KEY, selector, entry[0]);
 		}
 	}
 }
-
 
 /**
  * Action triggering resetting state in the store for the given selector name and
@@ -188,11 +176,7 @@ export function* resetForSelectorAndResource(selectorName, resourceName) {
 	};
 
 	// get resolvers from core/data
-	const resolvers = yield select(
-		'core/data',
-		'getCachedResolvers',
-		REDUCER_KEY
-	);
+	const resolvers = yield select('core/data', 'getCachedResolvers', REDUCER_KEY);
 	console.log(resolvers);
 	// dispatch invalidation of the cached resolvers for any resolver that
 	// has a variation of modelName in the selector name or in the args for the
@@ -202,13 +186,7 @@ export function* resetForSelectorAndResource(selectorName, resourceName) {
 		if (selectorName === selector || resourceNameInSelector(selector, resourceName)) {
 			for (const entry of resolvers[selector]._map) {
 				if (entry[0][0] === resourceName) {
-					yield dispatch(
-						'core/data',
-						'invalidateResolution',
-						REDUCER_KEY,
-						selector,
-						entry[0],
-					);
+					yield dispatch('core/data', 'invalidateResolution', REDUCER_KEY, selector, entry[0]);
 				}
 			}
 		}
@@ -230,13 +208,7 @@ export function* resetSpecificStateForSelector(selectorName, resourceName, query
 		queryString,
 	};
 
-	yield dispatch(
-		'core/data',
-		'invalidateResolution',
-		REDUCER_KEY,
-		selectorName,
-		[resourceName, queryString]
-	);
+	yield dispatch('core/data', 'invalidateResolution', REDUCER_KEY, selectorName, [resourceName, queryString]);
 }
 
 /**
@@ -254,7 +226,6 @@ const resourceNameInSelector = (selectorName, resourceName) => {
 
 	return selectorName.indexOf(resourceName) > -1;
 };
-
 
 /**
  * Helper for determining if actions are available in the `core/data` package.

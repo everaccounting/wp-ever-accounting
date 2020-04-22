@@ -2,11 +2,14 @@
  * External dependencies
  */
 
-import {Component} from '@wordpress/element';
 /**
  * WordPress dependencies
  */
-import {__} from '@wordpress/i18n';
+import { Component } from '@wordpress/element';
+/**
+ * WordPress dependencies
+ */
+import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 
 /**
@@ -38,11 +41,11 @@ class TableNav extends Component {
 		this.handleClick = this.onClick.bind(this);
 		this.handleChange = this.onChange.bind(this);
 
-		this.state = {action: -1};
+		this.state = { action: -1 };
 	}
 
 	onChange(ev) {
-		this.setState({action: ev.target.value});
+		this.setState({ action: ev.target.value });
 	}
 
 	onClick(ev) {
@@ -50,12 +53,12 @@ class TableNav extends Component {
 
 		if (parseInt(this.state.action, 10) !== -1) {
 			this.props.onAction(this.state.action);
-			this.setState({action: -1});
+			this.setState({ action: -1 });
 		}
 	}
 
 	getBulk(bulk) {
-		const {selected} = this.props;
+		const { selected } = this.props;
 		return (
 			<div className="alignleft actions bulkactions">
 				<label htmlFor="bulk-action-selector-top" className="screen-reader-text">
@@ -91,11 +94,10 @@ class TableNav extends Component {
 	}
 
 	render() {
-		const {total, per_page, page, bulk, status} = this.props;
+		const { total, per_page, page, bulk, status } = this.props;
 		return (
 			<div className="tablenav top">
 				<div className="ea-table__actions">
-
 					{bulk && this.getBulk(bulk)}
 					{this.props.children ? this.props.children : null}
 				</div>

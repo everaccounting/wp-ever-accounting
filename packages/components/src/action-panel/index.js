@@ -1,6 +1,12 @@
+/**
+ * External dependencies
+ */
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+/**
+ * Internal dependencies
+ */
 import Card from '../card';
 import Gridicon from 'gridicons';
 
@@ -14,7 +20,7 @@ export default class ActionPanel extends Component {
 	};
 
 	static defaultProps = {
-		className:'',
+		className: '',
 		primary: true,
 		icon: 'bug',
 		iconSize: 150,

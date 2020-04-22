@@ -8,25 +8,25 @@
 	box-sizing: border-box;
 	background: #fff;
 	box-shadow: 0 0 0 1px #e1e2e2;
-	width:100%;
-	max-width:none;
-	min-width:auto;
+	width: 100%;
+	max-width: none;
+	min-width: auto;
 
 
-	&:after{
+	&::after {
 		content: ".";
 		display: block;
 		height: 0;
 		width: 0;
 		clear: both;
 		visibility: hidden;
-		overflow: hidden
+		overflow: hidden;
 	}
 
 	@media (min-width: 481px) {
-		&{
-			margin-bottom:16px;
-			padding: 24px
+		& {
+			margin-bottom: 16px;
+			padding: 24px;
 		}
 	}
 
@@ -34,16 +34,16 @@
 	&.is-compact {
 		margin-bottom: 1px;
 		@media (min-width: 481px) {
-			&{
-				margin-bottom:1px;
-				padding: 16px 11px
+			& {
+				margin-bottom: 1px;
+				padding: 16px 11px;
 			}
 		}
 	}
 
 	&.is-card-link {
 		padding-right: 48px;
-		&:not( a ) {
+		&:not(a) {
 			color: #016087;
 			font-size: 100%;
 			line-height: 1.5;
@@ -78,12 +78,12 @@
 		border-left: 3px solid #008a00;
 	}
 
-	.components-spinner{
+	.components-spinner {
 		float: none;
 		text-align: center;
 	}
 
-	&.padding-less{
+	&.padding-less {
 		padding: 0;
 	}
 }

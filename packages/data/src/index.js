@@ -13,7 +13,6 @@ export * from './currencies';
  */
 export * from './defaults';
 
-
 /**
  * Server Formats data.
  */
@@ -33,8 +32,6 @@ export * from './paths';
  * Server locale data.
  */
 export * from './locale';
-
-
 
 /**
  * environment constant indicating development server

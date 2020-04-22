@@ -23,13 +23,14 @@ function eaccounting_clean( $var ) {
  *
  * @param $date
  * @param string $format
+ * @param string $fallback
  *
  * @return bool|string
  */
-function eaccounting_sanitize_date( $date, $format = 'Y-m-d' ) {
+function eaccounting_sanitize_date( $date, $format = 'Y-m-d', $fallback = false ) {
 	$d = DateTime::createFromFormat( $format, $date );
 
-	return $d && $d->format( $format ) === $date ? $date : false;
+	return $d && $d->format( $format ) === $date ? $date : $fallback;
 }
 
 /**
@@ -64,12 +65,13 @@ function eaccounting_currency( $currency ) {
 /**
  * Sanitize price for inserting into database
  * since 1.0.0
+ *
  * @param $amount
  * @param $code
  *
  * @return float|int
  */
-function eaccounting_sanitize_price($amount, $code){
+function eaccounting_sanitize_price( $amount, $code ) {
 	return eaccounting_money( $amount, $code, false )->getAmount();
 }
 
@@ -77,12 +79,17 @@ function eaccounting_sanitize_price($amount, $code){
  * Format price with currency code & number format
  *
  * since 1.0.0
+ *
  * @param $amount
  * @param $code
  *
  * @return string
  */
-function eaccounting_format_price($amount, $code){
+function eaccounting_format_price( $amount, $code = null ) {
+	if ( $code == null ){
+		$currency = eaccounting_get_default_currency();
+		$code = $currency->code;
+	}
 	return eaccounting_money( $amount, $code, true )->format();
 }
 

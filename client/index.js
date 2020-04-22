@@ -2,9 +2,9 @@
 /**
  * WordPress dependencies
  */
-import {render} from '@wordpress/element';
+import { render } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
-import "@wordpress/notices";
+import '@wordpress/notices';
 /**
  * Internal dependencies
  */
@@ -13,6 +13,5 @@ import './stylesheets/main.scss';
 
 domReady(() => {
 	const root = document.getElementById('eaccounting');
-	return render(<App/>, root);
+	return render(<App />, root);
 });
-

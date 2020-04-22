@@ -32,12 +32,13 @@ function eaccounting_insert_currency( $args ) {
 		'name'       => ! isset( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'code'       => ! isset( $args['code'] ) ? '' : sanitize_text_field( $args['code'] ),
 		'rate'       => ! isset( $args['rate'] ) ? '' : preg_replace( '/[^0-9\.]/', '', $args['rate'] ),
+		'creator_id' => empty( $args['creator_id'] ) ? eaccounting_get_creator_id() : $args['creator_id'],
 		'created_at' => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
 	$required = array(
-		'code'                => __( 'code', 'wp-ever-accounting' ),
-		'rate'                => __( 'Rate', 'wp-ever-accounting' ),
+		'code' => __( 'code', 'wp-ever-accounting' ),
+		'rate' => __( 'Rate', 'wp-ever-accounting' ),
 	);
 
 	foreach ( $required as $prop => $label ) {
@@ -120,7 +121,6 @@ function eaccounting_get_currency( $id, $by = 'id' ) {
 function eaccounting_delete_currency( $id ) {
 	global $wpdb;
 	$id = absint( $id );
-	error_log($id);
 	$currency = eaccounting_get_currency( $id );
 	if ( is_null( $currency ) ) {
 		return false;
@@ -170,7 +170,6 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 	$args        = wp_parse_args( $args, $default );
 	$query_from  = "FROM $wpdb->ea_currencies";
 	$query_where = 'WHERE 1=1';
-
 
 
 	//fields

@@ -1,10 +1,16 @@
-import {createHigherOrderComponent, compose} from '@wordpress/compose';
-import {withDispatch, withSelect} from '@wordpress/data';
-import {Component, createRef} from '@wordpress/element';
-import qs from "querystring";
-import {PER_PAGE} from "@eaccounting/data";
-import {addQueryArgs} from "@wordpress/url"
-import {forOwn, clone, pickBy, isNumber, isEmpty} from "lodash";
+/**
+ * WordPress dependencies
+ */
+import { createHigherOrderComponent, compose } from '@wordpress/compose';
+import { withDispatch, withSelect } from '@wordpress/data';
+import { Component, createRef } from '@wordpress/element';
+/**
+ * External dependencies
+ */
+import qs from 'querystring';
+import { PER_PAGE } from '@eaccounting/data';
+import { addQueryArgs } from '@wordpress/url';
+import { forOwn, clone, pickBy, isNumber, isEmpty } from 'lodash';
 import isShallowEqual from '@wordpress/is-shallow-equal';
 
 export const withListTable = createHigherOrderComponent(WrappedComponent => {
@@ -21,31 +27,29 @@ export const withListTable = createHigherOrderComponent(WrappedComponent => {
 		// 	return !isShallowEqual(nextState, this.queries) || !isShallowEqual(nextProps.table, this.props.table)
 		// }
 		updatePageQuery(params = {}) {
-			const {history, location} = this.props;
+			const { history, location } = this.props;
 			history.push(decodeURIComponent(addQueryArgs(location.pathname, params)));
 		}
-
 
 		getQueries() {
 			return pickBy(clone(this.queries), value => !isEmpty(value));
 		}
 
 		setSearch(search) {
-			this.setState({...this.queries, search});
+			this.setState({ ...this.queries, search });
 		}
 
 		setPage(page) {
-			this.setState({...this.queries, page})
+			this.setState({ ...this.queries, page });
 		}
 
 		setOrderBy(orderby, order) {
-			this.setState({...this.queries, orderby, order})
+			this.setState({ ...this.queries, orderby, order });
 		}
 
 		setFilter(filter) {
-			this.setState({...{...this.queries, page: 1}, ...filter});
+			this.setState({ ...{ ...this.queries, page: 1 }, ...filter });
 		}
-
 
 		render() {
 			// const {per_page = PER_PAGE, page = 1, orderby = 'id', order = 'desc'} = this.queries;
@@ -65,26 +69,24 @@ export const withListTable = createHigherOrderComponent(WrappedComponent => {
 			// 		onFilter={this.setFilter}/>
 			// );
 		}
-
 	}
 
 	return compose(
 		withSelect(select => {
-			const {getTable} = select('ea/store');
+			const { getTable } = select('ea/store');
 			return {
-				table: getTable()
-			}
+				table: getTable(),
+			};
 		}),
-		withDispatch((dispatch) => {
-			const {setTable, setTableSelected, setTableAllSelected} = dispatch('ea/store');
+		withDispatch(dispatch => {
+			const { setTable, setTableSelected, setTableAllSelected } = dispatch('ea/store');
 			return {
 				setTable,
 				setTableSelected,
-				setTableAllSelected
-			}
+				setTableAllSelected,
+			};
 		})
 	)(Hoc);
-
 }, 'withListTable');
 
 export default withListTable;

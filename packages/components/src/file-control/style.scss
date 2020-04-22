@@ -28,8 +28,8 @@
 	.ea-file-preview {
 		margin: 0;
 		overflow: hidden;
-		border-top: 1px solid #DFE1E6;
-		border-bottom: 1px solid #DFE1E6;
+		border-top: 1px solid #dfe1e6;
+		border-bottom: 1px solid #dfe1e6;
 		padding: 5px 0;
 		position: relative;
 		display: flex;
@@ -42,13 +42,14 @@
 			line-height: 16px;
 			padding: 0;
 		}
-		svg{
-			height:16px;
+		svg {
+			height: 16px;
 		}
 	}
 
 	a {
-		&:focus, &:active {
+		&:focus,
+		&:active {
 			box-shadow: none;
 			outline: none;
 		}

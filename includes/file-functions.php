@@ -243,6 +243,7 @@ function eaccounting_insert_file( $args ) {
 		'extension'  => ! isset( $args['extension'] ) ? '' : sanitize_text_field( $args['extension'] ),
 		'mime_type'  => ! isset( $args['mime_type'] ) ? '' : sanitize_text_field( $args['mime_type'] ),
 		'size'       => ! isset( $args['size'] ) ? '' : intval( $args['size'] ),
+		'creator_id' => empty( $args['creator_id'] ) ? eaccounting_get_creator_id() : $args['creator_id'],
 		'created_at' => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 
@@ -313,8 +314,9 @@ function eaccounting_delete_file( $id ) {
 		return false;
 	}
 	do_action( 'eaccounting_file_delete', $id, $file );
-	$path = eaccounting_get_file_path($file);
-	@unlink($path);
+	$path = eaccounting_get_file_path( $file );
+	@unlink( $path );
+
 	return true;
 }
 
@@ -467,7 +469,7 @@ function eaccounting_get_file_path( $file ) {
 	}
 
 	$upload_dir = eaccounting_get_upload_dir();
-	$file_path   = trailingslashit( $upload_dir['basedir'] ) . ltrim( $file->path, '/' ) . '/' . $file->name;
+	$file_path  = trailingslashit( $upload_dir['basedir'] ) . ltrim( $file->path, '/' ) . '/' . $file->name;
 
 	return $file_path;
 }

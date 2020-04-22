@@ -1,12 +1,15 @@
 /**
  * WordPress dependencies
  */
-import {Component, Fragment} from '@wordpress/element';
+import { Component, Fragment } from '@wordpress/element';
 /**
  * Internal dependencies
  */
 import SelectControl from '../select-control';
-import {PAYMENT_METHODS} from '@eaccounting/data';
+/**
+ * External dependencies
+ */
+import { PAYMENT_METHODS } from '@eaccounting/data';
 
 export default class paymentMethodSelect extends Component {
 	constructor(props) {
@@ -21,5 +24,3 @@ export default class paymentMethodSelect extends Component {
 		);
 	}
 }
-
-

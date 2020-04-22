@@ -1,13 +1,13 @@
-import {Component, Fragment} from 'react';
-import {HashRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
-import {applyFilters} from "@wordpress/hooks"
-import {__} from '@wordpress/i18n';
+import { Component, Fragment } from 'react';
+import { HashRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { applyFilters } from '@wordpress/hooks';
+import { __ } from '@wordpress/i18n';
 
-import Tabs from "components/tabs";
-import General from "./general";
-import Defaults from "./defaults";
-import "./currencies";
-import "./categories";
+import Tabs from 'components/tabs';
+import General from './general';
+import Defaults from './defaults';
+import './currencies';
+import './categories';
 
 const tabs = applyFilters('EA_SETTINGS_PAGES', [
 	{
@@ -40,16 +40,13 @@ export default class Banking extends Component {
 	render() {
 		return (
 			<Fragment>
-				<Tabs tabs={tabs}/>
+				<Tabs tabs={tabs} />
 				<Router>
 					<Switch>
 						{tabs.map(tab => {
-							return (
-								<Route key={tab.path} path={tab.path} exact
-									   render={props => <tab.component  {...props}/>}/>
-							);
+							return <Route key={tab.path} path={tab.path} exact render={props => <tab.component {...props} />} />;
 						})}
-						<Redirect from="/settings" to="/settings/general"/>
+						<Redirect from="/settings" to="/settings/general" />
 					</Switch>
 				</Router>
 			</Fragment>

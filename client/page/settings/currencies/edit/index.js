@@ -1,16 +1,10 @@
-import {Component, Fragment} from 'react';
-import {__, sprintf} from '@wordpress/i18n';
-import {withEntity} from "@eaccounting/hoc";
-import {
-	FormCard,
-	SelectControl,
-	TextControl,
-	BackButton,
-	Button,
-} from "@eaccounting/components";
-import {Form, Field} from "react-final-form";
-import {NotificationManager} from "react-notifications";
-import {getGlobalCurrencies} from "@eaccounting/data";
+import { Component, Fragment } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
+import { withEntity } from '@eaccounting/hoc';
+import { FormCard, SelectControl, TextControl, BackButton, Button } from '@eaccounting/components';
+import { Form, Field } from 'react-final-form';
+import { NotificationManager } from 'react-notifications';
+import { getGlobalCurrencies } from '@eaccounting/data';
 
 class EditCurrency extends Component {
 	constructor(props) {
@@ -19,15 +13,15 @@ class EditCurrency extends Component {
 	}
 
 	onSubmit(form) {
-		const {history, isAdd} = this.props;
-		this.props.handleSubmit(form, function (res) {
+		const { history, isAdd } = this.props;
+		this.props.handleSubmit(form, function(res) {
 			NotificationManager.success(sprintf(__('"%s" category %s.'), res.name, isAdd ? __('created') : __('updated')));
-			history.push('/settings/currencies')
-		});
+			history.push('/settings/currencies');
+		}, true);
 	}
 
 	render() {
-		const {isAdd, item} = this.props;
+		const { isAdd, item } = this.props;
 		const currencies = getGlobalCurrencies();
 		return (
 			<Fragment>
@@ -35,18 +29,11 @@ class EditCurrency extends Component {
 					<Form
 						onSubmit={this.onSubmit}
 						initialValues={item}
-						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
+						render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
 							<form onSubmit={handleSubmit}>
-
 								<div className="ea-row">
-									<Field
-										label={__('Name', 'wp-ever-accounting')}
-										name="name"
-										className="ea-col-6"
-										required>
-										{props => (
-											<TextControl {...props.input} {...props}/>
-										)}
+									<Field label={__('Name', 'wp-ever-accounting')} name="name" className="ea-col-6" required>
+										{props => <TextControl {...props.input} {...props} />}
 									</Field>
 
 									<Field
@@ -55,10 +42,9 @@ class EditCurrency extends Component {
 										defaultValue={'USD'}
 										options={currencies}
 										className="ea-col-6"
-										required>
-										{props => (
-											<SelectControl {...props.input} {...props}/>
-										)}
+										required
+									>
+										{props => <SelectControl {...props.input} {...props} />}
 									</Field>
 
 									<Field
@@ -67,24 +53,20 @@ class EditCurrency extends Component {
 										className="ea-col-6"
 										parse={value => value.replace(/[^\d.]+/g, '')}
 										help={__('Rate against default currency. NOTE: Default currency rate is always 1')}
-										required>
-										{props => (
-											<TextControl {...props.input} {...props}/>
-										)}
+										required
+									>
+										{props => <TextControl {...props.input} {...props} />}
 									</Field>
-
 								</div>
 
-								<Button
-									isPrimary
-									disabled={submitting || pristine}
-									type="submit">{__('Submit')}
+								<Button isPrimary disabled={submitting || pristine} type="submit">
+									{__('Submit')}
 								</Button>
 
 								<BackButton>{__('Cancel')}</BackButton>
-
 							</form>
-						)}/>
+						)}
+					/>
 				</FormCard>
 			</Fragment>
 		);

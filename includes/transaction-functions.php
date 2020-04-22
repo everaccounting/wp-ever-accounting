@@ -63,7 +63,7 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 	}
 
 	//type
-	if ( ! empty( $args['type'] ) ) {
+	if ( ! empty( $args['type'] ) && strtolower( $args['type']) !== 'all') {
 		$types       = implode( "','", wp_parse_list( $args['type'] ) );
 		$query_where .= " AND $transaction_table.type IN( '$types' ) ";
 	}
@@ -169,7 +169,7 @@ function eaccounting_get_transactions( $args = array(), $count = false ) {
 function eaccounting_get_expense_by_categories( $start = null, $end = null, $limit = 6 ) {
 
 	global $wpdb;
-	$query_fields = " category_id, SUM(amount) total ";
+	$query_fields = " category_id, SUM(amount / currency_rate ) total ";
 	$query_from   = " from $wpdb->ea_payments ";
 	$query_where  = "WHERE category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') ";
 	$limit        = " LIMIT $limit";

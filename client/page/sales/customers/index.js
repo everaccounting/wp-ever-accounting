@@ -1,10 +1,9 @@
-import Customers from "./table";
-import ViewCustomer from "./view";
-import {__} from '@wordpress/i18n';
-import {addFilter} from "@wordpress/hooks"
+import Customers from './table';
+import ViewCustomer from './view';
+import { __ } from '@wordpress/i18n';
+import { addFilter } from '@wordpress/hooks';
 
-
-addFilter('EA_SALES_PAGES', 'eaccounting', (pages)=> {
+addFilter('EA_SALES_PAGES', 'eaccounting', pages => {
 	pages.push({
 		path: '/sales/customers/:id/view',
 		component: ViewCustomer,

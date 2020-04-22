@@ -2,7 +2,7 @@
  * External dependencies
  */
 
-import {__} from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
 export const getHeaders = () => [
 	{
@@ -32,7 +32,7 @@ export const getHeaders = () => [
 	},
 	{
 		name: 'actions',
-		title: __('Actions')
+		title: __('Actions'),
 	},
 ];
 

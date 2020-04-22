@@ -8,15 +8,15 @@ import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
 import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
-import {getCurrencyConfig} from "@eaccounting/data";
+import { getCurrencyConfig } from '@eaccounting/data';
 import NumberFormat from 'react-number-format';
 export default class PriceControl extends Component {
 	onChange = price => {
-		this.props.onChange  && this.props.onChange(price.value);
+		this.props.onChange && this.props.onChange(price.value);
 	};
 
 	render() {
-		const { label, code = 'USD' , help, className, before, after, required, value, ...props } = this.props;
+		const { label, code = 'USD', help, className, before, after, required, value, ...props } = this.props;
 		const classes = classnames('ea-form-group', 'ea-price-field', className, {
 			required: !!required,
 		});
@@ -35,7 +35,7 @@ export default class PriceControl extends Component {
 						required={required}
 						placeholder={placeholder}
 						className="components-text-control__input ea-input-group__input"
-						thousandsGroupStyle='thousand'
+						thousandsGroupStyle="thousand"
 						decimalSeparator={currency && currency.decimalSeparator}
 						thousandSeparator={currency && currency.thousandSeparator}
 						value={(value && value) || ''}

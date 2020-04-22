@@ -6,8 +6,8 @@
 			vertical-align: top;
 			padding: 5px;
 		}
-		.check-column{
-			input{
+		.check-column {
+			input {
 				vertical-align: middle;
 			}
 		}
@@ -33,7 +33,7 @@
 		background: #dd4b39;
 		color: #fff;
 		font-size: 11px;
-		padding: .2em .6em .3em;
+		padding: 0.2em 0.6em 0.3em;
 		line-height: 11px;
 
 		&.enabled {
@@ -71,7 +71,8 @@
 		}
 	}
 
-	.is-placeholder, .no-results {
+	.is-placeholder,
+	.no-results {
 		td {
 			position: relative;
 			height: 20px;
@@ -98,7 +99,9 @@
 		border-radius: 0;
 		height: 26px;
 
-		&:hover, &:focus, &:active {
+		&:hover,
+		&:focus,
+		&:active {
 			box-shadow: none !important;
 			outline: none !important;
 		}
@@ -153,7 +156,9 @@
 	float: left;
 	padding-top: 2px;
 
-	> button, > form, > div.table-button-item {
+	> button,
+	> form,
+	> div.table-button-item {
 		margin-right: 5px !important;
 		display: inline;
 	}
@@ -217,7 +222,8 @@
 		margin-top: 0;
 	}
 
-	.page-title-action, .page-title-action:active {
+	.page-title-action,
+	.page-title-action:active {
 		top: 0;
 	}
 

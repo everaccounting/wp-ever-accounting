@@ -1,24 +1,24 @@
-.ea-table-report{
+.ea-table-report {
 	overflow-x: auto !important;
 }
 
-.ea-report-filter{
+.ea-report-filter {
 	width: 100%;
 	display: flex;
 	align-items: center;
 	align-content: center;
 
-	&>div{
+	& > div {
 		margin-right: 10px;
 		width: 200px;
 	}
 
-	.ea-form-group{
+	.ea-form-group {
 		margin: 0 10px 0 0;
 	}
 }
 
-.ea-report-graph{
+.ea-report-graph {
 	padding-bottom: 30px;
 	margin-bottom: 43px;
 	border-bottom: 1px solid #eee;

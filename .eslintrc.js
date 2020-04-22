@@ -1,5 +1,5 @@
 module.exports = {
-	extends: [ 'plugin:@wordpress/eslint-plugin/recommended', 'prettier' ],
+	extends: ['plugin:@wordpress/eslint-plugin/recommended', 'prettier'],
 	globals: {
 		eAccountingi18n: true,
 	},
@@ -7,6 +7,6 @@ module.exports = {
 		'@wordpress/dependency-group': 'error',
 		'valid-jsdoc': 'off',
 		radix: 'error',
-		yoda: [ 'error', 'never' ],
+		yoda: ['error', 'never'],
 	},
 };

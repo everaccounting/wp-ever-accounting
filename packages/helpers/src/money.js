@@ -1,46 +1,58 @@
 /**
  * External imports
  */
+/**
+ * External dependencies
+ */
 import { Decimal } from 'decimal.js-light';
 import * as Accounting from 'accounting-js';
+/**
+ * WordPress dependencies
+ */
 import isShallowEqual from '@wordpress/is-shallow-equal';
 import { isEmpty } from 'lodash';
+/**
+ * Internal dependencies
+ */
 import instanceOf from './instance-of';
 import { sprintf } from '@wordpress/i18n';
 
 /**
  * Asserts if incoming value is an instance of Money
+ *
  * @param {Money} money
  * @throws {TypeError}
  */
-const assertMoney = ( money ) => {
-	if ( ! ( instanceOf( money, 'Money' ) ) ) {
-		throw new TypeError( 'Instance of Money required' );
+const assertMoney = money => {
+	if (!instanceOf(money, 'Money')) {
+		throw new TypeError('Instance of Money required');
 	}
 };
 
 /**
  * Asserts if incoming value is an instance of Currency
+ *
  * @param {Currency} currency
  * @throws {TypeError}
  */
-const assertCurrency = ( currency ) => {
-	if ( ! ( instanceOf( currency, 'Currency' ) ) ) {
-		throw new TypeError( 'Instance of Currency required' );
+const assertCurrency = currency => {
+	if (!instanceOf(currency, 'Currency')) {
+		throw new TypeError('Instance of Currency required');
 	}
 };
 
 /**
  * Asserts if two currencies are shallow equal.
+ *
  * @param {Currency} currencyA
  * @param {Currency} currencyB
  * @throws {Exception}
  */
-const assertSameCurrency = ( currencyA, currencyB ) => {
-	assertCurrency( currencyA );
-	assertCurrency( currencyB );
-	if ( ! isShallowEqual( currencyA.toJSON(), currencyB.toJSON() ) ) {
-		throw new Exception( 'Provided currencies are not equivalent.' );
+const assertSameCurrency = (currencyA, currencyB) => {
+	assertCurrency(currencyA);
+	assertCurrency(currencyB);
+	if (!isShallowEqual(currencyA.toJSON(), currencyB.toJSON())) {
+		throw new Exception('Provided currencies are not equivalent.');
 	}
 };
 
@@ -50,54 +62,63 @@ const assertSameCurrency = ( currencyA, currencyB ) => {
 export default class Money {
 	/**
 	 * Internally the amount is stored as a Decimal instance.
+	 *
 	 * @type {Decimal}
 	 */
 	amount = {};
 
 	/**
 	 * Internally the amount is stored as a Currency instance.
+	 *
 	 * @type {Currency}
 	 */
 	currency = {};
 
 	/**
 	 * Formatter object for money values.
+	 *
 	 * @type {{}}
 	 */
 	formatter = {};
 
 	/**
 	 * Rounds away from zero
+	 *
 	 * @type {number}
 	 */
 	static ROUND_UP = Decimal.ROUND_UP;
 
 	/**
 	 * Rounds towards zero
+	 *
 	 * @type {number}
 	 */
 	static ROUND_DOWN = Decimal.ROUND_DOWN;
 
 	/**
 	 * Rounds towards infinity
+	 *
 	 * @type {number}
 	 */
 	static ROUND_CEIL = Decimal.ROUND_CEIL;
 
 	/**
 	 * Rounds towards -Infinity
+	 *
 	 * @type {number}
 	 */
 	static ROUND_FLOOR = Decimal.ROUND_FLOOR;
 
 	/**
 	 * Rounds towards nearest neighbour. If equidistant, rounds away from zero.
+	 *
 	 * @type {number}
 	 */
 	static ROUND_HALF_UP = Decimal.ROUND_HALF_UP;
 
 	/**
 	 * Rounds towards nearest neighbour. If equidistant rounds towards zero.
+	 *
 	 * @type {number}
 	 */
 	static ROUND_HALF_DOWN = Decimal.ROUND_HALF_DOWN;
@@ -105,20 +126,22 @@ export default class Money {
 	/**
 	 * Rounds towards nearest neighbour. If equidistant, rounds towards even
 	 * neighbour.
+	 *
 	 * @type {number}
 	 */
 	static ROUND_HALF_EVEN = Decimal.ROUND_HALF_EVEN;
 
 	/**
 	 * Class constructor
+	 *
 	 * @param {number|string|Decimal} amount
 	 * @param {Currency} currency
 	 */
-	constructor( amount, currency ) {
-		this.setCurrency( currency )
-			.setAmount( amount )
+	constructor(amount, currency) {
+		this.setCurrency(currency)
+			.setAmount(amount)
 			.setFormatter();
-		Object.freeze( this );
+		Object.freeze(this);
 	}
 
 	/**
@@ -128,11 +151,11 @@ export default class Money {
 	 * @return {Money} Either this Money or new Money depending on state of
 	 * property.
 	 */
-	setCurrency( currency ) {
-		Money.assertCurrency( currency );
+	setCurrency(currency) {
+		Money.assertCurrency(currency);
 		// if there's already a currency set, then return a new object.
-		if ( instanceOf( this.currency, 'Currency' ) ) {
-			return new Money( this.amount, currency );
+		if (instanceOf(this.currency, 'Currency')) {
+			return new Money(this.amount, currency);
 		}
 		this.currency = currency;
 		return this;
@@ -145,15 +168,13 @@ export default class Money {
 	 * @return {Money} Either this Money or new Money depending on state of the
 	 * property.
 	 */
-	setAmount( amount ) {
-		const value = instanceOf( amount, 'Decimal' ) ?
-			amount.toNumber() :
-			amount;
+	setAmount(amount) {
+		const value = instanceOf(amount, 'Decimal') ? amount.toNumber() : amount;
 		// if there's already an amount set, then return a new object.
-		if ( instanceOf( this.amount, 'Decimal' ) ) {
-			return new Money( new Decimal( value ), this.currency );
+		if (instanceOf(this.amount, 'Decimal')) {
+			return new Money(new Decimal(value), this.currency);
 		}
-		this.amount = new Decimal( value );
+		this.amount = new Decimal(value);
 		return this;
 	}
 
@@ -164,7 +185,7 @@ export default class Money {
 	 */
 	setFormatter() {
 		// only initialize if its not already initialized
-		if ( isEmpty( this.formatter ) ) {
+		if (isEmpty(this.formatter)) {
 			this.formatter = { ...Accounting };
 			this.formatter.settings = {
 				...this.formatter.settings,
@@ -176,6 +197,7 @@ export default class Money {
 
 	/**
 	 * Returns the value of this Money as its subunits.
+	 *
 	 * @return {number} If the subunits is 100 and the value is .45,
 	 * this returns 450
 	 */
@@ -190,10 +212,9 @@ export default class Money {
 	 * @param {Money} other
 	 * @return {boolean} True means this is equal. False means it isn't.
 	 */
-	equals( other ) {
-		Money.assertMoney( other );
-		return this.amount.equals( other.amount ) &&
-			this.hasSameCurrency( other );
+	equals(other) {
+		Money.assertMoney(other);
+		return this.amount.equals(other.amount) && this.hasSameCurrency(other);
 	}
 
 	/**
@@ -207,32 +228,31 @@ export default class Money {
 	 * @param {Money} other
 	 * @return {boolean} True means the currencies are equal.
 	 */
-	hasSameCurrency( other ) {
-		Money.assertMoney( other );
-		return isShallowEqual(
-			this.currency.toJSON(),
-			other.currency.toJSON()
-		);
+	hasSameCurrency(other) {
+		Money.assertMoney(other);
+		return isShallowEqual(this.currency.toJSON(), other.currency.toJSON());
 	}
 
 	/**
 	 * Add one Money object to this Money object
+	 *
 	 * @param {Money} other
 	 * @return {Money} Returns a new instance of Money.
 	 */
-	add( other ) {
-		Money.assertUsingSameCurrency( this, other );
-		return new Money( this.amount.plus( other.amount ), this.currency );
+	add(other) {
+		Money.assertUsingSameCurrency(this, other);
+		return new Money(this.amount.plus(other.amount), this.currency);
 	}
 
 	/**
 	 * Subtract one Money object from this Money object
+	 *
 	 * @param {Money} other
 	 * @return {Money} Returns a new instance of Money
 	 */
-	subtract( other ) {
-		Money.assertUsingSameCurrency( this, other );
-		return new Money( this.amount.minus( other.amount ), this.currency );
+	subtract(other) {
+		Money.assertUsingSameCurrency(this, other);
+		return new Money(this.amount.minus(other.amount), this.currency);
 	}
 
 	/**
@@ -241,8 +261,8 @@ export default class Money {
 	 * @param {number|string|Decimal} multiplier
 	 * @return {Money} Returns a new instance of Money
 	 */
-	multiply( multiplier ) {
-		return new Money( this.amount.times( multiplier ), this.currency );
+	multiply(multiplier) {
+		return new Money(this.amount.times(multiplier), this.currency);
 	}
 
 	/**
@@ -251,8 +271,8 @@ export default class Money {
 	 * @param {number|string|Decimal} divisor
 	 * @return {Money} Returns a new instance of Money
 	 */
-	divide( divisor ) {
-		return new Money( this.amount.dividedBy( divisor ), this.currency );
+	divide(divisor) {
+		return new Money(this.amount.dividedBy(divisor), this.currency);
 	}
 
 	/**
@@ -279,41 +299,28 @@ export default class Money {
 	 * @param {number[]} ratios
 	 * @return {Money[]} An array of Money objects
 	 */
-	allocate( ratios ) {
+	allocate(ratios) {
 		const self = this;
 		const results = [];
 		const convertedRatios = [];
-		let remainder = new Decimal( self.toSubunits() );
-		let total = new Decimal( 0 );
+		let remainder = new Decimal(self.toSubunits());
+		let total = new Decimal(0);
 		// convert ratios to decimal and generate total.
-		ratios.forEach( ( ratio ) => {
-			convertedRatios.push(
-				instanceOf( ratio, 'Decimal' ) ? ratio : new Decimal( ratio )
-			);
-			total = total.plus( ratio );
-		} );
-		convertedRatios.forEach( ( ratio ) => {
-			const share = new Decimal(
-				Math.floor(
-					self.toSubunits() * ratio.toNumber() / total.toNumber()
-				)
-			);
-			results.push(
-				new Money(
-					share.dividedBy( this.currency.subunits ),
-					this.currency
-				)
-			);
-			remainder = remainder.minus( share );
-		} );
-		for ( let i = 0; remainder.greaterThan( 0 ); i++ ) {
-			results[ i ] = new Money(
-				( new Decimal( results[ i ].toSubunits() ) )
-					.plus( 1 )
-					.dividedBy( this.currency.subunits ),
+		ratios.forEach(ratio => {
+			convertedRatios.push(instanceOf(ratio, 'Decimal') ? ratio : new Decimal(ratio));
+			total = total.plus(ratio);
+		});
+		convertedRatios.forEach(ratio => {
+			const share = new Decimal(Math.floor((self.toSubunits() * ratio.toNumber()) / total.toNumber()));
+			results.push(new Money(share.dividedBy(this.currency.subunits), this.currency));
+			remainder = remainder.minus(share);
+		});
+		for (let i = 0; remainder.greaterThan(0); i++) {
+			results[i] = new Money(
+				new Decimal(results[i].toSubunits()).plus(1).dividedBy(this.currency.subunits),
 				this.currency
 			);
-			remainder = remainder.minus( 1 );
+			remainder = remainder.minus(1);
 		}
 		return results;
 	}
@@ -328,23 +335,24 @@ export default class Money {
 	 * @return {number} 0 if they are the same, 1 if this is greater than
 	 * other and -1 if other is greater than this.
 	 */
-	compare( other ) {
+	compare(other) {
 		//quickly return 0 if identical
-		if ( this === other ) {
+		if (this === other) {
 			return 0;
 		}
-		Money.assertUsingSameCurrency( this, other );
-		return this.amount.comparedTo( other.amount );
+		Money.assertUsingSameCurrency(this, other);
+		return this.amount.comparedTo(other.amount);
 	}
 
 	/**
 	 * Compares whether this Money object is greater than the other Money object.
+	 *
 	 * @param {Money} other
 	 * @return {boolean} If true then this is greater than other.
 	 */
-	greaterThan( other ) {
-		Money.assertUsingSameCurrency( this, other );
-		return this.amount.greaterThan( other.amount );
+	greaterThan(other) {
+		Money.assertUsingSameCurrency(this, other);
+		return this.amount.greaterThan(other.amount);
 	}
 
 	/**
@@ -354,19 +362,20 @@ export default class Money {
 	 * @param {Money} other
 	 * @return {boolean} If true then this is greater than or equal to the other.
 	 */
-	greaterThanOrEqualTo( other ) {
-		Money.assertUsingSameCurrency( this, other );
-		return this.amount.greaterThanOrEqualTo( other.amount );
+	greaterThanOrEqualTo(other) {
+		Money.assertUsingSameCurrency(this, other);
+		return this.amount.greaterThanOrEqualTo(other.amount);
 	}
 
 	/**
 	 * Compares whether this Money object is less than the other Money object.
+	 *
 	 * @param {Money} other
 	 * @return {boolean} If true then this is less than other
 	 */
-	lessThan( other ) {
-		Money.assertUsingSameCurrency( this, other );
-		return this.amount.lessThan( other.amount );
+	lessThan(other) {
+		Money.assertUsingSameCurrency(this, other);
+		return this.amount.lessThan(other.amount);
 	}
 
 	/**
@@ -376,9 +385,9 @@ export default class Money {
 	 * @param {Money} other
 	 * @return {boolean} If true then this is less than or equal to other.
 	 */
-	lessThanOrEqualTo( other ) {
-		Money.assertUsingSameCurrency( this, other );
-		return this.amount.lessThanOrEqualTo( other.amount );
+	lessThanOrEqualTo(other) {
+		Money.assertUsingSameCurrency(this, other);
+		return this.amount.lessThanOrEqualTo(other.amount);
 	}
 
 	/**
@@ -410,6 +419,7 @@ export default class Money {
 
 	/**
 	 * Returns the value of this Money object as a number primitive.
+	 *
 	 * @return {number} Returns a number.
 	 */
 	toNumber() {
@@ -432,9 +442,9 @@ export default class Money {
 	 * in normal (fixed-point) notation rounded to decimal places using
 	 * rounding mode.
 	 */
-	toFixed( decimalPlaces, rounding = Money.ROUND_HALF_UP ) {
+	toFixed(decimalPlaces, rounding = Money.ROUND_HALF_UP) {
 		decimalPlaces = decimalPlaces || this.currency.decimalPlaces;
-		return this.amount.toFixed( decimalPlaces, rounding );
+		return this.amount.toFixed(decimalPlaces, rounding);
 	}
 
 	/**
@@ -445,22 +455,17 @@ export default class Money {
 	 * @return {Money} A new Money object
 	 */
 	toIntegerMoney() {
-		return new Money(
-			this.amount.toInteger(),
-			this.currency
-		);
+		return new Money(this.amount.toInteger(), this.currency);
 	}
 
 	/**
 	 * Returns the value of this Money object as a formatted string according
 	 * to the currency configuration.
+	 *
 	 * @return {string} Returns a formatted string according to Currency.
 	 */
 	toString() {
-		return this.formatter.format(
-			this.amount.toNumber(),
-			this.formatter.settings
-		);
+		return this.formatter.format(this.amount.toNumber(), this.formatter.settings);
 	}
 
 	/**
@@ -476,20 +481,22 @@ export default class Money {
 
 	/**
 	 * Asserts if the provided value is an instance of Money.
+	 *
 	 * @param {Money} money
 	 * @throws {TypeError}
 	 */
-	static assertMoney = ( money ) => {
-		assertMoney( money );
+	static assertMoney = money => {
+		assertMoney(money);
 	};
 
 	/**
 	 * Asserts if the provided value is an instance of Currency.
+	 *
 	 * @param {Currency} currency
 	 * @throws {TypeError}
 	 */
-	static assertCurrency = ( currency ) => {
-		assertCurrency( currency );
+	static assertCurrency = currency => {
+		assertCurrency(currency);
 	};
 
 	/**
@@ -500,21 +507,22 @@ export default class Money {
 	 * @param {Money} otherMoney
 	 * @throws {TypeError}
 	 */
-	static assertUsingSameCurrency = ( thisMoney, otherMoney ) => {
-		assertMoney( thisMoney );
-		assertMoney( otherMoney );
-		assertSameCurrency( thisMoney.currency, otherMoney.currency );
+	static assertUsingSameCurrency = (thisMoney, otherMoney) => {
+		assertMoney(thisMoney);
+		assertMoney(otherMoney);
+		assertSameCurrency(thisMoney.currency, otherMoney.currency);
 	};
 
 	/**
 	 * Asserts if two currencies are shallow equal.
+	 *
 	 * @param {Currency} currencyA
 	 * @param {Currency} currencyB
 	 * @throws {Exception}
 	 */
-	static assertSameCurrency = ( currencyA, currencyB ) => {
-		assertSameCurrency( currencyA, currencyB );
-	}
+	static assertSameCurrency = (currencyA, currencyB) => {
+		assertSameCurrency(currencyA, currencyB);
+	};
 
 	/**
 	 * Receives an incoming value that could be a money formatted
@@ -526,34 +534,35 @@ export default class Money {
 	 *
 	 * @return {Money} An instance of a money value object
 	 */
-	static fromMoneyValue = ( moneyValue, currency ) => {
-		assertCurrency( currency );
+	static fromMoneyValue = (moneyValue, currency) => {
+		assertCurrency(currency);
 		// detect if incoming value has a currency sign not matching provided
 		// currency.  This doesn't provide full protection from improper
 		// values sent in but is an initial safeguard.
-		if ( typeof moneyValue === 'string' ) {
-			const match = moneyValue.match( /[^\d\.\,\s]+/ );
-			if ( match && match[ 0 ] !== currency.sign ) {
+		if (typeof moneyValue === 'string') {
+			const match = moneyValue.match(/[^\d\.\,\s]+/);
+			if (match && match[0] !== currency.sign) {
 				// The first error message is used if we have just one character
 				// returned which is likely the currency symbol.  Otherwise,
 				// give a more generic message.
-				const message = match[ 0 ].length === 1 ?
-					sprintf(
-						'The provided money value has a %1$s sign in it, but the provided currency value object defines %2$s as the currency sign.',
-						match[ 0 ],
-						currency.sign
-					) :
-					sprintf(
-						'The provided money value has non numeric strings in it (%1$s), please double-check the value.',
-						match[ 0 ]
-					);
+				const message =
+					match[0].length === 1
+						? sprintf(
+								'The provided money value has a %1$s sign in it, but the provided currency value object defines %2$s as the currency sign.',
+								match[0],
+								currency.sign
+						  )
+						: sprintf(
+								'The provided money value has non numeric strings in it (%1$s), please double-check the value.',
+								match[0]
+						  );
 
-				throw new Error( message );
+				throw new Error(message);
 			}
 		}
 		// set the initial value object using the currency
-		const money = new Money( 0, currency );
+		const money = new Money(0, currency);
 		// set a new value using the parse on the formatter.
-		return money.setAmount( money.formatter.parse( moneyValue ) );
-	}
+		return money.setAmount(money.formatter.parse(moneyValue));
+	};
 }

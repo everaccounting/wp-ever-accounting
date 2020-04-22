@@ -1,7 +1,16 @@
-import {Component} from '@wordpress/element';
-import {withRouter} from "react-router-dom";
+/**
+ * WordPress dependencies
+ */
+import { Component } from '@wordpress/element';
+/**
+ * External dependencies
+ */
+import { withRouter } from 'react-router-dom';
 
-import Button from "../button";
+/**
+ * Internal dependencies
+ */
+import Button from '../button';
 
 class BackButton extends Component {
 	constructor(props) {
@@ -9,18 +18,14 @@ class BackButton extends Component {
 	}
 
 	render() {
-		const {history, className, compact = false , ...props} = this.props;
+		const { history, className, compact = false, ...props } = this.props;
 
 		return (
-			<Button
-				secondary
-				compact={compact}
-				className={className}
-				onClick={() => history.goBack()}>
+			<Button secondary compact={compact} className={className} onClick={() => history.goBack()}>
 				{this.props.children && this.props.children}
 			</Button>
-		)
+		);
 	}
 }
 
-export default withRouter(BackButton)
+export default withRouter(BackButton);

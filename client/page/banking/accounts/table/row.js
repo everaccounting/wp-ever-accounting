@@ -1,8 +1,8 @@
-import {Component, Fragment} from 'react';
+import { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import {RowActions} from '@eaccounting/components';
-import {__} from '@wordpress/i18n';
-import {Link} from "react-router-dom";
+import { RowActions } from '@eaccounting/components';
+import { __ } from '@wordpress/i18n';
+import { Link } from 'react-router-dom';
 export default class Row extends Component {
 	static propTypes = {
 		item: PropTypes.object.isRequired,
@@ -15,12 +15,11 @@ export default class Row extends Component {
 	}
 
 	render() {
-		const {isLoading, item, isSelected, match, history} = this.props;
-		const {id, name, balance, number} = item;
+		const { isLoading, item, isSelected, match, history } = this.props;
+		const { id, name, balance, number, bank_name } = item;
 		return (
 			<Fragment>
 				<tr className={isLoading ? 'disabled' : ''}>
-
 					<th scope="row" className="check-column">
 						<input
 							type="checkbox"
@@ -35,10 +34,12 @@ export default class Row extends Component {
 					<td scope="row" className="column-primary column-name">
 						<Link to={`${match.path}/${id}/edit`}>{this.props.getTableProp(name)}</Link>
 					</td>
+					<td className="column-money ea-money">{this.props.getTableProp(balance)}</td>
 					<td className="column-number">{this.props.getTableProp(number)}</td>
-					<td className="column-money">{this.props.getTableProp(balance)}</td>
+					<td className="column-number">{this.props.getTableProp(bank_name)}</td>
 					<td className="column-actions">
-						<RowActions controls={[
+						<RowActions
+							controls={[
 								{
 									title: __('Edit'),
 									onClick: () => history.push(`${match.path}/${id}/edit`),

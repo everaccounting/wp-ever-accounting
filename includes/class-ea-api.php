@@ -55,6 +55,7 @@ class EAccounting_API {
 			dirname( __FILE__ ) . '/api/class-ea-rest-transactions-controller.php' => 'EAccounting_Transactions_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-items-controller.php'        => 'EAccounting_Items_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-files-controller.php'        => 'EAccounting_Files_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-reports-controller.php'      => 'EAccounting_Reports_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-settings-controller.php'     => 'EAccounting_Settings_Controller',
 		);
 

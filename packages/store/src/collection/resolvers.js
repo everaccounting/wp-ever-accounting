@@ -1,9 +1,21 @@
-import {receiveResponse, receiveCollection, receiveCollectionWithRouteParts, receiveEntity, receiveEntitiesWithRouteParts} from './actions';
-import {fetch, fetchFromAPIWithTotal, resolveSelect} from '../base-controls';
-import {REDUCER_KEY as SCHEMA_REDUCER_KEY} from '../schema/constants';
-import {addQueryArgs} from '@wordpress/url';
-import {isResolving} from "../base-selectors";
-import {REDUCER_KEY} from "./constants";
+/**
+ * Internal dependencies
+ */
+import {
+	receiveResponse,
+	receiveCollection,
+	receiveCollectionWithRouteParts,
+	receiveEntity,
+	receiveEntitiesWithRouteParts,
+} from './actions';
+import { fetch, fetchFromAPIWithTotal, resolveSelect } from '../base-controls';
+import { REDUCER_KEY as SCHEMA_REDUCER_KEY } from '../schema/constants';
+/**
+ * WordPress dependencies
+ */
+import { addQueryArgs } from '@wordpress/url';
+import { isResolving } from '../base-selectors';
+import { REDUCER_KEY } from './constants';
 
 /**
  * Resolver for generic items returned from an endpoint.
@@ -15,7 +27,7 @@ import {REDUCER_KEY} from "./constants";
 export function* fetchAPI(resourceName, query = null) {
 	const queryString = addQueryArgs('', query);
 	const route = yield resolveSelect(SCHEMA_REDUCER_KEY, 'getRoute', resourceName);
-	const response = yield fetch({path: route + queryString});
+	const response = yield fetch({ path: route + queryString });
 	yield receiveResponse(resourceName, queryString, response);
 }
 
@@ -26,9 +38,9 @@ export function* fetchAPI(resourceName, query = null) {
  *
  * getCollection('contacts', {type='customer'})
  *
- * @param {String} resourceName
+ * @param {string} resourceName
  * @param {Object} query
- * @returns {Generator<Object|{path: string, type: string}|{args: Array[], reducerKey: string, selectorName: string, type: string}, *, ?>}
+ * @return {Generator<Object|{path: string, type: string}|{args: Array[], reducerKey: string, selectorName: string, type: string}, *, ?>}
  */
 export function* getCollection(resourceName, query = null) {
 	const queryString = addQueryArgs('', query);
@@ -38,23 +50,22 @@ export function* getCollection(resourceName, query = null) {
 	return response;
 }
 
-
 /**
  * This is same like getCollection but with the feature of calling from url parts
  * like from this url customer/customers
  *
  * getCollection('contacts', ['customers'], {type='customer'})
  *
- * @param {String} resourceName
+ * @param {string} resourceName
  * @param {Array} parts
  * @param {Object} query
- * @returns {Generator<Object|{path: string, type: string}|{args: Array[], reducerKey: string, selectorName: string, type: string}, *, ?>}
+ * @return {Generator<Object|{path: string, type: string}|{args: Array[], reducerKey: string, selectorName: string, type: string}, *, ?>}
  */
 export function* getCollectionWithRouteParts(resourceName, parts = [], query = null) {
 	const queryString = addQueryArgs('', query);
 	const route = yield resolveSelect(SCHEMA_REDUCER_KEY, 'getRoute', resourceName, parts);
 	const response = yield fetchFromAPIWithTotal(route + queryString);
-	yield receiveCollectionWithRouteParts(resourceName, parts,queryString, response);
+	yield receiveCollectionWithRouteParts(resourceName, parts, queryString, response);
 	return response;
 }
 
@@ -64,32 +75,31 @@ export function* getCollectionWithRouteParts(resourceName, parts = [], query = n
  * getEntityById('contacts', 10, {include:'address'})
  *
  * @param resourceName
- * @param {Number} id
+ * @param {number} id
  * @param {Object} query
- * @returns {Generator<Object|{args: Array[], reducerKey: string, selectorName: string, type: string}|{type: string, request: Object}, *, ?>}
+ * @return {Generator<Object|{args: Array[], reducerKey: string, selectorName: string, type: string}|{type: string, request: Object}, *, ?>}
  */
 export function* getEntityById(resourceName, id = null, query = null) {
 	const queryString = addQueryArgs('', query);
 	const route = yield resolveSelect(SCHEMA_REDUCER_KEY, 'getRoute', resourceName, [id]);
-	const response = yield fetch({path: route + queryString});
-	yield receiveEntity(resourceName,id, queryString, response);
+	const response = yield fetch({ path: route + queryString });
+	yield receiveEntity(resourceName, id, queryString, response);
 	return response;
 }
-
 
 /**
  * This is same as getEntityById with the featured address from complex endpoint
  *
- * @param {String} resourceName
+ * @param {string} resourceName
  * @param {Array} parts
- * @param {Number} id
+ * @param {number} id
  * @param {Object} query
- * @returns {Generator<Object|{args: Array[], reducerKey: string, selectorName: string, type: string}|{type: string, request: Object}, *, ?>}
+ * @return {Generator<Object|{args: Array[], reducerKey: string, selectorName: string, type: string}|{type: string, request: Object}, *, ?>}
  */
 export function* getEntitiesWithRouteParts(resourceName, parts = [], id = null, query = null) {
 	const queryString = addQueryArgs('', query);
 	const route = yield resolveSelect(SCHEMA_REDUCER_KEY, 'getRoute', resourceName, [id]);
-	const response = yield fetch({path: route + queryString});
+	const response = yield fetch({ path: route + queryString });
 	yield receiveEntitiesWithRouteParts(resourceName, queryString, response);
 	return response;
 }

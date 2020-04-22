@@ -1,39 +1,49 @@
 /**
  * WordPress dependencies
  */
-import {Component} from '@wordpress/element';
+import { Component } from '@wordpress/element';
 /**
  * External dependencies
  */
 import PropTypes from 'prop-types';
-import {BaseControl} from '@wordpress/components';
-import {__} from '@wordpress/i18n';
+import { BaseControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
 import Select from 'react-select';
-import {merge} from "lodash";
+import { merge } from 'lodash';
 
 export default class SelectControl extends Component {
 	transformValue = (value, options, isMulti) => {
 		if (isMulti && typeof value === 'string') return [];
 		const filteredOptions = options.filter(option => {
-			return isMulti
-				? value.indexOf(option.value) !== -1
-				: option.value === value;
+			return isMulti ? value.indexOf(option.value) !== -1 : option.value === value;
 		});
 
 		return isMulti ? filteredOptions : filteredOptions[0];
 	};
 
-	singleChangeHandler = (value) => {
-		this.props.onChange && this.props.onChange(value ? value.value : '')
+	singleChangeHandler = value => {
+		this.props.onChange && this.props.onChange(value ? value.value : '');
 	};
 
-	multiChangeHandler = (values) => {
-		this.props.onChange && this.props.onChange(values && values.map(value => value.value)|| [])
+	multiChangeHandler = values => {
+		this.props.onChange && this.props.onChange((values && values.map(value => value.value)) || []);
 	};
 
 	render() {
-		const {label, help, className, before, after, required, value = '', options, isMulti = false, OnChange, ...props} = this.props;
+		const {
+			label,
+			help,
+			className,
+			before,
+			after,
+			required,
+			value = '',
+			options,
+			isMulti = false,
+			OnChange,
+			...props
+		} = this.props;
 		const classes = classnames('ea-form-group', 'ea-select-field', className, {
 			required: !!required,
 		});
@@ -51,10 +61,8 @@ export default class SelectControl extends Component {
 						value={this.transformValue(value, options, isMulti)}
 						options={options}
 						isMulti={isMulti}
-						onChange={isMulti
-							? this.multiChangeHandler
-							: this.singleChangeHandler
-						}/>
+						onChange={isMulti ? this.multiChangeHandler : this.singleChangeHandler}
+					/>
 
 					{after && <span className="ea-input-group__after">{after}</span>}
 				</div>

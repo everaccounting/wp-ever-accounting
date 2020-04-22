@@ -4,8 +4,8 @@
 	box-sizing: border-box;
 
 	&.required {
-		.components-base-control__label:after {
-			content: ' *';
+		.components-base-control__label::after {
+			content: " *";
 			color: red;
 			font-weight: 700;
 		}
@@ -13,7 +13,7 @@
 
 	&.is-loading {
 		.placeholder-container {
-			height: 32px
+			height: 32px;
 		}
 
 		.placeholder-loading {
@@ -25,7 +25,8 @@
 	}
 
 
-	label, .components-base-control__label {
+	label,
+	.components-base-control__label {
 		display: block;
 		max-width: 100%;
 		margin-bottom: 5px;
@@ -65,11 +66,11 @@
 	flex-direction: row;
 	width: 100%;
 
-	input[type='email'],
-	input[type='password'],
-	input[type='url'],
-	input[type='text'],
-	input[type='number'] {
+	input[type="email"],
+	input[type="password"],
+	input[type="url"],
+	input[type="text"],
+	input[type="number"] {
 		flex-grow: 1;
 		margin: 0;
 
@@ -109,7 +110,7 @@
 .ea-input-group__before,
 .ea-input-group__after {
 	position: relative;
-	background: #ffffff;
+	background: #fff;
 	border: 1px solid #d2d6de;
 	color: #555;
 	padding: 6px 14px;
@@ -122,11 +123,11 @@
 .ea-input-group__before {
 	border-right: none;
 
-	& + input[type='email'],
-	& + input[type='password'],
-	& + input[type='url'],
-	& + input[type='text'],
-	& + input[type='number'] {
+	& + input[type="email"],
+	& + input[type="password"],
+	& + input[type="url"],
+	& + input[type="text"],
+	& + input[type="number"] {
 		&:disabled {
 			border-left-color: #e2e4e7;
 			border-right-width: 1px;

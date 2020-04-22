@@ -1,17 +1,18 @@
 /**
  * Get table
+ *
  * @param state
- * @returns {*}
+ * @return {*}
  */
-export const getTable = (state) => {
-  	return state.table;
+export const getTable = state => {
+	return state.table;
 };
 
 /**
  *
  * @param state
- * @returns {*}
+ * @return {*}
  */
-export const getSettings = (state) => {
+export const getSettings = state => {
 	return state.settings;
 };

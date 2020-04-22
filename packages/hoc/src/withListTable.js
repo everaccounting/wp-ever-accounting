@@ -1,16 +1,19 @@
 /**
  * WordPress dependencies
  */
-import {Component, Fragment, createRef} from '@wordpress/element';
-import {createHigherOrderComponent, compose} from '@wordpress/compose';
-import {withDispatch, withSelect} from '@wordpress/data';
-import {__} from "@wordpress/i18n";
-import {addQueryArgs} from "@wordpress/url"
+import { Component, Fragment, createRef } from '@wordpress/element';
+import { createHigherOrderComponent, compose } from '@wordpress/compose';
+import { withDispatch, withSelect } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
+import { addQueryArgs } from '@wordpress/url';
 import isShallowEqual from '@wordpress/is-shallow-equal';
-import {xor} from 'lodash';
-import apiFetch from "@wordpress/api-fetch";
-import {NotificationManager} from 'react-notifications';
-import {get, pickBy, isObject, clone, isEmpty} from "lodash";
+/**
+ * External dependencies
+ */
+import { xor } from 'lodash';
+import apiFetch from '@wordpress/api-fetch';
+import { NotificationManager } from 'react-notifications';
+import { get, pickBy, isObject, clone, isEmpty } from 'lodash';
 
 const withListTable = (table = {}) => {
 	return createHigherOrderComponent(WrappedComponent => {
@@ -43,7 +46,6 @@ const withListTable = (table = {}) => {
 				}
 			}
 
-
 			/**
 			 * This is a helper function for updating and creating entities
 			 * callback after() can be used do after ward processing
@@ -51,36 +53,42 @@ const withListTable = (table = {}) => {
 			 * @param data
 			 * @param after
 			 * @param autoUpdateStore
-			 * @returns {Promise<void>}
+			 * @return {Promise<void>}
 			 */
-			async handleSubmit(data, after = (res) => {
-			}, autoUpdateStore = true) {
-				await apiFetch({path: `ea/v1/${resourceName}`, method: 'POST', data}).then(res => {
-					after(res);
-					data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
-					data && !data.id && autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', resourceName);
-				}).catch(error => {
-					NotificationManager.error(error.message);
-				});
+			async handleSubmit(data, after = res => {}, autoUpdateStore = true) {
+				await apiFetch({ path: `ea/v1/${resourceName}`, method: 'POST', data })
+					.then(res => {
+						after(res);
+						data && data.id && autoUpdateStore && this.props.replaceEntity(resourceName, res);
+						data &&
+							!data.id &&
+							autoUpdateStore &&
+							this.props.resetForSelectorAndResource('getCollection', resourceName);
+					})
+					.catch(error => {
+						NotificationManager.error(error.message);
+					});
 			}
 
 			/**
 			 * This handles delete of the table items
 			 * callback after() can be used do after ward processing
+			 *
 			 * @param id
 			 * @param after
 			 * @param autoUpdateStore
-			 * @returns {Promise<void>}
+			 * @return {Promise<void>}
 			 */
-			async handleDelete(id, after = (res) => {
-			}, autoUpdateStore = true) {
-				if (true === confirm(__('Are you sure you want to delete this item?'))) {
-					await apiFetch({path: `ea/v1/${this.props.resourceName}/${id}`, method: 'DELETE'}).then(res => {
-						after(res);
-						autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
-					}).catch(error => {
-						NotificationManager.error(error.message);
-					});
+			async handleDelete(id, after = res => {}, autoUpdateStore = true) {
+				if (confirm(__('Are you sure you want to delete this item?')) === true) {
+					await apiFetch({ path: `ea/v1/${this.props.resourceName}/${id}`, method: 'DELETE' })
+						.then(res => {
+							after(res);
+							autoUpdateStore && this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
+						})
+						.catch(error => {
+							NotificationManager.error(error.message);
+						});
 				}
 			}
 
@@ -97,6 +105,7 @@ const withListTable = (table = {}) => {
 
 			/**
 			 * Set all item toggle select
+			 *
 			 * @param onoff
 			 */
 			setAllSelected(onoff) {
@@ -107,35 +116,33 @@ const withListTable = (table = {}) => {
 
 			/**
 			 * This method handles bulk action
+			 *
 			 * @param action
 			 */
 			setAction(action) {
-				const {selected} = this.state;
+				const { selected } = this.state;
 				switch (action) {
 					case 'delete':
-						if (true === confirm(__('Are you sure you want to delete these selected item?'))) {
+						if (confirm(__('Are you sure you want to delete these selected item?')) === true) {
 							selected.map(id => {
 								apiFetch({
 									path: `ea/v1/${this.props.resourceName}/${id}`,
-									method: 'DELETE'
-								}).then(res => {
-
-								}).catch(error => {
-									NotificationManager.error(error.message)
-								});
+									method: 'DELETE',
+								})
+									.then(res => {})
+									.catch(error => {
+										NotificationManager.error(error.message);
+									});
 							});
 
-							this.setState({selected: []});
-							this.props.setContextQuery(resourceName, {...this.props.query, search, page: 1});
+							this.setState({ selected: [] });
+							this.props.setContextQuery(resourceName, { ...this.props.query, search, page: 1 });
 							this.props.resetForSelectorAndResource('getCollection', this.props.resourceName);
 						}
 
 						break;
 					default:
-						const {
-							actions = () => {
-							}
-						} = table;
+						const { actions = () => {} } = table;
 						actions(action, this.props);
 						break;
 				}
@@ -143,25 +150,25 @@ const withListTable = (table = {}) => {
 
 			/**
 			 * extract table props
+			 *
 			 * @param value
 			 * @param path
 			 * @param defaults
-			 * @returns {*}
+			 * @return {*}
 			 */
 			getTableProp(value, path, defaults = '-') {
 				return isObject(value) ? get(value, path, defaults) : isEmpty(value) ? defaults : value;
 			}
 
-
 			render() {
-				const {items, status, resourceName} = this.props;
-				const {page = 1, per_page = 50, orderby = '', order = '', ...filters} = this.props.query;
+				const { items, status, resourceName } = this.props;
+				const { page = 1, per_page = 50, orderby = '', order = '', ...filters } = this.props.query;
 				return (
 					<Fragment>
 						<WrappedComponent
 							{...this.props}
-							filters={{...filters}}
-							hasFilter={!isEmpty({...filters})}
+							filters={{ ...filters }}
+							hasFilter={!isEmpty({ ...filters })}
 							selected={this.state.selected}
 							total={this.state.total}
 							page={page}
@@ -177,55 +184,54 @@ const withListTable = (table = {}) => {
 							getTableProp={this.getTableProp}
 							setPage={(page, removeSelected = true) => {
 								this.props.setQuery(resourceName, 'page', page);
-								removeSelected && this.setState({selected: []});
+								removeSelected && this.setState({ selected: [] });
 							}}
 							setOrderBy={(orderby, order) => {
-								this.props.setContextQuery(resourceName, {...this.props.query, orderby, order})
+								this.props.setContextQuery(resourceName, { ...this.props.query, orderby, order });
 							}}
-							setSearch={(search) => {
-								this.props.setContextQuery(resourceName, {...this.props.query, search, page: 1})
+							setSearch={search => {
+								this.props.setContextQuery(resourceName, { ...this.props.query, search, page: 1 });
 							}}
-							setFilter={(filter) => {
-								this.props.setContextQuery(resourceName, {...{...this.props.query, page: 1}, ...filter})
+							setFilter={filter => {
+								this.props.setContextQuery(resourceName, { ...{ ...this.props.query, page: 1 }, ...filter });
 							}}
 						/>
 					</Fragment>
 				);
 			}
-
 		}
 
 		return compose(
 			withSelect((select, ownProp) => {
-				const page = ownProp.location.pathname.split("/").pop() || '';
-				const {resourceName = page, queryFilter = (x) => x} = table;
-				const {getCollection, isRequestingGetCollection} = select('ea/collection');
-				const {getQuery} = select('ea/query');
+				const page = ownProp.location.pathname.split('/').pop() || '';
+				const { resourceName = page, queryFilter = x => x } = table;
+				const { getCollection, isRequestingGetCollection } = select('ea/collection');
+				const { getQuery } = select('ea/query');
 				const queries = getQuery(resourceName);
 				const pageQuery = queryFilter(clone(queries));
-				const {items = [], total = NaN} = getCollection(resourceName, pageQuery);
+				const { items = [], total = NaN } = getCollection(resourceName, pageQuery);
 				return {
-					items: items,
-					total: total,
+					items,
+					total,
 					resourceName,
 					query: queries,
-					status: isRequestingGetCollection(resourceName, pageQuery) === true ? "STATUS_IN_PROGRESS" : "STATUS_COMPLETE",
-				}
+					status:
+						isRequestingGetCollection(resourceName, pageQuery) === true ? 'STATUS_IN_PROGRESS' : 'STATUS_COMPLETE',
+				};
 			}),
-			withDispatch((dispatch => {
-				const {setQuery, setContextQuery} = dispatch('ea/query');
-				const {replaceEntity, deleteEntityById, resetForSelectorAndResource} = dispatch('ea/collection');
+			withDispatch(dispatch => {
+				const { setQuery, setContextQuery } = dispatch('ea/query');
+				const { replaceEntity, deleteEntityById, resetForSelectorAndResource } = dispatch('ea/collection');
 				return {
 					setQuery,
 					setContextQuery,
 					replaceEntity,
 					deleteEntityById,
 					resetForSelectorAndResource,
-				}
-			}))
-		)(Hoc)
+				};
+			})
+		)(Hoc);
 	}, 'withListTable');
 };
-
 
 export default withListTable;

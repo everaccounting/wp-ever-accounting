@@ -2,7 +2,7 @@
  * External dependencies
  */
 
-import {__} from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
 export const getHeaders = () => [
 	{
@@ -15,14 +15,19 @@ export const getHeaders = () => [
 		primary: true,
 	},
 	{
+		name: 'balance',
+		title: __('Balance'),
+		sortable: false,
+	},
+	{
 		name: 'number',
 		title: __('Number'),
 		sortable: true,
 	},
 	{
-		name: 'balance',
-		title: __('Balance'),
-		sortable: false,
+		name: 'bank_name',
+		title: __('Bank Name'),
+		sortable: true,
 	},
 	{
 		name: 'actions',

@@ -7,11 +7,8 @@
  * @param {string} expectedName
  * @return {boolean} True means the object is an instance of expectedName.
  */
-export function instanceOf( objectInstance, expectedName ) {
-	if ( ! objectInstance ||
-		! objectInstance.constructor ||
-		! objectInstance.constructor.name
-	) {
+export function instanceOf(objectInstance, expectedName) {
+	if (!objectInstance || !objectInstance.constructor || !objectInstance.constructor.name) {
 		return false;
 	}
 	return objectInstance.constructor.name === expectedName;

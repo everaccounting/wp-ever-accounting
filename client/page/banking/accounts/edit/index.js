@@ -1,6 +1,6 @@
-import {Component, Fragment} from 'react';
-import {__, sprintf} from '@wordpress/i18n';
-import {withEntity} from "@eaccounting/hoc";
+import { Component, Fragment } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
+import { withEntity } from '@eaccounting/hoc';
 import {
 	FormCard,
 	CurrencySelect,
@@ -8,16 +8,20 @@ import {
 	TextareaControl,
 	TextControl,
 	BackButton,
-	Button
-} from "@eaccounting/components";
-import {Form, Field} from "react-final-form";
-import {NotificationManager} from "react-notifications";
-import {get, pickBy, isObject} from "lodash";
+	Button,
+} from '@eaccounting/components';
+import { Form, Field } from 'react-final-form';
+import { NotificationManager } from 'react-notifications';
+import { get, pickBy, isObject } from 'lodash';
 
-const processFormData = (data) => (pickBy({
-	...data,
-	currency_code: get(data, 'currency.code')
-}, value => !isObject(value)));
+const processFormData = data =>
+	pickBy(
+		{
+			...data,
+			currency_code: get(data, 'currency.code'),
+		},
+		value => !isObject(value)
+	);
 
 class EditAccount extends Component {
 	constructor(props) {
@@ -26,32 +30,25 @@ class EditAccount extends Component {
 	}
 
 	onSubmit(form) {
-		const {history, isAdd} = this.props;
-		this.props.handleSubmit(form, function (res) {
+		const { history, isAdd } = this.props;
+		this.props.handleSubmit(form, function(res) {
 			NotificationManager.success(sprintf(__('"%s" account %s.'), res.name, isAdd ? __('created') : __('updated')));
-			history.push('/banking/accounts')
+			history.push('/banking/accounts');
 		});
 	}
 
 	render() {
-		const {isAdd, item} = this.props;
+		const { isAdd, item } = this.props;
 		return (
 			<Fragment>
 				<FormCard title={isAdd ? __('Add Account') : __('Update Account')}>
 					<Form
 						onSubmit={data => this.onSubmit(processFormData(data))}
 						initialValues={item}
-						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
+						render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
 							<form onSubmit={handleSubmit} className="ea-row">
-
-								<Field
-									label={__('Account Name', 'wp-ever-accounting')}
-									name="name"
-									className="ea-col-6"
-									required>
-									{props => (
-										<TextControl {...props.input} {...props}/>
-									)}
+								<Field label={__('Account Name', 'wp-ever-accounting')} name="name" className="ea-col-6" required>
+									{props => <TextControl {...props.input} {...props} />}
 								</Field>
 
 								<Field
@@ -59,10 +56,9 @@ class EditAccount extends Component {
 									className="ea-col-6"
 									parse={value => value}
 									name="number"
-									required>
-									{props => (
-										<TextControl {...props.input} {...props}/>
-									)}
+									required
+								>
+									{props => <TextControl {...props.input} {...props} />}
 								</Field>
 
 								<Field
@@ -71,10 +67,9 @@ class EditAccount extends Component {
 									className="ea-col-6"
 									parse={value => value}
 									enableCreate={true}
-									required>
-									{props => (
-										<CurrencySelect {...props.input} {...props}/>
-									)}
+									required
+								>
+									{props => <CurrencySelect {...props.input} {...props} />}
 								</Field>
 
 								<Field
@@ -84,54 +79,48 @@ class EditAccount extends Component {
 									parse={value => value}
 									className="ea-col-6"
 									code={values && values.currency && values.currency.code && values.currency.code}
-									required>
-									{props => (
-										<PriceControl {...props.input} {...props}/>
-									)}
+									required
+								>
+									{props => <PriceControl {...props.input} {...props} />}
 								</Field>
 
 								<Field
 									label={__('Bank Name', 'wp-ever-accounting')}
 									className="ea-col-6"
 									parse={value => value}
-									name="bank_name">
-									{props => (
-										<TextControl {...props.input} {...props}/>
-									)}
+									name="bank_name"
+								>
+									{props => <TextControl {...props.input} {...props} />}
 								</Field>
 
 								<Field
 									label={__('Bank Phone', 'wp-ever-accounting')}
 									className="ea-col-6"
 									parse={value => value}
-									name="bank_phone">
-									{props => (
-										<TextControl {...props.input} {...props}/>
-									)}
+									name="bank_phone"
+								>
+									{props => <TextControl {...props.input} {...props} />}
 								</Field>
 
 								<Field
 									label={__('Bank Address', 'wp-ever-accounting')}
 									className="ea-col-12"
 									parse={value => value}
-									name="bank_address">
-									{props => (
-										<TextareaControl {...props.input} {...props}/>
-									)}
+									name="bank_address"
+								>
+									{props => <TextareaControl {...props.input} {...props} />}
 								</Field>
 
 								<p className="ea-col-12">
-									<Button
-										isPrimary
-										disabled={submitting || pristine}
-										type="submit">{__('Submit')}
+									<Button isPrimary disabled={submitting || pristine} type="submit">
+										{__('Submit')}
 									</Button>
 
 									<BackButton>{__('Cancel')}</BackButton>
 								</p>
-
 							</form>
-						)}/>
+						)}
+					/>
 				</FormCard>
 			</Fragment>
 		);

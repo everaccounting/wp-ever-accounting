@@ -5,56 +5,26 @@ defined( 'ABSPATH' ) || exit();
  * Get financial Start
  *
  * since 1.0.0
- * @return array
+ * @return string
  */
-function eaccounting_get_financial_start( $year = null ) {
+function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 	$financial_start = apply_filters( 'eaccounting_financial_start', '01-01' );
 	$setting         = explode( '-', $financial_start );
 	$day             = ! empty( $setting[0] ) ? $setting[0] : '01';
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
 	$year            = empty( $year ) ? date( 'Y' ) : $year;
 
-	return array(
-		'year'  => $year,
-		'month' => $month,
-		'day'   => $day,
-	);
+	$financial_year = new DateTime();
+	$financial_year->setDate( $year, $month, $day );
+
+//	$now = new DateTime();
+//	if ( $now->diff( $financial_year )->format( '%a' ) > 0 ) {
+//		$financial_year->sub( new \DateInterval( 'P1Y' ) );
+//	}
+
+	return $financial_year->format( $format );
 }
 
-/**
- * Display a WooCommerce help tip.
- *
- * @param string $tip Help tip text.
- * @param bool $allow_html Allow sanitized HTML if true or escape.
- *
- * @return string
- * @since  1.0.0
- *
- */
-function eaccounting_help_tip( $tip, $allow_html = false ) {
-	if ( $allow_html ) {
-		$tip = htmlspecialchars(
-			wp_kses(
-				html_entity_decode( $tip ),
-				array(
-					'br'     => array(),
-					'em'     => array(),
-					'strong' => array(),
-					'small'  => array(),
-					'span'   => array(),
-					'ul'     => array(),
-					'li'     => array(),
-					'ol'     => array(),
-					'p'      => array(),
-				)
-			)
-		);
-	} else {
-		$tip = esc_attr( $tip );
-	}
-
-	return '<span class="eaccounting-help-tip" data-tip="' . $tip . '"></span>';
-}
 
 /**
  * Get income by category
@@ -68,7 +38,7 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
 function eaccounting_get_income_by_categories( $start = null, $end = null ) {
 
 	global $wpdb;
-	$query_fields = " category_id, SUM(amount) total ";
+	$query_fields = " category_id, SUM(amount/currency_rate) total ";
 	$query_from   = " from $wpdb->ea_revenues ";
 	$query_where  = "WHERE category_id NOT IN (select id from $wpdb->ea_categories WHERE type='other') ";
 
@@ -92,19 +62,6 @@ function eaccounting_get_income_by_categories( $start = null, $end = null ) {
 	}
 
 	return $results;
-}
-
-
-function eaccounting_cashflow_income( $start = null, $end = null ) {
-	if ( empty( $start ) ) {
-		$start = date( "1-1-Y" );
-	}
-
-	if ( empty( $end ) ) {
-		$end = date( "31-12-Y" );
-	}
-	global $wpdb;
-
 }
 
 /**
@@ -153,8 +110,9 @@ function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' )
 	$request->set_query_params( $args );
 	$response = rest_do_request( $request );
 	$server   = rest_get_server();
+	$result   = $server->response_to_data( $response, false );
 
-	return $server->response_to_data( $response, false );
+	return $result;
 }
 
 /**

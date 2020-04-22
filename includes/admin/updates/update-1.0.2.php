@@ -1,25 +1,24 @@
 <?php
-defined( 'ABSPATH') || exit();
+defined( 'ABSPATH' ) || exit();
 
 function eaccounting_update_1_0_2() {
-	EAccounting_Install::install();
-	error_log( "UPDATING");
+	EAccounting_Install::create_tables();
 	global $wpdb;
-	$prefix          = $wpdb->prefix;
+	$prefix        = $wpdb->prefix;
 	$localization  = get_option( 'eaccounting_localisation', [] );
 	$currency_code = array_key_exists( 'currency', $localization ) ? $localization['currency'] : 'USD';
+	$currency_code = empty( $currency_code ) ? 'USD' : sanitize_text_field( $currency_code );
 	$currency_data = eaccounting_get_currency_config( $currency_code );
-	$currency_id = eaccounting_insert_currency( [
+	$currency_id   = eaccounting_insert_currency( [
 		'name' => $currency_data['name'],
 		'code' => $currency_data['code'],
 		'rate' => 1,
 	] );
 
-	update_option( 'ea_default_payment_method', 'cash');
-	update_option( 'ea_default_currency_id', intval( $currency_id));
-
-	$account_id = $wpdb->get_row("SELECT id from $wpdb->ea_accounts order by id asc");
-	update_option( 'ea_default_account_id', intval( $account_id));
+	update_option( 'ea_default_payment_method', 'cash' );
+	if ( ! is_wp_error( $currency_id ) ) {
+		update_option( 'ea_default_currency_id', intval( $currency_id ) );
+	}
 
 	$current_user_id = eaccounting_get_creator_id();
 
@@ -91,16 +90,17 @@ function eaccounting_update_1_0_2() {
 	foreach ( $contacts as $contact ) {
 		$file_id = eaccounting_update_insert_file_1_0_2( $contact->avatar_url, $current_user_id );
 		$name    = implode( " ", [ $contact->first_name, $contact->last_name ] );
-		$wpdb->update( $wpdb->ea_contacts, [ 'name' => $name, 'type' => 'customer', 'file_id' => $file_id, 'creator_id' => $current_user_id ], ['id'=> $contact->id] );
+		$wpdb->update( $wpdb->ea_contacts, [ 'currency_code' => $currency_data['code'], 'name' => $name, 'type' => 'customer', 'file_id' => $file_id, 'creator_id' => $current_user_id ], [ 'id' => $contact->id ] );
 		$payment_ids = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $wpdb->ea_payments WHERE contact_id=%d", $contact->id ) );
 		if ( ! empty( $payment_ids ) ) {
 			$data        = (array) $contact;
 			$vendor_data = wp_parse_args( array(
-				'id'         => null,
-				'name'       => $name,
-				'type'       => 'vendor',
-				'file_id'    => $file_id,
-				'creator_id' => $current_user_id,
+				'id'            => null,
+				'name'          => $name,
+				'type'          => 'vendor',
+				'currency_code' => $currency_data['code'],
+				'file_id'       => $file_id,
+				'creator_id'    => $current_user_id,
 			), $data );
 
 			if ( false !== $wpdb->insert( $wpdb->ea_contacts, $vendor_data ) ) {
@@ -110,7 +110,20 @@ function eaccounting_update_1_0_2() {
 	}
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `types`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `avatar_url`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `first_name`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `last_name`;" );
+
+
+	$account_id = $wpdb->get_var( "SELECT id from $wpdb->ea_accounts order by id asc" );
+	if ( empty( $account_id ) ) {
+		$account_id = eaccounting_insert_account( [
+			'name'            => __( 'Cash', 'wp-ever-accounting' ),
+			'number'          => '',
+			'opening_balance' => '0',
+		] );
+	}
+	update_option( 'ea_default_account_id', intval( $account_id ) );
+
 }
 
 function eaccounting_update_insert_file_1_0_2( $url, $user_id = 1 ) {

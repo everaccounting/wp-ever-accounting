@@ -1,9 +1,12 @@
 /**
  * WordPress dependencies
  */
-import {Component} from '@wordpress/element';
-import {createHigherOrderComponent} from '@wordpress/compose';
-import {BaseControl} from '@wordpress/components';
+import { Component } from '@wordpress/element';
+import { createHigherOrderComponent } from '@wordpress/compose';
+import { BaseControl } from '@wordpress/components';
+/**
+ * External dependencies
+ */
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import cuid from 'cuid';
@@ -13,12 +16,12 @@ export const withBaseControl = createHigherOrderComponent(WrappedComponent => {
 		constructor(props) {
 			super(props);
 			this.state = {
-				value:''
-			}
+				value: '',
+			};
 		}
 
 		render() {
-			const {label, help, className, before, after, required} = this.props;
+			const { label, help, className, before, after, required } = this.props;
 			const classes = classNames('ea-form-group', className, {
 				required: !!required,
 			});
@@ -41,22 +44,19 @@ export const withBaseControl = createHigherOrderComponent(WrappedComponent => {
 					<div className="ea-input-group">
 						{before && (
 							<span id={`${id}__before`} className="ea-input-group__before">
-							{before}
-						</span>
+								{before}
+							</span>
 						)}
-						<WrappedComponent
-							{...this.props}
-							aria-describedby={describedby.join(' ')}
-						/>
+						<WrappedComponent {...this.props} aria-describedby={describedby.join(' ')} />
 						{after && (
 							<span id={`${id}__after`} className="ea-input-group__after">
-							{after}
-						</span>
+								{after}
+							</span>
 						)}
 					</div>
 				</BaseControl>
 			);
-		};
+		}
 	}
 
 	Hoc.propTypes = {
@@ -67,10 +67,6 @@ export const withBaseControl = createHigherOrderComponent(WrappedComponent => {
 		after: PropTypes.node,
 	};
 	return Hoc;
-
 }, 'withBaseControl');
 
-
 export default withBaseControl;
-
-

@@ -1,6 +1,6 @@
 .ea-textarea-field {
 	.components-base-control {
-		width: 100%
+		width: 100%;
 	}
 
 	textarea {
@@ -8,8 +8,8 @@
 		box-sizing: border-box;
 		vertical-align: middle;
 		height: auto;
-		-webkit-transition: .3s border;
-		transition: .3s border;
+		-webkit-transition: 0.3s border;
+		transition: 0.3s border;
 		max-width: none !important;
 		min-height: 100px;
 		width: 100%;

@@ -4,13 +4,16 @@
 /**
  * WordPress dependencies
  */
-import {Component} from '@wordpress/element';
+import { Component } from '@wordpress/element';
 import PropTypes from 'prop-types';
-import {BaseControl} from '@wordpress/components';
-import {withInstanceId} from '@wordpress/compose';
+import { BaseControl } from '@wordpress/components';
+import { withInstanceId } from '@wordpress/compose';
 import classnames from 'classnames';
-import {sprintf} from '@wordpress/i18n';
-import Placeholder from "../placeholder";
+import { sprintf } from '@wordpress/i18n';
+/**
+ * Internal dependencies
+ */
+import Placeholder from '../placeholder';
 
 class TextControl extends Component {
 	render() {
@@ -32,7 +35,7 @@ class TextControl extends Component {
 
 		const classes = classnames('ea-form-group', 'ea-text-field', className, {
 			required: !!required,
-			'is-loading': !!isLoading
+			'is-loading': !!isLoading,
 		});
 
 		const id = `inspector-ea-input-group-${instanceId}`;
@@ -54,12 +57,14 @@ class TextControl extends Component {
 
 		return (
 			<BaseControl label={label} id={id} help={help} className={classes}>
-				{isLoading ? <Placeholder className="ea-input-group"/> :
+				{isLoading ? (
+					<Placeholder className="ea-input-group" />
+				) : (
 					<div className="ea-input-group">
 						{before && (
 							<span id={`${id}__before`} className="ea-input-group__before">
-							{before}
-						</span>
+								{before}
+							</span>
 						)}
 
 						<input
@@ -77,10 +82,11 @@ class TextControl extends Component {
 
 						{after && (
 							<span id={`${id}__after`} className="ea-input-group__after">
-							{after}
-						</span>
+								{after}
+							</span>
 						)}
-					</div>}
+					</div>
+				)}
 			</BaseControl>
 		);
 	}

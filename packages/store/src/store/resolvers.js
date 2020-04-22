@@ -1,8 +1,8 @@
 /**
  *
  * @param state
- * @returns {*}
+ * @return {*}
  */
-export const getSettings = (state) => {
+export const getSettings = state => {
 	return state.settings;
 };

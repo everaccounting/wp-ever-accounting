@@ -25,7 +25,6 @@ function eaccounting_insert_account( $args ) {
 		}
 
 		$args = array_merge( $item_before, $args );
-		error_log( print_r( $args, true ) );
 	}
 
 
@@ -38,6 +37,7 @@ function eaccounting_insert_account( $args ) {
 		'bank_name'       => empty( $args['bank_name'] ) ? '' : sanitize_text_field( $args['bank_name'] ),
 		'bank_phone'      => empty( $args['bank_phone'] ) ? '' : sanitize_text_field( $args['bank_phone'] ),
 		'bank_address'    => empty( $args['bank_address'] ) ? '' : sanitize_textarea_field( $args['bank_address'] ),
+		'creator_id'      => empty( $args['creator_id'] ) ? eaccounting_get_creator_id() : $args['creator_id'],
 		'created_at'      => empty( $args['created_at'] ) ? current_time( 'Y-m-d H:i:s' ) : $args['created_at'],
 	);
 

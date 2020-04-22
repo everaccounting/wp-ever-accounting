@@ -26,7 +26,7 @@ function eaccounting_get_setting_options( $section = null ) {
 			'type'    => 'integer',
 			'section' => 'defaults',
 		],
-		'default_currency_id'  => [
+		'default_currency_id'    => [
 			'section' => 'defaults',
 			'type'    => 'integer',
 		],
@@ -42,7 +42,7 @@ function eaccounting_get_setting_options( $section = null ) {
 			'default' => 'INV-',
 			'section' => 'invoice',
 		],
-		'invoice_number_digit'  => [
+		'invoice_number_digit'   => [
 			'default' => '5',
 			'section' => 'invoice',
 		],
@@ -136,12 +136,26 @@ function eaccounting_set_option( $name, $value ) {
  */
 function eaccounting_get_default_currency() {
 	$default_currency_id = (int) eaccounting_get_option( 'default_currency_id' );
-	$currency   = (object) eaccounting_get_currency( $default_currency_id );
-	if(empty($default_currency_id) || empty($currency)){
-		return new WP_Error('invalid', __('Default currency is not set transaction on hold', 'wp-ever-accounting'));
+	if ( empty( $default_currency_id ) || empty( eaccounting_get_currency( $default_currency_id ) ) ) {
+		global $wpdb;
+		$default_currency_id = $wpdb->get_var( "SELECT id FROM $wpdb->ea_currencies order by id ASC limit 1" );
+		if ( empty( $default_currency_id ) ) {
+			$default_currency_id = eaccounting_insert_currency( array(
+				'name' => 'US Dollar',
+				'code' => 'USD',
+				'rate' => 1,
+			) );
+
+			if ( ! is_wp_error( $default_currency_id ) ) {
+				return null;
+			}
+		}
+
+		eaccounting_set_option( 'default_currency_id', $default_currency_id );
+		eaccounting_insert_currency( [ 'id' => $default_currency_id, 'rate' => 1 ] );
 	}
 
-	return $currency;
+	return eaccounting_get_currency( $default_currency_id );
 }
 
 /**
@@ -150,10 +164,25 @@ function eaccounting_get_default_currency() {
  */
 function eaccounting_get_default_account() {
 	$default_account_id = (int) eaccounting_get_option( 'default_account_id' );
-	$account = eaccounting_get_account( $default_account_id );
-	if(empty($default_account_id) || empty($account)){
-		return new WP_Error('invalid', __('Default account is not set transaction on hold', 'wp-ever-accounting'));
+	if ( empty( $default_account_id ) || empty( eaccounting_get_account( $default_account_id ) ) ) {
+		global $wpdb;
+		$default_account_id = $wpdb->get_var( "SELECT id FROM $wpdb->ea_accounts order by id ASC limit 1" );
+
+		if ( empty( $default_account_id ) ) {
+			$default_account_id = eaccounting_insert_account( [
+				'name'            => __( 'Cash', 'wp-ever-accounting' ),
+				'number'          => '0001',
+				'opening_balance' => '0',
+				'currency_code'   => 'USD',
+			] );
+
+			if ( ! is_wp_error( $default_account_id ) ) {
+				return null;
+			}
+		}
+
+		eaccounting_set_option( 'default_account_id', $default_account_id );
 	}
 
-	return $account;
+	return eaccounting_get_account( $default_account_id );
 }

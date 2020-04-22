@@ -1,12 +1,11 @@
-import Payments from "./table";
-import EditPayment from "./edit";
-import {__} from '@wordpress/i18n';
-import {addFilter} from "@wordpress/hooks"
+import Payments from './table';
+import EditPayment from './edit';
+import { __ } from '@wordpress/i18n';
+import { addFilter } from '@wordpress/hooks';
 
-
-addFilter('EA_PURCHASES_PAGES', 'eaccounting', (pages)=> {
+addFilter('EA_PURCHASES_PAGES', 'eaccounting', pages => {
 	pages.push({
-		path: '/purchases/payments/:id/view',
+		path: '/purchases/payments/:id/edit',
 		component: EditPayment,
 	});
 	pages.push({

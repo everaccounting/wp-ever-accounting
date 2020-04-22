@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import {has, setWith, clone, forOwn} from 'lodash';
+import { has, setWith, clone, forOwn } from 'lodash';
 
 /**
  * Utility for returning whether the given path exists in the state.

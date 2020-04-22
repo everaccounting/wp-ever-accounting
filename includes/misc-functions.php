@@ -2268,15 +2268,6 @@ function eaccounting_get_payment_methods() {
 
 
 /**
- * Get total income
- * @return string|null
- * @since 1.0.0
- */
-function eaccounting_get_total_profit() {
-	return eaccounting_get_total_income() - eaccounting_get_total_expense();
-}
-
-/**
  * Get dates in range
  *
  * @param string $period

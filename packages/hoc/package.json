@@ -8,8 +8,7 @@
 	"main": "build/index.js",
 	"module": "build-module/index.js",
 	"react-native": "src/index",
-	"dependencies": {
-	},
+	"dependencies": {},
 	"publishConfig": {
 		"access": "public"
 	}

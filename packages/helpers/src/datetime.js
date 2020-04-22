@@ -1,3 +1,6 @@
+/**
+ * External dependencies
+ */
 import moment from 'moment';
 import { trimEnd } from 'lodash';
 
@@ -7,6 +10,7 @@ export const DATE_TIME_FORMAT_ISO8601 = moment.DefaultFormat;
 /**
  * Recieves a moment parseable dateString and returns a string in the provided
  * format.
+ *
  * @param { string } dateString  Incoming date string.  Should be parseable by
  *   moment
  * @param { string } format        Incoming format string.  Should be a format
@@ -17,17 +21,15 @@ export const DATE_TIME_FORMAT_ISO8601 = moment.DefaultFormat;
  *   the incoming string includes offset info.
  * @return { string }  Returns a date string in the provided format.
  */
-export const formatDateString = (dateString = '', format = DATE_TIME_FORMAT_ISO8601, local = true,) => {
+export const formatDateString = (dateString = '', format = DATE_TIME_FORMAT_ISO8601, local = true) => {
 	const date = stringToMoment(dateString);
-	return local ?
-		date.local().format(format) :
-		date.format(format);
+	return local ? date.local().format(format) : date.format(format);
 };
-
 
 /**
  * Receives a moment parseable dateString and returns a string in the mysql
  * date and time format.
+ *
  * @param { string } dateString  Incoming date string.  Should be parseable by
  *   moment
  * @param { boolean } local        Whether or not convert the date to the local
@@ -36,8 +38,8 @@ export const formatDateString = (dateString = '', format = DATE_TIME_FORMAT_ISO8
  *   the incoming string includes offset info.
  * @return { string }  Returns a date string in mysql format.
  */
-export const formatMysqlDateString = ( dateString = '', local = true ) => {
-	return formatDateString( dateString, DATE_TIME_FORMAT_MYSQL, local );
+export const formatMysqlDateString = (dateString = '', local = true) => {
+	return formatDateString(dateString, DATE_TIME_FORMAT_MYSQL, local);
 };
 
 /**
@@ -49,23 +51,23 @@ export const formatMysqlDateString = ( dateString = '', local = true ) => {
  *   moment
  * @return {null|moment.Moment}  A moment object.
  */
-export const stringToMoment = ( dateString = '' ) => {
-	return dateString === '' ? moment() : moment( dateString );
+export const stringToMoment = (dateString = '') => {
+	return dateString === '' ? moment() : moment(dateString);
 };
 
 /**
  * Receives an indefinite number of dateStrings as arguments and concatenates
  * them together with the given separator.
+ *
  * @param { string } separator
  * @param { ...string } dateStrings
  * @return { string }  Returns a string concatenating all the provided
  *   dateStrings together with the given separator.
  */
-export const allDateTimesAsString = ( separator = '-', ...dateStrings ) => {
+export const allDateTimesAsString = (separator = '-', ...dateStrings) => {
 	let content = '';
-	dateStrings.forEach( ( item ) => {
+	dateStrings.forEach(item => {
 		content += item + separator;
-	} );
-	return trimEnd( content, separator );
+	});
+	return trimEnd(content, separator);
 };
-
