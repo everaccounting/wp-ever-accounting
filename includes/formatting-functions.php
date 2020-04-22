@@ -27,7 +27,7 @@ function eaccounting_clean( $var ) {
  *
  * @return bool|string
  */
-function eaccounting_sanitize_date( $date, $format = 'Y-m-d', $fallback = false ) {
+function eaccounting_sanitize_date( $date, $fallback = false, $format = 'Y-m-d' ) {
 	$d = DateTime::createFromFormat( $format, $date );
 
 	return $d && $d->format( $format ) === $date ? $date : $fallback;
@@ -86,11 +86,59 @@ function eaccounting_sanitize_price( $amount, $code ) {
  * @return string
  */
 function eaccounting_format_price( $amount, $code = null ) {
-	if ( $code == null ){
-		$currency = eaccounting_get_default_currency();
-		$code = $currency->code;
+	if ( $code == null ) {
+		$code = eaccounting_get_default_currency();
 	}
+
 	return eaccounting_money( $amount, $code, true )->format();
+}
+
+/**
+ * @param $method
+ * @param $amount
+ * @param $from
+ * @param $to
+ * @param $rate
+ * @param bool $format
+ *
+ * @return float|int|string
+ */
+function eaccounting_convert_price( $method, $amount, $from, $to, $rate, $format = false ) {
+	$money = eaccounting_money( $amount, $to );
+	// No need to convert same currency
+	if ( $from == $to ) {
+		return $format ? $money->format() : $money->getAmount();
+	}
+
+	try {
+		$money = $money->$method( (double) $rate );
+	} catch ( Exception $e ) {
+		return 0;
+	}
+
+	return $format ? $money->format() : $money->getAmount();
+}
+
+/**
+ *
+ * @param $amount
+ * @param $to
+ * @param $rate
+ * @param bool $format
+ *
+ * @return float|int|string
+ * @since 1.0.2
+ */
+function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = false ) {
+	$code = eaccounting_get_default_currency();
+
+	return eaccounting_convert_price( 'multiply', $amount, $code, $to, $rate, $format );
+}
+
+function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = false ) {
+	$code = eaccounting_get_default_currency();
+
+	return eaccounting_convert_price( 'divide', $amount, $from, $code, $rate, $format );
 }
 
 /**

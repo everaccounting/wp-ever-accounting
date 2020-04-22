@@ -47,11 +47,12 @@ export default withSelect((select) => {
 	const {getCollection, isRequestingGetCollection} = select('ea/collection');
 	const query = {
 		per_page:5,
+		type:'expense',
 		orderby:'created_at'
 	};
-	const {items } = getCollection('payments', query);
+	const {items } = getCollection('transactions', query);
 	return {
 		items: items,
-		isLoading: isRequestingGetCollection('payments', query),
+		isLoading: isRequestingGetCollection('transactions', query),
 	}
 })(Expenses);

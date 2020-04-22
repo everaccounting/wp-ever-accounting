@@ -1,11 +1,11 @@
-import { Component, Fragment } from 'react';
-import { __ } from '@wordpress/i18n';
-import { Link } from 'react-router-dom';
-import { withListTable } from '@eaccounting/hoc';
-import { SearchBox, TableNav, Table, ContactSelect } from '@eaccounting/components';
-import { getHeaders, getBulk } from './constants';
+import {Component, Fragment} from 'react';
+import {__} from '@wordpress/i18n';
+import {Link} from 'react-router-dom';
+import {withListTable} from '@eaccounting/hoc';
+import {SearchBox, TableNav, Table, ContactSelect} from '@eaccounting/components';
+import {getHeaders, getBulk} from './constants';
 import Row from './row';
-import { map } from 'lodash';
+import {map} from 'lodash';
 
 class Revenues extends Component {
 	constructor(props) {
@@ -15,11 +15,12 @@ class Revenues extends Component {
 	}
 
 	renderRow(item, pos, isSelected, isLoading, search) {
-		return <Row item={item} key={pos} isLoading={isLoading} search={search} isSelected={isSelected} {...this.props} />;
+		return <Row item={item} key={pos} isLoading={isLoading} search={search}
+					isSelected={isSelected} {...this.props} />;
 	}
 
 	renderTable() {
-		const { status, total, page, match, orderby, order, items, selected } = this.props;
+		const {status, total, page, match, orderby, order, items, selected} = this.props;
 		return (
 			<Fragment>
 				<div className="ea-table-display">
@@ -32,7 +33,7 @@ class Revenues extends Component {
 					{/*<a className="page-title-action" href="/">*/}
 					{/*	{__('Import')}*/}
 					{/*</a>*/}
-					<SearchBox status={status} onSearch={this.props.setSearch} />
+					<SearchBox status={status} onSearch={this.props.setSearch}/>
 				</div>
 
 				<TableNav
@@ -49,7 +50,7 @@ class Revenues extends Component {
 						placeholder={__('Filter Customer')}
 						isMulti
 						type="customer"
-						onChange={contact => this.props.setFilter({ contact_id: map(contact, 'id') })}
+						onChange={contact => this.props.setFilter({contact_id: map(contact, 'id')})}
 					/>
 				</TableNav>
 
@@ -81,16 +82,15 @@ class Revenues extends Component {
 	}
 
 	render() {
-		const { status, total } = this.props;
+		const {status, total} = this.props;
 		return <Fragment>{this.renderTable()}</Fragment>;
 	}
 }
 
 export default withListTable({
+	resourceName: 'transactions',
 	queryFilter: query => {
-		if (query.order && query.order === 'desc') {
-			delete query.order;
-		}
+		query.type = 'income';
 		return query;
 	},
 })(Revenues);

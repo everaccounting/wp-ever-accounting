@@ -17,7 +17,6 @@ import {
 import { Form, Field } from 'react-final-form';
 import { get, pickBy, isObject } from 'lodash';
 import { NotificationManager } from 'react-notifications';
-
 const processFormData = data =>
 	pickBy(
 		{
@@ -30,26 +29,27 @@ const processFormData = data =>
 		value => !isObject(value)
 	);
 
-class ViewRevenue extends Component {
+class EditRevenue extends Component {
 	constructor(props) {
 		super(props);
 		this.onSubmit = this.onSubmit.bind(this);
 	}
 
 	onSubmit(form) {
+		form.type='income';
 		const { history, isAdd } = this.props;
 		this.props.handleSubmit(
 			form,
 			function(res) {
 				NotificationManager.success(sprintf(__('Revenue %s.'), isAdd ? __('created') : __('updated')));
-				history.push('/sales/revenues');
+				isAdd && history.push(`/sales/revenues/${res.id}/edit`);
 			},
 			true
 		);
 	}
 
 	render() {
-		const { isAdd, item, settings } = this.props;
+		const { isAdd, item, settings, history } = this.props;
 		const { default_account, default_payment_method } = settings;
 		return (
 			<FormCard title={isAdd ? __('Add Revenue') : __('Update Revenue')}>
@@ -58,7 +58,11 @@ class ViewRevenue extends Component {
 					initialValues={item}
 					render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
 						<form onSubmit={handleSubmit} className="ea-row">
-							<Field label={__('Date', 'wp-ever-accounting')} name="paid_at" containerClass="ea-col-6" required>
+							<Field
+								label={__('Date', 'wp-ever-accounting')}
+								name="paid_at"
+								containerClass="ea-col-6"
+								required>
 								{props => <DateControl {...props.input} {...props} />}
 							</Field>
 
@@ -67,7 +71,7 @@ class ViewRevenue extends Component {
 								name="account"
 								className="ea-col-6"
 								defaultValue={default_account}
-								after={get(values, 'account.currency.code')}
+								after={get(values, 'account.currency_code')}
 								required
 							>
 								{props => <AccountSelect create={true} {...props.input} {...props} />}
@@ -77,13 +81,13 @@ class ViewRevenue extends Component {
 								label={__('Amount', 'wp-ever-accounting')}
 								name="amount"
 								className="ea-col-6"
-								code={get(values, 'account.currency.code')}
+								code={get(values, 'account.currency_code')}
 								required
 							>
 								{props => <PriceControl {...props.input} {...props} />}
 							</Field>
 
-							<Field label={__('Customer', 'wp-ever-accounting')} name="contact" className="ea-col-6" required>
+							<Field label={__('Customer', 'wp-ever-accounting')} name="contact" className="ea-col-6">
 								{props => <ContactSelect create={true} type={'customer'} {...props.input} {...props} />}
 							</Field>
 
@@ -135,6 +139,16 @@ class ViewRevenue extends Component {
 								<Button isPrimary disabled={submitting || pristine} type="submit">
 									{__('Submit')}
 								</Button>
+
+								{!isAdd && <Button secondary disabled={submitting}
+												   onClick={() => history.push(`/sales/revenues/add`)}>
+									{__('Add Another')}
+								</Button>}
+
+								<Button secondary disabled={submitting}
+										onClick={() => history.push(`/sales/revenues`)}>
+									{__('Back')}
+								</Button>
 							</p>
 						</form>
 					)}
@@ -144,4 +158,4 @@ class ViewRevenue extends Component {
 	}
 }
 
-export default withEntity('revenues')(ViewRevenue);
+export default withEntity('transactions')(EditRevenue);

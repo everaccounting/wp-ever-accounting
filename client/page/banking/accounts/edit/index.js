@@ -1,6 +1,6 @@
-import { Component, Fragment } from 'react';
-import { __, sprintf } from '@wordpress/i18n';
-import { withEntity } from '@eaccounting/hoc';
+import {Component, Fragment} from 'react';
+import {__, sprintf} from '@wordpress/i18n';
+import {withEntity} from '@eaccounting/hoc';
 import {
 	FormCard,
 	CurrencySelect,
@@ -10,18 +10,10 @@ import {
 	BackButton,
 	Button,
 } from '@eaccounting/components';
-import { Form, Field } from 'react-final-form';
-import { NotificationManager } from 'react-notifications';
-import { get, pickBy, isObject } from 'lodash';
+import {Form, Field} from 'react-final-form';
+import {NotificationManager} from 'react-notifications';
+import {pickBy, isObject} from 'lodash';
 
-const processFormData = data =>
-	pickBy(
-		{
-			...data,
-			currency_code: get(data, 'currency.code'),
-		},
-		value => !isObject(value)
-	);
 
 class EditAccount extends Component {
 	constructor(props) {
@@ -30,24 +22,26 @@ class EditAccount extends Component {
 	}
 
 	onSubmit(form) {
-		const { history, isAdd } = this.props;
-		this.props.handleSubmit(form, function(res) {
+		const {history, isAdd} = this.props;
+		this.props.handleSubmit(form, function (res) {
 			NotificationManager.success(sprintf(__('"%s" account %s.'), res.name, isAdd ? __('created') : __('updated')));
-			history.push('/banking/accounts');
+			history.push(`/banking/accounts/${res.id}/edit`);
 		});
 	}
 
 	render() {
-		const { isAdd, item } = this.props;
+		const {isAdd, item, settings} = this.props;
+		const {default_currency} = settings;
 		return (
 			<Fragment>
 				<FormCard title={isAdd ? __('Add Account') : __('Update Account')}>
 					<Form
-						onSubmit={data => this.onSubmit(processFormData(data))}
+						onSubmit={data => this.onSubmit(pickBy(data, value => !isObject(value)))}
 						initialValues={item}
-						render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
+						render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
 							<form onSubmit={handleSubmit} className="ea-row">
-								<Field label={__('Account Name', 'wp-ever-accounting')} name="name" className="ea-col-6" required>
+								<Field label={__('Account Name', 'wp-ever-accounting')} name="name" className="ea-col-6"
+									   required>
 									{props => <TextControl {...props.input} {...props} />}
 								</Field>
 
@@ -63,10 +57,11 @@ class EditAccount extends Component {
 
 								<Field
 									label={__('Account Currency', 'wp-ever-accounting')}
-									name="currency"
+									name="currency_code"
 									className="ea-col-6"
+									defaultValue={default_currency}
 									parse={value => value}
-									enableCreate={true}
+									create={true}
 									required
 								>
 									{props => <CurrencySelect {...props.input} {...props} />}

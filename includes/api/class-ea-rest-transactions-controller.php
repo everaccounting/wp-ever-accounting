@@ -26,12 +26,14 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 					'args'                => $this->get_collection_params(),
 				),
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
-		);
-
-		$get_item_args = array(
-			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 		);
 
 		register_rest_route(
@@ -49,7 +51,18 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
-					'args'                => $get_item_args,
+					'args'                => $this->get_context_param( array( 'default' => 'view' ) ),
+				),
+				array(
+					'methods'             => WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+				),
+				array(
+					'methods'             => WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -64,24 +77,26 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 	 * @return mixed|WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$args = array(
-			'account_id'  => $request['account_id'],
-			'category_id' => $request['category_id'],
-			'parent_id'   => $request['parent_id'],
-			'type'        => $request['type'],
-			'include'     => $request['include'],
-			'exclude'     => $request['exclude'],
-			'search'      => $request['search'],
-			'orderby'     => $request['orderby'],
-			'paid_at'     => $this->get_query_dates( $request['date'] ),
-			'order'       => $request['order'],
-			'per_page'    => $request['per_page'],
-			'page'        => $request['page'],
-			'offset'      => $request['offset'],
+		$dates = $this->get_query_dates( $request['date'] );
+		$args  = array(
+			'account_id'       => $request['account_id'],
+			'category_id'      => $request['category_id'],
+			'parent_id'        => $request['parent_id'],
+			'contact_id'       => $request['contact_id'],
+			'type'             => $request['type'],
+			'include'          => $request['include'],
+			'exclude'          => $request['exclude'],
+			'search'           => $request['search'],
+			'orderby'          => $request['orderby'],
+			'start_date'       => $dates['start_date'],
+			'end_date'         => $dates['end_date'],
+			'order'            => $request['order'],
+			'per_page'         => $request['per_page'],
+			'page'             => $request['page'],
+			'offset'           => $request['offset'],
+			'include_transfer' => $request['include_transfer'],
+			'nopaging'         => $request['nopaging'],
 		);
-		if ( $args['orderby'] == 'id' ) {
-			$args['orderby'] = 'paid_at';
-		}
 
 		$query_result = eaccounting_get_transactions( $args );
 		$total_items  = eaccounting_get_transactions( $args, true );
@@ -105,6 +120,35 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 		return rest_ensure_response( $response );
 	}
 
+	/***
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return int|mixed|WP_Error|WP_REST_Response|null
+	 */
+	public function create_item( $request ) {
+		$request->set_param( 'context', 'edit' );
+
+
+		$prepared = $this->prepare_item_for_database( $request );
+
+		$item_id = eaccounting_insert_transaction( (array) $prepared );
+		if ( is_wp_error( $item_id ) ) {
+			return $item_id;
+		}
+
+		$item = eaccounting_get_transaction( $item_id );
+
+		$request->set_param( 'context', 'view' );
+
+		$response = $this->prepare_item_for_response( $item, $request );
+		$response = rest_ensure_response( $response );
+		$response->set_status( 201 );
+
+		return $response;
+	}
+
 	/**
 	 * since 1.0.0
 	 *
@@ -115,7 +159,7 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
 		$request->set_param( 'context', 'view' );
-		$item = eaccounting_get_payment( $item_id );
+		$item = eaccounting_get_transaction( $item_id );
 		if ( is_null( $item ) ) {
 			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the transaction', 'wp-ever-accounting' ) );
 		}
@@ -123,6 +167,127 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return int|mixed|WP_Error|WP_REST_Response|null
+	 */
+	public function update_item( $request ) {
+		$request->set_param( 'context', 'edit' );
+		$item_id = intval( $request['id'] );
+
+		$item = eaccounting_get_transaction( $item_id );
+		if ( is_null( $item ) ) {
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the revenue', 'wp-ever-accounting' ) );
+		}
+		$prepared_args = $this->prepare_item_for_database( $request );
+
+		$prepared_args->id = $item_id;
+
+		if ( ! empty( $prepared_args ) ) {
+			$updated = eaccounting_insert_transaction( (array) $prepared_args );
+
+			if ( is_wp_error( $updated ) ) {
+				return $updated;
+			}
+		}
+
+		$request->set_param( 'context', 'view' );
+		$item     = eaccounting_get_transaction( $item_id );
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return void|WP_Error|WP_REST_Response
+	 */
+	public function delete_item( $request ) {
+		$item_id = intval( $request['id'] );
+		$item    = eaccounting_get_transaction( $item_id );
+		if ( is_null( $item ) ) {
+			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the transaction', 'wp-ever-accounting' ) );
+		}
+
+		$request->set_param( 'context', 'view' );
+
+		$previous = $this->prepare_item_for_response( $item, $request );
+		$retval   = eaccounting_delete_transaction( $item_id );
+		if ( is_wp_error( $retval ) ) {
+			return new WP_Error( 'rest_cannot_delete', $retval->get_error_message(), array( 'status' => 500 ) );
+		}
+
+		$response = new WP_REST_Response();
+		$response->set_data(
+			array(
+				'deleted'  => true,
+				'previous' => $previous->get_data(),
+			)
+		);
+
+		return $response;
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param WP_REST_Request $request
+	 *
+	 * @return object|stdClass|WP_Error
+	 */
+	public function prepare_item_for_database( $request ) {
+		$prepared_item = new stdClass();
+		$schema        = $this->get_item_schema();
+
+		if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
+			$prepared_item->id = $request['id'];
+		}
+		if ( ! empty( $schema['properties']['type'] ) && isset( $request['type'] ) ) {
+			$prepared_item->type = $request['type'];
+		}
+		if ( ! empty( $schema['properties']['paid_at'] ) && isset( $request['paid_at'] ) ) {
+			$prepared_item->paid_at = $request['paid_at'];
+		}
+		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
+			$prepared_item->amount = $request['amount'];
+		}
+		if ( ! empty( $schema['properties']['account_id'] ) && isset( $request['account_id'] ) ) {
+			$prepared_item->account_id = $request['account_id'];
+		}
+		if ( ! empty( $schema['properties']['contact_id'] ) && isset( $request['contact_id'] ) ) {
+			$prepared_item->contact_id = $request['contact_id'];
+		}
+		if ( ! empty( $schema['properties']['category_id'] ) && isset( $request['category_id'] ) ) {
+			$prepared_item->category_id = $request['category_id'];
+		}
+		if ( ! empty( $schema['properties']['description'] ) && isset( $request['description'] ) ) {
+			$prepared_item->description = $request['description'];
+		}
+		if ( ! empty( $schema['properties']['payment_method'] ) && isset( $request['payment_method'] ) ) {
+			$prepared_item->payment_method = $request['payment_method'];
+		}
+		if ( ! empty( $schema['properties']['reference'] ) && isset( $request['reference'] ) ) {
+			$prepared_item->reference = $request['reference'];
+		}
+		if ( ! empty( $schema['properties']['file_id'] ) && isset( $request['file_id'] ) ) {
+			$prepared_item->file_id = $request['file_id'];
+		}
+		if ( ! empty( $schema['properties']['parent_id'] ) && isset( $request['parent_id'] ) ) {
+			$prepared_item->parent_id = $request['parent_id'];
+		}
+		if ( ! empty( $schema['properties']['reconciled'] ) && isset( $request['reconciled'] ) ) {
+			$prepared_item->reconciled = $request['reconciled'];
+		}
+
+		return $prepared_item;
 	}
 
 	/**
@@ -136,16 +301,19 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
 			'id'             => $item->id,
-			'account'        => eaccounting_get_account( $item->account_id ),
+			'type'           => $item->type,
 			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
 			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
+			'currency_code'  => $item->currency_code,
+			'currency_rate'  => $item->currency_rate,
+			'account'        => self::get_rest_object( 'accounts', $item->account_id ),
 			'contact'        => eaccounting_get_contact( $item->contact_id ),
-			'description'    => $item->description,
 			'category'       => eaccounting_get_category( $item->category_id ),
+			'description'    => $item->description,
 			'payment_method' => $item->payment_method,
 			'reference'      => $item->reference,
+			'file'           => self::get_rest_object( 'files', $item->file_id ),
 			'reconciled'     => $item->reconciled,
-			'type'           => $item->type,
 			'created_at'     => $this->prepare_date_response( $item->created_at )
 		);
 
@@ -205,6 +373,29 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
+				'type'           => array(
+					'description' => __( 'Type of the transaction', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'paid_at'        => array(
+					'description' => __( 'Payment Date of the transaction', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date',
+					'context'     => array( 'embed', 'view' ),
+					'required'    => true,
+				),
+				'amount'         => array(
+					'description' => __( 'Amount of the transaction', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'required'    => true,
+					'readonly'    => true,
+				),
 				'account_id'     => array(
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
@@ -212,21 +403,6 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
-					'readonly'    => true,
-				),
-				'paid_at'        => array(
-					'description' => __( 'Payment Date of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'date-time',
-					'context'     => array( 'embed', 'view' ),
-					'required'    => true,
-					'readonly'    => true,
-				),
-				'amount'         => array(
-					'description' => __( 'Amount of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'required'    => true,
 					'readonly'    => true,
 				),
 				'description'    => array(
@@ -267,13 +443,10 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 					),
 					'readonly'    => true,
 				),
-				'attachment_url' => array(
+				'file'           => array(
 					'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'esc_url',
-					),
 					'readonly'    => true,
 				),
 				'reconciled'     => array(
@@ -283,16 +456,6 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
-					'readonly'    => true,
-				),
-				'type'           => array(
-					'description' => __( 'Type of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
 					'readonly'    => true,
 				),
 				'date_created'   => array(

@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import {
 	Card,
 	CompactCard,
-	Icon,
 	TextareaControl,
 	TextControl,
 	DateControl,
@@ -100,8 +99,7 @@ class EditPayment extends Component {
 											<Field
 												label={__('Amount', 'wp-ever-accounting')}
 												name="amount"
-												code={(values.account && values.account.currency && values.account.currency.code) || ''}
-												before={<Icon icon={'money'} />}
+												code={(values.account && values.account_currency && values.account_currency) || ''}
 												required
 											>
 												{props => <PriceControl {...props.input} {...props} />}

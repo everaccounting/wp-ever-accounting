@@ -33,15 +33,13 @@ class Transactions extends Component {
 			<Fragment>
 				<div className="ea-table-display">
 					<h1 className="wp-heading-inline">{__('Transactions')}</h1>
-					<Link className="page-title-action" to={`${match.path}/add`}>
-						{__('Add Account')}
+					<Link className="page-title-action" to={`/sales/revenues/add`}>
+						{__('Add Revenue')}
 					</Link>
-					{/*<a className="page-title-action" href="/">*/}
-					{/*	{__('Export')}*/}
-					{/*</a>*/}
-					{/*<a className="page-title-action" href="/">*/}
-					{/*	{__('Import')}*/}
-					{/*</a>*/}
+					<Link className="page-title-action" to={`/sales/purchases/add`}>
+						{__('Add Payment')}
+					</Link>
+
 					<SearchBox status={status} onSearch={this.props.setSearch} />
 				</div>
 
@@ -101,6 +99,7 @@ export default withListTable({
 		if (query.order && query.order === 'desc') {
 			delete query.order;
 		}
+		query.include_transfer = true ;
 		return query;
 	},
 })(Transactions);

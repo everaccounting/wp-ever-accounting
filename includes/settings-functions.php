@@ -26,26 +26,26 @@ function eaccounting_get_setting_options( $section = null ) {
 			'type'    => 'integer',
 			'section' => 'defaults',
 		],
-		'default_currency_id'    => [
+		'default_currency'       => [
 			'section' => 'defaults',
-			'type'    => 'integer',
+			'type'    => 'string',
 		],
 		'default_payment_method' => [
 			'default' => 'check',
 			'section' => 'defaults',
 		],
-		'default_tax_rate_id'    => [
-			'type'    => 'integer',
-			'section' => 'defaults',
-		],
-		'invoice_number_prefix'  => [
-			'default' => 'INV-',
-			'section' => 'invoice',
-		],
-		'invoice_number_digit'   => [
-			'default' => '5',
-			'section' => 'invoice',
-		],
+//		'default_tax_rate_id'    => [
+//			'type'    => 'integer',
+//			'section' => 'defaults',
+//		],
+//		'invoice_number_prefix'  => [
+//			'default' => 'INV-',
+//			'section' => 'invoice',
+//		],
+//		'invoice_number_digit'   => [
+//			'default' => '5',
+//			'section' => 'invoice',
+//		],
 	) );
 
 	$defaults = array(
@@ -131,57 +131,69 @@ function eaccounting_set_option( $name, $value ) {
 }
 
 /**
- * since 1.0.0
- * @return object|WP_Error
+ * Set default currency
+ *
+ * @param $code
+ *
+ * @return bool|int|WP_Error|null
+ * @since 1.0.2
  */
-function eaccounting_get_default_currency() {
-	$default_currency_id = (int) eaccounting_get_option( 'default_currency_id' );
-	if ( empty( $default_currency_id ) || empty( eaccounting_get_currency( $default_currency_id ) ) ) {
-		global $wpdb;
-		$default_currency_id = $wpdb->get_var( "SELECT id FROM $wpdb->ea_currencies order by id ASC limit 1" );
-		if ( empty( $default_currency_id ) ) {
-			$default_currency_id = eaccounting_insert_currency( array(
-				'name' => 'US Dollar',
-				'code' => 'USD',
-				'rate' => 1,
-			) );
+function eaccounting_set_default_currency( $code ) {
+	if ( empty( $code ) ) {
+		return false;
+	}
+	if ( $currency = eaccounting_get_currency( $code, is_numeric( $code ) ? 'id' : 'code' ) ) {
+		eaccounting_set_option( 'default_currency', $currency->code );
 
-			if ( ! is_wp_error( $default_currency_id ) ) {
-				return null;
-			}
-		}
-
-		eaccounting_set_option( 'default_currency_id', $default_currency_id );
-		eaccounting_insert_currency( [ 'id' => $default_currency_id, 'rate' => 1 ] );
+		return eaccounting_insert_currency( [ 'id'   => eaccounting_get_currency( $currency->id, 'code' ),
+		                                      'rate' => 1
+		] );
 	}
 
-	return eaccounting_get_currency( $default_currency_id );
+	return true;
 }
 
 /**
+ * Get default currency code
+ * since 1.0.0
+ * @return string
+ */
+function eaccounting_get_default_currency() {
+	$default_currency = eaccounting_get_option( 'default_currency' );
+	if ( empty( $default_currency ) ) {
+		$currency_id = eaccounting_insert_currency( array(
+			'name' => 'US Dollar',
+			'code' => 'USD',
+			'rate' => 1,
+		) );
+		if ( ! is_wp_error( $currency_id ) ) {
+			eaccounting_set_default_currency( $currency_id );
+			$default_currency = 'USD';
+		}
+	}
+
+	return $default_currency;
+}
+
+/**
+ *
+ *
  * @return array|object|void|null
  * @since 1.0.2
  */
 function eaccounting_get_default_account() {
 	$default_account_id = (int) eaccounting_get_option( 'default_account_id' );
-	if ( empty( $default_account_id ) || empty( eaccounting_get_account( $default_account_id ) ) ) {
-		global $wpdb;
-		$default_account_id = $wpdb->get_var( "SELECT id FROM $wpdb->ea_accounts order by id ASC limit 1" );
+	if ( empty( $default_account_id ) ) {
+		$default_account_id = eaccounting_insert_account( [
+			'name'            => __( 'Cash', 'wp-ever-accounting' ),
+			'number'          => '0001',
+			'opening_balance' => '0',
+			'currency_code'   => 'USD',
+		] );
 
-		if ( empty( $default_account_id ) ) {
-			$default_account_id = eaccounting_insert_account( [
-				'name'            => __( 'Cash', 'wp-ever-accounting' ),
-				'number'          => '0001',
-				'opening_balance' => '0',
-				'currency_code'   => 'USD',
-			] );
-
-			if ( ! is_wp_error( $default_account_id ) ) {
-				return null;
-			}
+		if ( ! is_wp_error( $default_account_id ) ) {
+			eaccounting_set_option( 'default_account_id', $default_account_id );
 		}
-
-		eaccounting_set_option( 'default_account_id', $default_account_id );
 	}
 
 	return eaccounting_get_account( $default_account_id );

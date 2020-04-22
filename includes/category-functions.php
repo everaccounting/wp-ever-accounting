@@ -136,18 +136,9 @@ function eaccounting_delete_category( $id ) {
 		return false;
 	}
 
-	$tables = [
-		$wpdb->ea_items    => 'category_id',
-		$wpdb->ea_revenues => 'category_id',
-		$wpdb->ea_payments => 'category_id',
-	];
-
-	foreach ( $tables as $table => $column ) {
-		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
-			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with category, you are not permitted to delete them.', 'wp-ever-accounting' ) );
-		}
+	if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $wpdb->ea_transactions WHERE category_id = %d", $id ) ) ) {
+		return new WP_Error( 'not-permitted', __( 'The Category is associated with one or more transactions, delete is not permitted.', 'wp-ever-accounting' ) );
 	}
-
 
 	do_action( 'eaccounting_pre_category_delete', $id, $category );
 	if ( false == $wpdb->delete( $wpdb->ea_categories, array( 'id' => $id ), array( '%d' ) ) ) {

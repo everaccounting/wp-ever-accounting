@@ -3,8 +3,6 @@ import { __, sprintf } from '@wordpress/i18n';
 import { withEntity } from '@eaccounting/hoc';
 import {
 	AccountSelect,
-	CategorySelect,
-	ContactSelect,
 	DateControl,
 	FormCard,
 	PaymentMethodSelect,
@@ -12,7 +10,7 @@ import {
 	PriceControl,
 	Button,
 	TextControl,
-	FileControl,
+	BackButton,
 } from '@eaccounting/components';
 import { Form, Field } from 'react-final-form';
 import { get, pickBy, isObject } from 'lodash';
@@ -61,7 +59,7 @@ class EditTransfer extends Component {
 								name="from_account"
 								defaultValue={default_account}
 								className="ea-col-6"
-								after={get(values, 'from_account.currency.code')}
+								after={get(values, 'from_account.currency_code')}
 								disabledOption={get(values, 'to_account', {})}
 								help={
 									get(values, 'from_account.balance', false)
@@ -76,7 +74,7 @@ class EditTransfer extends Component {
 								label={__('To Account', 'wp-ever-accounting')}
 								name="to_account"
 								className="ea-col-6"
-								after={get(values, 'to_account.currency.code')}
+								after={get(values, 'to_account.currency_code')}
 								disabledOption={get(values, ['from_account'], {})}
 								help={
 									get(values, 'from_account.balance', false)
@@ -93,7 +91,7 @@ class EditTransfer extends Component {
 								name="amount"
 								className="ea-col-6"
 								defaultValue={0}
-								code={get(values, 'from_account.currency.code')}
+								code={get(values, 'from_account.currency_code')}
 								required
 							>
 								{props => <PriceControl {...props.input} {...props} />}
@@ -125,6 +123,8 @@ class EditTransfer extends Component {
 								<Button isPrimary disabled={submitting || pristine} type="submit">
 									{__('Submit')}
 								</Button>
+
+								<BackButton>{__('Cancel')}</BackButton>
 							</p>
 						</form>
 					)}

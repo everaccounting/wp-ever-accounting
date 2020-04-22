@@ -45,7 +45,7 @@ function eaccounting_insert_contact( $args ) {
 		'name'          => empty( $args['name'] ) ? '' : sanitize_text_field( $args['name'] ),
 		'email'         => empty( $args['email'] ) ? '' : sanitize_email( $args['email'] ),
 		'phone'         => empty( $args['phone'] ) ? '' : sanitize_text_field( $args['phone'] ),
-		'fax_number'    => empty( $args['fax_number'] ) ? '' : sanitize_text_field( $args['fax_number'] ),
+		'fax'           => empty( $args['fax'] ) ? '' : sanitize_text_field( $args['fax'] ),
 		'birth_date'    => empty( $args['birth_date'] ) ? '' : eaccounting_sanitize_date( $args['birth_date'], '' ),
 		'address'       => empty( $args['address'] ) ? '' : sanitize_textarea_field( $args['address'] ),
 		'country'       => empty( $args['country'] ) ? '' : sanitize_text_field( $args['country'] ),
@@ -58,6 +58,7 @@ function eaccounting_insert_contact( $args ) {
 		'creator_id'    => empty( $args['creator_id'] ) ? eaccounting_get_creator_id() : $args['creator_id'],
 		'created_at'    => empty( $args['created_at'] ) ? date( 'Y-m-d H:i:s' ) : sanitize_text_field( $args['created_at'] ),
 	);
+
 	if ( empty( $data['name'] ) ) {
 		return new WP_Error( 'empty_content', __( 'Contact Name is required', 'wp-ever-accounting' ) );
 	}
@@ -273,9 +274,9 @@ function eaccounting_get_contacts( $args = array(), $count = false ) {
 		$searches = array();
 		$cols     = array_map( 'sanitize_key', $args['search_columns'] );
 		foreach ( $cols as $col ) {
-			$search_words = explode( ' ', $search);
-			foreach ($search_words as $search_word){
-				$like     = '%' . $wpdb->esc_like( $search_word ) . '%';
+			$search_words = explode( ' ', $search );
+			foreach ( $search_words as $search_word ) {
+				$like       = '%' . $wpdb->esc_like( $search_word ) . '%';
 				$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
 			}
 		}

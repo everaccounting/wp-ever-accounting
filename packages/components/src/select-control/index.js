@@ -1,16 +1,16 @@
 /**
  * WordPress dependencies
  */
-import { Component } from '@wordpress/element';
+import { Component, Fragment } from '@wordpress/element';
 /**
  * External dependencies
  */
 import PropTypes from 'prop-types';
-import { BaseControl } from '@wordpress/components';
+import { BaseControl, Dashicon } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import classnames from 'classnames';
-import Select from 'react-select';
-import { merge } from 'lodash';
+import Select, {components} from 'react-select';
+
 
 export default class SelectControl extends Component {
 	transformValue = (value, options, isMulti) => {
@@ -30,6 +30,10 @@ export default class SelectControl extends Component {
 		this.props.onChange && this.props.onChange((values && values.map(value => value.value)) || []);
 	};
 
+	onClick = () => {
+		this.props.onFooterClick && this.props.onFooterClick();
+	};
+
 	render() {
 		const {
 			label,
@@ -40,6 +44,10 @@ export default class SelectControl extends Component {
 			required,
 			value = '',
 			options,
+			innerRef,
+			footer,
+			addText,
+			addIcon,
 			isMulti = false,
 			OnChange,
 			...props
@@ -47,6 +55,19 @@ export default class SelectControl extends Component {
 		const classes = classnames('ea-form-group', 'ea-select-field', className, {
 			required: !!required,
 		});
+
+		const MenuList = props => {
+			return (
+				<Fragment>
+					<components.MenuList {...props}>{props.children}</components.MenuList>
+					{footer && this.props.onFooterClick && (
+						<div className="ea-react-select__footer ea-react-select__option" onClick={this.onClick}>
+							<Dashicon icon={addIcon} size={20} /> <span>{addText}</span>
+						</div>
+					)}
+				</Fragment>
+			);
+		};
 
 		return (
 			<BaseControl label={label} help={help} className={classes}>
@@ -61,6 +82,8 @@ export default class SelectControl extends Component {
 						value={this.transformValue(value, options, isMulti)}
 						options={options}
 						isMulti={isMulti}
+						components={{ MenuList }}
+						ref={innerRef}
 						onChange={isMulti ? this.multiChangeHandler : this.singleChangeHandler}
 					/>
 
@@ -86,8 +109,14 @@ SelectControl.propTypes = {
 	before: PropTypes.node,
 	after: PropTypes.node,
 	required: PropTypes.bool,
+	onFooterClick: PropTypes.func,
+	footer: PropTypes.bool,
+	addText: PropTypes.string,
+	addIcon: PropTypes.string,
 };
 
 SelectControl.defaultProps = {
 	autoload: false,
+	addText: __('Add New'),
+	addIcon: 'plus',
 };

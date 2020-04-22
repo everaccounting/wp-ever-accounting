@@ -1,6 +1,6 @@
-import { Component, Fragment } from 'react';
-import { __ } from '@wordpress/i18n';
-import { withEntity } from '@eaccounting/hoc';
+import {Component, Fragment} from 'react';
+import {__} from '@wordpress/i18n';
+import {withEntity} from '@eaccounting/hoc';
 import {
 	AccountSelect,
 	CategorySelect,
@@ -13,10 +13,11 @@ import {
 	Button,
 	TextControl,
 	FileControl,
+	BackButton
 } from '@eaccounting/components';
-import { Form, Field } from 'react-final-form';
-import { get, pickBy, isObject } from 'lodash';
-import { NotificationManager } from 'react-notifications';
+import {Form, Field} from 'react-final-form';
+import {get, pickBy, isObject} from 'lodash';
+import {NotificationManager} from 'react-notifications';
 
 const processFormData = data =>
 	pickBy(
@@ -37,28 +38,30 @@ class EditPayment extends Component {
 	}
 
 	onSubmit(form) {
-		const { history, isAdd } = this.props;
+		form.type = 'expense';
+		const {history, isAdd} = this.props;
 		this.props.handleSubmit(
 			form,
-			function(res) {
+			function (res) {
 				NotificationManager.success(sprintf(__('Payment %s.'), isAdd ? __('created') : __('updated')));
-				history.push('/purchases/payments');
+				isAdd && history.push(`/purchases/payments/${res.id}/edit`);
 			},
 			true
 		);
 	}
 
 	render() {
-		const { isAdd, item, settings } = this.props;
-		const { default_account, default_payment_method } = settings;
+		const {isAdd, item, settings, history} = this.props;
+		const {default_account, default_payment_method} = settings;
 		return (
 			<FormCard title={isAdd ? __('Add Payment') : __('Update Payment')}>
 				<Form
 					onSubmit={data => this.onSubmit(processFormData(data))}
 					initialValues={item}
-					render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
+					render={({submitError, handleSubmit, form, submitting, pristine, values}) => (
 						<form onSubmit={handleSubmit} className="ea-row">
-							<Field label={__('Date', 'wp-ever-accounting')} name="paid_at" containerClass="ea-col-6" required>
+							<Field label={__('Date', 'wp-ever-accounting')} name="paid_at" containerClass="ea-col-6"
+								   required>
 								{props => <DateControl {...props.input} {...props} />}
 							</Field>
 
@@ -67,7 +70,7 @@ class EditPayment extends Component {
 								name="account"
 								className="ea-col-6"
 								defaultValue={default_account}
-								after={get(values, 'account.currency.code')}
+								after={get(values, 'account.currency_code')}
 								required
 							>
 								{props => <AccountSelect create={true} {...props.input} {...props} />}
@@ -77,17 +80,18 @@ class EditPayment extends Component {
 								label={__('Amount', 'wp-ever-accounting')}
 								name="amount"
 								className="ea-col-6"
-								code={get(values, 'account.currency.code')}
+								code={get(values, 'account.currency_code')}
 								required
 							>
 								{props => <PriceControl {...props.input} {...props} />}
 							</Field>
 
-							<Field label={__('Vendor', 'wp-ever-accounting')} name="contact" className="ea-col-6" required>
+							<Field label={__('Vendor', 'wp-ever-accounting')} name="contact" className="ea-col-6">
 								{props => <ContactSelect create={true} type={'vendor'} {...props.input} {...props} />}
 							</Field>
 
-							<Field label={__('Category', 'wp-ever-accounting')} name="category" className="ea-col-6" required>
+							<Field label={__('Category', 'wp-ever-accounting')} name="category" className="ea-col-6"
+								   required>
 								{props => <CategorySelect create={true} type="expense" {...props.input} {...props} />}
 							</Field>
 
@@ -135,6 +139,16 @@ class EditPayment extends Component {
 								<Button isPrimary disabled={submitting || pristine} type="submit">
 									{__('Submit')}
 								</Button>
+
+								{!isAdd && <Button secondary disabled={submitting}
+												   onClick={() => history.push(`/purchases/payments/add`)}>
+									{__('Add Another')}
+								</Button>}
+
+								<Button secondary disabled={submitting}
+										onClick={() => history.push(`/purchases/payments`)}>
+									{__('Back')}
+								</Button>
 							</p>
 						</form>
 					)}
@@ -144,4 +158,4 @@ class EditPayment extends Component {
 	}
 }
 
-export default withEntity('payments')(EditPayment);
+export default withEntity('transactions')(EditPayment);

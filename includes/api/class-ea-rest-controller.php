@@ -119,7 +119,7 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 	 * @since 1.0.0
 	 */
 	protected function prepare_date_response( $date = null ) {
-		if ( '0000-00-00 00:00:00' === $date ) {
+		if ( '0000-00-00 00:00:00' === $date || '0000-00-00' === $date ) {
 			return null;
 		}
 
@@ -176,34 +176,35 @@ abstract class EAccounting_REST_Controller extends WP_REST_Controller {
 		$end   = isset( $dates[1] ) ? eaccounting_sanitize_date( $dates[1] ) : date( 'Y-m-d', current_time( 'timestamp' ) );
 		if ( ! $start || ! $end ) {
 			return array(
-				'start' => '',
-				'end'   => '',
+				'start_date' => '',
+				'end_date'   => '',
 			);
 		}
 
 		return [
-			'start' => sanitize_text_field( $start ),
-			'end'   => sanitize_text_field( $end ),
+			'start_date' => sanitize_text_field( $start ),
+			'end_date'   => sanitize_text_field( $end ),
 		];
 
 	}
 
 	/**
 	 * The method is used for retriving single object from rest request
-	 * @since 1.0.2
+	 *
 	 * @param $endpoint
 	 * @param $id
 	 * @param null $default
 	 * @param string $base
 	 *
 	 * @return array|null
+	 * @since 1.0.2
 	 */
 	protected static function get_rest_object( $endpoint, $id, $default = null, $base = '/ea/v1/' ) {
 		if ( empty( $id ) ) {
 			return $default;
 		}
 
-		$endpoint = $base. untrailingslashit( ltrim( $endpoint, '/') ) . '/' . intval( $id );
+		$endpoint = $base . untrailingslashit( ltrim( $endpoint, '/' ) ) . '/' . intval( $id );
 		$response = eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' );
 
 		return is_wp_error( $response ) ? $default : $response;

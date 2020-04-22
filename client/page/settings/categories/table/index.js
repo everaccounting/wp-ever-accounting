@@ -26,12 +26,12 @@ class Categories extends Component {
 					<Link className="page-title-action" to={`${match.path}/add`}>
 						{__('Add Category')}
 					</Link>
-					<a className="page-title-action" href="/">
-						{__('Export')}
-					</a>
-					<a className="page-title-action" href="/">
-						{__('Import')}
-					</a>
+					{/*<a className="page-title-action" href="/">*/}
+					{/*	{__('Export')}*/}
+					{/*</a>*/}
+					{/*<a className="page-title-action" href="/">*/}
+					{/*	{__('Import')}*/}
+					{/*</a>*/}
 					<SearchBox status={status} onSearch={this.props.setSearch} />
 				</div>
 

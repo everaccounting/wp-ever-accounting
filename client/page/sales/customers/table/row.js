@@ -35,7 +35,7 @@ export default class Row extends Component {
 					</th>
 
 					<td scope="row" className="column-primary column-name">
-						<Link to={`${history.location.pathname}/${id}/view`}>{this.props.getTableProp(name)}</Link>
+						<Link to={`${history.location.pathname}/${id}/edit`}>{this.props.getTableProp(name)}</Link>
 					</td>
 
 					<td className="column-email">{this.props.getTableProp(email)}</td>

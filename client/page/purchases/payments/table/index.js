@@ -78,10 +78,9 @@ class Revenues extends Component {
 }
 
 export default withListTable({
+	resourceName: 'transactions',
 	queryFilter: query => {
-		if (query.order && query.order === 'desc') {
-			delete query.order;
-		}
+		query.type = 'expense';
 		return query;
 	},
 })(Revenues);

@@ -115,15 +115,19 @@ function eaccounting_get_currency( $id, $by = 'id' ) {
  *
  * @param $id
  *
- * @return bool
+ * @return bool|WP_Error
  * @since 1.0.0
  */
 function eaccounting_delete_currency( $id ) {
 	global $wpdb;
-	$id = absint( $id );
+	$id       = absint( $id );
 	$currency = eaccounting_get_currency( $id );
 	if ( is_null( $currency ) ) {
 		return false;
+	}
+
+	if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $wpdb->ea_transactions WHERE currency_code = %s", $currency->code ) ) ) {
+		return new WP_Error( 'not-permitted', __( 'The currency is associated with one or more transactions, delete is not permitted.', 'wp-ever-accounting' ) );
 	}
 
 	do_action( 'eaccounting_pre_currency_delete', $id, $currency );
@@ -165,6 +169,7 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 		'per_page'       => 20,
 		'page'           => 1,
 		'offset'         => 0,
+		'nopaging'       => true,
 	);
 
 	$args        = wp_parse_args( $args, $default );
@@ -226,7 +231,7 @@ function eaccounting_get_currencies( $args = array(), $count = false ) {
 	$query_orderby = sprintf( " ORDER BY %s %s ", $order_by, $order );
 
 	// limit
-	if ( isset( $args['per_page'] ) && $args['per_page'] > 0 ) {
+	if ($args['nopaging'] == false && isset( $args['per_page'] ) && $args['per_page'] > 0 ) {
 		if ( $args['offset'] ) {
 			$query_limit = $wpdb->prepare( 'LIMIT %d, %d', $args['offset'], $args['per_page'] );
 		} else {

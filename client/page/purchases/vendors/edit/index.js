@@ -35,6 +35,7 @@ class EditVendor extends Component {
 
 	onSubmit(form) {
 		const {history, isAdd} = this.props;
+		form.type='vendor';
 		this.props.handleSubmit(
 			form,
 			function (res) {

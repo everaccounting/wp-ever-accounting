@@ -110,17 +110,8 @@ function eaccounting_delete_account( $id ) {
 		return false;
 	}
 
-	$tables = [
-		$wpdb->ea_revenues         => 'account_id',
-		$wpdb->ea_payments         => 'account_id',
-		$wpdb->ea_invoice_payments => 'account_id',
-	];
-
-
-	foreach ( $tables as $table => $column ) {
-		if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $table WHERE $column = %d", $id ) ) ) {
-			return new WP_Error( 'not-permitted', __( 'Major dependencies are associated with accounts, you are not permitted to delete them.', 'wp-ever-accounting' ) );
-		}
+	if ( $wpdb->get_var( $wpdb->prepare( "SELECT count(id) from $wpdb->ea_transactions WHERE account_id = %d", $id ) ) ) {
+		return new WP_Error( 'not-permitted', __( 'The account is associated with one or more transactions, delete is not permitted.', 'wp-ever-accounting' ) );
 	}
 
 	do_action( 'eaccounting_pre_account_delete', $id, $account );
@@ -284,8 +275,8 @@ function eaccounting_get_account_current_balance( $account_id, $formatted = fals
 	$account = eaccounting_get_account( $account_id );
 	$total   = $account->opening_balance;
 	// Sum Incomes
-	$total += $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_revenues WHERE account_id=%d", $account_id ) );
-	$total -= $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_payments WHERE account_id=%d", $account_id ) );
+	$total += $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_transactions WHERE type='income' AND account_id=%d", $account_id ) );
+	$total -= $wpdb->get_var( $wpdb->prepare( "SELECT SUM(amount) from $wpdb->ea_transactions WHERE type='expense' AND account_id=%d", $account_id ) );
 
 	return $formatted ? eaccounting_money( $total, $account->currency_code, true )->format() : $total;
 }
