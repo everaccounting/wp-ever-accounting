@@ -18,6 +18,7 @@
 		"build:core": "cross-env NODE_ENV=production webpack --display-error-details",
 		"postbuild": "npm run -s i18n:php && npm run -s i18n:pot",
 		"build:packages": "node ./bin/packages/build.js",
+		"build:release": "./bin/build-plugin-zip.sh",
 		"publish-packages:check": "npm run build:packages && lerna updated",
 		"publish-packages:dev": "npm run build:packages && lerna publish from-package --dist-tag next",
 		"publish-packages:prod": "npm run build:packages && lerna publish from-package",

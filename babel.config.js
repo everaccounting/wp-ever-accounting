@@ -14,8 +14,6 @@ module.exports = {
 		production: {
 			plugins: [
 				'transform-react-remove-prop-types',
-				'@babel/plugin-transform-react-inline-elements',
-				// '@babel/plugin-transform-react-constant-elements',
 				'@wordpress/babel-plugin-makepot',
 			],
 		},

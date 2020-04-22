@@ -20,92 +20,99 @@ msgid "Settings"
 msgstr ""
 
 #: client/components/header/index.js:9
-#: client/page/dashboard/index.js:29
+#: client/page/dashboard/index.js:28
 msgid "Dashboard"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:106
+#: client/page/banking/accounts/edit/index.js:101
 msgid "Bank Address"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:116
-#: client/page/banking/transfers/edit/index.js:126
-#: client/page/purchases/payments/edit/index.js:136
-#: client/page/sales/revenues/edit/index.js:136
+#: client/page/banking/accounts/edit/index.js:111
+#: client/page/banking/transfers/edit/index.js:124
+#: client/page/purchases/payments/edit/index.js:140
+#: client/page/purchases/vendors/edit/index.js:162
+#: client/page/sales/customers/edit/index.js:164
+#: client/page/sales/revenues/edit/index.js:140
 #: client/page/settings/categories/edit/index.js:50
 #: client/page/settings/currencies/edit/index.js:63
 #: client/page/settings/defaults/index.js:87
 #: client/page/settings/general/index.js:118
 #: packages/components/build-module/account-select/create.js:115
 #: packages/components/build-module/category-select/create.js:73
-#: packages/components/build-module/contact-select/create.js:122
+#: packages/components/build-module/contact-select/create.js:121
 #: packages/components/build-module/currency-select/create.js:96
 msgid "Submit"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:119
+#: client/page/banking/accounts/edit/index.js:114
+#: client/page/banking/transfers/edit/index.js:127
 #: client/page/settings/categories/edit/index.js:53
 #: client/page/settings/currencies/edit/index.js:66
 msgid "Cancel"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:35
+#: client/page/banking/accounts/edit/index.js:27
 msgid "\"%s\" account %s."
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:35
-#: client/page/banking/transfers/edit/index.js:42
-#: client/page/purchases/payments/edit/index.js:44
+#: client/page/banking/accounts/edit/index.js:27
+#: client/page/banking/transfers/edit/index.js:40
+#: client/page/purchases/payments/edit/index.js:46
+#: client/page/purchases/vendors/edit/index.js:42
+#: client/page/sales/customers/edit/index.js:42
 #: client/page/sales/revenues/edit/index.js:44
 #: client/page/settings/categories/edit/index.js:18
 #: client/page/settings/currencies/edit/index.js:18
 msgid "created"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:35
-#: client/page/banking/transfers/edit/index.js:42
-#: client/page/purchases/payments/edit/index.js:44
+#: client/page/banking/accounts/edit/index.js:27
+#: client/page/banking/transfers/edit/index.js:40
+#: client/page/purchases/payments/edit/index.js:46
+#: client/page/purchases/vendors/edit/index.js:42
+#: client/page/sales/customers/edit/index.js:42
 #: client/page/sales/revenues/edit/index.js:44
 #: client/page/settings/categories/edit/index.js:18
 #: client/page/settings/currencies/edit/index.js:18
 msgid "updated"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:44
+#: client/page/banking/accounts/edit/index.js:37
 #: client/page/banking/accounts/table/index.js:89
-#: client/page/transactions/index.js:37
 msgid "Add Account"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:44
+#: client/page/banking/accounts/edit/index.js:37
 msgid "Update Account"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:50
+#: client/page/banking/accounts/edit/index.js:43
 #: packages/components/build-module/account-select/create.js:81
 msgid "Account Name"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:55
+#: client/page/banking/accounts/edit/index.js:49
 #: packages/components/build-module/account-select/create.js:88
 msgid "Account Number"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:65
+#: client/page/banking/accounts/edit/index.js:59
 #: packages/components/build-module/account-select/create.js:95
 msgid "Account Currency"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:76
+#: client/page/banking/accounts/edit/index.js:71
 #: packages/components/build-module/account-select/create.js:102
 msgid "Opening Balance"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:88
+#: client/page/banking/accounts/edit/index.js:83
+#: client/page/banking/accounts/table/constants.js:29
 msgid "Bank Name"
 msgstr ""
 
-#: client/page/banking/accounts/edit/index.js:97
+#: client/page/banking/accounts/edit/index.js:92
 msgid "Bank Phone"
 msgstr ""
 
@@ -114,7 +121,9 @@ msgid "Accounts"
 msgstr ""
 
 #: client/page/banking/accounts/table/constants.js:14
+#: client/page/purchases/vendors/edit/index.js:61
 #: client/page/purchases/vendors/table/constants.js:14
+#: client/page/sales/customers/edit/index.js:61
 #: client/page/sales/customers/table/constants.js:14
 #: client/page/settings/categories/edit/index.js:34
 #: client/page/settings/categories/table/constants.js:14
@@ -126,14 +135,15 @@ msgid "Name"
 msgstr ""
 
 #: client/page/banking/accounts/table/constants.js:19
-msgid "Number"
-msgstr ""
-
-#: client/page/banking/accounts/table/constants.js:24
+#: client/page/dashboard/widgets/account/index.js:19
 msgid "Balance"
 msgstr ""
 
-#: client/page/banking/accounts/table/constants.js:29
+#: client/page/banking/accounts/table/constants.js:24
+msgid "Number"
+msgstr ""
+
+#: client/page/banking/accounts/table/constants.js:34
 #: client/page/banking/transfers/table/constants.js:35
 #: client/page/purchases/payments/table/constants.js:40
 #: client/page/purchases/vendors/table/constants.js:29
@@ -144,8 +154,8 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: client/page/banking/accounts/table/constants.js:37
-#: client/page/banking/accounts/table/row.js:48
+#: client/page/banking/accounts/table/constants.js:42
+#: client/page/banking/accounts/table/row.js:49
 #: client/page/banking/transfers/table/constants.js:42
 #: client/page/banking/transfers/table/row.js:53
 #: client/page/purchases/payments/table/constants.js:48
@@ -164,35 +174,14 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: client/page/banking/accounts/table/constants.js:41
-#: client/page/banking/accounts/table/index.js:32
+#: client/page/banking/accounts/table/constants.js:46
 #: client/page/banking/transfers/table/constants.js:46
-#: client/page/banking/transfers/table/index.js:31
-#: client/page/purchases/payments/table/index.js:29
-#: client/page/purchases/vendors/table/index.js:29
-#: client/page/sales/customers/table/index.js:29
-#: client/page/sales/revenues/table/index.js:30
 #: client/page/settings/categories/table/constants.js:41
-#: client/page/settings/categories/table/index.js:30
 #: client/page/settings/currencies/table/constants.js:41
-#: client/page/settings/currencies/table/index.js:29
-#: client/page/transactions/index.js:40
 msgid "Export"
 msgstr ""
 
-#: client/page/banking/accounts/table/index.js:35
-#: client/page/banking/transfers/table/index.js:34
-#: client/page/purchases/payments/table/index.js:32
-#: client/page/purchases/vendors/table/index.js:32
-#: client/page/sales/customers/table/index.js:32
-#: client/page/sales/revenues/table/index.js:33
-#: client/page/settings/categories/table/index.js:33
-#: client/page/settings/currencies/table/index.js:32
-#: client/page/transactions/index.js:43
-msgid "Import"
-msgstr ""
-
-#: client/page/banking/accounts/table/row.js:43
+#: client/page/banking/accounts/table/row.js:44
 #: client/page/banking/transfers/table/row.js:48
 #: client/page/purchases/payments/table/row.js:47
 #: client/page/purchases/vendors/table/row.js:47
@@ -203,63 +192,67 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:102
+#: client/page/banking/transfers/edit/index.js:100
 #: client/page/banking/transfers/table/constants.js:14
-#: client/page/purchases/payments/edit/index.js:61
+#: client/page/dashboard/widgets/expenses/index.js:21
+#: client/page/dashboard/widgets/incomes/index.js:21
+#: client/page/purchases/payments/edit/index.js:63
 #: client/page/purchases/payments/table/constants.js:14
-#: client/page/sales/revenues/edit/index.js:61
+#: client/page/sales/revenues/edit/index.js:62
 #: client/page/sales/revenues/table/constants.js:14
 #: client/page/transactions/constants.js:9
 msgid "Date"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:107
-#: client/page/purchases/payments/edit/index.js:95
-#: client/page/sales/revenues/edit/index.js:95
+#: client/page/banking/transfers/edit/index.js:105
+#: client/page/purchases/payments/edit/index.js:99
+#: client/page/sales/revenues/edit/index.js:99
 msgid "Payment Method"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:116
-#: client/page/purchases/payments/edit/index.js:114
-#: client/page/sales/revenues/edit/index.js:114
+#: client/page/banking/transfers/edit/index.js:114
+#: client/page/purchases/payments/edit/index.js:118
+#: client/page/sales/revenues/edit/index.js:118
 #: client/page/transactions/constants.js:34
 msgid "Reference"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:120
-#: client/page/purchases/payments/edit/index.js:105
-#: client/page/sales/revenues/edit/index.js:105
+#: client/page/banking/transfers/edit/index.js:118
+#: client/page/purchases/payments/edit/index.js:109
+#: client/page/sales/revenues/edit/index.js:109
 msgid "Description"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:42
+#: client/page/banking/transfers/edit/index.js:40
 msgid "Transfer %s."
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:53
+#: client/page/banking/transfers/edit/index.js:51
 #: client/page/banking/transfers/table/index.js:88
 msgid "Add Transfer"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:53
+#: client/page/banking/transfers/edit/index.js:51
 msgid "Update Transfer"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:60
+#: client/page/banking/transfers/edit/index.js:58
 #: client/page/banking/transfers/table/constants.js:25
 msgid "From Account"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:76
+#: client/page/banking/transfers/edit/index.js:74
 #: client/page/banking/transfers/table/constants.js:30
 msgid "To Account"
 msgstr ""
 
-#: client/page/banking/transfers/edit/index.js:92
+#: client/page/banking/transfers/edit/index.js:90
 #: client/page/banking/transfers/table/constants.js:20
-#: client/page/purchases/payments/edit/index.js:77
+#: client/page/dashboard/widgets/expenses/index.js:23
+#: client/page/dashboard/widgets/incomes/index.js:23
+#: client/page/purchases/payments/edit/index.js:80
 #: client/page/purchases/payments/table/constants.js:20
-#: client/page/sales/revenues/edit/index.js:77
+#: client/page/sales/revenues/edit/index.js:81
 #: client/page/sales/revenues/table/constants.js:20
 #: client/page/transactions/constants.js:14
 msgid "Amount"
@@ -269,98 +262,251 @@ msgstr ""
 msgid "Transfers"
 msgstr ""
 
-#: client/page/dashboard/index.js:120
-msgid "Latest Income"
-msgstr ""
-
-#: client/page/dashboard/index.js:123
-msgid "Account Balance"
-msgstr ""
-
-#: client/page/dashboard/index.js:66
+#: client/page/dashboard/index.js:35
 msgid "Cash Flow"
 msgstr ""
 
-#: client/page/dashboard/index.js:72
-msgid "Income By Categories"
+#: client/page/dashboard/widgets/account/index.js:13
+msgid "Account Balance"
 msgstr ""
 
-#: client/page/dashboard/index.js:75
-msgid "Expense By Categories"
-msgstr ""
-
-#: client/page/dashboard/index.js:81
-msgid "Latest Expense"
-msgstr ""
-
-#: client/page/purchases/payments/edit/index.js:123
-#: client/page/sales/revenues/edit/index.js:123
-msgid "File"
-msgstr ""
-
-#: client/page/purchases/payments/edit/index.js:44
-msgid "Payment %s."
-msgstr ""
-
-#: client/page/purchases/payments/edit/index.js:55
-#: client/page/purchases/payments/table/index.js:26
-msgid "Add Payment"
-msgstr ""
-
-#: client/page/purchases/payments/edit/index.js:55
-msgid "Update Payment"
-msgstr ""
-
-#: client/page/purchases/payments/edit/index.js:66
+#: client/page/dashboard/widgets/account/index.js:18
+#: client/page/purchases/payments/edit/index.js:69
 #: client/page/purchases/payments/table/constants.js:30
-#: client/page/sales/revenues/edit/index.js:66
+#: client/page/sales/revenues/edit/index.js:70
 #: client/page/sales/revenues/table/constants.js:30
 #: client/page/transactions/constants.js:19
 msgid "Account"
 msgstr ""
 
-#: client/page/purchases/payments/edit/index.js:86
-#: client/page/purchases/payments/table/constants.js:35
-msgid "Vendor"
+#: client/page/dashboard/widgets/account/index.js:33
+msgid "No accounts found."
 msgstr ""
 
-#: client/page/purchases/payments/edit/index.js:90
+#: client/page/dashboard/widgets/expense-categories/index.js:13
+msgid "Expense By Categories"
+msgstr ""
+
+#: client/page/dashboard/widgets/expense-categories/index.js:30
+msgid ""
+"There is not enough data to visualize expenses by category graph. Please "
+"add expenses."
+msgstr ""
+
+#: client/page/dashboard/widgets/expenses/index.js:16
+msgid "Latest Expense"
+msgstr ""
+
+#: client/page/dashboard/widgets/expenses/index.js:22
+#: client/page/dashboard/widgets/incomes/index.js:22
+#: client/page/purchases/payments/edit/index.js:93
 #: client/page/purchases/payments/table/constants.js:25
-#: client/page/sales/revenues/edit/index.js:90
+#: client/page/sales/revenues/edit/index.js:94
 #: client/page/sales/revenues/table/constants.js:25
 #: client/page/transactions/constants.js:29
 msgid "Category"
+msgstr ""
+
+#: client/page/dashboard/widgets/expenses/index.js:40
+msgid "There are no recent expenses"
+msgstr ""
+
+#: client/page/dashboard/widgets/income-categories/index.js:13
+msgid "Income By Categories"
+msgstr ""
+
+#: client/page/dashboard/widgets/income-categories/index.js:30
+msgid ""
+"There is not enough data to visualize incomes by category graph. Please add "
+"incomes."
+msgstr ""
+
+#: client/page/dashboard/widgets/incomes/index.js:16
+msgid "Latest Incomes"
+msgstr ""
+
+#: client/page/dashboard/widgets/incomes/index.js:39
+msgid "There are no recent incomes"
+msgstr ""
+
+#: client/page/dashboard/widgets/summery/index.js:33
+msgid "Total Incomes"
+msgstr ""
+
+#: client/page/dashboard/widgets/summery/index.js:34
+msgid "Total Expense"
+msgstr ""
+
+#: client/page/dashboard/widgets/summery/index.js:35
+msgid "Total Profit"
+msgstr ""
+
+#: client/page/purchases/payments/edit/index.js:127
+#: client/page/sales/revenues/edit/index.js:127
+msgid "File"
+msgstr ""
+
+#: client/page/purchases/payments/edit/index.js:145
+#: client/page/sales/revenues/edit/index.js:145
+msgid "Add Another"
+msgstr ""
+
+#: client/page/purchases/payments/edit/index.js:150
+#: client/page/sales/revenues/edit/index.js:150
+#: packages/components/build-module/form-card/index.js:60
+msgid "Back"
+msgstr ""
+
+#: client/page/purchases/payments/edit/index.js:46
+msgid "Payment %s."
+msgstr ""
+
+#: client/page/purchases/payments/edit/index.js:57
+#: client/page/purchases/payments/table/index.js:26
+#: client/page/transactions/index.js:40
+msgid "Add Payment"
+msgstr ""
+
+#: client/page/purchases/payments/edit/index.js:57
+msgid "Update Payment"
+msgstr ""
+
+#: client/page/purchases/payments/edit/index.js:89
+#: client/page/purchases/payments/table/constants.js:35
+msgid "Vendor"
 msgstr ""
 
 #: client/page/purchases/payments/index.js:18
 msgid "Payments"
 msgstr ""
 
-#: client/page/purchases/vendors/index.js:18
-msgid "Vendors"
+#: client/page/purchases/vendors/edit/index.js:105
+#: client/page/sales/customers/edit/index.js:106
+#: client/page/settings/general/index.js:65
+msgid "Tax Number"
 msgstr ""
 
+#: client/page/purchases/vendors/edit/index.js:113
+#: client/page/sales/customers/edit/index.js:114
+msgid "Website"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:121
+#: client/page/sales/customers/edit/index.js:122
+msgid "Birth Date"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:129
+#: client/page/sales/customers/edit/index.js:130
+msgid "Note"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:137
+#: client/page/sales/customers/edit/index.js:138
+#: client/page/settings/general/index.js:73
+#: packages/components/build-module/contact-select/create.js:110
+msgid "Address"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:145
+#: client/page/sales/customers/edit/index.js:146
+#: client/page/settings/general/index.js:105
+#: packages/components/build-module/contact-select/create.js:104
+msgid "Country"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:153
+#: client/page/sales/customers/edit/index.js:155
+msgid "Photo"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:42
+msgid "Vendor %s."
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:53
+#: client/page/purchases/vendors/table/index.js:26
+msgid "Add Vendor"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:53
+msgid "Update Vendor"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:70
+#: client/page/sales/customers/edit/index.js:70
+#: packages/components/build-module/contact-select/create.js:91
+msgid "Currency"
+msgstr ""
+
+#: client/page/purchases/vendors/edit/index.js:78
 #: client/page/purchases/vendors/table/constants.js:19
+#: client/page/sales/customers/edit/index.js:79
 #: client/page/sales/customers/table/constants.js:19
 #: packages/components/build-module/contact-select/create.js:98
 msgid "Email"
 msgstr ""
 
+#: client/page/purchases/vendors/edit/index.js:87
 #: client/page/purchases/vendors/table/constants.js:24
+#: client/page/sales/customers/edit/index.js:88
 #: client/page/sales/customers/table/constants.js:24
 msgid "Phone"
 msgstr ""
 
-#: client/page/purchases/vendors/table/index.js:26
-msgid "Add Vendor"
+#: client/page/purchases/vendors/edit/index.js:96
+#: client/page/sales/customers/edit/index.js:97
+msgid "Fax"
+msgstr ""
+
+#: client/page/purchases/vendors/index.js:18
+msgid "Vendors"
+msgstr ""
+
+#: client/page/reports/income/filter.js:62
+msgid "Filter"
+msgstr ""
+
+#: client/page/reports/income/filter.js:64
+msgid "Reset"
+msgstr ""
+
+#: client/page/reports/income/index.js:55
+#: client/page/settings/categories/index.js:18
+msgid "Categories"
+msgstr ""
+
+#: client/page/reports/income/index.js:83
+msgid "Total"
+msgstr ""
+
+#: client/page/reports/index.js:16
+msgid "Income"
+msgstr ""
+
+#: client/page/reports/index.js:21
+msgid "Expense"
+msgstr ""
+
+#: client/page/reports/index.js:26
+msgid "Income vs Expense"
+msgstr ""
+
+#: client/page/sales/customers/edit/index.js:42
+msgid "Customer %s."
+msgstr ""
+
+#: client/page/sales/customers/edit/index.js:53
+#: client/page/sales/customers/table/index.js:26
+msgid "Add Customer"
+msgstr ""
+
+#: client/page/sales/customers/edit/index.js:53
+msgid "Update Customer"
 msgstr ""
 
 #: client/page/sales/customers/index.js:18
 msgid "Customers"
-msgstr ""
-
-#: client/page/sales/customers/table/index.js:26
-msgid "Add Customer"
 msgstr ""
 
 #: client/page/sales/revenues/edit/index.js:44
@@ -368,7 +514,8 @@ msgid "Revenue %s."
 msgstr ""
 
 #: client/page/sales/revenues/edit/index.js:55
-#: client/page/sales/revenues/table/index.js:27
+#: client/page/sales/revenues/table/index.js:28
+#: client/page/transactions/index.js:37
 msgid "Add Revenue"
 msgstr ""
 
@@ -376,7 +523,7 @@ msgstr ""
 msgid "Update Revenue"
 msgstr ""
 
-#: client/page/sales/revenues/edit/index.js:86
+#: client/page/sales/revenues/edit/index.js:90
 #: client/page/sales/revenues/table/constants.js:35
 msgid "Customer"
 msgstr ""
@@ -385,7 +532,7 @@ msgstr ""
 msgid "Revenues"
 msgstr ""
 
-#: client/page/sales/revenues/table/index.js:49
+#: client/page/sales/revenues/table/index.js:50
 msgid "Filter Customer"
 msgstr ""
 
@@ -409,10 +556,6 @@ msgstr ""
 msgid "Category Type"
 msgstr ""
 
-#: client/page/settings/categories/index.js:18
-msgid "Categories"
-msgstr ""
-
 #: client/page/settings/categories/table/constants.js:19
 #: client/page/transactions/constants.js:24
 msgid "Type"
@@ -423,7 +566,7 @@ msgid "Color"
 msgstr ""
 
 #: client/page/settings/categories/table/index.js:49
-#: client/page/transactions/index.js:67
+#: client/page/transactions/index.js:65
 msgid "Filter Type"
 msgstr ""
 
@@ -473,11 +616,6 @@ msgstr ""
 msgid "Default Payment Method"
 msgstr ""
 
-#: client/page/settings/general/index.js:105
-#: packages/components/build-module/contact-select/create.js:105
-msgid "Country"
-msgstr ""
-
 #: client/page/settings/general/index.js:112
 msgid "Logo"
 msgstr ""
@@ -496,15 +634,6 @@ msgstr ""
 
 #: client/page/settings/general/index.js:57
 msgid "Phone Number"
-msgstr ""
-
-#: client/page/settings/general/index.js:65
-msgid "Tax Number"
-msgstr ""
-
-#: client/page/settings/general/index.js:73
-#: packages/components/build-module/contact-select/create.js:111
-msgid "Address"
 msgstr ""
 
 #: client/page/settings/general/index.js:81
@@ -531,11 +660,11 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: client/page/transactions/index.js:52
+#: client/page/transactions/index.js:50
 msgid "Filter Account"
 msgstr ""
 
-#: client/page/transactions/index.js:59
+#: client/page/transactions/index.js:57
 msgid "Filter Category"
 msgstr ""
 
@@ -569,11 +698,8 @@ msgstr ""
 
 #: packages/components/build-module/contact-select/create.js:66
 #: packages/components/build-module/select-control/async.js:166
+#: packages/components/build-module/select-control/index.js:162
 msgid "Add New"
-msgstr ""
-
-#: packages/components/build-module/contact-select/create.js:91
-msgid "Currency"
 msgstr ""
 
 #: packages/components/build-module/contact-select/index.js:90
@@ -584,7 +710,7 @@ msgstr ""
 msgid "New Currency"
 msgstr ""
 
-#: packages/components/build-module/currency-select/index.js:124
+#: packages/components/build-module/currency-select/index.js:122
 msgid "No currencies"
 msgstr ""
 
@@ -602,10 +728,6 @@ msgstr ""
 
 #: packages/components/build-module/file-control/index.js:62
 msgid "Do you really want to delete the file"
-msgstr ""
-
-#: packages/components/build-module/form-card/index.js:60
-msgid "Back"
 msgstr ""
 
 #: packages/components/build-module/table/header/check-column.js:22

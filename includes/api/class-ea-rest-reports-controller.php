@@ -131,19 +131,19 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 
 
 	public function get_cashflow( $request ) {
-//		$financial_start = eaccounting_get_financial_start();
-//		$duration        = $this->get_query_dates( $request['date'] );
-//		// check and assign year start
-//		if ( ( $year_start = date( 'Y-1-1' ) ) !== $financial_start ) {
-//			$year_start = $financial_start;
-//		}
-//
-//		$start_date = eaccounting_sanitize_date( $duration['start'],  $year_start );
-//		$end_date   = eaccounting_sanitize_date( $duration['end'],  date( 'Y-m-d' ) );
-//
-//		$start = new \DateTime( $start_date );
-//		$end   = new \DateTime( $end_date );
-//
+		$financial_start = eaccounting_get_financial_start();
+		$duration        = $this->get_query_dates( $request['date'] );
+		// check and assign year start
+		if ( ( $year_start = date( 'Y-1-1' ) ) !== $financial_start ) {
+			$year_start = $financial_start;
+		}
+
+		$start_date = eaccounting_sanitize_date( $duration['start'],  $year_start );
+		$end_date   = eaccounting_sanitize_date( $duration['end'],  date( 'Y-m-d' ) );
+
+		$start = new \DateTime( $start_date );
+		$end   = new \DateTime( $end_date );
+
 //		$start_month = $start->format( 'm' );
 //		$end_month   = ceil( $end->diff( $start )->format( '%a' ) / 12 );
 //		if ( $end_month == 0 ) {
