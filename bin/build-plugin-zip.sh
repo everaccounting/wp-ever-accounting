@@ -87,7 +87,7 @@ npm list webpack
 status "Generating build... 👷‍♀️"
 status "==========================="
 npm list webpack
-npm run build
+npm run build --progress
 status "==========================="
 npm list webpack
 
