@@ -17,23 +17,13 @@ import TextAreaControl from '../textarea-control';
 import CountrySelect from '../country-select';
 import { __ } from '@wordpress/i18n';
 import Button from '../button';
-import { get, pickBy, isObject } from 'lodash';
-
-const processFormData = data =>
-	pickBy(
-		{
-			...data,
-			currency_code: get(data, 'currency.code'),
-		},
-		value => !isObject(value)
-	);
 
 class Create extends Component {
 	render() {
 		return (
 			<Modal title={__('Add New')} onClose={this.props.onClose}>
 				<Form
-					onSubmit={data => this.props.onSubmit(processFormData(data))}
+					onSubmit={this.props.onSubmit}
 					initialValues={{}}
 					render={({ submitError, handleSubmit, form, submitting, pristine, values }) => (
 						<form onSubmit={handleSubmit} className="ea-row">
@@ -41,7 +31,7 @@ class Create extends Component {
 								{props => <TextControl {...props.input} {...props} />}
 							</Field>
 
-							<Field label={__('Currency', 'wp-ever-accounting')} name="currency" className="ea-col-6" required>
+							<Field label={__('Currency', 'wp-ever-accounting')} name="currency_code" className="ea-col-6" required>
 								{props => <CurrencySelect {...props.input} {...props} />}
 							</Field>
 

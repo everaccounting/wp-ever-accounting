@@ -16,23 +16,14 @@ import CurrencySelect from '../currency-select';
 import { __ } from '@wordpress/i18n';
 import Button from '../button';
 import PriceControl from '../price-control';
-import { get, pickBy, isObject } from 'lodash';
-
-const processFormData = data =>
-	pickBy(
-		{
-			...data,
-			currency_code: get(data, 'currency.code'),
-		},
-		value => !isObject(value)
-	);
+import { get } from 'lodash';
 
 class Create extends Component {
 	render() {
 		return (
 			<Modal title={__('New Account')} onClose={this.props.onClose}>
 				<Form
-					onSubmit={data => this.props.onSubmit(processFormData(data))}
+					onSubmit={this.props.onSubmit}
 					initialValues={{}}
 					render={({ handleSubmit, submitting, pristine, values }) => (
 						<form onSubmit={handleSubmit} className="ea-row">
@@ -44,7 +35,11 @@ class Create extends Component {
 								{props => <TextControl {...props.input} {...props} />}
 							</Field>
 
-							<Field label={__('Account Currency', 'wp-ever-accounting')} name="currency" className="ea-col-6" required>
+							<Field
+								label={__('Account Currency', 'wp-ever-accounting')}
+								name="currency_code"
+								className="ea-col-6"
+								required>
 								{props => <CurrencySelect {...props.input} {...props} />}
 							</Field>
 
@@ -52,9 +47,8 @@ class Create extends Component {
 								label={__('Opening Balance', 'wp-ever-accounting')}
 								name="opening_balance"
 								className="ea-col-6"
-								code={get(values, 'currency.code')}
-								required
-							>
+								code={get(values, 'currency_code')}
+								required>
 								{props => <PriceControl {...props.input} {...props} />}
 							</Field>
 

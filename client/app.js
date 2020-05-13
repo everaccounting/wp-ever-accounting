@@ -1,5 +1,5 @@
 import { routes } from './routes';
-import { Fragment, Component } from '@wordpress/element';
+import { Fragment, Component, Suspense } from '@wordpress/element';
 import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import { NotificationContainer } from 'react-notifications';
 import Header from './components/header';
@@ -18,9 +18,11 @@ class Page extends Component {
 		return (
 			<Fragment>
 				<Header />
+				<Suspense fallback={'loading'}>
 				<div className="eaccounting-page wrap">
 					<this.props.container {...this.props} />
 				</div>
+				</Suspense>
 			</Fragment>
 		);
 	}

@@ -36,6 +36,7 @@ function eaccounting_insert_transaction( $args ) {
 		}
 		$args = array_merge( $item_before, $args );
 	}
+
 	$methods = array_keys( eaccounting_get_payment_methods() );
 	$data    = array(
 		'id'             => empty( $args['id'] ) ? null : absint( $args['id'] ),

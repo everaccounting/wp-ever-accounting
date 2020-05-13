@@ -1,11 +1,13 @@
 import { applyFilters } from '@wordpress/hooks';
-import Dashboard from './page/dashboard';
-import Transactions from './page/transactions';
-import Sales from './page/sales';
-import Purchases from './page/purchases';
-import Banking from './page/banking';
-import Settings from './page/settings';
-import Reports from "./page/reports";
+import { lazy } from '@wordpress/element';
+
+const Dashboard = lazy( () => import( './page/dashboard' ) );
+const Transactions = lazy( () => import( './page/transactions' ) );
+const Sales = lazy( () => import( './page/sales' ) );
+const Purchases = lazy( () => import( './page/purchases' ) );
+const Banking = lazy( () => import( './page/banking' ) );
+const Reports = lazy( () => import( './page/reports' ) );
+const Settings = lazy( () => import( './page/settings' ) );
 
 export const PAGES_FILTER = 'eaccounting_admin_pages_list';
 

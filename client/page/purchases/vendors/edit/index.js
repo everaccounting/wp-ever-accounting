@@ -20,7 +20,6 @@ const processFormData = data =>
 	pickBy(
 		{
 			...data,
-			currency_code: get(data, 'currency.code'),
 			file_id: get(data, 'file.id'),
 		},
 		value => !isObject(value)
@@ -68,7 +67,7 @@ class EditVendor extends Component {
 
 							<Field
 								label={__('Currency', 'wp-ever-accounting')}
-								name="currency"
+								name="currency_code"
 								className="ea-col-6"
 								required>
 								{props => <CurrencySelect create={true} {...props.input} {...props} />}

@@ -4,11 +4,15 @@ import { Link } from 'react-router-dom';
 import { withListTable } from '@eaccounting/hoc';
 import { SearchBox, TableNav, Table } from '@eaccounting/components';
 import { getHeaders, getBulk } from './constants';
+import Importer from './import';
 import Row from './row';
 
 class Revenues extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			isImporting:false
+		};
 		this.renderRow = this.renderRow.bind(this);
 		this.renderTable = this.renderTable.bind(this);
 	}
@@ -21,6 +25,7 @@ class Revenues extends Component {
 		const { status, total, page, match, orderby, order, items, selected } = this.props;
 		return (
 			<Fragment>
+				<Importer/>
 				<div className="ea-table-display">
 					<Link className="page-title-action" to={`${match.path}/add`}>
 						{__('Add Payment')}
@@ -28,9 +33,9 @@ class Revenues extends Component {
 					{/*<a className="page-title-action" href="/">*/}
 					{/*	{__('Export')}*/}
 					{/*</a>*/}
-					{/*<a className="page-title-action" href="/">*/}
-					{/*	{__('Import')}*/}
-					{/*</a>*/}
+					<a className="page-title-action" href="/">
+						{__('Import')}
+					</a>
 					<SearchBox status={status} onSearch={this.props.setSearch} />
 				</div>
 

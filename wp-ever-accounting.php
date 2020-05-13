@@ -158,6 +158,8 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/transfer-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/report-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/helper-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/models/class-ea-query-builder.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/models/class-ea-transaction-model.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
