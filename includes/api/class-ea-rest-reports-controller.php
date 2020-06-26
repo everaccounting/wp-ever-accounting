@@ -369,21 +369,22 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 	}
 
 	public function get_income_report( $request ) {
-//		$duration        = $this->get_query_dates( $request['date'] );
-//		$dates           = $totals = $incomes = $incomes_graph = $categories = [];
-//		$year            = ! empty( $request->year ) ? absint( $request->year ) : date( 'Y' );
-//		$category_id     = ! empty( $request->category_id ) ? absint( $request->category_id ) : '';
-//		$financial_start = eaccounting_get_financial_start( $year );
-//
-//		global $wpdb;
-//		$categories   = $wpdb->get_results( "SELECT id, name FROM $wpdb->ea_categories WHERE type='income' ORDER BY name ASC", ARRAY_A );
-//		$category_ids = wp_list_pluck( $categories, 'id' );
-//		if ( ! empty( $category_id ) && in_array( $category_id, $category_ids ) ) {
-//			$categories = wp_list_filter( $categories, [ 'id' => $category_id ] );
-//		}
-//
-//		$categories = wp_list_pluck( $categories, 'name', 'id' );
-//		$date       = new DateTime( $financial_start );
+		$duration        = $this->get_query_dates( $request['date'] );
+		$dates           = $totals = $incomes = $incomes_graph = $categories = [];
+		$year            = ! empty( $request->year ) ? absint( $request->year ) : date( 'Y' );
+		$category_id     = ! empty( $request->category_id ) ? absint( $request->category_id ) : '';
+		$financial_start = eaccounting_get_financial_start( $year );
+
+		$transactions = EAccounting_Transactions::init();
+		global $wpdb;
+		$categories   = $wpdb->get_results( "SELECT id, name FROM $wpdb->ea_categories WHERE type='income' ORDER BY name ASC", ARRAY_A );
+		$category_ids = wp_list_pluck( $categories, 'id' );
+		if ( ! empty( $category_id ) && in_array( $category_id, $category_ids ) ) {
+			$categories = wp_list_filter( $categories, [ 'id' => $category_id ] );
+		}
+
+		$categories = wp_list_pluck( $categories, 'name', 'id' );
+		$date       = new DateTime( $financial_start );
 //
 //		for ( $j = 1; $j <= 12; $j ++ ) {
 //			$dates[ $j ]                             = $date->format( 'F' );
