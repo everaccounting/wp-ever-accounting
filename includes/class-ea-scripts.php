@@ -181,6 +181,7 @@ class EAccounting_Scripts {
 					'site_url'        => site_url(),
 					'admin_url'       => admin_url(),
 					'asset_url'       => EACCOUNTING_ASSETS_URL,
+					'plugin_url'       => plugins_url('', EACCOUNTING_PLUGIN_FILE),
 					'base_rest_route' => rest_url(),
 					'rest_route'      => rest_url( '/ea/v1/' ),
 					'namespace'       => '/ea/v1',

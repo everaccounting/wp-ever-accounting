@@ -39,6 +39,8 @@ copy_dest_files() {
 		--exclude="composer.*" \
 		--exclude="*.lock" \
 		--exclude=bin/ \
+		--exclude=client/ \
+		--exclude=packages/ \
 		--exclude=node_modules/ \
 		--exclude=tests/ \
 		--exclude=docs/ \
@@ -87,7 +89,7 @@ npm list webpack
 status "Generating build... 👷‍♀️"
 status "==========================="
 npm list webpack
-npm run build
+#npm run build
 status "==========================="
 npm list webpack
 

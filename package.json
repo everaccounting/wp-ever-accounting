@@ -15,7 +15,7 @@
 		"clean": "rimraf ./assets/dist ./packages/*/build ./packages/*/build-module ./packages/*/build-style",
 		"prebuild": "npm run -s install-if-deps-outdated && php ./bin/update-version.php",
 		"build": "npm run clean && npm run build:packages && npm run build:core",
-		"build:core": "cross-env NODE_ENV=production webpack --display-error-details",
+		"build:core": "cross-env NODE_ENV=production webpack --config webpack.config.js --mode production",
 		"postbuild": "npm run -s i18n:php && npm run -s i18n:pot",
 		"build:packages": "node ./bin/packages/build.js",
 		"build:release": "./bin/build-plugin-zip.sh",
@@ -56,6 +56,7 @@
 		"final-form": "^4.18.7",
 		"find-and": "^1.3.0",
 		"gridicons": "^3.3.1",
+		"papaparse": "^5.2.0",
 		"puppeteer": "^2.1.1",
 		"react-chartjs-2": "^2.9.0",
 		"react-final-form": "^6.3.5",
@@ -112,7 +113,8 @@
 		"stylelint": "^13.2.1",
 		"stylelint-config-wordpress": "^16.0.0",
 		"terser-webpack-plugin": "^2.3.5",
-		"webpack-fix-style-only-entries": "^0.4.0"
+		"webpack-fix-style-only-entries": "^0.4.0",
+		"webpack-remove-debug": "^0.1.0"
 	},
 	"publishConfig": {
 		"access": "public"

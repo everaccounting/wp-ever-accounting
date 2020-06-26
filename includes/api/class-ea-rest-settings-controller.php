@@ -119,6 +119,10 @@ class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
 				continue;
 			}
 
+			if($name ='default_currency'){
+				eaccounting_set_default_currency( $request[ $name ] );
+			}
+
 			$updated = apply_filters( 'eaccounting_rest_pre_update_setting', false, $name, $request[ $name ], $args );
 
 			if ( $updated ) {

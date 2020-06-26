@@ -28,9 +28,10 @@ function eaccounting_clean( $var ) {
  * @return bool|string
  */
 function eaccounting_sanitize_date( $date, $fallback = false, $format = 'Y-m-d' ) {
-	$d = DateTime::createFromFormat( $format, $date );
+	$formatted = date( $format, strtotime( $date ) );
+	$d         = DateTime::createFromFormat( $format, $formatted );
 
-	return $d && $d->format( $format ) === $date ? $date : $fallback;
+	return $d && $d->format( $format ) === $formatted ? $formatted : $fallback;
 }
 
 /**

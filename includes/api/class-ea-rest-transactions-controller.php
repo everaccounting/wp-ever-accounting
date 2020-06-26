@@ -67,6 +67,15 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
+
+		register_rest_route( $this->namespace, '/' . $this->rest_base . '/import', array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => [ $this, 'handle_import' ],
+				'permission_callback' => array( $this, 'get_item_permissions_check' ),
+				'args'                => $this->get_collection_params(),
+			),
+		) );
 	}
 
 	/**
@@ -236,6 +245,10 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 		return $response;
 	}
 
+	public function handle_import($request){
+
+	}
+
 	/**
 	 * since 1.0.0
 	 *
@@ -302,7 +315,7 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 		$data = array(
 			'id'             => $item->id,
 			'type'           => $item->type,
-			'paid_at'        => $this->prepare_date_response( $item->paid_at ),
+			'paid_at'        => $item->paid_at,
 			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,

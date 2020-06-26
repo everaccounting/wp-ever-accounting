@@ -46,3 +46,10 @@ export const ADMIN_URL = paths.admin_url || '';
  * @type { string }
  */
 export const ASSET_URL = paths.asset_url || '';
+/**
+ * The plugin url of the plugin.
+ * eg. 'https://mysite.com/wp-content/plugins/wp-ever-accounting'
+ *
+ * @type { string }
+ */
+export const PLUGIN_URL = paths.plugin_url || '';

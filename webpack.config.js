@@ -29,7 +29,7 @@ packages.forEach(name => {
 	entryPoints[name] = `./packages/${name}`;
 });
 
-module.exports = {
+const config = {
 	mode: NODE_ENV,
 	devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
 	entry: {
@@ -192,3 +192,13 @@ module.exports = {
 	},
 	watch: true,
 };
+
+if(NODE_ENV !== 'development'){
+	config.plugins.push( new webpack.LoaderOptionsPlugin( { minimize: true } ) );
+	config.module.rules.push( { test: /\.js$/, loader: 'webpack-remove-debug', exclude: /node_modules/ } );
+}
+
+if ( config.mode !== 'production' ) {
+	config.devtool = process.env.SOURCEMAP || 'source-map';
+}
+module.exports = config;
