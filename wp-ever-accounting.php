@@ -23,7 +23,7 @@ final class EverAccounting {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.2';
+	public $version = '1.0.1';
 
 	/**
 	 * The single instance of the class.
@@ -76,7 +76,6 @@ final class EverAccounting {
 	 */
 	public function __construct() {
 		$this->define_constants();
-		$this->define_tables();
 		$this->includes();
 		$this->init_hooks();
 	}
@@ -100,25 +99,6 @@ final class EverAccounting {
 		define( 'EACCOUNTING_DB_PREFIX', 'ea_' );
 	}
 
-	/**
-	 * Register custom tables within $wpdb object.
-	 */
-	private function define_tables() {
-		global $wpdb;
-		$tables = array(
-			'ea_contacts',
-			'ea_accounts',
-			'ea_categories',
-			'ea_transactions',
-			'ea_transfers',
-			'ea_currencies',
-			'ea_files',
-		);
-		foreach ( $tables as $table ) {
-			$wpdb->$table   = $wpdb->prefix . $table;
-			$wpdb->tables[] = $table;
-		}
-	}
 
 	/**
 	 * Include all required files
@@ -130,43 +110,53 @@ final class EverAccounting {
 	public function includes() {
 		//classes
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-form.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-api.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-csv-exporter.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
-//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transactions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-scripts.php' );
 
-		//functions
-		require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/eaccounting-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/contact-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/category-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/file-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/income-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/expense-functions.php' );
-//		require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/item-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/currency-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/settings-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/transaction-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/transfer-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/report-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/helper-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/models/class-ea-query-builder.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/models/class-ea-transaction-model.php' );
 
-		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
-		}
+		//models
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-object.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
+
+
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-form.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-api.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-csv-exporter.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
+////		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transactions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-scripts.php' );
+//
+//		//functions
+//		require_once( EACCOUNTING_ABSPATH . '/includes/formatting-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/misc-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/eaccounting-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/contact-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/category-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/file-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/income-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/expense-functions.php' );
+////		require_once( EACCOUNTING_ABSPATH . '/includes/tax-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/account-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/item-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/currency-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/settings-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/transaction-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/transfer-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/report-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/helper-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/models/class-ea-query-builder.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/models/class-ea-transaction-model.php' );
+//
+//		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+//			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
+//		}
 	}
 
 	/**
@@ -180,9 +170,6 @@ final class EverAccounting {
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
 		add_action( 'init', array( $this, 'init' ), 0 );
 		add_action( 'init', array( $this, 'localization_setup' ) );
-		add_action( 'init', array( $this, 'set_eaccounting_actions' ) );
-		add_action( 'activated_plugin', array( $this, 'activated_plugin' ) );
-		add_action( 'deactivated_plugin', array( $this, 'deactivated_plugin' ) );
 	}
 
 	/**
@@ -215,50 +202,6 @@ final class EverAccounting {
 	 */
 	public function localization_setup() {
 		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/i18n/languages/' );
-	}
-
-	/**
-	 * Hooks Accounting actions, when present in the $_GET superglobal. Every eaccounting_action
-	 * present in $_GET is called using WordPress's do_action function. These
-	 * functions are called on init.
-	 *
-	 * @return void
-	 * @since 1.0.0
-	 */
-	public function set_eaccounting_actions() {
-		$key = ! empty( $_GET['eaccounting_action'] ) ? sanitize_key( $_GET['eaccounting_action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( 'eaccounting_action_' . $key, $_GET );
-		}
-
-		$key = ! empty( $_POST['eaccounting_action'] ) ? sanitize_key( $_POST['eaccounting_action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( 'eaccounting_action_' . $key, $_GET );
-		}
-	}
-
-	/**
-	 * Ran when any plugin is activated.
-	 *
-	 * @param string $filename The filename of the activated plugin.
-	 *
-	 * @since 1.0.0
-	 */
-	public function activated_plugin( $filename ) {
-
-	}
-
-	/**
-	 * Ran when any plugin is deactivated.
-	 *
-	 * @param string $filename The filename of the deactivated plugin.
-	 *
-	 * @since 1.0.0
-	 */
-	public function deactivated_plugin( $filename ) {
-
 	}
 
 	/**

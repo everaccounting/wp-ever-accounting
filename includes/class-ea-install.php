@@ -9,7 +9,7 @@ class EAccounting_Install {
 	 */
 	public static function install() {
 		self::create_tables();
-		self::create_default_data();
+//		self::create_default_data();
 	}
 
 	/**
@@ -41,7 +41,7 @@ class EAccounting_Install {
 		    `bank_address` VARCHAR(191) DEFAULT NULL,
 		   	`company_id` INT(11) DEFAULT 1,
 		   	`creator_id` INT(11) DEFAULT NULL,
-		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY (`currency_code`),
 		    KEY `company_id` (`company_id`),
@@ -55,7 +55,7 @@ class EAccounting_Install {
 		  	`type` VARCHAR(50) NOT NULL,
 		  	`color` VARCHAR(20) NOT NULL,
 		  	`company_id` INT(11) DEFAULT 1,
-		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `type` (`type`),
 		    KEY `company_id` (`company_id`),
@@ -69,7 +69,7 @@ class EAccounting_Install {
 			`rate` double(15,8) NOT NULL,
 			`creator_id` INT(11) DEFAULT NULL,
 			`company_id` INT(11) DEFAULT 1,
-	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `rate` (`rate`),
 		    KEY `code` (`code`),
@@ -96,7 +96,7 @@ class EAccounting_Install {
 			`file_id` INT(11) DEFAULT NULL,
 			`creator_id` INT(11) DEFAULT NULL,
 			`company_id` INT(11) DEFAULT 1,
-		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `name`(`name`),
 		    KEY `email`(`email`),
@@ -125,7 +125,7 @@ class EAccounting_Install {
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 		    `creator_id` INT(11) DEFAULT NULL,
 			`company_id` int(11) NOT NULL DEFAULT 1,
-		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `account_id` (`account_id`),
 		    KEY `amount` (`amount`),
@@ -142,7 +142,7 @@ class EAccounting_Install {
   			`expense_id` INT(11) NOT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
   			`company_id` int(11) NOT NULL DEFAULT 1,
-		    `created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `income_id` (`income_id`),
 		    KEY `expense_id` (`expense_id`),
@@ -156,7 +156,7 @@ class EAccounting_Install {
 			`rate` double(15,8) NOT NULL,
 			`creator_id` INT(11) DEFAULT NULL,
 			`company_id` int(11) NOT NULL DEFAULT 1,
-	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `rate` (`rate`),
 		    KEY `code` (`code`),
@@ -173,7 +173,7 @@ class EAccounting_Install {
 			`size` int(10) unsigned NOT NULL,
 			`creator_id` INT(11) DEFAULT NULL,
 			`company_id` int(11) NOT NULL DEFAULT 1,
-	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `name` (`name`),
 		    KEY `creator_id` (`creator_id`),
