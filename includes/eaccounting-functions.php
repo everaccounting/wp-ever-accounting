@@ -115,27 +115,3 @@ function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' )
 	return $result;
 }
 
-/**
- * @return int|mixed
- * @since 1.0.2
- */
-function eaccounting_get_creator_id() {
-
-	$user_id = get_current_user_id();
-	if ( empty( $user_id ) ) {
-		$user = get_user_by( 'email', get_option( 'admin_email' ) );
-		if ( $user && in_array( 'administrator', $user->roles ) ) {
-			$user_id = $user->ID;
-		}
-	}
-
-	if ( empty( $user_id ) ) {
-		$users   = get_users( [
-			'role'   => 'administrator',
-			'fields' => 'ID'
-		] );
-		$user_id = reset( $users );
-	}
-
-	return $user_id;
-}

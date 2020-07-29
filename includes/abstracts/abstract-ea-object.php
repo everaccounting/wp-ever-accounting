@@ -54,20 +54,42 @@ abstract class EAccounting_Object {
 	protected $errors = array();
 
 	/**
+	 * This is false until the object is read from the DB.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	protected $object_read = false;
+
+	/**
 	 * EAccounting_Object constructor.
 	 *
-	 * @param mixed $object
+	 * @param mixed $data
 	 */
-	public function __construct( $object ) {
+	public function __construct( $data = 0 ) {
 		$this->default_data = $this->data;
-		if ( is_numeric( $object ) && $object > 0 ) {
-			$this->set_id( $object );
-		} elseif ( $object instanceof self ) {
-			$this->set_id( $object->get_id() );
-		} elseif ( ! empty( $object->id ) ) {
-			$this->set_id( $object->id );
-		} else {
-			$this->set_id( null );
+	}
+
+	/**
+	 * Only store the object ID to avoid serializing the data object instance.
+	 *
+	 * @return array
+	 */
+	public function __sleep() {
+		return array( 'id' );
+	}
+
+	/**
+	 * Re-run the constructor with the object ID.
+	 *
+	 * If the object no longer exists, remove the ID.
+	 */
+	public function __wakeup() {
+		try {
+			$this->__construct( absint( $this->id ) );
+		} catch ( Exception $e ) {
+			$this->set_id( 0 );
+			$this->set_object_read( true );
 		}
 	}
 
@@ -98,7 +120,7 @@ abstract class EAccounting_Object {
 	 * @since  1.0.0
 	 */
 	public function get_data() {
-		return array_merge( array( 'id' => $this->get_id() ), $this->data );
+		return array_merge( array( 'id' => $this->get_id() ), array_merge( $this->data, $this->changes ) );
 	}
 
 	/**
@@ -130,6 +152,29 @@ abstract class EAccounting_Object {
 	public function set_defaults() {
 		$this->data    = $this->default_data;
 		$this->changes = array();
+		$this->set_object_read( false );
+	}
+
+
+	/**
+	 * Set object read property.
+	 *
+	 * @param boolean $read Should read?.
+	 *
+	 * @since 1.0.0
+	 */
+	public function set_object_read( $read = true ) {
+		$this->object_read = (bool) $read;
+	}
+
+	/**
+	 * Get object read property.
+	 *
+	 * @return boolean
+	 * @since  1.0.0
+	 */
+	public function get_object_read() {
+		return (bool) $this->object_read;
 	}
 
 	/**
@@ -158,7 +203,11 @@ abstract class EAccounting_Object {
 
 				if ( is_callable( array( $this, $setter ) ) ) {
 					$this->{$setter}( $value );
+				} else {
+					$this->set_prop( $prop, $value );
 				}
+
+
 			} catch ( EAccounting_Exception $e ) {
 				if ( ! $errors ) {
 					$errors = new WP_Error();
@@ -184,8 +233,10 @@ abstract class EAccounting_Object {
 	 */
 	protected function set_prop( $prop, $value ) {
 		if ( array_key_exists( $prop, $this->data ) ) {
-			if ( $value !== $this->data[ $prop ] || array_key_exists( $prop, $this->changes ) ) {
-				$this->changes[ $prop ] = $value;
+			if ( true === $this->object_read ) {
+				if ( $value !== $this->data[ $prop ] || array_key_exists( $prop, $this->changes ) ) {
+					$this->changes[ $prop ] = $value;
+				}
 			} else {
 				$this->data[ $prop ] = $value;
 			}
@@ -262,19 +313,19 @@ abstract class EAccounting_Object {
 			} else {
 				// Strings are defined in local WP timezone. Convert to UTC.
 				if ( 1 === preg_match( '/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|((-|\+)\d{2}:\d{2}))$/', $value, $date_bits ) ) {
-					$offset    = ! empty( $date_bits[7] ) ? iso8601_timezone_to_offset( $date_bits[7] ) : wc_timezone_offset();
+					$offset    = ! empty( $date_bits[7] ) ? iso8601_timezone_to_offset( $date_bits[7] ) : eaccounting_timezone_offset();
 					$timestamp = gmmktime( $date_bits[4], $date_bits[5], $date_bits[6], $date_bits[2], $date_bits[3], $date_bits[1] ) - $offset;
 				} else {
-					$timestamp = wc_string_to_timestamp( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', wc_string_to_timestamp( $value ) ) ) );
+					$timestamp = eaccounting_string_to_timestamp( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', eaccounting_string_to_timestamp( $value ) ) ) );
 				}
 				$datetime = new EAccounting_DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 			}
 
 			// Set local timezone or offset.
 			if ( get_option( 'timezone_string' ) ) {
-				$datetime->setTimezone( new DateTimeZone( wc_timezone_string() ) );
+				$datetime->setTimezone( new DateTimeZone( eaccounting_timezone_string() ) );
 			} else {
-				$datetime->set_utc_offset( wc_timezone_offset() );
+				$datetime->set_utc_offset( eaccounting_timezone_offset() );
 			}
 
 			$this->set_prop( $prop, $datetime );
@@ -282,8 +333,85 @@ abstract class EAccounting_Object {
 		} // @codingStandardsIgnoreLine.
 	}
 
+
+	/**
+	 * Get object created date.
+	 *
+	 * @param string $context
+	 *
+	 * @return EAccounting_DateTime
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_date_created( $context = 'view' ) {
+		return $this->get_prop( 'date_created', $context );
+	}
+
+	/**
+	 * Set object belonging company id.
+	 *
+	 * @param int $company_id Company id
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_company_id( $company_id ) {
+		$this->set_prop( 'company_id', absint( $company_id ) );
+	}
+
+	/**
+	 * Set object creator id.
+	 *
+	 * @param int $creator_id Creator id
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_creator_id( $creator_id ) {
+		$this->set_prop( 'creator_id', absint( $creator_id ) );
+	}
+
+	/**
+	 * Set object created date.
+	 *
+	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if their is no date.
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_date_created( $date ) {
+		$this->set_date_prop( 'date_created', $date );
+	}
+
+	/**
+	 * Return object belonging company id.
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_company_id( $context = 'view' ) {
+		return absint( $this->get_prop( 'company_id', $context ) );
+	}
+
+	/**
+	 * Return object created by.
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_creator_id( $context = 'view' ) {
+		return $this->get_prop( 'creator_id', $context );
+	}
+
 	/**
 	 * Handle savings the item.
+	 *
 	 * @return mixed
 	 * @since 1.0.0
 	 */
@@ -292,9 +420,9 @@ abstract class EAccounting_Object {
 
 		if ( $this->get_id() ) {
 			return $this->update();
-		} else {
-			return $this->create();
 		}
+
+		return $this->create();
 	}
 
 	/**
@@ -305,7 +433,7 @@ abstract class EAccounting_Object {
 	 * @throws Exception Throw exception if invalid id is passed.
 	 * @since 1.0.0
 	 */
-	protected abstract function load( $id );
+	protected abstract function read( $id );
 
 	/**
 	 * Create an object.

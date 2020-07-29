@@ -102,8 +102,7 @@ class EAccounting_Install {
 		    KEY `email`(`email`),
 		    KEY `phone`(`phone`),
 		    KEY `type`(`type`),
-		    KEY `company_id` (`company_id`),
-		    UNIQUE KEY (`name`, `email`, `type`, `company_id`)
+		    KEY `company_id` (`company_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transactions(

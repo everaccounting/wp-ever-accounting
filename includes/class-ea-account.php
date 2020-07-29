@@ -29,6 +29,7 @@ class EAccounting_Account extends EAccounting_Object {
 		'bank_phone'      => null,
 		'bank_address'    => null,
 		'company_id'      => null,
+		'creator_id'      => null,
 		'date_created'    => null,
 	);
 
@@ -39,50 +40,23 @@ class EAccounting_Account extends EAccounting_Object {
 	 * should be used. It is possible, but the aforementioned are preferred and are the only
 	 * methods that will be maintained going forward.
 	 *
-	 * @param int|object|EAccounting_Account $account Order to read.
+	 * @param int|object|EAccounting_Account $data object to read.
 	 */
-	public function __construct( $account = 0 ) {
-		parent::__construct( $account );
+	public function __construct( $data = 0 ) {
+		parent::__construct( $data );
+
+		if ( is_numeric( $data ) && $data > 0 ) {
+			$this->set_id( $data );
+		} elseif ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} else {
+			$this->set_id( 0 );
+		}
 
 		if ( $this->get_id() > 0 ) {
-			$this->load( $this->get_id() );
-		}
-	}
-
-
-	/**
-	 * Load account from database.
-	 *
-	 * @param int $id
-	 *
-	 * @throws Exception
-	 */
-	public function load( $id ) {
-		$this->set_defaults();
-		global $wpdb;
-
-		// Get from cache if available.
-		$item = 0 < $this->get_id() ? wp_cache_get( 'account-item-' . $this->get_id(), 'accounts' ) : false;
-		if ( false === $item ) {
-			$item = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d;", $this->get_id() )
-			);
-
-			if ( 0 < $item->id ) {
-				wp_cache_set( 'account-item-' . $item->id, $item, 'accounts' );
-			}
-		}
-
-		if ( ! $item || ! $item->id ) {
-			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
-		}
-
-		// Gets extra data associated with the order if needed.
-		foreach ( $item as $key => $value ) {
-			$function = 'set_' . $key;
-			if ( is_callable( array( $this, $function ) ) ) {
-				$this->{$function}( $value );
-			}
+			$this->read( $this->get_id() );
 		}
 	}
 
@@ -181,32 +155,6 @@ class EAccounting_Account extends EAccounting_Object {
 		return $this->get_prop( 'bank_address', $context );
 	}
 
-	/**
-	 * Return account belonging company id.
-	 *
-	 * @param string $context
-	 *
-	 * @return mixed|null
-	 * @since 1.0.2
-	 *
-	 */
-	public function get_company_id( $context = 'view' ) {
-		return $this->get_prop( 'company_id', $context );
-	}
-
-	/**
-	 * Get account created date.
-	 *
-	 * @param string $context
-	 *
-	 * @return mixed|null
-	 * @since 1.0.2
-	 *
-	 */
-	public function get_date_created( $context = 'view' ) {
-		return $this->get_prop( 'date_created', $context );
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -295,38 +243,70 @@ class EAccounting_Account extends EAccounting_Object {
 		$this->set_prop( 'bank_address', $bank_address );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Crud
+	|--------------------------------------------------------------------------
+	*/
+
 	/**
-	 * Set account belonging company id.
+	 * Load account from database.
 	 *
-	 * @param int $company_id Company id
+	 * @param int $id
 	 *
-	 * @since 1.0.2
-	 *
+	 * @throws Exception
 	 */
-	public function set_company_id( $company_id ) {
-		$this->set_prop( 'company_id', $company_id );
+	public function read( $id ) {
+		$this->set_defaults();
+		global $wpdb;
+
+		// Get from cache if available.
+		$item = 0 < $this->get_id() ? wp_cache_get( 'account-item-' . $this->get_id(), 'accounts' ) : false;
+		if ( false === $item ) {
+			$item = $wpdb->get_row(
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d;", $this->get_id() )
+			);
+
+			if ( 0 < $item->id ) {
+				wp_cache_set( 'account-item-' . $item->id, $item, 'accounts' );
+			}
+		}
+
+		if ( ! $item || ! $item->id ) {
+			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+		}
+
+		// Gets extra data associated with the order if needed.
+		foreach ( $item as $key => $value ) {
+			$function = 'set_' . $key;
+			if ( is_callable( array( $this, $function ) ) ) {
+				$this->{$function}( $value );
+			}
+		}
+
+		$this->set_object_read( true );
 	}
 
 	/**
-	 * Set account created date.
+	 * Validate the properties before saving the object
+	 * in the database.
 	 *
-	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if their is no date.
-	 *
+	 * @return void
 	 * @since 1.0.2
-	 *
-	 */
-	public function set_date_created( $date ) {
-		$this->set_prop( 'date_created', $date );
-	}
-
-
-	/**
-	 * @since 1.0.
 	 */
 	protected function validate_props() {
 		global $wpdb;
+
 		if ( ! $this->get_date_created( 'edit' ) ) {
 			$this->set_date_created( time() );
+		}
+
+		if ( ! $this->get_company_id( 'edit' ) ) {
+			$this->set_company_id( 1 );
+		}
+
+		if ( ! $this->get_prop( 'creator_id' ) ) {
+			$this->set_prop( 'creator_id', eaccounting_get_current_user_id() );
 		}
 
 		if ( empty( $this->get_name( 'edit' ) ) ) {
@@ -341,11 +321,13 @@ class EAccounting_Account extends EAccounting_Object {
 			throw new Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
-		if ( $this->get_id() !== $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts where account_number=%s", $this->get_number( 'edit' ), $this->get_id() ) ) ) {
-			throw new Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts where number=%s", $this->get_number( 'edit' ) ) ) ) {
+			if ( ! empty( $existing_id ) && $existing_id !== $this->get_id() ) {
+				throw new Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+			}
 		}
-	}
 
+	}
 
 	/**
 	 * Create a new account in the database.
@@ -365,7 +347,8 @@ class EAccounting_Account extends EAccounting_Object {
 			'bank_phone'      => $this->get_bank_phone( 'edit' ),
 			'bank_address'    => $this->get_bank_address( 'edit' ),
 			'company_id'      => $this->get_company_id( 'edit' ),
-			'date_created'    => $this->get_date_created( 'edit' ),
+			'creator_id'      => $this->get_prop( 'creator_id' ),
+			'date_created'    => $this->get_date_created( 'edit' )->format( 'Y-m-d H:i:s' ),
 		);
 
 		do_action( 'eaccounting_pre_insert_account', $this->get_id(), $this );
@@ -379,6 +362,7 @@ class EAccounting_Account extends EAccounting_Object {
 
 		$this->set_id( $wpdb->insert_id );
 		$this->apply_changes();
+		$this->set_object_read( true );
 	}
 
 	/**
@@ -393,20 +377,21 @@ class EAccounting_Account extends EAccounting_Object {
 
 		$this->validate_props();
 		$changes = $this->get_changes();
+		if ( ! empty( $changes ) ) {
+			do_action( 'eaccounting_pre_update_account', $this->get_id(), $changes );
 
-		do_action( 'eaccounting_pre_update_account', $this->get_id(), $changes );
+			try {
+				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
+			} catch ( Exception $e ) {
+				throw new Exception( __( 'Could not update account.', 'wp-ever-accounting' ) );
+			}
 
-		try {
-			$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
-		} catch ( Exception $e ) {
-			throw new Exception( __( 'Could not update account.', 'wp-ever-accounting' ) );
+			do_action( 'eaccounting_update_account', $this->get_id(), $changes, $this->data );
+
+			$this->apply_changes();
+			$this->set_object_read( true );
+			wp_cache_delete( 'transaction-item-' . $this->get_id(), 'transactions' );
 		}
-
-		do_action( 'eaccounting_update_account', $this->get_id(), $changes, $this->data );
-
-		$this->apply_changes();
-
-		wp_cache_delete( 'transaction-item-' . $this->get_id(), 'transactions' );
 	}
 
 	/**

@@ -2,22 +2,22 @@
 
 defined( 'ABSPATH' ) || exit();
 
-/**
- * Category types
- *
- * @return array
- * @since 1.0.0
- */
-function eaccounting_get_category_types() {
-	$types = array(
-		'expense' => __( 'Expense', 'wp-ever-accounting' ),
-		'income'  => __( 'Income', 'wp-ever-accounting' ),
-//		'item'    => __( 'Item', 'wp-ever-accounting' ),
-		'other'   => __( 'Other', 'wp-ever-accounting' ),
-	);
-
-	return apply_filters( 'eaccounting_category_types', $types );
-}
+///**
+// * Category types
+// *
+// * @return array
+// * @since 1.0.0
+// */
+//function eaccounting_get_category_types() {
+//	$types = array(
+//		'expense' => __( 'Expense', 'wp-ever-accounting' ),
+//		'income'  => __( 'Income', 'wp-ever-accounting' ),
+////		'item'    => __( 'Item', 'wp-ever-accounting' ),
+//		'other'   => __( 'Other', 'wp-ever-accounting' ),
+//	);
+//
+//	return apply_filters( 'eaccounting_category_types', $types );
+//}
 
 
 /**

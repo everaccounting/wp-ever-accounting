@@ -185,7 +185,7 @@ class EAccounting_Query {
 			// run the closure callback on the sub query
 			call_user_func_array( $column, array( &$subquery ) );
 			$condition = '';
-			for ( $i = 0; $i < count( $subquery->where ); ++ $i ) {
+			for ( $i = 0, $iMax = count( $subquery->where ); $i < $iMax; ++ $i ) {
 				$condition .= ( $i === 0 ? ' ' : ' ' . $subquery->where[ $i ]['joint'] . ' ' )
 				              . $subquery->where[ $i ]['condition'];
 			}
@@ -872,7 +872,7 @@ class EAccounting_Query {
 		$this->_query_group( $query );
 		$this->_query_having( $query );
 
-		return intval( $wpdb->get_var( $query ) );
+		return (int) $wpdb->get_var( $query );
 	}
 
 	/**
@@ -946,9 +946,9 @@ class EAccounting_Query {
 	public function updateOrInsert( $data ) {
 		if ( $this->first() ) {
 			return $this->update( $data );
-		} else {
-			return $this->insert( $data );
 		}
+
+		return $this->insert( $data );
 	}
 
 	/**
@@ -961,9 +961,9 @@ class EAccounting_Query {
 	public function findOrInsert( $data ) {
 		if ( $this->first() ) {
 			return $this->update( $data );
-		} else {
-			return $this->insert( $data );
 		}
+
+		return $this->insert( $data );
 	}
 
 	/**
@@ -1003,7 +1003,7 @@ class EAccounting_Query {
 		$this->_query_group( $query );
 		$this->_query_having( $query );
 
-		return intval( $wpdb->get_var( $query ) );
+		return (int) $wpdb->get_var( $query );
 	}
 
 	/**
@@ -1023,7 +1023,7 @@ class EAccounting_Query {
 		$this->_query_group( $query );
 		$this->_query_having( $query );
 
-		return intval( $wpdb->get_var( $query ) );
+		return (int) $wpdb->get_var( $query );
 	}
 
 	/**
@@ -1043,7 +1043,7 @@ class EAccounting_Query {
 		$this->_query_group( $query );
 		$this->_query_having( $query );
 
-		return intval( $wpdb->get_var( $query ) );
+		return (int) $wpdb->get_var( $query );
 	}
 
 	/**
@@ -1098,7 +1098,7 @@ class EAccounting_Query {
 
 	/**
 	 * Returns found rows in last query, if SQL_CALC_FOUND_ROWS is used and is supported.
-	 * @return array
+	 * @return string
 	 * @global object $wpdb
 	 *
 	 * @since 1.0.0
@@ -1241,7 +1241,7 @@ class EAccounting_Query {
 	private function _query_join( &$query ) {
 		foreach ( $this->join as $join ) {
 			$query .= ( ! empty( $join['type'] ) ? ' ' . $join['type'] . ' JOIN ' : ' JOIN ' ) . $join['table'];
-			for ( $i = 0; $i < count( $join['on'] ); ++ $i ) {
+			for ( $i = 0, $iMax = count( $join['on'] ); $i < $iMax; ++ $i ) {
 				$query .= ( $i === 0 ? ' ON ' : ' ' . $join['on'][ $i ]['joint'] . ' ' )
 				          . $join['on'][ $i ]['condition'];
 			}
@@ -1257,7 +1257,7 @@ class EAccounting_Query {
 	 *
 	 */
 	public function _query_where( &$query ) {
-		for ( $i = 0; $i < count( $this->where ); ++ $i ) {
+		for ( $i = 0, $iMax = count( $this->where ); $i < $iMax; ++ $i ) {
 			$query .= ( $i === 0 ? ' WHERE ' : ' ' . $this->where[ $i ]['joint'] . ' ' )
 			          . $this->where[ $i ]['condition'];
 		}

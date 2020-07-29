@@ -3,22 +3,30 @@
 /**
  * Main function for returning account.
  *
- * @param $account_id
+ * @param $account
  *
- * @return EAccounting_Account|WP_Error
+ * @return EAccounting_Account|false
  * @since 1.0.0
  *
  */
-function eaccounting_get_account( $account_id ) {
+function eaccounting_get_account( $account ) {
+	if ( empty( $account ) ) {
+		return false;
+	}
+
 	try {
-		$account = new EAccounting_Account( $account_id );
+		if ( $account instanceof EAccounting_Account ) {
+			return $account;
+		}
+
+		$account = new EAccounting_Account( $account );
 		if ( ! $account->exists() ) {
 			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
 		return $account;
 	} catch ( Exception $exception ) {
-		return new WP_Error( 'error', $exception->getMessage() );
+		return false;
 	}
 }
 
@@ -34,39 +42,14 @@ function eaccounting_get_account( $account_id ) {
  *
  */
 function eaccounting_insert_account( $args ) {
-	$default_args = array(
-		'id'              => null,
-		'name'            => '',
-		'number'          => '',
-		'opening_balance' => 0.0000,
-		'currency_code'   => 'USD',
-		'bank_name'       => null,
-		'bank_phone'      => null,
-		'bank_address'    => null,
-		'company_id'      => null,
-		'date_created'    => null,
-	);
 
 	try {
-		$args    = wp_parse_args( $args, $default_args );
-		$account = new EAccounting_Account( $args['id'] );
-		if ( ! is_null( $args['name'] ) ) {
-			$account->set_name( $args['name'] );
-		}
-		if ( ! is_null( $args['number'] ) ) {
-			$account->set_number( $args['number'] );
-		}
-		$account->set_opening_balance( $args['opening_balance'] );
-		$account->set_currency_code( $args['currency_code'] );
-		$account->set_bank_name( $args['bank_name'] );
-		$account->get_bank_phone( $args['bank_phone'] );
-		$account->get_bank_address( $args['bank_address'] );
-		$account->set_company_id( $args['company_id'] );
-
-		if ( isset( $args['date_created'] ) ) {
-			$account->set_date_created( $args['date_created'] );
-		}
-
+		$default_args = array(
+			'id' => null,
+		);
+		$args         = (array) wp_parse_args( $args, $default_args );
+		$account      = new EAccounting_Account( $args['id'] );
+		$account->set_props( $args );
 		$account->save();
 
 	} catch ( Exception $e ) {
@@ -80,9 +63,10 @@ function eaccounting_insert_account( $args ) {
  * Delete an account.
  *
  * @param $account_id
+ *
+ * @return bool
  * @since 1.0.0
  *
- * @return bool|WP_Error  true when delete or WP_Error when found an error.
  */
 function eaccounting_delete_account( $account_id ) {
 	try {
@@ -92,9 +76,10 @@ function eaccounting_delete_account( $account_id ) {
 		}
 
 		$account->delete();
-		return empty($account->get_id());
+
+		return empty( $account->get_id() );
 
 	} catch ( Exception $exception ) {
-		return new WP_Error( 'error', $exception->getMessage() );
+		return false;
 	}
 }

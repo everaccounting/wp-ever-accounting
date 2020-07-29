@@ -1,21 +1,21 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Currency {
+class EAccounting_Currency extends EAccounting_Object {
 	/**
-	 * @var string
+	 * Currency Data array.
+	 *
+	 * @since 1.0.0
+	 * @var array
 	 */
-	protected $currency;
-
-	/**
-	 * @var string
-	 */
-	protected $name;
-
-	/**
-	 * @var int
-	 */
-	protected $code;
+	protected $data = array(
+		'name'         => '',
+		'code'         => '',
+		'rate'         => 1,
+		'creator_id'   => null,
+		'company_id'   => 1,
+		'date_created' => null,
+	);
 
 	/**
 	 * @var int
@@ -48,35 +48,328 @@ class EAccounting_Currency {
 	protected $thousandsSeparator;
 
 	/**
-	 * @var array
-	 */
-	protected static $currencies;
-
-	/**
-	 * @param string $currency
+	 * Get the currency if ID is passed, otherwise the currency is new and empty.
+	 * This class should NOT be instantiated, but the eaccounting_get_currency function
+	 * should be used. It is possible, but the aforementioned are preferred and are the only
+	 * methods that will be maintained going forward.
 	 *
-	 * @since 1.${CARET}
-	 * EAccounting_Currency constructor.
+	 * @param int|object|EAccounting_Currency $data Order to read.
 	 */
-	public function __construct( $currency ) {
-		$currency   = strtoupper( trim( $currency ) );
-		$currencies = self::getCurrencies();
+	public function __construct( $data = 0 ) {
+		parent::__construct( $data );
 
-		if ( ! array_key_exists( $currency, $currencies ) ) {
-			throw new OutOfBoundsException( 'Invalid currency "' . $currency . '"' );
+		if ( is_numeric( $data ) && $data > 0 ) {
+			$this->set_id( $data );
+		} elseif ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} elseif ( is_string( $data ) && array_key_exists( $data, eaccounting_get_global_currencies() ) ) {
+			$this->set_code( $data );
+		} else {
+			$this->set_id( 0 );
 		}
 
-		$attributes               = $currencies[ $currency ];
-		$this->currency           = $currency;
-		$this->name               = (string) $attributes['name'];
-		$this->code               = (int) $attributes['code'];
-		$this->precision          = (int) $attributes['precision'];
-		$this->subunit            = (int) $attributes['subunit'];
-		$this->symbol             = (string) $attributes['symbol'];
-		$this->symbolPosition        = (bool) $attributes['position'];
-		$this->decimalMark        = (string) $attributes['decimalSeparator'];
-		$this->thousandsSeparator = (string) $attributes['thousandSeparator'];
+		if ( $this->get_id() > 0 ) {
+			$this->read( $this->get_id() );
+		} elseif ( ! empty( $this->get_code( 'edit' ) ) ) {
+			$this->read( $this->get_code( 'edit' ), 'code' );
+		}
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Get currency name.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_name( $context = 'view' ) {
+		return $this->get_prop( 'name', $context );
+	}
+
+	/**
+	 * Get currency code.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_code( $context = 'view' ) {
+		return $this->get_prop( 'code', $context );
+	}
+
+	/**
+	 * Get currency rate.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_rate( $context = 'view' ) {
+		return $this->get_prop( 'rate', $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Set the currency name.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_name( $value ) {
+		$this->set_prop( 'name', eaccounting_clean( $value ) );
+	}
+
+	/**
+	 * Set the code.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_code( $value ) {
+		$code       = strtoupper( eaccounting_clean( $value ) );
+		$currencies = eaccounting_get_global_currencies();
+		if ( ! array_key_exists( $code, $currencies ) ) {
+			$this->error( 'invalid_currency_code', __( 'Unsupported currency code', 'wp-ever-accounting' ) );
+		}
+		$currency = $currencies[ $code ];
+		$this->set_prop( 'code', $code );
+		$this->precision          = (int) $currency['precision'];
+		$this->subunit            = (int) $currency['subunit'];
+		$this->symbol             = (string) $currency['symbol'];
+		$this->symbolPosition     = (string) $currency['position'];
+		$this->decimalMark        = (string) $currency['decimalSeparator'];
+		$this->thousandsSeparator = (string) $currency['thousandSeparator'];
+	}
+
+	/**
+	 * Set the code.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_rate( $value ) {
+		$this->set_prop( 'rate', eaccounting_sanitize_number( $value, true ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Crud
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Create a new currency in the database.
+	 *
+	 * @param string|int $id
+	 * @param string $by
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 *
+	 */
+	public function read( $id, $by = 'id' ) {
+		$this->set_defaults();
+		global $wpdb;
+
+		// Get from cache if available.
+		$item = ! empty( $id ) ? wp_cache_get( 'currency-item-' . $id, 'currencies' ) : false;
+
+		if ( false === $item ) {
+			switch ( $by ) {
+				case 'code':
+					$code = sanitize_text_field( $id );
+					$sql  = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_currencies WHERE code=%s", $code );
+					break;
+				case 'id':
+				default:
+					$id  = absint( $id );
+					$sql = $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_currencies WHERE id=%s", $id );
+					break;
+			}
+
+			$item = $wpdb->get_row( $sql );
+			if ( 0 < $item->id ) {
+				wp_cache_set( 'currency-item-' . $id, $item, 'currencies' );
+			}
+		}
+
+		if ( ! $item || ! $item->id ) {
+			throw new Exception( __( 'Invalid currency.', 'wp-ever-accounting' ) );
+		}
+
+		// Gets extra data associated with the order if needed.
+		foreach ( $item as $key => $value ) {
+			$function = 'set_' . $key;
+			if ( is_callable( array( $this, $function ) ) ) {
+				$this->{$function}( $value );
+			}
+		}
+
+
+		$this->set_object_read( true );
+	}
+
+	/**
+	 * Validate the properties before saving the object
+	 * in the database.
+	 *
+	 * @return void
+	 * @since 1.0.2
+	 */
+	public function validate_props() {
+		global $wpdb;
+
+		if ( ! $this->get_date_created( 'edit' ) ) {
+			$this->set_date_created( time() );
+		}
+
+		if ( ! $this->get_company_id( 'edit' ) ) {
+			$this->set_company_id( 1 );
+		}
+
+		if ( ! $this->get_prop( 'creator_id' ) ) {
+			$this->set_prop( 'creator_id', eaccounting_get_current_user_id() );
+		}
+
+		if ( empty( $this->get_name( 'edit' ) ) ) {
+			throw new Exception( __( 'Currency name is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_code( 'edit' ) ) ) {
+			throw new Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_rate( 'edit' ) ) ) {
+			throw new Exception( __( 'Currency rate is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_currencies where code=%s", $this->get_code( 'edit' ) ) ) ) {
+			if ( ! empty( $existing_id ) && $existing_id != $this->get_id() ) {
+				throw new Exception( __( 'Duplicate currency code.', 'wp-ever-accounting' ) );
+			}
+		}
+	}
+
+	/**
+	 * Create a new currency in the database.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	public function create() {
+		$this->validate_props();
+		global $wpdb;
+		$currency_data = array(
+			'name'         => $this->get_name( 'edit' ),
+			'code'         => $this->get_code( 'edit' ),
+			'rate'         => $this->get_rate( 'edit' ),
+			'creator_id'   => $this->get_creator_id( 'edit' ),
+			'company_id'   => $this->get_company_id( 'edit' ),
+			'date_created' => $this->get_date_created( 'edit' )->get_mysql_date(),
+		);
+
+		do_action( 'eaccounting_pre_insert_currency', $this->get_id(), $this );
+
+		$data = wp_unslash( apply_filters( 'eaccounting_new_currency_data', $currency_data ) );
+		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_currencies', $data ) ) {
+			throw new Exception( $wpdb->last_error );
+		}
+
+		do_action( 'eaccounting_insert_currency', $this->get_id(), $this );
+
+		$this->set_id( $wpdb->insert_id );
+		$this->apply_changes();
+		$this->set_object_read( true );
+	}
+
+	/**
+	 * Update a account in the database.
+	 *
+	 * @throws Exception
+	 * @since 1.0.0
+	 *
+	 */
+	public function update() {
+		global $wpdb;
+
+		$this->validate_props();
+		$changes = $this->get_changes();
+		if ( ! empty( $changes ) ) {
+			do_action( 'eaccounting_pre_update_currency', $this->get_id(), $changes );
+
+			try {
+				$wpdb->update( $wpdb->prefix . 'ea_currencies', $changes, array( 'id' => $this->get_id() ) );
+			} catch ( Exception $e ) {
+				throw new Exception( __( 'Could not update currency.', 'wp-ever-accounting' ) );
+			}
+
+			do_action( 'eaccounting_update_currency', $this->get_id(), $changes, $this->data );
+
+			$this->apply_changes();
+			$this->set_object_read( true );
+			wp_cache_delete( 'transaction-currency-' . $this->get_id(), 'currencies' );
+		}
+	}
+
+	/**
+	 * @return int|mixed
+	 * @throws Exception
+	 * @since 1.0.0
+	 */
+	public function save() {
+		if ( $this->get_id() ) {
+			$this->update();
+		} else {
+			$this->create();
+		}
+
+		return $this->get_id();
+	}
+
+	/**
+	 * Remove currency from the database.
+	 *
+	 * @param array $args
+	 *
+	 * @since 1.0.
+	 */
+	public function delete( $args = array() ) {
+		if ( $this->get_id() ) {
+			global $wpdb;
+			do_action( 'eaccounting_pre_delete_currency', $this->get_id() );
+			$wpdb->delete( $wpdb->prefix . 'ea_currencies', array( 'id' => $this->get_id() ) );
+			do_action( 'eaccounting_delete_currency', $this->get_id() );
+			$this->set_id( 0 );
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Extra
+	|--------------------------------------------------------------------------
+	*/
 
 	/**
 	 * __callStatic.
@@ -91,30 +384,6 @@ class EAccounting_Currency {
 	}
 
 	/**
-	 * setCurrencies.
-	 *
-	 * @param array $currencies
-	 *
-	 * @return void
-	 */
-	public static function setCurrencies( array $currencies ) {
-		static::$currencies = $currencies;
-	}
-
-	/**
-	 * getCurrencies.
-	 *
-	 * @return array
-	 */
-	public static function getCurrencies() {
-		if ( ! isset( static::$currencies ) ) {
-			static::$currencies = eaccounting_get_global_currencies();
-		}
-
-		return (array) static::$currencies;
-	}
-
-	/**
 	 * equals.
 	 *
 	 * @param EAccounting_Currency $currency
@@ -122,43 +391,15 @@ class EAccounting_Currency {
 	 * @return bool
 	 */
 	public function equals( self $currency ) {
-		return $this->getCurrency() === $currency->getCurrency();
+		return $this->get_code('edit') === $currency->get_code('edit');
 	}
 
 	/**
-	 * getCurrency.
-	 *
-	 * @return string
-	 */
-	public function getCurrency() {
-		return $this->currency;
-	}
-
-
-	/**
-	 * getName.
-	 *
-	 * @return string
-	 */
-	public function getName() {
-		return $this->name;
-	}
-
-	/**
-	 * getCode.
+	 * get_precision.
 	 *
 	 * @return int
 	 */
-	public function getCode() {
-		return $this->code;
-	}
-
-	/**
-	 * getPrecision.
-	 *
-	 * @return int
-	 */
-	public function getPrecision() {
+	public function get_precision() {
 		return $this->precision;
 	}
 
@@ -167,34 +408,34 @@ class EAccounting_Currency {
 	 *
 	 * @return int
 	 */
-	public function getSubunit() {
+	public function get_subunit() {
 		return $this->subunit;
 	}
 
 	/**
-	 * getSymbol.
+	 * get_symbol.
 	 *
 	 * @return string
 	 */
-	public function getSymbol() {
+	public function get_symbol() {
 		return $this->symbol;
 	}
 
 	/**
-	 * isSymbolFirst.
+	 * is_symbol_first.
 	 *
 	 * @return bool
 	 */
-	public function isSymbolFirst() {
-		return 'before' == $this->symbolPosition;
+	public function is_symbol_first() {
+		return 'before' === $this->symbolPosition;
 	}
 
 	/**
-	 * getDecimalMark.
+	 * get_decimal_mark.
 	 *
 	 * @return string
 	 */
-	public function getDecimalMark() {
+	public function get_decimal_mark() {
 		return $this->decimalMark;
 	}
 
@@ -203,7 +444,7 @@ class EAccounting_Currency {
 	 *
 	 * @return string
 	 */
-	public function getThousandsSeparator() {
+	public function get_thousands_separator() {
 		return $this->thousandsSeparator;
 	}
 
@@ -212,8 +453,8 @@ class EAccounting_Currency {
 	 *
 	 * @return string
 	 */
-	public function getPrefix() {
-		if ( ! $this->isSymbolFirst() ) {
+	public function get_prefix() {
+		if ( ! $this->is_symbol_first() ) {
 			return '';
 		}
 
@@ -225,8 +466,8 @@ class EAccounting_Currency {
 	 *
 	 * @return string
 	 */
-	public function getSuffix() {
-		if ( $this->isSymbolFirst() ) {
+	public function get_suffix() {
+		if ( $this->is_symbol_first() ) {
 			return '';
 		}
 
@@ -240,17 +481,17 @@ class EAccounting_Currency {
 	 */
 	public function toArray() {
 		return [
-			$this->currency => [
-				'name'                => $this->name,
-				'code'                => $this->code,
-				'precision'           => $this->precision,
-				'subunit'             => $this->subunit,
-				'symbol'              => $this->symbol,
-				'position'        => $this->symbolPosition,
-				'decimalSeparator'        => $this->decimalMark,
+			[
+				'name'              => $this->get_name( 'edit' ),
+				'code'              => $this->get_code( 'edit' ),
+				'precision'         => $this->precision,
+				'subunit'           => $this->subunit,
+				'symbol'            => $this->symbol,
+				'position'          => $this->symbolPosition,
+				'decimalSeparator'  => $this->decimalMark,
 				'thousandSeparator' => $this->thousandsSeparator,
-				'prefix'              => $this->getPrefix(),
-				'suffix'              => $this->getSuffix(),
+				'prefix'            => $this->get_prefix(),
+				'suffix'            => $this->get_suffix(),
 			]
 		];
 	}
@@ -271,7 +512,7 @@ class EAccounting_Currency {
 	 *
 	 * @return array
 	 */
-	public function jsonSerialize() {
+	public function json_serialize() {
 		return $this->toArray();
 	}
 
@@ -281,7 +522,7 @@ class EAccounting_Currency {
 	 * @return string
 	 */
 	public function render() {
-		return $this->currency . ' (' . $this->name . ')';
+		return $this->get_code( 'edit' ) . ' (' . $this->get_name( 'edit' ) . ')';
 	}
 
 	/**

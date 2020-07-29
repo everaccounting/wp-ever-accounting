@@ -11,7 +11,7 @@
 
 	<testsuites>
 		<testsuite name="WP Ever Accounting">
-			<directory suffix=".php">./tests/</directory>
+			<directory suffix=".php">./tests/unit-tests</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
@@ -26,6 +26,6 @@
 		</whitelist>
 	</filter>
 	<listeners>
-		<listener class="SpeedTrapListener" file="tests/helpers/listener-loader.php" />
+		<listener class="SpeedTrapListener" file="tests/framework/helpers/listener-loader.php" />
 	</listeners>
 </phpunit>

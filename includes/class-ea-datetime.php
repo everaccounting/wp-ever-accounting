@@ -99,4 +99,14 @@ class EAccounting_DateTime extends DateTime {
 	public function date_i18n( $format = 'Y-m-d' ) {
 		return date_i18n( $format, $this->getOffsetTimestamp() );
 	}
+
+	/**
+	 * Return mysql date time.
+	 *
+	 * @since 1.0.2
+	 * @return string date time
+	 */
+	public function get_mysql_date(){
+		return date_i18n( 'Y-m-d H:i:s', $this->getOffsetTimestamp() );
+	}
 }

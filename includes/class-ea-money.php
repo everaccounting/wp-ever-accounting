@@ -50,7 +50,7 @@ class EAccounting_Money{
 		}
 
 		if ( is_float( $amount ) ) {
-			return (float) round( $this->convertAmount( $amount, $convert ), $this->currency->getPrecision() );
+			return (float) round( $this->convertAmount( $amount, $convert ), $this->currency->get_precision() );
 		}
 
 		return 0;
@@ -83,13 +83,15 @@ class EAccounting_Money{
 			return $amount;
 		}
 
-		$thousandsSeparator = $this->currency->getThousandsSeparator();
-		$decimalMark        = $this->currency->getDecimalMark();
+		$thousandsSeparator = $this->currency->get_thousands_separator();
+		$decimalMark        = $this->currency->get_decimal_mark();
 
-		$amount = str_replace( $this->currency->getSymbol(), '', $amount );
+		$amount = str_replace( $this->currency->get_symbol(), '', $amount );
 		$amount = preg_replace( '/[^0-9\\' . $thousandsSeparator . '\\' . $decimalMark . '\-\+]/', '', $amount );
-		$amount = str_replace( $this->currency->getThousandsSeparator(), '', $amount );
-		$amount = str_replace( $this->currency->getDecimalMark(), '.', $amount );
+		$amount = str_replace( array(
+			$thousandsSeparator,
+			$decimalMark
+		), array( '', '.' ), $amount );
 
 		if ( preg_match( '/^([\-\+])?\d+$/', $amount ) ) {
 			$amount = (int) $amount;
@@ -113,7 +115,7 @@ class EAccounting_Money{
 			return $amount;
 		}
 
-		return $amount * $this->currency->getSubunit();
+		return $amount * $this->currency->get_subunit();
 	}
 
 	/**
@@ -186,7 +188,7 @@ class EAccounting_Money{
 	 * @return float
 	 */
 	public function getValue() {
-		return round( $this->amount / $this->currency->getSubunit(), $this->currency->getPrecision() );
+		return round( $this->amount / $this->currency->get_subunit(), $this->currency->get_precision() );
 	}
 
 	/**
@@ -354,7 +356,7 @@ class EAccounting_Money{
 	 * @throws \InvalidArgumentException
 	 */
 	public function multiply( $multiplier, $roundingMode = self::ROUND_HALF_UP ) {
-		return new self( round( $this->amount * $multiplier, $this->currency->getPrecision(), $roundingMode ), $this->currency );
+		return new self( round( $this->amount * $multiplier, $this->currency->get_precision(), $roundingMode ), $this->currency );
 	}
 
 	/**
@@ -376,7 +378,7 @@ class EAccounting_Money{
 			throw new InvalidArgumentException( 'Division by zero' );
 		}
 
-		return new self( round( $this->amount / $divisor, $this->currency->getPrecision(), $roundingMode ), $this->currency );
+		return new self( round( $this->amount / $divisor, $this->currency->get_precision(), $roundingMode ), $this->currency );
 	}
 
 	/**
@@ -440,9 +442,9 @@ class EAccounting_Money{
 	public function formatSimple() {
 		return number_format(
 			$this->getValue(),
-			$this->currency->getPrecision(),
-			$this->currency->getDecimalMark(),
-			$this->currency->getThousandsSeparator()
+			$this->currency->get_precision(),
+			$this->currency->get_decimal_mark(),
+			$this->currency->get_thousands_separator()
 		);
 	}
 
@@ -455,11 +457,11 @@ class EAccounting_Money{
 		$negative  = $this->isNegative();
 		$value     = $this->getValue();
 		$amount    = $negative ? - $value : $value;
-		$thousands = $this->currency->getThousandsSeparator();
-		$decimals  = $this->currency->getDecimalMark();
-		$prefix    = $this->currency->getPrefix();
-		$suffix    = $this->currency->getSuffix();
-		$value     = number_format( $amount, $this->currency->getPrecision(), $decimals, $thousands );
+		$thousands = $this->currency->get_thousands_separator();
+		$decimals  = $this->currency->get_decimal_mark();
+		$prefix    = $this->currency->get_prefix();
+		$suffix    = $this->currency->get_suffix();
+		$value     = number_format( $amount, $this->currency->get_precision(), $decimals, $thousands );
 
 		return ( $negative ? '-' : '' ) . $prefix . $value . $suffix;
 	}

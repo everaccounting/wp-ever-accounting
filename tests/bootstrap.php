@@ -38,4 +38,7 @@ function _disable_reqs( $status = false, $args = array(), $url = '' ) {
 add_filter( 'pre_http_request', '_disable_reqs' );
 
 // Include helpers
-require_once 'helpers/class-ea-unittestcase.php';
+require_once 'framework/helpers/class-ea-helper-account.php';
+require_once 'framework/helpers/class-ea-helper-contact.php';
+require_once 'framework/helpers/class-ea-helper-category.php';
+require_once 'framework/class-ea-unit-test-case.php';
