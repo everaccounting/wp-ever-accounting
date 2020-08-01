@@ -11,11 +11,34 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EAccounting_Account
- * @since 1.0.
+ * @since 1.0.2
  */
 class EAccounting_Account extends EAccounting_Object {
+
 	/**
-	 * Transaction Data array.
+	 * A group must be set to to enable caching.
+	 *
+	 * @var string
+	 * @since 1.0.2
+	 */
+	protected $cache_group = 'accounts';
+
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 * @since 1.0.2
+	 */
+	public $object_type = 'account';
+
+	/**
+	 * @var
+	 * @since 1.0.2
+	 */
+	protected $balance = 0;
+
+	/**
+	 * Account Data array.
 	 *
 	 * @since 1.0.0
 	 * @var array
@@ -28,21 +51,18 @@ class EAccounting_Account extends EAccounting_Object {
 		'bank_name'       => null,
 		'bank_phone'      => null,
 		'bank_address'    => null,
+		'enabled'         => 1,
 		'company_id'      => null,
 		'creator_id'      => null,
 		'date_created'    => null,
 	);
 
-
 	/**
-	 * Get the account if ID is passed, otherwise the account is new and empty.
-	 * This class should NOT be instantiated, but the eaccounting_get_account function
-	 * should be used. It is possible, but the aforementioned are preferred and are the only
-	 * methods that will be maintained going forward.
+	 * EAccounting_Account constructor.
 	 *
-	 * @param int|object|EAccounting_Account $data object to read.
+	 * @param int $data
 	 */
-	public function __construct( $data = 0 ) {
+	public function __construct( $data ) {
 		parent::__construct( $data );
 
 		if ( is_numeric( $data ) && $data > 0 ) {
@@ -59,6 +79,76 @@ class EAccounting_Account extends EAccounting_Object {
 			$this->read( $this->get_id() );
 		}
 	}
+
+	/**
+	 * Method to validate before inserting and updating EverAccounting object.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	public function validate_props() {
+		// TODO: Implement validate_props() method.
+	}
+
+	/**
+	 * Method to read a record. Creates a new EAccounting_Object based object.
+	 *
+	 * @param int $id ID of the object to read.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	public function read( $id ) {
+		$this->set_defaults();
+
+		// Get from cache if available.
+		$item = 0 < $id ? wp_cache_get( $this->object_type.'-item-' . $id, $this->cache_group ) : false;
+
+		if ( false === $item ) {
+			$item = eaccounting()->accounts->find($id);
+
+			if ( 0 < $item->id ) {
+				wp_cache_set( $this->object_type.'-item-' . $item->id, $item, $this->cache_group );
+			}
+		}
+
+		if ( ! $item || ! $item->id ) {
+			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+		}
+
+		$this->populate($item);
+	}
+
+	/**
+	 * Method to create a new record of an EverAccounting object.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	public function create() {
+		// TODO: Implement create() method.
+	}
+
+	/**
+	 * Updates a record in the database.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	public function update() {
+		// TODO: Implement update() method.
+	}
+
+	/**
+	 * Deletes a record from the database.
+	 *
+	 * @return bool result
+	 * @since 1.0.2
+	 */
+	public function delete() {
+		// TODO: Implement delete() method.
+	}
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -180,7 +270,8 @@ class EAccounting_Account extends EAccounting_Object {
 	 * @since 1.0.2
 	 */
 	public function set_number( $number ) {
-		$this->set_prop( 'number', $number );
+		$this->error('invalid', 'Custom Error message');
+//		$this->set_prop( 'number', $number );
 	}
 
 	/**
@@ -245,187 +336,34 @@ class EAccounting_Account extends EAccounting_Object {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Crud
+	| Extra
 	|--------------------------------------------------------------------------
 	*/
 
 	/**
-	 * Load account from database.
+	 * @param bool $format
 	 *
-	 * @param int $id
+	 * @return float|string
+	 * @since 1.0.2
 	 *
-	 * @throws Exception
 	 */
-	public function read( $id ) {
-		$this->set_defaults();
-		global $wpdb;
-
-		// Get from cache if available.
-		$item = 0 < $this->get_id() ? wp_cache_get( 'account-item-' . $this->get_id(), 'accounts' ) : false;
-		if ( false === $item ) {
-			$item = $wpdb->get_row(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d;", $this->get_id() )
-			);
-
-			if ( 0 < $item->id ) {
-				wp_cache_set( 'account-item-' . $item->id, $item, 'accounts' );
-			}
+	public function get_balance( $format = false ) {
+		if ( $format ) {
+			return eaccounting_get_money( $this->balance, $this->get_currency_code( 'edit' ), true )->format();
 		}
 
-		if ( ! $item || ! $item->id ) {
-			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
-		}
-
-		// Gets extra data associated with the order if needed.
-		foreach ( $item as $key => $value ) {
-			$function = 'set_' . $key;
-			if ( is_callable( array( $this, $function ) ) ) {
-				$this->{$function}( $value );
-			}
-		}
-
-		$this->set_object_read( true );
+		return eaccounting_get_money( $this->balance, $this->get_currency_code( 'edit' ), true )->getValue();
 	}
 
 	/**
-	 * Validate the properties before saving the object
-	 * in the database.
+	 * Set balance.
 	 *
-	 * @return void
+	 * @param $balance
+	 *
 	 * @since 1.0.2
 	 */
-	protected function validate_props() {
-		global $wpdb;
-
-		if ( ! $this->get_date_created( 'edit' ) ) {
-			$this->set_date_created( time() );
-		}
-
-		if ( ! $this->get_company_id( 'edit' ) ) {
-			$this->set_company_id( 1 );
-		}
-
-		if ( ! $this->get_prop( 'creator_id' ) ) {
-			$this->set_prop( 'creator_id', eaccounting_get_current_user_id() );
-		}
-
-		if ( empty( $this->get_name( 'edit' ) ) ) {
-			throw new Exception( __( 'Account Name is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_number( 'edit' ) ) ) {
-			throw new Exception( __( 'Account Number is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_currency_code( 'edit' ) ) ) {
-			throw new Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts where number=%s", $this->get_number( 'edit' ) ) ) ) {
-			if ( ! empty( $existing_id ) && $existing_id !== $this->get_id() ) {
-				throw new Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
-			}
-		}
-
+	protected function set_balance( $balance ) {
+		$this->balance = $balance;
 	}
-
-	/**
-	 * Create a new account in the database.
-	 *
-	 * @throws Exception
-	 * @since 1.0.0
-	 */
-	public function create() {
-		$this->validate_props();
-		global $wpdb;
-		$account_data = array(
-			'name'            => $this->get_name( 'edit' ),
-			'number'          => $this->get_number( 'edit' ),
-			'opening_balance' => $this->get_opening_balance( 'edit' ),
-			'currency_code'   => $this->get_currency_code( 'edit' ),
-			'bank_name'       => $this->get_bank_name( 'edit' ),
-			'bank_phone'      => $this->get_bank_phone( 'edit' ),
-			'bank_address'    => $this->get_bank_address( 'edit' ),
-			'company_id'      => $this->get_company_id( 'edit' ),
-			'creator_id'      => $this->get_prop( 'creator_id' ),
-			'date_created'    => $this->get_date_created( 'edit' )->format( 'Y-m-d H:i:s' ),
-		);
-
-		do_action( 'eaccounting_pre_insert_account', $this->get_id(), $this );
-
-		$data = wp_unslash( apply_filters( 'eaccounting_new_account_data', $account_data ) );
-		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_accounts', $data ) ) {
-			throw new Exception( $wpdb->last_error );
-		}
-
-		do_action( 'eaccounting_insert_account', $this->get_id(), $this );
-
-		$this->set_id( $wpdb->insert_id );
-		$this->apply_changes();
-		$this->set_object_read( true );
-	}
-
-	/**
-	 * Update a account in the database.
-	 *
-	 * @throws Exception
-	 * @since 1.0.0
-	 *
-	 */
-	public function update() {
-		global $wpdb;
-
-		$this->validate_props();
-		$changes = $this->get_changes();
-		if ( ! empty( $changes ) ) {
-			do_action( 'eaccounting_pre_update_account', $this->get_id(), $changes );
-
-			try {
-				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
-			} catch ( Exception $e ) {
-				throw new Exception( __( 'Could not update account.', 'wp-ever-accounting' ) );
-			}
-
-			do_action( 'eaccounting_update_account', $this->get_id(), $changes, $this->data );
-
-			$this->apply_changes();
-			$this->set_object_read( true );
-			wp_cache_delete( 'transaction-item-' . $this->get_id(), 'transactions' );
-		}
-	}
-
-	/**
-	 * @return int|mixed
-	 * @throws Exception
-	 * @since 1.0.0
-	 */
-	public function save() {
-		if ( $this->get_id() ) {
-			$this->update();
-		} else {
-			$this->create();
-		}
-
-		return $this->get_id();
-	}
-
-
-	/**
-	 * Remove an account from the database.
-	 *
-	 * @param array $args
-	 *
-	 * @since 1.0.
-	 */
-	public function delete( $args = array() ) {
-		if ( $this->get_id() ) {
-			global $wpdb;
-			do_action( 'eaccounting_pre_delete_account', $this->get_id() );
-			$wpdb->delete( $wpdb->prefix . 'ea_accounts', array( 'id' => $this->get_id() ) );
-			do_action( 'eaccounting_delete_account', $this->get_id() );
-			$this->set_id( 0 );
-		}
-	}
-
 
 }

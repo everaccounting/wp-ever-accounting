@@ -38,12 +38,30 @@ abstract class EAccounting_Object {
 	protected $changes = array();
 
 	/**
+	 * This is false until the object is read from the DB.
+	 *
+	 * @since 1.0.0
+	 * @var bool
+	 */
+	protected $object_read = false;
+
+	/**
 	 * Set to _data on construct so we can track and reset data if needed.
 	 *
 	 * @since 1.0.0
 	 * @var array
 	 */
 	protected $default_data = array();
+
+	/**
+	 * Extra data for this object. Name value pairs (name + default value).
+	 * Used as a standard way for sub classes to add
+	 * additional information to an inherited class.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $extra_data = array();
 
 	/**
 	 * Holds all the errors of the item.
@@ -54,19 +72,36 @@ abstract class EAccounting_Object {
 	protected $errors = array();
 
 	/**
-	 * This is false until the object is read from the DB.
+	 * Key to save cache.
 	 *
-	 * @since 1.0.0
-	 * @var bool
+	 * @var string
+	 * @since 1.0.2
 	 */
-	protected $object_read = false;
+	protected $cache_key = '';
+
+	/**
+	 * A group must be set to to enable caching.
+	 *
+	 * @var string
+	 * @since 1.0.2
+	 */
+	protected $cache_group = '';
+
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 * @since 1.0.2
+	 */
+	public $object_type = '';
 
 	/**
 	 * EAccounting_Object constructor.
 	 *
-	 * @param mixed $data
+	 * @param int|array|object|null $data
 	 */
 	public function __construct( $data = 0 ) {
+		$this->data         = array_merge( $this->data, $this->extra_data );
 		$this->default_data = $this->data;
 	}
 
@@ -95,6 +130,24 @@ abstract class EAccounting_Object {
 
 
 	/**
+	 * When the object is cloned, make sure meta is duplicated correctly.
+	 *
+	 * @since 1.0.2
+	 */
+	public function __clone() {
+
+	}
+
+	/**
+	 * Returns whether or not the item exists.
+	 *
+	 * @return bool
+	 */
+	public function exists() {
+		return ! empty( $this->get_id() );
+	}
+
+	/**
 	 * Returns the unique ID for this object.
 	 *
 	 * @return int
@@ -105,22 +158,13 @@ abstract class EAccounting_Object {
 	}
 
 	/**
-	 * Returns whether or not the item exists.
-	 *
-	 * @return bool
-	 */
-	public function exists() {
-		return false !== $this->get_id();
-	}
-
-	/**
 	 * Returns all data for this object.
 	 *
 	 * @return array
 	 * @since  1.0.0
 	 */
 	public function get_data() {
-		return array_merge( array( 'id' => $this->get_id() ), array_merge( $this->data, $this->changes ) );
+		return array_merge( array( 'id' => $this->get_id() ), $this->data );
 	}
 
 	/**
@@ -131,6 +175,16 @@ abstract class EAccounting_Object {
 	 */
 	public function get_data_keys() {
 		return array_keys( $this->data );
+	}
+
+	/**
+	 * Returns all "extra" data keys for an object.
+	 *
+	 * @return array
+	 * @since  1.0.2
+	 */
+	public function get_extra_data_keys() {
+		return array_keys( $this->extra_data );
 	}
 
 	/**
@@ -181,7 +235,7 @@ abstract class EAccounting_Object {
 	 * Set a collection of props in one go, collect any errors, and return the result.
 	 * Only sets using public methods.
 	 *
-	 * @param array $props Key value pairs to set. Key is the prop and should map to a setter function name.
+	 * @param array|object $props Key value pairs to set. Key is the prop and should map to a setter function name.
 	 * @param string $context In what context to run this.
 	 *
 	 * @return bool|WP_Error
@@ -190,6 +244,10 @@ abstract class EAccounting_Object {
 	 */
 	public function set_props( $props, $context = 'set' ) {
 		$errors = false;
+
+		if ( is_object( $props ) ) {
+			$props = get_object_vars( $props );
+		}
 
 		foreach ( $props as $prop => $value ) {
 			try {
@@ -348,6 +406,42 @@ abstract class EAccounting_Object {
 	}
 
 	/**
+	 * get object status
+	 *
+	 * @param string $context
+	 *
+	 * @return bool
+	 * @since 1.0.2
+	 */
+	public function get_enabled( $context = 'view' ) {
+		return $this->get_prop( 'enabled', $context );
+	}
+
+	/**
+	 * get object status
+	 *
+	 * @param string $context
+	 *
+	 * @return bool
+	 * @since 1.0.2
+	 */
+	public function is_enabled() {
+		return eaccounting_string_to_bool( $this->get_prop( 'enabled', 'edit' ) );
+	}
+
+	/**
+	 * Set object status.
+	 *
+	 * @param int $enabled Company id
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_enabled( $enabled ) {
+		$this->set_prop( 'enabled', absint( $enabled ) );
+	}
+
+	/**
 	 * Set object belonging company id.
 	 *
 	 * @param int $company_id Company id
@@ -410,9 +504,70 @@ abstract class EAccounting_Object {
 	}
 
 	/**
-	 * Handle savings the item.
+	 * Populate data based on the object or array passed.
+	 *
+	 * @param array|Object $data Object data.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	public function populate( $data ) {
+		$errors = $this->set_props( $data );
+		if ( is_wp_error( $errors ) ) {
+			$this->error( $errors->get_error_code(), $errors->get_error_message() );
+		}
+
+		$this->set_object_read( true );
+	}
+
+	/**
+	 * Method to validate before inserting and updating EverAccounting object.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	abstract public function validate_props();
+
+	/**
+	 * Method to read a record. Creates a new EAccounting_Object based object.
+	 *
+	 * @param int $id ID of the object to read.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	abstract public function read( $id );
+
+	/**
+	 * Method to create a new record of an EverAccounting object.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	abstract public function create();
+
+	/**
+	 * Updates a record in the database.
+	 *
+	 * @throws Exception
+	 * @since 1.0.2
+	 */
+	abstract public function update();
+
+	/**
+	 * Deletes a record from the database.
+	 *
+	 * @return bool result
+	 * @since 1.0.2
+	 */
+	abstract public function delete();
+
+	/**
+	 * Conditionally save item if id present then update
+	 * otherwise create.
 	 *
 	 * @return mixed
+	 * @throws Exception
 	 * @since 1.0.0
 	 */
 	public function save() {
@@ -424,48 +579,6 @@ abstract class EAccounting_Object {
 
 		return $this->create();
 	}
-
-	/**
-	 * Reads an object.
-	 *
-	 * @param int $id ID of the object.
-	 *
-	 * @throws Exception Throw exception if invalid id is passed.
-	 * @since 1.0.0
-	 */
-	protected abstract function read( $id );
-
-	/**
-	 * Create an object.
-	 * @return void
-	 * @since 1.0.0
-	 */
-	protected abstract function validate_props();
-
-	/**
-	 * Create an object.
-	 *
-	 * @since 1.0.0
-	 */
-	public abstract function create();
-
-	/**
-	 * Update an object.
-	 *
-	 * @return
-	 * @since 1.0.0
-	 */
-	public abstract function update();
-
-	/**
-	 * Delete an object.
-	 *
-	 * @param array $args Array of args to pass to the delete method.
-	 *
-	 * @since 1.0.0
-	 */
-	public abstract function delete( $args = array() );
-
 
 	/**
 	 * When invalid data is found, throw an exception unless reading from the DB.

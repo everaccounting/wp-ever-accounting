@@ -16,17 +16,21 @@ function eaccounting_get_account( $account ) {
 
 	try {
 		if ( $account instanceof EAccounting_Account ) {
-			return $account;
+			$_account = $account;
+		} elseif ( is_object( $account ) && !empty($account->id)) {
+			$_account = new EAccounting_Account( null );
+			$_account->populate( $account );
+		} else {
+			$_account = new EAccounting_Account( absint( $account ) );
 		}
 
-		$account = new EAccounting_Account( $account );
-		if ( ! $account->exists() ) {
+		if ( ! $_account->exists() ) {
 			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
-		return $account;
+		return $_account;
 	} catch ( Exception $exception ) {
-		return false;
+		return null;
 	}
 }
 

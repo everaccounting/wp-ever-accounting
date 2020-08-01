@@ -53,6 +53,12 @@ class EAccounting_Query {
 	protected $offset = 0;
 
 	/**
+	 * @var string
+	 * @since 1.0.2
+	 */
+	protected $cache_group = 'eaccounting_query';
+
+	/**
 	 * Static constructor.
 	 *
 	 *
@@ -61,7 +67,7 @@ class EAccounting_Query {
 	 */
 	public static function init( $id = null ) {
 		$builder     = new self();
-		$builder->id = ! empty( $id ) ? $id : uniqid();
+		$builder->id = ! empty( $id ) ? $id : uniqid( '', true );
 
 		return $builder;
 	}
@@ -436,6 +442,7 @@ class EAccounting_Query {
 		}
 		$stat_date = $wpdb->get_var( $wpdb->prepare( 'SELECT CAST(%s as DATE)', $start ) );
 		$end_date  = $wpdb->get_var( $wpdb->prepare( 'SELECT CAST(%s as DATE)', $end ) );
+
 		return $this->where( $column, 'BETWEEN', array( $stat_date, $end_date ) );
 	}
 
@@ -789,7 +796,7 @@ class EAccounting_Query {
 	 * @param callable $row_map Function callable to filter or map results to.
 	 * @param bool $calc_rows Flag that indicates to SQL if rows should be calculated or not.
 	 *
-	 * @return Object || Array
+	 * @return Object | array
 	 * @since 1.0.0
 	 *
 	 * @global object $wpdb
@@ -815,11 +822,28 @@ class EAccounting_Query {
 		$query = apply_filters( 'wp_query_builder_get_query', $query );
 		$query = apply_filters( 'wp_query_builder_get_query_' . $this->id, $query );
 
-		$results = $wpdb->get_results( $query, $output );
-		if ( $row_map ) {
-			$results = array_map( function ( $row ) use ( &$row_map ) {
-				return call_user_func_array( $row_map, [ $row ] );
-			}, $results );
+		$key          = md5( $query );
+		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
+
+		if ( ! $last_changed ) {
+			$last_changed = microtime();
+			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
+		}
+
+		$cache_key = "{$key}:{$last_changed}";
+
+		$results = wp_cache_get( $cache_key, $this->cache_group );
+
+		if ( false === $results ) {
+			$results = $wpdb->get_results( $query, $output );
+			wp_cache_add( $cache_key, $results, $this->id, HOUR_IN_SECONDS );
+			if ( $row_map ) {
+				$results = array_map( function ( $row ) use ( &$row_map ) {
+					return call_user_func_array( $row_map, [ $row ] );
+				}, $results );
+			}
+
+			wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
 		}
 
 		return $results;
@@ -847,10 +871,28 @@ class EAccounting_Query {
 		$query .= ' LIMIT 1';
 		$this->_query_offset( $query );
 
-		$query = apply_filters( 'wp_query_builder_one_query', $query );
-		$query = apply_filters( 'wp_query_builder_one_query_' . $this->id, $query );
+		$key          = md5( serialize( array( $query, $output ) ) );
+		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
 
-		return $wpdb->get_row( $query, $output );
+		if ( ! $last_changed ) {
+			$last_changed = microtime();
+			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
+		}
+
+		$cache_key = "{$key}:{$last_changed}";
+
+		$results = wp_cache_get( $cache_key, $this->cache_group );
+
+		if ( false === $results ) {
+			$query = apply_filters( 'wp_query_builder_one_query', $query );
+			$query = apply_filters( 'wp_query_builder_one_query_' . $this->id, $query );
+			var_dump('loaded from DB');
+			$results = $wpdb->get_row( $query, $output );
+
+			wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
+		}
+
+		return $results;
 	}
 
 	/**
@@ -872,7 +914,24 @@ class EAccounting_Query {
 		$this->_query_group( $query );
 		$this->_query_having( $query );
 
-		return (int) $wpdb->get_var( $query );
+		$key          = md5( serialize( array( $query, $column ) ) );
+		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
+
+		if ( ! $last_changed ) {
+			$last_changed = microtime();
+			wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
+		}
+
+		$cache_key = "{$key}:{$last_changed}";
+
+		$results = wp_cache_get( $cache_key, $this->cache_group );
+		if ( false === $results ) {
+
+			$results = (int) $wpdb->get_var( $query );
+			wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
+		}
+
+		return $results;
 	}
 
 	/**
@@ -983,7 +1042,7 @@ class EAccounting_Query {
 		$this->_query_group( $query );
 		$this->_query_having( $query );
 
-		return intval( $wpdb->get_var( $query ) );
+		return (int) $wpdb->get_var( $query );
 	}
 
 	/**

@@ -199,3 +199,23 @@ function eaccounting_get_payment_methods() {
 		'check'         => __( 'Cheque', 'wp-ever-accounting' ),
 	] );
 }
+
+/**
+ * Get the logger of the plugin.
+ *
+ * @return EAccounting_Logger
+ * @since 1.0.2
+ */
+function eaccounting_logger() {
+	return new EAccounting_Logger();
+}
+
+/**
+ * Trigger logging cleanup using the logging class.
+ *
+ * @since 1.0.2
+ */
+function wc_cleanup_logs() {
+	$logger = new EAccounting_Logger();
+	$logger->clear_expired_logs();
+}
