@@ -141,7 +141,7 @@ class EAccounting_Ajax {
 
 		switch ( $type ) {
 			case 'currency_code':
-				$results = eaccounting()->currencies->get_currencies( [ 'search' => $search ] )->select( 'id, name as text, rate ' )->where( 'enabled', 1 )->get();
+				$results = eaccounting()->currencies->get_currencies( [ 'search' => $search ] )->select( 'code as id, CONCAT(name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
 				break;
 
 			default:
@@ -160,6 +160,24 @@ class EAccounting_Ajax {
 		);
 	}
 
+	public static function get_currency() {
+		$posted = eaccounting_clean( $_REQUEST );
+		$code   = ! empty( $posted['code'] ) ? $posted['code'] : false;
+		if ( ! $code ) {
+			wp_send_json_error( [
+				'message' => __( 'No code received', 'wp-ever-accounting' ),
+			] );
+		}
+		$currency = eaccounting_get_currency_by_code($code);
+		if(empty($currency) || is_wp_error($currency)){
+			wp_send_json_error( [
+				'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
+			] );
+		}
+
+		wp_send_json_success($currency->toArray());
+	}
+
 	/**
 	 * Handle ajax action of creating/updating currencies.
 	 * @return void
@@ -175,9 +193,18 @@ class EAccounting_Ajax {
 			] );
 		}
 
+		$message  = __( 'Currency updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Currency created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( [ 'action' ], eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
 		wp_send_json_success( [
-			'message'  => __( 'Currency saved successfully!', 'wp-ever-accounting' ),
-			'redirect' => empty( $posted['id'] ) ? remove_query_arg( [ 'action' ], eaccounting_clean( $_REQUEST['_wp_http_referer'] ) ) : ''
+			'message'  => $message,
+			'redirect' => $redirect,
+			'item'     => $created->get_data()
 		] );
 
 		wp_die();

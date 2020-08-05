@@ -23,7 +23,7 @@ class EAccounting_Admin {
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
-		add_action( 'admin_footer', array($this, 'load_js_templates') );
+		add_action( 'admin_footer', array( $this, 'load_js_templates' ) );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 	}
 
@@ -100,8 +100,13 @@ class EAccounting_Admin {
 		return $footer_text;
 	}
 
-	public function load_js_templates(){
-		include dirname( __FILE__ ) . '/js-templates/modal-add-account.php';
+	public function load_js_templates() {
+		$screen    = get_current_screen();
+		$screen_id = $screen ? $screen->id : '';
+		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
+			include dirname( __FILE__ ) . '/js-templates/modal-add-currency.php';
+			include dirname( __FILE__ ) . '/js-templates/modal-add-account.php';
+		}
 	}
 
 }

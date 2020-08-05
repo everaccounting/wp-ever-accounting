@@ -26,7 +26,8 @@
 			new $.ea_backbone_modal.View({
 				target: settings.template,
 				string: settings.variable,
-				onSubmit:options.onSubmit
+				onSubmit: options.onSubmit,
+				onReady: options.onReady
 			});
 		}
 	};
@@ -39,7 +40,8 @@
 	$.ea_backbone_modal.defaultOptions = {
 		template: '',
 		variable: {},
-		onSubmit:undefined
+		onSubmit: undefined,
+		onReady: undefined,
 	};
 
 	/**
@@ -53,6 +55,7 @@
 		_target: undefined,
 		_string: undefined,
 		onSubmit: undefined,
+		onReady: undefined,
 		events: {
 			'click .modal-close': 'closeButton',
 			'touchstart #btn-ok': 'addButton',
@@ -67,11 +70,11 @@
 			});
 		},
 		initialize: function (data) {
-			console.log(data);
 			var view = this;
 			this._target = data.target;
 			this._string = data.string;
 			this.onSubmit = data.onSubmit;
+			this.onReady = data.onReady;
 			_.bindAll(this, 'render');
 			this.render();
 
@@ -100,12 +103,13 @@
 
 			$(document.body).trigger('ea_backbone_modal_loaded', this._target);
 			$(document.body).trigger(this._target + '_loaded');
-
 			var modal = this;
+			if (typeof this.onReady === 'function') {
+				this.onReady( this.$el, this);
+			}
 			if (typeof this.onSubmit === 'function') {
-				this.$el.find('form').on('submit', function(e) {
+				this.$el.find('form').on('submit', function (e) {
 					e.preventDefault();
-					modal.disableSubmit();
 					modal.onSubmit(modal.getFormData(), modal);
 				});
 			}
@@ -154,10 +158,10 @@
 				this.closeButton(e);
 			}
 		},
-		disableSubmit: function() {
+		disableSubmit: function () {
 			this.$el.find('*[type="submit"]').attr('disabled', 'disabled');
 		},
-		enableSubmit: function() {
+		enableSubmit: function () {
 			this.$el.find('*[type="submit"]').removeAttr('disabled');
 		},
 	});

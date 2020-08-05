@@ -50,12 +50,13 @@ try {
 							'class'         => 'currency_code_picker ea-ajax-select2',
 							'value'         => $account->get_currency_code( 'edit' ),
 							'options'       => [],
+							'default'       => eaccounting_get_currency_code(),
 							'required'      => true,
 							'attr'          => array(
-									'data-nonce'  => wp_create_nonce( 'dropdown-search' ),
-									'data-type'   => 'currency_code',
-									'data-action' => 'eaccounting_dropdown_search',
-									'data-placeholder' => __('Select currency code', 'wp-ever-accounting'),
+									'data-nonce'       => wp_create_nonce( 'dropdown-search' ),
+									'data-type'        => 'currency_code',
+									'data-action'      => 'eaccounting_dropdown_search',
+									'data-placeholder' => __( 'Select currency code', 'wp-ever-accounting' ),
 							)
 					) );
 
@@ -63,7 +64,8 @@ try {
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
 							'name'          => 'opening_balance',
-							'value'         => $account->get_opening_balance( 'edit' ),
+							'value'         => eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ),
+							'default'       => '0.00',
 							'required'      => true,
 					) );
 
@@ -104,5 +106,3 @@ try {
 
 	</div>
 <?php
-eaccounting_enqueue_js( "jQuery( document ).trigger( 'edit_account_form_loaded');" );
-eaccounting_get_js_template('modal-add-currency');

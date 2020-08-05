@@ -39,7 +39,7 @@
 			return this.optional(element) || !/[^\d.]+/g.test(value);
 		}, "numbers, and dot only please");
 
-
+		//currency form
 		window.eaccounting.currency_form = {
 			validate: function () {
 				$('#ea-currency-form').validate({
@@ -72,6 +72,32 @@
 						$.eaccounting_notice(error.message, 'error');
 					});
 			},
+			handle_modal: function (e) {
+				var $field = $(this);
+				$(this).ea_backbone_modal({
+					template: 'ea-modal-add-currency',
+					onSubmit: function (formData, modal) {
+						modal.disableSubmit();
+						modal.$el.blockThis();
+						wp.ajax.post('eaccounting_edit_currency', formData)
+							.then(function (result) {
+								console.log(result);
+								modal.$el.unblock();
+								$.eaccounting_notice(result.message, 'success');
+								modal.closeModal();
+								var title = result.item.name + '(' + result.item.symbol + ')';
+								$field.eaccounting_select2({data: [{id: result.item.code, text: title, selected: true}]}).trigger('change');
+								//$('.select2-selection__rendered[title="'+title+'"]').addClass('new-item');
+							})
+							.fail(function (error) {
+								modal.$el.unblock();
+								$.eaccounting_notice(error.message, 'error');
+								modal.enableSubmit();
+							});
+					}
+				});
+				return false;
+			},
 			init: function () {
 				this.validate();
 				$(document)
@@ -96,12 +122,54 @@
 						}
 					})
 					.on('submit', '#ea-currency-form', this.handleSubmit)
+					.on('select2:trigger_add', '.eaccounting .currency_code_picker', this.handle_modal)
+
 			}
 		}
 
+		eaccounting.account_form = {
+			init:function () {
+				$(document)
+					.on('ready', function () {
+						//$('#ea-account-form #currency_code').trigger('change')
+					})
+			}
+		}
+
+
 		eaccounting.currency_form.init();
 
+		$(document)
+			.on('change', '#ea-account-form #currency_code', function (e) {
+				console.log('changed')
+				var $field = $(this);
+				var code = $field.val().trim();
+				if (!code) {
+					return false;
+				}
+				wp.ajax.post('eaccounting_get_currency', {code: code})
+					.then(function (currency) {
+						console.log(currency);
+						$('#ea-account-form #opening_balance').inputmask('decimal', {
+							alias: 'numeric',
+							groupSeparator: currency.thousand_separator,
+							autoGroup: true,
+							digits: currency.precision,
+							radixPoint: currency.decimal_separator,
+							digitsOptional: false,
+							allowMinus: false,
+							prefix: currency.symbol,
+							placeholder: '0.000',
+							rightAlign: 0
+						});
+					})
+					.fail(function (error) {
+						$.eaccounting_notice(error.message, 'error');
+					});
+			}).change()
 
+
+		//global element handler.
 		$(document)
 			.on('click', '.wp-list-table .ea_item_status_update', function () {
 				var objectid = $(this).data('objectid'),
@@ -128,7 +196,6 @@
 			})
 			.on('click', function () {
 				$('.ea-dropdown').removeClass('open');
-				console.log('body')
 			})
 			.on('click', '.ea-dropdown-button', function (e) {
 				e.preventDefault();
@@ -136,6 +203,10 @@
 				$('.ea-dropdown').removeClass('open');
 				$(this).closest('.ea-dropdown').toggleClass('open');
 			})
+			.on('ea_backbone_modal_loaded', function () {
+				$('.ea-select2').select2();
+			})
+
 
 	});
 })(jQuery, eaccounting_admin_i10n);

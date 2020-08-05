@@ -32,9 +32,9 @@ class EAccounting_Currency extends EAccounting_Object {
 	protected $data = array(
 		'name'               => '',
 		'code'               => '',
-		'rate'               => 0,
+		'rate'               => 1,
 		'precision'          => 2,
-		'symbol'             => '',
+		'symbol'             => '$',
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
@@ -107,10 +107,6 @@ class EAccounting_Currency extends EAccounting_Object {
 
 		if ( empty( $this->get_name( 'edit' ) ) ) {
 			$this->set_name( $currency['name'] );
-		}
-
-		if ( empty( $this->get_precision( 'edit' ) ) ) {
-			$this->set_precision( $currency['precision'] );
 		}
 
 		if ( empty( $this->get_symbol( 'edit' ) ) ) {
@@ -516,7 +512,6 @@ class EAccounting_Currency extends EAccounting_Object {
 		if ( ! $this->is_symbol_first() ) {
 			return '';
 		}
-
 		return $this->get_symbol( 'edit' );
 	}
 

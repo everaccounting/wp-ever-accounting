@@ -95,7 +95,7 @@ function eaccounting_text_input( $field = array() ) {
 	);
 
 	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
-	$field['value']            = empty( $field['value'] ) ? $field['default'] : $field['value'];
+	$field['value']            = !isset( $field['value'] ) ? $field['default'] : $field['value'];
 	$field['attr']['required'] = ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
 	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
@@ -445,7 +445,7 @@ function eaccounting_toggle( $field ) {
 		$attributes,
 		checked( $field['value'], $field['cbvalue'], false ),
 		__( 'No', 'wp-ever-accounting' ),
-		__( 'Yes', 'wp-ever-accounting' ),
+		__( 'Yes', 'wp-ever-accounting' )
 	);
 	if ( ! $field['naked'] ) {
 		echo $desc;

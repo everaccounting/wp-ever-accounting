@@ -610,6 +610,17 @@
     background-color: #007cba;
     color: #fff; }
 
+.select2 span.new-item::after {
+  content: 'New';
+  position: absolute;
+  right: 20px;
+  background: green;
+  padding: 2px 5px;
+  line-height: 1;
+  vertical-align: middle;
+  color: #fff;
+  top: 7px; }
+
 .ea-row {
   box-sizing: border-box;
   display: -webkit-box;

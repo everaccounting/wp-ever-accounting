@@ -462,7 +462,6 @@ class EAccounting_Money{
 		$prefix    = $this->currency->get_prefix();
 		$suffix    = $this->currency->get_suffix();
 		$value     = number_format( $amount, $this->currency->get_precision(), $decimals, $thousands );
-
 		return ( $negative ? '-' : '' ) . $prefix . $value . $suffix;
 	}
 

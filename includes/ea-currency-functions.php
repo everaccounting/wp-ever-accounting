@@ -45,6 +45,28 @@ function eaccounting_get_currency( $currency ) {
 }
 
 /**
+ * Get currency by code
+ *
+ * @param string$code
+ *
+ * @return EAccounting_Currency|false
+ * @since 1.0.0
+ *
+ */
+function eaccounting_get_currency_by_code( $code ) {
+	if ( empty( $code ) ) {
+		return null;
+	}
+	try {
+		global $wpdb;
+		$_currency = $wpdb->get_row($wpdb->prepare("SELECT * from {$wpdb->prefix}ea_currencies where code=%s", sanitize_key($code)));
+		return eaccounting_get_currency($_currency);
+	} catch ( Exception $exception ) {
+		return null;
+	}
+}
+
+/**
  *  Create new currency programmatically.
  *
  *  Returns a new currency object on success.

@@ -17,7 +17,7 @@ window.eaccounting = window.eaccounting || {};
 		});
 	}
 
-	eaccounting.redirect = function(url){
+	eaccounting.redirect = function (url) {
 		url = url.trim();
 		if (!url) {
 			return false;
@@ -69,8 +69,6 @@ window.eaccounting = window.eaccounting || {};
 	}
 
 
-
-
 })(jQuery, window, window.wp, document, undefined);
 
 /**
@@ -114,26 +112,27 @@ jQuery.fn.blockThis = function () {
  */
 
 jQuery(function ($) {
-	$.fn.eaccounting_select2 = function (el, options) {
+	$.fn.eaccounting_select2 = function (options) {
 		return this.each(function () {
 			(new $.eaccounting_select2(this, options));
 		});
 	};
 
 	$.eaccounting_select2 = function (el, options) {
+		console.log(options);
 		plugin = this;
-		plugin.settings = $.extend(true, {}, $.eaccounting_select2.defaultOptions, options);
 		plugin.$el = $(el);
 		plugin.data = {};
-		plugin.options = {};
 		plugin.ajax = $(el).hasClass('ea-ajax-select2');
 		plugin.createable = $(el).attr('data-createable');
 		plugin.data.nonce = $(el).attr('data-nonce');
 		plugin.data.action = $(el).attr('data-action');
 		plugin.data.type = $(el).attr('data-type');
+		plugin.options = $.extend(true, {}, $.eaccounting_select2.defaultOptions, options);
+
 
 		if (plugin.ajax) {
-			plugin.options = {
+			plugin.options = $.extend(true, {}, plugin.options, {
 				ajax: {
 					cache: true,
 					delay: 500,
@@ -161,8 +160,12 @@ jQuery(function ($) {
 				},
 				placeholder: plugin.$el.attr('placeholder') || 'Select..',
 				allowClear: false
-			}
+			});
 		}
+		if ($(el).data('select2')) {
+			$(el).select2('destroy');
+		}
+		console.log(plugin.options);
 		var instance = $(el).select2(plugin.options);
 		instance.on('select2:open', () => {
 			if (!$(".select2-results .ea-select2-footer").length) {
@@ -170,7 +173,7 @@ jQuery(function ($) {
 					.on('click', function (e) {
 						e.preventDefault();
 						instance.select2("close");
-						plugin.$el.trigger('select2:click_add', [instance, plugin]);
+						plugin.$el.trigger('select2:trigger_add', [instance, plugin]);
 					});
 				$(".select2-results").append($footer);
 			}
@@ -180,6 +183,6 @@ jQuery(function ($) {
 	};
 
 	$.eaccounting_select2.defaultOptions = {};
-
+	$('.ea-ajax-select2').eaccounting_select2({test:true});
 });
 

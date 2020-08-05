@@ -72,6 +72,7 @@ class EAccounting_Admin_Assets {
 			wp_enqueue_script( 'ea-notice' );
 			wp_enqueue_script( 'eaccounting' );
 			wp_enqueue_script( 'select2' );
+			wp_enqueue_script( 'jquery-inputmask' );
 			wp_enqueue_script( 'jquery-blockui' );
 			wp_enqueue_script( 'jquery-tiptip' );
 			wp_enqueue_script( 'jquery-validation' );
