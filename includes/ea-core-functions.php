@@ -219,3 +219,16 @@ function wc_cleanup_logs() {
 	$logger = new EAccounting_Logger();
 	$logger->clear_expired_logs();
 }
+
+/**
+ * Define a constant if it is not already defined.
+ *
+ * @since 1.0.2
+ * @param string $name  Constant name.
+ * @param mixed  $value Value.
+ */
+function eaccounting_maybe_define_constant( $name, $value ) {
+	if ( ! defined( $name ) ) {
+		define( $name, $value );
+	}
+}

@@ -2,13 +2,13 @@
  * EverAccounting CSS Variables
  */
 
-$eaccounting:   	#a46497 !default;
+$eaccounting:   	#3211c1 !default;
 $green:         	#7ad03a !default;
 $red:           	#a00 !default;
 $orange:        	#ffba00 !default;
 $blue:          	#2ea2cc !default;
 
-$primary:           #a46497 !default;                                    // Primary color for buttons (alt)
+$primary:           #3211c1 !default;                                    // Primary color for buttons (alt)
 $primarytext:       desaturate(lighten($primary, 50%), 18%) !default;    // Text on primary color bg
 
 $secondary:         desaturate(lighten($primary, 40%), 21%) !default;    // Secondary buttons
@@ -19,3 +19,7 @@ $highlightext:      desaturate(lighten($highlight, 50%), 18%) !default;  // Text
 
 $contentbg:         #fff !default;                                       // Content BG - Tabs (active state)
 $subtext:           #767676 !default;                                    // small, breadcrumbs etc
+
+
+//form
+$border_color: #d2d6de !default;

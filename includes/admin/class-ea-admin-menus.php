@@ -36,13 +36,13 @@ class EAccounting_Admin_Menus {
 		$transactions = add_submenu_page( 'eaccounting', __( 'Transactions', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'manage_options', 'ea-transactions', 'eaccounting_admin_dashboard' );
 		$sales        = add_submenu_page( 'eaccounting', __( 'Sales', 'wp-ever-accounting' ), __( 'Sales', 'wp-ever-accounting' ), 'manage_options', 'ea-sales', 'eaccounting_admin_dashboard' );
 		$purchases    = add_submenu_page( 'eaccounting', __( 'Purchases', 'wp-ever-accounting' ), __( 'Purchases', 'wp-ever-accounting' ), 'manage_options', 'ea-purchases', 'eaccounting_admin_dashboard' );
-		$banking      = add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_options', 'ea-banking', 'eaccounting_admin_banking' );
+		$banking      = add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_options', 'ea-banking', 'eaccounting_admin_banking_page' );
 
-		add_action( 'load-' . $overview, 'eaccounting_overview_screen_options' );
-		add_action( 'load-' . $transactions, 'eaccounting_transactions_screen_options' );
-		add_action( 'load-' . $sales, 'eaccounting_sales_screen_options' );
-		add_action( 'load-' . $purchases, 'eaccounting_purchases_screen_options' );
-		add_action( 'load-' . $banking, 'eaccounting_baking_screen_options' );
+//		add_action( 'load-' . $overview, 'eaccounting_load_overview_page' );
+//		add_action( 'load-' . $transactions, 'eaccounting_load_transactions_page' );
+//		add_action( 'load-' . $sales, 'eaccounting_load_sales_page' );
+//		add_action( 'load-' . $purchases, 'eaccounting_load_purchases_page' );
+		add_action( 'load-' . $banking, 'eaccounting_load_baking_page' );
 	}
 
 	public function tools_menu() {
@@ -60,8 +60,6 @@ class EAccounting_Admin_Menus {
 	public function status_menu() {
 		add_submenu_page( 'eaccounting', __( 'Status', 'wp-ever-accounting' ), __( 'Status', 'wp-ever-accounting' ), 'manage_options', 'ea-status', 'eaccounting_admin_dashboard' );
 	}
-
-
 }
 
 return new EAccounting_Admin_Menus();

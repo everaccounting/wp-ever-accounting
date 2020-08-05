@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Transactions extends EAccounting_Query {
+class EAccounting_Query_Transactions extends EAccounting_Query {
 	/**
 	 * Static constructor.
 	 *

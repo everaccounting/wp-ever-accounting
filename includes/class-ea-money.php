@@ -83,8 +83,8 @@ class EAccounting_Money{
 			return $amount;
 		}
 
-		$thousandsSeparator = $this->currency->get_thousands_separator();
-		$decimalMark        = $this->currency->get_decimal_mark();
+		$thousandsSeparator = $this->currency->get_thousand_separator('edit');
+		$decimalMark        = $this->currency->get_decimal_separator('edit');
 
 		$amount = str_replace( $this->currency->get_symbol(), '', $amount );
 		$amount = preg_replace( '/[^0-9\\' . $thousandsSeparator . '\\' . $decimalMark . '\-\+]/', '', $amount );
@@ -443,8 +443,8 @@ class EAccounting_Money{
 		return number_format(
 			$this->getValue(),
 			$this->currency->get_precision(),
-			$this->currency->get_decimal_mark(),
-			$this->currency->get_thousands_separator()
+			$this->currency->get_decimal_separator('edit'),
+			$this->currency->get_thousand_separator('edit')
 		);
 	}
 
@@ -457,8 +457,8 @@ class EAccounting_Money{
 		$negative  = $this->isNegative();
 		$value     = $this->getValue();
 		$amount    = $negative ? - $value : $value;
-		$thousands = $this->currency->get_thousands_separator();
-		$decimals  = $this->currency->get_decimal_mark();
+		$thousands = $this->currency->get_thousand_separator('edit');
+		$decimals  = $this->currency->get_decimal_separator('edit');
 		$prefix    = $this->currency->get_prefix();
 		$suffix    = $this->currency->get_suffix();
 		$value     = number_format( $amount, $this->currency->get_precision(), $decimals, $thousands );

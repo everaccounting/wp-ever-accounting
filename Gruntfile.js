@@ -30,8 +30,7 @@ module.exports = function(grunt) {
 				configFile: '.stylelintrc'
 			},
 			all: [
-				'<%= dirs.css %>/*.scss',
-				'!<%= dirs.css %>/select2.scss'
+				'<%= dirs.css %>/*.scss'
 			]
 		},
 
@@ -82,7 +81,8 @@ module.exports = function(grunt) {
 			compile: {
 				options: {
 					implementation: sass,
-					sourceMap: 'none'
+					sourceMap: true,
+					map:true
 				},
 				files: [{
 					expand: true,
@@ -96,7 +96,7 @@ module.exports = function(grunt) {
 
 		// Generate RTL .css files.
 		rtlcss: {
-			woocommerce: {
+			eaccounting: {
 				expand: true,
 				cwd: '<%= dirs.css %>',
 				src: [
@@ -137,7 +137,7 @@ module.exports = function(grunt) {
 		// Watch changes for assets.
 		watch: {
 			css: {
-				files: ['<%= dirs.css %>/*.scss'],
+				files: ['<%= dirs.css %>/**/*.scss'],
 				tasks: ['sass', 'rtlcss', 'postcss', 'cssmin', 'concat']
 			},
 			js: {
@@ -171,6 +171,8 @@ module.exports = function(grunt) {
 		// Autoprefixer.
 		postcss: {
 			options: {
+				map: true,
+				annotation: false,
 				processors: [
 					require( 'autoprefixer' )
 				]

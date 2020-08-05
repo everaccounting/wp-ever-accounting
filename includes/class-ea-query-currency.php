@@ -1,42 +1,24 @@
 <?php
-/**
- * Class for Account querying
- *
- * @package  EverAccounting/Classes
- * @since    1.0.2
- */
+defined( 'ABSPATH' ) || exit();
 
-defined( 'ABSPATH' ) || exit;
-
-class EAccounting_Account_Query extends EAccounting_Query {
-	/**
-	 * Table name.
-	 *
-	 * @var string
-	 * @since 1.0.2
-	 */
-	protected static $table = 'ea_accounts';
-
+class EAccounting_Query_Currency extends EAccounting_Query {
 	/**
 	 * Static constructor.
 	 *
 	 *
-	 * @param string $id
-	 *
-	 * @return EAccounting_Account_Query
 	 * @since 1.0.0
+	 *
 	 */
-	public static function init( $id = 'account_query' ) {
-		global $wpdb;
-		$builder       = new self();
-		$builder->id   = ! empty( $id ) ? $id : uniqid( '', true );
-		$builder->from = $wpdb->prefix . self::$table;
+	public static function init( $id = null ) {
+		$builder     = new self();
+		$builder->id = ! empty( $id ) ? $id : uniqid();
+		$builder->from( 'ea_currencies' );
 
 		return $builder;
 	}
 
 
-	public function get_accounts( $args = array() ) {
+	public function get_currencies( $args = array() ) {
 		$defaults = array(
 			'number'  => 20,
 			'offset'  => 0,
@@ -45,7 +27,7 @@ class EAccounting_Account_Query extends EAccounting_Query {
 			'status'  => '',
 			'order'   => 'DESC',
 			'orderby' => 'id',
-			'search'       => '',
+			'search'  => '',
 		);
 
 		$args = (array) wp_parse_args( $args, $defaults );
@@ -55,10 +37,7 @@ class EAccounting_Account_Query extends EAccounting_Query {
 		if ( ! empty( $args['search'] ) ) {
 			$builder->search( eaccounting_clean( $args['search'] ), array(
 				'name',
-				'number',
-				'bank_name',
-				'bank_phone',
-				'bank_address'
+				'code',
 			) );
 		}
 

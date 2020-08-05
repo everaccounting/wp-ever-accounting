@@ -59,8 +59,8 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args( $args, array(
-				'singular' => 'account',
-				'plural'   => 'accounts',
+			'singular' => 'account',
+			'plural'   => 'accounts',
 		) );
 
 		parent::__construct( $args );
@@ -69,36 +69,14 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	}
 
 	/**
-	 * Show the search field
-	 *
-	 *
-	 * @param string $text Label for the search box
-	 * @param string $input_id ID of the search box
-	 *
-	 * @return void
-	 * @since 1.0.2
-	 *
+	 * Render blank state. Extend to add content.
 	 */
-	public function search_box( $text, $input_id ) {
-		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
-			return;
-		}
-
-		$input_id = $input_id . '-search-input';
-
-		if ( ! empty( $_REQUEST['orderby'] ) ) {
-			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
-		}
-		if ( ! empty( $_REQUEST['order'] ) ) {
-			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
-		}
-		?>
-		<p class="search-box">
-			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
-			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
-			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
-		</p>
-		<?php
+	protected function render_blank_state() {
+		echo '<div class="ea-blankstate">';
+		echo '<h2 class="ea-blankstate-message">' . esc_html__( 'Accounts is where you keep your money, it could be cash or bank account having different currencies.', 'wp-ever-accounting' ) . '</h2>';
+		echo '<a class="ea-blankstate-cta button-primary button" href="' . esc_url( admin_url( 'post-new.php?post_type=shop_coupon' ) ) . '">' . esc_html__( 'Create your first account', 'wp-ever-accounting' ) . '</a>';
+		echo '<a class="ea-blankstate-cta button" target="_blank" href="#?utm_source=blankslate&utm_medium=product&utm_content=couponsdoc&utm_campaign=woocommerceplugin">' . esc_html__( 'Learn more about accounts', 'wp-ever-accounting' ) . '</a>';
+		echo '</div>';
 	}
 
 	/**
@@ -116,9 +94,9 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-				'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-				'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-				'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -132,15 +110,16 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 */
 	public function get_columns() {
 		$columns = array(
-				'cb'        => '<input type="checkbox" />',
-				'name'      => __( 'Name', 'wp-ever-accounting' ),
-				'balance'   => __( 'Balance', 'wp-ever-accounting' ),
-				'number'    => __( 'Number', 'wp-ever-accounting' ),
-				'bank_name' => __( 'Bank Name', 'wp-ever-accounting' ),
-				'enabled'   => __( 'Enabled', 'wp-ever-accounting' ),
+			'cb'        => '<input type="checkbox" />',
+			'name'      => __( 'Name', 'wp-ever-accounting' ),
+			'balance'   => __( 'Balance', 'wp-ever-accounting' ),
+			'number'    => __( 'Number', 'wp-ever-accounting' ),
+			'bank_name' => __( 'Bank Name', 'wp-ever-accounting' ),
+			'enabled'   => __( 'Enabled', 'wp-ever-accounting' ),
+			'actions'   => __( 'Actions', 'wp-ever-accounting' ),
 		);
 
-		return apply_filters( 'eaccounting_accounts_table_columns', $this->prepare_columns( $columns ), $columns, $this );
+		return $columns; //apply_filters( 'eaccounting_accounts_table_columns', $this->prepare_columns( $columns ), $columns, $this );
 	}
 
 	/**
@@ -151,11 +130,11 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 */
 	public function get_sortable_columns() {
 		$columns = array(
-				'name'      => array( 'name', false ),
-				'number'    => array( 'number', false ),
-				'bank_name' => array( 'bank_name', false ),
-				'balance'   => array( 'balance', false ),
-				'enabled'   => array( 'enabled', false ),
+			'name'      => array( 'name', false ),
+			'number'    => array( 'number', false ),
+			'bank_name' => array( 'bank_name', false ),
+			'balance'   => array( 'balance', false ),
+			'enabled'   => array( 'enabled', false ),
 		);
 
 		return apply_filters( 'eaccounting_accounts_table_sortable_columns', $columns, $this );
@@ -169,7 +148,7 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 * @param string $column_name The name of the column
 	 *
 	 * @return string The column value.
-	 * @since 1.0
+	 * @since 1.0.2
 	 *
 	 */
 	function column_default( $affiliate, $column_name ) {
@@ -190,13 +169,11 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 * @param EAccounting_Account $account The current account object.
 	 *
 	 * @return string Displays a checkbox.
-	 * @since  1.0
+	 * @since  1.0.2
 	 *
 	 */
 	function column_cb( $account ) {
-		$disabled = $account->get_opening_balance( 'edit' ) != $account->get_balance() ? 'disabled="disabled"' : '';
-
-		return sprintf( '<input type="checkbox" name="account_id[]" value="%d" %s/>', $account->get_id(), $disabled );
+		return sprintf( '<input type="checkbox" name="account_id[]" value="%d"/>', $account->get_id() );
 	}
 
 	/**
@@ -210,48 +187,12 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 *
 	 */
 	function column_name( $account ) {
-		$base_uri    = eaccounting_admin_url( array( 'account_id' => $account->get_id(), 'tab' => 'accounts' ) );
-		$row_actions = array();
-		$name        = $account->get_name();
+		$name = $account->get_name();
 
-		$value = sprintf( '<strong><a href="%1$s" class="row-title">%2$s</a></strong>',
-				esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'account_id' => $account->get_id() ] ) ),
-				$name
+		$value = sprintf( '<a href="%1$s">%2$s</a>',
+			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'account_id' => $account->get_id() ] ) ),
+			$name
 		);
-
-		$row_actions['edit'] = $this->get_row_action_link(
-				__( 'Edit', 'wp-ever-accounting' ),
-				array( 'action' => 'edit' ),
-				array( 'base_uri' => $base_uri )
-		);
-
-		if ( $account->is_enabled() ) {
-			$row_actions['deactivate'] = $this->get_row_action_link(
-					__( 'Deactivate', 'wp-ever-accounting' ),
-					array( 'action' => 'deactivate' ),
-					array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
-			);
-
-		} else {
-			$row_actions['activate'] = $this->get_row_action_link(
-					__( 'Activate', 'wp-ever-accounting' ),
-					array( 'action' => 'activate' ),
-					array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
-			);
-
-		}
-
-		if ( $account->get_opening_balance( 'edit' ) == $account->get_balance() ) {
-			$row_actions['delete'] = $this->get_row_action_link(
-					__( 'Delete', 'wp-ever-accounting' ),
-					array( 'action' => 'delete' ),
-					array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
-			);
-		}
-
-		$row_actions = apply_filters( 'eaccounting_account_row_actions', $row_actions, $account );
-
-		$value .= '<div class="row-actions">' . $this->row_actions( $row_actions, true ) . '</div>';
 
 		return apply_filters( 'eaccounting_account_table_name', $value, $account );
 	}
@@ -296,9 +237,42 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	}
 
 	/**
+	 * @since 1.0.
+	 * @return string
+	 */
+	function column_enabled() {
+		return sprintf('<label class="ea-toggle"><input type="checkbox" name="enabled[1]" checked="checked"><span data-label-off="No" data-label-on="Yes" class="ea-toggle-slider"></span></label>');
+	}
+
+	/**
+	 * @param $account
+	 * @since 1.0.
+	 *
+	 * @return string
+	 */
+	function column_actions( $account ) {
+		$base_uri    = eaccounting_admin_url( array( 'account_id' => $account->get_id(), 'tab' => 'accounts' ) );
+		$row_actions = array();
+
+		$row_actions['edit'] = array(
+			'label' => __( 'Edit', 'wp-ever-accounting' ),
+			array( 'action' => 'edit' ),
+			array( 'base_uri' => $base_uri )
+		);
+		$row_actions['delete'] = array(
+			'label' => __( 'Delete', 'wp-ever-accounting' ),
+			array( 'base_uri' => $base_uri,  'nonce' => 'account-nonce' )
+		);
+
+		$row_actions = apply_filters( 'eaccounting_account_row_actions', $row_actions, $account );
+
+		return $this->row_actions( $row_actions );
+	}
+
+	/**
 	 * Renders the message to be displayed when there are no accounts.
 	 *
-	 * @since  1.7.2
+	 * @since  1.0.2
 	 */
 	function no_items() {
 		_e( 'No accounts found.', 'wp-ever-accounting' );
@@ -312,9 +286,9 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-				'activate'   => __( 'Activate', 'wp-ever-accounting' ),
-				'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
-				'delete'     => __( 'Delete', 'wp-ever-accounting' )
+			'activate'   => __( 'Activate', 'wp-ever-accounting' ),
+			'deactivate' => __( 'Deactivate', 'wp-ever-accounting' ),
+			'delete'     => __( 'Delete', 'wp-ever-accounting' )
 		);
 
 		/**
@@ -379,12 +353,12 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 
 		if ( ! empty( $account ) ) {
 			wp_safe_redirect( remove_query_arg( [
-					'account_id',
-					'action',
-					'_wpnonce',
-					'_wp_http_referer',
-					'action2',
-					'paged'
+				'account_id',
+				'action',
+				'_wpnonce',
+				'_wp_http_referer',
+				'action2',
+				'paged'
 			] ) );
 			exit();
 		}
@@ -401,13 +375,13 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 		$search = isset( $_GET['s'] ) ? $_GET['s'] : '';
 
 		$this->active_count = eaccounting()->accounts->get_accounts( array_merge( $this->query_args, array(
-				'status' => 'active',
-				'search' => $search
+			'status' => 'active',
+			'search' => $search
 		) ) )->count();
 
 		$this->inactive_count = eaccounting()->accounts->get_accounts( array_merge( $this->query_args, array(
-				'status' => 'inactive',
-				'search' => $search
+			'status' => 'inactive',
+			'search' => $search
 		) ) )->count();
 
 		$this->total_count = $this->active_count + $this->inactive_count;
@@ -416,8 +390,8 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	/**
 	 * Retrieve all the data for all the accounts
 	 *
-	 * @return array $accounts Array of all the data for the Affiliates
-	 * @since 1.0
+	 * @return array $accounts Array of all the data for the accounts
+	 * @since 1.0.2
 	 */
 	public function accounts_data() {
 		$page    = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
@@ -429,24 +403,14 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 		$per_page = $this->get_items_per_page( 'eaccounting_edit_accounts_per_page', $this->per_page );
 
 		$args = wp_parse_args( $this->query_args, array(
-				'number'  => $per_page,
-				'offset'  => $per_page * ( $page - 1 ),
-				'status'  => $status,
-				'search'  => $search,
-				'orderby' => eaccounting_clean( $orderby ),
-				'order'   => eaccounting_clean( $order )
+			'number'  => $per_page,
+			'offset'  => $per_page * ( $page - 1 ),
+			'status'  => $status,
+			'search'  => $search,
+			'orderby' => eaccounting_clean( $orderby ),
+			'order'   => eaccounting_clean( $order )
 		) );
 
-		/**
-		 * Filters the arguments used to retrieve accounts for the Affiliates list table.
-		 *
-		 * @param array $args Arguments passed to get_accounts() to retrieve
-		 *                                      the affiliate records for display.
-		 * @param \AffWP_Affiliates_Table $this Affiliates list table instance.
-		 *
-		 * @since 2.4.4
-		 *
-		 */
 		$args = apply_filters( 'eaccounting_account_table_get_accounts', $args, $this );
 
 		$accounts = eaccounting()->accounts->get_accounts( $args )->get( OBJECT, 'eaccounting_get_account' );
@@ -460,13 +424,7 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 	 * Setup the final data for the table
 	 *
 	 * @return void
-	 * @uses AffWP_Affiliates_Table::get_columns()
-	 * @uses AffWP_Affiliates_Table::get_sortable_columns()
-	 * @uses AffWP_Affiliates_Table::process_bulk_action()
-	 * @uses AffWP_Affiliates_Table::affiliate_data()
-	 * @uses WP_List_Table::get_pagenum()
-	 * @uses WP_List_Table::set_pagination_args()
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
 		$per_page = $this->get_items_per_page( 'eaccounting_edit_accounts_per_page', $this->per_page );
@@ -504,9 +462,9 @@ class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
 		$this->items = $data;
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page )
+			'total_items' => $total_items,
+			'per_page'    => $per_page,
+			'total_pages' => ceil( $total_items / $per_page )
 		) );
 	}
 

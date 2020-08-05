@@ -321,8 +321,9 @@ function eaccounting_array_merge_recursive_numeric() {
  */
 function eaccounting_implode_html_attributes( $raw_attributes ) {
 	$attributes = array();
+	$raw_attributes = array_filter($raw_attributes);
 	foreach ( $raw_attributes as $name => $value ) {
-		$attributes[] = esc_attr( $name ) . '="' . esc_attr( $value ) . '"';
+		$attributes[] = esc_attr( $name ) . '="' . esc_attr( trim($value) ) . '"';
 	}
 
 	return implode( ' ', $attributes );

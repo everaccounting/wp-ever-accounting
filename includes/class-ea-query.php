@@ -838,6 +838,7 @@ class EAccounting_Query {
 			$results = $wpdb->get_results( $query, $output );
 			wp_cache_add( $cache_key, $results, $this->id, HOUR_IN_SECONDS );
 			if ( $row_map ) {
+
 				$results = array_map( function ( $row ) use ( &$row_map ) {
 					return call_user_func_array( $row_map, [ $row ] );
 				}, $results );
@@ -886,7 +887,6 @@ class EAccounting_Query {
 		if ( false === $results ) {
 			$query = apply_filters( 'wp_query_builder_one_query', $query );
 			$query = apply_filters( 'wp_query_builder_one_query_' . $this->id, $query );
-			var_dump('loaded from DB');
 			$results = $wpdb->get_row( $query, $output );
 
 			wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );

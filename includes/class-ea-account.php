@@ -87,7 +87,38 @@ class EAccounting_Account extends EAccounting_Object {
 	 * @since 1.0.2
 	 */
 	public function validate_props() {
-		// TODO: Implement validate_props() method.
+		global $wpdb;
+
+		if ( ! $this->get_date_created( 'edit' ) ) {
+			$this->set_date_created( time() );
+		}
+
+		if ( ! $this->get_company_id( 'edit' ) ) {
+			$this->set_company_id( 1 );
+		}
+
+		if ( ! $this->get_prop( 'creator_id' ) ) {
+			$this->set_prop( 'creator_id', eaccounting_get_current_user_id() );
+		}
+
+		if ( empty( $this->get_name( 'edit' ) ) ) {
+			throw new Exception( __( 'Account Name is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_number( 'edit' ) ) ) {
+			throw new Exception( __( 'Account Number is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_currency_code( 'edit' ) ) ) {
+			throw new Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts where number=%s", $this->get_number( 'edit' ) ) ) ) {
+			if ( ! empty( $existing_id ) && absint( $existing_id ) !== $this->get_id() ) {
+				throw new Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+			}
+		}
+
 	}
 
 	/**
@@ -120,33 +151,86 @@ class EAccounting_Account extends EAccounting_Object {
 	}
 
 	/**
-	 * Method to create a new record of an EverAccounting object.
+	 * Create a new account in the database.
 	 *
 	 * @throws Exception
-	 * @since 1.0.2
+	 * @since 1.0.0
 	 */
 	public function create() {
-		// TODO: Implement create() method.
+		$this->validate_props();
+		global $wpdb;
+		$account_data = array(
+			'name'            => $this->get_name( 'edit' ),
+			'number'          => $this->get_number( 'edit' ),
+			'opening_balance' => $this->get_opening_balance( 'edit' ),
+			'currency_code'   => $this->get_currency_code( 'edit' ),
+			'bank_name'       => $this->get_bank_name( 'edit' ),
+			'bank_phone'      => $this->get_bank_phone( 'edit' ),
+			'bank_address'    => $this->get_bank_address( 'edit' ),
+			'enabled'         => $this->get_enabled( 'edit' ),
+			'company_id'      => $this->get_company_id( 'edit' ),
+			'creator_id'      => $this->get_prop( 'creator_id' ),
+			'date_created'    => $this->get_date_created( 'edit' )->format( 'Y-m-d H:i:s' ),
+		);
+
+		do_action( 'eaccounting_pre_insert_account', $this->get_id(), $this );
+
+		$data = wp_unslash( apply_filters( 'eaccounting_new_account_data', $account_data ) );
+		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_accounts', $data ) ) {
+			throw new Exception( $wpdb->last_error );
+		}
+
+		do_action( 'eaccounting_insert_account', $this->get_id(), $this );
+
+		$this->set_id( $wpdb->insert_id );
+		$this->apply_changes();
+		$this->set_object_read( true );
 	}
 
 	/**
-	 * Updates a record in the database.
+	 * Update a account in the database.
 	 *
 	 * @throws Exception
-	 * @since 1.0.2
+	 * @since 1.0.0
+	 *
 	 */
 	public function update() {
-		// TODO: Implement update() method.
+		global $wpdb;
+
+		$this->validate_props();
+		$changes = $this->get_changes();
+		if ( ! empty( $changes ) ) {
+			do_action( 'eaccounting_pre_update_account', $this->get_id(), $changes );
+
+			try {
+				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
+			} catch ( Exception $e ) {
+				throw new Exception( __( 'Could not update account.', 'wp-ever-accounting' ) );
+			}
+
+			do_action( 'eaccounting_update_account', $this->get_id(), $changes, $this->data );
+
+			$this->apply_changes();
+			$this->set_object_read( true );
+			wp_cache_delete( 'transaction-item-' . $this->get_id(), 'transactions' );
+		}
 	}
 
 	/**
-	 * Deletes a record from the database.
+	 * Remove an account from the database.
 	 *
-	 * @return bool result
-	 * @since 1.0.2
+	 * @param array $args
+	 *
+	 * @since 1.0.
 	 */
-	public function delete() {
-		// TODO: Implement delete() method.
+	public function delete( $args = array() ) {
+		if ( $this->get_id()) {
+			global $wpdb;
+			do_action( 'eaccounting_pre_delete_account', $this->get_id() );
+			$wpdb->delete( $wpdb->prefix . 'ea_accounts', array( 'id' => $this->get_id() ) );
+			do_action( 'eaccounting_delete_account', $this->get_id() );
+			$this->set_id( 0 );
+		}
 	}
 
 
@@ -270,8 +354,7 @@ class EAccounting_Account extends EAccounting_Object {
 	 * @since 1.0.2
 	 */
 	public function set_number( $number ) {
-		$this->error('invalid', 'Custom Error message');
-//		$this->set_prop( 'number', $number );
+		$this->set_prop( 'number', $number );
 	}
 
 	/**

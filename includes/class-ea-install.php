@@ -69,15 +69,17 @@ class EAccounting_Install {
 			`name` varchar(100) NOT NULL,
 			`code` varchar(3) NOT NULL,
 			`rate` double(15,8) NOT NULL,
+			`precision` varchar(2) DEFAULT NULL,
+  			`symbol` varchar(5) DEFAULT NULL,
+  			`position` ENUM ('before', 'after') DEFAULT 'before',
+  			`decimal_separator` varchar(1) DEFAULT '.',
+ 			`thousand_separator` varchar(1) DEFAULT ',',
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
-			`creator_id` INT(11) DEFAULT NULL,
-			`company_id` INT(11) DEFAULT 1,
 	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `rate` (`rate`),
 		    KEY `code` (`code`),
-		    KEY `company_id` (`company_id`),
-		    UNIQUE KEY (`name`, `code`, `company_id`)
+		    UNIQUE KEY (`name`, `code`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 

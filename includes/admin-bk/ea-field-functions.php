@@ -58,21 +58,21 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
  *
  * @since 1.0.2
  */
-function eaccounting_wp_text_input( $field ) {
-	$field = wp_parse_args(
-		$field, array(
-			'class'         => 'short',
-			'style'         => '',
-			'wrapper_class' => '',
-			'default'       => '',
-			'value'         => '',
-			'name'          => '',
-			'placeholder'   => '',
-			'type'          => 'text',
-			'data_type'     => '',
-			'desc_tip'      => false,
-			'attributes'    => array(),
-		)
+function eaccounting_text_input( $field = array() ) {
+	$field = (array) wp_parse_args(
+			$field, array(
+					'class'         => 'short',
+					'style'         => '',
+					'wrapper_class' => '',
+					'default'       => '',
+					'value'         => '',
+					'name'          => '',
+					'placeholder'   => '',
+					'type'          => 'text',
+					'data_type'     => '',
+					'tooltip'       => false,
+					'attributes'    => array(),
+			)
 	);
 
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
@@ -97,34 +97,33 @@ function eaccounting_wp_text_input( $field ) {
 	// Custom attribute handling
 	$attributes = eaccounting_implode_html_attributes( $field['attributes'] );
 
-	echo sprintf( '<p class="ea-form-field %s_field %s"><label for="%s>%s"',
-		esc_attr( $field['id'] ),
-		esc_attr( $field['wrapper_class'] ),
-		esc_attr( $field['id'] ),
-		wp_kses_post( $field['label'] )
+	echo sprintf( '<div class="ea-form-field %s_field %s"><label for="%s">%s</label>',
+			esc_attr( $field['id'] ),
+			esc_attr( $field['wrapper_class'] ),
+			esc_attr( $field['id'] ),
+			wp_kses_post( $field['label'] )
 	);
 
-	if ( ! empty( $field['description'] ) && false !== $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false !== $field['tooltip'] ) {
 		echo eaccounting_help_tip( $field['description'] );
 	}
 
 	echo sprintf( '<input type="%s" class="%s" style="%s" name="%s" id="%s" value="%s" placeholder="%s" %s/>',
-		esc_attr( $field['type'] ),
-		esc_attr( $field['class'] ),
-		esc_attr( $field['style'] ),
-		esc_attr( $field['name'] ),
-		esc_attr( $field['id'] ),
-		esc_attr( $field['value'] ),
-		esc_attr( $field['placeholder'] ),
-		$attributes
+			esc_attr( $field['type'] ),
+			esc_attr( $field['class'] ),
+			esc_attr( $field['style'] ),
+			esc_attr( $field['name'] ),
+			esc_attr( $field['id'] ),
+			esc_attr( $field['value'] ),
+			esc_attr( $field['placeholder'] ),
+			$attributes
 	);
 
-
-	if ( ! empty( $field['description'] ) && false === $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false === $field['tooltip'] ) {
 		echo sprintf( '<span class="description">%s</span>', wp_kses_post( $field['description'] ) );
 	}
 
-	echo '</p>';
+	echo '</div>';
 }
 
 
@@ -133,7 +132,7 @@ function eaccounting_wp_text_input( $field ) {
  *
  * @param array $field
  */
-function eaccounting_wp_hidden_input( $field ) {
+function eaccounting_hidden_input( $field ) {
 	$field['value'] = isset( $field['value'] ) ? $field['value'] : '';
 	$field['class'] = isset( $field['class'] ) ? $field['class'] : '';
 
@@ -145,13 +144,13 @@ function eaccounting_wp_hidden_input( $field ) {
  *
  * @param array $field
  */
-function eaccounting_wp_textarea_input( $field ) {
+function eaccounting_textarea_input( $field ) {
 	$field['placeholder']   = isset( $field['placeholder'] ) ? $field['placeholder'] : '';
 	$field['class']         = isset( $field['class'] ) ? $field['class'] : 'short';
 	$field['style']         = isset( $field['style'] ) ? $field['style'] : '';
 	$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
 	$field['value']         = isset( $field['value'] ) ? $field['value'] : '';
-	$field['desc_tip']      = isset( $field['desc_tip'] ) ? $field['desc_tip'] : false;
+	$field['tooltip']       = isset( $field['tooltip'] ) ? $field['tooltip'] : false;
 	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
 	$field['rows']          = isset( $field['rows'] ) ? $field['rows'] : 2;
 	$field['cols']          = isset( $field['cols'] ) ? $field['cols'] : 20;
@@ -169,13 +168,13 @@ function eaccounting_wp_textarea_input( $field ) {
 	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
 		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
 
-	if ( ! empty( $field['description'] ) && false !== $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false !== $field['tooltip'] ) {
 		echo wc_help_tip( $field['description'] );
 	}
 
 	echo '<textarea class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '"  name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" placeholder="' . esc_attr( $field['placeholder'] ) . '" rows="' . esc_attr( $field['rows'] ) . '" cols="' . esc_attr( $field['cols'] ) . '" ' . implode( ' ', $custom_attributes ) . '>' . esc_textarea( $field['value'] ) . '</textarea> ';
 
-	if ( ! empty( $field['description'] ) && false === $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false === $field['tooltip'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
@@ -195,7 +194,7 @@ function eaccounting_wp_checkbox( $field ) {
 	$field['value']         = isset( $field['value'] ) ? $field['value'] : '';
 	$field['cbvalue']       = isset( $field['cbvalue'] ) ? $field['cbvalue'] : 'yes';
 	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-	$field['desc_tip']      = isset( $field['desc_tip'] ) ? $field['desc_tip'] : false;
+	$field['tooltip']       = isset( $field['tooltip'] ) ? $field['tooltip'] : false;
 
 	// Custom attribute handling
 	$custom_attributes = array();
@@ -210,13 +209,13 @@ function eaccounting_wp_checkbox( $field ) {
 	echo '<p class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '">
 		<label for="' . esc_attr( $field['id'] ) . '">' . wp_kses_post( $field['label'] ) . '</label>';
 
-	if ( ! empty( $field['description'] ) && false !== $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false !== $field['tooltip'] ) {
 		echo wc_help_tip( $field['description'] );
 	}
 
 	echo '<input type="checkbox" class="' . esc_attr( $field['class'] ) . '" style="' . esc_attr( $field['style'] ) . '" name="' . esc_attr( $field['name'] ) . '" id="' . esc_attr( $field['id'] ) . '" value="' . esc_attr( $field['cbvalue'] ) . '" ' . checked( $field['value'], $field['cbvalue'], false ) . '  ' . implode( ' ', $custom_attributes ) . '/> ';
 
-	if ( ! empty( $field['description'] ) && false === $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false === $field['tooltip'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 
@@ -231,23 +230,23 @@ function eaccounting_wp_checkbox( $field ) {
 function eaccounting_wp_select( $field ) {
 
 	$field = wp_parse_args(
-		$field, array(
-			'class'             => 'select short',
-			'style'             => '',
-			'wrapper_class'     => '',
-			'value'             => '',
-			'name'              => $field['id'],
-			'desc_tip'          => false,
-			'custom_attributes' => array(),
-		)
+			$field, array(
+					'class'             => 'select short',
+					'style'             => '',
+					'wrapper_class'     => '',
+					'value'             => '',
+					'name'              => $field['id'],
+					'tooltip'           => false,
+					'custom_attributes' => array(),
+			)
 	);
 
 	$wrapper_attributes = array(
-		'class' => $field['wrapper_class'] . " form-field {$field['id']}_field",
+			'class' => $field['wrapper_class'] . " form-field {$field['id']}_field",
 	);
 
 	$label_attributes = array(
-		'for' => $field['id'],
+			'for' => $field['id'],
 	);
 
 	$field_attributes          = (array) $field['custom_attributes'];
@@ -256,8 +255,8 @@ function eaccounting_wp_select( $field ) {
 	$field_attributes['name']  = $field['name'];
 	$field_attributes['class'] = $field['class'];
 
-	$tooltip     = ! empty( $field['description'] ) && false !== $field['desc_tip'] ? $field['description'] : '';
-	$description = ! empty( $field['description'] ) && false === $field['desc_tip'] ? $field['description'] : '';
+	$tooltip     = ! empty( $field['description'] ) && false !== $field['tooltip'] ? $field['description'] : '';
+	$description = ! empty( $field['description'] ) && false === $field['tooltip'] ? $field['description'] : '';
 	?>
 	<p <?php echo wc_implode_html_attributes( $wrapper_attributes ); // WPCS: XSS ok. ?>>
 		<label <?php echo wc_implode_html_attributes( $label_attributes ); // WPCS: XSS ok. ?>><?php echo wp_kses_post( $field['label'] ); ?></label>
@@ -289,11 +288,11 @@ function eaccounting_wp_radio( $field ) {
 	$field['wrapper_class'] = isset( $field['wrapper_class'] ) ? $field['wrapper_class'] : '';
 	$field['value']         = isset( $field['value'] ) ? $field['value'] : '';
 	$field['name']          = isset( $field['name'] ) ? $field['name'] : $field['id'];
-	$field['desc_tip']      = isset( $field['desc_tip'] ) ? $field['desc_tip'] : false;
+	$field['tooltip']       = isset( $field['tooltip'] ) ? $field['tooltip'] : false;
 
 	echo '<fieldset class="form-field ' . esc_attr( $field['id'] ) . '_field ' . esc_attr( $field['wrapper_class'] ) . '"><legend>' . wp_kses_post( $field['label'] ) . '</legend>';
 
-	if ( ! empty( $field['description'] ) && false !== $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false !== $field['tooltip'] ) {
 		echo wc_help_tip( $field['description'] );
 	}
 
@@ -313,7 +312,7 @@ function eaccounting_wp_radio( $field ) {
 	}
 	echo '</ul>';
 
-	if ( ! empty( $field['description'] ) && false === $field['desc_tip'] ) {
+	if ( ! empty( $field['description'] ) && false === $field['tooltip'] ) {
 		echo '<span class="description">' . wp_kses_post( $field['description'] ) . '</span>';
 	}
 

@@ -187,6 +187,8 @@
 	height: 100%;
 	text-align: center;
 	content: $glyph;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @mixin icon_dashicons( $glyph: '\f333' ) {
@@ -196,7 +198,6 @@
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
-	-webkit-font-smoothing: antialiased;
 	margin: 0;
 	text-indent: 0;
 	position: absolute;
@@ -206,6 +207,8 @@
 	height: 100%;
 	text-align: center;
 	content: $glyph;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @mixin iconbefore( $glyph: '\e001' ) {
@@ -215,10 +218,10 @@
 	font-variant: normal;
 	text-transform: none;
 	line-height: 1;
-	-webkit-font-smoothing: antialiased;
-	margin-right: 0.618em;
 	content: $glyph;
 	text-decoration: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 @mixin iconbeforedashicons( $glyph: '\f333' ) {

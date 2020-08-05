@@ -43,17 +43,6 @@ abstract class EAccounting_Admin_List_Table extends \WP_List_Table {
 	public $screen;
 
 	/**
-	 * Total item count for the current query
-	 *
-	 * Used for the pagination controls with non-status filtered results.
-	 *
-	 * @access public
-	 * @since  2.1
-	 * @var    int
-	 */
-	public $current_count;
-
-	/**
 	 * Sets up the list table instance.
 	 *
 	 * @access public
@@ -94,70 +83,103 @@ abstract class EAccounting_Admin_List_Table extends \WP_List_Table {
 	 *
 	 */
 	public function __construct( $args = array() ) {
+		$args = wp_parse_args( $args, array(
+				'display_args' => array()
+		) );
+
 		$this->screen = get_current_screen();
 
 		$display_args = array(
-			'pre_table_callback'   => '',
-			'hide_table_nav'       => false,
-			'hide_bulk_options'    => false,
-			'hide_pagination'      => false,
-			'columns_to_hide'      => array(),
-			'hide_column_controls' => false,
+				'pre_table_callback'   => '',
+				'hide_table_nav'       => false,
+				'hide_bulk_options'    => false,
+				'hide_pagination'      => false,
+				'columns_to_hide'      => array(),
+				'hide_column_controls' => false,
 		);
 
-		if ( ! empty( $args['query_args'] ) ) {
-			$this->query_args = $args['query_args'];
+		$this->display_args = wp_parse_args( $args['display_args'], $display_args );
 
-			unset( $args['query_args'] );
-		}
+//		if ( ! empty( $args['query_args'] ) ) {
+//			$this->query_args = $args['query_args'];
+//
+//			unset( $args['query_args'] );
+//		}
+//
+//		if ( ! empty( $args['display_args'] ) ) {
+//			$this->display_args = wp_parse_args( $args['display_args'], $display_args );
+//
+//			unset( $args['display_args'] );
+//		} else {
+//			$this->display_args = $display_args;
+//		}
+//
+//		$args = (array) wp_parse_args( $args, array(
+//				'ajax' => false,
+//		) );
 
-		if ( ! empty( $args['display_args'] ) ) {
-			$this->display_args = wp_parse_args( $args['display_args'], $display_args );
-
-			unset( $args['display_args'] );
-		} else {
-			$this->display_args = $display_args;
-		}
-
-		$args = (array) wp_parse_args( $args, array(
-			'ajax' => false,
-		) );
 
 		parent::__construct( $args );
 	}
 
 	/**
-	 * Builds and retrieves the HTML markup for a row action link.
+	 * Show the search field
 	 *
-	 * @access public
 	 *
-	 * @param string $label Row action link label.
-	 * @param array $query_args Query arguments.
-	 * @param array $args {
-	 *     Optional. Additional arguments for building a row action link.
+	 * @param string $text Label for the search box
+	 * @param string $input_id ID of the search box
 	 *
-	 * @type false|string $nonce Whether to nonce the URL. Accepts false (disabled) or a nonce name
-	 *                                  to use. Default false.
-	 * @type string $class Class attribute value for the link.
-	 * @type string $base_uri Base URI to add query args to. Default is the current screen.
-	 *
-	 * }
-	 * @return string Row action link markup.
+	 * @return void
+	 * @since 1.0.2
 	 *
 	 */
-	public function get_row_action_link( $label, $query_args, $args = array() ) {
-
-		$base_uri = empty( $args['base_uri'] ) ? false : $args['base_uri'];
-
-		if ( empty( $args['nonce'] ) ) {
-			$url = esc_url( add_query_arg( $query_args, $base_uri ) );
-		} else {
-			$url = wp_nonce_url( add_query_arg( $query_args, $base_uri ), $args['nonce'] );
+	public function search_box( $text, $input_id ) {
+		if ( empty( $_REQUEST['s'] ) && ! $this->has_items() ) {
+			return;
 		}
 
-		$class = empty( $args['class'] ) ? '' : sprintf( ' class="%s"', esc_attr( $args['class'] ) );
+		$input_id = $input_id . '-search-input';
 
-		return sprintf( '<a href="%1$s"%2$s>%3$s</a>', $url, $class, esc_html( $label ) );
+		if ( ! empty( $_REQUEST['orderby'] ) ) {
+			echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
+		}
+		if ( ! empty( $_REQUEST['order'] ) ) {
+			echo '<input type="hidden" name="order" value="' . esc_attr( $_REQUEST['order'] ) . '" />';
+		}
+		?>
+		<p class="search-box">
+			<label class="screen-reader-text" for="<?php echo $input_id ?>"><?php echo $text; ?>:</label>
+			<input type="search" id="<?php echo $input_id ?>" name="s" value="<?php _admin_search_query(); ?>"/>
+			<?php submit_button( $text, 'button', false, false, array( 'ID' => 'search-submit' ) ); ?>
+		</p>
+		<?php
+	}
+
+	/**
+	 * Show blank slate.
+	 *
+	 * @param string $which String which tablenav is being shown.
+	 */
+	public function maybe_render_blank_state( $which ) {
+		if ( 'bottom' === $which ) {
+			if ( 0 < $this->total_count ) {
+				return;
+			}
+			if ( isset( $_GET['action'] ) ) {
+				return;
+			}
+
+			$this->render_blank_state();
+
+			echo '<style type="text/css">.wp-list-table, .tablenav.top, .tablenav.bottom .actions, .wrap .subsubsub  { display: none; } .tablenav.bottom { height: auto; } </style>';
+		}
+	}
+
+	/**
+	 * Render blank state. Extend to add content.
+	 */
+	protected function render_blank_state() {
+
 	}
 
 	/**
@@ -177,12 +199,14 @@ abstract class EAccounting_Admin_List_Table extends \WP_List_Table {
 		}
 
 		if ( ! empty( $this->display_args['pre_table_callback'] )
-		     && is_callable( $this->display_args['pre_table_callback'] )
-		     && 'top' === $which
+			 && is_callable( $this->display_args['pre_table_callback'] )
+			 && 'top' === $which
 		) {
 
 			echo call_user_func( $this->display_args['pre_table_callback'] );
 		}
+
+		$this->maybe_render_blank_state( $which );
 
 		if ( true !== $this->display_args['hide_table_nav'] ) : ?>
 			<div class="tablenav <?php echo esc_attr( $which ); ?>">
@@ -205,55 +229,47 @@ abstract class EAccounting_Admin_List_Table extends \WP_List_Table {
 	}
 
 	/**
-	 * Prepares columns for display.
+	 * Generates the required HTML for a list of row action links.
 	 *
-	 * Applies display arguments passed in the constructor to the list of columns.
+	 * @param array[] $actions An array of action links.
+	 * @param bool $always_visible Whether the actions should be always visible.
 	 *
-	 * @access protected
-	 *
-	 * @param array $columns List of columns.
-	 *
-	 * @return array (Maybe) filtered list of columns.
-	 * @since  1.0.2
+	 * @return string The HTML for the row actions.
+	 * @since 3.1.0
 	 *
 	 */
-	public function prepare_columns( $columns ) {
-		if ( ! empty( $this->display_args['columns_to_hide'] ) ) {
-			$columns_to_hide = $this->display_args['columns_to_hide'];
+	protected function row_actions( $actions, $always_visible = true ) {
+		$action_count = count( $actions );
+		if ( ! $action_count ) {
+			return '';
+		}
 
-			foreach ( $columns_to_hide as $column ) {
-				if ( array_key_exists( $column, $columns ) ) {
-					unset( $columns[ $column ] );
-				}
+		$out = '<div class="ea-dropdown"><a href="#" role="button" data-toggle="dropdown" class="ea-dropdown-button"><i class="ea-icon-dropdown"></i></a><ul class="ea-dropdown-menu">';
+
+		foreach ( $actions as $action => $args ) {
+			$args       = wp_parse_args( $args, array(
+					'base_uri'   => '',
+					'query_args' => '',
+					'nonce'      => '',
+					'label'      => ''
+			) );
+			$base_uri   = empty( $args['base_uri'] ) ? false : $args['base_uri'];
+			$query_args = empty( $args['query_args'] ) ? array() : $args['query_args'];
+			$nonce      = empty( $args['nonce'] ) ? false : $args['nonce'];
+			$label      = empty( $args['label'] ) ? '' : $args['label'];
+			$query_args = array_merge( $query_args, array( 'action' => $action ) );
+
+			if ( ! $nonce ) {
+				$url = esc_url( add_query_arg( $query_args, $base_uri ) );
+			} else {
+				$url = wp_nonce_url( add_query_arg( $query_args, $base_uri ), $nonce );
 			}
+
+			$out .= sprintf( '<li><a href="%s" class="row-action %s">%s</a>', $url, $action, $label );
 		}
 
-		return $columns;
-	}
+		$out .= '</ul></div>';
 
-	/**
-	 * Retrieves a list of all, hidden,sortable, and primary columns, with filters applied.
-	 *
-	 * Also sets up column show/hide controls.
-	 *
-	 * @access protected
-	 * @return array Column headers.
-	 * @since  1.0.2
-	 *
-	 */
-	protected function get_column_info() {
-		if ( true === $this->display_args['hide_column_controls'] ) {
-			$columns = $this->get_columns();
-
-			$hidden = array();
-
-			$sortable = $this->get_sortable_columns();
-
-			$this->_column_headers = array( $columns, $hidden, $sortable, $this->get_primary_column_name() );
-		} else {
-			$this->_column_headers = parent::get_column_info();
-		}
-
-		return $this->_column_headers;
+		return $out;
 	}
 }

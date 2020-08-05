@@ -2,3 +2,14 @@
  * _fonts.scss
  * Custom EverAccounting fonts.
  */
+@font-face {
+  font-family: 'eaccounting';
+  src: url('../fonts/eaccounting.eot?88999260');
+  src: url('../fonts/eaccounting.eot?88999260#iefix') format('embedded-opentype'),
+  url('../fonts/eaccounting.woff2?88999260') format('woff2'),
+  url('../fonts/eaccounting.woff?88999260') format('woff'),
+  url('../fonts/eaccounting.ttf?88999260') format('truetype'),
+  url('../fonts/eaccounting.svg?88999260#eaccounting') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

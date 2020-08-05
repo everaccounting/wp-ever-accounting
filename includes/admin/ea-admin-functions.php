@@ -153,7 +153,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array() 
 
 	foreach ( $tabs as $tab_id => $tab_name ) {
 		$args    = wp_parse_args( $query_args, array( 'tab' => $tab_id ) );
-		$tab_url = eaccounting_admin_url($args);
+		$tab_url = eaccounting_admin_url( $args );
 
 		printf( '<a href="%1$s" alt="%2$s" class="%3$s">%4$s</a>',
 			esc_url( $tab_url ),
@@ -187,7 +187,7 @@ function eaccounting_get_current_tab() {
  * @since  1.0.2
  */
 function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
-	if ( 'eaccounting_edit_accounts_per_page' === $option ) {
+	if ( in_array( $option, array( 'eaccounting_edit_accounts_per_page' ), true ) ) {
 		return $value;
 	}
 
@@ -196,3 +196,11 @@ function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 }
 
 add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3 );
+
+
+function eaccounting_get_js_template( $slug ) {
+	$file = EACCOUNTING_ABSPATH . '/includes/admin/js-templates/' . $slug . '.php';
+	if ( file_exists( $file ) ) {
+		return include $file;
+	}
+}

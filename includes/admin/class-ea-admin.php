@@ -21,7 +21,9 @@ class EAccounting_Admin {
 	public function __construct() {
 		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
+		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
+		add_action( 'admin_footer', array($this, 'load_js_templates') );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 	}
 
@@ -35,6 +37,13 @@ class EAccounting_Admin {
 		ob_start();
 	}
 
+	public function admin_body_class( $classes ) {
+		if ( eaccounting_is_admin_page() ) {
+			$classes .= ' eaccounting ';
+		}
+
+		return $classes;
+	}
 
 	/**
 	 * Include any classes we need within admin.
@@ -44,10 +53,10 @@ class EAccounting_Admin {
 	 */
 	public function includes() {
 		include_once __DIR__ . '/ea-admin-functions.php';
-		include_once __DIR__ . '/class-ea-admin-menus.php';
+//		include_once __DIR__ . '/ea-admin-form-functions.php';
+		include_once __DIR__ . '/class-ea-admin-assets.php';
 		include_once __DIR__ . '/banking/banking.php';
-		include_once __DIR__ . '/accounts/accounts.php';
-		//		include_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-admin-list-table.php';
+		include_once __DIR__ . '/class-ea-admin-menus.php';
 	}
 
 	/**
@@ -89,6 +98,10 @@ class EAccounting_Admin {
 		}
 
 		return $footer_text;
+	}
+
+	public function load_js_templates(){
+		include dirname( __FILE__ ) . '/js-templates/modal-add-account.php';
 	}
 
 }

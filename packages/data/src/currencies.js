@@ -22,8 +22,8 @@ export const {
 		subunit: 100,
 		symbol: '$',
 		position: 'before',
-		decimalSeparator: '.',
-		thousandSeparator: ',',
+		decimal_separator: '.',
+		thousand_separator: ',',
 	},
 } = data;
 
@@ -38,7 +38,7 @@ export const { global_currencies: GLOBAL_CURRENCIES = [] } = data;
  * Returns the specific currency configs from server
  *
  * @param {string} code
- * @return {*|{symbol: string, thousandSeparator: string, code: string, decimalSeparator: string, precision: number, name: string, subunit: number, position: string, currency_code: number}}
+ * @return {*|{symbol: string, thousand_separator: string, code: string, decimal_separator: string, precision: number, name: string, subunit: number, position: string, currency_code: number}}
  */
 export const getCurrencyConfig = code => {
 	return GLOBAL_CURRENCIES[code] || CURRENCY;

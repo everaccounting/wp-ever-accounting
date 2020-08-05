@@ -513,7 +513,14 @@ abstract class EAccounting_Object {
 	 */
 	public function populate( $data ) {
 		$errors = $this->set_props( $data );
+
 		if ( is_wp_error( $errors ) ) {
+			$class = get_called_class();
+			eaccounting_logger()->error(
+				sprintf( __( 'Failed populating account because %s', 'wp-ever-accounting' ), $errors->get_error_message()
+				),
+				array( 'id' => $this->get_id(), 'context' => $class . __METHOD__ )
+			);
 			$this->error( $errors->get_error_code(), $errors->get_error_message() );
 		}
 

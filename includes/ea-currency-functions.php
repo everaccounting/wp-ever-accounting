@@ -25,14 +25,22 @@ function eaccounting_get_currency( $currency ) {
 	}
 
 	try {
-		$currency= new EAccounting_Currency( $currency );
-		if ( ! $currency->exists() ) {
-			throw new Exception( __( 'Invalid currency.', 'wp-ever-accounting' ) );
+		if ( $currency instanceof EAccounting_Currency ) {
+			$_currency = $currency;
+		} elseif ( is_object( $currency ) && ! empty( $currency->id ) ) {
+			$_currency = new EAccounting_Currency( null );
+			$_currency->populate( $currency );
+		} else {
+			$_currency = new EAccounting_Currency( absint( $currency ) );
 		}
 
-		return $currency;
+		if ( ! $_currency->exists() ) {
+			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+		}
+
+		return $_currency;
 	} catch ( Exception $exception ) {
-		return false;
+		return null;
 	}
 }
 
@@ -52,8 +60,8 @@ function eaccounting_insert_currency( $args ) {
 		$default_args = array(
 			'id' => null,
 		);
-		$args    = (array) wp_parse_args( $args, $default_args );
-		$currency= new EAccounting_Currency( $args['id'] );
+		$args         = (array) wp_parse_args( $args, $default_args );
+		$currency     = new EAccounting_Currency( $args['id'] );
 		$currency->set_props( $args );
 		$currency->save();
 
@@ -75,7 +83,7 @@ function eaccounting_insert_currency( $args ) {
  */
 function eaccounting_delete_currency( $currency_id ) {
 	try {
-		$currency= new EAccounting_Currency( $currency_id );
+		$currency = new EAccounting_Currency( $currency_id );
 		if ( ! $currency->exists() ) {
 			throw new Exception( __( 'Invalid currency.', 'wp-ever-accounting' ) );
 		}

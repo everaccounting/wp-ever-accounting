@@ -37,6 +37,7 @@ class EAccounting_Capabilities {
 		}
 
 		if ( is_object( $wp_roles ) ) {
+			$wp_roles->add_cap( 'administrator', 'manage_eaccounting' );
 			$wp_roles->add_cap( 'administrator', 'view_eaccounting_reports' );
 			$wp_roles->add_cap( 'administrator', 'manage_eaccounting' );
 			$wp_roles->add_cap( 'administrator', 'manage_purchases' );

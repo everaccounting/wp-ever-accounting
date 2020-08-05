@@ -1,0 +1,138 @@
+.ea-form-field {
+  position: relative;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  margin-top: 0;
+
+  label, .label {
+	display: block;
+	max-width: 100%;
+	margin-bottom: 5px;
+	font-weight: 700;
+  }
+
+  &.required {
+	label::after {
+	  content: " *";
+	  color: red;
+	  font-weight: 700;
+	}
+  }
+
+  .ea-input-control {
+	border: 1px solid #d2d6de;
+	border-radius: 0;
+	transition: border 0.3s;
+	min-height: 32px;
+	display: block;
+	width: 100%;
+	max-width: none;
+
+
+	&:focus {
+	  box-shadow: none !important;
+	  outline: 0 !important;
+	  border: 1px solid #007cba !important;
+	}
+  }
+
+  .description, .desc {
+	font-style: italic;
+	color: #666;
+	margin-bottom: 0;
+  }
+
+  select,
+  textarea,
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="url"],
+  input[type="text"],
+  input[type="number"] {
+	&.error{
+	  border-color: red !important;
+	}
+  }
+
+  textarea{
+	min-height: 100px !important;
+  }
+}
+
+.ea-toggle {
+  width: 60px;
+  position: relative;
+  height: 1.5rem;
+  margin: 0;
+  display: inline-block;
+
+  &-slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	border: 1px solid #ccd0d4;
+	border-radius: 34px !important;
+	background-color: transparent;
+
+	&::before {
+	  position: absolute;
+	  content: "";
+	  height: 18px;
+	  width: 18px;
+	  left: 2px;
+	  bottom: 2px;
+	  border-radius: 50% !important;
+	  background-color: #ccd0d4;
+	  -webkit-transition: all .15s cubic-bezier(.68, -.55, .265, 1.55);
+	  transition: all .15s cubic-bezier(.68, -.55, .265, 1.55);
+	}
+
+	&::after {
+	  color: #ccd0d4;
+	  content: attr(data-label-off);
+	  display: block;
+	  font-family: inherit;
+	  font-weight: 600;
+	  font-size: .75rem;
+	  line-height: 24px;
+	  position: absolute;
+	  right: 0;
+	  margin: 0 .21667rem;
+	  top: 0;
+	  text-align: center;
+	  min-width: 1.66667rem;
+	  overflow: hidden;
+	  -webkit-transition: all .15s ease;
+	  transition: all .15s ease;
+	}
+  }
+
+
+  input {
+	display: none;
+
+	&:checked + .ea-toggle-slider {
+	  border: 1px solid #007cba;
+
+	  &::after {
+		content: attr(data-label-on);
+		color: #007cba;
+		right: auto;
+		left: 0;
+	  }
+
+	  &::before {
+		transform: translateX(28px);
+		left: 10px;
+		background-color: #007cba;
+	  }
+
+	}
+
+  }
+
+}

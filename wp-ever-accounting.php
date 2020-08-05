@@ -32,7 +32,7 @@ final class EverAccounting {
 	public $query = null;
 
 	/**
-	 * @var EAccounting_Account_Query
+	 * @var EAccounting_Query_Account
 	 * @since 1.0.2
 	 */
 	public $accounts = null;
@@ -44,7 +44,7 @@ final class EverAccounting {
 	public $categories = null;
 
 	/**
-	 * @var EAccounting_Query
+	 * @var EAccounting_Query_Currency
 	 * @since 1.0.2
 	 */
 	public $currencies = null;
@@ -170,8 +170,8 @@ final class EverAccounting {
 	 * The whole idea of the singleton design pattern is that there is a single
 	 * object therefore, we don't want the object to be cloned.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 
 	public function __clone() {
@@ -181,8 +181,8 @@ final class EverAccounting {
 	/**
 	 * Disable unserializing of the class
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 
 	public function __wakeup() {
@@ -196,7 +196,13 @@ final class EverAccounting {
 	 */
 	public function log_errors() {
 		$error = error_get_last();
-		if ( $error && in_array( $error['type'], array( E_ERROR, E_PARSE, E_COMPILE_ERROR, E_USER_ERROR, E_RECOVERABLE_ERROR ), true ) ) {
+		if ( $error && in_array( $error['type'], array(
+				E_ERROR,
+				E_PARSE,
+				E_COMPILE_ERROR,
+				E_USER_ERROR,
+				E_RECOVERABLE_ERROR
+			), true ) ) {
 			$logger = eaccounting_logger();
 			$logger->critical(
 				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
@@ -244,36 +250,74 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
-		//classes
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-
-		//functions
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
-
-		//abstract
-		require_once( EACCOUNTING_ABSPATH . '/includes/interfaces/class-ea-object-interface.php' );
+		/**
+		 * Abstract classes.
+		 */
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-object.php' );
-//		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-contact.php' );
-//		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-transaction.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
+		//require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-contact.php' );
+		//require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-transaction.php' );
+
+
+		/**
+		 * Core classes.
+		 */
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-logger.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
-//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-category.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-logger.php' );
-
-
-		//query
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account-query.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-account.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-currency.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transaction.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
+
+		/**
+		 * REST API.
+		 */
+
+		/**
+		 * Functions
+		 */
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
+
+
+//		//classes
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
+//
+//		//functions
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
+//
+//		//abstract
+//		require_once( EACCOUNTING_ABSPATH . '/includes/interfaces/class-ea-object-interface.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-object.php' );
+////		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-contact.php' );
+////		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-transaction.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
+////		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-category.php' );
+
+//		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-form.php' );
+//		require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
+//
+//
+//		//query
+
 
 //		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-form.php' );
 //		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
@@ -347,7 +391,8 @@ final class EverAccounting {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
 
-		$this->accounts = EAccounting_Account_Query::init();
+		$this->accounts   = EAccounting_Query_Account::init();
+		$this->currencies = EAccounting_Query_Currency::init();
 
 		// Init action.
 		do_action( 'eaccounting_init' );

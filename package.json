@@ -1,46 +1,47 @@
 {
-  "name": "wp-ever-accounting",
-  "title": "WP Ever Accounting",
-  "version": "1.0.1",
-  "description": "The Best WordPress Accounting Plugin ever made!",
-  "keywords": [],
-  "homepage": "https://www.pluginever.com",
-  "author": {
-	"name": "pluginever",
-	"email": "support@pluginever.com",
-	"url": "https://www.pluginever.com"
-  },
-  "main": "index.js",
-  "scripts": {
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-	"grunt": "1.1.0",
-	"grunt-contrib-clean": "2.0.0",
-	"grunt-contrib-concat": "1.0.1",
-	"grunt-contrib-copy": "1.0.0",
-	"grunt-contrib-cssmin": "3.0.0",
-	"grunt-contrib-uglify": "4.0.1",
-	"grunt-contrib-watch": "1.1.0",
-	"grunt-phpcs": "0.4.0",
-	"grunt-postcss": "0.9.0",
-	"grunt-rtlcss": "2.0.2",
-	"grunt-sass": "3.1.0",
-	"grunt-stylelint": "0.14.0",
-	"gruntify-eslint": "5.0.0"
-  },
-  "browserslist": [
-	"> 0.1%",
-	"ie 8",
-	"ie 9"
-  ],
-  "publishConfig": {
-	"access": "public"
-  },
-  "engines": {
-	"node": ">=8.9.3",
-	"npm": ">=5.5.1"
-  },
-  "esversion": 6
+ "name": "wp-ever-accounting",
+ "title": "WP Ever Accounting",
+ "version": "1.0.1",
+ "description": "The Best WordPress Accounting Plugin ever made!",
+ "keywords": [],
+ "homepage": "https://www.pluginever.com",
+ "author": {
+  "name": "pluginever",
+  "email": "support@pluginever.com",
+  "url": "https://www.pluginever.com"
+ },
+ "main": "index.js",
+ "scripts": {},
+ "dependencies": {
+  "node-sass": "^4.14.1"
+ },
+ "devDependencies": {
+  "autoprefixer": "^9.8.6",
+  "grunt": "1.1.0",
+  "grunt-contrib-clean": "2.0.0",
+  "grunt-contrib-concat": "1.0.1",
+  "grunt-contrib-copy": "1.0.0",
+  "grunt-contrib-cssmin": "3.0.0",
+  "grunt-contrib-uglify": "4.0.1",
+  "grunt-contrib-watch": "1.1.0",
+  "grunt-phpcs": "0.4.0",
+  "grunt-postcss": "0.9.0",
+  "grunt-rtlcss": "2.0.2",
+  "grunt-sass": "3.1.0",
+  "grunt-stylelint": "0.14.0",
+  "gruntify-eslint": "5.0.0"
+ },
+ "browserslist": [
+  "> 0.1%",
+  "ie 8",
+  "ie 9"
+ ],
+ "publishConfig": {
+  "access": "public"
+ },
+ "engines": {
+  "node": ">=8.9.3",
+  "npm": ">=5.5.1"
+ },
+ "esversion": 6
 }

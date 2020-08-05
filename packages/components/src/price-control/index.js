@@ -36,8 +36,8 @@ export default class PriceControl extends Component {
 						placeholder={placeholder}
 						className="components-text-control__input ea-input-group__input"
 						thousandsGroupStyle="thousand"
-						decimalSeparator={currency && currency.decimalSeparator}
-						thousandSeparator={currency && currency.thousandSeparator}
+						decimal_separator={currency && currency.decimal_separator}
+						thousand_separator={currency && currency.thousand_separator}
 						value={(value && value) || ''}
 						onValueChange={this.onChange}
 						//onChange={this.onChange}
