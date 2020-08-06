@@ -223,12 +223,94 @@ function wc_cleanup_logs() {
 /**
  * Define a constant if it is not already defined.
  *
+ * @param string $name Constant name.
+ * @param mixed $value Value.
+ *
  * @since 1.0.2
- * @param string $name  Constant name.
- * @param mixed  $value Value.
  */
 function eaccounting_maybe_define_constant( $name, $value ) {
 	if ( ! defined( $name ) ) {
 		define( $name, $value );
 	}
+}
+
+
+/**
+ * Sanitize values to an absolute number, rounded to the required decimal place
+ *
+ * Allows zero values, but ignores truly empty values.
+ *
+ * The correct type will be used automatically, depending on its value:
+ *
+ * - Whole numbers (including numbers with a 0 value decimal) will be return as int
+ * - Decimal numbers will be returned as floats
+ * - Decimal numbers ending with 0 will be returned as strings
+ *
+ * 1     => (int) 1
+ * 1.0   => (int) 1
+ * 0.00  => (int) 0
+ * 1.01  => (float) 1.01
+ * 1.019 => (float) 1.02
+ * 1.1   => (string) 1.10
+ * 1.10  => (string) 1.10
+ * 1.199 => (string) 1.20
+ *
+ * @param mixed $val
+ * @param int $precision Number of required decimal places (optional)
+ *
+ * @return mixed              Returns an int, float or string on success, null when empty
+ */
+function eaccounting_round_number( $val, $precision = 2 ) {
+
+	// 0 is a valid value so we check only for other empty values
+	if ( is_null( $val ) || '' === $val || false === $val ) {
+		return;
+	}
+
+	$period_decimal_sep         = preg_match( '/\.\d{1,2}$/', $val );
+	$comma_decimal_sep          = preg_match( '/\,\d{1,2}$/', $val );
+	$period_space_thousands_sep = preg_match( '/\d{1,3}(?:[.|\s]\d{3})+/', $val );
+	$comma_thousands_sep        = preg_match( '/\d{1,3}(?:,\d{3})+/', $val );
+
+	// Convert period and space thousand separators.
+	if ( $period_space_thousands_sep && 0 === preg_match( '/\d{4,}$/', $val ) ) {
+		$val = str_replace( ' ', '', $val );
+
+		if ( ! $comma_decimal_sep ) {
+			if ( ! $period_decimal_sep ) {
+				$val = str_replace( '.', '', $val );
+			}
+		} else {
+			$val = str_replace( '.', ':', $val );
+		}
+	}
+
+	// Convert comma decimal separators.
+	if ( $comma_decimal_sep ) {
+		$val = str_replace( ',', '.', $val );
+	}
+
+	// Clean up temporary replacements.
+	if ( ( $period_space_thousands_sep && $comma_decimal_sep ) || $comma_thousands_sep ) {
+		$val = str_replace( array( ':', ',' ), '', $val );
+	}
+
+	// Value cannot be negative
+	$val = abs( floatval( $val ) );
+
+	// Decimal precision must be a absolute integer
+	$precision = absint( $precision );
+
+	// Enforce the number of decimal places required (precision)
+	$val = sprintf( ( round( $val, $precision ) == intval( $val ) ) ? '%d' : "%.{$precision}f", $val );
+
+	// Convert number to the proper type (int, float, or string) depending on its value
+	if ( false === strpos( $val, '.' ) ) {
+
+		$val = absint( $val );
+
+	}
+
+	return $val;
+
 }

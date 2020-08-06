@@ -19,7 +19,6 @@ class EAccounting_Admin {
 	 * Constructor.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'includes' ) );
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
@@ -43,20 +42,6 @@ class EAccounting_Admin {
 		}
 
 		return $classes;
-	}
-
-	/**
-	 * Include any classes we need within admin.
-	 *
-	 * @return void
-	 * @since 1.0.2
-	 */
-	public function includes() {
-		include_once __DIR__ . '/ea-admin-functions.php';
-//		include_once __DIR__ . '/ea-admin-form-functions.php';
-		include_once __DIR__ . '/class-ea-admin-assets.php';
-		include_once __DIR__ . '/banking/banking.php';
-		include_once __DIR__ . '/class-ea-admin-menus.php';
 	}
 
 	/**

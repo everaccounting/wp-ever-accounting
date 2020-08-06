@@ -23,7 +23,7 @@ function eaccounting_get_screen_ids() {
 		$eaccounting_screen_id . '_page_ea-purchases',
 		$eaccounting_screen_id . '_page_ea-banking',
 		$eaccounting_screen_id . '_page_ea-reports',
-		$eaccounting_screen_id . '_page_ea-status',
+		$eaccounting_screen_id . '_page_ea-tools',
 		$eaccounting_screen_id . '_page_ea-settings',
 	);
 
@@ -123,15 +123,6 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
 	return $active_tab;
 }
 
-function eaccounting_admin_dashboard() {
-	$screen_ids = eaccounting_get_screen_ids();
-	var_dump( str_replace( [ 'toplevel_page_', 'accounting_page_ea-' ], '', $screen_ids ) );
-	var_dump( eaccounting_admin_url() );
-//	global $current_screen;
-//	var_dump( eaccounting_is_admin_page() );
-//	var_dump( $current_screen );
-}
-
 /**
  * Outputs navigation tabs markup in core screens.
  *
@@ -154,7 +145,6 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array() 
 	foreach ( $tabs as $tab_id => $tab_name ) {
 		$args    = wp_parse_args( $query_args, array( 'tab' => $tab_id ) );
 		$tab_url = eaccounting_admin_url( $args );
-
 		printf( '<a href="%1$s" alt="%2$s" class="%3$s">%4$s</a>',
 			esc_url( $tab_url ),
 			esc_attr( $tab_name ),
@@ -194,7 +184,6 @@ function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 	return $status;
 
 }
-
 add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3 );
 
 
