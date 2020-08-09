@@ -334,7 +334,6 @@ function eaccounting_round_number( $val, $precision = 2 ) {
 
 }
 
-
 /**
  * Makes internal API request for usages within PHP
  *
@@ -355,4 +354,3 @@ function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' )
 
 	return $result;
 }
-

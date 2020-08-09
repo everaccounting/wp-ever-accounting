@@ -26,7 +26,7 @@ final class EverAccounting {
 	public $version = '1.0.1';
 
 	/**
-	 * @var EAccounting_Settings
+	 * @var \EverAccounting\Admin\Settings
 	 * @since 1.0.2
 	 */
 	public $settings;
