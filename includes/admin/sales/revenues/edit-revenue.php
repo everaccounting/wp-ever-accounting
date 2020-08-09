@@ -30,7 +30,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Date', 'wp-ever-accounting' ),
 						'name'          => 'paid_at',
-						'tooltip'     => 'lorem ipsum dolor sit amet',
+						'tooltip'       => 'lorem ipsum dolor sit amet',
 						'data_type'     => 'date',
 						'value'         => $revenue->get_paid_at(),
 						'required'      => true,
@@ -45,8 +45,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'options'       => [],
 						'required'      => true,
 						'attr'          => array(
-								'data-nonce'      => wp_create_nonce( 'get_account' ),
-								'data-footer'      => true,
 								'data-search'      => eaccounting_esc_json( json_encode( array(
 										'nonce'  => wp_create_nonce( 'dropdown-search' ),
 										'type'   => 'account',
@@ -55,7 +53,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 								'data-modal'       => eaccounting_esc_json( json_encode( array(
 										'event' => 'ea-init-account-modal',
 										'type'  => 'account',
-										'nonce'  => 'edit_account',
+										'nonce' => 'edit_account',
 								) ), true ),
 								'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
 						)
@@ -72,7 +70,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Customer', 'wp-ever-accounting' ),
 						'name'          => 'contact_id',
-						'class'         => 'ea-select-customer enable-create ea-ajax-select2',
 						'value'         => $revenue->get_account_id(),
 						'options'       => [],
 						'attr'          => array(
@@ -93,7 +90,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Category', 'wp-ever-accounting' ),
 						'name'          => 'category_id',
-						'class'         => 'ea-select-category enable-create ea-ajax-select2',
 						'value'         => $revenue->get_account_id(),
 						'options'       => [],
 						'required'      => true,
@@ -127,7 +123,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-12',
 				) );
 
-				wp_create_nonce('edit_revenue');
+				wp_create_nonce( 'edit_revenue' );
 
 				submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit',  );
 				?>

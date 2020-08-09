@@ -7,7 +7,9 @@
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();
+
 $account_id = isset( $_REQUEST['account_id'] ) ? absint( $_REQUEST['account_id'] ) : null;
+
 try {
 	$account = new \EverAccounting\Account( $account_id );
 } catch ( Exception $e ) {
@@ -19,8 +21,8 @@ try {
 		<div class="ea-card ea-form-card__header is-compact">
 			<h3 class="ea-form-card__header-title"><?php echo $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __( 'Add Account', 'wp-ever-accounting' ); ?></h3>
 			<?php echo sprintf( '<a href="%s" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span> %s</a>',
-				eaccounting_admin_url( array( 'tab' => 'accounts', 'page' => 'ea-banking' ) ),
-				__( 'Back', 'wp-ever-accounting' )
+					eaccounting_admin_url( array( 'tab' => 'accounts', 'page' => 'ea-banking' ) ),
+					__( 'Back', 'wp-ever-accounting' )
 			); ?>
 		</div>
 
@@ -29,70 +31,70 @@ try {
 				<div class="ea-row">
 					<?php
 					eaccounting_text_input( array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Account Name', 'wp-ever-accounting' ),
-						'name'          => 'name',
-						'value'         => $account->get_name( 'edit' ),
-						'required'      => true,
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Account Name', 'wp-ever-accounting' ),
+							'name'          => 'name',
+							'value'         => $account->get_name( 'edit' ),
+							'required'      => true,
 					) );
 					eaccounting_text_input( array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Account Number', 'wp-ever-accounting' ),
-						'name'          => 'number',
-						'value'         => $account->get_number( 'edit' ),
-						'required'      => true,
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Account Number', 'wp-ever-accounting' ),
+							'name'          => 'number',
+							'value'         => $account->get_number( 'edit' ),
+							'required'      => true,
 					) );
 
 					eaccounting_select( array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
-						'name'          => 'currency_code',
-						'class'         => 'currency_code_picker ea-ajax-select2',
-						'value'         => $account->get_currency_code( 'edit' ),
-						'options'       => [],
-						'default'       => eaccounting_get_currency_code(),
-						'required'      => true,
-						'attr'          => array(
-							'data-nonce'       => wp_create_nonce( 'dropdown-search' ),
-							'data-type'        => 'currency_code',
-							'data-action'      => 'eaccounting_dropdown_search',
-							'data-placeholder' => __( 'Select currency code', 'wp-ever-accounting' ),
-						)
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
+							'name'          => 'currency_code',
+							'class'         => 'currency_code_picker ea-ajax-select2',
+							'value'         => $account->get_currency_code( 'edit' ),
+							'options'       => [],
+							'default'       => eaccounting_get_currency_code(),
+							'required'      => true,
+							'attr'          => array(
+									'data-nonce'       => wp_create_nonce( 'dropdown-search' ),
+									'data-type'        => 'currency_code',
+									'data-action'      => 'eaccounting_dropdown_search',
+									'data-placeholder' => __( 'Select currency code', 'wp-ever-accounting' ),
+							)
 					) );
 
 					eaccounting_text_input( array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
-						'name'          => 'opening_balance',
-						'value'         => eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ),
-						'default'       => '0.00',
-						'required'      => true,
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
+							'name'          => 'opening_balance',
+							'value'         => eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ),
+							'default'       => '0.00',
+							'required'      => true,
 					) );
 
 					eaccounting_text_input( array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Bank Name', 'wp-ever-accounting' ),
-						'name'          => 'bank_name',
-						'value'         => $account->get_bank_name( 'edit' ),
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Bank Name', 'wp-ever-accounting' ),
+							'name'          => 'bank_name',
+							'value'         => $account->get_bank_name( 'edit' ),
 					) );
 
 					eaccounting_text_input( array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Account Phone', 'wp-ever-accounting' ),
-						'name'          => 'bank_phone',
-						'value'         => $account->set_bank_phone( 'edit' ),
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Account Phone', 'wp-ever-accounting' ),
+							'name'          => 'bank_phone',
+							'value'         => $account->set_bank_phone( 'edit' ),
 					) );
 
 					eaccounting_textarea( array(
-						'wrapper_class' => 'ea-col-12',
-						'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
-						'name'          => 'bank_address',
-						'value'         => $account->get_bank_address( 'edit' )
+							'wrapper_class' => 'ea-col-12',
+							'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
+							'name'          => 'bank_address',
+							'value'         => $account->get_bank_address( 'edit' )
 					) );
 
 					eaccounting_hidden_input( array(
-						'name'  => 'account_id',
-						'value' => $account->get_id()
+							'name'  => 'account_id',
+							'value' => $account->get_id()
 					) );
 					?>
 				</div>
