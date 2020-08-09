@@ -125,7 +125,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 
 				wp_create_nonce( 'edit_revenue' );
 
-				submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit',  );
+				submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
 				?>
 			</div>
 		</form>
