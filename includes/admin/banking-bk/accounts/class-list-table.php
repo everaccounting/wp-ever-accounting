@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-admin-list-table.php' );
 
-class EAccounting_Accounts_Table extends EAccounting_Admin_List_Table {
+class EAccounting_Accounts_Table extends EAccounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *

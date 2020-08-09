@@ -20,7 +20,7 @@ function eaccounting_get_screen_ids() {
 		'toplevel_page_e' . $eaccounting_screen_id,
 		$eaccounting_screen_id . '_page_ea-transactions',
 		$eaccounting_screen_id . '_page_ea-sales',
-		$eaccounting_screen_id . '_page_ea-purchases',
+		$eaccounting_screen_id . '_page_ea-expenses',
 		$eaccounting_screen_id . '_page_ea-banking',
 		$eaccounting_screen_id . '_page_ea-reports',
 		$eaccounting_screen_id . '_page_ea-tools',
@@ -191,5 +191,25 @@ function eaccounting_get_js_template( $slug ) {
 	$file = EACCOUNTING_ABSPATH . '/includes/admin/js-templates/' . $slug . '.php';
 	if ( file_exists( $file ) ) {
 		return include $file;
+	}
+}
+
+
+/**
+ * Get admin view.
+ *
+ * since 1.0.0
+ * @param $template_name
+ * @param array $args
+ */
+function eaccounting_get_admin_template( $template_name, $args = [] ) {
+	if ( $args && is_array( $args ) ) {
+		extract( $args );
+	}
+
+	$file = apply_filters('eaccounting_admin_template', EACCOUNTING_ADMIN_ABSPATH . '/views/' . $template_name.'.php');
+
+	if ( file_exists( $file ) ) {
+		include $file;
 	}
 }

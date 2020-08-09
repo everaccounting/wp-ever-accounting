@@ -7,12 +7,16 @@
  * @package EverAccounting/Classes
  */
 
+namespace EAccounting;
+
+use DateTime as Base;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Datetime class.
  */
-class EAccounting_DateTime extends DateTime {
+class DateTime extends Base {
 	/**
 	 * UTC Offset, if needed. Only used when a timezone is not set. When
 	 * timezones are used this will equal 0.
@@ -24,8 +28,8 @@ class EAccounting_DateTime extends DateTime {
 	/**
 	 * Output an ISO 8601 date string in local (WordPress) timezone.
 	 *
-	 * @since  1.0.0
 	 * @return string
+	 * @since  1.0.0
 	 */
 	public function __toString() {
 		return $this->format( DATE_ATOM );
@@ -50,19 +54,21 @@ class EAccounting_DateTime extends DateTime {
 	/**
 	 * Set timezone.
 	 *
-	 * @param DateTimeZone $timezone DateTimeZone instance.
+	 * @param \DateTimeZone $timezone DateTimeZone instance.
+	 *
 	 * @return DateTime
 	 */
 	public function setTimezone( $timezone ) {
 		$this->utc_offset = 0;
+
 		return parent::setTimezone( $timezone );
 	}
 
 	/**
 	 * Missing in PHP 5.2 so just here so it can be supported consistently.
 	 *
-	 * @since  1.0.0
 	 * @return int
+	 * @since  1.0.0
 	 */
 	public function getTimestamp() {
 		return method_exists( 'DateTime', 'getTimestamp' ) ? parent::getTimestamp() : $this->format( 'U' );
@@ -71,8 +77,8 @@ class EAccounting_DateTime extends DateTime {
 	/**
 	 * Get the timestamp with the WordPress timezone offset added or subtracted.
 	 *
-	 * @since  1.0.0
 	 * @return int
+	 * @since  1.0.0
 	 */
 	public function getOffsetTimestamp() {
 		return $this->getTimestamp() + $this->getOffset();
@@ -81,9 +87,10 @@ class EAccounting_DateTime extends DateTime {
 	/**
 	 * Format a date based on the offset timestamp.
 	 *
-	 * @since  1.0.0
-	 * @param  string $format Date format.
+	 * @param string $format Date format.
+	 *
 	 * @return string
+	 * @since  1.0.0
 	 */
 	public function date( $format ) {
 		return gmdate( $format, $this->getOffsetTimestamp() );
@@ -92,9 +99,10 @@ class EAccounting_DateTime extends DateTime {
 	/**
 	 * Return a localised date based on offset timestamp. Wrapper for date_i18n function.
 	 *
-	 * @since  1.0.0
-	 * @param  string $format Date format.
+	 * @param string $format Date format.
+	 *
 	 * @return string
+	 * @since  1.0.0
 	 */
 	public function date_i18n( $format = 'Y-m-d' ) {
 		return date_i18n( $format, $this->getOffsetTimestamp() );
@@ -103,10 +111,10 @@ class EAccounting_DateTime extends DateTime {
 	/**
 	 * Return mysql date time.
 	 *
-	 * @since 1.0.2
 	 * @return string date time
+	 * @since 1.0.2
 	 */
-	public function get_mysql_date(){
+	public function get_mysql_date() {
 		return date_i18n( 'Y-m-d H:i:s', $this->getOffsetTimestamp() );
 	}
 }

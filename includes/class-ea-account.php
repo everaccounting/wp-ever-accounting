@@ -2,18 +2,22 @@
 /**
  * Handle the account object
  *
- * @class       EAccounting_Account
+ * @class       Account
  * @version     1.0.0
  * @package     EverAccounting/Classes
  */
 
+namespace EverAccounting;
+
+use EverAccounting\Abstracts\Base_Object;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class EAccounting_Account
+ * Class Account
  * @since 1.0.2
  */
-class EAccounting_Account extends EAccounting_Object {
+class Account extends Base_Object {
 
 	/**
 	 * A group must be set to to enable caching.
@@ -83,7 +87,7 @@ class EAccounting_Account extends EAccounting_Object {
 	/**
 	 * Method to validate before inserting and updating EverAccounting object.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 1.0.2
 	 */
 	public function validate_props() {
@@ -102,20 +106,25 @@ class EAccounting_Account extends EAccounting_Object {
 		}
 
 		if ( empty( $this->get_name( 'edit' ) ) ) {
-			throw new Exception( __( 'Account Name is required', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Account Name is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_number( 'edit' ) ) ) {
-			throw new Exception( __( 'Account Number is required', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Account Number is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_currency_code( 'edit' ) ) ) {
-			throw new Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
+		}
+
+		$currency = eaccounting_get_currency_by_code( $this->get_currency_code( 'edit' ) );
+		if ( ! $currency || ! $currency->exists() ) {
+			throw new Exception( 'invalid-currency', __( 'Account associated currency does not exist.', 'wp-ever-accounting' ) );
 		}
 
 		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts where number=%s", $this->get_number( 'edit' ) ) ) ) {
 			if ( ! empty( $existing_id ) && absint( $existing_id ) !== $this->get_id() ) {
-				throw new Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+				throw new \Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
 			}
 		}
 
@@ -126,34 +135,34 @@ class EAccounting_Account extends EAccounting_Object {
 	 *
 	 * @param int $id ID of the object to read.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 1.0.2
 	 */
 	public function read( $id ) {
 		$this->set_defaults();
 
 		// Get from cache if available.
-		$item = 0 < $id ? wp_cache_get( $this->object_type.'-item-' . $id, $this->cache_group ) : false;
+		$item = 0 < $id ? wp_cache_get( $this->object_type . '-item-' . $id, $this->cache_group ) : false;
 
 		if ( false === $item ) {
-			$item = eaccounting()->accounts->find($id);
+			$item = Query_Account::init()->find( $id );
 
 			if ( 0 < $item->id ) {
-				wp_cache_set( $this->object_type.'-item-' . $item->id, $item, $this->cache_group );
+				wp_cache_set( $this->object_type . '-item-' . $item->id, $item, $this->cache_group );
 			}
 		}
 
 		if ( ! $item || ! $item->id ) {
-			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
-		$this->populate($item);
+		$this->populate( $item );
 	}
 
 	/**
 	 * Create a new account in the database.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 1.0.0
 	 */
 	public function create() {
@@ -177,7 +186,7 @@ class EAccounting_Account extends EAccounting_Object {
 
 		$data = wp_unslash( apply_filters( 'eaccounting_new_account_data', $account_data ) );
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_accounts', $data ) ) {
-			throw new Exception( $wpdb->last_error );
+			throw new \Exception( $wpdb->last_error );
 		}
 
 		do_action( 'eaccounting_insert_account', $this->get_id(), $this );
@@ -190,7 +199,7 @@ class EAccounting_Account extends EAccounting_Object {
 	/**
 	 * Update a account in the database.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 1.0.0
 	 *
 	 */
@@ -204,8 +213,8 @@ class EAccounting_Account extends EAccounting_Object {
 
 			try {
 				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
-			} catch ( Exception $e ) {
-				throw new Exception( __( 'Could not update account.', 'wp-ever-accounting' ) );
+			} catch ( \Exception $e ) {
+				throw new \Exception( __( 'Could not update account.', 'wp-ever-accounting' ) );
 			}
 
 			do_action( 'eaccounting_update_account', $this->get_id(), $changes, $this->data );
@@ -224,7 +233,7 @@ class EAccounting_Account extends EAccounting_Object {
 	 * @since 1.0.
 	 */
 	public function delete( $args = array() ) {
-		if ( $this->get_id()) {
+		if ( $this->get_id() ) {
 			global $wpdb;
 			do_action( 'eaccounting_pre_delete_account', $this->get_id() );
 			$wpdb->delete( $wpdb->prefix . 'ea_accounts', array( 'id' => $this->get_id() ) );

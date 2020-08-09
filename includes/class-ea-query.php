@@ -1,7 +1,22 @@
 <?php
+/**
+ * The main query class that will be used by inherited classes.
+ *
+ * @version 1.0.2
+ * @package EverAccounting\Classes
+ */
+
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Query {
+/**
+ * Class Query
+ *
+ * @since 1.0.2
+ * @package EverAccounting
+ */
+class Query {
 	/**
 	 * @var string
 	 */
@@ -109,7 +124,7 @@ class EAccounting_Query {
 	 * @param string $from
 	 * @param bool $add_prefix Should DB prefix be added.
 	 *
-	 * @return EAccounting_Query this for chaining.
+	 * @return Query this for chaining.
 	 * @global object $wpdb
 	 *
 	 * @since 1.0.0
@@ -163,7 +178,7 @@ class EAccounting_Query {
 	 * @param mixed $param2 The value if $param1 is an operator.
 	 * @param string $joint the where type ( and, or )
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function where( $column, $param1 = null, $param2 = null, $joint = 'and' ) {
 		global $wpdb;
@@ -174,7 +189,7 @@ class EAccounting_Query {
 		// when column is an array we assume to make a bulk and where.
 		if ( is_array( $column ) ) {
 			// create new query object
-			$subquery = new EAccounting_Query();
+			$subquery = new Query();
 			foreach ( $column as $key => $val ) {
 				$subquery->where( $key, $val, null, $joint );
 			}
@@ -186,7 +201,7 @@ class EAccounting_Query {
 
 		if ( is_object( $column ) && ( $column instanceof \Closure ) ) {
 			// create new query object
-			$subquery = new EAccounting_Query();
+			$subquery = new Query();
 
 			// run the closure callback on the sub query
 			call_user_func_array( $column, array( &$subquery ) );
@@ -288,7 +303,7 @@ class EAccounting_Query {
 	 * @param mixed $param1
 	 * @param mixed $param2
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function orWhere( $column, $param1 = null, $param2 = null ) {
 		return $this->where( $column, $param1, $param2, 'or' );
@@ -303,7 +318,7 @@ class EAccounting_Query {
 	 * @param mixed $param1
 	 * @param mixed $param2
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function andWhere( $column, $param1 = null, $param2 = null ) {
 		return $this->where( $column, $param1, $param2, 'and' );
@@ -317,7 +332,7 @@ class EAccounting_Query {
 	 * @param string $column
 	 * @param array $options
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function whereIn( $column, array $options = array() ) {
 		// when the options are empty we skip
@@ -336,7 +351,7 @@ class EAccounting_Query {
 	 * @param string $column
 	 * @param array $options
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function whereNotIn( $column, array $options = array() ) {
 		// when the options are empty we skip
@@ -354,7 +369,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $column
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function whereNull( $column ) {
 		return $this->where( $column, 'is', null );
@@ -367,7 +382,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $column
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function whereNotNull( $column ) {
 		return $this->where( $column, 'is not', null );
@@ -380,7 +395,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $column
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function orWhereNull( $column ) {
 		return $this->orWhere( $column, 'is', null );
@@ -393,7 +408,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $column
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function orWhereNotNull( $column ) {
 		return $this->orWhere( $column, 'is not', null );
@@ -407,7 +422,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $column
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function whereBetween( $column, $min, $max ) {
 		return $this->where( $column, 'BETWEEN', array( $min, $max ) );
@@ -420,7 +435,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $column
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function whereNotBetween( $column, $min, $max ) {
 		return $this->where( $column, 'NOT BETWEEN', array( $min, $max ) );
@@ -433,7 +448,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $column
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function whereDateBetween( $column, $start = null, $end = null ) {
 		global $wpdb;
@@ -477,7 +492,7 @@ class EAccounting_Query {
 	 * @param string $joint The join AND or Or
 	 * @param bool $add_prefix Add table prefix or not
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function join( $table, $localKey, $operator = null, $referenceKey = null, $type = 'left', $joint = 'AND', $add_prefix = true ) {
 		global $wpdb;
@@ -496,7 +511,7 @@ class EAccounting_Query {
 		// which will create a new query where you can add your nested where
 		if ( is_object( $localKey ) && ( $localKey instanceof \Closure ) ) {
 			//create new query object
-			$subquery = new EAccounting_Query();
+			$subquery = new Query();
 			// run the closure callback on the sub query
 			call_user_func_array( $localKey, array( &$subquery ) );
 
@@ -537,7 +552,7 @@ class EAccounting_Query {
 	 * @param string $operator The operator (=, !=, <, > etc.)
 	 * @param string $referenceKey
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function leftJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
 		return $this->join( $table, $localKey, $operator, $referenceKey, 'left' );
@@ -551,7 +566,7 @@ class EAccounting_Query {
 	 * @param string $operator The operator (=, !=, <, > etc.)
 	 * @param string $referenceKey
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function rightJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
 		return $this->join( $table, $localKey, $operator, $referenceKey, 'right' );
@@ -565,7 +580,7 @@ class EAccounting_Query {
 	 * @param string $operator The operator (=, !=, <, > etc.)
 	 * @param string $referenceKey
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function innerJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
 		return $this->join( $table, $localKey, $operator, $referenceKey, 'inner' );
@@ -579,7 +594,7 @@ class EAccounting_Query {
 	 * @param string $operator The operator (=, !=, <, > etc.)
 	 * @param string $referenceKey
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function outerJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
 		return $this->join( $table, $localKey, $operator, $referenceKey, 'outer' );
@@ -609,7 +624,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $field
 	 *
-	 * @return EAccounting_Query this for chaining.
+	 * @return Query this for chaining.
 	 * @since 1.0.0
 	 *
 	 */
@@ -637,7 +652,7 @@ class EAccounting_Query {
 	 *
 	 * @param string $statement
 	 *
-	 * @return EAccounting_Query this for chaining.
+	 * @return Query this for chaining.
 	 * @since 1.0.0
 	 *
 	 */
@@ -658,7 +673,7 @@ class EAccounting_Query {
 	 * @param string $key
 	 * @param string $direction
 	 *
-	 * @return EAccounting_Query this for chaining.
+	 * @return Query this for chaining.
 	 * @throws Exception
 	 * @since 1.0.0
 	 *
@@ -687,7 +702,7 @@ class EAccounting_Query {
 	 * @param int $limit
 	 * @param int $limit2
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 */
 	public function limit( $limit, $limit2 = null ) {
 		if ( ! is_null( $limit2 ) ) {
@@ -707,7 +722,7 @@ class EAccounting_Query {
 	 *
 	 * @param int $offset
 	 *
-	 * @return EAccounting_Query this for chaining.
+	 * @return Query this for chaining.
 	 *
 	 */
 	public function offset( $offset ) {
@@ -725,7 +740,7 @@ class EAccounting_Query {
 	 * @param int $page
 	 * @param int $size
 	 *
-	 * @return EAccounting_Query The current query builder.
+	 * @return Query The current query builder.
 	 * @since 1.0.0
 	 */
 	public function page( $page, $size = 20 ) {
@@ -885,8 +900,8 @@ class EAccounting_Query {
 		$results = wp_cache_get( $cache_key, $this->cache_group );
 
 		if ( false === $results ) {
-			$query = apply_filters( 'wp_query_builder_one_query', $query );
-			$query = apply_filters( 'wp_query_builder_one_query_' . $this->id, $query );
+			$query   = apply_filters( 'wp_query_builder_one_query', $query );
+			$query   = apply_filters( 'wp_query_builder_one_query_' . $this->id, $query );
 			$results = $wpdb->get_row( $query, $output );
 
 			wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
@@ -979,7 +994,7 @@ class EAccounting_Query {
 		do_action( 'wp_query_builder_value_builder_' . $this->id, $this );
 
 		// Build
-		// EAccounting_Query
+		// Query
 		$query = '';
 		$this->_query_select( $query );
 		$this->_query_from( $query );
@@ -1253,7 +1268,7 @@ class EAccounting_Query {
 	/**
 	 * Return a cloned object from current builder.
 	 *
-	 * @return EAccounting_Query
+	 * @return Query
 	 * @since 1.0.0
 	 */
 	public function copy() {

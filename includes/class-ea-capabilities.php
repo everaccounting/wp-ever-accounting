@@ -6,10 +6,11 @@
  * @version     1.0.0
  * @package     EverAccounting/Classes
  */
+namespace EAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Capabilities {
+class Capabilities {
 	/**
 	 * Get things going
 	 *

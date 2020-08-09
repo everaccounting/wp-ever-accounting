@@ -1,33 +1,44 @@
 <?php
+namespace EverAccounting;
+
+use EAccounting\Currency;
+
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Money{
+/**
+ * Class Money
+ * @since 1.0.2
+ * @package EverAccounting
+ */
+
+class Money {
 	const ROUND_HALF_UP = PHP_ROUND_HALF_UP;
 	const ROUND_HALF_DOWN = PHP_ROUND_HALF_DOWN;
 	const ROUND_HALF_EVEN = PHP_ROUND_HALF_EVEN;
 	const ROUND_HALF_ODD = PHP_ROUND_HALF_ODD;
 
 	/**
-	 * @var int|float
+	 * @var float|int
+	 * @since 1.0.2
 	 */
 	protected $amount;
 
 	/**
-	 * @var EAccounting_Currency
+	 * @var Currency
+	 * @since 1.0.2
 	 */
 	protected $currency;
 
-
 	/**
-	 * Create a new instance.
+	 * Money constructor.
 	 *
-	 * @param mixed $amount
-	 * @param EAccounting_Currency $currency
+	 * @param string $amount Amount to convert
+	 * @param Currency $currency Currency object
 	 * @param bool $convert
 	 *
 	 * @throws \UnexpectedValueException
 	 */
-	public function __construct( $amount, EAccounting_Currency $currency, $convert = false ) {
+	public function __construct( $amount, Currency $currency, $convert = false ) {
 		$this->currency = $currency;
 		$this->amount   = $this->parseAmount( $amount, $convert );
 	}
@@ -83,8 +94,8 @@ class EAccounting_Money{
 			return $amount;
 		}
 
-		$thousandsSeparator = $this->currency->get_thousand_separator('edit');
-		$decimalMark        = $this->currency->get_decimal_separator('edit');
+		$thousandsSeparator = $this->currency->get_thousand_separator( 'edit' );
+		$decimalMark        = $this->currency->get_decimal_separator( 'edit' );
 
 		$amount = str_replace( $this->currency->get_symbol(), '', $amount );
 		$amount = preg_replace( '/[^0-9\\' . $thousandsSeparator . '\\' . $decimalMark . '\-\+]/', '', $amount );
@@ -124,24 +135,24 @@ class EAccounting_Money{
 	 * @param string $method
 	 * @param array $arguments
 	 *
-	 * @return EAccounting_Money
+	 * @return Money
 	 */
 	public static function __callStatic( $method, array $arguments ) {
 		$convert = ( isset( $arguments[1] ) && is_bool( $arguments[1] ) ) ? (bool) $arguments[1] : false;
 
-		return new static( $arguments[0], new EAccounting_Currency( $method ), $convert );
+		return new static( $arguments[0], new Currency( $method ), $convert );
 	}
 
 	/**
 	 * assertSameCurrency.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @throws \InvalidArgumentException
 	 */
 	protected function assertSameCurrency( self $other ) {
 		if ( ! $this->isSameCurrency( $other ) ) {
-			throw new InvalidArgumentException( 'Different currencies "' . $this->currency . '" and "' . $other->currency . '"' );
+			throw new \InvalidArgumentException( 'Different currencies "' . $this->currency . '" and "' . $other->currency . '"' );
 		}
 	}
 
@@ -154,7 +165,7 @@ class EAccounting_Money{
 	 */
 	protected function assertOperand( $operand ) {
 		if ( ! is_int( $operand ) && ! is_float( $operand ) ) {
-			throw new InvalidArgumentException( 'Operand "' . $operand . '" should be an integer or a float' );
+			throw new \InvalidArgumentException( 'Operand "' . $operand . '" should be an integer or a float' );
 		}
 	}
 
@@ -169,7 +180,7 @@ class EAccounting_Money{
 		$roundingModes = [ self::ROUND_HALF_DOWN, self::ROUND_HALF_EVEN, self::ROUND_HALF_ODD, self::ROUND_HALF_UP ];
 
 		if ( ! in_array( $roundingMode, $roundingModes ) ) {
-			throw new OutOfBoundsException( 'Rounding mode should be ' . implode( ' | ', $roundingModes ) );
+			throw new \OutOfBoundsException( 'Rounding mode should be ' . implode( ' | ', $roundingModes ) );
 		}
 	}
 
@@ -194,7 +205,7 @@ class EAccounting_Money{
 	/**
 	 * getCurrency.
 	 *
-	 * @return EAccounting_Currency
+	 * @return Currency
 	 */
 	public function getCurrency() {
 		return $this->currency;
@@ -203,7 +214,7 @@ class EAccounting_Money{
 	/**
 	 * isSameCurrency.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @return bool
 	 */
@@ -214,7 +225,7 @@ class EAccounting_Money{
 	/**
 	 * compare.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @return int
 	 * @throws \InvalidArgumentException
@@ -237,7 +248,7 @@ class EAccounting_Money{
 	/**
 	 * equals.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @return bool
 	 */
@@ -248,7 +259,7 @@ class EAccounting_Money{
 	/**
 	 * greaterThan.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @return bool
 	 */
@@ -259,7 +270,7 @@ class EAccounting_Money{
 	/**
 	 * greaterThanOrEqual.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @return bool
 	 */
@@ -270,7 +281,7 @@ class EAccounting_Money{
 	/**
 	 * lessThan.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @return bool
 	 */
@@ -281,7 +292,7 @@ class EAccounting_Money{
 	/**
 	 * lessThanOrEqual.
 	 *
-	 * @param EAccounting_Money $other
+	 * @param Money $other
 	 *
 	 * @return bool
 	 */
@@ -292,16 +303,16 @@ class EAccounting_Money{
 	/**
 	 * convert.
 	 *
-	 * @param EAccounting_Currency $currency
+	 * @param Currency $currency
 	 * @param int|float $ratio
 	 * @param int $roundingMode
 	 *
-	 * @return EAccounting_Money
+	 * @return Money
 	 * @throws \OutOfBoundsException
 	 *
 	 * @throws \InvalidArgumentException
 	 */
-	public function convert( EAccounting_Currency $currency, $ratio, $roundingMode = self::ROUND_HALF_UP ) {
+	public function convert( Currency $currency, $ratio, $roundingMode = self::ROUND_HALF_UP ) {
 		$this->currency = $currency;
 
 		$this->assertOperand( $ratio );
@@ -317,9 +328,9 @@ class EAccounting_Money{
 	/**
 	 * add.
 	 *
-	 * @param EAccounting_Money $addend
+	 * @param Money $addend
 	 *
-	 * @return EAccounting_Money
+	 * @return Money
 	 * @throws \InvalidArgumentException
 	 *
 	 */
@@ -332,9 +343,9 @@ class EAccounting_Money{
 	/**
 	 * subtract.
 	 *
-	 * @param EAccounting_Money $subtrahend
+	 * @param Money $subtrahend
 	 *
-	 * @return EAccounting_Money
+	 * @return Money
 	 * @throws \InvalidArgumentException
 	 *
 	 */
@@ -350,7 +361,7 @@ class EAccounting_Money{
 	 * @param int|float $multiplier
 	 * @param int $roundingMode
 	 *
-	 * @return EAccounting_Money
+	 * @return Money
 	 * @throws \OutOfBoundsException
 	 *
 	 * @throws \InvalidArgumentException
@@ -365,7 +376,7 @@ class EAccounting_Money{
 	 * @param int|float $divisor
 	 * @param int $roundingMode
 	 *
-	 * @return EAccounting_Money
+	 * @return Money
 	 * @throws \OutOfBoundsException
 	 *
 	 * @throws \InvalidArgumentException
@@ -375,7 +386,7 @@ class EAccounting_Money{
 		$this->assertRoundingMode( $roundingMode );
 
 		if ( $divisor == 0 ) {
-			throw new InvalidArgumentException( 'Division by zero' );
+			throw new \InvalidArgumentException( 'Division by zero' );
 		}
 
 		return new self( round( $this->amount / $divisor, $this->currency->get_precision(), $roundingMode ), $this->currency );
@@ -443,8 +454,8 @@ class EAccounting_Money{
 		return number_format(
 			$this->getValue(),
 			$this->currency->get_precision(),
-			$this->currency->get_decimal_separator('edit'),
-			$this->currency->get_thousand_separator('edit')
+			$this->currency->get_decimal_separator( 'edit' ),
+			$this->currency->get_thousand_separator( 'edit' )
 		);
 	}
 
@@ -457,11 +468,12 @@ class EAccounting_Money{
 		$negative  = $this->isNegative();
 		$value     = $this->getValue();
 		$amount    = $negative ? - $value : $value;
-		$thousands = $this->currency->get_thousand_separator('edit');
-		$decimals  = $this->currency->get_decimal_separator('edit');
+		$thousands = $this->currency->get_thousand_separator( 'edit' );
+		$decimals  = $this->currency->get_decimal_separator( 'edit' );
 		$prefix    = $this->currency->get_prefix();
 		$suffix    = $this->currency->get_suffix();
 		$value     = number_format( $amount, $this->currency->get_precision(), $decimals, $thousands );
+
 		return ( $negative ? '-' : '' ) . $prefix . $value . $suffix;
 	}
 

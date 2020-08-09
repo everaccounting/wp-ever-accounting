@@ -7,13 +7,17 @@
  * @package     EverAccounting/Classes
  */
 
+namespace EAccounting;
+
+use EverAccounting\Abstracts\Base_Object;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EAccounting_Category
  * @since 1.0.2
  */
-class EAccounting_Category extends EAccounting_Object {
+class Category extends Base_Object {
 	/**
 	 * Category Data array.
 	 *
@@ -34,7 +38,7 @@ class EAccounting_Category extends EAccounting_Object {
 	 * should be used. It is possible, but the aforementioned are preferred and are the only
 	 * methods that will be maintained going forward.
 	 *
-	 * @param int|object|EAccounting_Category $data object to read.
+	 * @param int|object|Category $data object to read.
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
@@ -60,7 +64,7 @@ class EAccounting_Category extends EAccounting_Object {
 	 *
 	 * @param int $id
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function read( $id ) {
 		$this->set_defaults();
@@ -79,7 +83,7 @@ class EAccounting_Category extends EAccounting_Object {
 		}
 
 		if ( ! $item || ! $item->id ) {
-			throw new Exception( __( 'Invalid category.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Invalid category.', 'wp-ever-accounting' ) );
 		}
 
 		// Gets extra data associated with the order if needed.
@@ -100,7 +104,7 @@ class EAccounting_Category extends EAccounting_Object {
 	 * @return void
 	 * @since 1.0.2
 	 */
-	protected function validate_props() {
+	public function validate_props() {
 		global $wpdb;
 
 		if ( ! $this->get_date_created( 'edit' ) ) {
@@ -120,27 +124,26 @@ class EAccounting_Category extends EAccounting_Object {
 		}
 
 		if ( empty( $this->get_name( 'edit' ) ) ) {
-			throw new Exception( __( 'Category name is required', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Category name is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_type( 'edit' ) ) ) {
-			throw new Exception( __( 'Category type is required', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Category type is required', 'wp-ever-accounting' ) );
 		}
 
 
 		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories where name=%s AND type=%s", $this->get_name( 'edit' ), $this->get_type( 'edit' ) ) ) ) {
 			if ( ! empty( $existing_id ) && $existing_id != $this->get_id() ) {
-				throw new Exception( __( 'Duplicate category name.', 'wp-ever-accounting' ) );
+				throw new \Exception( __( 'Duplicate category name.', 'wp-ever-accounting' ) );
 			}
 		}
 
 	}
 
-
 	/**
 	 * Create a new account in the database.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 1.0.0
 	 */
 	public function create() {
@@ -158,20 +161,20 @@ class EAccounting_Category extends EAccounting_Object {
 
 		$data = wp_unslash( apply_filters( 'eaccounting_new_category  _data', $account_data ) );
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_categories', $data ) ) {
-			throw new Exception( $wpdb->last_error );
+			throw new \Exception( $wpdb->last_error );
 		}
 
 		do_action( 'eaccounting_insert_category', $this->get_id(), $this );
 
 		$this->set_id( $wpdb->insert_id );
 		$this->apply_changes();
-		$this->set_object_read(true);
+		$this->set_object_read( true );
 	}
 
 	/**
 	 * Update the category in the database.
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 1.0.0
 	 *
 	 */
@@ -185,14 +188,14 @@ class EAccounting_Category extends EAccounting_Object {
 
 			try {
 				$wpdb->update( $wpdb->prefix . 'ea_categories', $changes, array( 'id' => $this->get_id() ) );
-			} catch ( Exception $e ) {
-				throw new Exception( __( 'Could not update category.', 'wp-ever-accounting' ) );
+			} catch ( \Exception $e ) {
+				throw new \Exception( __( 'Could not update category.', 'wp-ever-accounting' ) );
 			}
 
 			do_action( 'eaccounting_update_category', $this->get_id(), $changes, $this->data );
 
 			$this->apply_changes();
-			$this->set_object_read(true);
+			$this->set_object_read( true );
 			wp_cache_delete( 'category-item-' . $this->get_id(), 'categories' );
 		}
 	}
@@ -202,7 +205,7 @@ class EAccounting_Category extends EAccounting_Object {
 	 * if exist then update otherwise create.
 	 *
 	 * @return int|mixed
-	 * @throws Exception
+	 * @throws \Exception
 	 * @since 1.0.0
 	 */
 	public function save() {

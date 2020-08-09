@@ -8,14 +8,35 @@ window.eaccounting = window.eaccounting || {};
 (function ($, window, wp, document, undefined) {
 	'use strict';
 
-	eaccounting.ajax = function (data, onSuccess, onError) {
-		$.ajax({
-			url: ajaxurl,
-			data: data,
-			success: onSuccess,
-			error: onError,
-		});
-	}
+	//
+	// $.extend($.validator.messages, {
+	// 	required: "This field is required.",
+	// 	remote: "Please fix this field.",
+	// 	email: "Please enter a valid email address.",
+	// 	url: "Please enter a valid URL.",
+	// 	date: "Please enter a valid date.",
+	// 	dateISO: "Please enter a valid date (ISO).",
+	// 	number: "Please enter a valid number.",
+	// 	digits: "Please enter only digits.",
+	// 	creditcard: "Please enter a valid credit card number.",
+	// 	equalTo: "Please enter the same value again.",
+	// 	accept: "Please enter a value with a valid extension.",
+	// 	maxlength: $.validator.format("Please enter no more than {0} characters."),
+	// 	minlength: $.validator.format("Please enter at least {0} characters."),
+	// 	rangelength: $.validator.format("Please enter a value between {0} and {1} characters long."),
+	// 	range: $.validator.format("Please enter a value between {0} and {1}."),
+	// 	max: $.validator.format("Please enter a value less than or equal to {0}."),
+	// 	min: $.validator.format("Please enter a value greater than or equal to {0}.")
+	// });
+	//
+	// $.validator.setDefaults({
+	// 	errorElement: 'span',
+	// 	errorClass: 'description error',
+	// });
+	//
+	// $.validator.addMethod("currency_rate", function (value, element) {
+	// 	return this.optional(element) || !/[^\d.]+/g.test(value);
+	// }, "numbers, and dot only please");
 
 	eaccounting.redirect = function (url) {
 		url = url.trim();
@@ -48,24 +69,6 @@ window.eaccounting = window.eaccounting || {};
 		}
 		if (message)
 			$.eaccounting_notice(message, success ? 'success' : 'error');
-	}
-
-	eaccounting.validate_rate = function (value) {
-		value.replace(/[^\d.]+/g, '')
-	}
-
-	eaccounting.handle_dropdown = function (e) {
-		// e.preventDefault();
-		// $('.ea-dropdown').removeClass('active');
-		// var wrapper = $(e.target).closest('.ea-dropdown');
-		//
-		// if (wrapper.length) {
-		// 	if (wrapper.hasClass('active')) {
-		// 		return wrapper.removeClass('active');
-		// 	}
-		//
-		// 	return wrapper.addClass('active');
-		// }
 	}
 
 
@@ -119,20 +122,27 @@ jQuery(function ($) {
 	};
 
 	$.eaccounting_select2 = function (el, options) {
-		console.log(options);
-		plugin = this;
-		plugin.$el = $(el);
-		plugin.data = {};
-		plugin.ajax = $(el).hasClass('ea-ajax-select2');
-		plugin.createable = $(el).attr('data-createable');
-		plugin.data.nonce = $(el).attr('data-nonce');
-		plugin.data.action = $(el).attr('data-action');
-		plugin.data.type = $(el).attr('data-type');
-		plugin.options = $.extend(true, {}, $.eaccounting_select2.defaultOptions, options);
-
-
-		if (plugin.ajax) {
-			plugin.options = $.extend(true, {}, plugin.options, {
+		this.$el = $(el);
+		this.has_search = this.$el.is("[data-search]");
+		this.search_data = this.has_search ? this.$el.data('search') : {};
+		this.has_modal = this.$el.is("[data-modal]");
+		this.moda_data = this.has_modal ? this.$el.data('modal') : {};
+		this.id = this.$el.attr('id');
+		// var plugin = this;
+		// 	plugin.ajax =
+		// plugin.$el = $(el);
+		// plugin.data = {};
+		// plugin.ajax = $(el).hasClass('ea-ajax-select2');
+		// plugin.createable = $(el).hasClass('enable-create');
+		// plugin.data.nonce = $(el).attr('data-nonce');
+		// plugin.data.action = $(el).attr('data-action');
+		// plugin.data.type = $(el).attr('data-type');
+		// plugin.options = $.extend(true, {}, $.eaccounting_select2.defaultOptions, options);
+		// console.log($(el).data('search'));
+		//
+		var self = this;
+		if (this.has_search) {
+			options = $.extend(true, {}, options, {
 				ajax: {
 					cache: true,
 					delay: 500,
@@ -140,13 +150,10 @@ jQuery(function ($) {
 					method: 'POST',
 					dataType: 'json',
 					data: function (params) {
-						return {
-							action: plugin.data.action,
-							nonce: plugin.data.nonce,
-							type: plugin.data.type,
+						return $.extend(true, {}, self.search_data, {
 							search: params.term,
 							page: params.page
-						};
+						});
 					},
 					processResults: function (data, params) {
 						params.page = params.page || 1;
@@ -158,31 +165,71 @@ jQuery(function ($) {
 						};
 					}
 				},
-				placeholder: plugin.$el.attr('placeholder') || 'Select..',
+				placeholder: self.$el.attr('placeholder') || 'Select..',
 				allowClear: false
 			});
 		}
-		if ($(el).data('select2')) {
-			$(el).select2('destroy');
+		if (this.$el.data('select2')) {
+			this.$el.select2('destroy');
 		}
-		console.log(plugin.options);
-		var instance = $(el).select2(plugin.options);
-		instance.on('select2:open', () => {
-			if (!$(".select2-results .ea-select2-footer").length) {
-				var $footer = $('<a href="#" class="ea-select2-footer"><span class="dashicons dashicons-plus"></span>Add New</a>')
-					.on('click', function (e) {
-						e.preventDefault();
-						instance.select2("close");
-						plugin.$el.trigger('select2:trigger_add', [instance, plugin]);
-					});
-				$(".select2-results").append($footer);
-			}
-		});
+
+		var instance = this.$el.select2(options);
+		if (this.has_modal) {
+			instance.on('select2:open', (e) => {
+				var $results = $('#select2-' + self.id + '-results').closest('.select2-results');
+				if (!$results.children('.ea-select2-footer').length) {
+					console.log('nai');
+					var $footer = $('<a href="#" class="ea-select2-footer"><span class="dashicons dashicons-plus"></span>Add New</a>')
+						.on('click', function (e) {
+							e.preventDefault();
+							instance.select2("close");
+							self.$el.trigger(self.moda_data.event, [instance, self.moda_data]);
+						});
+					$results.append($footer);
+				}
+			});
+		}
 
 		return instance;
 	};
 
 	$.eaccounting_select2.defaultOptions = {};
-	$('.ea-ajax-select2').eaccounting_select2({test:true});
+	$('[data-search]').eaccounting_select2({test: true});
+	$('.ea-ajax-select2').eaccounting_select2({test: true});
 });
 
+jQuery.fn.ea_color_picker = function () {
+	return this.each(function () {
+		var el = this;
+		jQuery(el)
+			.iris({
+				change: function (event, ui) {
+					jQuery(el).parent().find('.colorpickpreview').css({backgroundColor: ui.color.toString()});
+				},
+				hide: true,
+				border: true
+			})
+			.on('click focus', function (event) {
+				event.stopPropagation();
+				jQuery('.iris-picker').hide();
+				jQuery(el).closest('div').find('.iris-picker').show();
+				jQuery(el).data('original-value', jQuery(el).val());
+			})
+			.on('change', function () {
+				if (jQuery(el).is('.iris-error')) {
+					var original_value = jQuery(this).data('original-value');
+
+					if (original_value.match(/^\#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})jQuery/)) {
+						jQuery(el).val(jQuery(el).data('original-value')).change();
+					} else {
+						jQuery(el).val('').change();
+					}
+				}
+			});
+
+		jQuery('body').on('click', function () {
+			jQuery('.iris-picker').hide();
+		});
+
+	});
+};

@@ -20,7 +20,7 @@
   margin-bottom: 20px !important;
 }
 
-.eaccounting{
+.eaccounting {
   .blockUI.blockOverlay {
 	position: relative;
 
@@ -62,9 +62,13 @@
 	}
   }
 
-  &.ea-backbone-modal-shipping-method-settings .ea-backbone-modal-content {
-	width: 75%;
-	min-width: 500px;
+  .wp-picker-input-wrap {
+	display: none;
+  }
+
+  .wp-picker-holder {
+	display: inline-block;
+	margin-left: 20px;
   }
 
   .select2-container {
@@ -224,6 +228,7 @@
 	padding: 1em 1.5em;
 	background: #fcfcfc;
 	border-top: 1px solid #dfdfdf;
+
 	.inner {
 	  text-align: right;
 	  line-height: 23px;
@@ -235,8 +240,8 @@
   }
 }
 
-.ea-modal-open{
-  .select2-container--open{
+.ea-modal-open {
+  .select2-container--open {
 	z-index: 9999999 !important;
   }
 }

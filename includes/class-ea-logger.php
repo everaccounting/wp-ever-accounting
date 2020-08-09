@@ -7,12 +7,14 @@
  * @package        EverAccounting/Classes
  */
 
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
  * EAccounting_Logger class.
  */
-class EAccounting_Logger {
+class Logger {
 
 	/**
 	 * @var string
@@ -278,9 +280,9 @@ class EAccounting_Logger {
 			}
 			do_action( 'eaccounting_log_remove', $handle, $removed );
 		}
+
 		return $removed;
 	}
-
 
 
 	/**

@@ -8,12 +8,16 @@
  * @since   1.0.0
  */
 
+namespace EverAccounting;
+
+use Exception as Base;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Data exception class.
  */
-class EAccounting_Exception extends Exception {
+class Exception extends Base {
 
 	/**
 	 * Sanitized error code.
@@ -32,10 +36,10 @@ class EAccounting_Exception extends Exception {
 	/**
 	 * Setup exception.
 	 *
-	 * @param string $code             Machine-readable error code, e.g `eaccounting_invalid_transaction_id`.
-	 * @param string $message          User-friendly translated error message, e.g. 'Transaction ID is invalid'.
-	 * @param int    $http_status_code Proper HTTP status code to respond with, e.g. 400.
-	 * @param array  $data             Extra error data.
+	 * @param string $code Machine-readable error code, e.g `eaccounting_invalid_transaction_id`.
+	 * @param string $message User-friendly translated error message, e.g. 'Transaction ID is invalid'.
+	 * @param int $http_status_code Proper HTTP status code to respond with, e.g. 400.
+	 * @param array $data Extra error data.
 	 */
 	public function __construct( $code, $message, $http_status_code = 400, $data = array() ) {
 		$this->error_code = $code;

@@ -1,10 +1,12 @@
 <?php
+namespace EAccounting;
+
 defined( 'ABSPATH' ) || exit();
 require_once dirname( __FILE__ ) . '/interfaces/Arrayable.php';
 require_once dirname( __FILE__ ) . '/interfaces/JSONable.php';
 require_once dirname( __FILE__ ) . '/interfaces/Stringable.php';
 
-class EAccounting_Collection {
+class Collection {
 	/**
 	 * The items contained in the collection.
 	 *

@@ -8,7 +8,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-require_once dirname( __FILE__ ) .'/metaboxes/class-ea-overview-metabox-categories.php';
+require_once dirname( __FILE__ ) . '/metaboxes/class-ea-expense-by-category.php';
 
 /**
  * Initializes meta boxes displayed via the Overview screen.
@@ -16,7 +16,7 @@ require_once dirname( __FILE__ ) .'/metaboxes/class-ea-overview-metabox-categori
  * @since 1.9.4
  */
 function eaccounting_init_overview_meta_boxes() {
-	new EAccounting_Overview_Metabox_Category();
+	new \EverAccounting\Admin\Overview\Expense_By_Category();
 	/**
 	 * Fires after all core Overview meta boxes have been instantiated.
 	 *

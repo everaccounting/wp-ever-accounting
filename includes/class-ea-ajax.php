@@ -5,12 +5,20 @@
  * @class   EAccounting_Ajax
  * @package EAccounting_Ajax/Classes
  */
+
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Ajax {
+/**
+ * Class EAccounting_Ajax
+ * @since 1.0.2
+ */
+class Ajax {
 
 	/**
 	 * EAccounting_Ajax constructor.
+	 *
 	 */
 	public function __construct() {
 		add_action( 'init', array( __CLASS__, 'define_ajax' ), 0 );
@@ -20,6 +28,8 @@ class EAccounting_Ajax {
 
 	/**
 	 * Set EA AJAX constant and headers.
+	 *
+	 * @since 1.0.2
 	 */
 	public static function define_ajax() {
 		// phpcs:disable
@@ -95,6 +105,9 @@ class EAccounting_Ajax {
 			'get_currency',
 			'dropdown_search',
 			'edit_currency',
+			'get_account',
+			'edit_account',
+			'edit_category',
 		);
 
 		foreach ( $ajax_events as $ajax_event ) {
@@ -102,6 +115,11 @@ class EAccounting_Ajax {
 		}
 	}
 
+	/**
+	 * Item status updater.
+	 *
+	 * @since 1.0.2
+	 */
 	public static function item_status_update() {
 		check_ajax_referer( 'ea_status_update', 'nonce' );
 		$object_id   = ! empty( $_REQUEST['objectid'] ) ? absint( $_REQUEST['objectid'] ) : null;
@@ -111,7 +129,7 @@ class EAccounting_Ajax {
 		if ( empty( $object_id ) || empty( $object_type ) ) {
 			wp_send_json_error( [ 'message' => __( 'No object type to update status', 'wp-ever-accounting' ) ] );
 		}
-		$result = new WP_Error( 'invalid_object', __( 'Invalid object type.', 'wp-ever-accounting' ) );
+		$result = new \WP_Error( 'invalid_object', __( 'Invalid object type.', 'wp-ever-accounting' ) );
 		switch ( $object_type ) {
 			case 'currency':
 				$result = eaccounting_insert_currency( [
@@ -120,6 +138,11 @@ class EAccounting_Ajax {
 				] );
 				break;
 			default:
+				/**
+				 * Hook into this for any custom object handling
+				 * @var int $object_id ID of the object.
+				 * @var boolean $enabled status of the object.
+				 */
 				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
 		}
 
@@ -131,21 +154,34 @@ class EAccounting_Ajax {
 		wp_send_json_success( [ 'message' => $result->is_enabled() ? sprintf( __( '%s enabled!', 'wp-ever-accounting' ), ucfirst( $object_type ) ) : sprintf( __( '%s disabled!', 'wp-ever-accounting' ), ucfirst( $object_type ) ) ] );
 	}
 
+
+	/**
+	 * handle dropdown search.
+	 *
+	 * @since 1.0.2
+	 */
 	public static function dropdown_search() {
 		check_ajax_referer( 'dropdown-search', 'nonce' );
 		$search  = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page    = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
-		$more    = false;
 		$results = array();
 		$type    = isset( $_REQUEST['type'] ) ? eaccounting_clean( $_REQUEST['type'] ) : '';
 
 		switch ( $type ) {
 			case 'currency_code':
-				$results = eaccounting()->currencies->get_currencies( [ 'search' => $search ] )->select( 'code as id, CONCAT(name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
+				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT(name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
+				break;
+
+			case 'account':
+				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, name as text' )->get();
+				break;
+
+			case 'customer':
+				$results = Query_Contact::init()->wp_query( [ 'search' => $search ] )->isCustomer()->select( 'id, name as text' )->get();
 				break;
 
 			default:
-				do_action( 'eaccounting_dropdown_search_' . eaccounting_clean( $type ) );
+				do_action( 'eaccounting_dropdown_search_' . eaccounting_clean( $type ), $search, $page );
 				break;
 		}
 
@@ -154,12 +190,17 @@ class EAccounting_Ajax {
 				'page'       => $page,
 				'results'    => $results,
 				'pagination' => array(
-					'more' => $more
+					'more' => false
 				)
 			)
 		);
 	}
 
+	/**
+	 * Get currency data.
+	 *
+	 * @since 1.0.2
+	 */
 	public static function get_currency() {
 		$posted = eaccounting_clean( $_REQUEST );
 		$code   = ! empty( $posted['code'] ) ? $posted['code'] : false;
@@ -168,14 +209,14 @@ class EAccounting_Ajax {
 				'message' => __( 'No code received', 'wp-ever-accounting' ),
 			] );
 		}
-		$currency = eaccounting_get_currency_by_code($code);
-		if(empty($currency) || is_wp_error($currency)){
+		$currency = eaccounting_get_currency_by_code( $code );
+		if ( empty( $currency ) || is_wp_error( $currency ) ) {
 			wp_send_json_error( [
 				'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
 			] );
 		}
 
-		wp_send_json_success($currency->toArray());
+		wp_send_json_success( $currency->toArray() );
 	}
 
 	/**
@@ -210,6 +251,101 @@ class EAccounting_Ajax {
 		wp_die();
 	}
 
+	/**
+	 * Handle ajax action of creating/updating account.
+	 * @return void
+	 * @since 1.0.2
+	 */
+	public static function edit_account() {
+		check_ajax_referer( 'edit_account', '_wpnonce' );
+		$posted  = eaccounting_clean( $_REQUEST );
+		$created = eaccounting_insert_account( $posted );
+		if ( is_wp_error( $created ) ) {
+			wp_send_json_error( [
+				'message' => $created->get_error_message()
+			] );
+		}
+
+		$message  = __( 'Account updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Account created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( [ 'action' ], eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
+		wp_send_json_success( [
+			'message'  => $message,
+			'redirect' => $redirect,
+			'item'     => $created->get_data()
+		] );
+
+		wp_die();
+	}
+
+
+	/**
+	 * Handle ajax action of creating/updating account.
+	 * @return void
+	 * @since 1.0.2
+	 */
+	public static function get_account() {
+		check_ajax_referer( 'get_account', '_wpnonce' );
+		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
+		$account = eaccounting_get_account( $id );
+		if ( $account ) {
+			wp_send_json_success( $account->get_data() );
+			wp_die();
+		}
+
+		wp_send_json_error( [] );
+
+		wp_die();
+	}
+
+	/**
+	 * Handle ajax action of creating/updating account.
+	 * @return void
+	 * @since 1.0.2
+	 */
+	public static function edit_category() {
+		check_ajax_referer( 'edit_category', '_wpnonce' );
+		$posted  = eaccounting_clean( $_REQUEST );
+		$created = eaccounting_insert_category( $posted );
+		if ( is_wp_error( $created ) ) {
+			wp_send_json_error( [
+				'message' => $created->get_error_message()
+			] );
+		}
+
+		$message  = __( 'Category updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Category created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( [ 'action' ], eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
+		wp_send_json_success( [
+			'message'  => $message,
+			'redirect' => $redirect,
+			'item'     => $created->get_data()
+		] );
+
+		wp_die();
+	}
+
+
+	/**
+	 * Check permission
+	 *
+	 * since 1.0.0
+	 */
+	public function check_permission() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => __( 'Error: You are not allowed to do this.', 'wp-ever-accounting' ) ) );
+		}
+	}
 }
 
-return new EAccounting_Ajax();
+return new Ajax();

@@ -7,22 +7,51 @@
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();
+require_once dirname( __FILE__ ) . '/list-table-transactions.php';
+
 /**
  * render transactions page.
  *
  * @since 1.0.2
  */
 function eaccounting_admin_transactions_page() {
-	ob_start();
+	$list_table = new \EverAccounting\Admin\Transactions\List_Table_Transactions();
+	$list_table->prepare_items();
 	?>
 	<div class="wrap">
-		<h2>
-			<?php _e('Transactions', 'wp-ever-accounting') ?>
-		</h2>
-		<div id="tab_container">
+		<h1>
+			<?php _e( 'Transactions', 'wp-ever-accounting' ); ?>
+		</h1>
+		<?php
 
-		</div><!-- #tab_container-->
-	</div><!-- .wrap -->
+		/**
+		 * Fires at the top of the admin transactions page.
+		 *
+		 * Use this hook to add content to this section of transactions.
+		 *
+		 * @since 1.0.2
+		 */
+		do_action( 'eaccounting_transactions_page_top' );
+
+		?>
+		<form id="ea-transactions-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-currencies' ), 'eaccounting-transactions' ); ?>
+
+			<input type="hidden" name="page" value="ea-transactions"/>
+
+			<?php $list_table->views() ?>
+			<?php $list_table->display() ?>
+		</form>
+		<?php
+		/**
+		 * Fires at the bottom of the admin transactions page.
+		 *
+		 * Use this hook to add content to this section of transactions Tab.
+		 *
+		 * @since 1.0.2
+		 */
+		do_action( 'eaccounting_transactions_page_bottom' );
+		?>
+	</div>
 	<?php
-	echo ob_get_clean();
 }

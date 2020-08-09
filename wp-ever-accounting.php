@@ -26,48 +26,6 @@ final class EverAccounting {
 	public $version = '1.0.1';
 
 	/**
-	 * @var EAccounting_Query
-	 * @since 1.0.2
-	 */
-	public $query = null;
-
-	/**
-	 * @var EAccounting_Query_Account
-	 * @since 1.0.2
-	 */
-	public $accounts = null;
-
-	/**
-	 * @var EAccounting_Query
-	 * @since 1.0.2
-	 */
-	public $categories = null;
-
-	/**
-	 * @var EAccounting_Query_Currency
-	 * @since 1.0.2
-	 */
-	public $currencies = null;
-
-	/**
-	 * @var EAccounting_Query
-	 * @since 1.0.2
-	 */
-	public $contacts = null;
-
-	/**
-	 * @var EAccounting_Query
-	 * @since 1.0.2
-	 */
-	public $transactions = null;
-
-	/**
-	 * @var EAccounting_Query
-	 * @since 1.0.2
-	 */
-	public $transfers = null;
-
-	/**
 	 * @var EAccounting_Settings
 	 * @since 1.0.2
 	 */
@@ -89,7 +47,6 @@ final class EverAccounting {
 	 *
 	 * @return EverAccounting - Main instance.
 	 * @since 1.0.0
-	 * @static
 	 */
 	public static function init() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EverAccounting ) ) {
@@ -105,7 +62,6 @@ final class EverAccounting {
 	 *
 	 * @return string
 	 * @since 1.2.0
-	 * @access public
 	 **/
 	public function get_version() {
 		return $this->version;
@@ -256,11 +212,11 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
+
 		//Abstract classes.
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-object.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-overview-metabox.php' );
-		//require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-contact.php' );
-		//require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-transaction.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-base-object.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-metabox.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-wp-query.php' );
 
 
 		//Core classes.
@@ -273,8 +229,13 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-account.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-currency.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transaction.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-contact.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-category.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transaction.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-category.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
 
@@ -287,16 +248,20 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php' );
+			require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php' );
-			require_once( EACCOUNTING_ABSPATH . '/includes/admin/purchases/purchases.php' );
+			require_once( EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/reports/reports.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php' );
@@ -337,9 +302,7 @@ final class EverAccounting {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
 
-		$this->settings   = new EAccounting_Settings;
-		$this->accounts   = EAccounting_Query_Account::init();
-		$this->currencies = EAccounting_Query_Currency::init();
+		$this->settings = new \EverAccounting\Admin\Settings();
 
 		// Init action.
 		do_action( 'eaccounting_init' );

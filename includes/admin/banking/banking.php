@@ -7,6 +7,10 @@
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();
+
+require_once dirname( __FILE__ ) .'/accounts/accounts.php';
+
+
 /**
  * render banking page.
  *
@@ -50,7 +54,7 @@ function eaccounting_get_banking_tabs() {
 	$tabs             = array();
 	$tabs['accounts']   = __( 'Accounts', 'wp-ever-accounting' );
 	$tabs['transfers']  = __( 'Transfers', 'wp-ever-accounting' );
-	$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
+	//$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_banking_tabs', $tabs );
 }

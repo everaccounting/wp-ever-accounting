@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit();
 
 
-class Currencies_List_Table extends EAccounting_Admin_List_Table {
+class Currencies_List_Table extends EAccounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *

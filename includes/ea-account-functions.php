@@ -5,7 +5,7 @@
  *
  * @param $account
  *
- * @return EAccounting_Account|false
+ * @return \EverAccounting\Account|false
  * @since 1.0.0
  *
  */
@@ -15,13 +15,13 @@ function eaccounting_get_account( $account ) {
 	}
 
 	try {
-		if ( $account instanceof EAccounting_Account ) {
+		if ( $account instanceof \EverAccounting\Account ) {
 			$_account = $account;
-		} elseif ( is_object( $account ) && !empty($account->id)) {
-			$_account = new EAccounting_Account( null );
+		} elseif ( is_object( $account ) && ! empty( $account->id ) ) {
+			$_account = new \EverAccounting\Account( null );
 			$_account->populate( $account );
 		} else {
-			$_account = new EAccounting_Account( absint( $account ) );
+			$_account = new \EverAccounting\Account( absint( $account ) );
 		}
 
 		if ( ! $_account->exists() ) {
@@ -41,7 +41,7 @@ function eaccounting_get_account( $account ) {
  *
  * @param array $args Account arguments.
  *
- * @return EAccounting_Account|WP_Error
+ * @return \EverAccounting\Account|WP_Error
  * @since 1.0.0
  *
  */
@@ -52,7 +52,7 @@ function eaccounting_insert_account( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$account      = new EAccounting_Account( $args['id'] );
+		$account      = new \EverAccounting\Account( $args['id'] );
 		$account->set_props( $args );
 		$account->save();
 
@@ -74,7 +74,7 @@ function eaccounting_insert_account( $args ) {
  */
 function eaccounting_delete_account( $account_id ) {
 	try {
-		$account = new EAccounting_Account( $account_id );
+		$account = new \EverAccounting\Account( $account_id );
 		if ( ! $account->exists() ) {
 			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}

@@ -5,10 +5,24 @@
  * @package  EverAccounting/Classes
  * @since    1.0.2
  */
+namespace EverAccounting;
+
+use EverAccounting\Traits\WP_Query;
 
 defined( 'ABSPATH' ) || exit;
 
-class EAccounting_Query_Account extends EAccounting_Query {
+class Query_Account extends Query {
+	/**
+	 * Implement WP style query.
+	 */
+	use WP_Query;
+
+	/**
+	 * @var string
+	 * @since 1.0.2
+	 */
+	protected $cache_group = 'contacts';
+
 	/**
 	 * Table name.
 	 *
@@ -23,57 +37,25 @@ class EAccounting_Query_Account extends EAccounting_Query {
 	 *
 	 * @param string $id
 	 *
-	 * @return EAccounting_Query_Account
+	 * @return Query_Account
 	 * @since 1.0.0
 	 */
 	public static function init( $id = 'account_query' ) {
-		global $wpdb;
-		$builder       = new self();
-		$builder->id   = ! empty( $id ) ? $id : uniqid( '', true );
-		$builder->from = $wpdb->prefix . self::$table;
-
+		$builder     = new self();
+		$builder->id = $id;
+		$builder->from( self::$table );
 		return $builder;
 	}
 
-
-	public function get_accounts( $args = array() ) {
-		$defaults = array(
-			'number'  => 20,
-			'offset'  => 0,
-			'include' => array(),
-			'exclude' => array(),
-			'status'  => '',
-			'order'   => 'DESC',
-			'orderby' => 'id',
-			'search'       => '',
-		);
-
-		$args = (array) wp_parse_args( $args, $defaults );
-
-		$builder = $this->copy();
-
-		if ( ! empty( $args['search'] ) ) {
-			$builder->search( eaccounting_clean( $args['search'] ), array(
-				'name',
-				'number',
-				'bank_name',
-				'bank_phone',
-				'bank_address'
-			) );
-		}
-
-		if ( $args['status'] === 'active' ) {
-			$builder->where( 'enabled', 1 );
-		}
-
-		if ( $args['status'] === 'inactive' ) {
-			$builder->where( 'enabled', 0 );
-		}
-
-		$builder->offset( absint( $args['offset'] ) );
-		$builder->limit( absint( $args['number'] ) );
-		$builder->order_by( $args['orderby'], $args['order'] );
-
-		return $builder;
+	/**
+	 * Searchable columns for the current table.
+	 *
+	 * @return array Table columns.
+	 * @since 1.0.2
+	 *
+	 */
+	protected function get_search_columns() {
+		return array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
 	}
+
 }

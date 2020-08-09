@@ -1,7 +1,8 @@
 <?php
+namespace EverAccounting;
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Scripts {
+class Scripts {
 	/**
 	 * The single instance of the class.
 	 *
@@ -224,4 +225,4 @@ class EAccounting_Scripts {
 	}
 }
 
-EAccounting_Scripts::instance();
+Scripts::instance();

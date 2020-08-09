@@ -1,58 +1,49 @@
 <?php
+
+namespace EverAccounting;
+
+use EverAccounting\Traits\WP_Query;
+
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Query_Currency extends EAccounting_Query {
+class Query_Currency extends Query {
+	/**
+	 * Implement WP style query.
+	 */
+	use WP_Query;
+
+	/**
+	 * @var string
+	 * @since 1.0.2
+	 */
+	protected $cache_group = 'currencies';
+
 	/**
 	 * Static constructor.
 	 *
 	 *
-	 * @since 1.0.0
+	 * @param string $id
 	 *
+	 * @return Query_Currency
+	 * @since 1.0.2
 	 */
-	public static function init( $id = null ) {
+	public static function init( $id = 'currencies_query' ) {
 		$builder     = new self();
-		$builder->id = ! empty( $id ) ? $id : uniqid();
+		$builder->id = $id;
 		$builder->from( 'ea_currencies' );
 
 		return $builder;
 	}
 
 
-	public function get_currencies( $args = array() ) {
-		$defaults = array(
-			'number'  => 20,
-			'offset'  => 0,
-			'include' => array(),
-			'exclude' => array(),
-			'status'  => '',
-			'order'   => 'DESC',
-			'orderby' => 'id',
-			'search'  => '',
-		);
-
-		$args = (array) wp_parse_args( $args, $defaults );
-
-		$builder = $this->copy();
-
-		if ( ! empty( $args['search'] ) ) {
-			$builder->search( eaccounting_clean( $args['search'] ), array(
-				'name',
-				'code',
-			) );
-		}
-
-		if ( $args['status'] === 'active' ) {
-			$builder->where( 'enabled', 1 );
-		}
-
-		if ( $args['status'] === 'inactive' ) {
-			$builder->where( 'enabled', 0 );
-		}
-
-		$builder->offset( absint( $args['offset'] ) );
-		$builder->limit( absint( $args['number'] ) );
-		$builder->order_by( $args['orderby'], $args['order'] );
-
-		return $builder;
+	/**
+	 * Searchable columns for the current table.
+	 *
+	 * @return array Table columns.
+	 * @since 1.0.2
+	 *
+	 */
+	protected function get_search_columns() {
+		return array( 'name', 'code', 'symbol', 'rate' );
 	}
 }

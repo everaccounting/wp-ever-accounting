@@ -29,7 +29,7 @@ function eaccounting_get_contact_types() {
  *
  * @param $contact
  *
- * @return EAccounting_Contact|false
+ * @return \EverAccounting\Contact|false
  * @since 1.0.0
  *
  */
@@ -39,7 +39,7 @@ function eaccounting_get_contact( $contact ) {
 	}
 
 	try {
-		$contact = new EAccounting_Contact( $contact );
+		$contact = new \EAccounting\Category( $contact );
 		if ( ! $contact->exists() ) {
 			throw new Exception( __( 'Invalid contact.', 'wp-ever-accounting' ) );
 		}
@@ -57,7 +57,7 @@ function eaccounting_get_contact( $contact ) {
  *
  * @param array $args Contact arguments.
  *
- * @return EAccounting_Contact|WP_Error
+ * @return \EAccounting\Category|WP_Error
  * @since 1.0.0
  *
  */
@@ -67,7 +67,7 @@ function eaccounting_insert_contact( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$contact      = new EAccounting_Contact( $args['id'] );
+		$contact      = new \EAccounting\Category( $args['id'] );
 		$contact->set_props( $args );
 		$contact->save();
 
@@ -89,7 +89,7 @@ function eaccounting_insert_contact( $args ) {
  */
 function eaccounting_delete_contact( $contact_id ) {
 	try {
-		$contact = new EAccounting_Contact( $contact_id );
+		$contact = new \EAccounting\Category( $contact_id );
 		if ( ! $contact->exists() ) {
 			throw new Exception( __( 'Invalid contact.', 'wp-ever-accounting' ) );
 		}

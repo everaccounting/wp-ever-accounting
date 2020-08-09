@@ -1,7 +1,13 @@
 <?php
+
+namespace EAccounting;
+
+use EverAccounting\Abstracts\Base_Object;
+use EverAccounting\Exception;
+
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Currency extends EAccounting_Object {
+class Currency extends Base_Object {
 	/**
 	 * A group must be set to to enable caching.
 	 *
@@ -93,11 +99,11 @@ class EAccounting_Currency extends EAccounting_Object {
 		}
 
 		if ( empty( $this->get_code( 'edit' ) ) ) {
-			throw new Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty-code', __( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_rate( 'edit' ) ) ) {
-			throw new Exception( __( 'Currency rate is required', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty-rate', __( 'Currency rate is required', 'wp-ever-accounting' ) );
 		}
 
 		$currencies = eaccounting_get_global_currencies();
@@ -127,7 +133,7 @@ class EAccounting_Currency extends EAccounting_Object {
 
 		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_currencies where code=%s", $this->get_code( 'edit' ) ) ) ) {
 			if ( ! empty( $existing_id ) && $existing_id != $this->get_id() ) {
-				throw new Exception( __( 'Duplicate currency code.', 'wp-ever-accounting' ) );
+				throw new Exception( 'invalid-code', __( 'Duplicate currency code.', 'wp-ever-accounting' ) );
 			}
 		}
 	}
@@ -155,7 +161,7 @@ class EAccounting_Currency extends EAccounting_Object {
 		}
 
 		if ( ! $item || ! $item->id ) {
-			throw new Exception( __( 'Invalid currency.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid-id', __( 'Invalid currency.', 'wp-ever-accounting' ) );
 		}
 
 		$this->populate( $item );
@@ -187,7 +193,7 @@ class EAccounting_Currency extends EAccounting_Object {
 
 		$data = wp_unslash( apply_filters( 'eaccounting_new_currency_data', $currency_data ) );
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_currencies', $data ) ) {
-			throw new Exception( $wpdb->last_error );
+			throw new Exception( 'db-error', $wpdb->last_error );
 		}
 
 		do_action( 'eaccounting_insert_currency', $this->get_id(), $this );
@@ -209,14 +215,14 @@ class EAccounting_Currency extends EAccounting_Object {
 
 		$this->validate_props();
 		$changes = $this->get_changes();
-		error_log(print_r($changes, true));
+		error_log( print_r( $changes, true ) );
 		if ( ! empty( $changes ) ) {
 			do_action( 'eaccounting_pre_update_currency', $this->get_id(), $changes );
 
 			try {
 				$wpdb->update( $wpdb->prefix . 'ea_currencies', $changes, array( 'id' => $this->get_id() ) );
 			} catch ( Exception $e ) {
-				throw new Exception( __( 'Could not update currency.', 'wp-ever-accounting' ) );
+				throw new Exception( 'db-error', __( 'Could not update currency.', 'wp-ever-accounting' ) );
 			}
 
 			do_action( 'eaccounting_update_currency', $this->get_id(), $changes, $this->data );
@@ -468,7 +474,7 @@ class EAccounting_Currency extends EAccounting_Object {
 	 * @param string $method
 	 * @param array $arguments
 	 *
-	 * @return EAccounting_Currency
+	 * @return Currency
 	 */
 	public static function __callStatic( $method, array $arguments ) {
 		return new static( $method, $arguments );
@@ -477,7 +483,7 @@ class EAccounting_Currency extends EAccounting_Object {
 	/**
 	 * equals.
 	 *
-	 * @param EAccounting_Currency $currency
+	 * @param Currency $currency
 	 *
 	 * @return bool
 	 */
@@ -512,6 +518,7 @@ class EAccounting_Currency extends EAccounting_Object {
 		if ( ! $this->is_symbol_first() ) {
 			return '';
 		}
+
 		return $this->get_symbol( 'edit' );
 	}
 

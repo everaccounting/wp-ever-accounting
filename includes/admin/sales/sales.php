@@ -7,6 +7,10 @@
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();
+
+require_once dirname( __FILE__ ) .'/revenues/revenues.php';
+require_once dirname( __FILE__ ) .'/customers/customers.php';
+
 /**
  * render sales page.
  *
@@ -48,7 +52,7 @@ function eaccounting_admin_sales_page() {
  */
 function eaccounting_get_sales_tabs() {
 	$tabs              = array();
-	$tabs['invoices']  = __( 'Invoices', 'wp-ever-accounting' );
+	//$tabs['invoices']  = __( 'Invoices', 'wp-ever-accounting' );
 	$tabs['revenues']  = __( 'Revenues', 'wp-ever-accounting' );
 	$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );
 
