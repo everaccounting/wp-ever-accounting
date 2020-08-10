@@ -70,7 +70,7 @@ class List_Table_Vendors extends List_Table {
 	 *
 	 * @see WP_List_Table::__construct()
 	 *
-	 * @since  1.0
+	 * @since  1.0.2
 	 *
 	 */
 	public function __construct( $args = array() ) {

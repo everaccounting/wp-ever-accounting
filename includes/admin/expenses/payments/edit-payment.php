@@ -7,9 +7,9 @@
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();
-$revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
+$payment_id = isset( $_REQUEST['payment_id'] ) ? absint( $_REQUEST['payment_id'] ) : null;
 try {
-    $revenue = new \EverAccounting\Transaction( $revenue_id );
+    $payment = new \EverAccounting\Transaction( $payment_id );
 } catch ( Exception $e ) {
     wp_die( $e->getMessage() );
 }
@@ -32,14 +32,14 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                     'name'          => 'paid_at',
                     'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
                     'data_type'     => 'date',
-                    'value'         => $revenue->get_paid_at(),
+                    'value'         => $payment->get_paid_at(),
                     'required'      => true,
                 ) );
                 eaccounting_select( array(
                     'wrapper_class' => 'ea-col-6',
                     'label'         => __( 'Account', 'wp-ever-accounting' ),
                     'name'          => 'account_id',
-                    'value'         => $revenue->get_account_id(),
+                    'value'         => $payment->get_account_id(),
                     'options'       => [],
                     'required'      => true,
                     'attr'          => array(
@@ -60,7 +60,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                 eaccounting_text_input( array(
                     'label'         => __( 'Amount', 'wp-ever-accounting' ),
                     'name'          => 'amount',
-                    'value'         => $revenue->get_amount(),
+                    'value'         => $payment->get_amount(),
                     'data_type'     => 'price',
                     'required'      => true,
                     'wrapper_class' => 'ea-col-6',
@@ -70,7 +70,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                     'wrapper_class' => 'ea-col-6',
                     'label'         => __( 'Customer', 'wp-ever-accounting' ),
                     'name'          => 'contact_id',
-                    'value'         => $revenue->get_account_id(),
+                    'value'         => $payment->get_account_id(),
                     'options'       => [],
                     'attr'          => array(
                         'data-footer'      => true,
@@ -90,18 +90,18 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                     'wrapper_class' => 'ea-col-6',
                     'label'         => __( 'Category', 'wp-ever-accounting' ),
                     'name'          => 'category_id',
-                    'value'         => $revenue->get_account_id(),
+                    'value'         => $payment->get_account_id(),
                     'options'       => [],
                     'required'      => true,
                     'attr'          => array(
                         'data-footer'      => true,
                         'data-search'      => eaccounting_esc_json( json_encode( array(
                             'nonce'  => wp_create_nonce( 'dropdown-search' ),
-                            'type'   => 'income_category',
+                            'type'   => 'expense_category',
                             'action' => 'eaccounting_dropdown_search',
                         ) ), true ),
                         'data-modal'       => eaccounting_esc_json( json_encode( array(
-                            'event' => 'ea_request_category_modal',
+                            'event' => 'ea-init-category-modal',
                             'type'  => 'income',
                         ) ), true ),
                         'data-placeholder' => __( 'Select Category', 'wp-ever-accounting' ),
@@ -113,13 +113,13 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                     'placeholder'   => __( 'Enter payment method', 'wp-ever-accounting' ),
                     'wrapper_class' => 'ea-col-6',
                     'required'      => true,
-                    'value'         => $revenue->get_payment_method(),
+                    'value'         => $payment->get_payment_method(),
                     'options'       => eaccounting_get_payment_methods(),
                 ) );
                 eaccounting_textarea( array(
                     'label'         => __( 'Description', 'wp-ever-accounting' ),
                     'name'          => 'description',
-                    'value'         => $revenue->get_description(),
+                    'value'         => $payment->get_description(),
                     'required'      => false,
                     'wrapper_class' => 'ea-col-12',
                     'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
@@ -127,7 +127,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                 eaccounting_text_input( array(
                     'label'         => __( 'Reference', 'wp-ever-accounting' ),
                     'name'          => 'reference',
-                    'value'         => $revenue->get_reference(),
+                    'value'         => $payment->get_reference(),
                     'required'      => false,
                     'wrapper_class' => 'ea-col-6',
                     'placeholder'   => __( 'Enter reference', 'wp-ever-accounting' ),
@@ -136,7 +136,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
             </div>
             <?php
             
-            wp_create_nonce( 'edit_revenue' );
+            wp_create_nonce( 'edit_payment' );
             
             submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
             ?>
