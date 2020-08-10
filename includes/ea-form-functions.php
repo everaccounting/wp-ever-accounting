@@ -47,7 +47,7 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
 		$tip = esc_attr( $tip );
 	}
 
-	return '<span class="eaccounting-help-tip" data-tip="' . $tip . '"></span>';
+	return '<span class="ea-help-tip" data-tip="' . $tip . '"></span>';
 }
 
 /**

@@ -12,7 +12,8 @@
 
 		$('.ea-input-date').datepicker({dateFormat: 'mm-dd-yy'});
 		$('.ea-input-color').ea_color_picker();
-		$('.eaccounting-help-tip').tipTip();
+		$('.ea-select2').select2();
+		$('.ea-help-tip').tipTip();
 		$('.ea-input-price').inputmask('decimal', {
 			alias: 'numeric',
 			groupSeparator: ',',

@@ -65,6 +65,7 @@ class Admin_Assets {
 
 		//core js
 		wp_register_script( 'eaccounting', eaccounting()->plugin_url() . '/assets/js/eaccounting/eaccounting' . $suffix . '.js', array( 'jquery' ), $version );
+		wp_register_script( 'eaccounting-settings', eaccounting()->plugin_url() . '/assets/js/admin/admin-settings' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-quick-add', eaccounting()->plugin_url() . '/assets/js/admin/ea-quick-add' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/js/admin/eaccounting-admin' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-revenue-form', eaccounting()->plugin_url() . '/assets/js/admin/ea-revenue-form' . $suffix . '.js', array( 'jquery', 'underscore', 'backbone', 'wp-util' ), $version );
@@ -94,6 +95,12 @@ class Admin_Assets {
 				'ajax_url'          => eaccounting()->ajax_url(),
 				'global_currencies' => eaccounting_get_global_currencies()
 			) );
+
+			if(eaccounting_is_admin_page('ea-settings')){
+				wp_enqueue_media();
+				wp_enqueue_script( 'eaccounting-settings' );
+			}
+
 		}
 	}
 }

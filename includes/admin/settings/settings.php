@@ -22,23 +22,28 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function eaccounting_admin_settings_page() {
 	$active_tab = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], eaccounting_get_settings_tabs() ) ? $_GET['tab'] : 'general';
-
-	ob_start();
+	global $wp_settings_fields;
+	$page    = 'eaccounting_settings_' . $active_tab;
+	$section = 'eaccounting_settings_' . $active_tab;
 	?>
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper">
 			<?php eaccounting_navigation_tabs( eaccounting_get_settings_tabs(), $active_tab ); ?>
 		</h2>
 		<div id="tab_container">
-			<form method="post" action="options.php">
-				<table class="form-table">
-					<?php
-					settings_fields( 'eaccounting_settings' );
-					do_settings_fields( 'eaccounting_settings_' . $active_tab, 'eaccounting_settings_' . $active_tab );
-					?>
-				</table>
-				<?php submit_button(); ?>
-			</form>
+			<?php if ( isset( $wp_settings_fields[ $page ][ $section ] ) ): ?>
+				<form method="post" action="options.php">
+					<table class="form-table">
+						<?php
+						settings_fields( 'eaccounting_settings' );
+						do_settings_fields( 'eaccounting_settings_' . $active_tab, 'eaccounting_settings_' . $active_tab );
+						?>
+					</table>
+					<?php submit_button(); ?>
+				</form>
+			<?php else: ?>
+				<?php do_action( 'eaccounting_settings_page_tab_' . $active_tab ); ?>
+			<?php endif; ?>
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->
 	<?php
@@ -54,13 +59,13 @@ function eaccounting_admin_settings_page() {
  *
  */
 function eaccounting_get_settings_tabs() {
-	$tabs                    = array();
-	$tabs['general']         = __( 'General', 'wp-ever-accounting' );
-	$tabs['integrations']    = __( 'Integrations', 'wp-ever-accounting' );
-	$tabs['opt_in_forms']    = __( 'Opt-In Form', 'wp-ever-accounting' );
-	$tabs['emails']          = __( 'Emails', 'wp-ever-accounting' );
-	$tabs['misc']            = __( 'Misc', 'wp-ever-accounting' );
-	$tabs['payouts_service'] = __( 'Payouts Service', 'wp-ever-accounting' );
+	$tabs               = array();
+	$tabs['general']    = __( 'General', 'wp-ever-accounting' );
+	$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
+	$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
+	$tabs['emails']     = __( 'Emails', 'wp-ever-accounting' );
+	$tabs['misc']       = __( 'Misc', 'wp-ever-accounting' );
+
 
 	/**
 	 * Filters the list of settings tabs.
