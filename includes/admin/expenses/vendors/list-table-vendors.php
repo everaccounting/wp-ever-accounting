@@ -1,9 +1,9 @@
 <?php
 /**
- * Vendors Admin List Table
+ * Vendors Admin List Table.
  *
  * @package     EverAccounting
- * @subpackage  Admin/Expenses
+ * @subpackage  Admin/Expenses/Vendors
  * @since       1.0.2
  */
 
@@ -172,7 +172,7 @@ class List_Table_Vendors extends List_Table {
 	 *
 	 */
 	function column_cb( $vendor ) {
-		return sprintf( '<input type="checkbox" name="customer_id[]" value="%d"/>', $vendor->get_id() );
+		return sprintf( '<input type="checkbox" name="vendor_id[]" value="%d"/>', $vendor->get_id() );
 	}
 
 
@@ -183,25 +183,25 @@ class List_Table_Vendors extends List_Table {
 	 * @since  1.0.2
 	 */
 	function no_items() {
-		_e( 'No customers found.', 'wp-ever-accounting' );
+		_e( 'No vendors found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Process the bulk actions
 	 *
 	 * @return void
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-customers' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'customer-nonce' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-vendors' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'vendor-nonce' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['customer_id'] ) ? $_GET['customer_id'] : false;
+		$ids = isset( $_GET['vendor_id'] ) ? $_GET['vendor_id'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -232,13 +232,13 @@ class List_Table_Vendors extends List_Table {
 					eaccounting_delete_contact( $id );
 					break;
 				default:
-					do_action( 'eaccounting_customers_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'eaccounting_vendors_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
 		if ( ! empty( $action ) ) {
 			wp_safe_redirect( remove_query_arg( [
-				'customer_id',
+				'vendor_id',
 				'action',
 				'_wpnonce',
 				'_wp_http_referer',
@@ -282,7 +282,7 @@ class List_Table_Vendors extends List_Table {
 			'type'    => 'customer'
 		) );
 
-		$args = apply_filters( 'eaccounting_customers_table_get_customers', $args, $this );
+		$args = apply_filters( 'eaccounting_vendors_table_get_vendors', $args, $this );
 
 		$this->items = Query_Contact::init()->wp_query( $args )->get( OBJECT, 'eaccounting_get_contact' );
 
