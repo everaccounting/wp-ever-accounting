@@ -169,11 +169,11 @@ class Ajax {
 
 		switch ( $type ) {
 			case 'currency':
-				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT(name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
+				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT(name," (", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'account':
-				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, name as text' )->get();
+				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->get();
 				break;
 
 			case 'customer':

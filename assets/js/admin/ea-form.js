@@ -20,9 +20,12 @@
 			this.currency = $('#currency_code', this.$el);
 			this.account = $('#account_id', this.$el);
 			this.amount = $('#amount, #opening_balance', this.$el);
-			_.bindAll(this, 'onSubmit', 'onAccountChange', 'onCurrencyChange', 'maskAmount');
+			_.bindAll(this, 'onSubmit', 'onAccountChange', 'onCurrencyChange', 'maskAmount', 'unblock');
 		},
 
+		/**
+		 * Block UI
+		 */
 		block: function () {
 			this.$el.block({
 				message: null,
@@ -33,9 +36,16 @@
 			});
 		},
 
+		/**
+		 * UnBlock UI
+		 */
 		unblock: function () {
 			this.$el.unblock();
 		},
+		/**
+		 * Mask money input
+		 * @param currency
+		 */
 		maskAmount: function (currency) {
 			this.amount.inputmask('decimal', {
 				alias: 'numeric',
@@ -50,7 +60,7 @@
 				rightAlign: 0
 			});
 		},
-		getCurrency: function (onSuccess, onError, code) {
+		getCurrency: function (code, onSuccess, onError) {
 			wp.ajax.send('eaccounting_get_currency', {
 				data: {
 					code: code,
@@ -76,7 +86,8 @@
 			var self = this;
 			self.block();
 			this.getAccount(id, function (account) {
-				self.getCurrency(account.currency_code, self.maskAmount, self.unblock)
+				self.getCurrency(account.currency_code, self.maskAmount, self.unblock);
+				self.unblock();
 			}, self.unblock)
 		},
 
@@ -85,29 +96,8 @@
 				var currency = this.currency.val();
 				var self = this;
 				self.block();
-				wp.ajax.send('eaccounting_get_currency', {
-					data: {
-						code: currency,
-					},
-					success: function (res) {
-						self.unblock();
-						self.amount.inputmask('decimal', {
-							alias: 'numeric',
-							groupSeparator: res.thousand_separator,
-							autoGroup: true,
-							digits: res.precision,
-							radixPoint: res.decimal_separator,
-							digitsOptional: false,
-							allowMinus: false,
-							prefix: res.symbol,
-							placeholder: '0.000',
-							rightAlign: 0
-						});
-					},
-					error: function (res) {
-						self.unblock();
-					}
-				});
+				self.getCurrency(currency, self.maskAmount, self.unblock);
+				self.unblock();
 			}
 		},
 
@@ -119,7 +109,7 @@
 		onSubmit: function (e) {
 			e.preventDefault();
 			// $('.notice', this.el).closest('#tab_container').remove();
-			this.$el.closest('#tab_container').prepend('<div class="notice updated"><p>lorem ipsum dolor sit amet</p></div>');
+			// this.$el.closest('#tab_container').prepend('<div class="notice updated"><p>lorem ipsum dolor sit amet</p></div>');
 
 			var formData = this.$el.serializeArray();
 			console.log(formData);
@@ -128,7 +118,6 @@
 
 
 	jQuery(document).ready(function () {
-		$('.select2-results__option:contains("2413")').css('color', 'red');
 		new Accounting_Form({
 			el: '#ea-account-form, #ea-revenue-form',
 		});
