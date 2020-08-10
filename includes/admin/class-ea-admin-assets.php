@@ -73,6 +73,7 @@ class Admin_Assets {
 		wp_register_script( 'ea-quick-add', eaccounting()->plugin_url() . '/assets/js/admin/ea-quick-add' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/js/admin/eaccounting-admin' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-form', eaccounting()->plugin_url() . '/assets/js/admin/ea-form' . $suffix . '.js', array( 'jquery', 'underscore', 'backbone', 'wp-util' ), $version );
+		wp_register_script( 'ea-batch', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-batch' . $suffix . '.js', array( 'jquery', 'underscore', 'backbone', 'wp-util' ), $version );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
@@ -94,6 +95,7 @@ class Admin_Assets {
 
 			wp_enqueue_script( 'ea-quick-add' );
 			wp_enqueue_script( 'ea-form' );
+			wp_enqueue_script( 'ea-batch' );
 
 			wp_localize_script( 'eaccounting-admin', 'eaccounting_admin_i10n', array(
 				'ajax_url'          => eaccounting()->ajax_url(),

@@ -26,6 +26,12 @@ final class EverAccounting {
 	public $version = '1.0.1';
 
 	/**
+	 * @var \EverAccounting\Utilities;
+	 * @since 1.0.2
+	 */
+	public $utils;
+
+	/**
 	 * @var \EverAccounting\Admin\Settings
 	 * @since 1.0.2
 	 */
@@ -224,6 +230,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-logger.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-account.php' );
@@ -302,6 +309,7 @@ final class EverAccounting {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
 
+		$this->utils    = new \EverAccounting\Utilities();
 		$this->settings = new \EverAccounting\Admin\Settings();
 
 		// Init action.

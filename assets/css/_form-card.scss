@@ -12,12 +12,13 @@
 	  display: none;
 	}
 
-	.button{
+	.button {
 	  display: flex;
 	  align-content: center;
 	  justify-content: center;
 	  align-items: center;
-	  span{
+
+	  span {
 		margin-right: 10px;
 	  }
 	}
@@ -33,5 +34,23 @@
 	}
   }
 
+  p.submit {
+	padding-bottom: 0;
 
+	.spinner {
+	  margin: 4px 10px 8px;
+	  position: relative;
+	  float: none;
+	}
+  }
+}
+
+.ea-batch-progress {
+  background: #ddd;
+  height: 15px;
+  div{
+	background: #0073aa;
+	height: 100%;
+	width: 0;
+  }
 }

@@ -69,3 +69,197 @@ function eaccounting_load_tools_page() {
 
 	do_action( 'eaccounting_load_tools_page_tab' . $tab );
 }
+
+function eaccounting_export_tab() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	?>
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Customers', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			<form method="post" class="ea-customers-export ea-batch-form">
+				<?php
+				echo sprintf( '<p>%s</p>', __( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) );
+				wp_nonce_field( 'ea_customers_export' );
+				submit_button( __( 'Export', 'wp-ever-accounting' ) );
+				?>
+			</form>
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Vendors', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Accounts', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Currencies', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Categories', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Transactions', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Settings', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<?php
+}
+
+add_action( 'eaccounting_tools_tab_export', 'eaccounting_export_tab' );
+
+
+function eaccounting_tools_import_tab() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	?>
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Import Customers', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Import Vendors', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Import Accounts', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Import Currencies', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Import Categories', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Import Transactions', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Import Settings', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+		</div>
+	</div>
+
+	<?php
+}
+
+add_action( 'eaccounting_tools_tab_import', 'eaccounting_tools_import_tab' );
+
+
+/**
+ * System Info tab.
+ *
+ * @since 1.0.2
+ */
+function eaccounting_system_info_tab() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
+	?>
+	<form action="<?php echo esc_url( $action_url ); ?>" method="post" dir="ltr">
+		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea" name="ea-sysinfo" title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
+			<?php echo affwp_tools_system_info_report(); ?>
+		</textarea>
+		<p class="submit">
+			<input type="hidden" name="eaccounting_action" value="download_sysinfo"/>
+			<?php submit_button( 'Download System Info File', 'primary', 'ea-download-sysinfo', false ); ?>
+		</p>
+	</form>
+	<?php
+}
+
+add_action( 'eaccounting_tools_tab_system_info', 'eaccounting_system_info_tab' );
