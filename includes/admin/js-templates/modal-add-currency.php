@@ -1,4 +1,11 @@
 <?php
+/**
+ * Add Currency Modal.
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin/Js Templates
+ * @since       1.0.2
+ */
 defined( 'ABSPATH' ) || exit();
 $currencies = eaccounting_get_global_currencies();
 $options    = array();
