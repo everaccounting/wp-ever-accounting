@@ -1,9 +1,10 @@
 <?php
 /**
- * Load assets
+ * Load assets.
  *
- * @package EverAccounting/Admin
- * @version 3.7.0
+ * @package EverAccounting
+ * @subpackage  Admin
+ * @version 1.0.2
  */
 
 namespace EverAccounting\Admin;
@@ -12,6 +13,7 @@ defined( 'ABSPATH' ) || exit();
 class Admin_Assets {
 	/**
 	 * Hook in tabs.
+     * @version 1.0.2
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
@@ -20,6 +22,7 @@ class Admin_Assets {
 
 	/**
 	 * Enqueue styles.
+     * @version 1.0.2
 	 */
 	public function admin_styles() {
 		$version   = eaccounting()->get_version();
@@ -45,6 +48,7 @@ class Admin_Assets {
 
 	/**
 	 * Enqueue scripts.
+     * @version 1.0.2
 	 */
 	public function admin_scripts() {
 		$screen                = get_current_screen();
