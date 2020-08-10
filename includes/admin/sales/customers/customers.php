@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit();
 function eaccounting_sales_tab_customers() {
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
-        include_once dirname( __FILE__ ) .'/edit-customers.php';
+        include_once dirname( __FILE__ ) . '/edit-customer.php';
 	} else {
         ?>
         <h1>

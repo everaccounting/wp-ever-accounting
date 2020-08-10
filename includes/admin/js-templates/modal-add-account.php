@@ -1,4 +1,11 @@
 <?php
+/**
+ * Add Account Modal.
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin/Js Templates
+ * @since       1.0.2
+ */
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="tmpl-ea-modal-add-account">

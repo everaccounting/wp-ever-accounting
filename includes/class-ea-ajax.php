@@ -2,22 +2,25 @@
 /**
  * EverAccounting  AJAX Event Handlers.
  *
- * @class   EAccounting_Ajax
- * @package EAccounting_Ajax/Classes
+ * @package     EverAccounting
+ * @class       EAccounting_Ajax
+ * @since       1.0.2
  */
 
 namespace EverAccounting;
-
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EAccounting_Ajax
+ *
  * @since 1.0.2
  */
 class Ajax {
 
 	/**
 	 * EAccounting_Ajax constructor.
+	 *
+	 * @since 1.0.2
 	 *
 	 */
 	public function __construct() {
@@ -66,6 +69,8 @@ class Ajax {
 
 	/**
 	 * Check for WC Ajax request and fire action.
+	 *
+	 * @since 1.0.2
 	 */
 	public static function do_ajax() {
 		global $wp_query;
@@ -88,6 +93,8 @@ class Ajax {
 
 	/**
 	 * Hook in methods - uses WordPress ajax handlers (admin-ajax).
+	 *
+	 * @since 1.0.2
 	 */
 	public static function add_ajax_events() {
 		$ajax_events_nopriv = array();
@@ -140,8 +147,9 @@ class Ajax {
 			default:
 				/**
 				 * Hook into this for any custom object handling
-				 * @var int $object_id ID of the object.
-				 * @var boolean $enabled status of the object.
+				 *
+				 * @var int     $object_id ID of the object.
+				 * @var boolean $enabled   status of the object.
 				 */
 				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
 		}
@@ -169,11 +177,11 @@ class Ajax {
 
 		switch ( $type ) {
 			case 'currency':
-				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT(name," (", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
+				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT(name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'account':
-				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->get();
+				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, name as text' )->get();
 				break;
 
 			case 'customer':
@@ -221,6 +229,7 @@ class Ajax {
 
 	/**
 	 * Handle ajax action of creating/updating currencies.
+	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
@@ -253,6 +262,7 @@ class Ajax {
 
 	/**
 	 * Handle ajax action of creating/updating account.
+	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
@@ -286,6 +296,7 @@ class Ajax {
 
 	/**
 	 * Handle ajax action of creating/updating account.
+	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
@@ -305,6 +316,7 @@ class Ajax {
 
 	/**
 	 * Handle ajax action of creating/updating account.
+	 *
 	 * @return void
 	 * @since 1.0.2
 	 */
@@ -339,7 +351,7 @@ class Ajax {
 	/**
 	 * Check permission
 	 *
-	 * since 1.0.0
+	 * since 1.0.2
 	 */
 	public function check_permission() {
 		if ( ! current_user_can( 'manage_options' ) ) {

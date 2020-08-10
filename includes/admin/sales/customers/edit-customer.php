@@ -49,7 +49,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                             'action' => 'eaccounting_dropdown_search',
                         ) ), true ),
                         'data-modal'       => eaccounting_esc_json( json_encode( array(
-                            'event' => 'ea-init-account-modal',
+                            'event' => 'ea-init-currency-modal',
                             'type'  => 'currency',
                             'nonce' => 'edit_currency',
                         ) ), true ),

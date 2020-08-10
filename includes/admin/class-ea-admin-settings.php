@@ -1,9 +1,9 @@
 <?php
 /**
- * Admin Settings
+ * Admin Settings.
  *
  * @package     EverAccounting
- * @subpackage  EverAccounting/Admin
+ * @subpackage  Admin
  * @since       1.0.2
  */
 
@@ -158,7 +158,7 @@ class Settings {
 	 * Add all settings sections and fields
 	 *
 	 * @return void
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function register_settings() {
 
@@ -337,7 +337,7 @@ class Settings {
 	 * Sanitize text fields
 	 *
 	 * @return string
-	 * @since 1.7
+	 * @since 1.0.2
 	 */
 	public function sanitize_text_fields( $value = '', $key = '' ) {
 		return sanitize_text_field( $value );
@@ -347,7 +347,7 @@ class Settings {
 	 * Sanitize URL fields
 	 *
 	 * @return string
-	 * @since 1.7.15
+	 * @since 1.0.2
 	 */
 	public function sanitize_url_fields( $value = '', $key = '' ) {
 		return sanitize_text_field( $value );
@@ -357,7 +357,7 @@ class Settings {
 	 * Sanitize checkbox fields
 	 *
 	 * @return int
-	 * @since 1.7
+	 * @since 1.0.2
 	 */
 	public function sanitize_cb_fields( $value = '', $key = '' ) {
 		return absint( $value );
@@ -367,7 +367,7 @@ class Settings {
 	 * Sanitize number fields
 	 *
 	 * @return int
-	 * @since 1.7
+	 * @since 1.0.2
 	 */
 	public function sanitize_number_fields( $value = '', $key = '' ) {
 		return floatval( $value );
@@ -377,7 +377,7 @@ class Settings {
 	 * Sanitize rich editor fields
 	 *
 	 * @return int
-	 * @since 1.7
+	 * @since 1.0.2
 	 */
 	public function sanitize_rich_editor_fields( $value = '', $key = '' ) {
 		return wp_kses_post( $value );
@@ -387,7 +387,7 @@ class Settings {
 	 * Set the capability needed to save affiliate settings
 	 *
 	 * @return string
-	 * @since 1.9
+	 * @since 1.0.2
 	 */
 	public function option_page_capability( $capability ) {
 		return 'manage_options';
@@ -397,7 +397,7 @@ class Settings {
 	 * Retrieve the array of plugin settings
 	 *
 	 * @return array
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function get_registered_settings() {
 		/**
@@ -554,7 +554,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function checkbox_callback( $args ) {
 
@@ -577,7 +577,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function multicheck_callback( $args ) {
 
@@ -605,7 +605,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function radio_callback( $args ) {
 
@@ -638,7 +638,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function text_callback( $args ) {
 
@@ -677,7 +677,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.7.15
+	 * @since 1.0.2
 	 */
 	function url_callback( $args ) {
 
@@ -717,7 +717,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.9
+	 * @since 1.0.2
 	 */
 	function number_callback( $args ) {
 
@@ -759,7 +759,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function textarea_callback( $args ) {
 
@@ -800,7 +800,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.3
+	 * @since 1.0.2
 	 */
 	function password_callback( $args ) {
 
@@ -838,7 +838,7 @@ class Settings {
 	 * @param array $args Arguments passed by the setting
 	 *
 	 * @return void
-	 * @since 1.3.1
+	 * @since 1.0.2
 	 */
 	function missing_callback( $args ) {
 		printf( __( 'The callback function used for the <strong>%s</strong> setting is missing.', 'wp-ever-accounting' ), $args['id'] );
@@ -853,7 +853,7 @@ class Settings {
 	 *
 	 * @return void
 	 * @global $this ->options Array of all the EverAccounting Options
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	function select_callback( $args ) {
 
@@ -894,7 +894,7 @@ class Settings {
 	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 * @global $this ->options Array of all the EverAccounting Options
 	 * @global string $wp_version WordPress Version
 	 */
@@ -922,7 +922,7 @@ class Settings {
 	 *
 	 * @param array $args Arguements passed by the setting
 	 *
-	 * @since 1.6
+	 * @since 1.0.2
 	 */
 	function upload_callback( $args ) {
 		if ( isset( $this->options[ $args['id'] ] ) ) {

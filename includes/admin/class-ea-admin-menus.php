@@ -2,7 +2,8 @@
 /**
  * Setup menus in WP admin.
  *
- * @package EverAccounting\Admin
+ * @package EverAccounting
+ * @subpackage Admin
  * @version 1.0.2
  */
 
@@ -13,6 +14,7 @@ class Admin_Menus {
 
 	/**
 	 * EAccounting_Admin_Menus constructor.
+     * @version 1.0.2
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
@@ -24,6 +26,7 @@ class Admin_Menus {
 
 	/**
 	 * Add menu items.
+     * @version 1.0.2
 	 */
 	public function admin_menu() {
 		global $menu;

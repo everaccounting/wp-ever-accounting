@@ -1,9 +1,9 @@
 <?php
 /**
- * Admin Transactions Page
+ * Admin Transactions Page.
  *
  * @package     EverAccounting
- * @subpackage  Admin/Sales
+ * @subpackage  Admin/Transactions
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();

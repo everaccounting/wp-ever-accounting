@@ -1,10 +1,10 @@
 <?php
 /**
- * Roles and Capabilities
+ * Roles and Capabilities.
  *
- * @class       EAccounting_Account
- * @version     1.0.0
- * @package     EverAccounting/Classes
+ * @package     EverAccounting
+ * @version     1.0.2
+ *
  */
 namespace EAccounting;
 
@@ -14,12 +14,17 @@ class Capabilities {
 	/**
 	 * Get things going
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function __construct() {
 		add_filter( 'map_meta_cap', array( $this, 'map_meta_caps' ), 10, 4 );
 	}
 
+	/**
+     * Available Capabilities
+     * @return void
+     * @since 1.0.2
+	*/
 	public function get_caps() {
 		$caps = array(
 			'manage_eaccounting',
@@ -73,7 +78,7 @@ class Capabilities {
 	 * @param array $args Adds the context to the cap. Typically the object ID.
 	 *
 	 * @return array (Maybe) modified capabilities.
-	 * @since  1.2.0
+	 * @since  1.0.2
 	 *
 	 */
 	public function map_meta_caps( $caps, $cap, $user_id, $args ) {

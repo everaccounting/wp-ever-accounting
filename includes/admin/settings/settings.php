@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Options Page
+ * Admin Settings Page.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Settings
@@ -8,9 +8,7 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit();
 
 /**
  * Options Page
@@ -55,7 +53,7 @@ function eaccounting_admin_settings_page() {
  * Retrieves the settings tabs.
  *
  * @return array $tabs Settings tabs.
- * @since 1.0
+ * @since 1.0.2
  *
  */
 function eaccounting_get_settings_tabs() {

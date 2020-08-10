@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Payments Page
+ * Admin Payments Page.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Expenses/Payments
