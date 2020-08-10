@@ -1,9 +1,9 @@
 <?php
 /**
- * Customers Admin List Table
+ * Customers Admin List Table.
  *
  * @package     EverAccounting
- * @subpackage  Admin/sales
+ * @subpackage  Admin/Sales/Customers
  * @since       1.0.2
  */
 
@@ -51,7 +51,7 @@ class List_Table_Customers extends List_Table {
 	 * Number of active items found
 	 *
 	 * @var string
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public $active_count;
 
@@ -59,7 +59,7 @@ class List_Table_Customers extends List_Table {
 	 *  Number of inactive items found
 	 *
 	 * @var string
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public $inactive_count;
 
@@ -70,7 +70,7 @@ class List_Table_Customers extends List_Table {
 	 *
 	 * @see WP_List_Table::__construct()
 	 *
-	 * @since  1.0
+	 * @since  1.0.2
 	 *
 	 */
 	public function __construct( $args = array() ) {
@@ -190,7 +190,7 @@ class List_Table_Customers extends List_Table {
 	 * Process the bulk actions
 	 *
 	 * @return void
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {

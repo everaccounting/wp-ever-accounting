@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Revenues Page
+ * Admin Revenues Page.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Sales/Revenues
