@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Reports Page
+ * Admin Reports Page.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Reports
@@ -48,8 +48,8 @@ function eaccounting_admin_reports_page() {
  */
 function eaccounting_get_reports_tabs() {
 	$tabs                    = array();
-	$tabs['income_summery']  = __( 'Income Summery', 'wp-ever-accounting' );
-	$tabs['expense_summery'] = __( 'Expense Summery', 'wp-ever-accounting' );
+	$tabs['income_summary']  = __( 'Income Summary', 'wp-ever-accounting' );
+	$tabs['expense_summary'] = __( 'Expense Summary', 'wp-ever-accounting' );
 	$tabs['income_expense']  = __( 'Income vs Expense', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_reports_tabs', $tabs );
@@ -63,7 +63,7 @@ function eaccounting_get_reports_tabs() {
 function eaccounting_load_reports_page() {
 	$tab = eaccounting_get_current_tab();
 	if ( empty( $tab ) ) {
-		wp_redirect( add_query_arg( [ 'tab' => 'income_summery' ] ) );
+		wp_redirect( add_query_arg( [ 'tab' => 'income_summary' ] ) );
 		exit();
 	}
 
