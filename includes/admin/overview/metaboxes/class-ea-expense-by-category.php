@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Admin Expense by Category Page.
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin/Overview/Metaboxes
+ * @since       1.0.2
+ */
 namespace EverAccounting\Admin\Overview;
 
 use EverAccounting\Abstracts\MetaBox;
@@ -20,7 +26,7 @@ class Expense_By_Category extends MetaBox {
 	 *
 	 * @access  public
 	 * @return  void
-	 * @since   1.9
+	 * @since   1.0.2
 	 */
 	public function init() {
 		$this->action        = 'eaccounting_overview_meta_boxes';
@@ -33,7 +39,7 @@ class Expense_By_Category extends MetaBox {
 	 * Displays the content of the metabox.
 	 *
 	 * @return mixed content The metabox content.
-	 * @since  1.9
+	 * @since  1.0.2
 	 */
 	public function content() {
 		?>

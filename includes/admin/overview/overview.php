@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Overview Page
+ * Admin Overview Page.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Overview
@@ -13,7 +13,7 @@ require_once dirname( __FILE__ ) . '/metaboxes/class-ea-expense-by-category.php'
 /**
  * Initializes meta boxes displayed via the Overview screen.
  *
- * @since 1.9.4
+ * @since 1.0.2
  */
 function eaccounting_init_overview_meta_boxes() {
 	new \EverAccounting\Admin\Overview\Expense_By_Category();
