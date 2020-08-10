@@ -1,53 +1,46 @@
-/*global jQuery, Backbone, _, woocommerce_admin_api_keys, wcSetClipboard, wcClearClipboard */
+/*global jQuery, eaccounting_form_i10n */
 (function ($) {
+	if ('undefined' === typeof eaccounting_form_i10n) {
+		return;
+	}
+	$.fn.eaccounting_form = function (options) {
+		return this.each(function () {
+			(new $.eaccounting_form(this, options));
+		});
+	};
+	$.eaccounting_form = function (el, options) {
+		var form = {};
+		form.el = el;
+		form.$el = $(el);
+		form.options = options;
 
-	var Accounting_Form = Backbone.View.extend({
-		/**
-		 * Events
-		 *
-		 * @type {Object}
-		 */
-		events: {
-			'submit': 'onSubmit',
-			'change select#account_id': 'onAccountChange',
-			'change select#currency_code': 'onCurrencyChange'
-		},
+		//fields
+		form.account_id = $('#account_id, #from_account_id', form.$el);
+		form.currency_code = $('#currency_code', form.$el);
+		form.amount = $('#amount, #opening_balance', form.$el);
 
-		/**
-		 * Initialize actions
-		 */
-		initialize: function () {
-			this.currency = $('#currency_code', this.$el);
-			this.account = $('#account_id', this.$el);
-			this.amount = $('#amount, #opening_balance', this.$el);
-			_.bindAll(this, 'onSubmit', 'onAccountChange', 'onCurrencyChange', 'maskAmount', 'unblock');
-		},
-
-		/**
-		 * Block UI
-		 */
-		block: function () {
-			this.$el.block({
+		form.block = function () {
+			form.$el.block({
 				message: null,
 				overlayCSS: {
 					background: '#fff',
 					opacity: 0.6
 				}
 			});
-		},
+		};
 
-		/**
-		 * UnBlock UI
-		 */
-		unblock: function () {
-			this.$el.unblock();
-		},
-		/**
-		 * Mask money input
-		 * @param currency
-		 */
-		maskAmount: function (currency) {
-			this.amount.inputmask('decimal', {
+		form.unblock = function () {
+			form.$el.unblock();
+		}
+
+		form.onError = function (error) {
+			console.warn(error);
+			form.unblock();
+		}
+
+		form.maskAmount = function (currency) {
+			console.log(currency);
+			form.amount.inputmask('decimal', {
 				alias: 'numeric',
 				groupSeparator: currency.thousand_separator,
 				autoGroup: true,
@@ -59,68 +52,87 @@
 				placeholder: '0.000',
 				rightAlign: 0
 			});
-		},
-		getCurrency: function (code, onSuccess, onError) {
+		};
+
+		form.getCurrency = function (code, onSuccess, onError) {
+			console.log(code);
 			wp.ajax.send('eaccounting_get_currency', {
 				data: {
 					code: code,
+					_wpnonce: eaccounting_form_i10n.nonce.get_currency
 				},
 				success: onSuccess,
 				error: onError
 			});
-		},
-		getAccount: function (id, onSuccess, onError) {
+		};
+
+		form.getAccount = function (id, onSuccess, onError) {
 			wp.ajax.send('eaccounting_get_account', {
 				data: {
 					id: id,
+					_wpnonce: eaccounting_form_i10n.nonce.get_account
 				},
 				success: onSuccess,
 				error: onError
 			});
-		},
-		onAccountChange: function () {
-			var id = parseInt(this.account.val(), 10);
-			if (!id) {
-				return;
-			}
-			var self = this;
-			self.block();
-			this.getAccount(id, function (account) {
-				self.getCurrency(account.currency_code, self.maskAmount, self.unblock);
-				self.unblock();
-			}, self.unblock)
-		},
+		};
 
-		onCurrencyChange: function () {
-			if (this.amount.length) {
-				var currency = this.currency.val();
-				var self = this;
-				self.block();
-				self.getCurrency(currency, self.maskAmount, self.unblock);
-				self.unblock();
-			}
-		},
-
-		/**
-		 * Save API Key using ajax
-		 *
-		 * @param {Object} e
-		 */
-		onSubmit: function (e) {
+		//bind events
+		form.$el.on('submit', function (e) {
 			e.preventDefault();
-			// $('.notice', this.el).closest('#tab_container').remove();
-			// this.$el.closest('#tab_container').prepend('<div class="notice updated"><p>lorem ipsum dolor sit amet</p></div>');
+			form.block();
+			wp.ajax.post(form.$el.serializeArray())
+				.then(function (result) {
+					result = $.extend(true, {}, {message: '', redirect: ''}, result)
+					form.unblock();
+					$.eaccounting_notice(result.message, 'success');
+					eaccounting.redirect(result.redirect);
+				})
+				.fail(function (error) {
+					console.log(error);
+					form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				});
+		});
 
-			var formData = this.$el.serializeArray();
-			console.log(formData);
-		}
+		//on currency change
+		form.currency_code.on('change', function () {
+			if (form.amount.length) {
+				var code = form.currency_code.val();
+				form.block();
+				form.getCurrency(code, function (res) {
+					form.maskAmount(res);
+					form.unblock();
+				}, form.onError);
+			}
+		});
+
+		//on account change
+		form.account_id.on('change', function () {
+			if (form.amount.length) {
+				var account_id = form.account_id.val();
+				var id = parseInt(account_id, 10);
+				if (!id) {
+					return;
+				}
+				form.block();
+				form.getAccount(id, function (res) {
+					form.getCurrency(res.currency_code, function (code) {
+						form.maskAmount(code);
+						form.unblock();
+					}, form.onError)
+				}, form.onError);
+			}
+		});
+
+		//change on first load
+		form.account_id.trigger('change');
+		form.currency_code.trigger('change');
+	};
+
+	$(document).ready(function () {
+		$('#ea-account-form, #ea-revenue-form, #ea-payment-form').eaccounting_form();
 	});
 
-
-	jQuery(document).ready(function () {
-		new Accounting_Form({
-			el: '#ea-account-form, #ea-revenue-form',
-		});
-	})
 
 })(jQuery);

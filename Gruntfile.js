@@ -1,7 +1,7 @@
 /* eslint-disable */
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 	'use strict';
-	var sass = require( 'node-sass' );
+	var sass = require('node-sass');
 
 	grunt.initConfig({
 
@@ -42,8 +42,20 @@ module.exports = function(grunt) {
 					strict: false
 				},
 				output: {
-					comments : /@license|@preserve|^!/
+					comments: /@license|@preserve|^!/
 				}
+			},
+			core: {
+				files: [{
+					expand: true,
+					cwd: '<%= dirs.js %>/eaccounting/',
+					src: [
+						'*.js',
+						'!*.min.js'
+					],
+					dest: '<%= dirs.js %>/eaccounting/',
+					ext: '.min.js'
+				}]
 			},
 			admin: {
 				files: [{
@@ -59,7 +71,12 @@ module.exports = function(grunt) {
 			},
 			vendor: {
 				files: {
-
+					'<%= dirs.js %>/jquery-blockui/jquery.blockUI.min.js': ['<%= dirs.js %>/jquery-blockui/jquery.blockUI.js'],
+					'<%= dirs.js %>/inputmask/jquery.inputmask.min.js': ['<%= dirs.js %>/inputmask/jquery.inputmask.js'],
+					'<%= dirs.js %>/jquery-tiptip/jquery.tipTip.min.js': ['<%= dirs.js %>/jquery-tiptip/jquery.tipTip.js'],
+					'<%= dirs.js %>/pace/pace.min.js': ['<%= dirs.js %>/pace/pace.js'],
+					'<%= dirs.js %>/select2/select2.full.min.js': ['<%= dirs.js %>/select2/select2.full.js'],
+					'<%= dirs.js %>/select2/select2.min.js': ['<%= dirs.js %>/select2/select2.js'],
 				}
 			},
 			frontend: {
@@ -82,7 +99,7 @@ module.exports = function(grunt) {
 				options: {
 					implementation: sass,
 					sourceMap: true,
-					map:true
+					map: true
 				},
 				files: [{
 					expand: true,
@@ -128,8 +145,8 @@ module.exports = function(grunt) {
 		concat: {
 			admin: {
 				files: {
-					'<%= dirs.css %>/admin.css' : ['<%= dirs.css %>/select2.css', '<%= dirs.css %>/admin.css'],
-					'<%= dirs.css %>/admin-rtl.css' : ['<%= dirs.css %>/select2.css', '<%= dirs.css %>/admin-rtl.css']
+					'<%= dirs.css %>/admin.css': ['<%= dirs.css %>/select2.css', '<%= dirs.css %>/admin.css'],
+					'<%= dirs.css %>/admin-rtl.css': ['<%= dirs.css %>/select2.css', '<%= dirs.css %>/admin-rtl.css']
 				}
 			}
 		},
@@ -144,11 +161,12 @@ module.exports = function(grunt) {
 				files: [
 					'GruntFile.js',
 					'<%= dirs.js %>/admin/*js',
+					'<%= dirs.js %>/eaccounting/*js',
 					'<%= dirs.js %>/frontend/*js',
 					'!<%= dirs.js %>/admin/*.min.js',
 					'!<%= dirs.js %>/frontend/*.min.js'
 				],
-				tasks: ['eslint','uglify']
+				tasks: ['eslint', 'uglify']
 			}
 		},
 
@@ -158,7 +176,7 @@ module.exports = function(grunt) {
 				bin: 'vendor/bin/phpcs'
 			},
 			dist: {
-				src:  [
+				src: [
 					'**/*.php', // Include all php files.
 					'!node_modules/**',
 					'!tests/cli/**',
@@ -174,7 +192,7 @@ module.exports = function(grunt) {
 				map: true,
 				annotation: false,
 				processors: [
-					require( 'autoprefixer' )
+					require('autoprefixer')
 				]
 			},
 			dist: {
@@ -186,32 +204,32 @@ module.exports = function(grunt) {
 	});
 
 	// Load NPM tasks to be used here.
-	grunt.loadNpmTasks( 'grunt-sass' );
-	grunt.loadNpmTasks( 'grunt-phpcs' );
-	grunt.loadNpmTasks( 'grunt-rtlcss' );
-	grunt.loadNpmTasks( 'grunt-postcss' );
-	grunt.loadNpmTasks( 'grunt-stylelint' );
-	grunt.loadNpmTasks( 'gruntify-eslint' );
-	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
-	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-	grunt.loadNpmTasks( 'grunt-contrib-concat' );
-	grunt.loadNpmTasks( 'grunt-contrib-copy' );
-	grunt.loadNpmTasks( 'grunt-contrib-watch' );
-	grunt.loadNpmTasks( 'grunt-contrib-clean' );
+	grunt.loadNpmTasks('grunt-sass');
+	grunt.loadNpmTasks('grunt-phpcs');
+	grunt.loadNpmTasks('grunt-rtlcss');
+	grunt.loadNpmTasks('grunt-postcss');
+	grunt.loadNpmTasks('grunt-stylelint');
+	grunt.loadNpmTasks('gruntify-eslint');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 
 	// Register tasks.
-	grunt.registerTask( 'default', [
+	grunt.registerTask('default', [
 		'js',
 		'css'
 	]);
 
-	grunt.registerTask( 'js', [
+	grunt.registerTask('js', [
 		'eslint',
 		'uglify:admin',
 		'uglify:frontend'
 	]);
 
-	grunt.registerTask( 'css', [
+	grunt.registerTask('css', [
 		'sass',
 		'rtlcss',
 		'postcss',
@@ -219,12 +237,12 @@ module.exports = function(grunt) {
 		'concat'
 	]);
 
-	grunt.registerTask( 'assets', [
+	grunt.registerTask('assets', [
 		'js',
 		'css'
 	]);
 
-	grunt.registerTask( 'e2e-build', [
+	grunt.registerTask('e2e-build', [
 		'uglify:admin',
 		'uglify:frontend',
 		'uglify:flexslider',
@@ -232,7 +250,7 @@ module.exports = function(grunt) {
 	]);
 
 	// Only an alias to 'default' task.
-	grunt.registerTask( 'dev', [
+	grunt.registerTask('dev', [
 		'default'
 	]);
 };

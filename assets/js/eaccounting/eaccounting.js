@@ -121,6 +121,7 @@ jQuery(function ($) {
 		});
 	};
 
+
 	$.eaccounting_select2 = function (el, options) {
 		this.$el = $(el);
 		this.has_search = this.$el.is("[data-search]");
@@ -128,18 +129,7 @@ jQuery(function ($) {
 		this.has_modal = this.$el.is("[data-modal]");
 		this.moda_data = this.has_modal ? this.$el.data('modal') : {};
 		this.id = this.$el.attr('id');
-		// var plugin = this;
-		// 	plugin.ajax =
-		// plugin.$el = $(el);
-		// plugin.data = {};
-		// plugin.ajax = $(el).hasClass('ea-ajax-select2');
-		// plugin.createable = $(el).hasClass('enable-create');
-		// plugin.data.nonce = $(el).attr('data-nonce');
-		// plugin.data.action = $(el).attr('data-action');
-		// plugin.data.type = $(el).attr('data-type');
-		// plugin.options = $.extend(true, {}, $.eaccounting_select2.defaultOptions, options);
-		// console.log($(el).data('search'));
-		//
+
 		var self = this;
 		if (this.has_search) {
 			options = $.extend(true, {}, options, {

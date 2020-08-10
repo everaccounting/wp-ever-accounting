@@ -148,8 +148,8 @@ class Ajax {
 				/**
 				 * Hook into this for any custom object handling
 				 *
-				 * @var int     $object_id ID of the object.
-				 * @var boolean $enabled   status of the object.
+				 * @var int $object_id ID of the object.
+				 * @var boolean $enabled status of the object.
 				 */
 				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
 		}
@@ -177,11 +177,11 @@ class Ajax {
 
 		switch ( $type ) {
 			case 'currency':
-				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT(name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
+				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT (name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'account':
-				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, name as text' )->get();
+				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->get();
 				break;
 
 			case 'customer':
@@ -210,6 +210,7 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public static function get_currency() {
+		check_ajax_referer( 'ea_get_currency', '_wpnonce' );
 		$posted = eaccounting_clean( $_REQUEST );
 		$code   = ! empty( $posted['code'] ) ? $posted['code'] : false;
 		if ( ! $code ) {
@@ -267,7 +268,7 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public static function edit_account() {
-		check_ajax_referer( 'edit_account', '_wpnonce' );
+		check_ajax_referer( 'ea_edit_account', '_wpnonce' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_account( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -301,7 +302,7 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public static function get_account() {
-		//check_ajax_referer( 'get_account', '_wpnonce' );
+		check_ajax_referer( 'ea_get_account', '_wpnonce' );
 		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
 		$account = eaccounting_get_account( $id );
 		if ( $account ) {

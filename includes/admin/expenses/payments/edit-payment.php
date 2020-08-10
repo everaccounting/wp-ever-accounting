@@ -18,12 +18,12 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 
 <div class="ea-form-card">
     <div class="ea-card ea-form-card__header is-compact">
-        <h3 class="ea-form-card__header-title"><?php echo $revenue->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' ); ?></h3>
+        <h3 class="ea-form-card__header-title"><?php echo $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' ); ?></h3>
         <a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
     </div>
 
     <div class="ea-card">
-        <form id="ea-revenue-form" method="post">
+        <form id="ea-payment-form" method="post">
             <div class="ea-row">
                 <?php
                 eaccounting_text_input( array(
@@ -135,9 +135,9 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                 ?>
             </div>
             <?php
-            
+
             wp_create_nonce( 'edit_payment' );
-            
+
             submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
             ?>
 

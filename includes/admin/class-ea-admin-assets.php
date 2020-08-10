@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit();
 class Admin_Assets {
 	/**
 	 * Hook in tabs.
-     * @version 1.0.2
+	 * @version 1.0.2
 	 */
 	public function __construct() {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
@@ -22,7 +22,7 @@ class Admin_Assets {
 
 	/**
 	 * Enqueue styles.
-     * @version 1.0.2
+	 * @version 1.0.2
 	 */
 	public function admin_styles() {
 		$version   = eaccounting()->get_version();
@@ -48,7 +48,7 @@ class Admin_Assets {
 
 	/**
 	 * Enqueue scripts.
-     * @version 1.0.2
+	 * @version 1.0.2
 	 */
 	public function admin_scripts() {
 		$screen                = get_current_screen();
@@ -57,11 +57,10 @@ class Admin_Assets {
 		$suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$version               = eaccounting()->get_version();
 
-//		//3rd parties
+		//3rd parties
 		wp_register_script( 'jquery-blockui', eaccounting()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'jquery-tiptip', eaccounting()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), $version, true );
 		wp_register_script( 'jquery-pace', eaccounting()->plugin_url() . '/assets/js/pace/pace' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
-//		wp_register_script( 'jquery-validation', eaccounting()->plugin_url() . '/assets/js/jquery-validation/jquery.validate' . $suffix . '.js', array( 'jquery' ), '1.19.2' );
 		wp_register_script( 'select2', eaccounting()->plugin_url() . '/assets/js/select2/select2.full' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-backbone-modal', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-backbone-modal' . $suffix . '.js', array( 'underscore', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-notice', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-notice' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
@@ -102,7 +101,15 @@ class Admin_Assets {
 				'global_currencies' => eaccounting_get_global_currencies()
 			) );
 
-			if(eaccounting_is_admin_page('ea-settings')){
+			wp_localize_script( 'ea-form', 'eaccounting_form_i10n', array(
+				'ajax_url' => eaccounting()->ajax_url(),
+				'nonce'    => array(
+					'get_account'  => wp_create_nonce( 'ea_get_account' ),
+					'get_currency' => wp_create_nonce( 'ea_get_currency' ),
+				)
+			) );
+
+			if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
 				wp_enqueue_media();
 				wp_enqueue_script( 'eaccounting-settings' );
 			}
