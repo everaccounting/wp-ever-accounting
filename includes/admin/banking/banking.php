@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Banking Page
+ * Admin Banking Page.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Banking
@@ -9,6 +9,7 @@
 defined( 'ABSPATH' ) || exit();
 
 require_once dirname( __FILE__ ) .'/accounts/accounts.php';
+require_once dirname( __FILE__ ) .'/transfers/transfers.php';
 
 
 /**
