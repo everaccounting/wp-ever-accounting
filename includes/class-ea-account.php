@@ -51,7 +51,7 @@ class Account extends Base_Object {
 		'name'            => '',
 		'number'          => '',
 		'opening_balance' => 0.0000,
-		'currency_code'   => 'USD',
+		'currency_code'   => '',
 		'bank_name'       => null,
 		'bank_phone'      => null,
 		'bank_address'    => null,
@@ -441,10 +441,10 @@ class Account extends Base_Object {
 	 */
 	public function get_balance( $format = false ) {
 		if ( $format ) {
-			return eaccounting_get_money( $this->balance, $this->get_currency_code( 'edit' ), true )->format();
+			return eaccounting_get_money( $this->get_opening_balance(), $this->get_currency_code( 'edit' ), true )->format();
 		}
 
-		return eaccounting_get_money( $this->balance, $this->get_currency_code( 'edit' ), true )->getValue();
+		return eaccounting_get_money( $this->get_opening_balance(), $this->get_currency_code( 'edit' ), true )->getValue();
 	}
 
 	/**

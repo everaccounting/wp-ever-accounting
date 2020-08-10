@@ -189,20 +189,8 @@ function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = 
  *
  */
 function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = false ) {
-	$code = eaccounting_get_currency_code();
 
-	return __eaccounting_convert_price( 'divide', $amount, $from, $code, $rate, $format );
-}
-
-
-/**
- * Get the plugin default currency code.
- *
- * @return string
- * @since 1.0.0
- */
-function eaccounting_get_currency_code() {
-	return apply_filters( 'eaccounting_currency_code', 'USD' );
+	return __eaccounting_convert_price( 'divide', $amount, $from, eaccounting()->settings->get( 'default_currency', 'USD' ), $rate, $format );
 }
 
 /**

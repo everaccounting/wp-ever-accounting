@@ -111,6 +111,11 @@ abstract class Base_Object {
 	 * @param int|array|object|null $data
 	 */
 	public function __construct( $data = 0 ) {
+		//set default data
+		if ( array_key_exists( 'currency_code', $this->data ) ) {
+			$this->set_currency_code( eaccounting()->settings->get( 'default_currency', 'USD' ) );
+		}
+
 		$this->data         = array_merge( $this->data, $this->extra_data );
 		$this->default_data = $this->data;
 	}

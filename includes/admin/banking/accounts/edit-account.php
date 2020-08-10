@@ -15,7 +15,7 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-
+$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
 ?>
 	<div class="ea-form-card">
 		<div class="ea-card ea-form-card__header is-compact">
@@ -44,21 +44,27 @@ try {
 							'value'         => $account->get_number( 'edit' ),
 							'required'      => true,
 					) );
-
+					$currency = eaccounting_get_currency_by_code( $account->get_currency_code( 'edit' ) );
 					eaccounting_select( array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 							'name'          => 'currency_code',
 							'class'         => 'currency_code_picker ea-ajax-select2',
 							'value'         => $account->get_currency_code( 'edit' ),
-							'options'       => [],
-							'default'       => eaccounting_get_currency_code(),
+							'options'       => empty( $currency ) ? [] : [ $currency->get_code() => sprintf( '%s(%s)', $currency->get_name(), $currency->get_symbol() ) ],
+							'default'       => $default_currency,
 							'required'      => true,
 							'attr'          => array(
-									'data-nonce'       => wp_create_nonce( 'dropdown-search' ),
-									'data-type'        => 'currency_code',
-									'data-action'      => 'eaccounting_dropdown_search',
-									'data-placeholder' => __( 'Select currency code', 'wp-ever-accounting' ),
+									'data-search'      => eaccounting_esc_json( json_encode( array(
+											'nonce'  => wp_create_nonce( 'dropdown-search' ),
+											'type'   => 'currency',
+											'action' => 'eaccounting_dropdown_search',
+									) ), true ),
+									'data-modal'       => eaccounting_esc_json( json_encode( array(
+											'event' => 'ea-init-currency-modal',
+											'nonce' => 'edit_currency',
+									) ), true ),
+									'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
 							)
 					) );
 

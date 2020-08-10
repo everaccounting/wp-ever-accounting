@@ -168,7 +168,7 @@ class Ajax {
 		$type    = isset( $_REQUEST['type'] ) ? eaccounting_clean( $_REQUEST['type'] ) : '';
 
 		switch ( $type ) {
-			case 'currency_code':
+			case 'currency':
 				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT(name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
 				break;
 
@@ -290,7 +290,7 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public static function get_account() {
-		check_ajax_referer( 'get_account', '_wpnonce' );
+		//check_ajax_referer( 'get_account', '_wpnonce' );
 		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
 		$account = eaccounting_get_account( $id );
 		if ( $account ) {

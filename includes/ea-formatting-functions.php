@@ -160,7 +160,7 @@ function eaccounting_string_to_timestamp( $time_string, $from_timestamp = null )
  *
  * @param string $time_string Time string.
  *
- * @return EAccounting_DateTime
+ * @return \EAccounting\DateTime
  * @throws Exception
  * @since  1.0.1
  */
@@ -172,7 +172,7 @@ function eaccounting_string_to_datetime( $time_string ) {
 	} else {
 		$timestamp = eaccounting_string_to_timestamp( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', eaccounting_string_to_timestamp( $time_string ) ) ) );
 	}
-	$datetime = new EAccounting_DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+	$datetime = new \EAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
 	// Set local timezone or offset.
 	if ( get_option( 'timezone_string' ) ) {
@@ -320,10 +320,10 @@ function eaccounting_array_merge_recursive_numeric() {
  * @since 1.0.2
  */
 function eaccounting_implode_html_attributes( $raw_attributes ) {
-	$attributes = array();
-	$raw_attributes = array_filter($raw_attributes);
+	$attributes     = array();
+	$raw_attributes = array_filter( $raw_attributes );
 	foreach ( $raw_attributes as $name => $value ) {
-		$attributes[] = esc_attr( $name ) . '="' . esc_attr( trim($value) ) . '"';
+		$attributes[] = esc_attr( $name ) . '="' . esc_attr( trim( $value ) ) . '"';
 	}
 
 	return implode( ' ', $attributes );
@@ -352,9 +352,10 @@ function eaccounting_esc_json( $json, $html = false ) {
  *
  * @param $number
  * @param bool $allow_decimal
- * @since 1.0.2
  *
  * @return int|float|null
+ * @since 1.0.2
+ *
  */
 function eaccounting_sanitize_number( $number, $allow_decimal = false ) {
 	// Convert multiple dots to just one.
@@ -366,6 +367,7 @@ function eaccounting_sanitize_number( $number, $allow_decimal = false ) {
 
 	return preg_replace( '/[^0-9]/', '', $number );
 }
+
 /**
  * Sanitize price for inserting into database
  * since 1.0.0
@@ -391,7 +393,7 @@ function eaccounting_sanitize_price( $amount, $code ) {
  */
 function eaccounting_format_price( $amount, $code = null ) {
 	if ( $code == null ) {
-		$code = eaccounting_get_default_currency();
+		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
 	}
 
 	return eaccounting_get_money( $amount, $code, true )->format();

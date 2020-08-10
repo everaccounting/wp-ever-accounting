@@ -108,10 +108,6 @@ class Transaction extends Base_Object {
 			$this->set_prop( 'creator_id', eaccounting_get_current_user_id() );
 		}
 
-		if ( ! $this->get_currency_code( 'edit' ) ) {
-			$this->set_prop( 'currency_code', eaccounting_get_currency_code() );
-		}
-
 		if ( empty( $this->get_paid_at( 'edit' ) ) ) {
 			throw new Exception( 'empty-date', __( 'Paid date is required', 'wp-ever-accounting' ) );
 		}

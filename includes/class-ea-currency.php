@@ -40,8 +40,8 @@ class Currency extends Base_Object {
 		'code'               => '',
 		'rate'               => 1,
 		'precision'          => 2,
-		'symbol'             => '$',
-		'position'           => 'before',
+		'symbol'             => '',
+		'position'           => '',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
 		'enabled'            => 1,
@@ -54,7 +54,7 @@ class Currency extends Base_Object {
 	 * should be used. It is possible, but the aforementioned are preferred and are the only
 	 * methods that will be maintained going forward.
 	 *
-	 * @param int|object|EAccounting_Currency $data Order to read.
+	 * @param int|object|Currency $data Order to read.
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
@@ -394,6 +394,26 @@ class Currency extends Base_Object {
 		$this->set_prop( 'code', $code );
 
 		$this->subunit = (int) $currency['subunit'];
+
+		if ( empty( $this->get_name( 'edit' ) ) ) {
+			$this->set_name( $currency['name'] );
+		}
+
+		if ( empty( $this->get_symbol( 'edit' ) ) ) {
+			$this->set_symbol( $currency['symbol'] );
+		}
+
+		if ( empty( $this->get_position( 'edit' ) ) ) {
+			$this->set_position( $currency['position'] );
+		}
+
+		if ( empty( $this->get_decimal_separator( 'edit' ) ) ) {
+			$this->set_decimal_separator( $currency['decimal_separator'] );
+		}
+
+		if ( empty( $this->get_thousand_separator( 'edit' ) ) ) {
+			$this->set_thousand_separator( $currency['thousand_separator'] );
+		}
 	}
 
 	/**
@@ -591,5 +611,15 @@ class Currency extends Base_Object {
 	 */
 	public function __toString() {
 		return $this->render();
+	}
+
+	/**
+	 * Get the value for select option.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public function get_select_option() {
+		return array( $this->get_code() => sprintf( '%(%s)', $this->get_name(), $this->get_symbol() ) );
 	}
 }
