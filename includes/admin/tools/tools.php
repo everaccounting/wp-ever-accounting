@@ -1,9 +1,9 @@
 <?php
 /**
- * Admin Reports Page
+ * Admin Tools Page.
  *
  * @package     EverAccounting
- * @subpackage  Admin/Reports
+ * @subpackage  Admin/Tools
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();
