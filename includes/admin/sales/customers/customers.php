@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Revenues Page
+ * Admin Revenues Page.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Sales/Revenues
@@ -11,8 +11,15 @@ defined( 'ABSPATH' ) || exit();
 function eaccounting_sales_tab_customers() {
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
-		echo 'EDIT';
+        include_once dirname( __FILE__ ) .'/edit-customers.php';
 	} else {
+        ?>
+        <h1>
+            <?php _e( 'Customers', 'wp-ever-accounting' ); ?>
+            <a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'customers', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+            <a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+        </h1>
+        <?php
 		require_once dirname( __FILE__ ) . '/list-table-customers.php';
 		$list_table = new \EverAccounting\Admin\Sales\List_Table_Customers();
 		$list_table->prepare_items();
