@@ -4,7 +4,6 @@
  *
  * @package     EverAccounting
  * @subpackage  Admin
- *
  * @version     1.0.2
  */
 
