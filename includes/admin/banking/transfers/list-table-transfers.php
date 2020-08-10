@@ -1,6 +1,6 @@
 <?php
 /**
- * Transactions Admin List Table.
+ * Transfers Admin List Table.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Banking/Transfers
@@ -54,7 +54,7 @@ class List_Table_Accounts extends List_Table {
      *  Number of inactive items found
      *
      * @var string
-     * @since 1.0
+     * @since 1.0.2
      */
     public $inactive_count;
     

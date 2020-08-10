@@ -39,7 +39,7 @@ function eaccounting_banking_tab_transfers() {
             
             ?>
             <form id="ea-transfers-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-                <?php $transfers_table->search_box( __( 'Search', 'wp-ever-transfers' ), 'eaccounting-transfers' ); ?>
+                <?php $transfers_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-transfers' ); ?>
 
                 <input type="hidden" name="page" value="ea-banking"/>
                 <input type="hidden" name="tab" value="transfers"/>

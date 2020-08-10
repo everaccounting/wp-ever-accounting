@@ -83,10 +83,10 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                 ) );
                 eaccounting_text_input( array(
                     'wrapper_class' => 'ea-col-6',
-                    'label'         => __( 'bank Phone', 'wp-ever-accounting' ),
+                    'label'         => __( 'Bank Phone', 'wp-ever-accounting' ),
                     'name'          => 'bank_phone',
                     'value'         => $account->get_bank_phone( 'edit' ),
-                    'placeholder' => __('Enter bank name','wp-ever-accounting'),
+                    'placeholder' => __('Enter bank phone','wp-ever-accounting'),
                 ) );
                 eaccounting_textarea( array(
                     'wrapper_class' => 'ea-col-12',
