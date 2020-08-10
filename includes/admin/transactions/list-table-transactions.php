@@ -1,9 +1,9 @@
 <?php
 /**
- * Transactions Admin List Table
+ * Transactions Admin List Table.
  *
  * @package     EverAccounting
- * @subpackage  Admin/ListTable
+ * @subpackage  Admin/Transactions
  * @since       1.0.2
  */
 
@@ -263,7 +263,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @access public
 	 * @return array $views All the views available
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function get_views() {
 		$base          = eaccounting_admin_url();
