@@ -1,10 +1,18 @@
 <?php
+/**
+ * Batch Process Interface.
+ *
+ * @package     EverAccounting
+ * @subpackage  Interfaces
+ * @since       1.0.2
+ */
 namespace EverAccounting\Interfaces;
+defined( 'ABSPATH' ) || exit();
 
 /**
  * Base interface for registering a batch process.
  *
- * @since 2.0
+ * @since 1.0.2
  */
 Interface Batch_Process {
 
@@ -12,7 +20,7 @@ Interface Batch_Process {
 	 * Determines if the current user can perform the current batch process.
 	 *
 	 * @access public
-	 * @since  2.0
+	 * @since 1.0.2
 	 *
 	 * @return bool True if the current user has the needed capability, otherwise false.
 	 */
@@ -22,7 +30,7 @@ Interface Batch_Process {
 	 * Processes a single step (batch).
 	 *
 	 * @access public
-	 * @since  2.0
+	 * @since 1.0.2
 	 */
 	public function process_step();
 
@@ -30,7 +38,7 @@ Interface Batch_Process {
 	 * Retrieves the calculated completion percentage.
 	 *
 	 * @access public
-	 * @since  2.0
+	 * @since 1.0.2
 	 *
 	 * @return int Percentage completed.
 	 */
@@ -40,7 +48,7 @@ Interface Batch_Process {
 	 * Retrieves a message based on the given message code.
 	 *
 	 * @access public
-	 * @since  2.0
+	 * @since 1.0.2
 	 *
 	 * @param string $code Message code.
 	 * @return string Message.
@@ -51,7 +59,7 @@ Interface Batch_Process {
 	 * Defines logic to execute once batch processing is complete.
 	 *
 	 * @access public
-	 * @since  2.0
+	 * @since 1.0.2
 	 *
 	 * @param string $batch_id Batch process ID.
 	 */
