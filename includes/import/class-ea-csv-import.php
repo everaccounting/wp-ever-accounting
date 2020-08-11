@@ -8,6 +8,7 @@
  */
 
 namespace EverAccounting\Import;
+defined( 'ABSPATH' ) || exit();
 
 class CSV_Import {
     /**
