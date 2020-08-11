@@ -1,20 +1,16 @@
 <?php
 /**
- * Emails
+ * Main Email Class.
  *
  * This class handles all emails sent through EverAccounting
  *
  * @package     EverAccounting
- * @subpackage  Classes/Emails
  * @since       1.0.2
  */
 
 namespace EverAccounting;
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit();
 
 
 class Emails {
@@ -611,7 +607,7 @@ class Emails {
 	 * @return bool
 	 * @since  2.2 Modified to use eaccounting_get_enabled_email_notifications()
 	 *
-	 * @since  1.7
+	 * @since  1.0.2
 	 */
 	public function is_email_disabled() {
 
@@ -629,7 +625,7 @@ class Emails {
 		 *
 		 * @param bool $disabled Whether to disable emails
 		 *
-		 * @since 1.7
+		 * @since 1.0.2
 		 *
 		 */
 		return (bool) apply_filters( 'eaccounting_disable_all_emails', $disabled );
