@@ -4,17 +4,16 @@
  *
  * All category related function of the plugin.
  *
- * @package EverAccounting\Functions
- * @version 1.0.0
+ * @package EverAccounting
+ * @version 1.0.2
  */
 
 defined( 'ABSPATH' ) || exit();
 /**
- * Get all the available type of category the plugin
- * support.
+ * Get all the available type of category the plugin support.
  *
  * @return array
- * @since 1.0.0
+ * @since 1.0.2
  */
 function eaccounting_get_category_types() {
 	$types = array(
@@ -32,7 +31,7 @@ function eaccounting_get_category_types() {
  * @param $category
  *
  * @return bool|\EAccounting\Category
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_get_category( $category ) {
@@ -54,7 +53,15 @@ function eaccounting_get_category( $category ) {
 		return false;
 	}
 }
-
+/**
+ * Insert a category.
+ *
+ * @param $args
+ *
+ * @return WP_Error|Mixed
+ * @since 1.0.2
+ *
+ */
 function eaccounting_insert_category( $args ) {
 	try {
 		$default_args = array(
@@ -72,6 +79,15 @@ function eaccounting_insert_category( $args ) {
 	return $category;
 }
 
+/**
+ * Delete a category.
+ *
+ * @param $category_id
+ *
+ * @return WP_Error|Mixed|bool
+ * @since 1.0.2
+ *
+ */
 function eaccounting_delete_category( $category_id ) {
 	try {
 		$category = new \EAccounting\Category( $category_id );

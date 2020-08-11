@@ -1,4 +1,12 @@
 <?php
+/**
+ * EverAccounting account Functions.
+ *
+ * All account related function of the plugin.
+ *
+ * @package EverAccounting
+ * @version 1.0.2
+ */
 
 /**
  * Main function for returning account.
@@ -6,7 +14,7 @@
  * @param $account
  *
  * @return \EverAccounting\Account|false
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_get_account( $account ) {
@@ -42,7 +50,7 @@ function eaccounting_get_account( $account ) {
  * @param array $args Account arguments.
  *
  * @return \EverAccounting\Account|WP_Error
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_insert_account( $args ) {
@@ -69,7 +77,7 @@ function eaccounting_insert_account( $args ) {
  * @param $account_id
  *
  * @return bool
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_delete_account( $account_id ) {

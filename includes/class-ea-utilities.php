@@ -1,13 +1,17 @@
 <?php
 /**
  * Utilities class for EverAccounting.
- * @since 1.0.2
+ *
  * @package EverAccounting
+ * @since 1.0.2
+ *
  */
 
 namespace EverAccounting;
 
 use EverAccounting\Utilities\Data;
+
+defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Utilities
