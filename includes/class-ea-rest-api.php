@@ -1,4 +1,11 @@
 <?php
+/**
+ * Handle main rest api Class.
+ *
+ * @package     EverAccounting
+ * @since       1.0.2
+ *
+ */
 namespace EverAccounting;
 
 defined( 'ABSPATH' ) || die();
@@ -9,7 +16,7 @@ class REST_API{
 	 * The single instance of the class.
 	 *
 	 * @var REST_API
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	protected static $_instance = null;
 
@@ -19,7 +26,7 @@ class REST_API{
 	 * Ensures only one instance of EAccounting is loaded or can be loaded.
 	 *
 	 * @return REST_API - Main instance.
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 * @static
 	 */
 	public static function instance() {
@@ -32,6 +39,7 @@ class REST_API{
 
 	/**
 	 * ECRM_API constructor.
+     * @since 1.0.2
 	 */
 	public function __construct() {
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
@@ -40,7 +48,7 @@ class REST_API{
 	/**
 	 * Register our rest controllers.
 	 * s
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public function register_rest_routes() {
 		require_once( dirname( __FILE__ ) . '/api/class-ea-rest-controller.php' );
