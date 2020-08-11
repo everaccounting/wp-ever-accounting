@@ -1,10 +1,10 @@
 <?php
 /**
- * EverAccounting Core Functions
+ * EverAccounting Core Functions.
  *
  * General core functions available on both the front-end and admin.
  *
- * @package EverAccounting\Functions
+ * @package EverAccounting
  * @version 1.0.0
  */
 
@@ -17,20 +17,21 @@ function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: te
 /**
  * Get financial Start
  *
- * since 1.0.0
+ *
  * @return string
+ * @since 1.0.2
  */
 function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
-	$financial_start = apply_filters( 'eaccounting_financial_start', '01-01' );
-	$setting         = explode( '-', $financial_start );
-	$day             = ! empty( $setting[0] ) ? $setting[0] : '01';
-	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
-	$year            = empty( $year ) ? date( 'Y' ) : $year;
-
-	$financial_year = new DateTime();
-	$financial_year->setDate( $year, $month, $day );
-
-	return $financial_year->format( $format );
+    $financial_start = apply_filters( 'eaccounting_financial_start', '01-01' );
+    $setting         = explode( '-', $financial_start );
+    $day             = ! empty( $setting[0] ) ? $setting[0] : '01';
+    $month           = ! empty( $setting[1] ) ? $setting[1] : '01';
+    $year            = empty( $year ) ? date( 'Y' ) : $year;
+    
+    $financial_year = new DateTime();
+    $financial_year->setDate( $year, $month, $day );
+    
+    return $financial_year->format( $format );
 }
 
 /**
@@ -42,35 +43,36 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  * @since 1.0.2
  */
 function eaccounting_enqueue_js( $code ) {
-	global $eaccounting_queued_js;
-
-	if ( empty( $eaccounting_queued_js ) ) {
-		$eaccounting_queued_js = '';
-	}
-
-	$eaccounting_queued_js .= "\n" . $code . "\n";
+    global $eaccounting_queued_js;
+    
+    if ( empty( $eaccounting_queued_js ) ) {
+        $eaccounting_queued_js = '';
+    }
+    
+    $eaccounting_queued_js .= "\n" . $code . "\n";
 }
 
 /**
  * Output any queued javascript code in the footer.
+ *
  * @return void
  * @since 1.0.2
  */
 function eaccounting_print_js() {
-	global $eaccounting_queued_js;
-
-	if ( ! empty( $eaccounting_queued_js ) ) {
-		// Sanitize.
-		$eaccounting_queued_js = wp_check_invalid_utf8( $eaccounting_queued_js );
-		$eaccounting_queued_js = preg_replace( '/&#(x)?0*(?(1)27|39);?/i', "'", $eaccounting_queued_js );
-		$eaccounting_queued_js = str_replace( "\r", '', $eaccounting_queued_js );
-
-		$js = "<!-- EverAccounting JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $eaccounting_queued_js });\n</script>\n";
-
-		echo apply_filters( 'eaccounting_queued_js', $js ); // WPCS: XSS ok.
-
-		unset( $eaccounting_queued_js );
-	}
+    global $eaccounting_queued_js;
+    
+    if ( ! empty( $eaccounting_queued_js ) ) {
+        // Sanitize.
+        $eaccounting_queued_js = wp_check_invalid_utf8( $eaccounting_queued_js );
+        $eaccounting_queued_js = preg_replace( '/&#(x)?0*(?(1)27|39);?/i', "'", $eaccounting_queued_js );
+        $eaccounting_queued_js = str_replace( "\r", '', $eaccounting_queued_js );
+        
+        $js = "<!-- EverAccounting JavaScript -->\n<script type=\"text/javascript\">\njQuery(function($) { $eaccounting_queued_js });\n</script>\n";
+        
+        echo apply_filters( 'eaccounting_queued_js', $js ); // WPCS: XSS ok.
+        
+        unset( $eaccounting_queued_js );
+    }
 }
 
 
@@ -84,23 +86,23 @@ function eaccounting_print_js() {
  * @since 1.0.2
  */
 function eaccounting_get_current_user_id() {
-	$user_id = get_current_user_id();
-	if ( empty( $user_id ) ) {
-		$user = get_user_by( 'email', get_option( 'admin_email' ) );
-		if ( $user && in_array( 'administrator', $user->roles ) ) {
-			$user_id = $user->ID;
-		}
-	}
-
-	if ( empty( $user_id ) ) {
-		$users   = get_users( [
-			'role'   => 'administrator',
-			'fields' => 'ID'
-		] );
-		$user_id = reset( $users );
-	}
-
-	return $user_id;
+    $user_id = get_current_user_id();
+    if ( empty( $user_id ) ) {
+        $user = get_user_by( 'email', get_option( 'admin_email' ) );
+        if ( $user && in_array( 'administrator', $user->roles ) ) {
+            $user_id = $user->ID;
+        }
+    }
+    
+    if ( empty( $user_id ) ) {
+        $users   = get_users( [
+            'role'   => 'administrator',
+            'fields' => 'ID'
+        ] );
+        $user_id = reset( $users );
+    }
+    
+    return $user_id;
 }
 
 
@@ -112,76 +114,78 @@ function eaccounting_get_current_user_id() {
  * For inserting into database
  * eaccounting_get_money( "$100,000", "USD", false )->getAmount()
  *
- * @param mixed $amount
+ * @param mixed  $amount
  * @param string $currency
- * @param bool $convert
+ * @param bool   $convert
  *
  * @return \EverAccounting\Money|WP_Error
+ * @since 1.0.2
  */
 function eaccounting_get_money( $amount, $currency = 'USD', $convert = false ) {
-	try {
-		$currency_object = new \EAccounting\Currency();
-		$currency_object->set_code( $currency );
-
-		return new \EverAccounting\Money( $amount, $currency_object, $convert );
-	} catch ( Exception $e ) {
-		return new \WP_Error( 'invalid_action', $e->getMessage() );
-	}
+    try {
+        $currency_object = new \EAccounting\Currency();
+        $currency_object->set_code( $currency );
+        
+        return new \EverAccounting\Money( $amount, $currency_object, $convert );
+    } catch ( Exception $e ) {
+        return new \WP_Error( 'invalid_action', $e->getMessage() );
+    }
 }
 
 
 /**
  * Convert price from one currency to another currency.
  *
- * @param $method
- * @param $amount
- * @param $from
- * @param $to
- * @param $rate
+ * @param      $method
+ * @param      $amount
+ * @param      $from
+ * @param      $to
+ * @param      $rate
  * @param bool $format
  *
  * @return float|int|string
+ * @since 1.0.2
  */
 function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $format = false ) {
-	$money = eaccounting_get_money( $amount, $to );
-	// No need to convert same currency
-	if ( $from == $to ) {
-		return $format ? $money->format() : $money->getAmount();
-	}
-
-	try {
-		$money = $money->$method( (double) $rate );
-	} catch ( Exception $e ) {
-		return 0;
-	}
-
-	return $format ? $money->format() : $money->getAmount();
+    $money = eaccounting_get_money( $amount, $to );
+    // No need to convert same currency
+    if ( $from == $to ) {
+        return $format ? $money->format() : $money->getAmount();
+    }
+    
+    try {
+        $money = $money->$method( (double) $rate );
+    } catch ( Exception $e ) {
+        return 0;
+    }
+    
+    return $format ? $money->format() : $money->getAmount();
 }
 
 
 /**
  * Convert price from default to any other currency.
  *
- * @param $amount
- * @param $to
- * @param $rate
+ * @param      $amount
+ * @param      $to
+ * @param      $rate
  * @param bool $format
  *
  * @return float|int|string
  * @since 1.0.2
  */
 function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = false ) {
-	$code = eaccounting_get_default_currency();
-
-	return __eaccounting_convert_price( 'multiply', $amount, $code, $to, $rate, $format );
+    $code = eaccounting_get_default_currency();
+    
+    return __eaccounting_convert_price( 'multiply', $amount, $code, $to, $rate, $format );
 }
 
 /**
  * Convert price from other currency to default currency.
  *
- * @param $amount
- * @param $from
- * @param $rate
+ * @param      $amount
+ * @param      $from
+ * @param      $rate
  * @param bool $format
  *
  * @return float|int|string
@@ -189,22 +193,23 @@ function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = 
  *
  */
 function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = false ) {
-
-	return __eaccounting_convert_price( 'divide', $amount, $from, eaccounting()->settings->get( 'default_currency', 'USD' ), $rate, $format );
+    
+    return __eaccounting_convert_price( 'divide', $amount, $from, eaccounting()->settings->get( 'default_currency', 'USD' ), $rate, $format );
 }
 
 /**
  * Get payment methods.
  *
- * since 1.0.0
+ *
  * @return array
+ * @since 1.0.2
  */
 function eaccounting_get_payment_methods() {
-	return apply_filters( 'eaccounting_payment_methods', [
-		'cash'          => __( 'Cash', 'wp-ever-accounting' ),
-		'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
-		'check'         => __( 'Cheque', 'wp-ever-accounting' ),
-	] );
+    return apply_filters( 'eaccounting_payment_methods', [
+        'cash'          => __( 'Cash', 'wp-ever-accounting' ),
+        'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
+        'check'         => __( 'Cheque', 'wp-ever-accounting' ),
+    ] );
 }
 
 /**
@@ -214,7 +219,7 @@ function eaccounting_get_payment_methods() {
  * @since 1.0.2
  */
 function eaccounting_logger() {
-	return new \EverAccounting\Logger();
+    return new \EverAccounting\Logger();
 }
 
 /**
@@ -223,22 +228,22 @@ function eaccounting_logger() {
  * @since 1.0.2
  */
 function wc_cleanup_logs() {
-	$logger = new \EverAccounting\Logger();
-	$logger->clear_expired_logs();
+    $logger = new \EverAccounting\Logger();
+    $logger->clear_expired_logs();
 }
 
 /**
  * Define a constant if it is not already defined.
  *
- * @param string $name Constant name.
- * @param mixed $value Value.
+ * @param string $name  Constant name.
+ * @param mixed  $value Value.
  *
  * @since 1.0.2
  */
 function eaccounting_maybe_define_constant( $name, $value ) {
-	if ( ! defined( $name ) ) {
-		define( $name, $value );
-	}
+    if ( ! defined( $name ) ) {
+        define( $name, $value );
+    }
 }
 
 
@@ -263,82 +268,84 @@ function eaccounting_maybe_define_constant( $name, $value ) {
  * 1.199 => (string) 1.20
  *
  * @param mixed $val
- * @param int $precision Number of required decimal places (optional)
+ * @param int   $precision Number of required decimal places (optional)
  *
  * @return mixed              Returns an int, float or string on success, null when empty
+ * @since 1.0.2
  */
 function eaccounting_round_number( $val, $precision = 2 ) {
-
-	// 0 is a valid value so we check only for other empty values
-	if ( is_null( $val ) || '' === $val || false === $val ) {
-		return;
-	}
-
-	$period_decimal_sep         = preg_match( '/\.\d{1,2}$/', $val );
-	$comma_decimal_sep          = preg_match( '/\,\d{1,2}$/', $val );
-	$period_space_thousands_sep = preg_match( '/\d{1,3}(?:[.|\s]\d{3})+/', $val );
-	$comma_thousands_sep        = preg_match( '/\d{1,3}(?:,\d{3})+/', $val );
-
-	// Convert period and space thousand separators.
-	if ( $period_space_thousands_sep && 0 === preg_match( '/\d{4,}$/', $val ) ) {
-		$val = str_replace( ' ', '', $val );
-
-		if ( ! $comma_decimal_sep ) {
-			if ( ! $period_decimal_sep ) {
-				$val = str_replace( '.', '', $val );
-			}
-		} else {
-			$val = str_replace( '.', ':', $val );
-		}
-	}
-
-	// Convert comma decimal separators.
-	if ( $comma_decimal_sep ) {
-		$val = str_replace( ',', '.', $val );
-	}
-
-	// Clean up temporary replacements.
-	if ( ( $period_space_thousands_sep && $comma_decimal_sep ) || $comma_thousands_sep ) {
-		$val = str_replace( array( ':', ',' ), '', $val );
-	}
-
-	// Value cannot be negative
-	$val = abs( floatval( $val ) );
-
-	// Decimal precision must be a absolute integer
-	$precision = absint( $precision );
-
-	// Enforce the number of decimal places required (precision)
-	$val = sprintf( ( round( $val, $precision ) == intval( $val ) ) ? '%d' : "%.{$precision}f", $val );
-
-	// Convert number to the proper type (int, float, or string) depending on its value
-	if ( false === strpos( $val, '.' ) ) {
-
-		$val = absint( $val );
-
-	}
-
-	return $val;
-
+    
+    // 0 is a valid value so we check only for other empty values
+    if ( is_null( $val ) || '' === $val || false === $val ) {
+        return;
+    }
+    
+    $period_decimal_sep         = preg_match( '/\.\d{1,2}$/', $val );
+    $comma_decimal_sep          = preg_match( '/\,\d{1,2}$/', $val );
+    $period_space_thousands_sep = preg_match( '/\d{1,3}(?:[.|\s]\d{3})+/', $val );
+    $comma_thousands_sep        = preg_match( '/\d{1,3}(?:,\d{3})+/', $val );
+    
+    // Convert period and space thousand separators.
+    if ( $period_space_thousands_sep && 0 === preg_match( '/\d{4,}$/', $val ) ) {
+        $val = str_replace( ' ', '', $val );
+        
+        if ( ! $comma_decimal_sep ) {
+            if ( ! $period_decimal_sep ) {
+                $val = str_replace( '.', '', $val );
+            }
+        } else {
+            $val = str_replace( '.', ':', $val );
+        }
+    }
+    
+    // Convert comma decimal separators.
+    if ( $comma_decimal_sep ) {
+        $val = str_replace( ',', '.', $val );
+    }
+    
+    // Clean up temporary replacements.
+    if ( ( $period_space_thousands_sep && $comma_decimal_sep ) || $comma_thousands_sep ) {
+        $val = str_replace( array( ':', ',' ), '', $val );
+    }
+    
+    // Value cannot be negative
+    $val = abs( floatval( $val ) );
+    
+    // Decimal precision must be a absolute integer
+    $precision = absint( $precision );
+    
+    // Enforce the number of decimal places required (precision)
+    $val = sprintf( ( round( $val, $precision ) == intval( $val ) ) ? '%d' : "%.{$precision}f", $val );
+    
+    // Convert number to the proper type (int, float, or string) depending on its value
+    if ( false === strpos( $val, '.' ) ) {
+        
+        $val = absint( $val );
+        
+    }
+    
+    return $val;
+    
 }
 
 /**
  * Makes internal API request for usages within PHP
  *
- * since 1.0.0
  *
- * @param $endpoint
- * @param array $args
+ *
+ * @param        $endpoint
+ * @param array  $args
  * @param string $method
  *
  * @return array
+ * @since 1.0.2
  */
 function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' ) {
-	$request = new \WP_REST_Request( $method, $endpoint );
-	$request->set_query_params( $args );
-	$response = rest_do_request( $request );
-	$server   = rest_get_server();
-	$result   = $server->response_to_data( $response, false );
-
-	return $result;
+    $request = new \WP_REST_Request( $method, $endpoint );
+    $request->set_query_params( $args );
+    $response = rest_do_request( $request );
+    $server   = rest_get_server();
+    $result   = $server->response_to_data( $response, false );
+    
+    return $result;
 }

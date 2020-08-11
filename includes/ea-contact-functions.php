@@ -1,10 +1,10 @@
 <?php
 /**
- * EverAccounting Contact Functions
+ * EverAccounting Contact Functions.
  *
  * Contact related functions.
  *
- * @package EverAccounting\Functions
+ * @package EverAccounting
  * @version 1.0.2
  */
 
@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get contact types.
  *
- * since 1.0.0
  * @return array
+ *              @since 1.0.2
  */
 function eaccounting_get_contact_types() {
 	return apply_filters( 'eaccounting_contact_types', array(
@@ -29,8 +29,8 @@ function eaccounting_get_contact_types() {
  *
  * @param $contact
  *
- * @return \EverAccounting\Contact|false
- * @since 1.0.0
+ * @return \EAccounting\Category|false
+ * @since 1.0.2
  *
  */
 function eaccounting_get_contact( $contact ) {
@@ -57,8 +57,8 @@ function eaccounting_get_contact( $contact ) {
  *
  * @param array $args Contact arguments.
  *
- * @return \EAccounting\Category|WP_Error
- * @since 1.0.0
+ * @return \EAccounting\Category|WP_Error|mixed
+ * @since 1.0.2
  *
  */
 function eaccounting_insert_contact( $args ) {
@@ -67,7 +67,7 @@ function eaccounting_insert_contact( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$contact      = new \EAccounting\Category( $args['id'] );
+		$contact      = new \EAccounting\Contact( $args['id'] );
 		$contact->set_props( $args );
 		$contact->save();
 
@@ -84,7 +84,7 @@ function eaccounting_insert_contact( $args ) {
  * @param $contact_id
  *
  * @return bool
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_delete_contact( $contact_id ) {

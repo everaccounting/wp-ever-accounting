@@ -1,6 +1,6 @@
 <?php
 /**
- * EverAccounting category Functions
+ * EverAccounting category Functions.
  *
  * All category related function of the plugin.
  *
