@@ -1,12 +1,20 @@
 <?php
+/**
+ * CSV Exporter Class
+ *
+ * @package     EverAccounting
+ * @subpackage  Export
+ * @since       1.0.2
+ */
 
 namespace EverAccounting\Import;
+defined( 'ABSPATH' ) || exit();
 
 class CSV_Export {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 * @var string
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public $export_type = 'default';
 
@@ -14,7 +22,7 @@ class CSV_Export {
 	 * Capability needed to perform the current export.
 	 *
 	 * @access public
-	 * @since  2.0
+	 * @since  1.0.2
 	 * @var    string
 	 */
 	public $capability = 'manage_options';
@@ -24,7 +32,7 @@ class CSV_Export {
 	 *
 	 * @access public
 	 * @return bool Whether we can export or not
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function can_export() {
 		/**
@@ -32,7 +40,7 @@ class CSV_Export {
 		 *
 		 * @param string $capability Capability needed to perform an export.
 		 *
-		 * @since 1.0
+		 * @since 1.0.2
 		 *
 		 */
 		return (bool) current_user_can( apply_filters( 'manage_options', $this->capability ) );
@@ -43,7 +51,7 @@ class CSV_Export {
 	 *
 	 * @access public
 	 * @return void
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function headers() {
 		ignore_user_abort( true );
@@ -63,7 +71,7 @@ class CSV_Export {
 	 *
 	 * @access public
 	 * @return array $cols All the columns
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function csv_cols() {
 		$cols = array(
@@ -79,7 +87,7 @@ class CSV_Export {
 	 *
 	 * @access public
 	 * @return array $cols Array of the columns
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function get_csv_cols() {
 		$cols = $this->csv_cols();
@@ -93,7 +101,7 @@ class CSV_Export {
 		 *
 		 * @param $cols The export columns available.
 		 *
-		 * @since 1.0
+		 * @since 1.0.2
 		 *
 		 */
 		return apply_filters( 'affwp_export_csv_cols_' . $this->export_type, $cols );
@@ -105,7 +113,7 @@ class CSV_Export {
 	 * @access public
 	 * @return void
 	 * @uses Affiliate_WP_Export::get_csv_cols()
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function csv_cols_out() {
 		$cols = $this->get_csv_cols();
@@ -123,7 +131,7 @@ class CSV_Export {
 	 *
 	 * @access public
 	 * @return array $data Data for Export
-	 * @since  1.0
+	 * @since  1.0.2
 	 *
 	 */
 	public function get_data() {
@@ -150,7 +158,7 @@ class CSV_Export {
 	 * @param array $data Export data.
 	 *
 	 * @return array Filtered export data.
-	 * @since  2.0
+	 * @since  1.0.2
 	 *
 	 */
 	public function prepare_data( $data ) {
@@ -161,7 +169,7 @@ class CSV_Export {
 		 *
 		 * @param array $data Export data.
 		 *
-		 * @since 2.0
+		 * @since 1.0.2
 		 *
 		 */
 		$data = apply_filters( 'affwp_export_get_data', $data );
@@ -173,7 +181,7 @@ class CSV_Export {
 		 *
 		 * @param array $data Export data.
 		 *
-		 * @since 2.0
+		 * @since 1.0.2
 		 *
 		 */
 		$data = apply_filters( 'affwp_export_get_data_' . $this->export_type, $data );
@@ -186,7 +194,7 @@ class CSV_Export {
 	 *
 	 * @access public
 	 * @return void
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function csv_rows_out() {
 		$data = $this->prepare_data( $this->get_data() );
@@ -218,7 +226,7 @@ class CSV_Export {
 	 * @uses Affiliate_WP_Export::headers()
 	 * @uses Affiliate_WP_Export::csv_cols_out()
 	 * @uses Affiliate_WP_Export::csv_rows_out()
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function export() {
 		if ( ! $this->can_export() ) {
