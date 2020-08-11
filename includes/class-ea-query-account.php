@@ -1,8 +1,8 @@
 <?php
 /**
- * Class for Account querying
+ * Class for Account querying.
  *
- * @package  EverAccounting/Classes
+ * @package  EverAccounting
  * @since    1.0.2
  */
 namespace EverAccounting;
@@ -38,7 +38,7 @@ class Query_Account extends Query {
 	 * @param string $id
 	 *
 	 * @return Query_Account
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public static function init( $id = 'account_query' ) {
 		$builder     = new self();
