@@ -1,24 +1,18 @@
 <?php
 /**
- * Graphs
- *
  * This class handles building pretty report graphs
  *
- * @package     AffiliateWP
- * @copyright   Copyright (c) 2012, Pippin Williamson
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       1.0
+ * @package     EverAccounting
+ * @since       1.0.2
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit();
 
 /**
  * EAccounting_Graph Class
  *
- * @since 1.0
+ * @since 1.0.2
  */
 class EAccounting_Graph {
 
@@ -52,7 +46,7 @@ class EAccounting_Graph {
 	 * Data to graph
 	 *
 	 * @var array
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public $data;
 
@@ -60,7 +54,7 @@ class EAccounting_Graph {
 	 * Unique ID for the graph
 	 *
 	 * @var string
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public $id = '';
 
@@ -68,14 +62,14 @@ class EAccounting_Graph {
 	 * Graph options
 	 *
 	 * @var array
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public $options = array();
 
 	/**
 	 * Get things started
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function __construct( $_data = array() ) {
 
@@ -114,7 +108,7 @@ class EAccounting_Graph {
 	 * @param string $key Graph option key to set
 	 * @param string|array $value The value to assign to the key
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function set( $key, $value ) {
 		if ( 'data' == $key ) {
@@ -130,7 +124,7 @@ class EAccounting_Graph {
 	 *
 	 * @param string $key The option key to get
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function get( $key ) {
 		return isset( $this->options[ $key ] ) ? $this->options[ $key ] : false;
@@ -139,7 +133,7 @@ class EAccounting_Graph {
 	/**
 	 * Get graph data
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function get_data() {
 		/**
@@ -148,7 +142,7 @@ class EAccounting_Graph {
 		 * @param array $data Graph data.
 		 * @param $this $instance Current Graph instance.
 		 *
-		 * @since 1.0
+		 * @since 1.0.2
 		 *
 		 */
 		return apply_filters( 'eaccounting_get_graph_data', $this->data, $this );
@@ -157,7 +151,7 @@ class EAccounting_Graph {
 	/**
 	 * Load the graphing library script
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function load_scripts() {
 		// Use minified libraries if SCRIPT_DEBUG is turned off
@@ -172,7 +166,7 @@ class EAccounting_Graph {
 	/**
 	 * Determines if the resize script should be loaded
 	 *
-	 * @since 1.1
+	 * @since 1.0.2
 	 */
 	public function load_resize_script() {
 
@@ -188,7 +182,7 @@ class EAccounting_Graph {
 		 *
 		 * @param bool $load Whether to load the resize script or not.
 		 *
-		 * @since 1.1
+		 * @since 1.0.2
 		 *
 		 */
 		return apply_filters( 'eaccounting_load_flot_resize', $ret );
@@ -198,7 +192,7 @@ class EAccounting_Graph {
 	 * Build the graph and return it as a string
 	 *
 	 * @return string
-	 * @since 1.0
+	 * @since 1.0.2
 	 * @var array
 	 */
 	public function build_graph() {
@@ -221,7 +215,7 @@ class EAccounting_Graph {
 	 *
 	 * @access public
 	 * @return string Graph JS output.
-	 * @since  1.9.5
+	 * @since  1.0.2
 	 *
 	 */
 	public function graph_js() {
@@ -349,7 +343,7 @@ class EAccounting_Graph {
 	/**
 	 * Output the final graph
 	 *
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function display() {
 		/**
@@ -369,7 +363,7 @@ class EAccounting_Graph {
 		 *
 		 * @param stdClass $graph The graph object.
 		 *
-		 * @since 1.0
+		 * @since 1.0.2
 		 *
 		 */
 		do_action( 'affwp_after_graph', $this );
@@ -382,7 +376,7 @@ class EAccounting_Graph {
 	 *           should be equally tested in the Affiliate Area..
 	 *
 	 * @access public
-	 * @since  1.0
+	 * @since  1.0.2
 	 */
 	public function graph_controls() {
 		/**
@@ -390,7 +384,7 @@ class EAccounting_Graph {
 		 *
 		 * @param array $date_options List of date options and their user-facing, translatable labels.
 		 *
-		 * @since 1.0
+		 * @since 1.0.2
 		 *
 		 */
 		$date_options = apply_filters( 'affwp_report_date_options', array(
@@ -486,7 +480,7 @@ class EAccounting_Graph {
  * @type int $year Year to start filtering results by.
  * @type int $year_end Year to end filtering results by.
  * }
- * @since 1.0
+ * @since 1.0.2
  *
  */
 function affwp_get_report_dates() {
@@ -687,7 +681,7 @@ function affwp_get_report_dates() {
 	 * @type int $year Year to start filtering results by.
 	 * @type int $year_end Year to end filtering results by.
 	 * }
-	 * @since 1.0
+	 * @since 1.0.2
 	 *
 	 */
 	return apply_filters( 'affwp_report_dates', $dates );
