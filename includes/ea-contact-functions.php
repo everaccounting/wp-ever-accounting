@@ -5,7 +5,7 @@
  * Contact related functions.
  *
  * @package EverAccounting
- * @version 1.0.2
+ * @since 1.0.2
  */
 
 defined( 'ABSPATH' ) || exit();

@@ -5,7 +5,7 @@
  * General core functions available on both the front-end and admin.
  *
  * @package EverAccounting
- * @version 1.0.0
+ * @since 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit();
