@@ -4,45 +4,6 @@
  * version 1.0.0
  */
 window.eaccounting = window.eaccounting || {};
-
-(function ($, window, wp, document, undefined) {
-	'use strict';
-	eaccounting.redirect = function (url) {
-		url = url.trim();
-		if (!url) {
-			return false;
-		}
-		var ua = navigator.userAgent.toLowerCase(),
-			isIE = ua.indexOf('msie') !== -1,
-			version = parseInt(ua.substr(4, 2), 10);
-
-		// Internet Explorer 8 and lower
-		if (isIE && version < 9) {
-			var link = document.createElement('a');
-			link.href = url;
-			document.body.appendChild(link);
-			return link.click();
-		}
-		// All other browsers can use the standard window.location.href (they don't lose HTTP_REFERER like Internet Explorer 8 & lower does)
-		window.location.href = url;
-	}
-
-	eaccounting.output_response = function (res) {
-		var success = false, message = false;
-		if (res && res.success && res.success) {
-			success = true;
-		}
-
-		if (res && res.data && res.data.message && res.data.message) {
-			message = res.data.message;
-		}
-		if (message)
-			$.eaccounting_notice(message, success ? 'success' : 'error');
-	}
-
-
-})(jQuery, window, window.wp, document, undefined);
-
 /**
  * A nifty plugin to converty form to serialize object
  *
@@ -167,7 +128,7 @@ jQuery(function ($) {
  * @since 1.0.2
  */
 jQuery(function ($) {
-	jQuery.fn.ea_color_picker = function ($) {
+	jQuery.fn.ea_color_picker = function () {
 		return this.each(function () {
 			var el = this;
 			$(el)
@@ -211,10 +172,10 @@ jQuery(function ($) {
 jQuery(function ($) {
 	$.eaccounting_redirect = function (url) {
 		if ('object' === typeof url) {
-			if (!('url' in url)) {
+			if (!('redirect' in url)) {
 				return;
 			}
-			url = url.url;
+			url = url.redirect;
 		}
 
 		if (!url) {
@@ -351,7 +312,7 @@ jQuery(function ($) {
 		form.account_id = $('#account_id, #from_account_id', form.$el);
 		form.currency_code = $('#currency_code', form.$el);
 		form.amount = $('#amount, #opening_balance', form.$el);
-
+		form.code = $('#code', form.$el);
 		form.block = function () {
 			form.$el.block({
 				message: null,
@@ -412,18 +373,24 @@ jQuery(function ($) {
 		form.$el.on('submit', function (e) {
 			e.preventDefault();
 			form.block();
-			wp.ajax.post(form.$el.serializeArray())
-				.then(function (result) {
-					result = $.extend(true, {}, {message: '', redirect: ''}, result)
+			// var checkboxes = $('input:checkbox', form.$el).map(function() {
+			// 	return { name: this.name, value: this.checked ? this.value : "false" };
+			// });
+			//
+			wp.ajax.send({
+				data: form.$el.serializeObject(),
+				success: function (res) {
 					form.unblock();
-					$.eaccounting_notice(result.message, 'success');
-					eaccounting.redirect(result.redirect);
-				})
-				.fail(function (error) {
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
 					console.warn(error);
 					form.unblock();
 					$.eaccounting_notice(error.message, 'error');
-				});
+				}
+			})
+
 		});
 
 		//on currency change
@@ -453,6 +420,25 @@ jQuery(function ($) {
 						form.unblock();
 					}, form.onError)
 				}, form.onError);
+			}
+		});
+
+		//on code change
+		form.code.on('change', function () {
+			var code = form.code.val();
+			console.log(code);
+			if (!code) {
+				return false;
+			}
+			try {
+				currency = eaccounting_i10n.global_currencies[code];
+				$('#precision', form.$el).val(currency.precision).change();
+				$('#position', form.$el).val(currency.position).change();
+				$('#symbol', form.$el).val(currency.symbol).change();
+				$('#decimal_separator', form.$el).val(currency.decimal_separator).change();
+				$('#thousand_separator', form.$el).val(currency.thousand_separator).change();
+			} catch (e) {
+				console.warn(e.message)
 			}
 		});
 

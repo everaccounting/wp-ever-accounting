@@ -144,6 +144,12 @@ class Ajax {
 					'enabled' => $enabled
 				] );
 				break;
+			case 'category':
+				$result = eaccounting_insert_category( [
+					'id'      => $object_id,
+					'enabled' => $enabled
+				] );
+				break;
 			default:
 				/**
 				 * Hook into this for any custom object handling
@@ -235,7 +241,7 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public static function edit_currency() {
-		check_ajax_referer( 'edit_currency', '_wpnonce' );
+		check_ajax_referer( 'ea_edit_currency', '_wpnonce' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_currency( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -322,7 +328,8 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public static function edit_category() {
-		check_ajax_referer( 'edit_category', '_wpnonce' );
+		self::verify_nonce( 'ea_edit_category' );
+
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_category( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -354,10 +361,31 @@ class Ajax {
 	 *
 	 * since 1.0.2
 	 */
-	public function check_permission() {
+	public static function check_permission() {
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Error: You are not allowed to do this.', 'wp-ever-accounting' ) ) );
 		}
+	}
+
+	/**
+	 * Verify our ajax nonce.
+	 *
+	 * @param $action
+	 *
+	 * @since 1.0.2
+	 */
+	public static function verify_nonce( $action ) {
+		$nonce = '';
+		if ( isset( $_REQUEST['_ajax_nonce'] ) ) {
+			$nonce = $_REQUEST['_ajax_nonce'];
+		} elseif ( isset( $_REQUEST['_wpnonce'] ) ) {
+			$nonce = $_REQUEST['_wpnonce'];
+		}
+		if ( false == wp_verify_nonce( $nonce, $action ) ) {
+			wp_send_json_error( array( 'message' => __( 'Error: Cheatin&#8217; huh?.', 'wp-ever-accounting' ) ) );
+			wp_die();
+		}
+
 	}
 }
 

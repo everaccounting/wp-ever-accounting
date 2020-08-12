@@ -15,23 +15,23 @@ defined( 'ABSPATH' ) || exit();
  *
  * @param $currency
  *
- * @return \EAccounting\Currency|false
+ * @return \EverAccounting\Currency|null
  * @since 1.0.2
  *
  */
 function eaccounting_get_currency( $currency ) {
 	if ( empty( $currency ) ) {
-		return false;
+		return null;
 	}
 
 	try {
-		if ( $currency instanceof \EAccounting\Currency ) {
+		if ( $currency instanceof \EverAccounting\Currency ) {
 			$_currency = $currency;
 		} elseif ( is_object( $currency ) && ! empty( $currency->id ) ) {
-			$_currency = new \EAccounting\Currency( null );
+			$_currency = new \EverAccounting\Currency( null );
 			$_currency->populate( $currency );
 		} else {
-			$_currency = new \EAccounting\Currency( absint( $currency ) );
+			$_currency = new \EverAccounting\Currency( absint( $currency ) );
 		}
 
 		if ( ! $_currency->exists() ) {
@@ -49,7 +49,7 @@ function eaccounting_get_currency( $currency ) {
  *
  * @param string $code
  *
- * @return \EAccounting\Currency|false
+ * @return \EverAccounting\Currency|false
  * @since 1.0.2
  *
  */
@@ -74,7 +74,7 @@ function eaccounting_get_currency_by_code( $code ) {
  *
  * @param array $args currency arguments.
  *
- * @return \EAccounting\Currency|WP_Error
+ * @return \EverAccounting\Currency|WP_Error
  * @since 1.0.2
  *
  */
@@ -84,7 +84,7 @@ function eaccounting_insert_currency( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$currency     = new \EAccounting\Currency( $args['id'] );
+		$currency     = new \EverAccounting\Currency( $args['id'] );
 		$currency->set_props( $args );
 		$currency->save();
 
@@ -106,7 +106,7 @@ function eaccounting_insert_currency( $args ) {
  */
 function eaccounting_delete_currency( $currency_id ) {
 	try {
-		$currency = new \EAccounting\Currency( $currency_id );
+		$currency = new \EverAccounting\Currency( $currency_id );
 		if ( ! $currency->exists() ) {
 			throw new Exception( __( 'Invalid currency.', 'wp-ever-accounting' ) );
 		}

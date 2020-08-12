@@ -218,7 +218,7 @@ class Account extends Base_Object {
 //			if ( in_array( 'opening_balance', $changes ) ) {
 //				$changes['opening_balance']
 //			}
-			error_log( print_r( $changes, true ) );
+
 			try {
 				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
 			} catch ( \Exception $e ) {

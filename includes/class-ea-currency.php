@@ -8,7 +8,7 @@
  *
  */
 
-namespace EAccounting;
+namespace EverAccounting;
 
 use EverAccounting\Abstracts\Base_Object;
 use EverAccounting\Exception;
@@ -227,7 +227,6 @@ class Currency extends Base_Object {
 
 		$this->validate_props();
 		$changes = $this->get_changes();
-		error_log( print_r( $changes, true ) );
 		if ( ! empty( $changes ) ) {
 			do_action( 'eaccounting_pre_update_currency', $this->get_id(), $changes );
 

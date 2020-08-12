@@ -10,6 +10,9 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit();
 
+require_once dirname( __FILE__ ) .'/currencies/currencies.php';
+require_once dirname( __FILE__ ) .'/categories/categories.php';
+
 /**
  * Options Page
  *
@@ -40,7 +43,7 @@ function eaccounting_admin_settings_page() {
 					<?php submit_button(); ?>
 				</form>
 			<?php else: ?>
-				<?php do_action( 'eaccounting_settings_page_tab_' . $active_tab ); ?>
+				<?php do_action( 'eaccounting_settings_tab_' . $active_tab ); ?>
 			<?php endif; ?>
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->

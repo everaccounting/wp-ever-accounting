@@ -20,15 +20,15 @@ class EAccounting_Tests_Misc_Functions extends EAccounting_Unit_Test_Case {
 	}
 
 	/**
-	 * Test eaccounting_get_random_hex_color().
+	 * Test eaccounting_get_random_color().
 	 *
 	 * @since 1.0.1
 	 */
-	public function test_eaccounting_get_random_hex_color() {
-		$this->assertNotNull( eaccounting_get_random_hex_color() );
-		$this->assertNotNull( eaccounting_get_random_hex_color() );
-		$this->assertNotNull( eaccounting_get_random_hex_color() );
-		$this->assertNotNull( eaccounting_get_random_hex_color() );
-		$this->assertNotNull( eaccounting_get_random_hex_color() );
+	public function test_eaccounting_get_random_color() {
+		$this->assertNotNull( eaccounting_get_random_color() );
+		$this->assertNotNull( eaccounting_get_random_color() );
+		$this->assertNotNull( eaccounting_get_random_color() );
+		$this->assertNotNull( eaccounting_get_random_color() );
+		$this->assertNotNull( eaccounting_get_random_color() );
 	}
 }

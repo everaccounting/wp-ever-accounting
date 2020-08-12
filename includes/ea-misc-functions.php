@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string hex color code.
  */
-function eaccounting_get_random_hex_color() {
+function eaccounting_get_random_color() {
     return '#' . str_pad( dechex( random_int( 0, 0xFFFFFF ) ), 6, '0', STR_PAD_LEFT );
 }
 
@@ -40,7 +40,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'AFN' => [
             'name'               => 'Afghani',
             'code'               => 'AFN',
@@ -52,7 +52,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ALL' => [
             'name'               => 'Lek',
             'code'               => 'ALL',
@@ -64,7 +64,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'AMD' => [
             'name'               => 'Armenian Dram',
             'code'               => 'AMD',
@@ -76,7 +76,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ANG' => [
             'name'               => 'Netherlands Antillean Guilder',
             'code'               => 'ANG',
@@ -88,7 +88,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'AOA' => [
             'name'               => 'Kwanza',
             'code'               => 'AOA',
@@ -100,7 +100,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ARS' => [
             'name'               => 'Argentine Peso',
             'code'               => 'ARS',
@@ -112,7 +112,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'AUD' => [
             'name'               => 'Australian Dollar',
             'code'               => 'AUD',
@@ -124,7 +124,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ' ',
         ],
-        
+
         'AWG' => [
             'name'               => 'Aruban Florin',
             'code'               => 'AWG',
@@ -136,7 +136,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'AZN' => [
             'name'               => 'Azerbaijanian Manat',
             'code'               => 'AZN',
@@ -148,7 +148,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BAM' => [
             'name'               => 'Convertible Mark',
             'code'               => 'BAM',
@@ -160,7 +160,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BBD' => [
             'name'               => 'Barbados Dollar',
             'code'               => 'BBD',
@@ -172,7 +172,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BDT' => [
             'name'               => 'Taka',
             'code'               => 'BDT',
@@ -184,7 +184,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BGN' => [
             'name'               => 'Bulgarian Lev',
             'code'               => 'BGN',
@@ -196,7 +196,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BHD' => [
             'name'               => 'Bahraini Dinar',
             'code'               => 'BHD',
@@ -208,7 +208,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BIF' => [
             'name'               => 'Burundi Franc',
             'code'               => 'BIF',
@@ -220,7 +220,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BMD' => [
             'name'               => 'Bermudian Dollar',
             'code'               => 'BMD',
@@ -232,7 +232,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BND' => [
             'name'               => 'Brunei Dollar',
             'code'               => 'BND',
@@ -244,7 +244,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BOB' => [
             'name'               => 'Boliviano',
             'code'               => 'BOB',
@@ -256,7 +256,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BOV' => [
             'name'               => 'Mvdol',
             'code'               => 'BOV',
@@ -268,7 +268,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BRL' => [
             'name'               => 'Brazilian Real',
             'code'               => 'BRL',
@@ -280,7 +280,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'BSD' => [
             'name'               => 'Bahamian Dollar',
             'code'               => 'BSD',
@@ -292,7 +292,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BTN' => [
             'name'               => 'Ngultrum',
             'code'               => 'BTN',
@@ -304,7 +304,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BWP' => [
             'name'               => 'Pula',
             'code'               => 'BWP',
@@ -316,7 +316,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'BYN' => [
             'name'               => 'Belarussian Ruble',
             'code'               => 'BYN',
@@ -328,7 +328,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => ' ',
         ],
-        
+
         'BZD' => [
             'name'               => 'Belize Dollar',
             'code'               => 'BZD',
@@ -340,7 +340,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'CAD' => [
             'name'               => 'Canadian Dollar',
             'code'               => 'CAD',
@@ -352,7 +352,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'CDF' => [
             'name'               => 'Congolese Franc',
             'code'               => 'CDF',
@@ -364,7 +364,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'CHF' => [
             'name'               => 'Swiss Franc',
             'code'               => 'CHF',
@@ -376,7 +376,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'CLF' => [
             'name'               => 'Unidades de fomento',
             'code'               => 'CLF',
@@ -388,7 +388,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'CLP' => [
             'name'               => 'Chilean Peso',
             'code'               => 'CLP',
@@ -400,7 +400,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'CNY' => [
             'name'               => 'Yuan Renminbi',
             'code'               => 'CNY',
@@ -412,7 +412,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'COP' => [
             'name'               => 'Colombian Peso',
             'code'               => 'COP',
@@ -424,7 +424,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'CRC' => [
             'name'               => 'Costa Rican Colon',
             'code'               => 'CRC',
@@ -436,7 +436,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'CUC' => [
             'name'               => 'Peso Convertible',
             'code'               => 'CUC',
@@ -448,7 +448,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'CUP' => [
             'name'               => 'Cuban Peso',
             'code'               => 'CUP',
@@ -460,7 +460,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'CVE' => [
             'name'               => 'Cape Verde Escudo',
             'code'               => 'CVE',
@@ -472,7 +472,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'CZK' => [
             'name'               => 'Czech Koruna',
             'code'               => 'CZK',
@@ -484,7 +484,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'DJF' => [
             'name'               => 'Djibouti Franc',
             'code'               => 'DJF',
@@ -496,7 +496,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'DKK' => [
             'name'               => 'Danish Krone',
             'code'               => 'DKK',
@@ -508,7 +508,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'DOP' => [
             'name'               => 'Dominican Peso',
             'code'               => 'DOP',
@@ -520,7 +520,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'DZD' => [
             'name'               => 'Algerian Dinar',
             'code'               => 'DZD',
@@ -532,7 +532,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'EGP' => [
             'name'               => 'Egyptian Pound',
             'code'               => 'EGP',
@@ -544,7 +544,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ERN' => [
             'name'               => 'Nakfa',
             'code'               => 'ERN',
@@ -556,7 +556,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ETB' => [
             'name'               => 'Ethiopian Birr',
             'code'               => 'ETB',
@@ -568,7 +568,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'EUR' => [
             'name'               => 'Euro',
             'code'               => 'EUR',
@@ -580,7 +580,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'FJD' => [
             'name'               => 'Fiji Dollar',
             'code'               => 'FJD',
@@ -592,7 +592,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'FKP' => [
             'name'               => 'Falkland Islands Pound',
             'code'               => 'FKP',
@@ -604,7 +604,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GBP' => [
             'name'               => 'Pound Sterling',
             'code'               => 'GBP',
@@ -616,7 +616,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GEL' => [
             'name'               => 'Lari',
             'code'               => 'GEL',
@@ -628,7 +628,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GHS' => [
             'name'               => 'Ghana Cedi',
             'code'               => 'GHS',
@@ -640,7 +640,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GIP' => [
             'name'               => 'Gibraltar Pound',
             'code'               => 'GIP',
@@ -652,7 +652,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GMD' => [
             'name'               => 'Dalasi',
             'code'               => 'GMD',
@@ -664,7 +664,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GNF' => [
             'name'               => 'Guinea Franc',
             'code'               => 'GNF',
@@ -676,7 +676,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GTQ' => [
             'name'               => 'Quetzal',
             'code'               => 'GTQ',
@@ -688,7 +688,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'GYD' => [
             'name'               => 'Guyana Dollar',
             'code'               => 'GYD',
@@ -700,7 +700,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'HKD' => [
             'name'               => 'Hong Kong Dollar',
             'code'               => 'HKD',
@@ -712,7 +712,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'HNL' => [
             'name'               => 'Lempira',
             'code'               => 'HNL',
@@ -724,7 +724,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'HRK' => [
             'name'               => 'Croatian Kuna',
             'code'               => 'HRK',
@@ -736,7 +736,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'HTG' => [
             'name'               => 'Gourde',
             'code'               => 'HTG',
@@ -748,7 +748,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'HUF' => [
             'name'               => 'Forint',
             'code'               => 'HUF',
@@ -760,7 +760,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'IDR' => [
             'name'               => 'Rupiah',
             'code'               => 'IDR',
@@ -772,7 +772,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'ILS' => [
             'name'               => 'New Israeli Sheqel',
             'code'               => 'ILS',
@@ -784,7 +784,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'INR' => [
             'name'               => 'Indian Rupee',
             'code'               => 'INR',
@@ -796,7 +796,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'IQD' => [
             'name'               => 'Iraqi Dinar',
             'code'               => 'IQD',
@@ -808,7 +808,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'IRR' => [
             'name'               => 'Iranian Rial',
             'code'               => 'IRR',
@@ -820,7 +820,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ISK' => [
             'name'               => 'Iceland Krona',
             'code'               => 'ISK',
@@ -832,7 +832,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'JMD' => [
             'name'               => 'Jamaican Dollar',
             'code'               => 'JMD',
@@ -844,7 +844,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'JOD' => [
             'name'               => 'Jordanian Dinar',
             'code'               => 'JOD',
@@ -856,7 +856,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'JPY' => [
             'name'               => 'Yen',
             'code'               => 'JPY',
@@ -868,7 +868,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KES' => [
             'name'               => 'Kenyan Shilling',
             'code'               => 'KES',
@@ -880,7 +880,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KGS' => [
             'name'               => 'Som',
             'code'               => 'KGS',
@@ -892,7 +892,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KHR' => [
             'name'               => 'Riel',
             'code'               => 'KHR',
@@ -904,7 +904,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KMF' => [
             'name'               => 'Comoro Franc',
             'code'               => 'KMF',
@@ -916,7 +916,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KPW' => [
             'name'               => 'North Korean Won',
             'code'               => 'KPW',
@@ -928,7 +928,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KRW' => [
             'name'               => 'Won',
             'code'               => 'KRW',
@@ -940,7 +940,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KWD' => [
             'name'               => 'Kuwaiti Dinar',
             'code'               => 'KWD',
@@ -952,7 +952,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KYD' => [
             'name'               => 'Cayman Islands Dollar',
             'code'               => 'KYD',
@@ -964,7 +964,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'KZT' => [
             'name'               => 'Tenge',
             'code'               => 'KZT',
@@ -976,7 +976,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LAK' => [
             'name'               => 'Kip',
             'code'               => 'LAK',
@@ -988,7 +988,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LBP' => [
             'name'               => 'Lebanese Pound',
             'code'               => 'LBP',
@@ -1000,7 +1000,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LKR' => [
             'name'               => 'Sri Lanka Rupee',
             'code'               => 'LKR',
@@ -1012,7 +1012,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LRD' => [
             'name'               => 'Liberian Dollar',
             'code'               => 'LRD',
@@ -1024,7 +1024,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LSL' => [
             'name'               => 'Loti',
             'code'               => 'LSL',
@@ -1036,7 +1036,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LTL' => [
             'name'               => 'Lithuanian Litas',
             'code'               => 'LTL',
@@ -1048,7 +1048,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LVL' => [
             'name'               => 'Latvian Lats',
             'code'               => 'LVL',
@@ -1060,7 +1060,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'LYD' => [
             'name'               => 'Libyan Dinar',
             'code'               => 'LYD',
@@ -1072,7 +1072,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MAD' => [
             'name'               => 'Moroccan Dirham',
             'code'               => 'MAD',
@@ -1084,7 +1084,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MDL' => [
             'name'               => 'Moldovan Leu',
             'code'               => 'MDL',
@@ -1096,7 +1096,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MGA' => [
             'name'               => 'Malagasy Ariary',
             'code'               => 'MGA',
@@ -1108,7 +1108,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MKD' => [
             'name'               => 'Denar',
             'code'               => 'MKD',
@@ -1120,7 +1120,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MMK' => [
             'name'               => 'Kyat',
             'code'               => 'MMK',
@@ -1132,7 +1132,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MNT' => [
             'name'               => 'Tugrik',
             'code'               => 'MNT',
@@ -1144,7 +1144,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MOP' => [
             'name'               => 'Pataca',
             'code'               => 'MOP',
@@ -1156,7 +1156,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MRO' => [
             'name'               => 'Ouguiya',
             'code'               => 'MRO',
@@ -1168,7 +1168,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MUR' => [
             'name'               => 'Mauritius Rupee',
             'code'               => 'MUR',
@@ -1180,7 +1180,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MVR' => [
             'name'               => 'Rufiyaa',
             'code'               => 'MVR',
@@ -1192,7 +1192,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MWK' => [
             'name'               => 'Kwacha',
             'code'               => 'MWK',
@@ -1204,7 +1204,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MXN' => [
             'name'               => 'Mexican Peso',
             'code'               => 'MXN',
@@ -1216,7 +1216,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MYR' => [
             'name'               => 'Malaysian Ringgit',
             'code'               => 'MYR',
@@ -1228,7 +1228,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'MZN' => [
             'name'               => 'Mozambique Metical',
             'code'               => 'MZN',
@@ -1240,7 +1240,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'NAD' => [
             'name'               => 'Namibia Dollar',
             'code'               => 'NAD',
@@ -1252,7 +1252,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'NGN' => [
             'name'               => 'Naira',
             'code'               => 'NGN',
@@ -1264,7 +1264,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'NIO' => [
             'name'               => 'Cordoba Oro',
             'code'               => 'NIO',
@@ -1276,7 +1276,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'NOK' => [
             'name'               => 'Norwegian Krone',
             'code'               => 'NOK',
@@ -1288,7 +1288,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'NPR' => [
             'name'               => 'Nepalese Rupee',
             'code'               => 'NPR',
@@ -1300,7 +1300,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'NZD' => [
             'name'               => 'New Zealand Dollar',
             'code'               => 'NZD',
@@ -1312,7 +1312,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'OMR' => [
             'name'               => 'Rial Omani',
             'code'               => 'OMR',
@@ -1324,7 +1324,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'PAB' => [
             'name'               => 'Balboa',
             'code'               => 'PAB',
@@ -1336,7 +1336,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'PEN' => [
             'name'               => 'Sol',
             'code'               => 'PEN',
@@ -1348,7 +1348,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'PGK' => [
             'name'               => 'Kina',
             'code'               => 'PGK',
@@ -1360,7 +1360,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'PHP' => [
             'name'               => 'Philippine Peso',
             'code'               => 'PHP',
@@ -1372,7 +1372,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'PKR' => [
             'name'               => 'Pakistan Rupee',
             'code'               => 'PKR',
@@ -1384,7 +1384,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'PLN' => [
             'name'               => 'Zloty',
             'code'               => 'PLN',
@@ -1396,7 +1396,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => ' ',
         ],
-        
+
         'PYG' => [
             'name'               => 'Guarani',
             'code'               => 'PYG',
@@ -1408,7 +1408,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'QAR' => [
             'name'               => 'Qatari Rial',
             'code'               => 'QAR',
@@ -1420,7 +1420,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'RON' => [
             'name'               => 'New Romanian Leu',
             'code'               => 'RON',
@@ -1432,7 +1432,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'RSD' => [
             'name'               => 'Serbian Dinar',
             'code'               => 'RSD',
@@ -1444,7 +1444,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'RUB' => [
             'name'               => 'Russian Ruble',
             'code'               => 'RUB',
@@ -1456,7 +1456,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'RWF' => [
             'name'               => 'Rwanda Franc',
             'code'               => 'RWF',
@@ -1468,7 +1468,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SAR' => [
             'name'               => 'Saudi Riyal',
             'code'               => 'SAR',
@@ -1480,7 +1480,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SBD' => [
             'name'               => 'Solomon Islands Dollar',
             'code'               => 'SBD',
@@ -1492,7 +1492,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SCR' => [
             'name'               => 'Seychelles Rupee',
             'code'               => 'SCR',
@@ -1504,7 +1504,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SDG' => [
             'name'               => 'Sudanese Pound',
             'code'               => 'SDG',
@@ -1516,7 +1516,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SEK' => [
             'name'               => 'Swedish Krona',
             'code'               => 'SEK',
@@ -1528,7 +1528,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => ' ',
         ],
-        
+
         'SGD' => [
             'name'               => 'Singapore Dollar',
             'code'               => 'SGD',
@@ -1540,7 +1540,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SHP' => [
             'name'               => 'Saint Helena Pound',
             'code'               => 'SHP',
@@ -1552,7 +1552,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SLL' => [
             'name'               => 'Leone',
             'code'               => 'SLL',
@@ -1564,7 +1564,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SOS' => [
             'name'               => 'Somali Shilling',
             'code'               => 'SOS',
@@ -1576,7 +1576,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SRD' => [
             'name'               => 'Surinam Dollar',
             'code'               => 'SRD',
@@ -1588,7 +1588,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SSP' => [
             'name'               => 'South Sudanese Pound',
             'code'               => 'SSP',
@@ -1600,7 +1600,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'STD' => [
             'name'               => 'Dobra',
             'code'               => 'STD',
@@ -1612,7 +1612,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SVC' => [
             'name'               => 'El Salvador Colon',
             'code'               => 'SVC',
@@ -1624,7 +1624,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SYP' => [
             'name'               => 'Syrian Pound',
             'code'               => 'SYP',
@@ -1636,7 +1636,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'SZL' => [
             'name'               => 'Lilangeni',
             'code'               => 'SZL',
@@ -1648,7 +1648,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'THB' => [
             'name'               => 'Baht',
             'code'               => 'THB',
@@ -1660,7 +1660,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'TJS' => [
             'name'               => 'Somoni',
             'code'               => 'TJS',
@@ -1672,7 +1672,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'TMT' => [
             'name'               => 'Turkmenistan New Manat',
             'code'               => 'TMT',
@@ -1684,7 +1684,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'TND' => [
             'name'               => 'Tunisian Dinar',
             'code'               => 'TND',
@@ -1696,7 +1696,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'TOP' => [
             'name'               => 'Pa’anga',
             'code'               => 'TOP',
@@ -1708,7 +1708,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'TRY' => [
             'name'               => 'Turkish Lira',
             'code'               => 'TRY',
@@ -1720,7 +1720,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'TTD' => [
             'name'               => 'Trinidad and Tobago Dollar',
             'code'               => 'TTD',
@@ -1732,7 +1732,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'TWD' => [
             'name'               => 'New Taiwan Dollar',
             'code'               => 'TWD',
@@ -1744,7 +1744,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'TZS' => [
             'name'               => 'Tanzanian Shilling',
             'code'               => 'TZS',
@@ -1756,7 +1756,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'UAH' => [
             'name'               => 'Hryvnia',
             'code'               => 'UAH',
@@ -1768,7 +1768,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'UGX' => [
             'name'               => 'Uganda Shilling',
             'code'               => 'UGX',
@@ -1780,7 +1780,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'USD' => [
             'name'               => 'US Dollar',
             'code'               => 'USD',
@@ -1792,7 +1792,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'UYU' => [
             'name'               => 'Peso Uruguayo',
             'code'               => 'UYU',
@@ -1804,7 +1804,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'UZS' => [
             'name'               => 'Uzbekistan Sum',
             'code'               => 'UZS',
@@ -1816,7 +1816,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'VEF' => [
             'name'               => 'Bolivar',
             'code'               => 'VEF',
@@ -1828,7 +1828,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'VND' => [
             'name'               => 'Dong',
             'code'               => 'VND',
@@ -1840,7 +1840,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => ',',
             'thousand_separator' => '.',
         ],
-        
+
         'VUV' => [
             'name'               => 'Vatu',
             'code'               => 'VUV',
@@ -1852,7 +1852,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'WST' => [
             'name'               => 'Tala',
             'code'               => 'WST',
@@ -1864,7 +1864,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'XAF' => [
             'name'               => 'CFA Franc BEAC',
             'code'               => 'XAF',
@@ -1876,7 +1876,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'XAG' => [
             'name'               => 'Silver',
             'code'               => 'XAG',
@@ -1888,7 +1888,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'XAU' => [
             'name'               => 'Gold',
             'code'               => 'XAU',
@@ -1900,7 +1900,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'XCD' => [
             'name'               => 'East Caribbean Dollar',
             'code'               => 'XCD',
@@ -1912,7 +1912,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'XDR' => [
             'name'               => 'SDR (Special Drawing Right)',
             'code'               => 'XDR',
@@ -1924,7 +1924,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'XOF' => [
             'name'               => 'CFA Franc BCEAO',
             'code'               => 'XOF',
@@ -1936,7 +1936,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'XPF' => [
             'name'               => 'CFP Franc',
             'code'               => 'XPF',
@@ -1948,7 +1948,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'YER' => [
             'name'               => 'Yemeni Rial',
             'code'               => 'YER',
@@ -1960,7 +1960,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ZAR' => [
             'name'               => 'Rand',
             'code'               => 'ZAR',
@@ -1972,7 +1972,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ZMW' => [
             'name'               => 'Zambian Kwacha',
             'code'               => 'ZMW',
@@ -1984,7 +1984,7 @@ function eaccounting_get_global_currencies() {
             'decimal_separator'  => '.',
             'thousand_separator' => ',',
         ],
-        
+
         'ZWL' => [
             'name'               => 'Zimbabwe Dollar',
             'code'               => 'ZWL',
@@ -1997,7 +1997,7 @@ function eaccounting_get_global_currencies() {
             'thousand_separator' => ',',
         ],
     );
-    
+
     return apply_filters( 'eaccounting_global_currencies', $currencies );
 }
 
@@ -2250,6 +2250,6 @@ function eaccounting_get_countries() {
         "ZM" => "Zambia",
         "ZW" => "Zimbabwe"
     );
-    
+
     return apply_filters( 'eaccounting_countries', $countries );
 }

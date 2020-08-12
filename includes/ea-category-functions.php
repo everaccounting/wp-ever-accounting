@@ -30,27 +30,28 @@ function eaccounting_get_category_types() {
  *
  * @param $category
  *
- * @return bool|\EAccounting\Category
+ * @return bool|\EverAccounting\Category
  * @since 1.0.2
  *
  */
 function eaccounting_get_category( $category ) {
-	if ( empty( $category ) ) {
-		return false;
-	}
 	try {
-		if ( $category instanceof \EAccounting\Category ) {
-			return $category;
+		if ( $category instanceof \EverAccounting\Category ) {
+			$_category = $category;
+		} elseif ( is_object( $category ) && ! empty( $category->id ) ) {
+			$_category = new \EverAccounting\Category( null );
+			$_category->populate( $category );
+		} else {
+			$_category = new \EverAccounting\Category( absint( $category ) );
 		}
 
-		$category = new \EAccounting\Category( $category );
-		if ( ! $category->exists() ) {
+		if ( ! $_category->exists() ) {
 			throw new Exception( __( 'Invalid category.', 'wp-ever-accounting' ) );
 		}
 
-		return $category;
+		return $_category;
 	} catch ( Exception $exception ) {
-		return false;
+		return null;
 	}
 }
 /**
@@ -68,7 +69,7 @@ function eaccounting_insert_category( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$category     = new \EAccounting\Category( $args['id'] );
+		$category     = new \EverAccounting\Category( $args['id'] );
 		$category->set_props( $args );
 		$category->save();
 
@@ -90,7 +91,7 @@ function eaccounting_insert_category( $args ) {
  */
 function eaccounting_delete_category( $category_id ) {
 	try {
-		$category = new \EAccounting\Category( $category_id );
+		$category = new \EverAccounting\Category( $category_id );
 		if ( ! $category->exists() ) {
 			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}

@@ -60,7 +60,7 @@ class Admin_Assets {
 		//3rd parties
 		wp_register_script( 'jquery-blockui', eaccounting()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js', array( 'jquery' ), '2.70', true );
 		wp_register_script( 'jquery-tiptip', eaccounting()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js', array( 'jquery' ), $version, true );
-		wp_register_script( 'jquery-pace', eaccounting()->plugin_url() . '/assets/js/pace/pace' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
+		//wp_register_script( 'jquery-pace', eaccounting()->plugin_url() . '/assets/js/pace/pace' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'select2', eaccounting()->plugin_url() . '/assets/js/select2/select2.full' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-backbone-modal', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-backbone-modal' . $suffix . '.js', array( 'underscore', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-notice', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-notice' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
@@ -93,9 +93,15 @@ class Admin_Assets {
 				'global_currencies' => eaccounting_get_global_currencies()
 			) );
 
+//			wp_localize_script( 'jquery-pace', 'paceOptions', array(
+//				'ajax'                  => 0,
+//				'restartOnRequestAfter' => 0
+//			) );
+
 
 			wp_localize_script( 'eaccounting', 'eaccounting_i10n', array(
 				'ajaxurl' => eaccounting()->ajax_url(),
+				'global_currencies' => eaccounting_get_global_currencies(),
 				'nonce'   => array(
 					'get_account'  => wp_create_nonce( 'ea_get_account' ),
 					'get_currency' => wp_create_nonce( 'ea_get_currency' ),

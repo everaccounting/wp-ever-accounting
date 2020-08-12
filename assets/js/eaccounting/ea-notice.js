@@ -9,6 +9,20 @@ jQuery(function ($) {
 	};
 
 	$.eaccounting_notice = function (message, type, options) {
+		if ('object' === typeof message) {
+			if (!('message' in message)) {
+				return;
+			}
+			message = message.message;
+		}
+
+		if (!message) {
+			return;
+		}
+		message = message.trim();
+		if (!message) {
+			return false;
+		}
 		options = $.extend(true, {}, $.eaccounting_notice.defaultOptions, options);
 
 		var html = '<div class="eaccounting-notice notice notice-' + (type ? type : options.type) + ' ' + (options.customClass ? options.customClass : '') + '">';
