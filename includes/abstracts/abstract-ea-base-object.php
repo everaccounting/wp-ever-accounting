@@ -1,12 +1,13 @@
 <?php
 /**
  *
- * Handles generic data interaction which is implemented by
- * the different classes.
+ * Handles generic data interaction which is implemented by the different classes.
  *
+ * @package     EverAccounting
+ * @subpackage  Abstracts
  * @class       Base_Object
- * @version     1.0.0
- * @package     EverAccounting\Abstracts
+ * @version     1.0.2
+ *
  */
 
 namespace EverAccounting\Abstracts;
@@ -18,7 +19,8 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Base_Object
- * @since 1.0.2
+ *
+ * @since   1.0.2
  * @package EverAccounting\Abstracts
  */
 abstract class Base_Object {
@@ -26,7 +28,7 @@ abstract class Base_Object {
 	/**
 	 * ID for this object.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 * @var int
 	 */
 	protected $id = 0;
@@ -34,7 +36,7 @@ abstract class Base_Object {
 	/**
 	 * Core data for this object. Name value pairs (name + default value).
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $data = array();
@@ -42,7 +44,7 @@ abstract class Base_Object {
 	/**
 	 * Core data changes for this object.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $changes = array();
@@ -50,7 +52,7 @@ abstract class Base_Object {
 	/**
 	 * This is false until the object is read from the DB.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 * @var bool
 	 */
 	protected $object_read = false;
@@ -58,7 +60,7 @@ abstract class Base_Object {
 	/**
 	 * Set to _data on construct so we can track and reset data if needed.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $default_data = array();
@@ -76,7 +78,7 @@ abstract class Base_Object {
 	/**
 	 * Holds all the errors of the item.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $errors = array();
@@ -109,12 +111,15 @@ abstract class Base_Object {
 	 * EAccounting_Object constructor.
 	 *
 	 * @param int|array|object|null $data
+	 *
+	 * @since 1.0.2
+	 *
 	 */
 	public function __construct( $data = 0 ) {
-//		//set default data
-//		if ( array_key_exists( 'currency_code', $this->data ) ) {
-//			$this->set_currency_code( eaccounting()->settings->get( 'default_currency', 'USD' ) );
-//		}
+		//set default data
+		if ( array_key_exists( 'currency_code', $this->data ) ) {
+			$this->set_currency_code( eaccounting()->settings->get( 'default_currency', 'USD' ) );
+		}
 
 		$this->data         = array_merge( $this->data, $this->extra_data );
 		$this->default_data = $this->data;
@@ -124,6 +129,7 @@ abstract class Base_Object {
 	 * Only store the object ID to avoid serializing the data object instance.
 	 *
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function __sleep() {
 		return array( 'id' );
@@ -133,6 +139,8 @@ abstract class Base_Object {
 	 * Re-run the constructor with the object ID.
 	 *
 	 * If the object no longer exists, remove the ID.
+	 *
+	 * @since 1.0.2
 	 */
 	public function __wakeup() {
 		try {
@@ -157,6 +165,7 @@ abstract class Base_Object {
 	 * Returns whether or not the item exists.
 	 *
 	 * @return bool
+	 * @since 1.0.2
 	 */
 	public function exists() {
 		return ! empty( $this->get_id() );
@@ -166,7 +175,7 @@ abstract class Base_Object {
 	 * Returns the unique ID for this object.
 	 *
 	 * @return int
-	 * @since  1.0.0
+	 * @since  1.0.2
 	 */
 	public function get_id() {
 		return $this->id;
@@ -176,7 +185,7 @@ abstract class Base_Object {
 	 * Returns all data for this object.
 	 *
 	 * @return array
-	 * @since  1.0.0
+	 * @since  1.0.2
 	 */
 	public function get_data() {
 		return array_merge( array( 'id' => $this->get_id() ), $this->data );
@@ -186,7 +195,7 @@ abstract class Base_Object {
 	 * Returns array of expected data keys for this object.
 	 *
 	 * @return array
-	 * @since   1.0.0
+	 * @since   1.0.2
 	 */
 	public function get_data_keys() {
 		return array_keys( $this->data );
@@ -207,7 +216,7 @@ abstract class Base_Object {
 	 *
 	 * @param int $id ID.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public function set_id( $id ) {
 		$this->id = absint( $id );
@@ -216,7 +225,7 @@ abstract class Base_Object {
 	/**
 	 * Set all props to default values.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public function set_defaults() {
 		$this->data    = $this->default_data;
@@ -230,7 +239,7 @@ abstract class Base_Object {
 	 *
 	 * @param boolean $read Should read?.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public function set_object_read( $read = true ) {
 		$this->object_read = (bool) $read;
@@ -240,7 +249,7 @@ abstract class Base_Object {
 	 * Get object read property.
 	 *
 	 * @return boolean
-	 * @since  1.0.0
+	 * @since  1.0.2
 	 */
 	public function get_object_read() {
 		return (bool) $this->object_read;
@@ -254,7 +263,7 @@ abstract class Base_Object {
 	 * @param string $context In what context to run this.
 	 *
 	 * @return bool|\WP_Error
-	 * @since  1.0.0
+	 * @since  1.0.2
 	 *
 	 */
 	public function set_props( $props, $context = 'set' ) {
@@ -302,7 +311,7 @@ abstract class Base_Object {
 	 * @param string $prop Name of prop to set.
 	 * @param mixed $value Value of the prop.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	protected function set_prop( $prop, $value ) {
 		if ( array_key_exists( $prop, $this->data ) ) {
@@ -320,7 +329,7 @@ abstract class Base_Object {
 	 * Return data changes only.
 	 *
 	 * @return array
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public function get_changes() {
 		return $this->changes;
@@ -329,7 +338,7 @@ abstract class Base_Object {
 	/**
 	 * Merge changes with data and clear.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public function apply_changes() {
 		$this->data    = array_replace_recursive( $this->data, $this->changes );
@@ -346,7 +355,7 @@ abstract class Base_Object {
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
 	 * @return mixed
-	 * @since  1.0.0
+	 * @since  1.0.2
 	 */
 	protected function get_prop( $prop, $context = 'view' ) {
 		$value = null;
@@ -368,7 +377,7 @@ abstract class Base_Object {
 	 * @param string $prop Name of prop to set.
 	 * @param string|integer $value Value of the prop.
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	protected function set_date_prop( $prop, $value ) {
 		try {
@@ -590,7 +599,7 @@ abstract class Base_Object {
 	 *
 	 * @return mixed
 	 * @throws Exception
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public function save() {
 		$this->validate_props();
@@ -611,7 +620,7 @@ abstract class Base_Object {
 	 * @param array $data Extra error data.
 	 *
 	 * @throws Exception Data Exception.
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	protected function error( $code, $message, $http_status_code = 400, $data = array() ) {
 		throw new Exception( $code, $message, $http_status_code, $data );

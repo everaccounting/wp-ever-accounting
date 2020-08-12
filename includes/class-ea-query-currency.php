@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Class for Currency querying.
+ *
+ * @package  EverAccounting
+ * @since    1.0.2
+ */
 namespace EverAccounting;
 
 use EverAccounting\Traits\WP_Query;

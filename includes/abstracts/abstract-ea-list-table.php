@@ -2,7 +2,8 @@
 /**
  * List tables.
  *
- * @package  EverAccounting/Admin
+ * @package  EverAccounting
+ * @subpackage Abstracts
  * @version  1.0.2
  */
 
@@ -62,6 +63,7 @@ abstract class List_Table extends \WP_List_Table {
 	 * Sets up the list table instance.
 	 *
 	 * @access public
+     * @since 1.0.2
 	 *
 	 * @param array $args {
 	 *     Optional. Arbitrary display and query arguments to pass through to the list table.
@@ -137,6 +139,7 @@ abstract class List_Table extends \WP_List_Table {
 	 * Show blank slate.
 	 *
 	 * @param string $which String which tablenav is being shown.
+     * @since 1.0.2
 	 */
 	public function maybe_render_blank_state( $which ) {
 		if ( 'bottom' === $which && $this->is_empty() ) {
@@ -168,7 +171,7 @@ abstract class List_Table extends \WP_List_Table {
 	 * Retrieve the table columns
 	 *
 	 * @return array $columns Array of all the list table columns
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function get_columns() {
 		$columns = $this->define_columns();

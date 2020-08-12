@@ -1,6 +1,14 @@
 <?php
+/**
+ * Overview of CSV Exporter Main Class.
+ *
+ * @package     EverAccounting
+ * @subpackage  Abstracts
+ * @since       1.0.2
+ */
 
 namespace EverAccounting\Export;
+defined( 'ABSPATH' ) || exit();
 
 abstract class CSV_Exporter {
 	/**
@@ -30,6 +38,7 @@ abstract class CSV_Exporter {
 	 * Number exported.
 	 *
 	 * @var integer
+     * @since 1.0.2
 	 */
 	protected $exported_row_count = 0;
 
@@ -37,6 +46,7 @@ abstract class CSV_Exporter {
 	 * Raw data to export.
 	 *
 	 * @var array
+     * @since 1.0.2
 	 */
 	protected $row_data = array();
 
@@ -44,6 +54,7 @@ abstract class CSV_Exporter {
 	 * Total rows to export.
 	 *
 	 * @var integer
+     * @since 1.0.2
 	 */
 	protected $total_rows = 0;
 
@@ -51,6 +62,7 @@ abstract class CSV_Exporter {
 	 * List of columns to export, or empty for all.
 	 *
 	 * @var array
+     *           @since 1.0.2
 	 */
 	protected $columns_to_export = array();
 
@@ -105,7 +117,7 @@ abstract class CSV_Exporter {
 	 *
 	 * @access public
 	 * @return void
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function headers() {
 		ignore_user_abort( true );
@@ -127,7 +139,7 @@ abstract class CSV_Exporter {
 	 *
 	 * @access public
 	 * @return array $cols Array of the columns
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function get_csv_cols() {
 		$cols = $this->csv_cols();
@@ -173,7 +185,7 @@ abstract class CSV_Exporter {
 	 * @param array $data Export data.
 	 *
 	 * @return array Filtered export data.
-	 * @since  2.0
+	 * @since  1.0.2
 	 *
 	 */
 	public function prepare_data( $data ) {
@@ -184,7 +196,7 @@ abstract class CSV_Exporter {
 		 *
 		 * @param array $data Export data.
 		 *
-		 * @since 2.0
+		 * @since 1.0.2
 		 *
 		 */
 		$data = apply_filters( 'eaccounting_export_get_data', $data );
@@ -196,7 +208,7 @@ abstract class CSV_Exporter {
 		 *
 		 * @param array $data Export data.
 		 *
-		 * @since 2.0
+		 * @since 1.0.2
 		 *
 		 */
 		$data = apply_filters( 'eaccounting_export_get_data_' . $this->export_type, $data );
@@ -209,7 +221,7 @@ abstract class CSV_Exporter {
 	 *
 	 * @access public
 	 * @return void
-	 * @since 1.0
+	 * @since 1.0.2
 	 */
 	public function csv_rows_out() {
 		$data = $this->prepare_data( $this->get_data() );

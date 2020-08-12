@@ -1,11 +1,21 @@
 <?php
+/**
+ * EverAccounting Report functions.
+ *
+ * Functions for all kind of reports of the plugin.
+ *
+ * @package EverAccounting
+ * @since   1.0.2
+ */
+
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Income report
  *
- * since 1.0.0
+ *
  * @throws Exception
+ *                  @since 1.0.2
  */
 function eaccounting_reports_tab_income_summery_render() {
 	global $wpdb;
@@ -71,8 +81,9 @@ add_action( 'eaccounting_reports_tab_income_summery', 'eaccounting_reports_tab_i
 
 /**
  * Expense report
- * since 1.0.0
+ *
  * @throws Exception
+ * @since 1.0.2
  */
 function eaccounting_reports_tab_expense_summery_render() {
 	global $wpdb;
@@ -135,7 +146,12 @@ function eaccounting_reports_tab_expense_summery_render() {
 
 add_action( 'eaccounting_reports_tab_expense_summery', 'eaccounting_reports_tab_expense_summery_render' );
 
-
+/**
+ * Summary report
+ *
+ * @throws Exception
+ * @since 1.0.2
+ */
 function eaccounting_reports_tab_income_expense_summary_render() {
 
 	global $wpdb;

@@ -1,11 +1,11 @@
 <?php
 /**
- * EverAccounting Currency Functions
+ * EverAccounting Currency Functions.
  *
  * Currency related functions.
  *
- * @package EverAccounting\Functions
- * @version 1.0.2
+ * @package EverAccounting
+ * @since 1.0.2
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit();
  * @param $currency
  *
  * @return \EAccounting\Currency|false
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_get_currency( $currency ) {
@@ -50,7 +50,7 @@ function eaccounting_get_currency( $currency ) {
  * @param string $code
  *
  * @return \EAccounting\Currency|false
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_get_currency_by_code( $code ) {
@@ -75,7 +75,7 @@ function eaccounting_get_currency_by_code( $code ) {
  * @param array $args currency arguments.
  *
  * @return \EAccounting\Currency|WP_Error
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_insert_currency( $args ) {
@@ -101,7 +101,7 @@ function eaccounting_insert_currency( $args ) {
  * @param $currency_id
  *
  * @return bool
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_delete_currency( $currency_id ) {

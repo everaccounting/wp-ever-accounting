@@ -1,11 +1,17 @@
 <?php
+/**
+ * Main Plugin Install Class.
+ *
+ * @package     EverAccounting
+ * @since       1.0.2
+ */
 defined( 'ABSPATH' ) || exit();
 
 class EAccounting_Install {
 	/**
 	 * Everything need to be done
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public static function install() {
 		self::create_tables();
@@ -15,7 +21,7 @@ class EAccounting_Install {
 	/**
 	 * Delete all data
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public static function uninstall() {
 
@@ -23,7 +29,7 @@ class EAccounting_Install {
 
 	/**
 	 * Creat tables
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
 	public static function create_tables() {
 		global $wpdb;

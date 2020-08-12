@@ -1,6 +1,8 @@
 <?php
 /**
  * Initializes a temporary data storage engine used by core in various capacities.
+ * @package EverAccounting
+ * @subpackage Utilities
  * @since 1.0.2
  */
 

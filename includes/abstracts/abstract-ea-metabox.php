@@ -3,9 +3,11 @@
  * Overview Meta Box Base class.
  * Provides a base structure for overview content meta boxes.
  *
+ * @package     EverAccounting
+ *              @subpackage Abstracts
  * @class       EAccounting_Transaction
  * @version     1.0.2
- * @package     EverAccounting/Classes
+ *
  */
 
 namespace EverAccounting\Abstracts;

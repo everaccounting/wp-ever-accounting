@@ -1,12 +1,14 @@
 <?php
 /**
- * Abstract Batch Processor
+ * Abstract Batch Processor.
  *
- * @package  EverAccounting/Abstracts
+ * @package  EverAccounting
+ * @subpackage Abstracts
  * @version  1.0.2
  */
 
 namespace EverAccounting\Abstracts;
+defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Batch_Process
@@ -147,7 +149,7 @@ abstract class Batch_Process {
 	 *
 	 * @access public
 	 * @return int Number of items to offset.
-	 * @since  2.0
+	 * @since 1.0.2
 	 *
 	 */
 	public function get_offset() {

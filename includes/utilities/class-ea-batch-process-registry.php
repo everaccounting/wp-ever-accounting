@@ -1,10 +1,13 @@
 <?php
 /**
- * Implements a batch process registry class
+ * Implements a batch process registry class.
+ * @package     EverAccounting
+ * @subpackage Utilities
  * @since 1.0.2
  */
 
 namespace EverAccounting\Utilities;
+defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\Registry;
 
@@ -32,7 +35,7 @@ class Batch_Process_Registry extends Registry {
 	 * Brings in core process files.
 	 *
 	 * @access public
-	 * @since  2.0
+	 * @since  1.0.2
 	 */
 	public function includes() {
 

@@ -1,7 +1,16 @@
 <?php
+/**
+ * EverAccounting Transaction functions.
+ *
+ * Functions for all kind of transaction of the plugin.
+ *
+ * @package EverAccounting
+ * @since   1.0.2
+ */
 defined( 'ABSPATH' ) || exit();
 
 /**
+ * Get all transaction types
  * @return array
  * @since 1.0.2
  */
@@ -21,6 +30,7 @@ function eaccounting_get_transaction_types() {
  * @param $args
  *
  * @return int|WP_Error|null
+ *                          @since 1.0.2
  */
 function eaccounting_insert_transaction( $args ) {
 	global $wpdb;
@@ -126,7 +136,12 @@ function eaccounting_insert_transaction( $args ) {
 
 }
 
-
+/**
+ * Get single transaction
+ * @param @id
+ * @return array
+ * @since 1.0.2
+*/
 function eaccounting_get_transaction( $id ) {
 	global $wpdb;
 
@@ -134,12 +149,12 @@ function eaccounting_get_transaction( $id ) {
 }
 
 /**
- * Delete revenue
+ * Delete transaction
  *
  * @param $id
  *
  * @return bool|WP_Error
- * @since 1.0.0
+ * @since 1.0.2
  */
 function eaccounting_delete_transaction( $id ) {
 	global $wpdb;
@@ -157,7 +172,15 @@ function eaccounting_delete_transaction( $id ) {
 	return true;
 }
 
-
+/**
+ * Get all transactions
+ *
+ * @param $args
+ * @param $count
+ *
+ * @return bool|WP_Error|mixed
+ * @since 1.0.2
+ */
 function eaccounting_get_transactions( $args = array(), $count = false ) {
 	global $wpdb;
 	$query_fields  = '';

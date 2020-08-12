@@ -1,4 +1,10 @@
 <?php
+/**
+ * Class for Transaction querying.
+ *
+ * @package  EverAccounting
+ * @since    1.0.2
+ */
 namespace EverAccounting;
 
 use EverAccounting\Traits\WP_Query;
@@ -8,6 +14,7 @@ defined( 'ABSPATH' ) || exit();
 class Query_Transaction extends Query {
 	/**
 	 * Implement WP style query.
+     * @since    1.0.2
 	 */
 	use WP_Query;
 

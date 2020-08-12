@@ -1,4 +1,11 @@
 <?php
+/**
+ * Reports Rest Controller Class.
+ *
+ * @package     EverAccounting
+ * @subpackage  Api
+ * @since       1.0.2
+ */
 defined( 'ABSPATH' ) || exit();
 
 class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
@@ -80,6 +87,11 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 		) );
 	}
 
+	/**
+     * @param $request
+     * @return mixed|WP_Error|WP_REST_Response
+     * @since 1.0.2
+	*/
 
 	public function get_summery( $request ) {
 		$response = array(
@@ -128,8 +140,12 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 
 		return rest_ensure_response( $response );
 	}
-
-
+    
+    /**
+     * @param $request
+     * @return mixed|WP_Error|WP_REST_Response
+     * @since 1.0.2
+     */
 	public function get_cashflow( $request ) {
 		$financial_start = eaccounting_get_financial_start();
 		$duration        = $this->get_query_dates( $request['date'] );
@@ -247,8 +263,12 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 
 		return rest_ensure_response( [] );
 	}
-
-
+    
+    /**
+     * @param $request
+     * @return mixed|WP_Error|WP_REST_Response
+     * @since 1.0.2
+     */
 	public function get_income_categories( $request ) {
 		$duration = $this->get_query_dates( $request['date'] );
 //		$incomes = eaccounting_get_income_by_categories( $duration['start'], $duration['end'] );
@@ -277,7 +297,11 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 
 		return rest_ensure_response( $income_response );
 	}
-
+    /**
+     * @param $request
+     * @return mixed|WP_Error|WP_REST_Response
+     * @since 1.0.2
+     */
 	public function get_expense_categories( $request ) {
 		$duration = $this->get_query_dates( $request['date'] );
 //		$expenses = eaccounting_get_expense_by_categories( $duration['start'], $duration['end'] );
@@ -367,7 +391,11 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 //
 //		return $profit;
 	}
-
+    /**
+     * @param $request
+     * @return mixed|WP_Error|WP_REST_Response
+     * @since 1.0.2
+     */
 	public function get_income_report( $request ) {
 		$duration        = $this->get_query_dates( $request['date'] );
 		$dates           = $totals = $incomes = $incomes_graph = $categories = [];
@@ -422,10 +450,18 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 //
 //		return rest_ensure_response( $data );
 	}
-
+    /**
+     * @param $request
+     * @return mixed|WP_Error|WP_REST_Response
+     * @since 1.0.2
+     */
 	public function expense_report( $request ) {
 	}
-
+    /**
+     * @param $request
+     * @return mixed|WP_Error|WP_REST_Response
+     * @since 1.0.2
+     */
 	public function income_expense_report( $request ) {
 	}
 

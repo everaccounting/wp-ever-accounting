@@ -1,17 +1,18 @@
 <?php
 /**
- * EverAccounting Transaction functions
+ * EverAccounting Transaction functions.
  *
  * Functions for all kind of transaction of the plugin.
  *
- * @package EverAccounting/Functions
- * @version 1.0.2
+ * @package EverAccounting
+ * @since 1.0.2
  */
 
 defined( 'ABSPATH' ) || exit;
 
 
 /**
+ * Get Transaction Types
  * @return array
  * @since 1.0.2
  */
@@ -32,7 +33,7 @@ function eaccounting_get_transaction_types() {
  * @param $transaction
  *
  * @return \EverAccounting\Transaction|false
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_get_transaction( $transaction ) {
@@ -68,7 +69,7 @@ function eaccounting_get_transaction( $transaction ) {
  * @param array $args transaction arguments.
  *
  * @return \EverAccounting\Transaction|WP_Error
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_insert_transaction( $args ) {
@@ -95,7 +96,7 @@ function eaccounting_insert_transaction( $args ) {
  * @param $transaction_id
  *
  * @return bool
- * @since 1.0.0
+ * @since 1.0.2
  *
  */
 function eaccounting_delete_transaction( $transaction_id ) {

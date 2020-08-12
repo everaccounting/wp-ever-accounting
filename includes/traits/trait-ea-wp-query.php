@@ -1,9 +1,10 @@
 <?php
 /**
- * Trait for setting wp style query arguments
+ * Trait for setting wp style query arguments.
  *
- * @package EverAccounting/Traits
- * @version 1.0.2
+ * @package EverAccounting
+ * @subpackage Traits
+ * @since 1.0.2
  */
 
 namespace EverAccounting\Traits;
