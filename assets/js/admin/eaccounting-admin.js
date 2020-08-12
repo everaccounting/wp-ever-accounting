@@ -6,30 +6,32 @@
 		}
 
 		//initialize plugins
-		$(document).ajaxStart(function () {
-			Pace.restart();
-		});
+		$(document).ready(function () {
+			$(document).ajaxStart(function () {
+				Pace.restart();
+			});
 
-		$('.ea-input-date').datepicker({dateFormat: 'mm-dd-yy'});
-		$('.ea-input-color').ea_color_picker();
-		$('.ea-help-tip').tipTip();
-		$('.ea-input-price').inputmask('decimal', {
-			alias: 'numeric',
-			groupSeparator: ',',
-			autoGroup: true,
-			digits: 2,
-			radixPoint: '.',
-			digitsOptional: false,
-			allowMinus: false,
-			prefix: '',
-			placeholder: '0.000',
-			rightAlign: 0,
-			clearMaskOnLostFocus: false,
-		});
+			$('.ea-input-date').datepicker({dateFormat: 'mm-dd-yy'});
+			$('.ea-input-color').ea_color_picker();
+			$('.ea-help-tip').tipTip();
+			$('.ea-input-price').inputmask('decimal', {
+				alias: 'numeric',
+				groupSeparator: ',',
+				autoGroup: true,
+				digits: 2,
+				radixPoint: '.',
+				digitsOptional: false,
+				allowMinus: false,
+				prefix: '',
+				placeholder: '0.000',
+				rightAlign: 0,
+				clearMaskOnLostFocus: false,
+			});
 
-		$('#ea-account-form, #ea-revenue-form, #ea-payment-form').eaccounting_form();
+			$('#ea-account-form, #ea-revenue-form, #ea-payment-form').eaccounting_form();
 
-		$('#account_id').eaccounting_creatable();
+			$('#account_id').eaccounting_creatable();
+		})
 
 		//
 		// //Handle Forms
