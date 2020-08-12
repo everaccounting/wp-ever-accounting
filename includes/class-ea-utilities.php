@@ -8,6 +8,7 @@
 namespace EverAccounting;
 
 use EverAccounting\Utilities\Data;
+use EverAccounting\Utilities\Defaults;
 
 /**
  * Class Utilities
@@ -22,6 +23,14 @@ class Utilities {
 	 * @var    Data
 	 */
 	public $data;
+
+	/**
+	 * Storage for holding default company data.
+	 *
+	 * @var Defaults
+	 * @since 1.0.2
+	 */
+	public $defaults;
 
 	/**
 	 * Instantiates the utilities class.
@@ -41,7 +50,8 @@ class Utilities {
 	 * @since  1.0.2
 	 */
 	public function includes() {
-		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-ea-data.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-ea-utils-data.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-ea-utils-default.php';
 	}
 
 	/**
@@ -51,7 +61,10 @@ class Utilities {
 	 * @since  1.0.2
 	 */
 	public function setup_objects() {
-		$this->data = new Data();
+		$this->data     = new Data();
+		$this->defaults = new Defaults();
+
+		$this->defaults->init();
 	}
 
 }

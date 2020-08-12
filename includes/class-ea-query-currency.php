@@ -46,4 +46,14 @@ class Query_Currency extends Query {
 	protected function get_search_columns() {
 		return array( 'name', 'code', 'symbol', 'rate' );
 	}
+
+	/**
+	 * Select as dropdown item
+	 * @since 1.0.2
+	 */
+	public function selectAsOption() {
+		$this->select( 'code as id, CONCAT (name,"(", symbol, ")") as value' );
+
+		return $this;
+	}
 }

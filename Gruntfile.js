@@ -164,6 +164,7 @@ module.exports = function (grunt) {
 					'<%= dirs.js %>/eaccounting/*js',
 					'<%= dirs.js %>/frontend/*js',
 					'!<%= dirs.js %>/admin/*.min.js',
+					'!<%= dirs.js %>/eaccounting/*.min.js',
 					'!<%= dirs.js %>/frontend/*.min.js'
 				],
 				tasks: ['eslint', 'uglify']

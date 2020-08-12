@@ -218,7 +218,7 @@ class Account extends Base_Object {
 //			if ( in_array( 'opening_balance', $changes ) ) {
 //				$changes['opening_balance']
 //			}
-			error_log(print_r($changes, true));
+			error_log( print_r( $changes, true ) );
 			try {
 				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
 			} catch ( \Exception $e ) {
@@ -383,7 +383,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_opening_balance( $opening_balance ) {
-		$this->set_prop( 'opening_balance', eaccounting_sanitize_price($opening_balance, $this->get_currency_code()) );
+		$this->set_prop( 'opening_balance', eaccounting_clean( $opening_balance ) );
 	}
 
 	/**

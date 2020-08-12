@@ -362,6 +362,7 @@ function eaccounting_select( $field ) {
 			'default'       => '',
 			'value'         => '',
 			'name'          => '',
+			'placeholder'   => '',
 			'options'       => array(),
 			'multiple'      => false,
 			'tooltip'       => '',
@@ -373,13 +374,14 @@ function eaccounting_select( $field ) {
 		)
 	);
 
-	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
-	$field['value']            = empty( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['wrapper_class']    .= ( true == $field['required'] ) ? ' required ' : '';
-	$field['attr']['required'] = ( true == $field['required'] ) ? ' required ' : '';
-	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
-	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
-	$field['attr']['multiple'] = ( true == $field['multiple'] ) ? ' multiple ' : '';
+	$field['id']                  = empty( $field['id'] ) ? $field['name'] : $field['id'];
+	$field['value']               = empty( $field['value'] ) ? $field['default'] : $field['value'];
+	$field['wrapper_class']       .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['attr']['required']    = ( true == $field['required'] ) ? ' required ' : '';
+	$field['attr']['readonly']    = ( true == $field['readonly'] ) ? ' readonly ' : '';
+	$field['attr']['disabled']    = ( true == $field['disabled'] ) ? ' disabled ' : '';
+	$field['attr']['multiple']    = ( true == $field['multiple'] ) ? ' multiple ' : '';
+	$field['attr']['placeholder'] = $field['placeholder'];
 
 	// Custom attribute handling
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
@@ -476,6 +478,72 @@ function eaccounting_toggle( $field ) {
 }
 
 /**
+ * Select field wrapper for ajax select 2 and new item creatable.
+ *
+ * @param array $field field properties.
+ *
+ * @since 1.0.2
+ */
+function eaccounting_select2( $field ) {
+	$field = (array) wp_parse_args(
+		$field, array(
+			'class'     => '',
+			'ajax'      => false,
+			'type'      => '',
+			'creatable' => false,
+			'template'  => '',
+			'attr'      => array(),
+		)
+	);
+
+	if ( $field['ajax'] && empty( $field['type'] ) ) {
+		_doing_it_wrong( __FUNCTION__, __( 'Ajax type defined without type property', 'wp-ever-accounting' ), '1.0.2' );
+		$field['ajax'] = false;
+	}
+
+	if ( $field['creatable'] && empty( $field['template'] ) ) {
+		_doing_it_wrong( __FUNCTION__, __( 'Creatable defined without template property', 'wp-ever-accounting' ), '1.0.2' );
+		$field['creatable'] = false;
+	}
+
+	$field['class'] .= ' ea-select2 ';
+	if ( $field['ajax'] ) {
+		$field['attr'] = array_merge( $field['attr'], array(
+			'data-ajax'  => true,
+			'data-type'  => $field['type'],
+			'data-nonce' => wp_create_nonce( 'ea-dropdown-search' ),
+		) );
+
+		unset( $field['ajax'] );
+		unset( $field['type'] );
+	}
+
+	if ( $field['creatable'] ) {
+		$field['attr'] = array_merge( $field['attr'], array(
+			'data-creatable' => true,
+			'data-template'  => $field['template'],
+			'data-text'      => __( 'Add New', 'wp-ever-accounting' ),
+		) );
+
+		unset( $field['creatable'] );
+		unset( $field['template'] );
+	}
+
+	eaccounting_select( $field );
+}
+
+
+function eaccounting_input_amount( $field ) {
+	$field = (array) wp_parse_args(
+		$field, array(
+			'class'    => '',
+			'currency' => '',
+			'attr'     => array(),
+		)
+	);
+}
+
+/**
  * Convert database result to option list.
  *
  * @param array $list database query result.
@@ -492,4 +560,33 @@ function eaccounting_result_to_dropdown( $list, $key = 'id', $value = 'name' ) {
 	}
 
 	return wp_list_pluck( $list, $value, $key );
+}
+
+/**
+ * Convert a object  to option
+ *
+ * @param object $item
+ * @param string $value_method
+ * @param string $key_method
+ *
+ * @return array|string[]
+ * @since 1.0.2
+ *
+ */
+function eaccounting_object_to_option( $item, $value_method, $key_method = 'get_id' ) {
+	$key   = '';
+	$value = '';
+	if ( empty( $item ) || is_wp_error( $item ) ) {
+		return array();
+	}
+
+	if ( is_callable( array( $item, $key_method ) ) ) {
+		$key = $item->$key_method();
+	}
+
+	if ( is_callable( array( $item, $value_method ) ) ) {
+		$value = $item->$value_method();
+	}
+
+	return array( $key => $value );
 }

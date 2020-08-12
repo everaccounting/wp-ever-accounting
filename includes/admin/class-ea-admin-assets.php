@@ -67,11 +67,9 @@ class Admin_Assets {
 		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url() . '/assets/js/inputmask/jquery.inputmask' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
 
 		//core js
-		wp_register_script( 'eaccounting', eaccounting()->plugin_url() . '/assets/js/eaccounting/eaccounting' . $suffix . '.js', array( 'jquery' ), $version );
+		wp_register_script( 'eaccounting', eaccounting()->plugin_url() . '/assets/js/eaccounting/eaccounting' . $suffix . '.js', array( 'jquery', 'ea-backbone-modal' ), $version );
 		wp_register_script( 'eaccounting-settings', eaccounting()->plugin_url() . '/assets/js/admin/admin-settings' . $suffix . '.js', array( 'jquery' ), $version );
-		wp_register_script( 'ea-quick-add', eaccounting()->plugin_url() . '/assets/js/admin/ea-quick-add' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/js/admin/eaccounting-admin' . $suffix . '.js', array( 'jquery' ), $version );
-		wp_register_script( 'ea-form', eaccounting()->plugin_url() . '/assets/js/admin/ea-form' . $suffix . '.js', array( 'jquery', 'underscore', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-batch', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-batch' . $suffix . '.js', array( 'jquery', 'underscore', 'backbone', 'wp-util' ), $version );
 
 		// Admin scripts for Accounting pages only.
@@ -85,25 +83,20 @@ class Admin_Assets {
 			wp_enqueue_script( 'jquery-inputmask' );
 			wp_enqueue_script( 'jquery-blockui' );
 			wp_enqueue_script( 'jquery-tiptip' );
-//			wp_enqueue_script( 'ea-quick-add' );
-//			wp_enqueue_script( 'jquery-validation' );
 			wp_enqueue_script( 'ea-backbone-modal' );
 			wp_enqueue_script( 'eaccounting' );
 			wp_enqueue_script( 'eaccounting-admin' );
-
-
-			wp_enqueue_script( 'ea-quick-add' );
-			wp_enqueue_script( 'ea-form' );
 			wp_enqueue_script( 'ea-batch' );
 
 			wp_localize_script( 'eaccounting-admin', 'eaccounting_admin_i10n', array(
-				'ajax_url'          => eaccounting()->ajax_url(),
+				'ajaxurl'           => eaccounting()->ajax_url(),
 				'global_currencies' => eaccounting_get_global_currencies()
 			) );
 
-			wp_localize_script( 'ea-form', 'eaccounting_form_i10n', array(
-				'ajax_url' => eaccounting()->ajax_url(),
-				'nonce'    => array(
+
+			wp_localize_script( 'eaccounting', 'eaccounting_i10n', array(
+				'ajaxurl' => eaccounting()->ajax_url(),
+				'nonce'   => array(
 					'get_account'  => wp_create_nonce( 'ea_get_account' ),
 					'get_currency' => wp_create_nonce( 'ea_get_currency' ),
 				)

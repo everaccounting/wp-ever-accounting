@@ -169,7 +169,7 @@ class Ajax {
 	 * @since 1.0.2
 	 */
 	public static function dropdown_search() {
-		check_ajax_referer( 'dropdown-search', 'nonce' );
+		check_ajax_referer( 'ea-dropdown-search', 'nonce' );
 		$search  = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page    = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 		$results = array();
@@ -181,11 +181,11 @@ class Ajax {
 				break;
 
 			case 'account':
-				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->get();
+				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'customer':
-				$results = Query_Contact::init()->wp_query( [ 'search' => $search ] )->isCustomer()->select( 'id, name as text' )->get();
+				$results = Query_Contact::init()->wp_query( [ 'search' => $search ] )->isCustomer()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			default:

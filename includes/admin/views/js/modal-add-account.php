@@ -43,16 +43,15 @@ defined( 'ABSPATH' ) || exit();
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 									'name'          => 'currency_code',
-									'class'         => 'ea-ajax-select2',
+									'class'         => 'ea-select2',
 									'value'         => '',
 									'options'       => [],
 									'default'       => '',
 									'required'      => true,
 									'attr'          => array(
-											'data-nonce'       => wp_create_nonce( 'dropdown-search' ),
-											'data-type'        => 'currency_code',
-											'data-action'      => 'eaccounting_dropdown_search',
-											'data-placeholder' => __( 'Select currency code', 'wp-ever-accounting' ),
+											'data-ajax'  => true,
+											'data-type'  => 'currency',
+											'data-nonce' => wp_create_nonce( 'ea-dropdown-search' ),
 									)
 							) );
 
@@ -64,7 +63,11 @@ defined( 'ABSPATH' ) || exit();
 									'default'       => '0.00',
 									'required'      => true,
 							) );
-							wp_nonce_field( 'edit_account' );
+							eaccounting_hidden_input( array(
+									'name'  => 'action',
+									'value' => 'eaccounting_edit_account',
+							) );
+							wp_nonce_field( 'ea_edit_account' );
 							?>
 						</div>
 					</article>

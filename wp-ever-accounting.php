@@ -222,6 +222,7 @@ final class EverAccounting {
 		//Abstract classes.
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-base-object.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-metabox.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-wp-query.php' );
 
 
@@ -309,8 +310,8 @@ final class EverAccounting {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
 
-		$this->utils    = new \EverAccounting\Utilities();
 		$this->settings = new \EverAccounting\Admin\Settings();
+		$this->utils    = new \EverAccounting\Utilities();
 
 		// Init action.
 		do_action( 'eaccounting_init' );

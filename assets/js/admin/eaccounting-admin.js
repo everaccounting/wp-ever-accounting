@@ -12,7 +12,6 @@
 
 		$('.ea-input-date').datepicker({dateFormat: 'mm-dd-yy'});
 		$('.ea-input-color').ea_color_picker();
-		$('.ea-select2').select2();
 		$('.ea-help-tip').tipTip();
 		$('.ea-input-price').inputmask('decimal', {
 			alias: 'numeric',
@@ -28,9 +27,9 @@
 			clearMaskOnLostFocus: false,
 		});
 
+		$('#ea-account-form, #ea-revenue-form, #ea-payment-form').eaccounting_form();
 
-		// Color picker
-
+		$('#account_id').eaccounting_creatable();
 
 		//
 		// //Handle Forms

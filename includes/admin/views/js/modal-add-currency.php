@@ -12,7 +12,6 @@ $options    = array();
 foreach ( $currencies as $code => $props ) {
 	$options[ $code ] = sprintf( '%s (%s)', $props['name'], $props['symbol'] );
 }
-$currency = new EAccounting_Currency( null );
 ?>
 	<script type="text/template" id="tmpl-ea-modal-add-currency">
 		<div class="ea-backbone-modal">
@@ -33,7 +32,7 @@ $currency = new EAccounting_Currency( null );
 										'label'         => __( 'Currency Code', 'wp-ever-accounting' ),
 										'name'          => 'code',
 										'class'         => 'ea-select2',
-										'value'         => $currency->get_code( 'edit' ),
+										'value'         => '',
 										'options'       => $options,
 										'required'      => true,
 								) );
@@ -41,7 +40,7 @@ $currency = new EAccounting_Currency( null );
 										'wrapper_class' => 'ea-col-12',
 										'label'         => __( 'Currency Rate', 'wp-ever-accounting' ),
 										'name'          => 'rate',
-										'value'         => $currency->get_rate( 'edit' ),
+										'value'         => '',
 										'required'      => true,
 								) );
 								?>
