@@ -55,7 +55,7 @@ set -ex
 
 install_wp() {
 
-	if [ -d $WP_CORE_DIR ]; then
+	if [ -f $WP_CORE_DIR/index.php ]; then
 		return;
 	fi
 
@@ -151,5 +151,5 @@ install_db() {
 }
 
 install_wp
-#install_test_suite
-#install_db
+install_test_suite
+install_db
