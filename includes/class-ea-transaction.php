@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit();
  * @package EverAccounting
  */
 class Transaction extends Base_Object {
-    
+
     /**
      * A group must be set to to enable caching.
      *
@@ -29,7 +29,7 @@ class Transaction extends Base_Object {
      * @since 1.0.2
      */
     protected $cache_group = 'transactions';
-    
+
     /**
      * This is the name of this object type.
      *
@@ -37,7 +37,7 @@ class Transaction extends Base_Object {
      * @since 1.0.2
      */
     public $object_type = 'transaction';
-    
+
     /**
      * Transaction Data array.
      *
@@ -64,8 +64,8 @@ class Transaction extends Base_Object {
             'company_id'     => '',
             'date_created'   => '',
         );
-    
-    
+
+
     /**
      * EAccounting_Transaction constructor.
      *
@@ -75,7 +75,7 @@ class Transaction extends Base_Object {
      */
     public function __construct( $data = 0 ) {
         parent::__construct( $data );
-        
+
         if ( is_numeric( $data ) && $data > 0 ) {
             $this->set_id( $data );
         } elseif ( $data instanceof self ) {
@@ -85,12 +85,12 @@ class Transaction extends Base_Object {
         } else {
             $this->set_id( 0 );
         }
-        
+
         if ( $this->get_id() > 0 ) {
             $this->read( $this->get_id() );
         }
     }
-    
+
     /**
      * Validate the properties before saving the object
      * in the database.
@@ -103,74 +103,74 @@ class Transaction extends Base_Object {
         if ( ! $this->get_date_created( 'edit' ) ) {
             $this->set_date_created( time() );
         }
-        
+
         if ( ! $this->get_company_id( 'edit' ) ) {
             $this->set_company_id( 1 );
         }
-        
+
         if ( ! $this->get_prop( 'creator_id' ) ) {
             $this->set_prop( 'creator_id', eaccounting_get_current_user_id() );
         }
-        
+
         if ( empty( $this->get_paid_at( 'edit' ) ) ) {
             throw new Exception( 'empty-date', __( 'Paid date is required', 'wp-ever-accounting' ) );
         }
-        
+
         if ( empty( $this->get_category_id( 'edit' ) ) ) {
             throw new Exception( 'empty-category', __( 'Category is required', 'wp-ever-accounting' ) );
         }
-        
+
         if ( empty( $this->get_payment_method( 'edit' ) ) ) {
             throw new Exception( 'empty-payment-method', __( 'Payment method is required', 'wp-ever-accounting' ) );
         }
-        
+
         $account = eaccounting_get_account( $this->get_account_id( 'edit' ) );
         if ( ! $account || ! $account->exists() ) {
             throw new Exception( 'empty-account', __( 'Account is required.', 'wp-ever-accounting' ) );
         }
-        
+
         $currency = eaccounting_get_currency_by_code( $account->get_currency_code( 'edit' ) );
         if ( ! $currency || ! $currency->exists() ) {
             throw new Exception( 'invalid-currency', __( 'Account associated currency does not exist.', 'wp-ever-accounting' ) );
         }
-        
+
         $category = eaccounting_get_category( $this->get_category_id( 'edit' ) );
         if ( ! $category->exists() ) {
             throw new Exception( 'invalid-category', __( 'Category does not exist.', 'wp-ever-accounting' ) );
         }
-        
+
         if ( ! in_array( $category->get_type( 'edit' ), [ 'expense', 'other', 'income' ] ) ) {
             throw new Exception( 'invalid-category-type', __( 'Invalid category type.', 'wp-ever-accounting' ) );
         }
-        
+
         //if expense category type must be expense
         //if type other category type must be other
         //if type income category type must be income
         if ( $this->get_type( 'edit' ) !== $category->get_type() ) {
             throw new Exception( 'invalid-category-type', __( 'Transaction type and category type does not match.', 'wp-ever-accounting' ) );
         }
-        
-        
+
+
         $contact = eaccounting_get_contact( $this->get_contact_id( 'edit' ) );
         if ( ! empty( $this->get_contact_id( 'edit' ) ) && ! $contact->exists() ) {
             throw new Exception( 'invalid-contact', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
         }
-        
+
         if ( empty( $this->get_type( 'edit' ) ) ) {
             throw new Exception( 'invalid-transaction-type', __( 'Type is required', 'wp-ever-accounting' ) );
         }
-        
+
         $this->set_prop( 'currency_code', $currency->get_code( 'edit' ) );
         $this->set_prop( 'currency_rate', $currency->get_rate( 'edit' ) );
         $this->set_prop( 'amount', eaccounting_sanitize_price( $this->get_amount( 'edit' ), $currency->get_code( 'edit' ) ) );
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     | Crud
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Load item from database.
      *
@@ -181,24 +181,24 @@ class Transaction extends Base_Object {
      */
     public function read( $id ) {
         $this->set_defaults();
-        
+
         // Get from cache if available.
         $item = 0 < $id ? wp_cache_get( $this->object_type . '-item-' . $id, $this->cache_group ) : false;
         if ( false === $item ) {
             $item = Query_Transaction::init( 'transaction_crud' )->find( $id );
-            
+
             if ( 0 < $item->id ) {
                 wp_cache_set( $this->object_type . '-item-' . $item->id, $item, $this->cache_group );
             }
         }
-        
+
         if ( ! $item || ! $item->id ) {
             throw new Exception( 'invalid-id', __( 'Invalid transaction.', 'wp-ever-accounting' ) );
         }
-        
+
         $this->populate( $item );
     }
-    
+
     /**
      * Create a new transaction in the database.
      *
@@ -227,24 +227,24 @@ class Transaction extends Base_Object {
             'creator_id'     => $this->get_prop( 'creator_id' ),
             'date_created'   => $this->get_date_created( 'edit' )->format( 'Y-m-d H:i:s' ),
         );
-        
+
         do_action( 'eaccounting_pre_insert_transaction', $this->get_id(), $this );
-        
+
         $data = wp_unslash( apply_filters( 'eaccounting_new_transaction_data', $contact_data ) );
         if ( false === $wpdb->insert( $wpdb->prefix . 'ea_transactions', $data ) ) {
             throw new Exception( 'db-error', $wpdb->last_error );
         }
-        
+
         do_action( 'eaccounting_insert_transaction', $this->get_id(), $this );
-        
+
         $this->set_id( $wpdb->insert_id );
         $this->apply_changes();
         $this->set_object_read( true );
-        
+
         return $this->get_id();
     }
-    
-    
+
+
     /**
      * Update a transaction in the database.
      *
@@ -254,31 +254,34 @@ class Transaction extends Base_Object {
      */
     public function update() {
         global $wpdb;
-        
+
         $this->validate_props();
         $changes = $this->get_changes();
-        
+
         if ( ! empty( $changes ) ) {
             do_action( 'eaccounting_pre_update_transaction', $this->get_id(), $changes );
-            
+            if(array_key_exists('paid_at', $changes)){
+	            $changes['paid_at'] = $this->get_paid_at()->get_mysql_date();
+            }
+			error_log(print_r($changes, true ));
             try {
                 $wpdb->update( $wpdb->prefix . 'ea_transactions', $changes, array( 'id' => $this->get_id() ) );
             } catch ( Exception $e ) {
                 throw new Exception( 'db-error', __( 'Could not update transaction.', 'wp-ever-accounting' ) );
             }
-            
+
             do_action( 'eaccounting_update_transaction', $this->get_id(), $changes, $this->data );
-            
+
             $this->apply_changes();
             $this->set_object_read( true );
             wp_cache_delete( 'transaction-item-' . $this->get_id(), 'transactions' );
-            
+
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Remove a transaction from the database.
      *
@@ -295,13 +298,13 @@ class Transaction extends Base_Object {
             $this->set_id( 0 );
         }
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     | Getters
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Transaction type.
      *
@@ -314,7 +317,7 @@ class Transaction extends Base_Object {
     public function get_type( $context = 'view' ) {
         return $this->get_prop( 'type', $context );
     }
-    
+
     /**
      * Paid at time.
      *
@@ -327,7 +330,7 @@ class Transaction extends Base_Object {
     public function get_paid_at( $context = 'view' ) {
         return $this->get_prop( 'paid_at', $context );
     }
-    
+
     /**
      * Transaction Amount.
      *
@@ -340,7 +343,7 @@ class Transaction extends Base_Object {
     public function get_amount( $context = 'view' ) {
         return $this->get_prop( 'amount', $context );
     }
-    
+
     /**
      * Currency code.
      *
@@ -353,7 +356,7 @@ class Transaction extends Base_Object {
     public function get_currency_code( $context = 'view' ) {
         return $this->get_prop( 'currency_code', $context );
     }
-    
+
     /**
      * Currency rate.
      *
@@ -366,7 +369,7 @@ class Transaction extends Base_Object {
     public function get_currency_rate( $context = 'view' ) {
         return $this->get_prop( 'currency_rate', $context );
     }
-    
+
     /**
      * Transaction from account id.
      *
@@ -379,7 +382,7 @@ class Transaction extends Base_Object {
     public function get_account_id( $context = 'view' ) {
         return $this->get_prop( 'account_id', $context );
     }
-    
+
     /**
      * @param string $context
      *
@@ -390,7 +393,7 @@ class Transaction extends Base_Object {
     public function get_invoice_id( $context = 'view' ) {
         return $this->get_prop( 'invoice_id', $context );
     }
-    
+
     /**
      * Contact id.
      *
@@ -403,7 +406,7 @@ class Transaction extends Base_Object {
     public function get_contact_id( $context = 'view' ) {
         return $this->get_prop( 'contact_id', $context );
     }
-    
+
     /**
      * Category ID.
      *
@@ -416,7 +419,7 @@ class Transaction extends Base_Object {
     public function get_category_id( $context = 'view' ) {
         return $this->get_prop( 'category_id', $context );
     }
-    
+
     /**
      * Description.
      *
@@ -429,7 +432,7 @@ class Transaction extends Base_Object {
     public function get_description( $context = 'view' ) {
         return $this->get_prop( 'description', $context );
     }
-    
+
     /**
      * Transaction payment methods.
      *
@@ -442,7 +445,7 @@ class Transaction extends Base_Object {
     public function get_payment_method( $context = 'view' ) {
         return $this->get_prop( 'payment_method', $context );
     }
-    
+
     /**
      * Transaction reference.
      *
@@ -455,7 +458,7 @@ class Transaction extends Base_Object {
     public function get_reference( $context = 'view' ) {
         return $this->get_prop( 'reference', $context );
     }
-    
+
     /**
      * Get associated parent payment id.
      *
@@ -468,7 +471,7 @@ class Transaction extends Base_Object {
     public function get_parent_id( $context = 'view' ) {
         return $this->get_prop( 'parent_id', $context );
     }
-    
+
     /**
      * Get if reconciled
      *
@@ -481,13 +484,13 @@ class Transaction extends Base_Object {
     public function get_reconciled( $context = 'view' ) {
         return (bool) $this->get_prop( 'reconciled', $context );
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     | Setters
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Set contact's email.
      *
@@ -498,7 +501,7 @@ class Transaction extends Base_Object {
     public function set_type( $value ) {
         $this->set_prop( 'type', $value );
     }
-    
+
     /**
      * Set transaction paid.
      *
@@ -509,7 +512,7 @@ class Transaction extends Base_Object {
     public function set_paid_at( $value ) {
         $this->set_date_prop( 'paid_at', $value );
     }
-    
+
     /**
      * Set transaction amount.
      *
@@ -520,7 +523,7 @@ class Transaction extends Base_Object {
     public function set_amount( $value ) {
         $this->set_prop( 'amount', eaccounting_sanitize_price( $value, $this->get_currency_code( 'edit' ) ) );
     }
-    
+
     /**
      * Set currency code.
      *
@@ -531,7 +534,7 @@ class Transaction extends Base_Object {
     public function set_currency_code( $value ) {
         $this->set_prop( 'currency_code', eaccounting_clean( $value ) );
     }
-    
+
     /**
      * Set currency rate.
      *
@@ -540,9 +543,9 @@ class Transaction extends Base_Object {
      * @since 1.0.2
      */
     public function set_currency_rate( $value ) {
-        $this->set_prop( 'currency_rate', eaccounting_sanitize_number( $value, true ) );
+        $this->set_prop( 'currency_rate', eaccounting_sanitize_price( $value, $this->get_currency_code() ) );
     }
-    
+
     /**
      * Set account id.
      *
@@ -553,7 +556,7 @@ class Transaction extends Base_Object {
     public function set_account_id( $value ) {
         $this->set_prop( 'account_id', absint( $value ) );
     }
-    
+
     /**
      * Set invoice id.
      *
@@ -564,7 +567,7 @@ class Transaction extends Base_Object {
     public function set_invoice_id( $value ) {
         $this->set_prop( 'invoice_id', absint( $value ) );
     }
-    
+
     /**
      * Set contact id.
      *
@@ -575,7 +578,7 @@ class Transaction extends Base_Object {
     public function set_contact_id( $value ) {
         $this->set_prop( 'contact_id', absint( $value ) );
     }
-    
+
     /**
      * Set category id.
      *
@@ -586,7 +589,7 @@ class Transaction extends Base_Object {
     public function set_category_id( $value ) {
         $this->set_prop( 'category_id', absint( $value ) );
     }
-    
+
     /**
      * Set description.
      *
@@ -597,7 +600,7 @@ class Transaction extends Base_Object {
     public function set_description( $value ) {
         $this->set_prop( 'description', eaccounting_clean( $value ) );
     }
-    
+
     /**
      * Set payment method.
      *
@@ -610,7 +613,7 @@ class Transaction extends Base_Object {
             $this->set_prop( 'payment_method', $value );
         }
     }
-    
+
     /**
      * Set reference.
      *
@@ -621,11 +624,11 @@ class Transaction extends Base_Object {
     public function set_reference( $value ) {
         $this->set_prop( 'reference', eaccounting_clean( $value ) );
     }
-    
+
     public function set_file_id( $value ) {
         $this->set_prop( 'file_id', absint( $value ) );
     }
-    
+
     /**
      * Set parent id.
      *
@@ -636,7 +639,7 @@ class Transaction extends Base_Object {
     public function set_parent_id( $value ) {
         $this->set_prop( 'parent_id', absint( $value ) );
     }
-    
+
     /**
      * Set if reconciled.
      *
@@ -647,13 +650,13 @@ class Transaction extends Base_Object {
     public function set_reconciled( $value ) {
         $this->set_prop( 'reconciled', absint( $value ) );
     }
-    
+
     /*
     |--------------------------------------------------------------------------
     | Extra
     |--------------------------------------------------------------------------
     */
-    
+
     /**
      * Get formatted transaction amount.
      *

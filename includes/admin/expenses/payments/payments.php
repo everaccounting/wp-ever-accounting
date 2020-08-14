@@ -21,8 +21,8 @@ function eaccounting_expenses_tab_payments() {
 			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
-		require_once dirname( __FILE__ ) . '/list-table-payments.php';
-		$list_table = new \EverAccounting\Admin\Expenses\List_Table_Payments();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-payments.php';
+		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Payments();
 		$list_table->prepare_items();
 
 		/**

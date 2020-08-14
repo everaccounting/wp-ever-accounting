@@ -1,19 +1,20 @@
 <?php
 /**
- * Customers Admin List Table.
+ * Customers list table
+ *
+ * Admin customers list table.
+ *
  *
  * @package     EverAccounting
- * @subpackage  Admin/Sales/Customers
+ * @subpackage  EverAccounting\Admin\ListTables
  * @since       1.0.2
  */
 
-namespace EverAccounting\Admin\Sales;
+namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
 use EverAccounting\Contact;
 use EverAccounting\Query_Contact;
-
-defined( 'ABSPATH' ) || exit();
 
 /**
  * Class List_Table_Customers
@@ -175,6 +176,113 @@ class List_Table_Customers extends List_Table {
 		return sprintf( '<input type="checkbox" name="customer_id[]" value="%d"/>', $customer->get_id() );
 	}
 
+	/**
+	 * Renders the "Name" column in the customer list table.
+	 *
+	 *
+	 * @param Contact $customer The current contact object.
+	 *
+	 * @return string Data shown in the Name column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_name( $customer ) {
+		$name = $customer->get_name();
+
+		$value = sprintf( '<a href="%1$s">%2$s</a>',
+			esc_url( eaccounting_admin_url( [ 'action' => 'edit','tab' => 'customers', 'customer_id' => $customer->get_id() ] ) ),
+			$name
+		);
+
+		return apply_filters( 'eaccounting_customers_table_name', $value, $customer );
+	}
+
+	/**
+	 * Renders the "Email" column in the customer list table.
+	 *
+	 *
+	 * @param Contact $customer The current contact object.
+	 *
+	 * @return string Data shown in the Email column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_email( $customer ) {
+		$email = empty( $customer->get_email() ) ? '&mdash' : $customer->get_email();
+
+		return apply_filters( 'eaccounting_customers_table_email', $email, $customer );
+	}
+
+	/**
+	 * Renders the "Phone" column in the customer list table.
+	 *
+	 *
+	 * @param Contact $customer The current contact object.
+	 *
+	 * @return string Data shown in the Phone column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_phone( $customer ) {
+		$phone = empty( $customer->get_phone() ) ? '&mdash' : $customer->get_phone();
+
+		return apply_filters( 'eaccounting_customers_table_phone', $phone, $customer );
+	}
+
+	/**
+	 * Renders the "enabled" column in the list table.
+	 *
+	 * @param Contact $customer The current object.
+	 *
+	 * @return string Data shown in the "enabled" column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_enabled( $customer ) {
+		ob_start();
+		eaccounting_toggle( array(
+			'name'  => 'enabled',
+			'id'    => 'enabled_' . $customer->get_id(),
+			'value' => $customer->get_enabled( 'edit' ),
+			'naked' => true,
+			'class' => 'ea_item_status_update',
+			'attr'  => array(
+				'data-objectid'   => $customer->get_id(),
+				'data-nonce'      => wp_create_nonce( 'ea_status_update' ),
+				'data-objecttype' => 'contact'
+			)
+		) );
+		$output = ob_get_contents();
+		ob_get_clean();
+
+		return apply_filters( 'eaccounting_customers_table_enabled', $output, $customer );
+	}
+
+	/**
+	 * @param $customer
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	function column_actions( $customer ) {
+		$base_uri    = eaccounting_admin_url( array( 'contact_id' => $customer->get_id(), 'tab' => 'customers' ) );
+		$row_actions = array();
+
+		$row_actions['edit']   = array(
+			'label' => __( 'Edit', 'wp-ever-accounting' ),
+			array( 'action' => 'edit' ),
+			array( 'base_uri' => $base_uri )
+		);
+		$row_actions['delete'] = array(
+			'label' => __( 'Delete', 'wp-ever-accounting' ),
+			array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
+		);
+
+		$row_actions = apply_filters( 'eaccounting_customers_table_row_actions', $row_actions, $customer );
+
+		return $this->row_actions( $row_actions );
+	}
 
 	/**
 	 * Renders the message to be displayed when there are no items.

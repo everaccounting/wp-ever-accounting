@@ -10,8 +10,10 @@ defined( 'ABSPATH' ) || exit();
 $currencies = eaccounting_get_global_currencies();
 $options    = array();
 foreach ( $currencies as $code => $props ) {
-	$options[ $code ] = sprintf( '%s (%s)', $props['name'], $props['symbol'] );
+	$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 }
+ksort( $options, SORT_STRING );
+$options = array_merge( array( '' => __( 'Select Currency', 'wp-ever-accounting' ) ), $options );
 ?>
 	<script type="text/template" id="tmpl-ea-modal-add-currency">
 		<div class="ea-backbone-modal">
@@ -43,11 +45,15 @@ foreach ( $currencies as $code => $props ) {
 										'value'         => '',
 										'required'      => true,
 								) );
+								eaccounting_hidden_input( array(
+										'name'  => 'action',
+										'value' => 'eaccounting_edit_currency'
+								) );
 								?>
 							</div>
 						</article>
 						<footer>
-							<?php wp_nonce_field( 'edit_currency' ); ?>
+							<?php wp_nonce_field( 'ea_edit_currency' ); ?>
 							<div class="inner">
 								<button type="submit" class="button button-primary button-large"><?php esc_html_e( 'Add', 'wp-ever-accounting' ); ?></button>
 							</div>

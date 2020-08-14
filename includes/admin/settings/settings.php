@@ -64,8 +64,8 @@ function eaccounting_get_settings_tabs() {
 	$tabs['general']    = __( 'General', 'wp-ever-accounting' );
 	$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
 	$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
-	$tabs['emails']     = __( 'Emails', 'wp-ever-accounting' );
-	$tabs['misc']       = __( 'Misc', 'wp-ever-accounting' );
+//	$tabs['emails']     = __( 'Emails', 'wp-ever-accounting' );
+//	$tabs['misc']       = __( 'Misc', 'wp-ever-accounting' );
 
 
 	/**

@@ -13,11 +13,11 @@ function eaccounting_banking_tab_accounts() {
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
 	if ( in_array( $action, [ 'edit', 'add' ] ) ) {
-		include __DIR__ . '/edit-account.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/banking/accounts/edit-account.php';
 	} else {
-		require_once dirname( __FILE__ ) . '/list-table-accounts.php';
-		$accounts_table = new \EverAccounting\Admin\Banking\Accounts\List_Table_Accounts();
-		$accounts_table->prepare_items();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-accounts.php';
+		$list_table = new \EverAccounting\Admin\Banking\Accounts\List_Table_Accounts();
+		$list_table->prepare_items();
 		?>
 		<h1>
 			<?php _e( 'Accounts', 'wp-ever-accounting' ); ?>
@@ -39,13 +39,13 @@ function eaccounting_banking_tab_accounts() {
 
 		?>
 		<form id="ea-accounts-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $accounts_table->search_box( __( 'Search', 'wp-ever-accounts' ), 'eaccounting-accounts' ); ?>
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounts' ), 'eaccounting-accounts' ); ?>
 
 			<input type="hidden" name="page" value="ea-banking"/>
 			<input type="hidden" name="tab" value="accounts"/>
 
-			<?php $accounts_table->views() ?>
-			<?php $accounts_table->display() ?>
+			<?php $list_table->views() ?>
+			<?php $list_table->display() ?>
 		</form>
 		<?php
 		/**

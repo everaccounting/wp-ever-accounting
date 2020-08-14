@@ -48,7 +48,8 @@ defined( 'ABSPATH' ) || exit();
 									'name'  => 'action',
 									'value' => 'eaccounting_edit_category',
 							) );
-							wp_nonce_field( 'edit_category' );
+							wp_nonce_field( 'ea_edit_category' );
+
 							?>
 						</div>
 					</article>

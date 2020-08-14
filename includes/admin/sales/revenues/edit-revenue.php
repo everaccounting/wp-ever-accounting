@@ -13,6 +13,11 @@ try {
 } catch ( Exception $e ) {
     wp_die( $e->getMessage() );
 }
+if($revenue->exists() && 'income' !== $revenue->get_type()){
+	echo __('Unknown revenue ID', 'wp-ever-accounting');
+	exit();
+}
+
 $back_url = remove_query_arg( array( 'action', 'id' ) );
 ?>
 
@@ -135,9 +140,9 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                 ?>
             </div>
             <?php
-            
+
             wp_create_nonce( 'edit_revenue' );
-            
+
             submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
             ?>
 

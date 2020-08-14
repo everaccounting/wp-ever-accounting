@@ -13,15 +13,15 @@ function eaccounting_expenses_tab_vendors() {
 	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
 		require_once dirname( __FILE__ ) . '/edit-vendor.php';
 	} else {
-        ?>
-        <h1>
-            <?php _e( 'Vendors', 'wp-ever-accounting' ); ?>
-            <a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'vendors', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-            <a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
-        </h1>
-        <?php
-		require_once dirname( __FILE__ ) . '/list-table-vendors.php';
-		$list_table = new \EverAccounting\Admin\Sales\List_Table_Vendors();
+		?>
+		<h1>
+			<?php _e( 'Vendors', 'wp-ever-accounting' ); ?>
+			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'vendors', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+		</h1>
+		<?php
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-vendors.php';
+		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Vendors();
 		$list_table->prepare_items();
 		/**
 		 * Fires at the top of the admin vendors page.

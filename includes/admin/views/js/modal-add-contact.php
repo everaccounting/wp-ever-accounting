@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit();
 	<div class="ea-backbone-modal">
 		<div class="ea-backbone-modal-content">
 			<section class="ea-backbone-modal-main" role="main">
-				<form id="ea-modal-account-form" action="" method="post">
+				<form id="ea-modal-contact-form" action="" method="post">
 
 					<header class="ea-backbone-modal-header">
 						<h1><?php esc_html_e( 'Add Category', 'wp-ever-accounting' ); ?></h1>
@@ -31,21 +31,18 @@ defined( 'ABSPATH' ) || exit();
 									'value'         => '',
 									'required'      => true,
 							) );
-							eaccounting_select( array(
+							$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
+							$currencies       = \EverAccounting\Query_Currency::init()->selectAsOption()->whereIn( 'code', [ $default_currency ] )->get();
+							eaccounting_select2( array(
 									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Currency', 'wp-ever-accounting' ),
+									'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 									'name'          => 'currency_code',
-									'class'         => 'ea-ajax-select2',
 									'value'         => '',
-									'options'       => [],
-									'default'       => '',
-									'required'      => true,
-									'attr'          => array(
-											'data-nonce'       => wp_create_nonce( 'dropdown-search' ),
-											'data-type'        => 'currency_code',
-											'data-action'      => 'eaccounting_dropdown_search',
-											'data-placeholder' => __( 'Select currency code', 'wp-ever-accounting' ),
-									)
+									'options'       => wp_list_pluck( $currencies, 'value', 'code' ),
+									'default'       => $default_currency,
+									'placeholder'   => __( 'Select Currency', 'wp-ever-accounting' ),
+									'ajax'          => true,
+									'type'          => 'currency',
 							) );
 							eaccounting_text_input( array(
 									'wrapper_class' => 'ea-col-6',
@@ -73,7 +70,11 @@ defined( 'ABSPATH' ) || exit();
 									'name'  => 'type',
 									'value' => 'customer',
 							) );
-							wp_nonce_field( 'edit_customer' );
+							eaccounting_hidden_input( array(
+									'name'  => 'action',
+									'value' => 'eaccounting_edit_contact',
+							) );
+							wp_nonce_field( 'ea_edit_contact' );
 							?>
 						</div>
 					</article>

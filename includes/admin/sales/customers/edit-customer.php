@@ -14,6 +14,12 @@ try {
     wp_die( $e->getMessage() );
 }
 $back_url = remove_query_arg( array( 'action', 'id' ) );
+
+if($customer->exists() && 'customer' !== $customer->get_type()){
+	echo __('Unknown customer ID', 'wp-ever-accounting');
+	exit();
+}
+
 ?>
 
 <div class="ea-form-card">
@@ -123,13 +129,13 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
                     'value'         => $customer->get_country(),
                     'options'       => eaccounting_get_countries(),
                 ) );
-                
+
                 ?>
             </div>
             <?php
-            
+
             wp_create_nonce( 'edit_customer' );
-            
+
             submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
             ?>
 

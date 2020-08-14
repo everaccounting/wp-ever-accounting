@@ -52,8 +52,8 @@ class Account extends Base_Object {
 		= array(
 			'name'            => '',
 			'number'          => '',
-			'opening_balance' => 0.0000,
 			'currency_code'   => '',
+			'opening_balance' => 0.0000,
 			'bank_name'       => null,
 			'bank_phone'      => null,
 			'bank_address'    => null,
@@ -151,7 +151,7 @@ class Account extends Base_Object {
 		if ( false === $item ) {
 			$item = Query_Account::init()->find( $id );
 
-			if ( 0 < $item->id ) {
+			if ($item && 0 < $item->id ) {
 				wp_cache_set( $this->object_type . '-item-' . $item->id, $item, $this->cache_group );
 			}
 		}
@@ -216,7 +216,7 @@ class Account extends Base_Object {
 		if ( ! empty( $changes ) ) {
 			do_action( 'eaccounting_pre_update_account', $this->get_id(), $changes );
 //			if ( in_array( 'opening_balance', $changes ) ) {
-//				$changes['opening_balance']
+//				$changes['opening_balance'] =
 //			}
 
 			try {
@@ -290,7 +290,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_opening_balance( $context = 'view' ) {
+	public function get_opening_balance( $context = 'view' ){
 		return $this->get_prop( 'opening_balance', $context );
 	}
 
@@ -383,7 +383,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_opening_balance( $opening_balance ) {
-		$this->set_prop( 'opening_balance', eaccounting_clean( $opening_balance ) );
+		$this->set_prop( 'opening_balance', eaccounting_sanitize_price($opening_balance, $this->get_currency_code()) );
 	}
 
 	/**

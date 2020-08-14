@@ -1,6 +1,6 @@
 <?php
 /**
- * Add Account Modal.
+ * Add Customer Modal.
  *
  * @package     EverAccounting
  * @subpackage  Admin/Js Templates
@@ -8,14 +8,14 @@
  */
 defined( 'ABSPATH' ) || exit();
 ?>
-<script type="text/template" id="tmpl-ea-modal-add-account">
+<script type="text/template" id="tmpl-ea-modal-add-customer">
 	<div class="ea-backbone-modal">
 		<div class="ea-backbone-modal-content">
 			<section class="ea-backbone-modal-main" role="main">
-				<form id="ea-modal-account-form" action="" method="post">
+				<form id="ea-modal-customer-form" action="" method="post">
 
 					<header class="ea-backbone-modal-header">
-						<h1><?php esc_html_e( 'Add Account', 'wp-ever-accounting' ); ?></h1>
+						<h1><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></h1>
 						<button class="modal-close modal-close-link dashicons">
 							<span class="screen-reader-text"><?php _e( 'Close', 'wp-ever-accounting' ); ?>></span>
 						</button>
@@ -26,19 +26,11 @@ defined( 'ABSPATH' ) || exit();
 							<?php
 							eaccounting_text_input( array(
 									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Account Name', 'wp-ever-accounting' ),
+									'label'         => __( 'Name', 'wp-ever-accounting' ),
 									'name'          => 'name',
 									'value'         => '',
 									'required'      => true,
 							) );
-							eaccounting_text_input( array(
-									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Account Number', 'wp-ever-accounting' ),
-									'name'          => 'number',
-									'value'         => '',
-									'required'      => true,
-							) );
-
 							$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
 							$currencies       = \EverAccounting\Query_Currency::init()->selectAsOption()->whereIn( 'code', [ $default_currency ] )->get();
 							eaccounting_select2( array(
@@ -52,21 +44,41 @@ defined( 'ABSPATH' ) || exit();
 									'ajax'          => true,
 									'type'          => 'currency',
 							) );
-
 							eaccounting_text_input( array(
 									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
-									'name'          => 'opening_balance',
+									'label'         => __( 'Email', 'wp-ever-accounting' ),
+									'name'          => 'email',
+									'type'          => 'email',
 									'value'         => '',
-									'default'       => '0.00',
 									'required'      => true,
 							) );
-							eaccounting_hidden_input( array(
-									'name'  => 'action',
-									'value' => 'eaccounting_edit_account',
+							eaccounting_text_input( array(
+									'wrapper_class' => 'ea-col-6',
+									'label'         => __( 'Phone', 'wp-ever-accounting' ),
+									'name'          => 'phone',
+									'value'         => '',
+									'required'      => true,
+							) );
+							eaccounting_textarea( array(
+									'wrapper_class' => 'ea-col-12',
+									'label'         => __( 'Address', 'wp-ever-accounting' ),
+									'name'          => 'address',
+									'value'         => '',
+									'required'      => true,
 							) );
 
-							wp_nonce_field( 'ea_edit_account' );
+							eaccounting_hidden_input( array(
+									'name'  => 'type',
+									'value' => 'customer',
+							) );
+
+
+							eaccounting_hidden_input( array(
+									'name'  => 'action',
+									'value' => 'eaccounting_edit_contact'
+							) );
+
+							wp_nonce_field( 'ea_edit_contact' );
 							?>
 						</div>
 					</article>

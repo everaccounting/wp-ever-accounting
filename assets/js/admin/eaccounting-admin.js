@@ -66,8 +66,25 @@ jQuery(document).ready(function ($) {
 
 
 	//forms
+	$('#ea-category-form,#ea-currency-form,#ea-account-form, #ea-payment-form').eaccounting_form();
 
-	$('#ea-category-form,#ea-currency-form').eaccounting_form();
+	//creatable form
+	$('#ea-account-form #currency_code').eaccounting_creatable({
+		option: function (item) {
+			return {id: item.code, text: item.name + ' (' + item.symbol + ')'};
+		}
+	});
+	$('#account_id').eaccounting_creatable();
+	$('#customer_id').eaccounting_creatable();
+	$('#category_id').eaccounting_creatable({
+		onReady:function ($el, $modal) {
+			var type = $el.data('type');
+			if(!type){
+				console.warn('No category type defined');
+			}
+			$('#type', $modal.$el).val(type.replace('_category', ''));
+		}
+	});
 
 });
 

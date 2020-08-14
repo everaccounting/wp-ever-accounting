@@ -248,11 +248,17 @@ jQuery(function ($) {
 
 		this.init_plugins = function () {
 			$('.ea-select2', this.$el).eaccounting_select2();
+			$('.ea-input-color').ea_color_picker();
 		}
 
 		this.handleSubmit = function (formData, $modal) {
 			self.block();
 			$modal.disableSubmit();
+
+			if (typeof self.options.onSubmit === 'function') {
+				self.options.onSubmit(self.$el, formData, $modal);
+			}
+
 			wp.ajax.send({
 				data: formData,
 				success: function (res) {
@@ -270,14 +276,20 @@ jQuery(function ($) {
 			});
 		}
 		this.handleModal = function (e, $el, template) {
-			console.log(template);
 			e.preventDefault();
 			if ($el.is(self.$el)) {
 				e.preventDefault();
 				$(this).ea_backbone_modal({
 					template: 'ea-modal-' + template,
-					onSubmit: self.handleSubmit
+					onSubmit: self.handleSubmit,
+					onReady: function (el, $modal) {
+						if (typeof self.options.onReady === 'function') {
+							self.options.onReady(self.$el, $modal, self);
+						}
+					}
 				});
+
+
 			}
 		}
 

@@ -55,7 +55,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 						'name'          => 'currency_code',
 						'value'         => $account->get_currency_code(),
-						'options'       => wp_list_pluck($currencies, 'value', 'id'),
+						'options'       => wp_list_pluck( $currencies, 'value', 'id' ),
 						'default'       => $default_currency,
 						'placeholder'   => __( 'Select Currency', 'wp-ever-accounting' ),
 						'ajax'          => true,
@@ -67,9 +67,8 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
 						'name'          => 'opening_balance',
-						'value'         => eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ),
+						'value'         => $account->get_opening_balance(),
 						'default'       => '0.00',
-						'required'      => true,
 				) );
 				eaccounting_text_input( array(
 						'wrapper_class' => 'ea-col-6',

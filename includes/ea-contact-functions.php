@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit();
  * Get contact types.
  *
  * @return array
- *              @since 1.0.2
+ * @since 1.0.2
  */
 function eaccounting_get_contact_types() {
 	return apply_filters( 'eaccounting_contact_types', array(
@@ -29,24 +29,28 @@ function eaccounting_get_contact_types() {
  *
  * @param $contact
  *
- * @return \EAccounting\Category|false
+ * @return \EverAccounting\Contact|false
  * @since 1.0.2
  *
  */
 function eaccounting_get_contact( $contact ) {
-	if ( empty( $contact ) ) {
-		return false;
-	}
-
 	try {
-		$contact = new \EAccounting\Category( $contact );
-		if ( ! $contact->exists() ) {
+		if ( $contact instanceof \EverAccounting\Contact ) {
+			$_contact = $contact;
+		} elseif ( is_object( $contact ) && ! empty( $contact->id ) ) {
+			$_contact = new \EverAccounting\Contact( null );
+			$_contact->populate( $contact );
+		} else {
+			$_contact = new \EverAccounting\Contact( absint( $contact ) );
+		}
+
+		if ( ! $_contact->exists() ) {
 			throw new Exception( __( 'Invalid contact.', 'wp-ever-accounting' ) );
 		}
 
-		return $contact;
+		return $_contact;
 	} catch ( Exception $exception ) {
-		return false;
+		return null;
 	}
 }
 
@@ -57,7 +61,7 @@ function eaccounting_get_contact( $contact ) {
  *
  * @param array $args Contact arguments.
  *
- * @return \EAccounting\Category|WP_Error|mixed
+ * @return \EverAccounting\Contact|WP_Error|mixed
  * @since 1.0.2
  *
  */
@@ -67,7 +71,7 @@ function eaccounting_insert_contact( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$contact      = new \EAccounting\Contact( $args['id'] );
+		$contact      = new \EverAccounting\Contact( $args['id'] );
 		$contact->set_props( $args );
 		$contact->save();
 
@@ -89,7 +93,7 @@ function eaccounting_insert_contact( $args ) {
  */
 function eaccounting_delete_contact( $contact_id ) {
 	try {
-		$contact = new \EAccounting\Category( $contact_id );
+		$contact = new \EverAccounting\Contact( $contact_id );
 		if ( ! $contact->exists() ) {
 			throw new Exception( __( 'Invalid contact.', 'wp-ever-accounting' ) );
 		}

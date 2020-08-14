@@ -16,6 +16,10 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
+if ( $payment->exists() && 'expense' !== $payment->get_type() ) {
+	echo __( 'Unknown payment ID', 'wp-ever-accounting' );
+	exit();
+}
 $back_url = remove_query_arg( array( 'action', 'id' ) );
 ?>
 
@@ -76,7 +80,10 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'ajax'          => true,
 						'type'          => 'customer',
 						'creatable'     => true,
-						'template'      => 'add-customer'
+						'template'      => 'add-contact',
+						'data'          => array(
+								'data-contact_type' => 'customer'
+						),
 				) );
 
 				eaccounting_select2( array(
@@ -102,7 +109,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-6',
 						'required'      => true,
 						'value'         => $payment->get_payment_method(),
-						'default'       => eaccounting()->utils->defaults->get( 'payment_method' ),
+						'default'       => eaccounting()->settings->get( 'default_payment_method' ),
 						'options'       => eaccounting_get_payment_methods(),
 				) );
 
@@ -123,12 +130,20 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-6',
 						'placeholder'   => __( 'Enter reference', 'wp-ever-accounting' ),
 				) );
+				eaccounting_hidden_input( array(
+						'name'  => 'id',
+						'value' => $payment->get_id()
+				) );
+
+				eaccounting_hidden_input( array(
+						'name'  => 'action',
+						'value' => 'eaccounting_edit_payment'
+				) );
+
 				?>
 			</div>
 			<?php
-
-			wp_create_nonce( 'edit_payment' );
-
+			wp_nonce_field( 'ea_edit_payment' );
 			submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
 			?>
 

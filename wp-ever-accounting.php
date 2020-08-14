@@ -311,7 +311,7 @@ final class EverAccounting {
 		do_action( 'before_eaccounting_init' );
 
 		$this->settings = new \EverAccounting\Admin\Settings();
-		$this->utils    = new \EverAccounting\Utilities();
+//		$this->utils    = new \EverAccounting\Utilities();
 
 		// Init action.
 		do_action( 'eaccounting_init' );

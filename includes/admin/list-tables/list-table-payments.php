@@ -1,15 +1,18 @@
 <?php
 /**
- * Payments Admin List Table.
+ * Payments list table
+ *
+ * Admin payments list table, show all the outgoing transactions.
+ *
  *
  * @package     EverAccounting
- * @subpackage  Admin/Expenses/Payments
+ * @subpackage  EverAccounting\Admin\ListTables
  * @since       1.0.2
  */
 
-namespace EverAccounting\Admin\Expenses;
+namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Abstracts\List_Table;
+use \EverAccounting\Abstracts\List_Table;
 use EverAccounting\Query_Transaction;
 use EverAccounting\Transaction;
 
@@ -18,7 +21,6 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Class List_Table_Payments
  * @since 1.0.2
- * @package EverAccounting\Admin\Transactions
  */
 class List_Table_Payments extends List_Table {
 	/**
@@ -176,7 +178,7 @@ class List_Table_Payments extends List_Table {
 			$date
 		);
 
-		return apply_filters( 'eaccounting_payment_table_date', $value, $payment );
+		return apply_filters( 'eaccounting_payments_table_date', $value, $payment );
 	}
 
 	/**
@@ -189,7 +191,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 */
 	function column_amount( $payment ) {
-		return apply_filters( 'eaccounting_payment_table_amount', $payment->get_formatted_amount(), $payment );
+		return apply_filters( 'eaccounting_payments_table_amount', $payment->get_formatted_amount(), $payment );
 	}
 
 	/**
@@ -205,7 +207,7 @@ class List_Table_Payments extends List_Table {
 		$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );
 		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-account' );
 
-		return apply_filters( 'eaccounting_payment_table_account', esc_html( $name ), $payment );
+		return apply_filters( 'eaccounting_payments_table_account', esc_html( $name ), $payment );
 	}
 
 	/**
@@ -221,7 +223,7 @@ class List_Table_Payments extends List_Table {
 		$account = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
 		$name    = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-account' );
 
-		return apply_filters( 'eaccounting_payment_table_category', esc_html( $name ), $payment );
+		return apply_filters( 'eaccounting_payments_table_category', esc_html( $name ), $payment );
 	}
 
 	/**
@@ -236,7 +238,7 @@ class List_Table_Payments extends List_Table {
 	function column_reference( $payment ) {
 		$reference = empty( $payment->get_reference() ) ? '&mdash;' : $payment->get_reference();
 
-		return apply_filters( 'eaccounting_payment_table_reference', esc_html( $reference ), $payment );
+		return apply_filters( 'eaccounting_payments_table_reference', esc_html( $reference ), $payment );
 	}
 
 
@@ -331,7 +333,7 @@ class List_Table_Payments extends List_Table {
 			'search'  => $search,
 			'orderby' => eaccounting_clean( $orderby ),
 			'order'   => eaccounting_clean( $order ),
-			'type'    => 'income'
+			'type'    => 'expense'
 		) );
 
 		$args = apply_filters( 'eaccounting_payments_table_get_payments', $args, $this );
@@ -339,7 +341,6 @@ class List_Table_Payments extends List_Table {
 		$this->items = Query_Transaction::init()->wp_query( $args )->get( OBJECT, 'eaccounting_get_transaction' );
 
 		$this->total_count = Query_Transaction::init()->wp_query( $args )->count();
-
 
 		$this->set_pagination_args( array(
 			'total_items' => $this->total_count,

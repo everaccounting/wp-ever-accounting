@@ -21,8 +21,8 @@ function eaccounting_sales_tab_revenues() {
 			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
-		require_once dirname( __FILE__ ) . '/list-table-revenues.php';
-		$list_table = new \EverAccounting\Admin\Transactions\List_Table_Revenues();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-revenues.php';
+		$list_table = new EverAccounting\Admin\ListTables\List_Table_Revenues();
 		$list_table->prepare_items();
 
 		/**

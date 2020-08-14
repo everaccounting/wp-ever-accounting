@@ -115,6 +115,8 @@ class Ajax {
 			'get_account',
 			'edit_account',
 			'edit_category',
+			'edit_contact',
+			'edit_payment',
 		);
 
 		foreach ( $ajax_events as $ajax_event ) {
@@ -192,6 +194,14 @@ class Ajax {
 
 			case 'customer':
 				$results = Query_Contact::init()->wp_query( [ 'search' => $search ] )->isCustomer()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				break;
+
+			case 'expense_category':
+				$results = Query_Category::init()->wp_query( [ 'search' => $search ] )->where( 'type', 'expense' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				break;
+
+			case 'income_category':
+				$results = Query_Category::init()->wp_query( [ 'search' => $search ] )->where( 'type', 'income' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			default:
@@ -343,6 +353,76 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Category created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( [ 'action' ], eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
+		wp_send_json_success( [
+			'message'  => $message,
+			'redirect' => $redirect,
+			'item'     => $created->get_data()
+		] );
+
+		wp_die();
+	}
+
+
+	/**
+	 * Handle ajax action of creating/updating account.
+	 *
+	 * @return void
+	 * @since 1.0.2
+	 */
+	public static function edit_contact() {
+		self::verify_nonce( 'ea_edit_contact' );
+
+		$posted  = eaccounting_clean( $_REQUEST );
+		$created = eaccounting_insert_contact( $posted );
+		if ( is_wp_error( $created ) || ! $created->exists() ) {
+			wp_send_json_error( [
+				'message' => $created->get_error_message()
+			] );
+		}
+
+		$message  = __( 'Contact updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Contact created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( [ 'action' ], eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
+		wp_send_json_success( [
+			'message'  => $message,
+			'redirect' => $redirect,
+			'item'     => $created->get_data()
+		] );
+
+		wp_die();
+	}
+
+	/**
+	 * Handle ajax action of creating/updating payment.
+	 *
+	 * @return void
+	 * @since 1.0.2
+	 */
+	public static function edit_payment() {
+		self::verify_nonce( 'ea_edit_payment' );
+
+		$posted         = eaccounting_clean( $_REQUEST );
+		$posted['type'] = 'expense';
+		$created        = eaccounting_insert_transaction( $posted );
+		if ( is_wp_error( $created ) || ! $created->exists() ) {
+			wp_send_json_error( [
+				'message' => $created->get_error_message()
+			] );
+		}
+
+		$message  = __( 'Payment updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Payment created successfully!', 'wp-ever-accounting' );
 			$redirect = remove_query_arg( [ 'action' ], eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 

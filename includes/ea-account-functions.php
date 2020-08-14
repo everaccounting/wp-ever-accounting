@@ -54,7 +54,7 @@ function eaccounting_get_account( $account ) {
  *
  */
 function eaccounting_insert_account( $args ) {
-
+	error_log(debug_backtrace()[1]['function']);
 	try {
 		$default_args = array(
 			'id' => null,

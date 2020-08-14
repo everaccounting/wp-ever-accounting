@@ -1,24 +1,25 @@
 <?php
 /**
- * Vendors Admin List Table.
+ * Vendors list table
+ *
+ * Admin vendors list table.
+ *
  *
  * @package     EverAccounting
- * @subpackage  Admin/Expenses/Vendors
+ * @subpackage  EverAccounting\Admin\ListTables
  * @since       1.0.2
  */
 
-namespace EverAccounting\Admin\Sales;
+namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
 use EverAccounting\Contact;
 use EverAccounting\Query_Contact;
 
-defined( 'ABSPATH' ) || exit();
-
 /**
  * Class List_Table_Vendors
  * @since 1.0.2
- * @package EverAccounting\Admin\Sales
+ * @package EverAccounting\Admin\ListTables
  */
 class List_Table_Vendors extends List_Table {
 	/**

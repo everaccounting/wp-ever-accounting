@@ -3,7 +3,7 @@
  * Accounts Admin List Table
  *
  * @package     EverAccounting
- * @subpackage  Admin/Banking/Accounts
+ * @subpackage  EverAccounting\Admin\ListTables
  * @since       1.0.2
  */
 
@@ -15,6 +15,11 @@ use EverAccounting\Query_Account;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class List_Table_Accounts
+ * @since 1.0.2
+ * @package EverAccounting\Admin\ListTables
+ */
 class List_Table_Accounts extends List_Table {
 	/**
 	 * Type of the table should be use plural name.
@@ -448,7 +453,7 @@ class List_Table_Accounts extends List_Table {
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
 			'per_page'    => $per_page,
-			'total_pages' => ceil( $this->total_count / $per_page )
+			'total_pages' => ceil( $total_items / $per_page )
 		) );
 	}
 }

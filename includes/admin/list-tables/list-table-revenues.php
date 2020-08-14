@@ -1,20 +1,27 @@
 <?php
 /**
- * Revenues Admin List Table.
+ * Revenues list table
+ *
+ * Admin revenues list table, show all the incoming transactions.
+ *
  *
  * @package     EverAccounting
- * @subpackage  Admin/Sales/Revenues
+ * @subpackage  EverAccounting\Admin\ListTables
  * @since       1.0.2
  */
 
-namespace EverAccounting\Admin\Transactions;
+namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Abstracts\List_Table;
+use \EverAccounting\Abstracts\List_Table;
 use EverAccounting\Query_Transaction;
 use EverAccounting\Transaction;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class List_Table_Revenues
+ * @since 1.0.2
+ */
 class List_Table_Revenues extends List_Table {
 	/**
 	 * Type of the table should be use plural name.
@@ -157,7 +164,7 @@ class List_Table_Revenues extends List_Table {
 	 * Renders the "Date" column in the accounts list table.
 	 *
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Transaction $revenue The current transation object.
 	 *
 	 * @return string Data shown in the Name column.
 	 * @since  1.0.2

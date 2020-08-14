@@ -1,20 +1,26 @@
 <?php
 /**
- * Transactions Admin List Table.
+ * Transactions list table
+ *
+ * Admin transactions list table it shows all kind of transactions
+ * related to  the company
+ *
  *
  * @package     EverAccounting
- * @subpackage  Admin/Transactions
+ * @subpackage  EverAccounting\Admin\ListTables
  * @since       1.0.2
  */
 
-namespace EverAccounting\Admin\Transactions;
+defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\List_Table;
 use EverAccounting\Query_Transaction;
 use EverAccounting\Transaction;
 
-defined( 'ABSPATH' ) || exit();
-
+/**
+ * Class List_Table_Transactions
+ * @since 1.0.2
+ */
 class List_Table_Transactions extends List_Table {
 	/**
 	 * Type of the table should be use plural name.
@@ -360,4 +366,6 @@ class List_Table_Transactions extends List_Table {
 			'total_pages' => ceil( $total_items / $per_page )
 		) );
 	}
+
+
 }

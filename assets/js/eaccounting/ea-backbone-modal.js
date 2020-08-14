@@ -105,7 +105,7 @@
 			$(document.body).trigger(this._target + '_loaded');
 			var modal = this;
 			if (typeof this.onReady === 'function') {
-				this.onReady( this.$el, this);
+				this.onReady(this.$el, this);
 			}
 			if (typeof this.onSubmit === 'function') {
 				this.$el.find('form').on('submit', function (e) {
@@ -147,10 +147,12 @@
 
 			// Enter key
 			if (
-				13 === button &&
-				!(e.target.tagName && (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea'))
+				13 === button
+				&& this.$el.find('form').length
 			) {
-				this.addButton(e);
+				e.preventDefault();
+				this.$el.find('[type="submit"]').trigger('click');
+				return false;
 			}
 
 			// ESC key
