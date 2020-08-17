@@ -168,7 +168,7 @@ class Contact extends Base_Object {
 			'email'         => $this->get_email( 'edit' ),
 			'phone'         => $this->get_phone( 'edit' ),
 			'fax'           => $this->get_fax( 'edit' ),
-			'birth_date'    => ! empty( $this->get_birth_date( 'edit' ) ) ? $this->get_birth_date( 'edit' )->get_mysql_date() : null,
+			'birth_date'    => ! empty( $this->get_birth_date( 'edit' ) ) ? $this->get_birth_date( 'edit' )->date_mysql() : null,
 			'address'       => $this->get_address( 'edit' ),
 			'country'       => $this->get_country( 'edit' ),
 			'website'       => $this->get_website( 'edit' ),
@@ -179,7 +179,7 @@ class Contact extends Base_Object {
 			'enabled'       => $this->get_enabled( 'edit' ),
 			'company_id'    => $this->get_company_id( 'edit' ),
 			'creator_id'    => $this->get_prop( 'creator_id' ),
-			'date_created'  => $this->get_date_created( 'edit' )->get_mysql_date(),
+			'date_created'  => $this->get_date_created( 'edit' )->date_mysql(),
 		);
 
 		do_action( 'eaccounting_pre_insert_contact', $contact_data, $this );
@@ -236,9 +236,9 @@ class Contact extends Base_Object {
 	public function delete( $args = array() ) {
 		if ( $this->get_id() ) {
 			global $wpdb;
-			do_action( 'eaccounting_pre_delete_contact', $this->get_id() );
+			do_action( 'eaccounting_pre_delete_contact', $this->get_id(), $this->get_data(), $this );
 			$wpdb->delete( $wpdb->prefix . 'ea_contacts', array( 'id' => $this->get_id() ) );
-			do_action( 'eaccounting_delete_contact', $this->get_id() );
+			do_action( 'eaccounting_delete_contact', $this->get_id(), $this->get_data(), $this );
 			$this->set_id( 0 );
 		}
 	}
@@ -567,5 +567,17 @@ class Contact extends Base_Object {
 	 */
 	public function set_note( $value ) {
 		$this->set_prop( 'note', sanitize_textarea_field( $value ) );
+	}
+
+	/**
+	 * Returns all data for this object.
+	 *
+	 * @return array
+	 * @since  1.0.2
+	 */
+	public function get_data() {
+		return array_merge( array( 'id' => $this->get_id() ), $this->data, array(
+			'date_created' => $this->get_date_created()->date_mysql()
+		) );
 	}
 }

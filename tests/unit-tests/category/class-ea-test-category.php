@@ -1,5 +1,6 @@
 <?php
 
+use EverAccounting\Category;
 /**
  * Class EAccounting_Tests_Category.
  * @package EAccounting\Tests\Category
@@ -7,7 +8,7 @@
 class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 
 	public function test_create_category() {
-		$account = new EAccounting_Category();
+		$account = new Category();
 		$account->set_name( 'Test Category' );
 		$account->set_type( 'expense' );
 		$account->set_color( 'red' );
@@ -20,7 +21,7 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 		$this->assertEquals( 1, $account->get_company_id() );
 		$this->assertNotNull( $account->get_date_created() );
 
-		$account = new EAccounting_Category();
+		$account = new Category();
 		$account->set_name( 'Test Category' );
 		$account->set_type( 'income' );
 		$account->set_color( '#dddddd' );
@@ -45,7 +46,7 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 		$category->set_color( 'blue' );
 		$category->save();
 
-		$category = new EAccounting_Category( $category_id ); // so we can read fresh copies from the DB
+		$category = new Category( $category_id ); // so we can read fresh copies from the DB
 
 		$this->assertEquals( 'Updated category', $category->get_name() );
 		$this->assertEquals( 'income', $category->get_type() );
@@ -71,7 +72,7 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 
 		//name check
 		try {
-			$category = new EAccounting_Category();
+			$category = new Category();
 			$category->set_name( '' );
 			$category->save();
 		} catch ( Exception $e ) {
@@ -80,7 +81,7 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 
 		//type check
 		try {
-			$category = new EAccounting_Category();
+			$category = new Category();
 			$category->set_name( 'Exception account' );
 			$category->set_type( '' );
 			$category->save();
@@ -89,7 +90,7 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 		}
 
 		try {
-			$category = new EAccounting_Category();
+			$category = new Category();
 			$category->set_name( 'Exception account' );
 			$category->set_type( 'income' );
 			$category->save();

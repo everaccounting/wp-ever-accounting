@@ -32,7 +32,7 @@ class EAccounting_Helper_Account {
 	 * Creates a account in the tests DB.
 	 */
 	public static function create_account( $name = 'Test Account', $number = '000001', $opening_balance = 1000, $currency_code = 'USD' ) {
-		$account = new EAccounting_Account();
+		$account = new \EverAccounting\Account();
 		$account->set_name( $name );
 		$account->set_number( $number );
 		$account->set_opening_balance( $opening_balance );

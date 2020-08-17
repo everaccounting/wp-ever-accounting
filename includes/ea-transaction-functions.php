@@ -32,13 +32,13 @@ function eaccounting_get_transaction_types() {
  *
  * @param $transaction
  *
- * @return \EverAccounting\Transaction|false
+ * @return \EverAccounting\Transaction|null
  * @since 1.0.2
  *
  */
 function eaccounting_get_transaction( $transaction ) {
 	if ( empty( $transaction ) ) {
-		return false;
+		return null;
 	}
 
 	try {

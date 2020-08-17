@@ -48,20 +48,19 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 * @var array
 	 */
-	protected $data
-		= array(
-			'name'            => '',
-			'number'          => '',
-			'currency_code'   => '',
-			'opening_balance' => 0.0000,
-			'bank_name'       => null,
-			'bank_phone'      => null,
-			'bank_address'    => null,
-			'enabled'         => 1,
-			'company_id'      => null,
-			'creator_id'      => null,
-			'date_created'    => null,
-		);
+	protected $data = array(
+		'name'            => '',
+		'number'          => '',
+		'currency_code'   => '',
+		'opening_balance' => 0.0000,
+		'bank_name'       => null,
+		'bank_phone'      => null,
+		'bank_address'    => null,
+		'enabled'         => 1,
+		'company_id'      => null,
+		'creator_id'      => null,
+		'date_created'    => null,
+	);
 
 	/**
 	 * EAccounting_Account constructor.
@@ -70,7 +69,7 @@ class Account extends Base_Object {
 	 *
 	 * @since 1.0.2
 	 */
-	public function __construct( $data ) {
+	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
 
 		if ( is_numeric( $data ) && $data > 0 ) {
@@ -91,7 +90,7 @@ class Account extends Base_Object {
 	/**
 	 * Method to validate before inserting and updating EverAccounting object.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 1.0.2
 	 */
 	public function validate_props() {
@@ -110,25 +109,25 @@ class Account extends Base_Object {
 		}
 
 		if ( empty( $this->get_name( 'edit' ) ) ) {
-			throw new \Exception( __( 'Account Name is required', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_props', __( 'Account Name is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_number( 'edit' ) ) ) {
-			throw new \Exception( __( 'Account Number is required', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_props', __( 'Account Number is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_currency_code( 'edit' ) ) ) {
-			throw new \Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_props', __( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
 		$currency = eaccounting_get_currency_by_code( $this->get_currency_code( 'edit' ) );
 		if ( ! $currency || ! $currency->exists() ) {
-			throw new Exception( 'invalid-currency', __( 'Account associated currency does not exist.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_props', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
 		}
 
 		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts where number=%s AND company_id=%d", $this->get_number( 'edit' ), $this->get_company_id() ) ) ) {
 			if ( ! empty( $existing_id ) && absint( $existing_id ) != $this->get_id() ) {
-				throw new \Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+				throw new Exception( 'duplicate_props', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
 			}
 		}
 
@@ -139,7 +138,7 @@ class Account extends Base_Object {
 	 *
 	 * @param int $id ID of the object to read.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 1.0.2
 	 */
 	public function read( $id ) {
@@ -151,13 +150,13 @@ class Account extends Base_Object {
 		if ( false === $item ) {
 			$item = Query_Account::init()->find( $id );
 
-			if ($item && 0 < $item->id ) {
+			if ( $item && 0 < $item->id ) {
 				wp_cache_set( $this->object_type . '-item-' . $item->id, $item, $this->cache_group );
 			}
 		}
 
 		if ( ! $item || ! $item->id ) {
-			throw new \Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
 		$this->populate( $item );
@@ -166,7 +165,7 @@ class Account extends Base_Object {
 	/**
 	 * Create a new account in the database.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 1.0.2
 	 */
 	public function create() {
@@ -183,14 +182,14 @@ class Account extends Base_Object {
 			'enabled'         => $this->get_enabled( 'edit' ),
 			'company_id'      => $this->get_company_id( 'edit' ),
 			'creator_id'      => $this->get_prop( 'creator_id' ),
-			'date_created'    => $this->get_date_created( 'edit' )->format( 'Y-m-d H:i:s' ),
+			'date_created'    => gmdate( 'Y-m-d H:i:s', $this->get_date_created( 'edit' )->getOffsetTimestamp() ),
 		);
 
 		do_action( 'eaccounting_pre_insert_account', $this->get_id(), $this );
 
 		$data = wp_unslash( apply_filters( 'eaccounting_new_account_data', $account_data ) );
 		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_accounts', $data ) ) {
-			throw new \Exception( $wpdb->last_error );
+			throw new Exception( 'db_error', $wpdb->last_error );
 		}
 
 		do_action( 'eaccounting_insert_account', $this->get_id(), $this );
@@ -203,7 +202,7 @@ class Account extends Base_Object {
 	/**
 	 * Update a account in the database.
 	 *
-	 * @throws \Exception
+	 * @throws Exception
 	 * @since 1.0.2
 	 *
 	 */
@@ -215,14 +214,14 @@ class Account extends Base_Object {
 
 		if ( ! empty( $changes ) ) {
 			do_action( 'eaccounting_pre_update_account', $this->get_id(), $changes );
-//			if ( in_array( 'opening_balance', $changes ) ) {
-//				$changes['opening_balance'] =
-//			}
+			if ( in_array( 'opening_balance', $changes ) ) {
+				$changes['opening_balance'] = eaccounting_sanitize_price( $changes['opening_balance'] );
+			}
 
 			try {
 				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
-			} catch ( \Exception $e ) {
-				throw new \Exception( __( 'Could not update account.', 'wp-ever-accounting' ) );
+			} catch ( Exception $e ) {
+				throw new Exception('db_error', __( 'Could not update account.', 'wp-ever-accounting' ) );
 			}
 
 			do_action( 'eaccounting_update_account', $this->get_id(), $changes, $this->data );
@@ -243,9 +242,9 @@ class Account extends Base_Object {
 	public function delete( $args = array() ) {
 		if ( $this->get_id() ) {
 			global $wpdb;
-			do_action( 'eaccounting_pre_delete_account', $this->get_id() );
+			do_action( 'eaccounting_pre_delete_account', $this->get_id(), $this->get_data(), $this );
 			$wpdb->delete( $wpdb->prefix . 'ea_accounts', array( 'id' => $this->get_id() ) );
-			do_action( 'eaccounting_delete_account', $this->get_id() );
+			do_action( 'eaccounting_delete_account', $this->get_id(), $this->get_data(), $this );
 			$this->set_id( 0 );
 		}
 	}
@@ -290,7 +289,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_opening_balance( $context = 'view' ){
+	public function get_opening_balance( $context = 'view' ) {
 		return $this->get_prop( 'opening_balance', $context );
 	}
 
@@ -383,7 +382,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_opening_balance( $opening_balance ) {
-		$this->set_prop( 'opening_balance', eaccounting_sanitize_price($opening_balance, $this->get_currency_code()) );
+		$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $this->get_currency_code() ) );
 	}
 
 	/**
@@ -395,7 +394,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_currency_code( $currency_code ) {
-		$this->set_prop( 'currency_code', $currency_code );
+		$this->set_prop( 'currency_code', strtoupper($currency_code) );
 	}
 
 	/**
@@ -464,6 +463,18 @@ class Account extends Base_Object {
 	 */
 	protected function set_balance( $balance ) {
 		$this->balance = $balance;
+	}
+
+	/**
+	 * Returns all data for this object.
+	 *
+	 * @return array
+	 * @since  1.0.2
+	 */
+	public function get_data() {
+		return array_merge( array( 'id' => $this->get_id() ), $this->data, array(
+			'date_created' => $this->get_date_created()->date_mysql()
+		) );
 	}
 
 }

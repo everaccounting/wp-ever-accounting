@@ -4,16 +4,16 @@
  *
  * All category related function of the plugin.
  *
- * @package EverAccounting
  * @since 1.0.2
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit();
 /**
  * Get all the available type of category the plugin support.
  *
- * @return array
  * @since 1.0.2
+ * @return array
  */
 function eaccounting_get_category_types() {
 	$types = array(
@@ -30,11 +30,14 @@ function eaccounting_get_category_types() {
  *
  * @param $category
  *
- * @return bool|\EverAccounting\Category
  * @since 1.0.2
  *
+ * @return null|\EverAccounting\Category
  */
 function eaccounting_get_category( $category ) {
+	if ( empty( $category ) ) {
+		return null;
+	}
 	try {
 		if ( $category instanceof \EverAccounting\Category ) {
 			$_category = $category;
@@ -54,14 +57,20 @@ function eaccounting_get_category( $category ) {
 		return null;
 	}
 }
+
 /**
  * Insert a category.
  *
- * @param $args
+ * @param       $args {
  *
- * @return WP_Error|Mixed
+ * @type string $name Unique name of the category.
+ * @type string $type Category type.
+ * @type string $color Color of the category
+ * }
+ *
  * @since 1.0.2
  *
+ * @return WP_Error|Mixed
  */
 function eaccounting_insert_category( $args ) {
 	try {
@@ -71,10 +80,36 @@ function eaccounting_insert_category( $args ) {
 		$args         = (array) wp_parse_args( $args, $default_args );
 		$category     = new \EverAccounting\Category( $args['id'] );
 		$category->set_props( $args );
+
+		if ( null == $category->get_date_created() ) {
+			$category->set_date_created( time() );
+		}
+		if ( ! $category->get_creator_id() ) {
+			$category->set_creator_id();
+		}
+		if ( ! $category->get_company_id() ) {
+			$category->set_company_id();
+		}
+		if ( ! $category->get_color( 'edit' ) ) {
+			$category->set_color( eaccounting_get_random_color() );
+		}
+		if ( empty( $category->get_name( 'edit' ) ) ) {
+			throw new \EverAccounting\Exception( 'empty_props', __( 'Category name is required', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $category->get_type( 'edit' ) ) ) {
+			throw new  \EverAccounting\Exception( 'empty_props', __( 'Category type is required', 'wp-ever-accounting' ) );
+		}
+		$existing_id = \EverAccounting\Query_Category::init()->where( 'type', $category->get_type() )->where( 'name', $category->get_name() )->value( 0 );
+		if ( $existing_id ) {
+			if ( ! empty( $existing_id ) && $existing_id != $category->get_id() ) {
+				throw new  \EverAccounting\Exception( 'duplicate_entry', __( 'Duplicate category name.', 'wp-ever-accounting' ) );
+			}
+		}
+
 		$category->save();
 
-	} catch ( Exception $e ) {
-		return new WP_Error( 'error', $e->getMessage() );
+	} catch ( \EverAccounting\Exception $e ) {
+		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
 	}
 
 	return $category;
@@ -85,9 +120,9 @@ function eaccounting_insert_category( $args ) {
  *
  * @param $category_id
  *
- * @return WP_Error|Mixed|bool
  * @since 1.0.2
  *
+ * @return WP_Error|Mixed|bool
  */
 function eaccounting_delete_category( $category_id ) {
 	try {

@@ -1,5 +1,10 @@
 <?php
-class EAccounting_Unit_Test_Case extends WP_UnitTestCase {
+
+/**
+ * Class EAccounting_Unit_Test_Case
+ * @since 1.0.2
+ */
+class EAccounting_Unit_Test_Case extends \WP_UnitTestCase {
 
 	/**
 	 * Setup test case.

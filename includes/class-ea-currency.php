@@ -44,19 +44,18 @@ class Currency extends Base_Object {
 	 * @since 1.0.2
 	 * @var array
 	 */
-	protected $data
-		= array(
-			'name'               => '',
-			'code'               => '',
-			'rate'               => 1,
-			'precision'          => 0,
-			'symbol'             => '',
-			'position'           => '',
-			'decimal_separator'  => '.',
-			'thousand_separator' => ',',
-			'enabled'            => 1,
-			'date_created'       => null,
-		);
+	protected $data = array(
+		'name'               => '',
+		'code'               => '',
+		'rate'               => 1,
+		'precision'          => 0,
+		'symbol'             => '',
+		'position'           => '',
+		'decimal_separator'  => '.',
+		'thousand_separator' => ',',
+		'enabled'            => 1,
+		'date_created'       => null,
+	);
 
 	/**
 	 * Get the currency if ID is passed, otherwise the currency is new and empty.
@@ -198,7 +197,7 @@ class Currency extends Base_Object {
 			'decimal_separator'  => $this->get_decimal_separator( 'edit' ),
 			'thousand_separator' => $this->get_thousand_separator( 'edit' ),
 			'enabled'            => $this->get_enabled( 'edit' ),
-			'date_created'       => $this->get_date_created( 'edit' )->get_mysql_date(),
+			'date_created'       => $this->get_date_created( 'edit' )->date_mysql(),
 		);
 
 		do_action( 'eaccounting_pre_insert_currency', $this->get_id(), $this );
@@ -254,9 +253,9 @@ class Currency extends Base_Object {
 	public function delete( $args = array() ) {
 		if ( $this->get_id() ) {
 			global $wpdb;
-			do_action( 'eaccounting_pre_delete_currency', $this->get_id() );
+			do_action( 'eaccounting_pre_delete_currency', $this->get_id(), $this->get_data() );
 			$wpdb->delete( $wpdb->prefix . 'ea_currencies', array( 'id' => $this->get_id() ) );
-			do_action( 'eaccounting_delete_currency', $this->get_id() );
+			do_action( 'eaccounting_delete_currency', $this->get_id(), $this->get_data() );
 			$this->set_id( 0 );
 		}
 	}
@@ -643,5 +642,18 @@ class Currency extends Base_Object {
 	 */
 	public function get_select_option() {
 		return array( $this->get_code() => sprintf( '%(%s)', $this->get_name(), $this->get_symbol() ) );
+	}
+
+
+	/**
+	 * Returns all data for this object.
+	 *
+	 * @return array
+	 * @since  1.0.2
+	 */
+	public function get_data() {
+		return array_merge( array( 'id' => $this->get_id() ), $this->data, array(
+			'date_created' => $this->get_date_created()->date_mysql()
+		) );
 	}
 }

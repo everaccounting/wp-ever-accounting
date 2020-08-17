@@ -7,7 +7,7 @@
 class EAccounting_Tests_Account extends EAccounting_Unit_Test_Case {
 
 	public function test_create_account() {
-		$account = new EAccounting_Account();
+		$account = new \EverAccounting\Account();
 		$account->set_name( 'Test Account' );
 		$account->set_number( '000001' );
 		$account->set_opening_balance( 5000 );
@@ -42,7 +42,7 @@ class EAccounting_Tests_Account extends EAccounting_Unit_Test_Case {
 		$account->set_currency_code( 'BDT' );
 		$account->save();
 
-		$account = new EAccounting_Account( $account_id ); // so we can read fresh copies from the DB
+		$account = new \EverAccounting\Account( $account_id ); // so we can read fresh copies from the DB
 		$this->assertEquals( 'Updated Account', $account->get_name() );
 		$this->assertEquals( '0202020', $account->get_number() );
 		$this->assertEquals( '10000.0000', $account->get_opening_balance() );
@@ -69,7 +69,7 @@ class EAccounting_Tests_Account extends EAccounting_Unit_Test_Case {
 
 		//name check
 		try {
-			$account = new EAccounting_Account();
+			$account = new \EverAccounting\Account();
 			$account->set_name( '' );
 			$account->save();
 		} catch ( Exception $e ) {
@@ -79,7 +79,7 @@ class EAccounting_Tests_Account extends EAccounting_Unit_Test_Case {
 
 		//number check
 		try {
-			$account = new EAccounting_Account();
+			$account = new \EverAccounting\Account();
 			$account->set_name( 'Exception account' );
 			$account->set_number( '' );
 			$account->save();
@@ -88,7 +88,7 @@ class EAccounting_Tests_Account extends EAccounting_Unit_Test_Case {
 		}
 
 		try {
-			$account = new EAccounting_Account();
+			$account = new \EverAccounting\Account();
 			$account->set_name( 'Exception account' );
 			$account->set_number( '090909' );
 			$account->set_currency_code( '' );
@@ -98,7 +98,7 @@ class EAccounting_Tests_Account extends EAccounting_Unit_Test_Case {
 		}
 
 		try {
-			$account = new EAccounting_Account();
+			$account = new \EverAccounting\Account();
 			$account->set_name( 'Exception account' );
 			$account->set_number( '090909' );
 			$account->set_currency_code( 'AUD' );

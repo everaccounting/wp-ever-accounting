@@ -29,11 +29,14 @@ function eaccounting_get_contact_types() {
  *
  * @param $contact
  *
- * @return \EverAccounting\Contact|false
+ * @return \EverAccounting\Contact|null
  * @since 1.0.2
  *
  */
 function eaccounting_get_contact( $contact ) {
+	if ( empty( $contact ) ) {
+		return null;
+	}
 	try {
 		if ( $contact instanceof \EverAccounting\Contact ) {
 			$_contact = $contact;
@@ -61,7 +64,7 @@ function eaccounting_get_contact( $contact ) {
  *
  * @param array $args Contact arguments.
  *
- * @return \EverAccounting\Contact|WP_Error|mixed
+ * @return \EverAccounting\Contact|WP_Error
  * @since 1.0.2
  *
  */

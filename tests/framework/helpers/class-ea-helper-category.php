@@ -10,7 +10,7 @@ class EAccounting_Helper_Category {
 	 * Creates a account in the tests DB.
 	 */
 	public static function create_category( $name = 'Test Category', $type = 'expense' ) {
-		$category = new EAccounting_Category();
+		$category = new \EverAccounting\Category();
 		$category->set_name( $name );
 		$category->set_type( $type );
 		$category->save();

@@ -1,5 +1,5 @@
 <?php
-
+use EverAccounting\Contact;
 /**
  * Class EAccounting_Tests_Contact.
  * @package EAccounting\Tests\Contact
@@ -7,7 +7,7 @@
 class EAccounting_Tests_Contact extends EAccounting_Unit_Test_Case {
 
 	public function test_create_contact() {
-		$contact = new EAccounting_Contact();
+		$contact = new Contact();
 		$contact->set_props( [
 			'name'          => 'Marcy P Frazier',
 			'email'         => 'ni4v3s21us@temporary-mail.net',
@@ -66,8 +66,8 @@ class EAccounting_Tests_Contact extends EAccounting_Unit_Test_Case {
 		$contact->set_birth_date( '01/30/1988' );
 		$contact->save();
 
-		$contact = new EAccounting_Contact( $contact_id ); // so we can read fresh copies from the DB
-		var_dump($contact);
+		$contact = new Contact( $contact_id ); // so we can read fresh copies from the DB
+
 //		$this->assertEquals( 'Jane Doe', $contact->get_name() );
 //		$this->assertEquals( 'jane@doe.com', $contact->get_email() );
 //		$this->assertEquals( '10000.0000', $contact->get_opening_balance() );

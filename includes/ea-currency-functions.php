@@ -49,7 +49,7 @@ function eaccounting_get_currency( $currency ) {
  *
  * @param string $code
  *
- * @return \EverAccounting\Currency|false
+ * @return \EverAccounting\Currency|null
  * @since 1.0.2
  *
  */
@@ -119,3 +119,19 @@ function eaccounting_delete_currency( $currency_id ) {
 		return false;
 	}
 }
+
+/**
+ * Delete default currency from settings
+ *
+ * @param int $id ID of the default currency.
+ *
+ * @since 1.0.2
+ */
+function eaccounting_delete_default_currency( $id ) {
+	$default_account = eaccounting()->settings->get( 'default_currency' );
+	if ( $default_account == $id ) {
+		eaccounting()->settings->set( array( [ 'default_currency' => '' ] ), true );
+	}
+}
+
+add_action( 'eaccounting_delete_currency', 'eaccounting_delete_default_currency' );

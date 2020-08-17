@@ -13,13 +13,13 @@
  *
  * @param $account
  *
- * @return \EverAccounting\Account|false
+ * @return \EverAccounting\Account|null
  * @since 1.0.2
  *
  */
 function eaccounting_get_account( $account ) {
 	if ( empty( $account ) ) {
-		return false;
+		return null;
 	}
 
 	try {
@@ -54,7 +54,6 @@ function eaccounting_get_account( $account ) {
  *
  */
 function eaccounting_insert_account( $args ) {
-	error_log(debug_backtrace()[1]['function']);
 	try {
 		$default_args = array(
 			'id' => null,
@@ -64,8 +63,8 @@ function eaccounting_insert_account( $args ) {
 		$account->set_props( $args );
 		$account->save();
 
-	} catch ( Exception $e ) {
-		return new WP_Error( 'error', $e->getMessage() );
+	} catch ( \EverAccounting\Exception $e ) {
+		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
 	}
 
 	return $account;
@@ -95,3 +94,19 @@ function eaccounting_delete_account( $account_id ) {
 		return false;
 	}
 }
+
+/**
+ * Delete default account from settings
+ *
+ * @param int $id ID of the default account.
+ *
+ * @since 1.0.2
+ */
+function eaccounting_delete_default_account( $id ) {
+	$default_account = eaccounting()->settings->get( 'default_account' );
+	if ( $default_account == $id ) {
+		eaccounting()->settings->set( array( [ 'default_account' => '' ] ), true );
+	}
+}
+
+add_action( 'eaccounting_delete_account', 'eaccounting_delete_default_account' );

@@ -10,7 +10,7 @@ class EAccounting_Helper_Contact {
 	 * Creates a account in the tests DB.
 	 */
 	public static function create_contact( $name = 'John Doe', $email = 'john@doe.com', $type = 'customer', $currency_code = 'USD' ) {
-		$contact = new EAccounting_Contact();
+		$contact = new \EverAccounting\Contact();
 		$contact->set_props( [
 			'name'          => $name,
 			'email'         => $email,

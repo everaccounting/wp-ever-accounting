@@ -377,7 +377,7 @@ function eaccounting_sanitize_number( $number, $allow_decimal = false ) {
  * @return float|int
  * @since 1.0.2
  */
-function eaccounting_sanitize_price( $amount, $code ) {
+function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
 	return eaccounting_get_money( $amount, $code, false )->getAmount();
 }
 

@@ -9,6 +9,7 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Exception;
 use EverAccounting\Query_Account;
 use EverAccounting\Query_Currency;
 
@@ -38,6 +39,7 @@ class Settings {
 
 		// Set up.
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
+		add_action( 'update_option_eaccounting_settings', array( $this, 'eaccounting_settings_updated' ), 10, 3 );
 
 		// Sanitization.
 		add_filter( 'eaccounting_settings_sanitize_text', array( $this, 'sanitize_text_fields' ), 10, 2 );
@@ -218,6 +220,33 @@ class Settings {
 		// Creates our settings in the options table
 		register_setting( 'eaccounting_settings', 'eaccounting_settings', array( $this, 'sanitize_settings' ) );
 
+	}
+
+	function eaccounting_settings_updated( $old_value, $value, $option ) {
+		//update currency code.
+		if ( ! empty( $value['default_currency'] ) && ( $old_value['default_currency'] != $value['default_currency'] ) ) {
+			$currency = eaccounting_get_currency_by_code( eaccounting_clean( $value['default_currency'] ) );
+			if ( $currency ) {
+				try {
+					$currency->set_rate( 1 );
+					$currency->save();
+				} catch ( Exception $exception ) {
+					eaccounting_logger()->error( __( 'Failed updating default currency code rate', 'wp-ever-accounting' ) );
+				}
+			}
+		}
+
+
+		/**
+		 * Hook when update plugin settings.
+		 *
+		 * @param array $value The new settings value is being saved.
+		 * @param array $old_value Old settings value.
+		 *
+		 * @since 1.0.2
+		 *
+		 */
+		do_action( 'eaccounting_settings_updated', $value, $old_value );
 	}
 
 	/**
@@ -494,7 +523,7 @@ class Settings {
 						'name'    => __( 'Account', 'wp-ever-accounting' ),
 						'type'    => 'select',
 						'class'   => 'ea-select2',
-						'options' => eaccounting_result_to_dropdown( Query_Account::init()->select( 'id, name' )->get() ),
+						'options' => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + eaccounting_result_to_dropdown( Query_Account::init()->select( 'id, name' )->get() ),
 						'attr'    => array(
 							'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
 						)
@@ -504,9 +533,9 @@ class Settings {
 						'type'    => 'select',
 						//'std'     => 'USD',
 						'class'   => 'ea-select2',
-						'options' => eaccounting_result_to_dropdown( Query_Currency::init()->select( 'code as id, CONCAT(name,"(", symbol, ")") as name' )->get() ),
+						'options' => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + eaccounting_result_to_dropdown( Query_Currency::init()->select( 'code as id, CONCAT(name,"(", symbol, ")") as name' )->get() ),
 						'attr'    => array(
-							'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
+							'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
 						)
 					),
 					'default_payment_method' => array(

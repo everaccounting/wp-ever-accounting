@@ -270,17 +270,16 @@ class List_Table_Accounts extends List_Table {
 	 *
 	 */
 	function column_actions( $account ) {
-		$base_uri    = eaccounting_admin_url( array( 'account_id' => $account->get_id(), 'tab' => 'accounts' ) );
-		$row_actions = array();
-
+		$base_uri              = eaccounting_admin_url( array( 'account_id' => $account->get_id(), 'tab' => 'accounts' ) );
+		$row_actions           = array();
 		$row_actions['edit']   = array(
-			'label' => __( 'Edit', 'wp-ever-accounting' ),
-			array( 'action' => 'edit' ),
-			array( 'base_uri' => $base_uri )
+			'label'    => __( 'Edit', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
 		);
 		$row_actions['delete'] = array(
-			'label' => __( 'Delete', 'wp-ever-accounting' ),
-			array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
+			'label'    => __( 'Delete', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+			'nonce'    => 'account-nonce',
 		);
 
 		$row_actions = apply_filters( 'eaccounting_account_row_actions', $row_actions, $account );
