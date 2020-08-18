@@ -6,7 +6,7 @@ jQuery(document).ready(function ($) {
 	//
 
 	//initialize plugins
-	$('.ea-input-date').datepicker({dateFormat: 'mm-dd-yy'});
+	$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
 	$('.ea-input-color').ea_color_picker();
 	$('.ea-help-tip').tipTip();
 	$('.ea-input-price').inputmask('decimal', {

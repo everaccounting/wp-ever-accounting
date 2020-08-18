@@ -4,18 +4,21 @@
  *
  * All account related function of the plugin.
  *
- * @package EverAccounting
  * @since 1.0.2
+ * @package EverAccounting
  */
+
+use EverAccounting\Exception;
+use EverAccounting\Account;
 
 /**
  * Main function for returning account.
  *
  * @param $account
  *
- * @return \EverAccounting\Account|null
  * @since 1.0.2
  *
+ * @return Account|null
  */
 function eaccounting_get_account( $account ) {
 	if ( empty( $account ) ) {
@@ -23,17 +26,17 @@ function eaccounting_get_account( $account ) {
 	}
 
 	try {
-		if ( $account instanceof \EverAccounting\Account ) {
+		if ( $account instanceof Account ) {
 			$_account = $account;
 		} elseif ( is_object( $account ) && ! empty( $account->id ) ) {
-			$_account = new \EverAccounting\Account( null );
+			$_account = new Account( null );
 			$_account->populate( $account );
 		} else {
-			$_account = new \EverAccounting\Account( absint( $account ) );
+			$_account = new Account( absint( $account ) );
 		}
 
 		if ( ! $_account->exists() ) {
-			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
 		return $_account;
@@ -49,9 +52,9 @@ function eaccounting_get_account( $account ) {
  *
  * @param array $args Account arguments.
  *
- * @return \EverAccounting\Account|WP_Error
  * @since 1.0.2
  *
+ * @return Account|WP_Error
  */
 function eaccounting_insert_account( $args ) {
 	try {
@@ -59,11 +62,49 @@ function eaccounting_insert_account( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$account      = new \EverAccounting\Account( $args['id'] );
+		$account      = new Account( $args['id'] );
 		$account->set_props( $args );
+
+		//validation
+		if ( ! $account->get_date_created() ) {
+			$account->set_date_created( time() );
+		}
+		if ( ! $account->get_company_id() ) {
+			$account->set_company_id( 1 );
+		}
+		if ( ! $account->get_creator_id() ) {
+			$account->set_creator_id();
+		}
+
+		if ( empty( $account->get_name() ) ) {
+			throw new Exception( 'empty_props', __( 'Account Name is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $account->get_number( 'edit' ) ) ) {
+			throw new Exception( 'empty_props', __( 'Account Number is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $account->get_currency_code( 'edit' ) ) ) {
+			throw new Exception( 'empty_props', __( 'Currency code is required', 'wp-ever-accounting' ) );
+		}
+
+		$currency = eaccounting_get_currency( $account->get_currency_code() );
+		if ( ! $currency || ! $currency->exists() ) {
+			throw new Exception( 'invalid_props', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
+		}
+
+		$existing_id = \EverAccounting\Query_Account::init()
+		                                            ->where( 'number', $account->get_number() )
+		                                            ->where( 'company_id', $account->get_company_id() )
+		                                            ->value( 0 );
+
+		if ( ! empty( $existing_id ) && absint( $existing_id ) != $account->get_id() ) {
+			throw new Exception( 'duplicate_props', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+		}
+
 		$account->save();
 
-	} catch ( \EverAccounting\Exception $e ) {
+	} catch ( Exception $e ) {
 		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
 	}
 
@@ -75,15 +116,15 @@ function eaccounting_insert_account( $args ) {
  *
  * @param $account_id
  *
- * @return bool
  * @since 1.0.2
  *
+ * @return bool
  */
 function eaccounting_delete_account( $account_id ) {
 	try {
-		$account = new \EverAccounting\Account( $account_id );
+		$account = new Account( $account_id );
 		if ( ! $account->exists() ) {
-			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
 		$account->delete();

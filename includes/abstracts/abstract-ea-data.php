@@ -251,7 +251,7 @@ class Data {
 	 * @return mixed
 	 * @since  2.6.0
 	 */
-	public function get_meta( $key = '', $single = true, $context = 'view' ) {
+	public function get_meta( $key = '', $single = true, $context = 'edit' ) {
 
 		$this->maybe_read_meta_data();
 		$meta_data  = $this->get_meta_data();
@@ -672,7 +672,7 @@ class Data {
 	 * @return mixed
 	 * @since  3.0.0
 	 */
-	protected function get_prop( $prop, $context = 'view' ) {
+	protected function get_prop( $prop, $context = 'edit' ) {
 		$value = null;
 
 		if ( array_key_exists( $prop, $this->data ) ) {

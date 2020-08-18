@@ -2,9 +2,9 @@
 /**
  * Admin Payment Edit Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Sales/Payments
  * @since       1.0.2
+ * @subpackage  Admin/Sales/Payments
+ * @package     EverAccounting
  */
 
 use EverAccounting\Query_Account;
@@ -39,13 +39,16 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'paid_at',
 						'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $payment->get_paid_at(),
+						'value'         => $payment->get_paid_at()->format( 'Y-m-d' ),
 						'required'      => true,
 				) );
 
 				$default_account_id = (int) eaccounting()->settings->get( 'default_account' );
 				$account_id         = (int) $payment->get_account_id();
-				$accounts           = Query_Account::init()->select( 'id, name' )->whereIn( 'id', [ $default_account_id, $account_id ] )->get();
+				$accounts           = Query_Account::init()
+												   ->select( 'id, name' )
+												   ->whereIn( 'id', [ $default_account_id, $account_id ] )
+												   ->get();
 				eaccounting_select2( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Account', 'wp-ever-accounting' ),
@@ -70,12 +73,18 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Enter amount', 'wp-ever-accounting' ),
 				) );
 
+				$customer_id = (int) $payment->get_contact_id();
+				$customers   = \EverAccounting\Query_Contact::init()
+															->select( 'id, name' )
+															->isCustomer()
+															->where( 'id', [ $customer_id ] )
+															->get();
 				eaccounting_select2( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Customer', 'wp-ever-accounting' ),
-						'name'          => 'customer_id',
+						'name'          => 'contact_id',
 						'value'         => $payment->get_contact_id(),
-						'options'       => [],
+						'options'       => wp_list_pluck( $customers, 'name', 'id' ),
 						'placeholder'   => __( 'Select Customer', 'wp-ever-accounting' ),
 						'ajax'          => true,
 						'type'          => 'customer',
@@ -86,12 +95,19 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						),
 				) );
 
+
+				$category_id = (int) $payment->get_category_id();
+				$categories  = \EverAccounting\Query_Category::init()
+															 ->select( 'id, name' )
+															 ->isExpense()
+															 ->where( 'id', [ $category_id ] )
+															 ->get();
 				eaccounting_select2( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Category', 'wp-ever-accounting' ),
 						'name'          => 'category_id',
 						'value'         => $payment->get_category_id(),
-						'options'       => [],
+						'options'       => wp_list_pluck( $categories, 'name', 'id' ),
 						'placeholder'   => __( 'Select Category', 'wp-ever-accounting' ),
 						'ajax'          => true,
 						'type'          => 'expense_category',

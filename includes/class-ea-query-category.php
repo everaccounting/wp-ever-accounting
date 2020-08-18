@@ -50,4 +50,30 @@ class Query_Category extends Query {
 	protected function get_search_columns() {
 		return array( 'name');
 	}
+
+	/**
+	 * Include only expense
+	 *
+	 * @return $this
+	 * @since 1.0.2
+	 */
+	public function isExpense() {
+
+		$this->where('type', 'expense');
+
+		return $this;
+	}
+
+	/**
+	 * Include only income
+	 *
+	 * @return $this
+	 * @since 1.0.2
+	 */
+	public function isIncome() {
+
+		$this->where('type', 'income');
+
+		return $this;
+	}
 }

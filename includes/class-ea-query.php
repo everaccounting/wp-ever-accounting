@@ -21,58 +21,58 @@ class Query {
      * @var string
      */
     protected $id;
-    
+
     /**
      * @var array
      */
     protected $select = [];
-    
+
     /**
      * @var null
      */
     protected $from = null;
-    
+
     /**
      * @var array
      */
     protected $join = [];
-    
+
     /**
      * @var array
      */
     protected $where = [];
-    
+
     /**
      * @var array
      */
     protected $order = [];
-    
+
     /**
      * @var array
      */
     protected $group = [];
-    
+
     /**
      * @var null
      */
     protected $having = null;
-    
+
     /**
      * @var null
      */
     protected $limit = null;
-    
+
     /**
      * @var int
      */
     protected $offset = 0;
-    
+
     /**
      * @var string
      * @since 1.0.2
      */
     protected $cache_group = 'eaccounting_query';
-    
+
     /**
      * Static constructor.
      *
@@ -83,10 +83,10 @@ class Query {
     public static function init( $id = null ) {
         $builder     = new self();
         $builder->id = ! empty( $id ) ? $id : uniqid( '', true );
-        
+
         return $builder;
     }
-    
+
     /**
      * Adds select statement.
      *
@@ -97,10 +97,10 @@ class Query {
      */
     public function select( $statement ) {
         $this->select[] = $statement;
-        
+
         return $this;
     }
-    
+
     /**
      * Adds from statement.
      *
@@ -114,10 +114,10 @@ class Query {
         global $wpdb;
         $table      = ( $add_prefix ? $wpdb->prefix : '' ) . $name;
         $this->from = $table;
-        
+
         return $this;
     }
-    
+
     /**
      * Adds from statement.
      *
@@ -133,10 +133,10 @@ class Query {
     public function from( $from, $add_prefix = true ) {
         global $wpdb;
         $this->from = $this->from . ' ' . ( $add_prefix ? $wpdb->prefix : '' ) . $from;
-        
+
         return $this;
     }
-    
+
     /**
      * Adds search statement.
      *
@@ -159,10 +159,10 @@ class Query {
                 ];
             }
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Create a where statement.
      *
@@ -185,7 +185,7 @@ class Query {
         if ( ! in_array( strtolower( $joint ), [ 'and', 'or', 'where' ] ) ) {
             $this->exception( 'Invalid where type "' . $joint . '"' );
         }
-        
+
         // when column is an array we assume to make a bulk and where.
         if ( is_array( $column ) ) {
             // create new query object
@@ -193,16 +193,16 @@ class Query {
             foreach ( $column as $key => $val ) {
                 $subquery->where( $key, $val, null, $joint );
             }
-            
+
             $this->where = array_merge( $this->where, $subquery->where );
-            
+
             return $this;
         }
-        
+
         if ( is_object( $column ) && ( $column instanceof \Closure ) ) {
             // create new query object
             $subquery = new Query();
-            
+
             // run the closure callback on the sub query
             call_user_func_array( $column, array( &$subquery ) );
             $condition = '';
@@ -210,30 +210,30 @@ class Query {
                 $condition .= ( $i === 0 ? ' ' : ' ' . $subquery->where[ $i ]['joint'] . ' ' )
                               . $subquery->where[ $i ]['condition'];
             }
-            
+
             $this->where = array_merge( $this->where, array(
                 array(
                     'joint'     => $joint,
                     'condition' => "($condition)"
                 )
             ) );
-            
+
             return $this;
         }
-        
+
         // when param2 is null we replace param2 with param one as the
         // value holder and make param1 to the = operator.
         if ( is_null( $param2 ) ) {
             $param2 = $param1;
             $param1 = '=';
         }
-        
+
         // if the param2 is an array we filter it. when param2 is an array we probably
         // have an "in" or "between" statement which has no need for duplicates.
         if ( is_array( $param2 ) ) {
             $param2 = array_unique( $param2 );
         }
-        
+
         // Between?
         if ( is_array( $param2 ) && strpos( $param1, 'BETWEEN' ) !== false ) {
             $min = isset( $param2[0] ) ? $param2[0] : false;
@@ -241,18 +241,18 @@ class Query {
             if ( ! $min || ! $max ) {
                 $this->exception( "BETWEEN min or max is missing" );
             }
-            
+
             $min = $wpdb->prepare( is_numeric( $min ) ? '%d' : '%s', $min );
             $max = $wpdb->prepare( is_numeric( $max ) ? '%d' : '%s', $max );
-            
+
             $this->where[] = [
                 'joint'     => $joint,
                 'condition' => "($column BETWEEN $min AND $max)",
             ];
-            
+
             return $this;
         }
-        
+
         // Not Between?
         if ( is_array( $param2 ) && strpos( $param1, 'NOT BETWEEN' ) !== false ) {
             $min = isset( $param2[0] ) ? $param2[0] : false;
@@ -260,42 +260,42 @@ class Query {
             if ( ! $min || ! $max ) {
                 $this->exception( "NOT BETWEEN min or max is missing" );
             }
-            
+
             $min = $wpdb->prepare( is_numeric( $min ) ? '%d' : '%s', $min );
             $max = $wpdb->prepare( is_numeric( $max ) ? '%d' : '%s', $max );
-            
+
             $this->where[] = [
                 'joint'     => $joint,
                 'condition' => "($column NOT BETWEEN $min AND $max)",
             ];
-            
+
             return $this;
         }
-        
-        
+
+
         //first check if is array if so then make a string out of array
         //if not array but null then set value as null
         //if not null does it contains . it could be column so dont parse as string
         //If not column then use wpdb prepare
         //if contains $prefix
         $contain_join = preg_replace( '/^(\s?AND ?|\s?OR ?)|\s$/i', '', $param2 );
-        
+
         $param2 = is_array( $param2 )
             ? ( '("' . implode( '","', $param2 ) . '")' )
             : ( $param2 === null
                 ? 'null'
-                : ( strpos( $param2, '.' ) !== false || strpos( $param2, $wpdb->prefix ) !== false ? $param2 : $wpdb->prepare( is_numeric( $param2 ) ? '%d' : '%s', $param2 ) )
+                : ( strpos( $param2, $wpdb->prefix ) !== false ? $param2 : $wpdb->prepare( is_numeric( $param2 ) ? '%d' : '%s', $param2 ) )
             );
-        
+
         $this->where[] = [
             'joint'     => $joint,
             'condition' => implode( ' ', [ $column, $param1, $param2 ] ),
         ];
-        
+
         return $this;
     }
-    
-    
+
+
     /**
      * Create an or where statement
      *
@@ -311,7 +311,7 @@ class Query {
     public function orWhere( $column, $param1 = null, $param2 = null ) {
         return $this->where( $column, $param1, $param2, 'or' );
     }
-    
+
     /**
      * Create an and where statement
      *
@@ -327,7 +327,7 @@ class Query {
     public function andWhere( $column, $param1 = null, $param2 = null ) {
         return $this->where( $column, $param1, $param2, 'and' );
     }
-    
+
     /**
      * Creates a where in statement
      *
@@ -344,10 +344,10 @@ class Query {
         if ( empty( $options ) ) {
             return $this;
         }
-        
+
         return $this->where( $column, 'in', $options );
     }
-    
+
     /**
      * Creates a where not in statement
      *
@@ -364,10 +364,10 @@ class Query {
         if ( empty( $options ) ) {
             return $this;
         }
-        
+
         return $this->where( $column, 'not in', $options );
     }
-    
+
     /**
      * Creates a where something is null statement
      *
@@ -381,7 +381,7 @@ class Query {
     public function whereNull( $column ) {
         return $this->where( $column, 'is', null );
     }
-    
+
     /**
      * Creates a where something is not null statement
      *
@@ -395,7 +395,7 @@ class Query {
     public function whereNotNull( $column ) {
         return $this->where( $column, 'is not', null );
     }
-    
+
     /**
      * Creates a or where something is null statement
      *
@@ -409,7 +409,7 @@ class Query {
     public function orWhereNull( $column ) {
         return $this->orWhere( $column, 'is', null );
     }
-    
+
     /**
      * Creates a or where something is not null statement
      *
@@ -423,8 +423,8 @@ class Query {
     public function orWhereNotNull( $column ) {
         return $this->orWhere( $column, 'is not', null );
     }
-    
-    
+
+
     /**
      * Creates a where between statement
      *
@@ -438,7 +438,7 @@ class Query {
     public function whereBetween( $column, $min, $max ) {
         return $this->where( $column, 'BETWEEN', array( $min, $max ) );
     }
-    
+
     /**
      * Creates a where not between statement
      *
@@ -452,7 +452,7 @@ class Query {
     public function whereNotBetween( $column, $min, $max ) {
         return $this->where( $column, 'NOT BETWEEN', array( $min, $max ) );
     }
-    
+
     /**
      * Creates a where date between statement
      *
@@ -470,11 +470,11 @@ class Query {
         }
         $stat_date = $wpdb->get_var( $wpdb->prepare( 'SELECT CAST(%s as DATE)', $start ) );
         $end_date  = $wpdb->get_var( $wpdb->prepare( 'SELECT CAST(%s as DATE)', $end ) );
-        
+
         return $this->where( $column, 'BETWEEN', array( $stat_date, $end_date ) );
     }
-    
-    
+
+
     /**
      *
      * @param        $query
@@ -487,11 +487,11 @@ class Query {
             'joint'     => $joint,
             'condition' => $query,
         ];
-        
+
         return $this;
     }
-    
-    
+
+
     /**
      * Add a join statement to the current query
      *
@@ -514,13 +514,13 @@ class Query {
         if ( ! in_array( $type, [ '', 'LEFT', 'RIGHT', 'INNER', 'CROSS', 'LEFT OUTER', 'RIGHT OUTER' ] ) ) {
             $this->exception( "Invalid join type." );
         }
-        
+
         $join = [
             'table' => ( $add_prefix ? $wpdb->prefix : '' ) . $table,
             'type'  => $type,
             'on'    => [],
         ];
-        
+
         // to make nested joins possible you can pass an closure
         // which will create a new query where you can add your nested where
         if ( is_object( $localKey ) && ( $localKey instanceof \Closure ) ) {
@@ -528,37 +528,37 @@ class Query {
             $subquery = new Query();
             // run the closure callback on the sub query
             call_user_func_array( $localKey, array( &$subquery ) );
-            
+
             $join['on'] = array_merge( $join['on'], $subquery->where );
             $this->join = array_merge( $this->join, array( $join ) );
-            
+
             return $this;
         }
-        
+
         // when $referenceKey is null we replace $operator with $referenceKey one as the
         // value holder and make $operator to the = operator.
         if ( is_null( $referenceKey ) ) {
             $referenceKey = $operator;
             $operator     = '=';
         }
-        
+
         $referenceKey = is_array( $referenceKey )
             ? ( '(\'' . implode( '\',\'', $referenceKey ) . '\')' )
             : ( $referenceKey === null
                 ? 'null'
                 : ( strpos( $referenceKey, '.' ) !== false || strpos( $referenceKey, $wpdb->prefix ) !== false ? $referenceKey : $wpdb->prepare( is_numeric( $referenceKey ) ? '%d' : '%s', $referenceKey ) )
             );
-        
+
         $join['on'][] = [
             'joint'     => $joint,
             'condition' => implode( ' ', [ $localKey, $operator, $referenceKey ] ),
         ];
-        
+
         $this->join[] = $join;
-        
+
         return $this;
     }
-    
+
     /**
      * Left join same as join with special type
      *
@@ -573,7 +573,7 @@ class Query {
     public function leftJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
         return $this->join( $table, $localKey, $operator, $referenceKey, 'left' );
     }
-    
+
     /**
      * Alias of the `join` method with join type right.
      *
@@ -588,7 +588,7 @@ class Query {
     public function rightJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
         return $this->join( $table, $localKey, $operator, $referenceKey, 'right' );
     }
-    
+
     /**
      * Alias of the `join` method with join type inner.
      *
@@ -603,7 +603,7 @@ class Query {
     public function innerJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
         return $this->join( $table, $localKey, $operator, $referenceKey, 'inner' );
     }
-    
+
     /**
      * Alias of the `join` method with join type outer.
      *
@@ -618,7 +618,7 @@ class Query {
     public function outerJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
         return $this->join( $table, $localKey, $operator, $referenceKey, 'outer' );
     }
-    
+
     /**
      *
      * @param        $query
@@ -631,11 +631,11 @@ class Query {
             'joint'     => $joint,
             'condition' => $query,
         ];
-        
+
         return $this;
     }
-    
-    
+
+
     /**
      * Adds group by statement.
      *     ->groupBy('category')
@@ -651,7 +651,7 @@ class Query {
         if ( empty( $field ) ) {
             return $this;
         }
-        
+
         if ( is_array( $field ) ) {
             foreach ( $field as $groupby ) {
                 $this->group[] = $groupby;
@@ -659,10 +659,10 @@ class Query {
         } else {
             $this->group[] = $field;
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Adds having statement.
      *
@@ -679,10 +679,10 @@ class Query {
         if ( ! empty( $statement ) ) {
             $this->having = $statement;
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Adds order by statement.
      *
@@ -705,10 +705,10 @@ class Query {
         if ( ! empty( $key ) ) {
             $this->order[] = $key . ' ' . $direction;
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Set the query limit
      *
@@ -731,10 +731,10 @@ class Query {
         } else {
             $this->limit = (int) $limit;
         }
-        
+
         return $this;
     }
-    
+
     /**
      * Adds offset statement.
      *
@@ -748,10 +748,10 @@ class Query {
      */
     public function offset( $offset ) {
         $this->offset = $offset;
-        
+
         return $this;
     }
-    
+
     /**
      * Create a query limit based on a page and a page size
      *
@@ -768,13 +768,13 @@ class Query {
         if ( ( $page = (int) $page ) <= 1 ) {
             $page = 0;
         }
-        
+
         $this->limit  = (int) $size;
         $this->offset = (int) $size * $page;
-        
+
         return $this;
     }
-    
+
     /**
      * Find something, means select one item by key
      *
@@ -789,7 +789,7 @@ class Query {
     public function find( $id, $key = 'id' ) {
         return $this->where( $key, $id )->one();
     }
-    
+
     /**
      * Get the first result ordered by the given key.
      *
@@ -801,7 +801,7 @@ class Query {
     public function first( $key = 'id' ) {
         return $this->order_by( $key, 'asc' )->one();
     }
-    
+
     /**
      * Get the last result by key
      *
@@ -813,7 +813,7 @@ class Query {
     public function last( $key = 'id' ) {
         return $this->order_by( $key, 'desc' )->one();
     }
-    
+
     /**
      * Pluck item.
      * ->find('post_title')
@@ -824,11 +824,11 @@ class Query {
     public function pluck() {
         $selects      = func_get_args();
         $this->select = $selects;
-        
+
         return $this->get();
     }
-    
-    
+
+
     /**
      * Returns results from builder statements.
      *
@@ -847,7 +847,7 @@ class Query {
         global $wpdb;
         do_action( 'wp_query_builder_get_builder', $this );
         do_action( 'wp_query_builder_get_builder_' . $this->id, $this );
-        
+
         $query = '';
         $this->_query_select( $query, $calc_rows );
         $this->_query_from( $query );
@@ -858,39 +858,39 @@ class Query {
         $this->_query_order( $query );
         $this->_query_limit( $query );
         $this->_query_offset( $query );
-        
+
         // Process
         $query = apply_filters( 'wp_query_builder_get_query', $query );
         $query = apply_filters( 'wp_query_builder_get_query_' . $this->id, $query );
-        
+
         $key          = md5( $query );
         $last_changed = wp_cache_get( 'last_changed', $this->cache_group );
-        
+
         if ( ! $last_changed ) {
             $last_changed = microtime();
             wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
         }
-        
+
         $cache_key = "{$key}:{$last_changed}";
-        
+
         $results = wp_cache_get( $cache_key, $this->cache_group );
-        
+
         if ( false === $results ) {
             $results = $wpdb->get_results( $query, $output );
             wp_cache_add( $cache_key, $results, $this->id, HOUR_IN_SECONDS );
             if ( $row_map ) {
-                
+
                 $results = array_map( function ( $row ) use ( &$row_map ) {
                     return call_user_func_array( $row_map, [ $row ] );
                 }, $results );
             }
-            
+
             wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
         }
-        
+
         return $results;
     }
-    
+
     /**
      * Sets the limit to 1, executes and returns the first result using get.
      *
@@ -903,7 +903,7 @@ class Query {
         global $wpdb;
         do_action( 'wp_query_builder_one_builder', $this );
         do_action( 'wp_query_builder_one_builder_' . $this->id, $this );
-        
+
         $this->_query_select( $query );
         $this->_query_from( $query );
         $this->_query_join( $query );
@@ -913,30 +913,30 @@ class Query {
         $this->_query_order( $query );
         $query .= ' LIMIT 1';
         $this->_query_offset( $query );
-        
+
         $key          = md5( serialize( array( $query, $output ) ) );
         $last_changed = wp_cache_get( 'last_changed', $this->cache_group );
-        
+
         if ( ! $last_changed ) {
             $last_changed = microtime();
             wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
         }
-        
+
         $cache_key = "{$key}:{$last_changed}";
-        
+
         $results = wp_cache_get( $cache_key, $this->cache_group );
-        
+
         if ( false === $results ) {
             $query   = apply_filters( 'wp_query_builder_one_query', $query );
             $query   = apply_filters( 'wp_query_builder_one_query_' . $this->id, $query );
             $results = $wpdb->get_row( $query, $output );
-            
+
             wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
         }
-        
+
         return $results;
     }
-    
+
     /**
      * Just return the number of results
      *
@@ -949,34 +949,34 @@ class Query {
         global $wpdb;
         do_action( 'wp_query_builder_count_builder', $this );
         do_action( 'wp_query_builder_count_builder_' . $this->id, $this );
-        
+
         $query = 'SELECT count(' . $column . ') as `count`';
         $this->_query_from( $query );
         $this->_query_join( $query );
         $this->_query_where( $query );
         $this->_query_group( $query );
         $this->_query_having( $query );
-        
+
         $key          = md5( serialize( array( $query, $column ) ) );
         $last_changed = wp_cache_get( 'last_changed', $this->cache_group );
-        
+
         if ( ! $last_changed ) {
             $last_changed = microtime();
             wp_cache_set( 'last_changed', $last_changed, $this->cache_group );
         }
-        
+
         $cache_key = "{$key}:{$last_changed}";
-        
+
         $results = wp_cache_get( $cache_key, $this->cache_group );
         if ( false === $results ) {
-            
+
             $results = (int) $wpdb->get_var( $query );
             wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
         }
-        
+
         return $results;
     }
-    
+
     /**
      * Just get a single value from the result
      *
@@ -990,7 +990,7 @@ class Query {
         global $wpdb;
         do_action( 'wp_query_builder_column_builder', $this );
         do_action( 'wp_query_builder_column_builder_' . $this->id, $this );
-        
+
         $query = '';
         $this->_query_select( $query, $calc_rows );
         $this->_query_from( $query );
@@ -1001,10 +1001,10 @@ class Query {
         $this->_query_order( $query );
         $this->_query_limit( $query );
         $this->_query_offset( $query );
-        
+
         return $wpdb->get_col( $query, $column );
     }
-    
+
     /**
      * Returns a value.
      *
@@ -1021,7 +1021,7 @@ class Query {
         global $wpdb;
         do_action( 'wp_query_builder_value_builder', $this );
         do_action( 'wp_query_builder_value_builder_' . $this->id, $this );
-        
+
         // Build
         // Query
         $query = '';
@@ -1034,11 +1034,11 @@ class Query {
         $this->_query_order( $query );
         $this->_query_limit( $query );
         $this->_query_offset( $query );
-        
+
         return $wpdb->get_var( $query, $x, $y );
     }
-    
-    
+
+
     /**
      * Update or insert.
      *
@@ -1051,10 +1051,10 @@ class Query {
         if ( $this->first() ) {
             return $this->update( $data );
         }
-        
+
         return $this->insert( $data );
     }
-    
+
     /**
      * Find or insert.
      *
@@ -1067,10 +1067,10 @@ class Query {
         if ( $this->first() ) {
             return $this->update( $data );
         }
-        
+
         return $this->insert( $data );
     }
-    
+
     /**
      * Get max value.
      *
@@ -1087,10 +1087,10 @@ class Query {
         $this->_query_where( $query );
         $this->_query_group( $query );
         $this->_query_having( $query );
-        
+
         return (int) $wpdb->get_var( $query );
     }
-    
+
     /**
      * Get min value.
      *
@@ -1107,10 +1107,10 @@ class Query {
         $this->_query_where( $query );
         $this->_query_group( $query );
         $this->_query_having( $query );
-        
+
         return (int) $wpdb->get_var( $query );
     }
-    
+
     /**
      * Get avg value.
      *
@@ -1128,10 +1128,10 @@ class Query {
         $this->_query_where( $query );
         $this->_query_group( $query );
         $this->_query_having( $query );
-        
+
         return (int) $wpdb->get_var( $query );
     }
-    
+
     /**
      * Get sum value.
      *
@@ -1148,10 +1148,10 @@ class Query {
         $this->_query_where( $query );
         $this->_query_group( $query );
         $this->_query_having( $query );
-        
+
         return (int) $wpdb->get_var( $query );
     }
-    
+
     /**
      * Returns flag indicating if query has been executed.
      *
@@ -1177,10 +1177,10 @@ class Query {
             $this->_query_limit( $query );
             $this->_query_offset( $query );
         }
-        
+
         return $wpdb->query( $query );
     }
-    
+
     /**
      * Returns query from builder statements.
      *
@@ -1198,10 +1198,10 @@ class Query {
         $this->_query_order( $query );
         $this->_query_limit( $query );
         $this->_query_offset( $query );
-        
+
         return $query;
     }
-    
+
     /**
      * Returns found rows in last query, if SQL_CALC_FOUND_ROWS is used and is supported.
      *
@@ -1217,10 +1217,10 @@ class Query {
         // Process
         $query = apply_filters( 'wp_query_builder_found_rows_query', $query );
         $query = apply_filters( 'wp_query_builder_found_rows_query_' . $this->id, $query );
-        
+
         return $wpdb->get_var( $query );
     }
-    
+
     /**
      * Returns flag indicating if delete query has been executed.
      *
@@ -1234,16 +1234,16 @@ class Query {
         global $wpdb;
         do_action( 'wp_query_builder_delete_builder', $this );
         do_action( 'wp_query_builder_delete_builder_' . $this->id, $this );
-        
+
         $query = '';
         $this->_query_delete( $query );
         $this->_query_from( $query );
         $this->_query_join( $query );
         $this->_query_where( $query );
-        
+
         return $wpdb->query( $query );
     }
-    
+
     /**
      * Update
      *
@@ -1257,30 +1257,30 @@ class Query {
         global $wpdb;
         $conditions = '';
         $this->_query_where( $conditions );
-        
+
         if ( empty( trim( $conditions ) ) ) {
             false;
         }
-        
+
         $fields = array();
         foreach ( $data as $column => $value ) {
-            
+
             if ( is_null( $value ) ) {
                 $fields[] = "`$column` = NULL";
                 continue;
             }
-            
+
             $fields[] = "`$column` = " . $wpdb->prepare( is_numeric( $value ) ? '%d' : '%s', $value );
         }
-        
+
         $table  = trim( $this->from );
         $fields = implode( ', ', $fields );
-        
+
         $query = "UPDATE `$table` SET $fields  $conditions";
-        
+
         return $wpdb->query( $query );
     }
-    
+
     /**
      * Insert data.
      *
@@ -1292,14 +1292,14 @@ class Query {
      */
     public function insert( $data, $format = array() ) {
         global $wpdb;
-        
+
         if ( false !== $wpdb->insert( trim( $this->from ), $data, $format ) ) {
             return $wpdb->insert_id;
         };
-        
+
         return false;
     }
-    
+
     /**
      * Return a cloned object from current builder.
      *
@@ -1309,7 +1309,7 @@ class Query {
     public function copy() {
         return clone( $this );
     }
-    
+
     /**
      * Builds query's select statement.
      *
@@ -1326,7 +1326,7 @@ class Query {
                 : '*'
             );
     }
-    
+
     /**
      * Builds query's from statement.
      *
@@ -1338,7 +1338,7 @@ class Query {
     private function _query_from( &$query ) {
         $query .= ' FROM ' . $this->from;
     }
-    
+
     /**
      * Builds query's join statement.
      *
@@ -1356,7 +1356,7 @@ class Query {
             }
         }
     }
-    
+
     /**
      * Builds query's where statement.
      *
@@ -1371,7 +1371,7 @@ class Query {
                       . $this->where[ $i ]['condition'];
         }
     }
-    
+
     /**
      * Builds query's group by statement.
      *
@@ -1385,7 +1385,7 @@ class Query {
             $query .= ' GROUP BY ' . implode( ',', $this->group );
         }
     }
-    
+
     /**
      * Builds query's having statement.
      *
@@ -1399,7 +1399,7 @@ class Query {
             $query .= ' HAVING ' . $this->having;
         }
     }
-    
+
     /**
      * Builds query's order by statement.
      *
@@ -1413,7 +1413,7 @@ class Query {
             $query .= ' ORDER BY ' . implode( ',', $this->order );
         }
     }
-    
+
     /**
      * Builds query's limit statement.
      *
@@ -1430,7 +1430,7 @@ class Query {
             $query .= $wpdb->prepare( ' LIMIT %d', $this->limit );
         }
     }
-    
+
     /**
      * Builds query's offset statement.
      *
@@ -1447,7 +1447,7 @@ class Query {
             $query .= $wpdb->prepare( ' OFFSET %d', $this->offset );
         }
     }
-    
+
     /**
      * Builds query's delete statement.
      *
@@ -1462,7 +1462,7 @@ class Query {
                 : ''
             ) );
     }
-    
+
     /**
      * Sanitize value.
      *
@@ -1493,10 +1493,10 @@ class Query {
                 $value[ $i ] = $this->sanitize_value( true, $value[ $i ] );
             }
         }
-        
+
         return $callback && is_callable( $callback ) ? call_user_func_array( $callback, [ $value ] ) : $value;
     }
-    
+
     /**
      * @param $message
      *

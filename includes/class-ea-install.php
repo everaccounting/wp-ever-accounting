@@ -114,14 +114,13 @@ class EAccounting_Install {
 		    KEY `email`(`email`),
 		    KEY `phone`(`phone`),
 		    KEY `type`(`type`),
-		    KEY `company_id`(`company_id`),
-		    UNIQUE KEY (`name`, `email`, `phone`, `type`, `company_id`)
+		    KEY `company_id`(`company_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transactions(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `type` VARCHAR(100) DEFAULT NULL,
-		  	`paid_at` datetime NOT NULL,
+		  	`paid_at` date NOT NULL,
 		  	`amount` DOUBLE(15,4) NOT NULL,
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,

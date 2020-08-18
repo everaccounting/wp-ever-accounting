@@ -4,17 +4,20 @@
  *
  * Functions for all kind of transaction of the plugin.
  *
- * @package EverAccounting
  * @since 1.0.2
+ * @package EverAccounting
  */
+
+use \EverAccounting\Transaction;
+use \EverAccounting\Exception;
 
 defined( 'ABSPATH' ) || exit;
 
 
 /**
  * Get Transaction Types
- * @return array
  * @since 1.0.2
+ * @return array
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
@@ -32,9 +35,9 @@ function eaccounting_get_transaction_types() {
  *
  * @param $transaction
  *
- * @return \EverAccounting\Transaction|null
  * @since 1.0.2
  *
+ * @return \EverAccounting\Transaction|null
  */
 function eaccounting_get_transaction( $transaction ) {
 	if ( empty( $transaction ) ) {
@@ -42,17 +45,17 @@ function eaccounting_get_transaction( $transaction ) {
 	}
 
 	try {
-		if ( $transaction instanceof \EverAccounting\Transaction ) {
+		if ( $transaction instanceof Transaction ) {
 			$_transaction = $transaction;
 		} elseif ( is_object( $transaction ) && ! empty( $transaction->id ) ) {
-			$_transaction = new \EverAccounting\Transaction( null );
+			$_transaction = new Transaction( null );
 			$_transaction->populate( $transaction );
 		} else {
-			$_transaction = new \EverAccounting\Transaction( absint( $transaction ) );
+			$_transaction = new Transaction( absint( $transaction ) );
 		}
 
 		if ( ! $_transaction->exists() ) {
-			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
 		return $_transaction;
@@ -68,9 +71,9 @@ function eaccounting_get_transaction( $transaction ) {
  *
  * @param array $args transaction arguments.
  *
- * @return \EverAccounting\Transaction|WP_Error
  * @since 1.0.2
  *
+ * @return \EverAccounting\Transaction|WP_Error
  */
 function eaccounting_insert_transaction( $args ) {
 
@@ -79,12 +82,87 @@ function eaccounting_insert_transaction( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$transaction  = new \EverAccounting\Transaction( $args['id'] );
+		error_log(print_r($args, true));
+		$transaction  = new Transaction( $args['id'] );
 		$transaction->set_props( $args );
+
+		//validation
+		if ( ! $transaction->get_date_created() ) {
+			$transaction->set_date_created( time() );
+		}
+		if ( ! $transaction->get_company_id() ) {
+			$transaction->set_company_id( 1 );
+		}
+		if ( ! $transaction->get_creator_id() ) {
+			$transaction->set_creator_id();
+		}
+		if ( empty( $transaction->get_paid_at() ) ) {
+			throw new Exception( 'empty_prop', __( 'Transaction date is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $transaction->get_type() ) ) {
+			throw new Exception( 'empty_prop', __( 'Transaction type is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $transaction->get_paid_at() ) ) {
+			throw new Exception( 'empty_prop', __( 'Paid date is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $transaction->get_category_id() ) ) {
+			throw new Exception( 'empty_prop', __( 'Category is required', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $transaction->get_payment_method() ) ) {
+			throw new Exception( 'empty_prop', __( 'Payment method is required', 'wp-ever-accounting' ) );
+		}
+
+		$account = eaccounting_get_account( $transaction->get_account_id() );
+		if ( ! $account || ! $account->exists() ) {
+			throw new Exception( 'invalid_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
+		}
+
+		$currency = eaccounting_get_currency( $account->get_currency_code( 'edit' ) );
+		if ( ! $currency || ! $currency->exists() ) {
+			throw new Exception( 'invalid_prop', __( 'Transaction associated account is not exist.', 'wp-ever-accounting' ) );
+		}
+
+		$category = eaccounting_get_category( $transaction->get_category_id() );
+		if ( ! $category->exists() ) {
+			throw new Exception( 'invalid_prop', __( 'Category does not exist.', 'wp-ever-accounting' ) );
+		}
+
+		if ( ! in_array( $category->get_type(), [ 'expense', 'other', 'income' ] ) ) {
+			throw new Exception( 'invalid_prop', __( 'Invalid category type.', 'wp-ever-accounting' ) );
+		}
+		//if expense category type must be expense
+		//if type other category type must be other
+		//if type income category type must be income
+		if ( $transaction->get_type() !== $category->get_type() ) {
+			throw new Exception( 'invalid-category-type', __( 'Transaction type and category type does not match.', 'wp-ever-accounting' ) );
+		}
+
+		if ( ! empty( $transaction->get_contact_id() ) ) {
+			$contact = eaccounting_get_contact( $transaction->get_contact_id() );
+			if ( ! empty( $transaction->get_contact_id() ) && ! $contact->exists() ) {
+				throw new Exception( 'invalid_prop', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
+			}
+		}
+
+		if ( empty( $transaction->get_currency_code() ) ) {
+			$transaction->set_currency_code( $account->get_currency_code() );
+		}
+
+		if ( empty( $transaction->get_currency_rate() ) ) {
+			$transaction->set_currency_rate( $currency->get_rate() );
+		}
+
+		$transaction->set_amount(  eaccounting_sanitize_price( $transaction->get_amount(), $currency->get_code() ) );
+
+
 		$transaction->save();
 
 	} catch ( Exception $e ) {
-		return new WP_Error( 'error', $e->getMessage() );
+		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
 	}
 
 	return $transaction;
@@ -95,15 +173,15 @@ function eaccounting_insert_transaction( $args ) {
  *
  * @param $transaction_id
  *
- * @return bool
  * @since 1.0.2
  *
+ * @return bool
  */
 function eaccounting_delete_transaction( $transaction_id ) {
 	try {
-		$transaction = new \EverAccounting\Transaction( $transaction_id );
+		$transaction = new Transaction( $transaction_id );
 		if ( ! $transaction->exists() ) {
-			throw new Exception( __( 'Invalid transaction.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid transaction.', 'wp-ever-accounting' ) );
 		}
 
 		$transaction->delete();

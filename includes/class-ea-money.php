@@ -25,14 +25,14 @@ class Money {
 	const ROUND_HALF_ODD = PHP_ROUND_HALF_ODD;
 
 	/**
-	 * @var float|int
 	 * @since 1.0.2
+	 * @var float|int
 	 */
 	protected $amount;
 
 	/**
-	 * @var Currency
 	 * @since 1.0.2
+	 * @var Currency
 	 */
 	protected $currency;
 
@@ -41,28 +41,13 @@ class Money {
 	 *
 	 * @param string $amount Amount to convert
 	 * @param string $code Currency object
-	 * @param bool $convert
+	 * @param bool   $convert
 	 *
-	 * @throws \Exception
 	 * @since       1.0.2
+	 * @throws \Exception
 	 */
 	public function __construct( $amount, $code, $convert = false ) {
-		$_currency         = null;
-		$global_currencies = eaccounting_get_global_currencies();
-
-		if ( $currency = eaccounting_get_currency_by_code( $code ) ) {
-			$_currency = $currency;
-		} elseif ( array_key_exists( $code, $global_currencies ) ) {
-			$g_currency = (object) $global_currencies[ $code ];
-			$_currency  = new Currency();
-			$_currency->set_props( $g_currency );
-		}
-
-		if ( empty( $_currency ) ) {
-			throw new Exception( 'invalid_currency_code', __( 'invalid currency code', 'wp-ever-accounting' ) );
-		}
-
-		$this->currency = $_currency;
+		$this->currency = new Currency( $code );
 		$this->amount   = $this->parseAmount( $amount, $convert );
 	}
 
@@ -70,12 +55,12 @@ class Money {
 	 * parseAmount.
 	 *
 	 * @param mixed $amount
-	 * @param bool $convert
+	 * @param bool  $convert
 	 *
-	 * @return int|float
-	 * @throws \UnexpectedValueException
 	 * @since       1.0.2
 	 *
+	 * @throws \UnexpectedValueException
+	 * @return int|float
 	 */
 	protected function parseAmount( $amount, $convert = false ) {
 		$amount = $this->parseAmountFromString( $this->parseAmountFromCallable( $amount ) );
@@ -96,8 +81,8 @@ class Money {
 	 *
 	 * @param mixed $amount
 	 *
-	 * @return mixed
 	 * @since       1.0.2
+	 * @return mixed
 	 */
 	protected function parseAmountFromCallable( $amount ) {
 		if ( ! is_callable( $amount ) ) {
@@ -112,8 +97,8 @@ class Money {
 	 *
 	 * @param mixed $amount
 	 *
-	 * @return int|float|mixed
 	 * @since       1.0.2
+	 * @return int|float|mixed
 	 */
 	protected function parseAmountFromString( $amount ) {
 		if ( ! is_string( $amount ) ) {
@@ -143,10 +128,10 @@ class Money {
 	 * convertAmount.
 	 *
 	 * @param int|float $amount
-	 * @param bool $convert
+	 * @param bool      $convert
 	 *
-	 * @return int|float
 	 * @since       1.0.2
+	 * @return int|float
 	 */
 	protected function convertAmount( $amount, $convert = false ) {
 		if ( ! $convert ) {
@@ -160,10 +145,10 @@ class Money {
 	 * __callStatic.
 	 *
 	 * @param string $method
-	 * @param array $arguments
+	 * @param array  $arguments
 	 *
-	 * @return Money
 	 * @since       1.0.2
+	 * @return Money
 	 */
 	public static function __callStatic( $method, array $arguments ) {
 		$convert = ( isset( $arguments[1] ) && is_bool( $arguments[1] ) ) ? (bool) $arguments[1] : false;
@@ -176,8 +161,8 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @throws \InvalidArgumentException
 	 * @since       1.0.2
+	 * @throws \InvalidArgumentException
 	 */
 	protected function assertSameCurrency( self $other ) {
 		if ( ! $this->isSameCurrency( $other ) ) {
@@ -190,8 +175,8 @@ class Money {
 	 *
 	 * @param int|float $operand
 	 *
-	 * @throws \InvalidArgumentException
 	 * @since       1.0.2
+	 * @throws \InvalidArgumentException
 	 */
 	protected function assertOperand( $operand ) {
 		if ( ! is_int( $operand ) && ! is_float( $operand ) ) {
@@ -204,8 +189,8 @@ class Money {
 	 *
 	 * @param int $roundingMode
 	 *
-	 * @throws \OutOfBoundsException
 	 * @since       1.0.2
+	 * @throws \OutOfBoundsException
 	 */
 	protected function assertRoundingMode( $roundingMode ) {
 		$roundingModes = [ self::ROUND_HALF_DOWN, self::ROUND_HALF_EVEN, self::ROUND_HALF_ODD, self::ROUND_HALF_UP ];
@@ -218,8 +203,8 @@ class Money {
 	/**
 	 * getAmount.
 	 *
-	 * @return int|float
 	 * @since       1.0.2
+	 * @return int|float
 	 */
 	public function getAmount() {
 		return $this->amount;
@@ -228,8 +213,8 @@ class Money {
 	/**
 	 * getValue.
 	 *
-	 * @return float
 	 * @since       1.0.2
+	 * @return float
 	 */
 	public function getValue() {
 		return round( $this->amount / $this->currency->get_subunit(), $this->currency->get_precision() );
@@ -238,8 +223,8 @@ class Money {
 	/**
 	 * getCurrency.
 	 *
-	 * @return Currency
 	 * @since       1.0.2
+	 * @return Currency
 	 */
 	public function getCurrency() {
 		return $this->currency;
@@ -250,8 +235,8 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function isSameCurrency( self $other ) {
 		return $this->currency->equals( $other->currency );
@@ -262,10 +247,10 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @return int
-	 * @throws \InvalidArgumentException
 	 * @since       1.0.2
 	 *
+	 * @throws \InvalidArgumentException
+	 * @return int
 	 */
 	public function compare( self $other ) {
 		$this->assertSameCurrency( $other );
@@ -286,8 +271,8 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function equals( self $other ) {
 		return $this->compare( $other ) == 0;
@@ -298,8 +283,8 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function greaterThan( self $other ) {
 		return $this->compare( $other ) == 1;
@@ -310,8 +295,8 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function greaterThanOrEqual( self $other ) {
 		return $this->compare( $other ) >= 0;
@@ -322,8 +307,8 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function lessThan( self $other ) {
 		return $this->compare( $other ) == - 1;
@@ -334,8 +319,8 @@ class Money {
 	 *
 	 * @param Money $other
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function lessThanOrEqual( self $other ) {
 		return $this->compare( $other ) <= 0;
@@ -344,15 +329,15 @@ class Money {
 	/**
 	 * convert.
 	 *
-	 * @param Currency $currency
+	 * @param Currency  $currency
 	 * @param int|float $ratio
-	 * @param int $roundingMode
+	 * @param int       $roundingMode
 	 *
-	 * @return Money
+	 * @since       1.0.2
+	 * @throws \InvalidArgumentException
 	 * @throws \OutOfBoundsException
 	 *
-	 * @throws \InvalidArgumentException
-	 * @since       1.0.2
+	 * @return Money
 	 */
 	public function convert( Currency $currency, $ratio, $roundingMode = self::ROUND_HALF_UP ) {
 		$this->currency = $currency;
@@ -372,10 +357,10 @@ class Money {
 	 *
 	 * @param Money $addend
 	 *
-	 * @return Money
-	 * @throws \
 	 * @since       1.0.2
 	 *
+	 * @throws \
+	 * @return Money
 	 */
 	public function add( self $addend ) {
 		$this->assertSameCurrency( $addend );
@@ -388,10 +373,10 @@ class Money {
 	 *
 	 * @param Money $subtrahend
 	 *
-	 * @return Money
-	 * @throws \InvalidArgumentException
 	 * @since       1.0.2
 	 *
+	 * @throws \InvalidArgumentException
+	 * @return Money
 	 */
 	public function subtract( self $subtrahend ) {
 		$this->assertSameCurrency( $subtrahend );
@@ -403,13 +388,13 @@ class Money {
 	 * multiply.
 	 *
 	 * @param int|float $multiplier
-	 * @param int $roundingMode
+	 * @param int       $roundingMode
 	 *
-	 * @return Money
+	 * @since       1.0.2
+	 * @throws \InvalidArgumentException
 	 * @throws \OutOfBoundsException
 	 *
-	 * @throws \InvalidArgumentException
-	 * @since       1.0.2
+	 * @return Money
 	 */
 	public function multiply( $multiplier, $roundingMode = self::ROUND_HALF_UP ) {
 		return new self( round( $this->amount * $multiplier, $this->currency->get_precision(), $roundingMode ), $this->currency );
@@ -419,13 +404,13 @@ class Money {
 	 * divide.
 	 *
 	 * @param int|float $divisor
-	 * @param int $roundingMode
+	 * @param int       $roundingMode
 	 *
-	 * @return Money
+	 * @since       1.0.2
+	 * @throws \InvalidArgumentException
 	 * @throws \OutOfBoundsException
 	 *
-	 * @throws \InvalidArgumentException
-	 * @since       1.0.2
+	 * @return Money
 	 */
 	public function divide( $divisor, $roundingMode = self::ROUND_HALF_UP ) {
 		$this->assertOperand( $divisor );
@@ -443,8 +428,8 @@ class Money {
 	 *
 	 * @param array $ratios
 	 *
-	 * @return array
 	 * @since       1.0.2
+	 * @return array
 	 */
 	public function allocate( array $ratios ) {
 		$remainder = $this->amount;
@@ -468,8 +453,8 @@ class Money {
 	/**
 	 * isZero.
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function isZero() {
 		return $this->amount == 0;
@@ -478,8 +463,8 @@ class Money {
 	/**
 	 * isPositive.
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function isPositive() {
 		return $this->amount > 0;
@@ -488,8 +473,8 @@ class Money {
 	/**
 	 * isNegative.
 	 *
-	 * @return bool
 	 * @since       1.0.2
+	 * @return bool
 	 */
 	public function isNegative() {
 		return $this->amount < 0;
@@ -498,10 +483,10 @@ class Money {
 	/**
 	 * formatSimple.
 	 *
-	 * @return string
 	 * @since       1.0.2
+	 * @return string
 	 */
-	public function formatSimple() {
+	public function format_simple() {
 		return number_format(
 			$this->getValue(),
 			$this->currency->get_precision(),
@@ -513,8 +498,8 @@ class Money {
 	/**
 	 * format.
 	 *
-	 * @return string
 	 * @since       1.0.2
+	 * @return string
 	 */
 	public function format() {
 		$negative  = $this->isNegative();
@@ -532,8 +517,8 @@ class Money {
 	/**
 	 * Get the instance as an array.
 	 *
-	 * @return array
 	 * @since       1.0.2
+	 * @return array
 	 */
 	public function toArray() {
 		return [
@@ -548,8 +533,8 @@ class Money {
 	 *
 	 * @param int $options
 	 *
-	 * @return string
 	 * @since       1.0.2
+	 * @return string
 	 */
 	public function toJson( $options = 0 ) {
 		return json_encode( $this->toArray(), $options );
@@ -558,8 +543,8 @@ class Money {
 	/**
 	 * jsonSerialize.
 	 *
-	 * @return array
 	 * @since       1.0.2
+	 * @return array
 	 */
 	public function jsonSerialize() {
 		return $this->toArray();
@@ -568,8 +553,8 @@ class Money {
 	/**
 	 * Get the evaluated contents of the object.
 	 *
-	 * @return string
 	 * @since       1.0.2
+	 * @return string
 	 */
 	public function render() {
 		return $this->format();
@@ -578,8 +563,8 @@ class Money {
 	/**
 	 * __toString.
 	 *
-	 * @return string
 	 * @since       1.0.2
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->render();

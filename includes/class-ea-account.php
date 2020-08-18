@@ -2,9 +2,9 @@
 /**
  * Handle the account object.
  *
- * @package     EverAccounting
  * @since       1.0.2
  *
+ * @package     EverAccounting
  */
 
 namespace EverAccounting;
@@ -19,28 +19,21 @@ defined( 'ABSPATH' ) || exit();
  * @since 1.0.2
  */
 class Account extends Base_Object {
-
-	/**
-	 * A group must be set to to enable caching.
-	 *
-	 * @var string
-	 * @since 1.0.2
-	 */
-	protected $cache_group = 'accounts';
-
 	/**
 	 * This is the name of this object type.
 	 *
-	 * @var string
 	 * @since 1.0.2
+	 * @var string
 	 */
 	public $object_type = 'account';
 
-	/**
-	 * @var
+	/***
+	 * Object table name.
+	 *
 	 * @since 1.0.2
+	 * @var string
 	 */
-	protected $balance = 0;
+	public $table = 'ea_accounts';
 
 	/**
 	 * Account Data array.
@@ -63,9 +56,20 @@ class Account extends Base_Object {
 	);
 
 	/**
-	 * EAccounting_Account constructor.
+	 * @since 1.0.2
+	 * @var int[]
+	 */
+	protected $extra_data = array(
+		'balance' => 0
+	);
+
+	/**
+	 * Get the account if ID is passed, otherwise the account is new and empty.
+	 * This class should NOT be instantiated, but the eaccounting_get_account function
+	 * should be used. It is possible, but the aforementioned are preferred and are the only
+	 * methods that will be maintained going forward.
 	 *
-	 * @param int $data
+	 * @param int|object|Category $data object to read.
 	 *
 	 * @since 1.0.2
 	 */
@@ -82,173 +86,10 @@ class Account extends Base_Object {
 			$this->set_id( 0 );
 		}
 
-		if ( $this->get_id() > 0 ) {
-			$this->read( $this->get_id() );
+		if ( $this->get_id() > 0 && ! $this->object_read ) {
+			$this->read();
 		}
 	}
-
-	/**
-	 * Method to validate before inserting and updating EverAccounting object.
-	 *
-	 * @throws Exception
-	 * @since 1.0.2
-	 */
-	public function validate_props() {
-		global $wpdb;
-
-		if ( ! $this->get_date_created( 'edit' ) ) {
-			$this->set_date_created( time() );
-		}
-
-		if ( ! $this->get_company_id( 'edit' ) ) {
-			$this->set_company_id( 1 );
-		}
-
-		if ( ! $this->get_prop( 'creator_id' ) ) {
-			$this->set_prop( 'creator_id', eaccounting_get_current_user_id() );
-		}
-
-		if ( empty( $this->get_name( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Account Name is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_number( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Account Number is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_currency_code( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Currency code is required', 'wp-ever-accounting' ) );
-		}
-
-		$currency = eaccounting_get_currency_by_code( $this->get_currency_code( 'edit' ) );
-		if ( ! $currency || ! $currency->exists() ) {
-			throw new Exception( 'invalid_props', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
-		}
-
-		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts where number=%s AND company_id=%d", $this->get_number( 'edit' ), $this->get_company_id() ) ) ) {
-			if ( ! empty( $existing_id ) && absint( $existing_id ) != $this->get_id() ) {
-				throw new Exception( 'duplicate_props', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
-			}
-		}
-
-	}
-
-	/**
-	 * Method to read a record. Creates a new EAccounting_Object based object.
-	 *
-	 * @param int $id ID of the object to read.
-	 *
-	 * @throws Exception
-	 * @since 1.0.2
-	 */
-	public function read( $id ) {
-		$this->set_defaults();
-
-		// Get from cache if available.
-		$item = 0 < $id ? wp_cache_get( $this->object_type . '-item-' . $id, $this->cache_group ) : false;
-
-		if ( false === $item ) {
-			$item = Query_Account::init()->find( $id );
-
-			if ( $item && 0 < $item->id ) {
-				wp_cache_set( $this->object_type . '-item-' . $item->id, $item, $this->cache_group );
-			}
-		}
-
-		if ( ! $item || ! $item->id ) {
-			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
-		}
-
-		$this->populate( $item );
-	}
-
-	/**
-	 * Create a new account in the database.
-	 *
-	 * @throws Exception
-	 * @since 1.0.2
-	 */
-	public function create() {
-		$this->validate_props();
-		global $wpdb;
-		$account_data = array(
-			'name'            => $this->get_name( 'edit' ),
-			'number'          => $this->get_number( 'edit' ),
-			'opening_balance' => $this->get_opening_balance( 'edit' ),
-			'currency_code'   => $this->get_currency_code( 'edit' ),
-			'bank_name'       => $this->get_bank_name( 'edit' ),
-			'bank_phone'      => $this->get_bank_phone( 'edit' ),
-			'bank_address'    => $this->get_bank_address( 'edit' ),
-			'enabled'         => $this->get_enabled( 'edit' ),
-			'company_id'      => $this->get_company_id( 'edit' ),
-			'creator_id'      => $this->get_prop( 'creator_id' ),
-			'date_created'    => gmdate( 'Y-m-d H:i:s', $this->get_date_created( 'edit' )->getOffsetTimestamp() ),
-		);
-
-		do_action( 'eaccounting_pre_insert_account', $this->get_id(), $this );
-
-		$data = wp_unslash( apply_filters( 'eaccounting_new_account_data', $account_data ) );
-		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_accounts', $data ) ) {
-			throw new Exception( 'db_error', $wpdb->last_error );
-		}
-
-		do_action( 'eaccounting_insert_account', $this->get_id(), $this );
-
-		$this->set_id( $wpdb->insert_id );
-		$this->apply_changes();
-		$this->set_object_read( true );
-	}
-
-	/**
-	 * Update a account in the database.
-	 *
-	 * @throws Exception
-	 * @since 1.0.2
-	 *
-	 */
-	public function update() {
-		global $wpdb;
-
-		$this->validate_props();
-		$changes = $this->get_changes();
-
-		if ( ! empty( $changes ) ) {
-			do_action( 'eaccounting_pre_update_account', $this->get_id(), $changes );
-			if ( in_array( 'opening_balance', $changes ) ) {
-				$changes['opening_balance'] = eaccounting_sanitize_price( $changes['opening_balance'] );
-			}
-
-			try {
-				$wpdb->update( $wpdb->prefix . 'ea_accounts', $changes, array( 'id' => $this->get_id() ) );
-			} catch ( Exception $e ) {
-				throw new Exception('db_error', __( 'Could not update account.', 'wp-ever-accounting' ) );
-			}
-
-			do_action( 'eaccounting_update_account', $this->get_id(), $changes, $this->data );
-
-			$this->apply_changes();
-			$this->set_object_read( true );
-			wp_cache_delete( 'transaction-item-' . $this->get_id(), 'transactions' );
-		}
-	}
-
-	/**
-	 * Remove an account from the database.
-	 *
-	 * @param array $args
-	 *
-	 * @since 1.0.2
-	 */
-	public function delete( $args = array() ) {
-		if ( $this->get_id() ) {
-			global $wpdb;
-			do_action( 'eaccounting_pre_delete_account', $this->get_id(), $this->get_data(), $this );
-			$wpdb->delete( $wpdb->prefix . 'ea_accounts', array( 'id' => $this->get_id() ) );
-			do_action( 'eaccounting_delete_account', $this->get_id(), $this->get_data(), $this );
-			$this->set_id( 0 );
-		}
-	}
-
 
 	/*
 	|--------------------------------------------------------------------------
@@ -264,7 +105,7 @@ class Account extends Base_Object {
 	 * @return string
 	 * @since  1.0.2
 	 */
-	public function get_name( $context = 'view' ) {
+	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
 	}
 
@@ -276,7 +117,7 @@ class Account extends Base_Object {
 	 * @return mixed|null
 	 * @since 1.0.2
 	 */
-	public function get_number( $context = 'view' ) {
+	public function get_number( $context = 'edit' ) {
 		return $this->get_prop( 'number', $context );
 	}
 
@@ -289,7 +130,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_opening_balance( $context = 'view' ) {
+	public function get_opening_balance( $context = 'edit' ) {
 		return $this->get_prop( 'opening_balance', $context );
 	}
 
@@ -302,7 +143,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_currency_code( $context = 'view' ) {
+	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
 	}
 
@@ -315,7 +156,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_bank_name( $context = 'view' ) {
+	public function get_bank_name( $context = 'edit' ) {
 		return $this->get_prop( 'bank_name', $context );
 	}
 
@@ -328,7 +169,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_bank_phone( $context = 'view' ) {
+	public function get_bank_phone( $context = 'edit' ) {
 		return $this->get_prop( 'bank_phone', $context );
 	}
 
@@ -341,7 +182,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_bank_address( $context = 'view' ) {
+	public function get_bank_address( $context = 'edit' ) {
 		return $this->get_prop( 'bank_address', $context );
 	}
 
@@ -463,18 +304,6 @@ class Account extends Base_Object {
 	 */
 	protected function set_balance( $balance ) {
 		$this->balance = $balance;
-	}
-
-	/**
-	 * Returns all data for this object.
-	 *
-	 * @return array
-	 * @since  1.0.2
-	 */
-	public function get_data() {
-		return array_merge( array( 'id' => $this->get_id() ), $this->data, array(
-			'date_created' => $this->get_date_created()->date_mysql()
-		) );
 	}
 
 }

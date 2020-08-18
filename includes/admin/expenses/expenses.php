@@ -67,7 +67,7 @@ function eaccounting_get_expenses_tabs() {
 function eaccounting_load_expenses_page() {
 	$tab = eaccounting_get_current_tab();
 	if ( empty( $tab ) ) {
-		wp_redirect( add_query_arg( [ 'tab' => 'revenues' ] ) );
+		wp_redirect( add_query_arg( [ 'tab' => 'payments' ] ) );
 		exit();
 	}
 

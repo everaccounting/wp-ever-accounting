@@ -174,7 +174,7 @@ class List_Table_Payments extends List_Table {
 		$date = $payment->get_paid_at()->date_i18n();
 
 		$value = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'account_id' => $payment->get_id() ] ) ),
+			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'payment_id' => $payment->get_id() ] ) ),
 			$date
 		);
 

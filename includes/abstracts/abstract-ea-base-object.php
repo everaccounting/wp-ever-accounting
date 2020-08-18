@@ -175,7 +175,14 @@ abstract class Base_Object {
 	 * @return array
 	 */
 	public function get_base_data() {
-		return array_merge( array( 'id' => $this->get_id() ), $this->data );
+		$data = array_merge( array( 'id' => $this->get_id() ), $this->data );
+		foreach ( $data as $prop => $value ) {
+			if ( $value instanceof DateTime ) {
+				$data[ $prop ] = $value->date( 'Y-m-d H:i:s' );
+			}
+		}
+
+		return $data;
 	}
 
 
@@ -405,7 +412,7 @@ abstract class Base_Object {
 			} else {
 				$datetime->set_utc_offset( eaccounting_timezone_offset() );
 			}
-
+			error_log(print_r($datetime, true));
 			$this->set_prop( $prop, $datetime );
 		} catch ( Exception $e ) {
 		} // @codingStandardsIgnoreLine.
@@ -478,8 +485,9 @@ abstract class Base_Object {
 		do_action( 'eaccounting_pre_insert_' . $this->object_type, $this->get_id(), $this );
 
 		$data = wp_unslash( apply_filters( 'eaccounting_new_' . $this->object_type . '_data', $this->get_base_data() ) );
-		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_categories', $data ) ) {
-			throw new \Exception( $wpdb->last_error );
+
+		if ( false === $wpdb->insert( $wpdb->prefix . $this->table, $data ) ) {
+			throw new Exception('db_error', $wpdb->last_error );
 		}
 
 		do_action( 'eaccounting_insert_' . $this->object_type, $this->get_id(), $this );
@@ -516,7 +524,7 @@ abstract class Base_Object {
 
 			$this->apply_changes();
 			$this->set_object_read( true );
-			wp_cache_delete( 'category-item-' . $this->get_id(), 'categories' );
+			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
 		}
 	}
 
@@ -533,6 +541,7 @@ abstract class Base_Object {
 			$wpdb->delete( $wpdb->prefix . $this->table, array( 'id' => $this->get_id() ) );
 			do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $this->get_data(), $this );
 			$this->set_id( 0 );
+			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
 
 			return true;
 		}
@@ -601,7 +610,7 @@ abstract class Base_Object {
 	 *
 	 * @return DateTime
 	 */
-	public function get_date_created( $context = 'view' ) {
+	public function get_date_created( $context = 'edit' ) {
 		return $this->get_prop( 'date_created', $context );
 	}
 
@@ -613,7 +622,7 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 * @return bool
 	 */
-	public function get_enabled( $context = 'view' ) {
+	public function get_enabled( $context = 'edit' ) {
 		return $this->get_prop( 'enabled', $context );
 	}
 
@@ -676,7 +685,10 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function set_date_created( $date ) {
+	public function set_date_created( $date = null ) {
+		if ( $date === null ) {
+			$date = time();
+		}
 		$this->set_date_prop( 'date_created', $date );
 	}
 
@@ -689,7 +701,7 @@ abstract class Base_Object {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_company_id( $context = 'view' ) {
+	public function get_company_id( $context = 'edit' ) {
 		return absint( $this->get_prop( 'company_id', $context ) );
 	}
 
@@ -702,7 +714,7 @@ abstract class Base_Object {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_creator_id( $context = 'view' ) {
+	public function get_creator_id( $context = 'edit' ) {
 		return $this->get_prop( 'creator_id', $context );
 	}
 }

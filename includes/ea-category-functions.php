@@ -8,6 +8,10 @@
  * @package EverAccounting
  */
 
+use EverAccounting\Category;
+use EverAccounting\Query_Category;
+use EverAccounting\Exception;
+
 defined( 'ABSPATH' ) || exit();
 /**
  * Get all the available type of category the plugin support.
@@ -32,24 +36,24 @@ function eaccounting_get_category_types() {
  *
  * @since 1.0.2
  *
- * @return null|\EverAccounting\Category
+ * @return null|Category
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
 		return null;
 	}
 	try {
-		if ( $category instanceof \EverAccounting\Category ) {
+		if ( $category instanceof Category ) {
 			$_category = $category;
 		} elseif ( is_object( $category ) && ! empty( $category->id ) ) {
-			$_category = new \EverAccounting\Category( null );
+			$_category = new Category( null );
 			$_category->populate( $category );
 		} else {
-			$_category = new \EverAccounting\Category( absint( $category ) );
+			$_category = new Category( absint( $category ) );
 		}
 
 		if ( ! $_category->exists() ) {
-			throw new Exception( __( 'Invalid category.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid category.', 'wp-ever-accounting' ) );
 		}
 
 		return $_category;
@@ -78,7 +82,7 @@ function eaccounting_insert_category( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$category     = new \EverAccounting\Category( $args['id'] );
+		$category     = new Category( $args['id'] );
 		$category->set_props( $args );
 
 		if ( null == $category->get_date_created() ) {
@@ -94,21 +98,24 @@ function eaccounting_insert_category( $args ) {
 			$category->set_color( eaccounting_get_random_color() );
 		}
 		if ( empty( $category->get_name( 'edit' ) ) ) {
-			throw new \EverAccounting\Exception( 'empty_props', __( 'Category name is required', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_props', __( 'Category name is required', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $category->get_type( 'edit' ) ) ) {
-			throw new  \EverAccounting\Exception( 'empty_props', __( 'Category type is required', 'wp-ever-accounting' ) );
+			throw new  Exception( 'empty_props', __( 'Category type is required', 'wp-ever-accounting' ) );
 		}
-		$existing_id = \EverAccounting\Query_Category::init()->where( 'type', $category->get_type() )->where( 'name', $category->get_name() )->value( 0 );
+		$existing_id = Query_Category::init()
+		                             ->where( 'type', $category->get_type() )
+		                             ->where( 'name', $category->get_name() )
+		                             ->value( 0 );
 		if ( $existing_id ) {
 			if ( ! empty( $existing_id ) && $existing_id != $category->get_id() ) {
-				throw new  \EverAccounting\Exception( 'duplicate_entry', __( 'Duplicate category name.', 'wp-ever-accounting' ) );
+				throw new  Exception( 'duplicate_entry', __( 'Duplicate category name.', 'wp-ever-accounting' ) );
 			}
 		}
 
 		$category->save();
 
-	} catch ( \EverAccounting\Exception $e ) {
+	} catch ( Exception $e ) {
 		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
 	}
 
@@ -126,9 +133,9 @@ function eaccounting_insert_category( $args ) {
  */
 function eaccounting_delete_category( $category_id ) {
 	try {
-		$category = new \EverAccounting\Category( $category_id );
+		$category = new Category( $category_id );
 		if ( ! $category->exists() ) {
-			throw new Exception( __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
 		}
 
 		$category->delete();

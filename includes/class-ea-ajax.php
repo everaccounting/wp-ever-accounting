@@ -234,14 +234,14 @@ class Ajax {
 				'message' => __( 'No code received', 'wp-ever-accounting' ),
 			] );
 		}
-		$currency = eaccounting_get_currency_by_code( $code );
+		$currency = eaccounting_get_currency( $code );
 		if ( empty( $currency ) || is_wp_error( $currency ) ) {
 			wp_send_json_error( [
 				'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
 			] );
 		}
 
-		wp_send_json_success( $currency->toArray() );
+		wp_send_json_success( $currency->get_data() );
 	}
 
 	/**

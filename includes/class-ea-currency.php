@@ -11,32 +11,25 @@
 namespace EverAccounting;
 
 use EverAccounting\Abstracts\Base_Object;
-use EverAccounting\Exception;
 
 defined( 'ABSPATH' ) || exit();
 
 class Currency extends Base_Object {
 	/**
-	 * A group must be set to to enable caching.
-	 *
-	 * @var string
-	 * @since 1.0.2
-	 */
-	protected $cache_group = 'currencies';
-
-	/**
 	 * This is the name of this object type.
 	 *
-	 * @var string
 	 * @since 1.0.2
+	 * @var string
 	 */
 	public $object_type = 'currency';
 
-	/**
-	 * @var int
+	/***
+	 * Object table name.
+	 *
 	 * @since 1.0.2
+	 * @var string
 	 */
-	protected $subunit;
+	public $table = 'ea_currencies';
 
 	/**
 	 * Currency Data array.
@@ -58,17 +51,33 @@ class Currency extends Base_Object {
 	);
 
 	/**
+	 * @since 1.0.2
+	 * @var int
+	 */
+	protected $subunit;
+
+	/**
+	 * Store global currencies.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	public $global_currencies;
+
+	/**
 	 * Get the currency if ID is passed, otherwise the currency is new and empty.
 	 * This class should NOT be instantiated, but the eaccounting_get_currency function
 	 * should be used. It is possible, but the aforementioned are preferred and are the only
 	 * methods that will be maintained going forward.
 	 *
-	 * @param int|object|Currency $data Order to read.
+	 * @param int|object|string|Currency $data Order to read.
 	 *
 	 * @since 1.0.2
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
+
+		$this->global_currencies = eaccounting_get_global_currencies();
 
 		if ( is_numeric( $data ) && $data > 0 ) {
 			$this->set_id( $data );
@@ -76,188 +85,61 @@ class Currency extends Base_Object {
 			$this->set_id( $data->get_id() );
 		} elseif ( ! empty( $data->id ) ) {
 			$this->set_id( $data->id );
+		} elseif ( is_string( $data ) && $this->is_valid_currency_code( $data ) ) {
+			$this->populate_by_code( $data );
 		} else {
 			$this->set_id( 0 );
 		}
 
-		if ( $this->get_id() > 0 ) {
-			$this->read( $this->get_id() );
+		if ( $this->get_id() > 0 && ! $this->object_read ) {
+			$this->read();
 		}
 	}
 
-
-	/*
-	|--------------------------------------------------------------------------
-	| Crud
-	|--------------------------------------------------------------------------
-	*/
+	/**
+	 * Checks if given code is valid.
+	 *
+	 * @param $code
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return bool
+	 */
+	public function is_valid_currency_code( $code ) {
+		return array_key_exists( strtoupper( $code ), $this->global_currencies );
+	}
 
 	/**
-	 * Method to validate before inserting and updating EverAccounting object.
+	 * @param string $code
 	 *
+	 * @since 1.0.2
+	 *
+	 * @return array|Object
+	 */
+	public function get_by_code( $code ) {
+		$code = strtoupper( $code );
+
+		return Query_Currency::init()->find( $code, 'code' );
+	}
+
+	/**
+	 * Populate data based on the object or array passed.
+	 *
+	 * @param string $code Object data.
+	 *
+	 * @since 1.0.2
 	 * @throws Exception
-	 * @since 1.0.2
 	 */
-	public function validate_props() {
-		global $wpdb;
-
-		if ( ! $this->get_date_created( 'edit' ) ) {
-			$this->set_date_created( time() );
+	public function populate_by_code( $code ) {
+		$currency = $this->get_by_code( $code );
+		if ( is_object( $currency ) ) {
+			$currency = get_object_vars( $currency );
 		}
-
-		if ( ! $this->get_company_id( 'edit' ) ) {
-			$this->set_company_id( 1 );
+		if(null == $currency){
+			$currency = array();
 		}
-
-		if ( empty( $this->get_code( 'edit' ) ) ) {
-			throw new Exception( 'empty-code', __( 'Currency code is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_rate( 'edit' ) ) ) {
-			throw new Exception( 'empty-rate', __( 'Currency rate is required', 'wp-ever-accounting' ) );
-		}
-
-		$currencies = eaccounting_get_global_currencies();
-		$code       = $this->get_code( 'edit' );
-		$currency   = $currencies[ $code ];
-
-
-		if ( empty( $this->get_name( 'edit' ) ) ) {
-			$this->set_name( $currency['name'] );
-		}
-
-		if ( empty( $this->get_symbol( 'edit' ) ) ) {
-			$this->set_symbol( $currency['symbol'] );
-		}
-
-		if ( empty( $this->get_position( 'edit' ) ) ) {
-			$this->set_position( $currency['position'] );
-		}
-
-		if ( empty( $this->get_decimal_separator( 'edit' ) ) ) {
-			$this->set_decimal_separator( $currency['decimal_separator'] );
-		}
-
-		if ( empty( $this->get_thousand_separator( 'edit' ) ) ) {
-			$this->set_thousand_separator( $currency['thousand_separator'] );
-		}
-
-		if ( $existing_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_currencies where code=%s", $this->get_code( 'edit' ) ) ) ) {
-			if ( ! empty( $existing_id ) && $existing_id != $this->get_id() ) {
-				throw new Exception( 'invalid-code', __( 'Duplicate currency code.', 'wp-ever-accounting' ) );
-			}
-		}
-	}
-
-	/**
-	 * Method to read a record. Creates a new EAccounting_Object based object.
-	 *
-	 * @param int $id ID of the object to read.
-	 *
-	 * @throws Exception
-	 * @since 1.0.2
-	 */
-	public function read( $id ) {
-		global $wpdb;
-		$this->set_defaults();
-
-		// Get from cache if available.
-		$item = 0 < $id ? wp_cache_get( $this->object_type . '-item-' . $id, $this->cache_group ) : false;
-
-		if ( false === $item ) {
-			$item = $wpdb->get_row( $wpdb->prepare( "SELECT * from {$wpdb->prefix}ea_currencies where id=%d", $id ) );
-			if ( $item && 0 < $item->id ) {
-				wp_cache_set( $this->object_type . '-item-' . $item->id, $item, $this->cache_group );
-			}
-		}
-
-		if ( ! $item || ! $item->id ) {
-			throw new Exception( 'invalid-id', __( 'Invalid currency.', 'wp-ever-accounting' ) );
-		}
-
-		$this->populate( $item );
-	}
-
-	/**
-	 * Create a new account in the database.
-	 *
-	 * @throws Exception
-	 * @since 1.0.2
-	 */
-	public function create() {
-		$this->validate_props();
-		global $wpdb;
-		$currency_data = array(
-			'name'               => $this->get_name( 'edit' ),
-			'code'               => $this->get_code( 'edit' ),
-			'rate'               => $this->get_rate( 'edit' ),
-			'precision'          => $this->get_precision( 'edit' ),
-			'symbol'             => $this->get_symbol( 'edit' ),
-			'position'           => $this->get_position( 'edit' ),
-			'decimal_separator'  => $this->get_decimal_separator( 'edit' ),
-			'thousand_separator' => $this->get_thousand_separator( 'edit' ),
-			'enabled'            => $this->get_enabled( 'edit' ),
-			'date_created'       => $this->get_date_created( 'edit' )->date_mysql(),
-		);
-
-		do_action( 'eaccounting_pre_insert_currency', $this->get_id(), $this );
-
-		$data = wp_unslash( apply_filters( 'eaccounting_new_currency_data', $currency_data ) );
-		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_currencies', $data ) ) {
-			throw new Exception( 'db-error', $wpdb->last_error );
-		}
-
-		do_action( 'eaccounting_insert_currency', $this->get_id(), $this );
-
-		$this->set_id( $wpdb->insert_id );
-		$this->apply_changes();
-		$this->set_object_read( true );
-	}
-
-	/**
-	 * Update a account in the database.
-	 *
-	 * @throws Exception
-	 * @since 1.0.2
-	 *
-	 */
-	public function update() {
-		global $wpdb;
-
-		$this->validate_props();
-		$changes = $this->get_changes();
-		if ( ! empty( $changes ) ) {
-			do_action( 'eaccounting_pre_update_currency', $this->get_id(), $changes );
-
-			try {
-				$wpdb->update( $wpdb->prefix . 'ea_currencies', $changes, array( 'id' => $this->get_id() ) );
-			} catch ( Exception $e ) {
-				throw new Exception( 'db-error', __( 'Could not update currency.', 'wp-ever-accounting' ) );
-			}
-
-			do_action( 'eaccounting_update_currency', $this->get_id(), $changes, $this->data );
-
-			$this->apply_changes();
-			$this->set_object_read( true );
-			wp_cache_delete( 'transaction-currency-' . $this->get_id(), 'currencies' );
-		}
-	}
-
-	/**
-	 * Remove an account from the database.
-	 *
-	 * @param array $args
-	 *
-	 * @since 1.0.2
-	 */
-	public function delete( $args = array() ) {
-		if ( $this->get_id() ) {
-			global $wpdb;
-			do_action( 'eaccounting_pre_delete_currency', $this->get_id(), $this->get_data() );
-			$wpdb->delete( $wpdb->prefix . 'ea_currencies', array( 'id' => $this->get_id() ) );
-			do_action( 'eaccounting_delete_currency', $this->get_id(), $this->get_data() );
-			$this->set_id( 0 );
-		}
+		$attributes = $this->global_currencies[ $code ];
+		$this->populate( array_merge( $attributes, $currency ) );
 	}
 
 	/*
@@ -271,11 +153,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_name( $context = 'view' ) {
+	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
 	}
 
@@ -284,11 +166,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_code( $context = 'view' ) {
+	public function get_code( $context = 'edit' ) {
 		return $this->get_prop( 'code', $context );
 	}
 
@@ -297,11 +179,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_rate( $context = 'view' ) {
+	public function get_rate( $context = 'edit' ) {
 		return $this->get_prop( 'rate', $context );
 	}
 
@@ -310,11 +192,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_precision( $context = 'view' ) {
+	public function get_precision( $context = 'edit' ) {
 		return $this->get_prop( 'precision', $context );
 	}
 
@@ -323,11 +205,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_symbol( $context = 'view' ) {
+	public function get_symbol( $context = 'edit' ) {
 		return $this->get_prop( 'symbol', $context );
 	}
 
@@ -336,11 +218,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_position( $context = 'view' ) {
+	public function get_position( $context = 'edit' ) {
 		return $this->get_prop( 'position', $context );
 	}
 
@@ -349,11 +231,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_decimal_separator( $context = 'view' ) {
+	public function get_decimal_separator( $context = 'edit' ) {
 		return $this->get_prop( 'decimal_separator', $context );
 	}
 
@@ -362,11 +244,11 @@ class Currency extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return string
 	 * @since 1.0.2
 	 *
+	 * @return string
 	 */
-	public function get_thousand_separator( $context = 'view' ) {
+	public function get_thousand_separator( $context = 'edit' ) {
 		return $this->get_prop( 'thousand_separator', $context );
 	}
 
@@ -395,35 +277,11 @@ class Currency extends Base_Object {
 	 * @since 1.0.2
 	 */
 	public function set_code( $value ) {
-		$code       = strtoupper( eaccounting_clean( $value ) );
-		$currencies = eaccounting_get_global_currencies();
-		if ( ! array_key_exists( $code, $currencies ) ) {
+		$code = strtoupper( eaccounting_clean( $value ) );
+		if ( ! $this->is_valid_currency_code( $value ) ) {
 			$this->error( 'invalid_currency_code', __( 'Unsupported currency code', 'wp-ever-accounting' ) );
 		}
-		$currency = $currencies[ $code ];
 		$this->set_prop( 'code', $code );
-
-		$this->subunit = (int) $currency['subunit'];
-
-		if ( empty( $this->get_name( 'edit' ) ) ) {
-			$this->set_name( $currency['name'] );
-		}
-
-		if ( empty( $this->get_symbol( 'edit' ) ) ) {
-			$this->set_symbol( $currency['symbol'] );
-		}
-
-		if ( empty( $this->get_position( 'edit' ) ) ) {
-			$this->set_position( $currency['precision'] );
-		}
-
-		if ( empty( $this->get_decimal_separator( 'edit' ) ) ) {
-			$this->set_decimal_separator( $currency['decimal_separator'] );
-		}
-
-		if ( empty( $this->get_thousand_separator( 'edit' ) ) ) {
-			$this->set_thousand_separator( $currency['thousand_separator'] );
-		}
 	}
 
 	/**
@@ -499,16 +357,24 @@ class Currency extends Base_Object {
 	*/
 
 	/**
-	 * __callStatic.
+	 * getSubunit.
 	 *
-	 * @param string $method
-	 * @param array $arguments
+	 * @since 1.0.2
+	 * @return int
+	 */
+	public function get_subunit() {
+		return $this->subunit;
+	}
+
+	/**
+	 * Set subunit.
 	 *
-	 * @return Currency
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 */
-	public static function __callStatic( $method, array $arguments ) {
-		return new static( $method, $arguments );
+	public function set_subunit( $value ) {
+		$this->subunit = absint( $value );
 	}
 
 	/**
@@ -516,28 +382,18 @@ class Currency extends Base_Object {
 	 *
 	 * @param Currency $currency
 	 *
-	 * @return bool
 	 * @since 1.0.2
+	 * @return bool
 	 */
 	public function equals( self $currency ) {
 		return $this->get_code( 'edit' ) === $currency->get_code( 'edit' );
 	}
 
 	/**
-	 * getSubunit.
-	 *
-	 * @return int
-	 * @since 1.0.2
-	 */
-	public function get_subunit() {
-		return $this->subunit;
-	}
-
-	/**
 	 * is_symbol_first.
 	 *
-	 * @return bool
 	 * @since 1.0.2
+	 * @return bool
 	 */
 	public function is_symbol_first() {
 		return 'before' === $this->get_position( 'edit' );
@@ -546,8 +402,8 @@ class Currency extends Base_Object {
 	/**
 	 * getPrefix.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_prefix() {
 		if ( ! $this->is_symbol_first() ) {
@@ -560,8 +416,8 @@ class Currency extends Base_Object {
 	/**
 	 * getSuffix.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_suffix() {
 		if ( $this->is_symbol_first() ) {
@@ -572,53 +428,22 @@ class Currency extends Base_Object {
 	}
 
 	/**
-	 * Get the instance as an array.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public function toArray() {
-		return [
-			'name'               => $this->get_name( 'edit' ),
-			'code'               => $this->get_code( 'edit' ),
-			'precision'          => $this->get_precision( 'edit' ),
-			'subunit'            => $this->get_subunit(),
-			'symbol'             => $this->get_symbol( 'edit' ),
-			'position'           => $this->get_position( 'edit' ),
-			'decimal_separator'  => $this->get_decimal_separator( 'edit' ),
-			'thousand_separator' => $this->get_thousand_separator( 'edit' ),
-			'prefix'             => $this->get_prefix(),
-			'suffix'             => $this->get_suffix(),
-		];
-	}
-
-	/**
 	 * Convert the object to its JSON representation.
 	 *
 	 * @param int $options
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function toJson( $options = 0 ) {
-		return json_encode( $this->toArray(), $options );
-	}
-
-	/**
-	 * jsonSerialize.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public function json_serialize() {
-		return $this->toArray();
+		return json_encode( $this->get_base_data(), $options );
 	}
 
 	/**
 	 * Get the evaluated contents of the object.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function render() {
 		return $this->get_code( 'edit' ) . ' (' . $this->get_name( 'edit' ) . ')';
@@ -627,33 +452,23 @@ class Currency extends Base_Object {
 	/**
 	 * __toString.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->render();
 	}
 
 	/**
-	 * Get the value for select option.
+	 * __callStatic.
 	 *
-	 * @return array
+	 * @param string $method
+	 * @param array  $arguments
+	 *
 	 * @since 1.0.2
+	 * @return Currency
 	 */
-	public function get_select_option() {
-		return array( $this->get_code() => sprintf( '%(%s)', $this->get_name(), $this->get_symbol() ) );
-	}
-
-
-	/**
-	 * Returns all data for this object.
-	 *
-	 * @return array
-	 * @since  1.0.2
-	 */
-	public function get_data() {
-		return array_merge( array( 'id' => $this->get_id() ), $this->data, array(
-			'date_created' => $this->get_date_created()->date_mysql()
-		) );
+	public static function __callStatic( $method, array $arguments ) {
+		return new static( $method, $arguments );
 	}
 }

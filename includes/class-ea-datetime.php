@@ -123,6 +123,6 @@ class DateTime extends Base {
      * @since 1.0.2
      */
     public function date_mysql() {
-        return date_i18n( 'Y-m-d H:i:s', $this->getOffsetTimestamp() );
+        return date( 'Y-m-d H:i:s', $this->getOffsetTimestamp() );
     }
 }

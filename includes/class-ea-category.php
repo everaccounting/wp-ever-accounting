@@ -92,7 +92,7 @@ class Category extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_name( $context = 'view' ) {
+	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
 	}
 
@@ -105,7 +105,7 @@ class Category extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_type( $context = 'view' ) {
+	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
 	}
 
@@ -118,7 +118,7 @@ class Category extends Base_Object {
 	 * @since 1.0.2
 	 *
 	 */
-	public function get_color( $context = 'view' ) {
+	public function get_color( $context = 'edit' ) {
 		return $this->get_prop( 'color', $context );
 	}
 
