@@ -108,7 +108,6 @@ abstract class Base_Object {
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		$this->data         = array_merge( $this->data, $this->extra_data );
 		$this->default_data = $this->data;
 	}
 
@@ -193,7 +192,7 @@ abstract class Base_Object {
 	 * @return array
 	 */
 	public function get_data() {
-		return $this->get_base_data();
+		return array_merge_recursive( $this->get_base_data(), $this->get_extra_data() );
 	}
 
 	/**
@@ -204,6 +203,16 @@ abstract class Base_Object {
 	 */
 	public function get_data_keys() {
 		return array_keys( $this->data );
+	}
+
+	/**
+	 * Returns all "extra" data for an object.
+	 *
+	 * @since  1.0.2
+	 * @return array
+	 */
+	public function get_extra_data() {
+		return $this->extra_data;
 	}
 
 	/**
@@ -233,8 +242,9 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 */
 	public function set_defaults() {
-		$this->data    = $this->default_data;
-		$this->changes = array();
+		$this->data       = array_intersect( $this->default_data, $this->data );
+		$this->extra_data = array_intersect( $this->default_data, $this->extra_data );
+		$this->changes    = array();
 		$this->set_object_read( false );
 	}
 
@@ -367,7 +377,12 @@ abstract class Base_Object {
 			$value = array_key_exists( $prop, $this->changes ) ? $this->changes[ $prop ] : $this->data[ $prop ];
 
 			if ( 'view' === $context ) {
-				$value = apply_filters( 'eaccounting_get_' . $prop, $value, $this );
+				$value = apply_filters( 'eaccounting_get_' . $this->object_type . '_' . $prop, $value, $this );
+			}
+		} elseif ( array_key_exists( $prop, $this->extra_data ) ) {
+			$value = $this->extra_data[ $prop ];
+			if ( 'view' === $context ) {
+				$value = apply_filters( 'eaccounting_get_extra_' . $this->object_type . '_' . $prop, $value, $this );
 			}
 		}
 
@@ -412,7 +427,7 @@ abstract class Base_Object {
 			} else {
 				$datetime->set_utc_offset( eaccounting_timezone_offset() );
 			}
-			error_log(print_r($datetime, true));
+
 			$this->set_prop( $prop, $datetime );
 		} catch ( Exception $e ) {
 		} // @codingStandardsIgnoreLine.
@@ -485,9 +500,8 @@ abstract class Base_Object {
 		do_action( 'eaccounting_pre_insert_' . $this->object_type, $this->get_id(), $this );
 
 		$data = wp_unslash( apply_filters( 'eaccounting_new_' . $this->object_type . '_data', $this->get_base_data() ) );
-
 		if ( false === $wpdb->insert( $wpdb->prefix . $this->table, $data ) ) {
-			throw new Exception('db_error', $wpdb->last_error );
+			throw new Exception( 'db_error', $wpdb->last_error );
 		}
 
 		do_action( 'eaccounting_insert_' . $this->object_type, $this->get_id(), $this );
@@ -511,21 +525,25 @@ abstract class Base_Object {
 				$changes[ $prop ] = $value->date( 'Y-m-d H:i:s' );
 			}
 		}
-		if ( ! empty( $changes ) ) {
-			do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $changes );
 
-			try {
-				$wpdb->update( $wpdb->prefix . $this->table, $changes, array( 'id' => $this->get_id() ) );
-			} catch ( Exception $e ) {
-				throw new Exception( 'db_error', __( 'Could not update resource.', 'wp-ever-accounting' ) );
-			}
+//		$changes = array_intersect($changes, $this->get_base_data() );
+//		var_dump($changes);
 
-			do_action( 'eaccounting_update_' . $this->object_type, $this->get_id(), $changes, $this->data );
-
-			$this->apply_changes();
-			$this->set_object_read( true );
-			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
-		}
+//		if ( ! empty( $changes ) ) {
+//			do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $changes );
+//
+//			try {
+//				$wpdb->update( $wpdb->prefix . $this->table, $changes, array( 'id' => $this->get_id() ) );
+//			} catch ( Exception $e ) {
+//				throw new Exception( 'db_error', __( 'Could not update resource.', 'wp-ever-accounting' ) );
+//			}
+//
+//			do_action( 'eaccounting_update_' . $this->object_type, $this->get_id(), $changes, $this->data );
+//
+//			$this->apply_changes();
+//			$this->set_object_read( true );
+//			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
+//		}
 	}
 
 	/**

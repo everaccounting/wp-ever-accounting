@@ -64,7 +64,8 @@ function eaccounting_insert_account( $args ) {
 		$args         = (array) wp_parse_args( $args, $default_args );
 		$account      = new Account( $args['id'] );
 		$account->set_props( $args );
-
+//		error_log(print_r($args, true));
+//		error_log(print_r($account->get_data(), true));
 		//validation
 		if ( ! $account->get_date_created() ) {
 			$account->set_date_created( time() );

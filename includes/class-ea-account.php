@@ -102,8 +102,8 @@ class Account extends Base_Object {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @return string
 	 * @since  1.0.2
+	 * @return string
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -114,8 +114,8 @@ class Account extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
+	 * @return mixed|null
 	 */
 	public function get_number( $context = 'edit' ) {
 		return $this->get_prop( 'number', $context );
@@ -126,9 +126,9 @@ class Account extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
 	 *
+	 * @return mixed|null
 	 */
 	public function get_opening_balance( $context = 'edit' ) {
 		return $this->get_prop( 'opening_balance', $context );
@@ -139,9 +139,9 @@ class Account extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
 	 *
+	 * @return mixed|null
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -152,9 +152,9 @@ class Account extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
 	 *
+	 * @return mixed|null
 	 */
 	public function get_bank_name( $context = 'edit' ) {
 		return $this->get_prop( 'bank_name', $context );
@@ -165,9 +165,9 @@ class Account extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
 	 *
+	 * @return mixed|null
 	 */
 	public function get_bank_phone( $context = 'edit' ) {
 		return $this->get_prop( 'bank_phone', $context );
@@ -178,9 +178,9 @@ class Account extends Base_Object {
 	 *
 	 * @param string $context
 	 *
-	 * @return mixed|null
 	 * @since 1.0.2
 	 *
+	 * @return mixed|null
 	 */
 	public function get_bank_address( $context = 'edit' ) {
 		return $this->get_prop( 'bank_address', $context );
@@ -200,7 +200,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 */
 	public function set_name( $name ) {
-		$this->set_prop( 'name', $name );
+		$this->set_prop( 'name', eaccounting_clean( $name ) );
 	}
 
 	/**
@@ -211,7 +211,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 */
 	public function set_number( $number ) {
-		$this->set_prop( 'number', $number );
+		$this->set_prop( 'number', eaccounting_clean( $number ) );
 	}
 
 	/**
@@ -223,7 +223,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_opening_balance( $opening_balance ) {
-		$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $this->get_currency_code() ) );
+		//$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $this->get_currency_code() ) );
 	}
 
 	/**
@@ -235,7 +235,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_currency_code( $currency_code ) {
-		$this->set_prop( 'currency_code', strtoupper($currency_code) );
+		$this->set_prop( 'currency_code', strtoupper( $currency_code ) );
 	}
 
 	/**
@@ -247,7 +247,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_bank_name( $bank_name ) {
-		$this->set_prop( 'bank_name', $bank_name );
+		$this->set_prop( 'bank_name', eaccounting_clean( $bank_name ) );
 	}
 
 	/**
@@ -259,7 +259,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_bank_phone( $bank_phone ) {
-		$this->set_prop( 'bank_phone', $bank_phone );
+		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
 	}
 
 	/**
@@ -271,7 +271,7 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_bank_address( $bank_address ) {
-		$this->set_prop( 'bank_address', $bank_address );
+		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
 	}
 
 	/*
@@ -283,9 +283,9 @@ class Account extends Base_Object {
 	/**
 	 * @param bool $format
 	 *
-	 * @return float|string
 	 * @since 1.0.2
 	 *
+	 * @return float|string
 	 */
 	public function get_balance( $format = false ) {
 		if ( $format ) {
@@ -303,7 +303,7 @@ class Account extends Base_Object {
 	 * @since 1.0.2
 	 */
 	protected function set_balance( $balance ) {
-		$this->balance = $balance;
+		$this->set_prop( 'balance', eaccounting_sanitize_price( $balance, $this->get_currency_code() ) );
 	}
 
 }

@@ -71,7 +71,7 @@ class Defaults {
 	protected function set_currency() {
 		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
 
-		$currency = eaccounting_get_currency_by_code( $code );
+		$currency = eaccounting_get_currency( $code );
 		if ( empty( $currency ) ) {
 			$global_currencies = eaccounting_get_global_currencies();
 			$currency          = $global_currencies[ $code ];

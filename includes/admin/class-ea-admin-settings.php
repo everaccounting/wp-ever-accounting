@@ -225,8 +225,8 @@ class Settings {
 	function eaccounting_settings_updated( $old_value, $value, $option ) {
 		//update currency code.
 		if ( ! empty( $value['default_currency'] ) && ( $old_value['default_currency'] != $value['default_currency'] ) ) {
-			$currency = eaccounting_get_currency_by_code( eaccounting_clean( $value['default_currency'] ) );
-			if ( $currency ) {
+			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
+			if ( $currency->exists() ) {
 				try {
 					$currency->set_rate( 1 );
 					$currency->save();
