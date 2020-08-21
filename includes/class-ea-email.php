@@ -200,8 +200,8 @@ class Emails {
 	 */
 	public function get_templates() {
 		$templates = array(
-			'default' => __( 'Default Template', 'affiliate-wp' ),
-			'none'    => __( 'No template, plain text only', 'affiliate-wp' )
+			'default' => __( 'Default Template', 'wp-ever-accounting' ),
+			'none'    => __( 'No template, plain text only', 'wp-ever-accounting' )
 		);
 
 		/**
@@ -332,7 +332,7 @@ class Emails {
 	public function send( $to, $subject, $message, $attachments = '' ) {
 
 		if ( ! did_action( 'init' ) && ! did_action( 'admin_init' ) ) {
-			_doing_it_wrong( __FUNCTION__, __( 'You cannot send emails with AffWP_Emails until init/admin_init has been reached', 'affiliate-wp' ), null );
+			_doing_it_wrong( __FUNCTION__, __( 'You cannot send emails with AffWP_Emails until init/admin_init has been reached', 'wp-ever-accounting' ), null );
 
 			return false;
 		}
@@ -474,77 +474,77 @@ class Emails {
 		$email_tags = array(
 			array(
 				'tag'         => 'name',
-				'description' => __( 'The display name of the affiliate, as set on the affiliate\'s user profile', 'affiliate-wp' ),
+				'description' => __( 'The display name of the affiliate, as set on the affiliate\'s user profile', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_name'
 			),
 			array(
 				'tag'         => 'user_name',
-				'description' => __( 'The user name of the affiliate on the site', 'affiliate-wp' ),
+				'description' => __( 'The user name of the affiliate on the site', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_user_name'
 			),
 			array(
 				'tag'         => 'user_email',
-				'description' => __( 'The email address of the affiliate', 'affiliate-wp' ),
+				'description' => __( 'The email address of the affiliate', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_user_email'
 			),
 			array(
 				'tag'         => 'website',
-				'description' => __( 'The website of the affiliate', 'affiliate-wp' ),
+				'description' => __( 'The website of the affiliate', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_website'
 			),
 			array(
 				'tag'         => 'promo_method',
-				'description' => __( 'The promo method used by the affiliate', 'affiliate-wp' ),
+				'description' => __( 'The promo method used by the affiliate', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_promo_method'
 			),
 			array(
 				'tag'         => 'rejection_reason',
-				'description' => __( 'The reason an affiliate was rejected', 'affiliate-wp' ),
+				'description' => __( 'The reason an affiliate was rejected', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_rejection_reason'
 			),
 			array(
 				'tag'         => 'login_url',
-				'description' => __( 'The affiliate login URL to your website', 'affiliate-wp' ),
+				'description' => __( 'The affiliate login URL to your website', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_login_url'
 			),
 			array(
 				'tag'         => 'amount',
-				'description' => __( 'The amount of a given referral', 'affiliate-wp' ),
+				'description' => __( 'The amount of a given referral', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_amount'
 			),
 			array(
 				'tag'         => 'site_name',
-				'description' => __( 'Your site name', 'affiliate-wp' ),
+				'description' => __( 'Your site name', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_site_name'
 			),
 			array(
 				'tag'         => 'referral_url',
-				'description' => __( 'The affiliate&#8217;s referral URL', 'affiliate-wp' ),
+				'description' => __( 'The affiliate&#8217;s referral URL', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_referral_url'
 			),
 			array(
 				'tag'         => 'affiliate_id',
-				'description' => __( 'The affiliate&#8217;s ID', 'affiliate-wp' ),
+				'description' => __( 'The affiliate&#8217;s ID', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_affiliate_id'
 			),
 			array(
 				'tag'         => 'referral_rate',
-				'description' => __( 'The affiliate&#8217;s referral rate', 'affiliate-wp' ),
+				'description' => __( 'The affiliate&#8217;s referral rate', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_referral_rate'
 			),
 			array(
 				'tag'         => 'review_url',
-				'description' => __( 'The URL to the review page for a pending affiliate', 'affiliate-wp' ),
+				'description' => __( 'The URL to the review page for a pending affiliate', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_review_url'
 			),
 			array(
 				'tag'         => 'landing_page',
-				'description' => __( 'The URL the customer landed on that led to a referral being created', 'affiliate-wp' ),
+				'description' => __( 'The URL the customer landed on that led to a referral being created', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_get_landing_page'
 			),
 			array(
 				'tag'         => 'campaign_name',
-				'description' => __( 'The name of the campaign associated with the referral (if any)', 'affiliate-wp' ),
+				'description' => __( 'The name of the campaign associated with the referral (if any)', 'wp-ever-accounting' ),
 				'function'    => 'eaccounting_email_tag_campaign_name'
 			),
 		);

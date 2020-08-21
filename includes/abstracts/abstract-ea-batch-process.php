@@ -117,7 +117,7 @@ abstract class Batch_Process {
 						'%s item was successfully processed.',
 						'%s items were successfully processed.',
 						$final_count,
-						'affiliate-wp'
+						'wp-ever-accounting'
 					), number_format_i18n( $final_count )
 				);
 				break;

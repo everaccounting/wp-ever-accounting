@@ -21,8 +21,8 @@ class Expense_By_Category extends MetaBox {
 	 *
 	 * Example:
 	 *
-	 * $this->action        = 'affwp_overview_meta_boxes';
-	 * $this->meta_box_name = __( 'Name of the meta box', 'affiliate-wp' );
+	 * $this->action        = 'eaccounting_overview_meta_boxes';
+	 * $this->meta_box_name = __( 'Name of the meta box', 'wp-ever-accounting' );
 	 *
 	 * @access  public
 	 * @return  void

@@ -62,7 +62,7 @@ class CSV_Export {
 
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=affiliate-wp-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
+		header( 'Content-Disposition: attachment; filename=eaccounting-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
 		header( "Expires: 0" );
 	}
 
@@ -75,8 +75,8 @@ class CSV_Export {
 	 */
 	public function csv_cols() {
 		$cols = array(
-			'id'   => __( 'ID', 'affiliate-wp' ),
-			'date' => __( 'Date', 'affiliate-wp' )
+			'id'   => __( 'ID', 'wp-ever-accounting' ),
+			'date' => __( 'Date', 'wp-ever-accounting' )
 		);
 
 		return $cols;
@@ -230,7 +230,7 @@ class CSV_Export {
 	 */
 	public function export() {
 		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to export data.', 'affiliate-wp' ), __( 'Error', 'affiliate-wp' ), array( 'response' => 403 ) );
+			wp_die( __( 'You do not have permission to export data.', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 		}
 		// Set headers
 		$this->headers();

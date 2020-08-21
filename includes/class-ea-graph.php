@@ -2,8 +2,8 @@
 /**
  * This class handles building pretty report graphs
  *
- * @package     EverAccounting
  * @since       1.0.2
+ * @package     EverAccounting
  */
 
 // Exit if accessed directly
@@ -45,24 +45,24 @@ class EAccounting_Graph {
 	/**
 	 * Data to graph
 	 *
-	 * @var array
 	 * @since 1.0.2
+	 * @var array
 	 */
 	public $data;
 
 	/**
 	 * Unique ID for the graph
 	 *
-	 * @var string
 	 * @since 1.0.2
+	 * @var string
 	 */
 	public $id = '';
 
 	/**
 	 * Graph options
 	 *
-	 * @var array
 	 * @since 1.0.2
+	 * @var array
 	 */
 	public $options = array();
 
@@ -80,24 +80,24 @@ class EAccounting_Graph {
 
 		// Setup default options;
 		$this->options = array(
-			'y_mode'          => null,
-			'x_mode'          => null,
-			'y_decimals'      => 0,
-			'x_decimals'      => 0,
-			'y_position'      => 'right',
-			'time_format'     => '%d/%b',
-			'ticksize_unit'   => 'day',
-			'ticksize_num'    => 1,
-			'multiple_y_axes' => false,
-			'bgcolor'         => '#f9f9f9',
-			'bordercolor'     => '#ccc',
-			'borderwidth'     => 2,
-			'bars'            => false,
-			'lines'           => true,
-			'points'          => true,
-			'currency'        => true,
-			'show_controls'   => true,
-			'form_wrapper'    => true,
+				'y_mode'          => null,
+				'x_mode'          => null,
+				'y_decimals'      => 0,
+				'x_decimals'      => 0,
+				'y_position'      => 'right',
+				'time_format'     => '%d/%b',
+				'ticksize_unit'   => 'day',
+				'ticksize_num'    => 1,
+				'multiple_y_axes' => false,
+				'bgcolor'         => '#f9f9f9',
+				'bordercolor'     => '#ccc',
+				'borderwidth'     => 2,
+				'bars'            => false,
+				'lines'           => true,
+				'points'          => true,
+				'currency'        => true,
+				'show_controls'   => true,
+				'form_wrapper'    => true,
 		);
 
 	}
@@ -105,10 +105,11 @@ class EAccounting_Graph {
 	/**
 	 * Set an option
 	 *
-	 * @param string $key Graph option key to set
+	 * @since 1.0.2
+	 *
 	 * @param string|array $value The value to assign to the key
 	 *
-	 * @since 1.0.2
+	 * @param string       $key   Graph option key to set
 	 */
 	public function set( $key, $value ) {
 		if ( 'data' == $key ) {
@@ -122,9 +123,10 @@ class EAccounting_Graph {
 	/**
 	 * Get an option
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $key The option key to get
 	 *
-	 * @since 1.0.2
 	 */
 	public function get( $key ) {
 		return isset( $this->options[ $key ] ) ? $this->options[ $key ] : false;
@@ -139,11 +141,11 @@ class EAccounting_Graph {
 		/**
 		 * Filters the data for the current reporting graph.
 		 *
-		 * @param array $data Graph data.
-		 * @param $this $instance Current Graph instance.
-		 *
 		 * @since 1.0.2
 		 *
+		 * @param       $this $instance Current Graph instance.
+		 *
+		 * @param array $data Graph data.
 		 */
 		return apply_filters( 'eaccounting_get_graph_data', $this->data, $this );
 	}
@@ -180,9 +182,9 @@ class EAccounting_Graph {
 		/**
 		 * Filters whether to load the resize script for a Flot.js.
 		 *
-		 * @param bool $load Whether to load the resize script or not.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param bool $load Whether to load the resize script or not.
 		 *
 		 */
 		return apply_filters( 'eaccounting_load_flot_resize', $ret );
@@ -191,8 +193,8 @@ class EAccounting_Graph {
 	/**
 	 * Build the graph and return it as a string
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 * @var array
 	 */
 	public function build_graph() {
@@ -206,7 +208,7 @@ class EAccounting_Graph {
 			$this->graph_controls();
 		}
 		?>
-		<div id="ea-graph-<?php echo $this->id; ?>" class="ea-graph" style="height: 300px; width:97%;"></div><?php
+	<div id="ea-graph-<?php echo $this->id; ?>" class="ea-graph" style="height: 300px; width:97%;"></div><?php
 		return ob_get_clean();
 	}
 
@@ -214,9 +216,9 @@ class EAccounting_Graph {
 	 * Retrieves the Graph initialization JS for output inline.
 	 *
 	 * @access public
-	 * @return string Graph JS output.
 	 * @since  1.0.2
 	 *
+	 * @return string Graph JS output.
 	 */
 	public function graph_js() {
 		$yaxis_count = 1;
@@ -349,9 +351,9 @@ class EAccounting_Graph {
 		/**
 		 * Fires just prior to the graph output.
 		 *
-		 * @param stdClass $graph The graph object.
-		 *
 		 * @since 1.0
+		 *
+		 * @param stdClass $graph The graph object.
 		 *
 		 */
 		do_action( 'affwp_before_graph', $this );
@@ -361,9 +363,9 @@ class EAccounting_Graph {
 		/**
 		 * Fires immediately after the graph output.
 		 *
-		 * @param stdClass $graph The graph object.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param stdClass $graph The graph object.
 		 *
 		 */
 		do_action( 'affwp_after_graph', $this );
@@ -372,33 +374,33 @@ class EAccounting_Graph {
 	/**
 	 * Displays the report graph date filters.
 	 *
+	 * @since    1.0.2
 	 * @internal Note that this method is also used on the front-end. Any changes here
 	 *           should be equally tested in the Affiliate Area..
 	 *
-	 * @access public
-	 * @since  1.0.2
+	 * @access   public
 	 */
 	public function graph_controls() {
 		/**
 		 * Filters the date filter options to use in the controls for the current reports graph.
 		 *
-		 * @param array $date_options List of date options and their user-facing, translatable labels.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param array $date_options List of date options and their user-facing, translatable labels.
 		 *
 		 */
 		$date_options = apply_filters( 'affwp_report_date_options', array(
-			'today'        => __( 'Today', 'affiliate-wp' ),
-			'yesterday'    => __( 'Yesterday', 'affiliate-wp' ),
-			'this_week'    => __( 'This Week', 'affiliate-wp' ),
-			'last_week'    => __( 'Last Week', 'affiliate-wp' ),
-			'this_month'   => __( 'This Month', 'affiliate-wp' ),
-			'last_month'   => __( 'Last Month', 'affiliate-wp' ),
-			'this_quarter' => __( 'This Quarter', 'affiliate-wp' ),
-			'last_quarter' => __( 'Last Quarter', 'affiliate-wp' ),
-			'this_year'    => __( 'This Year', 'affiliate-wp' ),
-			'last_year'    => __( 'Last Year', 'affiliate-wp' ),
-			'other'        => __( 'Custom', 'affiliate-wp' )
+				'today'        => __( 'Today', 'wp-ever-accounting' ),
+				'yesterday'    => __( 'Yesterday', 'wp-ever-accounting' ),
+				'this_week'    => __( 'This Week', 'wp-ever-accounting' ),
+				'last_week'    => __( 'Last Week', 'wp-ever-accounting' ),
+				'this_month'   => __( 'This Month', 'wp-ever-accounting' ),
+				'last_month'   => __( 'Last Month', 'wp-ever-accounting' ),
+				'this_quarter' => __( 'This Quarter', 'wp-ever-accounting' ),
+				'last_quarter' => __( 'Last Quarter', 'wp-ever-accounting' ),
+				'this_year'    => __( 'This Year', 'wp-ever-accounting' ),
+				'last_year'    => __( 'Last Year', 'wp-ever-accounting' ),
+				'other'        => __( 'Custom', 'wp-ever-accounting' )
 		) );
 
 		$dates = affwp_get_report_dates();
@@ -416,7 +418,7 @@ class EAccounting_Graph {
 
 		if ( is_admin() ) : ?>
 			<?php $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'referral'; ?>
-			<?php $page = isset( $_GET['page'] ) ? $_GET['page'] : 'affiliate-wp'; ?>
+			<?php $page = isset( $_GET['page'] ) ? $_GET['page'] : 'wp-ever-accounting'; ?>
 			<input type="hidden" name="page" value="<?php echo esc_attr( $page ); ?>"/>
 		<?php else: ?>
 			<?php $tab = isset( $_GET['tab'] ) ? $_GET['tab'] : 'graphs'; ?>
@@ -445,17 +447,17 @@ class EAccounting_Graph {
 			$to   = empty( $_REQUEST['filter_to'] ) ? '' : $_REQUEST['filter_to'];
 			?>
 			<span class="affwp-search-date">
-				<span><?php _ex( 'From', 'date filter', 'affiliate-wp' ); ?></span>
-				<input type="text" class="affwp-datepicker" autocomplete="off" name="filter_from" placeholder="<?php esc_attr_e( 'From - mm/dd/yyyy', 'affiliate-wp' ); ?>" aria-label="<?php esc_attr_e( 'From - mm/dd/yyyy', 'affiliate-wp' ); ?>" value="<?php echo esc_attr( $from ); ?>"/>
-				<span><?php _ex( 'To', 'date filter', 'affiliate-wp' ); ?></span>
-				<input type="text" class="affwp-datepicker" autocomplete="off" name="filter_to" placeholder="<?php esc_attr_e( 'To - mm/dd/yyyy', 'affiliate-wp' ); ?>" aria-label="<?php esc_attr_e( 'To - mm/dd/yyyy', 'affiliate-wp' ); ?>" value="<?php echo esc_attr( $to ); ?>"/>
+				<span><?php _ex( 'From', 'date filter', 'wp-ever-accounting' ); ?></span>
+				<input type="text" class="affwp-datepicker" autocomplete="off" name="filter_from" placeholder="<?php esc_attr_e( 'From - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" aria-label="<?php esc_attr_e( 'From - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $from ); ?>"/>
+				<span><?php _ex( 'To', 'date filter', 'wp-ever-accounting' ); ?></span>
+				<input type="text" class="affwp-datepicker" autocomplete="off" name="filter_to" placeholder="<?php esc_attr_e( 'To - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" aria-label="<?php esc_attr_e( 'To - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $to ); ?>"/>
 			</span>
 
 		</div>
 		<?php
 		if ( $this->get( 'form_wrapper' ) ) {
 			?>
-			<input name="submit" id="submit" class="button" value="<?php esc_attr_e( 'Filter', 'affiliate-wp' ); ?>" type="submit">
+			<input name="submit" id="submit" class="button" value="<?php esc_attr_e( 'Filter', 'wp-ever-accounting' ); ?>" type="submit">
 			</div><!-- .tablenav .top -->
 			</form><!-- .affwp-graphs-filter -->
 			<?php
@@ -470,18 +472,18 @@ class EAccounting_Graph {
  * Date sent via $_GET is read first and then modified (if needed) to match the
  * selected date-range (if any)
  *
+ * @since 1.0.2
+ *
  * @return array {
  *     Date values used by the reports API.
  *
- * @type int $day Day of the month (1-31) to start filtering results by.
- * @type int $day_end Day of the month (1-31) to end filtering results by.
- * @type int $m_start Month of the year (1-12) to start filtering results by.
- * @type int $m_end Month of the year (1-12) to end filtering results by.
- * @type int $year Year to start filtering results by.
+ * @type int $day      Day of the month (1-31) to start filtering results by.
+ * @type int $day_end  Day of the month (1-31) to end filtering results by.
+ * @type int $m_start  Month of the year (1-12) to start filtering results by.
+ * @type int $m_end    Month of the year (1-12) to end filtering results by.
+ * @type int $year     Year to start filtering results by.
  * @type int $year_end Year to end filtering results by.
  * }
- * @since 1.0.2
- *
  */
 function affwp_get_report_dates() {
 	$dates = array();
@@ -671,18 +673,18 @@ function affwp_get_report_dates() {
 	/**
 	 * Filters the dates array for the current reports graph.
 	 *
-	 * @param array $dates {
-	 *     Date values used by the reports API.
-	 *
-	 * @type int $day Day of the month (1-31) to start filtering results by.
-	 * @type int $day_end Day of the month (1-31) to end filtering results by.
-	 * @type int $m_start Month of the year (1-12) to start filtering results by.
-	 * @type int $m_end Month of the year (1-12) to end filtering results by.
-	 * @type int $year Year to start filtering results by.
-	 * @type int $year_end Year to end filtering results by.
-	 * }
 	 * @since 1.0.2
 	 *
+	 * @param array $dates    {
+	 *                        Date values used by the reports API.
+	 *
+	 * @type int    $day      Day of the month (1-31) to start filtering results by.
+	 * @type int    $day_end  Day of the month (1-31) to end filtering results by.
+	 * @type int    $m_start  Month of the year (1-12) to start filtering results by.
+	 * @type int    $m_end    Month of the year (1-12) to end filtering results by.
+	 * @type int    $year     Year to start filtering results by.
+	 * @type int    $year_end Year to end filtering results by.
+	 * }
 	 */
 	return apply_filters( 'affwp_report_dates', $dates );
 }
