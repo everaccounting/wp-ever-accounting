@@ -54,12 +54,12 @@ class Contact extends Base_Object {
 		'country'       => '',
 		'website'       => '',
 		'tax_number'    => '',
-		'currency_code' => 'USD',
+		'currency_code' => '',
 		'type'          => '',
 		'note'          => '',
 		'enabled'       => 1,
 		'creator_id'    => '',
-		'company_id'    => '',
+		'company_id'    => 1,
 		'date_created'  => '',
 	);
 
@@ -100,9 +100,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return int|null
 	 * @since 1.0.2
 	 *
-	 * @return int|null
 	 */
 	public function get_user_id( $context = 'edit' ) {
 		return $this->get_prop( 'user_id', $context );
@@ -113,9 +113,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -126,9 +126,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_email( $context = 'edit' ) {
 		return $this->get_prop( 'email', $context );
@@ -139,9 +139,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_phone( $context = 'edit' ) {
 		return $this->get_prop( 'phone', $context );
@@ -152,9 +152,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_fax( $context = 'edit' ) {
 		return $this->get_prop( 'fax', $context );
@@ -165,9 +165,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return DateTime|string
 	 * @since 1.0.2
 	 *
-	 * @return DateTime|string
 	 */
 	public function get_birth_date( $context = 'edit' ) {
 		return $this->get_prop( 'birth_date', $context );
@@ -178,9 +178,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_address( $context = 'edit' ) {
 		return $this->get_prop( 'address', $context );
@@ -191,9 +191,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_country( $context = 'edit' ) {
 		return $this->get_prop( 'country', $context );
@@ -204,9 +204,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_website( $context = 'edit' ) {
 		return $this->get_prop( 'website', $context );
@@ -217,9 +217,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_tax_number( $context = 'edit' ) {
 		return $this->get_prop( 'tax_number', $context );
@@ -230,9 +230,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -243,9 +243,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -256,9 +256,9 @@ class Contact extends Base_Object {
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since 1.0.2
 	 *
-	 * @return string
 	 */
 	public function get_note( $context = 'edit' ) {
 		return $this->get_prop( 'note', $context );
@@ -432,8 +432,8 @@ class Contact extends Base_Object {
 	/**
 	 * Return this customer's avatar.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_avatar_url() {
 		return get_avatar_url( $this->get_email() );

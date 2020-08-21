@@ -102,13 +102,13 @@ abstract class Base_Object {
 	/**
 	 * EAccounting_Object constructor.
 	 *
-	 * @param int|array|object|null $data
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param int|array|object|null $data
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		$this->default_data = $this->data;
+		$this->default_data = array_merge_recursive( $this->data, $this->extra_data );
 	}
 
 	/**
@@ -201,7 +201,7 @@ abstract class Base_Object {
 	 * @since   1.0.2
 	 * @return array
 	 */
-	public function get_data_keys() {
+	public function get_base_data_keys() {
 		return array_keys( $this->data );
 	}
 
@@ -228,9 +228,10 @@ abstract class Base_Object {
 	/**
 	 * Set ID.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param int $id ID.
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_id( $id ) {
 		$this->id = absint( $id );
@@ -242,8 +243,8 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 */
 	public function set_defaults() {
-		$this->data       = array_intersect( $this->default_data, $this->data );
-		$this->extra_data = array_intersect( $this->default_data, $this->extra_data );
+		$this->data       = array_intersect_key( $this->default_data, $this->get_base_data() );
+		$this->extra_data = array_intersect_key( $this->default_data, $this->get_extra_data() );
 		$this->changes    = array();
 		$this->set_object_read( false );
 	}
@@ -252,9 +253,10 @@ abstract class Base_Object {
 	/**
 	 * Set object read property.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param boolean $read Should read?.
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_object_read( $read = true ) {
 		$this->object_read = (bool) $read;
@@ -274,10 +276,11 @@ abstract class Base_Object {
 	 * Set a collection of props in one go, collect any errors, and return the result.
 	 * Only sets using public methods.
 	 *
-	 * @param array|object $props Key value pairs to set. Key is the prop and should map to a setter function name.
+	 * @since  1.0.2
+	 *
 	 * @param string       $context In what context to run this.
 	 *
-	 * @since  1.0.2
+	 * @param array|object $props   Key value pairs to set. Key is the prop and should map to a setter function name.
 	 *
 	 * @return bool|\WP_Error
 	 */
@@ -319,10 +322,11 @@ abstract class Base_Object {
 	 * This stores changes in a special array so we can track what needs saving
 	 * the the DB later.
 	 *
-	 * @param string $prop Name of prop to set.
+	 * @since 1.0.2
+	 *
 	 * @param mixed  $value Value of the prop.
 	 *
-	 * @since 1.0.2
+	 * @param string $prop  Name of prop to set.
 	 */
 	protected function set_prop( $prop, $value ) {
 		if ( array_key_exists( $prop, $this->data ) ) {
@@ -364,10 +368,12 @@ abstract class Base_Object {
 	 * Gets the value from either current pending changes, or the data itself.
 	 * Context controls what happens to the value before it's returned.
 	 *
-	 * @param string $prop Name of prop to get.
+	 * @since  1.0.2
+	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
-	 * @since  1.0.2
+	 * @param string $prop    Name of prop to get.
+	 *
 	 * @return mixed
 	 */
 	protected function get_prop( $prop, $context = 'raw' ) {
@@ -392,10 +398,11 @@ abstract class Base_Object {
 	/**
 	 * Sets a date prop whilst handling formatting and datetime objects.
 	 *
-	 * @param string         $prop Name of prop to set.
+	 * @since 1.0.2
+	 *
 	 * @param string|integer $value Value of the prop.
 	 *
-	 * @since 1.0.2
+	 * @param string         $prop  Name of prop to set.
 	 */
 	protected function set_date_prop( $prop, $value ) {
 		try {
@@ -436,9 +443,10 @@ abstract class Base_Object {
 	/**
 	 * Populate data based on the object or array passed.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array|Object $data Object data.
 	 *
-	 * @since 1.0.2
 	 * @throws Exception
 	 */
 	public function populate( $data ) {
@@ -454,15 +462,17 @@ abstract class Base_Object {
 			$this->error( $errors->get_error_code(), $errors->get_error_message() );
 		}
 
+		$this->populate_extra_data();
 		$this->set_object_read( true );
 	}
 
 	/**
 	 * Method to read a record. Creates a new EAccounting_Object based object.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param int $id ID of the object to read.
 	 *
-	 * @since 1.0.2
 	 * @throws Exception
 	 */
 	public function read() {
@@ -507,6 +517,7 @@ abstract class Base_Object {
 		do_action( 'eaccounting_insert_' . $this->object_type, $this->get_id(), $this );
 
 		$this->set_id( $wpdb->insert_id );
+		$this->save_extra_data( 'create' );
 		$this->apply_changes();
 		$this->set_object_read( true );
 	}
@@ -520,30 +531,30 @@ abstract class Base_Object {
 	public function update() {
 		global $wpdb;
 		$changes = $this->get_changes();
+
 		foreach ( $changes as $prop => $value ) {
 			if ( $value instanceof DateTime ) {
 				$changes[ $prop ] = $value->date( 'Y-m-d H:i:s' );
 			}
 		}
 
-//		$changes = array_intersect($changes, $this->get_base_data() );
-//		var_dump($changes);
+		$changed_data = array_intersect_key( $changes, $this->data );
 
-//		if ( ! empty( $changes ) ) {
-//			do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $changes );
-//
-//			try {
-//				$wpdb->update( $wpdb->prefix . $this->table, $changes, array( 'id' => $this->get_id() ) );
-//			} catch ( Exception $e ) {
-//				throw new Exception( 'db_error', __( 'Could not update resource.', 'wp-ever-accounting' ) );
-//			}
-//
-//			do_action( 'eaccounting_update_' . $this->object_type, $this->get_id(), $changes, $this->data );
-//
-//			$this->apply_changes();
-//			$this->set_object_read( true );
-//			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
-//		}
+		if ( ! empty( $changed_data ) ) {
+			do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $changed_data, $this );
+
+			try {
+				$wpdb->update( $wpdb->prefix . $this->table, $changed_data, array( 'id' => $this->get_id() ) );
+			} catch ( Exception $e ) {
+				throw new Exception( 'db_error', __( 'Could not update resource.', 'wp-ever-accounting' ) );
+			}
+
+			do_action( 'eaccounting_update_' . $this->object_type, $this->get_id(), $changes, $this->data );
+			$this->save_extra_data( 'update' );
+			$this->apply_changes();
+			$this->set_object_read( true );
+			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
+		}
 	}
 
 	/**
@@ -558,13 +569,45 @@ abstract class Base_Object {
 			do_action( 'eaccounting_pre_delete_' . $this->object_type, $this->get_id(), $this->get_data(), $this );
 			$wpdb->delete( $wpdb->prefix . $this->table, array( 'id' => $this->get_id() ) );
 			do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $this->get_data(), $this );
+			$this->delete_extra_data();
 			$this->set_id( 0 );
+
 			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
 
 			return true;
 		}
 
 		return false;
+	}
+
+	/**
+	 * Populate extra data.
+	 *
+	 * @since 1.0.2
+	 */
+	public function populate_extra_data() {
+
+	}
+
+	/**
+	 * Save any extra data.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $action when its called.
+	 *
+	 */
+	public function save_extra_data( $action ) {
+
+	}
+
+	/**
+	 * Delete any extra data.
+	 *
+	 * @since 1.0.2
+	 */
+	public function delete_extra_data() {
+
 	}
 
 	/**
@@ -607,12 +650,14 @@ abstract class Base_Object {
 	/**
 	 * When invalid data is found, throw an exception unless reading from the DB.
 	 *
-	 * @param string $code Error code.
-	 * @param string $message Error message.
-	 * @param int    $http_status_code HTTP status code.
-	 * @param array  $data Extra error data.
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param string $message          Error message.
+	 * @param int    $http_status_code HTTP status code.
+	 * @param array  $data             Extra error data.
+	 *
+	 * @param string $code             Error code.
+	 *
 	 * @throws Exception Data Exception.
 	 */
 	protected function error( $code, $message, $http_status_code = 400, $data = array() ) {
@@ -622,9 +667,9 @@ abstract class Base_Object {
 	/**
 	 * Get object created date.
 	 *
-	 * @param string $context
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param string $context
 	 *
 	 * @return DateTime
 	 */
@@ -635,9 +680,10 @@ abstract class Base_Object {
 	/**
 	 * get object status
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
-	 * @since 1.0.2
 	 * @return bool
 	 */
 	public function get_enabled( $context = 'edit' ) {
@@ -647,9 +693,10 @@ abstract class Base_Object {
 	/**
 	 * get object status
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
-	 * @since 1.0.2
 	 * @return bool
 	 */
 	public function is_enabled() {
@@ -659,9 +706,9 @@ abstract class Base_Object {
 	/**
 	 * Set object status.
 	 *
-	 * @param int $enabled Company id
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param int $enabled Company id
 	 *
 	 */
 	public function set_enabled( $enabled ) {
@@ -671,9 +718,9 @@ abstract class Base_Object {
 	/**
 	 * Set object belonging company id.
 	 *
-	 * @param int $company_id Company id
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param int $company_id Company id
 	 *
 	 */
 	public function set_company_id( $company_id = 1 ) {
@@ -683,9 +730,9 @@ abstract class Base_Object {
 	/**
 	 * Set object creator id.
 	 *
-	 * @param int $creator_id Creator id
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param int $creator_id Creator id
 	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
@@ -698,9 +745,9 @@ abstract class Base_Object {
 	/**
 	 * Set object created date.
 	 *
-	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if their is no date.
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if their is no date.
 	 *
 	 */
 	public function set_date_created( $date = null ) {
@@ -713,9 +760,9 @@ abstract class Base_Object {
 	/**
 	 * Return object belonging company id.
 	 *
-	 * @param string $context
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param string $context
 	 *
 	 * @return mixed|null
 	 */
@@ -726,9 +773,9 @@ abstract class Base_Object {
 	/**
 	 * Return object created by.
 	 *
-	 * @param string $context
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param string $context
 	 *
 	 * @return mixed|null
 	 */

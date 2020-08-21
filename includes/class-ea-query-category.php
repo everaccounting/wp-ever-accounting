@@ -34,7 +34,7 @@ class Query_Category extends Query {
 	public static function init( $id = 'categories_query' ) {
 		$builder     = new self();
 		$builder->id = $id;
-		$builder->from( 'ea_categories' );
+		$builder->from( 'ea_categories'.' categories' );
 		return $builder;
 	}
 

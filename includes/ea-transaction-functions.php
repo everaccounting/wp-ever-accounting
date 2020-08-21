@@ -4,7 +4,7 @@
  *
  * Functions for all kind of transaction of the plugin.
  *
- * @since 1.0.2
+ * @since   1.0.2
  * @package EverAccounting
  */
 
@@ -37,7 +37,7 @@ function eaccounting_get_transaction_types() {
  *
  * @since 1.0.2
  *
- * @return \EverAccounting\Transaction|null
+ * @return Transaction|null
  */
 function eaccounting_get_transaction( $transaction ) {
 	if ( empty( $transaction ) ) {
@@ -55,7 +55,7 @@ function eaccounting_get_transaction( $transaction ) {
 		}
 
 		if ( ! $_transaction->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid transaction.', 'wp-ever-accounting' ) );
 		}
 
 		return $_transaction;
@@ -69,11 +69,31 @@ function eaccounting_get_transaction( $transaction ) {
  *
  *  Returns a new transaction object on success.
  *
- * @param array $args transaction arguments.
+ * @param array $args           {
+ *
+ * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
+ * @type string $type           Type of the transaction eg income, expense etc.
+ * @type string $paid_at        Time of the transaction.
+ * @type string $amount         Transaction amount.
+ * @type int    $account_id     From/To which account the transaction is.
+ * @type int    $contact_id     Contact id related to the transaction.
+ * @type int    $invoice_id     Transaction related invoice id(optional).
+ * @type int    $category_id    Category of the transaction.
+ * @type string $payment_method Payment method used for the transaction.
+ * @type string $reference      Reference of the transaction.
+ * @type string $description    Description of the transaction.
+ *
+ * }
  *
  * @since 1.0.2
  *
- * @return \EverAccounting\Transaction|WP_Error
+ * @see   eaccounting_sanitize_price()
+ * @see   eaccounting_get_account()
+ * @see   eaccounting_get_currency()
+ * @see   eaccounting_get_category()
+ *
+ * @see   eaccounting_get_contact()
+ * @return Transaction|WP_Error
  */
 function eaccounting_insert_transaction( $args ) {
 
@@ -82,8 +102,8 @@ function eaccounting_insert_transaction( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		error_log(print_r($args, true));
-		$transaction  = new Transaction( $args['id'] );
+
+		$transaction = new Transaction( $args['id'] );
 		$transaction->set_props( $args );
 
 		//validation
@@ -137,7 +157,7 @@ function eaccounting_insert_transaction( $args ) {
 		//if expense category type must be expense
 		//if type other category type must be other
 		//if type income category type must be income
-		if ( $transaction->get_type() !== $category->get_type() ) {
+		if ( $transaction->get_type() !== $category->get_type() && $category->get_type() !== 'other' ) {
 			throw new Exception( 'invalid-category-type', __( 'Transaction type and category type does not match.', 'wp-ever-accounting' ) );
 		}
 
@@ -148,15 +168,12 @@ function eaccounting_insert_transaction( $args ) {
 			}
 		}
 
-		if ( empty( $transaction->get_currency_code() ) ) {
-			$transaction->set_currency_code( $account->get_currency_code() );
-		}
+		//May be changing the bank account so its need to update all the time.
+		$transaction->set_currency_code( $account->get_currency_code() );
+		$transaction->set_currency_rate( $currency->get_rate() );
 
-		if ( empty( $transaction->get_currency_rate() ) ) {
-			$transaction->set_currency_rate( $currency->get_rate() );
-		}
 
-		$transaction->set_amount(  eaccounting_sanitize_price( $transaction->get_amount(), $currency->get_code() ) );
+		$transaction->set_amount( eaccounting_sanitize_price( $transaction->get_amount(), $currency->get_code() ) );
 
 
 		$transaction->save();

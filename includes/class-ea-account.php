@@ -50,7 +50,7 @@ class Account extends Base_Object {
 		'bank_phone'      => null,
 		'bank_address'    => null,
 		'enabled'         => 1,
-		'company_id'      => null,
+		'company_id'      => 1,
 		'creator_id'      => null,
 		'date_created'    => null,
 	);
@@ -223,7 +223,8 @@ class Account extends Base_Object {
 	 *
 	 */
 	public function set_opening_balance( $opening_balance ) {
-		//$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $this->get_currency_code() ) );
+		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
+		$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $code ) );
 	}
 
 	/**
@@ -289,10 +290,10 @@ class Account extends Base_Object {
 	 */
 	public function get_balance( $format = false ) {
 		if ( $format ) {
-			return eaccounting_get_money( $this->get_opening_balance(), $this->get_currency_code( 'edit' ), true )->format();
+			return eaccounting_get_money( $this->get_prop('balance'), $this->get_currency_code( 'edit' ), true )->format();
 		}
 
-		return eaccounting_get_money( $this->get_opening_balance(), $this->get_currency_code( 'edit' ), true )->getValue();
+		return eaccounting_get_money( $this->get_prop('balance'), $this->get_currency_code( 'edit' ), true )->getValue();
 	}
 
 	/**

@@ -2,9 +2,9 @@
 /**
  * Admin Vendor Edit Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Expenses/Vendors
  * @since       1.0.2
+ * @subpackage  Admin/Expenses/Vendors
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 $vendor_id = isset( $_REQUEST['vendor_id'] ) ? absint( $_REQUEST['vendor_id'] ) : null;
@@ -13,7 +13,7 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-if ( $customer->exists() && 'vendor' !== $customer->get_type() ) {
+if ( $vendor->exists() && 'vendor' !== $vendor->get_type() ) {
 	echo __( 'Unknown vendor ID', 'wp-ever-accounting' );
 	exit();
 }
@@ -27,7 +27,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-revenue-form" method="post" enctype="multipart/form-data">
+		<form id="ea-vendor-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input( array(
@@ -38,28 +38,16 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'value'         => $vendor->get_name(),
 						'required'      => true,
 				) );
-				eaccounting_select( array(
+
+				eaccounting_currency_dropdown( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Currency', 'wp-ever-accounting' ),
 						'name'          => 'currency_code',
 						'value'         => $vendor->get_currency_code(),
-						'options'       => [],
 						'required'      => true,
-						'attr'          => array(
-								'data-footer'      => true,
-								'data-search'      => eaccounting_esc_json( json_encode( array(
-										'nonce'  => wp_create_nonce( 'dropdown-search' ),
-										'type'   => 'currency',
-										'action' => 'eaccounting_dropdown_search',
-								) ), true ),
-								'data-modal'       => eaccounting_esc_json( json_encode( array(
-										'event' => 'ea-init-currency-modal',
-										'type'  => 'currency',
-										'nonce' => 'edit_currency',
-								) ), true ),
-								'data-placeholder' => __( 'Select currency', 'wp-ever-accounting' ),
-						)
+						'creatable'     => true
 				) );
+
 				eaccounting_text_input( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Email', 'wp-ever-accounting' ),
@@ -119,20 +107,29 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Enter address', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_address(),
 				) );
-				eaccounting_select( array(
+				eaccounting_country_dropdown( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Country', 'wp-ever-accounting' ),
 						'name'          => 'country',
-						'placeholder'   => __( 'Enter country', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_country(),
-						'options'       => eaccounting_get_countries(),
 				) );
-
+				eaccounting_hidden_input( array(
+						'name'  => 'id',
+						'value' => $vendor->get_id()
+				) );
+				eaccounting_hidden_input( array(
+						'name'  => 'type',
+						'value' => 'vendor'
+				) );
+				eaccounting_hidden_input( array(
+						'name'  => 'action',
+						'value' => 'eaccounting_edit_contact'
+				) );
 				?>
 			</div>
 			<?php
 
-			wp_create_nonce( 'edit_vendor' );
+			wp_nonce_field( 'ea_edit_contact' );
 
 			submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
 			?>

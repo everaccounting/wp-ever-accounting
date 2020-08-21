@@ -39,15 +39,11 @@ defined( 'ABSPATH' ) || exit();
 									'required'      => true,
 							) );
 
-							$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
-							$currencies       = \EverAccounting\Query_Currency::init()->selectAsOption()->whereIn( 'code', [ $default_currency ] )->get();
-							eaccounting_select2( array(
+							eaccounting_currency_dropdown( array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 									'name'          => 'currency_code',
 									'value'         => '',
-									'options'       => wp_list_pluck( $currencies, 'value', 'code' ),
-									'default'       => $default_currency,
 									'placeholder'   => __( 'Select Currency', 'wp-ever-accounting' ),
 									'ajax'          => true,
 									'type'          => 'currency',

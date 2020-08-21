@@ -2,9 +2,9 @@
 /**
  * Admin Transactions Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Transactions
  * @since       1.0.2
+ * @subpackage  Admin/Transactions
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-transactions.php';
@@ -15,7 +15,7 @@ require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-trans
  * @since 1.0.2
  */
 function eaccounting_admin_transactions_page() {
-	$list_table = new List_Table_Transactions();
+	$list_table = new EverAccounting\Admin\ListTables\List_Table_Transactions();
 	$list_table->prepare_items();
 	?>
 	<div class="wrap">

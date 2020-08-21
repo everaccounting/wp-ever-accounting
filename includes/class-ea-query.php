@@ -345,7 +345,7 @@ class Query {
             return $this;
         }
 
-        return $this->where( $column, 'in', $options );
+        return $this->where( $column, 'in', array_filter($options) );
     }
 
     /**
@@ -798,7 +798,7 @@ class Query {
      * @return mixed The first result.
      * @since       1.0.2
      */
-    public function first( $key = 'id' ) {
+    public function  first( $key = 'id' ) {
         return $this->order_by( $key, 'asc' )->one();
     }
 

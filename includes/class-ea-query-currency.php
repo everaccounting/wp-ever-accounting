@@ -35,7 +35,7 @@ class Query_Currency extends Query {
 	public static function init( $id = 'currencies_query' ) {
 		$builder     = new self();
 		$builder->id = $id;
-		$builder->from( 'ea_currencies' );
+		$builder->from( 'ea_currencies' . ' currencies' );
 
 		return $builder;
 	}

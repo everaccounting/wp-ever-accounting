@@ -27,7 +27,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-account-form" method="post">
+		<form id="ea-account-form" class="ea-ajax-form" method="post">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input( array(
@@ -46,22 +46,13 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'required'      => true,
 						'placeholder'   => __( 'Enter account number', 'wp-ever-accounting' ),
 				) );
-
-				$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
-				$currency         = $account->get_currency_code();
-				$currencies       = Query_Currency::init()->selectAsOption()->whereIn( 'code', [ $default_currency, $currency ] )->get();
-				eaccounting_select2( array(
+				eaccounting_currency_dropdown( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 						'name'          => 'currency_code',
 						'value'         => $account->get_currency_code(),
-						'options'       => wp_list_pluck( $currencies, 'value', 'id' ),
-						'default'       => $default_currency,
-						'placeholder'   => __( 'Select Currency', 'wp-ever-accounting' ),
-						'ajax'          => true,
-						'type'          => 'currency',
-						'creatable'     => true,
-						'template'      => 'add-currency'
+						'required'      => true,
+						'creatable'     => true
 				) );
 				eaccounting_text_input( array(
 						'wrapper_class' => 'ea-col-6',

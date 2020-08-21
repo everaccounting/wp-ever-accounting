@@ -66,12 +66,3 @@ $options = array_merge( array( '' => __( 'Select Currency', 'wp-ever-accounting'
 
 	</script>
 <?php
-//eaccounting_enqueue_js( "
-//	jQuery(document)
-//			.on('ea-modal-add-currency_loaded', function () {
-//			jQuery('#ea-modal-currency-form #code').select2();
-//			jQuery('#ea-modal-currency-form #rate').on('keyup', function () {
-//				jQuery(this).val($(this).val().replace(/[^\d.]+/g, ''));
-//			});
-//		});
-//" );

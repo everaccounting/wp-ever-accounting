@@ -115,7 +115,7 @@ class List_Table_Vendors extends List_Table {
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
-			'sales'   => __( 'Sales', 'wp-ever-accounting' ),
+			//'sales'   => __( 'Sales', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -163,7 +163,7 @@ class List_Table_Vendors extends List_Table {
 
 
 	/**
-	 * Renders the checkbox column in the customers list table.
+	 * Renders the checkbox column in the vendors list table.
 	 *
 	 *
 	 * @param Contact $vendor The current object.
@@ -174,6 +174,114 @@ class List_Table_Vendors extends List_Table {
 	 */
 	function column_cb( $vendor ) {
 		return sprintf( '<input type="checkbox" name="vendor_id[]" value="%d"/>', $vendor->get_id() );
+	}
+
+	/**
+	 * Renders the "Name" column in the vendor list table.
+	 *
+	 *
+	 * @param Contact $vendor The current contact object.
+	 *
+	 * @return string Data shown in the Name column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_name( $vendor ) {
+		$name = $vendor->get_name();
+
+		$value = sprintf( '<a href="%1$s">%2$s</a>',
+			esc_url( eaccounting_admin_url( [ 'action' => 'edit','tab' => 'vendors', 'vendor_id' => $vendor->get_id() ] ) ),
+			$name
+		);
+
+		return apply_filters( 'eaccounting_vendors_table_name', $value, $vendor );
+	}
+
+	/**
+	 * Renders the "Email" column in the vendor list table.
+	 *
+	 *
+	 * @param Contact $vendor The current contact object.
+	 *
+	 * @return string Data shown in the Email column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_email( $vendor ) {
+		$email = empty( $vendor->get_email() ) ? '&mdash;' : $vendor->get_email();
+
+		return apply_filters( 'eaccounting_vendors_table_email', $email, $vendor );
+	}
+
+	/**
+	 * Renders the "Phone" column in the vendor list table.
+	 *
+	 *
+	 * @param Contact $vendor The current contact object.
+	 *
+	 * @return string Data shown in the Phone column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_phone( $vendor ) {
+		$phone = empty( $vendor->get_phone() ) ? '&mdash;' : $vendor->get_phone();
+
+		return apply_filters( 'eaccounting_vendors_table_phone', $phone, $vendor );
+	}
+
+	/**
+	 * Renders the "enabled" column in the list table.
+	 *
+	 * @param Contact $vendor The current object.
+	 *
+	 * @return string Data shown in the "enabled" column.
+	 * @since  1.0.2
+	 *
+	 */
+	function column_enabled( $vendor ) {
+		ob_start();
+		eaccounting_toggle( array(
+			'name'  => 'enabled',
+			'id'    => 'enabled_' . $vendor->get_id(),
+			'value' => $vendor->get_enabled( 'edit' ),
+			'naked' => true,
+			'class' => 'ea_item_status_update',
+			'attr'  => array(
+				'data-objectid'   => $vendor->get_id(),
+				'data-nonce'      => wp_create_nonce( 'ea_status_update' ),
+				'data-objecttype' => 'contact'
+			)
+		) );
+		$output = ob_get_contents();
+		ob_get_clean();
+
+		return apply_filters( 'eaccounting_vendors_table_enabled', $output, $vendor );
+	}
+
+	/**
+	 * @param $vendor
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	function column_actions( $vendor ) {
+		$base_uri    = eaccounting_admin_url( array( 'contact_id' => $vendor->get_id(), 'tab' => 'vendors' ) );
+		$row_actions = array();
+
+		$row_actions['edit']   = array(
+			'label' => __( 'Edit', 'wp-ever-accounting' ),
+			array( 'action' => 'edit' ),
+			array( 'base_uri' => $base_uri )
+		);
+		$row_actions['delete'] = array(
+			'label' => __( 'Delete', 'wp-ever-accounting' ),
+			array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
+		);
+
+		$row_actions = apply_filters( 'eaccounting_vendors_table_row_actions', $row_actions, $vendor );
+
+		return $this->row_actions( $row_actions );
 	}
 
 
@@ -280,7 +388,7 @@ class List_Table_Vendors extends List_Table {
 			'status'  => $status,
 			'orderby' => eaccounting_clean( $orderby ),
 			'order'   => eaccounting_clean( $order ),
-			'type'    => 'customer'
+			'type'    => 'vendor'
 		) );
 
 		$args = apply_filters( 'eaccounting_vendors_table_get_vendors', $args, $this );

@@ -95,7 +95,8 @@ function eaccounting_insert_contact( $args ) {
 		}
 
 		if ( ! $contact->get_currency_code() ) {
-			$contact->set_currency_code( eaccounting()->settings->get( 'default_currency' ) );
+			throw new Exception( 'missing_required', __( 'Currency is required', 'wp-ever-accounting' ) );
+			//$contact->set_currency_code( eaccounting()->settings->get( 'default_currency' ) );
 		}
 
 		if ( empty( $contact->get_name() ) ) {

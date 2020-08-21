@@ -11,6 +11,8 @@
  * @since       1.0.2
  */
 
+namespace EverAccounting\Admin\ListTables;
+
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\List_Table;

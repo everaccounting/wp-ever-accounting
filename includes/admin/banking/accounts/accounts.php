@@ -16,7 +16,7 @@ function eaccounting_banking_tab_accounts() {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/banking/accounts/edit-account.php';
 	} else {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-accounts.php';
-		$list_table = new \EverAccounting\Admin\Banking\Accounts\List_Table_Accounts();
+		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Accounts();
 		$list_table->prepare_items();
 		?>
 		<h1>

@@ -259,7 +259,7 @@ function eaccounting_timezone_offset() {
  * @return array
  * @since 1.0.2
  */
-function eaccounting_array_merge_recursive_numeric() {
+function eaccounting_array_merge_recursive() {
 	$arrays = func_get_args();
 
 	// If there's only one array, it's already merged.
@@ -290,7 +290,7 @@ function eaccounting_array_merge_recursive_numeric() {
 					$final[ $key ] = $value + $b[ $key ];
 				} elseif ( is_array( $value ) && is_array( $b[ $key ] ) ) {
 					// If both values are arrays, we recursively call ourself.
-					$final[ $key ] = eaccounting_array_merge_recursive_numeric( $value, $b[ $key ] );
+					$final[ $key ] = eaccounting_array_merge_recursive( $value, $b[ $key ] );
 				} else {
 					// If both keys exist but differ in type, then we cannot merge them.
 					// In this scenario, we will $b's value for $key is used.

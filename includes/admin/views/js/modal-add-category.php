@@ -31,13 +31,12 @@ defined( 'ABSPATH' ) || exit();
 									'value'         => '',
 									'required'      => true,
 							) );
-
 							eaccounting_text_input( array(
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Color', 'wp-ever-accounting' ),
 									'name'          => 'color',
 									'data_type'     => 'color',
-									'value'         => '',
+									'value'         => eaccounting_get_random_color(),
 									'required'      => true,
 							) );
 							eaccounting_hidden_input( array(
@@ -49,7 +48,6 @@ defined( 'ABSPATH' ) || exit();
 									'value' => 'eaccounting_edit_category',
 							) );
 							wp_nonce_field( 'ea_edit_category' );
-
 							?>
 						</div>
 					</article>

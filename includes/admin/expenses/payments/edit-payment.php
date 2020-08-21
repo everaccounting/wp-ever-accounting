@@ -30,7 +30,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-payment-form" method="post">
+		<form id="ea-payment-form" class="ea-ajax-form" method="post">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input( array(
@@ -39,28 +39,16 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'paid_at',
 						'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $payment->get_paid_at()->format( 'Y-m-d' ),
+						'value'         => $payment->get_paid_at() ? $payment->get_paid_at()->format( 'Y-m-d' ) : null,
 						'required'      => true,
 				) );
 
-				$default_account_id = (int) eaccounting()->settings->get( 'default_account' );
-				$account_id         = (int) $payment->get_account_id();
-				$accounts           = Query_Account::init()
-												   ->select( 'id, name' )
-												   ->whereIn( 'id', [ $default_account_id, $account_id ] )
-												   ->get();
-				eaccounting_select2( array(
+				eaccounting_account_dropdown( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Account', 'wp-ever-accounting' ),
 						'name'          => 'account_id',
 						'value'         => $payment->get_account_id(),
-						'default'       => $default_account_id,
-						'options'       => wp_list_pluck( $accounts, 'name', 'id' ),
-						'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
-						'ajax'          => true,
-						'type'          => 'account',
 						'creatable'     => true,
-						'template'      => 'add-account'
 				) );
 
 				eaccounting_text_input( array(
@@ -73,62 +61,34 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Enter amount', 'wp-ever-accounting' ),
 				) );
 
-				$customer_id = (int) $payment->get_contact_id();
-				$customers   = \EverAccounting\Query_Contact::init()
-															->select( 'id, name' )
-															->isCustomer()
-															->where( 'id', [ $customer_id ] )
-															->get();
-				eaccounting_select2( array(
+				eaccounting_contact_dropdown( array(
 						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Customer', 'wp-ever-accounting' ),
+						'label'         => __( 'Vendor', 'wp-ever-accounting' ),
 						'name'          => 'contact_id',
+						'id'            => 'vendor_id',
 						'value'         => $payment->get_contact_id(),
-						'options'       => wp_list_pluck( $customers, 'name', 'id' ),
-						'placeholder'   => __( 'Select Customer', 'wp-ever-accounting' ),
-						'ajax'          => true,
-						'type'          => 'customer',
+						'placeholder'   => __( 'Select Vendor', 'wp-ever-accounting' ),
+						'type'          => 'vendor',
 						'creatable'     => true,
-						'template'      => 'add-contact',
-						'data'          => array(
-								'data-contact_type' => 'customer'
-						),
 				) );
 
-
-				$category_id = (int) $payment->get_category_id();
-				$categories  = \EverAccounting\Query_Category::init()
-															 ->select( 'id, name' )
-															 ->isExpense()
-															 ->where( 'id', [ $category_id ] )
-															 ->get();
-				eaccounting_select2( array(
+				eaccounting_category_dropdown( array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Category', 'wp-ever-accounting' ),
 						'name'          => 'category_id',
 						'value'         => $payment->get_category_id(),
-						'options'       => wp_list_pluck( $categories, 'name', 'id' ),
-						'placeholder'   => __( 'Select Category', 'wp-ever-accounting' ),
-						'ajax'          => true,
-						'type'          => 'expense_category',
+						'required'      => true,
+						'type'          => 'expense',
 						'creatable'     => true,
-						'template'      => 'add-category',
-						'data'          => array(
-								'data-category_type' => 'expense'
-						),
 				) );
 
-				eaccounting_select2( array(
+				eaccounting_payment_method_dropdown( array(
 						'label'         => __( 'Payment Method', 'wp-ever-accounting' ),
 						'name'          => 'payment_method',
-						'placeholder'   => __( 'Enter payment method', 'wp-ever-accounting' ),
 						'wrapper_class' => 'ea-col-6',
 						'required'      => true,
 						'value'         => $payment->get_payment_method(),
-						'default'       => eaccounting()->settings->get( 'default_payment_method' ),
-						'options'       => eaccounting_get_payment_methods(),
 				) );
-
 				eaccounting_textarea( array(
 						'label'         => __( 'Description', 'wp-ever-accounting' ),
 						'name'          => 'description',

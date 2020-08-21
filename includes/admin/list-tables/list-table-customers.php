@@ -115,7 +115,7 @@ class List_Table_Customers extends List_Table {
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
-			'sales'   => __( 'Sales', 'wp-ever-accounting' ),
+			//'sales'   => __( 'Sales', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -208,7 +208,7 @@ class List_Table_Customers extends List_Table {
 	 *
 	 */
 	function column_email( $customer ) {
-		$email = empty( $customer->get_email() ) ? '&mdash' : $customer->get_email();
+		$email = empty( $customer->get_email() ) ? '&mdash;' : $customer->get_email();
 
 		return apply_filters( 'eaccounting_customers_table_email', $email, $customer );
 	}
@@ -224,7 +224,7 @@ class List_Table_Customers extends List_Table {
 	 *
 	 */
 	function column_phone( $customer ) {
-		$phone = empty( $customer->get_phone() ) ? '&mdash' : $customer->get_phone();
+		$phone = empty( $customer->get_phone() ) ? '&mdash;' : $customer->get_phone();
 
 		return apply_filters( 'eaccounting_customers_table_phone', $phone, $customer );
 	}

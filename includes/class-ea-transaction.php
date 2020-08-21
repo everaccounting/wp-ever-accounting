@@ -47,7 +47,7 @@ class Transaction extends Base_Object {
 		'type'           => '',
 		'paid_at'        => null,
 		'amount'         => null,
-		'currency_code'  => 'USD', //protected
+		'currency_code'  => '', //protected
 		'currency_rate'  => 1, //protected
 		'account_id'     => null,
 		'invoice_id'     => null,
@@ -59,7 +59,7 @@ class Transaction extends Base_Object {
 		'parent_id'      => 0,
 		'reconciled'     => 0,
 		'creator_id'     => '',
-		'company_id'     => '',
+		'company_id'     => 1,
 		'date_created'   => '',
 	);
 
