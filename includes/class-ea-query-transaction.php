@@ -37,7 +37,7 @@ class Query_Transaction extends Query {
 	public static function init( $id = 'transactions_query' ) {
 		$builder     = new self();
 		$builder->id = $id;
-		$builder->from( 'ea_transactions' . ' currencies' );
+		$builder->from( 'ea_transactions' . ' transactions' );
 
 		return $builder;
 	}
@@ -61,9 +61,8 @@ class Query_Transaction extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function isPurchase() {
-
-		$this->where( 'type', 'purchase' );
+	public function isExpense() {
+		$this->where( 'transactions.type', 'expense' );
 
 		return $this;
 	}
@@ -74,10 +73,15 @@ class Query_Transaction extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function isPayment() {
+	public function isIncome() {
 
-		$this->where( 'type', 'payment' );
+		$this->where( 'transactions.type', 'income' );
 
+		return $this;
+	}
+
+	public function withCategory(){
+		$this->leftJoin('ea_categories categories', 'categories.id', 'transactions.category_id');
 		return $this;
 	}
 

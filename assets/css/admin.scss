@@ -15,6 +15,7 @@
 @import "blank-state";
 @import "_eaccounting-notice";
 @import "dropdown";
+@import "widgets";
 
 .eaccounting .nav-tab-wrapper {
   margin-bottom: 20px !important;
@@ -245,3 +246,10 @@
 	z-index: 9999999 !important;
   }
 }
+
+.eaccounting .wp-list-table {
+  td {
+	padding: 0.75rem 1rem;
+  }
+}
+

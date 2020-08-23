@@ -536,7 +536,7 @@ function eaccounting_select2( $field ) {
 		unset( $field['template'] );
 	}
 
-	if ( ! email_exists( $field['placeholder'] ) ) {
+	if ( ! empty( $field['placeholder'] ) ) {
 		$field['options'] = array( '' => esc_html( $field['placeholder'] ) ) + $field['options'];
 	}
 	eaccounting_select( $field );

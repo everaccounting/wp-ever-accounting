@@ -2,13 +2,24 @@
 /**
  * Admin Overview Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Overview
  * @since       1.0.2
+ * @subpackage  Admin/Overview
+ * @package     EverAccounting
  */
+
+use EverAccounting\Query_Transaction;
+
 defined( 'ABSPATH' ) || exit();
 
-require_once dirname( __FILE__ ) . '/metaboxes/class-ea-expense-by-category.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-total-income.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-total-expense.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-total-profit.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-total-cashflow.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-income-categories.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-expense-categories.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-latest-incomes.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-latest-expenses.php';
+require_once dirname( __FILE__ ) . '/widgets/widget-account-balances.php';
 
 /**
  * Initializes meta boxes displayed via the Overview screen.
@@ -16,7 +27,15 @@ require_once dirname( __FILE__ ) . '/metaboxes/class-ea-expense-by-category.php'
  * @since 1.0.2
  */
 function eaccounting_init_overview_meta_boxes() {
-	new \EverAccounting\Admin\Overview\Expense_By_Category();
+	new \EverAccounting\Admin\Overview\Widgets\Total_Income();
+	new \EverAccounting\Admin\Overview\Widgets\Total_Expense();
+	new \EverAccounting\Admin\Overview\Widgets\Total_Profit();
+	new \EverAccounting\Admin\Overview\Widgets\Cash_Flow();
+	new \EverAccounting\Admin\Overview\Widgets\Income_Categories();
+	new \EverAccounting\Admin\Overview\Widgets\Expense_Categories();
+	new \EverAccounting\Admin\Overview\Widgets\Latest_Incomes();
+	new \EverAccounting\Admin\Overview\Widgets\Latest_Expenses();
+	new \EverAccounting\Admin\Overview\Widgets\Account_Balances();
 	/**
 	 * Fires after all core Overview meta boxes have been instantiated.
 	 *
@@ -45,22 +64,9 @@ function eaccounting_admin_overview_page() {
 		 */
 		do_action( 'eaccounting_overview_meta_boxes' );
 		?>
-
-		<div id="ea-dashboard-widgets-wrap">
-			<div id="dashboard-widgets" class="metabox-holder">
-
-				<div id="postbox-container-1" class="postbox-container">
-					<?php do_meta_boxes( 'toplevel_page_eaccounting', 'primary', null ); ?>
-				</div>
-
-				<div id="postbox-container-2" class="postbox-container">
-					<?php do_meta_boxes( 'toplevel_page_eaccounting', 'secondary', null ); ?>
-				</div>
-
-				<div id="postbox-container-3" class="postbox-container">
-					<?php do_meta_boxes( 'toplevel_page_eaccounting', 'tertiary', null ); ?>
-				</div>
-
+		<div id="ea-overview-widgets-wrap">
+			<div class="ea-row">
+				<?php do_action( 'eaccounting_add_overview_widget' ); ?>
 			</div>
 		</div>
 

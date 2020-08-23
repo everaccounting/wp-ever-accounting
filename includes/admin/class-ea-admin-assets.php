@@ -65,6 +65,7 @@ class Admin_Assets {
 		wp_register_script( 'ea-backbone-modal', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-backbone-modal' . $suffix . '.js', array( 'underscore', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-notice', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-notice' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url() . '/assets/js/inputmask/jquery.inputmask' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
+		wp_register_script( 'ea-chartjs', eaccounting()->plugin_url() . '/assets/js/chartjs/chart.bundle' . $suffix . '.js', array( 'jquery' ), '1.0.2' );
 
 		//core js
 		wp_register_script( 'eaccounting', eaccounting()->plugin_url() . '/assets/js/eaccounting/eaccounting' . $suffix . '.js', array( 'jquery', 'ea-backbone-modal' ), $version );
@@ -74,6 +75,7 @@ class Admin_Assets {
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
+			wp_enqueue_script( 'ea-chartjs' );
 			wp_enqueue_script( 'jquery-pace' );
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'ea-notice' );

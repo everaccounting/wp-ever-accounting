@@ -63,39 +63,6 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Debug Mode:                       ' . ( $settings->get( 'debug_mode', false ) ? "True" . "\n" : "False\n" );
 
 	// Pages.
-	$return .= "\n" . '-- AffiliateWP Page Configuration' . "\n\n";
-	$return .= 'Affiliate Area:                   ' . ( $settings->get( 'affiliates_page' ) ? get_permalink( $settings->get( 'affiliates_page' ) ) . "\n" : "Unset\n" );
-	$return .= 'Terms of Use:                     ' . ( $settings->get( 'terms_of_use' ) ? get_permalink( $settings->get( 'terms_of_use' ) ) . "\n" : "Unset\n" );
-
-	// Referral Settings
-	$return .= "\n" . '-- AffiliateWP Referral Configuration' . "\n\n";
-	$return .= 'Referral Var:                     ' . ( $settings->get( 'referral_var' ) ? $settings->get( 'referral_var' ) . "\n" : "Default\n" );
-	$return .= 'Referral Format:                  ' . ( $settings->get( 'referral_format' ) ? $settings->get( 'referral_format' ) . "\n" : "Default\n" );
-	$return .= 'Show Pretty URLs:                 ' . ( $settings->get( 'referral_pretty_urls' ) ? "True" . "\n" : "False\n" );
-	$return .= 'Referral Rate Type:               ' . ( $settings->get( 'referral_rate_type' ) ? $settings->get( 'referral_rate_type' ) . "\n" : "Default\n" );
-	$return .= 'Referral Rate:                    ' . ( $settings->get( 'referral_rate' ) ? $settings->get( 'referral_rate' ) . "\n" : "Default\n" );
-	$return .= 'Credit Last Referrer:             ' . ( $settings->get( 'referral_credit_last' ) ? "True\n" : "False\n" );
-
-	// Registration Fields
-	$return .= "\n" . '-- AffiliateWP Registration Settings' . "\n\n";
-	$return .= 'Allow Affiliate Registrations:    ' . ( $settings->get( 'allow_affiliate_registration' ) ? "True\n" : "False\n" );
-	$return .= 'Require Approval:                 ' . ( $settings->get( 'require_approval' )  ? "True\n" : "False\n" );
-	$return .= 'Auto Register New Users:          ' . ( $settings->get( 'auto_register' ) ? "True\n" : "False\n" );
-	$return .= 'Affiliate Area Forms              ' . ( $settings->get( 'affiliate_area_forms' ) ? $settings->get( 'affiliate_area_forms' ) . "\n" : "Default\n" );
-	$return .= 'Required Registration Fields:     ' . ( $settings->get( 'required_registration_fields' ) ? implode( ', ', array_values( $settings->get( 'required_registration_fields', array() ) ) ) . "\n" : "None\n" );
-
-	// Object counts.
-	$return .= "\n" . '-- AffiliateWP Object Counts' . "\n\n";
-	$return .= 'Affiliates:                       ' . affwp_format_amount( affiliate_wp()->affiliates->count(), false ) . "\n";
-	$return .= 'Campaigns:                        ' . affwp_format_amount( affiliate_wp()->campaigns->count(), false ) . "\n";
-	$return .= 'Creatives:                        ' . affwp_format_amount( affiliate_wp()->creatives->count(), false ) . "\n";
-	$return .= 'Customers:                        ' . affwp_format_amount( affiliate_wp()->customers->count(), false ) . "\n";
-	$return .= 'Payouts:                          ' . affwp_format_amount( affiliate_wp()->affiliates->payouts->count(), false ) . "\n";
-	$return .= 'Referrals:                        ' . affwp_format_amount( affiliate_wp()->referrals->count(), false ) . "\n";
-	$return .= 'Sales:                            ' . affwp_format_amount( affiliate_wp()->referrals->sales->count(), false ) . "\n";
-	$return .= 'REST Consumers:                   ' . affwp_format_amount( affiliate_wp()->REST->consumers->count(), false ) . "\n";
-	$return .= 'Visits:                           ' . affwp_format_amount( affiliate_wp()->visits->count(), false ) . "\n";
-
 	// Integrations
 	$return .= "\n" . '-- AffiliateWP Integrations' . "\n\n";
 

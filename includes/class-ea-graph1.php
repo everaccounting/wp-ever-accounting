@@ -6,6 +6,8 @@
  * @package     EverAccounting
  */
 
+namespace EverAccounting;
+
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit();
 
@@ -14,10 +16,8 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since 1.0.2
  */
-class EAccounting_Graph {
-
+class Graph {
 	/*
-
 	Simple example:
 
 	data format for each point: array( location on x, location on y )
@@ -156,39 +156,9 @@ class EAccounting_Graph {
 	 * @since 1.0.2
 	 */
 	public function load_scripts() {
-		// Use minified libraries if SCRIPT_DEBUG is turned off
-		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		wp_enqueue_script( 'jquery-flot', AFFILIATEWP_PLUGIN_URL . 'assets/js/jquery.flot' . $suffix . '.js' );
-
-		if ( $this->load_resize_script() ) {
-			wp_enqueue_script( 'jquery-flot-resize', AFFILIATEWP_PLUGIN_URL . 'assets/js/jquery.flot.resize' . $suffix . '.js' );
-		}
+		wp_enqueue_script( 'ea-chartjs' );
 	}
 
-	/**
-	 * Determines if the resize script should be loaded
-	 *
-	 * @since 1.0.2
-	 */
-	public function load_resize_script() {
-
-		$ret = true;
-
-		// The DMS theme is known to cause some issues with the resize script
-		if ( defined( 'DMS_CORE' ) ) {
-			$ret = false;
-		}
-
-		/**
-		 * Filters whether to load the resize script for a Flot.js.
-		 *
-		 * @since 1.0.2
-		 *
-		 * @param bool $load Whether to load the resize script or not.
-		 *
-		 */
-		return apply_filters( 'eaccounting_load_flot_resize', $ret );
-	}
 
 	/**
 	 * Build the graph and return it as a string
@@ -202,8 +172,7 @@ class EAccounting_Graph {
 
 		ob_start();
 
-		wp_add_inline_script( 'jquery-flot', $this->graph_js() );
-
+		wp_add_inline_script( 'ea-chartjs', $this->graph_js() );
 		if ( false !== $this->get( 'show_controls' ) ) {
 			$this->graph_controls();
 		}
@@ -225,10 +194,10 @@ class EAccounting_Graph {
 
 		ob_start();
 		?>
-		var affwp_vars;
+		var ea_vars;
 		jQuery( document ).ready( function($) {
-		$.plot(
-		$("#affwp-graph-<?php echo $this->id; ?>"),
+		new Chart(
+		$("#ea-graph-<?php echo $this->id; ?>"),
 		[
 		<?php foreach ( $this->get_data() as $label => $data ) : ?>
 			{
@@ -287,53 +256,39 @@ class EAccounting_Graph {
 
 		);
 
-		function affwp_flot_tooltip(x, y, contents) {
-		$('
-		<div id="affwp-flot-tooltip">' + contents + '</div>').css( {
-		position: 'absolute',
-		display: 'none',
-		top: y + 5,
-		left: x + 5,
-		border: '1px solid #fdd',
-		padding: '2px',
-		'background-color': '#fee',
-		opacity: 0.80
-		}).appendTo("body").fadeIn(200);
-		}
-
 		var previousPoint = null;
-		$("#affwp-graph-<?php echo $this->id; ?>").bind("plothover", function (event, pos, item) {
+		$("#ea-graph-<?php echo $this->id; ?>").bind("plothover", function (event, pos, item) {
 		$("#x").text(pos.x.toFixed(2));
 		$("#y").text(pos.y.toFixed(2));
 		if (item) {
 		if (previousPoint != item.dataIndex) {
 		previousPoint = item.dataIndex;
-		$("#affwp-flot-tooltip").remove();
+		$("#ea-flot-tooltip").remove();
 		var x = item.datapoint[0].toFixed(2),
 		y = item.datapoint[1].toFixed(2);
 
 		<?php if ( $this->get( 'currency' ) ) : ?>
-			if( affwp_vars.currency_pos == 'before' ) {
-			affwp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + affwp_vars.currency_sign + y );
+			if( ea_vars.currency_pos == 'before' ) {
+			ea_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + ea_vars.currency_sign + y );
 			} else {
-			affwp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + affwp_vars.currency_sign );
+			ea_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y + ea_vars.currency_sign );
 			}
 		<?php else : ?>
-			affwp_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y );
+			ea_flot_tooltip( item.pageX, item.pageY, item.series.label + ' ' + y );
 		<?php endif; ?>
 		}
 		} else {
-		$("#affwp-flot-tooltip").remove();
+		$("#ea-flot-tooltip").remove();
 		previousPoint = null;
 		}
 		});
 
-		$( '#affwp-graphs-date-options' ).change( function() {
+		$( '#ea-graphs-date-options' ).change( function() {
 		var $this = $(this);
 		if( $this.val() == 'other' ) {
-		$( '#affwp-date-range-options' ).css('display', 'inline-block');
+		$( '#ea-date-range-options' ).css('display', 'inline-block');
 		} else {
-		$( '#affwp-date-range-options' ).hide();
+		$( '#ea-date-range-options' ).hide();
 		}
 		});
 
@@ -356,7 +311,7 @@ class EAccounting_Graph {
 		 * @param stdClass $graph The graph object.
 		 *
 		 */
-		do_action( 'affwp_before_graph', $this );
+		do_action( 'eaccounting_before_graph', $this );
 
 		echo $this->build_graph();
 
@@ -368,7 +323,7 @@ class EAccounting_Graph {
 		 * @param stdClass $graph The graph object.
 		 *
 		 */
-		do_action( 'affwp_after_graph', $this );
+		do_action( 'eaccounting_after_graph', $this );
 	}
 
 	/**
@@ -389,7 +344,7 @@ class EAccounting_Graph {
 		 * @param array $date_options List of date options and their user-facing, translatable labels.
 		 *
 		 */
-		$date_options = apply_filters( 'affwp_report_date_options', array(
+		$date_options = apply_filters( 'ea_report_date_options', array(
 				'today'        => __( 'Today', 'wp-ever-accounting' ),
 				'yesterday'    => __( 'Yesterday', 'wp-ever-accounting' ),
 				'this_week'    => __( 'This Week', 'wp-ever-accounting' ),
@@ -403,7 +358,7 @@ class EAccounting_Graph {
 				'other'        => __( 'Custom', 'wp-ever-accounting' )
 		) );
 
-		$dates = affwp_get_report_dates();
+		$dates = ea_get_report_dates();
 
 		$display = $dates['range'] == 'other' ? 'style="display:inline-block;"' : 'style="display:none;"';
 
@@ -411,7 +366,7 @@ class EAccounting_Graph {
 
 		if ( $this->get( 'form_wrapper' ) ) {
 			?>
-			<form id="affwp-graphs-filter" method="get">
+			<form id="ea-graphs-filter" method="get">
 			<div class="tablenav top">
 			<?php
 		}
@@ -432,7 +387,7 @@ class EAccounting_Graph {
 			<input type="hidden" name="action" value="view_affiliate"/>
 		<?php endif; ?>
 
-		<select id="affwp-graphs-date-options" class="affwp-graphs-date-options" name="range">
+		<select id="ea-graphs-date-options" class="ea-graphs-date-options" name="range">
 			<?php
 			foreach ( $date_options as $key => $option ) {
 				echo '<option value="' . esc_attr( $key ) . '" ' . selected( $key, $dates['range'] ) . '>' . esc_html( $option ) . '</option>';
@@ -440,17 +395,17 @@ class EAccounting_Graph {
 			?>
 		</select>
 
-		<div id="affwp-date-range-options" <?php echo $display; ?>>
+		<div id="ea-date-range-options" <?php echo $display; ?>>
 
 			<?php
 			$from = empty( $_REQUEST['filter_from'] ) ? '' : $_REQUEST['filter_from'];
 			$to   = empty( $_REQUEST['filter_to'] ) ? '' : $_REQUEST['filter_to'];
 			?>
-			<span class="affwp-search-date">
+			<span class="ea-search-date">
 				<span><?php _ex( 'From', 'date filter', 'wp-ever-accounting' ); ?></span>
-				<input type="text" class="affwp-datepicker" autocomplete="off" name="filter_from" placeholder="<?php esc_attr_e( 'From - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" aria-label="<?php esc_attr_e( 'From - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $from ); ?>"/>
+				<input type="text" class="ea-datepicker" autocomplete="off" name="filter_from" placeholder="<?php esc_attr_e( 'From - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" aria-label="<?php esc_attr_e( 'From - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $from ); ?>"/>
 				<span><?php _ex( 'To', 'date filter', 'wp-ever-accounting' ); ?></span>
-				<input type="text" class="affwp-datepicker" autocomplete="off" name="filter_to" placeholder="<?php esc_attr_e( 'To - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" aria-label="<?php esc_attr_e( 'To - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $to ); ?>"/>
+				<input type="text" class="ea-datepicker" autocomplete="off" name="filter_to" placeholder="<?php esc_attr_e( 'To - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" aria-label="<?php esc_attr_e( 'To - mm/dd/yyyy', 'wp-ever-accounting' ); ?>" value="<?php echo esc_attr( $to ); ?>"/>
 			</span>
 
 		</div>
@@ -459,7 +414,7 @@ class EAccounting_Graph {
 			?>
 			<input name="submit" id="submit" class="button" value="<?php esc_attr_e( 'Filter', 'wp-ever-accounting' ); ?>" type="submit">
 			</div><!-- .tablenav .top -->
-			</form><!-- .affwp-graphs-filter -->
+			</form><!-- .ea-graphs-filter -->
 			<?php
 		}
 	}
@@ -485,7 +440,7 @@ class EAccounting_Graph {
  * @type int $year_end Year to end filtering results by.
  * }
  */
-function affwp_get_report_dates() {
+function ea_get_report_dates() {
 	$dates = array();
 
 	$current_time = current_time( 'timestamp' );
@@ -686,5 +641,5 @@ function affwp_get_report_dates() {
 	 * @type int    $year_end Year to end filtering results by.
 	 * }
 	 */
-	return apply_filters( 'affwp_report_dates', $dates );
+	return apply_filters( 'eaccounting_report_dates', $dates );
 }
