@@ -4,8 +4,8 @@
  *
  * General core functions available on both the front-end and admin.
  *
+ * @since   1.0.0
  * @package EverAccounting
- * @since 1.0.0
  */
 
 defined( 'ABSPATH' ) || exit();
@@ -18,11 +18,11 @@ function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: te
  * Get financial Start
  *
  *
- * @return string
  * @since 1.0.2
+ * @return string
  */
 function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
-	$financial_start = apply_filters( 'eaccounting_financial_start', '01-01' );
+	$financial_start = eaccounting()->settings->get('financial_year_start','01-01');
 	$setting         = explode( '-', $financial_start );
 	$day             = ! empty( $setting[0] ) ? $setting[0] : '01';
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
@@ -37,10 +37,11 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 /**
  * Queue some JavaScript code to be output in the footer.
  *
+ * @since 1.0.2
+ *
  * @param $code
  *
  * @return void
- * @since 1.0.2
  */
 function eaccounting_enqueue_js( $code ) {
 	global $eaccounting_queued_js;
@@ -55,8 +56,8 @@ function eaccounting_enqueue_js( $code ) {
 /**
  * Output any queued javascript code in the footer.
  *
- * @return void
  * @since 1.0.2
+ * @return void
  */
 function eaccounting_print_js() {
 	global $eaccounting_queued_js;
@@ -82,8 +83,8 @@ function eaccounting_print_js() {
  * The function is being used for inserting
  * the creator id of object over the plugin.
  *
- * @return int|mixed
  * @since 1.0.2
+ * @return int|mixed
  */
 function eaccounting_get_current_user_id() {
 	$user_id = get_current_user_id();
@@ -114,12 +115,14 @@ function eaccounting_get_current_user_id() {
  * For inserting into database
  * eaccounting_get_money( "$100,000", "USD", false )->getAmount()
  *
- * @param mixed $amount
+ * @since 1.0.2
+ *
  * @param string $code
- * @param bool $convert
+ * @param bool   $convert
+ *
+ * @param mixed  $amount
  *
  * @return \EverAccounting\Money|WP_Error
- * @since 1.0.2
  */
 function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
 	try {
@@ -133,15 +136,17 @@ function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
 /**
  * Convert price from one currency to another currency.
  *
- * @param      $method
+ * @since 1.0.2
+ *
  * @param      $amount
  * @param      $from
  * @param      $to
  * @param      $rate
  * @param bool $format
  *
+ * @param      $method
+ *
  * @return float|int|string
- * @since 1.0.2
  */
 function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $format = false ) {
 	$money = eaccounting_get_money( $amount, $to );
@@ -163,13 +168,15 @@ function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $form
 /**
  * Convert price from default to any other currency.
  *
- * @param      $amount
+ * @since 1.0.2
+ *
  * @param      $to
  * @param      $rate
  * @param bool $format
  *
+ * @param      $amount
+ *
  * @return float|int|string
- * @since 1.0.2
  */
 function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = false ) {
 	return __eaccounting_convert_price( 'multiply', $amount, eaccounting()->settings->get( 'default_currency', 'USD' ), $to, $rate, $format );
@@ -178,14 +185,15 @@ function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = 
 /**
  * Convert price from other currency to default currency.
  *
- * @param      $amount
+ * @since 1.0.2
+ *
  * @param      $from
  * @param      $rate
  * @param bool $format
  *
- * @return float|int|string
- * @since 1.0.2
+ * @param      $amount
  *
+ * @return float|int|string
  */
 function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = false ) {
 	return __eaccounting_convert_price( 'divide', $amount, $from, eaccounting()->settings->get( 'default_currency', 'USD' ), $rate, $format );
@@ -195,8 +203,8 @@ function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = 
  * Get payment methods.
  *
  *
- * @return array
  * @since 1.0.2
+ * @return array
  */
 function eaccounting_get_payment_methods() {
 	return apply_filters( 'eaccounting_payment_methods', [
@@ -209,8 +217,8 @@ function eaccounting_get_payment_methods() {
 /**
  * Get the logger of the plugin.
  *
- * @return \EverAccounting\Logger
  * @since 1.0.2
+ * @return \EverAccounting\Logger
  */
 function eaccounting_logger() {
 	return new \EverAccounting\Logger();
@@ -229,10 +237,11 @@ function wc_cleanup_logs() {
 /**
  * Define a constant if it is not already defined.
  *
- * @param string $name Constant name.
- * @param mixed $value Value.
- *
  * @since 1.0.2
+ *
+ * @param mixed  $value Value.
+ *
+ * @param string $name  Constant name.
  */
 function eaccounting_maybe_define_constant( $name, $value ) {
 	if ( ! defined( $name ) ) {
@@ -261,11 +270,13 @@ function eaccounting_maybe_define_constant( $name, $value ) {
  * 1.10  => (string) 1.10
  * 1.199 => (string) 1.20
  *
+ * @since 1.0.2
+ *
+ * @param int   $precision Number of required decimal places (optional)
+ *
  * @param mixed $val
- * @param int $precision Number of required decimal places (optional)
  *
  * @return mixed              Returns an int, float or string on success, null when empty
- * @since 1.0.2
  */
 function eaccounting_round_number( $val, $precision = 2 ) {
 
@@ -327,12 +338,14 @@ function eaccounting_round_number( $val, $precision = 2 ) {
  *
  *
  *
- * @param        $endpoint
- * @param array $args
+ * @since 1.0.2
+ *
+ * @param array  $args
  * @param string $method
  *
+ * @param        $endpoint
+ *
  * @return array
- * @since 1.0.2
  */
 function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' ) {
 	$request = new \WP_REST_Request( $method, $endpoint );
@@ -342,4 +355,28 @@ function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' )
 	$result   = $server->response_to_data( $response, false );
 
 	return $result;
+}
+
+/**
+ * Create a collection from the given value.
+ *
+ * @since 1.0.2
+ *
+ * @param mixed $items
+ *
+ * @return \EAccounting\Collection
+ */
+function eaccounting_collect( $items ) {
+	return new \EAccounting\Collection( $items );
+}
+
+/**
+ * Get the active company.
+ *
+ * @since 1.0.2
+ * @return int
+ */
+function eaccounting_get_active_company() {
+
+	return apply_filters( 'eaccounting_active_company', 1 );
 }

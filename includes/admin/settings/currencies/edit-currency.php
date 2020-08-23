@@ -38,7 +38,7 @@ foreach ( $currencies as $code => $props ) {
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-currency-form" method="post">
+		<form id="ea-currency-form" class="ea-ajax-form" method="post">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input( array(

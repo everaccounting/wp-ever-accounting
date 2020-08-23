@@ -20,6 +20,7 @@ window.eAccounting = window.eAccounting || {};
 			// 	rightAlign: 0
 			// });
 
+
 			$('.ea-color-control').wpColorPicker();
 			$('.ea-wp-file-upload-btn').on('click', eAccounting.handleMediaUpload);
 		},

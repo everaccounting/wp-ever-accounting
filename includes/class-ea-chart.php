@@ -28,6 +28,13 @@ class Chart {
 	public $width = null;
 
 	/**
+	 * Stores the dataset class to be used.
+	 *
+	 * @var object
+	 */
+	protected $dataset = DataSet::class;
+
+	/**
 	 * Chart constructor.
 	 */
 	public function __construct() {
@@ -122,20 +129,19 @@ class Chart {
 	/**
 	 * Adds a new dataset to the chart.
 	 *
-	 * @param string $label
-	 * @param array  $data
-	 * @param array  $extra
+	 * @param array $dataset
 	 *
 	 * @return self
 	 */
-	public function dataset( $label, $data, $extra = array() ) {
-		$dataset = array_merge_recursive(
-				array(
-						$label,
-						'data' => $data,
-				),
-				$extra
-		);
+	public function dataset( $dataset ) {
+		$dataset = wp_parse_args( $dataset, array(
+			'label'           => '',
+			'data'            => array(),
+			'color'           => '',
+			'backgroundColor' => '',
+			'options'         => array(),
+			'fill'            => false,
+		) );
 		array_push( $this->datasets, $dataset );
 
 		return $this;
@@ -149,51 +155,51 @@ class Chart {
 	 */
 	public function set_line_options() {
 		$this->options( [
-				'tooltips'   => [
-						'backgroundColor' => '#000000',
-						'titleFontColor'  => '#ffffff',
-						'bodyFontColor'   => '#e5e5e5',
-						'bodySpacing'     => 4,
-						'YrPadding'       => 12,
-						'mode'            => 'nearest',
-						'intersect'       => 0,
-						'position'        => 'nearest',
-				],
-				'responsive' => true,
-				'scales'     => [
-						'yAxes' => [
-								[
-										'barPercentage' => 1.6,
-										'ticks'         => [
-												'padding'   => 10,
-												'fontColor' => '#9e9e9e',
-										],
-										'gridLines'     => [
-												'drawBorder'       => false,
-												'color'            => 'rgba(29,140,248,0.1)',
-												'zeroLineColor'    => 'transparent',
-												'borderDash'       => [ 2 ],
-												'borderDashOffset' => [ 2 ],
-										],
-								]
+			'tooltips'   => [
+				'backgroundColor' => '#000000',
+				'titleFontColor'  => '#ffffff',
+				'bodyFontColor'   => '#e5e5e5',
+				'bodySpacing'     => 4,
+				'YrPadding'       => 12,
+				'mode'            => 'nearest',
+				'intersect'       => 0,
+				'position'        => 'nearest',
+			],
+			'responsive' => true,
+			'scales'     => [
+				'yAxes' => [
+					[
+						'barPercentage' => 1.6,
+						'ticks'         => [
+							'padding'   => 10,
+							'fontColor' => '#9e9e9e',
 						],
-						'xAxes' => [
-								[
-										'barPercentage' => 1.6,
-										'ticks'         => [
-												'suggestedMin' => 60,
-												'suggestedMax' => 125,
-												'padding'      => 20,
-												'fontColor'    => '#9e9e9e',
-										],
-										'gridLines'     => [
-												'drawBorder'    => false,
-												'color'         => 'rgba(29,140,248,0.0)',
-												'zeroLineColor' => 'transparent',
-										],
-								]
+						'gridLines'     => [
+							'drawBorder'       => false,
+							'color'            => 'rgba(29,140,248,0.1)',
+							'zeroLineColor'    => 'transparent',
+							'borderDash'       => [ 2 ],
+							'borderDashOffset' => [ 2 ],
 						],
+					]
 				],
+				'xAxes' => [
+					[
+						'barPercentage' => 1.6,
+						'ticks'         => [
+							'suggestedMin' => 60,
+							'suggestedMax' => 125,
+							'padding'      => 20,
+							'fontColor'    => '#9e9e9e',
+						],
+						'gridLines'     => [
+							'drawBorder'    => false,
+							'color'         => 'rgba(29,140,248,0.0)',
+							'zeroLineColor' => 'transparent',
+						],
+					]
+				],
+			],
 		] );
 
 		return $this;
@@ -202,36 +208,37 @@ class Chart {
 	/**
 	 * Set donut options.
 	 *
-	 * @param array$colors
 	 * @since 1.0.2
+	 *
+	 * @param array $colors
 	 *
 	 * @return $this
 	 */
 	public function set_donut_options( $colors ) {
 		$this->options( [
-				'color'            => array_values( $colors ),
-				'cutoutPercentage' => 80,
-				'legend'           => [
-						'position' => 'right',
+			'color'            => array_values( $colors ),
+			'cutoutPercentage' => 50,
+			'legend'           => [
+				'position' => 'right',
+			],
+			'tooltips'         => [
+				'backgroundColor' => '#000000',
+				'titleFontColor'  => '#ffffff',
+				'bodyFontColor'   => '#e5e5e5',
+				'bodySpacing'     => 4,
+				'xPadding'        => 12,
+				'mode'            => 'nearest',
+				'intersect'       => 0,
+				'position'        => 'nearest',
+			],
+			'scales'           => [
+				'yAxes' => [
+					'display' => false,
 				],
-				'tooltips'         => [
-						'backgroundColor' => '#000000',
-						'titleFontColor'  => '#ffffff',
-						'bodyFontColor'   => '#e5e5e5',
-						'bodySpacing'     => 4,
-						'xPadding'        => 12,
-						'mode'            => 'nearest',
-						'intersect'       => 0,
-						'position'        => 'nearest',
+				'xAxes' => [
+					'display' => false,
 				],
-				'scales'           => [
-						'yAxes' => [
-								'display' => false,
-						],
-						'xAxes' => [
-								'display' => false,
-						],
-				],
+			],
 		] );
 
 		return $this;
@@ -244,17 +251,17 @@ class Chart {
 	 */
 	public function render() {
 		$chart = json_encode( array(
-				'type'    => $this->type,
-				'data'    => array(
-						'labels'   => $this->labels,
-						'datasets' => $this->datasets,
-				),
-				'options' => $this->options
+			'type'    => $this->type,
+			'data'    => array(
+				'labels'   => $this->labels,
+				'datasets' => $this->datasets,
+			),
+			'options' => $this->options
 		) );
 		eaccounting_enqueue_js( "new Chart(document.getElementById('ea-chart-$this->id'),$chart);" );
 		echo sprintf( '<canvas id="ea-chart-%s" height="%s" width="%s">',
-				$this->id,
-				$this->height,
-				$this->width );
+			$this->id,
+			$this->height,
+			$this->width );
 	}
 }

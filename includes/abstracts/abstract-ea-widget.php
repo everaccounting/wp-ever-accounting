@@ -76,9 +76,9 @@ abstract class Widget {
 	 */
 	public function get_widget_classes() {
 		return apply_filters( 'eaccounting_overview_widget_classes', implode( ' ', array(
-			'ea-overview-widget',
-			esc_attr( $this->get_widget_size() ),
-			esc_attr( $this->get_widget_class() )
+				'ea-overview-widget',
+				esc_attr( $this->get_widget_size() ),
+				esc_attr( $this->get_widget_class() )
 		) ), $this->widget_id );
 	}
 
@@ -147,4 +147,31 @@ abstract class Widget {
 	 * @return void
 	 */
 	public abstract function get_content();
+
+	/**
+	 * @since 1.0.2
+	 * @throws \Exception
+	 * @return array
+	 */
+	public function get_dates() {
+		$financial_start = eaccounting_get_financial_start();
+		if ( ( $year_start = date( 'Y-01-01' ) ) !== $financial_start ) {
+			$year_start = $financial_start;
+		}
+
+		$start_date = empty( $_GET['start_date'] ) ? $year_start : eaccounting_clean( $_GET['start_date'] );
+		$end_date   = empty( $_GET['end_date'] ) ? null : eaccounting_clean( $_GET['end_date'] );
+		$start      = eaccounting_string_to_datetime( $start_date );
+
+		if ( empty( $end_date ) ) {
+			$start_copy = clone $start;
+			$end_date   = $start_copy->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( 'Y-m-d' );
+		}
+		$end = eaccounting_string_to_datetime( $end_date );
+
+		return [
+				'start' => $start->format('Y-m-d'),
+				'end'   => $end->format('Y-m-d'),
+		];
+	}
 }

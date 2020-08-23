@@ -95,6 +95,7 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
+
 	// var ctx = document.getElementById('ctx');
 	// var myChart = new Chart(ctx, {
 	// 	type: 'bar',

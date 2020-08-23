@@ -235,6 +235,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-account.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-currency.php' );
@@ -323,6 +324,18 @@ final class EverAccounting {
 		do_action( 'eaccounting_init' );
 	}
 
+	/**
+	 * Return the base query object.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param null $type
+	 *
+	 * @return \EverAccounting\Query
+	 */
+	public function query( $type = null ) {
+		return \EverAccounting\Query::init( $type );
+	}
 }
 
 

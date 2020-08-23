@@ -2,9 +2,9 @@
 /**
  * EverAccounting Wrapper for PHP DateTime which adds support for gmt/utc offset when a timezone is absent.
  *
- * @package EverAccounting
  * @since   1.0.2
  *
+ * @package EverAccounting
  */
 
 namespace EAccounting;
@@ -23,16 +23,16 @@ class DateTime extends Base {
 	 * UTC Offset, if needed. Only used when a timezone is not set. When
 	 * timezones are used this will equal 0.
 	 *
-	 * @var integer
 	 * @since   1.0.2
+	 * @var integer
 	 */
 	protected $utc_offset = 0;
 
 	/**
 	 * Output an ISO 8601 date string in local (WordPress) timezone.
 	 *
-	 * @return string
 	 * @since  1.0.2
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->format( DATE_ATOM );
@@ -41,9 +41,10 @@ class DateTime extends Base {
 	/**
 	 * Set UTC offset - this is a fixed offset instead of a timezone.
 	 *
+	 * @since   1.0.2
+	 *
 	 * @param int $offset Offset.
 	 *
-	 * @since   1.0.2
 	 */
 	public function set_utc_offset( $offset ) {
 		$this->utc_offset = intval( $offset );
@@ -61,10 +62,11 @@ class DateTime extends Base {
 	/**
 	 * Set timezone.
 	 *
+	 * @since   1.0.2
+	 *
 	 * @param \DateTimeZone $timezone DateTimeZone instance.
 	 *
 	 * @return DateTime
-	 * @since   1.0.2
 	 */
 	public function setTimezone( $timezone ) {
 		$this->utc_offset = 0;
@@ -75,8 +77,8 @@ class DateTime extends Base {
 	/**
 	 * Missing in PHP 5.2 so just here so it can be supported consistently.
 	 *
-	 * @return int
 	 * @since  1.0.2
+	 * @return int
 	 */
 	public function getTimestamp() {
 		return method_exists( 'DateTime', 'getTimestamp' ) ? parent::getTimestamp() : $this->format( 'U' );
@@ -85,8 +87,8 @@ class DateTime extends Base {
 	/**
 	 * Get the timestamp with the WordPress timezone offset added or subtracted.
 	 *
-	 * @return int
 	 * @since  1.0.2
+	 * @return int
 	 */
 	public function getOffsetTimestamp() {
 		return $this->getTimestamp() + $this->getOffset();
@@ -95,10 +97,11 @@ class DateTime extends Base {
 	/**
 	 * Format a date based on the offset timestamp.
 	 *
+	 * @since  1.0.2
+	 *
 	 * @param string $format Date format.
 	 *
 	 * @return string
-	 * @since  1.0.2
 	 */
 	public function date( $format ) {
 		return gmdate( $format, $this->getOffsetTimestamp() );
@@ -107,10 +110,11 @@ class DateTime extends Base {
 	/**
 	 * Return a localised date based on offset timestamp. Wrapper for date_i18n function.
 	 *
+	 * @since  1.0.2
+	 *
 	 * @param string $format Date format.
 	 *
 	 * @return string
-	 * @since  1.0.2
 	 */
 	public function date_i18n( $format = 'Y-m-d' ) {
 		return date_i18n( $format, $this->getOffsetTimestamp() );
@@ -119,10 +123,20 @@ class DateTime extends Base {
 	/**
 	 * Return mysql date time.
 	 *
-	 * @return string date time
 	 * @since 1.0.2
+	 * @return string date time
 	 */
 	public function date_mysql() {
 		return date( 'Y-m-d H:i:s', $this->getOffsetTimestamp() );
+	}
+
+	/**
+	 * Get quarter
+	 *
+	 * @since 1.0.2
+	 * @return int
+	 */
+	public function quarter() {
+		return ceil( $this->format( 'm' ) / 3 );
 	}
 }

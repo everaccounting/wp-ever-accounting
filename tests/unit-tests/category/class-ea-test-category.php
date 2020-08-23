@@ -61,6 +61,12 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 
 
 //	public function test_exception_category_number() {
+//		$category    = eaccounting_insert_category( array(
+//			'name'  => '',
+//		) );
+
+//		$this->assertNotEquals('Category name is required', $category->get_error_message());
+
 //		$category = EAccounting_Helper_Category::create_category( 'Another category 1', 'income' );
 //		try {
 //			EAccounting_Helper_Category::create_category( 'Another category 1', 'income' );

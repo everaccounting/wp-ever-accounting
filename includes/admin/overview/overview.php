@@ -51,10 +51,36 @@ function eaccounting_init_overview_meta_boxes() {
  */
 function eaccounting_admin_overview_page() {
 	eaccounting_init_overview_meta_boxes();
+	$financial_start = eaccounting_get_financial_start();
+	if ( ( $year_start = date( 'Y-01-01' ) ) !== $financial_start ) {
+		$year_start = $financial_start;
+	}
+
+	$start_date = empty( $_GET['start_date'] ) ? $year_start : eaccounting_clean( $_GET['start_date'] );
+	$end_date   = empty( $_GET['end_date'] ) ? null : eaccounting_clean( $_GET['end_date'] );
+	$start      = eaccounting_string_to_datetime( $start_date );
+
+	if ( empty( $end_date ) ) {
+		$start_copy = clone $start;
+		$end_date   = $start_copy->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( 'Y-m-d' );
+	}
+	$end = eaccounting_string_to_datetime( $end_date );
 	?>
 	<div class="wrap">
 
-		<h2><?php _e( 'Overview', 'wp-ever-accounting' ); ?></h2>
+		<div class="ea-flex-row">
+			<div>
+				<h1><?php _e( 'Overview', 'wp-ever-accounting' ); ?></h1>
+			</div>
+			<div>
+				<form action="" method="get">
+					<input type="text" id="ea-overview-date-range" data-start="<?php echo esc_attr($start->format('Y-m-d'));?>" data-end="<?php echo esc_attr($end->format('Y-m-d'));?>">
+					<input type="hidden" name="page" value="eaccounting">
+					<input type="hidden" name="start_date" value="">
+					<input type="hidden" name="end_date" value="">
+				</form>
+			</div>
+		</div>
 
 		<?php
 		/**

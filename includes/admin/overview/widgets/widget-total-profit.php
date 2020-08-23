@@ -48,8 +48,17 @@ class Total_Profit extends Widget {
 	 * @since 1.0.2
 	 */
 	public function get_content() {
+		global $wpdb;
+		$dates = $this->get_dates();
 		$total        = 0;
-		$transactions = Query_Transaction::init()->select( 'amount, currency_code, currency_rate, type' )->isNotTransfer()->get();
+		$transactions = eaccounting()
+				->query()
+				->select( 'amount, currency_code, currency_rate, type' )
+				->from( 'ea_transactions' )
+				->whereDateBetween( 'paid_at',  $dates['start'], $dates['end'] )
+				->whereRaw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
+				->get();
+
 		foreach ( $transactions as $transaction ) {
 			if ( $transaction->type == 'income' ) {
 				$total += eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );

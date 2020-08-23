@@ -2,6 +2,18 @@
   margin-top: 30px;
 }
 
+#ea-overview-date-range{
+  min-width: 220px;
+  border-radius: 0;
+  padding: 0 8px;
+  font-size: 14px;
+  line-height: 2;
+  min-height: 32px;
+  max-width: none;
+  border: 1px solid #d2d6de;
+  transition: border 0.3s;
+}
+
 .ea-overview-widget {
   box-sizing: border-box;
   margin-bottom: 20px;

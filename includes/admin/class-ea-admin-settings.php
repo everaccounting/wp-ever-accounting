@@ -513,7 +513,7 @@ class Settings {
 					),
 					'financial_year_start'   => array(
 						'name'  => __( 'Financial Year Start', 'wp-ever-accounting' ),
-						'std'   => '1 January',
+						'std'   => '01-01',
 						'class' => 'ea-financial-start',
 						'type'  => 'text',
 					),

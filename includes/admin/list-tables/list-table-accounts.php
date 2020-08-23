@@ -418,7 +418,6 @@ class List_Table_Accounts extends List_Table {
 		) );
 
 		$args = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
-
 		$this->items = Query_Account::init()
 		                            ->wp_query( $args )
 		                            ->withBalance()

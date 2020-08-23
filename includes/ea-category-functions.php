@@ -129,7 +129,7 @@ function eaccounting_insert_category( $args ) {
  *
  * @since 1.0.2
  *
- * @return WP_Error|Mixed|bool
+ * @return bool
  */
 function eaccounting_delete_category( $category_id ) {
 	try {

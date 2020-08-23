@@ -22,8 +22,7 @@ defined( 'ABSPATH' ) || exit;
 function eaccounting_get_transaction_types() {
 	$types = array(
 		'income'   => __( 'Income', 'wp-ever-accounting' ),
-		'expense'  => __( 'Expense', 'wp-ever-accounting' ),
-		'transfer' => __( 'Transfer', 'wp-ever-accounting' ),
+		'expense'  => __( 'Expense', 'wp-ever-accounting' )
 	);
 
 	return $types;

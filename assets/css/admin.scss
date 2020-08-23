@@ -16,7 +16,8 @@
 @import "_eaccounting-notice";
 @import "dropdown";
 @import "widgets";
-
+@import "daterangepicker";
+@import "table";
 .eaccounting .nav-tab-wrapper {
   margin-bottom: 20px !important;
 }
@@ -32,6 +33,18 @@
 	@include loader();
   }
 }
+
+.ea-flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+
 
 
 /**
