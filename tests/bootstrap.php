@@ -41,4 +41,7 @@ add_filter( 'pre_http_request', '_disable_reqs' );
 require_once 'framework/helpers/class-ea-helper-account.php';
 require_once 'framework/helpers/class-ea-helper-contact.php';
 require_once 'framework/helpers/class-ea-helper-category.php';
+require_once 'framework/helpers/class-ea-helper-currency.php';
+require_once 'framework/helpers/class-ea-helper-revenue.php';
+require_once 'framework/helpers/class-ea-helper-transfer.php';
 require_once 'framework/class-ea-unit-test-case.php';
