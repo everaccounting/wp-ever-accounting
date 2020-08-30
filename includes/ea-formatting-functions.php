@@ -2,8 +2,8 @@
 /**
  * EverAccounting Formatting Functions for formatting data.
  *
- * @package EverAccounting
  * @since   1.0.2
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -11,10 +11,11 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Converts a string (e.g. 'yes' or 'no') to a bool.
  *
+ * @since 1.0.2
+ *
  * @param string|boolean $string String to convert.
  *
  * @return bool
- * @since 1.0.2
  */
 function eaccounting_string_to_bool( $string ) {
 	return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
@@ -23,10 +24,11 @@ function eaccounting_string_to_bool( $string ) {
 /**
  * Converts a bool to a 'yes' or 'no'.
  *
+ * @since 1.0.2
+ *
  * @param bool $bool String to convert.
  *
  * @return string
- * @since 1.0.2
  */
 function eaccounting_bool_to_string( $bool ) {
 	if ( ! is_bool( $bool ) ) {
@@ -39,11 +41,13 @@ function eaccounting_bool_to_string( $bool ) {
 /**
  * Explode a string into an array by $delimiter and remove empty values.
  *
- * @param string|array $string String to convert.
- * @param string $delimiter Delimiter, defaults to ','.
+ * @since 1.0.2
+ *
+ * @param string       $delimiter Delimiter, defaults to ','.
+ *
+ * @param string|array $string    String to convert.
  *
  * @return array
- * @since 1.0.2
  */
 function eaccounting_string_to_array( $string, $delimiter = ',' ) {
 	return is_array( $string ) ? $string : array_filter( explode( $delimiter, $string ) );
@@ -53,10 +57,11 @@ function eaccounting_string_to_array( $string, $delimiter = ',' ) {
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
  * Non-scalar values are ignored.
  *
+ * @since 1.0.2
+ *
  * @param string|array $var Data to sanitize.
  *
  * @return string|array
- * @since 1.0.2
  */
 function eaccounting_clean( $var ) {
 	if ( is_array( $var ) ) {
@@ -70,10 +75,11 @@ function eaccounting_clean( $var ) {
 /**
  * Run wc_clean over posted textarea but maintain line breaks.
  *
+ * @since  1.0.2
+ *
  * @param string $var Data to sanitize.
  *
  * @return string
- * @since  1.0.2
  */
 function eaccounting_sanitize_textarea( $var ) {
 	return implode( "\n", array_map( 'eaccounting_clean', explode( "\n", $var ) ) );
@@ -83,10 +89,11 @@ function eaccounting_sanitize_textarea( $var ) {
 /**
  * Sanitize a string destined to be a tooltip.
  *
+ * @since  1.0.2 Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
+ *
  * @param string $var Data to sanitize.
  *
  * @return string
- * @since  1.0.2 Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
  */
 function eaccounting_sanitize_tooltip( $var ) {
 	return htmlspecialchars(
@@ -111,32 +118,33 @@ function eaccounting_sanitize_tooltip( $var ) {
 /**
  * EverAccounting date format - Allows to change date format for everything.
  *
- * @return string
  * @since 1.0.2
+ * @return string
  */
 function eaccounting_date_format() {
-	return apply_filters( 'eaccounting_date_format', get_option( 'date_format' ) );
+	return apply_filters( 'eaccounting_date_format', eaccounting()->settings->get( 'date_format', 'Y-m-d' ) );
 }
 
 /**
  * EAccounting Time Format - Allows to change time format for everything.
  *
- * @return string
  * @since 1.0.2
+ * @return string
  */
 function eaccounting_time_format() {
-	return apply_filters( 'eaccounting_time_format', get_option( 'time_format' ) );
+	return apply_filters( 'eaccounting_time_format', eaccounting()->settings->get( 'time_format', 'H:i' ) );
 }
 
 /**
  * Convert mysql datetime to PHP timestamp, forcing UTC. Wrapper for strtotime.
  *
- * @param string $time_string Time string.
- * @param int|null $from_timestamp Timestamp to convert from.
- *
- * @return int
  * @since 1.0.2
  *
+ * @param int|null $from_timestamp Timestamp to convert from.
+ *
+ * @param string   $time_string    Time string.
+ *
+ * @return int
  */
 function eaccounting_string_to_timestamp( $time_string, $from_timestamp = null ) {
 	$original_timezone = date_default_timezone_get();
@@ -157,11 +165,12 @@ function eaccounting_string_to_timestamp( $time_string, $from_timestamp = null )
 /**
  * Convert a date string to a EAccounting_DateTime.
  *
+ * @since  1.0.2
+ *
  * @param string $time_string Time string.
  *
- * @return \EAccounting\DateTime
  * @throws Exception
- * @since  1.0.2
+ * @return \EAccounting\DateTime
  */
 function eaccounting_string_to_datetime( $time_string ) {
 	// Strings are defined in local WP timezone. Convert to UTC.
@@ -189,8 +198,8 @@ function eaccounting_string_to_datetime( $time_string ) {
  *
  * Adapted from https://secure.php.net/manual/en/function.timezone-name-from-abbr.php#89155.
  *
- * @return string PHP timezone string for the site
  * @since 1.0.2
+ * @return string PHP timezone string for the site
  */
 function eaccounting_timezone_string() {
 	if ( function_exists( 'wp_timezone_string' ) ) {
@@ -235,8 +244,8 @@ function eaccounting_timezone_string() {
 /**
  * Get timezone offset in seconds.
  *
- * @return float
  * @since  1.0.2
+ * @return float
  */
 function eaccounting_timezone_offset() {
 	$timezone = get_option( 'timezone_string' );
@@ -250,14 +259,40 @@ function eaccounting_timezone_offset() {
 	return (float) get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
 }
 
+/**
+ * Format a date for output.
+ *
+ * @since  1.0.2
+ *
+ * @param \EAccounting\DateTime|string $date   Instance of DateTime.
+ * @param string                       $format Data format.
+ *                                             Defaults to the wc_date_format function if not set.
+ *
+ * @return string
+ */
+function eaccounting_format_datetime( $date, $format = '' ) {
+	if ( ! $format ) {
+		$format = eaccounting_date_format();
+	}
+	if ( ! is_a( $date, '\EAccounting\DateTime' ) ) {
+		try {
+			$date = eaccounting_string_to_datetime( $date );
+
+		} catch ( \EverAccounting\Exception $e ) {
+			return '';
+		}
+	}
+
+	return $date->date_i18n( $format );
+}
 
 /**
  * Array merge and sum function.
  *
  * Source:  https://gist.github.com/Nickology/f700e319cbafab5eaedc
  *
- * @return array
  * @since 1.0.2
+ * @return array
  */
 function eaccounting_array_merge_recursive() {
 	$arrays = func_get_args();
@@ -313,10 +348,11 @@ function eaccounting_array_merge_recursive() {
 /**
  * Implode and escape HTML attributes for output.
  *
+ * @since 1.0.2
+ *
  * @param array $raw_attributes Attribute name value pairs.
  *
  * @return string
- * @since 1.0.2
  */
 function eaccounting_implode_html_attributes( $raw_attributes ) {
 	$attributes     = array();
@@ -331,11 +367,13 @@ function eaccounting_implode_html_attributes( $raw_attributes ) {
 /**
  * Escape JSON for use on HTML or attribute text nodes.
  *
+ * @since 1.0.2
+ *
+ * @param bool   $html True if escaping for HTML text node, false for attributes. Determines how quotes are handled.
+ *
  * @param string $json JSON to escape.
- * @param bool $html True if escaping for HTML text node, false for attributes. Determines how quotes are handled.
  *
  * @return string Escaped JSON.
- * @since 1.0.2
  */
 function eaccounting_esc_json( $json, $html = false ) {
 	return _wp_specialchars(
@@ -349,12 +387,13 @@ function eaccounting_esc_json( $json, $html = false ) {
 /**
  * Get only numbers from the string.
  *
- * @param      $number
- * @param bool $allow_decimal
- *
- * @return int|float|null
  * @since 1.0.2
  *
+ * @param bool $allow_decimal
+ *
+ * @param      $number
+ *
+ * @return int|float|null
  */
 function eaccounting_sanitize_number( $number, $allow_decimal = false ) {
 	// Convert multiple dots to just one.
@@ -371,11 +410,13 @@ function eaccounting_sanitize_number( $number, $allow_decimal = false ) {
  * Sanitize price for inserting into database
  * since 1.0.0
  *
- * @param $amount
+ * @since 1.0.2
+ *
  * @param $code
  *
+ * @param $amount
+ *
  * @return float|int
- * @since 1.0.2
  */
 function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
 	return eaccounting_get_money( $amount, $code, false )->getAmount();
@@ -385,11 +426,13 @@ function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
  * Format price with currency code & number format
  *
  *
- * @param $amount
+ * @since 1.0.2
+ *
  * @param $code
  *
+ * @param $amount
+ *
  * @return string
- * @since 1.0.2
  */
 function eaccounting_format_price( $amount, $code = null ) {
 	if ( $code == null ) {

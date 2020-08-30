@@ -131,7 +131,6 @@ class List_Table_Payments extends List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'export_csv' => __( 'Export "CSV"', 'wp-ever-accounting' ),
 			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
@@ -254,6 +253,63 @@ class List_Table_Payments extends List_Table {
 	}
 
 	/**
+	 * Extra controls to be displayed between bulk actions and pagination.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $which
+	 */
+	protected function extra_tablenav( $which ) {
+		if ( 'top' == $which ) {
+			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
+			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
+			$vendor_id = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
+			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
+			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+			echo '<div class="alignleft actions ea-table-filter">';
+
+			eaccounting_input_date_range( array(
+				'start_date' => $start_date,
+				'end_date'   => $end_date,
+			) );
+
+			eaccounting_account_dropdown( [
+				'name'    => 'account_id',
+				'value'   => $account_id,
+				'default' => '',
+				'attr'    => array(
+					'data-allow-clear' => true
+				)
+			] );
+
+			eaccounting_category_dropdown( [
+				'name'    => 'category_id',
+				'value'   => $category_id,
+				'default' => '',
+				'type'    => 'expense',
+				'attr'    => array(
+					'data-allow-clear' => true
+				)
+			] );
+			eaccounting_contact_dropdown( [
+				'name'        => 'vendor_id',
+				'value'       => $vendor_id,
+				'default'     => '',
+				'placeholder' => __( 'Select Vendor', 'wp-ever-accounting' ),
+				'type'        => 'vendor',
+				'attr'        => array(
+					'data-allow-clear' => true
+				)
+			] );
+
+			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
+			echo "\n";
+
+			echo '</div>';
+		}
+	}
+
+	/**
 	 * Process the bulk actions
 	 *
 	 * @since 1.0.2
@@ -340,13 +396,13 @@ class List_Table_Payments extends List_Table {
 		$args = apply_filters( 'eaccounting_payments_table_get_payments', $args, $this );
 
 		$this->items = Query_Transaction::init()
-		                                ->wp_query( $args )
-		                                ->isNotTransfer()
+		                                ->where( $args )
+		                                ->notTransfer()
 		                                ->get( OBJECT, 'eaccounting_get_transaction' );
 
 		$this->total_count = Query_Transaction::init()
-		                                      ->wp_query( $args )
-		                                      ->isNotTransfer()
+		                                      ->where( $args )
+		                                      ->notTransfer()
 		                                      ->count();
 
 		$this->set_pagination_args( array(

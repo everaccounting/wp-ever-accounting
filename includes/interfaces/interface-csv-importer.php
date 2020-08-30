@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit();
  * @see         \AffWP\Utils\Importer\Base
  */
 interface CSV_Importer extends Importer {
-    
+
     /**
      * Maps CSV columns to their corresponding import fields.
      *
@@ -33,7 +33,7 @@ interface CSV_Importer extends Importer {
      *
      */
     public function map_fields( $import_fields = array() );
-    
+
     /**
      * Retrieves the CSV columns.
      *
@@ -43,7 +43,7 @@ interface CSV_Importer extends Importer {
      *
      */
     public function get_columns();
-    
+
     /**
      * Maps a single CSV row to the data passed in via init().
      *
@@ -56,7 +56,7 @@ interface CSV_Importer extends Importer {
      *
      */
     public function map_row( $csv_row );
-    
+
     /**
      * Retrieves the first row of the CSV.
      *
@@ -68,5 +68,4 @@ interface CSV_Importer extends Importer {
      *
      */
     public function get_first_row();
-    
 }

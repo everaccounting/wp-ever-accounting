@@ -45,7 +45,45 @@
   justify-content: space-between;
 }
 
+//List table filter
+.eaccounting .tablenav .ea-table-filter{
+	.select2{
+	  .select2-selection{
+		box-shadow: 0 0 0 transparent;
+		border-radius: 4px;
+		border: 1px solid #7e8993;
+		background-color: #fff;
+		color: #32373c;
+	  }
+	  .select2-selection--single{
+		height: 30px;
+	  }
+	}
 
+  input[type="text"], .select2-container, .ea-date-range-picker{
+	//vertical-align: top;
+	margin-right: 6px;
+	min-width: 180px;
+  }
+}
+
+//Report filter
+.ea-report-filter {
+  width: 100%;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  align-content: center;
+
+  .select2-container {
+	margin: 0 10px 0 0;
+	min-width: 170px;
+	.select2-selection--single{
+	  height: 30px;
+	}
+  }
+}
 
 /**
   * Backbone modal dialog

@@ -2,9 +2,9 @@
 /**
  * EverAccounting  AJAX Event Handlers.
  *
+ * @since       1.0.2
  * @package     EverAccounting
  * @class       EAccounting_Ajax
- * @since       1.0.2
  */
 
 namespace EverAccounting;
@@ -119,6 +119,7 @@ class Ajax {
 			'edit_payment',
 			'edit_revenue',
 			'edit_transfer',
+			'process_batch_request',
 		);
 
 		foreach ( $ajax_events as $ajax_event ) {
@@ -154,12 +155,25 @@ class Ajax {
 					'enabled' => $enabled
 				] );
 				break;
+			case 'account':
+				$result = eaccounting_insert_account( [
+					'id'      => $object_id,
+					'enabled' => $enabled
+				] );
+				break;
+			case 'customer':
+			case 'vendor':
+				$result = eaccounting_insert_contact( [
+					'id'      => $object_id,
+					'enabled' => $enabled
+				] );
+				break;
 			default:
 				/**
 				 * Hook into this for any custom object handling
 				 *
-				 * @var int $object_id ID of the object.
-				 * @var boolean $enabled status of the object.
+				 * @var int     $object_id ID of the object.
+				 * @var boolean $enabled   status of the object.
 				 */
 				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
 		}
@@ -187,27 +201,27 @@ class Ajax {
 
 		switch ( $type ) {
 			case 'currency':
-				$results = Query_Currency::init()->wp_query( [ 'search' => $search ] )->select( 'code as id, CONCAT (name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
+				$results = Query_Currency::init()->where( [ 'search' => $search ] )->select( 'code as id, CONCAT (name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'account':
-				$results = Query_Account::init()->wp_query( [ 'search' => $search ] )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->where( 'enabled', 1 )->get();
+				$results = Query_Account::init()->where( [ 'search' => $search ] )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'customer':
-				$results = Query_Contact::init()->wp_query( [ 'search' => $search ] )->isCustomer()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$results = Query_Contact::init()->where( [ 'search' => $search ] )->typeCustomer()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'vendor':
-				$results = Query_Contact::init()->wp_query( [ 'search' => $search ] )->isVendor()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$results = Query_Contact::init()->where( [ 'search' => $search ] )->typeVendor()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'expense_category':
-				$results = Query_Category::init()->wp_query( [ 'search' => $search ] )->where( 'type', 'expense' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$results = Query_Category::init()->where( [ 'search' => $search ] )->where( 'type', 'expense' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			case 'income_category':
-				$results = Query_Category::init()->wp_query( [ 'search' => $search ] )->where( 'type', 'income' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$results = Query_Category::init()->where( [ 'search' => $search ] )->where( 'type', 'income' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
 				break;
 
 			default:
@@ -253,8 +267,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating currencies.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_currency() {
 		check_ajax_referer( 'ea_edit_currency', '_wpnonce' );
@@ -286,8 +300,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_account() {
 		check_ajax_referer( 'ea_edit_account', '_wpnonce' );
@@ -320,8 +334,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function get_account() {
 		check_ajax_referer( 'ea_get_account', '_wpnonce' );
@@ -340,8 +354,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
@@ -375,13 +389,13 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_contact() {
 		self::verify_nonce( 'ea_edit_contact' );
 
-		$posted  = eaccounting_clean( $_REQUEST );
+		$posted = eaccounting_clean( $_REQUEST );
 
 		$created = eaccounting_insert_contact( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
@@ -410,12 +424,12 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating payment.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
-		$posted         = eaccounting_clean( $_REQUEST );
+		$posted = eaccounting_clean( $_REQUEST );
 
 		$posted['type'] = 'expense';
 		$created        = eaccounting_insert_transaction( $posted );
@@ -445,12 +459,12 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating revenue.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
-		$posted         = eaccounting_clean( $_REQUEST );
+		$posted = eaccounting_clean( $_REQUEST );
 
 		$posted['type'] = 'income';
 		$created        = eaccounting_insert_transaction( $posted );
@@ -480,14 +494,14 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating transfer.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
-		$posted         = eaccounting_clean( $_REQUEST );
+		$posted = eaccounting_clean( $_REQUEST );
 
-		$created        = eaccounting_insert_transfer( $posted );
+		$created = eaccounting_insert_transfer( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error( [
 				'message' => $created->get_error_message()
@@ -511,6 +525,66 @@ class Ajax {
 		wp_die();
 	}
 
+	public static function process_batch_request() {
+		if ( ! isset( $_REQUEST['process_name'] ) ) {
+			wp_send_json_error( array(
+				'error' => __( 'batch process name must be present to continue.', 'wp-ever-accounting' )
+			) );
+		}
+
+		$process_name = sanitize_key( $_REQUEST['process_name'] );
+		self::verify_nonce( "{$process_name}_step_nonce" );
+
+
+		wp_send_json_success( [
+			'step' => 1
+		] );
+	}
+
+
+	public static function do_ajax_import() {
+		self::verify_nonce( 'ea_ajax_import' );
+
+		if ( ! function_exists( 'wp_handle_upload' ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+		}
+
+		if ( empty( $_FILES['ea-import-file'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
+		}
+
+		$accepted_mime_types = array(
+			'text/csv',
+			'text/comma-separated-values',
+			'text/plain',
+			'text/anytext',
+			'text/*',
+			'text/plain',
+			'text/anytext',
+			'text/*',
+			'application/csv',
+			'application/excel',
+			'application/vnd.ms-excel',
+			'application/vnd.msexcel',
+		);
+		if ( empty( $_FILES['ea-import-file']['type'] ) || ! in_array( strtolower( $_FILES['ea-import-file']['type'] ), $accepted_mime_types ) ) {
+			wp_send_json_error( array( 'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
+		}
+
+		if ( ! file_exists( $_FILES['ea-import-file']['tmp_name'] ) ) {
+			wp_send_json_error( array( 'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
+		}
+
+		// Let WordPress import the file. We will remove it after import is complete
+		$import_file = wp_handle_upload( $_FILES['ea-import-file'], array( 'test_form' => false ) );
+
+		if ( $import_file && empty( $import_file['error'] ) ) {
+
+		}
+		wp_send_json_error( array( 'message' => $import_file['error'] ) );
+		exit();
+	}
+
 
 	/**
 	 * Check permission
@@ -526,9 +600,10 @@ class Ajax {
 	/**
 	 * Verify our ajax nonce.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $action
 	 *
-	 * @since 1.0.2
 	 */
 	public static function verify_nonce( $action ) {
 		$nonce = '';

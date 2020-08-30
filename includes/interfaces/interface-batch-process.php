@@ -64,5 +64,4 @@ Interface Batch_Process {
 	 * @param string $batch_id Batch process ID.
 	 */
 	public function finish( $batch_id );
-
 }

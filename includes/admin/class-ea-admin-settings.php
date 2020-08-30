@@ -535,6 +535,7 @@ class Settings {
 						'name'    => __( 'Currency', 'wp-ever-accounting' ),
 						'type'    => 'select',
 						//'std'     => 'USD',
+						'desc'     => __('Default currency rate will update to 1', 'wp-ever-accounting'),
 						'class'   => 'ea-select2',
 						'options' => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck($currencies, 'name', 'code'),
 						'attr'    => array(

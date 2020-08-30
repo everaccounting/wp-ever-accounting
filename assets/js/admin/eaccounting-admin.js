@@ -1,9 +1,5 @@
 /* global eaccounting_admin_i10n */
 jQuery(document).ready(function ($) {
-	// $(document).ajaxStart(function () {
-	// 	Pace.restart();
-	// });
-	//
 
 	//initialize plugins
 	$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
@@ -22,6 +18,32 @@ jQuery(document).ready(function ($) {
 		rightAlign: 0,
 		clearMaskOnLostFocus: false,
 	});
+
+	$('.ea-date-range-picker')
+		.daterangepicker({
+			autoUpdateInput: false,
+			locale: eaccounting_i10n.datepicker.locale,
+			ranges: {
+				'Today': [moment(), moment()],
+				'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+				'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+				'This Month': [moment().startOf('month'), moment().endOf('month')],
+				'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+			}
+		})
+		.on('apply.daterangepicker', function (ev, picker) {
+			var format = eaccounting_i10n.datepicker.locale.format;
+			var sep = eaccounting_i10n.datepicker.locale.separator;
+			$(this).find('span').html(picker.startDate.format(format) + sep + picker.endDate.format(format));
+			$(this).find('[name="start_date"]').val(picker.startDate.format("YYYY-MM-DD"));
+			$(this).find('[name="end_date"]').val(picker.endDate.format("YYYY-MM-DD"));
+		})
+		.on('cancel.daterangepicker', function (ev, picker) {
+			$(this).find('span').html('');
+			$(this).find('[name="start_date"]').val('');
+			$(this).find('[name="end_date"]').val('');
+		});
 
 	//status update
 	$(document)

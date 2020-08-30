@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit();
 class Admin {
 	/**
 	 * Admin constructor.
+	 *
 	 * @since   1.0.2
 	 */
 	public function __construct() {
@@ -32,8 +33,8 @@ class Admin {
 	/**
 	 * Output buffering allows admin screens to make redirects later on.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function buffer() {
 		ob_start();
@@ -42,11 +43,11 @@ class Admin {
 	/**
 	 * Add custom class in admin body
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $classes
 	 *
 	 * @return string
-	 * @since 1.0.2
-	 *
 	 */
 	public function admin_body_class( $classes ) {
 		if ( eaccounting_is_admin_page() ) {
@@ -59,10 +60,11 @@ class Admin {
 	/**
 	 * Change the admin footer text on EverAccounting admin pages.
 	 *
+	 * @since  1.0.2
+	 *
 	 * @param string $footer_text text to be rendered in the footer.
 	 *
 	 * @return string
-	 * @since  1.0.2
 	 */
 	public function admin_footer_text( $footer_text ) {
 		if ( ! current_user_can( 'manage_options' ) || ! function_exists( 'eaccounting_get_screen_ids' ) ) {
@@ -100,7 +102,7 @@ class Admin {
 	public function load_js_templates() {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
+		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ) ) ) {
 			eaccounting_get_admin_template( 'js/modal-add-account' );
 			eaccounting_get_admin_template( 'js/modal-add-currency' );
 			eaccounting_get_admin_template( 'js/modal-add-category' );

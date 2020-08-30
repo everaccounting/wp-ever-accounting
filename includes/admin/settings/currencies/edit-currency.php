@@ -23,7 +23,7 @@ foreach ( $currencies as $code => $props ) {
 }
 ?>
 
-<div class="notice notice-info notice-large">
+<div class="notice notice-warning notice-large">
 	<?php echo sprintf( '<p><strong>%s:</strong> %s',
 			__( 'Note', 'wp-ever-accounting' ),
 			__( 'Default currency rate should be always 1 & additional currency rates should be equivalent of default currency.

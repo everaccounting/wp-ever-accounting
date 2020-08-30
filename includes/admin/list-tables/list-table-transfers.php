@@ -107,10 +107,10 @@ class List_Table_Transfers extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'            => array( 'date', false ),
+			'date'            => array( 'paid_at', false ),
 			'amount'          => array( 'amount', false ),
-			'from_account_id' => array( 'from_account_id', false ),
-			'to_account_id'   => array( 'to_account_id', false ),
+//			'from_account_id' => array( 'from_account_id', false ),
+//			'to_account_id'   => array( 'to_account_id', false ),
 			'reference'       => array( 'reference', false ),
 		);
 	}
@@ -163,7 +163,7 @@ class List_Table_Transfers extends List_Table {
 	 * @return string Data shown in the Date column.
 	 */
 	function column_date( $transfer ) {
-		$date = $transfer->get_date()->date_i18n();
+		$date = eaccounting_format_datetime($transfer->get_date());
 
 		$value = sprintf( '<a href="%1$s">%2$s</a>',
 			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'tab' => 'transfers', 'transfer_id' => $transfer->get_id() ] ) ),
@@ -264,7 +264,7 @@ class List_Table_Transfers extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'delete':
-					eaccounting_delete_transaction( $id );
+					eaccounting_delete_transfer( $id );
 					break;
 				default:
 					do_action( 'eaccounting_transfers_do_bulk_action_' . $this->current_action(), $id );
@@ -277,6 +277,7 @@ class List_Table_Transfers extends List_Table {
 				'action',
 				'_wpnonce',
 				'_wp_http_referer',
+				'doaction',
 				'action2',
 				'paged'
 			] ) );
@@ -317,12 +318,14 @@ class List_Table_Transfers extends List_Table {
 		$args = apply_filters( 'eaccounting_transfers_table_get_transfers', $args, $this );
 
 		$this->items = Query_Transfer::init()
-		                             ->select( 'transfers.*, t.reference, t.amount' )
-		                             ->wp_query( $args )
-		                             ->leftJoin( 'ea_transactions t', 't.id', 'transfers.income_id' )
+		                             ->select( 'ea_transfers.*, ea_transactions.reference, ea_transactions.amount, ea_transactions.paid_at' )
+		                             ->where( $args )
+		                             ->withTransactions()
 		                             ->get( OBJECT, 'eaccounting_get_transfer' );
 
-		$this->total_count = Query_Transfer::init()->wp_query( $args )->count();
+		$this->total_count = Query_Transfer::init()
+		                                   ->where( $args )
+		                                   ->count();
 
 
 		$this->set_pagination_args( array(

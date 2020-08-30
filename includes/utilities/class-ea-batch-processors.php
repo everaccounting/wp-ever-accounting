@@ -1,23 +1,10 @@
 <?php
-/**
- * Implements a batch process registry class.
- * @package     EverAccounting
- * @subpackage Utilities
- * @since 1.0.2
- */
 
 namespace EverAccounting\Utilities;
-defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\Registry;
 
-/**
- * Class Batch_Process_Registry
- * @since 1.0.2
- * @package EverAccounting\Utilities
- */
-class Batch_Process_Registry extends Registry {
-
+class Batch_Processors extends Registry {
 	/**
 	 * Initializes the batch registry.
 	 *
@@ -38,6 +25,8 @@ class Batch_Process_Registry extends Registry {
 	 * @since  1.0.2
 	 */
 	public function includes() {
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-batch-process.php' );
+
 
 	}
 
@@ -48,11 +37,7 @@ class Batch_Process_Registry extends Registry {
 	 * @since  1.0.2
 	 */
 	protected function register_core_processes() {
-		// Export Customers.
-		$this->register_process( 'export-customers', array(
-			'class' => 'AffWP\Utils\Batch_Process\Export_Affiliates',
-			'file'  => AFFILIATEWP_PLUGIN_DIR . 'includes/admin/tools/export/class-batch-export-affiliates.php',
-		) );
+
 	}
 
 	/**
@@ -60,16 +45,18 @@ class Batch_Process_Registry extends Registry {
 	 *
 	 * @access public
 	 *
-	 * @param string $process_name Unique batch process name.
-	 * @param array $process_args {
-	 *     Arguments for registering a new batch process.
-	 *
-	 * @type string $class Batch processor class to use.
-	 * @type string $file File containing the batch processor class.
-	 * }
-	 * @return \WP_Error|true True on successful registration, otherwise a WP_Error object.
 	 * @since  1.0.2
 	 *
+	 * @param array  $process_args {
+	 *                             Arguments for registering a new batch process.
+	 *
+	 * @type string  $class        Batch processor class to use.
+	 * @type string  $file         File containing the batch processor class.
+	 * }
+	 *
+	 * @param string $process_name Unique batch process name.
+	 *
+	 * @return \WP_Error|true True on successful registration, otherwise a WP_Error object.
 	 */
 	public function register_process( $process_name, $process_args ) {
 		$process_args = wp_parse_args( $process_args, array_fill_keys( array( 'class', 'file' ), '' ) );
@@ -95,9 +82,10 @@ class Batch_Process_Registry extends Registry {
 	 *
 	 * @access public
 	 *
+	 * @since  1.0.2
+	 *
 	 * @param $process_name
 	 *
-	 * @since  1.0.2
 	 */
 	public function remove_process( $process_name ) {
 		$this->remove_item( $process_name );

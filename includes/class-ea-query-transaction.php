@@ -8,16 +8,26 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Traits\WP_Query;
+use EverAccounting\Traits\Query_Where;
 
 defined( 'ABSPATH' ) || exit();
 
 class Query_Transaction extends Query {
+	use Query_Where;
+
 	/**
-	 * Implement WP style query.
-	 * @since    1.0.2
+	 * Table name in database (without prefix).
+	 *
+	 * @var string
 	 */
-	use WP_Query;
+	const TABLE = 'ea_transactions';
+
+	/**
+	 * Table name in database (without prefix).
+	 *
+	 * @var string
+	 */
+	protected $table = self::TABLE;
 
 	/**
 	 * @since 1.0.2
@@ -26,18 +36,22 @@ class Query_Transaction extends Query {
 	protected $cache_group = 'transactions';
 
 	/**
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $search_columns = [ 'paid_at', 'amount', 'reference', 'description' ];
+
+	/**
 	 * Static constructor.
 	 *
 	 *
-	 * @param string $id
-	 *
 	 * @since 1.0.2
+	 *
 	 * @return Query_Transaction
 	 */
-	public static function init( $id = 'transactions_query' ) {
-		$builder     = new self();
-		$builder->id = $id;
-		$builder->from( 'ea_transactions' . ' transactions' );
+	public static function init() {
+		$builder = new self();
+		$builder->from( self::TABLE . ' as `' . self::TABLE . '`' );
 
 		return $builder;
 	}
@@ -48,9 +62,9 @@ class Query_Transaction extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function isNotTransfer() {
+	public function notTransfer() {
 		global $wpdb;
-		$this->whereRaw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" );
+		$this->whereRaw( "{$this->table}.category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" );
 
 		return $this;
 	}
@@ -61,8 +75,8 @@ class Query_Transaction extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function isExpense() {
-		$this->where( 'transactions.type', 'expense' );
+	public function typeExpense() {
+		$this->where( "{$this->table}.type", 'expense' );
 
 		return $this;
 	}
@@ -73,27 +87,10 @@ class Query_Transaction extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function isIncome() {
+	public function typeIncome() {
 
-		$this->where( 'transactions.type', 'income' );
+		$this->where( "{$this->table}.type", 'income' );
 
 		return $this;
 	}
-
-	public function withCategory(){
-		$this->leftJoin('ea_categories categories', 'categories.id', 'transactions.category_id');
-		return $this;
-	}
-
-	/**
-	 * Searchable columns for the current table.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return array Table columns.
-	 */
-	protected function get_search_columns() {
-		return array( 'paid_at', 'amount', 'reference', 'description' );
-	}
-
 }
