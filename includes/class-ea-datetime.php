@@ -39,6 +39,16 @@ class DateTime extends Base {
 	}
 
 	/**
+	 * Clone the current object.
+	 *
+	 * @since 1.0.2
+	 * @return \EAccounting\DateTime
+	 */
+	public function clone() {
+		return clone $this;
+	}
+
+	/**
 	 * Set UTC offset - this is a fixed offset instead of a timezone.
 	 *
 	 * @since   1.0.2
@@ -72,6 +82,84 @@ class DateTime extends Base {
 		$this->utc_offset = 0;
 
 		return parent::setTimezone( $timezone );
+	}
+
+	/**
+	 * @since 1.0.2
+	 *
+	 * @param int $number
+	 *
+	 * @return $this
+	 */
+	public function addYear( $number = 1 ) {
+		$this->add( new \DateInterval( "P{$number}Y" ) );
+
+		return $this;
+	}
+
+	/**
+	 * @since 1.0.2
+	 *
+	 * @param int $number
+	 *
+	 * @return $this
+	 */
+	public function addMonth( $number = 1 ) {
+		$this->add( new \DateInterval( "P{$number}M" ) );
+
+		return $this;
+	}
+
+	/**
+	 * @since 1.0.2
+	 *
+	 * @param int $number
+	 *
+	 * @return $this
+	 */
+	public function addDay( $number = 1 ) {
+		$this->add( new \DateInterval( "P{$number}D" ) );
+
+		return $this;
+	}
+
+	/**
+	 * @since 1.0.2
+	 *
+	 * @param int $number
+	 *
+	 * @return $this
+	 */
+	public function subYear( $number = 1 ) {
+		$this->sub( new \DateInterval( "P{$number}Y" ) );
+
+		return $this;
+	}
+
+	/**
+	 * @since 1.0.2
+	 *
+	 * @param int $number
+	 *
+	 * @return $this
+	 */
+	public function subMonth( $number = 1 ) {
+		$this->sub( new \DateInterval( "P{$number}M" ) );
+
+		return $this;
+	}
+
+	/**
+	 * @since 1.0.2
+	 *
+	 * @param int $number
+	 *
+	 * @return $this
+	 */
+	public function subDay( $number = 1 ) {
+		$this->sub( new \DateInterval( "P{$number}D" ) );
+
+		return $this;
 	}
 
 	/**

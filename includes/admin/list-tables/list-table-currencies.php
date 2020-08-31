@@ -329,18 +329,18 @@ class List_Table_Currency extends List_Table {
 			}
 		}
 
-//		if ( isset( $_REQUEST['_wpnonce'] ) || ! empty( $action ) ) {
-//			wp_safe_redirect( remove_query_arg( [
-////				'currency_id',
-////				'action',
-////				'_wpnonce',
-////				'_wp_http_referer',
-////				'action2',
-////				'doaction',
-////				'paged'
-//			] ) );
-//			exit();
-//		}
+		if ( isset( $_REQUEST['_wpnonce'] ) || ! empty( $action ) ) {
+			wp_safe_redirect( remove_query_arg( [
+				'currency_id',
+				'action',
+				'_wpnonce',
+				'_wp_http_referer',
+				'action2',
+				'doaction',
+				'paged'
+			] ) );
+			exit();
+		}
 	}
 
 	/**
@@ -400,14 +400,14 @@ class List_Table_Currency extends List_Table {
 
 		$args = apply_filters( 'eaccounting_currencies_table_get_currencies', $args, $this );
 
-		$this->items = Query_Currency::init()->wp_query( $args )->get( OBJECT, 'eaccounting_get_currency' );
+		$this->items = Query_Currency::init()->where( $args )->get( OBJECT, 'eaccounting_get_currency' );
 
-		$this->active_count = Query_Currency::init()->wp_query( array_merge( $this->query_args, array(
+		$this->active_count = Query_Currency::init()->where( array_merge( $this->query_args, array(
 				'status' => 'active',
 				'search' => $search
 		) ) )->count();
 
-		$this->inactive_count = Query_Currency::init()->wp_query( array_merge( $this->query_args, array(
+		$this->inactive_count = Query_Currency::init()->where( array_merge( $this->query_args, array(
 				'status' => 'inactive',
 				'search' => $search
 		) ) )->count();

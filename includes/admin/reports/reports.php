@@ -2,11 +2,16 @@
 /**
  * Admin Reports Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Reports
  * @since       1.0.2
+ * @subpackage  Admin/Reports
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
+require_once dirname( __FILE__ ) . '/expense-summary.php';
+require_once dirname( __FILE__ ) . '/income-summary.php';
+require_once dirname( __FILE__ ) . '/income-expense.php';
+//require_once dirname( __FILE__ ) . '/profit-loss.php';
+
 /**
  * render reports page.
  *
@@ -14,8 +19,7 @@ defined( 'ABSPATH' ) || exit();
  */
 function eaccounting_admin_reports_page() {
 	$tabs       = eaccounting_get_reports_tabs();
-	$active_tab = eaccounting_get_active_tab( $tabs, 'accounts' );
-
+	$active_tab = eaccounting_get_active_tab( $tabs, 'income_summary' );
 	ob_start();
 	?>
 	<div class="wrap">
@@ -43,14 +47,15 @@ function eaccounting_admin_reports_page() {
 /**
  * Retrieve reports tabs
  *
- * @return array $tabs
  * @since 1.0.2
+ * @return array $tabs
  */
 function eaccounting_get_reports_tabs() {
 	$tabs                    = array();
 	$tabs['income_summary']  = __( 'Income Summary', 'wp-ever-accounting' );
 	$tabs['expense_summary'] = __( 'Expense Summary', 'wp-ever-accounting' );
 	$tabs['income_expense']  = __( 'Income vs Expense', 'wp-ever-accounting' );
+	//$tabs['profit_loss']     = __( 'Profit & Loss', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_reports_tabs', $tabs );
 }

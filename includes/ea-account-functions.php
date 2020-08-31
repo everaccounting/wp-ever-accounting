@@ -4,7 +4,7 @@
  *
  * All account related function of the plugin.
  *
- * @since 1.0.2
+ * @since   1.0.2
  * @package EverAccounting
  */
 
@@ -14,9 +14,9 @@ use EverAccounting\Account;
 /**
  * Main function for returning account.
  *
- * @param $account
- *
  * @since 1.0.2
+ *
+ * @param $account
  *
  * @return Account|null
  */
@@ -50,9 +50,9 @@ function eaccounting_get_account( $account ) {
  *
  *  Returns a new account object on success.
  *
- * @param array $args Account arguments.
- *
  * @since 1.0.2
+ *
+ * @param array $args Account arguments.
  *
  * @return Account|WP_Error
  */
@@ -113,9 +113,9 @@ function eaccounting_insert_account( $args ) {
 /**
  * Delete an account.
  *
- * @param $account_id
- *
  * @since 1.0.2
+ *
+ * @param $account_id
  *
  * @return bool
  */
@@ -138,15 +138,40 @@ function eaccounting_delete_account( $account_id ) {
 /**
  * Delete default account from settings
  *
+ * @since 1.0.2
+ *
  * @param int $id ID of the default account.
  *
- * @since 1.0.2
  */
 function eaccounting_delete_default_account( $id ) {
 	$default_account = eaccounting()->settings->get( 'default_account' );
 	if ( $default_account == $id ) {
 		eaccounting()->settings->set( array( [ 'default_account' => '' ] ), true );
 	}
+
 }
 
 add_action( 'eaccounting_delete_account', 'eaccounting_delete_default_account' );
+
+/**
+ * Delete account id from transactions.
+ *
+ * @since 1.0.2
+ *
+ * @param $id
+ *
+ * @return bool
+ */
+function eaccounting_update_transaction_account( $id ) {
+	$id = absint( $id );
+	if ( empty( $id ) ) {
+		return false;
+	}
+	$transactions = \EverAccounting\Query::init();
+
+	return $transactions->table( 'ea_transactions' )->where( 'account_id', absint( $id ) )->update( array( 'account_id' => '' ) );
+}
+
+add_action( 'eaccounting_delete_account', 'eaccounting_update_transaction_account' );
+
+

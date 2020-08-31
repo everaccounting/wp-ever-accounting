@@ -7,7 +7,7 @@
  * @since       1.0.2
  */
 
-namespace EverAccounting\Export;
+namespace EverAccounting\Abstracts;
 defined( 'ABSPATH' ) || exit();
 
 abstract class CSV_Exporter {

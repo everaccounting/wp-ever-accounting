@@ -142,29 +142,30 @@
 
 .eaccounting {
   .iris-picker {
-  z-index: 100;
-  display: none;
-  position: absolute;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	z-index: 100;
+	display: none;
+	position: absolute;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
-  .ui-slider {
-    border: 0 !important;
-    margin: 0 !important;
-    width: auto !important;
-    height: auto !important;
-    background: none transparent !important;
+	.ui-slider {
+	  border: 0 !important;
+	  margin: 0 !important;
+	  width: auto !important;
+	  height: auto !important;
+	  background: none transparent !important;
 
-    .ui-slider-handle {
-  	margin-bottom: 0 !important;
-    }
-  }
+	  .ui-slider-handle {
+		margin-bottom: 0 !important;
+	  }
+	}
   }
 
   .iris-error {
-  background-color: #ffafaf;
+	background-color: #ffafaf;
   }
+
   .ea-color-field {
 	.ea-input-color {
 	  width: 6em !important;
@@ -186,3 +187,54 @@
   }
 }
 
+.ea-date-range-picker {
+  height: 30px;
+  box-shadow: 0 0 0 transparent;
+  border-radius: 4px;
+  border: 1px solid #7e8993;
+  background-color: #fff;
+  color: #32373c;
+  min-width: 180px;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  span{
+	padding: 2px 30px;
+	line-height: 2;
+  }
+
+  &:before, &:after {
+	font-family: dashicons;
+	display: inline-block;
+	line-height: 1;
+	font-weight: 400;
+	font-style: normal;
+	speak: none;
+	text-decoration: inherit;
+	text-transform: none;
+	text-rendering: auto;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	width: 20px;
+	height: 20px;
+	font-size: 20px;
+	vertical-align: top;
+	text-align: center;
+	transition: color 0.1s ease-in;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+  }
+  &:after{
+	content: "\f140";
+	right: 3px;
+	left: auto;
+  }
+  &:before{
+	content: "\f145";
+	left: 5px;
+	right: auto;
+  }
+}

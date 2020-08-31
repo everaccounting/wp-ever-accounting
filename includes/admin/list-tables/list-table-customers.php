@@ -247,9 +247,9 @@ class List_Table_Customers extends List_Table {
 			'naked' => true,
 			'class' => 'ea_item_status_update',
 			'attr'  => array(
-				'data-objectid'   => $customer->get_id(),
+				'data-object_id'   => $customer->get_id(),
 				'data-nonce'      => wp_create_nonce( 'ea_status_update' ),
-				'data-objecttype' => 'contact'
+				'data-object_type' => 'customer'
 			)
 		) );
 		$output = ob_get_contents();
@@ -324,13 +324,13 @@ class List_Table_Customers extends List_Table {
 		$action = $this->current_action();
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
-				case 'activate':
+				case 'enable':
 					eaccounting_insert_contact( array(
 						'id'      => $id,
 						'enabled' => '1'
 					) );
 					break;
-				case 'deactivate':
+				case 'disable':
 					eaccounting_insert_contact( array(
 						'id'      => $id,
 						'enabled' => '0'
@@ -392,16 +392,16 @@ class List_Table_Customers extends List_Table {
 
 		$args = apply_filters( 'eaccounting_customers_table_get_customers', $args, $this );
 
-		$this->items = Query_Contact::init()->wp_query( $args )->get( OBJECT, 'eaccounting_get_contact' );
+		$this->items = Query_Contact::init()->where( $args )->get( OBJECT, 'eaccounting_get_contact' );
 
-		$this->total_count = Query_Contact::init()->wp_query( $args )->count();
+		$this->total_count = Query_Contact::init()->where( $args )->count();
 
-		$this->active_count = Query_Contact::init()->wp_query( array_merge( $this->query_args, array(
+		$this->active_count = Query_Contact::init()->where( array_merge( $this->query_args, array(
 			'status' => 'active',
 			'search' => $search
 		) ) )->count();
 
-		$this->inactive_count = Query_Contact::init()->wp_query( array_merge( $this->query_args, array(
+		$this->inactive_count = Query_Contact::init()->where( array_merge( $this->query_args, array(
 			'status' => 'inactive',
 			'search' => $search
 		) ) )->count();

@@ -2,78 +2,83 @@
 /**
  * Class for Category querying.
  *
- * @package  EverAccounting
  * @since    1.0.2
+ * @package  EverAccounting
  */
+
 namespace EverAccounting;
 
-use EverAccounting\Traits\WP_Query;
+use EverAccounting\Traits\Query_Where;
+
 defined( 'ABSPATH' ) || exit();
 
 class Query_Category extends Query {
-	/**
-	 * Implement WP style query.
-	 */
-	use WP_Query;
+	use Query_Where;
 
 	/**
+	 * Table name in database (without prefix).
+	 *
 	 * @var string
+	 */
+	const TABLE = 'ea_categories';
+
+	/**
+	 * Table name in database (without prefix).
+	 *
+	 * @var string
+	 */
+	protected $table = self::TABLE;
+
+	/**
 	 * @since 1.0.2
+	 * @var string
 	 */
 	protected $cache_group = 'categories';
+
+	/**
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $search_columns = [ 'name' ];
 
 	/**
 	 * Static constructor.
 	 *
 	 *
-	 * @param string $id
-	 *
-	 * @return Query_Category
 	 * @since 1.0.2
+	 * @return Query_Category
 	 */
-	public static function init( $id = 'categories_query' ) {
-		$builder     = new self();
-		$builder->id = $id;
-		$builder->from( 'ea_categories'.' categories' );
+	public static function init() {
+		$builder = new self();
+		$builder->from( self::TABLE . ' as `' . self::TABLE . '`' );
+
 		return $builder;
 	}
 
 
-
 	/**
-	 * Searchable columns for the current table.
+	 * Include only customers
 	 *
-	 * @return array Table columns.
 	 * @since 1.0.2
-	 *
-	 */
-	protected function get_search_columns() {
-		return array( 'name');
-	}
-
-	/**
-	 * Include only expense
-	 *
 	 * @return $this
-	 * @since 1.0.2
 	 */
-	public function isExpense() {
-
-		$this->where('type', 'expense');
+	public function typeExpense() {
+		$this->where( "{$this->table}.type", 'expense' );
 
 		return $this;
 	}
 
 	/**
-	 * Include only income
+	 * Include only payments
 	 *
-	 * @return $this
 	 * @since 1.0.2
+	 * @return $this
 	 */
-	public function isIncome() {
+	public function typeIncome() {
 
-		$this->where('type', 'income');
+		$this->where( "{$this->table}.type", 'income' );
 
 		return $this;
 	}
+
 }

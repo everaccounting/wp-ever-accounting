@@ -131,7 +131,6 @@ class List_Table_Revenues extends List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'export_csv' => __( 'Export "CSV"', 'wp-ever-accounting' ),
 			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
@@ -254,6 +253,64 @@ class List_Table_Revenues extends List_Table {
 	}
 
 	/**
+	 * Extra controls to be displayed between bulk actions and pagination.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $which
+	 */
+	protected function extra_tablenav( $which ) {
+		if ( 'top' == $which ) {
+			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
+			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
+			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
+			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
+			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+			echo '<div class="alignleft actions ea-table-filter">';
+
+			eaccounting_input_date_range( array(
+				'start_date' => $start_date,
+				'end_date'   => $end_date,
+			) );
+
+			eaccounting_account_dropdown( [
+				'name'    => 'account_id',
+				'value'   => $account_id,
+				'default' => '',
+				'attr'    => array(
+					'data-allow-clear' => true
+				)
+			] );
+
+			eaccounting_category_dropdown( [
+				'name'    => 'category_id',
+				'value'   => $category_id,
+				'default' => '',
+				'type'    => 'income',
+				'attr'    => array(
+					'data-allow-clear' => true
+				)
+			] );
+			eaccounting_contact_dropdown( [
+				'name'        => 'customer_id',
+				'value'       => $customer_id,
+				'default'     => '',
+				'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
+				'type'        => 'customer',
+				'attr'        => array(
+					'data-allow-clear' => true
+				)
+			] );
+
+			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
+			echo "\n";
+
+			echo '</div>';
+		}
+	}
+
+
+	/**
 	 * Process the bulk actions
 	 *
 	 * @since 1.0.2
@@ -293,7 +350,7 @@ class List_Table_Revenues extends List_Table {
 			}
 		}
 
-		if ( ! empty( $action ) ) {
+		if ( isset( $_GET['_wpnonce'] ) ) {
 			wp_safe_redirect( remove_query_arg( [
 				'revenue_id',
 				'action',
@@ -326,27 +383,40 @@ class List_Table_Revenues extends List_Table {
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 
+		$start_date  = ! empty( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
+		$end_date    = ! empty( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
+		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
+		$customer_id = ! empty( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
+
 		$per_page = $this->get_per_page();
 
 		$args = wp_parse_args( $this->query_args, array(
-			'number'  => $per_page,
-			'offset'  => $per_page * ( $page - 1 ),
-			'search'  => $search,
-			'orderby' => eaccounting_clean( $orderby ),
-			'order'   => eaccounting_clean( $order ),
-			'type'    => 'income'
+			'per_page'    => $per_page,
+			'page'        => $page,
+			'number'      => $per_page,
+			'offset'      => $per_page * ( $page - 1 ),
+			'search'      => $search,
+			'orderby'     => eaccounting_clean( $orderby ),
+			'order'       => eaccounting_clean( $order ),
+			'type'        => 'income',
+			'category_id' => $category_id,
+			'account_id'  => $account_id,
+			'contact_id'  => $customer_id,
 		) );
 
 		$args = apply_filters( 'eaccounting_revenues_table_get_revenues', $args, $this );
 
 		$this->items = Query_Transaction::init()
-		                                ->wp_query( $args )
-		                                ->isNotTransfer()
+		                                ->where( $args )
+		                                ->notTransfer()
+		                                ->whereDateBetween( 'paid_at', $start_date, $end_date )
 		                                ->get( OBJECT, 'eaccounting_get_transaction' );
 
 		$this->total_count = Query_Transaction::init()
-		                                      ->wp_query( $args )
-		                                      ->isNotTransfer()
+		                                      ->where( $args )
+		                                      ->notTransfer()
+		                                      ->whereDateBetween( 'paid_at', $start_date, $end_date )
 		                                      ->count();
 
 

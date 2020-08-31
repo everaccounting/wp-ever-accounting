@@ -251,9 +251,9 @@ class List_Table_Accounts extends List_Table {
 			'naked' => true,
 			'class' => 'ea_item_status_update',
 			'attr'  => array(
-				'data-objectid'   => $account->get_id(),
+				'data-object_id'   => $account->get_id(),
 				'data-nonce'      => wp_create_nonce( 'ea_status_update' ),
-				'data-objecttype' => 'account'
+				'data-object_type' => 'customer'
 			)
 		) );
 		$output = ob_get_contents();
@@ -348,7 +348,7 @@ class List_Table_Accounts extends List_Table {
 			}
 		}
 
-		if ( ! empty( $action ) ) {
+		if ( isset( $_GET['_wpnonce'] ) ) {
 			wp_safe_redirect( remove_query_arg( [
 				'account_id',
 				'action',
@@ -419,16 +419,16 @@ class List_Table_Accounts extends List_Table {
 
 		$args = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
 		$this->items = Query_Account::init()
-		                            ->wp_query( $args )
+		                            ->where( $args )
 		                            ->withBalance()
 		                            ->get( OBJECT, 'eaccounting_get_account' );
 
-		$this->active_count = Query_Account::init()->wp_query( array_merge( $this->query_args, array(
+		$this->active_count = Query_Account::init()->where( array_merge( $this->query_args, array(
 			'status' => 'active',
 			'search' => $search
 		) ) )->count();
 
-		$this->inactive_count = Query_Account::init()->wp_query( array_merge( $this->query_args, array(
+		$this->inactive_count = Query_Account::init()->where( array_merge( $this->query_args, array(
 			'status' => 'inactive',
 			'search' => $search
 		) ) )->count();

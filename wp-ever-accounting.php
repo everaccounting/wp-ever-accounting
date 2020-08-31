@@ -225,7 +225,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-base-object.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-widget.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-wp-query.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-where-query.php' );
 
 
 		//Core classes.
@@ -252,6 +252,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-chart.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-emails.php' );
 
 		//REST API.
 
@@ -266,6 +267,8 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transfer-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
+
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php' );
@@ -335,6 +338,16 @@ final class EverAccounting {
 	 */
 	public function query( $type = null ) {
 		return \EverAccounting\Query::init( $type );
+	}
+
+	/**
+	 * Email Class.
+	 *
+	 * @since 1.0.2
+	 * @return \EverAccounting\Emails
+	 */
+	public function mailer() {
+		return \EverAccounting\Emails::instance();
 	}
 }
 

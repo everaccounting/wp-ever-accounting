@@ -30,9 +30,9 @@
 			}
 
 			var data = {
-				batch_id: this.$el.data('batch_id'),
+				process_name: this.$el.data('process_name'),
 				nonce: this.$el.data('nonce'),
-				//form: this.$el.serializeAssoc(),
+				form: this.$el.serialize(),
 			};
 
 			this.submitBtn.addClass('disabled');
@@ -58,22 +58,41 @@
 		 * @param {string[]} data Form data.
 		 */
 		process_step: function (step, data) {
-			var self = this;
-			wp.send({
-				batch_id: data.batch_id,
-				action: 'process_batch_request',
+			var self = this,
+				$form = self.$el,
+				spinner = $form.find('.spinner'),
+				$progress_wrap = $form.find('.ea-batch-progress'),
+				dismiss_on_complete = true === $form.data('dismiss-when-complete');
+
+			wp.ajax.send('eaccounting_process_batch_request', {
+				batch_id: data.process_name,
 				nonce: data.nonce,
 				form: data.form,
 				step: step,
-				data: data
+				data: data,
+				success: function (res) {
+					if (res.done) {
+						// We need to get the actual in progress form, not all forms on the page
+						if (false === dismiss_on_complete) {
+							$form.find('.button-disabled').removeClass('button-disabled');
+						}
+					}
+					this.$el.find('.ea-batch-progress div').animate({
+						width: 10 + '%',
+					}, 50, function () {
+						// Animation complete.
+					});
+					self.process_step(parseInt(res.step), data);
+				},
+				error: function (error) {
+					spinner.remove();
+					$progress_wrap.remove()
+					$form.append($('<div class="updated error"><p>' + error.message + '</p></div>'));
+					self.submitBtn.removeClass('disabled');
+				}
 			});
 
 
-			this.$el.find('.ea-batch-progress div').animate({
-				width: 10 + '%',
-			}, 50, function () {
-				// Animation complete.
-			});
 		}
 
 	});

@@ -37,6 +37,12 @@ class Utilities {
 	public $defaults;
 
 	/**
+	 * @since 1.0.
+	 * @var
+	 */
+	public $batches;
+
+	/**
 	 * Instantiates the utilities class.
 	 *
 	 * @access public

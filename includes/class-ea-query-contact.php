@@ -8,15 +8,26 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Traits\WP_Query;
+use EverAccounting\Traits\Query_Where;
 
 defined( 'ABSPATH' ) || exit();
 
 class Query_Contact extends Query {
+	use Query_Where;
+
 	/**
-	 * Implement WP style query.
+	 * Table name in database (without prefix).
+	 *
+	 * @var string
 	 */
-	use WP_Query;
+	const TABLE = 'ea_contacts';
+
+	/**
+	 * Table name in database (without prefix).
+	 *
+	 * @var string
+	 */
+	protected $table = self::TABLE;
 
 	/**
 	 * @since 1.0.2
@@ -25,18 +36,21 @@ class Query_Contact extends Query {
 	protected $cache_group = 'contacts';
 
 	/**
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $search_columns = [ 'name', 'email', 'phone', 'fax', 'address' ];
+
+	/**
 	 * Static constructor.
 	 *
-	 *
-	 * @param string $id
 	 *
 	 * @since 1.0.2
 	 * @return Query_Contact
 	 */
-	public static function init( $id = 'contacts_query' ) {
-		$builder     = new self();
-		$builder->id = $id;
-		$builder->from( 'ea_contacts' . ' contacts' );
+	public static function init() {
+		$builder = new self();
+		$builder->from( self::TABLE . ' as `' . self::TABLE . '`' );
 
 		return $builder;
 	}
@@ -47,7 +61,7 @@ class Query_Contact extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function isCustomer() {
+	public function typeCustomer() {
 
 		$this->where( 'type', 'customer' );
 
@@ -60,22 +74,10 @@ class Query_Contact extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function isVendor() {
+	public function typeVendor() {
 
 		$this->where( 'type', 'vendor' );
 
 		return $this;
 	}
-
-	/**
-	 * Searchable columns for the current table.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return array Table columns.
-	 */
-	protected function get_search_columns() {
-		return array( 'name', 'email', 'phone', 'fax', 'address' );
-	}
-
 }

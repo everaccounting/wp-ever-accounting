@@ -2,17 +2,21 @@
 /**
  * Load assets.
  *
- * @package EverAccounting
+ * @package     EverAccounting
  * @subpackage  Admin
- * @version 1.0.2
+ * @version     1.0.2
  */
 
 namespace EverAccounting\Admin;
+
+use EAccounting\DateTime;
+
 defined( 'ABSPATH' ) || exit();
 
 class Admin_Assets {
 	/**
 	 * Hook in tabs.
+	 *
 	 * @version 1.0.2
 	 */
 	public function __construct() {
@@ -22,6 +26,7 @@ class Admin_Assets {
 
 	/**
 	 * Enqueue styles.
+	 *
 	 * @version 1.0.2
 	 */
 	public function admin_styles() {
@@ -48,6 +53,7 @@ class Admin_Assets {
 
 	/**
 	 * Enqueue scripts.
+	 *
 	 * @version 1.0.2
 	 */
 	public function admin_scripts() {
@@ -99,18 +105,71 @@ class Admin_Assets {
 				'global_currencies' => eaccounting_get_global_currencies()
 			) );
 
-//			wp_localize_script( 'jquery-pace', 'paceOptions', array(
-//				'ajax'                  => 0,
-//				'restartOnRequestAfter' => 0
-//			) );
+
+			$financial_start    = eaccounting_get_financial_start();
+			$financial_start_dt = new DateTime( $financial_start );
+			$today_dt           = new DateTime();
+			$date_format        = 'Y-m-d';
+			wp_localize_script( 'ea-dashboard', 'eaccounting_dashboard_i10n', array(
+				'datepicker' => array(
+					'locale' => array(
+						'format'           => 'YYYY-MM-DD',
+						'separator'        => '  >>  ',
+						'applyLabel'       => __( 'Apply', 'wp-ever-accounting' ),
+						'cancelLabel'      => __( 'Cancel', 'wp-ever-accounting' ),
+						'fromLabel'        => __( 'From', 'wp-ever-accounting' ),
+						'toLabel'          => __( 'To', 'wp-ever-accounting' ),
+						'customRangeLabel' => __( 'Custom', 'wp-ever-accounting' ),
+						'daysOfWeek'       => [ 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ],
+						'monthNames'       => [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+						'firstDay'         => get_option( 'start_of_week' ),
+					),
+					'ranges' => array(
+						__( 'This Year', 'wp-ever-accounting' )      => array(
+							$financial_start,
+							$financial_start_dt->clone()->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format )
+						),
+						__( 'Last Year', 'wp-ever-accounting' )      => array(
+							$financial_start_dt->clone()->sub( new \DateInterval( 'P1Y' ) )->format( $date_format ),
+							$financial_start_dt->clone()->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+						),
+//						__( 'This Quarter', 'wp-ever-accounting' )   => array(
+//							$financial_start,
+//							$financial_start_dt->clone()->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format )
+//						),
+//						__( 'Last Quarter', 'wp-ever-accounting' )   => array(
+//							$financial_start_dt->clone()->sub( new \DateInterval( 'P1Y' ) )->format( $date_format ),
+//							$financial_start_dt->clone()->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+//						),
+						__( 'Last 12 Months', 'wp-ever-accounting' ) => array(
+							$today_dt->clone()->sub( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+							$today_dt->clone()->format( $date_format ),
+						)
+					)
+				)
+			) );
 
 
 			wp_localize_script( 'eaccounting', 'eaccounting_i10n', array(
-				'ajaxurl' => eaccounting()->ajax_url(),
+				'ajaxurl'           => eaccounting()->ajax_url(),
 				'global_currencies' => eaccounting_get_global_currencies(),
-				'nonce'   => array(
+				'nonce'             => array(
 					'get_account'  => wp_create_nonce( 'ea_get_account' ),
 					'get_currency' => wp_create_nonce( 'ea_get_currency' ),
+				),
+				'datepicker'        => array(
+					'locale' => array(
+						'format'           => 'D MMM YY',
+						'separator'        => '  >>  ',
+						'applyLabel'       => __( 'Apply', 'wp-ever-accounting' ),
+						'cancelLabel'      => __( 'Cancel', 'wp-ever-accounting' ),
+						'fromLabel'        => __( 'From', 'wp-ever-accounting' ),
+						'toLabel'          => __( 'To', 'wp-ever-accounting' ),
+						'customRangeLabel' => __( 'Custom', 'wp-ever-accounting' ),
+						'daysOfWeek'       => [ 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ],
+						'monthNames'       => [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+						'firstDay'         => get_option( 'start_of_week' ),
+					),
 				)
 			) );
 

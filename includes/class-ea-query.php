@@ -28,7 +28,7 @@ class Query {
 	protected $select = [];
 
 	/**
-	 * @var null
+	 * @var string
 	 */
 	protected $from = null;
 
@@ -53,12 +53,12 @@ class Query {
 	protected $group = [];
 
 	/**
-	 * @var null
+	 * @var string
 	 */
 	protected $having = null;
 
 	/**
-	 * @var null
+	 * @var int
 	 */
 	protected $limit = null;
 
@@ -69,20 +69,22 @@ class Query {
 
 	/**
 	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $search_columns = [];
+
+	/**
+	 * @since 1.0.2
 	 * @var string
 	 */
 	protected $cache_group = 'eaccounting_query';
 
 	/**
-	 * Static constructor.
-	 *
-	 *
-	 * @since       1.0.2
-	 *
+	 * @since 1.0.2
+	 * @return \EverAccounting\Query
 	 */
-	public static function init( $id = null ) {
-		$builder     = new self();
-		$builder->id = ! empty( $id ) ? $id : uniqid( '', true );
+	public static function init() {
+		$builder = new self();
 
 		return $builder;
 	}
@@ -92,11 +94,18 @@ class Query {
 	 *
 	 * @since       1.0.2
 	 *
-	 * @param $statement
+	 * @param array|string $statement
+	 *
+	 * @param bool         $reset
 	 *
 	 * @return $this
 	 */
-	public function select( $statement ) {
+	public function select( $statement, $reset = false ) {
+		if ( $reset ) {
+			$this->select = $statement;
+
+			return $this;
+		}
 		$this->select[] = $statement;
 
 		return $this;
@@ -143,12 +152,13 @@ class Query {
 	 *
 	 * @since       1.0.2
 	 *
-	 * @param $columns
-	 * @param $joint
+	 * @param string $search
+	 * @param array  $columns
+	 * @param string $joint
 	 *
-	 * @param $search
+	 * @return self
 	 */
-	public function search( $search, $columns, $joint = 'AND' ) {
+	public function search( $search, $columns = array(), $joint = 'AND' ) {
 		if ( ! empty( $search ) ) {
 			global $wpdb;
 			foreach ( explode( ' ', $search ) as $word ) {
@@ -157,7 +167,7 @@ class Query {
 					'joint'     => $joint,
 					'condition' => '(' . implode( ' OR ', array_map( function ( $column ) use ( &$wpdb, &$word ) {
 							return $wpdb->prepare( $column . ' LIKE %s', $word );
-						}, $columns ) ) . ')',
+						}, array_merge( $this->search_columns, $columns ) ) ) . ')',
 				];
 			}
 		}
@@ -192,6 +202,7 @@ class Query {
 		if ( is_array( $column ) ) {
 			// create new query object
 			$subquery = new Query();
+			$column   = array_filter( $column );
 			foreach ( $column as $key => $val ) {
 				$subquery->where( $key, $val, null, $joint );
 			}
@@ -899,8 +910,8 @@ class Query {
 		$this->_query_offset( $query );
 
 		// Process
-		$query = apply_filters( 'wp_query_builder_get_query', $query );
-		$query = apply_filters( 'wp_query_builder_get_query_' . $this->id, $query );
+		$query        = apply_filters( 'wp_query_builder_get_query', $query );
+		$query        = apply_filters( 'wp_query_builder_get_query_' . $this->id, $query );
 		$key          = md5( $query );
 		$last_changed = wp_cache_get( 'last_changed', $this->cache_group );
 
@@ -1091,23 +1102,6 @@ class Query {
 	 * @return array|string
 	 */
 	public function updateOrInsert( $data ) {
-		if ( $this->first() ) {
-			return $this->update( $data );
-		}
-
-		return $this->insert( $data );
-	}
-
-	/**
-	 * Find or insert.
-	 *
-	 * @since       1.0.2
-	 *
-	 * @param $data
-	 *
-	 * @return array|string
-	 */
-	public function findOrInsert( $data ) {
 		if ( $this->first() ) {
 			return $this->update( $data );
 		}
@@ -1324,7 +1318,7 @@ class Query {
 		$fields = implode( ', ', $fields );
 
 		$query = "UPDATE `$table` SET $fields  $conditions";
-
+		var_dump($query);
 		return $wpdb->query( $query );
 	}
 

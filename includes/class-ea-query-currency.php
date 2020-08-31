@@ -7,58 +7,50 @@
  */
 namespace EverAccounting;
 
-use EverAccounting\Traits\WP_Query;
+use EverAccounting\Traits\Query_Where;
 
 defined( 'ABSPATH' ) || exit();
 
 class Query_Currency extends Query {
-	/**
-	 * Implement WP style query.
-	 */
-	use WP_Query;
+	use Query_Where;
 
 	/**
+	 * Table name in database (without prefix).
+	 *
 	 * @var string
+	 */
+	const TABLE = 'ea_currencies';
+
+	/**
+	 * Table name in database (without prefix).
+	 *
+	 * @var string
+	 */
+	protected $table = self::TABLE;
+
+	/**
 	 * @since 1.0.2
+	 * @var string
 	 */
 	protected $cache_group = 'currencies';
+
+	/**
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $search_columns = [ 'name', 'code', 'symbol', 'rate' ];
 
 	/**
 	 * Static constructor.
 	 *
 	 *
-	 * @param string $id
-	 *
-	 * @return Query_Currency
 	 * @since 1.0.2
+	 * @return Query_Currency
 	 */
-	public static function init( $id = 'currencies_query' ) {
-		$builder     = new self();
-		$builder->id = $id;
-		$builder->from( 'ea_currencies' . ' currencies' );
+	public static function init() {
+		$builder = new self();
+		$builder->from( self::TABLE . ' as `' . self::TABLE . '`' );
 
 		return $builder;
-	}
-
-
-	/**
-	 * Searchable columns for the current table.
-	 *
-	 * @return array Table columns.
-	 * @since 1.0.2
-	 *
-	 */
-	protected function get_search_columns() {
-		return array( 'name', 'code', 'symbol', 'rate' );
-	}
-
-	/**
-	 * Select as dropdown item
-	 * @since 1.0.2
-	 */
-	public function selectAsOption() {
-		$this->select( 'code as id, CONCAT (name,"(", symbol, ")") as value' );
-
-		return $this;
 	}
 }

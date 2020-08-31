@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
 				<form id="ea-modal-contact-form" class="ea-ajax-form" action="" method="post">
 
 					<header class="ea-backbone-modal-header">
-						<h1><?php esc_html_e( 'Add Category', 'wp-ever-accounting' ); ?></h1>
+						<h1><?php esc_html_e( 'Add Contact', 'wp-ever-accounting' ); ?></h1>
 						<button class="modal-close modal-close-link dashicons">
 							<span class="screen-reader-text"><?php _e( 'Close', 'wp-ever-accounting' ); ?>></span>
 						</button>
@@ -46,21 +46,21 @@ defined( 'ABSPATH' ) || exit();
 									'name'          => 'email',
 									'type'          => 'email',
 									'value'         => '',
-									'required'      => true,
+									'required'      => false,
 							) );
 							eaccounting_text_input( array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Phone', 'wp-ever-accounting' ),
 									'name'          => 'phone',
 									'value'         => '',
-									'required'      => true,
+									'required'      => false,
 							) );
 							eaccounting_textarea( array(
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Address', 'wp-ever-accounting' ),
 									'name'          => 'address',
 									'value'         => '',
-									'required'      => true,
+									'required'      => false,
 							) );
 							eaccounting_hidden_input( array(
 									'name'  => 'type',

@@ -2,9 +2,9 @@
 /**
  * Admin Tools Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Tools
  * @since       1.0.2
+ * @subpackage  Admin/Tools
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 /**
@@ -43,8 +43,8 @@ function eaccounting_admin_tools_page() {
 /**
  * Retrieve tools tabs
  *
- * @return array $tabs
  * @since 1.0.2
+ * @return array $tabs
  */
 function eaccounting_get_tools_tabs() {
 	$tabs                = array();
@@ -81,12 +81,9 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			<form method="post" class="ea-customers-export ea-batch-form">
-				<?php
-				echo sprintf( '<p>%s</p>', __( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) );
-				wp_nonce_field( 'ea_customers_export' );
-				submit_button( __( 'Export', 'wp-ever-accounting' ) );
-				?>
+			<form method="post" enctype="multipart/form-data" class="ea-batch-form" data-process_name="export-customers" data-nonce="<?php echo esc_attr( wp_create_nonce( 'export-customers_step_nonce' ) ); ?>">
+				<?php echo sprintf( '<p>%s</p>', __( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
 			</form>
 		</div>
 	</div>

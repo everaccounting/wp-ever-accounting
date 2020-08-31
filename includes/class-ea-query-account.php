@@ -8,56 +8,77 @@
 
 namespace EverAccounting;
 
-use EverAccounting\Traits\WP_Query;
+use EverAccounting\Traits\Query_Where;
 
 defined( 'ABSPATH' ) || exit;
 
 class Query_Account extends Query {
-	/**
-	 * Implement WP style query.
-	 */
-	use WP_Query;
+	use Query_Where;
 
 	/**
-	 * @since 1.0.2
-	 * @var string
-	 */
-	protected $cache_group = 'contacts';
-
-	/**
-	 * Table name.
+	 * Table name in database (without prefix).
 	 *
+	 * @var string
+	 */
+	const TABLE = 'ea_accounts';
+
+	/**
+	 * Table name in database (without prefix).
+	 *
+	 * @var string
+	 */
+	protected $table = self::TABLE;
+
+	/**
 	 * @since 1.0.2
 	 * @var string
 	 */
-	protected static $table = 'ea_accounts';
+	protected $cache_group = 'accounts';
+
+	/**
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $search_columns = [ 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' ];
 
 	/**
 	 * Static constructor.
 	 *
 	 *
-	 * @param string $id
-	 *
 	 * @since 1.0.2
 	 * @return Query_Account
 	 */
-	public static function init( $id = 'account_query' ) {
-		$builder     = new self();
-		$builder->id = $id;
-		$builder->from( self::$table . ' accounts' );
+	public static function init() {
+		$builder = new self();
+		$builder->from( self::TABLE . ' as `' . self::TABLE . '`' );
 
 		return $builder;
 	}
 
+
 	/**
-	 * Searchable columns for the current table.
+	 * Include only customers
 	 *
 	 * @since 1.0.2
-	 *
-	 * @return array Table columns.
+	 * @return $this
 	 */
-	protected function get_search_columns() {
-		return array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
+	public function typeExpense() {
+		$this->where( "{$this->table}.type", 'expense' );
+
+		return $this;
+	}
+
+	/**
+	 * Include only payments
+	 *
+	 * @since 1.0.2
+	 * @return $this
+	 */
+	public function typeIncome() {
+
+		$this->where( "{$this->table}.type", 'income' );
+
+		return $this;
 	}
 
 	/**
@@ -67,10 +88,11 @@ class Query_Account extends Query {
 	 * @return $this
 	 */
 	public function withBalance() {
-		$this->select( 'accounts.*' )
-		     ->select( "SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) + opening_balance  as balance" )
-		     ->leftJoin( 'ea_transactions as t', 't.account_id', 'accounts.id' )
-		     ->group_by( 'accounts.id' );
+		$transaction = Query_Transaction::TABLE;
+		$this->select( "{$this->table}.*" )
+		     ->select( "SUM(CASE WHEN {$transaction}.type='income' then amount WHEN {$transaction}.type='expense' then - amount END ) + {$this->table}.opening_balance  as balance" )
+		     ->leftJoin( "ea_transactions as {$transaction}", "{$transaction}.account_id", "{$this->table}.id" )
+		     ->group_by( "{$this->table}.id" );
 
 		return $this;
 	}
