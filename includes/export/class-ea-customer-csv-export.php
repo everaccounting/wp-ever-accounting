@@ -21,14 +21,22 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @since  1.0.2
 	 * @return array
+	 * @since  1.0.2
 	 */
 	public function get_csv_columns() {
 		return array(
-			'name'  => __( 'Name', 'wp-ever-accounting' ),
-			'email' => __( 'Email', 'wp-ever-accounting' ),
-			'phone' => __( 'Phone', 'wp-ever-accounting' ),
+			'name'          => __( 'Name', 'wp-ever-accounting' ),
+			'email'         => __( 'Email', 'wp-ever-accounting' ),
+			'phone'         => __( 'Phone', 'wp-ever-accounting' ),
+			'fax'           => __( 'Fax', 'wp-ever-accounting' ),
+			'birth_date'    => __( 'Birth Date', 'wp-ever-accounting' ),
+			'address'       => __( 'Address', 'wp-ever-accounting' ),
+			'country'       => __( 'Country', 'wp-ever-accounting' ),
+			'website'       => __( 'Website', 'wp-ever-accounting' ),
+			'tax_number'    => __( 'Tax Number', 'wp-ever-accounting' ),
+			'currency_code' => __( 'Currency Code', 'wp-ever-accounting' ),
+			'note'          => __( 'Note', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -45,7 +53,7 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 			'type'     => 'customer',
 		);
 		$query             = Query_Contact::init()->where( $args );
-		$items             = $query->get(OBJECT, 'eaccounting_get_contact');
+		$items             = $query->get( OBJECT, 'eaccounting_get_contact' );
 		$this->total_count = $query->count();
 		$this->rows        = array();
 
@@ -65,22 +73,49 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 	 */
 	protected function generate_row_data( $item ) {
 		$props = [];
-		foreach ($this->get_csv_columns() as $column => $label){
+		foreach ( $this->get_csv_columns() as $column => $label ) {
 			$value = null;
-			switch ($column){
+			switch ( $column ) {
 				case 'name':
 					$value = $item->get_name();
 					break;
 				case 'email':
 					$value = $item->get_email();
 					break;
+				case 'phone':
+					$value = $item->get_phone();
+					break;
+				case 'fax':
+					$value = $item->get_fax();
+					break;
+				case 'birth_date':
+					$value = $item->get_birth_date();
+					break;
+				case 'address':
+					$value = $item->get_address();
+					break;
+				case 'country':
+					$value = $item->get_country();
+					break;
+				case 'website':
+					$value = $item->get_website();
+					break;
+				case 'tax_number':
+					$value = $item->get_tax_number();
+					break;
+				case 'currency_code':
+					$value = $item->get_currency_code();
+					break;
+				case 'note':
+					$value = $item->get_note();
+					break;
 
 
 				default:
-					$value = apply_filters('eaccounting_customer_csv_row_item', '', $column, $item, $this);
+					$value = apply_filters( 'eaccounting_customer_csv_row_item', '', $column, $item, $this );
 			}
 
-			$props[$column] = $value;
+			$props[ $column ] = $value;
 		}
 
 		return $props;
