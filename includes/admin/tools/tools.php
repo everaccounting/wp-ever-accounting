@@ -102,6 +102,21 @@ function eaccounting_export_tab() {
 
 	<div class="ea-form-card">
 		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Revenues', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
+				<?php echo sprintf( '<p>%s</p>', __( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-revenues' ) ); ?>
+				<?php wp_nonce_field( 'export-revenues_exporter_nonce' ); ?>
+				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
+			</form>
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
 			<h3 class="ea-form-card__header-title"><?php _e( 'Export Accounts', 'wp-ever-accounting' ); ?></h3>
 		</div>
 

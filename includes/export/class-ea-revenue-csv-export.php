@@ -2,12 +2,10 @@
 
 namespace EverAccounting\Export;
 
-defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Batch_Exporter;
-use EverAccounting\Query_Contact;
 
-class Customer_CSV_Export extends CSV_Batch_Exporter {
+class Revenue_CSV_Export extends CSV_Batch_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -15,7 +13,7 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'customers';
+	public $export_type = 'revenues';
 
 
 	/**
@@ -26,6 +24,7 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 	 */
 	public function get_csv_columns() {
 		return array(
+			'id'    => __( 'id', 'wp-ever-accounting' ),
 			'name'  => __( 'Name', 'wp-ever-accounting' ),
 			'email' => __( 'Email', 'wp-ever-accounting' ),
 			'phone' => __( 'Phone', 'wp-ever-accounting' ),
@@ -45,7 +44,7 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 			'type'     => 'customer',
 		);
 		$query             = Query_Contact::init()->where( $args );
-		$items             = $query->get(OBJECT, 'eaccounting_get_contact');
+		$items             = $query->get();
 		$this->total_count = $query->count();
 		$this->rows        = array();
 
@@ -59,30 +58,12 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 	 * Take a product and generate row data from it for export.
 	 *
 	 *
-	 * @param \EverAccounting\Contact $item
+	 * @param $item
 	 *
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
-		$props = [];
-		foreach ($this->get_csv_columns() as $column => $label){
-			$value = null;
-			switch ($column){
-				case 'name':
-					$value = $item->get_name();
-					break;
-				case 'email':
-					$value = $item->get_email();
-					break;
-
-
-				default:
-					$value = apply_filters('eaccounting_customer_csv_row_item', '', $column, $item, $this);
-			}
-
-			$props[$column] = $value;
-		}
-
-		return $props;
+		switch ($key)
+		return get_object_vars( $item );
 	}
 }

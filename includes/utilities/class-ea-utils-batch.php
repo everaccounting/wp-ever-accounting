@@ -52,6 +52,10 @@ class Batch extends Registry {
 			'class' => '\EverAccounting\Export\Customer_CSV_Export',
 			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-customer-csv-export.php'
 		) );
+		$this->add_item( 'export-revenues', array(
+			'class' => '\EverAccounting\Export\Revenue_CSV_Export',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-revenue-csv-export.php'
+		) );
 	}
 
 	/**
