@@ -1,48 +1,34 @@
 <?php
 
 /**
- * Class EAccounting_Helper_Account.
+ * Class EAccounting_Helper_Transaction.
  *
  * This helper class should ONLY be used for unit tests!.
  */
-class EAccounting_Helper_Account {
+class EAccounting_Helper_Transaction {
 
 	/**
 	 * Create a mock account for testing purposes.
 	 *
-	 * @return array
+	 * @return array|\EverAccounting\Transaction|WP_Error
 	 */
-	public static function create_mock_account() {
-		$account_data = array(
-			'id'              => 0,
-			'date_modified'   => null,
-			'name'            => 'Test Account',
-			'number'          => '000001',
-			'opening_balance' => 1000.01,
-			'currency_code'   => 'USD',
-			'bank_name'       => 'ABC Bank LTD.',
-			'bank_phone'      => '1234567890',
-			'bank_address'    => '123 South Street, Redwood City, California',
-		);
+	public static function create_transaction( $amount = 50, $payment_method = 'cash', $type = 'expense' ) {
+		$category = EAccounting_Helper_Category::create_category( 'Expense', 'expense' );
+		$account  = EAccounting_Helper_Account::create_account();
+		$vendor   = EAccounting_Helper_Contact::create_contact( 'John Doe', 'john@doe.com', 'vendor', 'USD' );
 
-		return $account_data;
+		$transaction = eaccounting_insert_transaction( array(
+			'account_id'     => $account->get_id(),
+			'paid_at'        => '2020-09-01',
+			'amount'         => $amount,
+			'vendor_id'      => $vendor->get_id(),
+			'category_id'    => $category->get_id(),
+			'payment_method' => $payment_method,
+			'type'           => $type
+		) );
+
+		return $transaction;
 	}
 
-	/**
-	 * Creates a account in the tests DB.
-	 */
-	public static function create_account( $name = 'Test Account', $number = '000001', $opening_balance = 1000, $currency_code = 'USD' ) {
-		$account = new \EverAccounting\Account();
-		$account->set_name( $name );
-		$account->set_number( $number );
-		$account->set_opening_balance( $opening_balance );
-		$account->set_currency_code( $currency_code );
-		$account->set_bank_name( 'ABC Bank LTD.' );
-		$account->set_bank_phone( '1234567890' );
-		$account->set_bank_address( '123 Steet, Redwood City, California' );
-		$account->save();
-
-		return $account;
-	}
 
 }
