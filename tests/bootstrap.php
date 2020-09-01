@@ -44,4 +44,5 @@ require_once 'framework/helpers/class-ea-helper-category.php';
 require_once 'framework/helpers/class-ea-helper-currency.php';
 require_once 'framework/helpers/class-ea-helper-revenue.php';
 require_once 'framework/helpers/class-ea-helper-transfer.php';
+require_once 'framework/helpers/class-ea-helper-transaction.php';
 require_once 'framework/class-ea-unit-test-case.php';
