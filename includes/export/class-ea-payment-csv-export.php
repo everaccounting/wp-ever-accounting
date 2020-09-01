@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
 use EverAccounting\Abstracts\CSV_Batch_Exporter;
 use EverAccounting\Query_Transaction;
 
-class Expense_CSV_Export extends CSV_Batch_Exporter {
+class Payment_CSV_Export extends CSV_Batch_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -15,7 +15,7 @@ class Expense_CSV_Export extends CSV_Batch_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'expenses';
+	public $export_type = 'payments';
 
 
 	/**
