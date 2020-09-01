@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
 use EverAccounting\Abstracts\CSV_Batch_Exporter;
 use EverAccounting\Query_Transaction;
 
-class Revenue_CSV_Export extends CSV_Batch_Exporter {
+class Payment_CSV_Export extends CSV_Batch_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -15,7 +15,7 @@ class Revenue_CSV_Export extends CSV_Batch_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'revenues';
+	public $export_type = 'payments';
 
 
 	/**
@@ -51,7 +51,7 @@ class Revenue_CSV_Export extends CSV_Batch_Exporter {
 			'page'     => $this->get_page(),
 			'orderby'  => 'id',
 			'order'    => 'ASC',
-			'type'     => 'income',
+			'type'     => 'expense',
 		);
 		$query             = Query_Transaction::init()->where( $args );
 		$items             = $query->get( OBJECT, 'eaccounting_get_transaction' );
@@ -114,7 +114,7 @@ class Revenue_CSV_Export extends CSV_Batch_Exporter {
 					$value = $item->get_reconciled();
 					break;
 				default:
-					$value = apply_filters('eaccounting_revenue_csv_row_item', '', $column, $item, $this);
+					$value = apply_filters('eaccounting_expense_csv_row_item', '', $column, $item, $this);
 			}
 			$props[$column] = $value;
 		}

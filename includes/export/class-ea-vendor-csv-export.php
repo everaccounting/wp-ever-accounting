@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit();
 use EverAccounting\Abstracts\CSV_Batch_Exporter;
 use EverAccounting\Query_Contact;
 
-class Customer_CSV_Export extends CSV_Batch_Exporter {
+class Vendor_CSV_Export extends CSV_Batch_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -15,7 +15,7 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'customers';
+	public $export_type = 'vendors';
 
 
 	/**
@@ -50,7 +50,7 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 			'page'     => $this->get_page(),
 			'orderby'  => 'id',
 			'order'    => 'ASC',
-			'type'     => 'customer',
+			'type'     => 'vendor',
 		);
 		$query             = Query_Contact::init()->where( $args );
 		$items             = $query->get( OBJECT, 'eaccounting_get_contact' );
@@ -109,10 +109,8 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 				case 'note':
 					$value = $item->get_note();
 					break;
-
-
 				default:
-					$value = apply_filters( 'eaccounting_customer_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'eaccounting_vendor_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;
