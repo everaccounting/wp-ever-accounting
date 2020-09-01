@@ -354,7 +354,7 @@ class List_Table_Categories extends List_Table {
 				<?php
 				eaccounting_select2( array(
 						'name'        => 'type',
-						'placeholder' => __( 'Select Category', 'wp-ever-accounting' ),
+						'placeholder' => __( 'Filter Type', 'wp-ever-accounting' ),
 						'options'     => $category_types,
 						'value'       => $type
 				) );

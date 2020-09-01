@@ -7,7 +7,7 @@
  * @package EverAccounting
  */
 
-namespace EAccounting;
+namespace EverAccounting;
 
 use DateTime as Base;
 
@@ -42,7 +42,7 @@ class DateTime extends Base {
 	 * Clone the current object.
 	 *
 	 * @since 1.0.2
-	 * @return \EAccounting\DateTime
+	 * @return \EverAccounting\DateTime
 	 */
 	public function clone() {
 		return clone $this;

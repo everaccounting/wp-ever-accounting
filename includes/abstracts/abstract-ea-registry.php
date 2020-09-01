@@ -13,7 +13,6 @@ namespace EverAccounting\Abstracts;
 defined( 'ABSPATH' ) || exit();
 
 abstract class Registry extends \ArrayObject {
-    
     /**
      * Array of registry items.
      *
@@ -21,8 +20,17 @@ abstract class Registry extends \ArrayObject {
      * @var   array
      */
     private $items = array();
-    
-    /**
+
+	/**
+	 * Registry constructor.
+	 */
+	public function __construct() {
+		parent::__construct();
+		$this->init();
+	}
+
+
+	/**
      * Initialize the registry.
      *
      * Each sub-class will need to do various initialization operations in this method.
@@ -30,7 +38,7 @@ abstract class Registry extends \ArrayObject {
      * @since 1.0.2
      */
     abstract public function init();
-    
+
     /**
      * Adds an item to the registry.
      *
@@ -49,10 +57,10 @@ abstract class Registry extends \ArrayObject {
         foreach ( $attributes as $attribute => $value ) {
             $this->items[ $item_id ][ $attribute ] = $value;
         }
-        
+
         return true;
     }
-    
+
     /**
      * Removes an item from the registry by ID.
      *
@@ -64,7 +72,7 @@ abstract class Registry extends \ArrayObject {
     public function remove_item( $item_id ) {
         unset( $this->items[ $item_id ] );
     }
-    
+
     /**
      * Retrieves an item and its associated attributes.
      *
@@ -78,10 +86,10 @@ abstract class Registry extends \ArrayObject {
         if ( isset( $this->items[ $item_id ] ) ) {
             return $this->items[ $item_id ];
         }
-        
+
         return false;
     }
-    
+
     /**
      * Retrieves registered items.
      *
@@ -92,7 +100,7 @@ abstract class Registry extends \ArrayObject {
     public function get_items() {
         return $this->items;
     }
-    
+
     /**
      * Only intended for use by tests.
      *
@@ -101,7 +109,7 @@ abstract class Registry extends \ArrayObject {
     public function _reset_items() {
         $this->items = array();
     }
-    
+
     /**
      * Determines whether an item exists.
      *
@@ -115,10 +123,10 @@ abstract class Registry extends \ArrayObject {
         if ( false !== $this->get( $offset ) ) {
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * Retrieves an item by its ID.
      *
@@ -133,7 +141,7 @@ abstract class Registry extends \ArrayObject {
     public function offsetGet( $offset ) {
         return $this->get( $offset );
     }
-    
+
     /**
      * Adds/overwrites an item in the registry.
      *
@@ -148,7 +156,7 @@ abstract class Registry extends \ArrayObject {
     public function offsetSet( $offset, $value ) {
         $this->add_item( $offset, $value );
     }
-    
+
     /**
      * Removes an item from the registry.
      *

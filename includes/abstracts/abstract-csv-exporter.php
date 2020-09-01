@@ -2,280 +2,373 @@
 /**
  * Overview of CSV Exporter Main Class.
  *
- * @package     EverAccounting
- * @subpackage  Abstracts
  * @since       1.0.2
+ * @subpackage  Abstracts
+ * @package     EverAccounting
  */
 
 namespace EverAccounting\Abstracts;
+
 defined( 'ABSPATH' ) || exit();
 
 abstract class CSV_Exporter {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
-	 * @var string
+	 *
 	 * @since 1.0.2
+	 * @var string
 	 */
 	public $export_type = 'default';
 
 	/**
 	 * Capability needed to perform the current export.
 	 *
-	 * @access public
 	 * @since  1.0.2
 	 * @var    string
 	 */
 	public $capability = 'manage_options';
 
 	/**
-	 * Batch limit.
+	 * Raw data to export.
+	 *
 	 * @since 1.0.2
-	 * @var integer
+	 * @var array
 	 */
-	protected $limit = 50;
+	protected $rows = array();
 
 	/**
 	 * Number exported.
 	 *
+	 * @since 1.0.2
 	 * @var integer
-     * @since 1.0.2
 	 */
-	protected $exported_row_count = 0;
-
-	/**
-	 * Raw data to export.
-	 *
-	 * @var array
-     * @since 1.0.2
-	 */
-	protected $row_data = array();
-
-	/**
-	 * Total rows to export.
-	 *
-	 * @var integer
-     * @since 1.0.2
-	 */
-	protected $total_rows = 0;
+	protected $exported_count = 0;
 
 	/**
 	 * List of columns to export, or empty for all.
 	 *
+	 * @since 1.0.2
 	 * @var array
-     *           @since 1.0.2
 	 */
 	protected $columns_to_export = array();
 
 	/**
 	 * The delimiter parameter sets the field delimiter (one character only).
+	 *
 	 * @since 1.0.2
 	 * @var string
 	 */
 	protected $delimiter = ',';
 
 	/**
-	 * Sets the CSV columns.
+	 * Set columns available columns to export.
 	 *
-	 * @access public
-	 * @return array<string,string> CSV columns.
-	 * @since  1.0.2
-	 *
+	 * @since 1.0.2
+	 * @return array
 	 */
-	abstract public function csv_cols();
+	public abstract function get_csv_columns();
 
 	/**
-	 * Retrieves the data for export.
+	 * Prepare data that will be exported.
 	 *
-	 * @access public
-	 * @return array[] Multi-dimensional array of data for export.
-	 * @since  1.0.2
-	 *
+	 * @since 1.0.2
+	 * @return array
 	 */
-	abstract public function get_data();
+	public abstract function set_data();
+
+	/**
+	 * Set filename to export to.
+	 *
+	 * @param string $filename Filename to export to.
+	 */
+	public function set_filename( $filename ) {
+		$this->filename = sanitize_file_name( str_replace( '.csv', '', $filename ) . '.csv' );
+	}
+
+	/**
+	 * Set columns to export.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param array $columns Columns array.
+	 */
+	public function set_columns_to_export( $columns ) {
+		if ( ! empty( $columns ) && is_array( $columns ) ) {
+			$this->columns_to_export = array_map( 'eaccounting_clean', $columns );
+		}
+	}
+
+	/**
+	 * Return an array of supported column names and ids.
+	 *
+	 * @since 1.0.2
+	 * @return array
+	 */
+	public function get_columns() {
+		return apply_filters( "eaccounting_{$this->export_type}_export_column_names", $this->get_csv_columns(), $this );
+	}
+
+	/**
+	 * Generate and return a filename.
+	 *
+	 * @return string
+	 */
+	public function get_filename() {
+		$date      = date( "Ymd" );
+		$file_name = empty( $this->filename ) ? "{$this->export_type}-$date.csv" : $this->filename;
+
+		return sanitize_file_name( apply_filters( "eaccounting_{$this->export_type}_export_get_filename", $file_name ) );
+	}
+
+	/**
+	 * Return an array of columns to export.
+	 *
+	 * @since 1.0.2
+	 * @return array
+	 */
+	public function get_columns_to_export() {
+		return $this->columns_to_export;
+	}
+
+	/**
+	 * Export column headers in CSV format.
+	 *
+	 * @since 1.0.2
+	 * @return string
+	 */
+	protected function export_column_headers() {
+		$columns    = $this->get_columns();
+		$export_row = array();
+		$buffer     = fopen( 'php://output', 'w' );
+		ob_start();
+
+		foreach ( $columns as $column_id => $column_name ) {
+			if ( ! $this->is_column_exporting( $column_id ) ) {
+				continue;
+			}
+			$export_row[] = $this->format_data( $column_name );
+		}
+
+		$this->fputcsv( $buffer, $export_row );
+
+		return ob_get_clean();
+	}
+
+	/**
+	 * Export rows in CSV format.
+	 *
+	 * @since 1.0.2
+	 * @return string
+	 */
+	protected function export_rows() {
+		$data   = $this->rows;
+		$buffer = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
+		ob_start();
+
+		array_walk( $data, array( $this, 'export_row' ), $buffer );
+
+		return apply_filters( "eaccounting_{$this->export_type}_export_rows", ob_get_clean(), $this );
+	}
+
+	/**
+	 * Export rows to an array ready for the CSV.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param array    $row_data Data to export.
+	 * @param string   $key      Column being exported.
+	 * @param resource $buffer   Output buffer.
+	 */
+	protected function export_row( $row_data, $key, $buffer ) {
+		$columns    = $this->get_columns();
+		$export_row = array();
+
+		foreach ( $columns as $column_id => $column_name ) {
+			if ( ! $this->is_column_exporting( $column_id ) ) {
+				continue;
+			}
+			if ( isset( $row_data[ $column_id ] ) ) {
+				$export_row[] = $this->format_data( $row_data[ $column_id ] );
+			} else {
+				$export_row[] = '';
+			}
+		}
+
+		$this->fputcsv( $buffer, $export_row );
+
+		++ $this->exported_count;
+	}
+
+	/**
+	 * Format and escape data ready for the CSV file.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $data Data to format.
+	 *
+	 * @return string
+	 */
+	public function format_data( $data ) {
+		if ( ! is_scalar( $data ) ) {
+			if ( is_a( $data, '\EverAccounting\DateTime' ) ) {
+				$data = $data->date( 'Y-m-d G:i:s' );
+			} else {
+				$data = ''; // Not supported.
+			}
+		} elseif ( is_bool( $data ) ) {
+			$data = $data ? 1 : 0;
+		}
+
+		$use_mb = function_exists( 'mb_convert_encoding' );
+
+		if ( $use_mb ) {
+			$encoding = mb_detect_encoding( $data, 'UTF-8, ISO-8859-1', true );
+			$data     = 'UTF-8' === $encoding ? $data : utf8_encode( $data );
+		}
+
+		return $this->escape_data( $data );
+	}
+
+	/**
+	 * Escape a string to be used in a CSV context
+	 *
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $data CSV field to escape.
+	 *
+	 * @return string
+	 */
+	public function escape_data( $data ) {
+		$active_content_triggers = array( '=', '+', '-', '@' );
+
+		if ( in_array( mb_substr( $data, 0, 1 ), $active_content_triggers, true ) ) {
+			$data = "'" . $data;
+		}
+
+		return $data;
+	}
+
+
+	/**
+	 * See if a column is to be exported or not.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $column_id ID of the column being exported.
+	 *
+	 * @return boolean
+	 */
+	public function is_column_exporting( $column_id ) {
+		$column_id         = strstr( $column_id, ':' ) ? current( explode( ':', $column_id ) ) : $column_id;
+		$columns_to_export = $this->get_columns_to_export();
+
+		if ( empty( $columns_to_export ) ) {
+			return true;
+		}
+
+		if ( in_array( $column_id, $columns_to_export, true ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
 
 	/**
 	 * Can we export?
 	 *
-	 * @access public
+	 * @since  1.0.2
 	 * @return bool Whether we can export or not
-	 * @since 1.0.2
 	 */
 	public function can_export() {
 		/**
 		 * Filters the capability needed to perform an export.
 		 *
-		 * @param string $capability Capability needed to perform an export.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param string $capability Capability needed to perform an export.
 		 *
 		 */
 		return (bool) current_user_can( apply_filters( 'eaccounting_export_capability', $this->capability ) );
 	}
 
 	/**
-	 * Set the export headers
+	 * Set the export headers.
 	 *
-	 * @access public
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
-	public function headers() {
+	public function send_headers() {
+		@ini_set( 'zlib.output_compression', 'Off' );
+		@ini_set( 'output_buffering', 'Off' );
+		@ini_set( 'output_handler', '' );
 		ignore_user_abort( true );
-		@set_time_limit( 0 );
+		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+			@set_time_limit( 0 );
+		}
 
-
-		@ini_set( 'zlib.output_compression', 'Off' ); // @codingStandardsIgnoreLine
-		@ini_set( 'output_buffering', 'Off' ); // @codingStandardsIgnoreLine
-		@ini_set( 'output_handler', '' ); // @codingStandardsIgnoreLine
 		nocache_headers();
 		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=eaccounting-export-' . $this->export_type . '-' . date( 'm-d-Y' ) . '.csv' );
+		header( 'Content-Disposition: attachment; filename=' . $this->get_filename() );
 		header( 'Pragma: no-cache' );
-		header( "Expires: 0" );
+		header( 'Expires: 0' );
 	}
 
 	/**
-	 * Retrieve the CSV columns
+	 * Set the export content.
 	 *
-	 * @access public
-	 * @return array $cols Array of the columns
 	 * @since 1.0.2
+	 *
+	 * @param string $csv_data All CSV content.
 	 */
-	public function get_csv_cols() {
-		$cols = $this->csv_cols();
-
-		/**
-		 * Filters the available CSV export columns for this export.
-		 *
-		 * This dynamic filter is appended with the export type string, for example:
-		 *
-		 *     `eaccounting_export_csv_cols_`
-		 *
-		 * @param array $cols The export columns available.
-		 *
-		 * @since 1.0.2
-		 *
-		 */
-		return apply_filters( 'eaccounting_export_csv_cols_' . $this->export_type, $cols );
+	public function send_content( $csv_data ) {
+		echo $csv_data;
 	}
 
 	/**
-	 * Output the CSV columns
+	 * Do the export.
 	 *
-	 * @access public
+	 * @since 1.0.2
 	 * @return void
-	 * @since 1.0.2
-	 */
-	public function csv_cols_out() {
-		$cols = $this->get_csv_cols();
-		$i    = 1;
-		foreach ( $cols as $col_id => $column ) {
-			echo '"' . $column . '"';
-			echo $i == count( $cols ) ? '' : ',';
-			$i ++;
-		}
-		echo "\r\n";
-	}
-
-	/**
-	 * Prepares a batch of data for export.
-	 *
-	 * @access public
-	 *
-	 * @param array $data Export data.
-	 *
-	 * @return array Filtered export data.
-	 * @since  1.0.2
-	 *
-	 */
-	public function prepare_data( $data ) {
-		/**
-		 * Filters the export data.
-		 *
-		 * The data set will differ depending on which exporter is currently in use.
-		 *
-		 * @param array $data Export data.
-		 *
-		 * @since 1.0.2
-		 *
-		 */
-		$data = apply_filters( 'eaccounting_export_get_data', $data );
-
-		/**
-		 * Filters the export data for a given export type.
-		 *
-		 * The dynamic portion of the hook name, `$this->export_type`, refers to the export type.
-		 *
-		 * @param array $data Export data.
-		 *
-		 * @since 1.0.2
-		 *
-		 */
-		$data = apply_filters( 'eaccounting_export_get_data_' . $this->export_type, $data );
-
-		return $data;
-	}
-
-	/**
-	 * Output the CSV rows
-	 *
-	 * @access public
-	 * @return void
-	 * @since 1.0.2
-	 */
-	public function csv_rows_out() {
-		$data = $this->prepare_data( $this->get_data() );
-
-		$cols = $this->get_csv_cols();
-
-		// Output each row
-		foreach ( $data as $row ) {
-			$i = 1;
-			foreach ( $row as $col_id => $column ) {
-				// Make sure the column is valid
-				if ( array_key_exists( $col_id, $cols ) ) {
-					echo '"' . $column . '"';
-					echo $i == count( $cols ) + 1 ? '' : ',';
-				}
-
-				$i ++;
-			}
-			echo "\r\n";
-		}
-	}
-
-	/**
-	 * Perform the export
-	 *
-	 * @access public
-	 * @return void
-	 * @since 1.0.2
 	 */
 	public function export() {
 		if ( ! $this->can_export() ) {
 			wp_die( __( 'You do not have permission to export data.', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 		}
+
 		// Set headers
-		$this->headers();
+		$this->send_headers();
 
-		// Output CSV columns (headers)
-		$this->csv_cols_out();
+		// Output contents
+		$this->send_content( chr( 239 ) . chr( 187 ) . chr( 191 ) . $this->export_column_headers() . $this->export_rows() );
+		die();
+	}
 
-		// Output CSV rows
-		$this->csv_rows_out();
+	/**
+	 * Write to the CSV file, ensuring escaping works across versions of
+	 * PHP.
+	 *
+	 * PHP 5.5.4 uses '\' as the default escape character. This is not RFC-4180 compliant.
+	 * \0 disables the escape character.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param resource $buffer     Resource we are writing to.
+	 * @param array    $export_row Row to export.
+	 */
+	protected function fputcsv( $buffer, $export_row ) {
 
-		/**
-		 * Fires at the end of an export.
-		 *
-		 * The dynamic portion of the hook name, `$this->export_type`, refers to
-		 * the export type set by the extending sub-class.
-		 *
-		 * @param CSV_Exporter $this CSV_Exporter instance.
-		 *
-		 *
-		 * @since 1.0.2
-		 */
-		do_action( "eaccounting_export_{$this->export_type}_end", $this );
-		exit;
+		if ( version_compare( PHP_VERSION, '5.5.4', '<' ) ) {
+			ob_start();
+			$temp = fopen( 'php://output', 'w' ); // @codingStandardsIgnoreLine
+			fputcsv( $temp, $export_row, $this->delimiter, '"' ); // @codingStandardsIgnoreLine
+			fclose( $temp ); // @codingStandardsIgnoreLine
+			$row = ob_get_clean();
+			$row = str_replace( '\\"', '\\""', $row );
+			fwrite( $buffer, $row ); // @codingStandardsIgnoreLine
+		} else {
+			fputcsv( $buffer, $export_row, $this->delimiter, '"', "\0" ); // @codingStandardsIgnoreLine
+		}
 	}
 }

@@ -12,7 +12,7 @@
 
 namespace EverAccounting\Abstracts;
 
-use EAccounting\DateTime;
+use EverAccounting\DateTime;
 use EverAccounting\Exception;
 
 defined( 'ABSPATH' ) || exit();

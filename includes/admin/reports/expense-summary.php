@@ -72,7 +72,7 @@ function eaccounting_reports_expense_summary_tab() {
 
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
-		$date       = new \EAccounting\DateTime( $start );
+		$date       = new \EverAccounting\DateTime( $start );
 		// Dates
 		for ( $j = 1; $j <= 12; $j ++ ) {
 			$dates[ $j ]                     = $date->format( 'F' );

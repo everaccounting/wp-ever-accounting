@@ -2,21 +2,23 @@
 /**
  * Utilities class for EverAccounting.
  *
- * @package EverAccounting
- * @since 1.0.2
+ * @since   1.0.2
  *
+ * @package EverAccounting
  */
 
 namespace EverAccounting;
 
 use EverAccounting\Utilities\Data;
 use EverAccounting\Utilities\Defaults;
+use EverAccounting\Utilities\Batch;
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Utilities
- * @since 1.0.2
+ *
+ * @since   1.0.2
  * @package EverAccounting
  */
 class Utilities {
@@ -31,16 +33,16 @@ class Utilities {
 	/**
 	 * Storage for holding default company data.
 	 *
-	 * @var Defaults
 	 * @since 1.0.2
+	 * @var Defaults
 	 */
 	public $defaults;
 
 	/**
-	 * @since 1.0.
-	 * @var
+	 * @since 1.0.2
+	 * @var Batch
 	 */
-	public $batches;
+	public $batch;
 
 	/**
 	 * Instantiates the utilities class.
@@ -56,25 +58,23 @@ class Utilities {
 	/**
 	 * Includes necessary utility files.
 	 *
-	 * @access public
 	 * @since  1.0.2
 	 */
 	public function includes() {
 		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-ea-utils-data.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-ea-utils-batch.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-ea-utils-default.php';
 	}
 
 	/**
 	 * Sets up utility objects.
 	 *
-	 * @access public
 	 * @since  1.0.2
 	 */
 	public function setup_objects() {
 		$this->data     = new Data();
 		$this->defaults = new Defaults();
-
-		$this->defaults->init();
+		$this->batch    = new Batch();
 	}
 
 }

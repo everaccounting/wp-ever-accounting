@@ -814,8 +814,10 @@ class Query {
 			$page = 0;
 		}
 
-		$this->limit  = (int) $size;
-		$this->offset = (int) $size * $page;
+		$this->limit = (int) $size;
+		if ( $page ) {
+			$this->offset = (int) ( ( $page - 1 ) * $size );
+		}
 
 		return $this;
 	}
@@ -1318,7 +1320,8 @@ class Query {
 		$fields = implode( ', ', $fields );
 
 		$query = "UPDATE `$table` SET $fields  $conditions";
-		var_dump($query);
+		var_dump( $query );
+
 		return $wpdb->query( $query );
 	}
 

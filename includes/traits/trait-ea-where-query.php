@@ -28,6 +28,7 @@ trait Query_Where {
 	 */
 	public function where( $column, $param1 = null, $param2 = null, $joint = 'and' ) {
 		if ( is_array( $column ) ) {
+
 			foreach ( $column as $key => $value ) {
 
 				if ( empty( $value ) ) {

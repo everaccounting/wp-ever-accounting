@@ -131,7 +131,7 @@ class List_Table_Payments extends List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -263,7 +263,7 @@ class List_Table_Payments extends List_Table {
 		if ( 'top' == $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
-			$vendor_id = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
+			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
 			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
 			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
@@ -378,19 +378,27 @@ class List_Table_Payments extends List_Table {
 		$this->process_bulk_action();
 
 		$page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;;
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+		$search      = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$order       = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$orderby     = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+		$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
+		$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
+		$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
+		$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
+		$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 
 		$per_page = $this->get_per_page();
 
 		$args = wp_parse_args( $this->query_args, array(
-			'number'  => $per_page,
-			'offset'  => $per_page * ( $page - 1 ),
-			'search'  => $search,
-			'orderby' => eaccounting_clean( $orderby ),
-			'order'   => eaccounting_clean( $order ),
-			'type'    => 'expense'
+			'number'      => $per_page,
+			'offset'      => $per_page * ( $page - 1 ),
+			'search'      => $search,
+			'orderby'     => eaccounting_clean( $orderby ),
+			'order'       => eaccounting_clean( $order ),
+			'type'        => 'expense',
+			'category_id' => $category_id,
+			'account_id'  => $account_id,
+			'contact_id'  => $vendor_id,
 		) );
 
 		$args = apply_filters( 'eaccounting_payments_table_get_payments', $args, $this );
@@ -398,11 +406,13 @@ class List_Table_Payments extends List_Table {
 		$this->items = Query_Transaction::init()
 		                                ->where( $args )
 		                                ->notTransfer()
+		                                ->whereDateBetween( 'paid_at', $start_date, $end_date )
 		                                ->get( OBJECT, 'eaccounting_get_transaction' );
 
 		$this->total_count = Query_Transaction::init()
 		                                      ->where( $args )
 		                                      ->notTransfer()
+		                                      ->whereDateBetween( 'paid_at', $start_date, $end_date )
 		                                      ->count();
 
 		$this->set_pagination_args( array(

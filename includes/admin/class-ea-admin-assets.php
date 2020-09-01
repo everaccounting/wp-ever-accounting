@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Admin;
 
-use EAccounting\DateTime;
+use EverAccounting\DateTime;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -80,7 +80,7 @@ class Admin_Assets {
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url() . '/assets/js/admin/admin-settings' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-admin', eaccounting()->plugin_url() . '/assets/js/admin/eaccounting-admin' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-dashboard', eaccounting()->plugin_url() . '/assets/js/admin/admin-dashboard' . $suffix . '.js', array( 'jquery', 'ea-daterange' ), $version );
-		wp_register_script( 'ea-batch', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-batch' . $suffix . '.js', array( 'jquery', 'underscore', 'backbone', 'wp-util' ), $version );
+		wp_register_script( 'ea-exporter', eaccounting()->plugin_url() . '/assets/js/admin/ea-exporter' . $suffix . '.js', array( 'jquery', 'backbone', 'wp-util' ), $version );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
@@ -176,6 +176,10 @@ class Admin_Assets {
 			if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
 				wp_enqueue_media();
 				wp_enqueue_script( 'ea-settings' );
+			}
+
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' == $_GET['tab'] ) {
+				wp_enqueue_script( 'ea-exporter' );
 			}
 
 		}

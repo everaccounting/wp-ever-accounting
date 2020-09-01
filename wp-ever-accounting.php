@@ -284,6 +284,8 @@ final class EverAccounting {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/reports/reports.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/settings/settings.php' );
+
+
 		}
 	}
 
@@ -321,7 +323,7 @@ final class EverAccounting {
 		do_action( 'before_eaccounting_init' );
 
 		$this->settings = new \EverAccounting\Admin\Settings();
-//		$this->utils    = new \EverAccounting\Utilities();
+		$this->utils    = new \EverAccounting\Utilities();
 
 		// Init action.
 		do_action( 'eaccounting_init' );
@@ -364,3 +366,9 @@ function eaccounting() {
 
 eaccounting();
 
+//add_action( 'admin_init', function () {
+//	$export = new \EverAccounting\Export\Transaction_CSV_Export();
+//	$export->set_column_names( $export->get_default_column_names() );
+//	$export->prepare_data_to_export();
+//	$export->export();
+//} );

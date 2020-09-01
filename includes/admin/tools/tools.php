@@ -81,8 +81,10 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			<form method="post" enctype="multipart/form-data" class="ea-batch-form" data-process_name="export-customers" data-nonce="<?php echo esc_attr( wp_create_nonce( 'export-customers_step_nonce' ) ); ?>">
+			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
 				<?php echo sprintf( '<p>%s</p>', __( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-customers' ) ); ?>
+				<?php wp_nonce_field( 'export-customers_exporter_nonce' ); ?>
 				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
 			</form>
 		</div>
