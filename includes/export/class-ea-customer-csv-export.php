@@ -109,8 +109,6 @@ class Customer_CSV_Export extends CSV_Batch_Exporter {
 				case 'note':
 					$value = $item->get_note();
 					break;
-
-
 				default:
 					$value = apply_filters( 'eaccounting_customer_csv_row_item', '', $column, $item, $this );
 			}

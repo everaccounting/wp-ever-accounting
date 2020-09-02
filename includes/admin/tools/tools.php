@@ -106,12 +106,12 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
-				<?php echo sprintf( '<p>%s</p>', __( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
-				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-revenues' ) ); ?>
-				<?php wp_nonce_field( 'export-revenues_exporter_nonce' ); ?>
-				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
-			</form>
+			<!--			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">-->
+			<!--				--><?php //echo sprintf( '<p>%s</p>', __( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+			<!--				--><?php //eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-revenues' ) ); ?>
+			<!--				--><?php //wp_nonce_field( 'export-revenues_exporter_nonce' ); ?>
+			<!--				--><?php //submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
+			<!--			</form>-->
 		</div>
 	</div>
 
@@ -182,7 +182,25 @@ function eaccounting_tools_import_tab() {
 		</div>
 
 		<div class="ea-card">
-
+			<form action="" method="post" enctype="multipart/form-data" class="ea-csv-importer">
+				<?php echo sprintf( '<p>' . __( 'Import customers from CSV file. Download a %ssample%s file to learn how to format the CSV file.', 'wp-ever-accounting' ) . '</p>', '<a href="#">', '</a>' ); ?>
+				<p><input name="upload" type="file" required="required" accept="text/csv"></p>
+				<div class="ea-importer-column-mapping" style="display: none">
+					<?php echo sprintf( '<p>' . __( 'Each column loaded from the CSV may be mapped to an affiliate field. Select the column that should be mapped to each field below. Any columns not needed can be ignored.', 'wp-ever-accounting' ) . '</p>', '<a href="#">', '</a>' ); ?>
+					<table class="widefat affwp_repeatable_table striped">
+						<thead>
+						<tr>
+							<th><strong>Field</strong></th>
+							<th><strong>CSV Column</strong></th>
+							<th><strong>Data Preview</strong></th>
+						</tr>
+						</thead>
+					</table>
+				</div>
+				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'import-customers' ) ); ?>
+				<?php wp_nonce_field( 'import-customers_importer_nonce' ); ?>
+				<?php submit_button( __( 'Import', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
+			</form>
 		</div>
 	</div>
 

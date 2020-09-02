@@ -178,9 +178,9 @@ class Admin_Assets {
 				wp_enqueue_script( 'ea-settings' );
 			}
 
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' == $_GET['tab'] ) {
+//			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' == $_GET['tab'] ) {
 				wp_enqueue_script( 'ea-exporter' );
-			}
+//			}
 
 		}
 	}

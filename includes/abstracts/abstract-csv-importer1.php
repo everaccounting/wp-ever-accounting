@@ -9,13 +9,6 @@
 
 namespace EverAccounting\Abstracts;
 
-/**
- * Class CSV_Importer
- *
- * @since   1.0.
- *
- * @package EverAccounting\Abstracts
- */
 abstract class CSV_Importer {
 	/**
 	 * Capability needed to perform the current import.
@@ -34,82 +27,22 @@ abstract class CSV_Importer {
 	protected $file = '';
 
 	/**
-	 * File pointer start.
+	 * Importer parameters.
 	 *
-	 * @since 1.0.2
-	 * @var int
-	 */
-	protected $position = 0;
-
-	/**
-	 * File pointer end.
-	 *
-	 * @since 1.0.2
-	 * @var int
-	 */
-	protected $end_position = -1;
-
-	/**
-	 * Max lines to read.
-	 *
-	 * @since 1.0.2
-	 * @var int
-	 */
-	protected $lines = - 1;
-
-	/**
-	 * Column mapping. csv_heading => schema_heading.
-	 *
-	 * @since 1.0.2
 	 * @var array
 	 */
-	protected $mapping = array();
+	protected $params = array();
 
 	/**
-	 * Whether to update existing items.
+	 * Tracks current row being parsed.
 	 *
-	 * @since 1.0.2
-	 * @var bool
+	 * @var integer
 	 */
-	protected $update_existing = false;
-
-	/**
-	 * CSV delimiter.
-	 *
-	 * @since 1.0.2
-	 * @var string
-	 */
-	protected $delimiter = ',';
-
-	/**
-	 * Check memory and time usage and abort if reaching limit.
-	 *
-	 * @since 1.0.2
-	 * @var bool
-	 */
-	protected $prevent_timeouts = true;
-
-	/**
-	 * The character used to wrap text in the CSV.
-	 *
-	 * @since 1.0.2
-	 * @var string
-	 */
-	protected $enclosure = '"';
-
-	/**
-	 * PHP uses '\' as the default escape character.
-	 * This is not RFC-4180 compliant. This disables the escape character.
-	 *
-	 * @since 1.0.
-	 * @var string
-	 */
-	protected $escape = "\0";
+	protected $parsing_raw_data_index = 0;
 
 	/**
 	 * Raw keys - CSV raw headers.
 	 *
-	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $raw_keys = array();
@@ -117,7 +50,6 @@ abstract class CSV_Importer {
 	/**
 	 * Mapped keys - CSV headers.
 	 *
-	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $mapped_keys = array();
@@ -125,15 +57,13 @@ abstract class CSV_Importer {
 	/**
 	 * Raw data.
 	 *
-	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $raw_data = array();
 
 	/**
-	 * Positions of the file.
+	 * Raw data.
 	 *
-	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $file_positions = array();
@@ -141,7 +71,6 @@ abstract class CSV_Importer {
 	/**
 	 * Parsed data.
 	 *
-	 * @since 1.0.2
 	 * @var array
 	 */
 	protected $parsed_data = array();
@@ -151,7 +80,6 @@ abstract class CSV_Importer {
 	 *
 	 * (default value: 0)
 	 *
-	 * @since 1.0.2
 	 * @var int
 	 */
 	protected $start_time = 0;
@@ -160,14 +88,49 @@ abstract class CSV_Importer {
 	 * CSV_Importer constructor.
 	 *
 	 * @param string $file
-	 * @param int    $position
+	 * @param array  $params
 	 */
-	public function __construct( string $file, int $position = 0 ) {
-		$this->file     = $file;
-		$this->position = $position;
+	public function __construct( string $file, array $params = array() ) {
+		$default_args = array(
+			'position'        => 0, // File pointer start.
+			'end_pos'          => - 1, // File pointer end.
+			'lines'            => - 1, // Max lines to read.
+			'mapping'          => array(), // Column mapping. csv_heading => schema_heading.
+			'update_existing'  => false, // Whether to update existing items.
+			'delimiter'        => ',', // CSV delimiter.
+			'prevent_timeouts' => true, // Check memory and time usage and abort if reaching limit.
+			'enclosure'        => '"', // The character used to wrap text in the CSV.
+			'escape'           => "\0", // PHP uses '\' as the default escape character. This is not RFC-4180 compliant. This disables the escape character.
+		);
+
+		$this->params = wp_parse_args( $params, $default_args );
+		$this->file   = $file;
+
+		if ( isset( $this->params['mapping']['from'], $this->params['mapping']['to'] ) ) {
+			$this->params['mapping'] = array_combine( $this->params['mapping']['from'], $this->params['mapping']['to'] );
+		}
 
 		$this->read_file();
 	}
+
+
+	/**
+	 * Process a single item and save.
+	 *
+	 * @param array $data Raw CSV data.
+	 *
+	 * @throws \EverAccounting\Exception If item cannot be processed.
+	 * @return array|\WP_Error
+	 */
+	abstract protected function process_item( $data );
+
+	/**
+	 * Get formatting callback.
+	 *
+	 * @since 1.0.2
+	 * @return array
+	 */
+	abstract protected function get_formatting_callback();
 
 	/**
 	 * Can user import?
@@ -188,31 +151,11 @@ abstract class CSV_Importer {
 	}
 
 	/**
-	 * Maps CSV columns to their corresponding import fields.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param array $mapping
-	 */
-	public function set_mapping( $mapping = array() ) {
-		if ( isset( $mapping['from'], $mapping['to'] ) ) {
-			$this->mapping = array_combine( $mapping['from'], $mapping['to'] );
-		}
-	}
-
-	/**
 	 * Read file.
 	 */
 	protected function read_file() {
-		$valid_filetypes = apply_filters(
-			'eaccounting_import_csv_filetypes',
-			array(
-				'csv' => 'text/csv',
-				'txt' => 'text/plain',
-			)
-		);
-
-		$filetype = wp_check_filetype( $this->file, $valid_filetypes );
+		$valid_filetypes = self::get_valid_csv_filetypes();
+		$filetype        = wp_check_filetype( $this->file, $valid_filetypes );
 		if ( ! in_array( $filetype['type'], $valid_filetypes, true ) ) {
 			wp_die( esc_html__( 'Invalid file type. The importer supports CSV and TXT file formats.', 'wp-ever-accounting' ) );
 		}
@@ -220,27 +163,25 @@ abstract class CSV_Importer {
 		$handle = fopen( $this->file, 'r' ); // @codingStandardsIgnoreLine.
 
 		if ( false !== $handle ) {
-			$this->raw_keys = version_compare( PHP_VERSION, '5.3', '>=' ) ? array_map( 'trim', fgetcsv( $handle, 0, $this->delimiter, $this->enclosure, $this->escape ) ) : array_map( 'trim', fgetcsv( $handle, 0, $this->delimiter, $this->enclosure ) );
+			$this->raw_keys = version_compare( PHP_VERSION, '5.3', '>=' ) ? array_map( 'trim', fgetcsv( $handle, 0, $this->params['delimiter'], $this->params['enclosure'], $this->params['escape'] ) ) : array_map( 'trim', fgetcsv( $handle, 0, $this->params['delimiter'], $this->params['enclosure'] ) ); // @codingStandardsIgnoreLine
 
 			// Remove BOM signature from the first item.
 			if ( isset( $this->raw_keys[0] ) ) {
-				if ( 'efbbbf' === substr( bin2hex( $this->raw_keys[0] ), 0, 6 ) ) {
-					$this->raw_keys[0] = substr( $this->raw_keys[0], 3 );
-				}
+				$this->raw_keys[0] = $this->remove_utf8_bom( $this->raw_keys[0] );
 			}
 
-			if ( 0 !== $this->position ) {
-				fseek( $handle, (int) $this->position );
+			if ( 0 !== $this->params['position'] ) {
+				fseek( $handle, (int) $this->params['position'] );
 			}
 
 			while ( 1 ) {
-				$row = version_compare( PHP_VERSION, '5.3', '>=' ) ? fgetcsv( $handle, 0, $this->delimiter, $this->enclosure, $this->escape ) : fgetcsv( $handle, 0, $this->delimiter, $this->enclosure );
+				$row = version_compare( PHP_VERSION, '5.3', '>=' ) ? fgetcsv( $handle, 0, $this->params['delimiter'], $this->params['enclosure'], $this->params['escape'] ) : fgetcsv( $handle, 0, $this->params['delimiter'], $this->params['enclosure'] ); // @codingStandardsIgnoreLine
 
 				if ( false !== $row ) {
 					$this->raw_data[]                                 = $row;
 					$this->file_positions[ count( $this->raw_data ) ] = ftell( $handle );
 
-					if ( ( $this->end_position > 0 && ftell( $handle ) >= $this->end_position ) || 0 === -- $this->lines ) {
+					if ( ( $this->params['end_pos'] > 0 && ftell( $handle ) >= $this->params['end_pos'] ) || 0 === -- $this->params['lines'] ) {
 						break;
 					}
 				} else {
@@ -251,18 +192,58 @@ abstract class CSV_Importer {
 			$this->file_position = ftell( $handle );
 		}
 
-		if ( ! empty( $this->mapping ) ) {
+		if ( ! empty( $this->params['mapping'] ) ) {
 			$this->set_mapped_keys();
 		}
 
 		$this->set_parsed_data();
 	}
 
+
+	//import
+	public function import() {
+		$this->start_time = time();
+		$index            = 0;
+		$update_existing  = $this->params['update_existing'];
+
+		$data = array(
+			'imported' => 0,
+			'failed'   => 0,
+			'updated'  => 0,
+			'skipped'  => 0,
+		);
+
+		foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
+
+			$result = $this->process_item( $parsed_data );
+
+			if ( is_wp_error( $result ) ) {
+				$data['failed'] = $data['failed'] ++;
+			} elseif ( $result == 'updated' ) {
+				$data['updated'] = $data['updated'] ++;
+			} elseif ( $result == 'skipped' ) {
+				$data['skipped'] = $data['skipped'] ++;
+			} else {
+				$data['imported'] = $data['imported'] ++;
+			}
+
+			$index ++;
+
+			if ( $this->params['prevent_timeouts'] && ( $this->time_exceeded() || $this->memory_exceeded() ) ) {
+				$this->file_position = $this->file_positions[ $index ];
+				break;
+			}
+		}
+
+		return $data;
+	}
+
+
 	/**
 	 * Set file mapped keys.
 	 */
 	protected function set_mapped_keys() {
-		$mapping = $this->mapping;
+		$mapping = $this->params['mapping'];
 
 		foreach ( $this->raw_keys as $key ) {
 			$this->mapped_keys[] = isset( $mapping[ $key ] ) ? $mapping[ $key ] : $key;
@@ -313,12 +294,37 @@ abstract class CSV_Importer {
 	}
 
 	/**
+	 * Get file mapped headers.
+	 *
+	 * @return array
+	 */
+	public function get_mapped_keys() {
+		return ! empty( $this->mapped_keys ) ? $this->mapped_keys : $this->raw_keys;
+	}
+
+	/**
+	 * Get all the valid filetypes for a CSV file.
+	 *
+	 * @return array
+	 */
+	protected static function get_valid_csv_filetypes() {
+		return apply_filters(
+			'eaccounting_import_csv_filetypes',
+			array(
+				'csv' => 'text/csv',
+				'txt' => 'text/plain',
+			)
+		);
+	}
+
+	/**
 	 * Get formatting callback.
 	 *
 	 * @since 1.0.2
 	 * @return array
 	 */
 	protected function formatting_callback() {
+
 		/**
 		 * Columns not mentioned here will get parsed with 'wc_clean'.
 		 * column_name => callback.
@@ -341,74 +347,20 @@ abstract class CSV_Importer {
 		return $callbacks;
 	}
 
-	//import
-	public function import() {
-		$this->start_time = time();
-		$index            = 0;
-		$update_existing  = $this->update_existing;
 
-		$data = array(
-			'imported' => 0,
-			'failed'   => 0,
-			'updated'  => 0,
-			'skipped'  => 0,
-		);
-
-		foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
-
-			$result = $this->import_item( $parsed_data );
-
-			if ( is_wp_error( $result ) ) {
-				$data['failed'] = $data['failed'] ++;
-			} elseif ( $result == 'updated' ) {
-				$data['updated'] = $data['updated'] ++;
-			} elseif ( $result == 'skipped' ) {
-				$data['skipped'] = $data['skipped'] ++;
-			} else {
-				$data['imported'] = $data['imported'] ++;
-			}
-
-			$index ++;
-
-			if ( $this->prevent_timeouts && ( $this->time_exceeded() || $this->memory_exceeded() ) ) {
-				$this->file_position = $this->file_positions[ $index ];
-				break;
-			}
+	/**
+	 * Remove UTF-8 BOM signature.
+	 *
+	 * @param string $string String to handle.
+	 *
+	 * @return string
+	 */
+	protected function remove_utf8_bom( $string ) {
+		if ( 'efbbbf' === substr( bin2hex( $string ), 0, 6 ) ) {
+			$string = substr( $string, 3 );
 		}
 
-		return $data;
-	}
-
-	/**
-	 * Process a single item and save.
-	 *
-	 * @param array $data Raw CSV data.
-	 *
-	 * @return string|\WP_Error
-	 */
-	protected function import_item( $data ) {
-		return 'skipped';
-	}
-
-
-	/**
-	 * Get file mapped headers.
-	 *
-	 * @return array
-	 */
-	public function get_mapped_keys() {
-		return ! empty( $this->mapped_keys ) ? $this->mapped_keys : $this->raw_keys;
-	}
-
-
-	/**
-	 * Get formatting callback.
-	 *
-	 * @since 1.0.2
-	 * @return array
-	 */
-	protected function get_formatting_callback() {
-		return array();
+		return $string;
 	}
 
 	/**

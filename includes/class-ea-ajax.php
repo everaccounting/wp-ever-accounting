@@ -535,7 +535,7 @@ class Ajax {
 
 		$type = sanitize_key( $_REQUEST['type'] );
 
-		self::verify_nonce( "{$type}_exporter_nonce" );
+//		self::verify_nonce( "{$type}_exporter_nonce" );
 
 		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
 			wp_send_json_error( array(

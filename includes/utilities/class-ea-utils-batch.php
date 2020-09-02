@@ -6,6 +6,7 @@
  *
  * @package EverAccounting\Utilities
  */
+
 namespace EverAccounting\Utilities;
 
 defined( 'ABSPATH' ) || exit();
@@ -14,6 +15,7 @@ use EverAccounting\Abstracts\Registry;
 
 /**
  * Class Batch
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Utilities
@@ -40,6 +42,9 @@ class Batch extends Registry {
 		//exporters
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-csv-exporter.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-csv-batch-exporter.php' );
+
+		//importers
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-csv-importer.php' );
 	}
 
 	/**
@@ -55,6 +60,12 @@ class Batch extends Registry {
 		$this->add_item( 'export-revenues', array(
 			'class' => '\EverAccounting\Export\Revenue_CSV_Export',
 			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-revenue-csv-export.php'
+		) );
+
+
+		$this->add_item( 'import-customers', array(
+			'class' => '\EverAccounting\Import\Customer_CSV_Import',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-customer-csv-import.php'
 		) );
 	}
 
