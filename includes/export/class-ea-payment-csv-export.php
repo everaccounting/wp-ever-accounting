@@ -114,7 +114,7 @@ class Payment_CSV_Export extends CSV_Batch_Exporter {
 					$value = $item->get_reconciled();
 					break;
 				default:
-					$value = apply_filters('eaccounting_expense_csv_row_item', '', $column, $item, $this);
+					$value = apply_filters('eaccounting_payment_csv_row_item', '', $column, $item, $this);
 			}
 			$props[$column] = $value;
 		}

@@ -32,7 +32,7 @@ class Account_CSV_Export extends CSV_Batch_Exporter {
 			'opening_balance' => __( 'Opening Balance', 'wp-ever-accounting' ),
 			'bank_name'       => __( 'Bank Name', 'wp-ever-accounting' ),
 			'bank_phone'      => __( 'Bank Phone', 'wp-ever-accounting' ),
-			'bank_address'    => __( 'Ban Address', 'wp-ever-accounting' ),
+			'bank_address'    => __( 'Bank Address', 'wp-ever-accounting' ),
 			'enabled'         => __( 'Enabled', 'wp-ever-accounting' ),
 		);
 	}
