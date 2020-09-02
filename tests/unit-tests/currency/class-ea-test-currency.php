@@ -133,6 +133,11 @@ class EAccounting_Tests_Currency extends EAccounting_Unit_Test_Case {
 
 //	public function test_exception_currency(){
 //		$currency = eaccounting_insert_currency(array(
+//
+//		));
+//	}
+//	public function test_exception_currency(){
+//		$currency = eaccounting_insert_currency(array(
 //			'code' => ''
 //		));
 //		$this->assertNotEquals('Currency code is required.', $currency->get_error_message());
