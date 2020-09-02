@@ -135,7 +135,7 @@ function eaccounting_delete_category( $category_id ) {
 	try {
 		$category = new Category( $category_id );
 		if ( ! $category->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid category.', 'wp-ever-accounting' ) );
 		}
 
 		$category->delete();
