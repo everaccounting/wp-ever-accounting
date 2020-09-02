@@ -43,7 +43,7 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 			'color' => 'blue',
 		) );
 
-		$this->assertNotWPError($error);
+		$this->assertNotWPError( $error );
 
 		$category = eaccounting_get_category( $category_id ); // so we can read fresh copies from the DB
 
@@ -59,68 +59,29 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 		$this->assertNotFalse( eaccounting_delete_category( $category->get_id() ) );
 	}
 
+	public function test_exception_category() {
+		$category = eaccounting_insert_category( array(
+			'name' => '',
+		) );
+		$this->assertEquals( 'Category name is required', $category->get_error_message() );
 
-//	public function test_exception_category_number() {
-//		$category    = eaccounting_insert_category( array(
-//			'name'  => '',
-//		) );
+		$category = eaccounting_insert_category( array(
+			'name' => 'Test Category',
+			'type' => ''
+		) );
+		$this->assertEquals( 'Category type is required', $category->get_error_message() );
 
-//		$this->assertNotEquals('Category name is required', $category->get_error_message());
+		$category = eaccounting_insert_category( array(
+			'name' => 'Expense',
+			'type' => 'expense',
+		) );
+		$this->assertNotFalse( $category->exists() );
 
-//		$category = EAccounting_Helper_Category::create_category( 'Another category 1', 'income' );
-//		try {
-//			EAccounting_Helper_Category::create_category( 'Another category 1', 'income' );
-//		} catch ( Exception $e ) {
-//			$this->assertEquals( "Duplicate category name.", $e->getMessage() );
-//		}
-//
-//		//name check
-//		try {
-//			$category = new Category();
-//			$category->set_name( '' );
-//			$category->save();
-//		} catch ( Exception $e ) {
-//			$this->assertEquals( "Category name is required", $e->getMessage() );
-//		}
-//
-//		//type check
-//		try {
-//			$category = new Category();
-//			$category->set_name( 'Exception account' );
-//			$category->set_type( '' );
-//			$category->save();
-//		} catch ( Exception $e ) {
-//			$this->assertEquals( "Category type is required", $e->getMessage() );
-//		}
-//
-//		try {
-//			$category = new Category();
-//			$category->set_name( 'Exception account' );
-//			$category->set_type( 'income' );
-//			$category->save();
-//		} catch ( Exception $e ) {
-//			$this->throwAnException( $e->getMessage() );
-//		}
-//
-//	}
-//
-//	public function test_category_functions() {
-//		$category = eaccounting_insert_category( array(
-//			'name'  => 'Income category',
-//			'type'  => 'income',
-//			'color' => 'red'
-//		) );
-//
-//		$this->assertNotNull( $category->get_id() );
-//
-//		$updated = eaccounting_insert_category( array(
-//			'id'   => $category->get_id(),
-//			'name' => 'Category Updated again'
-//		) );
-//		$this->assertEquals( "Category Updated again", $updated->get_name() );
-//		$this->assertEquals( "income", $updated->get_type() );
-//		$this->assertEquals( "red", $updated->get_color() );
-//
-//		$this->assertEquals( true, eaccounting_delete_category( $category->get_id() ) );
-//	}
+		$category = eaccounting_insert_category( array(
+			'name' => 'Expense',
+			'type' => 'expense',
+		) );
+		$this->assertEquals( 'Duplicate category name.', $category->get_error_message() );
+
+	}
 }
