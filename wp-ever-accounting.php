@@ -270,11 +270,15 @@ final class EverAccounting {
 
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 
+		require_once( EACCOUNTING_ABSPATH . '/includes/import/ea-functions-import-fields.php' );
+
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php' );
+			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php' );
+			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php' );
