@@ -78,6 +78,7 @@ class Batch extends Registry {
 		$this->add_item( 'export-revenues', array(
 			'class' => '\EverAccounting\Export\Export_Revenues',
 			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-revenues.php'
+
 		) );
 	}
 

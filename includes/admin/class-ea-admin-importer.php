@@ -58,7 +58,10 @@ class Importer {
 		}
 
 		if ( empty( $file ) && empty( $_FILES['upload'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
+			wp_send_json_error( array(
+				'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
+				'request' => $_REQUEST
+			) );
 		}
 
 		if ( ! empty( $_FILES['upload'] ) ) {
@@ -78,24 +81,36 @@ class Importer {
 			);
 
 			if ( empty( $_FILES['upload']['type'] ) || ! in_array( strtolower( $_FILES['upload']['type'] ), $accepted_mime_types ) ) {
-				wp_send_json_error( array( 'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
+				wp_send_json_error( array(
+					'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ),
+					'request' => $_REQUEST
+				) );
 			}
 
 			if ( ! file_exists( $_FILES['upload']['tmp_name'] ) ) {
-				wp_send_json_error( array( 'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ), 'error' => $_FILES ) );
+				wp_send_json_error( array(
+					'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+					'error'   => $_FILES
+				) );
 			}
 
 			// Let WordPress import the file. We will remove it after import is complete
 			$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) );
 			if ( ! empty( $import_file['error'] ) ) {
-				wp_send_json_error( array( 'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ), 'error' => $import_file ) );
+				wp_send_json_error( array(
+					'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+					'error'   => $import_file
+				) );
 			}
 
 			$file = $import_file['file'];
 		}
 
 		if ( empty( $file ) ) {
-			wp_send_json_error( array( 'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
+			wp_send_json_error( array(
+				'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
+				'request' => $_REQUEST
+			) );
 		}
 
 		$importer = new $class( $file, $position, $mapping );
@@ -218,8 +233,8 @@ class Importer {
 	/**
 	 * Get customer csv fields.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public static function get_customer_csv_fields() {
 		$fields = array(
@@ -238,6 +253,140 @@ class Importer {
 
 		return apply_filters( 'eaccounting_customer_csv_fields', $fields );
 	}
+
+	/**
+	 * Get vendor csv fields.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public static function get_vendor_csv_fields() {
+		$fields = array(
+			'Name'          => 'name',
+			'Email'         => 'email',
+			'Phone'         => 'phone',
+			'Fax'           => 'fax',
+			'Birth Date'    => 'birth_date',
+			'Address'       => 'address',
+			'Country'       => 'country',
+			'Website'       => 'website',
+			'Tax Number'    => 'tax_number',
+			'Currency Code' => 'currency_code',
+			'Note'          => 'note',
+		);
+
+		return apply_filters( 'eaccounting_vendor_csv_fields', $fields );
+	}
+
+	/**
+	 * Get revenue csv fields.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public static function get_revenue_csv_fields() {
+		$fields = array(
+			'Paid At'        => 'paid_at',
+			'Amount'         => 'amount',
+			'Currency Code'  => 'currency_code',
+			'Currency Rate'  => 'currency_rate',
+			'Account ID'     => 'account_id',
+			'Invoice ID'     => 'invoice_id',
+			'Contact ID'     => 'contact_id',
+			'Category ID'    => 'category_id',
+			'Description'    => 'description',
+			'Payment Method' => 'payment_method',
+			'Reference'      => 'reference',
+			'Reconciled'     => 'reconciled',
+		);
+
+		return apply_filters( 'eaccounting_revenue_csv_fields', $fields );
+	}
+
+	/**
+	 * Get payment csv fields.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public static function get_payment_csv_fields() {
+		$fields = array(
+			'Paid At'        => 'paid_at',
+			'Amount'         => 'amount',
+			'Currency Code'  => 'currency_code',
+			'Currency Rate'  => 'currency_rate',
+			'Account ID'     => 'account_id',
+			'Invoice ID'     => 'invoice_id',
+			'Contact ID'     => 'contact_id',
+			'Category ID'    => 'category_id',
+			'Description'    => 'description',
+			'Payment Method' => 'payment_method',
+			'Reference'      => 'reference',
+			'Reconciled'     => 'reconciled',
+		);
+
+		return apply_filters( 'eaccounting_payment_csv_fields', $fields );
+	}
+
+	/**
+	 * Get account csv fields.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public static function get_account_csv_fields() {
+		$fields = array(
+			'Name'            => 'name',
+			'Number'          => 'number',
+			'Currency Code'   => 'currency_code',
+			'Opening Balance' => 'opening_balance',
+			'Bank Name'       => 'bank_name',
+			'Bank Phone'      => 'bank_phone',
+			'Bank Address'    => 'bank_address',
+			'Enabled'         => 'enabled',
+		);
+
+		return apply_filters( 'eaccounting_account_csv_fields', $fields );
+	}
+
+	/**
+	 * Get category csv fields.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public static function get_category_csv_fields() {
+		$fields = array(
+			'Name'  => 'name',
+			'Type'  => 'type',
+			'Color' => 'color',
+		);
+
+		return apply_filters( 'eaccounting_category_csv_fields', $fields );
+	}
+
+	/**
+	 * Get currency csv fields.
+	 *
+	 * @return array
+	 * @since 1.0.2
+	 */
+	public static function get_currency_csv_fields() {
+		$fields = array(
+			'Name'               => 'name',
+			'Code'               => 'code',
+			'Precision'          => 'precision',
+			'Symbol'             => 'symbol',
+			'Position'           => 'position',
+			'Decimal Separator'  => 'decimal_separator',
+			'Thousand Separator' => 'thousand_separator',
+			'Enabled'            => 'enabled',
+		);
+
+		return apply_filters( 'eaccounting_currency_csv_fields', $fields );
+	}
+
+
 }
 
 return new Importer();

@@ -43,8 +43,8 @@ function eaccounting_admin_tools_page() {
 /**
  * Retrieve tools tabs
  *
- * @since 1.0.2
  * @return array $tabs
+ * @since 1.0.2
  */
 function eaccounting_get_tools_tabs() {
 	$tabs                = array();
@@ -303,7 +303,9 @@ function eaccounting_system_info_tab() {
 	$action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
 	?>
 	<form action="<?php echo esc_url( $action_url ); ?>" method="post" dir="ltr">
-		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea" name="ea-sysinfo" title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
+		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea"
+				  name="ea-sysinfo"
+				  title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
 			<?php echo affwp_tools_system_info_report(); ?>
 		</textarea>
 		<p class="submit">

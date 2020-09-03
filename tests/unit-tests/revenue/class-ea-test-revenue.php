@@ -98,10 +98,73 @@ class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
 		$this->assertNotNull( $revenue->get_date_created() );
 	}
 
-	public function test_delete_revenue(){
+	public function test_delete_revenue() {
 		$revenue = EAccounting_Helper_Revenue::create_revenue();
 		$this->assertNotEquals( 0, $revenue->get_id() );
 		$this->assertNotFalse( eaccounting_delete_transaction( $revenue->get_id() ) );
+	}
+
+	public function test_exception_revenue() {
+		$revenue = eaccounting_insert_transaction( array(
+			'paid_at' => '',
+		) );
+		$this->assertEquals( 'Transaction date is required', $revenue->get_error_message() );
+
+		$revenue = eaccounting_insert_transaction( array(
+			'paid_at' => '2020-09-01',
+			'type'    => ''
+		) );
+		$this->assertEquals( 'Transaction type is required', $revenue->get_error_message() );
+
+		$revenue = eaccounting_insert_transaction( array(
+			'paid_at'     => '2020-09-01',
+			'type'        => 'income',
+			'category_id' => ''
+		) );
+		$this->assertEquals( 'Category is required', $revenue->get_error_message() );
+
+		$revenue = eaccounting_insert_transaction( array(
+			'paid_at'        => '2020-09-01',
+			'type'           => 'income',
+			'category_id'    => 53,
+			'payment_method' => ''
+		) );
+		$this->assertEquals( 'Payment method is required', $revenue->get_error_message() );
+
+		$revenue = eaccounting_insert_transaction( array(
+			'paid_at'        => '2020-09-01',
+			'type'           => 'income',
+			'category_id'    => 53,
+			'payment_method' => 'cash',
+			'account_id'     => ''
+		) );
+		$this->assertEquals( 'Account is required.', $revenue->get_error_message() );
+
+		$account  = EAccounting_Helper_Account::create_account();
+		$category = EAccounting_Helper_Category::create_category();
+
+		$revenue = eaccounting_insert_transaction( array(
+			'account_id'     => $account->get_id(),
+			'paid_at'        => '2020-09-01',
+			'type'           => 'income',
+			'payment_method' => 'cash',
+			'category_id'    => $category->get_id()
+		) );
+		$this->assertEquals( 'Transaction type and category type does not match.', $revenue->get_error_message() );
+
+		$contact = EAccounting_Helper_Contact::create_contact();
+		$category = EAccounting_Helper_Category::create_category('Income','income');
+
+		$revenue = eaccounting_insert_transaction( array(
+			'account_id'     => $account->get_id(),
+			'paid_at'        => '2020-09-01',
+			'type'           => 'income',
+			'payment_method' => 'cash',
+			'category_id'    => $category->get_id(),
+			'contact_id'     => $contact->get_id()
+		) );
+		$this->assertNotFalse( $revenue->exists() );
+
 	}
 
 

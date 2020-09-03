@@ -51,7 +51,7 @@ function eaccounting_get_currency( $currency, $exist = false ) {
 		}
 
 		if ( $exist && ! $_currency->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid currency.', 'wp-ever-accounting' ) );
 		}
 
 		return $_currency;
