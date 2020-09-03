@@ -1,13 +1,27 @@
 <?php
+/**
+ * Handle category export.
+ *
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Export
+ */
 
 namespace EverAccounting\Export;
 
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Batch_Exporter;
+use EverAccounting\Abstracts\CSV_Exporter;
 use EverAccounting\Query_Category;
 
-class Category_CSV_Export extends CSV_Batch_Exporter {
+/**
+ * Class Category_CSV_Export
+ *
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Export
+ */
+class Export_Categories extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -21,41 +35,41 @@ class Category_CSV_Export extends CSV_Batch_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @return array
 	 * @since  1.0.2
+	 * @return array
 	 */
-	public function get_csv_columns() {
-		return array(
-			'name'  => __( 'Name', 'wp-ever-accounting' ),
-			'type'  => __( 'Type', 'wp-ever-accounting' ),
-			'color' => __( 'Color', 'wp-ever-accounting' ),
-		);
+	public function get_columns() {
+		return eaccounting_get_io_headers( 'category' );
 	}
 
 	/**
+	 * Get export data.
 	 *
 	 * @since 1.0.2
+	 * @return array
 	 */
-	public function set_data() {
+	public function get_rows() {
 		$args              = array(
-			'per_page' => $this->get_limit(),
-			'page'     => $this->get_page(),
+			'per_page' => $this->limit,
+			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 		);
 		$query             = Query_Category::init()->where( $args );
 		$items             = $query->get( OBJECT, 'eaccounting_get_category' );
 		$this->total_count = $query->count();
-		$this->rows        = array();
+		$rows              = array();
 
 		foreach ( $items as $item ) {
-			$this->rows[] = $this->generate_row_data( $item );
+			$rows[] = $this->generate_row_data( $item );
 		}
+
+		return $rows;
 	}
 
 
 	/**
-	 * Take a product and generate row data from it for export.
+	 * Take a category and generate row data from it for export.
 	 *
 	 *
 	 * @param \EverAccounting\Category $item
@@ -64,7 +78,7 @@ class Category_CSV_Export extends CSV_Batch_Exporter {
 	 */
 	protected function generate_row_data( $item ) {
 		$props = [];
-		foreach ( $this->get_csv_columns() as $column => $label ) {
+		foreach ( $this->get_columns() as $column => $label ) {
 			$value = null;
 			switch ( $column ) {
 				case 'name':

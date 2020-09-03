@@ -19,14 +19,14 @@ defined( 'ABSPATH' ) || exit();
 function eaccounting_get_screen_ids() {
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 	$screen_ids            = array(
-		'toplevel_page_e' . $eaccounting_screen_id,
-		$eaccounting_screen_id . '_page_ea-transactions',
-		$eaccounting_screen_id . '_page_ea-sales',
-		$eaccounting_screen_id . '_page_ea-expenses',
-		$eaccounting_screen_id . '_page_ea-banking',
-		$eaccounting_screen_id . '_page_ea-reports',
-		$eaccounting_screen_id . '_page_ea-tools',
-		$eaccounting_screen_id . '_page_ea-settings',
+			'toplevel_page_e' . $eaccounting_screen_id,
+			$eaccounting_screen_id . '_page_ea-transactions',
+			$eaccounting_screen_id . '_page_ea-sales',
+			$eaccounting_screen_id . '_page_ea-expenses',
+			$eaccounting_screen_id . '_page_ea-banking',
+			$eaccounting_screen_id . '_page_ea-reports',
+			$eaccounting_screen_id . '_page_ea-tools',
+			$eaccounting_screen_id . '_page_ea-settings',
 	);
 
 	return apply_filters( 'eaccounting_screen_ids', $screen_ids );
@@ -150,10 +150,10 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array() 
 		$args    = wp_parse_args( $query_args, array( 'tab' => $tab_id ) );
 		$tab_url = eaccounting_admin_url( $args );
 		printf( '<a href="%1$s" alt="%2$s" class="%3$s">%4$s</a>',
-			esc_url( $tab_url ),
-			esc_attr( $tab_name ),
-			$active_tab == $tab_id ? 'nav-tab nav-tab-active' : 'nav-tab',
-			esc_html( $tab_name )
+				esc_url( $tab_url ),
+				esc_attr( $tab_name ),
+				$active_tab == $tab_id ? 'nav-tab nav-tab-active' : 'nav-tab',
+				esc_html( $tab_name )
 		);
 	}
 
@@ -213,51 +213,128 @@ function eaccounting_get_admin_template( $template_name, $args = [] ) {
 }
 
 /**
- * Handle CSV file download.
+ * Get import export headers.
  *
  * @since 1.0.2
- * @return void
+ *
+ * @param $type
+ *
+ * @return mixed|void
  */
-function eaccounting_handle_csv_download() {
-	if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $_GET['action'] ) ) {
-
-		if ( empty( $_REQUEST['export'] ) || false === $batch = eaccounting()->utils->batch->get( $_REQUEST['export'] ) ) {
-			wp_die(
-				__( 'Invalid export type.', 'wp-ever-accounting' ),
-				__( 'Error', 'wp-ever-accounting' ),
-				array( 'response' => 403 )
+function eaccounting_get_io_headers( $type ) {
+	$headers = array();
+	switch ( $type ) {
+		case 'customer':
+		case 'vendor':
+			$headers = array(
+					'name'          => 'Name',
+					'email'         => 'Email',
+					'phone'         => 'Phone',
+					'fax'           => 'Fax',
+					'birth_date'    => 'Birth Date',
+					'address'       => 'Address',
+					'country'       => 'Country',
+					'website'       => 'Website',
+					'tax_number'    => 'Tax Number',
+					'currency_code' => 'Currency Code',
+					'note'          => 'Note',
 			);
-		}
-
-		require_once $batch['file'];
-
-		if ( empty( $batch['class'] ) || ( ! empty( $batch['class'] ) && ! class_exists( $batch['class'] ) ) ) {
-			wp_die(
-				__( 'Invalid export class.', 'wp-ever-accounting' ),
-				__( 'Error', 'wp-ever-accounting' ),
-				array( 'response' => 403 )
+			break;
+		case 'category':
+			$headers = array(
+					'name'  => 'Name',
+					'type'  => 'Type',
+					'color' => 'Color',
 			);
-		}
-
-		$class = $batch['class'];
-		/**
-		 * @var $class \EverAccounting\Abstracts\CSV_Batch_Exporter
-		 */
-		$exporter = new $class();
-
-		if ( ! $exporter->can_export() ) {
-			wp_die(
-				__( 'You do not have enough privileges to export this.', 'wp-ever-accounting' ),
-				__( 'Error', 'wp-ever-accounting' ),
-				array( 'response' => 403 )
+			break;
+		case 'account':
+			$headers = array(
+					'name'            => 'Name',
+					'number'          => 'Number',
+					'currency_code'   => 'Currency Code',
+					'opening_balance' => 'Opening Balance',
+					'bank_name'       => 'Bank Name',
+					'bank_phone'      => 'Bank Phone',
+					'bank_address'    => 'Ban Address',
+					'enabled'         => 'Enabled',
 			);
-		}
-		if ( ! empty( $_GET['filename'] ) ) {
-			$exporter->set_filename( wp_unslash( $_GET['filename'] ) );
-		}
+			break;
+		case 'payment':
+			$headers = array(
+					'paid_at'        => 'Paid At',
+					'amount'         => 'Amount',
+					'currency_code'  => 'Currency Code',
+					'currency_rate'  => 'Currency Rate',
+					'account_name'   => 'Account Name',
+					'vendor_name'    => 'Vendor Name',
+					'category_name'  => 'Category Name',
+					'description'    => 'Description',
+					'payment_method' => 'Payment Method',
+					'reference'      => 'Reference',
+					'reconciled'     => 'Reconciled',
+			);
+			break;
+		case 'revenue':
+			$headers = array(
+					'paid_at'        => 'Paid At',
+					'amount'         => 'Amount',
+					'currency_code'  => 'Currency Code',
+					'currency_rate'  => 'Currency Rate',
+					'account_name'   => 'Account Name',
+					'customer_name'  => 'Customer Name',
+					'category_name'  => 'Category Name',
+					'description'    => 'Description',
+					'payment_method' => 'Payment Method',
+					'reference'      => 'Reference',
+					'reconciled'     => 'Reconciled',
+			);
+			break;
+		case 'currency':
+			$headers = array(
+					'name'               => 'Name',
+					'code'               => 'Code',
+					'precision'          => 'Precision',
+					'symbol'             => 'Symbol',
+					'position'           => 'Position',
+					'decimal_separator'  => 'Decimal Separator',
+					'thousand_separator' => 'Thousand Separator',
+					'enabled'            => 'Enabled',
+			);
+			break;
 
-		$exporter->export();
+		default:
+
+			break;
 	}
+
+	return apply_filters( 'eaccounting_get_io_headers_' . $type, $headers );
 }
 
-add_action( 'admin_init', 'eaccounting_handle_csv_download' );
+/**
+ * Render the importer mapping table.
+ *
+ * @since 1.0.2
+ *
+ * @param string $type
+ */
+function eaccounting_do_import_fields( $type ) {
+	$fields = eaccounting_get_io_headers( $type );
+
+	if ( ! empty( $fields ) ) {
+
+		foreach ( $fields as $key => $label ) {
+			?>
+			<tr>
+				<td><?php echo esc_html( $label ); ?></td>
+				<td>
+					<select name="mapping[<?php echo esc_attr( $key ); ?>]" class="ea-importer-map-column">
+						<option value=""><?php esc_html_e( '- Do not import -', 'wp-ever-accounting' ); ?></option>
+					</select>
+				</td>
+				<td class="ea-importer-preview-field"><?php esc_html_e( '- Select field to preview data -', 'wp-ever-accounting' ); ?></td>
+			</tr>
+			<?php
+		}
+
+	}
+}

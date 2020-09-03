@@ -1,13 +1,27 @@
 <?php
+/**
+ * Handle accounts export.
+ *
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Export
+ */
 
 namespace EverAccounting\Export;
 
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Batch_Exporter;
+use EverAccounting\Abstracts\CSV_Exporter;
 use EverAccounting\Query_Account;
 
-class Account_CSV_Export extends CSV_Batch_Exporter {
+/**
+ * Class Export_Accounts
+ *
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Export
+ */
+class Export_Accounts extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -21,42 +35,34 @@ class Account_CSV_Export extends CSV_Batch_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @return array
 	 * @since  1.0.2
+	 * @return array
 	 */
-	public function get_csv_columns() {
-		return array(
-			'name'            => __( 'Name', 'wp-ever-accounting' ),
-			'number'          => __( 'Number', 'wp-ever-accounting' ),
-			'currency_code'   => __( 'Currency Code', 'wp-ever-accounting' ),
-			'opening_balance' => __( 'Opening Balance', 'wp-ever-accounting' ),
-			'bank_name'       => __( 'Bank Name', 'wp-ever-accounting' ),
-			'bank_phone'      => __( 'Bank Phone', 'wp-ever-accounting' ),
-			'bank_address'    => __( 'Ban Address', 'wp-ever-accounting' ),
-			'enabled'         => __( 'Enabled', 'wp-ever-accounting' ),
-		);
+	public function get_columns() {
+		return eaccounting_get_io_headers( 'account' );
 	}
 
 	/**
 	 *
 	 * @since 1.0.2
 	 */
-	public function set_data() {
+	public function get_rows() {
 		$args              = array(
-			'per_page' => $this->get_limit(),
-			'page'     => $this->get_page(),
+			'per_page' => $this->limit,
+			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
-			'type'     => 'account',
 		);
 		$query             = Query_Account::init()->where( $args );
-		$items             = $query->get( OBJECT, 'eaccounting_get_contact' );
+		$items             = $query->get( OBJECT, 'eaccounting_get_account' );
 		$this->total_count = $query->count();
-		$this->rows        = array();
+		$rows              = array();
 
 		foreach ( $items as $item ) {
-			$this->rows[] = $this->generate_row_data( $item );
+			$rows[] = $this->generate_row_data( $item );
 		}
+
+		return $rows;
 	}
 
 
@@ -70,7 +76,7 @@ class Account_CSV_Export extends CSV_Batch_Exporter {
 	 */
 	protected function generate_row_data( $item ) {
 		$props = [];
-		foreach ( $this->get_csv_columns() as $column => $label ) {
+		foreach ( $this->get_columns() as $column => $label ) {
 			$value = null;
 			switch ( $column ) {
 				case 'name':

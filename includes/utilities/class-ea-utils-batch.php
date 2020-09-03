@@ -41,8 +41,6 @@ class Batch extends Registry {
 	public function includes() {
 		//exporters
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-csv-exporter.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-csv-batch-exporter.php' );
-
 		//importers
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-csv-importer.php' );
 	}
@@ -54,18 +52,32 @@ class Batch extends Registry {
 	 */
 	protected function register_items() {
 		$this->add_item( 'export-customers', array(
-			'class' => '\EverAccounting\Export\Customer_CSV_Export',
-			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-customer-csv-export.php'
+			'class' => '\EverAccounting\Export\Export_Customers',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-customers.php'
+		) );
+		$this->add_item( 'export-vendors', array(
+			'class' => '\EverAccounting\Export\Export_Vendors',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-vendors.php'
+		) );
+		$this->add_item( 'export-accounts', array(
+			'class' => '\EverAccounting\Export\Export_Accounts',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-accounts.php'
+		) );
+		$this->add_item( 'export-categories', array(
+			'class' => '\EverAccounting\Export\Export_Categories',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-categories.php'
+		) );
+		$this->add_item( 'export-currencies', array(
+			'class' => '\EverAccounting\Export\Export_Currencies',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-currencies.php'
+		) );
+		$this->add_item( 'export-payments', array(
+			'class' => '\EverAccounting\Export\Export_Payments',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-payments.php'
 		) );
 		$this->add_item( 'export-revenues', array(
-			'class' => '\EverAccounting\Export\Revenue_CSV_Export',
-			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-revenue-csv-export.php'
-		) );
-
-
-		$this->add_item( 'import-customers', array(
-			'class' => '\EverAccounting\Import\Customer_CSV_Import',
-			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-customer-csv-import.php'
+			'class' => '\EverAccounting\Export\Export_Revenues',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-revenues.php'
 		) );
 	}
 

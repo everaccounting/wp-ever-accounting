@@ -29,28 +29,12 @@ abstract class CSV_Exporter {
 	public $capability = 'manage_options';
 
 	/**
-	 * Raw data to export.
-	 *
-	 * @since 1.0.2
-	 * @var array
-	 */
-	protected $rows = array();
-
-	/**
 	 * Number exported.
 	 *
 	 * @since 1.0.2
 	 * @var integer
 	 */
 	protected $exported_count = 0;
-
-	/**
-	 * List of columns to export, or empty for all.
-	 *
-	 * @since 1.0.2
-	 * @var array
-	 */
-	protected $columns_to_export = array();
 
 	/**
 	 * The delimiter parameter sets the field delimiter (one character only).
@@ -61,12 +45,35 @@ abstract class CSV_Exporter {
 	protected $delimiter = ',';
 
 	/**
-	 * Set columns available columns to export.
+	 * Page being exported
+	 *
+	 * @var integer
+	 */
+	protected $page = 1;
+
+	/**
+	 * Batch limit.
+	 *
+	 * @since 1.0.2
+	 * @var integer
+	 */
+	protected $limit = 100;
+
+	/**
+	 * Total rows to export.
+	 *
+	 * @since 1.0.2
+	 * @var integer
+	 */
+	protected $total_count = 0;
+
+	/**
+	 * Return an array of supported column names and ids.
 	 *
 	 * @since 1.0.2
 	 * @return array
 	 */
-	public abstract function get_csv_columns();
+	protected abstract function get_columns();
 
 	/**
 	 * Prepare data that will be exported.
@@ -74,7 +81,54 @@ abstract class CSV_Exporter {
 	 * @since 1.0.2
 	 * @return array
 	 */
-	public abstract function set_data();
+	protected abstract function get_rows();
+
+	/**
+	 * Can we export?
+	 *
+	 * @since  1.0.2
+	 * @return bool Whether we can export or not
+	 */
+	public function can_export() {
+		return (bool) current_user_can( apply_filters( 'eaccounting_export_capability', $this->capability ) );
+	}
+
+	/**
+	 * Generate the CSV file.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param int $step
+	 */
+	public function process_step( $step ) {
+		$this->page = absint( $step );
+		if ( 1 === $this->page ) {
+			@unlink( $this->get_file_path() );
+		}
+
+		$rows = $this->prepare_rows( $this->get_rows() );
+
+		$file = $this->get_file();
+
+		if ( 100 == $this->get_percent_complete() ) {
+			$file = chr( 239 ) . chr( 187 ) . chr( 191 ) . $this->get_column_headers() . $file;
+		}
+
+		$file .= $rows;
+		@file_put_contents( $this->get_file_path(), $file );
+	}
+
+	/**
+	 * Serve the file and remove once sent to the client.
+	 *
+	 * @since 1.0.2
+	 */
+	public function export() {
+		$this->send_headers();
+		$this->send_content( $this->get_file() );
+		@unlink( $this->get_file_path() );
+		die();
+	}
 
 	/**
 	 * Set filename to export to.
@@ -86,72 +140,64 @@ abstract class CSV_Exporter {
 	}
 
 	/**
-	 * Set columns to export.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param array $columns Columns array.
-	 */
-	public function set_columns_to_export( $columns ) {
-		if ( ! empty( $columns ) && is_array( $columns ) ) {
-			$this->columns_to_export = array_map( 'eaccounting_clean', $columns );
-		}
-	}
-
-	/**
-	 * Return an array of supported column names and ids.
-	 *
-	 * @since 1.0.2
-	 * @return array
-	 */
-	public function get_columns() {
-		return apply_filters( "eaccounting_{$this->export_type}_export_column_names", $this->get_csv_columns(), $this );
-	}
-
-	/**
 	 * Generate and return a filename.
 	 *
 	 * @return string
 	 */
 	public function get_filename() {
-		$date      = date( "Ymd" );
-		$file_name = empty( $this->filename ) ? "{$this->export_type}-$date.csv" : $this->filename;
+		$date = date( "Ymd" );
 
-		return sanitize_file_name( apply_filters( "eaccounting_{$this->export_type}_export_get_filename", $file_name ) );
+		return sanitize_file_name( "{$this->export_type}-$date.csv" );
 	}
 
 	/**
-	 * Return an array of columns to export.
+	 * Get total % complete.
 	 *
 	 * @since 1.0.2
-	 * @return array
+	 * @return int
 	 */
-	public function get_columns_to_export() {
-		return $this->columns_to_export;
+	public function get_percent_complete() {
+		return $this->total_count ? floor( ( $this->get_total_exported() / $this->total_count ) * 100 ) : 100;
 	}
 
 	/**
-	 * Export column headers in CSV format.
+	 * Get count of records exported.
+	 *
+	 * @since 1.0.2
+	 * @return int
+	 */
+	public function get_total_exported() {
+		return ( ( $this->page - 1 ) * $this->limit ) + $this->exported_count;
+	}
+
+	/**
+	 * Get file path to export to.
 	 *
 	 * @since 1.0.2
 	 * @return string
 	 */
-	protected function export_column_headers() {
-		$columns    = $this->get_columns();
-		$export_row = array();
-		$buffer     = fopen( 'php://output', 'w' );
-		ob_start();
+	protected function get_file_path() {
+		$upload_dir = wp_upload_dir();
 
-		foreach ( $columns as $column_id => $column_name ) {
-			if ( ! $this->is_column_exporting( $column_id ) ) {
-				continue;
-			}
-			$export_row[] = $this->format_data( $column_name );
+		return trailingslashit( $upload_dir['basedir'] ) . $this->get_filename();
+	}
+
+	/**
+	 * Get the file contents.
+	 *
+	 * @since 1.0.2
+	 * @return string
+	 */
+	protected function get_file() {
+		$file = '';
+		if ( @file_exists( $this->get_file_path() ) ) {
+			$file = @file_get_contents( $this->get_file_path() );
+		} else {
+			@file_put_contents( $this->get_file_path(), '' );
+			@chmod( $this->get_file_path(), 0664 );
 		}
 
-		$this->fputcsv( $buffer, $export_row );
-
-		return ob_get_clean();
+		return $file;
 	}
 
 	/**
@@ -160,12 +206,11 @@ abstract class CSV_Exporter {
 	 * @since 1.0.2
 	 * @return string
 	 */
-	protected function export_rows() {
-		$data   = $this->rows;
-		$buffer = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
+	protected function prepare_rows( $rows ) {
+		$buffer = fopen( 'php://output', 'w' );
 		ob_start();
 
-		array_walk( $data, array( $this, 'export_row' ), $buffer );
+		array_walk( $rows, array( $this, 'prepare_row' ), $buffer );
 
 		return apply_filters( "eaccounting_{$this->export_type}_export_rows", ob_get_clean(), $this );
 	}
@@ -179,16 +224,13 @@ abstract class CSV_Exporter {
 	 * @param string   $key      Column being exported.
 	 * @param resource $buffer   Output buffer.
 	 */
-	protected function export_row( $row_data, $key, $buffer ) {
+	protected function prepare_row( $row, $key, $buffer ) {
 		$columns    = $this->get_columns();
 		$export_row = array();
 
 		foreach ( $columns as $column_id => $column_name ) {
-			if ( ! $this->is_column_exporting( $column_id ) ) {
-				continue;
-			}
-			if ( isset( $row_data[ $column_id ] ) ) {
-				$export_row[] = $this->format_data( $row_data[ $column_id ] );
+			if ( isset( $row[ $column_id ] ) ) {
+				$export_row[] = $this->format_data( $row[ $column_id ] );
 			} else {
 				$export_row[] = '';
 			}
@@ -208,7 +250,7 @@ abstract class CSV_Exporter {
 	 *
 	 * @return string
 	 */
-	public function format_data( $data ) {
+	protected function format_data( $data ) {
 		if ( ! is_scalar( $data ) ) {
 			if ( is_a( $data, '\EverAccounting\DateTime' ) ) {
 				$data = $data->date( 'Y-m-d G:i:s' );
@@ -239,7 +281,7 @@ abstract class CSV_Exporter {
 	 *
 	 * @return string
 	 */
-	public function escape_data( $data ) {
+	protected function escape_data( $data ) {
 		$active_content_triggers = array( '=', '+', '-', '@' );
 
 		if ( in_array( mb_substr( $data, 0, 1 ), $active_content_triggers, true ) ) {
@@ -249,100 +291,25 @@ abstract class CSV_Exporter {
 		return $data;
 	}
 
-
 	/**
-	 * See if a column is to be exported or not.
+	 * get column headers in CSV format.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param string $column_id ID of the column being exported.
-	 *
-	 * @return boolean
+	 * @return string
 	 */
-	public function is_column_exporting( $column_id ) {
-		$column_id         = strstr( $column_id, ':' ) ? current( explode( ':', $column_id ) ) : $column_id;
-		$columns_to_export = $this->get_columns_to_export();
+	protected function get_column_headers() {
+		$columns    = $this->get_columns();
+		$export_row = array();
+		$buffer     = fopen( 'php://output', 'w' );
+		ob_start();
 
-		if ( empty( $columns_to_export ) ) {
-			return true;
+		foreach ( $columns as $column_id => $column_name ) {
+			$export_row[] = $this->format_data( $column_name );
 		}
 
-		if ( in_array( $column_id, $columns_to_export, true ) ) {
-			return true;
-		}
+		$this->fputcsv( $buffer, $export_row );
 
-		return false;
-	}
-
-
-	/**
-	 * Can we export?
-	 *
-	 * @since  1.0.2
-	 * @return bool Whether we can export or not
-	 */
-	public function can_export() {
-		/**
-		 * Filters the capability needed to perform an export.
-		 *
-		 * @since 1.0.2
-		 *
-		 * @param string $capability Capability needed to perform an export.
-		 *
-		 */
-		return (bool) current_user_can( apply_filters( 'eaccounting_export_capability', $this->capability ) );
-	}
-
-	/**
-	 * Set the export headers.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	public function send_headers() {
-		@ini_set( 'zlib.output_compression', 'Off' );
-		@ini_set( 'output_buffering', 'Off' );
-		@ini_set( 'output_handler', '' );
-		ignore_user_abort( true );
-		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
-			@set_time_limit( 0 );
-		}
-
-		nocache_headers();
-		header( 'Content-Type: text/csv; charset=utf-8' );
-		header( 'Content-Disposition: attachment; filename=' . $this->get_filename() );
-		header( 'Pragma: no-cache' );
-		header( 'Expires: 0' );
-	}
-
-	/**
-	 * Set the export content.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $csv_data All CSV content.
-	 */
-	public function send_content( $csv_data ) {
-		echo $csv_data;
-	}
-
-	/**
-	 * Do the export.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	public function export() {
-		if ( ! $this->can_export() ) {
-			wp_die( __( 'You do not have permission to export data.', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
-		}
-
-		// Set headers
-		$this->send_headers();
-
-		// Output contents
-		$this->send_content( chr( 239 ) . chr( 187 ) . chr( 191 ) . $this->export_column_headers() . $this->export_rows() );
-		die();
+		return ob_get_clean();
 	}
 
 	/**
@@ -370,5 +337,38 @@ abstract class CSV_Exporter {
 		} else {
 			fputcsv( $buffer, $export_row, $this->delimiter, '"', "\0" ); // @codingStandardsIgnoreLine
 		}
+	}
+
+	/**
+	 * Set the export headers.
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+	protected function send_headers() {
+		@ini_set( 'zlib.output_compression', 'Off' );
+		@ini_set( 'output_buffering', 'Off' );
+		@ini_set( 'output_handler', '' );
+		ignore_user_abort( true );
+		if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) {
+			@set_time_limit( 0 );
+		}
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=' . $this->get_filename() );
+		header( 'Pragma: no-cache' );
+		header( 'Expires: 0' );
+	}
+
+	/**
+	 * Set the export content.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $content All CSV content.
+	 */
+	protected function send_content( $content ) {
+		echo $content;
 	}
 }

@@ -27,7 +27,7 @@ class Importer {
 		$position        = isset( $_REQUEST['position'] ) ? absint( $_REQUEST['position'] ) : 0;
 		$mapping         = isset( $_REQUEST['mapping'] ) ? (array) eaccounting_clean( wp_unslash( $_REQUEST['mapping'] ) ) : array();
 		$update_existing = isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false;
-
+		$step            = isset( $_REQUEST['step'] ) ? absint( $_REQUEST['step'] ) : 0;
 		//verify nonce
 		Ajax::verify_nonce( "{$type}_importer_nonce" );
 
@@ -91,27 +91,76 @@ class Importer {
 				wp_send_json_error( array( 'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ), 'error' => $import_file ) );
 			}
 
-			$file = $import_file;
+			$file = $import_file['file'];
 		}
 
 		if ( empty( $file ) ) {
 			wp_send_json_error( array( 'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
 		}
 
-		$importer = new $class( $file['file'] );
+		$importer = new $class( $file, $position, $mapping );
 		if ( ! $importer->can_import() ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to import data', 'wp-ever-accounting' ) ) );
 		}
 
+		$headers = $importer->get_raw_keys();
+		$sample  = current( $importer->get_raw_data() );
 
-//		$params = array(
-//			'delimiter'       => ! empty( $_POST['delimiter'] ) ? eaccounting_clean( wp_unslash( $_POST['delimiter'] ) ) : ',',
-//			'start_pos'       => isset( $_POST['position'] ) ? absint( $_POST['position'] ) : 0,
-//			'mapping'         => isset( $_POST['mapping'] ) ? (array) eaccounting_clean( wp_unslash( $_POST['mapping'] ) ) : array(),
-//			'update_existing' => isset( $_POST['update_existing'] ) ? (bool) $_POST['update_existing'] : false,
-//			'lines'           => apply_filters( 'eaccounting_import_batch_size', 30 ),
-//			'parse'           => true,
-//		);
+		if ( empty( $sample ) ) {
+			wp_send_json_error( array( 'message' => __( 'The file is empty or using a different encoding than UTF-8, please try again with a new file.', 'wp-ever-accounting' ) ) );
+		}
+
+		if ( $step == 0 ) {
+			wp_send_json_success( array(
+				'position' => 0,
+				'headers'  => $headers,
+				'required' => $importer->get_required(),
+				'sample'   => $sample,
+				'step'     => $step + 1,
+				'file'     => $file,
+			) );
+		}
+
+		// Log failures.
+		if ( 0 !== $position ) {
+			$error_log = array_filter( (array) get_user_option( "{$type}_import_error_log" ) );
+		} else {
+			$error_log = array();
+		}
+
+		$results          = $importer->import();
+		$percent_complete = $importer->get_percent_complete();
+		$error_log        = array_merge( $error_log, $results );
+		update_user_option( get_current_user_id(), "{$type}_import_error_log", $error_log );
+
+
+		if ( 100 <= $percent_complete ) {
+			wp_send_json_success(
+				array(
+					'position'   => 'done',
+					'percentage' => 100,
+					'imported'   => (int) $results['imported'],
+					'failed'     => (int) $results['failed'],
+					'file'       => $file,
+					'step'       => (int) $step + 1,
+					'message'    => esc_html__( sprintf( '%d items imported and %d items failed.', $results['imported'], $results['failed'] ) ),
+				)
+			);
+		} else {
+			wp_send_json_success(
+				array(
+					'position'   => $importer->get_position(),
+					'percentage' => $percent_complete,
+					'imported'   => (int) $results['imported'],
+					'failed'     => (int) $results['failed'],
+					'file'       => $file,
+					'step'       => (int) $step + 1,
+					'mapping'    => $mapping,
+				)
+			);
+		}
+
+
 //
 //		/**
 //		 * @var $importer \EverAccounting\Abstracts\CSV_Batch_Importer

@@ -81,6 +81,7 @@ class Admin_Assets {
 		wp_register_script( 'ea-admin', eaccounting()->plugin_url() . '/assets/js/admin/eaccounting-admin' . $suffix . '.js', array( 'jquery' ), $version );
 		wp_register_script( 'ea-dashboard', eaccounting()->plugin_url() . '/assets/js/admin/admin-dashboard' . $suffix . '.js', array( 'jquery', 'ea-daterange' ), $version );
 		wp_register_script( 'ea-exporter', eaccounting()->plugin_url() . '/assets/js/admin/ea-exporter' . $suffix . '.js', array( 'jquery', 'backbone', 'wp-util' ), $version );
+		wp_register_script( 'ea-importer', eaccounting()->plugin_url() . '/assets/js/admin/ea-importer' . $suffix . '.js', array( 'jquery', 'wp-util' ), $version );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
@@ -173,14 +174,24 @@ class Admin_Assets {
 				)
 			) );
 
+			wp_localize_script( 'ea-importer', 'eaccounting_importer_i10n', array(
+				'uploaded_file_not_found' => esc_html__( 'Could not find the uploaded file, please try again', 'wp-ever-accounting' ),
+				'select_field_to_preview' => esc_html__( '	- Select field to preview data -', 'wp-ever-accounting' ),
+				'required'                => esc_html__( '(Required)', 'wp-ever-accounting' ),
+			) );
+
 			if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
 				wp_enqueue_media();
 				wp_enqueue_script( 'ea-settings' );
 			}
 
-//			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' == $_GET['tab'] ) {
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' == $_GET['tab'] ) {
 				wp_enqueue_script( 'ea-exporter' );
-//			}
+			}
+
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'import' == $_GET['tab'] ) {
+				wp_enqueue_script( 'ea-importer' );
+			}
 
 		}
 	}

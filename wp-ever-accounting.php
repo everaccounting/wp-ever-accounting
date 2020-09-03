@@ -17,6 +17,10 @@
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class EverAccounting
+ * @since 1.0.0
+ */
 final class EverAccounting {
 	/**
 	 * EAccounting version.
@@ -77,20 +81,38 @@ final class EverAccounting {
 	 * Plugin URL getter.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @param string $path
+	 *
 	 * @return string
 	 */
-	public function plugin_url() {
-		return untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
+	public function plugin_url( $path = '' ) {
+		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
+		if ( $path && is_string( $path ) ) {
+			$url = trailingslashit( $url );
+			$url .= ltrim( $path, '/' );
+		}
+
+		return $url;
 	}
 
 	/**
 	 * Plugin path getter.
 	 *
 	 * @since 1.2.0
+	 *
+	 * @param string $path
+	 *
 	 * @return string
 	 */
-	public function plugin_path() {
-		return untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
+	public function plugin_path( $path = '' ) {
+		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
+		if ( $path && is_string( $path ) ) {
+			$plugin_path = trailingslashit( $plugin_path );
+			$plugin_path .= ltrim( $path, '/' );
+		}
+
+		return $plugin_path;
 	}
 
 	/**
@@ -105,7 +127,7 @@ final class EverAccounting {
 
 	/**
 	 * Get the template path.
-	 *
+	 * @since 1.2.0
 	 * @return string
 	 */
 	public function template_path() {
@@ -184,7 +206,7 @@ final class EverAccounting {
 	}
 
 	/**
-	 * EverAccounting Constructor.
+	 * EverAccounting constructor.
 	 */
 	public function __construct() {
 		$this->define_constants();
@@ -277,8 +299,8 @@ final class EverAccounting {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php' );
-			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php' );
+			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php' );
@@ -288,8 +310,6 @@ final class EverAccounting {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/reports/reports.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php' );
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/settings/settings.php' );
-
-
 		}
 	}
 
@@ -297,6 +317,7 @@ final class EverAccounting {
 	 * Hook into actions and filters.
 	 *
 	 * @since 1.0.0
+	 * @return void
 	 */
 	private function init_hooks() {
 		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting_Install', 'install' ) );
@@ -314,6 +335,7 @@ final class EverAccounting {
 	 * are loaded, to avoid issues caused by plugin directory naming changing
 	 *
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function on_plugins_loaded() {
 		do_action( 'eaccounting_loaded' );
@@ -321,6 +343,9 @@ final class EverAccounting {
 
 	/**
 	 * Init EAccounting when WordPress Initialises.
+	 *
+	 * @since 1.0.2
+	 * @return void
 	 */
 	public function init_plugin() {
 		// Before init action.
@@ -338,12 +363,10 @@ final class EverAccounting {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param null $type
-	 *
 	 * @return \EverAccounting\Query
 	 */
-	public function query( $type = null ) {
-		return \EverAccounting\Query::init( $type );
+	public function query() {
+		return \EverAccounting\Query::init();
 	}
 
 	/**
@@ -357,7 +380,6 @@ final class EverAccounting {
 	}
 }
 
-
 /**
  * Returns the main instance of Plugin.
  *
@@ -369,10 +391,3 @@ function eaccounting() {
 }
 
 eaccounting();
-
-//add_action( 'admin_init', function () {
-//	$export = new \EverAccounting\Export\Transaction_CSV_Export();
-//	$export->set_column_names( $export->get_default_column_names() );
-//	$export->prepare_data_to_export();
-//	$export->export();
-//} );

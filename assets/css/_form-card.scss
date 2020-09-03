@@ -44,23 +44,3 @@
 	}
   }
 }
-
-.ea-batch-notice {
-  margin-top: 10px;
-  border-style: solid;
-  border-width: 1px 0;
-  border-color: #eae9e9;
-  padding: 12px 12px 12px 0;
-  overflow: auto;
-
-  .ea-batch-progress {
-	background: #ddd;
-	height: 15px;
-
-	div {
-	  background: #0073aa;
-	  height: 100%;
-	  width: 0;
-	}
-  }
-}

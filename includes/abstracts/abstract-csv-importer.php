@@ -42,12 +42,20 @@ abstract class CSV_Importer {
 	protected $position = 0;
 
 	/**
+	 * Whatever to parse data or not.
+	 *
+	 * @since 1.0.2
+	 * @var bool
+	 */
+	protected $parse = true;
+
+	/**
 	 * File pointer end.
 	 *
 	 * @since 1.0.2
 	 * @var int
 	 */
-	protected $end_position = -1;
+	protected $end_position = - 1;
 
 	/**
 	 * Max lines to read.
@@ -55,7 +63,7 @@ abstract class CSV_Importer {
 	 * @since 1.0.2
 	 * @var int
 	 */
-	protected $lines = - 1;
+	protected $lines = 100;
 
 	/**
 	 * Column mapping. csv_heading => schema_heading.
@@ -107,6 +115,14 @@ abstract class CSV_Importer {
 	protected $escape = "\0";
 
 	/**
+	 * Original headers.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $headers = array();
+
+	/**
 	 * Raw keys - CSV raw headers.
 	 *
 	 * @since 1.0.2
@@ -123,20 +139,12 @@ abstract class CSV_Importer {
 	protected $mapped_keys = array();
 
 	/**
-	 * Raw data.
-	 *
-	 * @since 1.0.2
-	 * @var array
-	 */
-	protected $raw_data = array();
-
-	/**
 	 * Positions of the file.
 	 *
 	 * @since 1.0.2
 	 * @var array
 	 */
-	protected $file_positions = array();
+	protected $positions = array();
 
 	/**
 	 * Parsed data.
@@ -145,6 +153,14 @@ abstract class CSV_Importer {
 	 * @var array
 	 */
 	protected $parsed_data = array();
+
+	/**
+	 * Raw data.
+	 *
+	 * @since 1.0.2
+	 * @var array
+	 */
+	protected $raw_data = array();
 
 	/**
 	 * Start time of current import.
@@ -161,13 +177,63 @@ abstract class CSV_Importer {
 	 *
 	 * @param string $file
 	 * @param int    $position
+	 * @param array  $mapping
 	 */
-	public function __construct( string $file, int $position = 0 ) {
+	public function __construct( string $file, int $position = 0, $mapping = array() ) {
 		$this->file     = $file;
-		$this->position = $position;
-
+		$this->position = intval( $position );
+		$this->headers  = $this->get_headers();
+		$this->mapping  = empty( $mapping ) ? $this->headers : $mapping;
 		$this->read_file();
 	}
+
+	/**
+	 * Get database column and readable label.
+	 *
+	 * @since 1.0.2
+	 * @return array
+	 */
+	protected abstract function get_headers();
+
+	/**
+	 * Return the required key to import item.
+	 *
+	 * @since 1.0.2
+	 * @return array
+	 */
+	public abstract function get_required();
+
+	/**
+	 * Get formatting callback.
+	 *
+	 * @since 1.0.2
+	 * @return array
+	 */
+	protected abstract function get_formatting_callback();
+
+	/**
+	 * Process a single item and save.
+	 *
+	 * @param array $data Raw CSV data.
+	 *
+	 * @return string|\WP_Error
+	 */
+	protected abstract function import_item( $data );
+
+
+	/**
+	 * Maps CSV columns to their corresponding import fields.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param array $mapping
+	 */
+	public function set_mapping( $mapping = array() ) {
+		if ( ! empty( $mapping ) ) {
+			$this->mapping = $mapping;
+		}
+	}
+
 
 	/**
 	 * Can user import?
@@ -185,19 +251,6 @@ abstract class CSV_Importer {
 		 *
 		 */
 		return (bool) current_user_can( apply_filters( 'eaccounting_import_capability', $this->capability ) );
-	}
-
-	/**
-	 * Maps CSV columns to their corresponding import fields.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param array $mapping
-	 */
-	public function set_mapping( $mapping = array() ) {
-		if ( isset( $mapping['from'], $mapping['to'] ) ) {
-			$this->mapping = array_combine( $mapping['from'], $mapping['to'] );
-		}
 	}
 
 	/**
@@ -237,8 +290,8 @@ abstract class CSV_Importer {
 				$row = version_compare( PHP_VERSION, '5.3', '>=' ) ? fgetcsv( $handle, 0, $this->delimiter, $this->enclosure, $this->escape ) : fgetcsv( $handle, 0, $this->delimiter, $this->enclosure );
 
 				if ( false !== $row ) {
-					$this->raw_data[]                                 = $row;
-					$this->file_positions[ count( $this->raw_data ) ] = ftell( $handle );
+					$this->raw_data[]                            = $row;
+					$this->positions[ count( $this->raw_data ) ] = ftell( $handle );
 
 					if ( ( $this->end_position > 0 && ftell( $handle ) >= $this->end_position ) || 0 === -- $this->lines ) {
 						break;
@@ -248,29 +301,35 @@ abstract class CSV_Importer {
 				}
 			}
 
-			$this->file_position = ftell( $handle );
+			$this->position = ftell( $handle );
 		}
 
-		if ( ! empty( $this->mapping ) ) {
-			$this->set_mapped_keys();
-		}
+		$this->set_mapped_keys();
 
-		$this->set_parsed_data();
+		if ( $this->parse ) {
+			$this->set_parsed_data();
+		}
 	}
 
 	/**
-	 * Set file mapped keys.
+	 * Set csv keys to database equivalent column.
+	 *
+	 * First match csv column to database column then
+	 * Check if those keys are allowed.
+	 *
+	 * @since 1.0.2
 	 */
 	protected function set_mapped_keys() {
-		$mapping = $this->mapping;
-
+		$mapping = array_flip( $this->mapping );
 		foreach ( $this->raw_keys as $key ) {
-			$this->mapped_keys[] = isset( $mapping[ $key ] ) ? $mapping[ $key ] : $key;
+			$mapped_key          = isset( $mapping[ $key ] ) ? $mapping[ $key ] : '';
+			$this->mapped_keys[] = isset( $this->headers[ $mapped_key ] ) ? $mapped_key : '';
 		}
 	}
 
 	/**
 	 * Map and format raw data to known fields.
+	 *
 	 */
 	protected function set_parsed_data() {
 		$parse_functions = $this->formatting_callback();
@@ -305,10 +364,12 @@ abstract class CSV_Importer {
 					$value = wp_check_invalid_utf8( $value, true );
 				}
 
-				$data[ $mapped_keys[ $id ] ] = call_user_func( $parse_functions[ $id ], $value );
+				$data[ $mapped_keys[ $id ] ] = call_user_func( $parse_functions[ $id ], $this->unescape_data( $value ) );
 			}
 
-			$this->parsed_data[] = $data;
+			//make all fields filled with empty
+			$default             = array_fill_keys( array_keys( $this->headers ), '' );
+			$this->parsed_data[] = wp_parse_args( $data, $default );
 		}
 	}
 
@@ -329,7 +390,7 @@ abstract class CSV_Importer {
 
 		// Figure out the parse function for each column.
 		foreach ( $this->get_mapped_keys() as $index => $heading ) {
-			$callback = 'eaccounting_clean';
+			$callback = array( $this, 'parse_text_field' );
 
 			if ( isset( $data_formatting[ $heading ] ) ) {
 				$callback = $data_formatting[ $heading ];
@@ -345,13 +406,10 @@ abstract class CSV_Importer {
 	public function import() {
 		$this->start_time = time();
 		$index            = 0;
-		$update_existing  = $this->update_existing;
 
 		$data = array(
 			'imported' => 0,
 			'failed'   => 0,
-			'updated'  => 0,
-			'skipped'  => 0,
 		);
 
 		foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
@@ -359,35 +417,20 @@ abstract class CSV_Importer {
 			$result = $this->import_item( $parsed_data );
 
 			if ( is_wp_error( $result ) ) {
-				$data['failed'] = $data['failed'] ++;
-			} elseif ( $result == 'updated' ) {
-				$data['updated'] = $data['updated'] ++;
-			} elseif ( $result == 'skipped' ) {
-				$data['skipped'] = $data['skipped'] ++;
+				$data['failed'] = (int) $data['failed'] + 1;
 			} else {
-				$data['imported'] = $data['imported'] ++;
+				$data['imported'] = (int) $data['imported'] + 1;
 			}
 
 			$index ++;
 
 			if ( $this->prevent_timeouts && ( $this->time_exceeded() || $this->memory_exceeded() ) ) {
-				$this->file_position = $this->file_positions[ $index ];
+				$this->position = $this->positions[ $index ];
 				break;
 			}
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Process a single item and save.
-	 *
-	 * @param array $data Raw CSV data.
-	 *
-	 * @return string|\WP_Error
-	 */
-	protected function import_item( $data ) {
-		return 'skipped';
 	}
 
 
@@ -400,15 +443,62 @@ abstract class CSV_Importer {
 		return ! empty( $this->mapped_keys ) ? $this->mapped_keys : $this->raw_keys;
 	}
 
+	/**
+	 * Get file raw headers.
+	 *
+	 * @return array
+	 */
+	public function get_raw_keys() {
+		return $this->raw_keys;
+	}
 
 	/**
-	 * Get formatting callback.
+	 * Get raw data.
 	 *
+	 * @return array
+	 */
+	public function get_raw_data() {
+		return $this->raw_data;
+	}
+
+	/**
+	 * Get raw data.
+	 *
+	 * @return array
+	 */
+	public function get_parsed_data() {
+		return $this->parsed_data;
+	}
+
+	/**
 	 * @since 1.0.2
 	 * @return array
 	 */
-	protected function get_formatting_callback() {
-		return array();
+	public function get_sample() {
+		return current( $this->get_raw_data() );
+	}
+
+	/**
+	 * Get file pointer position from the last read.
+	 *
+	 * @return int
+	 */
+	public function get_position() {
+		return $this->position;
+	}
+
+	/**
+	 * Get file pointer position as a percentage of file size.
+	 *
+	 * @return int
+	 */
+	public function get_percent_complete() {
+		$size = filesize( $this->file );
+		if ( ! $size || ! $this->position) {
+			return 0;
+		}
+
+		return absint( min( round( ( $this->position / $size ) * 100 ), 100 ) );
 	}
 
 	/**
@@ -489,9 +579,23 @@ abstract class CSV_Importer {
 		return $value;
 	}
 
+	/**
+	 * Parse generalized text field.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 *
+	 * @return array|string
+	 */
+	public function parse_text_field( $value ) {
+		return eaccounting_clean( $this->unescape_data( $value ) );
+	}
 
 	/**
 	 * Parse a field that is generally '1' or '0' but can be something else.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @param string $value Field value.
 	 *
@@ -507,11 +611,13 @@ abstract class CSV_Importer {
 		}
 
 		// Don't return explicit true or false for empty fields or values like 'notify'.
-		return wc_clean( $value );
+		return eaccounting_clean( $value );
 	}
 
 	/**
 	 * Parse a float value field.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @param string $value Field value.
 	 *
@@ -531,6 +637,8 @@ abstract class CSV_Importer {
 	/**
 	 * Parse dates from a CSV.
 	 * Dates requires the format YYYY-MM-DD and time is optional.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @param string $value Field value.
 	 *
@@ -552,8 +660,10 @@ abstract class CSV_Importer {
 	/**
 	 * Just skip current field.
 	 *
-	 * By default is applied wc_clean() to all not listed fields
+	 * By default is applied eaccounting_clean() to all not listed fields
 	 * in self::get_formatting_callback(), use this method to skip any formatting.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @param string $value Field value.
 	 *
@@ -565,6 +675,8 @@ abstract class CSV_Importer {
 
 	/**
 	 * Parse an int value field
+	 *
+	 * @since 1.0.2
 	 *
 	 * @param int $value field value.
 	 *
@@ -579,6 +691,8 @@ abstract class CSV_Importer {
 
 	/**
 	 * Parse a description value field
+	 *
+	 * @since 1.0.2
 	 *
 	 * @param string $description field value.
 	 *
@@ -596,6 +710,8 @@ abstract class CSV_Importer {
 	/**
 	 * Parse a country value field
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $country field value.
 	 *
 	 * @return string
@@ -609,13 +725,17 @@ abstract class CSV_Importer {
 	/**
 	 * Parse a currency code value field
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $currency field value.
 	 *
 	 * @return string
 	 */
 	public function parse_currency_code_field( $currency ) {
 		$currency = eaccounting_clean( $currency );
+		$exist    = eaccounting_get_currency( $currency );
 
-		return eaccounting_get_currency( $currency ) ? $currency : '';
+		return $exist->get_id() ? $currency : '';
 	}
+
 }

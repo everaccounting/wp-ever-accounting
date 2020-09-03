@@ -81,11 +81,9 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
-				<?php echo sprintf( '<p>%s</p>', __( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
-				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-customers' ) ); ?>
-				<?php wp_nonce_field( 'export-customers_exporter_nonce' ); ?>
-				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
+			<form method="post" class="ea-exporter ea-batch" data-type="export-customers" data-nonce="<?php echo wp_create_nonce( 'export-customers_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
 	</div>
@@ -96,7 +94,10 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<form method="post" class="ea-exporter ea-batch" data-type="export-vendors" data-nonce="<?php echo wp_create_nonce( 'export-vendors_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export vendors from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</form>
 		</div>
 	</div>
 
@@ -106,12 +107,23 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			<!--			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">-->
-			<!--				--><?php //echo sprintf( '<p>%s</p>', __( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
-			<!--				--><?php //eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-revenues' ) ); ?>
-			<!--				--><?php //wp_nonce_field( 'export-revenues_exporter_nonce' ); ?>
-			<!--				--><?php //submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
-			<!--			</form>-->
+			<form method="post" class="ea-exporter ea-batch" data-type="export-revenues" data-nonce="<?php echo wp_create_nonce( 'export-revenues_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</form>
+		</div>
+	</div>
+
+	<div class="ea-form-card">
+		<div class="ea-card ea-form-card__header is-compact">
+			<h3 class="ea-form-card__header-title"><?php _e( 'Export Payments', 'wp-ever-accounting' ); ?></h3>
+		</div>
+
+		<div class="ea-card">
+			<form method="post" class="ea-exporter ea-batch" data-type="export-payments" data-nonce="<?php echo wp_create_nonce( 'export-payments_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export payments from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</form>
 		</div>
 	</div>
 
@@ -121,7 +133,10 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<form method="post" class="ea-exporter ea-batch" data-type="export-accounts" data-nonce="<?php echo wp_create_nonce( 'export-accounts_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export accounts from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</form>
 		</div>
 	</div>
 
@@ -131,7 +146,10 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<form method="post" class="ea-exporter ea-batch" data-type="export-currencies" data-nonce="<?php echo wp_create_nonce( 'export-currencies_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export currencies from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</form>
 		</div>
 	</div>
 
@@ -141,27 +159,10 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
-		</div>
-	</div>
-
-	<div class="ea-form-card">
-		<div class="ea-card ea-form-card__header is-compact">
-			<h3 class="ea-form-card__header-title"><?php _e( 'Export Transactions', 'wp-ever-accounting' ); ?></h3>
-		</div>
-
-		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
-		</div>
-	</div>
-
-	<div class="ea-form-card">
-		<div class="ea-card ea-form-card__header is-compact">
-			<h3 class="ea-form-card__header-title"><?php _e( 'Export Settings', 'wp-ever-accounting' ); ?></h3>
-		</div>
-
-		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<form method="post" class="ea-exporter ea-batch" data-type="export-categories" data-nonce="<?php echo wp_create_nonce( 'export-categories_exporter_nonce' ); ?>">
+				<p><?php esc_html_e( 'Export categories from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+			</form>
 		</div>
 	</div>
 
@@ -182,24 +183,43 @@ function eaccounting_tools_import_tab() {
 		</div>
 
 		<div class="ea-card">
-			<form action="" method="post" enctype="multipart/form-data" class="ea-csv-importer">
-				<?php echo sprintf( '<p>' . __( 'Import customers from CSV file. Download a %ssample%s file to learn how to format the CSV file.', 'wp-ever-accounting' ) . '</p>', '<a href="#">', '</a>' ); ?>
-				<p><input name="upload" type="file" required="required" accept="text/csv"></p>
-				<div class="ea-importer-column-mapping" style="display: none">
-					<?php echo sprintf( '<p>' . __( 'Each column loaded from the CSV may be mapped to an affiliate field. Select the column that should be mapped to each field below. Any columns not needed can be ignored.', 'wp-ever-accounting' ) . '</p>', '<a href="#">', '</a>' ); ?>
-					<table class="widefat affwp_repeatable_table striped">
+			<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-io-form">
+				<p>
+					<?php
+					echo wp_kses_post( sprintf(
+							__( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
+							eaccounting()->plugin_url( '/sample-data/import/customers.csv' )
+					) );
+					?>
+				</p>
+
+				<div class="ea-importer-upload-wrapper">
+					<input name="upload" type="file" required="required" accept="text/csv">
+					<?php submit_button( esc_html__( 'Import CSV', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+				</div>
+
+				<div class="ea-importer-mapping-wrapper">
+					<p>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a customer field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+					</p>
+
+					<table class="widefat striped fixed">
 						<thead>
 						<tr>
-							<th><strong>Field</strong></th>
-							<th><strong>CSV Column</strong></th>
-							<th><strong>Data Preview</strong></th>
+							<th><strong><?php esc_html_e( 'Column name', 'wp-ever-accounting' ); ?></strong></th>
+							<th><strong><?php esc_html_e( 'Map to field', 'wp-ever-accounting' ); ?></strong></th>
+							<th><strong><?php esc_html_e( 'Data Preview', 'wp-ever-accounting' ); ?></strong></th>
 						</tr>
 						</thead>
+						<tbody>
+						<?php eaccounting_do_import_fields( 'customer' ); ?>
+						</tbody>
 					</table>
+
+					<?php submit_button( esc_attr__( 'Process', 'wp-ever-accounting' ), 'primary', null, true ); ?>
 				</div>
 				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'import-customers' ) ); ?>
 				<?php wp_nonce_field( 'import-customers_importer_nonce' ); ?>
-				<?php submit_button( __( 'Import', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
 			</form>
 		</div>
 	</div>

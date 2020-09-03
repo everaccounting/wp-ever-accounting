@@ -16,34 +16,23 @@ defined( 'ABSPATH' ) || exit();
 
 class Customer_CSV_Import extends CSV_Importer {
 	/**
-	 * Customer_CSV_Import constructor.
+	 * Get database column and readable label.
+	 *
+	 * @since 1.0.2
+	 * @return array
 	 */
-	public function __construct( string $file, int $position = 0 ) {
-
-		parent::__construct( $file, $position );
+	protected function get_headers() {
+		return eaccounting_get_io_headers( 'customer' );
 	}
 
-
 	/**
-	 * Process a single item and save.
+	 * Return the required key to import item.
 	 *
-	 * @param array $data Raw CSV data.
-	 *
-	 * @return string|\WP_Error
+	 * @since 1.0.2
+	 * @return array
 	 */
-	protected function import_item( $data ) {
-//		$keys     = array_keys( eaccounting_importer_customer_fields() );
-//		$defaults = array_fill_keys( $keys, '' );
-//		$data     = wp_parse_args( $data, $defaults );
-//
-//		if ( empty( $data['name'] ) || empty( $data['currency_code'] ) ) {
-//			return 'skipped';
-//		}
-//
-//		$data['type'] = 'customer';
-
-//		$customer = eaccounting_insert_contact();
-
+	public function get_required() {
+		return array( 'name', 'currency_code' );
 	}
 
 	/**
@@ -54,18 +43,30 @@ class Customer_CSV_Import extends CSV_Importer {
 	 */
 	protected function get_formatting_callback() {
 		return array(
-			'name'          => 'eaccounting_clean',
 			'email'         => 'sanitize_email',
-			'phone'         => 'eaccounting_clean',
-			'fax'           => 'eaccounting_clean',
 			'birth_date'    => array( $this, 'parse_date_field' ),
 			'address'       => array( $this, 'parse_description_field' ),
 			'country'       => array( $this, 'parse_country_field' ),
 			'website'       => 'esc_url_raw',
-			'tax_number'    => 'eaccounting_clean',
 			'currency_code' => array( $this, 'parse_currency_code_field' ),
 			'note'          => array( $this, 'parse_description_field' ),
 		);
+	}
+
+	/**
+	 * Process a single item and save.
+	 *
+	 * @param array $data Raw CSV data.
+	 *
+	 * @return string|\WP_Error
+	 */
+	protected function import_item( $data ) {
+		if ( empty( $data['name'] ) ) {
+			return 'skipped';
+		}
+		$data['type'] = 'customer';
+
+		return eaccounting_insert_contact( $data );
 	}
 
 }

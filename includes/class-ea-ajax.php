@@ -120,7 +120,6 @@ class Ajax {
 			'edit_payment',
 			'edit_revenue',
 			'edit_transfer',
-			'do_ajax_export',
 		);
 
 		foreach ( $ajax_events as $ajax_event ) {
@@ -687,6 +686,8 @@ class Ajax {
 			$nonce = $_REQUEST['_ajax_nonce'];
 		} elseif ( isset( $_REQUEST['_wpnonce'] ) ) {
 			$nonce = $_REQUEST['_wpnonce'];
+		} elseif ( isset( $_REQUEST['nonce'] ) ) {
+			$nonce = $_REQUEST['nonce'];
 		}
 		if ( false == wp_verify_nonce( $nonce, $action ) ) {
 			wp_send_json_error( array( 'message' => __( 'Error: Cheatin&#8217; huh?.', 'wp-ever-accounting' ) ) );

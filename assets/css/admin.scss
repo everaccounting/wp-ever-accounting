@@ -18,6 +18,7 @@
 @import "widgets";
 @import "daterangepicker";
 @import "table";
+
 .eaccounting .nav-tab-wrapper {
   margin-bottom: 20px !important;
 }
@@ -46,21 +47,22 @@
 }
 
 //List table filter
-.eaccounting .tablenav .ea-table-filter{
-	.select2{
-	  .select2-selection{
-		box-shadow: 0 0 0 transparent;
-		border-radius: 4px;
-		border: 1px solid #7e8993;
-		background-color: #fff;
-		color: #32373c;
-	  }
-	  .select2-selection--single{
-		height: 30px;
-	  }
+.eaccounting .tablenav .ea-table-filter {
+  .select2 {
+	.select2-selection {
+	  box-shadow: 0 0 0 transparent;
+	  border-radius: 4px;
+	  border: 1px solid #7e8993;
+	  background-color: #fff;
+	  color: #32373c;
 	}
 
-  input[type="text"], .select2-container, .ea-date-range-picker{
+	.select2-selection--single {
+	  height: 30px;
+	}
+  }
+
+  input[type="text"], .select2-container, .ea-date-range-picker {
 	//vertical-align: top;
 	margin-right: 6px;
 	min-width: 180px;
@@ -79,11 +81,83 @@
   .select2-container {
 	margin: 0 10px 0 0;
 	min-width: 170px;
-	.select2-selection--single{
+
+	.select2-selection--single {
 	  height: 30px;
 	}
   }
 }
+
+/*
+ * import export forms.
+ */
+.ea-batch {
+  .submit {
+	margin-top: 0;
+  }
+
+  .ea-batch-notice {
+	margin-top: 10px;
+	border-style: solid;
+	border-width: 1px 0;
+	border-color: #eae9e9;
+	padding: 12px 12px 12px 0;
+	overflow: auto;
+
+	.updated {
+	  margin: 0;
+	}
+  }
+
+  .ea-batch-progress {
+	background: #ddd;
+	height: 15px;
+
+	div {
+	  background: #0073aa;
+	  height: 100%;
+	  width: 0;
+	}
+  }
+
+}
+
+//.ea-io-form {
+//  .submit {
+//	margin-top: 0;
+//  }
+//
+//  &-notice {
+//	margin-top: 10px;
+//	border-style: solid;
+//	border-width: 1px 0;
+//	border-color: #eae9e9;
+//	padding: 12px 12px 12px 0;
+//	overflow: auto;
+//  }
+//
+//  &-progress {
+//	background: #ddd;
+//	height: 15px;
+//
+//	div {
+//	  background: #0073aa;
+//	  height: 100%;
+//	  width: 0;
+//	}
+//  }
+//
+//}
+//
+//.ea-importer {
+//  &-mapping-wrapper {
+//	display: none;
+//  }
+//  .ea-required-map{
+//	background-color: #fadedc !important;
+//  }
+//}
+
 
 /**
   * Backbone modal dialog
