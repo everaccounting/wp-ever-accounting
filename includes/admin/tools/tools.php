@@ -100,7 +100,7 @@ function eaccounting_export_tab() {
 				<?php echo sprintf( '<p>%s</p>', __( 'Export vendors from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
 				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-vendors' ) ); ?>
 				<?php wp_nonce_field( 'export-vendors_exporter_nonce' ); ?>
-				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
+				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-vendors-submit', false ); ?>
 			</form>
 		</div>
 	</div>
