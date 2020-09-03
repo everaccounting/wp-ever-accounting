@@ -57,9 +57,34 @@ class Batch extends Registry {
 			'class' => '\EverAccounting\Export\Customer_CSV_Export',
 			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-customer-csv-export.php'
 		) );
+		$this->add_item( 'export-vendors', array(
+			'class' => '\EverAccounting\Export\Vendor_CSV_Export',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-vendor-csv-export.php'
+		) );
+
 		$this->add_item( 'export-revenues', array(
 			'class' => '\EverAccounting\Export\Revenue_CSV_Export',
 			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-revenue-csv-export.php'
+		) );
+
+		$this->add_item( 'export-accounts', array(
+			'class' => '\EverAccounting\Export\Account_CSV_Export',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-account-csv-export.php'
+		) );
+
+		$this->add_item( 'export-accounts', array(
+			'class' => '\EverAccounting\Export\Account_CSV_Export',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-account-csv-export.php'
+		) );
+
+		$this->add_item( 'export-currencies', array(
+			'class' => '\EverAccounting\Export\Currency_CSV_Export',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-currency-csv-export.php'
+		) );
+
+		$this->add_item( 'export-categories', array(
+			'class' => '\EverAccounting\Export\Category_CSV_Export',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-category-csv-export.php'
 		) );
 
 

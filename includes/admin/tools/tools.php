@@ -43,8 +43,8 @@ function eaccounting_admin_tools_page() {
 /**
  * Retrieve tools tabs
  *
- * @since 1.0.2
  * @return array $tabs
+ * @since 1.0.2
  */
 function eaccounting_get_tools_tabs() {
 	$tabs                = array();
@@ -96,7 +96,12 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
+				<?php echo sprintf( '<p>%s</p>', __( 'Export vendors from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-vendors' ) ); ?>
+				<?php wp_nonce_field( 'export-vendors_exporter_nonce' ); ?>
+				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
+			</form>
 		</div>
 	</div>
 
@@ -106,12 +111,12 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			<!--			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">-->
-			<!--				--><?php //echo sprintf( '<p>%s</p>', __( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
-			<!--				--><?php //eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-revenues' ) ); ?>
-			<!--				--><?php //wp_nonce_field( 'export-revenues_exporter_nonce' ); ?>
-			<!--				--><?php //submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-customers-submit', false ); ?>
-			<!--			</form>-->
+			<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
+				<?php echo sprintf( '<p>%s</p>', __( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-revenues' ) ); ?>
+				<?php wp_nonce_field( 'export-revenues_exporter_nonce' ); ?>
+				<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-revenues-submit', false ); ?>
+			</form>
 		</div>
 	</div>
 
@@ -121,7 +126,14 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<div class="ea-card">
+				<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
+					<?php echo sprintf( '<p>%s</p>', __( 'Export accounts from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+					<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-accounts' ) ); ?>
+					<?php wp_nonce_field( 'export-accounts_exporter_nonce' ); ?>
+					<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-accounts-submit', false ); ?>
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -131,7 +143,14 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<div class="ea-card">
+				<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
+					<?php echo sprintf( '<p>%s</p>', __( 'Export currencies from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+					<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-currencies' ) ); ?>
+					<?php wp_nonce_field( 'export-currencies_exporter_nonce' ); ?>
+					<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-currencies-submit', false ); ?>
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -141,7 +160,14 @@ function eaccounting_export_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<div class="ea-card">
+				<form method="post" enctype="multipart/form-data" class="ea-bulk-csv-exporter">
+					<?php echo sprintf( '<p>%s</p>', __( 'Export categories from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ); ?>
+					<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'export-categories' ) ); ?>
+					<?php wp_nonce_field( 'export-categories_exporter_nonce' ); ?>
+					<?php submit_button( __( 'Export', 'wp-ever-accounting' ), 'secondary', 'export-categories-submit', false ); ?>
+				</form>
+			</div>
 		</div>
 	</div>
 
@@ -283,7 +309,9 @@ function eaccounting_system_info_tab() {
 	$action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
 	?>
 	<form action="<?php echo esc_url( $action_url ); ?>" method="post" dir="ltr">
-		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea" name="ea-sysinfo" title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
+		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea"
+				  name="ea-sysinfo"
+				  title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
 			<?php echo affwp_tools_system_info_report(); ?>
 		</textarea>
 		<p class="submit">
