@@ -22,6 +22,7 @@ function eaccounting_admin_transactions_page() {
 		<h1>
 			<?php _e( 'Transactions', 'wp-ever-accounting' ); ?>
 		</h1>
+		<hr class="wp-header-end">
 		<?php
 
 		/**

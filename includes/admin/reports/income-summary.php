@@ -51,12 +51,12 @@ function eaccounting_reports_income_summary_tab() {
 	</div>
 	<div class="ea-card">
 		<?php
-		global $wpdb;
 		$dates        = $totals = $incomes = $graph = $categories = [];
 		$start        = eaccounting_get_financial_start( $year );
+		$end          = eaccounting_get_financial_end($year);
 		$transactions = Query_Transaction::init()
 										 ->select( 'name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id' )
-										 ->whereRaw( $wpdb->prepare( "YEAR(paid_at) = %d", $year ) )
+										 ->whereDateBetween( 'paid_at', $start, $end )
 										 ->where( array(
 												 'contact_id'  => $customer_id,
 												 'account_id'  => $account_id,
@@ -93,11 +93,13 @@ function eaccounting_reports_income_summary_tab() {
 		}
 
 		foreach ( $transactions as $transaction ) {
-			$month                                                    = date( 'F', strtotime( $transaction->paid_at ) );
-			$month_year                                               = date( 'F-Y', strtotime( $transaction->paid_at ) );
-			$incomes[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
-			$graph[ $month_year ]                                     += $transaction->amount;
-			$totals[ $month ]['amount']                               += $transaction->amount;
+			if(isset($incomes[ $transaction->category_id ])){
+				$month                                                    = date( 'F', strtotime( $transaction->paid_at ) );
+				$month_year                                               = date( 'F-Y', strtotime( $transaction->paid_at ) );
+				$incomes[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
+				$graph[ $month_year ]                                     += $transaction->amount;
+				$totals[ $month ]['amount']                               += $transaction->amount;
+			}
 		}
 		$chart = new \EverAccounting\Chart();
 		$chart->type( 'line' )

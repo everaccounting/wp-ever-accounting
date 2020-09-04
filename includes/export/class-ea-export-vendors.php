@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Handle vendors export.
+ *
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Export
+ */
 namespace EverAccounting\Export;
 
 defined( 'ABSPATH' ) || exit();
@@ -7,6 +13,12 @@ defined( 'ABSPATH' ) || exit();
 use EverAccounting\Abstracts\CSV_Exporter;
 use EverAccounting\Query_Contact;
 
+/**
+ * Class Export_Vendors
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Export
+ */
 class Export_Vendors extends CSV_Exporter {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.

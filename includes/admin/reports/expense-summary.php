@@ -13,37 +13,37 @@ function eaccounting_reports_expense_summary_tab() {
 		<form action="" class="ea-report-filter">
 			<?php
 			eaccounting_hidden_input( array(
-				'name'  => 'page',
-				'value' => 'ea-reports'
+					'name'  => 'page',
+					'value' => 'ea-reports'
 			) );
 			eaccounting_hidden_input( array(
-				'name'  => 'tab',
-				'value' => 'expense_summary'
+					'name'  => 'tab',
+					'value' => 'expense_summary'
 			) );
 
 			$years = range( $year, ( $year - 5 ), 1 );
 			eaccounting_select2( array(
-				'placeholder' => __( 'Year', 'wp-ever-accounting' ),
-				'name'        => 'year',
-				'options'     => array_combine( array_values( $years ), $years ),
-				'value'       => $year,
+					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
+					'name'        => 'year',
+					'options'     => array_combine( array_values( $years ), $years ),
+					'value'       => $year,
 			) );
 			eaccounting_account_dropdown( array(
-				'placeholder' => __( 'Account', 'wp-ever-accounting' ),
-				'name'        => 'account_id',
-				'value'       => $account_id
+					'placeholder' => __( 'Account', 'wp-ever-accounting' ),
+					'name'        => 'account_id',
+					'value'       => $account_id
 			) );
 			eaccounting_contact_dropdown( array(
-				'placeholder' => __( 'Vendor', 'wp-ever-accounting' ),
-				'name'        => 'vendor_id',
-				'type'        => 'vendor',
-				'value'       => $vendor_id
+					'placeholder' => __( 'Vendor', 'wp-ever-accounting' ),
+					'name'        => 'vendor_id',
+					'type'        => 'vendor',
+					'value'       => $vendor_id
 			) );
 			eaccounting_category_dropdown( array(
-				'placeholder' => __( 'Category', 'wp-ever-accounting' ),
-				'name'        => 'category_id',
-				'type'        => 'expense',
-				'value'       => $category_id
+					'placeholder' => __( 'Category', 'wp-ever-accounting' ),
+					'name'        => 'category_id',
+					'type'        => 'expense',
+					'value'       => $category_id
 			) );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			?>
@@ -51,24 +51,24 @@ function eaccounting_reports_expense_summary_tab() {
 	</div>
 	<div class="ea-card">
 		<?php
-		global $wpdb;
 		$dates        = $totals = $expenses = $graph = $categories = [];
 		$start        = eaccounting_get_financial_start( $year );
+		$end          = eaccounting_get_financial_end( $year );
 		$transactions = Query_Transaction::init()
-		                                 ->select( 'name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id' )
-		                                 ->whereRaw( $wpdb->prepare( "YEAR(paid_at) = %d", $year ) )
-		                                 ->where( array(
-			                                 'contact_id'  => $vendor_id,
-			                                 'account_id'  => $account_id,
-			                                 'category_id' => $category_id,
-		                                 ) )
-		                                 ->leftJoin( 'ea_categories as ea_categories', 'ea_categories.id', 'ea_transactions.category_id' )
-		                                 ->where( 'ea_categories.type', 'expense' )
-		                                 ->get( OBJECT, function ( $expense ) {
-			                                 $expense->amount = eaccounting_price_convert_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
+										 ->select( 'name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id' )
+										 ->whereDateBetween( 'paid_at', $start, $end )
+										 ->where( array(
+												 'contact_id'  => $vendor_id,
+												 'account_id'  => $account_id,
+												 'category_id' => $category_id,
+										 ) )
+										 ->leftJoin( 'ea_categories as ea_categories', 'ea_categories.id', 'ea_transactions.category_id' )
+										 ->where( 'ea_categories.type', 'expense' )
+										 ->get( OBJECT, function ( $expense ) {
+											 $expense->amount = eaccounting_price_convert_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
 
-			                                 return $expense;
-		                                 } );
+											 return $expense;
+										 } );
 
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
@@ -79,44 +79,46 @@ function eaccounting_reports_expense_summary_tab() {
 			$graph[ $date->format( 'F-Y' ) ] = 0;
 			// Totals
 			$totals[ $dates[ $j ] ] = array(
-				'amount' => 0,
+					'amount' => 0,
 			);
 
 			foreach ( $categories as $cat_id => $category_name ) {
 				$expenses[ $cat_id ][ $dates[ $j ] ] = [
-					'category_id' => $cat_id,
-					'name'        => $category_name,
-					'amount'      => 0,
+						'category_id' => $cat_id,
+						'name'        => $category_name,
+						'amount'      => 0,
 				];
 			}
 			$date->modify( '+1 month' )->format( 'Y-m' );
 		}
 
 		foreach ( $transactions as $transaction ) {
-			$month                                                     = date( 'F', strtotime( $transaction->paid_at ) );
-			$month_year                                                = date( 'F-Y', strtotime( $transaction->paid_at ) );
-			$expenses[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
-			$graph[ $month_year ]                                      += $transaction->amount;
-			$totals[ $month ]['amount']                                += $transaction->amount;
+			if ( isset( $expenses[ $transaction->category_id ] ) ) {
+				$month                                                     = date( 'F', strtotime( $transaction->paid_at ) );
+				$month_year                                                = date( 'F-Y', strtotime( $transaction->paid_at ) );
+				$expenses[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
+				$graph[ $month_year ]                                      += $transaction->amount;
+				$totals[ $month ]['amount']                                += $transaction->amount;
+			}
 		}
 		$chart = new \EverAccounting\Chart();
 		$chart->type( 'line' )
-		      ->width( 0 )
-		      ->height( 300 )
-		      ->set_line_options()
-		      ->labels( array_values( $dates ) )
-		      ->dataset( array(
-			      'label'           => __( 'Expense', 'wp-ever-accounting' ),
-			      'data'            => array_values( $graph ),
-			      'borderColor'     => '#f2385a',
-			      'backgroundColor' => '#f2385a',
-			      'borderWidth'     => 4,
-			      'pointStyle'      => 'line',
-			      'fill'            => false,
-		      ) )
+			  ->width( 0 )
+			  ->height( 300 )
+			  ->set_line_options()
+			  ->labels( array_values( $dates ) )
+			  ->dataset( array(
+					  'label'           => __( 'Expense', 'wp-ever-accounting' ),
+					  'data'            => array_values( $graph ),
+					  'borderColor'     => '#f2385a',
+					  'backgroundColor' => '#f2385a',
+					  'borderWidth'     => 4,
+					  'pointStyle'      => 'line',
+					  'fill'            => false,
+			  ) )
 		?>
 		<div class="ea-report-graph">
-			<?php $chart->render();?>
+			<?php $chart->render(); ?>
 		</div>
 		<div class="ea-table-report">
 			<table class="ea-table">

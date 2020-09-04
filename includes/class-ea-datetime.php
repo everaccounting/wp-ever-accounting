@@ -93,7 +93,6 @@ class DateTime extends Base {
 	 */
 	public function addYear( $number = 1 ) {
 		$this->add( new \DateInterval( "P{$number}Y" ) );
-
 		return $this;
 	}
 

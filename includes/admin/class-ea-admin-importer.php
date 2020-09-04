@@ -20,14 +20,18 @@ class Importer {
 				'message' => __( 'Import type must be present.', 'wp-ever-accounting' )
 			) );
 		}
+		$params = array(
+			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? wc_clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
+			'position'        => isset( $_REQUEST['position'] ) ? absint( $_REQUEST['position'] ) : 0,
+			'mapping'         => isset( $_REQUEST['mapping'] ) ? (array) wp_unslash( $_REQUEST['mapping'] ) : array(),
+			'update_existing' => isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false,
+			'limit'           => apply_filters( 'eaccounting_import_batch_size', 30 ),
+			'parse'           => true,
+		);
+		$step   = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : '';
+		$type   = sanitize_key( $_REQUEST['type'] );
+		$file   = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';
 
-		$type            = sanitize_key( $_REQUEST['type'] );
-		$file            = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';
-		$delimiter       = ! empty( $_REQUEST['delimiter'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',';
-		$position        = isset( $_REQUEST['position'] ) ? absint( $_REQUEST['position'] ) : 0;
-		$mapping         = isset( $_REQUEST['mapping'] ) ? (array) eaccounting_clean( wp_unslash( $_REQUEST['mapping'] ) ) : array();
-		$update_existing = isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false;
-		$step            = isset( $_REQUEST['step'] ) ? absint( $_REQUEST['step'] ) : 0;
 		//verify nonce
 		Ajax::verify_nonce( "{$type}_importer_nonce" );
 
@@ -50,7 +54,7 @@ class Importer {
 
 		if ( empty( $class ) || ! class_exists( $class ) ) {
 			wp_send_json_error( array(
-				'error' => sprintf( __( '%1$s is an invalid importer handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
+				'message' => sprintf( __( '%1$s is an invalid importer handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
 					"<code>{$class}</code>",
 					"<code>{$type}</code>"
 				)
@@ -113,7 +117,7 @@ class Importer {
 			) );
 		}
 
-		$importer = new $class( $file, $position, $mapping );
+		$importer = new $class( $file, $params );
 		if ( ! $importer->can_import() ) {
 			wp_send_json_error( array( 'message' => __( 'You do not have permission to import data', 'wp-ever-accounting' ) ) );
 		}
@@ -125,40 +129,46 @@ class Importer {
 			wp_send_json_error( array( 'message' => __( 'The file is empty or using a different encoding than UTF-8, please try again with a new file.', 'wp-ever-accounting' ) ) );
 		}
 
-		if ( $step == 0 ) {
+		if ( $step == 'upload' ) {
 			wp_send_json_success( array(
 				'position' => 0,
 				'headers'  => $headers,
 				'required' => $importer->get_required(),
 				'sample'   => $sample,
-				'step'     => $step + 1,
+				'step'     => $step,
 				'file'     => $file,
 			) );
 		}
 
+
 		// Log failures.
-		if ( 0 !== $position ) {
-			$error_log = array_filter( (array) get_user_option( "{$type}_import_error_log" ) );
+		if ( $params['position'] > 0 ) {
+			$imported = (int) get_user_option( "{$type}_import_log_imported" );
+			$skipped  = (int) get_user_option( "{$type}_import_log_skipped" );
 		} else {
-			$error_log = array();
+			$skipped  = 0;
+			$imported = 0;
 		}
 
 		$results          = $importer->import();
 		$percent_complete = $importer->get_percent_complete();
-		$error_log        = array_merge( $error_log, $results );
-		update_user_option( get_current_user_id(), "{$type}_import_error_log", $error_log );
+		$skipped          += (int) $results['skipped'];
+		$imported         += (int) $results['imported'];
 
+		update_user_option( get_current_user_id(), "{$type}_import_log_imported", $imported );
+		update_user_option( get_current_user_id(), "{$type}_import_log_skipped", $skipped );
 
 		if ( 100 <= $percent_complete ) {
+			delete_user_option( get_current_user_id(), "{$type}_import_log_imported" );
+			delete_user_option( get_current_user_id(), "{$type}_import_log_skipped" );
 			wp_send_json_success(
 				array(
 					'position'   => 'done',
 					'percentage' => 100,
-					'imported'   => (int) $results['imported'],
-					'failed'     => (int) $results['failed'],
+					'imported'   => (int) $imported,
+					'skipped'    => (int) $skipped,
 					'file'       => $file,
-					'step'       => (int) $step + 1,
-					'message'    => esc_html__( sprintf( '%d items imported and %d items failed.', $results['imported'], $results['failed'] ) ),
+					'message'    => esc_html__( sprintf( '%d items imported and %d items skipped.', $imported, $skipped ) ),
 				)
 			);
 		} else {
@@ -166,227 +176,16 @@ class Importer {
 				array(
 					'position'   => $importer->get_position(),
 					'percentage' => $percent_complete,
-					'imported'   => (int) $results['imported'],
-					'failed'     => (int) $results['failed'],
+					'imported'   => (int) $imported,
+					'skipped'    => (int) $skipped,
 					'file'       => $file,
-					'step'       => (int) $step + 1,
-					'mapping'    => $mapping,
+					'step'       => 'import',
+					'mapping'    => $params['mapping'],
 				)
 			);
 		}
-
-
-//
-//		/**
-//		 * @var $importer \EverAccounting\Abstracts\CSV_Batch_Importer
-//		 */
-//		$importer = new $class( $file, $params );
-//
-//		if ( ! $importer->can_import() ) {
-//			wp_send_json_error( array(
-//				'message' => __( 'You do not have enough privileges to import this.', 'wp-ever-accounting' )
-//			) );
-//		}
-//
-//		// Log failures.
-//		if ( 0 !== $params['start_pos'] ) {
-//			$error_log = array_filter( (array) get_user_option( "{$type}_import_error_log" ) );
-//		} else {
-//			$error_log = array();
-//		}
-//
-//		$results          = $importer->import();
-//		$percent_complete = $importer->get_percent_complete();
-//		$error_log        = array_merge( $error_log, $results['failed'], $results['skipped'] );
-//
-//		update_user_option( get_current_user_id(), "{$type}_import_error_log", $error_log );
-//
-//
-//		if ( 100 === $percent_complete ) {
-//			wp_send_json_success(
-//				array(
-//					'position'   => 'done',
-//					'percentage' => 100,
-//					'imported'   => count( $results['imported'] ),
-//					'failed'     => count( $results['failed'] ),
-//					'updated'    => count( $results['updated'] ),
-//					'skipped'    => count( $results['skipped'] ),
-//				)
-//			);
-//		} else {
-//			wp_send_json_success(
-//				array(
-//					'position'   => $importer->get_file_position(),
-//					'percentage' => $percent_complete,
-//					'imported'   => count( $results['imported'] ),
-//					'failed'     => count( $results['failed'] ),
-//					'updated'    => count( $results['updated'] ),
-//					'skipped'    => count( $results['skipped'] ),
-//				)
-//			);
-//		}
-
-
 		exit();
 	}
-
-	/**
-	 * Get customer csv fields.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public static function get_customer_csv_fields() {
-		$fields = array(
-			'Name'          => 'name',
-			'Email'         => 'email',
-			'Phone'         => 'phone',
-			'Fax'           => 'fax',
-			'Birth Date'    => 'birth_date',
-			'Address'       => 'address',
-			'Country'       => 'country',
-			'Website'       => 'website',
-			'Tax Number'    => 'tax_number',
-			'Currency Code' => 'currency_code',
-			'Note'          => 'note',
-		);
-
-		return apply_filters( 'eaccounting_customer_csv_fields', $fields );
-	}
-
-	/**
-	 * Get vendor csv fields.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public static function get_vendor_csv_fields() {
-		$fields = array(
-			'Name'          => 'name',
-			'Email'         => 'email',
-			'Phone'         => 'phone',
-			'Fax'           => 'fax',
-			'Birth Date'    => 'birth_date',
-			'Address'       => 'address',
-			'Country'       => 'country',
-			'Website'       => 'website',
-			'Tax Number'    => 'tax_number',
-			'Currency Code' => 'currency_code',
-			'Note'          => 'note',
-		);
-
-		return apply_filters( 'eaccounting_vendor_csv_fields', $fields );
-	}
-
-	/**
-	 * Get revenue csv fields.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public static function get_revenue_csv_fields() {
-		$fields = array(
-			'Paid At'        => 'paid_at',
-			'Amount'         => 'amount',
-			'Currency Code'  => 'currency_code',
-			'Currency Rate'  => 'currency_rate',
-			'Account ID'     => 'account_id',
-			'Invoice ID'     => 'invoice_id',
-			'Contact ID'     => 'contact_id',
-			'Category ID'    => 'category_id',
-			'Description'    => 'description',
-			'Payment Method' => 'payment_method',
-			'Reference'      => 'reference',
-			'Reconciled'     => 'reconciled',
-		);
-
-		return apply_filters( 'eaccounting_revenue_csv_fields', $fields );
-	}
-
-	/**
-	 * Get payment csv fields.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public static function get_payment_csv_fields() {
-		$fields = array(
-			'Paid At'        => 'paid_at',
-			'Amount'         => 'amount',
-			'Currency Code'  => 'currency_code',
-			'Currency Rate'  => 'currency_rate',
-			'Account ID'     => 'account_id',
-			'Invoice ID'     => 'invoice_id',
-			'Contact ID'     => 'contact_id',
-			'Category ID'    => 'category_id',
-			'Description'    => 'description',
-			'Payment Method' => 'payment_method',
-			'Reference'      => 'reference',
-			'Reconciled'     => 'reconciled',
-		);
-
-		return apply_filters( 'eaccounting_payment_csv_fields', $fields );
-	}
-
-	/**
-	 * Get account csv fields.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public static function get_account_csv_fields() {
-		$fields = array(
-			'Name'            => 'name',
-			'Number'          => 'number',
-			'Currency Code'   => 'currency_code',
-			'Opening Balance' => 'opening_balance',
-			'Bank Name'       => 'bank_name',
-			'Bank Phone'      => 'bank_phone',
-			'Bank Address'    => 'bank_address',
-			'Enabled'         => 'enabled',
-		);
-
-		return apply_filters( 'eaccounting_account_csv_fields', $fields );
-	}
-
-	/**
-	 * Get category csv fields.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public static function get_category_csv_fields() {
-		$fields = array(
-			'Name'  => 'name',
-			'Type'  => 'type',
-			'Color' => 'color',
-		);
-
-		return apply_filters( 'eaccounting_category_csv_fields', $fields );
-	}
-
-	/**
-	 * Get currency csv fields.
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public static function get_currency_csv_fields() {
-		$fields = array(
-			'Name'               => 'name',
-			'Code'               => 'code',
-			'Precision'          => 'precision',
-			'Symbol'             => 'symbol',
-			'Position'           => 'position',
-			'Decimal Separator'  => 'decimal_separator',
-			'Thousand Separator' => 'thousand_separator',
-			'Enabled'            => 'enabled',
-		);
-
-		return apply_filters( 'eaccounting_currency_csv_fields', $fields );
-	}
-
-
 }
 
 return new Importer();

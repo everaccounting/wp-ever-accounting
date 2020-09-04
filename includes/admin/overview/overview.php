@@ -67,7 +67,6 @@ function eaccounting_admin_overview_page() {
 	$end = eaccounting_string_to_datetime( $end_date );
 	?>
 	<div class="wrap">
-
 		<div class="ea-flex-row">
 			<div>
 				<h1><?php _e( 'Overview', 'wp-ever-accounting' ); ?></h1>
@@ -81,6 +80,7 @@ function eaccounting_admin_overview_page() {
 				</form>
 			</div>
 		</div>
+		<hr class="wp-header-end">
 
 		<?php
 		/**

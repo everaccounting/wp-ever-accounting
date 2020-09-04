@@ -73,7 +73,7 @@ function eaccounting_clean( $var ) {
 
 
 /**
- * Run wc_clean over posted textarea but maintain line breaks.
+ * Run eaccounting_clean over posted textarea but maintain line breaks.
  *
  * @since  1.0.2
  *
@@ -266,7 +266,7 @@ function eaccounting_timezone_offset() {
  *
  * @param \EverAccounting\DateTime|string $date   Instance of DateTime.
  * @param string                       $format Data format.
- *                                             Defaults to the wc_date_format function if not set.
+ *                                             Defaults to the eaccounting_date_format function if not set.
  *
  * @return string
  */

@@ -33,9 +33,10 @@ function eaccounting_reports_income_expense_tab() {
 	</div>
 	<div class="ea-card">
 		<?php
-		global $wpdb;
+
 		$dates        = $totals = $compares = $graph = $categories = [];
 		$date_start   = eaccounting_get_financial_start( $year );
+		$end          = eaccounting_get_financial_end( $year );
 		$income_cats  = \EverAccounting\Query_Category::init()->select( 'id, name' )->typeIncome()->get();
 		$income_cats  = wp_list_pluck( $income_cats, 'name', 'id' );
 		$expense_cats = \EverAccounting\Query_Category::init()->select( 'id, name' )->typeExpense()->get();
@@ -69,7 +70,7 @@ function eaccounting_reports_income_expense_tab() {
 		$query        = \EverAccounting\Query_Transaction::init();
 		$transactions = $query->select( 'type, paid_at, currency_code, currency_rate, amount, category_id' )
 							  ->notTransfer()
-							  ->whereRaw( $wpdb->prepare( "YEAR(paid_at) = %d", $year ) )
+							  ->whereDateBetween( 'paid_at', $date_start, $end )
 							  ->where( array(
 									  'account_id' => $account_id,
 							  ) )
@@ -79,12 +80,12 @@ function eaccounting_reports_income_expense_tab() {
 			$amount     = eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
 			$month      = date( 'F', strtotime( $transaction->paid_at ) );
 			$month_year = date( 'F-Y', strtotime( $transaction->paid_at ) );
-			if ( $transaction->type == 'income' ) {
+
+			if ( $transaction->type == 'income' && isset( $compares['income'][ $transaction->category_id ] ) ) {
 				$compares['income'][ $transaction->category_id ][ $month ]['amount'] += $amount;
 				$graph[ $month_year ]                                                += $amount;
 				$totals[ $month ]['amount']                                          += $amount;
-			}
-			if ( $transaction->type == 'expense' ) {
+			} else if ( $transaction->type == 'expense' && isset( $compares['expense'][ $transaction->category_id ] ) ) {
 				$compares['expense'][ $transaction->category_id ][ $month ]['amount'] += $amount;
 				$graph[ $month_year ]                                                 += $amount;
 				$totals[ $month ]['amount']                                           += $amount;
@@ -107,7 +108,7 @@ function eaccounting_reports_income_expense_tab() {
 			  ) );
 		?>
 		<div class="ea-report-graph">
-			<?php $chart->render();?>
+			<?php $chart->render(); ?>
 		</div>
 		<div class="ea-table-report">
 			<table class="ea-table">

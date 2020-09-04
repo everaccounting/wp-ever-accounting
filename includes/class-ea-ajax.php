@@ -50,7 +50,7 @@ class Ajax {
 
 
 	/**
-	 * Send headers for WC Ajax Requests.
+	 * Send headers for EverAccounting Ajax Requests.
 	 *
 	 * @since 1.0.2
 	 */
@@ -58,7 +58,6 @@ class Ajax {
 		if ( ! headers_sent() ) {
 			send_origin_headers();
 			send_nosniff_header();
-			wc_nocache_headers();
 			header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
 			header( 'X-Robots-Tag: noindex' );
 			status_header( 200 );
@@ -69,7 +68,7 @@ class Ajax {
 	}
 
 	/**
-	 * Check for WC Ajax request and fire action.
+	 * Check for EverAccounting Ajax request and fire action.
 	 *
 	 * @since 1.0.2
 	 */
@@ -104,8 +103,8 @@ class Ajax {
 			add_action( 'wp_ajax_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 			add_action( 'wp_ajax_nopriv_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 
-			// WC AJAX can be used for frontend ajax requests.
-			add_action( 'wc_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
+			// EverAccounting AJAX can be used for frontend ajax requests.
+			add_action( 'eaccounting_ajax_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
 
 		$ajax_events = array(

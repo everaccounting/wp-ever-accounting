@@ -5,9 +5,7 @@
  */
 window.eaccounting = window.eaccounting || {};
 /**
- * A nifty plugin to converty form to serialize object
- *
- * @link http://stackoverflow.com/questions/1184624/convert-form-data-to-js-object-with-jquery
+ * A nifty plugin to converting form to serialize object
  */
 jQuery.fn.serializeObject = function () {
 	var o = {};
@@ -26,6 +24,53 @@ jQuery.fn.serializeObject = function () {
 };
 
 /**
+ * A plugin for converting form to serializeAssoc
+ * @returns {{}}
+ */
+jQuery.fn.serializeAssoc = function() {
+	var data = {};
+	$.each( this.serializeArray(), function( key, obj ) {
+		var a = obj.name.match(/(.*?)\[(.*?)\]/);
+		if(a !== null)
+		{
+			var subName = a[1];
+			var subKey = a[2];
+
+			if( !data[subName] ) {
+				data[subName] = [ ];
+			}
+
+			if (!subKey.length) {
+				subKey = data[subName].length;
+			}
+
+			if( data[subName][subKey] ) {
+				if( $.isArray( data[subName][subKey] ) ) {
+					data[subName][subKey].push( obj.value );
+				} else {
+					data[subName][subKey] = [ ];
+					data[subName][subKey].push( obj.value );
+				}
+			} else {
+				data[subName][subKey] = obj.value;
+			}
+		} else {
+			if( data[obj.name] ) {
+				if( $.isArray( data[obj.name] ) ) {
+					data[obj.name].push( obj.value );
+				} else {
+					data[obj.name] = [ ];
+					data[obj.name].push( obj.value );
+				}
+			} else {
+				data[obj.name] = obj.value;
+			}
+		}
+	});
+	return data;
+};
+
+/**
  * Select2 wrapper for EverAccounting
  *
  * The plugin is created to handle ajax search
@@ -40,8 +85,6 @@ jQuery(function ($) {
 				(new $.eaccounting_select2(this, options));
 			});
 		};
-
-
 		$.eaccounting_select2 = function (el, options) {
 			this.el = el;
 			this.$el = $(el);
@@ -163,6 +206,8 @@ jQuery(function ($) {
 
 		});
 	};
+
+	$('.ea-input-color').ea_color_picker();
 });
 
 /**
@@ -205,7 +250,9 @@ jQuery(function ($) {
 	};
 })
 
-
+/**
+ *
+ */
 jQuery(function ($) {
 
 	$.fn.eaccounting_creatable = function (options) {

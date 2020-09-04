@@ -7,6 +7,7 @@
  * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
+require_once EACCOUNTING_ABSPATH . '/includes/admin/tools/system-info.php';
 /**
  * render tools page.
  *
@@ -183,7 +184,7 @@ function eaccounting_tools_import_tab() {
 		</div>
 
 		<div class="ea-card">
-			<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-io-form">
+			<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-customers" data-nonce="<?php echo wp_create_nonce( 'import-customers_importer_nonce' ); ?>">
 				<p>
 					<?php
 					echo wp_kses_post( sprintf(
@@ -193,12 +194,12 @@ function eaccounting_tools_import_tab() {
 					?>
 				</p>
 
-				<div class="ea-importer-upload-wrapper">
+				<div class="ea-importer-top">
 					<input name="upload" type="file" required="required" accept="text/csv">
 					<?php submit_button( esc_html__( 'Import CSV', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 				</div>
 
-				<div class="ea-importer-mapping-wrapper">
+				<div class="ea-importer-bottom">
 					<p>
 						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a customer field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
 					</p>
@@ -218,8 +219,6 @@ function eaccounting_tools_import_tab() {
 
 					<?php submit_button( esc_attr__( 'Process', 'wp-ever-accounting' ), 'primary', null, true ); ?>
 				</div>
-				<?php eaccounting_hidden_input( array( 'name' => 'type', 'value' => 'import-customers' ) ); ?>
-				<?php wp_nonce_field( 'import-customers_importer_nonce' ); ?>
 			</form>
 		</div>
 	</div>
@@ -230,7 +229,42 @@ function eaccounting_tools_import_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-vendors" data-nonce="<?php echo wp_create_nonce( 'import-vendors_importer_nonce' ); ?>">
+				<p>
+					<?php
+					echo wp_kses_post( sprintf(
+							__( 'Import vendors from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
+							eaccounting()->plugin_url( '/sample-data/import/vendors.csv' )
+					) );
+					?>
+				</p>
+
+				<div class="ea-importer-top">
+					<input name="upload" type="file" required="required" accept="text/csv">
+					<?php submit_button( esc_html__( 'Import CSV', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+				</div>
+
+				<div class="ea-importer-bottom">
+					<p>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a vendor field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+					</p>
+
+					<table class="widefat striped fixed">
+						<thead>
+						<tr>
+							<th><strong><?php esc_html_e( 'Column name', 'wp-ever-accounting' ); ?></strong></th>
+							<th><strong><?php esc_html_e( 'Map to field', 'wp-ever-accounting' ); ?></strong></th>
+							<th><strong><?php esc_html_e( 'Data Preview', 'wp-ever-accounting' ); ?></strong></th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php eaccounting_do_import_fields( 'vendor' ); ?>
+						</tbody>
+					</table>
+
+					<?php submit_button( esc_attr__( 'Process', 'wp-ever-accounting' ), 'primary', null, true ); ?>
+				</div>
+			</form>
 		</div>
 	</div>
 
@@ -240,7 +274,42 @@ function eaccounting_tools_import_tab() {
 		</div>
 
 		<div class="ea-card">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit. In, veniam?
+			<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch" data-type="import-vendors" data-nonce="<?php echo wp_create_nonce( 'import-vendors_importer_nonce' ); ?>">
+				<p>
+					<?php
+					echo wp_kses_post( sprintf(
+							__( 'Import vendors from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
+							eaccounting()->plugin_url( '/sample-data/import/vendors.csv' )
+					) );
+					?>
+				</p>
+
+				<div class="ea-importer-top">
+					<input name="upload" type="file" required="required" accept="text/csv">
+					<?php submit_button( esc_html__( 'Import CSV', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+				</div>
+
+				<div class="ea-importer-bottom">
+					<p>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a vendor field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+					</p>
+
+					<table class="widefat striped fixed">
+						<thead>
+						<tr>
+							<th><strong><?php esc_html_e( 'Column name', 'wp-ever-accounting' ); ?></strong></th>
+							<th><strong><?php esc_html_e( 'Map to field', 'wp-ever-accounting' ); ?></strong></th>
+							<th><strong><?php esc_html_e( 'Data Preview', 'wp-ever-accounting' ); ?></strong></th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php eaccounting_do_import_fields( 'vendor' ); ?>
+						</tbody>
+					</table>
+
+					<?php submit_button( esc_attr__( 'Process', 'wp-ever-accounting' ), 'primary', null, true ); ?>
+				</div>
+			</form>
 		</div>
 	</div>
 
@@ -303,15 +372,10 @@ function eaccounting_system_info_tab() {
 	$action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
 	?>
 	<form action="<?php echo esc_url( $action_url ); ?>" method="post" dir="ltr">
-		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea"
-				  name="ea-sysinfo"
+		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea" name="ea-sysinfo"
 				  title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
-			<?php echo affwp_tools_system_info_report(); ?>
+			<?php echo eaccounting_tools_system_info_report(); ?>
 		</textarea>
-		<p class="submit">
-			<input type="hidden" name="eaccounting_action" value="download_sysinfo"/>
-			<?php submit_button( 'Download System Info File', 'primary', 'ea-download-sysinfo', false ); ?>
-		</p>
 	</form>
 	<?php
 }

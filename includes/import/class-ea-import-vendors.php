@@ -1,29 +1,34 @@
 <?php
 /**
- * Handle Customer Import.
+ * Handle vendors import.
  *
- * @since       1.0.2
- * @subpackage  Abstracts
- * @package     EverAccounting
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Import
  */
 
 namespace EverAccounting\Import;
+defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
 
-defined( 'ABSPATH' ) || exit();
-
-
-class Customer_CSV_Import extends CSV_Importer {
+/**
+ * Class Import_Vendors
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Import
+ */
+class Import_Vendors extends CSV_Importer {
 	/**
-	 * Get database column and readable label.
+	 * Get supported key and readable label.
 	 *
 	 * @since 1.0.2
 	 * @return array
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'customer' );
+		return eaccounting_get_io_headers( 'vendor' );
 	}
+
 
 	/**
 	 * Return the required key to import item.
@@ -32,7 +37,7 @@ class Customer_CSV_Import extends CSV_Importer {
 	 * @return array
 	 */
 	public function get_required() {
-		return array( 'name', 'currency_code' );
+		return array( 'name' );
 	}
 
 	/**
@@ -62,11 +67,10 @@ class Customer_CSV_Import extends CSV_Importer {
 	 */
 	protected function import_item( $data ) {
 		if ( empty( $data['name'] ) ) {
-			return 'skipped';
+			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
 		}
-		$data['type'] = 'customer';
+		$data['type'] = 'vendor';
 
 		return eaccounting_insert_contact( $data );
 	}
-
 }

@@ -417,6 +417,8 @@ class List_Table_Categories extends List_Table {
 		$args = wp_parse_args( $this->query_args, array(
 				'number'  => $per_page,
 				'offset'  => $per_page * ( $page - 1 ),
+				'per_page' => $per_page,
+				'page'     => $page,
 				'search'  => $search,
 				'status'  => $status,
 				'orderby' => eaccounting_clean( $orderby ),

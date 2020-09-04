@@ -255,7 +255,7 @@ function eaccounting_get_io_headers( $type ) {
 					'opening_balance' => 'Opening Balance',
 					'bank_name'       => 'Bank Name',
 					'bank_phone'      => 'Bank Phone',
-					'bank_address'    => 'Ban Address',
+					'bank_address'    => 'BanK Address',
 					'enabled'         => 'Enabled',
 			);
 			break;
@@ -286,7 +286,6 @@ function eaccounting_get_io_headers( $type ) {
 					'description'    => 'Description',
 					'payment_method' => 'Payment Method',
 					'reference'      => 'Reference',
-					'reconciled'     => 'Reconciled',
 			);
 			break;
 		case 'currency':
@@ -298,7 +297,6 @@ function eaccounting_get_io_headers( $type ) {
 					'position'           => 'Position',
 					'decimal_separator'  => 'Decimal Separator',
 					'thousand_separator' => 'Thousand Separator',
-					'enabled'            => 'Enabled',
 			);
 			break;
 

@@ -107,11 +107,11 @@ class List_Table_Transfers extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'            => array( 'paid_at', false ),
-			'amount'          => array( 'amount', false ),
+			'date'      => array( 'paid_at', false ),
+			'amount'    => array( 'amount', false ),
 //			'from_account_id' => array( 'from_account_id', false ),
 //			'to_account_id'   => array( 'to_account_id', false ),
-			'reference'       => array( 'reference', false ),
+			'reference' => array( 'reference', false ),
 		);
 	}
 
@@ -163,7 +163,7 @@ class List_Table_Transfers extends List_Table {
 	 * @return string Data shown in the Date column.
 	 */
 	function column_date( $transfer ) {
-		$date = eaccounting_format_datetime($transfer->get_date());
+		$date = eaccounting_format_datetime( $transfer->get_date() );
 
 		$value = sprintf( '<a href="%1$s">%2$s</a>',
 			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'tab' => 'transfers', 'transfer_id' => $transfer->get_id() ] ) ),
@@ -308,11 +308,13 @@ class List_Table_Transfers extends List_Table {
 		$per_page = $this->get_per_page();
 
 		$args = wp_parse_args( $this->query_args, array(
-			'number'  => $per_page,
-			'offset'  => $per_page * ( $page - 1 ),
-			'search'  => $search,
-			'orderby' => eaccounting_clean( $orderby ),
-			'order'   => eaccounting_clean( $order ),
+			'number'   => $per_page,
+			'offset'   => $per_page * ( $page - 1 ),
+			'per_page' => $per_page,
+			'page'     => $page,
+			'search'   => $search,
+			'orderby'  => eaccounting_clean( $orderby ),
+			'order'    => eaccounting_clean( $order ),
 		) );
 
 		$args = apply_filters( 'eaccounting_transfers_table_get_transfers', $args, $this );

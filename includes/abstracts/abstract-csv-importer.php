@@ -20,50 +20,35 @@ abstract class CSV_Importer {
 	/**
 	 * Capability needed to perform the current import.
 	 *
-	 * @access public
 	 * @since  1.0.2
 	 * @var    string
 	 */
-	public $capability = 'manage_options';
+	protected $capability = 'manage_options';
 
 	/**
 	 * CSV file.
 	 *
+	 * @since  1.0.2
 	 * @var string
 	 */
 	protected $file = '';
 
 	/**
-	 * File pointer start.
+	 * Importer parameters.
 	 *
-	 * @since 1.0.2
-	 * @var int
+	 * @since  1.0.2
+	 * @var array
 	 */
-	protected $position = 0;
+	protected $params = array();
 
 	/**
-	 * Whatever to parse data or not.
+	 * Original headers.
+	 * key => label pair value
 	 *
 	 * @since 1.0.2
-	 * @var bool
+	 * @var array
 	 */
-	protected $parse = true;
-
-	/**
-	 * File pointer end.
-	 *
-	 * @since 1.0.2
-	 * @var int
-	 */
-	protected $end_position = - 1;
-
-	/**
-	 * Max lines to read.
-	 *
-	 * @since 1.0.2
-	 * @var int
-	 */
-	protected $lines = 100;
+	protected $headers = array();
 
 	/**
 	 * Column mapping. csv_heading => schema_heading.
@@ -72,55 +57,6 @@ abstract class CSV_Importer {
 	 * @var array
 	 */
 	protected $mapping = array();
-
-	/**
-	 * Whether to update existing items.
-	 *
-	 * @since 1.0.2
-	 * @var bool
-	 */
-	protected $update_existing = false;
-
-	/**
-	 * CSV delimiter.
-	 *
-	 * @since 1.0.2
-	 * @var string
-	 */
-	protected $delimiter = ',';
-
-	/**
-	 * Check memory and time usage and abort if reaching limit.
-	 *
-	 * @since 1.0.2
-	 * @var bool
-	 */
-	protected $prevent_timeouts = true;
-
-	/**
-	 * The character used to wrap text in the CSV.
-	 *
-	 * @since 1.0.2
-	 * @var string
-	 */
-	protected $enclosure = '"';
-
-	/**
-	 * PHP uses '\' as the default escape character.
-	 * This is not RFC-4180 compliant. This disables the escape character.
-	 *
-	 * @since 1.0.
-	 * @var string
-	 */
-	protected $escape = "\0";
-
-	/**
-	 * Original headers.
-	 *
-	 * @since 1.0.2
-	 * @var array
-	 */
-	protected $headers = array();
 
 	/**
 	 * Raw keys - CSV raw headers.
@@ -173,19 +109,33 @@ abstract class CSV_Importer {
 	protected $start_time = 0;
 
 	/**
-	 * CSV_Importer constructor.
+	 * Initialize importer.
 	 *
-	 * @param string $file
-	 * @param int    $position
-	 * @param array  $mapping
+	 * @param string $file   File to read.
+	 * @param array  $params Arguments for the parser.
 	 */
-	public function __construct( string $file, int $position = 0, $mapping = array() ) {
-		$this->file     = $file;
-		$this->position = intval( $position );
-		$this->headers  = $this->get_headers();
-		$this->mapping  = empty( $mapping ) ? $this->headers : $mapping;
+	public function __construct( $file, $params = array() ) {
+		$default_args = array(
+			'position'         => 0, // File pointer start.
+			'end_position'     => - 1, // File pointer end.
+			'limit'            => 100, // Max lines to read.
+			'mapping'          => array(), // Column mapping. csv_heading => schema_heading.
+			'parse'            => true, // Whether to sanitize and format data.
+			'update_existing'  => false, // Whether to update existing items.
+			'delimiter'        => ',', // CSV delimiter.
+			'prevent_timeouts' => true, // Check memory and time usage and abort if reaching limit.
+			'enclosure'        => '"', // The character used to wrap text in the CSV.
+			'escape'           => "\0", // PHP uses '\' as the default escape character. This is not RFC-4180 compliant. This disables the escape character.
+		);
+
+		$this->params  = wp_parse_args( $params, $default_args );
+		$this->file    = $file;
+		$this->headers = $this->get_headers();
+		$this->set_mapping( $this->params['mapping'] );
+
 		$this->read_file();
 	}
+
 
 	/**
 	 * Get database column and readable label.
@@ -220,7 +170,6 @@ abstract class CSV_Importer {
 	 */
 	protected abstract function import_item( $data );
 
-
 	/**
 	 * Maps CSV columns to their corresponding import fields.
 	 *
@@ -229,11 +178,12 @@ abstract class CSV_Importer {
 	 * @param array $mapping
 	 */
 	public function set_mapping( $mapping = array() ) {
-		if ( ! empty( $mapping ) ) {
+		if ( ! empty( $mapping ) && is_array( $mapping ) ) {
 			$this->mapping = $mapping;
+		} else {
+			$this->mapping = $this->headers;
 		}
 	}
-
 
 	/**
 	 * Can user import?
@@ -242,19 +192,14 @@ abstract class CSV_Importer {
 	 * @return bool Whether the user can import or not
 	 */
 	public function can_import() {
-		/**
-		 * Filters the capability needed to perform an import.
-		 *
-		 * @since 1.0.2
-		 *
-		 * @param string $capability Capability needed to perform an import.
-		 *
-		 */
 		return (bool) current_user_can( apply_filters( 'eaccounting_import_capability', $this->capability ) );
 	}
 
 	/**
-	 * Read file.
+	 * Read CSV file.
+	 *
+	 * @since 1.0.2
+	 * @return void
 	 */
 	protected function read_file() {
 		$valid_filetypes = apply_filters(
@@ -273,7 +218,7 @@ abstract class CSV_Importer {
 		$handle = fopen( $this->file, 'r' ); // @codingStandardsIgnoreLine.
 
 		if ( false !== $handle ) {
-			$this->raw_keys = version_compare( PHP_VERSION, '5.3', '>=' ) ? array_map( 'trim', fgetcsv( $handle, 0, $this->delimiter, $this->enclosure, $this->escape ) ) : array_map( 'trim', fgetcsv( $handle, 0, $this->delimiter, $this->enclosure ) );
+			$this->raw_keys = version_compare( PHP_VERSION, '5.3', '>=' ) ? array_map( 'trim', fgetcsv( $handle, 0, $this->params['delimiter'], $this->params['enclosure'], $this->params['escape'] ) ) : array_map( 'trim', fgetcsv( $handle, 0, $this->params['delimiter'], $this->params['enclosure'] ) );
 
 			// Remove BOM signature from the first item.
 			if ( isset( $this->raw_keys[0] ) ) {
@@ -282,18 +227,18 @@ abstract class CSV_Importer {
 				}
 			}
 
-			if ( 0 !== $this->position ) {
-				fseek( $handle, (int) $this->position );
+			if ( 0 !== $this->params['position'] ) {
+				fseek( $handle, (int) $this->params['position'] );
 			}
 
 			while ( 1 ) {
-				$row = version_compare( PHP_VERSION, '5.3', '>=' ) ? fgetcsv( $handle, 0, $this->delimiter, $this->enclosure, $this->escape ) : fgetcsv( $handle, 0, $this->delimiter, $this->enclosure );
+				$row = version_compare( PHP_VERSION, '5.3', '>=' ) ? fgetcsv( $handle, 0, $this->params['delimiter'], $this->params['enclosure'], $this->params['escape'] ) : fgetcsv( $handle, 0, $this->params['enclosure'], $this->params['escape'] );
 
 				if ( false !== $row ) {
 					$this->raw_data[]                            = $row;
 					$this->positions[ count( $this->raw_data ) ] = ftell( $handle );
 
-					if ( ( $this->end_position > 0 && ftell( $handle ) >= $this->end_position ) || 0 === -- $this->lines ) {
+					if ( ( $this->params['end_position'] > 0 && ftell( $handle ) >= $this->params['end_position'] ) || 0 === -- $this->params['limit'] ) {
 						break;
 					}
 				} else {
@@ -301,12 +246,12 @@ abstract class CSV_Importer {
 				}
 			}
 
-			$this->position = ftell( $handle );
+			$this->params['position'] = ftell( $handle );
 		}
 
 		$this->set_mapped_keys();
 
-		if ( $this->parse ) {
+		if ( $this->params['parse'] ) {
 			$this->set_parsed_data();
 		}
 	}
@@ -373,6 +318,7 @@ abstract class CSV_Importer {
 		}
 	}
 
+
 	/**
 	 * Get formatting callback.
 	 *
@@ -402,29 +348,33 @@ abstract class CSV_Importer {
 		return $callbacks;
 	}
 
-	//import
+	/**
+	 * Import data.
+	 *
+	 * @since 1.0.2
+	 * @return int[]
+	 */
 	public function import() {
 		$this->start_time = time();
 		$index            = 0;
 
 		$data = array(
 			'imported' => 0,
-			'failed'   => 0,
+			'skipped'  => 0,
 		);
 
 		foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
 
 			$result = $this->import_item( $parsed_data );
-
-			if ( is_wp_error( $result ) ) {
-				$data['failed'] = (int) $data['failed'] + 1;
-			} else {
+			if ( ! is_wp_error( $result ) && $result) {
 				$data['imported'] = (int) $data['imported'] + 1;
+			} else {
+				$data['skipped'] = (int) $data['skipped'] + 1;
 			}
 
 			$index ++;
 
-			if ( $this->prevent_timeouts && ( $this->time_exceeded() || $this->memory_exceeded() ) ) {
+			if ( $this->params['prevent_timeouts'] && ( $this->time_exceeded() || $this->memory_exceeded() ) ) {
 				$this->position = $this->positions[ $index ];
 				break;
 			}
@@ -484,7 +434,7 @@ abstract class CSV_Importer {
 	 * @return int
 	 */
 	public function get_position() {
-		return $this->position;
+		return $this->params['position'];
 	}
 
 	/**
@@ -494,11 +444,16 @@ abstract class CSV_Importer {
 	 */
 	public function get_percent_complete() {
 		$size = filesize( $this->file );
-		if ( ! $size || ! $this->position) {
+		if ( ! $size || ! $this->params['position'] ) {
 			return 0;
 		}
 
-		return absint( min( round( ( $this->position / $size ) * 100 ), 100 ) );
+		$percent = absint( min( round( ( $this->params['position'] / $size ) * 100 ), 100 ) );
+		if ( $percent == 100 ) {
+			@unlink( $this->file );
+		}
+
+		return $percent;
 	}
 
 	/**

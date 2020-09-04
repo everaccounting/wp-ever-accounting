@@ -22,7 +22,7 @@ function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: te
  * @return string
  */
 function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
-	$financial_start = eaccounting()->settings->get('financial_year_start','01-01');
+	$financial_start = eaccounting()->settings->get( 'financial_year_start', '01-01' );
 	$setting         = explode( '-', $financial_start );
 	$day             = ! empty( $setting[0] ) ? $setting[0] : '01';
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
@@ -32,6 +32,23 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 	$financial_year->setDate( $year, $month, $day );
 
 	return $financial_year->format( $format );
+}
+
+/**
+ * Get financial end date.
+ *
+ * @since 1.0.2
+ *
+ * @param string $format
+ * @param null   $year
+ *
+ * @throws \Exception
+ * @return string
+ */
+function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
+	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
+
+	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
 }
 
 /**

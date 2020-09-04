@@ -374,6 +374,8 @@ class List_Table_Transactions extends List_Table {
 		$args       = wp_parse_args( $this->query_args, array(
 			'number'     => $per_page,
 			'offset'     => $per_page * ( $page - 1 ),
+			'per_page'   => $per_page,
+			'page'       => $page,
 			'search'     => $search,
 			'account_id' => $account_id,
 			'orderby'    => eaccounting_clean( $orderby ),
@@ -383,13 +385,13 @@ class List_Table_Transactions extends List_Table {
 
 		$args = apply_filters( 'eaccounting_transactions_table_get_transactions', $args, $this );
 
-		$base_query = Query_Transaction::init()
-		                               ->where( $args )
-		                               ->search( $search )
-		                               ->notTransfer()
-		                               ->whereDateBetween( 'paid_at', $start_date, $end_date )
-		                               ->order_by( $orderby, $order )
-		                               ->page( $page, $per_page );
+		$base_query  = Query_Transaction::init()
+		                                ->where( $args )
+		                                ->search( $search )
+		                                ->notTransfer()
+		                                ->whereDateBetween( 'paid_at', $start_date, $end_date )
+		                                ->order_by( $orderby, $order )
+		                                ->page( $page, $per_page );
 		$this->items = $base_query->copy()->where( [ 'type' => $type ] )->get( OBJECT, 'eaccounting_get_transaction' );
 
 		$this->income_count = $base_query->copy()->where( array_merge( $this->query_args, array(

@@ -14,7 +14,7 @@ function eaccounting_tools_system_info_report() {
 	$theme_data = wp_get_theme();
 	$theme      = $theme_data->Name . ' ' . $theme_data->Version;
 
-	$return  = '### Begin System Info ###' . "\n\n";
+	$return = '### Begin System Info ###' . "\n\n";
 
 	// Start with the basics...
 	$return .= '-- Site Info' . "\n\n";
@@ -33,9 +33,9 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Show On Front:            ' . get_option( 'show_on_front' ) . "\n";
 
 	// Only show page specs if frontpage is set to 'page'
-	if( get_option( 'show_on_front' ) === 'page' ) {
+	if ( get_option( 'show_on_front' ) === 'page' ) {
 		$front_page_id = get_option( 'page_on_front' );
-		$blog_page_id = get_option( 'page_for_posts' );
+		$blog_page_id  = get_option( 'page_for_posts' );
 
 		$return .= 'Page On Front:            ' . ( $front_page_id != 0 ? get_the_title( $front_page_id ) . ' (#' . $front_page_id . ')' : 'Unset' ) . "\n";
 		$return .= 'Page For Posts:           ' . ( $blog_page_id != 0 ? get_the_title( $blog_page_id ) . ' (#' . $blog_page_id . ')' : 'Unset' ) . "\n";
@@ -51,67 +51,42 @@ function eaccounting_tools_system_info_report() {
 	// EverAccounting
 	//
 
-	$settings = eaccounting()->settings;
 
-	// General settings.
-	$return .= "\n" . '-- AffiliateWP Configuration' . "\n\n";
-	$return .= 'Version:                          ' . AFFILIATEWP_VERSION . "\n";
-	$return .= 'License Key:                      ' . ( $settings->get( 'license_key' ) ? $settings->get( 'license_key' ) . "\n" : "Not set\n" );
-	$return .= 'Currency:                         ' . ( $settings->get( 'currency' ) ? $settings->get( 'currency' ) . "\n" : "Default\n" );
-	$return .= 'Currency Position:                ' . ( $settings->get( 'currency_position' ) ? $settings->get( 'currency_position' ) . "\n" : "Default\n" );
-	$return .= 'Cookie Expiration:                ' . ( $settings->get( 'cookie_exp' ) ? $settings->get( 'cookie_exp' ) . " day(s)\n" : "Default\n" );
+	$settings      = eaccounting()->settings;
+	$account_id    = eaccounting()->settings->get( 'default_account' );
+	$currency_code = eaccounting()->settings->get( 'default_currency' );
+	$currency      = '';
+	$db_version    = get_option( 'eaccounting_version' );
+	$install_date  = get_option( 'eaccounting_install_date' );
+	global $wpdb;
+	$tables = $wpdb->get_col( "SHOW TABLES LIKE '{$wpdb->prefix}ea_%'" );
+	$tables = preg_replace( "/^{$wpdb->prefix}/", '', $tables );
+
+	// Configariotn settings.
+	$return .= "\n" . '-- EverAccounting Configuration' . "\n\n";
+	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
+	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
+	$return .= 'Install Date:                     ' . ( $install_date ? date( 'Y-m-d H:i:s' ) . "\n" : "Unset\n" );
 	$return .= 'Debug Mode:                       ' . ( $settings->get( 'debug_mode', false ) ? "True" . "\n" : "False\n" );
-
-	// Pages.
-	// Integrations
-	$return .= "\n" . '-- AffiliateWP Integrations' . "\n\n";
-
-	$integrations = affiliate_wp()->integrations->query( array( 'fields' => 'ids' ) );
-
-	foreach ( $integrations as $id ) {
-
-		$integration = affiliate_wp()->integrations->get( $id );
-
-		if ( ! is_wp_error( $integration ) ) {
-
-			$needs_synced = $integration->needs_synced();
-			if ( is_wp_error( $needs_synced ) ) {
-				$sync_status = "Plugin Enabled, Sync Not Supported";
-			} else {
-				$sync_status = $integration->needs_synced() ? 'Plugin Enabled, Needs Synced' : 'Enabled, Synced';
-			}
-
-		} else {
-			$sync_status = "Sync Status Unknown";
-		}
-
-		$name = $integration->get_name();
-
-		// Align text with other fields dynamically, based on the length of the integration name.
-		$spaces = str_repeat( ' ', 33 - strlen( $name ) );
-		$return .= $name . ":" . $spaces . $sync_status . "\n";
-	}
+	$return .= 'Accounts Table:                   ' . ( in_array( 'ea_accounts', $tables, true ) ? "True" . "\n" : "False\n" );
+	$return .= 'Transactions Table:               ' . ( in_array( 'ea_transactions', $tables, true ) ? "True" . "\n" : "False\n" );
+	$return .= 'Contacts Table:                   ' . ( in_array( 'ea_contacts', $tables, true ) ? "True" . "\n" : "False\n" );
+	$return .= 'Currencies Table:                 ' . ( in_array( 'ea_currencies', $tables, true ) ? "True" . "\n" : "False\n" );
+	$return .= 'Transfers Table:                  ' . ( in_array( 'ea_transfers', $tables, true ) ? "True" . "\n" : "False\n" );
+	$return .= 'Categories Table:                 ' . ( in_array( 'ea_categories', $tables, true ) ? "True" . "\n" : "False\n" );
 
 	// Misc Settings
-	$return .= "\n" . '-- AffiliateWP Misc Settings' . "\n\n";
-	$return .= 'Enable reCaptcha:                  ' . ( $settings->get( 'recaptcha_enabled' ) ? "True\n" : "False\n" );
-	$return .= 'reCaptcha Site Key:                ' . ( $settings->get( 'recaptcha_site_key' ) ? "Set\n" : "Unset\n" );
-	$return .= 'reCaptcha Secret Key:              ' . ( $settings->get( 'recaptcha_secret_key' ) ? "Set\n" : "Unset\n" );
-	$return .= 'Fallback Tracking Enabled:         ' . ( $settings->get( 'tracking_fallback' ) ? "True\n" : "False\n" );
-	$return .= 'Ignore Zero Referrals:             ' . ( $settings->get( 'ignore_zero_referrals' ) ? "True\n" : "False\n" );
-	$return .= 'Reject Unpaid Referrals on Refund: ' . ( $settings->get( 'revoke_on_refund' ) ? "True\n" : "False\n" );
-	$return .= 'Default Referral URL:              ' . ( $settings->get( 'default_referral_url' ) ? $settings->get( 'default_referral_url' ) : "Default (empty)\n" );
+	$return .= "\n" . '-- EverAccounting Misc Settings' . "\n\n";
 
-	// AffiliateWP Templates
-	$dir = trailingslashit( get_stylesheet_directory() . affiliate_wp()->templates->get_theme_template_dir_name() );
 
-	if( is_dir( $dir ) && ( count( glob( "$dir/*" ) ) !== 0 ) ) {
-		$return .= "\n" . '-- AffiliateWP Template Overrides' . "\n\n";
+	// Object counts.
+	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
+	$return .= 'Transactions:                     ' . number_format( \EverAccounting\Query_Transaction::init()->count(), false ) . "\n";
+	$return .= 'Accounts:                         ' . number_format( \EverAccounting\Query_Account::init()->count(), false ) . "\n";
+	$return .= 'Contacts:                         ' . number_format( \EverAccounting\Query_Contact::init()->count(), false ) . "\n";
+	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Query_Currency::init()->count(), false ) . "\n";
+	$return .= 'Categories:                       ' . number_format( \EverAccounting\Query_Category::init()->count(), false ) . "\n";
 
-		foreach( glob( $dir . '/*' ) as $file ) {
-			$return .= 'Filename:                 ' . basename( $file ) . "\n";
-		}
-	}
 
 	// Get plugins that have an update
 	$updates = get_plugin_updates();
@@ -119,10 +94,10 @@ function eaccounting_tools_system_info_report() {
 	// Must-use plugins
 	// NOTE: MU plugins can't show updates!
 	$muplugins = get_mu_plugins();
-	if( count( $muplugins ) > 0 ) {
+	if ( count( $muplugins ) > 0 ) {
 		$return .= "\n" . '-- Must-Use Plugins' . "\n\n";
 
-		foreach( $muplugins as $plugin => $plugin_data ) {
+		foreach ( $muplugins as $plugin => $plugin_data ) {
 			$return .= $plugin_data['Name'] . ': ' . $plugin_data['Version'] . "\n";
 		}
 	}
@@ -130,43 +105,46 @@ function eaccounting_tools_system_info_report() {
 	// WordPress active plugins
 	$return .= "\n" . '-- WordPress Active Plugins' . "\n\n";
 
-	$plugins = get_plugins();
+	$plugins        = get_plugins();
 	$active_plugins = get_option( 'active_plugins', array() );
 
-	foreach( $plugins as $plugin_path => $plugin ) {
-		if( !in_array( $plugin_path, $active_plugins ) )
+	foreach ( $plugins as $plugin_path => $plugin ) {
+		if ( ! in_array( $plugin_path, $active_plugins ) ) {
 			continue;
+		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
 	// WordPress inactive plugins
 	$return .= "\n" . '-- WordPress Inactive Plugins' . "\n\n";
 
-	foreach( $plugins as $plugin_path => $plugin ) {
-		if( in_array( $plugin_path, $active_plugins ) )
+	foreach ( $plugins as $plugin_path => $plugin ) {
+		if ( in_array( $plugin_path, $active_plugins ) ) {
 			continue;
+		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
-	if( is_multisite() ) {
+	if ( is_multisite() ) {
 		// WordPress Multisite active plugins
 		$return .= "\n" . '-- Network Active Plugins' . "\n\n";
 
-		$plugins = wp_get_active_network_plugins();
+		$plugins        = wp_get_active_network_plugins();
 		$active_plugins = get_site_option( 'active_sitewide_plugins', array() );
 
-		foreach( $plugins as $plugin_path ) {
+		foreach ( $plugins as $plugin_path ) {
 			$plugin_base = plugin_basename( $plugin_path );
 
-			if( !array_key_exists( $plugin_base, $active_plugins ) )
+			if ( ! array_key_exists( $plugin_base, $active_plugins ) ) {
 				continue;
+			}
 
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[$plugin_path]->update->new_version . ')' : '';
-			$plugin  = get_plugin_data( $plugin_path );
+			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+			$plugin = get_plugin_data( $plugin_path );
 			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 	}

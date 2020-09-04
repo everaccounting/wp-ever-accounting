@@ -4,7 +4,7 @@
  *
  * Contact related functions.
  *
- * @since 1.0.2
+ * @since   1.0.2
  * @package EverAccounting
  */
 
@@ -31,9 +31,9 @@ function eaccounting_get_contact_types() {
 /**
  * Main function for returning contact.
  *
- * @param $contact
- *
  * @since 1.0.2
+ *
+ * @param $contact
  *
  * @return \EverAccounting\Contact|null
  */
@@ -66,9 +66,9 @@ function eaccounting_get_contact( $contact ) {
  *
  *  Returns a new contact object on success.
  *
- * @param array $args Contact arguments.
- *
  * @since 1.0.2
+ *
+ * @param array $args Contact arguments.
  *
  * @return \EverAccounting\Contact|WP_Error
  */
@@ -133,9 +133,9 @@ function eaccounting_insert_contact( $args ) {
 /**
  * Delete an contact.
  *
- * @param $contact_id
- *
  * @since 1.0.2
+ *
+ * @param $contact_id
  *
  * @return bool
  */
@@ -175,3 +175,34 @@ function eaccounting_update_transaction_contact( $id ) {
 }
 
 add_action( 'eaccounting_delete_contact', 'eaccounting_update_transaction_contact' );
+
+/**
+ * Main function for returning customer.
+ *
+ * @since 1.0.2
+ *
+ * @param $customer
+ *
+ * @return \EverAccounting\Contact|null
+ */
+function eaccounting_get_customer( $customer ) {
+	$contact = eaccounting_get_contact( $customer );
+
+	return $contact && $contact->get_type() == 'customer' ? $contact : null;
+}
+
+
+/**
+ * Main function for returning vendor.
+ *
+ * @since 1.0.2
+ *
+ * @param $vendor
+ *
+ * @return \EverAccounting\Contact|null
+ */
+function eaccounting_get_vendor( $vendor ) {
+	$contact = eaccounting_get_contact( $vendor );
+
+	return $contact && $contact->get_type() == 'vendor' ? $contact : null;
+}

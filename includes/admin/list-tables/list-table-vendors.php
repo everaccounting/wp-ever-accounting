@@ -384,13 +384,15 @@ class List_Table_Vendors extends List_Table {
 		$per_page = $this->get_per_page();
 
 		$args = wp_parse_args( $this->query_args, array(
-			'number'  => $per_page,
-			'offset'  => $per_page * ( $page - 1 ),
-			'search'  => $search,
-			'status'  => $status,
-			'orderby' => eaccounting_clean( $orderby ),
-			'order'   => eaccounting_clean( $order ),
-			'type'    => 'vendor'
+			'number'   => $per_page,
+			'per_page' => $per_page,
+			'page'     => $page,
+			'offset'   => $per_page * ( $page - 1 ),
+			'search'   => $search,
+			'status'   => $status,
+			'orderby'  => eaccounting_clean( $orderby ),
+			'order'    => eaccounting_clean( $order ),
+			'type'     => 'vendor'
 		) );
 
 		$args = apply_filters( 'eaccounting_vendors_table_get_vendors', $args, $this );

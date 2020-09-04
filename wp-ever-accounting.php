@@ -256,6 +256,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-capabilities.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php' );
@@ -291,8 +292,6 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
 
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
-
-		require_once( EACCOUNTING_ABSPATH . '/includes/import/ea-functions-import-fields.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php' );
