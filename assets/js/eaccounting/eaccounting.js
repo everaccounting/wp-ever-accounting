@@ -27,40 +27,39 @@ jQuery.fn.serializeObject = function () {
  * A plugin for converting form to serializeAssoc
  * @returns {{}}
  */
-jQuery.fn.serializeAssoc = function() {
+jQuery.fn.serializeAssoc = function () {
 	var data = {};
-	$.each( this.serializeArray(), function( key, obj ) {
+	$.each(this.serializeArray(), function (key, obj) {
 		var a = obj.name.match(/(.*?)\[(.*?)\]/);
-		if(a !== null)
-		{
+		if (a !== null) {
 			var subName = a[1];
 			var subKey = a[2];
 
-			if( !data[subName] ) {
-				data[subName] = [ ];
+			if (!data[subName]) {
+				data[subName] = [];
 			}
 
 			if (!subKey.length) {
 				subKey = data[subName].length;
 			}
 
-			if( data[subName][subKey] ) {
-				if( $.isArray( data[subName][subKey] ) ) {
-					data[subName][subKey].push( obj.value );
+			if (data[subName][subKey]) {
+				if ($.isArray(data[subName][subKey])) {
+					data[subName][subKey].push(obj.value);
 				} else {
-					data[subName][subKey] = [ ];
-					data[subName][subKey].push( obj.value );
+					data[subName][subKey] = [];
+					data[subName][subKey].push(obj.value);
 				}
 			} else {
 				data[subName][subKey] = obj.value;
 			}
 		} else {
-			if( data[obj.name] ) {
-				if( $.isArray( data[obj.name] ) ) {
-					data[obj.name].push( obj.value );
+			if (data[obj.name]) {
+				if ($.isArray(data[obj.name])) {
+					data[obj.name].push(obj.value);
 				} else {
-					data[obj.name] = [ ];
-					data[obj.name].push( obj.value );
+					data[obj.name] = [];
+					data[obj.name].push(obj.value);
 				}
 			} else {
 				data[obj.name] = obj.value;
@@ -505,5 +504,32 @@ jQuery(function ($) {
 		form.account_id.trigger('change');
 		form.currency_code.trigger('change');
 	};
+
+});
+
+
+jQuery(function ($) {
+	$.fn.eaccounting_file_uploader = function (options) {
+		return this.each(function () {
+			(new $.eaccounting_file_uploader(this, options));
+		});
+	};
+
+	$.eaccounting_file_uploader = function (el, options) {
+		this.el = el;
+		this.$el = $(el);
+		this.$uploader = this.$el.find('.ea-file-upload');
+		this.$delete_temp = '<span class="dashicons dashicons-no-alt"></span>';
+		var plugin = this;
+
+		plugin.init = function () {
+
+		}
+
+		this.init();
+
+		return this;
+	}
+
 
 });
