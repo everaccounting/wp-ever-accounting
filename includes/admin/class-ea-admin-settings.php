@@ -419,7 +419,7 @@ class Settings {
 	 * @return string
 	 */
 	public function option_page_capability( $capability ) {
-		return 'manage_options';
+		return 'ea_manage_options';
 	}
 
 	/**

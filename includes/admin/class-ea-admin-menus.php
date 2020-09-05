@@ -31,16 +31,16 @@ class Admin_Menus {
 	public function admin_menu() {
 		global $menu;
 
-//		if ( current_user_can( 'edit_others_shop_orders' ) ) {
-//			$menu[] = array( '', 'read', 'separator-woocommerce', '', 'wp-menu-separator woocommerce' ); // WPCS: override ok.
-//		}
+		if ( current_user_can( 'manage_eaccounting' ) ) {
+			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
+		}
 
-		add_menu_page( __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounting', 'wp-ever-accounting' ), 'manage_options', 'eaccounting', null, 'dashicons-chart-area', '54.5' );
-		$overview     = add_submenu_page( 'eaccounting', __( 'Overview', 'wp-ever-accounting' ), __( 'Overview', 'wp-ever-accounting' ), 'manage_options', 'eaccounting', 'eaccounting_admin_overview_page' );
-		$transactions = add_submenu_page( 'eaccounting', __( 'Transactions', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'manage_options', 'ea-transactions', 'eaccounting_admin_transactions_page' );
-		$sales        = add_submenu_page( 'eaccounting', __( 'Sales', 'wp-ever-accounting' ), __( 'Sales', 'wp-ever-accounting' ), 'manage_options', 'ea-sales', 'eaccounting_admin_sales_page' );
-		$expenses     = add_submenu_page( 'eaccounting', __( 'Expenses', 'wp-ever-accounting' ), __( 'Expenses', 'wp-ever-accounting' ), 'manage_options', 'ea-expenses', 'eaccounting_admin_expenses_page' );
-		$banking      = add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_options', 'ea-banking', 'eaccounting_admin_banking_page' );
+		add_menu_page( __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounting', 'wp-ever-accounting' ), 'manage_eaccounting', 'eaccounting', null, 'dashicons-chart-area', '54.5' );
+		$overview     = add_submenu_page( 'eaccounting', __( 'Overview', 'wp-ever-accounting' ), __( 'Overview', 'wp-ever-accounting' ), 'manage_eaccounting', 'eaccounting', 'eaccounting_admin_overview_page' );
+		$transactions = add_submenu_page( 'eaccounting', __( 'Transactions', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'ea_manage_report', 'ea-transactions', 'eaccounting_admin_transactions_page' );
+		$sales        = add_submenu_page( 'eaccounting', __( 'Sales', 'wp-ever-accounting' ), __( 'Sales', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-sales', 'eaccounting_admin_sales_page' );
+		$expenses     = add_submenu_page( 'eaccounting', __( 'Expenses', 'wp-ever-accounting' ), __( 'Expenses', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-expenses', 'eaccounting_admin_expenses_page' );
+		$banking      = add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-banking', 'eaccounting_admin_banking_page' );
 
 		add_action( 'load-' . $sales, 'eaccounting_load_sales_page' );
 		add_action( 'load-' . $expenses, 'eaccounting_load_expenses_page' );
@@ -48,17 +48,17 @@ class Admin_Menus {
 	}
 
 	public function tools_menu() {
-		$tools = add_submenu_page( 'eaccounting', __( 'Tools', 'wp-ever-accounting' ), __( 'Tools', 'wp-ever-accounting' ), 'manage_options', 'ea-tools', 'eaccounting_admin_tools_page' );
+		$tools = add_submenu_page( 'eaccounting', __( 'Tools', 'wp-ever-accounting' ), __( 'Tools', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-tools', 'eaccounting_admin_tools_page' );
 		add_action( 'load-' . $tools, 'eaccounting_load_tools_page' );
 	}
 
 	public function reports_menu() {
-		$reports = add_submenu_page( 'eaccounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'ea-reports', 'eaccounting_admin_reports_page' );
+		$reports = add_submenu_page( 'eaccounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'ea_manage_report', 'ea-reports', 'eaccounting_admin_reports_page' );
 		add_action( 'load-' . $reports, 'eaccounting_load_reports_page' );
 	}
 
 	public function settings_menu() {
-		add_submenu_page( 'eaccounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_options', 'ea-settings', 'eaccounting_admin_settings_page' );
+		add_submenu_page( 'eaccounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-settings', 'eaccounting_admin_settings_page' );
 	}
 
 //	public function status_menu() {

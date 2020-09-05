@@ -27,15 +27,19 @@ require_once dirname( __FILE__ ) . '/widgets/widget-account-balances.php';
  * @since 1.0.2
  */
 function eaccounting_init_overview_meta_boxes() {
-	new \EverAccounting\Admin\Overview\Widgets\Total_Income();
-	new \EverAccounting\Admin\Overview\Widgets\Total_Expense();
-	new \EverAccounting\Admin\Overview\Widgets\Total_Profit();
-	new \EverAccounting\Admin\Overview\Widgets\Cash_Flow();
-	new \EverAccounting\Admin\Overview\Widgets\Income_Categories();
-	new \EverAccounting\Admin\Overview\Widgets\Expense_Categories();
+	if ( current_user_can( 'ea_manage_report' ) ) {
+		new \EverAccounting\Admin\Overview\Widgets\Total_Income();
+		new \EverAccounting\Admin\Overview\Widgets\Total_Expense();
+		new \EverAccounting\Admin\Overview\Widgets\Total_Profit();
+		new \EverAccounting\Admin\Overview\Widgets\Cash_Flow();
+		new \EverAccounting\Admin\Overview\Widgets\Income_Categories();
+		new \EverAccounting\Admin\Overview\Widgets\Expense_Categories();
+	}
 	new \EverAccounting\Admin\Overview\Widgets\Latest_Incomes();
 	new \EverAccounting\Admin\Overview\Widgets\Latest_Expenses();
-	new \EverAccounting\Admin\Overview\Widgets\Account_Balances();
+	if ( current_user_can( 'ea_manage_report' ) ) {
+		new \EverAccounting\Admin\Overview\Widgets\Account_Balances();
+	}
 	/**
 	 * Fires after all core Overview meta boxes have been instantiated.
 	 *
@@ -71,14 +75,16 @@ function eaccounting_admin_overview_page() {
 			<div>
 				<h1><?php _e( 'Overview', 'wp-ever-accounting' ); ?></h1>
 			</div>
-			<div>
-				<form action="" method="get">
-					<input type="text" id="ea-overview-date-range" data-start="<?php echo esc_attr($start->format('Y-m-d'));?>" data-end="<?php echo esc_attr($end->format('Y-m-d'));?>">
-					<input type="hidden" name="page" value="eaccounting">
-					<input type="hidden" name="start_date" value="">
-					<input type="hidden" name="end_date" value="">
-				</form>
-			</div>
+			<?php if ( current_user_can( 'ea_manage_report' ) ): ?>
+				<div>
+					<form action="" method="get">
+						<input type="text" id="ea-overview-date-range" data-start="<?php echo esc_attr( $start->format( 'Y-m-d' ) ); ?>" data-end="<?php echo esc_attr( $end->format( 'Y-m-d' ) ); ?>">
+						<input type="hidden" name="page" value="eaccounting">
+						<input type="hidden" name="start_date" value="">
+						<input type="hidden" name="end_date" value="">
+					</form>
+				</div>
+			<?php endif; ?>
 		</div>
 		<hr class="wp-header-end">
 

@@ -143,25 +143,35 @@ class Ajax {
 		$result = new \WP_Error( 'invalid_object', __( 'Invalid object type.', 'wp-ever-accounting' ) );
 		switch ( $object_type ) {
 			case 'currency':
+				self::check_permission('ea_manage_currency');
 				$result = eaccounting_insert_currency( [
 					'id'      => $object_id,
 					'enabled' => $enabled
 				] );
 				break;
 			case 'category':
+				self::check_permission('ea_manage_category');
 				$result = eaccounting_insert_category( [
 					'id'      => $object_id,
 					'enabled' => $enabled
 				] );
 				break;
 			case 'account':
+				self::check_permission('ea_manage_account');
 				$result = eaccounting_insert_account( [
 					'id'      => $object_id,
 					'enabled' => $enabled
 				] );
 				break;
 			case 'customer':
+				self::check_permission('ea_manage_customer');
+				$result = eaccounting_insert_contact( [
+					'id'      => $object_id,
+					'enabled' => $enabled
+				] );
+				break;
 			case 'vendor':
+				self::check_permission('ea_manage_vendor');
 				$result = eaccounting_insert_contact( [
 					'id'      => $object_id,
 					'enabled' => $enabled
@@ -193,6 +203,7 @@ class Ajax {
 	 */
 	public static function dropdown_search() {
 		check_ajax_referer( 'ea-dropdown-search', 'nonce' );
+		self::check_permission('manage_eaccounting');
 		$search  = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page    = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 		$results = array();
@@ -246,6 +257,7 @@ class Ajax {
 	 */
 	public static function get_currency() {
 		check_ajax_referer( 'ea_get_currency', '_wpnonce' );
+		self::check_permission('manage_eaccounting');
 		$posted = eaccounting_clean( $_REQUEST );
 		$code   = ! empty( $posted['code'] ) ? $posted['code'] : false;
 		if ( ! $code ) {
@@ -271,6 +283,7 @@ class Ajax {
 	 */
 	public static function edit_currency() {
 		check_ajax_referer( 'ea_edit_currency', '_wpnonce' );
+		self::check_permission('ea_manage_currency');
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_currency( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -304,6 +317,7 @@ class Ajax {
 	 */
 	public static function edit_account() {
 		check_ajax_referer( 'ea_edit_account', '_wpnonce' );
+		self::check_permission('ea_manage_account');
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_account( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -338,6 +352,7 @@ class Ajax {
 	 */
 	public static function get_account() {
 		check_ajax_referer( 'ea_get_account', '_wpnonce' );
+		self::check_permission('manage_eaccounting');
 		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
 		$account = eaccounting_get_account( $id );
 		if ( $account ) {
@@ -358,7 +373,7 @@ class Ajax {
 	 */
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
-
+		self::check_permission('ea_manage_category');
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_category( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -393,7 +408,7 @@ class Ajax {
 	 */
 	public static function edit_contact() {
 		self::verify_nonce( 'ea_edit_contact' );
-
+		self::check_permission('ea_manage_customer');
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$created = eaccounting_insert_contact( $posted );
@@ -428,6 +443,7 @@ class Ajax {
 	 */
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
+		self::check_permission('ea_manage_payment');
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$posted['type'] = 'expense';
@@ -463,6 +479,7 @@ class Ajax {
 	 */
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
+		self::check_permission('ea_manage_revenue');
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$posted['type'] = 'income';
@@ -498,6 +515,7 @@ class Ajax {
 	 */
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
+		self::check_permission('ea_manage_transfer');
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$created = eaccounting_insert_transfer( $posted );
@@ -524,149 +542,13 @@ class Ajax {
 		wp_die();
 	}
 
-	public static function do_ajax_export() {
-		if ( ! isset( $_REQUEST['type'] ) ) {
-			wp_send_json_error( array(
-				'message' => __( 'Export type must be present.', 'wp-ever-accounting' )
-			) );
-		}
-
-		$type = sanitize_key( $_REQUEST['type'] );
-
-//		self::verify_nonce( "{$type}_exporter_nonce" );
-
-		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
-			wp_send_json_error( array(
-				'message' => sprintf( __( '%s is an invalid export type.', 'wp-ever-accounting' ), esc_html( $type ) )
-			) );
-		}
-
-		$class      = isset( $batch['class'] ) ? $batch['class'] : '';
-		$class_file = isset( $batch['file'] ) ? $batch['file'] : '';
-
-		if ( empty( $class_file ) ) {
-			wp_send_json_error( array(
-				'message' => sprintf( __( 'An invalid file path is registered for the %1$s handler.', 'wp-ever-accounting' ), "<code>{$type}</code>" )
-			) );
-		} else {
-			require_once $class_file;
-		}
-
-		if ( empty( $class ) || ! class_exists( $class ) ) {
-			wp_send_json_error( array(
-				'error' => sprintf( __( '%1$s is an invalid exporter handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
-					"<code>{$class}</code>",
-					"<code>{$type}</code>"
-				)
-			) );
-		}
-
-		/**
-		 * @var $exporter \EverAccounting\Abstracts\CSV_Batch_Exporter
-		 */
-		$exporter = new $class();
-
-		if ( ! $exporter->can_export() ) {
-			wp_send_json_error( array(
-				'message' => __( 'You do not have enough privileges to export this.', 'wp-ever-accounting' )
-			) );
-		}
-
-		$step = isset( $_POST['step'] ) ? absint( $_POST['step'] ) : 1;
-		if ( ! empty( $_POST['columns'] ) ) {
-			$exporter->set_columns_to_export( wp_unslash( $_POST['columns'] ) );
-		}
-
-		if ( ! empty( $_POST['filename'] ) ) {
-			$exporter->set_filename( wp_unslash( $_POST['filename'] ) );
-		}
-
-		$exporter->process_step( $step );
-
-		$query_args = apply_filters(
-			'eaccounting_export_get_ajax_query_args',
-			array(
-				'nonce'    => wp_create_nonce( 'ea-download-file' ),
-				'action'   => 'eaccounting_download_export_file',
-				'filename' => $exporter->get_filename(),
-				'page'     => 'ea-tools',
-				'export'   => $type,
-				'tab'      => 'export'
-			)
-		);
-
-		if ( 100 <= $exporter->get_percent_complete() ) {
-			$total = $exporter->get_total_exported();
-			wp_send_json_success(
-				array(
-					'step'       => 'done',
-					'percentage' => 100,
-					'message'    => sprintf( __( 'Total %d items exported', 'wp-ever-accounting' ), $total ),
-					'url'        => add_query_arg( $query_args, eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'export' ) ) ),
-				)
-			);
-		} else {
-			wp_send_json_success(
-				array(
-					'step'       => ++ $step,
-					'percentage' => $exporter->get_percent_complete(),
-				)
-			);
-		}
-	}
-
-
-	public static function do_ajax_import() {
-		self::verify_nonce( 'ea_ajax_import' );
-
-		if ( ! function_exists( 'wp_handle_upload' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
-		}
-
-		if ( empty( $_FILES['ea-import-file'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
-		}
-
-		$accepted_mime_types = array(
-			'text/csv',
-			'text/comma-separated-values',
-			'text/plain',
-			'text/anytext',
-			'text/*',
-			'text/plain',
-			'text/anytext',
-			'text/*',
-			'application/csv',
-			'application/excel',
-			'application/vnd.ms-excel',
-			'application/vnd.msexcel',
-		);
-		if ( empty( $_FILES['ea-import-file']['type'] ) || ! in_array( strtolower( $_FILES['ea-import-file']['type'] ), $accepted_mime_types ) ) {
-			wp_send_json_error( array( 'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
-		}
-
-		if ( ! file_exists( $_FILES['ea-import-file']['tmp_name'] ) ) {
-			wp_send_json_error( array( 'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ), 'request' => $_REQUEST ) );
-		}
-
-		// Let WordPress import the file. We will remove it after import is complete
-		$import_file = wp_handle_upload( $_FILES['ea-import-file'], array( 'test_form' => false ) );
-
-		if ( $import_file && empty( $import_file['error'] ) ) {
-
-		}
-		wp_send_json_error( array( 'message' => $import_file['error'] ) );
-		exit();
-	}
-
-
 	/**
 	 * Check permission
 	 *
 	 * since 1.0.2
 	 */
-	public static function check_permission() {
-		if ( ! current_user_can( 'manage_options' ) ) {
+	public static function check_permission( $cap = 'manage_eaccounting' ) {
+		if ( ! current_user_can( $cap ) ) {
 			wp_send_json_error( array( 'message' => __( 'Error: You are not allowed to do this.', 'wp-ever-accounting' ) ) );
 		}
 	}

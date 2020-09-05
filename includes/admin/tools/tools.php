@@ -44,27 +44,31 @@ function eaccounting_admin_tools_page() {
 /**
  * Retrieve tools tabs
  *
- * @return array $tabs
  * @since 1.0.2
+ * @return array $tabs
  */
 function eaccounting_get_tools_tabs() {
-	$tabs                = array();
-	$tabs['import']      = __( 'Import', 'wp-ever-accounting' );
-	$tabs['export']      = __( 'Export', 'wp-ever-accounting' );
+	$tabs = array();
+	if ( current_user_can( 'ea_import' ) ) {
+		$tabs['import'] = __( 'Import', 'wp-ever-accounting' );
+	}
+	if ( current_user_can( 'ea_export' ) ) {
+		$tabs['export'] = __( 'Export', 'wp-ever-accounting' );
+	}
 	$tabs['system_info'] = __( 'System Info', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_tools_tabs', $tabs );
 }
-
 /**
  * Setup tools pages.
  *
  * @since 1.0.2
  */
 function eaccounting_load_tools_page() {
-	$tab = eaccounting_get_current_tab();
-	if ( empty( $tab ) ) {
-		wp_redirect( add_query_arg( [ 'tab' => 'import' ] ) );
+	$tab  = eaccounting_get_current_tab();
+	$tabs = eaccounting_get_tools_tabs();
+	if ( empty( $tab ) && $tabs ) {
+		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
 		exit();
 	}
 
@@ -72,7 +76,7 @@ function eaccounting_load_tools_page() {
 }
 
 function eaccounting_export_tab() {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'ea_export' ) ) {
 		return;
 	}
 	?>
@@ -174,7 +178,7 @@ add_action( 'eaccounting_tools_tab_export', 'eaccounting_export_tab' );
 
 
 function eaccounting_tools_import_tab() {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'ea_import' ) ) {
 		return;
 	}
 	?>
@@ -365,7 +369,7 @@ add_action( 'eaccounting_tools_tab_import', 'eaccounting_tools_import_tab' );
  * @since 1.0.2
  */
 function eaccounting_system_info_tab() {
-	if ( ! current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'manage_eaccounting' ) ) {
 		return;
 	}
 

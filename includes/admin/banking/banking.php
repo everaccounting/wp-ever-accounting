@@ -2,15 +2,15 @@
 /**
  * Admin Banking Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Banking
  * @since       1.0.2
+ * @subpackage  Admin/Banking
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 
-require_once dirname( __FILE__ ) .'/accounts/accounts.php';
-require_once dirname( __FILE__ ) .'/transfers/transfers.php';
-require_once dirname( __FILE__ ) .'/reconciliations/reconciliations.php';
+require_once dirname( __FILE__ ) . '/accounts/accounts.php';
+require_once dirname( __FILE__ ) . '/transfers/transfers.php';
+require_once dirname( __FILE__ ) . '/reconciliations/reconciliations.php';
 
 
 /**
@@ -49,14 +49,18 @@ function eaccounting_admin_banking_page() {
 /**
  * Retrieve banking tabs
  *
- * @return array $tabs
  * @since 1.0.2
+ * @return array $tabs
  */
 function eaccounting_get_banking_tabs() {
-	$tabs             = array();
-	$tabs['accounts']   = __( 'Accounts', 'wp-ever-accounting' );
-	$tabs['transfers']  = __( 'Transfers', 'wp-ever-accounting' );
-	$tabs['reconciliations']  = __( 'Reconciliations', 'wp-ever-accounting' );
+	$tabs = array();
+	if ( current_user_can( 'ea_manage_account' ) ) {
+		$tabs['accounts'] = __( 'Accounts', 'wp-ever-accounting' );
+	}
+	if ( current_user_can( 'ea_manage_transfer' ) ) {
+		$tabs['transfers'] = __( 'Transfers', 'wp-ever-accounting' );
+	}
+	//$tabs['reconciliations']  = __( 'Reconciliations', 'wp-ever-accounting' );
 	//$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_banking_tabs', $tabs );
@@ -68,11 +72,11 @@ function eaccounting_get_banking_tabs() {
  * @since 1.0.2
  */
 function eaccounting_load_banking_page() {
-	$tab = eaccounting_get_current_tab();
-	if ( empty( $tab ) ) {
-		wp_redirect( add_query_arg( [ 'tab' => 'accounts' ] ) );
+	$tab  = eaccounting_get_current_tab();
+	$tabs = eaccounting_get_banking_tabs();
+	if ( empty( $tab ) && $tabs ) {
+		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
 		exit();
 	}
-
 	do_action( 'eaccounting_load_banking_page_tab' . $tab );
 }

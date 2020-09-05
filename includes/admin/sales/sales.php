@@ -2,14 +2,14 @@
 /**
  * Admin Sales Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Sales
  * @since       1.0.2
+ * @subpackage  Admin/Sales
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 
-require_once dirname( __FILE__ ) .'/revenues/revenues.php';
-require_once dirname( __FILE__ ) .'/customers/customers.php';
+require_once dirname( __FILE__ ) . '/revenues/revenues.php';
+require_once dirname( __FILE__ ) . '/customers/customers.php';
 
 /**
  * render sales page.
@@ -47,11 +47,11 @@ function eaccounting_admin_sales_page() {
 /**
  * Retrieve sales tabs
  *
- * @return array $tabs
  * @since 1.0.2
+ * @return array $tabs
  */
 function eaccounting_get_sales_tabs() {
-	$tabs              = array();
+	$tabs = array();
 	//$tabs['invoices']  = __( 'Invoices', 'wp-ever-accounting' );
 	$tabs['revenues']  = __( 'Revenues', 'wp-ever-accounting' );
 	$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );
@@ -64,12 +64,12 @@ function eaccounting_get_sales_tabs() {
  *
  * @since 1.0.2
  */
-function eaccounting_load_sales_page(){
-	$tab = eaccounting_get_current_tab();
-	if ( empty( $tab ) ) {
-		wp_redirect( add_query_arg( [ 'tab' => 'revenues' ] ) );
+function eaccounting_load_sales_page() {
+	$tab  = eaccounting_get_current_tab();
+	$tabs = eaccounting_get_sales_tabs();
+	if ( empty( $tab ) && $tabs ) {
+		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
 		exit();
 	}
-
 	do_action( 'eaccounting_load_sales_page_tab' . $tab );
 }

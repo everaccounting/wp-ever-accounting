@@ -9,6 +9,9 @@
 defined( 'ABSPATH' ) || exit();
 
 function eaccounting_expenses_tab_payments() {
+	if ( ! current_user_can( 'ea_manage_payment' ) ) {
+		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
+	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
 		include_once dirname( __FILE__ ) . '/edit-payment.php';

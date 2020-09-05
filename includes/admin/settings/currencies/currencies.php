@@ -10,6 +10,9 @@ defined( 'ABSPATH' ) || exit();
 
 
 function eaccounting_settings_currencies_tab() {
+	if ( ! current_user_can( 'ea_manage_currency' ) ) {
+		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
+	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
 	if ( in_array( $action, [ 'edit', 'add' ] ) ) {

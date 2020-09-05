@@ -169,10 +169,18 @@ class List_Table_Transactions extends List_Table {
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $transaction ) {
-		$date = $transaction->get_paid_at()->date_i18n();
-
-		$value = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'account_id' => $transaction->get_id() ] ) ),
+		$date   = $transaction->get_paid_at()->date_i18n();
+		$type   = $transaction->get_type();
+		$page   = 'expense' ? 'ea-sales' : 'ea-expenses';
+		$tab    = 'expense' ? 'revenues' : 'payments';
+		$object = $type == 'sales' ? 'revenue_id' : 'payment_id';
+		$value  = sprintf( '<a href="%1$s">%2$s</a>',
+			esc_url( eaccounting_admin_url( [
+				'action' => 'edit',
+				'page'   => $page,
+				'tab'    => $tab,
+				$object  => $transaction->get_id(),
+			] ) ),
 			$date
 		);
 

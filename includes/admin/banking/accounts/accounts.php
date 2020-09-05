@@ -2,14 +2,17 @@
 /**
  * Admin Accounts Page
  *
- * @package     EverAccounting
- * @subpackage  Admin/Banking/Accounts
  * @since       1.0.2
+ * @subpackage  Admin/Banking/Accounts
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 
 
 function eaccounting_banking_tab_accounts() {
+	if ( ! current_user_can( 'ea_manage_account' ) ) {
+		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
+	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
 	if ( in_array( $action, [ 'edit', 'add' ] ) ) {

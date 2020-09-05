@@ -256,7 +256,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-capabilities.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-roles.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php' );
@@ -290,6 +290,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transfer-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
 
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 
