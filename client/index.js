@@ -5,14 +5,31 @@
 import {render} from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import '@wordpress/notices';
-import {PLUGIN_URL} from "@eaccounting/data";
+import { Fragment, Component } from '@wordpress/element';
+
+// import {PLUGIN_URL} from "@eaccounting/data";
 /**
  * Internal dependencies
  */
-import App from './app';
-import './stylesheets/main.scss';
+// import App from './app';
+// import './stylesheets/main.scss';
 
-__webpack_public_path__ = `${PLUGIN_URL}/`;
+// __webpack_public_path__ = `${PLUGIN_URL}/`;
+
+import {Button} from "@wordpress/components";
+import './style.scss';
+
+class App extends Component{
+	render(){
+		return(
+			<Fragment>
+				Hello world
+				<Button isPrimary={true}>Button</Button>
+			</Fragment>
+		)
+	}
+}
+
 
 domReady(() => {
 	const root = document.getElementById('eaccounting');

@@ -87,7 +87,7 @@ function eaccounting_admin_overview_page() {
 			<?php endif; ?>
 		</div>
 		<hr class="wp-header-end">
-
+		<div id="eaccounting"></div>
 		<?php
 		/**
 		 * Fires at the top of the Overview page, in the area used for Overview meta-boxes.

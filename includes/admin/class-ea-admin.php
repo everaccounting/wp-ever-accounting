@@ -23,11 +23,46 @@ class Admin {
 	 * @since   1.0.2
 	 */
 	public function __construct() {
+		add_action( 'init', array( $this, 'includes' ) );
+		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
+		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
 		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
 		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
 		add_action( 'admin_footer', array( $this, 'load_js_templates' ) );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
+	}
+
+	/**
+	 * Include any classes we need within admin.
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+	public function includes() {
+		// Setup/welcome.
+		if ( ! empty( $_GET['page'] ) ) {
+			switch ( $_GET['page'] ) {
+				case 'ea-setup':
+					include_once dirname( __FILE__ ) . '/class-ea-admin-setup.php';
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Include admin files conditionally.
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+	public function conditional_includes() {
+		$screen = get_current_screen();
+
+		if ( ! $screen ) {
+			return;
+		}
+
 	}
 
 	/**
@@ -38,6 +73,30 @@ class Admin {
 	 */
 	public function buffer() {
 		ob_start();
+	}
+
+	/**
+	 * Handle redirects to setup/welcome page after install and updates.
+	 *
+	 * For setup wizard, transient must be present, the user must have access rights, and we must ignore the network/bulk plugin updaters.
+	 *
+	 * @since 1.0.
+	 */
+	public function admin_redirects() {
+		if ( get_transient( '_ea_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
+			$do_redirect = true;
+
+			// On these pages, or during these events, postpone the redirect.
+			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_eaccounting' ) ) {
+				$do_redirect = false;
+			}
+
+			if ( $do_redirect ) {
+				delete_transient( '_ea_activation_redirect' );
+				wp_safe_redirect( admin_url( 'index.php?page=ea-setup' ) );
+				exit;
+			}
+		}
 	}
 
 	/**
@@ -99,6 +158,11 @@ class Admin {
 		return $footer_text;
 	}
 
+	/**
+	 * Load js templates
+	 *
+	 * @since 1.0.2
+	 */
 	public function load_js_templates() {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';

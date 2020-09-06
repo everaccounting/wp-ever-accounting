@@ -38,7 +38,7 @@ class Admin_Assets {
 		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
 		wp_register_style( 'jquery-ui-style', eaccounting()->plugin_url() . '/assets/css/jquery-ui/jquery-ui.min.css', array(), $version );
 
-
+		wp_enqueue_style('wp-components');
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-admin-styles', 'rtl', 'replace' );
 
@@ -83,6 +83,10 @@ class Admin_Assets {
 		wp_register_script( 'ea-exporter', eaccounting()->plugin_url() . '/assets/js/admin/ea-exporter' . $suffix . '.js', array( 'jquery', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-importer', eaccounting()->plugin_url() . '/assets/js/admin/ea-importer' . $suffix . '.js', array( 'jquery', 'wp-util' ), $version );
 
+		$asset        = require_once eaccounting()->plugin_path('/assets/dist/client.asset.php');
+		wp_register_script( 'ea-client', eaccounting()->plugin_url('/assets/dist/client' . $suffix . '.js') , $asset['dependencies'], $asset['version'] );
+		wp_set_script_translations('ea-client', 'wp-ever-accounting', eaccounting()->plugin_path('/i18n/languages'));
+
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
 			wp_enqueue_script( 'ea-chartjs' );
@@ -100,6 +104,7 @@ class Admin_Assets {
 			wp_enqueue_script( 'ea-admin' );
 			wp_enqueue_script( 'ea-batch' );
 			wp_enqueue_script( 'ea-dashboard' );
+			wp_enqueue_script( 'ea-client' );
 
 			wp_localize_script( 'ea-admin', 'eaccounting_admin_i10n', array(
 				'ajaxurl'           => eaccounting()->ajax_url(),
@@ -195,6 +200,21 @@ class Admin_Assets {
 
 		}
 	}
+
+
+	/**
+	 * Returns the appropriate asset path for loading either legacy builds or
+	 * current builds.
+	 *
+	 * @param string $filename Filename for asset path (without extension).
+	 * @param string $type     File type (.css or .js).
+	 *
+	 * @return  string             The generated path.
+	 */
+	protected static function get_asset_dist_path( $filename, $type = 'js' ) {
+		return "assets/dist/$filename.$type";
+	}
+
 }
 
 return new Admin_Assets();

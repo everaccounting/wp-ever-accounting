@@ -23,7 +23,7 @@ abstract class CSV_Importer {
 	 * @since  1.0.2
 	 * @var    string
 	 */
-	protected $capability = 'manage_options';
+	protected $capability = 'ea_import';
 
 	/**
 	 * CSV file.

@@ -122,6 +122,10 @@ class EAccounting_Install {
 
 		// Add a temporary option
 		set_transient( '_eaccounting_installed', true, 60 );
+
+		if ( apply_filters( 'eaccounting_enable_setup_wizard', true ) && get_option('ea_run_setup_wizard') == false ) {
+			set_transient( '_ea_activation_redirect', 1, 30 );
+		}
 	}
 
 	/**

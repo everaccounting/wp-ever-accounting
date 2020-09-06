@@ -26,7 +26,7 @@ abstract class CSV_Exporter {
 	 * @since  1.0.2
 	 * @var    string
 	 */
-	public $capability = 'manage_options';
+	public $capability = 'ea_export';
 
 	/**
 	 * Number exported.
