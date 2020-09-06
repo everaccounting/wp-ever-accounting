@@ -336,39 +336,6 @@ class List_Table_Categories extends List_Table {
 	}
 
 	/**
-	 * Outputs the filters
-	 *
-	 * @since  1.0.2
-	 *
-	 * @param string $which Optional. Whether the bulk actions are being displayed at
-	 *                      the top or bottom of the list table. Accepts either 'top'
-	 *                      or bottom. Default empty.
-	 *
-	 */
-	public function extra_tablenav( $which = '' ) {
-		if ( 'top' == $which ) {
-			$category_types = eaccounting_get_category_types();
-			$type           = isset( $_GET['type'] ) && array_key_exists( $_GET['type'], $category_types ) ? sanitize_key( $_GET['type'] ) : '';
-			?>
-			<div class="alignleft actions bulkactions">
-				<?php
-				eaccounting_select2( array(
-						'name'        => 'type',
-						'placeholder' => __( 'Filter Type', 'wp-ever-accounting' ),
-						'options'     => $category_types,
-						'value'       => $type
-				) );
-				?>
-			</div>
-			<?php do_action( 'eaccounting_categories_filters' ); ?>
-			<?php
-
-			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
-			echo "\n";
-		}
-	}
-
-	/**
 	 * Retrieve the view types
 	 *
 	 * @access public

@@ -258,6 +258,7 @@ class Chart {
 			),
 			'options' => $this->options
 		) );
+
 		eaccounting_enqueue_js( "new Chart(document.getElementById('ea-chart-$this->id'),$chart);" );
 		echo sprintf( '<canvas id="ea-chart-%s" height="%s" width="%s">',
 			$this->id,
