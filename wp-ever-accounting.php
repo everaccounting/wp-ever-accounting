@@ -291,7 +291,6 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
-
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
