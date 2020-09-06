@@ -75,7 +75,6 @@ function eaccounting_admin_overview_page() {
 			<div>
 				<h1><?php _e( 'Overview', 'wp-ever-accounting' ); ?></h1>
 			</div>
-			<div id="eaccounting"></div>
 			<?php if ( current_user_can( 'ea_manage_report' ) ): ?>
 				<div>
 					<form action="" method="get">
