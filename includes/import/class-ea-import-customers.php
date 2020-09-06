@@ -11,6 +11,7 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
+use EverAccounting\Query_Currency;
 
 /**
  * Class Import_Customers
@@ -22,8 +23,8 @@ class Import_Customers extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_headers() {
 		return eaccounting_get_io_headers( 'customer' );
@@ -33,18 +34,18 @@ class Import_Customers extends CSV_Importer {
 	/**
 	 * Return the required key to import item.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_required() {
-		return array( 'name' );
+		return array( 'name', 'currency_code' );
 	}
 
 	/**
 	 * Get formatting callback.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_formatting_callback() {
 		return array(
@@ -68,6 +69,15 @@ class Import_Customers extends CSV_Importer {
 	protected function import_item( $data ) {
 		if ( empty( $data['name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $data['currency_code'] ) ) {
+			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
+		}
+
+		$exists        = Query_Currency::init()->select( 'id' )->where( $data['currency_code'], 'code' )->value( 0 );
+
+		if ( empty( $exists ) ) {
+			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
 		}
 		$data['type'] = 'customer';
 

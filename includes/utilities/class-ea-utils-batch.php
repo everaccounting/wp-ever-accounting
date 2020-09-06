@@ -89,24 +89,45 @@ class Batch extends Registry {
 			'class' => '\EverAccounting\Import\Import_Vendors',
 			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-vendors.php'
 		) );
+		$this->add_item( 'import-revenues', array(
+			'class' => '\EverAccounting\Import\Import_Revenues',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-revenues.php'
+		) );
+		$this->add_item( 'import-payments', array(
+			'class' => '\EverAccounting\Import\Import_Payments',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-payments.php'
+		) );
+		$this->add_item( 'import-accounts', array(
+			'class' => '\EverAccounting\Import\Import_Accounts',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-accounts.php'
+		) );
+		$this->add_item( 'import-currencies', array(
+			'class' => '\EverAccounting\Import\Import_Currencies',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-currencies.php'
+		) );
+		$this->add_item( 'import-categories', array(
+			'class' => '\EverAccounting\Import\Import_Categories',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-categories.php'
+		) );
+
 	}
 
 	/**
 	 * Add item.
 	 *
-	 * @since  1.0.2
+	 * @param string $batch_id Unique item name.
 	 *
-	 * @param string $batch_id      Unique item name.
-	 *
-	 * @param array  $args          {
+	 * @param array $args {
 	 *                              Arguments for registering a new item.
 	 *
-	 * @type string  $class         Item class.
-	 * @type string  $file          Item file containing the class.
+	 * @type string $class Item class.
+	 * @type string $file Item file containing the class.
 	 * }
 	 *
 	 *
 	 * @return \WP_Error|true True on successful registration, otherwise a WP_Error object.
+	 * @since  1.0.2
+	 *
 	 */
 	public function add_item( $batch_id, $args ) {
 		$args = wp_parse_args( $args, array_fill_keys( array( 'class', 'file' ), '' ) );
