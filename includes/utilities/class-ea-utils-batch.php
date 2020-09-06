@@ -89,6 +89,10 @@ class Batch extends Registry {
 			'class' => '\EverAccounting\Import\Import_Vendors',
 			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-vendors.php'
 		) );
+		$this->add_item( 'import-accounts', array(
+			'class' => '\EverAccounting\Import\Import_Accounts',
+			'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-accounts.php'
+		) );
 	}
 
 	/**

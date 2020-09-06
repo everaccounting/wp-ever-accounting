@@ -83,7 +83,7 @@ class Admin_Assets {
 		wp_register_script( 'ea-exporter', eaccounting()->plugin_url() . '/assets/js/admin/ea-exporter' . $suffix . '.js', array( 'jquery', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-importer', eaccounting()->plugin_url() . '/assets/js/admin/ea-importer' . $suffix . '.js', array( 'jquery', 'wp-util' ), $version );
 
-		$asset        = require_once eaccounting()->plugin_path('/assets/dist/client.asset.php');
+		//$asset        = require_once eaccounting()->plugin_path('/assets/dist/client.asset.php');
 		wp_register_script( 'ea-client', eaccounting()->plugin_url('/assets/dist/client' . $suffix . '.js') , $asset['dependencies'], $asset['version'] );
 		wp_set_script_translations('ea-client', 'wp-ever-accounting', eaccounting()->plugin_path('/i18n/languages'));
 

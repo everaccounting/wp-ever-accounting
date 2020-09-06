@@ -11,7 +11,6 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Query_Account;
 use EverAccounting\Query_Currency;
 
 /**
@@ -82,8 +81,10 @@ class Import_Accounts extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$currency_code = Query_Currency::init()->find( $data['currency_code'], 'code' );
-		if ( empty( $currency_code ) ) {
+		$currency_code = null;
+		$exists        = Query_Currency::init()->find( $data['currency_code'], 'code' );
+
+		if ( empty( $exists ) ) {
 			$currency = eaccounting_insert_currency( array(
 				'name'      => $data['currency_code'],
 				'code'      => $data['currency_code'],

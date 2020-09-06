@@ -11,6 +11,7 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
+use EverAccounting\Query_Currency;
 
 /**
  * Class Import_Vendors
@@ -22,8 +23,8 @@ class Import_Vendors extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_headers() {
 		return eaccounting_get_io_headers( 'vendor' );
@@ -33,18 +34,18 @@ class Import_Vendors extends CSV_Importer {
 	/**
 	 * Return the required key to import item.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_required() {
-		return array( 'name' );
+		return array( 'name', 'currency_code' );
 	}
 
 	/**
 	 * Get formatting callback.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_formatting_callback() {
 		return array(
@@ -69,7 +70,28 @@ class Import_Vendors extends CSV_Importer {
 		if ( empty( $data['name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
 		}
-		$data['type'] = 'vendor';
+		if ( empty( $data['currency_code'] ) ) {
+			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
+		}
+
+		$currency_code = null;
+		$exists        = Query_Currency::init()->find( $data['currency_code'], 'code' );
+
+		if ( empty( $exists ) ) {
+			$currency = eaccounting_insert_currency( array(
+				'name'      => $data['currency_code'],
+				'code'      => $data['currency_code'],
+				'rate'      => 1,
+				'precision' => 0
+			) );
+
+			if ( ! is_wp_error( $currency ) ) {
+				$currency_code = $currency->get_code();
+			}
+		}
+
+		$data['type']          = 'vendor';
+		$data['currency_code'] = $currency_code;
 
 		return eaccounting_insert_contact( $data );
 	}
