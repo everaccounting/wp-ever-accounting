@@ -81,23 +81,11 @@ class Import_Accounts extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$currency_code = null;
-		$exists        = Query_Currency::init()->find( $data['currency_code'], 'code' );
+		$exists = Query_Currency::init()->select( 'id' )->where( $data['currency_code'], 'code' )->value( 0 );
 
 		if ( empty( $exists ) ) {
-			$currency = eaccounting_insert_currency( array(
-				'name'      => $data['currency_code'],
-				'code'      => $data['currency_code'],
-				'rate'      => 1,
-				'precision' => 0
-			) );
-
-			if ( ! is_wp_error( $currency ) ) {
-				$currency_code = $currency->get_code();
-			}
+			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
 		}
-
-		$data['currency_code'] = $currency_code;
 
 		return eaccounting_insert_account( $data );
 	}

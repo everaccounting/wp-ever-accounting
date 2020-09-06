@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle vendors import.
+ * Handle currency import.
  *
  * @since   1.0.2
  *
@@ -11,15 +11,14 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Query_Currency;
 
 /**
- * Class Import_Vendors
+ * Class Import_Currencies
  * @since   1.0.2
  *
  * @package EverAccounting\Import
  */
-class Import_Vendors extends CSV_Importer {
+class Import_Currencies extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
@@ -27,9 +26,8 @@ class Import_Vendors extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'vendor' );
+		return eaccounting_get_io_headers( 'currency' );
 	}
-
 
 	/**
 	 * Return the required key to import item.
@@ -38,7 +36,7 @@ class Import_Vendors extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	public function get_required() {
-		return array( 'name', 'currency_code' );
+		return array( 'name', 'code' );
 	}
 
 	/**
@@ -49,13 +47,13 @@ class Import_Vendors extends CSV_Importer {
 	 */
 	protected function get_formatting_callback() {
 		return array(
-			'email'         => 'sanitize_email',
-			'birth_date'    => array( $this, 'parse_date_field' ),
-			'address'       => array( $this, 'parse_description_field' ),
-			'country'       => array( $this, 'parse_country_field' ),
-			'website'       => 'esc_url_raw',
-			'currency_code' => array( $this, 'parse_currency_code_field' ),
-			'note'          => array( $this, 'parse_description_field' ),
+			'name'               => array( $this, 'parse_text_field' ),
+			'code'               => array( $this, 'parse_currency_code_field' ),
+			'precision'          => array( $this, 'parse_float_field' ),
+			'symbol'             => array( $this, 'parse_text_field' ),
+			'position'           => array( $this, 'parse_text_field' ),
+			'decimal_separator'  => array( $this, 'parse_text_field' ),
+			'thousand_separator' => array( $this, 'parse_text_field' ),
 		);
 	}
 
@@ -70,18 +68,10 @@ class Import_Vendors extends CSV_Importer {
 		if ( empty( $data['name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $data['currency_code'] ) ) {
+		if ( empty( $data['code'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$currency_code = null;
-		$exists        = Query_Currency::init()->select( 'id' )->where( $data['currency_code'], 'code' )->value( 0 );
-
-		if ( empty( $exists ) ) {
-			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
-		}
-		$data['type'] = 'vendor';
-
-		return eaccounting_insert_contact( $data );
+		return eaccounting_insert_currency( $data );
 	}
 }
