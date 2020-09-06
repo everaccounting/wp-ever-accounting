@@ -79,91 +79,93 @@ jQuery.fn.serializeAssoc = function () {
  */
 
 jQuery(function ($) {
-		$.fn.eaccounting_select2 = function (options) {
-			return this.each(function () {
-				(new $.eaccounting_select2(this, options));
+	$.fn.eaccounting_select2 = function (options) {
+		return this.each(function () {
+			new $.eaccounting_select2(this, options);
+		});
+	};
+	$.eaccounting_select2 = function (el, options) {
+		this.el = el;
+		this.$el = $(el);
+		this.placeholder = this.$el.attr('placeholder');
+		this.template = this.$el.attr('data-template');
+		this.nonce = this.$el.attr('data-nonce');
+		this.type = this.$el.attr('data-type');
+		this.creatable_text = this.$el.attr('data-text');
+		this.creatable = this.$el.is('[data-creatable]');
+		this.creatable = this.creatable === true;
+		this.ajax = this.$el.is('[data-ajax]');
+		this.ajax = this.ajax === true;
+		this.id = this.$el.attr('id');
+		if (this.ajax && (!this.type || !this.nonce)) {
+			console.warn('ajax type defined without nonce and data type');
+			this.ajax = false;
+		}
+
+		if (this.creatable && !this.template) {
+			console.warn('modal type defined without template');
+			this.creatable = false;
+		}
+		var self = this;
+		var data = {};
+		data.placeholder = this.placeholder;
+		data.allowClear = false;
+		if (this.ajax) {
+			data.ajax = {
+				cache: true,
+				delay: 500,
+				url: eaccounting_i10n.ajaxurl,
+				method: 'POST',
+				dataType: 'json',
+				data: function (params) {
+					return {
+						action: 'eaccounting_dropdown_search',
+						nonce: self.nonce,
+						type: self.type,
+						search: params.term,
+						page: params.page,
+					};
+				},
+				processResults: function (data, params) {
+					params.page = params.page || 1;
+					return {
+						results: data.results,
+						pagination: {
+							more: data.pagination.more,
+						},
+					};
+				},
+			};
+		}
+
+		var settings = $.extend({}, data, options);
+
+		this.$el.select2(settings);
+
+		if (this.creatable && self.template) {
+			this.$el.on('select2:open', function (e) {
+				var $results = $('#select2-' + self.id + '-results').closest('.select2-results');
+				if (!$results.children('.ea-select2-footer').length) {
+					var $footer = $(
+						'<a href="#" class="ea-select2-footer"><span class="dashicons dashicons-plus"></span>' +
+							self.creatable_text +
+							'</a>'
+					).on('click', function (e) {
+						e.preventDefault();
+						self.$el.select2('close');
+						console.log(self.template);
+						$(document).trigger('ea_trigger_creatable', [self.$el, self.template]);
+					});
+					$results.append($footer);
+				}
 			});
-		};
-		$.eaccounting_select2 = function (el, options) {
-			this.el = el;
-			this.$el = $(el);
-			this.placeholder = this.$el.attr('placeholder');
-			this.template = this.$el.attr('data-template');
-			this.nonce = this.$el.attr('data-nonce');
-			this.type = this.$el.attr('data-type');
-			this.creatable_text = this.$el.attr('data-text');
-			this.creatable = this.$el.is("[data-creatable]");
-			this.creatable = this.creatable === true;
-			this.ajax = this.$el.is("[data-ajax]");
-			this.ajax = this.ajax === true;
-			this.id = this.$el.attr('id');
-			if (this.ajax && (!this.type || !this.nonce)) {
-				console.warn('ajax type defined without nonce and data type');
-				this.ajax = false;
-			}
+		}
 
-			if (this.creatable && (!this.template)) {
-				console.warn('modal type defined without template');
-				this.creatable = false;
-			}
-			var self = this;
-			var data = {};
-			data.placeholder = this.placeholder;
-			data.allowClear = false;
-			if (this.ajax) {
-				data.ajax = {
-					cache: true,
-					delay: 500,
-					url: eaccounting_i10n.ajaxurl,
-					method: 'POST',
-					dataType: 'json',
-					data: function (params) {
-						return {
-							action: 'eaccounting_dropdown_search',
-							nonce: self.nonce,
-							type: self.type,
-							search: params.term,
-							page: params.page
-						}
-					},
-					processResults: function (data, params) {
-						params.page = params.page || 1;
-						return {
-							results: data.results,
-							pagination: {
-								more: data.pagination.more
-							}
-						};
-					}
-				};
-			}
+		return this.$el;
+	};
 
-			var settings = $.extend({}, data, options);
-
-			this.$el.select2(settings);
-
-			if (this.creatable && self.template) {
-				this.$el.on('select2:open', function (e) {
-					var $results = $('#select2-' + self.id + '-results').closest('.select2-results');
-					if (!$results.children('.ea-select2-footer').length) {
-						var $footer = $('<a href="#" class="ea-select2-footer"><span class="dashicons dashicons-plus"></span>' + self.creatable_text + '</a>')
-							.on('click', function (e) {
-								e.preventDefault();
-								self.$el.select2("close");
-								console.log(self.template);
-								$(document).trigger('ea_trigger_creatable', [self.$el, self.template]);
-							});
-						$results.append($footer);
-					}
-				});
-			}
-
-			return this.$el;
-		};
-
-		$('.ea-select2').eaccounting_select2();
-	}
-);
+	$('.ea-select2').eaccounting_select2();
+});
 
 /**
  * Color field wrapper for Ever Accounting
@@ -176,10 +178,10 @@ jQuery(function ($) {
 			$(el)
 				.iris({
 					change: function (event, ui) {
-						$(el).parent().find('.colorpickpreview').css({backgroundColor: ui.color.toString()});
+						$(el).parent().find('.colorpickpreview').css({ backgroundColor: ui.color.toString() });
 					},
 					hide: true,
-					border: true
+					border: true,
 				})
 				.on('click focus', function (event) {
 					event.stopPropagation();
@@ -202,7 +204,6 @@ jQuery(function ($) {
 			$('body').on('click', function () {
 				$('.iris-picker').hide();
 			});
-
 		});
 	};
 
@@ -242,28 +243,27 @@ jQuery(function ($) {
 		}
 		// All other browsers can use the standard window.location.href (they don't lose HTTP_REFERER like Internet Explorer 8 & lower does)
 		window.location.href = url;
-	}
+	};
 
 	$.fn.eaccounting_redirect = function (url) {
-		return (new $.eaccounting_redirect(url));
+		return new $.eaccounting_redirect(url);
 	};
-})
+});
 
 /**
  *
  */
 jQuery(function ($) {
-
 	$.fn.eaccounting_creatable = function (options) {
 		return this.each(function () {
-			(new $.eaccounting_creatable(this, options));
+			new $.eaccounting_creatable(this, options);
 		});
 	};
 
 	$.eaccounting_creatable = function (el, options) {
 		this.defaults = {
 			option: function (item) {
-				return {id: item.id, text: item.name};
+				return { id: item.id, text: item.name };
 			},
 			template: undefined,
 			onReady: undefined,
@@ -278,24 +278,24 @@ jQuery(function ($) {
 				message: null,
 				overlayCSS: {
 					background: '#fff',
-					opacity: 0.6
-				}
+					opacity: 0.6,
+				},
 			});
 		};
 
 		this.unblock = function () {
 			self.$el.unblock();
-		}
+		};
 
 		this.onError = function (error) {
 			console.warn(error);
 			self.unblock();
-		}
+		};
 
 		this.init_plugins = function () {
 			$('.ea-select2', this.$el).eaccounting_select2();
 			$('.ea-input-color').ea_color_picker();
-		}
+		};
 
 		this.handleSubmit = function (formData, $modal) {
 			self.block();
@@ -309,7 +309,7 @@ jQuery(function ($) {
 				data: formData,
 				success: function (res) {
 					var option = self.options.option(res.item);
-					self.$el.eaccounting_select2({data: [option]});
+					self.$el.eaccounting_select2({ data: [option] });
 					self.$el.val(option.id).trigger('change');
 					$.eaccounting_notice(res.message, 'success');
 					$modal.closeModal();
@@ -318,9 +318,9 @@ jQuery(function ($) {
 				error: function (error) {
 					$.eaccounting_notice(error.message, 'error');
 					$modal.enableSubmit();
-				}
+				},
 			});
-		}
+		};
 		this.handleModal = function (e, $el, template) {
 			e.preventDefault();
 			if ($el.is(self.$el)) {
@@ -332,31 +332,25 @@ jQuery(function ($) {
 						if (typeof self.options.onReady === 'function') {
 							self.options.onReady(self.$el, $modal, self);
 						}
-					}
+					},
 				});
-
-
 			}
-		}
+		};
 
 		this.init = function () {
-			$(document)
-				.on('ea_trigger_creatable', self.handleModal)
-				.on('ea_backbone_modal_loaded', self.init_plugins);
-		}
+			$(document).on('ea_trigger_creatable', self.handleModal).on('ea_backbone_modal_loaded', self.init_plugins);
+		};
 
 		this.init();
 
 		return this;
-	}
-
+	};
 });
-
 
 jQuery(function ($) {
 	$.fn.eaccounting_form = function (options) {
 		return this.each(function () {
-			(new $.eaccounting_form(this, options));
+			new $.eaccounting_form(this, options);
 		});
 	};
 
@@ -371,24 +365,26 @@ jQuery(function ($) {
 		form.currency_code = $('#currency_code', form.$el);
 		form.amount = $('#amount, #opening_balance', form.$el);
 		form.code = $('#code', form.$el);
+		form.files = $('.ea-files-preview', form.$el);
+		form.uploader = $('.ea-files-upload', form.$el);
 		form.block = function () {
 			form.$el.block({
 				message: null,
 				overlayCSS: {
 					background: '#fff',
-					opacity: 0.6
-				}
+					opacity: 0.6,
+				},
 			});
 		};
 
 		form.unblock = function () {
 			form.$el.unblock();
-		}
+		};
 
 		form.onError = function (error) {
 			console.warn(error);
 			form.unblock();
-		}
+		};
 
 		form.maskAmount = function (currency) {
 			form.amount.inputmask('decimal', {
@@ -401,7 +397,7 @@ jQuery(function ($) {
 				allowMinus: false,
 				prefix: currency.symbol,
 				placeholder: '0.000',
-				rightAlign: 0
+				rightAlign: 0,
 			});
 		};
 
@@ -409,10 +405,10 @@ jQuery(function ($) {
 			wp.ajax.send('eaccounting_get_currency', {
 				data: {
 					code: code,
-					_wpnonce: eaccounting_i10n.nonce.get_currency
+					_wpnonce: eaccounting_i10n.nonce.get_currency,
 				},
 				success: onSuccess,
-				error: onError
+				error: onError,
 			});
 		};
 
@@ -420,10 +416,10 @@ jQuery(function ($) {
 			wp.ajax.send('eaccounting_get_account', {
 				data: {
 					id: id,
-					_wpnonce: eaccounting_i10n.nonce.get_account
+					_wpnonce: eaccounting_i10n.nonce.get_account,
 				},
 				success: onSuccess,
-				error: onError
+				error: onError,
 			});
 		};
 
@@ -446,9 +442,8 @@ jQuery(function ($) {
 					console.warn(error);
 					form.unblock();
 					$.eaccounting_notice(error.message, 'error');
-				}
-			})
-
+				},
+			});
 		});
 
 		//on currency change
@@ -456,10 +451,14 @@ jQuery(function ($) {
 			if (form.amount.length) {
 				var code = form.currency_code.val();
 				form.block();
-				form.getCurrency(code, function (res) {
-					form.maskAmount(res);
-					form.unblock();
-				}, form.onError);
+				form.getCurrency(
+					code,
+					function (res) {
+						form.maskAmount(res);
+						form.unblock();
+					},
+					form.onError
+				);
 			}
 		});
 
@@ -472,12 +471,20 @@ jQuery(function ($) {
 					return;
 				}
 				form.block();
-				form.getAccount(id, function (res) {
-					form.getCurrency(res.currency_code, function (code) {
-						form.maskAmount(code);
-						form.unblock();
-					}, form.onError)
-				}, form.onError);
+				form.getAccount(
+					id,
+					function (res) {
+						form.getCurrency(
+							res.currency_code,
+							function (code) {
+								form.maskAmount(code);
+								form.unblock();
+							},
+							form.onError
+						);
+					},
+					form.onError
+				);
 			}
 		});
 
@@ -496,40 +503,38 @@ jQuery(function ($) {
 				$('#decimal_separator', form.$el).val(currency.decimal_separator).change();
 				$('#thousand_separator', form.$el).val(currency.thousand_separator).change();
 			} catch (e) {
-				console.warn(e.message)
+				console.warn(e.message);
 			}
+		});
+
+		form.uploader.on('change', function (e) {
+			var data = new FormData();
+			data.append('nonce', $(this).data('nonce'));
+			data.append('upload', $(this)[0].files[0]);
+			data.append('limit', $(this).data('limit'));
+			data.append('action', 'eaccounting_upload_files');
+			form.block();
+			window.wp.ajax.send({
+				type: 'POST',
+				data: data,
+				dataType: 'json',
+				cache: false,
+				contentType: false,
+				processData: false,
+				success: function (res) {
+					var item = $('<li>').append('<a href="' + res.url + '" target="_blank">' + res.name + '</a>');
+					item.append('<a href="#" class="delete"><span class="dashicons dashicons-no-alt"></span></a>');
+					form.files.append(item);
+					form.unblock();
+				},
+				error: function (error) {
+					form.unblock();
+				},
+			});
 		});
 
 		//change on first load
 		form.account_id.trigger('change');
 		form.currency_code.trigger('change');
 	};
-
-});
-
-
-jQuery(function ($) {
-	$.fn.eaccounting_file_uploader = function (options) {
-		return this.each(function () {
-			(new $.eaccounting_file_uploader(this, options));
-		});
-	};
-
-	$.eaccounting_file_uploader = function (el, options) {
-		this.el = el;
-		this.$el = $(el);
-		this.$uploader = this.$el.find('.ea-file-upload');
-		this.$delete_temp = '<span class="dashicons dashicons-no-alt"></span>';
-		var plugin = this;
-
-		plugin.init = function () {
-
-		}
-
-		this.init();
-
-		return this;
-	}
-
-
 });

@@ -4,14 +4,13 @@ module.exports = function (grunt) {
 	var sass = require('node-sass');
 
 	grunt.initConfig({
-
 		// Setting folder templates.
 		dirs: {
 			css: 'assets/css',
 			fonts: 'assets/fonts',
 			images: 'assets/images',
 			js: 'assets/js',
-			php: 'includes'
+			php: 'includes',
 		},
 
 		// JavaScript linting with ESLint.
@@ -20,18 +19,16 @@ module.exports = function (grunt) {
 				'<%= dirs.js %>/admin/*.js',
 				'!<%= dirs.js %>/admin/*.min.js',
 				'<%= dirs.js %>/frontend/*.js',
-				'!<%= dirs.js %>/frontend/*.min.js'
-			]
+				'!<%= dirs.js %>/frontend/*.min.js',
+			],
 		},
 
 		// Sass linting with Stylelint.
 		stylelint: {
 			options: {
-				configFile: '.stylelintrc'
+				configFile: '.stylelintrc',
 			},
-			all: [
-				'<%= dirs.css %>/*.scss'
-			]
+			all: ['<%= dirs.css %>/*.scss'],
 		},
 
 		// Minify .js files.
@@ -39,35 +36,33 @@ module.exports = function (grunt) {
 			options: {
 				ie8: true,
 				parse: {
-					strict: false
+					strict: false,
 				},
 				output: {
-					comments: /@license|@preserve|^!/
-				}
+					comments: /@license|@preserve|^!/,
+				},
 			},
 			core: {
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.js %>/eaccounting/',
-					src: [
-						'*.js',
-						'!*.min.js'
-					],
-					dest: '<%= dirs.js %>/eaccounting/',
-					ext: '.min.js'
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.js %>/eaccounting/',
+						src: ['*.js', '!*.min.js'],
+						dest: '<%= dirs.js %>/eaccounting/',
+						ext: '.min.js',
+					},
+				],
 			},
 			admin: {
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.js %>/admin/',
-					src: [
-						'*.js',
-						'!*.min.js'
-					],
-					dest: '<%= dirs.js %>/admin/',
-					ext: '.min.js'
-				}]
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.js %>/admin/',
+						src: ['*.js', '!*.min.js'],
+						dest: '<%= dirs.js %>/admin/',
+						ext: '.min.js',
+					},
+				],
 			},
 			vendor: {
 				files: {
@@ -77,20 +72,19 @@ module.exports = function (grunt) {
 					'<%= dirs.js %>/pace/pace.min.js': ['<%= dirs.js %>/pace/pace.js'],
 					'<%= dirs.js %>/select2/select2.full.min.js': ['<%= dirs.js %>/select2/select2.full.js'],
 					'<%= dirs.js %>/select2/select2.min.js': ['<%= dirs.js %>/select2/select2.js'],
-				}
+				},
 			},
 			frontend: {
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.js %>/frontend/',
-					src: [
-						'*.js',
-						'!*.min.js'
-					],
-					dest: '<%= dirs.js %>/frontend/',
-					ext: '.min.js'
-				}]
-			}
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.js %>/frontend/',
+						src: ['*.js', '!*.min.js'],
+						dest: '<%= dirs.js %>/frontend/',
+						ext: '.min.js',
+					},
+				],
+			},
 		},
 
 		// Compile all .scss files.
@@ -99,16 +93,18 @@ module.exports = function (grunt) {
 				options: {
 					implementation: sass,
 					sourceMap: true,
-					map: true
+					map: true,
 				},
-				files: [{
-					expand: true,
-					cwd: '<%= dirs.css %>/',
-					src: ['*.scss'],
-					dest: '<%= dirs.css %>/',
-					ext: '.css'
-				}]
-			}
+				files: [
+					{
+						expand: true,
+						cwd: '<%= dirs.css %>/',
+						src: ['*.scss'],
+						dest: '<%= dirs.css %>/',
+						ext: '.css',
+					},
+				],
+			},
 		},
 
 		// Generate RTL .css files.
@@ -116,14 +112,10 @@ module.exports = function (grunt) {
 			eaccounting: {
 				expand: true,
 				cwd: '<%= dirs.css %>',
-				src: [
-					'*.css',
-					'!select2.css',
-					'!*-rtl.css'
-				],
+				src: ['*.css', '!select2.css', '!*-rtl.css'],
 				dest: '<%= dirs.css %>/',
-				ext: '-rtl.css'
-			}
+				ext: '-rtl.css',
+			},
 		},
 
 		// Minify all .css files.
@@ -135,10 +127,10 @@ module.exports = function (grunt) {
 						cwd: '<%= dirs.css %>/',
 						src: ['*.css'],
 						dest: '<%= dirs.css %>/',
-						ext: '.css'
-					}
-				]
-			}
+						ext: '.css',
+					},
+				],
+			},
 		},
 
 		// Concatenate select2.css onto the admin.css files.
@@ -146,16 +138,16 @@ module.exports = function (grunt) {
 			admin: {
 				files: {
 					'<%= dirs.css %>/admin.css': ['<%= dirs.css %>/select2.css', '<%= dirs.css %>/admin.css'],
-					'<%= dirs.css %>/admin-rtl.css': ['<%= dirs.css %>/select2.css', '<%= dirs.css %>/admin-rtl.css']
-				}
-			}
+					'<%= dirs.css %>/admin-rtl.css': ['<%= dirs.css %>/select2.css', '<%= dirs.css %>/admin-rtl.css'],
+				},
+			},
 		},
 
 		// Watch changes for assets.
 		watch: {
 			css: {
 				files: ['<%= dirs.css %>/**/*.scss'],
-				tasks: ['sass', 'rtlcss', 'postcss', 'cssmin', 'concat']
+				tasks: ['sass', 'rtlcss', 'postcss', 'cssmin', 'concat'],
 			},
 			js: {
 				files: [
@@ -165,16 +157,16 @@ module.exports = function (grunt) {
 					'<%= dirs.js %>/frontend/*js',
 					'!<%= dirs.js %>/admin/*.min.js',
 					'!<%= dirs.js %>/eaccounting/*.min.js',
-					'!<%= dirs.js %>/frontend/*.min.js'
+					'!<%= dirs.js %>/frontend/*.min.js',
 				],
-				tasks: ['eslint', 'uglify']
-			}
+				tasks: ['eslint', 'uglify'],
+			},
 		},
 
 		// PHP Code Sniffer.
 		phpcs: {
 			options: {
-				bin: 'vendor/bin/phpcs'
+				bin: 'vendor/bin/phpcs',
 			},
 			dist: {
 				src: [
@@ -182,9 +174,9 @@ module.exports = function (grunt) {
 					'!node_modules/**',
 					'!tests/cli/**',
 					'!tmp/**',
-					'!vendor/**'
-				]
-			}
+					'!vendor/**',
+				],
+			},
 		},
 
 		// Autoprefixer.
@@ -192,16 +184,12 @@ module.exports = function (grunt) {
 			options: {
 				map: true,
 				annotation: false,
-				processors: [
-					require('autoprefixer')
-				]
+				processors: [require('autoprefixer')],
 			},
 			dist: {
-				src: [
-					'<%= dirs.css %>/*.css'
-				]
-			}
-		}
+				src: ['<%= dirs.css %>/*.css'],
+			},
+		},
 	});
 
 	// Load NPM tasks to be used here.
@@ -219,39 +207,16 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 
 	// Register tasks.
-	grunt.registerTask('default', [
-		'js',
-		'css'
-	]);
+	grunt.registerTask('default', ['js', 'css']);
 
-	grunt.registerTask('js', [
-		'eslint',
-		'uglify:admin',
-		'uglify:frontend'
-	]);
+	grunt.registerTask('js', ['eslint', 'uglify:admin', 'uglify:frontend']);
 
-	grunt.registerTask('css', [
-		'sass',
-		'rtlcss',
-		'postcss',
-		'cssmin',
-		'concat'
-	]);
+	grunt.registerTask('css', ['sass', 'rtlcss', 'postcss', 'cssmin', 'concat']);
 
-	grunt.registerTask('assets', [
-		'js',
-		'css'
-	]);
+	grunt.registerTask('assets', ['js', 'css']);
 
-	grunt.registerTask('e2e-build', [
-		'uglify:admin',
-		'uglify:frontend',
-		'uglify:flexslider',
-		'css'
-	]);
+	grunt.registerTask('e2e-build', ['uglify:admin', 'uglify:frontend', 'uglify:flexslider', 'css']);
 
 	// Only an alias to 'default' task.
-	grunt.registerTask('dev', [
-		'default'
-	]);
+	grunt.registerTask('dev', ['default']);
 };

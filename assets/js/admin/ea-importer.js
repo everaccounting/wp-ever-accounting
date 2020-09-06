@@ -28,7 +28,7 @@ jQuery(function ($) {
 
 			if (plugin.$form.hasClass('mapped')) {
 				plugin.mapping = plugin.$form.serializeAssoc().mapping;
-				plugin.$form.append('<div class="ea-batch-notice"><div class="ea-batch-progress"><div></div></div></div>')
+				plugin.$form.append('<div class="ea-batch-notice"><div class="ea-batch-progress"><div></div></div></div>');
 				plugin.$form.find('input[type="submit"]').attr('disabled', 'disabled');
 				plugin.$form.find('.ea-importer-map-column').attr('disabled', 'disabled');
 				plugin.process_step(0);
@@ -47,34 +47,34 @@ jQuery(function ($) {
 			$submit_btn.closest('p').append('<span class="spinner is-active"></span>');
 			plugin.$form.find('.ea-importer-map-column').attr('disabled', 'disabled');
 
-
 			window.wp.ajax.send({
-					type: 'POST',
-					data: data,
-					dataType: 'json',
-					cache: false,
-					contentType: false,
-					processData: false,
-					success: function (res) {
-						$submit_btn.find('.spinner').remove();
-						plugin.$form.addClass('mapped');
-						$submit_btn.removeClass('disabled');
-						plugin.sample = res.sample;
-						plugin.file = res.file;
-						plugin.$form.find('.ea-importer-map-column').removeAttr('disabled');
-						plugin.$form.trigger('upload_complete', [res]);
-					},
-					error: function (error) {
-						plugin.$form.find('.spinner').remove();
-						$submit_btn.removeClass('disabled');
-						$file_field.removeAttr('disabled');
-						plugin.$form.append('<div class="ea-batch-notice"><div class="updated error"><p>' + error.message + '</p></div></div>');
-					},
+				type: 'POST',
+				data: data,
+				dataType: 'json',
+				cache: false,
+				contentType: false,
+				processData: false,
+				success: function (res) {
+					$submit_btn.find('.spinner').remove();
+					plugin.$form.addClass('mapped');
+					$submit_btn.removeClass('disabled');
+					plugin.sample = res.sample;
+					plugin.file = res.file;
+					plugin.$form.find('.ea-importer-map-column').removeAttr('disabled');
+					plugin.$form.trigger('upload_complete', [res]);
 				},
-			);
+				error: function (error) {
+					plugin.$form.find('.spinner').remove();
+					$submit_btn.removeClass('disabled');
+					$file_field.removeAttr('disabled');
+					plugin.$form.append(
+						'<div class="ea-batch-notice"><div class="updated error"><p>' + error.message + '</p></div></div>'
+					);
+				},
+			});
 
 			return false;
-		}
+		};
 
 		this.process_step = function (position) {
 			var $submit_btn = plugin.$form.find('input[type="submit"]');
@@ -90,13 +90,18 @@ jQuery(function ($) {
 					if (res.position === 'done') {
 						$submit_btn.remove();
 						plugin.$form.find('.ea-batch-notice').remove();
-						plugin.$form.append('<div class="ea-batch-notice"><div class="updated success"><p>' + res.message + '</p></div></div>')
+						plugin.$form.append(
+							'<div class="ea-batch-notice"><div class="updated success"><p>' + res.message + '</p></div></div>'
+						);
 						return false;
 					} else {
-						plugin.$form.find('.ea-batch-progress div').animate({
-							width: res.percentage + '%',
-						}, 50, function () {
-						});
+						plugin.$form.find('.ea-batch-progress div').animate(
+							{
+								width: res.percentage + '%',
+							},
+							50,
+							function () {}
+						);
 						plugin.process_step(parseInt(res.position, 10));
 					}
 				},
@@ -105,17 +110,23 @@ jQuery(function ($) {
 					plugin.$form.find('.ea-batch-notice').remove();
 					plugin.$form.find('.ea-importer-map-column').removeAttr('disabled');
 					if (error.message) {
-						plugin.$form.append('<div class="ea-batch-notice"><div class="updated error"><p>' + error.message + '</p></div></div>')
+						plugin.$form.append(
+							'<div class="ea-batch-notice"><div class="updated error"><p>' + error.message + '</p></div></div>'
+						);
 					}
 					console.warn(error);
-				}
+				},
 			});
-		}
+		};
 
 		this.init_mapping = function (e, response) {
 			if ($.isEmptyObject(response)) {
 				plugin.$form.find('.ea-batch-notice').remove();
-				plugin.$form.append('<div class="ea-batch-notice"><div class="updated error"><p>' + eaccounting_importer_i10n.uploaded_file_not_found + '</p></div></div>');
+				plugin.$form.append(
+					'<div class="ea-batch-notice"><div class="updated error"><p>' +
+						eaccounting_importer_i10n.uploaded_file_not_found +
+						'</p></div></div>'
+				);
 				return false;
 			}
 
@@ -131,13 +142,16 @@ jQuery(function ($) {
 					$tr = $(this).closest('tr');
 
 				if ($.inArray(selectName.replace('mapping', '').replace(/[\[\]\]]/g, ''), response.required) !== -1) {
-					$tr.find('td').eq(0).append(' <strong>' + eaccounting_importer_i10n.required + '</strong>');
+					$tr
+						.find('td')
+						.eq(0)
+						.append(' <strong>' + eaccounting_importer_i10n.required + '</strong>');
 					currentSelect.attr('required', 'required');
 				}
 
 				$.each(response.headers, function (columnKey, columnValue) {
 					var processedColumnValue = columnValue.toLowerCase().replace(/ /g, '_');
-					var columnRegex = new RegExp("\\[" + processedColumnValue + "\\]");
+					var columnRegex = new RegExp('\\[' + processedColumnValue + '\\]');
 					if (selectName.length && selectName.match(columnRegex)) {
 						// If the column matches a select, auto-map it. Boom.
 						options += '<option value="' + columnValue + '" selected="selected">' + columnValue + '</option>';
@@ -152,7 +166,7 @@ jQuery(function ($) {
 				// Reset options.
 				options = '';
 			});
-		}
+		};
 
 		this.handle_preview = function () {
 			var index = $(this).prop('selectedIndex');
@@ -160,12 +174,15 @@ jQuery(function ($) {
 				$(this).parent().next().html(eaccounting_importer_i10n.select_field_to_preview);
 			} else {
 				if (false !== plugin.sample[index - 1]) {
-					$(this).parent().next().html(plugin.sample[index - 1]);
+					$(this)
+						.parent()
+						.next()
+						.html(plugin.sample[index - 1]);
 				} else {
 					$(this).parent().next().html(eaccounting_importer_i10n.select_field_to_preview);
 				}
 			}
-		}
+		};
 
 		/**
 		 * Initialize the plugin.
@@ -175,15 +192,15 @@ jQuery(function ($) {
 				.on('submit', this.submit)
 				.on('upload_complete', plugin.$form, this.init_mapping)
 				.on('change', '.ea-importer-map-column', this.handle_preview);
-		}
+		};
 
 		this.init();
 		return this;
-	}
+	};
 
 	$.fn.eaccounting_importer = function (options) {
 		return this.each(function () {
-			(new $.eaccounting_importer(this, options));
+			new $.eaccounting_importer(this, options);
 		});
 	};
 

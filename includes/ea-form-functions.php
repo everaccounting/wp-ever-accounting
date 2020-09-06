@@ -457,7 +457,7 @@ function eaccounting_file_input( $field ) {
 	$field['attr']['data-limit'] = $field['limit'];
 	$field['wrapper_class']      .= ( true == $field['required'] ) ? ' required ' : '';
 	if ( ! empty( $field['types'] ) ) {
-		$field['attr']['data-types'] = implode( '|', $field['file_types'] );
+		$field['attr']['data-types'] = implode( '|', $field['types'] );
 	}
 
 	// Custom attribute handling
@@ -476,24 +476,20 @@ function eaccounting_file_input( $field ) {
 	}
 	$uploader_class = empty( $field['value'] ) ? '' : 'has-file';
 	?>
-	<div class="ea-file-uploader <?php echo sanitize_html_class( $uploader_class ); ?>">
-		<ul class="ea-files">
-			<li class="ea-file">
-				<a href="#">a3-t1-08-04 (modified)-working_1.pdf</a>
-				<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>
-			</li>
-			<li class="ea-file">
-				<a href="#">a3-t1-08-04 (modified)-working_1.pdf</a>
-				<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>
-			</li>
+	<div class="ea-files-wrap <?php echo sanitize_html_class( $uploader_class ); ?>">
+		<ul class="ea-files-preview">
+<!--			<li>-->
+<!--				<a href="#">a3-t1-08-04 (modified)-working_1.pdf</a>-->
+<!--				<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>-->
+<!--			</li>-->
 		</ul>
 		<?php
-		echo sprintf( '<input type="hidden" name="%s" class="ea-file-ids" id="%s" value="%s"/>',
+		echo sprintf( '<input type="hidden" name="%s" class="ea-files" id="%s" value="%s"/>',
 				esc_attr( $field['name'] ),
 				esc_attr( $field['id'] ),
 				esc_attr( $field['value'] )
 		);
-		echo sprintf( '<input type="file" class="ea-file-upload %s" style="%s" %s/>',
+		echo sprintf( '<input type="file" class="ea-files-upload %s" style="%s" %s/>',
 				esc_attr( $field['class'] ),
 				esc_attr( $field['style'] ),
 				$attributes

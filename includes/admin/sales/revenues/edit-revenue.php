@@ -103,8 +103,8 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Enter reference', 'wp-ever-accounting' ),
 				) );
 				eaccounting_file_input( array(
-						'label'         => __( 'Attachment', 'wp-ever-accounting' ),
-						'name'          => 'file_id',
+						'label'         => __( 'Attachments', 'wp-ever-accounting' ),
+						'name'          => 'files',
 						'value'         => '',
 						'required'      => false,
 						'wrapper_class' => 'ea-col-6',

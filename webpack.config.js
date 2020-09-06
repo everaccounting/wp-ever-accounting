@@ -20,12 +20,21 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const externals = [];
+const packages = ['components'];
+const entryPoints = {};
+packages.forEach((name) => {
+	externals[`@eaccounting/${name}`] = {
+		this: ['eaccounting', name.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase())],
+	};
+	entryPoints[name] = `./client/${name}`;
+});
 
 const config = {
 	mode: NODE_ENV,
 	devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
 	entry: {
 		client: './client',
+		...entryPoints,
 	},
 	output: {
 		filename: './assets/dist/[name].js',
@@ -171,12 +180,12 @@ const config = {
 	watch: true,
 };
 
-if(NODE_ENV !== 'development'){
-	config.plugins.push( new webpack.LoaderOptionsPlugin( { minimize: true } ) );
-	config.module.rules.push( { test: /\.js$/, loader: 'webpack-remove-debug', exclude: /node_modules/ } );
+if (NODE_ENV !== 'development') {
+	config.plugins.push(new webpack.LoaderOptionsPlugin({ minimize: true }));
+	config.module.rules.push({ test: /\.js$/, loader: 'webpack-remove-debug', exclude: /node_modules/ });
 }
 
-if ( config.mode !== 'production' ) {
+if (config.mode !== 'production') {
 	config.devtool = process.env.SOURCEMAP || 'source-map';
 }
 module.exports = config;

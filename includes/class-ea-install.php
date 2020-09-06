@@ -288,23 +288,6 @@ class EAccounting_Install {
 		    KEY `reconciled` (`reconciled`),
 		    KEY `company_id` (`company_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
-
-			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_files(
-            `id` bigint(20) NOT NULL AUTO_INCREMENT,
-			`name` varchar(199) NOT NULL,
-			`path` varchar(199) NOT NULL,
-			`extension` varchar(28) NOT NULL,
-			`mime_type` varchar(128) NOT NULL,
-			`size` int(10) unsigned NOT NULL,
-			`creator_id` INT(11) DEFAULT NULL,
-			`company_id` int(11) NOT NULL DEFAULT 1,
-	   		`created_at` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `name` (`name`),
-		    KEY `creator_id` (`creator_id`),
-		    KEY `path` (`path`),
-		    KEY `company_id` (`company_id`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
 
 

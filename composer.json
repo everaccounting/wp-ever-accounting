@@ -20,7 +20,7 @@
 	"extra": {
 		"cleaner-ignore": {}
 	},
-  "require-dev": {
-	"phpunit/phpunit": "7.5.20"
-  }
+	"require-dev": {
+		"phpunit/phpunit": "7.5.20"
+	}
 }

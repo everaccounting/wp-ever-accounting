@@ -6,9 +6,9 @@ jQuery(document).ready(function ($) {
 		startDate: startDate,
 		endDate: endDate,
 		locale: eaccounting_dashboard_i10n.datepicker.locale,
-		ranges: eaccounting_dashboard_i10n.datepicker.ranges
+		ranges: eaccounting_dashboard_i10n.datepicker.ranges,
 	});
-	$overview_filter.on('apply.daterangepicker', function(ev, picker) {
+	$overview_filter.on('apply.daterangepicker', function (ev, picker) {
 		var $form = $overview_filter.closest('form');
 		$form.find('[name="start_date"]').val(picker.startDate.format('YYYY-MM-DD'));
 		$form.find('[name="end_date"]').val(picker.endDate.format('YYYY-MM-DD'));

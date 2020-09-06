@@ -4,7 +4,6 @@ jQuery(document).ready(function ($) {
 	window.formfield = '';
 
 	$('body').on('click', '.ea_settings_upload_button', function (e) {
-
 		e.preventDefault();
 
 		var button = $(this);
@@ -23,9 +22,9 @@ jQuery(document).ready(function ($) {
 			state: 'insert',
 			title: button.data('uploader_title'),
 			button: {
-				text: button.data('uploader_button_text')
+				text: button.data('uploader_button_text'),
 			},
-			multiple: false
+			multiple: false,
 		});
 
 		file_frame.on('menu:render:default', function (view) {
@@ -57,7 +56,5 @@ jQuery(document).ready(function ($) {
 	});
 
 	$('.ea-financial-start').datepicker('destroy');
-	$('.ea-financial-start').datepicker({dateFormat: 'dd-mm'});
-
-
+	$('.ea-financial-start').datepicker({ dateFormat: 'dd-mm' });
 });

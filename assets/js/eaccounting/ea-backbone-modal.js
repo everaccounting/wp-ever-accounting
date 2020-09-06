@@ -9,7 +9,7 @@
 	 */
 	$.fn.ea_backbone_modal = function (options) {
 		return this.each(function () {
-			(new $.ea_backbone_modal($(this), options));
+			new $.ea_backbone_modal($(this), options);
 		});
 	};
 
@@ -27,7 +27,7 @@
 				target: settings.template,
 				string: settings.variable,
 				onSubmit: options.onSubmit,
-				onReady: options.onReady
+				onReady: options.onReady,
 			});
 		}
 	};
@@ -59,14 +59,14 @@
 		events: {
 			'click .modal-close': 'closeButton',
 			'touchstart #btn-ok': 'addButton',
-			'keydown': 'keyboardActions'
+			keydown: 'keyboardActions',
 		},
 		resizeContent: function () {
 			var $content = $('.ea-backbone-modal-content').find('article');
 			var max_h = $(window).height() * 0.75;
 
 			$content.css({
-				'max-height': max_h + 'px'
+				'max-height': max_h + 'px',
 			});
 		},
 		initialize: function (data) {
@@ -85,13 +85,11 @@
 		render: function () {
 			var template = wp.template(this._target);
 
-			this.$el.append(
-				template(this._string)
-			);
+			this.$el.append(template(this._string));
 
 			$(document.body)
 				.css({
-					'overflow': 'hidden'
+					overflow: 'hidden',
 				})
 				.append(this.$el)
 				.addClass('ea-modal-open');
@@ -122,9 +120,11 @@
 			$(document.body).trigger('ea_backbone_modal_before_remove', this._target);
 			this.undelegateEvents();
 			$(document).off('focusin');
-			$(document.body).css({
-				'overflow': 'auto'
-			}).removeClass('ea-modal-open');
+			$(document.body)
+				.css({
+					overflow: 'auto',
+				})
+				.removeClass('ea-modal-open');
 			this.remove();
 			$(document.body).trigger('ea_backbone_modal_removed', this._target);
 		},
@@ -146,10 +146,7 @@
 			var button = e.keyCode || e.which;
 
 			// Enter key
-			if (
-				13 === button
-				&& this.$el.find('form').length
-			) {
+			if (13 === button && this.$el.find('form').length) {
 				e.preventDefault();
 				this.$el.find('[type="submit"]').trigger('click');
 				return false;
@@ -167,5 +164,4 @@
 			this.$el.find('*[type="submit"]').removeAttr('disabled');
 		},
 	});
-
-}(jQuery, Backbone, _));
+})(jQuery, Backbone, _);

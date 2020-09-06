@@ -12,15 +12,15 @@
 		var a = 'object' == typeof exports ? factory(require('jquery')) : factory(root.jQuery);
 		for (var i in a) ('object' == typeof exports ? exports : root)[i] = a[i];
 	}
-})(window, function(__WEBPACK_EXTERNAL_MODULE__3__) {
+})(window, function (__WEBPACK_EXTERNAL_MODULE__3__) {
 	return (
 		(modules = [
-			function(module) {
+			function (module) {
 				module.exports = JSON.parse(
 					'{"BACKSPACE":8,"BACKSPACE_SAFARI":127,"DELETE":46,"DOWN":40,"END":35,"ENTER":13,"ESCAPE":27,"HOME":36,"INSERT":45,"LEFT":37,"PAGE_DOWN":34,"PAGE_UP":33,"RIGHT":39,"SPACE":32,"TAB":9,"UP":38,"X":88,"CONTROL":17}'
 				);
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				function _typeof(obj) {
 					return (
@@ -227,7 +227,7 @@
 						return (
 							'string' == typeof elems && (elems = document.getElementById(elems) || document.querySelectorAll(elems)),
 							(elems = elems.nodeName ? [elems] : elems),
-							$.each(elems, function(ndx, el) {
+							$.each(elems, function (ndx, el) {
 								var scopedOpts = $.extend(!0, {}, that.opts);
 								if (importAttributeOptions(el, scopedOpts, $.extend(!0, {}, that.userOptions), that.dataAttribute)) {
 									var maskset = generateMaskSet(scopedOpts, that.noMasksCache);
@@ -321,35 +321,35 @@
 					},
 					analyseMask: analyseMask,
 				}),
-					(Inputmask.extendDefaults = function(options) {
+					(Inputmask.extendDefaults = function (options) {
 						$.extend(!0, Inputmask.prototype.defaults, options);
 					}),
-					(Inputmask.extendDefinitions = function(definition) {
+					(Inputmask.extendDefinitions = function (definition) {
 						$.extend(!0, Inputmask.prototype.definitions, definition);
 					}),
-					(Inputmask.extendAliases = function(alias) {
+					(Inputmask.extendAliases = function (alias) {
 						$.extend(!0, Inputmask.prototype.aliases, alias);
 					}),
-					(Inputmask.format = function(value, options, metadata) {
+					(Inputmask.format = function (value, options, metadata) {
 						return Inputmask(options).format(value, metadata);
 					}),
-					(Inputmask.unmask = function(value, options) {
+					(Inputmask.unmask = function (value, options) {
 						return Inputmask(options).unmaskedvalue(value);
 					}),
-					(Inputmask.isValid = function(value, options) {
+					(Inputmask.isValid = function (value, options) {
 						return Inputmask(options).isValid(value);
 					}),
-					(Inputmask.remove = function(elems) {
+					(Inputmask.remove = function (elems) {
 						'string' == typeof elems && (elems = document.getElementById(elems) || document.querySelectorAll(elems)),
 							(elems = elems.nodeName ? [elems] : elems),
-							$.each(elems, function(ndx, el) {
+							$.each(elems, function (ndx, el) {
 								el.inputmask && el.inputmask.remove();
 							});
 					}),
-					(Inputmask.setValue = function(elems, value) {
+					(Inputmask.setValue = function (elems, value) {
 						'string' == typeof elems && (elems = document.getElementById(elems) || document.querySelectorAll(elems)),
 							(elems = elems.nodeName ? [elems] : elems),
-							$.each(elems, function(ndx, el) {
+							$.each(elems, function (ndx, el) {
 								el.inputmask ? el.inputmask.setValue(value) : $(el).trigger('setvalue', [value]);
 							});
 					});
@@ -357,23 +357,23 @@
 					'(\\' + ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\', '$', '^'].join('|\\') + ')',
 					'gim'
 				);
-				(Inputmask.escapeRegex = function(str) {
+				(Inputmask.escapeRegex = function (str) {
 					return str.replace(escapeRegexRegex, '\\$1');
 				}),
 					(Inputmask.dependencyLib = $),
 					(window.Inputmask = Inputmask),
 					(module.exports = Inputmask);
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				var jquery = __webpack_require__(3);
 				if (void 0 === jquery) throw 'jQuery not loaded!';
 				module.exports = jquery;
 			},
-			function(module, exports) {
+			function (module, exports) {
 				module.exports = __WEBPACK_EXTERNAL_MODULE__3__;
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				var __WEBPACK_AMD_DEFINE_RESULT__;
 				function _typeof(obj) {
@@ -391,12 +391,12 @@
 						_typeof(obj)
 					);
 				}
-				(__WEBPACK_AMD_DEFINE_RESULT__ = function() {
+				(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
 					return 'undefined' != typeof window ? window : new (eval("require('jsdom').JSDOM"))('').window;
 				}.call(exports, __webpack_require__, exports, module)),
 					void 0 === __WEBPACK_AMD_DEFINE_RESULT__ || (module.exports = __WEBPACK_AMD_DEFINE_RESULT__);
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				var $ = __webpack_require__(2);
 				function generateMaskSet(opts, nocache) {
@@ -429,10 +429,7 @@
 							(maskdefKey = regexMask
 								? 'regex_' + opts.regex
 								: opts.numericInput
-								? mask
-										.split('')
-										.reverse()
-										.join('')
+								? mask.split('').reverse().join('')
 								: mask),
 							!1 !== opts.keepStatic && (maskdefKey = 'ks_' + maskdefKey),
 							void 0 === Inputmask.prototype.masksCache[maskdefKey] || !0 === nocache
@@ -460,7 +457,7 @@
 							null === opts.keepStatic && (opts.keepStatic = !0);
 							var altMask = opts.groupmarker[0];
 							return (
-								$.each(opts.isRTL ? opts.mask.reverse() : opts.mask, function(ndx, msk) {
+								$.each(opts.isRTL ? opts.mask.reverse() : opts.mask, function (ndx, msk) {
 									1 < altMask.length && (altMask += opts.groupmarker[1] + opts.alternatormarker + opts.groupmarker[0]),
 										void 0 === msk.mask || $.isFunction(msk.mask) ? (altMask += msk) : (altMask += msk.mask);
 								}),
@@ -522,7 +519,7 @@
 										nativeDef: element,
 								  })
 								: (escaped && (element = element[element.length - 1]),
-								  $.each(element.split(''), function(ndx, lmnt) {
+								  $.each(element.split(''), function (ndx, lmnt) {
 										(prevMatch = mtoken.matches[position - 1]),
 											mtoken.matches.splice(position++, 0, {
 												fn: /[a-z]/i.test(opts.staticDefinitionSymbol || lmnt)
@@ -547,7 +544,7 @@
 										fn: maskdef.validator
 											? 'string' == typeof maskdef.validator
 												? new RegExp(maskdef.validator, opts.casing ? 'i' : '')
-												: new (function() {
+												: new (function () {
 														this.test = maskdef.validator;
 												  })()
 											: new RegExp('.'),
@@ -580,7 +577,7 @@
 					function verifyGroupMarker(maskToken) {
 						maskToken &&
 							maskToken.matches &&
-							$.each(maskToken.matches, function(ndx, token) {
+							$.each(maskToken.matches, function (ndx, token) {
 								var nextToken = maskToken.matches[ndx + 1];
 								(void 0 === nextToken || void 0 === nextToken.matches || !1 === nextToken.isQuantifier) &&
 									token &&
@@ -790,14 +787,14 @@
 					analyseMask: analyseMask,
 				};
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				__webpack_require__(7),
 					__webpack_require__(9),
 					__webpack_require__(10),
 					(module.exports = __webpack_require__(1));
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				var Inputmask = __webpack_require__(1);
 				Inputmask.extendDefinitions({
@@ -897,7 +894,7 @@
 				}),
 					(module.exports = Inputmask);
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				function _typeof(obj) {
 					return (
@@ -1088,7 +1085,7 @@
 									var firstMatch = 0 === $.inArray(latestMatch, tokenGroup.matches);
 									return (
 										firstMatch ||
-											$.each(tokenGroup.matches, function(ndx, match) {
+											$.each(tokenGroup.matches, function (ndx, match) {
 												if (
 													(!0 === match.isQuantifier
 														? (firstMatch = isFirstMatch(latestMatch, tokenGroup.matches[ndx - 1]))
@@ -1105,7 +1102,7 @@
 									var bestMatch, indexPos;
 									if (
 										((maskset.tests[pos] || maskset.validPositions[pos]) &&
-											$.each(maskset.tests[pos] || [maskset.validPositions[pos]], function(ndx, lmnt) {
+											$.each(maskset.tests[pos] || [maskset.validPositions[pos]], function (ndx, lmnt) {
 												if (lmnt.mloc[alternateNdx]) return (bestMatch = lmnt), !1;
 												var alternation = void 0 !== targetAlternation ? targetAlternation : lmnt.alternation,
 													ndxPos =
@@ -1189,8 +1186,10 @@
 									return !1;
 								}
 								if (testPos > opts._maxTestPos && void 0 !== quantifierRecurse)
-									throw 'Inputmask: There is probably an error in your mask definition or in the code. Create an issue on github with an example of the mask you are using. ' +
-										maskset.mask;
+									throw (
+										'Inputmask: There is probably an error in your mask definition or in the code. Create an issue on github with an example of the mask you are using. ' +
+										maskset.mask
+									);
 								if (testPos === pos && void 0 === match.matches)
 									return (
 										matches.push({
@@ -1217,7 +1216,7 @@
 											mtchsNdx = matches.length;
 										if (((match = resolveTestFromToken(match, ndxInitializer, loopNdx, quantifierRecurse)), match)) {
 											if (
-												($.each(matches, function(ndx, mtch) {
+												($.each(matches, function (ndx, mtch) {
 													mtchsNdx <= ndx && (mtch.match.optionality = !0);
 												}),
 												(latestMatch = matches[matches.length - 1].match),
@@ -1371,7 +1370,7 @@
 									(void 0 === tests[0].alternation || !0 === opts.keepStatic
 										? ((locator = determineTestTemplate(pos, tests.slice()).locator.slice()),
 										  0 === locator.length && (locator = tests[0].locator.slice()))
-										: $.each(tests, function(ndx, tst) {
+										: $.each(tests, function (ndx, tst) {
 												if ('' !== tst.def)
 													if (0 === locator.length) locator = tst.locator.slice();
 													else
@@ -1624,10 +1623,10 @@
 									(void 0 !== commandObj.remove &&
 										($.isArray(commandObj.remove) || (commandObj.remove = [commandObj.remove]),
 										$.each(
-											commandObj.remove.sort(function(a, b) {
+											commandObj.remove.sort(function (a, b) {
 												return b.pos - a.pos;
 											}),
-											function(ndx, lmnt) {
+											function (ndx, lmnt) {
 												revalidateMask({
 													begin: lmnt,
 													end: lmnt + 1,
@@ -1638,10 +1637,10 @@
 									void 0 !== commandObj.insert &&
 										($.isArray(commandObj.insert) || (commandObj.insert = [commandObj.insert]),
 										$.each(
-											commandObj.insert.sort(function(a, b) {
+											commandObj.insert.sort(function (a, b) {
 												return a.pos - b.pos;
 											}),
-											function(ndx, lmnt) {
+											function (ndx, lmnt) {
 												'' !== lmnt.c &&
 													isValid(
 														lmnt.pos,
@@ -1665,7 +1664,7 @@
 						function _isValid(position, c, strict) {
 							var rslt = !1;
 							return (
-								$.each(getTests(position), function(ndx, tst) {
+								$.each(getTests(position), function (ndx, tst) {
 									var test = tst.match;
 									if (
 										(getBuffer(!0),
@@ -2000,7 +1999,7 @@
 								nptVal = input.inputmask._valueGet();
 							(skipInputEvent = !0),
 								$input.trigger('input'),
-								setTimeout(function() {
+								setTimeout(function () {
 									nptVal === getBufferTemplate().join('')
 										? $input.trigger('cleared')
 										: !0 === isComplete(buffer) && $input.trigger('complete');
@@ -2086,9 +2085,7 @@
 
 								case 'radixFocus':
 									if (doRadixFocus(selectedCaret.begin)) {
-										var radixPos = getBuffer()
-											.join('')
-											.indexOf(opts.radixPoint);
+										var radixPos = getBuffer().join('').indexOf(opts.radixPoint);
 										selectedCaret.end = selectedCaret.begin = opts.numericInput ? seekNext(radixPos) : radixPos;
 										break;
 									}
@@ -2167,18 +2164,13 @@
 															  input.blur(),
 															  HandleNativePlaceholder(
 																	input,
-																	(isRTL
-																		? getBufferTemplate()
-																				.slice()
-																				.reverse()
-																		: getBufferTemplate()
-																	).join('')
+																	(isRTL ? getBufferTemplate().slice().reverse() : getBufferTemplate()).join('')
 															  ),
-															  setTimeout(function() {
+															  setTimeout(function () {
 																	input.focus();
 															  }, 3e3))
 															: ((args = arguments),
-															  setTimeout(function() {
+															  setTimeout(function () {
 																	eventHandler.apply(that, args);
 															  }, 0)),
 														!1
@@ -2203,7 +2195,7 @@
 									(event
 										? ((events = []), (events[event] = input.inputmask.events[event]))
 										: (events = input.inputmask.events),
-									$.each(events, function(eventName, evArr) {
+									$.each(events, function (eventName, evArr) {
 										for (; 0 < evArr.length; ) {
 											var ev = evArr.pop();
 											-1 !== $.inArray(eventName, ['submit', 'reset'])
@@ -2259,12 +2251,12 @@
 										  (opts.insertModeVisual &&
 												!1 === opts.insertMode &&
 												(k === keyCode.RIGHT
-													? setTimeout(function() {
+													? setTimeout(function () {
 															var caretPos = caret(input);
 															caret(input, caretPos.begin);
 													  }, 0)
 													: k === keyCode.LEFT &&
-													  setTimeout(function() {
+													  setTimeout(function () {
 															var caretPos_begin = translatePosition(input.inputmask.caretPos.begin),
 																caretPos_end = translatePosition(input.inputmask.caretPos.end);
 															caret(
@@ -2285,7 +2277,7 @@
 										k === keyCode.ENTER &&
 											undoValue !== getBuffer().join('') &&
 											((undoValue = getBuffer().join('')),
-											setTimeout(function() {
+											setTimeout(function () {
 												$input.trigger('change');
 											}, 0)),
 										(skipInputEvent = !0),
@@ -2319,7 +2311,7 @@
 												? seekPrevious(forwardPosition)
 												: forwardPosition),
 										!1 !== writeOut &&
-											(setTimeout(function() {
+											(setTimeout(function () {
 												opts.onKeyValidation.call(input, k, valResult);
 											}, 0),
 											maskset.writeOutBuffer && !1 !== valResult))
@@ -2341,21 +2333,11 @@
 									valueAfterCaret = inputValue.substr(caretPos.end, inputValue.length);
 								if (
 									(valueBeforeCaret ==
-										(isRTL
-											? getBufferTemplate()
-													.slice()
-													.reverse()
-											: getBufferTemplate()
-										)
+										(isRTL ? getBufferTemplate().slice().reverse() : getBufferTemplate())
 											.slice(0, caretPos.begin)
 											.join('') && (valueBeforeCaret = ''),
 									valueAfterCaret ==
-										(isRTL
-											? getBufferTemplate()
-													.slice()
-													.reverse()
-											: getBufferTemplate()
-										)
+										(isRTL ? getBufferTemplate().slice().reverse() : getBufferTemplate())
 											.slice(caretPos.end)
 											.join('') && (valueAfterCaret = ''),
 									window.clipboardData && window.clipboardData.getData)
@@ -2463,12 +2445,7 @@
 								}
 								var input = this,
 									inputValue = input.inputmask._valueGet(!0),
-									buffer = (isRTL
-										? getBuffer()
-												.slice()
-												.reverse()
-										: getBuffer()
-									).join(''),
+									buffer = (isRTL ? getBuffer().slice().reverse() : getBuffer()).join(''),
 									caretPos = caret(input, void 0, void 0, !0);
 								if (buffer !== inputValue) {
 									inputValue = ieMobileHandler(input, inputValue, caretPos);
@@ -2481,13 +2458,13 @@
 									) {
 										case 'insertText':
 										case 'insertReplacementText':
-											$.each(changes.data, function(ndx, entry) {
+											$.each(changes.data, function (ndx, entry) {
 												var keypress = new $.Event('keypress');
 												(keypress.which = entry.charCodeAt(0)),
 													(ignorable = !1),
 													EventHandlers.keypressEvent.call(input, keypress);
 											}),
-												setTimeout(function() {
+												setTimeout(function () {
 													$el.trigger('keyup');
 												}, 0);
 											break;
@@ -2567,7 +2544,7 @@
 												? (buffer = [])
 												: clearOptionalTail(buffer)),
 										!1 === isComplete(buffer) &&
-											(setTimeout(function() {
+											(setTimeout(function () {
 												$input.trigger('incomplete');
 											}, 0),
 											opts.clearIncomplete &&
@@ -2587,12 +2564,7 @@
 										opts.showMaskOnHover &&
 											HandleNativePlaceholder(
 												this,
-												(isRTL
-													? getBufferTemplate()
-															.slice()
-															.reverse()
-													: getBufferTemplate()
-												).join('')
+												(isRTL ? getBufferTemplate().slice().reverse() : getBufferTemplate()).join('')
 											));
 							},
 							submitEvent: function submitEvent() {
@@ -2605,13 +2577,13 @@
 									opts.clearIncomplete && !1 === isComplete(getBuffer()) && el.inputmask._valueSet(''),
 									opts.removeMaskOnSubmit &&
 										(el.inputmask._valueSet(el.inputmask.unmaskedvalue(), !0),
-										setTimeout(function() {
+										setTimeout(function () {
 											writeBuffer(el, getBuffer());
 										}, 0));
 							},
 							resetEvent: function resetEvent() {
 								(el.inputmask.refreshValue = !0),
-									setTimeout(function() {
+									setTimeout(function () {
 										applyInputValue(el, el.inputmask._valueGet(!0));
 									}, 0);
 							},
@@ -2625,10 +2597,7 @@
 							result = void 0;
 						function isTemplateMatch(ndx, charCodes) {
 							for (
-								var targetTemplate = getMaskTemplate(!0, 0)
-										.slice(ndx, seekNext(ndx))
-										.join('')
-										.replace(/'/g, ''),
+								var targetTemplate = getMaskTemplate(!0, 0).slice(ndx, seekNext(ndx)).join('').replace(/'/g, ''),
 									charCodeNdx = targetTemplate.indexOf(charCodes);
 								0 < charCodeNdx && ' ' === targetTemplate[charCodeNdx - 1];
 
@@ -2667,7 +2636,7 @@
 						var staticMatches = [],
 							prevCaretPos = inputmask.caretPos;
 						if (
-							($.each(inputValue, function(ndx, charCode) {
+							($.each(inputValue, function (ndx, charCode) {
 								if (void 0 !== charCode)
 									if (
 										void 0 === maskset.validPositions[ndx] &&
@@ -2762,12 +2731,7 @@
 							vps[pndx] && vps[pndx].match && 1 != vps[pndx].match.static && umValue.push(vps[pndx].input);
 						var unmaskedValue = 0 === umValue.length ? '' : (isRTL ? umValue.reverse() : umValue).join('');
 						if ($.isFunction(opts.onUnMask)) {
-							var bufferValue = (isRTL
-								? getBuffer()
-										.slice()
-										.reverse()
-								: getBuffer()
-							).join('');
+							var bufferValue = (isRTL ? getBuffer().slice().reverse() : getBuffer()).join('');
 							unmaskedValue = opts.onUnMask.call(inputmask, bufferValue, unmaskedValue, opts);
 						}
 						return unmaskedValue;
@@ -2979,13 +2943,13 @@
 										var valhookGet =
 												$.valHooks[type] && $.valHooks[type].get
 													? $.valHooks[type].get
-													: function(elem) {
+													: function (elem) {
 															return elem.value;
 													  },
 											valhookSet =
 												$.valHooks[type] && $.valHooks[type].set
 													? $.valHooks[type].set
-													: function(elem, value) {
+													: function (elem, value) {
 															return (elem.value = value), elem;
 													  };
 										$.valHooks[type] = {
@@ -3026,7 +2990,7 @@
 									valueSet.call(this, value), this.inputmask && applyInputValue(this, value);
 								}
 								function installNativeValueSetFallback(npt) {
-									EventRuler.on(npt, 'mouseenter', function() {
+									EventRuler.on(npt, 'mouseenter', function () {
 										var input = this,
 											value = this.inputmask._valueGet(!0);
 										value !== (isRTL ? getBuffer().reverse() : getBuffer()).join('') && applyInputValue(this, value);
@@ -3038,10 +3002,10 @@
 											'function' != typeof Object.getPrototypeOf &&
 												(Object.getPrototypeOf =
 													'object' === _typeof('test'.__proto__)
-														? function(object) {
+														? function (object) {
 																return object.__proto__;
 														  }
-														: function(object) {
+														: function (object) {
 																return object.constructor.prototype;
 														  });
 											var valueProperty = Object.getPrototypeOf
@@ -3076,26 +3040,15 @@
 												npt.__defineSetter__('value', setter));
 										(npt.inputmask.__valueGet = valueGet), (npt.inputmask.__valueSet = valueSet);
 									}
-									(npt.inputmask._valueGet = function(overruleRTL) {
+									(npt.inputmask._valueGet = function (overruleRTL) {
 										return isRTL && !0 !== overruleRTL
-											? valueGet
-													.call(this.el)
-													.split('')
-													.reverse()
-													.join('')
+											? valueGet.call(this.el).split('').reverse().join('')
 											: valueGet.call(this.el);
 									}),
-										(npt.inputmask._valueSet = function(value, overruleRTL) {
+										(npt.inputmask._valueSet = function (value, overruleRTL) {
 											valueSet.call(
 												this.el,
-												null == value
-													? ''
-													: !0 !== overruleRTL && isRTL
-													? value
-															.split('')
-															.reverse()
-															.join('')
-													: value
+												null == value ? '' : !0 !== overruleRTL && isRTL ? value.split('').reverse().join('') : value
 											);
 										}),
 										void 0 === valueGet &&
@@ -3206,12 +3159,7 @@
 									checkVal.call(this, void 0, !0, !1, valueBuffer),
 									actionObj.metadata
 										? {
-												value: isRTL
-													? getBuffer()
-															.slice()
-															.reverse()
-															.join('')
-													: getBuffer().join(''),
+												value: isRTL ? getBuffer().slice().reverse().join('') : getBuffer().join(''),
 												metadata: maskScope.call(
 													this,
 													{
@@ -3222,10 +3170,7 @@
 												),
 										  }
 										: isRTL
-										? getBuffer()
-												.slice()
-												.reverse()
-												.join('')
+										? getBuffer().slice().reverse().join('')
 										: getBuffer().join('')
 								);
 
@@ -3236,12 +3181,7 @@
 											actionObj.value
 									  ).split('')),
 									  checkVal.call(this, void 0, !0, !1, valueBuffer))
-									: (actionObj.value = isRTL
-											? getBuffer()
-													.slice()
-													.reverse()
-													.join('')
-											: getBuffer().join(''));
+									: (actionObj.value = isRTL ? getBuffer().slice().reverse().join('') : getBuffer().join(''));
 								for (
 									var buffer = getBuffer(), rl = determineLastRequiredPosition(), lmib = buffer.length - 1;
 									rl < lmib && !isMask(lmib);
@@ -3250,13 +3190,7 @@
 								return (
 									buffer.splice(rl, lmib + 1 - rl),
 									isComplete(buffer) &&
-										actionObj.value ===
-											(isRTL
-												? getBuffer()
-														.slice()
-														.reverse()
-														.join('')
-												: getBuffer().join(''))
+										actionObj.value === (isRTL ? getBuffer().slice().reverse().join('') : getBuffer().join(''))
 								);
 
 							case 'getemptymask':
@@ -3293,7 +3227,7 @@
 								if ($.isArray(maskset.metadata)) {
 									var maskTarget = getMaskTemplate(!0, 0, !1).join('');
 									return (
-										$.each(maskset.metadata, function(ndx, mtdt) {
+										$.each(maskset.metadata, function (ndx, mtdt) {
 											if (mtdt.mask === maskTarget) return (maskTarget = mtdt), !1;
 										}),
 										maskTarget
@@ -3303,7 +3237,7 @@
 						}
 				};
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				function _typeof(obj) {
 					return (
@@ -3329,7 +3263,7 @@
 							'0[1-9]|[12][0-9]|3[01]',
 							Date.prototype.setDate,
 							'day',
-							function() {
+							function () {
 								return pad(Date.prototype.getDate.call(this), 2);
 							},
 						],
@@ -3339,7 +3273,7 @@
 							'[1-9]|1[012]',
 							Date.prototype.setMonth,
 							'month',
-							function() {
+							function () {
 								return Date.prototype.getMonth.call(this) + 1;
 							},
 						],
@@ -3347,7 +3281,7 @@
 							'0[1-9]|1[012]',
 							Date.prototype.setMonth,
 							'month',
-							function() {
+							function () {
 								return pad(Date.prototype.getMonth.call(this) + 1, 2);
 							},
 						],
@@ -3357,7 +3291,7 @@
 							'[0-9]{2}',
 							Date.prototype.setFullYear,
 							'year',
-							function() {
+							function () {
 								return pad(Date.prototype.getFullYear.call(this), 2);
 							},
 						],
@@ -3365,7 +3299,7 @@
 							'[0-9]{4}',
 							Date.prototype.setFullYear,
 							'year',
-							function() {
+							function () {
 								return pad(Date.prototype.getFullYear.call(this), 4);
 							},
 						],
@@ -3374,17 +3308,17 @@
 							'0[1-9]|1[0-2]',
 							Date.prototype.setHours,
 							'hours',
-							function() {
+							function () {
 								return pad(Date.prototype.getHours.call(this), 2);
 							},
 						],
 						hx: [
-							function(x) {
+							function (x) {
 								return '[0-9]{'.concat(x, '}');
 							},
 							Date.prototype.setHours,
 							'hours',
-							function(x) {
+							function (x) {
 								return Date.prototype.getHours;
 							},
 						],
@@ -3393,18 +3327,18 @@
 							'0[0-9]|1[0-9]|2[0-3]',
 							Date.prototype.setHours,
 							'hours',
-							function() {
+							function () {
 								return pad(Date.prototype.getHours.call(this), 2);
 							},
 						],
 						Hx: [
-							function(x) {
+							function (x) {
 								return '[0-9]{'.concat(x, '}');
 							},
 							Date.prototype.setHours,
 							'hours',
-							function(x) {
-								return function() {
+							function (x) {
+								return function () {
 									return pad(Date.prototype.getHours.call(this), x);
 								};
 							},
@@ -3414,7 +3348,7 @@
 							'0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]',
 							Date.prototype.setMinutes,
 							'minutes',
-							function() {
+							function () {
 								return pad(Date.prototype.getMinutes.call(this), 2);
 							},
 						],
@@ -3423,7 +3357,7 @@
 							'0[0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9]',
 							Date.prototype.setSeconds,
 							'seconds',
-							function() {
+							function () {
 								return pad(Date.prototype.getSeconds.call(this), 2);
 							},
 						],
@@ -3431,7 +3365,7 @@
 							'[0-9]{3}',
 							Date.prototype.setMilliseconds,
 							'milliseconds',
-							function() {
+							function () {
 								return pad(Date.prototype.getMilliseconds.call(this), 3);
 							},
 						],
@@ -3439,7 +3373,7 @@
 							'[0-9]{2}',
 							Date.prototype.setMilliseconds,
 							'milliseconds',
-							function() {
+							function () {
 								return pad(Date.prototype.getMilliseconds.call(this), 2);
 							},
 						],
@@ -3792,7 +3726,7 @@
 				}),
 					(module.exports = Inputmask);
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				var Inputmask = __webpack_require__(1),
 					$ = Inputmask.dependencyLib,
@@ -3839,7 +3773,7 @@
 				function findValid(symbol, maskset) {
 					var ret = -1;
 					return (
-						$.each(maskset.validPositions, function(ndx, tst) {
+						$.each(maskset.validPositions, function (ndx, tst) {
 							if (tst && tst.match.def === symbol) return (ret = parseInt(ndx)), !1;
 						}),
 						ret
@@ -3963,12 +3897,7 @@
 								Inputmask.escapeRegex(opts.suffix) +
 								('' != opts.negationSymbol.back ? Inputmask.escapeRegex(opts.negationSymbol.back) + '?' : '') +
 								'$)'
-						).exec(
-							buffer
-								.slice()
-								.reverse()
-								.join('')
-						),
+						).exec(buffer.slice().reverse().join('')),
 						number = numberMatches ? numberMatches[2] : '',
 						leadingzeroes = !1;
 					return (
@@ -4142,10 +4071,7 @@
 							if (strict) return !0;
 							if (null !== opts.min || null !== opts.max) {
 								var unmasked = opts.onUnMask(
-									buffer
-										.slice()
-										.reverse()
-										.join(''),
+									buffer.slice().reverse().join(''),
 									void 0,
 									$.extend({}, opts, {
 										unmaskAsNumber: !0,
@@ -4292,11 +4218,7 @@
 															? Inputmask.escapeRegex(opts.negationSymbol.back) + '?'
 															: '') +
 														'$)'
-												).exec(
-													stripBuffer(buffer.slice(), !0)
-														.reverse()
-														.join('')
-												),
+												).exec(stripBuffer(buffer.slice(), !0).reverse().join('')),
 												number = nmbrMtchs ? nmbrMtchs[2] : '';
 											0 == number &&
 												(result = {
@@ -4432,7 +4354,7 @@
 				}),
 					(module.exports = Inputmask);
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				function _typeof(obj) {
 					return (
@@ -4452,7 +4374,7 @@
 				var $ = __webpack_require__(3),
 					Inputmask = __webpack_require__(1);
 				void 0 === $.fn.inputmask &&
-					($.fn.inputmask = function(fn, options) {
+					($.fn.inputmask = function (fn, options) {
 						var nptmask,
 							input = this[0];
 						if ((void 0 === options && (options = {}), 'string' == typeof fn))
@@ -4461,7 +4383,7 @@
 									return input && input.inputmask ? input.inputmask.unmaskedvalue() : $(input).val();
 
 								case 'remove':
-									return this.each(function() {
+									return this.each(function () {
 										this.inputmask && this.inputmask.remove();
 									});
 
@@ -4483,7 +4405,7 @@
 
 								case 'option':
 									if ('string' != typeof options)
-										return this.each(function() {
+										return this.each(function () {
 											if (void 0 !== this.inputmask) return this.inputmask.option(options);
 										});
 									if (input && void 0 !== input.inputmask) return input.inputmask.option(options);
@@ -4493,7 +4415,7 @@
 									return (
 										(options.alias = fn),
 										(nptmask = new Inputmask(options)),
-										this.each(function() {
+										this.each(function () {
 											nptmask.mask(this);
 										})
 									);
@@ -4503,7 +4425,7 @@
 								return (
 									(options.alias = fn),
 									(nptmask = new Inputmask(options)),
-									this.each(function() {
+									this.each(function () {
 										nptmask.mask(this);
 									})
 								);
@@ -4511,22 +4433,22 @@
 								return (
 									(nptmask = new Inputmask(fn)),
 									void 0 === fn.mask && void 0 === fn.alias
-										? this.each(function() {
+										? this.each(function () {
 												if (void 0 !== this.inputmask) return this.inputmask.option(fn);
 												nptmask.mask(this);
 										  })
-										: this.each(function() {
+										: this.each(function () {
 												nptmask.mask(this);
 										  })
 								);
 							if (void 0 === fn)
-								return this.each(function() {
+								return this.each(function () {
 									(nptmask = new Inputmask(options)), nptmask.mask(this);
 								});
 						}
 					});
 			},
-			function(module, exports, __webpack_require__) {
+			function (module, exports, __webpack_require__) {
 				'use strict';
 				var im = __webpack_require__(6),
 					jQuery = __webpack_require__(3);
@@ -4536,14 +4458,14 @@
 		(installedModules = {}),
 		(__webpack_require__.m = modules),
 		(__webpack_require__.c = installedModules),
-		(__webpack_require__.d = function(exports, name, getter) {
+		(__webpack_require__.d = function (exports, name, getter) {
 			__webpack_require__.o(exports, name) ||
 				Object.defineProperty(exports, name, {
 					enumerable: !0,
 					get: getter,
 				});
 		}),
-		(__webpack_require__.r = function(exports) {
+		(__webpack_require__.r = function (exports) {
 			'undefined' != typeof Symbol &&
 				Symbol.toStringTag &&
 				Object.defineProperty(exports, Symbol.toStringTag, {
@@ -4553,7 +4475,7 @@
 					value: !0,
 				});
 		}),
-		(__webpack_require__.t = function(value, mode) {
+		(__webpack_require__.t = function (value, mode) {
 			if ((1 & mode && (value = __webpack_require__(value)), 8 & mode)) return value;
 			if (4 & mode && 'object' == typeof value && value && value.__esModule) return value;
 			var ns = Object.create(null);
@@ -4569,13 +4491,13 @@
 					__webpack_require__.d(
 						ns,
 						key,
-						function(key) {
+						function (key) {
 							return value[key];
 						}.bind(null, key)
 					);
 			return ns;
 		}),
-		(__webpack_require__.n = function(module) {
+		(__webpack_require__.n = function (module) {
 			var getter =
 				module && module.__esModule
 					? function getDefault() {
@@ -4586,7 +4508,7 @@
 					  };
 			return __webpack_require__.d(getter, 'a', getter), getter;
 		}),
-		(__webpack_require__.o = function(object, property) {
+		(__webpack_require__.o = function (object, property) {
 			return Object.prototype.hasOwnProperty.call(object, property);
 		}),
 		(__webpack_require__.p = ''),

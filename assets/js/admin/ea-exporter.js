@@ -1,7 +1,7 @@
 jQuery(function ($) {
 	$.fn.eaccounting_exporter = function (options) {
 		return this.each(function () {
-			(new $.eaccounting_exporter(this, options));
+			new $.eaccounting_exporter(this, options);
 		});
 	};
 
@@ -36,42 +36,49 @@ jQuery(function ($) {
 			plugin.$submit_btn.parent('p').append('<span class="spinner is-active"></span>');
 
 			//add progressbar
-			plugin.$form.append('<div class="ea-batch-notice"><div class="ea-batch-progress"><div></div></div></div>')
+			plugin.$form.append('<div class="ea-batch-notice"><div class="ea-batch-progress"><div></div></div></div>');
 
 			//process step
 			plugin.process_step(1);
-		}
+		};
 
 		this.process_step = function (step) {
 			window.wp.ajax.send(plugin.action, {
 				data: {
 					nonce: plugin.nonce,
 					type: plugin.type,
-					step: step
+					step: step,
 				},
 				success: function (res) {
 					if (res.step === 'done') {
 						plugin.reset();
-						plugin.$form.append('<div class="ea-batch-notice"><div class="updated success"><p>' + res.message + '</p></div></div>')
+						plugin.$form.append(
+							'<div class="ea-batch-notice"><div class="updated success"><p>' + res.message + '</p></div></div>'
+						);
 						window.location = res.url;
 						return false;
 					} else {
-						plugin.$form.find('.ea-batch-progress div').animate({
-							width: res.percentage + '%',
-						}, 50, function () {});
+						plugin.$form.find('.ea-batch-progress div').animate(
+							{
+								width: res.percentage + '%',
+							},
+							50,
+							function () {}
+						);
 						plugin.process_step(parseInt(res.step, 10));
 					}
 				},
 				error: function (error) {
 					plugin.reset();
 					if (error.message) {
-						plugin.$form.append('<div class="ea-batch-notice"><div class="updated error"><p>' + error.message + '</p></div></div>')
+						plugin.$form.append(
+							'<div class="ea-batch-notice"><div class="updated error"><p>' + error.message + '</p></div></div>'
+						);
 					}
 					console.warn(error);
-				}
+				},
 			});
-
-		}
+		};
 
 		/**
 		 * Reset everything as fresh.
@@ -83,14 +90,14 @@ jQuery(function ($) {
 			plugin.$submit_btn.removeClass('disabled');
 			//remove spinner
 			$('.spinner', plugin.$form).remove();
-		}
+		};
 
 		/**
 		 * Initialize the plugin.
 		 */
 		this.init = function () {
 			this.$form.on('submit', this.submit);
-		}
+		};
 
 		this.init();
 		return this;

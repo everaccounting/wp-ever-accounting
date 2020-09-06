@@ -81,10 +81,11 @@ class Admin_Assets {
 		wp_register_script( 'ea-dashboard', eaccounting()->plugin_url() . '/assets/js/admin/admin-dashboard' . $suffix . '.js', array( 'jquery', 'ea-daterange' ), $version );
 		wp_register_script( 'ea-exporter', eaccounting()->plugin_url() . '/assets/js/admin/ea-exporter' . $suffix . '.js', array( 'jquery', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-importer', eaccounting()->plugin_url() . '/assets/js/admin/ea-importer' . $suffix . '.js', array( 'jquery', 'wp-util' ), $version );
-		
-//		$asset        = require_once eaccounting()->plugin_path('/assets/dist/client.asset.php');
-//		wp_register_script( 'ea-client', eaccounting()->plugin_url('/assets/dist/client' . $suffix . '.js') , $asset['dependencies'], $asset['version'] );
-//		wp_set_script_translations('ea-client', 'wp-ever-accounting', eaccounting()->plugin_path('/i18n/languages'));
+
+
+//		self::register_react_script( 'ea-components', self::get_asset_dist_url( 'components' ) );
+//		self::register_react_script( 'ea-client', self::get_asset_dist_url( 'client' ), array('ea-components') );
+//		wp_enqueue_script('ea-client');
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
@@ -201,18 +202,48 @@ class Admin_Assets {
 
 
 	/**
-	 * Returns the appropriate asset path for loading either legacy builds or
-	 * current builds.
+	 * Registers a script according to `wp_register_script`, additionally loading the translations for the file.
 	 *
-	 * @param string $filename Filename for asset path (without extension).
-	 * @param string $type     File type (.css or .js).
+	 * @param string $handle Name of the script. Should be unique.
+	 * @param string $src Full URL of the script, or path of the script relative to the WordPress root directory.
+	 * @param array $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
+	 * @param bool $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
 	 *
-	 * @return  string             The generated path.
+	 * @since 1.0.0
+	 *
 	 */
-	protected static function get_asset_dist_path( $filename, $type = 'js' ) {
-		return "assets/dist/$filename.$type";
+	protected static function register_react_script( $handle, $src, $dependencies = [], $has_i18n = true ) {
+		$relative_src = str_replace( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ), '', $src );
+		$asset_path   =  str_replace( '.js', '.asset.php', eaccounting()->plugin_path($relative_src) );
+
+		$version = eaccounting()->get_version();
+		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			$version =  time();
+		}
+		if ( file_exists( $asset_path ) ) {
+			$asset        = require $asset_path;
+			$dependencies = isset( $asset['dependencies'] ) ? array_merge( $asset['dependencies'], $dependencies ) : $dependencies;
+			$version      = ! empty( $asset['version'] ) ? $asset['version'] : $version;
+		}
+
+		wp_register_script( $handle, $src, $dependencies, $version, true );
+
+		if ( $has_i18n && function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( $handle, 'wp-ever-accounting', dirname( __DIR__ ) . '/languages' );
+		}
 	}
 
+	/**
+	 * Returns the appropriate asset url
+	 *
+	 * @param string $filename Filename for asset url (without extension).
+	 * @param string $type File type (.css or .js).
+	 *
+	 * @return  string The generated path.
+	 */
+	protected static function get_asset_dist_url( $filename, $type = 'js' ) {
+		return eaccounting()->plugin_url("assets/dist/$filename.$type");
+	}
 }
 
 return new Admin_Assets();

@@ -119,6 +119,7 @@ class Ajax {
 			'edit_payment',
 			'edit_revenue',
 			'edit_transfer',
+			'upload_files',
 		);
 
 		foreach ( $ajax_events as $ajax_event ) {
@@ -143,35 +144,35 @@ class Ajax {
 		$result = new \WP_Error( 'invalid_object', __( 'Invalid object type.', 'wp-ever-accounting' ) );
 		switch ( $object_type ) {
 			case 'currency':
-				self::check_permission('ea_manage_currency');
+				self::check_permission( 'ea_manage_currency' );
 				$result = eaccounting_insert_currency( [
 					'id'      => $object_id,
 					'enabled' => $enabled
 				] );
 				break;
 			case 'category':
-				self::check_permission('ea_manage_category');
+				self::check_permission( 'ea_manage_category' );
 				$result = eaccounting_insert_category( [
 					'id'      => $object_id,
 					'enabled' => $enabled
 				] );
 				break;
 			case 'account':
-				self::check_permission('ea_manage_account');
+				self::check_permission( 'ea_manage_account' );
 				$result = eaccounting_insert_account( [
 					'id'      => $object_id,
 					'enabled' => $enabled
 				] );
 				break;
 			case 'customer':
-				self::check_permission('ea_manage_customer');
+				self::check_permission( 'ea_manage_customer' );
 				$result = eaccounting_insert_contact( [
 					'id'      => $object_id,
 					'enabled' => $enabled
 				] );
 				break;
 			case 'vendor':
-				self::check_permission('ea_manage_vendor');
+				self::check_permission( 'ea_manage_vendor' );
 				$result = eaccounting_insert_contact( [
 					'id'      => $object_id,
 					'enabled' => $enabled
@@ -203,7 +204,7 @@ class Ajax {
 	 */
 	public static function dropdown_search() {
 		check_ajax_referer( 'ea-dropdown-search', 'nonce' );
-		self::check_permission('manage_eaccounting');
+		self::check_permission( 'manage_eaccounting' );
 		$search  = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page    = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 		$results = array();
@@ -257,7 +258,7 @@ class Ajax {
 	 */
 	public static function get_currency() {
 		check_ajax_referer( 'ea_get_currency', '_wpnonce' );
-		self::check_permission('manage_eaccounting');
+		self::check_permission( 'manage_eaccounting' );
 		$posted = eaccounting_clean( $_REQUEST );
 		$code   = ! empty( $posted['code'] ) ? $posted['code'] : false;
 		if ( ! $code ) {
@@ -283,7 +284,7 @@ class Ajax {
 	 */
 	public static function edit_currency() {
 		check_ajax_referer( 'ea_edit_currency', '_wpnonce' );
-		self::check_permission('ea_manage_currency');
+		self::check_permission( 'ea_manage_currency' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_currency( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -317,7 +318,7 @@ class Ajax {
 	 */
 	public static function edit_account() {
 		check_ajax_referer( 'ea_edit_account', '_wpnonce' );
-		self::check_permission('ea_manage_account');
+		self::check_permission( 'ea_manage_account' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_account( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -352,7 +353,7 @@ class Ajax {
 	 */
 	public static function get_account() {
 		check_ajax_referer( 'ea_get_account', '_wpnonce' );
-		self::check_permission('manage_eaccounting');
+		self::check_permission( 'manage_eaccounting' );
 		$id      = empty( $_REQUEST['id'] ) ? null : absint( $_REQUEST['id'] );
 		$account = eaccounting_get_account( $id );
 		if ( $account ) {
@@ -373,7 +374,7 @@ class Ajax {
 	 */
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
-		self::check_permission('ea_manage_category');
+		self::check_permission( 'ea_manage_category' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_category( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -408,7 +409,7 @@ class Ajax {
 	 */
 	public static function edit_contact() {
 		self::verify_nonce( 'ea_edit_contact' );
-		self::check_permission('ea_manage_customer');
+		self::check_permission( 'ea_manage_customer' );
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$created = eaccounting_insert_contact( $posted );
@@ -443,7 +444,7 @@ class Ajax {
 	 */
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
-		self::check_permission('ea_manage_payment');
+		self::check_permission( 'ea_manage_payment' );
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$posted['type'] = 'expense';
@@ -479,7 +480,7 @@ class Ajax {
 	 */
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
-		self::check_permission('ea_manage_revenue');
+		self::check_permission( 'ea_manage_revenue' );
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$posted['type'] = 'income';
@@ -515,7 +516,7 @@ class Ajax {
 	 */
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
-		self::check_permission('ea_manage_transfer');
+		self::check_permission( 'ea_manage_transfer' );
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$created = eaccounting_insert_transfer( $posted );
@@ -540,6 +541,20 @@ class Ajax {
 		] );
 
 		wp_die();
+	}
+
+	public static function upload_files() {
+		self::verify_nonce( 'eaccounting_file_upload' );
+		self::check_permission( 'manage_eaccounting' );
+
+		if ( ! empty( $_FILES['upload'] ) ) {
+			$file = eaccounting_upload_file( $_FILES['upload'] );
+			if ( is_wp_error( $file ) ) {
+				wp_send_json_error( array( 'message' => $file->get_error_message() ) );
+			}
+
+			wp_send_json_success( $file );
+		}
 	}
 
 	/**
