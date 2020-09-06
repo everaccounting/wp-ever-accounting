@@ -1,3 +1,7 @@
 module.exports = {
-	plugins: [require('autoprefixer'), require('precss'), require('postcss-color-function')],
+	plugins: [
+		require( 'autoprefixer' ),
+		require( 'precss' ),
+		require( 'postcss-color-function' ),
+	],
 };

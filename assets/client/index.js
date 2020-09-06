@@ -9,13 +9,13 @@ class App extends Component {
 		return (
 			<Fragment>
 				Hello world
-				<Button isPrimary={true}>Button</Button>
+				<Button isPrimary={ true }>Button</Button>
 			</Fragment>
 		);
 	}
 }
 
-domReady(() => {
-	const root = document.getElementById('eaccounting');
-	return render(<App />, root);
-});
+domReady( () => {
+	const root = document.getElementById( 'eaccounting' );
+	return render( <App />, root );
+} );

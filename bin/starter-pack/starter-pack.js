@@ -18,7 +18,7 @@ const maybeThrowError = ( error ) => {
 	console.log( '\n' );
 	console.log(
 		chalk.yellow(
-			'🎉 Welcome to WooCommerce Admin Extension Starter Pack 🎉'
+			'🎉 Welcome to Ever Accounting Extension Starter Pack 🎉'
 		)
 	);
 	console.log( '\n' );

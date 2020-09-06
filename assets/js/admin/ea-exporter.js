@@ -1,19 +1,19 @@
-jQuery(function ($) {
-	$.fn.eaccounting_exporter = function (options) {
-		return this.each(function () {
-			new $.eaccounting_exporter(this, options);
-		});
+jQuery( function ( $ ) {
+	$.fn.eaccounting_exporter = function ( options ) {
+		return this.each( function () {
+			new $.eaccounting_exporter( this, options );
+		} );
 	};
 
-	$.eaccounting_exporter = function (form, options) {
+	$.eaccounting_exporter = function ( form, options ) {
 		this.defaults = {};
 		this.form = form;
-		this.$form = $(form);
-		this.$submit_btn = $('input[type="submit"]', this.$form);
-		this.options = $.extend(this.defaults, options);
+		this.$form = $( form );
+		this.$submit_btn = $( 'input[type="submit"]', this.$form );
+		this.options = $.extend( this.defaults, options );
 		this.action = 'eaccounting_do_ajax_export';
-		this.nonce = this.$form.data('nonce');
-		this.type = this.$form.data('type');
+		this.nonce = this.$form.data( 'nonce' );
+		this.type = this.$form.data( 'type' );
 		var plugin = this;
 
 		/**
@@ -21,63 +21,71 @@ jQuery(function ($) {
 		 * @param e
 		 * @returns {boolean}
 		 */
-		this.submit = function (e) {
+		this.submit = function ( e ) {
 			e.preventDefault();
-			if (plugin.$submit_btn.hasClass('disabled')) {
+			if ( plugin.$submit_btn.hasClass( 'disabled' ) ) {
 				return false;
 			}
 			//disable submit
-			plugin.$submit_btn.addClass('disabled');
+			plugin.$submit_btn.addClass( 'disabled' );
 
 			//reset
 			plugin.reset();
 
 			//Add the spinner.
-			plugin.$submit_btn.parent('p').append('<span class="spinner is-active"></span>');
+			plugin.$submit_btn
+				.parent( 'p' )
+				.append( '<span class="spinner is-active"></span>' );
 
 			//add progressbar
-			plugin.$form.append('<div class="ea-batch-notice"><div class="ea-batch-progress"><div></div></div></div>');
+			plugin.$form.append(
+				'<div class="ea-batch-notice"><div class="ea-batch-progress"><div></div></div></div>'
+			);
 
 			//process step
-			plugin.process_step(1);
+			plugin.process_step( 1 );
 		};
 
-		this.process_step = function (step) {
-			window.wp.ajax.send(plugin.action, {
+		this.process_step = function ( step ) {
+			window.wp.ajax.send( plugin.action, {
 				data: {
 					nonce: plugin.nonce,
 					type: plugin.type,
 					step: step,
 				},
-				success: function (res) {
-					if (res.step === 'done') {
+				success: function ( res ) {
+					if ( res.step === 'done' ) {
 						plugin.reset();
 						plugin.$form.append(
-							'<div class="ea-batch-notice"><div class="updated success"><p>' + res.message + '</p></div></div>'
+							'<div class="ea-batch-notice"><div class="updated success"><p>' +
+								res.message +
+								'</p></div></div>'
 						);
 						window.location = res.url;
 						return false;
 					} else {
-						plugin.$form.find('.ea-batch-progress div').animate(
+						plugin.$form.find( '.ea-batch-progress div' ).animate(
 							{
 								width: res.percentage + '%',
 							},
 							50,
 							function () {}
 						);
-						plugin.process_step(parseInt(res.step, 10));
+						plugin.process_step( parseInt( res.step, 10 ) );
 					}
 				},
-				error: function (error) {
+				error: function ( error ) {
 					plugin.reset();
-					if (error.message) {
+					if ( error.message ) {
 						plugin.$form.append(
-							'<div class="ea-batch-notice"><div class="updated error"><p>' + error.message + '</p></div></div>'
+							'<div class="ea-batch-notice"><div class="updated error"><p>' +
+								error.message +
+								'</p></div></div>'
 						);
 					}
-					console.warn(error);
+					console.warn( error );
 				},
-			});
+			} );
 		};
 
 		/**
@@ -85,23 +93,23 @@ jQuery(function ($) {
 		 */
 		this.reset = function () {
 			//remove old notice
-			$('.ea-batch-notice', plugin.$form).remove();
+			$( '.ea-batch-notice', plugin.$form ).remove();
 			//disable submit
-			plugin.$submit_btn.removeClass('disabled');
+			plugin.$submit_btn.removeClass( 'disabled' );
 			//remove spinner
-			$('.spinner', plugin.$form).remove();
+			$( '.spinner', plugin.$form ).remove();
 		};
 
 		/**
 		 * Initialize the plugin.
 		 */
 		this.init = function () {
-			this.$form.on('submit', this.submit);
+			this.$form.on( 'submit', this.submit );
 		};
 
 		this.init();
 		return this;
 	};
 
-	$('.ea-exporter').eaccounting_exporter();
-});
+	$( '.ea-exporter' ).eaccounting_exporter();
+} );

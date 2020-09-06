@@ -22,7 +22,9 @@
 	"lint:js": "wp-scripts lint-js",
 	"lint:js-fix": "eslint assets/js --ext=js,jsx --fix",
 	"reformat-files": "prettier --ignore-path .eslintignore --write \"**/*.{js,jsx,json,ts,tsx}\"",
-	"clean": "rimraf ./assets/dist"
+	"clean": "rimraf ./assets/dist",
+	"create-extension": "node ./bin/starter-pack/starter-pack.js",
+	"format": "wp-scripts format-js ./assets/client"
   },
   "dependencies": {
 	"@babel/core": "^7.11.6",
