@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
 use EverAccounting\Query_Account;
+use EverAccounting\Query_Currency;
 
 /**
  * Class Import_Accounts
@@ -81,20 +82,21 @@ class Import_Accounts extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-//		$account_id = Query_Account::init()->select( 'id' )->where( $data['name'], 'name' )->value( 0 );
-//		if ( empty( $account_id ) ) {
-//			$account = eaccounting_insert_account( array(
-//				'name'          => $data['name'],
-//				'number'        => $data['number'],
-//				'currency_code' => $data['currency_code'],
-//			) );
-//
-//			if ( ! is_wp_error( $account ) ) {
-//				$account_id = $account->get_id();
-//			}
-//		}
+		$currency_code = Query_Currency::init()->find( $data['currency_code'], 'code' );
+		if ( empty( $currency_code ) ) {
+			$currency = eaccounting_insert_currency( array(
+				'name'      => $data['currency_code'],
+				'code'      => $data['currency_code'],
+				'rate'      => 1,
+				'precision' => 0
+			) );
 
-		$data['type'] = 'account';
+			if ( ! is_wp_error( $currency ) ) {
+				$currency_code = $currency->get_code();
+			}
+		}
+
+		$data['currency_code'] = $currency_code;
 
 		return eaccounting_insert_account( $data );
 	}
