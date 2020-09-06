@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle vendors import.
+ * Handle accounts import.
  *
  * @since   1.0.2
  *
@@ -14,7 +14,7 @@ use EverAccounting\Abstracts\CSV_Importer;
 use EverAccounting\Query_Account;
 
 /**
- * Class Import_Vendors
+ * Class Import_Accounts
  *
  * @since   1.0.2
  *
@@ -24,39 +24,39 @@ class Import_Accounts extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'vendor' );
+		return eaccounting_get_io_headers( 'account' );
 	}
 
 
 	/**
 	 * Return the required key to import item.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_required() {
-		return array( 'name' );
+		return array( 'name', 'number', 'currency_code' );
 	}
 
 	/**
 	 * Get formatting callback.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function get_formatting_callback() {
 		return array(
-			'email'         => 'sanitize_email',
-			'birth_date'    => array( $this, 'parse_date_field' ),
-			'address'       => array( $this, 'parse_description_field' ),
-			'country'       => array( $this, 'parse_country_field' ),
-			'website'       => 'esc_url_raw',
-			'currency_code' => array( $this, 'parse_currency_code_field' ),
-			'note'          => array( $this, 'parse_description_field' ),
+			'name'            => array( $this, 'parse_text_field' ),
+			'number'          => array( $this, 'parse_text_field' ),
+			'currency_code'   => array( $this, 'parse_currency_code_field' ),
+			'opening_balance' => array( $this, 'parse_float_field' ),
+			'bank_name'       => array( $this, 'parse_text_field' ),
+			'bank_phone'      => array( $this, 'parse_text_field' ),
+			'bank_address'    => array( $this, 'parse_description_field' ),
 		);
 	}
 
@@ -70,26 +70,32 @@ class Import_Accounts extends CSV_Importer {
 	protected function import_item( $data ) {
 		//
 		if ( empty( $data['name'] ) ) {
-			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'empty_prop', __( 'Empty Account Name', 'wp-ever-accounting' ) );
 		}
 
-		$account_id = Query_Account::init()->select( 'id' )->where( $data['account_name'], 'name' )->value( 0 );
-		if ( empty( $account_id ) ) {
-			$account = eaccounting_insert_account( array(
-				'name'          => $data['account_name'],
-				'currency_code' => $data['currency_code'],
-			) );
-
-			if ( ! is_wp_error( $account ) ) {
-				$account_id = $account->get_id();
-			}
+		if ( empty( $data['number'] ) ) {
+			return new \WP_Error( 'empty_prop', __( 'Empty Account Number', 'wp-ever-accounting' ) );
 		}
 
+		if ( empty( $data['currency_code'] ) ) {
+			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
+		}
 
-
-
-//		$data['type'] = 'vendor';
+//		$account_id = Query_Account::init()->select( 'id' )->where( $data['name'], 'name' )->value( 0 );
+//		if ( empty( $account_id ) ) {
+//			$account = eaccounting_insert_account( array(
+//				'name'          => $data['name'],
+//				'number'        => $data['number'],
+//				'currency_code' => $data['currency_code'],
+//			) );
 //
-//		return eaccounting_insert_contact( $data );
+//			if ( ! is_wp_error( $account ) ) {
+//				$account_id = $account->get_id();
+//			}
+//		}
+
+		$data['type'] = 'account';
+
+		return eaccounting_insert_account( $data );
 	}
 }
