@@ -716,18 +716,6 @@ abstract class Base_Object {
 	}
 
 	/**
-	 * Set object belonging company id.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param int $company_id Company id
-	 *
-	 */
-	public function set_company_id( $company_id = 1 ) {
-		$this->set_prop( 'company_id', absint( $company_id ) );
-	}
-
-	/**
 	 * Set object creator id.
 	 *
 	 * @since 1.0.2
@@ -757,18 +745,6 @@ abstract class Base_Object {
 		$this->set_date_prop( 'date_created', $date );
 	}
 
-	/**
-	 * Return object belonging company id.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $context
-	 *
-	 * @return mixed|null
-	 */
-	public function get_company_id( $context = 'edit' ) {
-		return absint( $this->get_prop( 'company_id', $context ) );
-	}
 
 	/**
 	 * Return object created by.

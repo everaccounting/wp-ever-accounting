@@ -39,7 +39,6 @@ class EAccounting_Tests_Vendor extends EAccounting_Unit_Test_Case {
 		$this->assertEquals( 'USD', $vendors->get_currency_code() );
 		$this->assertEquals( 'vendor', $vendors->get_type() );
 		$this->assertEquals( 1, $vendors->get_enabled() );
-		$this->assertEquals( 1, $vendors->get_company_id() );
 		$this->assertNotNull( $vendors->get_date_created() );
 	}
 

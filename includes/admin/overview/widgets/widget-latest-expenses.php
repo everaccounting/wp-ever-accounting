@@ -44,7 +44,6 @@ class Latest_Expenses extends Widget {
 			->leftJoin( 'ea_categories as c', 'c.id', 't.category_id' )
 			->where('t.type', 'expense')
 			->where('c.type', '!=', 'other')
-			->where( 'c.company_id', eaccounting_get_active_company() )
 			->order_by( 't.paid_at', 'DESC' )
 			->limit( 5 )
 			->get();

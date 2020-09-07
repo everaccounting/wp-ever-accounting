@@ -68,9 +68,6 @@ function eaccounting_insert_account( $args ) {
 		if ( ! $account->get_date_created() ) {
 			$account->set_date_created( time() );
 		}
-		if ( ! $account->get_company_id() ) {
-			$account->set_company_id( 1 );
-		}
 		if ( ! $account->get_creator_id() ) {
 			$account->set_creator_id();
 		}
@@ -94,7 +91,6 @@ function eaccounting_insert_account( $args ) {
 
 		$existing_id = \EverAccounting\Query_Account::init()
 		                                            ->where( 'number', $account->get_number() )
-		                                            ->where( 'company_id', $account->get_company_id() )
 		                                            ->value( 0 );
 
 		if ( ! empty( $existing_id ) && absint( $existing_id ) != $account->get_id() ) {

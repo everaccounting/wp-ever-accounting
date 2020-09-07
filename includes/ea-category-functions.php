@@ -91,9 +91,6 @@ function eaccounting_insert_category( $args ) {
 		if ( ! $category->get_creator_id() ) {
 			$category->set_creator_id();
 		}
-		if ( ! $category->get_company_id() ) {
-			$category->set_company_id();
-		}
 		if ( ! $category->get_color( 'edit' ) ) {
 			$category->set_color( eaccounting_get_random_color() );
 		}

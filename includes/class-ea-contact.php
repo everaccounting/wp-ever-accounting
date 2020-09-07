@@ -59,7 +59,6 @@ class Contact extends Base_Object {
 		'note'          => '',
 		'enabled'       => 1,
 		'creator_id'    => '',
-		'company_id'    => 1,
 		'date_created'  => '',
 	);
 

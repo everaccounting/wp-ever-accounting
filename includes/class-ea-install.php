@@ -156,15 +156,13 @@ class EAccounting_Install {
 		    `bank_name` VARCHAR(191) DEFAULT NULL,
 		    `bank_phone` VARCHAR(20) DEFAULT NULL,
 		    `bank_address` VARCHAR(191) DEFAULT NULL,
-		   	`company_id` INT(11) DEFAULT 1,
 		   	`enabled` tinyint(1) NOT NULL DEFAULT '1',
 		   	`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY (`currency_code`),
-		    KEY `company_id` (`company_id`),
 		    UNIQUE KEY (`number`),
-		    UNIQUE KEY (`name`, `number`, `company_id`)
+		    UNIQUE KEY (`name`, `number`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_categories(
@@ -173,12 +171,10 @@ class EAccounting_Install {
 		  	`type` VARCHAR(50) NOT NULL,
 		  	`color` VARCHAR(20) NOT NULL,
 		  	`enabled` tinyint(1) NOT NULL DEFAULT '1',
-		  	`company_id` INT(11) DEFAULT 1,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `type` (`type`),
-		    KEY `company_id` (`company_id`),
-		    UNIQUE KEY (`name`, `type`, `company_id`)
+		    UNIQUE KEY (`name`, `type`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_currencies(
@@ -216,7 +212,6 @@ class EAccounting_Install {
   			`type` VARCHAR(100) DEFAULT NULL COMMENT 'Customer or vendor',
 			`note` TEXT DEFAULT NULL,
 			`files` TEXT DEFAULT NULL,
-			`company_id` INT(11) DEFAULT 1,
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
 			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -224,8 +219,7 @@ class EAccounting_Install {
 		    KEY `name`(`name`),
 		    KEY `email`(`email`),
 		    KEY `phone`(`phone`),
-		    KEY `type`(`type`),
-		    KEY `company_id`(`company_id`)
+		    KEY `type`(`type`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transactions(
@@ -246,7 +240,6 @@ class EAccounting_Install {
 		  	`parent_id` INT(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 		    `creator_id` INT(11) DEFAULT NULL,
-			`company_id` int(11) NOT NULL DEFAULT 1,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `account_id` (`account_id`),
@@ -254,7 +247,6 @@ class EAccounting_Install {
 		    KEY `currency_code` (`currency_code`),
 		    KEY `currency_rate` (`currency_rate`),
 		    KEY `type` (`type`),
-		    KEY `company_id` (`company_id`),
 		    KEY `contact_id` (`contact_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
@@ -263,12 +255,10 @@ class EAccounting_Install {
   			`income_id` INT(11) NOT NULL,
   			`expense_id` INT(11) NOT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
-  			`company_id` int(11) NOT NULL DEFAULT 1,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `income_id` (`income_id`),
-		    KEY `expense_id` (`expense_id`),
-		    KEY `company_id` (`company_id`)
+		    KEY `expense_id` (`expense_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
 			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_reconciliations(
@@ -279,14 +269,12 @@ class EAccounting_Install {
   			`closing_balance` double(15,4) NOT NULL DEFAULT '0.0000',
   			`reconciled` tinyint(1) NOT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
-  			`company_id` int(11) NOT NULL DEFAULT 1,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `account_id` (`account_id`),
 		    KEY `date_started` (`date_started`),
 		    KEY `date_ended` (`date_ended`),
-		    KEY `reconciled` (`reconciled`),
-		    KEY `company_id` (`company_id`)
+		    KEY `reconciled` (`reconciled`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
 

@@ -41,7 +41,6 @@ class Transfer extends Base_Object {
 		'income_id'    => '',
 		'expense_id'   => '',
 		'creator_id'   => '',
-		'company_id'   => 1,
 		'date_created' => '',
 	);
 

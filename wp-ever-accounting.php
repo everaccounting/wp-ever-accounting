@@ -242,13 +242,11 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
-
 		//Abstract classes.
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-base-object.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-widget.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-where-query.php' );
-
 
 		//Core classes.
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );

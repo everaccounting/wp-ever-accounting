@@ -24,7 +24,6 @@ class EAccounting_Tests_contact extends EAccounting_Unit_Test_Case {
 			'note'          => 'Test Note',
 			'enabled'       => 1,
 			'creator_id'    => '',
-			'company_id'    => 1,
 		) );
 
 		$this->assertNotFalse( $contact->exists() );
@@ -43,7 +42,6 @@ class EAccounting_Tests_contact extends EAccounting_Unit_Test_Case {
 		$this->assertEquals( 'customer', $contact->get_type() );
 		$this->assertEquals( 'Test Note', $contact->get_note() );
 		$this->assertEquals( 1, $contact->get_enabled() );
-		$this->assertEquals( 1, $contact->get_company_id() );
 		$this->assertNotNull( $contact->get_date_created() );
 	}
 
@@ -184,7 +182,6 @@ class EAccounting_Tests_contact extends EAccounting_Unit_Test_Case {
 //		$this->assertNotNull( $contact->get_id() );
 //		$this->assertEquals( 'expense', $contact->get_type() );
 //		$this->assertEquals( 'red', $contact->get_color() );
-//		$this->assertEquals( 1, $contact->get_company_id() );
 //		$this->assertNotNull( $contact->get_date_created() );
 //	}
 

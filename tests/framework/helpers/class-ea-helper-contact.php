@@ -24,7 +24,6 @@ class EAccounting_Helper_Contact {
 			'tax_number'    => '3738 24315 73209',
 			'note'          => 'Avid food scholar. Certified coffee evangelist. Wannabe pop culture lover.',
 			'creator_id'    => '',
-			'company_id'    => '',
 			'date_created'  => '',
 		] );
 		$contact->set_birth_date('5/14/1966');

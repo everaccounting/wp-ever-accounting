@@ -47,7 +47,6 @@ class Category extends Base_Object {
 		'type'         => '',
 		'color'        => '',
 		'enabled'      => 1,
-		'company_id'   => 1,
 		'date_created' => null,
 	);
 

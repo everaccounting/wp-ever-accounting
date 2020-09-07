@@ -10,6 +10,72 @@ defined( 'ABSPATH' ) || exit();
 
 
 function eaccounting_banking_tab_reconciliations() {
+	?>
+
+		<div class="ea-row">
+			<div class="ea-col-12">
+				<span class="ea-control-label"><?php _e( 'Items', 'wp-ever-accounting' ); ?></span>
+				<div class="ea-transaction-table-wrap">
+					<table class="ea-transaction-table" id="transaction-items">
+						<thead>
+						<tr>
+							<th><?php _e( 'Actions', 'wp-ever-accounting' ); ?></th>
+							<th><?php _e( 'Name', 'wp-ever-accounting' ); ?></th>
+							<th><?php _e( 'Quantity', 'wp-ever-accounting' ); ?></th>
+							<th><?php _e( 'Price', 'wp-ever-accounting' ); ?></th>
+							<th><?php _e( 'Tax', 'wp-ever-accounting' ); ?></th>
+							<th><?php _e( 'Total', 'wp-ever-accounting' ); ?></th>
+						</tr>
+						</thead>
+
+						<tbody>
+
+						<tr id="tr-add-item">
+							<td>
+								<button id="ea-button-add-item" class="button-primary button button-small">
+									<i class="fa fa-plus"></i>
+								</button>
+							</td>
+							<td colspan="5"></td>
+						</tr>
+
+						<tr id="tr-subtotal">
+							<td colspan="5"><strong>Subtotal</strong></td>
+							<td ><span id="sub-total">$10,000.00</span></td>
+						</tr>
+
+						<tr id="tr-discount">
+							<td colspan="5">Add Discount</td>
+							<td>
+								<span id="discount-total"></span>
+								<input id="discount" class="ea-form-control" name="discount" type="text" value="">
+							</td>
+						</tr>
+
+						<tr id="tr-tax">
+							<td colspan="5">
+								<strong>Tax</strong>
+							</td>
+							<td><span id="tax-total">$100.00</span></td>
+						</tr>
+
+						<tr id="tr-total">
+							<td colspan="5"><strong>Total</strong></td>
+							<td><span id="grand-total">$10,100.00</span></td>
+						</tr>
+
+						</tbody>
+
+
+					</table>
+				</div>
+
+
+			</div>
+
+		</div>
+
+	<?php
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
 	if ( in_array( $action, [ 'edit', 'add' ] ) ) {

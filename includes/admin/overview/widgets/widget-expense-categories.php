@@ -48,7 +48,6 @@ class Expense_Categories extends Widget {
 			->leftJoin( 'ea_categories c', 'c.id', 't.category_id' )
 			->where( 'c.type', 'expense' )
 			->whereDateBetween( 't.paid_at', $dates['start'], $dates['end'] )
-			->where( 'c.company_id', eaccounting_get_active_company() )
 			->get( OBJECT, function ( $item ) use ( &$data ) {
 				$amount = eaccounting_price_convert_to_default( $item->amount, $item->currency_code, $item->currency_rate );
 				if ( isset( $data[ $item->name ] ) ) {

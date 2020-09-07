@@ -21,7 +21,6 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 		$this->assertNotNull( $category->get_id() );
 		$this->assertEquals( 'expense', $category->get_type() );
 		$this->assertEquals( 'red', $category->get_color() );
-		$this->assertEquals( 1, $category->get_company_id() );
 		$this->assertNotNull( $category->get_date_created() );
 	}
 

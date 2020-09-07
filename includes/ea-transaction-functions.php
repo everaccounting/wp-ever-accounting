@@ -109,9 +109,6 @@ function eaccounting_insert_transaction( $args ) {
 		if ( ! $transaction->get_date_created() ) {
 			$transaction->set_date_created( time() );
 		}
-		if ( ! $transaction->get_company_id() ) {
-			$transaction->set_company_id( 1 );
-		}
 		if ( ! $transaction->get_creator_id() ) {
 			$transaction->set_creator_id();
 		}

@@ -50,7 +50,6 @@ class Account extends Base_Object {
 		'bank_phone'      => null,
 		'bank_address'    => null,
 		'enabled'         => 1,
-		'company_id'      => 1,
 		'creator_id'      => null,
 		'date_created'    => null,
 	);

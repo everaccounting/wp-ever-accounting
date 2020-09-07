@@ -59,7 +59,6 @@ class Transaction extends Base_Object {
 		'parent_id'      => 0,
 		'reconciled'     => 0,
 		'creator_id'     => '',
-		'company_id'     => 1,
 		'date_created'   => '',
 	);
 

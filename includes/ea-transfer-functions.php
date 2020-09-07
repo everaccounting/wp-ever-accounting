@@ -82,9 +82,6 @@ function eaccounting_insert_transfer( $args ) {
 		if ( ! $transfer->get_date_created() ) {
 			$transfer->set_date_created( time() );
 		}
-		if ( ! $transfer->get_company_id() ) {
-			$transfer->set_company_id();
-		}
 		if ( ! $transfer->get_creator_id() ) {
 			$transfer->set_creator_id();
 		}

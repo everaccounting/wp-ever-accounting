@@ -1,0 +1,70 @@
+.ea-transaction-table-wrap{
+	overflow-x: visible;
+	min-height: .01%;
+	box-sizing: border-box;
+	.ea-transaction-table{
+		font-size: 14px;
+		font-weight: 400;
+		border: 1px solid #f4f4f4;
+		width: 100%;
+		max-width: 100%;
+		margin-bottom: 20px;
+		border-spacing: 0;
+		border-collapse: collapse;
+		background-color: transparent;
+		box-sizing: border-box;
+	}
+
+	thead{
+		tr{
+			background-color: #f9f9f9
+		}
+		th{
+			border-bottom: 2px solid #f4f4f4;
+			vertical-align: middle;
+			&:nth-child(1){
+				width: 5%;
+				text-align: center;
+			}
+			&:nth-child(2){
+				width: 40%;
+				text-align: left;
+			}
+			&:nth-child(3){
+				width: 5%;
+				text-align: center;
+			}
+			&:nth-child(4){
+				width: 10%;
+				text-align: right;
+			}
+			&:nth-child(5){
+				width: 15%;
+				text-align: right;
+			}
+			&:nth-child(6){
+				width: 10%;
+				text-align: right;
+			}
+		}
+	}
+	th,td{
+		border-top: 0;
+		border: 1px solid #f4f4f4;
+		vertical-align: middle;
+		padding: 8px;
+		line-height: 1.42857143;
+	}
+
+	.ea-form-control{
+		font-size: 14px !important;
+		min-height: 0 !important;
+	}
+
+
+	#tr-subtotal, #tr-discount, #tr-tax, #tr-total{
+		td{
+			text-align: right;
+		}
+	}
+}

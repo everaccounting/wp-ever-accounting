@@ -24,7 +24,6 @@ class EAccounting_Tests_customer extends EAccounting_Unit_Test_Case {
 			'note'          => 'Test Note',
 			'enabled'       => 1,
 			'creator_id'    => '',
-			'company_id'    => 1,
 		) );
 		$this->assertNotFalse( $customer->exists() );
 
@@ -42,7 +41,6 @@ class EAccounting_Tests_customer extends EAccounting_Unit_Test_Case {
 		$this->assertEquals( 'customer', $customer->get_type() );
 		$this->assertEquals( 'Test Note', $customer->get_note() );
 		$this->assertEquals( 1, $customer->get_enabled() );
-		$this->assertEquals( 1, $customer->get_company_id() );
 		$this->assertNotNull( $customer->get_date_created() );
 
 	}

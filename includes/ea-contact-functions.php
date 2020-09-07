@@ -85,11 +85,6 @@ function eaccounting_insert_contact( $args ) {
 		if ( ! $contact->get_date_created() ) {
 			$contact->set_date_created();
 		}
-
-		if ( ! $contact->get_company_id() ) {
-			$contact->set_company_id();
-		}
-
 		if ( ! $contact->get_creator_id() ) {
 			$contact->set_creator_id();
 		}
@@ -114,7 +109,6 @@ function eaccounting_insert_contact( $args ) {
 			$existing_id = Query_Contact::init()
 			                            ->where( 'email', $contact->get_email() )
 			                            ->where( 'type', $contact->get_type() )
-			                            ->where( 'company_id', $contact->get_company_id() )
 			                            ->value( 0 );
 			if ( ! empty( $existing_id ) && $existing_id != $contact->get_id() ) {
 				throw new Exception( 'duplicate_email', __( 'The email address is already in used.', 'wp-ever-accounting' ) );
