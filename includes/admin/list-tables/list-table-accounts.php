@@ -253,7 +253,7 @@ class List_Table_Accounts extends List_Table {
 			'attr'  => array(
 				'data-object_id'   => $account->get_id(),
 				'data-nonce'      => wp_create_nonce( 'ea_status_update' ),
-				'data-object_type' => 'customer'
+				'data-object_type' => 'account'
 			)
 		) );
 		$output = ob_get_contents();
@@ -328,13 +328,13 @@ class List_Table_Accounts extends List_Table {
 		$action = $this->current_action();
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
-				case 'activate':
+				case 'enable':
 					eaccounting_insert_account( array(
 						'id'      => $id,
 						'enabled' => '1'
 					) );
 					break;
-				case 'deactivate':
+				case 'disable':
 					eaccounting_insert_account( array(
 						'id'      => $id,
 						'enabled' => '0'
