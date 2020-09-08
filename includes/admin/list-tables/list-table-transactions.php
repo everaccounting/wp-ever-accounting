@@ -171,9 +171,9 @@ class List_Table_Transactions extends List_Table {
 	function column_date( $transaction ) {
 		$date   = $transaction->get_paid_at()->date_i18n();
 		$type   = $transaction->get_type();
-		$page   = 'expense' ? 'ea-sales' : 'ea-expenses';
-		$tab    = 'expense' ? 'revenues' : 'payments';
-		$object = $type == 'sales' ? 'revenue_id' : 'payment_id';
+		$page   = $type != 'expense' ? 'ea-sales' : 'ea-expenses';
+		$tab    = $type != 'expense' ? 'revenues' : 'payments';
+		$object = $type != 'expense' ? 'revenue_id' : 'payment_id';
 		$value  = sprintf( '<a href="%1$s">%2$s</a>',
 			esc_url( eaccounting_admin_url( [
 				'action' => 'edit',

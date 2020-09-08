@@ -40,7 +40,7 @@ class Account_Balances extends Widget {
 		$accounts = eaccounting()
 			->query()
 			->select( 'a.name, a.opening_balance, a.currency_code' )
-			->select( "SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) + a.opening_balance  as balance" )
+			->select( "SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) balance" )
 			->from( 'ea_accounts a' )
 			->leftJoin( 'ea_transactions as t', 't.account_id', 'a.id' )
 			->group_by( 'a.id' )
