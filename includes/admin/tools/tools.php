@@ -201,10 +201,7 @@ function eaccounting_tools_import_tab() {
 				  data-nonce="<?php echo wp_create_nonce( 'import-customers_importer_nonce' ); ?>">
 				<p>
 					<?php
-					echo wp_kses_post( sprintf(
-							__( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
-							eaccounting()->plugin_url( '/sample-data/import/customers.csv' )
-					) );
+					echo wp_kses_post( sprintf( __( 'Import customers from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/customers.csv' ) ) );
 					?>
 				</p>
 
@@ -248,10 +245,7 @@ function eaccounting_tools_import_tab() {
 				  data-nonce="<?php echo wp_create_nonce( 'import-vendors_importer_nonce' ); ?>">
 				<p>
 					<?php
-					echo wp_kses_post( sprintf(
-							__( 'Import vendors from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
-							eaccounting()->plugin_url( '/sample-data/import/vendors.csv' )
-					) );
+					echo wp_kses_post( sprintf( __( 'Import vendors from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/vendors.csv' ) ) );
 					?>
 				</p>
 
@@ -295,10 +289,7 @@ function eaccounting_tools_import_tab() {
 				  data-nonce="<?php echo wp_create_nonce( 'import-accounts_importer_nonce' ); ?>">
 				<p>
 					<?php
-					echo wp_kses_post( sprintf(
-							__( 'Import accounts from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
-							eaccounting()->plugin_url( '/sample-data/import/accounts.csv' )
-					) );
+					echo wp_kses_post( sprintf( __( 'Import accounts from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/accounts.csv' ) ) );
 					?>
 				</p>
 
@@ -309,7 +300,7 @@ function eaccounting_tools_import_tab() {
 
 				<div class="ea-importer-bottom">
 					<p>
-						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a vendor field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a account field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
 					</p>
 
 					<table class="widefat striped fixed">
@@ -341,9 +332,7 @@ function eaccounting_tools_import_tab() {
 				  data-type="import-revenues"
 				  data-nonce="<?php echo wp_create_nonce( 'import-revenues_importer_nonce' ); ?>">
 				<p>
-					<?php
-					echo wp_kses_post( sprintf( __( 'Import revenues from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/vendors.csv' )
-					) );
+					<?php  echo wp_kses_post( sprintf( __( 'Import revenues from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/revenues.csv' ) ) );
 					?>
 				</p>
 
@@ -354,7 +343,7 @@ function eaccounting_tools_import_tab() {
 
 				<div class="ea-importer-bottom">
 					<p>
-						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a vendor field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a revenue field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
 					</p>
 
 					<table class="widefat striped fixed">
@@ -388,7 +377,7 @@ function eaccounting_tools_import_tab() {
 				  data-nonce="<?php echo wp_create_nonce( 'import-payments_importer_nonce' ); ?>">
 				<p>
 					<?php
-					echo wp_kses_post( sprintf( __( 'Import payments from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/vendors.csv' )
+					echo wp_kses_post( sprintf( __( 'Import payments from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/payments.csv' )
 					) );
 					?>
 				</p>
@@ -400,7 +389,7 @@ function eaccounting_tools_import_tab() {
 
 				<div class="ea-importer-bottom">
 					<p>
-						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a vendor field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a payment field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
 					</p>
 
 					<table class="widefat striped fixed">
@@ -445,7 +434,7 @@ function eaccounting_tools_import_tab() {
 
 				<div class="ea-importer-bottom">
 					<p>
-						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a vendor field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a currency field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
 					</p>
 
 					<table class="widefat striped fixed">
@@ -490,7 +479,7 @@ function eaccounting_tools_import_tab() {
 
 				<div class="ea-importer-bottom">
 					<p>
-						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a vendor field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+						<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a category field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
 					</p>
 
 					<table class="widefat striped fixed">
