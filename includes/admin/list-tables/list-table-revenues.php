@@ -297,9 +297,6 @@ class List_Table_Revenues extends List_Table {
 				'default'     => '',
 				'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
 				'type'        => 'customer',
-				'attr'        => array(
-					'data-allow-clear' => true
-				)
 			] );
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );

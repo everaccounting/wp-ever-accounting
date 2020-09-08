@@ -9,12 +9,12 @@
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="tmpl-ea-modal-add-category">
-	<div class="ea-backbone-modal">
-		<div class="ea-backbone-modal-content">
-			<section class="ea-backbone-modal-main" role="main">
+	<div class="ea-modal">
+		<div class="ea-modal-content">
+			<section class="ea-modal-main" role="main">
 				<form id="ea-modal-account-form" action="" method="post">
 
-					<header class="ea-backbone-modal-header">
+					<header class="ea-modal-header">
 						<h1><?php esc_html_e( 'Add Category', 'wp-ever-accounting' ); ?></h1>
 						<button class="modal-close modal-close-link dashicons">
 							<span class="screen-reader-text"><?php _e( 'Close', 'wp-ever-accounting' ); ?>></span>
@@ -61,5 +61,5 @@ defined( 'ABSPATH' ) || exit();
 			</section>
 		</div>
 	</div>
-	<div class="ea-backbone-modal-backdrop modal-close"></div>
+	<div class="ea-modal-backdrop modal-close"></div>
 </script>

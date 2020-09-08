@@ -176,16 +176,16 @@
 
 
 /**
-  * Backbone modal dialog
+  * modal dialog
   */
 
-.ea-backbone-modal {
+.ea-modal {
 
   * {
 	box-sizing: border-box;
   }
 
-  .ea-backbone-modal-content {
+  .ea-modal-content {
 	position: fixed;
 	background: #fff;
 	z-index: 100000;
@@ -220,7 +220,7 @@
 
 @media screen and (max-width: 782px) {
 
-  .ea-backbone-modal .ea-backbone-modal-content {
+  .ea-modal .ea-modal-content {
 	width: 100%;
 	height: 100%;
 	min-width: 100%;
@@ -228,7 +228,7 @@
 }
 
 
-.ea-backbone-modal-backdrop {
+.ea-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -240,7 +240,7 @@
   z-index: 99;
 }
 
-.ea-backbone-modal-main {
+.ea-modal-main {
   padding-bottom: 55px;
 
   header,
@@ -249,7 +249,7 @@
 	position: relative;
   }
 
-  .ea-backbone-modal-header {
+  .ea-modal-header {
 	height: auto;
 	background: #fcfcfc;
 	padding: 1em 1.5em;

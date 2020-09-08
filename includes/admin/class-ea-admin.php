@@ -170,7 +170,8 @@ class Admin {
 			eaccounting_get_admin_template( 'js/modal-add-account' );
 			eaccounting_get_admin_template( 'js/modal-add-currency' );
 			eaccounting_get_admin_template( 'js/modal-add-category' );
-			eaccounting_get_admin_template( 'js/modal-add-contact' );
+			eaccounting_get_admin_template( 'js/modal-add-customer' );
+			eaccounting_get_admin_template( 'js/modal-add-vendor' );
 		}
 	}
 

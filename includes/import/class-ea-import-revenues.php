@@ -17,6 +17,7 @@ use EverAccounting\Query_Account;
 
 /**
  * Class Import_Revenues
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Import
@@ -25,8 +26,8 @@ class Import_Revenues extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	protected function get_headers() {
 		return eaccounting_get_io_headers( 'revenue' );
@@ -35,8 +36,8 @@ class Import_Revenues extends CSV_Importer {
 	/**
 	 * Return the required key to import item.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function get_required() {
 		return array( 'paid_at', 'currency_code', 'account_name', 'category_name', 'payment_method' );
@@ -45,8 +46,8 @@ class Import_Revenues extends CSV_Importer {
 	/**
 	 * Get formatting callback.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	protected function get_formatting_callback() {
 		return array(
@@ -58,8 +59,8 @@ class Import_Revenues extends CSV_Importer {
 			'vendor_name'    => array( $this, 'parse_text_field' ),
 			'category_name'  => array( $this, 'parse_text_field' ),
 			'description'    => array( $this, 'parse_description_field' ),
-			'payment_method' => array( $this, 'parse_date_field' ),
-			'reference'      => array( $this, 'parse_date_field' ),
+			'payment_method' => array( $this, 'parse_text_field' ),
+			'reference'      => array( $this, 'parse_text_field' ),
 		);
 	}
 
@@ -87,9 +88,9 @@ class Import_Revenues extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category_id   = Query_Category::init()->select( 'id' )->where( $data['category_name'], 'name' )->value( 0 );
-		$currency_code = Query_Currency::init()->select( 'id' )->where( $data['currency_code'], 'code' )->value( 0 );
-		$account_id    = Query_Account::init()->select( 'id' )->where( $data['account_name'], 'name' )->value( 0 );
+		$category_id   = Query_Category::init()->select( 'id' )->where( 'name', $data['account_name'] )->value( 0 );
+		$currency_code = Query_Currency::init()->find( $data['currency_code'], 'code' );
+		$account_id    = Query_Account::init()->select( 'id' )->where('name', $data['account_name'] )->value( 0 );
 
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );

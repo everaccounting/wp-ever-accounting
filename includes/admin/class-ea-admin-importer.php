@@ -28,6 +28,8 @@ class Importer {
 			'limit'           => apply_filters( 'eaccounting_import_batch_size', 30 ),
 			'parse'           => true,
 		);
+
+
 		$step   = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : '';
 		$type   = sanitize_key( $_REQUEST['type'] );
 		$file   = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';

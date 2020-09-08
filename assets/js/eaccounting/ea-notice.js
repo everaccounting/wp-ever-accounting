@@ -45,8 +45,8 @@ jQuery( function ( $ ) {
 				return ( offsetSum = Math.max(
 					offsetSum,
 					parseInt( $( this ).css( options.offset.from ) ) +
-						this.offsetHeight +
-						options.spacing
+					this.offsetHeight +
+					options.spacing
 				) );
 			} );
 		} else {
@@ -56,8 +56,8 @@ jQuery( function ( $ ) {
 					return ( offsetSum = Math.max(
 						offsetSum,
 						parseInt( $( this ).css( options.offset.from ) ) +
-							this.offsetHeight +
-							options.spacing
+						this.offsetHeight +
+						options.spacing
 					) );
 				} );
 		}

@@ -7,9 +7,9 @@
 	 *
 	 * @param {object} options
 	 */
-	$.fn.ea_backbone_modal = function ( options ) {
+	$.fn.ea_modal = function ( options ) {
 		return this.each( function () {
-			new $.ea_backbone_modal( $( this ), options );
+			new $.ea_modal( $( this ), options );
 		} );
 	};
 
@@ -19,15 +19,15 @@
 	 * @param {object} element [description]
 	 * @param {object} options [description]
 	 */
-	$.ea_backbone_modal = function ( element, options ) {
+	$.ea_modal = function ( element, options ) {
 		// Set settings
 		var settings = $.extend(
 			{},
-			$.ea_backbone_modal.defaultOptions,
+			$.ea_modal.defaultOptions,
 			options
 		);
 		if ( settings.template ) {
-			new $.ea_backbone_modal.View( {
+			new $.ea_modal.View( {
 				target: settings.template,
 				string: settings.variable,
 				onSubmit: options.onSubmit,
@@ -41,7 +41,7 @@
 	 *
 	 * @type {object}
 	 */
-	$.ea_backbone_modal.defaultOptions = {
+	$.ea_modal.defaultOptions = {
 		template: '',
 		variable: {},
 		onSubmit: undefined,
@@ -53,9 +53,9 @@
 	 *
 	 * @return {null}
 	 */
-	$.ea_backbone_modal.View = Backbone.View.extend( {
+	$.ea_modal.View = Backbone.View.extend( {
 		tagName: 'div',
-		id: 'ea-backbone-modal-dialog',
+		id: 'ea-modal-dialog',
 		_target: undefined,
 		_string: undefined,
 		onSubmit: undefined,
@@ -66,7 +66,7 @@
 			keydown: 'keyboardActions',
 		},
 		resizeContent: function () {
-			var $content = $( '.ea-backbone-modal-content' ).find( 'article' );
+			var $content = $( '.ea-modal-content' ).find( 'article' );
 			var max_h = $( window ).height() * 0.75;
 
 			$content.css( {
@@ -99,14 +99,14 @@
 				.addClass( 'ea-modal-open' );
 
 			this.resizeContent();
-			this.$( '.ea-backbone-modal-content' )
+			this.$( '.ea-modal-content' )
 				.attr( 'tabindex', '0' )
 				.focus();
 
 			$( document.body ).trigger( 'init_tooltips' );
 
 			$( document.body ).trigger(
-				'ea_backbone_modal_loaded',
+				'ea_modal_loaded',
 				this._target
 			);
 			$( document.body ).trigger( this._target + '_loaded' );
@@ -127,7 +127,7 @@
 		},
 		closeModal: function () {
 			$( document.body ).trigger(
-				'ea_backbone_modal_before_remove',
+				'ea_modal_before_remove',
 				this._target
 			);
 			this.undelegateEvents();
@@ -139,7 +139,7 @@
 				.removeClass( 'ea-modal-open' );
 			this.remove();
 			$( document.body ).trigger(
-				'ea_backbone_modal_removed',
+				'ea_modal_removed',
 				this._target
 			);
 		},

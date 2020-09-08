@@ -8,14 +8,14 @@
  */
 defined( 'ABSPATH' ) || exit();
 ?>
-<script type="text/template" id="tmpl-ea-modal-add-contact">
-	<div class="ea-backbone-modal">
-		<div class="ea-backbone-modal-content">
-			<section class="ea-backbone-modal-main" role="main">
+<script type="text/template" id="tmpl-ea-modal-add-customer">
+	<div class="ea-modal">
+		<div class="ea-modal-content">
+			<section class="ea-modal-main" role="main">
 				<form id="ea-modal-contact-form" class="ea-ajax-form" action="" method="post">
 
-					<header class="ea-backbone-modal-header">
-						<h1><?php esc_html_e( 'Add Contact', 'wp-ever-accounting' ); ?></h1>
+					<header class="ea-modal-header">
+						<h1><?php esc_html_e( 'Add Customer', 'wp-ever-accounting' ); ?></h1>
 						<button class="modal-close modal-close-link dashicons">
 							<span class="screen-reader-text"><?php _e( 'Close', 'wp-ever-accounting' ); ?>></span>
 						</button>
@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit();
 							) );
 							eaccounting_currency_dropdown( array(
 									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
+									'label'         => __( 'Currency', 'wp-ever-accounting' ),
 									'name'          => 'currency_code',
 									'value'         => '',
 									'placeholder'   => __( 'Select Currency', 'wp-ever-accounting' ),
@@ -84,5 +84,5 @@ defined( 'ABSPATH' ) || exit();
 			</section>
 		</div>
 	</div>
-	<div class="ea-backbone-modal-backdrop modal-close"></div>
+	<div class="ea-modal-backdrop modal-close"></div>
 </script>

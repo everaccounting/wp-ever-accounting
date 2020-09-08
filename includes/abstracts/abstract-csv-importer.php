@@ -223,7 +223,7 @@ abstract class CSV_Importer {
 			// Remove BOM signature from the first item.
 			if ( isset( $this->raw_keys[0] ) ) {
 				if ( 'efbbbf' === substr( bin2hex( $this->raw_keys[0] ), 0, 6 ) ) {
-					$this->raw_keys[0] = substr( $this->raw_keys[0], 3 );
+					$this->raw_keys[0] = str_replace($this->params['enclosure'], '', substr( $this->raw_keys[0], 3 ));
 				}
 			}
 

@@ -458,6 +458,7 @@ function eaccounting_file_input( $field ) {
 	$field['wrapper_class']      .= ( true == $field['required'] ) ? ' required ' : '';
 	if ( ! empty( $field['types'] ) ) {
 		$field['attr']['data-types'] = implode( '|', $field['types'] );
+		$field['attr']['accept'] = implode( ',', $field['types'] );
 	}
 
 	// Custom attribute handling
@@ -478,10 +479,10 @@ function eaccounting_file_input( $field ) {
 	?>
 	<div class="ea-files-wrap <?php echo sanitize_html_class( $uploader_class ); ?>">
 		<ul class="ea-files-preview">
-<!--			<li>-->
-<!--				<a href="#">a3-t1-08-04 (modified)-working_1.pdf</a>-->
-<!--				<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>-->
-<!--			</li>-->
+			<!--			<li>-->
+			<!--				<a href="#">a3-t1-08-04 (modified)-working_1.pdf</a>-->
+			<!--				<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>-->
+			<!--			</li>-->
 		</ul>
 		<?php
 		echo sprintf( '<input type="hidden" name="%s" class="ea-files" id="%s" value="%s"/>',
@@ -664,10 +665,7 @@ function eaccounting_contact_dropdown( $field ) {
 			'options'  => wp_list_pluck( $options, 'name', 'id' ),
 			'type'     => $type,
 			'ajax'     => true,
-			'template' => 'add-contact',
-			'data'     => array(
-					'data-contact_type' => $type
-			),
+			'template' => 'add-' . $type,
 	), $field );
 	eaccounting_select2( apply_filters( 'eaccounting_contact_dropdown', $field ) );
 }

@@ -75,7 +75,7 @@ class Import_Vendors extends CSV_Importer {
 		}
 
 		$currency_code = null;
-		$exists        = Query_Currency::init()->select( 'id' )->where( $data['currency_code'], 'code' )->value( 0 );
+		$exists        = Query_Currency::init()->find($data['currency_code'],'code');
 
 		if ( empty( $exists ) ) {
 			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
