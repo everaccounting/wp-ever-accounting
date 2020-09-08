@@ -267,19 +267,18 @@ class List_Table_Customers extends List_Table {
 	 * @return string
 	 */
 	function column_actions( $customer ) {
-		$base_uri    = eaccounting_admin_url( array( 'contact_id' => $customer->get_id(), 'tab' => 'customers' ) );
+		$base_uri    = eaccounting_admin_url( array( 'customer_id' => $customer->get_id(), 'tab' => 'customers' ) );
 		$row_actions = array();
 
 		$row_actions['edit']   = array(
-			'label' => __( 'Edit', 'wp-ever-accounting' ),
-			array( 'action' => 'edit' ),
-			array( 'base_uri' => $base_uri )
+			'label'    => __( 'Edit', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
 		);
 		$row_actions['delete'] = array(
-			'label' => __( 'Delete', 'wp-ever-accounting' ),
-			array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
+			'label'    => __( 'Delete', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+			'nonce'    => 'customer-nonce',
 		);
-
 		$row_actions = apply_filters( 'eaccounting_customers_table_row_actions', $row_actions, $customer );
 
 		return $this->row_actions( $row_actions );

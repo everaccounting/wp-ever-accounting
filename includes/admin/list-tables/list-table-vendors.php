@@ -267,17 +267,17 @@ class List_Table_Vendors extends List_Table {
 	 * @return string
 	 */
 	function column_actions( $vendor ) {
-		$base_uri    = eaccounting_admin_url( array( 'contact_id' => $vendor->get_id(), 'tab' => 'vendors' ) );
+		$base_uri    = eaccounting_admin_url( array( 'vendor_id' => $vendor->get_id(), 'tab' => 'vendors' ) );
 		$row_actions = array();
 
 		$row_actions['edit']   = array(
-			'label' => __( 'Edit', 'wp-ever-accounting' ),
-			array( 'action' => 'edit' ),
-			array( 'base_uri' => $base_uri )
+			'label'    => __( 'Edit', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
 		);
 		$row_actions['delete'] = array(
-			'label' => __( 'Delete', 'wp-ever-accounting' ),
-			array( 'base_uri' => $base_uri, 'nonce' => 'account-nonce' )
+			'label'    => __( 'Delete', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+			'nonce'    => 'vendor-nonce',
 		);
 
 		$row_actions = apply_filters( 'eaccounting_vendors_table_row_actions', $row_actions, $vendor );
