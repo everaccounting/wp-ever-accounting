@@ -241,6 +241,32 @@ class List_Table_Payments extends List_Table {
 		return apply_filters( 'eaccounting_payments_table_reference', esc_html( $reference ), $payment );
 	}
 
+	/**
+	 * @param $payment
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return string
+	 */
+	function column_actions( $payment ) {
+		$base_uri              = eaccounting_admin_url( array( 'payment_id' => $payment->get_id(), 'tab' => 'payments' ) );
+		$row_actions           = array();
+		$row_actions['edit']   = array(
+			'label'    => __( 'Edit', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+		);
+		$row_actions['delete'] = array(
+			'label'    => __( 'Delete', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+			'nonce'    => 'payment-nonce',
+		);
+
+		$row_actions = apply_filters( 'eaccounting_payment_row_actions', $row_actions, $payment );
+
+		return $this->row_actions( $row_actions );
+	}
+
+
 
 	/**
 	 * Renders the message to be displayed when there are no items.

@@ -241,6 +241,31 @@ class List_Table_Revenues extends List_Table {
 		return apply_filters( 'eaccounting_revenues_table_reference', esc_html( $reference ), $revenue );
 	}
 
+	/**
+	 * @param $revenue
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return string
+	 */
+	function column_actions( $revenue ) {
+		$base_uri              = eaccounting_admin_url( array( 'revenue_id' => $revenue->get_id(), 'tab' => 'revenues' ) );
+		$row_actions           = array();
+		$row_actions['edit']   = array(
+			'label'    => __( 'Edit', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+		);
+		$row_actions['delete'] = array(
+			'label'    => __( 'Delete', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+			'nonce'    => 'revenue-nonce',
+		);
+
+		$row_actions = apply_filters( 'eaccounting_revenue_row_actions', $row_actions, $revenue );
+
+		return $this->row_actions( $row_actions );
+	}
+
 
 	/**
 	 * Renders the message to be displayed when there are no items.
