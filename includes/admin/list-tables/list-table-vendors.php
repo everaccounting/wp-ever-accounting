@@ -346,7 +346,7 @@ class List_Table_Vendors extends List_Table {
 			}
 		}
 
-		if ( ! empty( $action ) ) {
+		if ( isset( $_GET['_wpnonce'] ) ) {
 			wp_safe_redirect( remove_query_arg( [
 				'vendor_id',
 				'action',

@@ -271,7 +271,7 @@ class List_Table_Transfers extends List_Table {
 			}
 		}
 
-		if ( ! empty( $action ) ) {
+		if ( isset( $_GET['_wpnonce'] ) ) {
 			wp_safe_redirect( remove_query_arg( [
 				'transfer_id',
 				'action',
