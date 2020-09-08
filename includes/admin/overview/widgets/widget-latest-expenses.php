@@ -28,7 +28,7 @@ class Latest_Expenses extends Widget {
 	 * @since 1.0.2
 	 */
 	public function get_title() {
-		echo sprintf( '<h2>%s</h2>', __( 'Latest Incomes', 'wp-ever-accounting' ) );
+		echo sprintf( '<h2>%s</h2>', __( 'Latest Expenses', 'wp-ever-accounting' ) );
 	}
 
 	/**
