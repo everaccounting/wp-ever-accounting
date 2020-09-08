@@ -4,9 +4,9 @@ use \EverAccounting\Query_Transaction;
 
 function eaccounting_reports_income_summary_tab() {
 	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' );
-	$category_id = isset( $_REQUEST['category_id'] ) ? intval( $_REQUEST['category_id'] ) : '';
-	$account_id  = isset( $_REQUEST['account_id'] ) ? intval( $_REQUEST['account_id'] ) : '';
-	$customer_id = isset( $_REQUEST['customer_id'] ) ? intval( $_REQUEST['customer_id'] ) : '';
+	$category_id = isset( $_REQUEST['category_id'] ) ? absint( $_REQUEST['category_id'] ) : '';
+	$account_id  = isset( $_REQUEST['account_id'] ) ? absint( $_REQUEST['account_id'] ) : '';
+	$customer_id = isset( $_REQUEST['customer_id'] ) ? absint( $_REQUEST['customer_id'] ) : '';
 
 	?>
 	<div class="ea-card is-compact">
@@ -21,7 +21,7 @@ function eaccounting_reports_income_summary_tab() {
 					'value' => 'income_summary'
 			) );
 
-			$years = range( $year, ( $year - 5 ), 1 );
+			$years = range( date('Y'), ( $year - 5 ), 1 );
 			eaccounting_select2( array(
 					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
 					'name'        => 'year',
@@ -30,20 +30,31 @@ function eaccounting_reports_income_summary_tab() {
 			) );
 			eaccounting_account_dropdown( array(
 					'placeholder' => __( 'Account', 'wp-ever-accounting' ),
+					'default'     => '',
 					'name'        => 'account_id',
-					'value'       => $account_id
+					'value'       => $account_id,
+					'attr'        => array(
+							'data-allow-clear' => true
+					)
 			) );
 			eaccounting_contact_dropdown( array(
 					'placeholder' => __( 'Customer', 'wp-ever-accounting' ),
 					'name'        => 'customer_id',
 					'type'        => 'customer',
-					'value'       => $customer_id
+					'value'       => $customer_id,
+					'attr'        => array(
+							'data-allow-clear' => true
+					)
 			) );
 			eaccounting_category_dropdown( array(
 					'placeholder' => __( 'Category', 'wp-ever-accounting' ),
 					'name'        => 'category_id',
+					'default'     => '',
 					'type'        => 'income',
-					'value'       => $category_id
+					'value'       => $category_id,
+					'attr'        => array(
+							'data-allow-clear' => true
+					)
 			) );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			?>
@@ -53,7 +64,7 @@ function eaccounting_reports_income_summary_tab() {
 		<?php
 		$dates        = $totals = $incomes = $graph = $categories = [];
 		$start        = eaccounting_get_financial_start( $year );
-		$end          = eaccounting_get_financial_end($year);
+		$end          = eaccounting_get_financial_end( $year );
 		$transactions = Query_Transaction::init()
 										 ->select( 'name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id' )
 										 ->whereDateBetween( 'paid_at', $start, $end )
@@ -93,7 +104,7 @@ function eaccounting_reports_income_summary_tab() {
 		}
 
 		foreach ( $transactions as $transaction ) {
-			if(isset($incomes[ $transaction->category_id ])){
+			if ( isset( $incomes[ $transaction->category_id ] ) ) {
 				$month                                                    = date( 'F', strtotime( $transaction->paid_at ) );
 				$month_year                                               = date( 'F-Y', strtotime( $transaction->paid_at ) );
 				$incomes[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;

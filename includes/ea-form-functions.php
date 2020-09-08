@@ -482,11 +482,11 @@ function eaccounting_file_input( $field ) {
 		);
 	}
 
-	$link = empty($field['value'])?'': $field['value'];
-	$name = empty($field['value'])?'': basename($field['value']);
+	$link = empty( $field['value'] ) ? '' : $field['value'];
+	$name = empty( $field['value'] ) ? '' : basename( $field['value'] );
 	?>
 	<div class="ea-file" style="<?php echo empty( $field['value'] ) ? 'display:none' : ''; ?>">
-		<a href="<?php echo esc_url($link);?>" target="_blank" class="ea-file-link"><?php echo sanitize_file_name($name);?></a>
+		<a href="<?php echo esc_url( $link ); ?>" target="_blank" class="ea-file-link"><?php echo sanitize_file_name( $name ); ?></a>
 		<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>
 	</div>
 	<?php
@@ -679,7 +679,7 @@ function eaccounting_contact_dropdown( $field ) {
  *
  */
 function eaccounting_account_dropdown( $field ) {
-	$default_id = (int) eaccounting()->settings->get( 'default_account' );
+	$default_id = '';
 	$account_id = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : 0;
 	$options    = array();
 	$wherein    = array_filter( array_unique( array( $default_id, $account_id ) ) );
@@ -688,6 +688,9 @@ function eaccounting_account_dropdown( $field ) {
 												->select( 'id, name' )
 												->whereIn( 'id', $wherein )
 												->get();
+	}
+	if ( ! isset( $field['default'] ) ) {
+		$default_id = (int) eaccounting()->settings->get( 'default_account' );
 	}
 
 	$field = wp_parse_args( $field, array(
@@ -745,9 +748,14 @@ function eaccounting_category_dropdown( $field ) {
  * @return void
  */
 function eaccounting_payment_method_dropdown( $field ) {
+	$default = '';
+	if ( ! isset( $field['default'] ) ) {
+		$default = eaccounting()->settings->get( 'default_payment_method' );
+	}
+
 	$field = wp_parse_args( array(
 			'placeholder' => __( 'Enter payment method', 'wp-ever-accounting' ),
-			'default'     => eaccounting()->settings->get( 'default_payment_method' ),
+			'default'     => $default,
 			'options'     => eaccounting_get_payment_methods(),
 	), $field );
 

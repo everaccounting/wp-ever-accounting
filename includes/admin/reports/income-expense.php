@@ -15,17 +15,23 @@ function eaccounting_reports_income_expense_tab() {
 					'value' => 'income_expense'
 			) );
 
-			$years = range( $year, ( $year - 5 ), 1 );
+			$years = range( date('Y'), ( $year - 5 ), 1 );
 			eaccounting_select2( array(
 					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
 					'name'        => 'year',
 					'options'     => array_combine( array_values( $years ), $years ),
 					'value'       => $year,
+
 			) );
 			eaccounting_account_dropdown( array(
 					'placeholder' => __( 'Account', 'wp-ever-accounting' ),
 					'name'        => 'account_id',
-					'value'       => $account_id
+					'default'     => '',
+					'value'       => $account_id,
+					'attr'        => array(
+							'data-allow-clear' => true
+					)
+
 			) );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			?>

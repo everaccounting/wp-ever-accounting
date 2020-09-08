@@ -21,7 +21,7 @@ function eaccounting_reports_expense_summary_tab() {
 					'value' => 'expense_summary'
 			) );
 
-			$years = range( $year, ( $year - 5 ), 1 );
+			$years = range( date('Y'), ( $year - 5 ), 1 );
 			eaccounting_select2( array(
 					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
 					'name'        => 'year',
@@ -30,20 +30,30 @@ function eaccounting_reports_expense_summary_tab() {
 			) );
 			eaccounting_account_dropdown( array(
 					'placeholder' => __( 'Account', 'wp-ever-accounting' ),
+					'default'     => '',
 					'name'        => 'account_id',
-					'value'       => $account_id
+					'value'       => $account_id,
+					'attr'        => array(
+							'data-allow-clear' => true
+					)
 			) );
 			eaccounting_contact_dropdown( array(
 					'placeholder' => __( 'Vendor', 'wp-ever-accounting' ),
 					'name'        => 'vendor_id',
 					'type'        => 'vendor',
-					'value'       => $vendor_id
+					'value'       => $vendor_id,
+					'attr'        => array(
+							'data-allow-clear' => true
+					)
 			) );
 			eaccounting_category_dropdown( array(
 					'placeholder' => __( 'Category', 'wp-ever-accounting' ),
 					'name'        => 'category_id',
 					'type'        => 'expense',
-					'value'       => $category_id
+					'value'       => $category_id,
+					'attr'        => array(
+							'data-allow-clear' => true
+					)
 			) );
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			?>
