@@ -20,8 +20,8 @@ jQuery(function ($) {
 		this.$amount_input = $('#amount, #opening_balance', this.$form);
 		this.$currency_code_select = $('#code, #currency_code', this.$form);
 		this.$uploader = $('[type="file"]', this.$form);
-		this.$file_input = $('.ea-files-upload', this.$form);
-		this.$file_preview = $('.ea-files-preview', this.$el);
+		this.$file_value = $('.ea-file-input', this.$form);
+		this.$file_preview = $('.ea-file', this.$el);
 
 		this.block = function () {
 			this.$form.block({
@@ -153,8 +153,39 @@ jQuery(function ($) {
 
 
 		plugin.$uploader.on('change', function (e) {
-			console.log(e);
+			var data = new FormData();
+			data.append('nonce', plugin.$uploader.data('nonce'));
+			data.append('upload', plugin.$uploader[0].files[0]);
+			data.append('limit', plugin.$uploader.data('limit'));
+			data.append('action', 'eaccounting_upload_files');
+			plugin.block();
+			window.wp.ajax.send({
+				type: 'POST',
+				data: data,
+				dataType: 'json',
+				cache: false,
+				contentType: false,
+				processData: false,
+				success: function (res) {
+					plugin.unblock();
+					plugin.$file_value.val(res.url);
+					plugin.$file_preview.find('.ea-file-link').text(res.name).attr('href', res.url);
+					plugin.$file_preview.show();
+					plugin.$uploader.hide();
+				},
+				error: function (error) {
+					plugin.handle_error(error);
+				},
+			});
 		});
+
+		plugin.$form.find('.ea-file-delete').on('click', function (e) {
+			e.preventDefault();
+			plugin.$file_value.val('');
+			plugin.$file_preview.find('.ea-file-link').text('').attr('href', '');
+			plugin.$file_preview.hide();
+			plugin.$uploader.show();
+		})
 
 
 		this.$form.on('submit', function (e) {
@@ -177,7 +208,7 @@ jQuery(function ($) {
 					$.eaccounting_notice(error.message, 'error');
 				},
 			});
-		})
+		});
 
 
 //

@@ -211,7 +211,7 @@ class EAccounting_Install {
 			`currency_code` varchar(3),
   			`type` VARCHAR(100) DEFAULT NULL COMMENT 'Customer or vendor',
 			`note` TEXT DEFAULT NULL,
-			`files` TEXT DEFAULT NULL,
+			`attachment` TEXT DEFAULT NULL,
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
 			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -236,7 +236,7 @@ class EAccounting_Install {
 		  	`description` text,
 	  		`payment_method` VARCHAR(100) DEFAULT NULL,
 		  	`reference` VARCHAR(191) DEFAULT NULL,
-			`files` TEXT DEFAULT NULL,
+			`attachment` TEXT DEFAULT NULL,
 		  	`parent_id` INT(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 		    `creator_id` INT(11) DEFAULT NULL,
@@ -261,21 +261,21 @@ class EAccounting_Install {
 		    KEY `expense_id` (`expense_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 
-			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_reconciliations(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`account_id` INT(11) NOT NULL,
-  			`date_started` DATETIME NULL DEFAULT NULL,
-  			`date_ended` DATETIME NULL DEFAULT NULL,
-  			`closing_balance` double(15,4) NOT NULL DEFAULT '0.0000',
-  			`reconciled` tinyint(1) NOT NULL,
-  			`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `account_id` (`account_id`),
-		    KEY `date_started` (`date_started`),
-		    KEY `date_ended` (`date_ended`),
-		    KEY `reconciled` (`reconciled`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+//			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_reconciliations(
+//            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+//  			`account_id` INT(11) NOT NULL,
+//  			`date_started` DATETIME NULL DEFAULT NULL,
+//  			`date_ended` DATETIME NULL DEFAULT NULL,
+//  			`closing_balance` double(15,4) NOT NULL DEFAULT '0.0000',
+//  			`reconciled` tinyint(1) NOT NULL,
+//  			`creator_id` INT(11) DEFAULT NULL,
+//		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+//		    PRIMARY KEY (`id`),
+//		    KEY `account_id` (`account_id`),
+//		    KEY `date_started` (`date_started`),
+//		    KEY `date_ended` (`date_ended`),
+//		    KEY `reconciled` (`reconciled`)
+//            ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
 		];
 
 

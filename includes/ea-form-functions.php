@@ -426,6 +426,13 @@ function eaccounting_select( $field ) {
 	}
 }
 
+/**
+ * File input field.
+ *
+ * @since 1.0.2
+ *
+ * @param $field
+ */
 function eaccounting_file_input( $field ) {
 	$field = (array) wp_parse_args(
 			$field, array(
@@ -433,10 +440,8 @@ function eaccounting_file_input( $field ) {
 					'class'         => 'short',
 					'style'         => '',
 					'wrapper_class' => '',
-					'default'       => '',
 					'value'         => '',
 					'name'          => '',
-					'placeholder'   => '',
 					'tooltip'       => '',
 					'desc'          => '',
 					'types'         => array( 'jpg', 'jpeg', 'png' ),
@@ -458,16 +463,17 @@ function eaccounting_file_input( $field ) {
 	$field['wrapper_class']      .= ( true == $field['required'] ) ? ' required ' : '';
 	if ( ! empty( $field['types'] ) ) {
 		$field['attr']['data-types'] = implode( '|', $field['types'] );
-		$field['attr']['accept'] = implode( ',', $field['types'] );
+		$field['attr']['accept']     = implode( ',', $field['types'] );
 	}
 
 	// Custom attribute handling
-	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
-	$tooltip    = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
-	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
+	$attributes     = eaccounting_implode_html_attributes( $field['attr'] );
+	$tooltip        = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
+	$desc           = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
+	$field['style'] .= ! empty( $field['value'] ) ? 'display:none;' : '';
 
 	if ( ! empty( $field['label'] ) ) {
-		echo sprintf( '<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+		echo sprintf( '<div class="ea-form-field ea-file-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
 				esc_attr( $field['id'] ),
 				esc_attr( $field['wrapper_class'] ),
 				esc_attr( $field['id'] ),
@@ -475,32 +481,26 @@ function eaccounting_file_input( $field ) {
 				$tooltip
 		);
 	}
-	$uploader_class = empty( $field['value'] ) ? '' : 'has-file';
-	?>
-	<div class="ea-files-wrap <?php echo sanitize_html_class( $uploader_class ); ?>">
-		<ul class="ea-files-preview">
-			<!--			<li>-->
-			<!--				<a href="#">a3-t1-08-04 (modified)-working_1.pdf</a>-->
-			<!--				<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>-->
-			<!--			</li>-->
-		</ul>
-		<?php
-		echo sprintf( '<input type="hidden" name="%s" class="ea-files" id="%s" value="%s"/>',
-				esc_attr( $field['name'] ),
-				esc_attr( $field['id'] ),
-				esc_attr( $field['value'] )
-		);
-		echo sprintf( '<input type="file" class="ea-files-upload %s" style="%s" %s/>',
-				esc_attr( $field['class'] ),
-				esc_attr( $field['style'] ),
-				$attributes
-		);
-		?>
-	</div>
 
+	$link = empty($field['value'])?'': $field['value'];
+	$name = empty($field['value'])?'': basename($field['value']);
+	?>
+	<div class="ea-file" style="<?php echo empty( $field['value'] ) ? 'display:none' : ''; ?>">
+		<a href="<?php echo esc_url($link);?>" target="_blank" class="ea-file-link"><?php echo sanitize_file_name($name);?></a>
+		<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>
+	</div>
 	<?php
 
-
+	echo sprintf( '<input type="hidden" name="%s" class="ea-file-input" id="%s" value="%s"/>',
+			esc_attr( $field['name'] ),
+			esc_attr( $field['id'] ),
+			esc_attr( $field['value'] )
+	);
+	echo sprintf( '<input type="file" class="ea-file-upload %s" style="%s" %s/>',
+			esc_attr( $field['class'] ),
+			esc_attr( $field['style'] ),
+			$attributes
+	);
 	if ( ! empty( $field['label'] ) ) {
 		echo $desc;
 

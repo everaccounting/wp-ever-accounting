@@ -106,6 +106,15 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'wrapper_class' => 'ea-col-6',
 						'placeholder'   => __( 'Enter reference', 'wp-ever-accounting' ),
 				) );
+
+				eaccounting_file_input( array(
+						'label'         => __( 'Attachments', 'wp-ever-accounting' ),
+						'name'          => 'attachment',
+						'value'         => $payment->get_attachment(),
+						'required'      => false,
+						'wrapper_class' => 'ea-col-6',
+						'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),
+				) );
 				eaccounting_hidden_input( array(
 						'name'  => 'id',
 						'value' => $payment->get_id()

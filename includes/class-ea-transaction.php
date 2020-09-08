@@ -56,6 +56,7 @@ class Transaction extends Base_Object {
 		'description'    => '',
 		'payment_method' => '',
 		'reference'      => '',
+		'attachment'     => '',
 		'parent_id'      => 0,
 		'reconciled'     => 0,
 		'creator_id'     => '',
@@ -97,11 +98,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Transaction type.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -110,11 +111,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Paid at time.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return DateTime
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_paid_at( $context = 'edit' ) {
 		return $this->get_prop( 'paid_at', $context );
@@ -123,11 +124,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Transaction Amount.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_amount( $context = 'edit' ) {
 		return $this->get_prop( 'amount', $context );
@@ -136,11 +137,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Currency code.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -149,11 +150,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Currency rate.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_currency_rate( $context = 'edit' ) {
 		return $this->get_prop( 'currency_rate', $context );
@@ -162,22 +163,22 @@ class Transaction extends Base_Object {
 	/**
 	 * Transaction from account id.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_account_id( $context = 'edit' ) {
 		return $this->get_prop( 'account_id', $context );
 	}
 
 	/**
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_invoice_id( $context = 'edit' ) {
 		return $this->get_prop( 'invoice_id', $context );
@@ -186,11 +187,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Contact id.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_contact_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
@@ -199,11 +200,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Category ID.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
@@ -212,11 +213,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Description.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
@@ -225,11 +226,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Transaction payment methods.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_payment_method( $context = 'edit' ) {
 		return $this->get_prop( 'payment_method', $context );
@@ -238,24 +239,37 @@ class Transaction extends Base_Object {
 	/**
 	 * Transaction reference.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_reference( $context = 'edit' ) {
 		return $this->get_prop( 'reference', $context );
 	}
 
 	/**
-	 * Get associated parent payment id.
+	 * Get attachment url.
+	 *
+	 * @since 1.0.2
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 */
+	public function get_attachment( $context = 'edit' ) {
+		return $this->get_prop( 'attachment', $context );
+	}
+
+	/**
+	 * Get associated parent payment id.
+	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
 	 */
 	public function get_parent_id( $context = 'edit' ) {
 		return $this->get_prop( 'parent_id', $context );
@@ -264,11 +278,11 @@ class Transaction extends Base_Object {
 	/**
 	 * Get if reconciled
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $context
 	 *
 	 * @return bool
-	 * @since 1.0.2
-	 *
 	 */
 	public function get_reconciled( $context = 'edit' ) {
 		return (bool) $this->get_prop( 'reconciled', $context );
@@ -283,9 +297,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set contact's email.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param string $value Email.
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_type( $value ) {
 		$this->set_prop( 'type', $value );
@@ -294,9 +309,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set transaction paid.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_paid_at( $value ) {
 		$this->set_date_prop( 'paid_at', $value );
@@ -305,9 +321,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set transaction amount.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_amount( $value ) {
 		$this->set_prop( 'amount', eaccounting_sanitize_price( $value ) );
@@ -316,9 +333,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set currency code.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_currency_code( $value ) {
 		$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
@@ -327,9 +345,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set currency rate.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_currency_rate( $value ) {
 		$this->set_prop( 'currency_rate', (double) $value );
@@ -338,9 +357,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set account id.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_account_id( $value ) {
 		$this->set_prop( 'account_id', absint( $value ) );
@@ -349,9 +369,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set invoice id.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_invoice_id( $value ) {
 		$this->set_prop( 'invoice_id', absint( $value ) );
@@ -360,9 +381,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set contact id.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_contact_id( $value ) {
 		$this->set_prop( 'contact_id', absint( $value ) );
@@ -371,9 +393,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set category id.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_category_id( $value ) {
 		$this->set_prop( 'category_id', absint( $value ) );
@@ -382,9 +405,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set description.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -393,9 +417,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set payment method.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_payment_method( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_payment_methods() ) ) {
@@ -406,24 +431,36 @@ class Transaction extends Base_Object {
 	/**
 	 * Set reference.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
 	}
 
-	public function set_file_id( $value ) {
-		$this->set_prop( 'file_id', absint( $value ) );
+	/**
+	 * Set attachment.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_attachment( $value ) {
+		if ( ! empty( $value ) ) {
+			$value = esc_url_raw( $value );
+		}
+		$this->set_prop( 'attachment', $value );
 	}
 
 	/**
 	 * Set parent id.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_parent_id( $value ) {
 		$this->set_prop( 'parent_id', absint( $value ) );
@@ -432,9 +469,10 @@ class Transaction extends Base_Object {
 	/**
 	 * Set if reconciled.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param $value
 	 *
-	 * @since 1.0.2
 	 */
 	public function set_reconciled( $value ) {
 		$this->set_prop( 'reconciled', absint( $value ) );
@@ -449,8 +487,8 @@ class Transaction extends Base_Object {
 	/**
 	 * Get formatted transaction amount.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_formatted_amount() {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
