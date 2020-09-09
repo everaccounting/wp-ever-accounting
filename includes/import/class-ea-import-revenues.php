@@ -89,7 +89,7 @@ class Import_Revenues extends CSV_Importer {
 		}
 
 		$category_id   = Query_Category::init()->select( 'id' )->where( 'name', $data['category_name'] )->value( 0 );
-		$currency_code = Query_Currency::init()->select( 'id' )->where( 'code', $data['currency_code'] )->value( 0 );
+		$currency_code = Query_Currency::init()->find($data['currency_code'],'code');
 		$account_id    = Query_Account::init()->select( 'id' )->where( 'name', $data['account_name'] )->value( 0 );
 
 		if ( empty( $category_id ) ) {
