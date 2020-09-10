@@ -22,6 +22,7 @@ function eaccounting_settings_currencies_tab() {
 		<h1>
 			<?php _e( 'Currencies', 'wp-ever-accounting' ); ?>
 			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'currencies', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-currencies.php';

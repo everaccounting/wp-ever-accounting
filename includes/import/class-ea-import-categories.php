@@ -62,10 +62,10 @@ class Import_Categories extends CSV_Importer {
 	 */
 	protected function import_item( $data ) {
 		if ( empty( $data['name'] ) ) {
-			return new \WP_Error( 'empty_prop', __( 'Empty Name', '' ) );
+			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['type'] ) ) {
-			return new \WP_Error( 'empty_prop', __( 'Empty Type', '' ) );
+			return new \WP_Error( 'empty_prop', __( 'Empty Type', 'wp-ever-accounting' ) );
 		}
 
 		return eaccounting_insert_category( $data );

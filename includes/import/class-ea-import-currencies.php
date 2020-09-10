@@ -48,7 +48,7 @@ class Import_Currencies extends CSV_Importer {
 	protected function get_formatting_callback() {
 		return array(
 			'name'               => array( $this, 'parse_text_field' ),
-			'code'               => array( $this, 'parse_currency_code_field' ),
+			'code'               => array( $this, 'parse_text_field' ),
 			'precision'          => array( $this, 'parse_float_field' ),
 			'symbol'             => array( $this, 'parse_text_field' ),
 			'position'           => array( $this, 'parse_text_field' ),
@@ -71,6 +71,7 @@ class Import_Currencies extends CSV_Importer {
 		if ( empty( $data['code'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
+		$data['rate'] = 1.0000;
 
 		return eaccounting_insert_currency( $data );
 	}
