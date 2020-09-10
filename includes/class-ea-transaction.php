@@ -493,4 +493,55 @@ class Transaction extends Base_Object {
 	public function get_formatted_amount() {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
 	}
+
+	/**
+	 * Get transaction account name.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $default
+	 *
+	 * @return string
+	 */
+	public function get_account_name( $default = 'N/A' ) {
+		if ( $this->get_account_id() && $account = eaccounting_get_account( $this->get_account_id() ) ) {
+			return $account->get_name();
+		}
+
+		return $default;
+	}
+
+	/**
+	 * Get transaction category name.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $default
+	 *
+	 * @return string
+	 */
+	public function get_category_name( $default = 'N/A' ) {
+		if ( $this->get_category_id() && $category = eaccounting_get_category( $this->get_category_id() ) ) {
+			return $category->get_name();
+		}
+
+		return $default;
+	}
+
+	/**
+	 * Get transaction contact name.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $default
+	 *
+	 * @return string
+	 */
+	public function get_contact_name( $default = 'N/A' ) {
+		if ( $this->get_contact_id() && $contact = eaccounting_get_contact( $this->get_contact_id() ) ) {
+			return $contact->get_name();
+		}
+
+		return $default;
+	}
 }

@@ -195,8 +195,10 @@ function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $form
  *
  * @return float|int|string
  */
-function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = false ) {
-	return __eaccounting_convert_price( 'multiply', $amount, eaccounting()->settings->get( 'default_currency', 'USD' ), $to, $rate, $format );
+function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = false, $default = null ) {
+	$default = $default === null ? eaccounting()->settings->get( 'default_currency', 'USD' ) : $default;
+
+	return __eaccounting_convert_price( 'multiply', $amount, $default, $to, $rate, $format );
 }
 
 /**
@@ -212,8 +214,35 @@ function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = 
  *
  * @return float|int|string
  */
-function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = false ) {
-	return __eaccounting_convert_price( 'divide', $amount, $from, eaccounting()->settings->get( 'default_currency', 'USD' ), $rate, $format );
+function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = false, $default = null ) {
+	$default = $default === null ? eaccounting()->settings->get( 'default_currency', 'USD' ) : $default;
+
+	return __eaccounting_convert_price( 'divide', $amount, $from, $default, $rate, $format );
+}
+
+/**
+ * Convert amount from one currency to another.
+ *
+ * @since 1.0.2
+ *
+ * @param string $from_code
+ * @param double $from_rate
+ * @param string $to_code
+ * @param double $to_rate
+ * @param double $amount
+ *
+ * @return float|int|string
+ */
+function eaccounting_price_convert_between( $amount, $from_code, $from_rate, $to_code, $to_rate ) {
+	$default_amount = $amount;
+
+	if ( $from_code != eaccounting()->settings->get( 'default_currency', 'USD' ) ) {
+		$default_amount = eaccounting_price_convert_to_default( $amount, $from_code, $from_rate );
+	}
+
+	$converted_amount = eaccounting_price_convert_from_default( $default_amount, $to_code, $to_rate, false, $from_code );
+
+	return $converted_amount;
 }
 
 /**
@@ -385,15 +414,4 @@ function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' )
  */
 function eaccounting_collect( $items ) {
 	return new \EAccounting\Collection( $items );
-}
-
-/**
- * Get the active company.
- *
- * @since 1.0.2
- * @return int
- */
-function eaccounting_get_active_company() {
-
-	return apply_filters( 'eaccounting_active_company', 1 );
 }

@@ -15,8 +15,9 @@ function eaccounting_sales_tab_revenues() {
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
 		include_once dirname( __FILE__ ) .'/edit-revenue.php';
-
-	} else {
+	}elseif ( in_array( $action, [ 'view' ] ) ) {
+		include_once dirname( __FILE__ ) .'/view-revenue.php';
+	}  else {
 		?>
 		<h1>
 			<?php _e( 'Revenues', 'wp-ever-accounting' ); ?>

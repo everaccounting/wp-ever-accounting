@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 // Load colors.
 $bg         = '#f7f7f7';
 $body       = '#ffffff';
-$base       = get_option( 'woocommerce_email_base_color' );
+$base       = get_option( 'eaccounting_email_base_color' );
 $base_text  = '#202020';
 $text       = '#202020';
 $link_color = '#202020';

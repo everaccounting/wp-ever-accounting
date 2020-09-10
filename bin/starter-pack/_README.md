@@ -1,6 +1,6 @@
 # {{extension_name}}
 
-A WooCommerce Admin Extension
+A EverAccounting Admin Extension
 
 ## Development
 

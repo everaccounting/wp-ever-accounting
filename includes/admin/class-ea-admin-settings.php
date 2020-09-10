@@ -15,7 +15,8 @@ use EverAccounting\Query_Currency;
 
 /**
  * Class Settings
- * @since 1.0.2
+ *
+ * @since   1.0.2
  * @package EverAccounting\Admin
  */
 class Settings {
@@ -63,10 +64,12 @@ class Settings {
 	 * setting that needs to allow 0 as a valid value, but sure to add its
 	 * key to the filtered array seen in this method.
 	 *
-	 * @param string $key
-	 * @param mixed $default (optional)
-	 *
 	 * @since  1.0.2
+	 *
+	 * @param mixed  $default (optional)
+	 *
+	 * @param string $key
+	 *
 	 * @return mixed
 	 */
 	public function get( $key, $default = false ) {
@@ -98,11 +101,12 @@ class Settings {
 	/**
 	 * Sets an option (in memory).
 	 *
-	 * @param array $settings An array of `key => value` setting pairs to set.
-	 * @param bool $save Optional. Whether to trigger saving the option or options. Default false.
-	 *
-	 * @since 1.0.2
+	 * @since  1.0.2
 	 * @access public
+	 *
+	 * @param bool  $save     Optional. Whether to trigger saving the option or options. Default false.
+	 *
+	 * @param array $settings An array of `key => value` setting pairs to set.
 	 *
 	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
 	 */
@@ -125,9 +129,9 @@ class Settings {
 	 * be called directly for direct saving to prevent memory pollution. Otherwise, this method
 	 * is only accessible via the optional `$save` parameter in the set() method.
 	 *
-	 * @param array $options Optional. Options to save/overwrite directly. Default empty array.
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param array $options Optional. Options to save/overwrite directly. Default empty array.
 	 *
 	 * @return bool False if the options were not updated (saved) successfully, true otherwise.
 	 */
@@ -222,29 +226,44 @@ class Settings {
 
 	}
 
+
 	function eaccounting_settings_updated( $old_value, $value, $option ) {
 		//update currency code.
 		if ( ! empty( $value['default_currency'] ) && ( $old_value['default_currency'] != $value['default_currency'] ) ) {
-			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
-			if ( $currency->exists() ) {
-				try {
-					$currency->set_rate( 1 );
-					$currency->save();
-				} catch ( Exception $exception ) {
-					eaccounting_logger()->error( __( 'Failed updating default currency code rate', 'wp-ever-accounting' ) );
-				}
-			}
+			$old_code = $old_value['default_currency'];
+//			$new_code = $value['default_currency'];
+//
+//			$old_currency = eaccounting_get_currency( $old_code );
+//			$new_currency = eaccounting_get_currency( $new_code );
+//
+//			if ( $old_currency->exists() && $new_currency->exists() ) {
+//				$old_rate = $old_currency->get_rate();
+//				$new_rate = $new_currency->get_rate();
+//
+//
+//			}
+
+
+//			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
+//			if ( $currency->exists() ) {
+//				try {
+//					$currency->set_rate( 1 );
+//					$currency->save();
+//				} catch ( Exception $exception ) {
+//					eaccounting_logger()->error( __( 'Failed updating default currency code rate', 'wp-ever-accounting' ) );
+//				}
+//			}
 		}
 
 
 		/**
 		 * Hook when update plugin settings.
 		 *
-		 * @param array $value The new settings value is being saved.
-		 * @param array $old_value Old settings value.
-		 *
 		 * @since 1.0.2
 		 *
+		 * @param array $old_value Old settings value.
+		 *
+		 * @param array $value     The new settings value is being saved.
 		 */
 		do_action( 'eaccounting_settings_updated', $value, $old_value );
 	}
@@ -279,13 +298,12 @@ class Settings {
 		 *     `eaccounting_settings_misc_sanitize`
 		 *     `eaccounting_settings_integrations_sanitize`
 		 *
-		 * @param mixed $input The settings tab content to sanitize.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param mixed $input The settings tab content to sanitize.
 		 *
 		 */
 		$input = apply_filters( 'eaccounting_settings_' . $tab . '_sanitize', $input );
-
 		// Ensure a value is always passed for every checkbox
 		if ( ! empty( $settings[ $tab ] ) ) {
 			foreach ( $settings[ $tab ] as $key => $setting ) {
@@ -328,11 +346,11 @@ class Settings {
 				 *     `eaccounting_settings_sanitize_checkbox`
 				 *     `eaccounting_settings_sanitize_select`
 				 *
-				 * @param array $value The input array and settings key defined within.
-				 * @param string $key The settings key.
-				 *
 				 * @since 1.0.2
 				 *
+				 * @param string $key   The settings key.
+				 *
+				 * @param array  $value The input array and settings key defined within.
 				 */
 				$input[ $key ] = apply_filters( 'eaccounting_settings_sanitize_' . $type, $input[ $key ], $key );
 			}
@@ -340,11 +358,11 @@ class Settings {
 			/**
 			 * General setting sanitization filter
 			 *
-			 * @param array $input [ $key ] The input array and settings key defined within.
-			 * @param string $key The settings key.
-			 *
 			 * @since 1.0
 			 *
+			 * @param string $key   The settings key.
+			 *
+			 * @param array  $input [ $key ] The input array and settings key defined within.
 			 */
 			$input[ $key ] = apply_filters( 'eaccounting_settings_sanitize', $input[ $key ], $key );
 
@@ -357,7 +375,6 @@ class Settings {
 		}
 
 		add_settings_error( 'eaccounting-notices', '', __( 'Settings updated.', 'wp-ever-accounting' ), 'updated' );
-
 		return array_merge( $saved, $input );
 
 	}
@@ -432,23 +449,26 @@ class Settings {
 		/**
 		 * Fires before attempting to retrieve registered settings.
 		 *
-		 * @param Settings $this Settings instance.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param Settings $this Settings instance.
 		 *
 		 */
 		do_action( 'eaccounting_pre_get_registered_settings', $this );
-
-		$accounts   = Query_Account::init()->select( 'id, name' )->get();
-		$currencies = Query_Currency::init()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get();
+		$accounts   = [];
+		$currencies = [];
+		if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
+			$accounts   = Query_Account::init()->select( 'id, name' )->get();
+			$currencies = Query_Currency::init()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get();
+		}
 
 		$settings = array(
 			/**
 			 * Filters the default "General" settings.
 			 *
-			 * @param array $settings General settings.
-			 *
 			 * @since 1.0.2
+			 *
+			 * @param array $settings General settings.
 			 *
 			 */
 			'general' => apply_filters( 'eaccounting_settings_general',
@@ -486,7 +506,7 @@ class Settings {
 					),
 					'company_address'        => array(
 						'name' => __( 'Address', 'wp-ever-accounting' ),
-						'type' => 'text',
+						'type' => 'textarea',
 					),
 					'company_state'          => array(
 						'name' => __( 'State', 'wp-ever-accounting' ),
@@ -526,7 +546,7 @@ class Settings {
 						'name'    => __( 'Account', 'wp-ever-accounting' ),
 						'type'    => 'select',
 						'class'   => 'ea-select2',
-						'options' => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + wp_list_pluck($accounts, 'name', 'id'),
+						'options' => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + wp_list_pluck( $accounts, 'name', 'id' ),
 						'attr'    => array(
 							'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
 						)
@@ -535,9 +555,9 @@ class Settings {
 						'name'    => __( 'Currency', 'wp-ever-accounting' ),
 						'type'    => 'select',
 						//'std'     => 'USD',
-						'desc'     => __('Default currency rate will update to 1', 'wp-ever-accounting'),
+						'desc'    => __( 'Default currency rate will update to 1', 'wp-ever-accounting' ),
 						'class'   => 'ea-select2',
-						'options' => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck($currencies, 'name', 'code'),
+						'options' => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck( $currencies, 'name', 'code' ),
 						'attr'    => array(
 							'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
 						)
@@ -555,9 +575,9 @@ class Settings {
 		/**
 		 * Filters the entire default settings array.
 		 *
-		 * @param array $settings Array of default settings.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param array $settings Array of default settings.
 		 *
 		 */
 		return apply_filters( 'eaccounting_settings', $settings );
@@ -569,9 +589,10 @@ class Settings {
 	 *
 	 * Renders the header.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
 	 */
 	function header_callback( $args ) {
@@ -583,18 +604,19 @@ class Settings {
 	 *
 	 * Renders checkboxes.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function checkbox_callback( $args ) {
 
-		$checked    = isset( $this->options[ $args['id'] ] ) ? checked( 'yes', $this->options[ $args['id'] ], false ) : '';
+		$checked    = isset( $this->options[ $args['id'] ] ) ? checked( '1', $this->options[ $args['id'] ], false ) : '';
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$html       = '<label for="eaccounting_settings[' . $args['id'] . ']">';
-		$html       .= '<input type="checkbox" id="eaccounting_settings[' . $args['id'] . ']" name="eaccounting_settings[' . $args['id'] . ']" value="1" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html       .= '<input type="checkbox" id="eaccounting_settings[' . $args['id'] . ']" name="eaccounting_settings[' . $args['id'] . ']" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
 		$html       .= $args['desc'];
 		$html       .= '</label>';
 
@@ -606,11 +628,12 @@ class Settings {
 	 *
 	 * Renders multiple checkboxes.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function multicheck_callback( $args ) {
 
@@ -634,11 +657,12 @@ class Settings {
 	 *
 	 * Renders radio boxes.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function radio_callback( $args ) {
 
@@ -667,11 +691,12 @@ class Settings {
 	 *
 	 * Renders text fields.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function text_callback( $args ) {
 
@@ -706,11 +731,12 @@ class Settings {
 	 *
 	 * Renders URL fields.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function url_callback( $args ) {
 
@@ -746,11 +772,12 @@ class Settings {
 	 *
 	 * Renders number fields.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function number_callback( $args ) {
 
@@ -788,11 +815,12 @@ class Settings {
 	 *
 	 * Renders textarea fields.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function textarea_callback( $args ) {
 
@@ -829,11 +857,12 @@ class Settings {
 	 *
 	 * Renders password fields.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function password_callback( $args ) {
 
@@ -868,9 +897,10 @@ class Settings {
 	 *
 	 * If a function is missing for settings callbacks alert the user.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
 	 */
 	function missing_callback( $args ) {
@@ -882,11 +912,12 @@ class Settings {
 	 *
 	 * Renders select fields.
 	 *
+	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 * @return void
-	 * @global $this ->options Array of all the EverAccounting Options
 	 */
 	function select_callback( $args ) {
 
@@ -925,11 +956,12 @@ class Settings {
 	 *
 	 * Renders rich editor fields.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
 	 * @since 1.0.2
-	 * @global $this ->options Array of all the EverAccounting Options
+	 * @global        $this       ->options Array of all the EverAccounting Options
 	 * @global string $wp_version WordPress Version
+	 *
+	 * @param array   $args       Arguments passed by the setting
+	 *
 	 */
 	function rich_editor_callback( $args ) {
 
@@ -953,9 +985,10 @@ class Settings {
 	 *
 	 * Renders file upload fields.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $args Arguements passed by the setting
 	 *
-	 * @since 1.0.2
 	 */
 	function upload_callback( $args ) {
 		if ( isset( $this->options[ $args['id'] ] ) ) {
