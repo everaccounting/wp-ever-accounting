@@ -45,6 +45,7 @@ function eaccounting_update_1_0_2() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers CHANGE `payment_id` `expense_id` INT(11) NOT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers CHANGE `revenue_id` `income_id` INT(11) NOT NULL;" );
 	$wpdb->query( $wpdb->prepare( "UPDATE {$prefix}ea_transfers SET creator_id=%d", $current_user_id ) );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers CHANGE `created_at` `date_created` DATETIME NULL DEFAULT NULL;" );
 
 	$transfers = $wpdb->get_results( "SELECT * FROM {$prefix}ea_transfers" );
 	foreach ( $transfers as $transfer ) {
@@ -190,6 +191,7 @@ function eaccounting_update_1_0_2() {
 	$wpdb->update( "{$prefix}ea_accounts", array( 'enabled' => '1' ), array( 'status' => 'active' ) );
 	$wpdb->update( "{$prefix}ea_accounts", array( 'enabled' => '0' ), array( 'status' => 'inactive' ) );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts DROP COLUMN `status`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts CHANGE `created_at` `date_created` DATETIME NULL DEFAULT NULL;" );
 
 	//categories
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories DROP COLUMN `updated_at`;" );
@@ -197,7 +199,7 @@ function eaccounting_update_1_0_2() {
 	$wpdb->update( "{$prefix}ea_categories", array( 'enabled' => '1' ), array( 'status' => 'active' ) );
 	$wpdb->update( "{$prefix}ea_categories", array( 'enabled' => '0' ), array( 'status' => 'inactive' ) );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories DROP COLUMN `status`;" );
-
+	$wpdb->query( "ALTER TABLE {$prefix}ea_categories CHANGE `created_at` `date_created` DATETIME NULL DEFAULT NULL;" );
 
 	//contacts
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `name` VARCHAR(191) NOT NULL AFTER `user_id`;" );
@@ -252,4 +254,6 @@ function eaccounting_update_1_0_2() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `state`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `postcode`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `status`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `types`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `created_at` `date_created` DATETIME NULL DEFAULT NULL;" );
 }

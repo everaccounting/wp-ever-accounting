@@ -243,16 +243,15 @@ class Settings {
 //
 //			}
 
-
-//			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
-//			if ( $currency->exists() ) {
-//				try {
-//					$currency->set_rate( 1 );
-//					$currency->save();
-//				} catch ( Exception $exception ) {
-//					eaccounting_logger()->error( __( 'Failed updating default currency code rate', 'wp-ever-accounting' ) );
-//				}
-//			}
+			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
+			if ( $currency->exists() ) {
+				try {
+					$currency->set_rate( 1 );
+					$currency->save();
+				} catch ( Exception $exception ) {
+					eaccounting_logger()->error( __( 'Failed updating default currency code rate', 'wp-ever-accounting' ) );
+				}
+			}
 		}
 
 

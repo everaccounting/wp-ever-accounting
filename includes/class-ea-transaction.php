@@ -480,6 +480,97 @@ class Transaction extends Base_Object {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Crud
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * Method to create a new record of an EverAccounting object.
+	 *
+	 * @since 1.0.2
+	 * @throws Exception
+	 */
+	public function create() {
+		global $wpdb;
+
+		do_action( 'eaccounting_pre_insert_' . $this->object_type, $this->get_id(), $this );
+
+		$data = wp_unslash( apply_filters( 'eaccounting_new_' . $this->object_type . '_data', $this->get_base_data() ) );
+		if ( false === $wpdb->insert( $wpdb->prefix . $this->table, $data ) ) {
+			throw new Exception( 'db_error', $wpdb->last_error );
+		}
+
+		do_action( 'eaccounting_insert_' . $this->object_type, $this->get_id(), $this );
+		do_action( 'eaccounting_insert_transaction_' . $this->get_type( 'raw' ), $this->get_id(), $this );
+
+		$this->set_id( $wpdb->insert_id );
+		$this->save_extra_data( 'create' );
+		$this->apply_changes();
+		$this->set_object_read( true );
+	}
+
+	/**
+	 * Updates a record in the database.
+	 *
+	 * @since 1.0.2
+	 * @throws Exception
+	 */
+	public function update() {
+		global $wpdb;
+		$changes = $this->get_changes();
+
+		foreach ( $changes as $prop => $value ) {
+			if ( $value instanceof DateTime ) {
+				$changes[ $prop ] = $value->date( 'Y-m-d H:i:s' );
+			}
+		}
+
+		$changed_data = array_intersect_key( $changes, $this->data );
+
+		if ( ! empty( $changed_data ) ) {
+			do_action( 'eaccounting_pre_update_' . $this->object_type, $this->get_id(), $changed_data, $this );
+			do_action( 'eaccounting_pre_update_transaction_' . $this->get_type( 'raw' ), $this->get_id(), $changed_data, $this );
+
+			try {
+				$wpdb->update( $wpdb->prefix . $this->table, $changed_data, array( 'id' => $this->get_id() ) );
+			} catch ( Exception $e ) {
+				throw new Exception( 'db_error', __( 'Could not update resource.', 'wp-ever-accounting' ) );
+			}
+
+			do_action( 'eaccounting_update_transaction_' . $this->get_type( 'raw' ), $this->get_id(), $changes, $this );
+			$this->save_extra_data( 'update' );
+			$this->apply_changes();
+			$this->set_object_read( true );
+			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
+		}
+	}
+
+	/**
+	 * Deletes a record from the database.
+	 *
+	 * @since 1.0.2
+	 * @return bool result
+	 */
+	public function delete() {
+		if ( $this->get_id() && $this->table ) {
+			global $wpdb;
+			do_action( 'eaccounting_pre_delete_' . $this->object_type, $this->get_id(), $this->get_data(), $this );
+			do_action( 'eaccounting_pre_delete_transaction_' . $this->get_type( 'raw' ), $this->get_id(), $this->get_data(), $this );
+			$wpdb->delete( $wpdb->prefix . $this->table, array( 'id' => $this->get_id() ) );
+			do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $this->get_data(), $this );
+			do_action( 'eaccounting_delete_transaction_' . $this->get_type( 'raw' ), $this->get_id(), $this->get_data(), $this );
+			$this->delete_extra_data();
+			$this->set_id( 0 );
+
+			wp_cache_delete( $this->object_type . '-item-' . $this->get_id(), $this->object_type );
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/*
+	|--------------------------------------------------------------------------
 	| Extra
 	|--------------------------------------------------------------------------
 	*/

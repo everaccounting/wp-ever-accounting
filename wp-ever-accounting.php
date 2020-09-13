@@ -27,7 +27,7 @@ final class EverAccounting {
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.1.1';
+	public $version = '1.0.2';
 
 	/**
 	 * @since 1.0.2
