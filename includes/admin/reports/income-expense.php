@@ -15,7 +15,7 @@ function eaccounting_reports_income_expense_tab() {
 					'value' => 'income_expense'
 			) );
 
-			$years = range( date('Y'), ( $year - 5 ), 1 );
+			$years = range( date( 'Y' ), ( $year - 5 ), 1 );
 			eaccounting_select2( array(
 					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
 					'name'        => 'year',
