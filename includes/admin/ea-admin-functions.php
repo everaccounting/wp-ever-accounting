@@ -23,6 +23,7 @@ function eaccounting_get_screen_ids() {
 			$eaccounting_screen_id . '_page_ea-transactions',
 			$eaccounting_screen_id . '_page_ea-sales',
 			$eaccounting_screen_id . '_page_ea-expenses',
+			$eaccounting_screen_id . '_page_ea-misc',
 			$eaccounting_screen_id . '_page_ea-banking',
 			$eaccounting_screen_id . '_page_ea-reports',
 			$eaccounting_screen_id . '_page_ea-tools',
