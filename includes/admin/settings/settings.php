@@ -42,6 +42,7 @@ function eaccounting_admin_settings_page() {
 				<form method="post" action="options.php">
 					<table class="form-table">
 						<?php
+						settings_errors();
 						settings_fields( 'eaccounting_settings' );
 						do_settings_fields( 'eaccounting_settings_' . $active_tab, 'eaccounting_settings_' . $active_tab );
 						?>

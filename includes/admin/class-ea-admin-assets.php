@@ -72,16 +72,16 @@ class Admin_Assets {
 		wp_register_script( 'jquery-daterange', eaccounting()->plugin_url( '/assets/js/daterange/daterangepicker' . $suffix . '.js' ), array( 'jquery', 'jquery-moment' ), '1.0.2' );
 
 		//core plugins
-		wp_register_script( 'ea-select', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-select2' . $suffix . '.js', array( 'jquery', 'jquery-select2' ), $version );
-		wp_register_script( 'ea-addons', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-addons' . $suffix . '.js', array( 'jquery' ), $version );
-		wp_register_script( 'ea-color-picker', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-color-picker' . $suffix . '.js', array( 'jquery', 'wp-color-picker' ), $version );
-		wp_register_script( 'ea-creatable', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-creatable' . $suffix . '.js', array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
+		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
+		wp_register_script( 'ea-addons', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-addons' . $suffix . '.js' ), array( 'jquery' ), $version );
+//		wp_register_script( 'ea-color-picker', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-color-picker' . $suffix . '.js' ), array( 'jquery', 'wp-color-picker' ), $version );
+		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-creatable' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
 		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-modal' . $suffix . '.js' ), array( 'underscore', 'backbone', 'wp-util' ), $version );
-		wp_register_script( 'ea-notice', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-notice' . $suffix . '.js', array( 'jquery' ), $version );
-		wp_register_script( 'ea-form', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-form' . $suffix . '.js', array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui', 'jquery-inputmask', 'ea-notice' ), $version );
-		wp_register_script( 'ea-redirect', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-redirect' . $suffix . '.js', array( 'jquery' ), $version );
-		wp_register_script( 'ea-exporter', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-exporter' . $suffix . '.js', array( 'jquery' ), $version );
-		wp_register_script( 'ea-importer', eaccounting()->plugin_url() . '/assets/js/eaccounting/ea-importer' . $suffix . '.js', array( 'jquery' ), $version );
+		wp_register_script( 'ea-notice', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-notice' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-form', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-form' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui', 'jquery-inputmask', 'ea-notice' ), $version );
+		wp_register_script( 'ea-redirect', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-redirect' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-exporter', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-exporter' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-importer' . $suffix . '.js' ), array( 'jquery' ), $version );
 
 		//core script
 		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-overview' . $suffix . '.js' ), array( 'jquery', 'jquery-daterange', 'jquery-chartjs' ), $version );
@@ -95,6 +95,7 @@ class Admin_Assets {
 
 			//globally needed scripts
 			wp_enqueue_script( 'jquery-ui-datepicker' );
+			wp_enqueue_script( 'wp-color-picker' );
 			wp_enqueue_script( 'jquery-tiptip' );
 			wp_enqueue_script( 'jquery-select2' );
 			wp_enqueue_script( 'jquery-inputmask' );
@@ -131,7 +132,7 @@ class Admin_Assets {
 				)
 			);
 
-			wp_enqueue_script('ea-form');
+			wp_enqueue_script( 'ea-form' );
 
 
 			wp_localize_script(

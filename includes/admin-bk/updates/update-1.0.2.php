@@ -24,15 +24,14 @@ function eaccounting_update_1_0_2() {
 	$current_user_id = eaccounting_get_creator_id();
 
 
-//transfer
+	//transfer
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers DROP COLUMN `updated_at`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers ADD `creator_id` INT(11) DEFAULT NULL AFTER `revenue_id`;" );
-	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers ADD `company_id`  int(11) NOT NULL DEFAULT 1 AFTER `revenue_id`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers CHANGE `payment_id` `expense_id` INT(11) NOT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transfers CHANGE `revenue_id` `income_id` INT(11) NOT NULL;" );
 	$wpdb->query( $wpdb->prepare( "UPDATE {$prefix}ea_transfers SET creator_id=%d", $current_user_id ) );
 
-//revenues
+	//revenues
 	$revenues = $wpdb->get_results( "SELECT * FROM {$prefix}ea_revenues order by id asc" );
 	foreach ( $revenues as $revenue ) {
 		$wpdb->insert( $prefix . 'ea_transactions', array(
@@ -54,7 +53,7 @@ function eaccounting_update_1_0_2() {
 	}
 
 
-//revenues
+	//revenues
 	$payments = $wpdb->get_results( "SELECT * FROM {$prefix}ea_payments order by id asc" );
 	foreach ( $payments as $payment ) {
 		$wpdb->insert( $prefix . 'ea_transactions', array(
@@ -75,7 +74,7 @@ function eaccounting_update_1_0_2() {
 		) );
 	}
 
-//accounts
+	//accounts
 	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts DROP COLUMN `status`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts DROP COLUMN `updated_at`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts ADD `currency_code` varchar(3) NOT NULL AFTER `opening_balance`;" );
@@ -83,12 +82,12 @@ function eaccounting_update_1_0_2() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts ADD `company_id`  int(11) NOT NULL DEFAULT 1 AFTER `bank_address`;" );
 	$wpdb->query( $wpdb->prepare( "UPDATE {$prefix}ea_accounts SET creator_id=%d, currency_code=%s ", $current_user_id, $currency_code ) );
 
-//categories
+	//categories
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories DROP COLUMN `status`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories DROP COLUMN `updated_at`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories ADD `company_id`  int(11) NOT NULL DEFAULT 1 AFTER `color`;" );
 
-//contacts
+	//contacts
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `status`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `updated_at`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `city`;" );

@@ -1,0 +1,17 @@
+.ea-m0 {
+  margin: 0;
+}
+
+.ea-flex {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+  box-sizing: border-box;
+
+  &.ea-flex-justify-center {
+	justify-content: space-between;
+  }
+}

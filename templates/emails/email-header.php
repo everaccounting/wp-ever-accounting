@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 			<td align="center" valign="top">
 				<div id="template_header_image">
 					<?php
-					if ( $img = get_option( 'woocommerce_email_header_image' ) ) {
+					if ( $img = get_option( 'eaccounting_email_header_image' ) ) {
 						echo '<p style="margin-top:0;"><img src="' . esc_url( $img ) . '" alt="' . get_bloginfo( 'name', 'display' ) . '" /></p>';
 					}
 					?>

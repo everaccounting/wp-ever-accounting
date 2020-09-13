@@ -93,10 +93,12 @@ function eaccounting_reports_income_expense_tab() {
 				$totals[ $month ]['amount']                                          += $amount;
 			} else if ( $transaction->type == 'expense' && isset( $compares['expense'][ $transaction->category_id ] ) ) {
 				$compares['expense'][ $transaction->category_id ][ $month ]['amount'] += $amount;
-				$graph[ $month_year ]                                                 += $amount;
+				$graph[ $month_year ]                                                 -= $amount;
 				$totals[ $month ]['amount']                                           -= $amount;
 			}
 		}
+
+
 		$chart = new \EverAccounting\Chart();
 		$chart->type( 'line' )
 			  ->width( 0 )

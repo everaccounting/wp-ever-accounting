@@ -568,6 +568,7 @@ abstract class Base_Object {
 			global $wpdb;
 			do_action( 'eaccounting_pre_delete_' . $this->object_type, $this->get_id(), $this->get_data(), $this );
 			$wpdb->delete( $wpdb->prefix . $this->table, array( 'id' => $this->get_id() ) );
+			error_log('eaccounting_delete_' . $this->object_type);
 			do_action( 'eaccounting_delete_' . $this->object_type, $this->get_id(), $this->get_data(), $this );
 			$this->delete_extra_data();
 			$this->set_id( 0 );
