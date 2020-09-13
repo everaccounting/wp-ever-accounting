@@ -1,38 +1,42 @@
-const path = require( 'path' );
-const chalk = require( 'chalk' );
-const webpack = require( 'webpack' );
-const pkg = require( './package.json' );
-const { get } = require( 'lodash' );
-const TerserPlugin = require( 'terser-webpack-plugin' );
-const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-const ProgressBarPlugin = require( 'progress-bar-webpack-plugin' );
-const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
-const CustomTemplatedPathPlugin = require( '@wordpress/custom-templated-path-webpack-plugin' );
-const DuplicatePackageCheckerPlugin = require( 'duplicate-package-checker-webpack-plugin' );
+const path = require('path');
+const chalk = require('chalk');
+const webpack = require('webpack');
+const pkg = require('./package.json');
+const {get} = require('lodash');
+const TerserPlugin = require('terser-webpack-plugin');
+const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 
-const postcssPresetEnv = require( 'postcss-preset-env' );
-const postcssFocus = require( 'postcss-focus' );
-const postcssReporter = require( 'postcss-reporter' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+const postcssPresetEnv = require('postcss-preset-env');
+const postcssFocus = require('postcss-focus');
+const postcssReporter = require('postcss-reporter');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 // const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
 const externals = [];
-const packages = [ 'components' ];
+const alias = {};
 const entryPoints = {};
-packages.forEach( ( name ) => {
-	externals[ `@eaccounting/${ name }` ] = {
+
+const packages = ['components'];
+
+packages.forEach((name) => {
+	externals[`@eaccounting/${name}`] = {
 		this: [
 			'eaccounting',
-			name.replace( /-([a-z])/g, ( match, letter ) =>
+			name.replace(/-([a-z])/g, (match, letter) =>
 				letter.toUpperCase()
 			),
 		],
 	};
-	entryPoints[ name ] = `./client/${ name }`;
-} );
+	alias[`@eaccounting/${name}`] = path.resolve(__dirname, `client/${name}`);
+	entryPoints[name] = `./client/${name}`;
+});
 
 const config = {
 	mode: NODE_ENV,
@@ -44,29 +48,30 @@ const config = {
 	output: {
 		filename: './assets/dist/[name].js',
 		path: __dirname,
-		library: [ 'eaccounting', '[modulename]' ],
+		library: ['eaccounting', '[modulename]'],
 		libraryTarget: 'this',
 	},
 	externals,
 	resolve: {
-		extensions: [ '.js', '.jsx', '.json', '.scss', '.css' ],
-		modules: [ path.resolve( __dirname, 'client' ), 'node_modules' ],
+		alias,
+		extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
+		modules: [path.resolve(__dirname, 'client'), 'node_modules'],
 	},
 	optimization: {
 		minimize: 'production' === NODE_ENV,
 		minimizer: [
-			new TerserPlugin( {
+			new TerserPlugin({
 				cache: true,
 				parallel: true,
 				terserOptions: {
 					ecma: 5,
 					mangle: {
 						reserved:
-							'production' === NODE_ENV ? [] : [ 'translate' ],
+							'production' === NODE_ENV ? [] : ['translate'],
 						safari10: true,
 					},
 				},
-			} ),
+			}),
 		],
 	},
 	module: {
@@ -78,12 +83,11 @@ const config = {
 			},
 			{
 				test: /\.s?css$/,
-				exclude: /node_modules/,
+				// exclude: /node_modules/,
 				use: [
 					MiniCssExtractPlugin.loader,
 					'css-loader',
 					{
-						// postcss loader so we can use autoprefixer and theme Gutenberg components
 						loader: 'postcss-loader',
 						options: {
 							config: {
@@ -104,7 +108,7 @@ const config = {
 						options: {
 							emitFile: true, // On the server side, don't actually copy files
 							name: '[name].[ext]',
-							outputPath: '/assets/dist',
+							outputPath: '/assets/dist/fonts',
 						},
 					},
 				],
@@ -123,60 +127,61 @@ const config = {
 			},
 			{
 				test: /\.svg$/,
-				use: [ '@svgr/webpack', 'url-loader' ],
+				use: ['@svgr/webpack', 'url-loader'],
 			},
 		],
 	},
 	plugins: [
-		new ProgressBarPlugin( {
+		new ProgressBarPlugin({
 			format:
-				chalk.blue( 'Build core script' ) +
+				chalk.blue('Build core script') +
 				' [:bar] ' +
-				chalk.green( ':percent' ) +
+				chalk.green(':percent') +
 				' :msg (:elapsed seconds)',
-		} ),
-		new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
-		new webpack.BannerPlugin( 'WP Ever Accounting v' + pkg.version ),
-		new webpack.DefinePlugin( {
+		}),
+		new DependencyExtractionWebpackPlugin({injectPolyfill: true}),
+		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
+		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify(
 					process.env.NODE_ENV || 'development'
 				),
 			},
 			EACCOUNTING_VERSION: "'" + pkg.version + "'",
-		} ),
+		}),
 		new FixStyleOnlyEntriesPlugin(),
-		new CustomTemplatedPathPlugin( {
-			modulename( outputPath, data ) {
-				const entryName = get( data, [ 'chunk', 'name' ] );
-				if ( entryName ) {
-					return entryName.replace( /-([a-z])/g, ( match, letter ) =>
+		new CustomTemplatedPathPlugin({
+			modulename(outputPath, data) {
+				const entryName = get(data, ['chunk', 'name']);
+				if (entryName) {
+					return entryName.replace(/-([a-z])/g, (match, letter) =>
 						letter.toUpperCase()
 					);
 				}
 				return outputPath;
 			},
-		} ),
+		}),
 		new DuplicatePackageCheckerPlugin(),
-		new webpack.LoaderOptionsPlugin( {
+		new webpack.LoaderOptionsPlugin({
 			options: {
 				postcss: [
 					postcssFocus(),
-					postcssPresetEnv( {
-						browsers: [ 'last 2 versions', 'IE > 10' ],
-					} ),
-					postcssReporter( {
+					postcssPresetEnv({
+						browsers: ['last 2 versions', 'IE > 10'],
+					}),
+					postcssReporter({
 						clearMessages: true,
-					} ),
+					}),
 				],
 			},
 			output: {
-				path: path.join( __dirname, 'assets/dist' ),
+				path: path.join(__dirname, 'assets/dist'),
 			},
-		} ),
-		new MiniCssExtractPlugin( {
+		}),
+		new MiniCssExtractPlugin({
 			filename: './assets/dist/[name].css',
-		} ),
+		}),
+		new webpack.NormalModuleReplacementPlugin(/element-react[\/\\]src[\/\\]locale[\/\\]lang[\/\\]zh-CN/, 'element-react/src/locale/lang/en')
 	],
 	stats: {
 		all: false,
@@ -188,7 +193,7 @@ const config = {
 		timings: true,
 	},
 	watchOptions: {
-		ignored: [ /node_modules/ ],
+		ignored: [/node_modules/],
 	},
 	performance: {
 		hints: false,
@@ -196,18 +201,18 @@ const config = {
 	watch: true,
 };
 
-if ( NODE_ENV !== 'development' ) {
+if (NODE_ENV !== 'development') {
 	config.plugins.push(
-		new webpack.LoaderOptionsPlugin( { minimize: true } )
+		new webpack.LoaderOptionsPlugin({minimize: true})
 	);
-	config.module.rules.push( {
+	config.module.rules.push({
 		test: /\.js$/,
 		loader: 'webpack-remove-debug',
 		exclude: /node_modules/,
-	} );
+	});
 }
 
-if ( config.mode !== 'production' ) {
+if (config.mode !== 'production') {
 	config.devtool = process.env.SOURCEMAP || 'source-map';
 }
 module.exports = config;

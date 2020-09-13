@@ -38,6 +38,14 @@ class Admin_Assets {
 		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
 		wp_register_style( 'jquery-ui-style', eaccounting()->plugin_url() . '/assets/css/jquery-ui/jquery-ui.min.css', array(), $version );
 
+
+
+//		wp_enqueue_style( 'element-icons', self::get_asset_dist_url('element-icons', 'css'), array(), $version );
+		wp_register_style( 'ea-components', self::get_asset_dist_url('components', 'css'), array(), $version );
+		wp_register_style( 'ea-client', self::get_asset_dist_url('client', 'css'), array('ea-components'), $version );
+
+		wp_enqueue_style('ea-client');
+
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-admin-styles', 'rtl', 'replace' );
 
@@ -89,7 +97,14 @@ class Admin_Assets {
 		//wp_register_script( 'ea-table', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-table' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-settings' . $suffix . '.js' ), array( 'jquery' ), $version );
 
+		self::register_react_script('ea-components', self::get_asset_dist_url('components'));
+		self::register_react_script('ea-client', self::get_asset_dist_url('client'), array('ea-components'));
 
+		wp_enqueue_script('ea-client');
+
+		wp_localize_script('ea-client', 'eaccounting_client_i10n', array(
+			'dist_url' => eaccounting()->plugin_url( "assets/dist" )
+		));
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
 
