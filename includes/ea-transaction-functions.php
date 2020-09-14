@@ -9,6 +9,8 @@
  */
 
 use \EverAccounting\Transaction;
+use \EverAccounting\Payment;
+use \EverAccounting\Revenue;
 use \EverAccounting\Exception;
 
 defined( 'ABSPATH' ) || exit;
@@ -16,13 +18,14 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Get Transaction Types
+ *
  * @since 1.0.2
  * @return array
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
-		'income'   => __( 'Income', 'wp-ever-accounting' ),
-		'expense'  => __( 'Expense', 'wp-ever-accounting' )
+		'income'  => __( 'Income', 'wp-ever-accounting' ),
+		'expense' => __( 'Expense', 'wp-ever-accounting' )
 	);
 
 	return $types;
@@ -32,9 +35,9 @@ function eaccounting_get_transaction_types() {
 /**
  * Main function for returning transaction.
  *
- * @param $transaction
- *
  * @since 1.0.2
+ *
+ * @param $transaction
  *
  * @return Transaction|null
  */
@@ -68,6 +71,15 @@ function eaccounting_get_transaction( $transaction ) {
  *
  *  Returns a new transaction object on success.
  *
+ * @since 1.0.2
+ *
+ * @see   eaccounting_sanitize_price()
+ * @see   eaccounting_get_account()
+ * @see   eaccounting_get_currency()
+ * @see   eaccounting_get_category()
+ *
+ * @see   eaccounting_get_contact()
+ *
  * @param array $args           {
  *
  * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
@@ -84,14 +96,6 @@ function eaccounting_get_transaction( $transaction ) {
  *
  * }
  *
- * @since 1.0.2
- *
- * @see   eaccounting_sanitize_price()
- * @see   eaccounting_get_account()
- * @see   eaccounting_get_currency()
- * @see   eaccounting_get_category()
- *
- * @see   eaccounting_get_contact()
  * @return Transaction|WP_Error
  */
 function eaccounting_insert_transaction( $args ) {
@@ -184,9 +188,9 @@ function eaccounting_insert_transaction( $args ) {
 /**
  * Delete an transaction.
  *
- * @param $transaction_id
- *
  * @since 1.0.2
+ *
+ * @param $transaction_id
  *
  * @return bool
  */
@@ -203,5 +207,36 @@ function eaccounting_delete_transaction( $transaction_id ) {
 
 	} catch ( Exception $exception ) {
 		return false;
+	}
+}
+
+/**
+ * @param $payment
+ * @since 1.0.2
+ *
+ * @return \EverAccounting\Payment|null
+ */
+function eaccounting_get_payment( $payment ) {
+	if ( empty( $payment ) ) {
+		return null;
+	}
+
+	try {
+		if ( $payment instanceof Payment ) {
+			$_payment = $payment;
+		} elseif ( is_object( $payment ) && ! empty( $payment->id ) ) {
+			$_payment = new Payment( null );
+			$_payment->populate( $payment );
+		} else {
+			$_payment = new Payment( absint( $payment ) );
+		}
+
+		if ( ! $_payment->exists() || $_payment->get_type() != 'expense' ) {
+			throw new Exception( 'invalid_id', __( 'Invalid payment.', 'wp-ever-accounting' ) );
+		}
+
+		return $_payment;
+	} catch ( Exception $exception ) {
+		return null;
 	}
 }

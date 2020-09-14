@@ -9,14 +9,14 @@
 defined( 'ABSPATH' ) || exit();
 
 
-function eaccounting_settings_categories_tab() {
+function eaccounting_misc_categories_tab() {
 	if ( ! current_user_can( 'ea_manage_category' ) ) {
 		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
 	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
 	if ( in_array( $action, [ 'edit', 'add' ] ) ) {
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/settings/categories/edit-category.php';
+		require_once dirname( __FILE__ ). '/edit-category.php';
 	} else {
 		?>
 		<h1>
@@ -66,4 +66,4 @@ function eaccounting_settings_categories_tab() {
 	}
 }
 
-add_action( 'eaccounting_settings_tab_categories', 'eaccounting_settings_categories_tab' );
+add_action( 'eaccounting_misc_tab_categories', 'eaccounting_misc_categories_tab' );

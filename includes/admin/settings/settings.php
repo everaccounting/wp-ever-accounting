@@ -10,8 +10,6 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit();
 
-require_once dirname( __FILE__ ) . '/currencies/currencies.php';
-require_once dirname( __FILE__ ) . '/categories/categories.php';
 
 /**
  * Options Page
@@ -70,12 +68,6 @@ function eaccounting_get_settings_tabs() {
 	$tabs = array();
 	if ( current_user_can( 'ea_manage_options' ) ) {
 		$tabs['general'] = __( 'Settings', 'wp-ever-accounting' );
-	}
-	if ( current_user_can( 'ea_manage_category' ) ) {
-		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
-	}
-	if ( current_user_can( 'ea_manage_currency' ) ) {
-		$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 	}
 //	$tabs['emails']     = __( 'Emails', 'wp-ever-accounting' );
 //	$tabs['misc']       = __( 'Misc', 'wp-ever-accounting' );
