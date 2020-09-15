@@ -10,22 +10,21 @@ namespace EverAccounting;
 
 defined( 'ABSPATH' ) || die();
 
-class REST_API{
-
+class API{
 	/**
 	 * The single instance of the class.
 	 *
-	 * @var REST_API
+	 * @var API
 	 * @since 1.0.2
 	 */
 	protected static $_instance = null;
 
 	/**
-	 * Main REST_API Instance.
+	 * Main API Instance.
 	 *
 	 * Ensures only one instance of EAccounting is loaded or can be loaded.
 	 *
-	 * @return REST_API - Main instance.
+	 * @return API - Main instance.
 	 * @since 1.0.2
 	 * @static
 	 */
@@ -56,7 +55,7 @@ class REST_API{
 		$rest_handlers = array(
 			dirname( __FILE__ ) . '/api/class-ea-rest-contacts-controller.php'     => 'EAccounting_Contacts_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php'   => 'EAccounting_Categories_Controller',
-			dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php'   => 'EAccounting_Currencies_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php'   => 'EverAccounting\API\Currencies_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-accounts-controller.php'     => 'EAccounting_Accounts_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-transfers-controller.php'    => 'EAccounting_Transfers_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-taxes-controller.php'        => 'EAccounting_Taxes_Controller',
@@ -79,4 +78,4 @@ class REST_API{
 
 }
 
-REST_API::instance();
+API::instance();

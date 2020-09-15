@@ -276,6 +276,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-emails.php' );
 
 		//REST API.
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-rest-api.php' );
 
 		//Functions.
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
