@@ -23,7 +23,7 @@ const externals = [];
 const alias = {};
 const entryPoints = {};
 
-const packages = ['components'];
+const packages = ['components', 'data'];
 
 packages.forEach((name) => {
 	externals[`@eaccounting/${name}`] = {
@@ -50,6 +50,7 @@ const config = {
 		path: __dirname,
 		library: ['eaccounting', '[modulename]'],
 		libraryTarget: 'this',
+		jsonpFunction: '__eaccounting_webpackJsonp',
 	},
 	externals,
 	resolve: {
@@ -180,6 +181,8 @@ const config = {
 		}),
 		new MiniCssExtractPlugin({
 			filename: './assets/dist/[name].css',
+			chunkFilename: './assets/dist/[id].style.css',
+			rtlEnabled: true,
 		}),
 		new webpack.NormalModuleReplacementPlugin(/element-react[\/\\]src[\/\\]locale[\/\\]lang[\/\\]zh-CN/, 'element-react/src/locale/lang/en')
 	],

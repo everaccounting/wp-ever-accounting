@@ -4,6 +4,7 @@ import {Fragment, Component} from '@wordpress/element';
 
 __webpack_public_path__ = eaccounting_client_i10n.dist_url;
 import Example from './example';
+import {ITEMS_STORE_NAME} from './store';
 
 import './stylesheets/syle.scss'
 

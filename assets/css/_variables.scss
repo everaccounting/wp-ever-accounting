@@ -2,11 +2,12 @@
  * EverAccounting CSS Variables
  */
 
-$eaccounting:   	#3211c1 !default;
-$green:         	#7ad03a !default;
-$red:           	#a00 !default;
-$orange:        	#ffba00 !default;
-$blue:          	#2ea2cc !default;
+$eaccounting:   		#3211c1 !default;
+$eaccounting_dark:   	#3211c1 !default;
+$green:         		#7ad03a !default;
+$red:           		#a00 !default;
+$orange:        		#ffba00 !default;
+$blue:          		#2ea2cc !default;
 
 $primary:           #3211c1 !default;                                    // Primary color for buttons (alt)
 $primarytext:       desaturate(lighten($primary, 50%), 18%) !default;    // Text on primary color bg
