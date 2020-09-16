@@ -1,9 +1,9 @@
 <?php
 /**
- * Admin Transfers Page.
+ * Admin Currencies Page.
  *
  * @package     EverAccounting
- * @subpackage  Admin/Banking/Transfers
+ * @subpackage  Admin/Misc/Currency
  * @since       1.0.2
  */
 defined( 'ABSPATH' ) || exit();
@@ -45,7 +45,7 @@ function eaccounting_misc_currencies_tab() {
 			<form id="ea-currencies-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 				<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-currencies' ); ?>
 
-				<input type="hidden" name="page" value="ea-settings"/>
+				<input type="hidden" name="page" value="ea-misc"/>
 				<input type="hidden" name="tab" value="currencies"/>
 
 				<?php $list_table->views() ?>
