@@ -2,9 +2,9 @@
 /**
  * Currency Admin List Table.
  *
- * @package     EverAccounting
- * @subpackage  Admin/ListTables
  * @since       1.0.2
+ * @subpackage  Admin/ListTables
+ * @package     EverAccounting
  */
 
 namespace EverAccounting\Admin\ListTables;
@@ -27,40 +27,40 @@ class List_Table_Currency extends List_Table {
 	 *
 	 * This will be used for filtering methods.
 	 *
-	 * @var string
 	 * @since 1.0.2
+	 * @var string
 	 */
 	protected $list_table_type = 'currencies';
 
 	/**
 	 * Default number of items to show per page
 	 *
-	 * @var string
 	 * @since 1.0.2
+	 * @var string
 	 */
 	public $per_page = 20;
 
 	/**
 	 * Total number of item found
 	 *
-	 * @var int
 	 * @since 1.0.2
+	 * @var int
 	 */
 	public $total_count;
 
 	/**
 	 * Number of active items found
 	 *
-	 * @var string
 	 * @since 1.0
+	 * @var string
 	 */
 	public $active_count;
 
 	/**
 	 *  Number of inactive items found
 	 *
-	 * @var string
 	 * @since 1.0
+	 * @var string
 	 */
 	public $inactive_count;
 
@@ -69,15 +69,15 @@ class List_Table_Currency extends List_Table {
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
 	 *
-	 * @see WP_List_Table::__construct()
-	 *
 	 * @since  1.0.2
+	 *
+	 * @see WP_List_Table::__construct()
 	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args( $args, array(
-				'singular' => 'currency',
-				'plural'   => 'currencies',
+			'singular' => 'currency',
+			'plural'   => 'currencies',
 		) );
 
 		parent::__construct( $args );
@@ -111,12 +111,13 @@ class List_Table_Currency extends List_Table {
 	 */
 	public function define_columns() {
 		return array(
-				'cb'      => '<input type="checkbox" />',
-				'name'    => __( 'Name', 'wp-ever-accounting' ),
-				'code'    => __( 'Code', 'wp-ever-accounting' ),
-				'symbol'  => __( 'Symbol', 'wp-ever-accounting' ),
-				'rate'    => __( 'Rate', 'wp-ever-accounting' ),
-				'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
+			'cb'      => '<input type="checkbox" />',
+			'name'    => __( 'Name', 'wp-ever-accounting' ),
+			'code'    => __( 'Code', 'wp-ever-accounting' ),
+			'symbol'  => __( 'Symbol', 'wp-ever-accounting' ),
+			'rate'    => __( 'Rate', 'wp-ever-accounting' ),
+			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
+			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -128,11 +129,11 @@ class List_Table_Currency extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-				'name'    => array( 'name', false ),
-				'code'    => array( 'code', false ),
-				'symbol'  => array( 'symbol', false ),
-				'rate'    => array( 'rate', false ),
-				'enabled' => array( 'enabled', false ),
+			'name'    => array( 'name', false ),
+			'code'    => array( 'code', false ),
+			'symbol'  => array( 'symbol', false ),
+			'rate'    => array( 'rate', false ),
+			'enabled' => array( 'enabled', false ),
 		);
 	}
 
@@ -144,9 +145,9 @@ class List_Table_Currency extends List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-				'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-				'disable' => __( 'Disable', 'wp-ever-accounting' ),
-				'delete'  => __( 'Delete', 'wp-ever-accounting' ),
+			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
+			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -190,8 +191,12 @@ class List_Table_Currency extends List_Table {
 		$name = $currency->get_name();
 
 		$value = sprintf( '<a href="%1$s">%2$s</a>',
-				esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'tab' => 'currencies', 'currency_id' => $currency->get_id() ] ) ),
-				$name
+			esc_url( eaccounting_admin_url( [
+				'action'      => 'edit',
+				'tab'         => 'currencies',
+				'currency_id' => $currency->get_id()
+			] ) ),
+			$name
 		);
 
 		return apply_filters( 'eaccounting_currencies_table_name', $value, $currency );
@@ -208,7 +213,7 @@ class List_Table_Currency extends List_Table {
 	 *
 	 */
 	function column_code( $currency ) {
-		return apply_filters( 'eaccounting_currencies_table_code', esc_html($currency->get_code()), $currency );
+		return apply_filters( 'eaccounting_currencies_table_code', esc_html( $currency->get_code() ), $currency );
 	}
 
 	/**
@@ -222,7 +227,7 @@ class List_Table_Currency extends List_Table {
 	 *
 	 */
 	function column_symbol( $currency ) {
-		return apply_filters( 'eaccounting_currencies_table_symbol', esc_html($currency->get_symbol()), $currency );
+		return apply_filters( 'eaccounting_currencies_table_symbol', esc_html( $currency->get_symbol() ), $currency );
 	}
 
 	/**
@@ -236,7 +241,7 @@ class List_Table_Currency extends List_Table {
 	 *
 	 */
 	function column_rate( $currency ) {
-		return apply_filters( 'eaccounting_currencies_table_rate', eaccounting_round_number($currency->get_rate()), $currency );
+		return apply_filters( 'eaccounting_currencies_table_rate', eaccounting_round_number( $currency->get_rate() ), $currency );
 	}
 
 	/**
@@ -251,21 +256,46 @@ class List_Table_Currency extends List_Table {
 	function column_enabled( $currency ) {
 		ob_start();
 		eaccounting_toggle( array(
-				'name'  => 'enabled',
-				'id'    => 'enabled_' . $currency->get_id(),
-				'value' => $currency->get_enabled( 'edit' ),
-				'naked' => true,
-				'class' => 'ea_item_status_update',
-				'attr'  => array(
-						'data-object_id'   => $currency->get_id(),
-						'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-						'data-object_type' => 'currency'
-				)
+			'name'  => 'enabled',
+			'id'    => 'enabled_' . $currency->get_id(),
+			'value' => $currency->get_enabled( 'edit' ),
+			'naked' => true,
+			'class' => 'ea_item_status_update',
+			'attr'  => array(
+				'data-object_id'   => $currency->get_id(),
+				'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
+				'data-object_type' => 'currency'
+			)
 		) );
 		$output = ob_get_contents();
 		ob_get_clean();
 
 		return apply_filters( 'eaccounting_accounts_table_enabled', $output, $currency );
+	}
+
+	/**
+	 * @param $currency
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	function column_actions( $currency ) {
+		$base_uri              = eaccounting_admin_url( array( 'currency_id' => $currency->get_id(), 'tab' => 'currencies' ) );
+		$row_actions           = array();
+		$row_actions['edit']   = array(
+			'label'    => __( 'Edit', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+		);
+		$row_actions['delete'] = array(
+			'label'    => __( 'Delete', 'wp-ever-accounting' ),
+			'base_uri' => $base_uri,
+			'nonce'    => 'currency-nonce',
+		);
+
+		$row_actions = apply_filters( 'eaccounting_currency_row_actions', $row_actions, $currency );
+
+		return $this->row_actions( $row_actions );
 	}
 
 
@@ -311,14 +341,14 @@ class List_Table_Currency extends List_Table {
 			switch ( $action ) {
 				case 'enable':
 					eaccounting_insert_currency( array(
-							'id'      => $id,
-							'enabled' => '1'
+						'id'      => $id,
+						'enabled' => '1'
 					) );
 					break;
 				case 'disable':
 					eaccounting_insert_currency( array(
-							'id'      => $id,
-							'enabled' => '0'
+						'id'      => $id,
+						'enabled' => '0'
 					) );
 					break;
 				case 'delete':
@@ -358,9 +388,9 @@ class List_Table_Currency extends List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-				'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-				'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-				'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);
 
 		return $views;
@@ -390,14 +420,14 @@ class List_Table_Currency extends List_Table {
 		$per_page = $this->get_per_page();
 
 		$args = wp_parse_args( $this->query_args, array(
-				'number'  => $per_page,
-				'offset'  => $per_page * ( $page - 1 ),
-				'per_page' => $per_page,
-				'page'     => $page,
-				'search'  => $search,
-				'status'  => $status,
-				'orderby' => eaccounting_clean( $orderby ),
-				'order'   => eaccounting_clean( $order ),
+			'number'   => $per_page,
+			'offset'   => $per_page * ( $page - 1 ),
+			'per_page' => $per_page,
+			'page'     => $page,
+			'search'   => $search,
+			'status'   => $status,
+			'orderby'  => eaccounting_clean( $orderby ),
+			'order'    => eaccounting_clean( $order ),
 		) );
 
 		$args = apply_filters( 'eaccounting_currencies_table_get_currencies', $args, $this );
@@ -405,13 +435,13 @@ class List_Table_Currency extends List_Table {
 		$this->items = Query_Currency::init()->where( $args )->get( OBJECT, 'eaccounting_get_currency' );
 
 		$this->active_count = Query_Currency::init()->where( array_merge( $this->query_args, array(
-				'status' => 'active',
-				'search' => $search
+			'status' => 'active',
+			'search' => $search
 		) ) )->count();
 
 		$this->inactive_count = Query_Currency::init()->where( array_merge( $this->query_args, array(
-				'status' => 'inactive',
-				'search' => $search
+			'status' => 'inactive',
+			'search' => $search
 		) ) )->count();
 
 		$this->total_count = $this->active_count + $this->inactive_count;
@@ -432,9 +462,9 @@ class List_Table_Currency extends List_Table {
 		}
 
 		$this->set_pagination_args( array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page )
+			'total_items' => $total_items,
+			'per_page'    => $per_page,
+			'total_pages' => ceil( $total_items / $per_page )
 		) );
 	}
 }

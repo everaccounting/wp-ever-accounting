@@ -139,7 +139,7 @@ class List_Table_Transactions extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'        => array( 'date', false ),
+			'date'        => array( 'date_created', false ),
 			'amount'      => array( 'amount', false ),
 			'account_id'  => array( 'account_id', false ),
 			'type'        => array( 'type', false ),

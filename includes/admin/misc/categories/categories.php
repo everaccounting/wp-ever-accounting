@@ -1,10 +1,10 @@
 <?php
 /**
- * Admin Transfers Page.
+ * Admin categories Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Banking/Transfers
  * @since       1.0.2
+ * @subpackage  Admin/Misc/Categories
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 
@@ -16,7 +16,7 @@ function eaccounting_misc_categories_tab() {
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
 	if ( in_array( $action, [ 'edit', 'add' ] ) ) {
-		require_once dirname( __FILE__ ). '/edit-category.php';
+		require_once dirname( __FILE__ ) . '/edit-category.php';
 	} else {
 		?>
 		<h1>
@@ -45,7 +45,7 @@ function eaccounting_misc_categories_tab() {
 			<form id="ea-categories-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 				<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-categories' ); ?>
 
-				<input type="hidden" name="page" value="ea-settings"/>
+				<input type="hidden" name="page" value="ea-misc"/>
 				<input type="hidden" name="tab" value="categories"/>
 
 				<?php $list_table->views() ?>
