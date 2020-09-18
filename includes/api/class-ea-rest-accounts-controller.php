@@ -8,17 +8,17 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
+class Accounts_Controller extends Controller {
     /**
      * @var string
      */
     protected $namespace = 'ea/v1';
-    
+
     /**
      * @var string
      */
     protected $rest_base = 'accounts';
-    
+
     /**
      * @since 1.0.2
      */
@@ -42,11 +42,11 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
                 'schema' => array( $this, 'get_public_item_schema' ),
             )
         );
-        
+
         $get_item_args = array(
             'context' => $this->get_context_param( array( 'default' => 'view' ) ),
         );
-        
+
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
@@ -78,7 +78,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
                 'schema' => array( $this, 'get_public_item_schema' ),
             )
         );
-        
+
         register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', array(
             array(
                 'methods'             => WP_REST_Server::EDITABLE,
@@ -88,7 +88,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
             ),
         ) );
     }
-    
+
     /**
      *
      * @param WP_REST_Request $request
@@ -112,30 +112,30 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
                 $args[ $filter ] = sanitize_text_field( $value );
             }
         }
-        
-        
+
+
         $query_result = eaccounting_get_accounts( $args );
         $total_items  = eaccounting_get_accounts( $args, true );
         $response     = array();
-        
+
         foreach ( $query_result as $tag ) {
             $data       = $this->prepare_item_for_response( $tag, $request );
             $response[] = $this->prepare_response_for_collection( $data );
         }
-        
+
         $response = rest_ensure_response( $response );
-        
+
         $per_page = (int) $args['per_page'];
-        
+
         $response->header( 'X-WP-Total', (int) $total_items );
-        
+
         $max_pages = ceil( $total_items / $per_page );
-        
+
         $response->header( 'X-WP-TotalPages', (int) $max_pages );
-        
+
         return rest_ensure_response( $response );
     }
-    
+
     /***
      *
      * @param WP_REST_Request $request
@@ -145,26 +145,26 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
      */
     public function create_item( $request ) {
         $request->set_param( 'context', 'edit' );
-        
-        
+
+
         $prepared = $this->prepare_item_for_database( $request );
-        
+
         $item_id = eaccounting_insert_account( (array) $prepared );
         if ( is_wp_error( $item_id ) ) {
             return $item_id;
         }
-        
+
         $item = eaccounting_get_account( $item_id );
-        
+
         $request->set_param( 'context', 'view' );
-        
+
         $response = $this->prepare_item_for_response( $item, $request );
         $response = rest_ensure_response( $response );
         $response->set_status( 201 );
-        
+
         return $response;
     }
-    
+
     /**
      *
      * @param WP_REST_Request $request
@@ -177,18 +177,18 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
         if ( empty( $item_id ) ) {
             return null;
         }
-        
+
         $request->set_param( 'context', 'view' );
         $item = eaccounting_get_account( $item_id );
         if ( is_null( $item ) ) {
             return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
         }
-        
+
         $response = $this->prepare_item_for_response( $item, $request );
-        
+
         return rest_ensure_response( $response );
     }
-    
+
     /**
      *
      * @param WP_REST_Request $request
@@ -199,30 +199,30 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
     public function update_item( $request ) {
         $request->set_param( 'context', 'edit' );
         $item_id = intval( $request['id'] );
-        
+
         $item = eaccounting_get_account( $item_id );
         if ( is_null( $item ) ) {
             return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
         }
         $prepared_args = $this->prepare_item_for_database( $request );
-        
+
         $prepared_args->id = $item_id;
-        
+
         if ( ! empty( $prepared_args ) ) {
             $updated = eaccounting_insert_account( (array) $prepared_args );
-            
+
             if ( is_wp_error( $updated ) ) {
                 return $updated;
             }
         }
-        
+
         $request->set_param( 'context', 'view' );
         $item     = eaccounting_get_account( $item_id );
         $response = $this->prepare_item_for_response( $item, $request );
-        
+
         return rest_ensure_response( $response );
     }
-    
+
     /**
      *
      * @param WP_REST_Request $request
@@ -236,15 +236,15 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
         if ( is_null( $item ) ) {
             return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
         }
-        
+
         $request->set_param( 'context', 'view' );
-        
+
         $previous = $this->prepare_item_for_response( $item, $request );
         $retval   = eaccounting_delete_account( $item_id );
         if ( ! $retval ) {
             return new WP_Error( 'rest_cannot_delete', __( 'This account cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
         }
-        
+
         $response = new WP_REST_Response();
         $response->set_data(
             array(
@@ -252,10 +252,10 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
                 'previous' => $previous->get_data(),
             )
         );
-        
+
         return $response;
     }
-    
+
     /**
      *
      * @param WP_REST_Request $request
@@ -285,10 +285,10 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
                 }
                 break;
         }
-        
+
         return rest_ensure_response( $deleted );
     }
-    
+
     /**
      *
      * @param WP_REST_Request $request
@@ -300,7 +300,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
     public function prepare_item_for_database( $request ) {
         $prepared_item = new stdClass();
         $schema        = $this->get_item_schema();
-        
+
         if ( ! empty( $schema['properties']['id'] ) && isset( $request['id'] ) ) {
             $prepared_item->id = $request['id'];
         }
@@ -322,14 +322,14 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
         if ( ! empty( $schema['properties']['bank_address'] ) && isset( $request['bank_address'] ) ) {
             $prepared_item->bank_address = $request['bank_address'];
         }
-        
+
         if ( ! empty( $schema['properties']['opening_balance'] ) && isset( $request['opening_balance'] ) ) {
             $prepared_item->opening_balance = eaccounting_money( $request['opening_balance'], $request['currency_code'], false )->getAmount();
         }
-        
+
         return $prepared_item;
     }
-    
+
     /**
      *
      * @param mixed           $item
@@ -339,7 +339,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
      * @since 1.0.2
      */
     public function prepare_item_for_response( $item, $request ) {
-        
+
         $data = array(
             'id'              => intval( $item->id ),
             'name'            => $item->name,
@@ -352,18 +352,18 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
             'bank_address'    => $item->bank_address,
             'created_at'      => $this->prepare_date_response( $item->created_at )
         );
-        
+
         $context = ! empty( $request['context'] ) ? $request['context'] : 'view';
         $data    = $this->add_additional_fields_to_object( $data, $request );
         $data    = $this->filter_response_by_context( $data, $context );
-        
+
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $item ) );
-        
+
         return $response;
     }
-    
-    
+
+
     /**
      * @param $item
      *
@@ -373,7 +373,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
     protected function prepare_links( $item ) {
         $base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
         $url  = $base . $item->id;
-        
+
         // Entity meta.
         $links = array(
             'self'       => array(
@@ -383,10 +383,10 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
                 'href' => rest_url( $base ),
             )
         );
-        
+
         return $links;
     }
-    
+
     /**
      * Retrieves the items's schema, conforming to JSON Schema.
      *
@@ -492,14 +492,14 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
                     'context'     => array( 'view' ),
                     'readonly'    => true,
                 ),
-            
+
             )
         );
-        
+
         return $this->add_additional_fields_schema( $schema );
     }
-    
-    
+
+
     /**
      * Retrieves the query params for the items collection.
      *
@@ -518,7 +518,7 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
             ),
             'default'     => array(),
         );
-        
+
         $query_params['include'] = array(
             'description' => __( 'Limit result set to specific IDs.', 'wp-ever-accounting' ),
             'type'        => 'array',
@@ -527,14 +527,14 @@ class EAccounting_Accounts_Controller extends EAccounting_REST_Controller {
             ),
             'default'     => array(),
         );
-        
+
         $query_params['search'] = array(
             'description' => __( 'Limit result set to specific searched.', 'wp-ever-accounting' ),
             'type'        => 'string',
             'default'     => '',
         );
-        
+
         return $query_params;
     }
-    
+
 }
