@@ -12,9 +12,7 @@ import { setError, setItems } from './actions';
 import { fetchWithHeaders } from '../controls';
 
 export function* getItems( itemType, query ) {
-	console.log('getItems')
 	try {
-		console.log('try');
 		const url = addQueryArgs( `${ NAMESPACE }/${ itemType }`, query );
 		const isUnboundedRequest = query.per_page === -1;
 		const fetch = isUnboundedRequest ? apiFetch : fetchWithHeaders;

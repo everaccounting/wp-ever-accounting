@@ -1,23 +1,13 @@
 import {render} from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
-import {Fragment, Component} from '@wordpress/element';
+
+import './stylesheets/syle.scss';
+
+
+
 
 __webpack_public_path__ = eaccounting_client_i10n.dist_url;
-import Example from './example';
-import {ITEMS_STORE_NAME} from './store';
-
-import './stylesheets/syle.scss'
-
-class App extends Component {
-
-	render() {
-		return (
-			<Fragment>
-				<Example/>
-			</Fragment>
-		);
-	}
-}
+import App from './app';
 
 domReady(() => {
 	const root = document.getElementById('eaccounting');

@@ -78,7 +78,9 @@
 		"grunt-rtlcss": "2.0.2",
 		"grunt-sass": "3.1.0",
 		"grunt-stylelint": "0.15.0",
-		"gruntify-eslint": "5.0.0"
+		"gruntify-eslint": "5.0.0",
+	  	"grunt-checktextdomain": "^1.0.1",
+	  	"grunt-wp-i18n": "^1.0.3"
 	},
 	"browserslist": [
 		"> 0.1%",
@@ -87,10 +89,6 @@
 	],
 	"publishConfig": {
 		"access": "public"
-	},
-	"engines": {
-		"node": "14.9.0",
-		"npm": "6.14.4"
 	},
 	"files": [
 		"assets/**/*.{js,scss,php}",

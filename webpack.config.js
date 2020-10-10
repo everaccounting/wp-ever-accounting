@@ -23,7 +23,7 @@ const externals = [];
 const alias = {};
 const entryPoints = {};
 
-const packages = ['components', 'data'];
+const packages = ['components'];
 
 packages.forEach((name) => {
 	externals[`@eaccounting/${name}`] = {
@@ -37,6 +37,7 @@ packages.forEach((name) => {
 	alias[`@eaccounting/${name}`] = path.resolve(__dirname, `client/${name}`);
 	entryPoints[name] = `./client/${name}`;
 });
+
 
 const config = {
 	mode: NODE_ENV,
@@ -140,7 +141,19 @@ const config = {
 				chalk.green(':percent') +
 				' :msg (:elapsed seconds)',
 		}),
-		new DependencyExtractionWebpackPlugin({injectPolyfill: true}),
+		new DependencyExtractionWebpackPlugin({
+			injectPolyfill: true,
+			requestToExternal: (request) => {
+				if ( externals[ request ] ) {
+					return externals[ request ]["this"];
+				}
+			},
+			requestToHandle: (request) => {
+				if ( externals[ request ] ) {
+					return request.replace('@eaccounting/', 'ea-');
+				}
+			}
+		}),
 		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
 		new webpack.DefinePlugin({
 			'process.env': {
