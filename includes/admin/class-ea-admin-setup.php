@@ -57,6 +57,8 @@ class Setup_Wizard {
 	public function enqueue_scripts() {
 		$version = eaccounting()->get_version();
 		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
 
 		wp_register_style( 'ea-setup', eaccounting()->plugin_url() . '/assets/css/setup.css', array( 'dashicons', 'install' ), $version );
 		// Add RTL support for admin styles.
@@ -64,6 +66,7 @@ class Setup_Wizard {
 
 		wp_register_script( 'ea-setup', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-setup' . $suffix . '.js' ), array( 'jquery' ), $version );
 
+		wp_enqueue_style( 'ea-admin-styles' );
 		wp_enqueue_style( 'ea-setup' );
 		wp_enqueue_script( 'ea-setup' );
 	}
@@ -77,27 +80,27 @@ class Setup_Wizard {
 		}
 		$default_steps = array(
 				'introduction' => array(
-						'name'    => __( 'Introduction', 'wc_crm' ),
+						'name'    => __( 'Introduction', 'wp-ever-accounting' ),
 						'view'    => array( $this, 'setup_introduction' ),
 						'handler' => ''
 				),
 				'company'      => array(
-						'name'    => __( 'Company setup', 'woocommerce' ),
-						'view'    => array( $this, 'wc_setup_new_onboarding' ),
-						'handler' => array( $this, 'wc_setup_new_onboarding_save' ),
+						'name'    => __( 'Company setup', 'wp-ever-accounting' ),
+						'view'    => array( $this, 'company_settings' ),
+						'handler' => array( $this, 'company_settings_save' ),
 				),
 				'currency'     => array(
-						'name'    => __( 'Currency setup', 'woocommerce' ),
+						'name'    => __( 'Currency setup', 'wp-ever-accounting' ),
 						'view'    => array( $this, 'wc_setup_new_onboarding' ),
 						'handler' => array( $this, 'wc_setup_new_onboarding_save' ),
 				),
 				'category'     => array(
-						'name'    => __( 'Category setup', 'woocommerce' ),
+						'name'    => __( 'Category setup', 'wp-ever-accounting' ),
 						'view'    => array( $this, 'wc_setup_new_onboarding' ),
 						'handler' => array( $this, 'wc_setup_new_onboarding_save' ),
 				),
 				'next_steps'   => array(
-						'name'    => __( 'Ready!', 'woocommerce' ),
+						'name'    => __( 'Ready!', 'wp-ever-accounting' ),
 						'view'    => array( $this, 'wc_setup_ready' ),
 						'handler' => '',
 				),
@@ -124,11 +127,13 @@ class Setup_Wizard {
 	/**
 	 * Get the URL for the next step's screen.
 	 *
-	 * @param string $step  slug (default: current step).
+	 * @since 1.0.2
+	 *
+	 * @param string $step slug (default: current step).
+	 *
 	 * @return string       URL for next step if a next step exists.
 	 *                      Admin URL if it's the last step.
 	 *                      Empty string on failure.
-	 * @since 1.0.2
 	 */
 	public function get_next_step_link( $step = '' ) {
 		if ( ! $step ) {
@@ -231,15 +236,55 @@ class Setup_Wizard {
 
 	public function setup_introduction() {
 		?>
-		<h1><?php _e('Welcome to WP Ever Accounting!', 'wp-ever-accounting'); ?></h1>
-		<p><?php _e('Thank you for choosing WP Ever Accounting to manage your accounting! This quick setup wizard will help you configure the basic settings.', 'wc_crm'); ?></p>
+		<h1><?php _e( 'Welcome to WP Ever Accounting!', 'wp-ever-accounting' ); ?></h1>
+		<p><?php _e( 'Thank you for choosing WP Ever Accounting to manage your accounting! This quick setup wizard will help you configure the basic settings.', 'wp-ever-accounting' ); ?></p>
 		<p class="ea-setup-actions step">
-			<a href="<?php echo esc_url($this->get_next_step_link()); ?>"
-			   class="button-primary button button-large button-next"><?php _e('Let\'s Go!', 'wc_crm'); ?></a>
+			<a href="<?php echo esc_url( $this->get_next_step_link() ); ?>"
+			   class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'wp-ever-accounting' ); ?></a>
 		</p>
 		<?php
 	}
 
+
+	public function company_settings() {
+		?>
+		<h1><?php _e( 'Company Setup', 'wp-ever-accounting' ); ?></h1>
+		<form method="post">
+			<?php
+			eaccounting_text_input( array(
+					'label'    => __( 'Company Name', 'wp-ever-accounting' ),
+					'name'     => 'company_name',
+					'required' => true
+			) );
+			eaccounting_text_input( array(
+					'label'    => __( 'Company Email', 'wp-ever-accounting' ),
+					'name'     => 'company_email',
+					'default'  => get_option( 'admin_email' ),
+					'required' => true,
+					'type'     => 'email',
+			) );
+
+			eaccounting_textarea( array(
+					'label'    => __( 'Company Address', 'wp-ever-accounting' ),
+					'name'     => 'company_address',
+			) );
+			eaccounting_country_dropdown( array(
+					'label'    => __( 'Country', 'wp-ever-accounting' ),
+					'name'     => 'company_country',
+					'required' => true,
+			) );
+			?>
+
+			<p class="ea-setup-actions step">
+				<input type="submit"
+					   class="button-primary button button-large button-next"
+					   value="<?php esc_attr_e('Continue', 'wp-ever-accounting'); ?>" name="save_step"/>
+				<?php wp_nonce_field('company-setup'); ?>
+
+			</p>
+		</form>
+		<?php
+	}
 }
 
 new Setup_Wizard();
