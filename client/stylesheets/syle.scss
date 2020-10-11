@@ -1,4 +1,10 @@
-dsfasfsafsafasdfsa{
-  fsadfsagasga
-  :GF
+.el-card__body {
+  padding: 0 !important;
+
+  .el-table {
+	border-top: 0 !important;
+  }
+}
+.el-checkbox__label:empty{
+  display: none;
 }

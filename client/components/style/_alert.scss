@@ -1,0 +1,86 @@
+
+.el{
+  &-alert {
+    width: 100%;
+    padding: $alert-padding;
+    margin: 0;
+    box-sizing: border-box;
+    border-radius: $alert-border-radius;
+    position: relative;
+    background-color: $color-white;
+    overflow: hidden;
+    color: $color-white;
+    opacity: 1;
+    display: table;
+    transition: opacity .2s;
+
+    &--success {
+      background-color: $alert-success-color;
+    }
+
+    &--info {
+      background-color: $alert-info-color;
+    }
+
+    &--warning {
+      background-color: $alert-warning-color;
+    }
+
+    &--error {
+      background-color: $alert-danger-color;
+    }
+
+    &__content {
+      display: table-cell;
+      padding: 0 8px;
+    }
+
+    &__icon {
+      font-size: $alert-icon-large-size;
+      width: $alert-icon-large-size;
+      display: table-cell;
+      color: $color-white;
+      vertical-align: middle;
+      &.is-big {
+        font-size: $alert-icon-large-size;
+        width: $alert-icon-large-size;
+      }
+    }
+
+    &__title {
+      font-size: $alert-title-font-size;
+      line-height: 18px;
+      &.is-bold {
+        font-weight: bold;
+      }
+    }
+
+
+    & .el-alert__description {
+      color: $color-white;
+      font-size: $alert-description-font-size;
+      margin: 5px 0 0 0;
+    }
+
+    &__closebtn {
+      font-size: $alert-close-font-size;
+      color: $color-white;
+      opacity: 1;
+      top: 12px;
+      right: 15px;
+      position: absolute;
+      cursor: pointer;
+
+      &.is-customed {
+        font-style: normal;
+        font-size: $alert-close-customed-font-size;
+        top: 9px;
+      }
+    }
+  }
+
+  .el-alert-fade-enter,
+  .el-alert-fade-leave-active {
+    opacity: 0;
+  }
+}
