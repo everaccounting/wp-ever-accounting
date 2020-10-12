@@ -64,7 +64,6 @@ class API{
 		);
 
 		foreach ( $rest_handlers as $file_name => $controller ) {
-			error_log($file_name);
 			if ( file_exists( $file_name ) ) {
 				require_once( $file_name );
 				$this->$controller = new $controller();

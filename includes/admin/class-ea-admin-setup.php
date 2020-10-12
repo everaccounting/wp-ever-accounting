@@ -11,6 +11,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Query_Currency;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -76,16 +78,11 @@ class Setup_Wizard {
 						'view'    => array( $this, 'currency_settings' ),
 						'handler' => array( $this, 'currency_settings_save' ),
 				),
-//				'category'     => array(
-//						'name'    => __( 'Category setup', 'wp-ever-accounting' ),
-//						'view'    => array( $this, 'wc_setup_new_onboarding' ),
-//						'handler' => array( $this, 'wc_setup_new_onboarding_save' ),
-//				),
-//				'next_steps'   => array(
-//						'name'    => __( 'Ready!', 'wp-ever-accounting' ),
-//						'view'    => array( $this, 'wc_setup_ready' ),
-//						'handler' => '',
-//				),
+				'finish'       => array(
+						'name'    => __( 'Finish!', 'wp-ever-accounting' ),
+						'view'    => array( $this, 'finish_setup' ),
+						'handler' => '',
+				),
 		);
 
 
@@ -232,7 +229,7 @@ class Setup_Wizard {
 
 	public function setup_introduction() {
 		?>
-		<h1><?php _e( 'Welcome to WP Ever Accounting!', 'wp-ever-accounting' ); ?></h1>
+		<h1><?php _e( 'Welcome!', 'wp-ever-accounting' ); ?></h1>
 		<p><?php _e( 'Thank you for choosing WP Ever Accounting to manage your accounting! This quick setup wizard will help you configure the basic settings.', 'wp-ever-accounting' ); ?></p>
 		<p class="ea-setup-actions step">
 			<a href="<?php echo esc_url( $this->get_next_step_link() ); ?>"
@@ -308,34 +305,72 @@ class Setup_Wizard {
 
 
 	public function currency_settings() {
-		$currencies = eaccounting_get_global_currencies();
-		$options    = array();
-		foreach ( $currencies as $code => $props ) {
+		$codes   = eaccounting_get_global_currencies();
+		$options = array();
+		foreach ( $codes as $code => $props ) {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
+
+		$currencies = Query_Currency::init()->get();
 
 		?>
 		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
 		<p>Default currency rate should be always 1 & additional currency rates should be equivalent of default currency. e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77</p>
-
-		<div class="repeater">
+		<form action="" method="post">
 			<table class="wp-list-table widefat fixed stripes">
 				<thead>
 				<tr>
-					<th style="width: 30%;"><?php _e( 'Code', 'wp-ever-accounting' ); ?></th>
+					<th style="width: 50%;"><?php _e( 'Code', 'wp-ever-accounting' ); ?></th>
 					<th style="width: 30%;"><?php _e( 'Rate', 'wp-ever-accounting' ); ?></th>
 					<th style="width: 20%;"><?php _e( 'Default', 'wp-ever-accounting' ); ?></th>
-					<th style="width: 20%;"><?php _e( 'Action', 'wp-ever-accounting' ); ?></th>
 				</tr>
 				</thead>
-				<tbody data-repeater-list>
-				<tr data-repeater-item>
+				<tbody>
+				<?php foreach ( $currencies as $id => $currency ): ?>
+					<tr>
+						<td>
+							<?php
+							eaccounting_select2( array(
+									'name'     => "code[$id]",
+									'options'  => [ '' => __( 'Select' ) ] + $options,
+									'value'    => $currency->code,
+									'required' => true,
+									'id'       => "$id-code",
+							) );
+							?>
+						</td>
+
+						<td>
+							<?php
+							eaccounting_text_input( array(
+									'name'     => "rate[$id]",
+									'value'    => eaccounting_round_number( $currency->rate ),
+									'required' => true,
+									'id'       => "$id-rate",
+							) );
+							?>
+						</td>
+
+						<td>
+							<input type="radio" name="default" value="<?php echo $currency->id; ?>" <?php checked( 'USD', $currency->code ); ?>>
+						</td>
+					</tr>
+
+				<?php endforeach; ?>
+
+				<tr>
+					<td colspan="3">
+						<strong><?php _e( 'Additional currency' ); ?></strong>
+					</td>
+				</tr>
+
+				<tr>
 					<td>
 						<?php
 						eaccounting_select2( array(
-								'name'     => 'code',
-								'options'  => [ '' => __( 'Select' ) ] + $options,
-								'required' => true,
+								'name'    => "code[custom]",
+								'options' => [ '' => __( 'Select' ) ] + $options,
+								'id'      => "4-code",
 						) );
 						?>
 					</td>
@@ -343,33 +378,67 @@ class Setup_Wizard {
 					<td>
 						<?php
 						eaccounting_text_input( array(
-								'name'     => 'rate',
-								'required' => true,
+								'name'  => "rate[custom]",
+								'value' => '',
+								'id'    => "4-rate",
 						) );
 						?>
 					</td>
 
 					<td>
-						<input type="radio" name="default" value="1">
+						<input type="radio" name="default" value="custom">
 					</td>
-
-					<td>
-						<a href="#" data-repeater-delete class="button"><?php _e( 'Delete', 'wp-ever-accounting' ); ?></a>
-					</td>
-
 				</tr>
 
 				</tbody>
 
 			</table>
-			<input data-repeater-create type="button" value="Add"/>
-		</div>
 
+			<p class="ea-setup-actions step">
+				<input type="submit"
+					   class="button-primary button button-large button-next"
+					   value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
+				<?php wp_nonce_field( 'currency_settings' ); ?>
+
+			</p>
+		</form>
 		<?php
 	}
 
 	public function currency_settings_save() {
+		check_admin_referer( 'currency_settings' );
 
+		$new_currency = false;
+		$default      = eaccounting_clean( $_REQUEST['default'] );
+
+		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) {
+			$new_currency = eaccounting_insert_currency( array(
+					'code' => eaccounting_clean( $_REQUEST['code']['custom'] ),
+					'rate' => eaccounting_clean( $_REQUEST['rate']['custom'] ),
+			) );
+		}
+
+		if ( ! empty( $default ) && is_numeric( $default ) ) {
+			$currency = eaccounting_get_currency( absint( $default ) );
+			if ( ! empty( $currency ) && $currency->exists() ) {
+				eaccounting()->settings->set( array( 'default_currency' => $currency->get_code() ), true );
+			}
+		} elseif ( ! empty( $default ) && 'custom' == $default && $new_currency->exists() ) {
+			eaccounting()->settings->set( array( 'default_currency' => $new_currency->get_code() ), true );
+		}
+
+		wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+		exit;
+	}
+
+	public function finish_setup() {
+		?>
+		<h1><?php _e( 'Finish!', 'wp-ever-accounting' ); ?></h1>
+		<p><?php _e( 'You are done with the basic setup of the plugin and ready to use.', 'wp-ever-accounting' ); ?></p>
+		<p class="ea-setup-actions step">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eaccounting' ) ); ?>" class="button button-primary"><?php _e( 'View Dashboard', 'wp-ever-accounting' ); ?></a>
+		</p>
+		<?php
 	}
 }
 

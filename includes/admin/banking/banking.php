@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit();
 
 require_once dirname( __FILE__ ) . '/accounts/accounts.php';
 require_once dirname( __FILE__ ) . '/transfers/transfers.php';
-require_once dirname( __FILE__ ) . '/reconciliations/reconciliations.php';
+//require_once dirname( __FILE__ ) . '/reconciliations/reconciliations.php';
 
 
 /**
@@ -60,7 +60,7 @@ function eaccounting_get_banking_tabs() {
 	if ( current_user_can( 'ea_manage_transfer' ) ) {
 		$tabs['transfers'] = __( 'Transfers', 'wp-ever-accounting' );
 	}
-	$tabs['reconciliations']  = __( 'Reconciliations', 'wp-ever-accounting' );
+	//$tabs['reconciliations']  = __( 'Reconciliations', 'wp-ever-accounting' );
 	//$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_banking_tabs', $tabs );

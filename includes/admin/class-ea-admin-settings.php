@@ -36,7 +36,7 @@ class Settings {
 	 */
 	public function __construct() {
 
-		$this->options = get_option( 'eaccounting_settings', array() );
+		$this->options = (array) get_option( 'eaccounting_settings', array() );
 
 		// Set up.
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
@@ -229,20 +229,7 @@ class Settings {
 
 	function eaccounting_settings_updated( $old_value, $value, $option ) {
 		//update currency code.
-		if ( ! empty( $value['default_currency'] ) && ( $old_value['default_currency'] != $value['default_currency'] ) ) {
-			$old_code = $old_value['default_currency'];
-//			$new_code = $value['default_currency'];
-//
-//			$old_currency = eaccounting_get_currency( $old_code );
-//			$new_currency = eaccounting_get_currency( $new_code );
-//
-//			if ( $old_currency->exists() && $new_currency->exists() ) {
-//				$old_rate = $old_currency->get_rate();
-//				$new_rate = $new_currency->get_rate();
-//
-//
-//			}
-
+		if ( ! empty( $value['default_currency'] ) ) {
 			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
 			if ( $currency->exists() ) {
 				try {
