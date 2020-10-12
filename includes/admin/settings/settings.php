@@ -20,8 +20,8 @@ defined( 'ABSPATH' ) || exit();
  * @return void
  */
 function eaccounting_admin_settings_page() {
-	$active_tab  = eaccounting_get_current_tab();
-	$tabs = eaccounting_get_settings_tabs();
+	$active_tab = eaccounting_get_current_tab();
+	$tabs       = eaccounting_get_settings_tabs();
 	if ( empty( $active_tab ) && $tabs ) {
 		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
 		exit();
@@ -32,9 +32,14 @@ function eaccounting_admin_settings_page() {
 	$section = 'eaccounting_settings_' . $active_tab;
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper">
-			<?php eaccounting_navigation_tabs( eaccounting_get_settings_tabs(), $active_tab ); ?>
-		</h2>
+		<?php if ( count( eaccounting_get_settings_tabs() ) > 1 ): ?>
+			<h2 class="nav-tab-wrapper">
+				<?php eaccounting_navigation_tabs( eaccounting_get_settings_tabs(), $active_tab ); ?>
+			</h2>
+		<?php else: ?>
+			<h1><?php _e( 'Settings', 'wp-ever-accounting' ); ?></h1>
+		<?php endif; ?>
+
 		<div id="tab_container">
 			<?php if ( isset( $wp_settings_fields[ $page ][ $section ] ) ): ?>
 				<form method="post" action="options.php">
@@ -71,6 +76,7 @@ function eaccounting_get_settings_tabs() {
 	}
 //	$tabs['emails']     = __( 'Emails', 'wp-ever-accounting' );
 //	$tabs['misc']       = __( 'Misc', 'wp-ever-accounting' );
+
 	/**
 	 * Filters the list of settings tabs.
 	 *
