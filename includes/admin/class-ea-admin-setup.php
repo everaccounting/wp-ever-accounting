@@ -40,10 +40,9 @@ class Setup_Wizard {
 	 * Hook in tabs.
 	 */
 	public function __construct() {
-		if ( apply_filters( 'eaccounting_enable_setup_wizard', true ) && current_user_can( 'manage_eaccounting' ) ) {
+		if ( current_user_can( 'manage_eaccounting' ) ) {
 			add_action( 'admin_menu', array( $this, 'admin_menus' ) );
 			add_action( 'admin_init', array( $this, 'setup_wizard' ) );
-			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
 	}
 
@@ -52,23 +51,6 @@ class Setup_Wizard {
 	 */
 	public function admin_menus() {
 		add_dashboard_page( '', '', 'manage_options', 'ea-setup', '' );
-	}
-
-	public function enqueue_scripts() {
-		$version = eaccounting()->get_version();
-		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
-
-		wp_register_style( 'ea-setup', eaccounting()->plugin_url() . '/assets/css/setup.css', array( 'dashicons', 'install' ), $version );
-		// Add RTL support for admin styles.
-		wp_style_add_data( 'ea-setup', 'rtl', 'replace' );
-
-		wp_register_script( 'ea-setup', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-setup' . $suffix . '.js' ), array( 'jquery' ), $version );
-
-		wp_enqueue_style( 'ea-admin-styles' );
-		wp_enqueue_style( 'ea-setup' );
-		wp_enqueue_script( 'ea-setup' );
 	}
 
 	/**
@@ -91,31 +73,46 @@ class Setup_Wizard {
 				),
 				'currency'     => array(
 						'name'    => __( 'Currency setup', 'wp-ever-accounting' ),
-						'view'    => array( $this, 'wc_setup_new_onboarding' ),
-						'handler' => array( $this, 'wc_setup_new_onboarding_save' ),
+						'view'    => array( $this, 'currency_settings' ),
+						'handler' => array( $this, 'currency_settings_save' ),
 				),
-				'category'     => array(
-						'name'    => __( 'Category setup', 'wp-ever-accounting' ),
-						'view'    => array( $this, 'wc_setup_new_onboarding' ),
-						'handler' => array( $this, 'wc_setup_new_onboarding_save' ),
-				),
-				'next_steps'   => array(
-						'name'    => __( 'Ready!', 'wp-ever-accounting' ),
-						'view'    => array( $this, 'wc_setup_ready' ),
-						'handler' => '',
-				),
+//				'category'     => array(
+//						'name'    => __( 'Category setup', 'wp-ever-accounting' ),
+//						'view'    => array( $this, 'wc_setup_new_onboarding' ),
+//						'handler' => array( $this, 'wc_setup_new_onboarding_save' ),
+//				),
+//				'next_steps'   => array(
+//						'name'    => __( 'Ready!', 'wp-ever-accounting' ),
+//						'view'    => array( $this, 'wc_setup_ready' ),
+//						'handler' => '',
+//				),
 		);
 
 
 		$this->steps = apply_filters( 'eaccounting_setup_wizard_steps', $default_steps );
 		$this->step  = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) ); // WPCS: CSRF ok, input var ok.
 
+		$version = eaccounting()->get_version();
+		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
+		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/assets/css/setup.css', array( 'install', 'common' ), $version );
+
+		// Add RTL support for admin styles.
+		wp_style_add_data( 'ea-setup', 'rtl', 'replace' );
+		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/assets/js/select2/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_enqueue_script( 'ea-repeater', eaccounting()->plugin_url( '/assets/js/jquery-repeater/jquery.repeater' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_enqueue_script( 'ea-select2', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
+		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-repeater', 'ea-select2' ), $version );
+
+
 		// @codingStandardsIgnoreStart
 		if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
 			call_user_func( $this->steps[ $this->step ]['handler'], $this );
 		}
-		// @codingStandardsIgnoreEnd
 
+		// @codingStandardsIgnoreEnd
+		header( 'Content-Type: text/html; charset=utf-8' );
 		ob_start();
 		$this->setup_wizard_header();
 		$this->setup_wizard_steps();
@@ -169,9 +166,8 @@ class Setup_Wizard {
 			<meta name="viewport" content="width=device-width"/>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 			<title><?php esc_html_e( 'Ever Accounting &rsaquo; Setup Wizard', 'wp-ever-accounting' ); ?></title>
-			<?php do_action( 'admin_enqueue_scripts' ); ?>
+			<?php wp_print_scripts( array( 'ea-setup' ) ); ?>
 			<?php do_action( 'admin_print_styles' ); ?>
-			<?php do_action( 'admin_head' ); ?>
 		</head>
 		<body class="ea-setup wp-core-ui <?php echo esc_attr( 'ea-setup-step__' . $this->step ); ?> <?php echo esc_attr( $wp_version_class ); ?>">
 		<h1 class="ea-logo"><a href="https://wpeveraccounting.com/"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
@@ -251,10 +247,12 @@ class Setup_Wizard {
 		<h1><?php _e( 'Company Setup', 'wp-ever-accounting' ); ?></h1>
 		<form method="post">
 			<?php
+
 			eaccounting_text_input( array(
 					'label'    => __( 'Company Name', 'wp-ever-accounting' ),
 					'name'     => 'company_name',
-					'required' => true
+					'required' => true,
+					'value'    => eaccounting()->settings->get( 'company_name' ),
 			) );
 			eaccounting_text_input( array(
 					'label'    => __( 'Company Email', 'wp-ever-accounting' ),
@@ -262,11 +260,13 @@ class Setup_Wizard {
 					'default'  => get_option( 'admin_email' ),
 					'required' => true,
 					'type'     => 'email',
+					'value'    => eaccounting()->settings->get( 'company_email' ),
 			) );
 
 			eaccounting_textarea( array(
-					'label'    => __( 'Company Address', 'wp-ever-accounting' ),
-					'name'     => 'company_address',
+					'label' => __( 'Company Address', 'wp-ever-accounting' ),
+					'name'  => 'company_address',
+					'value' => eaccounting()->settings->get( 'company_address' ),
 			) );
 			eaccounting_country_dropdown( array(
 					'label'    => __( 'Country', 'wp-ever-accounting' ),
@@ -278,12 +278,98 @@ class Setup_Wizard {
 			<p class="ea-setup-actions step">
 				<input type="submit"
 					   class="button-primary button button-large button-next"
-					   value="<?php esc_attr_e('Continue', 'wp-ever-accounting'); ?>" name="save_step"/>
-				<?php wp_nonce_field('company-setup'); ?>
+					   value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
+				<?php wp_nonce_field( 'company-setup' ); ?>
 
 			</p>
 		</form>
 		<?php
+	}
+
+	public function company_settings_save() {
+		check_admin_referer( 'company-setup' );
+
+		if ( ! empty( $_REQUEST['company_name'] ) ) {
+			eaccounting()->settings->set( array( 'company_name' => eaccounting_clean( $_REQUEST['company_name'] ) ), true );
+		}
+		if ( ! empty( $_REQUEST['company_email'] ) ) {
+			eaccounting()->settings->set( array( 'company_email' => eaccounting_clean( $_REQUEST['company_email'] ) ), true );
+		}
+		if ( ! empty( $_REQUEST['company_address'] ) ) {
+			eaccounting()->settings->set( array( 'company_address' => eaccounting_clean( $_REQUEST['company_address'] ) ), true );
+		}
+		if ( ! empty( $_REQUEST['company_country'] ) ) {
+			eaccounting()->settings->set( array( 'company_country' => eaccounting_clean( $_REQUEST['company_country'] ) ), true );
+		}
+
+		wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
+		exit;
+	}
+
+
+	public function currency_settings() {
+		$currencies = eaccounting_get_global_currencies();
+		$options    = array();
+		foreach ( $currencies as $code => $props ) {
+			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
+		}
+
+		?>
+		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
+		<p>Default currency rate should be always 1 & additional currency rates should be equivalent of default currency. e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77</p>
+
+		<div class="repeater">
+			<table class="wp-list-table widefat fixed stripes">
+				<thead>
+				<tr>
+					<th style="width: 30%;"><?php _e( 'Code', 'wp-ever-accounting' ); ?></th>
+					<th style="width: 30%;"><?php _e( 'Rate', 'wp-ever-accounting' ); ?></th>
+					<th style="width: 20%;"><?php _e( 'Default', 'wp-ever-accounting' ); ?></th>
+					<th style="width: 20%;"><?php _e( 'Action', 'wp-ever-accounting' ); ?></th>
+				</tr>
+				</thead>
+				<tbody data-repeater-list>
+				<tr data-repeater-item>
+					<td>
+						<?php
+						eaccounting_select2( array(
+								'name'     => 'code',
+								'options'  => [ '' => __( 'Select' ) ] + $options,
+								'required' => true,
+						) );
+						?>
+					</td>
+
+					<td>
+						<?php
+						eaccounting_text_input( array(
+								'name'     => 'rate',
+								'required' => true,
+						) );
+						?>
+					</td>
+
+					<td>
+						<input type="radio" name="default" value="1">
+					</td>
+
+					<td>
+						<a href="#" data-repeater-delete class="button"><?php _e( 'Delete', 'wp-ever-accounting' ); ?></a>
+					</td>
+
+				</tr>
+
+				</tbody>
+
+			</table>
+			<input data-repeater-create type="button" value="Add"/>
+		</div>
+
+		<?php
+	}
+
+	public function currency_settings_save() {
+
 	}
 }
 
