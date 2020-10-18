@@ -123,6 +123,18 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.0.2 (18 October,2020) =
+* Feature - Export and import support
+* Feature - Muti-Currency support
+* Feature - Custom user roles support
+* Feature - Cashflow graph
+* Feature - Interactive Quick Setup Wizard
+* Enhance - Full rewritten plugin
+* Enhance - Update Settings options
+* Enhance - Updated UI for adding Category, Customer, Account, Vendor and Currency
+* Enhance - Updated Dashboard with custom filter options
+* Enhance - Added more search option in transactions, sales and expenses list table
+
 = 1.0.1 (7 December,2019) =
 * Fix - revenue payment method is not showing
 * Fix - transfer date is not saving

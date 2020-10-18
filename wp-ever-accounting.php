@@ -2,12 +2,12 @@
 /**
  * Plugin Name: WP Ever Accounting
  * Plugin URI: https://wpeveraccounting.com/
- * Description: Best WordPress Accounting plugin for small office
- * Version: 1.0.1.1
+ * Description: Manage your business finances right from your WordPress dashboard.
+ * Version: 1.0.2
  * Author: everaccounting
  * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
- * Tested up to: 5.3
+ * Tested up to: 5.5.1
  * Text Domain: wp-ever-accounting
  * Domain Path: /i18n/languages/
  * License: GPL2+

@@ -1,11 +1,11 @@
-# Copyright (C) 2020 pluginever
+# Copyright (C) 2020 everaccounting
 # This file is distributed under the GPL2+.
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Ever Accounting 1.0.1.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2020-10-18 09:50:45+00:00\n"
+"POT-Creation-Date: 2020-10-18 14:25:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -489,7 +489,7 @@ msgstr ""
 msgid "Overview"
 msgstr ""
 
-#: includes/admin/class-ea-admin-menus.php:42 includes/class-ea-install.php:225
+#: includes/admin/class-ea-admin-menus.php:42 includes/class-ea-install.php:230
 msgid "Sales"
 msgstr ""
 
@@ -516,7 +516,7 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-menus.php:64
 #: includes/admin/settings/settings.php:40
-#: includes/admin/settings/settings.php:75 includes/class-ea-install.php:58
+#: includes/admin/settings/settings.php:75 includes/class-ea-install.php:63
 msgid "Settings"
 msgstr ""
 
@@ -2046,7 +2046,7 @@ msgid "This transfer cannot be deleted."
 msgstr ""
 
 #: includes/api/class-ea-rest-transfers-controller.php:351
-#: includes/class-ea-install.php:234 includes/ea-transfer-functions.php:118
+#: includes/class-ea-install.php:239 includes/ea-transfer-functions.php:118
 #: includes/ea-transfer-functions.php:124
 msgid "Transfer"
 msgstr ""
@@ -2179,31 +2179,31 @@ msgstr ""
 msgid "Unsupported currency code"
 msgstr ""
 
-#: includes/class-ea-install.php:58
+#: includes/class-ea-install.php:63
 msgid "View settings"
 msgstr ""
 
-#: includes/class-ea-install.php:78
+#: includes/class-ea-install.php:83
 msgid "View documentation"
 msgstr ""
 
-#: includes/class-ea-install.php:78
+#: includes/class-ea-install.php:83
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ea-install.php:106
+#: includes/class-ea-install.php:111
 msgid "Monthly"
 msgstr ""
 
-#: includes/class-ea-install.php:110
+#: includes/class-ea-install.php:115
 msgid "Every 15 Days"
 msgstr ""
 
-#: includes/class-ea-install.php:213
+#: includes/class-ea-install.php:218
 msgid "Deposit"
 msgstr ""
 
-#: includes/class-ea-install.php:219 includes/ea-category-functions.php:26
+#: includes/class-ea-install.php:224 includes/ea-category-functions.php:26
 msgid "Other"
 msgstr ""
 
@@ -2532,8 +2532,8 @@ msgstr ""
 msgid "WP Ever Accounting"
 msgstr ""
 
-#. Plugin URI of the plugin/theme
-msgid "https://pluginever.com/plugins/wp-ever-accounting"
+#. Author URI of the plugin/theme
+msgid "https://wpeveraccounting.com/"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -2541,19 +2541,15 @@ msgid "Best WordPress Accounting plugin for small office"
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "pluginever"
+msgid "everaccounting"
 msgstr ""
 
-#. Author URI of the plugin/theme
-msgid "https://pluginever.com/"
-msgstr ""
-
-#: includes/class-ea-install.php:518
+#: includes/class-ea-install.php:523
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/class-ea-install.php:519
+#: includes/class-ea-install.php:524
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
