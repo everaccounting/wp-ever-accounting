@@ -293,6 +293,7 @@ function eaccounting_get_io_headers( $type ) {
 			$headers = array(
 					'name'               => 'Name',
 					'code'               => 'Code',
+					'rate'               => 'Rate',
 					'precision'          => 'Precision',
 					'symbol'             => 'Symbol',
 					'position'           => 'Position',
