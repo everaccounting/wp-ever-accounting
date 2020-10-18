@@ -256,4 +256,6 @@ function eaccounting_update_1_0_2() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `status`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `types`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `created_at` `date_created` DATETIME NULL DEFAULT NULL;" );
+
+	delete_option('eaccounting_localisation');
 }

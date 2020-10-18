@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Accounting plugin for small business.
+Manage your business finances right from your WordPress dashboard. Keep track of your payments, expenses in multi-currencies using WP Ever Accounting.
 
 == Description ==
 

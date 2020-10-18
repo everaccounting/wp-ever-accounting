@@ -40,6 +40,11 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	public static function check_version() {
+		//todo remove on later version.
+		if ( false == get_option( 'eaccounting_version' ) && ! empty( get_option( 'eaccounting_localisation' ) ) ) {
+			update_option( 'eaccounting_version', '1.0.1.1' );
+		}
+
 		if ( version_compare( get_option( 'eaccounting_version' ), eaccounting()->get_version(), '<' ) ) {
 			self::maybe_update();
 			do_action( 'eaccounting_updated' );
