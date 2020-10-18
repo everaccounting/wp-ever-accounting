@@ -84,6 +84,15 @@ module.exports = function ( grunt ) {
 					'<%= dirs.js %>/select2/select2.min.js': [
 						'<%= dirs.js %>/select2/select2.js',
 					],
+					'<%= dirs.js %>/daterange/daterangepicker.min.js': [
+						'<%= dirs.js %>/daterange/daterangepicker.js',
+					],
+					'<%= dirs.js %>/chartjs/chartjs.min.js': [
+						'<%= dirs.js %>/chartjs/chartjs.js',
+					],
+					'<%= dirs.js %>/chartjs/chart.bundle.min.js': [
+						'<%= dirs.js %>/chartjs/chart.bundle.js',
+					],
 				},
 			},
 			frontend: {
@@ -227,7 +236,7 @@ module.exports = function ( grunt ) {
 	// Register tasks.
 	grunt.registerTask( 'default', [ 'js', 'css' ] );
 
-	grunt.registerTask( 'js', [ 'eslint', 'uglify:admin', 'uglify:frontend' ] );
+	grunt.registerTask( 'js', [ 'eslint', 'uglify'] );
 
 	grunt.registerTask( 'css', [
 		'sass',
