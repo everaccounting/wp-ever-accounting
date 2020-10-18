@@ -1,7 +1,7 @@
 #! /bin/bash
 # ----- START EDITING HERE -----
 PLUGINSLUG="wp-ever-accounting"
-SVNUSER="manikmist09"
+SVNUSER="everaccounting"
 # ----- STOP EDITING HERE -----
 
 # Exit if any command fails.

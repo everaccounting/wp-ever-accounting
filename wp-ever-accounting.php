@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: WP Ever Accounting
- * Plugin URI: https://pluginever.com/plugins/wp-ever-accounting
+ * Plugin URI: https://wpeveraccounting.com/
  * Description: Best WordPress Accounting plugin for small office
  * Version: 1.0.1.1
- * Author: pluginever
- * Author URI: https://pluginever.com/
+ * Author: everaccounting
+ * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
  * Tested up to: 5.3
  * Text Domain: wp-ever-accounting

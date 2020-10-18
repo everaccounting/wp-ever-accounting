@@ -1,5 +1,5 @@
 === WP Ever Accounting - Accounting for small business ===
-Contributors: pluginever
+Contributors: everaccounting
 Tags: accounting, income, expense, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
 Tested up to: 5.3
