@@ -1,0 +1,10 @@
+bin/*
+!.eslintrc.js
+assets/dist
+build
+build-module
+coverage
+languages
+node_modules
+vendor
+assets/**/**.min.js

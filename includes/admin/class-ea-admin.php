@@ -1,178 +1,197 @@
 <?php
+/**
+ * EverAccounting Admin.
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin
+ * @version     1.0.2
+ */
+
+namespace EverAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Admin {
+/**
+ * Class Admin
+ *
+ * @since   1.0.2
+ */
+class Admin {
 	/**
-	 * The single instance of the class.
+	 * Admin constructor.
 	 *
-	 * @var self
-	 * @since  1.0.0
-	 */
-	private static $instance = null;
-
-	/**
-	 * Allows for accessing single instance of class. Class should only be constructed once per call.
-	 *
-	 * @return self Main instance.
-	 * @since  1.0.0
-	 * @static
-	 */
-	public static function instance() {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new self();
-		}
-
-		return self::$instance;
-	}
-
-	/**
-	 * EAccounting_Admin constructor.
+	 * @since   1.0.2
 	 */
 	public function __construct() {
-		$this->define_constants();
 		add_action( 'init', array( $this, 'includes' ) );
+		add_action( 'current_screen', array( $this, 'conditional_includes' ) );
+		add_action( 'admin_init', array( $this, 'admin_redirects' ) );
 		add_action( 'admin_init', array( $this, 'buffer' ), 1 );
-		add_action( 'admin_init', array( $this, 'set_eaccounting_actions' ) );
-		add_action( 'admin_init', array( $this, 'setup_files' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-	}
-
-	/**
-	 * define all required constants
-	 *
-	 * since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function define_constants() {
-		define( 'EACCOUNTING_ADMIN_ABSPATH', dirname( __FILE__ ) );
+		add_filter( 'admin_body_class', array( $this, 'admin_body_class' ) );
+		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
+		add_action( 'admin_footer', array( $this, 'load_js_templates' ) );
+		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
 	}
 
 	/**
 	 * Include any classes we need within admin.
+	 *
+	 * @since 1.0.2
+	 * @return void
 	 */
 	public function includes() {
-		require_once dirname( __FILE__ ) . '/admin-functions.php';
-		require_once dirname( __FILE__ ) . '/class-ea-admin-menus.php';
-		require_once dirname( __FILE__ ) . '/class-ea-settings-api.php';
-		require_once dirname( __FILE__ ) . '/class-ea-settings-page.php';
-		require_once dirname( __FILE__ ) . '/class-ea-admin-notices.php';
-		require_once dirname( __FILE__ ) . '/tables/class-ea-admin-list-table.php';
-//		require_once dirname( __FILE__ ) . '/settings/class-ea-general-settings.php';
-		require_once dirname( __FILE__ ) . '/settings/class-ea-localization-settings.php';
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php' );
+		//require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/misc/misc.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/reports/reports.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/settings/settings.php' );
 
-		require_once dirname( __FILE__ ) . '/actions/contact-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/category-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/revenue-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/payment-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/account-actions.php';
-		require_once dirname( __FILE__ ) . '/actions/transfer-actions.php';
+		// Setup/welcome.
+		if ( ! empty( $_GET['page'] ) ) {
+			switch ( $_GET['page'] ) {
+				case 'ea-setup':
+					include_once dirname( __FILE__ ) . '/class-ea-admin-setup.php';
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Include admin files conditionally.
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+	public function conditional_includes() {
+		$screen = get_current_screen();
+
+		if ( ! $screen ) {
+			return;
+		}
+
 	}
 
 	/**
 	 * Output buffering allows admin screens to make redirects later on.
+	 *
+	 * @since 1.0.2
+	 * @return void
 	 */
 	public function buffer() {
 		ob_start();
 	}
 
 	/**
-	 * Setup eaccounting actions
+	 * Handle redirects to setup/welcome page after install and updates.
 	 *
-	 * since 1.0.0
+	 * For setup wizard, transient must be present, the user must have access rights, and we must ignore the network/bulk plugin updaters.
+	 *
+	 * @since 1.0.
 	 */
-	public function set_eaccounting_actions() {
+	public function admin_redirects() {
+		if ( get_transient( '_eaccounting_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
+			$do_redirect = true;
 
-		$key = ! empty( $_GET['eaccounting-action'] ) ? sanitize_key( $_GET['eaccounting-action'] ) : false;
+			// On these pages, or during these events, postpone the redirect.
+			if ( wp_doing_ajax() || is_network_admin() || ! current_user_can( 'manage_eaccounting' ) ) {
+				$do_redirect = false;
+			}
 
-		if ( ! empty( $key ) ) {
-			do_action( 'eaccounting_admin_get_' . $key, $_GET );
-		}
-
-		$key = ! empty( $_POST['eaccounting-action'] ) ? sanitize_key( $_POST['eaccounting-action'] ) : false;
-
-		if ( ! empty( $key ) ) {
-			do_action( 'eaccounting_admin_post_' . $key, $_POST );
+			if ( $do_redirect ) {
+				delete_transient( '_eaccounting_activation_redirect' );
+				wp_safe_redirect( admin_url( 'index.php?page=ea-setup' ) );
+				exit;
+			}
 		}
 	}
 
 	/**
-	 * Set up files
+	 * Add custom class in admin body
 	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
+	 *
+	 * @param $classes
+	 *
+	 * @return string
 	 */
-	public function setup_files() {
-		eaccounting_protect_files();
+	public function admin_body_class( $classes ) {
+		if ( eaccounting_is_admin_page() ) {
+			$classes .= ' eaccounting ';
+		}
+
+		return $classes;
 	}
 
 	/**
-	 * Enqueue admin related assets
+	 * Change the admin footer text on EverAccounting admin pages.
 	 *
-	 * @param $hook
+	 * @since  1.0.2
 	 *
-	 * @since 1.0.0
+	 * @param string $footer_text text to be rendered in the footer.
+	 *
+	 * @return string
 	 */
-	public function enqueue_scripts( $hook ) {
-		if ( ! preg_match( '/accounting/', $hook ) ) {
-			return;
+	public function admin_footer_text( $footer_text ) {
+		if ( ! current_user_can( 'manage_options' ) || ! function_exists( 'eaccounting_get_screen_ids' ) ) {
+			return $footer_text;
+		}
+		$current_screen = get_current_screen();
+		$ea_pages       = eaccounting_get_screen_ids();
+
+		// Set only EA pages.
+		$ea_pages = array_diff( $ea_pages, array( 'profile', 'user-edit' ) );
+
+		// Check to make sure we're on a EverAccounting admin page.
+		if ( isset( $current_screen->id ) && apply_filters( 'eaccounting_display_admin_footer_text', in_array( $current_screen->id, $ea_pages, true ) ) ) {
+			// Change the footer text.
+			if ( ! get_option( 'eaccounting_admin_footer_text_rated' ) ) {
+				$footer_text = sprintf(
+					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'wp-ever-accounting' ),
+					sprintf( '<strong>%s</strong>', esc_html__( 'Ever Accounting', 'wp-ever-accounting' ) ),
+					'<a href="https://wordpress.org/support/plugin/wp-ever-accounting/reviews?rate=5#new-post" target="_blank" class="ea-rating-link" aria-label="' . esc_attr__( 'five star', 'wp-ever-accounting' ) . '" data-rated="' . esc_attr__( 'Thanks :)', 'wp-ever-accounting' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
+				);
+				eaccounting_enqueue_js(
+					"jQuery( 'a.ea-rating-link' ).click( function() {
+						jQuery.post( '" . eaccounting()->ajax_url() . "', { action: 'eaccounting_rated' } );
+						jQuery( this ).parent().text( jQuery( this ).data( 'rated' ) );
+					});"
+				);
+			} else {
+				$footer_text = __( 'Thank you for using with Ever Accounting.', 'wp-ever-accounting' );
+			}
 		}
 
-		wp_enqueue_style( 'eaccounting-jquery-ui', eaccounting()->plugin_url() . '/assets/vendor/jquery-ui/jquery-ui.css', false, time() );
-		wp_enqueue_style( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.css', [], time() );
-		wp_enqueue_style( 'eaccounting-fontawesome', eaccounting()->plugin_url() . '/assets/vendor/font-awesome/css/font-awesome.css', [], time() );
-		wp_enqueue_style( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/css/eaccounting-admin.css', [
-			'eaccounting-select2',
-			'eaccounting-fontawesome'
-		], time() );
+		return $footer_text;
+	}
 
-		wp_register_script( 'chart-js', eaccounting()->plugin_url() . '/assets/vendor/chartjs/chart.bundle.min.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'jquery-iframe-transport', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array(
-			'jquery',
-			'jquery-ui-widget'
-		), time(), true );
-		wp_enqueue_script( 'jquery-fileupload', eaccounting()->plugin_url() . '/assets/vendor/fileupload/jquery.fileupload.js', array(
-			'jquery',
-			'jquery-ui-core',
-			'jquery-iframe-transport'
-		), time(), true );
-		wp_enqueue_script( 'eaccounting-select2', eaccounting()->plugin_url() . '/assets/vendor/select2/select2.js', array( 'jquery' ), time(), true );
-		wp_enqueue_script( 'eaccounting-mask-money', eaccounting()->plugin_url() . '/assets/vendor/mask-money/mask-money.js', array( 'jquery' ), time(), true );
-		wp_register_script( 'eaccounting-datepicker', eaccounting()->plugin_url() . '/assets/js/eaccounting-datepicker.js', [
-			'jquery',
-			'jquery-ui-datepicker'
-		], time(), true );
-		wp_enqueue_script( 'eaccounting-fileupload', eaccounting()->plugin_url() . '/assets/js/eaccounting-fileupload.js', array(
-			'jquery',
-			'jquery-fileupload'
-		), time(), true );
-		wp_register_script( 'eaccounting-dashboard', eaccounting()->plugin_url() . '/assets/js/eaccounting-dashboard.js', array( 'jquery', 'chart-js' ), time(), true );
-		wp_enqueue_script( 'eaccounting-admin', eaccounting()->plugin_url() . '/assets/js/eaccounting-admin.js', array(
-			'jquery',
-			'wp-util',
-			'eaccounting-select2',
-			'eaccounting-mask-money',
-			'wp-color-picker',
-			'eaccounting-datepicker'
-		), time(), true );
-
-		wp_localize_script( 'eaccounting-admin', 'eAccountingi18n', array(
-			'localization' => array(
-				'thousands_separator' => eaccounting_get_price_thousands_separator(),
-				'decimal_separator'   => eaccounting_get_price_decimal_separator(),
-				'precision'           => (int) eaccounting_get_price_precision(),
-				'price_symbol'        => html_entity_decode( eaccounting_get_price_currency_symbol() ),
-				'symbol_first'        => true,
-			)
-		) );
-
-		wp_localize_script( 'eaccounting-dashboard', 'eAccountingi18n', array(
-			'localization' => array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-			)
-		) );
+	/**
+	 * Load js templates
+	 *
+	 * @since 1.0.2
+	 */
+	public function load_js_templates() {
+		$screen    = get_current_screen();
+		$screen_id = $screen ? $screen->id : '';
+		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ) ) ) {
+			eaccounting_get_admin_template( 'js/modal-add-account' );
+			eaccounting_get_admin_template( 'js/modal-add-currency' );
+			eaccounting_get_admin_template( 'js/modal-add-category' );
+			eaccounting_get_admin_template( 'js/modal-add-customer' );
+			eaccounting_get_admin_template( 'js/modal-add-vendor' );
+		}
 	}
 
 }
 
-EAccounting_Admin::instance();
+return new Admin();

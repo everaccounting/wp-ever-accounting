@@ -1,405 +1,441 @@
 <?php
+/**
+ * Handle the core contact object.
+ *
+ * @package     EverAccounting
+ * @class       Contact
+ * @version     1.0.2
+ *
+ */
+
+namespace EverAccounting;
+
+use EverAccounting\DateTime;
+use EverAccounting\Abstracts\Base_Object;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class EAccounting_Contact
+ * Class Contact
+ *
+ * @since 1.0.2
  */
-class EAccounting_Contact {
+class Contact extends Base_Object {
 	/**
-	 * @var int
-	 */
-	protected $id;
-
-	/**
-	 * @var static
-	 */
-	protected $user_id;
-
-	/**
-	 * @var static
-	 */
-	protected $first_name;
-
-	/**
-	 * @var static
-	 */
-	protected $last_name;
-
-	/**
-	 * @var static
-	 */
-	protected $email;
-
-	/**
-	 * @var static
-	 */
-	protected $phone;
-
-	/**
-	 * @var static
-	 */
-	protected $tax_number;
-
-	/**
-	 * @var static
-	 */
-	protected $address;
-
-	/**
-	 * @var static
-	 */
-	protected $city;
-
-	/**
-	 * @var static
-	 */
-	protected $state;
-
-	/**
-	 * @var static
-	 */
-	protected $postcode;
-
-	/**
-	 * @var static
-	 */
-	protected $country;
-
-	/**
-	 * @var static
-	 */
-	protected $website;
-
-	/**
-	 * @var static
-	 */
-	protected $note;
-
-	/**
-	 * @var static
-	 */
-	protected $status;
-
-	/**
-	 * @var static
-	 */
-	protected $types;
-
-	/**
-	 * @var static
-	 */
-	protected $avatar_url;
-
-	/**
-	 * @var static
-	 */
-	protected $created_at;
-
-	/**
-	 * @var
-	 */
-	protected $updated_at;
-
-	/**
-	 * @var null
-	 */
-	public $user = null;
-
-	/**
-	 * @var null
-	 */
-	public $contact = null;
-
-	/**
-	 * EAccounting_Contact constructor.
+	 * This is the name of this object type.
 	 *
-	 * @param int $contact
+	 * @since 1.0.2
+	 * @var string
 	 */
-	public function __construct( $contact = 0 ) {
-		$this->init( $contact );
-	}
+	public $object_type = 'contact';
+
+	/***
+	 * Object table name.
+	 *
+	 * @since 1.0.2
+	 * @var string
+	 */
+	public $table = 'ea_contacts';
 
 	/**
-	 * Init/load the contact object. Called from the constructor.
+	 * Contact Data array.
 	 *
-	 * @param $contact
-	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
+	 * @var array
 	 */
-	protected function init( $contact ) {
-		if ( is_numeric( $contact ) ) {
-			$this->id      = absint( $contact );
-			$this->contact = eaccounting_get_contact( $contact );
-			$this->get_contact( $this->id );
-		} elseif ( $contact instanceof EAccounting_Contact ) {
-			$this->id      = absint( $contact->id );
-			$this->contact = $contact->contact;
-			$this->get_contact( $this->id );
-		} elseif ( isset( $contact->ID ) ) {
-			$this->contact = eaccounting_get_contact( $contact->ID, 'user_id' );
-			$this->id      = absint( ! is_null( $this->contact ) ? absint( $this->contact->id ) : 0 );
-			$this->get_contact( $this->id );
-		} elseif ( isset( $contact->id ) ) {
-			$this->contact = $contact;
-			$this->id      = absint( $this->contact->id );
-			$this->populate( $contact );
-		}
-	}
+	protected $data = array(
+		'user_id'       => null,
+		'name'          => '',
+		'email'         => '',
+		'phone'         => '',
+		'fax'           => '',
+		'birth_date'    => '',
+		'address'       => '',
+		'country'       => '',
+		'website'       => '',
+		'tax_number'    => '',
+		'currency_code' => '',
+		'type'          => '',
+		'note'          => '',
+		'enabled'       => 1,
+		'creator_id'    => '',
+		'date_created'  => '',
+	);
 
 	/**
-	 * Gets an call from the database.
+	 * Contact constructor.
 	 *
-	 * @param int $id (default: 0).
+	 * @param mixed $data
 	 *
-	 * @return bool
+	 * @since 1.0.2
+	 *
 	 */
-	public function get_contact( $id = 0 ) {
+	public function __construct( $data = 0 ) {
+		parent::__construct( $data );
 
-		if ( ! $id ) {
-			return false;
-		}
-
-		if ( $contact = eaccounting_get_contact( $id ) ) {
-			$this->populate( $contact );
-
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Populates an call from the loaded post data.
-	 *
-	 * @param mixed $contact
-	 */
-	public function populate( $contact ) {
-		$this->id      = $contact->id;
-		$this->user_id = $contact->user_id;
-		foreach ( $contact as $key => $value ) {
-			$this->$key = $value;
-		}
-
-		if ( $this->user_id > 0 ) {
-			$data = get_user_by( 'id', $this->user_id );
-			if ( $data ) {
-				$this->user       = $data;
-				$this->user_login = $data->user_login;
-				$this->user_email = $data->user_email;
-				$this->user_url   = $data->user_url;
-			}
+		if ( is_numeric( $data ) && $data > 0 ) {
+			$this->set_id( $data );
+		} elseif ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
 		} else {
-			$this->user_login = __( 'Guest', 'wp-ever-accounting' );
-			$this->user_email = $this->email;
+			$this->set_id( 0 );
+		}
+
+		if ( $this->get_id() > 0 && ! $this->object_read ) {
+			$this->read();
 		}
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	*/
+
 	/**
-	 * Magic __get function to dispatch a call to retrieve a private property
+	 * Get contact's wp user ID.
 	 *
-	 * @since 1.0.0
+	 * @param string $context
+	 *
+	 * @return int|null
+	 * @since 1.0.2
+	 *
 	 */
-	public function __get( $key ) {
-		if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ) );
-		} else if ( property_exists( $this, $key ) ) {
-			return $this->{$key};
-		} else {
-			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-ever-accounting' ), $key ) );
+	public function get_user_id( $context = 'edit' ) {
+		return $this->get_prop( 'user_id', $context );
+	}
+
+	/**
+	 * Get contact Name.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_name( $context = 'edit' ) {
+		return $this->get_prop( 'name', $context );
+	}
+
+	/**
+	 * Get contact's email.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_email( $context = 'edit' ) {
+		return $this->get_prop( 'email', $context );
+	}
+
+	/**
+	 * Get contact's phone number.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_phone( $context = 'edit' ) {
+		return $this->get_prop( 'phone', $context );
+	}
+
+	/**
+	 * Get contact's phone number.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_fax( $context = 'edit' ) {
+		return $this->get_prop( 'fax', $context );
+	}
+
+	/**
+	 * Get contact's birth date.
+	 *
+	 * @param string $context
+	 *
+	 * @return DateTime|string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_birth_date( $context = 'edit' ) {
+		return $this->get_prop( 'birth_date', $context );
+	}
+
+	/**
+	 * Get contact's address.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_address( $context = 'edit' ) {
+		return $this->get_prop( 'address', $context );
+	}
+
+	/**
+	 * Get contact's country.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_country( $context = 'edit' ) {
+		return $this->get_prop( 'country', $context );
+	}
+
+	/**
+	 * Get contact's website number.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_website( $context = 'edit' ) {
+		return $this->get_prop( 'website', $context );
+	}
+
+	/**
+	 * Get contact's tax number.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_tax_number( $context = 'edit' ) {
+		return $this->get_prop( 'tax_number', $context );
+	}
+
+	/**
+	 * Get the currency code of the contact.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_currency_code( $context = 'edit' ) {
+		return $this->get_prop( 'currency_code', $context );
+	}
+
+	/**
+	 * Get the type of contact.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_type( $context = 'edit' ) {
+		return $this->get_prop( 'type', $context );
+	}
+
+	/**
+	 * Get contact's note.
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_note( $context = 'edit' ) {
+		return $this->get_prop( 'note', $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Set wp user id.
+	 *
+	 * @param $id
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_user_id( $id ) {
+		$this->set_prop( 'user_id', absint( $id ) );
+	}
+
+	/**
+	 * Set contact name.
+	 *
+	 * @param $name
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_name( $name ) {
+		$this->set_prop( 'name', eaccounting_clean( $name ) );
+	}
+
+	/**
+	 * Set contact's email.
+	 *
+	 * @param string $value Email.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_email( $value ) {
+		if ( $value && ! is_email( $value ) ) {
+			$this->error( 'contact_invalid_email', __( 'Invalid email address', 'wp-ever-accounting' ) );
 		}
-
+		$this->set_prop( 'email', sanitize_email( $value ) );
 	}
 
 	/**
-	 * @since 1.0.0
-	 * @return mixed
+	 * Set contact's phone.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
 	 */
-	public function get_id(){
-		return $this->id;
+	public function set_phone( $value ) {
+		$this->set_prop( 'phone', eaccounting_clean( $value ) );
 	}
 
 	/**
-	 * @return mixed
-	 * @since 1.0.0
+	 * Set contact's fax.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
 	 */
-	public function get_first_name() {
-		return $this->first_name;
+	public function set_fax( $value ) {
+		$this->set_prop( 'fax', eaccounting_clean( $value ) );
 	}
 
 	/**
-	 * @return mixed
-	 * @since 1.0.0
+	 * Set contact's birth date.
+	 *
+	 * @param $date
+	 *
+	 * @since 1.0.2
 	 */
-	public function get_last_name() {
-		return $this->last_name;
+	public function set_birth_date( $date ) {
+		$this->set_date_prop( 'birth_date', $date );
 	}
 
 	/**
-	 * Get name
+	 * Set contact's phone.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_address( $value ) {
+		$this->set_prop( 'address', sanitize_textarea_field( $value ) );
+	}
+
+	/**
+	 * Set contact country.
+	 *
+	 * @param $country
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_country( $country ) {
+		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
+			$this->set_prop( 'country', $country );
+		}
+	}
+
+	/**
+	 * Set contact's website.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_website( $value ) {
+		$this->set_prop( 'website', esc_url( $value ) );
+	}
+
+	/**
+	 * Set contact's tax_number.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_tax_number( $value ) {
+		$this->set_prop( 'tax_number', eaccounting_clean( $value ) );
+	}
+
+	/**
+	 * Set contact's currency_code.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_currency_code( $value ) {
+		$currency = eaccounting_get_currency( $value );
+		if ( $currency && $currency->exists() ) {
+			$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
+		}
+	}
+
+	/**
+	 * Set contact type.
+	 *
+	 * @param $type
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_type( $type ) {
+		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
+			$this->set_prop( 'type', $type );
+		}
+	}
+
+	/**
+	 * Set contact's note.
+	 *
+	 * @param $value
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_note( $value ) {
+		$this->set_prop( 'note', sanitize_textarea_field( $value ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Extra
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Return this customer's avatar.
+	 *
 	 * @return string
-	 * @since 1.0.0
+	 * @since 1.0.2
 	 */
-	public function get_name() {
-		return implode( ' ', array( $this->first_name, $this->last_name ) );
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_email() {
-		return $this->email;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_phone() {
-		return $this->phone;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_tax_number() {
-		return $this->tax_number;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_address() {
-		return $this->address;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_city() {
-		return $this->city;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_state() {
-		return $this->state;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_postcode() {
-		return $this->postcode;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_country() {
-		return $this->country;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_website() {
-		return $this->website;
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_note() {
-		return $this->note;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_status() {
-		return empty( $this->status ) ? 'active' : $this->status;
-	}
-
-	/**
-	 * @since 1.0.0
-	 * @return string
-	 */
-	public function get_avatar_url(){
-		return empty( $this->avatar_url ) ? '' : esc_url($this->avatar_url);
-	}
-
-	/**
-	 * @return mixed
-	 * @since 1.0.0
-	 */
-	public function get_types() {
-		$types = maybe_unserialize( $this->types );
-		return empty($types)? ['customer', 'vendor']: $types;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_created_at() {
-		return $this->created_at;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_updated_at() {
-		return $this->updated_at;
-	}
-
-	/**
-	 * @since 1.0.1
-	 * @return float|string|null
-	 */
-	public function get_total_payment(){
-		return eaccounting_get_contact_payment_total($this->id);
-	}
-
-	/**
-	 * @since 1.0.1
-	 * @return float|string|null
-	 */
-	public function get_total_revenue(){
-		return eaccounting_get_contact_revenue_total($this->id);
-	}
-
-	/**
-	 * Deactivate contact
-	 * since 1.0.0
-	 */
-	public function deactivate(){
-		eaccounting_insert_contact([
-			'id' => $this->id,
-			'status' => 'inactive'
-		]);
-	}
-
-	/**
-	 * Activate contact
-	 * since 1.0.0
-	 */
-	public function activate(){
-		eaccounting_insert_contact([
-			'id' => $this->id,
-			'status' => 'active'
-		]);
+	public function get_avatar_url() {
+		return get_avatar_url( $this->get_email() );
 	}
 
 }

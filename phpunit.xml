@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	verbose="true"
+	>
+
+	<testsuites>
+		<testsuite name="WP Ever Accounting">
+			<directory suffix=".php">./tests/unit-tests</directory>
+		</testsuite>
+	</testsuites>
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./includes</directory>
+			<file>wp-ever-accounting.php</file>
+			<file>uninstall.php</file>
+			<exclude>
+				<directory suffix=".php">./includes/</directory>
+
+			</exclude>
+		</whitelist>
+	</filter>
+	<listeners>
+		<listener class="SpeedTrapListener" file="tests/framework/helpers/listener-loader.php" />
+	</listeners>
+</phpunit>
