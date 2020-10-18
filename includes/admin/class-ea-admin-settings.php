@@ -416,7 +416,7 @@ class Settings {
 	}
 
 	/**
-	 * Set the capability needed to save affiliate settings
+	 * Set the capability needed to save settings
 	 *
 	 * @since 1.0.2
 	 * @return string

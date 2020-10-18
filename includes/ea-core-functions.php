@@ -275,7 +275,7 @@ function eaccounting_logger() {
  *
  * @since 1.0.2
  */
-function wc_cleanup_logs() {
+function eaccounting_cleanup_logs() {
 	$logger = new \EverAccounting\Logger();
 	$logger->clear_expired_logs();
 }
