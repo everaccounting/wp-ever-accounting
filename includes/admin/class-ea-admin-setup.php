@@ -332,7 +332,7 @@ class Setup_Wizard {
 							<?php
 							eaccounting_select2( array(
 									'name'     => "code[$id]",
-									'options'  => [ '' => __( 'Select' ) ] + $options,
+									'options'  => [ '' => __( 'Select','wp-ever-accounting' ) ] + $options,
 									'value'    => $currency->code,
 									'required' => true,
 									'id'       => "$id-code",
@@ -360,7 +360,7 @@ class Setup_Wizard {
 
 				<tr>
 					<td colspan="3">
-						<strong><?php _e( 'Additional currency' ); ?></strong>
+						<strong><?php _e( 'Additional currency','wp-ever-accounting' ); ?></strong>
 					</td>
 				</tr>
 
@@ -369,7 +369,7 @@ class Setup_Wizard {
 						<?php
 						eaccounting_select2( array(
 								'name'    => "code[custom]",
-								'options' => [ '' => __( 'Select' ) ] + $options,
+								'options' => [ '' => __( 'Select','wp-ever-accounting' ) ] + $options,
 								'id'      => "4-code",
 						) );
 						?>

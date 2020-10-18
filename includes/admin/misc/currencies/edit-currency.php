@@ -55,7 +55,7 @@ foreach ( $currencies as $code => $props ) {
 						'label'         => __( 'Currency Code', 'wp-ever-accounting' ),
 						'name'          => 'code',
 						'value'         => $currency->get_code( 'edit' ),
-						'options'       => [ '' => __( 'Select' ) ] + $options,
+						'options'       => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
 						'required'      => true,
 				) );
 				eaccounting_text_input( array(

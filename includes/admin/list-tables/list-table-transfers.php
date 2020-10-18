@@ -184,7 +184,7 @@ class List_Table_Transfers extends List_Table {
 	 */
 	function column_from_account_id( $transfer ) {
 		$account = eaccounting_get_account( $transfer->get_from_account_id() );
-		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-account' );
+		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_transfers_table_from_account_id', esc_html( $name ), $transfer );
 	}
@@ -200,7 +200,7 @@ class List_Table_Transfers extends List_Table {
 	 */
 	function column_to_account_id( $transfer ) {
 		$account = eaccounting_get_account( $transfer->get_to_account_id() );
-		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-account' );
+		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_transfers_table_to_account_id', esc_html( $name ), $transfer );
 	}

@@ -211,7 +211,7 @@ class List_Table_Transactions extends List_Table {
 	 */
 	function column_account_id( $transaction ) {
 		$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
-		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-account' );
+		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_transaction_table_account', esc_html( $name ), $transaction );
 	}
@@ -244,7 +244,7 @@ class List_Table_Transactions extends List_Table {
 	 */
 	function column_category_id( $transaction ) {
 		$account = eaccounting_get_category( $transaction->get_category_id( 'edit' ) );
-		$name    = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-account' );
+		$name    = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_transaction_table_category', esc_html( $name ), $transaction );
 	}

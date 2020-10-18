@@ -37,7 +37,7 @@ function eaccounting_sales_tab_customers() {
 
 		?>
 		<form id="ea-accounts-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounts' ), 'eaccounting-customers' ); ?>
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-customers' ); ?>
 
 			<input type="hidden" name="page" value="ea-sales"/>
 			<input type="hidden" name="tab" value="customers"/>

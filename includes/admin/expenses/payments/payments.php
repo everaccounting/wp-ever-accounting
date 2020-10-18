@@ -39,7 +39,7 @@ function eaccounting_expenses_tab_payments() {
 
 		?>
 		<form id="ea-accounts-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounts' ), 'eaccounting-payments' ); ?>
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-payments' ); ?>
 
 			<input type="hidden" name="page" value="ea-expenses"/>
 			<input type="hidden" name="tab" value="payments"/>

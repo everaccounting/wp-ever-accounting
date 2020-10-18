@@ -21,7 +21,7 @@ class Importer {
 			) );
 		}
 		$params = array(
-			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? wc_clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
+			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
 			'position'        => isset( $_REQUEST['position'] ) ? absint( $_REQUEST['position'] ) : 0,
 			'mapping'         => isset( $_REQUEST['mapping'] ) ? (array) wp_unslash( $_REQUEST['mapping'] ) : array(),
 			'update_existing' => isset( $_REQUEST['update_existing'] ) ? (bool) $_REQUEST['update_existing'] : false,
@@ -170,7 +170,7 @@ class Importer {
 					'imported'   => (int) $imported,
 					'skipped'    => (int) $skipped,
 					'file'       => $file,
-					'message'    => esc_html__( sprintf( '%d items imported and %d items skipped.', $imported, $skipped ) ),
+					'message'    => esc_html__( sprintf( '%d items imported and %d items skipped.', $imported, $skipped ), 'wp-ever-accounting' ),
 				)
 			);
 		} else {

@@ -205,7 +205,7 @@ class List_Table_Payments extends List_Table {
 	 */
 	function column_account_id( $payment ) {
 		$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );
-		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-account' );
+		$name    = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_payments_table_account', esc_html( $name ), $payment );
 	}
@@ -221,7 +221,7 @@ class List_Table_Payments extends List_Table {
 	 */
 	function column_category_id( $payment ) {
 		$account = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
-		$name    = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-account' );
+		$name    = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_payments_table_category', esc_html( $name ), $payment );
 	}

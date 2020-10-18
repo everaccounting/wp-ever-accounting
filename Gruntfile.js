@@ -1,9 +1,9 @@
 /* eslint-disable */
-module.exports = function ( grunt ) {
+module.exports = function (grunt) {
 	'use strict';
-	var sass = require( 'node-sass' );
+	var sass = require('node-sass');
 
-	grunt.initConfig( {
+	grunt.initConfig({
 		// Setting folder templates.
 		dirs: {
 			css: 'assets/css',
@@ -16,10 +16,7 @@ module.exports = function ( grunt ) {
 		// JavaScript linting with ESLint.
 		eslint: {
 			src: [
-				'<%= dirs.js %>/admin/*.js',
-				'!<%= dirs.js %>/admin/*.min.js',
-				'<%= dirs.js %>/frontend/*.js',
-				'!<%= dirs.js %>/frontend/*.min.js',
+				'<%= dirs.js %>/eaccounting/*.js',
 			],
 		},
 
@@ -28,7 +25,7 @@ module.exports = function ( grunt ) {
 			options: {
 				configFile: '.stylelintrc',
 			},
-			all: [ '<%= dirs.css %>/*.scss' ],
+			all: ['<%= dirs.css %>/*.scss'],
 		},
 
 		// Minify .js files.
@@ -47,19 +44,8 @@ module.exports = function ( grunt ) {
 					{
 						expand: true,
 						cwd: '<%= dirs.js %>/eaccounting/',
-						src: [ '*.js', '!*.min.js' ],
+						src: ['*.js', '!*.min.js'],
 						dest: '<%= dirs.js %>/eaccounting/',
-						ext: '.min.js',
-					},
-				],
-			},
-			admin: {
-				files: [
-					{
-						expand: true,
-						cwd: '<%= dirs.js %>/admin/',
-						src: [ '*.js', '!*.min.js' ],
-						dest: '<%= dirs.js %>/admin/',
 						ext: '.min.js',
 					},
 				],
@@ -74,9 +60,6 @@ module.exports = function ( grunt ) {
 					],
 					'<%= dirs.js %>/jquery-tiptip/jquery.tipTip.min.js': [
 						'<%= dirs.js %>/jquery-tiptip/jquery.tipTip.js',
-					],
-					'<%= dirs.js %>/pace/pace.min.js': [
-						'<%= dirs.js %>/pace/pace.js',
 					],
 					'<%= dirs.js %>/select2/select2.full.min.js': [
 						'<%= dirs.js %>/select2/select2.full.js',
@@ -95,17 +78,6 @@ module.exports = function ( grunt ) {
 					],
 				},
 			},
-			frontend: {
-				files: [
-					{
-						expand: true,
-						cwd: '<%= dirs.js %>/frontend/',
-						src: [ '*.js', '!*.min.js' ],
-						dest: '<%= dirs.js %>/frontend/',
-						ext: '.min.js',
-					},
-				],
-			},
 		},
 
 		// Compile all .scss files.
@@ -120,7 +92,7 @@ module.exports = function ( grunt ) {
 					{
 						expand: true,
 						cwd: '<%= dirs.css %>/',
-						src: [ '*.scss' ],
+						src: ['*.scss'],
 						dest: '<%= dirs.css %>/',
 						ext: '.css',
 					},
@@ -133,7 +105,7 @@ module.exports = function ( grunt ) {
 			eaccounting: {
 				expand: true,
 				cwd: '<%= dirs.css %>',
-				src: [ '*.css', '!select2.css', '!*-rtl.css' ],
+				src: ['*.css', '!select2.css', '!*-rtl.css'],
 				dest: '<%= dirs.css %>/',
 				ext: '-rtl.css',
 			},
@@ -146,7 +118,7 @@ module.exports = function ( grunt ) {
 					{
 						expand: true,
 						cwd: '<%= dirs.css %>/',
-						src: [ '*.css' ],
+						src: ['*.css'],
 						dest: '<%= dirs.css %>/',
 						ext: '.css',
 					},
@@ -173,8 +145,8 @@ module.exports = function ( grunt ) {
 		// Watch changes for assets.
 		watch: {
 			css: {
-				files: [ '<%= dirs.css %>/**/*.scss' ],
-				tasks: [ 'sass', 'rtlcss', 'postcss', 'cssmin', 'concat' ],
+				files: ['<%= dirs.css %>/**/*.scss'],
+				tasks: ['sass', 'rtlcss', 'postcss', 'cssmin', 'concat'],
 			},
 			js: {
 				files: [
@@ -186,8 +158,66 @@ module.exports = function ( grunt ) {
 					'!<%= dirs.js %>/eaccounting/*.min.js',
 					'!<%= dirs.js %>/frontend/*.min.js',
 				],
-				tasks: [ 'eslint', 'uglify' ],
+				tasks: ['eslint', 'uglify'],
 			},
+		},
+
+		// Generate POT files.
+		makepot: {
+			options: {
+				type: 'wp-plugin',
+				domainPath: 'i18n/languages',
+				potHeaders: {
+					'language-team': 'LANGUAGE <EMAIL@ADDRESS>'
+				}
+			},
+			dist: {
+				options: {
+					potFilename: 'wp-ever-accounting.pot',
+					exclude: [
+						'apigen/.*',
+						'vendor/.*',
+						'tests/.*',
+						'tmp/.*'
+					]
+				}
+			}
+		},
+
+		// Check textdomain errors.
+		checktextdomain: {
+			options: {
+				text_domain: 'wp-ever-accounting',
+				keywords: [
+					'__:1,2d',
+					'_e:1,2d',
+					'_x:1,2c,3d',
+					'esc_html__:1,2d',
+					'esc_html_e:1,2d',
+					'esc_html_x:1,2c,3d',
+					'esc_attr__:1,2d',
+					'esc_attr_e:1,2d',
+					'esc_attr_x:1,2c,3d',
+					'_ex:1,2c,3d',
+					'_n:1,2,4d',
+					'_nx:1,2,4c,5d',
+					'_n_noop:1,2,3d',
+					'_nx_noop:1,2,3c,4d'
+				]
+			},
+			files: {
+				src: [
+					'**/*.php',               // Include all files
+					'!apigen/**',             // Exclude apigen/
+					'!build/**',             // Exclude build/
+					'!includes/libraries/**', // Exclude libraries/
+					'!node_modules/**',       // Exclude node_modules/
+					'!tests/**',              // Exclude tests/
+					'!vendor/**',             // Exclude vendor/
+					'!tmp/**'                 // Exclude tmp/
+				],
+				expand: true
+			}
 		},
 
 		// PHP Code Sniffer.
@@ -211,50 +241,63 @@ module.exports = function ( grunt ) {
 			options: {
 				map: true,
 				annotation: false,
-				processors: [ require( 'autoprefixer' ) ],
+				processors: [require('autoprefixer')],
 			},
 			dist: {
-				src: [ '<%= dirs.css %>/*.css' ],
+				src: ['<%= dirs.css %>/*.css'],
 			},
 		},
-	} );
+	});
 
 	// Load NPM tasks to be used here.
-	grunt.loadNpmTasks( 'grunt-sass' );
-	grunt.loadNpmTasks( 'grunt-phpcs' );
-	grunt.loadNpmTasks( 'grunt-rtlcss' );
-	grunt.loadNpmTasks( 'grunt-postcss' );
-	grunt.loadNpmTasks( 'grunt-stylelint' );
-	grunt.loadNpmTasks( 'gruntify-eslint' );
-	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
-	grunt.loadNpmTasks( 'grunt-contrib-cssmin' );
-	grunt.loadNpmTasks( 'grunt-contrib-concat' );
-	grunt.loadNpmTasks( 'grunt-contrib-copy' );
-	grunt.loadNpmTasks( 'grunt-contrib-watch' );
-	grunt.loadNpmTasks( 'grunt-contrib-clean' );
+	grunt.loadNpmTasks('grunt-sass');
+	grunt.loadNpmTasks('grunt-phpcs');
+	grunt.loadNpmTasks('grunt-rtlcss');
+	grunt.loadNpmTasks('grunt-postcss');
+	grunt.loadNpmTasks('grunt-stylelint');
+	grunt.loadNpmTasks('gruntify-eslint');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-copy');
+	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-wp-i18n');
+	grunt.loadNpmTasks('grunt-checktextdomain');
 
 	// Register tasks.
-	grunt.registerTask( 'default', [ 'js', 'css' ] );
+	grunt.registerTask('default', ['js', 'css', 'i18n']);
 
-	grunt.registerTask( 'js', [ 'eslint', 'uglify'] );
+	grunt.registerTask('js', ['eslint', 'uglify']);
 
-	grunt.registerTask( 'css', [
+	grunt.registerTask('css', [
 		'sass',
 		'rtlcss',
 		'postcss',
 		'cssmin',
 		'concat',
-	] );
-
-	grunt.registerTask( 'assets', [ 'js', 'css' ] );
-
-	grunt.registerTask( 'e2e-build', [
-		'uglify:admin',
-		'uglify:frontend',
-		'uglify:flexslider',
-		'css',
-	] );
+	]);
 
 	// Only an alias to 'default' task.
-	grunt.registerTask( 'dev', [ 'default' ] );
+	grunt.registerTask('dev', [
+		'default'
+	]);
+
+	grunt.registerTask('i18n', [
+		'checktextdomain',
+		'makepot'
+	]);
+
+	grunt.registerTask('release',
+		[
+			'default',
+			'i18n'
+		]);
+
+	grunt.registerTask('build',
+		[
+			'clean',
+			'copy'
+		]);
+
 };

@@ -440,7 +440,7 @@ function eaccounting_format_price( $amount, $code = null ) {
 	}
 	$amount = eaccounting_get_money( $amount, $code, true );
 	if ( is_wp_error( $amount ) ) {
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-account' ), $code ) );
+		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
 
 		return '00.00';
 	}

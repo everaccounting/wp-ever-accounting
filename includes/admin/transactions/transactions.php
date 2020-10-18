@@ -36,7 +36,7 @@ function eaccounting_admin_transactions_page() {
 
 		?>
 		<form id="ea-transactions-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $list_table->search_box( __( 'Search', 'wp-ever-currencies' ), 'eaccounting-transactions' ); ?>
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-transactions' ); ?>
 
 			<input type="hidden" name="page" value="ea-transactions"/>
 

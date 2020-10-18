@@ -37,7 +37,7 @@ function eaccounting_expenses_tab_vendors() {
 
 		?>
 		<form id="ea-vendors-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounts' ), 'eaccounting-vendors' ); ?>
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-vendors' ); ?>
 
 			<input type="hidden" name="page" value="ea-expenses"/>
 			<input type="hidden" name="tab" value="vendors"/>
