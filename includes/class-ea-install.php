@@ -80,7 +80,7 @@ class EAccounting_Install {
 		}
 
 		$row_meta = array(
-			'docs' => '<a href="' . esc_url( apply_filters( 'eaccounting_docs_url', 'https://docs.wpeveraccounting.com/documentation/plugins/ever-accounting/' ) ) . '" aria-label="' . esc_attr__( 'View documentation', 'wp-ever-accounting' ) . '">' . esc_html__( 'Docs', 'wp-ever-accounting' ) . '</a>',
+			'docs' => '<a href="' . esc_url( apply_filters( 'eaccounting_docs_url', 'https://wpeveraccounting.com/docs/' ) ) . '" aria-label="' . esc_attr__( 'View documentation', 'wp-ever-accounting' ) . '">' . esc_html__( 'Docs', 'wp-ever-accounting' ) . '</a>',
 		);
 
 		return array_merge( $links, $row_meta );
