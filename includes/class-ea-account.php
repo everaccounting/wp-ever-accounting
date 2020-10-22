@@ -1,244 +1,309 @@
 <?php
+/**
+ * Handle the account object.
+ *
+ * @since       1.0.2
+ *
+ * @package     EverAccounting
+ */
+
+namespace EverAccounting;
+
+use EverAccounting\Abstracts\Base_Object;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class EAccounting_Account
+ * Class Account
+ *
+ * @since 1.0.2
  */
-class EAccounting_Account {
+class Account extends Base_Object {
 	/**
-	 * @var
-	 */
-	protected $id;
-
-	/**
-	 * @var
-	 */
-	protected $name;
-
-	/**
-	 * @var
-	 */
-	protected $number;
-
-	/**
-	 * @var
-	 */
-	protected $opening_balance;
-
-	/**
-	 * @var
-	 */
-	protected $bank_name;
-
-	/**
-	 * @var
-	 */
-	protected $bank_phone;
-
-	/**
-	 * @var
-	 */
-	protected $bank_address;
-
-	/**
-	 * @var
-	 */
-	protected $status;
-
-	/**
-	 * @var
-	 */
-	protected $created_at;
-
-	/**
-	 * @var
-	 */
-	protected $updated_at;
-
-	/**
-	 * @var null
-	 */
-	public $account = null;
-
-	/**
-	 * EAccounting_Account constructor.
+	 * This is the name of this object type.
 	 *
-	 * @param int $account
+	 * @since 1.0.2
+	 * @var string
 	 */
-	public function __construct( $account = 0 ) {
-		$this->init( $account );
-	}
+	public $object_type = 'account';
+
+	/***
+	 * Object table name.
+	 *
+	 * @since 1.0.2
+	 * @var string
+	 */
+	public $table = 'ea_accounts';
 
 	/**
-	 * Init/load the account object. Called from the constructor.
+	 * Account Data array.
 	 *
-	 * @param $account
-	 *
-	 * @since 1.0.0
+	 * @since 1.0.2
+	 * @var array
 	 */
-	protected function init( $account ) {
-		if ( is_numeric( $account ) ) {
-			$this->id      = absint( $account );
-			$this->account = eaccounting_get_account( $account );
-			$this->get_account( $this->id );
-		} elseif ( $account instanceof EAccounting_Account ) {
-			$this->id      = absint( $account->id );
-			$this->account = $account->account;
-			$this->get_account( $this->id );
-		} elseif ( isset( $account->id ) ) {
-			$this->account = $account;
-			$this->id      = absint( $this->account->id );
-			$this->populate( $account );
-		}
-	}
+	protected $data = array(
+		'name'            => '',
+		'number'          => '',
+		'currency_code'   => '',
+		'opening_balance' => 0.0000,
+		'bank_name'       => null,
+		'bank_phone'      => null,
+		'bank_address'    => null,
+		'enabled'         => 1,
+		'creator_id'      => null,
+		'date_created'    => null,
+	);
 
 	/**
-	 * Gets an call from the database.
-	 *
-	 * @param int $id (default: 0).
-	 *
-	 * @return bool
+	 * @since 1.0.2
+	 * @var int[]
 	 */
-	public function get_account( $id = 0 ) {
-
-		if ( ! $id ) {
-			return false;
-		}
-
-		if ( $account = eaccounting_get_account( $id ) ) {
-			$this->populate( $account );
-
-			return true;
-		}
-
-		return false;
-	}
+	protected $extra_data = array(
+		'balance' => 0
+	);
 
 	/**
-	 * Populates an call from the loaded post data.
+	 * Get the account if ID is passed, otherwise the account is new and empty.
+	 * This class should NOT be instantiated, but the eaccounting_get_account function
+	 * should be used. It is possible, but the aforementioned are preferred and are the only
+	 * methods that will be maintained going forward.
 	 *
-	 * @param mixed $account
+	 * @param int|object|Category $data object to read.
+	 *
+	 * @since 1.0.2
 	 */
-	public function populate( $account ) {
-		$this->id = $account->id;
-		foreach ( $account as $key => $value ) {
-			$this->$key = $value;
-		}
-	}
+	public function __construct( $data = 0 ) {
+		parent::__construct( $data );
 
-	/**
-	 * Magic __get function to dispatch a call to retrieve a private property
-	 *
-	 * @since 1.0.0
-	 */
-	public function __get( $key ) {
-		if ( method_exists( $this, 'get_' . $key ) ) {
-			return call_user_func( array( $this, 'get_' . $key ) );
-		} else if ( property_exists( $this, $key ) ) {
-			return $this->{$key};
+		if ( is_numeric( $data ) && $data > 0 ) {
+			$this->set_id( $data );
+		} elseif ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
 		} else {
-			return new \WP_Error( 'invalid-property', sprintf( __( 'Can\'t get property %s', 'wp-ever-accounting' ), $key ) );
+			$this->set_id( 0 );
 		}
 
+		if ( $this->get_id() > 0 && ! $this->object_read ) {
+			$this->read();
+		}
 	}
 
-	/**
-	 * @return int
-	 * @since 1.0.0
-	 */
-	public function get_id() {
-		return $this->id;
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	*/
 
 	/**
+	 * Return the account name.
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @since  1.0.2
 	 * @return string
-	 * @since 1.0.0
 	 */
-	public function get_name() {
-		return $this->name;
+	public function get_name( $context = 'edit' ) {
+		return $this->get_prop( 'name', $context );
 	}
 
 	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_number() {
-		return $this->number;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_opening_balance() {
-		return eaccounting_price( $this->opening_balance );
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_bank_name() {
-		return $this->bank_name;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_bank_phone() {
-		return $this->bank_phone;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_bank_address() {
-		return $this->bank_address;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_status() {
-		return empty( $this->status ) ? 'active' : $this->status;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_created_at() {
-		return $this->created_at;
-	}
-
-	/**
-	 * @return string
-	 * @since 1.0.0
-	 */
-	public function get_updated_at() {
-		return $this->updated_at;
-	}
-
-	/**
-	 * Get current balance
-	 * since 1.0.0
+	 * Returns the account number.
+	 *
 	 * @param string $context
 	 *
-	 * @return string
+	 * @since 1.0.2
+	 * @return mixed|null
 	 */
-	public function get_current_balance( $context = 'edit' ) {
-		global $wpdb;
-		// Opening Balance
-		$total = $this->opening_balance;
-		// Sum Incomes
-		$total += $wpdb->get_var( $wpdb->prepare("SELECT SUM(amount) from $wpdb->ea_revenues WHERE account_id=%d", $this->get_id()) );
-		//sum expense
-		$total -= $wpdb->get_var( $wpdb->prepare("SELECT SUM(amount) from $wpdb->ea_payments WHERE account_id=%d", $this->get_id()) );
+	public function get_number( $context = 'edit' ) {
+		return $this->get_prop( 'number', $context );
+	}
 
-		return 'edit' == $context ? eaccounting_sanitize_price( $total ) : eaccounting_price( $total );
+	/**
+	 * Returns account opening balance.
+	 *
+	 * @param string $context
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return mixed|null
+	 */
+	public function get_opening_balance( $context = 'edit' ) {
+		return $this->get_prop( 'opening_balance', $context );
+	}
+
+	/**
+	 * Returns account currency code.
+	 *
+	 * @param string $context
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return mixed|null
+	 */
+	public function get_currency_code( $context = 'edit' ) {
+		return $this->get_prop( 'currency_code', $context );
+	}
+
+	/**
+	 * Return account bank name.
+	 *
+	 * @param string $context
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return mixed|null
+	 */
+	public function get_bank_name( $context = 'edit' ) {
+		return $this->get_prop( 'bank_name', $context );
+	}
+
+	/**
+	 * Return account bank phone number.
+	 *
+	 * @param string $context
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return mixed|null
+	 */
+	public function get_bank_phone( $context = 'edit' ) {
+		return $this->get_prop( 'bank_phone', $context );
+	}
+
+	/**
+	 * Return account bank address.
+	 *
+	 * @param string $context
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return mixed|null
+	 */
+	public function get_bank_address( $context = 'edit' ) {
+		return $this->get_prop( 'bank_address', $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Set account name.
+	 *
+	 * @param string $name Account name.
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_name( $name ) {
+		$this->set_prop( 'name', eaccounting_clean( $name ) );
+	}
+
+	/**
+	 * Set the account number.
+	 *
+	 * @param string $number bank account number
+	 *
+	 * @since 1.0.2
+	 */
+	public function set_number( $number ) {
+		$this->set_prop( 'number', eaccounting_clean( $number ) );
+	}
+
+	/**
+	 * Returns account opening balance.
+	 *
+	 * @param string $opening_balance opening balance of the account.
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_opening_balance( $opening_balance ) {
+		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
+		$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $code ) );
+	}
+
+	/**
+	 * Set account currency code.
+	 *
+	 * @param string $currency_code Bank currency code
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_currency_code( $currency_code ) {
+		$this->set_prop( 'currency_code', strtoupper( $currency_code ) );
+	}
+
+	/**
+	 * Set account bank name.
+	 *
+	 * @param string $bank_name name of the bank
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_bank_name( $bank_name ) {
+		$this->set_prop( 'bank_name', eaccounting_clean( $bank_name ) );
+	}
+
+	/**
+	 * Set account bank phone number.
+	 *
+	 * @param string $bank_phone Bank phone number.
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_bank_phone( $bank_phone ) {
+		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
+	}
+
+	/**
+	 * Set account bank address.
+	 *
+	 * @param string $bank_address Bank physical address
+	 *
+	 * @since 1.0.2
+	 *
+	 */
+	public function set_bank_address( $bank_address ) {
+		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Extra
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * @param bool $format
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return float|string
+	 */
+	public function get_balance( $format = false ) {
+		if ( $format ) {
+			return eaccounting_get_money( $this->get_prop('balance'), $this->get_currency_code( 'edit' ), true )->format();
+		}
+
+		return eaccounting_get_money( $this->get_prop('balance'), $this->get_currency_code( 'edit' ), true )->getValue();
+	}
+
+	/**
+	 * Set balance.
+	 *
+	 * @param $balance
+	 *
+	 * @since 1.0.2
+	 */
+	protected function set_balance( $balance ) {
+		$this->set_prop( 'balance', eaccounting_sanitize_price( $balance, $this->get_currency_code() ) );
 	}
 
 }

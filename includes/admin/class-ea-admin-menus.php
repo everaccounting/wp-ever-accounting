@@ -1,94 +1,72 @@
 <?php
+/**
+ * Setup menus in WP admin.
+ *
+ * @package    EverAccounting
+ * @subpackage Admin
+ * @version    1.0.2
+ */
 
-defined( 'ABSPATH' ) || exit();
+namespace EverAccounting\Admin;
+defined( 'ABSPATH' ) || exit;
 
-class EAccounting_Admin_Menus {
+class Admin_Menus {
 
 	/**
 	 * EAccounting_Admin_Menus constructor.
+	 *
+	 * @version 1.0.2
 	 */
 	public function __construct() {
-		// Add menus.
-		add_action( 'admin_menu', array( $this, 'admin_menu' ), 10 );
+		add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
+		add_action( 'admin_menu', array( $this, 'reports_menu' ), 86 );
+		add_action( 'admin_menu', array( $this, 'tools_menu' ), 88 );
+		add_action( 'admin_menu', array( $this, 'settings_menu' ), 90 );
 	}
 
 	/**
 	 * Add menu items.
+	 *
+	 * @version 1.0.2
 	 */
 	public function admin_menu() {
 		global $menu;
 
-		if ( current_user_can( 'manage_options' ) ) {
-			$menu[] = array( '', 'read', 'separator-eaccounting', '', 'wp-menu-separator eaccounting' );
+		if ( current_user_can( 'manage_eaccounting' ) ) {
+			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
 		}
 
-		add_menu_page( __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounting', 'wp-ever-accounting' ), 'manage_options', 'ever-accounting', null, 'dashicons-chart-area', '55.5' );
-		add_submenu_page( 'ever-accounting', __( 'Dashboard', 'wp-ever-accounting' ), __( 'Dashboard', 'wp-ever-accounting' ), 'manage_options', 'ever-accounting', array( $this, 'dashboard_page' ) );
-		add_submenu_page( 'ever-accounting', __( 'Transactions', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transactions', array( $this, 'transaction_page' ) );
-		add_submenu_page( 'ever-accounting', __( 'Contacts', 'wp-ever-accounting' ), __( 'Contacts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-contacts', array($this, 'contacts_page') );
-		add_submenu_page( 'ever-accounting', __( 'Payments', 'wp-ever-accounting' ), __( 'Payments', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-payments', array( $this, 'payments_page') );
-		add_submenu_page( 'ever-accounting', __( 'Revenues', 'wp-ever-accounting' ), __( 'Revenues', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-revenues', array( $this, 'revenues_page') );
-		add_submenu_page( 'ever-accounting', __( 'Accounts', 'wp-ever-accounting' ), __( 'Accounts', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-accounts', array( $this, 'accounts_page') );
-		add_submenu_page( 'ever-accounting', __( 'Transfers', 'wp-ever-accounting' ), __( 'Transfers', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-transfers', array( $this, 'transfers_page') );
-		add_submenu_page( 'ever-accounting', __( 'Categories', 'wp-ever-accounting' ), __( 'Categories', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-categories', array( $this, 'categories_page') );
-		add_submenu_page( 'ever-accounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'manage_options', 'eaccounting-reports', array( $this, 'reports_page') );
-		$help = '<span style="color:#ff7a03;">' . __( 'Help', 'wp-ever-accounting' ) . '</span>';
-		add_submenu_page( 'ever-accounting', '', $help, 'manage_options', 'eaccounting-help', array( $this, 'help_page') );
+		add_menu_page( __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounting', 'wp-ever-accounting' ), 'manage_eaccounting', 'eaccounting', null, 'dashicons-chart-area', '54.5' );
+		$overview     = add_submenu_page( 'eaccounting', __( 'Overview', 'wp-ever-accounting' ), __( 'Overview', 'wp-ever-accounting' ), 'manage_eaccounting', 'eaccounting', 'eaccounting_admin_overview_page' );
+		$transactions = add_submenu_page( 'eaccounting', __( 'Transactions', 'wp-ever-accounting' ), __( 'Transactions', 'wp-ever-accounting' ), 'ea_manage_report', 'ea-transactions', 'eaccounting_admin_transactions_page' );
+		$sales        = add_submenu_page( 'eaccounting', __( 'Sales', 'wp-ever-accounting' ), __( 'Sales', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-sales', 'eaccounting_admin_sales_page' );
+		$expenses     = add_submenu_page( 'eaccounting', __( 'Expenses', 'wp-ever-accounting' ), __( 'Expenses', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-expenses', 'eaccounting_admin_expenses_page' );
+		$banking      = add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-banking', 'eaccounting_admin_banking_page' );
+		$misc         = add_submenu_page( 'eaccounting', __( 'Misc', 'wp-ever-accounting' ), __( 'Misc', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-misc', 'eaccounting_admin_misc_page' );
+
+		add_action( 'load-' . $sales, 'eaccounting_load_sales_page' );
+		add_action( 'load-' . $expenses, 'eaccounting_load_expenses_page' );
+		add_action( 'load-' . $banking, 'eaccounting_load_banking_page' );
+		add_action( 'load-' . $misc, 'eaccounting_load_misc_page' );
 	}
 
-
-	/**
-	 * Render dashboard page
-	 * since 1.0.0
-	 */
-	public function dashboard_page(){
-		wp_enqueue_script('eaccounting-dashboard');
-		eaccounting_get_views('dashboard-page.php');
+	public function tools_menu() {
+		$tools = add_submenu_page( 'eaccounting', __( 'Tools', 'wp-ever-accounting' ), __( 'Tools', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-tools', 'eaccounting_admin_tools_page' );
+		add_action( 'load-' . $tools, 'eaccounting_load_tools_page' );
 	}
 
-	public function transaction_page(){
-		eaccounting_get_views('transactions-page.php');
+	public function reports_menu() {
+		$reports = add_submenu_page( 'eaccounting', __( 'Reports', 'wp-ever-accounting' ), __( 'Reports', 'wp-ever-accounting' ), 'ea_manage_report', 'ea-reports', 'eaccounting_admin_reports_page' );
+		add_action( 'load-' . $reports, 'eaccounting_load_reports_page' );
 	}
 
-	/**
-	 * render contact page
-	 * since 1.0.0
-	 */
-	public function contacts_page(){
-		eaccounting_get_views('contacts-page.php');
+	public function settings_menu() {
+		add_submenu_page( 'eaccounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-settings', 'eaccounting_admin_settings_page' );
 	}
 
-	public function revenues_page(){
-		eaccounting_get_views('revenue-page.php');
-	}
-
-	public function payments_page(){
-		eaccounting_get_views('payment-page.php');
-	}
-
-	public function accounts_page(){
-		eaccounting_get_views('accounts-page.php');
-	}
-
-	public function transfers_page(){
-		eaccounting_get_views('transfers-page.php');
-	}
-
-	public function categories_page(){
-		eaccounting_get_views('categories-page.php');
-	}
-
-	public function reports_page(){
-		wp_enqueue_script('chart-js');
-		eaccounting_get_views('reports-page.php');
-	}
-
-	public function help_page(){
-		if ( isset( $_GET['page'] ) && 'eaccounting-help' === $_GET['page'] ) {
-			wp_redirect(  'https://pluginever.com/docs/wp-ever-accounting?utm_source=wpmenu&utm_medium=admindash&utm_campaign=eaccounting' );
-			die;
-		}
-	}
+//	public function status_menu() {
+//		add_submenu_page( 'eaccounting', __( 'Status', 'wp-ever-accounting' ), __( 'Status', 'wp-ever-accounting' ), 'manage_options', 'ea-status', 'eaccounting_admin_dashboard' );
+//	}
 }
 
-new EAccounting_Admin_Menus();
+return new Admin_Menus();
