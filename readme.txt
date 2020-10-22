@@ -123,6 +123,10 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.0.3 (22 October,2020) =
+* Fix - PHP v5.6 compatibility
+* Fix - Repeat setup wizard
+
 = 1.0.2 (18 October,2020) =
 * Feature - Export and import support
 * Feature - Muti-Currency support
