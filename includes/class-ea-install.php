@@ -286,6 +286,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_accounts() {
+		error_log(\EverAccounting\Query_Account::init()->count());
 		if ( ! \EverAccounting\Query_Account::init()->count() ) {
 			eaccounting_insert_account( [
 				'name'            => 'Cash',

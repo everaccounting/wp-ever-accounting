@@ -100,7 +100,7 @@ class Admin {
 	 * @since 1.0.
 	 */
 	public function admin_redirects() {
-		if ( get_transient( '_eaccounting_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
+		if ( get_option('ea_setup_wizard_complete') !== 'yes' && get_transient( '_eaccounting_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
 			$do_redirect = true;
 
 			// On these pages, or during these events, postpone the redirect.
