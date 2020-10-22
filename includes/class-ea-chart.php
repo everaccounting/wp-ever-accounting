@@ -62,7 +62,7 @@ class Chart {
 	 *
 	 * @return self
 	 */
-	public function type( string $type ) {
+	public function type( $type ) {
 		$this->type = $type;
 
 		return $this;
@@ -75,7 +75,7 @@ class Chart {
 	 *
 	 * @return self
 	 */
-	public function height( int $height ) {
+	public function height( $height ) {
 		$this->height = $height;
 
 		return $this;
@@ -88,7 +88,7 @@ class Chart {
 	 *
 	 * @return self
 	 */
-	public function width( int $width ) {
+	public function width( $width ) {
 		$this->width = $width;
 
 		return $this;
@@ -102,7 +102,7 @@ class Chart {
 	 *
 	 * @return self
 	 */
-	public function options( $options, bool $overwrite = false ) {
+	public function options( $options, $overwrite = false ) {
 		if ( $overwrite ) {
 			$this->options = $options;
 		} else {

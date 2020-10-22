@@ -189,15 +189,15 @@ class Admin_Assets {
 						'ranges' => array(
 							__( 'This Year', 'wp-ever-accounting' )      => array(
 								$financial_start,
-								$financial_start_dt->clone()->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format )
+								$financial_start_dt->copy()->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format )
 							),
 							__( 'Last Year', 'wp-ever-accounting' )      => array(
-								$financial_start_dt->clone()->sub( new \DateInterval( 'P1Y' ) )->format( $date_format ),
-								$financial_start_dt->clone()->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+								$financial_start_dt->copy()->sub( new \DateInterval( 'P1Y' ) )->format( $date_format ),
+								$financial_start_dt->copy()->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
 							),
 							__( 'Last 12 Months', 'wp-ever-accounting' ) => array(
-								$today_dt->clone()->sub( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
-								$today_dt->clone()->format( $date_format ),
+								$today_dt->copy()->sub( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+								$today_dt->copy()->format( $date_format ),
 							)
 						)
 					)
