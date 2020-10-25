@@ -21,6 +21,7 @@ WP Ever Accounting will give you the opportunity to manage your income and expen
 With the ability to create multiple types of expense or income you will be on top of your accounting tasks. Apart from that, creating multiple accounts and the ability to transfer funds between them will give you the ease of smooth accounting operations.
 
 = Visit our website to learn more =
+&#128073;[Plugin Demo](https://wpeveraccounting.com/demo)&#128072;
 &#128073;[Plugin Documentation](https://wpeveraccounting.com/docs)&#128072;
 
 == How will WP Ever Accounting Benefit you: ==
