@@ -86,10 +86,13 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args( $args, array(
-			'singular' => 'transaction',
-			'plural'   => 'transactions',
-		) );
+		$args = (array) wp_parse_args(
+			$args,
+			array(
+				'singular' => 'transaction',
+				'plural'   => 'transactions',
+			)
+		);
 
 		parent::__construct( $args );
 	}
@@ -139,7 +142,7 @@ class List_Table_Transactions extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'        => array( 'date_created', false ),
+			'date'        => array( 'paid_at', false ),
 			'amount'      => array( 'amount', false ),
 			'account_id'  => array( 'account_id', false ),
 			'type'        => array( 'type', false ),
@@ -171,16 +174,21 @@ class List_Table_Transactions extends List_Table {
 	function column_date( $transaction ) {
 		$date   = $transaction->get_paid_at()->date_i18n();
 		$type   = $transaction->get_type();
-		$page   = $type != 'expense' ? 'ea-sales' : 'ea-expenses';
-		$tab    = $type != 'expense' ? 'revenues' : 'payments';
-		$object = $type != 'expense' ? 'revenue_id' : 'payment_id';
-		$value  = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [
-				'action' => 'edit',
-				'page'   => $page,
-				'tab'    => $tab,
-				$object  => $transaction->get_id(),
-			] ) ),
+		$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
+		$tab    = 'expense' !== $type ? 'revenues' : 'payments';
+		$object = 'expense' !== $type ? 'revenue_id' : 'payment_id';
+		$value  = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url(
+				eaccounting_admin_url(
+					array(
+						'action' => 'edit',
+						'page'   => $page,
+						'tab'    => $tab,
+						$object  => $transaction->get_id(),
+					)
+				)
+			),
 			$date
 		);
 
@@ -314,19 +322,23 @@ class List_Table_Transactions extends List_Table {
 			$end_date   = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
-			eaccounting_input_date_range( array(
-				'start_date' => $start_date,
-				'end_date'   => $end_date,
-			) );
-
-			eaccounting_account_dropdown( [
-				'name'    => 'account_id',
-				'value'   => $account_id,
-				'default' => '',
-				'attr'    => array(
-					'data-allow-clear' => true
+			eaccounting_input_date_range(
+				array(
+					'start_date' => $start_date,
+					'end_date'   => $end_date,
 				)
-			] );
+			);
+
+			eaccounting_account_dropdown(
+				array(
+					'name'    => 'account_id',
+					'value'   => $account_id,
+					'default' => '',
+					'attr'    => array(
+						'data-allow-clear' => true,
+					),
+				)
+			);
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			echo "\n";
@@ -343,14 +355,18 @@ class List_Table_Transactions extends List_Table {
 	 */
 	public function process_bulk_action() {
 		if ( isset( $_GET['_wpnonce'] ) ) {
-			wp_safe_redirect( remove_query_arg( [
-				'_wpnonce',
-				'_wp_http_referer',
-				'action',
-				'action2',
-				'doaction',
-				'paged'
-			] ) );
+			wp_safe_redirect(
+				remove_query_arg(
+					array(
+						'_wpnonce',
+						'_wp_http_referer',
+						'action',
+						'action2',
+						'doaction',
+						'paged',
+					)
+				)
+			);
 
 			exit();
 		}
@@ -379,39 +395,50 @@ class List_Table_Transactions extends List_Table {
 		$start_date = ! empty( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
 		$end_date   = ! empty( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 		$per_page   = $this->get_per_page();
-		$args       = wp_parse_args( $this->query_args, array(
-			'number'     => $per_page,
-			'offset'     => $per_page * ( $page - 1 ),
-			'per_page'   => $per_page,
-			'page'       => $page,
-			'search'     => $search,
-			'account_id' => $account_id,
-			'orderby'    => eaccounting_clean( $orderby ),
-			'order'      => eaccounting_clean( $order )
-		) );
-
+		$args       = wp_parse_args(
+			$this->query_args,
+			array(
+				'number'     => $per_page,
+				'offset'     => $per_page * ( $page - 1 ),
+				'per_page'   => $per_page,
+				'page'       => $page,
+				'search'     => $search,
+				'account_id' => $account_id,
+				'orderby'    => eaccounting_clean( $orderby ),
+				'order'      => eaccounting_clean( $order ),
+			)
+		);
 
 		$args = apply_filters( 'eaccounting_transactions_table_get_transactions', $args, $this );
 
 		$base_query  = Query_Transaction::init()
-		                                ->where( $args )
-		                                ->search( $search )
-		                                ->notTransfer()
-		                                ->whereDateBetween( 'paid_at', $start_date, $end_date )
-		                                ->order_by( $orderby, $order )
-		                                ->page( $page, $per_page );
-		$this->items = $base_query->copy()->where( [ 'type' => $type ] )->get( OBJECT, 'eaccounting_get_transaction' );
+										->where( $args )
+										->search( $search )
+										->notTransfer()
+										->whereDateBetween( 'paid_at', $start_date, $end_date )
+										->order_by( $orderby, $order )
+										->page( $page, $per_page );
+		$this->items = $base_query->copy()->where( array( 'type' => $type ) )->get( OBJECT, 'eaccounting_get_transaction' );
 
-		$this->income_count = $base_query->copy()->where( array_merge( $this->query_args, array(
-			'type'   => 'income',
-			'search' => $search
-		) ) )->count();
+		$this->income_count = $base_query->copy()->where(
+			array_merge(
+				$this->query_args,
+				array(
+					'type'   => 'income',
+					'search' => $search,
+				)
+			)
+		)->count();
 
-		$this->expense_count = $base_query->copy()->where( array_merge( $this->query_args, array(
-			'type'   => 'expense',
-			'search' => $search
-		) ) )->count();
-
+		$this->expense_count = $base_query->copy()->where(
+			array_merge(
+				$this->query_args,
+				array(
+					'type'   => 'expense',
+					'search' => $search,
+				)
+			)
+		)->count();
 
 		$this->total_count = $this->income_count + $this->expense_count + $this->others_count;
 
@@ -433,11 +460,13 @@ class List_Table_Transactions extends List_Table {
 				break;
 		}
 
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $total_items / $per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
 	}
 
 }
