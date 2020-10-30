@@ -270,6 +270,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-category.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transfer.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-chart.php' );
@@ -289,6 +290,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transfer-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 

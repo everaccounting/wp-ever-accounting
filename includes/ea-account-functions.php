@@ -11,6 +11,8 @@
 use EverAccounting\Exception;
 use EverAccounting\Account;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Main function for returning account.
  *
