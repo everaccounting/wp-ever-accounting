@@ -59,7 +59,7 @@ class Account extends Base_Object {
 	 * @var int[]
 	 */
 	protected $extra_data = array(
-		'balance' => 0
+		'balance' => 0,
 	);
 
 	/**
@@ -289,10 +289,10 @@ class Account extends Base_Object {
 	 */
 	public function get_balance( $format = false ) {
 		if ( $format ) {
-			return eaccounting_get_money( $this->get_prop('balance'), $this->get_currency_code( 'edit' ), true )->format();
+			return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->format();
 		}
 
-		return eaccounting_get_money( $this->get_prop('balance'), $this->get_currency_code( 'edit' ), true )->getValue();
+		return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->getValue();
 	}
 
 	/**

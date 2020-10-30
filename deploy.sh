@@ -136,6 +136,10 @@ rm -Rf trunk/.github
 rm -Rf trunk/.wordpress-org
 rm -Rf trunk/.svnignore
 rm -Rf trunk/apigen
+rm -Rf trunk/plugin-deploy.sh
+rm -Rf trunk/babel.config.js
+rm -Rf trunk/postcss.config.js
+rm -Rf trunk/webpack.config.js
 rm -Rf trunk/tests
 rm -f trunk/.coveralls.yml
 rm -f trunk/.editorconfig

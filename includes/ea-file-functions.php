@@ -43,7 +43,7 @@ function eaccounting_scan_folders( $path = '', $return = array() ) {
 
 	if ( ! empty( $lists ) ) {
 		foreach ( $lists as $f ) {
-			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != "." && $f != ".." ) {
+			if ( is_dir( $path . DIRECTORY_SEPARATOR . $f ) && $f != '.' && $f != '..' ) {
 				if ( ! in_array( $path . DIRECTORY_SEPARATOR . $f, $return ) ) {
 					$return[] = trailingslashit( $path . DIRECTORY_SEPARATOR . $f );
 				}
@@ -76,7 +76,7 @@ function eaccounting_protect_files( $force = false ) {
 
 		$htaccess = trailingslashit( $base_dir ) . '.htaccess';
 		if ( ! file_exists( $htaccess ) ) {
-			$rule = "order deny,allow\n";
+			$rule  = "order deny,allow\n";
 			$rule .= "deny from all\n";
 			$rule .= "allow from 127.0.0.1\n";
 			@file_put_contents( $htaccess, $rule );
@@ -110,19 +110,19 @@ function eaccounting_protect_files( $force = false ) {
  * @return array
  */
 function eaccounting_prepare_uploaded_files( $file_data ) {
-	$files_to_upload = [];
+	$files_to_upload = array();
 
 	if ( is_array( $file_data['name'] ) ) {
 		foreach ( $file_data['name'] as $file_data_key => $file_data_value ) {
 			if ( $file_data['name'][ $file_data_key ] ) {
 				$type              = wp_check_filetype( $file_data['name'][ $file_data_key ] ); // Map mime type to one WordPress recognises.
-				$files_to_upload[] = [
+				$files_to_upload[] = array(
 					'name'     => $file_data['name'][ $file_data_key ],
 					'type'     => $type['type'],
 					'tmp_name' => $file_data['tmp_name'][ $file_data_key ],
 					'error'    => $file_data['error'][ $file_data_key ],
 					'size'     => $file_data['size'][ $file_data_key ],
-				];
+				);
 			}
 		}
 	} else {
@@ -144,14 +144,14 @@ function eaccounting_prepare_uploaded_files( $file_data ) {
  * @return  array  Array of allowed mime types
  */
 function eaccounting_get_allowed_mime_types() {
-	$allowed_mime_types = [
+	$allowed_mime_types = array(
 		'jpg|jpeg|jpe' => 'image/jpeg',
 		'gif'          => 'image/gif',
 		'png'          => 'image/png',
 		'pdf'          => 'application/pdf',
 		'doc'          => 'application/msword',
 		'docx'         => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-	];
+	);
 
 	return apply_filters( 'eaccounting_mime_types', $allowed_mime_types );
 }
@@ -168,11 +168,11 @@ function eaccounting_get_allowed_mime_types() {
  *
  * @return stdClass|WP_Error Object containing file information, or error.
  */
-function eaccounting_upload_file( $file, $args = [] ) {
+function eaccounting_upload_file( $file, $args = array() ) {
 	include_once ABSPATH . 'wp-admin/includes/file.php';
 	include_once ABSPATH . 'wp-admin/includes/media.php';
 
-	$args = wp_parse_args( $args, [ 'allowed_mime_types' => '' ] );
+	$args = wp_parse_args( $args, array( 'allowed_mime_types' => '' ) );
 
 	$uploaded_file = new stdClass();
 	if ( '' === $args['allowed_mime_types'] ) {

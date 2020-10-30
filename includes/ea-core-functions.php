@@ -113,10 +113,12 @@ function eaccounting_get_current_user_id() {
 	}
 
 	if ( empty( $user_id ) ) {
-		$users   = get_users( [
-			'role'   => 'administrator',
-			'fields' => 'ID'
-		] );
+		$users   = get_users(
+			array(
+				'role'   => 'administrator',
+				'fields' => 'ID',
+			)
+		);
 		$user_id = reset( $users );
 	}
 
@@ -173,7 +175,7 @@ function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $form
 	}
 
 	try {
-		$money = $money->$method( (double) $rate );
+		$money = $money->$method( (float) $rate );
 	} catch ( Exception $e ) {
 		return 0;
 	}
@@ -253,11 +255,14 @@ function eaccounting_price_convert_between( $amount, $from_code, $from_rate, $to
  * @return array
  */
 function eaccounting_get_payment_methods() {
-	return apply_filters( 'eaccounting_payment_methods', [
-		'cash'          => __( 'Cash', 'wp-ever-accounting' ),
-		'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
-		'check'         => __( 'Cheque', 'wp-ever-accounting' ),
-	] );
+	return apply_filters(
+		'eaccounting_payment_methods',
+		array(
+			'cash'          => __( 'Cash', 'wp-ever-accounting' ),
+			'bank_transfer' => __( 'Bank Transfer', 'wp-ever-accounting' ),
+			'check'         => __( 'Cheque', 'wp-ever-accounting' ),
+		)
+	);
 }
 
 /**
@@ -275,7 +280,7 @@ function eaccounting_logger() {
  *
  * @since 1.0.2
  */
-function wc_cleanup_logs() {
+function eaccounting_cleanup_logs() {
 	$logger = new \EverAccounting\Logger();
 	$logger->clear_expired_logs();
 }

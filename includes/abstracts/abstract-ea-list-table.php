@@ -92,7 +92,7 @@ abstract class List_Table extends \WP_List_Table {
 	 *                                            empty array.
 	 * @type bool $hide_column_controls Whether to hide the screen options column controls for the list table.
 	 *                                            This should always be enabled when instantiating a standalone list
-	 *                                            table in sub-views such as view_affiliate or view_payout due to
+	 *                                            table in sub-views such as or view_payout due to
 	 *                                            conflicts introduced in column controls generated for list tables
 	 *                                            instantiated at the primary-view level. Default false.
 	 *     }

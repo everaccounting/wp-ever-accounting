@@ -33,7 +33,6 @@ class Admin_Assets {
 		$version   = eaccounting()->get_version();
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-
 		// Register admin styles.
 		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
 		wp_register_style( 'jquery-ui-style', eaccounting()->plugin_url() . '/assets/css/jquery-ui/jquery-ui.min.css', array(), $version );
@@ -41,9 +40,8 @@ class Admin_Assets {
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-admin-styles', 'rtl', 'replace' );
 
-
 		// Admin styles for Accounting pages only.
-		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
+		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'ea-admin-styles' );
 			wp_enqueue_style( 'jquery-ui-style' );
 		}
@@ -74,7 +72,7 @@ class Admin_Assets {
 		//core plugins
 		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
 		wp_register_script( 'ea-addons', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-addons' . $suffix . '.js' ), array( 'jquery' ), $version );
-//		wp_register_script( 'ea-color-picker', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-color-picker' . $suffix . '.js' ), array( 'jquery', 'wp-color-picker' ), $version );
+		//      wp_register_script( 'ea-color-picker', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-color-picker' . $suffix . '.js' ), array( 'jquery', 'wp-color-picker' ), $version );
 		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-creatable' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
 		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-modal' . $suffix . '.js' ), array( 'underscore', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-notice', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-notice' . $suffix . '.js' ), array( 'jquery' ), $version );
@@ -89,9 +87,8 @@ class Admin_Assets {
 		//wp_register_script( 'ea-table', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-table' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-settings' . $suffix . '.js' ), array( 'jquery' ), $version );
 
-
 		// Admin scripts for Accounting pages only.
-		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) ) {
+		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 
 			//globally needed scripts
 			wp_enqueue_script( 'jquery-ui-datepicker' );
@@ -118,7 +115,6 @@ class Admin_Assets {
 				)
 			);
 
-
 			wp_localize_script(
 				'ea-form',
 				'eaccounting_form_i10n',
@@ -133,7 +129,6 @@ class Admin_Assets {
 			);
 
 			wp_enqueue_script( 'ea-form' );
-
 
 			wp_localize_script(
 				'ea-admin',
@@ -154,17 +149,15 @@ class Admin_Assets {
 							'fromLabel'        => __( 'From', 'wp-ever-accounting' ),
 							'toLabel'          => __( 'To', 'wp-ever-accounting' ),
 							'customRangeLabel' => __( 'Custom', 'wp-ever-accounting' ),
-							'daysOfWeek'       => [ 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ],
-							'monthNames'       => [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
+							'daysOfWeek'       => array( 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ),
+							'monthNames'       => array( 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ),
 							'firstDay'         => get_option( 'start_of_week' ),
 						),
-					)
+					),
 				)
 			);
 
-
 			//all admin page
-
 
 			//overview page
 			if ( 'toplevel_page_eaccounting' === $screen_id ) {
@@ -172,53 +165,60 @@ class Admin_Assets {
 				$financial_start_dt = new DateTime( $financial_start );
 				$today_dt           = new DateTime();
 				$date_format        = 'Y-m-d';
-				wp_localize_script( 'ea-overview', 'eaccounting_overview_i10n', array(
-					'datepicker' => array(
-						'locale' => array(
-							'format'           => 'YYYY-MM-DD',
-							'separator'        => '  >>  ',
-							'applyLabel'       => __( 'Apply', 'wp-ever-accounting' ),
-							'cancelLabel'      => __( 'Cancel', 'wp-ever-accounting' ),
-							'fromLabel'        => __( 'From', 'wp-ever-accounting' ),
-							'toLabel'          => __( 'To', 'wp-ever-accounting' ),
-							'customRangeLabel' => __( 'Custom', 'wp-ever-accounting' ),
-							'daysOfWeek'       => [ 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ],
-							'monthNames'       => [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ],
-							'firstDay'         => get_option( 'start_of_week' ),
+				wp_localize_script(
+					'ea-overview',
+					'eaccounting_overview_i10n',
+					array(
+						'datepicker' => array(
+							'locale' => array(
+								'format'           => 'YYYY-MM-DD',
+								'separator'        => '  >>  ',
+								'applyLabel'       => __( 'Apply', 'wp-ever-accounting' ),
+								'cancelLabel'      => __( 'Cancel', 'wp-ever-accounting' ),
+								'fromLabel'        => __( 'From', 'wp-ever-accounting' ),
+								'toLabel'          => __( 'To', 'wp-ever-accounting' ),
+								'customRangeLabel' => __( 'Custom', 'wp-ever-accounting' ),
+								'daysOfWeek'       => array( 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa' ),
+								'monthNames'       => array( 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ),
+								'firstDay'         => get_option( 'start_of_week' ),
+							),
+							'ranges' => array(
+								__( 'This Year', 'wp-ever-accounting' )      => array(
+									$financial_start,
+									$financial_start_dt->copy()->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+								),
+								__( 'Last Year', 'wp-ever-accounting' )      => array(
+									$financial_start_dt->copy()->sub( new \DateInterval( 'P1Y' ) )->format( $date_format ),
+									$financial_start_dt->copy()->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+								),
+								__( 'Last 12 Months', 'wp-ever-accounting' ) => array(
+									$today_dt->copy()->sub( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
+									$today_dt->copy()->format( $date_format ),
+								),
+							),
 						),
-						'ranges' => array(
-							__( 'This Year', 'wp-ever-accounting' )      => array(
-								$financial_start,
-								$financial_start_dt->clone()->add( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format )
-							),
-							__( 'Last Year', 'wp-ever-accounting' )      => array(
-								$financial_start_dt->clone()->sub( new \DateInterval( 'P1Y' ) )->format( $date_format ),
-								$financial_start_dt->clone()->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
-							),
-							__( 'Last 12 Months', 'wp-ever-accounting' ) => array(
-								$today_dt->clone()->sub( new \DateInterval( 'P1Y' ) )->sub( new \DateInterval( 'P1D' ) )->format( $date_format ),
-								$today_dt->clone()->format( $date_format ),
-							)
-						)
 					)
-				) );
+				);
 
 				wp_enqueue_script( 'ea-overview' );
 			}
 
-
 			//export page
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' == $_GET['tab'] ) {
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' === $_GET['tab'] ) {
 				wp_enqueue_script( 'ea-exporter' );
 			}
 
 			//import page
-			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'import' == $_GET['tab'] ) {
-				wp_localize_script( 'ea-importer', 'eaccounting_importer_i10n', array(
-					'uploaded_file_not_found' => esc_html__( 'Could not find the uploaded file, please try again', 'wp-ever-accounting' ),
-					'select_field_to_preview' => esc_html__( '	- Select field to preview data -', 'wp-ever-accounting' ),
-					'required'                => esc_html__( '(Required)', 'wp-ever-accounting' ),
-				) );
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'import' === $_GET['tab'] ) {
+				wp_localize_script(
+					'ea-importer',
+					'eaccounting_importer_i10n',
+					array(
+						'uploaded_file_not_found' => esc_html__( 'Could not find the uploaded file, please try again', 'wp-ever-accounting' ),
+						'select_field_to_preview' => esc_html__( '	- Select field to preview data -', 'wp-ever-accounting' ),
+						'required'                => esc_html__( '(Required)', 'wp-ever-accounting' ),
+					)
+				);
 				wp_enqueue_script( 'ea-importer' );
 			}
 
@@ -232,7 +232,6 @@ class Admin_Assets {
 			if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
 				wp_enqueue_script( 'jquery-chartjs' );
 			}
-
 		}
 	}
 
@@ -248,7 +247,7 @@ class Admin_Assets {
 	 *
 	 * @param string $handle       Name of the script. Should be unique.
 	 */
-	protected static function register_react_script( $handle, $src, $dependencies = [], $has_i18n = true ) {
+	protected static function register_react_script( $handle, $src, $dependencies = array(), $has_i18n = true ) {
 		$relative_src = str_replace( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ), '', $src );
 		$asset_path   = str_replace( '.js', '.asset.php', eaccounting()->plugin_path( $relative_src ) );
 

@@ -21,6 +21,7 @@ WP Ever Accounting will give you the opportunity to manage your income and expen
 With the ability to create multiple types of expense or income you will be on top of your accounting tasks. Apart from that, creating multiple accounts and the ability to transfer funds between them will give you the ease of smooth accounting operations.
 
 = Visit our website to learn more =
+&#128073;[Plugin Demo](https://wpeveraccounting.com/demo)&#128072;
 &#128073;[Plugin Documentation](https://wpeveraccounting.com/docs)&#128072;
 
 == How will WP Ever Accounting Benefit you: ==
@@ -123,6 +124,15 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+
+= 1.0.4 (31 October,2020) =
+* Fix - Translation not working
+* Fix - Sortby date is not working
+
+= 1.0.3 (22 October,2020) =
+* Fix - PHP v5.6 compatibility
+* Fix - Repeat setup wizard
+
 = 1.0.2 (18 October,2020) =
 * Feature - Export and import support
 * Feature - Muti-Currency support

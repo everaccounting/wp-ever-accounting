@@ -44,7 +44,7 @@ class DateTime extends Base {
 	 * @since 1.0.2
 	 * @return \EverAccounting\DateTime
 	 */
-	public function clone() {
+	public function copy() {
 		return clone $this;
 	}
 
