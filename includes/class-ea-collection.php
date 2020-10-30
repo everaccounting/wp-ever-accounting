@@ -32,7 +32,7 @@ class Collection implements Arrayable {
 	 *
 	 */
 	public function __construct( $items = array() ) {
-		$items = is_null( $items ) ? [] : $this->getArrayableItems( $items );
+		$items = is_null( $items ) ? array() : $this->getArrayableItems( $items );
 
 		$this->items = (array) $items;
 	}
@@ -131,10 +131,12 @@ class Collection implements Arrayable {
 	 * @return static
 	 */
 	public function where( $key, $value, $strict = true ) {
-		return $this->filter( function ( $item ) use ( $key, $value, $strict ) {
-			return $strict ? self::data_get( $item, $key ) === $value
+		return $this->filter(
+			function ( $item ) use ( $key, $value, $strict ) {
+				return $strict ? self::data_get( $item, $key ) === $value
 				: self::data_get( $item, $key ) == $value;
-		} );
+			}
+		);
 	}
 
 	/**
@@ -384,14 +386,18 @@ class Collection implements Arrayable {
 	 */
 	public function reject( $callback ) {
 		if ( $this->useAsCallable( $callback ) ) {
-			return $this->filter( function ( $item ) use ( $callback ) {
-				return ! $callback( $item );
-			} );
+			return $this->filter(
+				function ( $item ) use ( $callback ) {
+					return ! $callback( $item );
+				}
+			);
 		}
 
-		return $this->filter( function ( $item ) use ( $callback ) {
-			return $item != $callback;
-		} );
+		return $this->filter(
+			function ( $item ) use ( $callback ) {
+				return $item != $callback;
+			}
+		);
 	}
 
 	/**
@@ -482,7 +488,7 @@ class Collection implements Arrayable {
 	 * @return static
 	 */
 	public function chunk( $size, $preserveKeys = false ) {
-		$chunks = [];
+		$chunks = array();
 
 		foreach ( array_chunk( $this->items, $size, $preserveKeys ) as $chunk ) {
 			$chunks[] = new static( $chunk );
@@ -537,7 +543,7 @@ class Collection implements Arrayable {
 	 *
 	 * @return static
 	 */
-	public function splice( $offset, $length = 0, $replacement = [] ) {
+	public function splice( $offset, $length = 0, $replacement = array() ) {
 		return new static( array_splice( $this->items, $offset, $length, $replacement ) );
 	}
 
@@ -670,7 +676,7 @@ class Collection implements Arrayable {
 	 * @return array
 	 */
 	public function __toArray() {
-		$output = [];
+		$output = array();
 		$value  = null;
 		foreach ( $this as $key => $value ) {
 			$output[ $key ] = ! is_object( $value )
@@ -773,7 +779,7 @@ class Collection implements Arrayable {
 				} elseif ( ! is_array( $target ) ) {
 					return $default instanceof \Closure ? $default() : $default;
 				}
-				$result = [];
+				$result = array();
 
 				foreach ( $target as $item ) {
 					$result[] = self::data_get( $item, $key );

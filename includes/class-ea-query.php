@@ -25,7 +25,7 @@ class Query {
 	/**
 	 * @var array
 	 */
-	protected $select = [];
+	protected $select = array();
 
 	/**
 	 * @var string
@@ -35,22 +35,22 @@ class Query {
 	/**
 	 * @var array
 	 */
-	protected $join = [];
+	protected $join = array();
 
 	/**
 	 * @var array
 	 */
-	protected $where = [];
+	protected $where = array();
 
 	/**
 	 * @var array
 	 */
-	protected $order = [];
+	protected $order = array();
 
 	/**
 	 * @var array
 	 */
-	protected $group = [];
+	protected $group = array();
 
 	/**
 	 * @var string
@@ -71,7 +71,7 @@ class Query {
 	 * @since 1.0.2
 	 * @var array
 	 */
-	protected $search_columns = [];
+	protected $search_columns = array();
 
 	/**
 	 * @since 1.0.2
@@ -163,12 +163,18 @@ class Query {
 			global $wpdb;
 			foreach ( explode( ' ', $search ) as $word ) {
 				$word          = '%' . $this->sanitize_value( true, $word ) . '%';
-				$this->where[] = [
+				$this->where[] = array(
 					'joint'     => $joint,
-					'condition' => '(' . implode( ' OR ', array_map( function ( $column ) use ( &$wpdb, &$word ) {
-							return $wpdb->prepare( $column . ' LIKE %s', $word );
-						}, array_merge( $this->search_columns, $columns ) ) ) . ')',
-				];
+					'condition' => '(' . implode(
+						' OR ',
+						array_map(
+							function ( $column ) use ( &$wpdb, &$word ) {
+								return $wpdb->prepare( $column . ' LIKE %s', $word );
+							},
+							array_merge( $this->search_columns, $columns )
+						)
+					) . ')',
+				);
 			}
 		}
 
@@ -194,7 +200,7 @@ class Query {
 	 */
 	public function where( $column, $param1 = null, $param2 = null, $joint = 'and' ) {
 		global $wpdb;
-		if ( ! in_array( strtolower( $joint ), [ 'and', 'or', 'where' ] ) ) {
+		if ( ! in_array( strtolower( $joint ), array( 'and', 'or', 'where' ) ) ) {
 			$this->exception( 'Invalid where type "' . $joint . '"' );
 		}
 
@@ -221,15 +227,18 @@ class Query {
 			$condition = '';
 			for ( $i = 0, $iMax = count( $subquery->where ); $i < $iMax; ++ $i ) {
 				$condition .= ( $i === 0 ? ' ' : ' ' . $subquery->where[ $i ]['joint'] . ' ' )
-				              . $subquery->where[ $i ]['condition'];
+							  . $subquery->where[ $i ]['condition'];
 			}
 
-			$this->where = array_merge( $this->where, array(
+			$this->where = array_merge(
+				$this->where,
 				array(
-					'joint'     => $joint,
-					'condition' => "($condition)"
+					array(
+						'joint'     => $joint,
+						'condition' => "($condition)",
+					),
 				)
-			) );
+			);
 
 			return $this;
 		}
@@ -252,16 +261,16 @@ class Query {
 			$min = isset( $param2[0] ) ? $param2[0] : false;
 			$max = isset( $param2[1] ) ? $param2[1] : $min;
 			if ( ! $min || ! $max ) {
-				$this->exception( "BETWEEN min or max is missing" );
+				$this->exception( 'BETWEEN min or max is missing' );
 			}
 
 			$min = $wpdb->prepare( is_numeric( $min ) ? '%d' : '%s', $min );
 			$max = $wpdb->prepare( is_numeric( $max ) ? '%d' : '%s', $max );
 
-			$this->where[] = [
+			$this->where[] = array(
 				'joint'     => $joint,
 				'condition' => "($column BETWEEN $min AND $max)",
-			];
+			);
 
 			return $this;
 		}
@@ -271,20 +280,19 @@ class Query {
 			$min = isset( $param2[0] ) ? $param2[0] : false;
 			$max = isset( $param2[1] ) ? $param2[1] : false;
 			if ( ! $min || ! $max ) {
-				$this->exception( "NOT BETWEEN min or max is missing" );
+				$this->exception( 'NOT BETWEEN min or max is missing' );
 			}
 
 			$min = $wpdb->prepare( is_numeric( $min ) ? '%d' : '%s', $min );
 			$max = $wpdb->prepare( is_numeric( $max ) ? '%d' : '%s', $max );
 
-			$this->where[] = [
+			$this->where[] = array(
 				'joint'     => $joint,
 				'condition' => "($column NOT BETWEEN $min AND $max)",
-			];
+			);
 
 			return $this;
 		}
-
 
 		//first check if is array if so then make a string out of array
 		//if not array but null then set value as null
@@ -300,10 +308,10 @@ class Query {
 				: ( strpos( $param2, $wpdb->prefix ) !== false ? $param2 : $wpdb->prepare( is_numeric( $param2 ) ? '%d' : '%s', $param2 ) )
 			);
 
-		$this->where[] = [
+		$this->where[] = array(
 			'joint'     => $joint,
-			'condition' => implode( ' ', [ $column, $param1, $param2 ] ),
-		];
+			'condition' => implode( ' ', array( $column, $param1, $param2 ) ),
+		);
 
 		return $this;
 	}
@@ -512,10 +520,10 @@ class Query {
 	 * @param        $query
 	 */
 	public function whereRaw( $query, $joint = 'AND' ) {
-		$this->where[] = [
+		$this->where[] = array(
 			'joint'     => $joint,
 			'condition' => $query,
-		];
+		);
 
 		return $this;
 	}
@@ -542,15 +550,15 @@ class Query {
 	public function join( $table, $localKey, $operator = null, $referenceKey = null, $type = 'left', $joint = 'AND', $add_prefix = true ) {
 		global $wpdb;
 		$type = is_string( $type ) ? strtoupper( trim( $type ) ) : ( $type ? 'LEFT' : '' );
-		if ( ! in_array( $type, [ '', 'LEFT', 'RIGHT', 'INNER', 'CROSS', 'LEFT OUTER', 'RIGHT OUTER' ] ) ) {
-			$this->exception( "Invalid join type." );
+		if ( ! in_array( $type, array( '', 'LEFT', 'RIGHT', 'INNER', 'CROSS', 'LEFT OUTER', 'RIGHT OUTER' ) ) ) {
+			$this->exception( 'Invalid join type.' );
 		}
 
-		$join = [
+		$join = array(
 			'table' => ( $add_prefix ? $wpdb->prefix : '' ) . $table,
 			'type'  => $type,
-			'on'    => [],
-		];
+			'on'    => array(),
+		);
 
 		// to make nested joins possible you can pass an closure
 		// which will create a new query where you can add your nested where
@@ -580,10 +588,10 @@ class Query {
 				: ( strpos( $referenceKey, '.' ) !== false || strpos( $referenceKey, $wpdb->prefix ) !== false ? $referenceKey : $wpdb->prepare( is_numeric( $referenceKey ) ? '%d' : '%s', $referenceKey ) )
 			);
 
-		$join['on'][] = [
+		$join['on'][] = array(
 			'joint'     => $joint,
-			'condition' => implode( ' ', [ $localKey, $operator, $referenceKey ] ),
-		];
+			'condition' => implode( ' ', array( $localKey, $operator, $referenceKey ) ),
+		);
 
 		$this->join[] = $join;
 
@@ -667,10 +675,10 @@ class Query {
 	 * @param        $query
 	 */
 	public function joinRaw( $query, $joint = 'AND' ) {
-		$this->join['on'][] = [
+		$this->join['on'][] = array(
 			'joint'     => $joint,
 			'condition' => $query,
-		];
+		);
 
 		return $this;
 	}
@@ -931,9 +939,12 @@ class Query {
 			wp_cache_add( $cache_key, $results, $this->id, HOUR_IN_SECONDS );
 			if ( $row_map ) {
 
-				$results = array_map( function ( $row ) use ( &$row_map ) {
-					return call_user_func_array( $row_map, [ $row ] );
-				}, $results );
+				$results = array_map(
+					function ( $row ) use ( &$row_map ) {
+						return call_user_func_array( $row_map, array( $row ) );
+					},
+					$results
+				);
 			}
 
 			wp_cache_add( $cache_key, $results, $this->cache_group, HOUR_IN_SECONDS );
@@ -1398,7 +1409,7 @@ class Query {
 			$query .= ( ! empty( $join['type'] ) ? ' ' . $join['type'] . ' JOIN ' : ' JOIN ' ) . $join['table'];
 			for ( $i = 0, $iMax = count( $join['on'] ); $i < $iMax; ++ $i ) {
 				$query .= ( $i === 0 ? ' ON ' : ' ' . $join['on'][ $i ]['joint'] . ' ' )
-				          . $join['on'][ $i ]['condition'];
+						  . $join['on'][ $i ]['condition'];
 			}
 		}
 	}
@@ -1414,7 +1425,7 @@ class Query {
 	public function _query_where( &$query ) {
 		for ( $i = 0, $iMax = count( $this->where ); $i < $iMax; ++ $i ) {
 			$query .= ( $i === 0 ? ' WHERE ' : ' ' . $this->where[ $i ]['joint'] . ' ' )
-			          . $this->where[ $i ]['condition'];
+					  . $this->where[ $i ]['condition'];
 		}
 	}
 
@@ -1503,10 +1514,12 @@ class Query {
 	 *
 	 */
 	private function _query_delete( &$query ) {
-		$query .= trim( 'DELETE ' . ( count( $this->join )
+		$query .= trim(
+			'DELETE ' . ( count( $this->join )
 				? preg_replace( '/\s[aA][sS][\s\S]+.*?/', '', $this->from )
 				: ''
-			) );
+			)
+		);
 	}
 
 	/**
@@ -1533,7 +1546,7 @@ class Query {
 				);
 		}
 		if ( strpos( $callback, '_builder' ) !== false ) {
-			$callback = [ &$this, $callback ];
+			$callback = array( &$this, $callback );
 		}
 		if ( is_array( $value ) ) {
 			for ( $i = count( $value ) - 1; $i >= 0; -- $i ) {
@@ -1541,7 +1554,7 @@ class Query {
 			}
 		}
 
-		return $callback && is_callable( $callback ) ? call_user_func_array( $callback, [ $value ] ) : $value;
+		return $callback && is_callable( $callback ) ? call_user_func_array( $callback, array( $value ) ) : $value;
 	}
 
 	/**

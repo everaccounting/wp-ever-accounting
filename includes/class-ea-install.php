@@ -15,7 +15,7 @@ class EAccounting_Install {
 	 * @var array
 	 */
 	private static $updates = array(
-		'1.0.2'   => 'eaccounting_update_1_0_2',
+		'1.0.2' => 'eaccounting_update_1_0_2',
 	);
 
 	/**
@@ -190,11 +190,11 @@ class EAccounting_Install {
 	private static function create_options() {
 		$settings = new \EverAccounting\Admin\Settings();
 		if ( empty( $settings->get( 'financial_year_start' ) ) ) {
-			$settings->set( [ 'financial_year_start' => '01-01' ] );
+			$settings->set( array( 'financial_year_start' => '01-01' ) );
 		}
 
 		if ( empty( $settings->get( 'default_payment_method' ) ) ) {
-			$settings->set( [ 'default_payment_method' => 'cash' ] );
+			$settings->set( array( 'default_payment_method' => 'cash' ) );
 		}
 
 		$settings->set( array(), true );
@@ -214,32 +214,45 @@ class EAccounting_Install {
 	private static function create_categories() {
 		//If no categories then create default categories
 		if ( ! \EverAccounting\Query_Category::init()->count() ) {
-			eaccounting_insert_category( [
-				'name'    => __( 'Deposit', 'wp-ever-accounting' ),
-				'type'    => 'income',
-				'enabled' => '1',
-			] );
+			eaccounting_insert_category(
+				array(
+					'name'    => __( 'Deposit', 'wp-ever-accounting' ),
+					'type'    => 'income',
+					'enabled' => '1',
+				)
+			);
 
-			eaccounting_insert_category( [
-				'name'    => __( 'Other', 'wp-ever-accounting' ),
-				'type'    => 'expense',
-				'enabled' => '1',
-			] );
+			eaccounting_insert_category(
+				array(
+					'name'    => __( 'Other', 'wp-ever-accounting' ),
+					'type'    => 'expense',
+					'enabled' => '1',
+				)
+			);
 
-			eaccounting_insert_category( [
-				'name'    => __( 'Sales', 'wp-ever-accounting' ),
-				'type'    => 'income',
-				'enabled' => '1',
-			] );
+			eaccounting_insert_category(
+				array(
+					'name'    => __( 'Sales', 'wp-ever-accounting' ),
+					'type'    => 'income',
+					'enabled' => '1',
+				)
+			);
 		}
 
 		//create transfer category
-		if ( ! \EverAccounting\Query_Category::init()->where( array( 'name' => 'Transfer', 'type' => 'other' ) )->count() ) {
-			eaccounting_insert_category( [
-				'name'    => __( 'Transfer', 'wp-ever-accounting' ),
-				'type'    => 'other',
-				'enabled' => '1',
-			] );
+		if ( ! \EverAccounting\Query_Category::init()->where(
+			array(
+				'name' => 'Transfer',
+				'type' => 'other',
+			)
+		)->count() ) {
+			eaccounting_insert_category(
+				array(
+					'name'    => __( 'Transfer', 'wp-ever-accounting' ),
+					'type'    => 'other',
+					'enabled' => '1',
+				)
+			);
 		}
 	}
 
@@ -252,30 +265,42 @@ class EAccounting_Install {
 	private static function create_currencies() {
 		//create currencies
 		if ( ! \EverAccounting\Query_Currency::init()->count() ) {
-			eaccounting_insert_currency( [
-				'code' => 'USD',
-				'rate' => '1',
-			] );
-			eaccounting_insert_currency( [
-				'code' => 'EUR',
-				'rate' => '1.25',
-			] );
-			eaccounting_insert_currency( [
-				'code' => 'GBP',
-				'rate' => '1.6',
-			] );
-			eaccounting_insert_currency( [
-				'code' => 'CAD',
-				'rate' => '1.31',
-			] );
-			eaccounting_insert_currency( [
-				'code' => 'JPY',
-				'rate' => '106.22',
-			] );
-			eaccounting_insert_currency( [
-				'code' => 'BDT',
-				'rate' => '84.81',
-			] );
+			eaccounting_insert_currency(
+				array(
+					'code' => 'USD',
+					'rate' => '1',
+				)
+			);
+			eaccounting_insert_currency(
+				array(
+					'code' => 'EUR',
+					'rate' => '1.25',
+				)
+			);
+			eaccounting_insert_currency(
+				array(
+					'code' => 'GBP',
+					'rate' => '1.6',
+				)
+			);
+			eaccounting_insert_currency(
+				array(
+					'code' => 'CAD',
+					'rate' => '1.31',
+				)
+			);
+			eaccounting_insert_currency(
+				array(
+					'code' => 'JPY',
+					'rate' => '106.22',
+				)
+			);
+			eaccounting_insert_currency(
+				array(
+					'code' => 'BDT',
+					'rate' => '84.81',
+				)
+			);
 		}
 	}
 
@@ -286,15 +311,17 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_accounts() {
-		error_log(\EverAccounting\Query_Account::init()->count());
+		error_log( \EverAccounting\Query_Account::init()->count() );
 		if ( ! \EverAccounting\Query_Account::init()->count() ) {
-			eaccounting_insert_account( [
-				'name'            => 'Cash',
-				'currency_code'   => 'USD',
-				'number'          => '001',
-				'opening_balance' => '0',
-				'enabled'         => '1',
-			] );
+			eaccounting_insert_account(
+				array(
+					'name'            => 'Cash',
+					'currency_code'   => 'USD',
+					'number'          => '001',
+					'opening_balance' => '0',
+					'enabled'         => '1',
+				)
+			);
 		}
 	}
 
@@ -308,12 +335,12 @@ class EAccounting_Install {
 		$settings = new \EverAccounting\Admin\Settings();
 		$account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
 		if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
-			$settings->set( [ 'default_account' => $account->id ] );
+			$settings->set( array( 'default_account' => $account->id ) );
 		}
 
 		$currency = \EverAccounting\Query_Currency::init()->find( 'USD', 'code' );
 		if ( ! empty( $currency ) && empty( $settings->get( 'default_currency' ) ) ) {
-			$settings->set( [ 'default_currency' => $currency->code ] );
+			$settings->set( array( 'default_currency' => $currency->code ) );
 		}
 
 		$settings->set( array(), true );
@@ -347,7 +374,7 @@ class EAccounting_Install {
 
 		$collate = 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4';
 
-		$tables = [
+		$tables = array(
 			"CREATE TABLE {$wpdb->prefix}ea_accounts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
 		    `name` VARCHAR(191) NOT NULL COMMENT 'Account Name',
@@ -459,8 +486,8 @@ class EAccounting_Install {
 		    PRIMARY KEY (`id`),
 		    KEY `income_id` (`income_id`),
 		    KEY `expense_id` (`expense_id`)
-            ) $collate"
-		];
+            ) $collate",
+		);
 
 		foreach ( $tables as $table ) {
 			dbDelta( $table );
@@ -686,7 +713,6 @@ class EAccounting_Install {
 				}
 				update_option( 'eaccounting_version', $version );
 			}
-
 		}
 	}
 

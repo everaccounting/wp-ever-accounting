@@ -90,8 +90,8 @@ function eaccounting_insert_account( $args ) {
 		}
 
 		$existing_id = \EverAccounting\Query_Account::init()
-		                                            ->where( 'number', $account->get_number() )
-		                                            ->value( 0 );
+													->where( 'number', $account->get_number() )
+													->value( 0 );
 
 		if ( ! empty( $existing_id ) && absint( $existing_id ) != $account->get_id() ) {
 			throw new Exception( 'duplicate_props', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
@@ -142,7 +142,7 @@ function eaccounting_delete_account( $account_id ) {
 function eaccounting_delete_default_account( $id ) {
 	$default_account = eaccounting()->settings->get( 'default_account' );
 	if ( $default_account == $id ) {
-		eaccounting()->settings->set( array( [ 'default_account' => '' ] ), true );
+		eaccounting()->settings->set( array( array( 'default_account' => '' ) ), true );
 	}
 
 }

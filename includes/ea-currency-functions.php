@@ -119,7 +119,6 @@ function eaccounting_insert_currency( $args ) {
 			$currency->set_thousand_separator( $attributes['thousand_separator'] );
 		}
 
-
 		$currency->save();
 
 	} catch ( Exception $e ) {
@@ -164,7 +163,7 @@ function eaccounting_delete_currency( $currency_id ) {
 function eaccounting_delete_default_currency( $id ) {
 	$default_account = eaccounting()->settings->get( 'default_currency' );
 	if ( $default_account == $id ) {
-		eaccounting()->settings->set( array( [ 'default_currency' => '' ] ), true );
+		eaccounting()->settings->set( array( array( 'default_currency' => '' ) ), true );
 	}
 }
 

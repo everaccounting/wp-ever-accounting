@@ -21,10 +21,13 @@ defined( 'ABSPATH' ) || exit();
  * @return array
  */
 function eaccounting_get_contact_types() {
-	return apply_filters( 'eaccounting_contact_types', array(
-		'customer' => __( 'Customer', 'wp-ever-accounting' ),
-		'vendor'   => __( 'Vendor', 'wp-ever-accounting' ),
-	) );
+	return apply_filters(
+		'eaccounting_contact_types',
+		array(
+			'customer' => __( 'Customer', 'wp-ever-accounting' ),
+			'vendor'   => __( 'Vendor', 'wp-ever-accounting' ),
+		)
+	);
 }
 
 
@@ -107,9 +110,9 @@ function eaccounting_insert_contact( $args ) {
 		}
 		if ( ! empty( $contact->get_email() ) ) {
 			$existing_id = Query_Contact::init()
-			                            ->where( 'email', $contact->get_email() )
-			                            ->where( 'type', $contact->get_type() )
-			                            ->value( 0 );
+										->where( 'email', $contact->get_email() )
+										->where( 'type', $contact->get_type() )
+										->value( 0 );
 			if ( ! empty( $existing_id ) && $existing_id != $contact->get_id() ) {
 				throw new Exception( 'duplicate_email', __( 'The email address is already in used.', 'wp-ever-accounting' ) );
 			}

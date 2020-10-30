@@ -18,16 +18,18 @@ defined( 'ABSPATH' ) || exit();
  */
 function eaccounting_get_screen_ids() {
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-	$screen_ids            = array(
-			'toplevel_page_e' . $eaccounting_screen_id,
-			$eaccounting_screen_id . '_page_ea-transactions',
-			$eaccounting_screen_id . '_page_ea-sales',
-			$eaccounting_screen_id . '_page_ea-expenses',
-			$eaccounting_screen_id . '_page_ea-misc',
-			$eaccounting_screen_id . '_page_ea-banking',
-			$eaccounting_screen_id . '_page_ea-reports',
-			$eaccounting_screen_id . '_page_ea-tools',
-			$eaccounting_screen_id . '_page_ea-settings',
+
+	$screen_ids = array(
+		'toplevel_page_' . $eaccounting_screen_id,
+		$eaccounting_screen_id . '_page_ea-transactions',
+		$eaccounting_screen_id . '_page_ea-sales',
+		$eaccounting_screen_id . '_page_ea-expenses',
+		$eaccounting_screen_id . '_page_ea-misc',
+		$eaccounting_screen_id . '_page_ea-banking',
+		$eaccounting_screen_id . '_page_ea-reports',
+		$eaccounting_screen_id . '_page_ea-tools',
+		$eaccounting_screen_id . '_page_ea-settings',
+		'toplevel_page_eaccounting',
 	);
 
 	return apply_filters( 'eaccounting_screen_ids', $screen_ids );
@@ -52,8 +54,9 @@ function eaccounting_is_admin_page( $page = '' ) {
 	} else {
 		$ret = false;
 	}
-
-	$pages = str_replace( [ 'toplevel_page_', 'accounting_page_' ], '', eaccounting_get_screen_ids() );
+	//When translate the page name becomes different so use translated
+	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
+	$pages                 = str_replace( array( 'toplevel_page_', 'accounting_page_', $eaccounting_screen_id . '_page_' ), '', eaccounting_get_screen_ids() );
 
 	if ( ! empty( $page ) && in_array( $page, $pages ) ) {
 		$ret = true;
@@ -81,7 +84,9 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 		$page = isset( $_GET['page'] ) ? eaccounting_clean( $_GET['page'] ) : '';
 	}
 
-	$whitelist = str_replace( [ 'toplevel_page_', 'accounting_page_' ], '', eaccounting_get_screen_ids() );
+	//When translate the page name becomes different so use translated
+	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
+	$whitelist             = str_replace( array( 'toplevel_page_', 'accounting_page_', $eaccounting_screen_id . '_page_' ), '', eaccounting_get_screen_ids() );
 
 	if ( ! in_array( $page, $whitelist, true ) ) {
 		$page = '';
@@ -118,7 +123,7 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 function eaccounting_get_active_tab( $tabs, $default = null ) {
 	if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ) {
 		$active_tab = eaccounting_clean( $_GET['tab'] );
-	} else if ( ! empty( $default ) ) {
+	} elseif ( ! empty( $default ) ) {
 		$active_tab = $default;
 	} else {
 		$array      = array_keys( $tabs );
@@ -150,11 +155,12 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array() 
 	foreach ( $tabs as $tab_id => $tab_name ) {
 		$args    = wp_parse_args( $query_args, array( 'tab' => $tab_id ) );
 		$tab_url = eaccounting_admin_url( $args );
-		printf( '<a href="%1$s" alt="%2$s" class="%3$s">%4$s</a>',
-				esc_url( $tab_url ),
-				esc_attr( $tab_name ),
-				$active_tab == $tab_id ? 'nav-tab nav-tab-active' : 'nav-tab',
-				esc_html( $tab_name )
+		printf(
+			'<a href="%1$s" alt="%2$s" class="%3$s">%4$s</a>',
+			esc_url( $tab_url ),
+			esc_attr( $tab_name ),
+			$active_tab === $tab_id ? 'nav-tab nav-tab-active' : 'nav-tab',
+			esc_html( $tab_name )
 		);
 	}
 
@@ -202,7 +208,7 @@ add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3
  * @param       $template_name
  * @param array $args
  */
-function eaccounting_get_admin_template( $template_name, $args = [] ) {
+function eaccounting_get_admin_template( $template_name, $args = array() ) {
 	if ( $args && is_array( $args ) ) {
 		extract( $args );
 	}
@@ -228,82 +234,81 @@ function eaccounting_get_io_headers( $type ) {
 		case 'customer':
 		case 'vendor':
 			$headers = array(
-					'name'          => 'Name',
-					'email'         => 'Email',
-					'phone'         => 'Phone',
-					'fax'           => 'Fax',
-					'birth_date'    => 'Birth Date',
-					'address'       => 'Address',
-					'country'       => 'Country',
-					'website'       => 'Website',
-					'tax_number'    => 'Tax Number',
-					'currency_code' => 'Currency Code',
-					'note'          => 'Note',
+				'name'          => 'Name',
+				'email'         => 'Email',
+				'phone'         => 'Phone',
+				'fax'           => 'Fax',
+				'birth_date'    => 'Birth Date',
+				'address'       => 'Address',
+				'country'       => 'Country',
+				'website'       => 'Website',
+				'tax_number'    => 'Tax Number',
+				'currency_code' => 'Currency Code',
+				'note'          => 'Note',
 			);
 			break;
 		case 'category':
 			$headers = array(
-					'name'  => 'Name',
-					'type'  => 'Type',
-					'color' => 'Color',
+				'name'  => 'Name',
+				'type'  => 'Type',
+				'color' => 'Color',
 			);
 			break;
 		case 'account':
 			$headers = array(
-					'name'            => 'Name',
-					'number'          => 'Number',
-					'currency_code'   => 'Currency Code',
-					'opening_balance' => 'Opening Balance',
-					'bank_name'       => 'Bank Name',
-					'bank_phone'      => 'Bank Phone',
-					'bank_address'    => 'BanK Address',
-					'enabled'         => 'Enabled',
+				'name'            => 'Name',
+				'number'          => 'Number',
+				'currency_code'   => 'Currency Code',
+				'opening_balance' => 'Opening Balance',
+				'bank_name'       => 'Bank Name',
+				'bank_phone'      => 'Bank Phone',
+				'bank_address'    => 'BanK Address',
+				'enabled'         => 'Enabled',
 			);
 			break;
 		case 'payment':
 			$headers = array(
-					'paid_at'        => 'Paid At',
-					'amount'         => 'Amount',
-					'currency_code'  => 'Currency Code',
-					'currency_rate'  => 'Currency Rate',
-					'account_name'   => 'Account Name',
-					'vendor_name'    => 'Vendor Name',
-					'category_name'  => 'Category Name',
-					'description'    => 'Description',
-					'payment_method' => 'Payment Method',
-					'reference'      => 'Reference',
-					'reconciled'     => 'Reconciled',
+				'paid_at'        => 'Paid At',
+				'amount'         => 'Amount',
+				'currency_code'  => 'Currency Code',
+				'currency_rate'  => 'Currency Rate',
+				'account_name'   => 'Account Name',
+				'vendor_name'    => 'Vendor Name',
+				'category_name'  => 'Category Name',
+				'description'    => 'Description',
+				'payment_method' => 'Payment Method',
+				'reference'      => 'Reference',
+				'reconciled'     => 'Reconciled',
 			);
 			break;
 		case 'revenue':
 			$headers = array(
-					'paid_at'        => 'Paid At',
-					'amount'         => 'Amount',
-					'currency_code'  => 'Currency Code',
-					'currency_rate'  => 'Currency Rate',
-					'account_name'   => 'Account Name',
-					'customer_name'  => 'Customer Name',
-					'category_name'  => 'Category Name',
-					'description'    => 'Description',
-					'payment_method' => 'Payment Method',
-					'reference'      => 'Reference',
+				'paid_at'        => 'Paid At',
+				'amount'         => 'Amount',
+				'currency_code'  => 'Currency Code',
+				'currency_rate'  => 'Currency Rate',
+				'account_name'   => 'Account Name',
+				'customer_name'  => 'Customer Name',
+				'category_name'  => 'Category Name',
+				'description'    => 'Description',
+				'payment_method' => 'Payment Method',
+				'reference'      => 'Reference',
 			);
 			break;
 		case 'currency':
 			$headers = array(
-					'name'               => 'Name',
-					'code'               => 'Code',
-					'rate'               => 'Rate',
-					'precision'          => 'Precision',
-					'symbol'             => 'Symbol',
-					'position'           => 'Position',
-					'decimal_separator'  => 'Decimal Separator',
-					'thousand_separator' => 'Thousand Separator',
+				'name'               => 'Name',
+				'code'               => 'Code',
+				'rate'               => 'Rate',
+				'precision'          => 'Precision',
+				'symbol'             => 'Symbol',
+				'position'           => 'Position',
+				'decimal_separator'  => 'Decimal Separator',
+				'thousand_separator' => 'Thousand Separator',
 			);
 			break;
 
 		default:
-
 			break;
 	}
 
@@ -335,6 +340,5 @@ function eaccounting_do_import_fields( $type ) {
 			</tr>
 			<?php
 		}
-
 	}
 }

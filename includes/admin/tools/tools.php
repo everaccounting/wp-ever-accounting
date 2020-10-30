@@ -69,7 +69,7 @@ function eaccounting_load_tools_page() {
 	$tab  = eaccounting_get_current_tab();
 	$tabs = eaccounting_get_tools_tabs();
 	if ( empty( $tab ) && $tabs ) {
-		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
+		wp_redirect( add_query_arg( array( 'tab' => current( array_keys( $tabs ) ) ) ) );
 		exit();
 	}
 
@@ -89,7 +89,7 @@ function eaccounting_export_tab() {
 		<div class="ea-card">
 			<form method="post" class="ea-exporter ea-batch" data-type="export-customers"
 				  data-nonce="<?php echo wp_create_nonce( 'export-customers_exporter_nonce' ); ?>">
-				<p><?php esc_html_e( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<p><?php esc_html_e( 'Export customers from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
@@ -103,7 +103,7 @@ function eaccounting_export_tab() {
 		<div class="ea-card">
 			<form method="post" class="ea-exporter ea-batch" data-type="export-vendors"
 				  data-nonce="<?php echo wp_create_nonce( 'export-vendors_exporter_nonce' ); ?>">
-				<p><?php esc_html_e( 'Export vendors from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<p><?php esc_html_e( 'Export vendors from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
@@ -117,7 +117,7 @@ function eaccounting_export_tab() {
 		<div class="ea-card">
 			<form method="post" class="ea-exporter ea-batch" data-type="export-revenues"
 				  data-nonce="<?php echo wp_create_nonce( 'export-revenues_exporter_nonce' ); ?>">
-				<p><?php esc_html_e( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<p><?php esc_html_e( 'Export revenues from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
@@ -131,7 +131,7 @@ function eaccounting_export_tab() {
 		<div class="ea-card">
 			<form method="post" class="ea-exporter ea-batch" data-type="export-payments"
 				  data-nonce="<?php echo wp_create_nonce( 'export-payments_exporter_nonce' ); ?>">
-				<p><?php esc_html_e( 'Export payments from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<p><?php esc_html_e( 'Export payments from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
@@ -145,7 +145,7 @@ function eaccounting_export_tab() {
 		<div class="ea-card">
 			<form method="post" class="ea-exporter ea-batch" data-type="export-accounts"
 				  data-nonce="<?php echo wp_create_nonce( 'export-accounts_exporter_nonce' ); ?>">
-				<p><?php esc_html_e( 'Export accounts from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<p><?php esc_html_e( 'Export accounts from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
@@ -159,7 +159,7 @@ function eaccounting_export_tab() {
 		<div class="ea-card">
 			<form method="post" class="ea-exporter ea-batch" data-type="export-currencies"
 				  data-nonce="<?php echo wp_create_nonce( 'export-currencies_exporter_nonce' ); ?>">
-				<p><?php esc_html_e( 'Export currencies from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<p><?php esc_html_e( 'Export currencies from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
@@ -173,7 +173,7 @@ function eaccounting_export_tab() {
 		<div class="ea-card">
 			<form method="post" class="ea-exporter ea-batch" data-type="export-categories"
 				  data-nonce="<?php echo wp_create_nonce( 'export-categories_exporter_nonce' ); ?>">
-				<p><?php esc_html_e( 'Export categories from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ) ?></p>
+				<p><?php esc_html_e( 'Export categories from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 				<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
 			</form>
 		</div>
@@ -332,7 +332,8 @@ function eaccounting_tools_import_tab() {
 				  data-type="import-revenues"
 				  data-nonce="<?php echo wp_create_nonce( 'import-revenues_importer_nonce' ); ?>">
 				<p>
-					<?php  echo wp_kses_post( sprintf( __( 'Import revenues from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/revenues.csv' ) ) );
+					<?php
+					 echo wp_kses_post( sprintf( __( 'Import revenues from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/revenues.csv' ) ) );
 					?>
 				</p>
 
@@ -377,8 +378,12 @@ function eaccounting_tools_import_tab() {
 				  data-nonce="<?php echo wp_create_nonce( 'import-payments_importer_nonce' ); ?>">
 				<p>
 					<?php
-					echo wp_kses_post( sprintf( __( 'Import payments from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/payments.csv' )
-					) );
+					echo wp_kses_post(
+						sprintf(
+							__( 'Import payments from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
+							eaccounting()->plugin_url( '/sample-data/import/payments.csv' )
+						)
+					);
 					?>
 				</p>
 
@@ -417,13 +422,20 @@ function eaccounting_tools_import_tab() {
 		</div>
 
 		<div class="ea-card">
-			<form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
+			<form action=""
+				  method="post"
+				  enctype="multipart/form-data"
+				  class="ea-importer ea-batch"
 				  data-type="import-currencies"
 				  data-nonce="<?php echo wp_create_nonce( 'import-currencies_importer_nonce' ); ?>">
 				<p>
 					<?php
-					echo wp_kses_post( sprintf( __( 'Import currencies from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/currencies.csv' )
-					) );
+					echo wp_kses_post(
+						sprintf(
+							__( 'Import currencies from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
+							eaccounting()->plugin_url( '/sample-data/import/currencies.csv' )
+						)
+					);
 					?>
 				</p>
 
@@ -467,8 +479,12 @@ function eaccounting_tools_import_tab() {
 				  data-nonce="<?php echo wp_create_nonce( 'import-categories_importer_nonce' ); ?>">
 				<p>
 					<?php
-					echo wp_kses_post( sprintf( __( 'Import categories from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ), eaccounting()->plugin_url( '/sample-data/import/categories.csv' )
-					) );
+					echo wp_kses_post(
+						sprintf(
+							__( 'Import categories from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
+							eaccounting()->plugin_url( '/sample-data/import/categories.csv' )
+						)
+					);
 					?>
 				</p>
 
@@ -519,7 +535,9 @@ function eaccounting_system_info_tab() {
 	$action_url = eaccounting_admin_url( array( 'tab' => 'system_info' ) );
 	?>
 	<form action="<?php echo esc_url( $action_url ); ?>" method="post" dir="ltr">
-		<textarea readonly="readonly" onclick="this.focus(); this.select()" id="ea-system-info-textarea"
+		<textarea readonly="readonly"
+				  onclick="this.focus(); this.select()"
+				  id="ea-system-info-textarea"
 				  name="ea-sysinfo"
 				  title="<?php esc_attr_e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'wp-ever-accounting' ); ?>">
 			<?php echo eaccounting_tools_system_info_report(); ?>
