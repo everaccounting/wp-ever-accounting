@@ -124,6 +124,11 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+
+= 1.0.4 (31 October,2020) =
+* Fix - Translation not working
+* Fix - Sortby date is not working
+
 = 1.0.3 (22 October,2020) =
 * Fix - PHP v5.6 compatibility
 * Fix - Repeat setup wizard
