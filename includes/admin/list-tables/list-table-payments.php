@@ -115,7 +115,7 @@ class List_Table_Payments extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'        => array( 'date_created', false ),
+			'date'        => array( 'paid_at', false ),
 			'amount'      => array( 'amount', false ),
 			'account_id'  => array( 'account_id', false ),
 			'category_id' => array( 'category_id', false ),
