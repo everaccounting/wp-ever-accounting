@@ -2,7 +2,7 @@
 /**
  * Handle the item object.
  *
- * @since       1.0.4
+ * @since       1.1.0
  *
  * @package     EverAccounting
  */
@@ -16,13 +16,13 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Class Item
  *
- * @since 1.0.4
+ * @since 1.1.0
  */
 class Item extends Base_Object {
 	/**
 	 * This is the name of this object type.
 	 *
-	 * @since 1.0.4
+	 * @since 1.1.0
 	 * @var string
 	 */
 	public $object_type = 'item';
@@ -30,7 +30,7 @@ class Item extends Base_Object {
 	/***
 	 * Object table name.
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @var string
 	 */
 	public $table = 'ea_items';
@@ -38,7 +38,7 @@ class Item extends Base_Object {
 	/**
 	 * Item Data array.
 	 *
-	 * @since 1.0.4
+	 * @since 1.1.0
 	 * @var array
 	 */
 	protected $data = array(
@@ -62,9 +62,9 @@ class Item extends Base_Object {
 	 * should be used. It is possible, but the aforementioned are preferred and are the only
 	 * methods that will be maintained going forward.
 	 *
-	 * @since 1.0.4
-	 *
 	 * @param int|object|Category $data object to read.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function __construct( $data = 0 ) {
@@ -92,99 +92,117 @@ class Item extends Base_Object {
 	*/
 
 	/**
-	 * @since 1.0.4
+	 * Get item name
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item sku
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_sku( $context = 'edit' ) {
 		return $this->get_prop( 'sku', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item image_id
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_image_id( $context = 'edit' ) {
 		return $this->get_prop( 'image_id', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item description
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item sale_price
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_sale_price( $context = 'edit' ) {
 		return $this->get_prop( 'sale_price', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item purchase_price
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_purchase_price( $context = 'edit' ) {
 		return $this->get_prop( 'purchase_price', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item_quantity
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_quantity( $context = 'edit' ) {
 		return $this->get_prop( 'quantity', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item category_id
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
 	}
 
 	/**
-	 * @since 1.0.4
+	 * Get item tax_id
 	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_tax_id( $context = 'edit' ) {
 		return $this->get_prop( 'tax_id', $context );
@@ -196,81 +214,108 @@ class Item extends Base_Object {
 	|--------------------------------------------------------------------------
 	*/
 	/**
-	 * @since 1.0..4
+	 *  Set item name
 	 *
 	 * @param $name
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item sku
 	 *
 	 * @param $sku
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_sku( $sku ) {
 		$this->set_prop( 'sku', eaccounting_clean( $sku ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item image_id
 	 *
 	 * @param $image_id
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_image_id( $image_id ) {
 		$this->set_prop( 'image_id', absint( $image_id ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item description
 	 *
 	 * @param $description
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_description( $description ) {
 		$this->set_prop( 'description', sanitize_textarea_field( $description ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item sale_price
 	 *
 	 * @param $sale_price
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_sale_price( $sale_price ) {
 		$this->set_prop( 'sale_price', eaccounting_sanitize_price( $sale_price ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item purchase_price
 	 *
 	 * @param $purchase_price
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_purchase_price( $purchase_price ) {
 		$this->set_prop( 'purchase_price', eaccounting_sanitize_price( $purchase_price ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item quantity
 	 *
 	 * @param $quantity
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_quantity( $quantity ) {
 		$this->set_prop( 'quantity', absint( $quantity ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item category_id
 	 *
 	 * @param $category_id
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_category_id( $category_id ) {
 		$this->set_prop( 'category_id', absint( $category_id ) );
 	}
 
 	/**
-	 * @since 1.0..4
+	 * Set item tax_id
 	 *
 	 * @param $tax_id
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function set_tax_id( $tax_id ) {
 		$this->set_prop( 'tax_id', absint( $tax_id ) );

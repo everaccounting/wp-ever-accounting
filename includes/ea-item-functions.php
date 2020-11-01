@@ -5,9 +5,10 @@
  *
  * All item related function of the plugin.
  *
- * @since   1.0.4
+ * @since   1.1.0
  * @package EverAccounting
  */
+
 use EverAccounting\Exception;
 use EverAccounting\Item;
 
@@ -16,11 +17,11 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main function for returning item.
  *
- * @since 1.0.4
- *
  * @param $item
  *
  * @return Item|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_item( $item ) {
 	if ( empty( $item ) ) {
@@ -48,17 +49,16 @@ function eaccounting_get_item( $item ) {
 }
 
 
-
 /**
  *  Create new item programmatically.
  *
  *  Returns a new item object on success.
  *
- * @since 1.0.4
- *
  * @param array $args Item arguments.
  *
  * @return Item|WP_Error
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_item( $args ) {
 	try {
@@ -66,7 +66,7 @@ function eaccounting_insert_item( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$item      = new item( $args['id'] );
+		$item         = new item( $args['id'] );
 		$item->set_props( $args );
 
 		//validation
@@ -101,11 +101,11 @@ function eaccounting_insert_item( $args ) {
 /**
  * Delete an item.
  *
- * @since 1.0.4
- *
  * @param $item_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_item( $item_id ) {
 	try {

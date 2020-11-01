@@ -7,10 +7,10 @@
  * @since       1.1.0
  */
 defined( 'ABSPATH' ) || exit();
-
+require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-items.php';
 
 /**
- * render expenses page.
+ * render items page.
  *
  * @since 1.1.0
  */
@@ -43,21 +43,22 @@ function eaccounting_admin_items_page() {
 }
 
 /**
- * Retrieve expenses tabs
+ * Retrieve items tabs
  *
  * @return array $tabs
- * @since 1.0.2
+ * @since 1.1.0
  */
 function eaccounting_get_items_tabs() {
 	$tabs          = array();
 	$tabs['items'] = __( 'Items', 'wp-ever-accounting' );
+
 	return apply_filters( 'eaccounting_items_tabs', $tabs );
 }
 
 /**
- * Setup expenses pages.
+ * Setup items pages.
  *
- * @since 1.0.2
+ * @since 1.1.0
  */
 function eaccounting_load_items_page() {
 	$tab  = eaccounting_get_current_tab();
