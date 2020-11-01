@@ -16,14 +16,19 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get all the available type of category the plugin support.
  *
- * @since 1.0.2
  * @return array
+ * @since 1.0.2
  */
 function eaccounting_get_category_types() {
 	$types = array(
 		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 		'income'  => __( 'Income', 'wp-ever-accounting' ),
 		'other'   => __( 'Other', 'wp-ever-accounting' ),
+		/**
+		 * Item category for items
+		 * @since 1.1.0
+		 */
+		'item'    => __( 'Item', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_category_types', $types );
@@ -34,9 +39,9 @@ function eaccounting_get_category_types() {
  *
  * @param $category
  *
+ * @return null|Category
  * @since 1.0.2
  *
- * @return null|Category
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
@@ -72,9 +77,9 @@ function eaccounting_get_category( $category ) {
  * @type string $color Color of the category
  * }
  *
+ * @return WP_Error|Mixed
  * @since 1.0.2
  *
- * @return WP_Error|Mixed
  */
 function eaccounting_insert_category( $args ) {
 	try {
@@ -124,9 +129,9 @@ function eaccounting_insert_category( $args ) {
  *
  * @param $category_id
  *
+ * @return bool
  * @since 1.0.2
  *
- * @return bool
  */
 function eaccounting_delete_category( $category_id ) {
 	try {
@@ -147,11 +152,11 @@ function eaccounting_delete_category( $category_id ) {
 /**
  * Delete category id from transactions.
  *
- * @since 1.0.2
- *
  * @param $id
  *
  * @return bool
+ * @since 1.0.2
+ *
  */
 function eaccounting_update_transaction_category( $id ) {
 	$id = absint( $id );

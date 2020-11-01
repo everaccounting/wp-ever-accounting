@@ -70,7 +70,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'label'         => __( 'Category', 'wp-ever-accounting' ),
 						'name'          => 'category_id',
 						'value'         => $item->get_category_id(),
-						'type'          => 'other',
+						'type'          => 'item',
 						'creatable'     => true,
 				) );
 				eaccounting_text_input( array(
