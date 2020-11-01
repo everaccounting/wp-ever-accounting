@@ -11,7 +11,7 @@ namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
 use EverAccounting\Item;
-use EverAccounting\Query_Item;
+//use EverAccounting\Query_Item;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -440,6 +440,8 @@ class List_Table_Items extends List_Table {
 		) );
 
 		$args        = apply_filters( 'eaccounting_items_table_query_args', $args, $this );
+
+		/*
 		$this->items = Query_Item::init()
 		                            ->where( $args )
 		                            ->withBalance()
@@ -478,5 +480,6 @@ class List_Table_Items extends List_Table {
 			'per_page'    => $per_page,
 			'total_pages' => ceil( $total_items / $per_page )
 		) );
+		*/
 	}
 }

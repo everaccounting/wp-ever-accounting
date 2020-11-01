@@ -7,7 +7,7 @@
  * @since       1.1.0
  */
 defined( 'ABSPATH' ) || exit();
-require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-items.php';
+require_once dirname( __FILE__ ) . '/items/items.php';
 
 /**
  * render items page.
