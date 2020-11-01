@@ -18,7 +18,7 @@ require_once dirname( __FILE__ ) . '/customers/customers.php';
  */
 function eaccounting_admin_sales_page() {
 	$tabs       = eaccounting_get_sales_tabs();
-	$active_tab = eaccounting_get_active_tab( $tabs, 'accounts' );
+	$active_tab = eaccounting_get_active_tab( $tabs, 'invoices' );
 
 	ob_start();
 	?>
@@ -51,8 +51,8 @@ function eaccounting_admin_sales_page() {
  * @return array $tabs
  */
 function eaccounting_get_sales_tabs() {
-	$tabs = array();
-	//$tabs['invoices']  = __( 'Invoices', 'wp-ever-accounting' );
+	$tabs              = array();
+	$tabs['invoices']  = __( 'Invoices', 'wp-ever-accounting' );
 	$tabs['revenues']  = __( 'Revenues', 'wp-ever-accounting' );
 	$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );
 
@@ -68,7 +68,7 @@ function eaccounting_load_sales_page() {
 	$tab  = eaccounting_get_current_tab();
 	$tabs = eaccounting_get_sales_tabs();
 	if ( empty( $tab ) && $tabs ) {
-		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
+		wp_redirect( add_query_arg( array( 'tab' => current( array_keys( $tabs ) ) ) ) );
 		exit();
 	}
 	do_action( 'eaccounting_load_sales_page_tab' . $tab );
