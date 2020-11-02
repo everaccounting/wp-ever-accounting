@@ -246,6 +246,9 @@ class Ajax {
 				$results = Query_Category::init()->where( array( 'search' => $search ) )->where( 'type', 'income' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
 				break;
 
+			case 'item_category':
+				$results = Query_Category::init()->where( array( 'search' => $search ) )->where( 'type', 'item' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				break;
 			default:
 				do_action( 'eaccounting_dropdown_search_' . eaccounting_clean( $type ), $search, $page );
 				break;
