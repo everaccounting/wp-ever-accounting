@@ -27,74 +27,94 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 		<form id="ea-item-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
-				eaccounting_text_input( array(
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Name', 'wp-ever-accounting' ),
 						'name'          => 'name',
 						'placeholder'   => __( 'Enter name', 'wp-ever-accounting' ),
 						'value'         => $item->get_name(),
 						'required'      => true,
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Sku', 'wp-ever-accounting' ),
 						'name'          => 'sku',
 						'placeholder'   => __( 'Enter Sku', 'wp-ever-accounting' ),
 						'value'         => $item->get_sku(),
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
 						'name'          => 'purchase_price',
 						'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
 						'value'         => $item->get_purchase_price(),
 						'required'      => true,
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Sale price', 'wp-ever-accounting' ),
 						'name'          => 'sale_price',
 						'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
 						'value'         => $item->get_sale_price(),
 						'required'      => true,
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Quantity', 'wp-ever-accounting' ),
 						'name'          => 'quantity',
 						'placeholder'   => __( 'Enter Quantity', 'wp-ever-accounting' ),
 						'value'         => $item->get_quantity(),
-				) );
-				eaccounting_category_dropdown( array(
+					)
+				);
+				eaccounting_category_dropdown(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Category', 'wp-ever-accounting' ),
 						'name'          => 'category_id',
 						'value'         => $item->get_category_id(),
 						'type'          => 'item',
 						'creatable'     => true,
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Tax id', 'wp-ever-accounting' ),
 						'name'          => 'tax_id',
 						'placeholder'   => __( 'Enter Tax Id', 'wp-ever-accounting' ),
 						'value'         => $item->get_tax_id(),
-				) );
-				eaccounting_textarea( array(
+					)
+				);
+				eaccounting_textarea(
+					array(
 						'wrapper_class' => 'ea-col-12',
 						'label'         => __( 'Description', 'wp-ever-accounting' ),
 						'name'          => 'description',
 						'placeholder'   => __( 'Enter Description', 'wp-ever-accounting' ),
 						'value'         => $item->get_description(),
-				) );
-				eaccounting_hidden_input( array(
+					)
+				);
+				eaccounting_hidden_input(
+					array(
 						'name'  => 'id',
-						'value' => $item->get_id()
-				) );
-				eaccounting_hidden_input( array(
+						'value' => $item->get_id(),
+					)
+				);
+				eaccounting_hidden_input(
+					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_item'
-				) );
+						'value' => 'eaccounting_edit_item',
+					)
+				);
 
 				?>
 			</div>
