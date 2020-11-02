@@ -420,6 +420,7 @@ class Invoice extends Base_Object {
 	| Setters
 	|--------------------------------------------------------------------------
 	*/
+
 	/**
 	 *  Set invoice_number
 	 *
@@ -429,7 +430,7 @@ class Invoice extends Base_Object {
 	 *
 	 */
 	public function set_invoice_number( $invoice_number ) {
-		$this->set_prop( 'invoice_number', absint( $invoice_number ) );
+		$this->set_prop( 'invoice_number', eaccounting_clean( $invoice_number ) );
 	}
 
 	/**
@@ -441,7 +442,7 @@ class Invoice extends Base_Object {
 	 *
 	 */
 	public function set_order_number( $order_number ) {
-		$this->set_prop( 'order_number', absint( $order_number ) );
+		$this->set_prop( 'order_number', eaccounting_clean( $order_number ) );
 	}
 
 	/**
@@ -525,7 +526,7 @@ class Invoice extends Base_Object {
 	 *
 	 */
 	public function set_currency_rate( $currency_rate ) {
-		$this->set_prop( 'currency_rate', eaccounting_clean( $currency_rate ) );
+		$this->set_prop( 'currency_rate', (double) $currency_rate  );
 	}
 
 	/**
@@ -573,7 +574,7 @@ class Invoice extends Base_Object {
 	 *
 	 */
 	public function set_contact_tax_number( $contact_tax_number ) {
-		$this->set_prop( 'contact_tax_number', absint( $contact_tax_number ) );
+		$this->set_prop( 'contact_tax_number', eaccounting_clean( $contact_tax_number ) );
 	}
 
 
