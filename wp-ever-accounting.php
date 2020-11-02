@@ -15,6 +15,8 @@
  * @package wp-ever-accounting
  */
 
+use EverAccounting\Query;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -359,7 +361,8 @@ final class EverAccounting {
 	 * @return \EverAccounting\Query
 	 */
 	public function query() {
-		return \EverAccounting\Query::init();
+		$query = new Query();
+		return $query::init();
 	}
 
 	/**

@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit();
 
 require_once dirname( __FILE__ ) . '/currencies/currencies.php';
 require_once dirname( __FILE__ ) . '/categories/categories.php';
+require_once dirname( __FILE__ ) . '/taxes/taxes.php';
 
 /**
  * render banking page.

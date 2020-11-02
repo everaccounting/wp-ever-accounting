@@ -2,7 +2,7 @@
 /**
  * Accounts Admin List Table
  *
- * @since       1.0.2
+ * @since       1.1.0
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
  */
@@ -10,31 +10,25 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Account;
-use EverAccounting\Query_Account;
+use EverAccounting\Tax;
 
 defined( 'ABSPATH' ) || exit();
 
-/**
- * Class List_Table_Accounts
- * @since 1.0.2
- * @package EverAccounting\Admin\ListTables
- */
-class List_Table_Accounts extends List_Table {
+class List_Table_Taxes extends List_Table {
 	/**
 	 * Type of the table should be use plural name.
 	 *
 	 * This will be used for filtering methods.
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @var string
 	 */
-	protected $list_table_type = 'accounts';
+	protected $list_table_type = 'taxes';
 
 	/**
 	 * Default number of items to show per page
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @var string
 	 */
 	public $per_page = 20;
@@ -42,7 +36,7 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Total number of item found
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @var int
 	 */
 	public $total_count;
@@ -50,7 +44,7 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Number of active items found
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @var string
 	 */
 	public $active_count;
@@ -58,7 +52,7 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 *  Number of inactive items found
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @var string
 	 */
 	public $inactive_count;
@@ -66,11 +60,11 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Get things started
 	 *
+	 * @since  1.1.0
+	 *
+	 * @see    WP_List_Table::__construct()
+	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
-	 * @since  1.0.2
-	 *
-	 * @see WP_List_Table::__construct()
 	 *
 	 */
 	public function __construct( $args = array() ) {
@@ -88,7 +82,7 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Check if there is contents in the database.
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return bool
 	 */
 	public function is_empty() {
@@ -98,7 +92,7 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Render blank state.
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return void
 	 */
 	protected function render_blank_state() {
@@ -108,41 +102,39 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return array
 	 */
 	public function define_columns() {
 		return array(
-			'cb'        => '<input type="checkbox" />',
-			'name'      => __( 'Name', 'wp-ever-accounting' ),
-			'balance'   => __( 'Balance', 'wp-ever-accounting' ),
-			'number'    => __( 'Number', 'wp-ever-accounting' ),
-			'bank_name' => __( 'Bank Name', 'wp-ever-accounting' ),
-			'enabled'   => __( 'Enabled', 'wp-ever-accounting' ),
-			'actions'   => __( 'Actions', 'wp-ever-accounting' ),
+			'cb'      => '<input type="checkbox" />',
+			'name'    => __( 'Name', 'wp-ever-accounting' ),
+			'rate'    => __( 'Rate(%)', 'wp-ever-accounting' ),
+			'type'    => __( 'Type', 'wp-ever-accounting' ),
+			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
+			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
 	/**
 	 * Define sortable columns.
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return array
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'name'      => array( 'name', false ),
-			'number'    => array( 'number', false ),
-			'bank_name' => array( 'bank_name', false ),
-			'balance'   => array( 'balance', false ),
-			'enabled'   => array( 'enabled', false ),
+			'name'    => array( 'name', false ),
+			'rate'    => array( 'rate', false ),
+			'type'    => array( 'type', false ),
+			'enabled' => array( 'enabled', false ),
 		);
 	}
 
 	/**
 	 * Define bulk actions
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return array
 	 */
 	public function define_bulk_actions() {
@@ -155,7 +147,7 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Define primary column.
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return string
 	 */
 	public function get_primary_column() {
@@ -166,127 +158,112 @@ class List_Table_Accounts extends List_Table {
 	 * Renders the checkbox column in the accounts list table.
 	 *
 	 *
-	 * @param Account $account The current account object.
-	 *
 	 * @since  1.0.2
+	 *
+	 * @param Tax $tax The current account object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
-	function column_cb( $account ) {
-		return sprintf( '<input type="checkbox" name="account_id[]" value="%d"/>', $account->get_id() );
+	function column_cb( $tax ) {
+		return sprintf( '<input type="checkbox" name="tax_id[]" value="%d"/>', $tax->get_id() );
 	}
 
 	/**
-	 * Renders the "Name" column in the accounts list table.
+	 * Renders the "Name" column in the list table.
 	 *
 	 *
-	 * @param Account $account The current account object.
+	 * @since  1.1.0
 	 *
-	 * @since  1.0.2
+	 * @param Tax $tax The current object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
-	function column_name( $account ) {
-		$name = $account->get_name();
+	function column_name( $tax ) {
+		$name = $tax->get_name();
 
 		$value = sprintf(
 			'<a href="%1$s">%2$s</a>',
 			esc_url(
 				eaccounting_admin_url(
 					array(
-						'action'     => 'edit',
-						'account_id' => $account->get_id(),
+						'action' => 'edit',
+						'tab'    => 'taxes',
+						'tax_id' => $tax->get_id(),
 					)
 				)
 			),
 			$name
 		);
 
-		return apply_filters( 'eaccounting_account_table_name', $value, $account );
+		return apply_filters( 'eaccounting_tax_table_name', $value, $tax );
 	}
 
 	/**
-	 * Renders the "Balance" column in the accounts list table.
+	 * @since 1.1.0
 	 *
-	 * @param Account $account The current account object.
+	 * @param Tax $tax
 	 *
-	 * @since  1.0.2
-	 *
-	 * @return string Data shown in the Balance column.
+	 * @return mixed|void
 	 */
-	function column_balance( $account ) {
-		return apply_filters( 'eaccounting_account_table_balance', $account->get_balance( true ), $account );
+	function column_rate( $tax ) {
+		return apply_filters( 'eaccounting_tax_table_rate', eaccounting_round_number( $tax->get_rate(), 2 ), $tax );
 	}
 
 	/**
-	 * Renders the "Number" column in the accounts list table.
+	 * @since 1.1.0
 	 *
-	 * @param Account $account The current account object.
-	 *
-	 * @since  1.0.2
-	 *
-	 * @return string Data shown in the Number column.
+	 * @param Tax $tax
 	 */
-	function column_number( $account ) {
-		return apply_filters( 'eaccounting_account_table_number', $account->get_number(), $account );
-	}
+	function column_type( $tax ) {
+		$tax_types = eaccounting_get_tax_types();
+		$name      = array_key_exists( $tax->get_type(), $tax_types ) ? $tax_types[ $tax->get_type() ] : '&mdash';
 
-	/**
-	 * Renders the "Bank Name" column in the accounts list table.
-	 *
-	 * @param Account $account The current account object.
-	 *
-	 * @since  1.0.2
-	 *
-	 * @return string Data shown in the Bank Name column.
-	 */
-	function column_bank_name( $account ) {
-		return apply_filters( 'eaccounting_account_table_bank_name', $account->get_bank_name(), $account );
+		return apply_filters( 'eaccounting_tax_table_type', esc_html( $name ), $tax );
 	}
 
 	/**
 	 * Renders the "enabled" column in the list table.
 	 *
-	 * @param Account $account The current object.
+	 * @since  1.1.0
 	 *
-	 * @since  1.0.2
+	 * @param Tax $tax The current object.
 	 *
 	 * @return string Data shown in the "enabled" column.
 	 */
-	function column_enabled( $account ) {
+	function column_enabled( $tax ) {
 		ob_start();
 		eaccounting_toggle(
 			array(
 				'name'  => 'enabled',
-				'id'    => 'enabled_' . $account->get_id(),
-				'value' => $account->get_enabled( 'edit' ),
+				'id'    => 'enabled_' . $tax->get_id(),
+				'value' => $tax->get_enabled( 'edit' ),
 				'naked' => true,
 				'class' => 'ea_item_status_update',
 				'attr'  => array(
-					'data-object_id'   => $account->get_id(),
+					'data-object_id'   => $tax->get_id(),
 					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-					'data-object_type' => 'account',
+					'data-object_type' => 'tax',
 				),
 			)
 		);
 		$output = ob_get_contents();
 		ob_get_clean();
 
-		return apply_filters( 'eaccounting_accounts_table_enabled', $output, $account );
+		return apply_filters( 'eaccounting_tax_table_enabled', $output, $tax );
 	}
 
 	/**
-	 * @param $account
+	 * @since 1.1.0
 	 *
-	 * @since 1.0.2
+	 * @param $tax
 	 *
 	 * @return string
 	 */
-	function column_actions( $account ) {
+	function column_actions( $tax ) {
 		$base_uri              = eaccounting_admin_url(
 			array(
-				'account_id' => $account->get_id(),
-				'tab'        => 'accounts',
+				'tax_id' => $tax->get_id(),
+				'tab'    => 'taxes',
 			)
 		);
 		$row_actions           = array();
@@ -297,10 +274,10 @@ class List_Table_Accounts extends List_Table {
 		$row_actions['delete'] = array(
 			'label'    => __( 'Delete', 'wp-ever-accounting' ),
 			'base_uri' => $base_uri,
-			'nonce'    => 'account-nonce',
+			'nonce'    => 'tax-nonce',
 		);
 
-		$row_actions = apply_filters( 'eaccounting_account_row_actions', $row_actions, $account );
+		$row_actions = apply_filters( 'eaccounting_tax_row_actions', $row_actions, $tax );
 
 		return $this->row_actions( $row_actions );
 	}
@@ -309,17 +286,17 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @since  1.0.2
+	 * @since  1.1.0
 	 * @return void
 	 */
 	function no_items() {
-		_e( 'No accounts found.', 'wp-ever-accounting' );
+		_e( 'No taxes found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Process the bulk actions
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return void
 	 */
 	public function process_bulk_action() {
@@ -327,11 +304,11 @@ class List_Table_Accounts extends List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-accounts' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'account-nonce' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-taxes' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'tax-nonce' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['account_id'] ) ? $_GET['account_id'] : false;
+		$ids = isset( $_GET['tax_id'] ) ? $_GET['tax_id'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -347,7 +324,7 @@ class List_Table_Accounts extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_account(
+					eaccounting_insert_tax(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -355,7 +332,7 @@ class List_Table_Accounts extends List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_account(
+					eaccounting_insert_tax(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -363,10 +340,10 @@ class List_Table_Accounts extends List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_account( $id );
+					eaccounting_delete_tax( $id );
 					break;
 				default:
-					do_action( 'eaccounting_accounts_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'eaccounting_tax_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -374,7 +351,7 @@ class List_Table_Accounts extends List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'account_id',
+						'tax_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
@@ -392,18 +369,18 @@ class List_Table_Accounts extends List_Table {
 	 * Retrieve the view types
 	 *
 	 * @access public
-	 * @since 1.0.2
+	 * @since  1.1.0
 	 * @return array $views All the views available
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url();
+		$base           = eaccounting_admin_url( array( 'tab' => 'taxes' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current !== '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
 			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
 			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);
@@ -437,66 +414,47 @@ class List_Table_Accounts extends List_Table {
 		$args = wp_parse_args(
 			$this->query_args,
 			array(
-				'number'   => $per_page,
 				'offset'   => $per_page * ( $page - 1 ),
 				'per_page' => $per_page,
 				'page'     => $page,
-				'status'   => $status,
+				'status'   => 'active' === $status && ! is_numeric( $status ) ? 1 : 0,
 				'search'   => $search,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
 
-		$args        = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
-		$this->items = Query_Account::init()
-									->where( $args )
-									->withBalance()
-									->get( OBJECT, 'eaccounting_get_account' );
+		$query = eaccounting()
+			->query()
+			->from( 'ea_taxes' )
+			->search( $search, array( 'name' ) );
 
-		$this->active_count = Query_Account::init()->where(
-			array_merge(
-				$this->query_args,
+		$this->items = $query
+			->copy()
+			->where(
 				array(
-					'status' => 'active',
-					'search' => $search,
+					'enabled' => $args['status'],
+				)
+			)->order_by( $args['orderby'], $args['order'] )
+			->page( $args['page'], $args['per_page'] )
+			->get( OBJECT, 'eaccounting_get_tax' );
+
+		$this->active_count   = $query
+			->copy()
+			->where(
+				array(
+					'enabled' => 1,
 				)
 			)
-		)->count();
-
-		$this->inactive_count = Query_Account::init()->where(
-			array_merge(
-				$this->query_args,
+			->count();
+		$this->inactive_count = $query
+			->copy()
+			->where(
 				array(
-					'status' => 'inactive',
-					'search' => $search,
+					'enabled' => '0',
 				)
 			)
-		)->count();
-
-		$this->total_count = $this->active_count + $this->inactive_count;
-
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
-
-		switch ( $status ) {
-			case 'active':
-				$total_items = $this->active_count;
-				break;
-			case 'inactive':
-				$total_items = $this->inactive_count;
-				break;
-			case 'any':
-			default:
-				$total_items = $this->total_count;
-				break;
-		}
-
-		$this->set_pagination_args(
-			array(
-				'total_items' => $total_items,
-				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page ),
-			)
-		);
+			->count();
+		$this->total_count    = $this->active_count + $this->inactive_count;
 	}
 }

@@ -143,7 +143,7 @@ function eaccounting_delete_account( $account_id ) {
  */
 function eaccounting_delete_default_account( $id ) {
 	$default_account = eaccounting()->settings->get( 'default_account' );
-	if ( $default_account == $id ) {
+	if ( intval( $default_account ) === intval( $id ) ) {
 		eaccounting()->settings->set( array( array( 'default_account' => '' ) ), true );
 	}
 

@@ -37,6 +37,8 @@ function eaccounting_get_item( $item ) {
 			$_item = new Item( absint( $item ) );
 		}
 
+
+
 		if ( ! $_item->exists() ) {
 			throw new Exception( 'invalid_id', __( 'Invalid item.', 'wp-ever-accounting' ) );
 		}
