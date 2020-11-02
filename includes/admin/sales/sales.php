@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit();
 
 require_once dirname( __FILE__ ) . '/revenues/revenues.php';
 require_once dirname( __FILE__ ) . '/customers/customers.php';
+require_once dirname( __FILE__ ) . '/invoices/invoices.php';
 
 /**
  * render sales page.
@@ -47,8 +48,8 @@ function eaccounting_admin_sales_page() {
 /**
  * Retrieve sales tabs
  *
- * @since 1.0.2
  * @return array $tabs
+ * @since 1.0.2
  */
 function eaccounting_get_sales_tabs() {
 	$tabs              = array();

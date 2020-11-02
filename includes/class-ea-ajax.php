@@ -120,6 +120,7 @@ class Ajax {
 			'edit_revenue',
 			'edit_transfer',
 			'edit_item',
+			'edit_invoice',
 			'upload_files',
 		);
 
@@ -611,6 +612,45 @@ class Ajax {
 		$redirect = '';
 		if ( ! $update ) {
 			$message  = __( 'Item created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $created->get_data(),
+			)
+		);
+
+		wp_die();
+	}
+
+	/**
+	 * Handle ajax action of creating/updating invoice.
+	 *
+	 * @return void
+	 * @since 1.1.0
+	 */
+	public static function edit_invoice() {
+		self::verify_nonce( 'ea_edit_invoice' );
+		self::check_permission( 'manage_eaccounting' );
+		$posted = eaccounting_clean( $_REQUEST );
+
+		$created = eaccounting_insert_invoice( $posted );
+		if ( is_wp_error( $created ) || ! $created->exists() ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
+			);
+		}
+
+		$message  = __( 'Invoice updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Invoice created successfully!', 'wp-ever-accounting' );
 			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
