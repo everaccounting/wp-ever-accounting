@@ -302,6 +302,8 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-invoice-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-invoice-item-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-invoice-history-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 

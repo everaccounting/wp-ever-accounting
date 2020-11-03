@@ -14,7 +14,7 @@ use EverAccounting\Abstracts\Base_Object;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class Invoice history
+ * Class Invoice History
  *
  * @since 1.1.0
  */
