@@ -33,7 +33,7 @@ class Bill extends Base_Object {
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $table = 'ea_bill';
+	public $table = 'ea_bills';
 
 	/**
 	 * Item Data array.
@@ -42,10 +42,10 @@ class Bill extends Base_Object {
 	 * @var array
 	 */
 	protected $data = array(
-		'bill_number'     => '',
+		'bill_number'        => '',
 		'order_number'       => '',
 		'status'             => '',
-		'bill_at'        => null,
+		'bill_at'            => null,
 		'due_at'             => null,
 		'subtotal'           => 0.0000,
 		'discount'           => 0.0000,
@@ -55,6 +55,7 @@ class Bill extends Base_Object {
 		'currency_code'      => 'USD',
 		'currency_rate'      => 1,
 		'category_id'        => '',
+		'contact_id'         => '',
 		'contact_name'       => '',
 		'contact_email'      => null,
 		'contact_tax_number' => null,
@@ -169,7 +170,7 @@ class Bill extends Base_Object {
 	}
 
 	/**
-	 * Get bill total
+	 * Get bill subtotal
 	 *
 	 * @param string $context
 	 *
@@ -270,6 +271,19 @@ class Bill extends Base_Object {
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
+	}
+
+	/**
+	 * Get bill contact_id
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_contact_id( $context = 'edit' ) {
+		return $this->get_prop( 'contact_id', $context );
 	}
 
 	/**
@@ -428,8 +442,8 @@ class Bill extends Base_Object {
 	 * @since 1.1.0
 	 *
 	 */
-	public function set_invoice_number( $invoice_number ) {
-		$this->set_prop( 'invoice_number', absint( $invoice_number ) );
+	public function set_bill_number( $bill_number ) {
+		$this->set_prop( 'bill_number', eaccounting_clean( $bill_number ) );
 	}
 
 	/**
@@ -441,19 +455,31 @@ class Bill extends Base_Object {
 	 *
 	 */
 	public function set_order_number( $order_number ) {
-		$this->set_prop( 'order_number', absint( $order_number ) );
+		$this->set_prop( 'order_number', eaccounting_clean( $order_number ) );
 	}
 
 	/**
-	 *  Set invoiced_at
+	 *  Set status
 	 *
-	 * @param $invoiced_at
+	 * @param $status
 	 *
 	 * @since 1.1.0
 	 *
 	 */
-	public function set_invoiced_at( $invoiced_at ) {
-		$this->set_date_prop( 'invoiced_at', $invoiced_at );
+	public function set_status( $status ) {
+		$this->set_prop( 'status', eaccounting_clean( $status ) );
+	}
+
+	/**
+	 *  Set bill_at
+	 *
+	 * @param $bill_at
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_bill_at( $bill_at ) {
+		$this->set_date_prop( 'bill_at', $bill_at );
 	}
 
 	/**
@@ -525,7 +551,7 @@ class Bill extends Base_Object {
 	 *
 	 */
 	public function set_currency_rate( $currency_rate ) {
-		$this->set_prop( 'currency_rate', eaccounting_clean( $currency_rate ) );
+		$this->set_prop( 'currency_rate', (double) $currency_rate );
 	}
 
 	/**
@@ -539,6 +565,19 @@ class Bill extends Base_Object {
 	public function set_category_id( $category_id ) {
 		$this->set_prop( 'category_id', eaccounting_clean( $category_id ) );
 	}
+
+	/**
+	 *  Set contact_id
+	 *
+	 * @param $contact_id
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_contact_id( $contact_id ) {
+		$this->set_prop( 'contact_id', eaccounting_clean( $contact_id ) );
+	}
+
 
 	/**
 	 *  Set contact_name
@@ -573,7 +612,7 @@ class Bill extends Base_Object {
 	 *
 	 */
 	public function set_contact_tax_number( $contact_tax_number ) {
-		$this->set_prop( 'contact_tax_number', absint( $contact_tax_number ) );
+		$this->set_prop( 'contact_tax_number', eaccounting_clean( $contact_tax_number ) );
 	}
 
 
@@ -651,6 +690,4 @@ class Bill extends Base_Object {
 	public function set_parent_id( $parent_id ) {
 		$this->set_prop( 'parent_id', absint( $parent_id ) );
 	}
-
-
 }

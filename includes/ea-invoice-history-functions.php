@@ -10,7 +10,6 @@
  */
 
 use EverAccounting\Exception;
-use EverAccounting\Invoice;
 use EverAccounting\Invoice_History;
 
 defined( 'ABSPATH' ) || exit;
@@ -33,14 +32,14 @@ function eaccounting_get_invoice_history( $invoice_history ) {
 		if ( $invoice_history instanceof Invoice_History ) {
 			$_invoice_history = $invoice_history;
 		} elseif ( is_object( $invoice_history ) && ! empty( $invoice_history->id ) ) {
-			$_invoice_history = new Invoice( null );
+			$_invoice_history = new Invoice_History( null );
 			$_invoice_history->populate( $invoice_history );
 		} else {
 			$_invoice_history = new Invoice_History( absint( $invoice_history ) );
 		}
 
 		if ( ! $_invoice_history->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid invoice.', 'wp-ever-accounting' ) );
+			throw new Exception( 'invalid_id', __( 'Invalid invoice history.', 'wp-ever-accounting' ) );
 		}
 
 		return $_invoice_history;

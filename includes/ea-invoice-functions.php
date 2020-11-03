@@ -65,7 +65,6 @@ function eaccounting_insert_invoice( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		error_log( print_r( $args, true ) );
 		$invoice = new invoice( $args['id'] );
 		$invoice->set_props( $args );
 
@@ -81,9 +80,9 @@ function eaccounting_insert_invoice( $args ) {
 			throw new Exception( 'empty_props', __( 'Invoice number is required', 'wp-ever-accounting' ) );
 		}
 
-//		if ( empty( $invoice->get_status() ) ) {
-//			throw new Exception( 'empty_props', __( 'Status is required', 'wp-ever-accounting' ) );
-//		}
+		if ( empty( $invoice->get_status() ) ) {
+			throw new Exception( 'empty_props', __( 'Status is required', 'wp-ever-accounting' ) );
+		}
 
 		if ( empty( $invoice->get_invoiced_at( 'edit' ) ) ) {
 			throw new Exception( 'empty_props', __( 'Invoiced at is required', 'wp-ever-accounting' ) );

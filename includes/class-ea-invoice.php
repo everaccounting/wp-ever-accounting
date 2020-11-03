@@ -55,6 +55,7 @@ class Invoice extends Base_Object {
 		'currency_code'      => 'USD',
 		'currency_rate'      => 1,
 		'category_id'        => '',
+		'contact_id'         => '',
 		'contact_name'       => '',
 		'contact_email'      => null,
 		'contact_tax_number' => null,
@@ -273,6 +274,19 @@ class Invoice extends Base_Object {
 	}
 
 	/**
+	 * Get invoice contact_id
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
+	 * @since 1.1.0
+	 *
+	 */
+	public function get_contact_id( $context = 'edit' ) {
+		return $this->get_prop( 'contact_id', $context );
+	}
+
+	/**
 	 * Get invoice contact_name
 	 *
 	 * @param string $context
@@ -434,6 +448,18 @@ class Invoice extends Base_Object {
 	}
 
 	/**
+	 *  Set status
+	 *
+	 * @param $status
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_status( $status ) {
+		$this->set_prop( 'status', eaccounting_clean( $status ) );
+	}
+
+	/**
 	 *  Set order_number
 	 *
 	 * @param $order_number
@@ -526,7 +552,7 @@ class Invoice extends Base_Object {
 	 *
 	 */
 	public function set_currency_rate( $currency_rate ) {
-		$this->set_prop( 'currency_rate', (double) $currency_rate  );
+		$this->set_prop( 'currency_rate', (double) $currency_rate );
 	}
 
 	/**
@@ -539,6 +565,18 @@ class Invoice extends Base_Object {
 	 */
 	public function set_category_id( $category_id ) {
 		$this->set_prop( 'category_id', eaccounting_clean( $category_id ) );
+	}
+
+	/**
+	 *  Set contact_id
+	 *
+	 * @param $contact_id
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function set_contact_id( $contact_id ) {
+		$this->set_prop( 'contact_id', eaccounting_clean( $contact_id ) );
 	}
 
 	/**

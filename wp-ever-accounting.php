@@ -279,6 +279,9 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-invoice.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-invoice-item.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-invoice-history.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-bill.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-bill-item.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-bill-history.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-tax.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
@@ -304,6 +307,8 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-invoice-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-invoice-item-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-invoice-history-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-bill-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-bill-item-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 
