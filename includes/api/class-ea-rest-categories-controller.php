@@ -39,10 +39,10 @@ class Categories_Controller extends Controller {
 					'args'     => $this->get_collection_params(),
 				),
 				array(
-					'methods'             => \WP_REST_Server::CREATABLE,
-					'callback'            => array( $this, 'create_item' ),
+					'methods'  => \WP_REST_Server::CREATABLE,
+					'callback' => array( $this, 'create_item' ),
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
+					'args'     => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -106,14 +106,14 @@ class Categories_Controller extends Controller {
 
 	/**
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since       1.0.2
+	 *
 	 */
 	public function get_items( $request ) {
-		$args         = array(
+		$args  = array(
 			'include'  => $request['include'],
 			'exclude'  => $request['exclude'],
 			'search'   => $request['search'],
@@ -124,9 +124,53 @@ class Categories_Controller extends Controller {
 			'page'     => $request['page'],
 			'offset'   => $request['offset'],
 		);
-		$query        = Query_Category::init();
-		$query_result = $query->where( $args )->get();
-		$total_items  = $query->where( $args )->count();
+		$query = Query_Category::init();
+
+		if ( ! empty( $args['include'] ) ) {
+			$query->whereIn( 'id', $args['include'] );
+		}
+		if ( ! empty( $args['exclude'] ) ) {
+			$query->whereNotIn( 'id', $args['exclude'] );
+		}
+		if ( ! empty( $args['search'] ) ) {
+			$query->search( $args['search'], array( 'id', 'name', 'type', 'color' ) );
+		}
+
+		if ( ! empty( $args['type'] ) ) {
+			foreach ( eaccounting_get_category_types() as $key => $value ) {
+				if ( $args['type'] == $key ) {
+					$query->where( 'type', $args['type'] );
+				}
+			}
+		}
+
+		if ( ! empty( $args['orderby'] ) && ! empty( $args['order'] ) ) {
+			$query->order_by( $args['orderby'], $args['order'] );
+		} elseif ( ! empty( $args['orderby'] ) && empty( $args['order'] ) ) {
+			$query->order_by( $args['orderby'], 'asc' );
+		} elseif ( empty( $args['orderby'] ) && ! empty( $args['order'] ) ) {
+			$query->order_by( 'id', $args['order'] );
+		} else {
+			$query->order_by( 'id', 'asc' );
+		}
+
+		if ( ! empty( $args['per_page'] ) && ! empty( $args['page'] ) ) {
+			$query->page( $args['page'], $args['per_page'] );
+		} elseif ( empty( $args['per_page'] ) && ! empty( $args['page'] ) ) {
+			$query->page( $args['page'], 20 );
+		} elseif ( ! empty( $args['per_page'] ) && empty( $args['page'] ) ) {
+			$query->page( 1, $args['per_page'] );
+		} else {
+			$query->page( 1, 20 );
+		}
+
+		if ( ! empty( $args['offset'] ) ) {
+			$query->offset( $args['offset'] );
+		}
+
+
+		$query_result = $query->get();
+		$total_items  = $query->count();
 		$response     = array();
 
 		foreach ( $query_result as $item ) {
@@ -149,11 +193,11 @@ class Categories_Controller extends Controller {
 
 	/***
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * @since       1.0.2
+	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -179,11 +223,11 @@ class Categories_Controller extends Controller {
 
 	/**
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since       1.0.2
+	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -200,11 +244,11 @@ class Categories_Controller extends Controller {
 
 	/**
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * @since       1.0.2
+	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -235,11 +279,11 @@ class Categories_Controller extends Controller {
 
 	/**
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response|bool
+	 * @since       1.0.2
+	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -269,11 +313,11 @@ class Categories_Controller extends Controller {
 
 	/**
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param $request
 	 *
 	 * @return mixed|\WP_REST_Response
+	 * @since       1.0.2
+	 *
 	 */
 	public function handle_bulk_actions( $request ) {
 		$actions = [
@@ -300,11 +344,11 @@ class Categories_Controller extends Controller {
 
 
 	/**
-	 * @since       1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return object|\stdClass|\WP_Error
+	 * @since       1.0.2
+	 *
 	 */
 	public function prepare_item_for_database( $request ) {
 		$prepared_item = new \stdClass();
@@ -329,21 +373,21 @@ class Categories_Controller extends Controller {
 
 	/**
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
-	 * @param mixed            $item
+	 * @param mixed $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since       1.0.2
+	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
-			'id'         => intval( $item->id ),
-			'name'       => $item->name,
-			'type'       => $item->type,
-			'color'      => sanitize_hex_color( $item->color ),
-			'created_at' => $this->prepare_date_response( $item->created_at )
+			'id'           => intval( $item->id ),
+			'name'         => $item->name,
+			'type'         => $item->type,
+			'color'        => sanitize_hex_color( $item->color ),
+			'date_created' => $this->prepare_date_response( $item->date_created )
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -359,11 +403,11 @@ class Categories_Controller extends Controller {
 
 	/**
 	 *
-	 * @since       1.0.2
-	 *
 	 * @param $item
 	 *
 	 * @return array
+	 * @since       1.0.2
+	 *
 	 */
 	protected function prepare_links( $item ) {
 		$base = sprintf( '/%s/%s/', $this->namespace, $this->rest_base );
@@ -385,9 +429,9 @@ class Categories_Controller extends Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
+	 * @return array Item schema data.
 	 * @since       1.0.2
 	 *
-	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -431,6 +475,14 @@ class Categories_Controller extends Controller {
 						'sanitize_callback' => 'sanitize_hex_color',
 					),
 				),
+				'enabled'      => array(
+					'description' => __( 'Status of the category.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
 				'date_created' => array(
 					'description' => __( 'Created date of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -449,9 +501,9 @@ class Categories_Controller extends Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
+	 * @return array Collection parameters.
 	 * @since       1.0.2
 	 *
-	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
