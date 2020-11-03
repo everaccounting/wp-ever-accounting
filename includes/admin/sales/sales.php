@@ -8,6 +8,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
+require_once dirname( __FILE__ ) . '/invoices/invoices.php';
 require_once dirname( __FILE__ ) . '/revenues/revenues.php';
 require_once dirname( __FILE__ ) . '/customers/customers.php';
 

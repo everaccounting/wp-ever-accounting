@@ -1,14 +1,5 @@
 module.exports = {
-	presets: [
-		[
-			'@wordpress/babel-preset-default',
-			{
-				targets: {
-					node: 'current',
-				},
-			},
-		],
-	],
+	presets: ['@wordpress/babel-preset-default'],
 	plugins: [ '@babel/plugin-proposal-class-properties' ],
 	env: {
 		production: {

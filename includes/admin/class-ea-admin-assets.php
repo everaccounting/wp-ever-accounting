@@ -45,6 +45,11 @@ class Admin_Assets {
 			wp_enqueue_style( 'ea-admin-styles' );
 			wp_enqueue_style( 'jquery-ui-style' );
 		}
+
+		//React Styles
+		wp_register_style( 'ea-components', self::get_asset_dist_url( 'components', 'css' ), array( 'wp-components' ), $version );
+		wp_register_style( 'ea-app', self::get_asset_dist_url( 'app', 'css' ), array( 'ea-components', 'wp-components' ), $version );
+		wp_enqueue_style( 'ea-app' );
 	}
 
 
@@ -233,6 +238,25 @@ class Admin_Assets {
 				wp_enqueue_script( 'jquery-chartjs' );
 			}
 		}
+
+		//React scripts
+		self::register_react_script( 'ea-data', self::get_asset_dist_url( 'data' ) );
+		self::register_react_script( 'ea-components', self::get_asset_dist_url( 'components' ) );
+		self::register_react_script( 'ea-app', self::get_asset_dist_url( 'app' ), array( 'ea-data', 'ea-components' ) );
+
+		wp_localize_script(
+			'ea-data',
+			'eaccountingi10n',
+			array(
+				'site_url'   => site_url(),
+				'admin_url'  => admin_url(),
+				'asset_url'  => eaccounting()->plugin_url( '/assets' ),
+				'plugin_url' => eaccounting()->plugin_url(),
+			)
+		);
+		wp_enqueue_media();
+		wp_enqueue_script( 'ea-app' );
+
 	}
 
 

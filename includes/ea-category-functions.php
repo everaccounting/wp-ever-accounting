@@ -4,7 +4,7 @@
  *
  * All category related function of the plugin.
  *
- * @since 1.0.2
+ * @since   1.0.2
  * @package EverAccounting
  */
 
@@ -32,9 +32,9 @@ function eaccounting_get_category_types() {
 /**
  * Get category.
  *
- * @param $category
- *
  * @since 1.0.2
+ *
+ * @param $category
  *
  * @return null|Category
  */
@@ -65,14 +65,14 @@ function eaccounting_get_category( $category ) {
 /**
  * Insert a category.
  *
- * @param       $args {
+ * @since 1.0.2
  *
- * @type string $name Unique name of the category.
- * @type string $type Category type.
+ * @param       $args  {
+ *
+ * @type string $name  Unique name of the category.
+ * @type string $type  Category type.
  * @type string $color Color of the category
  * }
- *
- * @since 1.0.2
  *
  * @return WP_Error|Mixed
  */
@@ -122,9 +122,9 @@ function eaccounting_insert_category( $args ) {
 /**
  * Delete a category.
  *
- * @param $category_id
- *
  * @since 1.0.2
+ *
+ * @param $category_id
  *
  * @return bool
  */
@@ -142,6 +142,10 @@ function eaccounting_delete_category( $category_id ) {
 	} catch ( Exception $exception ) {
 		return false;
 	}
+}
+
+function eaccounting_get_category_search_columns(){
+	return apply_filters('eaccounting_category_search_columns', ['']);
 }
 
 /**
