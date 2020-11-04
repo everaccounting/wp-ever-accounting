@@ -6,6 +6,7 @@
  * @since       1.0.2
  *
  */
+
 namespace EverAccounting;
 
 defined( 'ABSPATH' ) || die();
@@ -53,14 +54,14 @@ class API {
 		require_once( dirname( __FILE__ ) . '/api/class-ea-rest-controller.php' );
 
 		$rest_handlers = array(
-			//          dirname( __FILE__ ) . '/api/class-ea-rest-contacts-controller.php'     => 'EverAccounting\API\Contacts_Controller',
-							dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php'   => 'EverAccounting\API\Categories_Controller',
-		//          dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php'   => 'EverAccounting\API\Currencies_Controller',
-		//          dirname( __FILE__ ) . '/api/class-ea-rest-accounts-controller.php'     => 'EverAccounting\API\Accounts_Controller',
-		//          dirname( __FILE__ ) . '/api/class-ea-rest-transfers-controller.php'    => 'EverAccounting\API\Transfers_Controller',
-		//          dirname( __FILE__ ) . '/api/class-ea-rest-transactions-controller.php' => 'EverAccounting\API\Transactions_Controller',
-		//          dirname( __FILE__ ) . '/api/class-ea-rest-reports-controller.php'      => 'EverAccounting\API\Reports_Controller',
-		//          dirname( __FILE__ ) . '/api/class-ea-rest-settings-controller.php'     => 'EverAccounting\API\Settings_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-contacts-controller.php'   => 'EverAccounting\API\Contacts_Controller',
+			dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php' => 'EverAccounting\API\Categories_Controller',
+			//          dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php'   => 'EverAccounting\API\Currencies_Controller',
+			//          dirname( __FILE__ ) . '/api/class-ea-rest-accounts-controller.php'     => 'EverAccounting\API\Accounts_Controller',
+			//          dirname( __FILE__ ) . '/api/class-ea-rest-transfers-controller.php'    => 'EverAccounting\API\Transfers_Controller',
+			//          dirname( __FILE__ ) . '/api/class-ea-rest-transactions-controller.php' => 'EverAccounting\API\Transactions_Controller',
+			//          dirname( __FILE__ ) . '/api/class-ea-rest-reports-controller.php'      => 'EverAccounting\API\Reports_Controller',
+			//          dirname( __FILE__ ) . '/api/class-ea-rest-settings-controller.php'     => 'EverAccounting\API\Settings_Controller',
 		);
 
 		foreach ( $rest_handlers as $file_name => $controller ) {
