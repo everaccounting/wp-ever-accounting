@@ -55,7 +55,7 @@ class API {
 
 		$rest_handlers = array(
 			dirname( __FILE__ ) . '/api/class-ea-rest-contacts-controller.php'   => 'EverAccounting\API\Contacts_Controller',
-			dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php' => 'EverAccounting\API\Categories_Controller',
+			//dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php' => 'EverAccounting\API\Categories_Controller',
 			//          dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php'   => 'EverAccounting\API\Currencies_Controller',
 			//          dirname( __FILE__ ) . '/api/class-ea-rest-accounts-controller.php'     => 'EverAccounting\API\Accounts_Controller',
 			//          dirname( __FILE__ ) . '/api/class-ea-rest-transfers-controller.php'    => 'EverAccounting\API\Transfers_Controller',

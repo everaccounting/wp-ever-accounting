@@ -33,16 +33,16 @@ class Contacts_Controller extends Controller {
 			'/' . $this->rest_base,
 			array(
 				array(
-					'methods'  => WP_REST_Server::READABLE,
+					'methods'  => \WP_REST_Server::READABLE,
 					'callback' => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					//'permission_callback' => array( $this, 'get_items_permissions_check' ),
 					'args'     => $this->get_collection_params(),
 				),
 				array(
-					'methods'  => WP_REST_Server::CREATABLE,
-					'callback' => array( $this, 'create_item' ),
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
-					'args'     => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -64,19 +64,19 @@ class Contacts_Controller extends Controller {
 					),
 				),
 				array(
-					'methods'             => WP_REST_Server::READABLE,
+					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => $get_item_args,
 				),
 				array(
-					'methods'             => WP_REST_Server::EDITABLE,
+					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_item' ),
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
 				),
 				array(
-					'methods'             => WP_REST_Server::DELETABLE,
+					'methods'             => \WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 				),
@@ -86,7 +86,7 @@ class Contacts_Controller extends Controller {
 
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', array(
 			array(
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_contact_types' ],
 				'permission_callback' => array( $this, 'get_item_permissions_check' ),
 				'args'                => $this->get_collection_params(),
@@ -96,7 +96,7 @@ class Contacts_Controller extends Controller {
 
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', array(
 			array(
-				'methods'             => WP_REST_Server::EDITABLE,
+				'methods'             => \WP_REST_Server::EDITABLE,
 				'callback'            => [ $this, 'handle_bulk_actions' ],
 				'permission_callback' => array( $this, 'get_item_permissions_check' ),
 				'args'                => $this->get_collection_params(),
@@ -108,28 +108,72 @@ class Contacts_Controller extends Controller {
 
 	/**
 	 *
-	 * @param WP_REST_Request $request
+	 * @param \WP_REST_Request $request
 	 *
-	 * @return mixed|WP_Error|WP_REST_Response
+	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
 	 */
 	public function get_items( $request ) {
 		$args = array(
+			'include'      => $request['include'],
+			'exclude'      => $request['exclude'],
+			'search'       => $request['search'],
 			'type'         => $request['type'],
 			'city'         => $request['city'],
 			'state'        => $request['state'],
 			'postcode'     => $request['postcode'],
 			'country'      => $request['country'],
 			'date_created' => $request['date_created'],
-			'include'      => $request['include'],
-			'exclude'      => $request['exclude'],
-			'search'       => $request['search'],
 			'orderby'      => $request['orderby'],
 			'order'        => $request['order'],
 			'per_page'     => $request['per_page'],
 			'page'         => $request['page'],
 			'offset'       => $request['offset'],
 		);
+
+		$query = Query_Contact::init();
+
+		//check include and add query parameters
+		if ( ! empty( $args['include'] ) ) {
+			$query->whereIn( 'id', $args['include'] );
+		}
+		//check exclude and add query parameters
+		if ( ! empty( $args['exclude'] ) ) {
+			$query->whereNotIn( 'id', $args['exclude'] );
+		}
+		//check search and add query parameters
+		if ( ! empty( $args['search'] ) ) {
+			$query->search( $args['search'], array( 'id', 'user_id', 'name', 'email', 'phone', 'fax', 'address', 'tax_number', 'note' ) );
+		}
+		//check type and add query parameters
+		if ( ! empty( $args['type'] ) ) {
+			foreach ( eaccounting_get_contact_types() as $key => $value ) {
+				if ( $args['type'] == $key ) {
+					$query->where( 'type', $args['type'] );
+				}
+			}
+		}
+		//check city in address and add query parameters
+		if ( ! empty( $args['city'] ) ) {
+			$query->search( $args['city'], array( 'address' ) );
+		}
+		//check state in address and add query parameters
+		if ( ! empty( $args['state'] ) ) {
+			$query->search( $args['state'], array( 'address' ) );
+		}
+		//check postcode in address and add query parameters
+		if ( ! empty( $args['postcode'] ) ) {
+			$query->search( $args['postcode'], array( 'address' ) );
+		}
+		//check country and add query parameters
+		if ( ! empty( $args['country'] ) ) {
+			$query->where( 'country', $args['country'] );
+		}
+		//check order_by and order and add query parameters
+		if(!empty($args['orderby']) && !empty($args['order'])) {
+
+		}
+
 
 		$query_result   = eaccounting_get_contacts( $args );
 		$total_contacts = eaccounting_get_contacts( $args, true );
@@ -154,9 +198,9 @@ class Contacts_Controller extends Controller {
 	}
 
 	/***
-	 * @param WP_REST_Request $request
+	 * @param \WP_REST_Request $request
 	 *
-	 * @return int|mixed|WP_Error|WP_REST_Response|null
+	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
 	 */
 	public function create_item( $request ) {
@@ -183,9 +227,9 @@ class Contacts_Controller extends Controller {
 
 	/**
 	 *
-	 * @param WP_REST_Request $request
+	 * @param \WP_REST_Request $request
 	 *
-	 * @return mixed|WP_Error|WP_REST_Response
+	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
 	 */
 	public function get_item( $request ) {
@@ -203,9 +247,9 @@ class Contacts_Controller extends Controller {
 
 	/**
 	 *
-	 * @param WP_REST_Request $request
+	 * @param \WP_REST_Request $request
 	 *
-	 * @return int|mixed|WP_Error|WP_REST_Response|null
+	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
 	 */
 	public function update_item( $request ) {
@@ -238,9 +282,9 @@ class Contacts_Controller extends Controller {
 	/**
 	 * since 1.0.0
 	 *
-	 * @param WP_REST_Request $request
+	 * @param \WP_REST_Request $request
 	 *
-	 * @return void|WP_Error|WP_REST_Response
+	 * @return void|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
 	 */
 	public function delete_item( $request ) {
@@ -273,7 +317,7 @@ class Contacts_Controller extends Controller {
 	 *
 	 * @param $request
 	 *
-	 * @return mixed|WP_REST_Response
+	 * @return mixed|\WP_REST_Response
 	 * @since 1.0.2
 	 */
 	public function get_contact_types( $request ) {
@@ -287,7 +331,7 @@ class Contacts_Controller extends Controller {
 		$action  = $request['action'];
 		$items   = $request['items'];
 		if ( empty( $action ) || ! in_array( $action, $actions ) ) {
-			return new WP_Error( 'invalid_bulk_action', __( 'Invalid bulk action', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'invalid_bulk_action', __( 'Invalid bulk action', 'wp-ever-accounting' ) );
 		}
 		$deleted = [];
 		switch ( $action ) {
@@ -310,9 +354,9 @@ class Contacts_Controller extends Controller {
 	/**
 	 *
 	 * @param mixed $item
-	 * @param WP_REST_Request $request
+	 * @param \WP_REST_Request $request
 	 *
-	 * @return mixed|WP_Error|WP_REST_Response
+	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -332,7 +376,7 @@ class Contacts_Controller extends Controller {
 			'note'          => $item->note,
 			'file'          => self::get_rest_object( 'files', $item->file_id ),
 			'type'          => $item->type,
-			'date_created'    => $this->prepare_date_response( $item->date_created ),
+			'date_created'  => $this->prepare_date_response( $item->date_created ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -347,9 +391,9 @@ class Contacts_Controller extends Controller {
 
 	/**
 	 *
-	 * @param WP_REST_Request $request
+	 * @param \WP_REST_Request $request
 	 *
-	 * @return object|stdClass|WP_Error
+	 * @return object|\stdClass|\WP_Error
 	 * @since 1.0.2
 	 */
 	public function prepare_item_for_database( $request ) {
