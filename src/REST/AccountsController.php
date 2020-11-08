@@ -310,6 +310,36 @@ class AccountsController extends Controller {
 	/**
 	 *
 	 * @param \WP_REST_Request $request
+	 * @since 1.0.2
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return array
+	 */
+	public function prepare_item_for_database( $request ) {
+		$schema    = $this->get_item_schema();
+		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$params    = $request->get_params();
+		$data      = array();
+
+		foreach ( $params as $param_key => $param_value ) {
+			if ( in_array( $param_key, $data_keys, true ) ) {
+				$data[ $param_key ] = $param_value;
+			}
+		}
+
+
+
+
+		return $data;
+	}
+
+
+	/**
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param \WP_REST_Request        $request
 	 *
 	 * @param \EverAccounting\Accounts\Account $item
 	 *

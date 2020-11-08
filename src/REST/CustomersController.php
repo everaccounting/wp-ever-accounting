@@ -251,4 +251,5 @@ class CustomersController extends ContactsController {
 
 		return $response;
 	}
+
 }
