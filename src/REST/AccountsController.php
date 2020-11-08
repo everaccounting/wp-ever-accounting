@@ -328,9 +328,6 @@ class AccountsController extends Controller {
 			}
 		}
 
-
-
-
 		return $data;
 	}
 
@@ -444,7 +441,7 @@ class AccountsController extends Controller {
 
 					),
 				),
-				'bank_name'    => array(
+				'bank_name'       => array(
 					'description' => __( 'Bank name of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -452,7 +449,7 @@ class AccountsController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_phone'   => array(
+				'bank_phone'      => array(
 					'description' => __( 'Phone number of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -460,7 +457,7 @@ class AccountsController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_address' => array(
+				'bank_address'    => array(
 					'description' => __( 'Address of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -468,23 +465,23 @@ class AccountsController extends Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'enabled'      => array(
+				'enabled'         => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				'creator' => array(
+				'creator'         => array(
 					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'properties'  => array(
-						'id'   => array(
+						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'name' => array(
+						'name'  => array(
 							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -496,7 +493,7 @@ class AccountsController extends Controller {
 						),
 					),
 				),
-				'date_created' => array(
+				'date_created'    => array(
 					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',

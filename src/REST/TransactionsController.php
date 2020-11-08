@@ -81,6 +81,38 @@ class TransactionsController extends Controller {
 		);
 	}
 
+
+
+
+	/**
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return array
+	 */
+	public function prepare_item_for_database( $request ) {
+		$schema    = $this->get_item_schema();
+		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data      = array();
+		foreach ( $data_keys as $key ) {
+			$value = $request[ $key ];
+			switch ( $key ) {
+				case 'currency_code':
+					$data[ $key ] = eaccounting_rest_get_currency_code( $value );
+					break;
+				case 'account':
+					$data[ 'account_id' ] = eaccounting_rest_get_account_id( $value );
+					break;
+				default:
+					$data[ $key ] = $value;
+			}
+		}
+
+		return $data;
+	}
+
 	/**
 	 *
 	 * @since 1.0.2
@@ -190,7 +222,7 @@ class TransactionsController extends Controller {
 					),
 					'readonly'    => true,
 				),
-				'account_id'     => array(
+				'account'     => array(
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -268,7 +300,7 @@ class TransactionsController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'attachment'           => array(
+				'attachment'     => array(
 					'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -279,7 +311,7 @@ class TransactionsController extends Controller {
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'src' => array(
+						'src'  => array(
 							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -300,18 +332,18 @@ class TransactionsController extends Controller {
 					),
 					'readonly'    => true,
 				),
-				'creator' => array(
+				'creator'        => array(
 					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'properties'  => array(
-						'id'   => array(
+						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'name' => array(
+						'name'  => array(
 							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
