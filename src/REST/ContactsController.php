@@ -77,13 +77,13 @@ class ContactsController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param \WP_REST_Request        $request
+	 * @param \WP_REST_Request $request
 	 *
 	 * @param \EverAccounting\Contact $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -120,9 +120,9 @@ class ContactsController extends Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
+	 * @return array Item schema data.
 	 * @since 1.0.2
 	 *
-	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -221,12 +221,26 @@ class ContactsController extends Controller {
 				),
 				'currency_code' => array(
 					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'code' => array(
+							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+
+					),
 				),
 				'note'          => array(
 					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
@@ -237,15 +251,66 @@ class ContactsController extends Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'file_id'       => array(
+				'attachment'    => array(
 					'description' => __( 'Photo of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'src'  => array(
+							'description' => __( 'Attachment Source.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'name' => array(
+							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
 				),
 				'enabled'       => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Status of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
+				),
+				'creator'       => array(
+					'description' => __( 'Creator of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+					'properties'  => array(
+						'id'    => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name'  => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
+				),
+				'date_created' => array(
+					'description' => __( 'Created date of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date-time',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
 				),
 			),
 		);
@@ -256,9 +321,9 @@ class ContactsController extends Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
+	 * @return array Collection parameters.
 	 * @since 1.1.0
 	 *
-	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
@@ -285,6 +350,19 @@ class ContactsController extends Controller {
 			'description' => __( 'Limit result set to specific search.', 'wp-ever-accounting' ),
 			'type'        => 'string',
 			'default'     => '',
+		);
+
+		$params['orderby'] = array(
+			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
+			'type'              => 'string',
+			'default'           => 'id',
+			'enum'              => array(
+				'name',
+				'email',
+				'phone',
+				'type',
+			),
+			'validate_callback' => 'rest_validate_request_arg',
 		);
 
 		return $query_params;

@@ -192,11 +192,11 @@ class AccountsController extends Controller {
 
 
 	/***
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -221,11 +221,11 @@ class AccountsController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -242,11 +242,11 @@ class AccountsController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -276,11 +276,11 @@ class AccountsController extends Controller {
 	/**
 	 * since 1.0.0
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -309,13 +309,13 @@ class AccountsController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param \WP_REST_Request        $request
+	 * @param \WP_REST_Request $request
 	 *
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -347,9 +347,9 @@ class AccountsController extends Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
+	 * @return array Item schema data.
 	 * @since 1.0.2
 	 *
-	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -375,6 +375,15 @@ class AccountsController extends Controller {
 					),
 					'required'    => true,
 				),
+				'number'          => array(
+					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
 				'opening_balance' => array(
 					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -391,35 +400,21 @@ class AccountsController extends Controller {
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 					'properties'  => array(
-						'id' => array(
-							'description' => __( 'Currency code ID.', 'woocommerce' ),
+						'id'   => array(
+							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
+						'code' => array(
+							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
 
 					),
 				),
-				'number'          => array(
-					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'balance'         => array(
-					'description' => __( 'Current balance of the account', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'default'     => '0',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'readonly'    => true,
-				),
-				'bank_name'       => array(
+				'bank_name'    => array(
 					'description' => __( 'Bank name of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -427,7 +422,7 @@ class AccountsController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_phone'      => array(
+				'bank_phone'   => array(
 					'description' => __( 'Phone number of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -435,7 +430,7 @@ class AccountsController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_address'    => array(
+				'bank_address' => array(
 					'description' => __( 'Address of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -443,12 +438,35 @@ class AccountsController extends Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'enabled'         => array(
+				'enabled'      => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				'date_created'    => array(
+				'creator' => array(
+					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name' => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
+				),
+				'date_created' => array(
 					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -465,9 +483,9 @@ class AccountsController extends Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
+	 * @return array Collection parameters.
 	 * @since 1.1.0
 	 *
-	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

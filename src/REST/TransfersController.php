@@ -11,13 +11,13 @@ namespace EverAccounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
-class ItemsController extends Controller {
+class TransfersController extends Controller {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'items';
+	protected $rest_base = 'transfers';
 
 	/**
 	 * Register our routes.
@@ -83,7 +83,7 @@ class ItemsController extends Controller {
 	}
 
 	/**
-	 * Check whether a given request has permission to read items.
+	 * Check whether a given request has permission to read accounts.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -94,7 +94,7 @@ class ItemsController extends Controller {
 	}
 
 	/**
-	 * Check if a given request has access create item.
+	 * Check if a given request has access create account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -150,7 +150,7 @@ class ItemsController extends Controller {
 
 
 	/**
-	 * Get all customers.
+	 * Get all transfers.
 	 *
 	 * @param \WP_REST_Request $request
 	 *
@@ -169,7 +169,7 @@ class ItemsController extends Controller {
 			'offset'   => $request['offset'],
 		);
 
-		$results  = \EverAccounting\Accounts\query( $args )->get_results( OBJECT, '\EverAccounting\Accounts\get' );
+		$results  = \EverAccounting\Accounts\query( $args )->get_results( OBJECT, '\EverAccounting\Transfers\get' );
 		$total    = \EverAccounting\Accounts\query( $args )->count();
 		$response = array();
 		foreach ( $results as $item ) {
@@ -230,9 +230,9 @@ class ItemsController extends Controller {
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
 		$request->set_param( 'context', 'view' );
-		$item = eaccounting_get_account( $item_id );
+		$item = eaccounting_get_transfer( $item_id );
 		if ( is_null( $item ) ) {
-			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the transfers', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -251,9 +251,9 @@ class ItemsController extends Controller {
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 		$item_id = intval( $request['id'] );
-		$item    = eaccounting_get_account( $item_id );
+		$item    = eaccounting_get_transfer( $item_id );
 		if ( is_null( $item ) ) {
-			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the transfer', 'wp-ever-accounting' ) );
 		}
 		$prepared_args       = $this->prepare_item_for_database( $request );
 		$prepared_args['id'] = $item_id;
@@ -311,7 +311,7 @@ class ItemsController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request
 	 *
-	 * @param \EverAccounting\Accounts\Account $item
+	 * @param \EverAccounting\Transactions\Transaction $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
@@ -354,11 +354,11 @@ class ItemsController extends Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'title'      => __( 'Transfer', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'              => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -366,158 +366,26 @@ class ItemsController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'            => array(
-					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'sku'          => array(
-					'description' => __( 'Sku of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'attachment'           => array(
-					'description' => __( 'Attachment of the invoice', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view' ),
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'src' => array(
-							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name' => array(
-							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
-				),
-				'description' => array(
-					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_textarea_field',
-					),
-				),
-				'sale_price' => array(
-					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view','edit' ),
-					'default'     => '0',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'purchase_price' => array(
-					'description' => __( 'Purchase price of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view','edit' ),
-					'default'     => '0',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'quantity' => array(
-					'description' => __( 'Quantity of the item.', 'wp-ever-accounting' ),
+				'income_id'            => array(
+					'description' => __( 'Income ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view','edit' ),
-					'default'     => '1',
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
-				'category_id'    => array(
-					'description' => __( 'Category id of the item.', 'wp-ever-accounting' ),
-					'type'        => 'object',
+				'expense_id'          => array(
+					'description' => __( 'Expense ID of the transaction.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'type' => array(
-							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
 				),
-				'tax_id'    => array(
-					'description' => __( 'Tax id of the item.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Tax ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'rate'   => array(
-							'description' => __( 'Tax Rate.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-					),
-				),
-				'enabled'      => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-				'creator' => array(
-					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'name' => array(
-							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'email' => array(
-							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
-				),
-				'date_created' => array(
-					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
+				'date_created'    => array(
+					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
@@ -546,12 +414,8 @@ class ItemsController extends Controller {
 			'type'              => 'string',
 			'default'           => 'id',
 			'enum'              => array(
-				'name',
-				'id',
-				'number',
-				'opening_balance',
-				'bank_name',
-				'enabled',
+				'income_id',
+				'expense_id',
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
