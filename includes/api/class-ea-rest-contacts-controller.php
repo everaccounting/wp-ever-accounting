@@ -35,7 +35,7 @@ class Contacts_Controller extends Controller {
 				array(
 					'methods'  => \WP_REST_Server::READABLE,
 					'callback' => array( $this, 'get_items' ),
-					//'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 					'args'     => $this->get_collection_params(),
 				),
 				array(
@@ -119,9 +119,7 @@ class Contacts_Controller extends Controller {
 			'exclude'      => $request['exclude'],
 			'search'       => $request['search'],
 			'type'         => $request['type'],
-			'city'         => $request['city'],
-			'state'        => $request['state'],
-			'postcode'     => $request['postcode'],
+			'address'      => $request['address'],
 			'country'      => $request['country'],
 			'date_created' => $request['date_created'],
 			'orderby'      => $request['orderby'],
@@ -153,31 +151,41 @@ class Contacts_Controller extends Controller {
 				}
 			}
 		}
-		//check city in address and add query parameters
-		if ( ! empty( $args['city'] ) ) {
-			$query->search( $args['city'], array( 'address' ) );
-		}
-		//check state in address and add query parameters
-		if ( ! empty( $args['state'] ) ) {
-			$query->search( $args['state'], array( 'address' ) );
-		}
-		//check postcode in address and add query parameters
-		if ( ! empty( $args['postcode'] ) ) {
-			$query->search( $args['postcode'], array( 'address' ) );
+		//check address in address and add query parameters
+		if ( ! empty( $args['address'] ) ) {
+			$query->search( $args['address'], array( 'address' ) );
 		}
 		//check country and add query parameters
 		if ( ! empty( $args['country'] ) ) {
 			$query->where( 'country', $args['country'] );
 		}
 		//check order_by and order and add query parameters
-		if(!empty($args['orderby']) && !empty($args['order'])) {
-
+		if ( ! empty( $args['orderby'] ) && ! empty( $args['order'] ) ) {
+			$query->order_by( $args['orderby'], $args['order'] );
+		} else {
+			$query->order_by( 'id', 'asc' );
 		}
-
-
-		$query_result   = eaccounting_get_contacts( $args );
-		$total_contacts = eaccounting_get_contacts( $args, true );
-		$response       = array();
+		//check page and per_page and add query parameters
+		if ( ! empty( $args['per_page'] ) && ! empty( $args['page'] ) ) {
+			$query->page( $args['page'], $args['per_page'] );
+		} elseif ( ! empty( $args['per_page'] ) && empty( $args['page'] ) ) {
+			$query->page( 1, $args['per_page'] );
+		} elseif ( empty( $args['per_page'] ) && ! empty( $args['page'] ) ) {
+			$query->page( $args['page'], 20 );
+		} else {
+			$query->page( 1, 20 );
+		}
+		//check offset and add query parameters
+		if ( ! empty( $args['offset'] ) ) {
+			$query->offset( $args['offset'] );
+		}
+		//check date_created and add query parameters
+		if ( ! empty( $args['date_created'] ) ) {
+			$query->where( 'date_created', $args['date_created'] );
+		}
+		$query_result = $query->get();
+		$total_items  = $query->count();
+		$response     = array();
 
 		foreach ( $query_result as $item ) {
 			$data       = $this->prepare_item_for_response( $item, $request );
@@ -188,9 +196,9 @@ class Contacts_Controller extends Controller {
 
 		$per_page = (int) $args['per_page'];
 
-		$response->header( 'X-WP-Total', (int) $total_contacts );
+		$response->header( 'X-WP-Total', (int) $total_items );
 
-		$max_pages = ceil( $total_contacts / $per_page );
+		$max_pages = ceil( $total_items / $per_page );
 
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
 
@@ -237,7 +245,7 @@ class Contacts_Controller extends Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_contact( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -291,7 +299,7 @@ class Contacts_Controller extends Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_contact( $item_id );
 		if ( is_null( $item ) ) {
-			return new WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
@@ -299,10 +307,10 @@ class Contacts_Controller extends Controller {
 		$previous = $this->prepare_item_for_response( $item, $request );
 		$retval   = eaccounting_delete_contact( $item_id );
 		if ( ! $retval ) {
-			return new WP_Error( 'rest_cannot_delete', __( 'This contact cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'rest_cannot_delete', __( 'This contact cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
-		$response = new WP_REST_Response();
+		$response = new \WP_REST_Response();
 		$response->set_data(
 			array(
 				'deleted'  => true,
@@ -374,7 +382,7 @@ class Contacts_Controller extends Controller {
 			'tax_number'    => $item->tax_number,
 			'currency_code' => $item->currency_code,
 			'note'          => $item->note,
-			'file'          => self::get_rest_object( 'files', $item->file_id ),
+			'file'          => self::get_rest_object( 'files', $item->attachment ),
 			'type'          => $item->type,
 			'date_created'  => $this->prepare_date_response( $item->date_created ),
 		);
