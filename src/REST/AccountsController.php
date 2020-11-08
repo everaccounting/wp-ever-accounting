@@ -253,7 +253,7 @@ class AccountsController extends Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_account( $item_id );
 		if ( is_null( $item ) ) {
-			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
 		}
 		$prepared_args       = $this->prepare_item_for_database( $request );
 		$prepared_args['id'] = $item_id;
@@ -319,17 +319,20 @@ class AccountsController extends Controller {
 	public function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		$params    = $request->get_params();
 		$data      = array();
-
-		foreach ( $params as $param_key => $param_value ) {
-			if ( in_array( $param_key, $data_keys, true ) ) {
-				$data[ $param_key ] = $param_value;
+		foreach ( $data_keys as $key ) {
+			$value = $request[ $key ];
+			switch ( $key ) {
+				case 'currency_code':
+					$data[ $key ] = eaccounting_rest_get_currency_code( $value );
+					break;
+				case 'creator':
+					$data['creator_id'] = array();
+					break;
+				default:
+					$data[ $key ] = $value;
 			}
 		}
-
-
-
 
 		return $data;
 	}

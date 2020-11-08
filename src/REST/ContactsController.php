@@ -76,15 +76,237 @@ class ContactsController extends Controller {
 	}
 
 	/**
+	 * Check whether a given request has permission to read contacts.
 	 *
-<<<<<<< HEAD
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_Error|boolean
+	 */
+	public function get_items_permissions_check( $request ) {
+		return true; //current_user_can( 'manage_contacts' );
+	}
+
+	/**
+	 * Check if a given request has access create contacts.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function create_item_permissions_check( $request ) {
+		return true; //current_user_can( 'manage_contacts' );
+	}
+
+	/**
+	 * Check if a given request has access to read a contact.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_Error|boolean
+	 */
+	public function get_item_permissions_check( $request ) {
+		return true; //current_user_can( 'manage_contacts' );
+	}
+
+	/**
+	 * Check if a given request has access update a contact.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function update_item_permissions_check( $request ) {
+		return true; //current_user_can( 'manage_contacts' );
+	}
+
+	/**
+	 * Check if a given request has access delete a contact.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function delete_item_permissions_check( $request ) {
+		return true; //current_user_can( 'manage_contact' );
+	}
+
+	/**
+	 * Check if a given request has access batch create, update and delete items.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return bool|\WP_Error
+	 */
+	public function batch_items_permissions_check( $request ) {
+		return true; //current_user_can( 'manage_contacts' );
+	}
+
+	/**
+	 * Get all contacts.
+	 *
 	 * @param \WP_REST_Request $request
-=======
+	 *
+	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 */
+	public function get_items( $request ) {
+		$args = array(
+			'enabled'  => wp_validate_boolean( $request['enabled'] ),
+			'include'  => $request['include'],
+			'exclude'  => $request['exclude'],
+			'search'   => $request['search'],
+			'orderby'  => $request['orderby'],
+			'order'    => $request['order'],
+			'per_page' => $request['per_page'],
+			'page'     => $request['page'],
+			'offset'   => $request['offset'],
+		);
+
+		$results  = \EverAccounting\Contacts\query( $args )->get_results( OBJECT, '\EverAccounting\Contacts\get' );
+		$total    = \EverAccounting\Contacts\query( $args )->count();
+		$response = array();
+		foreach ( $results as $item ) {
+			$data       = $this->prepare_item_for_response( $item, $request );
+			$response[] = $this->prepare_response_for_collection( $data );
+		}
+
+		$response = rest_ensure_response( $response );
+
+		$per_page = (int) $args['per_page'];
+
+		$response->header( 'X-WP-Total', (int) $total );
+
+		$max_pages = ceil( $total / $per_page );
+
+		$response->header( 'X-WP-TotalPages', (int) $max_pages );
+
+		return rest_ensure_response( $response );
+	}
+
+
+	/***
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
+	 *
+	 */
+	public function create_item( $request ) {
+		$request->set_param( 'context', 'edit' );
+		$prepared = $this->prepare_item_for_database( $request );
+
+		$item_id = \EverAccounting\Vendors\insert( (array) $prepared );
+		if ( is_wp_error( $item_id ) ) {
+			return $item_id;
+		}
+
+		$contact = \EverAccounting\Vendors\get( $item_id );
+
+		$request->set_param( 'context', 'view' );
+
+		$response = $this->prepare_item_for_response( $contact, $request );
+		$response = rest_ensure_response( $response );
+		$response->set_status( 201 );
+
+		return $response;
+	}
+
+
+	/**
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
+	 */
+	public function get_item( $request ) {
+		$item_id = intval( $request['id'] );
+		$request->set_param( 'context', 'view' );
+		$item = \EverAccounting\Vendors\get( $item_id );
+		if ( is_null( $item ) ) {
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
+		}
+
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * @since 1.0.2
+	 *
+	 */
+	public function update_item( $request ) {
+		$request->set_param( 'context', 'edit' );
+		$item_id = intval( $request['id'] );
+		$item    = \EverAccounting\Vendors\get( $item_id );
+		if ( is_null( $item ) ) {
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
+		}
+		$prepared_args       = $this->prepare_item_for_database( $request );
+		$prepared_args['id'] = $item_id;
+
+		if ( ! empty( $prepared_args ) ) {
+			$updated = \EverAccounting\Vendors\insert( (array) $prepared_args );
+
+			if ( is_wp_error( $updated ) ) {
+				return $updated;
+			}
+		}
+
+		$request->set_param( 'context', 'view' );
+		$item     = \EverAccounting\Vendors\get( $item_id );
+		$response = $this->prepare_item_for_response( $item, $request );
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * since 1.0.0
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return void|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
+	 */
+	public function delete_item( $request ) {
+		$item_id = intval( $request['id'] );
+		$item    = \EverAccounting\Vendors\get( $item_id );
+		if ( is_null( $item ) ) {
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
+		}
+
+		$request->set_param( 'context', 'view' );
+
+		$previous = $this->prepare_item_for_response( $item, $request );
+		$retval   = \EverAccounting\Vendors\delete( $item_id );
+		if ( ! $retval ) {
+			return new \WP_Error( 'rest_cannot_delete', __( 'This vendor cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+		}
+
+		$response = new \WP_REST_Response();
+		$response->set_data(
+			array(
+				'deleted'  => true,
+				'previous' => $previous->get_data(),
+			)
+		);
+
+		return $response;
+	}
+
+	/**
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return array
+	 * @since 1.0.2
+	 *
 	 */
 	public function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -96,6 +318,9 @@ class ContactsController extends Controller {
 				case 'currency_code':
 					$data[ $key ] = eaccounting_rest_get_currency_code( $value );
 					break;
+				case 'creator':
+					$data['creator_id'] = array();
+					break;
 				default:
 					$data[ $key ] = $value;
 			}
@@ -106,14 +331,12 @@ class ContactsController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param \WP_REST_Request        $request
->>>>>>> 2e3ee4181938b4a216aa06eb90d9c6a2c56d522c
 	 *
 	 * @param \EverAccounting\Contact $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 * @since 1.0.2
 	 *
 	 */
@@ -147,7 +370,6 @@ class ContactsController extends Controller {
 
 		return $response;
 	}
-
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
@@ -254,7 +476,6 @@ class ContactsController extends Controller {
 				'currency_code' => array(
 					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
 					'type'        => 'object',
-<<<<<<< HEAD
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -262,34 +483,17 @@ class ContactsController extends Controller {
 					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
-							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
-=======
-					'context'     => array( 'embed', 'view' ),
-					'required'    => true,
-					'properties'  => array(
-						'id'   => array(
 							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
->>>>>>> 2e3ee4181938b4a216aa06eb90d9c6a2c56d522c
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
 						'code' => array(
-<<<<<<< HEAD
 							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 						),
-
 					),
-=======
-							'description' => __( 'Currency code', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'enum'        => array_keys( eaccounting_get_global_currencies() ),
-						),
-					)
->>>>>>> 2e3ee4181938b4a216aa06eb90d9c6a2c56d522c
 				),
 				'note'          => array(
 					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
@@ -354,7 +558,7 @@ class ContactsController extends Controller {
 						),
 					),
 				),
-				'date_created' => array(
+				'date_created'  => array(
 					'description' => __( 'Created date of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
