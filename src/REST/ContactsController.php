@@ -78,6 +78,7 @@ class ContactsController extends Controller {
 	/**
 	 * Check whether a given request has permission to read contacts.
 	 *
+<<<<<<< HEAD
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
@@ -187,6 +188,8 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+=======
+>>>>>>> 8be1b16a32129dc20b4fe952c11736e128c2fe2b
 	 * @since 1.0.2
 	 *
 	 */
@@ -331,6 +334,12 @@ class ContactsController extends Controller {
 
 	/**
 	 *
+<<<<<<< HEAD
+=======
+	 * @since 1.0.2
+	 *
+	 * @param \WP_REST_Request        $request
+>>>>>>> 8be1b16a32129dc20b4fe952c11736e128c2fe2b
 	 *
 	 * @param \EverAccounting\Contact $item
 	 *
@@ -489,9 +498,10 @@ class ContactsController extends Controller {
 							'readonly'    => true,
 						),
 						'code' => array(
-							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
+							'description' => __( 'Currency code', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
+							'enum'        => array_keys( eaccounting_get_global_currencies() ),
 						),
 					),
 				),
@@ -581,31 +591,7 @@ class ContactsController extends Controller {
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
 		$query_params['context']['default'] = 'view';
-		$query_params['exclude']            = array(
-			'description' => __( 'Ensure result set excludes specific ids.', 'wp-ever-accounting' ),
-			'type'        => 'array',
-			'items'       => array(
-				'type' => 'integer',
-			),
-			'default'     => array(),
-		);
-
-		$query_params['include'] = array(
-			'description' => __( 'Limit result set to specific IDs.', 'wp-ever-accounting' ),
-			'type'        => 'array',
-			'items'       => array(
-				'type' => 'integer',
-			),
-			'default'     => array(),
-		);
-
-		$query_params['search'] = array(
-			'description' => __( 'Limit result set to specific search.', 'wp-ever-accounting' ),
-			'type'        => 'string',
-			'default'     => '',
-		);
-
-		$params['orderby'] = array(
+		$params['orderby']                  = array(
 			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
 			'type'              => 'string',
 			'default'           => 'id',

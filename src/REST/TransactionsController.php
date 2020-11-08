@@ -80,7 +80,6 @@ class TransactionsController extends Controller {
 			)
 		);
 	}
-
 	/**
 	 * Check whether a given request has permission to read transactions.
 	 *
@@ -466,7 +465,7 @@ class TransactionsController extends Controller {
 					),
 					'readonly'    => true,
 				),
-				'account'        => array(
+				'account'     => array(
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
