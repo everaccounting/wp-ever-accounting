@@ -449,12 +449,11 @@ class List_Table_Accounts extends List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
-		$this->items = Query_Account::init()
-									->where( $args )
-									->withBalance()
+		$this->items = \EverAccounting\Accounts\query($args )
+									->include_balance()
 									->get( OBJECT, 'eaccounting_get_account' );
 
-		$this->active_count = Query_Account::init()->where(
+		$this->active_count = \EverAccounting\Accounts\query(
 			array_merge(
 				$this->query_args,
 				array(
@@ -464,7 +463,7 @@ class List_Table_Accounts extends List_Table {
 			)
 		)->count();
 
-		$this->inactive_count = Query_Account::init()->where(
+		$this->inactive_count = \EverAccounting\Accounts\query(
 			array_merge(
 				$this->query_args,
 				array(

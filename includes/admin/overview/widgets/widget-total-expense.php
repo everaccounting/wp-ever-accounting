@@ -55,8 +55,8 @@ class Total_Expense extends Widget {
 				->query()
 				->select( 'amount, currency_code, currency_rate' )
 				->from( 'ea_transactions' )
-				->whereDateBetween( 'paid_at', $dates['start'], $dates['end'] )
-				->whereRaw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
+				->where_date_between( 'paid_at', $dates['start'], $dates['end'] )
+				->where_raw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
 				->where( 'type', 'expense' )
 				->get();
 

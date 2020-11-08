@@ -43,9 +43,9 @@ function eaccounting_reports_income_expense_tab() {
 		$dates        = $totals = $compares = $graph = $categories = [];
 		$date_start   = eaccounting_get_financial_start( $year );
 		$end          = eaccounting_get_financial_end( $year );
-		$income_cats  = \EverAccounting\Query_Category::init()->select( 'id, name' )->typeIncome()->get();
+		$income_cats  = \EverAccounting\Categories\query()->select( 'id, name' )->income_only()->get();
 		$income_cats  = wp_list_pluck( $income_cats, 'name', 'id' );
-		$expense_cats = \EverAccounting\Query_Category::init()->select( 'id, name' )->typeExpense()->get();
+		$expense_cats = \EverAccounting\Categories\query()->select( 'id, name' )->expense_only()->get();
 		$expense_cats = wp_list_pluck( $expense_cats, 'name', 'id' );
 		$date         = new \EverAccounting\DateTime( $date_start );
 
@@ -73,14 +73,13 @@ function eaccounting_reports_income_expense_tab() {
 			}
 			$date->modify( '+1 month' )->format( 'Y-m' );
 		}
-		$query        = \EverAccounting\Query_Transaction::init();
-		$transactions = $query->select( 'type, paid_at, currency_code, currency_rate, amount, category_id' )
-							  ->notTransfer()
-							  ->whereDateBetween( 'paid_at', $date_start, $end )
-							  ->where( array(
-									  'account_id' => $account_id,
-							  ) )
-							  ->get();
+		$transactions = \EverAccounting\Transactions\query()->select( 'type, paid_at, currency_code, currency_rate, amount, category_id' )
+															->without_transfer()
+															->where_date_between( 'paid_at', $date_start, $end )
+															->where( array(
+																	'account_id' => $account_id,
+															) )
+															->get();
 
 		foreach ( $transactions as $transaction ) {
 			$amount     = eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );

@@ -81,11 +81,11 @@ function eaccounting_tools_system_info_report() {
 
 	// Object counts.
 	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
-	$return .= 'Transactions:                     ' . number_format( \EverAccounting\Query_Transaction::init()->count(), false ) . "\n";
-	$return .= 'Accounts:                         ' . number_format( \EverAccounting\Query_Account::init()->count(), false ) . "\n";
-	$return .= 'Contacts:                         ' . number_format( \EverAccounting\Query_Contact::init()->count(), false ) . "\n";
-	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Query_Currency::init()->count(), false ) . "\n";
-	$return .= 'Categories:                       ' . number_format( \EverAccounting\Query_Category::init()->count(), false ) . "\n";
+	$return .= 'Transactions:                     ' . number_format( \EverAccounting\Transactions\query()->count(), false ) . "\n";
+	$return .= 'Accounts:                         ' . number_format( \EverAccounting\Accounts\query()->count(), false ) . "\n";
+	$return .= 'Contacts:                         ' . number_format( \EverAccounting\Contacts\query()->count(), false ) . "\n";
+	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Currencies\query()->count(), false ) . "\n";
+	$return .= 'Categories:                       ' . number_format( \EverAccounting\Categories\query()->count(), false ) . "\n";
 
 
 	// Get plugins that have an update

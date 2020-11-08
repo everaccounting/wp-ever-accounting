@@ -9,6 +9,6 @@
 defined( 'ABSPATH' ) || exit();
 
 function eaccounting_sales_tab_invoices() {
-	echo '<div id="eaccounting-app"></div>';
+	echo '<div id="eaccounting-invoice"></div>';
 }
 add_action( 'eaccounting_sales_tab_invoices', 'eaccounting_sales_tab_invoices' );

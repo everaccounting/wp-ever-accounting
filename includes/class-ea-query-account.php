@@ -62,7 +62,7 @@ class Query_Account extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function typeExpense() {
+	public function expense_only() {
 		$this->where( "{$this->table}.type", 'expense' );
 
 		return $this;
@@ -74,7 +74,7 @@ class Query_Account extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function typeIncome() {
+	public function income_only() {
 
 		$this->where( "{$this->table}.type", 'income' );
 
@@ -88,10 +88,10 @@ class Query_Account extends Query {
 	 * @return $this
 	 */
 	public function withBalance() {
-		$transaction = Query_Transaction::TABLE;
+		$transaction = \EverAccounting\Transactions\Transaction::TABLE;
 		$this->select( "{$this->table}.*" )
 		     ->select( "SUM(CASE WHEN {$transaction}.type='income' then amount WHEN {$transaction}.type='expense' then - amount END ) + {$this->table}.opening_balance  as balance" )
-		     ->leftJoin( "ea_transactions as {$transaction}", "{$transaction}.account_id", "{$this->table}.id" )
+		     ->left_join( "ea_transactions as {$transaction}", "{$transaction}.account_id", "{$this->table}.id" )
 		     ->group_by( "{$this->table}.id" );
 
 		return $this;

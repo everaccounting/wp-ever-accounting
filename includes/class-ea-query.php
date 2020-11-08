@@ -491,7 +491,7 @@ class Query {
 	/**
 	 * Creates a where date between statement
 	 *
-	 *     ->whereDateBetween('date', '2014-02-01', '2014-02-28')
+	 *     ->where_date_between('date', '2014-02-01', '2014-02-28')
 	 *
 	 * @since       1.0.2
 	 *
@@ -499,7 +499,7 @@ class Query {
 	 *
 	 * @return Query The current query builder.
 	 */
-	public function whereDateBetween( $column, $start = null, $end = null ) {
+	public function where_date_between( $column, $start = null, $end = null ) {
 		global $wpdb;
 		if ( empty( $start ) || empty( $end ) ) {
 			return $this;
@@ -519,7 +519,7 @@ class Query {
 	 *
 	 * @param        $query
 	 */
-	public function whereRaw( $query, $joint = 'AND' ) {
+	public function where_raw( $query, $joint = 'AND' ) {
 		$this->where[] = array(
 			'joint'     => $joint,
 			'condition' => $query,
@@ -611,7 +611,7 @@ class Query {
 	 *
 	 * @return Query The current query builder.
 	 */
-	public function leftJoin( $table, $localKey, $operator = null, $referenceKey = null ) {
+	public function left_join( $table, $localKey, $operator = null, $referenceKey = null ) {
 		return $this->join( $table, $localKey, $operator, $referenceKey, 'left' );
 	}
 

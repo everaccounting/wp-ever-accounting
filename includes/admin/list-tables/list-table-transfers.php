@@ -10,7 +10,6 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Transfer;
 use \EverAccounting\Transfer;
 
 defined( 'ABSPATH' ) || exit();
@@ -344,15 +343,12 @@ class List_Table_Transfers extends List_Table {
 
 		$args = apply_filters( 'eaccounting_transfers_table_get_transfers', $args, $this );
 
-		$this->items = Query_Transfer::init()
+		$this->items = \EverAccounting\Transfers\query($args)
 		                             ->select( 'ea_transfers.*, ea_transactions.reference, ea_transactions.amount, ea_transactions.paid_at' )
-		                             ->where( $args )
-		                             ->withTransactions()
+		                             ->include_transactions()
 		                             ->get( OBJECT, 'eaccounting_get_transfer' );
 
-		$this->total_count = Query_Transfer::init()
-		                                   ->where( $args )
-		                                   ->count();
+		$this->total_count = \EverAccounting\Transfers\query( $args )->count();
 
 
 		$this->set_pagination_args( array(

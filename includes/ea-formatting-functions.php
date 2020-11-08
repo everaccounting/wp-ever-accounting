@@ -39,6 +39,22 @@ function eaccounting_bool_to_string( $bool ) {
 }
 
 /**
+ * Converts a bool to a 1 or 0.
+ *
+ * @param $bool
+ * @since 1.1.0
+ *
+ * @return int
+ */
+function eaccounting_bool_to_number( $bool ) {
+	if ( ! is_bool( $bool ) ) {
+		$bool = eaccounting_string_to_bool( $bool );
+	}
+
+	return true === $bool ? 1 : 0;
+}
+
+/**
  * Explode a string into an array by $delimiter and remove empty values.
  *
  * @since 1.0.2

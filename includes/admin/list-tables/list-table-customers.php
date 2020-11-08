@@ -76,10 +76,13 @@ class List_Table_Customers extends List_Table {
 	 *
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args( $args, array(
-			'singular' => 'customer',
-			'plural'   => 'customers',
-		) );
+		$args = (array) wp_parse_args(
+			$args,
+			array(
+				'singular' => 'customer',
+				'plural'   => 'customers',
+			)
+		);
 
 		parent::__construct( $args );
 	}
@@ -190,8 +193,17 @@ class List_Table_Customers extends List_Table {
 	function column_name( $customer ) {
 		$name = $customer->get_name();
 
-		$value = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'tab' => 'customers', 'customer_id' => $customer->get_id() ] ) ),
+		$value = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url(
+				eaccounting_admin_url(
+					array(
+						'action'      => 'edit',
+						'tab'         => 'customers',
+						'customer_id' => $customer->get_id(),
+					)
+				)
+			),
 			$name
 		);
 
@@ -241,18 +253,20 @@ class List_Table_Customers extends List_Table {
 	 */
 	function column_enabled( $customer ) {
 		ob_start();
-		eaccounting_toggle( array(
-			'name'  => 'enabled',
-			'id'    => 'enabled_' . $customer->get_id(),
-			'value' => $customer->get_enabled( 'edit' ),
-			'naked' => true,
-			'class' => 'ea_item_status_update',
-			'attr'  => array(
-				'data-object_id'   => $customer->get_id(),
-				'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-				'data-object_type' => 'customer'
+		eaccounting_toggle(
+			array(
+				'name'  => 'enabled',
+				'id'    => 'enabled_' . $customer->get_id(),
+				'value' => $customer->get_enabled( 'edit' ),
+				'naked' => true,
+				'class' => 'ea_item_status_update',
+				'attr'  => array(
+					'data-object_id'   => $customer->get_id(),
+					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
+					'data-object_type' => 'customer',
+				),
 			)
-		) );
+		);
 		$output = ob_get_contents();
 		ob_get_clean();
 
@@ -267,7 +281,12 @@ class List_Table_Customers extends List_Table {
 	 * @return string
 	 */
 	function column_actions( $customer ) {
-		$base_uri    = eaccounting_admin_url( array( 'customer_id' => $customer->get_id(), 'tab' => 'customers' ) );
+		$base_uri    = eaccounting_admin_url(
+			array(
+				'customer_id' => $customer->get_id(),
+				'tab'         => 'customers',
+			)
+		);
 		$row_actions = array();
 
 		$row_actions['edit']   = array(
@@ -279,7 +298,7 @@ class List_Table_Customers extends List_Table {
 			'base_uri' => $base_uri,
 			'nonce'    => 'customer-nonce',
 		);
-		$row_actions = apply_filters( 'eaccounting_customers_table_row_actions', $row_actions, $customer );
+		$row_actions           = apply_filters( 'eaccounting_customers_table_row_actions', $row_actions, $customer );
 
 		return $this->row_actions( $row_actions );
 	}
@@ -325,16 +344,20 @@ class List_Table_Customers extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_contact( array(
-						'id'      => $id,
-						'enabled' => '1'
-					) );
+					eaccounting_insert_contact(
+						array(
+							'id'      => $id,
+							'enabled' => '1',
+						)
+					);
 					break;
 				case 'disable':
-					eaccounting_insert_contact( array(
-						'id'      => $id,
-						'enabled' => '0'
-					) );
+					eaccounting_insert_contact(
+						array(
+							'id'      => $id,
+							'enabled' => '0',
+						)
+					);
 					break;
 				case 'delete':
 					eaccounting_delete_contact( $id );
@@ -345,14 +368,18 @@ class List_Table_Customers extends List_Table {
 		}
 
 		if ( isset( $_GET['_wpnonce'] ) ) {
-			wp_safe_redirect( remove_query_arg( [
-				'customer_id',
-				'action',
-				'_wpnonce',
-				'_wp_http_referer',
-				'action2',
-				'paged'
-			] ) );
+			wp_safe_redirect(
+				remove_query_arg(
+					array(
+						'customer_id',
+						'action',
+						'_wpnonce',
+						'_wp_http_referer',
+						'action2',
+						'paged',
+					)
+				)
+			);
 			exit();
 		}
 	}
@@ -380,35 +407,27 @@ class List_Table_Customers extends List_Table {
 
 		$per_page = $this->get_per_page();
 
-		$args = wp_parse_args( $this->query_args, array(
-			'number'  => $per_page,
-			'offset'  => $per_page * ( $page - 1 ),
-			'per_page' => $per_page,
-			'page'     => $page,
-			'search'  => $search,
-			'status'  => $status,
-			'orderby' => eaccounting_clean( $orderby ),
-			'order'   => eaccounting_clean( $order ),
-			'type'    => 'customer'
-		) );
+		$args = wp_parse_args(
+			$this->query_args,
+			array(
+				'number'   => $per_page,
+				'offset'   => $per_page * ( $page - 1 ),
+				'per_page' => $per_page,
+				'page'     => $page,
+				'search'   => $search,
+				'status'   => $status,
+				'orderby'  => eaccounting_clean( $orderby ),
+				'order'    => eaccounting_clean( $order ),
+				'type'     => 'customer',
+			)
+		);
 
 		$args = apply_filters( 'eaccounting_customers_table_get_customers', $args, $this );
 
-		$this->items = Query_Contact::init()
-		                            ->where( $args )
-		                            ->get( OBJECT, 'eaccounting_get_contact' );
-
-		$this->total_count = Query_Contact::init()->where( $args )->count();
-
-		$this->active_count = Query_Contact::init()->where( array_merge( $this->query_args, array(
-			'status' => 'active',
-			'search' => $search
-		) ) )->count();
-
-		$this->inactive_count = Query_Contact::init()->where( array_merge( $this->query_args, array(
-			'status' => 'inactive',
-			'search' => $search
-		) ) )->count();
+		$this->items          = \EverAccounting\Customer\query( $args )->get_results( OBJECT, 'eaccounting_get_contact' );
+		$this->total_count    = \EverAccounting\Customer\query( $args )->count();
+		$this->active_count   = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '1' )->count();
+		$this->inactive_count = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '0' )->count();
 
 		$total_items = $this->total_count;
 
@@ -426,10 +445,12 @@ class List_Table_Customers extends List_Table {
 				break;
 		}
 
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $total_items / $per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
 	}
 }

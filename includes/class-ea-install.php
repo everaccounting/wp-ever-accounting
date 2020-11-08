@@ -213,7 +213,7 @@ class EAccounting_Install {
 	 */
 	private static function create_categories() {
 		//If no categories then create default categories
-		if ( ! \EverAccounting\Query_Category::init()->count() ) {
+		if ( ! \EverAccounting\Categories\query()->count() ) {
 			eaccounting_insert_category(
 				array(
 					'name'    => __( 'Deposit', 'wp-ever-accounting' ),
@@ -240,7 +240,7 @@ class EAccounting_Install {
 		}
 
 		//create transfer category
-		if ( ! \EverAccounting\Query_Category::init()->where(
+		if ( ! \EverAccounting\Categories\query()->where(
 			array(
 				'name' => 'Transfer',
 				'type' => 'other',
@@ -892,7 +892,7 @@ class EAccounting_Install {
 	 * @return boolean
 	 */
 	public static function is_new_install() {
-		$transaction_count = \EverAccounting\Query_Transaction::init()->count( 0 );
+		$transaction_count = \EverAccounting\Transactions\query()->count( 0 );
 
 		return is_null( get_option( 'eaccounting_version', null ) ) || ( 0 === $transaction_count );
 	}

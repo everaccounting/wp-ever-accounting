@@ -43,7 +43,7 @@ class Latest_Incomes extends Widget {
 			->query()
 			->select( 't.paid_at, c.name, t.amount, t.currency_code' )
 			->from( 'ea_transactions t' )
-			->leftJoin( 'ea_categories as c', 'c.id', 't.category_id' )
+			->left_join( 'ea_categories as c', 'c.id', 't.category_id' )
 			->where('t.type', 'income')
 			->where('c.type', '!=', 'other')
 			->order_by( 't.paid_at', 'DESC' )

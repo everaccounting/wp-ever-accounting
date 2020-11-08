@@ -2,7 +2,7 @@ import {Fragment, Component, useState} from '@wordpress/element';
 import {ASSET_URL} from "@eaccounting/data";
 import {Loading, SearchBox, SubSub, Pagination, DropdownButton, Drawer, Table} from "@eaccounting/components";
 import {__} from '@wordpress/i18n';
-import {TextControl, Button} from '@wordpress/components';
+import {TextControl, Button, Dashicon} from '@wordpress/components';
 
 const Menu = [{
 	name: __('Redirects'),
@@ -73,6 +73,18 @@ export default class App extends Component {
 				{/*{this.state.drawer2 && <Drawer onClose={() => this.setState({drawer2: !this.state.drawer2})}>*/}
 				{/*	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quos.*/}
 				{/*</Drawer>}*/}
+
+				<div className="ea-search-control">
+					<input type="text" className='ea-search-control__input' placeholder='Search'/>
+					<span className="ea-search-control__icon">
+						<Dashicon icon={'search'}/>
+					</span>
+					<div className="ea-search-control__btn">
+						<Button>
+							<svg viewBox="0 0 14 14" id="svg-sprite-search" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd" stroke-width="2"><circle cx="6" cy="6" r="5"></circle><path d="M10 10l3 3" stroke-linecap="round"></path></g></svg>
+						</Button>
+					</div>
+				</div>
 
 
 				<Table

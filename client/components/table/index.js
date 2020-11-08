@@ -1,7 +1,6 @@
 import {useState, useEffect} from "@wordpress/element";
 import PropTypes from 'prop-types';
 import classNames from "classnames";
-
 import TableHeader from './header';
 import TableBody from './body';
 import {normalizeColumns} from './utils';
@@ -16,7 +15,8 @@ function Table(props) {
 
 	useEffect(() => {
 		setColumns(normalizeColumns(props.columns));
-	}, [props.columns]);
+		handleSelectAll(false);
+	}, [props.columns, data]);
 
 	const handleSelectAll = (isSelected) => {
 		let selected = data;
@@ -59,7 +59,7 @@ function Table(props) {
 	}
 
 	const classes = classNames('wp-list-table', 'widefat', 'fixed', 'striped', 'items', 'ea-list-table', className);
-	console.log(selected);
+
 	return (
 		<table className={classes}>
 			<thead>
@@ -144,7 +144,7 @@ Table.propTypes = {
 	//is loading
 	isLoading: PropTypes.func,
 	//no result
-	noResult: PropTypes.oneOfType(PropTypes.string, PropTypes.node)
+	noResult: PropTypes.oneOfType([PropTypes.string, PropTypes.node])
 };
 
 export default Table;

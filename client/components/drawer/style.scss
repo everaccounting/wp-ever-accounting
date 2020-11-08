@@ -66,10 +66,14 @@
   height: 100vh;
   background-color: #fff;
   box-shadow: 0 12px 12px 0 rgba(85, 93, 102, .3);
+  transform: translateX(100%);
+  transition-property: transform box-shadow;
+  transition-duration: .3s;
+  transition-timing-function: ease-in-out;
 
   @media (min-width: 772px) {
 	left: auto;
-	width: 500px;
+	width: 400px;
   }
 
   * {
@@ -91,6 +95,16 @@
 	justify-content: space-between;
 	padding: 16px 24px;
 	border-bottom: 1px solid #f0f0f0;
+  }
+
+  &.appear-done{
+	transform: initial;
+	box-shadow: 0 12px 12px 0 rgba(85, 93, 102, 0.3);
+  }
+
+  &-apear {
+	animation: tabSwitch;
+	animation-duration: 200ms;
   }
 
   //&-body {

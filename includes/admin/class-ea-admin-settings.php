@@ -52,7 +52,6 @@ class Settings {
 		// Capabilities
 		add_filter( 'option_page_capability_eaccounting_settings', array( $this, 'option_page_capability' ) );
 
-
 		// Filter the email settings
 		add_filter( 'eaccounting_settings_emails', array( $this, 'email_approval_settings' ) );
 	}
@@ -218,7 +217,6 @@ class Settings {
 					)
 				);
 			}
-
 		}
 
 		// Creates our settings in the options table
@@ -240,7 +238,6 @@ class Settings {
 				}
 			}
 		}
-
 
 		/**
 		 * Hook when update plugin settings.
@@ -441,11 +438,11 @@ class Settings {
 		 *
 		 */
 		do_action( 'eaccounting_pre_get_registered_settings', $this );
-		$accounts   = [];
-		$currencies = [];
+		$accounts   = array();
+		$currencies = array();
 		if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
-			$accounts   = Query_Account::init()->select( 'id, name' )->get();
-			$currencies = Query_Currency::init()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get();
+			$accounts   = \EverAccounting\Accounts\query()->select( 'id, name' )->get_results();
+			$currencies = \EverAccounting\Currencies\query()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get_results();
 		}
 
 		$settings = array(
@@ -457,12 +454,13 @@ class Settings {
 			 * @param array $settings General settings.
 			 *
 			 */
-			'general' => apply_filters( 'eaccounting_settings_general',
+			'general' => apply_filters(
+				'eaccounting_settings_general',
 				array(
 					'company_settings'       => array(
 						'name' => '<strong>' . __( 'Company Settings', 'wp-ever-accounting' ) . '</strong>',
 						'desc' => '',
-						'type' => 'header'
+						'type' => 'header',
 					),
 					'company_name'           => array(
 						'name' => __( 'Name', 'wp-ever-accounting' ),
@@ -470,13 +468,13 @@ class Settings {
 						'attr' => array(
 							'required'    => 'required',
 							'placeholder' => __( 'XYZ Company', 'wp-ever-accounting' ),
-						)
+						),
 					),
 					'company_email'          => array(
 						'name'              => __( 'Email', 'wp-ever-accounting' ),
 						'type'              => 'text',
 						'std'               => get_option( 'admin_email' ),
-						'sanitize_callback' => 'sanitize_email'
+						'sanitize_callback' => 'sanitize_email',
 					),
 					'company_phone'          => array(
 						'name' => __( 'Phone Number', 'wp-ever-accounting' ),
@@ -506,7 +504,7 @@ class Settings {
 						'name'    => __( 'Country', 'wp-ever-accounting' ),
 						'type'    => 'select',
 						'class'   => 'ea-select2',
-						'options' => [ '' => __( 'Select Country', 'wp-ever-accounting' ) ] + eaccounting_get_countries()
+						'options' => array( '' => __( 'Select Country', 'wp-ever-accounting' ) ) + eaccounting_get_countries(),
 					),
 					'company_logo'           => array(
 						'name' => __( 'Logo', 'wp-ever-accounting' ),
@@ -515,7 +513,7 @@ class Settings {
 					'local_settings'         => array(
 						'name' => '<strong>' . __( 'Localisation Settings', 'wp-ever-accounting' ) . '</strong>',
 						'desc' => '',
-						'type' => 'header'
+						'type' => 'header',
 					),
 					'financial_year_start'   => array(
 						'name'  => __( 'Financial Year Start', 'wp-ever-accounting' ),
@@ -526,7 +524,7 @@ class Settings {
 					'default_settings'       => array(
 						'name' => '<strong>' . __( 'Default Settings', 'wp-ever-accounting' ) . '</strong>',
 						'desc' => '',
-						'type' => 'header'
+						'type' => 'header',
 					),
 					'default_account'        => array(
 						'name'    => __( 'Account', 'wp-ever-accounting' ),
@@ -535,7 +533,7 @@ class Settings {
 						'options' => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + wp_list_pluck( $accounts, 'name', 'id' ),
 						'attr'    => array(
 							'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
-						)
+						),
 					),
 					'default_currency'       => array(
 						'name'    => __( 'Currency', 'wp-ever-accounting' ),
@@ -546,7 +544,7 @@ class Settings {
 						'options' => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck( $currencies, 'name', 'code' ),
 						'attr'    => array(
 							'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
-						)
+						),
 					),
 					'default_payment_method' => array(
 						'name'    => __( 'Payment Method', 'wp-ever-accounting' ),
@@ -602,9 +600,9 @@ class Settings {
 		$checked    = isset( $this->options[ $args['id'] ] ) ? checked( '1', $this->options[ $args['id'] ], false ) : '';
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$html       = '<label for="eaccounting_settings[' . $args['id'] . ']">';
-		$html       .= '<input type="checkbox" id="eaccounting_settings[' . $args['id'] . ']" name="eaccounting_settings[' . $args['id'] . ']" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
-		$html       .= $args['desc'];
-		$html       .= '</label>';
+		$html      .= '<input type="checkbox" id="eaccounting_settings[' . $args['id'] . ']" name="eaccounting_settings[' . $args['id'] . ']" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html      .= $args['desc'];
+		$html      .= '</label>';
 
 		echo $html;
 	}
@@ -697,8 +695,9 @@ class Settings {
 		$tooltip    = ! empty( $args['tooltip'] ) ? eaccounting_help_tip( $args['tooltip'] ) : '';
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = $tooltip;
-		$html .= sprintf( '<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
+		$html  = $tooltip;
+		$html .= sprintf(
+			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
@@ -737,8 +736,9 @@ class Settings {
 		$tooltip    = ! empty( $args['tooltip'] ) ? eaccounting_help_tip( $args['tooltip'] ) : '';
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = $tooltip;
-		$html .= sprintf( '<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
+		$html  = $tooltip;
+		$html .= sprintf(
+			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
@@ -781,8 +781,9 @@ class Settings {
 		$tooltip    = ! empty( $args['tooltip'] ) ? eaccounting_help_tip( $args['tooltip'] ) : '';
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = $tooltip;
-		$html .= sprintf( '<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
+		$html  = $tooltip;
+		$html .= sprintf(
+			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
@@ -816,14 +817,14 @@ class Settings {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 
-
 		$size       = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$tooltip    = ! empty( $args['tooltip'] ) ? eaccounting_help_tip( $args['tooltip'] ) : '';
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = $tooltip;
-		$html .= sprintf( '<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
+		$html  = $tooltip;
+		$html .= sprintf(
+			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
@@ -863,8 +864,9 @@ class Settings {
 		$tooltip    = ! empty( $args['tooltip'] ) ? eaccounting_help_tip( $args['tooltip'] ) : '';
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = $tooltip;
-		$html .= sprintf( '<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
+		$html  = $tooltip;
+		$html .= sprintf(
+			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
@@ -918,14 +920,16 @@ class Settings {
 		$tooltip    = ! empty( $args['tooltip'] ) ? eaccounting_help_tip( $args['tooltip'] ) : '';
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = $tooltip;
-		$html .= sprintf( '<select class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>',
+		$html  = $tooltip;
+		$html .= sprintf(
+			'<select class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>',
 			$size,
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
 			esc_attr( $args['id'] ),
 			esc_attr( $args['id'] ),
-			$attributes );
+			$attributes
+		);
 
 		foreach ( $args['options'] as $key => $option_value ) {
 			$html .= sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), eaccounting_selected( esc_attr( $key ), esc_attr( $value ) ), esc_html( $option_value ) );
@@ -988,8 +992,9 @@ class Settings {
 		$tooltip    = ! empty( $args['tooltip'] ) ? eaccounting_help_tip( $args['tooltip'] ) : '';
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = $tooltip;
-		$html .= sprintf( '<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
+		$html  = $tooltip;
+		$html .= sprintf(
+			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),

@@ -62,7 +62,7 @@ class Query_Category extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function typeExpense() {
+	public function expense_only() {
 		$this->where( "{$this->table}.type", 'expense' );
 
 		return $this;
@@ -74,7 +74,7 @@ class Query_Category extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function typeIncome() {
+	public function income_only() {
 
 		$this->where( "{$this->table}.type", 'income' );
 

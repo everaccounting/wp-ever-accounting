@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EverAccounting
+ *
  * @since 1.0.0
  */
 final class EverAccounting {
@@ -91,7 +92,7 @@ final class EverAccounting {
 	public function plugin_url( $path = '' ) {
 		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$url  = trailingslashit( $url );
+			$url = trailingslashit( $url );
 			$url .= ltrim( $path, '/' );
 		}
 
@@ -110,7 +111,7 @@ final class EverAccounting {
 	public function plugin_path( $path = '' ) {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$plugin_path  = trailingslashit( $plugin_path );
+			$plugin_path = trailingslashit( $plugin_path );
 			$plugin_path .= ltrim( $path, '/' );
 		}
 
@@ -129,6 +130,7 @@ final class EverAccounting {
 
 	/**
 	 * Get the template path.
+	 *
 	 * @since 1.2.0
 	 * @return string
 	 */
@@ -191,19 +193,19 @@ final class EverAccounting {
 	public function log_errors() {
 		$error = error_get_last();
 		if ( $error && in_array(
-			$error['type'],
-			array(
-				E_ERROR,
-				E_PARSE,
-				E_COMPILE_ERROR,
-				E_USER_ERROR,
-				E_RECOVERABLE_ERROR,
-			),
-			true
-		) ) {
+				$error['type'],
+				array(
+					E_ERROR,
+					E_PARSE,
+					E_COMPILE_ERROR,
+					E_USER_ERROR,
+					E_RECOVERABLE_ERROR,
+				),
+				true
+			) ) {
 			$logger = eaccounting_logger();
 			$logger->critical(
-						/* translators: 1: error message 2: file name and path 3: line number */
+			/* translators: 1: error message 2: file name and path 3: line number */
 				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
 				array(
 					'source' => 'fatal-errors',
@@ -250,59 +252,62 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
+		require_once( EACCOUNTING_ABSPATH . '/vendor/autoload.php' );
+
 		//Abstract classes.
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-base-object.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-base-object.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-widget.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-where-query.php' );
-
-		//Core classes.
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-where-query.php' );
+		//
+		//      //Core classes.
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-logger.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-logger.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-account.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-currency.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transaction.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-contact.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-category.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transfer.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transaction.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-category.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transfer.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-tax.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-account.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-currency.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transaction.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-contact.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-category.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transfer.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transaction.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-category.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transfer.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-item.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-tax.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-chart.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-chart.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-emails.php' );
 
 		//REST API.
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-rest-api.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-rest-api.php' );
 
 		//Functions.
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transfer-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-transfer-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
-
+		//
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
 		}
@@ -345,6 +350,7 @@ final class EverAccounting {
 	public function init_plugin() {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
+		\EverAccounting\REST\Manager::init();
 
 		$this->settings = new \EverAccounting\Admin\Settings();
 		$this->utils    = new \EverAccounting\Utilities();
@@ -360,9 +366,8 @@ final class EverAccounting {
 	 *
 	 * @return \EverAccounting\Query
 	 */
-	public function query() {
-		$query = new Query();
-		return $query::init();
+	public function query( $args = array() ) {
+		return new Query( $args = array() );
 	}
 
 	/**

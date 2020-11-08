@@ -35,20 +35,18 @@ const SubSub = (props) => {
 	}
 
 	return (
-		<div className="subsubsub-container">
-			<ul className="subsubsub">
-				{items.map((item, pos) => (
-					<SubItem
-						key={pos}
-						item={item}
-						isDisabled={isDisabled}
-						isCurrent={active === item.value}
-						isLast={pos === items.length - 1}
-						onClick={HandleClick}
-					/>
-				))}
-			</ul>
-		</div>
+		<ul className="subsubsub ea-subsubsub">
+			{items.map((item, pos) => (
+				<SubItem
+					key={pos}
+					item={item}
+					isDisabled={isDisabled}
+					isCurrent={active === item.value}
+					isLast={pos === items.length - 1}
+					onClick={HandleClick}
+				/>
+			))}
+		</ul>
 	);
 }
 

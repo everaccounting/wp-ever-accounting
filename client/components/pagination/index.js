@@ -5,6 +5,7 @@ import {numberFormat} from "../lib";
 import {__, sprintf, _n} from '@wordpress/i18n';
 
 import './style.scss';
+import Placeholder from "../placeholder";
 
 const Nav = props => {
 	const {title, button, className, enabled, onClick} = props;
@@ -60,13 +61,13 @@ const PageLinks = props => {
 
 
 const Pagination = (props) => {
-	const {per_page, page = 1, total, isDisabled} = props;
+	const {per_page, page = 1, total, onPageChange, isDisabled} = props;
 	const [current, setPage] = useState(page);
 	const onePage = total <= per_page;
 
 	const handlePageChange = page => {
 		setPage(page);
-		console.log('Now page ' + page);
+		onPageChange && onPageChange(page);
 	}
 
 	const classes = classNames({
@@ -74,9 +75,12 @@ const Pagination = (props) => {
 		'one-page': onePage,
 		'ea-tablenav':true,
 	});
+
 	return (
 		<div className={classes}>
+
 			<span className="displaying-num">
+						{/*{!!isDisabled && !total && <Placeholder/>}*/}
 				{sprintf(_n('%s item', '%s items', numberFormat(total), 'wp-ever-accounting'), numberFormat(total))}
 			</span>
 
@@ -88,6 +92,7 @@ const Pagination = (props) => {
 					current={current}
 					isDisabled={isDisabled}/>
 			)}
+
 
 		</div>
 	);

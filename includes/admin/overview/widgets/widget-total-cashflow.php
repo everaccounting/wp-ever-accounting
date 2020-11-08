@@ -159,9 +159,9 @@ class Cash_Flow extends Widget {
 			->query()
 			->select( 'amount, currency_code, currency_rate, paid_at' )
 			->from( 'ea_transactions' )
-			->whereDateBetween( 'paid_at', $start->format( 'Y-m-d' ), $end->format( 'Y-m-d' ) )
+			->where_date_between( 'paid_at', $start->format( 'Y-m-d' ), $end->format( 'Y-m-d' ) )
 			->where( 'type', $type )
-			->whereRaw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
+			->where_raw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
 			->get();
 
 		eaccounting_collect( $transactions )->each( function ( $item ) use ( $period, $date_format, &$totals ) {

@@ -1,3 +1,5 @@
+import { dispatch } from '@wordpress/data';
+
 /**
  * Get a portal node, or create it if it doesn't exist.
  *
@@ -55,3 +57,23 @@ export const numberFormat = (number, decimals, dec_point, thousands_sep) => {
 	}
 	return s.join(dec);
 };
+
+
+export function createNoticesFromResponse( response ) {
+	const { createNotice } = dispatch( 'core/notices' );
+
+	if (
+		response.error_data &&
+		response.errors &&
+		Object.keys( response.errors ).length
+	) {
+		// Loop over multi-error responses.
+		Object.keys( response.errors ).forEach( ( errorKey ) => {
+			createNotice( 'error', response.errors[ errorKey ].join( ' ' ) );
+		} );
+	} else if ( response.message ) {
+		// Handle generic messages.
+		createNotice( response.code ? 'error' : 'success', response.message );
+	}
+}
+

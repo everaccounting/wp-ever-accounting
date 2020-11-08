@@ -26,10 +26,10 @@ function SearchBox(props) {
 	}
 
 	return (
-		<form onSubmit={handleSubmit} className="search-box">
-			<input type="search" name="s" value={search} onChange={handleChange}/>
-			<input type="submit" className="button" value={__('Search')} disabled={isDisabled || !search}/>
-		</form>
+		<p className="search-box">
+			<input type="search" name="s" value={search} onChange={handleChange} disabled={!!isDisabled}/>
+			<input type="submit" className="button" value={__('Search')} onClick={handleSubmit} disabled={isDisabled || !search}/>
+		</p>
 	)
 }
 

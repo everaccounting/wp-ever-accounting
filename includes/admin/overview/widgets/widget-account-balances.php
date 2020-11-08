@@ -3,7 +3,6 @@
 namespace EverAccounting\Admin\Overview\Widgets;
 
 use EverAccounting\Abstracts\Widget;
-use EverAccounting\Query_Transaction;
 
 class Account_Balances extends Widget {
 	/**
@@ -42,7 +41,7 @@ class Account_Balances extends Widget {
 			->select( 'a.name, a.opening_balance, a.currency_code' )
 			->select( "SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) balance" )
 			->from( 'ea_accounts a' )
-			->leftJoin( 'ea_transactions as t', 't.account_id', 'a.id' )
+			->left_join( 'ea_transactions as t', 't.account_id', 'a.id' )
 			->group_by( 'a.id' )
 			->order_by( 'balance', 'DESC' )
 			->limit( 5 )

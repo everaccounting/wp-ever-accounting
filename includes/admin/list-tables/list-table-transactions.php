@@ -415,7 +415,7 @@ class List_Table_Transactions extends List_Table {
 										->where( $args )
 										->search( $search )
 										->notTransfer()
-										->whereDateBetween( 'paid_at', $start_date, $end_date )
+										->where_date_between( 'paid_at', $start_date, $end_date )
 										->order_by( $orderby, $order )
 										->page( $page, $per_page );
 		$this->items = $base_query->copy()->where( array( 'type' => $type ) )->get( OBJECT, 'eaccounting_get_transaction' );

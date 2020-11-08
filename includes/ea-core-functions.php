@@ -385,38 +385,14 @@ function eaccounting_round_number( $val, $precision = 2 ) {
 }
 
 /**
- * Makes internal API request for usages within PHP
- *
- *
- *
- * @since 1.0.2
- *
- * @param array  $args
- * @param string $method
- *
- * @param        $endpoint
- *
- * @return array
- */
-function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' ) {
-	$request = new \WP_REST_Request( $method, $endpoint );
-	$request->set_query_params( $args );
-	$response = rest_do_request( $request );
-	$server   = rest_get_server();
-	$result   = $server->response_to_data( $response, false );
-
-	return $result;
-}
-
-/**
  * Create a collection from the given value.
  *
  * @since 1.0.2
  *
  * @param mixed $items
  *
- * @return \EAccounting\Collection
+ * @return \EverAccounting\Collection
  */
 function eaccounting_collect( $items ) {
-	return new \EAccounting\Collection( $items );
+	return new \EverAccounting\Collection( $items );
 }

@@ -466,13 +466,13 @@ class List_Table_Payments extends List_Table {
 		$this->items = Query_Transaction::init()
 										->where( $args )
 										->notTransfer()
-										->whereDateBetween( 'paid_at', $start_date, $end_date )
+										->where_date_between( 'paid_at', $start_date, $end_date )
 										->get( OBJECT, 'eaccounting_get_transaction' );
 
 		$this->total_count = Query_Transaction::init()
 											  ->where( $args )
 											  ->notTransfer()
-											  ->whereDateBetween( 'paid_at', $start_date, $end_date )
+											  ->where_date_between( 'paid_at', $start_date, $end_date )
 											  ->count();
 
 		$this->set_pagination_args(

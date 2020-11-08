@@ -64,7 +64,7 @@ class Query_Transaction extends Query {
 	 */
 	public function notTransfer() {
 		global $wpdb;
-		$this->whereRaw( "{$this->table}.category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" );
+		$this->where_raw( "{$this->table}.category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" );
 
 		return $this;
 	}
@@ -75,7 +75,7 @@ class Query_Transaction extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function typeExpense() {
+	public function expense_only() {
 		$this->where( "{$this->table}.type", 'expense' );
 
 		return $this;
@@ -87,7 +87,7 @@ class Query_Transaction extends Query {
 	 * @since 1.0.2
 	 * @return $this
 	 */
-	public function typeIncome() {
+	public function income_only() {
 
 		$this->where( "{$this->table}.type", 'income' );
 

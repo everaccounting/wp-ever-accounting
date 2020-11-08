@@ -303,7 +303,6 @@ abstract class Base_Object {
 				if ( is_callable( array( $this, $setter ) ) ) {
 					$this->{$setter}( $value );
 				}
-
 			} catch ( Exception $e ) {
 				if ( ! $errors ) {
 					$errors = new \WP_Error();
@@ -412,7 +411,7 @@ abstract class Base_Object {
 				return;
 			}
 
-			if ( is_a( $value, 'EAccounting_DateTime' ) ) {
+			if ( is_a( $value, 'EverAccounting\\DateTime' ) ) {
 				$datetime = $value;
 			} elseif ( is_numeric( $value ) ) {
 				// Timestamps are handled as UTC timestamps in all cases.
@@ -455,9 +454,15 @@ abstract class Base_Object {
 		if ( is_wp_error( $errors ) ) {
 			$class = get_called_class();
 			eaccounting_logger()->error(
-				sprintf( __( 'Failed populating object because %s', 'wp-ever-accounting' ), $errors->get_error_message()
+				sprintf(
+						/* translators: %s error */
+					__( 'Failed populating object because %s', 'wp-ever-accounting' ),
+					$errors->get_error_message()
 				),
-				array( 'id' => $this->get_id(), 'context' => $class . __METHOD__ )
+				array(
+					'id'      => $this->get_id(),
+					'context' => $class . __METHOD__,
+				)
 			);
 			$this->error( $errors->get_error_code(), $errors->get_error_message() );
 		}
@@ -643,7 +648,6 @@ abstract class Base_Object {
 		 */
 		do_action( 'eaccounting_before_' . $this->object_type . '_object_save', $this );
 
-
 		return $this->get_id();
 	}
 
@@ -661,6 +665,7 @@ abstract class Base_Object {
 	 * @throws Exception Data Exception.
 	 */
 	protected function error( $code, $message, $http_status_code = 400, $data = array() ) {
+		_doing_it_wrong( __METHOD__, $message, '1.1.0' );
 		throw new Exception( $code, $message, $http_status_code, $data );
 	}
 
@@ -695,8 +700,6 @@ abstract class Base_Object {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
-	 *
 	 * @return bool
 	 */
 	public function is_enabled() {
@@ -724,7 +727,7 @@ abstract class Base_Object {
 	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
-		if ( $creator_id === null ) {
+		if ( null === $creator_id ) {
 			$creator_id = eaccounting_get_current_user_id();
 		}
 		$this->set_prop( 'creator_id', absint( $creator_id ) );
@@ -739,7 +742,7 @@ abstract class Base_Object {
 	 *
 	 */
 	public function set_date_created( $date = null ) {
-		if ( $date === null ) {
+		if ( null === $date ) {
 			$date = time();
 		}
 		$this->set_date_prop( 'date_created', $date );

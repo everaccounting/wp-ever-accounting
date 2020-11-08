@@ -681,7 +681,7 @@ function eaccounting_select2( $field ) {
 function eaccounting_contact_dropdown( $field ) {
 	$type    = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
 	$value   = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : '';
-	$options = \EverAccounting\Query_Contact::init()->select( 'id, name' );
+	$options = \EverAccounting\Contacts\query()->select( 'id, name' );
 	if ( $type ) {
 		$options->where( 'type', $type );
 	}
@@ -689,7 +689,7 @@ function eaccounting_contact_dropdown( $field ) {
 		$options->where( 'id', $value );
 	}
 
-	$options = $options->get();
+	$options = $options->get_results();
 
 	$field = wp_parse_args(
 		array(
@@ -718,10 +718,10 @@ function eaccounting_account_dropdown( $field ) {
 	$options    = array();
 	$wherein    = array_filter( array_unique( array( $default_id, $account_id ) ) );
 	if ( ! empty( $wherein ) ) {
-		$options = \EverAccounting\Query_Account::init()
+		$options = \EverAccounting\Accounts\query()
 												->select( 'id, name' )
 												->whereIn( 'id', $wherein )
-												->get();
+												->get_results();
 	}
 	if ( ! isset( $field['default'] ) ) {
 		$default_id = (int) eaccounting()->settings->get( 'default_account' );
@@ -759,7 +759,7 @@ function eaccounting_category_dropdown( $field ) {
 	);
 	$type    = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_category_types() ) ? eaccounting_clean( $field['type'] ) : false;
 	$value   = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : false;
-	$options = \EverAccounting\Query_Category::init()->select( 'id, name' );
+	$options = \EverAccounting\Categories\query()->select( 'id, name' );
 	if ( $type ) {
 		$options->where( 'type', $type );
 	}
@@ -769,7 +769,7 @@ function eaccounting_category_dropdown( $field ) {
 	$field = wp_parse_args(
 		array(
 			'value'       => $value ? absint( $value ) : '',
-			'options'     => wp_list_pluck( $options->get(), 'name', 'id' ),
+			'options'     => wp_list_pluck( $options->get_results(), 'name', 'id' ),
 			'type'        => $type . '_category',
 			'ajax'        => true,
 			'placeholder' => __( 'Select Category', 'wp-ever-accounting' ),
@@ -826,10 +826,10 @@ function eaccounting_currency_dropdown( $field ) {
 	$options       = array();
 	$wherein       = array_filter( array_unique( array( $default_code, $currency_code ) ) );
 	if ( ! empty( $wherein ) ) {
-		$options = \EverAccounting\Query_Currency::init()
-												 ->select( 'code as code, CONCAT (name,"(", symbol, ")") as name' )
-												 ->whereIn( 'code', $wherein )
-												 ->get();
+		$options = \EverAccounting\Currencies\query()
+				->select( 'code as code, CONCAT (name,"(", symbol, ")") as name' )
+				->whereIn( 'code', $wherein )
+				->get_results();
 	}
 	$field = wp_parse_args(
 		$field,

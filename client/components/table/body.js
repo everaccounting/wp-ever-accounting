@@ -40,9 +40,6 @@ function TableBody({columns, data, selected, isLoading, onSelect, noResult}) {
 					</td>
 				) ) }
 
-				<td>
-					<div className="ea-placeholder__loading" />
-				</td>
 			</tr>
 		)
 	}

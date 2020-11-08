@@ -63,7 +63,7 @@ class Query_Transfer extends Query {
 	 */
 	public function withTransactions() {
 		$transaction = Query_Transaction::TABLE;
-		$this->leftJoin( "ea_transactions as {$transaction}", "{$transaction}.id", "{$this->table}.income_id" )
+		$this->left_join( "ea_transactions as {$transaction}", "{$transaction}.id", "{$this->table}.income_id" )
 		     ->group_by( "{$this->table}.id" );
 
 		return $this;

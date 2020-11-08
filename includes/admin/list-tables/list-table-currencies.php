@@ -432,14 +432,14 @@ class List_Table_Currency extends List_Table {
 
 		$args = apply_filters( 'eaccounting_currencies_table_get_currencies', $args, $this );
 
-		$this->items = Query_Currency::init()->where( $args )->get( OBJECT, 'eaccounting_get_currency' );
+		$this->items = \EverAccounting\Currencies\query( $args )->get( OBJECT, 'eaccounting_get_currency' );
 
-		$this->active_count = Query_Currency::init()->where( array_merge( $this->query_args, array(
+		$this->active_count = \EverAccounting\Currencies\query( array_merge( $this->query_args, array(
 			'status' => 'active',
 			'search' => $search
 		) ) )->count();
 
-		$this->inactive_count = Query_Currency::init()->where( array_merge( $this->query_args, array(
+		$this->inactive_count = \EverAccounting\Currencies\query( array_merge( $this->query_args, array(
 			'status' => 'inactive',
 			'search' => $search
 		) ) )->count();
