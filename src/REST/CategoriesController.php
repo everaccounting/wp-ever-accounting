@@ -193,11 +193,11 @@ class CategoriesController extends Controller {
 
 
 	/***
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -222,11 +222,11 @@ class CategoriesController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -243,11 +243,11 @@ class CategoriesController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -277,11 +277,11 @@ class CategoriesController extends Controller {
 	/**
 	 * since 1.0.0
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -310,13 +310,13 @@ class CategoriesController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param \WP_REST_Request                    $request
+	 * @param \WP_REST_Request $request
 	 *
 	 * @param \EverAccounting\Categories\Category $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 * @since 1.0.2
+	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -342,9 +342,9 @@ class CategoriesController extends Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
+	 * @return array Item schema data.
 	 * @since 1.0.2
 	 *
-	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -410,9 +410,9 @@ class CategoriesController extends Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
+	 * @return array Collection parameters.
 	 * @since 1.1.0
 	 *
-	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

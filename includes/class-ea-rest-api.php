@@ -56,13 +56,11 @@ class API {
 		require_once( dirname( __FILE__ ) . '/api/class-ea-rest-controller.php' );
 
 		$rest_handlers = array(
-<<<<<<< HEAD
 			dirname( __FILE__ ) . '/api/class-ea-rest-customers-controller.php'  => 'EverAccounting\API\Customers_Controller',
 			dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php' => 'EverAccounting\API\Categories_Controller',
-=======
+
 			dirname( __FILE__ ) . '/api/class-ea-rest-contacts-controller.php'   => 'EverAccounting\API\Contacts_Controller',
 			//dirname( __FILE__ ) . '/api/class-ea-rest-categories-controller.php' => 'EverAccounting\API\Categories_Controller',
->>>>>>> e0017115839eda986c97abc3d463023d3c04207f
 			//          dirname( __FILE__ ) . '/api/class-ea-rest-currencies-controller.php'   => 'EverAccounting\API\Currencies_Controller',
 			//          dirname( __FILE__ ) . '/api/class-ea-rest-accounts-controller.php'     => 'EverAccounting\API\Accounts_Controller',
 			//          dirname( __FILE__ ) . '/api/class-ea-rest-transfers-controller.php'    => 'EverAccounting\API\Transfers_Controller',

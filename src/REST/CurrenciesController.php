@@ -357,7 +357,7 @@ class CurrenciesController extends Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'                 => array(
-					'description' => __( 'Unique identifier for the category.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the currency.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -366,7 +366,7 @@ class CurrenciesController extends Controller {
 					),
 				),
 				'name'               => array(
-					'description' => __( 'Name of the category.', 'wp-ever-accounting' ),
+					'description' => __( 'Name of the currency.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -375,7 +375,7 @@ class CurrenciesController extends Controller {
 					'required'    => true,
 				),
 				'code'               => array(
-					'description' => __( 'Unique code for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique code for the currency.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -407,6 +407,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required' => true,
 				),
 				'position'           => array(
 					'description' => __( 'Position.', 'wp-ever-accounting' ),
@@ -416,6 +417,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required' => true,
 				),
 				'decimal_separator'  => array(
 					'description' => __( 'Decimal separator count.', 'wp-ever-accounting' ),
@@ -424,6 +426,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required' => true,
 				),
 				'thousand_separator' => array(
 					'description' => __( 'Thousand separator count.', 'wp-ever-accounting' ),
@@ -432,6 +435,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required' => true,
 				),
 				'enabled'            => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),

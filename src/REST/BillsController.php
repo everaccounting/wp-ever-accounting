@@ -11,13 +11,13 @@ namespace EverAccounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
-class ItemsController extends Controller {
+class BillsController extends Controller {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'items';
+	protected $rest_base = 'bills';
 
 	/**
 	 * Register our routes.
@@ -55,7 +55,7 @@ class ItemsController extends Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the bill.', 'wp-ever-accounting' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -83,7 +83,7 @@ class ItemsController extends Controller {
 	}
 
 	/**
-	 * Check whether a given request has permission to read items.
+	 * Check whether a given request has permission to read accounts.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -94,7 +94,7 @@ class ItemsController extends Controller {
 	}
 
 	/**
-	 * Check if a given request has access create item.
+	 * Check if a given request has access create account.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -354,11 +354,11 @@ class ItemsController extends Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Item', 'wp-ever-accounting' ),
+			'title'      => __( 'Bill', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'              => array(
-					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
+				'id'                 => array(
+					'description' => __( 'Unique identifier for the bill.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -366,86 +366,124 @@ class ItemsController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'            => array(
-					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
-					'type'        => 'string',
+				'bill_number'        => array(
+					'description' => __( 'Number of bill.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'readonly'    => true,
+					'required'    => true,
+				),
+				'order_number'       => array(
+					'description' => __( 'Order Number of bill.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'readonly'    => true,
+					'required'    => true,
+				),
+				'status'             => array(
+					'description' => __( 'Status of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
-				'sku'          => array(
-					'description' => __( 'Sku of the item.', 'wp-ever-accounting' ),
+				'bill_at'            => array(
+					'description' => __( 'Date of bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date-time',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'due_at'             => array(
+					'description' => __( 'Due Date of bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date-time',
+					'context'     => array( 'view', 'edit' ),
+				),
+				'subtotal'           => array(
+					'description' => __( 'Subtotal of the bill.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
+					'default'     => '0',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'discount'           => array(
+					'description' => __( 'Discount of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'default'     => '0',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'attachment'           => array(
-					'description' => __( 'Attachment of the invoice', 'wp-ever-accounting' ),
-					'type'        => 'object',
+				'tax'                => array(
+					'description' => __( 'Tax of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
+					'default'     => '0',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'shipping'           => array(
+					'description' => __( 'Shipping of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'default'     => '0',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'total'              => array(
+					'description' => __( 'Total of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'default'     => '0',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'currency_code'      => array(
+					'description' => __( 'Currency code of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'src' => array(
-							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
+						'code' => array(
+							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 						),
-						'name' => array(
-							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
+
 					),
 				),
-				'description' => array(
-					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
+				'currency_rate'      => array(
+					'description' => __( 'Currency rate of the bill.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_textarea_field',
-					),
-				),
-				'sale_price' => array(
-					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view','edit' ),
-					'default'     => '0',
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => true,
 				),
-				'purchase_price' => array(
-					'description' => __( 'Purchase price of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view','edit' ),
-					'default'     => '0',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'quantity' => array(
-					'description' => __( 'Quantity of the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'embed', 'view','edit' ),
-					'default'     => '1',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
-				'category_id'    => array(
-					'description' => __( 'Category id of the item.', 'wp-ever-accounting' ),
+				'category_id'        => array(
+					'description' => __( 'Category id of the bill.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
@@ -466,45 +504,114 @@ class ItemsController extends Controller {
 						),
 					),
 				),
-				'tax_id'    => array(
-					'description' => __( 'Tax id of the item.', 'wp-ever-accounting' ),
+				'contact_id'         => array(
+					'description' => __( 'Contact id of the bill.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'intval',
 					),
+					'required'    => true,
 					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Tax ID.', 'wp-ever-accounting' ),
+						'id' => array(
+							'description' => __( 'Contact ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'rate'   => array(
-							'description' => __( 'Tax Rate.', 'wp-ever-accounting' ),
-							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
 					),
 				),
-				'enabled'      => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
+				'contact_name'       => array(
+					'description' => __( 'Contact name of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
-				'creator' => array(
-					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
+				'contact_email'      => array(
+					'description' => __( 'Contact email of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'contact_tax_number' => array(
+					'description' => __( 'Contact tax_number of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'contact_phone'      => array(
+					'description' => __( 'Contact phone of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'contact_address'    => array(
+					'description' => __( 'Contact address of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+				),
+				'note'               => array(
+					'description' => __( 'Note for the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+				),
+				'footer'             => array(
+					'description' => __( 'Footer of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+				),
+				'attachment'         => array(
+					'description' => __( 'Attachment url of the bill.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view' ),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'src'  => array(
+							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'name' => array(
+							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
+				),
+				'creator'            => array(
+					'description' => __( 'Creator of the bill.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'properties'  => array(
-						'id'   => array(
+						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'name' => array(
+						'name'  => array(
 							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -516,8 +623,8 @@ class ItemsController extends Controller {
 						),
 					),
 				),
-				'date_created' => array(
-					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
+				'date_created'       => array(
+					'description' => __( 'Created date of the bill.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
