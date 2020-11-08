@@ -79,6 +79,32 @@ class ContactsController extends Controller {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @return array
+	 */
+	public function prepare_item_for_database( $request ) {
+		$schema    = $this->get_item_schema();
+		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data      = array();
+		foreach ( $data_keys as $key ) {
+			$value = $request[ $key ];
+			switch ( $key ) {
+				case 'currency_code':
+					$data[ $key ] = eaccounting_rest_get_currency_code( $value );
+					break;
+				default:
+					$data[ $key ] = $value;
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 *
+	 * @since 1.0.2
+	 *
 	 * @param \WP_REST_Request        $request
 	 *
 	 * @param \EverAccounting\Contact $item
@@ -221,12 +247,23 @@ class ContactsController extends Controller {
 				),
 				'currency_code' => array(
 					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
 					'required'    => true,
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'code' => array(
+							'description' => __( 'Currency code', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'enum'        => array_keys( eaccounting_get_global_currencies() ),
+						),
+					)
 				),
 				'note'          => array(
 					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
