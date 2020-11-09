@@ -47,7 +47,6 @@ class Query extends \EverAccounting\Query {
 			array(
 				'table'          => self::TABLE,
 				'order'          => 'DESC',
-
 				'search_columns' => array( 'name', 'code', 'symbol', 'rate' ),
 			),
 			parent::get_query_vars()

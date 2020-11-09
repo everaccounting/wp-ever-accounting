@@ -334,12 +334,6 @@ class ContactsController extends Controller {
 
 	/**
 	 *
-<<<<<<< HEAD
-=======
-	 * @since 1.0.2
-	 *
-	 * @param \WP_REST_Request        $request
->>>>>>> 8be1b16a32129dc20b4fe952c11736e128c2fe2b
 	 *
 	 * @param \EverAccounting\Contact $item
 	 *
@@ -369,6 +363,9 @@ class ContactsController extends Controller {
 			'creator_id'    => $item->get_creator_id(),
 			'created_at'    => eaccounting_rest_date_response( $item->get_date_created() ),
 		);
+
+		$currency_code         = eaccounting_get_currency( $item->get_currency_code() );
+		$data['currency_code'] = $currency_code->exists() ? $currency_code->get_data() : array();
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
 		$data    = $this->add_additional_fields_to_object( $data, $request );

@@ -73,6 +73,8 @@ class Query extends \EverAccounting\Query {
 		return $this;
 	}
 
+
+
 	/**
 	 * Include only customers
 	 *

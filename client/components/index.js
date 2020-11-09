@@ -16,6 +16,7 @@ export {default as ListTable} from './list-table';
 export {default as Date} from './date';
 export {default as Select} from './select';
 export {default as SelectControl} from './select-control';
+export {default as TextControl} from './text-control';
 export {default as Form} from './form';
 export * from './lib';
 

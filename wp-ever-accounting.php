@@ -45,6 +45,14 @@ final class EverAccounting {
 	public $settings;
 
 	/**
+	 * Contains resource controllers.
+	 *
+	 * @since 1.1.0
+	 * @var array
+	 */
+	public $controllers;
+
+	/**
 	 * The single instance of the class.
 	 *
 	 * @since 1.0.0
@@ -92,7 +100,7 @@ final class EverAccounting {
 	public function plugin_url( $path = '' ) {
 		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$url = trailingslashit( $url );
+			$url  = trailingslashit( $url );
 			$url .= ltrim( $path, '/' );
 		}
 
@@ -111,7 +119,7 @@ final class EverAccounting {
 	public function plugin_path( $path = '' ) {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$plugin_path = trailingslashit( $plugin_path );
+			$plugin_path  = trailingslashit( $plugin_path );
 			$plugin_path .= ltrim( $path, '/' );
 		}
 
@@ -160,6 +168,21 @@ final class EverAccounting {
 	}
 
 	/**
+	 * Magic getter to select controller.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $prop
+	 *
+	 * @return \EverAccounting\Interfaces\Controller
+	 */
+	public function __get( $prop ) {
+		if ( array_key_exists( $prop, $this->controllers ) ) {
+			return $this->controllers[ $prop ];
+		}
+	}
+
+	/**
 	 * Throw error on object clone
 	 *
 	 * The whole idea of the singleton design pattern is that there is a single
@@ -193,16 +216,16 @@ final class EverAccounting {
 	public function log_errors() {
 		$error = error_get_last();
 		if ( $error && in_array(
-				$error['type'],
-				array(
-					E_ERROR,
-					E_PARSE,
-					E_COMPILE_ERROR,
-					E_USER_ERROR,
-					E_RECOVERABLE_ERROR,
-				),
-				true
-			) ) {
+			$error['type'],
+			array(
+				E_ERROR,
+				E_PARSE,
+				E_COMPILE_ERROR,
+				E_USER_ERROR,
+				E_RECOVERABLE_ERROR,
+			),
+			true
+		) ) {
 			$logger = eaccounting_logger();
 			$logger->critical(
 			/* translators: 1: error message 2: file name and path 3: line number */
@@ -292,11 +315,11 @@ final class EverAccounting {
 		//      require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-rest-api.php' );
 
 		//Functions.
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
+		      require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
+		      require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
+		      require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
+		      require_once( EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php' );
+		      require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
 		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
 		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
 		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php' );
@@ -305,12 +328,12 @@ final class EverAccounting {
 		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
 		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
 		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
+		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 		//
-		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
-		}
+		      if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+		          require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
+		      }
 	}
 
 	/**
@@ -326,6 +349,7 @@ final class EverAccounting {
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
 		add_action( 'init', array( $this, 'init_plugin' ), 0 );
 		add_action( 'init', array( $this, 'localization_setup' ) );
+		add_action( 'init', array( $this, 'init_controllers' ) );
 	}
 
 	/**
@@ -349,14 +373,22 @@ final class EverAccounting {
 	 */
 	public function init_plugin() {
 		// Before init action.
-		do_action( 'before_eaccounting_init' );
-		\EverAccounting\REST\Manager::init();
+		//      do_action( 'before_eaccounting_init' );
+		//      \EverAccounting\REST\Manager::init();
+		//
+		      $this->settings = new \EverAccounting\Admin\Settings();
+		//      $this->utils    = new \EverAccounting\Utilities();
+		//
+		//      // Init action.
+		//      do_action( 'eaccounting_init' );
+	}
 
-		$this->settings = new \EverAccounting\Admin\Settings();
-		$this->utils    = new \EverAccounting\Utilities();
-
-		// Init action.
-		do_action( 'eaccounting_init' );
+	/**
+	 *
+	 * @since 1.1.0
+	 */
+	public function init_controllers() {
+		$this->controllers['account'] = EverAccounting\Accounts\Controller::init();
 	}
 
 	/**

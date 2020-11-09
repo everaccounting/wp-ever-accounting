@@ -53,16 +53,7 @@
 	  "EverAccounting\\": "src/"
 	},
 	"files": [
-	  "src/Accounts/functions.php",
-	  "src/Categories/functions.php",
-	  "src/Contacts/functions.php",
-	  "src/Currencies/functions.php",
-	  "src/Customers/functions.php",
-	  "src/Payments/functions.php",
-	  "src/Revenues/functions.php",
-	  "src/Transactions/functions.php",
-	  "src/Transfers/functions.php",
-	  "src/Vendors/functions.php"
+
 	]
   }
 }

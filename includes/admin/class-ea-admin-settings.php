@@ -441,8 +441,8 @@ class Settings {
 		$accounts   = array();
 		$currencies = array();
 		if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
-			$accounts   = \EverAccounting\Accounts\query()->select( 'id, name' )->get_results();
-			$currencies = \EverAccounting\Currencies\query()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get_results();
+			//          $accounts   = \EverAccounting\Accounts\query()->select( 'id, name' )->get_results();
+			//          $currencies = \EverAccounting\Currencies\query()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get_results();
 		}
 
 		$settings = array(
@@ -554,6 +554,7 @@ class Settings {
 					),
 				)
 			),
+			'misc'    => array(),
 		);
 
 		/**

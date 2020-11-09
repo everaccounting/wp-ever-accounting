@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@automattic/color-studio@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@automattic/color-studio/-/color-studio-2.3.1.tgz#961d9af4fbe2878bcf30c6ade4eec06537ec1fb6"
+  integrity sha512-EukCyI4mJu7pMob/xLrply5LPVQQmpWD4y5JtTn/Vvni78Ax6654I82Ute/Yu9Buvj4MS3sIXasHlhECA7lSEQ==
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.10.4.tgz#168da1a36e90da68ae8d49c0f1b48c7c6249213a"

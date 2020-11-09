@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import {ITEMS_STORE_NAME} from '@eaccounting/data';
 import {TextControl, Button} from '@wordpress/components';
 import {useDispatch, useSelect} from '@wordpress/data';
-
+import CustomerFields from "./components/customers/fields";
 import {ListTable, Drawer, Form} from "@eaccounting/components";
 
 const initialValues = { firstName: '' };
@@ -39,6 +39,7 @@ function NameColumn(row, column) {
 								handleSubmit,
 							} ) => (
 							<div>
+								<CustomerFields getInputProps={getInputProps}/>
 								<TextControl
 									label={ 'Name' }
 									{ ...getInputProps( 'name' ) }
