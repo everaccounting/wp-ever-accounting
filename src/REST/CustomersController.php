@@ -24,6 +24,8 @@ class CustomersController extends ContactsController {
 	 * Route base.
 	 *
 	 * @var string
+	 *
+	 * @since   1.1.0
 	 */
 	protected $rest_base = 'customers';
 
@@ -33,6 +35,8 @@ class CustomersController extends ContactsController {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since   1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_customers' );
@@ -44,6 +48,8 @@ class CustomersController extends ContactsController {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_customers' );
@@ -55,6 +61,8 @@ class CustomersController extends ContactsController {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since   1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_customers' );
@@ -66,6 +74,8 @@ class CustomersController extends ContactsController {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_customers' );
@@ -77,6 +87,8 @@ class CustomersController extends ContactsController {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_customers' );
@@ -88,6 +100,8 @@ class CustomersController extends ContactsController {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_customers' );
@@ -99,6 +113,8 @@ class CustomersController extends ContactsController {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 *
+	 * @since   1.1.0
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -136,11 +152,14 @@ class CustomersController extends ContactsController {
 
 
 	/***
-	 * @since 1.0.2
+	 * Create a customer
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -165,11 +184,13 @@ class CustomersController extends ContactsController {
 
 	/**
 	 *
-	 * @since 1.0.2
+	 * Get a customer
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -186,11 +207,13 @@ class CustomersController extends ContactsController {
 
 	/**
 	 *
-	 * @since 1.0.2
+	 * Update a customer
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 *
+	 * @since 1.1.0
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -218,13 +241,13 @@ class CustomersController extends ContactsController {
 	}
 
 	/**
-	 * since 1.0.0
-	 *
-	 * @since 1.0.2
+	 * Delete a customer
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );

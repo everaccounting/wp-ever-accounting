@@ -16,6 +16,8 @@ class CurrenciesController extends Controller {
 	 * Route base.
 	 *
 	 * @var string
+	 *
+	 * @since 1.1.0
 	 */
 	protected $rest_base = 'currencies';
 
@@ -88,6 +90,8 @@ class CurrenciesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_currency' );
@@ -99,6 +103,8 @@ class CurrenciesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_currency' );
@@ -110,6 +116,8 @@ class CurrenciesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_currency' );
@@ -121,6 +129,8 @@ class CurrenciesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_currency' );
@@ -132,6 +142,8 @@ class CurrenciesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_currency' );
@@ -143,6 +155,8 @@ class CurrenciesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_currency' );
@@ -150,11 +164,13 @@ class CurrenciesController extends Controller {
 
 
 	/**
-	 * Get all categories.
+	 * Get all currencies.
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -192,11 +208,13 @@ class CurrenciesController extends Controller {
 
 
 	/***
-	 * @since 1.0.2
+	 * Create a currency
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 *
+	 * @since 1.1.0
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -221,11 +239,13 @@ class CurrenciesController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
+	 * Get a single currency
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -241,12 +261,13 @@ class CurrenciesController extends Controller {
 	}
 
 	/**
-	 *
-	 * @since 1.0.2
+	 * Update a currency
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 *
+	 * @since 1.1.0
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -274,13 +295,13 @@ class CurrenciesController extends Controller {
 	}
 
 	/**
-	 * since 1.0.0
-	 *
-	 * @since 1.0.2
+	 * Delete a currency
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -309,13 +330,15 @@ class CurrenciesController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
+	 * Prepare item for response
 	 *
 	 * @param \WP_REST_Request                    $request
 	 *
 	 * @param \EverAccounting\Currencies\Currency $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -344,11 +367,13 @@ class CurrenciesController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
+	 * Prepare item for database
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return array
+	 *
+	 * @since 1.1.0
 	 */
 	public function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -368,9 +393,9 @@ class CurrenciesController extends Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @return array Item schema data.
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -406,7 +431,7 @@ class CurrenciesController extends Controller {
 					'required'    => true,
 				),
 				'rate'               => array(
-					'description' => __( 'Current rate for the item.', 'wp-ever-accounting' ),
+					'description' => __( 'Current rate for the currency.', 'wp-ever-accounting' ),
 					'type'        => array( 'string', 'numeric' ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
@@ -465,7 +490,7 @@ class CurrenciesController extends Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_created'       => array(
-					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the currency.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
@@ -481,9 +506,9 @@ class CurrenciesController extends Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Collection parameters.
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

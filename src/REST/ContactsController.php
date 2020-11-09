@@ -78,10 +78,10 @@ class ContactsController extends Controller {
 	/**
 	 * Check whether a given request has permission to read contacts.
 	 *
-<<<<<<< HEAD
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_contacts' );
@@ -93,6 +93,7 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_contacts' );
@@ -104,6 +105,8 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_contacts' );
@@ -115,6 +118,8 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_contacts' );
@@ -126,6 +131,8 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_contact' );
@@ -137,6 +144,8 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_contacts' );
@@ -148,6 +157,8 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -185,24 +196,24 @@ class ContactsController extends Controller {
 
 
 	/***
+	 * Create a contact
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-=======
->>>>>>> 8be1b16a32129dc20b4fe952c11736e128c2fe2b
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 		$prepared = $this->prepare_item_for_database( $request );
 
-		$item_id = \EverAccounting\Vendors\insert( (array) $prepared );
+		$item_id = \EverAccounting\Contacts\insert( (array) $prepared );
 		if ( is_wp_error( $item_id ) ) {
 			return $item_id;
 		}
 
-		$contact = \EverAccounting\Vendors\get( $item_id );
+		$contact = \EverAccounting\Contacts\get( $item_id );
 
 		$request->set_param( 'context', 'view' );
 
@@ -215,19 +226,19 @@ class ContactsController extends Controller {
 
 
 	/**
-	 *
+	 * Get a single contact
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
 		$request->set_param( 'context', 'view' );
-		$item = \EverAccounting\Vendors\get( $item_id );
+		$item = \EverAccounting\Contacts\get( $item_id );
 		if ( is_null( $item ) ) {
-			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the contact', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -240,13 +251,13 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 		$item_id = intval( $request['id'] );
-		$item    = \EverAccounting\Vendors\get( $item_id );
+		$item    = \EverAccounting\Contacts\get( $item_id );
 		if ( is_null( $item ) ) {
 			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
 		}
@@ -254,7 +265,7 @@ class ContactsController extends Controller {
 		$prepared_args['id'] = $item_id;
 
 		if ( ! empty( $prepared_args ) ) {
-			$updated = \EverAccounting\Vendors\insert( (array) $prepared_args );
+			$updated = \EverAccounting\Contacts\insert( (array) $prepared_args );
 
 			if ( is_wp_error( $updated ) ) {
 				return $updated;
@@ -262,24 +273,23 @@ class ContactsController extends Controller {
 		}
 
 		$request->set_param( 'context', 'view' );
-		$item     = \EverAccounting\Vendors\get( $item_id );
+		$item     = \EverAccounting\Contacts\get( $item_id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
 	}
 
 	/**
-	 * since 1.0.0
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
-		$item    = \EverAccounting\Vendors\get( $item_id );
+		$item    = \EverAccounting\Contacts\get( $item_id );
 		if ( is_null( $item ) ) {
 			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
 		}
@@ -287,7 +297,7 @@ class ContactsController extends Controller {
 		$request->set_param( 'context', 'view' );
 
 		$previous = $this->prepare_item_for_response( $item, $request );
-		$retval   = \EverAccounting\Vendors\delete( $item_id );
+		$retval   = \EverAccounting\Contacts\delete( $item_id );
 		if ( ! $retval ) {
 			return new \WP_Error( 'rest_cannot_delete', __( 'This vendor cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
@@ -308,7 +318,7 @@ class ContactsController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return array
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 */
 	public function prepare_item_for_database( $request ) {
@@ -334,19 +344,13 @@ class ContactsController extends Controller {
 
 	/**
 	 *
-<<<<<<< HEAD
-=======
-	 * @since 1.0.2
 	 *
-	 * @param \WP_REST_Request        $request
->>>>>>> 8be1b16a32129dc20b4fe952c11736e128c2fe2b
+	 * @param \WP_REST_Request $request
 	 *
-	 * @param \EverAccounting\Contact $item
+	 * @param \EverAccounting\Contacts\Contact $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
-	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -384,7 +388,7 @@ class ContactsController extends Controller {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {

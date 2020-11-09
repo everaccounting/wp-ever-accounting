@@ -16,6 +16,8 @@ class AccountsController extends Controller {
 	 * Route base.
 	 *
 	 * @var string
+	 *
+	 * @since 1.1.0
 	 */
 	protected $rest_base = 'accounts';
 
@@ -88,6 +90,8 @@ class AccountsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_account' );
@@ -99,6 +103,8 @@ class AccountsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_account' );
@@ -110,6 +116,8 @@ class AccountsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_account' );
@@ -121,6 +129,8 @@ class AccountsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_account' );
@@ -132,6 +142,8 @@ class AccountsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_account' );
@@ -143,6 +155,8 @@ class AccountsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_account' );
@@ -150,7 +164,7 @@ class AccountsController extends Controller {
 
 
 	/**
-	 * Get all customers.
+	 * Get all accounts.
 	 *
 	 * @param \WP_REST_Request $request
 	 *
@@ -192,10 +206,13 @@ class AccountsController extends Controller {
 
 
 	/***
+	 * Create a account
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function create_item( $request ) {
@@ -220,11 +237,13 @@ class AccountsController extends Controller {
 
 
 	/**
+	 * get a account
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item( $request ) {
@@ -241,11 +260,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
+	 * Update a account
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function update_item( $request ) {
@@ -274,12 +295,13 @@ class AccountsController extends Controller {
 	}
 
 	/**
-	 * since 1.0.0
+	 * Delete a account
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function delete_item( $request ) {
@@ -308,13 +330,16 @@ class AccountsController extends Controller {
 	}
 
 	/**
+	 * Prepare item for database
 	 *
 	 * @param \WP_REST_Request $request
-	 * @since 1.0.2
+	 *
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return array
+	 *
+	 * @since 1.1.0
 	 */
 	public function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -340,14 +365,15 @@ class AccountsController extends Controller {
 
 	/**
 	 *
-	 * @since 1.0.2
+	 * Prepare item for response
 	 *
 	 * @param \WP_REST_Request        $request
 	 *
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -381,7 +407,8 @@ class AccountsController extends Controller {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -517,6 +544,7 @@ class AccountsController extends Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @return array Collection parameters.
+	 *
 	 * @since 1.1.0
 	 *
 	 */
