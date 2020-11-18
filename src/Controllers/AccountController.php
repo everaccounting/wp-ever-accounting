@@ -39,12 +39,12 @@ class AccountController extends Singleton {
 	/**
 	 * Prepare account data before inserting into database.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $data
 	 *
 	 * @return array
+	 * @since 1.1.0
+	 *
 	 */
 	public static function prepare_account_data( $data, $id = null ) {
 		if ( empty( $data['date_created'] ) && ! $id ) {
@@ -63,11 +63,12 @@ class AccountController extends Singleton {
 	/**
 	 * Validate account data.
 	 *
+	 * @param array $data
+	 * @param null $id
+	 * @param \WP_Error $errors
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param array     $data
-	 * @param null      $id
-	 * @param \WP_Error $errors
 	 */
 	public static function validate_account_data( $errors, $data, $id = null ) {
 		if ( empty( $data['name'] ) ) {
@@ -81,7 +82,7 @@ class AccountController extends Singleton {
 		}
 
 		$currency = Currencies::instance()->get_by( 'code', $data['currency_code'] );
-		if ( ! $currency || ! $currency->exists() ) {
+		if ( ! $currency ) {
 			$errors->add( 'invalid_prop', __( 'Currency code is invalid.', 'wp-ever-accounting' ) );
 		}
 
@@ -101,9 +102,10 @@ class AccountController extends Singleton {
 	 * When an account is deleted check if
 	 * default account need to be updated or not.
 	 *
+	 * @param $id
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param $id
 	 */
 	public static function delete_default_account( $id ) {
 		$default_account = eaccounting()->settings->get( 'default_account' );
@@ -115,11 +117,11 @@ class AccountController extends Singleton {
 	/**
 	 * Delete account id from transactions.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param $id
 	 *
 	 * @return bool
+	 * @since 1.0.2
+	 *
 	 */
 	function update_transaction_account( $id ) {
 		global $wpdb;
