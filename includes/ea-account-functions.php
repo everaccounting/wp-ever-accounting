@@ -36,7 +36,7 @@ function eaccounting_get_account( $account ) {
  *  An array of elements that make up an account to update or insert.
  *
  *  @type int $id The account ID. If equal to something other than 0,
- *                                         the post with that ID will be updated. Default 0.
+ *                                         the account with that id will be updated. Default 0.
  *
  * @type string $name The name of the account . Default empty.
  *
@@ -95,28 +95,25 @@ function eaccounting_delete_account( $account_id ) {
  * @param array $args {
  *  Optional. Arguments to retrieve accounts.
  *
- *  @type int $id The account ID. If equal to something other than 0,
- *                                         the post with that ID will be updated. Default 0.
+ * @type string $name The name of the account .
  *
- * @type string $name The name of the account . Default empty.
+ * @type string $number The number of account.
  *
- * @type string $number The number of account. Default empty.
+ * @type string $currency_code The currency_code for the account.
  *
- * @type string $currency_code The currency_code for the account.Default is empty.
+ * @type double $opening_balance The opening balance of the account.
  *
- * @type double $opening_balance The opening balance of the account. Default 0.0000.
+ * @type string $bank_name The bank name for the account.
  *
- * @type string $bank_name The bank name for the account. Default null.
+ * @type string $bank_phone The phone number of the bank on which the account is opened.
  *
- * @type string $bank_phone The phone number of the bank on which the account is opened. Default null.
+ * @type string $bank_address The address of the bank.
  *
- * @type string $bank_address The address of the bank. Default null.
+ * @type int $enabled The status of the account.
  *
- * @type int $enabled The status of the account. Default 1.
+ * @type int $creator_id The creator id for the account.
  *
- * @type int $creator_id The creator id for the account. Default is current user id of the wordpress.
- *
- * @type string $date_created The date when the account is created. Default is current current time.
+ * @type string $date_created The date when the account is created.
  *
  *
  * }

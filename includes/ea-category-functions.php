@@ -4,7 +4,7 @@
  *
  * All category related function of the plugin.
  *
- * @since   1.0.2
+ * @since   1.1.0
  * @package EverAccounting
  */
 
@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get all the available type of category the plugin support.
  *
- * @since 1.0.2
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_category_types() {
 	$types = array(
@@ -29,11 +29,11 @@ function eaccounting_get_category_types() {
 /**
  * Get category.
  *
- * @since 1.0.2
- *
  * @param $category
  *
  * @return null|EverAccounting\Models\Category
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
@@ -47,16 +47,26 @@ function eaccounting_get_category( $category ) {
 /**
  * Insert a category.
  *
- * @since 1.0.2
+ * @param       $args {
+ * An array of elements that make up an category to update or insert.
  *
- * @param       $args  {
+ * @type int $id The category ID. If equal to something other than 0, the category with that ID will be updated. Default 0.
  *
- * @type string $name  Unique name of the category.
- * @type string $type  Category type.
- * @type string $color Color of the category
+ * @type string $name Unique name of the category.
+ *
+ * @type string $type Category type.
+ *
+ * @type string $color Color of the category.
+ *
+ * @type int $enabled The status of the category. Default 1.
+ *
+ * @type string $date_created The date when the category is created. Default is current current time.
+ *
  * }
  *
  * @return WP_Error|\EverAccounting\Models\Category
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_category( $args ) {
 	$category = new EverAccounting\Models\Category( $args );
@@ -67,11 +77,11 @@ function eaccounting_insert_category( $args ) {
 /**
  * Delete a category.
  *
- * @since 1.0.2
- *
  * @param $category_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_category( $category_id ) {
 	$category = new EverAccounting\Models\Category( $category_id );
@@ -85,13 +95,24 @@ function eaccounting_delete_category( $category_id ) {
 /**
  * Get category items.
  *
- * @since 1.1.0
+ * @param array $args {
+ *  Optional. Arguments to retrieve categories.
  *
- * @param array $args
+ * @type string $name Unique name of the category.
  *
- * @param bool  $callback
+ * @type string $type Category type.
+ *
+ * @type string $color Color of the category.
+ *
+ * @type int $enabled The status of the category.
+ *
+ * }
+ *
+ * @param bool $callback
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_categories( $args = array(), $callback = true ) {
 	return \EverAccounting\Repositories\Categories::instance()->get_items(
