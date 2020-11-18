@@ -88,6 +88,8 @@ class CategoriesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_category' );
@@ -99,6 +101,8 @@ class CategoriesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_category' );
@@ -110,6 +114,8 @@ class CategoriesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_category' );
@@ -121,6 +127,8 @@ class CategoriesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_category' );
@@ -132,6 +140,8 @@ class CategoriesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_category' );
@@ -143,6 +153,8 @@ class CategoriesController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_category' );
@@ -155,6 +167,8 @@ class CategoriesController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -193,10 +207,13 @@ class CategoriesController extends Controller {
 
 
 	/***
+	 * Create a category
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function create_item( $request ) {
@@ -221,11 +238,13 @@ class CategoriesController extends Controller {
 
 
 	/**
+	 * Get a category
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item( $request ) {
@@ -233,7 +252,7 @@ class CategoriesController extends Controller {
 		$request->set_param( 'context', 'view' );
 		$item = eaccounting_get_category( $item_id );
 		if ( is_null( $item ) ) {
-			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the category', 'wp-ever-accounting' ) );
 		}
 
 		$response = $this->prepare_item_for_response( $item, $request );
@@ -242,11 +261,13 @@ class CategoriesController extends Controller {
 	}
 
 	/**
+	 * Update a category
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function update_item( $request ) {
@@ -254,13 +275,13 @@ class CategoriesController extends Controller {
 		$item_id = intval( $request['id'] );
 		$item    = eaccounting_get_category( $item_id );
 		if ( is_null( $item ) ) {
-			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the vendor', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the category', 'wp-ever-accounting' ) );
 		}
 		$prepared_args       = $this->prepare_item_for_database( $request );
 		$prepared_args['id'] = $item_id;
 
 		if ( ! empty( $prepared_args ) ) {
-			$updated = eaccounting_insert_account( (array) $prepared_args );
+			$updated = \EverAccounting\Categories\insert( (array) $prepared_args );
 
 			if ( is_wp_error( $updated ) ) {
 				return $updated;
@@ -275,12 +296,13 @@ class CategoriesController extends Controller {
 	}
 
 	/**
-	 * since 1.0.0
+	 * Delete a category
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function delete_item( $request ) {
@@ -309,11 +331,13 @@ class CategoriesController extends Controller {
 	}
 
 	/**
+	 * Prepare items for database
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return array
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function prepare_item_for_database( $request ) {
@@ -332,13 +356,15 @@ class CategoriesController extends Controller {
 	}
 
 	/**
+	 * Prepare items for response
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @param \EverAccounting\Categories\Category $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -366,7 +392,8 @@ class CategoriesController extends Controller {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {

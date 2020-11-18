@@ -13,9 +13,10 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class TransactionController
- * @since   1.1.0
  *
  * @package EverAccounting\REST
+ *
+ * @since   1.1.0
  */
 class TransactionsController extends Controller {
 	/**
@@ -80,12 +81,15 @@ class TransactionsController extends Controller {
 			)
 		);
 	}
+
 	/**
 	 * Check whether a given request has permission to read transactions.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since   1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_transactions' );
@@ -97,6 +101,8 @@ class TransactionsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_transactions' );
@@ -108,6 +114,8 @@ class TransactionsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since   1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_transactions' );
@@ -119,6 +127,8 @@ class TransactionsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_transactions' );
@@ -130,6 +140,8 @@ class TransactionsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_transactions' );
@@ -141,6 +153,8 @@ class TransactionsController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since   1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_transaction' );
@@ -152,6 +166,8 @@ class TransactionsController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 *
+	 * @since   1.1.0
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -188,10 +204,14 @@ class TransactionsController extends Controller {
 
 
 	/***
+	 * Create a transaction
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
+	 *
 	 *
 	 */
 	public function create_item( $request ) {
@@ -216,11 +236,13 @@ class TransactionsController extends Controller {
 
 
 	/**
+	 * Get a single transaction
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
 	 *
 	 */
 	public function get_item( $request ) {
@@ -237,11 +259,13 @@ class TransactionsController extends Controller {
 	}
 
 	/**
+	 * Update a transaction
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
 	 *
 	 */
 	public function update_item( $request ) {
@@ -270,12 +294,13 @@ class TransactionsController extends Controller {
 	}
 
 	/**
-	 * since 1.0.0
+	 * Delete a transaction
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
 	 *
 	 */
 	public function delete_item( $request ) {
@@ -305,11 +330,13 @@ class TransactionsController extends Controller {
 	}
 
 	/**
+	 * Prepare items for database
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return array
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
 	 *
 	 */
 	public function prepare_item_for_database( $request ) {
@@ -347,13 +374,15 @@ class TransactionsController extends Controller {
 
 
 	/**
+	 * Prepare item for response
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @param \EverAccounting\Transactions\Transaction $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
 	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -402,7 +431,8 @@ class TransactionsController extends Controller {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -465,7 +495,7 @@ class TransactionsController extends Controller {
 					),
 					'readonly'    => true,
 				),
-				'account'     => array(
+				'account'        => array(
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -572,7 +602,7 @@ class TransactionsController extends Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'creator'        => array(
-					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
+					'description' => __( 'Creator of the transactions', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'properties'  => array(
@@ -642,7 +672,8 @@ class TransactionsController extends Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @return array Collection parameters.
-	 * @since 1.0.2
+	 *
+	 * @since   1.1.0
 	 *
 	 */
 	public function get_collection_params() {
@@ -652,6 +683,14 @@ class TransactionsController extends Controller {
 			'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
 			'type'        => 'string',
 			'default'     => 'paid_at',
+			'enum'        => array(
+				'paid_at',
+				'amount',
+				'account_id',
+				'type',
+				'category_id',
+				'reference'
+			),
 		);
 
 		return $query_params;

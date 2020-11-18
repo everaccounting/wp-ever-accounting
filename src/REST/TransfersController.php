@@ -1,6 +1,6 @@
 <?php
 /**
- * Accounts Rest Controller Class.
+ * Transfers Rest Controller Class.
  *
  * @since       1.1.0
  * @subpackage  REST
@@ -16,6 +16,8 @@ class TransfersController extends Controller {
 	 * Route base.
 	 *
 	 * @var string
+	 *
+	 * @since 1.1.0
 	 */
 	protected $rest_base = 'transfers';
 
@@ -55,7 +57,7 @@ class TransfersController extends Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
 						'type'        => 'integer',
 						'required'    => true,
 					),
@@ -83,58 +85,68 @@ class TransfersController extends Controller {
 	}
 
 	/**
-	 * Check whether a given request has permission to read accounts.
+	 * Check whether a given request has permission to read transfers.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; //current_user_can( 'manage_transfer' );
 	}
 
 	/**
-	 * Check if a given request has access create account.
+	 * Check if a given request has access create transfer.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; //current_user_can( 'manage_transfer' );
 	}
 
 	/**
-	 * Check if a given request has access to read a account.
+	 * Check if a given request has access to read a transfer.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return \WP_Error|boolean
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; //current_user_can( 'manage_transfer' );
 	}
 
 	/**
-	 * Check if a given request has access update a account.
+	 * Check if a given request has access update a transfer.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; //current_user_can( 'manage_transfer' );
 	}
 
 	/**
-	 * Check if a given request has access delete a account.
+	 * Check if a given request has access delete a transfer.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; //current_user_can( 'manage_transfer' );
 	}
 
 	/**
@@ -143,6 +155,8 @@ class TransfersController extends Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return bool|\WP_Error
+	 *
+	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
 		return true; //current_user_can( 'manage_account' );
@@ -155,6 +169,8 @@ class TransfersController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
+	 *
+	 * @since 1.1.0
 	 */
 	public function get_items( $request ) {
 		$args = array(
@@ -169,8 +185,8 @@ class TransfersController extends Controller {
 			'offset'   => $request['offset'],
 		);
 
-		$results  = \EverAccounting\Accounts\query( $args )->get_results( OBJECT, '\EverAccounting\Transfers\get' );
-		$total    = \EverAccounting\Accounts\query( $args )->count();
+		$results  = \EverAccounting\Transfers\query( $args )->get_results( OBJECT, '\EverAccounting\Transfers\get' );
+		$total    = \EverAccounting\Transfers\query( $args )->count();
 		$response = array();
 		foreach ( $results as $item ) {
 			$data       = $this->prepare_item_for_response( $item, $request );
@@ -192,26 +208,29 @@ class TransfersController extends Controller {
 
 
 	/***
+	 * Create a transfer
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 		$prepared = $this->prepare_item_for_database( $request );
 
-		$item_id = eaccounting_insert_account( (array) $prepared );
+		$item_id = eaccounting_insert_transfer( (array) $prepared );
 		if ( is_wp_error( $item_id ) ) {
 			return $item_id;
 		}
 
-		$contact = eaccounting_get_account( $item_id );
+		$transfer = eaccounting_get_transfer( $item_id );
 
 		$request->set_param( 'context', 'view' );
 
-		$response = $this->prepare_item_for_response( $contact, $request );
+		$response = $this->prepare_item_for_response( $transfer, $request );
 		$response = rest_ensure_response( $response );
 		$response->set_status( 201 );
 
@@ -220,11 +239,13 @@ class TransfersController extends Controller {
 
 
 	/**
+	 * Get a single transfer
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item( $request ) {
@@ -241,6 +262,7 @@ class TransfersController extends Controller {
 	}
 
 	/**
+	 * Update a transfer
 	 *
 	 * @param \WP_REST_Request $request
 	 *
@@ -259,7 +281,7 @@ class TransfersController extends Controller {
 		$prepared_args['id'] = $item_id;
 
 		if ( ! empty( $prepared_args ) ) {
-			$updated = eaccounting_insert_account( (array) $prepared_args );
+			$updated = eaccounting_insert_transfer( (array) $prepared_args );
 
 			if ( is_wp_error( $updated ) ) {
 				return $updated;
@@ -267,33 +289,34 @@ class TransfersController extends Controller {
 		}
 
 		$request->set_param( 'context', 'view' );
-		$item     = \EverAccounting\Accounts\get( $item_id );
+		$item     = \EverAccounting\Transfers\get( $item_id );
 		$response = $this->prepare_item_for_response( $item, $request );
 
 		return rest_ensure_response( $response );
 	}
 
 	/**
-	 * since 1.0.0
+	 * Delete a transfer
 	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
-		$item    = eaccounting_get_account( $item_id );
+		$item    = eaccounting_get_transfer( $item_id );
 		if ( is_null( $item ) ) {
-			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the account', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'rest_invalid_item_id', __( 'Could not find the transfer', 'wp-ever-accounting' ) );
 		}
 
 		$request->set_param( 'context', 'view' );
 		$previous = $this->prepare_item_for_response( $item, $request );
-		$retval   = eaccounting_delete_account( $item_id );
+		$retval   = eaccounting_delete_transfer( $item_id );
 		if ( ! $retval ) {
-			return new \WP_Error( 'rest_cannot_delete', __( 'This account cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'rest_cannot_delete', __( 'This transfer cannot be deleted.', 'wp-ever-accounting' ), array( 'status' => 500 ) );
 		}
 
 		$response = new \WP_REST_Response();
@@ -308,29 +331,53 @@ class TransfersController extends Controller {
 	}
 
 	/**
+	 * Prepare items for database
 	 *
 	 * @param \WP_REST_Request $request
 	 *
-	 * @param \EverAccounting\Transactions\Transaction $item
+	 * @return array
+	 *
+	 * @since   1.1.0
+	 *
+	 */
+	public function prepare_item_for_database( $request ) {
+		$schema    = $this->get_item_schema();
+		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+		$data      = array();
+		foreach ( $data_keys as $key ) {
+			$value = $request[ $key ];
+			switch ( $key ) {
+				case 'creator':
+					$data['creator_id'] = array();
+					break;
+				default:
+					$data[ $key ] = $value;
+			}
+		}
+
+		return $data;
+	}
+
+
+	/**
+	 * Prepare item for response
+	 *
+	 * @param \WP_REST_Request $request
+	 *
+	 * @param \EverAccounting\Transfers\Transfer $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
-			'id'              => $item->get_id(),
-			'name'            => $item->get_name(),
-			'number'          => $item->get_number(),
-			'opening_balance' => $item->get_opening_balance(),
-			'balance'         => $item->get_balance(),
-			'currency_code'   => $item->get_currency_code(),
-			'bank_name'       => $item->get_bank_name(),
-			'bank_phone'      => $item->get_bank_phone(),
-			'bank_address'    => $item->get_bank_address(),
-			'enabled'         => $item->get_enabled(),
-			'creator_id'      => $item->get_creator_id(),
-			'created_at'      => eaccounting_rest_date_response( $item->get_date_created() ),
+			'id'           => $item->get_id(),
+			'income_id'    => $item->get_income_id(),
+			'expense_id'   => $item->get_expense_id(),
+			'creator'      => '',
+			'date_created' => eaccounting_rest_date_response( $item->get_date_created() ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -348,7 +395,8 @@ class TransfersController extends Controller {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
-	 * @since 1.0.2
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -357,7 +405,7 @@ class TransfersController extends Controller {
 			'title'      => __( 'Transfer', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'              => array(
+				'id'           => array(
 					'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -366,7 +414,7 @@ class TransfersController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'income_id'            => array(
+				'income_id'    => array(
 					'description' => __( 'Income ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view' ),
@@ -375,7 +423,7 @@ class TransfersController extends Controller {
 					),
 					'required'    => true,
 				),
-				'expense_id'          => array(
+				'expense_id'   => array(
 					'description' => __( 'Expense ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view' ),
@@ -384,7 +432,30 @@ class TransfersController extends Controller {
 					),
 					'required'    => true,
 				),
-				'date_created'    => array(
+				'creator'      => array(
+					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+					'properties'  => array(
+						'id'    => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name'  => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
+				),
+				'date_created' => array(
 					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -402,6 +473,7 @@ class TransfersController extends Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @return array Collection parameters.
+	 *
 	 * @since 1.1.0
 	 *
 	 */
