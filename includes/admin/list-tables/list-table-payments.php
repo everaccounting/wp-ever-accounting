@@ -13,7 +13,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use \EverAccounting\Abstracts\List_Table;
-use EverAccounting\Models\Payment;
+use EverAccounting\Models\Income;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -154,7 +154,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Payment $payment The current object.
+	 * @param Income $payment The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
@@ -168,7 +168,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Payment $payment The current account object.
+	 * @param Income $payment The current account object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
@@ -196,7 +196,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Payment $payment The current account object.
+	 * @param Income $payment The current account object.
 	 *
 	 * @return string Data shown in the amount column.
 	 */
@@ -209,7 +209,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Payment $payment The current account object.
+	 * @param Income $payment The current account object.
 	 *
 	 * @return string Data shown in the account column.
 	 */
@@ -225,7 +225,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Payment $payment The current account object.
+	 * @param Income $payment The current account object.
 	 *
 	 * @return string Data shown in the Category column.
 	 */
@@ -241,7 +241,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Payment $payment The current account object.
+	 * @param Income $payment The current account object.
 	 *
 	 * @return string Data shown in the Reference column.
 	 */

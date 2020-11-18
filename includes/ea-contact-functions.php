@@ -88,10 +88,25 @@ function eaccounting_delete_customer( $customer_id ) {
  *
  * @param array $args
  *
+ * @param bool  $callback
+ *
  * @return array|int
  */
-function eaccounting_get_customers( $args = array() ) {
-	return \EverAccounting\Repositories\Customers::instance()->get_items( $args );
+function eaccounting_get_customers( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Customers::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				$category = new \EverAccounting\Models\Customer();
+				$category->set_props( $item );
+				$category->set_object_read( true );
+
+				return $category;
+			}
+
+			return $item;
+		}
+	);
 }
 
 
@@ -157,8 +172,23 @@ function eaccounting_delete_vendor( $vendor_id ) {
  *
  * @param array $args
  *
+ * @param bool  $callback
+ *
  * @return array|int
  */
-function eaccounting_get_vendors( $args = array() ) {
-	return \EverAccounting\Repositories\Vendors::instance()->get_items( $args );
+function eaccounting_get_vendors( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Vendors::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				$contact = new \EverAccounting\Models\Vendor();
+				$contact->set_props( $item );
+				$contact->set_object_read( true );
+
+				return $contact;
+			}
+
+			return $item;
+		}
+	);
 }

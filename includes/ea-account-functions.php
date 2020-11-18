@@ -34,7 +34,10 @@ function eaccounting_get_account( $account ) {
  *
  * @since 1.0.2
  *
- * @param array $args Account arguments.
+ * @param array $args {
+ *  An array of elements that make up an account to update or insert.
+ *
+ * }
  *
  * @return EverAccounting\Models\Account|\WP_Error
  */
@@ -69,10 +72,23 @@ function eaccounting_delete_account( $account_id ) {
  *
  * @param array  $args
  *
- * @param string $callback
+ * @param bool $callback
  *
  * @return array|int
  */
-function eaccounting_get_accounts( $args = array(), $callback = 'eaccounting_get_account' ) {
-	return \EverAccounting\Repositories\Accounts::instance()->get_items( $args, $callback );
+function eaccounting_get_accounts( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Accounts::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				$account = new \EverAccounting\Models\Account();
+				$account->set_props( $item );
+				$account->set_object_read( true );
+
+				return $account;
+			}
+
+			return $item;
+		}
+	);
 }

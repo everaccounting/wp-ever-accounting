@@ -22,31 +22,31 @@ function eaccounting_get_transaction_types() {
 		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 	);
 
-	return $types;
+	return apply_filters( 'eaccounting_transaction_types', $types );
 }
 
 /**
- * Get payment.
+ * Get expense.
  *
  * @since 1.0.2
  *
- * @param $payment
+ * @param $expense
  *
- * @return \EverAccounting\Models\Payment|null
+ * @return \EverAccounting\Models\Expense|null
  */
-function eaccounting_get_payment( $payment ) {
-	if ( empty( $payment ) ) {
+function eaccounting_get_expense( $expense ) {
+	if ( empty( $expense ) ) {
 		return null;
 	}
 
-	$result = new EverAccounting\Models\Payment( $payment );
+	$result = new EverAccounting\Models\Expense( $expense );
 
 	return $result->exists() ? $result : null;
 }
 
 
 /**
- *  Create new payment programmatically.
+ *  Create new expense programmatically.
  *
  *  Returns a new payment object on success.
  *
@@ -54,30 +54,30 @@ function eaccounting_get_payment( $payment ) {
  *
  * @param array $args payment arguments.
  *
- * @return EverAccounting\Models\Payment|\WP_Error
+ * @return EverAccounting\Models\Expense|\WP_Error
  */
-function eaccounting_insert_payment( $args ) {
-	$payment = new EverAccounting\Models\Payment( $args );
+function eaccounting_insert_expense( $args ) {
+	$expense = new EverAccounting\Models\Expense( $args );
 
-	return $payment->save();
+	return $expense->save();
 }
 
 /**
- * Delete a payment.
+ * Delete a expense.
  *
  * @since 1.0.2
  *
- * @param $payment_id
+ * @param $expense_id
  *
  * @return bool
  */
-function eaccounting_delete_payment( $payment_id ) {
-	$payment = new EverAccounting\Models\Payment( $payment_id );
-	if ( ! $payment->exists() ) {
+function eaccounting_delete_expense( $expense_id ) {
+	$expense = new EverAccounting\Models\Expense( $expense_id );
+	if ( ! $expense->exists() ) {
 		return false;
 	}
 
-	return \EverAccounting\Repositories\Payments::instance()->delete( $payment->get_id() );
+	return \EverAccounting\Repositories\Expenses::instance()->delete( $expense->get_id() );
 }
 
 /**
@@ -87,35 +87,49 @@ function eaccounting_delete_payment( $payment_id ) {
  *
  * @param array $args
  *
+ * @param bool  $callback
+ *
  * @return array|int
  */
-function eaccounting_get_payments( $args = array() ) {
-	return \EverAccounting\Repositories\Payments::instance()->get_items( $args );
-}
+function eaccounting_get_expenses( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Expenses::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				$category = new \EverAccounting\Models\Expense();
+				$category->set_props( $item );
+				$category->set_object_read( true );
 
+				return $category;
+			}
+
+			return $item;
+		}
+	);
+}
 
 /**
  * Get revenue.
  *
  * @since 1.0.2
  *
- * @param $revenue
+ * @param $income
  *
- * @return \EverAccounting\Models\Revenue|null
+ * @return \EverAccounting\Models\Income|null
  */
-function eaccounting_get_revenue( $revenue ) {
-	if ( empty( $revenue ) ) {
+function eaccounting_get_income( $income ) {
+	if ( empty( $income ) ) {
 		return null;
 	}
 
-	$result = new EverAccounting\Models\Revenue( $revenue );
+	$result = new EverAccounting\Models\Income( $income );
 
 	return $result->exists() ? $result : null;
 }
 
 
 /**
- *  Create new revenue programmatically.
+ *  Create new income programmatically.
  *
  *  Returns a new revenue object on success.
  *
@@ -130,18 +144,18 @@ function eaccounting_get_revenue( $revenue ) {
  * @type int    $contact_id     Contact id related to the transaction.
  * @type int    $invoice_id     Transaction related invoice id(optional).
  * @type int    $category_id    Category of the transaction.
- * @type string $payment_method Payment method used for the transaction.
+ * @type string $expense_method Payment method used for the transaction.
  * @type string $reference      Reference of the transaction.
  * @type string $description    Description of the transaction.
  *
  * }
  *
- * @return EverAccounting\Models\Revenue|\WP_Error
+ * @return EverAccounting\Models\Income|\WP_Error
  */
-function eaccounting_insert_revenue( $args ) {
-	$revenue = new EverAccounting\Models\Revenue( $args );
+function eaccounting_insert_income( $args ) {
+	$income = new EverAccounting\Models\Income( $args );
 
-	return $revenue->save();
+	return $income->save();
 }
 
 /**
@@ -149,17 +163,17 @@ function eaccounting_insert_revenue( $args ) {
  *
  * @since 1.0.2
  *
- * @param $revenue_id
+ * @param $income_id
  *
  * @return bool
  */
-function eaccounting_delete_revenue( $revenue_id ) {
-	$revenue = new EverAccounting\Models\Revenue( $revenue_id );
-	if ( ! $revenue->exists() ) {
+function eaccounting_delete_income( $income_id ) {
+	$income = new EverAccounting\Models\Income( $income_id );
+	if ( ! $income->exists() ) {
 		return false;
 	}
 
-	return \EverAccounting\Repositories\Revenues::instance()->delete( $revenue->get_id() );
+	return \EverAccounting\Repositories\Incomes::instance()->delete( $income->get_id() );
 }
 
 /**
@@ -176,15 +190,30 @@ function eaccounting_delete_revenue( $revenue_id ) {
  * @type int    $contact_id     Contact id related to the transaction.
  * @type int    $invoice_id     Transaction related invoice id(optional).
  * @type int    $category_id    Category of the transaction.
- * @type string $payment_method Payment method used for the transaction.
+ * @type string $expense_method Payment method used for the transaction.
  * @type string $reference      Reference of the transaction.
  * @type string $description    Description of the transaction.
  *
  * }
+ * @param bool  $callback
+ *
  * @return array|int
  */
-function eaccounting_get_revenues( $args = array() ) {
-	return \EverAccounting\Repositories\Revenues::instance()->get_items( $args );
+function eaccounting_get_incomes( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Incomes::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				$income = new \EverAccounting\Models\Income();
+				$income->set_props( $item );
+				$income->set_object_read( true );
+
+				return $income;
+			}
+
+			return $item;
+		}
+	);
 }
 
 /**
@@ -246,8 +275,23 @@ function eaccounting_delete_transfer( $transfer_id ) {
  *
  * @param array $args
  *
+ * @param bool  $callback
+ *
  * @return array|int
  */
-function eaccounting_get_transfers( $args = array() ) {
-	return \EverAccounting\Repositories\Transfers::instance()->get_items( $args );
+function eaccounting_get_transfers( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Transfers::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				$transfer = new \EverAccounting\Models\Transfer();
+				$transfer->set_props( $item );
+				$transfer->set_object_read( true );
+
+				return $transfer;
+			}
+
+			return $item;
+		}
+	);
 }

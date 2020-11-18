@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class AccountController
+ *
  * @since   1.1.1
  *
  * @package EverAccounting\Controllers
@@ -46,10 +47,10 @@ class AccountController extends Singleton {
 	 * @return array
 	 */
 	public static function prepare_account_data( $data, $id = null ) {
-		if ( empty( $data['date_created'] ) ) {
+		if ( empty( $data['date_created'] ) && ! $id ) {
 			$data['date_created'] = current_time( 'mysql' );
 		}
-		if ( empty( $data['creator_id'] ) ) {
+		if ( empty( $data['creator_id'] ) && ! $id ) {
 			$data['creator_id'] = eaccounting_get_current_user_id();
 		}
 

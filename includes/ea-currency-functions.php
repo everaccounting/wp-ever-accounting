@@ -100,8 +100,23 @@ function eaccounting_delete_currency( $currency_id ) {
  *
  * @param array $args
  *
+ * @param bool  $callback
+ *
  * @return array|int
  */
-function eaccounting_get_currencies( $args = array() ) {
-	return \EverAccounting\Repositories\Currencies::instance()->get_items( $args );
+function eaccounting_get_currencies( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Currencies::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				$currency = new \EverAccounting\Models\Currency();
+				$currency->set_props( $item );
+				$currency->set_object_read( true );
+
+				return $currency;
+			}
+
+			return $item;
+		}
+	);
 }

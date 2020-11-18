@@ -324,7 +324,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 	 */
 	public function duplicate( $id ) {
 		_doing_it_wrong(
-			'WP_REST_Controller::register_routes',
+			'ResourceRepository::duplicate',
 			/* translators: %s: register_routes() */
 			sprintf( __( "Method '%s' must be overridden." ), __METHOD__ ),
 			'4.7'

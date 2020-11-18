@@ -86,11 +86,11 @@ class CurrencyController extends Singleton {
 
 		if ( ! empty( $data['code'] ) ) {
 			if ( intval( $id ) !== (int) Currencies::instance()->get_var(
-					'id',
-					array(
-						'code' => $data['code'],
-					)
-				) ) {
+				'id',
+				array(
+					'code' => $data['code'],
+				)
+			) ) {
 				$errors->add( 'invalid_prop', __( 'Duplicate currency.', 'wp-ever-accounting' ) );
 			}
 		}

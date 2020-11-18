@@ -295,10 +295,7 @@ abstract class TransactionModel extends ResourceModel {
 	 *
 	 */
 	public function set_account_id( $value ) {
-		$account = eaccounting_get_account(absint( $value ));
-		if($account->exists()){
-			$this->set_prop( 'account_id', $account->get_id() );
-		}
+		$this->set_prop( 'account_id', absint( $value ) );
 	}
 
 	/**

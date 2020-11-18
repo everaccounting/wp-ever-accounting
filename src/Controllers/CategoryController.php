@@ -68,7 +68,6 @@ class CategoryController extends Singleton {
 	 * @param \WP_Error $errors
 	 */
 	public static function validate_category_data( $errors, $data, $id = null ) {
-		error_log($id);
 		if ( empty( $data['name'] ) ) {
 			$errors->add( 'empty_prop', __( 'Category name is required.', 'wp-ever-accounting' ) );
 		}

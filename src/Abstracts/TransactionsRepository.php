@@ -7,12 +7,14 @@
  * @version   1.1.0
  * @package   EverAccounting\Repositories
  */
+
 namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Class TransactionsRepository
+ *
  * @since   1.1.0
  *
  * @package EverAccounting\Abstracts
@@ -95,6 +97,24 @@ class TransactionsRepository extends ResourceRepository {
 			'creator_id'     => eaccounting_get_current_user_id(),
 			'date_created'   => current_time( 'mysql' ),
 		);
+	}
+
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param bool  $callback
+	 * @param array $args
+	 *
+	 * @return array|int
+	 */
+	public function get_items( $args = array(), $callback = false ) {
+		$args = wp_parse_args( $args, array( 'category_in' => array(), 'category_not_in' => array() ) );
+		if ( isset( $args['category_id'] ) ) {
+
+		}
+
+		return parent::get_items( $args, $callback );
 	}
 
 }

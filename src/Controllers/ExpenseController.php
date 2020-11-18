@@ -1,11 +1,11 @@
 <?php
 /**
- * Revenue Controller
+ * Payment Controller
  *
- * Handles expense's insert, update and delete events.
+ * Handles payments's insert, update and delete events.
  *
  * @package     EverAccounting\Controllers
- * @class       RevenueController
+ * @class       PaymentController
  * @version     1.1.0
  */
 
@@ -16,24 +16,24 @@ use EverAccounting\Abstracts\Singleton;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class RevenueController
+ * Class PaymentController
  *
  * @since   1.1.0
  *
  * @package EverAccounting\Controllers
  */
-class RevenueController extends Singleton {
+class ExpenseController extends Singleton {
 
 	/**
-	 * RevenueController constructor.
+	 * PaymentController constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eaccounting_prepare_expense_data', array( __CLASS__, 'prepare_expense_data' ), 10, 2 );
-		add_action( 'eaccounting_validate_expense_data', array( __CLASS__, 'validate_expense_data' ), 10, 3 );
+		add_filter( 'eaccounting_prepare_payment_data', array( __CLASS__, 'prepare_payment_data' ), 10, 2 );
+		add_action( 'eaccounting_validate_payment_data', array( __CLASS__, 'validate_payment_data' ), 10, 3 );
 	}
 
 	/**
-	 * Prepare expense data before inserting into database.
+	 * Prepare payment data before inserting into database.
 	 *
 	 * @since 1.1.0
 	 *
@@ -42,7 +42,7 @@ class RevenueController extends Singleton {
 	 *
 	 * @return array
 	 */
-	public static function prepare_expense_data( $data, $id = null ) {
+	public static function prepare_payment_data( $data, $id = null ) {
 		if ( empty( $data['date_created'] ) ) {
 			$data['date_created'] = current_time( 'mysql' );
 		}
@@ -50,14 +50,13 @@ class RevenueController extends Singleton {
 			$data['creator_id'] = eaccounting_get_current_user_id();
 		}
 
-		$currency = null;
-		$account  = eaccounting_get_account( $data['account_id'] );
+		$account = eaccounting_get_account( $data['account_id'] );
 		if ( ! empty( $data['account_id'] ) && $account ) {
 			$data['currency_code'] = $account->get_currency_code();
-			$currency              = eaccounting_get_currency( $account->get_currency_code() );
 		}
 
-		if ( $currency ) {
+		$currency = eaccounting_get_currency( $data['currency_code'] );
+		if ( ! empty( $data['currency_code'] ) && $currency ) {
 			$data['currency_rate'] = $currency->get_rate();
 			$data['amount']        = eaccounting_sanitize_price( $data['amount'], $data['currency_code'] );
 		}
@@ -68,7 +67,7 @@ class RevenueController extends Singleton {
 	}
 
 	/**
-	 * Validate expense data.
+	 * Validate payment data.
 	 *
 	 * @since 1.1.0
 	 *
@@ -76,9 +75,9 @@ class RevenueController extends Singleton {
 	 * @param null      $id
 	 * @param \WP_Error $errors
 	 */
-	public static function validate_expense_data( $errors, $data, $id = null ) {
+	public static function validate_payment_data( $errors, $data, $id = null ) {
 		if ( empty( $data['paid_at'] ) ) {
-			$errors->add( 'empty_prop', __( 'Revenue date is required.', 'wp-ever-accounting' ) );
+			$errors->add( 'empty_prop', __( 'Payment date is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $data['payment_method'] ) ) {
@@ -86,7 +85,7 @@ class RevenueController extends Singleton {
 		}
 
 		$category = eaccounting_get_category( $data['category_id'] );
-		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'income', 'other' ), true ) ) {
+		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'expense', 'other'  ), true ) ) {
 			$errors->add( 'empty_prop', __( 'A valid income category is required.', 'wp-ever-accounting' ) );
 		}
 
@@ -101,7 +100,7 @@ class RevenueController extends Singleton {
 		}
 
 		if ( empty( eaccounting_sanitize_number( $data['amount'] ) ) ) {
-			$errors->add( 'empty_prop', __( 'Revenue amount is required.', 'wp-ever-accounting' ) );
+			$errors->add( 'empty_prop', __( 'Payment amount is required.', 'wp-ever-accounting' ) );
 		}
 
 		return $errors;

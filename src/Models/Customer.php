@@ -29,15 +29,10 @@ class Customer extends ContactModel {
 	public function __construct( $data = 0 ) {
 		$this->repository = Customers::instance();
 		parent::__construct( $data );
-
-		if ( $this->get_id() > 0 && ! $this->get_object_read() ) {
-			$customer = Customers::instance()->get( $this->get_id() );
-			if ( $customer && 'customer' === $customer->get_type() ) {
-				$this->set_props( $customer->get_data() );
-				$this->set_object_read( $customer->exists() );
-			} else {
-				$this->set_id( 0 );
-			}
+		// If not Customer then reset to default
+		if ( 'customer' !== $this->get_type() ) {
+			$this->set_id( 0 );
+			$this->set_defaults();
 		}
 	}
 

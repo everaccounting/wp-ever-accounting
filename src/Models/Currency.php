@@ -35,15 +35,14 @@ class Currency extends ResourceModel {
 		$this->repository = Currencies::instance();
 		parent::__construct( $data );
 
-		if ( ( is_numeric( $data ) || is_string( $data ) ) && ! $this->get_object_read() ) {
-			$by       = is_string( $data ) && eaccounting_get_currency_code( $data ) ? 'code' : 'id';
-			$currency = Currencies::instance()->get_by( $by, $data );
+		if ( is_string( $data ) && ! $this->get_object_read() ) {
+			$currency = Currencies::instance()->get_by( 'code', $data );
 			if ( $currency ) {
-				$code       = $currency->get_code();
+				$code       = $currency->code;
 				$currencies = eaccounting_get_global_currencies();
 				$defaults   = array_key_exists( $code, $currencies ) ? $currencies[ $code ] : array();
-				$this->set_props( array_merge( $defaults, $currency->get_data() ) );
-				$this->set_object_read( $currency->exists() );
+				$this->set_props( array_merge( $defaults, (array) $currency ) );
+				$this->set_object_read( true );
 			} else {
 				$this->set_id( 0 );
 			}
