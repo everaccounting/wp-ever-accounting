@@ -10,8 +10,8 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Account;
-use EverAccounting\Query_Account;
+use EverAccounting\Models\Account;
+
 
 defined( 'ABSPATH' ) || exit();
 
@@ -449,29 +449,11 @@ class List_Table_Accounts extends List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
-		$this->items = \EverAccounting\Accounts\query($args )
-									->include_balance()
-									->get( OBJECT, 'eaccounting_get_account' );
+		$this->items = eaccounting_get_accounts($args);
 
-		$this->active_count = \EverAccounting\Accounts\query(
-			array_merge(
-				$this->query_args,
-				array(
-					'status' => 'active',
-					'search' => $search,
-				)
-			)
-		)->count();
+		$this->active_count = eaccounting_get_accounts(array_merge($args, array('enabled' => '1', 'count' => true)));
 
-		$this->inactive_count = \EverAccounting\Accounts\query(
-			array_merge(
-				$this->query_args,
-				array(
-					'status' => 'inactive',
-					'search' => $search,
-				)
-			)
-		)->count();
+		$this->inactive_count = eaccounting_get_accounts(array_merge($args, array('enabled' => '0', 'count' => true)));
 
 		$this->total_count = $this->active_count + $this->inactive_count;
 

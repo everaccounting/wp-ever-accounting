@@ -13,8 +13,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use \EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Transaction;
-use EverAccounting\Transaction;
+use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -155,7 +154,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $payment The current object.
+	 * @param Payment $payment The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
@@ -169,7 +168,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $payment The current account object.
+	 * @param Payment $payment The current account object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
@@ -197,7 +196,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $payment The current account object.
+	 * @param Payment $payment The current account object.
 	 *
 	 * @return string Data shown in the amount column.
 	 */
@@ -210,7 +209,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $payment The current account object.
+	 * @param Payment $payment The current account object.
 	 *
 	 * @return string Data shown in the account column.
 	 */
@@ -226,13 +225,13 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $payment The current account object.
+	 * @param Payment $payment The current account object.
 	 *
 	 * @return string Data shown in the Category column.
 	 */
 	function column_category_id( $payment ) {
-		$account = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
-		$name    = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+		$category = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
+		$name     = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_payments_table_category', esc_html( $name ), $payment );
 	}
@@ -242,7 +241,7 @@ class List_Table_Payments extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $payment The current account object.
+	 * @param Payment $payment The current account object.
 	 *
 	 * @return string Data shown in the Reference column.
 	 */
@@ -253,9 +252,9 @@ class List_Table_Payments extends List_Table {
 	}
 
 	/**
-	 * @param $payment
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param $payment
 	 *
 	 * @return string
 	 */
@@ -283,7 +282,6 @@ class List_Table_Payments extends List_Table {
 	}
 
 
-
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
@@ -302,7 +300,7 @@ class List_Table_Payments extends List_Table {
 	 * @param string $which
 	 */
 	protected function extra_tablenav( $which ) {
-		if ( 'top' == $which ) {
+		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
@@ -463,17 +461,9 @@ class List_Table_Payments extends List_Table {
 
 		$args = apply_filters( 'eaccounting_payments_table_get_payments', $args, $this );
 
-		$this->items = Query_Transaction::init()
-										->where( $args )
-										->notTransfer()
-										->where_date_between( 'paid_at', $start_date, $end_date )
-										->get( OBJECT, 'eaccounting_get_transaction' );
+		$this->items = eaccounting_get_payments( $args );
 
-		$this->total_count = Query_Transaction::init()
-											  ->where( $args )
-											  ->notTransfer()
-											  ->where_date_between( 'paid_at', $start_date, $end_date )
-											  ->count();
+		$this->total_count = eaccounting_get_payments( array_merge( $args, array( 'count' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

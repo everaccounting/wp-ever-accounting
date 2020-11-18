@@ -11,7 +11,7 @@ namespace EverAccounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
-class InvoiceItemsController extends Controller {
+class InvoiceHistoriesController extends Controller {
 	/**
 	 * Route base.
 	 *

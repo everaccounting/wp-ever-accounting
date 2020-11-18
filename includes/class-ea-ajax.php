@@ -172,7 +172,7 @@ class Ajax {
 				break;
 			case 'customer':
 				self::check_permission( 'ea_manage_customer' );
-				$result = eaccounting_insert_contact(
+				$result = eaccounting_insert_customer(
 					array(
 						'id'      => $object_id,
 						'enabled' => $enabled,
@@ -181,7 +181,7 @@ class Ajax {
 				break;
 			case 'vendor':
 				self::check_permission( 'ea_manage_vendor' );
-				$result = eaccounting_insert_contact(
+				$result = eaccounting_insert_vendor(
 					array(
 						'id'      => $object_id,
 						'enabled' => $enabled,

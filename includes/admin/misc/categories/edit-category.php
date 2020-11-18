@@ -7,12 +7,11 @@
  * @since       1.0.2
  */
 
-use EverAccounting\Query_Category;
 
 defined( 'ABSPATH' ) || exit();
 $category_id = isset( $_REQUEST['category_id'] ) ? absint( $_REQUEST['category_id'] ) : null;
 try {
-	$category = new \EverAccounting\Category( $category_id );
+	$category = new \EverAccounting\Models\Category( $category_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
@@ -29,25 +28,30 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 		<form id="ea-category-form" class="ea-ajax-form" method="post">
 			<div class="ea-row">
 				<?php
-				eaccounting_text_input( array(
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Name', 'wp-ever-accounting' ),
 						'name'          => 'name',
 						'placeholder'   => __( 'Enter Name', 'wp-ever-accounting' ),
 						'value'         => $category->get_name(),
 						'required'      => true,
-				) );
+					)
+				);
 
-				eaccounting_select2( array(
+				eaccounting_select2(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Type', 'wp-ever-accounting' ),
 						'name'          => 'type',
 						'value'         => $category->get_type(),
 						'options'       => eaccounting_get_category_types(),
 						'placeholder'   => __( 'Select Type', 'wp-ever-accounting' ),
-				) );
+					)
+				);
 
-				eaccounting_text_input( array(
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Color', 'wp-ever-accounting' ),
 						'name'          => 'color',
@@ -57,7 +61,8 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'data_type'     => 'color',
 						'style'         => 'width: calc(100% - 3em) !important;',
 						'required'      => true,
-				) );
+					)
+				);
 
 				//				eaccounting_toggle( array(
 				//						'wrapper_class' => 'ea-col-6',
@@ -66,15 +71,19 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 				//						'value'         => $category->get_enabled( 'edit' ),
 				//				) );
 
-				eaccounting_hidden_input( array(
+				eaccounting_hidden_input(
+					array(
 						'name'  => 'id',
-						'value' => $category->get_id()
-				) );
+						'value' => $category->get_id(),
+					)
+				);
 
-				eaccounting_hidden_input( array(
+				eaccounting_hidden_input(
+					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_category'
-				) );
+						'value' => 'eaccounting_edit_category',
+					)
+				);
 
 				?>
 			</div>

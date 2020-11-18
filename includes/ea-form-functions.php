@@ -679,22 +679,26 @@ function eaccounting_select2( $field ) {
  *
  */
 function eaccounting_contact_dropdown( $field ) {
-	$type    = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
-	$value   = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : '';
-	$options = \EverAccounting\Contacts\query()->select( 'id, name' );
-	if ( $type ) {
-		$options->where( 'type', $type );
-	}
+	$type  = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
+	$value = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : '';
+	$query_args = array();
 	if ( ! empty( $value ) ) {
-		$options->where( 'id', $value );
+		$query_args['include'] = $value;
 	}
 
-	$options = $options->get_results();
+	$function = 'customer' === $type ? 'eaccounting_get_customers' : 'eaccounting_get_vendors';
+
+	$contacts = array_map(
+		function ( $item ) {
+			return $item->to_array();
+		},
+		$function( $query_args )
+	);
 
 	$field = wp_parse_args(
 		array(
 			'value'    => $value ? absint( $value ) : '',
-			'options'  => wp_list_pluck( $options, 'name', 'id' ),
+			'options'  => wp_list_pluck( $contacts, 'name', 'id' ),
 			'type'     => $type,
 			'ajax'     => true,
 			'template' => 'add-' . $type,
@@ -715,13 +719,19 @@ function eaccounting_contact_dropdown( $field ) {
 function eaccounting_account_dropdown( $field ) {
 	$default_id = '';
 	$account_id = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : 0;
-	$options    = array();
-	$wherein    = array_filter( array_unique( array( $default_id, $account_id ) ) );
-	if ( ! empty( $wherein ) ) {
-		$options = \EverAccounting\Accounts\query()
-												->select( 'id, name' )
-												->whereIn( 'id', $wherein )
-												->get_results();
+	$accounts   = array();
+	$include    = array_filter( array_unique( array( $default_id, $account_id ) ) );
+	if ( ! empty( $include ) ) {
+		$accounts = array_map(
+			function ( $item ) {
+				return $item->to_array();
+			},
+			eaccounting_get_accounts(
+				array(
+					'include' => $include,
+				)
+			)
+		);
 	}
 	if ( ! isset( $field['default'] ) ) {
 		$default_id = (int) eaccounting()->settings->get( 'default_account' );
@@ -734,7 +744,7 @@ function eaccounting_account_dropdown( $field ) {
 			'ajax'        => true,
 			'default'     => $default_id,
 			'template'    => 'add-account',
-			'options'     => wp_list_pluck( $options, 'name', 'id' ),
+			'options'     => wp_list_pluck( $accounts, 'name', 'id' ),
 			'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
 		)
 	);
@@ -750,26 +760,33 @@ function eaccounting_account_dropdown( $field ) {
  *
  */
 function eaccounting_category_dropdown( $field ) {
-	$field   = wp_parse_args(
+	$field      = wp_parse_args(
 		$field,
 		array(
 			'value' => '',
 			'type'  => '',
 		)
 	);
-	$type    = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_category_types() ) ? eaccounting_clean( $field['type'] ) : false;
-	$value   = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : false;
-	$options = \EverAccounting\Categories\query()->select( 'id, name' );
+	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_category_types() ) ? eaccounting_clean( $field['type'] ) : false;
+	$value      = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : false;
+	$query_args = array( array( 'fields' => 'id, name' ) );
 	if ( $type ) {
-		$options->where( 'type', $type );
+		$query_args['type'] = $type;
 	}
 	if ( ! empty( $value ) ) {
-		$options->where( 'id', $value );
+		$query_args['include'] = $value;
 	}
+	$categories = array_map(
+		function ( $item ) {
+			return $item->to_array();
+		},
+		eaccounting_get_categories( $query_args )
+	);
+
 	$field = wp_parse_args(
 		array(
 			'value'       => $value ? absint( $value ) : '',
-			'options'     => wp_list_pluck( $options->get_results(), 'name', 'id' ),
+			'options'     => wp_list_pluck( $categories, 'name', 'id' ),
 			'type'        => $type . '_category',
 			'ajax'        => true,
 			'placeholder' => __( 'Select Category', 'wp-ever-accounting' ),

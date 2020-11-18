@@ -35,7 +35,7 @@ class DateTime extends DT {
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->format( DATE_ATOM );
+		return $this->date_mysql();
 	}
 
 	/**

@@ -4,14 +4,27 @@
  *
  * Currency related functions.
  *
- * @since 1.0.2
+ * @since   1.0.2
  * @package EverAccounting
  */
 
-use \EverAccounting\Currency;
-use \EverAccounting\Exception;
 
 defined( 'ABSPATH' ) || exit();
+
+/**
+ * Checks if the currency code is valid.
+ *
+ * @since 1.1.0
+ *
+ * @param $code
+ *
+ * @return bool
+ */
+function eaccounting_get_currency_code( $code ) {
+	$codes = eaccounting_get_global_currencies();
+
+	return array_key_exists( strtoupper( $code ), $codes ) ? $codes[ $code ] : false;
+}
 
 /**
  * Main function for returning currency.
@@ -24,40 +37,20 @@ defined( 'ABSPATH' ) || exit();
  * in database must check $currency->exist()
  *
  *
- * @param object|string|int $currency
- *
- * @param bool              $exist
- *
  * @since 1.0.2
  *
- * @return \EverAccounting\Currency|null
+ * @param object|string|int $currency
+ *
+ * @return EverAccounting\Models\Currency|null
  */
-function eaccounting_get_currency( $currency, $exist = false ) {
+function eaccounting_get_currency( $currency ) {
 	if ( empty( $currency ) ) {
 		return null;
 	}
 
-	try {
-		if ( $currency instanceof Currency ) {
-			$_currency = $currency;
-		} elseif ( is_object( $currency ) && ! empty( $currency->id ) ) {
-			$_currency = new Currency( null );
-			$_currency->populate( $currency );
-		} elseif ( is_string( $currency ) && ! empty( $currency ) ) {
-			$_currency = new Currency( null );
-			$_currency->populate_by_code( $currency );
-		} else {
-			$_currency = new Currency( absint( $currency ) );
-		}
+	$result = new EverAccounting\Models\Currency( $currency );
 
-		if ( $exist && ! $_currency->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid currency.', 'wp-ever-accounting' ) );
-		}
-
-		return $_currency;
-	} catch ( Exception $e ) {
-		return null;
-	}
+	return $result->exists() ? $result : null;
 }
 
 /**
@@ -65,106 +58,50 @@ function eaccounting_get_currency( $currency, $exist = false ) {
  *
  *  Returns a new currency object on success.
  *
- * @param array $args currency arguments.
- *
  * @since 1.0.2
  *
- * @return Currency|WP_Error
+ * @param array $args currency arguments.
+ *
+ * @return EverAccounting\Models\Currency|\WP_Error
  */
 function eaccounting_insert_currency( $args ) {
-	try {
-		$default_args = array(
-			'id' => null,
-		);
-		$args         = (array) wp_parse_args( $args, $default_args );
-		$currency     = new Currency( $args['id'] );
-		$currency->set_props( $args );
-
-		if ( null == $currency->get_date_created() ) {
-			$currency->set_date_created( time() );
-		}
-		if ( empty( $currency->get_code() ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $currency->get_rate() ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency rate is required.', 'wp-ever-accounting' ) );
-		}
-		$exist = $currency->get_by_code( $currency->get_code() );
-		if ( ! empty( $exist ) && $exist->id != $currency->get_id() ) {
-			throw new Exception( 'empty_prop', __( 'Duplicate currency code.', 'wp-ever-accounting' ) );
-		}
-
-		$attributes = $currency->global_currencies[ $currency->get_code() ];
-		if ( empty( $currency->get_name( 'edit' ) ) ) {
-			$currency->set_name( $attributes['name'] );
-		}
-
-		if ( empty( $currency->get_symbol( 'edit' ) ) ) {
-			$currency->set_symbol( $attributes['symbol'] );
-		}
-
-		if ( empty( $currency->get_position( 'edit' ) ) ) {
-			$currency->set_position( $attributes['position'] );
-		}
-
-		if ( empty( $currency->get_precision( 'edit' ) ) ) {
-			$currency->set_precision( $attributes['precision'] );
-		}
-
-		if ( empty( $currency->get_decimal_separator( 'edit' ) ) ) {
-			$currency->set_decimal_separator( $attributes['decimal_separator'] );
-		}
-
-		if ( empty( $currency->get_thousand_separator( 'edit' ) ) ) {
-			$currency->set_thousand_separator( $attributes['thousand_separator'] );
-		}
-
-		$currency->save();
-
-	} catch ( Exception $e ) {
-		return new \WP_Error( $e->getErrorCode(), $e->getMessage() );
+	$args = wp_parse_args( $args, array( 'code' => '' ) );
+	$code = eaccounting_get_currency_code( $args['code'] );
+	if ( $code ) {
+		$args = array_merge( $code, $args );
 	}
+	$currency = new EverAccounting\Models\Currency( $args );
 
-	return $currency;
+	return $currency->save();
 }
 
 /**
  * Delete a currency.
  *
- * @param $currency_id
- *
  * @since 1.0.2
+ *
+ * @param $currency_id
  *
  * @return bool
  */
 function eaccounting_delete_currency( $currency_id ) {
-	try {
-		$currency = new Currency( $currency_id );
-		if ( ! $currency->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid currency.', 'wp-ever-accounting' ) );
-		}
-
-		$currency->delete();
-
-		return empty( $currency->get_id() );
-
-	} catch ( Exception $exception ) {
+	$currency = new EverAccounting\Models\Account( $currency_id );
+	if ( ! $currency->exists() ) {
 		return false;
 	}
+
+	return \EverAccounting\Repositories\Currencies::instance()->delete( $currency->get_id() );
 }
 
 /**
- * Delete default currency from settings
+ * Get currency items.
  *
- * @param int $id ID of the default currency.
+ * @since 1.1.0
  *
- * @since 1.0.2
+ * @param array $args
+ *
+ * @return array|int
  */
-function eaccounting_delete_default_currency( $id ) {
-	$default_account = eaccounting()->settings->get( 'default_currency' );
-	if ( $default_account == $id ) {
-		eaccounting()->settings->set( array( array( 'default_currency' => '' ) ), true );
-	}
+function eaccounting_get_currencies( $args = array() ) {
+	return \EverAccounting\Repositories\Currencies::instance()->get_items( $args );
 }
-
-add_action( 'eaccounting_delete_currency', 'eaccounting_delete_default_currency' );

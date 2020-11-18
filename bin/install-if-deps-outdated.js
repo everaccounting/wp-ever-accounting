@@ -14,22 +14,24 @@ const fs = require('fs');
 const spawnSync = require('child_process').spawnSync;
 
 const needsInstall = () => {
-	try {
-		const shrinkwrapTime = fs.statSync('package-lock.json').mtime;
-		const nodeModulesTime = fs.statSync('node_modules').mtime;
-		return shrinkwrapTime - nodeModulesTime > 1000; // In Windows, directory mtime has less precision than file mtime
-	} catch (e) {
-		return true;
-	}
+    try {
+        const shrinkwrapTime = fs.statSync('package-lock.json').mtime;
+        const nodeModulesTime = fs.statSync('node_modules').mtime;
+        return shrinkwrapTime - nodeModulesTime > 1000; // In Windows, directory mtime has less precision than file mtime
+    } catch (e) {
+        return true;
+    }
 };
 
 if (needsInstall()) {
-	const installResult = spawnSync('npm', ['install'], {
-		shell: true,
-		stdio: 'inherit',
-	}).status;
-	if (installResult) {
-		process.exit(installResult);
-	}
-	fs.utimesSync('node_modules', new Date(), new Date());
+    const installResult = spawnSync(
+        'npm', ['install'], {
+            shell: true,
+            stdio: 'inherit',
+        }
+    ).status;
+    if (installResult) {
+        process.exit(installResult);
+    }
+    fs.utimesSync('node_modules', new Date(), new Date());
 }

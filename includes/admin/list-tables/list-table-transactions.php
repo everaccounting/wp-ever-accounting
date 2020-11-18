@@ -16,8 +16,7 @@ namespace EverAccounting\Admin\ListTables;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Transaction;
-use EverAccounting\Transaction;
+use EverAccounting\Abstracts\TransactionModel;
 
 /**
  * Class List_Table_Transactions

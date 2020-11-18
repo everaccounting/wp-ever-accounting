@@ -801,4 +801,7 @@ class Collection implements Arrayable {
 	}
 
 
+	public function to_array() {
+		// TODO: Implement to_array() method.
+	}
 }

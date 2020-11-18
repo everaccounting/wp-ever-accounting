@@ -32,7 +32,7 @@ class Money {
 
 	/**
 	 * @since 1.0.2
-	 * @var Currency
+	 * @var \EverAccounting\Models\Currency
 	 */
 	protected $currency;
 
@@ -47,7 +47,7 @@ class Money {
 	 * @throws \Exception
 	 */
 	public function __construct( $amount, $code, $convert = false ) {
-		$this->currency = new Currencies\Currency( $code );
+		$this->currency = new \EverAccounting\Models\Currency( $code );
 		$this->amount   = $this->parseAmount( $amount, $convert );
 	}
 
@@ -221,7 +221,11 @@ class Money {
 	 * @return float
 	 */
 	public function getValue() {
-		return round( $this->amount / $this->currency->get_subunit(), $this->currency->get_precision() );
+		if ( $this->currency->get_subunit() && $this->currency->get_precision() ) {
+			return round( $this->amount / $this->currency->get_subunit(), $this->currency->get_precision() );
+		}
+
+		return $this->amount;
 	}
 
 	/**
@@ -279,7 +283,7 @@ class Money {
 	 * @return bool
 	 */
 	public function equals( self $other ) {
-		return $this->compare( $other ) == 0;
+		return $this->compare( $other ) === 0;
 	}
 
 	/**
@@ -291,7 +295,7 @@ class Money {
 	 * @return bool
 	 */
 	public function greaterThan( self $other ) {
-		return $this->compare( $other ) == 1;
+		return $this->compare( $other ) === 1;
 	}
 
 	/**
@@ -315,7 +319,7 @@ class Money {
 	 * @return bool
 	 */
 	public function lessThan( self $other ) {
-		return $this->compare( $other ) == - 1;
+		return $this->compare( $other ) === - 1;
 	}
 
 	/**
@@ -420,7 +424,7 @@ class Money {
 		$this->assertOperand( $divisor );
 		$this->assertRoundingMode( $roundingMode );
 
-		if ( $divisor == 0 ) {
+		if ( $divisor === 0 ) {
 			throw new \InvalidArgumentException( 'Division by zero' );
 		}
 
@@ -461,7 +465,7 @@ class Money {
 	 * @return bool
 	 */
 	public function isZero() {
-		return $this->amount == 0;
+		return $this->amount === 0;
 	}
 
 	/**
@@ -555,22 +559,12 @@ class Money {
 	}
 
 	/**
-	 * Get the evaluated contents of the object.
-	 *
-	 * @since       1.0.2
-	 * @return string
-	 */
-	public function render() {
-		return $this->format();
-	}
-
-	/**
 	 * __toString.
 	 *
 	 * @since       1.0.2
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->render();
+		return $this->format();
 	}
 }

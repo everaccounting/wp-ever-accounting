@@ -4,9 +4,13 @@ namespace EverAccounting\Interfaces;
 
 interface Arrayable {
 	/**
-	 * Get the instance as an array.
-	 *
-	 * @return array
+	 * Returns object as string.
+	 * @since 1.0.0
 	 */
-	public function toArray();
+	public function __toArray();
+	/**
+	 * Returns object as string.
+	 * @since 1.0.0
+	 */
+	public function to_array();
 }

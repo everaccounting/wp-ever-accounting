@@ -107,7 +107,7 @@ function eaccounting_get_current_user_id() {
 	$user_id = get_current_user_id();
 	if ( empty( $user_id ) ) {
 		$user = get_user_by( 'email', get_option( 'admin_email' ) );
-		if ( $user && in_array( 'administrator', $user->roles ) ) {
+		if ( $user && in_array( 'administrator', $user->roles, true ) ) {
 			$user_id = $user->ID;
 		}
 	}
@@ -170,7 +170,7 @@ function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
 function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $format = false ) {
 	$money = eaccounting_get_money( $amount, $to );
 	// No need to convert same currency
-	if ( $from == $to ) {
+	if ( $from === $to ) {
 		return $format ? $money->format() : $money->getAmount();
 	}
 
@@ -238,7 +238,7 @@ function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = 
 function eaccounting_price_convert_between( $amount, $from_code, $from_rate, $to_code, $to_rate ) {
 	$default_amount = $amount;
 
-	if ( $from_code != eaccounting()->settings->get( 'default_currency', 'USD' ) ) {
+	if ( $from_code !== eaccounting()->settings->get( 'default_currency', 'USD' ) ) {
 		$default_amount = eaccounting_price_convert_to_default( $amount, $from_code, $from_rate );
 	}
 

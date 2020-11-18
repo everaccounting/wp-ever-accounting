@@ -23,7 +23,8 @@
   },
   "require-dev": {
 	"phpunit/phpunit": "7.5.20",
-	"suin/phpcs-psr4-sniff": "^2.2"
+	"suin/phpcs-psr4-sniff": "^2.2",
+	"10up/phpcs-composer": "dev-master"
   },
   "config": {
 	"platform": {
@@ -35,10 +36,10 @@
 	  "phpunit"
 	],
 	"phpcs": [
-	  "phpcs -s -p"
+	  "phpcs -s -p ."
 	],
 	"phpcbf": [
-	  "phpcbf -p"
+	  "phpcbf -p ."
 	]
   },
   "extra": {

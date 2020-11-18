@@ -450,27 +450,27 @@ class List_Table_Categories extends List_Table {
 
 		$args = apply_filters( 'eaccounting_categories_table_get_categories', $args, $this );
 
-		$this->items = \EverAccounting\Categories\query( $args )->get( OBJECT, 'eaccounting_get_category' );
+		$this->items = eaccounting_get_categories( $args );
 
-		$this->active_count = \EverAccounting\Categories\query(
+		$this->active_count = eaccounting_get_categories(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
+					'count'  => true,
 					'status' => 'active',
-					'search' => $search,
 				)
 			)
-		)->count();
+		);
 
-		$this->inactive_count = \EverAccounting\Categories\query(
+		$this->inactive_count = eaccounting_get_categories(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
+					'count'  => true,
 					'status' => 'inactive',
-					'search' => $search,
 				)
 			)
-		)->count();
+		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;
 
