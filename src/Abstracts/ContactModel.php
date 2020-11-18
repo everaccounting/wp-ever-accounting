@@ -209,7 +209,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $id
-	 *
 	 */
 	public function set_user_id( $id ) {
 		$this->set_prop( 'user_id', absint( $id ) );
@@ -221,7 +220,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $name
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -233,7 +231,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $value Email.
-	 *
 	 */
 	public function set_email( $value ) {
 		if ( $value && ! is_email( $value ) ) {
@@ -247,7 +244,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_phone( $value ) {
 		$this->set_prop( 'phone', eaccounting_clean( $value ) );
@@ -259,7 +255,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_fax( $value ) {
 		$this->set_prop( 'fax', eaccounting_clean( $value ) );
@@ -271,7 +266,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $date
-	 *
 	 */
 	public function set_birth_date( $date ) {
 		$this->set_date_prop( 'birth_date', $date );
@@ -283,7 +277,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_address( $value ) {
 		$this->set_prop( 'address', sanitize_textarea_field( $value ) );
@@ -295,7 +288,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $country
-	 *
 	 */
 	public function set_country( $country ) {
 		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
@@ -309,7 +301,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_website( $value ) {
 		$this->set_prop( 'website', esc_url( $value ) );
@@ -321,7 +312,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_tax_number( $value ) {
 		$this->set_prop( 'tax_number', eaccounting_clean( $value ) );
@@ -333,7 +323,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_currency_code( $value ) {
 		if ( eaccounting_get_currency_code( $value ) ) {
@@ -347,7 +336,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $type
-	 *
 	 */
 	public function set_type( $type ) {
 		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
@@ -361,7 +349,6 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_note( $value ) {
 		$this->set_prop( 'note', sanitize_textarea_field( $value ) );

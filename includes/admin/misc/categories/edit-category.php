@@ -64,12 +64,12 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 					)
 				);
 
-				//				eaccounting_toggle( array(
-				//						'wrapper_class' => 'ea-col-6',
-				//						'label'         => __( 'Enabled', 'wp-ever-accounting' ),
-				//						'name'          => 'enabled',
-				//						'value'         => $category->get_enabled( 'edit' ),
-				//				) );
+				// eaccounting_toggle( array(
+				// 'wrapper_class' => 'ea-col-6',
+				// 'label'         => __( 'Enabled', 'wp-ever-accounting' ),
+				// 'name'          => 'enabled',
+				// 'value'         => $category->get_enabled( 'edit' ),
+				// ) );
 
 				eaccounting_hidden_input(
 					array(

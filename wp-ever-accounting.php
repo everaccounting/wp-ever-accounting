@@ -74,7 +74,7 @@ final class EverAccounting {
 	 * Return plugin version.
 	 *
 	 * @since 1.2.0
-	 **@return string
+	 * *@return string
 	 */
 	public function get_version() {
 		return $this->version;
@@ -252,38 +252,38 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
-		require_once( EACCOUNTING_ABSPATH . '/vendor/autoload.php' );
+		require_once EACCOUNTING_ABSPATH . '/vendor/autoload.php';
 
 		// Abstract classes.
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-widget.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php' );
+		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-widget.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php';
 
 		// Core classes.
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-emails.php' );
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-emails.php';
 
 		// Functions.
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php' );
-		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
-		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
-		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
-		//      require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
+		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
+		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
+		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
+		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 		//
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
+			require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php';
 		}
 	}
 
@@ -331,7 +331,8 @@ final class EverAccounting {
 		\EverAccounting\Controllers\TransferController::instance();
 		\EverAccounting\Controllers\CategoryController::instance();
 		\EverAccounting\Controllers\CurrencyController::instance();
-		//\EverAccounting\REST\Manager::();
+
+		// \EverAccounting\REST\Manager::();
 
 		$this->settings = new \EverAccounting\Admin\Settings();
 		$this->utils    = new \EverAccounting\Utilities();

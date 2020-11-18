@@ -78,7 +78,7 @@ function eaccounting_insert_transfer( $args ) {
 		$transfer     = new Transfer( $args['id'] );
 		$transfer->set_props( $args );
 
-		//validation
+		// validation
 		if ( ! $transfer->get_date_created() ) {
 			$transfer->set_date_created( time() );
 		}
@@ -114,16 +114,18 @@ function eaccounting_insert_transfer( $args ) {
 		}
 
 		$category_id = Query_Category::init()
-		                             ->select( 'id' )
-		                             ->where( 'name', __( 'Transfer', 'wp-ever-accounting' ) )
-		                             ->where( 'type', 'other' )
-		                             ->value( 0 );
+									 ->select( 'id' )
+									 ->where( 'name', __( 'Transfer', 'wp-ever-accounting' ) )
+									 ->where( 'type', 'other' )
+									 ->value( 0 );
 
 		if ( empty( $category_id ) ) {
-			$category = eaccounting_insert_category( array(
-				'name' => __( 'Transfer', 'wp-ever-accounting' ),
-				'type' => 'other'
-			) );
+			$category = eaccounting_insert_category(
+				array(
+					'name' => __( 'Transfer', 'wp-ever-accounting' ),
+					'type' => 'other',
+				)
+			);
 
 			$category_id = $category && $category->exists() ? $category->get_id() : null;
 		}
@@ -137,18 +139,20 @@ function eaccounting_insert_transfer( $args ) {
 		$expense_id       = $transfer->get_expense_id();
 		$income_id        = $transfer->get_income_id();
 		$amount           = eaccounting_sanitize_price( $transfer->get_amount(), $from_account->get_currency_code() );
-		$expense          = eaccounting_insert_transaction( array(
-			'id'             => $expense_id,
-			'account_id'     => $from_account->get_id(),
-			'paid_at'        => $transfer->get_date()->date_i18n(),
-			'amount'         => $amount,
-			'vendor_id'      => 0,
-			'description'    => $transfer->get_description(),
-			'category_id'    => $category_id,
-			'payment_method' => $transfer->get_payment_method(),
-			'reference'      => $transfer->get_reference(),
-			'type'           => 'expense'
-		) );
+		$expense          = eaccounting_insert_transaction(
+			array(
+				'id'             => $expense_id,
+				'account_id'     => $from_account->get_id(),
+				'paid_at'        => $transfer->get_date()->date_i18n(),
+				'amount'         => $amount,
+				'vendor_id'      => 0,
+				'description'    => $transfer->get_description(),
+				'category_id'    => $category_id,
+				'payment_method' => $transfer->get_payment_method(),
+				'reference'      => $transfer->get_reference(),
+				'type'           => 'expense',
+			)
+		);
 		if ( is_wp_error( $expense ) ) {
 			throw new Exception( $expense->get_error_code(), $expense->get_error_message() );
 		}
@@ -160,18 +164,20 @@ function eaccounting_insert_transfer( $args ) {
 			$amount = eaccounting_price_convert_from_default( $amount, $to_account->get_currency_code(), $income_currency->get_rate() );
 		}
 
-		$income = eaccounting_insert_transaction( array(
-			'id'             => $income_id,
-			'account_id'     => $to_account->get_id(),
-			'paid_at'        => $transfer->get_date()->date_i18n(),
-			'amount'         => $amount,
-			'vendor_id'      => 0,
-			'description'    => $transfer->get_description(),
-			'category_id'    => $category_id,
-			'payment_method' => $transfer->get_payment_method(),
-			'reference'      => $transfer->get_reference(),
-			'type'           => 'income'
-		) );
+		$income = eaccounting_insert_transaction(
+			array(
+				'id'             => $income_id,
+				'account_id'     => $to_account->get_id(),
+				'paid_at'        => $transfer->get_date()->date_i18n(),
+				'amount'         => $amount,
+				'vendor_id'      => 0,
+				'description'    => $transfer->get_description(),
+				'category_id'    => $category_id,
+				'payment_method' => $transfer->get_payment_method(),
+				'reference'      => $transfer->get_reference(),
+				'type'           => 'income',
+			)
+		);
 		if ( is_wp_error( $income ) ) {
 			eaccounting_delete_transaction( $expense->get_id() );
 			throw new Exception( $income->get_error_code(), $income->get_error_message() );

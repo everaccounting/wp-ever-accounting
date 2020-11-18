@@ -5,7 +5,6 @@
  * Admin transactions list table it shows all kind of transactions
  * related to  the company
  *
- *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
@@ -82,7 +81,6 @@ class List_Table_Transactions extends List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -162,7 +160,6 @@ class List_Table_Transactions extends List_Table {
 
 	/**
 	 * Renders the "Date" column in the accounts list table.
-	 *
 	 *
 	 * @since  1.0.2
 	 *
@@ -301,7 +298,7 @@ class List_Table_Transactions extends List_Table {
 			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'type', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
 			'income'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'income', $base ) ), $current === 'income' ? ' class="current"' : '', __( 'Income', 'wp-ever-accounting' ) . $income_count ),
 			'expense' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'expense', $base ) ), $current === 'expense' ? ' class="current"' : '', __( 'Expense', 'wp-ever-accounting' ) . $expense_count ),
-			//'other'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'other', $base ) ), $current === 'other' ? ' class="current"' : '', __( 'Other', 'wp-ever-accounting' ) . $others_count ),
+			// 'other'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'other', $base ) ), $current === 'other' ? ' class="current"' : '', __( 'Other', 'wp-ever-accounting' ) . $others_count ),
 		);
 
 		return $views;

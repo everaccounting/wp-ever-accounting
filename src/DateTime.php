@@ -54,7 +54,6 @@ class DateTime extends DT {
 	 * @since   1.0.2
 	 *
 	 * @param int $offset Offset.
-	 *
 	 */
 	public function set_utc_offset( $offset ) {
 		$this->utc_offset = intval( $offset );

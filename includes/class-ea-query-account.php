@@ -44,7 +44,6 @@ class Query_Account extends Query {
 	/**
 	 * Static constructor.
 	 *
-	 *
 	 * @since 1.0.2
 	 * @return Query_Account
 	 */
@@ -90,9 +89,9 @@ class Query_Account extends Query {
 	public function withBalance() {
 		$transaction = \EverAccounting\Transactions\Transaction::TABLE;
 		$this->select( "{$this->table}.*" )
-		     ->select( "SUM(CASE WHEN {$transaction}.type='income' then amount WHEN {$transaction}.type='expense' then - amount END ) + {$this->table}.opening_balance  as balance" )
-		     ->left_join( "ea_transactions as {$transaction}", "{$transaction}.account_id", "{$this->table}.id" )
-		     ->group_by( "{$this->table}.id" );
+			 ->select( "SUM(CASE WHEN {$transaction}.type='income' then amount WHEN {$transaction}.type='expense' then - amount END ) + {$this->table}.opening_balance  as balance" )
+			 ->left_join( "ea_transactions as {$transaction}", "{$transaction}.account_id", "{$this->table}.id" )
+			 ->group_by( "{$this->table}.id" );
 
 		return $this;
 	}

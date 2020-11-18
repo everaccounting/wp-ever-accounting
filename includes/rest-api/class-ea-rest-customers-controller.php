@@ -31,10 +31,10 @@ class Customers_Controller extends Controller {
 			'/' . $this->rest_base,
 			array(
 				array(
-					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					//'permission_callback' => current_user_can( 'ea_manage_customer' ),
-					'args'                => $this->get_collection_params(),
+					'methods'  => \WP_REST_Server::READABLE,
+					'callback' => array( $this, 'get_items' ),
+					// 'permission_callback' => current_user_can( 'ea_manage_customer' ),
+					'args'     => $this->get_collection_params(),
 				),
 				array(
 					'methods'             => \WP_REST_Server::CREATABLE,
@@ -101,7 +101,7 @@ class Customers_Controller extends Controller {
 
 	/**
 	 *
-	 * @param mixed           $item
+	 * @param mixed            $item
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
@@ -166,7 +166,6 @@ class Customers_Controller extends Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -306,7 +305,6 @@ class Customers_Controller extends Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

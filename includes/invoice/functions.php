@@ -5,11 +5,11 @@ function get() {
 
 }
 
-function insert(){
+function insert() {
 
 }
 
-function delete(){
+function delete() {
 
 }
 

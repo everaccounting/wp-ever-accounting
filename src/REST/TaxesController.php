@@ -90,7 +90,7 @@ class TaxesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class TaxesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class TaxesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class TaxesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -134,7 +134,7 @@ class TaxesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -145,7 +145,7 @@ class TaxesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function batch_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 
@@ -196,7 +196,6 @@ class TaxesController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -225,7 +224,6 @@ class TaxesController extends Controller {
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -246,7 +244,6 @@ class TaxesController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -280,7 +277,6 @@ class TaxesController extends Controller {
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -309,13 +305,12 @@ class TaxesController extends Controller {
 
 	/**
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \WP_REST_Request                 $request
 	 *
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -349,7 +344,6 @@ class TaxesController extends Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -357,7 +351,7 @@ class TaxesController extends Controller {
 			'title'      => __( 'Tax', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'              => array(
+				'id'           => array(
 					'description' => __( 'Unique identifier for the tax.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -366,7 +360,7 @@ class TaxesController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'            => array(
+				'name'         => array(
 					'description' => __( 'Name of the tax.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -375,7 +369,7 @@ class TaxesController extends Controller {
 					),
 					'required'    => true,
 				),
-				'rate'          => array(
+				'rate'         => array(
 					'description' => __( 'Rate of the tax.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -384,7 +378,7 @@ class TaxesController extends Controller {
 					),
 					'required'    => true,
 				),
-				'type'          => array(
+				'type'         => array(
 					'description' => __( 'Type of the tax.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -416,7 +410,6 @@ class TaxesController extends Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

@@ -15,6 +15,7 @@ use EverAccounting\Query_Contact;
 
 /**
  * Class Export_Vendors
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
@@ -67,7 +68,6 @@ class Export_Vendors extends CSV_Exporter {
 
 	/**
 	 * Take a vendor and generate row data from it for export.
-	 *
 	 *
 	 * @param \EverAccounting\Contact $item
 	 *

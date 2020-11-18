@@ -4,7 +4,6 @@
  *
  * Admin vendors list table.
  *
- *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
@@ -73,13 +72,15 @@ class List_Table_Vendors extends List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args( $args, array(
-			'singular' => 'vendor',
-			'plural'   => 'vendors',
-		) );
+		$args = (array) wp_parse_args(
+			$args,
+			array(
+				'singular' => 'vendor',
+				'plural'   => 'vendors',
+			)
+		);
 
 		parent::__construct( $args );
 	}
@@ -116,7 +117,7 @@ class List_Table_Vendors extends List_Table {
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
-			//'sales'   => __( 'Sales', 'wp-ever-accounting' ),
+			// 'sales'   => __( 'Sales', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -166,7 +167,6 @@ class List_Table_Vendors extends List_Table {
 	/**
 	 * Renders the checkbox column in the vendors list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
 	 * @param Contact $vendor The current object.
@@ -180,7 +180,6 @@ class List_Table_Vendors extends List_Table {
 	/**
 	 * Renders the "Name" column in the vendor list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
 	 * @param Contact $vendor The current contact object.
@@ -190,8 +189,17 @@ class List_Table_Vendors extends List_Table {
 	function column_name( $vendor ) {
 		$name = $vendor->get_name();
 
-		$value = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'tab' => 'vendors', 'vendor_id' => $vendor->get_id() ] ) ),
+		$value = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url(
+				eaccounting_admin_url(
+					[
+						'action'    => 'edit',
+						'tab'       => 'vendors',
+						'vendor_id' => $vendor->get_id(),
+					]
+				)
+			),
 			$name
 		);
 
@@ -200,7 +208,6 @@ class List_Table_Vendors extends List_Table {
 
 	/**
 	 * Renders the "Email" column in the vendor list table.
-	 *
 	 *
 	 * @since  1.0.2
 	 *
@@ -216,7 +223,6 @@ class List_Table_Vendors extends List_Table {
 
 	/**
 	 * Renders the "Phone" column in the vendor list table.
-	 *
 	 *
 	 * @since  1.0.2
 	 *
@@ -241,18 +247,20 @@ class List_Table_Vendors extends List_Table {
 	 */
 	function column_enabled( $vendor ) {
 		ob_start();
-		eaccounting_toggle( array(
-			'name'  => 'enabled',
-			'id'    => 'enabled_' . $vendor->get_id(),
-			'value' => $vendor->get_enabled( 'edit' ),
-			'naked' => true,
-			'class' => 'ea_item_status_update',
-			'attr'  => array(
-				'data-object_id'   => $vendor->get_id(),
-				'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-				'data-object_type' => 'vendor'
+		eaccounting_toggle(
+			array(
+				'name'  => 'enabled',
+				'id'    => 'enabled_' . $vendor->get_id(),
+				'value' => $vendor->get_enabled( 'edit' ),
+				'naked' => true,
+				'class' => 'ea_item_status_update',
+				'attr'  => array(
+					'data-object_id'   => $vendor->get_id(),
+					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
+					'data-object_type' => 'vendor',
+				),
 			)
-		) );
+		);
 		$output = ob_get_contents();
 		ob_get_clean();
 
@@ -267,7 +275,12 @@ class List_Table_Vendors extends List_Table {
 	 * @return string
 	 */
 	function column_actions( $vendor ) {
-		$base_uri    = eaccounting_admin_url( array( 'vendor_id' => $vendor->get_id(), 'tab' => 'vendors' ) );
+		$base_uri    = eaccounting_admin_url(
+			array(
+				'vendor_id' => $vendor->get_id(),
+				'tab'       => 'vendors',
+			)
+		);
 		$row_actions = array();
 
 		$row_actions['edit']   = array(
@@ -327,16 +340,20 @@ class List_Table_Vendors extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_contact( array(
-						'id'      => $id,
-						'enabled' => '1'
-					) );
+					eaccounting_insert_contact(
+						array(
+							'id'      => $id,
+							'enabled' => '1',
+						)
+					);
 					break;
 				case 'disable':
-					eaccounting_insert_contact( array(
-						'id'      => $id,
-						'enabled' => '0'
-					) );
+					eaccounting_insert_contact(
+						array(
+							'id'      => $id,
+							'enabled' => '0',
+						)
+					);
 					break;
 				case 'delete':
 					eaccounting_delete_contact( $id );
@@ -347,15 +364,19 @@ class List_Table_Vendors extends List_Table {
 		}
 
 		if ( isset( $_GET['_wpnonce'] ) ) {
-			wp_safe_redirect( remove_query_arg( [
-				'vendor_id',
-				'action',
-				'_wpnonce',
-				'_wp_http_referer',
-				'action2',
-				'doaction',
-				'paged'
-			] ) );
+			wp_safe_redirect(
+				remove_query_arg(
+					[
+						'vendor_id',
+						'action',
+						'_wpnonce',
+						'_wp_http_referer',
+						'action2',
+						'doaction',
+						'paged',
+					]
+				)
+			);
 			exit();
 		}
 	}
@@ -383,17 +404,20 @@ class List_Table_Vendors extends List_Table {
 
 		$per_page = $this->get_per_page();
 
-		$args = wp_parse_args( $this->query_args, array(
-			'number'   => $per_page,
-			'per_page' => $per_page,
-			'page'     => $page,
-			'offset'   => $per_page * ( $page - 1 ),
-			'search'   => $search,
-			'status'   => $status,
-			'orderby'  => eaccounting_clean( $orderby ),
-			'order'    => eaccounting_clean( $order ),
-			'type'     => 'vendor'
-		) );
+		$args = wp_parse_args(
+			$this->query_args,
+			array(
+				'number'   => $per_page,
+				'per_page' => $per_page,
+				'page'     => $page,
+				'offset'   => $per_page * ( $page - 1 ),
+				'search'   => $search,
+				'status'   => $status,
+				'orderby'  => eaccounting_clean( $orderby ),
+				'order'    => eaccounting_clean( $order ),
+				'type'     => 'vendor',
+			)
+		);
 
 		$args = apply_filters( 'eaccounting_vendors_table_get_vendors', $args, $this );
 
@@ -401,15 +425,25 @@ class List_Table_Vendors extends List_Table {
 
 		$this->total_count = Query_Contact::init()->where( $args )->count();
 
-		$this->active_count = Query_Contact::init()->where( array_merge( $this->query_args, array(
-			'status' => 'active',
-			'search' => $search
-		) ) )->count();
+		$this->active_count = Query_Contact::init()->where(
+			array_merge(
+				$this->query_args,
+				array(
+					'status' => 'active',
+					'search' => $search,
+				)
+			)
+		)->count();
 
-		$this->inactive_count = Query_Contact::init()->where( array_merge( $this->query_args, array(
-			'status' => 'inactive',
-			'search' => $search
-		) ) )->count();
+		$this->inactive_count = Query_Contact::init()->where(
+			array_merge(
+				$this->query_args,
+				array(
+					'status' => 'inactive',
+					'search' => $search,
+				)
+			)
+		)->count();
 
 		$total_items = $this->total_count;
 
@@ -427,10 +461,12 @@ class List_Table_Vendors extends List_Table {
 				break;
 		}
 
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $total_items / $per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
 	}
 }

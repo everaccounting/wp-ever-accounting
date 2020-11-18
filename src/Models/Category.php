@@ -29,7 +29,6 @@ class Category extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param int|object|array| Category $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data, Categories::instance() );
@@ -103,7 +102,6 @@ class Category extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_name( $value ) {
 		$this->set_prop( 'name', eaccounting_clean( $value ) );
@@ -115,7 +113,6 @@ class Category extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_type( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_category_types() ) ) {
@@ -129,7 +126,6 @@ class Category extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_color( $value ) {
 		$this->set_prop( 'color', eaccounting_clean( $value ) );

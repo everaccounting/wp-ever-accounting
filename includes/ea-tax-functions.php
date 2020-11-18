@@ -84,7 +84,7 @@ function eaccounting_insert_tax( $args ) {
 		$tax          = new Tax( $args['id'] );
 		$tax->set_props( $args );
 
-		//validation
+		// validation
 		if ( ! $tax->get_date_created() ) {
 			$tax->set_date_created( time() );
 		}

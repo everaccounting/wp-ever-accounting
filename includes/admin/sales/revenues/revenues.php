@@ -14,15 +14,33 @@ function eaccounting_sales_tab_revenues() {
 	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
-		include_once dirname( __FILE__ ) .'/edit-revenue.php';
-	}elseif ( in_array( $action, [ 'view' ] ) ) {
-		include_once dirname( __FILE__ ) .'/view-revenue.php';
-	}  else {
+		include_once dirname( __FILE__ ) . '/edit-revenue.php';
+	} elseif ( in_array( $action, [ 'view' ] ) ) {
+		include_once dirname( __FILE__ ) . '/view-revenue.php';
+	} else {
 		?>
 		<h1>
 			<?php _e( 'Revenues', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'revenues', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'tab'    => 'revenues',
+					'action' => 'add',
+				)
+			);
+			?>
+												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'page' => 'ea-tools',
+					'tab'  => 'import',
+				)
+			);
+			?>
+												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-revenues.php';
@@ -45,8 +63,8 @@ function eaccounting_sales_tab_revenues() {
 			<input type="hidden" name="page" value="ea-sales"/>
 			<input type="hidden" name="tab" value="revenues"/>
 
-			<?php $list_table->views() ?>
-			<?php $list_table->display() ?>
+			<?php $list_table->views(); ?>
+			<?php $list_table->display(); ?>
 		</form>
 		<?php
 		/**

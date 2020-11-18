@@ -89,7 +89,6 @@ interface ResourceRepository {
 	 * @param $args
 	 *
 	 * @return array
-	 *
 	 */
 	public function get_items( $args = array() );
 

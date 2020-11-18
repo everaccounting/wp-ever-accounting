@@ -63,28 +63,27 @@ class Setup_Wizard {
 			return;
 		}
 		$default_steps = array(
-				'introduction' => array(
-						'name'    => __( 'Introduction', 'wp-ever-accounting' ),
-						'view'    => array( $this, 'setup_introduction' ),
-						'handler' => ''
-				),
-				'company'      => array(
-						'name'    => __( 'Company setup', 'wp-ever-accounting' ),
-						'view'    => array( $this, 'company_settings' ),
-						'handler' => array( $this, 'company_settings_save' ),
-				),
-				'currency'     => array(
-						'name'    => __( 'Currency setup', 'wp-ever-accounting' ),
-						'view'    => array( $this, 'currency_settings' ),
-						'handler' => array( $this, 'currency_settings_save' ),
-				),
-				'finish'       => array(
-						'name'    => __( 'Finish!', 'wp-ever-accounting' ),
-						'view'    => array( $this, 'finish_setup' ),
-						'handler' => '',
-				),
+			'introduction' => array(
+				'name'    => __( 'Introduction', 'wp-ever-accounting' ),
+				'view'    => array( $this, 'setup_introduction' ),
+				'handler' => '',
+			),
+			'company'      => array(
+				'name'    => __( 'Company setup', 'wp-ever-accounting' ),
+				'view'    => array( $this, 'company_settings' ),
+				'handler' => array( $this, 'company_settings_save' ),
+			),
+			'currency'     => array(
+				'name'    => __( 'Currency setup', 'wp-ever-accounting' ),
+				'view'    => array( $this, 'currency_settings' ),
+				'handler' => array( $this, 'currency_settings_save' ),
+			),
+			'finish'       => array(
+				'name'    => __( 'Finish!', 'wp-ever-accounting' ),
+				'view'    => array( $this, 'finish_setup' ),
+				'handler' => '',
+			),
 		);
-
 
 		$this->steps = apply_filters( 'eaccounting_setup_wizard_steps', $default_steps );
 		$this->step  = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) ); // WPCS: CSRF ok, input var ok.
@@ -101,7 +100,6 @@ class Setup_Wizard {
 		wp_enqueue_script( 'ea-repeater', eaccounting()->plugin_url( '/assets/js/jquery-repeater/jquery.repeater' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_enqueue_script( 'ea-select2', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
 		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-repeater', 'ea-select2' ), $version );
-
 
 		// @codingStandardsIgnoreStart
 		if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
@@ -245,31 +243,39 @@ class Setup_Wizard {
 		<form method="post">
 			<?php
 
-			eaccounting_text_input( array(
+			eaccounting_text_input(
+				array(
 					'label'    => __( 'Company Name', 'wp-ever-accounting' ),
 					'name'     => 'company_name',
 					'required' => true,
 					'value'    => eaccounting()->settings->get( 'company_name' ),
-			) );
-			eaccounting_text_input( array(
+				)
+			);
+			eaccounting_text_input(
+				array(
 					'label'    => __( 'Company Email', 'wp-ever-accounting' ),
 					'name'     => 'company_email',
 					'default'  => get_option( 'admin_email' ),
 					'required' => true,
 					'type'     => 'email',
 					'value'    => eaccounting()->settings->get( 'company_email' ),
-			) );
+				)
+			);
 
-			eaccounting_textarea( array(
+			eaccounting_textarea(
+				array(
 					'label' => __( 'Company Address', 'wp-ever-accounting' ),
 					'name'  => 'company_address',
 					'value' => eaccounting()->settings->get( 'company_address' ),
-			) );
-			eaccounting_country_dropdown( array(
+				)
+			);
+			eaccounting_country_dropdown(
+				array(
 					'label'    => __( 'Country', 'wp-ever-accounting' ),
 					'name'     => 'company_country',
 					'required' => true,
-			) );
+				)
+			);
 			?>
 
 			<p class="ea-setup-actions step">
@@ -326,28 +332,32 @@ class Setup_Wizard {
 				</tr>
 				</thead>
 				<tbody>
-				<?php foreach ( $currencies as $id => $currency ): ?>
+				<?php foreach ( $currencies as $id => $currency ) : ?>
 					<tr>
 						<td>
 							<?php
-							eaccounting_select2( array(
+							eaccounting_select2(
+								array(
 									'name'     => "code[$id]",
 									'options'  => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
 									'value'    => $currency->code,
 									'required' => true,
 									'id'       => "$id-code",
-							) );
+								)
+							);
 							?>
 						</td>
 
 						<td>
 							<?php
-							eaccounting_text_input( array(
+							eaccounting_text_input(
+								array(
 									'name'     => "rate[$id]",
 									'value'    => eaccounting_round_number( $currency->rate ),
 									'required' => true,
 									'id'       => "$id-rate",
-							) );
+								)
+							);
 							?>
 						</td>
 
@@ -367,21 +377,25 @@ class Setup_Wizard {
 				<tr>
 					<td>
 						<?php
-						eaccounting_select2( array(
-								'name'    => "code[custom]",
+						eaccounting_select2(
+							array(
+								'name'    => 'code[custom]',
 								'options' => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
-								'id'      => "4-code",
-						) );
+								'id'      => '4-code',
+							)
+						);
 						?>
 					</td>
 
 					<td>
 						<?php
-						eaccounting_text_input( array(
-								'name'  => "rate[custom]",
+						eaccounting_text_input(
+							array(
+								'name'  => 'rate[custom]',
 								'value' => '',
-								'id'    => "4-rate",
-						) );
+								'id'    => '4-rate',
+							)
+						);
 						?>
 					</td>
 
@@ -412,10 +426,12 @@ class Setup_Wizard {
 		$default      = eaccounting_clean( $_REQUEST['default'] );
 
 		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) {
-			$new_currency = eaccounting_insert_currency( array(
+			$new_currency = eaccounting_insert_currency(
+				array(
 					'code' => eaccounting_clean( $_REQUEST['code']['custom'] ),
 					'rate' => eaccounting_clean( $_REQUEST['rate']['custom'] ),
-			) );
+				)
+			);
 		}
 
 		if ( ! empty( $default ) && is_numeric( $default ) ) {

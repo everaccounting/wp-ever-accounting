@@ -21,8 +21,26 @@ function eaccounting_misc_categories_tab() {
 		?>
 		<h1>
 			<?php _e( 'Categories', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'categories', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'tab'    => 'categories',
+					'action' => 'add',
+				)
+			);
+			?>
+												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'page' => 'ea-tools',
+					'tab'  => 'import',
+				)
+			);
+			?>
+												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-categories.php';
@@ -48,8 +66,8 @@ function eaccounting_misc_categories_tab() {
 				<input type="hidden" name="page" value="ea-misc"/>
 				<input type="hidden" name="tab" value="categories"/>
 
-				<?php $list_table->views() ?>
-				<?php $list_table->display() ?>
+				<?php $list_table->views(); ?>
+				<?php $list_table->display(); ?>
 			</form>
 			<?php
 			/**

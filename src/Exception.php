@@ -38,8 +38,8 @@ class Exception extends Ex {
 	 *
 	 * @param string $code Machine-readable error code, e.g `eaccounting_invalid_transaction_id`.
 	 * @param string $message User-friendly translated error message, e.g. 'Transaction ID is invalid'.
-	 * @param int $http_status_code Proper HTTP status code to respond with, e.g. 400.
-	 * @param array $data Extra error data.
+	 * @param int    $http_status_code Proper HTTP status code to respond with, e.g. 400.
+	 * @param array  $data Extra error data.
 	 * @since 1.0.2
 	 */
 	public function __construct( $code, $message, $http_status_code = 400, $data = array() ) {

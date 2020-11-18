@@ -29,7 +29,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param int|object|array|Currency $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data, Currencies::instance() );
@@ -170,7 +169,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_name( $value ) {
 		$this->set_prop( 'name', eaccounting_clean( $value ) );
@@ -182,7 +180,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_code( $value ) {
 		if ( eaccounting_get_currency_code( $value ) ) {
@@ -196,7 +193,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_rate( $value ) {
 		$this->set_prop( 'rate', eaccounting_sanitize_number( $value, true ) );
@@ -208,7 +204,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_precision( $value ) {
 		$this->set_prop( 'precision', eaccounting_sanitize_number( $value ) );
@@ -220,7 +215,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_symbol( $value ) {
 		$this->set_prop( 'symbol', eaccounting_clean( $value ) );
@@ -232,7 +226,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_position( $value ) {
 		$this->set_prop( 'position', eaccounting_clean( $value ) );
@@ -244,7 +237,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_decimal_separator( $value ) {
 		$this->set_prop( 'decimal_separator', eaccounting_clean( $value ) );
@@ -256,7 +248,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_thousand_separator( $value ) {
 		$this->set_prop( 'thousand_separator', eaccounting_clean( $value ) );
@@ -284,7 +275,6 @@ class Currency extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_subunit( $value ) {
 		$this->set_prop( 'subunit', absint( $value ) );

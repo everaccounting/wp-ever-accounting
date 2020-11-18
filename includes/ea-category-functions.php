@@ -33,7 +33,6 @@ function eaccounting_get_category_types() {
  *
  * @return null|EverAccounting\Models\Category
  * @since 1.1.0
- *
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
@@ -66,7 +65,6 @@ function eaccounting_get_category( $category ) {
  *
  * @return WP_Error|\EverAccounting\Models\Category
  * @since 1.1.0
- *
  */
 function eaccounting_insert_category( $args ) {
 	$category = new EverAccounting\Models\Category( $args );
@@ -81,7 +79,6 @@ function eaccounting_insert_category( $args ) {
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_delete_category( $category_id ) {
 	$category = new EverAccounting\Models\Category( $category_id );
@@ -108,11 +105,10 @@ function eaccounting_delete_category( $category_id ) {
  *
  * }
  *
- * @param bool $callback
+ * @param bool  $callback
  *
  * @return array|int
  * @since 1.1.0
- *
  */
 function eaccounting_get_categories( $args = array(), $callback = true ) {
 	return \EverAccounting\Repositories\Categories::instance()->get_items(

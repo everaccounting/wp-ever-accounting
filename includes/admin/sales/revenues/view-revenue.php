@@ -29,7 +29,7 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 	<div class="ea-card">
 <!--		<div class="ea-flex-row">-->
 <!--			<div class="ea-transaction-card-logo">-->
-<!--				<img src="--><?php //echo esc_url_raw( eaccounting()->plugin_url( '/assets/images/placeholders/placeholder.png' ) ); ?><!--" alt="company logo">-->
+<!--				<img src="--><?php // echo esc_url_raw( eaccounting()->plugin_url( '/assets/images/placeholders/placeholder.png' ) ); ?><!--" alt="company logo">-->
 <!--			</div>-->
 <!---->
 <!--		</div>-->

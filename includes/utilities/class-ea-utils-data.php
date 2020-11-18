@@ -1,6 +1,7 @@
 <?php
 /**
  * Initializes a temporary data storage engine used by core in various capacities.
+ *
  * @package EverAccounting
  * @subpackage Utilities
  * @since 1.0.2
@@ -10,6 +11,7 @@ namespace EverAccounting\Utilities;
 
 /**
  * Class Data
+ *
  * @since 1.0.2
  * @package EverAccounting\Utilities
  */
@@ -20,13 +22,11 @@ class Data {
 	 *
 	 * Given a key, get the information from the database directly.
 	 *
-	 *
-	 * @param string $key The stored option key.
+	 * @param string     $key The stored option key.
 	 * @param null|mixed $default Optional. A default value to retrieve should `$value` be empty. Default null.
 	 *
 	 * @return mixed|false The stored data, value of `$default` if not null, otherwise false.
 	 * @since  1.0.2
-	 *
 	 */
 	public function get( $key, $default = null ) {
 		global $wpdb;
@@ -43,10 +43,9 @@ class Data {
 	 * Write some data based on key and value.
 	 *
 	 * @param string $key The option_name.
-	 * @param mixed $value The value to store.
+	 * @param mixed  $value The value to store.
 	 *
 	 * @since  1.0.2
-	 *
 	 */
 	public function write( $key, $value ) {
 		global $wpdb;
@@ -67,12 +66,10 @@ class Data {
 	/**
 	 * Derives the formats array based on the type of $value.
 	 *
-	 *
 	 * @param mixed $value Value to store.
 	 *
 	 * @return array Formats array. First and last values will always be string ('%s').
 	 * @since  1.0.2
-	 *
 	 */
 	public function get_data_formats( $value ) {
 
@@ -101,7 +98,6 @@ class Data {
 	 *
 	 * @return int|false The number of rows deleted, or false on error.
 	 * @since  1.0.2
-	 *
 	 */
 	public function delete( $key ) {
 		global $wpdb;
@@ -116,13 +112,12 @@ class Data {
 	 *
 	 * @return int|false The number of rows deleted, or false on error.
 	 * @since 1.0.2
-	 *
 	 */
 	public function delete_by_match( $pattern ) {
 		global $wpdb;
 
 		// Double check to make sure the batch_id got included before proceeding.
-		if ( "^[0-9a-z\\_]+" !== $pattern && ! empty( $pattern ) ) {
+		if ( '^[0-9a-z\\_]+' !== $pattern && ! empty( $pattern ) ) {
 			$query = "DELETE FROM $wpdb->options WHERE option_name REGEXP %s";
 
 			$result = $wpdb->query( $wpdb->prepare( $query, $pattern ) );

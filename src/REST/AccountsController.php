@@ -94,7 +94,7 @@ class AccountsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class AccountsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class AccountsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -133,7 +133,7 @@ class AccountsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -146,7 +146,7 @@ class AccountsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -159,7 +159,7 @@ class AccountsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 
@@ -213,7 +213,6 @@ class AccountsController extends Controller {
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -244,7 +243,6 @@ class AccountsController extends Controller {
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -267,7 +265,6 @@ class AccountsController extends Controller {
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -302,7 +299,6 @@ class AccountsController extends Controller {
 	 * @return void|\WP_Error|\WP_REST_Response
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -333,7 +329,6 @@ class AccountsController extends Controller {
 	 * Prepare item for database
 	 *
 	 * @param \WP_REST_Request $request
-	 *
 	 *
 	 * @param \WP_REST_Request $request
 	 *
@@ -367,14 +362,13 @@ class AccountsController extends Controller {
 	 *
 	 * Prepare item for response
 	 *
-	 * @param \WP_REST_Request        $request
+	 * @param \WP_REST_Request                 $request
 	 *
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -409,7 +403,6 @@ class AccountsController extends Controller {
 	 * @return array Item schema data.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -546,7 +539,6 @@ class AccountsController extends Controller {
 	 * @return array Collection parameters.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

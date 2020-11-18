@@ -226,7 +226,7 @@ class Settings {
 
 
 	function eaccounting_settings_updated( $old_value, $value, $option ) {
-		//update currency code.
+		// update currency code.
 		if ( ! empty( $value['default_currency'] ) ) {
 			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
 			if ( $currency->exists() ) {
@@ -284,7 +284,6 @@ class Settings {
 		 * @since 1.0.2
 		 *
 		 * @param mixed $input The settings tab content to sanitize.
-		 *
 		 */
 		$input = apply_filters( 'eaccounting_settings_' . $tab . '_sanitize', $input );
 		// Ensure a value is always passed for every checkbox
@@ -435,14 +434,13 @@ class Settings {
 		 * @since 1.0.2
 		 *
 		 * @param Settings $this Settings instance.
-		 *
 		 */
 		do_action( 'eaccounting_pre_get_registered_settings', $this );
 		$accounts   = array();
 		$currencies = array();
 		if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
-			//          $accounts   = \EverAccounting\Accounts\query()->select( 'id, name' )->get_results();
-			//          $currencies = \EverAccounting\Currencies\query()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get_results();
+			// $accounts   = \EverAccounting\Accounts\query()->select( 'id, name' )->get_results();
+			// $currencies = \EverAccounting\Currencies\query()->select( 'code, CONCAT(name,"(", symbol, ")") as name' )->get_results();
 		}
 
 		$settings = array(
@@ -452,7 +450,6 @@ class Settings {
 			 * @since 1.0.2
 			 *
 			 * @param array $settings General settings.
-			 *
 			 */
 			'general' => apply_filters(
 				'eaccounting_settings_general',
@@ -538,7 +535,7 @@ class Settings {
 					'default_currency'       => array(
 						'name'    => __( 'Currency', 'wp-ever-accounting' ),
 						'type'    => 'select',
-						//'std'     => 'USD',
+						// 'std'     => 'USD',
 						'desc'    => __( 'Default currency rate will update to 1', 'wp-ever-accounting' ),
 						'class'   => 'ea-select2',
 						'options' => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck( $currencies, 'name', 'code' ),
@@ -563,7 +560,6 @@ class Settings {
 		 * @since 1.0.2
 		 *
 		 * @param array $settings Array of default settings.
-		 *
 		 */
 		return apply_filters( 'eaccounting_settings', $settings );
 	}
@@ -951,8 +947,7 @@ class Settings {
 	 * @global        $this       ->options Array of all the EverAccounting Options
 	 * @global string $wp_version WordPress Version
 	 *
-	 * @param array   $args       Arguments passed by the setting
-	 *
+	 * @param array $args       Arguments passed by the setting
 	 */
 	function rich_editor_callback( $args ) {
 
@@ -979,7 +974,6 @@ class Settings {
 	 * @since 1.0.2
 	 *
 	 * @param array $args Arguements passed by the setting
-	 *
 	 */
 	function upload_callback( $args ) {
 		if ( isset( $this->options[ $args['id'] ] ) ) {

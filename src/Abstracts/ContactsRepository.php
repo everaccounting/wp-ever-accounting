@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class ContactsRepository
+ *
  * @since   1.1.0
  *
  * @package EverAccounting\Abstracts

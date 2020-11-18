@@ -5,7 +5,6 @@
  * @package        EverAccounting
  * @class          EAccounting_Logger
  * @version        1.0.2
- *
  */
 
 namespace EverAccounting;
@@ -106,7 +105,7 @@ class Logger {
 	 * @since 1.0.2
 	 */
 	public function log( $level, $message, $context = array() ) {
-		//format log entry
+		// format log entry
 		$time         = date_i18n( 'm-d-Y @ H:i:s' );
 		$level_string = strtoupper( $level );
 		$entry        = "{$time} {$level_string} {$message}";
@@ -120,7 +119,6 @@ class Logger {
 	 * @param string $entry Log entry text.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	protected function write_log( $entry ) {
 		if ( $this->open( $this->handle ) && is_resource( $this->handle ) ) {
@@ -416,7 +414,6 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function debug( $message, $context = array() ) {
 		$this->log( self::DEBUG, $message, $context );

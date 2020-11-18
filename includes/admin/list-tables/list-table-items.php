@@ -72,7 +72,6 @@ class List_Table_Item extends List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -168,7 +167,6 @@ class List_Table_Item extends List_Table {
 	/**
 	 * Renders the checkbox column in the accounts list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
 	 * @param Item $item The current account object.
@@ -181,7 +179,6 @@ class List_Table_Item extends List_Table {
 
 	/**
 	 * Renders the "Name" column in the accounts list table.
-	 *
 	 *
 	 * @since  1.0.2
 	 *

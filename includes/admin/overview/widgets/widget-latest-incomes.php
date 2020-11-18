@@ -44,14 +44,16 @@ class Latest_Incomes extends Widget {
 			->select( 't.paid_at, c.name, t.amount, t.currency_code' )
 			->from( 'ea_transactions t' )
 			->left_join( 'ea_categories as c', 'c.id', 't.category_id' )
-			->where('t.type', 'income')
-			->where('c.type', '!=', 'other')
+			->where( 't.type', 'income' )
+			->where( 'c.type', '!=', 'other' )
 			->order_by( 't.paid_at', 'DESC' )
 			->limit( 5 )
 			->get();
 		if ( empty( $incomes ) ) {
-			echo sprintf( '<p class="ea-overview-widget-notice">%s</p>',
-				__( 'There is no income records.', 'wp-ever-accounting' ) );
+			echo sprintf(
+				'<p class="ea-overview-widget-notice">%s</p>',
+				__( 'There is no income records.', 'wp-ever-accounting' )
+			);
 
 			return;
 		}
@@ -66,11 +68,11 @@ class Latest_Incomes extends Widget {
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $incomes as $income ): ?>
+			<?php foreach ( $incomes as $income ) : ?>
 				<tr>
 					<td><?php echo esc_html( $income->paid_at ); ?></td>
 					<td><?php echo esc_html( $income->name ); ?></td>
-					<td><?php echo eaccounting_format_price($income->amount, $income->currency_code); ?></td>
+					<td><?php echo eaccounting_format_price( $income->amount, $income->currency_code ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>

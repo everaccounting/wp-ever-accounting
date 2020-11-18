@@ -30,101 +30,129 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 		<form id="ea-vendor-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
-				eaccounting_text_input( array(
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Name', 'wp-ever-accounting' ),
 						'name'          => 'name',
 						'placeholder'   => __( 'Enter name', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_name(),
 						'required'      => true,
-				) );
+					)
+				);
 
-				eaccounting_currency_dropdown( array(
+				eaccounting_currency_dropdown(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Currency', 'wp-ever-accounting' ),
 						'name'          => 'currency_code',
 						'value'         => $vendor->get_currency_code(),
 						'required'      => true,
-						'creatable'     => true
-				) );
+						'creatable'     => true,
+					)
+				);
 
-				eaccounting_text_input( array(
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Email', 'wp-ever-accounting' ),
 						'name'          => 'email',
 						'placeholder'   => __( 'Enter email', 'wp-ever-accounting' ),
 						'data_type'     => 'email',
 						'value'         => $vendor->get_email(),
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Phone', 'wp-ever-accounting' ),
 						'name'          => 'phone',
 						'placeholder'   => __( 'Enter phone', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_phone(),
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Fax', 'wp-ever-accounting' ),
 						'name'          => 'fax',
 						'placeholder'   => __( 'Enter fax', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_fax(),
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Tax Number', 'wp-ever-accounting' ),
 						'name'          => 'tax_number',
 						'placeholder'   => __( 'Enter tax number', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_tax_number(),
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Website', 'wp-ever-accounting' ),
 						'name'          => 'website',
 						'placeholder'   => __( 'Enter website', 'wp-ever-accounting' ),
 						'data_type'     => 'url',
 						'value'         => $vendor->get_website(),
-				) );
-				eaccounting_text_input( array(
+					)
+				);
+				eaccounting_text_input(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Birth Date', 'wp-ever-accounting' ),
 						'name'          => 'birth_date',
 						'placeholder'   => __( 'Enter birth date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
 						'value'         => $vendor->get_birth_date(),
-				) );
-				eaccounting_textarea( array(
+					)
+				);
+				eaccounting_textarea(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Note', 'wp-ever-accounting' ),
 						'name'          => 'note',
 						'placeholder'   => __( 'Enter note', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_note(),
-				) );
-				eaccounting_textarea( array(
+					)
+				);
+				eaccounting_textarea(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Address', 'wp-ever-accounting' ),
 						'name'          => 'address',
 						'placeholder'   => __( 'Enter address', 'wp-ever-accounting' ),
 						'value'         => $vendor->get_address(),
-				) );
-				eaccounting_country_dropdown( array(
+					)
+				);
+				eaccounting_country_dropdown(
+					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Country', 'wp-ever-accounting' ),
 						'name'          => 'country',
 						'value'         => $vendor->get_country(),
-				) );
-				eaccounting_hidden_input( array(
+					)
+				);
+				eaccounting_hidden_input(
+					array(
 						'name'  => 'id',
-						'value' => $vendor->get_id()
-				) );
-				eaccounting_hidden_input( array(
+						'value' => $vendor->get_id(),
+					)
+				);
+				eaccounting_hidden_input(
+					array(
 						'name'  => 'type',
-						'value' => 'vendor'
-				) );
-				eaccounting_hidden_input( array(
+						'value' => 'vendor',
+					)
+				);
+				eaccounting_hidden_input(
+					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_contact'
-				) );
+						'value' => 'eaccounting_edit_contact',
+					)
+				);
 				?>
 			</div>
 			<?php

@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Payment
+ *
  * @since   1.1.0
  *
  * @package EverAccounting\Models

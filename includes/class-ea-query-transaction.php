@@ -44,7 +44,6 @@ class Query_Transaction extends Query {
 	/**
 	 * Static constructor.
 	 *
-	 *
 	 * @since 1.0.2
 	 *
 	 * @return Query_Transaction

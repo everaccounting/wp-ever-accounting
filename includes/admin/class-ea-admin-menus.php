@@ -8,6 +8,7 @@
  */
 
 namespace EverAccounting\Admin;
+
 defined( 'ABSPATH' ) || exit;
 
 class Admin_Menus {

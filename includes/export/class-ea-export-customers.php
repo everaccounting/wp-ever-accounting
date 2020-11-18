@@ -1,6 +1,7 @@
 <?php
 /**
  * Handle customers export.
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
@@ -14,6 +15,7 @@ use EverAccounting\Query_Contact;
 
 /**
  * Class Export_Customers
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
@@ -67,7 +69,6 @@ class Export_Customers extends CSV_Exporter {
 
 	/**
 	 * Take a customer and generate row data from it for export.
-	 *
 	 *
 	 * @param \EverAccounting\Contact $item
 	 *

@@ -4,7 +4,6 @@
  *
  * Admin payments list table, show all the outgoing transactions.
  *
- *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
@@ -57,7 +56,6 @@ class List_Table_Payments extends List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -151,7 +149,6 @@ class List_Table_Payments extends List_Table {
 	/**
 	 * Renders the checkbox column in the payments list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
 	 * @param Income $payment The current object.
@@ -164,7 +161,6 @@ class List_Table_Payments extends List_Table {
 
 	/**
 	 * Renders the "Date" column in the accounts list table.
-	 *
 	 *
 	 * @since  1.0.2
 	 *

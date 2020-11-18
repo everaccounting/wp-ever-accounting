@@ -124,30 +124,30 @@ class Query {
 	 * @return \EverAccounting\Query
 	 */
 	public function parse( $vars ) {
-		//set primary could
+		// set primary could
 		if ( ! empty( $vars['primary_column'] ) ) {
 			$this->primary_column = sanitize_key( $vars['primary_column'] );
 		}
 
-		//set table
+		// set table
 		if ( ! empty( $vars['table'] ) ) {
 			$this->from( $vars['table'] . ' as `' . $vars['table'] . '`' );
 			$this->table = $vars['table'];
 		}
 
-		//include
+		// include
 		$include = wp_parse_id_list( $vars['include'] );
 		if ( ! empty( $include ) ) {
 			$this->where_in( $this->primary_column, $include );
 		}
 
-		//exclude
+		// exclude
 		$exclude = wp_parse_id_list( $vars['exclude'] );
 		if ( ! empty( $exclude ) ) {
 			$this->where_not_in( $this->primary_column, $exclude );
 		}
 
-		//search
+		// search
 		if ( is_string( $vars['search_columns'] ) ) {
 			$vars['search_columns'] = array_unique( array_filter( explode( ',', $vars['search_columns'] ) ) );
 		}
@@ -155,17 +155,17 @@ class Query {
 			$this->search( $vars['search'], $vars['search_columns'] );
 		}
 
-		//order
+		// order
 		if ( ! empty( $vars['orderby'] ) || ! empty( $vars['order'] ) ) {
 			$this->order_by( $vars['orderby'], $vars['order'] );
 		}
 
-		//pagination
+		// pagination
 		if ( - 1 !== $vars['per_page'] && ( ! empty( $vars['page'] ) || ! empty( $vars['per_page'] ) ) ) {
 			$this->page( $vars['page'], $vars['per_page'] );
 		}
 
-		//select
+		// select
 		if ( ! empty( $vars['fields'] ) && is_array( $vars['fields'] ) ) {
 			$vars['fields'] = array_unique( $vars['fields'] );
 			foreach ( $vars['fields'] as $field ) {
@@ -174,7 +174,7 @@ class Query {
 			}
 		}
 
-		//status
+		// status
 		if ( ! empty( $vars['status'] ) && in_array( $vars['status'], array( 'active', 'inactive' ), true ) ) {
 			$status = 'active' === $vars['status'] && ! is_numeric( $vars['status'] ) ? 1 : 0;
 			$this->where( 'enabled', $status );
@@ -192,7 +192,7 @@ class Query {
 	 * @param $vars
 	 */
 	protected function parse_extra( $vars ) {
-		//todo overwrite in subclass
+		// todo overwrite in subclass
 	}
 
 	/**
@@ -224,8 +224,8 @@ class Query {
 	 *
 	 * @global object $wpdb
 	 *
-	 * @param string  $from
-	 * @param bool    $add_prefix Should DB prefix be added.
+	 * @param string $from
+	 * @param bool   $add_prefix Should DB prefix be added.
 	 *
 	 * @return \EverAccounting\Query
 	 */
@@ -405,11 +405,11 @@ class Query {
 			return $this;
 		}
 
-		//first check if is array if so then make a string out of array
-		//if not array but null then set value as null
-		//if not null does it contains . it could be column so dont parse as string
-		//If not column then use wpdb prepare
-		//if contains $prefix
+		// first check if is array if so then make a string out of array
+		// if not array but null then set value as null
+		// if not null does it contains . it could be column so dont parse as string
+		// If not column then use wpdb prepare
+		// if contains $prefix
 		$contain_join = preg_replace( '/^(\s?AND ?|\s?OR ?)|\s$/i', '', $param2 );
 
 		$param2 = is_array( $param2 )
@@ -671,7 +671,7 @@ class Query {
 		// to make nested joins possible you can pass an closure
 		// which will create a new query where you can add your nested where
 		if ( is_object( $local_key ) && ( $local_key instanceof \Closure ) ) {
-			//create new query object
+			// create new query object
 			$subquery = new Query();
 			// run the closure callback on the sub query
 			call_user_func_array( $local_key, array( &$subquery ) );
@@ -978,7 +978,7 @@ class Query {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param bool    $calc_rows
+	 * @param bool   $calc_rows
 	 *
 	 * @param string &$query
 	 */
@@ -996,7 +996,6 @@ class Query {
 	 * @since 1.0.2
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_from( &$query ) {
 		$query .= ' FROM ' . $this->from;
@@ -1008,7 +1007,6 @@ class Query {
 	 * @since 1.0.2
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_join( &$query ) {
 		foreach ( $this->join as $join ) {
@@ -1025,7 +1023,6 @@ class Query {
 	 * @since 1.0.2
 	 *
 	 * @param string &$query
-	 *
 	 */
 	public function _query_where( &$query ) {
 		for ( $i = 0, $max = count( $this->where ); $i < $max; ++ $i ) {
@@ -1039,7 +1036,6 @@ class Query {
 	 * @since 1.0.2
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_group( &$query ) {
 		if ( count( $this->group ) ) {
@@ -1053,7 +1049,6 @@ class Query {
 	 * @since 1.0.2
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_having( &$query ) {
 		if ( $this->having ) {
@@ -1067,7 +1062,6 @@ class Query {
 	 * @since 1.0.2
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_order( &$query ) {
 		if ( count( $this->order ) ) {
@@ -1083,7 +1077,6 @@ class Query {
 	 * @global object $wpdb
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_limit( &$query ) {
 		global $wpdb;
@@ -1100,7 +1093,6 @@ class Query {
 	 * @global object $wpdb
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_offset( &$query ) {
 		global $wpdb;
@@ -1115,7 +1107,6 @@ class Query {
 	 * @since 1.0.2
 	 *
 	 * @param string &$query
-	 *
 	 */
 	private function _query_delete( &$query ) {
 		$query .= trim(
@@ -1228,7 +1219,6 @@ class Query {
 	 * @since       1.0.2
 	 *
 	 * @global object  $wpdb
-	 *
 	 *
 	 * @param callable $row_map   Function callable to filter or map results to.
 	 *
@@ -1344,8 +1334,8 @@ class Query {
 	 *
 	 * @global object $wpdb
 	 *
-	 * @param int     $x Column of value to return. Indexed from 0.
-	 * @param int     $y Row of value to return. Indexed from 0.
+	 * @param int $x Column of value to return. Indexed from 0.
+	 * @param int $y Row of value to return. Indexed from 0.
 	 *
 	 * @return mixed
 	 */
@@ -1474,7 +1464,7 @@ class Query {
 	 *
 	 * @global object $wpdb
 	 *
-	 * @param string  $sql
+	 * @param string $sql
 	 *
 	 * @return bool
 	 */
@@ -1636,36 +1626,36 @@ class Query {
 	}
 
 
-	//  /**
-	//   * Executes when calling any function on an instance of this class.
-	//   *
-	//   * @param string $name      The name of the function being called.
-	//   * @param array  $arguments An array of the arguments to the function call.
-	//   */
-	//  public function __call( $name, $arguments ) {
-	//      return call_user_func_array(
-	//          array(
-	//              $this,
-	//              $name,
-	//          ),
-	//          $arguments
-	//      );
-	//  }
+	// **
+	// * Executes when calling any function on an instance of this class.
+	// *
+	// * @param string $name      The name of the function being called.
+	// * @param array  $arguments An array of the arguments to the function call.
+	// */
+	// public function __call( $name, $arguments ) {
+	// return call_user_func_array(
+	// array(
+	// $this,
+	// $name,
+	// ),
+	// $arguments
+	// );
+	// }
 	//
-	//  /**
-	//   * Executes when calling any static function on this class.
-	//   *
-	//   * @param string $name      The name of the function being called.
-	//   * @param array  $arguments An array of the arguments to the function call.
-	//   */
-	//  public static function __callStatic( $name, $arguments ) {
-	//      $instance = new self();
-	//      return call_user_func_array(
-	//          array(
-	//              $instance,
-	//              $name,
-	//          ),
-	//          $arguments
-	//      );
-	//  }
+	// **
+	// * Executes when calling any static function on this class.
+	// *
+	// * @param string $name      The name of the function being called.
+	// * @param array  $arguments An array of the arguments to the function call.
+	// */
+	// public static function __callStatic( $name, $arguments ) {
+	// $instance = new self();
+	// return call_user_func_array(
+	// array(
+	// $instance,
+	// $name,
+	// ),
+	// $arguments
+	// );
+	// }
 }

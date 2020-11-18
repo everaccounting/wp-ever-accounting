@@ -7,7 +7,6 @@
  * @subpackage  Abstracts
  * @class       Base_Object
  * @version     1.0.2
- *
  */
 
 namespace EverAccounting\Abstracts;
@@ -105,7 +104,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int|array|object|null $data
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		$this->default_data = array_merge_recursive( $this->data, $this->extra_data );
@@ -231,7 +229,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int $id ID.
-	 *
 	 */
 	public function set_id( $id ) {
 		$this->id = absint( $id );
@@ -256,7 +253,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param boolean $read Should read?.
-	 *
 	 */
 	public function set_object_read( $read = true ) {
 		$this->object_read = (bool) $read;
@@ -600,7 +596,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param string $action when its called.
-	 *
 	 */
 	public function save_extra_data( $action ) {
 
@@ -712,7 +707,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int $enabled Company id
-	 *
 	 */
 	public function set_enabled( $enabled ) {
 		$this->set_prop( 'enabled', absint( $enabled ) );
@@ -724,7 +718,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int $creator_id Creator id
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -739,7 +732,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if their is no date.
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {

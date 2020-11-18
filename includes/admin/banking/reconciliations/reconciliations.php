@@ -84,7 +84,16 @@ function eaccounting_banking_tab_reconciliations() {
 		?>
 		<h1>
 			<?php _e( 'Reconciliations', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'reconciliations', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'tab'    => 'reconciliations',
+					'action' => 'add',
+				)
+			);
+			?>
+												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-reconciliations.php';
@@ -105,13 +114,13 @@ function eaccounting_banking_tab_reconciliations() {
 
 			?>
 			<form id="ea-reconciliations-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-				<?php //$reconciliations_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-reconciliations' ); ?>
+				<?php // $reconciliations_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-reconciliations' ); ?>
 
 				<input type="hidden" name="page" value="ea-banking"/>
 				<input type="hidden" name="tab" value="reconciliations"/>
 
-				<?php $reconciliations_table->views() ?>
-				<?php $reconciliations_table->display() ?>
+				<?php $reconciliations_table->views(); ?>
+				<?php $reconciliations_table->display(); ?>
 			</form>
 			<?php
 			/**

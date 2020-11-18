@@ -24,22 +24,27 @@ defined( 'ABSPATH' ) || exit();
 					<article>
 						<div class="ea-row">
 							<?php
-							eaccounting_text_input( array(
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Account Name', 'wp-ever-accounting' ),
 									'name'          => 'name',
 									'value'         => '',
 									'required'      => true,
-							) );
-							eaccounting_text_input( array(
+								)
+							);
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Account Number', 'wp-ever-accounting' ),
 									'name'          => 'number',
 									'value'         => '',
 									'required'      => true,
-							) );
+								)
+							);
 
-							eaccounting_currency_dropdown( array(
+							eaccounting_currency_dropdown(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 									'name'          => 'currency_code',
@@ -47,20 +52,25 @@ defined( 'ABSPATH' ) || exit();
 									'placeholder'   => __( 'Select Currency', 'wp-ever-accounting' ),
 									'ajax'          => true,
 									'type'          => 'currency',
-							) );
+								)
+							);
 
-							eaccounting_text_input( array(
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
 									'name'          => 'opening_balance',
 									'value'         => '',
 									'default'       => '0.00',
 									'required'      => true,
-							) );
-							eaccounting_hidden_input( array(
+								)
+							);
+							eaccounting_hidden_input(
+								array(
 									'name'  => 'action',
 									'value' => 'eaccounting_edit_account',
-							) );
+								)
+							);
 
 							wp_nonce_field( 'ea_edit_account' );
 							?>

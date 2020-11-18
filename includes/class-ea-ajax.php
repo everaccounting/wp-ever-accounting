@@ -22,7 +22,6 @@ class Ajax {
 	 * EAccounting_Ajax constructor.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function __construct() {
 		add_action( 'init', array( __CLASS__, 'define_ajax' ), 0 );
@@ -616,7 +615,6 @@ class Ajax {
 	 * @since 1.0.2
 	 *
 	 * @param $action
-	 *
 	 */
 	public static function verify_nonce( $action ) {
 		$nonce = '';

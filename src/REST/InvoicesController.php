@@ -90,7 +90,7 @@ class InvoicesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class InvoicesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class InvoicesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class InvoicesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -134,7 +134,7 @@ class InvoicesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -145,7 +145,7 @@ class InvoicesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function batch_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 
@@ -196,7 +196,6 @@ class InvoicesController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -225,7 +224,6 @@ class InvoicesController extends Controller {
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -246,7 +244,6 @@ class InvoicesController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -280,7 +277,6 @@ class InvoicesController extends Controller {
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -309,13 +305,12 @@ class InvoicesController extends Controller {
 
 	/**
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \WP_REST_Request                 $request
 	 *
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -349,7 +344,6 @@ class InvoicesController extends Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -357,7 +351,7 @@ class InvoicesController extends Controller {
 			'title'      => __( 'Invoice', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'              => array(
+				'id'                 => array(
 					'description' => __( 'Unique identifier for the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -366,7 +360,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'invoice_number'            => array(
+				'invoice_number'     => array(
 					'description' => __( 'Number of Invoice.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -376,7 +370,7 @@ class InvoicesController extends Controller {
 					'readonly'    => true,
 					'required'    => true,
 				),
-				'order_number'            => array(
+				'order_number'       => array(
 					'description' => __( 'Order Number of Invoice.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -386,7 +380,7 @@ class InvoicesController extends Controller {
 					'readonly'    => true,
 					'required'    => true,
 				),
-				'status'          => array(
+				'status'             => array(
 					'description' => __( 'Status of the Invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -395,19 +389,19 @@ class InvoicesController extends Controller {
 					),
 					'required'    => true,
 				),
-				'invoiced_at' => array(
+				'invoiced_at'        => array(
 					'description' => __( 'Date of Invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
-					'context'     => array( 'view','edit' ),
+					'context'     => array( 'view', 'edit' ),
 				),
-				'due_at' => array(
+				'due_at'             => array(
 					'description' => __( 'Due Date of Invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
-					'context'     => array( 'view','edit' ),
+					'context'     => array( 'view', 'edit' ),
 				),
-				'subtotal' => array(
+				'subtotal'           => array(
 					'description' => __( 'Subtotal of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -417,7 +411,7 @@ class InvoicesController extends Controller {
 					),
 					'required'    => true,
 				),
-				'discount' => array(
+				'discount'           => array(
 					'description' => __( 'Discount of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -426,7 +420,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'tax' => array(
+				'tax'                => array(
 					'description' => __( 'Tax of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -435,7 +429,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'shipping' => array(
+				'shipping'           => array(
 					'description' => __( 'Shipping of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -444,7 +438,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'total' => array(
+				'total'              => array(
 					'description' => __( 'Total of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -452,9 +446,9 @@ class InvoicesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
-				'currency_code'   => array(
+				'currency_code'      => array(
 					'description' => __( 'Currency code of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
@@ -474,7 +468,7 @@ class InvoicesController extends Controller {
 
 					),
 				),
-				'currency_rate' => array(
+				'currency_rate'      => array(
 					'description' => __( 'Currency rate of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -482,7 +476,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'category_id'    => array(
+				'category_id'        => array(
 					'description' => __( 'Category id of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -504,7 +498,7 @@ class InvoicesController extends Controller {
 						),
 					),
 				),
-				'contact_id'    => array(
+				'contact_id'         => array(
 					'description' => __( 'Contact id of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -513,7 +507,7 @@ class InvoicesController extends Controller {
 					),
 					'required'    => true,
 					'properties'  => array(
-						'id'   => array(
+						'id' => array(
 							'description' => __( 'Contact ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
@@ -521,7 +515,7 @@ class InvoicesController extends Controller {
 						),
 					),
 				),
-				'contact_name'    => array(
+				'contact_name'       => array(
 					'description' => __( 'Contact name of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -529,7 +523,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'contact_email'    => array(
+				'contact_email'      => array(
 					'description' => __( 'Contact email of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -537,7 +531,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'contact_tax_number'    => array(
+				'contact_tax_number' => array(
 					'description' => __( 'Contact tax_number of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -545,7 +539,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'contact_phone'    => array(
+				'contact_phone'      => array(
 					'description' => __( 'Contact phone of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -561,7 +555,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'note'    => array(
+				'note'               => array(
 					'description' => __( 'Note for the invoice', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -569,7 +563,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'footer'    => array(
+				'footer'             => array(
 					'description' => __( 'Footer of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -577,7 +571,7 @@ class InvoicesController extends Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'attachment'           => array(
+				'attachment'         => array(
 					'description' => __( 'Attachment url of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -588,7 +582,7 @@ class InvoicesController extends Controller {
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'src' => array(
+						'src'  => array(
 							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -600,18 +594,18 @@ class InvoicesController extends Controller {
 						),
 					),
 				),
-				'creator' => array(
+				'creator'            => array(
 					'description' => __( 'Creator of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'properties'  => array(
-						'id'   => array(
+						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'name' => array(
+						'name'  => array(
 							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -623,7 +617,7 @@ class InvoicesController extends Controller {
 						),
 					),
 				),
-				'date_created' => array(
+				'date_created'       => array(
 					'description' => __( 'Created date of the invoice.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -642,7 +636,6 @@ class InvoicesController extends Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

@@ -71,45 +71,50 @@ class Cash_Flow extends Widget {
 			}
 		}
 
-
 		$incomes  = $this->calculate_total( 'income', $start, $end, $period );
 		$expenses = $this->calculate_total( 'expense', $start, $end, $period );
 		$profits  = $this->calculate_profit( $incomes, $expenses );
 
 		$chart = new Chart();
 		$chart->type( 'line' )
-		      ->width( 0 )
-		      ->height( 300 )
-		      ->set_line_options()
-		      ->labels( array_values( $labels ) )
-		      ->dataset( array(
-			      'label'           => __( 'Incomes', 'wp-ever-accounting' ),
-			      'data'            => array_values( $incomes ),
-			      'borderColor'     => '#3644ff',
-			      'backgroundColor' => '#3644ff',
-			      'borderWidth'     => 4,
-			      'pointStyle'      => 'line',
-			      'fill'            => false,
-		      ) )
-		      ->dataset( array(
-			      'label'           => __( 'Expenses', 'wp-ever-accounting' ),
-			      'data'            => array_values( $expenses ),
-			      'borderColor'     => '#f2385a',
-			      'backgroundColor' => '#f2385a',
-			      'borderWidth'     => 4,
-			      'pointStyle'      => 'line',
-			      'fill'            => false,
-		      ) )
-		      ->dataset( array(
-			      'label'           => __( 'Profits', 'wp-ever-accounting' ),
-			      'data'            => array_values( $profits ),
-			      'borderColor'     => '#06d6a0',
-			      'backgroundColor' => '#06d6a0',
-			      'borderWidth'     => 4,
-			      'pointStyle'      => 'line',
-			      'fill'            => false,
-		      ) )
-		      ->render();
+			  ->width( 0 )
+			  ->height( 300 )
+			  ->set_line_options()
+			  ->labels( array_values( $labels ) )
+			->dataset(
+				array(
+					'label'           => __( 'Incomes', 'wp-ever-accounting' ),
+					'data'            => array_values( $incomes ),
+					'borderColor'     => '#3644ff',
+					'backgroundColor' => '#3644ff',
+					'borderWidth'     => 4,
+					'pointStyle'      => 'line',
+					'fill'            => false,
+				)
+			)
+			->dataset(
+				array(
+					'label'           => __( 'Expenses', 'wp-ever-accounting' ),
+					'data'            => array_values( $expenses ),
+					'borderColor'     => '#f2385a',
+					'backgroundColor' => '#f2385a',
+					'borderWidth'     => 4,
+					'pointStyle'      => 'line',
+					'fill'            => false,
+				)
+			)
+			->dataset(
+				array(
+					'label'           => __( 'Profits', 'wp-ever-accounting' ),
+					'data'            => array_values( $profits ),
+					'borderColor'     => '#06d6a0',
+					'backgroundColor' => '#06d6a0',
+					'borderWidth'     => 4,
+					'pointStyle'      => 'line',
+					'fill'            => false,
+				)
+			)
+			  ->render();
 	}
 
 	/**
@@ -117,7 +122,7 @@ class Cash_Flow extends Widget {
 	 *
 	 * @param \EverAccounting\DateTime $start
 	 * @param \EverAccounting\DateTime $end
-	 * @param string                $period
+	 * @param string                   $period
 	 * @param                       $type
 	 */
 	public function calculate_total( $type, $start = null, $end = null, $period = null ) {
@@ -140,7 +145,7 @@ class Cash_Flow extends Widget {
 
 		$s = clone $start;
 
-		//$totals[$start_date] = 0;
+		// $totals[$start_date] = 0;
 		while ( $next_date <= $end_date ) {
 			$totals[ $next_date ] = 0;
 
@@ -164,15 +169,17 @@ class Cash_Flow extends Widget {
 			->where_raw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
 			->get();
 
-		eaccounting_collect( $transactions )->each( function ( $item ) use ( $period, $date_format, &$totals ) {
-			$paid_at = new DateTime( $item->paid_at );
-			if ( $period == 'month' ) {
-				$i = $paid_at->format( $date_format );
-			} else {
-				$i = $paid_at->quarter();
+		eaccounting_collect( $transactions )->each(
+			function ( $item ) use ( $period, $date_format, &$totals ) {
+				$paid_at = new DateTime( $item->paid_at );
+				if ( $period == 'month' ) {
+					  $i = $paid_at->format( $date_format );
+				} else {
+					$i = $paid_at->quarter();
+				}
+				$totals[ $i ] += eaccounting_price_convert_to_default( $item->amount, $item->currency_code, $item->currency_rate );
 			}
-			$totals[ $i ] += eaccounting_price_convert_to_default( $item->amount, $item->currency_code, $item->currency_rate );
-		} );
+		);
 
 		return $totals;
 	}

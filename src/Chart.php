@@ -39,19 +39,19 @@ class Chart {
 	 */
 	public function __construct() {
 		$this->id = md5( rand() );
-		//      $this->options( [
-		//              'maintainAspectRatio' => false,
-		//              'scales'              => [
-		//                      'xAxes' => [],
-		//                      'yAxes' => [
-		//                              [
-		//                                      'ticks' => [
-		//                                              'beginAtZero' => true,
-		//                                      ],
-		//                              ],
-		//                      ],
-		//              ],
-		//      ] );
+		// $this->options( [
+		// 'maintainAspectRatio' => false,
+		// 'scales'              => [
+		// 'xAxes' => [],
+		// 'yAxes' => [
+		// [
+		// 'ticks' => [
+		// 'beginAtZero' => true,
+		// ],
+		// ],
+		// ],
+		// ],
+		// ] );
 	}
 
 

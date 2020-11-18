@@ -4,7 +4,6 @@
  *
  * Admin customers list table.
  *
- *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
@@ -73,7 +72,6 @@ class List_Table_Customers extends List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -119,7 +117,7 @@ class List_Table_Customers extends List_Table {
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
-			//'sales'   => __( 'Sales', 'wp-ever-accounting' ),
+			// 'sales'   => __( 'Sales', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -169,7 +167,6 @@ class List_Table_Customers extends List_Table {
 	/**
 	 * Renders the checkbox column in the customers list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
 	 * @param Contact $customer The current object.
@@ -182,7 +179,6 @@ class List_Table_Customers extends List_Table {
 
 	/**
 	 * Renders the "Name" column in the customer list table.
-	 *
 	 *
 	 * @since  1.0.2
 	 *
@@ -213,7 +209,6 @@ class List_Table_Customers extends List_Table {
 	/**
 	 * Renders the "Email" column in the customer list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
 	 * @param Contact $customer The current contact object.
@@ -228,7 +223,6 @@ class List_Table_Customers extends List_Table {
 
 	/**
 	 * Renders the "Phone" column in the customer list table.
-	 *
 	 *
 	 * @since  1.0.2
 	 *

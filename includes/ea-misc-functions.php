@@ -24,6 +24,7 @@ function eaccounting_get_random_color() {
 
 /**
  * Get global currencies
+ *
  * @return mixed|void
  * @since 1.0.2
  */

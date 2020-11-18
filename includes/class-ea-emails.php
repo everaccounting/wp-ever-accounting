@@ -72,7 +72,7 @@ class Emails {
 		// Include email classes.
 		include_once dirname( __FILE__ ) . '/emails/class-ea-email.php';
 
-		$this->emails['Email_New_Payment']     = include 'emails/class-ea-email-new-payment.php';
+		$this->emails['Email_New_Payment'] = include 'emails/class-ea-email-new-payment.php';
 
 		$this->emails = apply_filters( 'eaccounting_email_classes', $this->emails );
 	}

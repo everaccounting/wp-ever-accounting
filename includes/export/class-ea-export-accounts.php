@@ -69,7 +69,6 @@ class Export_Accounts extends CSV_Exporter {
 	/**
 	 * Take a product and generate row data from it for export.
 	 *
-	 *
 	 * @param \EverAccounting\Account $item
 	 *
 	 * @return array

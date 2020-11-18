@@ -5,7 +5,6 @@
  * @package     EverAccounting
  * @class       Collection
  * @version     1.0.2
- *
  */
 
 namespace EverAccounting;
@@ -29,7 +28,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed $items
-	 *
 	 */
 	public function __construct( $items = array() ) {
 		$items = is_null( $items ) ? array() : $this->getArrayableItems( $items );
@@ -708,7 +706,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param string
-	 *
 	 */
 	public function __toString() {
 		return json_encode( $this->__toArray() );
@@ -725,7 +722,6 @@ class Collection implements Arrayable {
 	 *
 	 * @return string
 	 * @link  http://php.net/manual/en/function.json-encode.php
-	 *
 	 */
 	public function __toJSON( $options = 0, $depth = 512 ) {
 		return json_encode( $this->__toArray(), $options, $depth );
@@ -742,7 +738,6 @@ class Collection implements Arrayable {
 	 *
 	 * @return string
 	 * @link  http://php.net/manual/en/function.json-encode.php
-	 *
 	 */
 	public function toJSON( $options = 0, $depth = 512 ) {
 		return $this->__toJSON( $options, $depth );
@@ -753,7 +748,7 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param      $key
-	 * @param null $default
+	 * @param null   $default
 	 *
 	 * @param      $target
 	 *

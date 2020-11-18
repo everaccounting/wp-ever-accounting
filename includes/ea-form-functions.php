@@ -59,7 +59,6 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_hidden_input( $field ) {
 	$field['value'] = isset( $field['value'] ) ? $field['value'] : '';
@@ -75,7 +74,6 @@ function eaccounting_hidden_input( $field ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_text_input( $field = array() ) {
 	$field = (array) wp_parse_args(
@@ -178,7 +176,6 @@ function eaccounting_text_input( $field = array() ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_textarea( $field ) {
 	$field                     = (array) wp_parse_args(
@@ -248,7 +245,6 @@ function eaccounting_textarea( $field ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_wp_radio( $field ) {
 	$field = (array) wp_parse_args(
@@ -314,7 +310,6 @@ function eaccounting_wp_radio( $field ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_wp_checkbox( $field ) {
 	$field = (array) wp_parse_args(
@@ -374,7 +369,6 @@ function eaccounting_wp_checkbox( $field ) {
  * @since 1.0.2
  *
  * @param array $field Data about the field to render.
- *
  */
 function eaccounting_select( $field ) {
 	$field = (array) wp_parse_args(
@@ -536,7 +530,6 @@ function eaccounting_file_input( $field ) {
  * @since 1.0.2
  *
  * @param array $field Data about the field to render.
- *
  */
 
 function eaccounting_toggle( $field ) {
@@ -610,7 +603,6 @@ function eaccounting_toggle( $field ) {
  * @since 1.0.2
  *
  * @param array $field field properties.
- *
  */
 function eaccounting_select2( $field ) {
 	$field = (array) wp_parse_args(
@@ -676,11 +668,10 @@ function eaccounting_select2( $field ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_contact_dropdown( $field ) {
-	$type  = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
-	$value = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : '';
+	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
+	$value      = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : '';
 	$query_args = array();
 	if ( ! empty( $value ) ) {
 		$query_args['include'] = $value;
@@ -714,7 +705,6 @@ function eaccounting_contact_dropdown( $field ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_account_dropdown( $field ) {
 	$default_id = '';
@@ -757,7 +747,6 @@ function eaccounting_account_dropdown( $field ) {
  * @since 1.0.2
  *
  * @param array $field
- *
  */
 function eaccounting_category_dropdown( $field ) {
 	$field      = wp_parse_args(

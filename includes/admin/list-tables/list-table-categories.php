@@ -73,7 +73,6 @@ class List_Table_Categories extends List_Table {
 	 * @since  1.0.2
 	 *
 	 * @see    WP_List_Table::__construct()
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -169,12 +168,10 @@ class List_Table_Categories extends List_Table {
 	/**
 	 * Renders the checkbox column in the categories list table.
 	 *
-	 *
 	 * @param Category $category The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $category ) {
 		return sprintf( '<input type="checkbox" name="category_id[]" value="%d"/>', $category->get_id() );
@@ -183,12 +180,10 @@ class List_Table_Categories extends List_Table {
 	/**
 	 * Renders the "Name" column in the category list table.
 	 *
-	 *
 	 * @param Category $category The current category object.
 	 *
 	 * @return string Data shown in the Name column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_name( $category ) {
 		$name = $category->get_name();
@@ -217,7 +212,6 @@ class List_Table_Categories extends List_Table {
 	 *
 	 * @return string Data shown in the type column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_type( $category ) {
 		$type  = $category->get_type();
@@ -230,12 +224,10 @@ class List_Table_Categories extends List_Table {
 	/**
 	 * Renders the "Color" column in the category list table.
 	 *
-	 *
 	 * @param Category $category The current category object.
 	 *
 	 * @return string Data shown in the Name column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_color( $category ) {
 		$value = sprintf( '<span class="dashicons dashicons-marker" style="background-color: %s; color:%s;"></span>', $category->get_color(), $category->get_color() );
@@ -250,7 +242,6 @@ class List_Table_Categories extends List_Table {
 	 *
 	 * @return string Data shown in the "enabled" column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_enabled( $category ) {
 		ob_start();
@@ -279,7 +270,6 @@ class List_Table_Categories extends List_Table {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 
 	function column_actions( $category ) {

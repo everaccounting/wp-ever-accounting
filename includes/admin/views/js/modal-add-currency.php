@@ -29,7 +29,8 @@ $options = array_merge( array( '' => __( 'Select Currency', 'wp-ever-accounting'
 						<article>
 							<div class="ea-row">
 								<?php
-								eaccounting_select( array(
+								eaccounting_select(
+									array(
 										'wrapper_class' => 'ea-col-12',
 										'label'         => __( 'Currency Code', 'wp-ever-accounting' ),
 										'name'          => 'code',
@@ -37,18 +38,23 @@ $options = array_merge( array( '' => __( 'Select Currency', 'wp-ever-accounting'
 										'value'         => '',
 										'options'       => $options,
 										'required'      => true,
-								) );
-								eaccounting_text_input( array(
+									)
+								);
+								eaccounting_text_input(
+									array(
 										'wrapper_class' => 'ea-col-12',
 										'label'         => __( 'Currency Rate', 'wp-ever-accounting' ),
 										'name'          => 'rate',
 										'value'         => '',
 										'required'      => true,
-								) );
-								eaccounting_hidden_input( array(
+									)
+								);
+								eaccounting_hidden_input(
+									array(
 										'name'  => 'action',
-										'value' => 'eaccounting_edit_currency'
-								) );
+										'value' => 'eaccounting_edit_currency',
+									)
+								);
 								?>
 							</div>
 						</article>

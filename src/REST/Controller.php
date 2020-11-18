@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Controller
+ *
  * @since   1.1.0
  *
  * @package EverAccounting\REST

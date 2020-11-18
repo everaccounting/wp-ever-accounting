@@ -49,7 +49,7 @@ class Total_Expense extends Widget {
 	 */
 	public function get_content() {
 		global $wpdb;
-		$dates = $this->get_dates();
+		$dates        = $this->get_dates();
 		$total        = 0;
 		$transactions = eaccounting()
 				->query()

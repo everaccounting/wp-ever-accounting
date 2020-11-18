@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return EverAccounting\Models\Account|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_account( $account ) {
 	if ( empty( $account ) ) {
@@ -54,7 +53,7 @@ function eaccounting_get_account( $account ) {
  *
  * @type int $enabled The status of the account. Default 1.
  *
- * @type int $creator_id The creator id for the account. Default is current user id of the wordpress.
+ * @type int $creator_id The creator id for the account. Default is current user id of the WordPress.
  *
  * @type string $date_created The date when the account is created. Default is current current time.
  *
@@ -63,7 +62,6 @@ function eaccounting_get_account( $account ) {
  *
  * @return EverAccounting\Models\Account|\WP_Error
  * @since 1.1.0
- *
  */
 function eaccounting_insert_account( $args ) {
 	$account = new EverAccounting\Models\Account( $args );
@@ -78,7 +76,6 @@ function eaccounting_insert_account( $args ) {
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_delete_account( $account_id ) {
 	$account = new EverAccounting\Models\Account( $account_id );
@@ -118,11 +115,10 @@ function eaccounting_delete_account( $account_id ) {
  *
  * }
  *
- * @param bool $callback
+ * @param bool  $callback
  *
  * @return array|int
  * @since 1.1.0
- *
  */
 function eaccounting_get_accounts( $args = array(), $callback = true ) {
 	return \EverAccounting\Repositories\Accounts::instance()->get_items(

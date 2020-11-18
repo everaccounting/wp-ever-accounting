@@ -39,7 +39,7 @@ class VendorsController extends ContactsController {
 	 * @since   1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_customers' );
+		return true; // current_user_can( 'manage_customers' );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class VendorsController extends ContactsController {
 	 * @since   1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_customers' );
+		return true; // current_user_can( 'manage_customers' );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class VendorsController extends ContactsController {
 	 * @since   1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_customers' );
+		return true; // current_user_can( 'manage_customers' );
 	}
 
 	/**
@@ -78,7 +78,7 @@ class VendorsController extends ContactsController {
 	 * @since   1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_customers' );
+		return true; // current_user_can( 'manage_customers' );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class VendorsController extends ContactsController {
 	 * @since   1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_customers' );
+		return true; // current_user_can( 'manage_customers' );
 	}
 
 	/**
@@ -104,7 +104,7 @@ class VendorsController extends ContactsController {
 	 * @since   1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_customers' );
+		return true; // current_user_can( 'manage_customers' );
 	}
 
 	/**

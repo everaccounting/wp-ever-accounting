@@ -39,12 +39,11 @@ class AccountController extends Singleton {
 	/**
 	 * Prepare account data before inserting into database.
 	 *
-	 * @param int $id
+	 * @param int   $id
 	 * @param array $data
 	 *
 	 * @return array
 	 * @since 1.1.0
-	 *
 	 */
 	public static function prepare_account_data( $data, $id = null ) {
 		if ( empty( $data['date_created'] ) && ! $id ) {
@@ -63,12 +62,11 @@ class AccountController extends Singleton {
 	/**
 	 * Validate account data.
 	 *
-	 * @param array $data
-	 * @param null $id
+	 * @param array     $data
+	 * @param null      $id
 	 * @param \WP_Error $errors
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function validate_account_data( $errors, $data, $id = null ) {
 		if ( empty( $data['name'] ) ) {
@@ -87,11 +85,11 @@ class AccountController extends Singleton {
 		}
 
 		if ( intval( $id ) !== (int) Accounts::instance()->get_var(
-				'id',
-				array(
-					'number' => $data['number'],
-				)
-			) ) {
+			'id',
+			array(
+				'number' => $data['number'],
+			)
+		) ) {
 			$errors->add( 'invalid_prop', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
 		}
 
@@ -105,7 +103,6 @@ class AccountController extends Singleton {
 	 * @param $id
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public static function delete_default_account( $id ) {
 		$default_account = eaccounting()->settings->get( 'default_account' );
@@ -121,7 +118,6 @@ class AccountController extends Singleton {
 	 *
 	 * @return bool
 	 * @since 1.0.2
-	 *
 	 */
 	function update_transaction_account( $id ) {
 		global $wpdb;

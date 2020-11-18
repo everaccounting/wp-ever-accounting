@@ -174,7 +174,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 	 * @since 1.1.0
 	 *
 	 * @param       $select
-	 * @param array $where
+	 * @param array  $where
 	 *
 	 * @return string|null         Database query result (as string), or null on failure
 	 */
@@ -188,7 +188,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 			return null;
 		}
 
-		//Builds query's where statement.
+		// Builds query's where statement.
 		$where_sql = '';
 		$keys      = array_keys( $where );
 		for ( $i = 0, $max = count( $keys ); $i < $max; $i ++ ) {
@@ -426,7 +426,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 			);
 		}
 
-		//Status
+		// Status
 		if ( isset( $args['status'] ) && in_array( $args['status'], array( 'active', 'inactive' ), true ) ) {
 			$args['enabled'] = 'active' === $args['status'] ? '1' : '0';
 		}
@@ -437,8 +437,8 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 			);
 		}
 
-		//search
-		//Search
+		// search
+		// Search
 		if ( ! empty( $args['search'] ) ) {
 			$searches = array();
 			$words    = array_unique( array_filter( explode( ' ', $args['search'] ) ) );
@@ -534,12 +534,12 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 			return $errors;
 		}
 
-		//if updating do not overwrite date created.
+		// if updating do not overwrite date created.
 		if ( $id && array_key_exists( 'date_created', $data ) ) {
 			unset( $data['date_created'] );
 		}
 
-		//if updating do not overwrite creator.
+		// if updating do not overwrite creator.
 		if ( $id && array_key_exists( 'creator_id', $data ) ) {
 			unset( $data['creator_id'] );
 		}

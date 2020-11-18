@@ -54,7 +54,7 @@ function eaccounting_is_admin_page( $page = '' ) {
 	} else {
 		$ret = false;
 	}
-	//When translate the page name becomes different so use translated
+	// When translate the page name becomes different so use translated
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 	$pages                 = str_replace( array( 'toplevel_page_', 'accounting_page_', $eaccounting_screen_id . '_page_' ), '', eaccounting_get_screen_ids() );
 
@@ -84,7 +84,7 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 		$page = isset( $_GET['page'] ) ? eaccounting_clean( $_GET['page'] ) : '';
 	}
 
-	//When translate the page name becomes different so use translated
+	// When translate the page name becomes different so use translated
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 	$whitelist             = str_replace( array( 'toplevel_page_', 'accounting_page_', $eaccounting_screen_id . '_page_' ), '', eaccounting_get_screen_ids() );
 
@@ -206,7 +206,7 @@ add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3
  * since 1.0.2
  *
  * @param       $template_name
- * @param array $args
+ * @param array         $args
  */
 function eaccounting_get_admin_template( $template_name, $args = array() ) {
 	if ( $args && is_array( $args ) ) {

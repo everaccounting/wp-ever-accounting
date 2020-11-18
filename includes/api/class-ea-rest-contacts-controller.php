@@ -33,10 +33,10 @@ class Contacts_Controller extends Controller {
 			'/' . $this->rest_base,
 			array(
 				array(
-					'methods'  => \WP_REST_Server::READABLE,
-					'callback' => array( $this, 'get_items' ),
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'args'     => $this->get_collection_params(),
+					'args'                => $this->get_collection_params(),
 				),
 				array(
 					'methods'             => \WP_REST_Server::CREATABLE,
@@ -84,25 +84,31 @@ class Contacts_Controller extends Controller {
 			)
 		);
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', array(
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/types',
 			array(
-				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_contact_types' ],
-				'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				'args'                => $this->get_collection_params(),
-			),
-		) );
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_contact_types' ],
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+			)
+		);
 
-
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', array(
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/bulk',
 			array(
-				'methods'             => \WP_REST_Server::EDITABLE,
-				'callback'            => [ $this, 'handle_bulk_actions' ],
-				'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				'args'                => $this->get_collection_params(),
-			),
-		) );
-
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'handle_bulk_actions' ],
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+			)
+		);
 
 	}
 
@@ -131,19 +137,19 @@ class Contacts_Controller extends Controller {
 
 		$query = Query_Contact::init();
 
-		//check include and add query parameters
+		// check include and add query parameters
 		if ( ! empty( $args['include'] ) ) {
 			$query->whereIn( 'id', $args['include'] );
 		}
-		//check exclude and add query parameters
+		// check exclude and add query parameters
 		if ( ! empty( $args['exclude'] ) ) {
 			$query->whereNotIn( 'id', $args['exclude'] );
 		}
-		//check search and add query parameters
+		// check search and add query parameters
 		if ( ! empty( $args['search'] ) ) {
 			$query->search( $args['search'], array( 'id', 'user_id', 'name', 'email', 'phone', 'fax', 'address', 'tax_number', 'note' ) );
 		}
-		//check type and add query parameters
+		// check type and add query parameters
 		if ( ! empty( $args['type'] ) ) {
 			foreach ( eaccounting_get_contact_types() as $key => $value ) {
 				if ( $args['type'] == $key ) {
@@ -151,21 +157,21 @@ class Contacts_Controller extends Controller {
 				}
 			}
 		}
-		//check address in address and add query parameters
+		// check address in address and add query parameters
 		if ( ! empty( $args['address'] ) ) {
 			$query->search( $args['address'], array( 'address' ) );
 		}
-		//check country and add query parameters
+		// check country and add query parameters
 		if ( ! empty( $args['country'] ) ) {
 			$query->where( 'country', $args['country'] );
 		}
-		//check order_by and order and add query parameters
+		// check order_by and order and add query parameters
 		if ( ! empty( $args['orderby'] ) && ! empty( $args['order'] ) ) {
 			$query->order_by( $args['orderby'], $args['order'] );
 		} else {
 			$query->order_by( 'id', 'asc' );
 		}
-		//check page and per_page and add query parameters
+		// check page and per_page and add query parameters
 		if ( ! empty( $args['per_page'] ) && ! empty( $args['page'] ) ) {
 			$query->page( $args['page'], $args['per_page'] );
 		} elseif ( ! empty( $args['per_page'] ) && empty( $args['page'] ) ) {
@@ -175,11 +181,11 @@ class Contacts_Controller extends Controller {
 		} else {
 			$query->page( 1, 20 );
 		}
-		//check offset and add query parameters
+		// check offset and add query parameters
 		if ( ! empty( $args['offset'] ) ) {
 			$query->offset( $args['offset'] );
 		}
-		//check date_created and add query parameters
+		// check date_created and add query parameters
 		if ( ! empty( $args['date_created'] ) ) {
 			$query->where( 'date_created', $args['date_created'] );
 		}
@@ -213,7 +219,6 @@ class Contacts_Controller extends Controller {
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
-
 
 		$prepared = $this->prepare_item_for_database( $request );
 
@@ -361,7 +366,7 @@ class Contacts_Controller extends Controller {
 
 	/**
 	 *
-	 * @param mixed $item
+	 * @param mixed            $item
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
@@ -427,8 +432,8 @@ class Contacts_Controller extends Controller {
 			$prepared_item->fax = $request['fax'];
 		}
 		if ( ! empty( $schema['properties']['birth_date'] )
-		     && isset( $request['birth_date'] )
-		     && eaccounting_sanitize_date( $request['birth_date'], false )
+			 && isset( $request['birth_date'] )
+			 && eaccounting_sanitize_date( $request['birth_date'], false )
 		) {
 			$prepared_item->birth_date = $request['birth_date'];
 		}
@@ -478,7 +483,7 @@ class Contacts_Controller extends Controller {
 			),
 			'collection' => array(
 				'href' => rest_url( $base ),
-			)
+			),
 		);
 
 		return $links;
@@ -489,7 +494,6 @@ class Contacts_Controller extends Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -531,7 +535,7 @@ class Contacts_Controller extends Controller {
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_email'
+						'sanitize_callback' => 'sanitize_email',
 					),
 				),
 				'phone'         => array(
@@ -608,7 +612,7 @@ class Contacts_Controller extends Controller {
 					'required'    => true,
 					'enum'        => array_keys( eaccounting_get_contact_types() ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field'
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'note'          => array(
@@ -639,10 +643,10 @@ class Contacts_Controller extends Controller {
 					'context'     => array( 'view', 'embed' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'eaccounting_sanitize_date',
-					)
+					),
 				),
 
-			)
+			),
 		);
 
 		return $this->add_additional_fields_schema( $schema );
@@ -654,7 +658,6 @@ class Contacts_Controller extends Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

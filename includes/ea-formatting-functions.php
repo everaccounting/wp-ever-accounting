@@ -281,8 +281,8 @@ function eaccounting_timezone_offset() {
  * @since  1.0.2
  *
  * @param \EverAccounting\DateTime|string $date   Instance of DateTime.
- * @param string                       $format Data format.
- *                                             Defaults to the eaccounting_date_format function if not set.
+ * @param string                          $format Data format.
+ *                                                Defaults to the eaccounting_date_format function if not set.
  *
  * @return string
  */
@@ -405,7 +405,7 @@ function eaccounting_esc_json( $json, $html = false ) {
  *
  * @since 1.0.2
  *
- * @param bool $allow_decimal
+ * @param bool   $allow_decimal
  *
  * @param      $number
  *
@@ -440,7 +440,6 @@ function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
 
 /**
  * Format price with currency code & number format
- *
  *
  * @since 1.0.2
  *

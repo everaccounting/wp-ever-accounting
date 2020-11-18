@@ -37,8 +37,6 @@ function eaccounting_get_item( $item ) {
 			$_item = new Item( absint( $item ) );
 		}
 
-
-
 		if ( ! $_item->exists() ) {
 			throw new Exception( 'invalid_id', __( 'Invalid item.', 'wp-ever-accounting' ) );
 		}
@@ -68,10 +66,10 @@ function eaccounting_insert_item( $args ) {
 			'id' => null,
 		);
 		$args         = (array) wp_parse_args( $args, $default_args );
-		$item      = new item( $args['id'] );
+		$item         = new item( $args['id'] );
 		$item->set_props( $args );
 
-		//validation
+		// validation
 		if ( ! $item->get_date_created() ) {
 			$item->set_date_created( time() );
 		}

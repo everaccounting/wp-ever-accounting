@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit();
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_get_currency_code( $code ) {
 	$codes = eaccounting_get_global_currencies();
@@ -36,12 +35,10 @@ function eaccounting_get_currency_code( $code ) {
  * Whenever need to check existence of the object
  * in database must check $currency->exist()
  *
- *
  * @param object|string|int $currency
  *
  * @return EverAccounting\Models\Currency|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_currency( $currency ) {
 	if ( empty( $currency ) ) {
@@ -89,7 +86,6 @@ function eaccounting_get_currency( $currency ) {
  *
  * @return EverAccounting\Models\Currency|\WP_Error
  * @since 1.1.0
- *
  */
 function eaccounting_insert_currency( $args ) {
 	$args = wp_parse_args( $args, array( 'code' => '' ) );
@@ -109,7 +105,6 @@ function eaccounting_insert_currency( $args ) {
  *
  * @return bool
  * @since 1.1.0
- *
  */
 function eaccounting_delete_currency( $currency_id ) {
 	$currency = new EverAccounting\Models\Currency( $currency_id );
@@ -146,11 +141,10 @@ function eaccounting_delete_currency( $currency_id ) {
  *
  * }
  *
- * @param bool $callback
+ * @param bool  $callback
  *
  * @return array|int
  * @since 1.1.0
- *
  */
 function eaccounting_get_currencies( $args = array(), $callback = true ) {
 	return \EverAccounting\Repositories\Currencies::instance()->get_items(

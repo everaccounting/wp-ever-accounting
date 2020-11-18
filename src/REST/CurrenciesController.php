@@ -94,7 +94,7 @@ class CurrenciesController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_currency' );
+		return true; // current_user_can( 'manage_currency' );
 	}
 
 	/**
@@ -107,7 +107,7 @@ class CurrenciesController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_currency' );
+		return true; // current_user_can( 'manage_currency' );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class CurrenciesController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_currency' );
+		return true; // current_user_can( 'manage_currency' );
 	}
 
 	/**
@@ -133,7 +133,7 @@ class CurrenciesController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_currency' );
+		return true; // current_user_can( 'manage_currency' );
 	}
 
 	/**
@@ -146,7 +146,7 @@ class CurrenciesController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_currency' );
+		return true; // current_user_can( 'manage_currency' );
 	}
 
 	/**
@@ -159,7 +159,7 @@ class CurrenciesController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_currency' );
+		return true; // current_user_can( 'manage_currency' );
 	}
 
 
@@ -454,7 +454,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
 				'position'           => array(
 					'description' => __( 'Position.', 'wp-ever-accounting' ),
@@ -464,7 +464,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
 				'decimal_separator'  => array(
 					'description' => __( 'Decimal separator count.', 'wp-ever-accounting' ),
@@ -473,7 +473,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
 				'thousand_separator' => array(
 					'description' => __( 'Thousand separator count.', 'wp-ever-accounting' ),
@@ -482,7 +482,7 @@ class CurrenciesController extends Controller {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required' => true,
+					'required'    => true,
 				),
 				'enabled'            => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),

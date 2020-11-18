@@ -73,7 +73,7 @@ abstract class CSV_Exporter {
 	 * @since 1.0.2
 	 * @return array
 	 */
-	protected abstract function get_columns();
+	abstract protected function get_columns();
 
 	/**
 	 * Prepare data that will be exported.
@@ -81,7 +81,7 @@ abstract class CSV_Exporter {
 	 * @since 1.0.2
 	 * @return array
 	 */
-	protected abstract function get_rows();
+	abstract protected function get_rows();
 
 	/**
 	 * Can we export?
@@ -145,7 +145,7 @@ abstract class CSV_Exporter {
 	 * @return string
 	 */
 	public function get_filename() {
-		$date = date( "Ymd" );
+		$date = date( 'Ymd' );
 
 		return sanitize_file_name( "{$this->export_type}-$date.csv" );
 	}
@@ -273,7 +273,6 @@ abstract class CSV_Exporter {
 
 	/**
 	 * Escape a string to be used in a CSV context
-	 *
 	 *
 	 * @since 1.0.2
 	 *

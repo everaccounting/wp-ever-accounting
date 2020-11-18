@@ -7,7 +7,6 @@
  * @subpackage  Abstracts
  * @class       Widget
  * @version     1.0.2
- *
  */
 
 namespace EverAccounting\Abstracts;
@@ -75,11 +74,18 @@ abstract class Widget {
 	 * @return mixed|void
 	 */
 	public function get_widget_classes() {
-		return apply_filters( 'eaccounting_overview_widget_classes', implode( ' ', array(
-				'ea-overview-widget',
-				esc_attr( $this->get_widget_size() ),
-				esc_attr( $this->get_widget_class() )
-		) ), $this->widget_id );
+		return apply_filters(
+			'eaccounting_overview_widget_classes',
+			implode(
+				' ',
+				array(
+					'ea-overview-widget',
+					esc_attr( $this->get_widget_size() ),
+					esc_attr( $this->get_widget_class() ),
+				)
+			),
+			$this->widget_id
+		);
 	}
 
 	/**
@@ -92,7 +98,7 @@ abstract class Widget {
 		<div class="<?php echo $this->get_widget_classes(); ?>" id="<?php echo esc_attr( $this->get_widget_id() ); ?>">
 			<?php $this->render_header(); ?>
 			<div class="ea-overview-widget-body">
-				<?php $this->get_content() ?>
+				<?php $this->get_content(); ?>
 			</div>
 		</div>
 
@@ -111,10 +117,10 @@ abstract class Widget {
 		?>
 		<div class="ea-overview-widget-header">
 			<div class="ea-overview-widget-header-left">
-				<?php $this->get_title() ?>
+				<?php $this->get_title(); ?>
 			</div>
 			<div class="ea-overview-widget-header-right">
-				<?php $this->get_tools() ?>
+				<?php $this->get_tools(); ?>
 			</div>
 		</div>
 		<?php
@@ -146,7 +152,7 @@ abstract class Widget {
 	 * @since 1.0.2
 	 * @return void
 	 */
-	public abstract function get_content();
+	abstract public function get_content();
 
 	/**
 	 * @since 1.0.2
@@ -170,8 +176,8 @@ abstract class Widget {
 		$end = eaccounting_string_to_datetime( $end_date );
 
 		return [
-				'start' => $start->format('Y-m-d'),
-				'end'   => $end->format('Y-m-d'),
+			'start' => $start->format( 'Y-m-d' ),
+			'end'   => $end->format( 'Y-m-d' ),
 		];
 	}
 }

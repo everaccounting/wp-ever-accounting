@@ -84,7 +84,7 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * Data constructor.
 	 *
 	 * @param int|array|object|null $data
-	 * @param object    $repository
+	 * @param object                $repository
 	 */
 	public function __construct( $data = 0, $repository = null ) {
 		if ( null !== $repository && class_exists( $repository ) ) {
@@ -213,7 +213,6 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @since 1.0.2
 	 *
 	 * @param int $id ID.
-	 *
 	 */
 	public function set_id( $id ) {
 		$this->id = absint( $id );
@@ -280,7 +279,6 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @since 1.0.2
 	 *
 	 * @param boolean $read Should read?.
-	 *
 	 */
 	public function set_object_read( $read = true ) {
 		$this->object_read = (bool) $read;
@@ -497,7 +495,6 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @since 1.0.2
 	 *
 	 * @param int $enabled Company id
-	 *
 	 */
 	public function set_enabled( $enabled ) {
 		$this->set_prop( 'enabled', absint( $enabled ) );
@@ -509,7 +506,6 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @since 1.0.2
 	 *
 	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if their is no date.
-	 *
 	 */
 	public function set_date_created( $date = null ) {
 		if ( null === $date ) {
@@ -524,7 +520,6 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @since 1.0.2
 	 *
 	 * @param int $creator_id Creator id
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
 		if ( null === $creator_id ) {
@@ -581,7 +576,6 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 *
 	 * @return string
 	 * @link  http://php.net/manual/en/function.json-encode.php
-	 *
 	 */
 	public function __toJSON( $options = 0, $depth = 512 ) {
 		return json_encode( $this->__toArray(), $options, $depth );
@@ -597,7 +591,6 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 *
 	 * @return string
 	 * @link  http://php.net/manual/en/function.json-encode.php
-	 *
 	 */
 	public function to_JSON( $options = 0, $depth = 512 ) {
 		return $this->__toJSON( $options, $depth );

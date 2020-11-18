@@ -43,16 +43,14 @@ function eaccounting_rest_date_response( $date, $utc = true ) {
 /**
  * Makes internal API request for usages within PHP
  *
- *
- *
  * @since 1.0.2
  *
  * @param        $endpoint
  *
- * @param array  $args
- * @param string $method
+ * @param array    $args
+ * @param string   $method
  *
- * @param string $namespace
+ * @param string   $namespace
  *
  * @return array
  */

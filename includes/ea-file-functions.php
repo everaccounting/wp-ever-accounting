@@ -62,7 +62,6 @@ function eaccounting_scan_folders( $path = '', $return = array() ) {
  * @since 1.0.2
  *
  * @param bool $force
- *
  */
 function eaccounting_protect_files( $force = false ) {
 
@@ -195,19 +194,19 @@ function eaccounting_upload_file( $file, $args = array() ) {
 	} else {
 		$upload_dir = eaccounting_get_upload_dir();
 
-		//clean name
+		// clean name
 		$original_name = str_replace( '\\', '/', $file['name'] );
 		$pos           = strrpos( $original_name, '/' );
 		$original_name = false === $pos ? $original_name : substr( $original_name, $pos + 1 );
 		$original_name = strlen( $original_name ) > 180 ? substr( $original_name, - 1, 180 ) : $original_name;
 		$file_name     = remove_accents( strtolower( $original_name ) );
 
-		//set folder if not exist
+		// set folder if not exist
 		if ( ! is_dir( $upload_dir['path'] ) ) {
 			wp_mkdir_p( $upload_dir['path'] );
 		}
 
-		//if exist another change the name
+		// if exist another change the name
 		if ( file_exists( trailingslashit( $upload_dir['path'] ) . $file_name ) ) {
 			$file_name = substr( md5( time() ), 0, 3 ) . '-' . $file_name;
 		}

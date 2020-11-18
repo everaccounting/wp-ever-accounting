@@ -16,13 +16,31 @@ function eaccounting_misc_currencies_tab() {
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
 	if ( in_array( $action, [ 'edit', 'add' ] ) ) {
-		require_once dirname( __FILE__ ). '/edit-currency.php';
+		require_once dirname( __FILE__ ) . '/edit-currency.php';
 	} else {
 		?>
 		<h1>
 			<?php _e( 'Currencies', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'currencies', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'tab'    => 'currencies',
+					'action' => 'add',
+				)
+			);
+			?>
+												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'page' => 'ea-tools',
+					'tab'  => 'import',
+				)
+			);
+			?>
+												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-currencies.php';
@@ -48,8 +66,8 @@ function eaccounting_misc_currencies_tab() {
 				<input type="hidden" name="page" value="ea-misc"/>
 				<input type="hidden" name="tab" value="currencies"/>
 
-				<?php $list_table->views() ?>
-				<?php $list_table->display() ?>
+				<?php $list_table->views(); ?>
+				<?php $list_table->display(); ?>
 			</form>
 			<?php
 			/**

@@ -33,10 +33,10 @@ class Categories_Controller extends Controller {
 			'/' . $this->rest_base,
 			array(
 				array(
-					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					//'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'args'                => $this->get_collection_params(),
+					'methods'  => \WP_REST_Server::READABLE,
+					'callback' => array( $this, 'get_items' ),
+					// 'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'     => $this->get_collection_params(),
 				),
 				array(
 					'methods'             => \WP_REST_Server::CREATABLE,
@@ -84,23 +84,31 @@ class Categories_Controller extends Controller {
 			)
 		);
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/bulk', array(
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/bulk',
 			array(
-				'methods'             => \WP_REST_Server::EDITABLE,
-				'callback'            => [ $this, 'handle_bulk_actions' ],
-				'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				'args'                => $this->get_collection_params(),
-			),
-		) );
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => [ $this, 'handle_bulk_actions' ],
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+			)
+		);
 
-		register_rest_route( $this->namespace, '/' . $this->rest_base . '/types', array(
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/types',
 			array(
-				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => [ $this, 'get_types' ],
-				'permission_callback' => array( $this, 'get_item_permissions_check' ),
-				'args'                => $this->get_collection_params(),
-			),
-		) );
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'get_types' ],
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+				),
+			)
+		);
 
 	}
 
@@ -157,7 +165,6 @@ class Categories_Controller extends Controller {
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
-
 
 		$prepared = $this->prepare_item_for_database( $request );
 
@@ -343,7 +350,7 @@ class Categories_Controller extends Controller {
 			'name'       => $item->name,
 			'type'       => $item->type,
 			'color'      => sanitize_hex_color( $item->color ),
-			'created_at' => $this->prepare_date_response( $item->created_at )
+			'created_at' => $this->prepare_date_response( $item->created_at ),
 		);
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -376,7 +383,7 @@ class Categories_Controller extends Controller {
 			),
 			'collection' => array(
 				'href' => rest_url( $base ),
-			)
+			),
 		);
 
 		return $links;
@@ -410,7 +417,7 @@ class Categories_Controller extends Controller {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'required'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field'
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'type'         => array(
@@ -420,7 +427,7 @@ class Categories_Controller extends Controller {
 					'required'    => true,
 					'enum'        => array_keys( eaccounting_get_category_types() ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field'
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'color'        => array(
@@ -439,7 +446,7 @@ class Categories_Controller extends Controller {
 					'readonly'    => true,
 				),
 
-			)
+			),
 		);
 
 		return $this->add_additional_fields_schema( $schema );

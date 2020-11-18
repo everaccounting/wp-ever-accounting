@@ -74,8 +74,8 @@ abstract class Controller extends \WP_REST_Controller {
 	 * @param        $endpoint
 	 *
 	 * @param        $id
-	 * @param null   $default
-	 * @param string $namespace
+	 * @param null     $default
+	 * @param string   $namespace
 	 *
 	 * @return array|null
 	 */

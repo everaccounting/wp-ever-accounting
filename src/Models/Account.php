@@ -29,7 +29,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param int|object|Account $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data, Accounts::instance() );
@@ -144,7 +143,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $name Account name.
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -156,7 +154,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $number bank account number
-	 *
 	 */
 	public function set_number( $number ) {
 		$this->set_prop( 'number', eaccounting_clean( $number ) );
@@ -168,7 +165,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $opening_balance opening balance of the account.
-	 *
 	 */
 	public function set_opening_balance( $opening_balance ) {
 		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
@@ -181,7 +177,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $currency_code Bank currency code
-	 *
 	 */
 	public function set_currency_code( $currency_code ) {
 		$this->set_prop( 'currency_code', strtoupper( $currency_code ) );
@@ -193,7 +188,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $bank_name name of the bank
-	 *
 	 */
 	public function set_bank_name( $bank_name ) {
 		$this->set_prop( 'bank_name', eaccounting_clean( $bank_name ) );
@@ -205,7 +199,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $bank_phone Bank phone number.
-	 *
 	 */
 	public function set_bank_phone( $bank_phone ) {
 		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
@@ -217,7 +210,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $bank_address Bank physical address
-	 *
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
@@ -250,7 +242,6 @@ class Account extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $balance
-	 *
 	 */
 	protected function set_balance( $balance ) {
 		$this->set_prop( 'balance', eaccounting_sanitize_price( $balance, $this->get_currency_code() ) );

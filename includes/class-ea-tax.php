@@ -127,7 +127,6 @@ class Tax extends Base_Object {
 	 * @since 1.1.0
 	 *
 	 * @param string $name Tax name.
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -139,7 +138,6 @@ class Tax extends Base_Object {
 	 * @since 1.1.0
 	 *
 	 * @param string $rate Tax name.
-	 *
 	 */
 	public function set_rate( $rate ) {
 		$this->set_prop( 'rate', doubleval( $rate ) );
@@ -151,7 +149,6 @@ class Tax extends Base_Object {
 	 * @since 1.1.0
 	 *
 	 * @param string $type Tax name.
-	 *
 	 */
 	public function set_type( $type ) {
 		$tax_types = eaccounting_get_tax_types();

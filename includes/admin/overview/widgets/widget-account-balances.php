@@ -45,15 +45,20 @@ class Account_Balances extends Widget {
 			->group_by( 'a.id' )
 			->order_by( 'balance', 'DESC' )
 			->limit( 5 )
-			->get( OBJECT, function ( $item ) {
-				$total         = $item->balance + $item->opening_balance;
-				$item->balance = eaccounting_format_price( $total, $item->currency_code );
+			->get(
+				OBJECT,
+				function ( $item ) {
+					$total         = $item->balance + $item->opening_balance;
+					$item->balance = eaccounting_format_price( $total, $item->currency_code );
 
-				return $item;
-			} );
+					return $item;
+				}
+			);
 		if ( empty( $accounts ) ) {
-			echo sprintf( '<p class="ea-overview-widget-notice">%s</p>',
-				__( 'There is not accounts.', 'wp-ever-accounting' ) );
+			echo sprintf(
+				'<p class="ea-overview-widget-notice">%s</p>',
+				__( 'There is not accounts.', 'wp-ever-accounting' )
+			);
 
 			return;
 		}
@@ -67,7 +72,7 @@ class Account_Balances extends Widget {
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $accounts as $account ): ?>
+			<?php foreach ( $accounts as $account ) : ?>
 				<tr>
 					<td><?php echo esc_html( $account->name ); ?></td>
 					<td><?php echo esc_html( $account->balance ); ?></td>

@@ -2,7 +2,6 @@
 /**
  * Get template part.
  *
- *
  * @param mixed  $slug Template slug.
  * @param string $name Template name (default: '').
  */

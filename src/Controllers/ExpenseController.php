@@ -85,7 +85,7 @@ class ExpenseController extends Singleton {
 		}
 
 		$category = eaccounting_get_category( $data['category_id'] );
-		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'expense', 'other'  ), true ) ) {
+		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'expense', 'other' ), true ) ) {
 			$errors->add( 'empty_prop', __( 'A valid income category is required.', 'wp-ever-accounting' ) );
 		}
 

@@ -66,7 +66,6 @@ trait Query_Where {
 				unset( $column['order'] );
 				unset( $column['orderby'] );
 			}
-
 		}
 
 		if ( ! empty( $column ) ) {

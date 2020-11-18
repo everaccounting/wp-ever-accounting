@@ -40,7 +40,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	public static function check_version() {
-		//todo remove on later version.
+		// todo remove on later version.
 		if ( false == get_option( 'eaccounting_version' ) && ! empty( get_option( 'eaccounting_localisation' ) ) ) {
 			update_option( 'eaccounting_version', '1.0.1.1' );
 		}
@@ -129,12 +129,12 @@ class EAccounting_Install {
 			return;
 		}
 
-		//Check if we are not already running this routine.
+		// Check if we are not already running this routine.
 		if ( 'yes' === get_transient( 'eaccounting_installing' ) ) {
 			return;
 		}
 
-		//If we made it till here nothing is running yet, lets set the transient now.
+		// If we made it till here nothing is running yet, lets set the transient now.
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 10 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		self::remove_admin_notices();
@@ -212,7 +212,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_categories() {
-		//If no categories then create default categories
+		// If no categories then create default categories
 		if ( ! \EverAccounting\Categories\query()->count() ) {
 			eaccounting_insert_category(
 				array(
@@ -239,7 +239,7 @@ class EAccounting_Install {
 			);
 		}
 
-		//create transfer category
+		// create transfer category
 		if ( ! \EverAccounting\Categories\query()->where(
 			array(
 				'name' => 'Transfer',
@@ -263,7 +263,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_currencies() {
-		//create currencies
+		// create currencies
 		if ( ! \EverAccounting\Query_Currency::init()->count() ) {
 			eaccounting_insert_currency(
 				array(
@@ -352,8 +352,8 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function remove_admin_notices() {
-		//include_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
-		//\EverAccounting\Admin\Admin_Notices::remove_all_notices();
+		// include_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
+		// \EverAccounting\Admin\Admin_Notices::remove_all_notices();
 	}
 
 
@@ -742,7 +742,7 @@ class EAccounting_Install {
 			)
 		);
 
-		//add caps to admin
+		// add caps to admin
 		global $wp_roles;
 
 		if ( is_object( $wp_roles ) ) {
@@ -801,7 +801,7 @@ class EAccounting_Install {
 	 */
 	private static function maybe_enable_setup_wizard() {
 		if ( apply_filters( 'eaccounting_enable_setup_wizard', true ) && self::is_new_install() ) {
-			//\EverAccounting\Admin\Admin_Notices::add_notice( 'install', true );
+			// \EverAccounting\Admin\Admin_Notices::add_notice( 'install', true );
 			set_transient( '_eaccounting_activation_redirect', 1, 30 );
 		}
 	}

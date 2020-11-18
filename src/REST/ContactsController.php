@@ -9,7 +9,6 @@
 
 namespace EverAccounting\REST;
 
-
 class ContactsController extends Controller {
 
 	/**
@@ -84,7 +83,7 @@ class ContactsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_contacts' );
+		return true; // current_user_can( 'manage_contacts' );
 	}
 
 	/**
@@ -96,7 +95,7 @@ class ContactsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_contacts' );
+		return true; // current_user_can( 'manage_contacts' );
 	}
 
 	/**
@@ -109,7 +108,7 @@ class ContactsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_contacts' );
+		return true; // current_user_can( 'manage_contacts' );
 	}
 
 	/**
@@ -122,7 +121,7 @@ class ContactsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_contacts' );
+		return true; // current_user_can( 'manage_contacts' );
 	}
 
 	/**
@@ -135,7 +134,7 @@ class ContactsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_contact' );
+		return true; // current_user_can( 'manage_contact' );
 	}
 
 	/**
@@ -148,7 +147,7 @@ class ContactsController extends Controller {
 	 * @since 1.1.0
 	 */
 	public function batch_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_contacts' );
+		return true; // current_user_can( 'manage_contacts' );
 	}
 
 	/**
@@ -197,12 +196,12 @@ class ContactsController extends Controller {
 
 	/***
 	 * Create a contact
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -227,11 +226,11 @@ class ContactsController extends Controller {
 
 	/**
 	 * Get a single contact
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -252,7 +251,6 @@ class ContactsController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.1.0
-	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -285,7 +283,6 @@ class ContactsController extends Controller {
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
 	 * @since 1.1.0
-	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -319,7 +316,6 @@ class ContactsController extends Controller {
 	 *
 	 * @return array
 	 * @since 1.1.0
-	 *
 	 */
 	public function prepare_item_for_database( $request ) {
 		$schema    = $this->get_item_schema();
@@ -345,13 +341,12 @@ class ContactsController extends Controller {
 	/**
 	 *
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \WP_REST_Request                 $request
 	 *
 	 * @param \EverAccounting\Contacts\Contact $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.1.0
-	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -392,7 +387,6 @@ class ContactsController extends Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -593,7 +587,6 @@ class ContactsController extends Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

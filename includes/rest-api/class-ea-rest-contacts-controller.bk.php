@@ -440,7 +440,6 @@ class Contacts_Controller extends Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -580,7 +579,6 @@ class Contacts_Controller extends Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

@@ -17,7 +17,6 @@ function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: te
 /**
  * Get financial Start
  *
- *
  * @since 1.0.2
  * @return string
  */
@@ -161,7 +160,7 @@ function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
  * @param      $from
  * @param      $to
  * @param      $rate
- * @param bool $format
+ * @param bool   $format
  *
  * @param      $method
  *
@@ -191,7 +190,7 @@ function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $form
  *
  * @param      $to
  * @param      $rate
- * @param bool $format
+ * @param bool   $format
  *
  * @param      $amount
  *
@@ -210,7 +209,7 @@ function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = 
  *
  * @param      $from
  * @param      $rate
- * @param bool $format
+ * @param bool   $format
  *
  * @param      $amount
  *
@@ -249,7 +248,6 @@ function eaccounting_price_convert_between( $amount, $from_code, $from_rate, $to
 
 /**
  * Get payment methods.
- *
  *
  * @since 1.0.2
  * @return array

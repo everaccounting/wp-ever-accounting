@@ -24,14 +24,17 @@ defined( 'ABSPATH' ) || exit();
 					<article>
 						<div class="ea-row">
 							<?php
-							eaccounting_text_input( array(
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Name', 'wp-ever-accounting' ),
 									'name'          => 'name',
 									'value'         => '',
 									'required'      => true,
-							) );
-							eaccounting_currency_dropdown( array(
+								)
+							);
+							eaccounting_currency_dropdown(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Currency', 'wp-ever-accounting' ),
 									'name'          => 'currency_code',
@@ -39,37 +42,48 @@ defined( 'ABSPATH' ) || exit();
 									'placeholder'   => __( 'Select Currency', 'wp-ever-accounting' ),
 									'ajax'          => true,
 									'type'          => 'currency',
-							) );
-							eaccounting_text_input( array(
+								)
+							);
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Email', 'wp-ever-accounting' ),
 									'name'          => 'email',
 									'type'          => 'email',
 									'value'         => '',
 									'required'      => false,
-							) );
-							eaccounting_text_input( array(
+								)
+							);
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-6',
 									'label'         => __( 'Phone', 'wp-ever-accounting' ),
 									'name'          => 'phone',
 									'value'         => '',
 									'required'      => false,
-							) );
-							eaccounting_textarea( array(
+								)
+							);
+							eaccounting_textarea(
+								array(
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Address', 'wp-ever-accounting' ),
 									'name'          => 'address',
 									'value'         => '',
 									'required'      => false,
-							) );
-							eaccounting_hidden_input( array(
+								)
+							);
+							eaccounting_hidden_input(
+								array(
 									'name'  => 'type',
 									'value' => 'vendor',
-							) );
-							eaccounting_hidden_input( array(
+								)
+							);
+							eaccounting_hidden_input(
+								array(
 									'name'  => 'action',
 									'value' => 'eaccounting_edit_contact',
-							) );
+								)
+							);
 							wp_nonce_field( 'ea_edit_contact' );
 							?>
 						</div>

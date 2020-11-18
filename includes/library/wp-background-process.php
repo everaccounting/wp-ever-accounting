@@ -195,11 +195,16 @@ abstract class WP_Background_Process extends WP_Async_Request {
 
 		$key = $this->identifier . '_batch_%';
 
-		$count = $wpdb->get_var( $wpdb->prepare( "
+		$count = $wpdb->get_var(
+			$wpdb->prepare(
+				"
 			SELECT COUNT(*)
 			FROM {$table}
 			WHERE {$column} LIKE %s
-		", $key ) );
+		",
+				$key
+			)
+		);
 
 		return ! ( $count > 0 );
 	}
@@ -270,13 +275,18 @@ abstract class WP_Background_Process extends WP_Async_Request {
 
 		$key = $this->identifier . '_batch_%';
 
-		$query = $wpdb->get_row( $wpdb->prepare( "
+		$query = $wpdb->get_row(
+			$wpdb->prepare(
+				"
 			SELECT *
 			FROM {$table}
 			WHERE {$column} LIKE %s
 			ORDER BY {$key_column} ASC
 			LIMIT 1
-		", $key ) );
+		",
+				$key
+			)
+		);
 
 		$batch       = new stdClass();
 		$batch->key  = $query->$column;
@@ -473,7 +483,6 @@ abstract class WP_Background_Process extends WP_Async_Request {
 	 * Cancel Process
 	 *
 	 * Stop processing queue items, clear cronjob and delete batch.
-	 *
 	 */
 	public function cancel_process() {
 		if ( ! $this->is_queue_empty() ) {

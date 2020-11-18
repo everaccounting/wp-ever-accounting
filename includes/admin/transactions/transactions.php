@@ -40,8 +40,8 @@ function eaccounting_admin_transactions_page() {
 
 			<input type="hidden" name="page" value="ea-transactions"/>
 
-			<?php $list_table->views() ?>
-			<?php $list_table->display() ?>
+			<?php $list_table->views(); ?>
+			<?php $list_table->display(); ?>
 		</form>
 		<?php
 		/**

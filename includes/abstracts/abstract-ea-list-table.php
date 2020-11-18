@@ -102,24 +102,24 @@ abstract class List_Table extends \WP_List_Table {
 	 */
 	public function __construct( $args = array() ) {
 		$args = wp_parse_args(
-				$args,
-				array(
-						'display_args' => array(),
-						'query_args'   => array(),
-				)
+			$args,
+			array(
+				'display_args' => array(),
+				'query_args'   => array(),
+			)
 		);
 
 		$this->screen = get_current_screen();
 
 		$this->display_args = wp_parse_args(
-				$args['display_args'],
-				array(
-						'hide_table_nav'       => false,
-						'hide_bulk_options'    => false,
-						'hide_pagination'      => false,
-						'columns_to_hide'      => array(),
-						'hide_column_controls' => false,
-				)
+			$args['display_args'],
+			array(
+				'hide_table_nav'       => false,
+				'hide_bulk_options'    => false,
+				'hide_pagination'      => false,
+				'columns_to_hide'      => array(),
+				'hide_column_controls' => false,
+			)
 		);
 
 		if ( ! empty( $args['query_args'] ) ) {
@@ -130,10 +130,10 @@ abstract class List_Table extends \WP_List_Table {
 		unset( $args['display_args'] );
 
 		$args = (array) wp_parse_args(
-				$args,
-				array(
-						'ajax' => false,
-				)
+			$args,
+			array(
+				'ajax' => false,
+			)
 		);
 
 		parent::__construct( $args );
@@ -314,7 +314,6 @@ abstract class List_Table extends \WP_List_Table {
 	/**
 	 * Show the search field
 	 *
-	 *
 	 * @since 1.0.2
 	 *
 	 * @param string $input_id ID of the search box
@@ -354,7 +353,6 @@ abstract class List_Table extends \WP_List_Table {
 	 *
 	 * @param string $which Which location the bulk actions are being rendered for.
 	 *                      Will be 'top' or 'bottom'.
-	 *
 	 */
 	protected function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
@@ -379,7 +377,7 @@ abstract class List_Table extends \WP_List_Table {
 					<div class="alignleft actions bulkactions">
 						<?php $this->bulk_actions( $which ); ?>
 					</div>
-				<?php
+					<?php
 				endif;
 				$this->extra_tablenav( $which );
 
@@ -390,7 +388,7 @@ abstract class List_Table extends \WP_List_Table {
 
 				<br class="clear"/>
 			</div>
-		<?php
+			<?php
 		endif;
 	}
 
@@ -415,13 +413,13 @@ abstract class List_Table extends \WP_List_Table {
 
 		foreach ( $actions as $action => $args ) {
 			$args       = wp_parse_args(
-					$args,
-					array(
-							'base_uri'   => '',
-							'query_args' => '',
-							'nonce'      => '',
-							'label'      => '',
-					)
+				$args,
+				array(
+					'base_uri'   => '',
+					'query_args' => '',
+					'nonce'      => '',
+					'label'      => '',
+				)
 			);
 			$base_uri   = empty( $args['base_uri'] ) ? false : $args['base_uri'];
 			$query_args = empty( $args['query_args'] ) ? array() : $args['query_args'];
@@ -446,7 +444,6 @@ abstract class List_Table extends \WP_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 *
 	 * @since 1.0.2
 	 *
 	 * @param string $column_name The name of the column
@@ -468,7 +465,6 @@ abstract class List_Table extends \WP_List_Table {
 
 	/**
 	 * Get number of items to display on a single page
-	 *
 	 *
 	 * @since 1.0.2
 	 *

@@ -52,8 +52,8 @@ class TransactionsRepository extends ResourceRepository {
 			'type'           => self::VARCHAR,
 			'paid_at'        => self::DATETIME,
 			'amount'         => self::DOUBLE,
-			'currency_code'  => self::VARCHAR, //protected
-			'currency_rate'  => self::DOUBLE, //protected
+			'currency_code'  => self::VARCHAR, // protected
+			'currency_rate'  => self::DOUBLE, // protected
 			'account_id'     => self::BIGINT,
 			'invoice_id'     => self::BIGINT,
 			'contact_id'     => self::BIGINT,
@@ -82,8 +82,8 @@ class TransactionsRepository extends ResourceRepository {
 			'type'           => '',
 			'paid_at'        => null,
 			'amount'         => null,
-			'currency_code'  => '', //protected
-			'currency_rate'  => 1, //protected
+			'currency_code'  => '', // protected
+			'currency_rate'  => 1, // protected
 			'account_id'     => null,
 			'invoice_id'     => null,
 			'contact_id'     => null,
@@ -109,7 +109,13 @@ class TransactionsRepository extends ResourceRepository {
 	 * @return array|int
 	 */
 	public function get_items( $args = array(), $callback = false ) {
-		$args = wp_parse_args( $args, array( 'category_in' => array(), 'category_not_in' => array() ) );
+		$args = wp_parse_args(
+			$args,
+			array(
+				'category_in'     => array(),
+				'category_not_in' => array(),
+			)
+		);
 		if ( isset( $args['category_id'] ) ) {
 
 		}

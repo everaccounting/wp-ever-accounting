@@ -48,53 +48,63 @@ class Expense_Categories extends Widget {
 			->left_join( 'ea_categories c', 'c.id', 't.category_id' )
 			->where( 'c.type', 'expense' )
 			->where_date_between( 't.paid_at', $dates['start'], $dates['end'] )
-			->get( OBJECT, function ( $item ) use ( &$data ) {
-				$amount = eaccounting_price_convert_to_default( $item->amount, $item->currency_code, $item->currency_rate );
-				if ( isset( $data[ $item->name ] ) ) {
-					$data[ $item->name ]['amount'] = (int) ( $data[ $item->name ]['amount'] + $amount );
-				} else {
-					$data[ $item->name ] = array(
-						'label'  => $item->name,
-						'color'  => $item->color,
-						'amount' => (int) $amount,
-					);
+			->get(
+				OBJECT,
+				function ( $item ) use ( &$data ) {
+					$amount = eaccounting_price_convert_to_default( $item->amount, $item->currency_code, $item->currency_rate );
+					if ( isset( $data[ $item->name ] ) ) {
+						$data[ $item->name ]['amount'] = (int) ( $data[ $item->name ]['amount'] + $amount );
+					} else {
+						$data[ $item->name ] = array(
+							'label'  => $item->name,
+							'color'  => $item->color,
+							'amount' => (int) $amount,
+						);
+					}
 				}
-			} );
+			);
 
 		$donuts = eaccounting_collect( array_values( $data ) )
-			->sort( function ( $item1, $item2 ) {
-				return $item1['amount'] - $item2['amount'];
-			} )
+			->sort(
+				function ( $item1, $item2 ) {
+					return $item1['amount'] - $item2['amount'];
+				}
+			)
 			->reverse()
 			->take( 6 )
-			->each( function ( $item ) {
-				$item['label'] .= ' - ' . eaccounting_format_price( $item['amount'] );
+			->each(
+				function ( $item ) {
+					$item['label'] .= ' - ' . eaccounting_format_price( $item['amount'] );
 
-				return $item;
-			} )->all();
+					return $item;
+				}
+			)->all();
 
 		$labels  = wp_list_pluck( $donuts, 'label' );
 		$colors  = wp_list_pluck( $donuts, 'color' );
 		$amounts = wp_list_pluck( $donuts, 'amount' );
 		if ( array_sum( $amounts ) == 0 ) {
-			echo sprintf( '<p class="ea-overview-widget-notice">%s</p>',
-				__( 'There is not enough data to visualize expense by category. Please add expenses.', 'wp-ever-accounting' ) );
+			echo sprintf(
+				'<p class="ea-overview-widget-notice">%s</p>',
+				__( 'There is not enough data to visualize expense by category. Please add expenses.', 'wp-ever-accounting' )
+			);
 
 			return;
 		}
 
-
 		$chart = new Chart();
 		$chart->type( 'doughnut' )
-		      ->width( 0 )
-		      ->height( 160 )
-		      ->set_donut_options( $colors )
-		      ->labels( $labels )
-		      ->dataset( array(
-			      'data'            => $amounts,
-			      'backgroundColor' => $colors,
-			      'borderWidth'     => 1
-		      ) )
-		      ->render();
+			  ->width( 0 )
+			  ->height( 160 )
+			  ->set_donut_options( $colors )
+			  ->labels( $labels )
+			->dataset(
+				array(
+					'data'            => $amounts,
+					'backgroundColor' => $colors,
+					'borderWidth'     => 1,
+				)
+			)
+			  ->render();
 	}
 }

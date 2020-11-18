@@ -90,7 +90,7 @@ class ItemsController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -101,7 +101,7 @@ class ItemsController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function create_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class ItemsController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -123,7 +123,7 @@ class ItemsController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function update_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -134,7 +134,7 @@ class ItemsController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 	/**
@@ -145,7 +145,7 @@ class ItemsController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function batch_items_permissions_check( $request ) {
-		return true; //current_user_can( 'manage_account' );
+		return true; // current_user_can( 'manage_account' );
 	}
 
 
@@ -196,7 +196,6 @@ class ItemsController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -225,7 +224,6 @@ class ItemsController extends Controller {
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -246,7 +244,6 @@ class ItemsController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -280,7 +277,6 @@ class ItemsController extends Controller {
 	 *
 	 * @return void|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function delete_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -309,13 +305,12 @@ class ItemsController extends Controller {
 
 	/**
 	 *
-	 * @param \WP_REST_Request $request
+	 * @param \WP_REST_Request                 $request
 	 *
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
 	 * @since 1.0.2
-	 *
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data = array(
@@ -349,7 +344,6 @@ class ItemsController extends Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -357,7 +351,7 @@ class ItemsController extends Controller {
 			'title'      => __( 'Item', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'              => array(
+				'id'             => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -366,7 +360,7 @@ class ItemsController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'            => array(
+				'name'           => array(
 					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -375,7 +369,7 @@ class ItemsController extends Controller {
 					),
 					'required'    => true,
 				),
-				'sku'          => array(
+				'sku'            => array(
 					'description' => __( 'Sku of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -383,7 +377,7 @@ class ItemsController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'attachment'           => array(
+				'attachment'     => array(
 					'description' => __( 'Attachment of the invoice', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -394,7 +388,7 @@ class ItemsController extends Controller {
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'src' => array(
+						'src'  => array(
 							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -406,7 +400,7 @@ class ItemsController extends Controller {
 						),
 					),
 				),
-				'description' => array(
+				'description'    => array(
 					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -414,10 +408,10 @@ class ItemsController extends Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'sale_price' => array(
+				'sale_price'     => array(
 					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view','edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'default'     => '0',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -427,17 +421,17 @@ class ItemsController extends Controller {
 				'purchase_price' => array(
 					'description' => __( 'Purchase price of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view','edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'default'     => '0',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
-				'quantity' => array(
+				'quantity'       => array(
 					'description' => __( 'Quantity of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view','edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'default'     => '1',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -466,7 +460,7 @@ class ItemsController extends Controller {
 						),
 					),
 				),
-				'tax_id'    => array(
+				'tax_id'         => array(
 					'description' => __( 'Tax id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -480,7 +474,7 @@ class ItemsController extends Controller {
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'rate'   => array(
+						'rate' => array(
 							'description' => __( 'Tax Rate.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -488,23 +482,23 @@ class ItemsController extends Controller {
 						),
 					),
 				),
-				'enabled'      => array(
+				'enabled'        => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				'creator' => array(
+				'creator'        => array(
 					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'properties'  => array(
-						'id'   => array(
+						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),
-						'name' => array(
+						'name'  => array(
 							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
@@ -516,7 +510,7 @@ class ItemsController extends Controller {
 						),
 					),
 				),
-				'date_created' => array(
+				'date_created'   => array(
 					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -535,7 +529,6 @@ class ItemsController extends Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

@@ -232,7 +232,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param string $value Email.
-	 *
 	 */
 	public function set_type( $value ) {
 		$this->set_prop( 'type', $value );
@@ -244,7 +243,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_paid_at( $value ) {
 		$this->set_date_prop( 'paid_at', $value );
@@ -256,7 +254,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_amount( $value ) {
 		$this->set_prop( 'amount', eaccounting_sanitize_price( $value ) );
@@ -268,7 +265,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_currency_code( $value ) {
 		$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
@@ -280,10 +276,9 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_currency_rate( $value ) {
-		$this->set_prop( 'currency_rate', (double) $value );
+		$this->set_prop( 'currency_rate', (float) $value );
 	}
 
 	/**
@@ -292,7 +287,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_account_id( $value ) {
 		$this->set_prop( 'account_id', absint( $value ) );
@@ -304,7 +298,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_invoice_id( $value ) {
 		$this->set_prop( 'invoice_id', absint( $value ) );
@@ -316,7 +309,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_contact_id( $value ) {
 		$this->set_prop( 'contact_id', absint( $value ) );
@@ -328,7 +320,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_category_id( $value ) {
 		$this->set_prop( 'category_id', absint( $value ) );
@@ -340,7 +331,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -352,7 +342,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_payment_method( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_payment_methods() ) ) {
@@ -366,7 +355,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -392,7 +380,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_parent_id( $value ) {
 		$this->set_prop( 'parent_id', absint( $value ) );
@@ -404,7 +391,6 @@ abstract class TransactionModel extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_reconciled( $value ) {
 		$this->set_prop( 'reconciled', absint( $value ) );

@@ -28,7 +28,6 @@ class Transfer extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param int|object|array|Transfer $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data, Transfers::instance() );
@@ -194,7 +193,6 @@ class Transfer extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param int $value income_id.
-	 *
 	 */
 	public function set_income_id( $value ) {
 		$this->set_prop( 'income_id', absint( $value ) );
@@ -206,7 +204,6 @@ class Transfer extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param int $value expense_id.
-	 *
 	 */
 	public function set_expense_id( $value ) {
 		$this->set_prop( 'expense_id', absint( $value ) );
@@ -273,7 +270,6 @@ class Transfer extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -285,7 +281,6 @@ class Transfer extends ResourceModel {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );

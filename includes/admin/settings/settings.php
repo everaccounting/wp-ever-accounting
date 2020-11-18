@@ -34,16 +34,16 @@ function eaccounting_admin_settings_page() {
 	$section = 'eaccounting_settings_' . $active_tab;
 	?>
 	<div class="wrap">
-		<?php if ( count( eaccounting_get_settings_tabs() ) > 1 ): ?>
+		<?php if ( count( eaccounting_get_settings_tabs() ) > 1 ) : ?>
 			<h2 class="nav-tab-wrapper">
 				<?php eaccounting_navigation_tabs( eaccounting_get_settings_tabs(), $active_tab ); ?>
 			</h2>
-		<?php else: ?>
+		<?php else : ?>
 			<h1><?php _e( 'Settings', 'wp-ever-accounting' ); ?></h1>
 		<?php endif; ?>
 
 		<div id="tab_container">
-			<?php if ( isset( $wp_settings_fields[ $page ][ $section ] ) ): ?>
+			<?php if ( isset( $wp_settings_fields[ $page ][ $section ] ) ) : ?>
 				<form method="post" action="options.php">
 					<table class="form-table">
 						<?php
@@ -54,7 +54,7 @@ function eaccounting_admin_settings_page() {
 					</table>
 					<?php submit_button(); ?>
 				</form>
-			<?php else: ?>
+			<?php else : ?>
 				<?php do_action( 'eaccounting_settings_tab_' . $active_tab ); ?>
 			<?php endif; ?>
 		</div><!-- #tab_container-->
@@ -76,8 +76,8 @@ function eaccounting_get_settings_tabs() {
 	if ( current_user_can( 'ea_manage_options' ) ) {
 		$tabs['general'] = __( 'Settings', 'wp-ever-accounting' );
 	}
-//	$tabs['emails']     = __( 'Emails', 'wp-ever-accounting' );
-//	$tabs['misc']       = __( 'Misc', 'wp-ever-accounting' );
+	// $tabs['emails']     = __( 'Emails', 'wp-ever-accounting' );
+	// $tabs['misc']       = __( 'Misc', 'wp-ever-accounting' );
 
 	/**
 	 * Filters the list of settings tabs.
@@ -85,7 +85,6 @@ function eaccounting_get_settings_tabs() {
 	 * @since 1.0.2
 	 *
 	 * @param array $tabs Settings tabs.
-	 *
 	 */
 	return apply_filters( 'eaccounting_settings_tabs', $tabs );
 }

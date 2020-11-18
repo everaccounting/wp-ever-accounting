@@ -4,11 +4,9 @@
  *
  * @package        EverAccounting
  * @version        1.0.2
- *
  */
 
 namespace EverAccounting;
-
 
 defined( 'ABSPATH' ) || exit();
 

@@ -65,7 +65,6 @@ class Item extends Base_Object {
 	 * @since 1.0.4
 	 *
 	 * @param int|object|Category $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );

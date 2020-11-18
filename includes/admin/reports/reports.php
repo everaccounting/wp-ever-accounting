@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit();
 require_once dirname( __FILE__ ) . '/expense-summary.php';
 require_once dirname( __FILE__ ) . '/income-summary.php';
 require_once dirname( __FILE__ ) . '/income-expense.php';
-//require_once dirname( __FILE__ ) . '/profit-loss.php';
+// require_once dirname( __FILE__ ) . '/profit-loss.php';
 
 /**
  * render reports page.
@@ -55,7 +55,7 @@ function eaccounting_get_reports_tabs() {
 	$tabs['income_summary']  = __( 'Income Summary', 'wp-ever-accounting' );
 	$tabs['expense_summary'] = __( 'Expense Summary', 'wp-ever-accounting' );
 	$tabs['income_expense']  = __( 'Income vs Expense', 'wp-ever-accounting' );
-	//$tabs['profit_loss']     = __( 'Profit & Loss', 'wp-ever-accounting' );
+	// $tabs['profit_loss']     = __( 'Profit & Loss', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_reports_tabs', $tabs );
 }

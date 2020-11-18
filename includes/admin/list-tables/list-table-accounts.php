@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class List_Table_Accounts
+ *
  * @since 1.0.2
  * @package EverAccounting\Admin\ListTables
  */
@@ -71,7 +72,6 @@ class List_Table_Accounts extends List_Table {
 	 * @since  1.0.2
 	 *
 	 * @see WP_List_Table::__construct()
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -165,7 +165,6 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Renders the checkbox column in the accounts list table.
 	 *
-	 *
 	 * @param Account $account The current account object.
 	 *
 	 * @since  1.0.2
@@ -178,7 +177,6 @@ class List_Table_Accounts extends List_Table {
 
 	/**
 	 * Renders the "Name" column in the accounts list table.
-	 *
 	 *
 	 * @param Account $account The current account object.
 	 *
@@ -449,11 +447,27 @@ class List_Table_Accounts extends List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
-		$this->items = eaccounting_get_accounts($args);
+		$this->items = eaccounting_get_accounts( $args );
 
-		$this->active_count = eaccounting_get_accounts(array_merge($args, array('enabled' => '1', 'count' => true)));
+		$this->active_count = eaccounting_get_accounts(
+			array_merge(
+				$args,
+				array(
+					'enabled' => '1',
+					'count'   => true,
+				)
+			)
+		);
 
-		$this->inactive_count = eaccounting_get_accounts(array_merge($args, array('enabled' => '0', 'count' => true)));
+		$this->inactive_count = eaccounting_get_accounts(
+			array_merge(
+				$args,
+				array(
+					'enabled' => '0',
+					'count'   => true,
+				)
+			)
+		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;
 
