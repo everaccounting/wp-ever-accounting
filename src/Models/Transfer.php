@@ -31,9 +31,7 @@ class Transfer extends ResourceModel {
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Transfers::instance();
-
-		parent::__construct( $data );
+		parent::__construct( $data, Transfers::instance() );
 
 		if ( $this->get_id() > 0 && ! $this->get_object_read() ) {
 			$transfer = Transfers::instance()->get( $this->get_id() );

@@ -32,8 +32,7 @@ class Currency extends ResourceModel {
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Currencies::instance();
-		parent::__construct( $data );
+		parent::__construct( $data, Currencies::instance() );
 
 		if ( is_string( $data ) && ! $this->get_object_read() ) {
 			$currency = Currencies::instance()->get_by( 'code', $data );

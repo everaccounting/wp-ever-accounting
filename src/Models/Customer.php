@@ -27,8 +27,7 @@ class Customer extends ContactModel {
 	 * Customer constructor.
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Customers::instance();
-		parent::__construct( $data );
+		parent::__construct( $data, Customers::instance() );
 		// If not Customer then reset to default
 		if ( 'customer' !== $this->get_type() ) {
 			$this->set_id( 0 );

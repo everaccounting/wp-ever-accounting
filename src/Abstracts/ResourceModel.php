@@ -84,12 +84,15 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * Data constructor.
 	 *
 	 * @param int|array|object|null $data
+	 * @param object    $repository
 	 */
-	public function __construct( $data = 0 ) {
-		/* var $repository */
-		$this->data         = $this->repository->get_defaults();
-		$this->default_data = $this->repository->get_defaults();
-		$this->caller       = get_called_class();
+	public function __construct( $data = 0, $repository = null ) {
+		if ( null !== $repository && class_exists( $repository ) ) {
+			$this->data         = $repository->get_defaults();
+			$this->default_data = $this->repository->get_defaults();
+		}
+
+		$this->caller = get_called_class();
 
 		if ( $data instanceof $this->caller ) {
 			$this->set_id( absint( $data->get_id() ) );
@@ -100,7 +103,7 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 		} elseif ( is_array( $data ) || is_object( $data ) ) {
 			$data = wp_parse_args( (array) $data, array( 'id' => null ) );
 			$this->set_id( $data['id'] );
-			if ( count( $data ) -1 !== count( $this->repository->get_columns() )   ) {
+			if ( count( $data ) - 1 !== count( $this->repository->get_columns() ) ) {
 				$this->read();
 			}
 			$this->set_props( $data );

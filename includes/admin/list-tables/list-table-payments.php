@@ -461,9 +461,9 @@ class List_Table_Payments extends List_Table {
 
 		$args = apply_filters( 'eaccounting_payments_table_get_payments', $args, $this );
 
-		$this->items = eaccounting_get_payments( $args );
+		$this->items = eaccounting_get_incomes( $args );
 
-		$this->total_count = eaccounting_get_payments( array_merge( $args, array( 'count' => true ) ) );
+		$this->total_count = eaccounting_get_incomes( array_merge( $args, array( 'count' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

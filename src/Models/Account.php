@@ -32,8 +32,7 @@ class Account extends ResourceModel {
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Accounts::instance();
-		parent::__construct( $data );
+		parent::__construct( $data, Accounts::instance() );
 	}
 
 	/*

@@ -25,8 +25,7 @@ class Income extends TransactionModel {
 	 * Payment constructor.
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Incomes::instance();
-		parent::__construct( $data );
+		parent::__construct( $data, Incomes::instance() );
 
 		// If not Income then reset to default
 		if ( 'income' !== $this->get_type() ) {

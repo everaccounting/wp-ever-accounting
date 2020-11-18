@@ -27,8 +27,7 @@ class Expense extends TransactionModel {
 	 * Payment constructor.
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Expenses::instance();
-		parent::__construct( $data );
+		parent::__construct( $data, Expenses::instance() );
 
 		// If not expense then reset to default
 		if ( 'expense' !== $this->get_type() ) {

@@ -25,10 +25,11 @@ class Vendor extends ContactModel {
 
 	/**
 	 * Customer constructor.
+	 *
+	 * @param int $data
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Vendors::instance();
-		parent::__construct( $data );
+		parent::__construct( $data, Vendors::instance() );
 
 		// If not vendor then reset to default
 		if ( 'vendor' !== $this->get_type() ) {

@@ -32,8 +32,7 @@ class Category extends ResourceModel {
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		$this->repository = Categories::instance();
-		parent::__construct( $data );
+		parent::__construct( $data, Categories::instance() );
 	}
 
 	/**
