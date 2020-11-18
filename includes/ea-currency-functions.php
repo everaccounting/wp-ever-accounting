@@ -4,7 +4,7 @@
  *
  * Currency related functions.
  *
- * @since   1.0.2
+ * @since   1.1.0
  * @package EverAccounting
  */
 
@@ -14,11 +14,11 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Checks if the currency code is valid.
  *
- * @since 1.1.0
- *
  * @param $code
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_currency_code( $code ) {
 	$codes = eaccounting_get_global_currencies();
@@ -37,11 +37,11 @@ function eaccounting_get_currency_code( $code ) {
  * in database must check $currency->exist()
  *
  *
- * @since 1.0.2
- *
  * @param object|string|int $currency
  *
  * @return EverAccounting\Models\Currency|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_currency( $currency ) {
 	if ( empty( $currency ) ) {
@@ -58,11 +58,38 @@ function eaccounting_get_currency( $currency ) {
  *
  *  Returns a new currency object on success.
  *
- * @since 1.0.2
+ * @param array $args {
+ *  An array of elements that make up a currency to update or insert.
  *
- * @param array $args currency arguments.
+ * @type int $id The currency ID. If equal to something other than 0,
+ *                                         the currency with that id will be updated. Default 0.
+ *
+ * @type string $name The name of the currency . Default empty.
+ *
+ * @type string $code The code of currency. Default empty.
+ *
+ * @type double $rate The rate for the currency.Default is 1.
+ *
+ * @type double $precision The precision for the currency. Default 0.
+ *
+ * @type string $symbol The symbol for the currency. Default empty.
+ *
+ * @type string $position The position where the currency code will be set in amount. Default before.
+ *
+ * @type string $decimal_separator The decimal_separator for the currency code. Default ..
+ *
+ * @type string $thousand_separator The thousand_separator for the currency code. Default ,.
+ *
+ * @type int $enabled The status of the currency. Default 1.
+ *
+ * @type string $date_created The date when the currency is created. Default is current time.
+ *
+ *
+ * }
  *
  * @return EverAccounting\Models\Currency|\WP_Error
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_currency( $args ) {
 	$args = wp_parse_args( $args, array( 'code' => '' ) );
@@ -78,15 +105,15 @@ function eaccounting_insert_currency( $args ) {
 /**
  * Delete a currency.
  *
- * @since 1.0.2
- *
  * @param $currency_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_currency( $currency_id ) {
-	$currency = new EverAccounting\Models\Account( $currency_id );
-	if ( ! $currency->exists() ) {
+	$currency = new EverAccounting\Models\Currency( $currency_id );
+	if ( ! $currency ) {
 		return false;
 	}
 
@@ -96,13 +123,34 @@ function eaccounting_delete_currency( $currency_id ) {
 /**
  * Get currency items.
  *
- * @since 1.1.0
+ * @param array $args {
+ * Optional. Arguments to retrieve currencies.
  *
- * @param array $args
+ * @type string $name The name of the currency .
  *
- * @param bool  $callback
+ * @type string $code The code of currency.
+ *
+ * @type double $rate The rate for the currency.
+ *
+ * @type double $precision The precision for the currency.
+ *
+ * @type string $symbol The symbol for the currency.
+ *
+ * @type string $position The position where the currency code will be set in amount.
+ *
+ * @type string $decimal_separator The decimal_separator for the currency code.
+ *
+ * @type string $thousand_separator The thousand_separator for the currency code.
+ *
+ * @type int $enabled The status of the currency. Default 1.
+ *
+ * }
+ *
+ * @param bool $callback
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_currencies( $args = array(), $callback = true ) {
 	return \EverAccounting\Repositories\Currencies::instance()->get_items(
