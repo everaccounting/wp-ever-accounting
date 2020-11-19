@@ -84,9 +84,11 @@ class DateTime extends DT {
 	}
 
 	/**
+	 * Adds year.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $number
+	 * @param int $number number of the years to add.
 	 *
 	 * @return $this
 	 */
@@ -96,9 +98,11 @@ class DateTime extends DT {
 	}
 
 	/**
+	 * Add months.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $number
+	 * @param int $number Number of the months to add.
 	 *
 	 * @return $this
 	 */
@@ -109,9 +113,11 @@ class DateTime extends DT {
 	}
 
 	/**
+	 * Adds day.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $number
+	 * @param int $number Number of the days to add.
 	 *
 	 * @return $this
 	 */

@@ -36,7 +36,7 @@
 	  "phpunit"
 	],
 	"phpcs": [
-	  "phpcs -s -p ."
+	  "phpcs -s -p ./src"
 	],
 	"phpcbf": [
 	  "phpcbf -p ."

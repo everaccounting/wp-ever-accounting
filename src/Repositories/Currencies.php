@@ -10,7 +10,6 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Models\Currency;
 use EverAccounting\Abstracts\ResourceRepository;
 
 defined( 'ABSPATH' ) || exit;
@@ -85,4 +84,71 @@ class Currencies extends ResourceRepository {
 		);
 	}
 
+	/**
+	 * Retrieves a row based on column and row ID.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $column Column name. See get_columns().
+	 * @param string $value
+	 *
+	 * @return object|null Database query result object, null if nothing was found, or false on failure.
+	 */
+	public function get_by( $column, $value ) {
+		if ( 'code' === $column ) {
+			$key        = 'eaccounting_cache_currencies';
+			$cached     = wp_cache_get( $key, $this->object_type );
+			$currencies = $cached ? $cached : get_transient( $key );
+			if ( false === $currencies ) {
+				$currencies = array();
+				$items      = eaccounting_get_currencies( array( 'number' => - 1 ), false );
+				foreach ( $items as $item ) {
+					$currencies[ $item->code ] = $item;
+				}
+				set_transient( $key, $currencies, HOUR_IN_SECONDS );
+				wp_cache_set( $key, $currencies, $this->object_type );
+			}
+
+			if ( array_key_exists( $value, $currencies ) ) {
+				return $currencies[ $value ];
+			}
+
+			return parent::get_by( $column, $value );
+		}
+
+		return parent::get_by( $column, $value );
+
+	}
+
+	/**
+	 * Insert item.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $data
+	 *
+	 * @return \WP_Error|int
+	 */
+	public function insert( $data ) {
+		delete_transient( 'eaccounting_cache_currencies' );
+
+		return parent::insert( $data );
+	}
+
+	/**
+	 * Update item.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param        $id
+	 * @param array  $data
+	 * @param string $where
+	 *
+	 * @return mixed
+	 */
+	public function update( $id, array $data ) {
+		delete_transient( 'eaccounting_cache_currencies' );
+
+		return parent::update( $id, $data );
+	}
 }

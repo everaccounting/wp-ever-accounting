@@ -11,7 +11,6 @@
 namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\ContactsRepository;
-use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,8 +28,7 @@ class Vendors extends ContactsRepository {
 	 */
 	public function __construct() {
 		parent::__construct();
-		$this->model = Vendor::class;
-		$this->hook  = 'vendor';
+		$this->object_type = 'vendor';
 	}
 
 	public function get_items( $args = array(), $callback = false ) {

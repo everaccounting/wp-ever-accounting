@@ -12,7 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Abstracts\TransactionsRepository;
+use EverAccounting\Abstracts\Transactions;
 use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Categories;
 use EverAccounting\Repositories\Currencies;
@@ -104,7 +104,7 @@ class CategoryController extends Singleton {
 			return false;
 		}
 
-		return $wpdb->update( TransactionsRepository::instance()->get_table(), array( 'category_id' => '' ), array( 'category_id', absint( $id ) ) );
+		return $wpdb->update( Transactions::instance()->get_table(), array( 'category_id' => '' ), array( 'category_id', absint( $id ) ) );
 	}
 
 }

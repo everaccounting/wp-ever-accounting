@@ -407,34 +407,29 @@ class List_Table_Transactions extends List_Table {
 
 		$args = apply_filters( 'eaccounting_transactions_table_get_transactions', $args, $this );
 
-		$base_query  = Query_Transaction::init()
-										->where( $args )
-										->search( $search )
-										->notTransfer()
-										->where_date_between( 'paid_at', $start_date, $end_date )
-										->order_by( $orderby, $order )
-										->page( $page, $per_page );
-		$this->items = $base_query->copy()->where( array( 'type' => $type ) )->get( OBJECT, 'eaccounting_get_transaction' );
+		$this->items = eaccounting_get_transactions( $args );
 
-		$this->income_count = $base_query->copy()->where(
+		$this->income_count = eaccounting_get_transactions(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
+					'count'  => true,
 					'type'   => 'income',
 					'search' => $search,
 				)
 			)
-		)->count();
+		);
 
-		$this->expense_count = $base_query->copy()->where(
+		$this->expense_count = eaccounting_get_transactions(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
+					'count'  => true,
 					'type'   => 'expense',
 					'search' => $search,
 				)
 			)
-		)->count();
+		);
 
 		$this->total_count = $this->income_count + $this->expense_count + $this->others_count;
 

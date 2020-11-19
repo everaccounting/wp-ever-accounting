@@ -295,3 +295,33 @@ function eaccounting_get_transfers( $args = array(), $callback = true ) {
 		}
 	);
 }
+
+
+function eaccounting_get_transactions( $args = array(), $callback = true ) {
+	return \EverAccounting\Repositories\Transactions::instance()->get_items(
+		$args,
+		function ( $item ) use ( $callback ) {
+			if ( $callback ) {
+				switch ( $callback ) {
+					case 'income':
+						$transaction = new \EverAccounting\Models\Income();
+						$transaction->set_props( $item );
+						$transaction->set_object_read( true );
+
+						return $transaction;
+						break;
+					case 'expense':
+						$transaction = new \EverAccounting\Models\Expense();
+						$transaction->set_props( $item );
+						$transaction->set_object_read( true );
+
+						return $transaction;
+						break;
+				}
+
+			}
+
+			return $item;
+		}
+	);
+}

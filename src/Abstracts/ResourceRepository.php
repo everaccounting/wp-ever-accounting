@@ -123,7 +123,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 
 		if ( false === $result ) {
 			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table WHERE $this->primary_key = %s LIMIT 1;", $id ) );
-			wp_cache_add( $cache_key, $result, $this->table );
+			wp_cache_add( $cache_key, $result, $this->object_type );
 		}
 
 		return $result;
@@ -141,7 +141,6 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 	 */
 	public function get_by( $column, $value ) {
 		global $wpdb;
-
 		if ( ! array_key_exists( $column, array_merge( static::get_columns(), array( 'id' => '' ) ) ) || empty( $value ) ) {
 			return null;
 		}
@@ -162,7 +161,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 		if ( false === $result ) {
 			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $this->table WHERE $column = '%s' LIMIT 1;", $value ) );
 			$result = apply_filters( 'eaccounting_raw_' . $this->object_type . '_data', $result );
-			wp_cache_add( $cache_key, $result, $this->table );
+			wp_cache_add( $cache_key, $result, $this->object_type );
 		}
 
 		return $result;
@@ -174,7 +173,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 	 * @since 1.1.0
 	 *
 	 * @param       $select
-	 * @param array  $where
+	 * @param array $where
 	 *
 	 * @return string|null         Database query result (as string), or null on failure
 	 */
@@ -200,11 +199,11 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 		$last_changed = $this->get_last_changed();
 
 		$cache_key = "query:$key:$last_changed";
-		$result    = wp_cache_get( $cache_key, $this->table );
+		$result    = wp_cache_get( $cache_key, $this->object_type );
 		if ( false === $result ) {
 			$result = $wpdb->get_var( "SELECT $select FROM $this->table $where_sql LIMIT 1;" ); // @codingStandardsIgnoreLine
 			$result = apply_filters( 'eaccounting_raw_' . $this->object_type . '_data', $result );
-			wp_cache_add( $cache_key, $result, $this->table );
+			wp_cache_add( $cache_key, $result, $this->object_type );
 		}
 
 		return $result;
@@ -389,7 +388,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 	 */
 	public function get_items( $args = array(), $callback = false ) {
 		global $wpdb;
-		$defaults = array(
+		$defaults     = array(
 			'number'      => 20,
 			'offset'      => 0,
 			'paged'       => '1',
@@ -406,76 +405,78 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 			'groupby'     => array(),
 			'having'      => array(),
 		);
-		$args     = wp_parse_args( $args, $defaults );
-		$args     = apply_filters( 'eaccounting_pre_get_' . $this->object_type, $args );
-		$columns  = static::get_columns();
-
-		if ( ! empty( $args['include'] ) ) {
-			$includes        = implode( ',', wp_parse_id_list( $args['include'] ) );
-			$args['where'][] = array(
-				'joint'     => 'AND',
-				'condition' => "{$this->table_name}.{$this->primary_key} IN( {$includes} ) ",
-			);
-		}
-
-		if ( ! empty( $args['exclude'] ) ) {
-			$excludes        = implode( ',', wp_parse_id_list( $args['exclude'] ) );
-			$args['where'][] = array(
-				'joint'     => 'AND',
-				'condition' => "{$this->table_name}.{$this->primary_key} IN( {$excludes} ) ",
-			);
-		}
-
-		// Status
-		if ( isset( $args['status'] ) && in_array( $args['status'], array( 'active', 'inactive' ), true ) ) {
-			$args['enabled'] = 'active' === $args['status'] ? '1' : '0';
-		}
-		if ( isset( $args['enabled'] ) && '' !== $args['enabled'] && array_key_exists( 'enabled', $columns ) ) {
-			$args['where'][] = array(
-				'joint'     => 'AND',
-				'condition' => $wpdb->prepare( "{$this->table_name}.enabled = %d ", $args['enabled'] ),
-			);
-		}
-
-		// search
-		// Search
-		if ( ! empty( $args['search'] ) ) {
-			$searches = array();
-			$words    = array_unique( array_filter( explode( ' ', $args['search'] ) ) );
-			$cols     = empty( $args['search_cols'] ) ? array_keys( $columns ) : $args['search_cols'];
-			$cols     = $this->aliased_fields( $cols );
-
-			if ( ! empty( $words ) || ! empty( $cols ) ) {
-				foreach ( $words as $word ) {
-					$like = '%' . $wpdb->esc_like( $word ) . '%';
-					foreach ( $cols as $col ) {
-						$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
-					}
-				}
-			}
-			if ( ! empty( $searches ) ) {
-				$args['where'][] = array(
-					'joint'     => 'AND',
-					'condition' => '(' . implode( ' OR ', $searches ) . ')',
-				);
-			}
-		}
-
-		$query = '';
-		$query = $this->parse_select( $args, $query );
-		$query = $this->parse_from( $args, $query );
-		$query = $this->parse_where( $args, $query );
-		$query = $this->parse_groupby( $args, $query );
-		$query = $this->parse_having( $args, $query );
-		$query = $this->parse_orderby( $args, $query );
-		$query = $this->parse_limit( $args, $query );
-
+		$args         = wp_parse_args( $args, $defaults );
+		$args         = apply_filters( 'eaccounting_pre_get_' . $this->object_type, $args );
 		$key          = serialize( $args );
 		$last_changed = $this->get_last_changed();
 
 		$cache_key = "query:$key:$last_changed";
-		$result    = wp_cache_get( $cache_key, $this->table );
+		$result    = wp_cache_get( $cache_key, $this->object_type );
+
 		if ( false === $result ) {
+			$columns = static::get_columns();
+
+			if ( ! empty( $args['include'] ) ) {
+				$includes        = implode( ',', wp_parse_id_list( $args['include'] ) );
+				$args['where'][] = array(
+					'joint'     => 'AND',
+					'condition' => "{$this->table_name}.{$this->primary_key} IN( {$includes} ) ",
+				);
+			}
+
+			if ( ! empty( $args['exclude'] ) ) {
+				$excludes        = implode( ',', wp_parse_id_list( $args['exclude'] ) );
+				$args['where'][] = array(
+					'joint'     => 'AND',
+					'condition' => "{$this->table_name}.{$this->primary_key} IN( {$excludes} ) ",
+				);
+			}
+
+			// Status
+			if ( isset( $args['status'] ) && in_array( $args['status'], array( 'active', 'inactive' ), true ) ) {
+				$args['enabled'] = 'active' === $args['status'] ? '1' : '0';
+			}
+			if ( isset( $args['enabled'] ) && '' !== $args['enabled'] && array_key_exists( 'enabled', $columns ) ) {
+				$args['where'][] = array(
+					'joint'     => 'AND',
+					'condition' => $wpdb->prepare( "{$this->table_name}.enabled = %d ", $args['enabled'] ),
+				);
+			}
+
+			// search
+			// Search
+			if ( ! empty( $args['search'] ) ) {
+				$searches = array();
+				$words    = array_unique( array_filter( explode( ' ', $args['search'] ) ) );
+				$cols     = empty( $args['search_cols'] ) ? array_keys( $columns ) : $args['search_cols'];
+				$cols     = $this->aliased_fields( $cols );
+
+				if ( ! empty( $words ) || ! empty( $cols ) ) {
+					foreach ( $words as $word ) {
+						$like = '%' . $wpdb->esc_like( $word ) . '%';
+						foreach ( $cols as $col ) {
+							$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
+						}
+					}
+				}
+				if ( ! empty( $searches ) ) {
+					$args['where'][] = array(
+						'joint'     => 'AND',
+						'condition' => '(' . implode( ' OR ', $searches ) . ')',
+					);
+				}
+			}
+
+			$query = '';
+			$query = $this->parse_select( $args, $query );
+			$query = $this->parse_from( $args, $query );
+			$query = $this->parse_where( $args, $query );
+			$query = $this->parse_groupby( $args, $query );
+			$query = $this->parse_having( $args, $query );
+			$query = $this->parse_orderby( $args, $query );
+			$query = $this->parse_limit( $args, $query );
+			echo $query;
+
 			if ( true === $args['count'] ) {
 				$result = (int) $wpdb->get_var( $query );
 			} else {
@@ -485,7 +486,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 				}
 			}
 
-			wp_cache_add( $cache_key, $result, $this->table );
+			wp_cache_add( $cache_key, $result, $this->object_type );
 		}
 
 		return $result;
@@ -633,10 +634,12 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 					break;
 			}
 
-			$wheres[ $key ] = array(
-				'joint'     => $joint,
-				'condition' => $condition,
-			);
+			if ( ! empty( $condition ) ) {
+				$wheres[ $key ] = array(
+					'joint'     => $joint,
+					'condition' => $condition,
+				);
+			}
 		}
 
 		for ( $i = 0, $max = count( $wheres ); $i < $max; $i ++ ) {
@@ -704,6 +707,15 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 		}
 
 		return $query;
+	}
+
+
+	protected function parse_date_query( $column, $stat_date, $end_date = null ) {
+		global $wpdb;
+		$stat_date = $wpdb->get_var( $wpdb->prepare( 'SELECT CAST(%s as DATE)', $stat_date ) );
+		if ( $end_date ) {
+			$end_date = $wpdb->get_var( $wpdb->prepare( 'SELECT CAST(%s as DATE)', $end_date ) );
+		}
 	}
 
 

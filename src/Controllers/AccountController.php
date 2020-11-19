@@ -12,7 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Abstracts\TransactionsRepository;
+use EverAccounting\Abstracts\Transactions;
 use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Currencies;
 
@@ -126,7 +126,7 @@ class AccountController extends Singleton {
 			return false;
 		}
 
-		return $wpdb->update( TransactionsRepository::instance()->get_table(), array( 'account_id' => '' ), array( 'account_id', absint( $id ) ) );
+		return $wpdb->update( Transactions::instance()->get_table(), array( 'account_id' => '' ), array( 'account_id', absint( $id ) ) );
 	}
 
 }

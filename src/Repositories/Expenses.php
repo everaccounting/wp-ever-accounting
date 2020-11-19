@@ -10,9 +10,6 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\TransactionsRepository;
-use EverAccounting\Models\Income;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -22,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Expenses extends TransactionsRepository {
+class Expenses extends Transactions {
 
 	/**
 	 * Accounts constructor.

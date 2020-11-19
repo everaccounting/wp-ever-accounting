@@ -11,7 +11,6 @@
 namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\ResourceRepository;
-use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit;
 

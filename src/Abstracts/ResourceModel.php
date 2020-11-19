@@ -87,9 +87,11 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @param object                $repository
 	 */
 	public function __construct( $data = 0, $repository = null ) {
-		if ( null !== $repository && class_exists( $repository ) ) {
-			$this->data         = $repository->get_defaults();
-			$this->default_data = $this->repository->get_defaults();
+
+		if ( null !== $repository && is_object( $repository ) ) {
+			$this->repository   = $repository;
+			$this->data         = $repository::get_defaults();
+			$this->default_data = $repository->get_defaults();
 		}
 
 		$this->caller = get_called_class();
@@ -122,6 +124,9 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @return void
 	 */
 	protected function read() {
+		if ( ! $this->repository ) {
+			return;
+		}
 		$this->set_defaults();
 		$item = $this->repository->get( $this->get_id() );
 		if ( $item ) {
@@ -139,6 +144,9 @@ abstract class ResourceModel implements Arrayable, JSONable, Stringable {
 	 * @return \EverAccounting\Abstracts\ResourceModel|\WP_Error
 	 */
 	public function save() {
+		if ( ! $this->repository ) {
+			return new \WP_Error( 'invalid_repository', __( 'No repository object defined.', 'wp-ever-accounting' ) );
+		}
 		$changes = $this->get_changes();
 		if ( ! $this->exists() ) {
 			$item_id = $this->repository->insert( $this->to_array() );

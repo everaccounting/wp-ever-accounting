@@ -679,12 +679,7 @@ function eaccounting_contact_dropdown( $field ) {
 
 	$function = 'customer' === $type ? 'eaccounting_get_customers' : 'eaccounting_get_vendors';
 
-	$contacts = array_map(
-		function ( $item ) {
-			return $item->to_array();
-		},
-		$function( $query_args )
-	);
+	$contacts = call_user_func_array( $function, array( $query_args, 'false' ) );
 
 	$field = wp_parse_args(
 		array(
@@ -712,15 +707,11 @@ function eaccounting_account_dropdown( $field ) {
 	$accounts   = array();
 	$include    = array_filter( array_unique( array( $default_id, $account_id ) ) );
 	if ( ! empty( $include ) ) {
-		$accounts = array_map(
-			function ( $item ) {
-				return $item->to_array();
-			},
-			eaccounting_get_accounts(
-				array(
-					'include' => $include,
-				)
-			)
+		$accounts = eaccounting_get_accounts(
+			array(
+				'include' => $include,
+			),
+			false
 		);
 	}
 	if ( ! isset( $field['default'] ) ) {
@@ -765,12 +756,7 @@ function eaccounting_category_dropdown( $field ) {
 	if ( ! empty( $value ) ) {
 		$query_args['include'] = $value;
 	}
-	$categories = array_map(
-		function ( $item ) {
-			return $item->to_array();
-		},
-		eaccounting_get_categories( $query_args )
-	);
+	$categories = eaccounting_get_categories( $query_args, false );
 
 	$field = wp_parse_args(
 		array(
@@ -832,10 +818,7 @@ function eaccounting_currency_dropdown( $field ) {
 	$options       = array();
 	$wherein       = array_filter( array_unique( array( $default_code, $currency_code ) ) );
 	if ( ! empty( $wherein ) ) {
-		$options = \EverAccounting\Currencies\query()
-				->select( 'code as code, CONCAT (name,"(", symbol, ")") as name' )
-				->whereIn( 'code', $wherein )
-				->get_results();
+		$options = eaccounting_get_currencies(array('search' => implode('', $wherein)), false);
 	}
 	$field = wp_parse_args(
 		$field,
