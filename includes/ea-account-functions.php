@@ -55,7 +55,7 @@ function eaccounting_get_account( $account ) {
  *
  * @type int $creator_id The creator id for the account. Default is current user id of the WordPress.
  *
- * @type string $date_created The date when the account is created. Default is current current time.
+ * @type string $date_created The date when the account is created. Default is current time.
  *
  *
  * }

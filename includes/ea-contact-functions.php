@@ -4,7 +4,7 @@
  *
  * Contact related functions.
  *
- * @since   1.0.2
+ * @since   1.1.0
  * @package EverAccounting
  */
 
@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get contact types.
  *
- * @since 1.0.2
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_contact_types() {
 	return apply_filters(
@@ -30,11 +30,11 @@ function eaccounting_get_contact_types() {
 /**
  * Get customer.
  *
- * @since 1.0.2
- *
  * @param $customer
  *
  * @return \EverAccounting\Models\Customer|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_customer( $customer ) {
 	if ( empty( $customer ) ) {
@@ -52,25 +52,46 @@ function eaccounting_get_customer( $customer ) {
  *
  *  Returns a new customer object on success.
  *
- * @since 1.0.2
+ * @param array $args {
+ * An array of elements that make up an customer to update or insert.
  *
- * @param array $args customer arguments.
+ * @type int $id ID of the contact. If equal to something other than 0,
+ *                               the post with that ID will be updated. Default 0.
+ * @type int $user_id user_id of the contact. Default null.
+ * @type string $name name of the contact. Default not null.
+ * @type string $email email of the contact. Default null.
+ * @type string $phone phone of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $birth_date date of birth of the contact. Default null.
+ * @type string $address address of the contact. Default null.
+ * @type string $country country of the contact. Default null.
+ * @type string $website website of the contact. Default null.
+ * @type string $tax_number tax_number of the contact. Default null.
+ * @type string $currency_code currency_code of the contact. Default null.
+ * @type string $note Additional note of the contact. Default null.
+ * @type string $attachment Attachment attached with contact. Default null.
+ *
+ * }
  *
  * @return EverAccounting\Models\Customer|\WP_Error
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_customer( $args ) {
 	$customer = new EverAccounting\Models\Customer( $args );
+
 	return $customer->save();
 }
 
 /**
  * Delete a customer.
  *
- * @since 1.0.2
- *
  * @param $customer_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_customer( $customer_id ) {
 	$customer = new EverAccounting\Models\Customer( $customer_id );
@@ -84,13 +105,29 @@ function eaccounting_delete_customer( $customer_id ) {
 /**
  * Get customers items.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- * @param array $args
+ * @type int $id ID of the contact.
+ * @type int $user_id user_id of the contact.
+ * @type string $name name of the contact.
+ * @type string $email email of the contact.
+ * @type string $phone phone of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $birth_date date of birth of the contact.
+ * @type string $address address of the contact.
+ * @type string $country country of the contact.
+ * @type string $website website of the contact.
+ * @type string $tax_number tax_number of the contact.
+ * @type string $currency_code currency_code of the contact.
  *
- * @param bool  $callback
+ * }
+ *
+ * @param bool $callback
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_customers( $args = array(), $callback = true ) {
 	return \EverAccounting\Repositories\Customers::instance()->get_items(
@@ -113,11 +150,11 @@ function eaccounting_get_customers( $args = array(), $callback = true ) {
 /**
  * Get vendor.
  *
- * @since 1.0.2
- *
  * @param $vendor
  *
  * @return \EverAccounting\Models\Vendor|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_vendor( $vendor ) {
 	if ( empty( $vendor ) ) {
@@ -135,11 +172,31 @@ function eaccounting_get_vendor( $vendor ) {
  *
  *  Returns a new vendor object on success.
  *
- * @since 1.0.2
+ * @param array $args {
+ * An array of elements that make up a vendor to update or insert.
  *
- * @param array $args
+ * @type int $id ID of the contact. If equal to something other than 0,
+ *                               the post with that ID will be updated. Default 0.
+ * @type int $user_id user_id of the contact. Default null.
+ * @type string $name name of the contact. Default not null.
+ * @type string $email email of the contact. Default null.
+ * @type string $phone phone of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $birth_date date of birth of the contact. Default null.
+ * @type string $address address of the contact. Default null.
+ * @type string $country country of the contact. Default null.
+ * @type string $website website of the contact. Default null.
+ * @type string $tax_number tax_number of the contact. Default null.
+ * @type string $currency_code currency_code of the contact. Default null.
+ * @type string $note Additional note of the contact. Default null.
+ * @type string $attachment Attachment attached with contact. Default null.
+ *
+ * }
  *
  * @return EverAccounting\Models\Vendor|\WP_Error
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_vendor( $args ) {
 	$vendor = new EverAccounting\Models\Vendor( $args );
@@ -150,11 +207,11 @@ function eaccounting_insert_vendor( $args ) {
 /**
  * Delete a vendor.
  *
- * @since 1.0.2
- *
  * @param $vendor_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_vendor( $vendor_id ) {
 	$vendor = new EverAccounting\Models\Vendor( $vendor_id );
@@ -168,13 +225,29 @@ function eaccounting_delete_vendor( $vendor_id ) {
 /**
  * Get vendors items.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- * @param array $args
+ * @type int $id ID of the contact.
+ * @type int $user_id user_id of the contact.
+ * @type string $name name of the contact.
+ * @type string $email email of the contact.
+ * @type string $phone phone of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $birth_date date of birth of the contact.
+ * @type string $address address of the contact.
+ * @type string $country country of the contact.
+ * @type string $website website of the contact.
+ * @type string $tax_number tax_number of the contact.
+ * @type string $currency_code currency_code of the contact.
  *
- * @param bool  $callback
+ * }
+ *
+ * @param bool $callback
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_vendors( $args = array(), $callback = true ) {
 	return \EverAccounting\Repositories\Vendors::instance()->get_items(
