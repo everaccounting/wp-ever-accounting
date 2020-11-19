@@ -33,4 +33,6 @@ class Invoice extends ResourceModel {
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data, Invoices::instance() );
 	}
+
+
 }
