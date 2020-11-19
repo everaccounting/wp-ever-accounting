@@ -64,6 +64,7 @@ function eaccounting_delete_invoice_history( $invoice_history_id ) {
  * @type string $status The status for the invoice history.
  * @type int $notify The notify of the invoice history.
  * @type string $description The description of the invoice history.
+ * }
  *
  * @param bool $callback
  *

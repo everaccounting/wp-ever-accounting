@@ -78,6 +78,7 @@ function eaccounting_delete_invoice_item( $invoice_item_id ) {
  * @type int $tax_id The tax_id of the invoice item.
  * @type string $tax_name The tax_name of the invoice item.
  * @type double $tax The tax of the invoice item.
+ * }
  *
  * @param bool $callback
  *

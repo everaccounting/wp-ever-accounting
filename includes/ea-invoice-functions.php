@@ -112,6 +112,7 @@ function eaccounting_delete_invoice( $invoice_id ) {
  * @type string $footer The footer for the invoice.
  * @type string $attachment The attachment for the invoice.
  * @type string $parent_id The parent_id for the invoice.
+ * }
  *
  * @param bool $callback
  *
