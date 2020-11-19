@@ -229,7 +229,11 @@ class Ajax {
 				break;
 
 			case 'customer':
-				$results = Query_Contact::init()->where( array( 'search' => $search ) )->typeCustomer()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$results = eaccounting_get_customers(array(
+					'fields' => 'id, name',
+					'search' => $search,
+					'status' => 'active',
+				), false);
 				break;
 
 			case 'vendor':

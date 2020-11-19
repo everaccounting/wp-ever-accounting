@@ -399,6 +399,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 			'count'       => false,
 			'order'       => 'ASC',
 			'fields'      => '*',
+			'output'      => OBJECT,
 			'search_cols' => array(),
 			'where'       => array(),
 			'join'        => array(),
@@ -480,7 +481,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 			if ( true === $args['count'] ) {
 				$result = (int) $wpdb->get_var( $query );
 			} else {
-				$result = $wpdb->get_results( $query );
+				$result = $wpdb->get_results( $query, $args['output'] );
 				if ( $callback ) {
 					$result = array_map( $callback, $result );
 				}
@@ -552,6 +553,7 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 		$args = wp_parse_args(
 			$args,
 			array(
+				'select' => '',
 				'fields' => '*',
 				'count'  => false,
 			)
@@ -559,6 +561,12 @@ abstract class ResourceRepository extends Singleton implements \EverAccounting\I
 
 		if ( true === $args['count'] ) {
 			$query .= "SELECT count({$this->table_name}.{$this->primary_key})";
+
+			return $query;
+		}
+
+		if ( ! empty( $args['select'] ) ) {
+			$query .= 'SELECT ' . $args['select'];
 
 			return $query;
 		}

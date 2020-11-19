@@ -418,10 +418,10 @@ class List_Table_Customers extends List_Table {
 
 		$args = apply_filters( 'eaccounting_customers_table_get_customers', $args, $this );
 
-		$this->items          = \EverAccounting\Customer\query( $args )->get_results( OBJECT, 'eaccounting_get_contact' );
-		$this->total_count    = \EverAccounting\Customer\query( $args )->count();
-		$this->active_count   = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '1' )->count();
-		$this->inactive_count = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '0' )->count();
+		$this->items       = eaccounting_get_customers( $args );
+		$this->total_count = eaccounting_get_customers( array_merge( $args, array( 'count' => true ) ) );
+		//      $this->active_count   = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '1' )->count();
+		//      $this->inactive_count = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '0' )->count();
 
 		$total_items = $this->total_count;
 
