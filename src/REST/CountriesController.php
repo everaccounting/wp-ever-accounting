@@ -11,21 +11,18 @@ namespace EverAccounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
-class CountriesController extends Controller {
+class CountriesController extends DataController {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'countries';
-
+	protected $rest_base = 'data/countries';
 
 	/**
-	 * Registers the routes for the objects of the controller.
+	 * Register routes.
 	 *
 	 * @since 1.1.0
-	 *
-	 * @see   register_rest_route()
 	 */
 	public function register_routes() {
 		register_rest_route(
@@ -36,37 +33,82 @@ class CountriesController extends Controller {
 					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_items' ),
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'args'                => $this->get_collection_params(),
 				),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
-
 	}
 
 	/**
-	 * Check if a given request has access to read items.
+	 * Return the list of all countries.
 	 *
-	 * @param \WP_REST_Request $request Full details about the request.
+	 * @since  1.1.0
 	 *
-	 * @return \WP_Error|boolean
-	 */
-	public function get_items_permissions_check( $request ) {
-		//      if ( ! current_user_can( "ea_manage_eaccounting" ) ) {
-		//          return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		//      }
-
-		return true;
-	}
-	/**
-	 * Get a collection of posts.
-	 *
-	 * @param \WP_REST_Request $request Full details about the request.
+	 * @param \WP_REST_Request $request Request data.
 	 *
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$codes = eaccounting_get_data( 'countries' );
+		$countries = eaccounting_get_data( 'countries' );
+		$data      = array();
 
-		return rest_ensure_response( $codes );
+		foreach ( $countries as $country_code => $country_name ) {
+			$country  = array(
+				'code' => $country_code,
+				'name' => $country_name,
+			);
+			$response = $this->prepare_item_for_response( (object) $country, $request );
+			$data[]   = $this->prepare_response_for_collection( $response );
+		}
+
+		return rest_ensure_response( $data );
+	}
+
+	/**
+	 * Prepare the data object for response.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param object           $item    Data object.
+	 * @param \WP_REST_Request $request Request object.
+	 *
+	 * @return \WP_REST_Response $response Response data.
+	 */
+	public function prepare_item_for_response( $item, $request ) {
+		$data     = $this->add_additional_fields_to_object( (array) $item, $request );
+		$data     = $this->filter_response_by_context( $data, 'view' );
+		$response = rest_ensure_response( $data );
+
+		return $response;
+	}
+
+	/**
+	 * Get the location schema, conforming to JSON Schema.
+	 *
+	 * @since  1.1.0
+	 * @return array
+	 */
+	public function get_item_schema() {
+		$schema = array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'data_countries',
+			'type'       => 'object',
+			'properties' => array(
+				'code' => array(
+					'type'        => 'string',
+					'description' => __( 'ISO3166 alpha-2 country code.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'name' => array(
+					'type'        => 'string',
+					'description' => __( 'Full name of country.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+			),
+		);
+
+		return $this->add_additional_fields_schema( $schema );
 	}
 }

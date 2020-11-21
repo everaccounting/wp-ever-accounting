@@ -36,6 +36,7 @@ class Manager extends Singleton {
 				'\EverAccounting\Rest\IncomesController',
 				'\EverAccounting\Rest\CodesController',
 				'\EverAccounting\Rest\CountriesController',
+				'\EverAccounting\Rest\DataController',
 			)
 		);
 

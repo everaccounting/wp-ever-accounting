@@ -11,14 +11,13 @@ namespace EverAccounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
-class CodesController extends Controller {
+class CodesController extends DataController {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'codes';
-
+	protected $rest_base = 'data/currencies';
 
 	/**
 	 * Registers the routes for the objects of the controller.
@@ -47,10 +46,10 @@ class CodesController extends Controller {
 
 		register_rest_route(
 			$this->namespace,
-			'/' . $this->rest_base . '/(?P<code>[a-z]+)',
+			'/' . $this->rest_base . '/(?P<currency>[a-z]+)',
 			array(
 				'args'   => array(
-					'code' => array(
+					'currency' => array(
 						'description' => __( 'Unique identifier for the entity.', 'wp-ever-accounting' ),
 						'type'        => 'string',
 					),
@@ -67,63 +66,150 @@ class CodesController extends Controller {
 	}
 
 	/**
-	 * Check if a given request has access to read items.
+	 * Return the list of all currencies.
 	 *
-	 * @param \WP_REST_Request $request Full details about the request.
+	 * @since  1.1.0
 	 *
-	 * @return \WP_Error|boolean
-	 */
-	public function get_items_permissions_check( $request ) {
-		//      if ( ! current_user_can( "ea_manage_eaccounting" ) ) {
-		//          return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		//      }
-
-		return true;
-	}
-
-	/**
-	 * Check if a given request has access to read an item.
-	 *
-	 * @param \WP_REST_Request $request Full details about the request.
-	 *
-	 * @return \WP_Error|boolean
-	 */
-	public function get_item_permissions_check( $request ) {
-		//      if ( ! current_user_can( "ea_manage_eaccounting" ) ) {
-		//          return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		//      }
-
-		return true;
-	}
-
-	/**
-	 * Get a collection of posts.
-	 *
-	 * @param \WP_REST_Request $request Full details about the request.
+	 * @param \WP_REST_Request $request Request data.
 	 *
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$codes = eaccounting_get_data( 'currencies' );
+		$currencies = eaccounting_get_data( 'currencies' );
+		$data       = array();
 
-		return rest_ensure_response( $codes );
+		foreach ( $currencies as $code => $currency ) {
+			$response = $this->prepare_item_for_response( (object) $currency, $request );
+			$data[]   = $this->prepare_response_for_collection( $response );
+		}
+
+		return rest_ensure_response( $data );
 	}
 
-
 	/**
-	 * Get a single object.
+	 * Return information for a specific currency.
 	 *
-	 * @param \WP_REST_Request $request Full details about the request.
+	 * @param \WP_REST_Request $request Request data.
 	 *
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_item( $request ) {
-		$code  = $request['code'];
-		$codes = eaccounting_get_data( 'currencies' );
-		if ( is_wp_error( $codes ) || empty( $code ) || ! isset( $codes[ $code ] ) ) {
-			return new \WP_Error( 'rest_object_invalid_code', __( 'Invalid currency code.', 'wp-ever-accounting' ), array( 'status' => 404 ) );
+		$currencies = eaccounting_get_data( 'currencies' );
+		$code       = strtoupper( $request['currency'] );
+		if ( ! array_key_exists( $code, $currencies ) ) {
+			return new \WP_Error( 'eaccounting_rest_data_invalid_currency', __( 'There are no currencies matching these parameters.', 'wp-ever-accounting' ), array( 'status' => 404 ) );
 		}
+		$data = $currencies[ $code ];
 
-		return rest_ensure_response( $codes[ $code ] );
+		return $this->prepare_item_for_response( $data, $request );
 	}
+
+
+	/**
+	 * Prepare links for the request.
+	 *
+	 * @param object $item Data object.
+	 *
+	 * @return array Links for the given currency.
+	 */
+	protected function prepare_links( $item ) {
+		$code  = strtoupper( $item->code );
+		$links = array(
+			'self'       => array(
+				'href' => rest_url( sprintf( '/%s/%s/%s', $this->namespace, $this->rest_base, $code ) ),
+			),
+			'collection' => array(
+				'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->rest_base ) ),
+			),
+		);
+
+		return $links;
+	}
+
+	/**
+	 * Prepare the data object for response.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param object           $item    Data object.
+	 * @param \WP_REST_Request $request Request object.
+	 *
+	 * @return \WP_REST_Response $response Response data.
+	 */
+	public function prepare_item_for_response( $item, $request ) {
+		$data     = $this->add_additional_fields_to_object( (array) $item, $request );
+		$data     = $this->filter_response_by_context( $data, 'view' );
+		$response = rest_ensure_response( $data );
+		$response->add_links( $this->prepare_links( $item ) );
+
+		return $response;
+	}
+
+
+	/**
+	 * Get the location schema, conforming to JSON Schema.
+	 *
+	 * @since  1.1.0
+	 * @return array
+	 */
+	public function get_item_schema() {
+		$schema = array(
+			'$schema'    => 'http://json-schema.org/draft-04/schema#',
+			'title'      => 'data_currencies',
+			'type'       => 'object',
+			'properties' => array(
+				'code'               => array(
+					'type'        => 'string',
+					'description' => __( 'ISO4217 currency code.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'name'               => array(
+					'type'        => 'string',
+					'description' => __( 'Full name of currency.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'symbol'             => array(
+					'type'        => 'string',
+					'description' => __( 'Currency symbol.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'precision'          => array(
+					'type'        => 'integer',
+					'description' => __( 'Precision count.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'subunit'            => array(
+					'type'        => 'integer',
+					'description' => __( 'Subunit count.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'position'           => array(
+					'type'        => 'string',
+					'description' => __( 'Currency position.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'decimal_separator'  => array(
+					'type'        => 'string',
+					'description' => __( 'Decimal separator.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+				'thousand_separator' => array(
+					'type'        => 'string',
+					'description' => __( 'Thousand separator.', 'wp-ever-accounting' ),
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
+			),
+		);
+
+		return $this->add_additional_fields_schema( $schema );
+	}
+
 }
