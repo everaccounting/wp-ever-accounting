@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit();
  * @package EverAccounting\REST
  *
  */
-class TransactionsController extends EntitiesController {
+abstract class TransactionsController extends EntitiesController {
 	/**
 	 * Route base.
 	 *
@@ -49,6 +49,21 @@ class TransactionsController extends EntitiesController {
 	 * @return array|int|\WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
+		$query_args['account_id']     = $request['account_id'];
+		$query_args['category_id']    = $request['category_id'];
+		$query_args['currency_code']  = $request['currency_code'];
+		$query_args['vendor_id']      = $request['vendor_id'];
+		$query_args['payment_method'] = $request['payment_method'];
+
+		// Set before into date query. Date query must be specified as an array of an array.
+		if ( isset( $request['before'] ) ) {
+			$args['paid_at'][0]['before'] = $request['before'];
+		}
+
+		// Set after into date query. Date query must be specified as an array of an array.
+		if ( isset( $request['after'] ) ) {
+			$args['paid_at'][0]['after'] = $request['after'];
+		}
 		return eaccounting_get_transactions( $query_args );
 	}
 
@@ -306,20 +321,29 @@ class TransactionsController extends EntitiesController {
 	 *
 	 */
 	public function get_collection_params() {
-		$query_params                       = parent::get_collection_params();
-		$query_params['context']['default'] = 'view';
-		$params['orderby']                  = array(
-			'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
-			'type'        => 'string',
-			'default'     => 'paid_at',
-			'enum'        => array(
-				'paid_at',
-				'amount',
-				'account_id',
-				'type',
-				'category_id',
-				'reference',
-			),
+		$query_params = array_merge(
+			parent::get_collection_params(),
+			array(
+				'orderby'    => array(
+					'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'default'     => 'paid_at',
+					'enum'        => array(
+						'paid_at',
+						'amount',
+						'account_id',
+						'type',
+						'category_id',
+						'reference',
+					),
+				),
+				'account_id' => array(
+					'description'       => __( 'Limit results to those matching accounts.', 'wp-ever-accounting' ),
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_text_field',
+					'validate_callback' => 'rest_validate_request_arg',
+				),
+			)
 		);
 
 		return $query_params;
