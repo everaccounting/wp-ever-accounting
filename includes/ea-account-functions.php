@@ -24,11 +24,8 @@ function eaccounting_get_account( $account ) {
 	}
 	try {
 		$result = new EverAccounting\Models\Account( $account );
-		if ( ! $result->exists() ) {
-			return null;
-		}
 
-		return $result;
+		return $result->exists() ? $result : null;
 	} catch ( \EverAccounting\Core\Exception $e ) {
 		return null;
 	}
@@ -107,12 +104,16 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
  * @return bool
  */
 function eaccounting_delete_account( $account_id ) {
-	$account = new EverAccounting\Models\Account( $account_id );
-	if ( ! $account->exists() ) {
+	try {
+		$account = new EverAccounting\Models\Account( $account_id );
+		if ( ! $account->exists() ) {
+			return false;
+		}
+
+		return $account->delete();
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
-
-	return $account->delete();
 }
 
 /**
@@ -179,7 +180,7 @@ function eaccounting_get_accounts( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];
