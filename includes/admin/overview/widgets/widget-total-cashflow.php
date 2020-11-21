@@ -2,7 +2,7 @@
 
 namespace EverAccounting\Admin\Overview\Widgets;
 
-use EverAccounting\DateTime;
+use EverAccounting\Core\DateTime;
 use EverAccounting\Abstracts\Widget;
 use EverAccounting\Chart;
 
@@ -120,8 +120,8 @@ class Cash_Flow extends Widget {
 	/**
 	 * @since 1.0.2
 	 *
-	 * @param \EverAccounting\DateTime $start
-	 * @param \EverAccounting\DateTime $end
+	 * @param \EverAccounting\Core\DateTime $start
+	 * @param \EverAccounting\Core\DateTime $end
 	 * @param string                   $period
 	 * @param                       $type
 	 */

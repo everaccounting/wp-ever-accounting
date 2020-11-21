@@ -12,6 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
+use EverAccounting\Models\Currency;
 use EverAccounting\Repositories\Currencies;
 
 defined( 'ABSPATH' ) || exit;
@@ -28,74 +29,46 @@ class CurrencyController extends Singleton {
 	 * CurrencyController constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eaccounting_prepare_currency_data', array( __CLASS__, 'prepare_currency_data' ), 10, 2 );
-		add_action( 'eaccounting_validate_currency_data', array( __CLASS__, 'validate_currency_data' ), 10, 3 );
+		add_action( 'eaccounting_pre_save_currency', array( __CLASS__, 'validate_currency_data' ), 10, 3 );
 		add_action( 'eaccounting_delete_currency', array( __CLASS__, 'delete_default_currency' ), 10, 2 );
 	}
-
-	/**
-	 * Prepare currency data before inserting into database.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param int   $id
-	 * @param array $data
-	 *
-	 * @return array
-	 */
-	public static function prepare_currency_data( $data, $id = null ) {
-		if ( empty( $data['date_created'] ) ) {
-			$data['date_created'] = current_time( 'mysql' );
-		}
-
-		return eaccounting_clean( $data );
-	}
-
 
 	/**
 	 * Validate currency data.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array     $data
-	 * @param null      $id
-	 * @param \WP_Error $errors
+	 * @param array    $data
+	 * @param int      $id
+	 * @param Currency $currency
 	 */
-	public static function validate_currency_data( $errors, $data, $id = null ) {
+	public static function validate_currency_data( $data, $id, $currency ) {
+		global $wpdb;
 		if ( empty( $data['code'] ) ) {
-			$errors->add( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
+			$currency->error( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['rate'] ) ) {
-			$errors->add( 'empty_prop', __( 'Currency rate is required.', 'wp-ever-accounting' ) );
+			$currency->error( 'empty_prop', __( 'Currency rate is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['symbol'] ) ) {
-			$errors->add( 'empty_prop', __( 'Currency symbol is required.', 'wp-ever-accounting' ) );
+			$currency->error( 'empty_prop', __( 'Currency symbol is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['position'] ) || ! in_array( $data['position'], array( 'before', 'after' ), true ) ) {
-			$errors->add( 'empty_prop', __( 'Currency position is required.', 'wp-ever-accounting' ) );
+			$currency->error( 'empty_prop', __( 'Currency position is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['precision'] ) ) {
-			$errors->add( 'empty_prop', __( 'Currency precision is required.', 'wp-ever-accounting' ) );
+			$currency->error( 'empty_prop', __( 'Currency precision is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['decimal_separator'] ) ) {
-			$errors->add( 'empty_prop', __( 'Currency decimal separator is required.', 'wp-ever-accounting' ) );
+			$currency->error( 'empty_prop', __( 'Currency decimal separator is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['thousand_separator'] ) ) {
-			$errors->add( 'empty_prop', __( 'Currency thousand separator is required.', 'wp-ever-accounting' ) );
+			$currency->error( 'empty_prop', __( 'Currency thousand separator is required.', 'wp-ever-accounting' ) );
 		}
 
-		if ( ! empty( $data['code'] ) ) {
-			if ( intval( $id ) !== (int) Currencies::instance()->get_var(
-				'id',
-				array(
-					'code' => $data['code'],
-				)
-			) ) {
-				$errors->add( 'invalid_prop', __( 'Duplicate currency.', 'wp-ever-accounting' ) );
-			}
+		if ( $currency->get_id() != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_currencies WHERE code='%s'", $currency->get_code() ) ) ) { // @codingStandardsIgnoreLine
+			$currency->error( 'duplicate_item', __( 'Duplicate currency.', 'wp-ever-accounting' ) );
 		}
-
-		return $errors;
 	}
 
 	/**

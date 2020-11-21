@@ -672,14 +672,14 @@ function eaccounting_select2( $field ) {
 function eaccounting_contact_dropdown( $field ) {
 	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_contact_types() ) ? eaccounting_clean( $field['type'] ) : false;
 	$value      = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : '';
-	$query_args = array();
+	$query_args = array( 'return' => 'raw' );
 	if ( ! empty( $value ) ) {
 		$query_args['include'] = $value;
 	}
 
 	$function = 'customer' === $type ? 'eaccounting_get_customers' : 'eaccounting_get_vendors';
 
-	$contacts = call_user_func_array( $function, array( $query_args, 'false' ) );
+	$contacts = call_user_func_array( $function, array( $query_args ) );
 
 	$field = wp_parse_args(
 		array(
@@ -709,9 +709,9 @@ function eaccounting_account_dropdown( $field ) {
 	if ( ! empty( $include ) ) {
 		$accounts = eaccounting_get_accounts(
 			array(
+				'return'  => 'raw',
 				'include' => $include,
-			),
-			false
+			)
 		);
 	}
 	if ( ! isset( $field['default'] ) ) {
@@ -749,14 +749,17 @@ function eaccounting_category_dropdown( $field ) {
 	);
 	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_category_types() ) ? eaccounting_clean( $field['type'] ) : false;
 	$value      = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : false;
-	$query_args = array( array( 'fields' => 'id, name' ) );
+	$query_args = array(
+		array( 'fields' => array( 'id', 'name' ) ),
+		'return' => 'raw',
+	);
 	if ( $type ) {
 		$query_args['type'] = $type;
 	}
 	if ( ! empty( $value ) ) {
 		$query_args['include'] = $value;
 	}
-	$categories = eaccounting_get_categories( $query_args, false );
+	$categories = eaccounting_get_categories( $query_args );
 
 	$field = wp_parse_args(
 		array(
@@ -818,7 +821,15 @@ function eaccounting_currency_dropdown( $field ) {
 	$options       = array();
 	$wherein       = array_filter( array_unique( array( $default_code, $currency_code ) ) );
 	if ( ! empty( $wherein ) ) {
-		$options = eaccounting_get_currencies(array('search' => implode('', $wherein)), false);
+		$options = eaccounting_get_currencies(
+			array(
+				'return' => 'raw',
+				'search' => implode(
+					'',
+					$wherein
+				),
+			)
+		);
 	}
 	$field = wp_parse_args(
 		$field,

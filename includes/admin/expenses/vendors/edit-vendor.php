@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit();
 $vendor_id = isset( $_REQUEST['vendor_id'] ) ? absint( $_REQUEST['vendor_id'] ) : null;
 try {
-	$vendor = new \EverAccounting\Contact( $vendor_id );
+	$vendor = new \EverAccounting\Models\Vendor( $vendor_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

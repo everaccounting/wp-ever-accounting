@@ -10,7 +10,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Tax;
+use EverAccounting\Models\Tax;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -400,12 +400,11 @@ class List_Table_Taxes extends List_Table {
 
 		$this->process_bulk_action();
 
-		$page    = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
-
+		$page     = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$status   = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$search   = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$order    = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$orderby  = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 		$per_page = $this->get_per_page();
 
 		$args = wp_parse_args(

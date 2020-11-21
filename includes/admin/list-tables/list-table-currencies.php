@@ -193,11 +193,11 @@ class List_Table_Currency extends List_Table {
 			'<a href="%1$s">%2$s</a>',
 			esc_url(
 				eaccounting_admin_url(
-					[
+					array(
 						'action'      => 'edit',
 						'tab'         => 'currencies',
 						'currency_id' => $currency->get_id(),
-					]
+					)
 				)
 			),
 			$name
@@ -369,7 +369,7 @@ class List_Table_Currency extends List_Table {
 		if ( isset( $_REQUEST['_wpnonce'] ) || ! empty( $action ) ) {
 			wp_safe_redirect(
 				remove_query_arg(
-					[
+					array(
 						'currency_id',
 						'action',
 						'_wpnonce',
@@ -377,7 +377,7 @@ class List_Table_Currency extends List_Table {
 						'action2',
 						'doaction',
 						'paged',
-					]
+					)
 				)
 			);
 			exit();
@@ -452,8 +452,8 @@ class List_Table_Currency extends List_Table {
 			array_merge(
 				$args,
 				array(
-					'count'  => true,
-					'status' => 'active',
+					'count_total' => true,
+					'status'      => 'active',
 				)
 			)
 		);
@@ -462,8 +462,8 @@ class List_Table_Currency extends List_Table {
 			array_merge(
 				$args,
 				array(
-					'count'  => true,
-					'status' => 'inactive',
+					'count_total' => true,
+					'status'      => 'inactive',
 				)
 			)
 		);

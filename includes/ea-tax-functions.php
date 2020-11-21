@@ -8,9 +8,6 @@
  * @package EverAccounting
  */
 
-use EverAccounting\Exception;
-use EverAccounting\Tax;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -40,28 +37,7 @@ function eaccounting_get_tax_types() {
  * @return \EverAccounting\Tax|null
  */
 function eaccounting_get_tax( $tax ) {
-	if ( empty( $tax ) ) {
-		return null;
-	}
 
-	try {
-		if ( $tax instanceof Tax ) {
-			$_tax = $tax;
-		} elseif ( is_object( $tax ) && ! empty( $tax->id ) ) {
-			$_tax = new Tax( null );
-			$_tax->populate( $tax );
-		} else {
-			$_tax = new Tax( absint( $tax ) );
-		}
-
-		if ( ! $_tax->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid tax.', 'wp-ever-accounting' ) );
-		}
-
-		return $_tax;
-	} catch ( Exception $exception ) {
-		return null;
-	}
 }
 
 /**
@@ -71,40 +47,48 @@ function eaccounting_get_tax( $tax ) {
  *
  * @since 1.1.0
  *
- * @param array $args Account arguments.
+ * @param array $args    {
+ *                       An array of elements that make up an invoice to update or insert.
  *
- * @return Tax|WP_Error
+ * @type int    $id      The tax ID. If equal to something other than 0,
+ *                                         the tax with that id will be updated. Default 0.
+ *
+ * @type string $name    The name of the tax.
+ * @type double $rate    The rate of the tax.
+ * @type string $type    The type for the tax.
+ * @type int    $enabled Status of the tax
+ * }
+ *
+ * @return \EverAccounting\Models\Tax|WP_Error|bool
  */
-function eaccounting_insert_tax( $args ) {
-	try {
-		$default_args = array(
-			'id' => null,
-		);
-		$args         = (array) wp_parse_args( $args, $default_args );
-		$tax          = new Tax( $args['id'] );
-		$tax->set_props( $args );
-
-		// validation
-		if ( ! $tax->get_date_created() ) {
-			$tax->set_date_created( time() );
-		}
-
-		if ( empty( $tax->get_name() ) ) {
-			throw new Exception( 'empty_props', __( 'Tax Name is required', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $tax->get_rate() ) ) {
-			throw new Exception( 'empty_props', __( 'Tax rate is required', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $tax->get_type() ) ) {
-			throw new Exception( 'empty_props', __( 'Tax type is required', 'wp-ever-accounting' ) );
-		}
-
-		$tax->save();
-	} catch ( Exception $e ) {
-		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
+function eaccounting_insert_tax( $args, $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $args ) ) {
+		return false;
 	}
 
-	return $tax;
+	// The  id will be provided when updating an item.
+	$args = wp_parse_args( $args, array( 'id' => null ) );
+
+	// Retrieve the category.
+	$item = new \EverAccounting\Models\Tax( $args['id'] );
+
+	// Load new data.
+	$item->set_props( $args );
+
+	// Save the item
+	$error = $item->save();
+
+	// Do we have an error while saving?
+	if ( is_wp_error( $error ) ) {
+		return $wp_error ? $error : 0;
+	}
+
+	if ( ! $item->get_id() ) {
+		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving tax.', 'wp-ever-accounting' ) ) : 0;
+	}
+
+	return $item;
 }
 
 /**
@@ -117,17 +101,88 @@ function eaccounting_insert_tax( $args ) {
  * @return bool
  */
 function eaccounting_delete_tax( $tax_id ) {
-	try {
-		$tax = new Tax( $tax_id );
-		if ( ! $tax->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid tax.', 'wp-ever-accounting' ) );
-		}
-
-		$tax->delete();
-
-		return empty( $tax->get_id() );
-
-	} catch ( Exception $exception ) {
+	$item = new EverAccounting\Models\Tax( $tax_id );
+	if ( ! $item->exists() ) {
 		return false;
 	}
+
+	return $item->delete();
+}
+
+/**
+ * Get taxes.
+ *
+ * @since 1.1.0
+ *
+ * @param array $args    {
+ *
+ * @type string $name    The name of the tax.
+ * @type double $rate    The rate of the tax.
+ * @type string $type    The type for the tax.
+ * @type int    $enabled Status of the tax.
+ * }
+ *
+ *
+ * @return array|int
+ */
+function eaccounting_get_taxes( $args = array() ) {
+	global $wpdb;
+	$search_cols  = array( 'name', 'rate', 'type' );
+	$orderby_cols = array( 'name', 'rate', 'type', 'enabled', 'date_created' );
+	// Prepare args.
+	$args = wp_parse_args(
+		$args,
+		array(
+			'status'       => 'all',
+			'type'         => '',
+			'include'      => '',
+			'search'       => '',
+			'search_cols'  => $search_cols,
+			'orderby_cols' => $orderby_cols,
+			'fields'       => '*',
+			'orderby'      => 'id',
+			'order'        => 'ASC',
+			'number'       => 20,
+			'offset'       => 0,
+			'paged'        => 1,
+			'return'       => 'objects',
+			'count_total'  => false,
+		)
+	);
+
+	$qv    = apply_filters( 'eaccounting_get_taxes_args', $args );
+	$table = 'ea_taxes';
+
+	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
+	$query_from    = eaccounting_prepare_query_from( $table );
+	$query_where   = 'WHERE 1=1';
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
+	$query_limit   = eaccounting_prepare_query_limit( $qv );
+	$count_total   = true === $qv['count_total'];
+	$cache_key     = md5( serialize( $qv ) );
+	$results       = wp_cache_get( $cache_key, 'eaccounting_tax' );
+	$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+	if ( false === $results ) {
+		if ( $count_total ) {
+			$results = (int) $wpdb->get_var( $request );
+			wp_cache_set( $cache_key, $results, 'eaccounting_tax' );
+		} else {
+			$results = $wpdb->get_results( $request );
+			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+				foreach ( $results as $key => $item ) {
+					wp_cache_set( $item->id, $item, 'eaccounting_tax' );
+					wp_cache_set( $item->name . '-' . $item->type, $item, 'eaccounting_tax' );
+				}
+			}
+			wp_cache_set( $cache_key, $results, 'eaccounting_tax' );
+		}
+	}
+
+	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+		$results = array_map( 'eaccounting_get_tax', $results );
+	}
+
+	return $results;
 }

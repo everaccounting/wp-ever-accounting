@@ -35,6 +35,9 @@ function eaccounting_admin_items_page() {
 			 * @since 1.1.0
 			 */
 			do_action( 'eaccounting_items_tab_' . $active_tab );
+			eaccounting_get_categories();
+			eaccounting_get_categories();
+			eaccounting_get_categories();
 			?>
 		</div><!-- #tab_container-->
 	</div><!-- .wrap -->

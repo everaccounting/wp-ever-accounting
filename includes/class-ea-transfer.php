@@ -9,7 +9,7 @@
 
 namespace EverAccounting;
 
-use EverAccounting\DateTime;
+use EverAccounting\Core\DateTime;
 use EverAccounting\Abstracts\Base_Object;
 
 defined( 'ABSPATH' ) || exit();

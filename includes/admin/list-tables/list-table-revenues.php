@@ -170,16 +170,16 @@ class List_Table_Revenues extends List_Table {
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $revenue ) {
-		$date = $revenue->get_paid_at()->date_i18n();
+		$date = $revenue->get_paid_at();
 
 		$value = sprintf(
 			'<a href="%1$s">%2$s</a>',
 			esc_url(
 				eaccounting_admin_url(
-					[
+					array(
 						'action'     => 'edit',
 						'revenue_id' => $revenue->get_id(),
-					]
+					)
 				)
 			),
 			$date
@@ -249,9 +249,9 @@ class List_Table_Revenues extends List_Table {
 	}
 
 	/**
-	 * @param $revenue
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param $revenue
 	 *
 	 * @return string
 	 */
@@ -313,18 +313,18 @@ class List_Table_Revenues extends List_Table {
 			);
 
 			eaccounting_account_dropdown(
-				[
+				array(
 					'name'    => 'account_id',
 					'value'   => $account_id,
 					'default' => '',
 					'attr'    => array(
 						'data-allow-clear' => true,
 					),
-				]
+				)
 			);
 
 			eaccounting_category_dropdown(
-				[
+				array(
 					'name'    => 'category_id',
 					'value'   => $category_id,
 					'default' => '',
@@ -332,16 +332,16 @@ class List_Table_Revenues extends List_Table {
 					'attr'    => array(
 						'data-allow-clear' => true,
 					),
-				]
+				)
 			);
 			eaccounting_contact_dropdown(
-				[
+				array(
 					'name'        => 'customer_id',
 					'value'       => $customer_id,
 					'default'     => '',
 					'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
 					'type'        => 'customer',
-				]
+				)
 			);
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
@@ -395,14 +395,14 @@ class List_Table_Revenues extends List_Table {
 		if ( isset( $_GET['_wpnonce'] ) ) {
 			wp_safe_redirect(
 				remove_query_arg(
-					[
+					array(
 						'revenue_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
 						'action2',
 						'paged',
-					]
+					)
 				)
 			);
 			exit();
@@ -455,19 +455,17 @@ class List_Table_Revenues extends List_Table {
 			)
 		);
 
-		$args = apply_filters( 'eaccounting_revenues_table_get_revenues', $args, $this );
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$args['paid_at'] = array(
+				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
+				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+			);
+		}
 
-		$this->items = Query_Transaction::init()
-										->where( $args )
-										->notTransfer()
-										->where_date_between( 'paid_at', $start_date, $end_date )
-										->get( OBJECT, 'eaccounting_get_transaction' );
+		$args        = apply_filters( 'eaccounting_revenues_table_get_revenues', $args, $this );
+		$this->items = eaccounting_get_incomes( $args );
 
-		$this->total_count = Query_Transaction::init()
-											  ->where( $args )
-											  ->notTransfer()
-											  ->where_date_between( 'paid_at', $start_date, $end_date )
-											  ->count();
+		$this->total_count = eaccounting_get_incomes( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit();
 $customer_id = isset( $_REQUEST['customer_id'] ) ? absint( $_REQUEST['customer_id'] ) : null;
 try {
-	$customer = new \EverAccounting\Contact( $customer_id );
+	$customer = new \EverAccounting\Models\Customer( $customer_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

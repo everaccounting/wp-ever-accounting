@@ -12,7 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Abstracts\Transactions;
+use EverAccounting\Models\Account;
 use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Currencies;
 
@@ -30,32 +30,9 @@ class AccountController extends Singleton {
 	 * AccountController constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eaccounting_prepare_account_data', array( __CLASS__, 'prepare_account_data' ), 10, 2 );
-		add_action( 'eaccounting_validate_account_data', array( __CLASS__, 'validate_account_data' ), 10, 3 );
+		add_action( 'eaccounting_pre_save_account', array( __CLASS__, 'validate_account_data' ), 10, 3 );
 		add_action( 'eaccounting_delete_account', array( __CLASS__, 'delete_default_account' ) );
 		add_action( 'eaccounting_delete_account', array( __CLASS__, 'update_transaction_account' ) );
-	}
-
-	/**
-	 * Prepare account data before inserting into database.
-	 *
-	 * @param int   $id
-	 * @param array $data
-	 *
-	 * @return array
-	 * @since 1.1.0
-	 */
-	public static function prepare_account_data( $data, $id = null ) {
-		if ( empty( $data['date_created'] ) && ! $id ) {
-			$data['date_created'] = current_time( 'mysql' );
-		}
-		if ( empty( $data['creator_id'] ) && ! $id ) {
-			$data['creator_id'] = eaccounting_get_current_user_id();
-		}
-
-		$data['opening_balance'] = eaccounting_sanitize_price( $data['opening_balance'], $data['currency_code'] );
-
-		return eaccounting_clean( $data );
 	}
 
 
@@ -63,25 +40,25 @@ class AccountController extends Singleton {
 	 * Validate account data.
 	 *
 	 * @param array     $data
-	 * @param null      $id
-	 * @param \WP_Error $errors
+	 * @param int      $id
+	 * @param Account $account
 	 *
 	 * @since 1.1.0
 	 */
-	public static function validate_account_data( $errors, $data, $id = null ) {
+	public static function validate_account_data( $data, $id, $account ) {
 		if ( empty( $data['name'] ) ) {
-			$errors->add( 'empty_prop', __( 'Account name is required.', 'wp-ever-accounting' ) );
+			$account->error( 'empty_prop', __( 'Account name is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['number'] ) ) {
-			$errors->add( 'empty_prop', __( 'Account number is required.', 'wp-ever-accounting' ) );
+			$account->error( 'empty_prop', __( 'Account number is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['currency_code'] ) ) {
-			$errors->add( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
+			$account->error( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
 		}
 
 		$currency = Currencies::instance()->get_by( 'code', $data['currency_code'] );
 		if ( ! $currency ) {
-			$errors->add( 'invalid_prop', __( 'Currency code is invalid.', 'wp-ever-accounting' ) );
+			$account->error( 'invalid_prop', __( 'Currency code is invalid.', 'wp-ever-accounting' ) );
 		}
 
 		if ( intval( $id ) !== (int) Accounts::instance()->get_var(
@@ -90,10 +67,9 @@ class AccountController extends Singleton {
 				'number' => $data['number'],
 			)
 		) ) {
-			$errors->add( 'invalid_prop', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+			$account->error( 'invalid_prop', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
 		}
 
-		return $errors;
 	}
 
 	/**

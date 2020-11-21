@@ -221,31 +221,108 @@ class Ajax {
 
 		switch ( $type ) {
 			case 'currency':
-				$results = Query_Currency::init()->where( array( 'search' => $search ) )->select( 'code as id, CONCAT (name,"(", symbol, ")") as text, rate ' )->where( 'enabled', 1 )->get();
+				$currencies = eaccounting_get_currencies(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $currencies as $currency ) {
+					$results[] = array(
+						'text' => "$currency->name($currency->symbol)",
+						'id'   => $currency->code,
+					);
+				}
+
 				break;
 
 			case 'account':
-				$results = Query_Account::init()->where( array( 'search' => $search ) )->select( 'id, CONCAT(name," (", currency_code, ")") as text' )->where( 'enabled', 1 )->get();
+				$items = eaccounting_get_accounts(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $items as $item ) {
+					$results[] = array(
+						'text' => "$item->name($item->currency_code)",
+						'id'   => $item->id,
+					);
+				}
 				break;
 
 			case 'customer':
-				$results = eaccounting_get_customers(array(
-					'fields' => 'id, name',
-					'search' => $search,
-					'status' => 'active',
-				), false);
+				$items = eaccounting_get_customers(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $items as $item ) {
+					$results[] = array(
+						'text' => "$item->name",
+						'id'   => $item->id,
+					);
+				}
 				break;
 
 			case 'vendor':
-				$results = Query_Contact::init()->where( array( 'search' => $search ) )->typeVendor()->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$items = eaccounting_get_vendors(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $items as $item ) {
+					$results[] = array(
+						'text' => "$item->name",
+						'id'   => $item->id,
+					);
+				}
 				break;
 
 			case 'expense_category':
-				$results = Query_Category::init()->where( array( 'search' => $search ) )->where( 'type', 'expense' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$items = eaccounting_get_categories(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'type'   => 'expense',
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $items as $item ) {
+					$results[] = array(
+						'text' => "$item->name",
+						'id'   => $item->id,
+					);
+				}
 				break;
 
 			case 'income_category':
-				$results = Query_Category::init()->where( array( 'search' => $search ) )->where( 'type', 'income' )->select( 'id, name as text' )->where( 'enabled', 1 )->get();
+				$items = eaccounting_get_categories(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'type'   => 'income',
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $items as $item ) {
+					$results[] = array(
+						'text' => "$item->name",
+						'id'   => $item->id,
+					);
+				}
 				break;
 
 			default:
@@ -480,8 +557,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_payment' );
 		$posted = eaccounting_clean( $_REQUEST );
 
-		$posted['type'] = 'expense';
-		$created        = eaccounting_insert_transaction( $posted );
+		$created = eaccounting_insert_expense( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -520,8 +596,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_revenue' );
 		$posted = eaccounting_clean( $_REQUEST );
 
-		$posted['type'] = 'income';
-		$created        = eaccounting_insert_transaction( $posted );
+		$created = eaccounting_insert_income( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(

@@ -8,10 +8,10 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-use \EverAccounting\Query_Currency;
+
 $account_id = isset( $_REQUEST['account_id'] ) ? absint( $_REQUEST['account_id'] ) : null;
 try {
-	$account = new \EverAccounting\Account( $account_id );
+	$account = new \EverAccounting\Models\Account( $account_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

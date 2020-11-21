@@ -419,9 +419,7 @@ class List_Table_Customers extends List_Table {
 		$args = apply_filters( 'eaccounting_customers_table_get_customers', $args, $this );
 
 		$this->items       = eaccounting_get_customers( $args );
-		$this->total_count = eaccounting_get_customers( array_merge( $args, array( 'count' => true ) ) );
-		//      $this->active_count   = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '1' )->count();
-		//      $this->inactive_count = \EverAccounting\Customer\query( array( 'search' => $search ) )->where( 'enabled', '0' )->count();
+		$this->total_count = eaccounting_get_customers( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$total_items = $this->total_count;
 

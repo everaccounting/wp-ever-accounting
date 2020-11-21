@@ -453,8 +453,8 @@ class List_Table_Accounts extends List_Table {
 			array_merge(
 				$args,
 				array(
-					'enabled' => '1',
-					'count'   => true,
+					'enabled'     => '1',
+					'count_total' => true,
 				)
 			)
 		);
@@ -463,8 +463,8 @@ class List_Table_Accounts extends List_Table {
 			array_merge(
 				$args,
 				array(
-					'enabled' => '0',
-					'count'   => true,
+					'enabled'     => '0',
+					'count_total' => true,
 				)
 			)
 		);

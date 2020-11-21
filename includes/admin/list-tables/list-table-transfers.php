@@ -358,12 +358,8 @@ class List_Table_Transfers extends List_Table {
 
 		$args = apply_filters( 'eaccounting_transfers_table_get_transfers', $args, $this );
 
-		$this->items = \EverAccounting\Transfers\query( $args )
-									 ->select( 'ea_transfers.*, ea_transactions.reference, ea_transactions.amount, ea_transactions.paid_at' )
-									 ->include_transactions()
-									 ->get( OBJECT, 'eaccounting_get_transfer' );
-
-		$this->total_count = \EverAccounting\Transfers\query( $args )->count();
+		$this->items       = eaccounting_get_transfers( $args );
+		$this->total_count = eaccounting_get_transfers( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

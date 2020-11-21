@@ -11,7 +11,7 @@
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\DateTime;
+use EverAccounting\Core\DateTime;
 use EverAccounting\Exception;
 
 defined( 'ABSPATH' ) || exit();

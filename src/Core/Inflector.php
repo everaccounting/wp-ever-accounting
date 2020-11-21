@@ -7,7 +7,7 @@
  * @package EverAccounting
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 /**
  * Class Inflector

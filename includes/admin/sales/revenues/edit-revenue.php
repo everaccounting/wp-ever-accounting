@@ -12,7 +12,7 @@ use \EverAccounting\Query_Account;
 
 $revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
 try {
-	$revenue = new \EverAccounting\Transaction( $revenue_id );
+	$revenue = new \EverAccounting\Models\Income( $revenue_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

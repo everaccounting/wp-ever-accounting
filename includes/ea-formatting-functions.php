@@ -186,7 +186,7 @@ function eaccounting_string_to_timestamp( $time_string, $from_timestamp = null )
  * @param string $time_string Time string.
  *
  * @throws Exception
- * @return \EverAccounting\DateTime
+ * @return \EverAccounting\Core\DateTime
  */
 function eaccounting_string_to_datetime( $time_string ) {
 	// Strings are defined in local WP timezone. Convert to UTC.
@@ -196,7 +196,7 @@ function eaccounting_string_to_datetime( $time_string ) {
 	} else {
 		$timestamp = eaccounting_string_to_timestamp( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', eaccounting_string_to_timestamp( $time_string ) ) ) );
 	}
-	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
 	// Set local timezone or offset.
 	if ( get_option( 'timezone_string' ) ) {
@@ -280,7 +280,7 @@ function eaccounting_timezone_offset() {
  *
  * @since  1.0.2
  *
- * @param \EverAccounting\DateTime|string $date   Instance of DateTime.
+ * @param \EverAccounting\Core\DateTime|string $date   Instance of DateTime.
  * @param string                          $format Data format.
  *                                                Defaults to the eaccounting_date_format function if not set.
  *
@@ -290,7 +290,7 @@ function eaccounting_format_datetime( $date, $format = '' ) {
 	if ( ! $format ) {
 		$format = eaccounting_date_format();
 	}
-	if ( ! is_a( $date, '\EverAccounting\DateTime' ) ) {
+	if ( ! is_a( $date, '\EverAccounting\Core\DateTime' ) ) {
 		try {
 			$date = eaccounting_string_to_datetime( $date );
 

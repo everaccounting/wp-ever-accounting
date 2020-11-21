@@ -7,7 +7,7 @@
  * @package EverAccounting
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 use DateTime as DT;
 
@@ -42,7 +42,7 @@ class DateTime extends DT {
 	 * Clone the current object.
 	 *
 	 * @since 1.0.2
-	 * @return \EverAccounting\DateTime
+	 * @return \EverAccounting\Core\DateTime
 	 */
 	public function copy() {
 		return clone $this;

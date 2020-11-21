@@ -9,16 +9,11 @@
 
 namespace EverAccounting\REST;
 
+use EverAccounting\Abstracts\Singleton;
+
 defined( 'ABSPATH' ) || die();
 
-use EverAccounting\Traits\SingletonTrait;
-
-class Manager {
-	/**
-	 * The single instance of the class
-	 */
-	use SingletonTrait;
-
+class Manager extends Singleton {
 	/**
 	 * Manager constructor.
 	 */
@@ -34,10 +29,13 @@ class Manager {
 			'eaccounting_rest_controllers',
 			array(
 				'\EverAccounting\Rest\AccountsController',
-				'\EverAccounting\Rest\CategoriesController',
-				'\EverAccounting\Rest\CurrenciesController',
 				'\EverAccounting\Rest\CustomersController',
 				'\EverAccounting\Rest\VendorsController',
+				'\EverAccounting\Rest\TransactionsController',
+				'\EverAccounting\Rest\ExpensesController',
+				'\EverAccounting\Rest\IncomesController',
+				'\EverAccounting\Rest\CodesController',
+				'\EverAccounting\Rest\CountriesController',
 			)
 		);
 

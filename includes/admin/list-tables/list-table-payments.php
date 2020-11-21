@@ -169,7 +169,7 @@ class List_Table_Payments extends List_Table {
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $payment ) {
-		$date = $payment->get_paid_at()->date_i18n();
+		$date = $payment->get_paid_at();
 
 		$value = sprintf(
 			'<a href="%1$s">%2$s</a>',
@@ -454,12 +454,17 @@ class List_Table_Payments extends List_Table {
 				'contact_id'  => $vendor_id,
 			)
 		);
-
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$args['paid_at'] = array(
+				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
+				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+			);
+		}
 		$args = apply_filters( 'eaccounting_payments_table_get_payments', $args, $this );
 
 		$this->items = eaccounting_get_incomes( $args );
 
-		$this->total_count = eaccounting_get_incomes( array_merge( $args, array( 'count' => true ) ) );
+		$this->total_count = eaccounting_get_incomes( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

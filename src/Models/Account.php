@@ -10,7 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Repositories\Accounts;
+use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +22,37 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Account extends ResourceModel {
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'account';
+
+	/**
+	 * @since 1.1.0
+	 * @var string
+	 */
+	public $cache_group = 'eaccounting_account';
+
+	/**
+	 * Item Data array.
+	 *
+	 * @since 1.1.0
+	 * @var array
+	 */
+	protected $data = array(
+		'name'            => '',
+		'number'          => '',
+		'currency_code'   => '',
+		'opening_balance' => 0.0000,
+		'bank_name'       => null,
+		'bank_phone'      => null,
+		'bank_address'    => null,
+		'enabled'         => 1,
+		'creator_id'      => null,
+		'date_created'    => null,
+	);
 
 	/**
 	 * Get the account if ID is passed, otherwise the account is new and empty.
@@ -31,13 +62,46 @@ class Account extends ResourceModel {
 	 * @param int|object|Account $data object to read.
 	 */
 	public function __construct( $data = 0 ) {
-		parent::__construct( $data, Accounts::instance() );
+		parent::__construct( $data );
+
+		if ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( is_numeric( $data ) ) {
+			$this->set_id( $data );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} elseif ( is_array( $data ) ) {
+			$this->set_props( $data );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		//Load repository
+		$this->repository = Repositories::load( $this->object_type );
+
+		if ( $this->get_id() > 0 ) {
+			$this->repository->read( $this );
+		}
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+
 
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods wont change anything unless
+	| just returning from the props.
+	|
 	*/
 
 	/**
@@ -135,6 +199,10 @@ class Account extends ResourceModel {
 	|--------------------------------------------------------------------------
 	| Setters
 	|--------------------------------------------------------------------------
+	|
+	| Functions for setting item data. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
 	*/
 
 	/**
@@ -217,8 +285,11 @@ class Account extends ResourceModel {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Extra
+	| Additional methods
 	|--------------------------------------------------------------------------
+	|
+	| Does extra thing as helper functions.
+	|
 	*/
 
 	/**
@@ -246,4 +317,14 @@ class Account extends ResourceModel {
 	protected function set_balance( $balance ) {
 		$this->set_prop( 'balance', eaccounting_sanitize_price( $balance, $this->get_currency_code() ) );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Conditionals
+	|--------------------------------------------------------------------------
+	|
+	| Checks if a condition is true or false.
+	|
+	*/
+
 }

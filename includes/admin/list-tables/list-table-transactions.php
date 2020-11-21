@@ -163,12 +163,12 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $transaction ) {
-		$date   = $transaction->get_paid_at()->date_i18n();
+		$date   = $transaction->get_paid_at();
 		$type   = $transaction->get_type();
 		$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
 		$tab    = 'expense' !== $type ? 'revenues' : 'payments';
@@ -196,7 +196,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the amount column.
 	 */
@@ -209,7 +209,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the account column.
 	 */
@@ -225,7 +225,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the type column.
 	 */
@@ -242,7 +242,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the Category column.
 	 */
@@ -258,7 +258,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the Reference column.
 	 */
@@ -398,6 +398,7 @@ class List_Table_Transactions extends List_Table {
 				'offset'     => $per_page * ( $page - 1 ),
 				'per_page'   => $per_page,
 				'page'       => $page,
+				'type'       => $type,
 				'search'     => $search,
 				'account_id' => $account_id,
 				'orderby'    => eaccounting_clean( $orderby ),
@@ -405,17 +406,41 @@ class List_Table_Transactions extends List_Table {
 			)
 		);
 
-		$args = apply_filters( 'eaccounting_transactions_table_get_transactions', $args, $this );
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$args['paid_at'] = array(
+				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
+				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+			);
+		}
 
+		$args = apply_filters( 'eaccounting_transactions_table_get_transactions', $args, $this );
+		eaccounting_get_currencies(
+			array(
+				'number' => '-1',
+				'return' => 'raw',
+			)
+		);
+		eaccounting_get_categories(
+			array(
+				'number' => '-1',
+				'return' => 'raw',
+			)
+		);
+		eaccounting_get_accounts(
+			array(
+				'number' => '-1',
+				'return' => 'raw',
+			)
+		);
 		$this->items = eaccounting_get_transactions( $args );
 
 		$this->income_count = eaccounting_get_transactions(
 			array_merge(
 				$args,
 				array(
-					'count'  => true,
-					'type'   => 'income',
-					'search' => $search,
+					'count_total' => true,
+					'type'        => 'income',
+					'search'      => $search,
 				)
 			)
 		);
@@ -424,9 +449,9 @@ class List_Table_Transactions extends List_Table {
 			array_merge(
 				$args,
 				array(
-					'count'  => true,
-					'type'   => 'expense',
-					'search' => $search,
+					'count_total' => true,
+					'type'        => 'expense',
+					'search'      => $search,
 				)
 			)
 		);

@@ -22,6 +22,10 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Vendor extends ContactModel {
+	/**
+	 * Type of the contact.
+	 */
+	const CONTACT_TYPE = 'vendor';
 
 	/**
 	 * Customer constructor.
@@ -29,13 +33,11 @@ class Vendor extends ContactModel {
 	 * @param int $data
 	 */
 	public function __construct( $data = 0 ) {
-		parent::__construct( $data, Vendors::instance() );
-
+		parent::__construct( $data );
 		// If not vendor then reset to default
-		if ( 'vendor' !== $this->get_type() ) {
+		if ( self::CONTACT_TYPE !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
 	}
-
 }

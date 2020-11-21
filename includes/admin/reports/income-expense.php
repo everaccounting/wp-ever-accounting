@@ -55,7 +55,7 @@ function eaccounting_reports_income_expense_tab() {
 		$income_cats  = wp_list_pluck( $income_cats, 'name', 'id' );
 		$expense_cats = \EverAccounting\Categories\query()->select( 'id, name' )->expense_only()->get();
 		$expense_cats = wp_list_pluck( $expense_cats, 'name', 'id' );
-		$date         = new \EverAccounting\DateTime( $date_start );
+		$date         = new \EverAccounting\Core\DateTime( $date_start );
 
 		// Dates
 		for ( $j = 1; $j <= 12; $j ++ ) {

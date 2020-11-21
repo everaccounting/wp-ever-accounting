@@ -45,7 +45,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  * @return string
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
-	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
+	$dt = new \EverAccounting\Core\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
 
 	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
 }
@@ -140,11 +140,11 @@ function eaccounting_get_current_user_id() {
  *
  * @param mixed  $amount
  *
- * @return \EverAccounting\Money|WP_Error
+ * @return \EverAccounting\Core\Money|WP_Error
  */
 function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
 	try {
-		return new \EverAccounting\Money( $amount, $code, $convert );
+		return new \EverAccounting\Core\Money( $amount, $code, $convert );
 	} catch ( Exception $e ) {
 		return new \WP_Error( 'invalid_action', $e->getMessage() );
 	}
@@ -160,7 +160,7 @@ function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
  * @param      $from
  * @param      $to
  * @param      $rate
- * @param bool   $format
+ * @param bool $format
  *
  * @param      $method
  *
@@ -190,7 +190,7 @@ function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $form
  *
  * @param      $to
  * @param      $rate
- * @param bool   $format
+ * @param bool $format
  *
  * @param      $amount
  *
@@ -209,7 +209,7 @@ function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = 
  *
  * @param      $from
  * @param      $rate
- * @param bool   $format
+ * @param bool $format
  *
  * @param      $amount
  *
@@ -267,10 +267,10 @@ function eaccounting_get_payment_methods() {
  * Get the logger of the plugin.
  *
  * @since 1.0.2
- * @return \EverAccounting\Logger
+ * @return \EverAccounting\Core\Logger
  */
 function eaccounting_logger() {
-	return new \EverAccounting\Logger();
+	return new \EverAccounting\Core\Logger();
 }
 
 /**
@@ -279,7 +279,7 @@ function eaccounting_logger() {
  * @since 1.0.2
  */
 function eaccounting_cleanup_logs() {
-	$logger = new \EverAccounting\Logger();
+	$logger = new \EverAccounting\Core\Logger();
 	$logger->clear_expired_logs();
 }
 
@@ -393,4 +393,49 @@ function eaccounting_round_number( $val, $precision = 2 ) {
  */
 function eaccounting_collect( $items ) {
 	return new \EverAccounting\Collection( $items );
+}
+
+
+/**
+ * Wrapper for _doing_it_wrong().
+ *
+ * @since  1.1.0
+ *
+ * @param string $function Function used.
+ * @param string $message  Message to log.
+ * @param string $version  Version the message was added in.
+ */
+function eaccounting_doing_it_wrong( $function, $message, $version ) {
+
+	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+
+	if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
+		do_action( 'doing_it_wrong_run', $function, $message, $version );
+		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+	} else {
+		_doing_it_wrong( $function, $message, $version );
+	}
+
+}
+
+/**
+ * Fetches data stored on disk.
+ *
+ * @since 1.1.0
+ *
+ * @param string $key Type of data to fetch.
+ *
+ * @return mixed Fetched data.
+ */
+function eaccounting_get_data( $key ) {
+	// Try fetching it from the cache.
+	$data = wp_cache_get( "eaccounting-data-$key", 'eaccounting-data' );
+	if ( $data ) {
+		return $data;
+	}
+
+	$data = apply_filters( "eaccounting_get_data_$key", include EACCOUNTING_ABSPATH . "/includes/data/$key.php" );
+	wp_cache_set( "eaccounting-data-$key", 'eaccounting-data' );
+
+	return $data;
 }

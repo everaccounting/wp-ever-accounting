@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\DateTime;
+use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,11 +21,80 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Abstracts
  */
 abstract class ContactModel extends ResourceModel {
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'contact';
 
+	/**
+	 * @since 1.1.0
+	 * @var string
+	 */
+	public $cache_group = 'eaccounting_contact';
+
+	/**
+	 * Item Data array.
+	 *
+	 * @since 1.1.0
+	 * @var array
+	 */
+	protected $data = array(
+		'user_id'       => null,
+		'name'          => '',
+		'email'         => '',
+		'phone'         => '',
+		'fax'           => '',
+		'birth_date'    => '',
+		'address'       => '',
+		'country'       => '',
+		'website'       => '',
+		'tax_number'    => '',
+		'currency_code' => '',
+		'type'          => '',
+		'note'          => '',
+		'enabled'       => 1,
+		'creator_id'    => null,
+		'date_created'  => null,
+	);
+	/**
+	 * Get the account if ID is passed, otherwise the account is new and empty.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param int|object $data object to read.
+	 */
+	public function __construct( $data = 0 ) {
+		parent::__construct( $data );
+
+		if ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( is_numeric( $data ) ) {
+			$this->set_id( $data );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} elseif ( is_array( $data ) ) {
+			$this->set_props( $data );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		//Load repository
+		$this->repository = Repositories::load( $this->object_type );
+
+		if ( $this->get_id() > 0 ) {
+			$this->repository->read( $this );
+		}
+	}
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods wont change anything unless
+	| just returning from the props.
+	|
 	*/
 
 	/**
@@ -100,7 +169,7 @@ abstract class ContactModel extends ResourceModel {
 	 *
 	 * @param string $context
 	 *
-	 * @return DateTime|string
+	 * @return string
 	 */
 	public function get_birth_date( $context = 'edit' ) {
 		return $this->get_prop( 'birth_date', $context );
@@ -201,6 +270,10 @@ abstract class ContactModel extends ResourceModel {
 	|--------------------------------------------------------------------------
 	| Setters
 	|--------------------------------------------------------------------------
+	|
+	| Functions for setting item data. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
 	*/
 
 	/**
@@ -325,7 +398,7 @@ abstract class ContactModel extends ResourceModel {
 	 * @param $value
 	 */
 	public function set_currency_code( $value ) {
-		if ( eaccounting_get_currency_code( $value ) ) {
+		if ( eaccounting_get_currency( $value ) ) {
 			$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
 		}
 	}

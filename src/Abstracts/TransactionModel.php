@@ -9,7 +9,13 @@
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\DateTime;
+
+use EverAccounting\Core\Repositories;
+use EverAccounting\Models\Account;
+use EverAccounting\Models\Category;
+use EverAccounting\Models\Currency;
+use EverAccounting\Models\Customer;
+use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,10 +27,53 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Abstracts
  */
 abstract class TransactionModel extends ResourceModel {
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'transaction';
+
+	/**
+	 * @since 1.1.0
+	 * @var string
+	 */
+	public $cache_group = 'eaccounting_transaction';
+
+	/**
+	 * Item Data array.
+	 *
+	 * @since 1.1.0
+	 * @var array
+	 */
+	protected $data = array(
+		'type'           => '',
+		'paid_at'        => null,
+		'amount'         => 0.00,
+		'currency_code'  => '', // protected
+		'currency_rate'  => 0.00, // protected
+		'account_id'     => null,
+		'invoice_id'     => null,
+		'contact_id'     => null,
+		'category_id'    => null,
+		'description'    => '',
+		'payment_method' => '',
+		'reference'      => '',
+		'attachment'     => null,
+		'parent_id'      => null,
+		'reconciled'     => 0,
+		'creator_id'     => null,
+		'date_created'   => null,
+	);
+
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods wont change anything unless
+	| just returning from the props.
+	|
 	*/
 
 	/**
@@ -47,7 +96,7 @@ abstract class TransactionModel extends ResourceModel {
 	 *
 	 * @param string $context
 	 *
-	 * @return DateTime
+	 * @return string
 	 */
 	public function get_paid_at( $context = 'edit' ) {
 		return $this->get_prop( 'paid_at', $context );
@@ -224,6 +273,10 @@ abstract class TransactionModel extends ResourceModel {
 	|--------------------------------------------------------------------------
 	| Setters
 	|--------------------------------------------------------------------------
+	|
+	| Functions for setting item data. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
 	*/
 
 	/**
@@ -403,6 +456,66 @@ abstract class TransactionModel extends ResourceModel {
 	*/
 
 	/**
+	 * Get currency object.
+	 *
+	 * @since 1.1.0
+	 * @return array|null
+	 */
+	public function get_currency() {
+		$currency = new Currency( $this->get_currency_code() );
+
+		return $currency->exists() ? $currency->get_data() : null;
+	}
+
+	/**
+	 * Get account object.
+	 *
+	 * @since 1.1.0
+	 * @return array|null
+	 */
+	public function get_account() {
+		$account = new Account( $this->get_account_id() );
+
+		return $account->exists() ? $account->get_data() : null;
+	}
+
+	/**
+	 * Get category object.
+	 *
+	 * @since 1.1.0
+	 * @return array|null
+	 */
+	public function get_category() {
+		$category = new Category( $this->get_category_id() );
+
+		return $category->exists() ? $category->get_data() : null;
+	}
+
+	/**
+	 * Get category object.
+	 *
+	 * @since 1.1.0
+	 * @return array|null
+	 */
+	public function get_customer() {
+		$customer = new Customer( $this->get_contact_id() );
+
+		return $customer->exists() ? $customer->get_data() : null;
+	}
+
+	/**
+	 * Get category object.
+	 *
+	 * @since 1.1.0
+	 * @return array|null
+	 */
+	public function get_vendor() {
+		$vendor = new Vendor( $this->get_contact_id() );
+
+		return $vendor->exists() ? $vendor->get_data() : null;
+	}
+
+	/**
 	 * Get formatted transaction amount.
 	 *
 	 * @since 1.0.2
@@ -410,56 +523,5 @@ abstract class TransactionModel extends ResourceModel {
 	 */
 	public function get_formatted_amount() {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
-	}
-
-	/**
-	 * Get transaction account name.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $default
-	 *
-	 * @return string
-	 */
-	public function get_account_name( $default = 'N/A' ) {
-		if ( $this->get_account_id() && $account = eaccounting_get_account( $this->get_account_id() ) ) {
-			return $account->get_name();
-		}
-
-		return $default;
-	}
-
-	/**
-	 * Get transaction category name.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $default
-	 *
-	 * @return string
-	 */
-	public function get_category_name( $default = 'N/A' ) {
-		if ( $this->get_category_id() && $category = eaccounting_get_category( $this->get_category_id() ) ) {
-			return $category->get_name();
-		}
-
-		return $default;
-	}
-
-	/**
-	 * Get transaction contact name.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $default
-	 *
-	 * @return string
-	 */
-	public function get_contact_name( $default = 'N/A' ) {
-		if ( $this->get_contact_id() && $contact = eaccounting_get_contact( $this->get_contact_id() ) ) {
-			return $contact->get_name();
-		}
-
-		return $default;
 	}
 }

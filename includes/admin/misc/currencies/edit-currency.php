@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit();
 $currency_id = isset( $_REQUEST['currency_id'] ) ? absint( $_REQUEST['currency_id'] ) : null;
 try {
-	$currency = new \EverAccounting\Currency( $currency_id );
+	$currency = new \EverAccounting\Models\Currency( $currency_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

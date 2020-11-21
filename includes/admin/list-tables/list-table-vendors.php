@@ -421,31 +421,8 @@ class List_Table_Vendors extends List_Table {
 
 		$args = apply_filters( 'eaccounting_vendors_table_get_vendors', $args, $this );
 
-		$this->items = Query_Contact::init()->where( $args )->get( OBJECT, 'eaccounting_get_contact' );
-
-		$this->total_count = Query_Contact::init()->where( $args )->count();
-
-		$this->active_count = Query_Contact::init()->where(
-			array_merge(
-				$this->query_args,
-				array(
-					'status' => 'active',
-					'search' => $search,
-				)
-			)
-		)->count();
-
-		$this->inactive_count = Query_Contact::init()->where(
-			array_merge(
-				$this->query_args,
-				array(
-					'status' => 'inactive',
-					'search' => $search,
-				)
-			)
-		)->count();
-
-		$total_items = $this->total_count;
+		$this->items       = eaccounting_get_vendors( $args );
+		$this->total_count = eaccounting_get_vendors( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 

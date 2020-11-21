@@ -23,54 +23,31 @@ defined( 'ABSPATH' ) || exit;
  */
 class Taxes extends ResourceRepository {
 	/**
+	 * Table name.
+	 *
 	 * @var string
 	 */
 	const TABLE = 'ea_taxes';
 
 	/**
-	 * Taxes constructor.
-	 */
-	public function __construct() {
-		global $wpdb;
-		$this->table       = $wpdb->prefix . self::TABLE;
-		$this->table_name  = self::TABLE;
-		$this->primary_key = 'id';
-		$this->object_type = 'tax';
-	}
-
-	/**
-	 * Retrieves the list of columns for the database table.
-	 *
-	 * Sub-classes should define an array of columns here.
+	 * Table name.
 	 *
 	 * @since 1.1.0
-	 * @return array List of columns.
+	 * @var string
 	 */
-	public static function get_columns() {
-		return array(
-			'name'         => self::VARCHAR,
-			'rate'         => self::DOUBLE,
-			'type'         => self::VARCHAR,
-			'enabled'      => self::TINYINT,
-			'date_created' => self::DATETIME,
-		);
-	}
+	protected $table = self::TABLE;
 
 	/**
-	 * Retrieves column defaults.
-	 *
-	 * Sub-classes can define default for any/all of columns defined in the get_columns() method.
+	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * @return array All defined column defaults.
+	 * @var array
 	 */
-	public static function get_defaults() {
-		return array(
-			'name'         => '',
-			'rate'         => 'normal',
-			'enabled'      => 1,
-			'date_created' => current_time( 'mysql' ),
-		);
-	}
-
+	protected $data_type = array(
+		'id'           => '%d',
+		'name'         => '%s',
+		'rate'         => '%s',
+		'enabled'      => '%d',
+		'date_created' => '%s',
+	);
 }

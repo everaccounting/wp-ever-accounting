@@ -1,52 +1,32 @@
 <?php
-
 /**
  * EverAccounting Item Functions.
  *
  * All item related function of the plugin.
  *
- * @since   1.0.4
+ * @since   1.1.0
  * @package EverAccounting
  */
-use EverAccounting\Exception;
-use EverAccounting\Item;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * Main function for returning item.
  *
- * @since 1.0.4
+ * @since 1.1.0
  *
  * @param $item
  *
- * @return Item|null
+ * @return EverAccounting\Models\Item|null
  */
 function eaccounting_get_item( $item ) {
 	if ( empty( $item ) ) {
 		return null;
 	}
+	$result = new EverAccounting\Models\Item( $item );
 
-	try {
-		if ( $item instanceof Item ) {
-			$_item = $item;
-		} elseif ( is_object( $item ) && ! empty( $item->id ) ) {
-			$_item = new Item( null );
-			$_item->populate( $item );
-		} else {
-			$_item = new Item( absint( $item ) );
-		}
-
-		if ( ! $_item->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid item.', 'wp-ever-accounting' ) );
-		}
-
-		return $_item;
-	} catch ( Exception $exception ) {
-		return null;
-	}
+	return $result->exists() ? $result : null;
 }
-
 
 
 /**
@@ -54,45 +34,52 @@ function eaccounting_get_item( $item ) {
  *
  *  Returns a new item object on success.
  *
- * @since 1.0.4
+ * @since 1.1.0
  *
- * @param array $args Item arguments.
+ * @param array $args           {
+ *                              An array of elements that make up an invoice to update or insert.
  *
- * @return Item|WP_Error
+ * @type int    $id             The item ID. If equal to something other than 0,
+ *                                         the item with that id will be updated. Default 0.
+ * @type string $name           The name of the item.
+ * @type string $sku            The sku of the item.
+ * @type int    $image_id       The image_id for the item.
+ * @type string $description    The description of the item.
+ * @type double $sale_price     The sale_price of the item.
+ * @type double $purchase_price The purchase_price for the item.
+ * @type int    $quantity       The quantity of the item.
+ * @type int    $category_id    The category_id of the item.
+ * @type int    $tax_id         The tax_id of the item.
+ * @type int    $enabled        The enabled of the item.
+ * }
+ *
+ * @return EverAccounting\Models\Item|WP_Error|bool
  */
-function eaccounting_insert_item( $args ) {
-	try {
-		$default_args = array(
-			'id' => null,
-		);
-		$args         = (array) wp_parse_args( $args, $default_args );
-		$item         = new item( $args['id'] );
-		$item->set_props( $args );
+function eaccounting_insert_item( $args, $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $args ) ) {
+		return false;
+	}
 
-		// validation
-		if ( ! $item->get_date_created() ) {
-			$item->set_date_created( time() );
-		}
-		if ( ! $item->get_creator_id() ) {
-			$item->set_creator_id();
-		}
+	// The  id will be provided when updating an item.
+	$args = wp_parse_args( $args, array( 'id' => null ) );
 
-		if ( empty( $item->get_name() ) ) {
-			throw new Exception( 'empty_props', __( 'Item Name is required', 'wp-ever-accounting' ) );
-		}
+	// Retrieve the category.
+	$item = new \EverAccounting\Models\Item( $args['id'] );
 
-		if ( empty( $item->get_sale_price( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Sale price is required', 'wp-ever-accounting' ) );
-		}
+	// Load new data.
+	$item->set_props( $args );
 
-		if ( empty( $item->get_purchase_price( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Purchase price is required', 'wp-ever-accounting' ) );
-		}
+	// Save the item
+	$error = $item->save();
 
-		$item->save();
+	// Do we have an error while saving?
+	if ( is_wp_error( $error ) ) {
+		return $wp_error ? $error : 0;
+	}
 
-	} catch ( Exception $e ) {
-		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
+	if ( ! $item->get_id() ) {
+		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving item.', 'wp-ever-accounting' ) ) : 0;
 	}
 
 	return $item;
@@ -101,24 +88,102 @@ function eaccounting_insert_item( $args ) {
 /**
  * Delete an item.
  *
- * @since 1.0.4
+ * @since 1.1.0
  *
  * @param $item_id
  *
  * @return bool
  */
 function eaccounting_delete_item( $item_id ) {
-	try {
-		$item = new Item( $item_id );
-		if ( ! $item->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
-		}
-
-		$item->delete();
-
-		return empty( $item->get_id() );
-
-	} catch ( Exception $exception ) {
+	$item = new EverAccounting\Models\Item( $item_id );
+	if ( ! $item->exists() ) {
 		return false;
 	}
+
+	return $item->delete();
+}
+
+/**
+ * Get items.
+ *
+ * @since 1.1.0
+ *
+ *
+ * @param array $args           {
+ *
+ * @type string $name           The name of the item.
+ * @type string $sku            The sku of the item.
+ * @type int    $image_id       The image_id for the item.
+ * @type string $description    The description of the item.
+ * @type double $sale_price     The sale_price of the item.
+ * @type double $purchase_price The purchase_price for the item.
+ * @type int    $quantity       The quantity of the item.
+ * @type int    $category_id    The category_id of the item.
+ * @type int    $tax_id         The tax_id of the item.
+ * @type int    $enabled        The enabled of the item.
+ * }
+ *
+ * @return array|int
+ */
+function eaccounting_get_items( $args = array() ) {
+	global $wpdb;
+	$search_cols  = array( 'name', 'sku', 'description' );
+	$orderby_cols = array( 'name', 'sku', 'description', 'sale_price', 'purchase_price', 'quantity', 'enabled', 'date_created' );
+	// Prepare args.
+	$args = wp_parse_args(
+		$args,
+		array(
+			'status'       => 'all',
+			'type'         => '',
+			'include'      => '',
+			'search'       => '',
+			'search_cols'  => $search_cols,
+			'orderby_cols' => $orderby_cols,
+			'fields'       => '*',
+			'orderby'      => 'id',
+			'order'        => 'ASC',
+			'number'       => 20,
+			'offset'       => 0,
+			'paged'        => 1,
+			'return'       => 'objects',
+			'count_total'  => false,
+		)
+	);
+
+	$qv    = apply_filters( 'eaccounting_get_items_args', $args );
+	$table = 'ea_items';
+
+	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
+	$query_from    = eaccounting_prepare_query_from( $table );
+	$query_where   = 'WHERE 1=1';
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
+	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
+	$query_limit   = eaccounting_prepare_query_limit( $qv );
+	$count_total   = true === $qv['count_total'];
+	$cache_key     = md5( serialize( $qv ) );
+	$results       = wp_cache_get( $cache_key, 'eaccounting_item' );
+	$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+
+	if ( false === $results ) {
+		if ( $count_total ) {
+			$results = (int) $wpdb->get_var( $request );
+			wp_cache_set( $cache_key, $results, 'eaccounting_item' );
+		} else {
+			$results = $wpdb->get_results( $request );
+			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+				foreach ( $results as $key => $item ) {
+					wp_cache_set( $item->id, $item, 'eaccounting_item' );
+					wp_cache_set( $item->name . '-' . $item->type, $item, 'eaccounting_item' );
+				}
+			}
+			wp_cache_set( $cache_key, $results, 'eaccounting_item' );
+		}
+	}
+
+	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+		$results = array_map( 'eaccounting_get_item', $results );
+	}
+
+	return $results;
 }

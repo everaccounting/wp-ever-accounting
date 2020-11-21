@@ -7,7 +7,7 @@
  * @version        1.0.2
  */
 
-namespace EverAccounting;
+namespace EverAccounting\Core;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -63,7 +63,7 @@ class Logger {
 	 * @var array
 	 * @since 1.0.2
 	 */
-	protected $cached_logs = [];
+	protected $cached_logs = array();
 
 	/**
 	 * EAccounting_Logger constructor.
