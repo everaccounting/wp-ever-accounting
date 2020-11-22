@@ -51,13 +51,13 @@ class Total_Profit extends Widget {
 		global $wpdb;
 		$dates        = $this->get_dates();
 		$total        = 0;
-		$transactions = eaccounting()
-				->query()
-				->select( 'amount, currency_code, currency_rate, type' )
-				->from( 'ea_transactions' )
-				->where_date_between( 'paid_at', $dates['start'], $dates['end'] )
-				->where_raw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
-				->get();
+		$transactions = $wpdb->get_results( $wpdb->prepare("
+		SELECT amount, currency_code, currency_rate
+		FROM {$wpdb->prefix}ea_transactions
+		WHERE (paid_at BETWEEN %s AND %s)
+		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
+		"), $dates['start'], $dates['end'] );
+
 
 		foreach ( $transactions as $transaction ) {
 			if ( $transaction->type == 'income' ) {

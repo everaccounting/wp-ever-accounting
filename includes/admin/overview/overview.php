@@ -7,7 +7,6 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Query_Transaction;
 
 defined( 'ABSPATH' ) || exit();
 
