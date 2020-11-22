@@ -74,7 +74,6 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 	if ( empty( $data ) ) {
 		return false;
 	}
-
 	try {
 		// The  id will be provided when updating an item.
 		$data = wp_parse_args( $data, array( 'id' => null ) );

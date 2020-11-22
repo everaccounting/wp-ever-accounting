@@ -12,6 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
+use EverAccounting\Core\Exception;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,18 +30,18 @@ class ExpenseController extends Singleton {
 	 */
 	public function __construct() {
 		add_filter( 'eaccounting_prepare_payment_data', array( __CLASS__, 'prepare_payment_data' ), 10, 2 );
-		add_action( 'eaccounting_validate_payment_data', array( __CLASS__, 'validate_payment_data' ), 10, 3 );
+		add_action( 'eaccounting_validate_payment_data', array( __CLASS__, 'validate_payment_data' ), 10, 2 );
 	}
 
 	/**
 	 * Prepare payment data before inserting into database.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param int   $id
+	 * @param int $id
 	 * @param array $data
 	 *
 	 * @return array
+	 * @since 1.1.0
+	 *
 	 */
 	public static function prepare_payment_data( $data, $id = null ) {
 		if ( empty( $data['date_created'] ) ) {
@@ -69,41 +70,40 @@ class ExpenseController extends Singleton {
 	/**
 	 * Validate payment data.
 	 *
+	 * @param array $data
+	 * @param null $id
+	 * @param \WP_Error $errors
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param array     $data
-	 * @param null      $id
-	 * @param \WP_Error $errors
 	 */
-	public static function validate_payment_data( $errors, $data, $id = null ) {
+	public static function validate_payment_data( $data, $id = null ) {
 		if ( empty( $data['paid_at'] ) ) {
-			$errors->add( 'empty_prop', __( 'Payment date is required.', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_prop', __( 'Payment date is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $data['payment_method'] ) ) {
-			$errors->add( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
 		}
 
 		$category = eaccounting_get_category( $data['category_id'] );
 		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'expense', 'other' ), true ) ) {
-			$errors->add( 'empty_prop', __( 'A valid income category is required.', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_prop', __( 'A valid income category is required.', 'wp-ever-accounting' ) );
 		}
 
 		$account = eaccounting_get_account( $data['account_id'] );
 		if ( empty( $account ) ) {
-			$errors->add( 'empty_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
 		}
 
 		$customer = eaccounting_get_customer( $data['contact_id'] );
 		if ( ! empty( $data['contact_id'] ) && empty( $customer ) ) {
-			$errors->add( 'empty_prop', __( 'Customer is not valid.', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_prop', __( 'Customer is not valid.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( eaccounting_sanitize_number( $data['amount'] ) ) ) {
-			$errors->add( 'empty_prop', __( 'Payment amount is required.', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_prop', __( 'Payment amount is required.', 'wp-ever-accounting' ) );
 		}
-
-		return $errors;
 	}
 
 }

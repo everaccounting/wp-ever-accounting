@@ -79,11 +79,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Transaction type.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -92,11 +92,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Paid at time.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_paid_at( $context = 'edit' ) {
 		return $this->get_prop( 'paid_at', $context );
@@ -105,11 +105,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Transaction Amount.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_amount( $context = 'edit' ) {
 		return $this->get_prop( 'amount', $context );
@@ -118,11 +118,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Currency code.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -131,11 +131,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Currency rate.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_currency_rate( $context = 'edit' ) {
 		return $this->get_prop( 'currency_rate', $context );
@@ -144,22 +144,22 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Transaction from account id.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_account_id( $context = 'edit' ) {
 		return $this->get_prop( 'account_id', $context );
 	}
 
 	/**
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_invoice_id( $context = 'edit' ) {
 		return $this->get_prop( 'invoice_id', $context );
@@ -168,11 +168,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Contact id.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_contact_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
@@ -181,11 +181,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Category ID.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
@@ -194,11 +194,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Description.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
@@ -207,11 +207,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Transaction payment methods.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_payment_method( $context = 'edit' ) {
 		return $this->get_prop( 'payment_method', $context );
@@ -220,11 +220,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Transaction reference.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_reference( $context = 'edit' ) {
 		return $this->get_prop( 'reference', $context );
@@ -233,11 +233,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get attachment url.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_attachment( $context = 'edit' ) {
 		return $this->get_prop( 'attachment', $context );
@@ -246,11 +246,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get associated parent payment id.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_parent_id( $context = 'edit' ) {
 		return $this->get_prop( 'parent_id', $context );
@@ -259,11 +259,11 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get if reconciled
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return bool
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_reconciled( $context = 'edit' ) {
 		return (bool) $this->get_prop( 'reconciled', $context );
@@ -282,20 +282,24 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set contact's email.
 	 *
+	 * @param string $value Email.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $value Email.
 	 */
 	public function set_type( $value ) {
-		$this->set_prop( 'type', $value );
+		if ( array_key_exists( $value, eaccounting_get_transaction_types() ) ) {
+			$this->set_prop( 'type', $value );
+		}
 	}
 
 	/**
 	 * Set transaction paid.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_paid_at( $value ) {
 		$this->set_date_prop( 'paid_at', $value );
@@ -304,9 +308,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set transaction amount.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_amount( $value ) {
 		$this->set_prop( 'amount', eaccounting_sanitize_price( $value ) );
@@ -315,9 +320,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set currency code.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_currency_code( $value ) {
 		$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
@@ -326,9 +332,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set currency rate.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_currency_rate( $value ) {
 		$this->set_prop( 'currency_rate', (float) $value );
@@ -337,9 +344,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set account id.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_account_id( $value ) {
 		$this->set_prop( 'account_id', absint( $value ) );
@@ -348,9 +356,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set invoice id.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_invoice_id( $value ) {
 		$this->set_prop( 'invoice_id', absint( $value ) );
@@ -359,9 +368,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set contact id.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_contact_id( $value ) {
 		$this->set_prop( 'contact_id', absint( $value ) );
@@ -370,9 +380,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set category id.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_category_id( $value ) {
 		$this->set_prop( 'category_id', absint( $value ) );
@@ -381,9 +392,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set description.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -392,9 +404,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set payment method.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_payment_method( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_payment_methods() ) ) {
@@ -405,9 +418,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set reference.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -416,9 +430,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set attachment.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_attachment( $value ) {
 		if ( ! empty( $value ) ) {
@@ -430,9 +445,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set parent id.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_parent_id( $value ) {
 		$this->set_prop( 'parent_id', absint( $value ) );
@@ -441,9 +457,10 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Set if reconciled.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_reconciled( $value ) {
 		$this->set_prop( 'reconciled', absint( $value ) );
@@ -458,8 +475,8 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get currency object.
 	 *
-	 * @since 1.1.0
 	 * @return array|null
+	 * @since 1.1.0
 	 */
 	public function get_currency() {
 		$currency = new Currency( $this->get_currency_code() );
@@ -470,8 +487,8 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get account object.
 	 *
-	 * @since 1.1.0
 	 * @return array|null
+	 * @since 1.1.0
 	 */
 	public function get_account() {
 		$account = new Account( $this->get_account_id() );
@@ -482,8 +499,8 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get category object.
 	 *
-	 * @since 1.1.0
 	 * @return array|null
+	 * @since 1.1.0
 	 */
 	public function get_category() {
 		$category = new Category( $this->get_category_id() );
@@ -494,8 +511,8 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get category object.
 	 *
-	 * @since 1.1.0
 	 * @return array|null
+	 * @since 1.1.0
 	 */
 	public function get_customer() {
 		$customer = new Customer( $this->get_contact_id() );
@@ -506,8 +523,8 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get category object.
 	 *
-	 * @since 1.1.0
 	 * @return array|null
+	 * @since 1.1.0
 	 */
 	public function get_vendor() {
 		$vendor = new Vendor( $this->get_contact_id() );
@@ -518,8 +535,8 @@ abstract class TransactionModel extends ResourceModel {
 	/**
 	 * Get formatted transaction amount.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_formatted_amount() {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
