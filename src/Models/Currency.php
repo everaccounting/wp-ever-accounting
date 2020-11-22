@@ -48,6 +48,7 @@ class Currency extends ResourceModel {
 		'rate'               => 1,
 		'precision'          => 0,
 		'symbol'             => '',
+		'subunit'            => 2,
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
@@ -267,8 +268,10 @@ class Currency extends ResourceModel {
 	 * @param $code
 	 */
 	public function set_code( $code ) {
-		if ( eaccounting_get_currency_data( $code ) ) {
+		$currency = eaccounting_get_currency_data( $code );
+		if ( $currency ) {
 			$this->set_prop( 'code', $code );
+			$this->set_prop( 'subunit', $currency['subunit'] );
 		}
 	}
 

@@ -241,9 +241,7 @@ function eaccounting_price_convert_between( $amount, $from_code, $from_rate, $to
 		$default_amount = eaccounting_price_convert_to_default( $amount, $from_code, $from_rate );
 	}
 
-	$converted_amount = eaccounting_price_convert_from_default( $default_amount, $to_code, $to_rate, false, $from_code );
-
-	return $converted_amount;
+	return eaccounting_price_convert_from_default( $default_amount, $to_code, $to_rate, false, $from_code );
 }
 
 /**
@@ -331,7 +329,7 @@ function eaccounting_round_number( $val, $precision = 2 ) {
 
 	// 0 is a valid value so we check only for other empty values
 	if ( is_null( $val ) || '' === $val || false === $val ) {
-		return;
+		return 0;
 	}
 
 	$period_decimal_sep         = preg_match( '/\.\d{1,2}$/', $val );
@@ -369,7 +367,7 @@ function eaccounting_round_number( $val, $precision = 2 ) {
 	$precision = absint( $precision );
 
 	// Enforce the number of decimal places required (precision)
-	$val = sprintf( ( round( $val, $precision ) == intval( $val ) ) ? '%d' : "%.{$precision}f", $val );
+	$val = sprintf( ( round( $val, $precision ) === intval( $val ) ) ? '%d' : "%.{$precision}f", $val );
 
 	// Convert number to the proper type (int, float, or string) depending on its value
 	if ( false === strpos( $val, '.' ) ) {
@@ -389,10 +387,10 @@ function eaccounting_round_number( $val, $precision = 2 ) {
  *
  * @param mixed $items
  *
- * @return \EverAccounting\Collection
+ * @return \EverAccounting\Core\Collection
  */
 function eaccounting_collect( $items ) {
-	return new \EverAccounting\Collection( $items );
+	return new \EverAccounting\Core\Collection( $items );
 }
 
 
