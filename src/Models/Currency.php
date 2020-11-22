@@ -111,13 +111,13 @@ class Currency extends ResourceModel {
 	 * @return bool|false|mixed|string|null
 	 */
 	public function get_id_by_code( $code ) {
-		if ( $code ) {
+		if ( empty( $code ) ) {
 			return false;
 		}
 		$id = wp_cache_get( $code, $this->cache_group );
 		if ( false === $id ) {
 			global $wpdb;
-			$id = $wpdb->get_var( "SELECT id from {$wpdb->prefix}ea_currencies where code = %s", $code );
+			$id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_currencies where code = %s", $code ) );
 			wp_cache_add( $code, $id, $this->cache_group );
 		}
 
