@@ -278,8 +278,8 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-sql-functions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
-		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
-		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
 		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
 		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 		//
@@ -333,6 +333,8 @@ final class EverAccounting {
 		\EverAccounting\Controllers\CategoryController::instance();
 		\EverAccounting\Controllers\CurrencyController::instance();
 		\EverAccounting\Controllers\TransactionController::instance();
+		\EverAccounting\Controllers\TaxController::instance();
+		\EverAccounting\Controllers\ItemController::instance();
 
 
 		\EverAccounting\REST\Manager::instance();

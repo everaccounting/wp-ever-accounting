@@ -21,6 +21,7 @@ use EverAccounting\Repositories\Expenses;
 use EverAccounting\Repositories\Incomes;
 use EverAccounting\Repositories\Items;
 use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Repositories\Taxes;
 use EverAccounting\Repositories\Transactions;
 use EverAccounting\Repositories\Vendors;
 
@@ -63,6 +64,7 @@ class Repositories {
 		'transaction-income'  => Incomes::class,
 		'transaction-expense' => Expenses::class,
 		'account'             => Accounts::class,
+		'tax'                 => Taxes::class,
 	);
 
 	/**
@@ -133,12 +135,12 @@ class Repositories {
 	/**
 	 * Loads a repository.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $object_type Name of object.
 	 *
-	 * @throws \Exception When validation fails.
 	 * @return Repositories
+	 * @throws \Exception When validation fails.
+	 * @since 1.1.0
+	 *
 	 */
 	public static function load( $object_type ) {
 		return new Repositories( $object_type );
@@ -147,8 +149,8 @@ class Repositories {
 	/**
 	 * Returns the class name of the current repository.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_repository_class() {
 		return $this->repository_class;
@@ -157,8 +159,8 @@ class Repositories {
 	/**
 	 * Returns the object type of the current repository.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_object_type() {
 		return $this->object_type;
@@ -167,9 +169,10 @@ class Repositories {
 	/**
 	 * Reads an object from the repository.
 	 *
+	 * @param ResourceModel $data model instance.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param ResourceModel $data model instance.
 	 */
 	public function read( &$data ) {
 		$this->instance->read( $data );
@@ -178,9 +181,10 @@ class Repositories {
 	/**
 	 * Create an object using repository.
 	 *
+	 * @param ResourceModel $data model instance.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param ResourceModel $data model instance.
 	 */
 	public function insert( &$data ) {
 		$this->instance->insert( $data );
@@ -189,9 +193,10 @@ class Repositories {
 	/**
 	 * Update an object using repository.
 	 *
+	 * @param ResourceModel $data model instance.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param ResourceModel $data model instance.
 	 */
 	public function update( &$data ) {
 		$this->instance->update( $data );
@@ -200,10 +205,11 @@ class Repositories {
 	/**
 	 * Delete an object using repository.
 	 *
+	 * @param ResourceModel $data GetPaid data instance.
+	 * @param array $args Array of args to pass to the delete method.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param ResourceModel $data GetPaid data instance.
-	 * @param array         $args Array of args to pass to the delete method.
 	 */
 	public function delete( &$data, $args = array() ) {
 		$this->instance->delete( $data, $args );
@@ -214,11 +220,11 @@ class Repositories {
 	 * Repository can define additional function. This passes
 	 * through to the instance if that function exists.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $method Method.
 	 *
 	 * @return mixed
+	 * @since 1.1.0
+	 *
 	 */
 	public function __call( $method, $parameters ) {
 		if ( is_callable( array( $this->instance, $method ) ) ) {

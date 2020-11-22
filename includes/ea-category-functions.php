@@ -89,7 +89,7 @@ function eaccounting_get_category( $category ) {
  * @since 1.1.0
  *
  */
-function eaccounting_insert_category( $data = array(), $wp_error = false ) {
+function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 	// Ensure that we have data.
 	if ( empty( $data ) ) {
 		return false;

@@ -8,6 +8,8 @@
  */
 defined( 'ABSPATH' ) || exit();
 
+require_once dirname( __FILE__ ) . '/items/items.php';
+
 
 /**
  * render expenses page.
@@ -54,6 +56,7 @@ function eaccounting_admin_items_page() {
 function eaccounting_get_items_tabs() {
 	$tabs          = array();
 	$tabs['items'] = __( 'Items', 'wp-ever-accounting' );
+
 	return apply_filters( 'eaccounting_items_tabs', $tabs );
 }
 
