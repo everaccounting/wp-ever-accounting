@@ -174,7 +174,6 @@ function eaccounting_get_items( $args = array() ) {
 			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'eaccounting_item' );
-					wp_cache_set( $item->name . '-' . $item->type, $item, 'eaccounting_item' );
 				}
 			}
 			wp_cache_set( $cache_key, $results, 'eaccounting_item' );

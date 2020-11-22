@@ -13,6 +13,7 @@ use EverAccounting\Models\Invoice;
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -50,6 +51,37 @@ class Tax extends ResourceModel {
 		'enabled'      => 1,
 		'date_created' => null,
 	);
+
+	/**
+	 * Get the tax if ID is passed, otherwise the tax is new and empty.
+	 *
+	 * @param int|object|Tax $data object to read.
+	 *
+	 * @since 1.1.0
+	 *
+	 */
+	public function __construct( $data = 0 ) {
+		parent::__construct( $data );
+
+		if ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( is_numeric( $data ) ) {
+			$this->set_id( $data );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} elseif ( is_array( $data ) ) {
+			$this->set_props( $data );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		//Load repository
+		$this->repository = Repositories::load( $this->object_type );
+
+		if ( $this->get_id() > 0 ) {
+			$this->repository->read( $this );
+		}
+	}
 
 	/*
 	|--------------------------------------------------------------------------

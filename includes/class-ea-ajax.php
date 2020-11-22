@@ -494,7 +494,7 @@ class Ajax {
 			$message  = __( 'Category created successfully!', 'wp-ever-accounting' );
 			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
 		}
-
+		error_log(print_r($created,true));
 		wp_send_json_success(
 			array(
 				'message'  => $message,

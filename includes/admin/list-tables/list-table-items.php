@@ -10,8 +10,8 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Item;
-use EverAccounting\Query_Account;
+use EverAccounting\Models\Item;
+use EverAccounting\Repositories\Items;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -165,24 +165,24 @@ class List_Table_Item extends List_Table {
 	}
 
 	/**
-	 * Renders the checkbox column in the accounts list table.
+	 * Renders the checkbox column in the items list table.
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Item $item The current account object.
+	 * @param Item $item The current item object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
 	function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" name="account_id[]" value="%d"/>', $item->get_id() );
+		return sprintf( '<input type="checkbox" name="item_id[]" value="%d"/>', $item->get_id() );
 	}
 
 	/**
-	 * Renders the "Name" column in the accounts list table.
+	 * Renders the "Name" column in the items list table.
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Item $item The current account object.
+	 * @param Item $item The current item object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
@@ -206,13 +206,13 @@ class List_Table_Item extends List_Table {
 	}
 
 	/**
-	 * Renders the "Balance" column in the accounts list table.
+	 * Renders the "Category" column in the items list table.
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Item $item The current account object.
+	 * @param Item $item The current item object.
 	 *
-	 * @return string Data shown in the Balance column.
+	 * @return string Data shown in the Category column.
 	 */
 	function column_category_id( $item ) {
 		$item = eaccounting_get_category( $item->get_category_id( 'edit' ) );
@@ -222,29 +222,42 @@ class List_Table_Item extends List_Table {
 	}
 
 	/**
-	 * Renders the "Number" column in the accounts list table.
+	 * Renders the "Quantity" column in the items list table.
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Account $item The current account object.
+	 * @param Item $item The current item object.
 	 *
-	 * @return string Data shown in the Number column.
+	 * @return string Data shown in the Quantity column.
 	 */
-	function column_number( $item ) {
-		return apply_filters( 'eaccounting_account_table_number', $item->get_number(), $item );
+	function column_quantity( $item ) {
+		return apply_filters( 'eaccounting_item_table_quantity', $item->get_quantity(), $item );
 	}
 
 	/**
-	 * Renders the "Bank Name" column in the accounts list table.
+	 * Renders the "Sale price" column in the items list table.
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Account $item The current account object.
+	 * @param Item $item The current item object.
 	 *
-	 * @return string Data shown in the Bank Name column.
+	 * @return string Data shown in the Sale Price column.
 	 */
-	function column_bank_name( $item ) {
-		return apply_filters( 'eaccounting_account_table_bank_name', $item->get_bank_name(), $item );
+	function column_sale_price( $item ) {
+		return apply_filters( 'eaccounting_item_table_sale_price', $item->get_sale_price(), $item );
+	}
+
+	/**
+	 * Renders the "Purchase price" column in the items list table.
+	 *
+	 * @since  1.0.2
+	 *
+	 * @param Item $item The current item object.
+	 *
+	 * @return string Data shown in the Purchase Price column.
+	 */
+	function column_purchase_price( $item ) {
+		return apply_filters( 'eaccounting_item_table_purchase_price', $item->get_purchase_price(), $item );
 	}
 
 	/**
@@ -288,8 +301,9 @@ class List_Table_Item extends List_Table {
 	function column_actions( $item ) {
 		$base_uri              = eaccounting_admin_url(
 			array(
-				'account_id' => $item->get_id(),
-				'tab'        => 'accounts',
+				'page' => 'ea-items',
+				'item_id' => $item->get_id(),
+				'tab'        => 'items',
 			)
 		);
 		$row_actions           = array();
@@ -303,7 +317,7 @@ class List_Table_Item extends List_Table {
 			'nonce'    => 'account-nonce',
 		);
 
-		$row_actions = apply_filters( 'eaccounting_account_row_actions', $row_actions, $item );
+		$row_actions = apply_filters( 'eaccounting_item_row_actions', $row_actions, $item );
 
 		return $this->row_actions( $row_actions );
 	}
@@ -316,7 +330,7 @@ class List_Table_Item extends List_Table {
 	 * @return void
 	 */
 	function no_items() {
-		_e( 'No accounts found.', 'wp-ever-accounting' );
+		_e( 'No items found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -330,11 +344,11 @@ class List_Table_Item extends List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-accounts' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'account-nonce' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-items' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'item-nonce' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['account_id'] ) ? $_GET['account_id'] : false;
+		$ids = isset( $_GET['item_id'] ) ? $_GET['item_id'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -350,7 +364,7 @@ class List_Table_Item extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_account(
+					eaccounting_insert_item(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -358,7 +372,7 @@ class List_Table_Item extends List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_account(
+					eaccounting_insert_item(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -366,10 +380,10 @@ class List_Table_Item extends List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_account( $id );
+					eaccounting_delete_item( $id );
 					break;
 				default:
-					do_action( 'eaccounting_accounts_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'eaccounting_items_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -377,7 +391,7 @@ class List_Table_Item extends List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'account_id',
+						'item_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
@@ -451,31 +465,27 @@ class List_Table_Item extends List_Table {
 			)
 		);
 
-		$args        = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
-		$this->items = Query_Account::init()
-									->where( $args )
-									->withBalance()
-									->get( OBJECT, 'eaccounting_get_account' );
+		$this->items = eaccounting_get_items($args);
 
-		$this->active_count = Query_Account::init()->where(
+		$this->active_count = eaccounting_get_items(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
-					'status' => 'active',
-					'search' => $search,
+					'count_total' => true,
+					'status'      => 'active',
 				)
 			)
-		)->count();
+		);
 
-		$this->inactive_count = Query_Account::init()->where(
+		$this->inactive_count = eaccounting_get_items(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
-					'status' => 'inactive',
-					'search' => $search,
+					'count_total' => true,
+					'status'      => 'inactive',
 				)
 			)
-		)->count();
+		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;
 

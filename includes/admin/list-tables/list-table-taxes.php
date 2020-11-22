@@ -420,37 +420,53 @@ class List_Table_Taxes extends List_Table {
 			)
 		);
 
-		$query = eaccounting()
-			->query()
-			->from( 'ea_taxes' )
-			->search( $search, array( 'name' ) );
 
-		$this->items = $query
-			->copy()
-			->where(
-				array(
-					'enabled' => $args['status'],
-				)
-			)->order_by( $args['orderby'], $args['order'] )
-			->page( $args['page'], $args['per_page'] )
-			->get( OBJECT, 'eaccounting_get_tax' );
 
-		$this->active_count   = $query
-			->copy()
-			->where(
+		$this->items = eaccounting_get_taxes($args);
+
+		$this->active_count = eaccounting_get_taxes(
+			array_merge(
+				$args,
 				array(
-					'enabled' => 1,
+					'count_total' => true,
+					'status'      => 'active',
 				)
 			)
-			->count();
-		$this->inactive_count = $query
-			->copy()
-			->where(
+		);
+
+		$this->inactive_count = eaccounting_get_taxes(
+			array_merge(
+				$args,
 				array(
-					'enabled' => '0',
+					'count_total' => true,
+					'status'      => 'inactive',
 				)
 			)
-			->count();
+		);
+
 		$this->total_count    = $this->active_count + $this->inactive_count;
+
+		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
+
+		switch ( $status ) {
+			case 'active':
+				$total_items = $this->active_count;
+				break;
+			case 'inactive':
+				$total_items = $this->inactive_count;
+				break;
+			case 'any':
+			default:
+				$total_items = $this->total_count;
+				break;
+		}
+
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
 	}
 }
