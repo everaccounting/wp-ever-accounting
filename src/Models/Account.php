@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
@@ -73,7 +74,7 @@ class Account extends ResourceModel {
 		} elseif ( is_array( $data ) ) {
 			$this->set_props( $data );
 		} else {
-			$this->set_object_read( true );
+			$this->set_object_read( false );
 		}
 
 		//Load repository
@@ -291,6 +292,34 @@ class Account extends ResourceModel {
 	| Does extra thing as helper functions.
 	|
 	*/
+
+	/**
+	 * Get currency object.
+	 *
+	 * @since 1.1.0
+	 * @return Currency|null
+	 */
+	public function get_currency() {
+		try {
+			$currency = new Currency( $this->get_currency_code() );
+			$this->set_prop( 'currency', $currency );
+
+			return $currency;
+		} catch ( Exception $e ) {
+			return null;
+		}
+	}
+
+	/**
+	 * Set currency code from object.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param array|object $currency
+	 */
+	public function set_currency( $currency ) {
+		$this->set_object_prop( $currency, 'code', 'currency_code' );
+	}
 
 	/**
 	 * @since 1.0.2

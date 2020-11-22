@@ -285,7 +285,12 @@ abstract class ResourceModel {
 	 * @return array
 	 */
 	public function get_data() {
-		return array_merge( array( 'id' => $this->get_id() ), $this->data, array( 'meta_data' => $this->get_meta_data() ) );
+		return array_merge(
+			array( 'id' => $this->get_id() ),
+			$this->data,
+			$this->changes,
+			array( 'meta_data' => $this->get_meta_data() )
+		);
 	}
 
 	/**
@@ -847,6 +852,29 @@ abstract class ResourceModel {
 	}
 
 	/**
+	 * Set prop from object.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string       $property property of the object will be used
+	 * @param string       $prop     prop that will be assigned to
+	 * @param array|object $object   The object
+	 */
+	protected function set_object_prop( $object, $property, $prop ) {
+		if ( is_object( $object ) && is_callable( array( $object, 'get_data' ) ) ) {
+			$object = $object->get_data();
+		} elseif ( is_object( $object ) ) {
+			$object = get_object_vars( $object );
+		} else {
+			$object = array();
+		}
+
+		if ( array_key_exists( $property, $object ) ) {
+			$this->set_prop( $prop, $object[ $property ] );
+		}
+	}
+
+	/**
 	 * Set object status.
 	 *
 	 * @since 1.0.2
@@ -980,7 +1008,6 @@ abstract class ResourceModel {
 	public function is_enabled() {
 		return eaccounting_string_to_bool( $this->get_prop( 'enabled', 'edit' ) );
 	}
-
 
 	/**
 	 * Return object created by.

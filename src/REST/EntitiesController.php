@@ -489,9 +489,8 @@ abstract class EntitiesController extends Controller {
 			// Get object value.
 			if ( is_callable( array( $object, "get_{$key}" ) ) ) {
 				$value = $object->{"get_{$key}"}( $context );
-
 				// If the value is an instance of entity_model...
-				if ( is_a( $value, $this->entity_model ) ) {
+				if ( is_object( $value ) && is_callable( array( $value, 'get_data' ) ) ) {
 					$value = $value->get_data();
 				}
 

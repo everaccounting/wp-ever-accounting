@@ -395,16 +395,6 @@ class Currency extends ResourceModel {
 		return ' ' . $this->get_symbol( 'edit' );
 	}
 
-	/**
-	 * __toString.
-	 *
-	 * @since 1.0.2
-	 * @return string
-	 */
-	public function __toString() {
-		return $this->get_code( 'edit' ) . ' (' . $this->get_name( 'edit' ) . ')';
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Conditionals
