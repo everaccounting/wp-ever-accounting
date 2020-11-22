@@ -12,8 +12,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use \EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Transaction;
-use EverAccounting\Transaction;
+use EverAccounting\Models\Income;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -152,7 +151,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current object.
+	 * @param Income $revenue The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
@@ -165,7 +164,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current transation object.
+	 * @param Income $revenue The current transation object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
@@ -177,6 +176,7 @@ class List_Table_Revenues extends List_Table {
 			esc_url(
 				eaccounting_admin_url(
 					array(
+						'tab'        => 'revenues',
 						'action'     => 'edit',
 						'revenue_id' => $revenue->get_id(),
 					)
@@ -193,7 +193,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the amount column.
 	 */
@@ -206,7 +206,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the account column.
 	 */
@@ -222,7 +222,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the Category column.
 	 */
@@ -238,7 +238,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the Reference column.
 	 */
@@ -297,7 +297,7 @@ class List_Table_Revenues extends List_Table {
 	 * @param string $which
 	 */
 	protected function extra_tablenav( $which ) {
-		if ( 'top' == $which ) {
+		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
@@ -385,7 +385,7 @@ class List_Table_Revenues extends List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_transaction( $id );
+					eaccounting_delete_income( $id );
 					break;
 				default:
 					do_action( 'eaccounting_revenues_do_bulk_action_' . $this->current_action(), $id );

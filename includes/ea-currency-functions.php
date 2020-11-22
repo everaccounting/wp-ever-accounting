@@ -48,7 +48,6 @@ function eaccounting_get_currency( $currency ) {
 	}
 	try {
 		$result = new EverAccounting\Models\Currency( $currency );
-		var_dump($result);
 		return $result->exists() ? $result : null;
 	} catch ( \EverAccounting\Core\Exception $e ) {
 		return null;

@@ -7,7 +7,6 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Query_Account;
 
 defined( 'ABSPATH' ) || exit();
 $payment_id = isset( $_REQUEST['payment_id'] ) ? absint( $_REQUEST['payment_id'] ) : null;
@@ -40,7 +39,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'paid_at',
 						'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $payment->get_paid_at() ? $payment->get_paid_at()->format( 'Y-m-d' ) : null,
+						'value'         => $payment->get_paid_at() ? $payment->get_paid_at() : null,
 						'required'      => true,
 					)
 				);

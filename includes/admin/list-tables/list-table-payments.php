@@ -176,6 +176,7 @@ class List_Table_Payments extends List_Table {
 			esc_url(
 				eaccounting_admin_url(
 					array(
+						'tab'        => 'payments',
 						'action'     => 'edit',
 						'payment_id' => $payment->get_id(),
 					)
@@ -386,7 +387,7 @@ class List_Table_Payments extends List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_transaction( $id );
+					eaccounting_delete_expense( $id );
 					break;
 				default:
 					do_action( 'eaccounting_payments_do_bulk_action_' . $this->current_action(), $id );
@@ -462,9 +463,9 @@ class List_Table_Payments extends List_Table {
 		}
 		$args = apply_filters( 'eaccounting_payments_table_get_payments', $args, $this );
 
-		$this->items = eaccounting_get_incomes( $args );
+		$this->items = eaccounting_get_expenses( $args );
 
-		$this->total_count = eaccounting_get_incomes( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->total_count = eaccounting_get_expenses( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

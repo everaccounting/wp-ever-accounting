@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Transfers;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,26 +24,68 @@ defined( 'ABSPATH' ) || exit;
  */
 class Transfer extends ResourceModel {
 	/**
-	 * Get an instance of Currency object.
+	 * This is the name of this object type.
 	 *
-	 * @since 1.0.2
+	 * @var string
+	 */
+	protected $object_type = 'transfer';
+
+	/**
+	 * @since 1.1.0
+	 * @var string
+	 */
+	public $cache_group = 'eaccounting_transfer';
+
+	/**
+	 * Item Data array.
 	 *
-	 * @param int|object|array|Transfer $data object to read.
+	 * @since 1.1.0
+	 * @var array
+	 */
+	protected $data = array(
+		'date'            => null,
+		'from_account_id' => null,
+		'amount'          => null,
+		'to_account_id'   => null,
+		'income_id'       => null,
+		'expense_id'      => null,
+		'payment_method'  => null,
+		'reference'       => null,
+		'description'     => null,
+		'creator_id'      => null,
+		'date_created'    => null,
+	);
+
+	/**
+	 * Get the account if ID is passed, otherwise the account is new and empty.
+	 *
+	 * @param int|object|Account $data object to read.
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function __construct( $data = 0 ) {
-		parent::__construct( $data, Transfers::instance() );
+		parent::__construct( $data );
 
-		if ( $this->get_id() > 0 && ! $this->get_object_read() ) {
-			$transfer = Transfers::instance()->get( $this->get_id() );
-			if ( $transfer ) {
-				$this->set_props( $transfer->get_data() );
-				$this->set_object_read( $transfer->exists() );
-			} else {
-				$this->set_id( 0 );
-			}
+		if ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( is_numeric( $data ) ) {
+			$this->set_id( $data );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} elseif ( is_array( $data ) ) {
+			$this->set_props( $data );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		//Load repository
+		$this->repository = Repositories::load( $this->object_type );
+
+		if ( $this->get_id() > 0 ) {
+			$this->repository->read( $this );
 		}
 	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -284,32 +327,6 @@ class Transfer extends ResourceModel {
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Overwrite
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Populate extra data.
-	 *
-	 * @since 1.0.2
-	 */
-	public function populate_extra_data() {
-		if ( ! empty( $this->get_expense_id() ) && $expense = eaccounting_get_transaction( $this->get_expense_id() ) ) {
-			$this->set_from_account_id( $expense->get_account_id() );
-			$this->set_amount( $expense->get_amount() );
-			$this->set_date( $expense->get_paid_at()->date_mysql() );
-			$this->set_payment_method( $expense->get_payment_method() );
-			$this->set_reference( $expense->get_reference() );
-			$this->set_description( $expense->get_description() );
-			$this->set_prop( 'currency_code', $expense->get_currency_code() );
-		}
-		if ( ! empty( $this->get_income_id() ) && $income = eaccounting_get_transaction( $this->get_income_id() ) ) {
-			$this->set_to_account_id( $income->get_account_id() );
-		}
 	}
 
 	/*

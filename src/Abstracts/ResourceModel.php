@@ -252,6 +252,12 @@ abstract class ResourceModel {
 		if ( $this->get_id() ) {
 			$this->repository->update( $this );
 		} else {
+			if ( array_key_exists( 'date_created', $this->data ) ) {
+				$this->set_date_created();
+			}
+			if ( array_key_exists( 'creator_id', $this->data ) ) {
+				$this->set_creator_id();
+			}
 			$this->repository->insert( $this );
 		}
 
@@ -840,15 +846,14 @@ abstract class ResourceModel {
 	 * @param string         $prop  Name of prop to set.
 	 * @param string|integer $value Value of the prop.
 	 */
-	protected function set_date_prop( $prop, $value ) {
-
+	protected function set_date_prop( $prop, $value, $format = 'Y-m-d H:i:s' ) {
+		$value = eaccounting_format_datetime( $value, $format );
 		if ( empty( $value ) ) {
 			$this->set_prop( $prop, null );
 
 			return;
 		}
 		$this->set_prop( $prop, $value );
-
 	}
 
 	/**

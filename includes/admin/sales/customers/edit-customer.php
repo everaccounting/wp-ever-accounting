@@ -107,7 +107,7 @@ if ( $customer->exists() && 'customer' !== $customer->get_type() ) {
 						'name'          => 'birth_date',
 						'placeholder'   => __( 'Enter birth date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $customer->get_birth_date() ? $customer->get_birth_date()->format( 'Y-m-d' ) : null,
+						'value'         => $customer->get_birth_date() ? $customer->get_birth_date() : null,
 					)
 				);
 				eaccounting_textarea(

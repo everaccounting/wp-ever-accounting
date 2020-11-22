@@ -8,8 +8,6 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-use \EverAccounting\Query_Account;
-
 $revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
 try {
 	$revenue = new \EverAccounting\Models\Income( $revenue_id );
@@ -41,7 +39,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'paid_at',
 						'placeholder'   => __( 'Enter Date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $revenue->get_paid_at() ? $revenue->get_paid_at()->format( 'Y-m-d' ) : null,
+						'value'         => $revenue->get_paid_at() ? $revenue->get_paid_at() : null,
 						'required'      => true,
 					)
 				);

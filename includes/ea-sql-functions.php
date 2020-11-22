@@ -26,17 +26,23 @@ function eaccounting_prepare_query_fields( &$qv, $table ) {
 	if ( true === $qv['count_total'] ) {
 		return 'COUNT(1)';
 	}
-
+	$re           = '/^\W?(?<table>[\w-]+\.)?(?<column>[\w-]+)\W?(\W+as\W+)?(?<alias>[\w-]+)?\W?$/i';
 	$query_fields = '';
 	if ( is_array( $qv['fields'] ) ) {
 		$qv['fields'] = array_unique( $qv['fields'] );
-
 		$query_fields = array();
 		foreach ( $qv['fields'] as $field ) {
+			preg_match( $re, $field, $matches );
+			if ( ! empty( $matches['table'] ) || ! empty( $matches['column'] ) ) {
+				$query_fields[] = preg_replace( '/[^0-9a-zA-Z\*\.\s\_]/', '', $field );
+				continue;
+			}
+
 			$field          = sanitize_key( $field );
 			$query_fields[] = "$table.`$field`";
 		}
-		$query_fields = implode( ',', $query_fields );
+
+		return implode( ', ', $query_fields );
 	} else {
 		$query_fields = "$table.*";
 	}
@@ -47,8 +53,9 @@ function eaccounting_prepare_query_fields( &$qv, $table ) {
 /**
  * Prepare query from.
  *
- * @param $table
  * @since 1.1.0
+ *
+ * @param $table
  *
  * @return string
  */
@@ -101,7 +108,7 @@ function eaccounting_prepare_query_where( &$qv, $table ) {
 
 	// Date queries are allowed for the subscription creation date.
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
-		$query_where = eaccounting_sql_parse_date_query( $qv['date_created'],  "$table.date_created" );
+		$query_where = eaccounting_sql_parse_date_query( $qv['date_created'], "$table.date_created" );
 	}
 
 	return $query_where;

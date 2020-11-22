@@ -67,7 +67,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'date',
 						'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $transfer->get_date() ? $transfer->get_date()->date_i18n() : null,
+						'value'         => $transfer->get_date() ? $transfer->get_date() : null,
 						'required'      => true,
 					)
 				);

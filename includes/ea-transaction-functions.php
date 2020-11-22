@@ -374,7 +374,78 @@ function eaccounting_delete_transfer( $transfer_id ) {
  *
  */
 function eaccounting_get_transfers( $args = array() ) {
+	global $wpdb;
+	$search_cols  = array( 'description', 'reference' );
+	$orderby_cols = array(
+		'id', 'date'
+	);
+	$fields       = array(
+		'ea_transfers.*',
+		'expense.account_id from_account_id',
+		'income.account_id to_account_id',
+		'income.description description',
+		'income.reference reference',
+		'income.amount amount',
+	);
+	// Prepare args.
+	$args = wp_parse_args(
+		$args,
+		array(
+			'include'          => '',
+			'search'           => '',
+			'search_cols'      => $search_cols,
+			'orderby_cols'     => $orderby_cols,
+			'exclude_transfer' => true,
+			'fields'           => $fields,
+			'orderby'          => 'id',
+			'order'            => 'ASC',
+			'number'           => 20,
+			'offset'           => 0,
+			'paged'            => 1,
+			'return'           => 'objects',
+			'count_total'      => false,
+		)
+	);
 
+	$qv    = apply_filters( 'eaccounting_get_transfer_args', $args );
+	$table = 'ea_transfers';
+
+	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
+	$query_from    = eaccounting_prepare_query_from( $table );
+	$query_where   = 'WHERE 1=1';
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
+	$query_limit   = eaccounting_prepare_query_limit( $qv );
+	$query_join    = '';
+
+	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
+	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
+
+	$count_total = true === $qv['count_total'];
+	$cache_key   = md5( serialize( $qv ) );
+	$results     = wp_cache_get( $cache_key, 'eaccounting_transaction' );
+	$request     = "SELECT $query_fields $query_from $query_join $query_where $query_orderby $query_limit";
+
+	if ( false === $results ) {
+		if ( $count_total ) {
+			$results = (int) $wpdb->get_var( $request );
+			wp_cache_set( $cache_key, $results, 'eaccounting_transfer' );
+		} else {
+			$results = $wpdb->get_results( $request );
+			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+				foreach ( $results as $key => $item ) {
+					wp_cache_set( $item->id, $item, 'eaccounting_transfer' );
+				}
+			}
+			wp_cache_set( $cache_key, $results, 'eaccounting_transfer' );
+		}
+	}
+
+	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+		$results = array_map('eaccounting_get_transfer', $results );
+	}
+
+	return $results;
 }
 
 
@@ -428,49 +499,49 @@ function eaccounting_get_transactions( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types       = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types        = implode( "','", wp_parse_list( $qv['type'] ) );
 		$query_where .= " AND $table.`type` IN ('$types')";
 	}
 	if ( ! empty( $qv['currency_code'] ) ) {
 		$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-		$query_where   .= " AND $table.`currency_code` IN ('$currency_code')";
+		$query_where  .= " AND $table.`currency_code` IN ('$currency_code')";
 	}
 	if ( ! empty( $qv['payment_method'] ) ) {
 		$payment_method = implode( "','", wp_parse_list( $qv['payment_method'] ) );
-		$query_where    .= " AND $table.`payment_method` IN ('$payment_method')";
+		$query_where   .= " AND $table.`payment_method` IN ('$payment_method')";
 	}
 
 	if ( ! empty( $qv['category_id'] ) ) {
-		$category_in = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
+		$category_in  = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
 		$query_where .= " AND $table.`category_id` IN ($category_in)";
 	}
 	if ( ! empty( $qv['account_id'] ) ) {
-		$account_id  = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
+		$account_id   = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
 		$query_where .= " AND $table.`account_id` IN ($account_id)";
 	}
 	if ( ! empty( $qv['invoice_id'] ) ) {
-		$invoice_id  = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );
+		$invoice_id   = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );
 		$query_where .= " AND $table.`invoice_id` IN ($invoice_id)";
 	}
 	if ( ! empty( $qv['invoice_id'] ) ) {
-		$invoice_id  = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );
+		$invoice_id   = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );
 		$query_where .= " AND $table.`invoice_id` IN ($invoice_id)";
 	}
 	if ( ! empty( $qv['contact_id'] ) ) {
-		$contact_id  = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
+		$contact_id   = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
 		$query_where .= " AND $table.`contact_id` IN ($contact_id)";
 	}
 	if ( ! empty( $qv['creator_id'] ) ) {
-		$creator_id  = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
+		$creator_id   = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
 		$query_where .= " AND $table.`creator_id` IN ($creator_id)";
 	}
 	if ( ! empty( $qv['parent_id'] ) ) {
-		$parent_id   = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
+		$parent_id    = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
 		$query_where .= " AND $table.`parent_id` IN ($parent_id)";
 	}
 	if ( ! empty( $qv['paid_at'] ) ) {

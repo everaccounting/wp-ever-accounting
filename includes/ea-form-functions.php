@@ -456,6 +456,7 @@ function eaccounting_file_input( $field ) {
 			'name'          => '',
 			'tooltip'       => '',
 			'desc'          => '',
+			'default'       => '',
 			'types'         => array( 'jpg', 'jpeg', 'png' ),
 			'limit'         => '2024',
 			'required'      => false,

@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\TransactionModel;
+use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Expenses;
 
@@ -69,5 +70,18 @@ class Expense extends TransactionModel {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
+	}
+
+	/**
+	 * Save should create or update based on object existence.
+	 *
+	 * @since  1.1.0
+	 * @throws Exception
+	 * @return \Exception|bool
+	 */
+	public function save() {
+		$this->set_type( self::TRANS_TYPE );
+
+		return parent::save();
 	}
 }
