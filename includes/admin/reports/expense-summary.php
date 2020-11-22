@@ -1,7 +1,5 @@
 <?php
 
-use \EverAccounting\Query_Transaction;
-
 function eaccounting_reports_expense_summary_tab() {
 	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' );
 	$category_id = isset( $_REQUEST['category_id'] ) ? intval( $_REQUEST['category_id'] ) : '';
@@ -73,29 +71,37 @@ function eaccounting_reports_expense_summary_tab() {
 	</div>
 	<div class="ea-card">
 		<?php
-		$dates        = $totals = $expenses = $graph = $categories = array();
-		$start        = eaccounting_get_financial_start( $year );
-		$end          = eaccounting_get_financial_end( $year );
-		$transactions = \EverAccounting\Transactions\query()
-				->select( 'name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id' )
-				->where_date_between( 'paid_at', $start, $end )
-				->where(
-					array(
-						'contact_id'  => $vendor_id,
-						'account_id'  => $account_id,
-						'category_id' => $category_id,
-					)
-				)
-				->left_join( 'ea_categories', 'ea_categories.id', 'ea_transactions.category_id' )
-				->where( 'ea_categories.type', 'expense' )
-				->get(
-					OBJECT,
-					function ( $expense ) {
-						$expense->amount = eaccounting_price_convert_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
+		global $wpdb;
+		$dates = $totals = $expenses = $graph = $categories = array();
+		$start = eaccounting_get_financial_start( $year );
+		$end   = eaccounting_get_financial_end( $year );
 
-						return $expense;
-					}
-				);
+		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
+		$where .= $wpdb->prepare( ' AND (paid_at BETWEEN %s AND %s)', $start, $end );
+		if ( ! empty( $account_id ) ) {
+			$where .= $wpdb->prepare( ' AND account_id=%d', $account_id );
+		}
+		if ( ! empty( $vendor_id ) ) {
+			$where .= $wpdb->prepare( ' AND contact_id=%d', $vendor_id );
+		}
+		if ( ! empty( $category_id ) ) {
+			$where .= $wpdb->prepare( ' AND category_id=%d', $category_id );
+		}
+
+		$transactions = $wpdb->get_results(
+			"
+		SELECT name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id
+		FROM {$wpdb->prefix}ea_transactions ea_transactions
+		LEFT JOIN {$wpdb->prefix}ea_categories ea_categories ON ea_categories.id=ea_transactions.category_id
+		WHERE $where AND ea_transactions.type = 'expense'
+		"
+		);
+
+		foreach ( $transactions as $key => $transaction ) {
+			$transaction->amount = eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+
+			$transactions[ $key ] = $transaction;
+		}
 
 		$categories = wp_list_pluck( $transactions, 'name', 'category_id' );
 		$date       = new \EverAccounting\Core\DateTime( $start );
@@ -127,7 +133,7 @@ function eaccounting_reports_expense_summary_tab() {
 				$totals[ $month ]['amount']                                += $transaction->amount;
 			}
 		}
-		$chart = new \EverAccounting\Chart();
+		$chart = new \EverAccounting\Core\Chart();
 		$chart->type( 'line' )
 			  ->width( 0 )
 			  ->height( 300 )

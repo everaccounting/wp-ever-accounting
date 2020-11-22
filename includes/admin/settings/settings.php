@@ -26,9 +26,7 @@ function eaccounting_admin_settings_page() {
 		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
 		exit();
 	}
-
-	$pages = arr;
-
+	
 	global $wp_settings_fields;
 	$page    = 'eaccounting_settings_' . $active_tab;
 	$section = 'eaccounting_settings_' . $active_tab;

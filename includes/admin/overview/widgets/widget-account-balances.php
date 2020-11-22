@@ -40,14 +40,13 @@ class Account_Balances extends Widget {
 		$accounts = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-		SELECT a.name, a.opening_balance, a.currency_code,
-		SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) balance
-		FROM {$wpdb->prefix}ea_accounts a
-		LEFT JOIN {$wpdb->prefix}ea_transactions as t ON t.account_id=a.id
-		GROUP BY a.id
-		ORDER BY balance DESC
-		LIMIT %d
-		",
+				SELECT a.name, a.opening_balance, a.currency_code,
+				SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) balance
+				FROM {$wpdb->prefix}ea_accounts a
+				LEFT JOIN {$wpdb->prefix}ea_transactions as t ON t.account_id=a.id
+				GROUP BY a.id
+				ORDER BY balance DESC
+				LIMIT %d",
 				5
 			)
 		);
