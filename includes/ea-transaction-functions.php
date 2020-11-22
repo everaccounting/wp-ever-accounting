@@ -309,20 +309,20 @@ function eaccounting_get_transfer( $transfer ) {
  * @since 1.1.0
  *
  */
-function eaccounting_insert_transfer( $data, $wp_error = true ) {
+function eaccounting_insert_transfer( $args, $wp_error = true ) {
 	// Ensure that we have data.
-	if ( empty( $data ) ) {
+	if ( empty( $args ) ) {
 		return false;
 	}
 	try {
-		// The  id will be provided when updating an item.
-		$data = wp_parse_args( $data, array( 'id' => null ) );
+		// The id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-		// Retrieve the category.
-		$item = new \EverAccounting\Models\Transfer( $data['id'] );
+		// Retrieve the transfer.
+		$item = new \EverAccounting\Models\Transfer( $args['id'] );
 
 		// Load new data.
-		$item->set_props( $data );
+		$item->set_props( $args );
 
 		// Save the item
 		$item->save();
