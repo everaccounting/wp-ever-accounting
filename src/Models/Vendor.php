@@ -47,7 +47,7 @@ class Vendor extends ContactModel {
 		} elseif ( is_array( $data ) ) {
 			$this->set_props( $data );
 		} else {
-			$this->set_object_read( true );
+			$this->set_object_read( false );
 		}
 
 		//Load repository

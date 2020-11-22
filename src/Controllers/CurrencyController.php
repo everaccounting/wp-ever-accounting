@@ -81,12 +81,10 @@ class CurrencyController extends Singleton {
 	 * @since 1.1.0
 	 *
 	 */
-	function delete_default_currency( $id, $data ) {
+	public static function delete_default_currency( $id, $data ) {
 		$default_currency = eaccounting()->settings->get( 'default_currency' );
 		if ( $default_currency === $data['code'] ) {
 			eaccounting()->settings->set( array( array( 'default_currency' => '' ) ), true );
 		}
 	}
-
-
 }

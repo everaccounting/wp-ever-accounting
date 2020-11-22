@@ -47,7 +47,6 @@ class AccountController extends Singleton {
 	 */
 	public static function validate_account_data( $data, $id ) {
 		global $wpdb;
-
 		if ( empty( $data['name'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Account name is required.', 'wp-ever-accounting' ) );
 		}
@@ -58,6 +57,7 @@ class AccountController extends Singleton {
 			throw new Exception( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
 		}
 		$currency = new Currency( $data['currency_code'] );
+
 		if ( ! $currency->exists() ) {
 			throw new Exception( 'invalid_prop', __( 'Currency code is invalid.', 'wp-ever-accounting' ) );
 		}
@@ -91,14 +91,14 @@ class AccountController extends Singleton {
 	 * @return bool
 	 * @since 1.0.2
 	 */
-	function update_transaction_account( $id ) {
+	public static function update_transaction_account( $id ) {
 		global $wpdb;
 		$id = absint( $id );
 		if ( empty( $id ) ) {
 			return false;
 		}
 
-		return $wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'account_id' => '' ), array( 'account_id', absint( $id ) ) );
+		return $wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'account_id' => '' ), array( 'account_id' => absint( $id ) ) );
 	}
 
 }

@@ -73,7 +73,7 @@ class Item extends ResourceModel {
 		} elseif ( is_array( $item ) ) {
 			$this->set_props( $item );
 		} else {
-			$this->set_object_read( true );
+			$this->set_object_read( false );
 		}
 
 		//Load repository

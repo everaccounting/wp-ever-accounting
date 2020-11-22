@@ -36,13 +36,13 @@ class CategoryController extends Singleton {
 	/**
 	 * Validate category data.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param array    $data
-	 * @param null     $id
+	 * @param array $data
+	 * @param null $id
 	 * @param Category $category
 	 *
 	 * @throws \EverAccounting\Core\Exception
+	 * @since 1.1.0
+	 *
 	 */
 	public static function validate_category_data( $data, $id ) {
 		global $wpdb;
@@ -62,20 +62,20 @@ class CategoryController extends Singleton {
 	/**
 	 * Delete category id from transactions.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $id
 	 *
 	 * @return bool
+	 * @since 1.1.0
+	 *
 	 */
-	function update_transaction_category( $id ) {
+	public static function update_transaction_category( $id ) {
 		global $wpdb;
 		$id = absint( $id );
 		if ( empty( $id ) ) {
 			return false;
 		}
 
-		return $wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'category_id' => '' ), array( 'category_id', absint( $id ) ) );
+		return $wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'category_id' => '' ), array( 'category_id' => absint( $id ) ) );
 	}
 
 }

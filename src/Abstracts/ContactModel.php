@@ -72,11 +72,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's wp user ID.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return int|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_user_id( $context = 'edit' ) {
 		return $this->get_prop( 'user_id', $context );
@@ -85,11 +85,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact Name.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
@@ -98,11 +98,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's email.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_email( $context = 'edit' ) {
 		return $this->get_prop( 'email', $context );
@@ -111,11 +111,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's phone number.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_phone( $context = 'edit' ) {
 		return $this->get_prop( 'phone', $context );
@@ -124,11 +124,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's phone number.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_fax( $context = 'edit' ) {
 		return $this->get_prop( 'fax', $context );
@@ -137,11 +137,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's birth date.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_birth_date( $context = 'edit' ) {
 		return $this->get_prop( 'birth_date', $context );
@@ -150,11 +150,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's address.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_address( $context = 'edit' ) {
 		return $this->get_prop( 'address', $context );
@@ -163,11 +163,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's country.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_country( $context = 'edit' ) {
 		return $this->get_prop( 'country', $context );
@@ -176,11 +176,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's website number.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_website( $context = 'edit' ) {
 		return $this->get_prop( 'website', $context );
@@ -189,11 +189,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's tax number.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_tax_number( $context = 'edit' ) {
 		return $this->get_prop( 'tax_number', $context );
@@ -202,11 +202,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get the currency code of the contact.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -215,11 +215,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get the type of contact.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -228,11 +228,11 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Get contact's note.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $context
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_note( $context = 'edit' ) {
 		return $this->get_prop( 'note', $context );
@@ -251,9 +251,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set wp user id.
 	 *
+	 * @param $id
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $id
 	 */
 	public function set_user_id( $id ) {
 		$this->set_prop( 'user_id', absint( $id ) );
@@ -262,9 +263,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact name.
 	 *
+	 * @param $name
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $name
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -273,12 +275,14 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's email.
 	 *
+	 * @param string $value Email.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $value Email.
 	 */
 	public function set_email( $value ) {
-		if ( $value && ! is_email( $value ) ) {
+		//$this->set_prop( 'email', sanitize_email( $value ) );
+		if ( $value && is_email( $value ) ) {
 			$this->set_prop( 'email', sanitize_email( $value ) );
 		}
 	}
@@ -286,9 +290,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's phone.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_phone( $value ) {
 		$this->set_prop( 'phone', eaccounting_clean( $value ) );
@@ -297,9 +302,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's fax.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_fax( $value ) {
 		$this->set_prop( 'fax', eaccounting_clean( $value ) );
@@ -308,9 +314,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's birth date.
 	 *
+	 * @param $date
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $date
 	 */
 	public function set_birth_date( $date ) {
 		$this->set_date_prop( 'birth_date', $date );
@@ -319,9 +326,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's phone.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_address( $value ) {
 		$this->set_prop( 'address', sanitize_textarea_field( $value ) );
@@ -330,9 +338,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact country.
 	 *
+	 * @param $country
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $country
 	 */
 	public function set_country( $country ) {
 		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
@@ -343,9 +352,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's website.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_website( $value ) {
 		$this->set_prop( 'website', esc_url( $value ) );
@@ -354,9 +364,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's tax_number.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_tax_number( $value ) {
 		$this->set_prop( 'tax_number', eaccounting_clean( $value ) );
@@ -365,9 +376,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's currency_code.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_currency_code( $value ) {
 		if ( eaccounting_get_currency( $value ) ) {
@@ -378,9 +390,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact type.
 	 *
+	 * @param $type
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $type
 	 */
 	public function set_type( $type ) {
 		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
@@ -391,9 +404,10 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Set contact's note.
 	 *
+	 * @param $value
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
 	 */
 	public function set_note( $value ) {
 		$this->set_prop( 'note', sanitize_textarea_field( $value ) );
@@ -408,8 +422,8 @@ abstract class ContactModel extends ResourceModel {
 	/**
 	 * Return this customer's avatar.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_avatar_url() {
 		return get_avatar_url( $this->get_email() );

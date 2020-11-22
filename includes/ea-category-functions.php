@@ -104,6 +104,8 @@ function eaccounting_insert_category( $data = array(), $wp_error = false ) {
 		// Load new data.
 		$item->set_props( $data );
 
+		$item->save();
+
 		return $item;
 	} catch ( \EverAccounting\Core\Exception $e ) {
 		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
