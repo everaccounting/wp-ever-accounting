@@ -41,9 +41,11 @@ class CategoryController extends Singleton {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array     $data
-	 * @param null      $id
+	 * @param array    $data
+	 * @param null     $id
 	 * @param Category $category
+	 *
+	 * @throws \EverAccounting\Core\Exception
 	 */
 	public static function validate_category_data( $data, $id, $category ) {
 		global $wpdb;

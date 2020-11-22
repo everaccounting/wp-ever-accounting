@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ContactModel;
+use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Customers;
 
 defined( 'ABSPATH' ) || exit;
@@ -28,12 +29,33 @@ class Customer extends ContactModel {
 	const CONTACT_TYPE = 'customer';
 
 	/**
-	 * Customer constructor.
+	 * Get the account if ID is passed, otherwise the account is new and empty.
 	 *
-	 * @param int $data
+	 * @since 1.0.2
+	 *
+	 * @param int|object $data object to read.
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
+
+		if ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( is_numeric( $data ) ) {
+			$this->set_id( $data );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} elseif ( is_array( $data ) ) {
+			$this->set_props( $data );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		//Load repository
+		$this->repository = Repositories::load( 'contact-customer' );
+
+		if ( $this->get_id() > 0 ) {
+			$this->repository->read( $this );
+		}
 
 		// If not vendor then reset to default
 		if ( self::CONTACT_TYPE !== $this->get_type() ) {
