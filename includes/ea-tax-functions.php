@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Get tax types.
  *
- * @since 1.1.0
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_tax_types() {
 	$types = array(
@@ -30,14 +30,23 @@ function eaccounting_get_tax_types() {
 /**
  * Main function for returning tax.
  *
- * @since 1.1.0
- *
  * @param $tax
  *
- * @return \EverAccounting\Tax|null
+ * @return \EverAccounting\Models\Tax|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_tax( $tax ) {
+	if ( empty( $tax ) ) {
+		return null;
+	}
+	try {
+		$result = new EverAccounting\Models\Tax( $tax );
 
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return null;
+	}
 }
 
 /**
@@ -45,85 +54,79 @@ function eaccounting_get_tax( $tax ) {
  *
  *  Returns a new tax object on success.
  *
- * @since 1.1.0
- *
- * @param array $args    {
+ * @param array $args {
  *                       An array of elements that make up an invoice to update or insert.
  *
- * @type int    $id      The tax ID. If equal to something other than 0,
+ * @type int $id The tax ID. If equal to something other than 0,
  *                                         the tax with that id will be updated. Default 0.
  *
- * @type string $name    The name of the tax.
- * @type double $rate    The rate of the tax.
- * @type string $type    The type for the tax.
- * @type int    $enabled Status of the tax
+ * @type string $name The name of the tax.
+ * @type double $rate The rate of the tax.
+ * @type string $type The type for the tax.
+ * @type int $enabled Status of the tax
  * }
  *
  * @return \EverAccounting\Models\Tax|WP_Error|bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_tax( $args, $wp_error = true ) {
 	// Ensure that we have data.
 	if ( empty( $args ) ) {
 		return false;
 	}
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-	// The  id will be provided when updating an item.
-	$args = wp_parse_args( $args, array( 'id' => null ) );
+		// Retrieve the category.
+		$item = new \EverAccounting\Models\Tax( $args['id'] );
 
-	// Retrieve the category.
-	$item = new \EverAccounting\Models\Tax( $args['id'] );
+		// Load new data.
+		$item->set_props( $args );
 
-	// Load new data.
-	$item->set_props( $args );
+		// Save the item
+		$item->save();
 
-	// Save the item
-	$error = $item->save();
-
-	// Do we have an error while saving?
-	if ( is_wp_error( $error ) ) {
-		return $wp_error ? $error : 0;
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
-
-	if ( ! $item->get_id() ) {
-		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving tax.', 'wp-ever-accounting' ) ) : 0;
-	}
-
-	return $item;
 }
 
 /**
  * Delete an tax.
  *
- * @since 1.1.0
- *
  * @param $tax_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_tax( $tax_id ) {
-	$item = new EverAccounting\Models\Tax( $tax_id );
-	if ( ! $item->exists() ) {
+	try {
+		$tax = new EverAccounting\Models\Tax( $tax_id );
+		return $tax->exists() ? $tax->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
-
-	return $item->delete();
 }
 
 /**
  * Get taxes.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- * @param array $args    {
- *
- * @type string $name    The name of the tax.
- * @type double $rate    The rate of the tax.
- * @type string $type    The type for the tax.
- * @type int    $enabled Status of the tax.
+ * @type string $name The name of the tax.
+ * @type double $rate The rate of the tax.
+ * @type string $type The type for the tax.
+ * @type int $enabled Status of the tax.
  * }
  *
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_taxes( $args = array() ) {
 	global $wpdb;
@@ -156,7 +159,7 @@ function eaccounting_get_taxes( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];

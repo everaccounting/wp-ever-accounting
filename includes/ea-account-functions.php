@@ -79,7 +79,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		// The  id will be provided when updating an item.
 		$data = wp_parse_args( $data, array( 'id' => null ) );
 
-		// Retrieve the category.
+		// Retrieve the account.
 		$item = new \EverAccounting\Models\Account( $data['id'] );
 
 		// Load new data.

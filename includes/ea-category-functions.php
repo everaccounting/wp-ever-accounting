@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get all the available type of category the plugin support.
  *
- * @since 1.1.0
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_category_types() {
 	$types = array(
@@ -29,11 +29,11 @@ function eaccounting_get_category_types() {
 /**
  * Get the category type label of a specific type.
  *
- * @since 1.1.0
- *
  * @param $type
  *
  * @return string
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_category_type( $type ) {
 	$types = eaccounting_get_category_types();
@@ -41,107 +41,102 @@ function eaccounting_get_category_type( $type ) {
 	return array_key_exists( $type, $types ) ? $types[ $type ] : null;
 }
 
-
 /**
  * Get category.
- *
- * @since 1.1.0
  *
  * @param $category
  *
  * @return null|EverAccounting\Models\Category
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
 		return null;
 	}
-	$result = new EverAccounting\Models\Category( $category );
+	try {
+		$result = new EverAccounting\Models\Category( $category );
 
-	return $result->exists() ? $result : null;
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return null;
+	}
 }
 
 /**
  * Insert a category.
  *
- * @since 1.1.0
- *
- * @param array $data         {
+ * @param array $data {
  *                            An array of elements that make up an category to update or insert.
  *
- * @type int    $id           The category ID. If equal to something other than 0, the category with that ID will be updated. Default 0.
+ * @type int $id The category ID. If equal to something other than 0, the category with that ID will be updated. Default 0.
  *
- * @type string $name         Unique name of the category.
+ * @type string $name Unique name of the category.
  *
- * @type string $type         Category type.
+ * @type string $type Category type.
  *
- * @type string $color        Color of the category.
+ * @type string $color Color of the category.
  *
- * @type int    $enabled      The status of the category. Default 1.
+ * @type int $enabled The status of the category. Default 1.
  *
  * @type string $date_created The date when the category is created. Default is current current time.
  *
  * }
  *
- * @param bool  $wp_error     Whether to return false or WP_Error on failure.
+ * @param bool $wp_error Whether to return false or WP_Error on failure.
  *
- * @return int|\WP_Error|\EverAccounting\Models\Category The value 0 or WP_Error on failure. The Category object on success.
+ * @return int|\WP_Error|\EverAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_category( $data = array(), $wp_error = false ) {
 	// Ensure that we have data.
 	if ( empty( $data ) ) {
 		return false;
 	}
+	try {
+		// The  id will be provided when updating an item.
+		$data = wp_parse_args( $data, array( 'id' => null ) );
 
-	// The  id will be provided when updating an item.
-	$data = wp_parse_args( $data, array( 'id' => null ) );
+		// Retrieve the category.
+		$item = new \EverAccounting\Models\Category( $data['id'] );
 
-	// Retrieve the category.
-	$item = new \EverAccounting\Models\Category( $data['id'] );
+		// Load new data.
+		$item->set_props( $data );
 
-	// Load new data.
-	$item->set_props( $data );
-
-	// Save the item
-	$error = $item->save();
-
-	// Do we have an error while saving?
-	if ( is_wp_error( $error ) ) {
-		return $wp_error ? $error : 0;
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
-
-	if ( ! $item->get_id() ) {
-		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving your category.', 'wp-ever-accounting' ) ) : 0;
-	}
-
-	return $item;
 }
 
 /**
  * Delete a category.
  *
- * @since 1.1.0
- *
  * @param $category_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_category( $category_id ) {
-	$category = new EverAccounting\Models\Category( $category_id );
-	if ( ! $category->exists() ) {
+	try {
+		$category = new EverAccounting\Models\Category( $category_id );
+
+		return $category->exists() ? $category->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
-
-	return $category->delete();
 }
 
 /**
  * Get category items.
  *
- * @since 1.1.0
- *
  * @param array $args
  *
  * @return int|array|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_categories( $args = array() ) {
 	global $wpdb;
@@ -172,7 +167,7 @@ function eaccounting_get_categories( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];

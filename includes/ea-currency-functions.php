@@ -15,9 +15,10 @@ defined( 'ABSPATH' ) || exit();
  * Get currency data by code.
  *
  * @param $code
- * @since 1.1.0
  *
  * @return bool|array
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_currency_data( $code ) {
 	$codes = eaccounting_get_data( 'currencies' );
@@ -35,20 +36,23 @@ function eaccounting_get_currency_data( $code ) {
  * Whenever need to check existence of the object
  * in database must check $currency->exist()
  *
- * @since 1.1.0
- *
  * @param object|string|int $currency
  *
  * @return EverAccounting\Models\Currency|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_currency( $currency ) {
 	if ( empty( $currency ) ) {
 		return null;
 	}
+	try {
+		$result = new EverAccounting\Models\Currency( $currency );
 
-	$result = new EverAccounting\Models\Currency( $currency );
-
-	return $result->exists() ? $result : null;
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return null;
+	}
 }
 
 /**
@@ -56,96 +60,91 @@ function eaccounting_get_currency( $currency ) {
  *
  *  Returns a new currency object on success.
  *
- * @since 1.1.0
- *
- * @param array $args               {
+ * @param array $args {
  *                                  An array of elements that make up a currency to update or insert.
  *
- * @type int    $id                 The currency ID. If equal to something other than 0,
+ * @type int $id The currency ID. If equal to something other than 0,
  *                                         the currency with that id will be updated. Default 0.
  *
- * @type string $name               The name of the currency . Default empty.
+ * @type string $name The name of the currency . Default empty.
  *
- * @type string $code               The code of currency. Default empty.
+ * @type string $code The code of currency. Default empty.
  *
- * @type double $rate               The rate for the currency.Default is 1.
+ * @type double $rate The rate for the currency.Default is 1.
  *
- * @type double $precision          The precision for the currency. Default 0.
+ * @type double $precision The precision for the currency. Default 0.
  *
- * @type string $symbol             The symbol for the currency. Default empty.
+ * @type string $symbol The symbol for the currency. Default empty.
  *
- * @type string $position           The position where the currency code will be set in amount. Default before.
+ * @type string $position The position where the currency code will be set in amount. Default before.
  *
- * @type string $decimal_separator  The decimal_separator for the currency code. Default ..
+ * @type string $decimal_separator The decimal_separator for the currency code. Default ..
  *
  * @type string $thousand_separator The thousand_separator for the currency code. Default ,.
  *
- * @type int    $enabled            The status of the currency. Default 1.
+ * @type int $enabled The status of the currency. Default 1.
  *
- * @type string $date_created       The date when the currency is created. Default is current time.
+ * @type string $date_created The date when the currency is created. Default is current time.
  *
  *
  * }
  *
  * @return EverAccounting\Models\Currency|\WP_Error|bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_currency( $args, $wp_error = true ) {
 	// Ensure that we have data.
 	if ( empty( $args ) ) {
 		return false;
 	}
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-	// The  id will be provided when updating an item.
-	$args = wp_parse_args( $args, array( 'id' => null ) );
+		// Retrieve the currency.
+		$item = new \EverAccounting\Models\Currency( $args['id'] );
 
-	// Retrieve the category.
-	$item = new \EverAccounting\Models\Currency( $args['id'] );
+		// Load new data.
+		$item->set_props( $args );
 
-	// Load new data.
-	$item->set_props( $args );
+		// Save the item
+		$item->save();
 
-	// Save the item
-	$error = $item->save();
-
-	// Do we have an error while saving?
-	if ( is_wp_error( $error ) ) {
-		return $wp_error ? $error : 0;
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
-
-	if ( ! $item->get_id() ) {
-		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving currency.', 'wp-ever-accounting' ) ) : 0;
-	}
-
-	return $item;
 }
 
 /**
  * Delete a currency.
  *
- * @since 1.1.0
- *
  * @param $currency_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_currency( $currency_id ) {
-	$currency = new EverAccounting\Models\Currency( $currency_id );
-	if ( ! $currency->exists() ) {
+	try {
+		$currency = new EverAccounting\Models\Currency( $currency_id );
+
+		return $currency->exists() ? $currency->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
-
-	return $currency->delete();
 }
 
 /**
  * Get currency items.
  *
- * @since 1.1.0
- *
- *
  * @param array $args
  *
  * @return array|int|null
+ * @since 1.1.0
+ *
+ *
  */
 function eaccounting_get_currencies( $args = array() ) {
 	global $wpdb;
@@ -178,7 +177,7 @@ function eaccounting_get_currencies( $args = array() ) {
 	$query_from    = "FROM {$table}";
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];

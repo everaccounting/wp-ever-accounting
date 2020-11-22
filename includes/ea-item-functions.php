@@ -13,19 +13,23 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main function for returning item.
  *
- * @since 1.1.0
- *
  * @param $item
  *
  * @return EverAccounting\Models\Item|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_item( $item ) {
 	if ( empty( $item ) ) {
 		return null;
 	}
-	$result = new EverAccounting\Models\Item( $item );
+	try {
+		$result = new EverAccounting\Models\Item( $item );
 
-	return $result->exists() ? $result : null;
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return null;
+	}
 }
 
 
@@ -34,26 +38,26 @@ function eaccounting_get_item( $item ) {
  *
  *  Returns a new item object on success.
  *
- * @since 1.1.0
- *
- * @param array $args           {
+ * @param array $args {
  *                              An array of elements that make up an invoice to update or insert.
  *
- * @type int    $id             The item ID. If equal to something other than 0,
+ * @type int $id The item ID. If equal to something other than 0,
  *                                         the item with that id will be updated. Default 0.
- * @type string $name           The name of the item.
- * @type string $sku            The sku of the item.
- * @type int    $image_id       The image_id for the item.
- * @type string $description    The description of the item.
- * @type double $sale_price     The sale_price of the item.
+ * @type string $name The name of the item.
+ * @type string $sku The sku of the item.
+ * @type int $image_id The image_id for the item.
+ * @type string $description The description of the item.
+ * @type double $sale_price The sale_price of the item.
  * @type double $purchase_price The purchase_price for the item.
- * @type int    $quantity       The quantity of the item.
- * @type int    $category_id    The category_id of the item.
- * @type int    $tax_id         The tax_id of the item.
- * @type int    $enabled        The enabled of the item.
+ * @type int $quantity The quantity of the item.
+ * @type int $category_id The category_id of the item.
+ * @type int $tax_id The tax_id of the item.
+ * @type int $enabled The enabled of the item.
  * }
  *
  * @return EverAccounting\Models\Item|WP_Error|bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_item( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -61,69 +65,65 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
 		return false;
 	}
 
-	// The  id will be provided when updating an item.
-	$args = wp_parse_args( $args, array( 'id' => null ) );
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-	// Retrieve the category.
-	$item = new \EverAccounting\Models\Item( $args['id'] );
+		// Retrieve the item.
+		$item = new \EverAccounting\Models\Item( $args['id'] );
 
-	// Load new data.
-	$item->set_props( $args );
+		// Load new data.
+		$item->set_props( $args );
 
-	// Save the item
-	$error = $item->save();
+		// Save the item
+		$item->save();
 
-	// Do we have an error while saving?
-	if ( is_wp_error( $error ) ) {
-		return $wp_error ? $error : 0;
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
-
-	if ( ! $item->get_id() ) {
-		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving item.', 'wp-ever-accounting' ) ) : 0;
-	}
-
-	return $item;
 }
 
 /**
  * Delete an item.
  *
- * @since 1.1.0
- *
  * @param $item_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_item( $item_id ) {
-	$item = new EverAccounting\Models\Item( $item_id );
-	if ( ! $item->exists() ) {
+	try {
+		$item = new EverAccounting\Models\Item( $item_id );
+
+		return $item->exists() ? $item->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
-
-	return $item->delete();
 }
 
 /**
  * Get items.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- *
- * @param array $args           {
- *
- * @type string $name           The name of the item.
- * @type string $sku            The sku of the item.
- * @type int    $image_id       The image_id for the item.
- * @type string $description    The description of the item.
- * @type double $sale_price     The sale_price of the item.
+ * @type string $name The name of the item.
+ * @type string $sku The sku of the item.
+ * @type int $image_id The image_id for the item.
+ * @type string $description The description of the item.
+ * @type double $sale_price The sale_price of the item.
  * @type double $purchase_price The purchase_price for the item.
- * @type int    $quantity       The quantity of the item.
- * @type int    $category_id    The category_id of the item.
- * @type int    $tax_id         The tax_id of the item.
- * @type int    $enabled        The enabled of the item.
+ * @type int $quantity The quantity of the item.
+ * @type int $category_id The category_id of the item.
+ * @type int $tax_id The tax_id of the item.
+ * @type int $enabled The enabled of the item.
  * }
  *
  * @return array|int
+ * @since 1.1.0
+ *
+ *
  */
 function eaccounting_get_items( $args = array() ) {
 	global $wpdb;
