@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get contact types.
  *
- * @since 1.1.0
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_contact_types() {
 	return apply_filters(
@@ -30,11 +30,11 @@ function eaccounting_get_contact_types() {
 /**
  * Get the contact type label of a specific type.
  *
- * @since 1.1.0
- *
  * @param $type
  *
  * @return string
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_contact_type( $type ) {
 	$types = eaccounting_get_contact_types();
@@ -46,128 +46,125 @@ function eaccounting_get_contact_type( $type ) {
 /**
  * Get customer.
  *
- * @since 1.1.0
- *
  * @param $customer
  *
  * @return \EverAccounting\Models\Customer|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_customer( $customer ) {
 	if ( empty( $customer ) ) {
 		return null;
 	}
+	try {
+		$result = new EverAccounting\Models\Customer( $customer );
 
-	$result = new EverAccounting\Models\Customer( $customer );
-
-	return $result->exists() ? $result : null;
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return null;
+	}
 }
-
 
 /**
  *  Create new customer programmatically.
  *
  *  Returns a new customer object on success.
  *
- * @since 1.1.0
- *
- * @param array $args          {
+ * @param array $args {
  *                             An array of elements that make up an customer to update or insert.
  *
- * @type int    $id            ID of the contact. If equal to something other than 0,
+ * @type int $id ID of the contact. If equal to something other than 0,
  *                               the post with that ID will be updated. Default 0.
- * @type int    $user_id       user_id of the contact. Default null.
- * @type string $name          name of the contact. Default not null.
- * @type string $email         email of the contact. Default null.
- * @type string $phone         phone of the contact. Default null.
- * @type string $fax           fax of the contact. Default null.
- * @type string $fax           fax of the contact. Default null.
- * @type string $birth_date    date of birth of the contact. Default null.
- * @type string $address       address of the contact. Default null.
- * @type string $country       country of the contact. Default null.
- * @type string $website       website of the contact. Default null.
- * @type string $tax_number    tax_number of the contact. Default null.
+ * @type int $user_id user_id of the contact. Default null.
+ * @type string $name name of the contact. Default not null.
+ * @type string $email email of the contact. Default null.
+ * @type string $phone phone of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $birth_date date of birth of the contact. Default null.
+ * @type string $address address of the contact. Default null.
+ * @type string $country country of the contact. Default null.
+ * @type string $website website of the contact. Default null.
+ * @type string $tax_number tax_number of the contact. Default null.
  * @type string $currency_code currency_code of the contact. Default null.
- * @type string $note          Additional note of the contact. Default null.
- * @type string $attachment    Attachment attached with contact. Default null.
+ * @type string $note Additional note of the contact. Default null.
+ * @type string $attachment Attachment attached with contact. Default null.
  *
  * }
  *
  * @return EverAccounting\Models\Customer|\WP_Error|bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_customer( $args, $wp_error = true ) {
 	// Ensure that we have data.
 	if ( empty( $args ) ) {
 		return false;
 	}
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-	// The  id will be provided when updating an item.
-	$args = wp_parse_args( $args, array( 'id' => null ) );
+		// Retrieve the customer.
+		$item = new \EverAccounting\Models\Customer( $args['id'] );
 
-	// Retrieve the category.
-	$item = new \EverAccounting\Models\Customer( $args['id'] );
+		// Load new data.
+		$item->set_props( $args );
 
-	// Load new data.
-	$item->set_props( $args );
+		// Save the item
+		$item->save();
 
-	// Save the item
-	$error = $item->save();
-
-	// Do we have an error while saving?
-	if ( is_wp_error( $error ) ) {
-		return $wp_error ? $error : 0;
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
-
-	if ( ! $item->get_id() ) {
-		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving customer.', 'wp-ever-accounting' ) ) : 0;
-	}
-
-	return $item;
 }
 
 /**
  * Delete a customer.
  *
- * @since 1.1.0
- *
  * @param $customer_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_customer( $customer_id ) {
-	$customer = new EverAccounting\Models\Customer( $customer_id );
-	if ( ! $customer->exists() ) {
+	try {
+		$customer = new EverAccounting\Models\Customer( $customer_id );
+
+		return $customer->exists() ? $customer->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
-
-	return $customer->delete();
 }
 
 /**
  * Get customers items.
  *
- * @since 1.1.0
+ * @param bool $callback
  *
- * @param bool  $callback
+ * @param array $args {
  *
- * @param array $args          {
- *
- * @type int    $id            ID of the contact.
- * @type int    $user_id       user_id of the contact.
- * @type string $name          name of the contact.
- * @type string $email         email of the contact.
- * @type string $phone         phone of the contact.
- * @type string $fax           fax of the contact.
- * @type string $fax           fax of the contact.
- * @type string $birth_date    date of birth of the contact.
- * @type string $address       address of the contact.
- * @type string $country       country of the contact.
- * @type string $website       website of the contact.
- * @type string $tax_number    tax_number of the contact.
+ * @type int $id ID of the contact.
+ * @type int $user_id user_id of the contact.
+ * @type string $name name of the contact.
+ * @type string $email email of the contact.
+ * @type string $phone phone of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $birth_date date of birth of the contact.
+ * @type string $address address of the contact.
+ * @type string $country country of the contact.
+ * @type string $website website of the contact.
+ * @type string $tax_number tax_number of the contact.
  * @type string $currency_code currency_code of the contact.
  *
  * }
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_customers( $args = array(), $callback = true ) {
 	global $wpdb;
@@ -199,7 +196,7 @@ function eaccounting_get_customers( $args = array(), $callback = true ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = "WHERE 1=1 AND $table.`type`='customer' ";
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];
@@ -233,127 +230,124 @@ function eaccounting_get_customers( $args = array(), $callback = true ) {
 /**
  * Get vendor.
  *
- * @since 1.1.0
- *
  * @param $vendor
  *
  * @return \EverAccounting\Models\Vendor|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_vendor( $vendor ) {
 	if ( empty( $vendor ) ) {
 		return null;
 	}
+	try {
+		$result = new EverAccounting\Models\Vendor( $vendor );
 
-	$result = new EverAccounting\Models\Vendor( $vendor );
-
-	return $result->exists() ? $result : null;
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return null;
+	}
 }
-
 
 /**
  *  Create new vendor programmatically.
  *
  *  Returns a new vendor object on success.
  *
- * @since 1.1.0
- *
- * @param array $args          {
+ * @param array $args {
  *                             An array of elements that make up a vendor to update or insert.
  *
- * @type int    $id            ID of the contact. If equal to something other than 0,
+ * @type int $id ID of the contact. If equal to something other than 0,
  *                               the post with that ID will be updated. Default 0.
- * @type int    $user_id       user_id of the contact. Default null.
- * @type string $name          name of the contact. Default not null.
- * @type string $email         email of the contact. Default null.
- * @type string $phone         phone of the contact. Default null.
- * @type string $fax           fax of the contact. Default null.
- * @type string $fax           fax of the contact. Default null.
- * @type string $birth_date    date of birth of the contact. Default null.
- * @type string $address       address of the contact. Default null.
- * @type string $country       country of the contact. Default null.
- * @type string $website       website of the contact. Default null.
- * @type string $tax_number    tax_number of the contact. Default null.
+ * @type int $user_id user_id of the contact. Default null.
+ * @type string $name name of the contact. Default not null.
+ * @type string $email email of the contact. Default null.
+ * @type string $phone phone of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $fax fax of the contact. Default null.
+ * @type string $birth_date date of birth of the contact. Default null.
+ * @type string $address address of the contact. Default null.
+ * @type string $country country of the contact. Default null.
+ * @type string $website website of the contact. Default null.
+ * @type string $tax_number tax_number of the contact. Default null.
  * @type string $currency_code currency_code of the contact. Default null.
- * @type string $note          Additional note of the contact. Default null.
- * @type string $attachment    Attachment attached with contact. Default null.
+ * @type string $note Additional note of the contact. Default null.
+ * @type string $attachment Attachment attached with contact. Default null.
  *
  * }
  *
  * @return EverAccounting\Models\Vendor|\WP_Error|bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_vendor( $args, $wp_error = true ) {
 	// Ensure that we have data.
 	if ( empty( $args ) ) {
 		return false;
 	}
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-	// The  id will be provided when updating an item.
-	$args = wp_parse_args( $args, array( 'id' => null ) );
+		// Retrieve the vendor.
+		$item = new \EverAccounting\Models\Vendor( $args['id'] );
 
-	// Retrieve the category.
-	$item = new \EverAccounting\Models\Vendor( $args['id'] );
+		// Load new data.
+		$item->set_props( $args );
 
-	// Load new data.
-	$item->set_props( $args );
+		// Save the item
+		$item->save();
 
-	// Save the item
-	$error = $item->save();
-
-	// Do we have an error while saving?
-	if ( is_wp_error( $error ) ) {
-		return $wp_error ? $error : 0;
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
-
-	if ( ! $item->get_id() ) {
-		return $wp_error ? new WP_Error( 'insert_error', __( 'An error occurred when saving customer.', 'wp-ever-accounting' ) ) : 0;
-	}
-
-	return $item;
 }
 
 /**
  * Delete a vendor.
  *
- * @since 1.1.0
- *
  * @param $vendor_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_vendor( $vendor_id ) {
-	$vendor = new EverAccounting\Models\Vendor( $vendor_id );
-	if ( ! $vendor->exists() ) {
+	try {
+		$vendor = new EverAccounting\Models\Vendor( $vendor_id );
+
+		return $vendor->exists() ? $vendor->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
-
-	return $vendor->save();
 }
 
 /**
  * Get vendors items.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- * @param array $args          {
- *
- * @type int    $id            ID of the contact.
- * @type int    $user_id       user_id of the contact.
- * @type string $name          name of the contact.
- * @type string $email         email of the contact.
- * @type string $phone         phone of the contact.
- * @type string $fax           fax of the contact.
- * @type string $fax           fax of the contact.
- * @type string $birth_date    date of birth of the contact.
- * @type string $address       address of the contact.
- * @type string $country       country of the contact.
- * @type string $website       website of the contact.
- * @type string $tax_number    tax_number of the contact.
+ * @type int $id ID of the contact.
+ * @type int $user_id user_id of the contact.
+ * @type string $name name of the contact.
+ * @type string $email email of the contact.
+ * @type string $phone phone of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $fax fax of the contact.
+ * @type string $birth_date date of birth of the contact.
+ * @type string $address address of the contact.
+ * @type string $country country of the contact.
+ * @type string $website website of the contact.
+ * @type string $tax_number tax_number of the contact.
  * @type string $currency_code currency_code of the contact.
  *
  * }
  *
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_vendors( $args = array() ) {
 	global $wpdb;
@@ -385,7 +379,7 @@ function eaccounting_get_vendors( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = "WHERE 1=1 AND $table.`type`='vendor' ";
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];
