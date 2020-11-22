@@ -106,11 +106,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 function eaccounting_delete_account( $account_id ) {
 	try {
 		$account = new EverAccounting\Models\Account( $account_id );
-		if ( ! $account->exists() ) {
-			return false;
-		}
-
-		return $account->delete();
+		return $account->exists() ? $account->delete() : false;
 	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
