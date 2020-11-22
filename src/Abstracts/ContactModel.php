@@ -58,35 +58,7 @@ abstract class ContactModel extends ResourceModel {
 		'creator_id'    => null,
 		'date_created'  => null,
 	);
-	/**
-	 * Get the account if ID is passed, otherwise the account is new and empty.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param int|object $data object to read.
-	 */
-	public function __construct( $data = 0 ) {
-		parent::__construct( $data );
 
-		if ( $data instanceof self ) {
-			$this->set_id( $data->get_id() );
-		} elseif ( is_numeric( $data ) ) {
-			$this->set_id( $data );
-		} elseif ( ! empty( $data->id ) ) {
-			$this->set_id( $data->id );
-		} elseif ( is_array( $data ) ) {
-			$this->set_props( $data );
-		} else {
-			$this->set_object_read( true );
-		}
-
-		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
-
-		if ( $this->get_id() > 0 ) {
-			$this->repository->read( $this );
-		}
-	}
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
