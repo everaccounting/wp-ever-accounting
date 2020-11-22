@@ -23,67 +23,37 @@ defined( 'ABSPATH' ) || exit;
  */
 class InvoiceItems extends ResourceRepository {
 	/**
+	 * Table name
+	 *
 	 * @var string
 	 */
-	const TABLE = 'ea_invoice_items';
+	const TABLE = 'ea_categories';
 
 	/**
-	 * InvoiceItems constructor.
+	 * @since 1.1.0
+	 * @var string
 	 */
-	public function __construct() {
-		global $wpdb;
-		$this->table       = $wpdb->prefix . self::TABLE;
-		$this->table_name  = self::TABLE;
-		$this->primary_key = 'id';
-		$this->object_type = 'invoice_item';
-	}
+	protected $table = self::TABLE;
 
 	/**
-	 * Retrieves the list of columns for the database table.
-	 *
-	 * Sub-classes should define an array of columns here.
+	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * @return array List of columns.
+	 * @var array
 	 */
-	public static function get_columns() {
-		return array(
-			'invoice_id'   => self::BIGINT,
-			'item_id'      => self::BIGINT,
-			'name'         => self::VARCHAR,
-			'sku'          => self::VARCHAR,
-			'quantity'     => self::DOUBLE,
-			'price'        => self::DOUBLE,
-			'total'        => self::DOUBLE,
-			'tax_id'       => self::BIGINT,
-			'tax_name'     => self::VARCHAR,
-			'tax'          => self::DOUBLE,
-			'date_created' => self::DATETIME,
-		);
-	}
-
-	/**
-	 * Retrieves column defaults.
-	 *
-	 * Sub-classes can define default for any/all of columns defined in the get_columns() method.
-	 *
-	 * @since 1.1.0
-	 * @return array All defined column defaults.
-	 */
-	public static function get_defaults() {
-		return array(
-			'invoice_id'   => null,
-			'item_id'      => null,
-			'name'         => '',
-			'sku'          => '',
-			'quantity'     => 1,
-			'price'        => 0.00,
-			'total'        => 0.00,
-			'tax_id'       => null,
-			'tax_name'     => '',
-			'tax'          => 0.00,
-			'date_created' => current_time( 'mysql' ),
-		);
-	}
+	protected $data_type = array(
+		'id'           => '%d',
+		'invoice_id'   => '%d',
+		'item_id'      => '%d',
+		'name'         => '%s',
+		'sku'          => '%s',
+		'quantity'     => '%f',
+		'price'        => '%f',
+		'total'        => '%f',
+		'tax_id'       => '%d',
+		'tax_name'     => '%s',
+		'tax'          => '%f',
+		'date_created' => '%s',
+	);
 
 }

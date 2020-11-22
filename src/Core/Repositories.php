@@ -19,6 +19,9 @@ use EverAccounting\Repositories\Currencies;
 use EverAccounting\Repositories\Customers;
 use EverAccounting\Repositories\Expenses;
 use EverAccounting\Repositories\Incomes;
+use EverAccounting\Repositories\InvoiceHistories;
+use EverAccounting\Repositories\InvoiceItems;
+use EverAccounting\Repositories\Invoices;
 use EverAccounting\Repositories\Items;
 use EverAccounting\Abstracts\ResourceRepository;
 use EverAccounting\Repositories\Taxes;
@@ -65,6 +68,9 @@ class Repositories {
 		'transaction-expense' => Expenses::class,
 		'account'             => Accounts::class,
 		'tax'                 => Taxes::class,
+		'invoice'             => Invoices::class,
+		'invoice-item'        => InvoiceItems::class,
+		'invoice-history'     => InvoiceHistories::class,
 	);
 
 	/**

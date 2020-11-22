@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\InvoiceItems;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,17 +23,68 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class InvoiceItem extends ResourceModel {
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'invoice_item';
 
 	/**
-	 * Get the InvoiceItem if ID is passed, otherwise the invoice item is new and empty.
+	 * @since 1.1.0
+	 * @var string
+	 */
+	public $cache_group = 'eaccounting_invoice_item';
+
+	/**
+	 * Item Data array.
 	 *
-	 * @param int|object|InvoiceItems $data object to read.
+	 * @since 1.1.0
+	 * @var array
+	 */
+	protected $data = array(
+		'invoice_id'   => null,
+		'item_id'      => null,
+		'name'         => '',
+		'sku'          => '',
+		'quantity'     => 1,
+		'price'        => 0.00,
+		'total'        => 0.00,
+		'tax_id'       => null,
+		'tax_name'     => '',
+		'tax'          => 0.00,
+		'date_created' => null,
+	);
+
+	/**
+	 * Get the account if ID is passed, otherwise the account is new and empty.
+	 *
+	 * @param int|object|Account $data object to read.
 	 *
 	 * @since 1.1.0
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		parent::__construct( $data, InvoiceItems::instance() );
+		parent::__construct( $data );
+
+		if ( $data instanceof self ) {
+			$this->set_id( $data->get_id() );
+		} elseif ( is_numeric( $data ) ) {
+			$this->set_id( $data );
+		} elseif ( ! empty( $data->id ) ) {
+			$this->set_id( $data->id );
+		} elseif ( is_array( $data ) ) {
+			$this->set_props( $data );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		//Load repository
+		$this->repository = Repositories::load( 'invoice-item' );
+
+		if ( $this->get_id() > 0 ) {
+			$this->repository->read( $this );
+		}
 	}
 
 	/*

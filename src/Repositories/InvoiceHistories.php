@@ -28,50 +28,24 @@ class InvoiceHistories extends ResourceRepository {
 	const TABLE = 'ea_invoices';
 
 	/**
-	 * Accounts constructor.
+	 * @since 1.1.0
+	 * @var string
 	 */
-	public function __construct() {
-		global $wpdb;
-		$this->table       = $wpdb->prefix . self::TABLE;
-		$this->table_name  = self::TABLE;
-		$this->primary_key = 'id';
-		$this->object_type = 'invoice';
-	}
+	protected $table = self::TABLE;
 
 	/**
-	 * Retrieves the list of columns for the database table.
-	 *
-	 * Sub-classes should define an array of columns here.
+	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * @return array List of columns.
+	 * @var array
 	 */
-	public static function get_columns() {
-		return array(
-			'invoice_id'   => self::BIGINT,
-			'status'       => self::VARCHAR,
-			'notify'       => self::TINYINT,
-			'description'  => self::LONGTEXT,
-			'date_created' => self::DATETIME,
-		);
-	}
-
-	/**
-	 * Retrieves column defaults.
-	 *
-	 * Sub-classes can define default for any/all of columns defined in the get_columns() method.
-	 *
-	 * @since 1.1.0
-	 * @return array All defined column defaults.
-	 */
-	public static function get_defaults() {
-		return array(
-			'invoice_id'   => null,
-			'status'       => '',
-			'notify'       => 0,
-			'description'  => '',
-			'date_created' => current_time( 'mysql' ),
-		);
-	}
+	protected $data_type = array(
+		'id'           => '%d',
+		'invoice_id'   => '%d',
+		'status'       => '%s',
+		'notify'       => '%s',
+		'description'  => '%s',
+		'date_created' => '%s',
+	);
 
 }
