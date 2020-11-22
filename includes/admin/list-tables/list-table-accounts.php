@@ -445,7 +445,7 @@ class List_Table_Accounts extends List_Table {
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-
+		eaccounting_get_currencies(array('return' => 'raw', 'number' => '-1'));
 		$args        = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
 		$this->items = eaccounting_get_accounts( $args );
 
