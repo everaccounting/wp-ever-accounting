@@ -8,6 +8,8 @@
 
 namespace EverAccounting\Core;
 
+use EverAccounting\Models\Currency;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -66,7 +68,6 @@ class Money {
 		if ( is_int( $amount ) ) {
 			return (int) $this->convertAmount( $amount, $convert );
 		}
-
 		if ( is_float( $amount ) ) {
 			return (float) round( $this->convertAmount( $amount, $convert ), $this->currency->get_precision() );
 		}

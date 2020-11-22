@@ -48,6 +48,7 @@ class Currency extends ResourceModel {
 		'rate'               => 1,
 		'precision'          => 0,
 		'symbol'             => '',
+		'subunit'            => 2,
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
@@ -80,7 +81,7 @@ class Currency extends ResourceModel {
 		} elseif ( is_array( $item ) ) {
 			$this->set_props( $item );
 		} else {
-			$this->set_object_read( false );
+			$this->set_object_read( true );
 		}
 
 		//Load repository
@@ -110,13 +111,13 @@ class Currency extends ResourceModel {
 	 * @return bool|false|mixed|string|null
 	 */
 	public function get_id_by_code( $code ) {
-		if ( $code ) {
+		if ( empty( $code ) ) {
 			return false;
 		}
 		$id = wp_cache_get( $code, $this->cache_group );
 		if ( false === $id ) {
 			global $wpdb;
-			$id = $wpdb->get_var( "SELECT id from {$wpdb->prefix}ea_currencies where code = %s", $code );
+			$id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_currencies where code = %s", $code ) );
 			wp_cache_add( $code, $id, $this->cache_group );
 		}
 
@@ -267,8 +268,10 @@ class Currency extends ResourceModel {
 	 * @param $code
 	 */
 	public function set_code( $code ) {
-		if ( eaccounting_get_currency_data( $code ) ) {
+		$currency = eaccounting_get_currency_data( $code );
+		if ( $currency ) {
 			$this->set_prop( 'code', $code );
+			$this->set_prop( 'subunit', $currency['subunit'] );
 		}
 	}
 
@@ -393,16 +396,6 @@ class Currency extends ResourceModel {
 		}
 
 		return ' ' . $this->get_symbol( 'edit' );
-	}
-
-	/**
-	 * __toString.
-	 *
-	 * @since 1.0.2
-	 * @return string
-	 */
-	public function __toString() {
-		return $this->get_code( 'edit' ) . ' (' . $this->get_name( 'edit' ) . ')';
 	}
 
 	/*
