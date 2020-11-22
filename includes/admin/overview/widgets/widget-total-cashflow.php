@@ -4,7 +4,7 @@ namespace EverAccounting\Admin\Overview\Widgets;
 
 use EverAccounting\Core\DateTime;
 use EverAccounting\Abstracts\Widget;
-use EverAccounting\Chart;
+use EverAccounting\Core\Chart;
 
 
 class Cash_Flow extends Widget {
@@ -160,14 +160,14 @@ class Cash_Flow extends Widget {
 			}
 		}
 
-		$transactions = eaccounting()
-			->query()
-			->select( 'amount, currency_code, currency_rate, paid_at' )
-			->from( 'ea_transactions' )
-			->where_date_between( 'paid_at', $start->format( 'Y-m-d' ), $end->format( 'Y-m-d' ) )
-			->where( 'type', $type )
-			->where_raw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
-			->get();
+		$transactions = $wpdb->get_results($wpdb->prepare("
+		SELECT amount, currency_code, currency_rate, paid_at
+		FROM {$wpdb->prefix}ea_transactions
+		WHERE (`paid_at` BETWEEN %s AND %s)
+		AND `type`=%s
+		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
+		", $start->format( 'Y-m-d' ), $end->format( 'Y-m-d' ), $type));
+
 
 		eaccounting_collect( $transactions )->each(
 			function ( $item ) use ( $period, $date_format, &$totals ) {

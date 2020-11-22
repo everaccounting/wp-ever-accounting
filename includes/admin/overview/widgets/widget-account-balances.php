@@ -36,24 +36,28 @@ class Account_Balances extends Widget {
 	 * @since 1.0.2
 	 */
 	public function get_content() {
-		$accounts = eaccounting()
-			->query()
-			->select( 'a.name, a.opening_balance, a.currency_code' )
-			->select( "SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) balance" )
-			->from( 'ea_accounts a' )
-			->left_join( 'ea_transactions as t', 't.account_id', 'a.id' )
-			->group_by( 'a.id' )
-			->order_by( 'balance', 'DESC' )
-			->limit( 5 )
-			->get(
-				OBJECT,
-				function ( $item ) {
-					$total         = $item->balance + $item->opening_balance;
-					$item->balance = eaccounting_format_price( $total, $item->currency_code );
+		global $wpdb;
+		$accounts = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+		SELECT a.name, a.opening_balance, a.currency_code,
+		SUM(CASE WHEN t.type='income' then amount WHEN t.type='expense' then - amount END ) balance
+		FROM {$wpdb->prefix}ea_accounts a
+		LEFT JOIN {$wpdb->prefix}ea_transactions as t ON t.account_id=a.id
+		GROUP BY a.id
+		ORDER BY balance DESC
+		LIMIT %d
+		",
+				5
+			)
+		);
 
-					return $item;
-				}
-			);
+		foreach ( $accounts as $key => $account ) {
+			$total            = $account->balance + $account->opening_balance;
+			$account->balance = eaccounting_format_price( $total, $account->currency_code );
+			$accounts[ $key ] = $account;
+		}
+
 		if ( empty( $accounts ) ) {
 			echo sprintf(
 				'<p class="ea-overview-widget-notice">%s</p>',

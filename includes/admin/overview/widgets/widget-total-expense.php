@@ -57,7 +57,7 @@ class Total_Expense extends Widget {
 		WHERE (paid_at BETWEEN %s AND %s)
 		AND type=%s
 		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
-		"), $dates['start'], $dates['end'], 'expense' );
+		", $dates['start'], $dates['end'], 'expense') );
 
 
 		foreach ( $transactions as $transaction ) {

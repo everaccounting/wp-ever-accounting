@@ -57,7 +57,7 @@ class Total_Income extends Widget {
 		WHERE (paid_at BETWEEN %s AND %s)
 		AND type=%s
 		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
-		"), $dates['start'], $dates['end'], 'income' );
+		", $dates['start'], $dates['end'], 'income') );
 
 		foreach ( $transactions as $transaction ) {
 			$total += eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );

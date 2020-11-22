@@ -52,11 +52,11 @@ class Total_Profit extends Widget {
 		$dates        = $this->get_dates();
 		$total        = 0;
 		$transactions = $wpdb->get_results( $wpdb->prepare("
-		SELECT amount, currency_code, currency_rate
+		SELECT amount, currency_code, currency_rate, `type`
 		FROM {$wpdb->prefix}ea_transactions
 		WHERE (paid_at BETWEEN %s AND %s)
 		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
-		"), $dates['start'], $dates['end'] );
+		", $dates['start'], $dates['end']) );
 
 
 		foreach ( $transactions as $transaction ) {
