@@ -261,7 +261,7 @@ abstract class ResourceRepository {
 		$item->clear_cache();
 
 		// Fire a hook.
-		do_action( 'eaccounting_delete_' . $item->get_object_type(), $item );
+		do_action( 'eaccounting_delete_' . $item->get_object_type(), $item->get_id(), $item->get_data(), $item );
 
 		$item->set_id( 0 );
 	}
