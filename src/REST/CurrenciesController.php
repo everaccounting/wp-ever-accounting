@@ -123,7 +123,7 @@ class CurrenciesController extends EntitiesController {
 				),
 				'decimal_separator'  => array(
 					'description' => __( 'Decimal separator count.', 'wp-ever-accounting' ),
-					'type'        => array( 'number' ),
+					'type'        => array( 'string' ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -132,7 +132,7 @@ class CurrenciesController extends EntitiesController {
 				),
 				'thousand_separator' => array(
 					'description' => __( 'Thousand separator count.', 'wp-ever-accounting' ),
-					'type'        => array( 'number' ),
+					'type'        => array( 'string' ),
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
