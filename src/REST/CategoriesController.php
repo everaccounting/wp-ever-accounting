@@ -9,15 +9,39 @@
 
 namespace EverAccounting\REST;
 
+use EverAccounting\Models\Category;
+
 defined( 'ABSPATH' ) || die();
 
-class CategoriesController extends Controller {
+class CategoriesController extends EntitiesController {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
 	protected $rest_base = 'categories';
+
+	/**
+	 * Entity model class.
+	 *
+	 * @since 1.1.0
+	 * @var string
+	 */
+	protected $entity_model = Category::class;
+
+	/**
+	 * Get objects.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param array            $query_args Query args.
+	 * @param \WP_REST_Request $request    Full details about the request.
+	 *
+	 * @return array|int|\WP_Error
+	 */
+	protected function get_objects( $query_args, $request ) {
+		return eaccounting_get_categories( $query_args );
+	}
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.

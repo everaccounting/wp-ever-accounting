@@ -9,10 +9,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Exception;
-use EverAccounting\Query_Account;
-use EverAccounting\Query_Currency;
-
 /**
  * Class Settings
  *
@@ -87,7 +83,7 @@ class Settings {
 		$zero_values_allowed = (array) apply_filters( 'eaccounting_settings_zero_values_allowed', $zero_values_allowed );
 
 		// Allow 0 values for specified keys only
-		if ( in_array( $key, $zero_values_allowed ) ) {
+		if ( in_array( $key, $zero_values_allowed ) ) { // phpcs:ignore
 
 			$value = isset( $this->options[ $key ] ) ? $this->options[ $key ] : null;
 			$value = ( ! is_null( $value ) && '' !== $value ) ? $value : $default;
@@ -167,7 +163,7 @@ class Settings {
 	 */
 	function register_settings() {
 
-		if ( false == get_option( 'eaccounting_settings' ) ) {
+		if ( false === get_option( 'eaccounting_settings' ) ) {
 			add_option( 'eaccounting_settings' );
 		}
 
@@ -182,7 +178,7 @@ class Settings {
 
 			foreach ( $settings as $key => $option ) {
 
-				if ( $option['type'] == 'checkbox' || $option['type'] == 'multicheck' || $option['type'] == 'radio' ) {
+				if ( $option['type'] === 'checkbox' || $option['type'] === 'multicheck' || $option['type'] === 'radio' ) {
 					$name = isset( $option['name'] ) ? $option['name'] : '';
 				} else {
 					$name = isset( $option['name'] ) ? '<label for="eaccounting_settings[' . $key . ']">' . $option['name'] . '</label>' : '';
@@ -228,15 +224,12 @@ class Settings {
 	function eaccounting_settings_updated( $old_value, $value, $option ) {
 		// update currency code.
 		if ( ! empty( $value['default_currency'] ) ) {
-			$currency = eaccounting_get_currency( eaccounting_clean( $value['default_currency'] ) );
-			if ( $currency->exists() ) {
-				try {
-					$currency->set_rate( 1 );
-					$currency->save();
-				} catch ( Exception $exception ) {
-					eaccounting_logger()->error( __( 'Failed updating default currency code rate', 'wp-ever-accounting' ) );
-				}
-			}
+			eaccounting_insert_currency(
+				array(
+					'code' => eaccounting_clean( $value['default_currency'] ),
+					'rate' => 1,
+				)
+			);
 		}
 
 		/**
@@ -357,6 +350,7 @@ class Settings {
 		}
 
 		add_settings_error( 'eaccounting-notices', '', __( 'Settings updated.', 'wp-ever-accounting' ), 'updated' );
+
 		return array_merge( $saved, $input );
 
 	}
@@ -947,7 +941,7 @@ class Settings {
 	 * @global        $this       ->options Array of all the EverAccounting Options
 	 * @global string $wp_version WordPress Version
 	 *
-	 * @param array $args       Arguments passed by the setting
+	 * @param array   $args       Arguments passed by the setting
 	 */
 	function rich_editor_callback( $args ) {
 

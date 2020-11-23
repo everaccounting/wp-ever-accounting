@@ -43,9 +43,11 @@ class Invoice extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
+		'items'              => array(),
+		'histories'          => array(),
 		'invoice_number'     => '',
 		'order_number'       => '',
-		'status'             => 'pending',
+		'status'             => 'draft',
 		'invoiced_at'        => null,
 		'due_at'             => null,
 		'subtotal'           => 0.00,
@@ -688,5 +690,137 @@ class Invoice extends ResourceModel {
 	 */
 	public function set_parent_id( $parent_id ) {
 		$this->set_prop( 'parent_id', absint( $parent_id ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Additional methods
+	|--------------------------------------------------------------------------
+	|
+	| Does extra thing as helper functions.
+	|
+	*/
+	/**
+	 * Set the invoice items.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param InvoiceItem[] $value items.
+	 */
+	public function set_items( $value ) {
+
+		// Remove existing items.
+		$this->set_prop( 'items', array() );
+
+		// Ensure that we have an array.
+		if ( ! is_array( $value ) ) {
+			return;
+		}
+
+		foreach ( $value as $item ) {
+			$this->add_item( $item );
+		}
+
+	}
+
+	/**
+	 * Get the invoice items.
+	 *
+	 * @since 1.1.0
+	 * @param  string $context View or edit context.
+	 * @return InvoiceItem[]
+	 */
+	public function get_items( $context = 'view' ) {
+		return $this->get_prop( 'items', $context );
+	}
+
+	/**
+	 * Retrieves a specific item.
+	 *
+	 * @since 1.0.19
+	 */
+	public function get_item( $item_id ) {
+		$items   = $this->get_items();
+		$item_id = (int) $item_id;
+
+		return ( ! empty( $item_id ) && isset( $items[ $item_id ] ) ) ? $items[ $item_id ] : null;
+	}
+
+	/**
+	 * Removes a specific item.
+	 *
+	 * @since 1.1.0
+	 */
+	public function remove_item( $item_id ) {
+		$items   = $this->get_items();
+		$item_id = (int) $item_id;
+
+		if ( isset( $items[ $item_id ] ) ) {
+			unset( $items[ $item_id ] );
+			$this->set_prop( 'items', $items );
+		}
+	}
+
+	/**
+	 * Adds an item to the invoice.
+	 *
+	 * @param InvoiceItem|array $item
+	 *
+	 * @return \WP_Error|Bool
+	 */
+	public function add_item( $item ) {
+
+		if ( is_array( $item ) ) {
+			$id   = wp_parse_args( $item, array( 'id' => null ) );
+			$item = new InvoiceItem( $id );
+
+			// Set item data.
+			foreach ( array( 'item_id', 'name', 'sku', 'quantity', 'price', 'tax_id', 'tax_name' ) as $key ) {
+				if ( isset( $array[ "item_$key" ] ) ) {
+					$method = "set_$key";
+					$item->$method( $array[ "item_$key" ] );
+				}
+			}
+
+			if ( isset( $array['quantity'] ) ) {
+				$item->set_quantity( $array['quantity'] );
+			}
+		}
+
+		if ( is_numeric( $item ) ) {
+			$item = new InvoiceItem( $item );
+		}
+
+		// Invoice id.
+		$item->set_invoice_id($this->get_id());
+
+		// Retrieve all items.
+		$items                          = $this->get_items();
+		$items[ (int) $item->get_id() ] = $item;
+
+		$this->set_prop( 'items', $items );
+
+		return true;
+	}
+
+
+	public function email_invoice() {
+
+	}
+
+	public function mark_sent() {
+
+	}
+
+	public function mark_cancelled() {
+
+	}
+
+	public function mark_paid() {
+
+	}
+
+	public function duplicate() {
+
 	}
 }

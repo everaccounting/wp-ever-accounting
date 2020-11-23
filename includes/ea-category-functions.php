@@ -13,14 +13,15 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get all the available type of category the plugin support.
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eaccounting_get_category_types() {
 	$types = array(
 		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 		'income'  => __( 'Income', 'wp-ever-accounting' ),
 		'other'   => __( 'Other', 'wp-ever-accounting' ),
+		'item'    => __( 'Item', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_category_types', $types );
@@ -29,11 +30,11 @@ function eaccounting_get_category_types() {
 /**
  * Get the category type label of a specific type.
  *
+ * @since 1.1.0
+ *
  * @param $type
  *
  * @return string
- * @since 1.1.0
- *
  */
 function eaccounting_get_category_type( $type ) {
 	$types = eaccounting_get_category_types();
@@ -44,11 +45,11 @@ function eaccounting_get_category_type( $type ) {
 /**
  * Get category.
  *
+ * @since 1.1.0
+ *
  * @param $category
  *
  * @return null|EverAccounting\Models\Category
- * @since 1.1.0
- *
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
@@ -66,28 +67,28 @@ function eaccounting_get_category( $category ) {
 /**
  * Insert a category.
  *
- * @param array $data {
+ * @since 1.1.0
+ *
+ * @param bool  $wp_error     Whether to return false or WP_Error on failure.
+ *
+ * @param array $data         {
  *                            An array of elements that make up an category to update or insert.
  *
- * @type int $id The category ID. If equal to something other than 0, the category with that ID will be updated. Default 0.
+ * @type int    $id           The category ID. If equal to something other than 0, the category with that ID will be updated. Default 0.
  *
- * @type string $name Unique name of the category.
+ * @type string $name         Unique name of the category.
  *
- * @type string $type Category type.
+ * @type string $type         Category type.
  *
- * @type string $color Color of the category.
+ * @type string $color        Color of the category.
  *
- * @type int $enabled The status of the category. Default 1.
+ * @type int    $enabled      The status of the category. Default 1.
  *
  * @type string $date_created The date when the category is created. Default is current current time.
  *
  * }
  *
- * @param bool $wp_error Whether to return false or WP_Error on failure.
- *
  * @return int|\WP_Error|\EverAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
- * @since 1.1.0
- *
  */
 function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 	// Ensure that we have data.
@@ -115,11 +116,11 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 /**
  * Delete a category.
  *
+ * @since 1.1.0
+ *
  * @param $category_id
  *
  * @return bool
- * @since 1.1.0
- *
  */
 function eaccounting_delete_category( $category_id ) {
 	try {
@@ -134,11 +135,11 @@ function eaccounting_delete_category( $category_id ) {
 /**
  * Get category items.
  *
+ * @since 1.1.0
+ *
  * @param array $args
  *
  * @return int|array|null
- * @since 1.1.0
- *
  */
 function eaccounting_get_categories( $args = array() ) {
 	global $wpdb;

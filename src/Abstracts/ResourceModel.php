@@ -240,6 +240,13 @@ abstract class ResourceModel {
 			return $this->get_id();
 		}
 
+		if ( array_key_exists( 'date_created', $this->data ) && ! $this->get_date_created() ) {
+			$this->set_date_created();
+		}
+		if ( array_key_exists( 'creator_id', $this->data ) && ! $this->get_creator_id() ) {
+			$this->set_creator_id();
+		}
+
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
 		 *
@@ -252,12 +259,6 @@ abstract class ResourceModel {
 		if ( $this->get_id() ) {
 			$this->repository->update( $this );
 		} else {
-			if ( array_key_exists( 'date_created', $this->data ) ) {
-				$this->set_date_created();
-			}
-			if ( array_key_exists( 'creator_id', $this->data ) ) {
-				$this->set_creator_id();
-			}
 			$this->repository->insert( $this );
 		}
 

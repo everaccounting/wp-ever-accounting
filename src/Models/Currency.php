@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Currencies;
 
@@ -100,6 +101,20 @@ class Currency extends ResourceModel {
 	| Methods which create, read, update and delete discounts from the database.
 	|
 	*/
+
+	/**
+	 * Save should create or update based on object existence.
+	 *
+	 * @since  1.1.0
+	 * @throws Exception
+	 * @return \Exception|bool
+	 */
+	public function save() {
+		if ( $this->get_code() && ! $this->get_id() ) {
+			$this->set_props( array_merge( $this->get_data(), eaccounting_get_currency_data( $this->get_code() ) ) );
+		}
+		return parent::save();
+	}
 
 	/**
 	 * Get currency id by code.

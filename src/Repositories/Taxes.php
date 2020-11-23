@@ -47,6 +47,7 @@ class Taxes extends ResourceRepository {
 		'id'           => '%d',
 		'name'         => '%s',
 		'rate'         => '%s',
+		'type'         => '%s',
 		'enabled'      => '%d',
 		'date_created' => '%s',
 	);

@@ -44,7 +44,6 @@ class TaxController extends Singleton {
 	 * @since 1.1.0
 	 */
 	public static function validate_tax_data( $data, $id ) {
-		error_log(print_r($data,true));
 		global $wpdb;
 		if ( empty( $data['name'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Tax name is required.', 'wp-ever-accounting' ) );

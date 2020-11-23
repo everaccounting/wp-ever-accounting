@@ -99,10 +99,16 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
 	}
 	try {
 		// The  id will be provided when updating an item.
-		$args = wp_parse_args( $args, array( 'id' => null ) );
-
+		$args = wp_parse_args(
+			$args,
+			array(
+				'id'   => null,
+				'code' => null,
+			)
+		);
+		$data = ! empty( $args['id'] ) ? abs( $args['id'] ) : $args['code'];
 		// Retrieve the currency.
-		$item = new \EverAccounting\Models\Currency( $args['id'] );
+		$item = new \EverAccounting\Models\Currency( $data );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -176,7 +182,7 @@ function eaccounting_get_currencies( $args = array() ) {
 	$query_from    = "FROM {$table}";
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];
