@@ -340,7 +340,7 @@ class List_Table_Vendors extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_contact(
+					eaccounting_insert_vendor(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -348,7 +348,7 @@ class List_Table_Vendors extends List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_contact(
+					eaccounting_insert_vendor(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -356,7 +356,7 @@ class List_Table_Vendors extends List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_contact( $id );
+					eaccounting_delete_vendor( $id );
 					break;
 				default:
 					do_action( 'eaccounting_vendors_do_bulk_action_' . $this->current_action(), $id );
