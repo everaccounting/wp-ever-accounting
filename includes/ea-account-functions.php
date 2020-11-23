@@ -79,7 +79,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		$data = wp_parse_args( $data, array( 'id' => null ) );
 
 		// Retrieve the account.
-		$item = new \EverAccounting\Models\Account( $data['number'] );
+		$item = new \EverAccounting\Models\Account( $data['id'] );
 
 		// Load new data.
 		$item->set_props( $data );
