@@ -10,6 +10,7 @@
 namespace EverAccounting\Abstracts;
 
 
+use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
@@ -540,5 +541,30 @@ abstract class TransactionModel extends ResourceModel {
 	 */
 	public function get_formatted_amount() {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
+	}
+
+	/**
+	 * Save should create or update based on object existence.
+	 *
+	 * @since  1.1.0
+	 * @throws Exception
+	 * @return \Exception|bool
+	 */
+	public function save() {
+		$account = eaccounting_get_account( $this->get_account_id() );
+		if ( ! empty( $this->get_account_id() ) && $account ) {
+			$this->set_currency_code( $account->get_currency_code() );
+			$currency = eaccounting_get_currency( $account->get_currency_code() );
+			if ( $currency->exists() && empty( $this->get_currency_rate() ) ) {
+				$this->set_currency_rate( $currency->get_rate() );
+			}
+			if ( $currency->exists() && empty( $this->get_currency_code() ) ) {
+				$this->set_currency_code( $currency->get_code() );
+			}
+
+			$this->set_amount( eaccounting_sanitize_price( $this->get_amount(), $this->get_currency_code() ) );
+		}
+
+		return parent::save();
 	}
 }

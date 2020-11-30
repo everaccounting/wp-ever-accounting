@@ -244,7 +244,7 @@ class List_Table_Item extends List_Table {
 	 * @return string Data shown in the Sale Price column.
 	 */
 	function column_sale_price( $item ) {
-		return apply_filters( 'eaccounting_item_table_sale_price', $item->get_sale_price(), $item );
+		return apply_filters( 'eaccounting_item_table_sale_price', eaccounting_format_price( $item->get_sale_price() ), $item );
 	}
 
 	/**
@@ -257,7 +257,7 @@ class List_Table_Item extends List_Table {
 	 * @return string Data shown in the Purchase Price column.
 	 */
 	function column_purchase_price( $item ) {
-		return apply_filters( 'eaccounting_item_table_purchase_price', $item->get_purchase_price(), $item );
+		return apply_filters( 'eaccounting_item_table_purchase_price', eaccounting_format_price( $item->get_purchase_price() ), $item );
 	}
 
 	/**
@@ -301,9 +301,9 @@ class List_Table_Item extends List_Table {
 	function column_actions( $item ) {
 		$base_uri              = eaccounting_admin_url(
 			array(
-				'page' => 'ea-items',
+				'page'    => 'ea-items',
 				'item_id' => $item->get_id(),
-				'tab'        => 'items',
+				'tab'     => 'items',
 			)
 		);
 		$row_actions           = array();
@@ -465,7 +465,7 @@ class List_Table_Item extends List_Table {
 			)
 		);
 
-		$this->items = eaccounting_get_items($args);
+		$this->items = eaccounting_get_items( $args );
 
 		$this->active_count = eaccounting_get_items(
 			array_merge(

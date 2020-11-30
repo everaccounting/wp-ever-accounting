@@ -774,17 +774,7 @@ class Invoice extends ResourceModel {
 			$id   = wp_parse_args( $item, array( 'id' => null ) );
 			$item = new InvoiceItem( $id );
 
-			// Set item data.
-			foreach ( array( 'item_id', 'name', 'sku', 'quantity', 'price', 'tax_id', 'tax_name' ) as $key ) {
-				if ( isset( $array[ "item_$key" ] ) ) {
-					$method = "set_$key";
-					$item->$method( $array[ "item_$key" ] );
-				}
-			}
-
-			if ( isset( $array['quantity'] ) ) {
-				$item->set_quantity( $array['quantity'] );
-			}
+			$item->set_props( (array) $item );
 		}
 
 		if ( is_numeric( $item ) ) {
@@ -792,7 +782,7 @@ class Invoice extends ResourceModel {
 		}
 
 		// Invoice id.
-		$item->set_invoice_id($this->get_id());
+		$item->set_invoice_id( $this->get_id() );
 
 		// Retrieve all items.
 		$items                          = $this->get_items();

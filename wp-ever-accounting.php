@@ -15,8 +15,6 @@
  * @package wp-ever-accounting
  */
 
-use EverAccounting\Query;
-
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -92,7 +90,7 @@ final class EverAccounting {
 	public function plugin_url( $path = '' ) {
 		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$url = trailingslashit( $url );
+			$url  = trailingslashit( $url );
 			$url .= ltrim( $path, '/' );
 		}
 
@@ -111,7 +109,7 @@ final class EverAccounting {
 	public function plugin_path( $path = '' ) {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$plugin_path = trailingslashit( $plugin_path );
+			$plugin_path  = trailingslashit( $plugin_path );
 			$plugin_path .= ltrim( $path, '/' );
 		}
 
@@ -193,16 +191,16 @@ final class EverAccounting {
 	public function log_errors() {
 		$error = error_get_last();
 		if ( $error && in_array(
-				$error['type'],
-				array(
-					E_ERROR,
-					E_PARSE,
-					E_COMPILE_ERROR,
-					E_USER_ERROR,
-					E_RECOVERABLE_ERROR,
-				),
-				true
-			) ) {
+			$error['type'],
+			array(
+				E_ERROR,
+				E_PARSE,
+				E_COMPILE_ERROR,
+				E_USER_ERROR,
+				E_RECOVERABLE_ERROR,
+			),
+			true
+		) ) {
 			$logger = eaccounting_logger();
 			$logger->critical(
 			/* translators: 1: error message 2: file name and path 3: line number */
@@ -327,15 +325,16 @@ final class EverAccounting {
 		do_action( 'before_eaccounting_init' );
 
 		\EverAccounting\Controllers\AccountController::instance();
-//		\EverAccounting\Controllers\ExpenseController::instance();
-//		\EverAccounting\Controllers\IncomeController::instance();
+		//      \EverAccounting\Controllers\ExpenseController::instance();
+		//      \EverAccounting\Controllers\IncomeController::instance();
 		\EverAccounting\Controllers\TransferController::instance();
 		\EverAccounting\Controllers\CategoryController::instance();
 		\EverAccounting\Controllers\CurrencyController::instance();
 		\EverAccounting\Controllers\TransactionController::instance();
 		\EverAccounting\Controllers\TaxController::instance();
 		\EverAccounting\Controllers\ItemController::instance();
-
+		\EverAccounting\Controllers\IncomeController::instance();
+		\EverAccounting\Controllers\ExpenseController::instance();
 
 		\EverAccounting\REST\Manager::instance();
 

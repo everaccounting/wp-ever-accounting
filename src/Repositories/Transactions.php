@@ -65,4 +65,6 @@ class Transactions extends ResourceRepository {
 		'creator_id'     => '%d',
 		'date_created'   => '%s',
 	);
+
+
 }

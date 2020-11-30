@@ -82,7 +82,6 @@ class Income extends TransactionModel {
 	 */
 	public function save() {
 		$this->set_type( self::TRANS_TYPE );
-
 		return parent::save();
 	}
 
