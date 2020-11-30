@@ -119,6 +119,7 @@ class Ajax {
 			'edit_revenue',
 			'edit_transfer',
 			'edit_item',
+			'edit_tax',
 			'upload_files',
 		);
 
@@ -182,6 +183,16 @@ class Ajax {
 			case 'vendor':
 				self::check_permission( 'ea_manage_vendor' );
 				$result = eaccounting_insert_vendor(
+					array(
+						'id'      => $object_id,
+						'enabled' => $enabled,
+					)
+				);
+				break;
+			case 'tax':
+				//todo check and implement permission
+				//self::check_permission( 'ea_manage_tax' );
+				$result = eaccounting_insert_tax(
 					array(
 						'id'      => $object_id,
 						'enabled' => $enabled,
@@ -701,6 +712,44 @@ class Ajax {
 		wp_die();
 	}
 
+	/**
+	 * Handle ajax action of creating/updating tax.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public static function edit_tax() {
+		self::verify_nonce( 'ea_edit_tax' );
+		//todo check permission for taxes
+		self::check_permission( 'ea_manage_category' );
+		$posted  = eaccounting_clean( $_REQUEST );
+		$created = eaccounting_insert_tax( $posted );
+		if ( is_wp_error( $created ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
+			);
+		}
+
+		$message  = __( 'Tax updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Tax created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $created->get_data(),
+			)
+		);
+
+		wp_die();
+	}
+
 	public static function upload_files() {
 		self::verify_nonce( 'eaccounting_file_upload' );
 		self::check_permission( 'manage_eaccounting' );
@@ -732,6 +781,7 @@ class Ajax {
 	 * @since 1.0.2
 	 *
 	 * @param $action
+	 *
 	 */
 	public static function verify_nonce( $action ) {
 		$nonce = '';
