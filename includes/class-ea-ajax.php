@@ -118,6 +118,7 @@ class Ajax {
 			'edit_payment',
 			'edit_revenue',
 			'edit_transfer',
+			'edit_item',
 			'upload_files',
 		);
 
@@ -651,6 +652,44 @@ class Ajax {
 			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
 		}
 
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $created->get_data(),
+			)
+		);
+
+		wp_die();
+	}
+
+	/**
+	 * Handle ajax action of creating/updating item.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public static function edit_item() {
+		self::verify_nonce( 'ea_edit_item' );
+		//todo check permission for item edit
+		self::check_permission( 'ea_manage_category' );
+		$posted  = eaccounting_clean( $_REQUEST );
+		$created = eaccounting_insert_item( $posted );
+		if ( is_wp_error( $created ) ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
+			);
+		}
+
+		$message  = __( 'Item updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Item created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
 		wp_send_json_success(
 			array(
 				'message'  => $message,

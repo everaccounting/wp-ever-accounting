@@ -3,7 +3,7 @@
  * Admin Item Edit Page.
  *
  * @since       1.1.0
- * @subpackage  Admin/Items/Categories
+ * @subpackage  Admin/Items/Items
  * @package     EverAccounting
  */
 
@@ -15,7 +15,7 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$back_url = remove_query_arg( array( 'action', 'item_id' ) );
+$back_url = remove_query_arg( array( 'action', 'id' ) );
 ?>
 
 <div class="ea-form-card">
@@ -38,9 +38,101 @@ $back_url = remove_query_arg( array( 'action', 'item_id' ) );
 						'required'      => true,
 					)
 				);
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Quantity', 'wp-ever-accounting' ),
+						'name'          => 'quantity',
+						'placeholder'   => __( 'Enter Quantity', 'wp-ever-accounting' ),
+						'value'         => $item->get_quantity(),
+						'required'      => true,
+					)
+				);
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
+						'name'          => 'purchase_price',
+						'data_type'     => 'price',
+						'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
+						'value'         => $item->get_purchase_price(),
+						'required'      => true,
+					)
+				);
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Sale price', 'wp-ever-accounting' ),
+						'name'          => 'sale_price',
+						'data_type'     => 'price',
+						'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
+						'value'         => $item->get_sale_price(),
+						'required'      => true,
+					)
+				);
+				eaccounting_textarea(
+					array(
+						'label'         => __( 'Description', 'wp-ever-accounting' ),
+						'name'          => 'description',
+						'value'         => $item->get_description(),
+						'required'      => false,
+						'wrapper_class' => 'ea-col-12',
+						'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
+					)
+				);
+
+				eaccounting_category_dropdown(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Category', 'wp-ever-accounting' ),
+						'name'          => 'category_id',
+						'value'         => $item->get_category_id(),
+						'required'      => false,
+						'type'          => 'expense',
+						'creatable'     => true,
+					)
+				);
+				//todo need to add tax dropdown
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Tax', 'wp-ever-accounting' ),
+						'name'          => 'tax_id',
+						'placeholder'   => __( 'Enter Tax', 'wp-ever-accounting' ),
+						'value'         => $item->get_tax_id(),
+						'required'      => false,
+					)
+				);
+				eaccounting_file_input(
+					array(
+						'label'         => __( 'Image', 'wp-ever-accounting' ),
+						'name'          => 'image_id',
+						'value'         => $item->get_image_id(),
+						'required'      => false,
+						'wrapper_class' => 'ea-col-6',
+						'placeholder'   => __( 'Upload Image', 'wp-ever-accounting' ),
+					)
+				);
+				eaccounting_hidden_input(
+					array(
+						'name'  => 'id',
+						'value' => $item->get_id(),
+					)
+				);
+
+				eaccounting_hidden_input(
+					array(
+						'name'  => 'action',
+						'value' => 'eaccounting_edit_item',
+					)
+				);
 
 				?>
 			</div>
+			<?php
+			wp_nonce_field( 'ea_edit_item' );
+			submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
+			?>
 		</form>
 	</div>
 </div>
