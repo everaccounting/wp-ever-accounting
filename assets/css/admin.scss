@@ -20,6 +20,7 @@
 @import "table";
 @import "invoice-card";
 @import "utility";
+@import "invoice-table";
 
 .eaccounting .nav-tab-wrapper {
   margin-bottom: 20px !important;
@@ -123,8 +124,9 @@
   }
 
 }
-.ea-importer{
-  &-bottom{
+
+.ea-importer {
+  &-bottom {
 	display: none;
   }
 }
@@ -133,7 +135,7 @@
 #ea-system-info-textarea {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
   display: block;
-  font-family: Menlo,Monaco,monospace;
+  font-family: Menlo, Monaco, monospace;
   height: 400px;
   overflow: auto;
   white-space: pre;
