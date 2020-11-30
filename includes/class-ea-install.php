@@ -40,7 +40,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	public static function check_version() {
-		//todo remove on later version.
+		// todo remove on later version.
 		if ( false == get_option( 'eaccounting_version' ) && ! empty( get_option( 'eaccounting_localisation' ) ) ) {
 			update_option( 'eaccounting_version', '1.0.1.1' );
 		}
@@ -129,12 +129,12 @@ class EAccounting_Install {
 			return;
 		}
 
-		//Check if we are not already running this routine.
+		// Check if we are not already running this routine.
 		if ( 'yes' === get_transient( 'eaccounting_installing' ) ) {
 			return;
 		}
 
-		//If we made it till here nothing is running yet, lets set the transient now.
+		// If we made it till here nothing is running yet, lets set the transient now.
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 10 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		self::remove_admin_notices();
@@ -212,8 +212,8 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_categories() {
-		//If no categories then create default categories
-		if ( ! \EverAccounting\Query_Category::init()->count() ) {
+		// If no categories then create default categories
+		if ( ! \EverAccounting\Categories\query()->count() ) {
 			eaccounting_insert_category(
 				array(
 					'name'    => __( 'Deposit', 'wp-ever-accounting' ),
@@ -239,8 +239,8 @@ class EAccounting_Install {
 			);
 		}
 
-		//create transfer category
-		if ( ! \EverAccounting\Query_Category::init()->where(
+		// create transfer category
+		if ( ! \EverAccounting\Categories\query()->where(
 			array(
 				'name' => 'Transfer',
 				'type' => 'other',
@@ -263,7 +263,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_currencies() {
-		//create currencies
+		// create currencies
 		if ( ! \EverAccounting\Query_Currency::init()->count() ) {
 			eaccounting_insert_currency(
 				array(
@@ -352,8 +352,8 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function remove_admin_notices() {
-		//include_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
-		//\EverAccounting\Admin\Admin_Notices::remove_all_notices();
+		// include_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
+		// \EverAccounting\Admin\Admin_Notices::remove_all_notices();
 	}
 
 
@@ -486,6 +486,158 @@ class EAccounting_Install {
 		    KEY `income_id` (`income_id`),
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_invoices(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+            `invoice_number` VARCHAR(191) DEFAULT NULL,
+            `order_number` VARCHAR(191) DEFAULT NULL,
+            `status` VARCHAR(191) DEFAULT NULL,
+            `invoiced_at` DATETIME NULL DEFAULT NULL,
+            `due_at` DATETIME NULL DEFAULT NULL,
+            `subtotal` DOUBLE(15,4) NOT NULL,
+            `discount` DOUBLE(15,4) NOT NULL,
+            `tax` DOUBLE(15,4) NOT NULL,
+            `shipping` DOUBLE(15,4) NOT NULL,
+            `total` DOUBLE(15,4) NOT NULL,
+		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
+  			`category_id` INT(11) NOT NULL,
+  			`contact_id` INT(11) NOT NULL,
+  			`contact_name` VARCHAR(191) DEFAULT NULL,
+  			`contact_email` VARCHAR(191) DEFAULT NULL,
+  			`contact_tax_number` VARCHAR(191) DEFAULT NULL,
+  			`contact_phone` VARCHAR(191) DEFAULT NULL,
+  			`contact_address` VARCHAR(191) DEFAULT NULL,
+  			`note` TEXT DEFAULT NULL,
+  			`footer` TEXT DEFAULT NULL,
+  			`attachment` TEXT DEFAULT NULL,
+  			`parent_id` INT(11) NOT NULL DEFAULT '0',
+  			`creator_id` INT(11) DEFAULT NULL,
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `contact_id` (`contact_id`),
+		    KEY `category_id` (`category_id`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_invoice_items(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+  			`invoice_id` INT(11) NOT NULL,
+  			`item_id` INT(11) NOT NULL,
+  			`name` VARCHAR(191) NOT NULL,
+  			`sku` VARCHAR(191) DEFAULT NULL,
+  			`quantity` double(7,2) NOT NULL,
+  			`price` double(15,4) NOT NULL,
+  			`total` double(15,4) NOT NULL,
+  			`tax_id` INT(11) NOT NULL,
+  			`tax_name` VARCHAR(191) NOT NULL,
+  			`tax` double(15,4) NOT NULL DEFAULT '0.0000',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `invoice_id` (`invoice_id`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_invoice_histories(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+  			`invoice_id` INT(11) NOT NULL,
+  			`status` VARCHAR(191) DEFAULT NULL,
+  			`notify` tinyint(1) NOT NULL,
+  			`description` TEXT DEFAULT NULL,
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `invoice_id` (`invoice_id`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_bills(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+            `bill_number` VARCHAR(191) DEFAULT NULL,
+            `order_number` VARCHAR(191) DEFAULT NULL,
+            `status` VARCHAR(191) DEFAULT NULL,
+            `bill_at` DATETIME NULL DEFAULT NULL,
+            `due_at` DATETIME NULL DEFAULT NULL,
+            `subtotal` DOUBLE(15,4) NOT NULL,
+            `discount` DOUBLE(15,4) NOT NULL,
+            `tax` DOUBLE(15,4) NOT NULL,
+            `shipping` DOUBLE(15,4) NOT NULL,
+            `total` DOUBLE(15,4) NOT NULL,
+		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
+  			`category_id` INT(11) NOT NULL,
+  			`contact_id` INT(11) NOT NULL,
+  			`contact_name` VARCHAR(191) DEFAULT NULL,
+  			`contact_email` VARCHAR(191) DEFAULT NULL,
+  			`contact_tax_number` VARCHAR(191) DEFAULT NULL,
+  			`contact_phone` VARCHAR(191) DEFAULT NULL,
+  			`contact_address` VARCHAR(191) DEFAULT NULL,
+  			`note` TEXT DEFAULT NULL,
+  			`footer` TEXT DEFAULT NULL,
+  			`attachment` TEXT DEFAULT NULL,
+  			`parent_id` INT(11) NOT NULL DEFAULT '0',
+  			`creator_id` INT(11) DEFAULT NULL,
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `contact_id` (`contact_id`),
+		    KEY `category_id` (`category_id`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_bill_items(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+  			`bill_id` INT(11) NOT NULL,
+  			`item_id` INT(11) NOT NULL,
+  			`name` VARCHAR(191) NOT NULL,
+  			`sku` VARCHAR(191) DEFAULT NULL,
+  			`quantity` double(7,2) NOT NULL,
+  			`price` double(15,4) NOT NULL,
+  			`total` double(15,4) NOT NULL,
+  			`tax_id` INT(11) NOT NULL,
+  			`tax_name` VARCHAR(191) NOT NULL,
+  			`tax` double(15,4) NOT NULL DEFAULT '0.0000',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `bill_id` (`bill_id`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_bill_histories(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+  			`bill_id` INT(11) NOT NULL,
+  			`status` VARCHAR(191) DEFAULT NULL,
+  			`notify` tinyint(1) NOT NULL,
+  			`description` TEXT DEFAULT NULL,
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `bill_id` (`bill_id`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_items(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+            `name` varchar(191) NOT NULL,
+  			`sku` varchar(100) NULL default '',
+			`image_id` bigint(20) NULL default 0,
+			`description` text COLLATE utf8mb4_unicode_ci,
+  			`sale_price` double(15,4) NOT NULL,
+  			`purchase_price` double(15,4) NOT NULL,
+  			`quantity` int(11) NOT NULL DEFAULT '1',
+  			`category_id` int(11) DEFAULT NULL,
+  			`tax_id` int(11) DEFAULT NULL,
+			`enabled` tinyint(1) NOT NULL DEFAULT '1',
+			`creator_id` INT(11) DEFAULT NULL,
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `sale_price` (`sale_price`),
+		    KEY `purchase_price` (`purchase_price`),
+		    KEY `category_id` (`category_id`),
+		    KEY `quantity` (`quantity`)
+            ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_taxes(
+            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
+  			`name` VARCHAR(191) NOT NULL,
+  			`rate` double(15,4) NOT NULL,
+  			`type` VARCHAR(30) NOT NULL,
+  			`enabled` tinyint(1) NOT NULL DEFAULT '1',
+		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `rate` (`rate`)
+            ) $collate",
 		);
 
 		foreach ( $tables as $table ) {
@@ -590,7 +742,7 @@ class EAccounting_Install {
 			)
 		);
 
-		//add caps to admin
+		// add caps to admin
 		global $wp_roles;
 
 		if ( is_object( $wp_roles ) ) {
@@ -649,7 +801,7 @@ class EAccounting_Install {
 	 */
 	private static function maybe_enable_setup_wizard() {
 		if ( apply_filters( 'eaccounting_enable_setup_wizard', true ) && self::is_new_install() ) {
-			//\EverAccounting\Admin\Admin_Notices::add_notice( 'install', true );
+			// \EverAccounting\Admin\Admin_Notices::add_notice( 'install', true );
 			set_transient( '_eaccounting_activation_redirect', 1, 30 );
 		}
 	}
@@ -740,7 +892,7 @@ class EAccounting_Install {
 	 * @return boolean
 	 */
 	public static function is_new_install() {
-		$transaction_count = \EverAccounting\Query_Transaction::init()->count( 0 );
+		$transaction_count = \EverAccounting\Transactions\query()->count( 0 );
 
 		return is_null( get_option( 'eaccounting_version', null ) ) || ( 0 === $transaction_count );
 	}

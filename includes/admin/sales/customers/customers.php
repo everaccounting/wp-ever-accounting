@@ -19,8 +19,26 @@ function eaccounting_sales_tab_customers() {
 		?>
 		<h1>
 			<?php _e( 'Customers', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'tab' => 'customers', 'action' => 'add' ) ); ?>"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'tab'    => 'customers',
+					'action' => 'add',
+				)
+			);
+			?>
+												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'page' => 'ea-tools',
+					'tab'  => 'import',
+				)
+			);
+			?>
+												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-customers.php';
@@ -42,8 +60,8 @@ function eaccounting_sales_tab_customers() {
 			<input type="hidden" name="page" value="ea-sales"/>
 			<input type="hidden" name="tab" value="customers"/>
 
-			<?php $list_table->views() ?>
-			<?php $list_table->display() ?>
+			<?php $list_table->views(); ?>
+			<?php $list_table->display(); ?>
 		</form>
 		<?php
 		/**

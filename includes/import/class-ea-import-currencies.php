@@ -8,12 +8,14 @@
  */
 
 namespace EverAccounting\Import;
+
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
 
 /**
  * Class Import_Currencies
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Import

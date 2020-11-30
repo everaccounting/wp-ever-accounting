@@ -71,7 +71,6 @@ class Export_Revenues extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 *
 	 * @param \EverAccounting\Transaction $item
 	 *
 	 * @return array

@@ -49,16 +49,15 @@ class Total_Income extends Widget {
 	 */
 	public function get_content() {
 		global $wpdb;
-		$dates = $this->get_dates();
+		$dates        = $this->get_dates();
 		$total        = 0;
-		$transactions = eaccounting()
-				->query()
-				->select( 'amount, currency_code, currency_rate' )
-				->from( 'ea_transactions' )
-				->whereDateBetween( 'paid_at', $dates['start'], $dates['end'] )
-				->whereRaw( "category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')" )
-				->where( 'type', 'income' )
-				->get();
+		$transactions = $wpdb->get_results( $wpdb->prepare("
+		SELECT amount, currency_code, currency_rate
+		FROM {$wpdb->prefix}ea_transactions
+		WHERE (paid_at BETWEEN %s AND %s)
+		AND type=%s
+		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
+		", $dates['start'], $dates['end'], 'income') );
 
 		foreach ( $transactions as $transaction ) {
 			$total += eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );

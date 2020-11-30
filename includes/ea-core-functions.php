@@ -17,7 +17,6 @@ function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: te
 /**
  * Get financial Start
  *
- *
  * @since 1.0.2
  * @return string
  */
@@ -46,7 +45,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  * @return string
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
-	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
+	$dt = new \EverAccounting\Core\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
 
 	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
 }
@@ -107,7 +106,7 @@ function eaccounting_get_current_user_id() {
 	$user_id = get_current_user_id();
 	if ( empty( $user_id ) ) {
 		$user = get_user_by( 'email', get_option( 'admin_email' ) );
-		if ( $user && in_array( 'administrator', $user->roles ) ) {
+		if ( $user && in_array( 'administrator', $user->roles, true ) ) {
 			$user_id = $user->ID;
 		}
 	}
@@ -141,11 +140,11 @@ function eaccounting_get_current_user_id() {
  *
  * @param mixed  $amount
  *
- * @return \EverAccounting\Money|WP_Error
+ * @return \EverAccounting\Core\Money|WP_Error
  */
 function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
 	try {
-		return new \EverAccounting\Money( $amount, $code, $convert );
+		return new \EverAccounting\Core\Money( $amount, $code, $convert );
 	} catch ( Exception $e ) {
 		return new \WP_Error( 'invalid_action', $e->getMessage() );
 	}
@@ -170,7 +169,7 @@ function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
 function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $format = false ) {
 	$money = eaccounting_get_money( $amount, $to );
 	// No need to convert same currency
-	if ( $from == $to ) {
+	if ( $from === $to ) {
 		return $format ? $money->format() : $money->getAmount();
 	}
 
@@ -238,18 +237,15 @@ function eaccounting_price_convert_to_default( $amount, $from, $rate, $format = 
 function eaccounting_price_convert_between( $amount, $from_code, $from_rate, $to_code, $to_rate ) {
 	$default_amount = $amount;
 
-	if ( $from_code != eaccounting()->settings->get( 'default_currency', 'USD' ) ) {
+	if ( $from_code !== eaccounting()->settings->get( 'default_currency', 'USD' ) ) {
 		$default_amount = eaccounting_price_convert_to_default( $amount, $from_code, $from_rate );
 	}
 
-	$converted_amount = eaccounting_price_convert_from_default( $default_amount, $to_code, $to_rate, false, $from_code );
-
-	return $converted_amount;
+	return eaccounting_price_convert_from_default( $default_amount, $to_code, $to_rate, false, $from_code );
 }
 
 /**
  * Get payment methods.
- *
  *
  * @since 1.0.2
  * @return array
@@ -269,10 +265,10 @@ function eaccounting_get_payment_methods() {
  * Get the logger of the plugin.
  *
  * @since 1.0.2
- * @return \EverAccounting\Logger
+ * @return \EverAccounting\Core\Logger
  */
 function eaccounting_logger() {
-	return new \EverAccounting\Logger();
+	return new \EverAccounting\Core\Logger();
 }
 
 /**
@@ -281,7 +277,7 @@ function eaccounting_logger() {
  * @since 1.0.2
  */
 function eaccounting_cleanup_logs() {
-	$logger = new \EverAccounting\Logger();
+	$logger = new \EverAccounting\Core\Logger();
 	$logger->clear_expired_logs();
 }
 
@@ -333,7 +329,7 @@ function eaccounting_round_number( $val, $precision = 2 ) {
 
 	// 0 is a valid value so we check only for other empty values
 	if ( is_null( $val ) || '' === $val || false === $val ) {
-		return;
+		return 0;
 	}
 
 	$period_decimal_sep         = preg_match( '/\.\d{1,2}$/', $val );
@@ -371,7 +367,7 @@ function eaccounting_round_number( $val, $precision = 2 ) {
 	$precision = absint( $precision );
 
 	// Enforce the number of decimal places required (precision)
-	$val = sprintf( ( round( $val, $precision ) == intval( $val ) ) ? '%d' : "%.{$precision}f", $val );
+	$val = sprintf( ( round( $val, $precision ) === intval( $val ) ) ? '%d' : "%.{$precision}f", $val );
 
 	// Convert number to the proper type (int, float, or string) depending on its value
 	if ( false === strpos( $val, '.' ) ) {
@@ -385,38 +381,59 @@ function eaccounting_round_number( $val, $precision = 2 ) {
 }
 
 /**
- * Makes internal API request for usages within PHP
- *
- *
- *
- * @since 1.0.2
- *
- * @param array  $args
- * @param string $method
- *
- * @param        $endpoint
- *
- * @return array
- */
-function eaccounting_rest_request( $endpoint, $args = array(), $method = 'GET' ) {
-	$request = new \WP_REST_Request( $method, $endpoint );
-	$request->set_query_params( $args );
-	$response = rest_do_request( $request );
-	$server   = rest_get_server();
-	$result   = $server->response_to_data( $response, false );
-
-	return $result;
-}
-
-/**
  * Create a collection from the given value.
  *
  * @since 1.0.2
  *
  * @param mixed $items
  *
- * @return \EAccounting\Collection
+ * @return \EverAccounting\Core\Collection
  */
 function eaccounting_collect( $items ) {
-	return new \EAccounting\Collection( $items );
+	return new \EverAccounting\Core\Collection( $items );
+}
+
+
+/**
+ * Wrapper for _doing_it_wrong().
+ *
+ * @since  1.1.0
+ *
+ * @param string $function Function used.
+ * @param string $message  Message to log.
+ * @param string $version  Version the message was added in.
+ */
+function eaccounting_doing_it_wrong( $function, $message, $version ) {
+
+	$message .= ' Backtrace: ' . wp_debug_backtrace_summary();
+
+	if ( wp_doing_ajax() || defined( 'REST_REQUEST' ) ) {
+		do_action( 'doing_it_wrong_run', $function, $message, $version );
+		error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+	} else {
+		_doing_it_wrong( $function, $message, $version );
+	}
+
+}
+
+/**
+ * Fetches data stored on disk.
+ *
+ * @since 1.1.0
+ *
+ * @param string $key Type of data to fetch.
+ *
+ * @return mixed Fetched data.
+ */
+function eaccounting_get_data( $key ) {
+	// Try fetching it from the cache.
+	$data = wp_cache_get( "eaccounting-data-$key", 'eaccounting-data' );
+	if ( $data ) {
+		return $data;
+	}
+
+	$data = apply_filters( "eaccounting_get_data_$key", include EACCOUNTING_ABSPATH . "/includes/data/$key.php" );
+	wp_cache_set( "eaccounting-data-$key", 'eaccounting-data' );
+
+	return $data;
 }

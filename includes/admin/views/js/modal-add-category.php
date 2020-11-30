@@ -24,29 +24,37 @@ defined( 'ABSPATH' ) || exit();
 					<article>
 						<div class="ea-row">
 							<?php
-							eaccounting_text_input( array(
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Category Name', 'wp-ever-accounting' ),
 									'name'          => 'name',
 									'value'         => '',
 									'required'      => true,
-							) );
-							eaccounting_text_input( array(
+								)
+							);
+							eaccounting_text_input(
+								array(
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Color', 'wp-ever-accounting' ),
 									'name'          => 'color',
 									'data_type'     => 'color',
 									'value'         => eaccounting_get_random_color(),
 									'required'      => true,
-							) );
-							eaccounting_hidden_input( array(
+								)
+							);
+							eaccounting_hidden_input(
+								array(
 									'name'  => 'type',
 									'value' => 'income',
-							) );
-							eaccounting_hidden_input( array(
+								)
+							);
+							eaccounting_hidden_input(
+								array(
 									'name'  => 'action',
 									'value' => 'eaccounting_edit_category',
-							) );
+								)
+							);
 							wp_nonce_field( 'ea_edit_category' );
 							?>
 						</div>

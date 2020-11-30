@@ -8,6 +8,7 @@
  */
 
 namespace EverAccounting\Import;
+
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
@@ -17,6 +18,7 @@ use EverAccounting\Query_Account;
 
 /**
  * Class Import_Payments
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Import
@@ -87,9 +89,9 @@ class Import_Payments extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category_id   = Query_Category::init()->select( 'id' )->where('name', $data['category_name'] )->value( 0 );
-		$currency_id = Query_Currency::init()->find($data['currency_code'],'code');
-		$account_id    = Query_Account::init()->select( 'id' )->where('name', $data['account_name'])->value( 0 );
+		$category_id = Query_Category::init()->select( 'id' )->where( 'name', $data['category_name'] )->value( 0 );
+		$currency_id = Query_Currency::init()->find( $data['currency_code'], 'code' );
+		$account_id  = Query_Account::init()->select( 'id' )->where( 'name', $data['account_name'] )->value( 0 );
 
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );

@@ -8,6 +8,7 @@
  */
 
 namespace EverAccounting\Admin;
+
 defined( 'ABSPATH' ) || exit;
 
 class Admin_Menus {
@@ -42,13 +43,13 @@ class Admin_Menus {
 		$sales        = add_submenu_page( 'eaccounting', __( 'Sales', 'wp-ever-accounting' ), __( 'Sales', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-sales', 'eaccounting_admin_sales_page' );
 		$expenses     = add_submenu_page( 'eaccounting', __( 'Expenses', 'wp-ever-accounting' ), __( 'Expenses', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-expenses', 'eaccounting_admin_expenses_page' );
 		$banking      = add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-banking', 'eaccounting_admin_banking_page' );
+		$items        = add_submenu_page( 'eaccounting', __( 'Items', 'wp-ever-accounting' ), __( 'Items', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-items', 'eaccounting_admin_items_page' );
 		$misc         = add_submenu_page( 'eaccounting', __( 'Misc', 'wp-ever-accounting' ), __( 'Misc', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-misc', 'eaccounting_admin_misc_page' );
-
-//		do_action('load');
 
 		add_action( 'load-' . $sales, 'eaccounting_load_sales_page' );
 		add_action( 'load-' . $expenses, 'eaccounting_load_expenses_page' );
 		add_action( 'load-' . $banking, 'eaccounting_load_banking_page' );
+		add_action( 'load-' . $items, 'eaccounting_load_items_page' );
 		add_action( 'load-' . $misc, 'eaccounting_load_misc_page' );
 	}
 
@@ -66,9 +67,9 @@ class Admin_Menus {
 		add_submenu_page( 'eaccounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-settings', 'eaccounting_admin_settings_page' );
 	}
 
-//	public function status_menu() {
-//		add_submenu_page( 'eaccounting', __( 'Status', 'wp-ever-accounting' ), __( 'Status', 'wp-ever-accounting' ), 'manage_options', 'ea-status', 'eaccounting_admin_dashboard' );
-//	}
+	public function status_menu() {
+		add_submenu_page( 'eaccounting', __( 'Status', 'wp-ever-accounting' ), __( 'Status', 'wp-ever-accounting' ), 'manage_options', 'ea-status', 'eaccounting_admin_dashboard' );
+	}
 }
 
 return new Admin_Menus();

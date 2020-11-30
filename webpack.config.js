@@ -1,76 +1,63 @@
-const path = require( 'path' );
-const chalk = require( 'chalk' );
-const webpack = require( 'webpack' );
-const pkg = require( './package.json' );
-const { get } = require( 'lodash' );
-const TerserPlugin = require( 'terser-webpack-plugin' );
+const path                              = require( 'path' );
+const chalk                             = require( 'chalk' );
+const webpack                           = require( 'webpack' );
+const pkg                               = require( './package.json' );
+const { get }                           = require( 'lodash' );
+const TerserPlugin                      = require( 'terser-webpack-plugin' );
 const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-const ProgressBarPlugin = require( 'progress-bar-webpack-plugin' );
-const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
-const CustomTemplatedPathPlugin = require( '@wordpress/custom-templated-path-webpack-plugin' );
-const DuplicatePackageCheckerPlugin = require( 'duplicate-package-checker-webpack-plugin' );
+const ProgressBarPlugin                 = require( 'progress-bar-webpack-plugin' );
+const FixStyleOnlyEntriesPlugin         = require( 'webpack-fix-style-only-entries' );
+const CustomTemplatedPathPlugin         = require( '@wordpress/custom-templated-path-webpack-plugin' );
+const DuplicatePackageCheckerPlugin     = require( 'duplicate-package-checker-webpack-plugin' );
+const WebpackRTLPlugin 					= require( 'webpack-rtl-plugin' );
+const MomentTimezoneDataPlugin 			= require( 'moment-timezone-data-webpack-plugin' );
+const postcssPresetEnv     				= require( 'postcss-preset-env' );
+const postcssFocus         				= require( 'postcss-focus' );
+const postcssReporter      				= require( 'postcss-reporter' );
+const MiniCssExtractPlugin 				= require( 'mini-css-extract-plugin' );
+const NODE_ENV 							= process.env.NODE_ENV || 'development';
+const suffix 							= NODE_ENV === 'production' ? '.min' : '';
 
-const postcssPresetEnv = require( 'postcss-preset-env' );
-const postcssFocus = require( 'postcss-focus' );
-const postcssReporter = require( 'postcss-reporter' );
-const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
-// const CopyWebpackPlugin = require('copy-webpack-plugin');
-
-const NODE_ENV = process.env.NODE_ENV || 'development';
-
-const externals = [];
-const packages = [ 'components' ];
+const externals   = [];
 const entryPoints = {};
-packages.forEach( ( name ) => {
-	externals[ `@eaccounting/${ name }` ] = {
-		this: [
+const packages 	  = ['components', 'data'];
+packages.forEach( (name) => {
+    externals[`@eaccounting/${name}`] = {
+    	this: [
 			'eaccounting',
-			name.replace( /-([a-z])/g, ( match, letter ) =>
-				letter.toUpperCase()
-			),
-		],
-	};
-	entryPoints[ name ] = `./client/${ name }`;
-} );
+			name.replace( /-([a-z])/g, ( match, letter ) =>letter.toUpperCase() ),
+		]
+    };
+    entryPoints[name] = `./client/${name}`;
+});
 
 const config = {
 	mode: NODE_ENV,
-	devtool: NODE_ENV === 'development' ? 'inline-source-map' : false,
 	entry: {
-		client: './client',
+		invoice: './client/invoice',
 		...entryPoints,
 	},
 	output: {
-		filename: './assets/dist/[name].js',
-		path: __dirname,
-		library: [ 'eaccounting', '[modulename]' ],
+		filename: `[name].js`,
+		path: path.resolve( __dirname, 'assets/dist'),
+		library: ['eaccounting', '[modulename]'],
 		libraryTarget: 'this',
+		jsonpFunction: '__eaccounting_webpackJsonp',
 	},
 	externals,
 	resolve: {
-		extensions: [ '.js', '.jsx', '.json', '.scss', '.css' ],
-		modules: [ path.resolve( __dirname, 'client' ), 'node_modules' ],
-	},
-	optimization: {
-		minimize: 'production' === NODE_ENV,
-		minimizer: [
-			new TerserPlugin( {
-				cache: true,
-				parallel: true,
-				terserOptions: {
-					ecma: 5,
-					mangle: {
-						reserved:
-							'production' === NODE_ENV ? [] : [ 'translate' ],
-						safari10: true,
-					},
-				},
-			} ),
-		],
+		extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
+		alias:{'@eaccounting': path.resolve(__dirname, 'client')},
+		modules: [path.resolve(__dirname, 'client'),  'node_modules'],
 	},
 	module: {
 		rules: [
+			{
+				parser: {
+					amd: false,
+				},
+			},
 			{
 				test: /\.(js|jsx)$/,
 				loader: 'babel-loader',
@@ -83,7 +70,6 @@ const config = {
 					MiniCssExtractPlugin.loader,
 					'css-loader',
 					{
-						// postcss loader so we can use autoprefixer and theme Gutenberg components
 						loader: 'postcss-loader',
 						options: {
 							config: {
@@ -123,60 +109,82 @@ const config = {
 			},
 			{
 				test: /\.svg$/,
-				use: [ '@svgr/webpack', 'url-loader' ],
+				use: ['@svgr/webpack', 'url-loader'],
 			},
 		],
 	},
 	plugins: [
-		new ProgressBarPlugin( {
+		new ProgressBarPlugin({
 			format:
-				chalk.blue( 'Build core script' ) +
+				chalk.blue('Build core script') +
 				' [:bar] ' +
-				chalk.green( ':percent' ) +
+				chalk.green(':percent') +
 				' :msg (:elapsed seconds)',
+		}),
+		new DependencyExtractionWebpackPlugin({
+			injectPolyfill: true,
+			requestToExternal: (request) => {
+				if ( externals[ request ] ) {
+					return externals[ request ]["this"];
+				}
+			},
+			requestToHandle: (request) => {
+				if ( externals[ request ] ) {
+					return request.replace('@eaccounting/', 'ea-');
+				}
+			}
+		}),
+		new WebpackRTLPlugin( {
+			minify: {
+				safe: true,
+			},
 		} ),
-		new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
-		new webpack.BannerPlugin( 'WP Ever Accounting v' + pkg.version ),
-		new webpack.DefinePlugin( {
+		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
+		new webpack.DefinePlugin({
 			'process.env': {
 				NODE_ENV: JSON.stringify(
 					process.env.NODE_ENV || 'development'
 				),
 			},
 			EACCOUNTING_VERSION: "'" + pkg.version + "'",
-		} ),
+		}),
 		new FixStyleOnlyEntriesPlugin(),
-		new CustomTemplatedPathPlugin( {
-			modulename( outputPath, data ) {
-				const entryName = get( data, [ 'chunk', 'name' ] );
-				if ( entryName ) {
-					return entryName.replace( /-([a-z])/g, ( match, letter ) =>
+		new CustomTemplatedPathPlugin({
+			modulename(outputPath, data) {
+				const entryName = get(data, ['chunk', 'name']);
+				if (entryName) {
+					return entryName.replace(/-([a-z])/g, (match, letter) =>
 						letter.toUpperCase()
 					);
 				}
 				return outputPath;
 			},
+		}),
+		new MomentTimezoneDataPlugin( {
+			startYear: 2000, // This strips out timezone data before the year 2000 to make a smaller file.
 		} ),
 		new DuplicatePackageCheckerPlugin(),
-		new webpack.LoaderOptionsPlugin( {
+		new webpack.LoaderOptionsPlugin({
 			options: {
 				postcss: [
 					postcssFocus(),
-					postcssPresetEnv( {
-						browsers: [ 'last 2 versions', 'IE > 10' ],
-					} ),
-					postcssReporter( {
+					postcssPresetEnv({
+						browsers: ['last 2 versions', 'IE > 10'],
+					}),
+					postcssReporter({
 						clearMessages: true,
-					} ),
+					}),
 				],
 			},
 			output: {
-				path: path.join( __dirname, 'assets/dist' ),
+				path: path.join(__dirname),
 			},
-		} ),
-		new MiniCssExtractPlugin( {
-			filename: './assets/dist/[name].css',
-		} ),
+		}),
+		new MiniCssExtractPlugin({
+			filename: '[name].css',
+			chunkFilename: '[id].style.css',
+			rtlEnabled: true,
+		}),
 	],
 	stats: {
 		all: false,
@@ -187,8 +195,15 @@ const config = {
 		hash: true,
 		timings: true,
 	},
+	optimization: {
+		minimize: NODE_ENV !== 'development',
+		minimizer: [ new TerserPlugin() ],
+		splitChunks: {
+			name: false,
+		},
+	},
 	watchOptions: {
-		ignored: [ /node_modules/ ],
+		ignored: [/node_modules/],
 	},
 	performance: {
 		hints: false,
@@ -196,18 +211,18 @@ const config = {
 	watch: true,
 };
 
-if ( NODE_ENV !== 'development' ) {
+if (NODE_ENV !== 'development') {
 	config.plugins.push(
-		new webpack.LoaderOptionsPlugin( { minimize: true } )
+		new webpack.LoaderOptionsPlugin({minimize: true})
 	);
-	config.module.rules.push( {
+	config.module.rules.push({
 		test: /\.js$/,
 		loader: 'webpack-remove-debug',
 		exclude: /node_modules/,
-	} );
+	});
 }
 
-if ( config.mode !== 'production' ) {
-	config.devtool = process.env.SOURCEMAP || 'source-map';
+if (config.mode !== 'production') {
+	config.devtool = process.env.SOURCEMAP || 'inline-source-map';
 }
 module.exports = config;

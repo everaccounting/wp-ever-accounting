@@ -65,7 +65,6 @@ class Email_New_Payment extends Email {
 			$this->placeholders['{payment_date}'] = eaccounting_format_datetime( $this->object->get_paid_at() );
 			$this->placeholders['{payment_id}']   = $this->object->get_id();
 		}
-		var_dump($this->is_enabled());
 		if ( $this->is_enabled() && $this->get_recipient() ) {
 			$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
 		}

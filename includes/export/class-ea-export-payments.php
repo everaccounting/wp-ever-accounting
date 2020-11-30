@@ -57,7 +57,6 @@ class Export_Payments extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 *
 	 * @param \EverAccounting\Transaction $item
 	 *
 	 * @return array
@@ -85,7 +84,7 @@ class Export_Payments extends CSV_Exporter {
 					break;
 				case 'vendor_name':
 					$vendor = eaccounting_get_contact( $item->get_contact_id() );
-					$value    = $vendor ? $vendor->get_name() : '';
+					$value  = $vendor ? $vendor->get_name() : '';
 					break;
 				case 'category_name':
 					$category = eaccounting_get_category( $item->get_category_id() );

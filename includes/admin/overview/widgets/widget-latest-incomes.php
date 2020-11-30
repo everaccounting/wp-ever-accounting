@@ -39,19 +39,22 @@ class Latest_Incomes extends Widget {
 	 * @since 1.0.2
 	 */
 	public function get_content() {
-		$incomes = eaccounting()
-			->query()
-			->select( 't.paid_at, c.name, t.amount, t.currency_code' )
-			->from( 'ea_transactions t' )
-			->leftJoin( 'ea_categories as c', 'c.id', 't.category_id' )
-			->where('t.type', 'income')
-			->where('c.type', '!=', 'other')
-			->order_by( 't.paid_at', 'DESC' )
-			->limit( 5 )
-			->get();
+		global $wpdb;
+		$incomes = $wpdb->get_results($wpdb->prepare("
+		SELECT t.paid_at, c.name, t.amount, t.currency_code
+		FROM {$wpdb->prefix}ea_transactions t
+		LEFT JOIN {$wpdb->prefix}ea_categories as c on c.id=t.category_id
+		WHERE t.type= 'income'
+		AND c.type != 'other'
+		ORDER BY t.paid_at DESC
+		LIMIT %d
+		", 5));
+
 		if ( empty( $incomes ) ) {
-			echo sprintf( '<p class="ea-overview-widget-notice">%s</p>',
-				__( 'There is no income records.', 'wp-ever-accounting' ) );
+			echo sprintf(
+				'<p class="ea-overview-widget-notice">%s</p>',
+				__( 'There is no income records.', 'wp-ever-accounting' )
+			);
 
 			return;
 		}
@@ -66,11 +69,11 @@ class Latest_Incomes extends Widget {
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $incomes as $income ): ?>
+			<?php foreach ( $incomes as $income ) : ?>
 				<tr>
 					<td><?php echo esc_html( $income->paid_at ); ?></td>
 					<td><?php echo esc_html( $income->name ); ?></td>
-					<td><?php echo eaccounting_format_price($income->amount, $income->currency_code); ?></td>
+					<td><?php echo eaccounting_format_price( $income->amount, $income->currency_code ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>

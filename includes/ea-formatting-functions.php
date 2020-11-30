@@ -39,6 +39,22 @@ function eaccounting_bool_to_string( $bool ) {
 }
 
 /**
+ * Converts a bool to a 1 or 0.
+ *
+ * @param $bool
+ * @since 1.1.0
+ *
+ * @return int
+ */
+function eaccounting_bool_to_number( $bool ) {
+	if ( ! is_bool( $bool ) ) {
+		$bool = eaccounting_string_to_bool( $bool );
+	}
+
+	return true === $bool ? 1 : 0;
+}
+
+/**
  * Explode a string into an array by $delimiter and remove empty values.
  *
  * @since 1.0.2
@@ -170,7 +186,7 @@ function eaccounting_string_to_timestamp( $time_string, $from_timestamp = null )
  * @param string $time_string Time string.
  *
  * @throws Exception
- * @return \EverAccounting\DateTime
+ * @return \EverAccounting\Core\DateTime
  */
 function eaccounting_string_to_datetime( $time_string ) {
 	// Strings are defined in local WP timezone. Convert to UTC.
@@ -180,7 +196,7 @@ function eaccounting_string_to_datetime( $time_string ) {
 	} else {
 		$timestamp = eaccounting_string_to_timestamp( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', eaccounting_string_to_timestamp( $time_string ) ) ) );
 	}
-	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
 	// Set local timezone or offset.
 	if ( get_option( 'timezone_string' ) ) {
@@ -264,9 +280,9 @@ function eaccounting_timezone_offset() {
  *
  * @since  1.0.2
  *
- * @param \EverAccounting\DateTime|string $date   Instance of DateTime.
- * @param string                       $format Data format.
- *                                             Defaults to the eaccounting_date_format function if not set.
+ * @param \EverAccounting\Core\DateTime|string $date   Instance of DateTime.
+ * @param string                          $format Data format.
+ *                                                Defaults to the eaccounting_date_format function if not set.
  *
  * @return string
  */
@@ -274,7 +290,7 @@ function eaccounting_format_datetime( $date, $format = '' ) {
 	if ( ! $format ) {
 		$format = eaccounting_date_format();
 	}
-	if ( ! is_a( $date, '\EverAccounting\DateTime' ) ) {
+	if ( ! is_a( $date, '\EverAccounting\Core\DateTime' ) ) {
 		try {
 			$date = eaccounting_string_to_datetime( $date );
 
@@ -389,7 +405,7 @@ function eaccounting_esc_json( $json, $html = false ) {
  *
  * @since 1.0.2
  *
- * @param bool $allow_decimal
+ * @param bool   $allow_decimal
  *
  * @param      $number
  *
@@ -425,7 +441,6 @@ function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
 /**
  * Format price with currency code & number format
  *
- *
  * @since 1.0.2
  *
  * @param $code
@@ -435,13 +450,13 @@ function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
  * @return string
  */
 function eaccounting_format_price( $amount, $code = null ) {
-	if ( $code == null ) {
+	if ( $code === null ) {
 		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
 	}
+
 	$amount = eaccounting_get_money( $amount, $code, true );
 	if ( is_wp_error( $amount ) ) {
 		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-
 		return '00.00';
 	}
 

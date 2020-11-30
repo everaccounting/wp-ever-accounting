@@ -4,43 +4,29 @@
  *
  * All account related function of the plugin.
  *
- * @since   1.0.2
+ * @since   1.1.0
  * @package EverAccounting
  */
-
-use EverAccounting\Exception;
-use EverAccounting\Account;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Main function for returning account.
  *
- * @since 1.0.2
- *
  * @param $account
  *
- * @return Account|null
+ * @return EverAccounting\Models\Account|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_account( $account ) {
 	if ( empty( $account ) ) {
 		return null;
 	}
-
 	try {
-		if ( $account instanceof Account ) {
-			$_account = $account;
-		} elseif ( is_object( $account ) && ! empty( $account->id ) ) {
-			$_account = new Account( null );
-			$_account->populate( $account );
-		} else {
-			$_account = new Account( absint( $account ) );
-		}
+		$result = new EverAccounting\Models\Account( $account );
 
-		if ( ! $_account->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
-		}
-
-		return $_account;
-	} catch ( Exception $exception ) {
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return null;
 	}
 }
@@ -50,124 +36,173 @@ function eaccounting_get_account( $account ) {
  *
  *  Returns a new account object on success.
  *
- * @since 1.0.2
+ * @param array $data {
+ *                               An array of elements that make up an account to update or insert.
  *
- * @param array $args Account arguments.
+ * @type int $id The account ID. If equal to something other than 0,
+ *                                         the account with that id will be updated. Default 0.
  *
- * @return Account|WP_Error
+ * @type string $name The name of the account . Default empty.
+ *
+ * @type string $number The number of account. Default empty.
+ *
+ * @type string $currency_code The currency_code for the account.Default is empty.
+ *
+ * @type double $opening_balance The opening balance of the account. Default 0.0000.
+ *
+ * @type string $bank_name The bank name for the account. Default null.
+ *
+ * @type string $bank_phone The phone number of the bank on which the account is opened. Default null.
+ *
+ * @type string $bank_address The address of the bank. Default null.
+ *
+ * @type int $enabled The status of the account. Default 1.
+ *
+ * @type int $creator_id The creator id for the account. Default is current user id of the WordPress.
+ *
+ * @type string $date_created The date when the account is created. Default is current time.
+ *
+ *
+ * }
+ *
+ * @return EverAccounting\Models\Account|\WP_Error|bool
+ * @since 1.1.0
+ *
  */
-function eaccounting_insert_account( $args ) {
-	try {
-		$default_args = array(
-			'id' => null,
-		);
-		$args         = (array) wp_parse_args( $args, $default_args );
-		$account      = new Account( $args['id'] );
-		$account->set_props( $args );
-		//validation
-		if ( ! $account->get_date_created() ) {
-			$account->set_date_created( time() );
-		}
-		if ( ! $account->get_creator_id() ) {
-			$account->set_creator_id();
-		}
-
-		if ( empty( $account->get_name() ) ) {
-			throw new Exception( 'empty_props', __( 'Account Name is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $account->get_number( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Account Number is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $account->get_currency_code( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Currency code is required', 'wp-ever-accounting' ) );
-		}
-
-		$currency = eaccounting_get_currency( $account->get_currency_code() );
-		if ( ! $currency || ! $currency->exists() ) {
-			throw new Exception( 'invalid_props', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
-		}
-
-		$existing_id = \EverAccounting\Query_Account::init()
-													->where( 'number', $account->get_number() )
-													->value( 0 );
-
-		if ( ! empty( $existing_id ) && absint( $existing_id ) != $account->get_id() ) {
-			throw new Exception( 'duplicate_props', __( 'Duplicate account number.', 'wp-ever-accounting' ) );
-		}
-
-		$account->save();
-
-	} catch ( Exception $e ) {
-		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
+function eaccounting_insert_account( $data, $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $data ) ) {
+		return false;
 	}
+	try {
+		// The  id will be provided when updating an item.
+		$data = wp_parse_args( $data, array( 'id' => null ) );
 
-	return $account;
+		// Retrieve the account.
+		$item = new \EverAccounting\Models\Account( $data['id'] );
+
+		// Load new data.
+		$item->set_props( $data );
+
+		// Save the item
+		$item->save();
+
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	}
 }
 
 /**
  * Delete an account.
  *
- * @since 1.0.2
- *
  * @param $account_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_account( $account_id ) {
 	try {
-		$account = new Account( $account_id );
-		if ( ! $account->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid account.', 'wp-ever-accounting' ) );
+		$account = new EverAccounting\Models\Account( $account_id );
+
+		return $account->exists() ? $account->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return false;
+	}
+}
+
+/**
+ * Get account items.
+ *
+ * @param array $args {
+ *                               Optional. Arguments to retrieve accounts.
+ *
+ * @type string $name The name of the account .
+ *
+ * @type string $number The number of account.
+ *
+ * @type string $currency_code The currency_code for the account.
+ *
+ * @type double $opening_balance The opening balance of the account.
+ *
+ * @type string $bank_name The bank name for the account.
+ *
+ * @type string $bank_phone The phone number of the bank on which the account is opened.
+ *
+ * @type string $bank_address The address of the bank.
+ *
+ * @type int $enabled The status of the account.
+ *
+ * @type int $creator_id The creator id for the account.
+ *
+ * @type string $date_created The date when the account is created.
+ *
+ *
+ * }
+ *
+ * @return array|int
+ * @since 1.1.0
+ *
+ *
+ */
+function eaccounting_get_accounts( $args = array() ) {
+	global $wpdb;
+	$search_cols  = array( 'id', 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address' );
+	$orderby_cols = array( 'id', 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address', 'enabled', 'date_created' );
+	// Prepare args.
+	$args = wp_parse_args(
+		$args,
+		array(
+			'status'       => 'all',
+			'include'      => '',
+			'search'       => '',
+			'search_cols'  => $search_cols,
+			'orderby_cols' => $orderby_cols,
+			'fields'       => '*',
+			'orderby'      => 'id',
+			'order'        => 'ASC',
+			'number'       => 20,
+			'offset'       => 0,
+			'paged'        => 1,
+			'return'       => 'objects',
+			'count_total'  => false,
+		)
+	);
+
+	$qv    = apply_filters( 'eaccounting_get_accounts_args', $args );
+	$table = 'ea_accounts';
+
+	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
+	$query_from    = eaccounting_prepare_query_from( $table );
+	$query_where   = 'WHERE 1=1';
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
+	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
+	$query_limit   = eaccounting_prepare_query_limit( $qv );
+	$count_total   = true === $qv['count_total'];
+	$cache_key     = md5( serialize( $qv ) );
+	$results       = wp_cache_get( $cache_key, 'eaccounting_account' );
+	$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+	if ( false === $results ) {
+		if ( $count_total ) {
+			$results = (int) $wpdb->get_var( $request );
+			wp_cache_set( $cache_key, $results, 'eaccounting_account' );
+		} else {
+			$results = $wpdb->get_results( $request );
+			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+				foreach ( $results as $key => $item ) {
+					wp_cache_set( $item->id, $item, 'eaccounting_account' );
+					wp_cache_set( $item->number, $item, 'eaccounting_account' );
+				}
+			}
+			wp_cache_set( $cache_key, $results, 'eaccounting_category' );
 		}
-
-		$account->delete();
-
-		return empty( $account->get_id() );
-
-	} catch ( Exception $exception ) {
-		return false;
-	}
-}
-
-/**
- * Delete default account from settings
- *
- * @since 1.0.2
- *
- * @param int $id ID of the default account.
- *
- */
-function eaccounting_delete_default_account( $id ) {
-	$default_account = eaccounting()->settings->get( 'default_account' );
-	if ( $default_account == $id ) {
-		eaccounting()->settings->set( array( array( 'default_account' => '' ) ), true );
 	}
 
-}
-
-add_action( 'eaccounting_delete_account', 'eaccounting_delete_default_account' );
-
-/**
- * Delete account id from transactions.
- *
- * @since 1.0.2
- *
- * @param $id
- *
- * @return bool
- */
-function eaccounting_update_transaction_account( $id ) {
-	$id = absint( $id );
-	if ( empty( $id ) ) {
-		return false;
+	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+		$results = array_map( 'eaccounting_get_account', $results );
 	}
-	$transactions = \EverAccounting\Query::init();
 
-	return $transactions->table( 'ea_transactions' )->where( 'account_id', absint( $id ) )->update( array( 'account_id' => '' ) );
+	return $results;
 }
-
-add_action( 'eaccounting_delete_account', 'eaccounting_update_transaction_account' );
-
-

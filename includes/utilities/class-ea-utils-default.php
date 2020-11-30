@@ -6,8 +6,10 @@
  */
 
 namespace EverAccounting\Utilities;
+
 /**
  * Class Defaults
+ *
  * @since 1.0.2
  * @package EverAccounting\Utilities
  */
@@ -29,7 +31,7 @@ class Defaults {
 	public function init() {
 		$this->set_currency();
 		$this->set_account();
-//		$this->set_payment_method();
+		// $this->set_payment_method();
 		do_action( 'eaccounting_init_company_defaults', $this );
 	}
 
@@ -40,13 +42,11 @@ class Defaults {
 	 *
 	 * @return mixed
 	 * @since 1.0.2
-	 *
 	 */
 	public function get( $prop ) {
 		if ( array_key_exists( $prop, $this->container ) ) {
 			return $this->container[ $prop ];
 		}
-
 
 		return false;
 	}
@@ -66,6 +66,7 @@ class Defaults {
 
 	/**
 	 * Set currency defaults
+	 *
 	 * @since 1.0.2
 	 */
 	protected function set_currency() {

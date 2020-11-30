@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit();
 
 require_once dirname( __FILE__ ) . '/currencies/currencies.php';
 require_once dirname( __FILE__ ) . '/categories/categories.php';
+require_once dirname( __FILE__ ) . '/taxes/taxes.php';
 
 /**
  * render banking page.
@@ -58,6 +59,9 @@ function eaccounting_get_misc_tabs() {
 	if ( current_user_can( 'ea_manage_currency' ) ) {
 		$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 	}
+	if ( current_user_can( 'ea_manage_currency' ) ) {
+		$tabs['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
+	}
 
 	return apply_filters( 'eaccounting_misc_tabs', $tabs );
 }
@@ -71,7 +75,7 @@ function eaccounting_load_misc_page() {
 	$tab  = eaccounting_get_current_tab();
 	$tabs = eaccounting_get_misc_tabs();
 	if ( empty( $tab ) && $tabs ) {
-		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
+		wp_redirect( add_query_arg( array( 'tab' => current( array_keys( $tabs ) ) ) ) );
 		exit();
 	}
 	do_action( 'eaccounting_load_misc_page_tab' . $tab );

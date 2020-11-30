@@ -5,7 +5,6 @@
  * Admin transactions list table it shows all kind of transactions
  * related to  the company
  *
- *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
@@ -16,8 +15,7 @@ namespace EverAccounting\Admin\ListTables;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Transaction;
-use EverAccounting\Transaction;
+use EverAccounting\Abstracts\TransactionModel;
 
 /**
  * Class List_Table_Transactions
@@ -83,7 +81,6 @@ class List_Table_Transactions extends List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -164,15 +161,14 @@ class List_Table_Transactions extends List_Table {
 	/**
 	 * Renders the "Date" column in the accounts list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $transaction ) {
-		$date   = $transaction->get_paid_at()->date_i18n();
+		$date   = $transaction->get_paid_at();
 		$type   = $transaction->get_type();
 		$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
 		$tab    = 'expense' !== $type ? 'revenues' : 'payments';
@@ -200,7 +196,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the amount column.
 	 */
@@ -213,7 +209,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the account column.
 	 */
@@ -229,7 +225,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the type column.
 	 */
@@ -246,7 +242,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the Category column.
 	 */
@@ -262,7 +258,7 @@ class List_Table_Transactions extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $transaction The current account object.
+	 * @param TransactionModel $transaction The current account object.
 	 *
 	 * @return string Data shown in the Reference column.
 	 */
@@ -302,7 +298,7 @@ class List_Table_Transactions extends List_Table {
 			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'type', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
 			'income'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'income', $base ) ), $current === 'income' ? ' class="current"' : '', __( 'Income', 'wp-ever-accounting' ) . $income_count ),
 			'expense' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'expense', $base ) ), $current === 'expense' ? ' class="current"' : '', __( 'Expense', 'wp-ever-accounting' ) . $expense_count ),
-			//'other'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'other', $base ) ), $current === 'other' ? ' class="current"' : '', __( 'Other', 'wp-ever-accounting' ) . $others_count ),
+			// 'other'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'other', $base ) ), $current === 'other' ? ' class="current"' : '', __( 'Other', 'wp-ever-accounting' ) . $others_count ),
 		);
 
 		return $views;
@@ -402,6 +398,7 @@ class List_Table_Transactions extends List_Table {
 				'offset'     => $per_page * ( $page - 1 ),
 				'per_page'   => $per_page,
 				'page'       => $page,
+				'type'       => $type,
 				'search'     => $search,
 				'account_id' => $account_id,
 				'orderby'    => eaccounting_clean( $orderby ),
@@ -409,36 +406,55 @@ class List_Table_Transactions extends List_Table {
 			)
 		);
 
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$args['paid_at'] = array(
+				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
+				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+			);
+		}
+
 		$args = apply_filters( 'eaccounting_transactions_table_get_transactions', $args, $this );
+		eaccounting_get_currencies(
+			array(
+				'number' => '-1',
+				'return' => 'raw',
+			)
+		);
+		eaccounting_get_categories(
+			array(
+				'number' => '-1',
+				'return' => 'raw',
+			)
+		);
+		eaccounting_get_accounts(
+			array(
+				'number' => '-1',
+				'return' => 'raw',
+			)
+		);
+		$this->items = eaccounting_get_transactions( $args );
 
-		$base_query  = Query_Transaction::init()
-										->where( $args )
-										->search( $search )
-										->notTransfer()
-										->whereDateBetween( 'paid_at', $start_date, $end_date )
-										->order_by( $orderby, $order )
-										->page( $page, $per_page );
-		$this->items = $base_query->copy()->where( array( 'type' => $type ) )->get( OBJECT, 'eaccounting_get_transaction' );
-
-		$this->income_count = $base_query->copy()->where(
+		$this->income_count = eaccounting_get_transactions(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
-					'type'   => 'income',
-					'search' => $search,
+					'count_total' => true,
+					'type'        => 'income',
+					'search'      => $search,
 				)
 			)
-		)->count();
+		);
 
-		$this->expense_count = $base_query->copy()->where(
+		$this->expense_count = eaccounting_get_transactions(
 			array_merge(
-				$this->query_args,
+				$args,
 				array(
-					'type'   => 'expense',
-					'search' => $search,
+					'count_total' => true,
+					'type'        => 'expense',
+					'search'      => $search,
 				)
 			)
-		)->count();
+		);
 
 		$this->total_count = $this->income_count + $this->expense_count + $this->others_count;
 

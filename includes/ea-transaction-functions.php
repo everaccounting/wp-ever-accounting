@@ -4,239 +4,599 @@
  *
  * Functions for all kind of transaction of the plugin.
  *
- * @since   1.0.2
+ * @since   1.1.0
  * @package EverAccounting
  */
 
-use \EverAccounting\Transaction;
-use \EverAccounting\Payment;
-use \EverAccounting\Revenue;
-use \EverAccounting\Exception;
-
 defined( 'ABSPATH' ) || exit;
-
 
 /**
  * Get Transaction Types
  *
- * @since 1.0.2
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
 		'income'  => __( 'Income', 'wp-ever-accounting' ),
-		'expense' => __( 'Expense', 'wp-ever-accounting' )
+		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 	);
 
-	return $types;
+	return apply_filters( 'eaccounting_transaction_types', $types );
 }
 
-
 /**
- * Main function for returning transaction.
+ * Get a single expense.
  *
- * @since 1.0.2
+ * @param $expense
  *
- * @param $transaction
+ * @return \EverAccounting\Models\Expense|null
+ * @since 1.1.0
  *
- * @return Transaction|null
  */
-function eaccounting_get_transaction( $transaction ) {
-	if ( empty( $transaction ) ) {
+function eaccounting_get_expense( $expense ) {
+	if ( empty( $expense ) ) {
 		return null;
 	}
-
 	try {
-		if ( $transaction instanceof Transaction ) {
-			$_transaction = $transaction;
-		} elseif ( is_object( $transaction ) && ! empty( $transaction->id ) ) {
-			$_transaction = new Transaction( null );
-			$_transaction->populate( $transaction );
-		} else {
-			$_transaction = new Transaction( absint( $transaction ) );
-		}
+		$result = new EverAccounting\Models\Expense( $expense );
 
-		if ( ! $_transaction->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid transaction.', 'wp-ever-accounting' ) );
-		}
-
-		return $_transaction;
-	} catch ( Exception $exception ) {
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return null;
 	}
 }
 
+
 /**
- *  Create new transaction programmatically.
+ *  Create new expense programmatically.
  *
- *  Returns a new transaction object on success.
+ *  Returns a new payment object on success.
  *
- * @since 1.0.2
+ * @param array $args {
+ *                              An array of elements that make up an expense to update or insert.
  *
- * @see   eaccounting_sanitize_price()
- * @see   eaccounting_get_account()
- * @see   eaccounting_get_currency()
- * @see   eaccounting_get_category()
- *
- * @see   eaccounting_get_contact()
- *
- * @param array $args           {
- *
- * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
- * @type string $type           Type of the transaction eg income, expense etc.
- * @type string $paid_at        Time of the transaction.
- * @type string $amount         Transaction amount.
- * @type int    $account_id     From/To which account the transaction is.
- * @type int    $contact_id     Contact id related to the transaction.
- * @type int    $invoice_id     Transaction related invoice id(optional).
- * @type int    $category_id    Category of the transaction.
- * @type string $payment_method Payment method used for the transaction.
- * @type string $reference      Reference of the transaction.
- * @type string $description    Description of the transaction.
+ * @type int $id Transaction id. If the id is something other than 0 then it will update the transaction.
+ * @type string $paid_at Time of the transaction. Default null.
+ * @type string $amount Transaction amount. Default null.
+ * @type int $account_id From/To which account the transaction is. Default empty.
+ * @type int $contact_id Contact id related to the transaction. Default empty.
+ * @type int $invoice_id Transaction related invoice id(optional). Default empty.
+ * @type int $category_id Category of the transaction. Default empty.
+ * @type string $payment_method Payment method used for the transaction. Default empty.
+ * @type string $reference Reference of the transaction. Default empty.
+ * @type string $description Description of the transaction. Default empty.
  *
  * }
  *
- * @return Transaction|WP_Error
+ * @return EverAccounting\Models\Expense|\WP_Error|bool
+ * @since 1.1.0
+ *
  */
-function eaccounting_insert_transaction( $args ) {
-
-	try {
-		$default_args = array(
-			'id' => null,
-		);
-		$args         = (array) wp_parse_args( $args, $default_args );
-
-		$transaction = new Transaction( $args['id'] );
-		$transaction->set_props( $args );
-
-		//validation
-		if ( ! $transaction->get_date_created() ) {
-			$transaction->set_date_created( time() );
-		}
-		if ( ! $transaction->get_creator_id() ) {
-			$transaction->set_creator_id();
-		}
-		if ( empty( $transaction->get_paid_at() ) ) {
-			throw new Exception( 'empty_prop', __( 'Transaction date is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $transaction->get_type() ) ) {
-			throw new Exception( 'empty_prop', __( 'Transaction type is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $transaction->get_paid_at() ) ) {
-			throw new Exception( 'empty_prop', __( 'Paid date is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $transaction->get_category_id() ) ) {
-			throw new Exception( 'empty_prop', __( 'Category is required', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $transaction->get_payment_method() ) ) {
-			throw new Exception( 'empty_prop', __( 'Payment method is required', 'wp-ever-accounting' ) );
-		}
-
-		$account = eaccounting_get_account( $transaction->get_account_id() );
-		if ( ! $account || ! $account->exists() ) {
-			throw new Exception( 'invalid_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
-		}
-
-		$currency = eaccounting_get_currency( $account->get_currency_code( 'edit' ) );
-		if ( ! $currency || ! $currency->exists() ) {
-			throw new Exception( 'invalid_prop', __( 'Transaction associated account is not exist.', 'wp-ever-accounting' ) );
-		}
-
-		$category = eaccounting_get_category( $transaction->get_category_id() );
-		if ( ! $category->exists() ) {
-			throw new Exception( 'invalid_prop', __( 'Category does not exist.', 'wp-ever-accounting' ) );
-		}
-
-		if ( ! in_array( $category->get_type(), [ 'expense', 'other', 'income' ] ) ) {
-			throw new Exception( 'invalid_prop', __( 'Invalid category type.', 'wp-ever-accounting' ) );
-		}
-		//if expense category type must be expense
-		//if type other category type must be other
-		//if type income category type must be income
-		if ( $transaction->get_type() !== $category->get_type() && $category->get_type() !== 'other' ) {
-			throw new Exception( 'invalid-category-type', __( 'Transaction type and category type does not match.', 'wp-ever-accounting' ) );
-		}
-
-		if ( ! empty( $transaction->get_contact_id() ) ) {
-			$contact = eaccounting_get_contact( $transaction->get_contact_id() );
-			if ( ! empty( $transaction->get_contact_id() ) && ! $contact->exists() ) {
-				throw new Exception( 'invalid_prop', __( 'Contact does not exist.', 'wp-ever-accounting' ) );
-			}
-		}
-
-		//May be changing the bank account so its need to update all the time.
-		$transaction->set_currency_code( $account->get_currency_code() );
-		$transaction->set_currency_rate( $currency->get_rate() );
-
-
-		$transaction->set_amount( eaccounting_sanitize_price( $transaction->get_amount(), $currency->get_code() ) );
-
-
-		$transaction->save();
-
-	} catch ( Exception $e ) {
-		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
+function eaccounting_insert_expense( $args, $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $args ) ) {
+		return false;
 	}
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-	return $transaction;
+		// Retrieve the expense.
+		$item = new \EverAccounting\Models\Expense( $args['id'] );
+
+		// Load new data.
+		$item->set_props( $args );
+
+		// Save the item
+		$item->save();
+
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	}
 }
 
 /**
- * Delete an transaction.
+ * Delete a expense.
  *
- * @since 1.0.2
- *
- * @param $transaction_id
+ * @param $expense_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
-function eaccounting_delete_transaction( $transaction_id ) {
+function eaccounting_delete_expense( $expense_id ) {
 	try {
-		$transaction = new Transaction( $transaction_id );
-		if ( ! $transaction->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid transaction.', 'wp-ever-accounting' ) );
-		}
+		$expense = new EverAccounting\Models\Expense( $expense_id );
 
-		$transaction->delete();
+		return $expense->exists() ? $expense->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return false;
+	}
 
-		return empty( $transaction->get_id() );
+}
 
-	} catch ( Exception $exception ) {
+/**
+ * Get expense items.
+ *
+ * @param array $args {
+ *
+ * @type int $id Transaction id.
+ * @type string $paid_at Time of the transaction.
+ * @type string $amount Transaction amount.
+ * @type int $account_id From/To which account the transaction is.
+ * @type int $contact_id Contact id related to the transaction.
+ * @type int $invoice_id Transaction related invoice id(optional).
+ * @type int $category_id Category of the transaction.
+ * @type string $payment_method Payment method used for the transaction.
+ * @type string $reference Reference of the transaction.
+ * @type string $description Description of the transaction.
+ *
+ * }
+ *
+ *
+ * @return array|int
+ * @since 1.1.0
+ *
+ */
+function eaccounting_get_expenses( $args = array() ) {
+	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense' ) ) );
+}
+
+/**
+ * Get revenue.
+ *
+ * @param $income
+ *
+ * @return \EverAccounting\Models\Income|null
+ * @since 1.1.0
+ *
+ */
+function eaccounting_get_income( $income ) {
+	if ( empty( $income ) ) {
+		return null;
+	}
+	try {
+		$result = new EverAccounting\Models\Income( $income );
+
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return null;
+	}
+}
+
+
+/**
+ *  Create new income programmatically.
+ *
+ *  Returns a new revenue object on success.
+ *
+ * @param array $args {
+ *                              An array of elements that make up an expense to update or insert.
+ *
+ * @type int $id Transaction id. If the id is something other than 0 then it will update the transaction.
+ * @type string $paid_at Time of the transaction. Default null.
+ * @type string $amount Transaction amount. Default null.
+ * @type int $account_id From/To which account the transaction is. Default empty.
+ * @type int $contact_id Contact id related to the transaction. Default empty.
+ * @type int $invoice_id Transaction related invoice id(optional). Default empty.
+ * @type int $category_id Category of the transaction. Default empty.
+ * @type string $payment_method Payment method used for the transaction. Default empty.
+ * @type string $reference Reference of the transaction. Default empty.
+ * @type string $description Description of the transaction. Default empty.
+ *
+ * }
+ *
+ * @return EverAccounting\Models\Income|\WP_Error|bool
+ * @since 1.1.0
+ *
+ */
+function eaccounting_insert_income( $args, $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $args ) ) {
+		return false;
+	}
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
+
+		// Retrieve the income.
+		$item = new \EverAccounting\Models\Income( $args['id'] );
+
+		// Load new data.
+		$item->set_props( $args );
+
+		// Save the item
+		$item->save();
+
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	}
+}
+
+/**
+ * Delete a income.
+ *
+ * @param $income_id
+ *
+ * @return bool
+ * @since 1.1.0
+ *
+ */
+function eaccounting_delete_income( $income_id ) {
+	try {
+		$income = new EverAccounting\Models\Income( $income_id );
+
+		return $income->exists() ? $income->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return false;
 	}
 }
 
 /**
- * @param $payment
- * @since 1.0.2
+ * Get revenues items.
  *
- * @return \EverAccounting\Payment|null
+ * @param array $args {
+ *
+ * @type int $id Transaction id.
+ * @type string $paid_at Time of the transaction.
+ * @type string $amount Transaction amount.
+ * @type int $account_id From/To which account the transaction is.
+ * @type int $contact_id Contact id related to the transaction.
+ * @type int $invoice_id Transaction related invoice id(optional).
+ * @type int $category_id Category of the transaction.
+ * @type string $expense_method Payment method used for the transaction.
+ * @type string $reference Reference of the transaction.
+ * @type string $description Description of the transaction.
+ *
+ * }
+ * @return array|int
+ * @since 1.1.0
+ *
+ *
  */
-function eaccounting_get_payment( $payment ) {
-	if ( empty( $payment ) ) {
+function eaccounting_get_incomes( $args = array() ) {
+	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );
+}
+
+/**
+ * Get transfer.
+ *
+ * @param $transfer
+ *
+ * @return \EverAccounting\Models\Transfer|null
+ * @since 1.1.0
+ *
+ */
+function eaccounting_get_transfer( $transfer ) {
+	if ( empty( $transfer ) ) {
 		return null;
 	}
-
 	try {
-		if ( $payment instanceof Payment ) {
-			$_payment = $payment;
-		} elseif ( is_object( $payment ) && ! empty( $payment->id ) ) {
-			$_payment = new Payment( null );
-			$_payment->populate( $payment );
-		} else {
-			$_payment = new Payment( absint( $payment ) );
-		}
+		$result = new EverAccounting\Models\Transfer( $transfer );
 
-		if ( ! $_payment->exists() || $_payment->get_type() != 'expense' ) {
-			throw new Exception( 'invalid_id', __( 'Invalid payment.', 'wp-ever-accounting' ) );
-		}
-
-		return $_payment;
-	} catch ( Exception $exception ) {
+		return $result->exists() ? $result : null;
+	} catch ( \EverAccounting\Core\Exception $e ) {
 		return null;
 	}
+}
+
+/**
+ * Create new transfer programmatically.
+ *
+ * Returns a new transfer object on success.
+ *
+ * @param array $args {
+ *                               An array of elements that make up an transfer to update or insert.
+ *
+ * @type int $id ID of the transfer. If equal to something other than 0,
+ *                               the post with that ID will be updated. Default 0.
+ * @type int $from_account_id ID of the source account from where transfer is initiating.
+ *                               default null.
+ * @type int $to_account_id ID of the target account where the transferred amount will be
+ *                               deposited. default null.
+ * @type string $amount Amount of the money that will be transferred. default 0.
+ * @type string $date Date of the transfer. default null.
+ * @type string $payment_method Payment method used in transfer. default null.
+ * @type string $reference Reference used in transfer. Default empty.
+ * @type string $description Description of the transfer. Default empty.
+ *
+ * }
+ *
+ * @return \EverAccounting\Models\Transfer|\WP_Error|\bool
+ * @since 1.1.0
+ *
+ */
+function eaccounting_insert_transfer( $args, $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $args ) ) {
+		return false;
+	}
+	try {
+		// The id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
+
+		// Retrieve the transfer.
+		$item = new \EverAccounting\Models\Transfer( $args['id'] );
+
+		// Load new data.
+		$item->set_props( $args );
+
+		// Save the item
+		$item->save();
+
+		return $item;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	}
+}
+
+/**
+ * Delete a transfer.
+ *
+ * @param $transfer_id
+ *
+ * @return bool
+ * @since 1.1.0
+ *
+ */
+function eaccounting_delete_transfer( $transfer_id ) {
+	try {
+		$transfer = new EverAccounting\Models\Transfer( $transfer_id );
+
+		return $transfer->exists() ? $transfer->delete() : false;
+	} catch ( \EverAccounting\Core\Exception $e ) {
+		return false;
+	}
+}
+
+/**
+ * Get transfers.
+ *
+ * @param array $args {
+ *
+ * @type int $id ID of the transfer.
+ * @type int $from_account_id ID of the source account from where transfer is initiating.
+ * @type int $to_account_id ID of the target account where the transferred amount will be deposited.
+ * @type string $amount Amount of the money that will be transferred.
+ * @type string $date Date of the transfer.
+ * @type string $payment_method Payment method used in transfer.
+ * @type string $reference Reference used in transfer.
+ * @type string $description Description of the transfer.
+ *
+ * }
+ *
+ * @return array|int
+ * @since 1.1.0
+ *
+ *
+ */
+function eaccounting_get_transfers( $args = array() ) {
+	global $wpdb;
+	$search_cols  = array( 'description', 'reference' );
+	$orderby_cols = array(
+		'id', 'date'
+	);
+	$fields       = array(
+		'ea_transfers.*',
+		'expense.account_id from_account_id',
+		'income.account_id to_account_id',
+		'income.description description',
+		'income.reference reference',
+		'income.amount amount',
+	);
+	// Prepare args.
+	$args = wp_parse_args(
+		$args,
+		array(
+			'include'          => '',
+			'search'           => '',
+			'search_cols'      => $search_cols,
+			'orderby_cols'     => $orderby_cols,
+			'exclude_transfer' => true,
+			'fields'           => $fields,
+			'orderby'          => 'id',
+			'order'            => 'ASC',
+			'number'           => 20,
+			'offset'           => 0,
+			'paged'            => 1,
+			'return'           => 'objects',
+			'count_total'      => false,
+		)
+	);
+
+	$qv    = apply_filters( 'eaccounting_get_transfer_args', $args );
+	$table = 'ea_transfers';
+
+	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
+	$query_from    = eaccounting_prepare_query_from( $table );
+	$query_where   = 'WHERE 1=1';
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
+	$query_limit   = eaccounting_prepare_query_limit( $qv );
+	$query_join    = '';
+
+	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
+	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
+
+	$count_total = true === $qv['count_total'];
+	$cache_key   = md5( serialize( $qv ) );
+	$results     = wp_cache_get( $cache_key, 'eaccounting_transaction' );
+	$request     = "SELECT $query_fields $query_from $query_join $query_where $query_orderby $query_limit";
+
+	if ( false === $results ) {
+		if ( $count_total ) {
+			$results = (int) $wpdb->get_var( $request );
+			wp_cache_set( $cache_key, $results, 'eaccounting_transfer' );
+		} else {
+			$results = $wpdb->get_results( $request );
+			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+				foreach ( $results as $key => $item ) {
+					wp_cache_set( $item->id, $item, 'eaccounting_transfer' );
+				}
+			}
+			wp_cache_set( $cache_key, $results, 'eaccounting_transfer' );
+		}
+	}
+
+	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+		$results = array_map('eaccounting_get_transfer', $results );
+	}
+
+	return $results;
+}
+
+
+function eaccounting_get_transactions( $args = array() ) {
+	global $wpdb;
+	$search_cols  = array( 'description', 'reference' );
+	$orderby_cols = array(
+		'id',
+		'type',
+		'paid_at',
+		'amount',
+		'currency_code',
+		'currency_rate',
+		'account_id',
+		'invoice_id',
+		'contact_id',
+		'category_id',
+		'description',
+		'payment_method',
+		'reference',
+		'attachment',
+		'parent_id',
+		'reconciled',
+		'creator_id',
+		'date_created',
+	);
+	// Prepare args.
+	$args = wp_parse_args(
+		$args,
+		array(
+			'type'             => '',
+			'include'          => '',
+			'search'           => '',
+			'search_cols'      => $search_cols,
+			'orderby_cols'     => $orderby_cols,
+			'exclude_transfer' => true,
+			'fields'           => '*',
+			'orderby'          => 'id',
+			'order'            => 'ASC',
+			'number'           => 20,
+			'offset'           => 0,
+			'paged'            => 1,
+			'return'           => 'objects',
+			'count_total'      => false,
+		)
+	);
+
+	$qv    = apply_filters( 'eaccounting_get_transactions_args', $args );
+	$table = 'ea_transactions';
+
+	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
+	$query_from    = eaccounting_prepare_query_from( $table );
+	$query_where   = 'WHERE 1=1';
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
+	$query_limit   = eaccounting_prepare_query_limit( $qv );
+
+	if ( ! empty( $qv['type'] ) ) {
+		$types        = implode( "','", wp_parse_list( $qv['type'] ) );
+		$query_where .= " AND $table.`type` IN ('$types')";
+	}
+	if ( ! empty( $qv['currency_code'] ) ) {
+		$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
+		$query_where  .= " AND $table.`currency_code` IN ('$currency_code')";
+	}
+	if ( ! empty( $qv['payment_method'] ) ) {
+		$payment_method = implode( "','", wp_parse_list( $qv['payment_method'] ) );
+		$query_where   .= " AND $table.`payment_method` IN ('$payment_method')";
+	}
+
+	if ( ! empty( $qv['category_id'] ) ) {
+		$category_in  = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
+		$query_where .= " AND $table.`category_id` IN ($category_in)";
+	}
+	if ( ! empty( $qv['account_id'] ) ) {
+		$account_id   = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
+		$query_where .= " AND $table.`account_id` IN ($account_id)";
+	}
+	if ( ! empty( $qv['invoice_id'] ) ) {
+		$invoice_id   = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );
+		$query_where .= " AND $table.`invoice_id` IN ($invoice_id)";
+	}
+	if ( ! empty( $qv['invoice_id'] ) ) {
+		$invoice_id   = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );
+		$query_where .= " AND $table.`invoice_id` IN ($invoice_id)";
+	}
+	if ( ! empty( $qv['contact_id'] ) ) {
+		$contact_id   = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
+		$query_where .= " AND $table.`contact_id` IN ($contact_id)";
+	}
+	if ( ! empty( $qv['creator_id'] ) ) {
+		$creator_id   = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
+		$query_where .= " AND $table.`creator_id` IN ($creator_id)";
+	}
+	if ( ! empty( $qv['parent_id'] ) ) {
+		$parent_id    = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
+		$query_where .= " AND $table.`parent_id` IN ($parent_id)";
+	}
+	if ( ! empty( $qv['paid_at'] ) ) {
+		$query_where .= eaccounting_sql_parse_date_query( $qv['paid_at'], "$table.paid_at" );
+	}
+	if ( true === $qv['exclude_transfer'] ) {
+		$query_where .= " AND $table.`category_id` NOT IN (SELECT id from {$wpdb->prefix}ea_categories where type='other' )";
+	}
+
+	$count_total = true === $qv['count_total'];
+	$cache_key   = md5( serialize( $qv ) );
+	$results     = wp_cache_get( $cache_key, 'eaccounting_transaction' );
+	$request     = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+	if ( false === $results ) {
+		if ( $count_total ) {
+			$results = (int) $wpdb->get_var( $request );
+			wp_cache_set( $cache_key, $results, 'eaccounting_transaction' );
+		} else {
+			$results = $wpdb->get_results( $request );
+			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+				foreach ( $results as $key => $item ) {
+					wp_cache_set( $item->id, $item, 'eaccounting_transaction' );
+					wp_cache_set( $item->id, $item, 'eaccounting_' . $item->type );
+				}
+			}
+			wp_cache_set( $cache_key, $results, 'eaccounting_transaction' );
+		}
+	}
+
+	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+		$results = array_map(
+			function ( $item ) {
+				switch ( $item->type ) {
+					case 'income':
+						$transaction = new \EverAccounting\Models\Income();
+						$transaction->set_props( $item );
+						$transaction->set_object_read( true );
+
+						return $transaction;
+						break;
+					case 'expense':
+						$transaction = new \EverAccounting\Models\Expense();
+						$transaction->set_props( $item );
+						$transaction->set_object_read( true );
+
+						return $transaction;
+						break;
+				}
+
+				return null;
+			},
+			$results
+		);
+	}
+
+	return $results;
 }

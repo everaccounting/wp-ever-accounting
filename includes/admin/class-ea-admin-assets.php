@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\DateTime;
+use EverAccounting\Core\DateTime;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -45,6 +45,13 @@ class Admin_Assets {
 			wp_enqueue_style( 'ea-admin-styles' );
 			wp_enqueue_style( 'jquery-ui-style' );
 		}
+
+		// React Styles
+		// wp_register_style( 'ea-components', self::get_asset_dist_url( 'components', 'css' ), array( 'wp-components' ), $version );
+		// wp_register_style( 'ea-invoice', self::get_asset_dist_url( 'invoice', 'css' ), array( 'ea-components', 'wp-components' ), $version );
+		// wp_register_style( 'ea-app', self::get_asset_dist_url( 'app', 'css' ), array( 'ea-components', 'wp-components' ), $version );
+		// wp_enqueue_style( 'ea-invoice' );
+		// wp_enqueue_style( 'ea-app' );
 	}
 
 
@@ -60,7 +67,7 @@ class Admin_Assets {
 		$suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 		$version               = eaccounting()->get_version();
 
-		//3rd parties
+		// 3rd parties
 		wp_register_script( 'jquery-blockui', eaccounting()->plugin_url( '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js' ), array( 'jquery' ), '2.70', true );
 		wp_register_script( 'jquery-tiptip', eaccounting()->plugin_url( '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js' ), array( 'jquery' ), $version, true );
 		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/assets/js/select2/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
@@ -69,10 +76,10 @@ class Admin_Assets {
 		wp_register_script( 'jquery-moment', eaccounting()->plugin_url( '/assets/js/moment/moment' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'jquery-daterange', eaccounting()->plugin_url( '/assets/js/daterange/daterangepicker' . $suffix . '.js' ), array( 'jquery', 'jquery-moment' ), '1.0.2' );
 
-		//core plugins
+		// core plugins
 		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
 		wp_register_script( 'ea-addons', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-addons' . $suffix . '.js' ), array( 'jquery' ), $version );
-		//      wp_register_script( 'ea-color-picker', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-color-picker' . $suffix . '.js' ), array( 'jquery', 'wp-color-picker' ), $version );
+		// wp_register_script( 'ea-color-picker', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-color-picker' . $suffix . '.js' ), array( 'jquery', 'wp-color-picker' ), $version );
 		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-creatable' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
 		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-modal' . $suffix . '.js' ), array( 'underscore', 'backbone', 'wp-util' ), $version );
 		wp_register_script( 'ea-notice', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-notice' . $suffix . '.js' ), array( 'jquery' ), $version );
@@ -81,16 +88,16 @@ class Admin_Assets {
 		wp_register_script( 'ea-exporter', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-exporter' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-importer' . $suffix . '.js' ), array( 'jquery' ), $version );
 
-		//core script
+		// core script
 		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-overview' . $suffix . '.js' ), array( 'jquery', 'jquery-daterange', 'jquery-chartjs' ), $version );
 		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
-		//wp_register_script( 'ea-table', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-table' . $suffix . '.js' ), array( 'jquery' ), $version );
+		// wp_register_script( 'ea-table', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-table' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-settings' . $suffix . '.js' ), array( 'jquery' ), $version );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 
-			//globally needed scripts
+			// globally needed scripts
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'wp-color-picker' );
 			wp_enqueue_script( 'jquery-tiptip' );
@@ -157,9 +164,9 @@ class Admin_Assets {
 				)
 			);
 
-			//all admin page
+			// all admin page
 
-			//overview page
+			// overview page
 			if ( 'toplevel_page_eaccounting' === $screen_id ) {
 				$financial_start    = eaccounting_get_financial_start();
 				$financial_start_dt = new DateTime( $financial_start );
@@ -203,12 +210,12 @@ class Admin_Assets {
 				wp_enqueue_script( 'ea-overview' );
 			}
 
-			//export page
+			// export page
 			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' === $_GET['tab'] ) {
 				wp_enqueue_script( 'ea-exporter' );
 			}
 
-			//import page
+			// import page
 			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'import' === $_GET['tab'] ) {
 				wp_localize_script(
 					'ea-importer',
@@ -222,17 +229,36 @@ class Admin_Assets {
 				wp_enqueue_script( 'ea-importer' );
 			}
 
-			//settings page
+			// settings page
 			if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
 				wp_enqueue_media();
 				wp_enqueue_script( 'ea-settings' );
 			}
 
-			//report page
+			// report page
 			if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
 				wp_enqueue_script( 'jquery-chartjs' );
 			}
 		}
+
+		// React scripts
+		//self::register_react_script( 'ea-data', self::get_asset_dist_url( 'data' ) );
+		//self::register_react_script( 'ea-components', self::get_asset_dist_url( 'components' ) );
+		//self::register_react_script( 'ea-invoice', self::get_asset_dist_url( 'invoice' ), array( 'ea-data', 'ea-components' ) );
+
+//		wp_localize_script(
+//			'ea-data',
+//			'eaccountingi10n',
+//			array(
+//				'site_url'   => site_url(),
+//				'admin_url'  => admin_url(),
+//				'asset_url'  => eaccounting()->plugin_url( '/assets' ),
+//				'plugin_url' => eaccounting()->plugin_url(),
+//			)
+//		);
+//		wp_enqueue_media();
+//		wp_enqueue_script( 'ea-invoice' );
+
 	}
 
 

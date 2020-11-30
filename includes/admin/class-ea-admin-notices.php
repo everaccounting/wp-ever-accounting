@@ -7,6 +7,7 @@
  */
 
 namespace EverAccounting\Admin;
+
 defined( 'ABSPATH' ) || exit;
 
 class Admin_Notices {
@@ -25,10 +26,10 @@ class Admin_Notices {
 	 * @var array
 	 */
 	private static $core_notices = array(
-			'install'             => 'install_notice',
-			'update'              => 'update_notice',
-			'default_currency'    => 'default_currency_notice',
-			'base_tables_missing' => 'base_tables_missing_notice',
+		'install'             => 'install_notice',
+		'update'              => 'update_notice',
+		'default_currency'    => 'default_currency_notice',
+		'base_tables_missing' => 'base_tables_missing_notice',
 	);
 
 	/**
@@ -143,8 +144,8 @@ class Admin_Notices {
 		$screen          = get_current_screen();
 		$screen_id       = $screen ? $screen->id : '';
 		$show_on_screens = array(
-				'dashboard',
-				'plugins',
+			'dashboard',
+			'plugins',
 		);
 
 		// Notices should only show on EverAccounting screens, the main dashboard, and on the plugins screen.
@@ -212,10 +213,10 @@ class Admin_Notices {
 			<p>
 				<?php
 				echo wp_kses_post(
-						sprintf(
-								__( 'One or more tables required for Ever Accounting to function are missing, some features may not work as expected. Missing tables: %1$s.', 'wp-ever-accounting' ),
-								esc_html( implode( ', ', $missing_tables ) )
-						)
+					sprintf(
+						__( 'One or more tables required for Ever Accounting to function are missing, some features may not work as expected. Missing tables: %1$s.', 'wp-ever-accounting' ),
+						esc_html( implode( ', ', $missing_tables ) )
+					)
 				);
 				?>
 			</p>

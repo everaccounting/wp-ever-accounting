@@ -1,0 +1,17 @@
+.ea-invoice-table-wrap {
+  overflow-x: visible;
+  min-height: .01%;
+  box-sizing: border-box;
+	.ea-invoice-items-table {
+	  font-size: 14px;
+	  font-weight: 400;
+	  border: 1px solid #f4f4f4;
+	  width: 100%;
+	  max-width: 100%;
+	  margin-bottom: 20px;
+	  border-spacing: 0;
+	  border-collapse: collapse;
+	  background-color: transparent;
+	  box-sizing: border-box;
+	}
+}

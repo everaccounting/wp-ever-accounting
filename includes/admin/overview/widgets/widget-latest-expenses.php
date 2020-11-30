@@ -37,19 +37,21 @@ class Latest_Expenses extends Widget {
 	 * @since 1.0.2
 	 */
 	public function get_content() {
-		$expenses = eaccounting()
-			->query()
-			->select( 't.paid_at, c.name, t.amount, t.currency_code' )
-			->from( 'ea_transactions t' )
-			->leftJoin( 'ea_categories as c', 'c.id', 't.category_id' )
-			->where('t.type', 'expense')
-			->where('c.type', '!=', 'other')
-			->order_by( 't.paid_at', 'DESC' )
-			->limit( 5 )
-			->get();
+		global $wpdb;
+		$expenses = $wpdb->get_results($wpdb->prepare("
+		SELECT t.paid_at, c.name, t.amount, t.currency_code
+		FROM {$wpdb->prefix}ea_transactions t
+		LEFT JOIN {$wpdb->prefix}ea_categories as c on c.id=t.category_id
+		WHERE t.type= 'expense'
+		AND c.type != 'other'
+		ORDER BY t.paid_at DESC
+		LIMIT %d
+		", 5));
 		if ( empty( $expenses ) ) {
-			echo sprintf( '<p class="ea-overview-widget-notice">%s</p>',
-				__( 'There is no expense records.', 'wp-ever-accounting' ) );
+			echo sprintf(
+				'<p class="ea-overview-widget-notice">%s</p>',
+				__( 'There is no expense records.', 'wp-ever-accounting' )
+			);
 
 			return;
 		}
@@ -64,11 +66,11 @@ class Latest_Expenses extends Widget {
 			</tr>
 			</thead>
 			<tbody>
-			<?php foreach ( $expenses as $expense ): ?>
+			<?php foreach ( $expenses as $expense ) : ?>
 				<tr>
 					<td><?php echo esc_html( $expense->paid_at ); ?></td>
 					<td><?php echo esc_html( $expense->name ); ?></td>
-					<td><?php echo eaccounting_format_price($expense->amount, $expense->currency_code); ?></td>
+					<td><?php echo eaccounting_format_price( $expense->amount, $expense->currency_code ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>

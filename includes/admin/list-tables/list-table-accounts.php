@@ -10,13 +10,14 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Account;
-use EverAccounting\Query_Account;
+use EverAccounting\Models\Account;
+
 
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class List_Table_Accounts
+ *
  * @since 1.0.2
  * @package EverAccounting\Admin\ListTables
  */
@@ -71,13 +72,15 @@ class List_Table_Accounts extends List_Table {
 	 * @since  1.0.2
 	 *
 	 * @see WP_List_Table::__construct()
-	 *
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args( $args, array(
-			'singular' => 'account',
-			'plural'   => 'accounts',
-		) );
+		$args = (array) wp_parse_args(
+			$args,
+			array(
+				'singular' => 'account',
+				'plural'   => 'accounts',
+			)
+		);
 
 		parent::__construct( $args );
 	}
@@ -162,7 +165,6 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Renders the checkbox column in the accounts list table.
 	 *
-	 *
 	 * @param Account $account The current account object.
 	 *
 	 * @since  1.0.2
@@ -176,7 +178,6 @@ class List_Table_Accounts extends List_Table {
 	/**
 	 * Renders the "Name" column in the accounts list table.
 	 *
-	 *
 	 * @param Account $account The current account object.
 	 *
 	 * @since  1.0.2
@@ -186,8 +187,16 @@ class List_Table_Accounts extends List_Table {
 	function column_name( $account ) {
 		$name = $account->get_name();
 
-		$value = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'account_id' => $account->get_id() ] ) ),
+		$value = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url(
+				eaccounting_admin_url(
+					array(
+						'action'     => 'edit',
+						'account_id' => $account->get_id(),
+					)
+				)
+			),
 			$name
 		);
 
@@ -244,18 +253,20 @@ class List_Table_Accounts extends List_Table {
 	 */
 	function column_enabled( $account ) {
 		ob_start();
-		eaccounting_toggle( array(
-			'name'  => 'enabled',
-			'id'    => 'enabled_' . $account->get_id(),
-			'value' => $account->get_enabled( 'edit' ),
-			'naked' => true,
-			'class' => 'ea_item_status_update',
-			'attr'  => array(
-				'data-object_id'   => $account->get_id(),
-				'data-nonce'      => wp_create_nonce( 'ea_status_update' ),
-				'data-object_type' => 'account'
+		eaccounting_toggle(
+			array(
+				'name'  => 'enabled',
+				'id'    => 'enabled_' . $account->get_id(),
+				'value' => $account->get_enabled( 'edit' ),
+				'naked' => true,
+				'class' => 'ea_item_status_update',
+				'attr'  => array(
+					'data-object_id'   => $account->get_id(),
+					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
+					'data-object_type' => 'account',
+				),
 			)
-		) );
+		);
 		$output = ob_get_contents();
 		ob_get_clean();
 
@@ -270,7 +281,12 @@ class List_Table_Accounts extends List_Table {
 	 * @return string
 	 */
 	function column_actions( $account ) {
-		$base_uri              = eaccounting_admin_url( array( 'account_id' => $account->get_id(), 'tab' => 'accounts' ) );
+		$base_uri              = eaccounting_admin_url(
+			array(
+				'account_id' => $account->get_id(),
+				'tab'        => 'accounts',
+			)
+		);
 		$row_actions           = array();
 		$row_actions['edit']   = array(
 			'label'    => __( 'Edit', 'wp-ever-accounting' ),
@@ -329,16 +345,20 @@ class List_Table_Accounts extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_account( array(
-						'id'      => $id,
-						'enabled' => '1'
-					) );
+					eaccounting_insert_account(
+						array(
+							'id'      => $id,
+							'enabled' => '1',
+						)
+					);
 					break;
 				case 'disable':
-					eaccounting_insert_account( array(
-						'id'      => $id,
-						'enabled' => '0'
-					) );
+					eaccounting_insert_account(
+						array(
+							'id'      => $id,
+							'enabled' => '0',
+						)
+					);
 					break;
 				case 'delete':
 					eaccounting_delete_account( $id );
@@ -349,14 +369,18 @@ class List_Table_Accounts extends List_Table {
 		}
 
 		if ( isset( $_GET['_wpnonce'] ) ) {
-			wp_safe_redirect( remove_query_arg( [
-				'account_id',
-				'action',
-				'_wpnonce',
-				'_wp_http_referer',
-				'action2',
-				'paged'
-			] ) );
+			wp_safe_redirect(
+				remove_query_arg(
+					array(
+						'account_id',
+						'action',
+						'_wpnonce',
+						'_wp_http_referer',
+						'action2',
+						'paged',
+					)
+				)
+			);
 			exit();
 		}
 	}
@@ -408,32 +432,42 @@ class List_Table_Accounts extends List_Table {
 
 		$per_page = $this->get_per_page();
 
-		$args = wp_parse_args( $this->query_args, array(
-			'number'  => $per_page,
-			'offset'  => $per_page * ( $page - 1 ),
-			'per_page' => $per_page,
-			'page'     => $page,
-			'status'  => $status,
-			'search'  => $search,
-			'orderby' => eaccounting_clean( $orderby ),
-			'order'   => eaccounting_clean( $order )
-		) );
+		$args = wp_parse_args(
+			$this->query_args,
+			array(
+				'number'   => $per_page,
+				'offset'   => $per_page * ( $page - 1 ),
+				'per_page' => $per_page,
+				'page'     => $page,
+				'status'   => $status,
+				'search'   => $search,
+				'orderby'  => eaccounting_clean( $orderby ),
+				'order'    => eaccounting_clean( $order ),
+			)
+		);
+		eaccounting_get_currencies(array('return' => 'raw', 'number' => '-1'));
+		$args        = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
+		$this->items = eaccounting_get_accounts( $args );
 
-		$args = apply_filters( 'eaccounting_accounts_table_query_args', $args, $this );
-		$this->items = Query_Account::init()
-		                            ->where( $args )
-		                            ->withBalance()
-		                            ->get( OBJECT, 'eaccounting_get_account' );
+		$this->active_count = eaccounting_get_accounts(
+			array_merge(
+				$args,
+				array(
+					'enabled'     => '1',
+					'count_total' => true,
+				)
+			)
+		);
 
-		$this->active_count = Query_Account::init()->where( array_merge( $this->query_args, array(
-			'status' => 'active',
-			'search' => $search
-		) ) )->count();
-
-		$this->inactive_count = Query_Account::init()->where( array_merge( $this->query_args, array(
-			'status' => 'inactive',
-			'search' => $search
-		) ) )->count();
+		$this->inactive_count = eaccounting_get_accounts(
+			array_merge(
+				$args,
+				array(
+					'enabled'     => '0',
+					'count_total' => true,
+				)
+			)
+		);
 
 		$this->total_count = $this->active_count + $this->inactive_count;
 
@@ -452,11 +486,12 @@ class List_Table_Accounts extends List_Table {
 				break;
 		}
 
-
-		$this->set_pagination_args( array(
-			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $total_items / $per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $total_items,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $total_items / $per_page ),
+			)
+		);
 	}
 }

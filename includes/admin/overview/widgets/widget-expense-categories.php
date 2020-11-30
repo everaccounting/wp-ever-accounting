@@ -3,9 +3,8 @@
 namespace EverAccounting\Admin\Overview\Widgets;
 
 use EverAccounting\Abstracts\Widget;
-use EverAccounting\Chart;
-use EverAccounting\Query;
-use EverAccounting\Query_Transaction;
+use EverAccounting\Core\Chart;
+
 
 class Expense_Categories extends Widget {
 	/**
@@ -39,62 +38,71 @@ class Expense_Categories extends Widget {
 	 * @since 1.0.2
 	 */
 	public function get_content() {
+		global $wpdb;
 		$dates  = $this->get_dates();
 		$donuts = $data = [];
-		eaccounting()
-			->query()
-			->select( 'c.name, c.color, t.amount, t.currency_rate, t.currency_code' )
-			->from( 'ea_transactions t' )
-			->leftJoin( 'ea_categories c', 'c.id', 't.category_id' )
-			->where( 'c.type', 'expense' )
-			->whereDateBetween( 't.paid_at', $dates['start'], $dates['end'] )
-			->get( OBJECT, function ( $item ) use ( &$data ) {
-				$amount = eaccounting_price_convert_to_default( $item->amount, $item->currency_code, $item->currency_rate );
-				if ( isset( $data[ $item->name ] ) ) {
-					$data[ $item->name ]['amount'] = (int) ( $data[ $item->name ]['amount'] + $amount );
-				} else {
-					$data[ $item->name ] = array(
-						'label'  => $item->name,
-						'color'  => $item->color,
-						'amount' => (int) $amount,
-					);
-				}
-			} );
+		$items  = $wpdb->get_results( $wpdb->prepare( "
+		SELECT c.name, c.color, t.amount, t.currency_rate, t.currency_code
+		FROM {$wpdb->prefix}ea_transactions t
+		LEFT JOIN {$wpdb->prefix}ea_categories c ON c.id=t.category_id
+		WHERE c.type='expense'
+		AND (paid_at BETWEEN %s AND %s)
+		", $dates['start'], $dates['end'] ) );
+
+		foreach ($items as $item){
+			$amount = eaccounting_price_convert_to_default( $item->amount, $item->currency_code, $item->currency_rate );
+			if ( isset( $data[ $item->name ] ) ) {
+				$data[ $item->name ]['amount'] = (int) ( $data[ $item->name ]['amount'] + $amount );
+			} else {
+				$data[ $item->name ] = array(
+					'label'  => $item->name,
+					'color'  => $item->color,
+					'amount' => (int) $amount,
+				);
+			}
+		}
 
 		$donuts = eaccounting_collect( array_values( $data ) )
-			->sort( function ( $item1, $item2 ) {
-				return $item1['amount'] - $item2['amount'];
-			} )
+			->sort(
+				function ( $item1, $item2 ) {
+					return $item1['amount'] - $item2['amount'];
+				}
+			)
 			->reverse()
 			->take( 6 )
-			->each( function ( $item ) {
-				$item['label'] .= ' - ' . eaccounting_format_price( $item['amount'] );
+			->each(
+				function ( $item ) {
+					$item['label'] .= ' - ' . eaccounting_format_price( $item['amount'] );
 
-				return $item;
-			} )->all();
+					return $item;
+				}
+			)->all();
 
 		$labels  = wp_list_pluck( $donuts, 'label' );
 		$colors  = wp_list_pluck( $donuts, 'color' );
 		$amounts = wp_list_pluck( $donuts, 'amount' );
 		if ( array_sum( $amounts ) == 0 ) {
-			echo sprintf( '<p class="ea-overview-widget-notice">%s</p>',
-				__( 'There is not enough data to visualize expense by category. Please add expenses.', 'wp-ever-accounting' ) );
+			echo sprintf(
+				'<p class="ea-overview-widget-notice">%s</p>',
+				__( 'There is not enough data to visualize expense by category. Please add expenses.', 'wp-ever-accounting' )
+			);
 
 			return;
 		}
 
-
 		$chart = new Chart();
 		$chart->type( 'doughnut' )
-		      ->width( 0 )
-		      ->height( 160 )
-		      ->set_donut_options( $colors )
-		      ->labels( $labels )
-		      ->dataset( array(
-			      'data'            => $amounts,
-			      'backgroundColor' => $colors,
-			      'borderWidth'     => 1
-		      ) )
-		      ->render();
+			  ->width( 0 )
+			  ->height( 160 )
+			  ->set_donut_options( $colors )
+			  ->labels( $labels )
+			->dataset(
+				array(
+					'data'            => $amounts,
+					'backgroundColor' => $colors,
+					'borderWidth'     => 1,
+				)
+			)
+			  ->render();
 	}
 }

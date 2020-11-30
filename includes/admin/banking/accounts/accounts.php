@@ -24,11 +24,28 @@ function eaccounting_banking_tab_accounts() {
 		?>
 		<h1>
 			<?php _e( 'Accounts', 'wp-ever-accounting' ); ?>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array(
-					'action' => 'add',
-					'tab'    => 'accounts'
-			) ) ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="<?php echo eaccounting_admin_url( array( 'page' => 'ea-tools', 'tab' => 'import' ) ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				eaccounting_admin_url(
+					array(
+						'action' => 'add',
+						'tab'    => 'accounts',
+					)
+				)
+			);
+			?>
+			" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href="
+			<?php
+			echo eaccounting_admin_url(
+				array(
+					'page' => 'ea-tools',
+					'tab'  => 'import',
+				)
+			);
+			?>
+												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 
@@ -48,8 +65,8 @@ function eaccounting_banking_tab_accounts() {
 			<input type="hidden" name="page" value="ea-banking"/>
 			<input type="hidden" name="tab" value="accounts"/>
 
-			<?php $list_table->views() ?>
-			<?php $list_table->display() ?>
+			<?php $list_table->views(); ?>
+			<?php $list_table->display(); ?>
 		</form>
 		<?php
 		/**

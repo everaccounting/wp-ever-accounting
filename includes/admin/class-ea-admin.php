@@ -40,22 +40,23 @@ class Admin {
 	 * @return void
 	 */
 	public function includes() {
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php' );
-		//require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/misc/misc.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/reports/reports.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/settings/settings.php' );
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
+		// require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php' );
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/items/items.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/misc/misc.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/reports/reports.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/settings/settings.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) {
@@ -100,7 +101,7 @@ class Admin {
 	 * @since 1.0.
 	 */
 	public function admin_redirects() {
-		if ( get_option('ea_setup_wizard_complete') !== 'yes' && get_transient( '_eaccounting_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
+		if ( get_option( 'ea_setup_wizard_complete' ) !== 'yes' && get_transient( '_eaccounting_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
 			$do_redirect = true;
 
 			// On these pages, or during these events, postpone the redirect.

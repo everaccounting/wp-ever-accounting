@@ -7,7 +7,6 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Query_Transaction;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -75,7 +74,7 @@ function eaccounting_admin_overview_page() {
 			<div>
 				<h1><?php _e( 'Overview', 'wp-ever-accounting' ); ?></h1>
 			</div>
-			<?php if ( current_user_can( 'ea_manage_report' ) ): ?>
+			<?php if ( current_user_can( 'ea_manage_report' ) ) : ?>
 				<div>
 					<form action="" method="get">
 						<input type="text" id="ea-overview-date-range" data-start="<?php echo esc_attr( $start->format( 'Y-m-d' ) ); ?>" data-end="<?php echo esc_attr( $end->format( 'Y-m-d' ) ); ?>">

@@ -7,12 +7,11 @@
  * @subpackage  Abstracts
  * @class       Base_Object
  * @version     1.0.2
- *
  */
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\DateTime;
+use EverAccounting\Core\DateTime;
 use EverAccounting\Exception;
 
 defined( 'ABSPATH' ) || exit();
@@ -105,7 +104,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int|array|object|null $data
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		$this->default_data = array_merge_recursive( $this->data, $this->extra_data );
@@ -231,7 +229,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int $id ID.
-	 *
 	 */
 	public function set_id( $id ) {
 		$this->id = absint( $id );
@@ -256,7 +253,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param boolean $read Should read?.
-	 *
 	 */
 	public function set_object_read( $read = true ) {
 		$this->object_read = (bool) $read;
@@ -303,7 +299,6 @@ abstract class Base_Object {
 				if ( is_callable( array( $this, $setter ) ) ) {
 					$this->{$setter}( $value );
 				}
-
 			} catch ( Exception $e ) {
 				if ( ! $errors ) {
 					$errors = new \WP_Error();
@@ -412,7 +407,7 @@ abstract class Base_Object {
 				return;
 			}
 
-			if ( is_a( $value, 'EAccounting_DateTime' ) ) {
+			if ( is_a( $value, 'EverAccounting\\DateTime' ) ) {
 				$datetime = $value;
 			} elseif ( is_numeric( $value ) ) {
 				// Timestamps are handled as UTC timestamps in all cases.
@@ -455,9 +450,15 @@ abstract class Base_Object {
 		if ( is_wp_error( $errors ) ) {
 			$class = get_called_class();
 			eaccounting_logger()->error(
-				sprintf( __( 'Failed populating object because %s', 'wp-ever-accounting' ), $errors->get_error_message()
+				sprintf(
+						/* translators: %s error */
+					__( 'Failed populating object because %s', 'wp-ever-accounting' ),
+					$errors->get_error_message()
 				),
-				array( 'id' => $this->get_id(), 'context' => $class . __METHOD__ )
+				array(
+					'id'      => $this->get_id(),
+					'context' => $class . __METHOD__,
+				)
 			);
 			$this->error( $errors->get_error_code(), $errors->get_error_message() );
 		}
@@ -595,7 +596,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param string $action when its called.
-	 *
 	 */
 	public function save_extra_data( $action ) {
 
@@ -643,7 +643,6 @@ abstract class Base_Object {
 		 */
 		do_action( 'eaccounting_before_' . $this->object_type . '_object_save', $this );
 
-
 		return $this->get_id();
 	}
 
@@ -661,6 +660,7 @@ abstract class Base_Object {
 	 * @throws Exception Data Exception.
 	 */
 	protected function error( $code, $message, $http_status_code = 400, $data = array() ) {
+		_doing_it_wrong( __METHOD__, $message, '1.1.0' );
 		throw new Exception( $code, $message, $http_status_code, $data );
 	}
 
@@ -695,8 +695,6 @@ abstract class Base_Object {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
-	 *
 	 * @return bool
 	 */
 	public function is_enabled() {
@@ -709,7 +707,6 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int $enabled Company id
-	 *
 	 */
 	public function set_enabled( $enabled ) {
 		$this->set_prop( 'enabled', absint( $enabled ) );
@@ -721,10 +718,9 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param int $creator_id Creator id
-	 *
 	 */
 	public function set_creator_id( $creator_id = null ) {
-		if ( $creator_id === null ) {
+		if ( null === $creator_id ) {
 			$creator_id = eaccounting_get_current_user_id();
 		}
 		$this->set_prop( 'creator_id', absint( $creator_id ) );
@@ -736,10 +732,9 @@ abstract class Base_Object {
 	 * @since 1.0.2
 	 *
 	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if their is no date.
-	 *
 	 */
 	public function set_date_created( $date = null ) {
-		if ( $date === null ) {
+		if ( null === $date ) {
 			$date = time();
 		}
 		$this->set_date_prop( 'date_created', $date );

@@ -10,7 +10,6 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Transfer;
 use \EverAccounting\Transfer;
 
 defined( 'ABSPATH' ) || exit();
@@ -50,13 +49,15 @@ class List_Table_Transfers extends List_Table {
 	 * @since  1.0.2
 	 *
 	 * @see    WP_List_Table::__construct()
-	 *
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args( $args, array(
-			'singular' => 'transfer',
-			'plural'   => 'transfers',
-		) );
+		$args = (array) wp_parse_args(
+			$args,
+			array(
+				'singular' => 'transfer',
+				'plural'   => 'transfers',
+			)
+		);
 
 		parent::__construct( $args );
 	}
@@ -107,11 +108,11 @@ class List_Table_Transfers extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'      => array( 'paid_at', false ),
-			'amount'    => array( 'amount', false ),
-//			'from_account_id' => array( 'from_account_id', false ),
-//			'to_account_id'   => array( 'to_account_id', false ),
-			'reference' => array( 'reference', false ),
+			'date'          => array( 'paid_at', false ),
+			'amount'        => array( 'amount', false ),
+			// 'from_account_id' => array( 'from_account_id', false ),
+			// 'to_account_id'   => array( 'to_account_id', false ),
+				'reference' => array( 'reference', false ),
 		);
 	}
 
@@ -141,12 +142,10 @@ class List_Table_Transfers extends List_Table {
 	/**
 	 * Renders the checkbox column in the transfers list table.
 	 *
-	 *
 	 * @param Transfer $transfer The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $transfer ) {
 		return sprintf( '<input type="checkbox" name="transfer_id[]" value="%d"/>', $transfer->get_id() );
@@ -155,18 +154,25 @@ class List_Table_Transfers extends List_Table {
 	/**
 	 * Renders the "Date" column in the transfer list table.
 	 *
-	 *
 	 * @param Transfer $transfer The current transfer object.
 	 *
 	 * @return string Data shown in the Date column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_date( $transfer ) {
 		$date = eaccounting_format_datetime( $transfer->get_date() );
 
-		$value = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'tab' => 'transfers', 'transfer_id' => $transfer->get_id() ] ) ),
+		$value = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url(
+				eaccounting_admin_url(
+					[
+						'action'      => 'edit',
+						'tab'         => 'transfers',
+						'transfer_id' => $transfer->get_id(),
+					]
+				)
+			),
 			$date
 		);
 
@@ -180,7 +186,6 @@ class List_Table_Transfers extends List_Table {
 	 *
 	 * @return string Data shown in the Category column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_from_account_id( $transfer ) {
 		$account = eaccounting_get_account( $transfer->get_from_account_id() );
@@ -196,7 +201,6 @@ class List_Table_Transfers extends List_Table {
 	 *
 	 * @return string Data shown in the Category column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_to_account_id( $transfer ) {
 		$account = eaccounting_get_account( $transfer->get_to_account_id() );
@@ -212,7 +216,6 @@ class List_Table_Transfers extends List_Table {
 	 *
 	 * @return string Data shown in the amount column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_amount( $transfer ) {
 		return apply_filters( 'eaccounting_transfers_table_amount', $transfer->get_formatted_amount(), $transfer );
@@ -225,7 +228,6 @@ class List_Table_Transfers extends List_Table {
 	 *
 	 * @return string Data shown in the Reference column.
 	 * @since  1.0.2
-	 *
 	 */
 	function column_reference( $transfer ) {
 		$reference = empty( $transfer->get_reference() ) ? '&mdash;' : $transfer->get_reference();
@@ -238,14 +240,18 @@ class List_Table_Transfers extends List_Table {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	function column_actions( $transfer ) {
-		$base_uri              = eaccounting_admin_url( array( 'transfer_id' => $transfer->get_id(), 'tab' => 'transfers' ) );
+		$base_uri              = eaccounting_admin_url(
+			array(
+				'transfer_id' => $transfer->get_id(),
+				'tab'         => 'transfers',
+			)
+		);
 		$row_actions           = array();
 		$row_actions['edit']   = array(
 			'label'    => __( 'Edit', 'wp-ever-accounting' ),
-			'base_uri' => $base_uri
+			'base_uri' => $base_uri,
 		);
 		$row_actions['delete'] = array(
 			'label'    => __( 'Delete', 'wp-ever-accounting' ),
@@ -297,15 +303,19 @@ class List_Table_Transfers extends List_Table {
 		}
 
 		if ( isset( $_GET['_wpnonce'] ) ) {
-			wp_safe_redirect( remove_query_arg( [
-				'transfer_id',
-				'action',
-				'_wpnonce',
-				'_wp_http_referer',
-				'doaction',
-				'action2',
-				'paged'
-			] ) );
+			wp_safe_redirect(
+				remove_query_arg(
+					[
+						'transfer_id',
+						'action',
+						'_wpnonce',
+						'_wp_http_referer',
+						'doaction',
+						'action2',
+						'paged',
+					]
+				)
+			);
 			exit();
 		}
 	}
@@ -325,40 +335,38 @@ class List_Table_Transfers extends List_Table {
 
 		$this->process_bulk_action();
 
-		$page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;;
+		$page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+
 		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 
 		$per_page = $this->get_per_page();
 
-		$args = wp_parse_args( $this->query_args, array(
-			'number'   => $per_page,
-			'offset'   => $per_page * ( $page - 1 ),
-			'per_page' => $per_page,
-			'page'     => $page,
-			'search'   => $search,
-			'orderby'  => eaccounting_clean( $orderby ),
-			'order'    => eaccounting_clean( $order ),
-		) );
+		$args = wp_parse_args(
+			$this->query_args,
+			array(
+				'number'   => $per_page,
+				'offset'   => $per_page * ( $page - 1 ),
+				'per_page' => $per_page,
+				'page'     => $page,
+				'search'   => $search,
+				'orderby'  => eaccounting_clean( $orderby ),
+				'order'    => eaccounting_clean( $order ),
+			)
+		);
 
 		$args = apply_filters( 'eaccounting_transfers_table_get_transfers', $args, $this );
 
-		$this->items = Query_Transfer::init()
-		                             ->select( 'ea_transfers.*, ea_transactions.reference, ea_transactions.amount, ea_transactions.paid_at' )
-		                             ->where( $args )
-		                             ->withTransactions()
-		                             ->get( OBJECT, 'eaccounting_get_transfer' );
+		$this->items       = eaccounting_get_transfers( $args );
+		$this->total_count = eaccounting_get_transfers( array_merge( $args, array( 'count_total' => true ) ) );
 
-		$this->total_count = Query_Transfer::init()
-		                                   ->where( $args )
-		                                   ->count();
-
-
-		$this->set_pagination_args( array(
-			'total_items' => $this->total_count,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $this->total_count / $per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $this->total_count,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $this->total_count / $per_page ),
+			)
+		);
 	}
 }

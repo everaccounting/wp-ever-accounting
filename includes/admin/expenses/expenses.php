@@ -8,8 +8,8 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-require_once dirname( __FILE__ ) .'/payments/payments.php';
-require_once dirname( __FILE__ ) .'/vendors/vendors.php';
+require_once dirname( __FILE__ ) . '/payments/payments.php';
+require_once dirname( __FILE__ ) . '/vendors/vendors.php';
 
 /**
  * render expenses page.
@@ -18,7 +18,7 @@ require_once dirname( __FILE__ ) .'/vendors/vendors.php';
  */
 function eaccounting_admin_expenses_page() {
 	$tabs       = eaccounting_get_expenses_tabs();
-	$active_tab = eaccounting_get_active_tab( $tabs, 'payments' );
+	$active_tab = eaccounting_get_active_tab( $tabs, 'bills' );
 
 	ob_start();
 	?>
@@ -51,8 +51,8 @@ function eaccounting_admin_expenses_page() {
  * @since 1.0.2
  */
 function eaccounting_get_expenses_tabs() {
-	$tabs = array();
-	//$tabs['bills']    = __( 'Bills', 'wp-ever-accounting' );
+	$tabs             = array();
+	$tabs['bills']    = __( 'Bills', 'wp-ever-accounting' );
 	$tabs['payments'] = __( 'Payments', 'wp-ever-accounting' );
 	$tabs['vendors']  = __( 'Vendors', 'wp-ever-accounting' );
 
@@ -65,10 +65,10 @@ function eaccounting_get_expenses_tabs() {
  * @since 1.0.2
  */
 function eaccounting_load_expenses_page() {
-	$tab = eaccounting_get_current_tab();
+	$tab  = eaccounting_get_current_tab();
 	$tabs = eaccounting_get_expenses_tabs();
 	if ( empty( $tab ) && $tabs ) {
-		wp_redirect( add_query_arg( [ 'tab' => current( array_keys( $tabs ) ) ] ) );
+		wp_redirect( add_query_arg( array( 'tab' => current( array_keys( $tabs ) ) ) ) );
 		exit();
 	}
 

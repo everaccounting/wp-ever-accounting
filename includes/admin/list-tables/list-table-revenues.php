@@ -4,7 +4,6 @@
  *
  * Admin revenues list table, show all the incoming transactions.
  *
- *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
@@ -13,8 +12,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use \EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Transaction;
-use EverAccounting\Transaction;
+use EverAccounting\Models\Income;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -58,13 +56,15 @@ class List_Table_Revenues extends List_Table {
 	 * @see    WP_List_Table::__construct()
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
-	 *
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args( $args, array(
-			'singular' => 'revenues',
-			'plural'   => 'revenues',
-		) );
+		$args = (array) wp_parse_args(
+			$args,
+			array(
+				'singular' => 'revenues',
+				'plural'   => 'revenues',
+			)
+		);
 
 		parent::__construct( $args );
 	}
@@ -131,7 +131,7 @@ class List_Table_Revenues extends List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'delete'     => __( 'Delete', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -149,10 +149,9 @@ class List_Table_Revenues extends List_Table {
 	/**
 	 * Renders the checkbox column in the revenues list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current object.
+	 * @param Income $revenue The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
@@ -163,18 +162,26 @@ class List_Table_Revenues extends List_Table {
 	/**
 	 * Renders the "Date" column in the accounts list table.
 	 *
-	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current transation object.
+	 * @param Income $revenue The current transation object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $revenue ) {
-		$date = $revenue->get_paid_at()->date_i18n();
+		$date = $revenue->get_paid_at();
 
-		$value = sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( eaccounting_admin_url( [ 'action' => 'edit', 'revenue_id' => $revenue->get_id() ] ) ),
+		$value = sprintf(
+			'<a href="%1$s">%2$s</a>',
+			esc_url(
+				eaccounting_admin_url(
+					array(
+						'tab'        => 'revenues',
+						'action'     => 'edit',
+						'revenue_id' => $revenue->get_id(),
+					)
+				)
+			),
 			$date
 		);
 
@@ -186,7 +193,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the amount column.
 	 */
@@ -199,7 +206,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the account column.
 	 */
@@ -215,7 +222,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the Category column.
 	 */
@@ -231,7 +238,7 @@ class List_Table_Revenues extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Transaction $revenue The current account object.
+	 * @param Income $revenue The current account object.
 	 *
 	 * @return string Data shown in the Reference column.
 	 */
@@ -242,14 +249,19 @@ class List_Table_Revenues extends List_Table {
 	}
 
 	/**
-	 * @param $revenue
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param $revenue
 	 *
 	 * @return string
 	 */
 	function column_actions( $revenue ) {
-		$base_uri              = eaccounting_admin_url( array( 'revenue_id' => $revenue->get_id(), 'tab' => 'revenues' ) );
+		$base_uri              = eaccounting_admin_url(
+			array(
+				'revenue_id' => $revenue->get_id(),
+				'tab'        => 'revenues',
+			)
+		);
 		$row_actions           = array();
 		$row_actions['edit']   = array(
 			'label'    => __( 'Edit', 'wp-ever-accounting' ),
@@ -285,7 +297,7 @@ class List_Table_Revenues extends List_Table {
 	 * @param string $which
 	 */
 	protected function extra_tablenav( $which ) {
-		if ( 'top' == $which ) {
+		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
@@ -293,36 +305,44 @@ class List_Table_Revenues extends List_Table {
 			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
-			eaccounting_input_date_range( array(
-				'start_date' => $start_date,
-				'end_date'   => $end_date,
-			) );
-
-			eaccounting_account_dropdown( [
-				'name'    => 'account_id',
-				'value'   => $account_id,
-				'default' => '',
-				'attr'    => array(
-					'data-allow-clear' => true
+			eaccounting_input_date_range(
+				array(
+					'start_date' => $start_date,
+					'end_date'   => $end_date,
 				)
-			] );
+			);
 
-			eaccounting_category_dropdown( [
-				'name'    => 'category_id',
-				'value'   => $category_id,
-				'default' => '',
-				'type'    => 'income',
-				'attr'    => array(
-					'data-allow-clear' => true
+			eaccounting_account_dropdown(
+				array(
+					'name'    => 'account_id',
+					'value'   => $account_id,
+					'default' => '',
+					'attr'    => array(
+						'data-allow-clear' => true,
+					),
 				)
-			] );
-			eaccounting_contact_dropdown( [
-				'name'        => 'customer_id',
-				'value'       => $customer_id,
-				'default'     => '',
-				'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
-				'type'        => 'customer',
-			] );
+			);
+
+			eaccounting_category_dropdown(
+				array(
+					'name'    => 'category_id',
+					'value'   => $category_id,
+					'default' => '',
+					'type'    => 'income',
+					'attr'    => array(
+						'data-allow-clear' => true,
+					),
+				)
+			);
+			eaccounting_contact_dropdown(
+				array(
+					'name'        => 'customer_id',
+					'value'       => $customer_id,
+					'default'     => '',
+					'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
+					'type'        => 'customer',
+				)
+			);
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			echo "\n";
@@ -365,7 +385,7 @@ class List_Table_Revenues extends List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_transaction( $id );
+					eaccounting_delete_income( $id );
 					break;
 				default:
 					do_action( 'eaccounting_revenues_do_bulk_action_' . $this->current_action(), $id );
@@ -373,14 +393,18 @@ class List_Table_Revenues extends List_Table {
 		}
 
 		if ( isset( $_GET['_wpnonce'] ) ) {
-			wp_safe_redirect( remove_query_arg( [
-				'revenue_id',
-				'action',
-				'_wpnonce',
-				'_wp_http_referer',
-				'action2',
-				'paged'
-			] ) );
+			wp_safe_redirect(
+				remove_query_arg(
+					array(
+						'revenue_id',
+						'action',
+						'_wpnonce',
+						'_wp_http_referer',
+						'action2',
+						'paged',
+					)
+				)
+			);
 			exit();
 		}
 	}
@@ -400,7 +424,8 @@ class List_Table_Revenues extends List_Table {
 
 		$this->process_bulk_action();
 
-		$page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;;
+		$page = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+
 		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
@@ -413,39 +438,41 @@ class List_Table_Revenues extends List_Table {
 
 		$per_page = $this->get_per_page();
 
-		$args = wp_parse_args( $this->query_args, array(
-			'per_page'    => $per_page,
-			'page'        => $page,
-			'number'      => $per_page,
-			'offset'      => $per_page * ( $page - 1 ),
-			'search'      => $search,
-			'orderby'     => eaccounting_clean( $orderby ),
-			'order'       => eaccounting_clean( $order ),
-			'type'        => 'income',
-			'category_id' => $category_id,
-			'account_id'  => $account_id,
-			'contact_id'  => $customer_id,
-		) );
+		$args = wp_parse_args(
+			$this->query_args,
+			array(
+				'per_page'    => $per_page,
+				'page'        => $page,
+				'number'      => $per_page,
+				'offset'      => $per_page * ( $page - 1 ),
+				'search'      => $search,
+				'orderby'     => eaccounting_clean( $orderby ),
+				'order'       => eaccounting_clean( $order ),
+				'type'        => 'income',
+				'category_id' => $category_id,
+				'account_id'  => $account_id,
+				'contact_id'  => $customer_id,
+			)
+		);
 
-		$args = apply_filters( 'eaccounting_revenues_table_get_revenues', $args, $this );
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$args['paid_at'] = array(
+				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
+				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+			);
+		}
 
-		$this->items = Query_Transaction::init()
-		                                ->where( $args )
-		                                ->notTransfer()
-		                                ->whereDateBetween( 'paid_at', $start_date, $end_date )
-		                                ->get( OBJECT, 'eaccounting_get_transaction' );
+		$args        = apply_filters( 'eaccounting_revenues_table_get_revenues', $args, $this );
+		$this->items = eaccounting_get_incomes( $args );
 
-		$this->total_count = Query_Transaction::init()
-		                                      ->where( $args )
-		                                      ->notTransfer()
-		                                      ->whereDateBetween( 'paid_at', $start_date, $end_date )
-		                                      ->count();
+		$this->total_count = eaccounting_get_incomes( array_merge( $args, array( 'count_total' => true ) ) );
 
-
-		$this->set_pagination_args( array(
-			'total_items' => $this->total_count,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $this->total_count / $per_page )
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $this->total_count,
+				'per_page'    => $per_page,
+				'total_pages' => ceil( $this->total_count / $per_page ),
+			)
+		);
 	}
 }

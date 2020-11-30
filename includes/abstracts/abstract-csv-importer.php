@@ -143,7 +143,7 @@ abstract class CSV_Importer {
 	 * @since 1.0.2
 	 * @return array
 	 */
-	protected abstract function get_headers();
+	abstract protected function get_headers();
 
 	/**
 	 * Return the required key to import item.
@@ -151,7 +151,7 @@ abstract class CSV_Importer {
 	 * @since 1.0.2
 	 * @return array
 	 */
-	public abstract function get_required();
+	abstract public function get_required();
 
 	/**
 	 * Get formatting callback.
@@ -159,7 +159,7 @@ abstract class CSV_Importer {
 	 * @since 1.0.2
 	 * @return array
 	 */
-	protected abstract function get_formatting_callback();
+	abstract protected function get_formatting_callback();
 
 	/**
 	 * Process a single item and save.
@@ -168,7 +168,7 @@ abstract class CSV_Importer {
 	 *
 	 * @return string|\WP_Error
 	 */
-	protected abstract function import_item( $data );
+	abstract protected function import_item( $data );
 
 	/**
 	 * Maps CSV columns to their corresponding import fields.
@@ -223,7 +223,7 @@ abstract class CSV_Importer {
 			// Remove BOM signature from the first item.
 			if ( isset( $this->raw_keys[0] ) ) {
 				if ( 'efbbbf' === substr( bin2hex( $this->raw_keys[0] ), 0, 6 ) ) {
-					$this->raw_keys[0] = str_replace($this->params['enclosure'], '', substr( $this->raw_keys[0], 3 ));
+					$this->raw_keys[0] = str_replace( $this->params['enclosure'], '', substr( $this->raw_keys[0], 3 ) );
 				}
 			}
 
@@ -274,7 +274,6 @@ abstract class CSV_Importer {
 
 	/**
 	 * Map and format raw data to known fields.
-	 *
 	 */
 	protected function set_parsed_data() {
 		$parse_functions = $this->formatting_callback();
@@ -312,7 +311,7 @@ abstract class CSV_Importer {
 				$data[ $mapped_keys[ $id ] ] = call_user_func( $parse_functions[ $id ], $this->unescape_data( $value ) );
 			}
 
-			//make all fields filled with empty
+			// make all fields filled with empty
 			$default             = array_fill_keys( array_keys( $this->headers ), '' );
 			$this->parsed_data[] = wp_parse_args( $data, $default );
 		}
@@ -366,7 +365,7 @@ abstract class CSV_Importer {
 		foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
 
 			$result = $this->import_item( $parsed_data );
-			if ( ! is_wp_error( $result ) && $result) {
+			if ( ! is_wp_error( $result ) && $result ) {
 				$data['imported'] = (int) $data['imported'] + 1;
 			} else {
 				$data['skipped'] = (int) $data['skipped'] + 1;
