@@ -126,7 +126,7 @@
 	width: 100%;
 	max-width: 100%;
 	text-align: right;
-	padding: 10px;
+	padding: 10px 0 10px 10px;
 
 	tbody {
 	  td {
@@ -142,14 +142,11 @@
 		  font-weight: 700;
 		}
 	  }
-
 	}
   }
-
   .ea-invoice-item-edit-actions {
 	visibility: hidden;
   }
-
   .ea-invoice-item-edit-actions a {
 	text-decoration: none;
 	margin: 0;
