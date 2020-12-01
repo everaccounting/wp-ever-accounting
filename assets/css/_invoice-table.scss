@@ -2,16 +2,141 @@
   overflow-x: visible;
   min-height: .01%;
   box-sizing: border-box;
-	.ea-invoice-items-table {
-	  font-size: 14px;
-	  font-weight: 400;
-	  border: 1px solid #f4f4f4;
-	  width: 100%;
-	  max-width: 100%;
-	  margin-bottom: 20px;
-	  border-spacing: 0;
-	  border-collapse: collapse;
-	  background-color: transparent;
-	  box-sizing: border-box;
+
+  .ea-invoice-items-table {
+	font-size: 14px;
+	font-weight: 400;
+	border: 1px solid #f4f4f4;
+	width: 100%;
+	max-width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+	background-color: transparent;
+	box-sizing: border-box;
+
+	.ea-invoice-items-line-items:nth-child(2n+0) {
+	  background-color: #f9f9f9;
 	}
+  }
+
+  thead {
+	tr {
+	  background-color: #f9f9f9
+	}
+
+	th {
+	  border-bottom: 2px solid #f4f4f4;
+	  vertical-align: middle;
+	  text-align: left;
+
+	  &:nth-child(1) {
+		width: 30%;
+		text-align: left;
+	  }
+
+	  &:nth-child(2) {
+		width: 20%;
+		text-align: right;
+	  }
+
+	  &:nth-child(3) {
+		width: 20%;
+		text-align: right;
+	  }
+
+	  &:nth-child(4) {
+		width: 20%;
+		text-align: right;
+	  }
+
+	  &:nth-child(5) {
+		width: 15%;
+		text-align: right;
+	  }
+
+	  &:nth-child(6) {
+		width: 5%;
+		text-align: right;
+	  }
+	}
+  }
+
+  tbody {
+	tr {
+	  border-bottom: 1px solid #dddddd;
+	}
+
+	td {
+	  &:nth-child(1) {
+		width: 30%;
+		text-align: left;
+	  }
+
+	  &:nth-child(2) {
+		width: 20%;
+		text-align: right;
+	  }
+
+	  &:nth-child(3) {
+		width: 20%;
+		text-align: right;
+	  }
+
+	  &:nth-child(4) {
+		width: 20%;
+		text-align: right;
+	  }
+
+	  &:nth-child(5) {
+		width: 15%;
+		text-align: right;
+	  }
+
+	  &:nth-child(6) {
+		width: 5%;
+		text-align: right;
+	  }
+	}
+
+	.ea-invoice-item-actions span {
+	  display: inline-block;
+	}
+  }
+
+  th, td {
+	border-top: 0;
+	vertical-align: middle;
+	padding: 8px;
+	line-height: 1.42857143;
+  }
+
+  .align-right {
+	text-align: right;
+  }
+
+  .ea-invoice-items-actions {
+	margin-top: 10px;
+	border-top: 1px solid #dddddd;
+	padding: 10px;
+  }
+
+  .ea-invoice-items-total {
+	border-left: 1px solid #f4f4f4;
+	border-right: 1px solid #f4f4f4;
+	border-bottom: 1px solid #f4f4f4;
+  }
+
+  .ea-invoice-total {
+	width: 100%;
+	max-width: 100%;
+	text-align: right;
+	padding: 10px;
+
+	tbody {
+	  td {
+		width: auto;
+		text-align: inherit;
+	  }
+	}
+  }
 }
