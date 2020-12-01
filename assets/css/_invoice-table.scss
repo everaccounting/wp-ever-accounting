@@ -91,7 +91,7 @@
 
 	  &:nth-child(6) {
 		width: 10%;
-		text-align: left;
+		text-align: right;
 	  }
 	}
 
@@ -152,12 +152,12 @@
 
   .ea-invoice-item-edit-actions a {
 	text-decoration: none;
-	margin: 0 0 0 6px;
+	margin: 0;
 	box-shadow: none;
 	span {
-	  width: 16px;
+	  width: 13px;
 	  color: #ccc;
-	  font-size: 15px;
+	  font-size: 13px;
 	  line-height: 1em;
 	  outline: none;
 	}
