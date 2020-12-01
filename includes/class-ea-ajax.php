@@ -200,6 +200,16 @@ class Ajax {
 					)
 				);
 				break;
+			case 'item':
+				//todo check and implement permission
+				//self::check_permission( 'ea_manage_item' );
+				$result = eaccounting_insert_item(
+					array(
+						'id'      => $object_id,
+						'enabled' => $enabled,
+					)
+				);
+				break;
 			default:
 				/**
 				 * Hook into this for any custom object handling
