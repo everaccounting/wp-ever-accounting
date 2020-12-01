@@ -326,8 +326,6 @@ final class EverAccounting {
 		do_action( 'before_eaccounting_init' );
 
 		\EverAccounting\Controllers\AccountController::instance();
-		//      \EverAccounting\Controllers\ExpenseController::instance();
-		//      \EverAccounting\Controllers\IncomeController::instance();
 		\EverAccounting\Controllers\TransferController::instance();
 		\EverAccounting\Controllers\CategoryController::instance();
 		\EverAccounting\Controllers\CurrencyController::instance();
