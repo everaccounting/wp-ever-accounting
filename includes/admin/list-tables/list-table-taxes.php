@@ -70,8 +70,8 @@ class List_Table_Taxes extends List_Table {
 		$args = (array) wp_parse_args(
 			$args,
 			array(
-				'singular' => 'account',
-				'plural'   => 'accounts',
+				'singular' => 'tax',
+				'plural'   => 'taxes',
 			)
 		);
 
@@ -213,7 +213,7 @@ class List_Table_Taxes extends List_Table {
 	 */
 	function column_type( $tax ) {
 		$tax_types = eaccounting_get_tax_types();
-		$name      = array_key_exists( $tax->get_type(), $tax_types ) ? $tax_types[ $tax->get_type() ] : '&mdash';
+		$name      = array_key_exists( $tax->get_type(), $tax_types ) ? $tax_types[ $tax->get_type() ] : '&mdash;';
 
 		return apply_filters( 'eaccounting_tax_table_type', esc_html( $name ), $tax );
 	}
