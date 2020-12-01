@@ -155,9 +155,9 @@
 	margin: 0;
 	box-shadow: none;
 	span {
-	  width: 13px;
+	  width: 15px;
 	  color: #ccc;
-	  font-size: 13px;
+	  font-size: 15px;
 	  line-height: 1em;
 	  outline: none;
 	}
@@ -184,7 +184,6 @@
 	  }
 	}
   }
-
   .ea-invoice-items-line-items:hover .ea-invoice-item-edit-actions {
 	visibility: visible;
   }
