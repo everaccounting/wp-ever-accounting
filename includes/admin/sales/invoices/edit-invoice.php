@@ -28,7 +28,7 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 		<form id="ea-category-form" class="ea-ajax-form" method="post">
 			<div class="ea-row">
 				<?php
-				eaccounting_contact_dropdown(array(
+				eaccounting_contact_dropdown( array(
 					'wrapper_class' => 'ea-col-6',
 					'label'         => __( 'Customer', 'wp-ever-accounting' ),
 					'name'          => 'contact_id',
@@ -39,14 +39,14 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 					'type'          => 'customer',
 					'creatable'     => true,
 				) );
-				eaccounting_currency_dropdown(array(
+				eaccounting_currency_dropdown( array(
 					'wrapper_class' => 'ea-col-6',
 					'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
 					'name'          => 'currency_code',
 					'value'         => $invoice->get_currency_code(),
 					'required'      => true,
 					'creatable'     => true,
-				));
+				) );
 				eaccounting_text_input( array(
 					'wrapper_class' => 'ea-col-6',
 					'label'         => __( 'Invoice Date', 'wp-ever-accounting' ),
@@ -54,7 +54,7 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 					'value'         => $invoice->get_invoiced_at() ? $invoice->get_invoiced_at() : null,
 					'required'      => true,
 					'data_type'     => 'date'
-				));
+				) );
 				eaccounting_text_input( array(
 					'wrapper_class' => 'ea-col-6',
 					'label'         => __( 'Due Date', 'wp-ever-accounting' ),
@@ -116,55 +116,45 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 									<a href="#" class="edit-items"><span class="dashicons dashicons-edit"></span></a>
 									<a href="#" class="delete-items"><span class="dashicons dashicons-no"></span></a>
 								</div>
-
 							</td>
 						</tr>
-
+						<tr class="ea-invoice-items-total">
+							<td colspan="2"></td>
+							<td colspan="3">
+								<div class="subtotal">
+									<span class="label"><?php _e( 'Subtotal:', 'wp-ever-accounting' ); ?></span>
+									<span class="value align-right"><?php _e( '$1000.00', 'wp-ever-accounting' ); ?></span>
+								</div>
+								<div class="discount">
+									<span class="label"><?php _e( 'Discount:', 'wp-ever-accounting' ); ?></span>
+									<span class="value align-right"><?php _e( '$0.00', 'wp-ever-accounting' ); ?></span>
+								</div>
+								<div class="shipping">
+									<span class="label"><?php _e( 'Shipping:', 'wp-ever-accounting' ); ?></span>
+									<span class="value align-right"><?php _e( '$0.00', 'wp-ever-accounting' ); ?></span>
+								</div>
+								<div class="total">
+									<span class="label"><?php _e( 'Total:', 'wp-ever-accounting' ); ?></span>
+									<span class="value align-right"><?php _e( '$1000.00', 'wp-ever-accounting' ); ?></span>
+								</div>
+							</td>
+							<td colspan="2"></td>
+						</tr>
 						</tbody>
+						<tfoot class="ea-invoice-items-table-footer">
+							<tr class="ea-invoice-items-actions">
+								<td colspan="3">
+									<button type="button" class="button ea-add-invoice-item btn-secondary"><?php _e( 'Add Invoice Items', 'wp-ever-accounting' ); ?></button>
+									<button type="button" class="button ea-add-discount btn-secondary"><?php _e( 'Add Discounts', 'wp-ever-accounting' ); ?></button>
+									<button type="button" class="button ea-add-shipping btn-secondary"><?php _e( 'Add Shipping', 'wp-ever-accounting' ); ?></button>
+								</td>
+								<td colspan="3" class="align-right">
+									<button type="button" class="button ea-invoice-recalculate button-primary"><?php _e( 'Recalculate Totals', 'wp-ever-accounting' ); ?></button>
+								</td>
+							</tr>
+
+						</tfoot>
 					</table>
-					<div class="ea-invoice-items-total">
-						<div class="ea-row">
-							<div class="ea-col-6"></div>
-							<div class="ea-col-6">
-								<table class="ea-invoice-total">
-									<tbody>
-									<tr id="subtotal">
-										<td class="label"><?php _e( 'Subtotal:','wp-ever-accounting' ); ?></td>
-										<td width="1%"></td>
-										<td class="value"><?php _e( '$1000.00','wp-ever-accounting' ); ?></td>
-									</tr>
-									<tr id="discount">
-										<td class="label"><?php _e( 'Discount:','wp-ever-accounting' ); ?></td>
-										<td width="1%"></td>
-										<td class="value"><?php _e( '$1000.00','wp-ever-accounting' ); ?></td>
-									</tr>
-									<tr id="shipping">
-										<td class="label"><?php _e( 'Shipping:','wp-ever-accounting' ); ?></td>
-										<td width="1%"></td>
-										<td class="value"><?php _e( '$0.00','wp-ever-accounting' ); ?></td>
-									</tr>
-									<tr id="total">
-										<td class="label"><?php _e( 'Total:','wp-ever-accounting' ); ?></td>
-										<td width="1%"></td>
-										<td class="value"><?php _e( '$1000.00','wp-ever-accounting' ); ?></td>
-									</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-					<div class="ea-invoice-items-actions">
-						<div class="ea-row">
-							<div class="ea-col-8">
-								<button type="button" class="button ea-add-invoice-item btn-secondary"><?php _e('Add Invoice Items','wp-ever-accounting');?></button>
-								<button type="button" class="button ea-add-discount btn-secondary"><?php _e('Add Discounts','wp-ever-accounting');?></button>
-								<button type="button" class="button ea-add-shipping btn-secondary"><?php _e('Add Shipping','wp-ever-accounting');?></button>
-							</div>
-							<div class="ea-col-4 align-right">
-								<button type="button" class="button ea-invoice-recalculate button-primary"><?php _e('Recalculate Totals','wp-ever-accounting');?></button>
-							</div>
-						</div>
-					</div>
 				</div>
 				<?php
 				eaccounting_textarea( array(
@@ -201,7 +191,7 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 				eaccounting_hidden_input( array(
 					'name'  => 'id',
 					'value' => $invoice->get_id(),
-				));
+				) );
 
 				eaccounting_hidden_input( array(
 					'name'  => 'action',
