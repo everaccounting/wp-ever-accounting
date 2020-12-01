@@ -14,9 +14,6 @@
 	background-color: transparent;
 	box-sizing: border-box;
 
-	.ea-invoice-items-line-items:nth-child(2n+0) {
-	  background-color: #f9f9f9;
-	}
   }
 
   thead {
@@ -35,17 +32,17 @@
 	  }
 
 	  &:nth-child(2) {
-		width: 20%;
+		width: 15%;
 		text-align: right;
 	  }
 
 	  &:nth-child(3) {
-		width: 20%;
+		width: 15%;
 		text-align: right;
 	  }
 
 	  &:nth-child(4) {
-		width: 20%;
+		width: 15%;
 		text-align: right;
 	  }
 
@@ -55,15 +52,15 @@
 	  }
 
 	  &:nth-child(6) {
-		width: 5%;
-		text-align: right;
+		width: 10%;
+		text-align: left;
 	  }
 	}
   }
 
   tbody {
 	tr {
-	  border-bottom: 1px solid #dddddd;
+	  border-bottom: 1px solid #f0f0f0;
 	}
 
 	td {
@@ -73,17 +70,17 @@
 	  }
 
 	  &:nth-child(2) {
-		width: 20%;
+		width: 15%;
 		text-align: right;
 	  }
 
 	  &:nth-child(3) {
-		width: 20%;
+		width: 15%;
 		text-align: right;
 	  }
 
 	  &:nth-child(4) {
-		width: 20%;
+		width: 15%;
 		text-align: right;
 	  }
 
@@ -93,8 +90,8 @@
 	  }
 
 	  &:nth-child(6) {
-		width: 5%;
-		text-align: right;
+		width: 10%;
+		text-align: left;
 	  }
 	}
 
@@ -115,15 +112,14 @@
   }
 
   .ea-invoice-items-actions {
-	margin-top: 10px;
-	border-top: 1px solid #dddddd;
+	border: 1px solid #dddddd;
 	padding: 10px;
   }
 
   .ea-invoice-items-total {
 	border-left: 1px solid #f4f4f4;
 	border-right: 1px solid #f4f4f4;
-	border-bottom: 1px solid #f4f4f4;
+	background: #f8f8f8;
   }
 
   .ea-invoice-total {
@@ -136,7 +132,60 @@
 	  td {
 		width: auto;
 		text-align: inherit;
+		padding: 4px 8px;
+		&.label {
+		  margin-bottom: 0;
+		  font-weight: 400;
+		}
+		&.value {
+		  width: 10%;
+		  font-weight: 700;
+		}
+	  }
+
+	}
+  }
+
+  .ea-invoice-item-edit-actions {
+	visibility: hidden;
+  }
+
+  .ea-invoice-item-edit-actions a {
+	text-decoration: none;
+	margin: 0 0 0 6px;
+	box-shadow: none;
+	span {
+	  width: 16px;
+	  color: #ccc;
+	  font-size: 15px;
+	  line-height: 1em;
+	  outline: none;
+	}
+  }
+
+  .ea-invoice-item-edit-actions {
+	.edit-items {
+	  &:hover,&:focus,&:active {
+		box-shadow: none;
+		span {
+		  color: #999999;
+		}
 	  }
 	}
+  }
+
+  .ea-invoice-item-edit-actions {
+	.delete-items {
+	  &:hover,&:focus,&:active {
+		box-shadow: none;
+		span {
+		  color: #a00;
+		}
+	  }
+	}
+  }
+
+  .ea-invoice-items-line-items:hover .ea-invoice-item-edit-actions {
+	visibility: visible;
   }
 }

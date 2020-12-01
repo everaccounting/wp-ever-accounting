@@ -84,8 +84,9 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 						<thead class="ea-invoice-items-table-head">
 						<tr>
 							<th class="ea-invoice-item"><?php _e( 'Item Name', 'wp-ever-accounting' ); ?></th>
-							<th class="ea-invoice-item-quantity"><?php _e( 'Quantity', 'wp-ever-accounting' ) ?></th>
 							<th colspan="ea-invoice-item-price"><?php _e( 'Price', 'wp-ever-accounting' ) ?></th>
+							<th class="ea-invoice-item-quantity"><?php _e( 'Quantity', 'wp-ever-accounting' ) ?></th>
+							<th colspan="ea-invoice-item-tax"><?php _e( 'Tax', 'wp-ever-accounting' ) ?></th>
 							<th colspan="ea-invoice-item-total"><?php _e( 'Total', 'wp-ever-accounting' ) ?></th>
 							<th colspan="ea-invoice-item-actions">&nbsp;</th>
 						</tr>
@@ -93,22 +94,29 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 						<tbody class="ea-invoice-items-table-body">
 						<tr class="ea-invoice-items-line-items">
 							<td class="ea-invoice-item"><?php _e( 'Item 1', 'wp-ever-accounting' ); ?></td>
-							<td class="ea-invoice-item-quantity"><?php _e( '1', 'wp-ever-accounting' ) ?></td>
 							<td class="ea-invoice-item-price"><?php _e( '$1000.00', 'wp-ever-accounting' ) ?></td>
+							<td class="ea-invoice-item-quantity"><?php _e( '1', 'wp-ever-accounting' ) ?></td>
+							<td class="ea-invoice-item-tax"><?php _e( '2.32', 'wp-ever-accounting' ) ?></td>
 							<td class="ea-invoice-item-total"><?php _e( '$1000.00', 'wp-ever-accounting' ) ?></td>
 							<td class="ea-invoice-item-actions">
-								<span class="dashicons dashicons-edit-page"></span>
-								<span class="dashicons dashicons-trash"></span>
+								<div class="ea-invoice-item-edit-actions">
+									<a href="#" class="edit-items"><span class="dashicons dashicons-edit"></span></a>
+									<a href="#" class="delete-items"><span class="dashicons dashicons-no"></span></a>
+								</div>
 							</td>
 						</tr>
 						<tr class="ea-invoice-items-line-items">
 							<td class="ea-invoice-item"><?php _e( 'Item 1', 'wp-ever-accounting' ); ?></td>
-							<td class="ea-invoice-item-quantity"><?php _e( '1', 'wp-ever-accounting' ) ?></td>
 							<td class="ea-invoice-item-price"><?php _e( '$1000.00', 'wp-ever-accounting' ) ?></td>
+							<td class="ea-invoice-item-quantity"><?php _e( '1', 'wp-ever-accounting' ) ?></td>
+							<td class="ea-invoice-item-tax"><?php _e( '2.32', 'wp-ever-accounting' ) ?></td>
 							<td class="ea-invoice-item-total"><?php _e( '$1000.00', 'wp-ever-accounting' ) ?></td>
 							<td class="ea-invoice-item-actions">
-								<span class="dashicons dashicons-edit-page"></span>
-								<span class="dashicons dashicons-trash"></span>
+								<div class="ea-invoice-item-edit-actions">
+									<a href="#" class="edit-items"><span class="dashicons dashicons-edit"></span></a>
+									<a href="#" class="delete-items"><span class="dashicons dashicons-no"></span></a>
+								</div>
+
 							</td>
 						</tr>
 
@@ -116,34 +124,44 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 					</table>
 					<div class="ea-invoice-items-total">
 						<div class="ea-row">
-							<div class="ea-col-12">
+							<div class="ea-col-6"></div>
+							<div class="ea-col-6">
 								<table class="ea-invoice-total">
 									<tbody>
 									<tr id="subtotal">
-										<td><?php _e( 'Items Subtotal: $1000.00','wp-ever-accounting' ); ?></td>
+										<td class="label"><?php _e( 'Subtotal:','wp-ever-accounting' ); ?></td>
+										<td width="1%"></td>
+										<td class="value"><?php _e( '$1000.00','wp-ever-accounting' ); ?></td>
 									</tr>
 									<tr id="discount">
-										<td><?php _e( 'Discount: $0.00','wp-ever-accounting' ); ?></td>
+										<td class="label"><?php _e( 'Discount:','wp-ever-accounting' ); ?></td>
+										<td width="1%"></td>
+										<td class="value"><?php _e( '$1000.00','wp-ever-accounting' ); ?></td>
 									</tr>
 									<tr id="shipping">
-										<td><?php _e( 'Shipping: $0.00','wp-ever-accounting' ); ?></td>
+										<td class="label"><?php _e( 'Shipping:','wp-ever-accounting' ); ?></td>
+										<td width="1%"></td>
+										<td class="value"><?php _e( '$0.00','wp-ever-accounting' ); ?></td>
 									</tr>
 									<tr id="total">
-										<td><?php _e( 'Items Total: $1000.00','wp-ever-accounting' ); ?></td>
+										<td class="label"><?php _e( 'Total:','wp-ever-accounting' ); ?></td>
+										<td width="1%"></td>
+										<td class="value"><?php _e( '$1000.00','wp-ever-accounting' ); ?></td>
 									</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
-						<div class="ea-invoice-items-actions">
-							<div class="ea-row">
-								<div class="ea-col-8">
-									<button type="button" class="button ea-add-invoice-item btn-secondary"><?php _e('Add Invoice Items','wp-ever-accounting');?></button>
-									<button type="button" class="button ea-create-invoice-item btn-secondary"><?php _e('Create Invoice Items','wp-ever-accounting');?></button>
-								</div>
-								<div class="ea-col-4 align-right">
-									<button type="button" class="button ea-invoice-recalculate button-primary"><?php _e('Recalculate Totals','wp-ever-accounting');?></button>
-								</div>
+					</div>
+					<div class="ea-invoice-items-actions">
+						<div class="ea-row">
+							<div class="ea-col-8">
+								<button type="button" class="button ea-add-invoice-item btn-secondary"><?php _e('Add Invoice Items','wp-ever-accounting');?></button>
+								<button type="button" class="button ea-add-discount btn-secondary"><?php _e('Add Discounts','wp-ever-accounting');?></button>
+								<button type="button" class="button ea-add-shipping btn-secondary"><?php _e('Add Shipping','wp-ever-accounting');?></button>
+							</div>
+							<div class="ea-col-4 align-right">
+								<button type="button" class="button ea-invoice-recalculate button-primary"><?php _e('Recalculate Totals','wp-ever-accounting');?></button>
 							</div>
 						</div>
 					</div>
