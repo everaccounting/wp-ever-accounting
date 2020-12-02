@@ -389,4 +389,190 @@ jQuery(function ($) {
 		$('.ea-ajax-form').eaccounting_form();
 	});
 
+	//Common
+
+	/**
+	 * Get account object by account_id.
+	 *
+	 * @param account_id
+	 * @param onSuccess
+	 * @param OnError
+	 * @returns {boolean}
+	 */
+	var eaccounting_get_account = function (account_id, onSuccess, OnError) {
+		if (!account_id) {
+			return false;
+		}
+
+		wp.ajax.send('eaccounting_get_account', {
+			data: {
+				id: account_id,
+				_wpnonce: eaccounting_form_i10n.nonce.get_account,
+			},
+			success: onSuccess,
+			error: OnError,
+		});
+	}
+
+	/**
+	 * Get currency object by code.
+	 *
+	 * @param code
+	 * @param onSuccess
+	 * @param OnError
+	 * @returns {boolean}
+	 */
+	var eaccounting_get_currency = function (code, onSuccess, OnError) {
+		if (!code) {
+			return false;
+		}
+		wp.ajax.send('eaccounting_get_currency', {
+			data: {
+				code: code,
+				_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+			},
+			success: onSuccess,
+			error: OnError,
+		});
+	}
+
+
+	/**
+	 * Mask currency input field
+	 * @param $el
+	 * @param currency
+	 */
+	var eaccounting_mask_input = function ($el, currency) {
+		$el.inputmask('decimal', {
+			alias: 'numeric',
+			groupSeparator: currency.thousand_separator,
+			autoGroup: true,
+			digits: currency.precision,
+			radixPoint: currency.decimal_separator,
+			digitsOptional: false,
+			allowMinus: false,
+			prefix: currency.symbol,
+			placeholder: '0.000',
+			rightAlign: 0,
+		});
+	}
+
+	// Tax form
+	var eaccounting_tax_form = {
+		init: function () {
+			$('#ea-tax-form')
+				.on('change keyup', 'input[name="rate"]', this.input_tax_rate)
+				.on('submit', this.submit);
+
+			$(document).on('ready', function () {
+				$('#ea-tax-form input[name="rate"]').trigger('change');
+			});
+		},
+		block: function () {
+			$('#ea-tax-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-tax-form').unblock();
+		},
+		input_tax_rate: function (e) {
+			e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_tax_form.block();
+			wp.ajax.send({
+				data: $('#ea-tax-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_tax_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_tax_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
+	// Revenue Form
+	var eaccounting_revenue_form = {
+		init: function () {
+			$('#ea-revenue-form')
+				.on('change', '#account_id', this.update_amount_input)
+				.on( 'submit', this.submit);
+			$(document).on('ready', function () {
+				$('#ea-revenue-form #account_id').trigger('change');
+			});
+		},
+		block: function () {
+			$('#ea-revenue-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-revenue-form').unblock();
+		},
+		update_amount_input: function (e) {
+			var account_id = parseInt(e.target.value, 10);
+			if (!account_id) {
+				return false;
+			}
+
+			eaccounting_revenue_form.block();
+			var $currency_input = $('#ea-revenue-form #amount');
+			var update_amount_input = function (code) {
+				eaccounting_get_currency(code, function (res) {
+					eaccounting_mask_input($currency_input, res);
+					eaccounting_revenue_form.unblock();
+				}, function (error) {
+					console.warn(error);
+					eaccounting_revenue_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				});
+			}
+
+			eaccounting_get_account(account_id, function (res) {
+				update_amount_input(res.currency_code);
+			}, function (error) {
+				console.warn(error);
+				eaccounting_revenue_form.unblock();
+				$.eaccounting_notice(error.message, 'error');
+			});
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_revenue_form.block();
+			wp.ajax.send({
+				data: $('#ea-tax-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_revenue_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_revenue_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
+
+	eaccounting_tax_form.init();
+	eaccounting_revenue_form.init();
+
+
 });

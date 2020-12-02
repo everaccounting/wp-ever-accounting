@@ -91,7 +91,7 @@
 
 	  &:nth-child(6) {
 		width: 10%;
-		text-align: left;
+		text-align: right;
 	  }
 	}
 
@@ -126,7 +126,7 @@
 	width: 100%;
 	max-width: 100%;
 	text-align: right;
-	padding: 10px;
+	padding: 10px 0 10px 10px;
 
 	tbody {
 	  td {
@@ -142,20 +142,17 @@
 		  font-weight: 700;
 		}
 	  }
-
 	}
   }
-
   .ea-invoice-item-edit-actions {
 	visibility: hidden;
   }
-
   .ea-invoice-item-edit-actions a {
 	text-decoration: none;
-	margin: 0 0 0 6px;
+	margin: 0;
 	box-shadow: none;
 	span {
-	  width: 16px;
+	  width: 15px;
 	  color: #ccc;
 	  font-size: 15px;
 	  line-height: 1em;
@@ -184,7 +181,6 @@
 	  }
 	}
   }
-
   .ea-invoice-items-line-items:hover .ea-invoice-item-edit-actions {
 	visibility: visible;
   }

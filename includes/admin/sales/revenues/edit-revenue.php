@@ -29,7 +29,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-revenue-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
+		<form id="ea-revenue-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
