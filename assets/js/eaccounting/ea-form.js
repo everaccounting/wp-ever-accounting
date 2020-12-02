@@ -391,50 +391,72 @@ jQuery(function ($) {
 
 	//Common
 
-	/**
-	 * Get account object by account_id.
-	 *
-	 * @param account_id
-	 * @param onSuccess
-	 * @param OnError
-	 * @returns {boolean}
-	 */
-	var eaccounting_get_account = function (account_id, onSuccess, OnError) {
-		if (!account_id) {
-			return false;
-		}
-
-		wp.ajax.send('eaccounting_get_account', {
-			data: {
-				id: account_id,
-				_wpnonce: eaccounting_form_i10n.nonce.get_account,
-			},
-			success: onSuccess,
-			error: OnError,
-		});
-	}
-
-	/**
-	 * Get currency object by code.
-	 *
-	 * @param code
-	 * @param onSuccess
-	 * @param OnError
-	 * @returns {boolean}
-	 */
-	var eaccounting_get_currency = function (code, onSuccess, OnError) {
-		if (!code) {
-			return false;
-		}
-		wp.ajax.send('eaccounting_get_currency', {
-			data: {
-				code: code,
-				_wpnonce: eaccounting_form_i10n.nonce.get_currency,
-			},
-			success: onSuccess,
-			error: OnError,
-		});
-	}
+	// /**
+	//  * Get account object by account_id.
+	//  *
+	//  * @param account_id
+	//  * @param onSuccess
+	//  * @param OnError
+	//  * @returns {boolean}
+	//  */
+	// var eaccounting_get_account = function (account_id, onSuccess, OnError) {
+	// 	if (!account_id) {
+	// 		return false;
+	// 	}
+	//
+	// 	wp.ajax.send('eaccounting_get_account', {
+	// 		data: {
+	// 			id: account_id,
+	// 			_wpnonce: eaccounting_form_i10n.nonce.get_account,
+	// 		},
+	// 		success: onSuccess,
+	// 		error: OnError,
+	// 	});
+	// }
+	// /**
+	//  * Get account object by account_id.
+	//  *
+	//  * @param account_id
+	//  * @param onSuccess
+	//  * @param OnError
+	//  * @returns {boolean}
+	//  */
+	// var eaccounting_get_account_currency = function (account_id, onSuccess, OnError) {
+	// 	if (!account_id) {
+	// 		return false;
+	// 	}
+	//
+	// 	wp.ajax.send('eaccounting_get_account_currency', {
+	// 		data: {
+	// 			id: account_id,
+	// 			_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+	// 		},
+	// 		success: onSuccess,
+	// 		error: OnError,
+	// 	});
+	// }
+	//
+	// /**
+	//  * Get currency object by code.
+	//  *
+	//  * @param code
+	//  * @param onSuccess
+	//  * @param OnError
+	//  * @returns {boolean}
+	//  */
+	// var eaccounting_get_currency = function (code, onSuccess, OnError) {
+	// 	if (!code) {
+	// 		return false;
+	// 	}
+	// 	wp.ajax.send('eaccounting_get_currency', {
+	// 		data: {
+	// 			code: code,
+	// 			_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+	// 		},
+	// 		success: onSuccess,
+	// 		error: OnError,
+	// 	});
+	// }
 
 
 	/**
@@ -507,7 +529,7 @@ jQuery(function ($) {
 		init: function () {
 			$('#ea-revenue-form')
 				.on('change', '#account_id', this.update_amount_input)
-				.on( 'submit', this.submit);
+				.on('submit', this.submit);
 			$(document).on('ready', function () {
 				$('#ea-revenue-form #account_id').trigger('change');
 			});
@@ -529,26 +551,22 @@ jQuery(function ($) {
 			if (!account_id) {
 				return false;
 			}
-
 			eaccounting_revenue_form.block();
 			var $currency_input = $('#ea-revenue-form #amount');
-			var update_amount_input = function (code) {
-				eaccounting_get_currency(code, function (res) {
+			wp.ajax.send('eaccounting_get_account_currency', {
+				data: {
+					account_id: account_id,
+					_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+				},
+				success: function (res) {
 					eaccounting_mask_input($currency_input, res);
 					eaccounting_revenue_form.unblock();
-				}, function (error) {
+				},
+				error: function (error) {
 					console.warn(error);
 					eaccounting_revenue_form.unblock();
 					$.eaccounting_notice(error.message, 'error');
-				});
-			}
-
-			eaccounting_get_account(account_id, function (res) {
-				update_amount_input(res.currency_code);
-			}, function (error) {
-				console.warn(error);
-				eaccounting_revenue_form.unblock();
-				$.eaccounting_notice(error.message, 'error');
+				}
 			});
 		},
 		submit: function (e) {

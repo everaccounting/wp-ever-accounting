@@ -281,7 +281,7 @@ module.exports = function (grunt) {
         'concat',
         ]
     );
-	assets/css/admin.css
+
     // Only an alias to 'default' task.
     grunt.registerTask(
         'dev', [

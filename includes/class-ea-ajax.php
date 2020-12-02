@@ -109,6 +109,7 @@ class Ajax {
 		$ajax_events = array(
 			'item_status_update',
 			'get_currency',
+			'get_account_currency',
 			'dropdown_search',
 			'edit_currency',
 			'get_account',
@@ -391,6 +392,35 @@ class Ajax {
 		}
 
 		wp_send_json_success( $currency->get_data() );
+	}
+
+	/**
+	 * Get currency data.
+	 *
+	 * @since 1.0.2
+	 */
+	public static function get_account_currency() {
+		check_ajax_referer( 'ea_get_currency', '_wpnonce' );
+		self::check_permission( 'manage_eaccounting' );
+		$posted     = eaccounting_clean( $_REQUEST );
+		$account_id = ! empty( $posted['account_id'] ) ? $posted['account_id'] : false;
+		if ( ! $account_id ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'No account id received', 'wp-ever-accounting' ),
+				)
+			);
+		}
+		$account = eaccounting_get_account( $account_id );
+		if ( empty( $account ) || is_wp_error( $account ) || empty( $account->get_currency()->exists() ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Could not find the currency', 'wp-ever-accounting' ),
+				)
+			);
+		}
+
+		wp_send_json_success( $account->get_currency()->get_data() );
 	}
 
 	/**
