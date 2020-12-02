@@ -588,9 +588,46 @@ jQuery(function ($) {
 		}
 	}
 
+	//category form
+	var eaccounting_category_form = {
+		init: function () {
+			$('#ea-category-form').on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-category-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-category-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_category_form.block();
+			wp.ajax.send({
+				data: $('#ea-category-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_category_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_category_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
 
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
+	eaccounting_category_form.init();
 
 
 });
