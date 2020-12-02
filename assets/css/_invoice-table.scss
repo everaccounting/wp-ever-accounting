@@ -10,9 +10,38 @@
 	width: 100%;
 	max-width: 100%;
 	border-spacing: 0;
-	border-collapse: collapse;
 	background-color: transparent;
 	box-sizing: border-box;
+
+	.ea-invoice-items-total {
+	  div {
+		margin-bottom: 9px;
+	  }
+	  span {
+		&.label {
+		  margin-bottom: 0;
+		  font-weight: 400;
+		  text-align: left;
+		  display: inline-block;
+		  margin-right: 50px;
+		}
+
+		&.value {
+		  font-weight: 700;
+		}
+	  }
+	  .discount,.shipping {
+		.label {
+		  margin-right: 75px;
+		}
+	  }
+	  .total {
+		.label {
+		  margin-right: 52px;
+		}
+	  }
+	}
+
 
   }
 
@@ -47,12 +76,12 @@
 	  }
 
 	  &:nth-child(5) {
-		width: 15%;
+		width: 22%;
 		text-align: right;
 	  }
 
 	  &:nth-child(6) {
-		width: 10%;
+		width: 50px;
 		text-align: left;
 	  }
 	}
@@ -120,37 +149,21 @@
 	border-left: 1px solid #f4f4f4;
 	border-right: 1px solid #f4f4f4;
 	background: #f8f8f8;
-  }
-
-  .ea-invoice-total {
-	width: 100%;
-	max-width: 100%;
-	text-align: right;
-	padding: 10px 0 10px 10px;
-
-	tbody {
-	  td {
-		width: auto;
-		text-align: inherit;
-		padding: 4px 8px;
-		&.label {
-		  margin-bottom: 0;
-		  font-weight: 400;
-		}
-		&.value {
-		  width: 10%;
-		  font-weight: 700;
-		}
-	  }
+	td {
+	  padding-top: 12px;
+	  padding-bottom: 12px;
 	}
   }
+
   .ea-invoice-item-edit-actions {
 	visibility: hidden;
   }
+
   .ea-invoice-item-edit-actions a {
 	text-decoration: none;
 	margin: 0;
 	box-shadow: none;
+
 	span {
 	  width: 15px;
 	  color: #ccc;
@@ -162,8 +175,9 @@
 
   .ea-invoice-item-edit-actions {
 	.edit-items {
-	  &:hover,&:focus,&:active {
+	  &:hover, &:focus, &:active {
 		box-shadow: none;
+
 		span {
 		  color: #999999;
 		}
@@ -173,14 +187,16 @@
 
   .ea-invoice-item-edit-actions {
 	.delete-items {
-	  &:hover,&:focus,&:active {
+	  &:hover, &:focus, &:active {
 		box-shadow: none;
+
 		span {
 		  color: #a00;
 		}
 	  }
 	}
   }
+
   .ea-invoice-items-line-items:hover .ea-invoice-item-edit-actions {
 	visibility: visible;
   }
