@@ -624,10 +624,66 @@ jQuery(function ($) {
 		}
 	}
 
+	//currency form
+	var eaccounting_currency_form = {
+		init: function () {
+			$('#ea-currency-form')
+				.on('change', '#code', this.update_currency_fields)
+				.on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-currency-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-currency-form').unblock();
+		},
+		update_currency_fields: function (e) {
+			var code = e.target.value;
+			if (!code) {
+				return false;
+			}
+			var currency = eaccounting_form_i10n.global_currencies[code];
+			$('#name','#ea-currency-form').val(currency.name).change()
+			$('#precision', '#ea-currency-form').val(currency.precision).change();
+			$('#position', '#ea-currency-form').val(currency.position).change();
+			$('#symbol', '#ea-currency-form').val(currency.symbol).change();
+			$('#decimal_separator', '#ea-currency-form')
+				.val(currency.decimal_separator)
+				.change();
+			$('#thousand_separator', '#ea-currency-form')
+				.val(currency.thousand_separator)
+				.change();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_currency_form.block();
+			wp.ajax.send({
+				data: $('#ea-currency-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_currency_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_currency_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
 
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
 	eaccounting_category_form.init();
+	eaccounting_currency_form.init();
 
 
 });
