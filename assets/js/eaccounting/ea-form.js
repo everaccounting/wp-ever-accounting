@@ -727,9 +727,9 @@ jQuery(function ($) {
 				.on('change', '#currency_code', this.update_opening_balance)
 				.on('submit', this.submit);
 
-			// $(document).on('ready', function () {
-			// 	$('#ea-account-form #currency_code').trigger('change');
-			// });
+			$(document).on('ready', function () {
+				$('#ea-account-form #currency_code').trigger('change');
+			});
 		},
 		block: function () {
 			$('#ea-account-form').block({
