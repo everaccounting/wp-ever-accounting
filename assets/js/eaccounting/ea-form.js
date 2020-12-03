@@ -720,11 +720,77 @@ jQuery(function ($) {
 		}
 	}
 
+	//account form
+	var eaccounting_account_form = {
+		init: function () {
+			$("#ea-account-form")
+				.on('change', '#currency_code', this.update_opening_balance)
+				.on('submit', this.submit);
+
+			// $(document).on('ready', function () {
+			// 	$('#ea-account-form #currency_code').trigger('change');
+			// });
+		},
+		block: function () {
+			$('#ea-account-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-account-form').unblock();
+		},
+		update_opening_balance: function (e) {
+			var code = e.target.value;
+			if (!code) {
+				return false;
+			}
+			eaccounting_account_form.block();
+			var $opening_balance = $("#ea-account-form #opening_balance");
+			wp.ajax.send('eaccounting_get_currency', {
+				data: {
+					code: code,
+					_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+				},
+				success: function (res) {
+					eaccounting_mask_input($opening_balance, res);
+					eaccounting_account_form.unblock();
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_account_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				}
+			});
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_account_form.block();
+			wp.ajax.send({
+				data: $('#ea-account-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_account_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_account_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+
+	}
+
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
 	eaccounting_category_form.init();
 	eaccounting_currency_form.init();
 	eaccounting_item_form.init();
-
+	eaccounting_account_form.init();
 
 });
