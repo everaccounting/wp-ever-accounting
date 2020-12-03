@@ -27,7 +27,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-vendor-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
+		<form id="ea-vendor-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
@@ -150,14 +150,14 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 				eaccounting_hidden_input(
 					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_contact',
+						'value' => 'eaccounting_edit_vendor',
 					)
 				);
 				?>
 			</div>
 			<?php
 
-			wp_nonce_field( 'ea_edit_contact' );
+			wp_nonce_field( 'ea_edit_vendor' );
 
 			submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
 			?>

@@ -913,6 +913,43 @@ jQuery(function ($) {
 		}
 	}
 
+	//vendor form
+	var eaccounting_vendor_form = {
+		init: function () {
+			$('#ea-vendor-form').on('submit',this.submit);
+		},
+
+		block: function () {
+			$('#ea-vendor-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-vendor-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_vendor_form.block();
+			wp.ajax.send({
+				data: $('#ea-vendor-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_vendor_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_vendor_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
 	eaccounting_category_form.init();
@@ -921,5 +958,6 @@ jQuery(function ($) {
 	eaccounting_account_form.init();
 	eaccounting_transfer_form.init();
 	eaccounting_payment_form.init();
+	eaccounting_vendor_form.init();
 
 });
