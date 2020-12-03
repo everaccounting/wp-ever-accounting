@@ -950,6 +950,43 @@ jQuery(function ($) {
 		}
 	}
 
+	//customer form
+	var eaccounting_customer_form = {
+		init: function () {
+			$('#ea-customer-form').on('submit',this.submit);
+		},
+
+		block: function () {
+			$('#ea-customer-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-customer-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_customer_form.block();
+			wp.ajax.send({
+				data: $('#ea-customer-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_customer_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_customer_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
 	eaccounting_category_form.init();
@@ -959,5 +996,6 @@ jQuery(function ($) {
 	eaccounting_transfer_form.init();
 	eaccounting_payment_form.init();
 	eaccounting_vendor_form.init();
+	eaccounting_customer_form.init();
 
 });

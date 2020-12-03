@@ -28,7 +28,7 @@ if ( $customer->exists() && 'customer' !== $customer->get_type() ) {
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-customer-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
+		<form id="ea-customer-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
@@ -152,14 +152,14 @@ if ( $customer->exists() && 'customer' !== $customer->get_type() ) {
 				eaccounting_hidden_input(
 					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_contact',
+						'value' => 'eaccounting_edit_customer',
 					)
 				);
 				?>
 			</div>
 			<?php
 
-			wp_nonce_field( 'ea_edit_contact' );
+			wp_nonce_field( 'ea_edit_customer' );
 
 			submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
 			?>

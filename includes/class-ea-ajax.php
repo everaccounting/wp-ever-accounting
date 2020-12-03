@@ -117,6 +117,7 @@ class Ajax {
 			'edit_category',
 			'edit_contact',
 		  	'edit_vendor',
+		    'edit_customer',
 			'edit_payment',
 			'edit_revenue',
 			'edit_transfer',
@@ -599,44 +600,83 @@ class Ajax {
 		wp_die();
 	}
 
-  /**
-   * Handle ajax action of creating/updating vendors.
-   *
-   * @since 1.1.0
-   * @return void
-   */
-  public static function edit_vendor() {
-	self::verify_nonce( 'ea_edit_vendor' );
-	self::check_permission( 'ea_manage_customer' );
-	$posted = eaccounting_clean( $_REQUEST );
+	/**
+	 * Handle ajax action of creating/updating vendors.
+	 *
+	 * @return void
+	 * @since 1.1.0
+	 */
+	public static function edit_vendor() {
+		self::verify_nonce( 'ea_edit_vendor' );
+		self::check_permission( 'ea_manage_customer' );
+		$posted = eaccounting_clean( $_REQUEST );
 
-	$created = eaccounting_insert_vendor( $posted );
-	if ( is_wp_error( $created ) || ! $created->exists() ) {
-	  wp_send_json_error(
-		array(
-		  'message' => $created->get_error_message(),
-		)
-	  );
+		$created = eaccounting_insert_vendor( $posted );
+		if ( is_wp_error( $created ) || ! $created->exists() ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
+			);
+		}
+
+		$message  = __( 'Vendor updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Vendor created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $created->get_data(),
+			)
+		);
+
+		wp_die();
 	}
 
-	$message  = __( 'Vendor updated successfully!', 'wp-ever-accounting' );
-	$update   = empty( $posted['id'] ) ? false : true;
-	$redirect = '';
-	if ( ! $update ) {
-	  $message  = __( 'Vendor created successfully!', 'wp-ever-accounting' );
-	  $redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+	/**
+	 * Handle ajax action of creating/updating customers.
+	 *
+	 * @return void
+	 * @since 1.1.0
+	 */
+	public static function edit_customer() {
+		self::verify_nonce( 'ea_edit_customer' );
+		self::check_permission( 'ea_manage_customer' );
+		$posted = eaccounting_clean( $_REQUEST );
+
+		$created = eaccounting_insert_customer( $posted );
+		if ( is_wp_error( $created ) || ! $created->exists() ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
+			);
+		}
+
+		$message  = __( 'Customer updated successfully!', 'wp-ever-accounting' );
+		$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( 'Customer created successfully!', 'wp-ever-accounting' );
+			$redirect = remove_query_arg( array( 'action' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+		}
+
+		wp_send_json_success(
+			array(
+				'message'  => $message,
+				'redirect' => $redirect,
+				'item'     => $created->get_data(),
+			)
+		);
+
+		wp_die();
 	}
-
-	wp_send_json_success(
-	  array(
-		'message'  => $message,
-		'redirect' => $redirect,
-		'item'     => $created->get_data(),
-	  )
-	);
-
-	wp_die();
-  }
 
 	/**
 	 * Handle ajax action of creating/updating payment.
