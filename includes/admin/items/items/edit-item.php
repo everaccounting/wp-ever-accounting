@@ -93,7 +93,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 					)
 				);
 				//todo need to add tax dropdown
-				eaccounting_text_input(
+				eaccounting_tax_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Tax', 'wp-ever-accounting' ),
@@ -101,6 +101,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Enter Tax', 'wp-ever-accounting' ),
 						'value'         => $item->get_tax_id(),
 						'required'      => false,
+						'creatable' => true
 					)
 				);
 				eaccounting_file_input(
