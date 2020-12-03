@@ -29,7 +29,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-payment-form" class="ea-ajax-form" method="post">
+		<form id="ea-payment-form" method="post">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
@@ -50,6 +50,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'label'         => __( 'Account', 'wp-ever-accounting' ),
 						'name'          => 'account_id',
 						'value'         => $payment->get_account_id(),
+						'required'      => true,
 						'creatable'     => true,
 					)
 				);

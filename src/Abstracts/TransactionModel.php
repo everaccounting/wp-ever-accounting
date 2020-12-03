@@ -61,7 +61,7 @@ abstract class TransactionModel extends ResourceModel {
 		'payment_method' => '',
 		'reference'      => '',
 		'attachment'     => null,
-		'parent_id'      => null,
+		'parent_id'      => 0,
 		'reconciled'     => 0,
 		'creator_id'     => null,
 		'date_created'   => null,

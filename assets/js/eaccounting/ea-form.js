@@ -848,6 +848,71 @@ jQuery(function ($) {
 		}
 	}
 
+	//payment form
+	var eaccounting_payment_form = {
+		init: function () {
+			$('#ea-payment-form')
+				.on('change', '#account_id', this.update_amount_input)
+				.on('submit', this.submit);
+
+			$(document).on('ready', function () {
+				$('#ea-payment-form #account_id').trigger('change');
+			});
+		},
+		block: function () {
+			$('#ea-payment-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-payment-form').unblock();
+		},
+		update_amount_input: function (e) {
+			var account_id = parseInt(e.target.value, 10);
+			if (!account_id) {
+				return false;
+			}
+			eaccounting_payment_form.block();
+			var $currency_input = $('#ea-payment-form #amount');
+			wp.ajax.send('eaccounting_get_account_currency', {
+				data: {
+					account_id: account_id,
+					_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+				},
+				success: function (res) {
+					eaccounting_mask_input($currency_input, res);
+					eaccounting_payment_form.unblock();
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_payment_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				}
+			});
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_payment_form.block();
+			wp.ajax.send({
+				data: $('#ea-payment-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_payment_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_payment_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
 	eaccounting_category_form.init();
@@ -855,5 +920,6 @@ jQuery(function ($) {
 	eaccounting_item_form.init();
 	eaccounting_account_form.init();
 	eaccounting_transfer_form.init();
+	eaccounting_payment_form.init();
 
 });
