@@ -573,7 +573,7 @@ jQuery(function ($) {
 			e.preventDefault();
 			eaccounting_revenue_form.block();
 			wp.ajax.send({
-				data: $('#ea-tax-form').serializeAssoc(),
+				data: $('#ea-revenue-form').serializeAssoc(),
 				success: function (res) {
 					eaccounting_revenue_form.unblock();
 					$.eaccounting_notice(res, 'success');
@@ -683,7 +683,7 @@ jQuery(function ($) {
 	var eaccounting_item_form = {
 		init: function () {
 			$('#ea-item-form')
-				.on('change keyup', 'input[name="quantity"],input[name="tax_id"]', this.input_item_quantity)
+				.on('change keyup', 'input[name="quantity"]', this.input_item_quantity)
 				.on('submit', this.submit);
 		},
 		block: function () {
@@ -783,7 +783,69 @@ jQuery(function ($) {
 				},
 			});
 		}
-
+	}
+	//transfer form
+	var eaccounting_transfer_form = {
+		init: function () {
+			$('#ea-transfer-form')
+				.on('change', '#from_account_id', this.update_amount_input)
+				.on('submit', this.submit);
+			$(document).on('ready', function () {
+				$('#ea-transfer-form #from_account_id').trigger('change');
+			});
+		},
+		block: function () {
+			$('#ea-transfer-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-transfer-form').unblock();
+		},
+		update_amount_input: function (e) {
+			var account_id = parseInt(e.target.value, 10);
+			if (!account_id) {
+				return false;
+			}
+			eaccounting_transfer_form.block();
+			var $currency_input = $('#ea-transfer-form #amount');
+			wp.ajax.send('eaccounting_get_account_currency', {
+				data: {
+					account_id: account_id,
+					_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+				},
+				success: function (res) {
+					eaccounting_mask_input($currency_input, res);
+					eaccounting_transfer_form.unblock();
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_transfer_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				}
+			});
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_transfer_form.block();
+			wp.ajax.send({
+				data: $('#ea-transfer-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_transfer_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_transfer_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
 	}
 
 	eaccounting_tax_form.init();
@@ -792,5 +854,6 @@ jQuery(function ($) {
 	eaccounting_currency_form.init();
 	eaccounting_item_form.init();
 	eaccounting_account_form.init();
+	eaccounting_transfer_form.init();
 
 });
