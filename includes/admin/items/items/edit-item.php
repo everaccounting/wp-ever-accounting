@@ -25,7 +25,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-item-form" method="post">
+		<form id="ea-category-form" class="ea-ajax-form" method="post">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
@@ -93,7 +93,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 					)
 				);
 				//todo need to add tax dropdown
-				eaccounting_tax_dropdown(
+				eaccounting_text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Tax', 'wp-ever-accounting' ),
@@ -101,7 +101,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Enter Tax', 'wp-ever-accounting' ),
 						'value'         => $item->get_tax_id(),
 						'required'      => false,
-						'creatable' => true
 					)
 				);
 				eaccounting_file_input(

@@ -25,7 +25,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card">
-		<form id="ea-category-form" method="post">
+		<form id="ea-category-form" class="ea-ajax-form" method="post">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
