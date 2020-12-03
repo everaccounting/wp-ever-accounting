@@ -350,6 +350,23 @@ class Ajax {
 					);
 				}
 				break;
+			case 'tax':
+				$taxes = eaccounting_get_taxes(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $taxes as $tax ) {
+					$results[] = array(
+						'text' => "$tax->name($tax->rate)",
+						'id'   => $tax->id,
+					);
+				}
+
+				break;
 
 			default:
 				do_action( 'eaccounting_dropdown_search_' . eaccounting_clean( $type ), $search, $page );

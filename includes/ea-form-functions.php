@@ -773,7 +773,6 @@ function eaccounting_category_dropdown( $field ) {
 		$query_args['include'] = $value;
 	}
 	$categories = eaccounting_get_categories( $query_args );
-
 	$field = wp_parse_args(
 			array(
 					'value'       => $value ? absint( $value ) : '',
@@ -932,7 +931,7 @@ function eaccounting_tax_dropdown( $field ) {
 	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_tax_types() ) ? eaccounting_clean( $field['type'] ) : false;
 	$value      = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : false;
 	$query_args = array(
-			array( 'fields' => array( 'name', 'rate' ) ),
+			array( 'fields' => array( 'id', 'rate' ) ),
 			'return' => 'raw',
 	);
 	if ( $type ) {
@@ -942,18 +941,14 @@ function eaccounting_tax_dropdown( $field ) {
 		$query_args['include'] = $value;
 	}
 	$taxes = eaccounting_get_taxes( $query_args );
-
 	$field = wp_parse_args(
 			array(
 					'value'       => $value ? absint( $value ) : '',
-					'options'     => wp_list_pluck( $taxes, 'name', 'id' ),
-					'type'        => $type . '_tax',
+					'options'     => wp_list_pluck( $taxes, 'rate', 'id' ),
+					'type'        => 'tax',
 					'ajax'        => true,
 					'placeholder' => __( 'Select Tax', 'wp-ever-accounting' ),
 					'template'    => 'add-tax',
-					'data'        => array(
-							'data-tax_type' => $type,
-					),
 			),
 			$field
 	);

@@ -117,4 +117,13 @@ jQuery( function ( $ ) {
 			$( '#type', $modal.$el ).val( type.replace( '_category', '' ) );
 		},
 	} );
+
+	$('#tax_id').eaccounting_creatable({
+		option: function (item) {
+			return {
+				id: item.id,
+				text: item.name + ' (' + item.rate + ')',
+			}
+		}
+	});
 } );
