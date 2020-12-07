@@ -573,7 +573,7 @@ jQuery(function ($) {
 			e.preventDefault();
 			eaccounting_revenue_form.block();
 			wp.ajax.send({
-				data: $('#ea-revenue-form').serializeAssoc(),
+				data: $('#ea-tax-form').serializeAssoc(),
 				success: function (res) {
 					eaccounting_revenue_form.unblock();
 					$.eaccounting_notice(res, 'success');
@@ -588,6 +588,7 @@ jQuery(function ($) {
 		}
 	}
 
+<<<<<<< HEAD
 	//category form
 	var eaccounting_category_form = {
 		init: function () {
@@ -847,13 +848,11 @@ jQuery(function ($) {
 			});
 		}
 	}
+=======
+>>>>>>> 3f45712b898e7c37e33b5aa763ca829eebb6ae7a
 
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
-	eaccounting_category_form.init();
-	eaccounting_currency_form.init();
-	eaccounting_item_form.init();
-	eaccounting_account_form.init();
-	eaccounting_transfer_form.init();
+
 
 });
