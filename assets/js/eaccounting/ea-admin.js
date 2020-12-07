@@ -152,7 +152,7 @@ jQuery.fn.serializeAssoc = function () {
 			}
 
 			if ( data[ subName ][ subKey ] ) {
-				if ( $.isArray( data[ subName ][ subKey ] ) ) {
+				if ( Array.isArray( data[ subName ][ subKey ] ) ) {
 					data[ subName ][ subKey ].push( obj.value );
 				} else {
 					data[ subName ][ subKey ] = [];
@@ -163,7 +163,7 @@ jQuery.fn.serializeAssoc = function () {
 			}
 		} else {
 			if ( data[ obj.name ] ) {
-				if ( $.isArray( data[ obj.name ] ) ) {
+				if ( Array.isArray( data[ obj.name ] ) ) {
 					data[ obj.name ].push( obj.value );
 				} else {
 					data[ obj.name ] = [];

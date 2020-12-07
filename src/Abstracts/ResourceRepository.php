@@ -119,8 +119,9 @@ abstract class ResourceRepository {
 			$values[ $key ] = $item->$method( 'edit' );
 			$formats[]      = $format;
 		}
-
-		$result = $wpdb->insert( $wpdb->prefix . $this->table, $values, $formats );
+		var_dump($values);
+		$result = $wpdb->insert( $wpdb->prefix . $this->table, wp_unslash( $values ), $formats );
+		var_dump($wpdb->prefix . $this->table);
 		if ( false === $result ) {
 			$item->error( 'db_insert_error', $wpdb->last_error );
 
@@ -144,7 +145,6 @@ abstract class ResourceRepository {
 	 *
 	 * @param ResourceModel $item Item object.
 	 *
-	 * @throws \EverAccounting\Core\Exception
 	 */
 	public function read( &$item ) {
 		global $wpdb;
@@ -153,9 +153,7 @@ abstract class ResourceRepository {
 		$item->set_defaults();
 
 		if ( ! $item->get_id() ) {
-			$item->error( 'invalid_prop', __( 'Invalid item ID.', 'wp-ever-accounting' ) );
 			$item->set_id( 0 );
-
 			return;
 		}
 
@@ -175,8 +173,7 @@ abstract class ResourceRepository {
 		}
 
 		if ( ! $raw_item ) {
-			$item->error( 'invalid_prop', __( 'Invalid item ID.', 'wp-ever-accounting' ) );
-
+			$item->set_id( 0 );
 			return;
 		}
 
@@ -217,7 +214,7 @@ abstract class ResourceRepository {
 
 		if ( false === $wpdb->update(
 			$table,
-			$values,
+			wp_unslash( $values ),
 			array(
 				'id' => $item->get_id(),
 			),

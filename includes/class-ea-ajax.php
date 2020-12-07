@@ -312,6 +312,22 @@ class Ajax {
 					);
 				}
 				break;
+			case 'tax':
+				$items = eaccounting_get_taxes(
+					array(
+						'search' => $search,
+						'paged'  => $page,
+						'status' => 'active',
+						'return' => 'raw',
+					)
+				);
+				foreach ( $items as $item ) {
+					$results[] = array(
+						'text' => "$item->name",
+						'id'   => $item->id,
+					);
+				}
+				break;
 
 			case 'expense_category':
 				$items = eaccounting_get_categories(

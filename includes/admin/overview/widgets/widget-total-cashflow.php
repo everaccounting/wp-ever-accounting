@@ -42,8 +42,8 @@ class Cash_Flow extends Widget {
 		$dates  = $this->get_dates();
 		$period = empty( $_GET['period'] ) ? 'month' : eaccounting_clean( $_GET['period'] );
 		$range  = empty( $_GET['range'] ) ? 'custom' : eaccounting_clean( $_GET['range'] );
-		$start  = eaccounting_string_to_datetime( $dates['start'] );
-		$end    = eaccounting_string_to_datetime( $dates['end'] );
+		$start  = new DateTime( $dates['start'] );
+		$end    = new DateTime( $dates['end'] );
 
 		$start_month = (int) $start->format( 'm' );
 		$end_month   = (int) $end->format( 'm' );

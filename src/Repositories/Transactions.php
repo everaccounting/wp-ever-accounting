@@ -59,7 +59,7 @@ class Transactions extends ResourceRepository {
 		'description'    => '%s',
 		'payment_method' => '%s',
 		'reference'      => '%s',
-		'attachment'     => '%d',
+		'attachment_id'  => '%d',
 		'parent_id'      => '%d',
 		'reconciled'     => '%d',
 		'creator_id'     => '%d',

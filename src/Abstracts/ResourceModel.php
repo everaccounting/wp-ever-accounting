@@ -413,7 +413,7 @@ abstract class ResourceModel {
 
 			if ( 'post_type' !== $key ) {
 				/* translators: %s: $key Key to set */
-				eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'getpaid' ), $key ), '1.1.0' );
+				eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'wp-ever-accounting' ), $key ), '1.1.0' );
 			}
 
 			return call_user_func( array( $this, 'get_' . $key ) );
@@ -846,6 +846,7 @@ abstract class ResourceModel {
 	 *
 	 * @param string         $prop  Name of prop to set.
 	 * @param string|integer $value Value of the prop.
+	 * @param string         $format
 	 */
 	protected function set_date_prop( $prop, $value, $format = 'Y-m-d H:i:s' ) {
 		$value = eaccounting_format_datetime( $value, $format );
@@ -864,19 +865,24 @@ abstract class ResourceModel {
 	 *
 	 * @param string       $property property of the object will be used
 	 * @param string       $prop     prop that will be assigned to
+	 * @param mixed        $default  default prop that will be assigned to
 	 * @param array|object $object   The object
 	 */
-	protected function set_object_prop( $object, $property, $prop ) {
-		if ( is_object( $object ) && is_callable( array( $object, 'get_data' ) ) ) {
-			$object = $object->get_data();
+	protected function set_object_prop( $object, $property, $prop, $default = null ) {
+		if ( is_object( $object ) && is_callable( array( $object, 'get_' . $property ) ) ) {
+			$method = "get_{$property}";
+			$value  = $object->$method();
 		} elseif ( is_object( $object ) ) {
 			$object = get_object_vars( $object );
+			if ( array_key_exists( $property, $object ) ) {
+				$value = $object[ $property ];
+			}
 		} else {
-			$object = array();
+			$value = $default;
 		}
 
-		if ( array_key_exists( $property, $object ) ) {
-			$this->set_prop( $prop, $object[ $property ] );
+		if ( isset( $value ) ) {
+			$this->set_prop( $prop, $value );
 		}
 	}
 
@@ -989,6 +995,26 @@ abstract class ResourceModel {
 	 */
 	public function get_date_created( $context = 'edit' ) {
 		return $this->get_prop( 'date_created', $context );
+	}
+
+	/**
+	 * Get prop from object.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param array|object $object   The object
+	 * @param string       $property property of the object will be used
+	 *
+	 * @return mixed|null
+	 */
+	protected function get_object_prop( $object, $property ) {
+		if ( is_object( $object ) && is_callable( array( $object, 'get_' . $property ) ) ) {
+			$method = "get_{$property}";
+
+			return $object->$method();
+		}
+
+		return null;
 	}
 
 	/**

@@ -20,15 +20,15 @@ function eaccounting_update_1_0_2() {
 
 	$settings = array();
 	delete_option( 'eaccounting_settings' );
-	$localization  = get_option( 'eaccounting_localisation', [] );
+	$localization  = get_option( 'eaccounting_localisation', array() );
 	$currency_code = array_key_exists( 'currency', $localization ) ? $localization['currency'] : 'USD';
 	$currency_code = empty( $currency_code ) ? 'USD' : sanitize_text_field( $currency_code );
 
 	$currency = eaccounting_insert_currency(
-		[
+		array(
 			'code' => $currency_code,
 			'rate' => 1,
-		]
+		)
 	);
 
 	$settings['financial_year_start']   = '01-01';
@@ -220,18 +220,18 @@ function eaccounting_update_1_0_2() {
 			$type = reset( $types );
 			$wpdb->update(
 				$wpdb->prefix . 'ea_contacts',
-				[
+				array(
 					'type' => $type,
-				],
-				[ 'id' => $contact->id ]
+				),
+				array( 'id' => $contact->id )
 			);
 		} else {
 			$wpdb->update(
 				$wpdb->prefix . 'ea_contacts',
-				[
+				array(
 					'type' => 'customer',
-				],
-				[ 'id' => $contact->id ]
+				),
+				array( 'id' => $contact->id )
 			);
 
 			$data         = (array) $contact;
@@ -244,13 +244,13 @@ function eaccounting_update_1_0_2() {
 
 				$wpdb->update(
 					$wpdb->prefix . 'ea_transactions',
-					[
+					array(
 						'contact_id' => $vendor_id,
-					],
-					[
+					),
+					array(
 						'contact_id' => $contact->id,
 						'type'       => 'expense',
-					]
+					)
 				);
 			}
 		}
@@ -259,16 +259,16 @@ function eaccounting_update_1_0_2() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `currency_code` varchar(3) NOT NULL AFTER `tax_number`;" );
 
 	foreach ( $contacts as $contact ) {
-		$name = implode( ' ', [ $contact->first_name, $contact->last_name ] );
+		$name = implode( ' ', array( $contact->first_name, $contact->last_name ) );
 		$wpdb->update(
 			$wpdb->prefix . 'ea_contacts',
-			[
+			array(
 				'currency_code' => $currency_code,
-				'enabled'       => $contact->status == 'active' ? 1 : 0,
+				'enabled'       => $contact->status === 'active' ? 1 : 0,
 				'name'          => $name,
 				'creator_id'    => $current_user_id,
-			],
-			[ 'id' => $contact->id ]
+			),
+			array( 'id' => $contact->id )
 		);
 	}
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `avatar_url`;" );
@@ -281,4 +281,13 @@ function eaccounting_update_1_0_2() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `created_at` `date_created` DATETIME NULL DEFAULT NULL;" );
 
 	delete_option( 'eaccounting_localisation' );
+}
+
+function eaccounting_update_1_1_0() {
+	global $wpdb;
+	$prefix = $wpdb->prefix;
+
+	//todo update attachment files
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
 }

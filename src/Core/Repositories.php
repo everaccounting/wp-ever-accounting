@@ -19,12 +19,11 @@ use EverAccounting\Repositories\Currencies;
 use EverAccounting\Repositories\Customers;
 use EverAccounting\Repositories\Expenses;
 use EverAccounting\Repositories\Incomes;
-use EverAccounting\Repositories\InvoiceHistories;
-use EverAccounting\Repositories\InvoiceItems;
+use EverAccounting\Repositories\Notes;
+use EverAccounting\Repositories\LineItems;
 use EverAccounting\Repositories\Invoices;
 use EverAccounting\Repositories\Items;
 use EverAccounting\Abstracts\ResourceRepository;
-use EverAccounting\Repositories\Taxes;
 use EverAccounting\Repositories\Transactions;
 use EverAccounting\Repositories\Transfers;
 use EverAccounting\Repositories\Vendors;
@@ -68,10 +67,9 @@ class Repositories {
 		'transaction-income'  => Incomes::class,
 		'transaction-expense' => Expenses::class,
 		'account'             => Accounts::class,
-		'tax'                 => Taxes::class,
-		'invoice'             => Invoices::class,
-		'invoice-item'        => InvoiceItems::class,
-		'invoice-history'     => InvoiceHistories::class,
+		'invoices'            => Invoices::class,
+		'line-items'          => LineItems::class,
+		'notes'               => Notes::class,
 		'transfer'            => Transfers::class,
 	);
 

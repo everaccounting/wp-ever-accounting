@@ -144,7 +144,7 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 						<tfoot class="ea-invoice-items-table-footer">
 							<tr class="ea-invoice-items-actions">
 								<td colspan="3">
-									<button type="button" class="button ea-add-invoice-item btn-secondary"><?php _e( 'Add Invoice Items', 'wp-ever-accounting' ); ?></button>
+									<button type="button" class="button ea-add-invoice-item btn-secondary"><?php _e( 'Add Item', 'wp-ever-accounting' ); ?></button>
 									<button type="button" class="button ea-add-discount btn-secondary"><?php _e( 'Add Discounts', 'wp-ever-accounting' ); ?></button>
 									<button type="button" class="button ea-add-shipping btn-secondary"><?php _e( 'Add Shipping', 'wp-ever-accounting' ); ?></button>
 								</td>

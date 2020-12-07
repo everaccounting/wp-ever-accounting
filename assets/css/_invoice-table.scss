@@ -6,12 +6,18 @@
   .ea-invoice-items-table {
 	font-size: 14px;
 	font-weight: 400;
-	border: 1px solid #f4f4f4;
 	width: 100%;
 	max-width: 100%;
 	border-spacing: 0;
 	background-color: transparent;
 	box-sizing: border-box;
+	border-collapse: collapse;
+	border: 1px solid #ddd;
+	table-layout: fixed;
+
+	tr{
+	  border-bottom: 1px solid #ddd;
+	}
 
 	.ea-invoice-items-total {
 	  div {

@@ -11,6 +11,8 @@
 namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Models\Invoice;
+use EverAccounting\Models\LineItem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -40,70 +42,79 @@ class Invoices extends ResourceRepository {
 	 * @var array
 	 */
 	protected $data_type = array(
-		'id'                 => '%d',
-		'invoice_number'     => '%s',
-		'order_number'       => '%s',
-		'status'             => '%s',
-		'invoiced_at'        => '%s',
-		'due_at'             => '%s',
-		'subtotal'           => '%f',
-		'discount'           => '%f',
-		'tax'                => '%f',
-		'shipping'           => '%f',
-		'total'              => '%f',
-		'currency_code'      => '%s',
-		'currency_rate'      => '%s',
-		'category_id'        => '%d',
-		'contact_id'         => '%d',
-		'contact_name'       => '%d',
-		'contact_email'      => '%d',
-		'contact_tax_number' => '%d',
-		'contact_phone'      => '%d',
-		'contact_address'    => '%s',
-		'note'               => '%s',
-		'footer'             => '%s',
-		'attachment'         => '%d',
-		'parent_id'          => '%d',
-		'creator_id'         => '%d',
-		'date_created'       => '%s',
+		'id'             => '%d',
+		'invoice_number' => '%s',
+		'order_number'   => '%s',
+		'status'         => '%s',
+		'issued_at'      => '%s',
+		'due_at'         => '%s',
+		'category_id'    => '%d',
+		'customer_id'    => '%d',
+		'name'           => '%s',
+		'phone'          => '%s',
+		'email'          => '%s',
+		'tax_number'     => '%s',
+		'postcode'       => '%s',
+		'address'        => '%s',
+		'country'        => '%s',
+		'subtotal'       => '%f',
+		'total_discount' => '%f',
+		'total_tax'      => '%f',
+		'total_vat'      => '%f',
+		'total_shipping' => '%f',
+		'total'          => '%f',
+		'note'           => '%s',
+		'footer'         => '%s',
+		'attachment_id'  => '%d',
+		'currency_code'  => '%s',
+		'currency_rate'  => '%s',
+		'key'            => '%s',
+		'parent_id'      => '%d',
+		'creator_id'     => '%d',
+		'date_created'   => '%s',
 	);
 
+
 	/**
-	 * Retrieves column defaults.
+	 * Read order items of a specific type from the database for this order.
 	 *
-	 * Sub-classes can define default for any/all of columns defined in the get_columns() method.
+	 * @param Invoice $invoice Order object.
 	 *
-	 * @since 1.1.0
-	 * @return array All defined column defaults.
+	 * @return array
 	 */
-	public static function get_defaults() {
-		return array(
-			'invoice_number'     => '',
-			'order_number'       => '',
-			'status'             => 'pending',
-			'invoiced_at'        => null,
-			'due_at'             => null,
-			'subtotal'           => 0.00,
-			'discount'           => 0.00,
-			'tax'                => 0.00,
-			'shipping'           => 0.00,
-			'total'              => 0.00,
-			'currency_code'      => null,
-			'currency_rate'      => null,
-			'category_id'        => null,
-			'contact_id'         => null,
-			'contact_name'       => null,
-			'contact_email'      => null,
-			'contact_tax_number' => null,
-			'contact_phone'      => null,
-			'contact_address'    => '',
-			'note'               => '',
-			'footer'             => '',
-			'attachment'         => null,
-			'parent_id'          => null,
-			'creator_id'         => eaccounting_get_current_user_id(),
-			'date_created'       => current_time( 'mysql' ),
-		);
+	public function read_items( $invoice ) {
+		global $wpdb;
+
+		// Get from cache if available.
+		$items = 0 < $invoice->get_id() ? wp_cache_get( 'line-item-' . $invoice->get_id(), 'ea-line-items' ) : false;
+
+		if ( false === $items ) {
+			$items = $wpdb->get_results(
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_line_items WHERE parent_id = %d AND parent_type = %s ORDER BY id;", $invoice->get_id(), 'invoice' )
+			);
+			foreach ( $items as $item ) {
+				wp_cache_set( 'line-item-' . $item->id, $item, 'ea-line-items' );
+			}
+			if ( 0 < $invoice->get_id() ) {
+				wp_cache_set( 'line-item' . $invoice->get_id(), $items, 'ea-line-items' );
+			}
+		}
+		$results = array();
+		foreach ( $items as $item ) {
+			$results[ absint( $item->item_id ) ] = new LineItem( $item );
+		}
+		return $results;
+	}
+
+	/**
+	 * Delete Invoice Items.
+	 *
+	 * @param Invoice $invoice
+	 * @since 1.1.0
+	 */
+	public function delete_items( $invoice ) {
+		global $wpdb;
+		$wpdb->delete( $wpdb->prefix . LineItems::TABLE, array( 'parent_id' => $invoice->get_id() ) );
 	}
 
 }

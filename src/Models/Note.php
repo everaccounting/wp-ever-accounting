@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle the invoice history object.
+ * Handle the history object.
  *
  * @package     EverAccounting\Models
  * @class       Currency
@@ -10,8 +10,8 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
-use EverAccounting\Repositories\InvoiceHistories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,19 +22,19 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class InvoiceHistory extends ResourceModel {
+class Note extends ResourceModel {
 	/**
 	 * This is the name of this object type.
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'invoice_history';
+	protected $object_type = 'note';
 
 	/**
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_invoice_history';
+	public $cache_group = 'ea_notes';
 
 	/**
 	 * Item Data array.
@@ -43,10 +43,10 @@ class InvoiceHistory extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'invoice_id'   => null,
-		'status'       => '',
+		'parent_id'    => null,
+		'parent_type'  => '',
 		'notify'       => 0,
-		'description'  => '',
+		'content'      => '',
 		'date_created' => null,
 	);
 
@@ -74,7 +74,7 @@ class InvoiceHistory extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( 'invoice-history' );
+		$this->repository = Repositories::load( 'notes' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
@@ -87,7 +87,7 @@ class InvoiceHistory extends ResourceModel {
 	*/
 
 	/**
-	 * Return the invoice id.
+	 * Return the id.
 	 *
 	 * @since  1.1.0
 	 *
@@ -95,12 +95,12 @@ class InvoiceHistory extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_invoice_id( $context = 'edit' ) {
-		return $this->get_prop( 'invoice_id', $context );
+	public function get_parent_id( $context = 'edit' ) {
+		return $this->get_prop( 'parent_id', $context );
 	}
 
 	/**
-	 * Return the status.
+	 * Return the type of parent
 	 *
 	 * @since  1.1.0
 	 *
@@ -108,8 +108,8 @@ class InvoiceHistory extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_status( $context = 'edit' ) {
-		return $this->get_prop( 'status', $context );
+	public function get_parent_type( $context = 'edit' ) {
+		return $this->get_prop( 'parent_type', $context );
 	}
 
 	/**
@@ -126,7 +126,7 @@ class InvoiceHistory extends ResourceModel {
 	}
 
 	/**
-	 * Return the description.
+	 * Return the content.
 	 *
 	 * @since  1.1.0
 	 *
@@ -134,8 +134,8 @@ class InvoiceHistory extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_description( $context = 'edit' ) {
-		return $this->get_prop( 'description', $context );
+	public function get_content( $context = 'edit' ) {
+		return $this->get_prop( 'content', $context );
 	}
 
 	/*
@@ -145,27 +145,27 @@ class InvoiceHistory extends ResourceModel {
 	*/
 
 	/**
-	 * set the invoice id.
+	 * set the id.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $invoice_id .
+	 * @param int $parent_id .
 	 *
 	 */
-	public function set_invoice_id( $invoice_id ) {
-		$this->set_prop( 'invoice_id', absint( $invoice_id ) );
+	public function set_parent_id( $parent_id ) {
+		$this->set_prop( 'parent_id', absint( $parent_id ) );
 	}
 
 	/**
-	 * set the status.
+	 * set the id.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $status .
+	 * @param int $parent_type .
 	 *
 	 */
-	public function set_status( $status ) {
-		$this->set_prop( 'status', eaccounting_clean( $status ) );
+	public function set_parent_type( $parent_type ) {
+		$this->set_prop( 'parent_type', eaccounting_clean( $parent_type ) );
 	}
 
 	/**
@@ -181,15 +181,33 @@ class InvoiceHistory extends ResourceModel {
 	}
 
 	/**
-	 * set the description.
+	 * set the content.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $description .
+	 * @param string $content .
 	 *
 	 */
-	public function set_description( $description ) {
-		$this->set_prop( 'description', eaccounting_sanitize_textarea( $description ) );
+	public function set_content( $content ) {
+		$this->set_prop( 'content', eaccounting_sanitize_textarea( $content ) );
 	}
 
+	/**
+	 * Save should create or update based on object existence.
+	 *
+	 * @since  1.1.0
+	 * @throws Exception
+	 * @return \Exception|bool
+	 */
+	public function save() {
+		if ( empty( $this->get_parent_id() ) ) {
+			throw new Exception( 'empty_parent_id', __( 'Parent ID must be specified', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $this->get_parent_type() ) ) {
+			throw new Exception( 'empty_parent_type', __( 'Parent type must be specified', 'wp-ever-accounting' ) );
+		}
+
+		return parent::save();
+	}
 }

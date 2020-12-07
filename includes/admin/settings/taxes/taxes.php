@@ -84,4 +84,4 @@ function eaccounting_misc_taxes_tab() {
 	}
 }
 
-add_action( 'eaccounting_misc_tab_taxes', 'eaccounting_misc_taxes_tab' );
+add_action( 'eaccounting_settings_tab_taxes_section_rates', 'eaccounting_misc_taxes_tab' );

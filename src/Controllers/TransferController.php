@@ -54,11 +54,11 @@ class TransferController extends Singleton {
 		}
 
 		if ( empty( $data['from_account_id'] )) {
-			throw new Exception( 'invalid_account', __( 'From account is required', 'wp-ever-account' ) );
+			throw new Exception( 'invalid_account', __( 'From account is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $data['from_account_id'] )) {
-			throw new Exception( 'invalid_account', __( 'To account is required', 'wp-ever-account' ) );
+			throw new Exception( 'invalid_account', __( 'To account is required', 'wp-ever-accounting' ) );
 		}
 	}
 

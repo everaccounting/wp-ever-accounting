@@ -50,7 +50,9 @@ class Item extends ResourceModel {
 		'purchase_price' => 0.0000,
 		'quantity'       => 1,
 		'category_id'    => null,
-		'tax_id'         => null,
+		'sales_tax'      => null,
+		'purchase_tax'   => null,
+		'vat'            => null,
 		'enabled'        => 1,
 		'creator_id'     => null,
 		'date_created'   => null,
@@ -198,8 +200,30 @@ class Item extends ResourceModel {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_tax_id( $context = 'edit' ) {
-		return $this->get_prop( 'tax_id', $context );
+	public function get_sales_tax( $context = 'edit' ) {
+		return $this->get_prop( 'sales_tax', $context );
+	}
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
+	 */
+	public function get_purchase_tax( $context = 'edit' ) {
+		return $this->get_prop( 'purchase_tax', $context );
+	}
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
+	 */
+	public function get_vat( $context = 'edit' ) {
+		return $this->get_prop( 'vat', $context );
 	}
 
 	/*
@@ -295,11 +319,31 @@ class Item extends ResourceModel {
 	/**
 	 * @since 1.1.0
 	 *
-	 * @param $tax_id
+	 * @param $tax_ids
 	 *
 	 */
-	public function set_tax_id( $tax_id ) {
-		$this->set_prop( 'tax_id', absint( $tax_id ) );
+	public function set_sales_tax( $tax ) {
+		$this->set_prop( 'sales_tax', floatval( $tax ) );
+	}
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param $tax_ids
+	 *
+	 */
+	public function set_purchase_tax( $tax ) {
+		$this->set_prop( 'purchase_tax', floatval( $tax ) );
+	}
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param $tax_ids
+	 *
+	 */
+	public function set_vat( $vat ) {
+		$this->set_prop( 'vat', floatval( $vat ) );
 	}
 
 
@@ -309,4 +353,14 @@ class Item extends ResourceModel {
 	public function clear_cache() {
 		wp_cache_delete( $this->get_id(), $this->cache_group );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Additional methods
+	|--------------------------------------------------------------------------
+	|
+	| Does extra thing as helper functions.
+	|
+	*/
+
 }

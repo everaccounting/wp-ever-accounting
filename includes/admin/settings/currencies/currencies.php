@@ -84,4 +84,4 @@ function eaccounting_misc_currencies_tab() {
 	}
 }
 
-add_action( 'eaccounting_misc_tab_currencies', 'eaccounting_misc_currencies_tab' );
+add_action( 'eaccounting_settings_tab_currencies', 'eaccounting_misc_currencies_tab' );

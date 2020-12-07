@@ -64,7 +64,6 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
 	if ( empty( $args ) ) {
 		return false;
 	}
-
 	try {
 		// The  id will be provided when updating an item.
 		$args = wp_parse_args( $args, array( 'id' => null ) );

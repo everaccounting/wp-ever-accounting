@@ -73,14 +73,14 @@ class Transfers extends ResourceRepository {
 		$to_account   = eaccounting_get_account( $transfer->get_to_account_id() );
 		$update       = $transfer->exists();
 		if ( empty( $transfer->get_date() ) ) {
-			throw new Exception( 'invalid_prop', __( 'Transfer date is required', 'wp-ever-account' ) );
+			throw new Exception( 'invalid_prop', __( 'Transfer date is required', 'wp-ever-accounting' ) );
 		}
 		if ( ! $from_account || ! $to_account ) {
-			throw new Exception( 'invalid_account', __( 'From and to accounts are required', 'wp-ever-account' ) );
+			throw new Exception( 'invalid_account', __( 'From and to accounts are required', 'wp-ever-accounting' ) );
 		}
 		$amount = eaccounting_sanitize_price( $transfer->get_amount(), $from_account->get_currency_code() );
 		if ( empty( $amount ) ) {
-			throw new Exception( 'empty_prop', __( 'Transfer amount is required.', 'wp-ever-account' ) );
+			throw new Exception( 'empty_prop', __( 'Transfer amount is required.', 'wp-ever-accounting' ) );
 		}
 		$cache_key   = md5( 'other' . __( 'Transfer', 'wp-ever-accounting' ) );
 		$category_id = wp_cache_get( $cache_key, 'eaccounting_categories' );
@@ -93,7 +93,7 @@ class Transfers extends ResourceRepository {
 				'empty_prop',
 				sprintf(
 				/* translators: %s: category name %s: category type */
-					__( 'Transfer category is missing please create a category named "%1$s" and type"%2$s".', 'wp-ever-account' ),
+					__( 'Transfer category is missing please create a category named "%1$s" and type"%2$s".', 'wp-ever-accounting' ),
 					__( 'Transfer', 'wp-ever-accounting' ),
 					'other'
 				)
@@ -103,10 +103,10 @@ class Transfers extends ResourceRepository {
 		$expense_currency = eaccounting_get_currency( $from_account->get_currency_code() );
 		$income_currency  = eaccounting_get_currency( $to_account->get_currency_code() );
 		if ( empty( $expense_currency ) ) {
-			throw new Exception( 'empty_prop', __( 'From account currency is unavailable .', 'wp-ever-account' ) );
+			throw new Exception( 'empty_prop', __( 'From account currency is unavailable .', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $income_currency ) ) {
-			throw new Exception( 'empty_prop', __( 'To account currency is unavailable .', 'wp-ever-account' ) );
+			throw new Exception( 'empty_prop', __( 'To account currency is unavailable .', 'wp-ever-accounting' ) );
 		}
 
 		$expense = new Expense( $transfer->get_expense_id() );
@@ -230,9 +230,7 @@ class Transfers extends ResourceRepository {
 		$item->set_defaults();
 
 		if ( ! $item->get_id() ) {
-			$item->error( 'invalid_prop', __( 'Invalid item ID.', 'wp-ever-accounting' ) );
 			$item->set_id( 0 );
-
 			return;
 		}
 
@@ -252,8 +250,7 @@ class Transfers extends ResourceRepository {
 		}
 
 		if ( ! $raw_item ) {
-			$item->error( 'invalid_prop', __( 'Invalid item ID.', 'wp-ever-accounting' ) );
-
+			$item->set_id( 0 );
 			return;
 		}
 

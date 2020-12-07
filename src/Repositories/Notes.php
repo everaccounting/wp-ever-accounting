@@ -1,8 +1,8 @@
 <?php
 /**
- * Tax repository.
+ * Notes repository.
  *
- * Handle tax insert, update, delete & retrieve from database.
+ * Handle Notes insert, update, delete & retrieve from database.
  *
  * @version   1.1.0
  * @package   EverAccounting\Repositories
@@ -15,23 +15,19 @@ use EverAccounting\Abstracts\ResourceRepository;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Taxes
+ * Class InvoiceHistories
  *
  * @since   1.1.0
  *
  * @package EverAccounting\Repositories
  */
-class Taxes extends ResourceRepository {
+class Notes extends ResourceRepository {
 	/**
-	 * Table name.
-	 *
 	 * @var string
 	 */
-	const TABLE = 'ea_taxes';
+	const TABLE = 'ea_notes';
 
 	/**
-	 * Table name.
-	 *
 	 * @since 1.1.0
 	 * @var string
 	 */
@@ -45,10 +41,11 @@ class Taxes extends ResourceRepository {
 	 */
 	protected $data_type = array(
 		'id'           => '%d',
-		'name'         => '%s',
-		'rate'         => '%s',
-		'type'         => '%s',
-		'enabled'      => '%d',
+		'parent_id'    => '%d',
+		'parent_type'  => '%s',
+		'notify'       => '%s',
+		'content'      => '%s',
 		'date_created' => '%s',
 	);
+
 }

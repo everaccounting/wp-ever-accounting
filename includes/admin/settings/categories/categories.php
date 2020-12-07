@@ -84,4 +84,4 @@ function eaccounting_misc_categories_tab() {
 	}
 }
 
-add_action( 'eaccounting_misc_tab_categories', 'eaccounting_misc_categories_tab' );
+add_action( 'eaccounting_settings_tab_categories', 'eaccounting_misc_categories_tab' );

@@ -705,7 +705,7 @@ jQuery(function ($) {
 			e.preventDefault();
 			eaccounting_item_form.block();
 			wp.ajax.send({
-				data: $('#ea-item-form').serializeAssoc(),
+				data: $('#ea-item-form').serializeObject(),
 				success: function (res) {
 					eaccounting_item_form.unblock();
 					$.eaccounting_notice(res, 'success');

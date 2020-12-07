@@ -51,17 +51,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 				eaccounting_text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
-						'name'          => 'purchase_price',
-						'data_type'     => 'price',
-						'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
-						'value'         => $item->get_purchase_price(),
-						'required'      => true,
-					)
-				);
-				eaccounting_text_input(
-					array(
-						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Sale price', 'wp-ever-accounting' ),
 						'name'          => 'sale_price',
 						'data_type'     => 'price',
@@ -70,6 +59,40 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'required'      => true,
 					)
 				);
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
+						'name'          => 'purchase_price',
+						'data_type'     => 'price',
+						'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
+						'value'         => $item->get_purchase_price(),
+						'required'      => true,
+					)
+				);
+				if ( eaccounting_tax_enabled() ) :
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Sales Tax (%)', 'wp-ever-accounting' ),
+							'name'          => 'sales_tax',
+							'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
+							'value'         => $item->get_sales_tax(),
+							'required'      => true,
+						)
+					);
+
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Purchase Tax (%)', 'wp-ever-accounting' ),
+							'name'          => 'purchase_tax',
+							'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
+							'value'         => $item->get_purchase_tax(),
+							'required'      => true,
+						)
+					);
+				endif;
 				eaccounting_textarea(
 					array(
 						'label'         => __( 'Description', 'wp-ever-accounting' ),
@@ -90,18 +113,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'required'      => false,
 						'type'          => 'expense',
 						'creatable'     => true,
-					)
-				);
-				//todo need to add tax dropdown
-				eaccounting_tax_dropdown(
-					array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Tax', 'wp-ever-accounting' ),
-						'name'          => 'tax_id',
-						'placeholder'   => __( 'Enter Tax', 'wp-ever-accounting' ),
-						'value'         => $item->get_tax_id(),
-						'required'      => false,
-						'creatable' => true
 					)
 				);
 				eaccounting_file_input(

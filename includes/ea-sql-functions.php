@@ -100,7 +100,9 @@ function eaccounting_prepare_query_where( &$qv, $table ) {
 		$searches    = array();
 		$query_where = ' AND (';
 		foreach ( $qv['search_cols'] as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+			foreach ( explode( ' ', $qv['search'] ) as $word ) {
+				$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $word ) . '%' );
+			}
 		}
 		$query_where .= implode( ' OR ', $searches );
 		$query_where .= ')';

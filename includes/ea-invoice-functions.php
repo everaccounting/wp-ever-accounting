@@ -9,32 +9,17 @@
  */
 defined( 'ABSPATH' ) || exit;
 
-function eaccounting_get_invoice_statuses() {
-	return array(
-		'draft'     => __( 'Draft', 'wp-ever-accounting' ),
-		'sent'      => __( 'Sent', 'wp-ever-accounting' ),
-		'viewed'    => __( 'Viewed', 'wp-ever-accounting' ),
-		'approved'  => __( 'Approved', 'wp-ever-accounting' ),
-		'partial'   => __( 'Partial', 'wp-ever-accounting' ),
-		'paid'      => __( 'Paid', 'wp-ever-accounting' ),
-		'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
-		'unpaid'    => __( 'Unpaid', 'wp-ever-accounting' ),
-		'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
-	);
-}
-
 /**
- * Get next invoice number.
+ * Get invoice types.
  *
- * @return string
  * @since 1.1.0
+ * @return array
  */
-function eaccounting_get_next_invoice_number() {
-	$prefix = 'INV-';
-	$next   = '1';
-	$digit  = 5;
-
-	return $prefix . str_pad( $next, $digit, '0', STR_PAD_LEFT );
+function eaccounting_get_invoice_types() {
+	return array(
+		'invoice' => __( 'Invoice', 'wp-ever-accounting' ),
+		'bill'    => __( 'Bill', 'wp-ever-accounting' ),
+	);
 }
 
 /**
@@ -159,11 +144,11 @@ function eaccounting_get_invoices( $args = array(), $callback = true ) {
 /**
  * Main function for returning invoice history.
  *
- * @param $invoice_history
- *
- * @return EverAccounting\Models\InvoiceHistory|null
  * @since 1.1.0
  *
+ *@param $invoice_history
+ *
+ * @return EverAccounting\Models\Note|null
  */
 function eaccounting_get_invoice_history( $invoice_history ) {
 
@@ -174,7 +159,9 @@ function eaccounting_get_invoice_history( $invoice_history ) {
  *
  *  Returns a new invoice history object on success.
  *
- * @param array $args {
+ * @since 1.1.0
+ *
+ *@param array $args {
  *                           An array of elements that make up an invoice to update or insert.
  *
  * @type int $id The invoice history ID. If equal to something other than 0,
@@ -185,9 +172,7 @@ function eaccounting_get_invoice_history( $invoice_history ) {
  *
  * }
  *
- * @return EverAccounting\Models\InvoiceHistory|\WP_Error
- * @since 1.1.0
- *
+ * @return EverAccounting\Models\Note|\WP_Error
  */
 function eaccounting_insert_invoice_history( $args ) {
 

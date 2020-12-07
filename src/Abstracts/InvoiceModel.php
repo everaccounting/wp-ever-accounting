@@ -1,41 +1,47 @@
 <?php
 /**
- * Handle the invoice object.
+ * Abstract Order Model.
  *
- * @package     EverAccounting\Models
- * @class       Currency
- * @version     1.1.0
+ * Handles generic data interaction which is implemented by
+ * the different repository classes.
+ *
  */
 
-namespace EverAccounting\Models;
+namespace EverAccounting\Abstracts;
 
-use EverAccounting\Abstracts\ResourceModel;
+
 use EverAccounting\Core\Exception;
-use EverAccounting\Core\Repositories;
-
-defined( 'ABSPATH' ) || exit;
+use EverAccounting\Models\Currency;
+use EverAccounting\Models\Item;
+use EverAccounting\Models\LineItem;
+use EverAccounting\Models\LineTax;
+use EverAccounting\Models\Tax;
 
 /**
- * Class Invoice
+ * Class OrderModel
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Models
+ * @package EverAccounting\Abstracts
  */
-class Invoice extends ResourceModel {
+abstract class InvoiceModel extends ResourceModel {
+	/**
+	 * Type of order.
+	 */
+	const TYPE = '';
 
 	/**
 	 * This is the name of this object type.
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'invoice';
+	protected $object_type = self::TYPE;
 
 	/**
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'ea_invoices';
+	public $cache_group = 'eaccounting_invoice';
 
 	/**
 	 * Item Data array.
@@ -44,14 +50,15 @@ class Invoice extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'invoice_number' => '',
+		'type'           => self::TYPE,
+		'number'         => '',
 		'order_number'   => '',
 		'status'         => 'draft',
 		'issued_at'      => null,
 		'due_at'         => null,
 		'paid_at'        => null,
 		'category_id'    => null,
-		'customer_id'    => null,
+		'contact_id'     => null,
 		'name'           => '',
 		'phone'          => '',
 		'email'          => '',
@@ -62,7 +69,6 @@ class Invoice extends ResourceModel {
 		'subtotal'       => 0.00,
 		'total_discount' => 0.00,
 		'total_tax'      => 0.00,
-		'total_vat'      => 0.00,
 		'total_shipping' => 0.00,
 		'total'          => 0.00,
 		'note'           => '',
@@ -101,39 +107,21 @@ class Invoice extends ResourceModel {
 	protected $items_to_delete = array();
 
 	/**
-	 * Get the invoice if ID is passed, otherwise the account is new and empty.
+	 * Taxes will be stored here, sometimes before they persist in the DB.
 	 *
 	 * @since 1.1.0
-	 *
-	 * @param int|object|Invoice $invoice object to read.
-	 *
+	 * @var array
 	 */
-	public function __construct( $invoice = 0 ) {
-		parent::__construct( $invoice );
+	protected $taxes = array();
 
-		if ( $invoice instanceof self ) {
-			$this->set_id( $invoice->get_id() );
-		} elseif ( is_numeric( $invoice ) ) {
-			$this->set_id( $invoice );
-		} elseif ( ! empty( $invoice->id ) ) {
-			$this->set_id( $invoice->id );
-		} elseif ( is_array( $invoice ) ) {
-			$this->set_props( $invoice );
-		} elseif ( is_string( $invoice ) && $invoice_id = self::get_by( $invoice, 'key' ) ) { // phpcs: ignore
-			$this->set_id( $invoice_id );
-		} elseif ( is_string( $invoice ) && $invoice_id = self::get_by( $invoice, 'invoice_number' ) ) { // phpcs: ignore
-			$this->set_id( $invoice_id );
-		} else {
-			$this->set_object_read( true );
-		}
+	/**
+	 * Stores the status transition information.
+	 *
+	 * @since 1.1.0
+	 * @var bool|array
+	 */
+	protected $status_transition = false;
 
-		//Load repository
-		$this->repository = Repositories::load( 'invoices' );
-
-		if ( $this->get_id() > 0 ) {
-			$this->repository->read( $this );
-		}
-	}
 
 	/**
 	 * Get invoice ID based on field type.
@@ -160,7 +148,7 @@ class Invoice extends ResourceModel {
 		}
 
 		// Maybe retrieve from the cache.
-		$invoice_id = wp_cache_get( "$field-$value", 'ea_invoices' );
+		$invoice_id = wp_cache_get( "$field-$value", 'invoice' );
 		if ( false !== $invoice_id ) {
 			return $invoice_id;
 		}
@@ -172,40 +160,61 @@ class Invoice extends ResourceModel {
 		);
 
 		// Update the cache with our data
-		wp_cache_set( "$field-$value", $invoice_id, 'ea_invoices' );
+		wp_cache_set( "$field-$value", $invoice_id, 'invoice' );
 
 		return $invoice_id;
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Object Specific data methods
+	| abstracts
 	|--------------------------------------------------------------------------
 	*/
 
 	/**
-	 * @since 1.0.1
+	 * Get all the available status for the object.
+	 *
+	 * @since 1.1.0
 	 * @return array
 	 */
-	public static function get_statuses() {
-		return array(
-			'draft'     => __( 'Draft', 'wp-ever-accounting' ),
-			'pending'   => __( 'Pending', 'wp-ever-accounting' ),
-			'viewed'    => __( 'Viewed', 'wp-ever-accounting' ),
-			'approved'  => __( 'Approved', 'wp-ever-accounting' ),
-			'partial'   => __( 'Partial', 'wp-ever-accounting' ),
-			'paid'      => __( 'Paid', 'wp-ever-accounting' ),
-			'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
-			'unpaid'    => __( 'Unpaid', 'wp-ever-accounting' ),
-			'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
-		);
-	}
+	abstract public function get_statuses();
+
+
+	/**
+	 * Generates a new number for the invoice.
+	 */
+	abstract public function maybe_set_number();
 
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
 	*/
+	/**
+	 * Return the invoice type.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_type( $context = 'edit' ) {
+		return $this->get_prop( 'type', $context );
+	}
+
+	/**
+	 * Get type nicename.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_type_nicename() {
+		$types = eaccounting_get_invoice_types();
+
+		return isset( $types[ $this->get_type() ] ) ? $types[ $this->get_type() ] : $this->get_type();
+	}
+
 
 	/**
 	 * Return the invoice number.
@@ -216,8 +225,8 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_invoice_number( $context = 'edit' ) {
-		return $this->get_prop( 'invoice_number', $context );
+	public function get_number( $context = 'edit' ) {
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
@@ -317,8 +326,8 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_customer_id( $context = 'edit' ) {
-		return $this->get_prop( 'customer_id', $context );
+	public function get_contact_id( $context = 'edit' ) {
+		return $this->get_prop( 'contact_id', $context );
 	}
 
 	/**
@@ -421,10 +430,10 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return array
 	 */
-	public function get_customer_info( $context = 'view' ) {
+	public function get_contact_info( $context = 'view' ) {
 
 		return array(
-			'id'         => $this->get_customer_id(),
+			'id'         => $this->get_contact_id(),
 			'name'       => $this->get_name( $context ),
 			'phone'      => $this->get_phone( $context ),
 			'email'      => $this->get_email( $context ),
@@ -473,19 +482,6 @@ class Invoice extends ResourceModel {
 	 */
 	public function get_total_tax( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_tax', $context );
-	}
-
-	/**
-	 * Get the invoice vat total.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $context View or edit context.
-	 *
-	 * @return float
-	 */
-	public function get_total_vat( $context = 'view' ) {
-		return (float) $this->get_prop( 'total_vat', $context );
 	}
 
 	/**
@@ -541,7 +537,6 @@ class Invoice extends ResourceModel {
 	public function get_footer( $context = 'edit' ) {
 		return $this->get_prop( 'footer', $context );
 	}
-
 
 	/**
 	 * Return the attachment.
@@ -643,14 +638,44 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return array
+	 * @return LineTax[]
 	 */
 	public function get_taxes() {
-		if ( empty( $this->get_items() ) && $this->exists() ) {
+		if ( empty( $this->taxes ) && $this->exists() ) {
 			$this->taxes = $this->repository->read_taxes( $this );
 		}
 
-		return array();
+		return $this->taxes;
+	}
+
+	/**
+	 * Retrieves a specific item.
+	 *
+	 * @since 1.0.19
+	 */
+	public function get_item( $id ) {
+		foreach ( $this->get_items() as $item ) {
+			if ( $item->get_id() === absint( $id ) ) {
+				return $item;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Retrieves a specific tax item.
+	 *
+	 * @since 1.0.19
+	 */
+	public function get_tax_item( $id ) {
+		foreach ( $this->get_taxes() as $item ) {
+			if ( $item->get_id() === absint( $id ) ) {
+				return $item;
+			}
+		}
+
+		return null;
 	}
 
 	/*
@@ -659,27 +684,43 @@ class Invoice extends ResourceModel {
 	|--------------------------------------------------------------------------
 	*/
 
+
 	/**
-	 * set the number.
+	 * set the invoice type.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $invoice_number .
+	 * @param string $type .
 	 *
 	 */
-	public function set_invoice_number( $invoice_number ) {
-		$this->set_prop( 'invoice_number', eaccounting_clean( $invoice_number ) );
+	public function set_type( $type ) {
+		if ( ! empty( $type ) && array_key_exists( $type, eaccounting_get_invoice_types() ) ) {
+			$this->set_prop( 'type', eaccounting_clean( $type ) );
+		}
 	}
+
 
 	/**
 	 * set the number.
 	 *
 	 * @since  1.1.0
 	 *
+	 * @param string $number .
+	 *
+	 */
+	public function set_number( $number ) {
+		$this->set_prop( 'number', eaccounting_clean( $number ) );
+	}
+
+	/**
+	 * set the order number.
+	 *
+	 * @since  1.1.0
+	 *
 	 * @param string $order_number .
 	 *
 	 */
-	public function set_order_number( $order_number ) {
+	protected function set_order_number( $order_number ) {
 		$this->set_prop( 'order_number', eaccounting_clean( $order_number ) );
 	}
 
@@ -776,15 +817,15 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
-	 * set the customer_id.
+	 * set the contact_id.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $customer_id .
+	 * @param int $contact_id .
 	 *
 	 */
-	public function set_customer_id( $customer_id ) {
-		$this->set_prop( 'customer_id', absint( $customer_id ) );
+	public function set_contact_id( $contact_id ) {
+		$this->set_prop( 'contact_id', absint( $contact_id ) );
 	}
 
 	/**
@@ -881,8 +922,8 @@ class Invoice extends ResourceModel {
 	 * @param DOUBLE $subtotal .
 	 *
 	 */
-	public function set_subtotal( $subtotal ) {
-		$this->set_prop( 'subtotal', floatval( $subtotal ) );
+	private function set_subtotal( $subtotal ) {
+		$this->set_prop( 'subtotal', eaccounting_sanitize_price( $subtotal ) );
 	}
 
 	/**
@@ -894,7 +935,7 @@ class Invoice extends ResourceModel {
 	 *
 	 */
 	public function set_total_discount( $discount ) {
-		$this->set_prop( 'total_discount', floatval( $discount ) );
+		$this->set_prop( 'total_discount', eaccounting_sanitize_price( $discount ) );
 	}
 
 	/**
@@ -905,20 +946,8 @@ class Invoice extends ResourceModel {
 	 * @param DOUBLE $tax .
 	 *
 	 */
-	public function set_total_tax( $tax ) {
-		$this->set_prop( 'total_tax', floatval( $tax ) );
-	}
-
-	/**
-	 * set the vat.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param DOUBLE $vat .
-	 *
-	 */
-	public function set_total_vat( $vat ) {
-		$this->set_prop( 'total_vat', floatval( $vat ) );
+	private function set_total_tax( $tax ) {
+		$this->set_prop( 'total_tax', eaccounting_sanitize_price( $tax ) );
 	}
 
 	/**
@@ -929,8 +958,8 @@ class Invoice extends ResourceModel {
 	 * @param DOUBLE $shipping .
 	 *
 	 */
-	public function set_total_shipping( $shipping ) {
-		$this->set_prop( 'total_shipping', floatval( $shipping ) );
+	private function set_total_shipping( $shipping ) {
+		$this->set_prop( 'total_shipping', eaccounting_sanitize_price( $shipping ) );
 	}
 
 	/**
@@ -941,8 +970,8 @@ class Invoice extends ResourceModel {
 	 * @param DOUBLE $total .
 	 *
 	 */
-	public function set_total( $total ) {
-		$this->set_prop( 'total', floatval( $total ) );
+	private function set_total( $total ) {
+		$this->set_prop( 'total', eaccounting_sanitize_price( $total ) );
 	}
 
 	/**
@@ -1004,7 +1033,7 @@ class Invoice extends ResourceModel {
 	 *
 	 */
 	public function set_currency_rate( $currency_rate ) {
-		$this->set_prop( 'currency_rate', floatval( $currency_rate ) );
+		$this->set_prop( 'currency_rate', eaccounting_clean( $currency_rate ) );
 	}
 
 	/**
@@ -1027,8 +1056,8 @@ class Invoice extends ResourceModel {
 	 * @param string $value New key.
 	 */
 	public function set_key( $value ) {
-		$key = strtolower( eaccounting_clean( $value ) );
-		$this->set_prop( 'key', substr( $key, 0, 30 ) );
+		$key = eaccounting_clean( $value );
+		$this->set_prop( 'key', $key );
 	}
 
 	/**
@@ -1040,7 +1069,7 @@ class Invoice extends ResourceModel {
 	 *
 	 */
 	public function set_discount( $discount ) {
-		$this->discount = floatval( $discount );
+		$this->discount = eaccounting_sanitize_number( $discount, true );
 	}
 
 
@@ -1049,167 +1078,33 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array|LineItem[] $items items.
+	 * @param LineItem[] $value items.
 	 */
-	public function set_items( $items ) {
+	public function set_items( $value ) {
+		// Old items.
+		$old_items = $this->items;
+
 		// Remove existing items.
 		$this->items = array();
 
 		// Ensure that we have an array.
-		if ( ! is_array( $items ) ) {
+		if ( ! is_array( $value ) ) {
 			return;
 		}
 
-		foreach ( $items as $item ) {
+		$new_item_ids = array();
+		foreach ( $value as $item ) {
 			$this->add_item( $item );
-		}
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Additional methods
-	|--------------------------------------------------------------------------
-	|
-	| Does extra thing as helper functions.
-	|
-	*/
-	/**
-	 * Adds an item to the invoice.
-	 *
-	 * @param array $item
-	 *
-	 * @return \WP_Error|Bool
-	 */
-	public function add_item( $args ) {
-		$this->get_items();
-		$args = wp_parse_args( $args, array( 'item_id' => null ) );
-		$item = new Item( $args['item_id'] );
-		if ( ! $item->exists() ) {
-			return false;
-		}
-		if ( $this->get_item( $item->get_id() ) ) {
-			$line_item = $this->get_item( $item->get_id() );
-		} else {
-			$line_item = new LineItem();
+			$new_item_ids[ $item->get_id() ];
 		}
 
-		$default = array(
-			'item_id'       => $item->get_id(),
-			'item_name'     => $item->get_name(),
-			'item_sku'      => $item->get_sku(),
-			'item_price'    => $item->get_sale_price(),
-			'quantity'      => 1,
-			'discount_rate' => $this->discount,
-			'tax_rate'      => $item->get_sales_tax(),
-			'vat_rate'      => $item->get_vat(),
-		);
-		$args    = wp_parse_args( $args, $default );
-		$line_item->set_props( $args );
-
-		// Now prepare
-		$tax_percent         = $line_item->get_tax_rate(); // Tax percentage
-		$vat_percent         = $line_item->get_vat_rate(); // Tax percentage
-		$subtotal            = $line_item->get_item_price() * $line_item->get_quantity();
-		$discount            = $subtotal * ( $line_item->get_discount_rate() / 100 ); //calculated discount for item
-		$discounted_subtotal = abs( $subtotal - $discount );
-		$tax                 = $discounted_subtotal * ( $tax_percent / 100 );
-		$subtotal            = eaccounting_get_price_excluding_tax( $discounted_subtotal, $tax ); // Recalculate subtotal if inclusive
-		$vat                 = $discounted_subtotal * ( $vat_percent / 100 );
-		$total               = abs( $subtotal + $tax + $vat - $discount );
-
-		$line_item->set_total_discount( $discount );
-		$line_item->set_subtotal( $subtotal );
-		$line_item->set_total_tax( $tax );
-		$line_item->set_total_vat( $vat );
-		$line_item->set_total_discount( $discount );
-		$line_item->set_total( $total );
-
-		$this->get_items();
-		$this->items[ $line_item->get_item_id() ] = $line_item;
-
-		return true;
-	}
-
-	/**
-	 * Remove item from the order.
-	 *
-	 * @param int  $item_id Item ID to delete.
-	 *
-	 * @param bool $by_line_id
-	 *
-	 * @return false|void
-	 */
-	public function remove_item( $item_id, $by_line_id = false ) {
-		$item = $this->get_item( $item_id, $by_line_id );
-
-		if ( ! $item ) {
-			return false;
-		}
-
-		// Unset and remove later.
-		$this->items_to_delete[] = $item;
-		unset( $this->items[ $item->get_item_id() ] );
-	}
-
-	/**
-	 * @since 1.1.0
-	 *
-	 * @param      $item_id
-	 *
-	 * @param bool $by_line_id
-	 *
-	 * @return LineItem|int
-	 */
-	public function get_item( $item_id, $by_line_id = false ) {
-		$items = $this->get_items();
-
-		// Search for item id.
-		if ( $items && ! $by_line_id ) {
-			foreach ( $items as $id => $item ) {
-				if ( isset( $items[ $item_id ] ) ) {
-					return $items[ $item_id ];
-				}
+		// Lets remove old items
+		foreach ( $old_items as $old_item ) {
+			if ( ! in_array( $old_item->get_id(), $new_item_ids, true ) ) {
+				$this->items_to_delete[] = $old_item;
 			}
 		}
-
-		// Search for line id.
-		if ( $items && $by_line_id ) {
-			foreach ( $items as $item ) {
-				if ( $item->get_id() === absint( $item_id ) ) {
-					return $item;
-				}
-			}
-		}
-
-		return false;
 	}
-
-	/**
-	 * Calculate.
-	 *
-	 * @since 1.1.0
-	 */
-	public function calculate_total() {
-		$subtotal       = 0;
-		$tax_total      = 0;
-		$vat_total      = 0;
-		$discount_total = 0;
-		$shipping_total = 0;
-		foreach ( $this->get_items() as $item ) {
-			$subtotal       += $item->get_subtotal();
-			$tax_total      += $item->get_total_tax();
-			$vat_total      += $item->get_total_vat();
-			$discount_total += $item->get_total_discount();
-		}
-		$this->set_subtotal( $subtotal );
-		$this->set_total_tax( $tax_total );
-		$this->set_total_vat( $vat_total );
-		$this->set_total_discount( $discount_total );
-		$this->set_total_shipping( $shipping_total );
-		$total = abs( $subtotal + $tax_total + $shipping_total - $discount_total );
-		$this->set_total( $total );
-	}
-
 
 	/*
 	|--------------------------------------------------------------------------
@@ -1232,131 +1127,231 @@ class Invoice extends ResourceModel {
 		return $this->get_status() === eaccounting_clean( $status );
 	}
 
+	/**
+	 * Checks if the invoice is of a given type.
+	 */
+	public function is_type( $type ) {
+		return $this->get_type() === eaccounting_clean( $type );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Additional methods
+	|--------------------------------------------------------------------------
+	|
+	| Does extra thing as helper functions.
+	|
+	*/
 
 	/**
+	 * Adds an item to the invoice.
+	 *
+	 * @param array $item
+	 *
+	 * @return \WP_Error|Bool
+	 */
+	public function add_item( $args ) {
+		$this->get_items();
+		$args = wp_parse_args( $args, array( 'item_id' => null ) );
+		$item = new Item( $args['item_id'] );
+		if ( ! $item->exists() ) {
+			throw new Exception( 'invalid_item_id', __( 'Invalid Item ID', 'wp-ever-accounting' ) );
+		}
+
+		$default = array(
+			'item_id'    => $item->get_id(),
+			'item_name'  => $item->get_name(),
+			'item_sku'   => $item->get_sku(),
+			'item_price' => $item->get_sale_price(),
+			'quantity'   => 1,
+			'discount'   => 0,
+			'taxes'      => $item->get_sales_tax_ids(),
+		);
+
+		$args = wp_parse_args( $args, $default );
+
+		$line_item = new LineItem();
+		$line_item->set_props( $args );
+		$line_item->set_subtotal( $line_item->get_item_price() * $line_item->get_quantity() );
+		$line_item->apply_discount( $this->discount );
+		$discounted_subtotal = $line_item->get_discounted_subtotal();
+
+		if ( eaccounting_tax_enabled() ) {
+			$line_tax_total = 0;
+			$tax_ids        = wp_parse_id_list( $args['tax_ids'] );
+			if ( ! empty( $tax_ids ) ) {
+				foreach ( $tax_ids as $tax_id ) {
+					$tax = new Tax( $tax_id );
+					if ( ! $tax->exists() ) {
+						continue;
+					}
+
+					switch ( $tax->get_type() ) {
+						case 'compound':
+							$tax_amount = ( ( $discounted_subtotal + $line_tax_total ) / 100 ) * $tax->get_rate();
+							break;
+						case 'fixed':
+							$tax_amount = $tax->get_rate() * $line_item->get_quantity();
+							break;
+						default:
+							$tax_amount = ( $discounted_subtotal / 100 ) * $tax->get_rate();
+							break;
+					}
+
+					$line_tax_total += $tax_amount;
+					$line_tax        = new LineTax();
+					$line_tax->set_props(
+						array(
+							'item_id'  => $line_item->get_id(),
+							'tax_id'   => $tax->get_id(),
+							'tax_name' => $tax->get_name(),
+							'tax_rate' => $tax->get_rate(),
+							'total'    => $tax_amount,
+						)
+					);
+
+					$this->taxes[] = $line_tax;
+				}
+			}
+		}
+
+		$line_item->calculate_total();
+		$this->get_items();
+		$this->items[] = $line_item;
+
+		return true;
+	}
+
+	/**
+	 * Remove item from the invoice.
+	 *
+	 * @param int $item_id Item ID to delete.
+	 *
+	 * @return false|void
+	 */
+	public function remove_item( $item_id ) {
+		$item = $this->get_item( $item_id );
+		if ( ! empty( $item ) ) {
+			// Unset and remove later.
+			$this->items_to_delete[] = $item;
+			foreach ( $this->get_items() as $key => $item ) {
+				if ( $item->get_id() === absint( $item_id ) ) {
+					unset( $this->items[ $key ] );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Updates an invoice status.
+	 */
+	public function update_status( $new_status = false, $note = '', $by_user = false ) {
+		// Update the status.
+		$this->set_status( $new_status, $note, $by_user );
+
+		// Save the invoice.
+		return $this->save();
+	}
+
+	/**
+	 * Save data to the database.
+	 *
 	 * @since 1.1.0
 	 * @throws Exception
-	 * @return bool|\Exception|int
+	 * @return int invoice ID
 	 */
 	public function save() {
 		if ( empty( $this->get_currency_code() ) ) {
-			throw new Exception( 'empty_currency_code', __( 'Currency Code must be specified.', 'wp-ever-accounting' ) );
+			throw new Exception( 'empty_prop', __( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
-		$this->calculate_total();
-		$this->maybe_set_currency_rate();
-		$this->maybe_set_customer_info();
-		$this->maybe_set_invoice_number();
-		$this->maybe_set_key();
 
+		if ( empty( $this->get_currency_rate() ) ) {
+			$currency = new Currency( $this->get_currency_code() );
+			$this->set_currency_rate( $currency->get_rate() );
+		}
+
+		$this->maybe_set_paid_at();
+		$this->maybe_set_key();
+		$this->maybe_set_number();
 		parent::save();
 		$this->save_items();
+		$this->save_taxes();
+		$this->clear_cache();
+		$this->status_transition();
 
-		return $this->exists();
+		return $this->get_id();
 	}
 
 	/**
-	 * Set currency rate if not present.
+	 * Maybe set date paid.
+	 *
+	 * Sets the date paid variable when transitioning to the payment complete
+	 * invoice status.
 	 *
 	 * @since 1.1.0
-	 * @return void
 	 */
-	protected function maybe_set_currency_rate() {
-		if ( empty( $this->get_currency_rate() ) && ! empty( $this->get_currency_code() ) ) {
-			$currency = new Currency( $this->get_currency_code() );
-			$this->set_currency_rate( $currency->exists() ? $currency->get_rate() : 1 );
+	public function maybe_set_paid_at() {
+
+		if ( ! $this->get_paid_at( 'edit' ) && $this->is_status( 'paid' ) ) {
+			$this->set_paid_at( current_time( 'mysql' ) );
 		}
 	}
 
 	/**
-	 * Set customer data if not present.
+	 * Set the invoice key.
 	 *
 	 * @since 1.1.0
-	 * @return void
 	 */
-	protected function maybe_set_customer_info() {
-		if ( empty( $this->get_customer_id() ) ) {
-			return;
+	public function maybe_set_key() {
+		if ( empty( $this->get_key() ) ) {
+			$auth_key = defined( 'EA_ORDER_KEY' ) ? EA_ORDER_KEY : '';
+			$type     = $this->get_type();
+			$key      = strtolower(
+				$type . md5( $this->get_id() . date( 'Y-m-d H:i:s' ) . $auth_key . uniqid( 'ea-', true ) )
+			);
+			$this->set_key( $key );
 		}
-
-		$customer = new Customer( $this->get_customer_id() );
-		if ( ! $customer->exists() ) {
-			return;
-		}
-		$info = $this->get_customer_info();
-		unset( $info['id'] );
-		foreach ( $info as $prop => $value ) {
-			if ( ! empty( $value ) ) {
-				continue;
-			}
-			$getter = "get_$prop";
-			$setter = "set_$prop";
-			if ( is_callable( array( $customer, $getter ) ) && is_callable( array( $this, $setter ) ) ) {
-				$this->$setter( $customer->$getter() );
-			}
-		}
-
 	}
 
 	/**
-	 * Generate invoice key.
-	 *
-	 * @since 1.1.0
-	 * @return void
-	 */
-	protected function maybe_set_key() {
-		if ( ! empty( $this->get_key() ) ) {
-			return;
-		}
-		$key = 'ea_' . apply_filters( 'eaccounting_generate_invoice_key', 'invoice_' . wp_generate_password( 19, false ) );
-		$this->set_key( strtolower( $key ) );
-	}
-
-	/**
-	 * Maybe set invoice number.
-	 *
-	 * @since 1.1.0
-	 *
-	 */
-	protected function maybe_set_invoice_number() {
-		if ( ! empty( $this->get_invoice_number() ) ) {
-			return;
-		}
-
-		$this->set_invoice_number( $this->get_next_invoice_number() );
-	}
-
-	/**
-	 * Get next invoice number.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	protected function get_next_invoice_number() {
-		global $wpdb;
-		$max              = (int) $wpdb->get_var( "select max(id) from {$wpdb->prefix}ea_invoices" );
-		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
-		$padd             = eaccounting()->settings->get( 'invoice_digit', 5 );
-		$formatted_number = zeroise( absint( $max + 1 ), $padd );
-
-		return $prefix . $formatted_number;
-	}
-
-	/**
-	 * Save all order items which are part of this order.
+	 * Save all line items which are part of this invoice.
 	 */
 	protected function save_items() {
 		foreach ( $this->items_to_delete as $item ) {
-			$item->delete();
+			if ( $item->exist() ) {
+				$item->delete();
+			}
 		}
-
 		$this->items_to_delete = array();
 
-		$items = array_filter( $this->items );
 		// Add/save items.
-		foreach ( $items as $item ) {
-			$item->set_parent_id( $this->get_id() );
-			$item->set_parent_type( 'invoice' );
-			$item_id = $item->save();
+		foreach ( $this->items as $item ) {
+			$item->set_invoice_id( $this->get_id() );
+			$item->save();
 		}
+
 	}
+
+	/**
+	 * Save all tax items which are part of this invoice.
+	 */
+	protected function save_taxes() {
+		$item_ids = $this->get_item_ids();
+		// Add/save items.
+		foreach ( $this->taxes as $key => $tax ) {
+			if ( ! in_array( $tax->get_item_id(), $item_ids, true ) && $tax->exists() ) {
+				$tax->delete();
+			}
+			unset( $this->taxes[ $key ] );
+		}
+
+		// Add/save items.
+		foreach ( $this->taxes as $item ) {
+			$item->set_order_id( $this->get_id() );
+			$item->save();
+		}
+
+	}
+
+
 }

@@ -130,21 +130,21 @@ class EAccounting_Install {
 		}
 
 		// Check if we are not already running this routine.
-		if ( 'yes' === get_transient( 'eaccounting_installing' ) ) {
-			return;
-		}
+//		if ( 'yes' === get_transient( 'eaccounting_installing' ) ) {
+//			return;
+//		}
 
 		// If we made it till here nothing is running yet, lets set the transient now.
-		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 10 );
+		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
 		self::remove_admin_notices();
 		self::create_tables();
 		self::verify_base_tables();
-		self::create_options();
-		self::create_categories();
-		self::create_currencies();
-		self::create_accounts();
-		self::create_defaults();
+//		self::create_options();
+//		self::create_categories();
+//		self::create_currencies();
+//		self::create_accounts();
+//		self::create_defaults();
 		self::create_roles();
 		self::create_cron_jobs();
 		self::maybe_enable_setup_wizard();
@@ -437,7 +437,7 @@ class EAccounting_Install {
 			`currency_code` varchar(3),
   			`type` VARCHAR(100) DEFAULT NULL COMMENT 'Customer or vendor',
 			`note` TEXT DEFAULT NULL,
-			`attachment` TEXT DEFAULT NULL,
+			`avatar_id` INT(11) DEFAULT NULL,
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
 			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -462,7 +462,7 @@ class EAccounting_Install {
 		  	`description` text,
 	  		`payment_method` VARCHAR(100) DEFAULT NULL,
 		  	`reference` VARCHAR(191) DEFAULT NULL,
-			`attachment` TEXT DEFAULT NULL,
+			`attachment_id` INT(11) DEFAULT NULL,
 		  	`parent_id` INT(11) NOT NULL DEFAULT '0',
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 		    `creator_id` INT(11) DEFAULT NULL,
@@ -489,122 +489,78 @@ class EAccounting_Install {
 
 			"CREATE TABLE {$wpdb->prefix}ea_invoices(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `invoice_number` VARCHAR(191) DEFAULT NULL,
+            `invoice_number` VARCHAR(191) NOT NULL,
             `order_number` VARCHAR(191) DEFAULT NULL,
             `status` VARCHAR(191) DEFAULT NULL,
-            `invoiced_at` DATETIME NULL DEFAULT NULL,
+            `issued_at` DATETIME NULL DEFAULT NULL,
             `due_at` DATETIME NULL DEFAULT NULL,
-            `subtotal` DOUBLE(15,4) NOT NULL,
-            `discount` DOUBLE(15,4) NOT NULL,
-            `tax` DOUBLE(15,4) NOT NULL,
-            `shipping` DOUBLE(15,4) NOT NULL,
-            `total` DOUBLE(15,4) NOT NULL,
-		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
-		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
-  			`category_id` INT(11) NOT NULL,
-  			`contact_id` INT(11) NOT NULL,
-  			`contact_name` VARCHAR(191) DEFAULT NULL,
-  			`contact_email` VARCHAR(191) DEFAULT NULL,
-  			`contact_tax_number` VARCHAR(191) DEFAULT NULL,
-  			`contact_phone` VARCHAR(191) DEFAULT NULL,
-  			`contact_address` VARCHAR(191) DEFAULT NULL,
+            `paid_at` DATETIME NULL DEFAULT NULL,
+            `category_id` INT(11) NOT NULL,
+  			`customer_id` INT(11) NOT NULL,
+  			`name` VARCHAR(191) DEFAULT NULL,
+  			`phone` VARCHAR(20) DEFAULT NULL,
+  			`email` VARCHAR(100) DEFAULT NULL,
+  			`tax_number` VARCHAR(50) DEFAULT NULL,
+  			`postcode` VARCHAR(30) DEFAULT NULL,
+  			`address` VARCHAR(191) DEFAULT NULL,
+  			`country` VARCHAR(10) DEFAULT NULL,
+            `subtotal` DOUBLE(15,4) DEFAULT 0,
+            `total_discount` DOUBLE(15,4) DEFAULT 0,
+            `total_tax` DOUBLE(15,4) DEFAULT 0,
+            `total_vat` DOUBLE(15,4) DEFAULT 0,
+            `total_shipping` DOUBLE(15,4) DEFAULT 0,
+            `total` DOUBLE(15,4) DEFAULT 0,
   			`note` TEXT DEFAULT NULL,
   			`footer` TEXT DEFAULT NULL,
-  			`attachment` TEXT DEFAULT NULL,
-  			`parent_id` INT(11) NOT NULL DEFAULT '0',
+			`attachment_id` INT(11) DEFAULT NULL,
+		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
+		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
+  			`key` VARCHAR(30) DEFAULT NULL,
+  			`parent_id` INT(11) DEFAULT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `contact_id` (`contact_id`),
-		    KEY `category_id` (`category_id`)
+		    KEY `customer_id` (`customer_id`),
+		    KEY `category_id` (`category_id`),
+		    KEY `total` (`total`),
+		    UNIQUE KEY (`invoice_number`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_invoice_items(
+			"CREATE TABLE {$wpdb->prefix}ea_line_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`invoice_id` INT(11) NOT NULL,
-  			`item_id` INT(11) NOT NULL,
-  			`name` VARCHAR(191) NOT NULL,
-  			`sku` VARCHAR(191) DEFAULT NULL,
-  			`quantity` double(7,2) NOT NULL,
-  			`price` double(15,4) NOT NULL,
+  			`parent_id` INT(11) NOT NULL,
+  			`parent_type` VARCHAR(20) DEFAULT NULL,
+  			`item_id` INT(11) DEFAULT NULL,
+  			`item_name` VARCHAR(191) NOT NULL,
+  			`item_sku` VARCHAR(100) NOT NULL,
+  			`item_price` double(15,4) NOT NULL,
+  			`quantity` double(7,2) NOT NULL DEFAULT 1.00,
+  			`tax_rate` double(15,4) NOT NULL COMMENT 'Tax Percentage',
+  			`vat_rate` double(15,4) NOT NULL COMMENT 'Vat Percentage',
+  			`discount_rate` double(15,4) NOT NULL COMMENT 'Discount Percentage',
+  			`subtotal` double(15,4) NOT NULL,
+  			`total_tax` double(15,4) NOT NULL DEFAULT '0.0000',
+  			`total_vat` double(15,4) NOT NULL DEFAULT '0.0000',
+  			`total_discount` double(15,4) NOT NULL DEFAULT '0.0000',
   			`total` double(15,4) NOT NULL,
-  			`tax_id` INT(11) NOT NULL,
-  			`tax_name` VARCHAR(191) NOT NULL,
-  			`tax` double(15,4) NOT NULL DEFAULT '0.0000',
+  			`extra` longtext DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `invoice_id` (`invoice_id`)
+		    KEY `parent_id` (`parent_id`),
+		    KEY `parent_type` (`parent_type`),
+		    KEY `item_id` (`item_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_invoice_histories(
+			"CREATE TABLE {$wpdb->prefix}ea_notes(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`invoice_id` INT(11) NOT NULL,
-  			`status` VARCHAR(191) DEFAULT NULL,
+  			`parent_id` INT(11) NOT NULL,
+  			`parent_type` VARCHAR(20) NOT NULL,
   			`notify` tinyint(1) NOT NULL,
-  			`description` TEXT DEFAULT NULL,
+  			`content` TEXT DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `invoice_id` (`invoice_id`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_bills(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `bill_number` VARCHAR(191) DEFAULT NULL,
-            `order_number` VARCHAR(191) DEFAULT NULL,
-            `status` VARCHAR(191) DEFAULT NULL,
-            `bill_at` DATETIME NULL DEFAULT NULL,
-            `due_at` DATETIME NULL DEFAULT NULL,
-            `subtotal` DOUBLE(15,4) NOT NULL,
-            `discount` DOUBLE(15,4) NOT NULL,
-            `tax` DOUBLE(15,4) NOT NULL,
-            `shipping` DOUBLE(15,4) NOT NULL,
-            `total` DOUBLE(15,4) NOT NULL,
-		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
-		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
-  			`category_id` INT(11) NOT NULL,
-  			`contact_id` INT(11) NOT NULL,
-  			`contact_name` VARCHAR(191) DEFAULT NULL,
-  			`contact_email` VARCHAR(191) DEFAULT NULL,
-  			`contact_tax_number` VARCHAR(191) DEFAULT NULL,
-  			`contact_phone` VARCHAR(191) DEFAULT NULL,
-  			`contact_address` VARCHAR(191) DEFAULT NULL,
-  			`note` TEXT DEFAULT NULL,
-  			`footer` TEXT DEFAULT NULL,
-  			`attachment` TEXT DEFAULT NULL,
-  			`parent_id` INT(11) NOT NULL DEFAULT '0',
-  			`creator_id` INT(11) DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `contact_id` (`contact_id`),
-		    KEY `category_id` (`category_id`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_bill_items(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`bill_id` INT(11) NOT NULL,
-  			`item_id` INT(11) NOT NULL,
-  			`name` VARCHAR(191) NOT NULL,
-  			`sku` VARCHAR(191) DEFAULT NULL,
-  			`quantity` double(7,2) NOT NULL,
-  			`price` double(15,4) NOT NULL,
-  			`total` double(15,4) NOT NULL,
-  			`tax_id` INT(11) NOT NULL,
-  			`tax_name` VARCHAR(191) NOT NULL,
-  			`tax` double(15,4) NOT NULL DEFAULT '0.0000',
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `bill_id` (`bill_id`)
-            ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_bill_histories(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`bill_id` INT(11) NOT NULL,
-  			`status` VARCHAR(191) DEFAULT NULL,
-  			`notify` tinyint(1) NOT NULL,
-  			`description` TEXT DEFAULT NULL,
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `bill_id` (`bill_id`)
+		    KEY `parent_id` (`parent_id`),
+		    KEY `parent_type` (`parent_type`)
             ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_items(
@@ -617,7 +573,9 @@ class EAccounting_Install {
   			`purchase_price` double(15,4) NOT NULL,
   			`quantity` int(11) NOT NULL DEFAULT '1',
   			`category_id` int(11) DEFAULT NULL,
-  			`tax_id` int(11) DEFAULT NULL,
+  			`sales_tax` double(15,4) DEFAULT NULL,
+  			`purchase_tax` double(15,4) DEFAULT NULL,
+  			`vat` double(15,4) DEFAULT NULL,
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
 			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -628,16 +586,6 @@ class EAccounting_Install {
 		    KEY `quantity` (`quantity`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_taxes(
-            `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`name` VARCHAR(191) NOT NULL,
-  			`rate` double(15,4) NOT NULL,
-  			`type` VARCHAR(30) NOT NULL,
-  			`enabled` tinyint(1) NOT NULL DEFAULT '1',
-		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `rate` (`rate`)
-            ) $collate",
 		);
 
 		foreach ( $tables as $table ) {
@@ -892,7 +840,7 @@ class EAccounting_Install {
 	 * @return boolean
 	 */
 	public static function is_new_install() {
-		$transaction_count = \EverAccounting\Transactions\query()->count( 0 );
+		$transaction_count = eaccounting_get_transactions( array( 'count_total' => true ) );
 
 		return is_null( get_option( 'eaccounting_version', null ) ) || ( 0 === $transaction_count );
 	}
