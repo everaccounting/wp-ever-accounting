@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Core\Exception;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -122,6 +124,7 @@ class Ajax {
 			'edit_invoice',
 			'edit_item',
 			'edit_tax',
+			'edit_api_key',
 			'upload_files',
 		);
 
@@ -215,8 +218,8 @@ class Ajax {
 				/**
 				 * Hook into this for any custom object handling
 				 *
-				 * @var int     $object_id ID of the object.
-				 * @var boolean $enabled   status of the object.
+				 * @var int $object_id ID of the object.
+				 * @var boolean $enabled status of the object.
 				 */
 				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
 		}
@@ -442,8 +445,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating currencies.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_currency() {
 		check_ajax_referer( 'ea_edit_currency', '_wpnonce' );
@@ -480,8 +483,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_account() {
 		check_ajax_referer( 'ea_edit_account', '_wpnonce' );
@@ -519,8 +522,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function get_account() {
 		check_ajax_referer( 'ea_get_account', '_wpnonce' );
@@ -540,8 +543,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
@@ -578,8 +581,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_contact() {
 		self::verify_nonce( 'ea_edit_contact' );
@@ -617,8 +620,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating payment.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
@@ -656,8 +659,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating revenue.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
@@ -695,8 +698,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating transfer.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
@@ -734,8 +737,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating invoice.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_invoice() {
 		self::verify_nonce( 'ea_edit_invoice' );
@@ -772,8 +775,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating item.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_item() {
 		self::verify_nonce( 'ea_edit_item' );
@@ -810,8 +813,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating tax.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_tax() {
 		self::verify_nonce( 'ea_edit_tax' );
@@ -845,6 +848,100 @@ class Ajax {
 		wp_die();
 	}
 
+	/**
+	 * Handle ajax action of creating/updating api key.
+	 *
+	 * @return void
+	 * @since 1.1.0
+	 */
+	public static function edit_api_key() {
+		global $wpdb;
+		self::verify_nonce( 'ea_edit_api_key' );
+		self::check_permission( 'manage_eaccounting' );
+		error_log( print_r( $_REQUEST, true ) );
+		$posted = eaccounting_clean( $_REQUEST );
+		if ( empty( $_REQUEST['user_id'] ) ) {
+			throw new Exception( 'empty_prop', __( 'User is required', 'wp-ever-accounting' ) );
+		}
+		if ( empty( $_REQUEST['permission'] ) ) {
+			throw new Exception( 'empty_prop', __( 'Permission is required', 'wp-ever-accounting' ) );
+		}
+
+		$key_id      = isset( $_REQUEST['id'] ) ? absint( $_REQUEST['id'] ) : 0;
+		$description = sanitize_text_field( wp_unslash( $_REQUEST['description'] ) );
+		$permission  = ( in_array( wp_unslash( $_REQUEST['permission'] ), array( 'read', 'write', 'read_write' ), true ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['permission'] ) ) : 'read';
+		$user_id     = absint( $_REQUEST['user_id'] );
+
+		//check if current user can edit other users
+		if ( $user_id && ! current_user_can( 'edit_user', $user_id ) ) {
+			if ( get_current_user_id() !== $user_id ) {
+				throw new \Exception( __( 'You do not have enough permission to assign API Keys to the selected user.', 'wp-ever-accounting' ) );
+			}
+		}
+
+		if ( 0 < $key_id ) {
+			$data = array(
+				'user_id'     => $user_id,
+				'description' => $description,
+				'permission'  => $permission,
+			);
+			$wpdb->update( $wpdb->prefix . 'ea_api_keys', $data, array( 'id' => $key_id ), array(
+				'%d',
+				'%s',
+				'%s'
+			),
+				array( '%d' )
+			);
+			$response['item']       = $data;
+			$response['api_key']    = '';
+			$response['api_secret'] = '';
+			$response['message']    = __( 'Api Key updated successfully!', 'wp-ever-accounting' );
+		} else {
+			$api_key    = 'ea_ak_' . ea_rand_hash();
+			$api_secret = 'ea_as_' . ea_rand_hash();
+
+			$data = array(
+				'user_id'       => $user_id,
+				'description'   => $description,
+				'permission'    => $permission,
+				'api_key'       => ea_api_hash( $api_key ),
+				'api_secret'    => $api_secret,
+				'truncated_key' => substr( $api_key, - 7 )
+			);
+			error_log(print_r($data,true));
+			$wpdb->insert( $wpdb->prefix . 'ea_api_keys', $data, array(
+				'%d',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+				'%s',
+			) );
+			$id = $wpdb->insert_id;
+			if(!empty($id)){
+				return;
+			}
+			$response['item']       = $data;
+			$response['api_key']    = $api_key;
+			$response['api_secret'] = $api_secret;
+			$response['message']    = __( 'Api Key created successfully!', 'wp-ever-accounting' );
+
+		}
+		wp_send_json_success(
+			array(
+				'message'    => $response['message'],
+				'redirect'   => '',
+				'item'       => $response['item'],
+				'api_key'    => $response['api_key'],
+				'api_secret' => $response['api_secret']
+			)
+		);
+
+		wp_die();
+
+	}
+
+
 	public static function upload_files() {
 		self::verify_nonce( 'eaccounting_file_upload' );
 		self::check_permission( 'manage_eaccounting' );
@@ -873,11 +970,11 @@ class Ajax {
 	/**
 	 * Verify our ajax nonce.
 	 *
+	 * @param $action
+	 *
+	 * @param $action
+	 *
 	 * @since 1.0.2
-	 *
-	 * @param $action
-	 *
-	 * @param $action
 	 *
 	 */
 	public static function verify_nonce( $action ) {

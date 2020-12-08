@@ -2254,3 +2254,47 @@ function eaccounting_get_countries() {
 
 	return apply_filters( 'eaccounting_countries', $countries );
 }
+
+/**
+ * Get all the admin users.
+ *
+ * @since 1.1.0
+ * @return array
+ */
+function eaccoutning_get_admin_users() {
+	$admins = get_users( [ 'role__in' => [ 'administrator' ] ] );
+	$users = array();
+	if(is_array($admins) && count($admins)){
+		foreach($admins as $single){
+			$users = array(
+				$single->ID => $single->user_nicename.'('. "#".$single->ID.'&ndash;'.$single->user_email.')',
+			);
+		}
+	}
+	return apply_filters( 'eaccounting_api_keys_users', $users );
+}
+
+/**
+ * Generate a random hash.
+ *
+ * @since  1.1.0
+ * @return string
+ */
+function ea_rand_hash() {
+	if ( ! function_exists( 'openssl_random_pseudo_bytes' ) ) {
+		return sha1( wp_rand() );
+	}
+
+	return bin2hex( openssl_random_pseudo_bytes( 20 ) ); // @codingStandardsIgnoreLine
+}
+
+/**
+ * EA API - Hash.
+ *
+ * @since  1.1.0
+ * @param  string $data Message to be hashed.
+ * @return string
+ */
+function ea_api_hash( $data ) {
+	return hash_hmac( 'sha256', $data, 'ea-api' );
+}

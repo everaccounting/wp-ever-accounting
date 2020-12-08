@@ -588,7 +588,7 @@ jQuery(function ($) {
 		}
 	}
 
-<<<<<<< HEAD
+
 	//category form
 	var eaccounting_category_form = {
 		init: function () {
@@ -848,11 +848,44 @@ jQuery(function ($) {
 			});
 		}
 	}
-=======
->>>>>>> 3f45712b898e7c37e33b5aa763ca829eebb6ae7a
+	var eaccounting_api_key_form = {
+		init: function () {
+			$('#ea-api-key-form').on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-api-key-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-api-key-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_api_key_form.block();
+			wp.ajax.send({
+				data: $('#ea-api-key-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_api_key_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					$.eaccounting_redirect(res);
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_api_key_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
 
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
+	eaccounting_api_key_form.init();
 
 
 });

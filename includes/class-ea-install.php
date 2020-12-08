@@ -586,7 +586,7 @@ class EAccounting_Install {
 		    KEY `quantity` (`quantity`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_api_keys (
+			"CREATE TABLE {$wpdb->prefix}ea_api_keys(
 		    id BIGINT UNSIGNED NOT NULL auto_increment,
 		  	user_id BIGINT UNSIGNED NOT NULL,
 		  	description varchar(200) NULL,
