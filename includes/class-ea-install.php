@@ -586,7 +586,20 @@ class EAccounting_Install {
 		    KEY `quantity` (`quantity`)
             ) $collate",
 
-		);
+			"CREATE TABLE {$wpdb->prefix}ea_api_keys (
+		    id BIGINT UNSIGNED NOT NULL auto_increment,
+		  	user_id BIGINT UNSIGNED NOT NULL,
+		  	description varchar(200) NULL,
+		  	permission varchar(10) NOT NULL,
+		  	api_key char(64) NOT NULL,
+		  	api_secret char(43) NOT NULL,
+		  	nonces longtext NULL,
+		  	truncated_key char(7) NOT NULL,
+		  	last_access datetime NULL default null,
+		  	PRIMARY KEY  (id),
+		  	KEY `key` (`key`),
+		  	KEY `secret` (`secret`)
+		) $collate");
 
 		foreach ( $tables as $table ) {
 			dbDelta( $table );

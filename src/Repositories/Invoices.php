@@ -117,4 +117,72 @@ class Invoices extends ResourceRepository {
 		$wpdb->delete( $wpdb->prefix . LineItems::TABLE, array( 'parent_id' => $invoice->get_id() ) );
 	}
 
+
+	/**
+	 * Get invoices collection.
+	 *
+	 * @param array $args
+	 * @since 1.1.0
+	 *
+	 * @return array|false|int|mixed|object|null
+	 */
+	public function get_invoices( $args = array() ) {
+		global $wpdb;
+		// Prepare args.
+		$args = wp_parse_args(
+			$args,
+			array(
+				'type'             => '',
+				'include'          => '',
+				'search'           => '',
+				'search_cols'      => array(),
+				'orderby_cols'     => array(),
+				'exclude_transfer' => true,
+				'fields'           => '*',
+				'orderby'          => 'id',
+				'order'            => 'ASC',
+				'number'           => 20,
+				'offset'           => 0,
+				'paged'            => 1,
+				'return'           => 'objects',
+				'count_total'      => false,
+			)
+		);
+
+		$qv            = apply_filters( 'eaccounting_get_invoices_args', $args );
+		$query_fields  = eaccounting_prepare_query_fields( $qv, $this->table );
+		$query_from    = eaccounting_prepare_query_from( $this->table );
+		$query_where   = 'WHERE 1=1';
+		$query_where  .= eaccounting_prepare_query_where( $qv, $this->table );
+		$query_orderby = eaccounting_prepare_query_orderby( $qv, $this->table );
+		$query_limit   = eaccounting_prepare_query_limit( $qv );
+		$count_total   = true === $qv['count_total'];
+		$cache_key     = md5( serialize( $qv ) );
+		$results       = wp_cache_get( $cache_key, 'ea_invoices' );
+		$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+		if ( false === $results ) {
+			if ( $count_total ) {
+				$results = (int) $wpdb->get_var( $request );
+				wp_cache_set( $cache_key, $results, 'ea_invoices' );
+			} else {
+				$results = $wpdb->get_results( $request );
+				if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+					foreach ( $results as $key => $item ) {
+						wp_cache_set( $item->id, $item, 'ea_invoices' );
+						wp_cache_set( "key-{$item->key}", $item->id, 'ea_invoices' );
+						wp_cache_set( "invoice_number-{$item->invoice_number}", $item->id, 'ea_invoices' );
+					}
+				}
+				wp_cache_set( $cache_key, $results, 'ea_invoices' );
+			}
+		}
+
+		if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+			$results = array_map( 'eaccounting_get_invoice', $results );
+		}
+
+		return $results;
+	}
+
 }

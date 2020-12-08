@@ -148,7 +148,7 @@ class Invoice extends ResourceModel {
 	public static function get_id_by( $value, $field = 'key' ) {
 		global $wpdb;
 		// Valid fields.
-		$fields = array( 'key', 'number', 'order_number' );
+		$fields = array( 'key', 'invoice_number', 'order_number' );
 		// Ensure a field has been passed.
 		if ( empty( $field ) || ! in_array( $field, $fields, true ) ) {
 			return 0;
@@ -497,7 +497,7 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return float
 	 */
-	public function get_total_shipping( $context = 'view' ) {
+	public function get_total_shipping( $context = 'edit' ) {
 		return (float) $this->get_prop( 'total_shipping', $context );
 	}
 
@@ -507,7 +507,7 @@ class Invoice extends ResourceModel {
 	 * @since 1.1.0
 	 * @return float
 	 */
-	public function get_total( $context ) {
+	public function get_total( $context = 'edit' ) {
 		$total = (float) $this->get_prop( 'total', $context );
 		if ( 0 > $total ) {
 			$total = 0;
@@ -613,10 +613,12 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since 1.1.0
 	 *
+	 * @param bool $force
+	 *
 	 * @return LineItem[]
 	 */
-	public function get_items() {
-		if ( empty( $this->items ) && $this->exists() ) {
+	public function get_items( $force = true ) {
+		if ( $force && $this->exists() ) {
 			$this->items = $this->repository->read_items( $this );
 		}
 
@@ -631,7 +633,7 @@ class Invoice extends ResourceModel {
 	 */
 	public function get_item_ids() {
 		$ids = array();
-		foreach ( $this->get_items() as $item ) {
+		foreach ( $this->get_items( true ) as $item ) {
 			$ids[] = $item->get_id();
 		}
 
@@ -1063,6 +1065,7 @@ class Invoice extends ResourceModel {
 		foreach ( $items as $item ) {
 			$this->add_item( $item );
 		}
+
 	}
 
 	/*
@@ -1081,7 +1084,6 @@ class Invoice extends ResourceModel {
 	 * @return \WP_Error|Bool
 	 */
 	public function add_item( $args ) {
-		$this->get_items();
 		$args = wp_parse_args( $args, array( 'item_id' => null ) );
 		$item = new Item( $args['item_id'] );
 		if ( ! $item->exists() ) {
@@ -1161,7 +1163,7 @@ class Invoice extends ResourceModel {
 	 * @return LineItem|int
 	 */
 	public function get_item( $item_id, $by_line_id = false ) {
-		$items = $this->get_items();
+		$items = $this->get_items( true );
 
 		// Search for item id.
 		if ( $items && ! $by_line_id ) {
@@ -1346,7 +1348,9 @@ class Invoice extends ResourceModel {
 	 */
 	protected function save_items() {
 		foreach ( $this->items_to_delete as $item ) {
-			$item->delete();
+			if ( $item->exists() ) {
+				$item->delete();
+			}
 		}
 
 		$this->items_to_delete = array();

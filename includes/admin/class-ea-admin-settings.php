@@ -39,81 +39,6 @@ class Settings {
 		add_filter( 'eaccounting_settings_sanitize_number', 'absint' );
 		add_filter( 'eaccounting_settings_sanitize_rich_editor', 'wp_kses_post' );
 	}
-
-	/**
-	 * Add all settings sections and fields
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	function register_settings() {
-		$all_sections       = self::get_sections();
-		$all_settings       = $this->get_registered_settings();
-		$registered_options = array();
-		foreach ( $all_sections as $tab_id => $sections ) {
-			if ( ! is_array( $sections ) || empty( $sections ) ) {
-				$sections = array( 'main' => '' );
-			}
-
-			foreach ( $sections as $section_id => $section ) {
-				// Register the setting section.
-				add_settings_section(
-					$section_id,
-					__return_null(),
-					'__return_false',
-					'eaccounting_settings_' . $tab_id
-				);
-
-				$settings = array_key_exists( $tab_id, $all_settings ) ? wp_list_filter( $all_settings[ $tab_id ], array( 'section' => $section_id ) ) : array();
-
-				foreach ( $settings as $id => $option ) {
-					//since we are using single option so multiple item with same id is not allowed.
-					if ( in_array( $id, $registered_options, true ) ) {
-						continue;
-					}
-
-					$title    = isset( $option['name'] ) ? $option['name'] : '';
-					$callback = ! empty( $option['callback'] ) ? $option['callback'] : array( $this, $option['type'] . '_callback' );
-					$tip      = isset( $option['tip'] ) ? eaccounting_help_tip( $option['tip'] ) : '';
-
-					if ( ! in_array( $option['type'], array( 'checkbox', 'multicheck', 'radio' ), true ) ) {
-						$title = sprintf( '<label for="eaccounting_settings[%1$s]">%2$s</label>%3$s', $id, $title, $tip );
-					}
-
-					add_settings_field(
-						'eaccounting_settings[' . $id . ']',
-						$title,
-						is_callable( $callback ) ? $callback : array( $this, 'missing_callback' ),
-						'eaccounting_settings_' . $tab_id,
-						$section_id,
-						array(
-							'id'          => $id,
-							'section'     => $section_id,
-							'desc'        => ! empty( $option['desc'] ) ? $option['desc'] : '',
-							'name'        => isset( $option['name'] ) ? $option['name'] : null,
-							'size'        => isset( $option['size'] ) ? $option['size'] : null,
-							'max'         => isset( $option['max'] ) ? $option['max'] : null,
-							'min'         => isset( $option['min'] ) ? $option['min'] : null,
-							'step'        => isset( $option['step'] ) ? $option['step'] : null,
-							'options'     => isset( $option['options'] ) ? $option['options'] : array(),
-							'attr'        => isset( $option['attr'] ) ? $option['attr'] : array(),
-							'std'         => isset( $option['std'] ) ? $option['std'] : '',
-							'disabled'    => isset( $option['disabled'] ) ? $option['disabled'] : '',
-							'class'       => isset( $option['wrap_class'] ) ? $option['wrap_class'] : '',
-							'input_class' => isset( $option['class'] ) ? $option['class'] : '',
-							'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : '',
-							'style'       => isset( $option['style'] ) ? $option['style'] : '',
-						)
-					);
-
-				}
-			}
-		}
-
-		// Creates our settings in the options table
-		register_setting( 'eaccounting_settings', 'eaccounting_settings', array( $this, 'sanitize_settings' ) );
-	}
-
 	/**
 	 * Retrieve the array of plugin settings
 	 *
@@ -134,12 +59,12 @@ class Settings {
 			'general' => apply_filters(
 				'eaccounting_settings_general',
 				array(
-					'company_settings'           => array(
+					'company_settings'       => array(
 						'name' => '<strong>' . __( 'Company Settings', 'wp-ever-accounting' ) . '</strong>',
 						'desc' => '',
 						'type' => 'header',
 					),
-					'company_name'               => array(
+					'company_name'           => array(
 						'name' => __( 'Name', 'wp-ever-accounting' ),
 						'type' => 'text',
 						'tip'  => 'XYZ Company',
@@ -148,58 +73,58 @@ class Settings {
 							'placeholder' => __( 'XYZ Company', 'wp-ever-accounting' ),
 						),
 					),
-					'company_email'              => array(
+					'company_email'          => array(
 						'name'              => __( 'Email', 'wp-ever-accounting' ),
 						'type'              => 'text',
 						'std'               => get_option( 'admin_email' ),
 						'sanitize_callback' => 'sanitize_email',
 					),
-					'company_phone'              => array(
+					'company_phone'          => array(
 						'name' => __( 'Phone Number', 'wp-ever-accounting' ),
 						'type' => 'text',
 					),
-					'company_tax_number'         => array(
+					'company_tax_number'     => array(
 						'name' => __( 'Tax Number', 'wp-ever-accounting' ),
 						'type' => 'text',
 					),
-					'company_city'               => array(
+					'company_city'           => array(
 						'name' => __( 'City', 'wp-ever-accounting' ),
 						'type' => 'text',
 					),
-					'company_address'            => array(
+					'company_address'        => array(
 						'name' => __( 'Address', 'wp-ever-accounting' ),
 						'type' => 'textarea',
 					),
-					'company_state'              => array(
+					'company_state'          => array(
 						'name' => __( 'State', 'wp-ever-accounting' ),
 						'type' => 'text',
 					),
-					'company_postcode'           => array(
+					'company_postcode'       => array(
 						'name' => __( 'Postcode', 'wp-ever-accounting' ),
 						'type' => 'text',
 					),
-					'company_country'            => array(
+					'company_country'        => array(
 						'name'    => __( 'Country', 'wp-ever-accounting' ),
 						'type'    => 'select',
 						'class'   => 'ea-select2',
 						'options' => array( '' => __( 'Select Country', 'wp-ever-accounting' ) ) + eaccounting_get_countries(),
 					),
-					'company_logo'               => array(
+					'company_logo'           => array(
 						'name' => __( 'Logo', 'wp-ever-accounting' ),
 						'type' => 'upload',
 					),
-					'local_settings'             => array(
+					'local_settings'         => array(
 						'name' => '<strong>' . __( 'Localisation Settings', 'wp-ever-accounting' ) . '</strong>',
 						'desc' => '',
 						'type' => 'header',
 					),
-					'financial_year_start'       => array(
+					'financial_year_start'   => array(
 						'name'  => __( 'Financial Year Start', 'wp-ever-accounting' ),
 						'std'   => '01-01',
 						'class' => 'ea-financial-start',
 						'type'  => 'text',
 					),
-					'default_settings'           => array(
+					'default_settings'       => array(
 						'name' => '<strong>' . __( 'Default Settings', 'wp-ever-accounting' ) . '</strong>',
 						'desc' => '',
 						'type' => 'header',
@@ -224,115 +149,115 @@ class Settings {
 					//                          'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
 					//                      ),
 					//                  ),
-						'default_payment_method' => array(
-							'name'    => __( 'Payment Method', 'wp-ever-accounting' ),
-							'std'     => 'cash',
-							'type'    => 'select',
-							'options' => eaccounting_get_payment_methods(),
-						),
-					'invoice_prefix'             => array(
+					'default_payment_method' => array(
+						'name'    => __( 'Payment Method', 'wp-ever-accounting' ),
+						'std'     => 'cash',
+						'type'    => 'select',
+						'options' => eaccounting_get_payment_methods(),
+					),
+					'invoice_prefix'         => array(
 						'name'    => __( 'Invoice Prefix', 'wp-ever-accounting' ),
 						'std'     => 'INV-',
 						'type'    => 'text',
 						'section' => 'invoice',
 					),
-					'invoice_digit'              => array(
+					'invoice_digit'          => array(
 						'name'    => __( 'Minimum Digits', 'wp-ever-accounting' ),
 						'std'     => '5',
 						'type'    => 'number',
 						'section' => 'invoice',
 					),
-					'invoice_title'              => array(
+					'invoice_title'          => array(
 						'name'    => __( 'Invoice Title', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'text',
 						'section' => 'invoice',
 					),
-					'invoice_subheading'         => array(
+					'invoice_subheading'     => array(
 						'name'    => __( 'Invoice Subheading', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'text',
 						'section' => 'invoice',
 					),
-					'invoice_notes'              => array(
+					'invoice_notes'          => array(
 						'name'    => __( 'Invoice Notes', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'textarea',
 						'section' => 'invoice',
 					),
-					'invoice_footer'             => array(
+					'invoice_footer'         => array(
 						'name'    => __( 'Invoice Footer', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'textarea',
 						'section' => 'invoice',
 					),
-					'invoice_item_label'         => array(
+					'invoice_item_label'     => array(
 						'name'    => __( 'Item Label', 'wp-ever-accounting' ),
 						'std'     => __( 'Item', 'wp-ever-accounting' ),
 						'type'    => 'text',
 						'section' => 'invoice',
 					),
-					'invoice_price_label'        => array(
+					'invoice_price_label'    => array(
 						'name'    => __( 'Price Label', 'wp-ever-accounting' ),
 						'std'     => __( 'Price', 'wp-ever-accounting' ),
 						'type'    => 'text',
 						'section' => 'invoice',
 					),
-					'invoice_quantity_label'     => array(
+					'invoice_quantity_label' => array(
 						'name'    => __( 'Quantity Label', 'wp-ever-accounting' ),
 						'std'     => __( 'Quantity', 'wp-ever-accounting' ),
 						'type'    => 'text',
 						'section' => 'invoice',
 					),
-					'bill_prefix'                => array(
+					'bill_prefix'            => array(
 						'name'    => __( 'Bill Prefix', 'wp-ever-accounting' ),
 						'std'     => 'BILL-',
 						'type'    => 'text',
 						'section' => 'bill',
 					),
-					'bill_digit'                 => array(
+					'bill_digit'             => array(
 						'name'    => __( 'Bill Digits', 'wp-ever-accounting' ),
 						'std'     => '5',
 						'type'    => 'number',
 						'section' => 'bill',
 					),
-					'bill_title'                 => array(
+					'bill_title'             => array(
 						'name'    => __( 'Bill Title', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'text',
 						'section' => 'bill',
 					),
-					'bill_subheading'            => array(
+					'bill_subheading'        => array(
 						'name'    => __( 'Bill Subheading', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'text',
 						'section' => 'bill',
 					),
-					'bill_notes'                 => array(
+					'bill_notes'             => array(
 						'name'    => __( 'Bill Notes', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'textarea',
 						'section' => 'bill',
 					),
-					'bill_footer'                => array(
+					'bill_footer'            => array(
 						'name'    => __( 'Bill Footer', 'wp-ever-accounting' ),
 						'std'     => '',
 						'type'    => 'textarea',
 						'section' => 'bill',
 					),
-					'bill_item_label'            => array(
+					'bill_item_label'        => array(
 						'name'    => __( 'Item Label', 'wp-ever-accounting' ),
 						'std'     => __( 'Item', 'wp-ever-accounting' ),
 						'type'    => 'text',
 						'section' => 'bill',
 					),
-					'bill_price_label'           => array(
+					'bill_price_label'       => array(
 						'name'    => __( 'Price Label', 'wp-ever-accounting' ),
 						'std'     => __( 'Price', 'wp-ever-accounting' ),
 						'type'    => 'text',
 						'section' => 'bill',
 					),
-					'bill_quantity_label'        => array(
+					'bill_quantity_label'    => array(
 						'name'    => __( 'Quantity Label', 'wp-ever-accounting' ),
 						'std'     => __( 'Quantity', 'wp-ever-accounting' ),
 						'type'    => 'text',
@@ -395,6 +320,130 @@ class Settings {
 		 * @param array $settings Array of default settings.
 		 */
 		return apply_filters( 'eaccounting_settings', $settings );
+	}
+
+	/**
+	 * Get settings tabs.
+	 *
+	 * @since 1.1.0
+	 * @return array list of tabs.
+	 */
+	protected static function get_tabs() {
+		return apply_filters(
+			'eaccounting_settings_tabs',
+			array(
+				'general'    => __( 'General', 'wp-ever-accounting' ),
+				'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+				'categories' => __( 'Categories', 'wp-ever-accounting' ),
+				'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
+				'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+				'misc'       => __( 'Misc', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/**
+	 * Get settings tabs.
+	 *
+	 * @since 1.1.0
+	 * @return array list of sections.
+	 */
+	protected static function get_sections() {
+		$sections = array();
+		$defaults = array(
+			'general'  => array(
+				'main'    => __( 'General Settings', 'wp-ever-accounting' ),
+				'invoice' => __( 'Invoice Settings', 'wp-ever-accounting' ),
+				'bill'    => __( 'Bill Settings', 'wp-ever-accounting' ),
+			),
+			'taxes'    => array(
+				'main'  => __( 'Tax Settings', 'wp-ever-accounting' ),
+				'rates' => __( 'Tax Rates', 'wp-ever-accounting' ),
+			),
+			'advanced' => array(
+				'keys' => __( 'REST API', 'wp-ever-accounting' ),
+			),
+		);
+
+		foreach ( self::get_tabs() as $tab_id => $tab_label ) {
+			$sections[ $tab_id ] = apply_filters( 'eaccounting_settings_tab_sections_' . $tab_id, isset( $defaults[ $tab_id ] ) ? $defaults[ $tab_id ] : array( 'main' => '' ) );
+		}
+
+		return $sections;
+	}
+
+	/**
+	 * Add all settings sections and fields
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+	function register_settings() {
+		$all_sections       = self::get_sections();
+		$all_settings       = $this->get_registered_settings();
+		$registered_options = array();
+		foreach ( $all_sections as $tab_id => $sections ) {
+			if ( ! is_array( $sections ) || empty( $sections ) ) {
+				$sections = array( 'main' => '' );
+			}
+
+			foreach ( $sections as $section_id => $section ) {
+				// Register the setting section.
+				add_settings_section(
+						$section_id,
+						__return_null(),
+						'__return_false',
+						'eaccounting_settings_' . $tab_id
+				);
+
+				$settings = array_key_exists( $tab_id, $all_settings ) ? wp_list_filter( $all_settings[ $tab_id ], array( 'section' => $section_id ) ) : array();
+
+				foreach ( $settings as $id => $option ) {
+					//since we are using single option so multiple item with same id is not allowed.
+					if ( in_array( $id, $registered_options, true ) ) {
+						continue;
+					}
+
+					$title    = isset( $option['name'] ) ? $option['name'] : '';
+					$callback = ! empty( $option['callback'] ) ? $option['callback'] : array( $this, $option['type'] . '_callback' );
+					$tip      = isset( $option['tip'] ) ? eaccounting_help_tip( $option['tip'] ) : '';
+
+					if ( ! in_array( $option['type'], array( 'checkbox', 'multicheck', 'radio' ), true ) ) {
+						$title = sprintf( '<label for="eaccounting_settings[%1$s]">%2$s</label>%3$s', $id, $title, $tip );
+					}
+
+					add_settings_field(
+							'eaccounting_settings[' . $id . ']',
+							$title,
+							is_callable( $callback ) ? $callback : array( $this, 'missing_callback' ),
+							'eaccounting_settings_' . $tab_id,
+							$section_id,
+							array(
+									'id'          => $id,
+									'section'     => $section_id,
+									'desc'        => ! empty( $option['desc'] ) ? $option['desc'] : '',
+									'name'        => isset( $option['name'] ) ? $option['name'] : null,
+									'size'        => isset( $option['size'] ) ? $option['size'] : null,
+									'max'         => isset( $option['max'] ) ? $option['max'] : null,
+									'min'         => isset( $option['min'] ) ? $option['min'] : null,
+									'step'        => isset( $option['step'] ) ? $option['step'] : null,
+									'options'     => isset( $option['options'] ) ? $option['options'] : array(),
+									'attr'        => isset( $option['attr'] ) ? $option['attr'] : array(),
+									'std'         => isset( $option['std'] ) ? $option['std'] : '',
+									'disabled'    => isset( $option['disabled'] ) ? $option['disabled'] : '',
+									'class'       => isset( $option['wrap_class'] ) ? $option['wrap_class'] : '',
+									'input_class' => isset( $option['class'] ) ? $option['class'] : '',
+									'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : '',
+									'style'       => isset( $option['style'] ) ? $option['style'] : '',
+							)
+					);
+
+				}
+			}
+		}
+
+		// Creates our settings in the options table
+		register_setting( 'eaccounting_settings', 'eaccounting_settings', array( $this, 'sanitize_settings' ) );
 	}
 
 	/**
@@ -1011,54 +1060,6 @@ class Settings {
 	public function get_all() {
 		return $this->settings;
 	}
-
-
-	/**
-	 * Get settings tabs.
-	 *
-	 * @since 1.1.0
-	 * @return array list of tabs.
-	 */
-	protected static function get_tabs() {
-		return apply_filters(
-			'eaccounting_settings_tabs',
-			array(
-				'general'    => __( 'General', 'wp-ever-accounting' ),
-				'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
-				'categories' => __( 'Categories', 'wp-ever-accounting' ),
-				'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
-				'misc'       => __( 'Misc', 'wp-ever-accounting' ),
-			)
-		);
-	}
-
-	/**
-	 * Get settings tabs.
-	 *
-	 * @since 1.1.0
-	 * @return array list of sections.
-	 */
-	protected static function get_sections() {
-		$sections = array();
-		$defaults = array(
-			'general' => array(
-				'main'    => __( 'General Settings', 'wp-ever-accounting' ),
-				'invoice' => __( 'Invoice Settings', 'wp-ever-accounting' ),
-				'bill'    => __( 'Bill Settings', 'wp-ever-accounting' ),
-			),
-			'taxes'   => array(
-				'main'  => __( 'Tax Settings', 'wp-ever-accounting' ),
-				'rates' => __( 'Tax Rates', 'wp-ever-accounting' ),
-			),
-		);
-
-		foreach ( self::get_tabs() as $tab_id => $tab_label ) {
-			$sections[ $tab_id ] = apply_filters( 'eaccounting_settings_tab_sections_' . $tab_id, isset( $defaults[ $tab_id ] ) ? $defaults[ $tab_id ] : array( 'main' => '' ) );
-		}
-
-		return $sections;
-	}
-
 
 	/**
 	 * Get sections for a specific tab.

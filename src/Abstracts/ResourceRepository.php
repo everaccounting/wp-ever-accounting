@@ -119,9 +119,8 @@ abstract class ResourceRepository {
 			$values[ $key ] = $item->$method( 'edit' );
 			$formats[]      = $format;
 		}
-		var_dump($values);
+
 		$result = $wpdb->insert( $wpdb->prefix . $this->table, wp_unslash( $values ), $formats );
-		var_dump($wpdb->prefix . $this->table);
 		if ( false === $result ) {
 			$item->error( 'db_insert_error', $wpdb->last_error );
 
