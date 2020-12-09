@@ -588,7 +588,7 @@ jQuery(function ($) {
 		}
 	}
 
-<<<<<<< HEAD
+
 	//category form
 	var eaccounting_category_form = {
 		init: function () {
@@ -848,11 +848,69 @@ jQuery(function ($) {
 			});
 		}
 	}
-=======
->>>>>>> 3f45712b898e7c37e33b5aa763ca829eebb6ae7a
+	var eaccounting_api_key_form = {
+		init: function () {
+			$('#ea-api-key-form').on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-api-key-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-api-key-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting_api_key_form.block();
+			wp.ajax.send({
+				data: $('#ea-api-key-form').serializeAssoc(),
+				success: function (res) {
+					eaccounting_api_key_form.unblock();
+					$.eaccounting_notice(res, 'success');
+					var api_key = res.item.api_key;
+					var api_secret = res.item.api_secret;
+					var action = res.action;
+					if ( action === 'insert' && api_key !== '' && api_secret !== '') {
+						eaccounting_api_key_form.block();
+						$('#ea-api-key-form').html('');
+						$('#api-key-container #api_key').val(api_key);
+						$('#api-key-container #api_secret').val(api_secret);
+						eaccounting_api_key_form.unblock();
+						$('#api-key-container').css("display", "block");
+						$('.api-key-notice').css("display", "block");
+					}
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_api_key_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		}
+	}
+
+	var copy_btn = {
+		init: function () {
+			$('body').on('click', '.copy-btn', function () {
+				var $temp = $('<input>');
+				$('body').append($temp);
+				var input = $(this).parents('.ea-form-field').find('input[type=text]').val();
+				$temp.val(input).select();
+				alert('Copied:  ' + input);
+				$temp.remove();
+			});
+		}
+	}
 
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
+	eaccounting_api_key_form.init();
+	copy_btn.init();
 
 
 });

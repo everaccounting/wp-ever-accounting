@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit();
 
 require_once dirname( __FILE__ ) . '/currencies/currencies.php';
 require_once dirname( __FILE__ ) . '/categories/categories.php';
-require_once dirname( __FILE__ ) . '/keys/keys.php';
+require_once dirname( __FILE__ ) . '/api-keys/api-keys.php';
 
 function eaccounting_admin_settings_page() {
 	\EverAccounting\Admin\Settings::output();

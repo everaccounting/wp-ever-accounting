@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Core\Exception;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -122,6 +124,7 @@ class Ajax {
 			'edit_invoice',
 			'edit_item',
 			'edit_tax',
+			'edit_api_key',
 			'upload_files',
 		);
 
@@ -215,8 +218,8 @@ class Ajax {
 				/**
 				 * Hook into this for any custom object handling
 				 *
-				 * @var int     $object_id ID of the object.
-				 * @var boolean $enabled   status of the object.
+				 * @var int $object_id ID of the object.
+				 * @var boolean $enabled status of the object.
 				 */
 				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
 		}
@@ -442,8 +445,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating currencies.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_currency() {
 		check_ajax_referer( 'ea_edit_currency', '_wpnonce' );
@@ -480,8 +483,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_account() {
 		check_ajax_referer( 'ea_edit_account', '_wpnonce' );
@@ -519,8 +522,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function get_account() {
 		check_ajax_referer( 'ea_get_account', '_wpnonce' );
@@ -540,8 +543,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
@@ -578,8 +581,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_contact() {
 		self::verify_nonce( 'ea_edit_contact' );
@@ -617,8 +620,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating payment.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
@@ -656,8 +659,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating revenue.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
@@ -695,8 +698,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating transfer.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
@@ -734,8 +737,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating invoice.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_invoice() {
 		self::verify_nonce( 'ea_edit_invoice' );
@@ -772,8 +775,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating item.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_item() {
 		self::verify_nonce( 'ea_edit_item' );
@@ -810,8 +813,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating tax.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_tax() {
 		self::verify_nonce( 'ea_edit_tax' );
@@ -845,6 +848,62 @@ class Ajax {
 		wp_die();
 	}
 
+	/**
+	 * Handle ajax action of creating/updating api key.
+	 *
+	 * @return void
+	 * @since 1.1.0
+	 */
+	public static function edit_api_key() {
+		self::verify_nonce( 'ea_edit_api_key' );
+		self::check_permission( 'manage_eaccounting' );
+		$posted     = eaccounting_clean( $_REQUEST );
+		$api_key    = '';
+		$api_secret = '';
+		$update     = empty( $posted['id'] ) ? false : true;
+		$action     = 'update';
+		if ( ! $update ) {
+			$api_key                 = ea_api_hash( 'ea_ak_' . ea_rand_hash() );
+			$api_secret              = 'ea_as_' . ea_rand_hash();
+			$posted['api_key']       = ea_api_hash( $api_key );
+			$posted['api_secret']    = $api_secret;
+			$posted['truncated_key'] = substr( $api_key, - 7 );
+			$action                  = 'insert';
+		}
+
+		$created = eaccounting_insert_api_key( $posted );
+		if ( is_wp_error( $created ) || ! $created->exists() ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
+			);
+		}
+
+		$message = __( 'API Key updated successfully!', 'wp-ever-accounting' );
+		//$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( '', 'wp-ever-accounting' );
+			$redirect = '';
+		}
+
+		wp_send_json_success(
+			array(
+				'message'    => $message,
+				'redirect'   => $redirect,
+				'item'       => $created->get_data(),
+				'api_key'    => $api_key,
+				'api_secret' => $api_secret,
+				'action'     => $action,
+			)
+		);
+
+		wp_die();
+
+	}
+
+
 	public static function upload_files() {
 		self::verify_nonce( 'eaccounting_file_upload' );
 		self::check_permission( 'manage_eaccounting' );
@@ -873,11 +932,11 @@ class Ajax {
 	/**
 	 * Verify our ajax nonce.
 	 *
+	 * @param $action
+	 *
+	 * @param $action
+	 *
 	 * @since 1.0.2
-	 *
-	 * @param $action
-	 *
-	 * @param $action
 	 *
 	 */
 	public static function verify_nonce( $action ) {
