@@ -589,16 +589,16 @@ class EAccounting_Install {
 			"CREATE TABLE {$wpdb->prefix}ea_api_keys(
 		    id BIGINT UNSIGNED NOT NULL auto_increment,
 		  	user_id BIGINT UNSIGNED NOT NULL,
-		  	description varchar(200) NULL,
+		  	description varchar(100) NULL,
 		  	permission varchar(10) NOT NULL,
-		  	api_key char(64) NOT NULL,
-		  	api_secret char(43) NOT NULL,
+		  	api_key varchar (100) NOT NULL,
+		  	api_secret varchar(100) NOT NULL,
 		  	nonces longtext NULL,
 		  	truncated_key char(7) NOT NULL,
 		  	last_access datetime NULL default null,
 		  	PRIMARY KEY  (id),
-		  	KEY `key` (`key`),
-		  	KEY `secret` (`secret`)
+		  	KEY `api_key` (`api_key`),
+		  	KEY `api_secret` (`api_secret`)
 		) $collate");
 
 		foreach ( $tables as $table ) {

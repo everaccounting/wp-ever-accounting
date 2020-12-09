@@ -10,6 +10,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
+use EverAccounting\Models\ApiKey;
 
 
 defined( 'ABSPATH' ) || exit();
@@ -18,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  * Class List_Table_Api_Keys
  *
  * @since   1.1.0
- * @package EverAccounting\Admin\ListTables
+ *
  */
 class List_Table_Api_Keys extends List_Table {
 	/**
@@ -47,12 +48,6 @@ class List_Table_Api_Keys extends List_Table {
 	 */
 	public $total_count;
 
-	/**
-	 * Get current api_keys
-	 * @since 1.1.0
-	 *
-	 */
-	public $api_key;
 
 	/**
 	 * Get things started
@@ -68,8 +63,8 @@ class List_Table_Api_Keys extends List_Table {
 		$args = (array) wp_parse_args(
 			$args,
 			array(
-				'singular' => 'api_key',
-				'plural'   => 'api_keys',
+				'singular' => 'api-key',
+				'plural'   => 'api-keys',
 			)
 		);
 
@@ -104,11 +99,13 @@ class List_Table_Api_Keys extends List_Table {
 	 */
 	public function define_columns() {
 		return array(
-			'cb'          => '<input type="checkbox" />',
-			'description' => __( 'Description', 'wp-ever-accounting' ),
-			'user_id'     => __( 'User', 'wp-ever-accounting' ),
-			'permission'  => __( 'Permission', 'wp-ever-accounting' ),
-			'actions'     => __( 'Actions', 'wp-ever-accounting' ),
+			'cb'            => '<input type="checkbox" />',
+			'description'   => __( 'Description', 'wp-ever-accounting' ),
+			'truncated_key' => __( 'API key ending in', 'wp-ever-accounting' ),
+			'user_id'       => __( 'User', 'wp-ever-accounting' ),
+			'permission'    => __( 'Permission', 'wp-ever-accounting' ),
+			'last_access'   => __( 'Last Access', 'wp-ever-accounting' ),
+			'actions'       => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -153,7 +150,7 @@ class List_Table_Api_Keys extends List_Table {
 	/**
 	 * Renders the checkbox column in the api keys list table.
 	 *
-	 * @param $api_key .
+	 * @param ApiKey $api_key The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.1.0
@@ -166,23 +163,23 @@ class List_Table_Api_Keys extends List_Table {
 	/**
 	 * Renders the "Description" column in the api key list table.
 	 *
-	 * @param $api_key .
+	 * @param ApiKey $api_key The current object.
 	 *
 	 * @return string Data shown in the Name column.
 	 * @since  1.1.0
 	 *
 	 */
 	function column_description( $api_key ) {
-		$description = $api_key->get_name();
+		$description = $api_key->get_description();
 
 		$value = sprintf(
 			'<a href="%1$s">%2$s</a>',
 			esc_url(
 				eaccounting_admin_url(
 					array(
-						'action'      => 'edit',
-						'tab'         => 'categories',
-						'category_id' => $description->get_id(),
+						'action'     => 'edit',
+						'tab'        => 'advanced',
+						'api_key_id' => $api_key->get_id(),
 					)
 				)
 			),
@@ -195,7 +192,7 @@ class List_Table_Api_Keys extends List_Table {
 	/**
 	 * Renders the "user_id" column in the api_keys list table.
 	 *
-	 * @param $api_key .
+	 * @param ApiKey $api_key The current object.
 	 *
 	 * @return string Data shown in the type column.
 	 * @since  1.1.0
@@ -208,9 +205,24 @@ class List_Table_Api_Keys extends List_Table {
 	}
 
 	/**
-	 * Renders the "Permission" column in the category list table.
+	 * Renders the "truncated_key" column in the api_keys list table.
 	 *
-	 * @param $api_key .
+	 * @param ApiKey $api_key The current object.
+	 *
+	 * @return string Data shown in the type column.
+	 * @since  1.1.0
+	 *
+	 */
+	function column_truncated_key( $api_key ) {
+		$truncated_key = $api_key->get_truncated_key();
+
+		return apply_filters( 'eaccounting_api_keys_table_truncated_key', '<code>'.'...'.$truncated_key.'</code>', $api_key );
+	}
+
+	/**
+	 * Renders the "Permission" column in the api_keys list table.
+	 *
+	 * @param ApiKey $api_key The current object. .
 	 *
 	 * @return string Data shown in the Name column.
 	 * @since  1.1.0
@@ -223,7 +235,22 @@ class List_Table_Api_Keys extends List_Table {
 	}
 
 	/**
-	 * @param $api_key
+	 * Renders the "Last Access" column in the api_keys list table.
+	 *
+	 * @param ApiKey $api_key The current object. .
+	 *
+	 * @return string Data shown in the Name column.
+	 * @since  1.1.0
+	 *
+	 */
+	function column_last_access( $api_key ) {
+		$last_access = (null != $api_key->get_last_access()) ? $api_key->get_last_access() : __('Unknown','wp-ever-accounting');
+
+		return apply_filters( 'eaccounting_api_keys_table_last_access', $last_access, $api_key );
+	}
+
+	/**
+	 * @param ApiKey $api_key The current object.
 	 *
 	 * @return string
 	 * @since 1.1.0
@@ -295,7 +322,7 @@ class List_Table_Api_Keys extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'revoke':
-					$this->eaccounting_revoke_api_key( $id );
+					eaccounting_delete_api_key( $id );
 					break;
 				default:
 					do_action( 'eaccounting_api_keys_do_bulk_action_' . $this->current_action(), $id );
@@ -318,26 +345,6 @@ class List_Table_Api_Keys extends List_Table {
 			);
 			exit();
 		}
-	}
-
-	/**
-	 * Retrieve the view types
-	 *
-	 * @access public
-	 * @return array $views All the views available
-	 * @since  1.1.0
-	 */
-	public function get_views() {
-		$base        = eaccounting_admin_url( array( 'tab' => 'advanced' ) );
-		$current     = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$total_count = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
-
-		$views = array(
-			'all' => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-
-		);
-
-		return $views;
 	}
 
 	/**
@@ -377,12 +384,10 @@ class List_Table_Api_Keys extends List_Table {
 			)
 		);
 
-		$args = apply_filters( 'eaccounting_categories_table_get_categories', $args, $this );
+		$args = apply_filters( 'eaccounting_api_keys_table_get_api_keys', $args, $this );
 
-		$this->items = $this->eaccounting_get_api_keys( $args );
+		$this->items = eaccounting_get_api_keys( $args );
 
-
-		$this->total_count = $this->items;
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
@@ -401,75 +406,5 @@ class List_Table_Api_Keys extends List_Table {
 			)
 		);
 	}
-
-	/**
-	 * Get all api keys
-	 */
-//	public function eaccounting_get_api_keys( $args = array() ) {
-//		global $wpdb;
-//		// Prepare args.
-//		$args = wp_parse_args(
-//			$args,
-//			array(
-//				'status'       => 'all',
-//				'type'         => '',
-//				'include'      => '',
-//				'search'       => '',
-//				'search_cols'  => array( 'description', 'permission' ),
-//				'orderby_cols' => array( 'user_id', 'description', 'permission', 'date_created' ),
-//				'fields'       => '*',
-//				'orderby'      => 'id',
-//				'order'        => 'ASC',
-//				'number'       => 20,
-//				'offset'       => 0,
-//				'paged'        => 1,
-//				'return'       => 'objects',
-//				'count_total'  => false,
-//			)
-//		);
-//
-//		$qv    = apply_filters( 'eaccounting_get_api_keys_args', $args );
-//		$table = 'ea_api_keys';
-//
-//		$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
-//		$query_from    = eaccounting_prepare_query_from( $table );
-//		$query_where   = 'WHERE 1=1';
-//		$query_where   .= eaccounting_prepare_query_where( $qv, $table );
-//		$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
-//		$query_limit   = eaccounting_prepare_query_limit( $qv );
-//		$count_total   = true === $qv['count_total'];
-//		$cache_key     = md5( serialize( $qv ) );
-//		$results       = wp_cache_get( $cache_key, 'ea_api_keys' );
-//		$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
-//
-//		if ( false === $results ) {
-//			if ( $count_total ) {
-//				$results = (int) $wpdb->get_var( $request );
-//				wp_cache_set( $cache_key, $results, 'ea_api_keys' );
-//			} else {
-//				$results = $wpdb->get_results( $request );
-//				if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
-//					foreach ( $results as $key => $item ) {
-//						wp_cache_set( $item->id, $item, 'ea_api_keys' );
-//					}
-//				}
-//				wp_cache_set( $cache_key, $results, 'ea_api_keys' );
-//			}
-//		}
-//
-//		if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-//			$results = array_map( 'eaccoutning_get_api_key', $results );
-//		}
-//
-//		return $results;
-//
-//	}
-//
-//	function eaccoutning_get_api_key() {
-//		return (
-//			''
-//		);
-//	}
-
 
 }

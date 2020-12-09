@@ -855,85 +855,47 @@ class Ajax {
 	 * @since 1.1.0
 	 */
 	public static function edit_api_key() {
-		global $wpdb;
 		self::verify_nonce( 'ea_edit_api_key' );
 		self::check_permission( 'manage_eaccounting' );
-		error_log( print_r( $_REQUEST, true ) );
-		$posted = eaccounting_clean( $_REQUEST );
-		if ( empty( $_REQUEST['user_id'] ) ) {
-			throw new Exception( 'empty_prop', __( 'User is required', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $_REQUEST['permission'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Permission is required', 'wp-ever-accounting' ) );
-		}
-
-		$key_id      = isset( $_REQUEST['id'] ) ? absint( $_REQUEST['id'] ) : 0;
-		$description = sanitize_text_field( wp_unslash( $_REQUEST['description'] ) );
-		$permission  = ( in_array( wp_unslash( $_REQUEST['permission'] ), array( 'read', 'write', 'read_write' ), true ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['permission'] ) ) : 'read';
-		$user_id     = absint( $_REQUEST['user_id'] );
-
-		//check if current user can edit other users
-		if ( $user_id && ! current_user_can( 'edit_user', $user_id ) ) {
-			if ( get_current_user_id() !== $user_id ) {
-				throw new \Exception( __( 'You do not have enough permission to assign API Keys to the selected user.', 'wp-ever-accounting' ) );
-			}
+		$posted     = eaccounting_clean( $_REQUEST );
+		$api_key    = '';
+		$api_secret = '';
+		$update     = empty( $posted['id'] ) ? false : true;
+		$action     = 'update';
+		if ( ! $update ) {
+			$api_key                 = ea_api_hash( 'ea_ak_' . ea_rand_hash() );
+			$api_secret              = 'ea_as_' . ea_rand_hash();
+			$posted['api_key']       = ea_api_hash( $api_key );
+			$posted['api_secret']    = $api_secret;
+			$posted['truncated_key'] = substr( $api_key, - 7 );
+			$action                  = 'insert';
 		}
 
-		if ( 0 < $key_id ) {
-			$data = array(
-				'user_id'     => $user_id,
-				'description' => $description,
-				'permission'  => $permission,
+		$created = eaccounting_insert_api_key( $posted );
+		if ( is_wp_error( $created ) || ! $created->exists() ) {
+			wp_send_json_error(
+				array(
+					'message' => $created->get_error_message(),
+				)
 			);
-			$wpdb->update( $wpdb->prefix . 'ea_api_keys', $data, array( 'id' => $key_id ), array(
-				'%d',
-				'%s',
-				'%s'
-			),
-				array( '%d' )
-			);
-			$response['item']       = $data;
-			$response['api_key']    = '';
-			$response['api_secret'] = '';
-			$response['message']    = __( 'Api Key updated successfully!', 'wp-ever-accounting' );
-		} else {
-			$api_key    = 'ea_ak_' . ea_rand_hash();
-			$api_secret = 'ea_as_' . ea_rand_hash();
-
-			$data = array(
-				'user_id'       => $user_id,
-				'description'   => $description,
-				'permission'    => $permission,
-				'api_key'       => ea_api_hash( $api_key ),
-				'api_secret'    => $api_secret,
-				'truncated_key' => substr( $api_key, - 7 )
-			);
-			error_log(print_r($data,true));
-			$wpdb->insert( $wpdb->prefix . 'ea_api_keys', $data, array(
-				'%d',
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-				'%s',
-			) );
-			$id = $wpdb->insert_id;
-			if(!empty($id)){
-				return;
-			}
-			$response['item']       = $data;
-			$response['api_key']    = $api_key;
-			$response['api_secret'] = $api_secret;
-			$response['message']    = __( 'Api Key created successfully!', 'wp-ever-accounting' );
-
 		}
+
+		$message = __( 'API Key updated successfully!', 'wp-ever-accounting' );
+		//$update   = empty( $posted['id'] ) ? false : true;
+		$redirect = '';
+		if ( ! $update ) {
+			$message  = __( '', 'wp-ever-accounting' );
+			$redirect = '';
+		}
+
 		wp_send_json_success(
 			array(
-				'message'    => $response['message'],
-				'redirect'   => '',
-				'item'       => $response['item'],
-				'api_key'    => $response['api_key'],
-				'api_secret' => $response['api_secret']
+				'message'    => $message,
+				'redirect'   => $redirect,
+				'item'       => $created->get_data(),
+				'api_key'    => $api_key,
+				'api_secret' => $api_secret,
+				'action'     => $action,
 			)
 		);
 

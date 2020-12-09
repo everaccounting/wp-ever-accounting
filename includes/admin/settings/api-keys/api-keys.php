@@ -29,11 +29,11 @@ function eaccounting_settings_keys_section() {
 		$list_table->prepare_items();
 
 		/**
-		 * Fires at the top of the admin categories page.
+		 * Fires at the top of the admin api_keys page.
 		 *
-		 * Use this hook to add content to this section of categories.
+		 * Use this hook to add content to this section of api_keys.
 		 *
-		 * @since 1.0.2
+		 * @since 1.1.0
 		 */
 		do_action( 'eaccounting_api_keys_page_top' );
 		?>
@@ -48,11 +48,11 @@ function eaccounting_settings_keys_section() {
 		</form>
 		<?php
 		/**
-		 * Fires at the bottom of the admin categories page.
+		 * Fires at the bottom of the admin api_keys page.
 		 *
-		 * Use this hook to add content to this section of categories Tab.
+		 * Use this hook to add content to this section of advanced Tab.
 		 *
-		 * @since 1.0.2
+		 * @since 1.1.0
 		 */
 		do_action( 'eaccounting_api_keys_page_bottom' );
 		?>

@@ -872,7 +872,18 @@ jQuery(function ($) {
 				success: function (res) {
 					eaccounting_api_key_form.unblock();
 					$.eaccounting_notice(res, 'success');
-					$.eaccounting_redirect(res);
+					var api_key = res.item.api_key;
+					var api_secret = res.item.api_secret;
+					var action = res.action;
+					if ( action === 'insert' && api_key !== '' && api_secret !== '') {
+						eaccounting_api_key_form.block();
+						$('#ea-api-key-form').html('');
+						$('#api-key-container #api_key').val(api_key);
+						$('#api-key-container #api_secret').val(api_secret);
+						eaccounting_api_key_form.unblock();
+						$('#api-key-container').css("display", "block");
+						$('.api-key-notice').css("display", "block");
+					}
 				},
 				error: function (error) {
 					console.warn(error);
@@ -883,9 +894,23 @@ jQuery(function ($) {
 		}
 	}
 
+	var copy_btn = {
+		init: function () {
+			$('body').on('click', '.copy-btn', function () {
+				var $temp = $('<input>');
+				$('body').append($temp);
+				var input = $(this).parents('.ea-form-field').find('input[type=text]').val();
+				$temp.val(input).select();
+				alert('Copied:  ' + input);
+				$temp.remove();
+			});
+		}
+	}
+
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
 	eaccounting_api_key_form.init();
+	copy_btn.init();
 
 
 });
