@@ -390,14 +390,14 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 		// }
 		//
 		// global $wpdb;
-		// $results = $wpdb->get_results( $wpdb->prepare( "SELECT paid_at, SUM(amount/currency_rate) total
+		// $results = $wpdb->get_results( $wpdb->prepare( "SELECT payment_date, SUM(amount/currency_rate) total
 		// from $table WHERE category_id IN (SELECT id FROM $wpdb->ea_categories WHERE type=%s)
-		// AND paid_at >= DATE(%s) AND paid_at <= DATE(%s) group by paid_at",
+		// AND payment_date >= DATE(%s) AND payment_date <= DATE(%s) group by payment_date",
 		// $type, $start->format( 'Y-m-d' ), $end->format( 'Y-m-d' ) ) );
 		//
 		//
 		// foreach ( $results as $result ) {
-		// $date = date( $date_format, strtotime( $result->paid_at ) );
+		// $date = date( $date_format, strtotime( $result->payment_date ) );
 		// if ( ! isset( $totals[ $date ] ) ) {
 		// continue;
 		// }
@@ -462,9 +462,9 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 		// $date->modify( '+1 month' )->format( 'Y-m' );
 		// }
 		//
-		// $revenues = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->ea_revenues WHERE YEAR(paid_at)=%d AND category_id NOT IN (SELECT id from $wpdb->ea_categories WHERE type='other')", $year ) );
+		// $revenues = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->ea_revenues WHERE YEAR(payment_date)=%d AND category_id NOT IN (SELECT id from $wpdb->ea_categories WHERE type='other')", $year ) );
 		// foreach ( $revenues as $revenue ) {
-		// $month      = date( 'F', strtotime( $revenue->paid_at ) );
+		// $month      = date( 'F', strtotime( $revenue->payment_date ) );
 		// $month_year = date( 'F-Y', strtotime( $revenue->paid_at ) );
 		//
 		// if ( ! isset( $incomes[ $revenue->category_id ] ) || ! isset( $incomes[ $revenue->category_id ][ $month ] ) || ! isset( $incomes_graph[ $month_year ] ) ) {

@@ -59,7 +59,7 @@ function eaccounting_get_expense( $expense ) {
  *                              An array of elements that make up an expense to update or insert.
  *
  * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
- * @type string $paid_at        Time of the transaction. Default null.
+ * @type string $payment_date        Time of the transaction. Default null.
  * @type string $amount         Transaction amount. Default null.
  * @type int    $account_id     From/To which account the transaction is. Default empty.
  * @type int    $contact_id     Contact id related to the transaction. Default empty.
@@ -125,7 +125,7 @@ function eaccounting_delete_expense( $expense_id ) {
  * @param array $args           {
  *
  * @type int    $id             Transaction id.
- * @type string $paid_at        Time of the transaction.
+ * @type string $payment_date        Time of the transaction.
  * @type string $amount         Transaction amount.
  * @type int    $account_id     From/To which account the transaction is.
  * @type int    $contact_id     Contact id related to the transaction.
@@ -178,7 +178,7 @@ function eaccounting_get_income( $income ) {
  *                              An array of elements that make up an expense to update or insert.
  *
  * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
- * @type string $paid_at        Time of the transaction. Default null.
+ * @type string $payment_date        Time of the transaction. Default null.
  * @type string $amount         Transaction amount. Default null.
  * @type int    $account_id     From/To which account the transaction is. Default empty.
  * @type int    $contact_id     Contact id related to the transaction. Default empty.
@@ -244,7 +244,7 @@ function eaccounting_delete_income( $income_id ) {
  * @param array $args           {
  *
  * @type int    $id             Transaction id.
- * @type string $paid_at        Time of the transaction.
+ * @type string $payment_date        Time of the transaction.
  * @type string $amount         Transaction amount.
  * @type int    $account_id     From/To which account the transaction is.
  * @type int    $contact_id     Contact id related to the transaction.
@@ -456,7 +456,7 @@ function eaccounting_get_transactions( $args = array() ) {
 	$orderby_cols = array(
 		'id',
 		'type',
-		'paid_at',
+		'payment_date',
 		'amount',
 		'currency_code',
 		'currency_rate',
@@ -545,8 +545,8 @@ function eaccounting_get_transactions( $args = array() ) {
 		$parent_id    = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
 		$query_where .= " AND $table.`parent_id` IN ($parent_id)";
 	}
-	if ( ! empty( $qv['paid_at'] ) ) {
-		$query_where .= eaccounting_sql_parse_date_query( $qv['paid_at'], "$table.paid_at" );
+	if ( ! empty( $qv['payment_date'] ) ) {
+		$query_where .= eaccounting_sql_parse_date_query( $qv['payment_date'], "$table.payment_date" );
 	}
 	if ( true === $qv['exclude_transfer'] ) {
 		$query_where .= " AND $table.`category_id` NOT IN (SELECT id from {$wpdb->prefix}ea_categories where type='other' )";

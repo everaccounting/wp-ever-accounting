@@ -75,9 +75,9 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Sales Tax (%)', 'wp-ever-accounting' ),
-							'name'          => 'sales_tax',
+							'name'          => 'sales_tax_rate',
 							'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
-							'value'         => $item->get_sales_tax(),
+							'value'         => $item->get_sales_tax_rate(),
 							'required'      => true,
 						)
 					);
@@ -86,9 +86,9 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Purchase Tax (%)', 'wp-ever-accounting' ),
-							'name'          => 'purchase_tax',
+							'name'          => 'purchase_tax_rate',
 							'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
-							'value'         => $item->get_purchase_tax(),
+							'value'         => $item->get_purchase_tax_rate(),
 							'required'      => true,
 						)
 					);

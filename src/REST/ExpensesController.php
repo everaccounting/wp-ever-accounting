@@ -58,12 +58,12 @@ class ExpensesController extends TransactionsController {
 
 		// Set before into date query. Date query must be specified as an array of an array.
 		if ( isset( $request['before'] ) ) {
-			$args['paid_at'][0]['before'] = $request['before'];
+			$args['payment_date'][0]['before'] = $request['before'];
 		}
 
 		// Set after into date query. Date query must be specified as an array of an array.
 		if ( isset( $request['after'] ) ) {
-			$args['paid_at'][0]['after'] = $request['after'];
+			$args['payment_date'][0]['after'] = $request['after'];
 		}
 
 		return eaccounting_get_expenses( $query_args );

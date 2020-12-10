@@ -39,12 +39,12 @@ class Latest_Expenses extends Widget {
 	public function get_content() {
 		global $wpdb;
 		$expenses = $wpdb->get_results($wpdb->prepare("
-		SELECT t.paid_at, c.name, t.amount, t.currency_code
+		SELECT t.payment_date, c.name, t.amount, t.currency_code
 		FROM {$wpdb->prefix}ea_transactions t
 		LEFT JOIN {$wpdb->prefix}ea_categories as c on c.id=t.category_id
 		WHERE t.type= 'expense'
 		AND c.type != 'other'
-		ORDER BY t.paid_at DESC
+		ORDER BY t.payment_date DESC
 		LIMIT %d
 		", 5));
 		if ( empty( $expenses ) ) {
@@ -68,7 +68,7 @@ class Latest_Expenses extends Widget {
 			<tbody>
 			<?php foreach ( $expenses as $expense ) : ?>
 				<tr>
-					<td><?php echo esc_html( $expense->paid_at ); ?></td>
+					<td><?php echo esc_html( $expense->payment_date ); ?></td>
 					<td><?php echo esc_html( $expense->name ); ?></td>
 					<td><?php echo eaccounting_format_price( $expense->amount, $expense->currency_code ); ?></td>
 				</tr>

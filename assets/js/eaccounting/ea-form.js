@@ -588,7 +588,6 @@ jQuery(function ($) {
 		}
 	}
 
-<<<<<<< HEAD
 	//category form
 	var eaccounting_category_form = {
 		init: function () {
@@ -848,11 +847,83 @@ jQuery(function ($) {
 			});
 		}
 	}
-=======
->>>>>>> 3f45712b898e7c37e33b5aa763ca829eebb6ae7a
 
+	var eaccounting_invoice_form = {
+		init: function () {
+			$(document).on('change keyup', '.ea-invoice-line-price input', this.number_input);
+			$(document).on('change keyup', '.ea-invoice-line-tax input', this.number_input);
+			$(document).on('change keyup', '.ea-invoice-line-vat input', this.number_input);
+			$(document).on('change keyup', '.ea-invoice-line-quantity input', this.number_input);
+			$(document).on('click', '.ea-invoice .edit-item', this.toggle_line_edit);
+			$(document).on('click', '.ea-invoice .delete-item', this.remove_line);
+			$(document).on('submit', '#ea-invoice-form', this.submit);
+			$('body').on('ea_invoice_updated', this.calculate_total);
+			$('.ea-invoice-line-name input[type="text"]').autocomplete(this.items_search());
+		},
+		items_search:function (){
+
+			return {
+				selectFirst: true,
+				source: function(params, suggest){
+					wp.ajax.send({
+						data: {
+							search:params.term,
+							action: 'eaccounting_get_items'
+						},
+						success: function (items){
+							suggest($.map(items, function (item){
+								return {
+									value: item.name +' ' +'('+item.sku+')',
+									data: item,
+									id: item.id
+								};
+							}));
+						},
+					});
+				},
+				classes: {
+					"ui-autocomplete": "your-custom-class",
+				},
+				autoFocus:true,
+				select: function( event, ui ) {
+					var item = ui.item;
+					console.log(this);
+				}
+			}
+		},
+		number_input: function (e) {
+			e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+		},
+		toggle_line_edit: function (e) {
+			e.preventDefault();
+			var $tr = $(this).closest('.ea-invoice-line');
+			if ($tr.hasClass('editing')) {
+				$tr.removeClass('editing');
+				return false;
+			}
+			$tr.siblings('tr').removeClass('editing');
+			$tr.addClass('editing');
+
+		},
+		remove_line: function (e) {
+			e.preventDefault();
+			$(this).closest('.ea-invoice-line').remove();
+			$('body').trigger('ea_invoice_updated');
+		},
+		disable_fields:function (){
+
+		},
+		calculate_total: function () {
+			console.log('calculate_total');
+		},
+		submit:function (e){
+			e.preventDefault();
+			console.log($('#ea-invoice-form').serializeObject())
+		}
+	}
+
+
+	eaccounting_invoice_form.init();
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
-
-
 });

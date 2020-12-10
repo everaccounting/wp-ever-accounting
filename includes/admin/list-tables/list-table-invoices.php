@@ -115,10 +115,10 @@ class List_Table_Invoices extends List_Table {
 		return array(
 			'cb'             => '<input type="checkbox" />',
 			'invoice_number' => __( 'Number', 'wp-ever-accounting' ),
-			'contact_name'   => __( 'Customer Name', 'wp-ever-accounting' ),
+			'name'           => __( 'Customer Name', 'wp-ever-accounting' ),
 			'total'          => __( 'Total', 'wp-ever-accounting' ),
-			'invoiced_at'    => __( 'Invoice Date', 'wp-ever-accounting' ),
-			'due_at'         => __( 'Due Date', 'wp-ever-accounting' ),
+			'issue_date'     => __( 'Invoice Date', 'wp-ever-accounting' ),
+			'due_date'       => __( 'Due Date', 'wp-ever-accounting' ),
 			'status'         => __( 'Status', 'wp-ever-accounting' ),
 			'actions'        => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -133,10 +133,10 @@ class List_Table_Invoices extends List_Table {
 	protected function define_sortable_columns() {
 		return array(
 			'invoice_number' => array( 'invoice_number', false ),
-			'contact_name'   => array( 'contact_name', false ),
+			'name'           => array( 'name', false ),
 			'total'          => array( 'total', false ),
-			'invoiced_at'    => array( 'invoiced_at', false ),
-			'due_at'         => array( 'due_at', false ),
+			'issue_date'     => array( 'issue_date', false ),
+			'due_date'       => array( 'due_date', false ),
 			'status'         => array( 'status', false ),
 		);
 	}
@@ -196,7 +196,7 @@ class List_Table_Invoices extends List_Table {
 				eaccounting_admin_url(
 					array(
 						'action'     => 'edit',
-						'account_id' => $invoice->get_id(),
+						'invoice_id' => $invoice->get_id(),
 					)
 				)
 			),
@@ -215,8 +215,8 @@ class List_Table_Invoices extends List_Table {
 	 * @since  1.1.0
 	 *
 	 */
-	function column_contact_name( $invoice ) {
-		return apply_filters( 'eaccounting_invoice_table_contact_name', $invoice->get_contact_name(), $invoice );
+	function column_name( $invoice ) {
+		return apply_filters( 'eaccounting_invoice_table_contact_name', $invoice->get_name(), $invoice );
 	}
 
 	/**
@@ -229,7 +229,7 @@ class List_Table_Invoices extends List_Table {
 	 *
 	 */
 	function column_total( $invoice ) {
-		return apply_filters( 'eaccounting_invoice_table_total', $invoice->get_total(), $invoice );
+		return apply_filters( 'eaccounting_invoice_table_total', $invoice->get_formatted_total(), $invoice );
 	}
 
 	/**
@@ -241,8 +241,9 @@ class List_Table_Invoices extends List_Table {
 	 * @since  1.1.0
 	 *
 	 */
-	function column_invoiced_at( $invoice ) {
-		return apply_filters( 'eaccounting_invoice_table_invoiced_at', $invoice->get_invoiced_at(), $invoice );
+	function column_issue_date( $invoice ) {
+		$date = ! empty( $invoice->get_issue_date() ) ? eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' ) : '&mdash;';
+		return apply_filters( 'eaccounting_invoice_table_issue_date', $date, $invoice );
 	}
 
 	/**
@@ -254,8 +255,9 @@ class List_Table_Invoices extends List_Table {
 	 * @since  1.1.0
 	 *
 	 */
-	function column_due_at( $invoice ) {
-		return apply_filters( 'eaccounting_invoice_table_due_at', $invoice->get_due_at(), $invoice );
+	function column_due_date( $invoice ) {
+		$date = ! empty( $invoice->get_due_date() ) ? eaccounting_format_datetime( $invoice->get_due_date(), 'Y-m-d' ) : '&mdash;';
+		return apply_filters( 'eaccounting_invoice_table_due_date', $date, $invoice );
 	}
 
 	/**
@@ -268,7 +270,7 @@ class List_Table_Invoices extends List_Table {
 	 *
 	 */
 	function column_status( $invoice ) {
-		return apply_filters( 'eaccounting_invoice_table_status', $invoice->get_status(), $invoice );
+		return apply_filters( 'eaccounting_invoice_table_status', $invoice->get_status_nicename(), $invoice );
 	}
 
 	/**
@@ -328,7 +330,7 @@ class List_Table_Invoices extends List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['account_id'] ) ? $_GET['account_id'] : false;
+		$ids = isset( $_GET['invoice_id'] ) ? $_GET['invoice_id'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -371,7 +373,7 @@ class List_Table_Invoices extends List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'account_id',
+						'invoice_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
@@ -382,30 +384,6 @@ class List_Table_Invoices extends List_Table {
 			);
 			exit();
 		}
-	}
-
-
-	/**
-	 * Retrieve the view types
-	 *
-	 * @access public
-	 * @return array $views All the views available
-	 * @since 1.1.0
-	 */
-	public function get_views() {
-		$base           = eaccounting_admin_url();
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
-//		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
-//		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
-
-		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-//			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-//			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
-		);
-
-		return $views;
 	}
 
 	/**
@@ -444,52 +422,15 @@ class List_Table_Invoices extends List_Table {
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-		eaccounting_get_currencies( array( 'return' => 'raw', 'number' => '-1' ) );
-		$args        = apply_filters( 'eaccounting_invoices_table_query_args', $args, $this );
-		$this->items = eaccounting_get_invoices( $args );
 
-//		$this->active_count = eaccounting_get_invoices(
-//			array_merge(
-//				$args,
-//				array(
-//					'enabled'     => '1',
-//					'count_total' => true,
-//				)
-//			)
-//		);
-//
-//		$this->inactive_count = eaccounting_get_accounts(
-//			array_merge(
-//				$args,
-//				array(
-//					'enabled'     => '0',
-//					'count_total' => true,
-//				)
-//			)
-//		);
-
-		$this->total_count = $this->items;
-
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
-
-		switch ( $status ) {
-			case 'active':
-				$total_items = $this->active_count;
-				break;
-			case 'inactive':
-				$total_items = $this->inactive_count;
-				break;
-			case 'any':
-			default:
-				$total_items = $this->total_count;
-				break;
-		}
-
+		$args              = apply_filters( 'eaccounting_invoices_table_query_args', $args, $this );
+		$this->items       = eaccounting_get_invoices( $args );
+		$this->total_count = eaccounting_get_invoices( array_merge( $args, array( 'count_total' => true ) ) );
 		$this->set_pagination_args(
 			array(
-				'total_items' => $total_items,
+				'total_items' => $this->total_count,
 				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page ),
+				'total_pages' => ceil( $this->total_count / $per_page ),
 			)
 		);
 	}

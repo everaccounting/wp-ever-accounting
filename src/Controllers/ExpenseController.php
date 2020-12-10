@@ -78,7 +78,7 @@ class ExpenseController extends Singleton {
 	 *
 	 */
 	public static function validate_payment_data( $data, $id = null ) {
-		if ( empty( $data['paid_at'] ) ) {
+		if ( empty( $data['payment_date'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Payment date is required.', 'wp-ever-accounting' ) );
 		}
 

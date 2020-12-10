@@ -19,7 +19,7 @@ class EAccounting_Helper_Transaction {
 
 		$transaction = eaccounting_insert_transaction( array(
 			'account_id'     => $account->get_id(),
-			'paid_at'        => '2020-09-01',
+			'payment_date'        => '2020-09-01',
 			'amount'         => $amount,
 			'vendor_id'      => $vendor->get_id(),
 			'category_id'    => $category->get_id(),

@@ -48,8 +48,8 @@ class Invoice1 extends ResourceModel {
 		'number'         => '',
 		'order_number'   => '',
 		'status'         => 'draft',
-		'issued_at'      => null,
-		'due_at'         => null,
+		'issue_date'      => null,
+		'due_date'         => null,
 		'completed_at'   => null,
 		'category_id'    => null,
 		'contact_id'     => null,
@@ -295,8 +295,8 @@ class Invoice1 extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_issued_at( $context = 'edit' ) {
-		return $this->get_prop( 'issued_at', $context );
+	public function get_issue_date( $context = 'edit' ) {
+		return $this->get_prop( 'issue_date', $context );
 	}
 
 	/**
@@ -308,8 +308,8 @@ class Invoice1 extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_due_at( $context = 'edit' ) {
-		return $this->get_prop( 'due_at', $context );
+	public function get_due_date( $context = 'edit' ) {
+		return $this->get_prop( 'due_date', $context );
 	}
 
 	/**
@@ -720,8 +720,8 @@ class Invoice1 extends ResourceModel {
 	 *
 	 * @param string $date Value to set.
 	 */
-	public function set_issued_at( $date ) {
-		$this->set_date_prop( 'issued_at', $date );
+	public function set_issue_date( $date ) {
+		$this->set_date_prop( 'issue_date', $date );
 	}
 
 	/**
@@ -729,11 +729,11 @@ class Invoice1 extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $due_at .
+	 * @param string $due_date .
 	 *
 	 */
-	public function set_due_at( $due_at ) {
-		$this->set_date_prop( 'due_at', $due_at );
+	public function set_due_date( $due_date ) {
+		$this->set_date_prop( 'due_date', $due_date );
 	}
 
 	/**
@@ -1095,7 +1095,7 @@ class Invoice1 extends ResourceModel {
 			'item_price' => $item->get_sale_price(),
 			'quantity'   => 1,
 			'discount'   => 0,
-			'tax_ids'    => $item->get_sales_tax_ids(),
+			'tax_ids'    => $item->get_sales_tax_rate_ids(),
 		);
 
 		$args = wp_parse_args( $args, $default );

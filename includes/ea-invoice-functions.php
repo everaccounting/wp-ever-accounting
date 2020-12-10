@@ -64,7 +64,7 @@ function eaccounting_get_invoice( $invoice ) {
  * @type string $status             The status for the invoice.Default is empty.
  *
  * @type string $invoiced_at        The date when the invoice is created. Default null.
- * @type string $due_at             The date when the invoice is created. Default null.
+ * @type string $due_date             The date when the invoice is created. Default null.
  * @type string $status             The status for the invoice.Default is empty.
  * @type double $subtotal           The subtotal of the invoice.
  * @type double $discount           The discount of the invoice.
@@ -125,7 +125,7 @@ function eaccounting_delete_invoice( $invoice_id ) {
  * @type string $order_number       The order number of the invoice.
  * @type string $status             The status for the invoice.
  * @type string $invoiced_at        The date when the invoice is created.
- * @type string $due_at             The date when the invoice is created.
+ * @type string $due_date             The date when the invoice is created.
  * @type string $status             The status for the invoice.
  * @type double $subtotal           The subtotal of the invoice.
  * @type double $discount           The discount of the invoice.

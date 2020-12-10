@@ -42,7 +42,7 @@ class TransactionController extends Singleton {
 	 *
 	 */
 	public static function validate_transaction_data( $data, $id ) {
-		if ( empty( $data['paid_at'] ) ) {
+		if ( empty( $data['payment_date'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Transaction date is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['type'] ) ) {

@@ -1,209 +1,382 @@
-.ea-invoice-table-wrap {
-  overflow-x: visible;
-  min-height: .01%;
+//.ea-invoice-table-wrap {
+//  overflow-x: visible;
+//  min-height: .01%;
+//  box-sizing: border-box;
+//
+//  .ea-invoice-items-table {
+//	font-size: 14px;
+//	font-weight: 400;
+//	width: 100%;
+//	max-width: 100%;
+//	border-spacing: 0;
+//	background-color: transparent;
+//	box-sizing: border-box;
+//	border-collapse: collapse;
+//	border: 1px solid #ddd;
+//	table-layout: fixed;
+//
+//	tr {
+//	  border-bottom: 1px solid #ddd;
+//	}
+//
+//	.ea-invoice-items-total {
+//	  div {
+//		margin-bottom: 9px;
+//	  }
+//
+//	  span {
+//		&.label {
+//		  margin-bottom: 0;
+//		  font-weight: 400;
+//		  text-align: left;
+//		  display: inline-block;
+//		  margin-right: 50px;
+//		}
+//
+//		&.value {
+//		  font-weight: 700;
+//		}
+//	  }
+//
+//	  .discount, .shipping {
+//		.label {
+//		  margin-right: 75px;
+//		}
+//	  }
+//
+//	  .total {
+//		.label {
+//		  margin-right: 52px;
+//		}
+//	  }
+//	}
+//
+//
+//  }
+//
+//  thead {
+//	tr {
+//	  background-color: #f9f9f9
+//	}
+//
+//	th {
+//	  border-bottom: 2px solid #f4f4f4;
+//	  vertical-align: middle;
+//	  text-align: left;
+//
+//	  &:nth-child(1) {
+//		width: 30%;
+//		text-align: left;
+//	  }
+//
+//	  &:nth-child(2) {
+//		width: 15%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(3) {
+//		width: 15%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(4) {
+//		width: 15%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(5) {
+//		width: 22%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(6) {
+//		width: 50px;
+//		text-align: left;
+//	  }
+//	}
+//  }
+//
+//  tbody {
+//	tr {
+//	  border-bottom: 1px solid #f0f0f0;
+//	}
+//
+//	td {
+//	  &:nth-child(1) {
+//		width: 30%;
+//		text-align: left;
+//	  }
+//
+//	  &:nth-child(2) {
+//		width: 15%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(3) {
+//		width: 15%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(4) {
+//		width: 15%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(5) {
+//		width: 15%;
+//		text-align: right;
+//	  }
+//
+//	  &:nth-child(6) {
+//		width: 10%;
+//		text-align: right;
+//	  }
+//	}
+//
+//	.ea-invoice-item-actions span {
+//	  display: inline-block;
+//	}
+//  }
+//
+//  th, td {
+//	border-top: 0;
+//	vertical-align: middle;
+//	padding: 8px;
+//	line-height: 1.42857143;
+//  }
+//
+//  .align-right {
+//	text-align: right;
+//  }
+//
+//  .ea-invoice-items-actions {
+//	border: 1px solid #dddddd;
+//	padding: 10px;
+//  }
+//
+//  .ea-invoice-items-total {
+//	border-left: 1px solid #f4f4f4;
+//	border-right: 1px solid #f4f4f4;
+//	background: #f8f8f8;
+//
+//	td {
+//	  padding-top: 12px;
+//	  padding-bottom: 12px;
+//	}
+//  }
+//
+//  .ea-invoice-item-edit-actions {
+//	visibility: hidden;
+//  }
+//
+//  .ea-invoice-item-edit-actions a {
+//	text-decoration: none;
+//	margin: 0;
+//	box-shadow: none;
+//
+//	span {
+//	  width: 15px;
+//	  color: #ccc;
+//	  font-size: 15px;
+//	  line-height: 1em;
+//	  outline: none;
+//	}
+//  }
+//
+//  .ea-invoice-item-edit-actions {
+//	.edit-items {
+//	  &:hover, &:focus, &:active {
+//		box-shadow: none;
+//
+//		span {
+//		  color: #999999;
+//		}
+//	  }
+//	}
+//  }
+//
+//  .ea-invoice-item-edit-actions {
+//	.delete-items {
+//	  &:hover, &:focus, &:active {
+//		box-shadow: none;
+//
+//		span {
+//		  color: #a00;
+//		}
+//	  }
+//	}
+//  }
+//
+//  .ea-invoice-items-line-items:hover .ea-invoice-item-edit-actions {
+//	visibility: visible;
+//  }
+//}
+
+.ea-invoice-items-wrap{
+  padding-top: 20px;
+  padding-bottom: 20px;
   box-sizing: border-box;
+}
 
-  .ea-invoice-items-table {
-	font-size: 14px;
+table.ea-invoice{
+  & *, & *::before, & *::after {
+	box-sizing: border-box
+  }
+
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-collapse: collapse;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  table-layout: fixed;
+  box-sizing: border-box;
+  border-left: 0;
+  border-right: 0;
+
+  tr {
+	border-bottom: 1px solid #ddd;
+  }
+
+  th {
+	text-align: right;
+	padding: 0.8em 1em;
 	font-weight: 400;
-	width: 100%;
-	max-width: 100%;
-	border-spacing: 0;
-	background-color: transparent;
-	box-sizing: border-box;
-	border-collapse: collapse;
-	border: 1px solid #ddd;
-	table-layout: fixed;
-
-	tr{
-	  border-bottom: 1px solid #ddd;
-	}
-
-	.ea-invoice-items-total {
-	  div {
-		margin-bottom: 9px;
-	  }
-	  span {
-		&.label {
-		  margin-bottom: 0;
-		  font-weight: 400;
-		  text-align: left;
-		  display: inline-block;
-		  margin-right: 50px;
-		}
-
-		&.value {
-		  font-weight: 700;
-		}
-	  }
-	  .discount,.shipping {
-		.label {
-		  margin-right: 75px;
-		}
-	  }
-	  .total {
-		.label {
-		  margin-right: 52px;
-		}
-	  }
-	}
-
-
+	color: #999;
+	background: #f8f8f8;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
   }
 
-  thead {
-	tr {
-	  background-color: #f9f9f9
-	}
+  td {
+	text-align: right;
+	padding: 0.8em 1em;
+  }
 
-	th {
-	  border-bottom: 2px solid #f4f4f4;
-	  vertical-align: middle;
-	  text-align: left;
-
-	  &:nth-child(1) {
-		width: 30%;
-		text-align: left;
-	  }
-
-	  &:nth-child(2) {
-		width: 15%;
-		text-align: right;
-	  }
-
-	  &:nth-child(3) {
-		width: 15%;
-		text-align: right;
-	  }
-
-	  &:nth-child(4) {
-		width: 15%;
-		text-align: right;
-	  }
-
-	  &:nth-child(5) {
-		width: 22%;
-		text-align: right;
-	  }
-
-	  &:nth-child(6) {
-		width: 50px;
-		text-align: left;
-	  }
+  tr:hover {
+	td.ea-invoice-line-actions {
+	  opacity: 1;
 	}
   }
 
-  tbody {
-	tr {
-	  border-bottom: 1px solid #f0f0f0;
+  a{
+	text-decoration: none;
+  }
+
+  .ea-invoice-item-name,
+  .ea-invoice-line-name {
+	text-align: left;
+  }
+
+  .ea-invoice-line-actions {
+	width: 65px;
+	text-align: left;
+  }
+
+  td.ea-invoice-line-actions {
+	//opacity: 0;
+	transition: opacity 0.3s;
+	text-align: center;
+  }
+
+
+  .edit-item,
+  .delete-item {
+	display: inline-block;
+	color: #ccc;
+	transition: color 0.1s ease-in;
+
+	&:hover {
+	  color: #444;
 	}
+  }
 
-	td {
-	  &:nth-child(1) {
-		width: 30%;
-		text-align: left;
-	  }
+  .dashicons {
+	width: 16px;
+	height: 16px;
+	font-size: 16px;
+  }
 
-	  &:nth-child(2) {
-		width: 15%;
-		text-align: right;
-	  }
+  input[type="text"]{
+	width: 90%;
+	text-align: inherit;
+  }
 
-	  &:nth-child(3) {
-		width: 15%;
-		text-align: right;
-	  }
-
-	  &:nth-child(4) {
-		width: 15%;
-		text-align: right;
-	  }
-
-	  &:nth-child(5) {
-		width: 15%;
-		text-align: right;
-	  }
-
-	  &:nth-child(6) {
-		width: 10%;
-		text-align: right;
-	  }
-	}
-
-	.ea-invoice-item-actions span {
+  .ea-invoice-line:not(.editing){
+	input[type="text"]{
+	  -webkit-appearance: none !important;
+	  border: 0 !important;
+	  min-height: auto !important;
+	  padding: 0 !important;
+	  margin: 0 !important;
+	  border-radius: 0 !important;
+	  box-shadow: none !important;
+	  line-height: inherit !important;
+	  cursor: pointer;
+	  pointer-events: none;
 	  display: inline-block;
 	}
   }
 
-  th, td {
-	border-top: 0;
-	vertical-align: middle;
-	padding: 8px;
-	line-height: 1.42857143;
+  .add-item-column{
+	text-align: left !important;
+	color: #444;
+	padding: 0.5em 1em;
+	button{
+	  font-size: 12px;
+	  min-height: 15px;
+	  line-height: 2;
+	}
+	.dashicons{
+	  vertical-align: middle;
+	}
+  }
+}
+
+.ea-invoice-totals-wrap{
+  width: 100%;
+  border-bottom: 1px solid #dfdfdf;
+  padding: 10px;
+  background: #f8f8f8;
+  box-sizing: border-box;
+
+
+  .ea-invoice-totals{
+	width: 100%;
+	@media only screen and (min-width: 600px) {
+	  padding-left: 50%;
+	}
   }
 
-  .align-right {
+  td{
 	text-align: right;
   }
 
-  .ea-invoice-items-actions {
-	border: 1px solid #dddddd;
-	padding: 10px;
+  .label{
+	vertical-align: top;
+	padding: 0.4em;
   }
 
-  .ea-invoice-items-total {
-	border-left: 1px solid #f4f4f4;
-	border-right: 1px solid #f4f4f4;
-	background: #f8f8f8;
-	td {
-	  padding-top: 12px;
-	  padding-bottom: 12px;
-	}
-  }
-
-  .ea-invoice-item-edit-actions {
-	visibility: hidden;
-  }
-
-  .ea-invoice-item-edit-actions a {
-	text-decoration: none;
-	margin: 0;
-	box-shadow: none;
-
-	span {
-	  width: 15px;
-	  color: #ccc;
-	  font-size: 15px;
-	  line-height: 1em;
-	  outline: none;
-	}
-  }
-
-  .ea-invoice-item-edit-actions {
-	.edit-items {
-	  &:hover, &:focus, &:active {
-		box-shadow: none;
-
-		span {
-		  color: #999999;
-		}
-	  }
-	}
-  }
-
-  .ea-invoice-item-edit-actions {
-	.delete-items {
-	  &:hover, &:focus, &:active {
-		box-shadow: none;
-
-		span {
-		  color: #a00;
-		}
-	  }
-	}
-  }
-
-  .ea-invoice-items-line-items:hover .ea-invoice-item-edit-actions {
-	visibility: visible;
+  .value{
+	font-size: 1em!important;
+	width: 14em;
+	margin: 0 0 0 .5em;
+	box-sizing: border-box;
+	font-weight: 700;
+	padding: 0.4em;
   }
 }
+
+.ea-invoice-action-wrap{
+  border-bottom: 1px solid #dfdfdf;
+  padding: 10px;
+  background: #f8f8f8;
+  width: 100%;
+  text-align: right;
+  box-sizing: border-box;
+}
+

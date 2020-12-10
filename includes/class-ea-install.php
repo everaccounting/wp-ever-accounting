@@ -41,7 +41,7 @@ class EAccounting_Install {
 	 */
 	public static function check_version() {
 		// todo remove on later version.
-		if ( false == get_option( 'eaccounting_version' ) && ! empty( get_option( 'eaccounting_localisation' ) ) ) {
+		if ( false === get_option( 'eaccounting_version' ) && ! empty( get_option( 'eaccounting_localisation' ) ) ) {
 			update_option( 'eaccounting_version', '1.0.1.1' );
 		}
 
@@ -130,9 +130,9 @@ class EAccounting_Install {
 		}
 
 		// Check if we are not already running this routine.
-//		if ( 'yes' === get_transient( 'eaccounting_installing' ) ) {
-//			return;
-//		}
+		if ( 'yes' === get_transient( 'eaccounting_installing' ) ) {
+			return;
+		}
 
 		// If we made it till here nothing is running yet, lets set the transient now.
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
@@ -451,7 +451,7 @@ class EAccounting_Install {
 			"CREATE TABLE {$wpdb->prefix}ea_transactions(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `type` VARCHAR(100) DEFAULT NULL,
-		  	`paid_at` date NOT NULL,
+		  	`payment_date` date NOT NULL,
 		  	`amount` DOUBLE(15,4) NOT NULL,
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
@@ -492,9 +492,9 @@ class EAccounting_Install {
             `invoice_number` VARCHAR(191) NOT NULL,
             `order_number` VARCHAR(191) DEFAULT NULL,
             `status` VARCHAR(191) DEFAULT NULL,
-            `issued_at` DATETIME NULL DEFAULT NULL,
-            `due_at` DATETIME NULL DEFAULT NULL,
-            `paid_at` DATETIME NULL DEFAULT NULL,
+            `issue_date` DATETIME NULL DEFAULT NULL,
+            `due_date` DATETIME NULL DEFAULT NULL,
+            `payment_date` DATETIME NULL DEFAULT NULL,
             `category_id` INT(11) NOT NULL,
   			`customer_id` INT(11) NOT NULL,
   			`name` VARCHAR(191) DEFAULT NULL,
@@ -573,8 +573,8 @@ class EAccounting_Install {
   			`purchase_price` double(15,4) NOT NULL,
   			`quantity` int(11) NOT NULL DEFAULT '1',
   			`category_id` int(11) DEFAULT NULL,
-  			`sales_tax` double(15,4) DEFAULT NULL,
-  			`purchase_tax` double(15,4) DEFAULT NULL,
+  			`sales_tax_rate` double(15,4) DEFAULT NULL,
+  			`purchase_tax_rate` double(15,4) DEFAULT NULL,
   			`vat` double(15,4) DEFAULT NULL,
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
 			`creator_id` INT(11) DEFAULT NULL,

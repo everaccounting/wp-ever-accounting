@@ -48,7 +48,7 @@ class Transactions extends ResourceRepository {
 	protected $data_type = array(
 		'id'             => '%d',
 		'type'           => '%s',
-		'paid_at'        => '%s',
+		'payment_date'        => '%s',
 		'amount'         => '%f',
 		'currency_code'  => '%s', // protected
 		'currency_rate'  => '%f', // protected

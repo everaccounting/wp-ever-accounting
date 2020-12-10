@@ -36,10 +36,10 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Date', 'wp-ever-accounting' ),
-						'name'          => 'paid_at',
+						'name'          => 'payment_date',
 						'placeholder'   => __( 'Enter date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $payment->get_paid_at() ? $payment->get_paid_at() : null,
+						'value'         => $payment->get_payment_date() ? $payment->get_payment_date() : null,
 						'required'      => true,
 					)
 				);

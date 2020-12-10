@@ -231,4 +231,14 @@ class DateTime extends DT {
 	public function quarter() {
 		return ceil( $this->format( 'm' ) / 3 );
 	}
+
+	/**
+	 * Alias self::quarter()
+	 *
+	 * @since 1.1.0
+	 * @return false|float
+	 */
+	public function get_quarter() {
+		return ceil( $this->format( 'm' ) / 3 );
+	}
 }

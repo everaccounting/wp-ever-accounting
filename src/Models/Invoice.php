@@ -47,9 +47,9 @@ class Invoice extends ResourceModel {
 		'invoice_number' => '',
 		'order_number'   => '',
 		'status'         => 'draft',
-		'issued_at'      => null,
-		'due_at'         => null,
-		'paid_at'        => null,
+		'issue_date'     => null,
+		'due_date'       => null,
+		'payment_date'   => null,
 		'category_id'    => null,
 		'customer_id'    => null,
 		'name'           => '',
@@ -265,8 +265,8 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_issued_at( $context = 'edit' ) {
-		return $this->get_prop( 'issued_at', $context );
+	public function get_issue_date( $context = 'edit' ) {
+		return $this->get_prop( 'issue_date', $context );
 	}
 
 	/**
@@ -278,8 +278,8 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_due_at( $context = 'edit' ) {
-		return $this->get_prop( 'due_at', $context );
+	public function get_due_date( $context = 'edit' ) {
+		return $this->get_prop( 'due_date', $context );
 	}
 
 	/**
@@ -291,8 +291,8 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_paid_at( $context = 'edit' ) {
-		return $this->get_prop( 'paid_at', $context );
+	public function get_payment_date( $context = 'edit' ) {
+		return $this->get_prop( 'payment_date', $context );
 	}
 
 	/**
@@ -450,6 +450,16 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
+	 * Get formatted subtotal.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_subtotal() {
+		return eaccounting_format_price( $this->get_subtotal(), $this->get_currency_code() );
+	}
+
+	/**
 	 * Get the invoice discount total.
 	 *
 	 * @since 1.1.0
@@ -460,6 +470,16 @@ class Invoice extends ResourceModel {
 	 */
 	public function get_total_discount( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_discount', $context );
+	}
+
+	/**
+	 * Get formatted subtotal.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_total_discount() {
+		return eaccounting_format_price( $this->get_total_discount(), $this->get_currency_code() );
 	}
 
 	/**
@@ -476,6 +496,16 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
+	 * Get formatted subtotal.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_total_tax() {
+		return eaccounting_format_price( $this->get_total_tax(), $this->get_currency_code() );
+	}
+
+	/**
 	 * Get the invoice vat total.
 	 *
 	 * @since 1.1.0
@@ -486,6 +516,16 @@ class Invoice extends ResourceModel {
 	 */
 	public function get_total_vat( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_vat', $context );
+	}
+
+	/**
+	 * Get formatted subtotal.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_total_vat() {
+		return eaccounting_format_price( $this->get_total_vat(), $this->get_currency_code() );
 	}
 
 	/**
@@ -502,6 +542,16 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
+	 * Get formatted total.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_total_shipping() {
+		return eaccounting_format_price( $this->get_total(), $this->get_currency_code() );
+	}
+
+	/**
 	 * Get the invoice total.
 	 *
 	 * @since 1.1.0
@@ -514,6 +564,16 @@ class Invoice extends ResourceModel {
 		}
 
 		return $total;
+	}
+
+	/**
+	 * Get formatted total.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_total() {
+		return eaccounting_format_price( $this->get_total(), $this->get_currency_code() );
 	}
 
 	/**
@@ -721,7 +781,7 @@ class Invoice extends ResourceModel {
 				'note' => $note,
 			);
 
-			$this->maybe_set_paid_at();
+			$this->maybe_set_payment_date();
 		}
 
 		return array(
@@ -737,8 +797,8 @@ class Invoice extends ResourceModel {
 	 *
 	 * @param string $date Value to set.
 	 */
-	public function set_issued_at( $date ) {
-		$this->set_date_prop( 'issued_at', $date );
+	public function set_issue_date( $date ) {
+		$this->set_date_prop( 'issue_date', $date );
 	}
 
 	/**
@@ -746,11 +806,11 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $due_at .
+	 * @param string $due_date .
 	 *
 	 */
-	public function set_due_at( $due_at ) {
-		$this->set_date_prop( 'due_at', $due_at );
+	public function set_due_date( $due_date ) {
+		$this->set_date_prop( 'due_date', $due_date );
 	}
 
 	/**
@@ -758,11 +818,11 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $paid_at .
+	 * @param string $payment_date .
 	 *
 	 */
-	public function set_paid_at( $paid_at ) {
-		$this->set_date_prop( 'paid_at', $paid_at );
+	public function set_payment_date( $payment_date ) {
+		$this->set_date_prop( 'payment_date', $payment_date );
 	}
 
 	/**
@@ -1102,7 +1162,7 @@ class Invoice extends ResourceModel {
 			'item_price'    => $item->get_sale_price(),
 			'quantity'      => 1,
 			'discount_rate' => $this->discount,
-			'tax_rate'      => $item->get_sales_tax(),
+			'tax_rate'      => $item->get_sales_tax_rate(),
 			'vat_rate'      => $item->get_vat(),
 		);
 		$args    = wp_parse_args( $args, $default );

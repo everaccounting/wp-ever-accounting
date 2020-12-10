@@ -54,9 +54,9 @@ abstract class InvoiceModel extends ResourceModel {
 		'number'         => '',
 		'order_number'   => '',
 		'status'         => 'draft',
-		'issued_at'      => null,
-		'due_at'         => null,
-		'paid_at'        => null,
+		'issue_date'      => null,
+		'due_date'         => null,
+		'payment_date'        => null,
 		'category_id'    => null,
 		'contact_id'     => null,
 		'name'           => '',
@@ -274,8 +274,8 @@ abstract class InvoiceModel extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_issued_at( $context = 'edit' ) {
-		return $this->get_prop( 'issued_at', $context );
+	public function get_issue_date( $context = 'edit' ) {
+		return $this->get_prop( 'issue_date', $context );
 	}
 
 	/**
@@ -287,8 +287,8 @@ abstract class InvoiceModel extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_due_at( $context = 'edit' ) {
-		return $this->get_prop( 'due_at', $context );
+	public function get_due_date( $context = 'edit' ) {
+		return $this->get_prop( 'due_date', $context );
 	}
 
 	/**
@@ -300,8 +300,8 @@ abstract class InvoiceModel extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_paid_at( $context = 'edit' ) {
-		return $this->get_prop( 'paid_at', $context );
+	public function get_payment_date( $context = 'edit' ) {
+		return $this->get_prop( 'payment_date', $context );
 	}
 
 	/**
@@ -760,7 +760,7 @@ abstract class InvoiceModel extends ResourceModel {
 				'note' => $note,
 			);
 
-			$this->maybe_set_paid_at();
+			$this->maybe_set_payment_date();
 		}
 
 		return array(
@@ -776,8 +776,8 @@ abstract class InvoiceModel extends ResourceModel {
 	 *
 	 * @param string $date Value to set.
 	 */
-	public function set_issued_at( $date ) {
-		$this->set_date_prop( 'issued_at', $date );
+	public function set_issue_date( $date ) {
+		$this->set_date_prop( 'issue_date', $date );
 	}
 
 	/**
@@ -785,11 +785,11 @@ abstract class InvoiceModel extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $due_at .
+	 * @param string $due_date .
 	 *
 	 */
-	public function set_due_at( $due_at ) {
-		$this->set_date_prop( 'due_at', $due_at );
+	public function set_due_date( $due_date ) {
+		$this->set_date_prop( 'due_date', $due_date );
 	}
 
 	/**
@@ -797,11 +797,11 @@ abstract class InvoiceModel extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $paid_at .
+	 * @param string $payment_date .
 	 *
 	 */
-	public function set_paid_at( $paid_at ) {
-		$this->set_date_prop( 'paid_at', $paid_at );
+	public function set_payment_date( $payment_date ) {
+		$this->set_date_prop( 'payment_date', $payment_date );
 	}
 
 	/**
@@ -1165,7 +1165,7 @@ abstract class InvoiceModel extends ResourceModel {
 			'item_price' => $item->get_sale_price(),
 			'quantity'   => 1,
 			'discount'   => 0,
-			'taxes'      => $item->get_sales_tax_ids(),
+			'taxes'      => $item->get_sales_tax_rate_ids(),
 		);
 
 		$args = wp_parse_args( $args, $default );
@@ -1270,7 +1270,7 @@ abstract class InvoiceModel extends ResourceModel {
 			$this->set_currency_rate( $currency->get_rate() );
 		}
 
-		$this->maybe_set_paid_at();
+		$this->maybe_set_payment_date();
 		$this->maybe_set_key();
 		$this->maybe_set_number();
 		parent::save();
@@ -1290,10 +1290,10 @@ abstract class InvoiceModel extends ResourceModel {
 	 *
 	 * @since 1.1.0
 	 */
-	public function maybe_set_paid_at() {
+	public function maybe_set_payment_date() {
 
-		if ( ! $this->get_paid_at( 'edit' ) && $this->is_status( 'paid' ) ) {
-			$this->set_paid_at( current_time( 'mysql' ) );
+		if ( ! $this->get_payment_date( 'edit' ) && $this->is_status( 'paid' ) ) {
+			$this->set_payment_date( current_time( 'mysql' ) );
 		}
 	}
 

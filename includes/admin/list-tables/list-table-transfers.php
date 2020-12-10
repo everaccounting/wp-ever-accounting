@@ -108,7 +108,7 @@ class List_Table_Transfers extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'          => array( 'paid_at', false ),
+			'date'          => array( 'payment_date', false ),
 			'amount'        => array( 'amount', false ),
 			// 'from_account_id' => array( 'from_account_id', false ),
 			// 'to_account_id'   => array( 'to_account_id', false ),

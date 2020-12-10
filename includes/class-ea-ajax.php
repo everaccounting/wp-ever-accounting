@@ -111,6 +111,7 @@ class Ajax {
 			'get_currency',
 			'get_account_currency',
 			'dropdown_search',
+			'get_items',
 			'edit_currency',
 			'get_account',
 			'edit_account',
@@ -379,6 +380,12 @@ class Ajax {
 				),
 			)
 		);
+	}
+
+	public static function get_items() {
+		$search = sanitize_text_field( $_REQUEST['search'] );
+
+		return wp_send_json_success( eaccounting_get_items( array( 'search' => $search, 'return' => 'raw', 	'status' => 'active',) ) );
 	}
 
 	/**

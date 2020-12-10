@@ -11,7 +11,7 @@ class EAccounting_Helper_Revenue {
 	 * Creates an revenue in test db
 	 *
 	 */
-	public static function create_revenue( $type = 'income', $amount = 1000, $paid_at = '2020-08-26', $category = 'income', $payment_method = 'cash' ) {
+	public static function create_revenue( $type = 'income', $amount = 1000, $payment_date = '2020-08-26', $category = 'income', $payment_method = 'cash' ) {
 		$account    = EAccounting_Helper_Account::create_account();
 		$account_id = $account->get_id();
 
@@ -21,7 +21,7 @@ class EAccounting_Helper_Revenue {
 		$revenue = eaccounting_insert_transaction( array(
 			'type'           => $type,
 			'amount'         => $amount,
-			'paid_at'        => $paid_at,
+			'payment_date'        => $payment_date,
 			'category'       => $category,
 			'category_id'    => $category_id,
 			'payment_method' => $payment_method,

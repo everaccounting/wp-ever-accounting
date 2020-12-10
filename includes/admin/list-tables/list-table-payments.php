@@ -115,7 +115,7 @@ class List_Table_Payments extends List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'date'        => array( 'paid_at', false ),
+			'date'        => array( 'payment_date', false ),
 			'amount'      => array( 'amount', false ),
 			'account_id'  => array( 'account_id', false ),
 			'category_id' => array( 'category_id', false ),
@@ -169,7 +169,7 @@ class List_Table_Payments extends List_Table {
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $payment ) {
-		$date = $payment->get_paid_at();
+		$date = $payment->get_payment_date();
 
 		$value = sprintf(
 			'<a href="%1$s">%2$s</a>',

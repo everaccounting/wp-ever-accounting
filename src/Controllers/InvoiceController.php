@@ -54,7 +54,7 @@ class InvoiceController extends Singleton {
 		if ( empty( $data['invoiced_at'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Invoice date is required.', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $data['due_at'] ) ) {
+		if ( empty( $data['due_date'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Invoice due date is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['currency_code'] ) ) {

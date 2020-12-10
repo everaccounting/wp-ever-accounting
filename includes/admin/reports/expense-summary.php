@@ -77,7 +77,7 @@ function eaccounting_reports_expense_summary_tab() {
 		$end   = eaccounting_get_financial_end( $year );
 
 		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
-		$where .= $wpdb->prepare( ' AND (paid_at BETWEEN %s AND %s)', $start, $end );
+		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $start, $end );
 		if ( ! empty( $account_id ) ) {
 			$where .= $wpdb->prepare( ' AND account_id=%d', $account_id );
 		}
@@ -90,7 +90,7 @@ function eaccounting_reports_expense_summary_tab() {
 
 		$transactions = $wpdb->get_results(
 			"
-		SELECT name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id
+		SELECT name, payment_date, currency_code, currency_rate, amount, ea_categories.id category_id
 		FROM {$wpdb->prefix}ea_transactions ea_transactions
 		LEFT JOIN {$wpdb->prefix}ea_categories ea_categories ON ea_categories.id=ea_transactions.category_id
 		WHERE $where AND ea_transactions.type = 'expense'
@@ -126,8 +126,8 @@ function eaccounting_reports_expense_summary_tab() {
 
 		foreach ( $transactions as $transaction ) {
 			if ( isset( $expenses[ $transaction->category_id ] ) ) {
-				$month      = date( 'F', strtotime( $transaction->paid_at ) );
-				$month_year = date( 'F-Y', strtotime( $transaction->paid_at ) );
+				$month      = date( 'F', strtotime( $transaction->payment_date ) );
+				$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) );
 				$expenses[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
 				$graph[ $month_year ]                                      += $transaction->amount;
 				$totals[ $month ]['amount']                                += $transaction->amount;

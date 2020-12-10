@@ -395,7 +395,7 @@ class BillsController extends Controller {
 					'format'      => 'date-time',
 					'context'     => array( 'view', 'edit' ),
 				),
-				'due_at'             => array(
+				'due_date'             => array(
 					'description' => __( 'Due Date of bill.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',

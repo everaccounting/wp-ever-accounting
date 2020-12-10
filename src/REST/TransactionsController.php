@@ -57,12 +57,12 @@ abstract class TransactionsController extends EntitiesController {
 
 		// Set before into date query. Date query must be specified as an array of an array.
 		if ( isset( $request['before'] ) ) {
-			$args['paid_at'][0]['before'] = $request['before'];
+			$args['payment_date'][0]['before'] = $request['before'];
 		}
 
 		// Set after into date query. Date query must be specified as an array of an array.
 		if ( isset( $request['after'] ) ) {
-			$args['paid_at'][0]['after'] = $request['after'];
+			$args['payment_date'][0]['after'] = $request['after'];
 		}
 		return eaccounting_get_transactions( $query_args );
 	}
@@ -89,7 +89,7 @@ abstract class TransactionsController extends EntitiesController {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'paid_at'          => array(
+				'payment_date'          => array(
 					'description' => __( 'Payment Date of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
@@ -327,9 +327,9 @@ abstract class TransactionsController extends EntitiesController {
 				'orderby'    => array(
 					'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'default'     => 'paid_at',
+					'default'     => 'payment_date',
 					'enum'        => array(
-						'paid_at',
+						'payment_date',
 						'amount',
 						'account_id',
 						'type',

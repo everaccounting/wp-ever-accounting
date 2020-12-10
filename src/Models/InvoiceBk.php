@@ -48,7 +48,7 @@ class InvoiceBk extends ResourceModel {
 		'order_number'        => '',
 		'status'              => 'draft',
 		'invoiced_at'         => null,
-		'due_at'              => null,
+		'due_date'              => null,
 		'completed_at'        => null,
 		'category_id'         => null,
 		'customer_id'         => null,
@@ -450,11 +450,11 @@ class InvoiceBk extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $due_at .
+	 * @param string $due_date .
 	 *
 	 */
-	public function set_due_at( $due_at ) {
-		$this->set_date_prop( 'due_at', $due_at );
+	public function set_due_date( $due_date ) {
+		$this->set_date_prop( 'due_date', $due_date );
 	}
 
 	/**
@@ -798,7 +798,7 @@ class InvoiceBk extends ResourceModel {
 			'item_price' => $item->get_sale_price(),
 			'quantity'   => 1,
 			'discount'   => 0,
-			'tax_ids'    => $item->get_sales_tax_ids(),
+			'tax_ids'    => $item->get_sales_tax_rate_ids(),
 		);
 
 		$args = wp_parse_args( $args, $default );

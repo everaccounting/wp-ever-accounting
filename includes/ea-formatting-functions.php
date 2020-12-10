@@ -165,7 +165,7 @@ function eaccounting_time_format() {
  */
 function eaccounting_format_datetime( $date, $format = '' ) {
 
-	if ( empty( $date ) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date) {
+	if ( empty( $date ) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date ) {
 		return '';
 	}
 
@@ -340,4 +340,35 @@ function eaccounting_format_price( $amount, $code = null ) {
 	}
 
 	return $amount->format();
+}
+
+/**
+ * Convert a date string to a EAccounting_DateTime.
+ *
+ * @since  1.0.2
+ *
+ * @param string $time_string Time string.
+ *
+ * @throws Exception
+ * @return \EverAccounting\Core\DateTime
+ */
+function eaccounting_string_to_datetime( $time_string ) {
+	// Strings are defined in local WP timezone. Convert to UTC.
+	if ( 1 === preg_match( '/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|((-|\+)\d{2}:\d{2}))$/', $time_string, $date_bits ) ) {
+		$offset    = ! empty( $date_bits[7] ) ? iso8601_timezone_to_offset( $date_bits[7] ) : ( (float) get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS );
+		$timestamp = gmmktime( $date_bits[4], $date_bits[5], $date_bits[6], $date_bits[2], $date_bits[3], $date_bits[1] ) - $offset;
+	} elseif ( is_numeric( $time_string ) ) {
+		$local_time = gmdate( 'Y-m-d H:i:s', $time_string );
+		$timezone   = wp_timezone();
+		$datetime   = date_create( $local_time, $timezone );
+		$timestamp  = $datetime->getTimestamp();
+	} else {
+		$original_timezone = date_default_timezone_get();
+		date_default_timezone_set( 'UTC' );
+		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
+		date_default_timezone_set( $original_timezone );
+	}
+	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+
+	return $datetime;
 }

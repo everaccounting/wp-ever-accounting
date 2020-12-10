@@ -41,12 +41,12 @@ class Latest_Incomes extends Widget {
 	public function get_content() {
 		global $wpdb;
 		$incomes = $wpdb->get_results($wpdb->prepare("
-		SELECT t.paid_at, c.name, t.amount, t.currency_code
+		SELECT t.payment_date, c.name, t.amount, t.currency_code
 		FROM {$wpdb->prefix}ea_transactions t
 		LEFT JOIN {$wpdb->prefix}ea_categories as c on c.id=t.category_id
 		WHERE t.type= 'income'
 		AND c.type != 'other'
-		ORDER BY t.paid_at DESC
+		ORDER BY t.payment_date DESC
 		LIMIT %d
 		", 5));
 
@@ -71,7 +71,7 @@ class Latest_Incomes extends Widget {
 			<tbody>
 			<?php foreach ( $incomes as $income ) : ?>
 				<tr>
-					<td><?php echo esc_html( $income->paid_at ); ?></td>
+					<td><?php echo esc_html( $income->payment_date ); ?></td>
 					<td><?php echo esc_html( $income->name ); ?></td>
 					<td><?php echo eaccounting_format_price( $income->amount, $income->currency_code ); ?></td>
 				</tr>
