@@ -11,37 +11,6 @@
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Get all the permissions of api_key the plugin support.
- *
- * @return array
- * @since 1.1.0
- */
-function eaccounting_get_api_key_permissions() {
-	$types = array(
-		'read'       => __( 'Read', 'wp-ever-accounting' ),
-		'write'      => __( 'Write', 'wp-ever-accounting' ),
-		'read_write' => __( 'Read/Write', 'wp-ever-accounting' ),
-	);
-
-	return apply_filters( 'eaccounting_get_api_key_permissions', $types );
-}
-
-/**
- * Get the api_key permission label of a specific permission.
- *
- * @param $permission
- *
- * @return string
- * @since 1.1.0
- *
- */
-function eaccounting_get_api_key_permission( $permission ) {
-	$permissions = eaccounting_get_api_key_permissions();
-
-	return array_key_exists( $permission, $permissions ) ? $permissions[ $permission ] : null;
-}
-
-/**
  * Get api_key.
  *
  * @param $api_key
@@ -109,118 +78,30 @@ function eaccounting_insert_api_key( $data = array(), $wp_error = true ) {
 }
 
 /**
- * Delete a api_key.
- *
- * @param $api_key_id
- *
- * @return bool
- * @since 1.1.0
- *
- */
-function eaccounting_delete_api_key( $api_key_id ) {
-	try {
-		$api_key = new EverAccounting\Models\ApiKey( $api_key_id );
-
-		return $api_key->exists() ? $api_key->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return false;
-	}
-}
-
-	/**
-	 * Get api_key collection.
-	 *
-	 * @param array $args
-	 *
-	 * @return int|array|null
-	 * @since 1.1.0
-	 *
-	 */
-	function eaccounting_get_api_keys( $args = array() ) {
-		global $wpdb;
-		// Prepare args.
-		$args = wp_parse_args(
-			$args,
-			array(
-				'status'       => 'all',
-				'type'         => '',
-				'include'      => '',
-				'search'       => '',
-				'search_cols'  => array( 'user_id', 'permission' ),
-				'orderby_cols' => array( 'user_id', 'permission' ),
-				'fields'       => '*',
-				'orderby'      => 'id',
-				'order'        => 'ASC',
-				'number'       => 20,
-				'offset'       => 0,
-				'paged'        => 1,
-				'return'       => 'objects',
-				'count_total'  => false,
-			)
-		);
-
-		$qv    = apply_filters( 'eaccounting_get_api_keys_args', $args );
-		$table = 'ea_api_keys';
-
-		$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
-		$query_from    = eaccounting_prepare_query_from( $table );
-		$query_where   = 'WHERE 1=1';
-		$query_where   .= eaccounting_prepare_query_where( $qv, $table );
-		$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
-		$query_limit   = eaccounting_prepare_query_limit( $qv );
-		$count_total   = true === $qv['count_total'];
-		$cache_key     = md5( serialize( $qv ) );
-		$results       = wp_cache_get( $cache_key, 'ea_api_keys' );
-		$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
-
-		if ( false === $results ) {
-			if ( $count_total ) {
-				$results = (int) $wpdb->get_var( $request );
-				wp_cache_set( $cache_key, $results, 'ea_api_keys' );
-			} else {
-				$results = $wpdb->get_results( $request );
-				if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
-					foreach ( $results as $key => $item ) {
-						wp_cache_set( $item->id, $item, 'ea_api_keys' );
-						wp_cache_set( "key-{$item->user_id}", $item->id, 'ea_api_keys' );
-						wp_cache_set( "key-{$item->permission}", $item->id, 'ea_api_keys' );
-					}
-				}
-				wp_cache_set( $cache_key, $results, 'ea_api_keys' );
-			}
-		}
-
-		if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-			$results = array_map( 'eaccounting_get_api_key', $results );
-		}
-
-		return $results;
-
-}
-/**
  * Get all the admin users.
  *
- * @since 1.1.0
  * @return array
+ * @since 1.1.0
  */
 function eaccoutning_get_admin_users() {
 	$admins = get_users( [ 'role__in' => [ 'administrator' ] ] );
-	$users = array();
-	if(is_array($admins) && count($admins)){
-		foreach($admins as $single){
+	$users  = array();
+	if ( is_array( $admins ) && count( $admins ) ) {
+		foreach ( $admins as $single ) {
 			$users = array(
-				$single->ID => $single->user_nicename.'('. "#".$single->ID.'&ndash;'.$single->user_email.')',
+				$single->ID => $single->user_nicename . '(' . "#" . $single->ID . '&ndash;' . $single->user_email . ')',
 			);
 		}
 	}
+
 	return apply_filters( 'eaccounting_api_keys_users', $users );
 }
 
 /**
  * Generate a random hash.
  *
- * @since  1.1.0
  * @return string
+ * @since  1.1.0
  */
 function ea_rand_hash() {
 	if ( ! function_exists( 'openssl_random_pseudo_bytes' ) ) {
@@ -233,10 +114,15 @@ function ea_rand_hash() {
 /**
  * EA API - Hash.
  *
- * @since  1.1.0
- * @param  string $data Message to be hashed.
+ * @param string $data Message to be hashed.
+ *
  * @return string
+ * @since  1.1.0
  */
 function ea_api_hash( $data ) {
 	return hash_hmac( 'sha256', $data, 'ea-api' );
 }
+
+
+
+

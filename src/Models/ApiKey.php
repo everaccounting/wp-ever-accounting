@@ -93,6 +93,24 @@ class ApiKey extends ResourceModel {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Object Specific data methods
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * @return array
+	 * @since 1.1.0
+	 */
+	public function get_permissions() {
+		return array(
+			'read'       => __( 'Read', 'wp-ever-accounting' ),
+			'write'      => __( 'Write', 'wp-ever-accounting' ),
+			'read_write' => __( 'Read/Write', 'wp-ever-accounting' ),
+
+		);
+	}
+	/*
+	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
 	|
@@ -138,6 +156,16 @@ class ApiKey extends ResourceModel {
 	 */
 	public function get_permission( $context = 'edit' ) {
 		return $this->get_prop( 'permission', $context );
+	}
+
+	/**
+	 * Get api-key permission nice name.
+	 *
+	 * @since 1.1.0
+	 * @return mixed|string
+	 */
+	public function get_permission_nicename() {
+		return isset( $this->get_permissions()[ $this->get_permission() ] ) ? $this->get_permissions()[ $this->get_permission() ] : $this->get_permission();
 	}
 
 	/**
@@ -257,7 +285,7 @@ class ApiKey extends ResourceModel {
 	 *
 	 */
 	public function set_permission( $value ) {
-		if ( array_key_exists( $value, eaccounting_get_api_key_permissions() ) ) {
+		if ( array_key_exists( $value, $this->get_permissions() ) ) {
 			$this->set_prop( 'permission', eaccounting_clean( $value ) );
 		}
 	}

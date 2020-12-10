@@ -851,6 +851,15 @@ jQuery(function ($) {
 	var eaccounting_api_key_form = {
 		init: function () {
 			$('#ea-api-key-form').on('submit', this.submit);
+			//copy functionality
+			$('body').on('click', '.copy-btn', function () {
+				var $temp = $('<input>');
+				$('body').append($temp);
+				var input = $(this).parents('.ea-form-field').find('input[type=text]').val();
+				$temp.val(input).select();
+				alert('Copied:  ' + input);
+				$temp.remove();
+			});
 		},
 		block: function () {
 			$('#ea-api-key-form').block({
@@ -884,6 +893,7 @@ jQuery(function ($) {
 						$('#api-key-container').css("display", "block");
 						$('.api-key-notice').css("display", "block");
 					}
+
 				},
 				error: function (error) {
 					console.warn(error);
@@ -894,23 +904,9 @@ jQuery(function ($) {
 		}
 	}
 
-	var copy_btn = {
-		init: function () {
-			$('body').on('click', '.copy-btn', function () {
-				var $temp = $('<input>');
-				$('body').append($temp);
-				var input = $(this).parents('.ea-form-field').find('input[type=text]').val();
-				$temp.val(input).select();
-				alert('Copied:  ' + input);
-				$temp.remove();
-			});
-		}
-	}
-
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
 	eaccounting_api_key_form.init();
-	copy_btn.init();
 
 
 });

@@ -16,6 +16,7 @@ try {
 	wp_die( $e->getMessage() );
 }
 $back_url = remove_query_arg( array( 'action', 'id' ) );
+
 ?>
 <div class="ea-form-card">
 	<div class="ea-card ea-form-card__header is-compact">
@@ -72,12 +73,20 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 							'readonly' => true
 						)
 					);
+
+					$restricted_last_access_value = array(
+						null,
+						'0000-00-00 00:00:00',
+						'0000-00-00'
+
+					);
+
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Last access', 'wp-ever-accounting' ),
 							'name'          => 'last_access',
-							'value'         => (null != $api_key->get_last_access()) ? $api_key->get_last_access() : __('Unknown','wp-ever-accounting'),
+							'value'         => ( ! in_array( $api_key->get_last_access(),$restricted_last_access_value ) ) ? $api_key->get_last_access() : __('Unknown','wp-ever-accounting'),
 							'readonly' => true
 						)
 					);

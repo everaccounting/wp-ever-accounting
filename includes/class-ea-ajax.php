@@ -10,6 +10,7 @@
 namespace EverAccounting;
 
 use EverAccounting\Core\Exception;
+use EverAccounting\Models\ApiKey;
 
 defined( 'ABSPATH' ) || exit();
 

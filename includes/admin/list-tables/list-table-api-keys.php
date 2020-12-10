@@ -11,6 +11,7 @@ namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
 use EverAccounting\Models\ApiKey;
+use EverAccounting\Repositories\ApiKeys;
 
 
 defined( 'ABSPATH' ) || exit();
@@ -216,7 +217,7 @@ class List_Table_Api_Keys extends List_Table {
 	function column_truncated_key( $api_key ) {
 		$truncated_key = $api_key->get_truncated_key();
 
-		return apply_filters( 'eaccounting_api_keys_table_truncated_key', '<code>'.'...'.$truncated_key.'</code>', $api_key );
+		return apply_filters( 'eaccounting_api_keys_table_truncated_key', '<code>' . '...' . $truncated_key . '</code>', $api_key );
 	}
 
 	/**
@@ -229,7 +230,7 @@ class List_Table_Api_Keys extends List_Table {
 	 *
 	 */
 	function column_permission( $api_key ) {
-		$permission = $api_key->get_permission();
+		$permission = $api_key->get_permission_nicename();
 
 		return apply_filters( 'eaccounting_api_keys_table_permission', $permission, $api_key );
 	}
@@ -244,7 +245,14 @@ class List_Table_Api_Keys extends List_Table {
 	 *
 	 */
 	function column_last_access( $api_key ) {
-		$last_access = (null != $api_key->get_last_access()) ? $api_key->get_last_access() : __('Unknown','wp-ever-accounting');
+
+		$restricted_last_access_value = array(
+			null,
+			'0000-00-00 00:00:00',
+			'0000-00-00'
+
+		);
+		$last_access = ( ! in_array( $api_key->get_last_access(), $restricted_last_access_value ) ) ? $api_key->get_last_access() : __( 'Unknown', 'wp-ever-accounting' );
 
 		return apply_filters( 'eaccounting_api_keys_table_last_access', $last_access, $api_key );
 	}
@@ -322,7 +330,7 @@ class List_Table_Api_Keys extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'revoke':
-					eaccounting_delete_api_key( $id );
+					$this->delete_api_key( $id );
 					break;
 				default:
 					do_action( 'eaccounting_api_keys_do_bulk_action_' . $this->current_action(), $id );
@@ -386,7 +394,7 @@ class List_Table_Api_Keys extends List_Table {
 
 		$args = apply_filters( 'eaccounting_api_keys_table_get_api_keys', $args, $this );
 
-		$this->items = eaccounting_get_api_keys( $args );
+		$this->items = ApiKeys::get_api_keys( $args );
 
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
@@ -405,6 +413,25 @@ class List_Table_Api_Keys extends List_Table {
 				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
+	}
+
+	/**
+	 * Delete a api_key.
+	 *
+	 * @param $api_key_id
+	 *
+	 * @return bool
+	 * @since 1.1.0
+	 *
+	 */
+	public function delete_api_key( $api_key_id ) {
+		try {
+			$api_key = eaccounting_get_api_key( $api_key_id );
+
+			return $api_key->exists() ? $api_key->delete() : false;
+		} catch ( \EverAccounting\Core\Exception $e ) {
+			return false;
+		}
 	}
 
 }
