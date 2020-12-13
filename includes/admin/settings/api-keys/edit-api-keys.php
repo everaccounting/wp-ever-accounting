@@ -43,7 +43,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'label'         => __( 'User', 'wp-ever-accounting' ),
 						'name'          => 'user_id',
 						'value'         => $api_key->get_user_id(),
-						'options'       => eaccoutning_get_admin_users(),
+						'options'       => eaccounting_get_admin_users(),
 						'placeholder'   => __( 'Select user', 'wp-ever-accounting' ),
 						'required'      => true,
 					)

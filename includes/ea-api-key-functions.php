@@ -83,7 +83,7 @@ function eaccounting_insert_api_key( $data = array(), $wp_error = true ) {
  * @return array
  * @since 1.1.0
  */
-function eaccoutning_get_admin_users() {
+function eaccounting_get_admin_users() {
 	$admins = get_users( [ 'role__in' => [ 'administrator' ] ] );
 	$users  = array();
 	if ( is_array( $admins ) && count( $admins ) ) {
