@@ -106,6 +106,7 @@ jQuery( function ( $ ) {
 			};
 		},
 	} );
+
 	$( '#account_id,#customer_id,#vendor_id' ).eaccounting_creatable();
 
 	$( '#category_id' ).eaccounting_creatable( {
@@ -117,4 +118,5 @@ jQuery( function ( $ ) {
 			$( '#type', $modal.$el ).val( type.replace( '_category', '' ) );
 		},
 	} );
+
 } );

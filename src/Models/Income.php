@@ -66,12 +66,100 @@ class Income extends TransactionModel {
 			$this->repository->read( $this );
 		}
 
-		// If not vendor then reset to default
+		// If not customer then reset to default
 		if ( self::TRANS_TYPE !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
 	}
+
+
+	/**
+	 * Return the customer phone.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	public function get_customer_phone() {
+		$customer = eaccounting_get_customer( $this->get_contact_id() );
+
+		return $this->get_object_prop( $customer, 'phone' );
+	}
+
+	/**
+	 * Return the customer email.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	public function get_customer_email() {
+		$customer = eaccounting_get_customer( $this->get_contact_id() );
+
+		return $this->get_object_prop( $customer, 'email' );
+	}
+
+	/**
+	 * Return the customer tax number.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	public function get_customer_tax_number() {
+		$customer = eaccounting_get_customer( $this->get_contact_id() );
+
+		return $this->get_object_prop( $customer, 'tax_number' );
+	}
+
+	/**
+	 * Return the customer postcode.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	public function get_customer_postcode() {
+		$customer = eaccounting_get_customer( $this->get_contact_id() );
+
+		return $this->get_object_prop( $customer, 'postcode' );
+	}
+
+	/**
+	 * Return the customer address.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	public function get_customer_address() {
+		$customer = eaccounting_get_customer( $this->get_contact_id() );
+
+		return $this->get_object_prop( $customer, 'postcode' );
+	}
+
+	/**
+	 * Return the customer country.
+	 *
+	 * @since  1.1.0
+	 * @return string
+	 */
+	public function get_customer_country() {
+		$customer = eaccounting_get_customer( $this->get_contact_id() );
+
+		return $this->get_object_prop( $customer, 'country' );
+	}
+
+	/**
+	 * Return the Vendor country.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @return string
+	 */
+	public function get_customer_country_nicename() {
+		$customer = eaccounting_get_customer( $this->get_contact_id() );
+
+		return $this->get_object_prop( $customer, 'country_nicename' );
+	}
+
+
 
 	/**
 	 * Save should create or update based on object existence.

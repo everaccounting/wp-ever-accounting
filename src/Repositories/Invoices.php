@@ -46,8 +46,8 @@ class Invoices extends ResourceRepository {
 		'invoice_number' => '%s',
 		'order_number'   => '%s',
 		'status'         => '%s',
-		'issue_date'      => '%s',
-		'due_date'         => '%s',
+		'issue_date'     => '%s',
+		'due_date'       => '%s',
 		'category_id'    => '%d',
 		'customer_id'    => '%d',
 		'name'           => '%s',
@@ -82,7 +82,7 @@ class Invoices extends ResourceRepository {
 	 *
 	 * @return array
 	 */
-	public function read_items( $invoice ) {
+	public function get_line_items( $invoice ) {
 		global $wpdb;
 
 		// Get from cache if available.

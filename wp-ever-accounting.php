@@ -56,8 +56,8 @@ final class EverAccounting {
 	 * Insures that only one instance of EverAccounting exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place
 	 *
-	 * @return EverAccounting - Main instance.
 	 * @since 1.0.0
+	 * @return EverAccounting - Main instance.
 	 */
 	public static function init() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EverAccounting ) ) {
@@ -71,9 +71,9 @@ final class EverAccounting {
 	/**
 	 * Return plugin version.
 	 *
-	 * @return string
 	 * @since 1.2.0
-	 * */
+	 * *@return string
+	 */
 	public function get_version() {
 		return $this->version;
 	}
@@ -81,11 +81,11 @@ final class EverAccounting {
 	/**
 	 * Plugin URL getter.
 	 *
+	 * @since 1.2.0
+	 *
 	 * @param string $path
 	 *
 	 * @return string
-	 * @since 1.2.0
-	 *
 	 */
 	public function plugin_url( $path = '' ) {
 		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
@@ -100,11 +100,11 @@ final class EverAccounting {
 	/**
 	 * Plugin path getter.
 	 *
+	 * @since 1.2.0
+	 *
 	 * @param string $path
 	 *
 	 * @return string
-	 * @since 1.2.0
-	 *
 	 */
 	public function plugin_path( $path = '' ) {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
@@ -119,8 +119,8 @@ final class EverAccounting {
 	/**
 	 * Plugin base path name getter.
 	 *
-	 * @return string
 	 * @since 1.2.0
+	 * @return string
 	 */
 	public function plugin_basename() {
 		return plugin_basename( __FILE__ );
@@ -129,8 +129,8 @@ final class EverAccounting {
 	/**
 	 * Get the template path.
 	 *
-	 * @return string
 	 * @since 1.2.0
+	 * @return string
 	 */
 	public function template_path() {
 		return apply_filters( 'eaccounting_template_path', 'eaccounting/' );
@@ -139,8 +139,8 @@ final class EverAccounting {
 	/**
 	 * Get Ajax URL.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function ajax_url() {
 		return admin_url( 'admin-ajax.php', 'relative' );
@@ -149,9 +149,9 @@ final class EverAccounting {
 	/**
 	 * Initialize plugin for localization
 	 *
-	 * @return void
 	 * @since 1.0.0
 	 *
+	 * @return void
 	 */
 	public function localization_setup() {
 		load_plugin_textdomain( 'wp-ever-accounting', false, plugin_basename( dirname( __FILE__ ) ) . '/i18n/languages' );
@@ -163,8 +163,8 @@ final class EverAccounting {
 	 * The whole idea of the singleton design pattern is that there is a single
 	 * object therefore, we don't want the object to be cloned.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 
 	public function __clone() {
@@ -174,8 +174,8 @@ final class EverAccounting {
 	/**
 	 * Disable unserializing of the class
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 
 	public function __wakeup() {
@@ -185,8 +185,8 @@ final class EverAccounting {
 	/**
 	 * Ensures fatal errors are logged so they can be picked up in the status report.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function log_errors() {
 		$error = error_get_last();
@@ -261,7 +261,6 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-emails.php';
 
 		// Functions.
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
@@ -280,6 +279,7 @@ final class EverAccounting {
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
 		require_once( EACCOUNTING_ABSPATH . '/includes/ea-invoice-functions.php' );
+		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
 		// require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 		//
@@ -291,8 +291,8 @@ final class EverAccounting {
 	/**
 	 * Hook into actions and filters.
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	private function init_hooks() {
 		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting_Install', 'install' ) );
@@ -309,8 +309,8 @@ final class EverAccounting {
 	 * This ensures `eaccounting_loaded` is called only after all other plugins
 	 * are loaded, to avoid issues caused by plugin directory naming changing
 	 *
-	 * @return void
 	 * @since 1.0.0
+	 * @return void
 	 */
 	public function on_plugins_loaded() {
 		do_action( 'eaccounting_loaded' );
@@ -319,8 +319,8 @@ final class EverAccounting {
 	/**
 	 * Init EAccounting when WordPress Initialises.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function init_plugin() {
 		// Before init action.
@@ -338,6 +338,8 @@ final class EverAccounting {
 
 		\EverAccounting\REST\Manager::instance();
 
+		\EverAccounting\Core\Emails::instance();
+
 		$this->settings = new \EverAccounting\Admin\Settings();
 		$this->utils    = new \EverAccounting\Utilities();
 
@@ -348,19 +350,19 @@ final class EverAccounting {
 	/**
 	 * Email Class.
 	 *
-	 * @return \EverAccounting\Emails
 	 * @since 1.0.2
+	 * @return \EverAccounting\Core\Mailer
 	 */
 	public function mailer() {
-		return \EverAccounting\Emails::instance();
+		return new \EverAccounting\Core\Mailer();
 	}
 }
 
 /**
  * Returns the main instance of Plugin.
  *
- * @return EverAccounting
  * @since  1.0.0
+ * @return EverAccounting
  */
 function eaccounting() {
 	return EverAccounting::init();

@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Models\Invoice;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -123,6 +125,7 @@ class Ajax {
 			'edit_invoice',
 			'edit_item',
 			'edit_tax',
+			'invoice_calculate_totals',
 			'upload_files',
 		);
 
@@ -385,7 +388,15 @@ class Ajax {
 	public static function get_items() {
 		$search = sanitize_text_field( $_REQUEST['search'] );
 
-		return wp_send_json_success( eaccounting_get_items( array( 'search' => $search, 'return' => 'raw', 	'status' => 'active',) ) );
+		return wp_send_json_success(
+			eaccounting_get_items(
+				array(
+					'search' => $search,
+					'return' => 'raw',
+					'status' => 'active',
+				)
+			)
+		);
 	}
 
 	/**
@@ -738,6 +749,7 @@ class Ajax {
 		wp_die();
 	}
 
+
 	/**
 	 * Handle ajax action of creating/updating invoice.
 	 *
@@ -850,6 +862,23 @@ class Ajax {
 		);
 
 		wp_die();
+	}
+
+	public static function invoice_calculate_totals() {
+		//self::check_permission( 'eaccounting_edit_invoice' );
+		$posted  = eaccounting_clean( $_REQUEST );
+		$posted  = wp_parse_args( $posted, array( 'id' => null ) );
+		$invoice = new Invoice( $posted['id'] );
+		$invoice->set_props( $posted );
+		$totals = $invoice->calculate_total();
+		wp_send_json_success(
+			array(
+				'lines_html'  => eaccounting_get_admin_template_html( 'invoice/line-items', array( 'invoice' => $invoice ) ),
+				'totals_html' => eaccounting_get_admin_template_html( 'invoice/totals', array( 'invoice' => $invoice ) ),
+				'line'        => array_map( 'strval', $invoice->get_line_items() ),
+				'totals'      => $totals,
+			)
+		);
 	}
 
 	public static function upload_files() {

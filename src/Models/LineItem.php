@@ -462,7 +462,7 @@ class LineItem extends ResourceModel {
 	 *
 	 */
 	public function set_total_vat( $vat ) {
-		$this->set_prop( 'total_vat', floatval( $vat ) );
+		$this->set_prop( 'total_vat', eaccounting_sanitize_number( $vat, true ) );
 	}
 
 	/**

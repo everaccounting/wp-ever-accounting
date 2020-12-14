@@ -850,30 +850,44 @@ jQuery(function ($) {
 
 	var eaccounting_invoice_form = {
 		init: function () {
-			$(document).on('change keyup', '.ea-invoice-line-price input', this.number_input);
-			$(document).on('change keyup', '.ea-invoice-line-tax input', this.number_input);
-			$(document).on('change keyup', '.ea-invoice-line-vat input', this.number_input);
-			$(document).on('change keyup', '.ea-invoice-line-quantity input', this.number_input);
-			$(document).on('click', '.ea-invoice .edit-item', this.toggle_line_edit);
-			$(document).on('click', '.ea-invoice .delete-item', this.remove_line);
+			// $(document).on('change keyup', '.ea-invoice-line-price input', this.number_input);
+			// $(document).on('change keyup', '.ea-invoice-line-tax input', this.number_input);
+			// $(document).on('change keyup', '.ea-invoice-line-quantity input', this.number_input);
+			// $(document).on('change keyup', '.ea-invoice-line-vat input', this.number_input);
+			$(document).on('click', '#ea-invoice-form .save-line, #ea-invoice-form .edit-line', this.toggle_line_edit);
+			$(document).on('click', '#ea-invoice-form .delete-line', this.remove_line);
+			$(document).on('click', '#ea-invoice-form .ea-add-line-item', this.add_line);
+			$(document).on('click', '#ea-invoice-form .recalculate-totals', this.recalculate_totals);
 			$(document).on('submit', '#ea-invoice-form', this.submit);
 			$('body').on('ea_invoice_updated', this.calculate_total);
-			$('.ea-invoice-line-name input[type="text"]').autocomplete(this.items_search());
+			// $('.ea-invoice-line-name input[type="text"]').autocomplete(this.items_search());
 		},
-		items_search:function (){
+		block: function () {
+			$('#ea-invoice-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+		unblock: function () {
+			$('#ea-invoice-form').unblock();
+		},
+		items_search: function () {
 
 			return {
 				selectFirst: true,
-				source: function(params, suggest){
+				source: function (params, suggest) {
 					wp.ajax.send({
 						data: {
-							search:params.term,
+							search: params.term,
 							action: 'eaccounting_get_items'
 						},
-						success: function (items){
-							suggest($.map(items, function (item){
+						success: function (items) {
+							suggest($.map(items, function (item) {
 								return {
-									value: item.name +' ' +'('+item.sku+')',
+									value: item.name + ' ' + '(' + item.sku + ')',
 									data: item,
 									id: item.id
 								};
@@ -884,8 +898,8 @@ jQuery(function ($) {
 				classes: {
 					"ui-autocomplete": "your-custom-class",
 				},
-				autoFocus:true,
-				select: function( event, ui ) {
+				autoFocus: true,
+				select: function (event, ui) {
 					var item = ui.item;
 					console.log(this);
 				}
@@ -899,6 +913,7 @@ jQuery(function ($) {
 			var $tr = $(this).closest('.ea-invoice-line');
 			if ($tr.hasClass('editing')) {
 				$tr.removeClass('editing');
+				$('body').trigger('ea_invoice_updated');
 				return false;
 			}
 			$tr.siblings('tr').removeClass('editing');
@@ -910,13 +925,39 @@ jQuery(function ($) {
 			$(this).closest('.ea-invoice-line').remove();
 			$('body').trigger('ea_invoice_updated');
 		},
-		disable_fields:function (){
+		add_line: function (e) {
+			e.preventDefault();
+			var index = parseInt($('#ea-invoice-form .ea-invoice-line').length, 10) + 1;
+			$("<input>").attr("type", "hidden").attr('name', 'line_items[' + index + '][item_id]').attr('value', 6).appendTo("#ea-invoice-form .ea-invoice-line-items");
+			$("<input>").attr("type", "hidden").attr('name', 'line_items[' + index + '][quantity]').attr('value', 10).appendTo("#ea-invoice-form .ea-invoice-line-items");
+			$('body').trigger('ea_invoice_updated');
+		},
+		disable_fields: function () {
 
 		},
-		calculate_total: function () {
-			console.log('calculate_total');
+		recalculate_totals: function (e) {
+			e.preventDefault();
+			eaccounting_invoice_form.calculate_total();
 		},
-		submit:function (e){
+		calculate_total: function () {
+			eaccounting_invoice_form.block();
+			var data = $('#ea-invoice-form').serializeObject();
+			data.action = 'eaccounting_invoice_calculate_totals'
+			wp.ajax.send({
+				data: data,
+				success: function (res) {
+					$('#ea-invoice-form .ea-invoice-line-items').html(res.lines_html);
+					$('#ea-invoice-form .ea-invoice-totals').html(res.totals_html);
+					eaccounting_invoice_form.unblock();
+				},
+				error: function (error) {
+					console.warn(error);
+					eaccounting_invoice_form.unblock();
+					$.eaccounting_notice(error.message, 'error');
+				},
+			});
+		},
+		submit: function (e) {
 			e.preventDefault();
 			console.log($('#ea-invoice-form').serializeObject())
 		}
@@ -926,4 +967,139 @@ jQuery(function ($) {
 	eaccounting_invoice_form.init();
 	eaccounting_tax_form.init();
 	eaccounting_revenue_form.init();
+
+	// $.fn.ea_form = function (callback) {
+	// 	return this.each(function () {
+	// 		new ea_form(this, callback);
+	// 	});
+	// };
+	//
+	// var ea_form = function (form, callback) {
+	// 	this.el = form;
+	// 	this.$el = $(form);
+	// 	this.rules = {};
+	// 	this.data = this.$el.serializeObject();
+	// 	var plugin = this;
+	//
+	// 	/**
+	// 	 * Get a form input value.
+	// 	 *
+	// 	 * @param {string} name
+	// 	 * @returns {boolean|*}
+	// 	 */
+	// 	this.get = function (name) {
+	// 		if (plugin.data.hasOwnProperty(name)) {
+	// 			return plugin.data[name];
+	// 		}
+	// 		return false;
+	// 	}
+	//
+	// 	/**
+	// 	 * Block the form when need to validate or make ajax call.
+	// 	 */
+	// 	this.block = function () {
+	// 		plugin.$el.block({
+	// 			message: null,
+	// 			overlayCSS: {
+	// 				background: '#fff',
+	// 				opacity: 0.6
+	// 			}
+	// 		});
+	// 	}
+	//
+	// 	/**
+	// 	 * Unblock the form when checking is done.
+	// 	 */
+	// 	this.unblock = function () {
+	// 		plugin.$el.unblock();
+	// 	}
+	//
+	// 	/**
+	// 	 * Fire action hook
+	// 	 * @param action
+	// 	 * @returns {function(): void}
+	// 	 */
+	// 	this.do_action = function (action) {
+	// 		return function () {
+	// 			plugin.$el.trigger(action);
+	// 		}
+	// 	}
+	//
+	// 	/**
+	// 	 * Apply an action hook.
+	// 	 *
+	// 	 * @param action
+	// 	 * @param callback
+	// 	 */
+	// 	this.add_action = function (action, callback) {
+	// 		plugin.$el.on(action, function () {
+	// 			callback(plugin)
+	// 		});
+	// 	}
+	//
+	// 	this.submit = function (e){
+	// 		e.preventDefault();
+	// 		console.log(plugin.data);
+	// 	}
+	//
+	// 	this.$el.on('submit', plugin.submit);
+	//
+	//
+	// 	if ('function' === typeof callback) {
+	// 		callback(this);
+	// 	}
+	// }
+	//
+	// $('#ea-invoice-form').ea_form(function (form) {
+	// 	/**
+	// 	 * Calculate total
+	// 	 */
+	// 	form.calculate_total = function () {
+	// 		console.log('calculate_total');
+	// 		form.block();
+	// 		wp.ajax.send({
+	// 			data: $.extend({}, form.data, {action: 'eaccounting_invoice_calculate_totals'}),
+	// 			success: function (res) {
+	// 				$('#ea-invoice-form .ea-invoice-line-items').html(res.lines_html);
+	// 				$('#ea-invoice-form .ea-invoice-totals').html(res.totals_html);
+	// 				form.unblock();
+	// 			},
+	// 			error: function (error) {
+	// 				console.warn(error);
+	// 				form.unblock();
+	// 				$.eaccounting_notice(error.message, 'error');
+	// 			},
+	// 		});
+	// 	}
+	//
+	// 	$('.ea-add-line-item', form.$el).on('click', function (){
+	// 		$( form.$el ).ea_modal( {
+	// 			template: 'ea-modal-add-invoice-item',
+	// 			onSubmit: function (){
+	//
+	// 			},
+	// 			onReady: function ( el, $modal ) {
+	//
+	// 			},
+	// 		} );
+	// 	});
+	//
+	// 	$('.save-line, .edit-line', form.$el).on('click',function (e){
+	// 		e.preventDefault();
+	// 		var $tr = $(this).closest('.ea-invoice-line');
+	// 		console.log($tr);
+	// 		if ($tr.hasClass('editing')) {
+	// 			$tr.removeClass('editing');
+	// 			form.do_action('ea_invoice_updated');
+	// 		}else{
+	// 			$tr.siblings('tr').removeClass('editing');
+	// 			$tr.addClass('editing');
+	// 		}
+	// 	});
+	//
+	// 	$('.recalculate-totals', form.$el).on('click', form.do_action('ea_invoice_updated'));
+	// 	form.add_action('ea_invoice_updated', form.calculate_total);
+	// });
+
+
 });

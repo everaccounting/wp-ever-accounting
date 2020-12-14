@@ -131,7 +131,7 @@ abstract class ResourceRepository {
 			$item->set_id( $wpdb->insert_id );
 			$item->apply_changes();
 			$item->clear_cache();
-			do_action( 'eacccounting_insert_' . $item->get_object_type(), $values, $item );
+			do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $values );
 
 			return true;
 		}

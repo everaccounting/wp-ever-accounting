@@ -49,7 +49,7 @@ abstract class TransactionModel extends ResourceModel {
 	 */
 	protected $data = array(
 		'type'           => '',
-		'paid_at'        => null,
+		'payment_date'   => null,
 		'amount'         => 0.00,
 		'currency_code'  => '', // protected
 		'currency_rate'  => 0.00, // protected
@@ -66,6 +66,8 @@ abstract class TransactionModel extends ResourceModel {
 		'creator_id'     => null,
 		'date_created'   => null,
 	);
+
+	protected $contact  = null;
 
 	/*
 	|--------------------------------------------------------------------------
@@ -99,10 +101,10 @@ abstract class TransactionModel extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_paid_at( $context = 'edit' ) {
-		$paid_at = $this->get_prop( 'paid_at', $context );
+	public function get_payment_date( $context = 'edit' ) {
+		$payment_date = $this->get_prop( 'payment_date', $context );
 
-		return $paid_at ? eaccounting_format_datetime( $paid_at, 'Y-m-d' ) : $paid_at;
+		return $payment_date ? eaccounting_format_datetime( $payment_date, 'Y-m-d' ) : $payment_date;
 	}
 
 	/**
@@ -304,8 +306,8 @@ abstract class TransactionModel extends ResourceModel {
 	 * @param $value
 	 *
 	 */
-	public function set_paid_at( $value ) {
-		$this->set_date_prop( 'paid_at', $value );
+	public function set_payment_date( $value ) {
+		$this->set_date_prop( 'payment_date', $value );
 	}
 
 	/**

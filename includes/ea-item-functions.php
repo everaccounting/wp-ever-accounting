@@ -155,14 +155,13 @@ function eaccounting_get_items( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];
 	$cache_key     = md5( serialize( $qv ) );
 	$results       = wp_cache_get( $cache_key, 'eaccounting_item' );
 	$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
-
 
 	if ( false === $results ) {
 		if ( $count_total ) {

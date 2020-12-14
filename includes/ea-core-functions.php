@@ -10,10 +10,6 @@
 
 defined( 'ABSPATH' ) || exit();
 
-function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: text/html\r\n", $attachments = '' ) {
-
-}
-
 /**
  * Get financial Start
  *
@@ -436,4 +432,19 @@ function eaccounting_get_data( $key ) {
 	wp_cache_set( "eaccounting-data-$key", 'eaccounting-data' );
 
 	return $data;
+}
+
+/**
+ * Send HTML emails from EverAccounting.
+ *
+ * @param mixed  $to          Receiver.
+ * @param mixed  $subject     Subject.
+ * @param mixed  $message     Message.
+ * @param string $headers     Headers. (default: "Content-Type: text/html\r\n").
+ * @param string $attachments Attachments. (default: "").
+ * @return bool
+ */
+function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: text/html\r\n", $attachments = '' ) {
+	$mailer = eaccounting()->mailer();
+	return $mailer->send( $to, $subject, $message, $headers, $attachments );
 }

@@ -203,6 +203,7 @@ function eaccounting_textarea( $field ) {
 	$field['value']            = empty( $field['value'] ) ? $field['default'] : $field['value'];
 	$field['attr']['required'] = ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
+	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
 	$field['attr']['rows']     = $field['rows'];
 	$field['attr']['cols']     = $field['cols'];
 	$field['wrapper_class']   .= ( true == $field['required'] ) ? ' required ' : '';
@@ -830,6 +831,7 @@ function eaccounting_currency_dropdown( $field ) {
 			)
 		);
 	}
+
 	$field = wp_parse_args(
 		$field,
 		array(
@@ -843,6 +845,41 @@ function eaccounting_currency_dropdown( $field ) {
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_currency_dropdown', $field ) );
 }
+
+
+/**
+ * Dropdown field for selecting currency.
+ *
+ * @since 1.0.2
+ *
+ * @param array $field
+ *
+ * @return void
+ */
+function eaccounting_item_dropdown( $field ) {
+	$items   = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : 0;
+	$options = array();
+	if ( ! empty( $items ) ) {
+		$options = eaccounting_get_items(
+			array(
+				'return'  => 'raw',
+				'include' => $items,
+			)
+		);
+	}
+	$field = wp_parse_args(
+		$field,
+		array(
+			'options'     => wp_list_pluck( $options, 'name', 'id' ),
+			'placeholder' => __( 'Select Item', 'wp-ever-accounting' ),
+			'ajax'        => true,
+			'type'        => 'currency',
+			'template'    => 'add-item',
+		)
+	);
+	eaccounting_select2( apply_filters( 'eaccounting_item_dropdown', $field ) );
+}
+
 
 /**
  * Dropdown field for selecting country.

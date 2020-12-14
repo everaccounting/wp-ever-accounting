@@ -64,7 +64,8 @@ class Admin_Assets {
 		$screen                = get_current_screen();
 		$screen_id             = $screen ? $screen->id : '';
 		$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-		$suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+//		$suffix                = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		$suffix                = '';
 		$version               = eaccounting()->get_version();
 
 		// 3rd parties
@@ -80,10 +81,11 @@ class Admin_Assets {
 		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
 		wp_register_script( 'ea-addons', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-addons' . $suffix . '.js' ), array( 'jquery' ), $version );
 		// wp_register_script( 'ea-color-picker', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-color-picker' . $suffix . '.js' ), array( 'jquery', 'wp-color-picker' ), $version );
-		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-creatable' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
-		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-modal' . $suffix . '.js' ), array( 'underscore', 'backbone', 'wp-util' ), $version );
+		//wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-creatable' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
+		//wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-modal' . $suffix . '.js' ), array( 'underscore', 'backbone', 'wp-util' ), $version );
+		wp_register_script( 'ea-modal-js', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-modal-js' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-notice', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-notice' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-form', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-form' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui', 'jquery-inputmask', 'ea-notice', 'jquery-ui-autocomplete' ), $version );
+		//wp_register_script( 'ea-form', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-form' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui', 'jquery-inputmask', 'ea-notice', 'jquery-ui-autocomplete' ), $version );
 		wp_register_script( 'ea-redirect', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-redirect' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-exporter', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-exporter' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-importer' . $suffix . '.js' ), array( 'jquery' ), $version );
@@ -94,6 +96,7 @@ class Admin_Assets {
 		// wp_register_script( 'ea-table', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-table' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-settings' . $suffix . '.js' ), array( 'jquery' ), $version );
 
+		wp_enqueue_script('ea-modal-js');
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 

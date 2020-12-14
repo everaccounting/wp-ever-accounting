@@ -90,7 +90,7 @@ class Invoice extends ResourceModel {
 	 * @since 1.1.0
 	 * @var array
 	 */
-	protected $items = array();
+	protected $line_items = array();
 
 	/**
 	 * Order items that need deleting are stored here.
@@ -98,7 +98,7 @@ class Invoice extends ResourceModel {
 	 * @since 1.1.0
 	 * @var array
 	 */
-	protected $items_to_delete = array();
+	protected $line_items_to_delete = array();
 
 	/**
 	 * Get the invoice if ID is passed, otherwise the account is new and empty.
@@ -190,8 +190,7 @@ class Invoice extends ResourceModel {
 	public static function get_statuses() {
 		return array(
 			'draft'     => __( 'Draft', 'wp-ever-accounting' ),
-			'pending'   => __( 'Pending', 'wp-ever-accounting' ),
-			'viewed'    => __( 'Viewed', 'wp-ever-accounting' ),
+			'sent'      => __( 'Sent', 'wp-ever-accounting' ),
 			'approved'  => __( 'Approved', 'wp-ever-accounting' ),
 			'partial'   => __( 'Partial', 'wp-ever-accounting' ),
 			'paid'      => __( 'Paid', 'wp-ever-accounting' ),
@@ -413,6 +412,18 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
+	 * Get country nicename.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_country_nicename() {
+		$countries = eaccounting_get_countries();
+
+		return isset( $countries[ $this->get_country() ] ) ? $countries[ $this->get_country() ] : $this->get_country();
+	}
+
+	/**
 	 * Returns the contact info.
 	 *
 	 * @since 1.1.0
@@ -433,7 +444,6 @@ class Invoice extends ResourceModel {
 			'address'    => $this->get_address( $context ),
 			'country'    => $this->get_country( $context ),
 		);
-
 	}
 
 	/**
@@ -677,12 +687,12 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return LineItem[]
 	 */
-	public function get_items( $force = true ) {
-		if ( $force && $this->exists() ) {
-			$this->items = $this->repository->read_items( $this );
+	public function get_line_items() {
+		if ( $this->exists() && empty( $this->line_items ) ) {
+			$this->line_items = $this->repository->get_line_items( $this );
 		}
 
-		return $this->items;
+		return $this->line_items;
 	}
 
 	/**
@@ -691,9 +701,9 @@ class Invoice extends ResourceModel {
 	 * @since 1.1.0
 	 * @return array
 	 */
-	public function get_item_ids() {
+	public function get_line_item_ids() {
 		$ids = array();
-		foreach ( $this->get_items( true ) as $item ) {
+		foreach ( $this->get_line_items() as $item ) {
 			$ids[] = $item->get_id();
 		}
 
@@ -708,7 +718,7 @@ class Invoice extends ResourceModel {
 	 * @return array
 	 */
 	public function get_taxes() {
-		if ( empty( $this->get_items() ) && $this->exists() ) {
+		if ( empty( $this->get_line_items() ) && $this->exists() ) {
 			$this->taxes = $this->repository->read_taxes( $this );
 		}
 
@@ -1113,7 +1123,7 @@ class Invoice extends ResourceModel {
 	 *
 	 * @param array|LineItem[] $items items.
 	 */
-	public function set_items( $items ) {
+	public function set_line_items( $items ) {
 		// Remove existing items.
 		$this->items = array();
 
@@ -1123,7 +1133,7 @@ class Invoice extends ResourceModel {
 		}
 
 		foreach ( $items as $item ) {
-			$this->add_item( $item );
+			$this->add_line_item( $item );
 		}
 
 	}
@@ -1143,16 +1153,11 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return \WP_Error|Bool
 	 */
-	public function add_item( $args ) {
+	public function add_line_item( $args ) {
 		$args = wp_parse_args( $args, array( 'item_id' => null ) );
 		$item = new Item( $args['item_id'] );
 		if ( ! $item->exists() ) {
 			return false;
-		}
-		if ( $this->get_item( $item->get_id() ) ) {
-			$line_item = $this->get_item( $item->get_id() );
-		} else {
-			$line_item = new LineItem();
 		}
 
 		$default = array(
@@ -1165,9 +1170,14 @@ class Invoice extends ResourceModel {
 			'tax_rate'      => $item->get_sales_tax_rate(),
 			'vat_rate'      => $item->get_vat(),
 		);
-		$args    = wp_parse_args( $args, $default );
-		$line_item->set_props( $args );
 
+		$line_item = $this->get_line_item( $item->get_id() );
+		if ( ! $line_item ) {
+			$line_item = new LineItem();
+		}
+
+		$args = wp_parse_args( $args, $default );
+		$line_item->set_props( $args );
 		// Now prepare
 		$tax_percent         = $line_item->get_tax_rate(); // Tax percentage
 		$vat_percent         = $line_item->get_vat_rate(); // Tax percentage
@@ -1186,8 +1196,7 @@ class Invoice extends ResourceModel {
 		$line_item->set_total_discount( $discount );
 		$line_item->set_total( $total );
 
-		$this->get_items();
-		$this->items[ $line_item->get_item_id() ] = $line_item;
+		$this->line_items[ $line_item->get_item_id() ] = $line_item;
 
 		return true;
 	}
@@ -1202,15 +1211,15 @@ class Invoice extends ResourceModel {
 	 * @return false|void
 	 */
 	public function remove_item( $item_id, $by_line_id = false ) {
-		$item = $this->get_item( $item_id, $by_line_id );
+		$line_item = $this->get_line_item( $item_id, $by_line_id );
 
-		if ( ! $item ) {
+		if ( ! $line_item ) {
 			return false;
 		}
 
 		// Unset and remove later.
-		$this->items_to_delete[] = $item;
-		unset( $this->items[ $item->get_item_id() ] );
+		$this->line_items_to_delete[] = $line_item;
+		unset( $this->line_items[ $line_item->get_item_id() ] );
 	}
 
 	/**
@@ -1222,20 +1231,17 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return LineItem|int
 	 */
-	public function get_item( $item_id, $by_line_id = false ) {
-		$items = $this->get_items( true );
+	public function get_line_item( $item_id, $by_line_id = false ) {
+		$items = $this->get_line_items();
 
 		// Search for item id.
-		if ( $items && ! $by_line_id ) {
+		if ( ! empty( $items ) && ! $by_line_id ) {
 			foreach ( $items as $id => $item ) {
 				if ( isset( $items[ $item_id ] ) ) {
 					return $items[ $item_id ];
 				}
 			}
-		}
-
-		// Search for line id.
-		if ( $items && $by_line_id ) {
+		} elseif ( ! empty( $items ) && $by_line_id ) {
 			foreach ( $items as $item ) {
 				if ( $item->get_id() === absint( $item_id ) ) {
 					return $item;
@@ -1257,7 +1263,7 @@ class Invoice extends ResourceModel {
 		$vat_total      = 0;
 		$discount_total = 0;
 		$shipping_total = 0;
-		foreach ( $this->get_items() as $item ) {
+		foreach ( $this->get_line_items() as $item ) {
 			$subtotal       += $item->get_subtotal();
 			$tax_total      += $item->get_total_tax();
 			$vat_total      += $item->get_total_vat();
@@ -1270,8 +1276,30 @@ class Invoice extends ResourceModel {
 		$this->set_total_shipping( $shipping_total );
 		$total = abs( $subtotal + $tax_total + $shipping_total - $discount_total );
 		$this->set_total( $total );
+
+		return array(
+			'subtotal'       => $this->get_subtotal(),
+			'total_tax'      => $this->get_total_tax(),
+			'total_vat'      => $this->get_total_vat(),
+			'total_discount' => $this->get_total_discount(),
+			'total_shipping' => $this->get_total_shipping(),
+			'total'          => $this->get_total(),
+		);
 	}
 
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param string $prop
+	 * @param        $item
+	 *
+	 * @return string
+	 */
+	public function get_formatted_line_amount( $item, $prop = 'total' ) {
+		$getter = "get_$prop";
+
+		return eaccounting_format_price( $item->$getter(), $this->get_currency_code() );
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -1294,6 +1322,15 @@ class Invoice extends ResourceModel {
 		return $this->get_status() === eaccounting_clean( $status );
 	}
 
+	/**
+	 * Check if an invoice is editable.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_editable() {
+		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
+	}
 
 	/**
 	 * @since 1.1.0
@@ -1311,7 +1348,7 @@ class Invoice extends ResourceModel {
 		$this->maybe_set_key();
 
 		parent::save();
-		$this->save_items();
+		$this->save_line_items();
 
 		return $this->exists();
 	}
@@ -1406,18 +1443,18 @@ class Invoice extends ResourceModel {
 	/**
 	 * Save all order items which are part of this order.
 	 */
-	protected function save_items() {
-		foreach ( $this->items_to_delete as $item ) {
+	protected function save_line_items() {
+		foreach ( $this->line_items_to_delete as $item ) {
 			if ( $item->exists() ) {
 				$item->delete();
 			}
 		}
 
-		$this->items_to_delete = array();
+		$this->line_items_to_delete = array();
 
-		$items = array_filter( $this->items );
+		$line_items = array_filter( $this->line_items );
 		// Add/save items.
-		foreach ( $items as $item ) {
+		foreach ( $line_items as $item ) {
 			$item->set_parent_id( $this->get_id() );
 			$item->set_parent_type( 'invoice' );
 			$item_id = $item->save();
