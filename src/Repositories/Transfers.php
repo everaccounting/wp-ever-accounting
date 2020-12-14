@@ -271,7 +271,7 @@ class Transfers extends ResourceRepository {
 			$item->set_from_account_id( $expense->get_account_id() );
 			$item->set_to_account_id( $income->get_account_id() );
 			$item->set_amount( $expense->get_amount() );
-			$item->set_date( $expense->get_paid_at() );
+			$item->set_date( $expense->get_payment_date() );
 			$item->set_payment_method( $expense->get_payment_method() );
 			$item->set_description( $expense->get_description() );
 			$item->set_reference( $expense->get_reference() );

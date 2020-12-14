@@ -168,7 +168,7 @@ class List_Table_Transactions extends List_Table {
 	 * @return string Data shown in the Name column.
 	 */
 	function column_date( $transaction ) {
-		$date   = $transaction->get_paid_at();
+		$date   = $transaction->get_payment_date();
 		$type   = $transaction->get_type();
 		$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
 		$tab    = 'expense' !== $type ? 'revenues' : 'payments';

@@ -1,39 +1,15 @@
-/*global jQuery, Backbone, _ */
-( function ( $, Backbone, _ ) {
+jQuery(function ($) {
 	'use strict';
 
 	/**
-	 * WooCommerce Backbone Modal plugin
+	 * Ever Accounting Modal plugin
 	 *
 	 * @param {object} options
 	 */
-	$.fn.ea_modal = function ( options ) {
-		return this.each( function () {
-			new $.ea_modal( $( this ), options );
-		} );
-	};
-
-	/**
-	 * Initialize the Backbone Modal
-	 *
-	 * @param {object} element [description]
-	 * @param {object} options [description]
-	 */
-	$.ea_modal = function ( element, options ) {
-		// Set settings
-		var settings = $.extend(
-			{},
-			$.ea_modal.defaultOptions,
-			options
-		);
-		if ( settings.template ) {
-			new $.ea_modal.View( {
-				target: settings.template,
-				string: settings.variable,
-				onSubmit: options.onSubmit,
-				onReady: options.onReady,
-			} );
-		}
+	$.fn.ea_modal = function (options) {
+		return this.each(function () {
+			new $.ea_modal(options);
+		});
 	};
 
 	/**
@@ -41,145 +17,168 @@
 	 *
 	 * @type {object}
 	 */
-	$.ea_modal.defaultOptions = {
-		template: '',
-		variable: {},
+	var defaults = {
+		title: '',
+		target: '',
+		button: 'Submit',
 		onSubmit: undefined,
 		onReady: undefined,
 	};
 
 	/**
-	 * Create the Backbone Modal
+	 * Initialize the Modal
 	 *
-	 * @return {null}
+	 * @param {object} options [description]
 	 */
-	$.ea_modal.View = Backbone.View.extend( {
-		tagName: 'div',
-		id: 'ea-modal-dialog',
-		_target: undefined,
-		_string: undefined,
-		onSubmit: undefined,
-		onReady: undefined,
-		events: {
-			'click .modal-close': 'closeButton',
-			'touchstart #btn-ok': 'addButton',
-			keydown: 'keyboardActions',
-		},
-		resizeContent: function () {
-			var $content = $( '.ea-modal-content' ).find( 'article' );
+	$.ea_modal = function (options) {
+		this.settings = $.extend(
+			{},
+			defaults,
+			options
+		);
+		var plugin  = this;
+		var $target = $(this.settings.target);
+		if (!$target.length) {
+			console.warn('Target element is not found.');
+			return false;
+		}
+
+		$('.ea-modal').remove();
+
+		var $modal = $('<div class="ea-modal">')
+			.append(
+				$('<div class="ea-modal__content">')
+					.append($('<div class="ea-modal__relative">')
+						.append($('<header class="ea-modal__header">')
+							.prepend($('<h1 class="ea-modal__title">')
+								.html(this.settings.title)
+							)
+							.append($('<button class="ea-modal__close dashicons">')
+							)
+						)
+						.append($('<div class="ea-modal__body">')
+							.append($target.html()
+							)
+						)
+						.append($('<div class="ea-modal__footer">')
+							.append($('<button>')
+								.addClass('button button-primary ea-modal__submit-btn')
+								.html(this.settings.button)
+							)
+						)
+					)
+			)
+			.append($('<div class="ea-modal__backdrop ea-modal__close">'));
+
+		$('.ea-modal__close', $modal).on('click', function (e) {
+			e.preventDefault();
+			plugin.close();
+		});
+
+		$('.ea-modal__submit-btn', $modal).on('click', function (e) {
+			e.preventDefault();
+			$('form [type="submit"]', $modal).trigger('click');
+			console.log('Submit')
+		});
+
+		$( window ).resize( function () {
+			//view.resizeContent();
+		} );
+
+		$modal.on('keydown', this.keyboardEvents);
+
+		this.block = function () {
+			$('.ea-modal__body', $modal).css({'opacity': 0.3});
+			// $('#ajde_loading').fadeIn();
+		}
+
+		this.unblock = function () {
+			$('.ea-modal__body', $modal).css({'opacity': 1});
+			// $('#ajde_loading').fadeOut(20);
+		}
+
+		this.resize = function (){
+			var $content = $( '.ea-modal__relative', $modal );
 			var max_h = $( window ).height() * 0.75;
 
 			$content.css( {
 				'max-height': max_h + 'px',
 			} );
-		},
-		initialize: function ( data ) {
-			var view = this;
-			this._target = data.target;
-			this._string = data.string;
-			this.onSubmit = data.onSubmit;
-			this.onReady = data.onReady;
-			_.bindAll( this, 'render' );
-			this.render();
+		}
 
-			$( window ).resize( function () {
-				view.resizeContent();
-			} );
-		},
-		render: function () {
-			var template = wp.template( this._target );
+		this.keyboardEvents = function (e){
+			var button = e.keyCode || e.which;
+			console.log(button);
+		}
 
-			this.$el.append( template( this._string ) );
-
-			$( document.body )
-				.css( {
-					overflow: 'hidden',
-				} )
-				.append( this.$el )
-				.addClass( 'ea-modal-open' );
-
-			this.resizeContent();
-			this.$( '.ea-modal-content' )
-				.attr( 'tabindex', '0' )
-				.focus();
-
-			$( document.body ).trigger( 'init_tooltips' );
-
-			$( document.body ).trigger(
-				'ea_modal_loaded',
-				this._target
-			);
-			$( document.body ).trigger( this._target + '_loaded' );
-			var modal = this;
-			if ( typeof this.onReady === 'function' ) {
-				this.onReady( this.$el, this );
+		this.getFormData = function () {
+			var $form = $('form', $modal);
+			if ($form) {
+				return $form.serializeObject();
 			}
-			if ( typeof this.onSubmit === 'function' ) {
-				this.$el.find( 'form' ).on( 'submit', function ( e ) {
-					e.preventDefault();
-					modal.onSubmit( modal.getFormData(), modal );
-				} );
+			return {};
+		}
+
+		this.get = function (name) {
+			if (plugin.formData().hasOwnProperty(name)) {
+				return plugin.form_data()[name];
 			}
-		},
-		closeButton: function ( e ) {
-			e.preventDefault();
-			this.closeModal();
-		},
-		closeModal: function () {
+			return false;
+		}
+
+		this.close = function () {
 			$( document.body ).trigger(
 				'ea_modal_before_remove',
-				this._target
+				plugin.settings.target
 			);
-			this.undelegateEvents();
 			$( document ).off( 'focusin' );
 			$( document.body )
 				.css( {
 					overflow: 'auto',
 				} )
 				.removeClass( 'ea-modal-open' );
-			this.remove();
+			$('.ea-modal').remove();
 			$( document.body ).trigger(
 				'ea_modal_removed',
-				this._target
+				plugin.settings.target
 			);
-		},
-		getFormData: function () {
-			var data = {};
-			$.each( $( 'form', this.$el ).serializeArray(), function (
-				index,
-				item
-			) {
-				if ( item.name.indexOf( '[]' ) !== -1 ) {
-					item.name = item.name.replace( '[]', '' );
-					data[ item.name ] = $.makeArray( data[ item.name ] );
-					data[ item.name ].push( item.value );
-				} else {
-					data[ item.name ] = item.value;
-				}
-			} );
+		}
 
-			return data;
-		},
-		keyboardActions: function ( e ) {
-			var button = e.keyCode || e.which;
+		this.init = function () {
+			$( document.body )
+				.css( {
+					overflow: 'hidden',
+				} )
+				.append( $modal )
+				.addClass( 'ea-modal-open' );
+			$( '.ea-modal-content', $modal )
+				.attr( 'tabindex', '0' )
+				.focus();
 
-			// Enter key
-			if ( 13 === button && this.$el.find( 'form' ).length ) {
-				e.preventDefault();
-				this.$el.find( '[type="submit"]' ).trigger( 'click' );
-				return false;
+			$( document.body ).trigger(
+				'ea_modal_loaded',
+				this.settings.target
+			);
+			$( document.body ).trigger( this.settings.target + '_loaded' );
+			if ( typeof this.settings.onReady === 'function' ) {
+				this.settings.onReady( $modal, this );
 			}
 
-			// ESC key
-			if ( 27 === button ) {
-				this.closeButton( e );
+			if ( typeof this.settings.onSubmit === 'function' ) {
+				$( 'form', $modal ).on( 'submit', function ( e ) {
+					e.preventDefault();
+					plugin.block();
+					plugin.settings.onSubmit( $modal, plugin );
+				} );
 			}
-		},
-		disableSubmit: function () {
-			this.$el.find( '*[type="submit"]' ).attr( 'disabled', 'disabled' );
-		},
-		enableSubmit: function () {
-			this.$el.find( '*[type="submit"]' ).removeAttr( 'disabled' );
-		},
-	} );
-} )( jQuery, Backbone, _ );
+		}
+
+		this.init();
+	}
+
+	// $.ea_modal({
+	// 	target: '#modal-add-invoice-item',
+	// 	title: 'Add Item'
+	// });
+
+});

@@ -39,7 +39,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'paid_at',
 						'placeholder'   => __( 'Enter Date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $revenue->get_paid_at() ? $revenue->get_paid_at() : null,
+						'value'         => $revenue->get_payment_date() ? $revenue->get_payment_date() : null,
 						'required'      => true,
 					)
 				);

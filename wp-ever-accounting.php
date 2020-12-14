@@ -337,7 +337,6 @@ final class EverAccounting {
 		\EverAccounting\Controllers\ExpenseController::instance();
 
 		\EverAccounting\REST\Manager::instance();
-
 		\EverAccounting\Core\Emails::instance();
 
 		$this->settings = new \EverAccounting\Admin\Settings();

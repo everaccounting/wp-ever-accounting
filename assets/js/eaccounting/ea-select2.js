@@ -79,7 +79,7 @@ jQuery( function ( $ ) {
 				);
 				if ( ! $results.children( '.ea-select2-footer' ).length ) {
 					var $footer = $(
-						'<a href="#" class="ea-select2-footer"><span class="dashicons dashicons-plus"></span>' +
+						'<a href="#" class="ea-select2-footer"><span class="dashicons dashicons-plus">&nbsp;</span>' +
 						self.creatable_text +
 						'</a>'
 					).on( 'click', function ( e ) {

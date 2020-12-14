@@ -25,7 +25,7 @@ class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
 		);
 		$this->assertNotFalse( $payment->exists() );
 		$this->assertNotNull( $payment->get_id() );
-		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_paid_at())));
+		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_payment_date())));
 		$this->assertEquals( 50, $payment->get_amount());
 		$this->assertEquals( 'cash', $payment->get_payment_method());
 		$this->assertEquals('expense', $payment->get_type());
@@ -49,7 +49,7 @@ class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
 		);
 		$payment_id = $payment->get_id();
 		$this->assertNotFalse( $payment->exists() );
-		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_paid_at())));
+		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_payment_date())));
 		$this->assertEquals( 50, $payment->get_amount());
 		$this->assertEquals( 'cash', $payment->get_payment_method());
 		$this->assertEquals('expense', $payment->get_type());

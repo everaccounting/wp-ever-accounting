@@ -873,7 +873,7 @@ function eaccounting_item_dropdown( $field ) {
 			'options'     => wp_list_pluck( $options, 'name', 'id' ),
 			'placeholder' => __( 'Select Item', 'wp-ever-accounting' ),
 			'ajax'        => true,
-			'type'        => 'currency',
+			'type'        => 'item',
 			'template'    => 'add-item',
 		)
 	);

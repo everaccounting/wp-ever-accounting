@@ -42,10 +42,10 @@ defined( 'ABSPATH' ) || exit;
 	<?php if ( $invoice->is_editable() ) : ?>
 		<div class="ea-invoice-data-row ea-invoice-tools">
 			<div class="tools-left">
-				<button type="button" class="button ea-add-line-item btn-secondary"><span class="dashicons dashicons-plus"></span> Item</button>
+				<button type="button" class="button ea-add-line-item btn-secondary" data-modal-title="<?php esc_html_e( 'Add Item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-plus">&nbsp;</span><?php esc_html_e( 'Item', 'wp-ever-accounting' ); ?></button>
 			</div>
 			<div class="tools-right">
-				<button type="button" class="button button-primary recalculate-totals">Recalculate Totals</button>
+				<button type="button" class="button button-primary recalculate-totals"><?php esc_html_e( 'Recalculate Totals', 'wp-ever-accounting' ); ?></button>
 			</div>
 		</div>
 	<?php endif; ?>

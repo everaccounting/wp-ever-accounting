@@ -67,7 +67,7 @@ class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
 
 		$this->assertEquals( 'income', $revenue->get_type() );
 		$this->assertNotNull( $revenue->get_id() );
-		$this->assertEquals( '2020-08-15', date( 'Y-m-d', strtotime( $revenue->get_paid_at() ) ) );
+		$this->assertEquals( '2020-08-15', date( 'Y-m-d', strtotime( $revenue->get_payment_date() ) ) );
 		$this->assertEquals( 500, $revenue->get_amount() );
 		$this->assertEquals( 'cash', $revenue->get_payment_method() );
 		$this->assertNotNull( $revenue->get_account_id() );
@@ -90,7 +90,7 @@ class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
 
 		$this->assertEquals( 'income', $revenue->get_type() );
 		$this->assertNotNull( $revenue->get_id() );
-		$this->assertEquals( '2020-08-15', date( 'Y-m-d', strtotime( $revenue->get_paid_at() ) ) );
+		$this->assertEquals( '2020-08-15', date( 'Y-m-d', strtotime( $revenue->get_payment_date() ) ) );
 		$this->assertEquals( 1500, $revenue->get_amount() );
 		$this->assertEquals( 'check', $revenue->get_payment_method() );
 		$this->assertNotNull( $revenue->get_account_id() );
