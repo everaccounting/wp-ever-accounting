@@ -20,14 +20,14 @@ if ( $vendor->exists() && 'vendor' !== $vendor->get_type() ) {
 $back_url = remove_query_arg( array( 'action', 'id' ) );
 ?>
 
-<div class="ea-form-card">
-	<div class="ea-card ea-form-card__header is-compact">
-		<h3 class="ea-form-card__header-title"><?php echo $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( 'Add Vendor', 'wp-ever-accounting' ); ?></h3>
+<div class="ea-card">
+	<div class="ea-card__header">
+		<h3 class="ea-card__title"><?php echo $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( 'Add Vendor', 'wp-ever-accounting' ); ?></h3>
 		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
 	</div>
 
-	<div class="ea-card">
-		<form id="ea-vendor-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
+	<div class="ea-card__inside">
+		<form id="ea-vendor-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(

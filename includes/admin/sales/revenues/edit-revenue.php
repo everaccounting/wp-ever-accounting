@@ -22,13 +22,13 @@ if ( $revenue->exists() && 'income' !== $revenue->get_type() ) {
 $back_url = remove_query_arg( array( 'action', 'id' ) );
 ?>
 
-<div class="ea-form-card">
-	<div class="ea-card ea-form-card__header is-compact">
-		<h3 class="ea-form-card__header-title"><?php echo $revenue->exists() ? __( 'Update Revenue', 'wp-ever-accounting' ) : __( 'Add Revenue', 'wp-ever-accounting' ); ?></h3>
+<div class="ea-card">
+	<div class="ea-card__header">
+		<h3 class="ea-card__title"><?php echo $revenue->exists() ? __( 'Update Revenue', 'wp-ever-accounting' ) : __( 'Add Revenue', 'wp-ever-accounting' ); ?></h3>
 		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
 	</div>
 
-	<div class="ea-card">
+	<div class="ea-card__inside">
 		<form id="ea-revenue-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
@@ -39,7 +39,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'paid_at',
 						'placeholder'   => __( 'Enter Date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
-						'value'         => $revenue->get_paid_at() ? $revenue->get_paid_at() : null,
+						'value'         => $revenue->get_payment_date() ? $revenue->get_payment_date() : null,
 						'required'      => true,
 					)
 				);
@@ -120,7 +120,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 					array(
 						'label'         => __( 'Attachments', 'wp-ever-accounting' ),
 						'name'          => 'attachment',
-						'value'         => $revenue->get_attachment(),
+						'value'         => $revenue->get_attachment_id(),
 						'required'      => false,
 						'wrapper_class' => 'ea-col-6',
 						'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),

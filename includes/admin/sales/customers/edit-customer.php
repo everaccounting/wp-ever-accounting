@@ -21,14 +21,14 @@ if ( $customer->exists() && 'customer' !== $customer->get_type() ) {
 }
 ?>
 
-<div class="ea-form-card">
-	<div class="ea-card ea-form-card__header is-compact">
-		<h3 class="ea-form-card__header-title"><?php echo $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' ); ?></h3>
+<div class="ea-card">
+	<div class="ea-card__header">
+		<h3 class="ea-card__title"><?php echo $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' ); ?></h3>
 		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
 	</div>
 
-	<div class="ea-card">
-		<form id="ea-customer-form" class="ea-ajax-form" method="post" enctype="multipart/form-data">
+	<div class="ea-card__inside">
+		<form id="ea-customer-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
