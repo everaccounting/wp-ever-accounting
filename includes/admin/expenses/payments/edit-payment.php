@@ -22,14 +22,14 @@ if ( $payment->exists() && 'expense' !== $payment->get_type() ) {
 $back_url = remove_query_arg( array( 'action', 'id' ) );
 ?>
 
-<div class="ea-form-card">
-	<div class="ea-card ea-form-card__header is-compact">
-		<h3 class="ea-form-card__header-title"><?php echo $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' ); ?></h3>
+<div class="ea-card">
+	<div class="ea-card__header">
+		<h3 class="ea-card__title"><?php echo $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' ); ?></h3>
 		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
 	</div>
 
-	<div class="ea-card">
-		<form id="ea-payment-form" class="ea-ajax-form" method="post">
+	<div class="ea-card__inside">
+		<form id="ea-payment-form" method="post">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
@@ -126,7 +126,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 					array(
 						'label'         => __( 'Attachments', 'wp-ever-accounting' ),
 						'name'          => 'attachment',
-						'value'         => $payment->get_attachment(),
+						'value'         => $payment->get_attachment_id(),
 						'required'      => false,
 						'wrapper_class' => 'ea-col-6',
 						'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),
