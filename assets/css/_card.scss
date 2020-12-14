@@ -456,6 +456,11 @@
 	padding: 0;
   }
 
+  &-page {
+	max-width: 800px;
+	margin: 0 auto;
+  }
+
   table {
 	border-collapse: collapse;
 	width: 100%;
@@ -475,6 +480,13 @@
 
 	.text-left {
 	  text-align: left;
+	}
+
+	.text-center {
+	  text-align: center;
+	}
+	.description {
+	  background: #f8f8f8;
 	}
   }
 
@@ -512,11 +524,6 @@
 	  box-sizing: border-box;
 	  @media (max-width: 768px) {
 		width: 100%;
-		//max-width: 100%;
-		//display: flex;
-		//flex-direction: column;
-		//flex-basis: 0;
-		//flex-grow: 1;
 	  }
 	}
 
@@ -541,7 +548,7 @@
   }
 
   &__company {
-	color: #444;
+	color: #444444e8;
 	margin-bottom: 10px;
 	font-weight: 700;
   }
@@ -557,13 +564,12 @@
 
   &__props {
 	th{
-	  text-align: right;
+	  text-align: left;
 	}
 	td{
 	  text-align: left;
 	}
 	th, td{
-	  border: 1px solid #dee2e6;
 	  padding: 5px 10px;
 	  vertical-align: top;
 	}
@@ -580,8 +586,6 @@
 	tbody tr td{
 		border: 1px solid #ddd;
 	}
-
-
 
 	th {
 	  padding: 5px 10px;
@@ -613,7 +617,11 @@
 	  color: #777;
 	}
   }
-
+  &__value {
+	color: #444444e8;
+	margin-bottom: 10px;
+	font-weight: 700;
+  }
 }
 
 .ea-revenue-notes {

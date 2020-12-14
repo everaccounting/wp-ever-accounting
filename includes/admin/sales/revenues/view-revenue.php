@@ -19,7 +19,7 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 
 <div class="ea-revenue-page">
 	<div class="ea-row">
-		<div class="ea-col-9">
+		<div class="ea-col-12">
 			<div class="ea-card">
 				<div class="ea-card__header">
 					<h3 class="ea-card__title"><?php _e( 'Revenue Voucher', 'wp-ever-accounting' ); ?></h3>
@@ -76,37 +76,57 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 							</div>
 
 							<div class="ea-revenue__props">
-								<table>
+								<table class="ea-revenue__party">
+									<tbody>
 									<tr>
-										<th colspan="ea-revenue__props-label">Voucher Number</th>
-										<td colspan="ea-revenue__props-content">1</td>
+
+										<th>
+											<div class="ea-revenue__subtitle">Voucher Number</div>
+										</th>
+										<td><div class="ea-revenue__value">1</td>
 									</tr>
 									<tr>
-										<th colspan="ea-revenue__props-label">Payment Method</th>
-										<td colspan="ea-revenue__props-content">Cash</td>
+
+										<th>
+											<div class="ea-revenue__subtitle">Payment Method</div>
+										</th>
+										<td><div class="ea-revenue__value">Cash</td>
 									</tr>
 									<tr>
-										<th colspan="ea-revenue__props-label">Payment Date</th>
-										<td colspan="ea-revenue__props-content">Dec 17, 2020</td>
+
+										<th>
+											<div class="ea-revenue__subtitle">Payment Date</div>
+										</th>
+										<td><div class="ea-revenue__value">Dec 17, 2020</td>
 									</tr>
 									<tr>
-										<th colspan="ea-revenue__props-label">Bank Account</th>
-										<td colspan="ea-revenue__props-content">Test</td>
+
+										<th>
+											<div class="ea-revenue__subtitle">Bank Account</div>
+										</th>
+										<td><div class="ea-revenue__value">Test</td>
 									</tr>
+
 									<tr>
-										<th colspan="ea-revenue__props-label">Category</th>
-										<td colspan="ea-revenue__props-content">Test</td>
+
+										<th>
+											<div class="ea-revenue__subtitle">Category</div>
+										</th>
+										<td><div class="ea-revenue__value">Test</td>
 									</tr>
+									</tbody>
 								</table>
 							</div>
 						</div>
 						<!-- /.ea-revenue__columns -->
 
+
+
 						<table class="ea-revenue__items">
 							<thead>
 							<tr>
 								<th class="text-left">Sl</th>
-								<th class="text-left">Description</th>
+								<th class="text-center">Description</th>
 								<th class="text-right">Amount</th>
 							</tr>
 							</thead>
@@ -114,7 +134,7 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 							<tbody>
 							<tr>
 								<td class="text-left">1</td>
-								<td class="text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, odio!</td>
+								<td class="text-center description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, odio!</td>
 								<td class="text-right">$100</td>
 							</tr>
 							</tbody>
@@ -153,72 +173,6 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 			<!-- /.ea-card -->
 		</div>
 		<!-- /.ea-col-9 -->
-		<div class="ea-col-3">
-			<div class="ea-card">
-				<div class="ea-card__header">
-					<h3 class="ea-card__title">
-						Action
-					</h3>
-				</div>
-				<div class="ea-card__inside">
-					<select name="" id="">
-						<option value="">Select</option>
-					</select>
-					<button class="button-primary">Submit</button>
-				</div>
-			</div>
-
-			<div class="ea-card">
-				<div class="ea-card__header">
-					<h3 class="ea-card__title">
-						Revenue Notes
-					</h3>
-				</div>
-				<div class="ea-card__inside padding-zero">
-					<ul class="ea-revenue-notes">
-						<li class="ea-revenue-notes__item customer-note">
-							<div class="ea-revenue-notes__item-content">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, maiores.
-							</div>
-							<div class="ea-revenue-notes__item-meta">
-								<abbr class="exact-date" title="20-12-13 02:55:33">added on December 13, 2020 at 2:55 am</abbr>
-								by admin
-								<a href="#" class="delete_note" role="button">Delete note</a>
-							</div>
-						</li>
-						<li class="ea-revenue-notes__item customer-note">
-							<div class="ea-revenue-notes__item-content">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, maiores.
-							</div>
-							<div class="ea-revenue-notes__item-meta">
-								<abbr class="exact-date" title="20-12-13 02:55:33">added on December 13, 2020 at 2:55 am</abbr>
-								by admin
-								<a href="#" class="delete_note" role="button">Delete note</a>
-							</div>
-						</li>
-					</ul>
-
-					<div class="ea-revenue-notes__add">
-						<p>
-							<label for="revenue_note">Add note</label>
-							<textarea type="text" name="revenue_note" id="revenue_note" class="input-text" cols="20" rows="5" autocomplete="off" spellcheck="false"></textarea>
-						</p>
-
-						<p>
-							<label for="revenue_note_type" class="screen-reader-text">Note type</label>
-							<select name="revenue_note_type" id="revenue_note_type">
-								<option value="">Private note</option>
-								<option value="customer">Note to customer</option>
-							</select>
-							<button type="button" class="add_revenue_note button">Add</button>
-						</p>
-
-					</div>
-
-				</div>
-			</div>
-		</div>
-		<!-- /.ea-col-3 -->
 	</div>
 	<!-- /.ea-row -->
 </div>
