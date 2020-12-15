@@ -24,23 +24,33 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 
 <div class="ea-card">
 	<div class="ea-card__header">
-		<h3 class="ea-card__title"><?php echo $revenue->exists() ? __( 'Update Revenue', 'wp-ever-accounting' ) : __( 'Add Revenue', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php echo $revenue->exists() ? __( 'Update Income', 'wp-ever-accounting' ) : __( 'Add Income', 'wp-ever-accounting' ); ?></h3>
 		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
 	</div>
 
 	<div class="ea-card__inside">
-		<form id="ea-revenue-form" method="post" enctype="multipart/form-data">
+		<form id="ea-income-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Date', 'wp-ever-accounting' ),
-						'name'          => 'paid_at',
+						'name'          => 'payment_date',
 						'placeholder'   => __( 'Enter Date', 'wp-ever-accounting' ),
 						'data_type'     => 'date',
 						'value'         => $revenue->get_payment_date() ? $revenue->get_payment_date() : null,
 						'required'      => true,
+					)
+				);
+				eaccounting_select2(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Account', 'wp-ever-accounting' ),
+						'name'          => 'account_id',
+						'value'         => $revenue->get_account_id(),
+						'ajax'     		=> true,
+						'creatable'     => true,
 					)
 				);
 				eaccounting_account_dropdown(

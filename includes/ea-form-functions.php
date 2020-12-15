@@ -605,61 +605,68 @@ function eaccounting_toggle( $field ) {
  * @param array $field field properties.
  */
 function eaccounting_select2( $field ) {
-	$field = (array) wp_parse_args(
+	$field           = (array) wp_parse_args(
 		$field,
 		array(
-			'class'     => '',
-			'ajax'      => false,
-			'type'      => '',
-			'creatable' => false,
-			'template'  => '',
-			'attr'      => array(),
+			'class'        => '',
+			'map'          => 'return {text: option.name, id:option.id}',
+			'add_text'     => __( 'Add New', 'wp-ever-accounting' ),
+			'ajax_action'  => false,
+			'nonce_action' => 'ea_get_items',
+			'modal_id'     => false,
+			'creatable'    => false,
+			'attr'         => array(),
 		)
 	);
-
-	if ( $field['ajax'] && empty( $field['type'] ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'Ajax type defined without type property', 'wp-ever-accounting' ), '1.0.2' );
-		$field['ajax'] = false;
-	}
-
-	if ( $field['creatable'] && empty( $field['template'] ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'Creatable defined without template property', 'wp-ever-accounting' ), '1.0.2' );
-		$field['creatable'] = false;
-	}
-
 	$field['class'] .= ' ea-select2 ';
-	if ( $field['ajax'] ) {
-		$field['attr'] = array_merge(
-			$field['attr'],
-			array(
-				'data-ajax'  => true,
-				'data-type'  => $field['type'],
-				'data-nonce' => wp_create_nonce( 'ea-dropdown-search' ),
-			)
-		);
 
-		unset( $field['ajax'] );
-		unset( $field['type'] );
+	if ( ! empty( $field['ajax_action'] ) ) {
+		$field['attr']['data-url']         = eaccounting()->ajax_url();
+		$field['attr']['data-ajax_action'] = eaccounting_clean( $field['ajax_action'] );
+		$field['attr']['data-nonce']       = wp_create_nonce( $field['nonce_action'] );
+		$field['attr']['data-map']         = esc_js( $field['map'] );
 	}
 
-	if ( $field['creatable'] ) {
-		$field['attr'] = array_merge(
-			$field['attr'],
-			array(
-				'data-creatable' => true,
-				'data-template'  => $field['template'],
-				'data-text'      => __( 'Add New', 'wp-ever-accounting' ),
-			)
-		);
-
-		unset( $field['creatable'] );
-		unset( $field['template'] );
+	if ( $field['creatable'] && ! empty( $field['modal_id'] ) ) {
+		$field['attr']['data-modal_id'] = esc_attr( $field['modal_id'] );
+		$field['attr']['data-add_text'] = esc_attr( $field['add_text'] );
 	}
 
 	if ( ! empty( $field['placeholder'] ) ) {
 		$field['options'] = array( '' => esc_html( $field['placeholder'] ) ) + $field['options'];
 	}
 	eaccounting_select( $field );
+}
+
+/**
+ * Get customer dropdown.
+ *
+ * @since 1.1.0
+ *
+ * @param $field
+ */
+function eaccounting_customer_dropdown( $field ) {
+	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
+	$contacts = eaccounting_get_customers(
+		array(
+			'include' => $include,
+			'fields'  => array( 'id', 'name' ),
+			'return'  => 'raw',
+		)
+	);
+
+	$field = wp_parse_args(
+		array(
+			'value'        => $include,
+			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'ajax_action'  => 'eaccounting_get_customers',
+			'nonce_action' => 'ea_get_customers',
+			'modal_id'     => '#ea-modal-add-customer',
+			'creatable'    => true,
+		),
+		$field
+	);
+	eaccounting_select2( apply_filters( 'eaccounting_customer_dropdown', $field ) );
 }
 
 /***
@@ -724,7 +731,7 @@ function eaccounting_account_dropdown( $field ) {
 			'type'        => 'account',
 			'ajax'        => true,
 			'default'     => $default_id,
-			'template'    => 'add-account',
+			'template'    => '#modal-add-account',
 			'options'     => wp_list_pluck( $accounts, 'name', 'id' ),
 			'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
 		)
@@ -740,44 +747,41 @@ function eaccounting_account_dropdown( $field ) {
  * @param array $field
  */
 function eaccounting_category_dropdown( $field ) {
-	$field      = wp_parse_args(
+	$field   = wp_parse_args(
 		$field,
 		array(
 			'value' => '',
 			'type'  => '',
 		)
 	);
-	$type       = ! empty( $field['type'] ) && array_key_exists( $field['type'], eaccounting_get_category_types() ) ? eaccounting_clean( $field['type'] ) : false;
-	$value      = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : false;
-	$query_args = array(
-		array( 'fields' => array( 'id', 'name' ) ),
-		'return' => 'raw',
+	$type    = ! empty( $field['type'] ) ? wp_parse_list( $field['type'] ) : array( 'income' );
+	$include = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
+
+	$categories = eaccounting_get_categories(
+		array(
+			'return'  => 'raw',
+			'include' => $include,
+			'type'    => $type,
+		)
 	);
-	if ( $type ) {
-		$query_args['type'] = $type;
-	}
-	if ( ! empty( $value ) ) {
-		$query_args['include'] = $value;
-	}
-	$categories = eaccounting_get_categories( $query_args );
 
 	$field = wp_parse_args(
 		array(
-			'value'       => $value ? absint( $value ) : '',
-			'options'     => wp_list_pluck( $categories, 'name', 'id' ),
-			'type'        => $type . '_category',
-			'ajax'        => true,
-			'placeholder' => __( 'Select Category', 'wp-ever-accounting' ),
-			'template'    => 'add-category',
-			'data'        => array(
-				'data-category_type' => $type,
-			),
+			'value'        => $include,
+			'options'      => wp_list_pluck( $categories, 'name', 'id' ),
+			'ajax'         => true,
+			'placeholder'  => __( 'Select Category', 'wp-ever-accounting' ),
+			'nonce_action' => 'ea_categories',
+			'ajax_action'  => 'eaccounting_get_income_categories', // Specify for the use case
+			'modal_id'     => '#ea-modal-add-income-category', //Specify for the use case
+			'creatable'    => true,
 		),
 		$field
 	);
 
 	eaccounting_select2( apply_filters( 'eaccounting_category_dropdown', $field ) );
 }
+
 
 /**
  * Dropdown field for selecting payment method.
@@ -817,31 +821,29 @@ function eaccounting_payment_method_dropdown( $field ) {
  */
 function eaccounting_currency_dropdown( $field ) {
 	$default_code  = (string) eaccounting()->settings->get( 'default_currency' );
-	$currency_code = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : 0;
-	$options       = array();
-	$wherein       = array_filter( array_unique( array( $default_code, $currency_code ) ) );
-	if ( ! empty( $wherein ) ) {
-		$options = eaccounting_get_currencies(
-			array(
-				'return' => 'raw',
-				'search' => implode(
-					' ',
-					$wherein
-				),
-			)
-		);
-	}
-
-	$field = wp_parse_args(
-		$field,
+	$currency_code = ! empty( $field['value'] ) ? wp_parse_list( $field['value'] ) : array();
+	$codes         = array_unique( array_filter( array_merge( array( $default_code ), $currency_code ) ) );
+	$search        = implode( ' ', $codes );
+	$options       = eaccounting_get_currencies(
 		array(
-			'default'     => $default_code,
-			'options'     => wp_list_pluck( $options, 'name', 'code' ),
-			'placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
-			'ajax'        => true,
-			'type'        => 'currency',
-			'template'    => 'add-currency',
+			'return' => 'raw',
+			'search' => $search,
+			'fields' => array( 'code', 'name' ),
 		)
+	);
+	$field         = wp_parse_args(
+		array(
+			'value'        => $codes,
+			'default'      => $default_code,
+			'options'      => wp_list_pluck( $options, 'code', 'name' ),
+			'map'          => 'return {text: option.name, id:option.code}',
+			'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
+			'ajax_action'  => 'eaccounting_get_currencies',
+			'nonce_action' => 'ea_get_currencies',
+			'modal_id'     => '#ea-modal-add-currency',
+			'creatable'    => true,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_currency_dropdown', $field ) );
 }

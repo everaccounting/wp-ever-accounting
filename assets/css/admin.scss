@@ -185,53 +185,52 @@
   */
 
 .ea-modal {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100%;
+  height: 100%;
+  outline: 0;
 
   * {
 	box-sizing: border-box;
   }
 
   &__content {
-	position: fixed;
-	background: #fff;
-	z-index: 100000;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	max-width: 100%;
-	min-width: 500px;
-
+	max-width:500px;
+	margin: 1.75rem auto;
+	min-height: calc(100% - 3.5rem);
+	display: flex;
+	align-items: center;
+	position: relative;
+	width: auto;
+	pointer-events: none;
+	&::before {
+	  content: "";
+	  display: block;
+	  height: calc(100vh - 3.5rem);
+	}
 	@media screen and (max-width: 782px) {
 	  width: 100%;
 	  height: 100%;
 	  min-width: 100%;
 	}
-
-	article {
-	  overflow: auto;
-	}
   }
 
-  &__backdrop {
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	min-height: 360px;
-	background: #000;
-	opacity: 0.7;
-	z-index: 99;
-  }
-
-  &__relative{
-	background: none repeat scroll 0 0 #fff;
-	bottom: 0;
-	left: 0;
-	margin: auto;
-	min-height: 400px;
-	position: absolute;
-	right: 0;
-	top: 0;
+  &__inner{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	pointer-events: auto;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid rgba(0,0,0,0.2);
+	border-radius: .3rem;
+	outline: 0;
+	z-index: 9999;
   }
 
   &__header {
@@ -241,62 +240,60 @@
 	border-bottom: 1px solid #ddd;
 	position: relative;
 
-	h1 {
-	  margin: 0;
-	  font-size: 18px;
-	  font-weight: 700;
-	  line-height: 1.5em;
+	.ea-modal__close {
+	  cursor: pointer;
+	  color: #777;
+	  height: 100%;
+	  width: 54px;
 	  padding: 0;
+	  position: absolute;
+	  top: 0;
+	  right: 0;
+	  text-align: center;
+	  border: 0;
+	  border-left: 1px solid #ddd;
+	  background-color: transparent;
+	  transition: color 0.1s ease-in-out, background 0.1s ease-in-out;
+
+
+	  &::before {
+		font: normal 22px/50px "dashicons" !important;
+		color: #666;
+		display: block;
+		content: "\f335";
+		font-weight: 300;
+	  }
+
+	  &:hover,
+	  &:focus {
+		background: #ddd;
+		border-color: #ccc;
+		color: #000;
+	  }
+
+	  &:focus {
+		outline: none;
+	  }
 	}
+
   }
 
-  button.ea-modal__close {
-	cursor: pointer;
-	color: #777;
-	height: 100%;
-	width: 54px;
+  &__title {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.5em;
 	padding: 0;
-	position: absolute;
-	top: 0;
-	right: 0;
-	text-align: center;
-	border: 0;
-	border-left: 1px solid #ddd;
-	background-color: transparent;
-	transition: color 0.1s ease-in-out, background 0.1s ease-in-out;
-
-
-	&::before {
-	  font: normal 22px/50px "dashicons" !important;
-	  color: #666;
-	  display: block;
-	  content: "\f335";
-	  font-weight: 300;
-	}
-
-	&:hover,
-	&:focus {
-	  background: #ddd;
-	  border-color: #ccc;
-	  color: #000;
-	}
-
-	&:focus {
-	  outline: none;
-	}
   }
 
   &__body{
-	bottom: 60px;
-	left: 0;
-	position: absolute;
-	overflow: auto;
-	right: 0;
-	top: 60px;
-	padding: 1em 1.5em;
+	position: relative;
+	flex: 1 1 auto;
+	padding: 1rem;
 
-	.submit, [type="submit"]{
-	  display: none;
+
+	.submit {
+	  text-align: center;
 	}
 
 	p {
@@ -309,6 +306,7 @@
 
 	p:last-child {
 	  margin-bottom: 0;
+	  padding: 0;
 	}
 
 	.pagination {
@@ -360,20 +358,26 @@
   }
 
   &__footer{
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 1rem;
+	border-top: 1px solid #dee2e6;
+	&>:not(:last-child) {
+	  margin-right: .25rem;
+	}
+  }
 
-	position: absolute;
+  &__backdrop {
+	position: fixed;
+	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	z-index: 100;
-	padding: 1em 1.5em;
-	background: #fcfcfc;
-	border-top: 1px solid #dfdfdf;
-
-	.inner {
-	  text-align: right;
-	  line-height: 23px;
-	}
+	min-height: 360px;
+	background: #000;
+	opacity: 0.7;
+	z-index: 99;
   }
 
   .wp-picker-input-wrap {
@@ -388,104 +392,14 @@
   .select2-container {
 	width: 100% !important;
   }
-}
 
-.ea-modal-main {
-  padding-bottom: 55px;
+  .ea-modal-open & {
+	overflow-x: hidden;
+	overflow-y: auto;
 
-  header,
-  article {
-	display: block;
-	position: relative;
-  }
-
-
-  article {
-	padding: 1.5em;
-
-	p {
-	  margin: 1.5em 0;
-	}
-
-	p:first-child {
-	  margin-top: 0;
-	}
-
-	p:last-child {
-	  margin-bottom: 0;
-	}
-
-	.pagination {
-	  padding: 10px 0 0;
-	  text-align: center;
-	}
-
-	table.widefat {
-	  margin: 0;
-	  width: 100%;
-	  border: 0;
-	  box-shadow: none;
-
-	  thead th {
-		padding: 0 1em 1em 1em;
-		text-align: left;
-
-		&:first-child {
-		  padding-left: 0;
-		}
-
-		&:last-child {
-		  padding-right: 0;
-		  text-align: right;
-		}
-	  }
-
-	  tbody td,
-	  tbody th {
-		padding: 1em;
-		text-align: left;
-		vertical-align: middle;
-
-		&:first-child {
-		  padding-left: 0;
-		}
-
-		&:last-child {
-		  padding-right: 0;
-		  text-align: right;
-		}
-
-		select,
-		.select2-container {
-		  width: 100%;
-		}
-	  }
+	.select2-container--open {
+	  z-index: 9999999 !important;
 	}
   }
 
-  footer {
-	position: absolute;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	z-index: 100;
-	padding: 1em 1.5em;
-	background: #fcfcfc;
-	border-top: 1px solid #dfdfdf;
-
-	.inner {
-	  text-align: right;
-	  line-height: 23px;
-
-	  .button {
-		margin-bottom: 0;
-	  }
-	}
-  }
-}
-
-.ea-modal-open {
-  .select2-container--open {
-	z-index: 9999999 !important;
-  }
 }

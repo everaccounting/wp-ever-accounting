@@ -63,7 +63,7 @@ function eaccounting_misc_categories_tab() {
 			<form id="ea-categories-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 				<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-categories' ); ?>
 
-				<input type="hidden" name="page" value="ea-misc"/>
+				<input type="hidden" name="page" value="ea-settings"/>
 				<input type="hidden" name="tab" value="categories"/>
 
 				<?php $list_table->views(); ?>

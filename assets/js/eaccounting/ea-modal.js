@@ -8,7 +8,7 @@ jQuery(function ($) {
 	 */
 	$.fn.ea_modal = function (options) {
 		return this.each(function () {
-			new $.ea_modal(options);
+			new $.ea_modal(this, $.extend({}, $(this).data(), options));
 		});
 	};
 
@@ -18,167 +18,180 @@ jQuery(function ($) {
 	 * @type {object}
 	 */
 	var defaults = {
-		title: '',
-		target: '',
-		button: 'Submit',
-		onSubmit: undefined,
-		onReady: undefined,
+		title: false,
+		onSubmit: false,
+		onReady: false,
+		submit: 'Submit',
+		url: false,
 	};
 
 	/**
 	 * Initialize the Modal
 	 *
+	 * @param template_id
 	 * @param {object} options [description]
 	 */
-	$.ea_modal = function (options) {
-		this.settings = $.extend(
+	$.ea_modal = function (template_id, options) {
+		var plugin = this;
+		this.template_id = template_id;
+		this.$template = $(template_id);
+		console.log(this);
+		this.options = $.extend(
 			{},
 			defaults,
 			options
 		);
-		var plugin  = this;
-		var $target = $(this.settings.target);
-		if (!$target.length) {
-			console.warn('Target element is not found.');
-			return false;
+
+		var markup = '<div class="ea-modal" tabindex="-1" role="document">' +
+			'<div class="ea-modal__content">' +
+			'<div class="ea-modal__inner">' +
+			'<header class="ea-modal__header">' +
+			'<h1 class="ea-modal__title">' + this.options.title + '&nbsp;</h1>' +
+			'<button class="ea-modal__close dashicons">&nbsp;</button>' +
+			'</header>' +
+			'<div class="ea-modal__body">' + this.$template.html() + '</div>' +
+			'<div class="ea-modal__footer">' +
+			'<button type="button" class="button button-secondary ea-modal__close">Cancel</button>' +
+			'</div>' +
+			'</div>' +
+			'</div>' +
+			'<div class="ea-modal__backdrop ea-modal__close">&nbsp;</div>';
+		this.$modal = $(markup);
+		//if form and it have submit button then remove and make one.
+		this.$modal.find('form [type="submit"]').remove();
+		this.$modal.find('form').append('<input type="submit" value="submit" style="display: none;">');
+
+		// need submit then make one
+		if (this.$modal.find('form') && this.options.submit) {
+			var $submit = $('<button type="button" class="button button-primary">').html(this.options.submit);
+			$submit.on('click', function () {
+				plugin.$modal.find('form [type="submit"]').trigger('click');
+			});
+			this.$modal.find('.ea-modal__footer').append($submit)
 		}
 
-		$('.ea-modal').remove();
 
-		var $modal = $('<div class="ea-modal">')
-			.append(
-				$('<div class="ea-modal__content">')
-					.append($('<div class="ea-modal__relative">')
-						.append($('<header class="ea-modal__header">')
-							.prepend($('<h1 class="ea-modal__title">')
-								.html(this.settings.title)
-							)
-							.append($('<button class="ea-modal__close dashicons">')
-							)
-						)
-						.append($('<div class="ea-modal__body">')
-							.append($target.html()
-							)
-						)
-						.append($('<div class="ea-modal__footer">')
-							.append($('<button>')
-								.addClass('button button-primary ea-modal__submit-btn')
-								.html(this.settings.button)
-							)
-						)
-					)
-			)
-			.append($('<div class="ea-modal__backdrop ea-modal__close">'));
+		this.block = function () {
+			eaccounting.block($('.ea-modal__body', plugin.$modal));
+			$('.ea-modal__footer button', plugin.$modal).attr('disabled', 'disabled');
+		}
 
-		$('.ea-modal__close', $modal).on('click', function (e) {
+		this.unblock = function () {
+			eaccounting.unblock($('.ea-modal__body', plugin.$modal));
+			$('.ea-modal__footer button', plugin.$modal).removeAttr('disabled');
+		}
+
+		this.delegate = function () {
+			$(window).bind('resize', plugin.resize);
+			$(document).bind('keydown', plugin.keyboard_events);
+		}
+
+		this.undelegate = function () {
+			$(window).unbind('resize', plugin.resize);
+			$(document).unbind('keydown', plugin.keyboard_events);
+		}
+
+		this.resize = function () {
+			// var $content = $('.ea-modal__inner', plugin.$modal);
+			// var max_h = $(window).height() * 0.75;
+			// $content.css({
+			// 	'max-height': max_h + 'px',
+			// });
+		}
+
+		$('.ea-modal__close', plugin.$modal).on('click', function (e) {
 			e.preventDefault();
 			plugin.close();
 		});
 
-		$('.ea-modal__submit-btn', $modal).on('click', function (e) {
-			e.preventDefault();
-			$('form [type="submit"]', $modal).trigger('click');
-			console.log('Submit')
-		});
 
-		$( window ).resize( function () {
-			//view.resizeContent();
-		} );
-
-		$modal.on('keydown', this.keyboardEvents);
-
-		this.block = function () {
-			$('.ea-modal__body', $modal).css({'opacity': 0.3});
-			// $('#ajde_loading').fadeIn();
-		}
-
-		this.unblock = function () {
-			$('.ea-modal__body', $modal).css({'opacity': 1});
-			// $('#ajde_loading').fadeOut(20);
-		}
-
-		this.resize = function (){
-			var $content = $( '.ea-modal__relative', $modal );
-			var max_h = $( window ).height() * 0.75;
-
-			$content.css( {
-				'max-height': max_h + 'px',
-			} );
-		}
-
-		this.keyboardEvents = function (e){
+		this.keyboard_events = function (e) {
 			var button = e.keyCode || e.which;
-			console.log(button);
+			// Enter key
+			if (13 === button && plugin.$modal.find('form').length) {
+				e.preventDefault();
+				plugin.$modal.find('[type="submit"]').trigger('click');
+				return false;
+			}
+			// ESC key
+			if (27 === button) {
+				plugin.close();
+			}
 		}
 
-		this.getFormData = function () {
-			var $form = $('form', $modal);
-			if ($form) {
-				return $form.serializeObject();
-			}
-			return {};
-		}
-
-		this.get = function (name) {
-			if (plugin.formData().hasOwnProperty(name)) {
-				return plugin.form_data()[name];
-			}
-			return false;
-		}
 
 		this.close = function () {
-			$( document.body ).trigger(
-				'ea_modal_before_remove',
-				plugin.settings.target
+			$(document.body).trigger(
+				'ea_modal_closed',
+				[plugin]
 			);
-			$( document ).off( 'focusin' );
-			$( document.body )
-				.css( {
+
+			$(document).off('focusin');
+			$(document.body)
+				.css({
 					overflow: 'auto',
-				} )
-				.removeClass( 'ea-modal-open' );
+				})
+				.removeClass('ea-modal-open');
+
+			plugin.undelegate();
+
 			$('.ea-modal').remove();
-			$( document.body ).trigger(
+
+			$(document.body).trigger(
 				'ea_modal_removed',
-				plugin.settings.target
+				[plugin]
 			);
 		}
 
 		this.init = function () {
-			$( document.body )
-				.css( {
+			$(document.body)
+				.css({
 					overflow: 'hidden',
-				} )
-				.append( $modal )
-				.addClass( 'ea-modal-open' );
-			$( '.ea-modal-content', $modal )
-				.attr( 'tabindex', '0' )
+				})
+				.append(this.$modal)
+				.addClass('ea-modal-open');
+			$('.ea-modal-content', this.$modal)
+				.attr('tabindex', '0')
 				.focus();
 
-			$( document.body ).trigger(
-				'ea_modal_loaded',
-				this.settings.target
+			this.delegate();
+			this.resize();
+
+			$(document.body).trigger(
+				'ea_modal_ready',
+				[plugin]
 			);
-			$( document.body ).trigger( this.settings.target + '_loaded' );
-			if ( typeof this.settings.onReady === 'function' ) {
-				this.settings.onReady( $modal, this );
+
+			if (typeof this.options.onReady === 'function') {
+				this.options.onReady(this);
 			}
 
-			if ( typeof this.settings.onSubmit === 'function' ) {
-				$( 'form', $modal ).on( 'submit', function ( e ) {
-					e.preventDefault();
-					plugin.block();
-					plugin.settings.onSubmit( $modal, plugin );
-				} );
-			}
+			$('form', plugin.$modal).on('submit', function (e) {
+				e.preventDefault();
+				plugin.block();
+				const data = eaccounting.get_values($('form', plugin.$modal));
+				if (typeof plugin.options.onSubmit === 'function') {
+					return plugin.options.onSubmit(data, plugin);
+				} else if ($('form #action', plugin.$modal).length) {
+					$.post(ajaxurl, data, function (json) {
+						eaccounting.notice(json);
+						if (json.success) {
+							plugin.close();
+							$(document.body).trigger(
+								'ea_modal_form_submitted',
+								[json, plugin, data]
+							);
+						}
+					}).always(function (json) {
+						plugin.unblock();
+					});
+				}
+			});
 		}
 
 		this.init();
-	}
 
-	// $.ea_modal({
-	// 	target: '#modal-add-invoice-item',
-	// 	title: 'Add Item'
-	// });
+		return this;
+	}
 
 });

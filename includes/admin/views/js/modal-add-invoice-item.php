@@ -40,5 +40,6 @@ defined( 'ABSPATH' ) || exit();
 		<?php
 		submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
 		?>
+
 	</form>
 </script>

@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit();
 
 require_once dirname( __FILE__ ) . '/invoices/invoices.php';
-require_once dirname( __FILE__ ) . '/revenues/revenues.php';
+require_once dirname( __FILE__ ) . '/incomes/incomes.php';
 require_once dirname( __FILE__ ) . '/customers/customers.php';
 
 /**
@@ -54,7 +54,7 @@ function eaccounting_admin_sales_page() {
 function eaccounting_get_sales_tabs() {
 	$tabs              = array();
 	$tabs['invoices']  = __( 'Invoices', 'wp-ever-accounting' );
-	$tabs['revenues']  = __( 'Revenues', 'wp-ever-accounting' );
+	$tabs['revenues']  = __( 'Incomes', 'wp-ever-accounting' );
 	$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );
 
 	return apply_filters( 'eaccounting_sales_tabs', $tabs );

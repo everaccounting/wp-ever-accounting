@@ -109,6 +109,10 @@ class Ajax {
 		}
 
 		$ajax_events = array(
+			'get_accounts',
+			'get_customers',
+			'get_currencies',
+			'get_income_categories',
 			'item_status_update',
 			'get_currency',
 			'get_account_currency',
@@ -132,6 +136,91 @@ class Ajax {
 		foreach ( $ajax_events as $ajax_event ) {
 			add_action( 'wp_ajax_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
+	}
+
+	/**
+	 * Get accounts.
+	 *
+	 * @since 1.1.0
+	 */
+	public static function get_accounts() {
+		check_ajax_referer( 'ea_get_accounts', 'nonce' );
+		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+
+		return wp_send_json_success(
+			eaccounting_get_accounts(
+				array(
+					'search' => $search,
+					'page'   => $page,
+					'return' => 'raw',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Get customers.
+	 *
+	 * @since 1.1.0
+	 */
+	public static function get_customers() {
+		check_ajax_referer( 'ea_get_customers', 'nonce' );
+		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+
+		return wp_send_json_success(
+			eaccounting_get_customers(
+				array(
+					'search' => $search,
+					'page'   => $page,
+					'return' => 'raw',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Get currencies.
+	 *
+	 * @since 1.1.0
+	 */
+	public static function get_currencies() {
+		check_ajax_referer( 'ea_get_currencies', 'nonce' );
+		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+
+		return wp_send_json_success(
+			eaccounting_get_currencies(
+				array(
+					'search' => $search,
+					'page'   => $page,
+					'return' => 'raw',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Get currencies.
+	 *
+	 * @since 1.1.0
+	 */
+	public static function get_income_categories() {
+		check_ajax_referer( 'ea_categories', 'nonce' );
+		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+
+		return wp_send_json_success(
+			eaccounting_get_categories(
+				array(
+					'search' => $search,
+					'type'   => 'income',
+					'page'   => $page,
+					'return' => 'raw',
+				)
+			)
+		);
 	}
 
 	/**

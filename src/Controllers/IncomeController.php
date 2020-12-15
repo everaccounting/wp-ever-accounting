@@ -70,6 +70,7 @@ class IncomeController extends Singleton {
 	 * @param \WP_Error $errors
 	 */
 	public static function validate_expense_data( $data, $id = null ) {
+		error_log(print_r($data, true));
 		if ( empty( $data['payment_date'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Income date is required.', 'wp-ever-accounting' ) );
 		}

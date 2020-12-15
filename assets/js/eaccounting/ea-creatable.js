@@ -2,94 +2,64 @@
  * Handle the creation of new items from dropdown
  * since 1.0.2
  */
-jQuery( function ( $ ) {
-	$.fn.eaccounting_creatable = function ( options ) {
-		return this.each( function () {
-			new $.eaccounting_creatable( this, options );
-		} );
+jQuery(function ($) {
+	$.fn.eaccounting_creatable = function (options) {
+		return this.each(function () {
+			new $.eaccounting_creatable(this, options);
+		});
 	};
 
-	$.eaccounting_creatable = function ( el, options ) {
-		this.defaults = {
-			option: function ( item ) {
-				return { id: item.id, text: item.name };
-			},
-			template: undefined,
-			onReady: undefined,
-			onSubmit: undefined,
-		};
+	var defaults = {
+		option: function (item) {
+			return {id: item.id, text: item.name};
+		},
+		template: undefined,
+		onReady: undefined,
+		onSubmit: undefined,
+	};
+
+	$.eaccounting_creatable = function (el, options) {
 		this.el = el;
-		this.$el = $( el );
-		this.options = $.extend( this.defaults, options );
-		var self = this;
-		this.block = function () {
-			self.$el.block( {
-				message: null,
-				overlayCSS: {
-					background: '#fff',
-					opacity: 0.6,
-				},
-			} );
-		};
+		this.$el = $(el);
+		this.options = $.extend({}, defaults, options);
+		var plugin = this;
 
-		this.unblock = function () {
-			self.$el.unblock();
-		};
-
-		this.onError = function ( error ) {
-			console.warn( error );
-			self.unblock();
-		};
-
-		this.init_plugins = function () {
-			$( '.ea-select2', this.$el ).eaccounting_select2();
-			$( '.ea-input-color', this.$el ).ea_color_picker();
-		};
-
-		this.handleSubmit = function ( formData, $modal ) {
-			self.block();
-			$modal.disableSubmit();
-
-			if ( typeof self.options.onSubmit === 'function' ) {
-				self.options.onSubmit( self.$el, formData, $modal );
+		this.handleSubmit = function ($modal) {
+			var data = eaccounting.get_values($('form', $modal.$modal));
+			if (typeof plugin.options.onSubmit === 'function') {
+				return plugin.options.onSubmit(plugin.$el, data, $modal);
 			}
 
-			wp.ajax.send( {
-				data: formData,
-				success: function ( res ) {
-					var option = self.options.option( res.item );
-					self.$el.eaccounting_select2( { data: [ option ] } );
-					self.$el.val( option.id ).trigger( 'change' );
-					$.eaccounting_notice( res.message, 'success' );
-					$modal.closeModal();
-					$modal.enableSubmit();
-				},
-				error: function ( error ) {
-					$.eaccounting_notice( error.message, 'error' );
-					$modal.enableSubmit();
-				},
-			} );
+			$.post(ajaxurl, data).always(function (json) {
+				$modal.unblock();
+
+				if (json.success) {
+					var option = plugin.options.option(json.data.item);
+					plugin.$el.eaccounting_select2({data: [option]});
+					plugin.$el.val(option.id).trigger('change');
+					$modal.close();
+				}
+
+				eaccounting.notice(json);
+			});
 		};
-		this.handleModal = function ( e, $el, template ) {
+		this.handleModal = function (e, $el, template) {
 			e.preventDefault();
-			if ( $el.is( self.$el ) ) {
-				e.preventDefault();
-				$( this ).ea_modal( {
-					template: 'ea-modal-' + template,
-					onSubmit: self.handleSubmit,
-					onReady: function ( el, $modal ) {
-						if ( typeof self.options.onReady === 'function' ) {
-							self.options.onReady( self.$el, $modal, self );
+			if ($el.is(plugin.$el)) {
+				$(template).ea_modal({
+					onSubmit: plugin.handleSubmit,
+					onReady: function ($modal) {
+						if (typeof plugin.options.onReady === 'function') {
+							plugin.options.onReady(plugin.$el, $modal, plugin);
 						}
 					},
-				} );
+				});
 			}
 		};
 
 		this.init = function () {
-			$( document )
-				.on( 'ea_trigger_creatable', self.handleModal )
-				.on( 'ea_modal_loaded', self.init_plugins );
+			$(document)
+				.on('ea_trigger_creatable', plugin.handleModal);
 		};
 
 		this.init();
@@ -97,26 +67,27 @@ jQuery( function ( $ ) {
 		return this;
 	};
 
+	$('#account_id,#customer_id,#vendor_id').eaccounting_creatable();
+
 	//creatable form
-	$( '#currency_code' ).eaccounting_creatable( {
-		option: function ( item ) {
-			return {
-				id: item.code,
-				text: item.name + ' (' + item.symbol + ')',
-			};
-		},
-	} );
+	// $('#currency_code').eaccounting_creatable({
+	// 	option: function (item) {
+	// 		return {
+	// 			id: item.code,
+	// 			text: item.name + ' (' + item.symbol + ')',
+	// 		};
+	// 	},
+	// });
 
-	$( '#account_id,#customer_id,#vendor_id' ).eaccounting_creatable();
 
-	$( '#category_id' ).eaccounting_creatable( {
-		onReady: function ( $el, $modal ) {
-			var type = $el.data( 'type' );
-			if ( ! type ) {
-				console.warn( 'No category type defined' );
-			}
-			$( '#type', $modal.$el ).val( type.replace( '_category', '' ) );
-		},
-	} );
+	// $('#category_id').eaccounting_creatable({
+	// 	onReady: function ($el, $modal) {
+	// 		var type = $el.data('type');
+	// 		if (!type) {
+	// 			console.warn('No category type defined');
+	// 		}
+	// 		$('#type', $modal.$el).val(type.replace('_category', ''));
+	// 	},
+	// });
 
-} );
+});

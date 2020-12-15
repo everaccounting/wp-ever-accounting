@@ -186,7 +186,7 @@ class Admin {
 		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ) ) ) {
 			eaccounting_get_admin_template( 'js/modal-add-account' );
 			eaccounting_get_admin_template( 'js/modal-add-currency' );
-			eaccounting_get_admin_template( 'js/modal-add-category' );
+			eaccounting_get_admin_template( 'js/modal-add-income-category' );
 			eaccounting_get_admin_template( 'js/modal-add-customer' );
 			eaccounting_get_admin_template( 'js/modal-add-vendor' );
 			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );

@@ -32,6 +32,20 @@ function eaccounting_get_account( $account ) {
 }
 
 /**
+ * @param $account
+ * @since 1.1.0
+ *
+ * @return mixed|null
+ */
+function eaccount_get_account_currency_code( $account ) {
+	$exist = eaccounting_get_account( $account );
+	if ( $exist ) {
+		return $exist->get_currency_code();
+	}
+	return null;
+}
+
+/**
  *  Create new account programmatically.
  *
  *  Returns a new account object on success.
@@ -176,7 +190,7 @@ function eaccounting_get_accounts( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];

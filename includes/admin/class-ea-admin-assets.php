@@ -88,6 +88,7 @@ class Admin_Assets {
 		wp_register_script( 'ea-helper', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-helper' . $suffix . '.js' ), array( 'jquery', 'jquery-blockui' ), $version );
 		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-overview' . $suffix . '.js' ), array( 'jquery', 'jquery-daterange', 'jquery-chartjs' ), $version );
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-settings' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
@@ -104,6 +105,7 @@ class Admin_Assets {
 			wp_enqueue_script( 'ea-creatable' );
 			wp_enqueue_script( 'ea-helper' );
 			wp_enqueue_script( 'ea-admin' );
+			wp_enqueue_script( 'ea-form' );
 
 			wp_localize_script(
 				'ea-select',
@@ -126,7 +128,7 @@ class Admin_Assets {
 				)
 			);
 
-			//          wp_enqueue_script( 'ea-form' );
+
 			//
 			//          wp_localize_script(
 			//              'ea-admin',

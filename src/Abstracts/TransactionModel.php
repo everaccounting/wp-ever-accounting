@@ -61,13 +61,13 @@ abstract class TransactionModel extends ResourceModel {
 		'payment_method' => '',
 		'reference'      => '',
 		'attachment_id'  => null,
-		'parent_id'      => null,
+		'parent_id'      => 0,
 		'reconciled'     => 0,
 		'creator_id'     => null,
 		'date_created'   => null,
 	);
 
-	protected $contact  = null;
+	protected $contact = null;
 
 	/*
 	|--------------------------------------------------------------------------
@@ -319,7 +319,9 @@ abstract class TransactionModel extends ResourceModel {
 	 *
 	 */
 	public function set_amount( $value ) {
-		$this->set_prop( 'amount', eaccounting_sanitize_price( $value ) );
+		error_log( $value );
+		error_log( $this->get_currency_code() );
+		$this->set_prop( 'amount', eaccounting_sanitize_price( $value, $this->get_currency_code() ) );
 	}
 
 	/**
@@ -356,6 +358,12 @@ abstract class TransactionModel extends ResourceModel {
 	 */
 	public function set_account_id( $value ) {
 		$this->set_prop( 'account_id', absint( $value ) );
+		if ( $this->get_account_id() && empty( $this->get_currency_code() ) ) {
+			$this->set_currency_code( eaccount_get_account_currency_code( $this->get_account_id() ) );
+		}
+		if ( $this->get_account_id() && empty( $this->get_currency_rate() ) && $this->get_currency_code() ) {
+			$this->set_currency_rate( eaccount_get_currency_rate( $this->get_currency_code() ) );
+		}
 	}
 
 	/**

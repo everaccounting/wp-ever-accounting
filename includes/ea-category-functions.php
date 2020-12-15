@@ -173,10 +173,18 @@ function eaccounting_get_categories( $args = array() ) {
 	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
-	$count_total   = true === $qv['count_total'];
-	$cache_key     = md5( serialize( $qv ) );
-	$results       = wp_cache_get( $cache_key, 'eaccounting_category' );
-	$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+	if ( ! empty( $qv['type'] ) ) {
+		$types        = implode( "','", wp_parse_list( $qv['type'] ) );
+		$query_where .= " AND $table.`type` IN ('$types')";
+	}
+
+	$count_total = true === $qv['count_total'];
+	$cache_key   = md5( serialize( $qv ) );
+	$results     = wp_cache_get( $cache_key, 'eaccounting_category' );
+	$request     = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+
+	error_log($request);
 
 	if ( false === $results ) {
 		if ( $count_total ) {

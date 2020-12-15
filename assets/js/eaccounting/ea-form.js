@@ -1,31 +1,60 @@
 jQuery(function ($) {
 	'use strict';
-	var eaccounting_invoice_form = {
-		$form: $('#ea-invoice-form'),
+
+	// Revenue Form
+	var ea_income_form = {
+		init: function () {
+			$(document)
+				.on('change', '#ea-income-form #account_id', this.update_amount_input)
+				.on('submit', '#ea-income-form', this.submit)
+				.find('#ea-income-form #account_id').trigger('change');
+		},
+		update_amount_input: function (e) {
+			var account_id = parseInt(e.target.value, 10);
+			if (!account_id) {
+				return false;
+			}
+			eaccounting.block('#ea-income-form');
+			var data = {
+				action: 'eaccounting_get_account_currency',
+				account_id: account_id,
+				_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+			}
+			$.post(ajaxurl, data).always(function (json){
+				eaccounting.unblock('#ea-income-form');
+				if (json.success) {
+					return eaccounting.mask_amount('#ea-income-form #amount', json.data);
+				}
+				eaccounting.notice(json);
+			});
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting.block('#ea-income-form');
+			const data = eaccounting.get_values('#ea-income-form');
+			$.post(ajaxurl, data, function (json){
+				eaccounting.notice(json);
+				eaccounting.redirect(json);
+			}).always(function (json){
+				eaccounting.unblock('#ea-income-form');
+			});
+		}
+	}
+
+	var ea_invoice_form = {
 		init: function () {
 			$('.ea-add-line-item', this.$form).on('click', this.add_line);
 		},
-		add_line:function (e){
+		add_line: function (e) {
 			e.preventDefault();
-			var title = $(this).data('modal-title');
-			$.ea_modal({
-				title:title,
-				target:'#modal-add-invoice-item',
-				onReady:function ($modal){
-					$( '.ea-select2', $modal ).eaccounting_select2();
-					$('#quantity', $modal).on('change keyup', eaccounting_invoice_form.number_input);
-				},
-				onSubmit:function ($modal, plugin){
+			$('#modal-add-invoice-item').ea_modal({
+				onSubmit: function (plugin) {
 					plugin.close();
-					console.log(plugin.getFormData());
 				}
 			})
-		},
-		number_input:function (e){
-			console.log(e);
-			e.target.value = e.target.value.replace(/[^0-9.]/g, '');
 		}
 	};
 
-	eaccounting_invoice_form.init();
+	ea_income_form.init();
+	ea_invoice_form.init();
 });

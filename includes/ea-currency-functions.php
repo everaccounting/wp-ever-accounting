@@ -55,6 +55,22 @@ function eaccounting_get_currency( $currency ) {
 }
 
 /**
+ * @param $account
+ * @since 1.1.0
+ *
+ * @return mixed|null
+ */
+function eaccount_get_currency_rate( $currency ) {
+	$exist = eaccounting_get_currency( $currency );
+	if ( $exist ) {
+		return $exist->get_rate();
+	}
+
+	return 1;
+}
+
+
+/**
  *  Create new currency programmatically.
  *
  *  Returns a new currency object on success.

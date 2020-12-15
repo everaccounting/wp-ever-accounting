@@ -463,7 +463,7 @@ class EAccounting_Install {
 	  		`payment_method` VARCHAR(100) DEFAULT NULL,
 		  	`reference` VARCHAR(191) DEFAULT NULL,
 			`attachment_id` INT(11) DEFAULT NULL,
-		  	`parent_id` INT(11) NOT NULL DEFAULT '0',
+		  	`parent_id` INT(11) DEFAULT NULL,
 		    `reconciled` tinyINT(1) NOT NULL DEFAULT '0',
 		    `creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
