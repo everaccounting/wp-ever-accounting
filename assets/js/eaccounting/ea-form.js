@@ -1,5 +1,24 @@
 jQuery(function ($) {
 	'use strict';
+	//Customer Form
+	var ea_customer_form = {
+		init: function () {
+			$(document)
+				.on('submit', '#ea-customer-form', this.submit);
+		},
+		submit: function (e) {
+			e.preventDefault();
+			eaccounting.block('#ea-customer-form');
+			const data = eaccounting.get_values('#ea-customer-form');
+			$.post(ajaxurl, data, function (json) {
+				eaccounting.notice(json);
+				eaccounting.redirect(json);
+			}).always(function (json) {
+				eaccounting.unblock('#ea-customer-form');
+			});
+		}
+	}
+
 
 	// Revenue Form
 	var ea_income_form = {
@@ -55,6 +74,7 @@ jQuery(function ($) {
 		}
 	};
 
+	ea_customer_form.init();
 	ea_income_form.init();
 	ea_invoice_form.init();
 });

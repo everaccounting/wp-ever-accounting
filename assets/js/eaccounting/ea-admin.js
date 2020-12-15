@@ -8,6 +8,7 @@ jQuery(function ($) {
 		$('.ea-help-tip').tipTip();
 		eaccounting.mask_amount('.ea-input-price');
 		eaccounting.mask_amount('#opening_balance');
+		eaccounting.dropdown('.ea-dropdown');
 		//$('#quantity').on('change keyup', eaccounting.number_input);
 	}
 
