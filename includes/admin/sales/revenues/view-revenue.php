@@ -15,6 +15,7 @@ try {
 	wp_die( $e->getMessage() );
 }
 $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
+$edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->get_id() ), $back_url );
 ?>
 
 <div class="ea-revenue-page">
@@ -24,7 +25,7 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 				<div class="ea-card__header">
 					<h3 class="ea-card__title"><?php _e( 'Revenue Voucher', 'wp-ever-accounting' ); ?></h3>
 					<div>
-						<button class="button-secondary button">Edit</button>
+						<a href="<?php echo $edit_url; ?>" class="button-secondary button"><?php _e('Edit','wp-ever-accounting');?></a>
 						<a href="<?php echo $back_url; ?>" class="button button-secondary"><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
 					</div>
 				</div>
@@ -44,14 +45,15 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 								<table class="ea-revenue__party">
 									<tr>
 										<th>
-											<div class="ea-revenue__subtitle">From</div>
+											<div class="ea-revenue__subtitle"><?php _e( 'From', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-revenue__company">BYTEEVER LIMITED</div>
+											<?php
+											$account = $revenue->get_account();
+											?>
+											<div class="ea-revenue__company"><?php echo strtoupper( $account['name'] ); ?></div>
 											<div class="ea-revenue__address">
-												<span class="ea-revenue__address-line">4485 Pennsylvania Avenue, Lyndhurst</span>
-												<span class="ea-revenue__address-line">NJ, New Jersey</span>
-												<span class="ea-revenue__address-line">United Stated of America</span>
+												<span class="ea-revenue__address-line"><?php echo isset( $account['bank_address'] ) && ! empty( $account['bank_address'] ) ? $account['bank_address'] : ''; ?></span>
 											</div>
 										</td>
 									</tr>
@@ -60,14 +62,15 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 								<table class="ea-revenue__party">
 									<tr>
 										<th>
-											<div class="ea-revenue__subtitle">To</div>
+											<div class="ea-revenue__subtitle"><?php _e( 'To', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-revenue__company">BYTEEVER LIMITED</div>
+											<?php
+											$customers = $revenue->get_customer();
+											?>
+											<div class="ea-revenue__company"><?php echo $customers ? strtoupper( $customers['name'] ) : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
 											<div class="ea-revenue__address">
-												<span class="ea-revenue__address-line">4485 Pennsylvania Avenue, Lyndhurst</span>
-												<span class="ea-revenue__address-line">NJ, New Jersey</span>
-												<span class="ea-revenue__address-line">United Stated of America</span>
+												<span class="ea-revenue__address-line"><?php echo isset( $customers['address'] ) && ! empty( $customers['address'] ) ? $customers['address'] : ''; ?></span>
 											</div>
 										</td>
 									</tr>
@@ -81,38 +84,58 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle">Voucher Number</div>
+											<div class="ea-revenue__subtitle"><?php _e( 'Voucher Number', 'wp-ever-accounting' ); ?></div>
 										</th>
-										<td><div class="ea-revenue__value">1</td>
+										<td>
+											<div class="ea-revenue__value"><?php echo $revenue_id; ?></div>
+										</td>
 									</tr>
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle">Payment Method</div>
+											<div class="ea-revenue__subtitle"><?php _e( 'Payment Method', 'wp-ever-accounting' ); ?></div>
 										</th>
-										<td><div class="ea-revenue__value">Cash</td>
+										<?php
+										$available_payment_methods = eaccounting_get_payment_methods();
+										$revenue_payment_method    = $revenue->get_payment_method();
+										?>
+										<td>
+											<div class="ea-revenue__value"><?php echo array_key_exists( $revenue_payment_method, $available_payment_methods ) ? $available_payment_methods[ $revenue_payment_method ] : ''; ?></div>
+										</td>
 									</tr>
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle">Payment Date</div>
+											<div class="ea-revenue__subtitle"><?php _e( 'Payment Date', 'wp-ever-accounting' ); ?></div>
 										</th>
-										<td><div class="ea-revenue__value">Dec 17, 2020</td>
+										<td>
+											<?php
+											$date_format = get_option( 'date_format' ) ? get_option( 'date_format' ) : 'F j, Y';
+											?>
+											<div class="ea-revenue__value"><?php echo date( $date_format, strtotime( $revenue->get_payment_date() ) ); ?></div>
+										</td>
 									</tr>
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle">Bank Account</div>
+											<div class="ea-revenue__subtitle"><?php _e( 'Bank Account', 'wp-ever-accounting' ); ?></div>
 										</th>
-										<td><div class="ea-revenue__value">Test</td>
+										<td>
+											<div class="ea-revenue__value"><?php echo $account ? strtoupper( $account['name'] ) : __( 'Deleted Account', 'wp-ever-accounting' ); ?></div>
+										</td>
 									</tr>
 
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle">Category</div>
+											<div class="ea-revenue__subtitle"><?php _e( 'Category', 'wp-ever-accounting' ); ?></div>
 										</th>
-										<td><div class="ea-revenue__value">Test</td>
+										<?php
+										$category = $revenue->get_category();
+										?>
+										<td>
+											<div class="ea-revenue__value"><?php echo $category ? $category['name'] : __( 'Deleted Category', 'wp-ever-accounting' ); ?></div>
+										</td>
 									</tr>
 									</tbody>
 								</table>
@@ -121,21 +144,20 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 						<!-- /.ea-revenue__columns -->
 
 
-
 						<table class="ea-revenue__items">
 							<thead>
 							<tr>
-								<th class="text-left">Sl</th>
-								<th class="text-center">Description</th>
-								<th class="text-right">Amount</th>
+								<th class="text-left"><?php _e( 'Sl', 'wp-ever-accounting' ); ?></th>
+								<th class="text-center"><?php _e( 'Description', 'wp-ever-accounting' ); ?></th>
+								<th class="text-right"><?php _e( 'Amount', 'wp-ever-accounting' ); ?></th>
 							</tr>
 							</thead>
 
 							<tbody>
 							<tr>
-								<td class="text-left">1</td>
-								<td class="text-center description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, odio!</td>
-								<td class="text-right">$100</td>
+								<td class="text-left"><?php _e( '1', 'wp-ever-accounting' ) ?></td>
+								<td class="text-center description"><?php echo ! empty( $revenue->get_description() ) ? $revenue->get_description() : ''; ?></td>
+								<td class="text-right"><?php echo eaccounting_format_price( $revenue->get_amount(), $revenue->get_currency_code() ); ?></td>
 							</tr>
 							</tbody>
 
@@ -143,7 +165,7 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 							<tr>
 								<td colspan="2">
 									<p class="ea-revenue__text">
-										<strong>In Word: </strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid autem cum cumque doloribus iste nisi nulla numquam quisquam tempore!
+										<strong><?php _e( 'In Word:', 'wp-ever-accounting' ); ?> </strong><?php echo eaccounting_numbers_to_words( $revenue->get_amount() ) . ' In ' . $revenue->get_currency_code(); ?>
 									</p>
 								</td>
 
@@ -151,8 +173,8 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 									<table class="ea-revenue__totals">
 										<tbody>
 										<tr>
-											<th>Total</th>
-											<td>$100.00</td>
+											<th><?php _e( 'Total', 'wp-ever-accounting' ) ?></th>
+											<td><?php echo eaccounting_format_price( $revenue->get_amount(), $revenue->get_currency_code() ); ?></td>
 										</tr>
 										</tbody>
 									</table>
@@ -163,7 +185,7 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 						</table>
 						<!-- /.ea-revenue__items -->
 						<p class="ea-revenue__reference">
-							<strong>Reference: </strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, odio!
+							<strong><?php _e( 'Reference:', 'wp-ever-accounting' ) ?> </strong><?php echo ! empty( $revenue->get_reference() ) ? $revenue->get_reference() : ''; ?>
 						</p>
 					</div>
 					<!-- /.ea-revenue -->

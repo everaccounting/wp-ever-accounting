@@ -499,7 +499,7 @@
   }
   &__title {
 	text-align: right;
-	font-size: 2em;
+	font-size: 1.5em;
 	text-transform: uppercase;
 	line-height: 1;
   }
@@ -516,7 +516,7 @@
   &__columns {
 	box-sizing: border-box;
 	display: flex;
-	flex-wrap: wrap;
+	flex-wrap: nowrap;
 	justify-content: space-between;
 	margin-bottom: 20px;
 
@@ -621,6 +621,7 @@
 	color: #444444e8;
 	margin-bottom: 10px;
 	font-weight: 700;
+	font-size: .95em;
   }
 }
 
