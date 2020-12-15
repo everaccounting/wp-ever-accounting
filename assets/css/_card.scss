@@ -289,12 +289,13 @@
 
   }
 
-  &__party{
-	th,td{
+  &__party {
+	th, td {
 	  vertical-align: top;
 	  padding: 5px 10px;
 	}
-	th{
+
+	th {
 	  width: 60px;
 	  text-align: left;
 	}
@@ -323,13 +324,15 @@
   }
 
   &__props {
-	th{
+	th {
 	  text-align: right;
 	}
-	td{
+
+	td {
 	  text-align: left;
 	}
-	th, td{
+
+	th, td {
 	  border: 1px solid #dee2e6;
 	  padding: 5px 10px;
 	  vertical-align: top;
@@ -431,16 +434,17 @@
 	border-top: 1px solid #ddd;
 	padding: 10px 10px 0;
 
-	label{
+	label {
 	  display: block;
 	  font-weight: 600;
 	  margin-bottom: 5px;
 	}
 
-	textarea{
+	textarea {
 	  width: 100%;
 	}
-	select{
+
+	select {
 	  width: 70%;
 	}
 
@@ -485,9 +489,6 @@
 	.text-center {
 	  text-align: center;
 	}
-	.description {
-	  background: #f8f8f8;
-	}
   }
 
   &__header {
@@ -496,23 +497,46 @@
 	min-height: 40px;
 	align-items: center;
 	margin-bottom: 20px;
+
+	@media(max-width: 767px) {
+	  display: block;
+	}
+
+	@media print {
+	  display: block;
+	}
   }
+
   &__title {
 	text-align: right;
 	font-size: 1.5em;
 	text-transform: uppercase;
 	line-height: 1;
+	@media (max-width: 767px) {
+	  text-align: left;
+	  margin-top: 5px;
+	}
+	@media print {
+	  width: 50%;
+	  float: right;
+	  text-align: right;
+	}
   }
 
   &__logo {
 	max-width: 250px;
 	max-height: 70px;
+	@media print {
+	  width: 50%;
+	  float: left;
+	}
 
 	img {
 	  max-width: 100%;
 	  height: auto;
 	}
   }
+
   &__columns {
 	box-sizing: border-box;
 	display: flex;
@@ -520,21 +544,35 @@
 	justify-content: space-between;
 	margin-bottom: 20px;
 
+	@media (max-width: 767px) {
+	  display: block;
+	}
+
+	@media print {
+	  display: block;
+	}
+
 	& > div {
 	  box-sizing: border-box;
 	  @media (max-width: 768px) {
 		width: 100%;
+		margin-top: 10px;
+	  }
+	  @media print {
+		width: 50%;
+		float: left;
 	  }
 	}
 
   }
 
-  &__party{
-	th,td{
+  &__party {
+	th, td {
 	  vertical-align: top;
 	  padding: 5px 10px;
 	}
-	th{
+
+	th {
 	  width: 60px;
 	  text-align: left;
 	}
@@ -542,8 +580,7 @@
 
   &__subtitle {
 	color: #888;
-	letter-spacing: .2px;
-	margin-bottom: 10px;
+	font-size: 12px;
 	text-transform: uppercase;
   }
 
@@ -551,6 +588,7 @@
 	color: #444444e8;
 	margin-bottom: 10px;
 	font-weight: 700;
+	font-size: 13px;
   }
 
   &__address {
@@ -559,19 +597,38 @@
 	&-line {
 	  display: block;
 	  margin-bottom: 0;
+	  width: 90%;
+	  word-break: break-word;
 	}
   }
 
   &__props {
-	th{
+	margin-left: 10%;
+
+	th {
 	  text-align: left;
 	}
-	td{
+
+	td {
 	  text-align: left;
 	}
-	th, td{
-	  padding: 5px 10px;
+
+	th, td {
+	  padding: 0 10px;
 	  vertical-align: top;
+	}
+	.ea-revenue__subtitle {
+	  font-size: 12px;
+	  text-transform: capitalize;
+	}
+
+	@media (max-width: 767px) {
+	  margin-left: 0;
+	}
+	@media print {
+	  width: 30%;
+	  float: right;
+	  padding-left: 15%;
 	}
   }
 
@@ -581,10 +638,14 @@
 	thead {
 	  background: #444;
 	  color: #fff;
+
+	  @media print {
+		background-color: #444;
+	  }
 	}
 
-	tbody tr td{
-		border: 1px solid #ddd;
+	tbody tr td {
+	  border: 1px solid #ddd;
 	}
 
 	th {
@@ -599,6 +660,10 @@
 	  border: 0 !important;
 	}
 
+	@media print {
+	  margin-top: 50px;
+	}
+
   }
 
   &__totals {
@@ -606,6 +671,7 @@
 	  padding: 10px;
 	  text-align: right;
 	}
+
 	tbody tr td {
 	  border: none;
 	}
@@ -617,54 +683,22 @@
 	  color: #777;
 	}
   }
+
   &__value {
 	color: #444444e8;
 	margin-bottom: 10px;
 	font-weight: 700;
-	font-size: .95em;
+	font-size: 11px;
+	@media (max-width: 767px) {
+	  font-size: .90em;
+	}
+	@media print {
+	  font-size: 10px;
+	}
   }
 }
-
-.ea-revenue-notes {
-  padding: 2px 0 0;
-  list-style: none;
-
-  &__item {
-	padding: 0 10px;
-	margin-bottom: 6px;
-
-	&-content {
-	  padding: 10px;
-	  background: #efefef;
-	  position: relative;
-	}
-
-	&-meta {
-	  padding: 10px;
-	  color: #999;
-	  margin: 0;
-	  font-size: 11px;
-	}
+@media print {
+  body {
+	background: none;
   }
-
-  &__add {
-	border-top: 1px solid #ddd;
-	padding: 10px 10px 0;
-
-	label{
-	  display: block;
-	  font-weight: 600;
-	  margin-bottom: 5px;
-	}
-
-	textarea{
-	  width: 100%;
-	}
-	select{
-	  width: 70%;
-	}
-
-  }
-
-
 }

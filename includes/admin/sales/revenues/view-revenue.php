@@ -8,6 +8,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
+wp_enqueue_script( 'ea-print' );
 $revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
 try {
 	$revenue = new \EverAccounting\Models\Income( $revenue_id );
@@ -25,12 +26,13 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 				<div class="ea-card__header">
 					<h3 class="ea-card__title"><?php _e( 'Revenue Voucher', 'wp-ever-accounting' ); ?></h3>
 					<div>
-						<a href="<?php echo $edit_url; ?>" class="button-secondary button"><?php _e('Edit','wp-ever-accounting');?></a>
+						<a href="<?php echo $edit_url; ?>" class="button-secondary button"><?php _e( 'Edit', 'wp-ever-accounting' ); ?></a>
 						<a href="<?php echo $back_url; ?>" class="button button-secondary"><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
+						<button class="button button-secondary print-button"><?php _e( 'Print', 'wp-ever-accounting' ) ?></button>
 					</div>
 				</div>
 				<!-- /.ea-card__header -->
-				<div class="ea-card__inside">
+				<div id="ea-print-voucher" class="ea-card__inside">
 					<div class="ea-revenue">
 						<div class="ea-revenue__header">
 							<div class="ea-revenue__logo">
@@ -51,7 +53,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 											<?php
 											$account = $revenue->get_account();
 											?>
-											<div class="ea-revenue__company"><?php echo strtoupper( $account['name'] ); ?></div>
+											<div class="ea-revenue__company"><?php echo  $account['name'] ; ?></div>
 											<div class="ea-revenue__address">
 												<span class="ea-revenue__address-line"><?php echo isset( $account['bank_address'] ) && ! empty( $account['bank_address'] ) ? $account['bank_address'] : ''; ?></span>
 											</div>
@@ -68,7 +70,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 											<?php
 											$customers = $revenue->get_customer();
 											?>
-											<div class="ea-revenue__company"><?php echo $customers ? strtoupper( $customers['name'] ) : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-revenue__company"><?php echo $customers ?  $customers['name']  : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
 											<div class="ea-revenue__address">
 												<span class="ea-revenue__address-line"><?php echo isset( $customers['address'] ) && ! empty( $customers['address'] ) ? $customers['address'] : ''; ?></span>
 											</div>
@@ -121,7 +123,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 											<div class="ea-revenue__subtitle"><?php _e( 'Bank Account', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-revenue__value"><?php echo $account ? strtoupper( $account['name'] ) : __( 'Deleted Account', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-revenue__value"><?php echo $account ?  $account['name']  : __( 'Deleted Account', 'wp-ever-accounting' ); ?></div>
 										</td>
 									</tr>
 
@@ -198,4 +200,32 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 	</div>
 	<!-- /.ea-row -->
 </div>
+<script type="text/javascript">
+	var $ =jQuery.noConflict();
+	$('.print-button').on('click',function(e){
+		$("#ea-print-voucher").printThis({
+			debug: false,               // show the iframe for debugging
+			importCSS: true,            // import parent page css
+			importStyle: false,         // import style tags
+			printContainer: true,       // print outer container/$.selector
+			loadCSS: "",                // path to additional css file - use an array [] for multiple
+			pageTitle: "",              // add title to print page
+			removeInline: false,        // remove inline styles from print elements
+			removeInlineSelector: "*",  // custom selectors to filter inline styles. removeInline must be true
+			printDelay: 333,            // variable print delay
+			header: null,               // prefix to html
+			footer: null,               // postfix to html
+			base: false,                // preserve the BASE tag or accept a string for the URL
+			formValues: true,           // preserve input/form values
+			canvas: false,              // copy canvas content
+			doctypeString: '...',       // enter a different doctype for older markup
+			removeScripts: false,       // remove script tags from print content
+			copyTagClasses: false,      // copy classes from the html & body tag
+			beforePrintEvent: null,     // function for printEvent in iframe
+			beforePrint: null,          // function called before iframe is filled
+			afterPrint: null            // function called before iframe is removed
+		});
+	});
+
+</script>
 
