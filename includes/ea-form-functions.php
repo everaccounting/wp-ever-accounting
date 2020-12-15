@@ -831,11 +831,12 @@ function eaccounting_currency_dropdown( $field ) {
 			'fields' => array( 'code', 'name' ),
 		)
 	);
-	$field         = wp_parse_args(
+
+	$field = wp_parse_args(
 		array(
 			'value'        => $codes,
 			'default'      => $default_code,
-			'options'      => wp_list_pluck( $options, 'code', 'name' ),
+			'options'      => wp_list_pluck( $options, 'name', 'code' ),
 			'map'          => 'return {text: option.name, id:option.code}',
 			'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
 			'ajax_action'  => 'eaccounting_get_currencies',

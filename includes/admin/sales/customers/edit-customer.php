@@ -145,14 +145,8 @@ if ( $customer->exists() && 'customer' !== $customer->get_type() ) {
 				);
 				eaccounting_hidden_input(
 					array(
-						'name'  => 'type',
-						'value' => 'customer',
-					)
-				);
-				eaccounting_hidden_input(
-					array(
 						'name'  => 'action',
-						'value' => 'eaccounting_edit_contact',
+						'value' => 'eaccounting_edit_customer',
 					)
 				);
 				?>
