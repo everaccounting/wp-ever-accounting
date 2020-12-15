@@ -43,16 +43,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'required'      => true,
 					)
 				);
-				eaccounting_select2(
-					array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Account', 'wp-ever-accounting' ),
-						'name'          => 'account_id',
-						'value'         => $revenue->get_account_id(),
-						'ajax'     		=> true,
-						'creatable'     => true,
-					)
-				);
 				eaccounting_account_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
@@ -60,6 +50,8 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'account_id',
 						'value'         => $revenue->get_account_id(),
 						'creatable'     => true,
+						'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
+						'required'      => true,
 					)
 				);
 
@@ -74,7 +66,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Enter Amount', 'wp-ever-accounting' ),
 					)
 				);
-				eaccounting_contact_dropdown(
+				eaccounting_customer_dropdown(
 					array(
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Customer', 'wp-ever-accounting' ),

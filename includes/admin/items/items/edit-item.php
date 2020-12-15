@@ -111,8 +111,10 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'category_id',
 						'value'         => $item->get_category_id(),
 						'required'      => false,
-						'type'          => 'expense',
+						'type'          => 'item',
 						'creatable'     => true,
+						'ajax_action' => 'eaccounting_get_item_categories',
+						'modal_id' => 'ea-modal-add-item-category',
 					)
 				);
 				eaccounting_file_input(

@@ -8,8 +8,8 @@
  */
 defined( 'ABSPATH' ) || exit();
 ?>
-<script type="text/template" id="ea-modal-add-vendor">
-	<form id="ea-modal-contact-form" class="ea-ajax-form" action="" method="post">
+<script type="text/template" id="ea-modal-add-vendor" data-title="<?php esc_html_e( 'Add Vendor', 'wp-ever-accounting' ); ?>">
+	<form action="" method="post" >
 		<?php
 		eaccounting_text_input(
 			array(
@@ -56,23 +56,12 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 		eaccounting_hidden_input(
-			array(
-				'name'  => 'type',
-				'value' => 'vendor',
-			)
+				array(
+						'name'  => 'action',
+						'value' => 'eaccounting_edit_vendor',
+				)
 		);
-		eaccounting_hidden_input(
-			array(
-				'name'  => 'action',
-				'value' => 'eaccounting_edit_contact',
-			)
-		);
-		wp_nonce_field( 'ea_edit_contact' );
+		wp_nonce_field( 'ea_edit_vendor' );
 		?>
-		<?php
-		wp_nonce_field( 'ea_edit_invoice', 'nonce' );
-		submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
-		?>
-		Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aliquid commodi earum excepturi ipsam itaque modi nesciunt, nostrum nulla numquam repudiandae saepe sequi voluptas! Consectetur corporis dolor enim eos fugit impedit laudantium maxime molestiae neque nesciunt omnis pariatur possimus praesentium provident, qui quis rerum saepe, sit unde velit. Aliquam cupiditate ex exercitationem fugit harum labore molestiae mollitia, qui? Accusantium adipisci consectetur deleniti dolor doloribus eius enim error facilis harum id iste, iusto molestiae mollitia necessitatibus nihil perspiciatis quaerat quas reprehenderit rerum suscipit ullam veniam voluptatum. At deleniti dicta distinctio, dolore earum eos harum inventore labore, quaerat recusandae sed sit velit.
 	</form>
 </script>

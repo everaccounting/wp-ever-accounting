@@ -669,6 +669,37 @@ function eaccounting_customer_dropdown( $field ) {
 	eaccounting_select2( apply_filters( 'eaccounting_customer_dropdown', $field ) );
 }
 
+/**
+ * Get vendor dropdown.
+ *
+ * @since 1.1.0
+ *
+ * @param $field
+ */
+function eaccounting_vendor_dropdown( $field ) {
+	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
+	$contacts = eaccounting_get_vendors(
+			array(
+					'include' => $include,
+					'fields'  => array( 'id', 'name' ),
+					'return'  => 'raw',
+			)
+	);
+
+	$field = wp_parse_args(
+			array(
+					'value'        => $include,
+					'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+					'ajax_action'  => 'eaccounting_get_vendors',
+					'nonce_action' => 'ea_get_vendors',
+					'modal_id'     => '#ea-modal-add-vendor',
+					'creatable'    => true,
+			),
+			$field
+	);
+	eaccounting_select2( apply_filters( 'eaccounting_vendor_dropdown', $field ) );
+}
+
 /***
  * Dropdown field for selecting contacts.
  *
@@ -709,32 +740,26 @@ function eaccounting_contact_dropdown( $field ) {
  * @param array $field
  */
 function eaccounting_account_dropdown( $field ) {
-	$default_id = '';
-	$account_id = ! empty( $field['value'] ) ? eaccounting_clean( $field['value'] ) : 0;
-	$accounts   = array();
-	$include    = array_filter( array_unique( array( $default_id, $account_id ) ) );
-	if ( ! empty( $include ) ) {
-		$accounts = eaccounting_get_accounts(
+	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
+	$accounts = eaccounting_get_accounts(
 			array(
-				'return'  => 'raw',
-				'include' => $include,
+					'include' => $include,
+					'fields'  => array( 'id', 'name' ),
+					'return'  => 'raw',
 			)
-		);
-	}
-	if ( ! isset( $field['default'] ) ) {
-		$default_id = (int) eaccounting()->settings->get( 'default_account' );
-	}
+	);
 
 	$field = wp_parse_args(
-		$field,
-		array(
-			'type'        => 'account',
-			'ajax'        => true,
-			'default'     => $default_id,
-			'template'    => '#modal-add-account',
-			'options'     => wp_list_pluck( $accounts, 'name', 'id' ),
-			'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
-		)
+			array(
+					'value'        => $include,
+					'options'      => wp_list_pluck( $accounts, 'name', 'id' ),
+					'placeholder'  => __( 'Select Account', 'wp-ever-accounting' ),
+					'ajax_action'  => 'eaccounting_get_accounts',
+					'nonce_action' => 'ea_get_accounts',
+					'modal_id'     => '#ea-modal-add-account',
+					'creatable'    => true,
+			),
+			$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_account_dropdown', $field ) );
 }
@@ -752,10 +777,14 @@ function eaccounting_category_dropdown( $field ) {
 		array(
 			'value' => '',
 			'type'  => '',
+			'ajax_action' => '',
+			'modal_id' => ''
 		)
 	);
 	$type    = ! empty( $field['type'] ) ? wp_parse_list( $field['type'] ) : array( 'income' );
 	$include = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
+	$ajax_action = ! empty( $field['ajax_action'] ) ?  $field['ajax_action']  : 'eaccounting_get_income_categories';
+	$modal_id = ! empty( $field['modal_id'] ) ?  '#'.$field['modal_id']  : 'ea-modal-add-income-category';
 
 	$categories = eaccounting_get_categories(
 		array(
@@ -772,8 +801,8 @@ function eaccounting_category_dropdown( $field ) {
 			'ajax'         => true,
 			'placeholder'  => __( 'Select Category', 'wp-ever-accounting' ),
 			'nonce_action' => 'ea_categories',
-			'ajax_action'  => 'eaccounting_get_income_categories', // Specify for the use case
-			'modal_id'     => '#ea-modal-add-income-category', //Specify for the use case
+			'ajax_action'  => $ajax_action, // Specify for the use case
+			'modal_id'     => $modal_id, //Specify for the use case
 			'creatable'    => true,
 		),
 		$field

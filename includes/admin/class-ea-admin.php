@@ -187,6 +187,8 @@ class Admin {
 			eaccounting_get_admin_template( 'js/modal-add-account' );
 			eaccounting_get_admin_template( 'js/modal-add-currency' );
 			eaccounting_get_admin_template( 'js/modal-add-income-category' );
+			eaccounting_get_admin_template( 'js/modal-add-expense-category' );
+			eaccounting_get_admin_template( 'js/modal-add-item-category' );
 			eaccounting_get_admin_template( 'js/modal-add-customer' );
 			eaccounting_get_admin_template( 'js/modal-add-vendor' );
 			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );

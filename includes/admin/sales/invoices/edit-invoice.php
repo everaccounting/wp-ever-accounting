@@ -126,9 +126,11 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 					'name'          => 'category_id',
 					'value'         => $invoice->get_category_id(),
 					'required'      => true,
-					'type'          => 'expense',
+					'type'          => 'item',
 					'disabled'      => ! $invoice->is_editable(),
 					'creatable'     => true,
+					'ajax_action' => 'eaccounting_get_item_categories',
+					'modal_id' => 'ea-modal-add-item-category',
 				)
 			);
 			eaccounting_file_input(

@@ -34,6 +34,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'from_account_id',
 						'value'         => $transfer->get_from_account_id(),
 						'required'      => true,
+						'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
 					)
 				);
 
@@ -45,6 +46,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'value'         => $transfer->get_to_account_id(),
 						'default'       => '',
 						'required'      => true,
+						'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
 					)
 				);
 
