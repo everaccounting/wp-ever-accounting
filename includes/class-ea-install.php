@@ -35,9 +35,9 @@ class EAccounting_Install {
 	 * Check EverAccounting version and run the updater is required.
 	 * This check is done on all requests and runs if the versions do not match.
 	 *
+	 * @return void
 	 * @since 1.0.2
 	 *
-	 * @return void
 	 */
 	public static function check_version() {
 		// todo remove on later version.
@@ -70,7 +70,7 @@ class EAccounting_Install {
 	 * Show row meta on the plugin screen.
 	 *
 	 * @param mixed $links Plugin Row Meta.
-	 * @param mixed $file  Plugin Base file.
+	 * @param mixed $file Plugin Base file.
 	 *
 	 * @return array
 	 */
@@ -121,8 +121,8 @@ class EAccounting_Install {
 	/**
 	 * Install EverAccounting.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function install() {
 		if ( ! is_blog_installed() ) {
@@ -184,8 +184,8 @@ class EAccounting_Install {
 	/**
 	 * Create default options.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_options() {
 		$settings = new \EverAccounting\Admin\Settings();
@@ -208,8 +208,8 @@ class EAccounting_Install {
 	/**
 	 * Create categories.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_categories() {
 		// If no categories then create default categories
@@ -259,8 +259,8 @@ class EAccounting_Install {
 	/**
 	 * Create currencies.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_currencies() {
 		// create currencies
@@ -307,8 +307,8 @@ class EAccounting_Install {
 	/**
 	 * Create accounts.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_accounts() {
 		if ( ! \EverAccounting\Query_Account::init()->count() ) {
@@ -327,8 +327,8 @@ class EAccounting_Install {
 	/**
 	 * Create default data.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_defaults() {
 		$settings = new \EverAccounting\Admin\Settings();
@@ -348,8 +348,8 @@ class EAccounting_Install {
 	/**
 	 * Reset any notices added to admin.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function remove_admin_notices() {
 		// include_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
@@ -600,7 +600,8 @@ class EAccounting_Install {
 		  	PRIMARY KEY  (id),
 		  	KEY `key` (`key`),
 		  	KEY `secret` (`secret`)
-		) $collate");
+		) $collate"
+		);
 
 		foreach ( $tables as $table ) {
 			dbDelta( $table );
@@ -675,16 +676,20 @@ class EAccounting_Install {
 			'ea_accountant',
 			'Accountant',
 			array(
-				'manage_eaccounting' => true,
-				'ea_manage_customer' => true,
-				'ea_manage_vendor'   => true,
-				'ea_manage_account'  => true,
-				'ea_manage_payment'  => true,
-				'ea_manage_revenue'  => true,
-				'ea_manage_transfer' => true,
-				'ea_manage_category' => true,
-				'ea_manage_currency' => true,
-				'read'               => true,
+				'manage_eaccounting'        => true,
+				'ea_manage_customer'        => true,
+				'ea_manage_vendor'          => true,
+				'ea_manage_account'         => true,
+				'ea_manage_payment'         => true,
+				'ea_manage_revenue'         => true,
+				'ea_manage_transfer'        => true,
+				'ea_manage_category'        => true,
+				'ea_manage_currency'        => true,
+				'ea_manage_item'            => true,
+				'ea_manage_invoice'         => true,
+				'ea_manage_invoice_payment' => true,
+				'ea_manage_bill'            => true,
+				'read'                      => true,
 			)
 		);
 
@@ -693,20 +698,24 @@ class EAccounting_Install {
 			'ea_manager',
 			'Accounting Manager',
 			array(
-				'manage_eaccounting' => true,
-				'ea_manage_report'   => true,
-				'ea_manage_options'  => true,
-				'ea_import'          => true,
-				'ea_export'          => true,
-				'ea_manage_customer' => true,
-				'ea_manage_vendor'   => true,
-				'ea_manage_account'  => true,
-				'ea_manage_payment'  => true,
-				'ea_manage_revenue'  => true,
-				'ea_manage_transfer' => true,
-				'ea_manage_category' => true,
-				'ea_manage_currency' => true,
-				'read'               => true,
+				'manage_eaccounting'        => true,
+				'ea_manage_report'          => true,
+				'ea_manage_options'         => true,
+				'ea_import'                 => true,
+				'ea_export'                 => true,
+				'ea_manage_customer'        => true,
+				'ea_manage_vendor'          => true,
+				'ea_manage_account'         => true,
+				'ea_manage_payment'         => true,
+				'ea_manage_revenue'         => true,
+				'ea_manage_transfer'        => true,
+				'ea_manage_category'        => true,
+				'ea_manage_currency'        => true,
+				'ea_manage_item'            => true,
+				'ea_manage_invoice'         => true,
+				'ea_manage_invoice_payment' => true,
+				'ea_manage_bill'            => true,
+				'read'                      => true,
 			)
 		);
 
@@ -727,14 +736,18 @@ class EAccounting_Install {
 			$wp_roles->add_cap( 'administrator', 'ea_manage_transfer' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_category' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_currency' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_item' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_invoice' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_invoice_item' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 		}
 	}
 
 	/**
 	 * Remove EverAccounting roles.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function remove_roles() {
 		global $wp_roles;
@@ -755,8 +768,8 @@ class EAccounting_Install {
 	/**
 	 * Create cron jobs (clear them first).
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_cron_jobs() {
 		wp_schedule_event( time() + ( 3 * HOUR_IN_SECONDS ), 'daily', 'eaccounting_cleanup_logs' );
@@ -777,8 +790,8 @@ class EAccounting_Install {
 	/**
 	 * Update version to current.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function update_version() {
 		delete_option( 'eaccounting_version' );
@@ -788,8 +801,8 @@ class EAccounting_Install {
 	/**
 	 * See if we need to show or run database updates during install.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function maybe_update() {
 		if ( self::needs_update() ) {
@@ -802,8 +815,8 @@ class EAccounting_Install {
 	/**
 	 * Is an update needed?
 	 *
-	 * @since  1.0.2
 	 * @return boolean
+	 * @since  1.0.2
 	 */
 	public static function needs_update() {
 		$current_version = get_option( 'eaccounting_version', null );
@@ -817,8 +830,8 @@ class EAccounting_Install {
 	/**
 	 * Push all needed updates to the queue for processing.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function update() {
 		$current_version = get_option( 'eaccounting_version' );
@@ -838,9 +851,10 @@ class EAccounting_Install {
 	/**
 	 * Run an update callback.
 	 *
+	 * @param string $callback Callback name.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $callback Callback name.
 	 */
 	public static function run_update_callback( $callback ) {
 		include_once EACCOUNTING_ABSPATH . '/includes/ea-update-functions.php';
@@ -856,8 +870,8 @@ class EAccounting_Install {
 	 *
 	 * A brand new install has no version yet. Also treat empty installs as 'new'.
 	 *
-	 * @since  1.0.2
 	 * @return boolean
+	 * @since  1.0.2
 	 */
 	public static function is_new_install() {
 		$transaction_count = eaccounting_get_transactions( array( 'count_total' => true ) );
