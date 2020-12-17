@@ -42,20 +42,20 @@ class Item extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'name'           => '',
-		'sku'            => '',
-		'image_id'       => null,
-		'description'    => '',
-		'sale_price'     => 0.0000,
-		'purchase_price' => 0.0000,
-		'quantity'       => 1,
-		'category_id'    => null,
-		'sales_tax_rate'      => null,
-		'purchase_tax_rate'   => null,
-		'vat'            => null,
-		'enabled'        => 1,
-		'creator_id'     => null,
-		'date_created'   => null,
+		'name'              => '',
+		'sku'               => '',
+		'image_id'          => null,
+		'description'       => '',
+		'sale_price'        => 0.0000,
+		'purchase_price'    => 0.0000,
+		'quantity'          => 1,
+		'category_id'       => null,
+		'sales_tax_rate'    => null,
+		'purchase_tax_rate' => null,
+		'vat'               => null,
+		'enabled'           => 1,
+		'creator_id'        => null,
+		'date_created'      => null,
 	);
 
 	/**
@@ -84,6 +84,12 @@ class Item extends ResourceModel {
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'name'       => __( 'Item name', 'wp-ever-accounting' ),
+			'quantity'   => __( 'Item Quantity', 'wp-ever-accounting' ),
+			'sale_price' => __( 'Item Purchase Price', 'wp-ever-accounting' ),
+		);
 	}
 
 	/*

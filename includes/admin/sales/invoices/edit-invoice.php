@@ -30,7 +30,7 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 		<form id="ea-invoice-form" method="post">
 			<div class="ea-row">
 			<?php
-			eaccounting_contact_dropdown(
+			eaccounting_customer_dropdown(
 				array(
 					'wrapper_class' => 'ea-col-6',
 					'label'         => __( 'Customer', 'wp-ever-accounting' ),
@@ -43,10 +43,11 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 					'creatable'     => true,
 				)
 			);
+
 			eaccounting_currency_dropdown(
 				array(
 					'wrapper_class' => 'ea-col-6',
-					'label'         => __( 'Account Currency', 'wp-ever-accounting' ),
+					'label'         => __( 'Currency', 'wp-ever-accounting' ),
 					'name'          => 'currency_code',
 					'value'         => $invoice->get_currency_code(),
 					'disabled'      => ! $invoice->is_editable(),
@@ -58,7 +59,7 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 				array(
 					'wrapper_class' => 'ea-col-6',
 					'label'         => __( 'Invoice Date', 'wp-ever-accounting' ),
-					'name'          => 'invoiced_at',
+					'name'          => 'issue_date',
 					'value'         => $invoice->get_issue_date() ? eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' ) : null,
 					'required'      => true,
 					'disabled'      => ! $invoice->is_editable(),
@@ -126,20 +127,18 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 					'name'          => 'category_id',
 					'value'         => $invoice->get_category_id(),
 					'required'      => true,
-					'type'          => 'item',
+					'type'          => 'income',
 					'disabled'      => ! $invoice->is_editable(),
 					'creatable'     => true,
-					'ajax_action' => 'eaccounting_get_item_categories',
-					'modal_id' => 'ea-modal-add-item-category',
+					'ajax_action'   => 'eaccounting_get_income_categories',
+					'modal_id'      => 'ea-modal-add-income-category',
 				)
 			);
 			eaccounting_file_input(
 				array(
 					'label'         => __( 'Attachments', 'wp-ever-accounting' ),
-					'name'          => 'attachment',
-					'value'         => $invoice->get_attachment_id(),
-					'required'      => false,
-					'disabled'      => ! $invoice->is_editable(),
+					'name'          => 'attachment_id',
+					'value'         => $invoice->get_attachment(),
 					'wrapper_class' => 'ea-col-6',
 					'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),
 				)

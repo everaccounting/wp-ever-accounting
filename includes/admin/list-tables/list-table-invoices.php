@@ -195,7 +195,7 @@ class List_Table_Invoices extends List_Table {
 			esc_url(
 				eaccounting_admin_url(
 					array(
-						'action'     => 'edit',
+						'action'     => 'view',
 						'invoice_id' => $invoice->get_id(),
 					)
 				)

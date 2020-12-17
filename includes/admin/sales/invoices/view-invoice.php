@@ -16,7 +16,7 @@ try {
 	wp_die( $e->getMessage() );
 }
 ?>
-<div class="ea-invoice-page">
+<div id="ea-invoice" class="ea-invoice-page">
 	<div class="ea-row">
 		<div class="ea-col-9">
 			<div class="ea-card">
@@ -25,14 +25,35 @@ try {
 						Invoice
 					</h3>
 					<div>
-						<button class="button-secondary button">Edit</button>
-						<button class="button-secondary button">Edit</button>
+						<?php
+						echo sprintf(
+							'<a href="%s" class="button-secondary button">%s</a>',
+							esc_url(
+								add_query_arg(
+									array(
+										'page'       => 'ea-sales',
+										'action'     => 'edit',
+										'invoice_id' => $invoice->get_id(),
+									),
+									admin_url( 'admin.php' )
+								)
+							),
+							__( 'Edit', 'wp-ever-accounting' )
+						);
+						?>
+						<button class="button-primary button receive-payment">Receive Payment</button>
 					</div>
 				</div>
 				<div class="ea-card__inside">
 
 					<div class="ea-invoice">
-						<div class="ea-invoice__watermark"><p>Paid</p></div>
+						<?php if ( $invoice->is_status( 'paid' ) ) : ?>
+							<div class="ea-invoice__watermark">
+								<p>
+									<?php echo esc_html( $invoice->get_status_nicename() ); ?>
+								</p>
+							</div>
+						<?php endif; ?>
 						<div class="ea-invoice__header">
 							<div class="ea-invoice__logo">
 								<img src="https://wpeveraccounting.com/wp-content/uploads/2020/09/Logo-same-size-plugin-ever.svg" alt="WP Ever Accounting">
@@ -65,11 +86,14 @@ try {
 											<div class="ea-invoice__subtitle">To</div>
 										</th>
 										<td>
-											<div class="ea-invoice__company">BYTEEVER LIMITED</div>
+											<div class="ea-invoice__company">
+												<?php echo empty( $invoice->get_name() ) ? '&mdash;' : esc_html( $invoice->get_name() ); ?>
+											</div>
 											<div class="ea-invoice__address">
-												<span class="ea-invoice__address-line">4485 Pennsylvania Avenue, Lyndhurst</span>
+												<span class="ea-invoice__address-line">
+													<?php echo empty( $invoice->get_address() ) ? '&mdash;' : nl2br( $invoice->get_address() ); ?>
+												</span>
 												<span class="ea-invoice__address-line">NJ, New Jersey</span>
-												<span class="ea-invoice__address-line">United Stated of America</span>
 											</div>
 										</td>
 									</tr>
@@ -82,27 +106,39 @@ try {
 								<table>
 									<tr>
 										<th class="ea-invoice__props-label">Invoice Number</th>
-										<td class="ea-invoice__props-content">INV-00003</td>
+										<td class="ea-invoice__props-content">
+											<?php echo empty( $invoice->get_invoice_number() ) ? '&mdash;' : esc_html( $invoice->get_invoice_number( 'view' ) ); ?>
+										</td>
 									</tr>
 									<tr>
 										<th class="ea-invoice__props-label">Order Number</th>
-										<td class="ea-invoice__props-content">ORD-00003</td>
+										<td class="ea-invoice__props-content">
+											<?php echo empty( $invoice->get_order_number() ) ? '&mdash;' : esc_html( $invoice->get_order_number( 'view' ) ); ?>
+										</td>
 									</tr>
 									<tr>
 										<th class="ea-invoice__props-label">Invoice Date</th>
-										<td class="ea-invoice__props-content">Dec 17, 2020</td>
+										<td class="ea-invoice__props-content">
+											<?php echo empty( $invoice->get_issue_date() ) ? '&mdash;' : eaccounting_format_datetime( $invoice->get_issue_date(), 'M j, Y' ); ?>
+										</td>
 									</tr>
 									<tr>
 										<th class="ea-invoice__props-label">Payment Date</th>
-										<td class="ea-invoice__props-content">Dec 17, 2020</td>
+										<td class="ea-invoice__props-content">
+											<?php echo empty( $invoice->get_payment_date() ) ? '&mdash;' : eaccounting_format_datetime( $invoice->get_payment_date(), 'M j, Y' ); ?>
+										</td>
 									</tr>
 									<tr>
-										<th class="ea-invoice__props-label">Invoice Due Date</th>
-										<td class="ea-invoice__props-content">Dec 17, 2020</td>
+										<th class="ea-invoice__props-label">Due Date</th>
+										<td class="ea-invoice__props-content">
+											<?php echo empty( $invoice->get_due_date() ) ? '&mdash;' : eaccounting_format_datetime( $invoice->get_due_date(), 'M j, Y' ); ?>
+										</td>
 									</tr>
 									<tr>
 										<th class="ea-invoice__props-label">Invoice Status</th>
-										<td class="ea-invoice__props-content">Paid</td>
+										<td class="ea-invoice__props-content">
+											<?php echo empty( $invoice->get_status() ) ? '&mdash;' : esc_html( $invoice->get_status_nicename() ); ?>
+										</td>
 									</tr>
 								</table>
 							</div>
@@ -119,103 +155,70 @@ try {
 							</thead>
 
 							<tbody>
-							<tr>
-								<td class="text-left">
-									435 Ridenour Street
-								</td>
-								<td class="text-right">
-									9
-								</td>
-								<td class="text-right">
-									$100.00
-								</td>
-								<td class="text-right">
-									9000.00
-								</td>
-							</tr>
-							<tr>
-								<td class="text-left">
-									435 Ridenour Street
-								</td>
-								<td class="text-right">
-									9
-								</td>
-								<td class="text-right">
-									$100.00
-								</td>
-								<td class="text-right">
-									9000.00
-								</td>
-							</tr>
-							<tr>
-								<td class="text-left">
-									435 Ridenour Street
-								</td>
-								<td class="text-right">
-									9
-								</td>
-								<td class="text-right">
-									$100.00
-								</td>
-								<td class="text-right">
-									9000.00
-								</td>
-							</tr>
-							<tr>
-								<td class="text-left">
-									435 Ridenour Street
-								</td>
-								<td class="text-right">
-									9
-								</td>
-								<td class="text-right">
-									$100.00
-								</td>
-								<td class="text-right">
-									9000.00
-								</td>
-							</tr>
+							<?php foreach ( $invoice->get_line_items() as $line_item ) : ?>
+								<tr>
+									<td class="text-left">
+										<?php echo empty( $line_item->get_item_name() ) ? '&mdash;' : esc_html( $line_item->get_item_name() ); ?>
+									</td>
+									<td class="text-right">
+										<?php echo empty( $line_item->get_quantity() ) ? '&mdash;' : esc_html( $line_item->get_quantity() ); ?>
+									</td>
+									<td class="text-right">
+										<?php echo empty( $line_item->get_item_price() ) ? '&mdash;' : esc_html( $invoice->get_formatted_line_amount( $line_item, 'item_price' ) ); ?>
+									</td>
+									<td class="text-right">
+										<?php echo empty( $line_item->get_item_price() ) ? '&mdash;' : esc_html( $invoice->get_formatted_line_amount( $line_item, 'subtotal' ) ); ?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+
 							</tbody>
 
 							<tfoot>
-								<tr>
-									<td colspan="2">
-										<p class="ea-invoice__note">
-											<strong>Note: </strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, odio!
-										</p>
-									</td>
+							<tr>
+								<td colspan="2">
+									<p class="ea-invoice__note">
+										<strong>Note: </strong>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minima, odio!
+									</p>
+								</td>
 
-									<td colspan="2" class="padding-zero">
-										<table class="ea-invoice__totals">
-											<tbody>
-											<tr>
-												<th>Subtotal</th>
-												<td>$9,900.00</td>
-											</tr>
-											<tr>
-												<th>Tax</th>
-												<td>$9,900.00</td>
-											</tr>
-											<tr>
-												<th>Discount</th>
-												<td>$9,900.00</td>
-											</tr>
-											<tr>
-												<th>Total</th>
-												<td>$9,900.00</td>
-											</tr>
-											<tr>
-												<th>Paid</th>
-												<td>$9,900.00</td>
-											</tr>
-											<tr>
-												<th>Due</th>
-												<td>$9,900.00</td>
-											</tr>
-											</tbody>
-										</table>
-									</td>
-								</tr>
+								<td colspan="2" class="padding-zero">
+									<table class="ea-invoice__totals">
+										<tbody>
+										<tr>
+											<th>Subtotal</th>
+											<td><?php echo $invoice->get_formatted_subtotal(); ?></td>
+										</tr>
+										<tr>
+											<th>Tax</th>
+											<td><?php echo $invoice->get_formatted_total_tax(); ?></td>
+										</tr>
+										<tr>
+											<th>Discount</th>
+											<td><?php echo $invoice->get_formatted_total_discount(); ?></td>
+										</tr>
+										<tr>
+											<th>Total</th>
+											<td><?php echo $invoice->get_formatted_total(); ?></td>
+										</tr>
+										<tr>
+											<th>Paid</th>
+											<td>
+												<?php echo $invoice->get_formatted_total_paid(); ?>
+											</td>
+										</tr>
+										<?php if ( ! $invoice->is_status( 'paid' ) ) : ?>
+										<tr>
+											<th>Due</th>
+											<td>
+												<?php echo $invoice->get_formatted_total_due(); ?>
+											</td>
+										</tr>
+										<?php endif; ?>
+										</tbody>
+									</table>
+								</td>
+							</tr>
 							</tfoot>
 
 						</table>
@@ -233,20 +236,6 @@ try {
 		</div>
 
 		<div class="ea-col-3">
-
-			<div class="ea-card">
-				<div class="ea-card__header">
-					<h3 class="ea-card__title">
-						Action
-					</h3>
-				</div>
-				<div class="ea-card__inside">
-					<select name="" id="">
-						<option value="">Select</option>
-					</select>
-					<button class="button-primary">Submit</button>
-				</div>
-			</div>
 
 			<div class="ea-card">
 				<div class="ea-card__header">
@@ -301,3 +290,78 @@ try {
 		</div>
 	</div>
 </div>
+
+<script type="text/template" id="ea-modal-add-invoice-payment" data-title="<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>">
+	<form action="" method="post" >
+		<?php
+		eaccounting_text_input(
+			array(
+				'label'       => __( 'Date', 'wp-ever-accounting' ),
+				'name'        => 'payment_date',
+				'placeholder' => __( 'Enter Date', 'wp-ever-accounting' ),
+				'data_type'   => 'date',
+				'value'       => date( 'Y-m-d' ),
+				'required'    => true,
+			)
+		);
+		eaccounting_text_input(
+			array(
+				'label'       => __( 'Amount', 'wp-ever-accounting' ),
+				'name'        => 'amount',
+				'value'       => $invoice->get_formatted_total_due(),
+				'data_type'   => 'price',
+				'required'    => true,
+				'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),
+				/* translators: %s amount */
+				'desc'        => sprintf( __( 'Total amount due:%s', 'wp-ever-accounting' ), $invoice->get_formatted_total_due() ),
+			)
+		);
+		eaccounting_account_dropdown(
+			array(
+				'label'       => __( 'Account', 'wp-ever-accounting' ),
+				'name'        => 'account_id',
+				'creatable'   => false,
+				'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
+				'required'    => true,
+			)
+		);
+		eaccounting_payment_method_dropdown(
+			array(
+				'label'    => __( 'Payment Method', 'wp-ever-accounting' ),
+				'name'     => 'payment_method',
+				'required' => true,
+				'value'    => '',
+			)
+		);
+		eaccounting_textarea(
+			array(
+				'label'       => __( 'Description', 'wp-ever-accounting' ),
+				'name'        => 'description',
+				'value'       => '',
+				'required'    => false,
+				'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
+			)
+		);
+		eaccounting_hidden_input(
+			array(
+				'name'  => 'invoice_id',
+				'value' => $invoice->get_id(),
+			)
+		);
+		eaccounting_hidden_input(
+			array(
+				'name'  => 'category_id',
+				'value' => $invoice->get_category_id(),
+			)
+		);
+		eaccounting_hidden_input(
+			array(
+				'name'  => 'action',
+				'value' => 'eaccounting_add_invoice_payment',
+			)
+		);
+		wp_nonce_field( 'ea_add_invoice_payment' );
+		?>
+	</form>
+</script>
+

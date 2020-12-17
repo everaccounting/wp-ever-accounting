@@ -38,15 +38,21 @@ class Latest_Expenses extends Widget {
 	 */
 	public function get_content() {
 		global $wpdb;
-		$expenses = $wpdb->get_results($wpdb->prepare("
+		$expenses = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 		SELECT t.payment_date, c.name, t.amount, t.currency_code
 		FROM {$wpdb->prefix}ea_transactions t
 		LEFT JOIN {$wpdb->prefix}ea_categories as c on c.id=t.category_id
 		WHERE t.type= 'expense'
+		AND t.currency_code != ''
 		AND c.type != 'other'
 		ORDER BY t.payment_date DESC
 		LIMIT %d
-		", 5));
+		",
+				5
+			)
+		);
 		if ( empty( $expenses ) ) {
 			echo sprintf(
 				'<p class="ea-overview-widget-notice">%s</p>',

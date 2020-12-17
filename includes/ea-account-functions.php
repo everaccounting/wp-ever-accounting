@@ -26,7 +26,7 @@ function eaccounting_get_account( $account ) {
 		$result = new EverAccounting\Models\Account( $account );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -102,8 +102,8 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error(  $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -121,7 +121,7 @@ function eaccounting_delete_account( $account_id ) {
 		$account = new EverAccounting\Models\Account( $account_id );
 
 		return $account->exists() ? $account->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }

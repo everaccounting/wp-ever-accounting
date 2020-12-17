@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\Core\Exception;
+
 use EverAccounting\Repositories\MetaData;
 
 /**
@@ -88,7 +88,6 @@ abstract class ResourceModel {
 	 */
 	protected $repository;
 
-
 	/**
 	 * Stores meta in cache for future reads.
 	 * A group must be set to to enable caching.
@@ -105,6 +104,13 @@ abstract class ResourceModel {
 	 * @var array
 	 */
 	protected $meta_data = null;
+
+	/**
+	 * Array('prop' => readable text )
+	 * @since 1.1.0
+	 * @var array $required_props that will automatically check before saving.
+	 */
+	protected $required_props;
 
 	/**
 	 * ResourceModel constructor.
@@ -232,7 +238,6 @@ abstract class ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * @throws Exception
 	 * @return \Exception|bool
 	 */
 	public function save() {
@@ -246,6 +251,11 @@ abstract class ResourceModel {
 		if ( array_key_exists( 'creator_id', $this->data ) && ! $this->get_creator_id() ) {
 			$this->set_creator_id();
 		}
+
+		/**
+		 * Check for any required data if missing throw exception.
+		 */
+		$this->check_required_items();
 
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
@@ -1030,6 +1040,44 @@ abstract class ResourceModel {
 		return $this->get_prop( 'enabled', $context );
 	}
 
+
+	/**
+	 * Get attachment.
+	 *
+	 * @since 1.1.0
+	 * @return false|\stdClass
+	 */
+	public function get_attachment() {
+		if ( is_callable( array( $this, 'get_attachment_id' ) ) && $this->get_attachment_id() && 'attachment' === get_post_type( $this->get_attachment_id() ) ) {
+			$attachment   = get_post( $this->get_attachment_id() );
+			$output       = new \stdClass();
+			$output->id   = $attachment->ID;
+			$output->name = $attachment->post_title;
+			$output->src  = $attachment->guid;
+			return $output;
+		}
+
+		return false;
+	}
+
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param $required
+	 *
+	 * @throws \Exception
+	 */
+	public function check_required_items() {
+		foreach ( $this->required_props as $key => $title ) {
+			$method = "get_{$key}";
+			if ( empty( $this->$method( 'edit' ) ) ) {
+				/* translators: %s missing item title */
+				throw new \Exception( sprintf( __( '%s is required', 'wp-ever-accounting' ), $title ), 400 );
+			}
+		}
+	}
+
 	/**
 	 * Alias self::get_enabled()
 	 *
@@ -1085,10 +1133,10 @@ abstract class ResourceModel {
 	 * @param int    $http_status_code
 	 * @param array  $data
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function error( $code, $message, $http_status_code = 400, $data = array() ) {
-		throw new Exception( $code, $message, $http_status_code, $data );
+		throw new \Exception( $message );
 	}
 
 }

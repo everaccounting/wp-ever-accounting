@@ -251,7 +251,7 @@ function eaccounting_get_io_headers( $type ) {
 			break;
 		case 'payment':
 			$headers = array(
-					'paid_at'        => 'Paid At',
+					'payment_date'        => 'Paid At',
 					'amount'         => 'Amount',
 					'currency_code'  => 'Currency Code',
 					'currency_rate'  => 'Currency Rate',
@@ -266,7 +266,7 @@ function eaccounting_get_io_headers( $type ) {
 			break;
 		case 'revenue':
 			$headers = array(
-					'paid_at'        => 'Paid At',
+					'payment_date'        => 'Paid At',
 					'amount'         => 'Amount',
 					'currency_code'  => 'Currency Code',
 					'currency_rate'  => 'Currency Rate',

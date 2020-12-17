@@ -9,8 +9,6 @@
 
 namespace EverAccounting\Abstracts;
 
-
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
@@ -54,7 +52,7 @@ abstract class TransactionModel extends ResourceModel {
 		'currency_code'  => '', // protected
 		'currency_rate'  => 0.00, // protected
 		'account_id'     => null,
-		'invoice_id'     => null,
+		'document_id'    => null,
 		'contact_id'     => null,
 		'category_id'    => null,
 		'description'    => '',
@@ -166,8 +164,8 @@ abstract class TransactionModel extends ResourceModel {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_invoice_id( $context = 'edit' ) {
-		return $this->get_prop( 'invoice_id', $context );
+	public function get_document_id( $context = 'edit' ) {
+		return $this->get_prop( 'document_id', $context );
 	}
 
 	/**
@@ -319,8 +317,6 @@ abstract class TransactionModel extends ResourceModel {
 	 *
 	 */
 	public function set_amount( $value ) {
-		error_log( $value );
-		error_log( $this->get_currency_code() );
 		$this->set_prop( 'amount', eaccounting_sanitize_price( $value, $this->get_currency_code() ) );
 	}
 
@@ -374,8 +370,8 @@ abstract class TransactionModel extends ResourceModel {
 	 * @param $value
 	 *
 	 */
-	public function set_invoice_id( $value ) {
-		$this->set_prop( 'invoice_id', absint( $value ) );
+	public function set_document_id( $value ) {
+		$this->set_prop( 'document_id', absint( $value ) );
 	}
 
 	/**

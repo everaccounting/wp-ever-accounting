@@ -97,22 +97,22 @@ function eaccounting_reports_income_expense_tab() {
 		}
 
 		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
-		$where .= $wpdb->prepare( ' AND (paid_at BETWEEN %s AND %s)', $date_start, $end );
+		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $date_start, $end );
 		if ( ! empty( $account_id ) ) {
 			$where .= $wpdb->prepare( ' AND account_id=%d', $account_id );
 		}
 
 		$transactions = $wpdb->get_results("
 
-		SELECT `type`, paid_at, currency_code, currency_rate, amount, category_id
+		SELECT `type`, payment_date, currency_code, currency_rate, amount, category_id
 		FROM {$wpdb->prefix}ea_transactions
 		WHERE $where
 		");
 
 		foreach ( $transactions as $transaction ) {
 			$amount     = eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
-			$month      = date( 'F', strtotime( $transaction->paid_at ) );
-			$month_year = date( 'F-Y', strtotime( $transaction->paid_at ) );
+			$month      = date( 'F', strtotime( $transaction->payment_date ) );
+			$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) );
 
 			if ( $transaction->type == 'income' && isset( $compares['income'][ $transaction->category_id ] ) ) {
 				$compares['income'][ $transaction->category_id ][ $month ]['amount'] += $amount;

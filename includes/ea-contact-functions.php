@@ -60,7 +60,7 @@ function eaccounting_get_customer( $customer ) {
 		$result = new EverAccounting\Models\Customer( $customer );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -115,8 +115,8 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -134,7 +134,7 @@ function eaccounting_delete_customer( $customer_id ) {
 		$customer = new EverAccounting\Models\Customer( $customer_id );
 
 		return $customer->exists() ? $customer->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }
@@ -244,7 +244,7 @@ function eaccounting_get_vendor( $vendor ) {
 		$result = new EverAccounting\Models\Vendor( $vendor );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -299,8 +299,8 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error(  $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -318,7 +318,7 @@ function eaccounting_delete_vendor( $vendor_id ) {
 		$vendor = new EverAccounting\Models\Vendor( $vendor_id );
 
 		return $vendor->exists() ? $vendor->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }

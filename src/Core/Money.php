@@ -422,9 +422,10 @@ class Money {
 	public function divide( $divisor, $roundingMode = self::ROUND_HALF_UP ) {
 		$this->assertOperand( $divisor );
 		$this->assertRoundingMode( $roundingMode );
-
-		if ( $divisor === 0 ) {
-			throw new \InvalidArgumentException( 'Division by zero' );
+		if ( empty( $divisor ) ) {
+			/* translators: %s amount %s currency */
+			eaccounting_doing_it_wrong( __METHOD__, sprintf( __( 'Division by zero is not permitted amount %1$s currency %2$s' ), $this->amount, $this->currency ), null );
+			$divisor = 1;
 		}
 
 		return new self( round( $this->amount / $divisor, $this->currency->get_precision(), $roundingMode ), $this->currency );

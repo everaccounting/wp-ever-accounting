@@ -326,15 +326,15 @@ final class EverAccounting {
 		// Before init action.
 		do_action( 'before_eaccounting_init' );
 
-		\EverAccounting\Controllers\AccountController::instance();
-		\EverAccounting\Controllers\TransferController::instance();
-		\EverAccounting\Controllers\CategoryController::instance();
-		\EverAccounting\Controllers\CurrencyController::instance();
-		\EverAccounting\Controllers\TransactionController::instance();
-		\EverAccounting\Controllers\TaxController::instance();
-		\EverAccounting\Controllers\ItemController::instance();
-		\EverAccounting\Controllers\IncomeController::instance();
-		\EverAccounting\Controllers\ExpenseController::instance();
+//		\EverAccounting\Controllers\AccountController::instance();
+//		\EverAccounting\Controllers\TransferController::instance();
+//		\EverAccounting\Controllers\CategoryController::instance();
+//		\EverAccounting\Controllers\CurrencyController::instance();
+//		\EverAccounting\Controllers\TransactionController::instance();
+//		\EverAccounting\Controllers\TaxController::instance();
+//		\EverAccounting\Controllers\ItemController::instance();
+//		\EverAccounting\Controllers\IncomeController::instance();
+//		\EverAccounting\Controllers\ExpenseController::instance();
 
 		\EverAccounting\REST\Manager::instance();
 		\EverAccounting\Core\Emails::instance();

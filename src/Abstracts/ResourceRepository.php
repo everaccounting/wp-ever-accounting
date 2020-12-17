@@ -103,7 +103,7 @@ abstract class ResourceRepository {
 	 *
 	 * @param ResourceModel $item Item object.
 	 *
-	 * @throws \EverAccounting\Core\Exception
+	 * @throws \Exception
 	 */
 	public function insert( &$item ) {
 		global $wpdb;
@@ -144,6 +144,7 @@ abstract class ResourceRepository {
 	 *
 	 * @param ResourceModel $item Item object.
 	 *
+	 * @throws \Exception
 	 */
 	public function read( &$item ) {
 		global $wpdb;
@@ -153,7 +154,7 @@ abstract class ResourceRepository {
 
 		if ( ! $item->get_id() ) {
 			$item->set_id( 0 );
-			return;
+			throw new \Exception( $wpdb->last_error );
 		}
 
 		// Maybe retrieve from the cache.
@@ -173,6 +174,7 @@ abstract class ResourceRepository {
 
 		if ( ! $raw_item ) {
 			$item->set_id( 0 );
+
 			return;
 		}
 
@@ -190,7 +192,7 @@ abstract class ResourceRepository {
 	 *
 	 * @param ResourceModel $item Subscription object.
 	 *
-	 * @throws \EverAccounting\Core\Exception
+	 * @throws \Exception
 	 */
 	public function update( &$item ) {
 		global $wpdb;
@@ -220,9 +222,7 @@ abstract class ResourceRepository {
 			$formats,
 			'%d'
 		) ) {
-			$item->error( 'db_update_error', $wpdb->last_error );
-
-			return;
+			throw new \Exception( $wpdb->last_error );
 		}
 
 		// Apply the changes.

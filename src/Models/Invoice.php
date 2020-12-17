@@ -10,7 +10,6 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
@@ -46,7 +45,7 @@ class Invoice extends ResourceModel {
 	protected $data = array(
 		'invoice_number' => '',
 		'order_number'   => '',
-		'status'         => 'draft',
+		'status'         => 'pending',
 		'issue_date'     => null,
 		'due_date'       => null,
 		'payment_date'   => null,
@@ -168,7 +167,7 @@ class Invoice extends ResourceModel {
 		// Fetch from the db.
 		$table      = $wpdb->prefix . 'ea_invoices';
 		$invoice_id = (int) $wpdb->get_var(
-			$wpdb->prepare( "SELECT `post_id` FROM $table WHERE `$field`=%s  AND type=%s LIMIT 1", $value, self::TYPE )
+			$wpdb->prepare( "SELECT `id` FROM $table WHERE `$field`=%s  AND type=%s LIMIT 1", $value, self::TYPE )
 		);
 
 		// Update the cache with our data
@@ -184,19 +183,26 @@ class Invoice extends ResourceModel {
 	*/
 
 	/**
+	 * All available invoice statuses.
+	 *
+	 * @when an invoice is created status is pending
+	 * @when sent to customer is sent
+	 * @when partially paid is partial
+	 * @when Full amount paid is paid
+	 * @when due date passed but not paid is overdue.
+	 *
 	 * @since 1.0.1
 	 * @return array
 	 */
 	public static function get_statuses() {
 		return array(
-			'draft'     => __( 'Draft', 'wp-ever-accounting' ),
+			'pending'   => __( 'Pending', 'wp-ever-accounting' ),
 			'sent'      => __( 'Sent', 'wp-ever-accounting' ),
-			'approved'  => __( 'Approved', 'wp-ever-accounting' ),
 			'partial'   => __( 'Partial', 'wp-ever-accounting' ),
 			'paid'      => __( 'Paid', 'wp-ever-accounting' ),
 			'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
-			'unpaid'    => __( 'Unpaid', 'wp-ever-accounting' ),
 			'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
+			'refunded'  => __( 'Refunded', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -689,7 +695,12 @@ class Invoice extends ResourceModel {
 	 */
 	public function get_line_items() {
 		if ( $this->exists() && empty( $this->line_items ) ) {
-			$this->line_items = $this->repository->get_line_items( $this );
+			$line_items = $this->repository->get_line_items( $this );
+			foreach ( $line_items as $item_id => $line_item ) {
+				if ( ! array_key_exists( $item_id, $this->line_items_to_delete ) ) {
+					$this->line_items[ $item_id ] = $line_item;
+				}
+			}
 		}
 
 		return $this->line_items;
@@ -704,7 +715,7 @@ class Invoice extends ResourceModel {
 	public function get_line_item_ids() {
 		$ids = array();
 		foreach ( $this->get_line_items() as $item ) {
-			$ids[] = $item->get_id();
+			$ids[] = $item->get_item_id();
 		}
 
 		return $ids;
@@ -723,6 +734,69 @@ class Invoice extends ResourceModel {
 		}
 
 		return array();
+	}
+
+	/**
+	 * Get payments.
+	 *
+	 * @since 1.1.0
+	 * @return Income[]
+	 */
+	public function get_payments() {
+		if ( $this->exists() ) {
+			return eaccounting_get_incomes(
+				array(
+					'document_id' => $this->get_id(),
+					'type'        => 'income',
+				)
+			);
+		}
+
+		return array();
+	}
+
+	/**
+	 * Get total paid
+	 *
+	 * @since 1.1.0
+	 * @return float|int|string
+	 */
+	public function get_total_paid() {
+		$total_paid = 0;
+		foreach ( $this->get_payments() as $payment ) {
+			var_dump( $payment->get_amount() );
+			$total_paid += (float) eaccounting_price_convert_between( $payment->get_amount(), $payment->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_code(), $this->get_currency_rate() );
+		}
+
+		return $total_paid;
+	}
+
+	/**
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_total_paid() {
+		return eaccounting_format_price( $this->get_total_paid(), $this->get_currency_code() );
+	}
+
+	/**
+	 * Get total due.
+	 *
+	 * @since 1.1.0
+	 * @return float|int
+	 */
+	public function get_total_due() {
+		return abs( $this->get_total() - $this->get_total_paid() );
+	}
+
+	/**
+	 * Get formatted total due.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_formatted_total_due() {
+		return eaccounting_format_price( $this->get_total_due(), $this->get_currency_code() );
 	}
 
 	/*
@@ -1123,19 +1197,25 @@ class Invoice extends ResourceModel {
 	 *
 	 * @param array|LineItem[] $items items.
 	 */
-	public function set_line_items( $items ) {
+	public function set_line_items( $items, $append = false ) {
 		// Remove existing items.
-		$this->items = array();
+		$old_item_ids = $this->get_line_item_ids();
 
 		// Ensure that we have an array.
 		if ( ! is_array( $items ) ) {
 			return;
 		}
-
+		$new_item_ids = array();
 		foreach ( $items as $item ) {
-			$this->add_line_item( $item );
+			$new_item_ids[] = $this->add_line_item( $item );
 		}
 
+		if ( ! $append ) {
+			$remove_item_ids = array_diff( $old_item_ids, $new_item_ids );
+			foreach ( $remove_item_ids as $remove_item_id ) {
+				$this->remove_item( $remove_item_id );
+			}
+		}
 	}
 
 	/*
@@ -1155,6 +1235,9 @@ class Invoice extends ResourceModel {
 	 */
 	public function add_line_item( $args ) {
 		$args = wp_parse_args( $args, array( 'item_id' => null ) );
+		if ( empty( $args['item_id'] ) ) {
+			return false;
+		}
 		$item = new Item( $args['item_id'] );
 		if ( ! $item->exists() ) {
 			return false;
@@ -1198,7 +1281,7 @@ class Invoice extends ResourceModel {
 
 		$this->line_items[ $line_item->get_item_id() ] = $line_item;
 
-		return true;
+		return $line_item->get_item_id();
 	}
 
 	/**
@@ -1218,7 +1301,7 @@ class Invoice extends ResourceModel {
 		}
 
 		// Unset and remove later.
-		$this->line_items_to_delete[] = $line_item;
+		$this->line_items_to_delete[ $line_item->get_item_id() ] = $line_item;
 		unset( $this->line_items[ $line_item->get_item_id() ] );
 	}
 
@@ -1301,6 +1384,32 @@ class Invoice extends ResourceModel {
 		return eaccounting_format_price( $item->$getter(), $this->get_currency_code() );
 	}
 
+	public function add_payment( $amount, $account_id, $payment_method, $date = null, $description = null ) {
+		if ( null === $date ) {
+			$date = current_time( 'mysql' );
+		}
+
+		try {
+			$total_due = $this->get_total_due();
+			$amount    = eaccounting_sanitize_price( $amount, $this->get_currency_code() );
+			if ( $amount > $total_due ) {
+				throw new \Exception(
+					sprintf(
+						/* translators: %s paying amount %s due amount */
+						__( 'Amount is larger than due amount, amount: %1$s & due: %2$s' ),
+						eaccounting_format_price( $amount, $this->get_currency_code() ),
+						$this->get_formatted_total_due()
+					)
+				);
+			}
+
+
+
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Boolean methods
@@ -1332,20 +1441,38 @@ class Invoice extends ResourceModel {
 		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Boolean methods
+	|--------------------------------------------------------------------------
+	|
+	| Return true or false.
+	|
+	*/
+
 	/**
 	 * @since 1.1.0
-	 * @throws Exception
 	 * @return bool|\Exception|int
 	 */
 	public function save() {
 		if ( empty( $this->get_currency_code() ) ) {
-			throw new Exception( 'empty_currency_code', __( 'Currency Code must be specified.', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Currency Code must be specified.', 'wp-ever-accounting' ) );
 		}
 		$this->calculate_total();
 		$this->maybe_set_currency_rate();
 		$this->maybe_set_customer_info();
 		$this->maybe_set_invoice_number();
 		$this->maybe_set_key();
+
+		if ( ( 0 <= $this->get_total_paid() ) && ( $this->get_total_paid() <= $this->get_total() ) ) {
+			$this->set_status( 'partial' );
+			error_log( '1' );
+		} elseif ( $this->get_total_paid() >= $this->get_total_paid() ) { // phpcs:ignore
+			$this->set_status( 'paid' );
+			error_log( '2' );
+		}
+
+		error_log( $this->get_status() );
 
 		parent::save();
 		$this->save_line_items();
@@ -1444,9 +1571,9 @@ class Invoice extends ResourceModel {
 	 * Save all order items which are part of this order.
 	 */
 	protected function save_line_items() {
-		foreach ( $this->line_items_to_delete as $item ) {
-			if ( $item->exists() ) {
-				$item->delete();
+		foreach ( $this->line_items_to_delete as $line_item ) {
+			if ( $line_item->exists() ) {
+				$line_item->delete();
 			}
 		}
 
@@ -1454,10 +1581,82 @@ class Invoice extends ResourceModel {
 
 		$line_items = array_filter( $this->line_items );
 		// Add/save items.
-		foreach ( $line_items as $item ) {
-			$item->set_parent_id( $this->get_id() );
-			$item->set_parent_type( 'invoice' );
-			$item_id = $item->save();
+		foreach ( $line_items as $line_item ) {
+			$line_item->set_parent_id( $this->get_id() );
+			$line_item->set_parent_type( 'invoice' );
+			$line_item->save();
 		}
+	}
+
+	/**
+	 * Handle the status transition.
+	 */
+	protected function status_transition() {
+		$status_transition = $this->status_transition;
+
+		// Reset status transition variable.
+		$this->status_transition = false;
+
+		if ( $status_transition ) {
+			try {
+				do_action( 'eaccounting_invoice_status_' . $status_transition['to'], $this->get_id(), $this );
+
+				if ( ! empty( $status_transition['from'] ) ) {
+					/* translators: 1: old order status 2: new order status */
+					$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
+
+					// Note the transition occurred.
+					$this->add_note( $transition_note, false, true );
+
+					do_action( 'eaccounting_invoice_status_' . $status_transition['from'] . '_to_' . $status_transition['to'], $this->get_id(), $this );
+					do_action( 'eaccounting_invoice_status_changed', $this->get_id(), $status_transition['from'], $status_transition['to'], $this );
+
+					// Work out if this was for a payment, and trigger a payment_status hook instead.
+					if (
+						in_array( $status_transition['from'], array( 'cancelled', 'pending', 'viewed', 'approved', 'overdue', 'unpaid' ), true )
+						&& in_array( $status_transition['to'], array( 'paid', 'partial' ), true )
+					) {
+						do_action( 'eaccounting_invoice_payment_status_changed', $this, $status_transition );
+					}
+				} else {
+					/* translators: %s: new invoice status */
+					$transition_note = sprintf( __( 'Status set to %s.', 'wp-ever-accounting' ), $status_transition['to'], $this );
+
+					// Note the transition occurred.
+					$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), 0, false );
+				}
+			} catch ( \Exception $e ) {
+				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
+			}
+		}
+	}
+
+
+	/**
+	 * Adds a note to an invoice.
+	 *
+	 * @param string $note The note being added.
+	 *
+	 * @return int|false The new note's ID on success, false on failure.
+	 *
+	 */
+	public function add_note( $note = '', $customer_note = false, $added_by_user = false ) {
+
+		// Bail if no note specified or this invoice is not yet saved.
+		if ( ! empty( $note ) || ! $this->exists() || ( ! is_user_logged_in() && $added_by_user ) ) {
+			return false;
+		}
+
+		$author       = 'System';
+		$author_email = 'bot@wpeveraccounting.com';
+
+		// If this is an admin comment or it has been added by the user.
+		if ( is_user_logged_in() && ( $added_by_user ) ) {
+			$user         = get_user_by( 'id', get_current_user_id() );
+			$author       = $user->display_name;
+			$author_email = $user->user_email;
+		}
+
+		//$this->respository->add_note($note, )
 	}
 }

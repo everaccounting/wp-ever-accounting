@@ -12,7 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Core\Exception;
+
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Currency;
 
@@ -47,23 +47,8 @@ class AccountController extends Singleton {
 	 */
 	public static function validate_account_data( $data, $id ) {
 		global $wpdb;
-		if ( empty( $data['name'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Account name is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['number'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Account number is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['currency_code'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
-		}
-		$currency = new Currency( $data['currency_code'] );
-
-		if ( ! $currency->exists() ) {
-			throw new Exception( 'invalid_prop', __( 'Currency code is invalid.', 'wp-ever-accounting' ) );
-		}
-
 		if ( $id != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_accounts WHERE number='%s'", eaccounting_clean( $data['number'] ) ) ) ) { // @codingStandardsIgnoreLine
-			throw new Exception( 'duplicate_item', __( 'Duplicate account.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Duplicate account.', 'wp-ever-accounting' ) );
 		}
 
 	}

@@ -10,7 +10,6 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
@@ -196,16 +195,15 @@ class Note extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * @throws Exception
 	 * @return \Exception|bool
 	 */
 	public function save() {
 		if ( empty( $this->get_parent_id() ) ) {
-			throw new Exception( 'empty_parent_id', __( 'Parent ID must be specified', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Parent ID must be specified', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_parent_type() ) ) {
-			throw new Exception( 'empty_parent_type', __( 'Parent type must be specified', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Parent type must be specified', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();

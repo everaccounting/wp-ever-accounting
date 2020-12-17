@@ -42,21 +42,21 @@ class Items extends ResourceRepository {
 	 * @var array
 	 */
 	protected $data_type = array(
-		'id'             => '%d',
-		'name'           => '%s',
-		'sku'            => '%s',
-		'image_id'       => '%d',
-		'description'    => '%s',
-		'sale_price'     => '%f',
-		'purchase_price' => '%f',
-		'quantity'       => '%f',
-		'category_id'    => '%d',
-		'sales_tax_rate'      => '%f',
-		'purchase_tax_rate'   => '%f',
-		'vat'            => '%f',
-		'enabled'        => '%d',
-		'creator_id'     => '%d',
-		'date_created'   => '%s',
+		'id'                => '%d',
+		'name'              => '%s',
+		'sku'               => '%s',
+		'image_id'          => '%d',
+		'description'       => '%s',
+		'sale_price'        => '%f',
+		'purchase_price'    => '%f',
+		'quantity'          => '%f',
+		'category_id'       => '%d',
+		'sales_tax_rate'    => '%f',
+		'purchase_tax_rate' => '%f',
+		'vat'               => '%f',
+		'enabled'           => '%d',
+		'creator_id'        => '%d',
+		'date_created'      => '%s',
 	);
 
 

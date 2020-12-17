@@ -456,7 +456,7 @@ class List_Table_Payments extends List_Table {
 			)
 		);
 		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$args['paid_at'] = array(
+			$args['payment_date'] = array(
 				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
 				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
 			);

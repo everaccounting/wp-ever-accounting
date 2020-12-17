@@ -163,7 +163,7 @@ abstract class TransactionsController extends EntitiesController {
 
 					),
 				),
-				'invoice_id'       => array(
+				'document_id'       => array(
 					'description' => __( 'Invoice id of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),

@@ -10,7 +10,6 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Invoices;
 
@@ -1085,7 +1084,7 @@ class Invoice1 extends ResourceModel {
 		$args = wp_parse_args( $args, array( 'item_id' => null ) );
 		$item = new Item( $args['item_id'] );
 		if ( ! $item->exists() ) {
-			throw new Exception( 'invalid_item_id', __( 'Invalid Item ID', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Invalid Item ID', 'wp-ever-accounting' ) );
 		}
 
 		$default = array(
@@ -1207,12 +1206,12 @@ class Invoice1 extends ResourceModel {
 	 * Save data to the database.
 	 *
 	 * @since 1.1.0
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return int invoice ID
 	 */
 	public function save() {
 		if ( empty( $this->get_currency_code() ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency code is required', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_currency_rate() ) ) {

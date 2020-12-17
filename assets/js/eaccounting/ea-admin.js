@@ -2,20 +2,66 @@
 jQuery(function ($) {
 
 	//initialize plugins
-	function init_plugins(){
-		$( '.ea-select2' ).eaccounting_select2();
-		$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
-		$('.ea-help-tip').tipTip();
-		eaccounting.mask_amount('.ea-input-price');
-		eaccounting.mask_amount('#opening_balance');
-		eaccounting.dropdown('.ea-dropdown');
-		//$('#quantity').on('change keyup', eaccounting.number_input);
-	}
+	$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
+	$('.ea-help-tip').tipTip();
+	eaccounting.mask_amount('.ea-input-price');
+	eaccounting.mask_amount('#opening_balance');
+	//eaccounting.dropdown('.ea-dropdown');
+	$(document.body).trigger('ea_select2_init');
+	$('#quantity').on('change keyup', function (e){
+		e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+	});
+	$(document.body).on('ea_modal_loaded', function (){
+		$(document.body).trigger('ea_select2_init');
+	});
 
-	$(document)
-		.ready(init_plugins)
-		.on('ea_modal_ready', init_plugins)
 
+	var frame = false;
+	$('.ea-upload-attachment').on('click', function (e) {
+		e.preventDefault();
+		var $button = $(this);
+		if (frame) {
+			frame.open();
+			return false;
+		}
+
+		frame = wp.media({
+			title: 'Select or upload image',
+			button: {
+				text: 'Select',
+			},
+			library: {
+				type: 'image',
+			},
+			multiple: false,
+			custom: 'custom'
+		});
+
+		frame.on('select', function () {
+			var attachment = frame.state().get('selection').first().toJSON();
+			$button.siblings('.ea-file-input').eq(0).val(attachment.id);
+			$button.siblings('.ea-file').find('.ea-file-link').attr('href', attachment.url).text(attachment.filename);
+			$button.siblings('.ea-file').show();
+			$button.hide();
+		});
+
+		frame.on('ready', function () {
+			frame.uploader.options.uploader.params = {
+				type: 'eaccounting_file'
+			};
+			console.log(frame.uploader.options.uploader.params);
+		});
+
+		frame.open();
+	});
+	$('.ea-file-delete').on('click', function (e) {
+		e.preventDefault();
+		var $button = $(this);
+		$button.closest('.ea-file').siblings('.ea-file-input').eq(0).val('');
+		$button.closest('.ea-file').find('.ea-file-link').attr('href', '').text();
+		$button.closest('.ea-file').hide();
+		$button.closest('.ea-file').siblings('.ea-upload-attachment').show();
+	})
 
 	// $('.ea-input-price').inputmask('decimal', {
 	// 	alias: 'numeric',

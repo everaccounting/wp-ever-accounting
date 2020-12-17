@@ -16,7 +16,7 @@ function eaccounting_sales_tab_invoices() {
 	//  }
 
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
-	if ( 'edit' === $action && ! empty( $_GET['invoice_id'] ) ) {
+	if ( in_array($action, array('add', 'edit'), true )  ) {
 		require_once dirname( __FILE__ ) . '/edit-invoice.php';
 	} elseif ( 'view' === $action && ! empty( $_GET['invoice_id'] ) ) {
 		require_once dirname( __FILE__ ) . '/view-invoice.php';

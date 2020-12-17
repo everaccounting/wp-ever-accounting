@@ -41,7 +41,7 @@ class Import_Payments extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	public function get_required() {
-		return array( 'paid_at', 'currency_code', 'account_name', 'category_name', 'payment_method' );
+		return array( 'payment_date', 'currency_code', 'account_name', 'category_name', 'payment_method' );
 	}
 
 	/**
@@ -52,7 +52,7 @@ class Import_Payments extends CSV_Importer {
 	 */
 	protected function get_formatting_callback() {
 		return array(
-			'paid_at'        => array( $this, 'parse_date_field' ),
+			'payment_date'        => array( $this, 'parse_date_field' ),
 			'amount'         => array( $this, 'parse_text_field' ),
 			'currency_code'  => array( $this, 'parse_currency_code_field' ),
 			'currency_rate'  => array( $this, 'parse_float_field' ),
@@ -73,7 +73,7 @@ class Import_Payments extends CSV_Importer {
 	 * @return string|\WP_Error
 	 */
 	protected function import_item( $data ) {
-		if ( empty( $data['paid_at'] ) ) {
+		if ( empty( $data['payment_date'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Date', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['account_name'] ) ) {

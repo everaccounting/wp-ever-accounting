@@ -121,8 +121,8 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 				eaccounting_file_input(
 					array(
 						'label'         => __( 'Attachments', 'wp-ever-accounting' ),
-						'name'          => 'attachment',
-						'value'         => $revenue->get_attachment_id(),
+						'name'          => 'attachment_id',
+						'value'         => $revenue->get_attachment(),
 						'required'      => false,
 						'wrapper_class' => 'ea-col-6',
 						'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),

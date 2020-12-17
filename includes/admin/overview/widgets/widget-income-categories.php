@@ -45,6 +45,7 @@ class Income_Categories extends Widget {
 		FROM {$wpdb->prefix}ea_transactions t
 		LEFT JOIN {$wpdb->prefix}ea_categories c ON c.id=t.category_id
 		WHERE c.type='income'
+		AND t.currency_code != ''
 		AND (payment_date BETWEEN %s AND %s)
 		", $dates['start'], $dates['end'] ) );
 

@@ -59,7 +59,7 @@ function eaccounting_get_category( $category ) {
 		$result = new EverAccounting\Models\Category( $category );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -108,8 +108,8 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error(  $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -127,7 +127,7 @@ function eaccounting_delete_category( $category_id ) {
 		$category = new EverAccounting\Models\Category( $category_id );
 
 		return $category->exists() ? $category->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }
@@ -183,8 +183,6 @@ function eaccounting_get_categories( $args = array() ) {
 	$cache_key   = md5( serialize( $qv ) );
 	$results     = wp_cache_get( $cache_key, 'eaccounting_category' );
 	$request     = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
-
-	error_log($request);
 
 	if ( false === $results ) {
 		if ( $count_total ) {

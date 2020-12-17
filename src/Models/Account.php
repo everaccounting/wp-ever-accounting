@@ -10,7 +10,6 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
@@ -84,18 +83,12 @@ class Account extends ResourceModel {
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'name'   => __( 'Account name', 'wp-ever-accounting' ),
+			'number' => __( 'Account number', 'wp-ever-accounting' ),
+		);
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
-	*/
-
-
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -313,7 +306,7 @@ class Account extends ResourceModel {
 			$this->set_prop( 'currency', $currency );
 
 			return $currency;
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			return null;
 		}
 	}
@@ -366,5 +359,16 @@ class Account extends ResourceModel {
 	| Checks if a condition is true or false.
 	|
 	*/
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+
 
 }

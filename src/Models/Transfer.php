@@ -34,7 +34,7 @@ class Transfer extends ResourceModel {
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_transfer';
+	public $cache_group = 'ea_transfers';
 
 	/**
 	 * Item Data array.
@@ -55,6 +55,8 @@ class Transfer extends ResourceModel {
 		'creator_id'      => null,
 		'date_created'    => null,
 	);
+
+	protected $category_id;
 
 	/**
 	 * Get the account if ID is passed, otherwise the account is new and empty.
@@ -80,11 +82,19 @@ class Transfer extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'transfers' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'date'            => __( 'Transfer Date', 'wp-ever-accounting' ),
+			'from_account_id' => __( 'From account ID', 'wp-ever-accounting' ),
+			'to_account_id'   => __( 'To account ID', 'wp-ever-accounting' ),
+			'amount'          => __( 'Transfer amount', 'wp-ever-accounting' ),
+			'payment_method'  => __( 'Payment method', 'wp-ever-accounting' ),
+		);
 	}
 	/*
 	|--------------------------------------------------------------------------
@@ -223,6 +233,15 @@ class Transfer extends ResourceModel {
 		return $this->get_prop( 'currency_code', $context );
 	}
 
+	/**
+	 * Get transfer category.
+	 *
+	 * @since 1.1.0
+	 * @return integer
+	 */
+	public function get_category_id() {
+		return absint( $this->category_id );
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -344,4 +363,50 @@ class Transfer extends ResourceModel {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
 	}
 
+
+	/**
+	 * Save should create or update based on object existence.
+	 *
+	 * @since  1.1.0
+	 * @throws \Exception
+	 * @return \Exception|bool
+	 */
+	public function save() {
+		if ( ! $this->get_from_account_id() || ! $this->get_to_account_id() ) {
+			throw new \Exception( __( 'Transfer from and to account can not be same.', 'wp-ever-accounting' ) );
+		}
+
+		$this->maybe_set_transfer_category();
+
+		return parent::save();
+	}
+
+
+	/**
+	 * Set transfer category.
+	 *
+	 * @since 1.1.0
+	 * @throws \Exception
+	 */
+	protected function maybe_set_transfer_category() {
+		global $wpdb;
+		$cache_key   = md5( 'other' . __( 'Transfer', 'wp-ever-accounting' ) );
+		$category_id = wp_cache_get( $cache_key, 'ea_categories' );
+		if ( false === $category_id ) {
+			$category_id = $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name=%s", 'other', __( 'Transfer', 'wp-ever-accounting' ) ) );
+			wp_cache_add( $cache_key, $category_id, 'eaccounting_categories' );
+		}
+		if ( empty( $category_id ) ) {
+			throw new \Exception(
+				sprintf(
+				/* translators: %s: category name %s: category type */
+					__( 'Transfer category is missing please create a category named "%1$s" and type"%2$s".', 'wp-ever-accounting' ),
+					__( 'Transfer', 'wp-ever-accounting' ),
+					'other'
+				)
+			);
+		}
+
+		$this->category_id = $category_id;
+	}
 }

@@ -57,7 +57,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'income',
-				'paid_at'        => $revenue->paid_at,
+				'payment_date'        => $revenue->payment_date,
 				'amount'         => $revenue->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected
@@ -82,7 +82,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'expense',
-				'paid_at'        => $expense->paid_at,
+				'payment_date'        => $expense->payment_date,
 				'amount'         => $expense->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected
@@ -129,7 +129,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'income',
-				'paid_at'        => $revenue->paid_at,
+				'payment_date'        => $revenue->payment_date,
 				'amount'         => $revenue->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected
@@ -161,7 +161,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'expense',
-				'paid_at'        => $expense->paid_at,
+				'payment_date'        => $expense->payment_date,
 				'amount'         => $expense->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected

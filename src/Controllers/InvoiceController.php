@@ -12,7 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Core\Exception;
+
 
 defined( 'ABSPATH' ) || exit;
 
@@ -86,7 +86,7 @@ class InvoiceController extends Singleton {
 	 */
 	public static function validate_invoice_item_data( $data, $id = null ) {
 		global $wpdb;
-		if ( empty( $data['invoice_id'] ) ) {
+		if ( empty( $data['document_id'] ) ) {
 			throw new Exception( 'empty_prop', __( 'Invoice item invoice_id is required.', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['name'] ) ) {

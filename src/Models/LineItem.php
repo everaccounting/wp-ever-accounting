@@ -10,9 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
-use EverAccounting\Repositories\LineTaxes;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -516,24 +514,23 @@ class LineItem extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * @throws Exception
 	 * @return \Exception|bool
 	 */
 	public function save() {
 		if ( empty( $this->get_item_id() ) ) {
-			throw new Exception( 'empty_item_id', __( 'Item ID must be specified.', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Item ID must be specified.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_item_name() ) ) {
-			throw new Exception( 'empty_item_name', __( 'Item name can not be blank.', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Item name can not be blank.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_parent_id() ) ) {
-			throw new Exception( 'empty_parent_id', __( 'Parent ID must be specified.', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Parent ID must be specified.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_parent_type() ) ) {
-			throw new Exception( 'empty_parent_type', __( 'Parent type must be specified.', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Parent type must be specified.', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();

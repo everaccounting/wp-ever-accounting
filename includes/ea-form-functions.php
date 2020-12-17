@@ -448,35 +448,19 @@ function eaccounting_file_input( $field ) {
 		$field,
 		array(
 			'label'         => '',
-			'class'         => 'short',
 			'style'         => '',
 			'wrapper_class' => '',
-			'value'         => '',
+			'value'         => false,
 			'name'          => '',
 			'tooltip'       => '',
 			'desc'          => '',
 			'default'       => '',
-			'types'         => array( 'jpg', 'jpeg', 'png' ),
-			'limit'         => '2024',
-			'required'      => false,
-			'disabled'      => false,
-			'readonly'      => false,
 			'attr'          => array(),
 		)
 	);
 
-	$field['id']                 = empty( $field['id'] ) ? $field['name'] : $field['id'];
-	$field['value']              = ! isset( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['attr']['required']   = ( true == $field['required'] ) ? ' required ' : '';
-	$field['attr']['readonly']   = ( true == $field['readonly'] ) ? ' readonly ' : '';
-	$field['attr']['disabled']   = ( true == $field['disabled'] ) ? ' disabled ' : '';
-	$field['attr']['data-nonce'] = wp_create_nonce( 'eaccounting_file_upload' );
-	$field['attr']['data-limit'] = $field['limit'];
-	$field['wrapper_class']     .= ( true == $field['required'] ) ? ' required ' : '';
-	if ( ! empty( $field['types'] ) ) {
-		$field['attr']['data-types'] = implode( '|', $field['types'] );
-		$field['attr']['accept']     = implode( ',', $field['types'] );
-	}
+	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
+	$field['value'] = ! isset( $field['value'] ) ? $field['default'] : $field['value'];
 
 	// Custom attribute handling
 	$attributes      = eaccounting_implode_html_attributes( $field['attr'] );
@@ -495,33 +479,31 @@ function eaccounting_file_input( $field ) {
 		);
 	}
 
-	$link = empty( $field['value'] ) ? '' : $field['value'];
-	$name = empty( $field['value'] ) ? '' : basename( $field['value'] );
+	$link = empty( $field['value'] ) ? '' : $field['value']->src;
+	$name = empty( $field['value'] ) ? '' : $field['value']->name;
+	$id   = empty( $field['value'] ) ? '' : $field['value']->id;
 	?>
 	<div class="ea-file" style="<?php echo empty( $field['value'] ) ? 'display:none' : ''; ?>">
 		<a href="<?php echo esc_url( $link ); ?>" target="_blank" class="ea-file-link"><?php echo sanitize_file_name( $name ); ?></a>
-		<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt"></span></a>
+		<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt">&nbsp;</span></a>
 	</div>
 	<?php
-
+	echo sprintf(
+		'<button type="button" class="button-secondary ea-upload-attachment" style="%s">%s</button>',
+		! empty( $field['value'] ) ? 'display:none' : '',
+		__( 'Upload', 'wp-ever-accounting' )
+	);
 	echo sprintf(
 		'<input type="hidden" name="%s" class="ea-file-input" id="%s" value="%s"/>',
 		esc_attr( $field['name'] ),
 		esc_attr( $field['id'] ),
-		esc_attr( $field['value'] )
+		absint( $id )
 	);
-	echo sprintf(
-		'<input type="file" class="ea-file-upload %s" style="%s" %s/>',
-		esc_attr( $field['class'] ),
-		esc_attr( $field['style'] ),
-		$attributes
-	);
+
 	if ( ! empty( $field['label'] ) ) {
 		echo $desc;
-
 		echo '</div>';
 	}
-
 }
 
 /**
@@ -609,7 +591,7 @@ function eaccounting_select2( $field ) {
 		$field,
 		array(
 			'class'        => '',
-			'map'          => 'return {text: option.name, id:option.id}',
+			'map'          => 'return {text: option.name, id:option.id, item:option}',
 			'add_text'     => __( 'Add New', 'wp-ever-accounting' ),
 			'ajax_action'  => false,
 			'nonce_action' => 'ea_get_items',
@@ -679,23 +661,23 @@ function eaccounting_customer_dropdown( $field ) {
 function eaccounting_vendor_dropdown( $field ) {
 	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
 	$contacts = eaccounting_get_vendors(
-			array(
-					'include' => $include,
-					'fields'  => array( 'id', 'name' ),
-					'return'  => 'raw',
-			)
+		array(
+			'include' => $include,
+			'fields'  => array( 'id', 'name' ),
+			'return'  => 'raw',
+		)
 	);
 
 	$field = wp_parse_args(
-			array(
-					'value'        => $include,
-					'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
-					'ajax_action'  => 'eaccounting_get_vendors',
-					'nonce_action' => 'ea_get_vendors',
-					'modal_id'     => '#ea-modal-add-vendor',
-					'creatable'    => true,
-			),
-			$field
+		array(
+			'value'        => $include,
+			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'ajax_action'  => 'eaccounting_get_vendors',
+			'nonce_action' => 'ea_get_vendors',
+			'modal_id'     => '#ea-modal-add-vendor',
+			'creatable'    => true,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_vendor_dropdown', $field ) );
 }
@@ -740,26 +722,32 @@ function eaccounting_contact_dropdown( $field ) {
  * @param array $field
  */
 function eaccounting_account_dropdown( $field ) {
-	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
-	$accounts = eaccounting_get_accounts(
-			array(
-					'include' => $include,
-					'fields'  => array( 'id', 'name' ),
-					'return'  => 'raw',
-			)
+	$include = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
+	$result  = eaccounting_get_accounts(
+		array(
+			'include' => $include,
+			'fields'  => array( 'id', 'name', 'currency_code' ),
+			'return'  => 'raw',
+		)
 	);
 
+	$options = array();
+	foreach ( $result as $item ) {
+		$options[ $item->id ] = $item->name . '(' . $item->currency_code . ')';
+	}
+
 	$field = wp_parse_args(
-			array(
-					'value'        => $include,
-					'options'      => wp_list_pluck( $accounts, 'name', 'id' ),
-					'placeholder'  => __( 'Select Account', 'wp-ever-accounting' ),
-					'ajax_action'  => 'eaccounting_get_accounts',
-					'nonce_action' => 'ea_get_accounts',
-					'modal_id'     => '#ea-modal-add-account',
-					'creatable'    => true,
-			),
-			$field
+		array(
+			'value'        => $include,
+			'options'      => $options,
+			'placeholder'  => __( 'Select Account', 'wp-ever-accounting' ),
+			'map'          => 'return {text: option.name + " (" + option.currency_code +")"  , id:option.id}',
+			'ajax_action'  => 'eaccounting_get_accounts',
+			'nonce_action' => 'ea_get_accounts',
+			'modal_id'     => '#ea-modal-add-account',
+			'creatable'    => true,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_account_dropdown', $field ) );
 }
@@ -772,19 +760,19 @@ function eaccounting_account_dropdown( $field ) {
  * @param array $field
  */
 function eaccounting_category_dropdown( $field ) {
-	$field   = wp_parse_args(
+	$field       = wp_parse_args(
 		$field,
 		array(
-			'value' => '',
-			'type'  => '',
+			'value'       => '',
+			'type'        => '',
 			'ajax_action' => '',
-			'modal_id' => ''
+			'modal_id'    => '',
 		)
 	);
-	$type    = ! empty( $field['type'] ) ? wp_parse_list( $field['type'] ) : array( 'income' );
-	$include = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
-	$ajax_action = ! empty( $field['ajax_action'] ) ?  $field['ajax_action']  : 'eaccounting_get_income_categories';
-	$modal_id = ! empty( $field['modal_id'] ) ?  '#'.$field['modal_id']  : 'ea-modal-add-income-category';
+	$type        = ! empty( $field['type'] ) ? wp_parse_list( $field['type'] ) : array( 'income' );
+	$include     = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
+	$ajax_action = ! empty( $field['ajax_action'] ) ? $field['ajax_action'] : 'eaccounting_get_income_categories';
+	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : 'ea-modal-add-income-category';
 
 	$categories = eaccounting_get_categories(
 		array(
@@ -793,8 +781,7 @@ function eaccounting_category_dropdown( $field ) {
 			'type'    => $type,
 		)
 	);
-
-	$field = wp_parse_args(
+	$field      = wp_parse_args(
 		array(
 			'value'        => $include,
 			'options'      => wp_list_pluck( $categories, 'name', 'id' ),
@@ -813,33 +800,6 @@ function eaccounting_category_dropdown( $field ) {
 
 
 /**
- * Dropdown field for selecting payment method.
- *
- * @since 1.0.2
- *
- * @param array $field
- *
- * @return void
- */
-function eaccounting_payment_method_dropdown( $field ) {
-	$default = '';
-	if ( ! isset( $field['default'] ) ) {
-		$default = eaccounting()->settings->get( 'default_payment_method' );
-	}
-
-	$field = wp_parse_args(
-		array(
-			'placeholder' => __( 'Enter payment method', 'wp-ever-accounting' ),
-			'default'     => $default,
-			'options'     => eaccounting_get_payment_methods(),
-		),
-		$field
-	);
-
-	eaccounting_select2( apply_filters( 'eaccounting_payment_method_dropdown', $field ) );
-}
-
-/**
  * Dropdown field for selecting currency.
  *
  * @since 1.0.2
@@ -853,20 +813,23 @@ function eaccounting_currency_dropdown( $field ) {
 	$currency_code = ! empty( $field['value'] ) ? wp_parse_list( $field['value'] ) : array();
 	$codes         = array_unique( array_filter( array_merge( array( $default_code ), $currency_code ) ) );
 	$search        = implode( ' ', $codes );
-	$options       = eaccounting_get_currencies(
+	$result        = eaccounting_get_currencies(
 		array(
 			'return' => 'raw',
 			'search' => $search,
-			'fields' => array( 'code', 'name' ),
+			'fields' => array( 'code', 'name', 'symbol' ),
 		)
 	);
-
+	$options       = array();
+	foreach ( $result as $item ) {
+		$options[ $item->code ] = $item->name . '(' . $item->symbol . ')';
+	}
 	$field = wp_parse_args(
 		array(
 			'value'        => $codes,
 			'default'      => $default_code,
-			'options'      => wp_list_pluck( $options, 'name', 'code' ),
-			'map'          => 'return {text: option.name, id:option.code}',
+			'options'      => $options,
+			'map'          => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code}',
 			'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
 			'ajax_action'  => 'eaccounting_get_currencies',
 			'nonce_action' => 'ea_get_currencies',
@@ -902,16 +865,46 @@ function eaccounting_item_dropdown( $field ) {
 	$field = wp_parse_args(
 		$field,
 		array(
-			'options'     => wp_list_pluck( $options, 'name', 'id' ),
-			'placeholder' => __( 'Select Item', 'wp-ever-accounting' ),
-			'ajax'        => true,
-			'type'        => 'item',
-			'template'    => 'add-item',
+			'options'      => wp_list_pluck( $options, 'name', 'id' ),
+			'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
+			'ajax'         => true,
+			'ajax_action'  => 'eaccounting_get_items',
+			'nonce_action' => 'ea_get_items',
+			'modal_id'     => '#ea-modal-add-item',
 		)
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_item_dropdown', $field ) );
 }
 
+
+
+
+/**
+ * Dropdown field for selecting payment method.
+ *
+ * @since 1.0.2
+ *
+ * @param array $field
+ *
+ * @return void
+ */
+function eaccounting_payment_method_dropdown( $field ) {
+	$default = '';
+	if ( ! isset( $field['default'] ) ) {
+		$default = eaccounting()->settings->get( 'default_payment_method' );
+	}
+
+	$field = wp_parse_args(
+		array(
+			'placeholder' => __( 'Enter payment method', 'wp-ever-accounting' ),
+			'default'     => $default,
+			'options'     => eaccounting_get_payment_methods(),
+		),
+		$field
+	);
+
+	eaccounting_select2( apply_filters( 'eaccounting_payment_method_dropdown', $field ) );
+}
 
 /**
  * Dropdown field for selecting country.

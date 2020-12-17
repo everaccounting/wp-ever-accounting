@@ -12,7 +12,7 @@
 namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
+
 use EverAccounting\Repositories\MetaData;
 
 defined( 'ABSPATH' ) || die();

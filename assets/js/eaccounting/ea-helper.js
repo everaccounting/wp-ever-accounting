@@ -2,7 +2,6 @@ window.eaccounting = window.eaccounting || {}
 
 jQuery(function ($) {
 	'use strict';
-
 	/**
 	 * A nifty plugin to converting form to serialize object
 	 */
@@ -68,149 +67,200 @@ jQuery(function ($) {
 		return data;
 	};
 
-	$.fn.eaccounting = function () {
-		return this.each(function () {
-			new $.eaccounting();
-		});
+
+	$.fn.eaccounting_redirect = function ( url ) {
+		return new $.eaccounting_redirect( url );
 	};
 
-	$.eaccounting = function () {
-		/**
-		 * Block element.
-		 *
-		 * @param el
-		 */
-		this.block = function (el) {
-			$(el).block({
-				message: null,
-				overlayCSS: {
-					background: '#fff',
-					opacity: 0.6
-				}
-			});
-		}
-
-		/**
-		 * Unblock element.
-		 *
-		 * @param el
-		 */
-		this.unblock = function (el) {
-			$(el).unblock();
-		}
-
-		/**
-		 * Make a dropdown
-		 * @param el
-		 */
-		this.dropdown = function (el) {
-			$(document)
-				.on('click', function () {
-					$(el).removeClass('open');
-				})
-				.on('click', el, function (e) {
-					e.preventDefault();
-					e.stopPropagation();
-					$(el).removeClass('open');
-					$(this).closest(el).toggleClass('open');
-				});
-		}
-
-		/**
-		 * Redirect based of object.
-		 *
-		 * @param url
-		 * @returns {boolean|void}
-		 */
-		this.redirect = function (url) {
-			if ('object' === typeof url) {
-				if (('data' in url)) {
-					url = url.data;
-				}
-
-				if (!('redirect' in url)) {
-					return;
-				}
-				url = url.redirect;
+	$.eaccounting_redirect = function ( url ) {
+		if ('object' === typeof url) {
+			if (('data' in url)) {
+				url = url.data;
 			}
 
-			if (!url) {
+			if (!('redirect' in url)) {
 				return;
 			}
-			url = url.trim();
-			if (!url) {
-				return false;
-			}
-			var ua = navigator.userAgent.toLowerCase(),
-				isIE = ua.indexOf('msie') !== -1,
-				version = parseInt(ua.substr(4, 2), 10);
-
-			// Internet Explorer 8 and lower
-			if (isIE && version < 9) {
-				var link = document.createElement('a');
-				link.href = url;
-				document.body.appendChild(link);
-				return link.click();
-			}
-			// All other browsers can use the standard window.location.href (they don't lose HTTP_REFERER like Internet Explorer 8 & lower does)
-			window.location.href = url;
+			url = url.redirect;
 		}
 
-		/**
-		 * Get form values.
-		 *
-		 * @param form
-		 * @returns {jQuery|{}}
-		 */
-		this.get_values = function (form) {
-			return $(form).serializeObject();
+		if ( ! url ) {
+			return;
 		}
-
-		/**
-		 * Mask input
-		 * @param input
-		 * @param currency
-		 */
-		this.mask_amount = function (input, currency) {
-			currency = currency || {};
-			$(input).inputmask('decimal', {
-				alias: 'numeric',
-				groupSeparator: currency.thousand_separator || ',',
-				autoGroup: true,
-				digits: currency.precision || 2,
-				radixPoint: currency.decimal_separator || '.',
-				digitsOptional: false,
-				allowMinus: false,
-				prefix: currency.symbol || '',
-				placeholder: '0.000',
-				rightAlign: 0,
-			})
+		url = url.trim();
+		if ( ! url ) {
+			return false;
 		}
+		var ua = navigator.userAgent.toLowerCase(),
+			isIE = ua.indexOf( 'msie' ) !== -1,
+			version = parseInt( ua.substr( 4, 2 ), 10 );
 
-		/**
-		 * Validate only decimal data.
-		 *
-		 * @param number
-		 * @returns {*}
-		 */
-		this.validate_decimal = function (number) {
-			return number.replace(/[^0-9.]/g, '');
+		// Internet Explorer 8 and lower
+		if ( isIE && version < 9 ) {
+			var link = document.createElement( 'a' );
+			link.href = url;
+			document.body.appendChild( link );
+			return link.click();
 		}
-
-		/**
-		 * Render notice.
-		 *
-		 * @param message
-		 * @param type
-		 * @param options
-		 * @returns {undefined|boolean}
-		 */
-		this.notice = function (message, type, options) {
-			return $.eaccounting_notice(message, type, options);
-		}
-
-		return this;
+		// All other browsers can use the standard window.location.href (they don't lose HTTP_REFERER like Internet Explorer 8 & lower does)
+		window.location.href = url;
 	};
 
-	window.eaccounting = $.eaccounting();
+	$.fn.eaccounting_notice = function ( message, type, options ) {
+		return this.each( function () {
+			message = message.trim();
+			if ( message ) {
+				new $.eaccounting_notice( message, type, options );
+			}
+		} );
+	};
+
+	$.eaccounting_notice = function ( message, type, options ) {
+		if ( 'object' === typeof message ) {
+			if ( ( 'data' in message ) ) {
+				if( message.success && true === message.success ){
+					type = 'success';
+				}else {
+					type = 'error';
+				}
+				message = message.data;
+			}
+
+			if ( ! ( 'message' in message ) ) {
+				return;
+			}
+
+			message = message.message;
+		}
+
+		if ( ! message ) {
+			return;
+		}
+		message = message.trim();
+		if ( ! message ) {
+			return false;
+		}
+		options = $.extend(
+			true,
+			{},
+			$.eaccounting_notice.defaultOptions,
+			options
+		);
+
+		var html =
+			'<div class="eaccounting-notice notice notice-' +
+			( type ? type : options.type ) +
+			' ' +
+			( options.customClass ? options.customClass : '' ) +
+			'">';
+		html += message;
+		html += '</div>';
+
+		var offsetSum = options.offset.amount;
+		if ( ! options.stack ) {
+			$( '.eaccounting-notice' ).each( function () {
+				return ( offsetSum = Math.max(
+					offsetSum,
+					parseInt( $( this ).css( options.offset.from ) ) +
+					this.offsetHeight +
+					options.spacing
+				) );
+			} );
+		} else {
+			$( options.appendTo )
+				.find( '.eaccounting-notice' )
+				.each( function () {
+					return ( offsetSum = Math.max(
+						offsetSum,
+						parseInt( $( this ).css( options.offset.from ) ) +
+						this.offsetHeight +
+						options.spacing
+					) );
+				} );
+		}
+
+		var css = {
+			position: options.appendTo === 'body' ? 'fixed' : 'absolute',
+			margin: 0,
+			'z-index': '9999',
+			display: 'none',
+			'min-width': options.minWidth,
+			'max-width': options.maxWidth,
+		};
+
+		css[ options.offset.from ] = offsetSum + 'px';
+
+		var $notice = $( html ).css( css ).appendTo( options.appendTo );
+
+		switch ( options.align ) {
+			case 'center':
+				$notice.css( {
+					left: '50%',
+					'margin-left': '-' + $notice.outerWidth() / 2 + 'px',
+				} );
+				break;
+			case 'left':
+				$notice.css( 'left', '20px' );
+				break;
+			default:
+				$notice.css( 'right', '20px' );
+		}
+
+		if ( $notice.fadeIn ) $notice.fadeIn();
+		else $notice.css( { display: 'block', opacity: 1 } );
+
+		function removeAlert() {
+			$.eaccounting_notice.remove( $notice );
+		}
+
+		if ( options.delay > 0 ) {
+			setTimeout( removeAlert, options.delay );
+		}
+
+		$notice.click( removeAlert );
+
+		return $notice;
+	};
+
+	$.eaccounting_notice.remove = function ( $alert ) {
+		if ( $alert.fadeOut ) {
+			return $alert.fadeOut( function () {
+				return $alert.remove();
+			} );
+		} else {
+			return $alert.remove();
+		}
+	};
+
+	$.eaccounting_notice.defaultOptions = {
+		appendTo: 'body',
+		stack: false,
+		customClass: false,
+		type: 'success',
+		offset: {
+			from: 'top',
+			amount: 50,
+		},
+		align: 'right',
+		minWidth: 250,
+		maxWidth: 450,
+		delay: 4000,
+		spacing: 10,
+	};
+
+	eaccounting.mask_amount = function (input, currency) {
+		currency = currency || {};
+		$(input).inputmask('decimal', {
+			alias: 'numeric',
+			groupSeparator: currency.thousand_separator || ',',
+			autoGroup: true,
+			digits: currency.precision || 2,
+			radixPoint: currency.decimal_separator || '.',
+			digitsOptional: false,
+			allowMinus: false,
+			prefix: currency.symbol || '',
+			placeholder: '0.000',
+			rightAlign: 0,
+		})
+	}
 })

@@ -249,8 +249,11 @@ class Admin_Assets {
 		//              'plugin_url' => eaccounting()->plugin_url(),
 		//          )
 		//      );
-		//      wp_enqueue_media();
+		      wp_enqueue_media();
 		//      wp_enqueue_script( 'ea-invoice' );
+
+		//print scripts
+		wp_register_script( 'ea-print', eaccounting()->plugin_url( '/assets/js/printjs/printThis' . $suffix . '.js' ), array( 'jquery' ), $version,true );
 
 	}
 

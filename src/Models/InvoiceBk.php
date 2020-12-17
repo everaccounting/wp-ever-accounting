@@ -10,7 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
+
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Invoices;
 

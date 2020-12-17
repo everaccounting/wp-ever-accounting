@@ -39,7 +39,7 @@ function eaccounting_get_invoice( $invoice ) {
 		$result = new EverAccounting\Models\Invoice( $invoice );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -108,7 +108,7 @@ function eaccounting_delete_invoice( $invoice_id ) {
 		$invoice = new EverAccounting\Models\Invoice( $invoice_id );
 
 		return $invoice->exists() ? $invoice->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }

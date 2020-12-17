@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\Core\Exception;
+
 use EverAccounting\Core\Repositories;
 use EverAccounting\Models\Currency;
 
@@ -448,7 +448,7 @@ abstract class ContactModel extends ResourceModel {
 			$this->set_prop( 'currency', $currency );
 
 			return $currency;
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			return null;
 		}
 	}

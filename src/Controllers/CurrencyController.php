@@ -13,7 +13,7 @@ namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
 use EverAccounting\Models\Currency;
-use EverAccounting\Core\Exception;
+
 
 defined( 'ABSPATH' ) || exit;
 
@@ -45,30 +45,8 @@ class CurrencyController extends Singleton {
 	 */
 	public static function validate_currency_data( $data, $id ) {
 		global $wpdb;
-		if ( empty( $data['code'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['rate'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency rate is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['symbol'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency symbol is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['position'] ) || ! in_array( $data['position'], array( 'before', 'after' ), true ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency position is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['precision'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency precision is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['decimal_separator'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency decimal separator is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['thousand_separator'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency thousand separator is required.', 'wp-ever-accounting' ) );
-		}
-
 		if ( $id != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_currencies WHERE code='%s'", eaccounting_clean( $data['code'] ) ) ) ) { // @codingStandardsIgnoreLine
-			throw new Exception( 'duplicate_item', __( 'Duplicate currency.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Duplicate currency.', 'wp-ever-accounting' ) );
 		}
 	}
 

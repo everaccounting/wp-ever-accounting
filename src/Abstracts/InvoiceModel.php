@@ -10,12 +10,9 @@
 namespace EverAccounting\Abstracts;
 
 
-use EverAccounting\Core\Exception;
 use EverAccounting\Models\Currency;
 use EverAccounting\Models\Item;
 use EverAccounting\Models\LineItem;
-use EverAccounting\Models\LineTax;
-use EverAccounting\Models\Tax;
 
 /**
  * Class OrderModel
@@ -54,9 +51,9 @@ abstract class InvoiceModel extends ResourceModel {
 		'number'         => '',
 		'order_number'   => '',
 		'status'         => 'draft',
-		'issue_date'      => null,
-		'due_date'         => null,
-		'payment_date'        => null,
+		'issue_date'     => null,
+		'due_date'       => null,
+		'payment_date'   => null,
 		'category_id'    => null,
 		'contact_id'     => null,
 		'name'           => '',
@@ -1155,7 +1152,7 @@ abstract class InvoiceModel extends ResourceModel {
 		$args = wp_parse_args( $args, array( 'item_id' => null ) );
 		$item = new Item( $args['item_id'] );
 		if ( ! $item->exists() ) {
-			throw new Exception( 'invalid_item_id', __( 'Invalid Item ID', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Invalid Item ID', 'wp-ever-accounting' ) );
 		}
 
 		$default = array(
@@ -1257,12 +1254,12 @@ abstract class InvoiceModel extends ResourceModel {
 	 * Save data to the database.
 	 *
 	 * @since 1.1.0
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return int invoice ID
 	 */
 	public function save() {
 		if ( empty( $this->get_currency_code() ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency code is required', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_currency_rate() ) ) {

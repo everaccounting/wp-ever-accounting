@@ -10,7 +10,6 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Currencies;
 
@@ -91,6 +90,16 @@ class Currency extends ResourceModel {
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'code'               => __( 'Currency code', 'wp-ever-accounting' ),
+			'rate'               => __( 'Currency rate', 'wp-ever-accounting' ),
+			'symbol'             => __( 'Currency symbol', 'wp-ever-accounting' ),
+			'position'           => __( 'Currency position', 'wp-ever-accounting' ),
+			'precision'          => __( 'Currency precision', 'wp-ever-accounting' ),
+			'decimal_separator'  => __( 'Currency decimal separator', 'wp-ever-accounting' ),
+			'thousand_separator' => __( 'Currency thousand separator', 'wp-ever-accounting' ),
+		);
 	}
 
 	/*
@@ -106,7 +115,6 @@ class Currency extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * @throws Exception
 	 * @return \Exception|bool
 	 */
 	public function save() {

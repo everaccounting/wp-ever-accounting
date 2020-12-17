@@ -12,7 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Core\Exception;
+
 
 defined( 'ABSPATH' ) || exit;
 

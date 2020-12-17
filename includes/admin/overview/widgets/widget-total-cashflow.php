@@ -48,7 +48,7 @@ class Cash_Flow extends Widget {
 		$start_month = (int) $start->format( 'm' );
 		$end_month   = (int) $end->format( 'm' );
 		// Monthly
-		$labels = [];
+		$labels = array();
 
 		$s = clone $start;
 
@@ -122,12 +122,12 @@ class Cash_Flow extends Widget {
 	 *
 	 * @param \EverAccounting\Core\DateTime $start
 	 * @param \EverAccounting\Core\DateTime $end
-	 * @param string                   $period
-	 * @param                       $type
+	 * @param string                        $period
+	 * @param                               $type
 	 */
 	public function calculate_total( $type, $start = null, $end = null, $period = null ) {
 		global $wpdb;
-		$totals = [];
+		$totals = array();
 
 		$date_format = 'Y-m';
 
@@ -160,20 +160,27 @@ class Cash_Flow extends Widget {
 			}
 		}
 
-		$transactions = $wpdb->get_results($wpdb->prepare("
-		SELECT amount, currency_code, currency_rate, paid_at
+		$transactions = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+		SELECT amount, currency_code, currency_rate, payment_date
 		FROM {$wpdb->prefix}ea_transactions
-		WHERE (`paid_at` BETWEEN %s AND %s)
+		WHERE (`payment_date` BETWEEN %s AND %s)
+		AND currency_code != ''
 		AND `type`=%s
 		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
-		", $start->format( 'Y-m-d' ), $end->format( 'Y-m-d' ), $type));
-
+		",
+				$start->format( 'Y-m-d' ),
+				$end->format( 'Y-m-d' ),
+				$type
+			)
+		);
 
 		eaccounting_collect( $transactions )->each(
 			function ( $item ) use ( $period, $date_format, &$totals ) {
-				$paid_at = new DateTime( $item->paid_at );
+				$paid_at = new DateTime( $item->payment_date );
 				if ( $period == 'month' ) {
-					  $i = $paid_at->format( $date_format );
+					$i = $paid_at->format( $date_format );
 				} else {
 					$i = $paid_at->quarter();
 				}
@@ -193,7 +200,7 @@ class Cash_Flow extends Widget {
 	 * @return array
 	 */
 	public function calculate_profit( $incomes, $expenses ) {
-		$profit = [];
+		$profit = array();
 
 		foreach ( $incomes as $key => $income ) {
 			if ( $income > 0 && $income > $expenses[ $key ] ) {

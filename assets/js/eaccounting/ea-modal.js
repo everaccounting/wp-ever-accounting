@@ -28,14 +28,14 @@ jQuery(function ($) {
 	/**
 	 * Initialize the Modal
 	 *
-	 * @param template_id
+	 * @param template
 	 * @param {object} options [description]
 	 */
-	$.ea_modal = function (template_id, options) {
+	$.ea_modal = function (template, options) {
 		var plugin = this;
-		this.template_id = template_id;
-		this.$template = $(template_id);
-		console.log(this);
+		this.template_id = template;
+		this.modal_id = $(template).attr('id');
+		this.$template = $(template);
 		this.options = $.extend(
 			{},
 			defaults,
@@ -72,12 +72,18 @@ jQuery(function ($) {
 
 
 		this.block = function () {
-			eaccounting.block($('.ea-modal__body', plugin.$modal));
+			$('.ea-modal__body', plugin.$modal).block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
 			$('.ea-modal__footer button', plugin.$modal).attr('disabled', 'disabled');
 		}
 
 		this.unblock = function () {
-			eaccounting.unblock($('.ea-modal__body', plugin.$modal));
+			$('.ea-modal__body', plugin.$modal).unblock();
 			$('.ea-modal__footer button', plugin.$modal).removeAttr('disabled');
 		}
 
@@ -144,12 +150,14 @@ jQuery(function ($) {
 		}
 
 		this.init = function () {
+			console.log('INIT');
 			$(document.body)
 				.css({
 					overflow: 'hidden',
 				})
 				.append(this.$modal)
 				.addClass('ea-modal-open');
+
 			$('.ea-modal-content', this.$modal)
 				.attr('tabindex', '0')
 				.focus();
@@ -158,7 +166,7 @@ jQuery(function ($) {
 			this.resize();
 
 			$(document.body).trigger(
-				'ea_modal_ready',
+				'ea_modal_loaded',
 				[plugin]
 			);
 
@@ -169,12 +177,13 @@ jQuery(function ($) {
 			$('form', plugin.$modal).on('submit', function (e) {
 				e.preventDefault();
 				plugin.block();
-				const data = eaccounting.get_values($('form', plugin.$modal));
+				const data = $('form', plugin.$modal).serializeObject();
+
 				if (typeof plugin.options.onSubmit === 'function') {
 					return plugin.options.onSubmit(data, plugin);
 				} else if ($('form #action', plugin.$modal).length) {
 					$.post(ajaxurl, data, function (json) {
-						eaccounting.notice(json);
+						$.eaccounting_notice(json);
 						if (json.success) {
 							plugin.close();
 							$(document.body).trigger(
@@ -185,6 +194,12 @@ jQuery(function ($) {
 					}).always(function (json) {
 						plugin.unblock();
 					});
+				} else {
+					console.log('ea_modal_form_submitted');
+					$(document.body).trigger(
+						'ea_modal_form_submitted',
+						[plugin, data]
+					);
 				}
 			});
 		}

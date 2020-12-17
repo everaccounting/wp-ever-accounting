@@ -33,7 +33,7 @@ class Category extends ResourceModel {
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_category';
+	public $cache_group = 'ea_category';
 
 	/**
 	 * Item Data array.
@@ -71,11 +71,16 @@ class Category extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'categories' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'name' => __( 'Category name', 'wp-ever-accounting' ),
+			'type' => __( 'Category type', 'wp-ever-accounting' ),
+		);
 	}
 
 	/*

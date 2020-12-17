@@ -10,7 +10,6 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ContactModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Vendors;
 
@@ -69,7 +68,6 @@ class Vendor extends ContactModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * @throws Exception
 	 * @return \Exception|bool
 	 */
 	public function save() {

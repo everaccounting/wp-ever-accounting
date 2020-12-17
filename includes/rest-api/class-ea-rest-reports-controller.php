@@ -465,7 +465,7 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 		// $revenues = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->ea_revenues WHERE YEAR(payment_date)=%d AND category_id NOT IN (SELECT id from $wpdb->ea_categories WHERE type='other')", $year ) );
 		// foreach ( $revenues as $revenue ) {
 		// $month      = date( 'F', strtotime( $revenue->payment_date ) );
-		// $month_year = date( 'F-Y', strtotime( $revenue->paid_at ) );
+		// $month_year = date( 'F-Y', strtotime( $revenue->payment_date ) );
 		//
 		// if ( ! isset( $incomes[ $revenue->category_id ] ) || ! isset( $incomes[ $revenue->category_id ][ $month ] ) || ! isset( $incomes_graph[ $month_year ] ) ) {
 		// continue;

@@ -49,7 +49,7 @@ function eaccounting_get_currency( $currency ) {
 	try {
 		$result = new EverAccounting\Models\Currency( $currency );
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -133,8 +133,8 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error(  $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -152,7 +152,7 @@ function eaccounting_delete_currency( $currency_id ) {
 		$currency = new EverAccounting\Models\Currency( $currency_id );
 
 		return $currency->exists() ? $currency->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }

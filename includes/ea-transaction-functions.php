@@ -42,7 +42,7 @@ function eaccounting_get_expense( $expense ) {
 		$result = new EverAccounting\Models\Expense( $expense );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -63,7 +63,7 @@ function eaccounting_get_expense( $expense ) {
  * @type string $amount         Transaction amount. Default null.
  * @type int    $account_id     From/To which account the transaction is. Default empty.
  * @type int    $contact_id     Contact id related to the transaction. Default empty.
- * @type int    $invoice_id     Transaction related invoice id(optional). Default empty.
+ * @type int    $document_id     Transaction related invoice id(optional). Default empty.
  * @type int    $category_id    Category of the transaction. Default empty.
  * @type string $payment_method Payment method used for the transaction. Default empty.
  * @type string $reference      Reference of the transaction. Default empty.
@@ -92,8 +92,8 @@ function eaccounting_insert_expense( $args, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error(  $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -111,7 +111,7 @@ function eaccounting_delete_expense( $expense_id ) {
 		$expense = new EverAccounting\Models\Expense( $expense_id );
 
 		return $expense->exists() ? $expense->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 
@@ -129,7 +129,7 @@ function eaccounting_delete_expense( $expense_id ) {
  * @type string $amount         Transaction amount.
  * @type int    $account_id     From/To which account the transaction is.
  * @type int    $contact_id     Contact id related to the transaction.
- * @type int    $invoice_id     Transaction related invoice id(optional).
+ * @type int    $document_id     Transaction related invoice id(optional).
  * @type int    $category_id    Category of the transaction.
  * @type string $payment_method Payment method used for the transaction.
  * @type string $reference      Reference of the transaction.
@@ -161,7 +161,7 @@ function eaccounting_get_income( $income ) {
 		$result = new EverAccounting\Models\Income( $income );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -178,11 +178,10 @@ function eaccounting_get_income( $income ) {
  *                              An array of elements that make up an expense to update or insert.
  *
  * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
- * @type string $payment_date        Time of the transaction. Default null.
+ * @type string $payment_date   Time of the transaction. Default null.
  * @type string $amount         Transaction amount. Default null.
  * @type int    $account_id     From/To which account the transaction is. Default empty.
  * @type int    $contact_id     Contact id related to the transaction. Default empty.
- * @type int    $invoice_id     Transaction related invoice id(optional). Default empty.
  * @type int    $category_id    Category of the transaction. Default empty.
  * @type string $payment_method Payment method used for the transaction. Default empty.
  * @type string $reference      Reference of the transaction. Default empty.
@@ -211,8 +210,8 @@ function eaccounting_insert_income( $args, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -230,7 +229,7 @@ function eaccounting_delete_income( $income_id ) {
 		$income = new EverAccounting\Models\Income( $income_id );
 
 		return $income->exists() ? $income->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }
@@ -248,7 +247,7 @@ function eaccounting_delete_income( $income_id ) {
  * @type string $amount         Transaction amount.
  * @type int    $account_id     From/To which account the transaction is.
  * @type int    $contact_id     Contact id related to the transaction.
- * @type int    $invoice_id     Transaction related invoice id(optional).
+ * @type int    $document_id     Transaction related invoice id(optional).
  * @type int    $category_id    Category of the transaction.
  * @type string $expense_method Payment method used for the transaction.
  * @type string $reference      Reference of the transaction.
@@ -278,7 +277,7 @@ function eaccounting_get_transfer( $transfer ) {
 		$result = new EverAccounting\Models\Transfer( $transfer );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -328,8 +327,8 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -347,7 +346,7 @@ function eaccounting_delete_transfer( $transfer_id ) {
 		$transfer = new EverAccounting\Models\Transfer( $transfer_id );
 
 		return $transfer->exists() ? $transfer->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }
@@ -461,7 +460,7 @@ function eaccounting_get_transactions( $args = array() ) {
 		'currency_code',
 		'currency_rate',
 		'account_id',
-		'invoice_id',
+		'document_id',
 		'contact_id',
 		'category_id',
 		'description',
@@ -525,9 +524,9 @@ function eaccounting_get_transactions( $args = array() ) {
 		$account_id   = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
 		$query_where .= " AND $table.`account_id` IN ($account_id)";
 	}
-	if ( ! empty( $qv['invoice_id'] ) ) {
-		$invoice_id   = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );
-		$query_where .= " AND $table.`invoice_id` IN ($invoice_id)";
+	if ( ! empty( $qv['document_id'] ) ) {
+		$document_id   = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
+		$query_where .= " AND $table.`document_id` IN ($document_id)";
 	}
 	if ( ! empty( $qv['invoice_id'] ) ) {
 		$invoice_id   = implode( ',', wp_parse_id_list( $qv['invoice_id'] ) );

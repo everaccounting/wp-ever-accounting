@@ -45,6 +45,7 @@ class Latest_Incomes extends Widget {
 		FROM {$wpdb->prefix}ea_transactions t
 		LEFT JOIN {$wpdb->prefix}ea_categories as c on c.id=t.category_id
 		WHERE t.type= 'income'
+		AND t.currency_code != ''
 		AND c.type != 'other'
 		ORDER BY t.payment_date DESC
 		LIMIT %d

@@ -55,6 +55,7 @@ class Total_Profit extends Widget {
 		SELECT amount, currency_code, currency_rate, `type`
 		FROM {$wpdb->prefix}ea_transactions
 		WHERE (payment_date BETWEEN %s AND %s)
+		AND currency_code != ''
 		AND category_id NOT IN(select id from {$wpdb->prefix}ea_categories where type='other')
 		", $dates['start'], $dates['end']) );
 

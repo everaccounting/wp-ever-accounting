@@ -27,7 +27,7 @@ function eaccounting_get_item( $item ) {
 		$result = new EverAccounting\Models\Item( $item );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
@@ -78,8 +78,8 @@ function eaccounting_insert_item( $args, $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -97,7 +97,7 @@ function eaccounting_delete_item( $item_id ) {
 		$item = new EverAccounting\Models\Item( $item_id );
 
 		return $item->exists() ? $item->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }
