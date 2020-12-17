@@ -118,9 +118,9 @@ class Invoice extends ResourceModel {
 			$this->set_id( $invoice->id );
 		} elseif ( is_array( $invoice ) ) {
 			$this->set_props( $invoice );
-		} elseif ( is_string( $invoice ) && $invoice_id = self::get_by( $invoice, 'key' ) ) { // phpcs: ignore
+		} elseif ( is_string( $invoice ) && $invoice_id = self::get_id_by( $invoice, 'key' ) ) { // phpcs:ignore
 			$this->set_id( $invoice_id );
-		} elseif ( is_string( $invoice ) && $invoice_id = self::get_by( $invoice, 'invoice_number' ) ) { // phpcs: ignore
+		} elseif ( is_string( $invoice ) && $invoice_id = self::get_id_by( $invoice, 'invoice_number' ) ) { // phpcs:ignore
 			$this->set_id( $invoice_id );
 		} else {
 			$this->set_object_read( true );
@@ -132,6 +132,11 @@ class Invoice extends ResourceModel {
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
+			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
+		);
 	}
 
 	/**
@@ -185,11 +190,11 @@ class Invoice extends ResourceModel {
 	/**
 	 * All available invoice statuses.
 	 *
-	 * @when an invoice is created status is pending
-	 * @when sent to customer is sent
-	 * @when partially paid is partial
-	 * @when Full amount paid is paid
-	 * @when due date passed but not paid is overdue.
+	 * @when  an invoice is created status is pending
+	 * @when  sent to customer is sent
+	 * @when  partially paid is partial
+	 * @when  Full amount paid is paid
+	 * @when  due date passed but not paid is overdue.
 	 *
 	 * @since 1.0.1
 	 * @return array
@@ -764,7 +769,6 @@ class Invoice extends ResourceModel {
 	public function get_total_paid() {
 		$total_paid = 0;
 		foreach ( $this->get_payments() as $payment ) {
-			var_dump( $payment->get_amount() );
 			$total_paid += (float) eaccounting_price_convert_between( $payment->get_amount(), $payment->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_code(), $this->get_currency_rate() );
 		}
 
@@ -864,8 +868,6 @@ class Invoice extends ResourceModel {
 				'to'   => $status,
 				'note' => $note,
 			);
-
-			$this->maybe_set_payment_date();
 		}
 
 		return array(
@@ -1339,8 +1341,17 @@ class Invoice extends ResourceModel {
 	 * Calculate.
 	 *
 	 * @since 1.1.0
+	 * @throws \Exception
 	 */
 	public function calculate_total() {
+		$this->check_required_items();
+
+		//if changing or inserting update currency rate.
+		if ( ! array_key_exists( 'currency_code', $this->get_changes() ) || ! $this->exists() ) {
+			$currency = new Currency( $this->get_currency_code() );
+			$this->get_currency_rate( $currency->get_rate() );
+		}
+
 		$subtotal       = 0;
 		$tax_total      = 0;
 		$vat_total      = 0;
@@ -1384,30 +1395,58 @@ class Invoice extends ResourceModel {
 		return eaccounting_format_price( $item->$getter(), $this->get_currency_code() );
 	}
 
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param      $account_id
+	 * @param      $payment_method
+	 * @param null $date
+	 * @param null $description
+	 * @param      $amount
+	 *
+	 * @throws \Exception
+	 * @return false
+	 */
 	public function add_payment( $amount, $account_id, $payment_method, $date = null, $description = null ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+
 		if ( null === $date ) {
 			$date = current_time( 'mysql' );
 		}
 
-		try {
-			$total_due = $this->get_total_due();
-			$amount    = eaccounting_sanitize_price( $amount, $this->get_currency_code() );
-			if ( $amount > $total_due ) {
-				throw new \Exception(
-					sprintf(
-						/* translators: %s paying amount %s due amount */
-						__( 'Amount is larger than due amount, amount: %1$s & due: %2$s' ),
-						eaccounting_format_price( $amount, $this->get_currency_code() ),
-						$this->get_formatted_total_due()
-					)
-				);
-			}
-
-
-
-		} catch ( \Exception $e ) {
-			return false;
+		$total_due = $this->get_total_due();
+		$amount    = eaccounting_sanitize_price( $amount, $this->get_currency_code() );
+		if ( $amount > $total_due ) {
+			throw new \Exception(
+				sprintf(
+				/* translators: %s paying amount %s due amount */
+					__( 'Amount is larger than due amount, amount: %1$s & due: %2$s' ),
+					eaccounting_format_price( $amount, $this->get_currency_code() ),
+					$this->get_formatted_total_due()
+				)
+			);
 		}
+
+		$income = new Income();
+		$income->set_props(
+			array(
+				'payment_date'   => $date,
+				'document_id'    => $this->get_id(),
+				'account_id'     => $account_id,
+				'amount'         => $amount,
+				'category_id'    => $this->get_category_id(),
+				'customer_id'    => $this->get_customer_id(),
+				'payment_method' => $payment_method,
+			)
+		);
+
+		$income->save();
+		/* translators: %s amount */
+		$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), $income->get_formatted_amount() ), false );
+
+		return true;
 	}
 
 	/*
@@ -1452,12 +1491,10 @@ class Invoice extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * @throws \Exception
 	 * @return bool|\Exception|int
 	 */
 	public function save() {
-		if ( empty( $this->get_currency_code() ) ) {
-			throw new \Exception(  __( 'Currency Code must be specified.', 'wp-ever-accounting' ) );
-		}
 		$this->calculate_total();
 		$this->maybe_set_currency_rate();
 		$this->maybe_set_customer_info();
@@ -1466,15 +1503,12 @@ class Invoice extends ResourceModel {
 
 		if ( ( 0 <= $this->get_total_paid() ) && ( $this->get_total_paid() <= $this->get_total() ) ) {
 			$this->set_status( 'partial' );
-			error_log( '1' );
 		} elseif ( $this->get_total_paid() >= $this->get_total_paid() ) { // phpcs:ignore
 			$this->set_status( 'paid' );
-			error_log( '2' );
 		}
 
-		error_log( $this->get_status() );
-
 		parent::save();
+		$this->status_transition();
 		$this->save_line_items();
 
 		return $this->exists();
@@ -1596,7 +1630,6 @@ class Invoice extends ResourceModel {
 
 		// Reset status transition variable.
 		$this->status_transition = false;
-
 		if ( $status_transition ) {
 			try {
 				do_action( 'eaccounting_invoice_status_' . $status_transition['to'], $this->get_id(), $this );
@@ -1606,7 +1639,7 @@ class Invoice extends ResourceModel {
 					$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
 
 					// Note the transition occurred.
-					$this->add_note( $transition_note, false, true );
+					$this->add_note( $transition_note, false );
 
 					do_action( 'eaccounting_invoice_status_' . $status_transition['from'] . '_to_' . $status_transition['to'], $this->get_id(), $this );
 					do_action( 'eaccounting_invoice_status_changed', $this->get_id(), $status_transition['from'], $status_transition['to'], $this );
@@ -1623,7 +1656,7 @@ class Invoice extends ResourceModel {
 					$transition_note = sprintf( __( 'Status set to %s.', 'wp-ever-accounting' ), $status_transition['to'], $this );
 
 					// Note the transition occurred.
-					$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), 0, false );
+					$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), false );
 				}
 			} catch ( \Exception $e ) {
 				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
@@ -1635,28 +1668,22 @@ class Invoice extends ResourceModel {
 	/**
 	 * Adds a note to an invoice.
 	 *
-	 * @param string $note The note being added.
+	 * @param string $content
+	 * @param bool   $customer_note
 	 *
 	 * @return int|false The new note's ID on success, false on failure.
-	 *
 	 */
-	public function add_note( $note = '', $customer_note = false, $added_by_user = false ) {
-
+	public function add_note( $content = '', $customer_note = false ) {
 		// Bail if no note specified or this invoice is not yet saved.
-		if ( ! empty( $note ) || ! $this->exists() || ( ! is_user_logged_in() && $added_by_user ) ) {
+		if ( empty( $content ) || ! $this->exists() ) {
 			return false;
 		}
+		$note = $this->repository->add_note( $content, $this );
 
-		$author       = 'System';
-		$author_email = 'bot@wpeveraccounting.com';
-
-		// If this is an admin comment or it has been added by the user.
-		if ( is_user_logged_in() && ( $added_by_user ) ) {
-			$user         = get_user_by( 'id', get_current_user_id() );
-			$author       = $user->display_name;
-			$author_email = $user->user_email;
+		if ( $note && $customer_note ) {
+			do_action( 'eaccounting_invoice_add_customer_note', $note, $this );
 		}
 
-		//$this->respository->add_note($note, )
+		return $note;
 	}
 }

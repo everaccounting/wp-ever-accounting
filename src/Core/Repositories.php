@@ -57,7 +57,7 @@ class Repositories {
 	 */
 	private $repositories = array(
 		'item'             => Items::class,
-		'categories'         => Categories::class,
+		'categories'       => Categories::class,
 		'currency'         => Currencies::class,
 		'contact'          => Contacts::class,
 		'contact-customer' => Customers::class,

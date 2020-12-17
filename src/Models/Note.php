@@ -44,7 +44,6 @@ class Note extends ResourceModel {
 	protected $data = array(
 		'parent_id'    => null,
 		'parent_type'  => '',
-		'notify'       => 0,
 		'content'      => '',
 		'date_created' => null,
 	);
@@ -78,6 +77,11 @@ class Note extends ResourceModel {
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'parent_id'   => __( 'Parent ID', 'wp-ever-accounting' ),
+			'parent_type' => __( 'Parent type', 'wp-ever-accounting' ),
+		);
 	}
 	/*
 	|--------------------------------------------------------------------------
@@ -109,19 +113,6 @@ class Note extends ResourceModel {
 	 */
 	public function get_parent_type( $context = 'edit' ) {
 		return $this->get_prop( 'parent_type', $context );
-	}
-
-	/**
-	 * Return the notify.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return string
-	 */
-	public function get_notify( $context = 'edit' ) {
-		return $this->get_prop( 'notify', $context );
 	}
 
 	/**
@@ -168,18 +159,6 @@ class Note extends ResourceModel {
 	}
 
 	/**
-	 * set the notify.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param int $notify .
-	 *
-	 */
-	public function set_notify( $notify ) {
-		$this->set_prop( 'notify', absint( $notify ) );
-	}
-
-	/**
 	 * set the content.
 	 *
 	 * @since  1.1.0
@@ -189,23 +168,5 @@ class Note extends ResourceModel {
 	 */
 	public function set_content( $content ) {
 		$this->set_prop( 'content', eaccounting_sanitize_textarea( $content ) );
-	}
-
-	/**
-	 * Save should create or update based on object existence.
-	 *
-	 * @since  1.1.0
-	 * @return \Exception|bool
-	 */
-	public function save() {
-		if ( empty( $this->get_parent_id() ) ) {
-			throw new \Exception( __( 'Parent ID must be specified', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_parent_type() ) ) {
-			throw new \Exception(  __( 'Parent type must be specified', 'wp-ever-accounting' ) );
-		}
-
-		return parent::save();
 	}
 }

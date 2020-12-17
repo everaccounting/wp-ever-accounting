@@ -348,12 +348,7 @@ try {
 				'value' => $invoice->get_id(),
 			)
 		);
-		eaccounting_hidden_input(
-			array(
-				'name'  => 'category_id',
-				'value' => $invoice->get_category_id(),
-			)
-		);
+
 		eaccounting_hidden_input(
 			array(
 				'name'  => 'action',

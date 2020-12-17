@@ -110,27 +110,7 @@ jQuery(function ($) {
 						$(document.body).trigger('ea_select2_init');
 					})
 				}else if('ea-modal-add-invoice-payment' === plugin.modal_id){
-					$('#account_id', plugin.$modal).trigger('change');
-					$('#account_id', plugin.$modal).on('change', function (e) {
-						var account_id = parseInt(e.target.value, 10);
-						if (!account_id) {
-							return false;
-						}
-						plugin.block();
-						var data = {
-							action: 'eaccounting_get_account_currency',
-							account_id: account_id,
-							_wpnonce: eaccounting_form_i10n.nonce.get_currency,
-						}
-						$.post(ajaxurl, data).always(function (json) {
-							plugin.unblock();
-							console.log(json);
-							if (json.success) {
-								return eaccounting.mask_amount($('#amount', plugin.$modal), json.data);
-							}
-							eaccounting.notice(json);
-						});
-					});
+
 				}
 			},
 			submitted:function (e, plugin, data) {

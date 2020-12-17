@@ -47,8 +47,8 @@ class Invoice1 extends ResourceModel {
 		'number'         => '',
 		'order_number'   => '',
 		'status'         => 'draft',
-		'issue_date'      => null,
-		'due_date'         => null,
+		'issue_date'     => null,
+		'due_date'       => null,
 		'completed_at'   => null,
 		'category_id'    => null,
 		'contact_id'     => null,
@@ -159,6 +159,10 @@ class Invoice1 extends ResourceModel {
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'line_items'  => __( 'Line Items', 'wp-ever-accounting' ),
+		);
 	}
 
 	/**
@@ -1084,7 +1088,7 @@ class Invoice1 extends ResourceModel {
 		$args = wp_parse_args( $args, array( 'item_id' => null ) );
 		$item = new Item( $args['item_id'] );
 		if ( ! $item->exists() ) {
-			throw new \Exception(  __( 'Invalid Item ID', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Invalid Item ID', 'wp-ever-accounting' ) );
 		}
 
 		$default = array(
@@ -1211,7 +1215,7 @@ class Invoice1 extends ResourceModel {
 	 */
 	public function save() {
 		if ( empty( $this->get_currency_code() ) ) {
-			throw new \Exception(  __( 'Currency code is required', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Currency code is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_currency_rate() ) ) {

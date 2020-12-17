@@ -13,6 +13,7 @@ namespace EverAccounting\Repositories;
 use EverAccounting\Abstracts\ResourceRepository;
 use EverAccounting\Models\Invoice;
 use EverAccounting\Models\LineItem;
+use EverAccounting\Models\Note;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -103,14 +104,16 @@ class Invoices extends ResourceRepository {
 		foreach ( $items as $item ) {
 			$results[ absint( $item->item_id ) ] = new LineItem( $item );
 		}
+
 		return $results;
 	}
 
 	/**
 	 * Delete Invoice Items.
 	 *
-	 * @param Invoice $invoice
 	 * @since 1.1.0
+	 *
+	 * @param Invoice $invoice
 	 */
 	public function delete_items( $invoice ) {
 		global $wpdb;
@@ -121,8 +124,9 @@ class Invoices extends ResourceRepository {
 	/**
 	 * Get invoices collection.
 	 *
-	 * @param array $args
 	 * @since 1.1.0
+	 *
+	 * @param array $args
 	 *
 	 * @return array|false|int|mixed|object|null
 	 */
@@ -183,6 +187,32 @@ class Invoices extends ResourceRepository {
 		}
 
 		return $results;
+	}
+
+
+	/**
+	 * Add invoice note.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $invoice
+	 * @param $note
+	 *
+	 * @return array
+	 */
+	public function add_note( $content, $invoice ) {
+		$note = new Note();
+		$note->set_props(
+			array(
+				'parent_id'   => $invoice->get_id(),
+				'parent_type' => 'invoice',
+				'content'     => $content,
+			)
+		);
+
+		$note->save();
+
+		return $note->get_data();
 	}
 
 }

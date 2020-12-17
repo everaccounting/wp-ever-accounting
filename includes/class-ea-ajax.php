@@ -1034,31 +1034,20 @@ class Ajax {
 		//self::verify_nonce( 'ea_edit_transfer' );
 		//      self::check_permission( 'ea_add_invoice_payment' );
 		$posted = eaccounting_clean( $_REQUEST );
-		if ( empty( $posted['invoice_id'] ) ) {
-			wp_send_json_error(
-				array(
-					'message' => __( 'Invoice ID is empty', 'wp-ever-accounting' ),
-				)
-			);
-		}
 
 		try {
 			$invoice = new Invoice( $posted['invoice_id'] );
 			if ( ! $invoice->exists() ) {
-				throw new Exception( 'invalid_invoice_id', __( 'Invalid Invoice Item', 'wp-ever-accounting' ) );
+				throw new \Exception( __( 'Invalid Invoice Item', 'wp-ever-accounting' ) );
 			}
-
-
-			$income = new Income();
-			$income->set_props( $posted );
-			$income->set_document_id( $posted['invoice_id'] );
-			$income->save();
+			$invoice->add_payment( $posted['amount'], $posted['account_id'], $posted['payment_method'], $posted['date'], $posted['description'] );
+			$invoice->save();
 			wp_send_json_success(
 				array(
 					'message' => __( 'Invoice Payment saved', 'wp-ever-accounting' ),
 				)
 			);
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			wp_send_json_error(
 				array(
 					'message' => $e->getMessage(),

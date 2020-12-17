@@ -175,6 +175,16 @@ class Income extends ResourceModel {
 	}
 
 	/**
+	 * Get formatted amount.
+	 *
+	 * @since 1.0.2
+	 * @return string
+	 */
+	public function get_formatted_amount() {
+		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
+	}
+
+	/**
 	 * Currency code.
 	 *
 	 * @since 1.0.2

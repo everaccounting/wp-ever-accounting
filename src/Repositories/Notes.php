@@ -43,7 +43,6 @@ class Notes extends ResourceRepository {
 		'id'           => '%d',
 		'parent_id'    => '%d',
 		'parent_type'  => '%s',
-		'notify'       => '%s',
 		'content'      => '%s',
 		'date_created' => '%s',
 	);

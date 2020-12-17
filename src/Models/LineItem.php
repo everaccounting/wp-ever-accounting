@@ -83,6 +83,13 @@ class LineItem extends ResourceModel {
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'item_id'     => __( 'Item ID', 'wp-ever-accounting' ),
+			'item_name'   => __( 'Item name', 'wp-ever-accounting' ),
+			'parent_id'   => __( 'Parent ID', 'wp-ever-accounting' ),
+			'parent_type' => __( 'Parent type', 'wp-ever-accounting' ),
+		);
 	}
 
 	/*
@@ -518,19 +525,19 @@ class LineItem extends ResourceModel {
 	 */
 	public function save() {
 		if ( empty( $this->get_item_id() ) ) {
-			throw new \Exception(  __( 'Item ID must be specified.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Item ID must be specified.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_item_name() ) ) {
-			throw new \Exception(  __( 'Item name can not be blank.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Item name can not be blank.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_parent_id() ) ) {
-			throw new \Exception(  __( 'Parent ID must be specified.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Parent ID must be specified.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $this->get_parent_type() ) ) {
-			throw new \Exception(  __( 'Parent type must be specified.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Parent type must be specified.', 'wp-ever-accounting' ) );
 		}
 
 		return parent::save();
