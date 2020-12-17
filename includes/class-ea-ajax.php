@@ -10,6 +10,7 @@
 namespace EverAccounting;
 
 
+use EverAccounting\Models\Account;
 use EverAccounting\Models\Income;
 use EverAccounting\Models\Invoice;
 
@@ -358,16 +359,6 @@ class Ajax {
 					)
 				);
 				break;
-			case 'tax':
-				//todo check and implement permission
-				//self::check_permission( 'ea_manage_tax' );
-				$result = eaccounting_insert_tax(
-					array(
-						'id'      => $object_id,
-						'enabled' => $enabled,
-					)
-				);
-				break;
 			case 'item':
 				//todo check and implement permission
 				//self::check_permission( 'ea_manage_item' );
@@ -479,23 +470,6 @@ class Ajax {
 					);
 				}
 				break;
-			case 'tax':
-				$items = eaccounting_get_taxes(
-					array(
-						'search' => $search,
-						'paged'  => $page,
-						'status' => 'active',
-						'return' => 'raw',
-					)
-				);
-				foreach ( $items as $item ) {
-					$results[] = array(
-						'text' => "$item->name",
-						'id'   => $item->id,
-					);
-				}
-				break;
-
 			case 'expense_category':
 				$items = eaccounting_get_categories(
 					array(
@@ -804,7 +778,7 @@ class Ajax {
 	 */
 	public static function edit_vendor() {
 		self::verify_nonce( 'ea_edit_vendor' );
-		self::check_permission( 'ea_manage_customer' );
+		self::check_permission( 'ea_manage_vendor' );
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$created = eaccounting_insert_vendor( $posted );
@@ -1000,8 +974,7 @@ class Ajax {
 	 */
 	public static function edit_invoice1() {
 		self::verify_nonce( 'ea_edit_invoice' );
-		//todo need to add and implement permission
-		//self::check_permission( 'ea_manage_category' );
+		self::check_permission( 'ea_manage_invoice' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_invoice( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -1064,8 +1037,7 @@ class Ajax {
 	 */
 	public static function edit_item() {
 		self::verify_nonce( 'ea_edit_item' );
-		//todo check permission for item edit
-		self::check_permission( 'ea_manage_category' );
+		self::check_permission( 'ea_manage_item' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_item( $posted );
 		if ( is_wp_error( $created ) ) {
@@ -1133,7 +1105,7 @@ class Ajax {
 	}
 
 	public static function invoice_calculate_totals() {
-		//self::check_permission( 'eaccounting_edit_invoice' );
+		self::check_permission( 'ea_manage_invoice' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$posted  = wp_parse_args( $posted, array( 'id' => null ) );
 		$invoice = new Invoice( $posted['id'] );

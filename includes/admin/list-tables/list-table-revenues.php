@@ -198,7 +198,7 @@ class List_Table_Revenues extends List_Table {
 	 * @return string Data shown in the amount column.
 	 */
 	function column_amount( $revenue ) {
-		return apply_filters( 'eaccounting_revenues_table_amount', $revenue->get_formatted_amount(), $revenue );
+		return apply_filters( 'eaccounting_revenues_table_amount', eaccounting_format_price($revenue->get_amount(),$revenue->get_currency_code()), $revenue );
 	}
 
 	/**
