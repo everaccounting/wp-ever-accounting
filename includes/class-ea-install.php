@@ -623,6 +623,12 @@ class EAccounting_Install {
 			"{$wpdb->prefix}ea_contacts",
 			"{$wpdb->prefix}ea_transactions",
 			"{$wpdb->prefix}ea_transfers",
+			"{$wpdb->prefix}ea_invoices",
+			"{$wpdb->prefix}ea_line_items",
+			"{$wpdb->prefix}ea_notes",
+			"{$wpdb->prefix}ea_items",
+			"{$wpdb->prefix}ea_api_keys",
+
 		);
 
 		$tables = apply_filters( 'eaccounting_install_get_tables', $tables );
