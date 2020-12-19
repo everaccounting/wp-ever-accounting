@@ -122,9 +122,7 @@ abstract class ResourceRepository {
 
 		$result = $wpdb->insert( $wpdb->prefix . $this->table, wp_unslash( $values ), $formats );
 		if ( false === $result ) {
-			$item->error( 'db_insert_error', $wpdb->last_error );
-
-			return false;
+			throw new \Exception( $wpdb->last_error );
 		}
 
 		if ( $result ) {
