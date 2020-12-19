@@ -138,7 +138,7 @@ class Ajax {
 			'edit_invoice',
 			'edit_item',
 			'edit_tax',
-			'invoice_calculate_totals',
+			'invoice_recalculate',
 			'add_invoice_payment',
 			'upload_files',
 		);
@@ -523,9 +523,10 @@ class Ajax {
 	}
 
 	public static function get_items() {
-		check_ajax_referer( 'ea_get_items', 'nonce' );
-		self::check_permission( 'manage_eaccounting' );
+		//      check_ajax_referer( 'ea_get_items', 'nonce' );
+		//      self::check_permission( 'manage_eaccounting' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
+
 		return wp_send_json_success(
 			eaccounting_get_items(
 				array(
@@ -602,7 +603,7 @@ class Ajax {
 	 * @return void
 	 */
 	public static function edit_currency() {
-		check_ajax_referer( 'ea_edit_currency', '_wpnonce' );
+		self::verify_nonce( 'ea_edit_currency' );
 		self::check_permission( 'ea_manage_currency' );
 		$posted  = eaccounting_clean( $_REQUEST );
 		$created = eaccounting_insert_currency( $posted );
@@ -1005,7 +1006,7 @@ class Ajax {
 
 	public static function add_invoice_payment() {
 		//self::verify_nonce( 'ea_edit_transfer' );
-		//      self::check_permission( 'ea_add_invoice_payment' );
+		self::check_permission( 'ea_manage_invoice' );
 		$posted = eaccounting_clean( $_REQUEST );
 
 		try {
@@ -1013,8 +1014,7 @@ class Ajax {
 			if ( ! $invoice->exists() ) {
 				throw new \Exception( __( 'Invalid Invoice Item', 'wp-ever-accounting' ) );
 			}
-			$invoice->add_payment( $posted['amount'], $posted['account_id'], $posted['payment_method'], $posted['date'], $posted['description'] );
-			$invoice->save();
+			$invoice->add_payment( $posted );
 			wp_send_json_success(
 				array(
 					'message' => __( 'Invoice Payment saved', 'wp-ever-accounting' ),
@@ -1104,40 +1104,47 @@ class Ajax {
 		wp_die();
 	}
 
-	public static function invoice_calculate_totals() {
-		self::check_permission( 'ea_manage_invoice' );
-		$posted  = eaccounting_clean( $_REQUEST );
-		$posted  = wp_parse_args( $posted, array( 'id' => null ) );
-		$invoice = new Invoice( $posted['id'] );
-		$invoice->set_props( $posted );
-		$totals = $invoice->calculate_total();
-		wp_send_json_success(
-			array(
-				'lines_html'  => eaccounting_get_admin_template_html( 'invoice/line-items', array( 'invoice' => $invoice ) ),
-				'totals_html' => eaccounting_get_admin_template_html( 'invoice/totals', array( 'invoice' => $invoice ) ),
-				'line'        => array_map( 'strval', $invoice->get_line_items() ),
-				'totals'      => $totals,
-			)
-		);
+	public static function invoice_recalculate() {
+		try {
+			self::check_permission( 'ea_manage_invoice' );
+			$posted  = eaccounting_clean( $_REQUEST );
+			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
+			$invoice = new Invoice( $posted['id'] );
+			$invoice->set_props( $posted );
+			$totals = $invoice->recalculate();
+			wp_send_json_success(
+				array(
+					'html'   => eaccounting_get_admin_template_html( 'html-invoice-items', array( 'invoice' => $invoice ) ),
+					'line'   => array_map( 'strval', $invoice->get_line_items() ),
+					'totals' => $totals,
+				)
+			);
+		} catch ( \Exception $e ) {
+			wp_send_json_error( array( 'message' => $e->getMessage() ) );
+		}
 	}
 
 	public static function edit_invoice() {
-		$posted  = eaccounting_clean( $_REQUEST );
-		$posted  = wp_parse_args( $posted, array( 'id' => null ) );
-		$invoice = new Invoice( $posted['id'] );
-		$invoice->set_props( $posted );
-		$invoice->save();
-		$totals   = $invoice->calculate_total();
-		$redirect = add_query_arg( array( 'action' => 'view' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
-		wp_send_json_success(
-			array(
-				'lines_html'  => eaccounting_get_admin_template_html( 'invoice/line-items', array( 'invoice' => $invoice ) ),
-				'totals_html' => eaccounting_get_admin_template_html( 'invoice/totals', array( 'invoice' => $invoice ) ),
-				'line'        => array_map( 'strval', $invoice->get_line_items() ),
-				'redirect'    => $redirect,
-				'totals'      => $totals,
-			)
-		);
+		try {
+			$posted  = eaccounting_clean( $_REQUEST );
+			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
+			$invoice = new Invoice( $posted['id'] );
+			$invoice->set_props( $posted );
+			$invoice->save();
+			$totals   = $invoice->recalculate();
+			$redirect = add_query_arg( array( 'action' => 'view' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			wp_send_json_success(
+				array(
+					'lines_html'  => eaccounting_get_admin_template_html( 'invoice/line-items', array( 'invoice' => $invoice ) ),
+					'totals_html' => eaccounting_get_admin_template_html( 'invoice/totals', array( 'invoice' => $invoice ) ),
+					'line'        => array_map( 'strval', $invoice->get_line_items() ),
+					'redirect'    => $redirect,
+					'totals'      => $totals,
+				)
+			);
+		} catch ( \Exception $e ) {
+			wp_send_json_error( array( 'message' => $e->getMessage() ) );
+		}
 	}
 
 	public static function upload_files() {

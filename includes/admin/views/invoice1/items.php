@@ -49,5 +49,9 @@ defined( 'ABSPATH' ) || exit;
 			</div>
 		</div>
 	<?php endif; ?>
-
 </div>
+
+<script	type="text/template" id="invoice-line-item">
+
+	<?php eaccounting_get_admin_template( 'invoice/line-item', array( 'invoice' => $invoice, 'item' => new \EverAccounting\Models\LineItem(), 'index' => 0 ) ); ?>
+</script>

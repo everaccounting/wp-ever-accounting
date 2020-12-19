@@ -232,9 +232,9 @@ class Account extends ResourceModel {
 	 * @since 1.1.0
 	 *
 	 */
-	public function set_opening_balance( $opening_balance ) {
+	public function set_opening_balance( $amount ) {
 		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
-		$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $code ) );
+		$this->set_prop( 'opening_balance', (float) eaccounting_sanitize_number( $amount, true ) );
 	}
 
 	/**
@@ -348,7 +348,7 @@ class Account extends ResourceModel {
 	 *
 	 */
 	protected function set_balance( $balance ) {
-		$this->set_prop( 'balance', eaccounting_sanitize_price( $balance, $this->get_currency_code() ) );
+		$this->set_prop( 'balance', (float) eaccounting_sanitize_number( $balance, true ) );
 	}
 
 	/*

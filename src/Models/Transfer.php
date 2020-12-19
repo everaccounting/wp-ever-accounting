@@ -312,7 +312,7 @@ class Transfer extends ResourceModel {
 	 * @param string $amount
 	 */
 	public function set_amount( $amount ) {
-		$this->set_prop( 'amount', eaccounting_sanitize_price( $amount ) );
+		$this->set_prop( 'amount', (float) eaccounting_sanitize_number( $amount, true ) );
 	}
 
 	/**

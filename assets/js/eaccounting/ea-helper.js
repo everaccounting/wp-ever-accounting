@@ -2,6 +2,30 @@ window.eaccounting = window.eaccounting || {}
 
 jQuery(function ($) {
 	'use strict';
+
+	/**
+	 * Mask amount field.
+	 *
+	 * @param input
+	 * @param currency
+	 */
+	eaccounting.mask_amount = function (input, currency) {
+		currency = currency || {};
+		$(input).inputmask('decimal', {
+			alias: 'numeric',
+			groupSeparator: currency.thousand_separator || ',',
+			autoGroup: true,
+			digits: currency.precision || 2,
+			radixPoint: currency.decimal_separator || '.',
+			digitsOptional: false,
+			allowMinus: false,
+			prefix: currency.symbol || '',
+			placeholder: '0.000',
+			rightAlign: 0,
+		})
+	}
+
+
 	/**
 	 * A nifty plugin to converting form to serialize object
 	 */
@@ -248,19 +272,56 @@ jQuery(function ($) {
 		spacing: 10,
 	};
 
-	eaccounting.mask_amount = function (input, currency) {
-		currency = currency || {};
-		$(input).inputmask('decimal', {
-			alias: 'numeric',
-			groupSeparator: currency.thousand_separator || ',',
-			autoGroup: true,
-			digits: currency.precision || 2,
-			radixPoint: currency.decimal_separator || '.',
-			digitsOptional: false,
-			allowMinus: false,
-			prefix: currency.symbol || '',
-			placeholder: '0.000',
-			rightAlign: 0,
-		})
-	}
+
+	/**
+	 * Color field wrapper for Ever Accounting
+	 * @since 1.0.2
+	 */
+	jQuery( function ( $ ) {
+		jQuery.fn.ea_color_picker = function () {
+			return this.each( function () {
+				var el = this;
+				$( el )
+					.iris( {
+						change: function ( event, ui ) {
+							$( el )
+								.parent()
+								.find( '.colorpickpreview' )
+								.css( { backgroundColor: ui.color.toString() } );
+						},
+						hide: true,
+						border: true,
+					} )
+					.on( 'click focus', function ( event ) {
+						event.stopPropagation();
+						$( '.iris-picker' ).hide();
+						$( el ).closest( 'div' ).find( '.iris-picker' ).show();
+						$( el ).data( 'original-value', $( el ).val() );
+					} )
+					.on( 'change', function () {
+						if ( $( el ).is( '.iris-error' ) ) {
+							var original_value = $( this ).data( 'original-value' );
+
+							if (
+								original_value.match(
+									/^\#([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$/
+								)
+							) {
+								$( el )
+									.val( $( el ).data( 'original-value' ) )
+									.change();
+							} else {
+								$( el ).val( '' ).change();
+							}
+						}
+					} );
+
+				$( 'body' ).on( 'click', function () {
+					$( '.iris-picker' ).hide();
+				} );
+			} );
+		};
+
+		$( '.ea-input-color' ).ea_color_picker();
+	} );
 })

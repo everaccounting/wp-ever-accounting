@@ -43,9 +43,9 @@ class Accounts extends ResourceRepository {
 	 */
 	protected $data_type = array(
 		'id'              => '%d',
+		'currency_code'   => '%s',
 		'name'            => '%s',
 		'number'          => '%s',
-		'currency_code'   => '%s',
 		'opening_balance' => '%f',
 		'bank_name'       => '%s',
 		'bank_phone'      => '%s',

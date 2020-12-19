@@ -78,4 +78,6 @@ jQuery( function ( $ ) {
 			$(this).eaccounting_select2();
 		});
 	});
+
+	$('.ea-select2').eaccounting_select2();
 } );

@@ -18,9 +18,20 @@ defined( 'ABSPATH' ) || exit;
 	<?php endif; ?>
 	<td class="line-name" colspan="2">
 		<input type="hidden" class="line-id" name="line_items[<?php echo $index; ?>][id]" value="<?php echo esc_html( $item->get_id() ); ?>">
-		<input type="hidden" class="item-id" name="line_items[<?php echo $index; ?>][item_id]" value="<?php echo esc_html( $item->get_item_id() ); ?>">
+		<input type="hidden" class="item-name" name="line_items[<?php echo $index; ?>][item_name]" value="<?php echo esc_html( $item->get_item_name() ); ?>">
 		<div class="edit">
-			<input type="text" class="item-name" name="line_items[<?php echo $index; ?>][item_name]" value="<?php echo esc_html( $item->get_item_name() ); ?>" placeholder="<?php esc_html_e( 'Search item', 'wp-ever-accounting' ); ?>" required>
+			<select class="item-id ea-select2"
+					name="line_items[<?php echo $index; ?>][item_id]"
+					data-url="<?php echo esc_attr(eaccounting()->ajax_url());?>"
+					data-ajax_action="eaccounting_get_items"
+					data-map="return {text: option.name, id:option.id, item:option}"
+					data-nonce_action="<?php echo esc_attr(wp_create_nonce('ea_get_items'));?>"
+					data-modal_id="#ea-modal-add-item"
+					placeholder="<?php esc_html_e( 'Search item', 'wp-ever-accounting' ); ?>"
+					data-placeholder="<?php esc_html_e( 'Search item', 'wp-ever-accounting' ); ?>"
+					required>
+					<?php echo $item->get_item_id()? sprintf('<option value="%d">%s</option>', $item->get_item_id(), $item->get_item_name()): '';?>
+			</select>
 		</div>
 		<div class="view">
 			<?php echo esc_html( $item->get_item_name() ); ?>

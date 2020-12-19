@@ -50,9 +50,9 @@ class Expenses extends ResourceRepository {
 		'type_id'        => '%d',
 		'type'           => '%s',
 		'payment_date'   => '%s',
-		'amount'         => '%f',
 		'currency_code'  => '%s', // protected
 		'currency_rate'  => '%f', // protected
+		'amount'         => '%f',
 		'account_id'     => '%d',
 		'document_id'    => '%d',
 		'contact_id'     => '%d',

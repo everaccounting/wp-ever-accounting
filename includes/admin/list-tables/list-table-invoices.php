@@ -229,7 +229,7 @@ class List_Table_Invoices extends List_Table {
 	 *
 	 */
 	function column_total( $invoice ) {
-		return apply_filters( 'eaccounting_invoice_table_total', $invoice->get_formatted_total(), $invoice );
+		return apply_filters( 'eaccounting_invoice_table_total', eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() ), $invoice );
 	}
 
 	/**
@@ -270,7 +270,7 @@ class List_Table_Invoices extends List_Table {
 	 *
 	 */
 	function column_status( $invoice ) {
-		return apply_filters( 'eaccounting_invoice_table_status', $invoice->get_status_nicename(), $invoice );
+		return apply_filters( 'eaccounting_invoice_table_status', sprintf( '<span class="invoice-status %s">%s</span>', $invoice->get_status(), $invoice->get_status_nicename() ), $invoice );
 	}
 
 	/**

@@ -44,6 +44,7 @@ class Contacts extends ResourceRepository {
 	 */
 	protected $data_type = array(
 		'id'            => '%d',
+		'currency_code' => '%s',
 		'user_id'       => '%d',
 		'name'          => '%s',
 		'email'         => '%s',
@@ -54,7 +55,6 @@ class Contacts extends ResourceRepository {
 		'country'       => '%s',
 		'website'       => '%s',
 		'tax_number'    => '%s',
-		'currency_code' => '%s',
 		'type'          => '%s',
 		'note'          => '%s',
 		'enabled'       => '%d',

@@ -49,6 +49,7 @@ class Invoices extends ResourceRepository {
 		'status'         => '%s',
 		'issue_date'     => '%s',
 		'due_date'       => '%s',
+		'payment_date'   => '%s',
 		'category_id'    => '%d',
 		'customer_id'    => '%d',
 		'name'           => '%s',
@@ -58,17 +59,16 @@ class Invoices extends ResourceRepository {
 		'postcode'       => '%s',
 		'address'        => '%s',
 		'country'        => '%s',
-		'subtotal'       => '%f',
-		'total_discount' => '%f',
-		'total_tax'      => '%f',
-		'total_vat'      => '%f',
-		'total_shipping' => '%f',
-		'total'          => '%f',
-		'note'           => '%s',
-		'footer'         => '%s',
-		'attachment_id'  => '%d',
 		'currency_code'  => '%s',
-		'currency_rate'  => '%s',
+		'currency_rate'  => '%f',
+		'subtotal'       => '%f',
+		'discount'       => '%f',
+		'discount_type'  => '%s',
+		'total_tax'      => '%f',
+		'total'          => '%f',
+		'tax_inclusive'  => '%d',
+		'terms'          => '%s',
+		'attachment_id'  => '%d',
 		'key'            => '%s',
 		'parent_id'      => '%d',
 		'creator_id'     => '%d',
@@ -213,6 +213,37 @@ class Invoices extends ResourceRepository {
 		$note->save();
 
 		return $note->get_data();
+	}
+
+	/**
+	 * @param $invoice
+	 * @since 1.1.0
+	 *
+	 * @return Note[]
+	 */
+	public function get_notes( $invoice ) {
+		global $wpdb;
+
+		// Get from cache if available.
+		$items = 0 < $invoice->get_id() ? wp_cache_get( 'invoice-notes-' . $invoice->get_id(), 'ea-notes' ) : false;
+
+		if ( false === $items ) {
+			$items = $wpdb->get_results(
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_notes WHERE parent_id = %d AND parent_type = %s ORDER BY id;", $invoice->get_id(), 'invoice' )
+			);
+			foreach ( $items as $item ) {
+				wp_cache_set( 'invoice-note-' . $item->id, $item, 'ea-notes' );
+			}
+			if ( 0 < $invoice->get_id() ) {
+				wp_cache_set( 'invoice-notes-' . $invoice->get_id(), $items, 'ea-notes' );
+			}
+		}
+		$results = array();
+		foreach ( $items as $item ) {
+			$results[ absint( $item->item_id ) ] = new Note( $item );
+		}
+
+		return $results;
 	}
 
 }

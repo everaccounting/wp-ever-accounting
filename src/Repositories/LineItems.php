@@ -44,24 +44,18 @@ class LineItems extends ResourceRepository {
 	 * @var array
 	 */
 	protected $data_type = array(
-		'id'             => '%d',
-		'parent_id'      => '%d',
-		'parent_type'    => '%s',
-		'item_id'        => '%d',
-		'item_name'      => '%s',
-		'item_sku'       => '%s',
-		'item_price'     => '%f',
-		'quantity'       => '%f',
-		'tax_rate'       => '%f',
-		'vat_rate'       => '%f',
-		'discount_rate'  => '%f',
-		'subtotal'       => '%f',
-		'total_tax'      => '%f',
-		'total_vat'      => '%f',
-		'total_discount' => '%f',
-		'total'          => '%f',
-		'extra'          => '%s',
-		'date_created'   => '%s',
+		'id'           => '%d',
+		'parent_id'    => '%d',
+		'parent_type'  => '%s',
+		'item_id'      => '%d',
+		'item_name'    => '%s',
+		'unit_price'   => '%f',
+		'quantity'     => '%f',
+		'tax_rate'     => '%f',
+		'discount'     => '%f',
+		'total'        => '%f',
+		'extra'        => '%s',
+		'date_created' => '%s',
 	);
 
 	/**

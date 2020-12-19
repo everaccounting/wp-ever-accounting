@@ -194,7 +194,6 @@ function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $form
  */
 function eaccounting_price_convert_from_default( $amount, $to, $rate, $format = false, $default = null ) {
 	$default = $default === null ? eaccounting()->settings->get( 'default_currency', 'USD' ) : $default;
-
 	return __eaccounting_convert_price( 'multiply', $amount, $default, $to, $rate, $format );
 }
 

@@ -1,7 +1,7 @@
 .ea-card {
   display: block;
   position: relative;
-  margin: 0 auto 10px;
+  margin: 20px auto 10px;
   box-sizing: border-box;
   background: #fff;
   border: none;
@@ -83,626 +83,388 @@
 	text-align: left;
   }
 }
-
-
-.ea-invoice-view {
-  padding: 20px;
-
-  & *, & *::before, & *::after {
-	box-sizing: border-box
-  }
-
-  .invoice-header {
-	margin-bottom: 20px;
-  }
-
-  .logo-wrapper {
-	max-width: 250px;
-	max-height: 70px;
-
-	.invoice-logo {
-	  max-width: 100%;
-	  height: auto;
-	}
-  }
-
-  .invoice-title {
-	text-align: right;
-	font-size: 2.5em;
-	text-transform: uppercase;
-	line-height: 1;
-  }
-
-  .invoice-details {
-	float: right;
-	border: 0;
-	margin: 0;
-	margin-top: 22px;
-
-	th {
-	  white-space: nowrap;
-	  padding: 0 20px;
-	  letter-spacing: 0.2px;
-	}
-
-	td, th {
-	  text-align: right;
-	  line-height: 1.7;
-	}
-  }
-
-  .invoice-subtitle {
-	color: #888;
-	letter-spacing: 0.2px;
-	margin-bottom: 10px;
-	text-transform: uppercase;
-  }
-
-  .invoice-client-name,
-  .invoice-sender-name {
-	color: #444;
-	margin-bottom: 10px;
-	font-weight: bold;
-  }
-
-  .invoice-address {
-	margin-bottom: 10px;
-	max-width: 250px;
-  }
-
-  .invoice-company {
-	font-size: 14px;
-	line-height: 1.4;
-	margin-bottom: 30px;
-
-	span {
-	  display: block;
-	  color: #72777c;
-	}
-
-	.invoice-name {
-	  font-weight: 400;
-	}
-  }
-
-  .invoice-items {
-	width: 100%;
-	margin-top: 30px;
-	border-collapse: collapse;
-
-	thead {
-	  background: #444;
-	  color: #fff;
-	}
-
-	th, td {
-	  text-align: right;
-
-	  &:first-child {
-		text-align: left;
-	  }
-	}
-
-	th {
-	  padding: 5px 10px;
-	}
-
-	td {
-	  padding: 10px;
-	}
-
-	tbody {
-	  tr {
-		border-bottom: 1px solid #ddd;
-	  }
-	}
-
-	.invoice-note,
-	.invoice-totals {
-	  padding: 0;
-
-	  table {
-		width: 100%;
-		border-collapse: collapse;
-
-		tr {
-		  border-bottom: 1px solid #ddd;
-		}
-	  }
-	}
-
-  }
-
-}
-
-.ea-invoice {
-  padding: 20px;
-
-  .padding-zero {
-	padding: 0;
-  }
-
-  table {
-	border-collapse: collapse;
-	width: 100%;
-	box-sizing: border-box;
-
-	th {
-	  white-space: nowrap;
-	}
-
-	th, td {
-	  vertical-align: top;
-	}
-
-	.text-right {
-	  text-align: right;
-	}
-
-	.text-left {
-	  text-align: left;
-	}
-  }
-
-  &__header {
-	display: flex;
-	justify-content: space-between;
-	min-height: 40px;
-	align-items: center;
-	margin-bottom: 20px;
-  }
-
-  &__title {
-	text-align: right;
-	font-size: 2.5em;
-	text-transform: uppercase;
-	line-height: 1;
-  }
-
-  &__logo {
-	max-width: 250px;
-	max-height: 70px;
-
-	img {
-	  max-width: 100%;
-	  height: auto;
-	}
-  }
-
-  &__columns {
-	box-sizing: border-box;
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-	margin-bottom: 20px;
-
-	& > div {
-	  box-sizing: border-box;
-	  @media (max-width: 768px) {
-		width: 100%;
-		//max-width: 100%;
-		//display: flex;
-		//flex-direction: column;
-		//flex-basis: 0;
-		//flex-grow: 1;
-	  }
-	}
-
-  }
-
-  &__party {
-	th, td {
-	  vertical-align: top;
-	  padding: 5px 10px;
-	}
-
-	th {
-	  width: 60px;
-	  text-align: left;
-	}
-  }
-
-  &__subtitle {
-	color: #888;
-	letter-spacing: .2px;
-	margin-bottom: 10px;
-	text-transform: uppercase;
-  }
-
-  &__company {
-	color: #444;
-	margin-bottom: 10px;
-	font-weight: 700;
-  }
-
-  &__address {
-	margin-bottom: 10px;
-	max-width: 250px;
-
-	&-line {
-	  display: block;
-	  margin-bottom: 0;
-	}
-  }
-
-  &__props {
-	th {
-	  text-align: right;
-	}
-
-	td {
-	  text-align: left;
-	}
-
-	th, td {
-	  border: 1px solid #dee2e6;
-	  padding: 5px 10px;
-	  vertical-align: top;
-	}
-  }
-
-  &__items {
-	margin-bottom: 20px;
-
-	thead {
-	  background: #444;
-	  color: #fff;
-	}
-
-	tbody {
-	}
-
-	tr {
-	  border-bottom: 1px solid #ddd;
-	}
-
-	th {
-	  padding: 5px 10px;
-	}
-
-	td {
-	  padding: 10px;
-	}
-
-	tfoot tr:last-child {
-	  border: 0 !important;
-	}
-
-  }
-
-  &__totals {
-	td, th {
-	  padding: 10px;
-	  text-align: right;
-	}
-  }
-
-  &__note, &__terms {
-	strong {
-	  display: block;
-	  color: #777;
-	}
-  }
-
-  &__watermark {
-	display: block;
-	left: 0;
-	right: 0;
-	position: absolute;
-	top: 15%;
-	z-index: 2;
-	pointer-events: none;
-
-	p {
-	  color: rgba(0, 0, 0, 0.1);
-	  font-size: 150px;
-	  font-weight: 500;
-	  transform: rotate(325deg);
-	  text-align: center;
-	  font-family: monospace;
-	}
-  }
-
-  &__terms {
-  }
-
-  &__attachment {
-  }
-}
-
-.ea-invoice-notes {
-  padding: 2px 0 0;
-  list-style: none;
-
-  &__item {
-	padding: 0 10px;
-	margin-bottom: 6px;
-
-	&-content {
-	  padding: 10px;
-	  background: #efefef;
-	  position: relative;
-	}
-
-	&-meta {
-	  padding: 10px;
-	  color: #999;
-	  margin: 0;
-	  font-size: 11px;
-	}
-  }
-
-  &__add {
-	border-top: 1px solid #ddd;
-	padding: 10px 10px 0;
-
-	label {
-	  display: block;
-	  font-weight: 600;
-	  margin-bottom: 5px;
-	}
-
-	textarea {
-	  width: 100%;
-	}
-
-	select {
-	  width: 70%;
-	}
-
-  }
-
-
-}
-
-.ea-revenue {
-  padding: 20px;
-
-  .padding-zero {
-	padding: 0;
-  }
-
-  &-page {
-	max-width: 800px;
-	margin: 0 auto;
-  }
-
-  table {
-	border-collapse: collapse;
-	width: 100%;
-	box-sizing: border-box;
-
-	th {
-	  white-space: nowrap;
-	}
-
-	th, td {
-	  vertical-align: top;
-	}
-
-	.text-right {
-	  text-align: right;
-	}
-
-	.text-left {
-	  text-align: left;
-	}
-
-	.text-center {
-	  text-align: center;
-	}
-  }
-
-  &__header {
-	display: flex;
-	justify-content: space-between;
-	min-height: 40px;
-	align-items: center;
-	margin-bottom: 20px;
-
-	@media(max-width: 767px) {
-	  display: block;
-	}
-
-	@media print {
-	  display: block;
-	}
-  }
-
-  &__title {
-	text-align: right;
-	font-size: 1.5em;
-	text-transform: uppercase;
-	line-height: 1;
-	@media (max-width: 767px) {
-	  text-align: left;
-	  margin-top: 5px;
-	}
-	@media print {
-	  width: 50%;
-	  float: right;
-	  text-align: right;
-	}
-  }
-
-  &__logo {
-	max-width: 250px;
-	max-height: 70px;
-	@media print {
-	  width: 50%;
-	  float: left;
-	}
-
-	img {
-	  max-width: 100%;
-	  height: auto;
-	}
-  }
-
-  &__columns {
-	box-sizing: border-box;
-	display: flex;
-	flex-wrap: nowrap;
-	justify-content: space-between;
-	margin-bottom: 20px;
-
-	@media (max-width: 767px) {
-	  display: block;
-	}
-
-	@media print {
-	  display: block;
-	}
-
-	& > div {
-	  box-sizing: border-box;
-	  @media (max-width: 768px) {
-		width: 100%;
-		margin-top: 10px;
-	  }
-	  @media print {
-		width: 50%;
-		float: left;
-	  }
-	}
-
-  }
-
-  &__party {
-	th, td {
-	  vertical-align: top;
-	  padding: 5px 10px;
-	}
-
-	th {
-	  width: 60px;
-	  text-align: left;
-	}
-  }
-
-  &__subtitle {
-	color: #888;
-	font-size: 12px;
-	text-transform: uppercase;
-  }
-
-  &__company {
-	color: #444444e8;
-	margin-bottom: 10px;
-	font-weight: 700;
-	font-size: 13px;
-  }
-
-  &__address {
-	margin-bottom: 10px;
-	max-width: 250px;
-
-
-	&-line {
-	  display: block;
-	  margin-bottom: 0;
-	  width: 90%;
-	  word-break: break-word;
-	}
-  }
-
-  &__props {
-	margin-left: 0;
-
-	th {
-	  text-align: left;
-	}
-
-	td {
-	  text-align: left;
-	}
-
-	th, td {
-	  padding: 0 10px;
-	  vertical-align: top;
-	}
-	.ea-revenue__subtitle {
-	  font-size: 12px;
-	  text-transform: capitalize;
-	}
-
-	@media (max-width: 767px) {
-	  margin-left: 0;
-	}
-	@media print {
-	  width: 30%;
-	  float: right;
-	  padding-left: 15%;
-	}
-  }
-
-  &__items {
-	margin-bottom: 20px;
-
-	thead {
-	  background: #444;
-	  color: #fff;
-
-	  @media print {
-		background-color: #444;
-	  }
-	}
-
-	tbody tr td {
-	  border: 1px solid #ddd;
-	}
-
-	th {
-	  padding: 5px 10px;
-	}
-
-	td {
-	  padding: 10px;
-	}
-
-	tfoot tr:last-child {
-	  border: 0 !important;
-	}
-
-	@media print {
-	  margin-top: 50px;
-	}
-
-  }
-
-  &__totals {
-	td, th {
-	  padding: 10px;
-	  text-align: right;
-	}
-
-	tbody tr td {
-	  border: none;
-	}
-  }
-
-  &__text, &__reference {
-	strong {
-	  display: block;
-	  color: #777;
-	}
-  }
-
-  &__value {
-	color: #444444e8;
-	margin-bottom: 10px;
-	font-weight: 700;
-	font-size: 11px;
-	@media (max-width: 767px) {
-	  font-size: .90em;
-	}
-	@media print {
-	  font-size: 10px;
-	}
-  }
-}
-@media print {
-  body {
-	background: none;
-  }
-}
+//
+//
+//.ea-invoice-view {
+//  padding: 20px;
+//
+//  & *, & *::before, & *::after {
+//	box-sizing: border-box
+//  }
+//
+//  .invoice-header {
+//	margin-bottom: 20px;
+//  }
+//
+//  .logo-wrapper {
+//	max-width: 250px;
+//	max-height: 70px;
+//
+//	.invoice-logo {
+//	  max-width: 100%;
+//	  height: auto;
+//	}
+//  }
+//
+//  .invoice-title {
+//	text-align: right;
+//	font-size: 2.5em;
+//	text-transform: uppercase;
+//	line-height: 1;
+//  }
+//
+//  .invoice-details {
+//	float: right;
+//	border: 0;
+//	margin: 0;
+//	margin-top: 22px;
+//
+//	th {
+//	  white-space: nowrap;
+//	  padding: 0 20px;
+//	  letter-spacing: 0.2px;
+//	}
+//
+//	td, th {
+//	  text-align: right;
+//	  line-height: 1.7;
+//	}
+//  }
+//
+//  .invoice-subtitle {
+//	color: #888;
+//	letter-spacing: 0.2px;
+//	margin-bottom: 10px;
+//	text-transform: uppercase;
+//  }
+//
+//  .invoice-client-name,
+//  .invoice-sender-name {
+//	color: #444;
+//	margin-bottom: 10px;
+//	font-weight: bold;
+//  }
+//
+//  .invoice-address {
+//	margin-bottom: 10px;
+//	max-width: 250px;
+//  }
+//
+//  .invoice-company {
+//	font-size: 14px;
+//	line-height: 1.4;
+//	margin-bottom: 30px;
+//
+//	span {
+//	  display: block;
+//	  color: #72777c;
+//	}
+//
+//	.invoice-name {
+//	  font-weight: 400;
+//	}
+//  }
+//
+//  .invoice-items {
+//	width: 100%;
+//	margin-top: 30px;
+//	border-collapse: collapse;
+//
+//	thead {
+//	  background: #444;
+//	  color: #fff;
+//	}
+//
+//	th, td {
+//	  text-align: right;
+//
+//	  &:first-child {
+//		text-align: left;
+//	  }
+//	}
+//
+//	th {
+//	  padding: 5px 10px;
+//	}
+//
+//	td {
+//	  padding: 10px;
+//	}
+//
+//	tbody {
+//	  tr {
+//		border-bottom: 1px solid #ddd;
+//	  }
+//	}
+//
+//	.invoice-note,
+//	.invoice-totals {
+//	  padding: 0;
+//
+//	  table {
+//		width: 100%;
+//		border-collapse: collapse;
+//
+//		tr {
+//		  border-bottom: 1px solid #ddd;
+//		}
+//	  }
+//	}
+//
+//  }
+//
+//}
+//
+
+//
+//.ea-revenue {
+//  padding: 20px;
+//
+//  .padding-zero {
+//	padding: 0;
+//  }
+//
+//  &-page {
+//	max-width: 800px;
+//	margin: 0 auto;
+//  }
+//
+//  table {
+//	border-collapse: collapse;
+//	width: 100%;
+//	box-sizing: border-box;
+//
+//	th {
+//	  white-space: nowrap;
+//	}
+//
+//	th, td {
+//	  vertical-align: top;
+//	}
+//
+//	.text-right {
+//	  text-align: right;
+//	}
+//
+//	.text-left {
+//	  text-align: left;
+//	}
+//
+//	.text-center {
+//	  text-align: center;
+//	}
+//  }
+//
+//  &__header {
+//	display: flex;
+//	justify-content: space-between;
+//	min-height: 40px;
+//	align-items: center;
+//	margin-bottom: 20px;
+//
+//	@media(max-width: 767px) {
+//	  display: block;
+//	}
+//
+//	@media print {
+//	  display: block;
+//	}
+//  }
+//
+//  &__title {
+//	text-align: right;
+//	font-size: 1.5em;
+//	text-transform: uppercase;
+//	line-height: 1;
+//	@media (max-width: 767px) {
+//	  text-align: left;
+//	  margin-top: 5px;
+//	}
+//	@media print {
+//	  width: 50%;
+//	  float: right;
+//	  text-align: right;
+//	}
+//  }
+//
+//  &__logo {
+//	max-width: 250px;
+//	max-height: 70px;
+//	@media print {
+//	  width: 50%;
+//	  float: left;
+//	}
+//
+//	img {
+//	  max-width: 100%;
+//	  height: auto;
+//	}
+//  }
+//
+//  &__columns {
+//	box-sizing: border-box;
+//	display: flex;
+//	flex-wrap: nowrap;
+//	justify-content: space-between;
+//	margin-bottom: 20px;
+//
+//	@media (max-width: 767px) {
+//	  display: block;
+//	}
+//
+//	@media print {
+//	  display: block;
+//	}
+//
+//	& > div {
+//	  box-sizing: border-box;
+//	  @media (max-width: 768px) {
+//		width: 100%;
+//		margin-top: 10px;
+//	  }
+//	  @media print {
+//		width: 50%;
+//		float: left;
+//	  }
+//	}
+//
+//  }
+//
+//  &__party {
+//	th, td {
+//	  vertical-align: top;
+//	  padding: 5px 10px;
+//	}
+//
+//	th {
+//	  width: 60px;
+//	  text-align: left;
+//	}
+//  }
+//
+//  &__subtitle {
+//	color: #888;
+//	font-size: 12px;
+//	text-transform: uppercase;
+//  }
+//
+//  &__company {
+//	color: #444444e8;
+//	margin-bottom: 10px;
+//	font-weight: 700;
+//	font-size: 13px;
+//  }
+//
+//  &__address {
+//	margin-bottom: 10px;
+//	max-width: 250px;
+//
+//
+//	&-line {
+//	  display: block;
+//	  margin-bottom: 0;
+//	  width: 90%;
+//	  word-break: break-word;
+//	}
+//  }
+//
+//  &__props {
+//	margin-left: 0;
+//
+//	th {
+//	  text-align: left;
+//	}
+//
+//	td {
+//	  text-align: left;
+//	}
+//
+//	th, td {
+//	  padding: 0 10px;
+//	  vertical-align: top;
+//	}
+//	.ea-revenue__subtitle {
+//	  font-size: 12px;
+//	  text-transform: capitalize;
+//	}
+//
+//	@media (max-width: 767px) {
+//	  margin-left: 0;
+//	}
+//	@media print {
+//	  width: 30%;
+//	  float: right;
+//	  padding-left: 15%;
+//	}
+//  }
+//
+//  &__items {
+//	margin-bottom: 20px;
+//
+//	thead {
+//	  background: #444;
+//	  color: #fff;
+//
+//	  @media print {
+//		background-color: #444;
+//	  }
+//	}
+//
+//	tbody tr td {
+//	  border: 1px solid #ddd;
+//	}
+//
+//	th {
+//	  padding: 5px 10px;
+//	}
+//
+//	td {
+//	  padding: 10px;
+//	}
+//
+//	tfoot tr:last-child {
+//	  border: 0 !important;
+//	}
+//
+//	@media print {
+//	  margin-top: 50px;
+//	}
+//
+//  }
+//
+//  &__totals {
+//	td, th {
+//	  padding: 10px;
+//	  text-align: right;
+//	}
+//
+//	tbody tr td {
+//	  border: none;
+//	}
+//  }
+//
+//  &__text, &__reference {
+//	strong {
+//	  display: block;
+//	  color: #777;
+//	}
+//  }
+//
+//  &__value {
+//	color: #444444e8;
+//	margin-bottom: 10px;
+//	font-weight: 700;
+//	font-size: 11px;
+//	@media (max-width: 767px) {
+//	  font-size: .90em;
+//	}
+//	@media print {
+//	  font-size: 10px;
+//	}
+//  }
+//}
+//@media print {
+//  body {
+//	background: none;
+//  }
+//}

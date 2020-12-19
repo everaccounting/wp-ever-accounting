@@ -35,9 +35,9 @@ class EAccounting_Install {
 	 * Check EverAccounting version and run the updater is required.
 	 * This check is done on all requests and runs if the versions do not match.
 	 *
-	 * @return void
 	 * @since 1.0.2
 	 *
+	 * @return void
 	 */
 	public static function check_version() {
 		// todo remove on later version.
@@ -70,7 +70,7 @@ class EAccounting_Install {
 	 * Show row meta on the plugin screen.
 	 *
 	 * @param mixed $links Plugin Row Meta.
-	 * @param mixed $file Plugin Base file.
+	 * @param mixed $file  Plugin Base file.
 	 *
 	 * @return array
 	 */
@@ -121,8 +121,8 @@ class EAccounting_Install {
 	/**
 	 * Install EverAccounting.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function install() {
 		if ( ! is_blog_installed() ) {
@@ -140,11 +140,11 @@ class EAccounting_Install {
 		self::remove_admin_notices();
 		self::create_tables();
 		self::verify_base_tables();
-//		self::create_options();
-//		self::create_categories();
-//		self::create_currencies();
-//		self::create_accounts();
-//		self::create_defaults();
+		self::create_options();
+		self::create_categories();
+		self::create_currencies();
+		self::create_accounts();
+		self::create_defaults();
 		self::create_roles();
 		self::create_cron_jobs();
 		self::maybe_enable_setup_wizard();
@@ -172,7 +172,7 @@ class EAccounting_Install {
 			}
 		}
 		if ( 0 < count( $missing_tables ) ) {
-			\EverAccounting\Admin\Admin_Notices::add_notice( 'base_tables_missing' );
+			//\EverAccounting\Admin\Admin_Notices::add_notice( 'base_tables_missing' );
 			update_option( 'eaccounting_schema_missing_tables', $missing_tables );
 		} else {
 			delete_option( 'eaccounting_schema_missing_tables' );
@@ -184,8 +184,8 @@ class EAccounting_Install {
 	/**
 	 * Create default options.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function create_options() {
 		$settings = new \EverAccounting\Admin\Settings();
@@ -201,19 +201,19 @@ class EAccounting_Install {
 
 		$installation_time = get_option( 'eaccounting_install_date' );
 		if ( empty( $installation_time ) ) {
-			update_option( 'eaccounting_install_date', current_time( 'timestamp' ) );
+			update_option( 'eaccounting_install_date', time() );
 		}
 	}
 
 	/**
 	 * Create categories.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function create_categories() {
 		// If no categories then create default categories
-		if ( ! \EverAccounting\Categories\query()->count() ) {
+		if ( ! eaccounting_get_categories( array( 'count_total' => true ) ) ) {
 			eaccounting_insert_category(
 				array(
 					'name'    => __( 'Deposit', 'wp-ever-accounting' ),
@@ -240,12 +240,15 @@ class EAccounting_Install {
 		}
 
 		// create transfer category
-		if ( ! \EverAccounting\Categories\query()->where(
+		if ( ! eaccounting_get_currencies(
 			array(
-				'name' => 'Transfer',
-				'type' => 'other',
+				'count_total' => true,
+				'search'      => __(
+					'Transfer',
+					'wp-ever-accounting'
+				),
 			)
-		)->count() ) {
+		) ) {
 			eaccounting_insert_category(
 				array(
 					'name'    => __( 'Transfer', 'wp-ever-accounting' ),
@@ -259,12 +262,13 @@ class EAccounting_Install {
 	/**
 	 * Create currencies.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function create_currencies() {
 		// create currencies
-		if ( ! \EverAccounting\Query_Currency::init()->count() ) {
+		if ( ! eaccounting_get_currencies( array( 'count_total' => true ) ) ) {
+
 			eaccounting_insert_currency(
 				array(
 					'code' => 'USD',
@@ -307,11 +311,11 @@ class EAccounting_Install {
 	/**
 	 * Create accounts.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function create_accounts() {
-		if ( ! \EverAccounting\Query_Account::init()->count() ) {
+		if ( ! eaccounting_get_accounts( array( 'count_total' => true ) ) ) {
 			eaccounting_insert_account(
 				array(
 					'name'            => 'Cash',
@@ -327,8 +331,8 @@ class EAccounting_Install {
 	/**
 	 * Create default data.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function create_defaults() {
 		$settings = new \EverAccounting\Admin\Settings();
@@ -348,8 +352,8 @@ class EAccounting_Install {
 	/**
 	 * Reset any notices added to admin.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function remove_admin_notices() {
 		// include_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
@@ -505,14 +509,14 @@ class EAccounting_Install {
   			`postcode` VARCHAR(30) DEFAULT NULL,
   			`address` VARCHAR(191) DEFAULT NULL,
   			`country` VARCHAR(10) DEFAULT NULL,
+            `discount` DOUBLE(15,4) DEFAULT 0,
+            `discount_type`  ENUM('percentage', 'fixed') DEFAULT 'percentage',
             `subtotal` DOUBLE(15,4) DEFAULT 0,
-            `total_discount` DOUBLE(15,4) DEFAULT 0,
             `total_tax` DOUBLE(15,4) DEFAULT 0,
-            `total_vat` DOUBLE(15,4) DEFAULT 0,
-            `total_shipping` DOUBLE(15,4) DEFAULT 0,
+            `total_discount` DOUBLE(15,4) DEFAULT 0,
             `total` DOUBLE(15,4) DEFAULT 0,
-  			`note` TEXT DEFAULT NULL,
-  			`footer` TEXT DEFAULT NULL,
+            `tax_inclusive` tinyINT(1) NOT NULL DEFAULT '0',
+  			`terms` TEXT DEFAULT NULL,
 			`attachment_id` INT(11) DEFAULT NULL,
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
@@ -533,16 +537,10 @@ class EAccounting_Install {
   			`parent_type` VARCHAR(20) DEFAULT NULL,
   			`item_id` INT(11) DEFAULT NULL,
   			`item_name` VARCHAR(191) NOT NULL,
-  			`item_sku` VARCHAR(100) NOT NULL,
-  			`item_price` double(15,4) NOT NULL,
+  			`unit_price` double(15,4) NOT NULL,
   			`quantity` double(7,2) NOT NULL DEFAULT 1.00,
   			`tax_rate` double(15,4) NOT NULL COMMENT 'Tax Percentage',
-  			`vat_rate` double(15,4) NOT NULL COMMENT 'Vat Percentage',
-  			`discount_rate` double(15,4) NOT NULL COMMENT 'Discount Percentage',
-  			`subtotal` double(15,4) NOT NULL,
-  			`total_tax` double(15,4) NOT NULL DEFAULT '0.0000',
-  			`total_vat` double(15,4) NOT NULL DEFAULT '0.0000',
-  			`total_discount` double(15,4) NOT NULL DEFAULT '0.0000',
+  			`discount` double(15,4) NOT NULL,
   			`total` double(15,4) NOT NULL,
   			`extra` longtext DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -566,10 +564,10 @@ class EAccounting_Install {
 
 			"CREATE TABLE {$wpdb->prefix}ea_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `name` varchar(191) NOT NULL,
-  			`sku` varchar(100) NULL default '',
+            `name` VARCHAR(191) NOT NULL,
+  			`sku` VARCHAR(100) NULL default '',
 			`image_id` bigint(20) NULL default 0,
-			`description` text COLLATE utf8mb4_unicode_ci,
+			`description` TEXT DEFAULT NULL ,
   			`sale_price` double(15,4) NOT NULL,
   			`purchase_price` double(15,4) NOT NULL,
   			`quantity` int(11) NOT NULL DEFAULT '1',
@@ -588,19 +586,19 @@ class EAccounting_Install {
             ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_api_keys (
-		    id BIGINT UNSIGNED NOT NULL auto_increment,
-		  	user_id BIGINT UNSIGNED NOT NULL,
-		  	description varchar(200) NULL,
-		  	permission varchar(10) NOT NULL,
-		  	api_key char(64) NOT NULL,
-		  	api_secret char(43) NOT NULL,
-		  	nonces longtext NULL,
-		  	truncated_key char(7) NOT NULL,
-		  	last_access datetime NULL default null,
+		    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+		  	`user_id` BIGINT UNSIGNED NOT NULL,
+		  	`description` VARCHAR(190) NULL,
+		  	`permission` VARCHAR(10) NOT NULL,
+		  	`api_key` VARCHAR(64) NOT NULL,
+		  	`api_secret` VARCHAR(74) NOT NULL,
+		  	`nonces` TEXT DEFAULT NULL,
+		  	`truncated_key` VARCHAR(7) NOT NULL,
+		  	`last_access` datetime NULL default null,
 		  	PRIMARY KEY  (id),
-		  	KEY `key` (`key`),
-		  	KEY `secret` (`secret`)
-		) $collate"
+		  	KEY `api_key` (`api_key`),
+		  	KEY `api_secret` (`api_secret`)
+		) $collate",
 		);
 
 		foreach ( $tables as $table ) {
@@ -738,7 +736,7 @@ class EAccounting_Install {
 			$wp_roles->add_cap( 'administrator', 'ea_manage_currency' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_item' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_invoice' );
-			$wp_roles->add_cap( 'administrator', 'ea_manage_invoice_item' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_line_item' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 		}
 	}
@@ -746,8 +744,8 @@ class EAccounting_Install {
 	/**
 	 * Remove EverAccounting roles.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function remove_roles() {
 		global $wp_roles;
@@ -768,8 +766,8 @@ class EAccounting_Install {
 	/**
 	 * Create cron jobs (clear them first).
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function create_cron_jobs() {
 		wp_schedule_event( time() + ( 3 * HOUR_IN_SECONDS ), 'daily', 'eaccounting_cleanup_logs' );
@@ -790,8 +788,8 @@ class EAccounting_Install {
 	/**
 	 * Update version to current.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function update_version() {
 		delete_option( 'eaccounting_version' );
@@ -801,8 +799,8 @@ class EAccounting_Install {
 	/**
 	 * See if we need to show or run database updates during install.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function maybe_update() {
 		if ( self::needs_update() ) {
@@ -815,8 +813,8 @@ class EAccounting_Install {
 	/**
 	 * Is an update needed?
 	 *
-	 * @return boolean
 	 * @since  1.0.2
+	 * @return boolean
 	 */
 	public static function needs_update() {
 		$current_version = get_option( 'eaccounting_version', null );
@@ -830,8 +828,8 @@ class EAccounting_Install {
 	/**
 	 * Push all needed updates to the queue for processing.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	private static function update() {
 		$current_version = get_option( 'eaccounting_version' );
@@ -851,9 +849,9 @@ class EAccounting_Install {
 	/**
 	 * Run an update callback.
 	 *
-	 * @param string $callback Callback name.
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param string $callback Callback name.
 	 *
 	 */
 	public static function run_update_callback( $callback ) {
@@ -870,8 +868,8 @@ class EAccounting_Install {
 	 *
 	 * A brand new install has no version yet. Also treat empty installs as 'new'.
 	 *
-	 * @return boolean
 	 * @since  1.0.2
+	 * @return boolean
 	 */
 	public static function is_new_install() {
 		$transaction_count = eaccounting_get_transactions( array( 'count_total' => true ) );

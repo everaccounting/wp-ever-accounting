@@ -47,6 +47,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'value'         => $category->get_type(),
 						'options'       => eaccounting_get_category_types(),
 						'placeholder'   => __( 'Select Type', 'wp-ever-accounting' ),
+						'required'      => true,
 					)
 				);
 

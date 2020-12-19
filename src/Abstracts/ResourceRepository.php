@@ -116,7 +116,7 @@ abstract class ResourceRepository {
 
 		foreach ( $fields as $key => $format ) {
 			$method         = "get_$key";
-			$values[ $key ] = $item->$method( 'edit' );
+			$values[ $key ] = $item->$method();
 			$formats[]      = $format;
 		}
 
@@ -204,7 +204,7 @@ abstract class ResourceRepository {
 		foreach ( $this->data_type as $key => $format ) {
 			if ( array_key_exists( $key, $changes ) ) {
 				$method         = "get_$key";
-				$values[ $key ] = $item->$method( 'edit' );
+				$values[ $key ] = $item->$method();
 				$formats[]      = $format;
 			}
 		}

@@ -109,7 +109,7 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error(  $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		return $wp_error ? new WP_Error( 'category_error', $e->getMessage() ) : 0;
 	}
 }
 

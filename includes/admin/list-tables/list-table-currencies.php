@@ -9,9 +9,8 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Currency;
+use EverAccounting\Models\Currency;
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Currency;
 
 
 defined( 'ABSPATH' ) || exit();
@@ -195,6 +194,7 @@ class List_Table_Currency extends List_Table {
 				eaccounting_admin_url(
 					array(
 						'action'      => 'edit',
+						'page'        => 'ea-settings',
 						'tab'         => 'currencies',
 						'currency_id' => $currency->get_id(),
 					)
@@ -258,11 +258,9 @@ class List_Table_Currency extends List_Table {
 				'id'    => 'enabled_' . $currency->get_id(),
 				'value' => $currency->get_enabled( 'edit' ),
 				'naked' => true,
-				'class' => 'ea_item_status_update',
 				'attr'  => array(
-					'data-object_id'   => $currency->get_id(),
-					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-					'data-object_type' => 'currency',
+					'data-id'    => $currency->get_id(),
+					'data-nonce' => wp_create_nonce( 'ea_edit_currency' ),
 				),
 			)
 		);
@@ -283,6 +281,7 @@ class List_Table_Currency extends List_Table {
 			array(
 				'currency_id' => $currency->get_id(),
 				'tab'         => 'currencies',
+				'page'        => 'ea-settings',
 			)
 		);
 		$row_actions           = array();

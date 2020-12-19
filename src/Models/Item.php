@@ -289,7 +289,7 @@ class Item extends ResourceModel {
 	 *
 	 */
 	public function set_sale_price( $sale_price ) {
-		$this->set_prop( 'sale_price', eaccounting_sanitize_price( $sale_price ) );
+		$this->set_prop( 'sale_price', (float) eaccounting_sanitize_number( $sale_price, true ) );
 	}
 
 	/**
@@ -299,7 +299,7 @@ class Item extends ResourceModel {
 	 *
 	 */
 	public function set_purchase_price( $purchase_price ) {
-		$this->set_prop( 'purchase_price', eaccounting_sanitize_price( $purchase_price ) );
+		$this->set_prop( 'purchase_price', (float) eaccounting_sanitize_number( $purchase_price, true ) );
 	}
 
 	/**

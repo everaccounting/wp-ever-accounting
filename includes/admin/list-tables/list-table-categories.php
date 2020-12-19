@@ -9,9 +9,8 @@
 
 namespace EverAccounting\Admin\ListTables;
 
-use EverAccounting\Category;
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Query_Category;
+use EverAccounting\Models\Category;
 
 
 defined( 'ABSPATH' ) || exit();
@@ -235,7 +234,7 @@ class List_Table_Categories extends List_Table {
 	 * @return string Data shown in the Name column.
 	 */
 	function column_color( $category ) {
-		$value = sprintf( '<span class="dashicons dashicons-marker" style="background-color: %s; color:%s;"></span>', $category->get_color(), $category->get_color() );
+		$value = sprintf( '<span class="dashicons dashicons-marker" style="color:%s;">&nbsp;</span>', $category->get_color() );
 
 		return apply_filters( 'eaccounting_categories_table_color', $value, $category );
 	}
@@ -257,11 +256,9 @@ class List_Table_Categories extends List_Table {
 				'id'    => 'enabled_' . $category->get_id(),
 				'value' => $category->get_enabled( 'edit' ),
 				'naked' => true,
-				'class' => 'ea_item_status_update',
 				'attr'  => array(
-					'data-object_id'   => $category->get_id(),
-					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-					'data-object_type' => 'category',
+					'data-id'    => $category->get_id(),
+					'data-nonce' => wp_create_nonce( 'ea_edit_category' ),
 				),
 			)
 		);

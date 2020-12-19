@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Converts a string (e.g. 'yes' or 'no') to a bool.
  *
+ * @since 1.0.2
+ *
  * @param string|boolean $string String to convert.
  *
  * @return bool
- * @since 1.0.2
- *
  */
 function eaccounting_string_to_bool( $string ) {
 	return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
@@ -24,11 +24,11 @@ function eaccounting_string_to_bool( $string ) {
 /**
  * Converts a bool to a 'yes' or 'no'.
  *
+ * @since 1.0.2
+ *
  * @param bool $bool String to convert.
  *
  * @return string
- * @since 1.0.2
- *
  */
 function eaccounting_bool_to_string( $bool ) {
 	if ( ! is_bool( $bool ) ) {
@@ -41,11 +41,11 @@ function eaccounting_bool_to_string( $bool ) {
 /**
  * Converts a bool to a 1 or 0.
  *
+ * @since 1.1.0
+ *
  * @param $bool
  *
  * @return int
- * @since 1.1.0
- *
  */
 function eaccounting_bool_to_number( $bool ) {
 	if ( ! is_bool( $bool ) ) {
@@ -58,13 +58,13 @@ function eaccounting_bool_to_number( $bool ) {
 /**
  * Explode a string into an array by $delimiter and remove empty values.
  *
- * @param string $delimiter Delimiter, defaults to ','.
- *
- * @param string|array $string String to convert.
- *
- * @return array
  * @since 1.0.2
  *
+ * @param string|array $string    String to convert.
+ *
+ * @param string       $delimiter Delimiter, defaults to ','.
+ *
+ * @return array
  */
 function eaccounting_string_to_array( $string, $delimiter = ',' ) {
 	return is_array( $string ) ? $string : array_filter( explode( $delimiter, $string ) );
@@ -74,11 +74,11 @@ function eaccounting_string_to_array( $string, $delimiter = ',' ) {
  * Clean variables using sanitize_text_field. Arrays are cleaned recursively.
  * Non-scalar values are ignored.
  *
+ * @since 1.0.2
+ *
  * @param string|array $var Data to sanitize.
  *
  * @return string|array
- * @since 1.0.2
- *
  */
 function eaccounting_clean( $var ) {
 	if ( is_array( $var ) ) {
@@ -92,11 +92,11 @@ function eaccounting_clean( $var ) {
 /**
  * Run eaccounting_clean over posted textarea but maintain line breaks.
  *
+ * @since  1.0.2
+ *
  * @param string $var Data to sanitize.
  *
  * @return string
- * @since  1.0.2
- *
  */
 function eaccounting_sanitize_textarea( $var ) {
 	return implode( "\n", array_map( 'eaccounting_clean', explode( "\n", $var ) ) );
@@ -106,11 +106,11 @@ function eaccounting_sanitize_textarea( $var ) {
 /**
  * Sanitize a string destined to be a tooltip.
  *
+ * @since  1.0.2 Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
+ *
  * @param string $var Data to sanitize.
  *
  * @return string
- * @since  1.0.2 Tooltips are encoded with htmlspecialchars to prevent XSS. Should not be used in conjunction with esc_attr()
- *
  */
 function eaccounting_sanitize_tooltip( $var ) {
 	return htmlspecialchars(
@@ -135,8 +135,8 @@ function eaccounting_sanitize_tooltip( $var ) {
 /**
  * EverAccounting date format - Allows to change date format for everything.
  *
- * @return string
  * @since 1.0.2
+ * @return string
  */
 function eaccounting_date_format() {
 	return apply_filters( 'eaccounting_date_format', eaccounting()->settings->get( 'date_format', 'Y-m-d' ) );
@@ -145,8 +145,8 @@ function eaccounting_date_format() {
 /**
  * EAccounting Time Format - Allows to change time format for everything.
  *
- * @return string
  * @since 1.0.2
+ * @return string
  */
 function eaccounting_time_format() {
 	return apply_filters( 'eaccounting_time_format', eaccounting()->settings->get( 'time_format', 'H:i' ) );
@@ -155,13 +155,14 @@ function eaccounting_time_format() {
 /**
  * Format a date for output.
  *
- * @param \EverAccounting\Core\DateTime|string $date Instance of DateTime.
- * @param string $format Data format.
- *                                                     Defaults to the eaccounting_date_format function if not set.
- *
- * @return string
  * @since  1.0.2
  *
+ * @param string                               $format Data format.
+ *                                                     Defaults to the eaccounting_date_format function if not set.
+ *
+ * @param \EverAccounting\Core\DateTime|string $date   Instance of DateTime.
+ *
+ * @return string
  */
 function eaccounting_format_datetime( $date, $format = '' ) {
 
@@ -185,8 +186,8 @@ function eaccounting_format_datetime( $date, $format = '' ) {
  *
  * Source:  https://gist.github.com/Nickology/f700e319cbafab5eaedc
  *
- * @return array
  * @since 1.0.2
+ * @return array
  */
 function eaccounting_array_merge_recursive() {
 	$arrays = func_get_args();
@@ -242,11 +243,11 @@ function eaccounting_array_merge_recursive() {
 /**
  * Implode and escape HTML attributes for output.
  *
+ * @since 1.0.2
+ *
  * @param array $raw_attributes Attribute name value pairs.
  *
  * @return string
- * @since 1.0.2
- *
  */
 function eaccounting_implode_html_attributes( $raw_attributes ) {
 	$attributes     = array();
@@ -261,13 +262,13 @@ function eaccounting_implode_html_attributes( $raw_attributes ) {
 /**
  * Escape JSON for use on HTML or attribute text nodes.
  *
- * @param bool $html True if escaping for HTML text node, false for attributes. Determines how quotes are handled.
+ * @since 1.0.2
  *
  * @param string $json JSON to escape.
  *
- * @return string Escaped JSON.
- * @since 1.0.2
+ * @param bool   $html True if escaping for HTML text node, false for attributes. Determines how quotes are handled.
  *
+ * @return string Escaped JSON.
  */
 function eaccounting_esc_json( $json, $html = false ) {
 	return _wp_specialchars(
@@ -281,36 +282,36 @@ function eaccounting_esc_json( $json, $html = false ) {
 /**
  * Get only numbers from the string.
  *
- * @param bool $allow_decimal
+ * @since 1.0.2
  *
  * @param      $number
  *
- * @return int|float|null
- * @since 1.0.2
+ * @param bool $allow_decimal
  *
+ * @return int|float|null
  */
-function eaccounting_sanitize_number( $number, $allow_decimal = false ) {
+function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
 	// Convert multiple dots to just one.
 	$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
 
 	if ( $allow_decimal ) {
-		return preg_replace( '/[^0-9.-]/', '', $number );
+		return (float) preg_replace( '/[^0-9.-]/', '', $number );
 	}
 
-	return preg_replace( '/[^0-9]/', '', $number );
+	return (int) preg_replace( '/[^0-9]/', '', $number );
 }
 
 /**
  * Sanitize price for inserting into database
  * since 1.0.0
  *
- * @param $code
+ * @since 1.0.2
  *
  * @param $amount
  *
- * @return float|int
- * @since 1.0.2
+ * @param $code
  *
+ * @return float|int
  */
 function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
 	return eaccounting_get_money( $amount, $code, false )->getAmount();
@@ -319,13 +320,13 @@ function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
 /**
  * Format price with currency code & number format
  *
- * @param $code
+ * @since 1.0.2
  *
  * @param $amount
  *
- * @return string
- * @since 1.0.2
+ * @param $code
  *
+ * @return string
  */
 function eaccounting_format_price( $amount, $code = null ) {
 	if ( $code === null ) {
@@ -334,6 +335,34 @@ function eaccounting_format_price( $amount, $code = null ) {
 
 	$amount = eaccounting_get_money( $amount, $code, true );
 	if ( is_wp_error( $amount ) ) {
+		/* translators: %s currency code */
+		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
+
+		return '00.00';
+	}
+
+	return $amount->format();
+}
+
+/**
+ * Format price with currency code & number format
+ *
+ * @since 1.0.2
+ *
+ * @param $amount
+ *
+ * @param $code
+ *
+ * @return string
+ */
+function eaccounting_price( $amount, $code = null ) {
+	if ( empty( $code ) ) {
+		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
+	}
+
+	$amount = eaccounting_get_money( $amount, $code, true );
+	if ( is_wp_error( $amount ) ) {
+		/* translators: %s currency code */
 		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
 
 		return '00.00';
@@ -345,12 +374,12 @@ function eaccounting_format_price( $amount, $code = null ) {
 /**
  * Convert a date string to a EAccounting_DateTime.
  *
- * @param string $time_string Time string.
- *
- * @return \EverAccounting\Core\DateTime
- * @throws Exception
  * @since  1.0.2
  *
+ * @param string $time_string Time string.
+ *
+ * @throws Exception
+ * @return \EverAccounting\Core\DateTime
  */
 function eaccounting_string_to_datetime( $time_string ) {
 	// Strings are defined in local WP timezone. Convert to UTC.
@@ -376,11 +405,11 @@ function eaccounting_string_to_datetime( $time_string ) {
 /**
  * Convert RGB to HEX.
  *
+ * @since 1.1.0
+ *
  * @param mixed $color Color.
  *
  * @return array
- * @since 1.1.0
- *
  */
 function eaccounting_rgb_from_hex( $color ) {
 	$color = str_replace( '#', '', $color );
@@ -398,8 +427,8 @@ function eaccounting_rgb_from_hex( $color ) {
 /**
  * Make HEX color darker.
  *
- * @param mixed $color Color.
- * @param int $factor Darker factor.
+ * @param mixed $color  Color.
+ * @param int   $factor Darker factor.
  *                      Defaults to 30.
  *
  * @return string
@@ -426,8 +455,8 @@ function eaccounting_hex_darker( $color, $factor = 30 ) {
 /**
  * Make HEX color lighter.
  *
- * @param mixed $color Color.
- * @param int $factor Lighter factor.
+ * @param mixed $color  Color.
+ * @param int   $factor Lighter factor.
  *                      Defaults to 30.
  *
  * @return string
@@ -474,8 +503,8 @@ function eaccounting_hex_is_light( $color ) {
 /**
  * Detect if we should use a light or dark color on a background color.
  *
- * @param mixed $color Color.
- * @param string $dark Darkest reference.
+ * @param mixed  $color Color.
+ * @param string $dark  Darkest reference.
  *                      Defaults to '#000000'.
  * @param string $light Lightest reference.
  *                      Defaults to '#FFFFFF'.
@@ -506,48 +535,48 @@ function eaccounting_format_hex( $hex ) {
 /**
  * Dictionary for amount to text converter
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eaccounting_number_dictionary() {
 	return apply_filters(
 		'ea_number_dictionary',
 		array(
-			0                   => __('Zero', 'wp-ever-accounting'),
-			1                   => __('One', 'wp-ever-accounting'),
-			2                   => __('Two', 'wp-ever-accounting'),
-			3                   => __('Three', 'wp-ever-accounting'),
-			4                   => __('Four', 'wp-ever-accounting'),
-			5                   => __('Five', 'wp-ever-accounting'),
-			6                   => __('Six', 'wp-ever-accounting'),
-			7                   => __('Seven', 'wp-ever-accounting'),
-			8                   => __('Eight', 'wp-ever-accounting'),
-			9                   => __('Nine', 'wp-ever-accounting'),
-			10                  => __('Ten', 'wp-ever-accounting'),
-			11                  => __('Eleven', 'wp-ever-accounting'),
-			12                  => __('Twelve', 'wp-ever-accounting'),
-			13                  => __('Thirteen', 'wp-ever-accounting'),
-			14                  => __('Fourteen', 'wp-ever-accounting'),
-			15                  => __('Fifteen', 'wp-ever-accounting'),
-			16                  => __('Sixteen', 'wp-ever-accounting'),
-			17                  => __('Seventeen', 'wp-ever-accounting'),
-			18                  => __('Eighteen', 'wp-ever-accounting'),
-			19                  => __('Nineteen', 'wp-ever-accounting'),
-			20                  => __('Twenty', 'wp-ever-accounting'),
-			30                  => __('Thirty', 'wp-ever-accounting'),
-			40                  => __('Fourty', 'wp-ever-accounting'),
-			50                  => __('Fifty', 'wp-ever-accounting'),
-			60                  => __('Sixty', 'wp-ever-accounting'),
-			70                  => __('Seventy', 'wp-ever-accounting'),
-			80                  => __('Eighty', 'wp-ever-accounting'),
-			90                  => __('Ninety', 'wp-ever-accounting'),
-			100                 => __('Hundred', 'wp-ever-accounting'),
-			1000                => __('Thousand', 'wp-ever-accounting'),
-			1000000             => __('Million', 'wp-ever-accounting'),
-			1000000000          => __('Billion', 'wp-ever-accounting'),
-			1000000000000       => __('Trillion', 'wp-ever-accounting'),
-			1000000000000000    => __('Quadrillion', 'wp-ever-accounting'),
-			1000000000000000000 => __('Quintillion', 'wp-ever-accounting'),
+			0                   => __( 'Zero', 'wp-ever-accounting' ),
+			1                   => __( 'One', 'wp-ever-accounting' ),
+			2                   => __( 'Two', 'wp-ever-accounting' ),
+			3                   => __( 'Three', 'wp-ever-accounting' ),
+			4                   => __( 'Four', 'wp-ever-accounting' ),
+			5                   => __( 'Five', 'wp-ever-accounting' ),
+			6                   => __( 'Six', 'wp-ever-accounting' ),
+			7                   => __( 'Seven', 'wp-ever-accounting' ),
+			8                   => __( 'Eight', 'wp-ever-accounting' ),
+			9                   => __( 'Nine', 'wp-ever-accounting' ),
+			10                  => __( 'Ten', 'wp-ever-accounting' ),
+			11                  => __( 'Eleven', 'wp-ever-accounting' ),
+			12                  => __( 'Twelve', 'wp-ever-accounting' ),
+			13                  => __( 'Thirteen', 'wp-ever-accounting' ),
+			14                  => __( 'Fourteen', 'wp-ever-accounting' ),
+			15                  => __( 'Fifteen', 'wp-ever-accounting' ),
+			16                  => __( 'Sixteen', 'wp-ever-accounting' ),
+			17                  => __( 'Seventeen', 'wp-ever-accounting' ),
+			18                  => __( 'Eighteen', 'wp-ever-accounting' ),
+			19                  => __( 'Nineteen', 'wp-ever-accounting' ),
+			20                  => __( 'Twenty', 'wp-ever-accounting' ),
+			30                  => __( 'Thirty', 'wp-ever-accounting' ),
+			40                  => __( 'Fourty', 'wp-ever-accounting' ),
+			50                  => __( 'Fifty', 'wp-ever-accounting' ),
+			60                  => __( 'Sixty', 'wp-ever-accounting' ),
+			70                  => __( 'Seventy', 'wp-ever-accounting' ),
+			80                  => __( 'Eighty', 'wp-ever-accounting' ),
+			90                  => __( 'Ninety', 'wp-ever-accounting' ),
+			100                 => __( 'Hundred', 'wp-ever-accounting' ),
+			1000                => __( 'Thousand', 'wp-ever-accounting' ),
+			1000000             => __( 'Million', 'wp-ever-accounting' ),
+			1000000000          => __( 'Billion', 'wp-ever-accounting' ),
+			1000000000000       => __( 'Trillion', 'wp-ever-accounting' ),
+			1000000000000000    => __( 'Quadrillion', 'wp-ever-accounting' ),
+			1000000000000000000 => __( 'Quintillion', 'wp-ever-accounting' ),
 		)
 	);
 }
@@ -555,11 +584,11 @@ function eaccounting_number_dictionary() {
 /**
  * Convert Number to words
  *
+ * @since 1.1.0
+ *
  * @param $amount
  *
  * @return string|null
- *
- * @since 1.1.0
  *
  */
 function eaccounting_numbers_to_words( $number ) {
@@ -609,4 +638,32 @@ function eaccounting_numbers_to_words( $number ) {
 
 }
 
+function eaccounting_format_address( $address ) {
+	$address = wp_parse_args(
+		$address,
+		array(
+			'street'   => '',
+			'city'     => '',
+			'state'    => '',
+			'postcode' => '',
+			'country'  => '',
+		)
+	);
+
+	$complements = implode(
+		' ',
+		array(
+			implode(
+				', ',
+				array(
+					$address['city'],
+					$address['state'],
+				)
+			),
+			$address['postcode'],
+		)
+	);
+
+	return implode( '<br>', array_filter( array( $address['street'], $complements, $address['country'] ) ) );
+}
 

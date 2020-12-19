@@ -35,23 +35,17 @@ class LineItem extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'parent_id'      => null,
-		'parent_type'    => '',
-		'item_id'        => null,
-		'item_name'      => '',
-		'item_sku'       => '',
-		'item_price'     => 0.00,
-		'quantity'       => 1,
-		'tax_rate'       => 0.00,
-		'vat_rate'       => 0.00,
-		'discount_rate'  => 0.00,
-		'subtotal'       => 0.00,
-		'total_tax'      => 0.00,
-		'total_vat'      => 0.00,
-		'total_discount' => 0.00,
-		'total'          => 0.00,
-		'extra'          => '',
-		'date_created'   => null,
+		'parent_id'    => null,
+		'parent_type'  => '',
+		'item_id'      => null,
+		'item_name'    => '',
+		'unit_price'   => 0.00,
+		'quantity'     => 1,
+		'tax_rate'     => 0.00,
+		'discount'     => 0.00,
+		'total'        => 0.00,
+		'extra'        => '',
+		'date_created' => null,
 	);
 
 	/**
@@ -91,6 +85,7 @@ class LineItem extends ResourceModel {
 			'parent_type' => __( 'Parent type', 'wp-ever-accounting' ),
 		);
 	}
+
 
 	/*
 	|--------------------------------------------------------------------------
@@ -151,19 +146,6 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
-	 * Return the sku.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return string
-	 */
-	public function get_item_sku( $context = 'edit' ) {
-		return $this->get_prop( 'item_sku', $context );
-	}
-
-	/**
 	 * Return the quantity.
 	 *
 	 * @since  1.1.0
@@ -186,8 +168,20 @@ class LineItem extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_item_price( $context = 'edit' ) {
-		return $this->get_prop( 'item_price', $context );
+	public function get_unit_price( $context = 'edit' ) {
+		return $this->get_prop( 'unit_price', $context );
+	}
+
+	/**
+	 * Return the sub_total.
+	 *
+	 * @since  1.1.0
+	 *
+	 *
+	 * @return float
+	 */
+	public function get_subtotal() {
+		return (float) ( $this->get_unit_price() * $this->get_quantity() );
 	}
 
 	/**
@@ -204,16 +198,19 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
-	 * Return the tax.
+	 * Return the subtotal tax.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 */
-	public function get_vat_rate( $context = 'edit' ) {
-		return $this->get_prop( 'vat_rate', $context );
+	public function get_subtotal_tax() {
+		if ( empty( $this->get_tax_rate() ) ) {
+			return 0;
+		}
+
+		return ( $this->get_subtotal() / 100 ) * $this->get_tax_rate();
 	}
 
 	/**
@@ -225,60 +222,34 @@ class LineItem extends ResourceModel {
 	 *
 	 * @return float
 	 */
-	public function get_discount_rate( $context = 'edit' ) {
-		return $this->get_prop( 'discount_rate', $context );
+	public function get_discount( $context = 'edit' ) {
+		return $this->get_prop( 'discount', $context );
 	}
 
 	/**
-	 * Return the sub_total.
+	 * Return the discount tax.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 */
-	public function get_subtotal( $context = 'edit' ) {
-		return $this->get_prop( 'subtotal', $context );
+	public function get_discount_tax() {
+		if ( empty( $this->get_discount() ) ) {
+			return 0;
+		}
+
+		return ( $this->get_discount() / 100 ) * $this->get_tax_rate();
 	}
 
 	/**
-	 * Return the tax.
+	 * Get total tax.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
+	 * @since 1.1.0
 	 * @return float
 	 */
-	public function get_total_tax( $context = 'edit' ) {
-		return $this->get_prop( 'total_tax', $context );
-	}
-
-	/**
-	 * Return the tax.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return float
-	 */
-	public function get_total_vat( $context = 'edit' ) {
-		return $this->get_prop( 'total_vat', $context );
-	}
-
-	/**
-	 * Return the discount.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return float
-	 */
-	public function get_total_discount( $context = 'edit' ) {
-		return $this->get_prop( 'total_discount', $context );
+	public function get_total_tax() {
+		return (float) ( $this->get_subtotal_tax() + $this->get_discount_tax() );
 	}
 
 	/**
@@ -361,18 +332,6 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
-	 * set the sku.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $sku .
-	 *
-	 */
-	public function set_item_sku( $sku ) {
-		$this->set_prop( 'item_sku', eaccounting_clean( $sku ) );
-	}
-
-	/**
 	 * set the price.
 	 *
 	 * @since  1.1.0
@@ -380,8 +339,8 @@ class LineItem extends ResourceModel {
 	 * @param double $price .
 	 *
 	 */
-	public function set_item_price( $price ) {
-		$this->set_prop( 'item_price', eaccounting_sanitize_price( $price ) );
+	public function set_unit_price( $price ) {
+		$this->set_prop( 'unit_price', (float) eaccounting_sanitize_number( $price, true ) );
 	}
 
 
@@ -413,73 +372,15 @@ class LineItem extends ResourceModel {
 	/**
 	 * set the tax.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param double $vat_rate .
-	 *
-	 */
-	public function set_vat_rate( $vat_rate ) {
-		$this->set_prop( 'vat_rate', floatval( $vat_rate ) );
-	}
-
-	/**
-	 * set the tax.
+	 * Flat amount
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param double $discount_rate .
+	 * @param double $discount .
 	 *
 	 */
-	public function set_discount_rate( $discount_rate ) {
-		$this->set_prop( 'discount_rate', floatval( $discount_rate ) );
-	}
-
-	/**
-	 * set the sub total.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param int $sub_total .
-	 *
-	 */
-	public function set_subtotal( $sub_total ) {
-		$this->set_prop( 'subtotal', eaccounting_sanitize_price( $sub_total ) );
-	}
-
-	/**
-	 * set the tax.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param double $tax .
-	 *
-	 */
-	public function set_total_tax( $tax ) {
-		$this->set_prop( 'total_tax', floatval( $tax ) );
-	}
-
-	/**
-	 * set the tax.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param double $vat .
-	 *
-	 */
-	public function set_total_vat( $vat ) {
-		$this->set_prop( 'total_vat', eaccounting_sanitize_number( $vat, true ) );
-	}
-
-	/**
-	 * set the discount.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param int $discount .
-	 *
-	 */
-	public function set_total_discount( $discount ) {
-		$this->set_prop( 'total_discount', floatval( $discount ) );
+	public function set_discount( $discount ) {
+		$this->set_prop( 'discount', floatval( $discount ) );
 	}
 
 	/**
@@ -505,41 +406,4 @@ class LineItem extends ResourceModel {
 		$this->set_prop( 'extra', eaccounting_clean( $extra ) );
 	}
 
-
-
-	/*
-	|--------------------------------------------------------------------------
-	| Additional methods
-	|--------------------------------------------------------------------------
-	|
-	| Does extra thing as helper functions.
-	|
-	*/
-
-
-	/**
-	 * Save should create or update based on object existence.
-	 *
-	 * @since  1.1.0
-	 * @return \Exception|bool
-	 */
-	public function save() {
-		if ( empty( $this->get_item_id() ) ) {
-			throw new \Exception( __( 'Item ID must be specified.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_item_name() ) ) {
-			throw new \Exception( __( 'Item name can not be blank.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_parent_id() ) ) {
-			throw new \Exception( __( 'Parent ID must be specified.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( $this->get_parent_type() ) ) {
-			throw new \Exception( __( 'Parent type must be specified.', 'wp-ever-accounting' ) );
-		}
-
-		return parent::save();
-	}
 }

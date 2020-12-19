@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Repositories\Invoices;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,6 +38,14 @@ class Invoice extends ResourceModel {
 	public $cache_group = 'ea_invoices';
 
 	/**
+	 * Contains a reference to the repository for this class.
+	 *
+	 * @since 1.1.0
+	 * @var Invoices
+	 */
+	protected $repository;
+
+	/**
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
@@ -59,16 +68,15 @@ class Invoice extends ResourceModel {
 		'address'        => '',
 		'country'        => '',
 		'subtotal'       => 0.00,
-		'total_discount' => 0.00,
+		'discount'       => 0.00,
+		'discount_type'  => 'percentage',
 		'total_tax'      => 0.00,
-		'total_vat'      => 0.00,
-		'total_shipping' => 0.00,
 		'total'          => 0.00,
-		'note'           => '',
-		'footer'         => '',
+		'tax_inclusive'  => 1,
+		'terms'          => '',
 		'attachment_id'  => null,
 		'currency_code'  => null,
-		'currency_rate'  => null,
+		'currency_rate'  => 1,
 		'key'            => null,
 		'parent_id'      => null,
 		'creator_id'     => null,
@@ -98,6 +106,12 @@ class Invoice extends ResourceModel {
 	 * @var array
 	 */
 	protected $line_items_to_delete = array();
+
+	/**
+	 * @since 1.1.0
+	 * @var array
+	 */
+	private $status_transition = array();
 
 	/**
 	 * Get the invoice if ID is passed, otherwise the account is new and empty.
@@ -134,8 +148,12 @@ class Invoice extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
+			//'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
+			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
+			'customer_id'   => __( 'Customer', 'wp-ever-accounting' ),
+			'issue_date'    => __( 'Issue date', 'wp-ever-accounting' ),
+			'due_date'      => __( 'Due date', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -271,12 +289,14 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @param string $format
 	 *
 	 * @return string
 	 */
-	public function get_issue_date( $context = 'edit' ) {
-		return $this->get_prop( 'issue_date', $context );
+	public function get_issue_date( $format = 'y-m-d' ) {
+		$date = $this->get_prop( 'issue_date', 'raw' );
+
+		return empty( $date ) ? '' : eaccounting_format_datetime( $date, $format );
 	}
 
 	/**
@@ -284,12 +304,14 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @param string $format
 	 *
 	 * @return string
 	 */
-	public function get_due_date( $context = 'edit' ) {
-		return $this->get_prop( 'due_date', $context );
+	public function get_due_date( $format = 'y-m-d' ) {
+		$date = $this->get_prop( 'due_date', 'raw' );
+
+		return empty( $date ) ? '' : eaccounting_format_datetime( $date, $format );
 	}
 
 	/**
@@ -297,12 +319,14 @@ class Invoice extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @param string $format
 	 *
 	 * @return string
 	 */
-	public function get_payment_date( $context = 'edit' ) {
-		return $this->get_prop( 'payment_date', $context );
+	public function get_payment_date( $format = 'y-m-d' ) {
+		$date = $this->get_prop( 'payment_date', 'raw' );
+
+		return empty( $date ) ? '' : eaccounting_format_datetime( $date, $format );
 	}
 
 	/**
@@ -471,16 +495,6 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
-	 * Get formatted subtotal.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	public function get_formatted_subtotal() {
-		return eaccounting_format_price( $this->get_subtotal(), $this->get_currency_code() );
-	}
-
-	/**
 	 * Get the invoice discount total.
 	 *
 	 * @since 1.1.0
@@ -489,18 +503,21 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return float
 	 */
-	public function get_total_discount( $context = 'view' ) {
-		return (float) $this->get_prop( 'total_discount', $context );
+	public function get_discount( $context = 'view' ) {
+		return (float) $this->get_prop( 'discount', $context );
 	}
 
 	/**
-	 * Get formatted subtotal.
+	 * Get the invoice discount type.
 	 *
 	 * @since 1.1.0
-	 * @return string
+	 *
+	 * @param string $context View or edit context.
+	 *
+	 * @return float
 	 */
-	public function get_formatted_total_discount() {
-		return eaccounting_format_price( $this->get_total_discount(), $this->get_currency_code() );
+	public function get_discount_type( $context = 'view' ) {
+		return $this->get_prop( 'discount_type', $context );
 	}
 
 	/**
@@ -517,17 +534,7 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
-	 * Get formatted subtotal.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	public function get_formatted_total_tax() {
-		return eaccounting_format_price( $this->get_total_tax(), $this->get_currency_code() );
-	}
-
-	/**
-	 * Get the invoice vat total.
+	 * Get the invoice discount total.
 	 *
 	 * @since 1.1.0
 	 *
@@ -535,41 +542,12 @@ class Invoice extends ResourceModel {
 	 *
 	 * @return float
 	 */
-	public function get_total_vat( $context = 'view' ) {
-		return (float) $this->get_prop( 'total_vat', $context );
-	}
+	public function get_total_discount() {
+		if ( $this->is_fixed_discount() ) {
+			return (float) $this->get_discount();
+		}
 
-	/**
-	 * Get formatted subtotal.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	public function get_formatted_total_vat() {
-		return eaccounting_format_price( $this->get_total_vat(), $this->get_currency_code() );
-	}
-
-	/**
-	 * Get the invoice shipping total.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $context View or edit context.
-	 *
-	 * @return float
-	 */
-	public function get_total_shipping( $context = 'edit' ) {
-		return (float) $this->get_prop( 'total_shipping', $context );
-	}
-
-	/**
-	 * Get formatted total.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	public function get_formatted_total_shipping() {
-		return eaccounting_format_price( $this->get_total(), $this->get_currency_code() );
+		return  (float) ( $this->get_subtotal() * ( $this->get_discount() / 100 ) );
 	}
 
 	/**
@@ -588,41 +566,30 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
-	 * Get formatted total.
+	 * Get tax inclusive or not.
 	 *
 	 * @since 1.1.0
-	 * @return string
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
 	 */
-	public function get_formatted_total() {
-		return eaccounting_format_price( $this->get_total(), $this->get_currency_code() );
+	public function get_tax_inclusive( $context = 'edit' ) {
+		return $this->get_prop( 'tax_inclusive', $context );
 	}
 
 	/**
-	 * Return the note.
+	 * Return the terms.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_note( $context = 'edit' ) {
-		return $this->get_prop( 'note', $context );
+	public function get_terms( $context = 'edit' ) {
+		return $this->get_prop( 'terms', $context );
 	}
-
-	/**
-	 * Return the footer.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return string
-	 */
-	public function get_footer( $context = 'edit' ) {
-		return $this->get_prop( 'footer', $context );
-	}
-
 
 	/**
 	 * Return the attachment.
@@ -734,8 +701,11 @@ class Invoice extends ResourceModel {
 	 * @return array
 	 */
 	public function get_taxes() {
-		if ( empty( $this->get_line_items() ) && $this->exists() ) {
-			$this->taxes = $this->repository->read_taxes( $this );
+		$taxes = array();
+		if ( empty( $this->get_line_items() ) ) {
+			foreach ( $this->get_line_items() as $item ) {
+				$taxes[ $item->get_item_id() ] = $item->get_total_tax();
+			}
 		}
 
 		return array();
@@ -775,13 +745,6 @@ class Invoice extends ResourceModel {
 		return $total_paid;
 	}
 
-	/**
-	 * @since 1.1.0
-	 * @return string
-	 */
-	public function get_formatted_total_paid() {
-		return eaccounting_format_price( $this->get_total_paid(), $this->get_currency_code() );
-	}
 
 	/**
 	 * Get total due.
@@ -790,17 +753,7 @@ class Invoice extends ResourceModel {
 	 * @return float|int
 	 */
 	public function get_total_due() {
-		return abs( $this->get_total() - $this->get_total_paid() );
-	}
-
-	/**
-	 * Get formatted total due.
-	 *
-	 * @since 1.1.0
-	 * @return string
-	 */
-	public function get_formatted_total_due() {
-		return eaccounting_format_price( $this->get_total_due(), $this->get_currency_code() );
+		return $this->get_total() - $this->get_total_paid();
 	}
 
 	/*
@@ -840,25 +793,21 @@ class Invoice extends ResourceModel {
 	 *
 	 * @param string $status .
 	 * @param string $note
-	 * @param bool   $by_user
+	 * @param bool   $customer_note
 	 *
 	 * @return array
 	 */
-	public function set_status( $status, $note = '', $by_user = false ) {
+	public function set_status( $status ) {
 		$old_status = $this->get_status();
 		$statuses   = $this->get_statuses();
 		$this->set_prop( 'status', eaccounting_clean( $status ) );
-
-		if ( isset( $statuses['draft'] ) ) {
-			unset( $statuses['draft'] );
-		}
 
 		// If setting the status, ensure it's set to a valid status.
 		if ( true === $this->object_read ) {
 
 			// Only allow valid new status.
 			if ( ! array_key_exists( $status, $statuses ) ) {
-				$status = 'draft';
+				$status = 'pending';
 			}
 		}
 
@@ -866,7 +815,6 @@ class Invoice extends ResourceModel {
 			$this->status_transition = array(
 				'from' => ! empty( $this->status_transition['from'] ) ? $this->status_transition['from'] : $old_status,
 				'to'   => $status,
-				'note' => $note,
 			);
 		}
 
@@ -1041,8 +989,22 @@ class Invoice extends ResourceModel {
 	 * @param DOUBLE $discount .
 	 *
 	 */
-	public function set_total_discount( $discount ) {
-		$this->set_prop( 'total_discount', floatval( $discount ) );
+	public function set_discount( $discount ) {
+		$this->set_prop( 'discount', floatval( $discount ) );
+	}
+
+	/**
+	 * set the discount type.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param DOUBLE $discount_type .
+	 *
+	 */
+	public function set_discount_type( $discount_type ) {
+		if ( in_array( $discount_type, array( 'percentage', 'fixed' ), true ) ) {
+			$this->set_prop( 'discount_type', $discount_type );
+		}
 	}
 
 	/**
@@ -1055,30 +1017,6 @@ class Invoice extends ResourceModel {
 	 */
 	public function set_total_tax( $tax ) {
 		$this->set_prop( 'total_tax', floatval( $tax ) );
-	}
-
-	/**
-	 * set the vat.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param DOUBLE $vat .
-	 *
-	 */
-	public function set_total_vat( $vat ) {
-		$this->set_prop( 'total_vat', floatval( $vat ) );
-	}
-
-	/**
-	 * set the shipping.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param DOUBLE $shipping .
-	 *
-	 */
-	public function set_total_shipping( $shipping ) {
-		$this->set_prop( 'total_shipping', floatval( $shipping ) );
 	}
 
 	/**
@@ -1101,20 +1039,20 @@ class Invoice extends ResourceModel {
 	 * @param string $note .
 	 *
 	 */
-	public function set_note( $note ) {
-		$this->set_prop( 'note', eaccounting_sanitize_textarea( $note ) );
+	public function set_tax_inclusive( $type ) {
+		$this->set_prop( 'tax_inclusive', eaccounting_bool_to_number( $type ) );
 	}
 
 	/**
-	 * set the footer.
+	 * set the note.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $footer .
+	 * @param string $note .
 	 *
 	 */
-	public function set_footer( $footer ) {
-		$this->set_prop( 'footer', eaccounting_sanitize_textarea( $footer ) );
+	public function set_terms( $terms ) {
+		$this->set_prop( 'terms', eaccounting_sanitize_textarea( $terms ) );
 	}
 
 	/**
@@ -1152,7 +1090,9 @@ class Invoice extends ResourceModel {
 	 *
 	 */
 	public function set_currency_rate( $currency_rate ) {
-		$this->set_prop( 'currency_rate', floatval( $currency_rate ) );
+		if ( ! empty( $currency_rate ) ) {
+			$this->set_prop( 'currency_rate', floatval( $currency_rate ) );
+		}
 	}
 
 	/**
@@ -1177,18 +1117,6 @@ class Invoice extends ResourceModel {
 	public function set_key( $value ) {
 		$key = strtolower( eaccounting_clean( $value ) );
 		$this->set_prop( 'key', substr( $key, 0, 30 ) );
-	}
-
-	/**
-	 * set the discount.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param DOUBLE $discount .
-	 *
-	 */
-	public function set_discount( $discount ) {
-		$this->discount = floatval( $discount );
 	}
 
 
@@ -1244,16 +1172,14 @@ class Invoice extends ResourceModel {
 		if ( ! $item->exists() ) {
 			return false;
 		}
+		//convert the price from default to invoice currency.
 
 		$default = array(
-			'item_id'       => $item->get_id(),
-			'item_name'     => $item->get_name(),
-			'item_sku'      => $item->get_sku(),
-			'item_price'    => $item->get_sale_price(),
-			'quantity'      => 1,
-			'discount_rate' => $this->discount,
-			'tax_rate'      => $item->get_sales_tax_rate(),
-			'vat_rate'      => $item->get_vat(),
+			'item_id'    => $item->get_id(),
+			'item_name'  => $item->get_name(),
+			'unit_price' => eaccounting_price_convert_from_default( $item->get_sale_price(), $this->get_currency_code(), $this->get_currency_rate() ),
+			'quantity'   => 1,
+			'tax_rate'   => eaccounting_tax_enabled() ? $item->get_sales_tax_rate() : 0,
 		);
 
 		$line_item = $this->get_line_item( $item->get_id() );
@@ -1263,24 +1189,8 @@ class Invoice extends ResourceModel {
 
 		$args = wp_parse_args( $args, $default );
 		$line_item->set_props( $args );
-		// Now prepare
-		$tax_percent         = $line_item->get_tax_rate(); // Tax percentage
-		$vat_percent         = $line_item->get_vat_rate(); // Tax percentage
-		$subtotal            = $line_item->get_item_price() * $line_item->get_quantity();
-		$discount            = $subtotal * ( $line_item->get_discount_rate() / 100 ); //calculated discount for item
-		$discounted_subtotal = abs( $subtotal - $discount );
-		$tax                 = $discounted_subtotal * ( $tax_percent / 100 );
-		$subtotal            = eaccounting_get_price_excluding_tax( $discounted_subtotal, $tax ); // Recalculate subtotal if inclusive
-		$vat                 = $discounted_subtotal * ( $vat_percent / 100 );
-		$total               = abs( $subtotal + $tax + $vat - $discount );
 
-		$line_item->set_total_discount( $discount );
-		$line_item->set_subtotal( $subtotal );
-		$line_item->set_total_tax( $tax );
-		$line_item->set_total_vat( $vat );
-		$line_item->set_total_discount( $discount );
-		$line_item->set_total( $total );
-
+		//Now prepare
 		$this->line_items[ $line_item->get_item_id() ] = $line_item;
 
 		return $line_item->get_item_id();
@@ -1338,50 +1248,6 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
-	 * Calculate.
-	 *
-	 * @since 1.1.0
-	 * @throws \Exception
-	 */
-	public function calculate_total() {
-		$this->check_required_items();
-
-		//if changing or inserting update currency rate.
-		if ( ! array_key_exists( 'currency_code', $this->get_changes() ) || ! $this->exists() ) {
-			$currency = new Currency( $this->get_currency_code() );
-			$this->get_currency_rate( $currency->get_rate() );
-		}
-
-		$subtotal       = 0;
-		$tax_total      = 0;
-		$vat_total      = 0;
-		$discount_total = 0;
-		$shipping_total = 0;
-		foreach ( $this->get_line_items() as $item ) {
-			$subtotal       += $item->get_subtotal();
-			$tax_total      += $item->get_total_tax();
-			$vat_total      += $item->get_total_vat();
-			$discount_total += $item->get_total_discount();
-		}
-		$this->set_subtotal( $subtotal );
-		$this->set_total_tax( $tax_total );
-		$this->set_total_vat( $vat_total );
-		$this->set_total_discount( $discount_total );
-		$this->set_total_shipping( $shipping_total );
-		$total = abs( $subtotal + $tax_total + $shipping_total - $discount_total );
-		$this->set_total( $total );
-
-		return array(
-			'subtotal'       => $this->get_subtotal(),
-			'total_tax'      => $this->get_total_tax(),
-			'total_vat'      => $this->get_total_vat(),
-			'total_discount' => $this->get_total_discount(),
-			'total_shipping' => $this->get_total_shipping(),
-			'total'          => $this->get_total(),
-		);
-	}
-
-	/**
 	 * @since 1.1.0
 	 *
 	 * @param string $prop
@@ -1407,111 +1273,136 @@ class Invoice extends ResourceModel {
 	 * @throws \Exception
 	 * @return false
 	 */
-	public function add_payment( $amount, $account_id, $payment_method, $date = null, $description = null ) {
+	public function add_payment( $args = array() ) {
 		if ( ! $this->exists() ) {
 			return false;
 		}
 
-		if ( null === $date ) {
-			$date = current_time( 'mysql' );
+		if ( empty( $args['date'] ) ) {
+			$args['date'] = current_time( 'mysql' );
+		}
+
+		if ( empty( $args['amount'] ) ) {
+			throw new \Exception(
+				__( 'Payment amount is required', 'wp-ever-accounting' )
+			);
+		}
+
+		if ( empty( $args['account_id'] ) ) {
+			throw new \Exception(
+				__( 'Payment account is required', 'wp-ever-accounting' )
+			);
+		}
+
+		if ( empty( $args['payment_method'] ) ) {
+			throw new \Exception(
+				__( 'Payment method is required', 'wp-ever-accounting' )
+			);
 		}
 
 		$total_due = $this->get_total_due();
-		$amount    = eaccounting_sanitize_price( $amount, $this->get_currency_code() );
-		if ( $amount > $total_due ) {
-			throw new \Exception(
-				sprintf(
-				/* translators: %s paying amount %s due amount */
-					__( 'Amount is larger than due amount, amount: %1$s & due: %2$s' ),
-					eaccounting_format_price( $amount, $this->get_currency_code() ),
-					$this->get_formatted_total_due()
-				)
-			);
-		}
+		$amount    = (float) eaccounting_sanitize_number( $args['amount'], true );
+		//      if ( $amount  $total_due ) {
+		//          throw new \Exception(
+		//              sprintf(
+		//              /* translators: %s paying amount %s due amount */
+		//                  __( 'Amount is larger than due amount, input total: %1$s & due: %2$s', 'wp-ever-accounting' ),
+		//                  eaccounting_format_price( $amount, $this->get_currency_code() ),
+		//                  eaccounting_format_price( $this->get_total_due(), $this->get_currency_code() )
+		//              )
+		//          );
+		//      }
+
+		$account          = eaccounting_get_account( $args['account_id'] );
+		$currency         = eaccounting_get_currency( $account->get_currency_code() );
+		$converted_amount = eaccounting_price_convert_between( $amount, $this->get_currency_code(), $this->get_currency_rate(), $currency->get_code(), $currency->get_rate() );
 
 		$income = new Income();
 		$income->set_props(
 			array(
-				'payment_date'   => $date,
+				'payment_date'   => $args['date'],
 				'document_id'    => $this->get_id(),
-				'account_id'     => $account_id,
-				'amount'         => $amount,
+				'account_id'     => absint( $args['account_id'] ),
+				'amount'         => $converted_amount,
 				'category_id'    => $this->get_category_id(),
 				'customer_id'    => $this->get_customer_id(),
-				'payment_method' => $payment_method,
+				'payment_method' => eaccounting_clean( $args['payment_method'] ),
+				'description'    => eaccounting_clean( $args['description'] ),
 			)
 		);
 
 		$income->save();
+		$this->save();
 		/* translators: %s amount */
-		$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), $income->get_formatted_amount() ), false );
+		//$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), $income->get_formatted_amount() ), false );
 
 		return true;
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Boolean methods
+	| CRUD methods
 	|--------------------------------------------------------------------------
 	|
-	| Return true or false.
+	| Used for database transactions.
 	|
 	*/
 
 
 	/**
-	 * Checks if the invoice has a given status.
+	 * Calculate.
 	 *
-	 * @param $status
-	 *
-	 * @return bool
-	 */
-	public function is_status( $status ) {
-		return $this->get_status() === eaccounting_clean( $status );
-	}
-
-	/**
-	 * Check if an invoice is editable.
-	 *
-	 * @since 1.1.0
-	 * @return bool
-	 */
-	public function is_editable() {
-		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Boolean methods
-	|--------------------------------------------------------------------------
-	|
-	| Return true or false.
-	|
-	*/
-
-	/**
 	 * @since 1.1.0
 	 * @throws \Exception
-	 * @return bool|\Exception|int
 	 */
-	public function save() {
-		$this->calculate_total();
-		$this->maybe_set_currency_rate();
-		$this->maybe_set_customer_info();
-		$this->maybe_set_invoice_number();
-		$this->maybe_set_key();
+	public function recalculate() {
 
-		if ( ( 0 <= $this->get_total_paid() ) && ( $this->get_total_paid() <= $this->get_total() ) ) {
-			$this->set_status( 'partial' );
-		} elseif ( $this->get_total_paid() >= $this->get_total_paid() ) { // phpcs:ignore
-			$this->set_status( 'paid' );
+		$this->check_required_items();
+
+		//if changing or inserting update currency rate.
+		if ( array_key_exists( 'currency_code', $this->get_changes() ) || ! $this->exists() ) {
+			$currency = new Currency( $this->get_currency_code() );
+			$this->set_currency_rate( $currency->get_rate() );
 		}
 
-		parent::save();
-		$this->status_transition();
-		$this->save_line_items();
+		$subtotal  = 0;
+		$tax_total = 0;
+		$total     = 0;
 
-		return $this->exists();
+		// before calculating need to know subtotal so we can apply fixed discount
+		foreach ( $this->get_line_items() as $item ) {
+			$subtotal += $item->get_subtotal();
+		}
+
+		$discount_type = $this->get_discount_type();
+		$discount_rate = 'percentage' === $discount_type ? $this->get_discount() : ( ( $this->get_discount() * 100 ) / $subtotal );
+		$tax_inclusive = $this->exists() ? $this->is_tax_inclusive() : eaccounting_prices_include_tax();
+
+		foreach ( $this->get_line_items() as $item ) {
+			$line_subtotal = $item->get_subtotal();
+			if ( ! empty( $this->get_discount() ) ) {
+				$discount = $line_subtotal * ( $discount_rate / 100 );
+				$discount = $discount >= $line_subtotal ? $line_subtotal : $discount;
+				$item->set_discount( $discount );
+			}
+			if ( eaccounting_tax_enabled() ) {
+				$tax_total = $item->get_total_tax();
+			}
+			$line_total = $tax_inclusive ? ( $line_subtotal - $tax_total - $item->get_discount() ) : ( $line_subtotal + $tax_total - $item->get_discount() );
+			$item->set_total( $line_total );
+			$tax_total += (float) $item->get_total_tax();
+			$total     += (float) $item->get_total();
+		}
+
+		$this->set_subtotal( $subtotal );
+		$this->set_total_tax( $tax_total );
+		$this->set_total( $total );
+
+		return array(
+			'subtotal'  => $this->get_subtotal(),
+			'total_tax' => $this->get_total_tax(),
+			'total'     => $this->get_total(),
+		);
 	}
 
 	/**
@@ -1586,12 +1477,47 @@ class Invoice extends ResourceModel {
 	}
 
 	/**
+	 * Set payment date.
+	 * @since 1.1.0
+	 */
+	protected function maybe_set_payment_date() {
+		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
+			$this->set_payment_date( time() );
+		}
+	}
+
+	/**
+	 * @since 1.1.0
+	 * @throws \Exception
+	 * @return bool|\Exception|int
+	 */
+	public function save() {
+		$this->recalculate();
+		$this->maybe_set_currency_rate();
+		$this->maybe_set_customer_info();
+		$this->maybe_set_invoice_number();
+		$this->maybe_set_key();
+		if ( ( 0 < $this->get_total_paid() ) && ( $this->get_total_paid() < $this->get_total() ) ) {
+			$this->set_status( 'partial' );
+		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
+			$this->set_status( 'paid' );
+		}
+
+		$this->maybe_set_payment_date();
+		parent::save();
+		$this->status_transition();
+		$this->save_line_items();
+
+		return $this->exists();
+	}
+
+	/**
 	 * Get next invoice number.
 	 *
 	 * @since 1.1.0
 	 * @return string
 	 */
-	protected function get_next_invoice_number() {
+	public function get_next_invoice_number() {
 		global $wpdb;
 		$max              = (int) $wpdb->get_var( "select max(id) from {$wpdb->prefix}ea_invoices" );
 		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
@@ -1636,10 +1562,10 @@ class Invoice extends ResourceModel {
 
 				if ( ! empty( $status_transition['from'] ) ) {
 					/* translators: 1: old order status 2: new order status */
-					$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
+					//$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
 
 					// Note the transition occurred.
-					$this->add_note( $transition_note, false );
+					//$this->add_note( $transition_note, false );
 
 					do_action( 'eaccounting_invoice_status_' . $status_transition['from'] . '_to_' . $status_transition['to'], $this->get_id(), $this );
 					do_action( 'eaccounting_invoice_status_changed', $this->get_id(), $status_transition['from'], $status_transition['to'], $this );
@@ -1656,34 +1582,64 @@ class Invoice extends ResourceModel {
 					$transition_note = sprintf( __( 'Status set to %s.', 'wp-ever-accounting' ), $status_transition['to'], $this );
 
 					// Note the transition occurred.
-					$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), false );
+					//$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), false );
 				}
 			} catch ( \Exception $e ) {
-				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
+				//$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
 			}
 		}
 	}
 
 
+	/*
+	|--------------------------------------------------------------------------
+	| Boolean methods
+	|--------------------------------------------------------------------------
+	|
+	| Return true or false.
+	|
+	*/
+
+
 	/**
-	 * Adds a note to an invoice.
+	 * Checks if the invoice has a given status.
 	 *
-	 * @param string $content
-	 * @param bool   $customer_note
+	 * @param $status
 	 *
-	 * @return int|false The new note's ID on success, false on failure.
+	 * @return bool
 	 */
-	public function add_note( $content = '', $customer_note = false ) {
-		// Bail if no note specified or this invoice is not yet saved.
-		if ( empty( $content ) || ! $this->exists() ) {
-			return false;
-		}
-		$note = $this->repository->add_note( $content, $this );
-
-		if ( $note && $customer_note ) {
-			do_action( 'eaccounting_invoice_add_customer_note', $note, $this );
-		}
-
-		return $note;
+	public function is_status( $status ) {
+		return $this->get_status() === eaccounting_clean( $status );
 	}
+
+	/**
+	 * Check if an invoice is editable.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_editable() {
+		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
+	}
+
+	/**
+	 * Check if tax inclusive or not.
+	 *
+	 * @since 1.1.0
+	 * @return mixed|null
+	 */
+	public function is_tax_inclusive() {
+		return ! empty( $this->get_tax_inclusive() );
+	}
+
+	/**
+	 * Get the type of discount.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_fixed_discount() {
+		return 'percentage' !== $this->get_discount_type();
+	}
+
 }

@@ -409,7 +409,7 @@ class Expense extends ResourceModel {
 	 *
 	 */
 	public function set_amount( $value ) {
-		$this->set_prop( 'amount', eaccounting_sanitize_price( $value, $this->get_currency_code() ) );
+		$this->set_prop( 'amount', (float) eaccounting_sanitize_number( $value, true ) );
 	}
 
 	/**

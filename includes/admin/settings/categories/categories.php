@@ -15,72 +15,72 @@ function eaccounting_misc_categories_tab() {
 	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
 
-	if ( in_array( $action, [ 'edit', 'add' ] ) ) {
+	if ( in_array( $action, array( 'edit', 'add' ), true ) ) {
 		require_once dirname( __FILE__ ) . '/edit-category.php';
 	} else {
 		?>
 		<h1>
 			<?php _e( 'Categories', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="
 			<?php
-			echo eaccounting_admin_url(
-				array(
-					'tab'    => 'categories',
-					'action' => 'add',
-				)
+			echo sprintf(
+				'<a class="page-title-action" href="%s">%s</a>',
+				esc_url(
+					eaccounting_admin_url(
+						array(
+							'tab'    => 'categories',
+							'action' => 'add',
+						)
+					)
+				),
+				__( 'Add New', 'wp-ever-accounting' )
+			);
+			echo sprintf(
+				'<a class="page-title-action" href="%s">%s</a>',
+				esc_url(
+					eaccounting_admin_url(
+						array(
+							'page' => 'ea-tools',
+							'tab'  => 'import',
+						)
+					)
+				),
+				__( 'Import', 'wp-ever-accounting' )
 			);
 			?>
-												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="
-			<?php
-			echo eaccounting_admin_url(
-				array(
-					'page' => 'ea-tools',
-					'tab'  => 'import',
-				)
-			);
-			?>
-												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-categories.php';
 		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Categories();
 		$list_table->prepare_items();
+
+		/**
+		 * Fires at the top of the admin categories page.
+		 *
+		 * Use this hook to add content to this section of categories.
+		 *
+		 * @since 1.0.2
+		 */
+		do_action( 'eaccounting_categories_page_top' );
+
 		?>
-		<div class="wrap">
-			<?php
+		<form id="ea-categories-list-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-categories' ); ?>
 
-			/**
-			 * Fires at the top of the admin categories page.
-			 *
-			 * Use this hook to add content to this section of categories.
-			 *
-			 * @since 1.0.2
-			 */
-			do_action( 'eaccounting_categories_page_top' );
+			<input type="hidden" name="page" value="ea-settings"/>
+			<input type="hidden" name="tab" value="categories"/>
 
-			?>
-			<form id="ea-categories-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-				<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-categories' ); ?>
-
-				<input type="hidden" name="page" value="ea-settings"/>
-				<input type="hidden" name="tab" value="categories"/>
-
-				<?php $list_table->views(); ?>
-				<?php $list_table->display(); ?>
-			</form>
-			<?php
-			/**
-			 * Fires at the bottom of the admin categories page.
-			 *
-			 * Use this hook to add content to this section of categories Tab.
-			 *
-			 * @since 1.0.2
-			 */
-			do_action( 'eaccounting_categories_page_bottom' );
-			?>
-		</div>
+			<?php $list_table->views(); ?>
+			<?php $list_table->display(); ?>
+		</form>
 		<?php
+		/**
+		 * Fires at the bottom of the admin categories page.
+		 *
+		 * Use this hook to add content to this section of categories Tab.
+		 *
+		 * @since 1.0.2
+		 */
+		do_action( 'eaccounting_categories_page_bottom' );
 	}
 }
 
