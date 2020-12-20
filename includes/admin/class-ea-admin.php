@@ -48,7 +48,6 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php';
@@ -157,6 +156,7 @@ class Admin {
 			// Change the footer text.
 			if ( ! get_option( 'eaccounting_admin_footer_text_rated' ) ) {
 				$footer_text = sprintf(
+					/* translators: %s page */
 					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'wp-ever-accounting' ),
 					sprintf( '<strong>%s</strong>', esc_html__( 'Ever Accounting', 'wp-ever-accounting' ) ),
 					'<a href="https://wordpress.org/support/plugin/wp-ever-accounting/reviews?rate=5#new-post" target="_blank" class="ea-rating-link" aria-label="' . esc_attr__( 'five star', 'wp-ever-accounting' ) . '" data-rated="' . esc_attr__( 'Thanks :)', 'wp-ever-accounting' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
@@ -183,7 +183,7 @@ class Admin {
 	public function load_js_templates() {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ) ) ) {
+		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ), true ) ) {
 			eaccounting_get_admin_template( 'js/modal-add-account' );
 			eaccounting_get_admin_template( 'js/modal-add-currency' );
 			eaccounting_get_admin_template( 'js/modal-add-income-category' );

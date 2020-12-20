@@ -53,7 +53,6 @@ class Items extends ResourceRepository {
 		'category_id'       => '%d',
 		'sales_tax_rate'    => '%f',
 		'purchase_tax_rate' => '%f',
-		'vat'               => '%f',
 		'enabled'           => '%d',
 		'creator_id'        => '%d',
 		'date_created'      => '%s',

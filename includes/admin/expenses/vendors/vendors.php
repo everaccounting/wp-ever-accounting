@@ -13,32 +13,29 @@ function eaccounting_expenses_tab_vendors() {
 		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
 	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
-	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
+	if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 		require_once dirname( __FILE__ ) . '/edit-vendor.php';
 	} else {
+		$add_url    = add_query_arg(
+			array(
+				'page'   => 'ea-expenses',
+				'tab'    => 'vendors',
+				'action' => 'add',
+			),
+			admin_url( 'admin.php' )
+		);
+		$import_url = add_query_arg(
+			array(
+				'page' => 'ea-tools',
+				'tab'  => 'import',
+			),
+			admin_url( 'admin.php' )
+		);
 		?>
 		<h1>
 			<?php _e( 'Vendors', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="
-			<?php
-			echo eaccounting_admin_url(
-				array(
-					'tab'    => 'vendors',
-					'action' => 'add',
-				)
-			);
-			?>
-												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="
-			<?php
-			echo eaccounting_admin_url(
-				array(
-					'page' => 'ea-tools',
-					'tab'  => 'import',
-				)
-			);
-			?>
-												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a class="page-title-action" href=" <?php echo esc_url( $import_url ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-vendors.php';
@@ -54,7 +51,7 @@ function eaccounting_expenses_tab_vendors() {
 		do_action( 'eaccounting_vendors_page_top' );
 
 		?>
-		<form id="ea-vendors-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+		<form id="ea-vendors-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-vendors' ); ?>
 
 			<input type="hidden" name="page" value="ea-expenses"/>

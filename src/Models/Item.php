@@ -52,7 +52,6 @@ class Item extends ResourceModel {
 		'category_id'       => null,
 		'sales_tax_rate'    => null,
 		'purchase_tax_rate' => null,
-		'vat'               => null,
 		'enabled'           => 1,
 		'creator_id'        => null,
 		'date_created'      => null,
@@ -221,17 +220,6 @@ class Item extends ResourceModel {
 		return $this->get_prop( 'purchase_tax_rate', $context );
 	}
 
-	/**
-	 * @since 1.1.0
-	 *
-	 * @param string $context
-	 *
-	 * @return mixed|null
-	 */
-	public function get_vat( $context = 'edit' ) {
-		return $this->get_prop( 'vat', $context );
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -341,17 +329,6 @@ class Item extends ResourceModel {
 	public function set_purchase_tax_rate( $tax ) {
 		$this->set_prop( 'purchase_tax_rate', floatval( $tax ) );
 	}
-
-	/**
-	 * @since 1.1.0
-	 *
-	 * @param $tax_ids
-	 *
-	 */
-	public function set_vat( $vat ) {
-		$this->set_prop( 'vat', floatval( $vat ) );
-	}
-
 
 	/**
 	 * Clears the subscription's cache.

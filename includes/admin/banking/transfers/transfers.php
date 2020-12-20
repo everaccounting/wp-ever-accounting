@@ -13,25 +13,22 @@ function eaccounting_banking_tab_transfers() {
 	if ( ! current_user_can( 'ea_manage_transfer' ) ) {
 		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
 	}
-
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
-
-	if ( in_array( $action, [ 'edit', 'add' ] ) ) {
+	if ( in_array( $action, array( 'edit', 'add' ), true ) ) {
 		include __DIR__ . '/edit-transfer.php';
 	} else {
+		$add_url = add_query_arg(
+			array(
+				'page'   => 'ea-banking',
+				'tab'    => 'transfers',
+				'action' => 'add',
+			),
+			admin_url( 'admin.php' )
+		);
 		?>
 		<h1>
 			<?php _e( 'Transfers', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="
-			<?php
-			echo eaccounting_admin_url(
-				array(
-					'tab'    => 'transfers',
-					'action' => 'add',
-				)
-			);
-			?>
-												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-transfers.php';

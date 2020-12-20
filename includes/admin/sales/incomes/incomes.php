@@ -13,9 +13,9 @@ function eaccounting_sales_tab_revenues() {
 		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
 	}
 	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
-	if ( in_array( $action, [ 'add', 'edit' ] ) ) {
+	if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
 		include_once dirname( __FILE__ ) . '/edit-revenue.php';
-	} elseif ( in_array( $action, [ 'view' ] ) ) {
+	} elseif ( in_array( $action, array( 'view' ), true ) ) {
 		include_once dirname( __FILE__ ) . '/view-revenue.php';
 	} else {
 		?>
@@ -57,7 +57,7 @@ function eaccounting_sales_tab_revenues() {
 		do_action( 'eaccounting_revenues_page_top' );
 
 		?>
-		<form id="ea-accounts-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+		<form id="ea-accounts-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-revenues' ); ?>
 
 			<input type="hidden" name="page" value="ea-sales"/>

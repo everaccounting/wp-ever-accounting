@@ -29,16 +29,19 @@ function eaccounting_sales_tab_invoices() {
 		include_once dirname( __FILE__ ) . '/edit-invoice.php';
 	} elseif ( 'view' === $action && ! empty( $_GET['invoice_id'] ) ) {
 		include_once dirname( __FILE__ ) . '/view-invoice.php';
-	} else { ?>
+	} else {
+		$add_new_url = add_query_arg(
+			array(
+				'page'   => 'ea-sales',
+				'tab'    => 'invoices',
+				'action' => 'add',
+			),
+			admin_url( 'admin.php' )
+		);
+		?>
 		<h1>
 			<?php _e( 'Invoices', 'wp-ever-accounting' ); ?>
-			<?php
-			echo sprintf(
-				'<a class="page-title-action" href="%s">%s</a>',
-				$add_url,
-				__( 'Add New', 'wp-ever-accounting' )
-			);
-			?>
+			<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-invoices.php';
@@ -54,7 +57,7 @@ function eaccounting_sales_tab_invoices() {
 		do_action( 'eaccounting_invoices_page_top' );
 		?>
 
-		<form id="ea-accounts-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+		<form id="ea-accounts-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-revenues' ); ?>
 
 			<input type="hidden" name="page" value="ea-sales"/>

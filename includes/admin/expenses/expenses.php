@@ -26,7 +26,7 @@ function eaccounting_admin_expenses_page() {
 		<h2 class="nav-tab-wrapper">
 			<?php eaccounting_navigation_tabs( $tabs, $active_tab ); ?>
 		</h2>
-		<div id="tab_container">
+		<div id="tab_container" class="ea-admin-page">
 			<?php
 			/**
 			 * Fires in the Tabs screen tab.
