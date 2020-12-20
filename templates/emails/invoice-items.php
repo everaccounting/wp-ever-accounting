@@ -8,7 +8,7 @@ foreach ( $invoice->get_line_items() as $item_id => $item ) : ?>
 		</td>
 
 		<td class="td text-right" style="text-align:right; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
-			<?php echo esc_html( $invoice->get_formatted_line_amount( $item, 'item_price' ) ); ?>
+			<?php echo esc_html( eaccounting_price( $item->get_unit_price(), $invoice->get_currency_code() ) ); ?>
 		</td>
 
 		<td class="td text-right" style="text-align:right; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
@@ -16,7 +16,7 @@ foreach ( $invoice->get_line_items() as $item_id => $item ) : ?>
 		</td>
 
 		<td class="td text-right" style="text-align:right; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
-			<?php echo wp_kses_post( $invoice->get_formatted_line_amount( $item ) ); ?>
+			<?php echo esc_html( eaccounting_price( $item->get_subtotal(), $invoice->get_currency_code() ) ); ?>
 		</td>
 	</tr>
 

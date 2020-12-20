@@ -156,7 +156,7 @@ class Admin {
 			// Change the footer text.
 			if ( ! get_option( 'eaccounting_admin_footer_text_rated' ) ) {
 				$footer_text = sprintf(
-					/* translators: %s page */
+				/* translators: %s page */
 					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'wp-ever-accounting' ),
 					sprintf( '<strong>%s</strong>', esc_html__( 'Ever Accounting', 'wp-ever-accounting' ) ),
 					'<a href="https://wordpress.org/support/plugin/wp-ever-accounting/reviews?rate=5#new-post" target="_blank" class="ea-rating-link" aria-label="' . esc_attr__( 'five star', 'wp-ever-accounting' ) . '" data-rated="' . esc_attr__( 'Thanks :)', 'wp-ever-accounting' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
@@ -194,7 +194,6 @@ class Admin {
 			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );
 		}
 	}
-
 }
 
 return new Admin();

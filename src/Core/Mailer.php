@@ -130,7 +130,7 @@ class Mailer {
 	 */
 	public function get_headers() {
 		if ( ! $this->headers ) {
-			$this->headers = "From: {$this->get_from_name()} <{$this->get_mail_from()}>\r\n";
+			$this->headers  = "From: {$this->get_from_name()} <{$this->get_mail_from()}>\r\n";
 			$this->headers .= "Reply-To: {$this->get_mail_from()}\r\n";
 			$this->headers .= "Content-Type: {$this->get_content_type()}; charset=utf-8\r\n";
 		}

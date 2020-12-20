@@ -317,6 +317,7 @@ final class EverAccounting {
 //		\EverAccounting\Controllers\ItemController::instance();
 //		\EverAccounting\Controllers\IncomeController::instance();
 //		\EverAccounting\Controllers\ExpenseController::instance();
+		\EverAccounting\Controllers\InvoiceController::instance();
 
 		\EverAccounting\REST\Manager::instance();
 		\EverAccounting\Core\Emails::instance();

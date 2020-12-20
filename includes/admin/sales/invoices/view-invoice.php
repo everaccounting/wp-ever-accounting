@@ -181,26 +181,10 @@ $notes = eaccounting_get_notes(
 					<?php esc_html_e( 'Invoice Actions', 'wp-ever-accounting' ); ?>
 				</h3>
 			</div>
-			<form action="">
-				<div class="ea-card__inside">
-					<select name="invoice_action" id="invoice_action" required>
-						<option value=""><?php esc_html_e( 'Select action', 'wp-ever-accounting' ); ?></option>
-						<option value="email_invoice"><?php esc_html_e( 'Email Invoice', 'wp-ever-accounting' ); ?></option>
-						<option value="mark_partial"><?php esc_html_e( 'Status to "Partial"', 'wp-ever-accounting' ); ?></option>
-						<option value="mark_paid"><?php esc_html_e( 'Status to "paid"', 'wp-ever-accounting' ); ?></option>
-						<option value="mark_paid"><?php esc_html_e( 'Status to "Overdue"', 'wp-ever-accounting' ); ?></option>
-						<option value="mark_overdue"><?php esc_html_e( 'Status to "Overdue"', 'wp-ever-accounting' ); ?></option>
-						<option value="mark_cancelled"><?php esc_html_e( 'Status to "Cancelled"', 'wp-ever-accounting' ); ?></option>
-					</select>
-				</div>
 
-				<div class="ea-card__footer">
-					<button type="submit" class="button-link">Remove</button>
-					<button type="submit" class="button-primary">Submit</button>
-				</div>
-			</form>
-
+			<?php eaccounting_get_admin_template( 'html-invoice-actions', array( 'invoice' => $invoice ) ); ?>
 		</div><!--.ea-card-->
+
 
 		<div class="ea-card">
 			<div class="ea-card__header">

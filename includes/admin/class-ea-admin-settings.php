@@ -375,6 +375,7 @@ class Settings {
 	 * @return array
 	 */
 	public function register_email_settings( $settings ) {
+
 		$email_settings = array(
 			'default_settings'                    => array(
 				'name' => __( 'Email sender options', 'wp-ever-accounting' ),
