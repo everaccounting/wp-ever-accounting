@@ -1165,6 +1165,8 @@ class Ajax {
 	 * Check permission
 	 *
 	 * since 1.0.2
+	 *
+	 * @param string $cap
 	 */
 	public static function check_permission( $cap = 'manage_eaccounting' ) {
 		if ( ! current_user_can( $cap ) ) {

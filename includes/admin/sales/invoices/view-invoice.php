@@ -18,13 +18,20 @@ try {
 $company_country          = eaccounting()->settings->get( 'company_country' );
 $company_country_nicename = ! empty( $company_country ) ? eaccounting_get_countries()[ $company_country ] : '';
 $company_address          = eaccounting_format_address(
-	array(
-		'street'   => eaccounting()->settings->get( 'company_address' ),
-		'city'     => eaccounting()->settings->get( 'company_city' ),
-		'state'    => eaccounting()->settings->get( 'company_state' ),
-		'postcode' => eaccounting()->settings->get( 'company_postcode' ),
-		'country'  => $company_country_nicename,
-	)
+		array(
+				'street'   => eaccounting()->settings->get( 'company_address' ),
+				'city'     => eaccounting()->settings->get( 'company_city' ),
+				'state'    => eaccounting()->settings->get( 'company_state' ),
+				'postcode' => eaccounting()->settings->get( 'company_postcode' ),
+				'country'  => $company_country_nicename,
+		)
+);
+
+$notes = eaccounting_get_notes(
+		array(
+				'document_id'   => $invoice->get_id(),
+				'document_type' => 'invoice',
+		)
 );
 ?>
 <div id="ea-invoice" class="columns-2">
@@ -168,6 +175,32 @@ $company_address          = eaccounting_format_address(
 	</div>
 
 	<div class="ea-admin-page__sidebar">
+		<div class="ea-card">
+			<div class="ea-card__header">
+				<h3 class="ea-card__title">
+					<?php esc_html_e( 'Invoice Actions', 'wp-ever-accounting' ); ?>
+				</h3>
+			</div>
+			<form action="">
+				<div class="ea-card__inside">
+					<select name="invoice_action" id="invoice_action" required>
+						<option value=""><?php esc_html_e( 'Select action', 'wp-ever-accounting' ); ?></option>
+						<option value="email_invoice"><?php esc_html_e( 'Email Invoice', 'wp-ever-accounting' ); ?></option>
+						<option value="mark_partial"><?php esc_html_e( 'Status to "Partial"', 'wp-ever-accounting' ); ?></option>
+						<option value="mark_paid"><?php esc_html_e( 'Status to "paid"', 'wp-ever-accounting' ); ?></option>
+						<option value="mark_paid"><?php esc_html_e( 'Status to "Overdue"', 'wp-ever-accounting' ); ?></option>
+						<option value="mark_overdue"><?php esc_html_e( 'Status to "Overdue"', 'wp-ever-accounting' ); ?></option>
+						<option value="mark_cancelled"><?php esc_html_e( 'Status to "Cancelled"', 'wp-ever-accounting' ); ?></option>
+					</select>
+				</div>
+
+				<div class="ea-card__footer">
+					<button type="submit" class="button-link">Remove</button>
+					<button type="submit" class="button-primary">Submit</button>
+				</div>
+			</form>
+
+		</div><!--.ea-card-->
 
 		<div class="ea-card">
 			<div class="ea-card__header">
@@ -176,30 +209,10 @@ $company_address          = eaccounting_format_address(
 				</h3>
 			</div>
 			<div class="ea-card__inside padding-zero">
-				<ul class="ea-invoice-notes">
-					<li class="ea-invoice-notes__item customer-note">
-						<div class="ea-invoice-notes__item-content">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, maiores.
-						</div>
-						<div class="ea-invoice-notes__item-meta">
-							<abbr class="exact-date" title="20-12-13 02:55:33">added on December 13, 2020 at 2:55 am</abbr>
-							by admin
-							<a href="#" class="delete_note" role="button">Delete note</a>
-						</div>
-					</li>
-					<li class="ea-invoice-notes__item customer-note">
-						<div class="ea-invoice-notes__item-content">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, maiores.
-						</div>
-						<div class="ea-invoice-notes__item-meta">
-							<abbr class="exact-date" title="20-12-13 02:55:33">added on December 13, 2020 at 2:55 am</abbr>
-							by admin
-							<a href="#" class="delete_note" role="button">Delete note</a>
-						</div>
-					</li>
-				</ul>
+				<?php eaccounting_get_admin_template( 'html-invoice-notes', array( 'notes' => $notes ) ); ?>
 
-				<div class="ea-invoice-notes__add">
+
+				<form id="invoice-note-insert" method="post" class="ea-invoice-notes__add">
 					<p>
 						<label for="invoice_note">Add note</label>
 						<textarea type="text" name="invoice_note" id="invoice_note" class="input-text" cols="20" rows="5" autocomplete="off" spellcheck="false"></textarea>
@@ -213,79 +226,93 @@ $company_address          = eaccounting_format_address(
 						</select>
 						<button type="button" class="add_invoice_note button">Add</button>
 					</p>
-
-				</div>
+					<input type="hidden" name="action" value="eaccounting_add_invoice_note">
+					<input type="hidden" name="invoice_id" value="<?php esc_attr( $invoice->get_id() ); ?>">
+					<?php wp_nonce_field( 'ea_add_invoice_note', 'nonce' ); ?>
+				</form>
 
 			</div>
 		</div>
 
+		<div class="ea-card">
+			<div class="ea-card__header">
+				<h3 class="ea-card__title">
+					<?php esc_html_e( 'Payments Received', 'wp-ever-accounting' ); ?>
+				</h3>
+			</div>
+
+			<div class="ea-card__inside padding-zero">
+				<?php eaccounting_get_admin_template( 'html-invoice-payments', array( 'invoice' => $invoice ) ); ?>
+			</div>
+
+		</div>
 	</div>
 
 </div>
 
 <script type="text/template" id="ea-modal-add-invoice-payment" data-title="<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>">
-	<form action="" method="post" >
+	<form action="" method="post">
 		<?php
 		eaccounting_text_input(
-			array(
-				'label'       => __( 'Date', 'wp-ever-accounting' ),
-				'name'        => 'date',
-				'placeholder' => __( 'Enter Date', 'wp-ever-accounting' ),
-				'data_type'   => 'date',
-				'value'       => date( 'Y-m-d' ),
-				'required'    => true,
-			)
+				array(
+						'label'       => __( 'Date', 'wp-ever-accounting' ),
+						'name'        => 'date',
+						'placeholder' => __( 'Enter Date', 'wp-ever-accounting' ),
+						'data_type'   => 'date',
+						'value'       => date( 'Y-m-d' ),
+						'required'    => true,
+				)
 		);
 		eaccounting_text_input(
-			array(
-				'label'       => __( 'Amount', 'wp-ever-accounting' ),
-				'name'        => 'amount',
-				'value'       => $invoice->get_total_due(),
-				'data_type'   => 'price',
-				'required'    => true,
-				'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),
-				/* translators: %s amount */
-				'desc'        => sprintf( __( 'Total amount due:%s', 'wp-ever-accounting' ), eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ) ),
-			)
+				array(
+						'label'       => __( 'Amount', 'wp-ever-accounting' ),
+						'name'        => 'amount',
+						'value'       => $invoice->get_total_due(),
+						'data_type'   => 'price',
+						'required'    => true,
+						'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),
+					/* translators: %s amount */
+						'desc'        => sprintf( __( 'Total amount due:%s', 'wp-ever-accounting' ), eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ) ),
+				)
 		);
 		eaccounting_account_dropdown(
-			array(
-				'label'       => __( 'Account', 'wp-ever-accounting' ),
-				'name'        => 'account_id',
-				'creatable'   => false,
-				'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
-				'required'    => true,
-			)
+				array(
+						'label'       => __( 'Account', 'wp-ever-accounting' ),
+						'name'        => 'account_id',
+						'creatable'   => false,
+						'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
+						'required'    => true,
+				)
 		);
 		eaccounting_payment_method_dropdown(
-			array(
-				'label'    => __( 'Payment Method', 'wp-ever-accounting' ),
-				'name'     => 'payment_method',
-				'required' => true,
-				'value'    => '',
-			)
+				array(
+						'label'    => __( 'Payment Method', 'wp-ever-accounting' ),
+						'name'     => 'payment_method',
+						'required' => true,
+						'value'    => '',
+				)
 		);
 		eaccounting_textarea(
-			array(
-				'label'       => __( 'Description', 'wp-ever-accounting' ),
-				'name'        => 'description',
-				'value'       => '',
-				'required'    => false,
-				'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
-			)
+				array(
+						'label'       => __( 'Description', 'wp-ever-accounting' ),
+						'name'        => 'description',
+						'value'       => '',
+						'required'    => false,
+						'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
+				)
 		);
 		eaccounting_hidden_input(
-			array(
-				'name'  => 'invoice_id',
-				'value' => $invoice->get_id(),
-			)
+				array(
+						'name'  => 'invoice_id',
+						'value' => $invoice->get_id(),
+				)
 		);
 
 		eaccounting_hidden_input(
-			array(
-				'name'  => 'action',
-				'value' => 'eaccounting_add_invoice_payment',
-			)
+				array(
+						'name'  => 'action',
+						'value' => 'eaccounting_add_invoice_payment',
+				)
 		);
 		wp_nonce_field( 'ea_add_invoice_payment' );
 		?>

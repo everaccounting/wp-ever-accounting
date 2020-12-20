@@ -42,10 +42,11 @@ class Note extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'parent_id'    => null,
-		'parent_type'  => '',
-		'content'      => '',
-		'date_created' => null,
+		'document_id'   => null,
+		'document_type' => '',
+		'note'          => '',
+		'creator_name'  => '',
+		'date_created'  => null,
 	);
 
 	/**
@@ -79,8 +80,9 @@ class Note extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'parent_id'   => __( 'Parent ID', 'wp-ever-accounting' ),
-			'parent_type' => __( 'Parent type', 'wp-ever-accounting' ),
+			'document_id'   => __( 'Document ID', 'wp-ever-accounting' ),
+			'document_type' => __( 'Document type', 'wp-ever-accounting' ),
+			'note'          => __( 'Note content', 'wp-ever-accounting' ),
 		);
 	}
 	/*
@@ -98,8 +100,8 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_parent_id( $context = 'edit' ) {
-		return $this->get_prop( 'parent_id', $context );
+	public function get_document_id( $context = 'edit' ) {
+		return $this->get_prop( 'document_id', $context );
 	}
 
 	/**
@@ -111,12 +113,12 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_parent_type( $context = 'edit' ) {
-		return $this->get_prop( 'parent_type', $context );
+	public function get_document_type( $context = 'edit' ) {
+		return $this->get_prop( 'document_type', $context );
 	}
 
 	/**
-	 * Return the content.
+	 * Return the note.
 	 *
 	 * @since  1.1.0
 	 *
@@ -124,8 +126,21 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_content( $context = 'edit' ) {
-		return $this->get_prop( 'content', $context );
+	public function get_note( $context = 'edit' ) {
+		return $this->get_prop( 'note', $context );
+	}
+
+	/**
+	 * Return the note.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_creator_name( $context = 'edit' ) {
+		return $this->get_prop( 'creator_name', $context );
 	}
 
 	/*
@@ -139,11 +154,11 @@ class Note extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $parent_id .
+	 * @param int $document_id .
 	 *
 	 */
-	public function set_parent_id( $parent_id ) {
-		$this->set_prop( 'parent_id', absint( $parent_id ) );
+	public function set_document_id( $document_id ) {
+		$this->set_prop( 'document_id', absint( $document_id ) );
 	}
 
 	/**
@@ -151,22 +166,52 @@ class Note extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $parent_type .
+	 * @param int $document_type .
 	 *
 	 */
-	public function set_parent_type( $parent_type ) {
-		$this->set_prop( 'parent_type', eaccounting_clean( $parent_type ) );
+	public function set_document_type( $document_type ) {
+		$this->set_prop( 'document_type', eaccounting_clean( $document_type ) );
 	}
 
 	/**
-	 * set the content.
+	 * set the note.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $content .
+	 * @param string $note .
 	 *
 	 */
-	public function set_content( $content ) {
-		$this->set_prop( 'content', eaccounting_sanitize_textarea( $content ) );
+	public function set_note( $note ) {
+		$this->set_prop( 'note', eaccounting_sanitize_textarea( $note ) );
 	}
+
+	/**
+	 * set the note.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $creator_name .
+	 *
+	 */
+	public function set_creator_name( $creator_name ) {
+		$this->set_prop( 'creator_name', eaccounting_clean( $creator_name ) );
+	}
+
+
+	/**
+	 * Save should create or update based on object existence.
+	 *
+	 * @since  1.1.0
+	 * @return \Exception|bool
+	 */
+	public function save() {
+		if ( empty( $this->get_creator_name() ) ) {
+			$parse = wp_parse_url( site_url() );
+			$host  = isset( $parse['host'] ) ? eaccounting_clean( $parse['host'] ) : 'wpeveraccounting.com';
+			$this->set_creator_name( "bot@$host" );
+		}
+
+		return parent::save();
+	}
+
 }

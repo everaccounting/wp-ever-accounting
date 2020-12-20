@@ -552,14 +552,14 @@ class EAccounting_Install {
 
 			"CREATE TABLE {$wpdb->prefix}ea_notes(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`parent_id` INT(11) NOT NULL,
-  			`parent_type` VARCHAR(20) NOT NULL,
-  			`notify` tinyint(1) NOT NULL,
-  			`content` TEXT DEFAULT NULL,
+  			`document_id` INT(11) NOT NULL,
+  			`document_type` VARCHAR(20) NOT NULL,
+  			`note` TEXT DEFAULT NULL,
+  			`creator_name` VARCHAR(50) DEFAULT 'bot@eaccounting.com',
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `parent_id` (`parent_id`),
-		    KEY `parent_type` (`parent_type`)
+		    KEY `document_id` (`document_id`),
+		    KEY `document_type` (`document_type`)
             ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_items(
@@ -689,7 +689,7 @@ class EAccounting_Install {
 			)
 		);
 
-		// Shop manager role.
+		// Accounting manager role.
 		add_role(
 			'ea_manager',
 			'Accounting Manager',
@@ -733,7 +733,6 @@ class EAccounting_Install {
 			$wp_roles->add_cap( 'administrator', 'ea_manage_currency' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_item' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_invoice' );
-			$wp_roles->add_cap( 'administrator', 'ea_manage_line_item' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 		}
 	}
