@@ -54,8 +54,10 @@ function eaccounting_admin_items_page() {
  * @since 1.0.2
  */
 function eaccounting_get_items_tabs() {
-	$tabs          = array();
-	$tabs['items'] = __( 'Items', 'wp-ever-accounting' );
+	$tabs = array();
+	if ( current_user_can( 'ea_manage_item' ) ) {
+		$tabs['items'] = __( 'Items', 'wp-ever-accounting' );
+	}
 
 	return apply_filters( 'eaccounting_items_tabs', $tabs );
 }

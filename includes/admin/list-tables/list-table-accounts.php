@@ -259,11 +259,9 @@ class List_Table_Accounts extends List_Table {
 				'id'    => 'enabled_' . $account->get_id(),
 				'value' => $account->get_enabled( 'edit' ),
 				'naked' => true,
-				'class' => 'ea_item_status_update',
 				'attr'  => array(
-					'data-object_id'   => $account->get_id(),
-					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-					'data-object_type' => 'account',
+					'data-id'    => $account->get_id(),
+					'data-nonce' => wp_create_nonce( 'ea_edit_account' ),
 				),
 			)
 		);

@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
  */
 function eaccounting_banking_tab_transactions() {
 	require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-transactions.php';
-	$list_table = new \EverAccounting\Admin\ListTables\List_Table_Accounts();
+	$list_table = new \EverAccounting\Admin\ListTables\List_Table_Transactions();
 	$list_table->prepare_items();
 	?>
 	<h1>
@@ -33,7 +33,7 @@ function eaccounting_banking_tab_transactions() {
 	do_action( 'eaccounting_transactions_page_top' );
 
 	?>
-	<form id="ea-accounts-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+	<form id="ea-transactions-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 		<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-accounts' ); ?>
 
 		<input type="hidden" name="page" value="ea-banking"/>

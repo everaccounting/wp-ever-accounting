@@ -35,7 +35,6 @@ function eaccounting_banking_tab_transfers() {
 		$transfers_table = new \EverAccounting\Admin\ListTables\List_Table_Transfers();
 		$transfers_table->prepare_items();
 		?>
-		<div class="wrap">
 			<?php
 
 			/**
@@ -48,7 +47,7 @@ function eaccounting_banking_tab_transfers() {
 			do_action( 'eaccounting_transfers_page_top' );
 
 			?>
-			<form id="ea-transfers-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+			<form id="ea-transfers-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 				<?php // $transfers_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-transfers' ); ?>
 
 				<input type="hidden" name="page" value="ea-banking"/>
@@ -67,7 +66,6 @@ function eaccounting_banking_tab_transfers() {
 			 */
 			do_action( 'eaccounting_transfers_page_bottom' );
 			?>
-		</div>
 		<?php
 	}
 }

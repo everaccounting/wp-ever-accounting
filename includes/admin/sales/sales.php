@@ -48,14 +48,20 @@ function eaccounting_admin_sales_page() {
 /**
  * Retrieve sales tabs
  *
- * @since 1.0.2
  * @return array $tabs
+ * @since 1.0.2
  */
 function eaccounting_get_sales_tabs() {
-	$tabs              = array();
-	$tabs['invoices']  = __( 'Invoices', 'wp-ever-accounting' );
-	$tabs['revenues']  = __( 'Incomes', 'wp-ever-accounting' );
-	$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );
+	$tabs = array();
+	if ( current_user_can( 'ea_manage_invoice' ) ) {
+		$tabs['invoices'] = __( 'Invoices', 'wp-ever-accounting' );
+	}
+	if ( current_user_can( 'ea_manage_revenue' ) ) {
+		$tabs['revenues'] = __( 'Incomes', 'wp-ever-accounting' );
+	}
+	if ( current_user_can( 'ea_manage_customer' ) ) {
+		$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );
+	}
 
 	return apply_filters( 'eaccounting_sales_tabs', $tabs );
 }

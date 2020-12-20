@@ -48,7 +48,6 @@ function eaccounting_items_items_tab() {
 		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Item();
 		$list_table->prepare_items();
 		?>
-		<div class="wrap">
 			<?php
 
 			/**
@@ -61,7 +60,7 @@ function eaccounting_items_items_tab() {
 			do_action( 'eaccounting_items_page_top' );
 
 			?>
-			<form id="ea-items-filter" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+			<form id="ea-items-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 				<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-items' ); ?>
 
 				<input type="hidden" name="page" value="ea-items"/>
@@ -80,7 +79,6 @@ function eaccounting_items_items_tab() {
 			 */
 			do_action( 'eaccounting_items_page_bottom' );
 			?>
-		</div>
 		<?php
 	}
 }

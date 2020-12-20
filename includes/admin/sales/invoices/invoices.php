@@ -57,8 +57,8 @@ function eaccounting_sales_tab_invoices() {
 		do_action( 'eaccounting_invoices_page_top' );
 		?>
 
-		<form id="ea-accounts-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-revenues' ); ?>
+		<form id="ea-invoices-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-invoices' ); ?>
 
 			<input type="hidden" name="page" value="ea-sales"/>
 			<input type="hidden" name="tab" value="invoices"/>
