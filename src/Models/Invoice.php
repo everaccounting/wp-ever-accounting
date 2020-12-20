@@ -547,7 +547,7 @@ class Invoice extends ResourceModel {
 			return (float) $this->get_discount();
 		}
 
-		return  (float) ( $this->get_subtotal() * ( $this->get_discount() / 100 ) );
+		return (float) ( $this->get_subtotal() * ( $this->get_discount() / 100 ) );
 	}
 
 	/**
@@ -1334,7 +1334,7 @@ class Invoice extends ResourceModel {
 		$income->save();
 		$this->save();
 		/* translators: %s amount */
-		//$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), $income->get_formatted_amount() ), false );
+		$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), $income->get_formatted_amount() ), false );
 
 		return true;
 	}
@@ -1478,6 +1478,7 @@ class Invoice extends ResourceModel {
 
 	/**
 	 * Set payment date.
+	 *
 	 * @since 1.1.0
 	 */
 	protected function maybe_set_payment_date() {
@@ -1562,10 +1563,10 @@ class Invoice extends ResourceModel {
 
 				if ( ! empty( $status_transition['from'] ) ) {
 					/* translators: 1: old order status 2: new order status */
-					//$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
+					$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
 
 					// Note the transition occurred.
-					//$this->add_note( $transition_note, false );
+					$this->add_note( $transition_note, false );
 
 					do_action( 'eaccounting_invoice_status_' . $status_transition['from'] . '_to_' . $status_transition['to'], $this->get_id(), $this );
 					do_action( 'eaccounting_invoice_status_changed', $this->get_id(), $status_transition['from'], $status_transition['to'], $this );
@@ -1582,14 +1583,48 @@ class Invoice extends ResourceModel {
 					$transition_note = sprintf( __( 'Status set to %s.', 'wp-ever-accounting' ), $status_transition['to'], $this );
 
 					// Note the transition occurred.
-					//$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), false );
+					$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), false );
 				}
 			} catch ( \Exception $e ) {
-				//$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
+				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
 			}
 		}
 	}
 
+	/**
+	 * Add note.
+	 *
+	 * @param       $note
+	 * @param false $customer_note
+	 * @since 1.1.0
+	 *
+	 * @return Note|false|int|\WP_Error
+	 */
+	public function add_note( $note, $customer_note = false ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+		if ( $customer_note ) {
+			do_action( 'eaccounting_invoice_customer_note', $note, $this );
+		}
+
+		$author = 'Ever Accounting';
+		// If this is an admin comment or it has been added by the user.
+		if ( is_user_logged_in() ) {
+			$user   = get_user_by( 'id', get_current_user_id() );
+			$author = $user->display_name;
+		}
+
+		return eaccounting_insert_note(
+			array(
+				'parent_id'   => $this->get_id(),
+				'parent_type' => 'invoice',
+				'note'        => $note,
+				'highlight'   => $customer_note,
+				'author'      => $author,
+			)
+		);
+	}
 
 	/*
 	|--------------------------------------------------------------------------

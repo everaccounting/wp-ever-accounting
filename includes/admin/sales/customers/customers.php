@@ -2,76 +2,24 @@
 /**
  * Admin Revenues Page.
  *
- * @package     EverAccounting
- * @subpackage  Admin/Sales/Revenues
  * @since       1.0.2
+ * @subpackage  Admin/Sales/Revenues
+ * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
 
-function eaccounting_sales_tab_customers() {
-	if ( ! current_user_can( 'ea_manage_customer' ) ) {
-		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
-	}
-	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
-	if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-		include_once dirname( __FILE__ ) . '/edit-customer.php';
+
+function eaccounting_render_customers_tab() {
+	$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+	if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['customer_id'] ) ) {
+		$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
+		include dirname( __FILE__ ) . '/view/html-customer.php';
+	} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+		$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
+		include dirname( __FILE__ ) . '/view/html-customer-edit.php';
 	} else {
-		$add_url    = add_query_arg(
-			array(
-				'page'   => 'ea-sales',
-				'tab'    => 'customers',
-				'action' => 'add',
-			),
-			admin_url( 'admin.php' )
-		);
-		$import_url = add_query_arg(
-			array(
-				'page' => 'ea-tools',
-				'tab'  => 'import',
-			),
-			admin_url( 'admin.php' )
-		);
-
-		?>
-		<h1>
-			<?php _e( 'Customers', 'wp-ever-accounting' ); ?>
-			<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href=" <?php echo esc_url( $import_url ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
-		</h1>
-		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-customers.php';
-		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Customers();
-		$list_table->prepare_items();
-
-		/**
-		 * Fires at the top of the admin customers page.
-		 *
-		 * Use this hook to add content to this section of customers.
-		 *
-		 * @since 1.0.2
-		 */
-		do_action( 'eaccounting_customers_page_top' );
-
-		?>
-		<form id="ea-customers-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-customers' ); ?>
-
-			<input type="hidden" name="page" value="ea-sales"/>
-			<input type="hidden" name="tab" value="customers"/>
-
-			<?php $list_table->views(); ?>
-			<?php $list_table->display(); ?>
-		</form>
-		<?php
-		/**
-		 * Fires at the bottom of the admin customers page.
-		 *
-		 * Use this hook to add content to this section of customers Tab.
-		 *
-		 * @since 1.0.2
-		 */
-		do_action( 'eaccounting_customers_page_bottom' );
+		include dirname( __FILE__ ) . '/view/html-customer-list.php';
 	}
 }
 
-add_action( 'eaccounting_sales_tab_customers', 'eaccounting_sales_tab_customers' );
+add_action( 'eaccounting_sales_tab_customers', 'eaccounting_render_customers_tab' );

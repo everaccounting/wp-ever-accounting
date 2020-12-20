@@ -41,12 +41,13 @@ class Notes extends ResourceRepository {
 	 * @var array
 	 */
 	protected $data_type = array(
-		'id'            => '%d',
-		'document_id'   => '%d',
-		'document_type' => '%s',
-		'note'          => '%s',
-		'creator_name'  => '%s',
-		'date_created'  => '%s',
+		'id'           => '%d',
+		'parent_id'    => '%d',
+		'parent_type'  => '%s',
+		'note'         => '%s',
+		'highlight'    => '%d',
+		'author'       => '%s',
+		'date_created' => '%s',
 	);
 
 
@@ -63,20 +64,20 @@ class Notes extends ResourceRepository {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'include'       => '',
-				'document_id'   => '',
-				'document_type' => '',
-				'search'        => '',
-				'search_cols'   => array( 'note', 'date_created' ),
-				'orderby_cols'  => array( 'note' ),
-				'fields'        => '*',
-				'orderby'       => 'id',
-				'order'         => 'ASC',
-				'number'        => 20,
-				'offset'        => 0,
-				'paged'         => 1,
-				'return'        => 'objects',
-				'count_total'   => false,
+				'include'      => '',
+				'parent_id'    => '',
+				'parent_type'  => '',
+				'search'       => '',
+				'search_cols'  => array( 'note', 'date_created' ),
+				'orderby_cols' => array( 'note' ),
+				'fields'       => '*',
+				'orderby'      => 'id',
+				'order'        => 'ASC',
+				'number'       => 20,
+				'offset'       => 0,
+				'paged'        => 1,
+				'return'       => 'objects',
+				'count_total'  => false,
 			)
 		);
 
@@ -89,13 +90,13 @@ class Notes extends ResourceRepository {
 		$query_limit   = eaccounting_prepare_query_limit( $qv );
 		$count_total   = true === $qv['count_total'];
 
-		if ( ! empty( $qv['document_id'] ) ) {
-			$document_id  = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
-			$query_where .= " AND $this->table.`document_id` IN ($document_id)";
+		if ( ! empty( $qv['parent_id'] ) ) {
+			$parent_id    = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
+			$query_where .= " AND $this->table.`parent_id` IN ($parent_id)";
 		}
-		if ( ! empty( $qv['document_type'] ) ) {
-			$document_types = implode( "','", wp_parse_list( $qv['document_type'] ) );
-			$query_where   .= " AND $this->table.`document_type` IN ('$document_types')";
+		if ( ! empty( $qv['parent_type'] ) ) {
+			$parent_types = implode( "','", wp_parse_list( $qv['parent_type'] ) );
+			$query_where .= " AND $this->table.`parent_type` IN ('$parent_types')";
 		}
 
 		$cache_key = md5( serialize( $qv ) );

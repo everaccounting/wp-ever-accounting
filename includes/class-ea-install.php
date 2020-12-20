@@ -552,10 +552,11 @@ class EAccounting_Install {
 
 			"CREATE TABLE {$wpdb->prefix}ea_notes(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-  			`document_id` INT(11) NOT NULL,
-  			`document_type` VARCHAR(20) NOT NULL,
+  			`parent_id` INT(11) NOT NULL,
+  			`parent_type` VARCHAR(20) NOT NULL,
   			`note` TEXT DEFAULT NULL,
-  			`creator_name` VARCHAR(50) DEFAULT 'bot@eaccounting.com',
+  			`highlight` tinyint(1) NOT NULL DEFAULT '0',
+  			`author` VARCHAR(50) DEFAULT NULL ,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `document_id` (`document_id`),

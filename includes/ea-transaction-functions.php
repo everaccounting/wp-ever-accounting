@@ -254,7 +254,7 @@ function eaccounting_delete_income( $income_id ) {
  * @type string $description    Description of the transaction.
  *
  * }
- * @return array|int
+ * @return \EverAccounting\Models\Income[]|int
  */
 function eaccounting_get_incomes( $args = array() ) {
 	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );

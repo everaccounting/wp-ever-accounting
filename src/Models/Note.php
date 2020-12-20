@@ -42,11 +42,12 @@ class Note extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'document_id'   => null,
-		'document_type' => '',
-		'note'          => '',
-		'creator_name'  => '',
-		'date_created'  => null,
+		'parent_id'    => null,
+		'parent_type'  => '',
+		'note'         => '',
+		'highlight'    => '',
+		'author'       => '',
+		'date_created' => null,
 	);
 
 	/**
@@ -80,9 +81,9 @@ class Note extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'document_id'   => __( 'Document ID', 'wp-ever-accounting' ),
-			'document_type' => __( 'Document type', 'wp-ever-accounting' ),
-			'note'          => __( 'Note content', 'wp-ever-accounting' ),
+			'parent_id'   => __( 'Document ID', 'wp-ever-accounting' ),
+			'parent_type' => __( 'Document type', 'wp-ever-accounting' ),
+			'note'        => __( 'Note content', 'wp-ever-accounting' ),
 		);
 	}
 	/*
@@ -100,8 +101,8 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_document_id( $context = 'edit' ) {
-		return $this->get_prop( 'document_id', $context );
+	public function get_parent_id( $context = 'edit' ) {
+		return $this->get_prop( 'parent_id', $context );
 	}
 
 	/**
@@ -113,8 +114,8 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_document_type( $context = 'edit' ) {
-		return $this->get_prop( 'document_type', $context );
+	public function get_parent_type( $context = 'edit' ) {
+		return $this->get_prop( 'parent_type', $context );
 	}
 
 	/**
@@ -131,6 +132,19 @@ class Note extends ResourceModel {
 	}
 
 	/**
+	 * Return highlight.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_highlight( $context = 'edit' ) {
+		return $this->get_prop( 'highlight', $context );
+	}
+
+	/**
 	 * Return the note.
 	 *
 	 * @since  1.1.0
@@ -139,8 +153,8 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_creator_name( $context = 'edit' ) {
-		return $this->get_prop( 'creator_name', $context );
+	public function get_author( $context = 'edit' ) {
+		return $this->get_prop( 'author', $context );
 	}
 
 	/*
@@ -154,11 +168,11 @@ class Note extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $document_id .
+	 * @param int $parent_id .
 	 *
 	 */
-	public function set_document_id( $document_id ) {
-		$this->set_prop( 'document_id', absint( $document_id ) );
+	public function set_parent_id( $parent_id ) {
+		$this->set_prop( 'parent_id', absint( $parent_id ) );
 	}
 
 	/**
@@ -166,11 +180,31 @@ class Note extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $document_type .
+	 * @param int $parent_type .
 	 *
 	 */
-	public function set_document_type( $document_type ) {
-		$this->set_prop( 'document_type', eaccounting_clean( $document_type ) );
+	public function set_parent_type( $parent_type ) {
+		$this->set_prop( 'parent_type', eaccounting_clean( $parent_type ) );
+	}
+
+	/**
+	 * set the note.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $note .
+	 *
+	 */
+	public function set_highlight( $highlight ) {
+		$this->set_prop( 'highlight', absint( $highlight ) );
+	}
+
+	/**
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_highlighted() {
+		return ! empty( $this->get_highlight() );
 	}
 
 	/**
@@ -190,11 +224,11 @@ class Note extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $creator_name .
+	 * @param string $author .
 	 *
 	 */
-	public function set_creator_name( $creator_name ) {
-		$this->set_prop( 'creator_name', eaccounting_clean( $creator_name ) );
+	public function set_author( $author ) {
+		$this->set_prop( 'author', eaccounting_clean( $author ) );
 	}
 
 
@@ -205,10 +239,8 @@ class Note extends ResourceModel {
 	 * @return \Exception|bool
 	 */
 	public function save() {
-		if ( empty( $this->get_creator_name() ) ) {
-			$parse = wp_parse_url( site_url() );
-			$host  = isset( $parse['host'] ) ? eaccounting_clean( $parse['host'] ) : 'wpeveraccounting.com';
-			$this->set_creator_name( "bot@$host" );
+		if ( empty( $this->get_author() ) ) {
+			$this->set_author( 'Ever Accounting' );
 		}
 
 		return parent::save();

@@ -177,121 +177,63 @@ class List_Table_Customers extends List_Table {
 	}
 
 	/**
-	 * Renders the "Name" column in the customer list table.
+	 * This function renders most of the columns in the list table.
 	 *
-	 * @since  1.0.2
-	 *
-	 * @param Customer $customer The current contact object.
-	 *
-	 * @return string Data shown in the Name column.
-	 */
-	function column_name( $customer ) {
-		$name = $customer->get_name();
-
-		$value = sprintf(
-			'<a href="%1$s">%2$s</a>',
-			esc_url(
-				eaccounting_admin_url(
-					array(
-						'action'      => 'edit',
-						'tab'         => 'customers',
-						'customer_id' => $customer->get_id(),
-					)
-				)
-			),
-			$name
-		);
-
-		return apply_filters( 'eaccounting_customers_table_name', $value, $customer );
-	}
-
-	/**
-	 * Renders the "Email" column in the customer list table.
-	 *
-	 * @since  1.0.2
-	 *
-	 * @param Customer $customer The current contact object.
-	 *
-	 * @return string Data shown in the Email column.
-	 */
-	function column_email( $customer ) {
-		$email = empty( $customer->get_email() ) ? '&mdash;' : $customer->get_email();
-
-		return apply_filters( 'eaccounting_customers_table_email', $email, $customer );
-	}
-
-	/**
-	 * Renders the "Phone" column in the customer list table.
-	 *
-	 * @since  1.0.2
-	 *
-	 * @param Customer $customer The current contact object.
-	 *
-	 * @return string Data shown in the Phone column.
-	 */
-	function column_phone( $customer ) {
-		$phone = empty( $customer->get_phone() ) ? '&mdash;' : $customer->get_phone();
-
-		return apply_filters( 'eaccounting_customers_table_phone', $phone, $customer );
-	}
-
-	/**
-	 * Renders the "enabled" column in the list table.
-	 *
-	 * @since  1.0.2
-	 *
-	 * @param Customer $customer The current object.
-	 *
-	 * @return string Data shown in the "enabled" column.
-	 */
-	function column_enabled( $customer ) {
-		ob_start();
-		eaccounting_toggle(
-			array(
-				'name'  => 'enabled',
-				'id'    => 'enabled_' . $customer->get_id(),
-				'value' => $customer->get_enabled( 'edit' ),
-				'naked' => true,
-				'attr'  => array(
-					'data-id'    => $customer->get_id(),
-					'data-nonce' => wp_create_nonce( 'ea_edit_customer' ),
-				),
-			)
-		);
-		$output = ob_get_contents();
-		ob_get_clean();
-
-		return apply_filters( 'eaccounting_customers_table_enabled', $output, $customer );
-	}
-
-	/**
 	 * @since 1.0.2
 	 *
-	 * @param $customer
+	 * @param string   $column_name The name of the column
 	 *
-	 * @return string
+	 * @param Customer $customer
+	 *
+	 * @return string The column value.
 	 */
-	function column_actions( $customer ) {
-		$base_uri    = eaccounting_admin_url(
-			array(
-				'customer_id' => $customer->get_id(),
-				'tab'         => 'customers',
-			)
-		);
-		$row_actions = array();
+	function column_default( $customer, $column_name ) {
+		$customer_id = $customer->get_id();
+		switch ( $column_name ) {
+			case 'name':
+				$url   = eaccounting_admin_url(
+					array(
+						'tab'         => 'customers',
+						'action'      => 'view',
+						'customer_id' => $customer_id,
+					)
+				);
+				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( $customer->get_name() ) );
+				break;
+			case 'enabled':
+				$nonce   = wp_create_nonce( 'ea_manage_customer' );
+				$enabled = $customer->get_enabled();
+				$value   = '<label class="ea-toggle">';
+				$value  .= sprintf( '<input type="checkbox" name="enabled" value="1" data-id="%d" data-nonce="%s" checked="%s">', $customer_id, $nonce, checked( 1, $enabled, false ) );
+				$value  .= sprintf( '<span data-label-off="%s" data-label-on="%s" class="ea-toggle-slider"></span>', __( 'No', 'wp-ever-accounting' ), __( 'Yes', 'wp-ever-accounting' ) );
+				$value  .= '</label>';
+				break;
+			case 'actions':
+				$edit_url = eaccounting_admin_url(
+					array(
+						'tab'         => 'customers',
+						'action'      => 'edit',
+						'customer_id' => $customer_id,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'tab'         => 'customers',
+						'action'      => 'delete',
+						'customer_id' => $customer_id,
+					)
+				);
+				$actions  = array(
+					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
+					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
+				);
+				$value    = $this->row_actions( $actions );
+				break;
+			default:
+				return parent::column_default( $customer, $column_name );
+		}
 
-		$row_actions['edit']   = array(
-			'label'    => __( 'Edit', 'wp-ever-accounting' ),
-			'base_uri' => $base_uri,
-		);
-		$row_actions['delete'] = array(
-			'label'    => __( 'Delete', 'wp-ever-accounting' ),
-			'base_uri' => $base_uri,
-			'nonce'    => 'customer-nonce',
-		);
-		$row_actions           = apply_filters( 'eaccounting_customers_table_row_actions', $row_actions, $customer );
-
-		return $this->row_actions( $row_actions );
+		return apply_filters( 'eaccounting_' . $this->list_table_type . '_table_' . $column_name, $value, $customer );
 	}
 
 	/**
@@ -335,7 +277,7 @@ class List_Table_Customers extends List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_contact(
+					eaccounting_insert_customer(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -343,7 +285,7 @@ class List_Table_Customers extends List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_contact(
+					eaccounting_insert_customer(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -351,7 +293,7 @@ class List_Table_Customers extends List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_contact( $id );
+					eaccounting_insert_customer( $id );
 					break;
 				default:
 					do_action( 'eaccounting_customers_do_bulk_action_' . $this->current_action(), $id );

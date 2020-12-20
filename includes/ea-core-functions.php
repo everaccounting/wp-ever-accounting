@@ -139,6 +139,30 @@ function eaccounting_get_current_user_id() {
 	return $user_id;
 }
 
+/**
+ * Get user full name.
+ *
+ * @param $user_id
+ * @since 1.1.0
+ *
+ * @return string|void
+ */
+function eaccounting_get_username( $user_id ) {
+	$unknown = __( 'Unknown User', 'wp-ever-accounting' );
+	if ( empty( $user_id ) ) {
+		return $unknown;
+	}
+	$user = get_userdata( absint( $user_id ) );
+	if ( empty( $user ) ) {
+		return $unknown;
+	}
+	$name = array_filter( array( $user->first_name, $user->last_name ) );
+	if ( empty( $name ) ) {
+		return empty( $user->display_name ) ? $unknown : $user->display_name;
+	}
+
+	return implode( ' ', $name );
+}
 
 /**
  * Instance of money class.

@@ -33,6 +33,7 @@ $notes = eaccounting_get_notes(
 		'document_type' => 'invoice',
 	)
 );
+eaccounting_get_template('invoice/invoice.php', array('invoice' => $invoice ) );
 ?>
 <div id="ea-invoice" class="columns-2">
 

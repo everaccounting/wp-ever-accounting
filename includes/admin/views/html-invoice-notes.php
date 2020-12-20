@@ -30,7 +30,7 @@ if ( empty( $notes ) ) {
 						?>
 					</abbr>
 					<?php /* translators: %s note creator user */ ?>
-					<?php echo sprintf( esc_html__( 'By %s', 'wp-ever-accounting' ), $note->get_creator_name() ); ?>
+					<?php echo sprintf( esc_html__( 'By %s', 'wp-ever-accounting' ), $note->get_author() ); ?>
 					<a href="#" class="delete_note" role="button"><?php esc_html_e( 'Delete note', 'wp-ever-accounting' ); ?></a>
 				</div>
 			</li>

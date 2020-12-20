@@ -10,7 +10,6 @@
 @import "grids";
 @import "card";
 @import "form";
-@import "form-card";
 @import "pace";
 @import "blank-state";
 @import "notice";
@@ -22,6 +21,37 @@
 @import "utility";
 @import "invoice-table";
 @import "settings";
+@import "admin-common";
+
+/*------------------------------------------------------------------------------
+  Adjust all list tables
+------------------------------------------------------------------------------*/
+.eaccounting{
+  .wp-list-table{
+	.column-enabled{
+	  width: 150px;
+	}
+	.column-actions{
+	  width: 150px;
+	}
+
+	.row-actions{
+	  left: 0;
+	  a{
+		display: inline-block;
+		color: #444;
+		transition: color 0.1s ease-in;
+		text-decoration: none;
+	  }
+	  &:hover{
+		color: #444;
+	  }
+	}
+
+
+  }
+}
+
 
 .ea-admin-page {
   margin-bottom: 20px;

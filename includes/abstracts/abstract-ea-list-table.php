@@ -8,7 +8,6 @@
  */
 
 namespace EverAccounting\Abstracts;
-
 defined( 'ABSPATH' ) || exit();
 
 // Load WP_List_Table if not loaded
@@ -102,24 +101,24 @@ abstract class List_Table extends \WP_List_Table {
 	 */
 	public function __construct( $args = array() ) {
 		$args = wp_parse_args(
-			$args,
-			array(
-				'display_args' => array(),
-				'query_args'   => array(),
-			)
+				$args,
+				array(
+						'display_args' => array(),
+						'query_args'   => array(),
+				)
 		);
 
 		$this->screen = get_current_screen();
 
 		$this->display_args = wp_parse_args(
-			$args['display_args'],
-			array(
-				'hide_table_nav'       => false,
-				'hide_bulk_options'    => false,
-				'hide_pagination'      => false,
-				'columns_to_hide'      => array(),
-				'hide_column_controls' => false,
-			)
+				$args['display_args'],
+				array(
+						'hide_table_nav'       => false,
+						'hide_bulk_options'    => false,
+						'hide_pagination'      => false,
+						'columns_to_hide'      => array(),
+						'hide_column_controls' => false,
+				)
 		);
 
 		if ( ! empty( $args['query_args'] ) ) {
@@ -130,10 +129,10 @@ abstract class List_Table extends \WP_List_Table {
 		unset( $args['display_args'] );
 
 		$args = (array) wp_parse_args(
-			$args,
-			array(
-				'ajax' => false,
-			)
+				$args,
+				array(
+						'ajax' => false,
+				)
 		);
 
 		parent::__construct( $args );
@@ -297,7 +296,7 @@ abstract class List_Table extends \WP_List_Table {
 	 *
 	 * @return array Column headers.
 	 */
-	protected function get_column_info() {
+	public function get_column_info() {
 		if ( true === $this->display_args['hide_column_controls'] ) {
 			$columns = $this->get_columns();
 
@@ -354,7 +353,7 @@ abstract class List_Table extends \WP_List_Table {
 	 * @param string $which Which location the bulk actions are being rendered for.
 	 *                      Will be 'top' or 'bottom'.
 	 */
-	protected function display_tablenav( $which ) {
+	public function display_tablenav( $which ) {
 		if ( 'top' === $which ) {
 			wp_nonce_field( 'bulk-' . $this->_args['plural'] );
 		}
@@ -377,7 +376,7 @@ abstract class List_Table extends \WP_List_Table {
 					<div class="alignleft actions bulkactions">
 						<?php $this->bulk_actions( $which ); ?>
 					</div>
-					<?php
+				<?php
 				endif;
 				$this->extra_tablenav( $which );
 
@@ -388,57 +387,8 @@ abstract class List_Table extends \WP_List_Table {
 
 				<br class="clear"/>
 			</div>
-			<?php
+		<?php
 		endif;
-	}
-
-	/**
-	 * Generates the required HTML for a list of row action links.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param bool    $always_visible Whether the actions should be always visible.
-	 *
-	 * @param array[] $actions        An array of action links.
-	 *
-	 * @return string The HTML for the row actions.
-	 */
-	protected function row_actions( $actions, $always_visible = true ) {
-		$action_count = count( $actions );
-		if ( ! $action_count ) {
-			return '';
-		}
-
-		$out = '<div class="ea-dropdown"><a href="#" role="button" data-toggle="dropdown" class="ea-dropdown-button"><i class="ea-icon-dropdown"></i></a><ul class="ea-dropdown-menu">';
-
-		foreach ( $actions as $action => $args ) {
-			$args       = wp_parse_args(
-				$args,
-				array(
-					'base_uri'   => '',
-					'query_args' => '',
-					'nonce'      => '',
-					'label'      => '',
-				)
-			);
-			$base_uri   = empty( $args['base_uri'] ) ? false : $args['base_uri'];
-			$query_args = empty( $args['query_args'] ) ? array() : $args['query_args'];
-			$nonce      = empty( $args['nonce'] ) ? false : $args['nonce'];
-			$label      = empty( $args['label'] ) ? '' : $args['label'];
-			$query_args = array_merge( $query_args, array( 'action' => $action ) );
-
-			if ( ! $nonce ) {
-				$url = esc_url( add_query_arg( $query_args, $base_uri ) );
-			} else {
-				$url = wp_nonce_url( add_query_arg( $query_args, $base_uri ), $nonce );
-			}
-
-			$out .= sprintf( '<li><a href="%s" class="row-action %s">%s</a>', $url, $action, $label );
-		}
-
-		$out .= '</ul></div>';
-
-		return $out;
 	}
 
 	/**
@@ -456,7 +406,8 @@ abstract class List_Table extends \WP_List_Table {
 		switch ( $column_name ) {
 
 			default:
-				$value = isset( $item->$column_name ) ? $item->$column_name : '';
+				$getter = "get_$column_name";
+				$value  = is_callable( array( $item, $getter ) ) ? empty( $item->$getter() ) ? '&mdash;' : $item->$getter() : '&mdash;';
 				break;
 		}
 
@@ -474,50 +425,5 @@ abstract class List_Table extends \WP_List_Table {
 		$per_page = (int) apply_filters( 'eaccounting_' . $this->list_table_type . '_per_page', $this->per_page );
 
 		return parent::get_items_per_page( 'eaccounting_' . $this->list_table_type . '_per_page', $per_page );
-	}
-
-	/**
-	 * Get search columns.
-	 *
-	 * @since 1.1.0
-	 * @return array
-	 */
-	protected function get_search_columns() {
-		return $this->define_search_columns();
-	}
-
-	/**
-	 *
-	 * @param $args
-	 * @since 1.1.0
-	 *
-	 * @return array
-	 */
-	protected function get_table_query( $args ) {
-		if ( is_array( $args ) ) {
-			foreach ( $args as $key => $value ) {
-				if ( empty( $value ) ) {
-					continue;
-				}
-
-				switch ( $key ) {
-					case 's':
-					case 'offset':
-					case 'number':
-					case 'limit':
-					case 'search':
-						unset( $args[ $key ] );
-						break;
-					case 'status':
-					case 'enabled':
-						$status          = 'active' === $value && ! is_numeric( $value ) ? 1 : 0;
-						$args['enabled'] = $status;
-						unset( $args[ $key ] );
-						break;
-				}
-			}
-		}
-
-		return $args;
 	}
 }

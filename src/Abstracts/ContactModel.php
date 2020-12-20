@@ -471,7 +471,7 @@ abstract class ContactModel extends ResourceModel {
 	 * @since 1.0.2
 	 * @return string
 	 */
-	public function get_avatar_url() {
-		return get_avatar_url( $this->get_email() );
+	public function get_avatar_url( $args = array() ) {
+		return get_avatar_url( $this->get_email(), wp_parse_args($args, array('size' => '100')) );
 	}
 }

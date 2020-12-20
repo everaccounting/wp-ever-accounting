@@ -189,32 +189,6 @@ class Invoices extends ResourceRepository {
 		return $results;
 	}
 
-
-	/**
-	 * Add invoice note.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param $invoice
-	 * @param $note
-	 *
-	 * @return array
-	 */
-	public function add_note( $content, $invoice ) {
-		$note = new Note();
-		$note->set_props(
-			array(
-				'parent_id'   => $invoice->get_id(),
-				'parent_type' => 'invoice',
-				'content'     => $content,
-			)
-		);
-
-		$note->save();
-
-		return $note->get_data();
-	}
-
 	/**
 	 * @param $invoice
 	 * @since 1.1.0

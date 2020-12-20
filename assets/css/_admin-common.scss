@@ -1,0 +1,87 @@
+/*------------------------------------------------------------------------------
+  Used for page layout like wp post edit screen
+------------------------------------------------------------------------------*/
+.ea-page-columns{
+  position: relative;
+  @include clearfix();
+
+  &__content{
+	width: calc(100% - 300px);
+	min-width: 463px;
+	float: left;
+	@media only screen and (max-width: 850px) {
+	  margin-right: 0;
+	  width: 100%;
+	}
+  }
+  &__aside{
+	float: right;
+	width: 280px;
+	@media only screen and (max-width: 850px) {
+	  margin-right: 0;
+	  width: 100%;
+	}
+  }
+
+  .altered &{
+	&__content{
+	  float: right;
+	}
+	&__aside{
+	  float: left;
+	}
+  }
+
+}
+
+/*------------------------------------------------------------------------------
+  Helpers for small components
+------------------------------------------------------------------------------*/
+.ea-avatar{
+  position: relative;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 50%;
+  img{
+	width: 100%;
+	height: auto;
+  }
+}
+
+.ea-list-group{
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0;
+  &__item{
+	position: relative;
+	display: block;
+	padding: 10px 12px;
+	background-color: #fff;
+	border-top: 1px solid #e1e2e2;
+  }
+
+  &__title{
+	font-size: 13px;
+	font-weight: bold;
+	color: #555;
+  }
+
+  &__text{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	color: #666;
+  }
+
+}
+
+/*------------------------------------------------------------------------------
+  Helpers for positing
+------------------------------------------------------------------------------*/
+.ea-center-block{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}

@@ -7,11 +7,9 @@
 
 	&::before,
 	&::after {
-		display: table;
-	}
-
-	&::after {
-		clear: both;
+	  content: "";
+	  clear: both;
+	  display: table;
 	}
 }
 

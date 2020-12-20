@@ -4,7 +4,6 @@
   margin: 20px auto 10px;
   box-sizing: border-box;
   background: #fff;
-  //box-shadow: 0 0 0 1px #e1e2e2;
   border: 1px solid #e1e2e2;
   width: 100%;
   max-width: none;
@@ -48,6 +47,9 @@
 	font-size: 1.2em;
   }
 
+  &__body{
+	box-sizing: content-box;
+  }
 
   &__inside {
 	margin: 15px 0 15px 0;
@@ -63,6 +65,18 @@
 
   &:first-child {
 	margin-top: 20px;
+  }
+
+  .nav-tab-wrapper{
+	border-bottom: 1px solid #e1e2e2;
+	.nav-tab{
+	  background: #f8f8f8;
+	  font-size: 13px;
+	}
+	.nav-tab-active{
+	  background: #ffffff;
+	  border-bottom: 1px solid #ffffff !important;
+	}
   }
 
 }

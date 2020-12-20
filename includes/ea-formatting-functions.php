@@ -182,6 +182,17 @@ function eaccounting_format_datetime( $date, $format = '' ) {
 }
 
 /**
+ * @param        $date
+ * @param string $format
+ * @since 1.1.0
+ *
+ * @return string
+ */
+function eaccounting_date( $date, $format = '' ) {
+	return eaccounting_format_datetime( $date, $format );
+}
+
+/**
  * Array merge and sum function.
  *
  * Source:  https://gist.github.com/Nickology/f700e319cbafab5eaedc
