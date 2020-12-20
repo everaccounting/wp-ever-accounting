@@ -285,7 +285,7 @@ class List_Table_Item extends List_Table {
 		$output = ob_get_contents();
 		ob_get_clean();
 
-		return apply_filters( 'eaccounting_item_table_enabled', $output, $item );
+		return apply_filters( 'eaccounting_items_table_enabled', $output, $item );
 	}
 
 	/**
