@@ -267,7 +267,7 @@ class List_Table_Currency extends List_Table {
 		$output = ob_get_contents();
 		ob_get_clean();
 
-		return apply_filters( 'eaccounting_accounts_table_enabled', $output, $currency );
+		return apply_filters( 'eaccounting_currencies_table_enabled', $output, $currency );
 	}
 
 	/**
