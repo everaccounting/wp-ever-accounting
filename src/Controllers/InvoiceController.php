@@ -30,11 +30,11 @@ class InvoiceController extends Singleton {
 	 * RevenueController constructor.
 	 */
 	public function __construct() {
-		add_action('eaccounting_invoice_action_send_customer_invoice', array( __CLASS__, 'send_customer_invoice'));
+		add_action( 'eaccounting_invoice_action_send_customer_invoice', array( __CLASS__, 'send_customer_invoice' ) );
 	}
 
-	public static function send_customer_invoice($invoice){
-		Emails::send_customer_invoice($invoice);
+	public static function send_customer_invoice( $invoice ) {
+		Emails::send_customer_invoice( $invoice );
 	}
 
 }
