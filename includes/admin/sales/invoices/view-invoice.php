@@ -18,20 +18,20 @@ try {
 $company_country          = eaccounting()->settings->get( 'company_country' );
 $company_country_nicename = ! empty( $company_country ) ? eaccounting_get_countries()[ $company_country ] : '';
 $company_address          = eaccounting_format_address(
-		array(
-				'street'   => eaccounting()->settings->get( 'company_address' ),
-				'city'     => eaccounting()->settings->get( 'company_city' ),
-				'state'    => eaccounting()->settings->get( 'company_state' ),
-				'postcode' => eaccounting()->settings->get( 'company_postcode' ),
-				'country'  => $company_country_nicename,
-		)
+	array(
+		'street'   => eaccounting()->settings->get( 'company_address' ),
+		'city'     => eaccounting()->settings->get( 'company_city' ),
+		'state'    => eaccounting()->settings->get( 'company_state' ),
+		'postcode' => eaccounting()->settings->get( 'company_postcode' ),
+		'country'  => $company_country_nicename,
+	)
 );
 
 $notes = eaccounting_get_notes(
-		array(
-				'document_id'   => $invoice->get_id(),
-				'document_type' => 'invoice',
-		)
+	array(
+		'document_id'   => $invoice->get_id(),
+		'document_type' => 'invoice',
+	)
 );
 ?>
 <div id="ea-invoice" class="columns-2">
@@ -45,18 +45,18 @@ $notes = eaccounting_get_notes(
 				<div>
 					<?php
 					echo sprintf(
-							'<a href="%s" class="button-secondary button">%s</a>',
-							esc_url(
-									add_query_arg(
-											array(
-													'page'       => 'ea-sales',
-													'action'     => 'edit',
-													'invoice_id' => $invoice->get_id(),
-											),
-											admin_url( 'admin.php' )
-									)
-							),
-							__( 'Edit', 'wp-ever-accounting' )
+						'<a href="%s" class="button-secondary button">%s</a>',
+						esc_url(
+							add_query_arg(
+								array(
+									'page'       => 'ea-sales',
+									'action'     => 'edit',
+									'invoice_id' => $invoice->get_id(),
+								),
+								admin_url( 'admin.php' )
+							)
+						),
+						__( 'Edit', 'wp-ever-accounting' )
 					);
 					?>
 					<button class="button-primary button receive-payment">Receive Payment</button>
@@ -254,65 +254,65 @@ $notes = eaccounting_get_notes(
 	<form action="" method="post">
 		<?php
 		eaccounting_text_input(
-				array(
-						'label'       => __( 'Date', 'wp-ever-accounting' ),
-						'name'        => 'date',
-						'placeholder' => __( 'Enter Date', 'wp-ever-accounting' ),
-						'data_type'   => 'date',
-						'value'       => date( 'Y-m-d' ),
-						'required'    => true,
-				)
+			array(
+				'label'       => __( 'Date', 'wp-ever-accounting' ),
+				'name'        => 'date',
+				'placeholder' => __( 'Enter Date', 'wp-ever-accounting' ),
+				'data_type'   => 'date',
+				'value'       => date( 'Y-m-d' ),
+				'required'    => true,
+			)
 		);
 		eaccounting_text_input(
-				array(
-						'label'       => __( 'Amount', 'wp-ever-accounting' ),
-						'name'        => 'amount',
-						'value'       => $invoice->get_total_due(),
-						'data_type'   => 'price',
-						'required'    => true,
-						'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),
-					/* translators: %s amount */
-						'desc'        => sprintf( __( 'Total amount due:%s', 'wp-ever-accounting' ), eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ) ),
-				)
+			array(
+				'label'       => __( 'Amount', 'wp-ever-accounting' ),
+				'name'        => 'amount',
+				'value'       => $invoice->get_total_due(),
+				'data_type'   => 'price',
+				'required'    => true,
+				'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),
+				/* translators: %s amount */
+					'desc'    => sprintf( __( 'Total amount due:%s', 'wp-ever-accounting' ), eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ) ),
+			)
 		);
 		eaccounting_account_dropdown(
-				array(
-						'label'       => __( 'Account', 'wp-ever-accounting' ),
-						'name'        => 'account_id',
-						'creatable'   => false,
-						'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
-						'required'    => true,
-				)
+			array(
+				'label'       => __( 'Account', 'wp-ever-accounting' ),
+				'name'        => 'account_id',
+				'creatable'   => false,
+				'placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
+				'required'    => true,
+			)
 		);
 		eaccounting_payment_method_dropdown(
-				array(
-						'label'    => __( 'Payment Method', 'wp-ever-accounting' ),
-						'name'     => 'payment_method',
-						'required' => true,
-						'value'    => '',
-				)
+			array(
+				'label'    => __( 'Payment Method', 'wp-ever-accounting' ),
+				'name'     => 'payment_method',
+				'required' => true,
+				'value'    => '',
+			)
 		);
 		eaccounting_textarea(
-				array(
-						'label'       => __( 'Description', 'wp-ever-accounting' ),
-						'name'        => 'description',
-						'value'       => '',
-						'required'    => false,
-						'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
-				)
+			array(
+				'label'       => __( 'Description', 'wp-ever-accounting' ),
+				'name'        => 'description',
+				'value'       => '',
+				'required'    => false,
+				'placeholder' => __( 'Enter description', 'wp-ever-accounting' ),
+			)
 		);
 		eaccounting_hidden_input(
-				array(
-						'name'  => 'invoice_id',
-						'value' => $invoice->get_id(),
-				)
+			array(
+				'name'  => 'invoice_id',
+				'value' => $invoice->get_id(),
+			)
 		);
 
 		eaccounting_hidden_input(
-				array(
-						'name'  => 'action',
-						'value' => 'eaccounting_add_invoice_payment',
-				)
+			array(
+				'name'  => 'action',
+				'value' => 'ea_add_invoice_payment',
+			)
 		);
 		wp_nonce_field( 'ea_add_invoice_payment' );
 		?>
