@@ -63,7 +63,7 @@ function eaccounting_misc_currencies_tab() {
 		do_action( 'eaccounting_currencies_page_top' );
 
 		?>
-		<form id="ea-currencies-list-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
+		<form id="ea-currencies-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
 			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-currencies' ); ?>
 
 			<input type="hidden" name="page" value="ea-settings"/>

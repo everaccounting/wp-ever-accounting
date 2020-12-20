@@ -51,10 +51,16 @@ function eaccounting_admin_expenses_page() {
  * @since 1.0.2
  */
 function eaccounting_get_expenses_tabs() {
-	$tabs             = array();
-	$tabs['bills']    = __( 'Bills', 'wp-ever-accounting' );
-	$tabs['payments'] = __( 'Payments', 'wp-ever-accounting' );
-	$tabs['vendors']  = __( 'Vendors', 'wp-ever-accounting' );
+	$tabs = array();
+	if ( current_user_can( 'ea_manage_bill' ) ) {
+		$tabs['bills'] = __( 'Bills', 'wp-ever-accounting' );
+	}
+	if ( current_user_can( 'ea_manage_payment' ) ) {
+		$tabs['payments'] = __( 'Payments', 'wp-ever-accounting' );
+	}
+	if ( current_user_can( 'ea_manage_vendor' ) ) {
+		$tabs['vendors'] = __( 'Vendors', 'wp-ever-accounting' );
+	}
 
 	return apply_filters( 'eaccounting_expenses_tabs', $tabs );
 }

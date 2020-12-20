@@ -1480,6 +1480,7 @@ class Settings {
 
 			<?php self::render_tabs( $tabs, $current_tab ); ?>
 			<?php self::render_subsub( $tab_sections, $current_tab, $current_section ); ?>
+
 			<h1 class="screen-reader-text"><?php echo esc_html( $current_tab_label ); ?></h1>
 
 			<?php

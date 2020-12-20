@@ -12,8 +12,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use EverAccounting\Contact;
-use EverAccounting\Query_Contact;
+use EverAccounting\Models\Vendor;
 
 /**
  * Class List_Table_Vendors
@@ -169,7 +168,7 @@ class List_Table_Vendors extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Contact $vendor The current object.
+	 * @param Vendor $vendor The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
@@ -182,7 +181,7 @@ class List_Table_Vendors extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Contact $vendor The current contact object.
+	 * @param Vendor $vendor The current contact object.
 	 *
 	 * @return string Data shown in the Name column.
 	 */
@@ -211,7 +210,7 @@ class List_Table_Vendors extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Contact $vendor The current contact object.
+	 * @param Vendor $vendor The current contact object.
 	 *
 	 * @return string Data shown in the Email column.
 	 */
@@ -226,7 +225,7 @@ class List_Table_Vendors extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Contact $vendor The current contact object.
+	 * @param Vendor $vendor The current contact object.
 	 *
 	 * @return string Data shown in the Phone column.
 	 */
@@ -241,7 +240,7 @@ class List_Table_Vendors extends List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Contact $vendor The current object.
+	 * @param Vendor $vendor The current object.
 	 *
 	 * @return string Data shown in the "enabled" column.
 	 */
@@ -253,11 +252,9 @@ class List_Table_Vendors extends List_Table {
 				'id'    => 'enabled_' . $vendor->get_id(),
 				'value' => $vendor->get_enabled( 'edit' ),
 				'naked' => true,
-				'class' => 'ea_item_status_update',
 				'attr'  => array(
-					'data-object_id'   => $vendor->get_id(),
-					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-					'data-object_type' => 'vendor',
+					'data-id'   => $vendor->get_id(),
+					'data-nonce'       => wp_create_nonce( 'ea_edit_vendor' ),
 				),
 			)
 		);

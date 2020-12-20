@@ -11,7 +11,6 @@ namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
 use EverAccounting\Models\Item;
-use EverAccounting\Repositories\Items;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -277,11 +276,9 @@ class List_Table_Item extends List_Table {
 				'id'    => 'enabled_' . $item->get_id(),
 				'value' => $item->get_enabled( 'edit' ),
 				'naked' => true,
-				'class' => 'ea_item_status_update',
 				'attr'  => array(
-					'data-object_id'   => $item->get_id(),
-					'data-nonce'       => wp_create_nonce( 'ea_status_update' ),
-					'data-object_type' => 'item',
+					'data-id'    => $item->get_id(),
+					'data-nonce' => wp_create_nonce( 'ea_edit_item' ),
 				),
 			)
 		);
@@ -292,7 +289,7 @@ class List_Table_Item extends List_Table {
 	}
 
 	/**
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 * @param $item
 	 *
@@ -326,7 +323,7 @@ class List_Table_Item extends List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @since  1.0.2
+	 * @since  1.1.0
 	 * @return void
 	 */
 	function no_items() {
@@ -336,7 +333,7 @@ class List_Table_Item extends List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return void
 	 */
 	public function process_bulk_action() {
@@ -409,7 +406,7 @@ class List_Table_Item extends List_Table {
 	 * Retrieve the view types
 	 *
 	 * @access public
-	 * @since  1.0.2
+	 * @since  1.1.0
 	 * @return array $views All the views available
 	 */
 	public function get_views() {
@@ -432,7 +429,7 @@ class List_Table_Item extends List_Table {
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * @return void
 	 */
 	public function prepare_items() {

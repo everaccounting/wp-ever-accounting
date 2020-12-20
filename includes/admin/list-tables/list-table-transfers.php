@@ -10,7 +10,7 @@
 namespace EverAccounting\Admin\ListTables;
 
 use EverAccounting\Abstracts\List_Table;
-use \EverAccounting\Transfer;
+use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit();
 

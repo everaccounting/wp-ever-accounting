@@ -733,7 +733,6 @@ class EAccounting_Install {
 			$wp_roles->add_cap( 'administrator', 'ea_manage_currency' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_item' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_invoice' );
-			$wp_roles->add_cap( 'administrator', 'ea_manage_line_item' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 		}
 	}
