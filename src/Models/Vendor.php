@@ -90,7 +90,7 @@ class Vendor extends ResourceModel {
 			$this->repository->read( $this );
 		}
 
-		// If not income then reset to default
+		// If not expense then reset to default
 		if ( 'vendor' !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
