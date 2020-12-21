@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Income extends ResourceModel {
+	use CurrencyTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -82,8 +85,6 @@ class Income extends ResourceModel {
 			$this->set_id( $data->id );
 		} elseif ( is_array( $data ) ) {
 			$this->set_props( $data );
-		} elseif ( is_string( $data ) && $data = self::get_id_by_type_id( $data ) ) { // phpcs:ignore
-			$this->set_id( $data );
 		} else {
 			$this->set_object_read( true );
 		}
@@ -131,19 +132,6 @@ class Income extends ResourceModel {
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
-	}
-
-	/**
-	 * Transaction type.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $context
-	 *
-	 * @return mixed|null
-	 */
-	public function get_type_id( $context = 'edit' ) {
-		return $this->get_prop( 'type_id', $context );
 	}
 
 	/**
@@ -375,18 +363,6 @@ class Income extends ResourceModel {
 	}
 
 	/**
-	 * Set type id.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param $value
-	 *
-	 */
-	public function set_type_id( $value ) {
-		$this->set_prop( 'type_id', absint( $value ) );
-	}
-
-	/**
 	 * Set transaction paid.
 	 *
 	 * @since 1.0.2
@@ -565,43 +541,6 @@ class Income extends ResourceModel {
 	|
 	*/
 	/**
-	 * Get invoice ID based on field type.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $field
-	 * @param        $value
-	 *
-	 * @return int|mixed
-	 */
-	public static function get_id_by_type_id( $value ) {
-		global $wpdb;
-
-		if ( empty( $value ) ) {
-			return 0;
-		}
-
-		$value = (int) eaccounting_sanitize_number( $value );
-
-		// Maybe retrieve from the cache.
-		$income_id = wp_cache_get( "income-type-id-$value", 'ea_incomes' );
-		if ( false !== $income_id ) {
-			return $income_id;
-		}
-
-		// Fetch from the db.
-		$table     = $wpdb->prefix . 'ea_transactions';
-		$income_id = (int) $wpdb->get_var(
-			$wpdb->prepare( "SELECT `id` FROM $table WHERE `type_id`=%d  AND type='income' LIMIT 1", $value )
-		);
-
-		// Update the cache with our data
-		wp_cache_set( "income-type-id-$value", $income_id, 'ea_incomes' );
-
-		return $income_id;
-	}
-
-	/**
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
@@ -619,25 +558,7 @@ class Income extends ResourceModel {
 			$currency = new Currency( $this->get_currency_code() );
 			$this->set_currency_rate( $currency->get_rate() );
 		}
-
-		$this->maybe_set_type_id();
-
 		//saving same
 		return parent::save();
-	}
-
-	/**
-	 * Maybe set income id.
-	 *
-	 * @since 1.1.0
-	 *
-	 */
-	protected function maybe_set_type_id() {
-		if ( ! empty( $this->get_type_id() ) ) {
-			return;
-		}
-		global $wpdb;
-		$max = (int) $wpdb->get_var( "select max(type_id) from {$wpdb->prefix}ea_transactions where `type`='income'" );
-		$this->set_type_id( $max + 1 );
 	}
 }

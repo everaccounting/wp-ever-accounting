@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Account extends ResourceModel {
+	use CurrencyTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -33,7 +36,7 @@ class Account extends ResourceModel {
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_account';
+	public $cache_group = 'ea_accounts';
 
 	/**
 	 * Item Data array.
@@ -78,7 +81,7 @@ class Account extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'accounts' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );

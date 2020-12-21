@@ -12,7 +12,6 @@ namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\ResourceRepository;
 use EverAccounting\Models\LineItem;
-use EverAccounting\Models\LineTax;
 
 defined( 'ABSPATH' ) || exit;
 

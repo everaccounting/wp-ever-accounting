@@ -129,6 +129,7 @@ class Ajax {
 			'get_customers',
 			'get_currencies',
 			'get_currency',
+			'get_currency_codes',
 			'get_expense_categories',
 			'get_income_categories',
 			'get_item_categories',
@@ -692,6 +693,17 @@ class Ajax {
 		}
 
 		wp_send_json_success( $currency->get_data() );
+	}
+
+	/**
+	 * Get currency codes.
+	 * @since 1.1.0
+	 */
+	public static function get_currency_codes(){
+		self::verify_nonce( 'ea_get_currency_codes' );
+		self::check_permission( 'manage_eaccounting' );
+		$currencies = eaccounting_get_global_currencies();
+		wp_send_json_success( $currencies );
 	}
 
 	/**

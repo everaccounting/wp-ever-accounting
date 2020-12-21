@@ -72,7 +72,7 @@ final class EverAccounting {
 	 * Return plugin version.
 	 *
 	 * @since 1.2.0
-	 * *@return string
+	 * @return string
 	 */
 	public function get_version() {
 		return $this->version;

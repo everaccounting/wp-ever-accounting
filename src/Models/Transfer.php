@@ -11,7 +11,6 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
-use EverAccounting\Repositories\Transfers;
 
 defined( 'ABSPATH' ) || exit;
 

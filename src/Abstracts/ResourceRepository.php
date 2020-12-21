@@ -28,7 +28,6 @@ abstract class ResourceRepository {
 	 */
 	protected $meta_type = 'contact';
 
-
 	/**
 	 * Gets a list of props and meta keys that need updated based on change state
 	 * or if they are present in the database or not.
