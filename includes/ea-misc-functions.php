@@ -2254,3 +2254,11 @@ function eaccounting_get_countries() {
 
 	return apply_filters( 'eaccounting_countries', $countries );
 }
+
+function eaccounting_get_attachment_image( $attachment_id, $type = 'item' ) {
+	if ( empty( $attachment_id ) || empty( wp_get_attachment_image( $attachment_id ) ) ) {
+		return sprintf( '<img src="%s" alt="image"/>', eaccounting()->plugin_url( 'assets/images/item-placeholder.png' ) );
+	}
+
+	return wp_get_attachment_image( $attachment_id );
+}
