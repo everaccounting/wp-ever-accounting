@@ -49,6 +49,51 @@
   }
 }
 
+.ea-attachment{
+  $self: &;
+
+  &__preview{
+	margin-right: 15px;
+	width: 96px;
+	height: 96px;
+	border: 1px solid #e8e8e8;
+	background: #f8f8f8;
+	color: #ccc;
+	position: relative;
+	font-size: 21px;
+	display: block;
+	text-align: center;
+	padding: 5px;
+
+	a{
+	  width: 100%;
+	  height: 100%;
+	  overflow: hidden;
+	  display: block;
+	}
+
+	img {
+	  width: 100%;
+	  height: auto;
+	}
+
+  }
+
+  &__remove{
+	display: none;
+  }
+
+  &__upload{
+	display: inline-block;
+  }
+
+ &.has--image{
+	display: flex;
+	align-items: center;
+  }
+
+}
+
 .ea-list-group{
   display: flex;
   flex-direction: column;

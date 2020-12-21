@@ -112,10 +112,11 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'name'          => 'description',
 						'value'         => $item->get_description(),
 						'required'      => false,
-						'wrapper_class' => 'ea-col-12',
+						'wrapper_class' => 'ea-col-6',
 						'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
 					)
 				);
+				eaccounting_file_input();
 				eaccounting_file_input(
 					array(
 						'label'         => __( 'Image', 'wp-ever-accounting' ),
@@ -126,6 +127,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'placeholder'   => __( 'Upload Image', 'wp-ever-accounting' ),
 					)
 				);
+
 				eaccounting_hidden_input(
 					array(
 						'name'  => 'id',
