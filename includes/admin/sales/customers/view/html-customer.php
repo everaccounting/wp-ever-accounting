@@ -39,7 +39,7 @@ $active = isset( $_GET['subtab'] ) ? $_GET['subtab'] : current( array_keys( $tab
 					</a>
 				<?php endforeach; ?>
 			</nav>
-			<div class="ea-card__body">
+			<div class="ea-card__inside">
 				<?php
 				switch ( $active ) {
 					case 'transactions':

@@ -43,8 +43,8 @@ function eaccounting_sales_tab_revenues() {
 												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-revenues.php';
-		$list_table = new EverAccounting\Admin\ListTables\List_Table_Revenues();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-income-list-table.php';
+		$list_table = new EAccounting_Income_List_Table();
 		$list_table->prepare_items();
 
 		/**
