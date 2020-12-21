@@ -18,8 +18,8 @@ function eaccounting_banking_tab_accounts() {
 	if ( in_array( $action, array( 'edit', 'add' ), true ) ) {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/banking/accounts/edit-account.php';
 	} else {
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-accounts.php';
-		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Accounts();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-account-list-table.php';
+		$list_table = new EAccounting_Account_List_Table ();
 		$list_table->prepare_items();
 		$add_url    = add_query_arg(
 			array(

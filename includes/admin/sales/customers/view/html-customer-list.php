@@ -3,8 +3,8 @@
  * Customer list
  */
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-customers.php' );
-$customers_table = new EverAccounting\Admin\ListTables\List_Table_Customers();
+include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-customer-list-table.php' );
+$customers_table = new EAccounting_Customer_List_Table();
 $customers_table->prepare_items();
 ?>
 	<h1 class="wp-heading-inline"><?php _e( 'Customers', 'wp-ever-accounting' ); ?></h1>

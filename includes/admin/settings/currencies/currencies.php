@@ -49,8 +49,8 @@ function eaccounting_misc_currencies_tab() {
 			?>
 		</h1>
 		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-currencies.php';
-		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Currency();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-currency-list-table.php';
+		$list_table = new EAccounting_Currency_List_Table();
 		$list_table->prepare_items();
 
 		/**

@@ -49,8 +49,8 @@ function eaccounting_misc_categories_tab() {
 			?>
 		</h1>
 		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-categories.php';
-		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Categories();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-category-list-table.php';
+		$list_table = new EAccounting_Category_List_Table();
 		$list_table->prepare_items();
 
 		/**
