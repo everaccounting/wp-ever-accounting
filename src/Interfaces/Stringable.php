@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Interfaces;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Interface for any object that can be casted to string.
  */

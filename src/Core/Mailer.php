@@ -2,6 +2,7 @@
 
 namespace EverAccounting\Core;
 
+defined( 'ABSPATH' ) || exit;
 
 class Mailer {
 	/**

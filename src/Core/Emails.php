@@ -6,6 +6,8 @@ namespace EverAccounting\Core;
 use EverAccounting\Abstracts\Singleton;
 use EverAccounting\Models\Invoice;
 
+defined( 'ABSPATH' ) || exit;
+
 class Emails extends Singleton {
 
 	/**

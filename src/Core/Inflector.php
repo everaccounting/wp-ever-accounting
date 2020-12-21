@@ -9,6 +9,8 @@
 
 namespace EverAccounting\Core;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Class Inflector
  *

@@ -2,6 +2,8 @@
 
 namespace EverAccounting\REST;
 
+defined( 'ABSPATH' ) || exit;
+
 class SettingOptionsController extends Controller {
 
 	/**

@@ -2,6 +2,8 @@
 
 namespace EverAccounting\Interfaces;
 
+defined( 'ABSPATH' ) || exit;
+
 interface Arrayable {
 	/**
 	 * Returns object as string.
