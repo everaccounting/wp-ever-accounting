@@ -33,7 +33,7 @@ class Item extends ResourceModel {
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_items';
+	public $cache_group = 'es_items';
 
 	/**
 	 * Item Data array.
@@ -78,7 +78,7 @@ class Item extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'items' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );

@@ -455,7 +455,6 @@ class EAccounting_Install {
 			"CREATE TABLE {$wpdb->prefix}ea_transactions(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `type` VARCHAR(100) DEFAULT NULL,
-            `type_id` INT(11) NOT NULL,
 		  	`payment_date` date NOT NULL,
 		  	`amount` DOUBLE(15,4) NOT NULL,
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',

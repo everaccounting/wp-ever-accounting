@@ -11,7 +11,6 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
-use EverAccounting\Repositories\Currencies;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -34,7 +33,7 @@ class Currency extends ResourceModel {
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_currency';
+	public $cache_group = 'ea_currencies';
 
 	/**
 	 * Item Data array.
@@ -46,7 +45,7 @@ class Currency extends ResourceModel {
 		'name'               => '',
 		'code'               => '',
 		'rate'               => 1,
-		'precision'          => 0,
+		'precision'          => 2,
 		'symbol'             => '',
 		'subunit'            => 2,
 		'position'           => 'before',
@@ -85,7 +84,7 @@ class Currency extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'currencies' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );

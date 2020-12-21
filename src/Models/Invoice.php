@@ -12,6 +12,7 @@ namespace EverAccounting\Models;
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Invoices;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,6 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Invoice extends ResourceModel {
+	use CurrencyTrait;
 
 	/**
 	 * This is the name of this object type.

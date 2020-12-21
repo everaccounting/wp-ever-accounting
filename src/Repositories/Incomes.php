@@ -47,7 +47,6 @@ class Incomes extends ResourceRepository {
 	 */
 	protected $data_type = array(
 		'id'             => '%d',
-		'type_id'        => '%d',
 		'type'           => '%s',
 		'payment_date'   => '%s',
 		'currency_code'  => '%s', // protected
@@ -96,7 +95,6 @@ class Incomes extends ResourceRepository {
 			);
 
 			// Update the cache with our data
-			wp_cache_set( 'income-type-id-' . $raw_item->type_id, $raw_item->id, $item->get_cache_group() );
 			wp_cache_set( $item->get_id(), $raw_item, $item->get_cache_group() );
 		}
 

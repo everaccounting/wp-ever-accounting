@@ -21,7 +21,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 <div class="ea-card">
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php echo $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add Item', 'wp-ever-accounting' ); ?></h3>
-		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
+		<a href="<?php echo $back_url; ?>" class="button button-secondary"><?php _e( 'All Items', 'wp-ever-accounting' ); ?></a>
 	</div>
 
 	<div class="ea-card__inside">
@@ -38,16 +38,29 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'required'      => true,
 					)
 				);
-				eaccounting_text_input(
-					array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Quantity', 'wp-ever-accounting' ),
-						'name'          => 'quantity',
-						'placeholder'   => __( 'Enter Quantity', 'wp-ever-accounting' ),
-						'value'         => $item->get_quantity(),
-						'required'      => true,
-					)
+				eaccounting_category_dropdown(
+						array(
+								'wrapper_class' => 'ea-col-6',
+								'label'         => __( 'Category', 'wp-ever-accounting' ),
+								'name'          => 'category_id',
+								'value'         => $item->get_category_id(),
+								'required'      => false,
+								'type'          => 'item',
+								'creatable'     => true,
+								'ajax_action'   => 'eaccounting_get_item_categories',
+								'modal_id'      => 'ea-modal-add-item-category',
+						)
 				);
+//				eaccounting_text_input(
+//					array(
+//						'wrapper_class' => 'ea-col-6',
+//						'label'         => __( 'Quantity', 'wp-ever-accounting' ),
+//						'name'          => 'quantity',
+//						'placeholder'   => __( 'Enter Quantity', 'wp-ever-accounting' ),
+//						'value'         => $item->get_quantity(),
+//						'required'      => true,
+//					)
+//				);
 				eaccounting_text_input(
 					array(
 						'wrapper_class' => 'ea-col-6',
@@ -101,20 +114,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'required'      => false,
 						'wrapper_class' => 'ea-col-12',
 						'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
-					)
-				);
-
-				eaccounting_category_dropdown(
-					array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Category', 'wp-ever-accounting' ),
-						'name'          => 'category_id',
-						'value'         => $item->get_category_id(),
-						'required'      => false,
-						'type'          => 'item',
-						'creatable'     => true,
-						'ajax_action' => 'eaccounting_get_item_categories',
-						'modal_id' => 'ea-modal-add-item-category',
 					)
 				);
 				eaccounting_file_input(

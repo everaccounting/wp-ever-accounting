@@ -33,7 +33,7 @@ class Category extends ResourceModel {
 	 * @since 1.1.0
 	 * @var string
 	 */
-	public $cache_group = 'ea_category';
+	public $cache_group = 'ea_categories';
 
 	/**
 	 * Item Data array.
@@ -53,7 +53,7 @@ class Category extends ResourceModel {
 	/**
 	 * Get the category if ID is passed, otherwise the category is new and empty.
 	 *
-	 * @param int|string|object|Item $item Item object to read.
+	 * @param int|object|Category $item Item object to read.
 	 */
 	public function __construct( $item = 0 ) {
 		parent::__construct( $item );
