@@ -166,7 +166,7 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 				$url   = eaccounting_admin_url(
 					array(
 						'tab'       => 'incomes',
-						'action'    => 'edit',
+						'action'    => 'view',
 						'income_id' => $income_id,
 					)
 				);

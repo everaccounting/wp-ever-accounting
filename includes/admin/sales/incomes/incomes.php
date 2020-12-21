@@ -8,74 +8,20 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-function eaccounting_sales_tab_revenues() {
+function eaccounting_sales_tab_incomes() {
 	if ( ! current_user_can( 'ea_manage_revenue' ) ) {
 		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
 	}
-	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
-	if ( in_array( $action, array( 'add', 'edit' ), true ) ) {
-		include_once dirname( __FILE__ ) . '/edit-revenue.php';
-	} elseif ( in_array( $action, array( 'view' ), true ) ) {
-		include_once dirname( __FILE__ ) . '/view-revenue.php';
+	$requested_view = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
+	if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['income_id'] ) ) {
+		$income_id = isset( $_GET['income_id'] ) ? absint( $_GET['income_id'] ) : null;
+		include dirname( __FILE__ ) . '/view-income.php';
+	} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+		$income_id = isset( $_GET['income_id'] ) ? absint( $_GET['income_id'] ) : null;
+		include dirname( __FILE__ ) . '/edit-income.php';
 	} else {
-		?>
-		<h1>
-			<?php _e( 'Revenues', 'wp-ever-accounting' ); ?>
-			<a class="page-title-action" href="
-			<?php
-			echo eaccounting_admin_url(
-				array(
-					'tab'    => 'revenues',
-					'action' => 'add',
-				)
-			);
-			?>
-												"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
-			<a class="page-title-action" href="
-			<?php
-			echo eaccounting_admin_url(
-				array(
-					'page' => 'ea-tools',
-					'tab'  => 'import',
-				)
-			);
-			?>
-												"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
-		</h1>
-		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-income-list-table.php';
-		$list_table = new EAccounting_Income_List_Table();
-		$list_table->prepare_items();
-
-		/**
-		 * Fires at the top of the admin revenues page.
-		 *
-		 * Use this hook to add content to this section of revenues.
-		 *
-		 * @since 1.0.2
-		 */
-		do_action( 'eaccounting_revenues_page_top' );
-
-		?>
-		<form id="ea-revenues-table" method="get" action="<?php echo esc_url( eaccounting_admin_url() ); ?>">
-			<?php $list_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'eaccounting-revenues' ); ?>
-
-			<input type="hidden" name="page" value="ea-sales"/>
-			<input type="hidden" name="tab" value="revenues"/>
-
-			<?php $list_table->views(); ?>
-			<?php $list_table->display(); ?>
-		</form>
-		<?php
-		/**
-		 * Fires at the bottom of the admin revenues page.
-		 *
-		 * Use this hook to add content to this section of revenues Tab.
-		 *
-		 * @since 1.0.2
-		 */
-		do_action( 'eaccounting_revenues_page_bottom' );
+		include dirname( __FILE__ ) . '/list-income.php';
 	}
 }
 
-add_action( 'eaccounting_sales_tab_revenues', 'eaccounting_sales_tab_revenues' );
+add_action( 'eaccounting_sales_tab_incomes', 'eaccounting_sales_tab_incomes' );
