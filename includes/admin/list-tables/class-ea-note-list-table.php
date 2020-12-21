@@ -197,9 +197,10 @@ class EAccounting_Note_List_Table extends EAccounting_List_Table {
 				$value = esc_html( eaccounting_date( $note->get_date_created() ) );
 				break;
 			case 'actions':
+				$tab = !empty($_GET['tab']) ? $_GET['tab'] : 'customers' ;
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'     => 'customers',
+						'tab'     => $tab,
 						'action'  => 'edit',
 						'note_id' => $note_id,
 						'subtab'  => 'notes'
@@ -207,7 +208,7 @@ class EAccounting_Note_List_Table extends EAccounting_List_Table {
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'     => 'customers',
+						'tab'     => $tab,
 						'action'  => 'delete',
 						'note_id' => $note_id,
 						'subtab'  => 'notes'

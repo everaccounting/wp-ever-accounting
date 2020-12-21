@@ -186,7 +186,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 					esc_url(
 						eaccounting_admin_url(
 							array(
-								'action'    => 'edit',
+								'action'    => 'view',
 								'tab'       => 'vendors',
 								'vendor_id' => $vendor_id,
 							)
