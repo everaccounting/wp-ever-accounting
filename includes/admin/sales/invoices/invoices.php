@@ -44,8 +44,8 @@ function eaccounting_sales_tab_invoices() {
 			<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-invoices.php';
-		$list_table = new EverAccounting\Admin\ListTables\List_Table_Invoices();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-invoice-list-table.php';
+		$list_table = new EAccounting_Invoice_List_Table();
 		$list_table->prepare_items();
 		/**
 		 * Fires at the top of the admin invoices page.

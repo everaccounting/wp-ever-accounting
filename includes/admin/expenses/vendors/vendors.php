@@ -38,8 +38,8 @@ function eaccounting_expenses_tab_vendors() {
 			<a class="page-title-action" href=" <?php echo esc_url( $import_url ); ?>"><?php _e( 'Import', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-vendors.php';
-		$list_table = new \EverAccounting\Admin\ListTables\List_Table_Vendors();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-vendor-list-table.php';
+		$list_table = new EAccounting_Vendor_List_Table();
 		$list_table->prepare_items();
 		/**
 		 * Fires at the top of the admin vendors page.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Currency Admin List Table.
+ * Customer Admin List Table.
  *
  * @since       1.0.2
  * @subpackage  Admin/ListTables
@@ -16,7 +16,7 @@ if ( ! class_exists( '\EAccounting_List_Table' ) ) {
 }
 
 /**
- * Class EAccounting_Currency_List_Table
+ * Class EAccounting_Customer_List_Table
  * @since 1.1.0
  */
 class EAccounting_Customer_List_Table extends EAccounting_List_Table {
@@ -303,7 +303,7 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_insert_customer( $id );
+					eaccounting_delete_customer( $id );
 					break;
 				default:
 					do_action( 'eaccounting_customers_do_bulk_action_' . $this->current_action(), $id );
@@ -365,7 +365,7 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 			)
 		);
 
-		$args = apply_filters( 'eaccounting_currency_table_query_args', $args, $this );
+		$args = apply_filters( 'eaccounting_customer_table_query_args', $args, $this );
 
 		$this->items       = eaccounting_get_customers( $args );
 		$this->total_count = eaccounting_get_customers( array_merge( $args, array( 'count_total' => true ) ) );

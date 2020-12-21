@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit();
  * @since 1.0.2
  */
 function eaccounting_banking_tab_transactions() {
-	require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-transactions.php';
-	$list_table = new \EverAccounting\Admin\ListTables\List_Table_Transactions();
+	require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-transaction-list-table.php';
+	$list_table = new EAccounting_Transaction_List_Table();
 	$list_table->prepare_items();
 	?>
 	<h1>

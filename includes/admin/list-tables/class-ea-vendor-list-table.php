@@ -1,13 +1,13 @@
 <?php
 /**
- * Currency Admin List Table.
+ * Vendor Admin List Table.
  *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Currency;
+use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -16,10 +16,10 @@ if ( ! class_exists( '\EAccounting_List_Table' ) ) {
 }
 
 /**
- * Class EAccounting_Currency_List_Table
+ * Class EAccounting_Vendor_List_Table
  * @since 1.1.0
  */
-class EAccounting_Currency_List_Table extends EAccounting_List_Table {
+class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *
@@ -65,8 +65,8 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 		$args = (array) wp_parse_args(
 			$args,
 			array(
-				'singular' => 'currency',
-				'plural'   => 'currencies',
+				'singular' => 'vendor',
+				'plural'   => 'vendors',
 			)
 		);
 
@@ -103,9 +103,8 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 		return array(
 			'cb'      => '<input type="checkbox" />',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
-			'code'    => __( 'Code', 'wp-ever-accounting' ),
-			'symbol'  => __( 'Symbol', 'wp-ever-accounting' ),
-			'rate'    => __( 'Rate', 'wp-ever-accounting' ),
+			'email'   => __( 'Email', 'wp-ever-accounting' ),
+			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -120,9 +119,8 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	protected function define_sortable_columns() {
 		return array(
 			'name'    => array( 'name', false ),
-			'code'    => array( 'code', false ),
-			'symbol'  => array( 'symbol', false ),
-			'rate'    => array( 'rate', false ),
+			'email'   => array( 'email', false ),
+			'phone'   => array( 'phone', false ),
 			'enabled' => array( 'enabled', false ),
 		);
 	}
@@ -156,13 +154,13 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the currencies list table.
 	 *
-	 * @param Currency $currency The current object.
+	 * @param Vendor $vendor The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.0.2
 	 */
-	function column_cb( $currency ) {
-		return sprintf( '<input type="checkbox" name="currency_id[]" value="%d"/>', $currency->get_id() );
+	function column_cb( $vendor ) {
+		return sprintf( '<input type="checkbox" name="vendor_id[]" value="%d"/>', $vendor->get_id() );
 	}
 
 	/**
@@ -170,18 +168,18 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string $column_name The name of the column
 	 *
-	 * @param Currency $currency
+	 * @param Vendor $vendor
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
 	 *
 	 */
-	function column_default( $currency, $column_name ) {
-		$currency_id = $currency->get_id();
+	function column_default( $vendor, $column_name ) {
+		$vendor_id = $vendor->get_id();
 
 		switch ( $column_name ) {
 			case 'name':
-				$name = $currency->get_name();
+				$name = $vendor->get_name();
 
 				$value = sprintf(
 					'<a href="%1$s">%2$s</a>',
@@ -189,34 +187,31 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 						eaccounting_admin_url(
 							array(
 								'action'      => 'edit',
-								'tab'         => 'currencies',
-								'category_id' => $currency_id,
+								'tab'         => 'vendors',
+								'category_id' => $vendor_id,
 							)
 						)
 					),
 					$name
 				);
 				break;
-			case 'code':
-				$value = esc_html( $currency->get_code() );
+			case 'email':
+				$value = sanitize_email( $vendor->get_email() );
 				break;
-			case 'symbol':
-				$value = esc_html( $currency->get_symbol() );
-				break;
-			case 'rate':
-				$value = esc_html( $currency->get_rate() );
+			case 'phone':
+				$value =  $vendor->get_phone() ;
 				break;
 			case 'enabled':
 				ob_start();
 				eaccounting_toggle(
 					array(
 						'name'  => 'enabled',
-						'id'    => 'enabled_' . $currency_id,
-						'value' => $currency->get_enabled( 'edit' ),
+						'id'    => 'enabled_' . $vendor_id,
+						'value' => $vendor->get_enabled( 'edit' ),
 						'naked' => true,
 						'attr'  => array(
-							'data-id'    => $currency_id,
-							'data-nonce' => wp_create_nonce( 'ea_edit_currency' ),
+							'data-id'    => $vendor_id,
+							'data-nonce' => wp_create_nonce( 'ea_edit_vendor' ),
 						),
 					)
 				);
@@ -226,16 +221,16 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'         => 'currencies',
+						'tab'         => 'vendors',
 						'action'      => 'edit',
-						'category_id' => $currency_id,
+						'customer_id' => $vendor_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'         => 'currencies',
+						'tab'         => 'vendors',
 						'action'      => 'delete',
-						'category_id' => $currency_id,
+						'customer_id' => $vendor_id,
 					)
 				);
 				$actions  = array(
@@ -245,10 +240,10 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				$value    = $this->row_actions( $actions );
 				break;
 			default:
-				return parent::column_default( $currency, $column_name );
+				return parent::column_default( $vendor, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_currency_list_table_' . $column_name, $value, $currency );
+		return apply_filters( 'eaccounting_vendor_list_table_' . $column_name, $value, $vendor );
 	}
 
 	/**
@@ -258,25 +253,25 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 * @since  1.0.2
 	 */
 	function no_items() {
-		_e( 'There is no currencies found.', 'wp-ever-accounting' );
+		_e( 'There is no vendors found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Process the bulk actions
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-currencies' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'currency-nonce' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-vendors' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'vendor-nonce' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['currency_id'] ) ? $_GET['currency_id'] : false;
+		$ids = isset( $_GET['vendor_id'] ) ? $_GET['vendor_id'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -292,7 +287,7 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_currency(
+					eaccounting_insert_vendor(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -300,7 +295,7 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_currency(
+					eaccounting_insert_vendor(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -308,23 +303,22 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_currency( $id );
+					eaccounting_delete_vendor( $id );
 					break;
 				default:
-					do_action( 'eaccounting_currencies_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'eaccounting_vendors_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
-		if ( isset( $_REQUEST['_wpnonce'] ) || ! empty( $action ) ) {
+		if ( isset( $_GET['_wpnonce'] ) ) {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'currency_id',
+						'vendor_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
 						'action2',
-						'doaction',
 						'paged',
 					)
 				)
@@ -334,34 +328,11 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * Retrieve the view types
-	 *
-	 * @access public
-	 * @return array $views All the views available
-	 * @since 1.0.2
-	 */
-	public function get_views() {
-		$base           = eaccounting_admin_url( array( 'tab' => 'currencies' ) );
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
-		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
-		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
-
-		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
-		);
-
-		return $views;
-	}
-
-	/**
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
@@ -390,34 +361,16 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				'status'   => $status,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
+				'type'     => 'customer',
 			)
 		);
 
-		$args = apply_filters( 'eaccounting_currency_table_query_args', $args, $this );
+		$args = apply_filters( 'eaccounting_vendor_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_currencies( $args );
+		$this->items       = eaccounting_get_vendors( $args );
+		$this->total_count = eaccounting_get_vendors( array_merge( $args, array( 'count_total' => true ) ) );
 
-		$this->active_count = eaccounting_get_currencies(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'status'      => 'active',
-				)
-			)
-		);
-
-		$this->inactive_count = eaccounting_get_currencies(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'status'      => 'inactive',
-				)
-			)
-		);
-
-		$this->total_count = $this->active_count + $this->inactive_count;
+		$total_items = $this->total_count;
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 
@@ -429,7 +382,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				$total_items = $this->inactive_count;
 				break;
 			case 'any':
-			default:
 				$total_items = $this->total_count;
 				break;
 		}

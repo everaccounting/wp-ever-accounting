@@ -229,7 +229,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
-			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
+			$vendor_id = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
 			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
 			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
@@ -265,11 +265,11 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			);
 			eaccounting_contact_dropdown(
 				array(
-					'name'        => 'customer_id',
-					'value'       => $customer_id,
+					'name'        => 'vendor_id',
+					'value'       => $vendor_id,
 					'default'     => '',
-					'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
-					'type'        => 'customer',
+					'placeholder' => __( 'Select Vendor', 'wp-ever-accounting' ),
+					'type'        => 'vendor',
 				)
 			);
 
@@ -362,7 +362,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		$end_date    = ! empty( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
-		$customer_id = ! empty( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
+		$vendor_id = ! empty( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
 
 		$per_page = $this->per_page;
 
@@ -378,7 +378,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				'order'       => eaccounting_clean( $order ),
 				'category_id' => $category_id,
 				'account_id'  => $account_id,
-				'contact_id'  => $customer_id,
+				'contact_id'  => $vendor_id,
 			)
 		);
 
