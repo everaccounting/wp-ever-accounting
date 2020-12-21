@@ -35,16 +35,40 @@
 	  width: 150px;
 	}
 
+	.column-thumb {
+	  width: 52px;
+	  text-align: center;
+	  white-space: nowrap;
+	  .ea-thumb{
+		display: block;
+		position: relative;
+		height: 1em;
+		width: 1em;
+		margin: 0 auto;
+		font-size: 14px;
+	  }
+
+	  img{
+		margin: 0;
+		width: auto;
+		height: auto;
+		max-width: 36px;
+		max-height: 36px;
+		vertical-align: middle;
+	  }
+	}
+
 	.row-actions{
 	  left: 0;
 	  a{
 		display: inline-block;
-		color: #444;
+		color: #757575;
 		transition: color 0.1s ease-in;
 		text-decoration: none;
-	  }
-	  &:hover{
-		color: #444;
+		font-size: 16px;
+		&:hover{
+		  color: #444;
+		}
 	  }
 	}
 

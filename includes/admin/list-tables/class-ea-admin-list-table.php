@@ -99,13 +99,13 @@ abstract class EAccounting_List_Table extends \WP_List_Table {
 	public function __construct( $args = array() ) {
 		$this->screen = get_current_screen();
 		$display_args = array(
-				'pre_table_callback'   => '',
-				'hide_table_nav'       => false,
-				'hide_extra_table_nav' => false,
-				'hide_bulk_options'    => false,
-				'hide_pagination'      => false,
-				'columns_to_hide'      => array(),
-				'hide_column_controls' => false,
+			'pre_table_callback'   => '',
+			'hide_table_nav'       => false,
+			'hide_extra_table_nav' => false,
+			'hide_bulk_options'    => false,
+			'hide_pagination'      => false,
+			'columns_to_hide'      => array(),
+			'hide_column_controls' => false,
 		);
 
 		if ( ! empty( $args['query_args'] ) ) {
@@ -123,10 +123,10 @@ abstract class EAccounting_List_Table extends \WP_List_Table {
 		}
 
 		$args = wp_parse_args(
-				$args,
-				array(
-						'ajax' => false,
-				)
+			$args,
+			array(
+				'ajax' => false,
+			)
 		);
 
 		parent::__construct( $args );
@@ -220,9 +220,7 @@ abstract class EAccounting_List_Table extends \WP_List_Table {
 	 * @since 1.0.2
 	 */
 	public function get_sortable_columns() {
-		$this->prepare_columns( $this->define_sortable_columns() );
-
-		return $this->prepare_columns( $this->define_columns() );
+		return $this->prepare_columns( $this->define_sortable_columns() );
 	}
 
 	/**
@@ -336,7 +334,7 @@ abstract class EAccounting_List_Table extends \WP_List_Table {
 					<div class="alignleft actions bulkactions">
 						<?php $this->bulk_actions( $which ); ?>
 					</div>
-				<?php
+					<?php
 				endif;
 				if ( true !== $this->display_args['hide_extra_table_nav'] ) :
 					$this->extra_tablenav( $which );
@@ -349,7 +347,7 @@ abstract class EAccounting_List_Table extends \WP_List_Table {
 
 				<br class="clear"/>
 			</div>
-		<?php
+			<?php
 		endif;
 	}
 
