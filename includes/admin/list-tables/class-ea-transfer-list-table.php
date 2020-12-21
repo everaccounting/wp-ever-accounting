@@ -195,7 +195,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'incomes',
+						'tab'       => 'transfers',
 						'action'    => 'delete',
 						'transfer_id' => $transfer_id,
 					)
