@@ -91,7 +91,7 @@ class Customer extends ResourceModel {
 		}
 
 		// If not income then reset to default
-		if ( 'vendor' !== $this->get_type() ) {
+		if ( 'customer' !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
