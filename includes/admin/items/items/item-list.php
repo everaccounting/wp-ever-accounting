@@ -9,8 +9,8 @@
 
 defined( 'ABSPATH' ) || exit();
 
-require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-items.php';
-$list_table = new \EverAccounting\Admin\ListTables\List_Table_Item();
+require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-item-list-table.php';
+$list_table = new EAccounting_Item_List_Table();
 $list_table->prepare_items();
 ?>
 

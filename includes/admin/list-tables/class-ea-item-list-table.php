@@ -1,6 +1,6 @@
 <?php
 /**
- * Account list table
+ * Item list table
  *
  * Admin item list table, show all the item information.
  *

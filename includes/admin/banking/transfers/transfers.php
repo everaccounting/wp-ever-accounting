@@ -31,8 +31,8 @@ function eaccounting_banking_tab_transfers() {
 			<a href="<?php echo esc_url( $add_url ); ?>" class="page-title-action"><?php _e( 'Add New', 'wp-ever-accounting' ); ?></a>
 		</h1>
 		<?php
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/list-table-transfers.php';
-		$transfers_table = new \EverAccounting\Admin\ListTables\List_Table_Transfers();
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-transfer-list-table.php';
+		$transfers_table = new EAccounting_Transfer_List_Table();
 		$transfers_table->prepare_items();
 		?>
 			<?php
