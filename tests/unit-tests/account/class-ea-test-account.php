@@ -5,6 +5,7 @@ use EverAccounting\Account;
 /**
  * Class EAccounting_Tests_account.
  * @package EAccounting\Tests\Customer
+ * @since 1.0.2
  */
 class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {
 	public function test_create_account() {
