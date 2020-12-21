@@ -1,12 +1,24 @@
 <?php
 /**
- *
+ * Customer profile aside
+ * @var \EverAccounting\Models\Customer $customer
  */
+
+defined( 'ABSPATH' ) || exit();
+
+$edit_url = eaccounting_admin_url(
+	array(
+		'page'        => 'ea-sales',
+		'tab'         => 'customers',
+		'action'      => 'edit',
+		'customer_id' => $customer->get_id()
+	)
+);
 ?>
 <div class="ea-card">
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php esc_html_e( 'Customer Details', 'wp-ever-accounting' ); ?></h3>
-		<a href="#" class="button-secondary">Edit</a>
+		<a href="<?php echo esc_url( $edit_url ); ?>" class="button-secondary"><?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?></a>
 	</div>
 
 	<div class="ea-card__inside">
@@ -50,7 +62,7 @@
 		</div>
 		<div class="ea-list-group__item">
 			<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
-			<div class="ea-list-group__text"><?php echo ! empty( $customer->get_website() ) ? $customer->get_website() : '&mdash;'; ?></div>
+			<div class="ea-list-group__text"><?php echo ! empty( $customer->get_address() ) ? $customer->get_address() : '&mdash;'; ?></div>
 		</div>
 	</div>
 
@@ -58,10 +70,10 @@
 		<p class="description">
 			<?php
 			echo sprintf(
-				/* translators: %s date and %s name */
-				esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
-				eaccounting_format_datetime( $customer->get_date_created(), 'F m, Y H:i a' ),
-				eaccounting_get_username( $customer->get_creator_id() )
+			/* translators: %s date and %s name */
+					esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
+					eaccounting_format_datetime( $customer->get_date_created(), 'F m, Y H:i a' ),
+					eaccounting_get_username( $customer->get_creator_id() )
 			);
 			?>
 		</p>

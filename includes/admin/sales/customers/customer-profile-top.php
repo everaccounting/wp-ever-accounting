@@ -1,3 +1,10 @@
+<?php
+/**
+ * Customer Profile Top
+ */
+
+defined( 'ABSPATH' ) || exit();
+?>
 <div class="ea-row">
 	<div class="ea-col">
 		<div class="ea-card">

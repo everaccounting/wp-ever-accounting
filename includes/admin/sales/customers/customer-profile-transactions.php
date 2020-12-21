@@ -1,4 +1,10 @@
 <?php
+/**
+ * Customer profile transactions
+ */
+
+defined( 'ABSPATH' ) || exit();
+
 require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-income-list-table.php';
 $args       = array(
 	'display_args' => array(

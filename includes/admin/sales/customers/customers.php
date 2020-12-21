@@ -40,3 +40,13 @@ function eaccounting_customer_profile_content_transactions($customer){
 	include dirname( __FILE__ ) . '/customer-profile-transactions.php';
 }
 add_action('eaccounting_customer_profile_content_transactions', 'eaccounting_customer_profile_content_transactions');
+
+function eaccounting_customer_profile_content_invoices($customer) {
+	include dirname( __FILE__ ) . '/customer-profile-invoices.php';
+}
+add_action('eaccounting_customer_profile_content_invoices','eaccounting_customer_profile_content_invoices');
+
+function eaccounting_customer_profile_content_notes($customer) {
+	include dirname( __FILE__ ) . '/customer-profile-notes.php';
+}
+add_action('eaccounting_customer_profile_content_notes','eaccounting_customer_profile_content_notes');

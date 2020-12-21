@@ -327,18 +327,18 @@ class EAccounting_Note_List_Table extends EAccounting_List_Table {
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-		eaccounting_get_notes( array( 'return' => 'raw', 'number' => '-1' ) );
 
 		$args        = apply_filters( 'eaccounting_note_table_query_args', $args, $this );
 		$this->items = eaccounting_get_notes( $args );
 
+		$this->total_count = eaccounting_get_notes( array_merge( $args, array( 'count_total' => true ) ) );
 
 
 		$this->set_pagination_args(
 			array(
-				'total_items' => $this->items,
+				'total_items' => $this->total_count,
 				'per_page'    => $per_page,
-				'total_pages' => ceil( $this->items / $per_page ),
+				'total_pages' => ceil( $this->total_count / $per_page ),
 			)
 		);
 	}

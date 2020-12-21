@@ -1,6 +1,11 @@
 <?php
 /**
- * Customer edit
+ * Render Customer edit
+ *
+ * @since       1.0.2
+ * @subpackage  Admin/Sales/Customers
+ * @package     EverAccounting
+ *
  * @var int $customer_id
  */
 
