@@ -12,8 +12,8 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Models\Currency;
 
+use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 

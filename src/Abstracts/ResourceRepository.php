@@ -11,6 +11,8 @@
 
 namespace EverAccounting\Abstracts;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Class ResourceRepository
  *

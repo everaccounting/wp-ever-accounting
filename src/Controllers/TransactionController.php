@@ -13,7 +13,6 @@ namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
 
-
 defined( 'ABSPATH' ) || exit;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract Model.
+ * Abstract Model.                   
  *
  * Handles generic data interaction which is implemented by
  * the different repository classes.
@@ -9,8 +9,9 @@
 
 namespace EverAccounting\Abstracts;
 
-
 use EverAccounting\Repositories\MetaData;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class ResourceModel
