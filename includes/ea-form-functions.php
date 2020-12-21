@@ -77,26 +77,26 @@ function eaccounting_hidden_input( $field ) {
  */
 function eaccounting_text_input( $field = array() ) {
 	$field = (array) wp_parse_args(
-			$field,
-			array(
-					'label'         => '',
-					'class'         => 'short',
-					'style'         => '',
-					'wrapper_class' => '',
-					'default'       => '',
-					'value'         => '',
-					'name'          => '',
-					'placeholder'   => '',
-					'type'          => 'text',
-					'data_type'     => '',
-					'after'         => '',
-					'tooltip'       => '',
-					'desc'          => '',
-					'required'      => false,
-					'disabled'      => false,
-					'readonly'      => false,
-					'attr'          => array(),
-			)
+		$field,
+		array(
+			'label'         => '',
+			'class'         => 'short',
+			'style'         => '',
+			'wrapper_class' => '',
+			'default'       => '',
+			'value'         => '',
+			'name'          => '',
+			'placeholder'   => '',
+			'type'          => 'text',
+			'data_type'     => '',
+			'after'         => '',
+			'tooltip'       => '',
+			'desc'          => '',
+			'required'      => false,
+			'disabled'      => false,
+			'readonly'      => false,
+			'attr'          => array(),
+		)
 	);
 
 	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
@@ -104,7 +104,7 @@ function eaccounting_text_input( $field = array() ) {
 	$field['attr']['required'] = ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['readonly'] = ( true == $field['readonly'] ) ? ' readonly ' : '';
 	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
-	$field['wrapper_class']    .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['wrapper_class']   .= ( true == $field['required'] ) ? ' required ' : '';
 	$data_type                 = empty( $field['data_type'] ) ? '' : $field['data_type'];
 
 	switch ( $data_type ) {
@@ -123,7 +123,7 @@ function eaccounting_text_input( $field = array() ) {
 			break;
 		case 'url':
 			$field['class'] .= ' ea-input-url';
-			$field['value'] = esc_url( $field['value'] );
+			$field['value']  = esc_url( $field['value'] );
 			break;
 		default:
 			break;
@@ -136,12 +136,12 @@ function eaccounting_text_input( $field = array() ) {
 
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
-				'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
-				esc_attr( $field['id'] ),
-				esc_attr( $field['wrapper_class'] ),
-				esc_attr( $field['id'] ),
-				wp_kses_post( $field['label'] ),
-				$tooltip
+			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+			esc_attr( $field['id'] ),
+			esc_attr( $field['wrapper_class'] ),
+			esc_attr( $field['id'] ),
+			wp_kses_post( $field['label'] ),
+			$tooltip
 		);
 	}
 
@@ -150,15 +150,15 @@ function eaccounting_text_input( $field = array() ) {
 	}
 
 	echo sprintf(
-			'<input type="%s" class="ea-input-control %s" style="%s" name="%s" id="%s" value="%s" placeholder="%s" %s/>',
-			esc_attr( $field['type'] ),
-			esc_attr( $field['class'] ),
-			esc_attr( $field['style'] ),
-			esc_attr( $field['name'] ),
-			esc_attr( $field['id'] ),
-			esc_attr( $field['value'] ),
-			esc_attr( $field['placeholder'] ),
-			$attributes
+		'<input type="%s" class="ea-input-control %s" style="%s" name="%s" id="%s" value="%s" placeholder="%s" %s/>',
+		esc_attr( $field['type'] ),
+		esc_attr( $field['class'] ),
+		esc_attr( $field['style'] ),
+		esc_attr( $field['name'] ),
+		esc_attr( $field['id'] ),
+		esc_attr( $field['value'] ),
+		esc_attr( $field['placeholder'] ),
+		$attributes
 	);
 	if ( $field['data_type'] == 'color' ) {
 		echo sprintf( '<div id="colorPickerDiv_%s" class="colorpickdiv" style="z-index: 100;background:#eee;border:1px solid #ccc;position:absolute;display:none;"></div>', $field['id'] );
@@ -179,25 +179,25 @@ function eaccounting_text_input( $field = array() ) {
  */
 function eaccounting_textarea( $field ) {
 	$field                     = (array) wp_parse_args(
-			$field,
-			array(
-					'label'         => '',
-					'class'         => 'short',
-					'style'         => '',
-					'wrapper_class' => '',
-					'default'       => '',
-					'value'         => '',
-					'name'          => '',
-					'placeholder'   => '',
-					'rows'          => 2,
-					'cols'          => 20,
-					'tooltip'       => '',
-					'desc'          => '',
-					'required'      => false,
-					'disabled'      => false,
-					'readonly'      => false,
-					'attr'          => array(),
-			)
+		$field,
+		array(
+			'label'         => '',
+			'class'         => 'short',
+			'style'         => '',
+			'wrapper_class' => '',
+			'default'       => '',
+			'value'         => '',
+			'name'          => '',
+			'placeholder'   => '',
+			'rows'          => 2,
+			'cols'          => 20,
+			'tooltip'       => '',
+			'desc'          => '',
+			'required'      => false,
+			'disabled'      => false,
+			'readonly'      => false,
+			'attr'          => array(),
+		)
 	);
 	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value']            = empty( $field['value'] ) ? $field['default'] : $field['value'];
@@ -206,7 +206,7 @@ function eaccounting_textarea( $field ) {
 	$field['attr']['disabled'] = ( true == $field['disabled'] ) ? ' disabled ' : '';
 	$field['attr']['rows']     = $field['rows'];
 	$field['attr']['cols']     = $field['cols'];
-	$field['wrapper_class']    .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['wrapper_class']   .= ( true == $field['required'] ) ? ' required ' : '';
 
 	// Custom attribute handling
 	$attributes = eaccounting_implode_html_attributes( $field['attr'] );
@@ -214,23 +214,23 @@ function eaccounting_textarea( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 
 	echo sprintf(
-			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
-			esc_attr( $field['id'] ),
-			esc_attr( $field['wrapper_class'] ),
-			esc_attr( $field['id'] ),
-			wp_kses_post( $field['label'] ),
-			$tooltip
+		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+		esc_attr( $field['id'] ),
+		esc_attr( $field['wrapper_class'] ),
+		esc_attr( $field['id'] ),
+		wp_kses_post( $field['label'] ),
+		$tooltip
 	);
 
 	echo sprintf(
-			'<textarea class="ea-input-control %s" style="%s" name="%s" id="%s" placeholder="%s" %s>%s</textarea>',
-			esc_attr( $field['class'] ),
-			esc_attr( $field['style'] ),
-			esc_attr( $field['name'] ),
-			esc_attr( $field['id'] ),
-			esc_attr( $field['placeholder'] ),
-			$attributes,
-			esc_attr( $field['value'] )
+		'<textarea class="ea-input-control %s" style="%s" name="%s" id="%s" placeholder="%s" %s>%s</textarea>',
+		esc_attr( $field['class'] ),
+		esc_attr( $field['style'] ),
+		esc_attr( $field['name'] ),
+		esc_attr( $field['id'] ),
+		esc_attr( $field['placeholder'] ),
+		$attributes,
+		esc_attr( $field['value'] )
 	);
 
 	echo $desc;
@@ -249,20 +249,20 @@ function eaccounting_textarea( $field ) {
  */
 function eaccounting_wp_radio( $field ) {
 	$field = (array) wp_parse_args(
-			$field,
-			array(
-					'label'         => '',
-					'class'         => '',
-					'style'         => '',
-					'wrapper_class' => '',
-					'default'       => '',
-					'value'         => '',
-					'name'          => '',
-					'tooltip'       => '',
-					'desc'          => '',
-					'options'       => array(),
-					'attr'          => array(),
-			)
+		$field,
+		array(
+			'label'         => '',
+			'class'         => '',
+			'style'         => '',
+			'wrapper_class' => '',
+			'default'       => '',
+			'value'         => '',
+			'name'          => '',
+			'tooltip'       => '',
+			'desc'          => '',
+			'options'       => array(),
+			'attr'          => array(),
+		)
 	);
 
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
@@ -274,26 +274,26 @@ function eaccounting_wp_radio( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 
 	echo sprintf(
-			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
-			esc_attr( $field['id'] ),
-			esc_attr( $field['wrapper_class'] ),
-			esc_attr( $field['id'] ),
-			wp_kses_post( $field['label'] ),
-			$tooltip
+		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+		esc_attr( $field['id'] ),
+		esc_attr( $field['wrapper_class'] ),
+		esc_attr( $field['id'] ),
+		wp_kses_post( $field['label'] ),
+		$tooltip
 	);
 
 	echo '<ul class="ea-radios">';
 
 	foreach ( $field['options'] as $key => $value ) {
 		echo sprintf(
-				'<li><label><input type="radio" name="%s" value="%s" class="%s" style="%s" %s %s/>%s</label></li>',
-				esc_attr( $field['name'] ),
-				esc_attr( $key ),
-				esc_attr( $field['class'] ),
-				esc_attr( $field['style'] ),
-				esc_html( $value ),
-				$attributes,
-				checked( esc_attr( $field['value'] ), esc_attr( $key ), false )
+			'<li><label><input type="radio" name="%s" value="%s" class="%s" style="%s" %s %s/>%s</label></li>',
+			esc_attr( $field['name'] ),
+			esc_attr( $key ),
+			esc_attr( $field['class'] ),
+			esc_attr( $field['style'] ),
+			esc_html( $value ),
+			$attributes,
+			checked( esc_attr( $field['value'] ), esc_attr( $key ), false )
 		);
 	}
 
@@ -314,20 +314,20 @@ function eaccounting_wp_radio( $field ) {
  */
 function eaccounting_wp_checkbox( $field ) {
 	$field = (array) wp_parse_args(
-			$field,
-			array(
-					'label'         => '',
-					'class'         => '',
-					'style'         => '',
-					'wrapper_class' => '',
-					'default'       => '',
-					'cbvalue'       => 'yes',
-					'value'         => '',
-					'name'          => '',
-					'tooltip'       => '',
-					'desc'          => '',
-					'attr'          => array(),
-			)
+		$field,
+		array(
+			'label'         => '',
+			'class'         => '',
+			'style'         => '',
+			'wrapper_class' => '',
+			'default'       => '',
+			'cbvalue'       => 'yes',
+			'value'         => '',
+			'name'          => '',
+			'tooltip'       => '',
+			'desc'          => '',
+			'attr'          => array(),
+		)
 	);
 
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
@@ -339,23 +339,23 @@ function eaccounting_wp_checkbox( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 
 	echo sprintf(
-			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
-			esc_attr( $field['id'] ),
-			esc_attr( $field['wrapper_class'] ),
-			esc_attr( $field['id'] ),
-			wp_kses_post( $field['label'] ),
-			$tooltip
+		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+		esc_attr( $field['id'] ),
+		esc_attr( $field['wrapper_class'] ),
+		esc_attr( $field['id'] ),
+		wp_kses_post( $field['label'] ),
+		$tooltip
 	);
 
 	echo sprintf(
-			'<input type="checkbox" class="%s" style="%s" name="%s" id="%s" value="%s" %s %s/>',
-			esc_attr( $field['class'] ),
-			esc_attr( $field['style'] ),
-			esc_attr( $field['name'] ),
-			esc_attr( $field['id'] ),
-			esc_attr( $field['cbvalue'] ),
-			$attributes,
-			checked( $field['value'], $field['cbvalue'], false )
+		'<input type="checkbox" class="%s" style="%s" name="%s" id="%s" value="%s" %s %s/>',
+		esc_attr( $field['class'] ),
+		esc_attr( $field['style'] ),
+		esc_attr( $field['name'] ),
+		esc_attr( $field['id'] ),
+		esc_attr( $field['cbvalue'] ),
+		$attributes,
+		checked( $field['value'], $field['cbvalue'], false )
 	);
 
 	echo $desc;
@@ -373,30 +373,30 @@ function eaccounting_wp_checkbox( $field ) {
  */
 function eaccounting_select( $field ) {
 	$field = (array) wp_parse_args(
-			$field,
-			array(
-					'label'         => '',
-					'class'         => '',
-					'style'         => '',
-					'wrapper_class' => '',
-					'default'       => '',
-					'value'         => '',
-					'name'          => '',
-					'placeholder'   => '',
-					'options'       => array(),
-					'multiple'      => false,
-					'tooltip'       => '',
-					'desc'          => '',
-					'required'      => false,
-					'disabled'      => false,
-					'readonly'      => false,
-					'attr'          => array(),
-			)
+		$field,
+		array(
+			'label'         => '',
+			'class'         => '',
+			'style'         => '',
+			'wrapper_class' => '',
+			'default'       => '',
+			'value'         => '',
+			'name'          => '',
+			'placeholder'   => '',
+			'options'       => array(),
+			'multiple'      => false,
+			'tooltip'       => '',
+			'desc'          => '',
+			'required'      => false,
+			'disabled'      => false,
+			'readonly'      => false,
+			'attr'          => array(),
+		)
 	);
 
 	$field['id']                  = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value']               = empty( $field['value'] ) ? $field['default'] : $field['value'];
-	$field['wrapper_class']       .= ( true == $field['required'] ) ? ' required ' : '';
+	$field['wrapper_class']      .= ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['required']    = ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['readonly']    = ( true == $field['readonly'] ) ? ' readonly ' : '';
 	$field['attr']['disabled']    = ( true == $field['disabled'] ) ? ' disabled ' : '';
@@ -408,21 +408,21 @@ function eaccounting_select( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
-				'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
-				esc_attr( $field['id'] ),
-				esc_attr( $field['wrapper_class'] ),
-				esc_attr( $field['id'] ),
-				wp_kses_post( $field['label'] ),
-				$tooltip
+			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+			esc_attr( $field['id'] ),
+			esc_attr( $field['wrapper_class'] ),
+			esc_attr( $field['id'] ),
+			wp_kses_post( $field['label'] ),
+			$tooltip
 		);
 	}
 	echo sprintf(
-			'<select class="ea-input-control select %s" style="%s" name="%s" id="%s" %s>',
-			esc_attr( $field['class'] ),
-			esc_attr( $field['style'] ),
-			esc_attr( $field['name'] ),
-			esc_attr( $field['id'] ),
-			$attributes
+		'<select class="ea-input-control select %s" style="%s" name="%s" id="%s" %s>',
+		esc_attr( $field['class'] ),
+		esc_attr( $field['style'] ),
+		esc_attr( $field['name'] ),
+		esc_attr( $field['id'] ),
+		$attributes
 	);
 	foreach ( $field['options'] as $key => $value ) {
 		echo sprintf( '<option value="%s" %s>%s</option>', esc_attr( $key ), eaccounting_selected( esc_attr( $key ), eaccounting_clean( $field['value'] ) ), esc_html( $value ) );
@@ -436,89 +436,60 @@ function eaccounting_select( $field ) {
 	}
 }
 
-function eaccounting_file_input() {
-	?>
-	<div class="ea-form-field ea-file-field ea-col-6">
-		<label class="ea-label" for="%s">Attachment</label>
-		<div class="ea-attachment has--image">
-			<div class="ea-attachment__preview">
-				<a href="#">
-					<img src="http://accounting.test/wp-content/uploads/2020/12/belt-2-150x150.jpg">
-				</a>
-			</div>
-			<button class="button-secondary ea-attachment__remove">Remove</button>
-			<button class="button-secondary ea-attachment__upload">Upload</button>
-		</div>
-	</div>
-	<?php
-}
-
 /**
  * File input field.
  *
- * @since 1.0.2
- *
  * @param $field
+ * @since 1.1.0
  */
-function eaccounting_file_input_bk( $field ) {
-	$field = (array) wp_parse_args(
-			$field,
-			array(
-					'label'         => '',
-					'style'         => '',
-					'wrapper_class' => '',
-					'value'         => false,
-					'name'          => '',
-					'tooltip'       => '',
-					'desc'          => '',
-					'default'       => '',
-					'attr'          => array(),
-			)
+function eaccounting_file_input( $field ) {
+	$field          = (array) wp_parse_args(
+		$field,
+		array(
+			'label'         => '',
+			'wrapper_class' => '',
+			'value'         => false,
+			'name'          => '',
+			'desc'          => '',
+			'attr'          => array(),
+		)
 	);
-
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value'] = ! isset( $field['value'] ) ? $field['default'] : $field['value'];
-
-	// Custom attribute handling
-	$attributes     = eaccounting_implode_html_attributes( $field['attr'] );
 	$tooltip        = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
 	$desc           = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
-	$field['style'] .= ! empty( $field['value'] ) ? 'display:none;' : '';
-
+	$link           = empty( $field['value'] ) ? '' : $field['value']->src;
+	$name           = empty( $field['value'] ) ? '' : $field['value']->name;
+	$id             = empty( $field['value'] ) ? '' : $field['value']->id;
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
-				'<div class="ea-form-field ea-file-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
-				esc_attr( $field['id'] ),
-				esc_attr( $field['wrapper_class'] ),
-				esc_attr( $field['id'] ),
-				wp_kses_post( $field['label'] ),
-				$tooltip
+			'<div class="ea-form-field ea-file-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+			esc_attr( $field['id'] ),
+			esc_attr( $field['wrapper_class'] ),
+			esc_attr( $field['id'] ),
+			wp_kses_post( $field['label'] ),
+			$tooltip
 		);
 	}
-
-	$link = empty( $field['value'] ) ? '' : $field['value']->src;
-	$name = empty( $field['value'] ) ? '' : $field['value']->name;
-	$id   = empty( $field['value'] ) ? '' : $field['value']->id;
 	?>
-	<div class="ea-file" style="<?php //echo empty( $field['value'] ) ? 'display:none' : ''; ?>">
-		<a href="">
-			<img width="150" height="150" src="http://accounting.test/wp-content/uploads/2020/12/belt-2-150x150.jpg" class="attachment-thumbnail size-thumbnail" alt="" loading="lazy" title="">
-		</a>
-		<a href="<?php echo esc_url( $link ); ?>" target="_blank" class="ea-file-link"><?php echo sanitize_file_name( $name ); ?></a>
-		<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt">&nbsp;</span></a>
-	</div>
+		<div class="ea-attachment <?php echo ! empty( $id ) ? 'has--image' : ''; ?>">
+			<div class="ea-attachment__preview">
+				<a class="ea-attachment__link" href="<?php echo esc_attr( $link ); ?>">
+					<img class="ea-attachment__image" src="<?php echo esc_attr( $link ); ?>" alt="<?php echo esc_attr( $name ); ?>">
+				</a>
+			</div>
+			<button type="button" class="button-link ea-attachment__remove">Remove</button>
+			<button type="button" class="button-secondary ea-attachment__upload">Upload</button>
+			<?php
+			echo sprintf(
+				'<input type="hidden" name="%s" class="ea-attachment__input" id="%s" value="%s"/>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				absint( $id )
+			);
+			?>
+		</div>
 	<?php
-	echo sprintf(
-			'<button type="button" class="button-secondary ea-upload-attachment" style="%s">%s</button>',
-			! empty( $field['value'] ) ? 'display:none' : '',
-			__( 'Upload', 'wp-ever-accounting' )
-	);
-	echo sprintf(
-			'<input type="hidden" name="%s" class="ea-file-input" id="%s" value="%s"/>',
-			esc_attr( $field['name'] ),
-			esc_attr( $field['id'] ),
-			absint( $id )
-	);
 
 	if ( ! empty( $field['label'] ) ) {
 		echo $desc;
@@ -536,26 +507,26 @@ function eaccounting_file_input_bk( $field ) {
 
 function eaccounting_toggle( $field ) {
 	$field = (array) wp_parse_args(
-			$field,
-			array(
-					'label'         => '',
-					'class'         => '',
-					'style'         => '',
-					'wrapper_class' => '',
-					'default'       => '',
-					'value'         => '',
-					'name'          => '',
-					'cbvalue'       => '1',
-					'options'       => array(),
-					'multiple'      => false,
-					'naked'         => false,
-					'tooltip'       => '',
-					'desc'          => '',
-					'required'      => false,
-					'disabled'      => false,
-					'readonly'      => false,
-					'attr'          => array(),
-			)
+		$field,
+		array(
+			'label'         => '',
+			'class'         => '',
+			'style'         => '',
+			'wrapper_class' => '',
+			'default'       => '',
+			'value'         => '',
+			'name'          => '',
+			'cbvalue'       => '1',
+			'options'       => array(),
+			'multiple'      => false,
+			'naked'         => false,
+			'tooltip'       => '',
+			'desc'          => '',
+			'required'      => false,
+			'disabled'      => false,
+			'readonly'      => false,
+			'attr'          => array(),
+		)
 	);
 
 	$field['id']               = empty( $field['id'] ) ? $field['name'] : $field['id'];
@@ -570,26 +541,26 @@ function eaccounting_toggle( $field ) {
 
 	if ( ! $field['naked'] ) {
 		echo sprintf(
-				'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
-				esc_attr( $field['id'] ),
-				esc_attr( $field['wrapper_class'] ),
-				esc_attr( $field['id'] ),
-				wp_kses_post( $field['label'] ),
-				$tooltip
+			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+			esc_attr( $field['id'] ),
+			esc_attr( $field['wrapper_class'] ),
+			esc_attr( $field['id'] ),
+			wp_kses_post( $field['label'] ),
+			$tooltip
 		);
 	}
 
 	echo sprintf(
-			'<label class="ea-toggle"><input type="checkbox" name="%s" id="%s" class="%s"  style="%s" value="%s" %s %s><span data-label-off="%s" data-label-on="%s" class="ea-toggle-slider"></span></label>',
-			esc_attr( $field['name'] ),
-			esc_attr( $field['id'] ),
-			esc_attr( $field['class'] ),
-			esc_attr( $field['style'] ),
-			esc_attr( $field['cbvalue'] ),
-			$attributes,
-			checked( $field['value'], $field['cbvalue'], false ),
-			__( 'No', 'wp-ever-accounting' ),
-			__( 'Yes', 'wp-ever-accounting' )
+		'<label class="ea-toggle"><input type="checkbox" name="%s" id="%s" class="%s"  style="%s" value="%s" %s %s><span data-label-off="%s" data-label-on="%s" class="ea-toggle-slider"></span></label>',
+		esc_attr( $field['name'] ),
+		esc_attr( $field['id'] ),
+		esc_attr( $field['class'] ),
+		esc_attr( $field['style'] ),
+		esc_attr( $field['cbvalue'] ),
+		$attributes,
+		checked( $field['value'], $field['cbvalue'], false ),
+		__( 'No', 'wp-ever-accounting' ),
+		__( 'Yes', 'wp-ever-accounting' )
 	);
 	if ( ! $field['naked'] ) {
 		echo $desc;
@@ -607,18 +578,18 @@ function eaccounting_toggle( $field ) {
  * @param array $field field properties.
  */
 function eaccounting_select2( $field ) {
-	$field          = (array) wp_parse_args(
-			$field,
-			array(
-					'class'        => '',
-					'map'          => 'return {text: option.name, id:option.id, item:option}',
-					'add_text'     => __( 'Add New', 'wp-ever-accounting' ),
-					'ajax_action'  => false,
-					'nonce_action' => 'ea_get_items',
-					'modal_id'     => false,
-					'creatable'    => false,
-					'attr'         => array(),
-			)
+	$field           = (array) wp_parse_args(
+		$field,
+		array(
+			'class'        => '',
+			'map'          => 'return {text: option.name, id:option.id, item:option}',
+			'add_text'     => __( 'Add New', 'wp-ever-accounting' ),
+			'ajax_action'  => false,
+			'nonce_action' => 'ea_get_items',
+			'modal_id'     => false,
+			'creatable'    => false,
+			'attr'         => array(),
+		)
 	);
 	$field['class'] .= ' ea-select2 ';
 
@@ -650,23 +621,23 @@ function eaccounting_select2( $field ) {
 function eaccounting_customer_dropdown( $field ) {
 	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
 	$contacts = eaccounting_get_customers(
-			array(
-					'include' => $include,
-					'fields'  => array( 'id', 'name' ),
-					'return'  => 'raw',
-			)
+		array(
+			'include' => $include,
+			'fields'  => array( 'id', 'name' ),
+			'return'  => 'raw',
+		)
 	);
 
 	$field = wp_parse_args(
-			array(
-					'value'        => $include,
-					'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
-					'ajax_action'  => 'eaccounting_get_customers',
-					'nonce_action' => 'ea_get_customers',
-					'modal_id'     => '#ea-modal-add-customer',
-					'creatable'    => true,
-			),
-			$field
+		array(
+			'value'        => $include,
+			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'ajax_action'  => 'eaccounting_get_customers',
+			'nonce_action' => 'ea_get_customers',
+			'modal_id'     => '#ea-modal-add-customer',
+			'creatable'    => true,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_customer_dropdown', $field ) );
 }
@@ -681,23 +652,23 @@ function eaccounting_customer_dropdown( $field ) {
 function eaccounting_vendor_dropdown( $field ) {
 	$include  = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
 	$contacts = eaccounting_get_vendors(
-			array(
-					'include' => $include,
-					'fields'  => array( 'id', 'name' ),
-					'return'  => 'raw',
-			)
+		array(
+			'include' => $include,
+			'fields'  => array( 'id', 'name' ),
+			'return'  => 'raw',
+		)
 	);
 
 	$field = wp_parse_args(
-			array(
-					'value'        => $include,
-					'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
-					'ajax_action'  => 'eaccounting_get_vendors',
-					'nonce_action' => 'ea_get_vendors',
-					'modal_id'     => '#ea-modal-add-vendor',
-					'creatable'    => true,
-			),
-			$field
+		array(
+			'value'        => $include,
+			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),
+			'ajax_action'  => 'eaccounting_get_vendors',
+			'nonce_action' => 'ea_get_vendors',
+			'modal_id'     => '#ea-modal-add-vendor',
+			'creatable'    => true,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_vendor_dropdown', $field ) );
 }
@@ -722,14 +693,14 @@ function eaccounting_contact_dropdown( $field ) {
 	$contacts = call_user_func_array( $function, array( $query_args ) );
 
 	$field = wp_parse_args(
-			array(
-					'value'    => $value ? absint( $value ) : '',
-					'options'  => wp_list_pluck( $contacts, 'name', 'id' ),
-					'type'     => $type,
-					'ajax'     => true,
-					'template' => 'add-' . $type,
-			),
-			$field
+		array(
+			'value'    => $value ? absint( $value ) : '',
+			'options'  => wp_list_pluck( $contacts, 'name', 'id' ),
+			'type'     => $type,
+			'ajax'     => true,
+			'template' => 'add-' . $type,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_contact_dropdown', $field ) );
 }
@@ -744,11 +715,11 @@ function eaccounting_contact_dropdown( $field ) {
 function eaccounting_account_dropdown( $field ) {
 	$include = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
 	$result  = eaccounting_get_accounts(
-			array(
-					'include' => $include,
-					'fields'  => array( 'id', 'name', 'currency_code' ),
-					'return'  => 'raw',
-			)
+		array(
+			'include' => $include,
+			'fields'  => array( 'id', 'name', 'currency_code' ),
+			'return'  => 'raw',
+		)
 	);
 
 	$options = array();
@@ -757,17 +728,17 @@ function eaccounting_account_dropdown( $field ) {
 	}
 
 	$field = wp_parse_args(
-			array(
-					'value'        => $include,
-					'options'      => $options,
-					'placeholder'  => __( 'Select Account', 'wp-ever-accounting' ),
-					'map'          => 'return {text: option.name + " (" + option.currency_code +")"  , id:option.id}',
-					'ajax_action'  => 'eaccounting_get_accounts',
-					'nonce_action' => 'ea_get_accounts',
-					'modal_id'     => '#ea-modal-add-account',
-					'creatable'    => true,
-			),
-			$field
+		array(
+			'value'        => $include,
+			'options'      => $options,
+			'placeholder'  => __( 'Select Account', 'wp-ever-accounting' ),
+			'map'          => 'return {text: option.name + " (" + option.currency_code +")"  , id:option.id}',
+			'ajax_action'  => 'eaccounting_get_accounts',
+			'nonce_action' => 'ea_get_accounts',
+			'modal_id'     => '#ea-modal-add-account',
+			'creatable'    => true,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_account_dropdown', $field ) );
 }
@@ -781,13 +752,13 @@ function eaccounting_account_dropdown( $field ) {
  */
 function eaccounting_category_dropdown( $field ) {
 	$field       = wp_parse_args(
-			$field,
-			array(
-					'value'       => '',
-					'type'        => '',
-					'ajax_action' => '',
-					'modal_id'    => '',
-			)
+		$field,
+		array(
+			'value'       => '',
+			'type'        => '',
+			'ajax_action' => '',
+			'modal_id'    => '',
+		)
 	);
 	$type        = ! empty( $field['type'] ) ? wp_parse_list( $field['type'] ) : array( 'income' );
 	$include     = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
@@ -795,24 +766,24 @@ function eaccounting_category_dropdown( $field ) {
 	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : 'ea-modal-add-income-category';
 
 	$categories = eaccounting_get_categories(
-			array(
-					'return'  => 'raw',
-					'include' => $include,
-					'type'    => $type,
-			)
+		array(
+			'return'  => 'raw',
+			'include' => $include,
+			'type'    => $type,
+		)
 	);
 	$field      = wp_parse_args(
-			array(
-					'value'        => $include,
-					'options'      => wp_list_pluck( $categories, 'name', 'id' ),
-					'ajax'         => true,
-					'placeholder'  => __( 'Select Category', 'wp-ever-accounting' ),
-					'nonce_action' => 'ea_categories',
-					'ajax_action'  => $ajax_action, // Specify for the use case
-					'modal_id'     => $modal_id, //Specify for the use case
-					'creatable'    => true,
-			),
-			$field
+		array(
+			'value'        => $include,
+			'options'      => wp_list_pluck( $categories, 'name', 'id' ),
+			'ajax'         => true,
+			'placeholder'  => __( 'Select Category', 'wp-ever-accounting' ),
+			'nonce_action' => 'ea_categories',
+			'ajax_action'  => $ajax_action, // Specify for the use case
+			'modal_id'     => $modal_id, //Specify for the use case
+			'creatable'    => true,
+		),
+		$field
 	);
 
 	eaccounting_select2( apply_filters( 'eaccounting_category_dropdown', $field ) );
@@ -834,29 +805,29 @@ function eaccounting_currency_dropdown( $field ) {
 	$codes         = array_unique( array_filter( array_merge( array( $default_code ), $currency_code ) ) );
 	$search        = implode( ' ', $codes );
 	$result        = eaccounting_get_currencies(
-			array(
-					'return' => 'raw',
-					'search' => $search,
-					'fields' => array( 'code', 'name', 'symbol' ),
-			)
+		array(
+			'return' => 'raw',
+			'search' => $search,
+			'fields' => array( 'code', 'name', 'symbol' ),
+		)
 	);
 	$options       = array();
 	foreach ( $result as $item ) {
 		$options[ $item->code ] = $item->name . '(' . $item->symbol . ')';
 	}
 	$field = wp_parse_args(
-			array(
-					'value'        => $codes,
-					'default'      => $default_code,
-					'options'      => $options,
-					'map'          => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code}',
-					'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
-					'ajax_action'  => 'eaccounting_get_currencies',
-					'nonce_action' => 'ea_get_currencies',
-					'modal_id'     => '#ea-modal-add-currency',
-					'creatable'    => true,
-			),
-			$field
+		array(
+			'value'        => $codes,
+			'default'      => $default_code,
+			'options'      => $options,
+			'map'          => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code}',
+			'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
+			'ajax_action'  => 'eaccounting_get_currencies',
+			'nonce_action' => 'ea_get_currencies',
+			'modal_id'     => '#ea-modal-add-currency',
+			'creatable'    => true,
+		),
+		$field
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_currency_dropdown', $field ) );
 }
@@ -876,22 +847,22 @@ function eaccounting_item_dropdown( $field ) {
 	$options = array();
 	if ( ! empty( $items ) ) {
 		$options = eaccounting_get_items(
-				array(
-						'return'  => 'raw',
-						'include' => $items,
-				)
+			array(
+				'return'  => 'raw',
+				'include' => $items,
+			)
 		);
 	}
 	$field = wp_parse_args(
-			$field,
-			array(
-					'options'      => wp_list_pluck( $options, 'name', 'id' ),
-					'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
-					'ajax'         => true,
-					'ajax_action'  => 'eaccounting_get_items',
-					'nonce_action' => 'ea_get_items',
-					'modal_id'     => '#ea-modal-add-item',
-			)
+		$field,
+		array(
+			'options'      => wp_list_pluck( $options, 'name', 'id' ),
+			'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
+			'ajax'         => true,
+			'ajax_action'  => 'eaccounting_get_items',
+			'nonce_action' => 'ea_get_items',
+			'modal_id'     => '#ea-modal-add-item',
+		)
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_item_dropdown', $field ) );
 }
@@ -913,12 +884,12 @@ function eaccounting_payment_method_dropdown( $field ) {
 	}
 
 	$field = wp_parse_args(
-			array(
-					'placeholder' => __( 'Enter payment method', 'wp-ever-accounting' ),
-					'default'     => $default,
-					'options'     => eaccounting_get_payment_methods(),
-			),
-			$field
+		array(
+			'placeholder' => __( 'Enter payment method', 'wp-ever-accounting' ),
+			'default'     => $default,
+			'options'     => eaccounting_get_payment_methods(),
+		),
+		$field
 	);
 
 	eaccounting_select2( apply_filters( 'eaccounting_payment_method_dropdown', $field ) );
@@ -936,12 +907,12 @@ function eaccounting_payment_method_dropdown( $field ) {
 function eaccounting_country_dropdown( $field ) {
 	$default = eaccounting()->settings->get( 'company_country' );
 	$field   = wp_parse_args(
-			$field,
-			array(
-					'default'     => $default,
-					'options'     => eaccounting_get_countries(),
-					'placeholder' => __( 'Select Country', 'wp-ever-accounting' ),
-			)
+		$field,
+		array(
+			'default'     => $default,
+			'options'     => eaccounting_get_countries(),
+			'placeholder' => __( 'Select Country', 'wp-ever-accounting' ),
+		)
 	);
 
 	eaccounting_select2( apply_filters( 'eaccounting_country_dropdown', $field ) );
@@ -956,13 +927,13 @@ function eaccounting_country_dropdown( $field ) {
  */
 function eaccounting_input_date_range( $field ) {
 	$field       = (array) wp_parse_args(
-			$field,
-			array(
-					'start_date'  => '',
-					'end_date'    => '',
-					'name'        => '',
-					'placeholder' => '',
-			)
+		$field,
+		array(
+			'start_date'  => '',
+			'end_date'    => '',
+			'name'        => '',
+			'placeholder' => '',
+		)
 	);
 	$field['id'] = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$value       = __( 'Date range', 'wp-ever-accounting' );

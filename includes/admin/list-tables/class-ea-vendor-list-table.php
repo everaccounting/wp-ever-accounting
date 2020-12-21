@@ -186,9 +186,9 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 					esc_url(
 						eaccounting_admin_url(
 							array(
-								'action'      => 'edit',
-								'tab'         => 'vendors',
-								'category_id' => $vendor_id,
+								'action'    => 'edit',
+								'tab'       => 'vendors',
+								'vendor_id' => $vendor_id,
 							)
 						)
 					),
@@ -199,7 +199,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				$value = sanitize_email( $vendor->get_email() );
 				break;
 			case 'phone':
-				$value =  $vendor->get_phone() ;
+				$value = $vendor->get_phone();
 				break;
 			case 'enabled':
 				ob_start();

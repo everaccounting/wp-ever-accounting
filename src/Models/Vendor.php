@@ -54,7 +54,7 @@ class Vendor extends ResourceModel {
 		'tax_number'    => '',
 		'currency_code' => '',
 		'type'          => '',
-		'note'          => '',
+		'avatar_id'     => null,
 		'enabled'       => 1,
 		'creator_id'    => null,
 		'date_created'  => null,
@@ -284,16 +284,16 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Get contact's note.
+	 * Get avatar id
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 * @param string $context
 	 *
-	 * @return string
+	 * @return int|null
 	 */
-	public function get_note( $context = 'edit' ) {
-		return $this->get_prop( 'note', $context );
+	public function get_avatar_id( $context = 'edit' ) {
+		return $this->get_prop( 'avatar_id', $context );
 	}
 
 	/*
@@ -460,15 +460,14 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Set contact's note.
+	 * Set avatar id
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
-	 * @param $value
-	 *
+	 * @param int $avatar_id
 	 */
-	public function set_note( $value ) {
-		$this->set_prop( 'note', sanitize_textarea_field( $value ) );
+	public function set_avatar_id( $avatar_id ) {
+		$this->set_prop( 'avatar_id', absint( $avatar_id ) );
 	}
 
 	/*
@@ -513,6 +512,6 @@ class Vendor extends ResourceModel {
 	 * @return string
 	 */
 	public function get_avatar_url( $args = array() ) {
-		return get_avatar_url( $this->get_email(), wp_parse_args($args, array('size' => '100')) );
+		return get_avatar_url( $this->get_email(), wp_parse_args( $args, array( 'size' => '100' ) ) );
 	}
 }

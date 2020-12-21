@@ -58,7 +58,7 @@ class Vendors extends ResourceRepository {
 		'website'       => '%s',
 		'tax_number'    => '%s',
 		'type'          => '%s',
-		'note'          => '%s',
+		'avatar_id'     => '%d',
 		'enabled'       => '%d',
 		'creator_id'    => '%d',
 		'date_created'  => '%s',

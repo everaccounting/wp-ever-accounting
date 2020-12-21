@@ -1,11 +1,11 @@
 /*------------------------------------------------------------------------------
   Used for page layout like wp post edit screen
 ------------------------------------------------------------------------------*/
-.ea-page-columns{
+.ea-page-columns {
   position: relative;
   @include clearfix();
 
-  &__content{
+  &__content {
 	width: calc(100% - 300px);
 	min-width: 463px;
 	float: left;
@@ -14,7 +14,8 @@
 	  width: 100%;
 	}
   }
-  &__aside{
+
+  &__aside {
 	float: right;
 	width: 280px;
 	@media only screen and (max-width: 850px) {
@@ -23,11 +24,12 @@
 	}
   }
 
-  .altered &{
-	&__content{
+  .altered & {
+	&__content {
 	  float: right;
 	}
-	&__aside{
+
+	&__aside {
 	  float: left;
 	}
   }
@@ -37,22 +39,24 @@
 /*------------------------------------------------------------------------------
   Helpers for small components
 ------------------------------------------------------------------------------*/
-.ea-avatar{
+.ea-avatar {
   position: relative;
   width: 100px;
   height: 100px;
   overflow: hidden;
   border-radius: 50%;
-  img{
+
+  img {
 	width: 100%;
 	height: auto;
   }
 }
 
-.ea-attachment{
+.ea-attachment {
   $self: &;
+  width: 96px;
 
-  &__preview{
+  &__preview {
 	margin-right: 15px;
 	width: 96px;
 	height: 96px;
@@ -65,7 +69,7 @@
 	text-align: center;
 	padding: 5px;
 
-	a{
+	a {
 	  width: 100%;
 	  height: 100%;
 	  overflow: hidden;
@@ -79,27 +83,41 @@
 
   }
 
-  &__remove{
-	display: none;
+  &:not(.has--image) {
+	#{$self}__remove {
+	  display: none !important;
+	}
+
+	#{$self}__upload {
+	  display: inline-block;
+	}
+
+	#{$self}__preview {
+	  display: none;
+	}
   }
 
-  &__upload{
-	display: inline-block;
-  }
+  &.has--image {
+	text-align: center;
 
- &.has--image{
-	display: flex;
-	align-items: center;
+	#{$self}__preview{
+	  margin-bottom: 5px;
+	}
+
+	#{$self}__upload {
+	  display: none;
+	}
   }
 
 }
 
-.ea-list-group{
+.ea-list-group {
   display: flex;
   flex-direction: column;
   padding-left: 0;
   margin-bottom: 0;
-  &__item{
+
+  &__item {
 	position: relative;
 	display: block;
 	padding: 10px 12px;
@@ -107,13 +125,13 @@
 	border-top: 1px solid #e1e2e2;
   }
 
-  &__title{
+  &__title {
 	font-size: 13px;
 	font-weight: bold;
 	color: #555;
   }
 
-  &__text{
+  &__text {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -125,7 +143,7 @@
 /*------------------------------------------------------------------------------
   Helpers for positing
 ------------------------------------------------------------------------------*/
-.ea-center-block{
+.ea-center-block {
   margin-left: auto;
   margin-right: auto;
   display: block;

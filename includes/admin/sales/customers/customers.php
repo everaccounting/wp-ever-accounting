@@ -13,13 +13,30 @@ function eaccounting_render_customers_tab() {
 	$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 	if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['customer_id'] ) ) {
 		$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
-		include dirname( __FILE__ ) . '/view/html-customer.php';
+		include dirname( __FILE__ ) . '/view-customer.php';
 	} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 		$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
-		include dirname( __FILE__ ) . '/view/html-customer-edit.php';
+		include dirname( __FILE__ ) . '/edit-customer.php';
 	} else {
-		include dirname( __FILE__ ) . '/view/html-customer-list.php';
+		include dirname( __FILE__ ) . '/list-customer.php';
 	}
 }
 
 add_action( 'eaccounting_sales_tab_customers', 'eaccounting_render_customers_tab' );
+
+
+function eaccounting_render_customer_profile_top($customer){
+	include dirname( __FILE__ ) . '/customer-profile-top.php';
+}
+add_action('eaccounting_customer_profile_top', 'eaccounting_render_customer_profile_top');
+
+function eaccounting_customer_profile_aside($customer){
+	include dirname( __FILE__ ) . '/customer-profile-aside.php';
+}
+add_action('eaccounting_customer_profile_aside', 'eaccounting_customer_profile_aside');
+
+
+function eaccounting_customer_profile_content_transactions($customer){
+	include dirname( __FILE__ ) . '/customer-profile-transactions.php';
+}
+add_action('eaccounting_customer_profile_content_transactions', 'eaccounting_customer_profile_content_transactions');

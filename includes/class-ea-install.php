@@ -440,7 +440,6 @@ class EAccounting_Install {
 			`tax_number` VARCHAR(50) DEFAULT NULL,
 			`currency_code` varchar(3),
   			`type` VARCHAR(100) DEFAULT NULL COMMENT 'Customer or vendor',
-			`note` TEXT DEFAULT NULL,
 			`avatar_id` INT(11) DEFAULT NULL,
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
 			`creator_id` INT(11) DEFAULT NULL,
