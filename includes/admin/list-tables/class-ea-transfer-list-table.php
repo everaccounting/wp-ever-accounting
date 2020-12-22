@@ -165,7 +165,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				$url   = eaccounting_admin_url(
 					array(
 						'tab'         => 'transfers',
-						'action'      => 'edit',
+						'action'      => 'view',
 						'transfer_id' => $transfer_id,
 					)
 				);
@@ -180,23 +180,23 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 				break;
 			case 'amount':
-				$value   = $transfer->get_formatted_amount();
+				$value = $transfer->get_formatted_amount();
 				break;
 			case 'reference':
-				$value   = $transfer->get_reference();
+				$value = $transfer->get_reference();
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'       => 'transfers',
-						'action'    => 'edit',
+						'tab'         => 'transfers',
+						'action'      => 'edit',
 						'transfer_id' => $transfer_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'transfers',
-						'action'    => 'delete',
+						'tab'         => 'transfers',
+						'action'      => 'delete',
 						'transfer_id' => $transfer_id,
 					)
 				);
@@ -304,13 +304,13 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 		$args = wp_parse_args(
 			$this->query_args,
 			array(
-				'per_page'    => $per_page,
-				'page'        => $page,
-				'number'      => $per_page,
-				'offset'      => $per_page * ( $page - 1 ),
-				'search'      => $search,
-				'orderby'     => eaccounting_clean( $orderby ),
-				'order'       => eaccounting_clean( $order ),
+				'per_page' => $per_page,
+				'page'     => $page,
+				'number'   => $per_page,
+				'offset'   => $per_page * ( $page - 1 ),
+				'search'   => $search,
+				'orderby'  => eaccounting_clean( $orderby ),
+				'order'    => eaccounting_clean( $order ),
 			)
 		);
 

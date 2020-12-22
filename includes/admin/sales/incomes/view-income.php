@@ -8,15 +8,19 @@
  */
 defined( 'ABSPATH' ) || exit();
 
+use EverAccounting\Models\Account;
+use EverAccounting\Models\Category;
+use EverAccounting\Models\Customer;
+
 wp_enqueue_script( 'ea-print' );
-$revenue_id = isset( $_REQUEST['revenue_id'] ) ? absint( $_REQUEST['revenue_id'] ) : null;
+$income_id = isset( $_REQUEST['income_id'] ) ? absint( $_REQUEST['income_id'] ) : null;
 try {
-	$revenue = new \EverAccounting\Models\Income( $revenue_id );
+	$income = new \EverAccounting\Models\Income( $income_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
 $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
-$edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->get_id() ), $back_url );
+$edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $income->get_id() ), $back_url );
 ?>
 
 <div class="ea-revenue-page">
@@ -24,7 +28,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 		<div class="ea-col-12">
 			<div class="ea-card">
 				<div class="ea-card__header">
-					<h3 class="ea-card__title"><?php _e( 'Revenue Voucher', 'wp-ever-accounting' ); ?></h3>
+					<h3 class="ea-card__title"><?php _e( 'Income Voucher', 'wp-ever-accounting' ); ?></h3>
 					<div>
 						<a href="<?php echo $edit_url; ?>" class="button-secondary button"><?php _e( 'Edit', 'wp-ever-accounting' ); ?></a>
 						<a href="<?php echo $back_url; ?>" class="button button-secondary"><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
@@ -39,7 +43,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 								<img src="https://wpeveraccounting.com/wp-content/uploads/2020/09/Logo-same-size-plugin-ever.svg" alt="WP Ever Accounting">
 							</div>
 
-							<div class="ea-revenue__title"><?php _e( 'Revenue Voucher', 'wp-ever-accounting' ); ?></div>
+							<div class="ea-revenue__title"><?php _e( 'Income Voucher', 'wp-ever-accounting' ); ?></div>
 						</div>
 
 						<div class="ea-revenue__columns">
@@ -51,11 +55,12 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 										</th>
 										<td>
 											<?php
-											$account = $revenue->get_account();
+											$account_id = $income->get_account_id();
+											$account    = new Account( $account_id );
 											?>
-											<div class="ea-revenue__company"><?php echo  $account['name'] ; ?></div>
+											<div class="ea-revenue__company"><?php echo $account->get_name(); ?></div>
 											<div class="ea-revenue__address">
-												<span class="ea-revenue__address-line"><?php echo isset( $account['bank_address'] ) && ! empty( $account['bank_address'] ) ? $account['bank_address'] : ''; ?></span>
+												<span class="ea-revenue__address-line"><?php echo !empty( $account->get_bank_address() ) && ! empty( $account->get_bank_address() ) ? $account->get_bank_address() : ''; ?></span>
 											</div>
 										</td>
 									</tr>
@@ -68,11 +73,12 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 										</th>
 										<td>
 											<?php
-											$customers = $revenue->get_customer();
+											$customer_id = $income->get_customer_id();
+											$customers   = new Customer( $customer_id );
 											?>
-											<div class="ea-revenue__company"><?php echo $customers ?  $customers['name']  : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-revenue__company"><?php echo $customers ? $customers->get_name() : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
 											<div class="ea-revenue__address">
-												<span class="ea-revenue__address-line"><?php echo isset( $customers['address'] ) && ! empty( $customers['address'] ) ? $customers['address'] : ''; ?></span>
+												<span class="ea-revenue__address-line"><?php echo !empty( $customers->get_address() ) && ! empty( $customers->get_address() ) ? $customers->get_address() : ''; ?></span>
 											</div>
 										</td>
 									</tr>
@@ -89,7 +95,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 											<div class="ea-revenue__subtitle"><?php _e( 'Voucher Number', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-revenue__value"><?php echo $revenue_id; ?></div>
+											<div class="ea-revenue__value"><?php echo $income_id; ?></div>
 										</td>
 									</tr>
 									<tr>
@@ -99,10 +105,10 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 										</th>
 										<?php
 										$available_payment_methods = eaccounting_get_payment_methods();
-										$revenue_payment_method    = $revenue->get_payment_method();
+										$income_payment_method    = $income->get_payment_method();
 										?>
 										<td>
-											<div class="ea-revenue__value"><?php echo array_key_exists( $revenue_payment_method, $available_payment_methods ) ? $available_payment_methods[ $revenue_payment_method ] : ''; ?></div>
+											<div class="ea-revenue__value"><?php echo array_key_exists( $income_payment_method, $available_payment_methods ) ? $available_payment_methods[ $revenue_payment_method ] : ''; ?></div>
 										</td>
 									</tr>
 									<tr>
@@ -114,7 +120,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 											<?php
 											$date_format = get_option( 'date_format' ) ? get_option( 'date_format' ) : 'F j, Y';
 											?>
-											<div class="ea-revenue__value"><?php echo eaccounting_format_datetime($revenue->get_payment_date(), 'M j, Y'); ?></div>
+											<div class="ea-revenue__value"><?php echo eaccounting_format_datetime( $income->get_payment_date(), 'M j, Y' ); ?></div>
 										</td>
 									</tr>
 									<tr>
@@ -123,7 +129,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 											<div class="ea-revenue__subtitle"><?php _e( 'Bank Account', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-revenue__value"><?php echo $account ?  $account['name']  : '&mdash'; ?></div>
+											<div class="ea-revenue__value"><?php echo $account ? $account->get_name() : '&mdash'; ?></div>
 										</td>
 									</tr>
 
@@ -133,10 +139,11 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 											<div class="ea-revenue__subtitle"><?php _e( 'Category', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<?php
-										$category = $revenue->get_category();
+										$category_id = $income->get_category_id();
+										$category = new Category($category_id);
 										?>
 										<td>
-											<div class="ea-revenue__value"><?php echo $category ? $category['name'] : __( 'Deleted Category', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-revenue__value"><?php echo $category ? $category->get_name() : __( 'Deleted Category', 'wp-ever-accounting' ); ?></div>
 										</td>
 									</tr>
 									</tbody>
@@ -158,8 +165,8 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 							<tbody>
 							<tr>
 								<td class="text-left"><?php _e( '1', 'wp-ever-accounting' ) ?></td>
-								<td class="text-center description"><?php echo ! empty( $revenue->get_description() ) ? $revenue->get_description() : '&mdash;'; ?></td>
-								<td class="text-right"><?php echo eaccounting_format_price( $revenue->get_amount(), $revenue->get_currency_code() ); ?></td>
+								<td class="text-center description"><?php echo ! empty( $income->get_description() ) ? $income->get_description() : '&mdash;'; ?></td>
+								<td class="text-right"><?php echo eaccounting_format_price( $income->get_amount(), $income->get_currency_code() ); ?></td>
 							</tr>
 							</tbody>
 
@@ -167,7 +174,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 							<tr>
 								<td colspan="2">
 									<p class="ea-revenue__text">
-										<strong><?php _e( 'In Word:', 'wp-ever-accounting' ); ?> </strong><?php echo eaccounting_numbers_to_words( $revenue->get_amount() ) . ' In ' . $revenue->get_currency_code(); ?>
+										<strong><?php _e( 'In Word:', 'wp-ever-accounting' ); ?> </strong><?php echo eaccounting_numbers_to_words( $income->get_amount() ) . ' In ' . $income->get_currency_code(); ?>
 									</p>
 								</td>
 
@@ -176,7 +183,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 										<tbody>
 										<tr>
 											<th><?php _e( 'Total', 'wp-ever-accounting' ) ?></th>
-											<td><?php echo eaccounting_format_price( $revenue->get_amount(), $revenue->get_currency_code() ); ?></td>
+											<td><?php echo eaccounting_format_price( $income->get_amount(), $income->get_currency_code() ); ?></td>
 										</tr>
 										</tbody>
 									</table>
@@ -187,7 +194,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 						</table>
 						<!-- /.ea-revenue__items -->
 						<p class="ea-revenue__reference">
-							<strong><?php _e( 'Reference:', 'wp-ever-accounting' ) ?> </strong><?php echo ! empty( $revenue->get_reference() ) ? $revenue->get_reference() : ''; ?>
+							<strong><?php _e( 'Reference:', 'wp-ever-accounting' ) ?> </strong><?php echo ! empty( $income->get_reference() ) ? $income->get_reference() : ''; ?>
 						</p>
 					</div>
 					<!-- /.ea-revenue -->
@@ -201,8 +208,8 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $revenue->
 	<!-- /.ea-row -->
 </div>
 <script type="text/javascript">
-	var $ =jQuery.noConflict();
-	$('.print-button').on('click',function(e){
+	var $ = jQuery.noConflict();
+	$('.print-button').on('click', function (e) {
 		$("#ea-print-voucher").printThis({
 			debug: false,               // show the iframe for debugging
 			importCSS: true,            // import parent page css

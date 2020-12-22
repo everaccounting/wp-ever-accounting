@@ -1,8 +1,16 @@
 <?php
 /**
- * Customer edit
+ * Render Customer edit
+ *
+ * @since       1.0.2
+ * @subpackage  Admin/Sales/Customers
+ * @package     EverAccounting
+ *
  * @var int $customer_id
  */
+
+defined( 'ABSPATH' ) || exit();
+
 try {
 	$customer = new \EverAccounting\Models\Customer( $customer_id );
 } catch ( Exception $e ) {
@@ -103,15 +111,6 @@ $back_url = remove_query_arg( array( 'action', 'customer_id' ) );
 					eaccounting_textarea(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Note', 'wp-ever-accounting' ),
-							'name'          => 'note',
-							'placeholder'   => __( 'Enter note', 'wp-ever-accounting' ),
-							'value'         => $customer->get_note(),
-						)
-					);
-					eaccounting_textarea(
-						array(
-							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Address', 'wp-ever-accounting' ),
 							'name'          => 'address',
 							'placeholder'   => __( 'Enter address', 'wp-ever-accounting' ),
@@ -125,6 +124,14 @@ $back_url = remove_query_arg( array( 'action', 'customer_id' ) );
 							'label'         => __( 'Country', 'wp-ever-accounting' ),
 							'name'          => 'country',
 							'value'         => $customer->get_country(),
+						)
+					);
+					eaccounting_file_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Photo', 'wp-ever-accounting' ),
+							'name'          => 'avatar_id',
+							'value'         => $customer->get_attachment(),
 						)
 					);
 					eaccounting_hidden_input(
@@ -141,7 +148,7 @@ $back_url = remove_query_arg( array( 'action', 'customer_id' ) );
 					);
 					?>
 				</div>
-				<?php wp_nonce_field( 'ea_edit_contact' ); ?>
+				<?php wp_nonce_field( 'ea_edit_customer' ); ?>
 				<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
 			</form>
 		</div>

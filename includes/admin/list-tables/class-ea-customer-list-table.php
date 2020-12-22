@@ -186,9 +186,9 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 					esc_url(
 						eaccounting_admin_url(
 							array(
-								'action'      => 'edit',
+								'action'      => 'view',
 								'tab'         => 'customers',
-								'category_id' => $customer_id,
+								'customer_id' => $customer_id,
 							)
 						)
 					),
@@ -199,7 +199,7 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 				$value = sanitize_email( $customer->get_email() );
 				break;
 			case 'phone':
-				$value =  $customer->get_phone() ;
+				$value = $customer->get_phone();
 				break;
 			case 'enabled':
 				ob_start();
@@ -369,8 +369,6 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 
 		$this->items       = eaccounting_get_customers( $args );
 		$this->total_count = eaccounting_get_customers( array_merge( $args, array( 'count_total' => true ) ) );
-
-		$total_items = $this->total_count;
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 

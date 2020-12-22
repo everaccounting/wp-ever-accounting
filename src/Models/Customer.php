@@ -11,6 +11,8 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\ContactTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +24,9 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Customer extends ResourceModel {
+	use AttachmentTrait;
+	use ContactTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -56,7 +61,7 @@ class Customer extends ResourceModel {
 		'tax_number'    => '',
 		'currency_code' => '',
 		'type'          => '',
-		'note'          => '',
+		'avatar_id'     => null,
 		'enabled'       => 1,
 		'creator_id'    => null,
 		'date_created'  => null,

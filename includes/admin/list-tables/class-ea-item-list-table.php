@@ -104,9 +104,9 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 	public function define_columns() {
 		return array(
 			'cb'             => '<input type="checkbox" />',
+			'thumb'          => '<span class="ea-thumb dashicons dashicons-format-image">&nbsp;</span>',
 			'name'           => __( 'Name', 'wp-ever-accounting' ),
 			'category_id'    => __( 'Category', 'wp-ever-accounting' ),
-			'quantity'       => __( 'Quantity', 'wp-ever-accounting' ),
 			'sale_price'     => __( 'Sale Price', 'wp-ever-accounting' ),
 			'purchase_price' => __( 'Purchase Price', 'wp-ever-accounting' ),
 			'enabled'        => __( 'Enabled', 'wp-ever-accounting' ),
@@ -181,15 +181,18 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 	function column_default( $item, $column_name ) {
 		$item_id = $item->get_id();
 		switch ( $column_name ) {
+			case 'thumb':
+				$value = eaccounting_get_attachment_image( $item->get_image_id() );
+				break;
 			case 'name':
 				$name = $item->get_name();
 
 				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
+					'<a class="row-title" href="%1$s">%2$s</a>',
 					esc_url(
 						eaccounting_admin_url(
 							array(
-								'action'     => 'edit',
+								'action'  => 'edit',
 								'item_id' => $item_id,
 							)
 						)
@@ -198,8 +201,8 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				);
 				break;
 			case 'category_id':
-				$category = eaccounting_get_category( $item->get_category_id( ) );
-				$value = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				$category = eaccounting_get_category( $item->get_category_id() );
+				$value    = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 				break;
 			case 'quantity':
 				$value = $item->get_quantity();
@@ -207,7 +210,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 			case 'sale_price':
 				$value = eaccounting_price( $item->get_sale_price() );
 				break;
-				case 'purchase_price':
+			case 'purchase_price':
 				$value = eaccounting_price( $item->get_purchase_price() );
 				break;
 			case 'enabled':
@@ -230,15 +233,15 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'        => 'items',
-						'action'     => 'edit',
+						'tab'     => 'items',
+						'action'  => 'edit',
 						'item_id' => $item_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'items',
-						'action'    => 'delete',
+						'tab'     => 'items',
+						'action'  => 'delete',
 						'item_id' => $item_id,
 					)
 				);
@@ -395,7 +398,12 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-		eaccounting_get_currencies( array( 'return' => 'raw', 'number' => '-1' ) );
+		eaccounting_get_currencies(
+			array(
+				'return' => 'raw',
+				'number' => '-1',
+			)
+		);
 
 		$args        = apply_filters( 'eaccounting_item_table_query_args', $args, $this );
 		$this->items = eaccounting_get_items( $args );

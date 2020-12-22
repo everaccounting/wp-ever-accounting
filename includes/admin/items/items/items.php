@@ -18,7 +18,7 @@ function eaccounting_items_items_tab() {
 	if ( in_array( $action, array( 'edit', 'add' ), true ) ) {
 		require_once dirname( __FILE__ ) . '/edit-item.php';
 	} else {
-		require_once dirname( __FILE__ ) . '/item-list.php';
+		require_once dirname( __FILE__ ) . '/list-item.php';
 	}
 }
 

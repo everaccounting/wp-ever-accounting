@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Item extends ResourceModel {
+	use AttachmentTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *

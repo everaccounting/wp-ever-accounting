@@ -57,7 +57,7 @@ function eaccounting_get_sales_tabs() {
 		$tabs['invoices'] = __( 'Invoices', 'wp-ever-accounting' );
 	}
 	if ( current_user_can( 'ea_manage_revenue' ) ) {
-		$tabs['revenues'] = __( 'Incomes', 'wp-ever-accounting' );
+		$tabs['incomes'] = __( 'Incomes', 'wp-ever-accounting' );
 	}
 	if ( current_user_can( 'ea_manage_customer' ) ) {
 		$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );

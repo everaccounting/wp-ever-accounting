@@ -439,35 +439,28 @@ function eaccounting_select( $field ) {
 /**
  * File input field.
  *
- * @since 1.0.2
- *
  * @param $field
+ * @since 1.1.0
  */
 function eaccounting_file_input( $field ) {
-	$field = (array) wp_parse_args(
+	$field          = (array) wp_parse_args(
 		$field,
 		array(
 			'label'         => '',
-			'style'         => '',
 			'wrapper_class' => '',
 			'value'         => false,
 			'name'          => '',
-			'tooltip'       => '',
 			'desc'          => '',
-			'default'       => '',
 			'attr'          => array(),
 		)
 	);
-
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
 	$field['value'] = ! isset( $field['value'] ) ? $field['default'] : $field['value'];
-
-	// Custom attribute handling
-	$attributes      = eaccounting_implode_html_attributes( $field['attr'] );
-	$tooltip         = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
-	$desc            = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
-	$field['style'] .= ! empty( $field['value'] ) ? 'display:none;' : '';
-
+	$tooltip        = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
+	$desc           = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
+	$link           = empty( $field['value'] ) ? '' : $field['value']->src;
+	$name           = empty( $field['value'] ) ? '' : $field['value']->name;
+	$id             = empty( $field['value'] ) ? '' : $field['value']->id;
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
 			'<div class="ea-form-field ea-file-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
@@ -478,27 +471,25 @@ function eaccounting_file_input( $field ) {
 			$tooltip
 		);
 	}
-
-	$link = empty( $field['value'] ) ? '' : $field['value']->src;
-	$name = empty( $field['value'] ) ? '' : $field['value']->name;
-	$id   = empty( $field['value'] ) ? '' : $field['value']->id;
 	?>
-	<div class="ea-file" style="<?php echo empty( $field['value'] ) ? 'display:none' : ''; ?>">
-		<a href="<?php echo esc_url( $link ); ?>" target="_blank" class="ea-file-link"><?php echo sanitize_file_name( $name ); ?></a>
-		<a href="#" class="ea-file-delete"><span class="dashicons dashicons-no-alt">&nbsp;</span></a>
-	</div>
+		<div class="ea-attachment <?php echo ! empty( $id ) ? 'has--image' : ''; ?>">
+			<div class="ea-attachment__preview">
+				<a class="ea-attachment__link" href="<?php echo esc_attr( $link ); ?>">
+					<img class="ea-attachment__image" src="<?php echo esc_attr( $link ); ?>" alt="<?php echo esc_attr( $name ); ?>">
+				</a>
+			</div>
+			<button type="button" class="button-link ea-attachment__remove">Remove</button>
+			<button type="button" class="button-secondary ea-attachment__upload">Upload</button>
+			<?php
+			echo sprintf(
+				'<input type="hidden" name="%s" class="ea-attachment__input" id="%s" value="%s"/>',
+				esc_attr( $field['name'] ),
+				esc_attr( $field['id'] ),
+				absint( $id )
+			);
+			?>
+		</div>
 	<?php
-	echo sprintf(
-		'<button type="button" class="button-secondary ea-upload-attachment" style="%s">%s</button>',
-		! empty( $field['value'] ) ? 'display:none' : '',
-		__( 'Upload', 'wp-ever-accounting' )
-	);
-	echo sprintf(
-		'<input type="hidden" name="%s" class="ea-file-input" id="%s" value="%s"/>',
-		esc_attr( $field['name'] ),
-		esc_attr( $field['id'] ),
-		absint( $id )
-	);
 
 	if ( ! empty( $field['label'] ) ) {
 		echo $desc;
@@ -875,8 +866,6 @@ function eaccounting_item_dropdown( $field ) {
 	);
 	eaccounting_select2( apply_filters( 'eaccounting_item_dropdown', $field ) );
 }
-
-
 
 
 /**

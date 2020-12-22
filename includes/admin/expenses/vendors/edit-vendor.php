@@ -112,15 +112,6 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 				eaccounting_textarea(
 					array(
 						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Note', 'wp-ever-accounting' ),
-						'name'          => 'note',
-						'placeholder'   => __( 'Enter note', 'wp-ever-accounting' ),
-						'value'         => $vendor->get_note(),
-					)
-				);
-				eaccounting_textarea(
-					array(
-						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Address', 'wp-ever-accounting' ),
 						'name'          => 'address',
 						'placeholder'   => __( 'Enter address', 'wp-ever-accounting' ),

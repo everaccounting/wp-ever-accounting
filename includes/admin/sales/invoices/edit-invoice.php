@@ -121,7 +121,7 @@ $back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
 						array(
 							'label'         => __( 'Attachments', 'wp-ever-accounting' ),
 							'name'          => 'attachment_id',
-							'value'         => $invoice->get_attachment(),
+							'value'         => $invoice->get_attachment_id(),
 							'wrapper_class' => 'ea-col-6',
 							'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),
 						)
