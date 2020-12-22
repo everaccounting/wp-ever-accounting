@@ -27,6 +27,7 @@ $add_url = eaccounting_admin_url(
 <?php do_action( 'eaccounting_currencies_table_top' ); ?>
 	<form id="ea-customers-table" method="get" action="<?php echo admin_url(); ?>">
 		<?php
+		$currency_table->views();
 		$currency_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-currencies' );
 		$currency_table->display();
 		?>

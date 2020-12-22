@@ -328,6 +328,28 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
+	 * Retrieve the view types
+	 *
+	 * @access public
+	 * @return array $views All the views available
+	 * @since 1.0.2
+	 */
+	public function get_views() {
+		$base           = eaccounting_admin_url();
+		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
+		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
+		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
+
+		$views = array(
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
+			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
+		);
+
+		return $views;
+	}
+	/**
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
@@ -368,7 +390,28 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 		$args = apply_filters( 'eaccounting_customer_table_query_args', $args, $this );
 
 		$this->items       = eaccounting_get_customers( $args );
-		$this->total_count = eaccounting_get_customers( array_merge( $args, array( 'count_total' => true ) ) );
+
+		$this->active_count = eaccounting_get_customers(
+			array_merge(
+				$args,
+				array(
+					'enabled'     => '1',
+					'count_total' => true,
+				)
+			)
+		);
+
+		$this->inactive_count = eaccounting_get_customers(
+			array_merge(
+				$args,
+				array(
+					'enabled'     => '0',
+					'count_total' => true,
+				)
+			)
+		);
+
+		$this->total_count = $this->active_count + $this->inactive_count;
 
 		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
 

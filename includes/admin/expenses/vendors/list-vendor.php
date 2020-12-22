@@ -27,6 +27,7 @@ $add_url = eaccounting_admin_url(
 <?php do_action( 'eaccounting_vendors_table_top' ); ?>
 	<form id="ea-vendors-table" method="get" action="<?php echo admin_url(); ?>">
 		<?php
+		$vendors_table->views();
 		$vendors_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-vendors' );
 		$vendors_table->display();
 		?>
