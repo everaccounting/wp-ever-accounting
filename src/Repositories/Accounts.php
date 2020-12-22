@@ -50,6 +50,7 @@ class Accounts extends ResourceRepository {
 		'bank_name'       => '%s',
 		'bank_phone'      => '%s',
 		'bank_address'    => '%s',
+		'thumbnail_id'    => '%d',
 		'enabled'         => '%d',
 		'creator_id'      => '%d',
 		'date_created'    => '%s',
