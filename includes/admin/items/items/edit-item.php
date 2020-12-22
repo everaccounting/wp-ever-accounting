@@ -5,17 +5,17 @@
  * @since       1.1.0
  * @subpackage  Admin/Items/Items
  * @package     EverAccounting
+ * @var int $item_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
-$item_id = isset( $_REQUEST['item_id'] ) ? absint( $_REQUEST['item_id'] ) : null;
 try {
 	$item = new \EverAccounting\Models\Item( $item_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$back_url = remove_query_arg( array( 'action', 'id' ) );
+$back_url = remove_query_arg( array( 'action', 'item_id' ) );
 ?>
 
 <div class="ea-card">
@@ -25,7 +25,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 	</div>
 
 	<div class="ea-card__inside">
-		<form id="ea-category-form" method="post">
+		<form id="ea-item-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
 				<?php
 				eaccounting_text_input(

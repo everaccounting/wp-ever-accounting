@@ -223,14 +223,14 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 					array(
 						'tab'         => 'vendors',
 						'action'      => 'edit',
-						'customer_id' => $vendor_id,
+						'vendor_id' => $vendor_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
 						'tab'         => 'vendors',
 						'action'      => 'delete',
-						'customer_id' => $vendor_id,
+						'vendor_id' => $vendor_id,
 					)
 				);
 				$actions  = array(
