@@ -190,7 +190,7 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 							array(
 								'action'      => 'edit',
 								'tab'         => 'currencies',
-								'category_id' => $currency_id,
+								'currency_id' => $currency_id,
 							)
 						)
 					),
@@ -228,14 +228,14 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 					array(
 						'tab'         => 'currencies',
 						'action'      => 'edit',
-						'category_id' => $currency_id,
+						'currency_id' => $currency_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
 						'tab'         => 'currencies',
 						'action'      => 'delete',
-						'category_id' => $currency_id,
+						'currency_id' => $currency_id,
 					)
 				);
 				$actions  = array(

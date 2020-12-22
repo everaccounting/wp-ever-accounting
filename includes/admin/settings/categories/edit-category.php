@@ -15,7 +15,7 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$back_url = remove_query_arg( array( 'action', 'id' ) );
+$back_url = remove_query_arg( array( 'action', 'category_id' ) );
 ?>
 
 <div class="ea-card">
