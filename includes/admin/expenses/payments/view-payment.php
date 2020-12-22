@@ -5,16 +5,17 @@
  * @since       1.1.0
  * @subpackage  Admin/Expenses/Payments
  * @package     EverAccounting
+ *
+ * @var int $payment_id
  */
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
-use EverAccounting\Models\Customer;
 use EverAccounting\Models\Vendor;
 
 wp_enqueue_script( 'ea-print' );
-$payment_id = isset( $_REQUEST['payment_id'] ) ? absint( $_REQUEST['payment_id'] ) : null;
+
 try {
 	$payment = new \EverAccounting\Models\Expense( $payment_id );
 } catch ( Exception $e ) {
@@ -77,7 +78,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->
 											$vendor_id = $payment->get_vendor_id();
 											$vendors   = new Vendor( $vendor_id );
 											?>
-											<div class="ea-voucer__company"><?php echo $vendors ? $vendors->get_name() : __( 'Deleted Vendor', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__company"><?php echo $vendors ? $vendors->get_name() : __( 'Deleted Vendor', 'wp-ever-accounting' ); ?></div>
 											<div class="ea-voucher__address">
 												<span class="ea-voucher__address-line"><?php echo !empty( $vendors->get_address() ) && ! empty( $vendors->get_address() ) ? $vendors->get_address() : ''; ?></span>
 											</div>
@@ -93,7 +94,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->
 									<tr>
 
 										<th>
-											<div class="ea-voucer__subtitle"><?php _e( 'Voucher Number', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'Voucher Number', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
 											<div class="ea-voucher__value"><?php echo $payment_id; ?></div>
@@ -174,27 +175,18 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->
 							<tfoot>
 							<tr>
 								<td colspan="2">
-									<p class="ea-voucer__text">
+									<p class="ea-voucher__text">
 										<strong><?php _e( 'In Word:', 'wp-ever-accounting' ); ?> </strong><?php echo eaccounting_numbers_to_words( $payment->get_amount() ) . ' In ' . $payment->get_currency_code(); ?>
 									</p>
 								</td>
 
-								<td colspan="2" class="padding-zero">
-									<table class="ea-voucher__totals">
-										<tbody>
-										<tr>
-											<th><?php _e( 'Total', 'wp-ever-accounting' ) ?></th>
-											<td><?php echo eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() ); ?></td>
-										</tr>
-										</tbody>
-									</table>
-								</td>
+								<td colspan="2" class="ea-voucher__totals"><span><?php _e( 'Total', 'wp-ever-accounting' ) ?></span><?php echo eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() ); ?></td>
 							</tr>
 
 							</tfoot>
 						</table>
 						<!-- /.ea-voucher__items -->
-						<p class="ea-voucer__reference">
+						<p class="ea-voucher__reference">
 							<strong><?php _e( 'Reference:', 'wp-ever-accounting' ) ?> </strong><?php echo ! empty( $payment->get_reference() ) ? $payment->get_reference() : ''; ?>
 						</p>
 					</div>

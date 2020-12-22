@@ -5,11 +5,12 @@
  * @since       1.1.0
  * @subpackage  Admin/Sales/Invoices
  * @package     EverAccounting
+ *
+ * @var int $invoice_id
  */
 
 defined( 'ABSPATH' ) || exit();
 
-$invoice_id = isset( $_REQUEST['invoice_id'] ) ? absint( $_REQUEST['invoice_id'] ) : null;
 try {
 	$invoice = new \EverAccounting\Models\Invoice( $invoice_id );
 } catch ( Exception $e ) {
