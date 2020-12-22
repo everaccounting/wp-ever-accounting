@@ -15,10 +15,7 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-if ( $payment->exists() && 'expense' !== $payment->get_type() ) {
-	echo __( 'Unknown payment ID', 'wp-ever-accounting' );
-	exit();
-}
+
 $back_url = remove_query_arg( array( 'action', 'id' ) );
 ?>
 
@@ -52,6 +49,7 @@ $back_url = remove_query_arg( array( 'action', 'id' ) );
 						'value'         => $payment->get_account_id(),
 						'creatable'     => true,
 						'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
+						'required'      => true,
 					)
 				);
 

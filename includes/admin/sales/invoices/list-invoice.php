@@ -3,7 +3,7 @@
  * Render Invoice list table
  *
  * @since       1.1.0
- * @subpackage  Admin/Sales/Customers
+ * @subpackage  Admin/Sales/Invoices
  * @package     EverAccounting
  */
 
@@ -26,7 +26,7 @@ $add_url = eaccounting_admin_url(
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
 <?php do_action( 'eaccounting_invoices_table_top' ); ?>
-	<form id="ea-customers-table" method="get" action="<?php echo admin_url(); ?>">
+	<form id="ea-invoices-table" method="get" action="<?php echo admin_url(); ?>">
 		<?php
 		$invoice_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-invoices' );
 		$invoice_table->display();
