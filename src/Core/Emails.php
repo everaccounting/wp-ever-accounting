@@ -2,9 +2,10 @@
 
 namespace EverAccounting\Core;
 
-
 use EverAccounting\Abstracts\Singleton;
 use EverAccounting\Models\Invoice;
+
+defined('ABSPATH') || exit;
 
 class Emails extends Singleton {
 
@@ -20,10 +21,10 @@ class Emails extends Singleton {
 	}
 
 	/**
+	 * @since 1.1.0
+	 * 
 	 * @param $sent_to_admin
 	 * @param $invoice
-	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public static function invoice_items( $invoice, $sent_to_admin ) {
@@ -32,10 +33,10 @@ class Emails extends Singleton {
 	}
 
 	/**
+	 * @since 1.1.0
+	 * 
 	 * @param         $sent_to_admin
 	 * @param Invoice $invoice
-	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public static function invoice_customer_details( $invoice, $sent_to_admin ) {
@@ -59,9 +60,9 @@ class Emails extends Singleton {
 	/**
 	 * Replace invoice tags from message.
 	 *
-	 * @param Invoice $invoice
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param Invoice $invoice
 	 */
 	public static function get_invoice_placeholders( $invoice ) {
 		$placeholders = array(
@@ -90,10 +91,11 @@ class Emails extends Singleton {
 	}
 
 	/**
-	 * @param Invoice $invoice
-	 *
-	 * @return bool
 	 * @since 1.1.0
+	 * 
+	 * @param Invoice $invoice
+	 * 
+	 * @return bool
 	 *
 	 */
 	public static function send_customer_invoice( $invoice ) {
@@ -157,9 +159,9 @@ class Emails extends Singleton {
 
 
 	/**
-	 * @param Invoice $invoice
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param Invoice $invoice
 	 *
 	 */
 	public static function send_new_invoice_notification( $invoice ) {
@@ -187,9 +189,9 @@ class Emails extends Singleton {
 	}
 
 	/**
-	 * @param Invoice $invoice
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param Invoice $invoice
 	 *
 	 */
 	public static function send_canecelled_invoice_notification( $invoice ) {
@@ -217,9 +219,9 @@ class Emails extends Singleton {
 	}
 
 	/**
-	 * @param Invoice $invoice
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param Invoice $invoice
 	 *
 	 */
 	public static function send_failed_invoice_notification( $invoice ) {
@@ -247,9 +249,9 @@ class Emails extends Singleton {
 	}
 
 	/**
-	 * @param Invoice $invoice
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param Invoice $invoice
 	 *
 	 */
 	public static function send_completed_invoice_notification( $invoice ) {

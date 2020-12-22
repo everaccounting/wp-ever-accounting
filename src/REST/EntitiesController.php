@@ -36,6 +36,7 @@ abstract class EntitiesController extends Controller {
 	 * Contains the current entity object.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var ResourceModel
 	 */
 	protected $entity_model;
@@ -46,7 +47,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @see   register_rest_route()
+	 * @see register_rest_route()
 	 */
 	public function register_routes() {
 

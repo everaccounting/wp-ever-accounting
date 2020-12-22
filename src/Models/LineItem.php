@@ -24,6 +24,7 @@ class LineItem extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'ea_line_items';
@@ -32,6 +33,7 @@ class LineItem extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(
@@ -177,7 +179,6 @@ class LineItem extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 *
 	 * @return float
 	 */
 	public function get_subtotal() {
@@ -201,7 +202,6 @@ class LineItem extends ResourceModel {
 	 * Return the subtotal tax.
 	 *
 	 * @since  1.1.0
-	 *
 	 *
 	 * @return float
 	 */
@@ -231,7 +231,6 @@ class LineItem extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 *
 	 * @return float
 	 */
 	public function get_discount_tax() {
@@ -246,6 +245,7 @@ class LineItem extends ResourceModel {
 	 * Get total tax.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return float
 	 */
 	public function get_total_tax() {
@@ -266,10 +266,11 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
+	 * @since 1.1.0
+	 * 
 	 * @param string $key
 	 * @param bool   $single
 	 * @param string $context
-	 * @since 1.1.0
 	 *
 	 * @return array|mixed|string
 	 */

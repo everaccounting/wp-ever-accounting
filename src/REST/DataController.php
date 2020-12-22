@@ -77,7 +77,9 @@ class DataController extends Controller {
 	 * Return the list of data resources.
 	 *
 	 * @since  1.1.0
+	 * 
 	 * @param  \WP_REST_Request $request Request data.
+	 * 
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_items( $request ) {
@@ -106,6 +108,7 @@ class DataController extends Controller {
 	 *
 	 * @param \\stdClass        $resource Resource data.
 	 * @param \WP_REST_Request $request  Request object.
+	 * 
 	 * @return \WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $resource, $request ) {
@@ -128,6 +131,7 @@ class DataController extends Controller {
 	 * Prepare links for the request.
 	 *
 	 * @param object $item Data object.
+	 * 
 	 * @return array Links for the given country.
 	 */
 	protected function prepare_links( $item ) {
@@ -147,6 +151,7 @@ class DataController extends Controller {
 	 * Get the data index schema, conforming to JSON Schema.
 	 *
 	 * @since  3.5.0
+	 * 
 	 * @return array
 	 */
 	public function get_item_schema() {

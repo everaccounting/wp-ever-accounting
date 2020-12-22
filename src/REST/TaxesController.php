@@ -25,6 +25,7 @@ class TaxesController extends EntitiesController {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $entity_model = Tax::class;
@@ -45,9 +46,11 @@ class TaxesController extends EntitiesController {
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
-	 *
-	 * @return array Item schema data.
+	 * 
 	 * @since 1.0.2
+	 * 
+	 * @return array Item schema data.
+	 * 
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -111,9 +114,11 @@ class TaxesController extends EntitiesController {
 
 	/**
 	 * Retrieves the query params for the items collection.
-	 *
-	 * @return array Collection parameters.
+	 * 
 	 * @since 1.1.0
+	 * 
+	 * @return array Collection parameters.
+	 * 
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

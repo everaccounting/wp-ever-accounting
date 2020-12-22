@@ -24,6 +24,7 @@ class DateTime extends DT {
 	 * timezones are used this will equal 0.
 	 *
 	 * @since   1.0.2
+	 * 
 	 * @var integer
 	 */
 	protected $utc_offset = 0;
@@ -32,6 +33,7 @@ class DateTime extends DT {
 	 * Output an ISO 8601 date string in local (WordPress) timezone.
 	 *
 	 * @since  1.0.2
+	 * 
 	 * @return string
 	 */
 	public function __toString() {
@@ -42,6 +44,7 @@ class DateTime extends DT {
 	 * Clone the current object.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return \EverAccounting\Core\DateTime
 	 */
 	public function copy() {
@@ -63,6 +66,8 @@ class DateTime extends DT {
 	 * Get UTC offset if set, or default to the DateTime object's offset.
 	 *
 	 * @since   1.0.2
+	 * 
+	 * @return int
 	 */
 	public function getOffset() {
 		return $this->utc_offset ? $this->utc_offset : parent::getOffset();
@@ -75,7 +80,7 @@ class DateTime extends DT {
 	 *
 	 * @param \DateTimeZone $timezone DateTimeZone instance.
 	 *
-	 * @return DateTime
+	 * @return bool
 	 */
 	public function setTimezone( $timezone ) {
 		$this->utc_offset = 0;
@@ -90,7 +95,7 @@ class DateTime extends DT {
 	 *
 	 * @param int $number number of the years to add.
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function addYear( $number = 1 ) {
 		$this->add( new \DateInterval( "P{$number}Y" ) );
@@ -104,7 +109,7 @@ class DateTime extends DT {
 	 *
 	 * @param int $number Number of the months to add.
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function addMonth( $number = 1 ) {
 		$this->add( new \DateInterval( "P{$number}M" ) );
@@ -119,7 +124,7 @@ class DateTime extends DT {
 	 *
 	 * @param int $number Number of the days to add.
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function addDay( $number = 1 ) {
 		$this->add( new \DateInterval( "P{$number}D" ) );
@@ -132,7 +137,7 @@ class DateTime extends DT {
 	 *
 	 * @param int $number
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function subYear( $number = 1 ) {
 		$this->sub( new \DateInterval( "P{$number}Y" ) );
@@ -145,7 +150,7 @@ class DateTime extends DT {
 	 *
 	 * @param int $number
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function subMonth( $number = 1 ) {
 		$this->sub( new \DateInterval( "P{$number}M" ) );
@@ -158,7 +163,7 @@ class DateTime extends DT {
 	 *
 	 * @param int $number
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function subDay( $number = 1 ) {
 		$this->sub( new \DateInterval( "P{$number}D" ) );
@@ -216,6 +221,7 @@ class DateTime extends DT {
 	 * Return mysql date time.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return string date time
 	 */
 	public function date_mysql() {
@@ -226,6 +232,7 @@ class DateTime extends DT {
 	 * Get quarter
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return int
 	 */
 	public function quarter() {
@@ -236,6 +243,7 @@ class DateTime extends DT {
 	 * Alias self::quarter()
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return false|float
 	 */
 	public function get_quarter() {

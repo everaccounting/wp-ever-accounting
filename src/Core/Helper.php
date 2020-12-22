@@ -2,9 +2,11 @@
 
 /**
  * Helper methods
- *
- * @package        EverAccounting
+ * 
  * @version        1.0.2
+ * 
+ * @package        EverAccounting
+ * 
  */
 
 namespace EverAccounting\Core;

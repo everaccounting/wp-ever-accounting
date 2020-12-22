@@ -34,6 +34,7 @@ class Account extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'ea_accounts';
@@ -42,6 +43,7 @@ class Account extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(
@@ -60,9 +62,10 @@ class Account extends ResourceModel {
 	/**
 	 * Get the account if ID is passed, otherwise the account is new and empty.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param int|object|Account $data object to read.
 	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public function __construct( $data = 0 ) {
@@ -105,10 +108,11 @@ class Account extends ResourceModel {
 	/**
 	 * Return the account name.
 	 *
+	 * @since  1.1.0
+	 * 
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
-	 * @since  1.1.0
 	 *
 	 */
 	public function get_name( $context = 'edit' ) {
@@ -118,10 +122,11 @@ class Account extends ResourceModel {
 	/**
 	 * Returns the account number.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_number( $context = 'edit' ) {
@@ -131,10 +136,11 @@ class Account extends ResourceModel {
 	/**
 	 * Returns account opening balance.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_opening_balance( $context = 'edit' ) {
@@ -144,10 +150,11 @@ class Account extends ResourceModel {
 	/**
 	 * Returns account currency code.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
@@ -157,10 +164,11 @@ class Account extends ResourceModel {
 	/**
 	 * Return account bank name.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_bank_name( $context = 'edit' ) {
@@ -170,10 +178,11 @@ class Account extends ResourceModel {
 	/**
 	 * Return account bank phone number.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_bank_phone( $context = 'edit' ) {
@@ -183,10 +192,11 @@ class Account extends ResourceModel {
 	/**
 	 * Return account bank address.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_bank_address( $context = 'edit' ) {
@@ -205,10 +215,11 @@ class Account extends ResourceModel {
 
 	/**
 	 * Set account name.
-	 *
+	 * 
+	 * @since 1.1.0
+	 * 
 	 * @param string $name Account name.
 	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public function set_name( $name ) {
@@ -218,9 +229,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set the account number.
 	 *
-	 * @param string $number bank account number
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param string $number bank account number
 	 *
 	 */
 	public function set_number( $number ) {
@@ -230,9 +241,9 @@ class Account extends ResourceModel {
 	/**
 	 * Returns account opening balance.
 	 *
-	 * @param string $opening_balance opening balance of the account.
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param string $opening_balance opening balance of the account.
 	 *
 	 */
 	public function set_opening_balance( $amount ) {
@@ -243,9 +254,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set account currency code.
 	 *
-	 * @param string $currency_code Bank currency code
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param string $currency_code Bank currency code
 	 *
 	 */
 	public function set_currency_code( $currency_code ) {
@@ -255,9 +266,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set account bank name.
 	 *
-	 * @param string $bank_name name of the bank
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param string $bank_name name of the bank
 	 *
 	 */
 	public function set_bank_name( $bank_name ) {
@@ -267,10 +278,10 @@ class Account extends ResourceModel {
 	/**
 	 * Set account bank phone number.
 	 *
-	 * @param string $bank_phone Bank phone number.
-	 *
 	 * @since 1.1.0
-	 *
+	 * 
+	 * @param string $bank_phone Bank phone number.
+	 * 
 	 */
 	public function set_bank_phone( $bank_phone ) {
 		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
@@ -279,10 +290,10 @@ class Account extends ResourceModel {
 	/**
 	 * Set account bank address.
 	 *
-	 * @param string $bank_address Bank physical address
-	 *
 	 * @since 1.1.0
-	 *
+	 * 
+	 * @param string $bank_address Bank physical address
+	 * 
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
@@ -301,7 +312,9 @@ class Account extends ResourceModel {
 	 * Get currency object.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return Currency|null
+	 * 
 	 */
 	public function get_currency() {
 		try {
@@ -320,18 +333,19 @@ class Account extends ResourceModel {
 	 * @since 1.1.0
 	 *
 	 * @param array|object $currency
+	 * 
 	 */
 	public function set_currency( $currency ) {
 		$this->set_object_prop( $currency, 'code', 'currency_code' );
 	}
 
 	/**
+	 * @since 1.1.0
 	 * @since 1.0.2
 	 *
 	 * @param bool $format
 	 *
 	 * @return float|string
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_balance( $format = false ) {
@@ -345,9 +359,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set balance.
 	 *
-	 * @param $balance
-	 *
 	 * @since 1.1.0
+	 * 
+	 * @param $balance
 	 *
 	 */
 	protected function set_balance( $balance ) {

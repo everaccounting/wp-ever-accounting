@@ -12,7 +12,6 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-
 use EverAccounting\Repositories\Categories;
 
 defined( 'ABSPATH' ) || exit;

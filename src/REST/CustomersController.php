@@ -25,6 +25,7 @@ class CustomersController extends ContactsController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 *
 	 */
@@ -34,6 +35,7 @@ class CustomersController extends ContactsController {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $entity_model = Customer::class;

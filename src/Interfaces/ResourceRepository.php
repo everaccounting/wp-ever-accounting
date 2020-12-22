@@ -11,6 +11,7 @@ interface ResourceRepository {
 	 * Sub-classes should define an array of columns here.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return array List of columns.
 	 */
 	public static function get_columns();
@@ -21,6 +22,7 @@ interface ResourceRepository {
 	 * Sub-classes can define default for any/all of columns defined in the get_columns() method.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return array All defined column defaults.
 	 */
 	public static function get_defaults();
@@ -108,6 +110,7 @@ interface ResourceRepository {
 	 * Truncate all entries.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return mixed
 	 */
 	public function truncate();
@@ -116,6 +119,7 @@ interface ResourceRepository {
 	 * Name of the table.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return string
 	 */
 	public function get_table();
@@ -124,6 +128,7 @@ interface ResourceRepository {
 	 * Primary key of the table.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return string
 	 */
 	public function get_primary_key();

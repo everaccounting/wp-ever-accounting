@@ -34,6 +34,7 @@ class Item extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'es_items';
@@ -42,6 +43,7 @@ class Item extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.0.4
+	 * 
 	 * @var array
 	 */
 	protected $data = array(

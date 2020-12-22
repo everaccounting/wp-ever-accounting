@@ -27,12 +27,14 @@ class Customers extends ResourceRepository {
 	 * Name of the table.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	const TABLE = 'ea_contacts';
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -41,6 +43,7 @@ class Customers extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data_type = array(
