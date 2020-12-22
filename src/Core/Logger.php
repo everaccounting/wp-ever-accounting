@@ -52,16 +52,19 @@ class Logger {
 	/**
 	 * The file handler.
 	 *
-	 * @var null
 	 * @since 1.0.2
+	 * 
+	 * @var null
+	 * 
 	 */
 	protected $handle = null;
 
 	/**
 	 * Log messages to be stored later.
+	 * 
+	 * @since 1.0.2
 	 *
 	 * @var array
-	 * @since 1.0.2
 	 */
 	protected $cached_logs = array();
 
@@ -90,6 +93,8 @@ class Logger {
 	/**
 	 * Add a log entry.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $level   One of the following:
 	 *                        'emergency': System is unusable.
 	 *                        'alert': Action must be taken immediately.
@@ -102,7 +107,6 @@ class Logger {
 	 * @param string $message Log message.
 	 * @param array  $context Optional. Additional information for log handlers.
 	 *
-	 * @since 1.0.2
 	 */
 	public function log( $level, $message, $context = array() ) {
 		// format log entry
@@ -116,9 +120,10 @@ class Logger {
 	/**
 	 * Add a log entry to chosen file.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $entry Log entry text.
 	 *
-	 * @since 1.0.2
 	 */
 	protected function write_log( $entry ) {
 		if ( $this->open( $this->handle ) && is_resource( $this->handle ) ) {
@@ -130,10 +135,11 @@ class Logger {
 
 	/**
 	 * Cache log to write later.
-	 *
+	 * 
+	 * @since 1.0.2
+	 * 
 	 * @param string $entry Log entry text.
 	 *
-	 * @since 1.0.2
 	 */
 	protected function cache_log( $entry ) {
 		$this->cached_logs[] = $entry;
@@ -142,11 +148,12 @@ class Logger {
 	/**
 	 * Open log file for writing.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param resource|null $handle Log handle.
 	 * @param string        $name   Optional. Name of the log file.
 	 *
 	 * @return bool Success.
-	 * @since 1.0.2
 	 */
 	protected function open( $handle, $name = 'eaccounting' ) {
 		if ( is_resource( $handle ) ) {
@@ -182,10 +189,11 @@ class Logger {
 	/**
 	 * Close a handle.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param resource|string $handle Log handle.
 	 *
 	 * @return bool success
-	 * @since 1.0.2
 	 */
 	protected function close( $handle ) {
 		$result = false;
@@ -201,10 +209,12 @@ class Logger {
 	/**
 	 * Get a log file path.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param $name
 	 *
 	 * @return bool|string The log file path or false if path cannot be determined.
-	 * @since 1.0.2
+	 * 
 	 */
 	public static function get_log_file_path( $name ) {
 		if ( function_exists( 'wp_hash' ) ) {
@@ -254,8 +264,9 @@ class Logger {
 	/**
 	 * Get all log files in the log directory.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * 
+	 * @return array
 	 */
 	public static function get_log_files() {
         $files  = @scandir( EACCOUNTING_LOG_DIR ); // @codingStandardsIgnoreLine.
@@ -277,10 +288,11 @@ class Logger {
 	/**
 	 * Remove/delete the chosen file.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param $file_name
 	 *
 	 * @return bool
-	 * @since 1.0.2
 	 */
 	public function remove( $file_name ) {
 		$removed = false;
@@ -305,10 +317,10 @@ class Logger {
 	 *
 	 * System is unusable.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
-	 *
-	 * @since 1.0.2
 	 */
 	public function emergency( $message, $context = array() ) {
 		$this->log( self::EMERGENCY, $message, $context );
@@ -320,10 +332,11 @@ class Logger {
 	 * Action must be taken immediately.
 	 * Example: Entire website down, database unavailable, etc.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
-	 * @since 1.0.2
 	 */
 	public function alert( $message, $context = array() ) {
 		$this->log( self::ALERT, $message, $context );
@@ -335,10 +348,11 @@ class Logger {
 	 * Critical conditions.
 	 * Example: Application component unavailable, unexpected exception.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
-	 * @since 1.0.2
 	 */
 	public function critical( $message, $context = array() ) {
 		$this->log( self::CRITICAL, $message, $context );
@@ -350,10 +364,11 @@ class Logger {
 	 * Runtime errors that do not require immediate action but should typically be logged
 	 * and monitored.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
-	 * @since 1.0.2
 	 */
 	public function error( $message, $context = array() ) {
 		$this->log( self::ERROR, $message, $context );
@@ -367,10 +382,11 @@ class Logger {
 	 * Example: Use of deprecated APIs, poor use of an API, undesirable things that are not
 	 * necessarily wrong.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
-	 * @since 1.0.2
 	 */
 	public function warning( $message, $context = array() ) {
 		$this->log( self::WARNING, $message, $context );
@@ -381,10 +397,11 @@ class Logger {
 	 *
 	 * Normal but significant events.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
-	 * @since 1.0.2
 	 */
 	public function notice( $message, $context = array() ) {
 		$this->log( self::NOTICE, $message, $context );
@@ -396,10 +413,11 @@ class Logger {
 	 * Interesting events.
 	 * Example: User logs in, SQL logs.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
-	 * @since 1.0.2
 	 */
 	public function info( $message, $context = array() ) {
 		$this->log( self::INFO, $message, $context );
@@ -410,10 +428,11 @@ class Logger {
 	 *
 	 * Detailed debug information.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
-	 * @since 1.0.2
 	 */
 	public function debug( $message, $context = array() ) {
 		$this->log( self::DEBUG, $message, $context );

@@ -38,6 +38,7 @@ class Transfers extends ResourceRepository {
 	 * Table name.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -46,6 +47,7 @@ class Transfers extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data_type = array(

@@ -32,6 +32,7 @@ class LineItems extends ResourceRepository {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -40,6 +41,7 @@ class LineItems extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data_type = array(

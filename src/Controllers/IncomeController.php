@@ -13,7 +13,6 @@ namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
 
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -68,6 +67,8 @@ class IncomeController extends Singleton {
 	 * @param array     $data
 	 * @param null      $id
 	 * @param \WP_Error $errors
+	 * 
+	 * @throws \Exception
 	 */
 	public static function validate_expense_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {

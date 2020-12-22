@@ -11,7 +11,7 @@ namespace EverAccounting\REST;
 
 use EverAccounting\Repositories\Transactions;
 
-defined( 'ABSPATH' ) || exit();
+defined( 'ABSPATH' ) || die();
 
 /**
  * Class TransactionController
@@ -25,6 +25,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 *
 	 */
@@ -34,6 +35,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $entity_model = Transactions::class;
@@ -71,6 +73,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since   1.1.0
+	 * 
 	 * @return array Item schema data.
 	 *
 	 */
@@ -317,6 +320,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since   1.1.0
+	 * 
 	 * @return array Collection parameters.
 	 *
 	 */

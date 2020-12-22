@@ -31,6 +31,7 @@ class Customer extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'ea_customers';
@@ -39,6 +40,7 @@ class Customer extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(
@@ -481,6 +483,7 @@ class Customer extends ResourceModel {
 	 * Get currency object.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return Currency|null
 	 */
 	public function get_currency() {
@@ -510,6 +513,7 @@ class Customer extends ResourceModel {
 	 * Return this customer's avatar.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return string
 	 */
 	public function get_avatar_url( $args = array() ) {

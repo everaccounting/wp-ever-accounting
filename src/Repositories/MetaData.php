@@ -24,6 +24,7 @@ class MetaData implements \JsonSerializable {
 	 * Current data for metadata
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $current_data;
@@ -32,6 +33,7 @@ class MetaData implements \JsonSerializable {
 	 * Metadata data
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data;

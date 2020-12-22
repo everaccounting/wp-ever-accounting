@@ -86,6 +86,7 @@ class CountriesController extends DataController {
 	 * Get the location schema, conforming to JSON Schema.
 	 *
 	 * @since  1.1.0
+	 * 
 	 * @return array
 	 */
 	public function get_item_schema() {

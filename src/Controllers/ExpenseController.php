@@ -35,12 +35,13 @@ class ExpenseController extends Singleton {
 	/**
 	 * Validate payment data.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param array $data
 	 * @param null $id
 	 * @param \WP_Error $errors
-	 *
-	 * @since 1.1.0
-	 *
+	 * 
+	 * @throws \Exception
 	 */
 	public static function validate_payment_data( $data, $id = null ) {
 

@@ -14,7 +14,6 @@ namespace EverAccounting\Controllers;
 use EverAccounting\Abstracts\Singleton;
 use EverAccounting\Core\Emails;
 
-
 defined( 'ABSPATH' ) || exit;
 
 /**

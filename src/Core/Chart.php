@@ -8,7 +8,6 @@
 
 namespace EverAccounting\Core;
 
-// Exit if accessed directly
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -60,7 +59,7 @@ class Chart {
 	 *
 	 * @param string $type
 	 *
-	 * @return self
+	 * @return object
 	 */
 	public function type( $type ) {
 		$this->type = $type;
@@ -73,7 +72,7 @@ class Chart {
 	 *
 	 * @param int $height
 	 *
-	 * @return self
+	 * @return object
 	 */
 	public function height( $height ) {
 		$this->height = $height;
@@ -86,7 +85,7 @@ class Chart {
 	 *
 	 * @param int $width
 	 *
-	 * @return self
+	 * @return object
 	 */
 	public function width( $width ) {
 		$this->width = $width;
@@ -100,7 +99,7 @@ class Chart {
 	 * @param array $options
 	 * @param bool  $overwrite
 	 *
-	 * @return self
+	 * @return object
 	 */
 	public function options( $options, $overwrite = false ) {
 		if ( $overwrite ) {
@@ -117,7 +116,7 @@ class Chart {
 	 *
 	 * @param array $labels
 	 *
-	 * @return self
+	 * @return object
 	 */
 	public function labels( $labels ) {
 
@@ -131,7 +130,7 @@ class Chart {
 	 *
 	 * @param array $dataset
 	 *
-	 * @return self
+	 * @return object
 	 */
 	public function dataset( $dataset ) {
 		$dataset = wp_parse_args(
@@ -154,7 +153,8 @@ class Chart {
 	 * Set line chart options.
 	 *
 	 * @since 1.0.2
-	 * @return $this
+	 * 
+	 * @return object
 	 */
 	public function set_line_options() {
 		$this->options(
@@ -217,7 +217,7 @@ class Chart {
 	 *
 	 * @param array $colors
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function set_donut_options( $colors ) {
 		$this->options(

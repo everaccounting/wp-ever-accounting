@@ -26,6 +26,7 @@ class ExpensesController extends TransactionsController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 *
 	 */
@@ -35,6 +36,7 @@ class ExpensesController extends TransactionsController {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $entity_model = Expense::class;
