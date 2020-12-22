@@ -31,6 +31,7 @@ class Note extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'ea_notes';
@@ -39,6 +40,7 @@ class Note extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(
@@ -201,6 +203,7 @@ class Note extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @return bool
 	 */
 	public function is_highlighted() {
@@ -236,6 +239,7 @@ class Note extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
+	 * 
 	 * @return \Exception|bool
 	 */
 	public function save() {

@@ -30,6 +30,7 @@ class Notes extends ResourceRepository {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -38,6 +39,7 @@ class Notes extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data_type = array(
@@ -53,9 +55,11 @@ class Notes extends ResourceRepository {
 
 	/**
 	 * Get notes
-	 * @param array $args
+	 * 
 	 * @since 1.1.0
 	 *
+	 * @param array $args
+	 * 
 	 * @return Note[]|array|int
 	 */
 	public function get_notes( $args = array() ) {

@@ -166,8 +166,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				$url   = eaccounting_admin_url(
 					array(
 						'tab'       => 'payments',
-						'action'    => 'edit',
-						'income_id' => $payment_id,
+						'action'    => 'view',
+						'payment_id' => $payment_id,
 					)
 				);
 				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $payment->get_payment_date() ) ) );
@@ -390,7 +390,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_payment_table_query_args', $args, $this );
-		$this->items = eaccounting_get_incomes( $args );
+		$this->items = eaccounting_get_expenses( $args );
 
 		$this->total_count = eaccounting_get_expenses( array_merge( $args, array( 'count_total' => true ) ) );
 

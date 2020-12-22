@@ -9,17 +9,14 @@
 defined( 'ABSPATH' ) || exit();
 
 
-function eaccounting_items_items_tab() {
-	if ( ! current_user_can( 'ea_manage_currency' ) ) {
-		wp_die( __( 'Sorry you are not allowed to access this page.', 'wp-ever-accounting' ) );
-	}
-	$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( $_REQUEST['action'] ) : null;
-
-	if ( in_array( $action, array( 'edit', 'add' ), true ) ) {
-		require_once dirname( __FILE__ ) . '/edit-item.php';
+function eaccounting_render_items_tab() {
+	$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+	if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+		$item_id = isset( $_GET['item_id'] ) ? absint( $_GET['item_id'] ) : null;
+		include dirname( __FILE__ ) . '/edit-item.php';
 	} else {
-		require_once dirname( __FILE__ ) . '/list-item.php';
+		include dirname( __FILE__ ) . '/list-item.php';
 	}
 }
 
-add_action( 'eaccounting_items_tab_items', 'eaccounting_items_items_tab' );
+add_action( 'eaccounting_items_tab_items', 'eaccounting_render_items_tab' );

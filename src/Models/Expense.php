@@ -36,6 +36,7 @@ class Expense extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'ea_expenses';
@@ -44,6 +45,7 @@ class Expense extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(
@@ -167,6 +169,7 @@ class Expense extends ResourceModel {
 	 * Get formatted amount.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return string
 	 */
 	public function get_formatted_amount() {
@@ -556,7 +559,9 @@ class Expense extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
+	 * 
 	 * @throws \Exception
+	 * 
 	 * @return bool
 	 */
 	public function save() {

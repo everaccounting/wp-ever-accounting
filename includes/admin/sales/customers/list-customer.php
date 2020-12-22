@@ -27,6 +27,7 @@ $add_url = eaccounting_admin_url(
 <?php do_action( 'eaccounting_customers_table_top' ); ?>
 <form id="ea-customers-table" method="get" action="<?php echo admin_url(); ?>">
 	<?php
+	$customers_table->views();
 	$customers_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-customers' );
 	$customers_table->display();
 	?>

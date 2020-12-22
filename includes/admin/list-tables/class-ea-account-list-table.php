@@ -187,7 +187,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 					esc_url(
 						eaccounting_admin_url(
 							array(
-								'action'     => 'edit',
+								'action'     => 'view',
 								'account_id' => $account_id,
 							)
 						)

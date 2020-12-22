@@ -36,12 +36,13 @@ class CurrencyController extends Singleton {
 	/**
 	 * Validate currency data.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param array $data
 	 * @param int $id
 	 * @param Currency $currency
 	 *
-	 * @since 1.1.0
-	 *
+	 * @throws \Exception
 	 */
 	public static function validate_currency_data( $data, $id ) {
 		global $wpdb;
@@ -53,10 +54,10 @@ class CurrencyController extends Singleton {
 	/**
 	 * Delete currency id from settings.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param $id
 	 * @param $data
-	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public static function delete_default_currency( $id, $data ) {

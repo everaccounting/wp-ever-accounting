@@ -36,6 +36,7 @@ class Customer extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_customers';
@@ -44,6 +45,7 @@ class Customer extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -59,7 +61,7 @@ class Customer extends ResourceModel {
 		'tax_number'    => '',
 		'currency_code' => '',
 		'type'          => '',
-		'thumbnail_id'     => null,
+		'thumbnail_id'  => null,
 		'enabled'       => 1,
 		'creator_id'    => null,
 		'date_created'  => null,
@@ -289,6 +291,7 @@ class Customer extends ResourceModel {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Get avatar id
 	 *
 	 * @since 1.1.0
@@ -472,9 +475,9 @@ class Customer extends ResourceModel {
 	 * @param int $thumbnail_id
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
-		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
-	}
+			$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
 
+	}
 	/*
 	|--------------------------------------------------------------------------
 	| Extra
@@ -513,7 +516,9 @@ class Customer extends ResourceModel {
 	/**
 	 * Return this customer's avatar.
 	 *
-	 * @since 1.0.2
+	 *
+	 * @param array $args
+	 *
 	 * @return string
 	 */
 	public function get_avatar_url( $args = array() ) {

@@ -140,14 +140,14 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				$date   = $transaction->get_payment_date();
 				$type   = $transaction->get_type();
 				$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
-				$tab    = 'expense' !== $type ? 'revenues' : 'payments';
-				$object = 'expense' !== $type ? 'revenue_id' : 'payment_id';
+				$tab    = 'expense' !== $type ? 'incomes' : 'payments';
+				$object = 'expense' !== $type ? 'income_id' : 'payment_id';
 				$value  = sprintf(
 					'<a href="%1$s">%2$s</a>',
 					esc_url(
 						eaccounting_admin_url(
 							array(
-								'action' => 'edit',
+								'action' => 'view',
 								'page'   => $page,
 								'tab'    => $tab,
 								$object  => $transaction->get_id(),

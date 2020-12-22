@@ -31,6 +31,7 @@ class Category extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'ea_categories';
@@ -39,6 +40,7 @@ class Category extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(

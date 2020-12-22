@@ -2,6 +2,8 @@
 
 namespace EverAccounting\REST;
 
+defined( 'ABSPATH' ) || die();
+
 class SettingsController extends Controller {
 	/**
 	 * Route base.

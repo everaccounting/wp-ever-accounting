@@ -9,11 +9,14 @@
 
 namespace EverAccounting\REST;
 
+defined( 'ABSPATH' ) || die();
+
 abstract class ContactsController extends EntitiesController {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
@@ -214,6 +217,7 @@ abstract class ContactsController extends EntitiesController {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {

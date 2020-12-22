@@ -18,6 +18,7 @@ class AccountsController extends EntitiesController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 *
 	 */
@@ -27,6 +28,7 @@ class AccountsController extends EntitiesController {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $entity_model = Account::class;
@@ -49,6 +51,7 @@ class AccountsController extends EntitiesController {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return array Item schema data.
 	 *
 	 */
@@ -185,6 +188,7 @@ class AccountsController extends EntitiesController {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return array Collection parameters.
 	 *
 	 */

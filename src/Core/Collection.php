@@ -11,8 +11,7 @@ namespace EverAccounting\Core;
 
 use EverAccounting\Interfaces\Arrayable;
 
-defined( 'ABSPATH' ) || exit();
-
+defined( 'ABSPATH' ) || exit;
 
 class Collection implements Arrayable {
 	/**
@@ -71,6 +70,7 @@ class Collection implements Arrayable {
 	 * Get all of the items in the collection.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return array
 	 */
 	public function all() {
@@ -97,7 +97,7 @@ class Collection implements Arrayable {
 	 *
 	 * @param callable $callback
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function each( callable $callback ) {
 		return new static( array_map( $callback, $this->items ) );
@@ -123,7 +123,6 @@ class Collection implements Arrayable {
 	 *
 	 * @param mixed  $value
 	 * @param bool   $strict
-	 *
 	 * @param string $key
 	 *
 	 * @return static
@@ -143,7 +142,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed  $value
-	 *
 	 * @param string $key
 	 *
 	 * @return static
@@ -156,6 +154,7 @@ class Collection implements Arrayable {
 	 * Flip the items in the collection.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return static
 	 */
 	public function flip() {
@@ -181,7 +180,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed $default
-	 *
 	 * @param mixed $key
 	 *
 	 * @return mixed
@@ -224,6 +222,7 @@ class Collection implements Arrayable {
 	 * Determine if the collection is empty or not.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return bool
 	 */
 	public function isEmpty() {
@@ -247,6 +246,7 @@ class Collection implements Arrayable {
 	 * Get the keys of the collection items.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return static
 	 */
 	public function keys() {
@@ -292,6 +292,7 @@ class Collection implements Arrayable {
 	 * Get and remove the last item from the collection.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return mixed|null
 	 */
 	public function pop() {
@@ -330,7 +331,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed $value
-	 *
 	 * @param mixed $key
 	 *
 	 * @return void
@@ -364,7 +364,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed    $initial
-	 *
 	 * @param callable $callback
 	 *
 	 * @return mixed
@@ -417,7 +416,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param bool  $strict
-	 *
 	 * @param mixed $value
 	 *
 	 * @return mixed
@@ -440,6 +438,7 @@ class Collection implements Arrayable {
 	 * Get and remove the first item from the collection.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return mixed|null
 	 */
 	public function shift() {
@@ -450,7 +449,8 @@ class Collection implements Arrayable {
 	 * Shuffle the items in the collection.
 	 *
 	 * @since 1.0.2
-	 * @return $this
+	 * 
+	 * @return object
 	 */
 	public function shuffle() {
 		shuffle( $this->items );
@@ -465,7 +465,6 @@ class Collection implements Arrayable {
 	 *
 	 * @param int  $length
 	 * @param bool $preserveKeys
-	 *
 	 * @param int  $offset
 	 *
 	 * @return static
@@ -480,7 +479,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param bool $preserveKeys
-	 *
 	 * @param int  $size
 	 *
 	 * @return static
@@ -502,7 +500,7 @@ class Collection implements Arrayable {
 	 *
 	 * @param callable|int|null $callback
 	 *
-	 * @return $this
+	 * @return static
 	 */
 	public function sort( $callback = null ) {
 		$items = $this->items;
@@ -536,7 +534,6 @@ class Collection implements Arrayable {
 	 *
 	 * @param int   $length
 	 * @param mixed $replacement
-	 *
 	 * @param int   $offset
 	 *
 	 * @return static
@@ -569,7 +566,7 @@ class Collection implements Arrayable {
 	 *
 	 * @param callable $callback
 	 *
-	 * @return $this
+	 * @return object
 	 */
 	public function transform( callable $callback ) {
 		$this->items = array_map( $callback, $this->items );
@@ -581,6 +578,7 @@ class Collection implements Arrayable {
 	 * Return only unique items from the collection array.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return static
 	 */
 	public function unique() {
@@ -591,6 +589,7 @@ class Collection implements Arrayable {
 	 * Reset the keys on the underlying array.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return static
 	 */
 	public function values() {
@@ -601,6 +600,7 @@ class Collection implements Arrayable {
 	 * Count the number of items in the collection.
 	 *
 	 * @since 1.0.2
+	 * 
 	 * @return int
 	 */
 	public function count() {
@@ -639,7 +639,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed $value
-	 *
 	 * @param mixed $key
 	 *
 	 * @return void
@@ -717,7 +716,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param int $depth   JSON encoding depth. See @link.
-	 *
 	 * @param int $options JSON encoding options. See @link.
 	 *
 	 * @return string
@@ -733,7 +731,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param int $depth   JSON encoding depth. See @link.
-	 *
 	 * @param int $options JSON encoding options. See @link.
 	 *
 	 * @return string
@@ -749,7 +746,6 @@ class Collection implements Arrayable {
 	 *
 	 * @param      $key
 	 * @param null   $default
-	 *
 	 * @param      $target
 	 *
 	 * @return array

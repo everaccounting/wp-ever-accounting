@@ -12,7 +12,6 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-
 use EverAccounting\Models\Item;
 use EverAccounting\Models\Tax;
 
@@ -37,10 +36,11 @@ class ItemController extends Singleton {
 	/**
 	 * Delete item id from invoice items.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param $id
 	 *
 	 * @return bool
-	 * @since 1.0.2
 	 */
 	public static function update_invoice_item( $id ) {
 		global $wpdb;
@@ -55,10 +55,11 @@ class ItemController extends Singleton {
 	/**
 	 * Delete tax id from bill items.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param $id
 	 *
 	 * @return bool
-	 * @since 1.0.2
 	 */
 	public static function update_bill_item( $id ) {
 		global $wpdb;

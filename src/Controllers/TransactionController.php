@@ -13,7 +13,6 @@ namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
 
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -35,10 +34,12 @@ class TransactionController extends Singleton {
 	/**
 	 * Validate transaction data.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param array $data
 	 * @param null $id
-	 *
-	 * @since 1.1.0
+	 * 
+	 * @throws \Exception
 	 *
 	 */
 	public static function validate_transaction_data( $data, $id ) {

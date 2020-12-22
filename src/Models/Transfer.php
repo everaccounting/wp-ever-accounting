@@ -31,6 +31,7 @@ class Transfer extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	public $cache_group = 'ea_transfers';
@@ -39,6 +40,7 @@ class Transfer extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(
@@ -60,9 +62,10 @@ class Transfer extends ResourceModel {
 	/**
 	 * Get the account if ID is passed, otherwise the account is new and empty.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param int|object|Account $data object to read.
 	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public function __construct( $data = 0 ) {
@@ -236,6 +239,7 @@ class Transfer extends ResourceModel {
 	 * Get transfer category.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return integer
 	 */
 	public function get_category_id() {
@@ -355,8 +359,9 @@ class Transfer extends ResourceModel {
 	/**
 	 * Get formatted transaction amount.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * 
+	 * @return string
 	 */
 	public function get_formatted_amount() {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
@@ -367,6 +372,7 @@ class Transfer extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
+	 * 
 	 * @throws \Exception
 	 * @return \Exception|bool
 	 */
@@ -385,6 +391,7 @@ class Transfer extends ResourceModel {
 	 * Set transfer category.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @throws \Exception
 	 */
 	protected function maybe_set_transfer_category() {

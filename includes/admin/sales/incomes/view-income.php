@@ -3,8 +3,10 @@
  * Admin Revenue View Page.
  *
  * @since       1.1.0
- * @subpackage  Admin/Sales/Revenues
+ * @subpackage  Admin/Sales/Income
  * @package     EverAccounting
+ *
+ * @var int $income_id
  */
 defined( 'ABSPATH' ) || exit();
 
@@ -13,17 +15,16 @@ use EverAccounting\Models\Category;
 use EverAccounting\Models\Customer;
 
 wp_enqueue_script( 'ea-print' );
-$income_id = isset( $_REQUEST['$income_id'] ) ? absint( $_REQUEST['$income_id'] ) : null;
 try {
 	$income = new \EverAccounting\Models\Income( $income_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
-$edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $income->get_id() ), $back_url );
+$back_url = remove_query_arg( array( 'action', 'income_id' ) );
+$edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 ?>
 
-<div class="ea-revenue-page">
+<div class="ea-voucher-page">
 	<div class="ea-row">
 		<div class="ea-col-12">
 			<div class="ea-card">
@@ -37,48 +38,48 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $income->g
 				</div>
 				<!-- /.ea-card__header -->
 				<div id="ea-print-voucher" class="ea-card__inside">
-					<div class="ea-revenue">
-						<div class="ea-revenue__header">
-							<div class="ea-revenue__logo">
+					<div class="ea-voucher">
+						<div class="ea-voucher__header">
+							<div class="ea-voucher__logo">
 								<img src="https://wpeveraccounting.com/wp-content/uploads/2020/09/Logo-same-size-plugin-ever.svg" alt="WP Ever Accounting">
 							</div>
 
-							<div class="ea-revenue__title"><?php _e( 'Income Voucher', 'wp-ever-accounting' ); ?></div>
+							<div class="ea-voucher__title"><?php _e( 'Income Voucher', 'wp-ever-accounting' ); ?></div>
 						</div>
 
-						<div class="ea-revenue__columns">
+						<div class="ea-voucher__columns">
 							<div>
-								<table class="ea-revenue__party">
+								<table class="ea-voucher__party">
 									<tr>
 										<th>
-											<div class="ea-revenue__subtitle"><?php _e( 'From', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'From', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
 											<?php
 											$account_id = $income->get_account_id();
 											$account    = new Account( $account_id );
 											?>
-											<div class="ea-revenue__company"><?php echo $account->get_name(); ?></div>
-											<div class="ea-revenue__address">
-												<span class="ea-revenue__address-line"><?php echo !empty( $account->get_bank_address() ) && ! empty( $account->get_bank_address() ) ? $account->get_bank_address() : ''; ?></span>
+											<div class="ea-voucher__company"><?php echo $account->get_name(); ?></div>
+											<div class="ea-voucher__address">
+												<span class="ea-voucher__address-line"><?php echo !empty( $account->get_bank_address() ) && ! empty( $account->get_bank_address() ) ? $account->get_bank_address() : ''; ?></span>
 											</div>
 										</td>
 									</tr>
 								</table>
 
-								<table class="ea-revenue__party">
+								<table class="ea-voucher__party">
 									<tr>
 										<th>
-											<div class="ea-revenue__subtitle"><?php _e( 'To', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'To', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
 											<?php
 											$customer_id = $income->get_customer_id();
 											$customers   = new Customer( $customer_id );
 											?>
-											<div class="ea-revenue__company"><?php echo $customers ? $customers->get_name() : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
-											<div class="ea-revenue__address">
-												<span class="ea-revenue__address-line"><?php echo !empty( $customers->get_address() ) && ! empty( $customers->get_address() ) ? $customers->get_address() : ''; ?></span>
+											<div class="ea-voucher__company"><?php echo $customers ? $customers->get_name() : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__address">
+												<span class="ea-voucher__address-line"><?php echo !empty( $customers->get_address() ) && ! empty( $customers->get_address() ) ? $customers->get_address() : ''; ?></span>
 											</div>
 										</td>
 									</tr>
@@ -86,74 +87,74 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $income->g
 
 							</div>
 
-							<div class="ea-revenue__props">
-								<table class="ea-revenue__party">
+							<div class="ea-voucher__props">
+								<table class="ea-voucher__party">
 									<tbody>
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle"><?php _e( 'Voucher Number', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'Voucher Number', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-revenue__value"><?php echo $income_id; ?></div>
+											<div class="ea-voucher__value"><?php echo $income_id; ?></div>
 										</td>
 									</tr>
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle"><?php _e( 'Payment Method', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'Payment Method', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<?php
 										$available_payment_methods = eaccounting_get_payment_methods();
 										$income_payment_method    = $income->get_payment_method();
 										?>
 										<td>
-											<div class="ea-revenue__value"><?php echo array_key_exists( $income_payment_method, $available_payment_methods ) ? $available_payment_methods[ $revenue_payment_method ] : ''; ?></div>
+											<div class="ea-voucher__value"><?php echo array_key_exists( $income_payment_method, $available_payment_methods ) ? $available_payment_methods[ $income_payment_method ] : ''; ?></div>
 										</td>
 									</tr>
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle"><?php _e( 'Payment Date', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'Payment Date', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
 											<?php
 											$date_format = get_option( 'date_format' ) ? get_option( 'date_format' ) : 'F j, Y';
 											?>
-											<div class="ea-revenue__value"><?php echo eaccounting_format_datetime( $income->get_payment_date(), 'M j, Y' ); ?></div>
+											<div class="ea-voucher__value"><?php echo eaccounting_format_datetime( $income->get_payment_date(), 'M j, Y' ); ?></div>
 										</td>
 									</tr>
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle"><?php _e( 'Bank Account', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'Bank Account', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-revenue__value"><?php echo $account ? $account->get_name() : '&mdash'; ?></div>
+											<div class="ea-voucher__value"><?php echo $account ? $account->get_name() : '&mdash'; ?></div>
 										</td>
 									</tr>
 
 									<tr>
 
 										<th>
-											<div class="ea-revenue__subtitle"><?php _e( 'Category', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__subtitle"><?php _e( 'Category', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<?php
 										$category_id = $income->get_category_id();
 										$category = new Category($category_id);
 										?>
 										<td>
-											<div class="ea-revenue__value"><?php echo $category ? $category->get_name() : __( 'Deleted Category', 'wp-ever-accounting' ); ?></div>
+											<div class="ea-voucher__value"><?php echo $category ? $category->get_name() : __( 'Deleted Category', 'wp-ever-accounting' ); ?></div>
 										</td>
 									</tr>
 									</tbody>
 								</table>
 							</div>
 						</div>
-						<!-- /.ea-revenue__columns -->
+						<!-- /.ea-voucher__columns -->
 
 
-						<table class="ea-revenue__items">
+						<table class="ea-voucher__items">
 							<thead>
 							<tr>
 								<th class="text-left"><?php _e( 'Sl', 'wp-ever-accounting' ); ?></th>
@@ -173,31 +174,21 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'revenue_id' => $income->g
 							<tfoot>
 							<tr>
 								<td colspan="2">
-									<p class="ea-revenue__text">
+									<p class="ea-voucher__text">
 										<strong><?php _e( 'In Word:', 'wp-ever-accounting' ); ?> </strong><?php echo eaccounting_numbers_to_words( $income->get_amount() ) . ' In ' . $income->get_currency_code(); ?>
 									</p>
 								</td>
-
-								<td colspan="2" class="padding-zero">
-									<table class="ea-revenue__totals">
-										<tbody>
-										<tr>
-											<th><?php _e( 'Total', 'wp-ever-accounting' ) ?></th>
-											<td><?php echo eaccounting_format_price( $income->get_amount(), $income->get_currency_code() ); ?></td>
-										</tr>
-										</tbody>
-									</table>
-								</td>
+								<td colspan="2" class="ea-voucher__totals"><span><?php _e( 'Total', 'wp-ever-accounting' ) ?></span><?php echo eaccounting_format_price( $income->get_amount(), $income->get_currency_code() ); ?></td>
 							</tr>
 
 							</tfoot>
 						</table>
-						<!-- /.ea-revenue__items -->
-						<p class="ea-revenue__reference">
+						<!-- /.ea-voucher__items -->
+						<p class="ea-voucher__reference">
 							<strong><?php _e( 'Reference:', 'wp-ever-accounting' ) ?> </strong><?php echo ! empty( $income->get_reference() ) ? $income->get_reference() : ''; ?>
 						</p>
 					</div>
-					<!-- /.ea-revenue -->
+					<!-- /.ea-voucher -->
 				</div>
 				<!-- /.ea-card__inside -->
 			</div>

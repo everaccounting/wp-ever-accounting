@@ -418,7 +418,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 			)
 		);
 
-		$this->inactive_count = eaccounting_get_accounts(
+		$this->inactive_count = eaccounting_get_items(
 			array_merge(
 				$args,
 				array(

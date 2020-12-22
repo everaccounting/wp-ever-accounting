@@ -36,6 +36,7 @@ class Vendor extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_vendors';
@@ -44,6 +45,7 @@ class Vendor extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -107,15 +109,14 @@ class Vendor extends ResourceModel {
 		);
 	}
 	/*
-		|--------------------------------------------------------------------------
-		| Getters
-		|--------------------------------------------------------------------------
-		|
-		| Functions for getting item data. Getter methods wont change anything unless
-		| just returning from the props.
-		|
-		*/
-
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for getting item data. Getter methods wont change anything unless
+	| just returning from the props.
+	|
+	*/
 	/**
 	 * Get contact's wp user ID.
 	 *
@@ -288,6 +289,7 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
+	 * <<<<<<< HEAD
 	 * Get avatar id
 	 *
 	 * @since 1.1.0
@@ -464,6 +466,7 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
+	 * <<<<<<< HEAD
 	 * Set avatar id
 	 *
 	 * @since 1.1.0
@@ -481,38 +484,7 @@ class Vendor extends ResourceModel {
 	*/
 
 	/**
-	 * Get currency object.
-	 *
-	 * @since 1.1.0
-	 * @return Currency|null
-	 */
-	public function get_currency() {
-		try {
-			$currency = new Currency( $this->get_currency_code() );
-			$this->set_prop( 'currency', $currency );
-
-			return $currency;
-		} catch ( \Exception $e ) {
-			return null;
-		}
-	}
-
-	/**
-	 * Set currency code from object.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param array|object $currency
-	 */
-	public function set_currency( $currency ) {
-		$this->set_object_prop( $currency, 'code', 'currency_code' );
-	}
-
-
-	/**
 	 * Return this customer's avatar.
-	 *
-	 * @since 1.0.2
 	 *
 	 * @param array $args
 	 *

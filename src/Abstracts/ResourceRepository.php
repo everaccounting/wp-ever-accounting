@@ -11,6 +11,8 @@
 
 namespace EverAccounting\Abstracts;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Class ResourceRepository
  *
@@ -36,7 +38,7 @@ abstract class ResourceRepository {
 	 * @param array         $meta_key_to_props A mapping of meta keys => prop names.
 	 * @param string        $meta_type         The internal WP meta type (post, user, etc).
 	 *
-	 * @return array                        A mapping of meta keys => prop names, filtered by ones that should be updated.
+	 * @return array        A mapping of meta keys => prop names, filtered by ones that should be updated.
 	 */
 	protected function get_props_to_update( $object, $meta_key_to_props, $meta_type = 'contact' ) {
 		$props_to_update = array();
@@ -102,7 +104,7 @@ abstract class ResourceRepository {
 	 *
 	 * @param ResourceModel $item Item object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception | @return bool
 	 */
 	public function insert( &$item ) {
 		global $wpdb;

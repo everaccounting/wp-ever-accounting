@@ -17,15 +17,17 @@ class TransfersController extends EntitiesController {
 	/**
 	 * Route base.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @var string
 	 *
-	 * @since 1.1.0
 	 */
 	protected $rest_base = 'transfers';
 	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $entity_model = Transfer::class;
@@ -47,9 +49,10 @@ class TransfersController extends EntitiesController {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @return array Item schema data.
 	 *
-	 * @since 1.1.0
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -124,9 +127,10 @@ class TransfersController extends EntitiesController {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @return array Collection parameters.
 	 *
-	 * @since 1.1.0
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

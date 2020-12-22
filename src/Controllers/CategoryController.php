@@ -12,7 +12,6 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-
 use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit;
@@ -36,12 +35,13 @@ class CategoryController extends Singleton {
 	/**
 	 * Validate category data.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param array $data
 	 * @param null $id
 	 * @param Category $category
 	 *
 	 * @throws \Exception
-	 * @since 1.1.0
 	 *
 	 */
 	public static function validate_category_data( $data, $id ) {
@@ -55,10 +55,11 @@ class CategoryController extends Singleton {
 	/**
 	 * Delete category id from transactions.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param $id
 	 *
 	 * @return bool
-	 * @since 1.1.0
 	 *
 	 */
 	public static function update_transaction_category( $id ) {
