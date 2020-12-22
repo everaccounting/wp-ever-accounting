@@ -15,7 +15,7 @@ $transactions_table->prepare_items();
 ?>
 <h1 class="wp-heading-inline"><?php _e( 'Transactions', 'wp-ever-accounting' ); ?></h1>
 <?php do_action( 'eaccounting_transactions_table_top' ); ?>
-<form id="ea-customers-table" method="get" action="<?php echo admin_url(); ?>">
+<form id="ea-transactions-table" method="get" action="<?php echo admin_url(); ?>">
 	<?php
 	$transactions_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-transactions' );
 	$transactions_table->display();
