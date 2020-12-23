@@ -221,15 +221,15 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'         => 'vendors',
-						'action'      => 'edit',
+						'tab'       => 'vendors',
+						'action'    => 'edit',
 						'vendor_id' => $vendor_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'         => 'vendors',
-						'action'      => 'delete',
+						'tab'       => 'vendors',
+						'action'    => 'delete',
 						'vendor_id' => $vendor_id,
 					)
 				);
@@ -259,8 +259,8 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
@@ -335,7 +335,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 	 * @since 1.1.0
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url();
+		$base           = eaccounting_admin_url( array( 'tab' => 'vendors' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
@@ -354,8 +354,8 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
@@ -390,13 +390,13 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 
 		$args = apply_filters( 'eaccounting_vendor_table_query_args', $args, $this );
 
-		$this->items       = eaccounting_get_vendors( $args );
+		$this->items = eaccounting_get_vendors( $args );
 
 		$this->active_count = eaccounting_get_vendors(
 			array_merge(
 				$args,
 				array(
-					'enabled'     => '1',
+					'status'      => 'active',
 					'count_total' => true,
 				)
 			)
@@ -406,7 +406,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 			array_merge(
 				$args,
 				array(
-					'enabled'     => '0',
+					'status'      => 'inactive',
 					'count_total' => true,
 				)
 			)

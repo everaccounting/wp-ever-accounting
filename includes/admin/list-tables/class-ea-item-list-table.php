@@ -412,7 +412,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 			array_merge(
 				$args,
 				array(
-					'enabled'     => '1',
+					'status'      => 'active',
 					'count_total' => true,
 				)
 			)
@@ -422,7 +422,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 			array_merge(
 				$args,
 				array(
-					'enabled'     => '0',
+					'status'      => 'inactive',
 					'count_total' => true,
 				)
 			)
@@ -444,6 +444,10 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				$total_items = $this->total_count;
 				break;
 		}
+		error_log($total_items);
+		error_log($this->total_count);
+		error_log($this->active_count);
+		error_log($this->inactive_count);
 
 		$this->set_pagination_args(
 			array(

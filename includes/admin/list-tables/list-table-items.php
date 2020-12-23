@@ -501,6 +501,7 @@ class List_Table_Item extends List_Table {
 				break;
 		}
 
+
 		$this->set_pagination_args(
 			array(
 				'total_items' => $total_items,
