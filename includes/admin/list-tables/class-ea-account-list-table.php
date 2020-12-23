@@ -404,7 +404,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 			array_merge(
 				$args,
 				array(
-					'enabled'     => '1',
+					'status'      => 'active',
 					'count_total' => true,
 				)
 			)
@@ -414,7 +414,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 			array_merge(
 				$args,
 				array(
-					'enabled'     => '0',
+					'status'      => 'inactive',
 					'count_total' => true,
 				)
 			)

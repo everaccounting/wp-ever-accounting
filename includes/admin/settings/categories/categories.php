@@ -11,10 +11,7 @@ defined( 'ABSPATH' ) || exit();
 
 function eaccounting_render_categories_tab() {
 	$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-	if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['category_id'] ) ) {
-		$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : null;
-		include dirname( __FILE__ ) . '/view-category.php';
-	} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+	if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 		$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : null;
 		include dirname( __FILE__ ) . '/edit-category.php';
 	} else {

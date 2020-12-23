@@ -11,10 +11,7 @@ defined( 'ABSPATH' ) || exit();
 
 function eaccounting_render_transfers_tab() {
 	$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-	if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['transfer_id'] ) ) {
-		$transfer_id = isset( $_GET['transfer_id'] ) ? absint( $_GET['transfer_id'] ) : null;
-		include dirname( __FILE__ ) . '/view-transfer.php';
-	} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+	if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 		$transfer_id = isset( $_GET['transfer_id'] ) ? absint( $_GET['transfer_id'] ) : null;
 		include dirname( __FILE__ ) . '/edit-transfer.php';
 	} else {
