@@ -34,7 +34,7 @@ class Item extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'es_items';
@@ -43,13 +43,13 @@ class Item extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.0.4
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
 		'name'              => '',
 		'sku'               => '',
-		'thumbnail_id'          => null,
+		'thumbnail_id'      => null,
 		'description'       => '',
 		'sale_price'        => 0.0000,
 		'purchase_price'    => 0.0000,
