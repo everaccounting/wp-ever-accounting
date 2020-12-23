@@ -124,7 +124,7 @@ trait CurrencyTrait {
 	 * @return string
 	 */
 	public function format_amount( $amount ) {
-		return eaccounting_price( $amount, $this->get_currency() );
+		return eaccounting_price( $amount, $this->get_currency_code() );
 	}
 
 	/**
@@ -138,4 +138,5 @@ trait CurrencyTrait {
 	public function get_converted_amount( $amount, $code, $rate = null ) {
 		//todo complete
 	}
+
 }

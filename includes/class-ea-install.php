@@ -460,7 +460,7 @@ class EAccounting_Install {
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
             `account_id` INT(11) NOT NULL,
-            `invoice_id` INT(11) DEFAULT NULL,
+            `document_id` INT(11) DEFAULT NULL,
 		  	`contact_id` INT(11) DEFAULT NULL,
 		  	`category_id` INT(11) NOT NULL,
 		  	`description` text,

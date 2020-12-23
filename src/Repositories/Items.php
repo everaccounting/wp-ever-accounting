@@ -31,7 +31,7 @@ class Items extends ResourceRepository {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -40,14 +40,13 @@ class Items extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data_type = array(
 		'id'                => '%d',
 		'name'              => '%s',
 		'sku'               => '%s',
-		'image_id'          => '%d',
 		'description'       => '%s',
 		'sale_price'        => '%f',
 		'purchase_price'    => '%f',
@@ -55,6 +54,7 @@ class Items extends ResourceRepository {
 		'category_id'       => '%d',
 		'sales_tax_rate'    => '%f',
 		'purchase_tax_rate' => '%f',
+		'thumbnail_id'      => '%d',
 		'enabled'           => '%d',
 		'creator_id'        => '%d',
 		'date_created'      => '%s',

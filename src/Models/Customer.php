@@ -60,7 +60,7 @@ class Customer extends ResourceModel {
 		'website'       => '',
 		'tax_number'    => '',
 		'currency_code' => '',
-		'type'          => '',
+		'type'          => 'customer',
 		'thumbnail_id'  => null,
 		'enabled'       => 1,
 		'creator_id'    => null,
@@ -291,7 +291,6 @@ class Customer extends ResourceModel {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Get avatar id
 	 *
 	 * @since 1.1.0
@@ -527,5 +526,13 @@ class Customer extends ResourceModel {
 		}
 
 		return get_avatar_url( $this->get_email(), wp_parse_args( $args, array( 'size' => '100' ) ) );
+	}
+
+	/**
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_default_image_url() {
+		return $this->get_avatar_url();
 	}
 }

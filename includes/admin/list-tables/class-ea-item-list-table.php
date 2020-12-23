@@ -182,7 +182,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 		$item_id = $item->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$value = eaccounting_get_attachment_image( $item->get_image_id() );
+				$value = $item->get_attachment_image();
 				break;
 			case 'name':
 				$name = $item->get_name();

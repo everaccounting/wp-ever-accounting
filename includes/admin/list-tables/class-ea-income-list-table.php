@@ -172,6 +172,9 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 				);
 				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $income->get_payment_date() ) ) );
 				break;
+			case 'amount':
+				$value = $income->format_amount( $income->get_amount() );
+				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $income->get_account_id( 'edit' ) );
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );

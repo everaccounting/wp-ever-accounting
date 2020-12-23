@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit();
 try {
 	$customer = new \EverAccounting\Models\Customer( $customer_id );
 } catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
+	wp_redirect(admin_url('admin.php?page=ea-sales&tab=customers'));
 }
 $title    = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' );
 $back_url = remove_query_arg( array( 'action', 'customer_id' ) );

@@ -60,7 +60,7 @@ class Vendor extends ResourceModel {
 		'website'       => '',
 		'tax_number'    => '',
 		'currency_code' => '',
-		'type'          => '',
+		'type'          => 'vendor',
 		'thumbnail_id'  => null,
 		'enabled'       => 1,
 		'creator_id'    => null,

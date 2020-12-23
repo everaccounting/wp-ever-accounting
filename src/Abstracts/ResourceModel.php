@@ -26,7 +26,7 @@ abstract class ResourceModel {
 	 * ID for this object.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var int
 	 */
 	protected $id = 0;
@@ -35,7 +35,7 @@ abstract class ResourceModel {
 	 * Core data for this object. Name value pairs (name + default value).
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array();
@@ -44,7 +44,7 @@ abstract class ResourceModel {
 	 * Core data changes for this object.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $changes = array();
@@ -53,7 +53,7 @@ abstract class ResourceModel {
 	 * This is false until the object is read from the DB.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var bool
 	 */
 	protected $object_read = false;
@@ -62,7 +62,7 @@ abstract class ResourceModel {
 	 * This is the name of this object type.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $object_type = 'model';
@@ -73,7 +73,7 @@ abstract class ResourceModel {
 	 * additional information to an inherited class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $extra_data = array();
@@ -82,7 +82,7 @@ abstract class ResourceModel {
 	 * Set to _data on construct so we can track and reset data if needed.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $default_data = array();
@@ -91,7 +91,7 @@ abstract class ResourceModel {
 	 * Contains a reference to the repository for this class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var \EverAccounting\Abstracts\ResourceRepository
 	 */
 	protected $repository;
@@ -101,7 +101,7 @@ abstract class ResourceModel {
 	 * A group must be set to to enable caching.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $cache_group = '';
@@ -110,16 +110,16 @@ abstract class ResourceModel {
 	 * Stores additional meta data.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $meta_data = null;
 
 	/**
 	 * Array('prop' => readable text )
-	 * 
+	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array $required_props that will automatically check before saving.
 	 */
 	protected $required_props;
@@ -139,7 +139,7 @@ abstract class ResourceModel {
 	 * Only store the object ID to avoid serializing the data object instance.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function __sleep() {
@@ -178,7 +178,7 @@ abstract class ResourceModel {
 	 * Get the repository.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return object
 	 */
 	public function get_repository() {
@@ -189,7 +189,7 @@ abstract class ResourceModel {
 	 * Get the object type.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_object_type() {
@@ -200,7 +200,7 @@ abstract class ResourceModel {
 	 * get the cache group.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_cache_group() {
@@ -211,7 +211,7 @@ abstract class ResourceModel {
 	 * Returns the unique ID for this object.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return int
 	 */
 	public function get_id() {
@@ -255,7 +255,7 @@ abstract class ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return \Exception|bool
 	 */
 	public function save() {
@@ -307,7 +307,7 @@ abstract class ResourceModel {
 	 * Change data to JSON format.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return string Data in JSON format.
 	 */
 	public function __toString() {
@@ -318,7 +318,7 @@ abstract class ResourceModel {
 	 * Returns all data for this object.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_data() {
@@ -334,7 +334,7 @@ abstract class ResourceModel {
 	 * Returns array of expected data keys for this object.
 	 *
 	 * @since   1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_data_keys() {
@@ -345,7 +345,7 @@ abstract class ResourceModel {
 	 * Returns all "extra" data keys for an object (for sub objects like item types).
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_extra_data_keys() {
@@ -369,7 +369,7 @@ abstract class ResourceModel {
 	 * Get All Meta Data.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array of objects.
 	 */
 	public function get_meta_data() {
@@ -927,7 +927,7 @@ abstract class ResourceModel {
 	 * @param int $enabled
 	 */
 	public function set_enabled( $enabled ) {
-		$this->set_prop( 'enabled', absint( $enabled ) );
+		$this->set_prop( 'enabled', eaccounting_bool_to_number($enabled) );
 	}
 
 	/**
@@ -963,7 +963,7 @@ abstract class ResourceModel {
 	 * Return data changes only.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_changes() {
@@ -984,7 +984,7 @@ abstract class ResourceModel {
 	 * Prefix for action and filter hooks on model.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function get_hook_prefix() {
@@ -1070,7 +1070,7 @@ abstract class ResourceModel {
 	 * Get attachment.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return false|\stdClass
 	 */
 	public function get_attachment() {
@@ -1141,7 +1141,7 @@ abstract class ResourceModel {
 	 * Checks if the object is saved in the database
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function exists() {

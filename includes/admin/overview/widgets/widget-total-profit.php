@@ -3,7 +3,6 @@
 namespace EverAccounting\Admin\Overview\Widgets;
 
 use EverAccounting\Abstracts\Widget;
-use EverAccounting\Query_Transaction;
 
 class Total_Profit extends Widget {
 	/**

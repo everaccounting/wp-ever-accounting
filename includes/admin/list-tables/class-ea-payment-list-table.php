@@ -165,12 +165,15 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			case 'date':
 				$url   = eaccounting_admin_url(
 					array(
-						'tab'       => 'payments',
-						'action'    => 'view',
+						'tab'        => 'payments',
+						'action'     => 'view',
 						'payment_id' => $payment_id,
 					)
 				);
 				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $payment->get_payment_date() ) ) );
+				break;
+			case 'amount':
+				$value = $payment->format_amount( $payment->get_amount() );
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );
@@ -183,15 +186,15 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'       => 'payments',
-						'action'    => 'edit',
+						'tab'        => 'payments',
+						'action'     => 'edit',
 						'payment_id' => $payment_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'payments',
-						'action'    => 'delete',
+						'tab'        => 'payments',
+						'action'     => 'delete',
 						'payment_id' => $payment_id,
 					)
 				);
@@ -229,7 +232,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
-			$vendor_id = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
+			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
 			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
 			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
@@ -362,7 +365,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		$end_date    = ! empty( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
-		$vendor_id = ! empty( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
+		$vendor_id   = ! empty( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
 
 		$per_page = $this->per_page;
 

@@ -187,6 +187,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 					esc_url(
 						eaccounting_admin_url(
 							array(
+								'tab'        => 'accounts',
 								'action'     => 'view',
 								'account_id' => $account_id,
 							)
@@ -231,8 +232,8 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'accounts',
-						'action'    => 'delete',
+						'tab'        => 'accounts',
+						'action'     => 'delete',
 						'account_id' => $account_id,
 					)
 				);
@@ -389,7 +390,12 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-		eaccounting_get_currencies( array( 'return' => 'raw', 'number' => '-1' ) );
+		eaccounting_get_currencies(
+			array(
+				'return' => 'raw',
+				'number' => '-1',
+			)
+		);
 
 		$args        = apply_filters( 'eaccounting_account_table_query_args', $args, $this );
 		$this->items = eaccounting_get_accounts( $args );
