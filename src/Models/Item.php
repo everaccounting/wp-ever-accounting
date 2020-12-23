@@ -49,7 +49,7 @@ class Item extends ResourceModel {
 	protected $data = array(
 		'name'              => '',
 		'sku'               => '',
-		'image_id'          => null,
+		'thumbnail_id'          => null,
 		'description'       => '',
 		'sale_price'        => 0.0000,
 		'purchase_price'    => 0.0000,
@@ -144,8 +144,8 @@ class Item extends ResourceModel {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_image_id( $context = 'edit' ) {
-		return $this->get_prop( 'image_id', $context );
+	public function get_thumbnail_id( $context = 'edit' ) {
+		return $this->get_prop( 'thumbnail_id', $context );
 	}
 
 	/**
@@ -258,11 +258,11 @@ class Item extends ResourceModel {
 	/**
 	 * @since 1.1.0
 	 *
-	 * @param $image_id
+	 * @param $thumbnail_id
 	 *
 	 */
-	public function set_image_id( $image_id ) {
-		$this->set_prop( 'image_id', absint( $image_id ) );
+	public function set_thumbnail_id( $thumbnail_id ) {
+		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
 	}
 
 	/**

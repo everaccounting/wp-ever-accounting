@@ -54,6 +54,7 @@ class Account extends ResourceModel {
 		'bank_name'       => null,
 		'bank_phone'      => null,
 		'bank_address'    => null,
+		'thumbnail_id'    => null,
 		'enabled'         => 1,
 		'creator_id'      => null,
 		'date_created'    => null,
@@ -203,6 +204,18 @@ class Account extends ResourceModel {
 		return $this->get_prop( 'bank_address', $context );
 	}
 
+	/**
+	 * Get the thumbnail id.
+	 *
+	 * @param string $context
+	 * @since 1.1.0
+	 *
+	 * @return int
+	 */
+	public function get_thumbnail_id( $context = 'edit' ) {
+		return $this->get_prop( 'thumbnail_id', $context );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -297,6 +310,16 @@ class Account extends ResourceModel {
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
+	}
+
+	/**
+	 * Set the thumbnail id.
+	 *
+	 * @param int $thumbnail_id
+	 * @since 1.1.0
+	 */
+	public function set_thumbnail_id( $thumbnail_id ) {
+		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
 	}
 
 	/*

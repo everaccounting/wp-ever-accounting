@@ -36,7 +36,7 @@ class Vendor extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_vendors';
@@ -45,7 +45,7 @@ class Vendor extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -61,7 +61,7 @@ class Vendor extends ResourceModel {
 		'tax_number'    => '',
 		'currency_code' => '',
 		'type'          => '',
-		'avatar_id'     => null,
+		'thumbnail_id'  => null,
 		'enabled'       => 1,
 		'creator_id'    => null,
 		'date_created'  => null,
@@ -108,7 +108,6 @@ class Vendor extends ResourceModel {
 			'currency_code' => __( 'Currency Code', 'wp-ever-accounting' ),
 		);
 	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -118,7 +117,6 @@ class Vendor extends ResourceModel {
 	| just returning from the props.
 	|
 	*/
-
 	/**
 	 * Get contact's wp user ID.
 	 *
@@ -291,16 +289,17 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Get contact's note.
+	 * <<<<<<< HEAD
+	 * Get avatar id
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
 	 * @param string $context
 	 *
-	 * @return string
+	 * @return int|null
 	 */
-	public function get_note( $context = 'edit' ) {
-		return $this->get_prop( 'note', $context );
+	public function get_thumbnail_id( $context = 'edit' ) {
+		return $this->get_prop( 'thumbnail_id', $context );
 	}
 
 	/*
@@ -467,15 +466,15 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Set contact's note.
+	 * <<<<<<< HEAD
+	 * Set avatar id
 	 *
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 *
-	 * @param $value
-	 *
+	 * @param int $thumbnail_id
 	 */
-	public function set_note( $value ) {
-		$this->set_prop( 'note', sanitize_textarea_field( $value ) );
+	public function set_thumbnail_id( $thumbnail_id ) {
+		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
 	}
 
 	/*
@@ -485,43 +484,17 @@ class Vendor extends ResourceModel {
 	*/
 
 	/**
-	 * Get currency object.
-	 *
-	 * @since 1.1.0
-	 * 
-	 * @return Currency|null
-	 */
-	public function get_currency() {
-		try {
-			$currency = new Currency( $this->get_currency_code() );
-			$this->set_prop( 'currency', $currency );
-
-			return $currency;
-		} catch ( \Exception $e ) {
-			return null;
-		}
-	}
-
-	/**
-	 * Set currency code from object.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param array|object $currency
-	 */
-	public function set_currency( $currency ) {
-		$this->set_object_prop( $currency, 'code', 'currency_code' );
-	}
-
-
-	/**
 	 * Return this customer's avatar.
 	 *
-	 * @since 1.0.2
-	 * 
+	 * @param array $args
+	 *
 	 * @return string
 	 */
 	public function get_avatar_url( $args = array() ) {
-		return get_avatar_url( $this->get_email(), wp_parse_args($args, array('size' => '100')) );
+		if ( ! empty( $this->get_thumbnail_id() ) && $this->get_attachment() ) {
+			return $this->get_attachment()->src;
+		}
+
+		return get_avatar_url( $this->get_email(), wp_parse_args( $args, array( 'size' => '100' ) ) );
 	}
 }

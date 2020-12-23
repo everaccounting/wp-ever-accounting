@@ -60,7 +60,7 @@ class Customers extends ResourceRepository {
 		'website'       => '%s',
 		'tax_number'    => '%s',
 		'type'          => '%s',
-		'avatar_id'     => '%d',
+		'thumbnail_id'    => '%d',
 		'enabled'       => '%d',
 		'creator_id'    => '%d',
 		'date_created'  => '%s',
