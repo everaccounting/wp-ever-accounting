@@ -1,6 +1,8 @@
 <?php
 /**
  * Render Customer list table
+ * Page: Sales
+ * Tab: Customers
  *
  * @since       1.0.2
  * @subpackage  Admin/Views/Customers

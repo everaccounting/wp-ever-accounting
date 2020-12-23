@@ -41,11 +41,11 @@ class Admin_Menus {
 		$eaccounting = add_menu_page( __( 'Accounting', 'wp-ever-accounting' ), __( 'Accounting', 'wp-ever-accounting' ), 'manage_eaccounting', 'eaccounting', null, $icons, '54.5' );
 		$overview    = add_submenu_page( 'eaccounting', __( 'Overview', 'wp-ever-accounting' ), __( 'Overview', 'wp-ever-accounting' ), 'manage_eaccounting', 'eaccounting', 'eaccounting_admin_overview_page' );
 		//$sales       = add_submenu_page( 'eaccounting', __( 'Sales', 'wp-ever-accounting' ), __( 'Sales', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-sales', 'eaccounting_admin_sales_page' );
-		$expenses    = add_submenu_page( 'eaccounting', __( 'Expenses', 'wp-ever-accounting' ), __( 'Expenses', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-expenses', 'eaccounting_admin_expenses_page' );
+		//$expenses    = add_submenu_page( 'eaccounting', __( 'Expenses', 'wp-ever-accounting' ), __( 'Expenses', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-expenses', 'eaccounting_admin_expenses_page' );
 		//$banking     = add_submenu_page( 'eaccounting', __( 'Banking', 'wp-ever-accounting' ), __( 'Banking', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-banking', 'eaccounting_admin_banking_page' );
 		$items       = add_submenu_page( 'eaccounting', __( 'Items', 'wp-ever-accounting' ), __( 'Items', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-items', 'eaccounting_admin_items_page' );
 		//add_action( 'load-' . $sales, 'eaccounting_load_sales_page' );
-		add_action( 'load-' . $expenses, 'eaccounting_load_expenses_page' );
+		//add_action( 'load-' . $expenses, 'eaccounting_load_expenses_page' );
 		//add_action( 'load-' . $banking, 'eaccounting_load_banking_page' );
 		add_action( 'load-' . $items, 'eaccounting_load_items_page' );
 	}

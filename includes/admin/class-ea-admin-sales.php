@@ -1,4 +1,14 @@
 <?php
+/**
+ * EverAccounting Admin Sales Page.
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin
+ * @version     1.1.0
+ */
+
+defined( 'ABSPATH' ) || exit();
+
 class EAccounting_Admin_Sales {
 
 	/**
@@ -7,6 +17,7 @@ class EAccounting_Admin_Sales {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
 		add_action( 'eaccounting_sales_page_tab_customers', array( $this, 'render_customers_tab' ), 20 );
+		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ), 20 );
 	}
 
 	/**
@@ -65,6 +76,16 @@ class EAccounting_Admin_Sales {
 	public function render_customers_tab() {
 		include dirname( __FILE__ ) . '/views/sales-tab-customers.php';
 	}
+	/**
+	 * Render invoice tab.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_invoices_tab() {
+		include dirname( __FILE__ ) . '/views/sales-tab-invoices.php';
+	}
+
+
 }
 
 new EAccounting_Admin_Sales();
