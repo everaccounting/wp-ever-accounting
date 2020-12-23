@@ -104,12 +104,12 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 	public function define_columns() {
 		return array(
 			'cb'        => '<input type="checkbox" />',
+			'thumb'   => '<span class="ea-thumb">&nbsp;</span>',
 			'name'      => __( 'Name', 'wp-ever-accounting' ),
 			'balance'   => __( 'Balance', 'wp-ever-accounting' ),
 			'number'    => __( 'Number', 'wp-ever-accounting' ),
 			'bank_name' => __( 'Bank Name', 'wp-ever-accounting' ),
 			'enabled'   => __( 'Enabled', 'wp-ever-accounting' ),
-			'actions'   => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -179,22 +179,20 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 	function column_default( $account, $column_name ) {
 		$account_id = $account->get_id();
 		switch ( $column_name ) {
-			case 'name':
-				$name = $account->get_name();
+			case 'thumb':
+				$view_url = admin_url( 'admin.php?page=ea-banking&tab=accounts&action=view&account_id=' . $account_id );
+				$value    = '<a href="' . esc_url( $view_url ) . '">' . $account->get_attachment_image() . '</a>';
+				break;
 
-				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'tab'        => 'accounts',
-								'action'     => 'view',
-								'account_id' => $account_id,
-							)
-						)
-					),
-					$name
+			case 'name':
+				$view_url = admin_url( 'admin.php?page=ea-banking&tab=accounts&action=view&account_id=' . $account_id );
+				$nonce    = wp_create_nonce( 'account-nonce' );
+				$actions  = array(
+					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
+					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&action=edit&account_id=' . $account->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&_wpnonce=' . $nonce . '&action=delete&account_id=' . $account->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
+				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'balance':
 				$value = $account->get_balance( true );

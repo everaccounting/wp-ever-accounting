@@ -18,6 +18,7 @@ class EAccounting_Admin_Banking {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
+		add_action( 'eaccounting_banking_page_tab_accounts', array( $this, 'render_accounts_page' ), 20 );
 	}
 
 	/**
@@ -38,8 +39,8 @@ class EAccounting_Admin_Banking {
 	/**
 	 * Get banking page tabs.
 	 *
-	 * @since 1.1.0
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function get_tabs() {
 		$tabs = array();
@@ -66,6 +67,10 @@ class EAccounting_Admin_Banking {
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
 		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
+	}
+
+	public function render_accounts_page() {
+		include dirname( __FILE__ ) . '/views/banking-tab-accounts.php';
 	}
 
 }

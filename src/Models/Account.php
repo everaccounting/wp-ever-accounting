@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
 use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
@@ -24,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Account extends ResourceModel {
 	use CurrencyTrait;
-
+	use AttachmentTrait;
 	/**
 	 * This is the name of this object type.
 	 *
@@ -34,7 +35,7 @@ class Account extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_accounts';
@@ -43,7 +44,7 @@ class Account extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -64,7 +65,7 @@ class Account extends ResourceModel {
 	 * Get the account if ID is passed, otherwise the account is new and empty.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param int|object|Account $data object to read.
 	 *
 	 *
@@ -110,7 +111,7 @@ class Account extends ResourceModel {
 	 * Return the account name.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
@@ -124,7 +125,7 @@ class Account extends ResourceModel {
 	 * Returns the account number.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
@@ -138,7 +139,7 @@ class Account extends ResourceModel {
 	 * Returns account opening balance.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
@@ -152,7 +153,7 @@ class Account extends ResourceModel {
 	 * Returns account currency code.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
@@ -166,7 +167,7 @@ class Account extends ResourceModel {
 	 * Return account bank name.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
@@ -180,7 +181,7 @@ class Account extends ResourceModel {
 	 * Return account bank phone number.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
@@ -194,7 +195,7 @@ class Account extends ResourceModel {
 	 * Return account bank address.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
@@ -228,9 +229,9 @@ class Account extends ResourceModel {
 
 	/**
 	 * Set account name.
-	 * 
+	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $name Account name.
 	 *
 	 *
@@ -243,7 +244,7 @@ class Account extends ResourceModel {
 	 * Set the account number.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $number bank account number
 	 *
 	 */
@@ -255,7 +256,7 @@ class Account extends ResourceModel {
 	 * Returns account opening balance.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $opening_balance opening balance of the account.
 	 *
 	 */
@@ -268,7 +269,7 @@ class Account extends ResourceModel {
 	 * Set account currency code.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $currency_code Bank currency code
 	 *
 	 */
@@ -280,7 +281,7 @@ class Account extends ResourceModel {
 	 * Set account bank name.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $bank_name name of the bank
 	 *
 	 */
@@ -292,9 +293,9 @@ class Account extends ResourceModel {
 	 * Set account bank phone number.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $bank_phone Bank phone number.
-	 * 
+	 *
 	 */
 	public function set_bank_phone( $bank_phone ) {
 		$this->set_prop( 'bank_phone', eaccounting_clean( $bank_phone ) );
@@ -304,9 +305,9 @@ class Account extends ResourceModel {
 	 * Set account bank address.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param string $bank_address Bank physical address
-	 * 
+	 *
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
@@ -335,9 +336,9 @@ class Account extends ResourceModel {
 	 * Get currency object.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return Currency|null
-	 * 
+	 *
 	 */
 	public function get_currency() {
 		try {
@@ -356,7 +357,7 @@ class Account extends ResourceModel {
 	 * @since 1.1.0
 	 *
 	 * @param array|object $currency
-	 * 
+	 *
 	 */
 	public function set_currency( $currency ) {
 		$this->set_object_prop( $currency, 'code', 'currency_code' );
@@ -383,7 +384,7 @@ class Account extends ResourceModel {
 	 * Set balance.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param $balance
 	 *
 	 */
