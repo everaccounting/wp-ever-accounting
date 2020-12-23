@@ -2255,10 +2255,23 @@ function eaccounting_get_countries() {
 	return apply_filters( 'eaccounting_countries', $countries );
 }
 
-function eaccounting_get_attachment_image( $attachment_id, $type = 'item' ) {
-	if ( empty( $attachment_id ) || empty( wp_get_attachment_image( $attachment_id ) ) ) {
-		return sprintf( '<img src="%s" alt="image"/>', eaccounting()->plugin_url( 'assets/images/item-placeholder.png' ) );
-	}
-
-	return wp_get_attachment_image( $attachment_id );
+function eaccounting_get_date_ranges() {
+	$date_options = apply_filters(
+		'eaccounting_date_ranges',
+		array(
+			'today'        => __( 'Today', 'wp-ever-accounting' ),
+			'yesterday'    => __( 'Yesterday', 'wp-ever-accounting' ),
+			'this_week'    => __( 'This Week', 'wp-ever-accounting' ),
+			'last_week'    => __( 'Last Week', 'wp-ever-accounting' ),
+			'last_30_days' => __( 'Last 30 Days', 'wp-ever-accounting' ),
+			'this_month'   => __( 'This Month', 'wp-ever-accounting' ),
+			'last_month'   => __( 'Last Month', 'wp-ever-accounting' ),
+			'this_quarter' => __( 'This Quarter', 'wp-ever-accounting' ),
+			'last_quarter' => __( 'Last Quarter', 'wp-ever-accounting' ),
+			'this_year'    => __( 'This Year', 'wp-ever-accounting' ),
+			'last_year'    => __( 'Last Year', 'wp-ever-accounting' ),
+			'custom'       => __( 'Custom', 'wp-ever-accounting' ),
+		)
+	);
 }
+
