@@ -28,10 +28,12 @@
 ------------------------------------------------------------------------------*/
 .eaccounting{
   .wp-list-table{
-	.column-enabled{
-	  width: 150px;
+	.check-column{
+	  vertical-align: middle;
+	  padding-top: 0;
+	  padding-bottom: 0;
 	}
-	.column-actions{
+	.column-enabled{
 	  width: 150px;
 	}
 
@@ -61,17 +63,22 @@
 		height: auto;
 	  }
 	}
+	th.column-actions{
+	  width: 150px;
+	}
 
-	td.row-actions{
-	  left: 0;
-	  a{
-		display: inline-block;
-		color: #757575;
-		transition: color 0.1s ease-in;
-		text-decoration: none;
-		font-size: 16px;
-		&:hover{
-		  color: #444;
+	td.column-actions{
+	  .row-actions{
+		left: 0;
+		a{
+		  display: inline-block;
+		  color: #757575;
+		  transition: color 0.1s ease-in;
+		  text-decoration: none;
+		  font-size: 16px;
+		  &:hover{
+			color: #444;
+		  }
 		}
 	  }
 	}

@@ -106,7 +106,6 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
-			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
 			'due'     => __( 'Due', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 		);

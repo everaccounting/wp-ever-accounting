@@ -93,7 +93,7 @@ function eaccounting_insert_expense( $args, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error(  $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -525,7 +525,7 @@ function eaccounting_get_transactions( $args = array() ) {
 		$query_where .= " AND $table.`account_id` IN ($account_id)";
 	}
 	if ( ! empty( $qv['document_id'] ) ) {
-		$document_id   = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
+		$document_id  = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
 		$query_where .= " AND $table.`document_id` IN ($document_id)";
 	}
 	if ( ! empty( $qv['invoice_id'] ) ) {

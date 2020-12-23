@@ -3,7 +3,7 @@
  * Render Customer edit
  *
  * @since       1.0.2
- * @subpackage  Admin/Sales/Customers
+ * @subpackage  Admin/Views/Customers
  * @package     EverAccounting
  *
  * @var int $customer_id

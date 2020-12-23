@@ -102,11 +102,12 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 	public function define_columns() {
 		return array(
 			'cb'      => '<input type="checkbox" />',
+			'thumb'   => '<span class="ea-thumb">&nbsp;</span>',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Email', 'wp-ever-accounting' ),
 			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
+			'due'     => __( 'Due', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
-			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -178,22 +179,19 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 		$vendor_id = $vendor->get_id();
 
 		switch ( $column_name ) {
+			case 'thumb':
+				$view_url = admin_url( 'admin.php?page=ea-expenses&tab=vendors&action=view&vendor_id=' . $vendor->get_id() );
+				$value    = '<a href="' . esc_url( $view_url ) . '">' . $vendor->get_attachment_image() . '</a>';
+				break;
 			case 'name':
-				$name = $vendor->get_name();
-
-				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'action'    => 'view',
-								'tab'       => 'vendors',
-								'vendor_id' => $vendor_id,
-							)
-						)
-					),
-					$name
+				$view_url = admin_url( 'admin.php?page=ea-expenses&tab=vendors&action=view&vendor_id=' . $vendor->get_id() );
+				$nonce    = wp_create_nonce( 'vendor-nonce' );
+				$actions  = array(
+					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
+					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-expenses&tab=vendors&action=edit&vendor_id=' . $vendor->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-expenses&tab=vendors&_wpnonce=' . $nonce . '&action=delete&vendor_id=' . $vendor->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
+				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'email':
 				$value = sanitize_email( $vendor->get_email() );
@@ -202,42 +200,10 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				$value = $vendor->get_phone();
 				break;
 			case 'enabled':
-				ob_start();
-				eaccounting_toggle(
-					array(
-						'name'  => 'enabled',
-						'id'    => 'enabled_' . $vendor_id,
-						'value' => $vendor->get_enabled( 'edit' ),
-						'naked' => true,
-						'attr'  => array(
-							'data-id'    => $vendor_id,
-							'data-nonce' => wp_create_nonce( 'ea_edit_vendor' ),
-						),
-					)
-				);
-				$value = ob_get_contents();
-				ob_get_clean();
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'       => 'vendors',
-						'action'    => 'edit',
-						'vendor_id' => $vendor_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'       => 'vendors',
-						'action'    => 'delete',
-						'vendor_id' => $vendor_id,
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
+				$value  = '<label class="ea-toggle">';
+				$value .= '<input type="checkbox" class="vendor-status" style="" value="true" data-id="' . $vendor->get_id() . '" ' . checked( $vendor->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '</label>';
 				break;
 			default:
 				return parent::column_default( $vendor, $column_name );
@@ -342,7 +308,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
 
 		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current === '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
 			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
 			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
 		);

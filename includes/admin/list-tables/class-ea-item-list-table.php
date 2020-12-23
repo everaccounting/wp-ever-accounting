@@ -110,7 +110,6 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 			'sale_price'     => __( 'Sale Price', 'wp-ever-accounting' ),
 			'purchase_price' => __( 'Purchase Price', 'wp-ever-accounting' ),
 			'enabled'        => __( 'Enabled', 'wp-ever-accounting' ),
-			'actions'        => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -182,23 +181,17 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 		$item_id = $item->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$value = $item->get_attachment_image();
+				$edit_url = admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() );
+				$value    = '<a href="' . esc_url( $edit_url ) . '">' . $item->get_attachment_image() . '</a>';
 				break;
 			case 'name':
-				$name = $item->get_name();
-
-				$value = sprintf(
-					'<a class="row-title" href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'action'  => 'edit',
-								'item_id' => $item_id,
-							)
-						)
-					),
-					$name
+				$edit_url = admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() );
+				$nonce    = wp_create_nonce( 'item-nonce' );
+				$actions  = array(
+					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-items&tab=items&_wpnonce=' . $nonce . '&action=delete&item_id=' . $item->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
+				$value    = '<a href="' . esc_url( $edit_url ) . '"><strong>' . $item->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $item->get_category_id() );
@@ -214,42 +207,10 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				$value = eaccounting_price( $item->get_purchase_price() );
 				break;
 			case 'enabled':
-				ob_start();
-				eaccounting_toggle(
-					array(
-						'name'  => 'enabled',
-						'id'    => 'enabled_' . $item_id,
-						'value' => $item->get_enabled( 'edit' ),
-						'naked' => true,
-						'attr'  => array(
-							'data-id'    => $item_id,
-							'data-nonce' => wp_create_nonce( 'ea_edit_item' ),
-						),
-					)
-				);
-				$value = ob_get_contents();
-				ob_get_clean();
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'     => 'items',
-						'action'  => 'edit',
-						'item_id' => $item_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'     => 'items',
-						'action'  => 'delete',
-						'item_id' => $item_id,
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
+				$value  = '<label class="ea-toggle">';
+				$value .= '<input type="checkbox" class="item-status" style="" value="true" data-id="' . $item->get_id() . '" ' . checked( $item->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '</label>';
 				break;
 			default:
 				return parent::column_default( $item, $column_name );

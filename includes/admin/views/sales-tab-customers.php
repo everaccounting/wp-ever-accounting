@@ -1,6 +1,7 @@
 <?php
 /**
- * Admin View: Page - Sales Tab - Customers
+ * Page : Sales
+ * Tab: Customer
  *
  * @var array  $tabs
  * @var string $current_tab
