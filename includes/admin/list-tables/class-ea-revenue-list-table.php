@@ -136,7 +136,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * Renders the checkbox column in the incomes list table.
+	 * Renders the checkbox column in the revenues list table.
 	 *
 	 * @since  1.0.2
 	 *
@@ -165,8 +165,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 			case 'date':
 				$url   = eaccounting_admin_url(
 					array(
-						'tab'       => 'revenues',
-						'action'    => 'view',
+						'tab'        => 'revenues',
+						'action'     => 'edit',
 						'revenue_id' => $revenue_id,
 					)
 				);
@@ -186,15 +186,15 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'       => 'revenues',
-						'action'    => 'edit',
+						'tab'        => 'revenues',
+						'action'     => 'edit',
 						'revenue_id' => $revenue_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'revenues',
-						'action'    => 'delete',
+						'tab'        => 'revenues',
+						'action'     => 'delete',
 						'revenue_id' => $revenue_id,
 					)
 				);
@@ -228,7 +228,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string $which
 	 */
-	protected function extra_tablenav( $which ) {
+	protected function extra_tablenav_depricated( $which ) {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';

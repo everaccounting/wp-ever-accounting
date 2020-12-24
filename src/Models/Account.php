@@ -333,25 +333,6 @@ class Account extends ResourceModel {
 	*/
 
 	/**
-	 * Get currency object.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return Currency|null
-	 *
-	 */
-	public function get_currency() {
-		try {
-			$currency = new Currency( $this->get_currency_code() );
-			$this->set_prop( 'currency', $currency );
-
-			return $currency;
-		} catch ( \Exception $e ) {
-			return null;
-		}
-	}
-
-	/**
 	 * Set currency code from object.
 	 *
 	 * @since 1.1.0

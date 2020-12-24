@@ -28,7 +28,7 @@ $add_url = eaccounting_admin_url(
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
 <?php do_action( 'eaccounting_invoices_table_top' ); ?>
-	<form id="ea-invoices-table" method="get" action="<?php echo admin_url(); ?>">
+	<form id="ea-invoices-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 		<?php
 		$invoice_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-invoices' );
 		$invoice_table->display();

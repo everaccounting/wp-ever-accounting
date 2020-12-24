@@ -18,18 +18,18 @@ if ( empty( $account ) || ! $account->exists() ) {
 	wp_die( __( 'Sorry, Account does not exist', 'wp-ever-accounting' ) );
 }
 
-$sections   = array(
+$sections        = array(
 	'transactions' => __( 'Transactions', 'wp-ever-accounting' ),
 	'transfers'    => __( 'Transfers', 'wp-ever-accounting' ),
 );
-$sections   = apply_filters( 'eaccounting_account_sections', $sections );
+$sections        = apply_filters( 'eaccounting_account_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
 $current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
 $edit_url        = eaccounting_admin_url(
 	array(
-		'page'        => 'ea-banking',
-		'tab'         => 'accounts',
-		'action'      => 'edit',
+		'page'       => 'ea-banking',
+		'tab'        => 'accounts',
+		'action'     => 'edit',
 		'account_id' => $account->get_id(),
 	)
 );
@@ -68,7 +68,7 @@ $edit_url        = eaccounting_admin_url(
 							'tab'        => 'accounts',
 							'action'     => 'view',
 							'account_id' => $account_id,
-							'section'     => $section_id,
+							'section'    => $section_id,
 						)
 					);
 					?>

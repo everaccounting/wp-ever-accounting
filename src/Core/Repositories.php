@@ -16,13 +16,13 @@ use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Categories;
 use EverAccounting\Repositories\Currencies;
 use EverAccounting\Repositories\Customers;
+use EverAccounting\Repositories\Payments;
+use EverAccounting\Repositories\Revenues;
 use EverAccounting\Repositories\Notes;
 use EverAccounting\Repositories\LineItems;
 use EverAccounting\Repositories\Invoices;
 use EverAccounting\Repositories\Items;
 use EverAccounting\Abstracts\ResourceRepository;
-use EverAccounting\Repositories\Payments;
-use EverAccounting\Repositories\Revenues;
 use EverAccounting\Repositories\Transfers;
 use EverAccounting\Repositories\Vendors;
 

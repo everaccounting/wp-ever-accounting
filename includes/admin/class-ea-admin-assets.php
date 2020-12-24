@@ -230,7 +230,7 @@ class Admin_Assets {
 		//
 		//          // report page
 		//          if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
-		//              wp_enqueue_script( 'jquery-chartjs' );
+		              wp_enqueue_script( 'jquery-chartjs' );
 		//          }
 		//      }
 

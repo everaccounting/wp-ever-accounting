@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
 use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
@@ -24,6 +25,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Revenue extends ResourceModel {
 	use CurrencyTrait;
+	use AttachmentTrait;
 
 	/**
 	 * This is the name of this object type.
@@ -92,7 +94,7 @@ class Revenue extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( 'incomes' );
+		$this->repository = Repositories::load( 'revenues' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );

@@ -17,9 +17,11 @@ trait CurrencyTrait {
 	 */
 	public function get_currency() {
 		$currency = false;
-		if ( is_callable( $this, 'get_currency_code' ) && ! empty( $this->get_currency_code() ) ) {
-			$currency = eaccounting_get_currency( $this->get_currency_code() );
+		if ( array_key_exists( 'currency_code', $this->data ) ) {
+			$code     = $this->get_currency_code() ? $this->get_currency_code() : eaccounting()->settings->get( 'default_currency' );
+			$currency = eaccounting_get_currency( $code );
 		}
+
 		return $currency;
 	}
 
@@ -118,8 +120,9 @@ trait CurrencyTrait {
 	/**
 	 * Format amount.
 	 *
-	 * @param $amount
 	 * @since 1.1.0
+	 *
+	 * @param $amount
 	 *
 	 * @return string
 	 */
@@ -130,10 +133,11 @@ trait CurrencyTrait {
 	/**
 	 * Get converted amount.
 	 *
-	 * @param      $amount
+	 * @since 1.1.0
+	 *
 	 * @param      $code
 	 * @param null $rate
-	 * @since 1.1.0
+	 * @param      $amount
 	 */
 	public function get_converted_amount( $amount, $code, $rate = null ) {
 		//todo complete

@@ -1,282 +1,304 @@
 jQuery(function ($) {
 	'use strict';
 
-	var ea_category_controller = {
-		init: function () {
-			$('#ea-categories-list-table')
-				.on('change', '[name="enabled"]', this.list_table.toggle_enabled);
-			$('#ea-category-form')
-				.on('submit', this.form.submit);
-		},
-
-		list_table: {
-			toggle_enabled: function (e) {
-				e.preventDefault();
-				var nonce = $(this).data('nonce'),
-					id = $(this).data('id'),
-					enabled = $(this).is(':checked'),
-					data = {
-						action: 'eaccounting_edit_category',
-						id: id,
-						enabled: enabled,
-						nonce: nonce
-					};
-				$.post(ajaxurl, data, function (json) {
-					$.eaccounting_notice(json);
-				});
-			},
-		},
-
-		form: {
-
-			block: function () {
-				$('#ea-category-form').block({
-					message: null,
-					overlayCSS: {
-						background: '#fff',
-						opacity: 0.6
-					}
-				});
-			},
-
-			unblock: function () {
-				$('#ea-category-form').unblock();
-			},
-
-			submit: function (e) {
-				e.preventDefault();
-				ea_category_controller.form.block();
-				var data = $(this).serializeObject();
-				$.post(ajaxurl, data, function (json) {
-					$.eaccounting_notice(json);
-					$.eaccounting_redirect(json);
-				}).always(function (json) {
-					ea_category_controller.form.unblock();
-				});
-			}
-		}
-	};
-
-	var ea_currency_controller = {
-		init: function () {
-			$('#ea-currencies-list-table')
-				.on('change', '[name="enabled"]', this.list_table.toggle_enabled);
-			$('#ea-currency-form')
-				.on('change', '#code', this.form.update_currency_props)
-				.on('submit', this.form.submit);
-		},
-
-		list_table: {
-			toggle_enabled: function (e) {
-				e.preventDefault();
-				var nonce = $(this).data('nonce'),
-					id = $(this).data('id'),
-					enabled = $(this).is(':checked'),
-					data = {
-						action: 'eaccounting_edit_currency',
-						id: id,
-						enabled: enabled,
-						nonce: nonce
-					};
-				$.post(ajaxurl, data, function (json) {
-					$.eaccounting_notice(json);
-				});
-			},
-		},
-
-		form: {
-
-			block: function () {
-				$('#ea-currency-form').block({
-					message: null,
-					overlayCSS: {
-						background: '#fff',
-						opacity: 0.6
-					}
-				});
-			},
-
-			unblock: function () {
-				$('#ea-currency-form').unblock();
-			},
-			update_currency_props:function(e){
-				var code = e.target.value;
-				if (!code) {
-					return false;
-				}
-				var currency = eaccounting_form_i10n.global_currencies[code];
-				$('#name', '#ea-currency-form').val(currency.name).change()
-				$('#precision', '#ea-currency-form').val(currency.precision).change();
-				$('#position', '#ea-currency-form').val(currency.position).change();
-				$('#symbol', '#ea-currency-form').val(currency.symbol).change();
-				$('#decimal_separator', '#ea-currency-form')
-					.val(currency.decimal_separator)
-					.change();
-				$('#thousand_separator', '#ea-currency-form')
-					.val(currency.thousand_separator)
-					.change();
-			},
-			submit: function (e) {
-				e.preventDefault();
-				ea_currency_controller.form.block();
-				var data = $(this).serializeObject();
-				$.post(ajaxurl, data, function (json) {
-					$.eaccounting_notice(json);
-					$.eaccounting_redirect(json);
-				}).always(function (json) {
-					ea_currency_controller.form.unblock();
-				});
-			}
-		}
-	};
-
-	var ea_invoice_controller = {
-		init: function () {
-			$('#ea-invoice-form')
-				.on('click', '.add-line-item', this.form.add_line_item)
-				.on('select2:select', '.select-item', this.form.item_selected)
-				.on('click', '.delete-invoice-item', this.form.remove_line_item)
-				.on('click', '.edit-invoice-item, .save-invoice-item', this.form.edit_line_item)
-				.on('click', '.recalculate', this.form.recalculate)
-				.on('submit', this.form.submit);
-
-			$('#ea-invoice')
-				.on('click', '.receive-payment', this.view.receive_payment)
-
-			$(document.body).on('ea_invoice_updated', this.form.recalculate)
-		},
-		form: {
-			block: function () {
-				$('#ea-invoice-form').block({
-					message: null,
-					overlayCSS: {
-						background: '#fff',
-						opacity: 0.6
-					}
-				});
-			},
-
-			unblock: function () {
-				$('#ea-invoice-form').unblock();
-			},
-			add_line_item: function (e) {
-				e.preventDefault();
-				var line_item = $($('#ea-invoice-line-template').html());
-				var item_selector = $($('#ea-invoice-item-selector').html());
-				var item_selector_name = item_selector.attr('name');
-				var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
-				line_item.addClass('editing')
-				$(line_item).find(":input").each(function () {
-					var name = $(this).attr('name');
-					name = name.replace(/\[(\d+)\]/, '[' + (index) + ']');
-					$(this).attr('name', name).attr('id', name);
-				});
-				item_selector_name = item_selector_name.replace(/\[(\d+)\]/, '[' + (index) + ']');
-				item_selector.attr('name', item_selector_name).attr('id', item_selector_name);
-				item_selector.css({width: '90%', maxWidth: 'none'})
-				line_item.find('.ea-invoice__line-name').html(item_selector);
-				$('#ea-invoice__line-items').append(line_item);
-				$(document.body).trigger('ea_select2_init');
-			},
-			item_selected: function (e) {
-				var data = e.params.data;
-				$(e.target).closest('tr')
-					.find("input.item-name").val(data.item.name)
-					.end()
-					.find("input.invoice_unit_price").val(data.item.sale_price)
-					.end()
-					.find("input.invoice_item_quantity").val(1)
-					.end()
-					.find("input.invoice_item_tax").val(data.item.sales_tax_rate);
-				$('body').trigger('ea_invoice_updated');
-			},
-			remove_line_item: function (e) {
-				e.preventDefault();
-				$(this).closest('tr').remove();
-				ea_invoice_controller.form.recalculate();
-			},
-			edit_line_item:function(e){
-				e.preventDefault();
-				var $tr = $(this).closest('.ea-invoice__line');
-				if ($tr.hasClass('editing')) {
-					$tr.removeClass('editing');
-					$('body').trigger('ea_invoice_updated');
-					return false;
-				}
-				$tr.siblings('tr').removeClass('editing');
-				$tr.addClass('editing');
-			},
-			recalculate:function (){
-				ea_invoice_controller.form.block();
-				var data = $.extend({}, $('#ea-invoice-form').serializeObject(), {action: 'eaccounting_invoice_recalculate'});
-				$.post(ajaxurl, data, function (json) {
-					if (json.success) {
-						$('#ea-invoice-form .ea-invoice__items-wrapper').replaceWith(json.data.html);
-					}else{
-						$.eaccounting_notice(json);
-					}
-				}).always(function (json) {
-					ea_invoice_controller.form.unblock();
-				});
-			},
-			submit: function (e) {
-				e.preventDefault();
-				ea_invoice_controller.form.block();
-				var data = $('#ea-invoice-form').serializeObject();
-				$.post(ajaxurl, data, function (json) {
-					$.eaccounting_redirect(json);
-				}).always(function (json) {
-					$.eaccounting_notice(json);
-					ea_invoice_controller.form.unblock();
-				});
-			},
-		},
-		view:{
-			receive_payment:function (e){
-				e.preventDefault();
-				$('#ea-modal-add-invoice-payment').ea_modal();
-			}
-		},
-		list_table: {}
+	var maskInput = function (el, json) {
+		console.log(json);
+		$(el).inputmask('decimal', {
+			alias: 'numeric',
+			groupSeparator: json.thousand_separator,
+			autoGroup: true,
+			digits: json.precision,
+			radixPoint: json.decimal_separator,
+			digitsOptional: false,
+			allowMinus: false,
+			prefix: json.symbol,
+			placeholder: '0.000',
+			rightAlign: 0,
+			autoUnmask: true
+		});
 	}
 
-	var ea_item_controller = {};
-	var ea_customer_controller = {
-		init:function (){
-			$('#ea-customer-form')
-				.on('submit', this.form.submit);
+	var revenue_form = {
+		init: function () {
+			$(document)
+				.on('change', '#ea-revenue-form #account_id', this.update_amount_input)
+				.on('submit', '#ea-revenue-form', this.submit);
 		},
-		form:{
-			block: function () {
-				$('#ea-customer-form').block({
-					message: null,
-					overlayCSS: {
-						background: '#fff',
-						opacity: 0.6
-					}
-				});
-			},
 
-			unblock: function () {
-				$('#ea-customer-form').unblock();
-			},
-			submit:function (e) {
-				e.preventDefault();
-				ea_customer_controller.form.block();
-				var data = $('#ea-customer-form').serializeObject();
-				$.post(ajaxurl, data, function (json) {
-					$.eaccounting_redirect(json);
-				}).always(function (json) {
-					$.eaccounting_notice(json);
-					ea_customer_controller.form.unblock();
-				});
-			}
+		block: function () {
+			$('#ea-revenue-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
 		},
-		list_table:{}
+
+		unblock: function () {
+			$('#ea-revenue-form').unblock();
+		},
+
+		update_amount_input: function (e) {
+			var account_id = parseInt(e.target.value, 10);
+			console.log(account_id)
+			if (isNaN(account_id)) {
+				return false;
+			}
+			revenue_form.block();
+			var data = {
+				action: 'eaccounting_get_account_currency',
+				account_id: account_id,
+				_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+			}
+			$.post(ajaxurl, data, function (json) {
+
+				if (json.success) {
+					maskInput($('#ea-revenue-form #amount'), json.data);
+				}
+
+			}).always(function (json) {
+				revenue_form.unblock();
+				$.eaccounting_notice(json);
+			});
+		},
+
+		submit: function (e) {
+			e.preventDefault();
+			revenue_form.block();
+			var data = $('#ea-revenue-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				revenue_form.unblock();
+			});
+		}
+	}
+
+	var payment_form = {
+		init: function () {
+			$(document)
+				.on('change', '#ea-payment-form #account_id', this.update_amount_input)
+				.on('submit', '#ea-payment-form', this.submit);
+		},
+
+		block: function () {
+			$('#ea-payment-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-payment-form').unblock();
+		},
+
+		update_amount_input: function (e) {
+			var account_id = parseInt(e.target.value, 10);
+			console.log(account_id)
+			if (isNaN(account_id)) {
+				return false;
+			}
+			payment_form.block();
+			var data = {
+				action: 'eaccounting_get_account_currency',
+				account_id: account_id,
+				_wpnonce: eaccounting_form_i10n.nonce.get_currency,
+			}
+			$.post(ajaxurl, data, function (json) {
+
+				if (json.success) {
+					maskInput($('#ea-payment-form #amount'), json.data);
+				}
+
+			}).always(function (json) {
+				payment_form.unblock();
+				$.eaccounting_notice(json);
+			});
+		},
+
+		submit: function (e) {
+			e.preventDefault();
+			payment_form.block();
+			var data = $('#ea-payment-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				payment_form.unblock();
+			});
+		}
+	}
+
+	var account_form = {
+		init: function () {
+			$('#ea-account-form')
+				.on('select2:select', '#currency_code', this.update_amount_input)
+				.on('submit', this.submit);
+		},
+
+		block: function () {
+			$('#ea-account-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-account-form').unblock();
+		},
+
+		update_amount_input: function (e) {
+			var data = e.params.data;
+			maskInput($('#ea-account-form #opening_balance'), data.item);
+		},
+
+		submit: function (e) {
+			e.preventDefault();
+			account_form.block();
+			var data = $('#ea-account-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				account_form.unblock();
+			});
+		}
+	}
+
+	var transfer_form = {
+		init: function () {
+			$('#ea-transfer-form')
+				.on('change', '#from_account_id', this.update_amount_input)
+				.find('#from_account_id').trigger('change')
+				.end()
+				.on('submit', this.submit)
+		},
+
+		block: function () {
+			$('#ea-customer-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-transfer-form').unblock();
+		},
+
+		update_amount_input: function (e) {
+			var account_id = parseInt(e.target.value, 10);
+			console.log(account_id)
+			if (isNaN(account_id)) {
+				return false;
+			}
+			transfer_form.block();
+			var data = {
+				action: $(this).data('ajax_action'),
+				account_id: account_id,
+				_wpnonce: $(this).data('nonce'),
+			}
+			$.post(ajaxurl, data, function (json) {
+				if (json.success) {
+					maskInput($('#ea-transfer-form #amount'), json.data);
+				}
+
+			}).always(function (json) {
+				transfer_form.unblock();
+				$.eaccounting_notice(json);
+			});
+		},
+
+		submit: function (e) {
+			e.preventDefault();
+			transfer_form.block();
+			var data = $('#ea-transfer-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				transfer_form.unblock();
+			});
+		}
+	}
+
+	var customer_form = {
+		init: function () {
+			$('#ea-customer-form')
+				.on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-customer-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-customer-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			customer_form.block();
+			var data = $('#ea-customer-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				customer_form.unblock();
+			});
+		}
 	};
 
-	ea_category_controller.init();
-	ea_currency_controller.init();
-	ea_invoice_controller.init();
-	ea_customer_controller.init();
+	var vendor_form = {
+		init: function () {
+			$('#ea-vendor-form')
+				.on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-vendor-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-vendor-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			vendor_form.block();
+			var data = $('#ea-vendor-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				vendor_form.unblock();
+			});
+		}
+	};
+
+
+	revenue_form.init();
+	payment_form.init();
+	account_form.init();
+	transfer_form.init();
+	customer_form.init();
+	vendor_form.init();
 });

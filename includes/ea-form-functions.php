@@ -455,12 +455,17 @@ function eaccounting_file_input( $field ) {
 		)
 	);
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];
-	$field['value'] = ! isset( $field['value'] ) ? $field['default'] : $field['value'];
+	$field['value'] = ! isset( $field['value'] ) ? '' : $field['value'];
 	$tooltip        = ! empty( $field['tooltip'] ) ? eaccounting_help_tip( $field['tooltip'] ) : '';
 	$desc           = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
-	$link           = empty( $field['value'] ) ? '' : $field['value']->src;
-	$name           = empty( $field['value'] ) ? '' : $field['value']->name;
-	$id             = empty( $field['value'] ) ? '' : $field['value']->id;
+	$attachment     = new stdClass();
+	if ( ! empty( $field['value'] ) && 'attachment' === get_post_type( $field['value'] ) ) {
+		$attachment = get_post( $field['value'] );
+	}
+	$src  = ! isset( $attachment->ID ) ? '' : wp_get_attachment_thumb_url( $attachment->ID );
+	$link = ! isset( $attachment->ID ) ? '' : wp_get_attachment_image_url( $attachment->ID, 'large' );
+	$name = ! isset( $attachment->post_title ) ? '' : $attachment->post_title;
+	$id   = ! isset( $attachment->ID ) ? '' : $attachment->ID;
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
 			'<div class="ea-form-field ea-file-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
@@ -475,7 +480,7 @@ function eaccounting_file_input( $field ) {
 		<div class="ea-attachment <?php echo ! empty( $id ) ? 'has--image' : ''; ?>">
 			<div class="ea-attachment__preview">
 				<a class="ea-attachment__link" href="<?php echo esc_attr( $link ); ?>">
-					<img class="ea-attachment__image" src="<?php echo esc_attr( $link ); ?>" alt="<?php echo esc_attr( $name ); ?>">
+					<img class="ea-attachment__image" src="<?php echo esc_attr( $src ); ?>" alt="<?php echo esc_attr( $name ); ?>">
 				</a>
 			</div>
 			<button type="button" class="button-link ea-attachment__remove">Remove</button>
@@ -817,10 +822,10 @@ function eaccounting_currency_dropdown( $field ) {
 	}
 	$field = wp_parse_args(
 		array(
-			'value'        => $codes,
+			'value'        => $currency_code,
 			'default'      => $default_code,
 			'options'      => $options,
-			'map'          => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code}',
+			'map'          => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code, item:option}',
 			'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
 			'ajax_action'  => 'eaccounting_get_currencies',
 			'nonce_action' => 'ea_get_currencies',

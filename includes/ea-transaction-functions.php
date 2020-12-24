@@ -249,7 +249,7 @@ function eaccounting_delete_revenue( $revenue_id ) {
  * @type int    $contact_id     Contact id related to the transaction.
  * @type int    $document_id     Transaction related invoice id(optional).
  * @type int    $category_id    Category of the transaction.
- * @type string $expense_method Payment method used for the transaction.
+ * @type string $payment_method Payment method used for the transaction.
  * @type string $reference      Reference of the transaction.
  * @type string $description    Description of the transaction.
  *
@@ -374,7 +374,7 @@ function eaccounting_delete_transfer( $transfer_id ) {
  */
 function eaccounting_get_transfers( $args = array() ) {
 	global $wpdb;
-	$search_cols  = array( 'description', 'reference' );
+	$search_cols  = array( 'income.description', 'income.reference' );
 	$orderby_cols = array(
 		'id',
 		'date',

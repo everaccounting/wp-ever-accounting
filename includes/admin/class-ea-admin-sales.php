@@ -16,8 +16,9 @@ class EAccounting_Admin_Sales {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
-		add_action( 'eaccounting_sales_page_tab_customers', array( $this, 'render_customers_tab' ), 20 );
-		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ), 20 );
+		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ) );
+		add_action( 'eaccounting_sales_page_tab_revenues', array( $this, 'render_revenues_tab' ) );
+		add_action( 'eaccounting_sales_page_tab_customers', array( $this, 'render_customers_tab' ) );
 	}
 
 	/**
@@ -103,6 +104,15 @@ class EAccounting_Admin_Sales {
 		}
 	}
 
+	public function render_revenues_tab(){
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$invoice_id = isset( $_GET['revenue_id'] ) ? absint( $_GET['revenue_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/revenues/edit-revenue.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/revenues/list-revenue.php';
+		}
+	}
 
 }
 

@@ -133,7 +133,7 @@ $back_url = remove_query_arg( array( 'action', 'customer_id' ) );
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Photo', 'wp-ever-accounting' ),
 							'name'          => 'thumbnail_id',
-							'value'         => $customer->get_attachment(),
+							'value'         => $customer->get_thumbnail_id(),
 						)
 					);
 					eaccounting_hidden_input(

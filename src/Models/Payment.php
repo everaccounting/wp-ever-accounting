@@ -93,7 +93,7 @@ class Payment extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( 'expenses' );
+		$this->repository = Repositories::load( 'payments' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
