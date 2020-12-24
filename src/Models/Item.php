@@ -12,6 +12,7 @@ namespace EverAccounting\Models;
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,7 +38,7 @@ class Item extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	public $cache_group = 'es_items';
+	public $cache_group = 'ea_items';
 
 	/**
 	 * Item Data array.

@@ -206,21 +206,10 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 				$value = sprintf( '<span class="dashicons dashicons-marker" style="color:%s;">&nbsp;</span>', $category->get_color() );
 				break;
 			case 'enabled':
-				ob_start();
-				eaccounting_toggle(
-					array(
-						'name'  => 'enabled',
-						'id'    => 'enabled_' . $category->get_id(),
-						'value' => $category->get_enabled( 'edit' ),
-						'naked' => true,
-						'attr'  => array(
-							'data-id'    => $category->get_id(),
-							'data-nonce' => wp_create_nonce( 'ea_edit_category' ),
-						),
-					)
-				);
-				$value = ob_get_contents();
-				ob_get_clean();
+				$value  = '<label class="ea-toggle">';
+				$value .= '<input type="checkbox" class="category-status" style="" value="true" data-id="' . $category->get_id() . '" ' . checked( $category->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '</label>';
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
