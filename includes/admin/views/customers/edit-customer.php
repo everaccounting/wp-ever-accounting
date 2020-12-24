@@ -16,15 +16,14 @@ defined( 'ABSPATH' ) || exit();
 try {
 	$customer = new \EverAccounting\Models\Customer( $customer_id );
 } catch ( Exception $e ) {
-	wp_redirect(admin_url('admin.php?page=ea-sales&tab=customers'));
+	wp_redirect( admin_url( 'admin.php?page=ea-sales&tab=customers' ) );
 }
-$title    = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' );
-$back_url = remove_query_arg( array( 'action', 'customer_id' ) );
+$title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' );
 ?>
 <div class="ea-card">
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-		<a href="<?php echo $back_url; ?>" class="button button-secondary"><?php esc_html_e( 'Back', 'wp-ever-accounting' ); ?></a>
+		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 	</div>
 	<div class="ea-card__body">
 		<div class="ea-card__inside">

@@ -22,14 +22,13 @@ if ( $vendor->exists() && 'vendor' !== $vendor->get_type() ) {
 	exit();
 }
 
-$title    = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( 'Add Vendor', 'wp-ever-accounting' );
-$back_url = remove_query_arg( array( 'action', 'vendor_id' ) );
+$title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( 'Add Vendor', 'wp-ever-accounting' );
 ?>
 
 <div class="ea-card">
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php echo $title; ?></h3>
-		<a href="<?php echo $back_url; ?>" class="button button-secondary"><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
+		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 	</div>
 	<div class="ea-card__body">
 		<div class="ea-card__inside">

@@ -14,7 +14,7 @@ class EAccounting_Admin_Tools {
 	 * EAccounting_Admin_Banking constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
+		add_action( 'admin_menu', array( $this, 'register_page' ), 70 );
 		add_action( 'eaccounting_tools_page_tab_export', array( $this, 'render_export_page' ), 20 );
 		add_action( 'eaccounting_tools_page_tab_import', array( $this, 'render_import_page' ), 20 );
 		add_action( 'eaccounting_tools_page_tab_system_info', array( $this, 'render_system_info_page' ), 20 );

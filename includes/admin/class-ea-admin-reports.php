@@ -18,7 +18,7 @@ class EAccounting_Admin_Reports {
 	 *
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 20 );
+		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 80 );
 		add_action( 'eaccounting_render_report_sales', array( $this, 'render_sales_report' ) );
 	}
 

@@ -20,15 +20,12 @@ try {
 	wp_die( $e->getMessage() );
 }
 $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : __( 'Add Invoice', 'wp-ever-accounting' );
-$back_url = remove_query_arg( array( 'action', 'invoice_id' ) );
-
 ?>
 <div class="ea-invoice">
 	<div class="ea-card">
 		<div class="ea-card__header">
 			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-
-			<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt">&nbsp;</span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
+			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>	</div>
 		</div>
 
 		<div class="ea-card__inside">
