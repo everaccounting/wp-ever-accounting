@@ -20,7 +20,6 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$back_url = remove_query_arg( array( 'action', 'income_id' ) );
 $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 ?>
 
@@ -32,7 +31,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 					<h3 class="ea-card__title"><?php _e( 'Income Voucher', 'wp-ever-accounting' ); ?></h3>
 					<div>
 						<a href="<?php echo $edit_url; ?>" class="button-secondary button"><?php _e( 'Edit', 'wp-ever-accounting' ); ?></a>
-						<a href="<?php echo $back_url; ?>" class="button button-secondary"><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
+						<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>	</div>
 						<button class="button button-secondary print-button"><?php _e( 'Print', 'wp-ever-accounting' ); ?></button>
 					</div>
 				</div>

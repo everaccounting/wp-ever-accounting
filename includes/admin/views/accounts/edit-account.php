@@ -17,14 +17,13 @@ try {
 	wp_die( $e->getMessage() );
 }
 
-$title    = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __( 'Add Account', 'wp-ever-accounting' );
-$back_url = remove_query_arg( array( 'action', 'account_id' ) );
+$title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __( 'Add Account', 'wp-ever-accounting' );
 ?>
 
 <div class="ea-card">
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php echo $title; ?></h3>
-		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
+		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 	</div>
 	<div class="ea-card__body">
 		<div class="ea-card__inside">
@@ -139,7 +138,7 @@ $back_url = remove_query_arg( array( 'action', 'account_id' ) );
 </div>
 <?php
 eaccounting_enqueue_js(
-		"
+	"
 	jQuery('#ea-account-form #opening_balance').inputmask('decimal', {
 			alias: 'numeric',
 			groupSeparator: '" . $account->get_currency_thousand_separator() . "',

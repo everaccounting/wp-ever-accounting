@@ -15,7 +15,7 @@ class EAccounting_Admin_Expenses {
 	 * EAccounting_Admin_Expenses constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
+		add_action( 'admin_menu', array( $this, 'register_page' ), 40 );
 		//add_action( 'eaccounting_expenses_page_tab_bills', array( $this, 'render_bills_tab' ), 20 );
 		add_action( 'eaccounting_expenses_page_tab_payments', array( $this, 'render_payments_tab' ), 20 );
 		add_action( 'eaccounting_expenses_page_tab_vendors', array( $this, 'render_vendors_tab' ), 20 );
