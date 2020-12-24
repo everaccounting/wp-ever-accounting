@@ -262,7 +262,6 @@ class Ajax {
 		$posted = eaccounting_clean( $_REQUEST );
 
 		$created = eaccounting_insert_customer( $posted );
-		error_log(print_r($posted, true));
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -487,6 +486,7 @@ class Ajax {
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
 
 		$created = eaccounting_insert_transfer( $posted );
+
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(

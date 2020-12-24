@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
 class Account extends ResourceModel {
 	use CurrencyTrait;
 	use AttachmentTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -61,6 +62,8 @@ class Account extends ResourceModel {
 		'date_created'    => null,
 	);
 
+	protected $balance = 0.00;
+
 	/**
 	 * Get the account if ID is passed, otherwise the account is new and empty.
 	 *
@@ -72,15 +75,14 @@ class Account extends ResourceModel {
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
-
 		if ( $data instanceof self ) {
 			$this->set_id( $data->get_id() );
 		} elseif ( is_numeric( $data ) ) {
 			$this->set_id( $data );
+		} elseif ( is_object( $data ) || is_array( $data )) {
+			$this->set_props( $data );
 		} elseif ( ! empty( $data->id ) ) {
 			$this->set_id( $data->id );
-		} elseif ( is_array( $data ) ) {
-			$this->set_props( $data );
 		} else {
 			$this->set_object_read( true );
 		}
@@ -208,8 +210,9 @@ class Account extends ResourceModel {
 	/**
 	 * Get the thumbnail id.
 	 *
-	 * @param string $context
 	 * @since 1.1.0
+	 *
+	 * @param string $context
 	 *
 	 * @return int
 	 */
@@ -316,8 +319,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set the thumbnail id.
 	 *
-	 * @param int $thumbnail_id
 	 * @since 1.1.0
+	 *
+	 * @param int $thumbnail_id
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
 		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
@@ -353,9 +357,10 @@ class Account extends ResourceModel {
 	 * @return float|string
 	 *
 	 */
-	public function get_balance( $format = false ) {
-		if ( $format ) {
-			return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->format();
+	public function get_balance() {
+		if ( ! empty( $this->balance ) ) {
+			return $this->balance;
+			//return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->format();
 		}
 
 		return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->getValue();
@@ -370,7 +375,7 @@ class Account extends ResourceModel {
 	 *
 	 */
 	protected function set_balance( $balance ) {
-		$this->set_prop( 'balance', (float) eaccounting_sanitize_number( $balance, true ) );
+		$this->balance = $balance;
 	}
 
 	/*

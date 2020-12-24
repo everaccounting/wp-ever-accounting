@@ -313,6 +313,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 	if ( empty( $args ) ) {
 		return false;
 	}
+
 	try {
 		// The id will be provided when updating an item.
 		$args = wp_parse_args( $args, array( 'id' => null ) );
@@ -328,7 +329,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		return $wp_error ? new WP_Error( 'insert_error', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 

@@ -204,9 +204,9 @@ jQuery(function ($) {
 			}
 			transfer_form.block();
 			var data = {
-				action: $(this).data('ajax_action'),
+				action: 'eaccounting_get_account_currency',
 				account_id: account_id,
-				_wpnonce: $(this).data('nonce'),
+				_wpnonce: eaccounting_form_i10n.nonce.get_currency,
 			}
 			$.post(ajaxurl, data, function (json) {
 				if (json.success) {
@@ -294,6 +294,36 @@ jQuery(function ($) {
 		}
 	};
 
+	var category_form = {
+		init: function () {
+			$('#ea-category-form')
+				.on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-category-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-category-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			category_form.block();
+			var data = $('#ea-category-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				category_form.unblock();
+			});
+		}
+	};
 
 	revenue_form.init();
 	payment_form.init();
@@ -301,4 +331,5 @@ jQuery(function ($) {
 	transfer_form.init();
 	customer_form.init();
 	vendor_form.init();
+	category_form.init();
 });

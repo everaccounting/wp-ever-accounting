@@ -80,7 +80,7 @@ class EAccounting_Admin_Banking {
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_accounts_page() {
+	public function render_accounts_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['account_id'] ) ) {
 			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
