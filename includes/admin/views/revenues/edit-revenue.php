@@ -1,9 +1,11 @@
 <?php
 /**
  * Admin Revenue Edit Page.
+ * Page: Sales
+ * Tab: Revenue
  *
  * @since       1.0.2
- * @subpackage  Admin/Sales/Revenues
+ * @subpackage  Admin/Views/Revenues
  * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
@@ -14,12 +16,16 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
+
+$back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 ?>
 
 <div class="ea-card">
 	<div class="ea-card__header">
+
 		<h3 class="ea-card__title"><?php echo $revenue->exists() ? __( 'Update Income', 'wp-ever-accounting' ) : __( 'Add Income', 'wp-ever-accounting' ); ?></h3>
 		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
+
 	</div>
 
 	<div class="ea-card__inside">

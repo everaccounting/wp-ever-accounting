@@ -35,3 +35,18 @@ $add_url = eaccounting_admin_url(
 	<input type="hidden" name="tab" value="categories"/>
 </form>
 <?php do_action( 'eaccounting_categories_table_bottom' ); ?>
+<?php
+eaccounting_enqueue_js(
+		"
+	jQuery('.category-status').on('change', function(e){
+		jQuery.post('" . eaccounting()->ajax_url() . "', {
+			action:'eaccounting_edit_category',
+			id: $(this).data('id'),
+			enabled: $(this).is(':checked'),
+			nonce: '" . wp_create_nonce( 'ea_edit_category' ) . "',
+		}, function(json){
+			$.eaccounting_notice(json);
+		});
+	});
+"
+);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle the Expense object.
+ * Handle the Payment object.
  *
  * @package     EverAccounting\Models
  * @class       Payment
@@ -32,7 +32,7 @@ class Payment extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'payments';
+	protected $object_type = 'payment';
 
 	/**
 	 * @since 1.1.0
@@ -49,7 +49,7 @@ class Payment extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'type'           => 'expense',
+		'type'           => 'payment',
 		'payment_date'   => null,
 		'amount'         => 0.00,
 		'currency_code'  => '', // protected
@@ -99,8 +99,8 @@ class Payment extends ResourceModel {
 			$this->repository->read( $this );
 		}
 
-		// If not expense then reset to default
-		if ( 'expense' !== $this->get_type() ) {
+		// If not payment then reset to default
+		if ( 'payment' !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}

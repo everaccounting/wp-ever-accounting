@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit();
 $payment_id = isset( $_REQUEST['payment_id'] ) ? absint( $_REQUEST['payment_id'] ) : null;
 try {
-	$payment = new \EverAccounting\Models\Expense( $payment_id );
+	$payment = new \EverAccounting\Models\Payment( $payment_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }

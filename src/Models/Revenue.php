@@ -32,7 +32,7 @@ class Revenue extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'revenues';
+	protected $object_type = 'revenue';
 
 	/**
 	 * @since 1.1.0
@@ -49,7 +49,7 @@ class Revenue extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'type'           => 'income',
+		'type'           => 'revenue',
 		'type_id'        => null,
 		'payment_date'   => null,
 		'amount'         => 0.00,
@@ -100,8 +100,8 @@ class Revenue extends ResourceModel {
 			$this->repository->read( $this );
 		}
 
-		// If not income then reset to default
-		if ( 'income' !== $this->get_type() ) {
+		// If not revenue then reset to default
+		if ( 'revenue' !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}

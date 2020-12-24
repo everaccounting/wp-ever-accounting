@@ -18,7 +18,7 @@ class EAccounting_Admin_Item {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
-		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_page' ), 20 );
+		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_tab' ), 20 );
 	}
 
 	/**
@@ -64,11 +64,11 @@ class EAccounting_Admin_Item {
 	}
 
 	/**
-	 * Render Items page.
+	 * Render Items tab.
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_items_page() {
+	public function render_items_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			$item_id = isset( $_GET['item_id'] ) ? absint( $_GET['item_id'] ) : null;

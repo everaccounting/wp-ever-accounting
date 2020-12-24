@@ -103,8 +103,8 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 		return array(
 			'cb'             => '<input type="checkbox" />',
 			'invoice_number' => __( 'Number', 'wp-ever-accounting' ),
-			'name'           => __( 'Customer Name', 'wp-ever-accounting' ),
 			'total'          => __( 'Total', 'wp-ever-accounting' ),
+			'name'           => __( 'Customer Name', 'wp-ever-accounting' ),
 			'issue_date'     => __( 'Invoice Date', 'wp-ever-accounting' ),
 			'due_date'       => __( 'Due Date', 'wp-ever-accounting' ),
 			'status'         => __( 'Status', 'wp-ever-accounting' ),
@@ -195,11 +195,11 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 					$invoice_number
 				);
 				break;
-			case 'name':
-				$value = $invoice->get_name();
-				break;
 			case 'total':
 				$value = eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() );
+				break;
+			case 'name':
+				$value = $invoice->get_name();
 				break;
 			case 'issue_date':
 				$value = eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' );

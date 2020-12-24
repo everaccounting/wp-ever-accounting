@@ -82,7 +82,7 @@ $edit_url        = eaccounting_admin_url(
 				<?php
 				switch ( $current_section ) {
 					case 'transactions':
-					case 'incomes':
+					case 'invoices':
 						include dirname( __FILE__ ) . '/customer-sections/' . sanitize_file_name( $current_section ) . '.php';
 						break;
 					default:

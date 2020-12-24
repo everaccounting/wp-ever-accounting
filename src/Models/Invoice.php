@@ -35,7 +35,7 @@ class Invoice extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_invoices';
@@ -44,7 +44,7 @@ class Invoice extends ResourceModel {
 	 * Contains a reference to the repository for this class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var Invoices
 	 */
 	protected $repository;
@@ -53,7 +53,7 @@ class Invoice extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -92,7 +92,7 @@ class Invoice extends ResourceModel {
 	 * Temporarily stores discount
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var float
 	 */
 	protected $discount = 0;
@@ -101,7 +101,7 @@ class Invoice extends ResourceModel {
 	 * Order items will be stored here, sometimes before they persist in the DB.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $line_items = array();
@@ -110,14 +110,14 @@ class Invoice extends ResourceModel {
 	 * Order items that need deleting are stored here.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $line_items_to_delete = array();
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	private $status_transition = array();
@@ -224,7 +224,7 @@ class Invoice extends ResourceModel {
 	 * @when  due date passed but not paid is overdue.
 	 *
 	 * @since 1.0.1
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function get_statuses() {
@@ -288,7 +288,7 @@ class Invoice extends ResourceModel {
 	 * Get invoice status nice name.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return mixed|string
 	 */
 	public function get_status_nicename() {
@@ -461,7 +461,7 @@ class Invoice extends ResourceModel {
 	 * Get country nicename.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_country_nicename() {
@@ -566,7 +566,7 @@ class Invoice extends ResourceModel {
 	 * Get the invoice total.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return float
 	 */
 	public function get_total( $context = 'edit' ) {
@@ -695,7 +695,7 @@ class Invoice extends ResourceModel {
 	 * Get item ids.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_line_item_ids() {
@@ -729,12 +729,12 @@ class Invoice extends ResourceModel {
 	 * Get payments.
 	 *
 	 * @since 1.1.0
-	 * 
-	 * @return Income[]
+	 *
+	 * @return Revenue[]
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {
-			return eaccounting_get_incomes(
+			return eaccounting_get_revenues(
 				array(
 					'document_id' => $this->get_id(),
 					'type'        => 'income',
@@ -749,7 +749,7 @@ class Invoice extends ResourceModel {
 	 * Get total paid
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return float|int|string
 	 */
 	public function get_total_paid() {
@@ -766,7 +766,7 @@ class Invoice extends ResourceModel {
 	 * Get total due.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return float|int
 	 */
 	public function get_total_due() {
@@ -1369,7 +1369,7 @@ class Invoice extends ResourceModel {
 	 * Calculate.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @throws \Exception
 	 */
 	public function recalculate() {
@@ -1426,7 +1426,7 @@ class Invoice extends ResourceModel {
 	 * Set currency rate if not present.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function maybe_set_currency_rate() {
@@ -1440,7 +1440,7 @@ class Invoice extends ResourceModel {
 	 * Set customer data if not present.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function maybe_set_customer_info() {
@@ -1471,7 +1471,7 @@ class Invoice extends ResourceModel {
 	 * Generate invoice key.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function maybe_set_key() {
@@ -1536,7 +1536,7 @@ class Invoice extends ResourceModel {
 	 * Get next invoice number.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_next_invoice_number() {
@@ -1614,9 +1614,9 @@ class Invoice extends ResourceModel {
 
 	/**
 	 * Add note.
-	 * 
+	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param       $note
 	 * @param false $customer_note
 	 *
@@ -1662,7 +1662,7 @@ class Invoice extends ResourceModel {
 	 * Checks if the invoice has a given status.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param $status
 	 *
 	 * @return bool
@@ -1675,7 +1675,7 @@ class Invoice extends ResourceModel {
 	 * Check if an invoice is editable.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function is_editable() {
@@ -1686,7 +1686,7 @@ class Invoice extends ResourceModel {
 	 * Check if tax inclusive or not.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return mixed|null
 	 */
 	public function is_tax_inclusive() {
@@ -1697,7 +1697,7 @@ class Invoice extends ResourceModel {
 	 * Get the type of discount.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function is_fixed_discount() {

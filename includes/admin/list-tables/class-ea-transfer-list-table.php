@@ -90,9 +90,9 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 		return array(
 			'cb'              => '<input type="checkbox" />',
 			'date'            => __( 'Date', 'wp-ever-accounting' ),
+			'amount'          => __( 'Amount', 'wp-ever-accounting' ),
 			'from_account_id' => __( 'From Account', 'wp-ever-accounting' ),
 			'to_account_id'   => __( 'To Account', 'wp-ever-accounting' ),
-			'amount'          => __( 'Amount', 'wp-ever-accounting' ),
 			'reference'       => __( 'Reference', 'wp-ever-accounting' ),
 			'actions'         => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -135,7 +135,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * Renders the checkbox column in the incomes list table.
+	 * Renders the checkbox column in the transfers list table.
 	 *
 	 * @param Transfer $transfer The current object.
 	 *
@@ -171,6 +171,10 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				);
 				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $transfer->get_date() ) ) );
 				break;
+			case 'amount':
+				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
+				$value   = eaccounting_price( $transfer->get_amount(), $account->get_currency_code() );
+				break;
 			case 'from_account_id':
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
@@ -178,9 +182,6 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 			case 'to_account_id':
 				$account = eaccounting_get_account( $transfer->get_to_account_id( 'edit' ) );
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
-				break;
-			case 'amount':
-				$value = $transfer->get_formatted_amount();
 				break;
 			case 'reference':
 				$value = $transfer->get_reference();
@@ -322,7 +323,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 			);
 		}
 
-		$args        = apply_filters( 'eaccounting_income_table_query_args', $args, $this );
+		$args        = apply_filters( 'eaccounting_transfer_table_query_args', $args, $this );
 		$this->items = eaccounting_get_transfers( $args );
 
 		$this->total_count = eaccounting_get_transfers( array_merge( $args, array( 'count_total' => true ) ) );

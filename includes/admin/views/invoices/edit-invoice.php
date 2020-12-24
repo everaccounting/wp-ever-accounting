@@ -44,7 +44,6 @@ $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : 
 							'creatable'     => true,
 						)
 					);
-
 					eaccounting_currency_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',

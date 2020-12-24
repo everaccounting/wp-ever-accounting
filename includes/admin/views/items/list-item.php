@@ -37,3 +37,18 @@ $add_url = eaccounting_admin_url(
 	<input type="hidden" name="tab" value="items"/>
 </form>
 <?php do_action( 'eaccounting_items_table_bottom' ); ?>
+<?php
+eaccounting_enqueue_js(
+		"
+	jQuery('.item-status').on('change', function(e){
+		jQuery.post('" . eaccounting()->ajax_url() . "', {
+			action:'eaccounting_edit_item',
+			id: $(this).data('id'),
+			enabled: $(this).is(':checked'),
+			nonce: '" . wp_create_nonce( 'ea_edit_item' ) . "',
+		}, function(json){
+			$.eaccounting_notice(json);
+		});
+	});
+"
+);
