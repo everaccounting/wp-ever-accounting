@@ -41,28 +41,3 @@ $accounts_table->prepare_items();
 	<?php do_action( 'eaccounting_accounts_table_bottom' ); ?>
 
 <?php
-eaccounting_enqueue_js(
-	"
-	jQuery( '.wp-list-table [name=\"enabled\"]' ).on( 'change', function(e){
-				e.preventDefault();
-				var nonce = jQuery(this).data('nonce'),
-					data = {
-						action: 'eaccounting_edit_account',
-						id: jQuery(this).data('id'),
-						enabled: jQuery(this).is(':checked'),
-						_wpnonce: '" . wp_create_nonce( 'ea_edit_account' ) . " '
-					};
-				jQuery.post(ajaxurl, data, function (json) {
-					jQuery.eaccounting_notice(json);
-				});
-	} );
-	jQuery( '.wp-list-table .row-actions delete a' ).click( function() {
-		if ( window.confirm('" . esc_js( __( 'Are you sure you want to clear all logs from the database?', 'woocommerce' ) ) . "') ) {
-			return true;
-		}
-		return false;
-	});
-
-	"
-
-);

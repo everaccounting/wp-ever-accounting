@@ -128,7 +128,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string $column_name The name of the column
 	 *
-	 * @param TransactionModel $transaction
+	 * @param  $transaction
 	 *
 	 * @return string The column value.
 	 * @since 1.0.2
@@ -140,14 +140,14 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				$date   = $transaction->get_payment_date();
 				$type   = $transaction->get_type();
 				$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
-				$tab    = 'expense' !== $type ? 'incomes' : 'payments';
-				$object = 'expense' !== $type ? 'income_id' : 'payment_id';
+				$tab    = 'expense' !== $type ? 'revenues' : 'payments';
+				$object = 'expense' !== $type ? 'revenue_id' : 'payment_id';
 				$value  = sprintf(
 					'<a href="%1$s">%2$s</a>',
 					esc_url(
 						eaccounting_admin_url(
 							array(
-								'action' => 'view',
+								'action' => 'edit',
 								'page'   => $page,
 								'tab'    => $tab,
 								$object  => $transaction->get_id(),
@@ -167,14 +167,14 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 			case 'type':
 				$type  = $transaction->get_type();
 				$types = eaccounting_get_transaction_types();
-				$value  = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
+				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $transaction->get_category_id( 'edit' ) );
-				$value   = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				$value    = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 				break;
 			case 'reference':
-				$value   = $transaction->get_reference();
+				$value = $transaction->get_reference();
 				break;
 			default:
 				return parent::column_default( $transaction, $column_name );
@@ -203,9 +203,9 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 	 */
 	protected function extra_tablenav( $which ) {
 		if ( 'top' === $which ) {
-			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
-			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
-			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
+			$start_date = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
+			$end_date   = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
 			eaccounting_input_date_range(
@@ -309,7 +309,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 			);
 		}
 
-		$args        = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
+		$args = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
 		eaccounting_get_currencies(
 			array(
 				'number' => '-1',

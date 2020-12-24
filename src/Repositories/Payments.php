@@ -11,7 +11,7 @@
 namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\ResourceRepository;
-use EverAccounting\Models\Expense;
+use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,12 +22,12 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Expenses extends ResourceRepository {
+class Payments extends ResourceRepository {
 	/**
 	 * Name of the table.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	const TABLE = 'ea_transactions';
@@ -36,7 +36,7 @@ class Expenses extends ResourceRepository {
 	 * Table name.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -45,7 +45,7 @@ class Expenses extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data_type = array(
@@ -72,7 +72,7 @@ class Expenses extends ResourceRepository {
 	/**
 	 * Method to read a item from the database.
 	 *
-	 * @param Expense $item Item object.
+	 * @param Payment $item Item object.
 	 *
 	 */
 	public function read( &$item ) {

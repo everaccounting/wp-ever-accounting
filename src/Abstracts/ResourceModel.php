@@ -1067,27 +1067,6 @@ abstract class ResourceModel {
 
 
 	/**
-	 * Get attachment.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return false|\stdClass
-	 */
-	public function get_attachment() {
-		if ( is_callable( array( $this, 'get_attachment_id' ) ) && $this->get_attachment_id() && 'attachment' === get_post_type( $this->get_attachment_id() ) ) {
-			$attachment   = get_post( $this->get_attachment_id() );
-			$output       = new \stdClass();
-			$output->id   = $attachment->ID;
-			$output->name = $attachment->post_title;
-			$output->src  = $attachment->guid;
-			return $output;
-		}
-
-		return false;
-	}
-
-
-	/**
 	 * @since 1.1.0
 	 *
 	 * @param $required

@@ -16,8 +16,8 @@ use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Categories;
 use EverAccounting\Repositories\Currencies;
 use EverAccounting\Repositories\Customers;
-use EverAccounting\Repositories\Expenses;
-use EverAccounting\Repositories\Incomes;
+use EverAccounting\Repositories\Payments;
+use EverAccounting\Repositories\Revenues;
 use EverAccounting\Repositories\Notes;
 use EverAccounting\Repositories\LineItems;
 use EverAccounting\Repositories\Invoices;
@@ -60,8 +60,8 @@ class Repositories {
 		'currencies' => Currencies::class,
 		'customers'  => Customers::class,
 		'vendors'    => Vendors::class,
-		'incomes'    => Incomes::class,
-		'expenses'   => Expenses::class,
+		'revenues'   => Revenues::class,
+		'payments'   => Payments::class,
 		'accounts'   => Accounts::class,
 		'invoices'   => Invoices::class,
 		'line-items' => LineItems::class,
@@ -142,7 +142,7 @@ class Repositories {
 	 * @param string $object_type Name of object.
 	 *
 	 * @throws \Exception When validation fails.
-	 * 
+	 *
 	 * @return Repositories
 	 */
 	public static function load( $object_type ) {
@@ -153,7 +153,7 @@ class Repositories {
 	 * Returns the class name of the current repository.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_repository_class() {
@@ -164,7 +164,7 @@ class Repositories {
 	 * Returns the object type of the current repository.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_object_type() {

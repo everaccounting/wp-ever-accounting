@@ -165,7 +165,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				$url   = eaccounting_admin_url(
 					array(
 						'tab'         => 'transfers',
-						'action'      => 'view',
+						'action'      => 'edit',
 						'transfer_id' => $transfer_id,
 					)
 				);
@@ -198,6 +198,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 						'tab'         => 'transfers',
 						'action'      => 'delete',
 						'transfer_id' => $transfer_id,
+						'_wpnonce'    => wp_create_nonce( 'transfer-nonce' ),
 					)
 				);
 				$actions  = array(

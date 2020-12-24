@@ -1,15 +1,15 @@
 <?php
 /**
- * Income list table
+ * Revenue list table
  *
- * Admin incomes list table, show all the incoming transactions.
+ * Admin revenues list table, show all the incoming transactions.
  *
  * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Income;
+use EverAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -18,10 +18,10 @@ if ( ! class_exists( '\EAccounting_List_Table' ) ) {
 }
 
 /**
- * Class EAccounting_Income_List_Table
+ * Class EAccounting_Revenue_List_Table
  * @since 1.1.0
  */
-class EAccounting_Income_List_Table extends EAccounting_List_Table {
+class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *
@@ -51,8 +51,8 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 		$args = (array) wp_parse_args(
 			$args,
 			array(
-				'singular' => 'income',
-				'plural'   => 'incomes',
+				'singular' => 'revenue',
+				'plural'   => 'revenues',
 			)
 		);
 
@@ -136,16 +136,16 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * Renders the checkbox column in the incomes list table.
+	 * Renders the checkbox column in the revenues list table.
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Income $income The current object.
+	 * @param Revenue $revenue The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
-	function column_cb( $income ) {
-		return sprintf( '<input type="checkbox" name="income_id[]" value="%d"/>', $income->get_id() );
+	function column_cb( $revenue ) {
+		return sprintf( '<input type="checkbox" name="revenue_id[]" value="%d"/>', $revenue->get_id() );
 	}
 
 	/**
@@ -155,47 +155,47 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string   $column_name The name of the column
 	 *
-	 * @param Income $income
+	 * @param Revenue $revenue
 	 *
 	 * @return string The column value.
 	 */
-	function column_default( $income, $column_name ) {
-		$income_id = $income->get_id();
+	function column_default( $revenue, $column_name ) {
+		$revenue_id = $revenue->get_id();
 		switch ( $column_name ) {
 			case 'date':
 				$url   = eaccounting_admin_url(
 					array(
-						'tab'       => 'incomes',
-						'action'    => 'view',
-						'income_id' => $income_id,
+						'tab'        => 'revenues',
+						'action'     => 'edit',
+						'revenue_id' => $revenue_id,
 					)
 				);
-				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $income->get_payment_date() ) ) );
+				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $revenue->get_payment_date() ) ) );
 				break;
 			case 'amount':
-				$value = $income->format_amount( $income->get_amount() );
+				$value = $revenue->format_amount( $revenue->get_amount() );
 				break;
 			case 'account_id':
-				$account = eaccounting_get_account( $income->get_account_id( 'edit' ) );
+				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 				break;
 			case 'category_id':
-				$account = eaccounting_get_category( $income->get_category_id( 'edit' ) );
+				$account = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
 				$value   = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'       => 'incomes',
-						'action'    => 'edit',
-						'income_id' => $income_id,
+						'tab'        => 'revenues',
+						'action'     => 'edit',
+						'revenue_id' => $revenue_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'incomes',
-						'action'    => 'delete',
-						'income_id' => $income_id,
+						'tab'        => 'revenues',
+						'action'     => 'delete',
+						'revenue_id' => $revenue_id,
 					)
 				);
 				$actions  = array(
@@ -205,10 +205,10 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 				$value    = $this->row_actions( $actions );
 				break;
 			default:
-				return parent::column_default( $income, $column_name );
+				return parent::column_default( $revenue, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_income_list_table_' . $column_name, $value, $income );
+		return apply_filters( 'eaccounting_revenue_list_table_' . $column_name, $value, $revenue );
 	}
 
 	/**
@@ -218,7 +218,7 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 	 * @return void
 	 */
 	function no_items() {
-		_e( 'There is no incomes found.', 'wp-ever-accounting' );
+		_e( 'There is no revenues found.', 'wp-ever-accounting' );
 	}
 
 	/**
@@ -228,7 +228,7 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string $which
 	 */
-	protected function extra_tablenav( $which ) {
+	protected function extra_tablenav_depricated( $which ) {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
@@ -294,11 +294,11 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-incomes' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'income-nonce' ) ) {
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-revenues' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'revenue-nonce' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['income_id'] ) ? $_GET['income_id'] : false;
+		$ids = isset( $_GET['revenue_id'] ) ? $_GET['revenue_id'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -316,10 +316,10 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_income( $id );
+					eaccounting_delete_revenue( $id );
 					break;
 				default:
-					do_action( 'eaccounting_incomes_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'eaccounting_revenues_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -327,7 +327,7 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'income_id',
+						'revenue_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
@@ -392,10 +392,10 @@ class EAccounting_Income_List_Table extends EAccounting_List_Table {
 			);
 		}
 
-		$args        = apply_filters( 'eaccounting_income_table_query_args', $args, $this );
-		$this->items = eaccounting_get_incomes( $args );
+		$args        = apply_filters( 'eaccounting_revenue_table_query_args', $args, $this );
+		$this->items = eaccounting_get_revenues( $args );
 
-		$this->total_count = eaccounting_get_incomes( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->total_count = eaccounting_get_revenues( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

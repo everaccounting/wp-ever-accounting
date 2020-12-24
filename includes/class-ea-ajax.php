@@ -447,7 +447,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_revenue' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
 
-		$created = eaccounting_insert_income( $posted );
+		$created = eaccounting_insert_revenue( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(

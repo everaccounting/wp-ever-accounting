@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
 use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,8 +23,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Income extends ResourceModel {
+class Revenue extends ResourceModel {
 	use CurrencyTrait;
+	use AttachmentTrait;
 
 	/**
 	 * This is the name of this object type.
@@ -34,7 +36,7 @@ class Income extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_incomes';
@@ -43,7 +45,7 @@ class Income extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -92,7 +94,7 @@ class Income extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( 'incomes' );
+		$this->repository = Repositories::load( 'revenues' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
@@ -168,7 +170,7 @@ class Income extends ResourceModel {
 	 * Get formatted amount.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_formatted_amount() {
@@ -547,9 +549,9 @@ class Income extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @throws \Exception
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function save() {

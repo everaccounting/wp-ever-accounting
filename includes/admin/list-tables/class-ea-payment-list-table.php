@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Expense;
+use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -140,7 +140,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	 *
 	 * @since  1.0.2
 	 *
-	 * @param Expense $payment The current object.
+	 * @param Payment $payment The current object.
 	 *
 	 * @return string Displays a checkbox.
 	 */
@@ -155,7 +155,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string   $column_name The name of the column
 	 *
-	 * @param Expense $payment
+	 * @param Payment $payment
 	 *
 	 * @return string The column value.
 	 */
@@ -393,9 +393,9 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		}
 
 		$args        = apply_filters( 'eaccounting_payment_table_query_args', $args, $this );
-		$this->items = eaccounting_get_expenses( $args );
+		$this->items = eaccounting_get_payments( $args );
 
-		$this->total_count = eaccounting_get_expenses( array_merge( $args, array( 'count_total' => true ) ) );
+		$this->total_count = eaccounting_get_payments( array_merge( $args, array( 'count_total' => true ) ) );
 
 		$this->set_pagination_args(
 			array(

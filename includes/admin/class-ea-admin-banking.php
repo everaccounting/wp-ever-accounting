@@ -18,7 +18,9 @@ class EAccounting_Admin_Banking {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
-		add_action( 'eaccounting_banking_page_tab_accounts', array( $this, 'render_accounts_page' ), 20 );
+		add_action( 'eaccounting_banking_page_tab_transactions', array( $this, 'render_transactions_tab' ), 20 );
+		add_action( 'eaccounting_banking_page_tab_accounts', array( $this, 'render_accounts_tab' ), 20 );
+		add_action( 'eaccounting_banking_page_tab_transfers', array( $this, 'render_transfers_tab' ), 20 );
 	}
 
 	/**
@@ -69,8 +71,31 @@ class EAccounting_Admin_Banking {
 		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
 	}
 
-	public function render_accounts_page() {
-		include dirname( __FILE__ ) . '/views/banking-tab-accounts.php';
+	public function render_transactions_tab() {
+		include dirname( __FILE__ ) . '/views/transactions/list-transactions.php';
+	}
+
+	public function render_accounts_tab() {
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['account_id'] ) ) {
+			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/accounts/view-account.php';
+		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/accounts/edit-account.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/accounts/list-account.php';
+		}
+	}
+
+	public function render_transfers_tab() {
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$transfer_id = isset( $_GET['transfer_id'] ) ? absint( $_GET['transfer_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/transfers/edit-transfer.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/transfers/list-transfer.php';
+		}
 	}
 
 }

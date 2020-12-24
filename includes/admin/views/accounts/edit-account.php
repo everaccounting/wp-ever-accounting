@@ -48,7 +48,7 @@ $back_url = remove_query_arg( array( 'action', 'account_id' ) );
 							'name'          => 'number',
 							'value'         => $account->get_number( 'edit' ),
 							'required'      => true,
-							'placeholder'   => __( 'Enter account number', 'wp-ever-accounting'),
+							'placeholder'   => __( 'Enter account number', 'wp-ever-accounting' ),
 						)
 					);
 					eaccounting_currency_dropdown(
@@ -137,3 +137,21 @@ $back_url = remove_query_arg( array( 'action', 'account_id' ) );
 
 
 </div>
+<?php
+eaccounting_enqueue_js(
+		"
+	jQuery('#ea-account-form #opening_balance').inputmask('decimal', {
+			alias: 'numeric',
+			groupSeparator: '" . $account->get_currency_thousand_separator() . "',
+			autoGroup: true,
+			digits: '" . $account->get_currency_precision() . "',
+			radixPoint: '" . $account->get_currency_decimal_separator() . "',
+			digitsOptional: false,
+			allowMinus: false,
+			prefix: '" . $account->get_currency_symbol() . "',
+			placeholder: '0.000',
+			rightAlign: 0,
+			autoUnmask: true
+		});
+"
+);

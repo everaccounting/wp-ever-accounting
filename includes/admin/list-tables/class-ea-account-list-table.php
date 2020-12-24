@@ -104,7 +104,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 	public function define_columns() {
 		return array(
 			'cb'        => '<input type="checkbox" />',
-			'thumb'   => '<span class="ea-thumb">&nbsp;</span>',
+			'thumb'     => '<span class="ea-thumb">&nbsp;</span>',
 			'name'      => __( 'Name', 'wp-ever-accounting' ),
 			'balance'   => __( 'Balance', 'wp-ever-accounting' ),
 			'number'    => __( 'Number', 'wp-ever-accounting' ),

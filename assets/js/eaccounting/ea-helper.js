@@ -22,6 +22,7 @@ jQuery(function ($) {
 			prefix: currency.symbol || '',
 			placeholder: '0.000',
 			rightAlign: 0,
+			autoUnmask: true
 		})
 	}
 
