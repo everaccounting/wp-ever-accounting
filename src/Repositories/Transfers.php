@@ -52,8 +52,8 @@ class Transfers extends ResourceRepository {
 	 */
 	protected $data_type = array(
 		'id'           => '%d',
-		'revenue_id'    => '%d',
-		'payment_id'   => '%d',
+		'income_id'    => '%d',
+		'expense_id'   => '%d',
 		'creator_id'   => '%d',
 		'date_created' => '%s',
 	);
@@ -89,6 +89,7 @@ class Transfers extends ResourceRepository {
 				)
 			);
 			$expense->save();
+			$transfer->set_expense_id( $expense->get_id() );
 
 			$amount = $transfer->get_amount();
 			if ( $from_account->get_currency_code() !== $to_account->get_currency_code() ) {
@@ -97,7 +98,7 @@ class Transfers extends ResourceRepository {
 				$amount           = eaccounting_price_convert_to_default( $amount, $from_account->get_currency_code(), $expense_currency->get_rate() );
 				$amount           = eaccounting_price_convert_from_default( $amount, $to_account->get_currency_code(), $income_currency->get_rate() );
 			}
-			$transfer->set_expense_id( $expense->get_id() );
+
 			$income = new Revenue( $transfer->get_income_id() );
 			$income->set_props(
 				array(
@@ -123,7 +124,7 @@ class Transfers extends ResourceRepository {
 				$values[ $key ] = $transfer->$method( 'edit' );
 				$formats[]      = $format;
 			}
-
+			$inserting = false;
 			if ( $transfer->exists() ) {
 				unset( $formats[0] );
 				unset( $values['id'] );
@@ -137,14 +138,16 @@ class Transfers extends ResourceRepository {
 					'%d'
 				);
 			} else {
-				$result = $wpdb->insert( $wpdb->prefix . $this->table, wp_unslash( $values ), $formats );
+				$inserting = true;
+				$result    = $wpdb->insert( $wpdb->prefix . $this->table, wp_unslash( $values ), $formats );
 			}
 
 			if ( false === $result ) {
 				throw new \Exception( $wpdb->last_error );
 			}
-
-			$transfer->set_id( $wpdb->insert_id );
+			if ( $inserting ) {
+				$transfer->set_id( $wpdb->insert_id );
+			}
 			$transfer->apply_changes();
 			$transfer->clear_cache();
 			do_action( 'eacccounting_insert_' . $transfer->get_object_type(), $transfer, $values );
@@ -174,8 +177,6 @@ class Transfers extends ResourceRepository {
 
 		if ( ! $item->get_id() ) {
 			$item->set_id( 0 );
-
-			return;
 		}
 
 		// Maybe retrieve from the cache.
@@ -196,7 +197,7 @@ class Transfers extends ResourceRepository {
 		if ( ! $raw_item ) {
 			$item->set_id( 0 );
 
-			return;
+			throw new \Exception( __( 'Transfer data corrupted', 'wp-ever-accounting' ) );
 		}
 
 		foreach ( array_keys( $this->data_type ) as $key ) {

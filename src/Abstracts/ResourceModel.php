@@ -323,9 +323,9 @@ abstract class ResourceModel {
 	 */
 	public function get_data() {
 		return array_merge(
-			array( 'id' => $this->get_id() ),
 			$this->data,
 			$this->changes,
+			array( 'id' => $this->get_id() ),
 			array( 'meta_data' => $this->get_meta_data() )
 		);
 	}

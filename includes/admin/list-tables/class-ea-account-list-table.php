@@ -195,7 +195,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'balance':
-				$value = $account->get_balance( true );
+				$value = $account->format_amount( $account->get_balance());
 				break;
 			case 'number':
 				$value = $account->get_number();
@@ -385,7 +385,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_account_table_query_args', $args, $this );
-		$this->items = eaccounting_get_accounts( $args );
+		$this->items = eaccounting_get_accounts( array_merge($args, array('balance' => true)) );
 
 		$this->active_count = eaccounting_get_accounts(
 			array_merge(

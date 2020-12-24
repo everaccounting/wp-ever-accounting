@@ -95,7 +95,6 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'name'          => 'sales_tax_rate',
 							'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
 							'value'         => $item->get_sales_tax_rate(),
-							'required'      => true,
 						)
 					);
 
@@ -106,7 +105,6 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'name'          => 'purchase_tax_rate',
 							'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
 							'value'         => $item->get_purchase_tax_rate(),
-							'required'      => true,
 						)
 					);
 				endif;
