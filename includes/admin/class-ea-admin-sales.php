@@ -70,23 +70,6 @@ class EAccounting_Admin_Sales {
 	}
 
 	/**
-	 * Render customer tab.
-	 *
-	 * @since 1.1.0
-	 */
-	public function render_customers_tab() {
-		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['customer_id'] ) ) {
-			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
-			include dirname( __FILE__ ) . '/views/customers/view-customer.php';
-		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
-			include dirname( __FILE__ ) . '/views/customers/edit-customer.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/customers/list-customer.php';
-		}
-	}
-	/**
 	 * Render invoice tab.
 	 *
 	 * @since 1.1.0
@@ -104,6 +87,11 @@ class EAccounting_Admin_Sales {
 		}
 	}
 
+	/**
+	 * Render revenues tab.
+	 *
+	 * @since 1.1.0
+	 */
 	public function render_revenues_tab(){
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
@@ -111,6 +99,24 @@ class EAccounting_Admin_Sales {
 			include dirname( __FILE__ ) . '/views/revenues/edit-revenue.php';
 		} else {
 			include dirname( __FILE__ ) . '/views/revenues/list-revenue.php';
+		}
+	}
+
+	/**
+	 * Render customer tab.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_customers_tab() {
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['customer_id'] ) ) {
+			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/customers/view-customer.php';
+		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/customers/edit-customer.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/customers/list-customer.php';
 		}
 	}
 

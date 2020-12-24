@@ -70,7 +70,22 @@ class EAccounting_Admin_Expenses {
 	}
 
 	/**
-	 * Render customer tab.
+	 * Render payment tab.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_payments_tab() {
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$payment_id = isset( $_GET['payment_id'] ) ? absint( $_GET['payment_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/payments/edit-payment.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/payments/list-payment.php';
+		}
+	}
+
+	/**
+	 * Render vendor tab.
 	 *
 	 * @since 1.1.0
 	 */
@@ -84,24 +99,6 @@ class EAccounting_Admin_Expenses {
 			include dirname( __FILE__ ) . '/views/vendors/edit-vendor.php';
 		} else {
 			include dirname( __FILE__ ) . '/views/vendors/list-vendor.php';
-		}
-	}
-
-	/**
-	 * Render customer tab.
-	 *
-	 * @since 1.1.0
-	 */
-	public function render_payments_tab() {
-		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['payment_id'] ) ) {
-			$payment_id = isset( $_GET['payment_id'] ) ? absint( $_GET['payment_id'] ) : null;
-			include dirname( __FILE__ ) . '/views/payments/view-payment.php';
-		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			$payment_id = isset( $_GET['payment_id'] ) ? absint( $_GET['payment_id'] ) : null;
-			include dirname( __FILE__ ) . '/views/payments/edit-payment.php';
-		} else {
-			include dirname( __FILE__ ) . '/views/payments/list-payment.php';
 		}
 	}
 }

@@ -1,6 +1,8 @@
 <?php
 /**
  * Admin Account Edit Page.
+ * Page: Banking
+ * Tab: Accounts
  *
  * @package     EverAccounting
  * @subpackage  Admin/View/Accounts

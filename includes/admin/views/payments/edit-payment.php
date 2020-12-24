@@ -1,27 +1,32 @@
 <?php
 /**
  * Admin Payment Edit Page.
+ * Page: Expenses
+ * Tab: Payment
  *
  * @since       1.0.2
- * @subpackage  Admin/Sales/Payments
+ * @subpackage  Admin/Views/Payments
  * @package     EverAccounting
+ *
+ * @var int $payment_id
  */
 
 
 defined( 'ABSPATH' ) || exit();
-$payment_id = isset( $_REQUEST['payment_id'] ) ? absint( $_REQUEST['payment_id'] ) : null;
+
 try {
 	$payment = new \EverAccounting\Models\Payment( $payment_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
 
-$back_url = remove_query_arg( array( 'action', 'id' ) );
+$back_url = remove_query_arg( array( 'action', 'payment_id' ) );
+$title = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' );
 ?>
 
 <div class="ea-card">
 	<div class="ea-card__header">
-		<h3 class="ea-card__title"><?php echo $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : __( 'Add Payment', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php echo $title; ?></h3>
 		<a href="<?php echo $back_url; ?>" class="button button-secondary"><span class="dashicons dashicons-arrow-left-alt"></span><?php _e( 'Back', 'wp-ever-accounting' ); ?></a>
 	</div>
 

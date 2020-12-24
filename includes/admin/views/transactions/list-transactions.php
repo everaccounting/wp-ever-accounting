@@ -1,9 +1,11 @@
 <?php
 /**
  * Render Transaction list table
+ * Page: Banking
+ * Tab: Transactions
  *
  * @since       1.0.2
- * @subpackage  Admin/Banking/Transactions
+ * @subpackage  Admin/Views/Transactions
  * @package     EverAccounting
  */
 

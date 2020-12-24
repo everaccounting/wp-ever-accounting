@@ -93,7 +93,7 @@ class Payments extends ResourceRepository {
 		if ( false === $raw_item ) {
 			$raw_item = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * FROM {$table} WHERE id = %d AND `type` = 'expense'",
+					"SELECT * FROM {$table} WHERE id = %d AND `type` = 'payment'",
 					$item->get_id()
 				)
 			);

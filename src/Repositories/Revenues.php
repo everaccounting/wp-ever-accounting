@@ -92,7 +92,7 @@ class Revenues extends ResourceRepository {
 		if ( false === $raw_item ) {
 			$raw_item = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT * FROM {$table} WHERE id = %d AND `type` = 'income'",
+					"SELECT * FROM {$table} WHERE id = %d AND `type` = 'revenue'",
 					$item->get_id()
 				)
 			);

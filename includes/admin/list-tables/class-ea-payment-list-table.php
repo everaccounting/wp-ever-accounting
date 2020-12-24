@@ -166,7 +166,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				$url   = eaccounting_admin_url(
 					array(
 						'tab'        => 'payments',
-						'action'     => 'view',
+						'action'     => 'edit',
 						'payment_id' => $payment_id,
 					)
 				);

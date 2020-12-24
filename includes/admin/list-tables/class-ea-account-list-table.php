@@ -204,21 +204,10 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				$value = $account->get_bank_name();
 				break;
 			case 'enabled':
-				ob_start();
-				eaccounting_toggle(
-					array(
-						'name'  => 'enabled',
-						'id'    => 'enabled_' . $account_id,
-						'value' => $account->get_enabled( 'edit' ),
-						'naked' => true,
-						'attr'  => array(
-							'data-id'    => $account_id,
-							'data-nonce' => wp_create_nonce( 'ea_edit_account' ),
-						),
-					)
-				);
-				$value = ob_get_contents();
-				ob_get_clean();
+				$value  = '<label class="ea-toggle">';
+				$value .= '<input type="checkbox" class="account-status" style="" value="true" data-id="' . $account->get_id() . '" ' . checked( $account->is_enabled(), true, false ) . '>';
+				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
+				$value .= '</label>';
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(

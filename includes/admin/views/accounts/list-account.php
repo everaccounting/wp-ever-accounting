@@ -3,9 +3,14 @@
  * Render Accounts list table
  * Page: Banking
  * Tab: Accounts
+ *
+ * @since       1.0.2
+ * @subpackage  Admin/Views/Accounts
+ * @package     EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit;
+
 $add_url    = add_query_arg(
 	array(
 		'page'   => 'ea-banking',
@@ -41,3 +46,17 @@ $accounts_table->prepare_items();
 	<?php do_action( 'eaccounting_accounts_table_bottom' ); ?>
 
 <?php
+eaccounting_enqueue_js(
+		"
+	jQuery('.account-status').on('change', function(e){
+		jQuery.post('" . eaccounting()->ajax_url() . "', {
+			action:'eaccounting_edit_account',
+			id: $(this).data('id'),
+			enabled: $(this).is(':checked'),
+			nonce: '" . wp_create_nonce( 'ea_edit_account' ) . "',
+		}, function(json){
+			$.eaccounting_notice(json);
+		});
+	});
+"
+);

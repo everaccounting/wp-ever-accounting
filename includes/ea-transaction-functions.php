@@ -141,7 +141,7 @@ function eaccounting_delete_payment( $payment_id ) {
  * @return array|int
  */
 function eaccounting_get_payments( $args = array() ) {
-	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense' ) ) );
+	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'payment' ) ) );
 }
 
 /**
@@ -257,7 +257,7 @@ function eaccounting_delete_revenue( $revenue_id ) {
  * @return \EverAccounting\Models\Revenue[]|int
  */
 function eaccounting_get_revenues( $args = array() ) {
-	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );
+	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'revenue' ) ) );
 }
 
 /**
@@ -576,14 +576,14 @@ function eaccounting_get_transactions( $args = array() ) {
 		$results = array_map(
 			function ( $item ) {
 				switch ( $item->type ) {
-					case 'income':
+					case 'revenue':
 						$transaction = new \EverAccounting\Models\Revenue();
 						$transaction->set_props( $item );
 						$transaction->set_object_read( true );
 
 						return $transaction;
 						break;
-					case 'expense':
+					case 'payment':
 						$transaction = new \EverAccounting\Models\Payment();
 						$transaction->set_props( $item );
 						$transaction->set_object_read( true );

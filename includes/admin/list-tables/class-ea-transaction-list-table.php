@@ -141,7 +141,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				$type   = $transaction->get_type();
 				$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
 				$tab    = 'expense' !== $type ? 'revenues' : 'payments';
-				$object = 'expense' !== $type ? 'revenue_id' : 'payment_id';
+				$object = 'payment' !== $type ? 'revenue_id' : 'payment_id';
 				$value  = sprintf(
 					'<a href="%1$s">%2$s</a>',
 					esc_url(

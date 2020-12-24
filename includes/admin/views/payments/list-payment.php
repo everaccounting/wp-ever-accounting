@@ -1,9 +1,11 @@
 <?php
 /**
  * Render Payment list table
+ * Page: Expenses
+ * Tab: Payment
  *
  * @since       1.0.2
- * @subpackage  Admin/Expenses/Payments
+ * @subpackage  Admin/Views/Payments
  * @package     EverAccounting
  */
 

@@ -21,7 +21,6 @@ if ( empty( $vendor ) || ! $vendor->exists() ) {
 $sections   = array(
 	'transactions' => __( 'Transactions', 'wp-ever-accounting' ),
 	'bills'        => __( 'Bills', 'wp-ever-accounting' ),
-	'notes'        => __( 'Notes', 'wp-ever-accounting' ),
 );
 
 $sections        = apply_filters( 'eaccounting_vendor_sections', $sections );
@@ -84,7 +83,7 @@ $edit_url        = eaccounting_admin_url(
 				<?php
 				switch ( $current_section ) {
 					case 'transactions':
-					case 'expenses':
+					case 'bills':
 						include dirname( __FILE__ ) . '/vendor-sections/' . sanitize_file_name( $current_section ) . '.php';
 						break;
 					default:

@@ -106,9 +106,9 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 			'cb'             => '<input type="checkbox" />',
 			'thumb'          => '<span class="ea-thumb dashicons dashicons-format-image">&nbsp;</span>',
 			'name'           => __( 'Name', 'wp-ever-accounting' ),
-			'category_id'    => __( 'Category', 'wp-ever-accounting' ),
 			'sale_price'     => __( 'Sale Price', 'wp-ever-accounting' ),
 			'purchase_price' => __( 'Purchase Price', 'wp-ever-accounting' ),
+			'category_id'    => __( 'Category', 'wp-ever-accounting' ),
 			'enabled'        => __( 'Enabled', 'wp-ever-accounting' ),
 		);
 	}
@@ -193,18 +193,15 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				);
 				$value    = '<a href="' . esc_url( $edit_url ) . '"><strong>' . $item->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
-			case 'category_id':
-				$category = eaccounting_get_category( $item->get_category_id() );
-				$value    = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
-				break;
-			case 'quantity':
-				$value = $item->get_quantity();
-				break;
 			case 'sale_price':
 				$value = eaccounting_price( $item->get_sale_price() );
 				break;
 			case 'purchase_price':
 				$value = eaccounting_price( $item->get_purchase_price() );
+				break;
+			case 'category_id':
+				$category = eaccounting_get_category( $item->get_category_id() );
+				$value    = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
@@ -405,10 +402,6 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				$total_items = $this->total_count;
 				break;
 		}
-		error_log($total_items);
-		error_log($this->total_count);
-		error_log($this->active_count);
-		error_log($this->inactive_count);
 
 		$this->set_pagination_args(
 			array(

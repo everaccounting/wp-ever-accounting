@@ -71,16 +71,21 @@ class EAccounting_Admin_Banking {
 		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
 	}
 
+	/**
+	 * Render transactions Tab.
+	 *
+	 * @since 1.1.0
+	 */
 	public function render_transactions_tab() {
 		include dirname( __FILE__ ) . '/views/transactions/list-transactions.php';
 	}
 
 	/**
-	 * Render accounts page.
+	 * Render accounts Tab.
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_accounts_page() {
+	public function render_accounts_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['account_id'] ) ) {
 			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
@@ -93,6 +98,11 @@ class EAccounting_Admin_Banking {
 		}
 	}
 
+	/**
+	 * Render transfers Tab.
+	 *
+	 * @since 1.1.0
+	 */
 	public function render_transfers_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
