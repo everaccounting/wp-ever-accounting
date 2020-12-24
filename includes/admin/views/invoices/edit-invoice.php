@@ -25,7 +25,7 @@ $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : 
 	<div class="ea-card">
 		<div class="ea-card__header">
 			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>	</div>
+			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 		</div>
 
 		<div class="ea-card__inside">

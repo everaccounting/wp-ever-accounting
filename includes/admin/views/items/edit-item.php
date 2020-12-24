@@ -25,6 +25,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php echo $title; ?></h3>
 		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
+	</div>
 	<div class="ea-card__inside">
 		<form id="ea-item-form" method="post" enctype="multipart/form-data">
 			<div class="ea-row">
