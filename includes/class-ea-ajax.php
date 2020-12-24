@@ -11,7 +11,7 @@ namespace EverAccounting;
 
 
 use EverAccounting\Models\Account;
-use EverAccounting\Models\Income;
+use EverAccounting\Models\Revenue;
 use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
@@ -408,7 +408,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_payment' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
 
-		$created = eaccounting_insert_expense( $posted );
+		$created = eaccounting_insert_payment( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(

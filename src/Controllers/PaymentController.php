@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Controllers
  */
-class ExpenseController extends Singleton {
+class PaymentController extends Singleton {
 
 	/**
 	 * PaymentController constructor.
@@ -36,23 +36,23 @@ class ExpenseController extends Singleton {
 	 * Validate payment data.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param array $data
 	 * @param null $id
 	 * @param \WP_Error $errors
-	 * 
+	 *
 	 * @throws \Exception
 	 */
 	public static function validate_payment_data( $data, $id = null ) {
 
 		$category = eaccounting_get_category( $data['category_id'] );
 		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'expense', 'other' ), true ) ) {
-			throw new \Exception(  __( 'A valid income category is required.', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'A valid payment category is required.', 'wp-ever-accounting' ) );
 		}
 
 		$customer = eaccounting_get_customer( $data['contact_id'] );
 		if ( ! empty( $data['contact_id'] ) && empty( $customer ) ) {
-			throw new \Exception(  __( 'Customer is not valid.', 'wp-ever-accounting' ) );
+			throw new \Exception(  __( 'Vendor is not valid.', 'wp-ever-accounting' ) );
 		}
 	}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle the Income object.
+ * Handle the Revenue object.
  *
  * @package     EverAccounting\Models
  * @class       Payment
@@ -17,7 +17,7 @@ use EverAccounting\Traits\CurrencyTrait;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Payment
+ * Class Revenue
  *
  * @since   1.1.0
  *
@@ -32,14 +32,14 @@ class Revenue extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'income';
+	protected $object_type = 'revenues';
 
 	/**
 	 * @since 1.1.0
 	 *
 	 * @var string
 	 */
-	public $cache_group = 'ea_incomes';
+	public $cache_group = 'ea_revenues';
 
 	/**
 	 * Item Data array.

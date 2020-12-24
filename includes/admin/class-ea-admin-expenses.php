@@ -39,8 +39,8 @@ class EAccounting_Admin_Expenses {
 	/**
 	 * Get banking page tabs.
 	 *
-	 * @since 1.1.0
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function get_tabs() {
 		$tabs = array();

@@ -85,7 +85,6 @@ class EAccounting_Admin_Sales {
 		} else {
 			include dirname( __FILE__ ) . '/views/customers/list-customer.php';
 		}
-
 	}
 	/**
 	 * Render invoice tab.

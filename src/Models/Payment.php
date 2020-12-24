@@ -32,14 +32,14 @@ class Payment extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'expense';
+	protected $object_type = 'payments';
 
 	/**
 	 * @since 1.1.0
 	 *
 	 * @var string
 	 */
-	public $cache_group = 'ea_expenses';
+	public $cache_group = 'ea_payments';
 
 	/**
 	 * Item Data array.

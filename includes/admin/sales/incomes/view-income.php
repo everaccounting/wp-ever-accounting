@@ -3,10 +3,10 @@
  * Admin Revenue View Page.
  *
  * @since       1.1.0
- * @subpackage  Admin/Sales/Income
+ * @subpackage  Admin/Sales/Expense
  * @package     EverAccounting
  *
- * @var int $income_id
+ * @var int $revenue_id
  */
 defined( 'ABSPATH' ) || exit();
 
@@ -16,7 +16,7 @@ use EverAccounting\Models\Customer;
 
 wp_enqueue_script( 'ea-print' );
 try {
-	$income = new \EverAccounting\Models\Income( $income_id );
+	$revenue = new \EverAccounting\Models\Revenue( $revenue_id );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
@@ -56,7 +56,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 										</th>
 										<td>
 											<?php
-											$account_id = $income->get_account_id();
+											$account_id = $revenue->get_account_id();
 											$account    = new Account( $account_id );
 											?>
 											<div class="ea-voucher__company"><?php echo $account->get_name(); ?></div>
@@ -74,7 +74,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 										</th>
 										<td>
 											<?php
-											$customer_id = $income->get_customer_id();
+											$customer_id = $revenue->get_customer_id();
 											$customers   = new Customer( $customer_id );
 											?>
 											<div class="ea-voucher__company"><?php echo $customers ? $customers->get_name() : __( 'Deleted Customer', 'wp-ever-accounting' ); ?></div>
@@ -96,7 +96,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 											<div class="ea-voucher__subtitle"><?php _e( 'Voucher Number', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<td>
-											<div class="ea-voucher__value"><?php echo $income_id; ?></div>
+											<div class="ea-voucher__value"><?php echo $revenue_id; ?></div>
 										</td>
 									</tr>
 									<tr>
@@ -106,7 +106,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 										</th>
 										<?php
 										$available_payment_methods = eaccounting_get_payment_methods();
-										$income_payment_method    = $income->get_payment_method();
+										$income_payment_method    = $revenue->get_payment_method();
 										?>
 										<td>
 											<div class="ea-voucher__value"><?php echo array_key_exists( $income_payment_method, $available_payment_methods ) ? $available_payment_methods[ $income_payment_method ] : ''; ?></div>
@@ -121,7 +121,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 											<?php
 											$date_format = get_option( 'date_format' ) ? get_option( 'date_format' ) : 'F j, Y';
 											?>
-											<div class="ea-voucher__value"><?php echo eaccounting_format_datetime( $income->get_payment_date(), 'M j, Y' ); ?></div>
+											<div class="ea-voucher__value"><?php echo eaccounting_format_datetime( $revenue->get_payment_date(), 'M j, Y' ); ?></div>
 										</td>
 									</tr>
 									<tr>
@@ -140,7 +140,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit' ), $back_url );
 											<div class="ea-voucher__subtitle"><?php _e( 'Category', 'wp-ever-accounting' ); ?></div>
 										</th>
 										<?php
-										$category_id = $income->get_category_id();
+										$category_id = $revenue->get_category_id();
 										$category = new Category($category_id);
 										?>
 										<td>

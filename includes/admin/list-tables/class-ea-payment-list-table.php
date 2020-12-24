@@ -136,7 +136,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * Renders the checkbox column in the incomes list table.
+	 * Renders the checkbox column in the revenues list table.
 	 *
 	 * @since  1.0.2
 	 *
@@ -260,7 +260,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 					'name'    => 'category_id',
 					'value'   => $category_id,
 					'default' => '',
-					'type'    => 'income',
+					'type'    => 'expense',
 					'attr'    => array(
 						'data-allow-clear' => true,
 					),
@@ -316,7 +316,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				case 'export_csv':
 					break;
 				case 'delete':
-					eaccounting_delete_expense( $id );
+					eaccounting_delete_payment( $id );
 					break;
 				default:
 					do_action( 'eaccounting_payments_do_bulk_action_' . $this->current_action(), $id );

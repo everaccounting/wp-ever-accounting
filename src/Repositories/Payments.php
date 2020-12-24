@@ -1,6 +1,6 @@
 <?php
 /**
- * Expenses repository.
+ * Payments repository.
  *
  * Handle payment insert, update, delete & retrieve from database.
  *
@@ -83,6 +83,7 @@ class Payments extends ResourceRepository {
 
 		if ( ! $item->get_id() ) {
 			$item->set_id( 0 );
+
 			return;
 		}
 
@@ -103,6 +104,7 @@ class Payments extends ResourceRepository {
 
 		if ( ! $raw_item ) {
 			$item->set_id( 0 );
+
 			return;
 		}
 

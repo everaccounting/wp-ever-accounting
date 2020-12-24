@@ -10,7 +10,7 @@
 
 namespace EverAccounting\REST;
 
-use EverAccounting\Models\Expense;
+use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || die();
 
@@ -21,25 +21,25 @@ defined( 'ABSPATH' ) || die();
  *
  * @package EverAccounting\REST
  */
-class ExpensesController extends TransactionsController {
+class PaymentsController extends TransactionsController {
 	/**
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 *
 	 */
-	protected $rest_base = 'expenses';
+	protected $rest_base = 'payments';
 
 	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
-	protected $entity_model = Expense::class;
+	protected $entity_model = Payment::class;
 
 	/**
 	 * Get objects.
@@ -68,6 +68,6 @@ class ExpensesController extends TransactionsController {
 			$args['payment_date'][0]['after'] = $request['after'];
 		}
 
-		return eaccounting_get_expenses( $query_args );
+		return eaccounting_get_payments( $query_args );
 	}
 }

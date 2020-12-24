@@ -52,8 +52,8 @@ class Transfers extends ResourceRepository {
 	 */
 	protected $data_type = array(
 		'id'           => '%d',
-		'income_id'    => '%d',
-		'expense_id'   => '%d',
+		'revenue_id'    => '%d',
+		'payment_id'   => '%d',
 		'creator_id'   => '%d',
 		'date_created' => '%s',
 	);
