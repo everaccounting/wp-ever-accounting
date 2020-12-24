@@ -74,7 +74,16 @@ class EAccounting_Admin_Sales {
 	 * @since 1.1.0
 	 */
 	public function render_customers_tab() {
-		include dirname( __FILE__ ) . '/views/sales-tab-customers.php';
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['customer_id'] ) ) {
+			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/customers/view-customer.php';
+		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/customers/edit-customer.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/customers/list-customer.php';
+		}
 	}
 	/**
 	 * Render invoice tab.
@@ -82,7 +91,16 @@ class EAccounting_Admin_Sales {
 	 * @since 1.1.0
 	 */
 	public function render_invoices_tab() {
-		include dirname( __FILE__ ) . '/views/sales-tab-invoices.php';
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['invoice_id'] ) ) {
+			$invoice_id = isset( $_GET['invoice_id'] ) ? absint( $_GET['invoice_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/invoices/view-invoice.php';
+		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$invoice_id = isset( $_GET['invoice_id'] ) ? absint( $_GET['invoice_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/invoices/edit-invoice.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/invoices/list-invoice.php';
+		}
 	}
 
 

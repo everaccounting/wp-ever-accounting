@@ -48,13 +48,15 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php';
+		//require_once EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php';
 		//require_once EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php';
 		//require_once EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-banking.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-sales.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-expenses.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/items/items.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-items.php';
+		//require_once EACCOUNTING_ABSPATH . '/includes/admin/items/items.php';
+
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-reports.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/settings/settings.php';

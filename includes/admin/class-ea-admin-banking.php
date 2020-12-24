@@ -6,7 +6,7 @@
  *
  * @author      EverAccounting
  * @category    Admin
- * @package     EverAccounting\Admin\Banking
+ * @package     EverAccounting\Admin
  * @version     1.1.10
  */
 
@@ -69,8 +69,22 @@ class EAccounting_Admin_Banking {
 		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
 	}
 
+	/**
+	 * Render accounts page.
+	 *
+	 * @since 1.1.0
+	 */
 	public function render_accounts_page() {
-		include dirname( __FILE__ ) . '/views/banking-tab-accounts.php';
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['account_id'] ) ) {
+			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/accounts/view-account.php';
+		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/accounts/edit-account.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/accounts/list-account.php';
+		}
 	}
 
 }

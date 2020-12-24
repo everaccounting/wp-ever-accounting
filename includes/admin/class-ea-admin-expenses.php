@@ -37,8 +37,8 @@ class EAccounting_Admin_Expenses {
 	/**
 	 * Get banking page tabs.
 	 *
-	 * @since 1.1.0
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function get_tabs() {
 		$tabs = array();
@@ -73,7 +73,16 @@ class EAccounting_Admin_Expenses {
 	 * @since 1.1.0
 	 */
 	public function render_vendors_tab() {
-		include dirname( __FILE__ ) . '/views/sales-tab-vendors.php';
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['vendor_id'] ) ) {
+			$vendor_id = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/vendors/view-vendor.php';
+		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$vendor_id = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/vendors/edit-vendor.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/vendors/list-vendor.php';
+		}
 	}
 }
 
