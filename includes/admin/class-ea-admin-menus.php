@@ -21,7 +21,7 @@ class Admin_Menus {
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
 		add_action( 'admin_menu', array( $this, 'reports_menu' ), 86 );
-		add_action( 'admin_menu', array( $this, 'tools_menu' ), 88 );
+		//add_action( 'admin_menu', array( $this, 'tools_menu' ), 88 );
 		add_action( 'admin_menu', array( $this, 'settings_menu' ), 90 );
 	}
 
