@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
-		'revenue'  => __( 'Revenue', 'wp-ever-accounting' ),
+		'revenue' => __( 'Revenue', 'wp-ever-accounting' ),
 		'payment' => __( 'Payment', 'wp-ever-accounting' ),
 	);
 
@@ -93,7 +93,7 @@ function eaccounting_insert_payment( $args, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		return $wp_error ? new WP_Error( 'insert_payment', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -211,7 +211,7 @@ function eaccounting_insert_revenue( $args, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		return $wp_error ? new WP_Error( 'insert_revenue', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 
@@ -329,7 +329,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( 'insert_error', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		return $wp_error ? new WP_Error( 'insert_transfer', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 

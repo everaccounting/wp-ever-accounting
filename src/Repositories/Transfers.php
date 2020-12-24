@@ -177,6 +177,7 @@ class Transfers extends ResourceRepository {
 
 		if ( ! $item->get_id() ) {
 			$item->set_id( 0 );
+			return false;
 		}
 
 		// Maybe retrieve from the cache.

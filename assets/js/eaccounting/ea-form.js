@@ -325,6 +325,88 @@ jQuery(function ($) {
 		}
 	};
 
+	var item_form = {
+		init: function () {
+			$('#ea-item-form')
+				.on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-item-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-item-form').unblock();
+		},
+		submit: function (e) {
+			e.preventDefault();
+			category_form.block();
+			var data = $('#ea-item-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				category_form.unblock();
+			});
+		}
+	};
+
+	var currency_form = {
+		init: function () {
+			$('#ea-currency-form')
+				.on('change', '#code', this.update_currency_props)
+				.on('submit', this.submit);
+		},
+		block: function () {
+			$('#ea-currency-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-currency-form').unblock();
+		},
+
+		update_currency_props:function(e){
+			var code = e.target.value;
+			if (!code) {
+				return false;
+			}
+			var currency = eaccounting_form_i10n.global_currencies[code];
+			$('#name', '#ea-currency-form').val(currency.name).change()
+			$('#precision', '#ea-currency-form').val(currency.precision).change();
+			$('#position', '#ea-currency-form').val(currency.position).change();
+			$('#symbol', '#ea-currency-form').val(currency.symbol).change();
+			$('#decimal_separator', '#ea-currency-form')
+				.val(currency.decimal_separator)
+				.change();
+			$('#thousand_separator', '#ea-currency-form')
+				.val(currency.thousand_separator)
+				.change();
+		},
+
+		submit: function (e) {
+			e.preventDefault();
+			currency_form.block();
+			var data = $('#ea-currency-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				currency_form.unblock();
+			});
+		}
+	};
+
 	revenue_form.init();
 	payment_form.init();
 	account_form.init();
@@ -332,4 +414,6 @@ jQuery(function ($) {
 	customer_form.init();
 	vendor_form.init();
 	category_form.init();
+	currency_form.init();
+	item_form.init();
 });

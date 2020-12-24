@@ -20,9 +20,9 @@ class Admin_Menus {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'admin_menu' ), 9 );
-		add_action( 'admin_menu', array( $this, 'reports_menu' ), 86 );
+		//add_action( 'admin_menu', array( $this, 'reports_menu' ), 86 );
 		//add_action( 'admin_menu', array( $this, 'tools_menu' ), 88 );
-		add_action( 'admin_menu', array( $this, 'settings_menu' ), 90 );
+		//add_action( 'admin_menu', array( $this, 'settings_menu' ), 90 );
 	}
 
 	/**
@@ -60,12 +60,12 @@ class Admin_Menus {
 //		add_action( 'load-' . $reports, 'eaccounting_load_reports_page' );
 	}
 
-	public function settings_menu() {
-		add_submenu_page( 'eaccounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-settings', 'eaccounting_admin_settings_page' );
-	}
+//	public function settings_menu() {
+//		add_submenu_page( 'eaccounting', __( 'Settings', 'wp-ever-accounting' ), __( 'Settings', 'wp-ever-accounting' ), 'manage_eaccounting', 'ea-settings', 'eaccounting_admin_settings_page' );
+//	}
 
 	public function status_menu() {
-		add_submenu_page( 'eaccounting', __( 'Status', 'wp-ever-accounting' ), __( 'Status', 'wp-ever-accounting' ), 'manage_options', 'ea-status', 'eaccounting_admin_dashboard' );
+		//add_submenu_page( 'eaccounting', __( 'Status', 'wp-ever-accounting' ), __( 'Status', 'wp-ever-accounting' ), 'manage_options', 'ea-status', 'eaccounting_admin_dashboard' );
 	}
 }
 

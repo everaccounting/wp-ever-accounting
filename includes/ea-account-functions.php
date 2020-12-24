@@ -105,7 +105,7 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+		return $wp_error ? new WP_Error( 'insert_account', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
 

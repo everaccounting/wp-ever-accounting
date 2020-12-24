@@ -31,7 +31,7 @@ class Currency extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_currencies';
@@ -40,7 +40,7 @@ class Currency extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.0.4
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -97,7 +97,6 @@ class Currency extends ResourceModel {
 			'rate'               => __( 'Currency rate', 'wp-ever-accounting' ),
 			'symbol'             => __( 'Currency symbol', 'wp-ever-accounting' ),
 			'position'           => __( 'Currency position', 'wp-ever-accounting' ),
-			'precision'          => __( 'Currency precision', 'wp-ever-accounting' ),
 			'decimal_separator'  => __( 'Currency decimal separator', 'wp-ever-accounting' ),
 			'thousand_separator' => __( 'Currency thousand separator', 'wp-ever-accounting' ),
 		);
@@ -116,7 +115,7 @@ class Currency extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return \Exception|bool
 	 */
 	public function save() {
@@ -378,7 +377,7 @@ class Currency extends ResourceModel {
 	 * getSubunit.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return int
 	 */
 	public function get_subunit() {
@@ -400,7 +399,7 @@ class Currency extends ResourceModel {
 	 * getPrefix.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_prefix() {
@@ -415,7 +414,7 @@ class Currency extends ResourceModel {
 	 * getSuffix.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_suffix() {
@@ -452,7 +451,7 @@ class Currency extends ResourceModel {
 	 * is_symbol_first.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function is_symbol_first() {

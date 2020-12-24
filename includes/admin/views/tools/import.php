@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 		<div class="ea-card__header is-compact">
-			<h3 class="ea-card__header__title"><?php _e( 'Import Customers', 'wp-ever-accounting' ); ?></h3>
+			<h3 class="ea-card__title"><?php _e( 'Import Customers', 'wp-ever-accounting' ); ?></h3>
 </div>
 
 <div class="ea-card__inside">
@@ -59,7 +59,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__header__title"><?php _e( 'Import Vendors', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php _e( 'Import Vendors', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
@@ -103,7 +103,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__header__title"><?php _e( 'Import Accounts', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php _e( 'Import Accounts', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
@@ -147,7 +147,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__header__title"><?php _e( 'Import Revenues', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php _e( 'Import Revenues', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
@@ -192,7 +192,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__header__title"><?php _e( 'Import Payments', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php _e( 'Import Payments', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
@@ -241,7 +241,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__header__title"><?php _e( 'Import Currencies', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php _e( 'Import Currencies', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">
@@ -291,7 +291,7 @@ defined( 'ABSPATH' ) || exit();
 
 <div class="ea-card">
 	<div class="ea-card__header is-compact">
-		<h3 class="ea-card__header__title"><?php _e( 'Import Categories', 'wp-ever-accounting' ); ?></h3>
+		<h3 class="ea-card__title"><?php _e( 'Import Categories', 'wp-ever-accounting' ); ?></h3>
 	</div>
 
 	<div class="ea-card__inside">

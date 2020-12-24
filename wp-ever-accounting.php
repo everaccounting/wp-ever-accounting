@@ -38,7 +38,7 @@ final class EverAccounting {
 
 	/**
 	 * @since 1.0.2
-	 * @var \EverAccounting\Admin\Settings
+	 * @var \EAccounting_Settings
 	 */
 	public $settings;
 
@@ -259,7 +259,7 @@ final class EverAccounting {
 		// Core classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-settings.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
 
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
@@ -322,7 +322,7 @@ final class EverAccounting {
 		\EverAccounting\REST\Manager::instance();
 		\EverAccounting\Core\Emails::instance();
 
-		$this->settings = new \EverAccounting\Admin\Settings();
+		$this->settings = new EAccounting_Settings();
 		$this->utils    = new \EverAccounting\Utilities();
 
 		// Init action.

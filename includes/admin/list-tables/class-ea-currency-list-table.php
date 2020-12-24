@@ -53,6 +53,12 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	public $inactive_count;
 
 	/**
+	 * @since 1.1.0
+	 * @var string
+	 */
+	public $base_url;
+
+	/**
 	 * Get things started
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
@@ -62,14 +68,14 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 * @see WP_List_Table::__construct()
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args(
+		$args           = (array) wp_parse_args(
 			$args,
 			array(
 				'singular' => 'currency',
 				'plural'   => 'currencies',
 			)
 		);
-
+		$this->base_url = admin_url( 'admin.php?page=ea-settings&tab=currencies' );
 		parent::__construct( $args );
 	}
 
@@ -181,19 +187,10 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 
 		switch ( $column_name ) {
 			case 'name':
-				$name = $currency->get_name();
-
+				$name  = $currency->get_name();
 				$value = sprintf(
 					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'action'      => 'edit',
-								'tab'         => 'currencies',
-								'currency_id' => $currency_id,
-							)
-						)
-					),
+					esc_url( add_query_arg( array( 'currency_id' => $currency_id ) ), $this->base_url ),
 					$name
 				);
 				break;
@@ -213,20 +210,10 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				$value .= '</label>';
 				break;
 			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'         => 'currencies',
-						'action'      => 'edit',
-						'currency_id' => $currency_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'         => 'currencies',
-						'action'      => 'delete',
-						'currency_id' => $currency_id,
-					)
-				);
+				$base     = add_query_arg( array( 'currency_id' => $currency_id ), $this->base_url );
+				$nonce    = wp_create_nonce( 'currency-nonce' );
+				$edit_url = add_query_arg( array( 'action' => 'edit' ), $base );
+				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce ), $base ); //phpcs:ignore
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
 					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
