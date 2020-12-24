@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle the Income object.
+ * Handle the Revenue object.
  *
  * @package     EverAccounting\Models
  * @class       Payment
@@ -16,13 +16,13 @@ use EverAccounting\Traits\CurrencyTrait;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Payment
+ * Class Revenue
  *
  * @since   1.1.0
  *
  * @package EverAccounting\Models
  */
-class Income extends ResourceModel {
+class Revenue extends ResourceModel {
 	use CurrencyTrait;
 
 	/**
@@ -30,20 +30,20 @@ class Income extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'income';
+	protected $object_type = 'revenues';
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
-	public $cache_group = 'ea_incomes';
+	public $cache_group = 'ea_revenues';
 
 	/**
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -168,7 +168,7 @@ class Income extends ResourceModel {
 	 * Get formatted amount.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_formatted_amount() {
@@ -547,9 +547,9 @@ class Income extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @throws \Exception
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function save() {

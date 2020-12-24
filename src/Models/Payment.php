@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Expense extends ResourceModel {
+class Payment extends ResourceModel {
 	use CurrencyTrait;
 
 	/**
@@ -32,20 +32,20 @@ class Expense extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'expense';
+	protected $object_type = 'payments';
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
-	public $cache_group = 'ea_expenses';
+	public $cache_group = 'ea_payments';
 
 	/**
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -169,7 +169,7 @@ class Expense extends ResourceModel {
 	 * Get formatted amount.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function get_formatted_amount() {
@@ -559,9 +559,9 @@ class Expense extends ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @throws \Exception
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function save() {

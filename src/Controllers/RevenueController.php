@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Controllers
  */
-class IncomeController extends Singleton {
+class RevenueController extends Singleton {
 
 	/**
 	 * RevenueController constructor.
@@ -67,35 +67,35 @@ class IncomeController extends Singleton {
 	 * @param array     $data
 	 * @param null      $id
 	 * @param \WP_Error $errors
-	 * 
+	 *
 	 * @throws \Exception
 	 */
 	public static function validate_expense_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Income date is required.', 'wp-ever-accounting' ) );
+			throw new \Exception( 'empty_prop', __( 'Revenue date is required.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $data['payment_method'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
+			throw new \Exception( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
 		}
 
 		$category = eaccounting_get_category( $data['category_id'] );
 		if ( empty( $category ) || ! in_array( $category->get_type(), array( 'income', 'other' ), true ) ) {
-			throw new Exception( 'empty_prop', __( 'A valid income category is required.', 'wp-ever-accounting' ) );
+			throw new \Exception( 'empty_prop', __( 'A valid income category is required.', 'wp-ever-accounting' ) );
 		}
 
 		$account = eaccounting_get_account( $data['account_id'] );
 		if ( empty( $account ) ) {
-			throw new Exception( 'empty_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
+			throw new \Exception( 'empty_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
 		}
 
 		$customer = eaccounting_get_customer( $data['contact_id'] );
 		if ( ! empty( $data['contact_id'] ) && empty( $customer ) ) {
-			throw new Exception( 'empty_prop', __( 'Customer is not valid.', 'wp-ever-accounting' ) );
+			throw new \Exception( 'empty_prop', __( 'Customer is not valid.', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( eaccounting_sanitize_number( $data['amount'] ) ) ) {
-			throw new Exception( 'empty_prop', __( 'Income amount is required.', 'wp-ever-accounting' ) );
+			throw new \Exception( 'empty_prop', __( 'Revenue amount is required.', 'wp-ever-accounting' ) );
 		}
 
 	}

@@ -13,8 +13,8 @@ namespace EverAccounting\Repositories;
 use EverAccounting\Abstracts\ResourceRepository;
 
 use EverAccounting\Models\Account;
-use EverAccounting\Models\Expense;
-use EverAccounting\Models\Income;
+use EverAccounting\Models\Payment;
+use EverAccounting\Models\Revenue;
 use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || exit;
@@ -38,7 +38,7 @@ class Transfers extends ResourceRepository {
 	 * Table name.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -47,13 +47,13 @@ class Transfers extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data_type = array(
 		'id'           => '%d',
-		'income_id'    => '%d',
-		'expense_id'   => '%d',
+		'revenue_id'    => '%d',
+		'payment_id'   => '%d',
 		'creator_id'   => '%d',
 		'date_created' => '%s',
 	);
@@ -76,7 +76,7 @@ class Transfers extends ResourceRepository {
 			$wpdb->query( 'START TRANSACTION' );
 			$from_account = new Account( $transfer->get_from_account_id() );
 			$to_account   = new Account( $transfer->get_to_account_id() );
-			$expense      = new Expense( $transfer->get_expense_id() );
+			$expense      = new Payment( $transfer->get_expense_id() );
 			$expense->set_props(
 				array(
 					'account_id'     => $transfer->get_from_account_id(),
@@ -98,7 +98,7 @@ class Transfers extends ResourceRepository {
 				$amount           = eaccounting_price_convert_from_default( $amount, $to_account->get_currency_code(), $income_currency->get_rate() );
 			}
 			$transfer->set_expense_id( $expense->get_id() );
-			$income = new Income( $transfer->get_income_id() );
+			$income = new Revenue( $transfer->get_income_id() );
 			$income->set_props(
 				array(
 					'account_id'     => $to_account->get_id(),
@@ -205,11 +205,11 @@ class Transfers extends ResourceRepository {
 		}
 
 		try {
-			$income = new Income( $item->get_income_id() );
+			$income = new Revenue( $item->get_income_id() );
 			if ( ! $income->exists() ) {
 				throw new \Exception( __( 'Transfer data corrupted', 'wp-ever-accounting' ) );
 			}
-			$expense = new Expense( $item->get_expense_id() );
+			$expense = new Payment( $item->get_expense_id() );
 			if ( ! $expense->exists() ) {
 				throw new \Exception( __( 'Transfer data corrupted', 'wp-ever-accounting' ) );
 			}

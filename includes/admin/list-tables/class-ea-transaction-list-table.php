@@ -140,8 +140,8 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				$date   = $transaction->get_payment_date();
 				$type   = $transaction->get_type();
 				$page   = 'expense' !== $type ? 'ea-sales' : 'ea-expenses';
-				$tab    = 'expense' !== $type ? 'incomes' : 'payments';
-				$object = 'expense' !== $type ? 'income_id' : 'payment_id';
+				$tab    = 'expense' !== $type ? 'revenues' : 'payments';
+				$object = 'expense' !== $type ? 'revenue_id' : 'payment_id';
 				$value  = sprintf(
 					'<a href="%1$s">%2$s</a>',
 					esc_url(
@@ -244,7 +244,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'income_id',
+						'transaction_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
@@ -330,38 +330,36 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 		);
 		$this->items = eaccounting_get_transactions( $args );
 
-		$this->income_count = eaccounting_get_transactions(
+		$this->revenue_count = eaccounting_get_revenues(
 			array_merge(
 				$args,
 				array(
 					'count_total' => true,
-					'type'        => 'income',
 					'search'      => $search,
 				)
 			)
 		);
 
-		$this->expense_count = eaccounting_get_transactions(
+		$this->payment_count = eaccounting_get_payments(
 			array_merge(
 				$args,
 				array(
 					'count_total' => true,
-					'type'        => 'expense',
 					'search'      => $search,
 				)
 			)
 		);
 
-		$this->total_count = $this->income_count + $this->expense_count + $this->others_count;
+		$this->total_count = $this->revenue_count + $this->payment_count + $this->others_count;
 
 		$type = isset( $_GET['type'] ) ? $_GET['type'] : 'any';
 
 		switch ( $type ) {
 			case 'income':
-				$total_items = $this->income_count;
+				$total_items = $this->revenue_count;
 				break;
 			case 'expense':
-				$total_items = $this->expense_count;
+				$total_items = $this->payment_count;
 				break;
 			case 'other':
 				$total_items = $this->others_count;

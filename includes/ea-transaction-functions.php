@@ -18,28 +18,28 @@ defined( 'ABSPATH' ) || exit;
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
-		'income'  => __( 'Income', 'wp-ever-accounting' ),
-		'expense' => __( 'Expense', 'wp-ever-accounting' ),
+		'revenue'  => __( 'Revenue', 'wp-ever-accounting' ),
+		'payment' => __( 'Payment', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_transaction_types', $types );
 }
 
 /**
- * Get a single expense.
+ * Get a single payment.
  *
  * @since 1.1.0
  *
- * @param $expense
+ * @param $payment
  *
- * @return \EverAccounting\Models\Expense|null
+ * @return \EverAccounting\Models\Payment|null
  */
-function eaccounting_get_expense( $expense ) {
-	if ( empty( $expense ) ) {
+function eaccounting_get_payment( $payment ) {
+	if ( empty( $payment ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Expense( $expense );
+		$result = new EverAccounting\Models\Payment( $payment );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -49,7 +49,7 @@ function eaccounting_get_expense( $expense ) {
 
 
 /**
- *  Create new expense programmatically.
+ *  Create new payment programmatically.
  *
  *  Returns a new payment object on success.
  *
@@ -71,9 +71,9 @@ function eaccounting_get_expense( $expense ) {
  *
  * }
  *
- * @return EverAccounting\Models\Expense|\WP_Error|bool
+ * @return EverAccounting\Models\Payment|\WP_Error|bool
  */
-function eaccounting_insert_expense( $args, $wp_error = true ) {
+function eaccounting_insert_payment( $args, $wp_error = true ) {
 	// Ensure that we have data.
 	if ( empty( $args ) ) {
 		return false;
@@ -83,7 +83,7 @@ function eaccounting_insert_expense( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the expense.
-		$item = new \EverAccounting\Models\Expense( $args['id'] );
+		$item = new \EverAccounting\Models\Payment( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -98,19 +98,19 @@ function eaccounting_insert_expense( $args, $wp_error = true ) {
 }
 
 /**
- * Delete a expense.
+ * Delete a payment.
  *
  * @since 1.1.0
  *
- * @param $expense_id
+ * @param $payment_id
  *
  * @return bool
  */
-function eaccounting_delete_expense( $expense_id ) {
+function eaccounting_delete_payment( $payment_id ) {
 	try {
-		$expense = new EverAccounting\Models\Expense( $expense_id );
+		$payment = new EverAccounting\Models\Payment( $payment_id );
 
-		return $expense->exists() ? $expense->delete() : false;
+		return $payment->exists() ? $payment->delete() : false;
 	} catch ( \Exception $e ) {
 		return false;
 	}
@@ -118,7 +118,7 @@ function eaccounting_delete_expense( $expense_id ) {
 }
 
 /**
- * Get expense items.
+ * Get payment items.
  *
  * @since 1.1.0
  *
@@ -140,7 +140,7 @@ function eaccounting_delete_expense( $expense_id ) {
  *
  * @return array|int
  */
-function eaccounting_get_expenses( $args = array() ) {
+function eaccounting_get_payments( $args = array() ) {
 	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense' ) ) );
 }
 
@@ -149,16 +149,16 @@ function eaccounting_get_expenses( $args = array() ) {
  *
  * @since 1.1.0
  *
- * @param $income
+ * @param $revenue
  *
- * @return \EverAccounting\Models\Income|null
+ * @return \EverAccounting\Models\Revenue|null
  */
-function eaccounting_get_income( $income ) {
-	if ( empty( $income ) ) {
+function eaccounting_get_revenue( $revenue ) {
+	if ( empty( $revenue ) ) {
 		return null;
 	}
 	try {
-		$result = new EverAccounting\Models\Income( $income );
+		$result = new EverAccounting\Models\Revenue( $revenue );
 
 		return $result->exists() ? $result : null;
 	} catch ( \Exception $e ) {
@@ -168,7 +168,7 @@ function eaccounting_get_income( $income ) {
 
 
 /**
- *  Create new income programmatically.
+ *  Create new revenue programmatically.
  *
  *  Returns a new revenue object on success.
  *
@@ -189,9 +189,9 @@ function eaccounting_get_income( $income ) {
  *
  * }
  *
- * @return EverAccounting\Models\Income|\WP_Error|bool
+ * @return EverAccounting\Models\Revenue|\WP_Error|bool
  */
-function eaccounting_insert_income( $args, $wp_error = true ) {
+function eaccounting_insert_revenue( $args, $wp_error = true ) {
 	// Ensure that we have data.
 	if ( empty( $args ) ) {
 		return false;
@@ -201,7 +201,7 @@ function eaccounting_insert_income( $args, $wp_error = true ) {
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
 		// Retrieve the income.
-		$item = new \EverAccounting\Models\Income( $args['id'] );
+		$item = new \EverAccounting\Models\Revenue( $args['id'] );
 
 		// Load new data.
 		$item->set_props( $args );
@@ -216,19 +216,19 @@ function eaccounting_insert_income( $args, $wp_error = true ) {
 }
 
 /**
- * Delete a income.
+ * Delete a revenue.
  *
  * @since 1.1.0
  *
- * @param $income_id
+ * @param $revenue_id
  *
  * @return bool
  */
-function eaccounting_delete_income( $income_id ) {
+function eaccounting_delete_revenue( $revenue_id ) {
 	try {
-		$income = new EverAccounting\Models\Income( $income_id );
+		$revenue = new EverAccounting\Models\Revenue( $revenue_id );
 
-		return $income->exists() ? $income->delete() : false;
+		return $revenue->exists() ? $revenue->delete() : false;
 	} catch ( \Exception $e ) {
 		return false;
 	}
@@ -254,9 +254,9 @@ function eaccounting_delete_income( $income_id ) {
  * @type string $description    Description of the transaction.
  *
  * }
- * @return \EverAccounting\Models\Income[]|int
+ * @return \EverAccounting\Models\Revenue[]|int
  */
-function eaccounting_get_incomes( $args = array() ) {
+function eaccounting_get_revenues( $args = array() ) {
 	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );
 }
 
@@ -577,14 +577,14 @@ function eaccounting_get_transactions( $args = array() ) {
 			function ( $item ) {
 				switch ( $item->type ) {
 					case 'income':
-						$transaction = new \EverAccounting\Models\Income();
+						$transaction = new \EverAccounting\Models\Revenue();
 						$transaction->set_props( $item );
 						$transaction->set_object_read( true );
 
 						return $transaction;
 						break;
 					case 'expense':
-						$transaction = new \EverAccounting\Models\Expense();
+						$transaction = new \EverAccounting\Models\Payment();
 						$transaction->set_props( $item );
 						$transaction->set_object_read( true );
 
