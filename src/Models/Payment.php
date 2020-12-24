@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle the Expense object.
+ * Handle the Payment object.
  *
  * @package     EverAccounting\Models
  * @class       Payment
@@ -49,7 +49,7 @@ class Payment extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'type'           => 'expense',
+		'type'           => 'payment',
 		'payment_date'   => null,
 		'amount'         => 0.00,
 		'currency_code'  => '', // protected

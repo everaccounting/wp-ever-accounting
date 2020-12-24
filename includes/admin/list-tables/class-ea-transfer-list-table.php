@@ -135,7 +135,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * Renders the checkbox column in the incomes list table.
+	 * Renders the checkbox column in the transfers list table.
 	 *
 	 * @param Transfer $transfer The current object.
 	 *
@@ -321,7 +321,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 			);
 		}
 
-		$args        = apply_filters( 'eaccounting_income_table_query_args', $args, $this );
+		$args        = apply_filters( 'eaccounting_transfer_table_query_args', $args, $this );
 		$this->items = eaccounting_get_transfers( $args );
 
 		$this->total_count = eaccounting_get_transfers( array_merge( $args, array( 'count_total' => true ) ) );

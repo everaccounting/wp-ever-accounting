@@ -3,7 +3,7 @@
  * Admin Revenue View Page.
  *
  * @since       1.1.0
- * @subpackage  Admin/Sales/Expense
+ * @subpackage  Admin/Sales/Revenue
  * @package     EverAccounting
  *
  * @var int $revenue_id

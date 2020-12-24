@@ -47,7 +47,7 @@ class Revenue extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'type'           => 'income',
+		'type'           => 'revenue',
 		'type_id'        => null,
 		'payment_date'   => null,
 		'amount'         => 0.00,
