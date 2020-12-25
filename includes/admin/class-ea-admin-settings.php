@@ -19,18 +19,19 @@ class EAccounting_Admin_Settings {
 	 * EAccounting_Admin_Settings constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 100 );
+		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 100 );
 		add_filter( 'eaccounting_settings', array( $this, 'register_settings' ) );
 		add_filter( 'eaccounting_settings_emails', array( $this, 'register_email_settings' ) );
 		add_filter( 'eaccounting_settings_tab_currencies', array( $this, 'render_currencies_tab' ) );
 		add_filter( 'eaccounting_settings_tab_categories', array( $this, 'render_categories_tab' ) );
+		add_filter( 'eaccounting_settings_tab_taxes', array( $this, 'render_taxes_tab' ) );
 	}
 
 	/**
-	 * Registers the reports page.
+	 * Registers the page.
 	 *
 	 */
-	public function register_reports_page() {
+	public function register_settings_page() {
 		add_submenu_page(
 			'eaccounting',
 			__( 'Settings', 'wp-ever-accounting' ),
@@ -350,7 +351,6 @@ class EAccounting_Admin_Settings {
 
 		return array_merge( $registered, $settings );
 	}
-
 
 	/**
 	 * Add email settings.
@@ -731,6 +731,144 @@ class EAccounting_Admin_Settings {
 		} else {
 			include dirname( __FILE__ ) . '/views/categories/list-category.php';
 		}
+	}
+
+	public function render_taxes_tab() {
+		$currencies = eaccounting_get_currencies();
+		$codes      = eaccounting_get_global_currencies();
+		?>
+		<style>
+			#ea_currencies {
+
+			}
+
+			#ea_currencies th {
+				padding: 15px 10px;
+			}
+
+			#ea_currencies .ea_currencies_action {
+				width: 100px;
+			}
+
+			#ea_currencies .ea_currencies_code {
+				width: 250px;
+			}
+
+			#ea_currencies .ea_currencies_code select {
+				width: 100%;
+			}
+
+			#ea_currencies .ea_currencies_rate,
+			#ea_currencies .ea_currencies_precision {
+				width: 100px;
+			}
+
+			#ea_currencies .ea_currencies_decimal_separator,
+			#ea_currencies .ea_currencies_thousand_separator {
+				width: 120px;
+			}
+
+			#ea_currencies .ea_currencies_position {
+				width: 150px;
+			}
+		</style>
+		<script>
+			var eaccounting_codes = <?php echo json_encode( $codes ); ?>
+		</script>
+
+		<form id="ea-currency-settings" method="post">
+
+			<table id="ea_currencies" class="form-table wp-list-table widefat fixed striped">
+				<thead>
+				<tr>
+					<th scope="col" class="ea_currencies_code">Currency</th>
+					<th scope="col" class="ea_currencies_rate">Rate</th>
+					<th scope="col" class="ea_currencies_precision">Precision</th>
+					<th scope="col" class="ea_currencies_position">Position</th>
+					<th scope="col" class="ea_currencies_decimal_separator">Decimal Separator</th>
+					<th scope="col" class="ea_currencies_thousand_separator">Thousands Separator</th>
+					<th scope="col" class="ea_currencies_action">Remove</th>
+				</tr>
+				</thead>
+				<tbody>
+				<?php if ( ! empty( $currencies ) ) : ?>
+					<?php foreach ( array_values( $currencies ) as $key => $currency ) : ?>
+						<tr>
+							<td class="ea_currencies_code">
+								<select class="widefat ea-select2 select" id="currencies[<?php echo absint( $key ); ?>>][code]" name="currencies[<?php echo absint( $key ); ?>][code]" required="required">
+									<?php foreach ( $codes as $code => $props ) : ?>
+										<option value="<?php echo esc_attr( $code ); ?>" <?php selected( $currency['code'], $code ); ?>>
+											<?php echo esc_html( sprintf( '%s (%s)', $props['name'], $props['symbol'] ) ); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</td>
+							<td class="ea_currencies_rate">
+								<input type="number" class="large-text" step="0.0001" min="0.0" name="currencies[<?php echo absint( $key ); ?>][rate]" value="<?php echo eaccounting_format_decimal( $currency['rate'], 4 ); ?>" required="required"/>
+							<td class="ea_currencies_precision">
+								<input type="number" class="large-text" step="1" min="0" max="4" maxlength="1" name="currencies[<?php echo absint( $key ); ?>][precision]" value="<?php echo eaccounting_format_decimal( $currency['precision'], 0 ); ?>" required="required"/>
+							</td>
+							<td class="ea_currencies_position">
+								<select class="widefat select" name="currencies[<?php echo absint( $key ); ?>][position]" required="required">
+									<option value="before" <?php selected( $currency['position'], 'before' ); ?>>Before</option>
+									<option value="after" <?php selected( $currency['position'], 'after' ); ?>>After</option>
+								</select>
+							</td>
+							<td class="ea_currencies_decimal_separator">
+								<input type="text" class="large-text" name="currencies[<?php echo absint( $key ); ?>][decimal_separator]" maxlength="1" value="<?php echo eaccounting_clean( $currency['decimal_separator'] ); ?>" required="required"/>
+							</td>
+							<td class="ea_currencies_thousand_separator">
+								<input type="text" class="large-text" name="currencies[<?php echo absint( $key ); ?>][thousand_separator]" maxlength="1" value="<?php echo eaccounting_clean( $currency['thousand_separator'] ); ?>" required="required"/>
+							</td>
+
+							<td class="ea_currencies_action">
+								<button type="button" class="ea_remove_currency button-secondary"><?php _e( 'Remove', 'wp-ever-accounting' ); ?></button>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php else : ?>
+					<tr>
+						<td class="ea_currencies_code">
+							<select class="widefat ea-select2 select" id="currencies[0][code]" name="currencies[0][code]" required="required">
+								<?php foreach ( $codes as $code => $props ) : ?>
+									<option value="<?php echo esc_attr( $code ); ?>"><?php echo esc_html( sprintf( '%s (%s)', $props['name'], $props['symbol'] ) ); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</td>
+						<td class="ea_currencies_rate">
+							<input type="number" class="large-text" step="0.0001" min="0.0" name="currencies[0][rate]" value="1.00" required="required"/>
+						<td class="ea_currencies_precision">
+							<input type="number" class="large-text" step="1" min="0" max="4" maxlength="1" name="currencies[0][precision]" value="1" required="required"/>
+						</td>
+						<td class="ea_currencies_position">
+							<select class="widefat select" name="currencies[0][position]" required="required">
+								<option value="before" selected="selected">Before</option>
+								<option value="after">After</option>
+							</select>
+						</td>
+						<td class="ea_currencies_decimal_separator">
+							<input type="text" class="large-text" name="currencies[0][decimal_separator]" maxlength="1" value="." required="required"/>
+						</td>
+						<td class="ea_currencies_thousand_separator">
+							<input type="text" class="large-text" name="currencies[0][thousand_separator]" maxlength="1" value="," required="required"/>
+						</td>
+
+						<td class="ea_currencies_action">
+							<button type="button" class="ea_remove_currency button-secondary"><?php _e( 'Remove', 'wp-ever-accounting' ); ?></button>
+						</td>
+					</tr>
+				<?php endif; ?>
+
+				</tbody>
+			</table>
+			<p>
+				<input type="hidden" name="action" value="eaccounting_update_currencies">
+				<?php wp_nonce_field( 'ea_update_currencies' ); ?>
+				<button type="button" class="button button-secondary" id="ea_add_currency"><?php _e( 'Add Currency', 'wp-ever-accounting' ); ?></button>
+				<button type="submit" class="button button-primary" id="ea_save_currency"><?php _e( 'Save', 'wp-ever-accounting' ); ?></button>
+			</p>
+		</form>
+		<?php
 	}
 }
 

@@ -53,12 +53,14 @@ class Vendor extends ResourceModel {
 		'name'          => '',
 		'email'         => '',
 		'phone'         => '',
-		'fax'           => '',
 		'birth_date'    => '',
-		'address'       => '',
+		'street'        => '',
+		'city'          => '',
+		'state'         => '',
+		'postcode'      => '',
 		'country'       => '',
 		'website'       => '',
-		'tax_number'    => '',
+		'vat_number'    => '',
 		'currency_code' => '',
 		'type'          => 'vendor',
 		'thumbnail_id'  => null,
@@ -170,7 +172,7 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Get contact's phone number.
+	 * Get contact's website number.
 	 *
 	 * @since 1.0.2
 	 *
@@ -178,8 +180,8 @@ class Vendor extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_fax( $context = 'edit' ) {
-		return $this->get_prop( 'fax', $context );
+	public function get_website( $context = 'edit' ) {
+		return $this->get_prop( 'website', $context );
 	}
 
 	/**
@@ -196,7 +198,7 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Get contact's address.
+	 * Get contact's street.
 	 *
 	 * @since 1.0.2
 	 *
@@ -204,8 +206,47 @@ class Vendor extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_address( $context = 'edit' ) {
-		return $this->get_prop( 'address', $context );
+	public function get_street( $context = 'edit' ) {
+		return $this->get_prop( 'street', $context );
+	}
+
+	/**
+	 * Get contact's city.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_city( $context = 'edit' ) {
+		return $this->get_prop( 'city', $context );
+	}
+
+	/**
+	 * Get contact's state.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_state( $context = 'edit' ) {
+		return $this->get_prop( 'state', $context );
+	}
+
+	/**
+	 * Get contact's postcode.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_postcode( $context = 'edit' ) {
+		return $this->get_prop( 'postcode', $context );
 	}
 
 	/**
@@ -237,7 +278,7 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Get contact's website number.
+	 * Get contact's vat number.
 	 *
 	 * @since 1.0.2
 	 *
@@ -245,21 +286,8 @@ class Vendor extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_website( $context = 'edit' ) {
-		return $this->get_prop( 'website', $context );
-	}
-
-	/**
-	 * Get contact's tax number.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param string $context
-	 *
-	 * @return string
-	 */
-	public function get_tax_number( $context = 'edit' ) {
-		return $this->get_prop( 'tax_number', $context );
+	public function get_vat_number( $context = 'edit' ) {
+		return $this->get_prop( 'vat_number', $context );
 	}
 
 	/**
@@ -289,7 +317,6 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * <<<<<<< HEAD
 	 * Get avatar id
 	 *
 	 * @since 1.1.0
@@ -345,7 +372,6 @@ class Vendor extends ResourceModel {
 	 *
 	 */
 	public function set_email( $value ) {
-		//$this->set_prop( 'email', sanitize_email( $value ) );
 		if ( $value && is_email( $value ) ) {
 			$this->set_prop( 'email', sanitize_email( $value ) );
 		}
@@ -364,15 +390,15 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Set contact's fax.
+	 * Set contact's website.
 	 *
 	 * @since 1.0.2
 	 *
 	 * @param $value
 	 *
 	 */
-	public function set_fax( $value ) {
-		$this->set_prop( 'fax', eaccounting_clean( $value ) );
+	public function set_website( $value ) {
+		$this->set_prop( 'website', esc_url( $value ) );
 	}
 
 	/**
@@ -386,17 +412,52 @@ class Vendor extends ResourceModel {
 	public function set_birth_date( $date ) {
 		$this->set_date_prop( 'birth_date', $date );
 	}
-
 	/**
-	 * Set contact's phone.
+	 * Set contact's street.
 	 *
 	 * @since 1.0.2
 	 *
 	 * @param $value
 	 *
 	 */
-	public function set_address( $value ) {
-		$this->set_prop( 'address', sanitize_textarea_field( $value ) );
+	public function set_street( $value ) {
+		$this->set_prop( 'street', sanitize_text_field( $value ) );
+	}
+
+	/**
+	 * Set contact's city.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $city
+	 *
+	 */
+	public function set_city( $city ) {
+		$this->set_prop( 'city', sanitize_text_field( $city ) );
+	}
+
+	/**
+	 * Set contact's state.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $state
+	 *
+	 */
+	public function set_state( $state ) {
+		$this->set_prop( 'state', sanitize_text_field( $state ) );
+	}
+
+	/**
+	 * Set contact's postcode.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $postcode
+	 *
+	 */
+	public function set_postcode( $postcode ) {
+		$this->set_prop( 'postcode', sanitize_text_field( $postcode ) );
 	}
 
 	/**
@@ -414,27 +475,15 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * Set contact's website.
+	 * Set contact's vat_number.
 	 *
 	 * @since 1.0.2
 	 *
 	 * @param $value
 	 *
 	 */
-	public function set_website( $value ) {
-		$this->set_prop( 'website', esc_url( $value ) );
-	}
-
-	/**
-	 * Set contact's tax_number.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param $value
-	 *
-	 */
-	public function set_tax_number( $value ) {
-		$this->set_prop( 'tax_number', eaccounting_clean( $value ) );
+	public function set_vat_number( $value ) {
+		$this->set_prop( 'vat_number', eaccounting_clean( $value ) );
 	}
 
 	/**
@@ -466,7 +515,6 @@ class Vendor extends ResourceModel {
 	}
 
 	/**
-	 * <<<<<<< HEAD
 	 * Set avatar id
 	 *
 	 * @since 1.1.0
@@ -496,5 +544,14 @@ class Vendor extends ResourceModel {
 		}
 
 		return get_avatar_url( $this->get_email(), wp_parse_args( $args, array( 'size' => '100' ) ) );
+	}
+
+
+	/**
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_default_image_url() {
+		return $this->get_avatar_url();
 	}
 }

@@ -1,33 +1,24 @@
 <?php
-/**
- * Handle the order item object.
- *
- * @package     EverAccounting\Models
- * @class       Currency
- * @version     1.1.0
- */
 
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
 
-defined( 'ABSPATH' ) || exit;
-
-class LineItem extends ResourceModel {
+class InvoiceItem extends ResourceModel {
 	/**
 	 * This is the name of this object type.
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'line_item';
+	protected $object_type = 'invoice_item';
 
 	/**
 	 * @since 1.1.0
 	 *
 	 * @var string
 	 */
-	public $cache_group = 'ea_line_items';
+	public $cache_group = 'ea_invoice_items';
 
 	/**
 	 * Item Data array.
@@ -37,15 +28,19 @@ class LineItem extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'document_id'   => null,
+		'invoice_id'    => null,
 		'item_id'       => null,
 		'item_name'     => '',
-		'price'         => 0.00,
+		'unit_price'    => 0.00,
 		'quantity'      => 1,
-		'subtotal'      => 1,
+		'subtotal'      => 0.00,
 		'tax_rate'      => 0.00,
+		'subtotal_tax'  => 0.00,
 		'discount'      => 0.00,
-		'tax'           => 0.00,
+		'discount_tax'  => 0.00,
+		'shipping'      => 0.00,
+		'shipping_tax'  => 0.00,
+		'total_tax'     => 0.00,
 		'total'         => 0.00,
 		'currency_code' => '',
 		'extra'         => '',
@@ -76,28 +71,26 @@ class LineItem extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( 'line-items' );
+		$this->repository = Repositories::load( 'invoice-items' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
 
 		$this->required_props = array(
-			'item_id'     => __( 'Item ID', 'wp-ever-accounting' ),
-			'item_name'   => __( 'Item name', 'wp-ever-accounting' ),
-			'document_id' => __( 'Document ID', 'wp-ever-accounting' ),
+			'item_id'    => __( 'Item ID', 'wp-ever-accounting' ),
+			'item_name'  => __( 'Item name', 'wp-ever-accounting' ),
+			'invoice_id' => __( 'Invoice ID', 'wp-ever-accounting' ),
 		);
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
 	*/
-
 	/**
-	 * Return the order id.
+	 * Return the invoice id.
 	 *
 	 * @since  1.1.0
 	 *
@@ -105,8 +98,8 @@ class LineItem extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_document_id( $context = 'edit' ) {
-		return $this->get_prop( 'document_id', $context );
+	public function get_invoice_id( $context = 'edit' ) {
+		return $this->get_prop( 'invoice_id', $context );
 	}
 
 	/**
@@ -136,19 +129,6 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
-	 * Return the price.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return string
-	 */
-	public function get_price( $context = 'edit' ) {
-		return $this->get_prop( 'price', $context );
-	}
-
-	/**
 	 * Return the quantity.
 	 *
 	 * @since  1.1.0
@@ -161,17 +141,31 @@ class LineItem extends ResourceModel {
 		return $this->get_prop( 'quantity', $context );
 	}
 
+
 	/**
-	 * Return the sub_total.
+	 * Return the price.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_unit_price( $context = 'edit' ) {
+		return $this->get_prop( 'unit_price', $context );
+	}
+
+	/**
+	 * Return the tax.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 */
-	public function get_subtotal( $context = 'edit' ) {
-		return $this->get_prop( 'subtotal', $context );
+	public function get_tax_name( $context = 'edit' ) {
+		return $this->get_prop( 'tax_name', $context );
 	}
 
 	/**
@@ -188,6 +182,32 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
+	 * Return the sub_total.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return float
+	 */
+	public function get_subtotal( $context = 'edit' ) {
+		return $this->get_prop( 'subtotal', $context );
+	}
+
+	/**
+	 * Return the sub_total.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return float
+	 */
+	public function get_subtotal_tax( $context = 'edit' ) {
+		return $this->get_prop( 'subtotal_tax', $context );
+	}
+
+	/**
 	 * Return the discount.
 	 *
 	 * @since  1.1.0
@@ -201,16 +221,55 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
-	 * Get total tax.
+	 * Return the discount.
 	 *
-	 * @since 1.1.0
+	 * @since  1.1.0
 	 *
-	 * @param string $context
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 */
-	public function get_tax( $context = 'edit' ) {
-		return $this->get_prop( 'tax', $context );
+	public function get_discount_tax( $context = 'edit' ) {
+		return $this->get_prop( 'discount_tax', $context );
+	}
+
+	/**
+	 * Return the discount.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return float
+	 */
+	public function get_shipping( $context = 'edit' ) {
+		return $this->get_prop( 'shipping', $context );
+	}
+
+	/**
+	 * Return the shipping.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return float
+	 */
+	public function get_shipping_tax( $context = 'edit' ) {
+		return $this->get_prop( 'shipping_tax', $context );
+	}
+
+	/**
+	 * Return the total.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return float
+	 */
+	public function get_total_tax( $context = 'edit' ) {
+		return $this->get_prop( 'total_tax', $context );
 	}
 
 	/**
@@ -227,7 +286,18 @@ class LineItem extends ResourceModel {
 	}
 
 	/**
-	 * Return the total.
+	 * @since 1.1.0
+	 *
+	 * @param bool $serialize
+	 *
+	 * @return array|mixed|string
+	 */
+	public function get_extra( $serialize = true ) {
+		return $this->get_prop( 'extra' );
+	}
+
+	/**
+	 * Return the currency code.
 	 *
 	 * @since  1.1.0
 	 *
@@ -237,17 +307,6 @@ class LineItem extends ResourceModel {
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
-	}
-
-	/**
-	 * @since 1.1.0
-	 *
-	 * @param string $context
-	 *
-	 * @return array|mixed|string
-	 */
-	public function get_extra( $context = 'edit' ) {
-		return $this->get_prop( 'extra' );
 	}
 
 	/*
@@ -261,11 +320,24 @@ class LineItem extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $document_id .
+	 * @param int $invoice_id .
 	 *
 	 */
-	public function set_document_id( $document_id ) {
-		$this->set_prop( 'document_id', absint( $document_id ) );
+	public function set_invoice_id( $invoice_id ) {
+		$this->set_prop( 'invoice_id', absint( $invoice_id ) );
+	}
+
+	/**
+	 * Return type
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_type( $context = 'edit' ) {
+		return $this->get_prop( 'type', $context );
 	}
 
 	/**
@@ -289,7 +361,7 @@ class LineItem extends ResourceModel {
 	 *
 	 */
 	public function set_item_name( $name ) {
-		$this->set_prop( 'item_name', sanitize_text_field( $name ) );
+		$this->set_prop( 'item_name', eaccounting_clean( $name ) );
 	}
 
 	/**
@@ -300,8 +372,8 @@ class LineItem extends ResourceModel {
 	 * @param double $price .
 	 *
 	 */
-	public function set_price( $price ) {
-		$this->set_prop( 'price', eaccounting_format_decimal( $price, 2 ) );
+	public function set_unit_price( $price ) {
+		$this->set_prop( 'unit_price', (float) eaccounting_sanitize_number( $price, true ) );
 	}
 
 
@@ -314,43 +386,42 @@ class LineItem extends ResourceModel {
 	 *
 	 */
 	public function set_quantity( $quantity = 1 ) {
-		$this->set_prop( 'quantity', eaccounting_format_decimal( $quantity, 2 ) );
+		$this->set_prop( 'quantity', eaccounting_sanitize_number( $quantity ) );
 	}
 
 	/**
-	 * set the tax.
-	 *
-	 * Flat amount
+	 * Return the sub_total.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param double $subtotal .
-	 *
+	 * @param string $subtotal
 	 */
 	public function set_subtotal( $subtotal ) {
-		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 4 ) );
+		$this->set_prop( 'subtotal', eaccounting_sanitize_number( $subtotal ) );
 	}
+
 
 	/**
 	 * set the tax.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param $tax_rate
+	 * @param double $tax .
+	 *
 	 */
 	public function set_tax_rate( $tax_rate ) {
-		$this->set_prop( 'tax_rate', eaccounting_format_decimal( $tax_rate, 4 ) );
+		$this->set_prop( 'tax_rate', floatval( $tax_rate ) );
 	}
 
 	/**
-	 * set the tax.
+	 * Return the sub_total.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param $tax
+	 * @param string $subtotal_tax
 	 */
-	public function set_tax( $tax ) {
-		$this->set_prop( 'tax', eaccounting_format_decimal( $tax, 4 ) );
+	public function set_subtotal_tax( $subtotal_tax ) {
+		$this->set_prop( 'subtotal_tax', eaccounting_sanitize_number( $subtotal_tax ) );
 	}
 
 	/**
@@ -364,7 +435,49 @@ class LineItem extends ResourceModel {
 	 *
 	 */
 	public function set_discount( $discount ) {
-		$this->set_prop( 'discount', floatval( $discount ) );
+		$this->set_prop( 'discount', eaccounting_sanitize_number( $discount ) );
+	}
+
+	/**
+	 * set the tax.
+	 *
+	 * Flat amount
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param double $discount_tax .
+	 *
+	 */
+	public function set_discount_tax( $discount_tax ) {
+		$this->set_prop( 'discount_tax', eaccounting_sanitize_number( $discount_tax ) );
+	}
+
+	/**
+	 * set the tax.
+	 *
+	 * Flat amount
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param double $shipping .
+	 *
+	 */
+	public function set_shipping( $shipping ) {
+		$this->set_prop( 'shipping', eaccounting_sanitize_number( $shipping ) );
+	}
+
+	/**
+	 * set the tax.
+	 *
+	 * Flat amount
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param double $shipping_tax .
+	 *
+	 */
+	public function set_shipping_tax( $shipping_tax ) {
+		$this->set_prop( 'shipping_tax', eaccounting_sanitize_number( $shipping_tax ) );
 	}
 
 	/**
@@ -376,18 +489,7 @@ class LineItem extends ResourceModel {
 	 *
 	 */
 	public function set_total( $total ) {
-		$this->set_prop( 'total', eaccounting_format_decimal( $total, 4 ) );
-	}
-
-	/**
-	 * set the total.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param $currency_code
-	 */
-	public function set_currency_code( $currency_code ) {
-		$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
+		$this->set_prop( 'total', floatval( $total ) );
 	}
 
 	/**
@@ -400,30 +502,4 @@ class LineItem extends ResourceModel {
 	public function set_extra( $extra ) {
 		$this->set_prop( 'extra', eaccounting_clean( $extra ) );
 	}
-
-
-	public function recalculate() {
-		$subtotal         = $this->get_price() * $this->get_quantity();
-		$discount         = $this->get_discount();
-		$subtotal_for_tax = $subtotal - $discount;
-		$tax_rate         = ( $this->get_tax_rate() / 100 );
-		$total_tax        = eaccounting_calculate_tax( $subtotal_for_tax, $tax_rate );
-
-		if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
-			$total_tax = eaccounting_format_decimal( $total_tax, 2 );
-		}
-		if ( eaccounting_prices_include_tax() ) {
-			$subtotal -= $total_tax;
-		}
-		$total = $subtotal - $discount + $total_tax;
-		if ( $total < 0 ) {
-			$total = 0;
-		}
-
-		$this->set_subtotal( $subtotal );
-		$this->set_tax( $total_tax );
-		$this->set_total( $total );
-
-	}
-
 }

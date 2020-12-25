@@ -18,7 +18,7 @@ if ( empty( $vendor ) || ! $vendor->exists() ) {
 	wp_die( __( 'Sorry, Vendor does not exist', 'wp-ever-accounting' ) );
 }
 
-$sections   = array(
+$sections = array(
 	'transactions' => __( 'Transactions', 'wp-ever-accounting' ),
 	'bills'        => __( 'Bills', 'wp-ever-accounting' ),
 );
@@ -28,9 +28,9 @@ $first_section   = current( array_keys( $sections ) );
 $current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
 $edit_url        = eaccounting_admin_url(
 	array(
-		'page'        => 'ea-expenses',
-		'tab'         => 'vendors',
-		'action'      => 'edit',
+		'page'      => 'ea-expenses',
+		'tab'       => 'vendors',
+		'action'    => 'edit',
 		'vendor_id' => $vendor->get_id(),
 	)
 );
@@ -70,7 +70,7 @@ $edit_url        = eaccounting_admin_url(
 							'tab'       => 'vendors',
 							'action'    => 'view',
 							'vendor_id' => $vendor_id,
-							'section'    => $section_id,
+							'section'   => $section_id,
 						)
 					);
 					?>
@@ -105,7 +105,7 @@ $edit_url        = eaccounting_admin_url(
 
 			<div class="ea-card__inside">
 				<div class="ea-avatar ea-center-block">
-					<img src="<?php echo esc_url( $vendor->get_avatar_url() ); ?>" alt="<?php echo esc_html( $vendor->get_name() ); ?>">
+					<img src="<?php echo esc_url( $vendor->get_attachment_url() ); ?>" alt="<?php echo esc_html( $vendor->get_name() ); ?>">
 				</div>
 			</div>
 
@@ -131,12 +131,8 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_email() ) ? $vendor->get_email() : '&mdash;'; ?></div>
 				</div>
 				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Fax', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_fax() ) ? $vendor->get_fax() : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Tax Number', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_tax_number() ) ? $vendor->get_tax_number() : '&mdash;'; ?></div>
+					<div class="ea-list-group__title"><?php esc_html_e( 'VAT Number', 'wp-ever-accounting' ); ?></div>
+					<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_vat_number() ) ? $vendor->get_vat_number() : '&mdash;'; ?></div>
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Website', 'wp-ever-accounting' ); ?></div>
@@ -144,7 +140,19 @@ $edit_url        = eaccounting_admin_url(
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $vendor->get_address() ) ? $vendor->get_address() : '&mdash;'; ?></div>
+					<div class="ea-list-group__text">
+						<?php
+						echo eaccounting_format_address(
+							array(
+								'street'   => $vendor->get_street(),
+								'city'     => $vendor->get_city(),
+								'state'    => $vendor->get_state(),
+								'postcode' => $vendor->get_postcode(),
+								'country'  => $vendor->get_country_nicename(),
+							)
+						);
+						?>
+					</div>
 				</div>
 			</div>
 
@@ -153,9 +161,9 @@ $edit_url        = eaccounting_admin_url(
 					<?php
 					echo sprintf(
 					/* translators: %s date and %s name */
-							esc_html__( 'The vendor was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_format_datetime( $vendor->get_date_created(), 'F m, Y H:i a' ),
-							eaccounting_get_username( $vendor->get_creator_id() )
+						esc_html__( 'The vendor was created at %1$s by %2$s', 'wp-ever-accounting' ),
+						eaccounting_format_datetime( $vendor->get_date_created(), 'F m, Y H:i a' ),
+						eaccounting_get_username( $vendor->get_creator_id() )
 					);
 					?>
 				</p>

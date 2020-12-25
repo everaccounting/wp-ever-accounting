@@ -135,6 +135,7 @@ class Ajax {
 			'get_item_categories',
 			'get_items',
 			'get_vendors',
+			'update_currencies',
 			'item_status_update',
 			'invoice_recalculate',
 		);
@@ -147,8 +148,8 @@ class Ajax {
 	/**
 	 * Add payment to invoice.
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	public static function add_invoice_payment() {
 		self::verify_nonce( 'ea_add_invoice_payment' );
@@ -178,8 +179,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_account() {
 		self::verify_nonce( 'ea_edit_account' );
@@ -216,8 +217,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
@@ -253,8 +254,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating customer.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_customer() {
 		self::verify_nonce( 'ea_edit_customer' );
@@ -292,8 +293,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating currencies.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_currency() {
 		self::verify_nonce( 'ea_edit_currency' );
@@ -330,8 +331,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating invoice.
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	public static function edit_invoice() {
 		self::verify_nonce( 'ea_edit_invoice' );
@@ -362,8 +363,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating item.
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	public static function edit_item() {
 		self::verify_nonce( 'ea_edit_item' );
@@ -399,8 +400,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating payment.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
@@ -438,8 +439,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating revenue.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
@@ -477,8 +478,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating transfer.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
@@ -517,8 +518,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating vendor.
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	public static function edit_vendor() {
 		self::verify_nonce( 'ea_edit_vendor' );
@@ -556,8 +557,8 @@ class Ajax {
 	/**
 	 * Get single account.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public static function get_account() {
 		self::verify_nonce( 'ea_get_account' );
@@ -698,9 +699,10 @@ class Ajax {
 
 	/**
 	 * Get currency codes.
+	 *
 	 * @since 1.1.0
 	 */
-	public static function get_currency_codes(){
+	public static function get_currency_codes() {
 		self::verify_nonce( 'ea_get_currency_codes' );
 		self::check_permission( 'manage_eaccounting' );
 		$currencies = eaccounting_get_global_currencies();
@@ -890,8 +892,8 @@ class Ajax {
 				/**
 				 * Hook into this for any custom object handling
 				 *
-				 * @var int $object_id ID of the object.
-				 * @var boolean $enabled status of the object.
+				 * @var int     $object_id ID of the object.
+				 * @var boolean $enabled   status of the object.
 				 */
 				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
 		}
@@ -907,8 +909,8 @@ class Ajax {
 	/**
 	 * Recalculate invoice totals
 	 *
-	 * @return void
 	 * @since 1.1.0
+	 * @return void
 	 */
 	public static function invoice_recalculate() {
 		self::verify_nonce( 'ea_edit_invoice' );
@@ -931,6 +933,54 @@ class Ajax {
 		}
 	}
 
+	public static function update_currencies() {
+		self::verify_nonce( 'ea_update_currencies' );
+		self::check_permission( 'ea_manage_options' );
+		$posted     = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$currencies = ! empty( $posted['currencies'] ) ? $posted['currencies'] : array();
+
+		if ( count( $currencies ) < 1 ) {
+			wp_send_json_error( array( 'message' => __( 'Please at least add one currency', 'wp-ever-accounting' ) ) );
+		}
+
+		$currencies_before = eaccounting_get_currencies();
+		$codes_before      = wp_list_pluck( $currencies_before, 'code' );
+		$codes_now         = wp_list_pluck( $currencies, 'code' );
+		$new_currencies    = $currencies_before;
+		$codes             = eaccounting_get_data( 'currencies' );
+
+		foreach ( $codes_now as $index => $code ) {
+			if ( ! array_key_exists( $code, $codes ) ) {
+				continue;
+			}
+
+			if ( ! in_array( $code, $codes_before, true ) && array_key_exists( $code, $codes ) ) {
+				unset( $new_currencies[ $code ] );
+			}
+			$default                 = $codes[ $code ];
+			$new_currencies[ $code ] = wp_parse_args(
+				$currencies[ $index ],
+				array(
+					'code'               => $default['code'],
+					'name'               => $default['name'],
+					'precision'          => $default['precision'],
+					'subunit'            => $default['subunit'],
+					'symbol'             => $default['symbol'],
+					'position'           => $default['position'],
+					'decimal_separator'  => $default['decimal_separator'],
+					'thousand_separator' => $default['thousand_separator'],
+				)
+			);
+		}
+
+		if ( count( $new_currencies ) < 1 ) {
+			wp_send_json_error( array( 'message' => __( 'Please at least add one currency', 'wp-ever-accounting' ) ) );
+		}
+
+		update_option( 'eaccounting_currencies', $new_currencies );
+		wp_send_json_success( array( 'message' => __( 'Currencies updated successfully.', 'wp-ever-accounting' ) ) );
+	}
+
 	/**
 	 * Check permission
 	 *
@@ -947,11 +997,11 @@ class Ajax {
 	/**
 	 * Verify our ajax nonce.
 	 *
-	 * @param $action
-	 *
-	 * @param $action
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param $action
+	 *
+	 * @param $action
 	 *
 	 */
 	public static function verify_nonce( $action ) {

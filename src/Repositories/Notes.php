@@ -30,7 +30,7 @@ class Notes extends ResourceRepository {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -39,27 +39,27 @@ class Notes extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data_type = array(
 		'id'           => '%d',
 		'parent_id'    => '%d',
-		'parent_type'  => '%s',
+		'type'         => '%s',
 		'note'         => '%s',
-		'highlight'    => '%d',
-		'author'       => '%s',
+		'extra'        => '%s',
+		'creator_id'   => '%d',
 		'date_created' => '%s',
 	);
 
 
 	/**
 	 * Get notes
-	 * 
+	 *
 	 * @since 1.1.0
 	 *
 	 * @param array $args
-	 * 
+	 *
 	 * @return Note[]|array|int
 	 */
 	public function get_notes( $args = array() ) {
@@ -68,24 +68,31 @@ class Notes extends ResourceRepository {
 		$args = wp_parse_args(
 			$args,
 			array(
-				'include'      => '',
-				'parent_id'    => '',
-				'parent_type'  => '',
-				'search'       => '',
-				'search_cols'  => array( 'note', 'date_created' ),
-				'orderby_cols' => array( 'note' ),
-				'fields'       => '*',
-				'orderby'      => 'id',
-				'order'        => 'ASC',
-				'number'       => 20,
-				'offset'       => 0,
-				'paged'        => 1,
-				'return'       => 'objects',
-				'count_total'  => false,
+				'include'     => '',
+				'parent_id'   => '',
+				'type'        => '',
+				'search'      => '',
+				'fields'      => '*',
+				'orderby'     => 'id',
+				'order'       => 'ASC',
+				'number'      => 20,
+				'offset'      => 0,
+				'paged'       => 1,
+				'return'      => 'objects',
+				'count_total' => false,
 			)
 		);
 
-		$qv            = apply_filters( 'eaccounting_get_notes_args', $args );
+		$qv    = apply_filters( 'eaccounting_get_notes_args', $args );
+		$query = array(
+			'fields'  => array(),
+			'from'    => array(),
+			'where'   => array( 'WHERE 1=1' ),
+			'having'  => array(),
+			'orderby' => array(),
+			'limit'   => array(),
+		);
+
 		$query_fields  = eaccounting_prepare_query_fields( $qv, $this->table );
 		$query_from    = eaccounting_prepare_query_from( $this->table );
 		$query_where   = 'WHERE 1=1';
@@ -98,9 +105,9 @@ class Notes extends ResourceRepository {
 			$parent_id    = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
 			$query_where .= " AND $this->table.`parent_id` IN ($parent_id)";
 		}
-		if ( ! empty( $qv['parent_type'] ) ) {
-			$parent_types = implode( "','", wp_parse_list( $qv['parent_type'] ) );
-			$query_where .= " AND $this->table.`parent_type` IN ('$parent_types')";
+		if ( ! empty( $qv['type'] ) ) {
+			$types        = implode( "','", wp_parse_list( $qv['type'] ) );
+			$query_where .= " AND $this->table.`type` IN ('$types')";
 		}
 
 		$cache_key = md5( serialize( $qv ) );
@@ -128,7 +135,6 @@ class Notes extends ResourceRepository {
 
 		return $results;
 	}
-
 
 
 }

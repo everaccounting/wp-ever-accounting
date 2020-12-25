@@ -312,7 +312,7 @@ function eaccounting_wp_radio( $field ) {
  *
  * @param array $field
  */
-function eaccounting_wp_checkbox( $field ) {
+function eaccounting_checkbox( $field ) {
 	$field = (array) wp_parse_args(
 		$field,
 		array(

@@ -31,7 +31,7 @@ class Note extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_notes';
@@ -40,15 +40,15 @@ class Note extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(
 		'parent_id'    => null,
-		'parent_type'  => '',
+		'type'         => '',
 		'note'         => '',
-		'highlight'    => '',
-		'author'       => '',
+		'extra'        => '',
+		'creator_id'   => '',
 		'date_created' => null,
 	);
 
@@ -83,9 +83,9 @@ class Note extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'parent_id'   => __( 'Document ID', 'wp-ever-accounting' ),
-			'parent_type' => __( 'Document type', 'wp-ever-accounting' ),
-			'note'        => __( 'Note content', 'wp-ever-accounting' ),
+			'parent_id' => __( 'Document ID', 'wp-ever-accounting' ),
+			'type'      => __( 'Document type', 'wp-ever-accounting' ),
+			'note'      => __( 'Note content', 'wp-ever-accounting' ),
 		);
 	}
 	/*
@@ -116,8 +116,8 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_parent_type( $context = 'edit' ) {
-		return $this->get_prop( 'parent_type', $context );
+	public function get_type( $context = 'edit' ) {
+		return $this->get_prop( 'type', $context );
 	}
 
 	/**
@@ -142,12 +142,12 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_highlight( $context = 'edit' ) {
-		return $this->get_prop( 'highlight', $context );
+	public function get_extra( $context = 'edit' ) {
+		return $this->get_prop( 'extra', $context );
 	}
 
 	/**
-	 * Return the note.
+	 * Return creator id.
 	 *
 	 * @since  1.1.0
 	 *
@@ -155,8 +155,8 @@ class Note extends ResourceModel {
 	 *
 	 * @return string
 	 */
-	public function get_author( $context = 'edit' ) {
-		return $this->get_prop( 'author', $context );
+	public function get_creator_id( $context = 'edit' ) {
+		return $this->get_prop( 'creator_id', $context );
 	}
 
 	/*
@@ -182,32 +182,11 @@ class Note extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $parent_type .
+	 * @param string $type .
 	 *
 	 */
-	public function set_parent_type( $parent_type ) {
-		$this->set_prop( 'parent_type', eaccounting_clean( $parent_type ) );
-	}
-
-	/**
-	 * set the note.
-	 *
-	 * @since  1.1.0
-	 *
-	 * @param string $note .
-	 *
-	 */
-	public function set_highlight( $highlight ) {
-		$this->set_prop( 'highlight', absint( $highlight ) );
-	}
-
-	/**
-	 * @since 1.1.0
-	 * 
-	 * @return bool
-	 */
-	public function is_highlighted() {
-		return ! empty( $this->get_highlight() );
+	public function set_type( $type ) {
+		$this->set_prop( 'type', eaccounting_clean( $type ) );
 	}
 
 	/**
@@ -227,27 +206,11 @@ class Note extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $author .
+	 * @param string $extra .
 	 *
 	 */
-	public function set_author( $author ) {
-		$this->set_prop( 'author', eaccounting_clean( $author ) );
-	}
-
-
-	/**
-	 * Save should create or update based on object existence.
-	 *
-	 * @since  1.1.0
-	 * 
-	 * @return \Exception|bool
-	 */
-	public function save() {
-		if ( empty( $this->get_author() ) ) {
-			$this->set_author( 'Ever Accounting' );
-		}
-
-		return parent::save();
+	public function set_extra( $extra ) {
+		$this->set_prop( 'extra', eaccounting_clean( $extra ) );
 	}
 
 }

@@ -1,8 +1,8 @@
-.ea-blankstate {
+.ea-empty-table {
   text-align: center;
   padding: 5em 0 0;
 
-  &-message {
+  &__message {
 	color: #aaa;
 	margin: 0 auto 1.5em;
 	line-height: 1.5em;
@@ -22,7 +22,7 @@
 	}
   }
 
-  &-cta {
+  &__cta {
 	font-size: 1.2em !important;
 	padding: 0.75em 1.5em !important;
 	margin: 0 0.25em !important;
@@ -32,10 +32,10 @@
 
 }
 
-#ea-accounts-filter .ea-blankstate-message::before {
+.ea-empty-table__message::before {
   @include icon("\f19c");
 }
 
-#ea-currencies-filter .ea-blankstate-message::before {
+.ea-empty-table__message::before {
   @include icon("\f19c");
 }

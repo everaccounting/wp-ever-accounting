@@ -1,9 +1,12 @@
 /* global eaccounting_admin_i10n */
 jQuery(function ($) {
+	// Tooltips
+	var tooltips = $('.ea-help-tip');
+	eaccounting_tooltips( tooltips );
 
 	//initialize plugins
 	$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
-	$('.ea-help-tip').tipTip();
+
 	eaccounting.mask_amount('.ea-input-price');
 	eaccounting.mask_amount('#opening_balance');
 	//eaccounting.dropdown('.ea-dropdown');
@@ -78,3 +81,25 @@ jQuery(function ($) {
 
 		});
 });
+
+
+function eaccounting_tooltips( selector ) {
+	// Tooltips
+	selector.tooltip({
+		content: function() {
+			return jQuery(this).data('tip');
+		},
+		tooltipClass: 'ea-ui-tooltip',
+		position: {
+			my: 'center top',
+			at: 'center bottom+10',
+			collision: 'flipfit'
+		},
+		hide: {
+			duration: 200
+		},
+		show: {
+			duration: 200
+		}
+	});
+}

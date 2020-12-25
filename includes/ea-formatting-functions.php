@@ -313,6 +313,34 @@ function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
 }
 
 /**
+ * Get only numbers from the string.
+ *
+ * @since 1.0.2
+ *
+ * @param      $number
+ *
+ * @param int  $precision
+ * @param bool $trim_zeros
+ *
+ * @return int|float|null
+ */
+function eaccounting_format_decimal( $number, $precision = 2, $trim_zeros = false ) {
+
+	// Convert multiple dots to just one.
+	$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+
+	if ( $precision ) {
+		$number = number_format( floatval( $number ), $precision, '.', '' );
+	}
+
+	if ( $trim_zeros && strstr( $number, '.' ) ) {
+		$number = rtrim( rtrim( $number, '0' ), '.' );
+	}
+
+	return $number;
+}
+
+/**
  * Sanitize price for inserting into database
  * since 1.0.0
  *

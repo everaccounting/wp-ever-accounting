@@ -1280,11 +1280,7 @@ class Invoice extends ResourceModel {
 	/**
 	 * @since 1.1.0
 	 *
-	 * @param      $account_id
-	 * @param      $payment_method
-	 * @param null $date
-	 * @param null $description
-	 * @param      $amount
+	 * @param array $args
 	 *
 	 * @throws \Exception
 	 * @return false

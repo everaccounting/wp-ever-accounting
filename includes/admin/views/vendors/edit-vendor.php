@@ -24,15 +24,14 @@ if ( $vendor->exists() && 'vendor' !== $vendor->get_type() ) {
 
 $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( 'Add Vendor', 'wp-ever-accounting' );
 ?>
-
-<div class="ea-card">
-	<div class="ea-card__header">
-		<h3 class="ea-card__title"><?php echo $title; ?></h3>
-		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
-	</div>
-	<div class="ea-card__body">
-		<div class="ea-card__inside">
-			<form id="ea-vendor-form" method="post" enctype="multipart/form-data">
+<form id="ea-vendor-form" method="post" enctype="multipart/form-data">
+	<div class="ea-card">
+		<div class="ea-card__header">
+			<h3 class="ea-card__title"><?php echo $title; ?></h3>
+			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
+		</div>
+		<div class="ea-card__body">
+			<div class="ea-card__inside">
 				<div class="ea-row">
 					<?php
 					eaccounting_text_input(
@@ -79,19 +78,10 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Fax', 'wp-ever-accounting' ),
-							'name'          => 'fax',
-							'placeholder'   => __( 'Enter fax', 'wp-ever-accounting' ),
-							'value'         => $vendor->get_fax(),
-						)
-					);
-					eaccounting_text_input(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Tax Number', 'wp-ever-accounting' ),
-							'name'          => 'tax_number',
-							'placeholder'   => __( 'Enter tax number', 'wp-ever-accounting' ),
-							'value'         => $vendor->get_tax_number(),
+							'label'         => __( 'VAT Number', 'wp-ever-accounting' ),
+							'name'          => 'vat_number',
+							'placeholder'   => __( 'Enter vat number', 'wp-ever-accounting' ),
+							'value'         => $vendor->get_vat_number(),
 						)
 					);
 					eaccounting_text_input(
@@ -111,16 +101,43 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'name'          => 'birth_date',
 							'placeholder'   => __( 'Enter birth date', 'wp-ever-accounting' ),
 							'data_type'     => 'date',
-							'value'         => $vendor->get_birth_date(),
+							'value'         => $vendor->get_birth_date() ? $vendor->get_birth_date() : null,
 						)
 					);
-					eaccounting_textarea(
+					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Address', 'wp-ever-accounting' ),
-							'name'          => 'address',
-							'placeholder'   => __( 'Enter address', 'wp-ever-accounting' ),
-							'value'         => $vendor->get_address(),
+							'label'         => __( 'Street', 'wp-ever-accounting' ),
+							'name'          => 'street',
+							'placeholder'   => __( 'Enter street', 'wp-ever-accounting' ),
+							'value'         => $vendor->get_street(),
+						)
+					);
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'City', 'wp-ever-accounting' ),
+							'name'          => 'city',
+							'placeholder'   => __( 'Enter city', 'wp-ever-accounting' ),
+							'value'         => $vendor->get_city(),
+						)
+					);
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'State', 'wp-ever-accounting' ),
+							'name'          => 'state',
+							'placeholder'   => __( 'Enter state', 'wp-ever-accounting' ),
+							'value'         => $vendor->get_state(),
+						)
+					);
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Postcode', 'wp-ever-accounting' ),
+							'name'          => 'postcode',
+							'placeholder'   => __( 'Enter postcode', 'wp-ever-accounting' ),
+							'value'         => $vendor->get_postcode(),
 						)
 					);
 					eaccounting_country_dropdown(
@@ -159,29 +176,12 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 					);
 					?>
 				</div>
-				<?php
-
-				wp_nonce_field( 'ea_edit_vendor' );
-
-				submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
-				?>
-
-			</form>
+			</div>
 		</div>
-	</div>
-	<?php if ( $vendor->exists() ) : ?>
 		<div class="ea-card__footer">
-			<p class="description"><span class="dashicons dashicons-info"></span>
-				<?php
-				echo sprintf(
-				/* translators: %s date and %s name */
-					esc_html__( 'The vendor was created at %1$s by %2$s', 'wp-ever-accounting' ),
-					eaccounting_format_datetime( $vendor->get_date_created(), 'F m, Y H:i a' ),
-					eaccounting_get_username( $vendor->get_creator_id() )
-				);
-				?>
-			</p>
+			<?php wp_nonce_field( 'ea_edit_vendor' ); ?>
+			<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
 		</div>
-	<?php endif; ?>
 
-</div>
+	</div>
+</form>

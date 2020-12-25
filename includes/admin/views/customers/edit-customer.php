@@ -20,14 +20,14 @@ try {
 }
 $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : __( 'Add Customer', 'wp-ever-accounting' );
 ?>
-<div class="ea-card">
-	<div class="ea-card__header">
-		<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
-	</div>
-	<div class="ea-card__body">
-		<div class="ea-card__inside">
-			<form id="ea-customer-form" method="post" enctype="multipart/form-data">
+<form id="ea-customer-form" method="post" enctype="multipart/form-data">
+	<div class="ea-card">
+		<div class="ea-card__header">
+			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
+			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
+		</div>
+		<div class="ea-card__body">
+			<div class="ea-card__inside">
 				<div class="ea-row">
 					<?php
 					eaccounting_text_input(
@@ -40,7 +40,6 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 							'required'      => true,
 						)
 					);
-
 					eaccounting_currency_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
@@ -74,19 +73,10 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Fax', 'wp-ever-accounting' ),
-							'name'          => 'fax',
-							'placeholder'   => __( 'Enter fax', 'wp-ever-accounting' ),
-							'value'         => $customer->get_fax(),
-						)
-					);
-					eaccounting_text_input(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Tax Number', 'wp-ever-accounting' ),
-							'name'          => 'tax_number',
-							'placeholder'   => __( 'Enter tax number', 'wp-ever-accounting' ),
-							'value'         => $customer->get_tax_number(),
+							'label'         => __( 'VAT Number', 'wp-ever-accounting' ),
+							'name'          => 'vat_number',
+							'placeholder'   => __( 'Enter vat number', 'wp-ever-accounting' ),
+							'value'         => $customer->get_vat_number(),
 						)
 					);
 					eaccounting_text_input(
@@ -109,16 +99,42 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 							'value'         => $customer->get_birth_date() ? $customer->get_birth_date() : null,
 						)
 					);
-					eaccounting_textarea(
+					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Address', 'wp-ever-accounting' ),
-							'name'          => 'address',
-							'placeholder'   => __( 'Enter address', 'wp-ever-accounting' ),
-							'value'         => $customer->get_address(),
+							'label'         => __( 'Street', 'wp-ever-accounting' ),
+							'name'          => 'street',
+							'placeholder'   => __( 'Enter street', 'wp-ever-accounting' ),
+							'value'         => $customer->get_street(),
 						)
 					);
-
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'City', 'wp-ever-accounting' ),
+							'name'          => 'city',
+							'placeholder'   => __( 'Enter city', 'wp-ever-accounting' ),
+							'value'         => $customer->get_city(),
+						)
+					);
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'State', 'wp-ever-accounting' ),
+							'name'          => 'state',
+							'placeholder'   => __( 'Enter state', 'wp-ever-accounting' ),
+							'value'         => $customer->get_state(),
+						)
+					);
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Postcode', 'wp-ever-accounting' ),
+							'name'          => 'postcode',
+							'placeholder'   => __( 'Enter postcode', 'wp-ever-accounting' ),
+							'value'         => $customer->get_postcode(),
+						)
+					);
 					eaccounting_country_dropdown(
 						array(
 							'wrapper_class' => 'ea-col-6',
@@ -129,7 +145,7 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 					);
 					eaccounting_file_input(
 						array(
-							'wrapper_class' => 'ea-col-6',
+							'wrapper_class' => 'ea-col-12',
 							'label'         => __( 'Photo', 'wp-ever-accounting' ),
 							'name'          => 'thumbnail_id',
 							'value'         => $customer->get_thumbnail_id(),
@@ -149,23 +165,12 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 					);
 					?>
 				</div>
-				<?php wp_nonce_field( 'ea_edit_customer' ); ?>
-				<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
-			</form>
+			</div>
 		</div>
-	</div>
-	<?php if ( $customer->exists() ) : ?>
 		<div class="ea-card__footer">
-			<p class="description"><span class="dashicons dashicons-info"></span>
-				<?php
-				echo sprintf(
-				/* translators: %s date and %s name */
-					esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
-					eaccounting_format_datetime( $customer->get_date_created(), 'F m, Y H:i a' ),
-					eaccounting_get_username( $customer->get_creator_id() )
-				);
-				?>
-			</p>
+			<?php wp_nonce_field( 'ea_edit_customer' ); ?>
+			<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
 		</div>
-	<?php endif; ?>
-</div>
+
+	</div>
+</form>

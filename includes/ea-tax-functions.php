@@ -32,15 +32,24 @@ function eaccounting_prices_include_tax() {
 /**
  * @since 1.1.0
  *
- * @param $tax_amount
  * @param $amount
+ *
+ * @param $rate
  *
  * @return float|int
  */
-function eaccounting_get_price_excluding_tax( $amount, $tax_amount ) {
-	if ( eaccounting_tax_enabled() && eaccounting_prices_include_tax() ) {
-		return abs( $amount - $tax_amount );
+function eaccounting_calculate_tax( $amount, $rate ) {
+	$tax = 0.00;
+
+	if ( eaccounting_tax_enabled() && $amount > 0 ) {
+
+		if ( eaccounting_prices_include_tax() ) {
+			$pre_tax = ( $amount / ( 1 + $rate ) );
+			$tax     = $amount - $pre_tax;
+		} else {
+			$tax = $amount * $rate;
+		}
 	}
 
-	return $amount;
+	return $tax;
 }

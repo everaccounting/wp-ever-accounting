@@ -104,7 +104,7 @@ $edit_url        = eaccounting_admin_url(
 
 			<div class="ea-card__inside">
 				<div class="ea-avatar ea-center-block">
-					<?php echo $customer->get_attachment_image(); ?>
+					<img src="<?php echo esc_url( $customer->get_attachment_url() ); ?>" alt="<?php echo esc_html( $customer->get_name() ); ?>">
 				</div>
 			</div>
 
@@ -130,12 +130,8 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_email() ) ? $customer->get_email() : '&mdash;'; ?></div>
 				</div>
 				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Fax', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_fax() ) ? $customer->get_fax() : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Tax Number', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_tax_number() ) ? $customer->get_tax_number() : '&mdash;'; ?></div>
+					<div class="ea-list-group__title"><?php esc_html_e( 'VAT Number', 'wp-ever-accounting' ); ?></div>
+					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_vat_number() ) ? $customer->get_vat_number() : '&mdash;'; ?></div>
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Website', 'wp-ever-accounting' ); ?></div>
@@ -143,7 +139,19 @@ $edit_url        = eaccounting_admin_url(
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_address() ) ? $customer->get_address() : '&mdash;'; ?></div>
+					<div class="ea-list-group__text">
+						<?php
+						echo eaccounting_format_address(
+							array(
+								'street'   => $customer->get_street(),
+								'city'     => $customer->get_city(),
+								'state'    => $customer->get_state(),
+								'postcode' => $customer->get_postcode(),
+								'country'  => $customer->get_country_nicename(),
+							)
+						);
+						?>
+					</div>
 				</div>
 			</div>
 
