@@ -9,6 +9,56 @@
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Get registered settings.
+ *
+ * @since 1.1.0
+ * @return mixed|void
+ */
+function eaccounting_get_settings_tabs() {
+	return apply_filters(
+		'eaccounting_settings_tabs',
+		array(
+			'general'    => __( 'General', 'wp-ever-accounting' ),
+			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+			'categories' => __( 'Categories', 'wp-ever-accounting' ),
+			'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
+			'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+			'emails'     => __( 'Emails', 'wp-ever-accounting' ),
+			'misc'       => __( 'Misc', 'wp-ever-accounting' ),
+		)
+	);
+}
+
+/**
+ * Get the settings sections for each tab
+ * Uses a static to avoid running the filters on every request to this function
+ *
+ * @since  1.1.0
+ * @return array Array of tabs and sections
+ */
+function eaccounting_get_settings_sections() {
+	static $sections = false;
+
+	if ( false !== $sections ) {
+		return $sections;
+	}
+
+	$sections = array(
+		'general' => array(
+			'main' => __( 'General', 'wp-ever-accounting' ),
+		),
+		'emails'  => array(
+			'main' => __( 'General', 'wp-ever-accounting' ),
+		),
+	);
+
+	$sections = apply_filters( 'eaccounting_settings_sections', $sections );
+
+	return $sections;
+}
+
+
 
 /**
  * Get all EverAccounting screen ids.

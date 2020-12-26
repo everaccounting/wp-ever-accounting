@@ -3,12 +3,12 @@
  * Shows an Invoice item
  *
  * @package EverAccounting\Admin
- * @var Invoice  $invoice The item being displayed
- * @var LineItem $item    The item being displayed
- * @var int      $item_id The id of the item being displayed
+ * @var Invoice      $invoice The item being displayed
+ * @var DocumentItem $item    The item being displayed
+ * @var int          $item_id The id of the item being displayed
  */
 
-use EverAccounting\Models\LineItem;
+use EverAccounting\Models\DocumentItem;
 use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit;

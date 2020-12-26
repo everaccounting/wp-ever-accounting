@@ -14,16 +14,16 @@ namespace EverAccounting\Core;
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Categories;
-use EverAccounting\Repositories\Customers;
+use EverAccounting\Repositories\Contacts;
+use EverAccounting\Repositories\Currencies;
 use EverAccounting\Repositories\Payments;
 use EverAccounting\Repositories\Revenues;
 use EverAccounting\Repositories\Notes;
-use EverAccounting\Repositories\LineItems;
-use EverAccounting\Repositories\Invoices;
+use EverAccounting\Repositories\DocumentItems;
+use EverAccounting\Repositories\Documents;
 use EverAccounting\Repositories\Items;
 use EverAccounting\Abstracts\ResourceRepository;
 use EverAccounting\Repositories\Transfers;
-use EverAccounting\Repositories\Vendors;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -56,13 +56,13 @@ class Repositories {
 	private $repositories = array(
 		'items'      => Items::class,
 		'categories' => Categories::class,
-		'customers'  => Customers::class,
-		'vendors'    => Vendors::class,
+		'contacts'   => Contacts::class,
 		'payments'   => Payments::class,
 		'revenues'   => Revenues::class,
 		'accounts'   => Accounts::class,
-		'invoices'   => Invoices::class,
-		'line-items' => LineItems::class,
+		'currencies' => Currencies::class,
+		'invoices'   => Documents::class,
+		'line-items' => DocumentItems::class,
 		'notes'      => Notes::class,
 		'transfers'  => Transfers::class,
 	);

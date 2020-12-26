@@ -187,7 +187,7 @@ jQuery(function ($) {
 					.end()
 					.find("input.invoice_item_quantity").val(1)
 					.end()
-					.find("input.invoice_item_tax").val(data.item.sales_tax_rate);
+					.find("input.invoice_item_tax").val(data.item.sales_tax);
 				$('body').trigger('ea_invoice_updated');
 			},
 			remove_line_item: function (e) {

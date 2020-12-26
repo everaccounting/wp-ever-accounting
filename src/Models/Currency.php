@@ -9,6 +9,9 @@
 
 namespace EverAccounting\Models;
 
+use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Repositories;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,7 +21,20 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Currency {
+class Currency extends ResourceModel {
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'currency';
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @var string
+	 */
+	public $cache_group = 'ea_currencies';
 
 	/**
 	 * Item Data array.
@@ -31,23 +47,50 @@ class Currency {
 		'name'               => '',
 		'code'               => '',
 		'rate'               => 1,
+		'number'             => '',
 		'precision'          => 2,
+		'subunit'            => 100,
 		'symbol'             => '',
-		'subunit'            => 2,
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
 	);
 
 	/**
-	 * @param string $code Item object to read.
+	 * Get the category if ID is passed, otherwise the category is new and empty.
+	 *
+	 * @param int|string|object|Item $code Item object to read.
 	 */
-	public function __construct( $code ) {
-		$currencies = eaccounting_get_currencies();
-		$codes      = eaccounting_get_data( 'currencies' );
-		$default    = array_key_exists( $code, $codes ) ? $codes[ $code ] : array();
-		$currency   = array_key_exists( $code, $currencies ) ? $currencies[ $code ] : array();
-		$this->data = wp_parse_args( $currency, $default);
+	public function __construct( $code = 0 ) {
+		parent::__construct( $code );
+
+		if ( $code instanceof self ) {
+			$this->set_code( $code->get_code() );
+		} elseif ( is_string( $code ) ) {
+			$this->set_code( $code );
+		} elseif ( is_array( $code ) && ! empty( $code['code'] ) ) {
+			$this->set_code( $code['code'] );
+		} elseif ( is_object( $code ) && ! empty( $code->code ) ) {
+			$this->set_code( $code->code );
+		} else {
+			$this->set_object_read( true );
+		}
+
+		//Load repository
+		$this->repository = Repositories::load( 'currencies' );
+
+		if ( ! empty( $this->get_code() ) ) {
+			$this->repository->read( $this );
+		}
+
+		$this->required_props = array(
+			'code'               => __( 'Currency code', 'wp-ever-accounting' ),
+			'rate'               => __( 'Currency rate', 'wp-ever-accounting' ),
+			'symbol'             => __( 'Currency symbol', 'wp-ever-accounting' ),
+			'position'           => __( 'Currency position', 'wp-ever-accounting' ),
+			'decimal_separator'  => __( 'Currency decimal separator', 'wp-ever-accounting' ),
+			'thousand_separator' => __( 'Currency thousand separator', 'wp-ever-accounting' ),
+		);
 	}
 
 	/*
@@ -65,11 +108,12 @@ class Currency {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_name() {
-		return $this->data['name'];
+	public function get_name( $context = 'edit' ) {
+		return $this->get_prop( 'name', $context );
 	}
 
 	/**
@@ -77,11 +121,12 @@ class Currency {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_code() {
-		return $this->data['code'];
+	public function get_code( $context = 'edit' ) {
+		return $this->get_prop( 'code', $context );
 	}
 
 	/**
@@ -93,8 +138,21 @@ class Currency {
 	 *
 	 * @return string
 	 */
-	public function get_rate() {
-		return $this->data['rate'];
+	public function get_rate( $context = 'edit' ) {
+		return $this->get_prop( 'rate', $context );
+	}
+
+	/**
+	 * Get currency number.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_number( $context = 'edit' ) {
+		return $this->get_prop( 'number', $context );
 	}
 
 	/**
@@ -102,11 +160,25 @@ class Currency {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_precision() {
-		return $this->data['precision'];
+	public function get_precision( $context = 'edit' ) {
+		return $this->get_prop( 'precision', $context );
+	}
+
+	/**
+	 * Get number of decimal points.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_subunit( $context = 'edit' ) {
+		return $this->get_prop( 'subunit', $context );
 	}
 
 	/**
@@ -114,11 +186,12 @@ class Currency {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_symbol() {
-		return $this->data['symbol'];
+	public function get_symbol( $context = 'edit' ) {
+		return $this->get_prop( 'symbol', $context );
 	}
 
 	/**
@@ -126,11 +199,12 @@ class Currency {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_position() {
-		return $this->data['position'];
+	public function get_position( $context = 'edit' ) {
+		return $this->get_prop( 'position', $context );
 	}
 
 	/**
@@ -138,11 +212,12 @@ class Currency {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_decimal_separator() {
-		return $this->data['decimal_separator'];
+	public function get_decimal_separator( $context = 'edit' ) {
+		return $this->get_prop( 'decimal_separator', $context );
 	}
 
 	/**
@@ -150,13 +225,151 @@ class Currency {
 	 *
 	 * @since 1.0.2
 	 *
+	 * @param string $context
 	 *
 	 * @return string
 	 */
-	public function get_thousand_separator() {
-		return $this->data['thousand_separator'];
+	public function get_thousand_separator( $context = 'edit' ) {
+		return $this->get_prop( 'thousand_separator', $context );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	|
+	| Functions for setting item data. These should not update anything in the
+	| database itself and should only change what is stored in the class
+	| object.
+	*/
+
+	/**
+	 * Overwrite base so it can accept string.
+	 *
+	 * Set ID.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param int $id ID.
+	 */
+	public function set_id( $id ) {
+		$this->id = eaccounting_sanitize_currency_code( $id );
+	}
+
+	/**
+	 * Set the currency name.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_name( $value ) {
+		$this->set_prop( 'name', eaccounting_clean( $value ) );
+	}
+
+	/**
+	 * Set the code.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $code
+	 */
+	public function set_code( $code ) {
+		$code = eaccounting_sanitize_currency_code( $code );
+		if ( ! empty( $code ) ) {
+			$this->set_prop( 'code', $code );
+		}
+	}
+
+	/**
+	 * Set the rate.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_rate( $value ) {
+		$this->set_prop( 'rate', eaccounting_format_decimal( $value, 4 ) );
+	}
+
+	/**
+	 * Set the code.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_number( $value ) {
+		$this->set_prop( 'number', intval( $value ) );
+	}
+
+	/**
+	 * Set precision.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_precision( $value ) {
+		$this->set_prop( 'precision', eaccounting_sanitize_number( $value ) );
+	}
+
+	/**
+	 * Set precision.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_subunit( $value ) {
+		$this->set_prop( 'subunit', intval( $value ) );
+	}
+
+	/**
+	 * Set symbol.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_symbol( $value ) {
+		$this->set_prop( 'symbol', eaccounting_clean( $value ) );
+	}
+
+	/**
+	 * Set symbol position.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_position( $value ) {
+		if ( in_array( $value, array( 'before', 'after' ), true ) ) {
+			$this->set_prop( 'position', eaccounting_clean( $value ) );
+		}
+	}
+
+	/**
+	 * Set decimal separator.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_decimal_separator( $value ) {
+		$this->set_prop( 'decimal_separator', eaccounting_clean( $value ) );
+	}
+
+	/**
+	 * Set thousand separator.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param $value
+	 */
+	public function set_thousand_separator( $value ) {
+		$this->set_prop( 'thousand_separator', eaccounting_clean( $value ) );
+	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -166,16 +379,6 @@ class Currency {
 	| Does extra thing as helper functions.
 	|
 	*/
-	/**
-	 * getSubunit.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @return int
-	 */
-	public function get_subunit() {
-		return $this->data['subunit'];
-	}
 
 	/**
 	 * getPrefix.
@@ -189,7 +392,7 @@ class Currency {
 			return '';
 		}
 
-		return $this->get_symbol();
+		return $this->get_symbol( 'edit' );
 	}
 
 	/**
@@ -204,17 +407,8 @@ class Currency {
 			return '';
 		}
 
-		return ' ' . $this->get_symbol();
+		return ' ' . $this->get_symbol( 'edit' );
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Conditionals
-	|--------------------------------------------------------------------------
-	|
-	| Checks if a condition is true or false.
-	|
-	*/
 
 	/**
 	 * equals.
@@ -226,7 +420,7 @@ class Currency {
 	 * @return bool
 	 */
 	public function equals( self $currency ) {
-		return $this->get_code() === $currency->get_code();
+		return $this->get_code( 'edit' ) === $currency->get_code( 'edit' );
 	}
 
 	/**
@@ -237,6 +431,7 @@ class Currency {
 	 * @return bool
 	 */
 	public function is_symbol_first() {
-		return 'before' === $this->get_position();
+		return 'before' === $this->get_position( 'edit' );
 	}
+
 }

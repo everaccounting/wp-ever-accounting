@@ -45,137 +45,17 @@ class EAccounting_Settings {
 	 * @return array
 	 */
 	function get_registered_settings() {
-		$currencies = eaccounting_get_currencies(
-			array(
-				'number' => -1,
-				'return' => 'raw',
-			)
-		);
-		$accounts   = eaccounting_get_accounts(
-			array(
-				'include' => eaccounting()->settings->get( 'default_account' ),
-				'return'  => 'raw',
-			)
-		);
+		/**
+		 * Fires before attempting to retrieve registered settings.
+		 *
+		 * @since 1.0.2
+		 *
+		 * @param self $this Settings instance.
+		 *
+		 */
+		do_action( 'eaccounting_pre_get_registered_settings', $this );
 
-		$settings = array(
-			/** General Settings */
-			'general' => apply_filters(
-				'eaccounting_settings_general',
-				array(
-					/** General Main Section */
-					'main' => array(
-						'company_settings'       => array(
-							'name' => __( 'Company Settings', 'wp-ever-accounting' ),
-							'desc' => '',
-							'type' => 'header',
-						),
-						'company_name'           => array(
-							'name'        => __( 'Name', 'wp-ever-accounting' ),
-							'type'        => 'text',
-							'tip'         => 'XYZ Company',
-							'required'    => 'required',
-							'placeholder' => __( 'XYZ Company', 'wp-ever-accounting' ),
-						),
-						'company_email'          => array(
-							'name'              => __( 'Email', 'wp-ever-accounting' ),
-							'type'              => 'email',
-							'std'               => get_option( 'admin_email' ),
-							'sanitize_callback' => 'sanitize_email',
-						),
-						'company_phone'          => array(
-							'name' => __( 'Phone Number', 'wp-ever-accounting' ),
-							'type' => 'text',
-						),
-						'company_vat_number'     => array(
-							'name' => __( 'VAT Number', 'wp-ever-accounting' ),
-							'type' => 'text',
-						),
-						'company_address'        => array(
-							'name' => __( 'Street', 'wp-ever-accounting' ),
-							'type' => 'text',
-						),
-						'company_city'           => array(
-							'name' => __( 'City', 'wp-ever-accounting' ),
-							'type' => 'text',
-						),
-						'company_state'          => array(
-							'name' => __( 'State', 'wp-ever-accounting' ),
-							'type' => 'text',
-						),
-						'company_postcode'       => array(
-							'name' => __( 'Postcode', 'wp-ever-accounting' ),
-							'type' => 'text',
-						),
-						'company_country'        => array(
-							'name'        => __( 'Country', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'input_class' => 'ea-select2',
-							'options'     => array( '' => __( 'Select Country', 'wp-ever-accounting' ) ) + eaccounting_get_countries(),
-						),
-						'company_logo'           => array(
-							'name' => __( 'Logo', 'wp-ever-accounting' ),
-							'type' => 'upload',
-						),
-						'local_settings'         => array(
-							'name' => __( 'Localisation Settings', 'wp-ever-accounting' ),
-							'desc' => '',
-							'type' => 'header',
-						),
-						'financial_year_start'   => array(
-							'name'  => __( 'Financial Year Start', 'wp-ever-accounting' ),
-							'std'   => '01-01',
-							'class' => 'ea-financial-start',
-							'type'  => 'text',
-						),
-						'default_account'        => array(
-							'name'        => __( 'Account', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'input_class' => 'ea-select2',
-							'options'     => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + wp_list_pluck( $accounts, 'name', 'id' ),
-							'attr'        => array(
-								'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
-								'data-url'         => eaccounting()->ajax_url(),
-								'data-ajax_action' => 'eaccounting_get_accounts',
-								'data-nonce'       => wp_create_nonce( 'ea_get_accounts' ),
-								'data-map'         => 'return {text: option.name + " (" + option.currency_code +")"  , id:option.id}',
-								'data-modal_id'    => '#ea-modal-add-account',
-								'data-add_text'    => __( 'Add New', 'wp-ever-accounting' ),
-							),
-						),
-						'default_currency'       => array(
-							'name'        => __( 'Currency', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'std'         => 'USD',
-							'desc'        => __( 'Default currency rate will update to 1', 'wp-ever-accounting' ),
-							'input_class' => 'ea-select2',
-							'options'     => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck( array_values( $currencies ), 'name', 'code' ),
-							'attr'        => array(
-								'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
-								'data-url'         => eaccounting()->ajax_url(),
-								'data-ajax_action' => 'eaccounting_get_currencies',
-								'data-nonce'       => wp_create_nonce( 'ea_get_currencies' ),
-								'data-map'         => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code}',
-								'data-modal_id'    => '#ea-modal-add-currency',
-								'data-add_text'    => __( 'Add New', 'wp-ever-accounting' ),
-							),
-						),
-						'default_payment_method' => array(
-							'name'    => __( 'Payment Method', 'wp-ever-accounting' ),
-							'std'     => 'cash',
-							'type'    => 'select',
-							'options' => eaccounting_get_payment_methods(),
-						),
-					),
-				)
-			),
-			'emails'  => apply_filters(
-				'eaccounting_settings_emails',
-				array(
-					'main' => array(),
-				)
-			),
-		);
+		$settings = array();
 
 		/**
 		 * Filters the entire default settings array.
@@ -188,8 +68,70 @@ class EAccounting_Settings {
 		 * @param array $settings Array of default settings.
 		 *
 		 */
+		$settings = apply_filters( 'eaccounting_settings', $settings );
 
-		return apply_filters( 'eaccounting_settings', $settings );
+		$registered = array();
+		foreach ( $settings as $tab => $options ) {
+			foreach ( $options as $key => $option ) {
+				$registered[ $key ] = wp_parse_args(
+					$option,
+					array(
+						'section' => 'main',
+						'tab'     => $tab,
+					)
+				);
+			}
+		}
+
+		return $registered;
+	}
+
+	/**
+	 * Get settings tabs.
+	 *
+	 * @since 1.1.0
+	 * @return array list of tabs.
+	 */
+	public static function get_tabs() {
+		return apply_filters(
+			'eaccounting_settings_tabs',
+			array(
+				'general'    => __( 'General', 'wp-ever-accounting' ),
+				'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+				'categories' => __( 'Categories', 'wp-ever-accounting' ),
+				'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
+				'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+				'emails'     => __( 'Emails', 'wp-ever-accounting' ),
+				'misc'       => __( 'Misc', 'wp-ever-accounting' ),
+			)
+		);
+	}
+
+	/**
+	 * Get settings tabs.
+	 *
+	 * @since 1.1.0
+	 * @return array list of sections.
+	 */
+	public static function get_sections() {
+		$sections = array();
+		$defaults = array(
+			'general'  => array(
+				'main'    => __( 'General Settings', 'wp-ever-accounting' ),
+				'tax'     => __( 'Tax Settings', 'wp-ever-accounting' ),
+				'invoice' => __( 'Invoice Settings', 'wp-ever-accounting' ),
+				'bill'    => __( 'Bill Settings', 'wp-ever-accounting' ),
+			),
+			'advanced' => array(
+				'keys' => __( 'REST API', 'wp-ever-accounting' ),
+			),
+		);
+
+		foreach ( self::get_tabs() as $tab_id => $tab_label ) {
+			$sections[ $tab_id ] = apply_filters( 'eaccounting_settings_tab_sections_' . $tab_id, isset( $defaults[ $tab_id ] ) ? $defaults[ $tab_id ] : array( 'main' => '' ) );
+		}
+
+		return $sections;
 	}
 
 	/**
@@ -199,70 +141,59 @@ class EAccounting_Settings {
 	 * @return void
 	 */
 	function register_settings() {
+		$options  = $this->get_registered_settings();
+		$settings = array();
 
-		foreach ( $this->get_registered_settings() as $tab => $sections ) {
-			if ( ! is_array( $sections ) ) {
-				continue;
+		foreach ( $options as $key => $option ) {
+			if ( ! isset( $settings[ $option['tab'] ] ) ) {
+				$settings[ $option['tab'] ] = array();
 			}
 
-			foreach ( $sections as $section => $settings ) {
-
+			if ( ! isset( $settings[ $option['tab'] ] [ $option['section'] ] ) ) {
 				add_settings_section(
-					$section,
+					$option['section'],
 					__return_null(),
 					'__return_false',
-					'eaccounting_settings_' . $tab
+					'eaccounting_settings_' . $option['tab']
 				);
-
-				foreach ( $settings as $id => $option ) {
-
-					$args = wp_parse_args(
-						$option,
-						array(
-							'section'     => $section,
-							'desc'        => '',
-							'id'          => $id,
-							'tip'         => '',
-							'name'        => '',
-							'size'        => 'regular',
-							'options'     => array(),
-							'std'         => '',
-							'min'         => null,
-							'max'         => null,
-							'step'        => null,
-							'multiple'    => null,
-							'placeholder' => null,
-							'required'    => '',
-							'disabled'    => '',
-							'input_class' => '',
-							'class'       => '',
-							'callback'    => '',
-							'style'       => '',
-							'html'        => '',
-							'attr'        => array(),
-						)
-					);
-
-					$callback = ! empty( $args['callback'] ) ? $args['callback'] : array( $this, $args['type'] . '_callback' );
-					$tip      = isset( $args['tip'] ) ? eaccounting_help_tip( $args['tip'] ) : '';
-
-					if ( ! in_array( $args['type'], array( 'checkbox', 'multicheck', 'radio', 'header' ), true ) ) {
-						$args['name'] = sprintf( '<label for="eaccounting_settings[%1$s]">%2$s</label>%3$s', $id, $args['name'], $tip );
-					} elseif ( 'header' === $args['type'] ) {
-						$args['name'] = sprintf( '<h3>%s</h3>', esc_html( $args['name'] ) );
-					}
-
-					add_settings_field(
-						'eaccounting_settings[' . $id . ']',
-						$args['name'],
-						is_callable( $callback ) ? $callback : array( $this, 'missing_callback' ),
-						'eaccounting_settings_' . $tab,
-						$section,
-						$args
-					);
-
-				}
 			}
+
+			$title    = isset( $option['name'] ) ? $option['name'] : '';
+			$callback = ! empty( $option['callback'] ) ? $option['callback'] : array( $this, $option['type'] . '_callback' );
+			$tip      = isset( $option['tip'] ) ? eaccounting_help_tip( $option['tip'] ) : '';
+
+			if ( ! in_array( $option['type'], array( 'checkbox', 'multicheck', 'radio', 'header' ), true ) ) {
+				$title = sprintf( '<label for="eaccounting_settings[%1$s]">%2$s</label>%3$s', $key, $title, $tip );
+			} elseif ( 'header' === $option['type'] ) {
+				$title = sprintf( '<h3>%s</h3>', esc_html( $title ) );
+			}
+
+			add_settings_field(
+				'eaccounting_settings[' . $key . ']',
+				$title,
+				is_callable( $callback ) ? $callback : array( $this, 'missing_callback' ),
+				'eaccounting_settings_' . $option['tab'],
+				$option['section'],
+				array(
+					'id'          => $key,
+					'section'     => $option['section'],
+					'desc'        => ! empty( $option['desc'] ) ? $option['desc'] : '',
+					'name'        => isset( $option['name'] ) ? $option['name'] : null,
+					'size'        => isset( $option['size'] ) ? $option['size'] : null,
+					'max'         => isset( $option['max'] ) ? $option['max'] : null,
+					'min'         => isset( $option['min'] ) ? $option['min'] : null,
+					'step'        => isset( $option['step'] ) ? $option['step'] : null,
+					'options'     => isset( $option['options'] ) ? $option['options'] : array(),
+					'attr'        => isset( $option['attr'] ) ? $option['attr'] : array(),
+					'std'         => isset( $option['std'] ) ? $option['std'] : '',
+					'disabled'    => isset( $option['disabled'] ) ? $option['disabled'] : '',
+					'class'       => isset( $option['wrap_class'] ) ? $option['wrap_class'] : '',
+					'input_class' => isset( $option['class'] ) ? $option['class'] : '',
+					'placeholder' => isset( $option['placeholder'] ) ? $option['placeholder'] : '',
+					'style'       => isset( $option['style'] ) ? $option['style'] : '',
+					'html'        => isset( $option['html'] ) ? $option['html'] : '',
+				)
+			);
 		}
 		register_setting( 'eaccounting_settings', 'eaccounting_settings', array( $this, 'sanitize_settings' ) );
 	}
@@ -290,6 +221,7 @@ class EAccounting_Settings {
 	 * Renders text fields.
 	 *
 	 * @since 1.0.2
+	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
 	 * @param array $args Arguments passed by the setting
 	 *
@@ -298,60 +230,23 @@ class EAccounting_Settings {
 	function text_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
 		$value   = $this->get( $args['id'], $default );
-		$attrs   = array( 'required', 'placeholder', 'disabled', 'style' );
-		foreach ( $attrs as $attr ) {
-			if ( ! empty( $args[ $attr ] ) ) {
-				$args['attr'][ $attr ] = $args[ $attr ];
-			}
-		}
 
-		echo sprintf(
+		$size       = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
+		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
+
+		$html  = sprintf(
 			'<input type="text" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s]" id="eaccounting_settings[%4$s]" value="%5$s" %6$s/>',
-			esc_attr( $args['size'] ),
+			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
 			esc_attr( $args['id'] ),
 			esc_attr( stripslashes( $value ) ),
-			eaccounting_implode_html_attributes( $args['attr'] )
+			$attributes
 		);
+		$html .= $desc;
 
-		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
-
-	}
-
-	/**
-	 * Text Callback
-	 *
-	 * Renders text fields.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
-	 */
-	function email_callback( $args ) {
-		$default = isset( $args['std'] ) ? $args['std'] : '';
-		$value   = $this->get( $args['id'], $default );
-		$attrs   = array( 'required', 'placeholder', 'disabled', 'style' );
-		foreach ( $attrs as $attr ) {
-			if ( ! empty( $args[ $attr ] ) ) {
-				$args['attr'][ $attr ] = $args[ $attr ];
-			}
-		}
-
-		echo sprintf(
-			'<input type="email" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s]" id="eaccounting_settings[%4$s]" value="%5$s" %6$s/>',
-			esc_attr( $args['size'] ),
-			esc_attr( $args['input_class'] ),
-			esc_attr( $args['style'] ),
-			esc_attr( $args['id'] ),
-			esc_attr( stripslashes( $value ) ),
-			eaccounting_implode_html_attributes( $args['attr'] )
-		);
-
-		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
-
+		echo $html;
 	}
 
 	/**
@@ -623,14 +518,17 @@ class EAccounting_Settings {
 			$value = isset( $args['std'] ) ? $args['std'] : '';
 		}
 
-		$html = sprintf(
+		$size       = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
+		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
+		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
+		$html       = sprintf(
 			'<select class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>',
-			$args['size'],
+			$size,
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
 			esc_attr( $args['id'] ),
 			esc_attr( $args['id'] ),
-			eaccounting_implode_html_attributes( $args['attr'] )
+			$attributes
 		);
 
 		foreach ( $args['options'] as $key => $option_value ) {
@@ -638,9 +536,9 @@ class EAccounting_Settings {
 		}
 
 		$html .= '</select>';
-		echo $html;
+		$html .= $desc;
 
-		echo ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
+		echo $html;
 	}
 
 	/**
@@ -926,5 +824,20 @@ class EAccounting_Settings {
 	 */
 	public function get_all() {
 		return $this->settings;
+	}
+
+	/**
+	 * Get sections for a specific tab.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $tab
+	 *
+	 * @return array|mixed
+	 */
+	public static function get_tab_sections( $tab ) {
+		$sections = self::get_sections();
+
+		return array_key_exists( $tab, $sections ) ? $sections[ $tab ] : array();
 	}
 }

@@ -8,14 +8,12 @@
  */
 
 defined( 'ABSPATH' ) || exit();
-$currency_id = isset( $_REQUEST['currency_id'] ) ? absint( $_REQUEST['currency_id'] ) : null;
+$currency_code = isset( $_REQUEST['currency_code'] ) ? eaccounting_clean( $_REQUEST['currency_code'] ) : null;
 try {
-	$currency = new \EverAccounting\Models\Currency( $currency_id );
+	$currency = new \EverAccounting\Models\Currency( $currency_code );
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$back_url = remove_query_arg( array( 'action', 'id' ) );
-
 $currencies = eaccounting_get_global_currencies();
 $options    = array();
 foreach ( $currencies as $code => $props ) {
@@ -47,17 +45,6 @@ foreach ( $currencies as $code => $props ) {
 		<form id="ea-currency-form" method="post">
 			<div class="ea-row">
 				<?php
-				eaccounting_text_input(
-					array(
-						'wrapper_class' => 'ea-col-6',
-						'label'         => __( 'Name', 'wp-ever-accounting' ),
-						'name'          => 'name',
-						'placeholder'   => __( 'Enter Name', 'wp-ever-accounting' ),
-						'value'         => $currency->get_name(),
-						'required'      => true,
-					)
-				);
-
 				eaccounting_select2(
 					array(
 						'wrapper_class' => 'ea-col-6',
@@ -65,6 +52,16 @@ foreach ( $currencies as $code => $props ) {
 						'name'          => 'code',
 						'value'         => $currency->get_code( 'edit' ),
 						'options'       => array( '' => __( 'Select', 'wp-ever-accounting' ) ) + $options,
+						'required'      => true,
+					)
+				);
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Name', 'wp-ever-accounting' ),
+						'name'          => 'name',
+						'placeholder'   => __( 'Enter Name', 'wp-ever-accounting' ),
+						'value'         => $currency->get_name(),
 						'required'      => true,
 					)
 				);

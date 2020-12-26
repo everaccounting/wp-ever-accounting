@@ -14,7 +14,7 @@ use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
-class LineItem extends ResourceModel {
+class DocumentItem extends ResourceModel {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -42,13 +42,13 @@ class LineItem extends ResourceModel {
 		'item_name'     => '',
 		'price'         => 0.00,
 		'quantity'      => 1,
-		'subtotal'      => 1,
+		'subtotal'      => 0.00,
 		'tax_rate'      => 0.00,
 		'discount'      => 0.00,
 		'tax'           => 0.00,
 		'total'         => 0.00,
 		'currency_code' => '',
-		'extra'         => '',
+		'extra'         => array(),
 		'date_created'  => null,
 	);
 
@@ -57,7 +57,7 @@ class LineItem extends ResourceModel {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param int|object|LineItem $data object to read.
+	 * @param int|object|DocumentItem $data object to read.
 	 *
 	 */
 	public function __construct( $data = 0 ) {
@@ -83,9 +83,10 @@ class LineItem extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'item_id'     => __( 'Item ID', 'wp-ever-accounting' ),
-			'item_name'   => __( 'Item name', 'wp-ever-accounting' ),
-			'document_id' => __( 'Document ID', 'wp-ever-accounting' ),
+			'item_id'       => __( 'Item ID', 'wp-ever-accounting' ),
+			'item_name'     => __( 'Item name', 'wp-ever-accounting' ),
+			'document_id'   => __( 'Document ID', 'wp-ever-accounting' ),
+			'currency_code' => __( 'Currency Code', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -395,14 +396,59 @@ class LineItem extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param $extra
+	 * @param      $extra
+	 * @param bool $append
 	 */
-	public function set_extra( $extra ) {
-		$this->set_prop( 'extra', eaccounting_clean( $extra ) );
+	public function set_extra( $extra, $append = true ) {
+		$extra = eaccounting_clean( $extra );
+		if ( is_array( $extra ) ) {
+			$extra = $append ? array_merge( $this->data['extra'], $extra ) : $extra;
+			$this->set_prop( 'extra', eaccounting_clean( $extra ) );
+		}
 	}
 
+	/**
+	 * Add extra data.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $value
+	 * @param $key
+	 */
+	public function add_extra_data( $key, $value ) {
+		$key   = eaccounting_clean( $key );
+		$value = eaccounting_clean( $value );
 
-	public function recalculate() {
+		if ( ! empty( $key ) ) {
+			$this->data['extra'] = array_merge( $this->data['extra'], array( $key => $value ) );
+		}
+	}
+
+	/**
+	 * Get extra data.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $key
+	 *
+	 * @return false|mixed
+	 */
+	public function get_extra_data( $key ) {
+		$key   = eaccounting_clean( $key );
+		$value = false;
+		if ( ! empty( $key ) && array_key_exists( $key, $this->data['extra'] ) ) {
+			$value = $this->data['extra'][ $key ];
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Calculate total.
+	 *
+	 * @since 1.1.0
+	 */
+	public function calculate_total() {
 		$subtotal         = $this->get_price() * $this->get_quantity();
 		$discount         = $this->get_discount();
 		$subtotal_for_tax = $subtotal - $discount;
@@ -424,6 +470,21 @@ class LineItem extends ResourceModel {
 		$this->set_tax( $total_tax );
 		$this->set_total( $total );
 
+	}
+
+	/**
+	 * Save should create or update based on object existence.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @return \Exception|bool
+	 */
+	public function save() {
+		if ( ! empty( $this->changes ) || ! $this->exists() ) {
+			$this->calculate_total();
+		}
+
+		return parent::save();
 	}
 
 }

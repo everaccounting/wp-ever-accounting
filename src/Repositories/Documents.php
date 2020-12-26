@@ -11,9 +11,8 @@
 namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\ResourceRepository;
-use EverAccounting\Models\Invoice;
-use EverAccounting\Models\LineItem;
-use EverAccounting\Models\Note;
+use EverAccounting\Models\Document;
+use EverAccounting\Models\DocumentItem;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,15 +23,15 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Invoices extends ResourceRepository {
+class Documents extends ResourceRepository {
 	/**
 	 * @var string
 	 */
-	const TABLE = 'ea_invoices';
+	const TABLE = 'ea_documents';
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -41,7 +40,7 @@ class Invoices extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data_type = array(
@@ -81,30 +80,30 @@ class Invoices extends ResourceRepository {
 	/**
 	 * Read order items of a specific type from the database for this order.
 	 *
-	 * @param Invoice $invoice Order object.
+	 * @param Document $document Order object.
 	 *
 	 * @return array
 	 */
-	public function get_line_items( $invoice ) {
+	public function get_items( $document ) {
 		global $wpdb;
 
 		// Get from cache if available.
-		$items = 0 < $invoice->get_id() ? wp_cache_get( 'line-item-' . $invoice->get_id(), 'ea-line-items' ) : false;
+		$items = 0 < $document->get_id() ? wp_cache_get( 'document-item-' . $document->get_id(), 'ea-document-items' ) : false;
 
 		if ( false === $items ) {
 			$items = $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_line_items WHERE parent_id = %d AND parent_type = %s ORDER BY id;", $invoice->get_id(), 'invoice' )
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_line_items WHERE document_id = %d ORDER BY id;", $document->get_id() )
 			);
 			foreach ( $items as $item ) {
-				wp_cache_set( 'line-item-' . $item->id, $item, 'ea-line-items' );
+				wp_cache_set( 'document-item-' . $item->id, $item, 'ea-document-items' );
 			}
-			if ( 0 < $invoice->get_id() ) {
-				wp_cache_set( 'line-item' . $invoice->get_id(), $items, 'ea-line-items' );
+			if ( 0 < $document->get_id() ) {
+				wp_cache_set( 'document-item' . $document->get_id(), $items, 'ea-document-items' );
 			}
 		}
 		$results = array();
 		foreach ( $items as $item ) {
-			$results[ absint( $item->item_id ) ] = new LineItem( $item );
+			$results[ absint( $item->item_id ) ] = new DocumentItem( $item );
 		}
 
 		return $results;
@@ -115,16 +114,16 @@ class Invoices extends ResourceRepository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param Invoice $invoice
+	 * @param Document $document
 	 */
-	public function delete_items( $invoice ) {
+	public function delete_items( $document ) {
 		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . LineItems::TABLE, array( 'parent_id' => $invoice->get_id() ) );
+		$wpdb->delete( $wpdb->prefix . DocumentItems::TABLE, array( 'document_id' => $document->get_id() ) );
 	}
 
 
 	/**
-	 * Get invoices collection.
+	 * Get documents collection.
 	 *
 	 * @since 1.1.0
 	 *
@@ -132,7 +131,7 @@ class Invoices extends ResourceRepository {
 	 *
 	 * @return array|false|int|mixed|object|null
 	 */
-	public function get_invoices( $args = array() ) {
+	public function get_documents( $args = array() ) {
 		global $wpdb;
 		// Prepare args.
 		$args = wp_parse_args(
@@ -155,7 +154,7 @@ class Invoices extends ResourceRepository {
 			)
 		);
 
-		$qv            = apply_filters( 'eaccounting_get_invoices_args', $args );
+		$qv            = apply_filters( 'eaccounting_get_documents_args', $args );
 		$query_fields  = eaccounting_prepare_query_fields( $qv, $this->table );
 		$query_from    = eaccounting_prepare_query_from( $this->table );
 		$query_where   = 'WHERE 1=1';
@@ -164,63 +163,32 @@ class Invoices extends ResourceRepository {
 		$query_limit   = eaccounting_prepare_query_limit( $qv );
 		$count_total   = true === $qv['count_total'];
 		$cache_key     = md5( serialize( $qv ) );
-		$results       = wp_cache_get( $cache_key, 'ea_invoices' );
+		$results       = wp_cache_get( $cache_key, 'ea_documents' );
 		$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
 
 		if ( false === $results ) {
 			if ( $count_total ) {
 				$results = (int) $wpdb->get_var( $request );
-				wp_cache_set( $cache_key, $results, 'ea_invoices' );
+				wp_cache_set( $cache_key, $results, 'ea_documents' );
 			} else {
 				$results = $wpdb->get_results( $request );
 				if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
 					foreach ( $results as $key => $item ) {
-						wp_cache_set( $item->id, $item, 'ea_invoices' );
-						wp_cache_set( "key-{$item->key}", $item->id, 'ea_invoices' );
-						wp_cache_set( "invoice_number-{$item->invoice_number}", $item->id, 'ea_invoices' );
+						wp_cache_set( $item->id, $item, 'ea_documents' );
+						wp_cache_set( "key-{$item->key}", $item->id, 'ea_documents' );
+						wp_cache_set( "document_number-{$item->invoice_number}", $item->id, 'ea_documents' );
 					}
 				}
-				wp_cache_set( $cache_key, $results, 'ea_invoices' );
+				wp_cache_set( $cache_key, $results, 'ea_documents' );
 			}
 		}
 
 		if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-			$results = array_map( 'eaccounting_get_invoice', $results );
+			$results = array_map( 'eaccounting_get_document', $results );
 		}
 
 		return $results;
 	}
 
-	/**
-	 * @since 1.1.0
-	 * 
-	 * @param $invoice
-	 * 
-	 * @return Note[]
-	 */
-	public function get_notes( $invoice ) {
-		global $wpdb;
-
-		// Get from cache if available.
-		$items = 0 < $invoice->get_id() ? wp_cache_get( 'invoice-notes-' . $invoice->get_id(), 'ea-notes' ) : false;
-
-		if ( false === $items ) {
-			$items = $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_notes WHERE parent_id = %d AND parent_type = %s ORDER BY id;", $invoice->get_id(), 'invoice' )
-			);
-			foreach ( $items as $item ) {
-				wp_cache_set( 'invoice-note-' . $item->id, $item, 'ea-notes' );
-			}
-			if ( 0 < $invoice->get_id() ) {
-				wp_cache_set( 'invoice-notes-' . $invoice->get_id(), $items, 'ea-notes' );
-			}
-		}
-		$results = array();
-		foreach ( $items as $item ) {
-			$results[ absint( $item->item_id ) ] = new Note( $item );
-		}
-
-		return $results;
-	}
 
 }

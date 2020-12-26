@@ -56,8 +56,8 @@ class Item extends ResourceModel {
 		'purchase_price'    => 0.0000,
 		'quantity'          => 1,
 		'category_id'       => null,
-		'sales_tax_rate'    => null,
-		'purchase_tax_rate' => null,
+		'sales_tax'    => null,
+		'purchase_tax' => null,
 		'enabled'           => 1,
 		'creator_id'        => null,
 		'date_created'      => null,
@@ -211,8 +211,8 @@ class Item extends ResourceModel {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_sales_tax_rate( $context = 'edit' ) {
-		return $this->get_prop( 'sales_tax_rate', $context );
+	public function get_sales_tax( $context = 'edit' ) {
+		return $this->get_prop( 'sales_tax', $context );
 	}
 
 	/**
@@ -222,8 +222,8 @@ class Item extends ResourceModel {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_purchase_tax_rate( $context = 'edit' ) {
-		return $this->get_prop( 'purchase_tax_rate', $context );
+	public function get_purchase_tax( $context = 'edit' ) {
+		return $this->get_prop( 'purchase_tax', $context );
 	}
 
 	/*
@@ -319,11 +319,11 @@ class Item extends ResourceModel {
 	/**
 	 * @since 1.1.0
 	 *
-	 * @param $tax_ids
+	 * @param $tax
 	 *
 	 */
-	public function set_sales_tax_rate( $tax ) {
-		$this->set_prop( 'sales_tax_rate', floatval( $tax ) );
+	public function set_sales_tax( $tax ) {
+		$this->set_prop( 'sales_tax', floatval( $tax ) );
 	}
 
 	/**
@@ -332,8 +332,8 @@ class Item extends ResourceModel {
 	 * @param $tax_ids
 	 *
 	 */
-	public function set_purchase_tax_rate( $tax ) {
-		$this->set_prop( 'purchase_tax_rate', floatval( $tax ) );
+	public function set_purchase_tax( $tax ) {
+		$this->set_prop( 'purchase_tax', floatval( $tax ) );
 	}
 
 	/**

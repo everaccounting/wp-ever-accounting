@@ -53,5 +53,5 @@ defined( 'ABSPATH' ) || exit;
 
 <script	type="text/template" id="invoice-line-item">
 
-	<?php eaccounting_get_admin_template( 'invoice/line-item', array( 'invoice' => $invoice, 'item' => new \EverAccounting\Models\LineItem(), 'index' => 0 ) ); ?>
+	<?php eaccounting_get_admin_template( 'invoice/line-item', array( 'invoice' => $invoice, 'item' => new \EverAccounting\Models\DocumentItem(), 'index' => 0 ) ); ?>
 </script>

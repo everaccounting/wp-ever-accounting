@@ -1,6 +1,6 @@
 <?php
 /**
- * InvoiceItem repository.
+ * DocumentItems repository.
  *
  * Handle Invoice Item insert, update, delete & retrieve from database.
  *
@@ -21,13 +21,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class LineItems extends ResourceRepository {
+class DocumentItems extends ResourceRepository {
 	/**
 	 * Table name
 	 *
 	 * @var string
 	 */
-	const TABLE = 'ea_line_items';
+	const TABLE = 'ea_document_items';
 
 	/**
 	 * @since 1.1.0
@@ -59,5 +59,6 @@ class LineItems extends ResourceRepository {
 		'extra'         => '%s',
 		'date_created'  => '%s',
 	);
+
 
 }

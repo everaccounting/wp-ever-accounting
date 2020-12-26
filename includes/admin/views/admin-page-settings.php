@@ -10,6 +10,10 @@
  */
 defined( 'ABSPATH' ) || exit;
 $section_keys = array_keys( $tab_sections );
+
+//		$current_section   = array_key_exists( $requested_section, $sections[ $current_tab ] ) ? $requested_section : current( array_keys( $sections[ $current_tab ] ) );
+//		$current_tab_label = isset( $tabs[ $current_tab ] ) ? $tabs[ $current_tab ] : '';
+//		$tab_sections      = array_key_exists( $current_tab, $sections ) ? $sections[ $current_tab ] : array();
 ?>
 <div class="wrap ea-settings">
 	<nav class="nav-tab-wrapper ea-tab-wrapper">
@@ -45,15 +49,16 @@ $section_keys = array_keys( $tab_sections );
 		do_action( 'eaccounting_settings_tab_' . $current_tab );
 	} elseif ( has_action( 'eaccounting_settings_tab_' . $current_tab . '_section_' . $current_section ) ) {
 		do_action( 'eaccounting_settings_tab_' . $current_tab . '_section_' . $current_section );
+	} elseif ( empty( $current_section ) ) {
+		wp_safe_redirect( admin_url( 'admin.php?page=ea-settings' ) );
+		exit;
 	} else {
 		?>
 		<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 			<table class="form-table">
-				<?php
-				settings_errors();
-				settings_fields( 'eaccounting_settings' );
-				do_settings_fields( 'eaccounting_settings_' . $current_tab, $current_section );
-				?>
+				<?php settings_errors(); ?>
+				<?php settings_fields( 'eaccounting_settings' ); ?>
+				<?php do_settings_fields( 'eaccounting_settings_' . $current_tab, $current_section ); ?>
 			</table>
 
 			<?php if ( empty( $GLOBALS['hide_save_button'] ) ) : ?>

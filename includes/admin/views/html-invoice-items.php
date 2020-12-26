@@ -48,7 +48,7 @@ $line_items = $invoice->get_line_items();
 					array(
 							'invoice' => $invoice,
 							'item_id' => '999',
-							'item'    => new \EverAccounting\Models\LineItem(),
+							'item'    => new \EverAccounting\Models\DocumentItem(),
 					)
 			);
 			?>

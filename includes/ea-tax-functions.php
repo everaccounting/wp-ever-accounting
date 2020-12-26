@@ -32,18 +32,20 @@ function eaccounting_prices_include_tax() {
 /**
  * @since 1.1.0
  *
- * @param $amount
+ * @param      $amount
  *
- * @param $rate
+ * @param      $rate
+ *
+ * @param bool $inclusive
  *
  * @return float|int
  */
-function eaccounting_calculate_tax( $amount, $rate ) {
+function eaccounting_calculate_tax( $amount, $rate, $inclusive = false ) {
 	$tax = 0.00;
 
-	if ( eaccounting_tax_enabled() && $amount > 0 ) {
+	if ( $amount > 0 ) {
 
-		if ( eaccounting_prices_include_tax() ) {
+		if ( $inclusive ) {
 			$pre_tax = ( $amount / ( 1 + $rate ) );
 			$tax     = $amount - $pre_tax;
 		} else {

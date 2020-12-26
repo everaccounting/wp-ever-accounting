@@ -10,18 +10,78 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Abstracts\ResourceRepository;
-
 
 abstract class Document extends ResourceModel {
+
+	/**
+	 * This is the name of this object type.
+	 *
+	 * @var string
+	 */
+	protected $object_type = 'document';
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @var string
+	 */
+	public $cache_group = 'ea_documents';
+
 	/**
 	 * Contains a reference to the repository for this class.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var ResourceRepository
+	 * @var
 	 */
 	protected $repository;
+
+
+	/**
+	 * Item Data array.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $data = array(
+		'document_number' => '',
+		'type'            => '',
+		'order_number'    => '',
+		'status'          => 'draft',
+		'issue_date'      => null,
+		'due_date'        => null,
+		'payment_date'    => null,
+		'category_id'     => null,
+		'contact_id'      => null,
+		'address'         => array(
+			'name'       => '',
+			'company'    => '',
+			'street'     => '',
+			'city'       => '',
+			'state'      => '',
+			'postcode'   => '',
+			'country'    => '',
+			'email'      => '',
+			'phone'      => '',
+			'vat_number' => '',
+		),
+		'discount'        => 0.00,
+		'discount_type'   => 'percentage',
+		'subtotal'        => 0.00,
+		'total_tax'       => 0.00,
+		'total_discount'  => 0.00,
+		'total'           => 0.00,
+		'tax_inclusive'   => 1,
+		'terms'           => '',
+		'attachment_id'   => null,
+		'currency_code'   => null,
+		'currency_rate'   => 1,
+		'key'             => null,
+		'parent_id'       => null,
+		'creator_id'      => null,
+		'date_created'    => null,
+	);
 
 	/**
 	 * Order items will be stored here, sometimes before they persist in the DB.
@@ -30,7 +90,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @var array
 	 */
-	protected $line_items = array();
+	protected $items = array();
 
 	/**
 	 * Order items that need deleting are stored here.
@@ -39,7 +99,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @var array
 	 */
-	protected $line_items_to_delete = array();
+	protected $items_to_delete = array();
 
 	/**
 	 * @since 1.1.0
@@ -48,21 +108,42 @@ abstract class Document extends ResourceModel {
 	 */
 	private $status_transition = array();
 
+
 	/**
-	 * All available document statuses.
+	 * Get the document if ID is passed, otherwise the account is new and empty.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param int|object $document object to read.
+	 *
+	 */
+	public function __construct( $document = 0 ) {
+		parent::__construct( $document );
+	}
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| Object Specific data methods
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * All available statuses.
 	 *
 	 * @since 1.0.1
 	 *
 	 * @return array
 	 */
-	abstract public function get_statuses();
+	public static function get_statuses() {
+		return array();
+	}
 
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
 	*/
-
 	/**
 	 * Return the document number.
 	 *
@@ -74,6 +155,15 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_document_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
+	}
+
+	/**
+	 * Get internal type.
+	 *
+	 * @return string
+	 */
+	public function get_type( $context = 'edit' ) {
+		return $this->get_prop( 'type', $context );
 	}
 
 	/**
@@ -179,6 +269,173 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
+	 * Return the address.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_address( $context = 'edit' ) {
+		return $this->get_prop( 'address', $context );
+	}
+
+	/**
+	 * Gets a prop for a getter method.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $prop    Name of prop to get.
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return mixed
+	 */
+	protected function get_address_prop( $prop, $context = 'view' ) {
+		$value = null;
+
+		if ( array_key_exists( $prop, $this->data['address'] ) ) {
+			$value = isset( $this->changes['address'][ $prop ] ) ? $this->changes['address'][ $prop ] : $this->data['address'][ $prop ];
+
+			if ( 'view' === $context ) {
+				$value = apply_filters( $this->get_hook_prefix() . 'address' . '_' . $prop, $value, $this );
+			}
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Get name.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_name( $context = 'view' ) {
+		return $this->get_address_prop( 'name', $context );
+	}
+
+	/**
+	 * Get company.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_company( $context = 'view' ) {
+		return $this->get_address_prop( 'company', $context );
+	}
+
+	/**
+	 * Get street.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_street( $context = 'view' ) {
+		return $this->get_address_prop( 'street', $context );
+	}
+
+	/**
+	 * Get city.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_city( $context = 'view' ) {
+		return $this->get_address_prop( 'city', $context );
+	}
+
+	/**
+	 * Get state.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_state( $context = 'view' ) {
+		return $this->get_address_prop( 'state', $context );
+	}
+
+	/**
+	 * Get postcode.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_postcode( $context = 'view' ) {
+		return $this->get_address_prop( 'postcode', $context );
+	}
+
+	/**
+	 * Get country.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_country( $context = 'view' ) {
+		return $this->get_address_prop( 'country', $context );
+	}
+
+	/**
+	 * Get email.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_email( $context = 'view' ) {
+		return $this->get_address_prop( 'email', $context );
+	}
+
+	/**
+	 * Get phone.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_phone( $context = 'view' ) {
+		return $this->get_address_prop( 'phone', $context );
+	}
+
+	/**
+	 * Get vat_number.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return string
+	 */
+	public function get_vat_number( $context = 'view' ) {
+		return $this->get_address_prop( 'vat_number', $context );
+	}
+
+	/**
 	 * Get the invoice discount total.
 	 *
 	 * @since 1.1.0
@@ -188,7 +445,7 @@ abstract class Document extends ResourceModel {
 	 * @return float
 	 */
 	public function get_discount( $context = 'view' ) {
-		return (float) $this->get_prop( 'discount', $context );
+		return $this->get_prop( 'discount', $context );
 	}
 
 	/**
@@ -266,6 +523,9 @@ abstract class Document extends ResourceModel {
 	 * @return mixed|null
 	 */
 	public function get_tax_inclusive( $context = 'edit' ) {
+		if ( ! $this->exists() ) {
+			return eaccounting_prices_include_tax();
+		}
 		return $this->get_prop( 'tax_inclusive', $context );
 	}
 
@@ -348,35 +608,24 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
-	 * @param string $context
-	 *
-	 * @return array|mixed|string
-	 */
-	public function get_extra( $context = 'view' ) {
-		return $this->get_prop( 'extra' );
-	}
-
-	/**
 	 * Get the invoice items.
 	 *
 	 * @since 1.1.0
 	 *
 	 *
-	 * @return LineItem[]
+	 * @return DocumentItem[]
 	 */
-	public function get_line_items() {
-		if ( $this->exists() && empty( $this->line_items ) ) {
-			$line_items = $this->repository->get_line_items( $this );
-			foreach ( $line_items as $item_id => $line_item ) {
-				if ( ! array_key_exists( $item_id, $this->line_items_to_delete ) ) {
-					$this->line_items[ $item_id ] = $line_item;
+	public function get_items() {
+		if ( $this->exists() && empty( $this->items ) ) {
+			$items = $this->repository->get_items( $this );
+			foreach ( $items as $item_id => $item ) {
+				if ( ! array_key_exists( $item_id, $this->items_to_delete ) ) {
+					$this->items[ $item_id ] = $item;
 				}
 			}
 		}
 
-		return $this->line_items;
+		return $this->items;
 	}
 
 	/**
@@ -386,9 +635,9 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @return array
 	 */
-	public function get_line_item_ids() {
+	public function get_item_ids() {
 		$ids = array();
-		foreach ( $this->get_line_items() as $item ) {
+		foreach ( $this->get_items() as $item ) {
 			$ids[] = $item->get_item_id();
 		}
 
@@ -404,9 +653,9 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_taxes() {
 		$taxes = array();
-		if ( empty( $this->get_line_items() ) ) {
-			foreach ( $this->get_line_items() as $item ) {
-				$taxes[ $item->get_item_id() ] = $item->get_total_tax();
+		if ( empty( $this->get_items() ) ) {
+			foreach ( $this->get_items() as $item ) {
+				$taxes[ $item->get_item_id() ] = $item->get_tax();
 			}
 		}
 
@@ -419,10 +668,10 @@ abstract class Document extends ResourceModel {
 	 * @param      $item_id
 	 * @param bool $by_line_id
 	 *
-	 * @return LineItem|int
+	 * @return DocumentItem|int
 	 */
-	public function get_line_item( $item_id, $by_line_id = false ) {
-		$items = $this->get_line_items();
+	public function get_item( $item_id, $by_line_id = false ) {
+		$items = $this->get_items();
 
 		// Search for item id.
 		if ( ! empty( $items ) && ! $by_line_id ) {
@@ -440,6 +689,21 @@ abstract class Document extends ResourceModel {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get all class data in array format.
+	 *
+	 * @since 3.0.0
+	 * @return array
+	 */
+	public function get_data() {
+		return array_merge(
+			parent::get_data(),
+			array(
+				'line_items' => $this->get_items(),
+			)
+		);
 	}
 
 	/*
@@ -465,11 +729,11 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $order_number .
+	 * @param string $type .
 	 *
 	 */
-	public function set_order_number( $order_number ) {
-		$this->set_prop( 'order_number', eaccounting_clean( $order_number ) );
+	public function set_type( $type ) {
+		$this->set_prop( 'type', eaccounting_clean( $type ) );
 	}
 
 	/**
@@ -483,15 +747,23 @@ abstract class Document extends ResourceModel {
 	public function set_status( $status ) {
 		$statuses   = $this->get_statuses();
 		$old_status = $this->get_status();
-		if ( array_key_exists( $status, $statuses ) ) {
-			$this->set_prop( 'status', eaccounting_clean( $status ) );
+
+		if ( ! array_key_exists( $status, $statuses ) ) {
+			return array(
+				'from' => $old_status,
+				'to'   => $old_status,
+			);
 		}
+
+		$this->set_prop( 'status', eaccounting_clean( $status ) );
+
 		if ( true === $this->object_read && $old_status !== $status ) {
 			$this->status_transition = array(
 				'from' => ! empty( $this->status_transition['from'] ) ? $this->status_transition['from'] : $old_status,
 				'to'   => $status,
 			);
 		}
+
 		return array(
 			'from' => $old_status,
 			'to'   => $status,
@@ -550,23 +822,153 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $customer_id .
+	 * @param int $contact_id .
 	 *
 	 */
-	public function set_customer_id( $customer_id ) {
-		$this->set_prop( 'customer_id', absint( $customer_id ) );
+	public function set_contact_id( $contact_id ) {
+		$this->set_prop( 'contact_id', absint( $contact_id ) );
 	}
 
 	/**
-	 * set the subtotal.
+	 * set the address.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param float $subtotal .
+	 * @param int $address .
 	 *
 	 */
-	public function set_subtotal( $subtotal ) {
-		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 2 ) );
+	public function set_address( $address ) {
+		$this->set_prop( 'address', eaccounting_clean( $address ) );
+	}
+
+	/**
+	 * Sets a prop for a setter method.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $prop  Name of prop to set.
+	 * @param mixed  $value Value of the prop.
+	 */
+	protected function set_address_prop( $prop, $value ) {
+		if ( array_key_exists( $prop, $this->data['address'] ) ) {
+			if ( true === $this->object_read ) {
+				if ( $value !== $this->data['address'][ $prop ] || ( isset( $this->changes['address'] ) && array_key_exists( $prop, $this->changes[ $address ] ) ) ) {
+					$this->changes[ $address ][ $prop ] = $value;
+				}
+			} else {
+				$this->data['address'][ $prop ] = $value;
+			}
+		}
+	}
+
+	/**
+	 * Set name.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $name name.
+	 */
+	public function set_name( $name ) {
+		$this->set_address_prop( 'name', eaccounting_clean( $name ) );
+	}
+
+	/**
+	 * Set company.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $company company.
+	 */
+	public function set_company( $company ) {
+		$this->set_address_prop( 'company', eaccounting_clean( $company ) );
+	}
+
+	/**
+	 * Set street.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $street street.
+	 */
+	public function set_street( $street ) {
+		$this->set_address_prop( 'street', eaccounting_clean( $street ) );
+	}
+
+	/**
+	 * Set city.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $city city.
+	 */
+	public function set_city( $city ) {
+		$this->set_address_prop( 'city', eaccounting_clean( $city ) );
+	}
+
+	/**
+	 * Set state.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $state state.
+	 */
+	public function set_state( $state ) {
+		$this->set_address_prop( 'state', eaccounting_clean( $state ) );
+	}
+
+	/**
+	 * Set postcode.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $postcode postcode.
+	 */
+	public function set_postcode( $postcode ) {
+		$this->set_address_prop( 'postcode', eaccounting_clean( $postcode ) );
+	}
+
+	/**
+	 * Set country.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $country country.
+	 */
+	public function set_country( $country ) {
+		$this->set_address_prop( 'country', eaccounting_clean( $country ) );
+	}
+
+	/**
+	 * Set email.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $email email.
+	 */
+	public function set_email( $email ) {
+		$this->set_address_prop( 'email', sanitize_email( $email ) );
+	}
+
+	/**
+	 * Set phone.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $phone phone.
+	 */
+	public function set_phone( $phone ) {
+		$this->set_address_prop( 'phone', eaccounting_clean( $phone ) );
+	}
+
+	/**
+	 * Set vat_number.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $vat_number vat_number.
+	 */
+	public function set_vat_number( $vat_number ) {
+		$this->set_address_prop( 'vat_number', eaccounting_clean( $vat_number ) );
 	}
 
 	/**
@@ -596,6 +998,18 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
+	 * set the subtotal.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param float $subtotal .
+	 *
+	 */
+	public function set_subtotal( $subtotal ) {
+		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 2 ) );
+	}
+
+	/**
 	 * set the tax.
 	 *
 	 * @since  1.1.0
@@ -605,6 +1019,18 @@ abstract class Document extends ResourceModel {
 	 */
 	public function set_total_tax( $tax ) {
 		$this->set_prop( 'total_tax', eaccounting_format_decimal( $tax, 2 ) );
+	}
+
+	/**
+	 * set the tax.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param float $discount .
+	 *
+	 */
+	public function set_total_discount( $discount ) {
+		$this->set_prop( 'total_discount', eaccounting_format_decimal( $discount, 2 ) );
 	}
 
 	/**
@@ -664,8 +1090,13 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_currency_code( $currency_code ) {
-		if ( eaccounting_get_currency_data( $currency_code ) ) {
+		if ( eaccounting_sanitize_currency_code( $currency_code ) ) {
 			$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
+		}
+
+		if ( $this->get_currency_code() && ( ! $this->exists() || in_array( 'currency_code', $this->changes, true ) ) ) {
+			$currency = eaccounting_get_currency( $this->get_currency_code() );
+			$this->set_currency_rate( $currency->get_rate() );
 		}
 	}
 
@@ -709,89 +1140,12 @@ abstract class Document extends ResourceModel {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Additional methods
-	|--------------------------------------------------------------------------
-	|
-	| Does extra thing as helper functions.
-	|
-	*/
-	/**
-	 * Adds an item to the invoice.
-	 *
-	 * @param array $item
-	 *
-	 * @return \WP_Error|Bool
-	 */
-	abstract public function add_line_item( $args );
-
-
-	/**
-	 * Remove item from the order.
-	 *
-	 * @param int  $item_id Item ID to delete.
-	 *
-	 * @param bool $by_line_id
-	 *
-	 * @return false|void
-	 */
-	public function remove_item( $item_id, $by_line_id = false ) {
-		$line_item = $this->get_line_item( $item_id, $by_line_id );
-
-		if ( ! $line_item ) {
-			return false;
-		}
-
-		// Unset and remove later.
-		$this->line_items_to_delete[ $line_item->get_item_id() ] = $line_item;
-		unset( $this->line_items[ $line_item->get_item_id() ] );
-	}
-
-
-	/**
-	 * Add note.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param       $note
-	 * @param false $customer_note
-	 *
-	 * @return Note|false|int|\WP_Error
-	 */
-	public function add_note( $note, $customer_note = false ) {
-		if ( ! $this->exists() ) {
-			return false;
-		}
-		if ( $customer_note ) {
-			do_action( 'eaccounting_invoice_customer_note', $note, $this );
-		}
-
-		$author = 'Ever Accounting';
-		// If this is an admin comment or it has been added by the user.
-		if ( is_user_logged_in() ) {
-			$user   = get_user_by( 'id', get_current_user_id() );
-			$author = $user->display_name;
-		}
-
-		return eaccounting_insert_note(
-			array(
-				'parent_id' => $this->get_id(),
-				'type'      => 'invoice',
-				'note'      => $note,
-				'highlight' => $customer_note,
-				'author'    => $author,
-			)
-		);
-	}
-
-	/*
-	|--------------------------------------------------------------------------
 	| Boolean methods
 	|--------------------------------------------------------------------------
 	|
 	| Return true or false.
 	|
 	*/
-
 
 	/**
 	 * Checks if the invoice has a given status.
@@ -814,7 +1168,7 @@ abstract class Document extends ResourceModel {
 	 * @return bool
 	 */
 	public function is_editable() {
-		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
+		return ! in_array( $this->get_status(), array( 'paid' ), true );
 	}
 
 	/**
@@ -838,4 +1192,208 @@ abstract class Document extends ResourceModel {
 	public function is_fixed_discount() {
 		return 'percentage' !== $this->get_discount_type();
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Used for database transactions.
+	|
+	*/
+
+	/**
+	 * Set the document items.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param array|DocumentItem[] $items items.
+	 */
+	public function set_items( $items, $append = false ) {
+		// Remove existing items.
+		$old_item_ids = $this->get_item_ids();
+
+		// Ensure that we have an array.
+		if ( ! is_array( $items ) ) {
+			return;
+		}
+		$new_item_ids = array();
+		foreach ( $items as $item ) {
+			$new_item_ids[] = $this->add_item( $item );
+		}
+
+		if ( ! $append ) {
+			$remove_item_ids = array_diff( $old_item_ids, $new_item_ids );
+			foreach ( $remove_item_ids as $remove_item_id ) {
+				$this->remove_item( $remove_item_id );
+			}
+		}
+	}
+
+	/**
+	 * Adds an item to the document.
+	 *
+	 * @param array $item
+	 *
+	 * @return \WP_Error|Bool
+	 */
+	public function add_item( $args ) {
+
+	}
+
+	/**
+	 * Remove item from the order.
+	 *
+	 * @param int  $item_id Item ID to delete.
+	 *
+	 * @param bool $by_line_id
+	 *
+	 * @return false|void
+	 */
+	public function remove_item( $item_id, $by_line_id = false ) {
+		$item = $this->get_item( $item_id, $by_line_id );
+
+		if ( ! $item ) {
+			return false;
+		}
+
+		// Unset and remove later.
+		$this->items_to_delete[ $item->get_item_id() ] = $item;
+		unset( $this->items[ $item->get_item_id() ] );
+	}
+
+	/**
+	 * Calculate total.
+	 *
+	 * @since 1.1.0
+	 * @throws \Exception
+	 */
+	public function calculate_totals() {
+		$this->check_required_items();
+		$subtotal       = 0;
+		$total_tax      = 0;
+		$total_discount = 0;
+		// before calculating need to know subtotal so we can apply fixed discount
+		if ( $this->is_fixed_discount() ) {
+			foreach ( $this->get_items() as $item ) {
+				$subtotal += ( $item->get_price() * $item->get_quantity() );
+			}
+		}
+
+		$discount_rate = $this->is_fixed_discount() ? ( ( $this->get_discount() * 100 ) / $subtotal ) : $this->get_discount();
+		foreach ( $this->get_items() as $item ) {
+			$item_subtotal         = ( $item->get_price() * $item->get_quantity() );
+			$item_discount         = $item_subtotal * ( $discount_rate / 100 );
+			$item_subtotal_for_tax = $item_subtotal - $item_discount;
+			$item_tax_rate         = ( $item->get_tax_rate() / 100 );
+			$item_tax              = eaccounting_calculate_tax( $item_subtotal_for_tax, $item_tax_rate, $this->is_tax_inclusive() );
+			if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
+				$item_tax = eaccounting_format_decimal( $item_tax, 2 );
+			}
+			if ( $this->is_tax_inclusive() ) {
+				$item_subtotal -= $item_tax;
+			}
+			$item_total = $item_subtotal - $item_discount + $item_tax;
+			if ( $item_total < 0 ) {
+				$item_total = 0;
+			}
+
+			$item->set_subtotal( $item_subtotal );
+			$item->set_discount( $item_discount );
+			$item->set_tax( $item_tax );
+			$item->set_total( $item_total );
+
+			$subtotal       += $item->get_subtotal();
+			$total_tax      += $item->get_tax();
+			$total_discount += $item->get_discount();
+		}
+
+		$this->set_subtotal( $subtotal );
+		$this->set_total_tax( $total_tax );
+		$this->set_total_discount( $total_discount );
+		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax();
+		if ( $total < 0 ) {
+			$total = 0;
+		}
+		$this->set_total( $total );
+	}
+
+	/**
+	 * Save object.
+	 *
+	 * @since 1.1.0
+	 * @return bool|\Exception|int
+	 */
+	public function save() {
+		$this->calculate_totals();
+		$this->maybe_set_document_number();
+		$this->maybe_set_key();
+		$this->maybe_set_payment_date();
+		$this->validate_document_number();
+		$saved = parent::save();
+		$this->save_items();
+		$this->status_transition();
+
+		return $saved;
+	}
+
+	/**
+	 * Set address.
+	 *
+	 * @since 1.1.0
+	 */
+	public function maybe_set_address( $contact ) {
+		if ( empty( $contact ) ) {
+			return;
+		}
+		$address = $this->data['address'];
+		foreach ( $address as $prop => $value ) {
+			$getter = "get_{$prop}";
+			$setter = "set_{$prop}";
+			if ( is_callable( array( $contact, $getter ) )
+				 && is_callable( array( $this, $setter ) )
+				 && is_callable( array( $this, $getter ) )
+				 && empty( $this->$getter() ) ) {
+				$this->$setter( $contact->$getter() );
+			}
+		}
+	}
+
+
+	public function maybe_set_document_number() {
+	}
+
+	public function maybe_set_key() {
+	}
+
+	public function maybe_set_payment_date() {
+	}
+
+	public function validate_document_number() {
+	}
+
+	/**
+	 * Save all document items which are part of this order.
+	 */
+	protected function save_items() {
+		foreach ( $this->items_to_delete as $item ) {
+			if ( $item->exists() ) {
+				$item->delete();
+			}
+		}
+
+		$this->items_to_delete = array();
+
+		$items = array_filter( $this->items );
+		// Add/save items.
+		foreach ( $items as $item ) {
+			$item->set_document_id( $this->get_id() );
+			$item->set_currency_code( $this->get_currency_code() );
+			$item->save();
+		}
+	}
+
+	protected function status_transition() {
+	}
+
 }

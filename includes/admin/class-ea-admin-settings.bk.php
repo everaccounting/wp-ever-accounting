@@ -20,11 +20,11 @@ class EAccounting_Admin_Settings {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 100 );
-		//add_filter( 'eaccounting_settings', array( $this, 'register_settings' ) );
-		//add_filter( 'eaccounting_settings_emails', array( $this, 'register_email_settings' ) );
+		add_filter( 'eaccounting_settings', array( $this, 'register_settings' ) );
+		add_filter( 'eaccounting_settings_emails', array( $this, 'register_email_settings' ) );
 		add_filter( 'eaccounting_settings_tab_currencies', array( $this, 'render_currencies_tab' ) );
 		add_filter( 'eaccounting_settings_tab_categories', array( $this, 'render_categories_tab' ) );
-		//add_filter( 'eaccounting_settings_tab_taxes', array( $this, 'render_taxes_tab' ) );
+		add_filter( 'eaccounting_settings_tab_taxes', array( $this, 'render_taxes_tab' ) );
 	}
 
 	/**
@@ -50,17 +50,15 @@ class EAccounting_Admin_Settings {
 	 * @return void
 	 */
 	public function display_settings_page() {
-		$tabs     = eaccounting_get_settings_tabs();
-		$sections = eaccounting_get_settings_sections();
+		$tabs     = EAccounting_Settings::get_tabs();
+		$sections = EAccounting_Settings::get_sections();
 		// Get current tab/section.
-		$first_tab         = current( array_keys( $tabs ) );
-		$requested_tab     = isset( $_GET['tab'] ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
-		$current_tab       = array_key_exists( $requested_tab, $tabs ) ? $requested_tab : $first_tab;
-		$requested_section = isset( $_GET['section'] ) ? sanitize_title( $_GET['section'] ) : 'main';
-		$tab_sections      = isset( $sections[ $current_tab ] ) ? $sections[ $current_tab ] : array();
-		$current_section   = isset($tab_sections[$requested_section]) ? $requested_section : current( array_keys( $tab_sections ) );
-		$tab_exists        = ! empty( $current_tab ) || has_action( 'eaccounting_settings_' . $current_tab ) || has_action( 'eaccounting_settings_tab_' . $current_tab );
+		$current_tab       = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // WPCS: input var okay, CSRF ok.
+		$current_section   = empty( $_REQUEST['section'] ) ? 'main' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // WPCS: input var okay, CSRF ok.
 		$current_tab_label = isset( $tabs[ $current_tab ] ) ? $tabs[ $current_tab ] : '';
+		$tab_sections      = array_key_exists( $current_tab, $sections ) ? $sections[ $current_tab ] : array();
+
+		$tab_exists = isset( $tabs[ $current_tab ] ) || has_action( 'eaccounting_settings_' . $current_tab ) || has_action( 'eaccounting_settings_tabs_' . $current_tab );
 		if ( ! $tab_exists ) {
 			wp_safe_redirect( admin_url( 'admin.php?page=ea-settings' ) );
 			exit;

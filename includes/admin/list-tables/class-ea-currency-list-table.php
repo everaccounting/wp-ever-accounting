@@ -107,12 +107,10 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 */
 	public function define_columns() {
 		return array(
-			'cb'      => '<input type="checkbox" />',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
+			'rate'    => __( 'Rate', 'wp-ever-accounting' ),
 			'code'    => __( 'Code', 'wp-ever-accounting' ),
 			'symbol'  => __( 'Symbol', 'wp-ever-accounting' ),
-			'rate'    => __( 'Rate', 'wp-ever-accounting' ),
-			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
@@ -125,28 +123,12 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'name'    => array( 'name', false ),
-			'code'    => array( 'code', false ),
-			'symbol'  => array( 'symbol', false ),
-			'rate'    => array( 'rate', false ),
-			'enabled' => array( 'enabled', false ),
+			'name'   => array( 'name', false ),
+			'code'   => array( 'code', false ),
+			'symbol' => array( 'symbol', false ),
+			'rate'   => array( 'rate', false ),
 		);
 	}
-
-	/**
-	 * Define bulk actions
-	 *
-	 * @return array
-	 * @since 1.0.2
-	 */
-	public function define_bulk_actions() {
-		return array(
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
-			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
-		);
-	}
-
 
 	/**
 	 * Define primary column.
@@ -158,18 +140,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 		return 'name';
 	}
 
-
-	/**
-	 * Renders the checkbox column in the currencies list table.
-	 *
-	 * @param Currency $currency The current object.
-	 *
-	 * @return string Displays a checkbox.
-	 * @since  1.0.2
-	 */
-	function column_cb( $currency ) {
-		return sprintf( '<input type="checkbox" name="currency_id[]" value="%d"/>', $currency->get_id() );
-	}
 
 	/**
 	 * This function renders most of the columns in the list table.
@@ -190,7 +160,7 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				$name  = $currency->get_name();
 				$value = sprintf(
 					'<a href="%1$s">%2$s</a>',
-					esc_url( add_query_arg( array( 'currency_id' => $currency_id ) ), $this->base_url ),
+					esc_url( add_query_arg( array( 'currency_code' => $currency_id, 'action' => 'edit' ) ), $this->base_url ),
 					$name
 				);
 				break;
@@ -202,12 +172,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				break;
 			case 'rate':
 				$value = esc_html( $currency->get_rate() );
-				break;
-			case 'enabled':
-				$value  = '<label class="ea-toggle">';
-				$value .= '<input type="checkbox" class="currency-status" style="" value="true" data-id="' . $currency->get_id() . '" ' . checked( $currency->is_enabled(), true, false ) . '>';
-				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
-				$value .= '</label>';
 				break;
 			case 'actions':
 				$base     = add_query_arg( array( 'currency_id' => $currency_id ), $this->base_url );
@@ -257,8 +221,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
-
-		$ids = array_map( 'absint', $ids );
 
 		if ( empty( $ids ) ) {
 			return;
@@ -310,29 +272,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	}
 
 	/**
-	 * Retrieve the view types
-	 *
-	 * @access public
-	 * @return array $views All the views available
-	 * @since 1.0.2
-	 */
-	public function get_views() {
-		$base           = eaccounting_admin_url( array( 'tab' => 'currencies' ) );
-		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
-		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
-		$inactive_count = '&nbsp;<span class="count">(' . $this->inactive_count . ')</span>';
-
-		$views = array(
-			'all'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
-			'active'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'active', $base ) ), $current === 'active' ? ' class="current"' : '', __( 'Active', 'wp-ever-accounting' ) . $active_count ),
-			'inactive' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'inactive', $base ) ), $current === 'inactive' ? ' class="current"' : '', __( 'Inactive', 'wp-ever-accounting' ) . $inactive_count ),
-		);
-
-		return $views;
-	}
-
-	/**
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
@@ -371,44 +310,9 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 
 		$args = apply_filters( 'eaccounting_currency_table_query_args', $args, $this );
 
-		$this->items = eaccounting_get_currencies( $args );
-
-		$this->active_count = eaccounting_get_currencies(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'status'      => 'active',
-				)
-			)
-		);
-
-		$this->inactive_count = eaccounting_get_currencies(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'status'      => 'inactive',
-				)
-			)
-		);
-
-		$this->total_count = $this->active_count + $this->inactive_count;
-
-		$status = isset( $_GET['status'] ) ? $_GET['status'] : 'any';
-
-		switch ( $status ) {
-			case 'active':
-				$total_items = $this->active_count;
-				break;
-			case 'inactive':
-				$total_items = $this->inactive_count;
-				break;
-			case 'any':
-			default:
-				$total_items = $this->total_count;
-				break;
-		}
+		$this->items       = eaccounting_get_currencies( $args );
+		$total_items       = count( $this->items );
+		$this->total_count = $total_items;
 
 		$this->set_pagination_args(
 			array(

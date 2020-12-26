@@ -14,6 +14,7 @@ return array(
 	'AED' => array(
 		'name'               => 'UAE Dirham',
 		'code'               => 'AED',
+		'rate'               => 1.0000,
 		'number'             => 784,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -26,6 +27,7 @@ return array(
 	'AFN' => array(
 		'name'               => 'Afghani',
 		'code'               => 'AFN',
+		'rate'               => 1.0000,
 		'number'             => 971,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -38,6 +40,7 @@ return array(
 	'ALL' => array(
 		'name'               => 'Lek',
 		'code'               => 'ALL',
+		'rate'               => 1.0000,
 		'number'             => 8,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -50,6 +53,7 @@ return array(
 	'AMD' => array(
 		'name'               => 'Armenian Dram',
 		'code'               => 'AMD',
+		'rate'               => 1.0000,
 		'number'             => 51,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -62,6 +66,7 @@ return array(
 	'ANG' => array(
 		'name'               => 'Netherlands Antillean Guilder',
 		'code'               => 'ANG',
+		'rate'               => 1.0000,
 		'number'             => 532,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -74,6 +79,7 @@ return array(
 	'AOA' => array(
 		'name'               => 'Kwanza',
 		'code'               => 'AOA',
+		'rate'               => 1.0000,
 		'number'             => 973,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -86,6 +92,7 @@ return array(
 	'ARS' => array(
 		'name'               => 'Argentine Peso',
 		'code'               => 'ARS',
+		'rate'               => 1.0000,
 		'number'             => 32,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -98,6 +105,7 @@ return array(
 	'AUD' => array(
 		'name'               => 'Australian Dollar',
 		'code'               => 'AUD',
+		'rate'               => 1.0000,
 		'number'             => 36,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -110,6 +118,7 @@ return array(
 	'AWG' => array(
 		'name'               => 'Aruban Florin',
 		'code'               => 'AWG',
+		'rate'               => 1.0000,
 		'number'             => 533,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -122,6 +131,7 @@ return array(
 	'AZN' => array(
 		'name'               => 'Azerbaijanian Manat',
 		'code'               => 'AZN',
+		'rate'               => 1.0000,
 		'number'             => 944,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -134,6 +144,7 @@ return array(
 	'BAM' => array(
 		'name'               => 'Convertible Mark',
 		'code'               => 'BAM',
+		'rate'               => 1.0000,
 		'number'             => 977,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -146,6 +157,7 @@ return array(
 	'BBD' => array(
 		'name'               => 'Barbados Dollar',
 		'code'               => 'BBD',
+		'rate'               => 1.0000,
 		'number'             => 52,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -156,8 +168,9 @@ return array(
 	),
 
 	'BDT' => array(
-		'name'               => 'Taka',
+		'name'               => 'Bangladeshi Taka',
 		'code'               => 'BDT',
+		'rate'               => 1.0000,
 		'number'             => 50,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -170,6 +183,7 @@ return array(
 	'BGN' => array(
 		'name'               => 'Bulgarian Lev',
 		'code'               => 'BGN',
+		'rate'               => 1.0000,
 		'number'             => 975,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -182,6 +196,7 @@ return array(
 	'BHD' => array(
 		'name'               => 'Bahraini Dinar',
 		'code'               => 'BHD',
+		'rate'               => 1.0000,
 		'number'             => 48,
 		'precision'          => 3,
 		'subunit'            => 1000,
@@ -194,6 +209,7 @@ return array(
 	'BIF' => array(
 		'name'               => 'Burundi Franc',
 		'code'               => 'BIF',
+		'rate'               => 1.0000,
 		'number'             => 108,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -206,6 +222,7 @@ return array(
 	'BMD' => array(
 		'name'               => 'Bermudian Dollar',
 		'code'               => 'BMD',
+		'rate'               => 1.0000,
 		'number'             => 60,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -218,6 +235,7 @@ return array(
 	'BND' => array(
 		'name'               => 'Brunei Dollar',
 		'code'               => 'BND',
+		'rate'               => 1.0000,
 		'number'             => 96,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -230,6 +248,7 @@ return array(
 	'BOB' => array(
 		'name'               => 'Boliviano',
 		'code'               => 'BOB',
+		'rate'               => 1.0000,
 		'number'             => 68,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -242,6 +261,7 @@ return array(
 	'BOV' => array(
 		'name'               => 'Mvdol',
 		'code'               => 'BOV',
+		'rate'               => 1.0000,
 		'number'             => 984,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -254,6 +274,7 @@ return array(
 	'BRL' => array(
 		'name'               => 'Brazilian Real',
 		'code'               => 'BRL',
+		'rate'               => 1.0000,
 		'number'             => 986,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -266,6 +287,7 @@ return array(
 	'BSD' => array(
 		'name'               => 'Bahamian Dollar',
 		'code'               => 'BSD',
+		'rate'               => 1.0000,
 		'number'             => 44,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -278,6 +300,7 @@ return array(
 	'BTN' => array(
 		'name'               => 'Ngultrum',
 		'code'               => 'BTN',
+		'rate'               => 1.0000,
 		'number'             => 64,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -290,6 +313,7 @@ return array(
 	'BWP' => array(
 		'name'               => 'Pula',
 		'code'               => 'BWP',
+		'rate'               => 1.0000,
 		'number'             => 72,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -302,6 +326,7 @@ return array(
 	'BYN' => array(
 		'name'               => 'Belarussian Ruble',
 		'code'               => 'BYN',
+		'rate'               => 1.0000,
 		'number'             => 974,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -314,6 +339,7 @@ return array(
 	'BZD' => array(
 		'name'               => 'Belize Dollar',
 		'code'               => 'BZD',
+		'rate'               => 1.0000,
 		'number'             => 84,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -326,6 +352,7 @@ return array(
 	'CAD' => array(
 		'name'               => 'Canadian Dollar',
 		'code'               => 'CAD',
+		'rate'               => 1.0000,
 		'number'             => 124,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -338,6 +365,7 @@ return array(
 	'CDF' => array(
 		'name'               => 'Congolese Franc',
 		'code'               => 'CDF',
+		'rate'               => 1.0000,
 		'number'             => 976,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -350,6 +378,7 @@ return array(
 	'CHF' => array(
 		'name'               => 'Swiss Franc',
 		'code'               => 'CHF',
+		'rate'               => 1.0000,
 		'number'             => 756,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -362,6 +391,7 @@ return array(
 	'CLF' => array(
 		'name'               => 'Unidades de fomento',
 		'code'               => 'CLF',
+		'rate'               => 1.0000,
 		'number'             => 990,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -374,6 +404,7 @@ return array(
 	'CLP' => array(
 		'name'               => 'Chilean Peso',
 		'code'               => 'CLP',
+		'rate'               => 1.0000,
 		'number'             => 152,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -386,6 +417,7 @@ return array(
 	'CNY' => array(
 		'name'               => 'Yuan Renminbi',
 		'code'               => 'CNY',
+		'rate'               => 1.0000,
 		'number'             => 156,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -398,6 +430,7 @@ return array(
 	'COP' => array(
 		'name'               => 'Colombian Peso',
 		'code'               => 'COP',
+		'rate'               => 1.0000,
 		'number'             => 170,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -410,6 +443,7 @@ return array(
 	'CRC' => array(
 		'name'               => 'Costa Rican Colon',
 		'code'               => 'CRC',
+		'rate'               => 1.0000,
 		'number'             => 188,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -422,6 +456,7 @@ return array(
 	'CUC' => array(
 		'name'               => 'Peso Convertible',
 		'code'               => 'CUC',
+		'rate'               => 1.0000,
 		'number'             => 931,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -434,6 +469,7 @@ return array(
 	'CUP' => array(
 		'name'               => 'Cuban Peso',
 		'code'               => 'CUP',
+		'rate'               => 1.0000,
 		'number'             => 192,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -446,6 +482,7 @@ return array(
 	'CVE' => array(
 		'name'               => 'Cape Verde Escudo',
 		'code'               => 'CVE',
+		'rate'               => 1.0000,
 		'number'             => 132,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -458,6 +495,7 @@ return array(
 	'CZK' => array(
 		'name'               => 'Czech Koruna',
 		'code'               => 'CZK',
+		'rate'               => 1.0000,
 		'number'             => 203,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -470,6 +508,7 @@ return array(
 	'DJF' => array(
 		'name'               => 'Djibouti Franc',
 		'code'               => 'DJF',
+		'rate'               => 1.0000,
 		'number'             => 262,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -482,6 +521,7 @@ return array(
 	'DKK' => array(
 		'name'               => 'Danish Krone',
 		'code'               => 'DKK',
+		'rate'               => 1.0000,
 		'number'             => 208,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -494,6 +534,7 @@ return array(
 	'DOP' => array(
 		'name'               => 'Dominican Peso',
 		'code'               => 'DOP',
+		'rate'               => 1.0000,
 		'number'             => 214,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -506,6 +547,7 @@ return array(
 	'DZD' => array(
 		'name'               => 'Algerian Dinar',
 		'code'               => 'DZD',
+		'rate'               => 1.0000,
 		'number'             => 12,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -518,6 +560,7 @@ return array(
 	'EGP' => array(
 		'name'               => 'Egyptian Pound',
 		'code'               => 'EGP',
+		'rate'               => 1.0000,
 		'number'             => 818,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -530,6 +573,7 @@ return array(
 	'ERN' => array(
 		'name'               => 'Nakfa',
 		'code'               => 'ERN',
+		'rate'               => 1.0000,
 		'number'             => 232,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -542,6 +586,7 @@ return array(
 	'ETB' => array(
 		'name'               => 'Ethiopian Birr',
 		'code'               => 'ETB',
+		'rate'               => 1.0000,
 		'number'             => 230,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -554,6 +599,7 @@ return array(
 	'EUR' => array(
 		'name'               => 'Euro',
 		'code'               => 'EUR',
+		'rate'               => 1.0000,
 		'number'             => 978,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -566,6 +612,7 @@ return array(
 	'FJD' => array(
 		'name'               => 'Fiji Dollar',
 		'code'               => 'FJD',
+		'rate'               => 1.0000,
 		'number'             => 242,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -578,6 +625,7 @@ return array(
 	'FKP' => array(
 		'name'               => 'Falkland Islands Pound',
 		'code'               => 'FKP',
+		'rate'               => 1.0000,
 		'number'             => 238,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -590,6 +638,7 @@ return array(
 	'GBP' => array(
 		'name'               => 'Pound Sterling',
 		'code'               => 'GBP',
+		'rate'               => 1.0000,
 		'number'             => 826,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -602,6 +651,7 @@ return array(
 	'GEL' => array(
 		'name'               => 'Lari',
 		'code'               => 'GEL',
+		'rate'               => 1.0000,
 		'number'             => 981,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -614,6 +664,7 @@ return array(
 	'GHS' => array(
 		'name'               => 'Ghana Cedi',
 		'code'               => 'GHS',
+		'rate'               => 1.0000,
 		'number'             => 936,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -626,6 +677,7 @@ return array(
 	'GIP' => array(
 		'name'               => 'Gibraltar Pound',
 		'code'               => 'GIP',
+		'rate'               => 1.0000,
 		'number'             => 292,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -638,6 +690,7 @@ return array(
 	'GMD' => array(
 		'name'               => 'Dalasi',
 		'code'               => 'GMD',
+		'rate'               => 1.0000,
 		'number'             => 270,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -650,6 +703,7 @@ return array(
 	'GNF' => array(
 		'name'               => 'Guinea Franc',
 		'code'               => 'GNF',
+		'rate'               => 1.0000,
 		'number'             => 324,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -662,6 +716,7 @@ return array(
 	'GTQ' => array(
 		'name'               => 'Quetzal',
 		'code'               => 'GTQ',
+		'rate'               => 1.0000,
 		'number'             => 320,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -674,6 +729,7 @@ return array(
 	'GYD' => array(
 		'name'               => 'Guyana Dollar',
 		'code'               => 'GYD',
+		'rate'               => 1.0000,
 		'number'             => 328,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -686,6 +742,7 @@ return array(
 	'HKD' => array(
 		'name'               => 'Hong Kong Dollar',
 		'code'               => 'HKD',
+		'rate'               => 1.0000,
 		'number'             => 344,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -698,6 +755,7 @@ return array(
 	'HNL' => array(
 		'name'               => 'Lempira',
 		'code'               => 'HNL',
+		'rate'               => 1.0000,
 		'number'             => 340,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -710,6 +768,7 @@ return array(
 	'HRK' => array(
 		'name'               => 'Croatian Kuna',
 		'code'               => 'HRK',
+		'rate'               => 1.0000,
 		'number'             => 191,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -722,6 +781,7 @@ return array(
 	'HTG' => array(
 		'name'               => 'Gourde',
 		'code'               => 'HTG',
+		'rate'               => 1.0000,
 		'number'             => 332,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -734,6 +794,7 @@ return array(
 	'HUF' => array(
 		'name'               => 'Forint',
 		'code'               => 'HUF',
+		'rate'               => 1.0000,
 		'number'             => 348,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -746,6 +807,7 @@ return array(
 	'IDR' => array(
 		'name'               => 'Rupiah',
 		'code'               => 'IDR',
+		'rate'               => 1.0000,
 		'number'             => 360,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -758,6 +820,7 @@ return array(
 	'ILS' => array(
 		'name'               => 'New Israeli Sheqel',
 		'code'               => 'ILS',
+		'rate'               => 1.0000,
 		'number'             => 376,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -770,6 +833,7 @@ return array(
 	'INR' => array(
 		'name'               => 'Indian Rupee',
 		'code'               => 'INR',
+		'rate'               => 1.0000,
 		'number'             => 356,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -782,6 +846,7 @@ return array(
 	'IQD' => array(
 		'name'               => 'Iraqi Dinar',
 		'code'               => 'IQD',
+		'rate'               => 1.0000,
 		'number'             => 368,
 		'precision'          => 3,
 		'subunit'            => 1000,
@@ -794,6 +859,7 @@ return array(
 	'IRR' => array(
 		'name'               => 'Iranian Rial',
 		'code'               => 'IRR',
+		'rate'               => 1.0000,
 		'number'             => 364,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -806,6 +872,7 @@ return array(
 	'ISK' => array(
 		'name'               => 'Iceland Krona',
 		'code'               => 'ISK',
+		'rate'               => 1.0000,
 		'number'             => 352,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -818,6 +885,7 @@ return array(
 	'JMD' => array(
 		'name'               => 'Jamaican Dollar',
 		'code'               => 'JMD',
+		'rate'               => 1.0000,
 		'number'             => 388,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -830,6 +898,7 @@ return array(
 	'JOD' => array(
 		'name'               => 'Jordanian Dinar',
 		'code'               => 'JOD',
+		'rate'               => 1.0000,
 		'number'             => 400,
 		'precision'          => 3,
 		'subunit'            => 100,
@@ -842,6 +911,7 @@ return array(
 	'JPY' => array(
 		'name'               => 'Yen',
 		'code'               => 'JPY',
+		'rate'               => 1.0000,
 		'number'             => 392,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -854,6 +924,7 @@ return array(
 	'KES' => array(
 		'name'               => 'Kenyan Shilling',
 		'code'               => 'KES',
+		'rate'               => 1.0000,
 		'number'             => 404,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -866,6 +937,7 @@ return array(
 	'KGS' => array(
 		'name'               => 'Som',
 		'code'               => 'KGS',
+		'rate'               => 1.0000,
 		'number'             => 417,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -878,6 +950,7 @@ return array(
 	'KHR' => array(
 		'name'               => 'Riel',
 		'code'               => 'KHR',
+		'rate'               => 1.0000,
 		'number'             => 116,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -890,6 +963,7 @@ return array(
 	'KMF' => array(
 		'name'               => 'Comoro Franc',
 		'code'               => 'KMF',
+		'rate'               => 1.0000,
 		'number'             => 174,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -902,6 +976,7 @@ return array(
 	'KPW' => array(
 		'name'               => 'North Korean Won',
 		'code'               => 'KPW',
+		'rate'               => 1.0000,
 		'number'             => 408,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -914,6 +989,7 @@ return array(
 	'KRW' => array(
 		'name'               => 'Won',
 		'code'               => 'KRW',
+		'rate'               => 1.0000,
 		'number'             => 410,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -926,6 +1002,7 @@ return array(
 	'KWD' => array(
 		'name'               => 'Kuwaiti Dinar',
 		'code'               => 'KWD',
+		'rate'               => 1.0000,
 		'number'             => 414,
 		'precision'          => 3,
 		'subunit'            => 1000,
@@ -938,6 +1015,7 @@ return array(
 	'KYD' => array(
 		'name'               => 'Cayman Islands Dollar',
 		'code'               => 'KYD',
+		'rate'               => 1.0000,
 		'number'             => 136,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -950,6 +1028,7 @@ return array(
 	'KZT' => array(
 		'name'               => 'Tenge',
 		'code'               => 'KZT',
+		'rate'               => 1.0000,
 		'number'             => 398,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -962,6 +1041,7 @@ return array(
 	'LAK' => array(
 		'name'               => 'Kip',
 		'code'               => 'LAK',
+		'rate'               => 1.0000,
 		'number'             => 418,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -974,6 +1054,7 @@ return array(
 	'LBP' => array(
 		'name'               => 'Lebanese Pound',
 		'code'               => 'LBP',
+		'rate'               => 1.0000,
 		'number'             => 422,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -986,6 +1067,7 @@ return array(
 	'LKR' => array(
 		'name'               => 'Sri Lanka Rupee',
 		'code'               => 'LKR',
+		'rate'               => 1.0000,
 		'number'             => 144,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -998,6 +1080,7 @@ return array(
 	'LRD' => array(
 		'name'               => 'Liberian Dollar',
 		'code'               => 'LRD',
+		'rate'               => 1.0000,
 		'number'             => 430,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1010,6 +1093,7 @@ return array(
 	'LSL' => array(
 		'name'               => 'Loti',
 		'code'               => 'LSL',
+		'rate'               => 1.0000,
 		'number'             => 426,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1022,6 +1106,7 @@ return array(
 	'LTL' => array(
 		'name'               => 'Lithuanian Litas',
 		'code'               => 'LTL',
+		'rate'               => 1.0000,
 		'number'             => 440,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1034,6 +1119,7 @@ return array(
 	'LVL' => array(
 		'name'               => 'Latvian Lats',
 		'code'               => 'LVL',
+		'rate'               => 1.0000,
 		'number'             => 428,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1046,6 +1132,7 @@ return array(
 	'LYD' => array(
 		'name'               => 'Libyan Dinar',
 		'code'               => 'LYD',
+		'rate'               => 1.0000,
 		'number'             => 434,
 		'precision'          => 3,
 		'subunit'            => 1000,
@@ -1058,6 +1145,7 @@ return array(
 	'MAD' => array(
 		'name'               => 'Moroccan Dirham',
 		'code'               => 'MAD',
+		'rate'               => 1.0000,
 		'number'             => 504,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1070,6 +1158,7 @@ return array(
 	'MDL' => array(
 		'name'               => 'Moldovan Leu',
 		'code'               => 'MDL',
+		'rate'               => 1.0000,
 		'number'             => 498,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1082,6 +1171,7 @@ return array(
 	'MGA' => array(
 		'name'               => 'Malagasy Ariary',
 		'code'               => 'MGA',
+		'rate'               => 1.0000,
 		'number'             => 969,
 		'precision'          => 2,
 		'subunit'            => 5,
@@ -1094,6 +1184,7 @@ return array(
 	'MKD' => array(
 		'name'               => 'Denar',
 		'code'               => 'MKD',
+		'rate'               => 1.0000,
 		'number'             => 807,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1106,6 +1197,7 @@ return array(
 	'MMK' => array(
 		'name'               => 'Kyat',
 		'code'               => 'MMK',
+		'rate'               => 1.0000,
 		'number'             => 104,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1118,6 +1210,7 @@ return array(
 	'MNT' => array(
 		'name'               => 'Tugrik',
 		'code'               => 'MNT',
+		'rate'               => 1.0000,
 		'number'             => 496,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1130,6 +1223,7 @@ return array(
 	'MOP' => array(
 		'name'               => 'Pataca',
 		'code'               => 'MOP',
+		'rate'               => 1.0000,
 		'number'             => 446,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1142,6 +1236,7 @@ return array(
 	'MRO' => array(
 		'name'               => 'Ouguiya',
 		'code'               => 'MRO',
+		'rate'               => 1.0000,
 		'number'             => 478,
 		'precision'          => 2,
 		'subunit'            => 5,
@@ -1154,6 +1249,7 @@ return array(
 	'MUR' => array(
 		'name'               => 'Mauritius Rupee',
 		'code'               => 'MUR',
+		'rate'               => 1.0000,
 		'number'             => 480,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1166,6 +1262,7 @@ return array(
 	'MVR' => array(
 		'name'               => 'Rufiyaa',
 		'code'               => 'MVR',
+		'rate'               => 1.0000,
 		'number'             => 462,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1178,6 +1275,7 @@ return array(
 	'MWK' => array(
 		'name'               => 'Kwacha',
 		'code'               => 'MWK',
+		'rate'               => 1.0000,
 		'number'             => 454,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1190,6 +1288,7 @@ return array(
 	'MXN' => array(
 		'name'               => 'Mexican Peso',
 		'code'               => 'MXN',
+		'rate'               => 1.0000,
 		'number'             => 484,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1202,6 +1301,7 @@ return array(
 	'MYR' => array(
 		'name'               => 'Malaysian Ringgit',
 		'code'               => 'MYR',
+		'rate'               => 1.0000,
 		'number'             => 458,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1214,6 +1314,7 @@ return array(
 	'MZN' => array(
 		'name'               => 'Mozambique Metical',
 		'code'               => 'MZN',
+		'rate'               => 1.0000,
 		'number'             => 943,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1226,6 +1327,7 @@ return array(
 	'NAD' => array(
 		'name'               => 'Namibia Dollar',
 		'code'               => 'NAD',
+		'rate'               => 1.0000,
 		'number'             => 516,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1238,6 +1340,7 @@ return array(
 	'NGN' => array(
 		'name'               => 'Naira',
 		'code'               => 'NGN',
+		'rate'               => 1.0000,
 		'number'             => 566,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1250,6 +1353,7 @@ return array(
 	'NIO' => array(
 		'name'               => 'Cordoba Oro',
 		'code'               => 'NIO',
+		'rate'               => 1.0000,
 		'number'             => 558,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1262,6 +1366,7 @@ return array(
 	'NOK' => array(
 		'name'               => 'Norwegian Krone',
 		'code'               => 'NOK',
+		'rate'               => 1.0000,
 		'number'             => 578,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1274,6 +1379,7 @@ return array(
 	'NPR' => array(
 		'name'               => 'Nepalese Rupee',
 		'code'               => 'NPR',
+		'rate'               => 1.0000,
 		'number'             => 524,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1286,6 +1392,7 @@ return array(
 	'NZD' => array(
 		'name'               => 'New Zealand Dollar',
 		'code'               => 'NZD',
+		'rate'               => 1.0000,
 		'number'             => 554,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1298,6 +1405,7 @@ return array(
 	'OMR' => array(
 		'name'               => 'Rial Omani',
 		'code'               => 'OMR',
+		'rate'               => 1.0000,
 		'number'             => 512,
 		'precision'          => 3,
 		'subunit'            => 1000,
@@ -1310,6 +1418,7 @@ return array(
 	'PAB' => array(
 		'name'               => 'Balboa',
 		'code'               => 'PAB',
+		'rate'               => 1.0000,
 		'number'             => 590,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1322,6 +1431,7 @@ return array(
 	'PEN' => array(
 		'name'               => 'Sol',
 		'code'               => 'PEN',
+		'rate'               => 1.0000,
 		'number'             => 604,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1334,6 +1444,7 @@ return array(
 	'PGK' => array(
 		'name'               => 'Kina',
 		'code'               => 'PGK',
+		'rate'               => 1.0000,
 		'number'             => 598,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1346,6 +1457,7 @@ return array(
 	'PHP' => array(
 		'name'               => 'Philippine Peso',
 		'code'               => 'PHP',
+		'rate'               => 1.0000,
 		'number'             => 608,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1358,6 +1470,7 @@ return array(
 	'PKR' => array(
 		'name'               => 'Pakistan Rupee',
 		'code'               => 'PKR',
+		'rate'               => 1.0000,
 		'number'             => 586,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1370,6 +1483,7 @@ return array(
 	'PLN' => array(
 		'name'               => 'Zloty',
 		'code'               => 'PLN',
+		'rate'               => 1.0000,
 		'number'             => 985,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1382,6 +1496,7 @@ return array(
 	'PYG' => array(
 		'name'               => 'Guarani',
 		'code'               => 'PYG',
+		'rate'               => 1.0000,
 		'number'             => 600,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1394,6 +1509,7 @@ return array(
 	'QAR' => array(
 		'name'               => 'Qatari Rial',
 		'code'               => 'QAR',
+		'rate'               => 1.0000,
 		'number'             => 634,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1406,6 +1522,7 @@ return array(
 	'RON' => array(
 		'name'               => 'New Romanian Leu',
 		'code'               => 'RON',
+		'rate'               => 1.0000,
 		'number'             => 946,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1418,6 +1535,7 @@ return array(
 	'RSD' => array(
 		'name'               => 'Serbian Dinar',
 		'code'               => 'RSD',
+		'rate'               => 1.0000,
 		'number'             => 941,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1430,6 +1548,7 @@ return array(
 	'RUB' => array(
 		'name'               => 'Russian Ruble',
 		'code'               => 'RUB',
+		'rate'               => 1.0000,
 		'number'             => 643,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1442,6 +1561,7 @@ return array(
 	'RWF' => array(
 		'name'               => 'Rwanda Franc',
 		'code'               => 'RWF',
+		'rate'               => 1.0000,
 		'number'             => 646,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1454,6 +1574,7 @@ return array(
 	'SAR' => array(
 		'name'               => 'Saudi Riyal',
 		'code'               => 'SAR',
+		'rate'               => 1.0000,
 		'number'             => 682,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1466,6 +1587,7 @@ return array(
 	'SBD' => array(
 		'name'               => 'Solomon Islands Dollar',
 		'code'               => 'SBD',
+		'rate'               => 1.0000,
 		'number'             => 90,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1478,6 +1600,7 @@ return array(
 	'SCR' => array(
 		'name'               => 'Seychelles Rupee',
 		'code'               => 'SCR',
+		'rate'               => 1.0000,
 		'number'             => 690,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1490,6 +1613,7 @@ return array(
 	'SDG' => array(
 		'name'               => 'Sudanese Pound',
 		'code'               => 'SDG',
+		'rate'               => 1.0000,
 		'number'             => 938,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1502,6 +1626,7 @@ return array(
 	'SEK' => array(
 		'name'               => 'Swedish Krona',
 		'code'               => 'SEK',
+		'rate'               => 1.0000,
 		'number'             => 752,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1514,6 +1639,7 @@ return array(
 	'SGD' => array(
 		'name'               => 'Singapore Dollar',
 		'code'               => 'SGD',
+		'rate'               => 1.0000,
 		'number'             => 702,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1526,6 +1652,7 @@ return array(
 	'SHP' => array(
 		'name'               => 'Saint Helena Pound',
 		'code'               => 'SHP',
+		'rate'               => 1.0000,
 		'number'             => 654,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1538,6 +1665,7 @@ return array(
 	'SLL' => array(
 		'name'               => 'Leone',
 		'code'               => 'SLL',
+		'rate'               => 1.0000,
 		'number'             => 694,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1550,6 +1678,7 @@ return array(
 	'SOS' => array(
 		'name'               => 'Somali Shilling',
 		'code'               => 'SOS',
+		'rate'               => 1.0000,
 		'number'             => 706,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1562,6 +1691,7 @@ return array(
 	'SRD' => array(
 		'name'               => 'Surinam Dollar',
 		'code'               => 'SRD',
+		'rate'               => 1.0000,
 		'number'             => 968,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1574,6 +1704,7 @@ return array(
 	'SSP' => array(
 		'name'               => 'South Sudanese Pound',
 		'code'               => 'SSP',
+		'rate'               => 1.0000,
 		'number'             => 728,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1586,6 +1717,7 @@ return array(
 	'STD' => array(
 		'name'               => 'Dobra',
 		'code'               => 'STD',
+		'rate'               => 1.0000,
 		'number'             => 678,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1598,6 +1730,7 @@ return array(
 	'SVC' => array(
 		'name'               => 'El Salvador Colon',
 		'code'               => 'SVC',
+		'rate'               => 1.0000,
 		'number'             => 222,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1610,6 +1743,7 @@ return array(
 	'SYP' => array(
 		'name'               => 'Syrian Pound',
 		'code'               => 'SYP',
+		'rate'               => 1.0000,
 		'number'             => 760,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1622,6 +1756,7 @@ return array(
 	'SZL' => array(
 		'name'               => 'Lilangeni',
 		'code'               => 'SZL',
+		'rate'               => 1.0000,
 		'number'             => 748,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1634,6 +1769,7 @@ return array(
 	'THB' => array(
 		'name'               => 'Baht',
 		'code'               => 'THB',
+		'rate'               => 1.0000,
 		'number'             => 764,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1646,6 +1782,7 @@ return array(
 	'TJS' => array(
 		'name'               => 'Somoni',
 		'code'               => 'TJS',
+		'rate'               => 1.0000,
 		'number'             => 972,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1658,6 +1795,7 @@ return array(
 	'TMT' => array(
 		'name'               => 'Turkmenistan New Manat',
 		'code'               => 'TMT',
+		'rate'               => 1.0000,
 		'number'             => 934,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1670,6 +1808,7 @@ return array(
 	'TND' => array(
 		'name'               => 'Tunisian Dinar',
 		'code'               => 'TND',
+		'rate'               => 1.0000,
 		'number'             => 788,
 		'precision'          => 3,
 		'subunit'            => 1000,
@@ -1682,6 +1821,7 @@ return array(
 	'TOP' => array(
 		'name'               => 'Pa’anga',
 		'code'               => 'TOP',
+		'rate'               => 1.0000,
 		'number'             => 776,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1694,6 +1834,7 @@ return array(
 	'TRY' => array(
 		'name'               => 'Turkish Lira',
 		'code'               => 'TRY',
+		'rate'               => 1.0000,
 		'number'             => 949,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1706,6 +1847,7 @@ return array(
 	'TTD' => array(
 		'name'               => 'Trinidad and Tobago Dollar',
 		'code'               => 'TTD',
+		'rate'               => 1.0000,
 		'number'             => 780,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1718,6 +1860,7 @@ return array(
 	'TWD' => array(
 		'name'               => 'New Taiwan Dollar',
 		'code'               => 'TWD',
+		'rate'               => 1.0000,
 		'number'             => 901,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1730,6 +1873,7 @@ return array(
 	'TZS' => array(
 		'name'               => 'Tanzanian Shilling',
 		'code'               => 'TZS',
+		'rate'               => 1.0000,
 		'number'             => 834,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1742,6 +1886,7 @@ return array(
 	'UAH' => array(
 		'name'               => 'Hryvnia',
 		'code'               => 'UAH',
+		'rate'               => 1.0000,
 		'number'             => 980,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1754,6 +1899,7 @@ return array(
 	'UGX' => array(
 		'name'               => 'Uganda Shilling',
 		'code'               => 'UGX',
+		'rate'               => 1.0000,
 		'number'             => 800,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1766,6 +1912,7 @@ return array(
 	'USD' => array(
 		'name'               => 'US Dollar',
 		'code'               => 'USD',
+		'rate'               => 1.0000,
 		'number'             => 840,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1778,6 +1925,7 @@ return array(
 	'UYU' => array(
 		'name'               => 'Peso Uruguayo',
 		'code'               => 'UYU',
+		'rate'               => 1.0000,
 		'number'             => 858,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1790,6 +1938,7 @@ return array(
 	'UZS' => array(
 		'name'               => 'Uzbekistan Sum',
 		'code'               => 'UZS',
+		'rate'               => 1.0000,
 		'number'             => 860,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1802,6 +1951,7 @@ return array(
 	'VEF' => array(
 		'name'               => 'Bolivar',
 		'code'               => 'VEF',
+		'rate'               => 1.0000,
 		'number'             => 937,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1814,6 +1964,7 @@ return array(
 	'VND' => array(
 		'name'               => 'Dong',
 		'code'               => 'VND',
+		'rate'               => 1.0000,
 		'number'             => 704,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1826,6 +1977,7 @@ return array(
 	'VUV' => array(
 		'name'               => 'Vatu',
 		'code'               => 'VUV',
+		'rate'               => 1.0000,
 		'number'             => 548,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1838,6 +1990,7 @@ return array(
 	'WST' => array(
 		'name'               => 'Tala',
 		'code'               => 'WST',
+		'rate'               => 1.0000,
 		'number'             => 882,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1850,6 +2003,7 @@ return array(
 	'XAF' => array(
 		'name'               => 'CFA Franc BEAC',
 		'code'               => 'XAF',
+		'rate'               => 1.0000,
 		'number'             => 950,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1862,6 +2016,7 @@ return array(
 	'XAG' => array(
 		'name'               => 'Silver',
 		'code'               => 'XAG',
+		'rate'               => 1.0000,
 		'number'             => 961,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1874,6 +2029,7 @@ return array(
 	'XAU' => array(
 		'name'               => 'Gold',
 		'code'               => 'XAU',
+		'rate'               => 1.0000,
 		'number'             => 959,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1886,6 +2042,7 @@ return array(
 	'XCD' => array(
 		'name'               => 'East Caribbean Dollar',
 		'code'               => 'XCD',
+		'rate'               => 1.0000,
 		'number'             => 951,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1898,6 +2055,7 @@ return array(
 	'XDR' => array(
 		'name'               => 'SDR (Special Drawing Right)',
 		'code'               => 'XDR',
+		'rate'               => 1.0000,
 		'number'             => 960,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1910,6 +2068,7 @@ return array(
 	'XOF' => array(
 		'name'               => 'CFA Franc BCEAO',
 		'code'               => 'XOF',
+		'rate'               => 1.0000,
 		'number'             => 952,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1922,6 +2081,7 @@ return array(
 	'XPF' => array(
 		'name'               => 'CFP Franc',
 		'code'               => 'XPF',
+		'rate'               => 1.0000,
 		'number'             => 953,
 		'precision'          => 0,
 		'subunit'            => 1,
@@ -1934,6 +2094,7 @@ return array(
 	'YER' => array(
 		'name'               => 'Yemeni Rial',
 		'code'               => 'YER',
+		'rate'               => 1.0000,
 		'number'             => 886,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1946,6 +2107,7 @@ return array(
 	'ZAR' => array(
 		'name'               => 'Rand',
 		'code'               => 'ZAR',
+		'rate'               => 1.0000,
 		'number'             => 710,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1958,6 +2120,7 @@ return array(
 	'ZMW' => array(
 		'name'               => 'Zambian Kwacha',
 		'code'               => 'ZMW',
+		'rate'               => 1.0000,
 		'number'             => 967,
 		'precision'          => 2,
 		'subunit'            => 100,
@@ -1970,6 +2133,7 @@ return array(
 	'ZWL' => array(
 		'name'               => 'Zimbabwe Dollar',
 		'code'               => 'ZWL',
+		'rate'               => 1.0000,
 		'number'             => 932,
 		'precision'          => 2,
 		'subunit'            => 100,

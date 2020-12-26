@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Customers extends ResourceRepository {
+class Contacts extends ResourceRepository {
 	/**
 	 * Name of the table.
 	 *
@@ -40,6 +40,14 @@ class Customers extends ResourceRepository {
 	protected $table = self::TABLE;
 
 	/**
+	 * Cache group.
+	 *
+	 * @since 1.1.0
+	 * @var string
+	 */
+	protected $cache_group = self::TABLE;
+
+	/**
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
@@ -48,9 +56,9 @@ class Customers extends ResourceRepository {
 	 */
 	protected $data_type = array(
 		'id'            => '%d',
-		'currency_code' => '%s',
 		'user_id'       => '%d',
 		'name'          => '%s',
+		'company'       => '%s',
 		'email'         => '%s',
 		'phone'         => '%s',
 		'website'       => '%s',
@@ -62,6 +70,7 @@ class Customers extends ResourceRepository {
 		'postcode'      => '%s',
 		'country'       => '%s',
 		'type'          => '%s',
+		'currency_code' => '%s',
 		'thumbnail_id'  => '%d',
 		'enabled'       => '%d',
 		'creator_id'    => '%d',
@@ -85,29 +94,22 @@ class Customers extends ResourceRepository {
 			return;
 		}
 
-		// Maybe retrieve from the cache.
-		$raw_item = wp_cache_get( $item->get_id(), $item->get_cache_group() );
-		// If not found, retrieve from the db.
-		if ( false === $raw_item ) {
-			$raw_item = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM {$table} WHERE id = %d AND `type` = 'customer'",
-					$item->get_id()
-				)
-			);
+		// Get from cache if available.
+		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
 
-			// Update the cache with our data
-			wp_cache_set( $item->get_id(), $raw_item, $item->get_cache_group() );
+		if ( false === $data ) {
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1;", $item->get_id() ) );
+			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );
 		}
 
-		if ( ! $raw_item ) {
+		if ( ! $data || $data->type !== $item->get_type() ) {
 			$item->set_id( 0 );
 			return;
 		}
 
 		foreach ( array_keys( $this->data_type ) as $key ) {
 			$method = "set_$key";
-			$item->$method( $raw_item->$key );
+			$item->$method( $data->$key );
 		}
 
 		$item->set_object_read( true );

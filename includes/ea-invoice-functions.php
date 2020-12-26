@@ -153,7 +153,7 @@ function eaccounting_delete_invoice( $invoice_id ) {
  */
 function eaccounting_get_invoices( $args = array() ) {
 	try {
-		/* @var $repository \EverAccounting\Repositories\Invoices */
+		/* @var $repository \EverAccounting\Repositories\Documents */
 		$repository = \EverAccounting\Core\Repositories::load( 'invoices' );
 		return $repository->get_invoices( $args );
 

@@ -117,7 +117,8 @@ abstract class ResourceRepository {
 
 		foreach ( $fields as $key => $format ) {
 			$method         = "get_$key";
-			$values[ $key ] = $item->$method();
+			$data           = $item->$method();
+			$values[ $key ] = is_array( $data ) ? maybe_serialize( $data ) : $data;
 			$formats[]      = $format;
 		}
 
@@ -156,30 +157,22 @@ abstract class ResourceRepository {
 			throw new \Exception( $wpdb->last_error );
 		}
 
-		// Maybe retrieve from the cache.
-		$raw_item = wp_cache_get( $item->get_id(), $item->get_cache_group() );
-		// If not found, retrieve from the db.
-		if ( false === $raw_item ) {
-			$raw_item = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT * FROM {$table} WHERE id = %d",
-					$item->get_id()
-				)
-			);
+		// Get from cache if available.
+		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
 
-			// Update the cache with our data
-			wp_cache_set( $item->get_id(), $raw_item, $item->get_cache_group() );
+		if ( false === $data ) {
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1;", $item->get_id() ) );
+			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );
 		}
 
-		if ( ! $raw_item ) {
+		if ( ! $data ) {
 			$item->set_id( 0 );
-
 			return;
 		}
 
 		foreach ( array_keys( $this->data_type ) as $key ) {
 			$method = "set_$key";
-			$item->$method( $raw_item->$key );
+			$item->$method( maybe_unserialize( $data->$key ) );
 		}
 
 		$item->set_object_read( true );
@@ -203,7 +196,8 @@ abstract class ResourceRepository {
 		foreach ( $this->data_type as $key => $format ) {
 			if ( array_key_exists( $key, $changes ) ) {
 				$method         = "get_$key";
-				$values[ $key ] = $item->$method();
+				$data           = $item->$method();
+				$values[ $key ] = is_array( $data ) ? maybe_serialize( $data ) : $data;
 				$formats[]      = $format;
 			}
 		}
@@ -244,20 +238,11 @@ abstract class ResourceRepository {
 	public function delete( &$item, $args = array() ) {
 		global $wpdb;
 		$table = $wpdb->prefix . $this->table;
-		$wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM {$table}
-				WHERE id = %d",
-				$item->get_id()
-			)
-		);
-
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ) );
 		// Delete cache.
 		$item->clear_cache();
-
 		// Fire a hook.
 		do_action( 'eaccounting_delete_' . $item->get_object_type(), $item->get_id(), $item->get_data(), $item );
-
 		$item->set_id( 0 );
 	}
 }

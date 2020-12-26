@@ -188,7 +188,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_options() {
-		$settings = new \EverAccounting\Admin\Settings();
+		$settings = new EAccounting_Settings();
 		if ( empty( $settings->get( 'financial_year_start' ) ) ) {
 			$settings->set( array( 'financial_year_start' => '01-01' ) );
 		}
@@ -335,18 +335,18 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_defaults() {
-		$settings = new \EverAccounting\Admin\Settings();
-		$account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
-		if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
-			$settings->set( array( 'default_account' => $account->id ) );
-		}
-
-		$currency = \EverAccounting\Query_Currency::init()->find( 'USD', 'code' );
-		if ( ! empty( $currency ) && empty( $settings->get( 'default_currency' ) ) ) {
-			$settings->set( array( 'default_currency' => $currency->code ) );
-		}
-
-		$settings->set( array(), true );
+		$settings = new EAccounting_Settings;
+//		$account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
+//		if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
+//			$settings->set( array( 'default_account' => $account->id ) );
+//		}
+//
+//		$currency = \EverAccounting\Query_Currency::init()->find( 'USD', 'code' );
+//		if ( ! empty( $currency ) && empty( $settings->get( 'default_currency' ) ) ) {
+//			$settings->set( array( 'default_currency' => $currency->code ) );
+//		}
+//
+//		$settings->set( array(), true );
 	}
 
 	/**
@@ -409,28 +409,11 @@ class EAccounting_Install {
 		    UNIQUE KEY (`name`, `type`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_currencies(
-            `id` bigint(20) NOT NULL AUTO_INCREMENT,
-			`name` varchar(100) NOT NULL,
-			`code` varchar(3) NOT NULL,
-			`rate` double(15,8) NOT NULL,
-			`precision` varchar(2) DEFAULT NULL,
-  			`symbol` varchar(5) DEFAULT NULL,
-  			`position` ENUM ('before', 'after') DEFAULT 'before',
-  			`decimal_separator` varchar(1) DEFAULT '.',
- 			`thousand_separator` varchar(1) DEFAULT ',',
-			`enabled` tinyint(1) NOT NULL DEFAULT '1',
-	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
-		    PRIMARY KEY (`id`),
-		    KEY `rate` (`rate`),
-		    KEY `code` (`code`),
-		    UNIQUE KEY (`name`, `code`)
-            ) $collate",
-
 			"CREATE TABLE {$wpdb->prefix}ea_contacts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `user_id` INT(11) DEFAULT NULL,
 			`name` VARCHAR(191) NOT NULL,
+			`company` VARCHAR(191) NOT NULL,
 			`email` VARCHAR(191) DEFAULT NULL,
 			`phone` VARCHAR(50) DEFAULT NULL,
 			`website` VARCHAR(191) DEFAULT NULL,
@@ -495,16 +478,16 @@ class EAccounting_Install {
 
 			"CREATE TABLE {$wpdb->prefix}ea_documents(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
-            `document_number` VARCHAR(191) NOT NULL,
-            `type` VARCHAR(191) NOT NULL,
-            `order_number` VARCHAR(191) DEFAULT NULL,
-            `status` VARCHAR(191) DEFAULT NULL,
+            `document_number` VARCHAR(100) NOT NULL,
+            `type` VARCHAR(60) NOT NULL,
+            `order_number` VARCHAR(100) DEFAULT NULL,
+            `status` VARCHAR(100) DEFAULT NULL,
             `issue_date` DATETIME NULL DEFAULT NULL,
             `due_date` DATETIME NULL DEFAULT NULL,
             `payment_date` DATETIME NULL DEFAULT NULL,
             `category_id` INT(11) NOT NULL,
   			`contact_id` INT(11) NOT NULL,
-  			`contact_info` TEXT DEFAULT NULL,
+  			`address` longtext DEFAULT NULL,
             `discount` DOUBLE(15,4) DEFAULT 0,
             `discount_type`  ENUM('percentage', 'fixed') DEFAULT 'percentage',
             `subtotal` DOUBLE(15,4) DEFAULT 0,
@@ -517,31 +500,28 @@ class EAccounting_Install {
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
 		  	`currency_rate` double(15,8) NOT NULL DEFAULT 1,
   			`key` VARCHAR(30) DEFAULT NULL,
-  			`extra` longtext DEFAULT NULL,
   			`parent_id` INT(11) DEFAULT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `customer_id` (`customer_id`),
+		    KEY `contact_id` (`contact_id`),
 		    KEY `category_id` (`category_id`),
 		    KEY `total` (`total`),
-		    UNIQUE KEY (`invoice_number`)
+		    UNIQUE KEY (`document_number`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_line_items(
+			"CREATE TABLE {$wpdb->prefix}ea_document_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`document_id` INT(11) DEFAULT NULL,
   			`item_id` INT(11) DEFAULT NULL,
   			`item_name` VARCHAR(191) NOT NULL,
   			`price` double(15,4) NOT NULL,
-  			`quantity` double(7,2) NOT NULL DEFAULT 1.00,
-  			`subtotal` double(7,2) NOT NULL DEFAULT 1.00,
-  			`tax_rate` double(15,4) NOT NULL COMMENT 'Tax Percentage',
-  			`subtotal_tax` double(7,2) NOT NULL DEFAULT 1.00 COMMENT 'Tax on subtotal',,
-  			`discount` double(15,4) NOT NULL,
-  			`discount_tax` double(15,4) NOT NULL 'Tax on discount',
-  			`total_tax` double(15,4) NOT NULL 'sum of subtotal & discount tax',
-  			`total` double(15,4) NOT NULL COMMENT 'Subtotal + Tax - Discount',
+  			`quantity` double(7,2) NOT NULL DEFAULT 0.00,
+  			`subtotal` double(7,2) NOT NULL DEFAULT 0.00,
+  			`tax_rate` double(15,4) NOT NULL DEFAULT 0.00,
+  			`discount` double(15,4) NOT NULL DEFAULT 0.00,
+  			`tax` double(15,4) NOT NULL DEFAULT 0.00,
+  			`total` double(15,4) NOT NULL DEFAULT 0.00,
   			`currency_code` varchar(3) NOT NULL DEFAULT 'USD',
   			`extra` longtext DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
@@ -572,8 +552,8 @@ class EAccounting_Install {
   			`purchase_price` double(15,4) NOT NULL,
   			`quantity` int(11) NOT NULL DEFAULT '1',
   			`category_id` int(11) DEFAULT NULL,
-  			`sales_tax_rate` double(15,4) DEFAULT NULL,
-  			`purchase_tax_rate` double(15,4) DEFAULT NULL,
+  			`sales_tax` double(15,4) DEFAULT NULL,
+  			`purchase_tax` double(15,4) DEFAULT NULL,
   			`thumbnail_id` INT(11) DEFAULT NULL,
 			`enabled` tinyint(1) NOT NULL DEFAULT '1',
 			`creator_id` INT(11) DEFAULT NULL,
@@ -619,7 +599,6 @@ class EAccounting_Install {
 		$tables = array(
 			"{$wpdb->prefix}ea_accounts",
 			"{$wpdb->prefix}ea_categories",
-			"{$wpdb->prefix}ea_currencies",
 			"{$wpdb->prefix}ea_contacts",
 			"{$wpdb->prefix}ea_transactions",
 			"{$wpdb->prefix}ea_transfers",
