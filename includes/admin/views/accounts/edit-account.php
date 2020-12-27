@@ -91,12 +91,20 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 					);
 					eaccounting_textarea(
 						array(
-							'wrapper_class' => 'ea-col-12',
+							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Bank Address', 'wp-ever-accounting' ),
 							'name'          => 'bank_address',
 							'value'         => $account->get_bank_address( 'edit' ),
 							'placeholder'   => __( 'Enter bank address', 'wp-ever-accounting' ),
 						)
+					);
+					eaccounting_file_input(
+							array(
+									'wrapper_class' => 'ea-col-6',
+									'label'         => __( 'Photo', 'wp-ever-accounting' ),
+									'name'          => 'thumbnail_id',
+									'value'         => $account->get_thumbnail_id(),
+							)
 					);
 					eaccounting_hidden_input(
 						array(
