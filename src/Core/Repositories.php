@@ -16,8 +16,7 @@ use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Categories;
 use EverAccounting\Repositories\Contacts;
 use EverAccounting\Repositories\Currencies;
-use EverAccounting\Repositories\Payments;
-use EverAccounting\Repositories\Revenues;
+use EverAccounting\Repositories\Transactions;
 use EverAccounting\Repositories\Notes;
 use EverAccounting\Repositories\DocumentItems;
 use EverAccounting\Repositories\Documents;
@@ -54,17 +53,16 @@ class Repositories {
 	 * @var array
 	 */
 	private $repositories = array(
-		'items'      => Items::class,
-		'categories' => Categories::class,
-		'contacts'   => Contacts::class,
-		'payments'   => Payments::class,
-		'revenues'   => Revenues::class,
-		'accounts'   => Accounts::class,
-		'currencies' => Currencies::class,
-		'invoices'   => Documents::class,
-		'line-items' => DocumentItems::class,
-		'notes'      => Notes::class,
-		'transfers'  => Transfers::class,
+		'items'        => Items::class,
+		'categories'   => Categories::class,
+		'contacts'     => Contacts::class,
+		'transactions' => Transactions::class,
+		'accounts'     => Accounts::class,
+		'currencies'   => Currencies::class,
+		'invoices'     => Documents::class,
+		'line-items'   => DocumentItems::class,
+		'notes'        => Notes::class,
+		'transfers'    => Transfers::class,
 	);
 
 	/**

@@ -16,8 +16,6 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-
-$back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 ?>
 	<form id="ea-revenue-form" method="post" enctype="multipart/form-data">
 		<div class="ea-card">
@@ -143,7 +141,7 @@ $back_url = remove_query_arg( array( 'action', 'revenue_id' ) );
 			</div>
 
 			<div class="ea-card__footer">
-				<?php wp_nonce_field( 'ea_edit_customer' ); ?>
+				<?php wp_nonce_field( 'ea_edit_revenue' ); ?>
 				<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
 			</div>
 

@@ -174,10 +174,9 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				$value = esc_html( $currency->get_rate() );
 				break;
 			case 'actions':
-				$base     = add_query_arg( array( 'currency_id' => $currency_id ), $this->base_url );
 				$nonce    = wp_create_nonce( 'currency-nonce' );
-				$edit_url = add_query_arg( array( 'action' => 'edit' ), $base );
-				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce ), $base ); //phpcs:ignore
+				$edit_url = add_query_arg( array( 'action' => 'edit', 'currency_code' => $currency->get_code() ), $this->base_url );
+				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce, 'currency_id' => $currency_id ), $this->base_url ); //phpcs:ignore
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
 					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),

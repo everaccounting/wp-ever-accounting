@@ -9,6 +9,8 @@
 
 namespace EverAccounting\Models;
 
+use EverAccounting\Traits\AttachmentTrait;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -19,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Customer extends Contact {
-
+	use AttachmentTrait;
 	/**
 	 * This is the name of this object type.
 	 *
@@ -44,6 +46,7 @@ class Customer extends Contact {
 	 * @throws \Exception
 	 */
 	public function __construct( $data = 0 ) {
+		$this->data = array_merge( $this->data, array( 'type' => 'customer' ) );
 		parent::__construct( $data );
 
 		if ( $data instanceof self ) {
