@@ -81,7 +81,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo  esc_html__( 'Payment is a paid expense transaction. It can be an independent record (i.e. food receipt) or attached to a bill.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="" class="button-primary ea-empty-table__cta">Add Revenue</a>
+			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -99,6 +99,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			'amount'      => __( 'Amount', 'wp-ever-accounting' ),
 			'account_id'  => __( 'Account Name', 'wp-ever-accounting' ),
 			'category_id' => __( 'Category', 'wp-ever-accounting' ),
+			'contact_id'  => __( 'Vendor', 'wp-ever-accounting' ),
 			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
 			'actions'     => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -116,6 +117,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			'amount'      => array( 'amount', false ),
 			'account_id'  => array( 'account_id', false ),
 			'category_id' => array( 'category_id', false ),
+			'contact_id' => array( 'contact_id', false ),
 			'reference'   => array( 'reference', false ),
 		);
 	}
@@ -187,8 +189,12 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 				break;
 			case 'category_id':
-				$account = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				$category = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
+				$value   = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				break;
+			case 'contact_id':
+				$contact = eaccounting_get_vendor( $payment->get_contact_id( 'edit' ) );
+				$value   = $contact ? $contact->get_name() : __( '(Deleted Vendor)', 'wp-ever-accounting' );
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(

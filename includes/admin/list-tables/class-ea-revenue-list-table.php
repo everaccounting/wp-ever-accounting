@@ -41,11 +41,12 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @since  1.0.2
+	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
 	 *
 	 * @see    WP_List_Table::__construct()
 	 *
-	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
+	 * @since  1.0.2
+	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -62,27 +63,28 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Check if there is contents in the database.
 	 *
-	 * @since 1.0.2
 	 * @return bool
+	 * @since 1.0.2
 	 */
 	public function is_empty() {
 		global $wpdb;
+
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_transactions where type='income'" );
 	}
 
 	/**
 	 * Render blank state.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	protected function render_blank_state() {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Revenue is a paid income transaction. It can be an independent record (i.e. deposit) or attached to an invoice.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Revenue is a paid income transaction. It can be an independent record (i.e. deposit) or attached to an invoice.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="" class="button-primary ea-empty-table__cta">Add Revenue</a>
+			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -90,8 +92,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function define_columns() {
 		return array(
@@ -100,6 +102,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 			'amount'      => __( 'Amount', 'wp-ever-accounting' ),
 			'account_id'  => __( 'Account Name', 'wp-ever-accounting' ),
 			'category_id' => __( 'Category', 'wp-ever-accounting' ),
+			'contact_id'  => __( 'Customer', 'wp-ever-accounting' ),
 			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
 			'actions'     => __( 'Actions', 'wp-ever-accounting' ),
 		);
@@ -108,8 +111,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Define sortable columns.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function define_sortable_columns() {
 		return array(
@@ -117,6 +120,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 			'amount'      => array( 'amount', false ),
 			'account_id'  => array( 'account_id', false ),
 			'category_id' => array( 'category_id', false ),
+			'contact_id'  => array( 'contact_id', false ),
 			'reference'   => array( 'reference', false ),
 		);
 	}
@@ -124,8 +128,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Define bulk actions
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function define_bulk_actions() {
 		return array(
@@ -136,8 +140,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Define primary column.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_primary_column() {
 		return 'date';
@@ -146,11 +150,11 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the revenues list table.
 	 *
-	 * @since  1.0.2
-	 *
 	 * @param Revenue $revenue The current object.
 	 *
 	 * @return string Displays a checkbox.
+	 * @since  1.0.2
+	 *
 	 */
 	function column_cb( $revenue ) {
 		return sprintf( '<input type="checkbox" name="revenue_id[]" value="%d"/>', $revenue->get_id() );
@@ -159,13 +163,13 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param string   $column_name The name of the column
+	 * @param string $column_name The name of the column
 	 *
 	 * @param Revenue $revenue
 	 *
 	 * @return string The column value.
+	 * @since 1.0.2
+	 *
 	 */
 	function column_default( $revenue, $column_name ) {
 		$revenue_id = $revenue->get_id();
@@ -188,8 +192,12 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 				break;
 			case 'category_id':
-				$account = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
+				$value   = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				break;
+			case 'contact_id':
+				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
+				$value   = $contact ? $contact->get_name() : __( '(Deleted Customer)', 'wp-ever-accounting' );
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
@@ -222,8 +230,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @since  1.0.2
 	 * @return void
+	 * @since  1.0.2
 	 */
 	function no_items() {
 		_e( 'There is no revenues found.', 'wp-ever-accounting' );
@@ -232,9 +240,10 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination.
 	 *
+	 * @param string $which
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $which
 	 */
 	protected function extra_tablenav_depricated( $which ) {
 		if ( 'top' === $which ) {
@@ -294,8 +303,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
@@ -352,8 +361,8 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
