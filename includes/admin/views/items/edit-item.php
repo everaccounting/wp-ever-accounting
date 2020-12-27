@@ -118,8 +118,8 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 				eaccounting_file_input(
 					array(
 						'label'         => __( 'Product Image', 'wp-ever-accounting' ),
-						'name'          => 'image_id',
-						'value'         => $item->get_attachment(),
+						'name'          => 'thumbnail_id',
+						'value'         => $item->get_thumbnail_id(),
 						'required'      => false,
 						'wrapper_class' => 'ea-col-6',
 						'placeholder'   => __( 'Upload Image', 'wp-ever-accounting' ),
