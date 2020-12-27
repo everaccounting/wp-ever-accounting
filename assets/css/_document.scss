@@ -1,0 +1,192 @@
+.ea-document{
+  box-sizing: border-box;
+
+  & *, & *::before, & *::after {
+	box-sizing: border-box
+  }
+
+  a {
+	text-decoration: none;
+
+	&:focus {
+	  outline: none;
+	  box-shadow: none;
+	}
+  }
+
+  &__items-title{
+	font-size: 14px;
+	margin-top: 0;
+	margin-bottom: 1rem;
+	padding-left: 12px;
+  }
+
+  /* Line items table */
+
+  &__items-wrapper {
+	margin: 1rem 0 1rem 0;
+	display: block;
+	width: 100%;
+	@include clearfix();
+  }
+
+  &__items {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-collapse: collapse;
+	width: 100%;
+	background: #fff;
+	border: 1px solid #ddd;
+	table-layout: fixed;
+	box-sizing: border-box;
+	border-left: 0;
+	border-right: 0;
+
+	tr {
+	  border-bottom: 1px solid #ddd;
+	}
+
+	th {
+	  font-weight: 400;
+	  color: #999;
+	  background: #f8f8f8;
+	  user-select: none;
+	}
+
+	td {
+	  white-space: nowrap;
+	  vertical-align: middle;
+	}
+
+	th, td {
+	  padding: 0.8em 1em;
+	  vertical-align: middle;
+	}
+
+	.view {
+	  white-space: nowrap;
+	}
+  }
+
+  &__line-actions {
+	width: 65px;
+	text-align: left;
+
+	> a {
+	  display: inline-block;
+	  color: #ccc;
+	  transition: color 0.1s ease-in;
+	  text-decoration: none;
+
+	  &:hover {
+		color: #444;
+	  }
+
+	  .dashicons {
+		width: 16px;
+		height: 16px;
+		font-size: 16px;
+	  }
+	}
+
+	.save-line {
+	  display: none;
+	}
+
+  }
+
+  &__line-name {
+	text-align: left;
+  }
+
+  &__line-quantity,
+  &__line-price,
+  &__line-tax,
+  &__line-vat,
+  &__line-subtotal {
+	text-align: right;
+  }
+
+  &__line {
+	&.editing {
+	  .edit {
+		display: block !important;
+	  }
+
+	  .view {
+		display: none;
+	  }
+
+	  .save-line {
+		display: inline-block;
+	  }
+
+	  .edit-line {
+		display: none;
+	  }
+	}
+
+	.line_item_name {
+	  width: 90%;
+	}
+
+	&-price,
+	&-quantity,
+	&-tax,
+	&-tax {
+	  input{
+		width: 100px;
+		text-align: right;
+	  }
+	}
+  }
+
+  &__data-row {
+	width: 100%;
+	border-bottom: 1px solid #dfdfdf;
+	padding: 10px;
+	background: #f8f8f8;
+	box-sizing: border-box;
+	margin: 0;
+  }
+
+  &__total-items {
+	width: 100%;
+
+	td {
+	  text-align: right;
+	}
+
+	.label {
+	  vertical-align: top;
+	  padding: 0.4em;
+	}
+
+	.total {
+	  font-size: 1em !important;
+	  width: 14em;
+	  margin: 0 0 0 .5em;
+	  box-sizing: border-box;
+	  font-weight: 700;
+	  padding: 0.4em;
+	}
+
+	@media only screen and (min-width: 600px) {
+	  padding-left: 50%;
+	}
+  }
+
+  &__actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+  }
+
+  .add-line-item{
+	.dashicons {
+	  vertical-align: middle;
+	}
+  }
+}

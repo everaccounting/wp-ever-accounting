@@ -19,17 +19,17 @@ try {
 } catch ( Exception $e ) {
 	wp_die( $e->getMessage() );
 }
-$title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : __( 'Add Invoice', 'wp-ever-accounting' );
+$title = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : __( 'Add Invoice', 'wp-ever-accounting' );
 ?>
-<div class="ea-invoice">
-	<div class="ea-card">
-		<div class="ea-card__header">
-			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-			<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
-		</div>
+<form id="ea-invoice-form" method="post" class="ea-documents">
+	<div class="ea-invoice">
+		<div class="ea-card">
+			<div class="ea-card__header">
+				<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
+				<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
+			</div>
 
-		<div class="ea-card__inside">
-			<form id="ea-invoice-form" method="post" class="ea-documents">
+			<div class="ea-card__inside">
 				<div class="ea-row">
 					<?php
 					eaccounting_customer_dropdown(
@@ -111,8 +111,6 @@ $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					//eaccounting_get_admin_template( 'html-invoice-items', array( 'invoice' => $invoice ) );
-
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
@@ -122,6 +120,9 @@ $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : 
 							'required'      => false,
 						)
 					);
+
+					$editable = false;
+					include dirname( __FILE__ ) . '/partials/items.php';
 
 					eaccounting_file_input(
 						array(
@@ -154,14 +155,11 @@ $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : 
 
 				</div><!--.ea-row-->
 
-				<?php
-				wp_nonce_field( 'ea_edit_invoice' );
-				submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
-				?>
-
-			</form>
-
+			</div>
+			<div class="ea-card__footer">
+				<?php wp_nonce_field( 'ea_edit_invoice' ); ?>
+				<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
+			</div>
 		</div>
-
 	</div>
-</div>
+</form>

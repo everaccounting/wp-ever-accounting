@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Core\Repositories;
 
 abstract class Document extends ResourceModel {
 
@@ -28,13 +29,13 @@ abstract class Document extends ResourceModel {
 	public $cache_group = 'ea_documents';
 
 	/**
-	 * Contains a reference to the repository for this class.
+	 * The name of the repository.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @var
 	 */
-	protected $repository;
+	protected $repository_name = 'documents';
 
 
 	/**
@@ -119,6 +120,8 @@ abstract class Document extends ResourceModel {
 	 */
 	public function __construct( $document = 0 ) {
 		parent::__construct( $document );
+		//Load repository
+		$this->repository = Repositories::load( $this->repository_name );
 	}
 
 
@@ -155,6 +158,22 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_document_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
+	}
+
+	/**
+	 * Generate document number.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function maybe_set_document_number() {
+		if ( empty( $this->get_document_number() ) ) {
+			$number = $this->get_id();
+			if ( empty( $number ) ) {
+				$number = $this->repository->get_next_number( $this );
+			}
+			$this->set_document_number( $this->generate_number( $number ) );
+		}
 	}
 
 	/**
@@ -526,6 +545,7 @@ abstract class Document extends ResourceModel {
 		if ( ! $this->exists() ) {
 			return eaccounting_prices_include_tax();
 		}
+
 		return $this->get_prop( 'tax_inclusive', $context );
 	}
 
@@ -592,6 +612,18 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_key( $context = 'edit' ) {
 		return $this->get_prop( 'key', $context );
+	}
+
+	/**
+	 * Set the document key.
+	 *
+	 * @since 1.1.0
+	 */
+	public function maybe_set_key() {
+		$key = $this->get_key();
+		if ( empty( $key ) ) {
+			$this->set_key( $this->generate_key() );
+		}
 	}
 
 	/**
@@ -729,6 +761,18 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
+	 * @param string $order_number .
+	 *
+	 */
+	public function set_order_number( $order_number ) {
+		$this->set_prop( 'order_number', eaccounting_clean( $order_number ) );
+	}
+
+	/**
+	 * set the number.
+	 *
+	 * @since  1.1.0
+	 *
 	 * @param string $type .
 	 *
 	 */
@@ -852,8 +896,8 @@ abstract class Document extends ResourceModel {
 	protected function set_address_prop( $prop, $value ) {
 		if ( array_key_exists( $prop, $this->data['address'] ) ) {
 			if ( true === $this->object_read ) {
-				if ( $value !== $this->data['address'][ $prop ] || ( isset( $this->changes['address'] ) && array_key_exists( $prop, $this->changes[ $address ] ) ) ) {
-					$this->changes[ $address ][ $prop ] = $value;
+				if ( $value !== $this->data['address'][ $prop ] || ( isset( $this->changes['address'] ) && array_key_exists( $prop, $this->changes['address'] ) ) ) {
+					$this->changes['address'][ $prop ] = $value;
 				}
 			} else {
 				$this->data['address'][ $prop ] = $value;
@@ -1138,6 +1182,7 @@ abstract class Document extends ResourceModel {
 		$this->set_prop( 'key', substr( $key, 0, 30 ) );
 	}
 
+
 	/*
 	|--------------------------------------------------------------------------
 	| Boolean methods
@@ -1316,6 +1361,13 @@ abstract class Document extends ResourceModel {
 			$total = 0;
 		}
 		$this->set_total( $total );
+
+		return array(
+			'subtotal'       => $this->get_subtotal(),
+			'total_tax'      => $this->get_total_tax(),
+			'total_discount' => $this->get_total_discount(),
+			'total'          => $this->get_total(),
+		);
 	}
 
 	/**
@@ -1329,11 +1381,9 @@ abstract class Document extends ResourceModel {
 		$this->maybe_set_document_number();
 		$this->maybe_set_key();
 		$this->maybe_set_payment_date();
-		$this->validate_document_number();
 		$saved = parent::save();
 		$this->save_items();
 		$this->status_transition();
-
 		return $saved;
 	}
 
@@ -1351,20 +1401,44 @@ abstract class Document extends ResourceModel {
 			$getter = "get_{$prop}";
 			$setter = "set_{$prop}";
 			if ( is_callable( array( $contact, $getter ) )
-				 && is_callable( array( $this, $setter ) )
-				 && is_callable( array( $this, $getter ) )
-				 && empty( $this->$getter() ) ) {
+			     && is_callable( array( $this, $setter ) )
+			     && is_callable( array( $this, $getter ) )
+			     && empty( $this->$getter() ) ) {
 				$this->$setter( $contact->$getter() );
 			}
 		}
 	}
 
+	/**
+	 * Generate number.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $number
+	 *
+	 * @return string
+	 */
+	public function generate_number( $number ) {
+		$prefix           = 'DOC-';
+		$padd             = 5;
+		$formatted_number = zeroise( absint( $number ), $padd );
+		$number           = apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_number', $prefix . $formatted_number );
 
-	public function maybe_set_document_number() {
+		return $number;
 	}
 
-	public function maybe_set_key() {
+	/**
+	 * Generate key.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function generate_key() {
+		$key = 'ea_' . apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_key', 'document_' . wp_generate_password( 19, false ) );
+
+		return strtolower( $key );
 	}
+
 
 	public function maybe_set_payment_date() {
 	}
@@ -1394,6 +1468,7 @@ abstract class Document extends ResourceModel {
 	}
 
 	protected function status_transition() {
+
 	}
 
 }

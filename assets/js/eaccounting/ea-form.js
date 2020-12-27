@@ -407,6 +407,104 @@ jQuery(function ($) {
 		}
 	};
 
+	var invoice_form = {
+		init:function (){
+			$('#ea-invoice-form')
+				.on('click', '.add-line-item', this.add_line_item)
+				.on('select2:select', '.select-item', this.item_selected)
+				.on('click', '.delete-line', this.remove_line_item)
+				.on('click', '.edit-line, .save-line', this.edit_line_item)
+				.on('click', '.recalculate', this.recalculate)
+				.on('submit', this.submit);
+
+			$(document.body).on('ea_invoice_updated', this.recalculate)
+		},
+		block: function () {
+			$('#ea-invoice-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-invoice-form').unblock();
+		},
+
+		add_line_item: function (e) {
+			e.preventDefault();
+			console.log(e);
+			var line_item = $($('#ea-invoice-line-template').html());
+			var item_selector = $($('#ea-invoice-item-selector').html());
+			var item_selector_name = item_selector.attr('name');
+			var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
+			line_item.addClass('editing')
+			$(line_item).find(":input").each(function () {
+				var name = $(this).attr('name');
+				name = name.replace(/\[(\d+)\]/, '[' + (index) + ']');
+				$(this).attr('name', name).attr('id', name);
+			});
+			item_selector_name = item_selector_name.replace(/\[(\d+)\]/, '[' + (index) + ']');
+			item_selector.attr('name', item_selector_name).attr('id', item_selector_name);
+			item_selector.css({width: '90%', maxWidth: 'none'})
+			line_item.find('.ea-document__line-name').html(item_selector);
+			$('#ea-document__line-items').append(line_item);
+			$(document.body).trigger('ea_select2_init');
+		},
+		item_selected: function (e) {
+			var data = e.params.data;
+			$(e.target).closest('tr')
+				.find("input.line_item_price").val(data.item.sale_price)
+				.end()
+				.find("input.line_item_quantity").val(1)
+				.end()
+				.find("input.line_item_tax").val(data.item.sales_tax);
+			$('body').trigger('ea_invoice_updated');
+		},
+		remove_line_item: function (e) {
+			e.preventDefault();
+			$(this).closest('tr').remove();
+			invoice_form.recalculate();
+		},
+		edit_line_item:function(e){
+			e.preventDefault();
+			var $tr = $(this).closest('.ea-document__line');
+			if ($tr.hasClass('editing')) {
+				$tr.removeClass('editing');
+				$('body').trigger('ea_invoice_updated');
+				return false;
+			}
+			$tr.siblings('tr').removeClass('editing');
+			$tr.addClass('editing');
+		},
+		recalculate:function (){
+			invoice_form.block();
+			var data = $.extend({}, $('#ea-invoice-form').serializeObject(), {action: 'eaccounting_invoice_recalculate'});
+			$.post(ajaxurl, data, function (json) {
+				if (json.success) {
+					$('#ea-invoice-form .ea-document__items-wrapper').replaceWith(json.data.html);
+				}else{
+					$.eaccounting_notice(json);
+				}
+			}).always(function (json) {
+				invoice_form.unblock();
+			});
+		},
+		submit: function (e) {
+			e.preventDefault();
+			invoice_form.block();
+			var data = $('#ea-invoice-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				invoice_form.unblock();
+			});
+		},
+	};
+
 	revenue_form.init();
 	payment_form.init();
 	account_form.init();
@@ -416,4 +514,5 @@ jQuery(function ($) {
 	category_form.init();
 	currency_form.init();
 	item_form.init();
+	invoice_form.init();
 });

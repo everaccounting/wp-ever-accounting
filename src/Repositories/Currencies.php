@@ -231,7 +231,7 @@ class Currencies extends ResourceRepository {
 			$collection = $collection->splice( $qv['offset'], $qv['number'] );
 		}
 
-		$results = $collection->all();
+		$results = $collection->values()->all();
 
 		if ( 'objects' === $qv['return'] ) {
 			$results = array_map( 'eaccounting_get_currency', $results );

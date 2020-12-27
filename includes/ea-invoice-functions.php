@@ -153,9 +153,8 @@ function eaccounting_delete_invoice( $invoice_id ) {
  */
 function eaccounting_get_invoices( $args = array() ) {
 	try {
-		/* @var $repository \EverAccounting\Repositories\Documents */
-		$repository = \EverAccounting\Core\Repositories::load( 'invoices' );
-		return $repository->get_invoices( $args );
+		$repository = \EverAccounting\Core\Repositories::load( 'documents' );
+		return $repository->get_documents( array_merge($args, array('type' => 'invoice')) );
 
 	} catch ( \Exception $e ) {
 		return array();

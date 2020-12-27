@@ -29,6 +29,9 @@ trait CurrencyTrait {
 	 * Get currency rate.
 	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
 	 * @return int|string
 	 */
 	public function get_currency_rate( $context = 'edit' ) {
@@ -45,9 +48,9 @@ trait CurrencyTrait {
 	 * @since 1.1.0
 	 * @return int|string
 	 */
-	public function get_currency_precision() {
+	public function get_currency_precision( $context = 'edit' ) {
 		if ( $this->get_currency() ) {
-			return $this->get_currency()->get_precision();
+			return $this->get_currency()->get_precision( $context );
 		}
 
 		return 2;
@@ -55,11 +58,14 @@ trait CurrencyTrait {
 
 	/**
 	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
 	 * @return string
 	 */
-	public function get_currency_symbol() {
+	public function get_currency_symbol( $context = 'edit' ) {
 		if ( $this->get_currency() ) {
-			return $this->get_currency()->get_symbol();
+			return $this->get_currency()->get_symbol( $context );
 		}
 
 		return '$';
@@ -69,9 +75,9 @@ trait CurrencyTrait {
 	 * @since 1.1.0
 	 * @return string
 	 */
-	public function get_currency_subunit() {
+	public function get_currency_subunit( $context = 'edit' ) {
 		if ( $this->get_currency() ) {
-			return $this->get_currency()->get_subunit();
+			return $this->get_currency()->get_subunit( $context );
 		}
 
 		return 2;
@@ -79,11 +85,14 @@ trait CurrencyTrait {
 
 	/**
 	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
 	 * @return string
 	 */
-	public function get_currency_position() {
+	public function get_currency_position( $context = 'edit' ) {
 		if ( $this->get_currency() ) {
-			return $this->get_currency()->get_position();
+			return $this->get_currency()->get_position( $context );
 		}
 
 		return 'before';
@@ -93,11 +102,14 @@ trait CurrencyTrait {
 	 * Get currency rate.
 	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
 	 * @return int|string
 	 */
-	public function get_currency_decimal_separator() {
+	public function get_currency_decimal_separator( $context = 'edit' ) {
 		if ( $this->get_currency() ) {
-			return $this->get_currency()->get_decimal_separator();
+			return $this->get_currency()->get_decimal_separator( $context );
 		}
 
 		return '.';
@@ -107,11 +119,14 @@ trait CurrencyTrait {
 	 * Get currency rate.
 	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
 	 * @return int|string
 	 */
-	public function get_currency_thousand_separator() {
+	public function get_currency_thousand_separator( $context = 'edit' ) {
 		if ( $this->get_currency() ) {
-			return $this->get_currency()->get_thousand_separator();
+			return $this->get_currency()->get_thousand_separator( $context );
 		}
 
 		return ',';

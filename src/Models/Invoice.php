@@ -61,9 +61,6 @@ class Invoice extends Document {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
-		//$this->repository = Repositories::load( 'documents' );
-
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
