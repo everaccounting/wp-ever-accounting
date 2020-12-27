@@ -27,7 +27,7 @@ class DocumentItem extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	public $cache_group = 'ea_line_items';
+	public $cache_group = 'ea_document_items';
 
 	/**
 	 * Item Data array.
@@ -76,7 +76,7 @@ class DocumentItem extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( 'line-items' );
+		$this->repository = Repositories::load( 'document-items' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );

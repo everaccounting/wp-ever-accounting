@@ -44,38 +44,45 @@ class Documents extends ResourceRepository {
 	 * @var array
 	 */
 	protected $data_type = array(
-		'id'             => '%d',
-		'invoice_number' => '%s',
-		'order_number'   => '%s',
-		'status'         => '%s',
-		'issue_date'     => '%s',
-		'due_date'       => '%s',
-		'payment_date'   => '%s',
-		'category_id'    => '%d',
-		'customer_id'    => '%d',
-		'name'           => '%s',
-		'phone'          => '%s',
-		'email'          => '%s',
-		'tax_number'     => '%s',
-		'postcode'       => '%s',
-		'address'        => '%s',
-		'country'        => '%s',
-		'currency_code'  => '%s',
-		'currency_rate'  => '%f',
-		'subtotal'       => '%f',
-		'discount'       => '%f',
-		'discount_type'  => '%s',
-		'total_tax'      => '%f',
-		'total'          => '%f',
-		'tax_inclusive'  => '%d',
-		'terms'          => '%s',
-		'attachment_id'  => '%d',
-		'key'            => '%s',
-		'parent_id'      => '%d',
-		'creator_id'     => '%d',
-		'date_created'   => '%s',
+		'id'              => '%d',
+		'document_number' => '%s',
+		'type'            => '%s',
+		'order_number'    => '%s',
+		'status'          => '%s',
+		'issue_date'      => '%s',
+		'due_date'        => '%s',
+		'payment_date'    => '%s',
+		'category_id'     => '%d',
+		'contact_id'      => '%d',
+		'address'         => '%s',
+		'currency_code'   => '%s',
+		'currency_rate'   => '%f',
+		'subtotal'        => '%f',
+		'discount'        => '%f',
+		'discount_type'   => '%s',
+		'total_tax'       => '%f',
+		'total'           => '%f',
+		'tax_inclusive'   => '%d',
+		'terms'           => '%s',
+		'attachment_id'   => '%d',
+		'key'             => '%s',
+		'parent_id'       => '%d',
+		'creator_id'      => '%d',
+		'date_created'    => '%s',
 	);
 
+	/**
+	 * Get the next available number.
+	 *
+	 * @param Document $document
+	 * @since 1.1.0
+	 * @return int
+	 */
+	public function get_next_number( &$document ) {
+		global $wpdb;
+		$max = (int) $wpdb->get_var( $wpdb->prepare( "select max(id) from {$wpdb->prefix}ea_documents WHERE type=%s", $document->get_type() ) );
+		return $max + 1;
+	}
 
 	/**
 	 * Read order items of a specific type from the database for this order.
@@ -92,7 +99,7 @@ class Documents extends ResourceRepository {
 
 		if ( false === $items ) {
 			$items = $wpdb->get_results(
-				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_line_items WHERE document_id = %d ORDER BY id;", $document->get_id() )
+				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_document_items WHERE document_id = %d ORDER BY id;", $document->get_id() )
 			);
 			foreach ( $items as $item ) {
 				wp_cache_set( 'document-item-' . $item->id, $item, 'ea-document-items' );
@@ -176,7 +183,7 @@ class Documents extends ResourceRepository {
 					foreach ( $results as $key => $item ) {
 						wp_cache_set( $item->id, $item, 'ea_documents' );
 						wp_cache_set( "key-{$item->key}", $item->id, 'ea_documents' );
-						wp_cache_set( "document_number-{$item->invoice_number}", $item->id, 'ea_documents' );
+						wp_cache_set( "document_number-{$item->document_number}", $item->id, 'ea_documents' );
 					}
 				}
 				wp_cache_set( $cache_key, $results, 'ea_documents' );
@@ -184,7 +191,7 @@ class Documents extends ResourceRepository {
 		}
 
 		if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-			$results = array_map( 'eaccounting_get_document', $results );
+			$results = array_map( 'eaccounting_get_invoice', $results );
 		}
 
 		return $results;

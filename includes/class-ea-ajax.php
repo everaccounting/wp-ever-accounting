@@ -135,7 +135,6 @@ class Ajax {
 			'get_item_categories',
 			'get_items',
 			'get_vendors',
-			'update_currencies',
 			'item_status_update',
 			'invoice_recalculate',
 		);
@@ -344,15 +343,14 @@ class Ajax {
 			$invoice = new Invoice( $posted['id'] );
 			$invoice->set_props( $posted );
 			$invoice->save();
-			$totals   = $invoice->recalculate();
+			$totals   = $invoice->calculate_totals();
 			$redirect = add_query_arg( array( 'action' => 'view' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
 			wp_send_json_success(
 				array(
-					'lines_html'  => eaccounting_get_admin_template_html( 'invoice/line-items', array( 'invoice' => $invoice ) ),
-					'totals_html' => eaccounting_get_admin_template_html( 'invoice/totals', array( 'invoice' => $invoice ) ),
-					'line'        => array_map( 'strval', $invoice->get_line_items() ),
-					'redirect'    => $redirect,
-					'totals'      => $totals,
+					'items'    => eaccounting_get_admin_template_html( 'invoices/partials/views', array( 'invoice' => $invoice ) ),
+					'line'     => array_map( 'strval', $invoice->get_items() ),
+					'redirect' => $redirect,
+					'totals'   => $totals,
 				)
 			);
 		} catch ( \Exception $e ) {
@@ -654,18 +652,13 @@ class Ajax {
 	 */
 	public static function get_currencies() {
 		self::verify_nonce( 'ea_get_currencies' );
-		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
-		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
-
-		return wp_send_json_success(
-			eaccounting_get_currencies(
-				array(
-					'search' => $search,
-					'page'   => $page,
-					'return' => 'raw',
-				)
+		$currencies = eaccounting_get_currencies(
+			array(
+				'number' => -1,
+				'return' => 'raw',
 			)
 		);
+		return wp_send_json_success( $currencies );
 	}
 
 	/**
@@ -819,94 +812,6 @@ class Ajax {
 	}
 
 	/**
-	 * Item status updater.
-	 *
-	 * @since 1.0.2
-	 */
-	public static function item_status_update() {
-		self::verify_nonce( 'ea_status_update' );
-		$object_id   = ! empty( $_REQUEST['objectid'] ) ? absint( $_REQUEST['objectid'] ) : null;
-		$object_type = ! empty( $_REQUEST['objecttype'] ) ? eaccounting_clean( $_REQUEST['objecttype'] ) : '';
-		$enabled     = isset( $_REQUEST['enabled'] ) ? absint( $_REQUEST['enabled'] ) : 0;
-
-		if ( empty( $object_id ) || empty( $object_type ) ) {
-			wp_send_json_error( array( 'message' => __( 'No object type to update status', 'wp-ever-accounting' ) ) );
-		}
-		$result = new \WP_Error( 'invalid_object', __( 'Invalid object type.', 'wp-ever-accounting' ) );
-		switch ( $object_type ) {
-			case 'currency':
-				self::check_permission( 'ea_manage_currency' );
-				$result = eaccounting_insert_currency(
-					array(
-						'id'      => $object_id,
-						'enabled' => $enabled,
-					)
-				);
-				break;
-			case 'category':
-				self::check_permission( 'ea_manage_category' );
-				$result = eaccounting_insert_category(
-					array(
-						'id'      => $object_id,
-						'enabled' => $enabled,
-					)
-				);
-				break;
-			case 'account':
-				self::check_permission( 'ea_manage_account' );
-				$result = eaccounting_insert_account(
-					array(
-						'id'      => $object_id,
-						'enabled' => $enabled,
-					)
-				);
-				break;
-			case 'customer':
-				self::check_permission( 'ea_manage_customer' );
-				$result = eaccounting_insert_customer(
-					array(
-						'id'      => $object_id,
-						'enabled' => $enabled,
-					)
-				);
-				break;
-			case 'vendor':
-				self::check_permission( 'ea_manage_vendor' );
-				$result = eaccounting_insert_vendor(
-					array(
-						'id'      => $object_id,
-						'enabled' => $enabled,
-					)
-				);
-				break;
-			case 'item':
-				self::check_permission( 'ea_manage_item' );
-				$result = eaccounting_insert_item(
-					array(
-						'id'      => $object_id,
-						'enabled' => $enabled,
-					)
-				);
-				break;
-			default:
-				/**
-				 * Hook into this for any custom object handling
-				 *
-				 * @var int     $object_id ID of the object.
-				 * @var boolean $enabled   status of the object.
-				 */
-				do_action( 'eaccounting_item_status_update_' . $object_type, $object_id, $enabled );
-		}
-
-		if ( is_wp_error( $result ) ) {
-			wp_send_json_error( array( 'message' => $result->get_error_message() ) );
-			exit();
-		}
-
-		wp_send_json_success( array( 'message' => $result->is_enabled() ? sprintf( __( '%s enabled!', 'wp-ever-accounting' ), ucfirst( $object_type ) ) : sprintf( __( '%s disabled!', 'wp-ever-accounting' ), ucfirst( $object_type ) ) ) );
-	}
-
-	/**
 	 * Recalculate invoice totals
 	 *
 	 * @since 1.1.0
@@ -920,65 +825,17 @@ class Ajax {
 			$posted  = wp_parse_args( $posted, array( 'id' => null ) );
 			$invoice = new Invoice( $posted['id'] );
 			$invoice->set_props( $posted );
-			$totals = $invoice->recalculate();
+			$totals = $invoice->calculate_totals();
 			wp_send_json_success(
 				array(
-					'html'   => eaccounting_get_admin_template_html( 'html-invoice-items', array( 'invoice' => $invoice ) ),
-					'line'   => array_map( 'strval', $invoice->get_line_items() ),
+					'html'   => eaccounting_get_admin_template_html( 'invoices/partials/items', array( 'invoice' => $invoice ) ),
+					'line'   => array_map( 'strval', $invoice->get_items() ),
 					'totals' => $totals,
 				)
 			);
 		} catch ( \Exception $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ) );
 		}
-	}
-
-	public static function update_currencies() {
-		self::verify_nonce( 'ea_update_currencies' );
-		self::check_permission( 'ea_manage_options' );
-		$posted     = eaccounting_clean( wp_unslash( $_REQUEST ) );
-		$currencies = ! empty( $posted['currencies'] ) ? $posted['currencies'] : array();
-
-		if ( count( $currencies ) < 1 ) {
-			wp_send_json_error( array( 'message' => __( 'Please at least add one currency', 'wp-ever-accounting' ) ) );
-		}
-
-		$currencies_before = eaccounting_get_currencies();
-		$codes_before      = wp_list_pluck( $currencies_before, 'code' );
-		$codes_now         = wp_list_pluck( $currencies, 'code' );
-		$new_currencies    = $currencies_before;
-		$codes             = eaccounting_get_data( 'currencies' );
-
-		foreach ( $codes_now as $index => $code ) {
-			if ( ! array_key_exists( $code, $codes ) ) {
-				continue;
-			}
-
-			if ( ! in_array( $code, $codes_before, true ) && array_key_exists( $code, $codes ) ) {
-				unset( $new_currencies[ $code ] );
-			}
-			$default                 = $codes[ $code ];
-			$new_currencies[ $code ] = wp_parse_args(
-				$currencies[ $index ],
-				array(
-					'code'               => $default['code'],
-					'name'               => $default['name'],
-					'precision'          => $default['precision'],
-					'subunit'            => $default['subunit'],
-					'symbol'             => $default['symbol'],
-					'position'           => $default['position'],
-					'decimal_separator'  => $default['decimal_separator'],
-					'thousand_separator' => $default['thousand_separator'],
-				)
-			);
-		}
-
-		if ( count( $new_currencies ) < 1 ) {
-			wp_send_json_error( array( 'message' => __( 'Please at least add one currency', 'wp-ever-accounting' ) ) );
-		}
-
-		update_option( 'eaccounting_currencies', $new_currencies );
-		wp_send_json_success( array( 'message' => __( 'Currencies updated successfully.', 'wp-ever-accounting' ) ) );
 	}
 
 	/**
