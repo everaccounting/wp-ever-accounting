@@ -191,7 +191,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 				break;
 			case 'reference':
-				$value = $transfer->get_reference();
+				$value = !empty($transfer->get_reference()) ? $transfer->get_reference() : '&mdash;';
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(

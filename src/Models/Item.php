@@ -56,8 +56,8 @@ class Item extends ResourceModel {
 		'purchase_price'    => 0.0000,
 		'quantity'          => 1,
 		'category_id'       => null,
-		'sales_tax'    => null,
-		'purchase_tax' => null,
+		'sales_tax'         => null,
+		'purchase_tax'      => null,
 		'enabled'           => 1,
 		'creator_id'        => null,
 		'date_created'      => null,
@@ -91,9 +91,10 @@ class Item extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'name'       => __( 'Item name', 'wp-ever-accounting' ),
-			'quantity'   => __( 'Item Quantity', 'wp-ever-accounting' ),
-			'sale_price' => __( 'Item Purchase Price', 'wp-ever-accounting' ),
+			'name'           => __( 'Item name', 'wp-ever-accounting' ),
+			'quantity'       => __( 'Item Quantity', 'wp-ever-accounting' ),
+			'sale_price'     => __( 'Item Sale Price', 'wp-ever-accounting' ),
+			'purchase_price' => __( 'Item Purchase Price', 'wp-ever-accounting' ),
 		);
 	}
 

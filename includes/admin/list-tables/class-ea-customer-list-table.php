@@ -111,10 +111,11 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 			'cb'      => '<input type="checkbox" />',
 			'thumb'   => '<span class="ea-thumb">&nbsp;</span>',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
-			'email'   => __( 'Email', 'wp-ever-accounting' ),
-			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
+			'email'   => __( 'Contact', 'wp-ever-accounting' ),
+			'street'  => __( 'Address', 'wp-ever-accounting' ),
 			'due'     => __( 'Due', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
+			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -128,7 +129,7 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 		return array(
 			'name'    => array( 'name', false ),
 			'email'   => array( 'email', false ),
-			'phone'   => array( 'phone', false ),
+			'street'  => array( 'street', false ),
 			'enabled' => array( 'enabled', false ),
 		);
 	}
@@ -192,25 +193,51 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 				break;
 			case 'name':
 				$view_url = admin_url( 'admin.php?page=ea-sales&tab=customers&action=view&customer_id=' . $customer->get_id() );
-				$nonce    = wp_create_nonce( 'customer-nonce' );
-				$actions  = array(
-					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
-					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-sales&tab=customers&action=edit&customer_id=' . $customer->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
-					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-sales&tab=customers&_wpnonce=' . $nonce . '&action=delete&customer_id=' . $customer->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
-				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>' . $this->row_actions( $actions );
+				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
+				$value .= '<br>';
+				$value .= '<small class=meta>'.$customer->get_company().'</small>';
 				break;
 			case 'email':
-				$value = sanitize_email( $customer->get_email() );
+				$value = '<a href="mailto:'.sanitize_email( $customer->get_email() ).'">'.sanitize_email($customer->get_email()).'</a><br>';
+				$value .= '<span class="contact_phone">'.$customer->get_phone().'</span>';
 				break;
-			case 'phone':
-				$value = $customer->get_phone();
+			case 'street':
+				$value = eaccounting_format_address(
+				array(
+					'street'   => $customer->get_street(),
+					'city'     => $customer->get_city(),
+					'state'    => $customer->get_state(),
+					'postcode' => $customer->get_postcode(),
+					'country'  => $customer->get_country_nicename(),
+				)
+			);
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="customer-status" style="" value="true" data-id="' . $customer->get_id() . '" ' . checked( $customer->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
+				break;
+			case 'actions':
+				$edit_url = eaccounting_admin_url(
+					array(
+						'tab'        => 'customers',
+						'action'     => 'edit',
+						'customer_id' => $customer_id,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'tab'        => 'customers',
+						'action'     => 'delete',
+						'customer_id' => $customer_id,
+					)
+				);
+				$actions  = array(
+					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
+					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
+				);
+				$value    = $this->row_actions( $actions );
 				break;
 			default:
 				return parent::column_default( $customer, $column_name );

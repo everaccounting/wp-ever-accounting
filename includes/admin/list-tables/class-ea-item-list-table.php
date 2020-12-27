@@ -196,6 +196,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				$edit_url = admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() );
 				$nonce    = wp_create_nonce( 'item-nonce' );
 				$actions  = array(
+					'id' => 'ID: '.$item_id,
 					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-items&tab=items&_wpnonce=' . $nonce . '&action=delete&item_id=' . $item->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);

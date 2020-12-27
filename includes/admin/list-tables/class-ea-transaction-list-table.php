@@ -91,6 +91,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 		return array(
 			'date'        => __( 'Date', 'wp-ever-accounting' ),
 			'amount'      => __( 'Amount', 'wp-ever-accounting' ),
+			'type'        => __( 'Type', 'wp-ever-accounting' ),
 			'account_id'  => __( 'Account Name', 'wp-ever-accounting' ),
 			'category_id' => __( 'Category', 'wp-ever-accounting' ),
 			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
@@ -107,6 +108,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 		return array(
 			'date'        => array( 'payment_date', false ),
 			'amount'      => array( 'amount', false ),
+			'type'        => array( 'type', false ),
 			'account_id'  => array( 'account_id', false ),
 			'category_id' => array( 'category_id', false ),
 			'reference'   => array( 'reference', false ),
@@ -160,21 +162,21 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 			case 'amount':
 				$value = eaccounting_price( $transaction->get_amount() );
 				break;
-			case 'account_id':
-				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
-				break;
 			case 'type':
 				$type  = $transaction->get_type();
 				$types = eaccounting_get_transaction_types();
 				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
+				break;
+			case 'account_id':
+				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
+				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $transaction->get_category_id( 'edit' ) );
 				$value    = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
 				break;
 			case 'reference':
-				$value = $transaction->get_reference();
+				$value = !empty( $transaction->get_reference() ) ? $transaction->get_reference() : '&mdash;';
 				break;
 			default:
 				return parent::column_default( $transaction, $column_name );

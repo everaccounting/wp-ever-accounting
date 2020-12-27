@@ -111,10 +111,11 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 			'cb'      => '<input type="checkbox" />',
 			'thumb'   => '<span class="ea-thumb">&nbsp;</span>',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
-			'email'   => __( 'Email', 'wp-ever-accounting' ),
-			'phone'   => __( 'Phone', 'wp-ever-accounting' ),
+			'email'   => __( 'Contact', 'wp-ever-accounting' ),
+			'street'  => __( 'Address', 'wp-ever-accounting' ),
 			'due'     => __( 'Due', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
+			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -128,7 +129,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 		return array(
 			'name'    => array( 'name', false ),
 			'email'   => array( 'email', false ),
-			'phone'   => array( 'phone', false ),
+			'street'  => array( 'street', false ),
 			'enabled' => array( 'enabled', false ),
 		);
 	}
@@ -191,26 +192,52 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				$value    = '<a href="' . esc_url( $view_url ) . '">' . $vendor->get_attachment_image() . '</a>';
 				break;
 			case 'name':
-				$view_url = admin_url( 'admin.php?page=ea-expenses&tab=vendors&action=view&vendor_id=' . $vendor->get_id() );
-				$nonce    = wp_create_nonce( 'vendor-nonce' );
-				$actions  = array(
-					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
-					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-expenses&tab=vendors&action=edit&vendor_id=' . $vendor->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
-					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-expenses&tab=vendors&_wpnonce=' . $nonce . '&action=delete&vendor_id=' . $vendor->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
-				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>' . $this->row_actions( $actions );
+				$view_url = admin_url( 'admin.php?page=ea-sales&tab=vendors&action=view&vendor_id=' . $vendor->get_id() );
+				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
+				$value .= '<br>';
+				$value .= '<small class=meta>'.$vendor->get_company().'</small>';
 				break;
 			case 'email':
-				$value = sanitize_email( $vendor->get_email() );
+				$value = '<a href="mailto:'.sanitize_email( $vendor->get_email() ).'">'.sanitize_email($vendor->get_email()).'</a><br>';
+				$value .= '<span class="contact_phone">'.$vendor->get_phone().'</span>';
 				break;
-			case 'phone':
-				$value = $vendor->get_phone();
+			case 'street':
+				$value = eaccounting_format_address(
+					array(
+						'street'   => $vendor->get_street(),
+						'city'     => $vendor->get_city(),
+						'state'    => $vendor->get_state(),
+						'postcode' => $vendor->get_postcode(),
+						'country'  => $vendor->get_country_nicename(),
+					)
+				);
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="vendor-status" style="" value="true" data-id="' . $vendor->get_id() . '" ' . checked( $vendor->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
+				break;
+			case 'actions':
+				$edit_url = eaccounting_admin_url(
+					array(
+						'tab'        => 'vendors',
+						'action'     => 'edit',
+						'vendor_id' => $vendor_id,
+					)
+				);
+				$del_url  = eaccounting_admin_url(
+					array(
+						'tab'        => 'vendors',
+						'action'     => 'delete',
+						'vendor_id' => $vendor_id,
+					)
+				);
+				$actions  = array(
+					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
+					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
+				);
+				$value    = $this->row_actions( $actions );
 				break;
 			default:
 				return parent::column_default( $vendor, $column_name );
