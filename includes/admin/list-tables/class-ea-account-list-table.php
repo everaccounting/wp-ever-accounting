@@ -188,6 +188,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				$view_url = admin_url( 'admin.php?page=ea-banking&tab=accounts&action=view&account_id=' . $account_id );
 				$nonce    = wp_create_nonce( 'account-nonce' );
 				$actions  = array(
+					'id'	=> 'ID: '.$account_id,
 					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
 					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&action=edit&account_id=' . $account->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&_wpnonce=' . $nonce . '&action=delete&account_id=' . $account->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
@@ -201,7 +202,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				$value = $account->get_number();
 				break;
 			case 'bank_name':
-				$value = $account->get_bank_name();
+				$value = !empty( $account->get_bank_name() ) ? $account->get_bank_name() : "&mdash;";
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
