@@ -50,6 +50,15 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 							'creatable'     => true,
 						)
 					);
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Company', 'wp-ever-accounting' ),
+							'name'          => 'company',
+							'value'         => $customer->get_company(),
+							'required'      => true,
+						)
+					);
 
 					eaccounting_text_input(
 						array(
@@ -145,7 +154,7 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 					);
 					eaccounting_file_input(
 						array(
-							'wrapper_class' => 'ea-col-12',
+							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Photo', 'wp-ever-accounting' ),
 							'name'          => 'thumbnail_id',
 							'value'         => $customer->get_thumbnail_id(),

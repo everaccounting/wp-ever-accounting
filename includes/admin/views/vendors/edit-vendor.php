@@ -55,7 +55,15 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'creatable'     => true,
 						)
 					);
-
+					eaccounting_text_input(
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Company', 'wp-ever-accounting' ),
+							'name'          => 'company',
+							'value'         => $vendor->get_company(),
+							'required'      => true,
+						)
+					);
 					eaccounting_text_input(
 						array(
 							'wrapper_class' => 'ea-col-6',
