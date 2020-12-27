@@ -200,8 +200,13 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				$value .= '<small class=meta>'.$vendor->get_company().'</small>';
 				break;
 			case 'email':
-				$value = !empty($vendor->get_email()) ? '<a href="mailto:'.sanitize_email( $vendor->get_email() ).'">'.sanitize_email($vendor->get_email()).'</a><br>':'';
-				$value .= !empty($vendor->get_phone()) ? '<span class="contact_phone">'.$vendor->get_phone().'</span>' : '';
+				if(!empty($vendor->get_email()) || !empty($vendor->get_phone())) {
+					$value = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
+					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . $vendor->get_phone() . '</span>' : '';
+				}
+				if(empty($vendor->get_email()) && empty($vendor->get_phone())){
+					$value = '&mdash;';
+				}
 				break;
 			case 'street':
 				$value = eaccounting_format_address(

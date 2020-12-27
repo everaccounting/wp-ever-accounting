@@ -200,8 +200,13 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 				$value .= '<small class=meta>'.$customer->get_company().'</small>';
 				break;
 			case 'email':
-				$value = !empty($customer->get_email()) ? '<a href="mailto:'.sanitize_email( $customer->get_email() ).'">'.sanitize_email($customer->get_email()).'</a><br>' : '';
-				$value .= !empty($customer->get_phone()) ? '<span class="contact_phone">'.$customer->get_phone().'</span>' : '';
+				if(!empty($customer->get_email()) || !empty($customer->get_phone())) {
+					$value = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
+					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . $customer->get_phone() . '</span>' : '';
+				}
+				if(empty($customer->get_email()) && empty($customer->get_phone())){
+					$value = '&mdash;';
+				}
 				break;
 			case 'street':
 				$value = eaccounting_format_address(
