@@ -198,7 +198,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value   = $contact ? $contact->get_name() : __( '(Deleted Customer)', 'wp-ever-accounting' );
+				$value   = $contact ? $contact->get_name() : '&mdash;';
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(

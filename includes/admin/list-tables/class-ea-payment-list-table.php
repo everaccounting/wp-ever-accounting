@@ -197,7 +197,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_vendor( $payment->get_contact_id( 'edit' ) );
-				$value   = $contact ? $contact->get_name() : __( '(Deleted Vendor)', 'wp-ever-accounting' );
+				$value   = $contact ? $contact->get_name() : '&mdash;';
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
