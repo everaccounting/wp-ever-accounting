@@ -741,10 +741,11 @@ function eaccounting_account_dropdown( $field ) {
 			'ajax_action'  => 'eaccounting_get_accounts',
 			'nonce_action' => 'ea_get_accounts',
 			'modal_id'     => '#ea-modal-add-account',
-			'creatable'    => true,
+			'creatable'    => (false === $field['creatable']) ? $field['creatable'] : true,
 		),
 		$field
 	);
+
 	eaccounting_select2( apply_filters( 'eaccounting_account_dropdown', $field ) );
 }
 
