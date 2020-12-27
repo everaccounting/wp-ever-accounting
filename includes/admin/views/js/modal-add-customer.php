@@ -31,6 +31,14 @@ defined( 'ABSPATH' ) || exit();
 		);
 		eaccounting_text_input(
 				array(
+						'label'    => __( 'Company', 'wp-ever-accounting' ),
+						'name'     => 'company',
+						'value'    => '',
+						'required' => false,
+				)
+		);
+		eaccounting_text_input(
+				array(
 						'label'    => __( 'Email', 'wp-ever-accounting' ),
 						'name'     => 'email',
 						'type'     => 'email',
@@ -44,15 +52,6 @@ defined( 'ABSPATH' ) || exit();
 						'name'     => 'phone',
 						'value'    => '',
 						'required' => false,
-				)
-		);
-		eaccounting_textarea(
-				array(
-						'wrapper_class' => 'ea-col-12',
-						'label'         => __( 'Address', 'wp-ever-accounting' ),
-						'name'          => 'address',
-						'value'         => '',
-						'required'      => false,
 				)
 		);
 		eaccounting_hidden_input(
