@@ -137,8 +137,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
-			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -220,8 +219,8 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'       => 'invoices',
-						'action'    => 'delete',
+						'tab'        => 'invoices',
+						'action'     => 'delete',
 						'invoice_id' => $invoice_id,
 					)
 				);
@@ -278,22 +277,6 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 		$action = $this->current_action();
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
-				case 'enable':
-					eaccounting_insert_invoice(
-						array(
-							'id'      => $id,
-							'enabled' => '1',
-						)
-					);
-					break;
-				case 'disable':
-					eaccounting_insert_invoice(
-						array(
-							'id'      => $id,
-							'enabled' => '0',
-						)
-					);
-					break;
 				case 'delete':
 					eaccounting_delete_invoice( $id );
 					break;

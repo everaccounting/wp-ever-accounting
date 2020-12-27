@@ -214,7 +214,7 @@ function eaccounting_prepare_query_orderby( &$qv, $table ) {
 function eaccounting_sql_parse_orderby( $orderby, $table, &$qv = array() ) {
 
 	$_orderby = '';
-	if ( in_array(
+	if ( is_array($qv['orderby_cols']) && in_array(
 		$orderby,
 		$qv['orderby_cols'],
 		true

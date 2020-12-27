@@ -22,6 +22,15 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class ResourceRepository {
 	/**
+	 * A map of database fields to data types.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $data_type = array();
+
+	/**
 	 * Meta type. This should match up with
 	 * the types available at https://developer.wordpress.org/reference/functions/add_metadata/.
 	 * WP defines 'post', 'user', 'comment', and 'term'.
@@ -244,5 +253,15 @@ abstract class ResourceRepository {
 		// Fire a hook.
 		do_action( 'eaccounting_delete_' . $item->get_object_type(), $item->get_id(), $item->get_data(), $item );
 		$item->set_id( 0 );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Additional Methods
+	|--------------------------------------------------------------------------
+	*/
+	public static function get_columns() {
+		$self = new static;
+		return array_keys( $self->data_type );
 	}
 }

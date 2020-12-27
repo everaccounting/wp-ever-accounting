@@ -11,8 +11,12 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\CurrencyTrait;
 
 abstract class Document extends ResourceModel {
+	use AttachmentTrait;
+	use CurrencyTrait;
 
 	/**
 	 * This is the name of this object type.
@@ -107,7 +111,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @var array
 	 */
-	private $status_transition = array();
+	protected $status_transition = array();
 
 
 	/**
@@ -882,7 +886,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_address( $address ) {
-		$this->set_prop( 'address', eaccounting_clean( $address ) );
+		$this->set_prop( 'address', maybe_unserialize( $address ) );
 	}
 
 	/**
@@ -1380,7 +1384,7 @@ abstract class Document extends ResourceModel {
 		$this->calculate_totals();
 		$this->maybe_set_document_number();
 		$this->maybe_set_key();
-		$this->maybe_set_payment_date();
+		$this->maybe_set_complete();
 		$saved = parent::save();
 		$this->save_items();
 		$this->status_transition();
@@ -1401,9 +1405,9 @@ abstract class Document extends ResourceModel {
 			$getter = "get_{$prop}";
 			$setter = "set_{$prop}";
 			if ( is_callable( array( $contact, $getter ) )
-			     && is_callable( array( $this, $setter ) )
-			     && is_callable( array( $this, $getter ) )
-			     && empty( $this->$getter() ) ) {
+				 && is_callable( array( $this, $setter ) )
+				 && is_callable( array( $this, $getter ) )
+				 && empty( $this->$getter() ) ) {
 				$this->$setter( $contact->$getter() );
 			}
 		}
@@ -1439,11 +1443,14 @@ abstract class Document extends ResourceModel {
 		return strtolower( $key );
 	}
 
-
-	public function maybe_set_payment_date() {
-	}
-
-	public function validate_document_number() {
+	/**
+	 * Conditionally set complete
+	 * @since 1.1.0
+	 */
+	public function maybe_set_complete() {
+		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
+			$this->set_payment_date( time() );
+		}
 	}
 
 	/**
@@ -1467,8 +1474,5 @@ abstract class Document extends ResourceModel {
 		}
 	}
 
-	protected function status_transition() {
-
-	}
 
 }

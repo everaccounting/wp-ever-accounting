@@ -414,8 +414,13 @@ jQuery(function ($) {
 				.on('select2:select', '.select-item', this.item_selected)
 				.on('click', '.delete-line', this.remove_line_item)
 				.on('click', '.edit-line, .save-line', this.edit_line_item)
+				.on('click', '.add-discount', this.add_discount)
+				.on('change', '#currency_code', this.recalculate)
 				.on('click', '.recalculate', this.recalculate)
 				.on('submit', this.submit);
+
+			$('#ea-invoice')
+				.on('click', '.receive-payment', this.receive_payment)
 
 			$(document.body).on('ea_invoice_updated', this.recalculate)
 		},
@@ -453,6 +458,7 @@ jQuery(function ($) {
 			$('#ea-document__line-items').append(line_item);
 			$(document.body).trigger('ea_select2_init');
 		},
+
 		item_selected: function (e) {
 			var data = e.params.data;
 			$(e.target).closest('tr')
@@ -463,11 +469,13 @@ jQuery(function ($) {
 				.find("input.line_item_tax").val(data.item.sales_tax);
 			$('body').trigger('ea_invoice_updated');
 		},
+
 		remove_line_item: function (e) {
 			e.preventDefault();
 			$(this).closest('tr').remove();
 			invoice_form.recalculate();
 		},
+
 		edit_line_item:function(e){
 			e.preventDefault();
 			var $tr = $(this).closest('.ea-document__line');
@@ -479,6 +487,42 @@ jQuery(function ($) {
 			$tr.siblings('tr').removeClass('editing');
 			$tr.addClass('editing');
 		},
+
+		add_discount:function (e){
+			$('#ea-modal-add-discount').ea_modal({
+				onReady:function(plugin){
+					$('#discount', plugin.$modal).val($('#ea-invoice-form #discount').val());
+					$('#discount_type', plugin.$modal).val($('#ea-invoice-form #discount_type').val());
+				},
+				onSubmit:function (data, modal) {
+					$('#ea-invoice-form #discount').val(data.discount);
+					$('#ea-invoice-form #discount_type').val(data.discount_type);
+					modal.close();
+					invoice_form.recalculate();
+				}
+			})
+		},
+
+		receive_payment:function(e){
+			e.preventDefault();
+			var $modal_selector = $('#ea-modal-add-invoice-payment');
+			var code = $(this).data('currency');
+
+			$modal_selector.ea_modal({
+				onReady:function (plugin) {
+					eaccounting_mask_amount($('#amount', plugin.$modal), code)
+				},
+				onSubmit:function (data, plugin) {
+					$.post(ajaxurl, data, function (json) {
+					}).always(function (json) {
+						plugin.close();
+						$.eaccounting_notice(json);
+						location.reload();
+					});
+				}
+			});
+		},
+
 		recalculate:function (){
 			invoice_form.block();
 			var data = $.extend({}, $('#ea-invoice-form').serializeObject(), {action: 'eaccounting_invoice_recalculate'});
@@ -492,11 +536,13 @@ jQuery(function ($) {
 				invoice_form.unblock();
 			});
 		},
+
 		submit: function (e) {
 			e.preventDefault();
 			invoice_form.block();
 			var data = $('#ea-invoice-form').serializeObject();
 			$.post(ajaxurl, data, function (json) {
+				console.log(json);
 				$.eaccounting_redirect(json);
 			}).always(function (json) {
 				$.eaccounting_notice(json);

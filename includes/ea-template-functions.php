@@ -148,6 +148,7 @@ function eaccounting_get_template_html( $template_name, $args = array(), $templa
  * @param array $args
  */
 function eaccounting_get_admin_template( $template_name, $args = array() ) {
+
 	if ( $args && is_array( $args ) ) {
 		extract( $args );
 	}
@@ -162,8 +163,18 @@ function eaccounting_get_admin_template( $template_name, $args = array() ) {
 	include $file;
 }
 
+/**
+ * Render admin template.
+ *
+ * @param       $template_name
+ * @param array $args
+ * @since 1.0.0
+ *
+ * @return string
+ */
 function eaccounting_get_admin_template_html( $template_name, $args = array() ) {
 	ob_start();
+
 	eaccounting_get_admin_template( $template_name, $args );
 
 	return ob_get_clean();

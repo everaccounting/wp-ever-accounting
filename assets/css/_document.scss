@@ -161,6 +161,7 @@
 	.label {
 	  vertical-align: top;
 	  padding: 0.4em;
+	  font-weight: 600;
 	}
 
 	.total {
@@ -168,7 +169,7 @@
 	  width: 14em;
 	  margin: 0 0 0 .5em;
 	  box-sizing: border-box;
-	  font-weight: 700;
+	  font-weight: 600;
 	  padding: 0.4em;
 	}
 
@@ -187,6 +188,53 @@
   .add-line-item{
 	.dashicons {
 	  vertical-align: middle;
+	}
+  }
+
+  /* NOTES */
+  &-notes {
+	padding: 2px 0 0;
+	list-style: none;
+	max-height: 300px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+	&__item {
+	  padding: 0 10px;
+	  margin-bottom: 6px;
+
+	  &-content {
+		padding: 10px;
+		background: #efefef;
+		position: relative;
+	  }
+
+	  &-meta {
+		padding: 10px;
+		color: #999;
+		margin: 0;
+		font-size: 11px;
+	  }
+	}
+
+	&__add {
+	  border-top: 1px solid #ddd;
+	  padding: 10px 10px 0;
+
+	  label {
+		display: block;
+		font-weight: 600;
+		margin-bottom: 5px;
+	  }
+
+	  textarea {
+		width: 100%;
+	  }
+
+	  select {
+		width: 70%;
+	  }
+
 	}
   }
 }

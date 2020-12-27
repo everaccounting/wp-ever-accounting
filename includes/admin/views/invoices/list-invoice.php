@@ -33,7 +33,7 @@ $add_url = eaccounting_admin_url(
 		$invoice_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-invoices' );
 		$invoice_table->display();
 		?>
-		<input type="hidden" name="page" value="ea-invoices"/>
+		<input type="hidden" name="page" value="ea-sales"/>
 		<input type="hidden" name="tab" value="invoices"/>
 	</form>
 <?php do_action( 'eaccounting_invoices_table_bottom' ); ?>

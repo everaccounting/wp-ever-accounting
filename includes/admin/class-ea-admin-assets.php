@@ -166,18 +166,18 @@ class Admin_Assets {
 		//self::register_react_script( 'ea-components', self::get_asset_dist_url( 'components' ) );
 		//self::register_react_script( 'ea-invoice', self::get_asset_dist_url( 'invoice' ), array( 'ea-data', 'ea-components' ) );
 
-		//      wp_localize_script(
-		//          'ea-data',
-		//          'eaccountingi10n',
-		//          array(
-		//              'site_url'   => site_url(),
-		//              'admin_url'  => admin_url(),
-		//              'asset_url'  => eaccounting()->plugin_url( '/assets' ),
-		//              'plugin_url' => eaccounting()->plugin_url(),
-		//          )
-		//      );
+		wp_localize_script(
+			'ea-admin',
+			'eaccountingi10n',
+			array(
+				'site_url'   => site_url(),
+				'admin_url'  => admin_url(),
+				'asset_url'  => eaccounting()->plugin_url( '/assets' ),
+				'plugin_url' => eaccounting()->plugin_url(),
+				'currencies' => eaccounting_get_currencies(array('return' => 'raw', 'number' => -1 )) //phpcs:ignore
+			)
+		);
 		wp_enqueue_media();
-
 	}
 
 

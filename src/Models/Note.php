@@ -213,4 +213,15 @@ class Note extends ResourceModel {
 		$this->set_prop( 'extra', eaccounting_clean( $extra ) );
 	}
 
+	/**
+	 * Set object creator id.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param int $creator_id Creator id
+	 */
+	public function set_creator_id( $creator_id = null ) {
+		$this->set_prop( 'creator_id', absint( $creator_id ) );
+	}
+
 }

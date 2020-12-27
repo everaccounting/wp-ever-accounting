@@ -3,18 +3,21 @@
  * Invoice items.
  *
  * @var $invoice \EverAccounting\Models\Invoice
+ * @var $mode    string
  * @package EverAccounting\Admin
  */
 
 defined( 'ABSPATH' ) || exit;
-$items = $invoice->get_items();
+
+$edit_mode = isset( $mode ) && $mode === 'edit';
+$items     = $invoice->get_items();
 ?>
 <div class="ea-document__items-wrapper">
 	<h3 class="ea-document__items-title"><?php esc_html_e( 'Line Items', 'wp-ever-accounting' ); ?></h3>
 	<table cellpadding="0" cellspacing="0" class="ea-document__items">
 		<thead>
 		<tr>
-			<?php if ( $invoice->is_editable() ) : ?>
+			<?php if ( $invoice->is_editable() && $edit_mode ) : ?>
 				<th class="ea-document__line-actions">&nbsp;</th>
 			<?php endif; ?>
 			<th class="ea-document__line-name" colspan="2"><?php esc_html_e( 'Item', 'wp-ever-accounting' ); ?></th>
@@ -39,7 +42,7 @@ $items = $invoice->get_items();
 		do_action( 'eaccounting_invoice_items_after_line_items', $invoice );
 		?>
 		</tbody>
-		<?php if ( $invoice->is_editable() ) : ?>
+		<?php if ( $invoice->is_editable() && $edit_mode ) : ?>
 			<tbody>
 			<script type="text/template" id="ea-invoice-line-template">
 				<?php
@@ -52,7 +55,7 @@ $items = $invoice->get_items();
 				<?php
 				eaccounting_item_dropdown(
 					array(
-						'name'  => 'line_items[9999][item_id]',
+						'name'  => 'items[9999][item_id]',
 						'class' => 'select-item',
 					)
 				);
@@ -61,7 +64,7 @@ $items = $invoice->get_items();
 			</tbody>
 		<?php endif; ?>
 	</table>
-	<?php if ( $invoice->is_editable() ) : ?>
+	<?php if ( $invoice->is_editable() && $edit_mode ) : ?>
 		<div class="ea-document__data-row ea-document__actions">
 			<div class="ea-document__actions-left">
 				<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
@@ -100,7 +103,7 @@ $items = $invoice->get_items();
 					</td>
 				</tr>
 			<?php endif; ?>
-
+			<?php if ( $invoice->exists() ) : ?>
 			<tr>
 				<td class="label"><?php esc_html_e( 'Invoice Total', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
@@ -108,6 +111,23 @@ $items = $invoice->get_items();
 					<?php echo eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() ); ?>
 				</td>
 			</tr>
+			<tr>
+				<td class="label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?>:</td>
+				<td width="1%"></td>
+				<td class="total">
+					<?php echo eaccounting_price( $invoice->get_total_paid(), $invoice->get_currency_code() ); ?>
+				</td>
+			</tr>
+			<?php endif; ?>
+			<?php if ( $invoice->exists() && ! empty( $invoice->get_total_due() ) ) : ?>
+				<tr>
+					<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
+					<td width="1%"></td>
+					<td class="total">
+						<?php echo eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ); ?>
+					</td>
+				</tr>
+			<?php endif; ?>
 
 		</table>
 

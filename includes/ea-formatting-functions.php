@@ -182,9 +182,10 @@ function eaccounting_format_datetime( $date, $format = '' ) {
 }
 
 /**
- * @param        $date
- * @param string $format
  * @since 1.1.0
+ *
+ * @param string $format
+ * @param        $date
  *
  * @return string
  */
@@ -677,8 +678,8 @@ function eaccounting_numbers_to_words( $number ) {
 
 }
 
-function eaccounting_format_address( $address ) {
-	$address = wp_parse_args(
+function eaccounting_format_address( $address, $break = '<br>' ) {
+	$address   = wp_parse_args(
 		$address,
 		array(
 			'street'   => '',
@@ -688,21 +689,16 @@ function eaccounting_format_address( $address ) {
 			'country'  => '',
 		)
 	);
+	$countries = eaccounting_get_countries();
+	if ( ! empty( $address['country'] ) && isset( $countries[ $address['country'] ] ) ) {
+		$address['country'] = $countries[ $address['country'] ];
+	}
 
-	$complements = implode(
-		' ',
-		array(
-			implode(
-				', ',
-				array(
-					$address['city'],
-					$address['state'],
-				)
-			),
-			$address['postcode'],
-		)
-	);
+	$line_1       = $address['street'];
+	$line_2       = implode( ' ', array_filter( array( $address['city'], $address['state'], $address['postcode'] ) ) );
+	$line_3       = $address['country'];
+	$full_address = array_filter( array( $line_1, $line_2, $line_3 ) );
 
-	return implode( '<br>', array_filter( array( $address['street'], $complements, $address['country'] ) ) );
+	return implode( $break, $full_address );
 }
 

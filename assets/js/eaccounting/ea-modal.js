@@ -195,7 +195,6 @@ jQuery(function ($) {
 						plugin.unblock();
 					});
 				} else {
-					console.log('ea_modal_form_submitted');
 					$(document.body).trigger(
 						'ea_modal_form_submitted',
 						[plugin, data]

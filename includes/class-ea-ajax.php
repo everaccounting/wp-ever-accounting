@@ -161,9 +161,15 @@ class Ajax {
 				throw new \Exception( __( 'Invalid Invoice Item', 'wp-ever-accounting' ) );
 			}
 			$invoice->add_payment( $posted );
+			$invoice->save();
+
 			wp_send_json_success(
 				array(
 					'message' => __( 'Invoice Payment saved', 'wp-ever-accounting' ),
+					'total'   => $invoice->get_total(),
+					'due'     => $invoice->get_total_due(),
+					'paid'    => $invoice->get_total_paid(),
+					'status'  => $invoice->get_status(),
 				)
 			);
 		} catch ( \Exception $e ) {
@@ -343,14 +349,24 @@ class Ajax {
 			$invoice = new Invoice( $posted['id'] );
 			$invoice->set_props( $posted );
 			$invoice->save();
-			$totals   = $invoice->calculate_totals();
-			$redirect = add_query_arg( array( 'action' => 'view' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) );
+			$redirect = add_query_arg(
+				array(
+					'action'     => 'view',
+					'invoice_id' => $invoice->get_id(),
+				),
+				eaccounting_clean( $_REQUEST['_wp_http_referer'] )
+			);
 			wp_send_json_success(
 				array(
-					'items'    => eaccounting_get_admin_template_html( 'invoices/partials/views', array( 'invoice' => $invoice ) ),
+					'items'    => eaccounting_get_admin_template_html(
+						'invoices/partials/items',
+						array(
+							'mode'    => 'edit',
+							'invoice' => $invoice,
+						)
+					),
 					'line'     => array_map( 'strval', $invoice->get_items() ),
 					'redirect' => $redirect,
-					'totals'   => $totals,
 				)
 			);
 		} catch ( \Exception $e ) {
@@ -828,7 +844,13 @@ class Ajax {
 			$totals = $invoice->calculate_totals();
 			wp_send_json_success(
 				array(
-					'html'   => eaccounting_get_admin_template_html( 'invoices/partials/items', array( 'invoice' => $invoice ) ),
+					'html'   => eaccounting_get_admin_template_html(
+						'invoices/partials/items',
+						array(
+							'invoice' => $invoice,
+							'mode'    => 'edit',
+						)
+					),
 					'line'   => array_map( 'strval', $invoice->get_items() ),
 					'totals' => $totals,
 				)
