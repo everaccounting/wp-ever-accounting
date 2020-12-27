@@ -18,8 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
-		'revenue' => __( 'Revenue', 'wp-ever-accounting' ),
-		'payment' => __( 'Payment', 'wp-ever-accounting' ),
+		'income'  => __( 'Income', 'wp-ever-accounting' ),
+		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_transaction_types', $types );
@@ -141,7 +141,7 @@ function eaccounting_delete_payment( $payment_id ) {
  * @return array|int
  */
 function eaccounting_get_payments( $args = array() ) {
-	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'payment' ) ) );
+	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );
 }
 
 /**
@@ -257,7 +257,7 @@ function eaccounting_delete_revenue( $revenue_id ) {
  * @return \EverAccounting\Models\Revenue[]|int
  */
 function eaccounting_get_revenues( $args = array() ) {
-	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'revenue' ) ) );
+	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );
 }
 
 /**
@@ -577,14 +577,14 @@ function eaccounting_get_transactions( $args = array() ) {
 		$results = array_map(
 			function ( $item ) {
 				switch ( $item->type ) {
-					case 'revenue':
+					case 'income':
 						$transaction = new \EverAccounting\Models\Revenue();
 						$transaction->set_props( $item );
 						$transaction->set_object_read( true );
 
 						return $transaction;
 						break;
-					case 'payment':
+					case 'expense':
 						$transaction = new \EverAccounting\Models\Payment();
 						$transaction->set_props( $item );
 						$transaction->set_object_read( true );

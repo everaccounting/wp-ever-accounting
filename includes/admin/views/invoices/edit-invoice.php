@@ -82,7 +82,7 @@ $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : 
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Invoice Number', 'wp-ever-accounting' ),
 							'name'          => 'invoice_number',
-							'value'         => empty( $invoice->get_invoice_number() ) ? $invoice->get_next_invoice_number() : $invoice->get_next_invoice_number(),
+							'value'         => empty( $invoice->get_invoice_number() ) ? $invoice->get_invoice_number() : $invoice->get_invoice_number(),
 							'required'      => true,
 						)
 					);
@@ -111,7 +111,7 @@ $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : 
 						)
 					);
 
-					eaccounting_get_admin_template( 'html-invoice-items', array( 'invoice' => $invoice ) );
+					//eaccounting_get_admin_template( 'html-invoice-items', array( 'invoice' => $invoice ) );
 
 					eaccounting_text_input(
 						array(

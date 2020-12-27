@@ -31,9 +31,9 @@ trait CurrencyTrait {
 	 * @since 1.1.0
 	 * @return int|string
 	 */
-	public function get_currency_rate() {
+	public function get_currency_rate( $context = 'edit' ) {
 		if ( $this->get_currency() ) {
-			return $this->get_currency()->get_rate();
+			return $this->get_currency()->get_rate( $context );
 		}
 
 		return 1;

@@ -115,6 +115,28 @@ class Invoice extends Document {
 	|--------------------------------------------------------------------------
 	*/
 	/**
+	 * Return the document number.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_invoice_number( $context = 'edit' ) {
+		return $this->get_prop( 'document_number', $context );
+	}
+
+	/**
+	 * Get internal type.
+	 *
+	 * @return string
+	 */
+	public function get_type( $context = 'edit' ) {
+		return 'invoice';
+	}
+
+	/**
 	 * Return the customer id.
 	 *
 	 * @since  1.1.0
