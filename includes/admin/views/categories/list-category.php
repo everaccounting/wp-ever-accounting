@@ -25,7 +25,7 @@ $add_url = eaccounting_admin_url(
 	<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 </a>
 <?php do_action( 'eaccounting_categories_table_top' ); ?>
-<form id="ea-categories-table" method="get" action="<?php echo admin_url(); ?>">
+<form id="ea-categories-table" method="get" action="<?php echo admin_url('admin.php'); ?>">
 	<?php
 	$category_table->views();
 	$category_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-categories' );

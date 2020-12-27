@@ -741,10 +741,11 @@ function eaccounting_account_dropdown( $field ) {
 			'ajax_action'  => 'eaccounting_get_accounts',
 			'nonce_action' => 'ea_get_accounts',
 			'modal_id'     => '#ea-modal-add-account',
-			'creatable'    => true,
+			'creatable'    => (false === $field['creatable']) ? $field['creatable'] : true,
 		),
 		$field
 	);
+
 	eaccounting_select2( apply_filters( 'eaccounting_account_dropdown', $field ) );
 }
 
@@ -768,7 +769,7 @@ function eaccounting_category_dropdown( $field ) {
 	$type        = ! empty( $field['type'] ) ? wp_parse_list( $field['type'] ) : array( 'income' );
 	$include     = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : false;
 	$ajax_action = ! empty( $field['ajax_action'] ) ? $field['ajax_action'] : 'eaccounting_get_income_categories';
-	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : 'ea-modal-add-income-category';
+	$modal_id    = ! empty( $field['modal_id'] ) ? '#' . $field['modal_id'] : '#ea-modal-add-income-category';
 
 	$categories = eaccounting_get_categories(
 		array(

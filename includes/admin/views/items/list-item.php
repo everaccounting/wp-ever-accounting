@@ -27,7 +27,7 @@ $add_url = eaccounting_admin_url(
 	<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 </a>
 <?php do_action( 'eaccounting_items_table_top' ); ?>
-<form id="ea-items-table" method="get" action="<?php echo admin_url(); ?>">
+<form id="ea-items-table" method="get" action="<?php echo admin_url('admin.php'); ?>">
 	<?php
 	$items_table->views();
 	$items_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-items' );

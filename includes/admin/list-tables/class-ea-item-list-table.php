@@ -96,9 +96,10 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Items can be products or services. You can use items when creating invoices and bills to have the price, tax etc fields populated.', 'wp-ever-accounting' ); ?>
+				<?php echo  esc_html__( 'Create as many items as you want categorically and assign sale and purchase prices to use them in your bills and invoices.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="" class="button-primary ea-empty-table__cta">Add Item</a>
+			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-items','tab'=>'items','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Item','wp-ever-accounting');?></a>
+			<a href="" class="button-primary ea-empty-table__cta"><?php _e('Learn More','wp-ever-accounting');?></a>
 		</div>
 		<?php
 	}

@@ -320,6 +320,7 @@ class List_Table_Categories extends List_Table {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
+		error_log(print_r($_REQUEST,true));
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-categories' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'category-nonce' ) ) {
 			return;
