@@ -82,7 +82,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'Revenue is a paid income transaction. It can be an independent record (i.e. deposit) or attached to an invoice.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Create and manage your business incomes in any currencies and affix account, category and customer to each revenue.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-sales','tab'=>'revenues','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
 			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>

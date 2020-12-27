@@ -81,7 +81,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Payment is a paid expense transaction. It can be an independent record (i.e. food receipt) or attached to a bill.', 'wp-ever-accounting' ); ?>
+				<?php echo  esc_html__( 'Create and manage your business expenses in any currencies, and affix account, category and customer to each payment.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-expenses','tab'=>'payments','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
 			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>

@@ -81,7 +81,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Transfers allow you to move money from one account to another, whether they use the same currency or not..', 'wp-ever-accounting' ); ?>
+				<?php echo  esc_html__( 'Transfer balance from one account to another without being worried about currency conversion.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url( array('page'=>'ea-banking','tab'=>'transfers','action'=>'edit') ));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Transfers','wp-ever-accounting');?></a>
 			<a href="" class="button-primary ea-empty-table__cta"><?php _e('Learn More','wp-ever-accounting');?></a>

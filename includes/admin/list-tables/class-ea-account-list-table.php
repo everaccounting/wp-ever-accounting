@@ -96,7 +96,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Create unlimited bank and cash accounts and track their opening and current balances. You can use it with any currencies that you want.', 'wp-ever-accounting' ); ?>
+				<?php echo  esc_html__( 'Create as many bank and cash accounts as you want and track your opening and current balances.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-banking','tab'=>'accounts','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Account','wp-ever-accounting');?></a>
 			<a href="https://wpeveraccounting.com/docs/general/accounts-listing/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-primary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
