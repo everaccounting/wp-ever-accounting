@@ -245,7 +245,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string $which
 	 */
-	protected function extra_tablenav( $which ) {
+	protected function extra_tablenav_deprecated( $which ) {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
