@@ -147,8 +147,8 @@ class Ajax {
 	/**
 	 * Add payment to invoice.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function add_invoice_payment() {
 		self::verify_nonce( 'ea_add_invoice_payment' );
@@ -184,8 +184,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_account() {
 		self::verify_nonce( 'ea_edit_account' );
@@ -222,8 +222,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_category() {
 		self::verify_nonce( 'ea_edit_category' );
@@ -259,8 +259,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating customer.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_customer() {
 		self::verify_nonce( 'ea_edit_customer' );
@@ -298,8 +298,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating currencies.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_currency() {
 		self::verify_nonce( 'ea_edit_currency' );
@@ -336,8 +336,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating invoice.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_invoice() {
 		self::verify_nonce( 'ea_edit_invoice' );
@@ -377,8 +377,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating item.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_item() {
 		self::verify_nonce( 'ea_edit_item' );
@@ -414,8 +414,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating payment.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_payment() {
 		self::verify_nonce( 'ea_edit_payment' );
@@ -453,8 +453,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating revenue.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_revenue() {
 		self::verify_nonce( 'ea_edit_revenue' );
@@ -492,16 +492,14 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating transfer.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
 		self::check_permission( 'ea_manage_transfer' );
 		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
-
 		$created = eaccounting_insert_transfer( $posted );
-
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
 				array(
@@ -532,8 +530,8 @@ class Ajax {
 	/**
 	 * Handle ajax action of creating/updating vendor.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function edit_vendor() {
 		self::verify_nonce( 'ea_edit_vendor' );
@@ -571,8 +569,8 @@ class Ajax {
 	/**
 	 * Get single account.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function get_account() {
 		self::verify_nonce( 'ea_get_account' );
@@ -670,10 +668,11 @@ class Ajax {
 		self::verify_nonce( 'ea_get_currencies' );
 		$currencies = eaccounting_get_currencies(
 			array(
-				'number' => -1,
+				'number' => - 1,
 				'return' => 'raw',
 			)
 		);
+
 		return wp_send_json_success( $currencies );
 	}
 
@@ -830,8 +829,8 @@ class Ajax {
 	/**
 	 * Recalculate invoice totals
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public static function invoice_recalculate() {
 		self::verify_nonce( 'ea_edit_invoice' );
@@ -876,11 +875,11 @@ class Ajax {
 	/**
 	 * Verify our ajax nonce.
 	 *
+	 * @param $action
+	 *
+	 * @param $action
+	 *
 	 * @since 1.0.2
-	 *
-	 * @param $action
-	 *
-	 * @param $action
 	 *
 	 */
 	public static function verify_nonce( $action ) {

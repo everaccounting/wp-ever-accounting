@@ -86,6 +86,7 @@ function eaccount_get_account_currency_code( $account ) {
  * @return EverAccounting\Models\Account|\WP_Error|bool
  */
 function eaccounting_insert_account( $data, $wp_error = true ) {
+	global $wpdb;
 	// Ensure that we have data.
 	if ( empty( $data ) ) {
 		return false;
@@ -96,6 +97,16 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 
 		// Retrieve the account.
 		$item = new \EverAccounting\Models\Account( $data['id'] );
+
+		//check if already account number exists for another user
+		$existing_account = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$data[number]'");
+
+		if( $existing_account ){
+			$existing_id = $existing_account->id;
+		}
+		if( !empty($existing_id) && absint($existing_id) != $item->get_id() ){
+			throw new \Exception(  __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+		}
 
 		// Load new data.
 		$item->set_props( $data );
