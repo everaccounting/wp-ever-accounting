@@ -503,7 +503,7 @@ function eaccounting_get_transactions( $args = array() ) {
 	$search_cols = array( 'description', 'reference' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    = ' AND (';
+		$where    .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
