@@ -194,7 +194,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				$value    = '<a href="' . esc_url( $view_url ) . '">' . $vendor->get_attachment_image() . '</a>';
 				break;
 			case 'name':
-				$view_url = admin_url( 'admin.php?page=ea-sales&tab=vendors&action=view&vendor_id=' . $vendor->get_id() );
+				$view_url = admin_url( 'admin.php?page=ea-expenses&tab=vendors&action=view&vendor_id=' . $vendor->get_id() );
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
 				$value .= '<br>';
 				$value .= '<small class=meta>'.$vendor->get_company().'</small>';
