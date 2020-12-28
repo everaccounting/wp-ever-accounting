@@ -157,7 +157,12 @@ jQuery(function ($) {
 
 		update_amount_input: function (e) {
 			var data = e.params.data;
-			maskInput($('#ea-account-form #opening_balance'), data.item);
+			var code = data.id;
+			if ( !code ) {
+				return false;
+			}
+			var currency = eaccounting_form_i10n.global_currencies[code];
+			maskInput($('#ea-account-form #opening_balance'), currency);
 		},
 
 		submit: function (e) {
@@ -376,7 +381,7 @@ jQuery(function ($) {
 			$('#ea-currency-form').unblock();
 		},
 
-		update_currency_props:function(e){
+		update_currency_props: function (e) {
 			var code = e.target.value;
 			if (!code) {
 				return false;
@@ -408,7 +413,7 @@ jQuery(function ($) {
 	};
 
 	var invoice_form = {
-		init:function (){
+		init: function () {
 			$('#ea-invoice-form')
 				.on('click', '.add-line-item', this.add_line_item)
 				.on('select2:select', '.select-item', this.item_selected)
@@ -476,7 +481,7 @@ jQuery(function ($) {
 			invoice_form.recalculate();
 		},
 
-		edit_line_item:function(e){
+		edit_line_item: function (e) {
 			e.preventDefault();
 			var $tr = $(this).closest('.ea-document__line');
 			if ($tr.hasClass('editing')) {
@@ -488,13 +493,13 @@ jQuery(function ($) {
 			$tr.addClass('editing');
 		},
 
-		add_discount:function (e){
+		add_discount: function (e) {
 			$('#ea-modal-add-discount').ea_modal({
-				onReady:function(plugin){
+				onReady: function (plugin) {
 					$('#discount', plugin.$modal).val($('#ea-invoice-form #discount').val());
 					$('#discount_type', plugin.$modal).val($('#ea-invoice-form #discount_type').val());
 				},
-				onSubmit:function (data, modal) {
+				onSubmit: function (data, modal) {
 					$('#ea-invoice-form #discount').val(data.discount);
 					$('#ea-invoice-form #discount_type').val(data.discount_type);
 					modal.close();
@@ -503,16 +508,16 @@ jQuery(function ($) {
 			})
 		},
 
-		receive_payment:function(e){
+		receive_payment: function (e) {
 			e.preventDefault();
 			var $modal_selector = $('#ea-modal-add-invoice-payment');
 			var code = $(this).data('currency');
 
 			$modal_selector.ea_modal({
-				onReady:function (plugin) {
+				onReady: function (plugin) {
 					eaccounting_mask_amount($('#amount', plugin.$modal), code)
 				},
-				onSubmit:function (data, plugin) {
+				onSubmit: function (data, plugin) {
 					$.post(ajaxurl, data, function (json) {
 					}).always(function (json) {
 						plugin.close();
@@ -523,13 +528,13 @@ jQuery(function ($) {
 			});
 		},
 
-		recalculate:function (){
+		recalculate: function () {
 			invoice_form.block();
 			var data = $.extend({}, $('#ea-invoice-form').serializeObject(), {action: 'eaccounting_invoice_recalculate'});
 			$.post(ajaxurl, data, function (json) {
 				if (json.success) {
 					$('#ea-invoice-form .ea-document__items-wrapper').replaceWith(json.data.html);
-				}else{
+				} else {
 					$.eaccounting_notice(json);
 				}
 			}).always(function (json) {
