@@ -11,7 +11,6 @@
  * @var int $payment_id
  */
 
-
 defined( 'ABSPATH' ) || exit();
 
 try {

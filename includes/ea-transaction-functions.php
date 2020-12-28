@@ -144,7 +144,7 @@ function eaccounting_delete_payment( $payment_id ) {
  * @return array|int
  */
 function eaccounting_get_payments( $args = array() ) {
-	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );
+	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense' ) ) );
 }
 
 /**

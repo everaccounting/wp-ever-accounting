@@ -212,6 +212,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 						'tab'        => 'payments',
 						'action'     => 'delete',
 						'payment_id' => $payment_id,
+						'_wpnonce'      => wp_create_nonce('payment-nonce'),
 					)
 				);
 				$actions  = array(
