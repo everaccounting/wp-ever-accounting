@@ -190,11 +190,11 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
+				$value   = $account ? $account->get_name() : '&mdash;';
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
-				$value   = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				$value   = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );

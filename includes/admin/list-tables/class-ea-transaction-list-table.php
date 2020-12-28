@@ -169,11 +169,11 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : __( '(Deleted Account)', 'wp-ever-accounting' );
+				$value   = $account ? $account->get_name() :'&mdash;';
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $transaction->get_category_id( 'edit' ) );
-				$value    = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'reference':
 				$value = !empty( $transaction->get_reference() ) ? $transaction->get_reference() : '&mdash;';

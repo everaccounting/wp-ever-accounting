@@ -211,7 +211,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $item->get_category_id() );
-				$value    = $category ? $category->get_name() : __( '(Deleted Category)', 'wp-ever-accounting' );
+				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
