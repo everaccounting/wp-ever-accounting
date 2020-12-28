@@ -34,6 +34,7 @@ try {
 						'value'         => $transfer->get_from_account_id(),
 						'required'      => true,
 						'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
+						'creatable' 	=> true,
 					)
 				);
 
@@ -46,6 +47,7 @@ try {
 						'default'       => '',
 						'required'      => true,
 						'placeholder'   => __( 'Select Account', 'wp-ever-accounting' ),
+						'creatable' 	=> true,
 					)
 				);
 

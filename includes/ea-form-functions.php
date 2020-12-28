@@ -741,7 +741,7 @@ function eaccounting_account_dropdown( $field ) {
 			'ajax_action'  => 'eaccounting_get_accounts',
 			'nonce_action' => 'ea_get_accounts',
 			'modal_id'     => '#ea-modal-add-account',
-			'creatable'    => (false === $field['creatable']) ? $field['creatable'] : true,
+			'creatable'    => false === $field['creatable'] ? $field['creatable'] : true,
 		),
 		$field
 	);
