@@ -299,7 +299,7 @@ class EAccounting_Admin_Settings {
 						'type'    => 'text',
 						'section' => 'bill',
 					),
-					'tax_settings'           => array(
+					'tax_settings'  => array(
 						'name'    => __( 'Tax Settings', 'wp-ever-accounting' ),
 						'desc'    => '',
 						'type'    => 'header',

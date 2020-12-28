@@ -266,7 +266,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
 		$posted = eaccounting_clean( $_REQUEST );
-
+		error_log(print_r($posted,true));
 		$created = eaccounting_insert_customer( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(

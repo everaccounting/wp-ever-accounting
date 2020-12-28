@@ -111,6 +111,8 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
+		error_log(print_r($item,true));
+
 		// Save the item
 		$item->save();
 
