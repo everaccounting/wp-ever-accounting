@@ -217,7 +217,6 @@ function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $form
 	} catch ( Exception $e ) {
 		return 0;
 	}
-
 	return $format ? $money->format() : $money->getAmount();
 }
 

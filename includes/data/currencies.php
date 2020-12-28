@@ -605,8 +605,8 @@ return array(
 		'subunit'            => 100,
 		'symbol'             => '€',
 		'position'           => 'before',
-		'decimal_separator'  => ',',
-		'thousand_separator' => '.',
+		'decimal_separator'  => '.',
+		'thousand_separator' => ',',
 	),
 
 	'FJD' => array(
