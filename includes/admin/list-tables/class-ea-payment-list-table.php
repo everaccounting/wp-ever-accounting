@@ -268,6 +268,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 					'attr'    => array(
 						'data-allow-clear' => true,
 					),
+					'creatable'	=> false,
 				)
 			);
 
