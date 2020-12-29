@@ -27,6 +27,7 @@ defined( 'ABSPATH' ) || exit();
 						'placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
 						'ajax'        => true,
 						'type'        => 'currency',
+						'creatable'   => false,
 				)
 		);
 		eaccounting_text_input(

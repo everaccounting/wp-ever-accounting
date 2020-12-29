@@ -829,10 +829,11 @@ function eaccounting_currency_dropdown( $field ) {
 			'ajax'         => true,
 			'ajax_action'  => 'eaccounting_get_currencies',
 			'nonce_action' => 'ea_get_currencies',
-			'creatable'    => true,
+			'creatable'    => false === $field['creatable'] ? $field['creatable'] : true,
 		),
 		$field
 	);
+	error_log(print_r($field,true));
 	eaccounting_select2( apply_filters( 'eaccounting_currency_dropdown', $field ) );
 }
 
