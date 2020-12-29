@@ -158,7 +158,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 	 * @return string
 	 * @since 1.0.2
 	 */
-	public function get_primary_column() {
+	public function get_primary_column_name() {
 		return 'name';
 	}
 

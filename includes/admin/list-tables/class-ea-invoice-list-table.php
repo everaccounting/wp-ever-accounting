@@ -167,7 +167,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 	 * @return string
 	 * @since 1.1.0
 	 */
-	public function get_primary_column() {
+	public function get_primary_column_name() {
 		return 'invoice_number';
 	}
 
