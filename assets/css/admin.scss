@@ -34,6 +34,9 @@
 	  vertical-align: middle;
 	  padding-top: 0;
 	  padding-bottom: 0;
+	  @media(max-width: 768px) {
+		padding-top: 10px;
+	  }
 	}
 	.column-enabled{
 	  width: 150px;
@@ -103,6 +106,10 @@
   display: block;
   position: relative;
   box-sizing: border-box;
+  @media (max-width: 767px) {
+	min-width: auto;
+	position: inherit;
+  }
 
   .columns-2 &{
 
@@ -125,6 +132,7 @@
 	  }
 	}
   }
+
 
 }
 

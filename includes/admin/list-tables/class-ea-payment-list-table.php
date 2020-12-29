@@ -229,7 +229,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				);
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
+					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
 				);
 				$value    = $this->row_actions( $actions );
 				break;
