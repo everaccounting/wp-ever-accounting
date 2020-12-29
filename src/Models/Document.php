@@ -1321,14 +1321,17 @@ abstract class Document extends ResourceModel {
 		$subtotal       = 0;
 		$total_tax      = 0;
 		$total_discount = 0;
+		$discount_rate = $this->get_discount();
+
 		// before calculating need to know subtotal so we can apply fixed discount
 		if ( $this->is_fixed_discount() ) {
+			$subtotal_discount = 0;
 			foreach ( $this->get_items() as $item ) {
-				$subtotal += ( $item->get_price() * $item->get_quantity() );
+				$subtotal_discount += ( $item->get_price() * $item->get_quantity() );
 			}
+			$discount_rate =  ( ( $this->get_discount() * 100 ) / $subtotal_discount ) ;
 		}
 
-		$discount_rate = $this->is_fixed_discount() ? ( ( $this->get_discount() * 100 ) / $subtotal ) : $this->get_discount();
 		foreach ( $this->get_items() as $item ) {
 			$item_subtotal         = ( $item->get_price() * $item->get_quantity() );
 			$item_discount         = $item_subtotal * ( $discount_rate / 100 );
