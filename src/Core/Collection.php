@@ -86,7 +86,7 @@ class Collection implements Arrayable {
 	 *
 	 * @return static
 	 */
-	public function filter( $callback ) {
+	public function filter( $callback = null ) {
 		return new static( array_filter( $this->items, $callback ) );
 	}
 
@@ -209,6 +209,14 @@ class Collection implements Arrayable {
 		return count( $this->items ) > 0 ? end( $this->items ) : null;
 	}
 
+	/**
+	 * Get the first item from the collection.
+	 *
+	 * @return mixed|null
+	 */
+	public function first() {
+		return count( $this->items ) > 0 ? current( $this->items ) : null;
+	}
 
 	/**
 	 * Run a map over each of the items.

@@ -335,7 +335,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_defaults() {
-		$settings = new EAccounting_Settings;
+//		$settings = new EAccounting_Settings;
 //		$account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
 //		if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
 //			$settings->set( array( 'default_account' => $account->id ) );

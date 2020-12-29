@@ -54,6 +54,7 @@ class Currency extends ResourceModel {
 		'position'           => 'before',
 		'decimal_separator'  => '.',
 		'thousand_separator' => ',',
+		'date_created'       => null,
 	);
 
 	/**
@@ -102,6 +103,17 @@ class Currency extends ResourceModel {
 	| just returning from the props.
 	|
 	*/
+	/**
+	 * Returns the unique ID for this object.
+	 *
+	 * @since  1.1.0
+	 * @deprecatd 1.1.0
+	 * @return int
+	 */
+	public function get_id() {
+//		eaccounting_doing_it_wrong( __METHOD__, __( 'For currency get_id() calling is discoursed use get_code()', 'wp-ever-accounting' ), 'Currency::get_code' );
+		return parent::get_id();
+	}
 
 	/**
 	 * Get currency name.
@@ -253,7 +265,7 @@ class Currency extends ResourceModel {
 	 * @param int $id ID.
 	 */
 	public function set_id( $id ) {
-		$this->id = eaccounting_sanitize_currency_code( $id );
+		$this->id = eaccounting_clean( $id );
 	}
 
 	/**
