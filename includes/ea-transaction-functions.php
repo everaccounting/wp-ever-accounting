@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Get Transaction Types
  *
- * @since 1.1.0
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_transaction_types() {
 	$types = array(
@@ -31,11 +31,11 @@ function eaccounting_get_transaction_types() {
 /**
  * Get a single payment.
  *
- * @since 1.1.0
- *
  * @param $payment
  *
  * @return Payment|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_payment( $payment ) {
 	if ( empty( $payment ) ) {
@@ -56,25 +56,25 @@ function eaccounting_get_payment( $payment ) {
  *
  *  Returns a new payment object on success.
  *
- * @since 1.1.0
- *
- * @param array $args           {
+ * @param array $args {
  *                              An array of elements that make up an expense to update or insert.
  *
- * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
- * @type string $payment_date        Time of the transaction. Default null.
- * @type string $amount         Transaction amount. Default null.
- * @type int    $account_id     From/To which account the transaction is. Default empty.
- * @type int    $contact_id     Contact id related to the transaction. Default empty.
- * @type int    $document_id     Transaction related invoice id(optional). Default empty.
- * @type int    $category_id    Category of the transaction. Default empty.
+ * @type int $id Transaction id. If the id is something other than 0 then it will update the transaction.
+ * @type string $payment_date Time of the transaction. Default null.
+ * @type string $amount Transaction amount. Default null.
+ * @type int $account_id From/To which account the transaction is. Default empty.
+ * @type int $contact_id Contact id related to the transaction. Default empty.
+ * @type int $document_id Transaction related invoice id(optional). Default empty.
+ * @type int $category_id Category of the transaction. Default empty.
  * @type string $payment_method Payment method used for the transaction. Default empty.
- * @type string $reference      Reference of the transaction. Default empty.
- * @type string $description    Description of the transaction. Default empty.
+ * @type string $reference Reference of the transaction. Default empty.
+ * @type string $description Description of the transaction. Default empty.
  *
  * }
  *
  * @return EverAccounting\Models\Payment|\WP_Error|bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_payment( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -103,11 +103,11 @@ function eaccounting_insert_payment( $args, $wp_error = true ) {
 /**
  * Delete a payment.
  *
- * @since 1.1.0
- *
  * @param $payment_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_payment( $payment_id ) {
 	try {
@@ -123,25 +123,25 @@ function eaccounting_delete_payment( $payment_id ) {
 /**
  * Get payment items.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- * @param array $args           {
- *
- * @type int    $id             Transaction id.
- * @type string $payment_date        Time of the transaction.
- * @type string $amount         Transaction amount.
- * @type int    $account_id     From/To which account the transaction is.
- * @type int    $contact_id     Contact id related to the transaction.
- * @type int    $document_id     Transaction related invoice id(optional).
- * @type int    $category_id    Category of the transaction.
+ * @type int $id Transaction id.
+ * @type string $payment_date Time of the transaction.
+ * @type string $amount Transaction amount.
+ * @type int $account_id From/To which account the transaction is.
+ * @type int $contact_id Contact id related to the transaction.
+ * @type int $document_id Transaction related invoice id(optional).
+ * @type int $category_id Category of the transaction.
  * @type string $payment_method Payment method used for the transaction.
- * @type string $reference      Reference of the transaction.
- * @type string $description    Description of the transaction.
+ * @type string $reference Reference of the transaction.
+ * @type string $description Description of the transaction.
  *
  * }
  *
  *
  * @return array|int
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_payments( $args = array() ) {
 	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense' ) ) );
@@ -150,11 +150,11 @@ function eaccounting_get_payments( $args = array() ) {
 /**
  * Get revenue.
  *
- * @since 1.1.0
- *
  * @param $revenue
  *
  * @return Revenue|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_revenue( $revenue ) {
 	if ( empty( $revenue ) ) {
@@ -175,24 +175,24 @@ function eaccounting_get_revenue( $revenue ) {
  *
  *  Returns a new revenue object on success.
  *
- * @since 1.1.0
- *
- * @param array $args           {
+ * @param array $args {
  *                              An array of elements that make up an expense to update or insert.
  *
- * @type int    $id             Transaction id. If the id is something other than 0 then it will update the transaction.
- * @type string $payment_date   Time of the transaction. Default null.
- * @type string $amount         Transaction amount. Default null.
- * @type int    $account_id     From/To which account the transaction is. Default empty.
- * @type int    $contact_id     Contact id related to the transaction. Default empty.
- * @type int    $category_id    Category of the transaction. Default empty.
+ * @type int $id Transaction id. If the id is something other than 0 then it will update the transaction.
+ * @type string $payment_date Time of the transaction. Default null.
+ * @type string $amount Transaction amount. Default null.
+ * @type int $account_id From/To which account the transaction is. Default empty.
+ * @type int $contact_id Contact id related to the transaction. Default empty.
+ * @type int $category_id Category of the transaction. Default empty.
  * @type string $payment_method Payment method used for the transaction. Default empty.
- * @type string $reference      Reference of the transaction. Default empty.
- * @type string $description    Description of the transaction. Default empty.
+ * @type string $reference Reference of the transaction. Default empty.
+ * @type string $description Description of the transaction. Default empty.
  *
  * }
  *
  * @return EverAccounting\Models\Revenue|\WP_Error|bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_revenue( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -221,11 +221,11 @@ function eaccounting_insert_revenue( $args, $wp_error = true ) {
 /**
  * Delete a revenue.
  *
- * @since 1.1.0
- *
  * @param $revenue_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_revenue( $revenue_id ) {
 	try {
@@ -240,24 +240,24 @@ function eaccounting_delete_revenue( $revenue_id ) {
 /**
  * Get revenues items.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- *
- * @param array $args           {
- *
- * @type int    $id             Transaction id.
- * @type string $payment_date        Time of the transaction.
- * @type string $amount         Transaction amount.
- * @type int    $account_id     From/To which account the transaction is.
- * @type int    $contact_id     Contact id related to the transaction.
- * @type int    $document_id     Transaction related invoice id(optional).
- * @type int    $category_id    Category of the transaction.
+ * @type int $id Transaction id.
+ * @type string $payment_date Time of the transaction.
+ * @type string $amount Transaction amount.
+ * @type int $account_id From/To which account the transaction is.
+ * @type int $contact_id Contact id related to the transaction.
+ * @type int $document_id Transaction related invoice id(optional).
+ * @type int $category_id Category of the transaction.
  * @type string $payment_method Payment method used for the transaction.
- * @type string $reference      Reference of the transaction.
- * @type string $description    Description of the transaction.
+ * @type string $reference Reference of the transaction.
+ * @type string $description Description of the transaction.
  *
  * }
  * @return Revenue[]|int
+ * @since 1.1.0
+ *
+ *
  */
 function eaccounting_get_revenues( $args = array() ) {
 	return eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income' ) ) );
@@ -266,11 +266,11 @@ function eaccounting_get_revenues( $args = array() ) {
 /**
  * Get transfer.
  *
- * @since 1.1.0
- *
  * @param $transfer
  *
  * @return \EverAccounting\Models\Transfer|null
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_transfer( $transfer ) {
 	if ( empty( $transfer ) ) {
@@ -290,26 +290,26 @@ function eaccounting_get_transfer( $transfer ) {
  *
  * Returns a new transfer object on success.
  *
- * @since 1.1.0
- *
- * @param array $args            {
+ * @param array $args {
  *                               An array of elements that make up an transfer to update or insert.
  *
- * @type int    $id              ID of the transfer. If equal to something other than 0,
+ * @type int $id ID of the transfer. If equal to something other than 0,
  *                               the post with that ID will be updated. Default 0.
- * @type int    $from_account_id ID of the source account from where transfer is initiating.
+ * @type int $from_account_id ID of the source account from where transfer is initiating.
  *                               default null.
- * @type int    $to_account_id   ID of the target account where the transferred amount will be
+ * @type int $to_account_id ID of the target account where the transferred amount will be
  *                               deposited. default null.
- * @type string $amount          Amount of the money that will be transferred. default 0.
- * @type string $date            Date of the transfer. default null.
- * @type string $payment_method  Payment method used in transfer. default null.
- * @type string $reference       Reference used in transfer. Default empty.
- * @type string $description     Description of the transfer. Default empty.
+ * @type string $amount Amount of the money that will be transferred. default 0.
+ * @type string $date Date of the transfer. default null.
+ * @type string $payment_method Payment method used in transfer. default null.
+ * @type string $reference Reference used in transfer. Default empty.
+ * @type string $description Description of the transfer. Default empty.
  *
  * }
  *
  * @return \EverAccounting\Models\Transfer|\WP_Error|\bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_insert_transfer( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -320,6 +320,10 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 	try {
 		// The id will be provided when updating an item.
 		$args = wp_parse_args( $args, array( 'id' => null ) );
+
+		if ( $args['from_account_id'] == $args['to_account_id'] ) {
+			throw new \Exception( __( "Source and Destination account can't be same.", 'wp-ever-accounting' ) );
+		}
 
 		// Retrieve the transfer.
 		$item = new \EverAccounting\Models\Transfer( $args['id'] );
@@ -339,11 +343,11 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 /**
  * Delete a transfer.
  *
- * @since 1.1.0
- *
  * @param $transfer_id
  *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_transfer( $transfer_id ) {
 	try {
@@ -358,23 +362,23 @@ function eaccounting_delete_transfer( $transfer_id ) {
 /**
  * Get transfers.
  *
- * @since 1.1.0
+ * @param array $args {
  *
- *
- * @param array $args            {
- *
- * @type int    $id              ID of the transfer.
- * @type int    $from_account_id ID of the source account from where transfer is initiating.
- * @type int    $to_account_id   ID of the target account where the transferred amount will be deposited.
- * @type string $amount          Amount of the money that will be transferred.
- * @type string $date            Date of the transfer.
- * @type string $payment_method  Payment method used in transfer.
- * @type string $reference       Reference used in transfer.
- * @type string $description     Description of the transfer.
+ * @type int $id ID of the transfer.
+ * @type int $from_account_id ID of the source account from where transfer is initiating.
+ * @type int $to_account_id ID of the target account where the transferred amount will be deposited.
+ * @type string $amount Amount of the money that will be transferred.
+ * @type string $date Date of the transfer.
+ * @type string $payment_method Payment method used in transfer.
+ * @type string $reference Reference used in transfer.
+ * @type string $description Description of the transfer.
  *
  * }
  *
  * @return array|int
+ * @since 1.1.0
+ *
+ *
  */
 function eaccounting_get_transfers( $args = array() ) {
 	global $wpdb;
@@ -417,7 +421,7 @@ function eaccounting_get_transfers( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = 'WHERE 1=1';
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$query_join    = '';
@@ -455,11 +459,11 @@ function eaccounting_get_transfers( $args = array() ) {
 /**
  * Get transaction items.
  *
- * @since 1.0.
- *
  * @param array $args
  *
  * @return array|Payment[]|Revenue[]|int
+ * @since 1.0.
+ *
  */
 function eaccounting_get_transactions( $args = array() ) {
 	// Prepare args.
@@ -494,16 +498,16 @@ function eaccounting_get_transactions( $args = array() ) {
 	$where  = 'WHERE 1=1';
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where  .= " AND $table.`id` IN ($include)";
+		$where   .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where  .= " AND $table.`id` NOT IN ($exclude)";
+		$where   .= " AND $table.`id` NOT IN ($exclude)";
 	}
 	//search
 	$search_cols = array( 'description', 'reference' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where   .= ' AND (';
+		$where    .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -512,57 +516,57 @@ function eaccounting_get_transactions( $args = array() ) {
 	}
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types = implode( "','", wp_parse_list( $qv['type'] ) );
 		$where .= " AND $table.`type` IN ('$types')";
 	}
 
 	if ( ! empty( $qv['currency_code'] ) ) {
 		$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-		$where        .= " AND $table.`currency_code` IN ('$currency_code')";
+		$where         .= " AND $table.`currency_code` IN ('$currency_code')";
 	}
 
 	if ( ! empty( $qv['payment_method'] ) ) {
 		$payment_method = implode( "','", wp_parse_list( $qv['payment_method'] ) );
-		$where         .= " AND $table.`payment_method` IN ('$payment_method')";
+		$where          .= " AND $table.`payment_method` IN ('$payment_method')";
 	}
 
 	if ( ! empty( $qv['account_id'] ) ) {
 		$account_id = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
-		$where     .= " AND $table.`account_id` IN ($account_id)";
+		$where      .= " AND $table.`account_id` IN ($account_id)";
 	}
 
 	if ( ! empty( $qv['document_id'] ) ) {
 		$document_id = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
-		$where      .= " AND $table.`document_id` IN ($document_id)";
+		$where       .= " AND $table.`document_id` IN ($document_id)";
 	}
 
 	if ( ! empty( $qv['category_id'] ) ) {
 		$category_in = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
-		$where      .= " AND $table.`category_id` IN ($category_in)";
+		$where       .= " AND $table.`category_id` IN ($category_in)";
 	}
 
 	if ( ! empty( $qv['contact_id'] ) ) {
 		$contact_id = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
-		$where     .= " AND $table.`contact_id` IN ($contact_id)";
+		$where      .= " AND $table.`contact_id` IN ($contact_id)";
 	}
 
 	if ( ! empty( $qv['parent_id'] ) ) {
 		$parent_id = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
-		$where    .= " AND $table.`parent_id` IN ($parent_id)";
+		$where     .= " AND $table.`parent_id` IN ($parent_id)";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where             .= $date_created_query->get_sql();
+		$where              .= $date_created_query->get_sql();
 	}
 
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
-		$where             .= $date_created_query->get_sql();
+		$where              .= $date_created_query->get_sql();
 	}
 	if ( ! empty( $qv['creator_id'] ) ) {
 		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
-		$where     .= " AND $table.`creator_id` IN ($creator_id)";
+		$where      .= " AND $table.`creator_id` IN ($creator_id)";
 	}
 
 	if ( true === $qv['transfer'] ) {
