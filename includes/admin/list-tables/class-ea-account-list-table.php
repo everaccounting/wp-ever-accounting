@@ -148,6 +148,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 		return array(
 			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
 			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
