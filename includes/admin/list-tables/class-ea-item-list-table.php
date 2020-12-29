@@ -131,8 +131,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 	protected function define_sortable_columns() {
 		return array(
 			'name'           => array( 'name', false ),
-			'category'       => array( 'category_id', false ),
-			'quantity'       => array( 'quantity', false ),
+			'category_id'       => array( 'category_id', false ),
 			'sale_price'     => array( 'sale_price', false ),
 			'purchase_price' => array( 'purchase_price', false ),
 			'enabled'        => array( 'enabled', false ),
@@ -149,6 +148,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 		return array(
 			'enable'  => __( 'Enable', 'wp-ever-accounting' ),
 			'disable' => __( 'Disable', 'wp-ever-accounting' ),
+			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -158,7 +158,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 	 * @return string
 	 * @since 1.1.0
 	 */
-	public function get_primary_column() {
+	public function get_primary_column_name() {
 		return 'name';
 	}
 
