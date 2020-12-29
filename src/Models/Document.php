@@ -1318,7 +1318,6 @@ abstract class Document extends ResourceModel {
 	 * @throws \Exception
 	 */
 	public function calculate_totals() {
-		$this->check_required_items();
 		$subtotal       = 0;
 		$total_tax      = 0;
 		$total_discount = 0;
@@ -1381,6 +1380,7 @@ abstract class Document extends ResourceModel {
 	 * @return bool|\Exception|int
 	 */
 	public function save() {
+		$this->check_required_items();
 		$this->calculate_totals();
 		$this->maybe_set_document_number();
 		$this->maybe_set_key();

@@ -12,6 +12,8 @@ $notes = eaccounting_get_notes(
 		'number'    => - 1,
 		'parent_id' => $invoice->get_id(),
 		'type'      => 'invoice',
+		'orderby'   => 'date_created',
+		'order'     => 'DESC',
 	)
 );
 ?>
@@ -27,7 +29,7 @@ $notes = eaccounting_get_notes(
 		<?php else : ?>
 			<ul class="ea-document-notes">
 				<?php foreach ( $notes as $note ) : ?>
-					<li class="ea-document-notes__item" data-noteid="<?php esc_attr( $note->get_id() ); ?>">
+					<li class="ea-document-notes__item" data-noteid="<?php echo esc_attr( $note->get_id() ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'ea_delete_note' ) ); ?>">
 						<div class="ea-document-notes__item-content">
 							<?php echo wp_kses_post( $note->get_note() ); ?>
 						</div>
@@ -55,19 +57,19 @@ $notes = eaccounting_get_notes(
 		<form id="invoice-note-insert" method="post" class="ea-document-notes__add">
 			<p>
 				<label for="invoice_note"><?php _e( 'Add note', 'wp-ever-accounting' ); ?></label>
-				<textarea type="text" name="document_note" id="document_note" class="input-text" cols="20" rows="5" autocomplete="off" spellcheck="false"></textarea>
+				<textarea type="text" name="note"  class="input-text" cols="20" rows="5" autocomplete="off" spellcheck="false" required></textarea>
 			</p>
 
 			<p>
 				<label for="document_note_type" class="screen-reader-text"><?php _e( 'Note type', 'wp-ever-accounting' ); ?></label>
-				<select name="document_note_type" id="document_note_type">
-					<option value=""><?php _e( 'Private note', 'wp-ever-accounting' ); ?></option>
+				<select name="type" required>
+					<option value="private"><?php _e( 'Private note', 'wp-ever-accounting' ); ?></option>
 					<option value="customer"><?php _e( 'Note to customer', 'wp-ever-accounting' ); ?></option>
 				</select>
-				<button type="button" class="add_document_note button"><?php _e( 'Add', 'wp-ever-accounting' ); ?></button>
+				<button type="submit" class="add_document_note button"><?php _e( 'Add', 'wp-ever-accounting' ); ?></button>
 			</p>
 			<input type="hidden" name="action" value="eaccounting_add_invoice_note">
-			<input type="hidden" name="invoice_id" value="<?php esc_attr( $invoice->get_id() ); ?>">
+			<input type="hidden" name="invoice_id" value="<?php echo esc_attr( $invoice->get_id() ); ?>">
 			<?php wp_nonce_field( 'ea_add_invoice_note', 'nonce' ); ?>
 		</form>
 	</div>

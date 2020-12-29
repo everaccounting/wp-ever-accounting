@@ -257,11 +257,6 @@ class Invoice extends Document {
 	 * @since 1.1.0
 	 */
 	public function maybe_set_complete() {
-		if ( ( 0 < $this->get_total_paid() ) && ( $this->get_total_paid() < $this->get_total() ) ) {
-			$this->set_status( 'partial' );
-		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
-			$this->set_status( 'paid' );
-		}
 		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
 			$this->set_payment_date( time() );
 		}
@@ -385,14 +380,21 @@ class Invoice extends Document {
 				'customer_id'    => $this->get_contact_id(),
 				'payment_method' => eaccounting_clean( $args['payment_method'] ),
 				'description'    => eaccounting_clean( $args['description'] ),
+				'reference'      => sprintf(__('Invoice Payment #%d', 'wp-ever-accounting'), $this->get_id()),//phpcs:ignore
 			)
 		);
 
 		$income->save();
 		/* translators: %s amount */
 		$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), eaccounting_price( $args['amount'], $this->get_currency_code() ) ), false );
-		wp_cache_delete('ea_transactions');
-		$this->maybe_set_complete();
+		wp_cache_flush();
+
+		if ( ( 0 < $this->get_total_paid() ) && ( $this->get_total_paid() < $this->get_total() ) ) {
+			$this->set_status( 'partial' );
+		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
+			$this->set_status( 'paid' );
+		}
+
 		return true;
 	}
 

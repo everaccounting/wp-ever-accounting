@@ -46,13 +46,14 @@ jQuery(function ($) {
 
 			frame.on('select', function () {
 				var attachment = frame.state().get('selection').first().toJSON();
+				console.log(attachment);
 				$button
 					.closest('.ea-attachment')
 					.find('.ea-attachment__input').val(attachment.id)
 					.end()
 					.find('.ea-attachment__link').attr('href', attachment.url)
 					.end()
-					.find('.ea-attachment__image').attr('src', attachment.url)
+					.find('.ea-attachment__image').attr('src', attachment.icon)
 					.end()
 					.addClass('has--image');
 			});
@@ -61,7 +62,6 @@ jQuery(function ($) {
 				frame.uploader.options.uploader.params = {
 					type: 'eaccounting_file'
 				};
-				console.log(frame.uploader.options.uploader.params);
 			});
 
 			frame.open();
@@ -116,7 +116,7 @@ function eaccounting_mask_amount(el, code) {
 	if (!currency) {
 		return false;
 	}
-	console.log(currency);
+
 	jQuery(el).inputmask('decimal', {
 		alias: 'numeric',
 		groupSeparator: currency.thousand_separator,
@@ -130,4 +130,26 @@ function eaccounting_mask_amount(el, code) {
 		rightAlign: 0,
 		autoUnmask: true
 	});
+}
+
+/**
+ * Block UI
+ * @param el
+ */
+function eaccounting_block(el){
+	jQuery(el).block({
+		message: null,
+		overlayCSS: {
+			background: '#fff',
+			opacity: 0.6
+		}
+	});
+}
+
+/**
+ * Unblock UI
+ * @param el
+ */
+function eaccounting_unblock(el){
+	jQuery(el).unblock();
 }

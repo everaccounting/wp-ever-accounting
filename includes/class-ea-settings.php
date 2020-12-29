@@ -47,7 +47,7 @@ class EAccounting_Settings {
 	function get_registered_settings() {
 		$currencies = eaccounting_get_currencies(
 			array(
-				'number' => -1,
+				'number' => - 1,
 				'return' => 'raw',
 			)
 		);
@@ -117,8 +117,8 @@ class EAccounting_Settings {
 							'name' => __( 'Logo', 'wp-ever-accounting' ),
 							'type' => 'upload',
 						),
-						'local_settings'         => array(
-							'name' => __( 'Localisation Settings', 'wp-ever-accounting' ),
+						'general_settings'       => array(
+							'name' => __( 'General Settings', 'wp-ever-accounting' ),
 							'desc' => '',
 							'type' => 'header',
 						),
@@ -127,6 +127,16 @@ class EAccounting_Settings {
 							'std'   => '01-01',
 							'class' => 'ea-financial-start',
 							'type'  => 'text',
+						),
+						'tax_enabled'            => array(
+							'name' => __( 'Enable taxes', 'wp-ever-accounting' ),
+							'desc' => 'Enable tax rates and calculations',
+							'type' => 'checkbox',
+						),
+						'local_settings'         => array(
+							'name' => __( 'Default Settings', 'wp-ever-accounting' ),
+							'desc' => '',
+							'type' => 'header',
 						),
 						'default_account'        => array(
 							'name'        => __( 'Account', 'wp-ever-accounting' ),
@@ -176,6 +186,37 @@ class EAccounting_Settings {
 				)
 			),
 		);
+
+		if ( eaccounting_tax_enabled() ) {
+			$settings['general']['taxes'] = array(
+				'tax_subtotal_rounding' => array(
+					'name'    => __( 'Rounding', 'wp-ever-accounting' ),
+					'type'    => 'checkbox',
+					'desc'    => __( 'Round tax at subtotal level, instead of rounding per tax rate.', 'wp-ever-accounting' ),
+					'section' => 'tax',
+				),
+				'prices_include_tax'    => array(
+					'name'    => __( 'Prices entered with tax', 'wp-ever-accounting' ),
+					'type'    => 'select',
+					'std'     => 'yes',
+					'section' => 'tax',
+					'options' => array(
+						'yes' => __( 'Yes, I will enter prices inclusive of tax', 'wp-ever-accounting' ),
+						'no'  => __( 'No, I will enter prices exclusive of tax', 'wp-ever-accounting' ),
+					),
+				),
+				'tax_display_totals'    => array(
+					'name'    => __( 'Display tax totals	', 'wp-ever-accounting' ),
+					'type'    => 'select',
+					'std'     => 'total',
+					'section' => 'tax',
+					'options' => array(
+						'total'      => __( 'As a single total', 'wp-ever-accounting' ),
+						'individual' => __( 'As individual tax rates', 'wp-ever-accounting' ),
+					),
+				),
+			);
+		}
 
 		/**
 		 * Filters the entire default settings array.
@@ -372,9 +413,9 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$id         = 'eaccounting_settings[' . $args['id'] . ']';
 		$html       = '<label for="' . $id . '">';
-		$html      .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
-		$html      .= $args['desc'];
-		$html      .= '</label>';
+		$html       .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html       .= $args['desc'];
+		$html       .= '</label>';
 
 		echo $html;
 	}
@@ -466,7 +507,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -509,7 +550,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -548,7 +589,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -588,7 +629,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -694,7 +735,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -794,7 +835,7 @@ class EAccounting_Settings {
 		$settings = $this->get_registered_settings();
 		$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 		$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
-		$settings = isset( $settings[ $tab ] ) ? wp_list_filter( $settings[ $tab ], array( 'section' => $section ) ) : array();
+		$settings = isset( $settings[ $tab ] ) ? $settings[ $tab ][$section] : array();
 
 		$input = $input ? $input : array();
 
@@ -862,7 +903,6 @@ class EAccounting_Settings {
 		}
 
 		add_settings_error( 'eaccounting-notices', '', __( 'Settings updated.', 'wp-ever-accounting' ), 'updated' );
-
 		return array_merge( $saved, $input );
 	}
 

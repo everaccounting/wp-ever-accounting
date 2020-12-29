@@ -53,6 +53,10 @@ function eaccounting_get_settings_sections() {
 		),
 	);
 
+	if ( eaccounting_tax_enabled() ) {
+		$sections['general']['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
+	}
+
 	$sections = apply_filters( 'eaccounting_settings_sections', $sections );
 
 	return $sections;

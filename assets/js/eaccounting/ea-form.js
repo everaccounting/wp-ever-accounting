@@ -425,7 +425,10 @@ jQuery(function ($) {
 				.on('submit', this.submit);
 
 			$('#ea-invoice')
+				.on('click', '.delete_note', this.delete_note)
 				.on('click', '.receive-payment', this.receive_payment)
+
+			$(document).on('submit', '#invoice-note-insert', this.add_note);
 
 			$(document.body).on('ea_invoice_updated', this.recalculate)
 		},
@@ -493,6 +496,26 @@ jQuery(function ($) {
 			$tr.addClass('editing');
 		},
 
+		delete_note:function(e){
+			e.preventDefault();
+			var note = $(this).closest('.ea-document-notes__item');
+			var nonce   = note.data('nonce');
+			var note_id   = note.data('noteid');
+
+			var data    = {
+				action:'eaccounting_delete_note',
+				id:note_id,
+				nonce:nonce,
+			}
+			$.post(ajaxurl, data, function (json) {
+				if( json.success){
+					note.remove();
+				}
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+			});
+		},
+
 		add_discount: function (e) {
 			$('#ea-modal-add-discount').ea_modal({
 				onReady: function (plugin) {
@@ -525,6 +548,21 @@ jQuery(function ($) {
 						location.reload();
 					});
 				}
+			});
+		},
+
+		add_note:function(e){
+			e.preventDefault();
+			var $form = $(this);
+			eaccounting_block($form);
+			var data = $form.serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				if( json.success) {
+					$('#ea-invoice-notes').replaceWith(json.data.notes);
+				}
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				eaccounting_unblock($form)
 			});
 		},
 

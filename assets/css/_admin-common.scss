@@ -55,7 +55,7 @@
 
 .ea-attachment {
   $self: &;
-  width: 96px;
+  width: 110px;
 
   &__preview {
 	margin-right: 15px;
@@ -78,8 +78,8 @@
 	}
 
 	img {
-	  width: 100%;
-	  height: auto;
+	  width: auto;
+	  height: 100%;
 	}
 
   }
@@ -124,6 +124,9 @@
 	padding: 10px 12px;
 	background-color: #fff;
 	border-top: 1px solid #e1e2e2;
+	&:first-child{
+	  border-top: 0;
+	}
   }
 
   &__title {

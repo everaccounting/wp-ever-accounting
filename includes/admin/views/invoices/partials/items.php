@@ -103,14 +103,14 @@ $items     = $invoice->get_items();
 					</td>
 				</tr>
 			<?php endif; ?>
-			<?php if ( $invoice->exists() ) : ?>
 			<tr>
-				<td class="label"><?php esc_html_e( 'Invoice Total', 'wp-ever-accounting' ); ?>:</td>
+				<td class="label"><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total">
 					<?php echo eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() ); ?>
 				</td>
 			</tr>
+			<?php if ( $invoice->exists() ) : ?>
 			<tr>
 				<td class="label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>

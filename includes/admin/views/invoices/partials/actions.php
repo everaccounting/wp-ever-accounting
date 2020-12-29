@@ -21,6 +21,7 @@ $invoice_actions = apply_filters(
 		'mark_cancelled'        => __( 'Status to "Cancelled"', 'wp-ever-accounting' ),
 	)
 );
+$del_url         = wp_nonce_url( admin_url( 'admin.php?page=ea-sales&tab=invoices&action=delete&invoice_id=' . $invoice->get_id() ), 'invoice-nonce', '_wpnonce' );
 ?>
 <form action="<?php echo admin_url( 'admin-post.php' ); ?>" method="post">
 <div class="ea-card">
@@ -43,7 +44,7 @@ $invoice_actions = apply_filters(
 			</div>
 	</div>
 	<div class="ea-card__footer">
-		<button type="submit" class="button-link"><?php esc_html_e( 'Remove', 'wp-ever-accounting' ); ?></button>
+		<a href="<?php echo esc_url( $del_url ); ?>"><?php esc_html_e( 'Remove', 'wp-ever-accounting' ); ?></a>
 		<button class="button-primary"><span><?php esc_html_e( 'Apply', 'wp-ever-accounting' ); ?></span></button>
 	</div>
 </div><!--.ea-card-->

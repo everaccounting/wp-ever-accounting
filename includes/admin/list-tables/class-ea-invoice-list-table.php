@@ -221,6 +221,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 					array(
 						'tab'        => 'invoices',
 						'action'     => 'delete',
+						'_wpnonce'   => wp_create_nonce( 'invoice-nonce' ),
 						'invoice_id' => $invoice_id,
 					)
 				);
@@ -275,6 +276,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 		}
 
 		$action = $this->current_action();
+
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'delete':

@@ -39,18 +39,39 @@ $edit_url        = eaccounting_admin_url(
 	<div class="ea-page-columns__content">
 		<div class="ea-row">
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+				<div class="ea-score-card">
+					<div class="ea-score-card__inside">
+						<div class="ea-score-card__icon">
+							<span class="dashicons dashicons-money-alt"></span>
+						</div>
+						<div class="ea-score-card__content">
+							<div class="ea-score-card__title">Total Sales</div>
+							<div class="ea-score-card__amount">$50000 <small>$5000</small></div>
+						</div>
 					</div>
 				</div>
 			</div>
+
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+				<div class="ea-score-card">
+					<div class="ea-score-card__inside">
+						<div class="ea-score-card__icon">
+							<span class="dashicons dashicons-money-alt"></span>
+						</div>
+						<div class="ea-score-card__content">
+							<div class="ea-score-card__primary">
+								<div class="ea-score-card__title">Total Sales</div>
+								<div class="ea-score-card__amount">$50000</div>
+							</div>
+							<div class="ea-score-card__secondary">
+								<div class="ea-score-card__title">Total Sales</div>
+								<div class="ea-score-card__amount">$50000</div>
+							</div>
+
+						</div>
 					</div>
 				</div>
+
 			</div>
 			<div class="ea-col">
 				<div class="ea-card">

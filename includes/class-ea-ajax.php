@@ -113,6 +113,8 @@ class Ajax {
 
 		$ajax_events = array(
 			'add_invoice_payment',
+			'add_invoice_note',
+			'delete_note',
 			'edit_account',
 			'edit_category',
 			'edit_customer',
@@ -179,6 +181,56 @@ class Ajax {
 				)
 			);
 		}
+	}
+
+	public static function add_invoice_note() {
+		self::verify_nonce( 'ea_add_invoice_note' );
+		self::check_permission( 'ea_manage_invoice' );
+		$invoice_id    = absint( $_REQUEST['invoice_id'] );
+		$note          = eaccounting_clean( $_REQUEST['note'] );
+		$customer_note = isset( $_REQUEST['type'] ) && 'customer' === $_REQUEST['type'] ? true : false;
+		if ( empty( $note ) ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Note Content empty.' ),
+				)
+			);
+		}
+		try {
+			$invoice = new Invoice( $invoice_id );
+			$invoice->add_note( $note, $customer_note );
+			$notes = eaccounting_get_admin_template_html( 'invoices/partials/notes', array( 'invoice' => $invoice ) );
+			wp_send_json_success(
+				array(
+					'message' => __( 'Note Added.' ),
+					'notes'   => $notes,
+				)
+			);
+		} catch ( \Exception $e ) {
+			wp_send_json_error(
+				array(
+					'message' => $e->getMessage(),
+				)
+			);
+		}
+	}
+
+	public static function delete_note() {
+		self::verify_nonce( 'ea_delete_note' );
+		self::check_permission( 'ea_manage_invoice' );
+		$deleted = eaccounting_delete_note( absint( $_REQUEST['id'] ) );
+		if ( ! $deleted ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Note could not be deleted.' ),
+				)
+			);
+		}
+		wp_send_json_success(
+			array(
+				'message' => __( 'Note deleted.' ),
+			)
+		);
 	}
 
 	/**
@@ -266,7 +318,7 @@ class Ajax {
 		self::verify_nonce( 'ea_edit_customer' );
 		self::check_permission( 'ea_manage_customer' );
 		$posted = eaccounting_clean( $_REQUEST );
-		error_log(print_r($posted,true));
+		error_log( print_r( $posted, true ) );
 		$created = eaccounting_insert_customer( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(
@@ -498,7 +550,7 @@ class Ajax {
 	public static function edit_transfer() {
 		self::verify_nonce( 'ea_edit_transfer' );
 		self::check_permission( 'ea_manage_transfer' );
-		$posted = eaccounting_clean( wp_unslash( $_REQUEST ) );
+		$posted  = eaccounting_clean( wp_unslash( $_REQUEST ) );
 		$created = eaccounting_insert_transfer( $posted );
 		if ( is_wp_error( $created ) || ! $created->exists() ) {
 			wp_send_json_error(

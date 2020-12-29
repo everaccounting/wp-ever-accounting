@@ -61,6 +61,7 @@ class Documents extends ResourceRepository {
 		'discount'        => '%f',
 		'discount_type'   => '%s',
 		'total_tax'       => '%f',
+		'total_discount'  => '%f',
 		'total'           => '%f',
 		'tax_inclusive'   => '%d',
 		'terms'           => '%s',
@@ -122,11 +123,23 @@ class Documents extends ResourceRepository {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $document_id
+	 * @param $item
 	 */
-	public function delete_items( $document_id ) {
+	public function delete_items( $item) {
 		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . DocumentItems::TABLE, array( 'document_id' => $document_id ) );
+		$wpdb->delete( $wpdb->prefix . DocumentItems::TABLE, array( 'document_id' => $item->get_id() ) );
+	}
+
+	/**
+	 * Delete Invoice notes.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $item
+	 */
+	public function delete_notes( $item ) {
+		global $wpdb;
+		$wpdb->delete( $wpdb->prefix . Notes::TABLE, array( 'parent_id' => $item->get_id(), 'type' => $item->get_type() ) );
 	}
 
 	/**
@@ -137,8 +150,8 @@ class Documents extends ResourceRepository {
 	 * @since 1.1.0
 	 */
 	public function delete( &$item, $args = array() ) {
-		$document_id = $item->get_id();
+		$this->delete_items( $item );
+		$this->delete_notes( $item );
 		parent::delete( $item, $args );
-		$this->delete_items( $document_id );
 	}
 }

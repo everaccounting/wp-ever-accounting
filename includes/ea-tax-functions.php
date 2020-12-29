@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function eaccounting_tax_enabled() {
-	return apply_filters( 'eaccounting_tax_enabled', eaccounting()->settings->get( 'enable_taxes', 'no' ) === 'yes' );
+	return apply_filters( 'eaccounting_tax_enabled', eaccounting()->settings->get( 'tax_enabled', 'no' ) === 'yes' );
 }
 
 /**
