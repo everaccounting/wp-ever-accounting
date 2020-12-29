@@ -37,3 +37,18 @@ $add_url = eaccounting_admin_url(
 		<input type="hidden" name="tab" value="vendors"/>
 	</form>
 <?php do_action( 'eaccounting_vendors_table_bottom' ); ?>
+<?php
+eaccounting_enqueue_js(
+		"
+	jQuery('.vendor-status').on('change', function(e){
+		jQuery.post('" . eaccounting()->ajax_url() . "', {
+			action:'eaccounting_edit_vendor',
+			id: $(this).data('id'),
+			enabled: $(this).is(':checked'),
+			nonce: '" . wp_create_nonce( 'ea_edit_vendor' ) . "',
+		}, function(json){
+			$.eaccounting_notice(json);
+		});
+	});
+"
+);
