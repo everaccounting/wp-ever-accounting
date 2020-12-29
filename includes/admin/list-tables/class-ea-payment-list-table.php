@@ -83,7 +83,19 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo  esc_html__( 'Create and manage your business expenses in any currencies, and affix account, category and customer to each payment.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-expenses','tab'=>'payments','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				eaccounting_admin_url(
+					array(
+						'page'   => 'ea-expenses',
+						'tab'    => 'payments',
+						'action' => 'edit',
+					)
+				)
+			);
+			?>
+						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
 			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -120,7 +132,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			'amount'      => array( 'amount', false ),
 			'account_id'  => array( 'account_id', false ),
 			'category_id' => array( 'category_id', false ),
-			'contact_id' => array( 'contact_id', false ),
+			'contact_id'  => array( 'contact_id', false ),
 			'reference'   => array( 'reference', false ),
 		);
 	}
@@ -193,7 +205,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
-				$value   = $category ? $category->get_name() : '&mdash;';
+				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_vendor( $payment->get_contact_id( 'edit' ) );
@@ -212,7 +224,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 						'tab'        => 'payments',
 						'action'     => 'delete',
 						'payment_id' => $payment_id,
-						'_wpnonce'      => wp_create_nonce('payment-nonce'),
+						'_wpnonce'   => wp_create_nonce( 'payment-nonce' ),
 					)
 				);
 				$actions  = array(
@@ -245,7 +257,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	 *
 	 * @param string $which
 	 */
-	protected function extra_tablenav( $which ) {
+	protected function extra_tablenav_deprecated( $which ) {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
@@ -263,13 +275,13 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 
 			eaccounting_account_dropdown(
 				array(
-					'name'    => 'account_id',
-					'value'   => $account_id,
-					'default' => '',
-					'attr'    => array(
+					'name'      => 'account_id',
+					'value'     => $account_id,
+					'default'   => '',
+					'attr'      => array(
 						'data-allow-clear' => true,
 					),
-					'creatable'	=> false,
+					'creatable' => false,
 				)
 			);
 
