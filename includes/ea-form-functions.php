@@ -833,7 +833,7 @@ function eaccounting_currency_dropdown( $field ) {
 		),
 		$field
 	);
-	error_log(print_r($field,true));
+
 	eaccounting_select2( apply_filters( 'eaccounting_currency_dropdown', $field ) );
 }
 
