@@ -808,20 +808,28 @@ function eaccounting_category_dropdown( $field ) {
 function eaccounting_currency_dropdown( $field ) {
 	$default_code  = (string) eaccounting()->settings->get( 'default_currency' );
 	$currency_code = ! empty( $field['value'] ) ? wp_parse_list( $field['value'] ) : array();
-	$options       = eaccounting_get_currencies(
+	$results       = eaccounting_get_currencies(
 		array(
 			'return' => 'raw',
 			'number' => -1,
 		)
 	);
-	$field         = wp_parse_args(
+	$options       = array();
+	foreach ( $results as $item ) {
+		$options[ $item->code ] = $item->name . '(' . $item->symbol . ')';
+	}
+	$field = wp_parse_args(
 		array(
-			'value'       => $currency_code,
-			'default'     => $default_code,
-			'options'     => wp_list_pluck( array_values( $options ), 'name', 'code' ),
-			'placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
-			'modal_id'    => '#ea-modal-add-currency',
-			'creatable'   => true,
+			'value'        => $currency_code,
+			'default'      => $default_code,
+			'options'      => $options,
+			'placeholder'  => __( 'Select Currency', 'wp-ever-accounting' ),
+			'map'          => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code, item:option}',
+			'modal_id'     => '#ea-modal-add-currency',
+			'ajax'         => true,
+			'ajax_action'  => 'eaccounting_get_currencies',
+			'nonce_action' => 'ea_get_currencies',
+			'creatable'    => true,
 		),
 		$field
 	);

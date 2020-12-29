@@ -38,6 +38,26 @@ class Currencies extends ResourceRepository {
 	 */
 	protected $option = self::OPTION;
 
+	/**
+	 * A map of database fields to data types.
+	 *
+	 * @since 1.1.0
+	 * @var array
+	 */
+	protected $data_type = array(
+		'id'                 => '%d',
+		'name'               => '%s',
+		'code'               => '%s',
+		'rate'               => '%f',
+		'precision'          => '%d',
+		'symbol'             => '%s',
+		'subunit'            => '%d',
+		'position'           => '%s',
+		'decimal_separator'  => '%s',
+		'thousand_separator' => '%s',
+		'date_created'       => '%s',
+	);
+
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD Methods
@@ -51,28 +71,29 @@ class Currencies extends ResourceRepository {
 	 * @throws \Exception | @return bool
 	 */
 	public function insert( &$item ) {
-		$data                            = array(
-			'name'               => $item->get_name(),
-			'code'               => $item->get_code(),
-			'rate'               => $item->get_rate(),
-			'number'             => $item->get_number(),
-			'precision'          => $item->get_precision(),
-			'subunit'            => $item->get_subunit(),
-			'symbol'             => $item->get_symbol(),
-			'position'           => $item->get_position(),
-			'decimal_separator'  => $item->get_decimal_separator(),
-			'thousand_separator' => $item->get_thousand_separator(),
-		);
-		$currencies                      = $this->get_raw_currencies();
-		$currencies[ $item->get_code() ] = $data;
-		update_option( self::OPTION, $currencies );
-		wp_cache_delete( 'currency', 'ea_currencies' );
-		$item->set_id( $item->get_code() );
-		$item->apply_changes();
-		$item->clear_cache();
-		do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $data );
+		$values = array();
 
-		return true;
+		$fields = $this->data_type;
+		foreach ( $fields as $key => $format ) {
+			$method         = "get_$key";
+			$data           = $item->$method();
+			$value          = is_array( $data ) ? maybe_serialize( $data ) : $data;
+			$values[ $key ] = sprintf( $format, $value );
+		}
+		$currencies = $this->get_currencies();
+		if ( ! $currencies->where( 'code', $item->get_code() )->count() ) {
+			$id           = wp_generate_uuid4();
+			$values['id'] = $id;
+			$currencies->push( $values );
+			update_option( self::OPTION, $currencies->all() );
+			wp_cache_delete( 'ea_currencies', 'ea_currencies' );
+			$item->set_id( $id );
+			$item->apply_changes();
+			$item->clear_cache();
+			$item->set_object_read( true );
+			do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $values );
+			return true;
+		}
 	}
 
 	/**
@@ -83,7 +104,6 @@ class Currencies extends ResourceRepository {
 	 * @throws \Exception
 	 */
 	public function read( &$item ) {
-
 		if ( empty( $item->get_code() ) ) {
 			$item->set_defaults();
 			$item->set_object_read( false );
@@ -91,12 +111,25 @@ class Currencies extends ResourceRepository {
 			return;
 		}
 
-		$codes    = eaccounting_get_currency_codes();
-		$saved    = eaccounting_collect( $this->get_raw_currencies() )->get( $item->get_code() );
-		$currency = (array) eaccounting_collect( $codes )->merge( $this->get_raw_currencies() )->get( $item->get_code() );
-		$item->set_props( $currency );
-		if ( ! empty( $saved ) ) {
-			$item->set_id( $item->get_code() );
+		$codes      = $this->get_codes();
+		$currencies = $this->get_currencies();
+		$saved      = $currencies->where( 'code', $item->get_code() );
+		$currency   = $saved->merge( $codes->where( 'code', $item->get_code() ) )->first();
+		$currency   = array_merge(
+			array(
+				'date_created' => null,
+				'id'           => null,
+			),
+			$currency
+		);
+
+		foreach ( array_keys( $this->data_type ) as $key ) {
+			$method = "set_$key";
+			$item->$method( maybe_unserialize( $currency[ $key ] ) );
+		}
+
+		if ( ! empty( $currencies->where( 'code', $item->get_code() )->count() ) ) {
+			$item->set_id( $item->get_id() );
 			$item->set_object_read( $saved );
 			do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
 		}
@@ -114,18 +147,25 @@ class Currencies extends ResourceRepository {
 		if ( empty( $changes ) ) {
 			return;
 		}
-		$code                = $item->get_id();
-		$currencies          = $this->get_raw_currencies();
-		$changed_item        = eaccounting_collect( $currencies )->get( $code );
-		$changed_item        = eaccounting_collect( $changed_item )->merge( $changes )->all();
-		$currencies[ $code ] = $changed_item;
+
+		$currencies = $this->get_currencies();
+		$currencies = $currencies->each(
+			function ( $currency ) use ( $item, $changes ) {
+				if ( $item->get_code() === $currency['code'] ) {
+					$currency = array_merge( $currency, $changes );
+				}
+
+				return $currency;
+			}
+		)->all();
+
 		update_option( self::OPTION, $currencies );
-		wp_cache_delete( 'currency', 'ea_currencies' );
+		wp_cache_delete( 'ea_currencies', 'ea_currencies' );
+
 		// Apply the changes.
 		$item->apply_changes();
 		// Fire a hook.
 		do_action( 'eaccounting_update_' . $item->get_object_type(), $changes, $item );
-
 	}
 
 	/**
@@ -135,16 +175,15 @@ class Currencies extends ResourceRepository {
 	 * @param array         $args Array of args to pass to the delete method.
 	 */
 	public function delete( &$item, $args = array() ) {
-		$code       = $item->get_id();
-		$currencies = $this->get_raw_currencies();
-		$currencies = eaccounting_collect( $currencies )->reject(
-			function ( $item ) use ( $code ) {
-				return $item['code'] === $code;
+		$code       = $item->get_code();
+		$currencies = $this->get_currencies()->reject(
+			function ( $currency ) use ( $code ) {
+				return $currency['code'] === $code;
 			}
-		);
+		)->all();
 
 		update_option( self::OPTION, $currencies );
-		wp_cache_delete( 'currency', 'ea_currencies' );
+		wp_cache_delete( 'ea_currencies', 'ea_currencies' );
 		// Delete cache.
 		$item->clear_cache();
 		// Fire a hook.
@@ -156,88 +195,26 @@ class Currencies extends ResourceRepository {
 	 * Get raw currencies.
 	 *
 	 * @since 1.1.0
-	 * @return array
+	 * @return \EverAccounting\Core\Collection
 	 */
-	public function get_raw_currencies() {
-		$currencies = wp_cache_get( 'currency', 'ea_currencies' );
+	public function get_currencies() {
+		$currencies = wp_cache_get( self::OPTION, 'ea_currencies' );
 		if ( false === $currencies ) {
 			$currencies = get_option( self::OPTION, array() );
-			wp_cache_set( 'currency', $currencies, 'ea_currencies' );
+			wp_cache_set( self::OPTION, $currencies, 'ea_currencies' );
 		}
 
-		return $currencies;
+		return eaccounting_collect( $currencies );
 	}
 
-
 	/**
+	 * Get all the codes.
+	 *
 	 * @since 1.1.0
-	 *
-	 * @param array $args
-	 *
-	 * @return false|mixed|void
+	 * @return \EverAccounting\Core\Collection
 	 */
-	public function get_currencies( $args = array() ) {
-		$args = wp_parse_args(
-			$args,
-			array(
-				'search'      => '',
-				'orderby'     => 'name',
-				'order'       => 'ASC',
-				'number'      => - 1,
-				'offset'      => 0,
-				'paged'       => 1,
-				'return'      => 'objects',
-				'count_total' => false,
-			)
-		);
-
-		$qv = apply_filters( 'eaccounting_get_currencies_args', $args );
-
-		$collection    = eaccounting_collect( $this->get_raw_currencies() );
-		$qv['order']   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-		$qv['orderby'] = in_array( $qv['orderby'], array( 'code', 'name', 'rate', 'symbol' ), true ) ? $qv['orderby'] : 'name';
-		$qv['number']  = isset( $qv['number'] ) && $qv['number'] > 0 ? $qv['number'] : - 1;
-		$qv['offset']  = isset( $qv['offset'] ) ? $qv['offset'] : ( $qv['number'] * ( $qv['paged'] - 1 ) );
-		$count_total   = true === $qv['count_total'];
-
-		$collection = $collection->sort(
-			function ( $a, $b ) use ( $qv ) {
-				if ( 'ASC' === $qv['orderby'] ) {
-					return $a[ $qv['orderby'] ] < $b[ $qv['orderby'] ];
-				}
-
-				return $a[ $qv['orderby'] ] > $b[ $qv['orderby'] ];
-			}
-		);
-
-		if ( ! empty( $qv['search'] ) ) {
-			$collection = $collection->filter(
-				function ( $item ) use ( $qv ) {
-					$search = implode( ' ', array( $item['name'], $item['code'], $item['symbol'] ) );
-					if ( false !== strpos( $search, $qv['search'] ) ) {
-						return $item;
-					}
-
-					return false;
-				}
-			);
-		}
-
-		if ( $count_total ) {
-			return $collection->count();
-		}
-
-		if ( $qv['number'] > 1 ) {
-			$collection = $collection->splice( $qv['offset'], $qv['number'] );
-		}
-
-		$results = $collection->values()->all();
-
-		if ( 'objects' === $qv['return'] ) {
-			$results = array_map( 'eaccounting_get_currency', $results );
-		}
-
-		return $results;
+	public function get_codes() {
+		return eaccounting_collect( array_values( eaccounting_get_currency_codes() ) );
 	}
 
 }

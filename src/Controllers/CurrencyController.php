@@ -30,8 +30,7 @@ class CurrencyController extends Singleton {
 	 */
 	public function __construct() {
 		add_action( 'update_option_eaccounting_settings', array( __CLASS__, 'update_default_currency' ), 10, 2 );
-		//      add_action( 'eaccounting_pre_save_currency', array( __CLASS__, 'validate_currency_data' ), 10, 2 );
-		//      add_action( 'eaccounting_delete_currency', array( __CLASS__, 'delete_default_currency' ), 10, 2 );
+		add_action( 'eaccounting_delete_currency', array( __CLASS__, 'delete_default_currency' ), 10, 2 );
 	}
 
 	public static function update_default_currency( $value, $old_value ) {
@@ -47,6 +46,7 @@ class CurrencyController extends Singleton {
 		$currencies            = $currencies->each(
 			function ( $currency ) use ( $conversion_rate ) {
 				$currency['rate'] = eaccounting_format_decimal( $currency['rate'] * $conversion_rate, 4 );
+
 				return $currency;
 			}
 		)->all();

@@ -107,6 +107,7 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 */
 	public function define_columns() {
 		return array(
+			'cb'      => '<input type="checkbox" />',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'rate'    => __( 'Rate', 'wp-ever-accounting' ),
 			'code'    => __( 'Code', 'wp-ever-accounting' ),
@@ -128,6 +129,31 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 			'symbol' => array( 'symbol', false ),
 			'rate'   => array( 'rate', false ),
 		);
+	}
+
+	/**
+	 * Define bulk actions
+	 *
+	 * @since 1.0.2
+	 * @return array
+	 */
+	public function define_bulk_actions() {
+		return array(
+			'delete' => __( 'Delete', 'wp-ever-accounting' ),
+		);
+	}
+
+	/**
+	 * Renders the checkbox column in the categories list table.
+	 *
+	 * @since  1.0.2
+	 *
+	 * @param Currency $currency The current object.
+	 *
+	 * @return string Displays a checkbox.
+	 */
+	function column_cb( $currency ) {
+		return sprintf( '<input type="checkbox" name="currency_code[]" value="%s"/>', $currency->get_code() );
 	}
 
 	/**
@@ -153,14 +179,22 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 *
 	 */
 	function column_default( $currency, $column_name ) {
-		$currency_id = $currency->get_id();
+		$currency_code = $currency->get_code();
 
 		switch ( $column_name ) {
 			case 'name':
 				$name  = $currency->get_name();
 				$value = sprintf(
 					'<a href="%1$s">%2$s</a>',
-					esc_url( add_query_arg( array( 'currency_code' => $currency_id, 'action' => 'edit' ) ), $this->base_url ),
+					esc_url(
+						add_query_arg(
+							array(
+								'currency_code' => $currency_code,
+								'action'        => 'edit',
+							)
+						),
+						$this->base_url
+					),
 					$name
 				);
 				break;
@@ -175,8 +209,14 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				break;
 			case 'actions':
 				$nonce    = wp_create_nonce( 'currency-nonce' );
-				$edit_url = add_query_arg( array( 'action' => 'edit', 'currency_code' => $currency->get_code() ), $this->base_url );
-				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce, 'currency_id' => $currency_id ), $this->base_url ); //phpcs:ignore
+				$edit_url = add_query_arg(
+					array(
+						'action'        => 'edit',
+						'currency_code' => $currency_code,
+					),
+					$this->base_url
+				);
+				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce, 'currency_code' => $currency_code ), $this->base_url ); //phpcs:ignore
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
 					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
@@ -215,40 +255,17 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 			return;
 		}
 
-		$ids = isset( $_GET['currency_id'] ) ? $_GET['currency_id'] : false;
-
-		if ( ! is_array( $ids ) ) {
-			$ids = array( $ids );
-		}
-
-		if ( empty( $ids ) ) {
-			return;
-		}
+		$codes = isset( $_GET['currency_code'] ) ? $_GET['currency_code'] : false;
+		$codes = wp_parse_list($codes);
 
 		$action = $this->current_action();
-		foreach ( $ids as $id ) {
+		foreach ( $codes as $code ) {
 			switch ( $action ) {
-				case 'enable':
-					eaccounting_insert_currency(
-						array(
-							'id'      => $id,
-							'enabled' => '1',
-						)
-					);
-					break;
-				case 'disable':
-					eaccounting_insert_currency(
-						array(
-							'id'      => $id,
-							'enabled' => '0',
-						)
-					);
-					break;
 				case 'delete':
-					eaccounting_delete_currency( $id );
+					eaccounting_delete_currency( $code );
 					break;
 				default:
-					do_action( 'eaccounting_currencies_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'eaccounting_currencies_do_bulk_action_' . $this->current_action(), $code );
 			}
 		}
 
@@ -256,7 +273,7 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'currency_id',
+						'currency_code',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',

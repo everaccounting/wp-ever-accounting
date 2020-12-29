@@ -104,17 +104,24 @@ function eaccounting_tooltips(selector) {
 	});
 }
 
-function eaccounting_mask_amount(el, code) {
-	if (!eaccountingi10n.hasOwnProperty('currencies')) {
-		return false;
-	}
-	var currency = eaccountingi10n.currencies.find(function (currency) {
-		console.log(currency.code);
-		console.log(code);
-		return currency.code === code;
-	});
-	if (!currency) {
-		return false;
+/**
+ * Format currency field.
+ * @param el
+ * @param currency
+ * @returns {boolean}
+ */
+function eaccounting_mask_amount(el, currency) {
+	if( 'object' !== typeof currency){
+		if (!eaccountingi10n.hasOwnProperty('currencies')) {
+			return false;
+		}
+		currency = eaccountingi10n.currencies.find(function (currency) {
+			return currency.code === currency;
+		});
+		if (!currency) {
+			return false;
+		}
+
 	}
 
 	jQuery(el).inputmask('decimal', {
