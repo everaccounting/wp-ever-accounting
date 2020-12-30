@@ -278,14 +278,13 @@ function eaccounting_get_io_headers( $type ) {
 				'name'          => 'Name',
 				'email'         => 'Email',
 				'phone'         => 'Phone',
-				'fax'           => 'Fax',
 				'birth_date'    => 'Birth Date',
 				'address'       => 'Address',
 				'country'       => 'Country',
 				'website'       => 'Website',
-				'tax_number'    => 'Tax Number',
+				'vat_number'    => 'Vat Number',
 				'currency_code' => 'Currency Code',
-				'note'          => 'Note',
+				'thumbnail_id'  => 'Thumbnail URL',
 			);
 			break;
 		case 'category':

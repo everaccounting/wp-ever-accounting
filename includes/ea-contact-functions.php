@@ -111,8 +111,6 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $args );
 
-		error_log(print_r($item,true));
-
 		// Save the item
 		$item->save();
 
@@ -193,7 +191,7 @@ function eaccounting_get_customers( $args = array(), $callback = true ) {
 		)
 	);
 
-	$qv    = apply_filters( 'eaccounting_get_vendors_args', $args );
+	$qv    = apply_filters( 'eaccounting_get_customers_args', $args );
 	$table = 'ea_contacts';
 
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
