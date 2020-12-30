@@ -97,7 +97,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				<?php echo  esc_html__( 'Create vendors to assign payments, generate bills and filter the transactions you made with them.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-expenses','tab'=>'vendors','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Vendors','wp-ever-accounting');?></a>
-			<a href="" class="button-primary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
 		</div>
 		<?php
 	}
@@ -241,7 +241,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				);
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
+					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
 				);
 				$value    = $this->row_actions( $actions );
 				break;

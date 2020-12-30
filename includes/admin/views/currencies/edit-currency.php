@@ -34,7 +34,7 @@ foreach ( $currencies as $code => $props ) {
 	);
 	?>
 </div>
-
+<form id="ea-currency-form" method="post">
 <div class="ea-card">
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php echo $currency->exists() ? __( 'Update Currency', 'wp-ever-accounting' ) : __( 'Add Currency', 'wp-ever-accounting' ); ?></h3>
@@ -42,7 +42,7 @@ foreach ( $currencies as $code => $props ) {
 	</div>
 
 	<div class="ea-card__inside">
-		<form id="ea-currency-form" method="post">
+
 			<div class="ea-row">
 				<?php
 				eaccounting_select2(
@@ -140,11 +140,15 @@ foreach ( $currencies as $code => $props ) {
 
 				?>
 			</div>
-			<?php
-			wp_nonce_field( 'ea_edit_currency' );
-			submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
-			?>
 
-		</form>
+
+
+	</div>
+	<div class="ea-card__footer">
+		<?php
+		wp_nonce_field( 'ea_edit_currency' );
+		submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' );
+		?>
 	</div>
 </div>
+</form>

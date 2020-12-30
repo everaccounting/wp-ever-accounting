@@ -201,7 +201,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 					'id'	=> 'ID: '.$account_id,
 					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
 					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&action=edit&account_id=' . $account->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
-					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&_wpnonce=' . $nonce . '&action=delete&account_id=' . $account->get_id() ) . '">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&_wpnonce=' . $nonce . '&action=delete&account_id=' . $account->get_id() ) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;

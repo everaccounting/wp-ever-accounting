@@ -219,7 +219,7 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce, 'currency_code' => $currency_code ), $this->base_url ); //phpcs:ignore
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
+					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
 				);
 				$value    = $this->row_actions( $actions );
 				break;

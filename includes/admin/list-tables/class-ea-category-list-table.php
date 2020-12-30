@@ -226,7 +226,7 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce ), $base ); //phpcs:ignore
 				$actions  = array(
 					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit">&nbsp;</a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash">&nbsp;</a>', esc_url( $del_url ) ),
+					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del">&nbsp;</a>', esc_url( $del_url ) ),
 				);
 				$value    = $this->row_actions( $actions );
 				break;
@@ -257,7 +257,7 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
-		error_log(print_r($_REQUEST,true));
+
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-categories' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'category-nonce' ) ) {
 			return;
