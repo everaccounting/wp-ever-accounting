@@ -1,26 +1,26 @@
 <?php
 /**
- * Handle currency export.
+ * Handle customers export.
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-
 namespace EverAccounting\Export;
 
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Exporter;
+use EverAccounting\Query_Contact;
 
 /**
- * Class Export_Currencies
+ * Class Export_Customers
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-class Export_Currencies extends CSV_Exporter {
+class Export_Customers extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -28,8 +28,7 @@ class Export_Currencies extends CSV_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'currencies';
-
+	public $export_type = 'customers';
 
 	/**
 	 * Return an array of columns to export.
@@ -38,13 +37,13 @@ class Export_Currencies extends CSV_Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'currency' );
+		return eaccounting_get_io_headers( 'customer' );
 	}
 
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.2
+	 * @since 1.0.
 	 * @return array
 	 */
 	public function get_rows() {
@@ -53,11 +52,11 @@ class Export_Currencies extends CSV_Exporter {
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
-			'return'   => 'objects',
-			'number'      => -1,
+			'type'     => 'customer',
 		);
-		$args = apply_filters( 'eaccounting_currency_export_query_args', $args );
-		$items = eaccounting_get_currencies( $args );
+		$query             = Query_Contact::init()->where( $args );
+		$items             = $query->get( OBJECT, 'eaccounting_get_contact' );
+		$this->total_count = $query->count();
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -69,9 +68,9 @@ class Export_Currencies extends CSV_Exporter {
 
 
 	/**
-	 * Take a currency and generate row data from it for export.
+	 * Take a customer and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Currency $item
+	 * @param \EverAccounting\Contact $item
 	 *
 	 * @return array
 	 */
@@ -83,32 +82,38 @@ class Export_Currencies extends CSV_Exporter {
 				case 'name':
 					$value = $item->get_name();
 					break;
-				case 'code':
-					$value = $item->get_code();
+				case 'email':
+					$value = $item->get_email();
 					break;
-				case 'rate':
-					$value = $item->get_rate();
+				case 'phone':
+					$value = $item->get_phone();
 					break;
-				case 'precision':
-					$value = $item->get_precision();
+				case 'fax':
+					$value = $item->get_fax();
 					break;
-				case 'symbol':
-					$value = $item->get_symbol();
+				case 'birth_date':
+					$value = $item->get_birth_date();
 					break;
-				case 'position':
-					$value = $item->get_position();
+				case 'address':
+					$value = $item->get_address();
 					break;
-				case 'decimal_separator':
-					$value = $item->get_decimal_separator();
+				case 'country':
+					$value = $item->get_country();
 					break;
-				case 'thousand_separator':
-					$value = $item->get_thousand_separator();
+				case 'website':
+					$value = $item->get_website();
 					break;
-				case 'enabled':
-					$value = $item->get_enabled();
+				case 'tax_number':
+					$value = $item->get_tax_number();
+					break;
+				case 'currency_code':
+					$value = $item->get_currency_code();
+					break;
+				case 'note':
+					$value = $item->get_note();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_currency_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'eaccounting_customer_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

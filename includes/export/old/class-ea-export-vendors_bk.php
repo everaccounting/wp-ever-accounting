@@ -1,35 +1,33 @@
 <?php
 /**
- * Handle accounts export.
+ * Handle vendors export.
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-
 namespace EverAccounting\Export;
 
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Exporter;
+use EverAccounting\Query_Contact;
 
 /**
- * Class Export_Accounts
+ * Class Export_Vendors
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-class Export_Accounts extends CSV_Exporter {
-
+class Export_Vendors extends CSV_Exporter {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'accounts';
-
+	public $export_type = 'vendors';
 
 	/**
 	 * Return an array of columns to export.
@@ -38,12 +36,14 @@ class Export_Accounts extends CSV_Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'account' );
+		return eaccounting_get_io_headers( 'vendor' );
 	}
 
 	/**
+	 * Get export data.
 	 *
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function get_rows() {
 		$args              = array(
@@ -51,11 +51,11 @@ class Export_Accounts extends CSV_Exporter {
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
-			'return'   => 'objects',
-			'number'      => -1,
+			'type'     => 'vendor',
 		);
-		$args = apply_filters( 'eaccounting_account_export_query_args', $args );
-		$items = eaccounting_get_accounts($args);
+		$query             = Query_Contact::init()->where( $args );
+		$items             = $query->get( OBJECT, 'eaccounting_get_contact' );
+		$this->total_count = $query->count();
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -67,9 +67,9 @@ class Export_Accounts extends CSV_Exporter {
 
 
 	/**
-	 * Take a product and generate row data from it for export.
+	 * Take a vendor and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Account $item
+	 * @param \EverAccounting\Contact $item
 	 *
 	 * @return array
 	 */
@@ -81,32 +81,38 @@ class Export_Accounts extends CSV_Exporter {
 				case 'name':
 					$value = $item->get_name();
 					break;
-				case 'number':
-					$value = $item->get_number();
+				case 'email':
+					$value = $item->get_email();
+					break;
+				case 'phone':
+					$value = $item->get_phone();
+					break;
+				case 'fax':
+					$value = $item->get_fax();
+					break;
+				case 'birth_date':
+					$value = $item->get_birth_date();
+					break;
+				case 'address':
+					$value = $item->get_address();
+					break;
+				case 'country':
+					$value = $item->get_country();
+					break;
+				case 'website':
+					$value = $item->get_website();
+					break;
+				case 'tax_number':
+					$value = $item->get_tax_number();
 					break;
 				case 'currency_code':
 					$value = $item->get_currency_code();
 					break;
-				case 'opening_balance':
-					$value = $item->get_opening_balance();
-					break;
-				case 'bank_name':
-					$value = $item->get_bank_name();
-					break;
-				case 'bank_phone':
-					$value = $item->get_bank_phone();
-					break;
-				case 'bank_address':
-					$value = $item->get_bank_address();
-					break;
-				case 'enabled':
-					$value = $item->get_enabled();
-					break;
-				case 'attachment':
-					$value = $item->get_attachment_url();
+				case 'note':
+					$value = $item->get_note();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_account_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'eaccounting_vendor_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

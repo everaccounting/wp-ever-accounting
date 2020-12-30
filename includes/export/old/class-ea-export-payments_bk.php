@@ -1,17 +1,11 @@
 <?php
-/**
- * Handle payment export.
- *
- * @since   1.0.2
- *
- * @package EverAccounting\Export
- */
 
 namespace EverAccounting\Export;
 
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Exporter;
+use EverAccounting\Query_Transaction;
 
 class Export_Payments extends CSV_Exporter {
 
@@ -47,12 +41,10 @@ class Export_Payments extends CSV_Exporter {
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'type'     => 'expense',
-			'return'   => 'objects',
-			'number'   => -1,
 		);
-		$args = apply_filters('eaccounting_payment_export_query_args', $args);
-		$items = eaccounting_get_payments($args);
-
+		$query             = Query_Transaction::init()->where( $args )->notTransfer();
+		$items             = $query->get( OBJECT, 'eaccounting_get_transaction' );
+		$this->total_count = $query->count();
 		$rows              = array();
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
@@ -65,7 +57,7 @@ class Export_Payments extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Payment $item
+	 * @param \EverAccounting\Transaction $item
 	 *
 	 * @return array
 	 */
@@ -91,7 +83,7 @@ class Export_Payments extends CSV_Exporter {
 					$value   = $account ? $account->get_name() : '';
 					break;
 				case 'vendor_name':
-					$vendor = eaccounting_get_vendor( $item->get_contact_id() );
+					$vendor = eaccounting_get_contact( $item->get_contact_id() );
 					$value  = $vendor ? $vendor->get_name() : '';
 					break;
 				case 'category_name':
@@ -109,9 +101,6 @@ class Export_Payments extends CSV_Exporter {
 					break;
 				case 'reconciled':
 					$value = $item->get_reconciled();
-					break;
-				case 'attachment':
-					$value = $item->get_attachment_url();
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_payment_csv_row_item', '', $column, $item, $this );

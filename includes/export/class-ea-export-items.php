@@ -1,8 +1,8 @@
 <?php
 /**
- * Handle accounts export.
+ * Handle items export.
  *
- * @since   1.0.2
+ * @since   1.1.0
  *
  * @package EverAccounting\Export
  */
@@ -14,13 +14,13 @@ defined( 'ABSPATH' ) || exit();
 use EverAccounting\Abstracts\CSV_Exporter;
 
 /**
- * Class Export_Accounts
+ * Class Export_Items
  *
- * @since   1.0.2
+ * @since   1.1.0
  *
  * @package EverAccounting\Export
  */
-class Export_Accounts extends CSV_Exporter {
+class Export_Items extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -28,7 +28,7 @@ class Export_Accounts extends CSV_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'accounts';
+	public $export_type = 'items';
 
 
 	/**
@@ -38,7 +38,7 @@ class Export_Accounts extends CSV_Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'account' );
+		return eaccounting_get_io_headers( 'item' );
 	}
 
 	/**
@@ -54,8 +54,8 @@ class Export_Accounts extends CSV_Exporter {
 			'return'   => 'objects',
 			'number'      => -1,
 		);
-		$args = apply_filters( 'eaccounting_account_export_query_args', $args );
-		$items = eaccounting_get_accounts($args);
+		$args = apply_filters( 'eaccounting_item_export_query_args', $args );
+		$items = eaccounting_get_items($args);
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -67,9 +67,9 @@ class Export_Accounts extends CSV_Exporter {
 
 
 	/**
-	 * Take a product and generate row data from it for export.
+	 * Take a item and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Account $item
+	 * @param \EverAccounting\Models\Item $item
 	 *
 	 * @return array
 	 */
@@ -81,32 +81,27 @@ class Export_Accounts extends CSV_Exporter {
 				case 'name':
 					$value = $item->get_name();
 					break;
-				case 'number':
-					$value = $item->get_number();
+				case 'category_name':
+					$category = eaccounting_get_category($item->get_category_id());
+					$value = $category ? $category->get_name() : '';
 					break;
-				case 'currency_code':
-					$value = $item->get_currency_code();
+				case 'sale_price':
+					$value = $item->get_sale_price();
 					break;
-				case 'opening_balance':
-					$value = $item->get_opening_balance();
+				case 'purchase_price':
+					$value = $item->get_purchase_price();
 					break;
-				case 'bank_name':
-					$value = $item->get_bank_name();
+				case 'sales_tax':
+					$value = $item->get_sales_tax();
 					break;
-				case 'bank_phone':
-					$value = $item->get_bank_phone();
-					break;
-				case 'bank_address':
-					$value = $item->get_bank_address();
-					break;
-				case 'enabled':
-					$value = $item->get_enabled();
+				case 'purchase_tax':
+					$value = $item->get_purchase_tax();
 					break;
 				case 'attachment':
 					$value = $item->get_attachment_url();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_account_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'eaccounting_item_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;
