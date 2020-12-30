@@ -9,11 +9,9 @@
  * @var int $income_id
  */
 defined( 'ABSPATH' ) || exit();
-
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
 use EverAccounting\Models\Customer;
-
 wp_enqueue_script( 'ea-print' );
 try {
 	$income = new \EverAccounting\Models\Income( $income_id );

@@ -3,7 +3,6 @@
 namespace EverAccounting\Admin\Overview\Widgets;
 
 use EverAccounting\Abstracts\Widget;
-use EverAccounting\Query_Transaction;
 
 class Total_Income extends Widget {
 	/**
@@ -39,7 +38,7 @@ class Total_Income extends Widget {
 	 * @return string|void
 	 */
 	public function get_widget_class() {
-		return 'ea-summery-widget income';
+		return 'ea-score-card success';
 	}
 
 	/**
@@ -65,14 +64,22 @@ class Total_Income extends Widget {
 			$total += eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
 		}
 		?>
-		<div class="ea-summery-widget-icon">
-			<span class="dashicons dashicons-chart-pie"></span>
-		</div>
-		<div class="ea-summery-widget-content">
-			<?php
-			echo sprintf( '<span class="ea-summery-widget-title">%s</span>', __( 'Total Income', 'wp-ever-accounting' ) );
-			echo sprintf( '<span class="ea-summery-widget-amount">%s</span>', eaccounting_format_price( $total ) );
-			?>
+		<div class="ea-score-card__inside">
+			<div class="ea-score-card__icon">
+				<span class="dashicons dashicons-chart-pie"></span>
+			</div>
+			<div class="ea-score-card__content">
+
+				<div class="ea-score-card__primary">
+					<span class="ea-score-card__title"><?php esc_html_e('Total Income', 'wp-ever-accounting' );?></span>
+					<span class="ea-score-card__amount"><?php echo esc_html(eaccounting_format_price( $total ));?></span>
+				</div>
+
+				<div class="ea-score-card__secondary">
+					<span class="ea-score-card__title">Receivable</span>
+					<span class="ea-score-card__amount">$50000</span>
+				</div>
+			</div>
 		</div>
 		<?php
 	}

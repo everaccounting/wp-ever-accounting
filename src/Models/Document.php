@@ -1028,7 +1028,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_discount( $discount ) {
-		$this->set_prop( 'discount', eaccounting_format_decimal( $discount, 2 ) );
+		$this->set_prop( 'discount', abs( eaccounting_format_decimal( $discount, 2 ) ) );
 	}
 
 	/**
@@ -1321,7 +1321,7 @@ abstract class Document extends ResourceModel {
 		$subtotal       = 0;
 		$total_tax      = 0;
 		$total_discount = 0;
-		$discount_rate = $this->get_discount();
+		$discount_rate  = $this->get_discount();
 
 		// before calculating need to know subtotal so we can apply fixed discount
 		if ( $this->is_fixed_discount() ) {
@@ -1329,7 +1329,7 @@ abstract class Document extends ResourceModel {
 			foreach ( $this->get_items() as $item ) {
 				$subtotal_discount += ( $item->get_price() * $item->get_quantity() );
 			}
-			$discount_rate =  ( ( $this->get_discount() * 100 ) / $subtotal_discount ) ;
+			$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
 		}
 
 		foreach ( $this->get_items() as $item ) {

@@ -53,6 +53,7 @@ function eaccounting_init_overview_meta_boxes() {
  * @since 1.0.2
  */
 function eaccounting_admin_overview_page() {
+	eaccounting_do_meta_boxes( 'affiliates_page_affiliate-wp-reports', 'primary', null );
 	eaccounting_init_overview_meta_boxes();
 	$financial_start = eaccounting_get_financial_start();
 	if ( ( $year_start = date( 'Y-01-01' ) ) !== $financial_start ) {
@@ -74,16 +75,6 @@ function eaccounting_admin_overview_page() {
 			<div>
 				<h1><?php _e( 'Overview', 'wp-ever-accounting' ); ?></h1>
 			</div>
-			<?php if ( current_user_can( 'ea_manage_report' ) ) : ?>
-				<div>
-					<form action="" method="get">
-						<input type="text" id="ea-overview-date-range" data-start="<?php echo esc_attr( $start->format( 'Y-m-d' ) ); ?>" data-end="<?php echo esc_attr( $end->format( 'Y-m-d' ) ); ?>">
-						<input type="hidden" name="page" value="eaccounting">
-						<input type="hidden" name="start_date" value="">
-						<input type="hidden" name="end_date" value="">
-					</form>
-				</div>
-			<?php endif; ?>
 		</div>
 		<hr class="wp-header-end">
 		<?php

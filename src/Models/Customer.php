@@ -70,4 +70,15 @@ class Customer extends Contact {
 			'currency_code' => __( 'Currency Code', 'wp-ever-accounting' ),
 		);
 	}
+
+
+	public function get_total_paid() {
+		global $wpdb;
+		$total        = 0;
+		$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='income' AND contact_id=%d", $this->get_id() ) );
+		foreach ( $transactions as $transaction ) {
+			$total += eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+		}
+		return $total;
+	}
 }

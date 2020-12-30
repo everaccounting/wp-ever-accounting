@@ -18,6 +18,8 @@ jQuery(function ($) {
 		$(document.body).trigger('ea_select2_init');
 	});
 
+	$('#eaccounting_settings[financial_year_start]').datepicker({dateFormat: 'yy-mm-dd'});
+
 	/**
 	 * Media selector
 	 * @type {boolean}
