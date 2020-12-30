@@ -51,6 +51,7 @@ class EAccounting_Admin_Report {
 		return current( array_keys( $years ) );
 	}
 
+
 	public function get_range_sql( $range, $column ) {
 		$date   = 'CAST(`' . $column . '` AS DATE)';
 		$start  = strtotime( $range[0] );
@@ -204,40 +205,72 @@ class EAccounting_Admin_Report {
 			<div class="ea-card__header">
 				<h3 class="ea-card__title">Sale Report</h3>
 				<div class="ea-crd__toolbar">
-					<button class="button button-secondary"><span class="dashicons dashicons-image-rotate"></span></button>
-					<?php
-					eaccounting_select(
-						array(
-							'placeholder' => __( 'Year', 'wp-ever-accounting' ),
-							'name'        => 'year',
-							'options'     => eaccounting_get_report_years(),
-							'value'       => $this->get_report_year(),
-						)
-					);
-					?>
+					<form action="">
+						<label for="">Financial Year</label>
+						<?php
+						eaccounting_select(
+							array(
+								'placeholder' => __( 'Year', 'wp-ever-accounting' ),
+								'name'        => 'year',
+								'options'     => eaccounting_get_report_years(),
+								'value'       => $this->get_report_year(),
+							)
+						);
+						?>
+						<button type="submit" class="button-secondary button">Submit</button>
+					</form>
 				</div>
 			</div>
 			<div class="ea-card__inside">
-				<?php
-				$this->render_chart(
-					array(
-						'data' => array(
-							'labels'   => array_values( array_values( $dates ) ),
-							'datasets' => array(
-								array(
-									'label'           => __( 'Income', 'wp-ever-accounting' ),
-									'data'            => array_values( $graph ),
-									'borderColor'     => '#3644ff',
-									'backgroundColor' => '#3644ff',
-									'borderWidth'     => 4,
-									'pointStyle'      => 'line',
-									'fill'            => false,
-								),
-							),
-						),
-					)
-				);
-				?>
+				<div style="position: relative">
+					<canvas id="getpaid-chartjs-earnings-fees_total" height="300"></canvas>
+				</div>
+				<script>
+					window.addEventListener( 'DOMContentLoaded', function() {
+
+						var ctx = document.getElementById( 'getpaid-chartjs-earnings-fees_total' ).getContext('2d');
+						new Chart(
+								ctx,
+								{
+									type: 'line',
+									data: {
+										'labels': ["Dec 23","Dec 24","Dec 25","Dec 26","Dec 27","Dec 28","Dec 29"],
+										'datasets': [
+											{
+												label: 'Fees',
+												data: [0,0,0,0,0,0,0],
+												backgroundColor: 'rgba(54, 162, 235, 0.1)',
+												borderColor: 'rgb(54, 162, 235)',
+												borderWidth: 4,
+												pointBackgroundColor: 'rgb(54, 162, 235)'
+											}
+										]
+									},
+									options: {
+										responsive: true,
+										maintainAspectRatio: false,
+										scales: {
+											yAxes: [{
+												ticks: {
+													beginAtZero: true
+												}
+											}],
+											xAxes: [{
+												ticks: {
+													maxTicksLimit: 15
+												}
+											}]
+										},
+										legend: {
+											display: false
+										}
+									}
+								}
+						);
+
+					})
+
+				</script>
 				<div class="ea-table-report">
 					<table class="ea-table">
 						<thead>
