@@ -64,7 +64,7 @@ class EAccounting_Settings {
 				'eaccounting_settings_general',
 				array(
 					/** General Main Section */
-					'main' => array(
+					'main'     => array(
 						'company_settings'       => array(
 							'name' => __( 'Company Settings', 'wp-ever-accounting' ),
 							'desc' => '',
@@ -175,6 +175,73 @@ class EAccounting_Settings {
 							'std'     => 'cash',
 							'type'    => 'select',
 							'options' => eaccounting_get_payment_methods(),
+						),
+					),
+					'invoices' => array(
+						'invoice_prefix'         => array(
+							'name' => __( 'Invoice Prefix', 'wp-ever-accounting' ),
+							'std'  => 'INV-',
+							'type' => 'text',
+						),
+						'invoice_digit'          => array(
+							'name' => __( 'Minimum Digits', 'wp-ever-accounting' ),
+							'std'  => '5',
+							'type' => 'number',
+						),
+						'invoice_terms'          => array(
+							'name' => __( 'Invoice Terms', 'wp-ever-accounting' ),
+							'std'  => '',
+							'type' => 'textarea',
+						),
+						'invoice_item_label'     => array(
+							'name' => __( 'Item Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Item', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'invoice_price_label'    => array(
+							'name' => __( 'Price Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Price', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'invoice_quantity_label' => array(
+							'name' => __( 'Quantity Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Quantity', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+					),
+					'bills'    => array(
+						'bill_prefix'         => array(
+							'name' => __( 'Bill Prefix', 'wp-ever-accounting' ),
+							'std'  => 'BILL-',
+							'type' => 'text',
+
+						),
+						'bill_digit'          => array(
+							'name' => __( 'Bill Digits', 'wp-ever-accounting' ),
+							'std'  => '5',
+							'type' => 'number',
+
+						),
+						'bill_terms'          => array(
+							'name' => __( 'Bill Notes', 'wp-ever-accounting' ),
+							'std'  => '',
+							'type' => 'textarea',
+						),
+						'bill_item_label'     => array(
+							'name' => __( 'Item Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Item', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'bill_price_label'    => array(
+							'name' => __( 'Price Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Price', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'bill_quantity_label' => array(
+							'name' => __( 'Quantity Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Quantity', 'wp-ever-accounting' ),
+							'type' => 'text',
+
 						),
 					),
 				)
@@ -413,9 +480,9 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$id         = 'eaccounting_settings[' . $args['id'] . ']';
 		$html       = '<label for="' . $id . '">';
-		$html       .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
-		$html       .= $args['desc'];
-		$html       .= '</label>';
+		$html      .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html      .= $args['desc'];
+		$html      .= '</label>';
 
 		echo $html;
 	}
@@ -507,7 +574,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -550,7 +617,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -589,7 +656,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -629,7 +696,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -735,7 +802,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -835,7 +902,7 @@ class EAccounting_Settings {
 		$settings = $this->get_registered_settings();
 		$tab      = isset( $referrer['tab'] ) ? $referrer['tab'] : 'general';
 		$section  = isset( $referrer['section'] ) ? $referrer['section'] : 'main';
-		$settings = isset( $settings[ $tab ] ) ? $settings[ $tab ][$section] : array();
+		$settings = isset( $settings[ $tab ] ) ? $settings[ $tab ][ $section ] : array();
 
 		$input = $input ? $input : array();
 
@@ -903,6 +970,7 @@ class EAccounting_Settings {
 		}
 
 		add_settings_error( 'eaccounting-notices', '', __( 'Settings updated.', 'wp-ever-accounting' ), 'updated' );
+
 		return array_merge( $saved, $input );
 	}
 

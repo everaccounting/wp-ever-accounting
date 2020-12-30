@@ -18,11 +18,10 @@ if ( empty( $customer ) || ! $customer->exists() ) {
 	wp_die( __( 'Sorry, Customer does not exist', 'wp-ever-accounting' ) );
 }
 
-$sections = array(
+$sections        = array(
 	'transactions' => __( 'Transactions', 'wp-ever-accounting' ),
 	'invoices'     => __( 'Invoices', 'wp-ever-accounting' ),
 );
-
 $sections        = apply_filters( 'eaccounting_customer_sections', $sections );
 $first_section   = current( array_keys( $sections ) );
 $current_section = ! empty( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : $first_section;
@@ -39,33 +38,17 @@ $edit_url        = eaccounting_admin_url(
 	<div class="ea-page-columns__content">
 		<div class="ea-row">
 			<div class="ea-col">
-				<div class="ea-score-card">
-					<div class="ea-score-card__inside">
-						<div class="ea-score-card__icon">
-							<span class="dashicons dashicons-money-alt"></span>
-						</div>
-						<div class="ea-score-card__content">
-							<div class="ea-score-card__title">Total Sales</div>
-							<div class="ea-score-card__amount">$50000 <small>$5000</small></div>
-						</div>
-					</div>
-				</div>
-			</div>
 
-			<div class="ea-col">
-				<div class="ea-score-card">
+				<div class="ea-score-card success">
 					<div class="ea-score-card__inside">
 						<div class="ea-score-card__icon">
 							<span class="dashicons dashicons-money-alt"></span>
 						</div>
 						<div class="ea-score-card__content">
+
 							<div class="ea-score-card__primary">
-								<div class="ea-score-card__title">Total Sales</div>
-								<div class="ea-score-card__amount">$50000</div>
-							</div>
-							<div class="ea-score-card__secondary">
-								<div class="ea-score-card__title">Total Sales</div>
-								<div class="ea-score-card__amount">$50000</div>
+								<span class="ea-score-card__title">Paid</span>
+								<span class="ea-score-card__amount"><?php echo esc_html( eaccounting_format_price( $customer->get_total_paid() ) ); ?></span>
 							</div>
 
 						</div>
@@ -73,12 +56,45 @@ $edit_url        = eaccounting_admin_url(
 				</div>
 
 			</div>
+
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+
+				<div class="ea-score-card warning">
+					<div class="ea-score-card__inside">
+						<div class="ea-score-card__icon">
+							<span class="dashicons dashicons-text-page"></span>
+						</div>
+						<div class="ea-score-card__content">
+
+							<div class="ea-score-card__primary">
+								<span class="ea-score-card__title">OPEN INVOICES</span>
+								<span class="ea-score-card__amount">$50000</span>
+							</div>
+
+						</div>
 					</div>
 				</div>
+
+			</div>
+
+			<div class="ea-col">
+
+				<div class="ea-score-card alert">
+					<div class="ea-score-card__inside">
+						<div class="ea-score-card__icon">
+							<span class="dashicons dashicons-flag"></span>
+						</div>
+						<div class="ea-score-card__content">
+
+							<div class="ea-score-card__primary">
+								<span class="ea-score-card__title">OVERDUE INVOICES</span>
+								<span class="ea-score-card__amount">$50000</span>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 		<div class="ea-card">

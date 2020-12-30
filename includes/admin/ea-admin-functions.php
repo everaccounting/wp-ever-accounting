@@ -22,9 +22,8 @@ function eaccounting_get_settings_tabs() {
 			'general'    => __( 'General', 'wp-ever-accounting' ),
 			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 			'categories' => __( 'Categories', 'wp-ever-accounting' ),
-			'taxes'      => __( 'Taxes', 'wp-ever-accounting' ),
-			'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 			'emails'     => __( 'Emails', 'wp-ever-accounting' ),
+			'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 			'misc'       => __( 'Misc', 'wp-ever-accounting' ),
 		)
 	);
@@ -46,7 +45,9 @@ function eaccounting_get_settings_sections() {
 
 	$sections = array(
 		'general' => array(
-			'main' => __( 'General', 'wp-ever-accounting' ),
+			'main'     => __( 'General', 'wp-ever-accounting' ),
+			'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
+			'bills'    => __( 'Bills', 'wp-ever-accounting' ),
 		),
 		'emails'  => array(
 			'main' => __( 'General', 'wp-ever-accounting' ),
@@ -61,7 +62,6 @@ function eaccounting_get_settings_sections() {
 
 	return $sections;
 }
-
 
 
 /**
@@ -193,6 +193,7 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
  *
  * @since 1.0.2
  * @since 1.1.0 add $tab argument.
+ *
  * @param array  $tabs       Navigation tabs.
  * @param string $active_tab Active tab slug.
  * @param array  $query_args Optional. Query arguments used to build the tab URLs. Default empty array.
@@ -228,6 +229,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(),
  *
  * @since 1.0.2
  * @since 1.1.0 add $tab argument.
+ *
  * @param string $tab
  *
  * @return array|string
@@ -382,4 +384,62 @@ function eaccounting_do_import_fields( $type ) {
 			<?php
 		}
 	}
+}
+
+
+/**
+ * Meta-Box template function.
+ *
+ * @since 1.1.0
+ *
+ * @global array $wp_meta_boxes
+ *
+ */
+function eaccounting_do_meta_boxes( $screen, $context, $object ) {
+	global $wp_meta_boxes;
+	if ( empty( $screen ) ) {
+		$screen = get_current_screen();
+	} elseif ( is_string( $screen ) ) {
+		$screen = convert_to_screen( $screen );
+	}
+	$page = $screen->id;
+	if ( isset( $wp_meta_boxes[ $page ][ $context ] ) ) {
+		foreach ( array( 'high', 'sorted', 'core', 'default', 'low' ) as $priority ) {
+			if ( isset( $wp_meta_boxes[ $page ][ $context ][ $priority ] ) ) {
+				foreach ( (array) $wp_meta_boxes[ $page ][ $context ][ $priority ] as $box ) {
+					$args         = wp_parse_args( $box['args'], array( 'col' => 4 ) );
+					$col          = ! empty( $args['col'] ) ? "ea-col-{$args['col']}" : 'ea-col-4';
+					$custom_class = isset( $args['class'] ) ? wp_parse_list( $args['class'] ) : array();
+					$custom_class = array_map( 'sanitize_html_class', $custom_class );
+					echo '<div id="ea-' . $box['id'] . '" class="' . $col . '" ' . '>' . "\n";
+					echo '<div class="ea-widget ea-card ' . implode( ' ', $custom_class ) . '" ' . '>' . "\n";
+					if ( ! empty( $box['title'] ) ) {
+						echo '<div class="ea-card__header">';
+						echo '<h3 class="ea-card__title">' . $box['title'] . '</h3>';
+						if ( isset( $args['toolbar_callback'] ) && is_callable( $args['toolbar_callback'] ) ) {
+							echo '<div class="ea-card__toolbar">';
+							call_user_func( $box['toolbar_callback'], $object, $box );
+							echo "</div>\n";
+						}
+						echo "</div>\n";
+					}
+					call_user_func( $box['callback'], $object, $box );
+					echo '</div>';
+					echo '</div>';
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Get report years.
+ *
+ * @since 1.1.0
+ * @return array
+ */
+function eaccounting_get_report_years() {
+	$years = range( date( 'Y' ), ( date( 'Y' ) - 5 ), 1 );
+
+	return array_combine( array_values( $years ), $years );
 }

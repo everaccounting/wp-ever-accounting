@@ -41,6 +41,7 @@ class Admin {
 	 */
 	public function includes() {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
+//		require_once EACCOUNTING_ABSPATH . '/includes/admin/dashboard.php';
 		// require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php' );
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php';
@@ -48,7 +49,7 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-overview.php';
 		//require_once EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php';
 		//require_once EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php';
 		//require_once EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php';

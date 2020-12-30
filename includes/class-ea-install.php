@@ -275,12 +275,14 @@ class EAccounting_Install {
 					'rate' => '1',
 				)
 			);
+
 			eaccounting_insert_currency(
 				array(
 					'code' => 'EUR',
 					'rate' => '1.25',
 				)
 			);
+
 			eaccounting_insert_currency(
 				array(
 					'code' => 'GBP',
@@ -507,6 +509,7 @@ class EAccounting_Install {
 		    KEY `contact_id` (`contact_id`),
 		    KEY `category_id` (`category_id`),
 		    KEY `total` (`total`),
+		    KEY `type` (`type`),
 		    UNIQUE KEY (`document_number`)
             ) $collate",
 
@@ -602,8 +605,8 @@ class EAccounting_Install {
 			"{$wpdb->prefix}ea_contacts",
 			"{$wpdb->prefix}ea_transactions",
 			"{$wpdb->prefix}ea_transfers",
-			"{$wpdb->prefix}ea_invoices",
-			"{$wpdb->prefix}ea_line_items",
+			"{$wpdb->prefix}ea_documents",
+			"{$wpdb->prefix}ea_document_items",
 			"{$wpdb->prefix}ea_notes",
 			"{$wpdb->prefix}ea_items",
 			"{$wpdb->prefix}ea_api_keys",

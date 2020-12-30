@@ -40,25 +40,63 @@ $edit_url        = eaccounting_admin_url(
 	<div class="ea-page-columns__content">
 		<div class="ea-row">
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+
+				<div class="ea-score-card success">
+					<div class="ea-score-card__inside">
+						<div class="ea-score-card__icon">
+							<span class="dashicons dashicons-money-alt"></span>
+						</div>
+						<div class="ea-score-card__content">
+
+							<div class="ea-score-card__primary">
+								<span class="ea-score-card__title">Paid</span>
+								<span class="ea-score-card__amount">$50000</span>
+							</div>
+
+						</div>
 					</div>
 				</div>
+
 			</div>
+
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+
+				<div class="ea-score-card warning">
+					<div class="ea-score-card__inside">
+						<div class="ea-score-card__icon">
+							<span class="dashicons dashicons-text-page"></span>
+						</div>
+						<div class="ea-score-card__content">
+
+							<div class="ea-score-card__primary">
+								<span class="ea-score-card__title">OPEN BILLS</span>
+								<span class="ea-score-card__amount">$50000</span>
+							</div>
+
+						</div>
 					</div>
 				</div>
+
 			</div>
+
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+
+				<div class="ea-score-card alert">
+					<div class="ea-score-card__inside">
+						<div class="ea-score-card__icon">
+							<span class="dashicons dashicons-flag"></span>
+						</div>
+						<div class="ea-score-card__content">
+
+							<div class="ea-score-card__primary">
+								<span class="ea-score-card__title">OVERDUE BILLS</span>
+								<span class="ea-score-card__amount">$50000</span>
+							</div>
+
+						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 		<div class="ea-card">

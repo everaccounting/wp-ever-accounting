@@ -175,13 +175,14 @@ class Currencies extends ResourceRepository {
 	 * @param array         $args Array of args to pass to the delete method.
 	 */
 	public function delete( &$item, $args = array() ) {
-		$code       = $item->get_code();
+		$code = $item->get_code();
+		error_log( $code );
+		error_log( print_r($this->get_currencies(), true) );
 		$currencies = $this->get_currencies()->reject(
 			function ( $currency ) use ( $code ) {
 				return $currency['code'] === $code;
 			}
 		)->all();
-
 		update_option( self::OPTION, $currencies );
 		wp_cache_delete( 'ea_currencies', 'ea_currencies' );
 		// Delete cache.
@@ -198,10 +199,10 @@ class Currencies extends ResourceRepository {
 	 * @return \EverAccounting\Core\Collection
 	 */
 	public function get_currencies() {
-		$currencies = wp_cache_get( self::OPTION, 'ea_currencies' );
+		$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );
 		if ( false === $currencies ) {
 			$currencies = get_option( self::OPTION, array() );
-			wp_cache_set( self::OPTION, $currencies, 'ea_currencies' );
+			wp_cache_set( 'ea_currencies', $currencies, 'ea_currencies' );
 		}
 
 		return eaccounting_collect( $currencies );

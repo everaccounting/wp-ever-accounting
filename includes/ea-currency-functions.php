@@ -166,7 +166,6 @@ function eaccounting_insert_currency( $args, $wp_error = true ) {
 function eaccounting_delete_currency( $currency_code ) {
 	try {
 		$currency = new EverAccounting\Models\Currency( $currency_code );
-
 		return $currency->exists() ? $currency->delete() : false;
 	} catch ( \Exception $e ) {
 		return false;

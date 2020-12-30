@@ -196,8 +196,13 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 			array(
 				'label'    => __( 'Discount Amount', 'wp-ever-accounting' ),
 				'name'     => 'discount',
+				'type'     => 'number',
 				'value'    => 0.0000,
 				'required' => true,
+				'attr'     => array(
+					'step' => 1,
+					'min'  => 0,
+				),
 			)
 		);
 		eaccounting_select(
