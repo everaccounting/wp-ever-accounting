@@ -311,7 +311,6 @@ function eaccounting_get_io_headers( $type ) {
 					'bank_phone'      => 'Bank Phone',
 					'bank_address'    => 'BanK Address',
 					'enabled'         => 'Enabled',
-					'attachment'      => 'Attachment',
 			);
 			break;
 		case 'payment':
@@ -363,7 +362,6 @@ function eaccounting_get_io_headers( $type ) {
 					'purchase_price' => 'Purchase Price',
 					'sales_tax'      => 'Sales Tax',
 					'purchase_tax'   => 'Purchase Tax',
-					'attachment'     => 'Attachment',
 			);
 			break;
 
