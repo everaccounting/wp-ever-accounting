@@ -81,6 +81,9 @@ class Export_Vendors extends CSV_Exporter {
 				case 'name':
 					$value = $item->get_name();
 					break;
+				case 'company':
+					$value = $item->get_company();
+					break;
 				case 'email':
 					$value = $item->get_email();
 					break;
@@ -90,8 +93,17 @@ class Export_Vendors extends CSV_Exporter {
 				case 'birth_date':
 					$value = $item->get_birth_date();
 					break;
-				case 'address':
-					$value = eaccounting_format_address( array( 'street' => $item->get_street(), 'city' => $item->get_city(), 'state' => $item->get_state(), 'postcode' => $item->get_postcode(), 'country' => $item->get_country_nicename() ),',' );
+				case 'street':
+					$value = $item->get_street();
+					break;
+				case 'city':
+					$value = $item->get_city();
+					break;
+				case 'state':
+					$value = $item->get_street();
+					break;
+				case 'postcode':
+					$value = $item->get_postcode();
 					break;
 				case 'country':
 					$value = $item->get_country_nicename();
@@ -104,9 +116,6 @@ class Export_Vendors extends CSV_Exporter {
 					break;
 				case 'currency_code':
 					$value = $item->get_currency_code();
-					break;
-				case 'attachment':
-					$value = $item->get_attachment_url();
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_vendor_csv_row_item', '', $column, $item, $this );

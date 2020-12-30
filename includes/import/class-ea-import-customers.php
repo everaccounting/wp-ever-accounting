@@ -51,8 +51,8 @@ class Import_Customers extends CSV_Importer {
 	protected function get_formatting_callback() {
 		return array(
 			'email'         => 'sanitize_email',
+			'company'       => array( $this, 'parse_text_field' ),
 			'birth_date'    => array( $this, 'parse_date_field' ),
-			'address'       => array( $this, 'parse_description_field' ),
 			'country'       => array( $this, 'parse_country_field' ),
 			'website'       => 'esc_url_raw',
 			'currency_code' => array( $this, 'parse_currency_code_field' ),
@@ -67,6 +67,7 @@ class Import_Customers extends CSV_Importer {
 	 * @return string|\WP_Error
 	 */
 	protected function import_item( $data ) {
+		error_log(print_r($data,true));
 		if ( empty( $data['name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
 		}

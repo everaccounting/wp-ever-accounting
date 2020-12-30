@@ -280,15 +280,18 @@ function eaccounting_get_io_headers( $type ) {
 		case 'vendor':
 			$headers = array(
 					'name'          => 'Name',
+					'company'       => 'Company',
 					'email'         => 'Email',
 					'phone'         => 'Phone',
 					'birth_date'    => 'Birth Date',
-					'address'       => 'Address',
+					'street'        => 'Street',
+					'city'          => 'City',
+					'state'         => 'State',
+					'postcode'      => 'Postcode',
 					'country'       => 'Country',
 					'website'       => 'Website',
 					'vat_number'    => 'Vat Number',
 					'currency_code' => 'Currency Code',
-					'attachment'    => 'Attachment',
 			);
 			break;
 		case 'category':
