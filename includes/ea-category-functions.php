@@ -206,3 +206,13 @@ function eaccounting_get_categories( $args = array() ) {
 
 	return $results;
 }
+
+/**
+ * Get category by category name.
+ *
+ * @since 1.1.0
+ *
+ * @param array $args
+ *
+ * @return int|array|null
+ */

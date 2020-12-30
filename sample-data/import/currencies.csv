@@ -1,3 +1,3 @@
-﻿Name,Code,Precision,Symbol,Position,"Decimal Separator","Thousand Separator",Enabled
-"US Dollar",USD,2,$,before,.,",",0
-"Canadian Dollar",CAD,2,$,before,.,",",0
+﻿Name,Code,Rate,Precision,Symbol,Position,"Decimal Separator","Thousand Separator",Enabled
+"US Dollar",USD,1,2,$,before,.,",",0
+"Canadian Dollar",CAD,1.85,2,$,before,.,",",0

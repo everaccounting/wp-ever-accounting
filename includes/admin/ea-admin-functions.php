@@ -313,7 +313,7 @@ function eaccounting_get_io_headers( $type ) {
 			break;
 		case 'payment':
 			$headers = array(
-					'payment_date'   => 'Paid At',
+					'payment_date'   => 'Payment Date',
 					'amount'         => 'Amount',
 					'currency_code'  => 'Currency Code',
 					'currency_rate'  => 'Currency Rate',
@@ -324,12 +324,11 @@ function eaccounting_get_io_headers( $type ) {
 					'payment_method' => 'Payment Method',
 					'reference'      => 'Reference',
 					'reconciled'     => 'Reconciled',
-					'attachment'     => 'Attachment',
 			);
 			break;
 		case 'revenue':
 			$headers = array(
-					'payment_date'   => 'Paid At',
+					'payment_date'   => 'Payment Date',
 					'amount'         => 'Amount',
 					'currency_code'  => 'Currency Code',
 					'currency_rate'  => 'Currency Rate',
@@ -339,7 +338,6 @@ function eaccounting_get_io_headers( $type ) {
 					'description'    => 'Description',
 					'payment_method' => 'Payment Method',
 					'reference'      => 'Reference',
-					'attachment'     => 'Attachment',
 			);
 			break;
 		case 'currency':

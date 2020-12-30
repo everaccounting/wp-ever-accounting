@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle revenue import.
+ * Handle payment import.
  *
  * @since   1.0.2
  *
@@ -12,16 +12,18 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Models\Currency;
+use EverAccounting\Query_Category;
+use EverAccounting\Query_Currency;
+use EverAccounting\Query_Account;
 
 /**
- * Class Import_Revenues
+ * Class Import_Payments
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Import
  */
-class Import_Revenues extends CSV_Importer {
+class Import_Payments extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
@@ -29,7 +31,7 @@ class Import_Revenues extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'revenue' );
+		return eaccounting_get_io_headers( 'payment' );
 	}
 
 	/**
@@ -50,7 +52,7 @@ class Import_Revenues extends CSV_Importer {
 	 */
 	protected function get_formatting_callback() {
 		return array(
-			'payment_date'   => array( $this, 'parse_date_field' ),
+			'payment_date'        => array( $this, 'parse_date_field' ),
 			'amount'         => array( $this, 'parse_text_field' ),
 			'currency_code'  => array( $this, 'parse_currency_code_field' ),
 			'currency_rate'  => array( $this, 'parse_float_field' ),
@@ -87,20 +89,15 @@ class Import_Revenues extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'income' ) );
-		$category_id = ! empty( $category ) ? $category[0]->get_id() : '';
-
-		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
-
-		$account    = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
-		$account_id = ! empty( $account ) ? $account[0]->get_id() : '';
-		$account_currency_code = !empty($account) ? $account[0]->get_currency_code() : '';
+		$category_id = Query_Category::init()->select( 'id' )->where( 'name', $data['category_name'] )->value( 0 );
+		$currency_id = Query_Currency::init()->find( $data['currency_code'], 'code' );
+		$account_id  = Query_Account::init()->select( 'id' )->where( 'name', $data['account_name'] )->value( 0 );
 
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );
 		}
 
-		if ( ! $currency->exists() ) {
+		if ( empty( $currency_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Currency Code not exists', 'wp-ever-accounting' ) );
 		}
 
@@ -108,15 +105,11 @@ class Import_Revenues extends CSV_Importer {
 			return new \WP_Error( 'invalid_props', __( 'Transaction associated account is not exist.', 'wp-ever-accounting' ) );
 		}
 
-		if ( $data['currency_code'] != $account_currency_code ) {
-			return new \WP_Error( 'invalid_props', __( 'Account currency does not match with provided currency code.', 'wp-ever-accounting' ) );
-		}
-
 		$data['category_id'] = $category_id;
 		$data['account_id']  = $account_id;
-		$data['type']        = 'income';
+		$data['type']        = 'expense';
 
-		return eaccounting_insert_revenue( $data );
+		return eaccounting_insert_transaction( $data );
 	}
 
 }
