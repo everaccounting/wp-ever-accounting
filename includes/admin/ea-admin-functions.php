@@ -284,7 +284,7 @@ function eaccounting_get_io_headers( $type ) {
 				'website'       => 'Website',
 				'vat_number'    => 'Vat Number',
 				'currency_code' => 'Currency Code',
-				'thumbnail_id'  => 'Thumbnail URL',
+				'attachment'  	=> 'Attachment',
 			);
 			break;
 		case 'category':
@@ -304,6 +304,7 @@ function eaccounting_get_io_headers( $type ) {
 				'bank_phone'      => 'Bank Phone',
 				'bank_address'    => 'BanK Address',
 				'enabled'         => 'Enabled',
+				'attachment'  	  => 'Attachment',
 			);
 			break;
 		case 'payment':
@@ -319,6 +320,7 @@ function eaccounting_get_io_headers( $type ) {
 				'payment_method' => 'Payment Method',
 				'reference'      => 'Reference',
 				'reconciled'     => 'Reconciled',
+				'attachment'     => 'Attachment',
 			);
 			break;
 		case 'revenue':
@@ -333,6 +335,7 @@ function eaccounting_get_io_headers( $type ) {
 				'description'    => 'Description',
 				'payment_method' => 'Payment Method',
 				'reference'      => 'Reference',
+				'attachment'     => 'Attachment',
 			);
 			break;
 		case 'currency':

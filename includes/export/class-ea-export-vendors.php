@@ -51,11 +51,11 @@ class Export_Vendors extends CSV_Exporter {
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'type'     => 'vendor',
+			'return'   => 'objects',
+			'number'      => -1,
 		);
 		$args = apply_filters( 'eaccounting_vendor_export_query_args', $args );
-
 		$items = eaccounting_get_vendors( $args );
-
 		$rows = array();
 
 		foreach ( $items as $item ) {
@@ -105,7 +105,7 @@ class Export_Vendors extends CSV_Exporter {
 				case 'currency_code':
 					$value = $item->get_currency_code();
 					break;
-				case 'thumbnail_id':
+				case 'attachment':
 					$value = $item->get_attachment_url();
 					break;
 				default:

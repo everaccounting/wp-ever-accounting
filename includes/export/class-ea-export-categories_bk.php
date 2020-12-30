@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle accounts export.
+ * Handle category export.
  *
  * @since   1.0.2
  *
@@ -12,15 +12,16 @@ namespace EverAccounting\Export;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Exporter;
+use EverAccounting\Query_Category;
 
 /**
- * Class Export_Accounts
+ * Class Category_CSV_Export
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-class Export_Accounts extends CSV_Exporter {
+class Export_Categories extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -28,7 +29,7 @@ class Export_Accounts extends CSV_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'accounts';
+	public $export_type = 'categories';
 
 
 	/**
@@ -38,12 +39,14 @@ class Export_Accounts extends CSV_Exporter {
 	 * @return array
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'account' );
+		return eaccounting_get_io_headers( 'category' );
 	}
 
 	/**
+	 * Get export data.
 	 *
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function get_rows() {
 		$args              = array(
@@ -51,11 +54,10 @@ class Export_Accounts extends CSV_Exporter {
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
-			'return'   => 'objects',
-			'number'      => -1,
 		);
-		$args = apply_filters( 'eaccounting_account_export_query_args', $args );
-		$items = eaccounting_get_accounts($args);
+		$query             = Query_Category::init()->where( $args );
+		$items             = $query->get( OBJECT, 'eaccounting_get_category' );
+		$this->total_count = $query->count();
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -67,9 +69,9 @@ class Export_Accounts extends CSV_Exporter {
 
 
 	/**
-	 * Take a product and generate row data from it for export.
+	 * Take a category and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Account $item
+	 * @param \EverAccounting\Category $item
 	 *
 	 * @return array
 	 */
@@ -81,32 +83,15 @@ class Export_Accounts extends CSV_Exporter {
 				case 'name':
 					$value = $item->get_name();
 					break;
-				case 'number':
-					$value = $item->get_number();
+				case 'type':
+					$value = $item->get_type();
 					break;
-				case 'currency_code':
-					$value = $item->get_currency_code();
+				case 'color':
+					$value = $item->get_color();
 					break;
-				case 'opening_balance':
-					$value = $item->get_opening_balance();
-					break;
-				case 'bank_name':
-					$value = $item->get_bank_name();
-					break;
-				case 'bank_phone':
-					$value = $item->get_bank_phone();
-					break;
-				case 'bank_address':
-					$value = $item->get_bank_address();
-					break;
-				case 'enabled':
-					$value = $item->get_enabled();
-					break;
-				case 'attachment':
-					$value = $item->get_attachment_url();
-					break;
+
 				default:
-					$value = apply_filters( 'eaccounting_account_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'eaccounting_category_csv_row_item', '', $column, $item, $this );
 			}
 
 			$props[ $column ] = $value;

@@ -53,7 +53,8 @@ class Export_Customers extends CSV_Exporter {
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'type'     => 'customer',
-			'return'   => 'objects'
+			'return'   => 'objects',
+			'number'      => -1,
 		);
 
 		$args = apply_filters( 'eaccounting_customer_export_query_args', $args );
@@ -109,7 +110,7 @@ class Export_Customers extends CSV_Exporter {
 				case 'currency_code':
 					$value = $item->get_currency_code();
 					break;
-				case 'thumbnail_id':
+				case 'attachment':
 					$value = $item->get_attachment_url();
 					break;
 				default:
