@@ -63,6 +63,18 @@ class EAccounting_Admin_Tools {
 		$tabs        = $this->get_tabs();
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
+		if ( empty( $_GET['tab'] ) ) {
+			wp_redirect(
+				add_query_arg(
+					array(
+						'page' => 'ea-tools',
+						'tab'  => $current_tab,
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			exit();
+		}
 		include dirname( __FILE__ ) . '/views/admin-page-tools.php';
 	}
 
@@ -89,7 +101,7 @@ class EAccounting_Admin_Tools {
 	 * @since 1.0.2
 	 */
 	public function render_system_info_page() {
-		require_once dirname(__FILE__).'/views/tools/system-info.php';
+		require_once dirname( __FILE__ ) . '/views/tools/system-info.php';
 		include dirname( __FILE__ ) . '/views/tools/system_info.php';
 	}
 

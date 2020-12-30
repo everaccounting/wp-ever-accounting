@@ -8,6 +8,11 @@
  * @var string $current_section
  */
 ?>
+<style>
+	.ea-card{
+		margin-top: 0 !important;
+	}
+</style>
 <div class="wrap eaccounting ea-reports">
 	<nav class="nav-tab-wrapper ea-nav-tab-wrapper">
 		<?php
