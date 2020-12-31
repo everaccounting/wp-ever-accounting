@@ -107,6 +107,21 @@ function eaccounting_tooltips(selector) {
 }
 
 /**
+ * Get currency.
+ *
+ * @param code
+ * @returns {boolean|*}
+ */
+function eaccounting_get_currency(code){
+	if (!eaccountingi10n.hasOwnProperty('currencies')) {
+		return false;
+	}
+	return eaccountingi10n.currencies.find(function (currency) {
+		return currency.code === code;
+	});
+}
+
+/**
  * Format currency field.
  * @param el
  * @param currency

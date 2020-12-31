@@ -22,6 +22,7 @@ class EAccounting_Admin_Reports {
 		add_action( 'eaccounting_reports_tab_sales', array( $this, 'render_sales_report' ) );
 		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report' ) );
 		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report' ) );
+		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report' ) );
 	}
 
 	/**
@@ -50,6 +51,7 @@ class EAccounting_Admin_Reports {
 			'sales'    => __( 'Sales', 'wp-ever-accounting' ),
 			'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 			'profits'  => __( 'Profits', 'wp-ever-accounting' ),
+			'cashflow'  => __( 'Chashflow', 'wp-ever-accounting' ),
 		);
 
 		return apply_filters( 'eaccounting_reports_tabs', $tabs );
@@ -106,6 +108,12 @@ class EAccounting_Admin_Reports {
 	public function render_profits_report() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-profits.php';
 		$report = new EAccounting_Report_Profits();
+		$report->output();
+	}
+
+	public function render_cashflow_report(){
+		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
+		$report = new EAccounting_Report_CashFlow();
 		$report->output();
 	}
 

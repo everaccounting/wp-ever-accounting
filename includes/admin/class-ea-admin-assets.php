@@ -74,6 +74,7 @@ class Admin_Assets {
 		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/assets/js/select2/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url( '/assets/js/inputmask/jquery.inputmask' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'jquery-chartjs', eaccounting()->plugin_url( '/assets/js/chartjs/chart.bundle' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
+		wp_register_script( 'jquery-chartjs-labels', eaccounting()->plugin_url( '/assets/js/chartjs/chartjs-plugin-labels' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'ea-print', eaccounting()->plugin_url( '/assets/js/printjs/printThis' . $suffix . '.js' ), array( 'jquery' ), $version, true );
 
 		// core plugins
@@ -159,6 +160,7 @@ class Admin_Assets {
 		// report page
 		if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
 			wp_enqueue_script( 'jquery-chartjs' );
+			wp_enqueue_script( 'jquery-chartjs-labels' );
 		}
 
 		// React scripts

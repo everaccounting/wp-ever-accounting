@@ -32,13 +32,13 @@ class EAccounting_Report_Profits extends EAccounting_Admin_Report {
 
 		$report = $this->get_cache( $args );
 		if ( empty( $report ) ) {
-			$report     = array();
-			$start_date = $this->get_start_date( $args['year'] );
-			$end_date   = $this->get_end_date( $args['year'] );
-			$where      = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
-			$where     .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
-			$dates      = $this->get_dates_in_period( $start_date, $end_date );
-			$sql        = $wpdb->prepare(
+			$report          = array();
+			$start_date      = $this->get_start_date( $args['year'] );
+			$end_date        = $this->get_end_date( $args['year'] );
+			$where           = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
+			$where          .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
+			$dates           = $this->get_dates_in_period( $start_date, $end_date );
+			$sql             = $wpdb->prepare(
 				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.type, t.currency_code, t.currency_rate,t.category_id, c.name category
 					   FROM {$wpdb->prefix}ea_transactions t
 					   LEFT JOIN {$wpdb->prefix}ea_categories c on c.id=t.category_id
@@ -129,17 +129,18 @@ class EAccounting_Report_Profits extends EAccounting_Admin_Report {
 						);
 						eaccounting_payment_method_dropdown(
 							array(
-								'name'  => 'payment_method',
-								'value' => $payment_method,
+								'name'    => 'payment_method',
+								'value'   => $payment_method,
+								'default' => '',
 							)
 						);
 						?>
 						<input type="hidden" name="page" value="ea-reports">
-						<input type="hidden" name="tab" value="expenses">
+						<input type="hidden" name="tab" value="profits">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 						<?php if ( isset( $_GET['filter'] ) ) : ?>
-							<a class="button-secondary" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=expenses' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
+							<a class="button-secondary" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=profits' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>
 				</div>
