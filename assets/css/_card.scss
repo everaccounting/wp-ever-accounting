@@ -21,7 +21,7 @@
 	overflow: hidden;
   }
 
-  &__header, &__footer {
+  &__header, &__footer, &__section {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -35,7 +35,6 @@
 	  padding: 0;
 	}
   }
-
 
   &__header{
 	background-color: rgba(0,0,0,0.03);
@@ -51,6 +50,12 @@
 	padding: 0;
 	margin: 0;
 	font-size: 1.2em;
+  }
+
+  &__toolbar{
+	input, select, .select2, button {
+	  margin-right: 5px;
+	}
   }
 
   &__subtitle{
@@ -73,6 +78,14 @@
 
 	&.padding-zero {
 	  padding: 0;
+	}
+  }
+
+  &__section{
+	border-top: 1px solid #e1e2e2;
+	border-bottom: 0;
+	&:last-child{
+	  border-bottom: 0;
 	}
   }
 
