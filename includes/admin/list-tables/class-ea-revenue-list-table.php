@@ -68,7 +68,6 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	 */
 	public function is_empty() {
 		global $wpdb;
-
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_transactions where type='income'" );
 	}
 

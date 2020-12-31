@@ -34,7 +34,8 @@
 	  vertical-align: middle;
 	  padding-top: 0;
 	  padding-bottom: 0;
-	  @media(max-width: 768px) {
+	  @media only screen and (max-width: 782px) {
+		vertical-align: top;
 		padding-top: 10px;
 	  }
 	}
@@ -85,6 +86,7 @@
 			color: #444;
 		  }
 		}
+
 	  }
 	}
 	.meta {
@@ -95,6 +97,15 @@
 	.row-actions {
 	  color: #999;
 	}
+	@media only screen and (max-width: 782px){
+	  &.items {
+		.column-thumb {
+		  display: none;
+		  text-align: left;
+		}
+	  }
+	}
+
   }
 }
 
@@ -106,7 +117,7 @@
   display: block;
   position: relative;
   box-sizing: border-box;
-  @media (max-width: 767px) {
+  @media only screen and (max-width: 782px) {
 	min-width: auto;
 	position: inherit;
   }
