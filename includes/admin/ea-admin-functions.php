@@ -309,7 +309,7 @@ function eaccounting_get_io_headers( $type ) {
 					'opening_balance' => 'Opening Balance',
 					'bank_name'       => 'Bank Name',
 					'bank_phone'      => 'Bank Phone',
-					'bank_address'    => 'BanK Address',
+					'bank_address'    => 'Bank Address',
 					'enabled'         => 'Enabled',
 			);
 			break;

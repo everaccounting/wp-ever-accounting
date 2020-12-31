@@ -12,6 +12,7 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
+use EverAccounting\Models\Currency;
 
 /**
  * Class Import_Currencies
@@ -73,7 +74,11 @@ class Import_Currencies extends CSV_Importer {
 		if ( empty( $data['code'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
-		$data['rate'] = 1.0000;
+
+		$currency = new Currency( array( 'code' => $data['code'] ) );
+		if ( $currency->exists() ) {
+			return new \WP_Error( 'empty_prop', __( 'Currency already exists', 'wp-ever-accounting' ) );
+		}
 
 		return eaccounting_insert_currency( $data );
 	}
