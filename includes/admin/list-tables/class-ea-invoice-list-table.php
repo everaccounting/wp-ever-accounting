@@ -95,7 +95,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Create and manage your invoices for your sales.', 'wp-ever-accounting' ); ?>
+				<?php echo  esc_html__( 'An invoice functions as a commercial document that itemizes and records sales. The invoice specifies a transaction between a buyer and a seller and possesses all the necessary information about them. In the document, Taxes can be included or excluded.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php
 			echo esc_url(
@@ -108,7 +108,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 				)
 			);
 			?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
-			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
