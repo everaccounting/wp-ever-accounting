@@ -146,6 +146,14 @@ class Batch extends Registry {
 			)
 		);
 		$this->add_item(
+			'import-items',
+			array(
+				'class' => '\EverAccounting\Import\Import_Items',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-items.php',
+			)
+		);
+
+		$this->add_item(
 			'import-currencies',
 			array(
 				'class' => '\EverAccounting\Import\Import_Currencies',

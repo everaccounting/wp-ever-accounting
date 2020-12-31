@@ -88,13 +88,19 @@ class Import_Payments extends CSV_Importer {
 		}
 
 		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'expense' ) );
-		$category_id = ! empty( $category ) ? $category[0]->get_id() : '';
+		$category    = ! empty( $category ) ? reset( $category ) : '';
+		$category_id = ! empty( $category ) ? $category->get_id() : '';
 
 		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
 
-		$account    = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
-		$account_id = ! empty( $account ) ? $account[0]->get_id() : '';
-		$account_currency_code = !empty($account) ? $account[0]->get_currency_code() : '';
+		$account               = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account               = ! empty( $account ) ? reset( $account ) : '';
+		$account_id            = ! empty( $account ) ? $account->get_id() : '';
+		$account_currency_code = ! empty( $account ) ? $account->get_currency_code() : '';
+
+		$vendor    = ( '' != $data['vendor_name'] ) ? eaccounting_get_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$vendor    = ! empty( $vendor ) ? reset( $vendor ) : '';
+		$vendor_id = ! empty( $vendor ) ? $vendor->get_id() : '';
 
 
 		if ( empty( $category_id ) ) {
@@ -116,6 +122,7 @@ class Import_Payments extends CSV_Importer {
 		$data['category_id'] = $category_id;
 		$data['account_id']  = $account_id;
 		$data['type']        = 'expense';
+		$data['contact_id']  = $vendor_id;
 
 		return eaccounting_insert_payment( $data );
 	}

@@ -55,7 +55,7 @@ class Import_Revenues extends CSV_Importer {
 			'currency_code'  => array( $this, 'parse_currency_code_field' ),
 			'currency_rate'  => array( $this, 'parse_float_field' ),
 			'account_name'   => array( $this, 'parse_text_field' ),
-			'vendor_name'    => array( $this, 'parse_text_field' ),
+			'customer_name'  => array( $this, 'parse_text_field' ),
 			'category_name'  => array( $this, 'parse_text_field' ),
 			'description'    => array( $this, 'parse_description_field' ),
 			'payment_method' => array( $this, 'parse_text_field' ),
@@ -92,9 +92,13 @@ class Import_Revenues extends CSV_Importer {
 
 		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
 
-		$account    = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
-		$account_id = ! empty( $account ) ? $account[0]->get_id() : '';
-		$account_currency_code = !empty($account) ? $account[0]->get_currency_code() : '';
+		$account               = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account_id            = ! empty( $account ) ? $account[0]->get_id() : '';
+		$account_currency_code = ! empty( $account ) ? $account[0]->get_currency_code() : '';
+
+		$customer    = ( '' != $data['customer_name'] ) ? eaccounting_get_customers( array( 'search' => $data['customer_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$customer    = ! empty( $customer ) ? reset( $customer ) : '';
+		$customer_id = ! empty( $customer ) ? $customer->get_id() : '';
 
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );
@@ -115,6 +119,7 @@ class Import_Revenues extends CSV_Importer {
 		$data['category_id'] = $category_id;
 		$data['account_id']  = $account_id;
 		$data['type']        = 'income';
+		$data['contact_id']  = $customer_id;
 
 		return eaccounting_insert_revenue( $data );
 	}

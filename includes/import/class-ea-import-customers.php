@@ -67,7 +67,6 @@ class Import_Customers extends CSV_Importer {
 	 * @return string|\WP_Error
 	 */
 	protected function import_item( $data ) {
-		error_log(print_r($data,true));
 		if ( empty( $data['name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
 		}

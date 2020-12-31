@@ -12,7 +12,6 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Query_Currency;
 
 /**
  * Class Import_Accounts
