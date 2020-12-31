@@ -80,9 +80,9 @@ class Import_Accounts extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$currency = new \EverAccounting\Models\Currency( array( 'code' => $data['currency_code'] ) );
+		$exists = Query_Currency::init()->select( 'id' )->find( $data['currency_code'], 'code' );
 
-		if ( ! $currency->exists() ) {
+		if ( empty( $exists ) ) {
 			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
 		}
 

@@ -280,15 +280,18 @@ function eaccounting_get_io_headers( $type ) {
 		case 'vendor':
 			$headers = array(
 					'name'          => 'Name',
+					'company'       => 'Company',
 					'email'         => 'Email',
 					'phone'         => 'Phone',
 					'birth_date'    => 'Birth Date',
-					'address'       => 'Address',
+					'street'        => 'Street',
+					'city'          => 'City',
+					'state'         => 'State',
+					'postcode'      => 'Postcode',
 					'country'       => 'Country',
 					'website'       => 'Website',
 					'vat_number'    => 'Vat Number',
 					'currency_code' => 'Currency Code',
-					'attachment'    => 'Attachment',
 			);
 			break;
 		case 'category':
@@ -306,14 +309,13 @@ function eaccounting_get_io_headers( $type ) {
 					'opening_balance' => 'Opening Balance',
 					'bank_name'       => 'Bank Name',
 					'bank_phone'      => 'Bank Phone',
-					'bank_address'    => 'BanK Address',
+					'bank_address'    => 'Bank Address',
 					'enabled'         => 'Enabled',
-					'attachment'      => 'Attachment',
 			);
 			break;
 		case 'payment':
 			$headers = array(
-					'payment_date'   => 'Paid At',
+					'payment_date'   => 'Payment Date',
 					'amount'         => 'Amount',
 					'currency_code'  => 'Currency Code',
 					'currency_rate'  => 'Currency Rate',
@@ -324,12 +326,11 @@ function eaccounting_get_io_headers( $type ) {
 					'payment_method' => 'Payment Method',
 					'reference'      => 'Reference',
 					'reconciled'     => 'Reconciled',
-					'attachment'     => 'Attachment',
 			);
 			break;
 		case 'revenue':
 			$headers = array(
-					'payment_date'   => 'Paid At',
+					'payment_date'   => 'Payment Date',
 					'amount'         => 'Amount',
 					'currency_code'  => 'Currency Code',
 					'currency_rate'  => 'Currency Rate',
@@ -339,7 +340,6 @@ function eaccounting_get_io_headers( $type ) {
 					'description'    => 'Description',
 					'payment_method' => 'Payment Method',
 					'reference'      => 'Reference',
-					'attachment'     => 'Attachment',
 			);
 			break;
 		case 'currency':
@@ -362,7 +362,6 @@ function eaccounting_get_io_headers( $type ) {
 					'purchase_price' => 'Purchase Price',
 					'sales_tax'      => 'Sales Tax',
 					'purchase_tax'   => 'Purchase Tax',
-					'attachment'     => 'Attachment',
 			);
 			break;
 

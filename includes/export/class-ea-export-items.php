@@ -97,9 +97,6 @@ class Export_Items extends CSV_Exporter {
 				case 'purchase_tax':
 					$value = $item->get_purchase_tax();
 					break;
-				case 'attachment':
-					$value = $item->get_attachment_url();
-					break;
 				default:
 					$value = apply_filters( 'eaccounting_item_csv_row_item', '', $column, $item, $this );
 			}

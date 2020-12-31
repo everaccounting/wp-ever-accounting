@@ -110,9 +110,6 @@ class Export_Payments extends CSV_Exporter {
 				case 'reconciled':
 					$value = $item->get_reconciled();
 					break;
-				case 'attachment':
-					$value = $item->get_attachment_url();
-					break;
 				default:
 					$value = apply_filters( 'eaccounting_payment_csv_row_item', '', $column, $item, $this );
 			}

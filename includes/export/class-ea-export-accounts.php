@@ -102,9 +102,6 @@ class Export_Accounts extends CSV_Exporter {
 				case 'enabled':
 					$value = $item->get_enabled();
 					break;
-				case 'attachment':
-					$value = $item->get_attachment_url();
-					break;
 				default:
 					$value = apply_filters( 'eaccounting_account_csv_row_item', '', $column, $item, $this );
 			}
