@@ -160,7 +160,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				);
 				break;
 			case 'amount':
-				$value = eaccounting_price( $transaction->get_amount() );
+				$value = eaccounting_price( $transaction->get_amount(), $transaction->get_currency_code()  );
 				break;
 			case 'type':
 				$type  = $transaction->get_type();

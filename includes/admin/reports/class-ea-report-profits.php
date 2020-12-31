@@ -183,10 +183,11 @@ class EAccounting_Report_Profits extends EAccounting_Admin_Report {
 												position: "nearest",
 												titleFontColor: "#ffffff",
 												callbacks: {
-													label: function (t, d) {
-														var xLabel = d.datasets[t.datasetIndex].label;
-														var yLabel = t.yLabel;
-														return xLabel + ': ' + yLabel;
+													label: function(tooltipItem, data) {
+														console.log(tooltipItem);
+														let label = data.labels[tooltipItem.index];
+														let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+														return ' ' + label + ': ' + eaccountingi10n.currency['symbol'] + Number((value).toFixed(1)).toLocaleString();
 													}
 												}
 											},

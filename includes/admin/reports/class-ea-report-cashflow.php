@@ -231,10 +231,11 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 												position: "nearest",
 												titleFontColor: "#ffffff",
 												callbacks: {
-													label: function (t, d) {
-														var xLabel = d.datasets[t.datasetIndex].label;
-														var yLabel = t.yLabel;
-														return xLabel + ': ' + yLabel;
+													label: function(tooltipItem, data) {
+														console.log(tooltipItem);
+														let label = data.labels[tooltipItem.index];
+														let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+														return ' ' + label + ': ' + eaccountingi10n.currency['symbol'] + Number((value).toFixed(1)).toLocaleString();
 													}
 												}
 											},
@@ -332,7 +333,7 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=ea-reports&tab=expenses&refresh_report=yes' ), 'refresh_report' ); ?>">
+					<a class="button button-secondary" href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=ea-reports&tab=cashflow&refresh_report=yes' ), 'refresh_report' ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>

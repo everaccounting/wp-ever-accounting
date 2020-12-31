@@ -298,7 +298,11 @@ class Invoice extends Document {
 	 * @return float|int
 	 */
 	public function get_total_due() {
-		return $this->get_total() - $this->get_total_paid();
+		$due = $this->get_total() - $this->get_total_paid();
+		if ( $due < 0 ) {
+			$due = 0;
+		}
+		return $due;
 	}
 
 	/**
@@ -368,8 +372,7 @@ class Invoice extends Document {
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
 		$converted_amount = eaccounting_price_convert_between( $amount, $this->get_currency_code(), $this->get_currency_rate(), $currency->get_code(), $currency->get_rate() );
-
-		$income = new Revenue();
+		$income           = new Revenue();
 		$income->set_props(
 			array(
 				'payment_date'   => $args['date'],

@@ -41,6 +41,15 @@ class Collection implements Arrayable {
 	}
 
 	/**
+	 * Copy the collection
+	 * @since 1.1.0
+	 * @return $this
+	 */
+	public function copy(){
+		return new static($this->items);
+	}
+
+	/**
 	 * Create a new collection instance if the value isn't one already.
 	 *
 	 * @since 1.0.2
