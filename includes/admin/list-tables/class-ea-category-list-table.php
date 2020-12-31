@@ -105,7 +105,7 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 				<?php echo  esc_html__( 'Create categories for incomes, expenses, items and see how your business flow at a glance.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-settings','tab'=>'categories','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Categories','wp-ever-accounting');?></a>
-			<a href="" class="button-primary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
 		</div>
 		<?php
 	}

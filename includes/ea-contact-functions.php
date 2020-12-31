@@ -116,7 +116,8 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		error_log(print_r($e, true));
+		error_log( print_r( $e, true ) );
+
 		return $wp_error ? new WP_Error( 'insert_customer', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }
@@ -169,8 +170,8 @@ function eaccounting_delete_customer( $customer_id ) {
  */
 function eaccounting_get_customers( $args = array(), $callback = true ) {
 	global $wpdb;
-	$search_cols  = array( 'id', 'name', 'email', 'phone', 'fax', 'address', 'country' );
-	$orderby_cols = array( 'id', 'name', 'email', 'phone', 'fax', 'address', 'country', 'enabled', 'date_created' );
+	$search_cols  = array( 'id', 'name', 'email', 'phone', 'street', 'country' );
+	$orderby_cols = array( 'id', 'name', 'email', 'phone', 'country', 'enabled', 'date_created' );
 	// Prepare args.
 	$args = wp_parse_args(
 		$args,
@@ -197,7 +198,7 @@ function eaccounting_get_customers( $args = array(), $callback = true ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = "WHERE 1=1 AND $table.`type`='customer' ";
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];
@@ -352,8 +353,8 @@ function eaccounting_delete_vendor( $vendor_id ) {
  */
 function eaccounting_get_vendors( $args = array() ) {
 	global $wpdb;
-	$search_cols  = array( 'id', 'name', 'email', 'phone', 'fax', 'address', 'country' );
-	$orderby_cols = array( 'id', 'name', 'email', 'phone', 'fax', 'address', 'country', 'enabled', 'date_created' );
+	$search_cols  = array( 'id', 'name', 'email', 'phone', 'street', 'country' );
+	$orderby_cols = array( 'id', 'name', 'email', 'phone', 'country', 'enabled', 'date_created' );
 	// Prepare args.
 	$args = wp_parse_args(
 		$args,
@@ -380,7 +381,7 @@ function eaccounting_get_vendors( $args = array() ) {
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = "WHERE 1=1 AND $table.`type`='vendor' ";
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];

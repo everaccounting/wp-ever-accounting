@@ -483,8 +483,8 @@ function eaccounting_file_input( $field ) {
 					<img class="ea-attachment__image" src="<?php echo esc_attr( $src ); ?>" alt="<?php echo esc_attr( $name ); ?>">
 				</a>
 			</div>
-			<button type="button" class="button-link ea-attachment__remove">Remove</button>
-			<button type="button" class="button-secondary ea-attachment__upload">Upload</button>
+			<button type="button" class="button-link ea-attachment__remove"><?php _e('Remove','wp-ever-accounting'); ?></button>
+			<button type="button" class="button-secondary ea-attachment__upload"><?php _e('Upload','wp-ever-accounting'); ?></button>
 			<?php
 			echo sprintf(
 				'<input type="hidden" name="%s" class="ea-attachment__input" id="%s" value="%s"/>',

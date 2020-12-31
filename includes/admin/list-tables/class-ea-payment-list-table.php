@@ -81,7 +81,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Create and manage your business expenses in any currencies, and affix account, category and customer to each payment.', 'wp-ever-accounting' ); ?>
+				<?php echo  esc_html__( 'Payment is a disbursement of money in the form of cash or checks where tax is inapplicable. You can create and manage your business expenses in any currencies, and can also affix account, category, and vendor to each payment.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="
 			<?php
@@ -96,7 +96,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			);
 			?>
 						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Payment', 'wp-ever-accounting' ); ?></a>
-			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}

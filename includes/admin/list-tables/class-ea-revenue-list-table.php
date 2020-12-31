@@ -68,7 +68,6 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 	 */
 	public function is_empty() {
 		global $wpdb;
-
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_transactions where type='income'" );
 	}
 
@@ -82,10 +81,10 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'Create and manage your business incomes in any currencies and affix account, category and customer to each revenue.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Revenue is a direct and independent record of income or deposit where tax is inapplicable. You can create and manage your business incomes in any currency and can also affix account, category, and customer to each revenue.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-sales','tab'=>'revenues','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
-			<a href="" class="button-primary ea-empty-table__cta"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}

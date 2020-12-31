@@ -131,7 +131,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 					eaccounting_file_input(
 							array(
 									'label'         => __( 'Attachments', 'wp-ever-accounting' ),
-									'name'          => 'attachment',
+									'name'          => 'attachment_id',
 									'value'         => $payment->get_attachment_id(),
 									'required'      => false,
 									'wrapper_class' => 'ea-col-6',
