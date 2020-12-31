@@ -2,9 +2,9 @@
 /**
  * Displays the system info report.
  *
+ * @return string The compiled system info report.
  * @since 1.0.2
  *
- * @return string The compiled system info report.
  */
 function eaccounting_tools_system_info_report() {
 
@@ -79,11 +79,13 @@ function eaccounting_tools_system_info_report() {
 
 	// Object counts.
 	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
-	$return .= 'Transactions:                     ' . number_format( \EverAccounting\Transactions\query()->count(), false ) . "\n";
-	$return .= 'Accounts:                         ' . number_format( \EverAccounting\Accounts\query()->count(), false ) . "\n";
-	$return .= 'Contacts:                         ' . number_format( \EverAccounting\Contacts\query()->count(), false ) . "\n";
-	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Currencies\query()->count(), false ) . "\n";
-	$return .= 'Categories:                       ' . number_format( \EverAccounting\Categories\query()->count(), false ) . "\n";
+	$return .= 'Transactions:                     ' . number_format( eaccounting_get_transactions( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Accounts:                         ' . number_format( eaccounting_get_accounts( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Customers:                        '. number_format( eaccounting_get_customers( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Vendors:                          ' . number_format( eaccounting_get_vendors( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Currencies:                       ' . number_format( eaccounting_get_currencies( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Categories:                       ' . number_format( eaccounting_get_categories( array( 'count_total' => true ) ) ) . "\n";
+
 
 	// Get plugins that have an update
 	$updates = get_plugin_updates();
@@ -110,7 +112,7 @@ function eaccounting_tools_system_info_report() {
 			continue;
 		}
 
-		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
@@ -122,7 +124,7 @@ function eaccounting_tools_system_info_report() {
 			continue;
 		}
 
-		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
@@ -140,8 +142,8 @@ function eaccounting_tools_system_info_report() {
 				continue;
 			}
 
-			$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-			$plugin  = get_plugin_data( $plugin_path );
+			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+			$plugin = get_plugin_data( $plugin_path );
 			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 	}
