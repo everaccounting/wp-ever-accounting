@@ -28,7 +28,7 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 
 			return false;
 		}
-		$report = $this->get_cache( $args );
+		$report = false; //$this->get_cache( $args );
 		if ( empty( $report ) ) {
 			$start_date = $this->get_start_date( $args['year'] );
 			$end_date   = $this->get_end_date( $args['year'] );
@@ -39,20 +39,20 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 			$expense    = $this->calculate_total_expense( $start_date, $end_date );
 			$expense    = array_merge( $dates, $expense );
 			$profit     = array_map(
-					function ( $in, $ex ) {
-						return $in - $ex;
-					},
-					$income,
-					$expense
+				function ( $in, $ex ) {
+					return $in - $ex;
+				},
+				$income,
+				$expense
 			);
 			$profit     = array_combine( array_keys( $dates ), $profit );
 			$report     = array(
-					'incomes'  => $income,
-					'expenses' => $expense,
-					'profits'  => $profit,
-					'dates'    => $period,
+				'incomes'  => $income,
+				'expenses' => $expense,
+				'profits'  => $profit,
+				'dates'    => $period,
 			);
-			$this->set_cache( $args, $report );
+			//$this->set_cache( $args, $report );
 		}
 
 		return $report;
@@ -83,13 +83,13 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 	protected function calculate_total_income( $start_date, $end_date, $format = '%Y-%m' ) {
 		global $wpdb;
 		$sql     = $wpdb->prepare(
-				"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
+			"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
 					   FROM {$wpdb->prefix}ea_transactions
 					   WHERE type=%s AND payment_date BETWEEN %s AND %s AND category_id NOT IN (SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')
 					   GROUP BY currency_code, currency_rate, payment_date",
-				'income',
-				$start_date,
-				$end_date
+			'income',
+			$start_date,
+			$end_date
 		);
 		$results = $wpdb->get_results( $sql );
 		$income  = array();
@@ -97,7 +97,7 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 			if ( ! isset( $income[ $result->date ] ) ) {
 				$income[ $result->date ] = 0;
 			}
-			$amount                  = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                   = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$income[ $result->date ] += $amount;
 		}
 
@@ -107,13 +107,13 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 	protected function calculate_total_expense( $start_date, $end_date, $format = '%Y-%m' ) {
 		global $wpdb;
 		$sql = $wpdb->prepare(
-				"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
+			"SELECT DATE_FORMAT(payment_date, '$format') `date`, SUM(amount) amount, currency_code, currency_rate
 					   FROM {$wpdb->prefix}ea_transactions
 					   WHERE type=%s AND payment_date BETWEEN %s AND %s AND category_id NOT IN (SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')
 					   GROUP BY currency_code, currency_rate, payment_date",
-				'expense',
-				$start_date,
-				$end_date
+			'expense',
+			$start_date,
+			$end_date
 		);
 
 		$results = $wpdb->get_results( $sql );
@@ -122,7 +122,7 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 			if ( ! isset( $expense[ $result->date ] ) ) {
 				$expense[ $result->date ] = 0;
 			}
-			$amount                   = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                    = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$expense[ $result->date ] += $amount;
 		}
 
@@ -139,13 +139,13 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 		$year   = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] );
 		$report = $this->get_report( array( 'year' => $year ) );
 		$report = wp_parse_args(
-				$report,
-				array(
-						'dates'    => array(),
-						'incomes'  => array(),
-						'expenses' => array(),
-						'profits'  => array(),
-				)
+			$report,
+			array(
+				'dates'    => array(),
+				'incomes'  => array(),
+				'expenses' => array(),
+				'profits'  => array(),
+			)
 		)
 		?>
 		<div class="ea-card">
@@ -156,12 +156,12 @@ class EAccounting_Report_CashFlow extends EAccounting_Admin_Report {
 						<?php esc_html_e( 'Filter', 'wp-ever-accounting' ); ?>
 						<?php
 						eaccounting_select2(
-								array(
-										'placeholder' => __( 'Year', 'wp-ever-accounting' ),
-										'name'        => 'year',
-										'options'     => eaccounting_get_report_years(),
-										'value'       => $year,
-								)
+							array(
+								'placeholder' => __( 'Year', 'wp-ever-accounting' ),
+								'name'        => 'year',
+								'options'     => eaccounting_get_report_years(),
+								'value'       => $year,
+							)
 						);
 						?>
 						<input type="hidden" name="page" value="ea-reports">

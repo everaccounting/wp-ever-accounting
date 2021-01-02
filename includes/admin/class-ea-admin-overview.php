@@ -74,60 +74,8 @@ class EAccounting_Admin_Overview {
 	}
 
 	public static function render_total_income_widget() {
-		global $wpdb;
-		$total_income = get_transient( 'eaccounting_widget_total_income' );
-		if ( empty( $total_income ) ) {
-			$sql          = $wpdb->prepare(
-				"
-										SELECT Sum(amount) amount,
-								   currency_code,
-								   currency_rate
-							FROM   {$wpdb->prefix}ea_transactions
-							WHERE  type = %s
-								   AND category_id NOT IN (SELECT id
-														   FROM   {$wpdb->prefix}ea_categories
-														   WHERE  type = 'other')
-							GROUP  BY currency_code,
-									  currency_rate
-			",
-				'income'
-			);
-			$results      = $wpdb->get_results( $sql );
-			$total_income = 0;
-			foreach ( $results as $result ) {
-				$total_income += eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-			}
-			set_transient( 'eaccounting_widget_total_income', $total_income, MINUTE_IN_SECONDS * 1 );
-		}
-
-		$total_receivable = get_transient( 'eaccounting_widget_total_receivable' );
-		if ( empty( $total_receivable ) ) {
-			$sql = $wpdb->prepare(
-				"
-			SELECT Sum(amount) amount,
-				   currency_code,
-				   currency_rate
-			FROM   {$wpdb->prefix}ea_transactions
-			WHERE  type = %s
-				   AND document_id IN (SELECT id
-									   FROM   {$wpdb->prefix}ea_documents
-									   WHERE  status NOT IN ( 'draft', 'cancelled' )
-											  AND `status` <> 'paid'
-											  AND type = 'invoice')
-			GROUP  BY currency_code,
-					  currency_rate
-			",
-				'income'
-			);
-
-			$results          = $wpdb->get_results( $sql );
-			$total_receivable = 0;
-			foreach ( $results as $result ) {
-				$total_receivable += eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-			}
-			set_transient( 'eaccounting_widget_total_receivable', $total_receivable, MINUTE_IN_SECONDS * 1 );
-		}
-
+		$total_income     = eaccounting_get_total_income();
+		$total_receivable = eaccounting_get_total_receivable();
 		?>
 		<div class="ea-score-card__inside">
 			<div class="ea-score-card__icon">
@@ -149,58 +97,8 @@ class EAccounting_Admin_Overview {
 	}
 
 	public static function render_total_expense_widget() {
-		global $wpdb;
-		$total_expense = get_transient( 'eaccounting_widget_total_expense' );
-		if ( empty( $total_expense ) ) {
-			$sql           = $wpdb->prepare(
-				"
-										SELECT Sum(amount) amount,
-								   currency_code,
-								   currency_rate
-							FROM   {$wpdb->prefix}ea_transactions
-							WHERE  type = %s
-								   AND category_id NOT IN (SELECT id
-														   FROM   {$wpdb->prefix}ea_categories
-														   WHERE  type = 'other')
-							GROUP  BY currency_code,
-									  currency_rate
-			",
-				'expense'
-			);
-			$results       = $wpdb->get_results( $sql );
-			$total_expense = 0;
-			foreach ( $results as $result ) {
-				$total_expense += eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-			}
-			set_transient( 'eaccounting_widget_total_expense', $total_expense, MINUTE_IN_SECONDS * 1 );
-		}
-		$total_payable = get_transient( 'eaccounting_widget_total_payable' );
-		if ( empty( $total_payable ) ) {
-			$sql = $wpdb->prepare(
-				"
-			SELECT Sum(amount) amount,
-				   currency_code,
-				   currency_rate
-			FROM   {$wpdb->prefix}ea_transactions
-			WHERE  type = %s
-				   AND document_id IN (SELECT id
-									   FROM   {$wpdb->prefix}ea_documents
-									   WHERE  status NOT IN ( 'draft', 'cancelled' )
-											  AND `status` <> 'paid'
-											  AND type = 'bill')
-			GROUP  BY currency_code,
-					  currency_rate
-			",
-				'expense'
-			);
-
-			$results       = $wpdb->get_results( $sql );
-			$total_payable = 0;
-			foreach ( $results as $result ) {
-				$total_payable += eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-			}
-			set_transient( 'eaccounting_widget_total_payable', $total_payable, MINUTE_IN_SECONDS * 1 );
-		}
+		$total_expense = eaccounting_get_total_expense();
+		$total_payable = eaccounting_get_total_payable();
 		?>
 		<div class="ea-widget-card alert">
 			<div class="ea-widget-card__icon">
@@ -222,12 +120,8 @@ class EAccounting_Admin_Overview {
 	}
 
 	public static function render_total_profit_widget() {
-		$total_income     = (float) get_transient( 'eaccounting_widget_total_income' );
-		$total_expense    = (float) get_transient( 'eaccounting_widget_total_expense' );
-		$total_receivable = (float) get_transient( 'eaccounting_widget_total_receivable' );
-		$total_payable    = (float) get_transient( 'eaccounting_widget_total_payable' );
-		$total_profit     = $total_income - $total_expense;
-		$total_upcoming   = $total_receivable - $total_payable;
+		$total_profit   = eaccounting_get_total_profit();
+		$total_upcoming = eaccounting_get_total_upcoming_profit();
 		?>
 		<div class="ea-widget-card success">
 			<div class="ea-widget-card__icon">
@@ -311,8 +205,7 @@ class EAccounting_Admin_Overview {
 										callbacks: {
 											label: function (t, d) {
 												var xLabel = d.datasets[t.datasetIndex].label;
-												var yLabel = t.yLabel;
-												return xLabel + ': ' + yLabel;
+												return xLabel + ': ' + eaccountingi10n.currency['symbol'] + Number((t.yLabel).toFixed(1)).toLocaleString();
 											}
 										}
 									},
@@ -320,8 +213,6 @@ class EAccounting_Admin_Overview {
 										yAxes: [{
 											barPercentage: 1.6,
 											gridLines: {
-												// borderDash: [1],
-												// borderDashOffset: [2],
 												color: "rgba(29,140,248,0.1)",
 												drawBorder: false,
 												zeroLineColor: "transparent",
@@ -437,7 +328,7 @@ class EAccounting_Admin_Overview {
 						},
 						tooltips: {
 							callbacks: {
-								label: function(tooltipItem, data) {
+								label: function (tooltipItem, data) {
 									console.log(tooltipItem);
 									let label = data.labels[tooltipItem.index];
 									let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
@@ -528,8 +419,7 @@ class EAccounting_Admin_Overview {
 						},
 						tooltips: {
 							callbacks: {
-								label: function(tooltipItem, data) {
-									console.log(tooltipItem);
+								label: function (tooltipItem, data) {
 									let label = data.labels[tooltipItem.index];
 									let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 									return ' ' + label + ': ' + eaccountingi10n.currency['symbol'] + Number((value).toFixed(1)).toLocaleString();

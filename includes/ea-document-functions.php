@@ -100,6 +100,94 @@ function eaccounting_get_invoices( $args = array() ) {
 	return eaccounting_get_documents( array_merge( $args, array( 'type' => 'invoice' ) ) );
 }
 
+
+/**
+ * Main function for returning bill.
+ *
+ * @since 1.1.0
+ *
+ * @param $bill
+ *
+ * @return EverAccounting\Models\Bill|null
+ */
+function eaccounting_get_bill( $bill ) {
+	if ( empty( $bill ) ) {
+		return null;
+	}
+	try {
+		$result = new EverAccounting\Models\Bill( $bill );
+
+		return $result->exists() ? $result : null;
+	} catch ( \Exception $e ) {
+		return null;
+	}
+}
+
+/**
+ *  Create new bill programmatically.
+ *  Returns a new bill object on success.
+ *
+ * @since 1.1.0
+ *
+ * @param bool $wp_error
+ * @param      $args
+ *
+ * @return Bill|false|int|WP_Error
+ */
+function eaccounting_insert_bill( $args, $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $args ) ) {
+		return false;
+	}
+	try {
+		// The  id will be provided when updating an item.
+		$args = wp_parse_args( $args, array( 'id' => null ) );
+
+		// Retrieve the item.
+		$item = new \EverAccounting\Models\Bill( $args['id'] );
+
+		// Load new data.
+		$item->set_props( $args );
+
+		// Save the item
+		$item->save();
+
+		return $item;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error( 'insert_item', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	}
+}
+
+/**
+ * Delete an bill.
+ *
+ * @since 1.1.0
+ *
+ * @param $bill_id
+ *
+ * @return bool
+ */
+function eaccounting_delete_bill( $bill_id ) {
+	try {
+		$bill = new EverAccounting\Models\Bill( $bill_id );
+
+		return $bill->exists() ? $bill->delete() : false;
+	} catch ( \Exception $e ) {
+		return false;
+	}
+}
+
+/**
+ * @since 1.1.0
+ *
+ * @param array $args
+ *
+ * @return array|Invoice[]|int|
+ */
+function eaccounting_get_bills( $args = array() ) {
+	return eaccounting_get_documents( array_merge( $args, array( 'type' => 'bill' ) ) );
+}
+
 /**
  * Get document items.
  *

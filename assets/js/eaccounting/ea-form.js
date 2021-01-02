@@ -594,6 +594,188 @@ jQuery(function ($) {
 		},
 	};
 
+	var bill_form = {
+		init: function () {
+			$('#ea-bill-form')
+				.on('click', '.add-line-item', this.add_line_item)
+				.on('select2:select', '.select-item', this.item_selected)
+				.on('click', '.delete-line', this.remove_line_item)
+				.on('click', '.edit-line, .save-line', this.edit_line_item)
+				.on('click', '.add-discount', this.add_discount)
+				.on('change', '#currency_code', this.recalculate)
+				.on('click', '.recalculate', this.recalculate)
+				.on('submit', this.submit);
+
+			$('#ea-bill')
+				.on('click', '.delete_note', this.delete_note)
+				.on('click', '.receive-payment', this.receive_payment)
+
+			$(document).on('submit', '#bill-note-insert', this.add_note);
+
+			$(document.body).on('ea_bill_updated', this.recalculate)
+		},
+		block: function () {
+			$('#ea-bill-form').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+		},
+
+		unblock: function () {
+			$('#ea-bill-form').unblock();
+		},
+
+		add_line_item: function (e) {
+			e.preventDefault();
+			console.log(e);
+			var line_item = $($('#ea-bill-line-template').html());
+			var item_selector = $($('#ea-bill-item-selector').html());
+			var item_selector_name = item_selector.attr('name');
+			var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
+			line_item.addClass('editing')
+			$(line_item).find(":input").each(function () {
+				var name = $(this).attr('name');
+				name = name.replace(/\[(\d+)\]/, '[' + (index) + ']');
+				$(this).attr('name', name).attr('id', name);
+			});
+			item_selector_name = item_selector_name.replace(/\[(\d+)\]/, '[' + (index) + ']');
+			item_selector.attr('name', item_selector_name).attr('id', item_selector_name);
+			item_selector.css({width: '90%', maxWidth: 'none'})
+			line_item.find('.ea-document__line-name').html(item_selector);
+			$('#ea-document__line-items').append(line_item);
+			$(document.body).trigger('ea_select2_init');
+		},
+
+		item_selected: function (e) {
+			var data = e.params.data;
+			$(e.target).closest('tr')
+				.find("input.line_item_price").val(data.item.purchase_price)
+				.end()
+				.find("input.line_item_quantity").val(1)
+				.end()
+				.find("input.line_item_tax").val(data.item.purchase_tax);
+			$('body').trigger('ea_bill_updated');
+		},
+
+		remove_line_item: function (e) {
+			e.preventDefault();
+			$(this).closest('tr').remove();
+			bill_form.recalculate();
+		},
+
+		edit_line_item: function (e) {
+			e.preventDefault();
+			var $tr = $(this).closest('.ea-document__line');
+			if ($tr.hasClass('editing')) {
+				$tr.removeClass('editing');
+				$('body').trigger('ea_bill_updated');
+				return false;
+			}
+			$tr.siblings('tr').removeClass('editing');
+			$tr.addClass('editing');
+		},
+
+		delete_note:function(e){
+			e.preventDefault();
+			var note = $(this).closest('.ea-document-notes__item');
+			var nonce   = note.data('nonce');
+			var note_id   = note.data('noteid');
+
+			var data    = {
+				action:'eaccounting_delete_note',
+				id:note_id,
+				nonce:nonce,
+			}
+			$.post(ajaxurl, data, function (json) {
+				if( json.success){
+					note.remove();
+				}
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+			});
+		},
+
+		add_discount: function (e) {
+			$('#ea-modal-add-discount').ea_modal({
+				onReady: function (plugin) {
+					$('#discount', plugin.$modal).val($('#ea-bill-form #discount').val());
+					$('#discount_type', plugin.$modal).val($('#ea-bill-form #discount_type').val());
+				},
+				onSubmit: function (data, modal) {
+					$('#ea-bill-form #discount').val(data.discount);
+					$('#ea-bill-form #discount_type').val(data.discount_type);
+					modal.close();
+					bill_form.recalculate();
+				}
+			})
+		},
+
+		receive_payment: function (e) {
+			e.preventDefault();
+			var $modal_selector = $('#ea-modal-add-bill-payment');
+			var code = $(this).data('currency');
+
+			$modal_selector.ea_modal({
+				onReady: function (plugin) {
+					eaccounting_mask_amount($('#amount', plugin.$modal), code)
+				},
+				onSubmit: function (data, plugin) {
+					$.post(ajaxurl, data, function (json) {
+					}).always(function (json) {
+						plugin.close();
+						$.eaccounting_notice(json);
+						location.reload();
+					});
+				}
+			});
+		},
+
+		add_note:function(e){
+			e.preventDefault();
+			var $form = $(this);
+			eaccounting_block($form);
+			var data = $form.serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				if( json.success) {
+					$('#ea-bill-notes').replaceWith(json.data.notes);
+				}
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				eaccounting_unblock($form)
+			});
+		},
+
+		recalculate: function () {
+			bill_form.block();
+			var data = $.extend({}, $('#ea-bill-form').serializeObject(), {action: 'eaccounting_bill_recalculate'});
+			$.post(ajaxurl, data, function (json) {
+				if (json.success) {
+					$('#ea-bill-form .ea-document__items-wrapper').replaceWith(json.data.html);
+				} else {
+					$.eaccounting_notice(json);
+				}
+			}).always(function (json) {
+				bill_form.unblock();
+			});
+		},
+
+		submit: function (e) {
+			e.preventDefault();
+			bill_form.block();
+			var data = $('#ea-bill-form').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+				console.log(json);
+				$.eaccounting_redirect(json);
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				bill_form.unblock();
+			});
+		},
+	};
+
 	revenue_form.init();
 	payment_form.init();
 	account_form.init();
@@ -604,4 +786,5 @@ jQuery(function ($) {
 	currency_form.init();
 	item_form.init();
 	invoice_form.init();
+	bill_form.init();
 });

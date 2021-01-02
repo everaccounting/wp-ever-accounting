@@ -30,7 +30,7 @@ class EAccounting_Report_Sales extends EAccounting_Admin_Report {
 			return false;
 		}
 
-		$report = $this->get_cache( $args );
+		$report = false;// $this->get_cache( $args );
 		if ( empty( $report ) ) {
 			$report            = array();
 			$start_date        = $this->get_start_date( $args['year'] );
@@ -78,7 +78,7 @@ class EAccounting_Report_Sales extends EAccounting_Admin_Report {
 				$report['categories'] = $categories;
 			}
 
-			$this->set_cache( $args, $report );
+			//$this->set_cache( $args, $report );
 		}
 
 		return $report;

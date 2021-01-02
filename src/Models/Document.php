@@ -1368,6 +1368,12 @@ abstract class Document extends ResourceModel {
 		}
 		$this->set_total( $total );
 
+		if ( ( 0 < $this->get_total_paid() ) && ( $this->get_total_paid() < $this->get_total() ) ) {
+			$this->set_status( 'partial' );
+		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
+			$this->set_status( 'paid' );
+		}
+
 		return array(
 			'subtotal'       => $this->get_subtotal(),
 			'total_tax'      => $this->get_total_tax(),
