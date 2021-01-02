@@ -140,6 +140,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=bills&action=view&bil
 						array(
 							'label'         => __( 'Attachments', 'wp-ever-accounting' ),
 							'name'          => 'attachment_id',
+							'allowed-types' => 'jpg,jpeg,png,pdf',
 							'value'         => $bill->get_attachment_id(),
 							'wrapper_class' => 'ea-col-6',
 							'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),

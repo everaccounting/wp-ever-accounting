@@ -96,8 +96,20 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo  esc_html__( 'Customers are individuals or businesses that buy goods or services from other businesses. Customers can be assigned to revenues and invoices and can also be filtered out from the transactions you made with them.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-sales','tab'=>'customers','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Customer','wp-ever-accounting');?></a>
-			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				eaccounting_admin_url(
+					array(
+						'page'   => 'ea-sales',
+						'tab'    => 'customers',
+						'action' => 'edit',
+					)
+				)
+			);
+			?>
+						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -196,26 +208,26 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 			case 'name':
 				$view_url = admin_url( 'admin.php?page=ea-sales&tab=customers&action=view&customer_id=' . $customer->get_id() );
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
-				$value .= '<br>';
-				$value .= '<small class=meta>'.$customer->get_company().'</small>';
+				$value   .= '<br>';
+				$value   .= '<small class=meta>' . $customer->get_company() . '</small>';
 				break;
 			case 'email':
-				if(!empty($customer->get_email()) || !empty($customer->get_phone())) {
-					$value = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
+				if ( ! empty( $customer->get_email() ) || ! empty( $customer->get_phone() ) ) {
+					$value  = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
 					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . $customer->get_phone() . '</span>' : '';
 				}
-				if(empty($customer->get_email()) && empty($customer->get_phone())){
+				if ( empty( $customer->get_email() ) && empty( $customer->get_phone() ) ) {
 					$value = '&mdash;';
 				}
 				break;
 			case 'street':
 				$value = eaccounting_format_address(
-				array(
-					'city'     => $customer->get_city(),
-					'state'    => $customer->get_state(),
-					'country'  => $customer->get_country_nicename(),
-				)
-			);
+					array(
+						'city'    => $customer->get_city(),
+						'state'   => $customer->get_state(),
+						'country' => $customer->get_country_nicename(),
+					)
+				);
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
@@ -223,20 +235,23 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
 				break;
+			case 'due':
+				$value = eaccounting_format_price($customer->get_total_due());
+				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
 					array(
-						'tab'        => 'customers',
-						'action'     => 'edit',
+						'tab'         => 'customers',
+						'action'      => 'edit',
 						'customer_id' => $customer_id,
 					)
 				);
 				$del_url  = eaccounting_admin_url(
 					array(
-						'tab'        => 'customers',
-						'action'     => 'delete',
+						'tab'         => 'customers',
+						'action'      => 'delete',
 						'customer_id' => $customer_id,
-						'_wpnonce'   => wp_create_nonce('customer-nonce'),
+						'_wpnonce'    => wp_create_nonce( 'customer-nonce' ),
 					)
 				);
 				$actions  = array(

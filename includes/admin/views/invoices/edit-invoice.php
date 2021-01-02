@@ -143,6 +143,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 						array(
 							'label'         => __( 'Attachments', 'wp-ever-accounting' ),
 							'name'          => 'attachment_id',
+							'allowed-types' => 'jpg,jpeg,png,pdf',
 							'value'         => $invoice->get_attachment_id(),
 							'wrapper_class' => 'ea-col-6',
 							'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),

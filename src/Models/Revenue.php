@@ -67,4 +67,40 @@ class Revenue extends Transaction {
 			'payment_method' => __( 'Payment Method', 'wp-ever-accounting' ),
 		);
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Return the customer id.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_customer_id( $context = 'edit' ) {
+		return $this->get_prop( 'contact_id', $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * set the customer id.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param int $customer_id .
+	 *
+	 */
+	public function set_customer_id( $customer_id ) {
+		$this->set_prop( 'contact_id', absint( $customer_id ) );
+	}
 }

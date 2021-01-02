@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function eaccounting_string_to_bool( $string ) {
-	return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
+	return is_bool( $string ) ? $string : ( in_array( strtolower( $string ), array( 'yes', 'true', 'active', 'enabled' ), true ) || 1 === $string || '1' === $string );
 }
 
 /**

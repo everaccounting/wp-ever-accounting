@@ -318,6 +318,7 @@ class Invoice extends Document {
 		if ( $due < 0 ) {
 			$due = 0;
 		}
+
 		return $due;
 	}
 
@@ -372,8 +373,7 @@ class Invoice extends Document {
 			);
 		}
 
-		$total_due = $this->get_total_due();
-		$amount    = (float) eaccounting_sanitize_number( $args['amount'], true );
+		//$total_due = $this->get_total_due();
 		//      if ( $amount  $total_due ) {
 		//          throw new \Exception(
 		//              sprintf(
@@ -384,7 +384,7 @@ class Invoice extends Document {
 		//              )
 		//          );
 		//      }
-
+		$amount           = (float) eaccounting_sanitize_number( $args['amount'], true );
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
 		$converted_amount = eaccounting_price_convert_between( $amount, $this->get_currency_code(), $this->get_currency_rate(), $currency->get_code(), $currency->get_rate() );
@@ -399,7 +399,7 @@ class Invoice extends Document {
 				'customer_id'    => $this->get_contact_id(),
 				'payment_method' => eaccounting_clean( $args['payment_method'] ),
 				'description'    => eaccounting_clean( $args['description'] ),
-				'reference'      => sprintf(__('Invoice Payment #%d', 'wp-ever-accounting'), $this->get_id()),//phpcs:ignore
+				'reference'      => sprintf( __( 'Invoice Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),//phpcs:ignore
 			)
 		);
 

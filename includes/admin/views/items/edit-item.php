@@ -31,27 +31,27 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 				<div class="ea-row">
 					<?php
 					eaccounting_text_input(
-							array(
-									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Name', 'wp-ever-accounting' ),
-									'name'          => 'name',
-									'placeholder'   => __( 'Enter Name', 'wp-ever-accounting' ),
-									'value'         => $item->get_name(),
-									'required'      => true,
-							)
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Name', 'wp-ever-accounting' ),
+							'name'          => 'name',
+							'placeholder'   => __( 'Enter Name', 'wp-ever-accounting' ),
+							'value'         => $item->get_name(),
+							'required'      => true,
+						)
 					);
 					eaccounting_category_dropdown(
-							array(
-									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Category', 'wp-ever-accounting' ),
-									'name'          => 'category_id',
-									'value'         => $item->get_category_id(),
-									'required'      => false,
-									'type'          => 'item',
-									'creatable'     => true,
-									'ajax_action'   => 'eaccounting_get_item_categories',
-									'modal_id'      => 'ea-modal-add-item-category',
-							)
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Category', 'wp-ever-accounting' ),
+							'name'          => 'category_id',
+							'value'         => $item->get_category_id(),
+							'required'      => false,
+							'type'          => 'item',
+							'creatable'     => true,
+							'ajax_action'   => 'eaccounting_get_item_categories',
+							'modal_id'      => 'ea-modal-add-item-category',
+						)
 					);
 					//				eaccounting_text_input(
 					//					array(
@@ -64,90 +64,91 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 					//					)
 					//				);
 					eaccounting_text_input(
-							array(
-									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Sale price', 'wp-ever-accounting' ),
-									'name'          => 'sale_price',
-									'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
-									'value'         => $item->get_sale_price(),
-									'required'      => true,
-							)
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Sale price', 'wp-ever-accounting' ),
+							'name'          => 'sale_price',
+							'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
+							'value'         => $item->get_sale_price(),
+							'required'      => true,
+						)
 					);
 					eaccounting_text_input(
-							array(
-									'wrapper_class' => 'ea-col-6',
-									'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
-									'name'          => 'purchase_price',
-									'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
-									'value'         => $item->get_purchase_price(),
-									'required'      => true,
-							)
+						array(
+							'wrapper_class' => 'ea-col-6',
+							'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
+							'name'          => 'purchase_price',
+							'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
+							'value'         => $item->get_purchase_price(),
+							'required'      => true,
+						)
 					);
 					if ( eaccounting_tax_enabled() ) :
 						eaccounting_text_input(
-								array(
-										'wrapper_class' => 'ea-col-6',
-										'label'         => __( 'Sales Tax (%)', 'wp-ever-accounting' ),
-										'name'          => 'sales_tax',
-										'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
-										'value'         => $item->get_sales_tax(),
-										'type'          => 'number',
-										'attr'          => array(
-												'min' => 0,
-												'max' => 100
-										)
-								)
+							array(
+								'wrapper_class' => 'ea-col-6',
+								'label'         => __( 'Sales Tax (%)', 'wp-ever-accounting' ),
+								'name'          => 'sales_tax',
+								'placeholder'   => __( 'Enter Sale price', 'wp-ever-accounting' ),
+								'value'         => $item->get_sales_tax(),
+								'type'          => 'number',
+								'attr'          => array(
+									'min' => 0,
+									'max' => 100,
+								),
+							)
 						);
 
 						eaccounting_text_input(
-								array(
-										'wrapper_class' => 'ea-col-6',
-										'label'         => __( 'Purchase Tax (%)', 'wp-ever-accounting' ),
-										'name'          => 'purchase_tax',
-										'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
-										'value'         => $item->get_purchase_tax(),
-										'type'          => 'number',
-										'attr'          => array(
-												'min' => 0,
-												'max' => 100
-										)
-								)
+							array(
+								'wrapper_class' => 'ea-col-6',
+								'label'         => __( 'Purchase Tax (%)', 'wp-ever-accounting' ),
+								'name'          => 'purchase_tax',
+								'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
+								'value'         => $item->get_purchase_tax(),
+								'type'          => 'number',
+								'attr'          => array(
+									'min' => 0,
+									'max' => 100,
+								),
+							)
 						);
 					endif;
 					eaccounting_textarea(
-							array(
-									'label'         => __( 'Description', 'wp-ever-accounting' ),
-									'name'          => 'description',
-									'value'         => $item->get_description(),
-									'required'      => false,
-									'wrapper_class' => 'ea-col-6',
-									'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
-							)
+						array(
+							'label'         => __( 'Description', 'wp-ever-accounting' ),
+							'name'          => 'description',
+							'value'         => $item->get_description(),
+							'required'      => false,
+							'wrapper_class' => 'ea-col-6',
+							'placeholder'   => __( 'Enter description', 'wp-ever-accounting' ),
+						)
 					);
 
 					eaccounting_file_input(
-							array(
-									'label'         => __( 'Product Image', 'wp-ever-accounting' ),
-									'name'          => 'thumbnail_id',
-									'value'         => $item->get_thumbnail_id(),
-									'required'      => false,
-									'wrapper_class' => 'ea-col-6',
-									'placeholder'   => __( 'Upload Image', 'wp-ever-accounting' ),
-							)
+						array(
+							'label'         => __( 'Product Image', 'wp-ever-accounting' ),
+							'name'          => 'thumbnail_id',
+							'value'         => $item->get_thumbnail_id(),
+							'required'      => false,
+							'allowed-types' => 'jpg,jpeg,png',
+							'wrapper_class' => 'ea-col-6',
+							'placeholder'   => __( 'Upload Image', 'wp-ever-accounting' ),
+						)
 					);
 
 					eaccounting_hidden_input(
-							array(
-									'name'  => 'id',
-									'value' => $item->get_id(),
-							)
+						array(
+							'name'  => 'id',
+							'value' => $item->get_id(),
+						)
 					);
 
 					eaccounting_hidden_input(
-							array(
-									'name'  => 'action',
-									'value' => 'eaccounting_edit_item',
-							)
+						array(
+							'name'  => 'action',
+							'value' => 'eaccounting_edit_item',
+						)
 					);
 
 					?>
@@ -167,7 +168,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 $code     = eaccounting()->settings->get( 'default_currency', 'USD' );
 $currency = eaccounting_get_currency( $code );
 eaccounting_enqueue_js(
-		"
+	"
 	jQuery('#ea-item-form #purchase_price, #ea-item-form #sale_price').inputmask('decimal', {
 			alias: 'numeric',
 			groupSeparator: '" . $currency->get_thousand_separator() . "',

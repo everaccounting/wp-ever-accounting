@@ -28,7 +28,8 @@ jQuery(function ($) {
 	$('.ea-attachment')
 		.on('click', '.ea-attachment__upload', function (e) {
 			e.preventDefault();
-			var $button = $(this);
+			var $button = $(this),
+			allowed_types = $(this).data('allowed-types').split(',');
 			if (frame) {
 				frame.open();
 				return false;
@@ -48,14 +49,20 @@ jQuery(function ($) {
 
 			frame.on('select', function () {
 				var attachment = frame.state().get('selection').first().toJSON();
-				console.log(attachment);
+				var subtype = attachment.subtype;
+				console.log(allowed_types);
+				console.log(subtype);
+				if( !allowed_types.includes(subtype) ){
+					alert('Unsupported Media');
+					return false;
+				}
 				$button
 					.closest('.ea-attachment')
 					.find('.ea-attachment__input').val(attachment.id)
 					.end()
 					.find('.ea-attachment__link').attr('href', attachment.url)
 					.end()
-					.find('.ea-attachment__image').attr('src', attachment.icon)
+					.find('.ea-attachment__image').attr('src', ['jpeg', 'png', 'jpg'].includes(subtype)? attachment.url :attachment.icon)
 					.end()
 					.addClass('has--image');
 			});

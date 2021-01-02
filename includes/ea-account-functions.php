@@ -99,13 +99,13 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		$item = new \EverAccounting\Models\Account( $data['id'] );
 
 		//check if already account number exists for another user
-		$existing_account = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$data[number]'");
+		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$data[number]'" );
 
-		if( $existing_account ){
+		if ( $existing_account ) {
 			$existing_id = $existing_account->id;
 		}
-		if( !empty($existing_id) && absint($existing_id) != $item->get_id() ){
-			throw new \Exception(  __( 'Duplicate account number.', 'wp-ever-accounting' ) );
+		if ( ! empty( $existing_id ) && absint( $existing_id ) != $item->get_id() ) {
+			throw new \Exception( __( 'Duplicate account number.', 'wp-ever-accounting' ) );
 		}
 
 		// Load new data.
@@ -175,62 +175,108 @@ function eaccounting_delete_account( $account_id ) {
  */
 function eaccounting_get_accounts( $args = array() ) {
 	global $wpdb;
-	$search_cols  = array( 'id', 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address' );
-	$orderby_cols = array( 'id', 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address', 'enabled', 'date_created' );
 	// Prepare args.
 	$args = wp_parse_args(
 		$args,
 		array(
-			'status'       => 'all',
-			'include'      => '',
-			'search'       => '',
-			'balance'      => false,
-			'search_cols'  => $search_cols,
-			'orderby_cols' => $orderby_cols,
-			'fields'       => '*',
-			'orderby'      => 'id',
-			'order'        => 'ASC',
-			'number'       => 20,
-			'offset'       => 0,
-			'paged'        => 1,
-			'return'       => 'objects',
-			'count_total'  => false,
+			'status'      => 'all',
+			'include'     => '',
+			'search'      => '',
+			'balance'     => false,
+			'fields'      => '*',
+			'orderby'     => 'id',
+			'order'       => 'ASC',
+			'number'      => 20,
+			'offset'      => 0,
+			'paged'       => 1,
+			'return'      => 'objects',
+			'count_total' => false,
 		)
 	);
 
-	$qv    = apply_filters( 'eaccounting_get_accounts_args', $args );
-	$table = 'ea_accounts';
+	$qv           = apply_filters( 'eaccounting_get_accounts_args', $args );
+	$table        = \EverAccounting\Repositories\Accounts::TABLE;
+	$columns      = \EverAccounting\Repositories\Accounts::get_columns();
+	$qv['fields'] = wp_parse_list( $qv['fields'] );
+	foreach ( $qv['fields'] as $index => $field ) {
+		if ( ! in_array( $field, $columns, true ) ) {
+			unset( $qv['fields'][ $index ] );
+		}
+	}
+	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
+	$where  = 'WHERE 1=1';
 
-	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
-	$query_from    = eaccounting_prepare_query_from( $table );
-	$query_where   = 'WHERE 1=1';
-	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
-	$query_join    = '';
-	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
-	$query_limit   = eaccounting_prepare_query_limit( $qv );
-	$count_total   = true === $qv['count_total'];
-
-	if ( true === $qv['balance'] && ! $count_total ) {
-		$sub_query     = "
-		SELECT account_id, SUM(CASE WHEN ea_transactions.type='income' then amount WHEN ea_transactions.type='expense' then - amount END) as total from
-		{$wpdb->prefix}ea_transactions as ea_transactions LEFT JOIN {$wpdb->prefix}$table ea_accounts ON ea_accounts.id=ea_transactions.account_id GROUP BY account_id";
-		$query_join   .= " LEFT JOIN ($sub_query) as calculated ON calculated.account_id = {$table}.id";
-		$query_fields .= " , ( {$table}.opening_balance + calculated.total ) as balance ";
+	if ( ! empty( $qv['include'] ) ) {
+		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
+		$where  .= " AND $table.`id` IN ($include)";
+	} elseif ( ! empty( $qv['exclude'] ) ) {
+		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
-	$cache_key = md5( serialize( $qv ) );
-	$results   = wp_cache_get( $cache_key, 'ea_accounts' );
-	$request   = "SELECT $query_fields $query_from $query_join $query_where $query_orderby $query_limit";
+	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+		$status = eaccounting_string_to_bool( $qv['status'] );
+		$status = eaccounting_bool_to_number( $status );
+		$where .= " AND $table.`enabled` = ('$status')";
+	}
+
+	$join = '';
+	if ( true === $qv['balance'] && ! $qv['count_total'] ) {
+		$sub_query = "
+		SELECT account_id, SUM(CASE WHEN ea_transactions.type='income' then amount WHEN ea_transactions.type='expense' then - amount END) as total from
+		{$wpdb->prefix}ea_transactions as ea_transactions LEFT JOIN {$wpdb->prefix}$table ea_accounts ON ea_accounts.id=ea_transactions.account_id GROUP BY account_id";
+		$join     .= " LEFT JOIN ($sub_query) as calculated ON calculated.account_id = {$table}.id";
+		$fields   .= " , ( {$table}.opening_balance + IFNULL( calculated.total, 0) ) as balance ";
+	}
+
+	//search
+	$search_cols = array( 'name', 'number', 'currency_code', 'bank_name', 'bank_phone', 'bank_address' );
+	if ( ! empty( $qv['search'] ) ) {
+		$searches = array();
+		$where   .= ' AND (';
+		foreach ( $search_cols as $col ) {
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+		}
+		$where .= implode( ' OR ', $searches );
+		$where .= ')';
+	}
+
+	if ( ! empty( $qv['due_date'] ) && is_array( $qv['due_date'] ) ) {
+		$date_created_query = new \WP_Date_Query( $qv['due_date'], "{$table}.due_date" );
+		$where             .= $date_created_query->get_sql();
+	}
+
+	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
+	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
+
+	$limit = '';
+	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
+		if ( $qv['offset'] ) {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
+		} else {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
+		}
+	}
+
+	$select      = "SELECT {$fields}";
+	$from        = "FROM {$wpdb->prefix}$table $table";
+	$orderby     = "ORDER BY {$orderby} {$order}";
+	$count_total = true === $qv['count_total'];
+	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
+	$cache_key   = md5( serialize( array_merge( $clauses, array( 'count_total' => $qv['count_total'] ) ) ) );
+	$results     = wp_cache_get( $cache_key, 'ea_accounts' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( $request );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
 			wp_cache_set( $cache_key, $results, 'ea_accounts' );
 		} else {
-			$results = $wpdb->get_results( $request );
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_accounts' );
-					wp_cache_set( $item->number, $item, 'ea_accounts' );
+					if ( true === $qv['balance'] ) {
+						wp_cache_set( 'balance-' . $item->id, $item->balance, 'ea_accounts' );
+					}
 				}
 			}
 			wp_cache_set( $cache_key, $results, 'ea_accounts' );
@@ -243,3 +289,4 @@ function eaccounting_get_accounts( $args = array() ) {
 
 	return $results;
 }
+

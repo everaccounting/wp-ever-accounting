@@ -98,8 +98,20 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo  esc_html__( 'An account is a record in an accounting system that tracks the financial activities of a specific asset, revenue, or expense. You can create as many banks and cash accounts as you want and can track your opening and current balances in any currency.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-banking','tab'=>'accounts','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Account','wp-ever-accounting');?></a>
-			<a href="https://wpeveraccounting.com/docs/general/accounts-listing/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				eaccounting_admin_url(
+					array(
+						'page'   => 'ea-banking',
+						'tab'    => 'accounts',
+						'action' => 'edit',
+					)
+				)
+			);
+			?>
+						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Account', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/accounts-listing/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -198,7 +210,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				$view_url = admin_url( 'admin.php?page=ea-banking&tab=accounts&action=view&account_id=' . $account_id );
 				$nonce    = wp_create_nonce( 'account-nonce' );
 				$actions  = array(
-					'id'	=> 'ID: '.$account_id,
+					'id'     => 'ID: ' . $account_id,
 					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
 					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&action=edit&account_id=' . $account->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&_wpnonce=' . $nonce . '&action=delete&account_id=' . $account->get_id() ) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
@@ -206,13 +218,13 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'balance':
-				$value = $account->format_amount( $account->get_balance());
+				$value = $account->format_amount( $account->get_balance() );
 				break;
 			case 'number':
 				$value = $account->get_number();
 				break;
 			case 'bank_name':
-				$value = !empty( $account->get_bank_name() ) ? $account->get_bank_name() : "&mdash;";
+				$value = ! empty( $account->get_bank_name() ) ? $account->get_bank_name() : '&mdash;';
 				break;
 			case 'enabled':
 				$value  = '<label class="ea-toggle">';
@@ -396,7 +408,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 		);
 
 		$args        = apply_filters( 'eaccounting_account_table_query_args', $args, $this );
-		$this->items = eaccounting_get_accounts( array_merge($args, array('balance' => true)) );
+		$this->items = eaccounting_get_accounts( array_merge( $args, array( 'balance' => true ) ) );
 
 		$this->active_count = eaccounting_get_accounts(
 			array_merge(

@@ -484,11 +484,58 @@ function eaccounting_get_data( $key ) {
  * @param mixed  $to          Receiver.
  * @param mixed  $subject     Subject.
  * @param mixed  $message     Message.
- * @param string $headers     Headers. (default: "Content-Type: text/html\r\n").
  * @param string $attachments Attachments. (default: "").
+ *
  * @return bool
  */
-function eaccounting_mail( $to, $subject, $message, $headers = "Content-Type: text/html\r\n", $attachments = '' ) {
+function eaccounting_mail( $to, $subject, $message, $attachments = '' ) {
 	$mailer = eaccounting()->mailer();
-	return $mailer->send( $to, $subject, $message, $headers, $attachments );
+	return $mailer->send( $to, $subject, $message, $attachments );
+}
+
+
+
+/**
+ * Based on wp_list_pluck, this calls a method instead of returning a property.
+ *
+ * @since 1.1.0
+ * @param array      $list              List of objects or arrays.
+ * @param int|string $callback_or_field Callback method from the object to place instead of the entire object.
+ * @param int|string $index_key         Optional. Field from the object to use as keys for the new array.
+ *                                      Default null.
+ * @return array Array of values.
+ */
+function eaccounting_list_pluck( $list, $callback_or_field, $index_key = null ) {
+	// Use wp_list_pluck if this isn't a callback.
+	$first_el = current( $list );
+	if ( ! is_object( $first_el ) || ! is_callable( array( $first_el, $callback_or_field ) ) ) {
+		return wp_list_pluck( $list, $callback_or_field, $index_key );
+	}
+	if ( ! $index_key ) {
+		/*
+		 * This is simple. Could at some point wrap array_column()
+		 * if we knew we had an array of arrays.
+		 */
+		foreach ( $list as $key => $value ) {
+			$list[ $key ] = $value->{$callback_or_field}();
+		}
+		return $list;
+	}
+
+	/*
+	 * When index_key is not set for a particular item, push the value
+	 * to the end of the stack. This is how array_column() behaves.
+	 */
+	$newlist = array();
+	foreach ( $list as $value ) {
+		// Get index. @since 3.2.0 this supports a callback.
+		if ( is_callable( array( $value, $index_key ) ) ) {
+			$newlist[ $value->{$index_key}() ] = $value->{$callback_or_field}();
+		} elseif ( isset( $value->$index_key ) ) {
+			$newlist[ $value->$index_key ] = $value->{$callback_or_field}();
+		} else {
+			$newlist[] = $value->{$callback_or_field}();
+		}
+	}
+	return $newlist;
 }

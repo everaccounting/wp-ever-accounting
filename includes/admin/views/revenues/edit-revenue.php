@@ -117,6 +117,7 @@ try {
 						array(
 							'label'         => __( 'Attachments', 'wp-ever-accounting' ),
 							'name'          => 'attachment_id',
+							'allowed-types' => 'jpg,jpeg,png,pdf',
 							'value'         => $revenue->get_attachment_id(),
 							'required'      => false,
 							'wrapper_class' => 'ea-col-6',

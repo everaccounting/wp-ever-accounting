@@ -193,6 +193,7 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 						eaccounting_admin_url(
 							array(
 								'action'  => 'view',
+								'tab'     => 'bills',
 								'bill_id' => $bill_id,
 							)
 						)

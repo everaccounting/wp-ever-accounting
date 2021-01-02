@@ -157,6 +157,7 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Photo', 'wp-ever-accounting' ),
 							'name'          => 'thumbnail_id',
+							'allowed-types' => 'jpg,jpeg,png',
 							'value'         => $customer->get_thumbnail_id(),
 						)
 					);

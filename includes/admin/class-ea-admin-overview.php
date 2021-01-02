@@ -77,19 +77,19 @@ class EAccounting_Admin_Overview {
 		$total_income     = eaccounting_get_total_income();
 		$total_receivable = eaccounting_get_total_receivable();
 		?>
-		<div class="ea-score-card__inside">
-			<div class="ea-score-card__icon">
+		<div class="ea-widget-card">
+			<div class="ea-widget-card__icon">
 				<span class="dashicons dashicons-money-alt"></span>
 			</div>
-			<div class="ea-score-card__content">
-				<div class="ea-score-card__primary">
-					<span class="ea-score-card__title"><?php esc_html_e( 'Total Sales', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-score-card__amount"><?php echo eaccounting_format_price( $total_income ); ?></span>
+			<div class="ea-widget-card__content">
+				<div class="ea-widget-card__primary">
+					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Sales', 'wp-ever-accounting' ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_income ); ?></span>
 				</div>
 
-				<div class="ea-score-card__secondary">
-					<span class="ea-score-card__title"><?php esc_html_e( 'Receivable', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-score-card__amount"><?php echo eaccounting_format_price( $total_receivable ); ?></span>
+				<div class="ea-widget-card__secondary">
+					<span class="ea-widget-card__title"><?php esc_html_e( 'Receivable', 'wp-ever-accounting' ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_receivable ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -105,14 +105,14 @@ class EAccounting_Admin_Overview {
 				<span class="dashicons dashicons-money-alt"></span>
 			</div>
 			<div class="ea-widget-card__content">
-				<div class="ea-score-card__primary">
-					<span class="ea-score-card__title"><?php esc_html_e( 'Total Expenses', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-score-card__amount"><?php echo eaccounting_format_price( $total_expense ); ?></span>
+				<div class="ea-widget-card__primary">
+					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Expenses', 'wp-ever-accounting' ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_expense ); ?></span>
 				</div>
 
-				<div class="ea-score-card__secondary">
-					<span class="ea-score-card__title"><?php esc_html_e( 'Payable', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-score-card__amount"><?php echo eaccounting_format_price( $total_payable ); ?></span>
+				<div class="ea-widget-card__secondary">
+					<span class="ea-widget-card__title"><?php esc_html_e( 'Payable', 'wp-ever-accounting' ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_payable ); ?></span>
 				</div>
 			</div>
 		</div>
@@ -128,14 +128,14 @@ class EAccounting_Admin_Overview {
 				<span class="dashicons dashicons-money-alt"></span>
 			</div>
 			<div class="ea-widget-card__content">
-				<div class="ea-score-card__primary">
-					<span class="ea-score-card__title"><?php esc_html_e( 'Total Profit', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-score-card__amount"><?php echo eaccounting_format_price( $total_profit ); ?></span>
+				<div class="ea-widget-card__primary">
+					<span class="ea-widget-card__title"><?php esc_html_e( 'Total Profit', 'wp-ever-accounting' ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_profit ); ?></span>
 				</div>
 
-				<div class="ea-score-card__secondary">
-					<span class="ea-score-card__title"><?php esc_html_e( 'Upcoming', 'wp-ever-accounting' ); ?></span>
-					<span class="ea-score-card__amount"><?php echo eaccounting_format_price( $total_upcoming ); ?></span>
+				<div class="ea-widget-card__secondary">
+					<span class="ea-widget-card__title"><?php esc_html_e( 'Upcoming', 'wp-ever-accounting' ); ?></span>
+					<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $total_upcoming ); ?></span>
 				</div>
 			</div>
 		</div>

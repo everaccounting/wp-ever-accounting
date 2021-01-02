@@ -97,7 +97,12 @@ function eaccounting_delete_invoice( $invoice_id ) {
  * @return array|Invoice[]|int|
  */
 function eaccounting_get_invoices( $args = array() ) {
-	return eaccounting_get_documents( array_merge( $args, array( 'type' => 'invoice' ) ) );
+	$args = array_merge( $args, array( 'type' => 'invoice' ) );
+	if ( isset( $args['customer_id'] ) ) {
+		$args['contact_id'] = $args['customer_id'];
+		unset( $args['customer_id'] );
+	}
+	return eaccounting_get_documents( $args );
 }
 
 
@@ -185,7 +190,12 @@ function eaccounting_delete_bill( $bill_id ) {
  * @return array|Invoice[]|int|
  */
 function eaccounting_get_bills( $args = array() ) {
-	return eaccounting_get_documents( array_merge( $args, array( 'type' => 'bill' ) ) );
+	$args = array_merge( $args, array( 'type' => 'bill' ) );
+	if ( isset( $args['vendor_id'] ) ) {
+		$args['contact_id'] = $args['vendor_id'];
+		unset( $args['vendor_id'] );
+	}
+	return eaccounting_get_documents( $args );
 }
 
 /**
@@ -239,7 +249,7 @@ function eaccounting_get_documents( $args = array() ) {
 	$search_cols = array( 'document_number', 'order_number', 'address' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    = ' AND (';
+		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -299,6 +309,7 @@ function eaccounting_get_documents( $args = array() ) {
 	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
 	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
 
+	$limit = '';
 	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
 		if ( $qv['offset'] ) {
 			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
@@ -311,10 +322,9 @@ function eaccounting_get_documents( $args = array() ) {
 	$from        = "FROM {$wpdb->prefix}$table $table";
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = md5( serialize( $qv ) );
-	$results     = wp_cache_get( $cache_key, 'ea_documents' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-
+	$cache_key   = md5( serialize( array_merge($clauses, array('count_total' => $qv['count_total'])) ) );
+	$results     = wp_cache_get( $cache_key, 'ea_documents' );
 	if ( false === $results ) {
 		if ( $count_total ) {
 			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
@@ -347,7 +357,6 @@ function eaccounting_get_documents( $args = array() ) {
 					default:
 						$document = apply_filters( 'eaccounting_document_object_' . $item->type, null, $item );
 				}
-
 
 				return $document;
 			},
