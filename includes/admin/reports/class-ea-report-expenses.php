@@ -132,7 +132,7 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 						eaccounting_vendor_dropdown(
 							array(
 								'name'        => 'vendor_id',
-								'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
+								'placeholder' => __( 'Select Vendor', 'wp-ever-accounting' ),
 								'value'       => $vendor_id,
 								'creatable'   => false,
 							)
