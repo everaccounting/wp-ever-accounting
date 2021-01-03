@@ -132,7 +132,7 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 						eaccounting_vendor_dropdown(
 							array(
 								'name'        => 'vendor_id',
-								'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
+								'placeholder' => __( 'Select Vendor', 'wp-ever-accounting' ),
 								'value'       => $vendor_id,
 								'creatable'   => false,
 							)
@@ -143,6 +143,7 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 								'value'     => $category_id,
 								'type'      => 'expense',
 								'creatable' => false,
+								'ajax_action' => 'eaccounting_get_expense_categories'
 							)
 						);
 						eaccounting_payment_method_dropdown(
@@ -152,6 +153,7 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 								'default' => '',
 							)
 						);
+
 						?>
 						<input type="hidden" name="page" value="ea-reports">
 						<input type="hidden" name="tab" value="expenses">

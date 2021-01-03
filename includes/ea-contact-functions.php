@@ -116,8 +116,6 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 
 		return $item;
 	} catch ( \Exception $e ) {
-		error_log( print_r( $e, true ) );
-
 		return $wp_error ? new WP_Error( 'insert_customer', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
 	}
 }

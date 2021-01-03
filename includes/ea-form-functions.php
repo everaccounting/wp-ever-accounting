@@ -821,7 +821,6 @@ function eaccounting_category_dropdown( $field ) {
 		),
 		$field
 	);
-
 	eaccounting_select2( apply_filters( 'eaccounting_category_dropdown', $field ) );
 }
 

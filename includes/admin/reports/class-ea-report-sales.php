@@ -149,6 +149,7 @@ class EAccounting_Report_Sales extends EAccounting_Admin_Report {
 							array(
 								'name'  => 'payment_method',
 								'value' => $payment_method,
+								'default' => '',
 							)
 						);
 						?>
