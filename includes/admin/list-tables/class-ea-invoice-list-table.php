@@ -344,6 +344,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+		$customer_id = isset($_GET['customer_id']) ? $_GET['customer_id'] : '';
 
 		$per_page = $this->per_page;
 
@@ -358,6 +359,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 				'search'   => $search,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
+				'customer_id' => $customer_id,
 			)
 		);
 

@@ -61,15 +61,15 @@ class EAccounting_Admin_Overview {
 	}
 
 	public static function eaccounting_dashboard_setup() {
-		add_meta_box( 'total-income', false, array( __CLASS__, 'render_total_income_widget' ), 'ea-overview', 'top' );
-		add_meta_box( 'total-expense', false, array( __CLASS__, 'render_total_expense_widget' ), 'ea-overview', 'top' );
-		add_meta_box( 'total-profit', false, array( __CLASS__, 'render_total_profit_widget' ), 'ea-overview', 'top' );
+		add_meta_box( 'total-income', false, array( __CLASS__, 'render_total_income_widget' ), 'ea-overview', 'top','high', array( 'col' => '4' ) );
+		add_meta_box( 'total-expense', false, array( __CLASS__, 'render_total_expense_widget' ), 'ea-overview', 'top','high', array( 'col' => '4' ) );
+		add_meta_box( 'total-profit', false, array( __CLASS__, 'render_total_profit_widget' ), 'ea-overview', 'top','high', array( 'col' => '4' ) );
 		add_meta_box( 'cash-flow', __( 'Cash Flow', 'wp-ever-accounting' ), array( __CLASS__, 'render_cashflow' ), 'ea-overview', 'middle', 'high', array( 'col' => '12' ) );
 		add_meta_box( 'income-category-chart', __( 'Income by categories', 'wp-ever-accounting' ), array( __CLASS__, 'render_incomes_categories' ), 'ea-overview', 'advanced', 'high', array( 'col' => '6' ) );
 		add_meta_box( 'expense-category-chart', __( 'Expense by categories', 'wp-ever-accounting' ), array( __CLASS__, 'render_expenses_categories' ), 'ea-overview', 'advanced', 'high', array( 'col' => '6' ) );
-		add_meta_box( 'latest-income', __( 'Latest Incomes', 'wp-ever-accounting' ), array( __CLASS__, 'render_latest_incomes' ), 'ea-overview' );
-		add_meta_box( 'latest-expense', __( 'Latest Expenses', 'wp-ever-accounting' ), array( __CLASS__, 'render_latest_expenses' ), 'ea-overview' );
-		add_meta_box( 'account-balance', __( 'Account Balances', 'wp-ever-accounting' ), array( __CLASS__, 'render_account_balances' ), 'ea-overview' );
+		add_meta_box( 'latest-income', __( 'Latest Incomes', 'wp-ever-accounting' ), array( __CLASS__, 'render_latest_incomes' ), 'ea-overview', 'advanced', 'high', array( 'col' => '4' ) );
+		add_meta_box( 'latest-expense', __( 'Latest Expenses', 'wp-ever-accounting' ), array( __CLASS__, 'render_latest_expenses' ), 'ea-overview', 'advanced', 'high', array( 'col' => '4' ) );
+		add_meta_box( 'account-balance', __( 'Account Balances', 'wp-ever-accounting' ), array( __CLASS__, 'render_account_balances' ), 'ea-overview', 'advanced', 'high', array( 'col' => '4' ) );
 		do_action( 'eaccounting_dashboard_setup' );
 	}
 

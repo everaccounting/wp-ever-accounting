@@ -202,6 +202,13 @@ function eaccounting_get_customers( $args = array(), $callback = true ) {
 	$count_total   = true === $qv['count_total'];
 	$cache_key     = md5( serialize( $qv ) );
 	$results       = wp_cache_get( $cache_key, 'eaccounting_customer' );
+
+	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+		$status = eaccounting_string_to_bool( $qv['status'] );
+		$status = eaccounting_bool_to_number( $status );
+		$query_where .= " AND $table.`enabled` = ('$status')";
+	}
+
 	$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
 
 	if ( false === $results ) {
@@ -380,6 +387,13 @@ function eaccounting_get_vendors( $args = array() ) {
 	$query_from    = eaccounting_prepare_query_from( $table );
 	$query_where   = "WHERE 1=1 AND $table.`type`='vendor' ";
 	$query_where  .= eaccounting_prepare_query_where( $qv, $table );
+
+	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+		$status = eaccounting_string_to_bool( $qv['status'] );
+		$status = eaccounting_bool_to_number( $status );
+		$query_where .= " AND $table.`enabled` = ('$status')";
+	}
+
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$count_total   = true === $qv['count_total'];

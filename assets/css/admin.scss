@@ -98,13 +98,22 @@
 	  color: #999;
 	}
 	@media only screen and (max-width: 782px){
-	  &.items {
+	  &.items,&.customers,&.vendors,&.accounts {
 		.column-thumb {
 		  display: none;
 		  text-align: left;
 		}
 	  }
+	  &.customers .row-actions span,&.vendors .row-actions span,&.invoices .row-actions span {
+		padding-top: 0;
+	  }
+	  &.customers .row-actions span a,&.vendors .row-actions span a,&.invoices .row-actions span a {
+		padding-top: 0;
+		line-height: 1;
+	  }
+
 	}
+
 
   }
 }
@@ -143,7 +152,14 @@
 	  }
 	}
   }
-
+  .button {
+	@media screen and (max-width: 782px) {
+	  font-size: 13px;
+	  line-height: 2.15384615;
+	  min-height: 30px;
+	  padding: 0 10px;
+	}
+  }
 
 }
 

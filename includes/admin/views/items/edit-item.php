@@ -93,6 +93,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 								'value'         => $item->get_sales_tax(),
 								'type'          => 'number',
 								'attr'          => array(
+									'step' => .1,
 									'min' => 0,
 									'max' => 100,
 								),
@@ -108,6 +109,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 								'value'         => $item->get_purchase_tax(),
 								'type'          => 'number',
 								'attr'          => array(
+									'step' => .1,
 									'min' => 0,
 									'max' => 100,
 								),

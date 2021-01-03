@@ -309,6 +309,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+		$from_id = isset($_GET['account_id']) ? $_GET['account_id'] : '';
 
 		$per_page = $this->per_page;
 
@@ -322,6 +323,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				'search'   => $search,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
+				'from_id'      => $from_id,
 			)
 		);
 
