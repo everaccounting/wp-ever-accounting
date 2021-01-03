@@ -31,7 +31,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 			<div class="ea-card__header">
 				<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
 				<div>
-					<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
+					<button onclick="history.go(-1);" class="button-secondary button"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 					<?php if ( $invoice->exists() ) : ?>
 						<?php do_action( 'eaccounting_invoice_header_actions', $invoice ); ?>
 						<a class="button-secondary button" href="<?php echo esc_url( $view_url ); ?>"><?php _e( 'View Invoice', 'wp-ever-accounting' ); ?></a>
