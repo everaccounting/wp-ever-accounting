@@ -736,3 +736,24 @@
 	background: none;
   }
 }
+.ea-admin-page {
+  .ea-card__header {
+	@media screen and (max-width: 782px) {
+	  display: block;
+	}
+  }
+  .ea-card__toolbar {
+	@media screen and (max-width: 782px) {
+	  margin-top: 5px;
+	}
+  }
+  .ea-card__toolbar .select2-container {
+	@media screen and (max-width: 782px) {
+	  display: block;
+	  margin-bottom: 5px;
+	}
+  }
+
+
+
+}
