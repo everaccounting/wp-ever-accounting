@@ -395,6 +395,7 @@ function eaccounting_get_transfers( $args = array() ) {
 		'income.reference reference',
 		'income.amount amount',
 	);
+
 	// Prepare args.
 	$args = wp_parse_args(
 		$args,
@@ -412,6 +413,7 @@ function eaccounting_get_transfers( $args = array() ) {
 			'paged'        => 1,
 			'return'       => 'objects',
 			'count_total'  => false,
+			'from_account_id' => 52,
 		)
 	);
 
@@ -420,12 +422,11 @@ function eaccounting_get_transfers( $args = array() ) {
 
 	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
 	$query_from    = eaccounting_prepare_query_from( $table );
-	$query_where   = 'WHERE 1=1';
+	$query_where  = 'WHERE 1=1';
 	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
 	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
 	$query_limit   = eaccounting_prepare_query_limit( $qv );
 	$query_join    = '';
-
 	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
 	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
 
