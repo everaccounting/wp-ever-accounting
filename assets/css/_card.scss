@@ -36,12 +36,12 @@
 	}
   }
 
-  &__header{
-	background-color: rgba(0,0,0,0.03);
-	border-bottom: 1px solid rgba(0,0,0,0.125);
+  &__header {
+	background-color: rgba(0, 0, 0, 0.03);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.125);
   }
 
-  &__footer{
+  &__footer {
 	border-bottom: 0;
 	border-top: 1px solid #e1e2e2;
   }
@@ -52,17 +52,17 @@
 	font-size: 1.2em;
   }
 
-  &__toolbar{
+  &__toolbar {
 	input, select, .select2, button {
 	  margin-right: 5px;
 	}
   }
 
-  &__subtitle{
+  &__subtitle {
 	font-size: 1em;
   }
 
-  &__body{
+  &__body {
 	box-sizing: content-box;
 	position: relative;
   }
@@ -81,10 +81,11 @@
 	}
   }
 
-  &__section{
+  &__section {
 	border-top: 1px solid #e1e2e2;
 	border-bottom: 0;
-	&:last-child{
+
+	&:last-child {
 	  border-bottom: 0;
 	}
   }
@@ -93,13 +94,15 @@
 	margin-top: 20px;
   }
 
-  .nav-tab-wrapper{
+  .nav-tab-wrapper {
 	border-bottom: 1px solid #e1e2e2;
-	.nav-tab{
+
+	.nav-tab {
 	  background: #f8f8f8;
 	  font-size: 13px;
 	}
-	.nav-tab-active{
+
+	.nav-tab-active {
 	  background: #ffffff;
 	  border-bottom: 1px solid #ffffff !important;
 	}
@@ -108,7 +111,7 @@
 }
 
 
-.ea-widget-card{
+.ea-widget-card {
   $self: &;
   flex: 1 1 auto;
   flex-direction: row;
@@ -132,18 +135,19 @@
 	background: #3644ff;
 	color: #fff;
 	position: relative;
-	&>*{
+
+	& > * {
 	  position: absolute;
 	  top: 50%;
 	  left: 50%;
-	  transform: translate(-50%,-50%);
+	  transform: translate(-50%, -50%);
 	  height: 50px;
 	  width: 50px;
 	  font-size: 50px;
 	}
   }
 
-  &__content{
+  &__content {
 	-webkit-box-flex: 1;
 	flex-grow: 1;
 	text-align: right;
@@ -158,14 +162,14 @@
   }
 
   &__primary,
-  &__secondary{
+  &__secondary {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
   }
 
   &__title,
-  &__amount{
+  &__amount {
 	color: #6c757d;
 	font-size: 17px;
 	line-height: 1;
@@ -176,37 +180,38 @@
 	font-weight: normal;
   }
 
-  &__amount{
+  &__amount {
 	//font-weight: bold;
   }
 
-  &__secondary{
+  &__secondary {
 	margin-top: 12px;
 	padding-top: 12px;
 	border-top: 1px solid #ddd;
-	#{$self}{
+
+	#{$self} {
 	  &__title,
-	  &__amount{
+	  &__amount {
 		font-size: 12px;
 		font-weight: normal;
 	  }
 	}
   }
 
-  &.success{
-	#{$self}__icon{
+  &.success {
+	#{$self}__icon {
 	  background: #00c689;
 	}
   }
 
-  &.alert{
-	#{$self}__icon{
+  &.alert {
+	#{$self}__icon {
 	  background: #f2385a;
 	}
   }
 
-  &.warning{
-	#{$self}__icon{
+  &.warning {
+	#{$self}__icon {
 	  background: #fda006;
 	}
   }
@@ -354,6 +359,7 @@
 	text-align: left;
   }
 }
+
 //
 //
 //.ea-invoice-view {
@@ -654,6 +660,7 @@
 	  padding: 0 10px;
 	  vertical-align: top;
 	}
+
 	.ea-revenue__subtitle {
 	  font-size: 12px;
 	  text-transform: capitalize;
@@ -705,6 +712,7 @@
 
   &__totals {
 	text-align: right;
+
 	span {
 	  font-weight: 700;
 	  margin-right: 10px;
@@ -731,29 +739,33 @@
 	}
   }
 }
+
 @media print {
   body {
 	background: none;
   }
 }
-.ea-admin-page {
-  .ea-card__header {
-	@media screen and (max-width: 782px) {
-	  display: block;
+
+.ea-reports {
+  .ea-admin-page {
+	.ea-card__header {
+	  @media screen and (max-width: 782px) {
+		display: block;
+	  }
+	}
+
+	.ea-card__toolbar {
+	  @media screen and (max-width: 782px) {
+		margin-top: 5px;
+	  }
+	}
+
+	.ea-card__toolbar .select2-container {
+	  @media screen and (max-width: 782px) {
+		display: block;
+		margin-bottom: 5px;
+	  }
 	}
   }
-  .ea-card__toolbar {
-	@media screen and (max-width: 782px) {
-	  margin-top: 5px;
-	}
-  }
-  .ea-card__toolbar .select2-container {
-	@media screen and (max-width: 782px) {
-	  display: block;
-	  margin-bottom: 5px;
-	}
-  }
-
-
-
 }
+
