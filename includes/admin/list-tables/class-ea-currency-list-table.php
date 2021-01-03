@@ -126,7 +126,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 		return array(
 			'name'   => array( 'name', false ),
 			'code'   => array( 'code', false ),
-			'symbol' => array( 'symbol', false ),
 			'rate'   => array( 'rate', false ),
 		);
 	}

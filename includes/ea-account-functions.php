@@ -99,7 +99,8 @@ function eaccounting_insert_account( $data, $wp_error = true ) {
 		$item = new \EverAccounting\Models\Account( $data['id'] );
 
 		//check if already account number exists for another user
-		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$data[number]'" );
+		$number = !empty($data['number']) ? $data['number'] : $item->get_number();
+		$existing_account = $wpdb->get_row( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE number='$number'" );
 
 		if ( $existing_account ) {
 			$existing_id = $existing_account->id;
