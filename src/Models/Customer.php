@@ -22,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Customer extends Contact {
 	use AttachmentTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -72,13 +73,67 @@ class Customer extends Contact {
 	}
 
 
+	/**
+	 * Get total paid by a customer.
+	 *
+	 * @since 1.1.0
+	 * @return float|int|string
+	 */
 	public function get_total_paid() {
 		global $wpdb;
-		$total        = 0;
-		$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='income' AND contact_id=%d", $this->get_id() ) );
-		foreach ( $transactions as $transaction ) {
-			$total += eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+		$total = wp_cache_get( 'customer_total_total_paid_' . $this->get_id(), 'ea_customers' );
+		if ( false === $total ) {
+			$total        = 0;
+			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='income' AND contact_id=%d", $this->get_id() ) );
+			foreach ( $transactions as $transaction ) {
+				$total += eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+			}
+			wp_cache_set( 'customer_total_total_paid_' . $this->get_id(), $total, 'ea_customers' );
 		}
+
 		return $total;
 	}
+
+	/**
+	 * Get total paid by a customer.
+	 *
+	 * @since 1.1.0
+	 * @return float|int|string
+	 */
+	public function get_total_due() {
+		global $wpdb;
+		$total = wp_cache_get( 'customer_total_total_due_' . $this->get_id(), 'ea_customers' );
+		if ( false === $total ) {
+			$invoices = $wpdb->get_results( $wpdb->prepare(
+				"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
+					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
+					   AND type = 'invoice' AND contact_id=%d",
+				$this->get_id()
+			) );
+
+			$total = 0;
+			foreach ( $invoices as $invoice ) {
+				$total += eaccounting_price_convert_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
+			}
+			if( !empty( $total ) ) {
+				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
+				$revenues    = $wpdb->get_results( $wpdb->prepare(
+					"SELECT Sum(amount) amount, currency_code, currency_rate
+		  			   FROM   {$wpdb->prefix}ea_transactions
+		               WHERE  type = %s AND document_id IN ($invoice_ids)
+		  			   GROUP  BY currency_code,currency_rate",
+					'income'
+				) );
+
+				foreach ( $revenues as $revenue ) {
+					$total -= eaccounting_price_convert_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
+				}
+			}
+			wp_cache_set( 'customer_total_total_due_' . $this->get_id(), $total, 'ea_customers' );
+		}
+
+		return $total;
+	}
+
+
 }

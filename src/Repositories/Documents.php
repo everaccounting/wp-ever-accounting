@@ -125,7 +125,7 @@ class Documents extends ResourceRepository {
 	 *
 	 * @param $item
 	 */
-	public function delete_items( $item) {
+	public function delete_items( $item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . DocumentItems::TABLE, array( 'document_id' => $item->get_id() ) );
 	}
@@ -139,7 +139,18 @@ class Documents extends ResourceRepository {
 	 */
 	public function delete_notes( $item ) {
 		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . Notes::TABLE, array( 'parent_id' => $item->get_id(), 'type' => $item->get_type() ) );
+		$wpdb->delete(
+			$wpdb->prefix . Notes::TABLE,
+			array(
+				'parent_id' => $item->get_id(),
+				'type'      => $item->get_type(),
+			)
+		);
+	}
+
+	public function delete_transactions( $item ) {
+		global $wpdb;
+		$wpdb->delete( $wpdb->prefix . Transactions::TABLE, array( 'document_id' => $item->get_id() ) );
 	}
 
 	/**
@@ -152,6 +163,7 @@ class Documents extends ResourceRepository {
 	public function delete( &$item, $args = array() ) {
 		$this->delete_items( $item );
 		$this->delete_notes( $item );
+		$this->delete_transactions( $item );
 		parent::delete( $item, $args );
 	}
 }

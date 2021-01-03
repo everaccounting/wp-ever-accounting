@@ -62,7 +62,7 @@ class Account extends ResourceModel {
 		'date_created'    => null,
 	);
 
-	protected $balance = 0.00;
+	protected $balance = null;
 
 	/**
 	 * Get the account if ID is passed, otherwise the account is new and empty.
@@ -79,7 +79,7 @@ class Account extends ResourceModel {
 			$this->set_id( $data->get_id() );
 		} elseif ( is_numeric( $data ) ) {
 			$this->set_id( $data );
-		} elseif ( is_object( $data ) || is_array( $data )) {
+		} elseif ( is_object( $data ) || is_array( $data ) ) {
 			$this->set_props( $data );
 		} elseif ( ! empty( $data->id ) ) {
 			$this->set_id( $data->id );
@@ -358,12 +358,19 @@ class Account extends ResourceModel {
 	 *
 	 */
 	public function get_balance() {
-		if ( ! empty( $this->balance ) ) {
+		if ( null !== $this->balance ) {
 			return $this->balance;
-			//return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->format();
 		}
-
-		return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->getValue();
+		global $wpdb;
+		$transaction_total = (float) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d",
+				$this->get_id()
+			)
+		);
+		$balance           = $this->get_opening_balance() + $transaction_total;
+		$this->set_balance( $balance );
+		return $balance;
 	}
 
 	/**

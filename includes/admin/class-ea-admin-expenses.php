@@ -66,6 +66,18 @@ class EAccounting_Admin_Expenses {
 		$tabs        = $this->get_tabs();
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
+		if ( empty( $_GET['tab'] ) ) {
+			wp_redirect(
+				add_query_arg(
+					array(
+						'page' => 'ea-expenses',
+						'tab'  => $current_tab,
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			exit();
+		}
 		include dirname( __FILE__ ) . '/views/admin-page-expenses.php';
 	}
 

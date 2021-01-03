@@ -38,26 +38,36 @@ $edit_url        = eaccounting_admin_url(
 	<div class="ea-page-columns__content">
 		<div class="ea-row">
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+				<div class="ea-widget-card success">
+					<div class="ea-widget-card__icon">
+						<span class="dashicons dashicons-money-alt"></span>
 					</div>
-				</div>
+					<div class="ea-widget-card__content">
+						<div class="ea-widget-card__primary">
+							<span class="ea-widget-card__title"><?php esc_html_e( 'Current Balance', 'wp-ever-accounting' ); ?></span>
+							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_balance() ); ?></span>
+						</div>
+					</div>
+				</div><!--.ea-widget-card-->
+
 			</div>
+
 			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+
+				<div class="ea-widget-card">
+					<div class="ea-widget-card__icon">
+						<span class="dashicons dashicons-money-alt"></span>
 					</div>
-				</div>
-			</div>
-			<div class="ea-col">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, numquam.
+					<div class="ea-widget-card__content">
+						<div class="ea-widget-card__primary">
+							<span class="ea-widget-card__title"><?php esc_html_e( 'Opening Balance', 'wp-ever-accounting' ); ?></span>
+							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_opening_balance() ); ?></span>
+						</div>
 					</div>
-				</div>
+				</div><!--.ea-widget-card-->
+
 			</div>
+
 		</div>
 		<div class="ea-card">
 			<nav class="nav-tab-wrapper">
@@ -113,15 +123,6 @@ $edit_url        = eaccounting_admin_url(
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></div>
 					<div class="ea-list-group__text"><?php echo ! empty( $account->get_currency_code() ) ? $account->get_currency_code() : '&mdash;'; ?></div>
-				</div>
-
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Opening Balance', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $account->get_opening_balance() ) ? eaccounting_price( $account->get_opening_balance(), $account->get_currency_code() ) : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Balance', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $account->get_balance() ) ? eaccounting_price( $account->get_balance(), $account->get_currency_code() ) : eaccounting_price( $account->get_opening_balance(), $account->get_currency_code() ); ?></div>
 				</div>
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Bank Name', 'wp-ever-accounting' ); ?></div>

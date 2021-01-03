@@ -176,8 +176,6 @@ class Currencies extends ResourceRepository {
 	 */
 	public function delete( &$item, $args = array() ) {
 		$code = $item->get_code();
-		error_log( $code );
-		error_log( print_r($this->get_currencies(), true) );
 		$currencies = $this->get_currencies()->reject(
 			function ( $currency ) use ( $code ) {
 				return $currency['code'] === $code;

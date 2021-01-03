@@ -68,4 +68,39 @@ class Payment extends Transaction {
 			'payment_method' => __( 'Payment Method', 'wp-ever-accounting' ),
 		);
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * Return the vendor id.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return string
+	 */
+	public function get_vendor_id( $context = 'edit' ) {
+		return $this->get_prop( 'contact_id', $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * set the vendor id.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param int $vendor_id .
+	 *
+	 */
+	public function set_vendor_id( $vendor_id ) {
+		$this->set_prop( 'contact_id', absint( $vendor_id ) );
+	}
 }

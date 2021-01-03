@@ -119,6 +119,7 @@
   box-shadow: none;
   box-sizing: border-box;
   position: relative;
+  height: 100%;
 
   &__icon {
 	border-top-left-radius: 2px;
@@ -212,124 +213,124 @@
 
 }
 
-.ea-score-card{
-  $self: &;
-  margin: 20px auto 10px;
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  max-width: none;
-  min-width: auto;
-  min-height: 1px;
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  color: #555;
-  flex: 1 1 auto;
-  box-shadow: 0 1px 1px rgba(0,0,0,.1);
-
-  &__inside{
-	flex: 1 1 auto;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	display: flex;
-	box-shadow: none;
-	box-sizing: border-box;
-  }
-
-  &__icon {
-	border-top-left-radius: 2px;
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-	border-bottom-left-radius: 2px;
-	height: 90px;
-	width: 90px;
-	text-align: center;
-	background: #3644ff;
-	color: #fff;
-	position: relative;
-	&>*{
-	  position: absolute;
-	  top: 50%;
-	  left: 50%;
-	  transform: translate(-50%,-50%);
-	  height: 50px;
-	  width: 50px;
-	  font-size: 50px;
-	}
-  }
-
-  &__content{
-	-webkit-box-flex: 1;
-	flex-grow: 1;
-	text-align: right;
-	color: #555;
-	background: #fff;
-	height: 100%;
-	padding: 15px 15px;
-	box-sizing: border-box;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-  }
-
-  &__primary,
-  &__secondary{
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-  }
-
-  &__title,
-  &__amount{
-	color: #6c757d;
-	font-size: 17px;
-	line-height: 1;
-	text-transform: uppercase;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	font-weight: normal;
-  }
-
-  &__amount{
-	//font-weight: bold;
-  }
-
-  &__secondary{
-	margin-top: 12px;
-	padding-top: 12px;
-	border-top: 1px solid #ddd;
-	#{$self}{
-	  &__title,
-	  &__amount{
-		font-size: 12px;
-		font-weight: normal;
-	  }
-	}
-  }
-
-  &.success{
-	#{$self}__icon{
-	  background: #00c689;
-	}
-  }
-
-  &.alert{
-	#{$self}__icon{
-	  background: #f2385a;
-	}
-  }
-
-  &.warning{
-	#{$self}__icon{
-	  background: #fda006;
-	}
-  }
-
-}
+//.ea-score-card{
+//  $self: &;
+//  margin: 20px auto 10px;
+//  position: relative;
+//  box-sizing: border-box;
+//  width: 100%;
+//  max-width: none;
+//  min-width: auto;
+//  min-height: 1px;
+//  display: flex;
+//  align-items: stretch;
+//  justify-content: stretch;
+//  color: #555;
+//  flex: 1 1 auto;
+//  box-shadow: 0 1px 1px rgba(0,0,0,.1);
+//
+//  &__inside{
+//	flex: 1 1 auto;
+//	flex-direction: row;
+//	align-items: center;
+//	justify-content: space-between;
+//	flex-wrap: wrap;
+//	display: flex;
+//	box-shadow: none;
+//	box-sizing: border-box;
+//  }
+//
+//  &__icon {
+//	border-top-left-radius: 2px;
+//	border-top-right-radius: 0;
+//	border-bottom-right-radius: 0;
+//	border-bottom-left-radius: 2px;
+//	height: 90px;
+//	width: 90px;
+//	text-align: center;
+//	background: #3644ff;
+//	color: #fff;
+//	position: relative;
+//	&>*{
+//	  position: absolute;
+//	  top: 50%;
+//	  left: 50%;
+//	  transform: translate(-50%,-50%);
+//	  height: 50px;
+//	  width: 50px;
+//	  font-size: 50px;
+//	}
+//  }
+//
+//  &__content{
+//	-webkit-box-flex: 1;
+//	flex-grow: 1;
+//	text-align: right;
+//	color: #555;
+//	background: #fff;
+//	height: 100%;
+//	padding: 15px 15px;
+//	box-sizing: border-box;
+//	display: flex;
+//	flex-direction: column;
+//	justify-content: center;
+//  }
+//
+//  &__primary,
+//  &__secondary{
+//	display: flex;
+//	flex-direction: row;
+//	justify-content: space-between;
+//  }
+//
+//  &__title,
+//  &__amount{
+//	color: #6c757d;
+//	font-size: 17px;
+//	line-height: 1;
+//	text-transform: uppercase;
+//	white-space: nowrap;
+//	overflow: hidden;
+//	text-overflow: ellipsis;
+//	font-weight: normal;
+//  }
+//
+//  &__amount{
+//	//font-weight: bold;
+//  }
+//
+//  &__secondary{
+//	margin-top: 12px;
+//	padding-top: 12px;
+//	border-top: 1px solid #ddd;
+//	#{$self}{
+//	  &__title,
+//	  &__amount{
+//		font-size: 12px;
+//		font-weight: normal;
+//	  }
+//	}
+//  }
+//
+//  &.success{
+//	#{$self}__icon{
+//	  background: #00c689;
+//	}
+//  }
+//
+//  &.alert{
+//	#{$self}__icon{
+//	  background: #f2385a;
+//	}
+//  }
+//
+//  &.warning{
+//	#{$self}__icon{
+//	  background: #fda006;
+//	}
+//  }
+//
+//}
 
 
 .ea-table {

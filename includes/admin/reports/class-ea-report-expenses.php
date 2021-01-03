@@ -30,18 +30,18 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 			return false;
 		}
 
-		$report = $this->get_cache( $args );
+		$report = false; //$this->get_cache( $args );
 		if ( empty( $report ) ) {
-			$report          = array();
-			$start_date      = $this->get_start_date( $args['year'] );
-			$end_date        = $this->get_end_date( $args['year'] );
-			$where           = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
-			$where          .= empty( $args['category_id'] ) ? '' : $wpdb->prepare( ' AND t.category_id = %d', intval( $args['category_id'] ) );
-			$where          .= empty( $args['customer_id'] ) ? '' : $wpdb->prepare( ' AND t.contact_id = %d', intval( $args['customer_id'] ) );
-			$where          .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
-			$dates           = $this->get_dates_in_period( $start_date, $end_date );
-			$sql             = $wpdb->prepare(
-				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id, c.name category
+			$report            = array();
+			$start_date        = $this->get_start_date( $args['year'] );
+			$end_date          = $this->get_end_date( $args['year'] );
+			$where             = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
+			$where            .= empty( $args['category_id'] ) ? '' : $wpdb->prepare( ' AND t.category_id = %d', intval( $args['category_id'] ) );
+			$where            .= empty( $args['vendor_id'] ) ? '' : $wpdb->prepare( ' AND t.contact_id = %d', intval( $args['vendor_id'] ) );
+			$where            .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
+			$dates             = $this->get_dates_in_period( $start_date, $end_date );
+			$sql               = $wpdb->prepare(
+				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id, c.name category,c.color
 					   FROM {$wpdb->prefix}ea_transactions t
 					   LEFT JOIN {$wpdb->prefix}ea_categories c on c.id=t.category_id
 					   WHERE c.type = %s AND t.payment_date BETWEEN %s AND %s $where
@@ -50,9 +50,10 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 				$start_date,
 				$end_date
 			);
-			$results         = $wpdb->get_results( $sql );
-			$report['dates'] = $dates;
-			$report['data']  = array();
+			$results           = $wpdb->get_results( $sql );
+			$report['results'] = $results;
+			$report['dates']   = $dates;
+			$report['data']    = array();
 			foreach ( array_keys( $dates ) as $date ) {
 				$report['data']['totals'][ $date ] = 0;
 			}
@@ -77,7 +78,7 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 				$report['categories'] = $categories;
 			}
 
-			$this->set_cache( $args, $report );
+			//$this->set_cache( $args, $report );
 		}
 
 		return $report;
@@ -93,14 +94,14 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] );
 		$category_id    = empty( $_GET['category_id'] ) ? '' : intval( $_GET['category_id'] );
 		$account_id     = empty( $_GET['account_id'] ) ? '' : intval( $_GET['account_id'] );
-		$customer_id    = empty( $_GET['customer_id'] ) ? '' : intval( $_GET['customer_id'] );
+		$vendor_id      = empty( $_GET['vendor_id'] ) ? '' : intval( $_GET['vendor_id'] );
 		$payment_method = empty( $_GET['payment_method'] ) ? '' : intval( $_GET['payment_method'] );
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,
 				'category_id'    => $category_id,
 				'account_id'     => $account_id,
-				'customer_id'    => $customer_id,
+				'vendor_id'      => $vendor_id,
 				'payment_method' => $payment_method,
 			)
 		);
@@ -128,11 +129,11 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 								'value'       => $account_id,
 							)
 						);
-						eaccounting_customer_dropdown(
+						eaccounting_vendor_dropdown(
 							array(
-								'name'        => 'customer_id',
+								'name'        => 'vendor_id',
 								'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
-								'value'       => $customer_id,
+								'value'       => $vendor_id,
 								'creatable'   => false,
 							)
 						);
@@ -146,8 +147,9 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 						);
 						eaccounting_payment_method_dropdown(
 							array(
-								'name'  => 'payment_method',
-								'value' => $payment_method,
+								'name'    => 'payment_method',
+								'value'   => $payment_method,
+								'default' => '',
 							)
 						);
 						?>
@@ -199,10 +201,11 @@ class EAccounting_Report_Expenses extends EAccounting_Admin_Report {
 												position: "nearest",
 												titleFontColor: "#ffffff",
 												callbacks: {
-													label: function (t, d) {
-														var xLabel = d.datasets[t.datasetIndex].label;
-														var yLabel = t.yLabel;
-														return xLabel + ': ' + yLabel;
+													label: function(tooltipItem, data) {
+														console.log(tooltipItem);
+														let label = data.labels[tooltipItem.index];
+														let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+														return ' ' + label + ': ' + eaccountingi10n.currency['symbol'] + Number((value).toFixed(1)).toLocaleString();
 													}
 												}
 											},

@@ -198,10 +198,9 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 		switch ( $column_name ) {
 			case 'name':
 				$name = $category->get_name();
-
 				$value = sprintf(
 					'<a href="%1$s">%2$s</a>',
-					esc_url( add_query_arg( array( 'category_id' => $category->get_id() ) ), $this->base_url ),
+					esc_url( add_query_arg( array( 'category_id' => $category_id, 'action' => 'edit' ) ), $this->base_url ),
 					$name
 				);
 				break;

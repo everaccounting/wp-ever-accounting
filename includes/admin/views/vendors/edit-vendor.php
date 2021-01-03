@@ -161,6 +161,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Photo', 'wp-ever-accounting' ),
 							'name'          => 'thumbnail_id',
+							'allowed-types' => 'jpg,jpeg,png',
 							'value'         => $vendor->get_thumbnail_id(),
 						)
 					);

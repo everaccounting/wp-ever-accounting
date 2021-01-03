@@ -74,6 +74,7 @@ class Admin_Assets {
 		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/assets/js/select2/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
 		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url( '/assets/js/inputmask/jquery.inputmask' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'jquery-chartjs', eaccounting()->plugin_url( '/assets/js/chartjs/chart.bundle' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
+		wp_register_script( 'jquery-chartjs-labels', eaccounting()->plugin_url( '/assets/js/chartjs/chartjs-plugin-labels' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
 		wp_register_script( 'ea-print', eaccounting()->plugin_url( '/assets/js/printjs/printThis' . $suffix . '.js' ), array( 'jquery' ), $version, true );
 
 		// core plugins
@@ -159,13 +160,14 @@ class Admin_Assets {
 		// report page
 		if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
 			wp_enqueue_script( 'jquery-chartjs' );
+			//wp_enqueue_script( 'jquery-chartjs-labels' );
 		}
 
 		// React scripts
 		//self::register_react_script( 'ea-data', self::get_asset_dist_url( 'data' ) );
 		//self::register_react_script( 'ea-components', self::get_asset_dist_url( 'components' ) );
 		//self::register_react_script( 'ea-invoice', self::get_asset_dist_url( 'invoice' ), array( 'ea-data', 'ea-components' ) );
-
+		$default_currency = eaccounting()->settings->get('default_currency', 'USD');
 		wp_localize_script(
 			'ea-admin',
 			'eaccountingi10n',
@@ -174,6 +176,7 @@ class Admin_Assets {
 				'admin_url'  => admin_url(),
 				'asset_url'  => eaccounting()->plugin_url( '/assets' ),
 				'plugin_url' => eaccounting()->plugin_url(),
+				'currency'   => eaccounting_get_currency($default_currency)->get_data(),
 				'currencies' => eaccounting_get_currencies(array('return' => 'raw', 'number' => -1 )) //phpcs:ignore
 			)
 		);
@@ -192,10 +195,7 @@ class Admin_Assets {
 	 *
 	 * @param string $handle       Name of the script. Should be unique.
 	 */
-	protected
-	static function register_react_script(
-		$handle, $src, $dependencies = array(), $has_i18n = true
-	) {
+	protected static function register_react_script( $handle, $src, $dependencies = array(), $has_i18n = true ) {
 		$relative_src = str_replace( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ), '', $src );
 		$asset_path   = str_replace( '.js', '.asset.php', eaccounting()->plugin_path( $relative_src ) );
 
@@ -224,10 +224,7 @@ class Admin_Assets {
 	 *
 	 * @return  string The generated path.
 	 */
-	protected
-	static function get_asset_dist_url(
-		$filename, $type = 'js'
-	) {
+	protected static function get_asset_dist_url( $filename, $type = 'js' ) {
 		return eaccounting()->plugin_url( "assets/dist/$filename.$type" );
 	}
 }

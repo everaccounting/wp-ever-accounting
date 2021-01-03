@@ -193,6 +193,19 @@ class EAccounting_Settings {
 							'std'  => '',
 							'type' => 'textarea',
 						),
+						'invoice_due'            => array(
+							'name'    => __( 'Invoice Due', 'wp-ever-accounting' ),
+							'std'     => '15',
+							'type'    => 'select',
+							'options' => array(
+								'7'  => __( 'Due within 7 days', 'wp-ever-accounting' ),
+								'15' => __( 'Due within 15 days', 'wp-ever-accounting' ),
+								'30' => __( 'Due within 30 days', 'wp-ever-accounting' ),
+								'45' => __( 'Due within 45 days', 'wp-ever-accounting' ),
+								'60' => __( 'Due within 60 days', 'wp-ever-accounting' ),
+								'90' => __( 'Due within 90 days', 'wp-ever-accounting' ),
+							),
+						),
 						'invoice_item_label'     => array(
 							'name' => __( 'Item Label', 'wp-ever-accounting' ),
 							'std'  => __( 'Item', 'wp-ever-accounting' ),
@@ -257,16 +270,14 @@ class EAccounting_Settings {
 		if ( eaccounting_tax_enabled() ) {
 			$settings['general']['taxes'] = array(
 				'tax_subtotal_rounding' => array(
-					'name'    => __( 'Rounding', 'wp-ever-accounting' ),
-					'type'    => 'checkbox',
-					'desc'    => __( 'Round tax at subtotal level, instead of rounding per tax rate.', 'wp-ever-accounting' ),
-					'section' => 'tax',
+					'name' => __( 'Rounding', 'wp-ever-accounting' ),
+					'type' => 'checkbox',
+					'desc' => __( 'Round tax at subtotal level, instead of rounding per tax rate.', 'wp-ever-accounting' ),
 				),
 				'prices_include_tax'    => array(
 					'name'    => __( 'Prices entered with tax', 'wp-ever-accounting' ),
 					'type'    => 'select',
 					'std'     => 'yes',
-					'section' => 'tax',
 					'options' => array(
 						'yes' => __( 'Yes, I will enter prices inclusive of tax', 'wp-ever-accounting' ),
 						'no'  => __( 'No, I will enter prices exclusive of tax', 'wp-ever-accounting' ),
@@ -276,7 +287,6 @@ class EAccounting_Settings {
 					'name'    => __( 'Display tax totals	', 'wp-ever-accounting' ),
 					'type'    => 'select',
 					'std'     => 'total',
-					'section' => 'tax',
 					'options' => array(
 						'total'      => __( 'As a single total', 'wp-ever-accounting' ),
 						'individual' => __( 'As individual tax rates', 'wp-ever-accounting' ),

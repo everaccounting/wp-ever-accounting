@@ -451,6 +451,7 @@ function eaccounting_file_input( $field ) {
 			'value'         => false,
 			'name'          => '',
 			'desc'          => '',
+			'allowed-types' => 'image',
 			'attr'          => array(),
 		)
 	);
@@ -462,8 +463,10 @@ function eaccounting_file_input( $field ) {
 	if ( ! empty( $field['value'] ) && 'attachment' === get_post_type( $field['value'] ) ) {
 		$attachment = get_post( $field['value'] );
 	}
-	$src  = ! isset( $attachment->ID ) ? '' : wp_get_attachment_thumb_url( $attachment->ID );
-	$link = ! isset( $attachment->ID ) ? '' : wp_get_attachment_image_url( $attachment->ID, 'large' );
+
+	$icon = isset( $attachment->ID ) && in_array( $attachment->post_mime_type, array( 'image/jpeg', 'image/png' ), true ) ? false : true;
+	$src  = ! isset( $attachment->ID ) ? '' : wp_get_attachment_image_url( $attachment->ID, 'thumbnail', $icon );
+	$link = ! isset( $attachment->ID ) ? '' : wp_get_attachment_url( $attachment->ID );
 	$name = ! isset( $attachment->post_title ) ? '' : $attachment->post_title;
 	$id   = ! isset( $attachment->ID ) ? '' : $attachment->ID;
 	if ( ! empty( $field['label'] ) ) {
@@ -483,8 +486,8 @@ function eaccounting_file_input( $field ) {
 					<img class="ea-attachment__image" src="<?php echo esc_attr( $src ); ?>" alt="<?php echo esc_attr( $name ); ?>">
 				</a>
 			</div>
-			<button type="button" class="button-link ea-attachment__remove"><?php _e('Remove','wp-ever-accounting'); ?></button>
-			<button type="button" class="button-secondary ea-attachment__upload"><?php _e('Upload','wp-ever-accounting'); ?></button>
+			<button type="button" class="button-link ea-attachment__remove"><?php _e( 'Remove', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button-secondary ea-attachment__upload" data-allowed-types="<?php echo esc_js( $field['allowed-types'] ); ?>"><?php _e( 'Upload', 'wp-ever-accounting' ); ?></button>
 			<?php
 			echo sprintf(
 				'<input type="hidden" name="%s" class="ea-attachment__input" id="%s" value="%s"/>',
@@ -613,7 +616,7 @@ function eaccounting_select2( $field ) {
 	if ( ! empty( $field['placeholder'] ) ) {
 		$field['options'] = array( '' => esc_html( $field['placeholder'] ) ) + $field['options'];
 	}
-	if( !empty($field['clearable']) ){
+	if ( ! empty( $field['clearable'] ) ) {
 		$field['attr']['data-allow-clear'] = true;
 	}
 	eaccounting_select( $field );

@@ -10,8 +10,6 @@
  * @package     EverAccounting
  */
 
-use EverAccounting\Abstracts\TransactionModel;
-
 defined( 'ABSPATH' ) || exit();
 
 if ( ! class_exists( '\EAccounting_List_Table' ) ) {
@@ -160,7 +158,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				);
 				break;
 			case 'amount':
-				$value = eaccounting_price( $transaction->get_amount() );
+				$value = eaccounting_price( $transaction->get_amount(), $transaction->get_currency_code() );
 				break;
 			case 'type':
 				$type  = $transaction->get_type();
@@ -169,14 +167,14 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() :'&mdash;';
+				$value   = $account ? $account->get_name() : '&mdash;';
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $transaction->get_category_id( 'edit' ) );
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'reference':
-				$value = !empty( $transaction->get_reference() ) ? $transaction->get_reference() : '&mdash;';
+				$value = ! empty( $transaction->get_reference() ) ? $transaction->get_reference() : '&mdash;';
 				break;
 			default:
 				return parent::column_default( $transaction, $column_name );
@@ -204,31 +202,11 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 	 *
 	 */
 	protected function extra_tablenav( $which ) {
-		if ( 'top' === $which ) {
+		if ( 'stop' === $which ) {
 			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$start_date = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
 			$end_date   = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
-
-			eaccounting_input_date_range(
-				array(
-					'start_date' => $start_date,
-					'end_date'   => $end_date,
-				)
-			);
-
-			eaccounting_account_dropdown(
-				array(
-					'name'    => 'account_id',
-					'value'   => $account_id,
-					'default' => '',
-					'attr'    => array(
-						'data-allow-clear' => true,
-					),
-					'creatable'     => false,
-				)
-			);
-
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			echo "\n";
 
@@ -312,66 +290,10 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 			);
 		}
 
-		$args = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
-		eaccounting_get_currencies(
-			array(
-				'number' => '-1',
-				'return' => 'raw',
-			)
-		);
-		eaccounting_get_categories(
-			array(
-				'number' => '-1',
-				'return' => 'raw',
-			)
-		);
-		eaccounting_get_accounts(
-			array(
-				'number' => '-1',
-				'return' => 'raw',
-			)
-		);
-		$this->items = eaccounting_get_transactions( $args );
-
-		$this->revenue_count = eaccounting_get_revenues(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'search'      => $search,
-				)
-			)
-		);
-
-		$this->payment_count = eaccounting_get_payments(
-			array_merge(
-				$args,
-				array(
-					'count_total' => true,
-					'search'      => $search,
-				)
-			)
-		);
-
-		$this->total_count = $this->revenue_count + $this->payment_count + $this->others_count;
-
-		$type = isset( $_GET['type'] ) ? $_GET['type'] : 'any';
-
-		switch ( $type ) {
-			case 'income':
-				$total_items = $this->revenue_count;
-				break;
-			case 'expense':
-				$total_items = $this->payment_count;
-				break;
-			case 'other':
-				$total_items = $this->others_count;
-				break;
-			case 'any':
-			default:
-				$total_items = $this->total_count;
-				break;
-		}
+		$args              = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
+		$this->items       = eaccounting_get_transactions( $args );
+		$total_items       = $this->revenue_count + $this->payment_count + $this->others_count;
+		$this->total_count = $total_items;
 
 		$this->set_pagination_args(
 			array(
