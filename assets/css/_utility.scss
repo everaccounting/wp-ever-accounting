@@ -32,10 +32,6 @@
   align-items: center;
   align-content: center;
   flex-wrap: wrap;
-  margin: 1rem 0;
   box-sizing: border-box;
-
-  &.ea-flex-justify-center {
-	justify-content: space-between;
-  }
+  justify-content: space-between;
 }

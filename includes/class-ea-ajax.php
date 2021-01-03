@@ -610,7 +610,7 @@ class Ajax {
 			wp_send_json_success(
 				array(
 					'html'   => eaccounting_get_admin_template_html(
-						'bills/partials/items',
+						'bills/bill-items',
 						array(
 							'bill' => $bill,
 							'mode' => 'edit',
@@ -658,7 +658,7 @@ class Ajax {
 						)
 					),
 					'line'     => array_map( 'strval', $bill->get_items() ),
-					'redirect' => $redirect,
+					'redirect' => empty($posted['id'])? $redirect : '',
 				)
 			);
 		} catch ( \Exception $e ) {

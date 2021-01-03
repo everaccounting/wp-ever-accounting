@@ -432,6 +432,7 @@ jQuery(function ($) {
 
 			$(document.body).on('ea_invoice_updated', this.recalculate)
 		},
+
 		block: function () {
 			$('#ea-invoice-form').block({
 				message: null,
@@ -608,9 +609,9 @@ jQuery(function ($) {
 
 			$('#ea-bill')
 				.on('click', '.delete_note', this.delete_note)
-				.on('click', '.receive-payment', this.receive_payment)
+				.on('click', '.add-payment', this.add_payment)
 
-			$(document).on('submit', '#bill-note-insert', this.add_note);
+			$(document).on('submit', '#invoice-note-insert', this.add_note);
 
 			$(document.body).on('ea_bill_updated', this.recalculate)
 		},
@@ -627,15 +628,13 @@ jQuery(function ($) {
 		unblock: function () {
 			$('#ea-bill-form').unblock();
 		},
-
 		add_line_item: function (e) {
 			e.preventDefault();
-			console.log(e);
 			var line_item = $($('#ea-bill-line-template').html());
 			var item_selector = $($('#ea-bill-item-selector').html());
 			var item_selector_name = item_selector.attr('name');
 			var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
-			line_item.addClass('editing')
+			line_item.addClass('editing');
 			$(line_item).find(":input").each(function () {
 				var name = $(this).attr('name');
 				name = name.replace(/\[(\d+)\]/, '[' + (index) + ']');
@@ -713,10 +712,11 @@ jQuery(function ($) {
 			})
 		},
 
-		receive_payment: function (e) {
+		add_payment: function (e) {
 			e.preventDefault();
 			var $modal_selector = $('#ea-modal-add-bill-payment');
 			var code = $(this).data('currency');
+			console.log($modal_selector);
 
 			$modal_selector.ea_modal({
 				onReady: function (plugin) {
@@ -740,7 +740,7 @@ jQuery(function ($) {
 			var data = $form.serializeObject();
 			$.post(ajaxurl, data, function (json) {
 				if( json.success) {
-					$('#ea-bill-notes').replaceWith(json.data.notes);
+					$('#ea-invoice-notes').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);

@@ -15,7 +15,7 @@ $edit_mode = isset( $mode ) && $mode === 'edit';
 defined( 'ABSPATH' ) || exit;
 ?>
 <tr class="ea-document__line" data-item_id="<?php echo esc_attr( $item_id ); ?>">
-	<?php if ( $bill->is_editable() && $edit_mode ) : ?>
+	<?php if ( $edit_mode ) : ?>
 		<td class="ea-document__line-actions" width="1%">
 			<a class="save-line tips" href="#" data-tip="<?php esc_attr_e( 'Save item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-yes">&nbsp;</span></a>
 			<a class="edit-line tips" href="#" data-tip="<?php esc_attr_e( 'Edit item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-edit">&nbsp;</span></a>
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="view">
 			<?php echo esc_html( $item->get_item_name( 'view' ) ); ?>
 		</div>
-		<?php if ( $bill->is_editable() && $edit_mode ) : ?>
+		<?php if ( $edit_mode ) : ?>
 			<div class="edit" style="display: none;">
 				<input type="text" class="line_item_name" name="items[<?php echo absint( $item_id ); ?>][item_name]" value="<?php echo esc_attr( $item->get_item_name() ); ?>" required/>
 			</div>
@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="view">
 			<?php echo esc_html( eaccounting_price( $item->get_price(), $bill->get_currency_code() ) ); ?>
 		</div>
-		<?php if ( $bill->is_editable() && $edit_mode ) : ?>
+		<?php if ( $edit_mode ) : ?>
 			<div class="edit" style="display: none;">
 				<input type="number" step="0.05" min="0" class="line_item_price" name="items[<?php echo $item_id; ?>][price]" value="<?php echo esc_attr( $item->get_price() ); ?>" required/>
 			</div>
@@ -51,7 +51,7 @@ defined( 'ABSPATH' ) || exit;
 		<div class="view">
 			<?php echo '<small class="times">&times;</small> ' . esc_html( $item->get_quantity() ); ?>
 		</div>
-		<?php if ( $bill->is_editable() && $edit_mode ) : ?>
+		<?php if ( $edit_mode ) : ?>
 			<div class="edit" style="display: none;">
 				<input type="number" step="1" min="1"  autocomplete="off" name="items[<?php echo absint( $item_id ); ?>][quantity]" placeholder="0" value="<?php echo esc_attr( $item->get_quantity() ); ?>" size="4" class="line_item_quantity" required/>
 			</div>
@@ -62,7 +62,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="view">
 				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $bill->get_currency_code() ) ); ?>"><?php echo esc_html( $item->get_tax_rate() ); ?><small>%</small></abbr>
 			</div>
-			<?php if ( $bill->is_editable() && $edit_mode ) : ?>
+			<?php if ( $edit_mode ) : ?>
 				<div class="edit" style="display: none;">
 					<input type="number" step="0.05" min="0" max="1000" class="line_item_tax" name="items[<?php echo absint( $item_id ); ?>][tax_rate]" value="<?php echo esc_attr( $item->get_tax_rate() ); ?>" required>
 				</div>

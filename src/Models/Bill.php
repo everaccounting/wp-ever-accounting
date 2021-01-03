@@ -61,11 +61,16 @@ class Bill extends Document {
 			$this->repository->read( $this );
 		}
 
+		if ( 'bill' !== $this->get_type() ) {
+			$this->set_id( 0 );
+			$this->set_defaults();
+		}
+
 		$this->required_props = array(
 			//'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
 			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
-			'vendor_id'     => __( 'Customer', 'wp-ever-accounting' ),
+			'contact_id'    => __( 'Vendor', 'wp-ever-accounting' ),
 			'issue_date'    => __( 'Issue date', 'wp-ever-accounting' ),
 			'due_date'      => __( 'Due date', 'wp-ever-accounting' ),
 		);
@@ -120,15 +125,6 @@ class Bill extends Document {
 	}
 
 	/**
-	 * Get internal type.
-	 *
-	 * @return string
-	 */
-	public function get_type( $context = 'edit' ) {
-		return 'bill';
-	}
-
-	/**
 	 * Return the vendor id.
 	 *
 	 * @since  1.1.0
@@ -163,8 +159,8 @@ class Bill extends Document {
 				$getter = "get_{$prop}";
 				$setter = "set_{$prop}";
 				if ( is_callable( array( $contact, $getter ) )
-				     && is_callable( array( $this, $setter ) )
-				     && is_callable( array( $this, $getter ) ) ) {
+					 && is_callable( array( $this, $setter ) )
+					 && is_callable( array( $this, $getter ) ) ) {
 					$this->$setter( $contact->$getter() );
 				}
 			}
@@ -215,6 +211,17 @@ class Bill extends Document {
 	 */
 	public function is_draft() {
 		return $this->is_status( 'draft' );
+	}
+
+	/**
+	 * Check if an bill is editable.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_editable() {
+		return ! $this->needs_payment();
 	}
 
 	/*
@@ -497,6 +504,23 @@ class Bill extends Document {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Update status.
+	 *
+	 * @param $status
+	 * @since 1.1.0
+	 *
+	 * @return bool|\Exception|int
+	 */
+	public function update_status( $status ) {
+		try {
+			$this->set_status( $status );
+			return $this->save();
+		} catch ( \Exception $e ) {
+			return false;
+		}
 	}
 
 	/**

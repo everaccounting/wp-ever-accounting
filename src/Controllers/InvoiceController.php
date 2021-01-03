@@ -49,7 +49,7 @@ class InvoiceController extends Singleton {
 		}
 
 		switch ( $action ) {
-			case 'mark_pending':
+			case 'mark_received':
 				$invoice->set_status( 'pending' );
 				$invoice->save();
 				break;

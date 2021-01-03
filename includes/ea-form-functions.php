@@ -58,9 +58,16 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
  *
  * @since 1.0.2
  *
- * @param array $field
+ * @param array|string $field
+ * @param mixed  ...$args    Optional further parameters.
  */
-function eaccounting_hidden_input( $field ) {
+function eaccounting_hidden_input( $field, ...$args ) {
+	if ( is_string( $field ) ) {
+		$field = array(
+			'name'  => $field,
+			'value' => $args[0],
+		);
+	}
 	$field['value'] = isset( $field['value'] ) ? $field['value'] : '';
 	$field['class'] = isset( $field['class'] ) ? $field['class'] : '';
 	$field['id']    = empty( $field['id'] ) ? $field['name'] : $field['id'];

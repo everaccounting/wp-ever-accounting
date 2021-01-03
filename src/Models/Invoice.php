@@ -62,6 +62,11 @@ class Invoice extends Document {
 			$this->repository->read( $this );
 		}
 
+		if ( 'invoice' !== $this->get_type() ) {
+			$this->set_id( 0 );
+			$this->set_defaults();
+		}
+
 		$this->required_props = array(
 			//'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
@@ -120,15 +125,6 @@ class Invoice extends Document {
 	 */
 	public function get_invoice_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
-	}
-
-	/**
-	 * Get internal type.
-	 *
-	 * @return string
-	 */
-	public function get_type( $context = 'edit' ) {
-		return 'invoice';
 	}
 
 	/**

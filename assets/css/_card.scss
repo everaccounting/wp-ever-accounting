@@ -87,6 +87,10 @@
 	&:last-child{
 	  border-bottom: 0;
 	}
+	&.alt{
+	  border-top: 0;
+	  border-bottom: 1px solid #e1e2e2;
+	}
   }
 
   &:first-child {

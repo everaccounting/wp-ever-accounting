@@ -152,3 +152,42 @@
   margin-right: auto;
   display: block;
 }
+
+/*------------------------------------------------------------------------------
+  Buttons
+------------------------------------------------------------------------------*/
+.ea-button-success{
+  color: #28a745 !important;
+  border-color: #28a745 !important;
+}
+.ea-button-alert{
+  color: #dc3545 !important;
+  border-color: #dc3545 !important;
+}
+.ea-button-warning{
+  color: #ffc107 !important;
+  border-color: #ffc107 !important;
+}
+
+/*------------------------------------------------------------------------------
+  Title Section
+------------------------------------------------------------------------------*/
+.ea-title-section{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  &>div{
+	flex: 0 0 auto;
+	width: auto;
+	max-width: 100%;
+  }
+}
+
+/*------------------------------------------------------------------------------
+  MISC
+------------------------------------------------------------------------------*/
+.ea-form, .ea-clearfix{
+	@include clearfix();
+}
