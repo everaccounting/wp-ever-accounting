@@ -324,5 +324,8 @@ jQuery(function ($) {
 		};
 
 		$( '.ea-input-color' ).ea_color_picker();
+		$('body').on('click','.ea-modal__body .ea-input-color',function(){
+			$('.ea-modal__body .ea-input-color').ea_color_picker();
+		})
 	} );
 })
