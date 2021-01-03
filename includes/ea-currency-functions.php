@@ -238,12 +238,13 @@ function eaccounting_get_currencies( $args = array() ) {
 	$fields        = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? $qv['fields'] : '*';
 	$qv['order']   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
 	$qv['orderby'] = in_array( $qv['orderby'], $columns, true ) ? $qv['orderby'] : 'name';
+
 	$qv['number']  = isset( $qv['number'] ) && $qv['number'] > 0 ? $qv['number'] : - 1;
 	$qv['offset']  = isset( $qv['offset'] ) ? $qv['offset'] : ( $qv['number'] * ( $qv['paged'] - 1 ) );
 	$count_total   = true === $qv['count_total'];
 	$currencies = $currencies->sort(
 		function ( $a, $b ) use ( $qv ) {
-			if ( 'ASC' === $qv['orderby'] ) {
+			if ( 'ASC' === $qv['order'] ) {
 				return $a[ $qv['orderby'] ] < $b[ $qv['orderby'] ];
 			}
 
