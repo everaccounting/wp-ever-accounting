@@ -12,6 +12,7 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
+use EverAccounting\Admin\Admin_Notices;
 use EverAccounting\Core\Emails;
 use EverAccounting\Core\Mailer;
 
@@ -48,11 +49,15 @@ class InvoiceController extends Singleton {
 		}
 
 		switch ( $action ) {
-			case 'mark_partial':
-				$invoice->set_status( 'partial' );
+			case 'mark_pending':
+				$invoice->set_status( 'pending' );
 				$invoice->save();
 				break;
 			case 'mark_paid':
+				$invoice->set_paid();
+				break;
+			case 'mark_refunded':
+				$invoice->set_refunded();
 				break;
 			case 'mark_overdue':
 				$invoice->set_status( 'overdue' );

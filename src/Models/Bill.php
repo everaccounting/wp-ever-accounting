@@ -93,12 +93,11 @@ class Bill extends Document {
 	public static function get_statuses() {
 		return array(
 			'draft'     => __( 'Draft', 'wp-ever-accounting' ),
-			'pending'   => __( 'Pending', 'wp-ever-accounting' ),
+			'received'  => __( 'Received', 'wp-ever-accounting' ),
 			'partial'   => __( 'Partial', 'wp-ever-accounting' ),
 			'paid'      => __( 'Paid', 'wp-ever-accounting' ),
 			'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
 			'cancelled' => __( 'Cancelled', 'wp-ever-accounting' ),
-			'refunded'  => __( 'Refunded', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -139,7 +138,7 @@ class Bill extends Document {
 	 * @return string
 	 */
 	public function get_vendor_id( $context = 'edit' ) {
-		return $this->get_prop( 'contact_id', $context );
+		return parent::get_contact_id( $context );
 	}
 
 	/*
@@ -156,10 +155,66 @@ class Bill extends Document {
 	 *
 	 */
 	public function set_vendor_id( $vendor_id ) {
-		$this->set_prop( 'contact_id', absint( $vendor_id ) );
-		if ( $this->get_vendor_id() && ( ! $this->exists() || in_array( 'contact_id', $this->changes, true ) ) ) {
-			$this->maybe_set_address( eaccounting_get_vendor( $this->get_vendor_id() ) );
+		parent::set_contact_id( $vendor_id );
+		if ( $this->get_contact_id() && ( ! $this->exists() || array_key_exists( 'contact_id', $this->changes ) ) ) {
+			$contact = eaccounting_get_vendor( $this->get_contact_id() );
+			$address = $this->data['address'];
+			foreach ( $address as $prop => $value ) {
+				$getter = "get_{$prop}";
+				$setter = "set_{$prop}";
+				if ( is_callable( array( $contact, $getter ) )
+				     && is_callable( array( $this, $setter ) )
+				     && is_callable( array( $this, $getter ) ) ) {
+					$this->$setter( $contact->$getter() );
+				}
+			}
 		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Boolean methods
+	|--------------------------------------------------------------------------
+	|
+	| Return true or false.
+	|
+	*/
+
+	/**
+	 * Checks to see if the invoice requires payment.
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_free() {
+		return empty( $this->get_total() );
+	}
+
+	/**
+	 * Checks if the invoice needs payment.
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function needs_payment() {
+		return ! $this->is_status( 'paid' ) && ! $this->is_free();
+	}
+
+	/**
+	 * Checks if the invoice is due.
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_due() {
+		$due_date = $this->get_due_date();
+		return empty( $due_date ) ? false : current_time( 'timestamp' ) > strtotime( $due_date ); //phpcs:ignore
+	}
+
+	/**
+	 * Checks if the invoice is draft.
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_draft() {
+		return $this->is_status( 'draft' );
 	}
 
 	/*
@@ -211,8 +266,6 @@ class Bill extends Document {
 		return $item->get_item_id();
 	}
 
-
-
 	/**
 	 * Add note.
 	 *
@@ -249,11 +302,13 @@ class Bill extends Document {
 	}
 
 	/**
-	 * Conditionally set complete
-	 *
+	 * Conditionally change status
 	 * @since 1.1.0
 	 */
-	public function maybe_set_complete() {
+	public function maybe_change_status() {
+		if ( $this->needs_payment() && ( time() > strtotime( $this->get_due_date() ) ) ) {
+			$this->set_status( 'overdue' );
+		}
 		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
 			$this->set_payment_date( time() );
 		}
@@ -277,6 +332,24 @@ class Bill extends Document {
 		return $number;
 	}
 
+	/**
+	 * Save object.
+	 *
+	 * @since 1.1.0
+	 * @return bool|\Exception|int
+	 */
+	public function save() {
+		$this->check_required_items();
+		$this->calculate_totals();
+		$this->maybe_set_document_number();
+		$this->maybe_set_key();
+		$this->maybe_change_status();
+		$saved = parent::save();
+		$this->save_items();
+		$this->status_transition();
+		return $saved;
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Additional methods
@@ -297,7 +370,7 @@ class Bill extends Document {
 			return eaccounting_get_payments(
 				array(
 					'document_id' => $this->get_id(),
-					'type'        => 'income',
+					'type'        => 'expense',
 				)
 			);
 		}
@@ -345,6 +418,17 @@ class Bill extends Document {
 	 * @return false
 	 */
 	public function add_payment( $args = array() ) {
+		$args = wp_parse_args(
+			$args,
+			array(
+				'date'           => '',
+				'amount'         => '',
+				'account_id'     => '',
+				'payment_method' => '',
+				'description'    => '',
+			)
+		);
+
 		if ( ! $this->exists() ) {
 			return false;
 		}
@@ -371,8 +455,7 @@ class Bill extends Document {
 			);
 		}
 
-		$total_due = $this->get_total_due();
-		$amount    = (float) eaccounting_sanitize_number( $args['amount'], true );
+		//      $total_due = $this->get_total_due();
 		//      if ( $amount  $total_due ) {
 		//          throw new \Exception(
 		//              sprintf(
@@ -383,7 +466,7 @@ class Bill extends Document {
 		//              )
 		//          );
 		//      }
-
+		$amount           = (float) eaccounting_sanitize_number( $args['amount'], true );
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
 		$converted_amount = eaccounting_price_convert_between( $amount, $this->get_currency_code(), $this->get_currency_rate(), $currency->get_code(), $currency->get_rate() );

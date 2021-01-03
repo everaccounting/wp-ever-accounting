@@ -47,7 +47,6 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-overview.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-banking.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-sales.php';
@@ -57,7 +56,6 @@ class Admin {
 
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-reports.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-tools.php';
-
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) {
 			switch ( $_GET['page'] ) {

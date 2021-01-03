@@ -401,9 +401,9 @@ function eaccounting_get_transfers( $args = array() ) {
 		array(
 			'include'      => '',
 			'search'       => '',
+			'from_id'      => '',
 			'search_cols'  => $search_cols,
 			'orderby_cols' => $orderby_cols,
-			'transfer'     => true,
 			'fields'       => $fields,
 			'orderby'      => 'id',
 			'order'        => 'ASC',
@@ -428,12 +428,15 @@ function eaccounting_get_transfers( $args = array() ) {
 
 	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
 	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
+	if ( ! empty( $qv['from_id'] ) ) {
+		$from_id      = implode( ',', wp_parse_id_list( $qv['from_id'] ) );
+		$query_where .= " AND expense.`account_id` IN ($from_id)";
+	}
 
 	$count_total = true === $qv['count_total'];
 	$cache_key   = md5( serialize( $qv ) );
 	$results     = wp_cache_get( $cache_key, 'eaccounting_transaction' );
 	$request     = "SELECT $query_fields $query_from $query_join $query_where $query_orderby $query_limit";
-
 	if ( false === $results ) {
 		if ( $count_total ) {
 			$results = (int) $wpdb->get_var( $request );

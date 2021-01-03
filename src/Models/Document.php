@@ -183,6 +183,8 @@ abstract class Document extends ResourceModel {
 	/**
 	 * Get internal type.
 	 *
+	 * @param string $context
+	 *
 	 * @return string
 	 */
 	public function get_type( $context = 'edit' ) {
@@ -1142,7 +1144,7 @@ abstract class Document extends ResourceModel {
 			$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
 		}
 
-		if ( $this->get_currency_code() && ( ! $this->exists() || in_array( 'currency_code', $this->changes, true ) ) ) {
+		if ( $this->get_currency_code() && ( ! $this->exists() || array_key_exists( 'currency_code', $this->changes ) ) ) {
 			$currency = eaccounting_get_currency( $this->get_currency_code() );
 			$this->set_currency_rate( $currency->get_rate() );
 		}
@@ -1286,9 +1288,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @return \WP_Error|Bool
 	 */
-	public function add_item( $args ) {
-
-	}
+	public abstract function add_item( $args );
 
 	/**
 	 * Remove item from the order.
@@ -1383,46 +1383,6 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
-	 * Save object.
-	 *
-	 * @since 1.1.0
-	 * @return bool|\Exception|int
-	 */
-	public function save() {
-		$this->check_required_items();
-		$this->calculate_totals();
-		$this->maybe_set_document_number();
-		$this->maybe_set_key();
-		$this->maybe_set_complete();
-		$saved = parent::save();
-		$this->save_items();
-		$this->status_transition();
-		return $saved;
-	}
-
-	/**
-	 * Set address.
-	 *
-	 * @since 1.1.0
-	 */
-	public function maybe_set_address( $contact ) {
-		if ( empty( $contact ) ) {
-			return;
-		}
-		$address = $this->data['address'];
-		foreach ( $address as $prop => $value ) {
-			$getter = "get_{$prop}";
-			$setter = "set_{$prop}";
-			if ( is_callable( array( $contact, $getter ) )
-				 && is_callable( array( $this, $setter ) )
-				 && is_callable( array( $this, $getter ) )
-				 && empty( $this->$getter() ) ) {
-				$this->$setter( $contact->$getter() );
-			}
-		}
-	}
-
-	/**
 	 * Generate number.
 	 *
 	 * @since 1.1.0
@@ -1453,16 +1413,6 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
-	 * Conditionally set complete
-	 * @since 1.1.0
-	 */
-	public function maybe_set_complete() {
-		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
-			$this->set_payment_date( time() );
-		}
-	}
-
-	/**
 	 * Save all document items which are part of this order.
 	 */
 	protected function save_items() {
@@ -1482,6 +1432,5 @@ abstract class Document extends ResourceModel {
 			$item->save();
 		}
 	}
-
 
 }

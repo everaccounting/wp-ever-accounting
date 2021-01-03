@@ -12,16 +12,17 @@ use EverAccounting\Models\Invoice;
 defined( 'ABSPATH' ) || exit;
 
 $invoice_actions = apply_filters(
-		'eaccounting_invoice_actions',
-		array(
-				'send_customer_invoice' => __( 'Email invoice to customer', 'wp-ever-accounting' ),
-				'mark_partial'          => __( 'Status to "Partial', 'wp-ever-accounting' ),
-				'mark_paid'             => __( 'Status to "paid"', 'wp-ever-accounting' ),
-				'mark_overdue'          => __( 'Status to "Overdue"', 'wp-ever-accounting' ),
-				'mark_cancelled'        => __( 'Status to "Cancelled"', 'wp-ever-accounting' ),
-		)
+	'eaccounting_invoice_actions',
+	array(
+		'send_customer_invoice' => __( 'Email invoice to customer', 'wp-ever-accounting' ),
+		'mark_pending'          => __( 'Status to "Pending', 'wp-ever-accounting' ),
+		'mark_paid'             => __( 'Status to "paid"', 'wp-ever-accounting' ),
+		'mark_overdue'          => __( 'Status to "Overdue"', 'wp-ever-accounting' ),
+		'mark_cancelled'        => __( 'Status to "Cancelled"', 'wp-ever-accounting' ),
+		'mark_refunded'         => __( 'Status to "Refunded"', 'wp-ever-accounting' ),
+	)
 );
-$del_url = wp_nonce_url( admin_url( 'admin.php?page=ea-sales&tab=invoices&action=delete&invoice_id=' . $invoice->get_id() ), 'invoice-nonce', '_wpnonce' );
+$del_url         = wp_nonce_url( admin_url( 'admin.php?page=ea-sales&tab=invoices&action=delete&invoice_id=' . $invoice->get_id() ), 'invoice-nonce', '_wpnonce' );
 ?>
 <form action="<?php echo admin_url( 'admin-post.php' ); ?>" method="post">
 	<div class="ea-card">
