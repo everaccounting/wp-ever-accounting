@@ -222,6 +222,7 @@ function eaccounting_get_documents( $args = array() ) {
 			'paged'       => 1,
 			'return'      => 'objects',
 			'count_total' => false,
+			'customer_id' => '',
 		)
 	);
 	global $wpdb;
@@ -304,6 +305,10 @@ function eaccounting_get_documents( $args = array() ) {
 	if ( ! empty( $qv['creator_id'] ) ) {
 		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
 		$where     .= " AND $table.`creator_id` IN ($creator_id)";
+	}
+	if ( ! empty( $qv['customer_id'] ) ) {
+		$customer_id = implode( ',', wp_parse_id_list( $qv['customer_id'] ) );
+		$where     .= " AND $table.`contact_id` IN ($customer_id)";
 	}
 
 	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
