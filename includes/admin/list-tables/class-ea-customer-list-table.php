@@ -421,7 +421,6 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 				)
 			)
 		);
-
 		$this->inactive_count = eaccounting_get_customers(
 			array_merge(
 				$args,
