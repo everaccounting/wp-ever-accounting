@@ -236,7 +236,7 @@ class EAccounting_Settings {
 
 						),
 						'bill_terms'          => array(
-							'name' => __( 'Bill Notes', 'wp-ever-accounting' ),
+							'name' => __( 'Bill Terms', 'wp-ever-accounting' ),
 							'std'  => '',
 							'type' => 'textarea',
 						),
