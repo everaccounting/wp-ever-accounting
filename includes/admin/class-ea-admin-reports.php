@@ -51,7 +51,7 @@ class EAccounting_Admin_Reports {
 			'sales'    => __( 'Sales', 'wp-ever-accounting' ),
 			'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 			'profits'  => __( 'Profits', 'wp-ever-accounting' ),
-			'cashflow'  => __( 'Chashflow', 'wp-ever-accounting' ),
+			'cashflow'  => __( 'Cashflow', 'wp-ever-accounting' ),
 		);
 
 		return apply_filters( 'eaccounting_reports_tabs', $tabs );
