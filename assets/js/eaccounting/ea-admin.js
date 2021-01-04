@@ -7,10 +7,6 @@ jQuery(function ($) {
 	//initialize plugins
 	$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
 
-	$('body').on('click','.ea-modal__body .ea-input-date',function(e){
-		$(this).datepicker({dateFormat: 'yy-mm-dd'});
-	});
-
 	eaccounting.mask_amount('.ea-input-price');
 	eaccounting.mask_amount('#opening_balance');
 	//eaccounting.dropdown('.ea-dropdown');

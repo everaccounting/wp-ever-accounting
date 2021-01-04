@@ -150,7 +150,6 @@ jQuery(function ($) {
 		}
 
 		this.init = function () {
-			console.log('INIT');
 			$(document.body)
 				.css({
 					overflow: 'hidden',
@@ -161,6 +160,8 @@ jQuery(function ($) {
 			$('.ea-modal-content', this.$modal)
 				.attr('tabindex', '0')
 				.focus();
+
+			$('.ea-modal__content .ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
 
 			this.delegate();
 			this.resize();

@@ -74,7 +74,6 @@ jQuery( function ( $ ) {
 
 	$(document.body).on('ea_select2_init', function (){
 		$('.ea-select2').filter(':not(.select2-hidden-accessible)').each(function () {
-			console.log($(this).data('select2'));
 			$(this).eaccounting_select2();
 		});
 	});
