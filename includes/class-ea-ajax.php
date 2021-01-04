@@ -663,9 +663,12 @@ class Ajax {
 						)
 					),
 					'line'     => array_map( 'strval', $bill->get_items() ),
+					'message' => !empty($posted['id']) ? __( 'Bill updated successfully!', 'wp-ever-accounting' ) : '',
 					'redirect' => empty($posted['id'])? $redirect : '',
+
 				)
 			);
+
 		} catch ( \Exception $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ) );
 		}
