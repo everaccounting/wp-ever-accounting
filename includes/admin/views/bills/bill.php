@@ -41,7 +41,7 @@ if ( $bill->exists() ) {
 	add_meta_box( 'bill_notes', __( 'Bill Notes', 'wp-ever-accounting' ), array( 'EAccounting_Admin_Bills', 'bill_notes' ), 'ea_bill', 'side' );
 	add_meta_box( 'bill_payments', __( 'Bill Payments', 'wp-ever-accounting' ), '__return_null', 'ea_bill', 'side' );
 }
-$del_url = wp_nonce_url( admin_url( 'admin.php?page=ea-expenses&tab=bills&action=delete&invoice_id=' . $bill->get_id() ), 'bill-nonce', '_wpnonce' );
+$del_url = wp_nonce_url( admin_url( 'admin.php?page=ea-expenses&tab=bills&action=delete&bill_id=' . $bill->get_id() ), 'bill-nonce', '_wpnonce' );
 /**
  * Fires after all built-in meta boxes have been added, contextually for the given object.
  *
