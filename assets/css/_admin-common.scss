@@ -12,6 +12,7 @@
 	@media only screen and (max-width: 850px) {
 	  margin-right: 0;
 	  width: 100%;
+	  min-width: 100%;
 	}
   }
 
@@ -27,6 +28,9 @@
   .altered & {
 	&__content {
 	  float: right;
+		@media only screen and (max-width: 500px) {
+			float: none;
+		}
 	}
 
 	&__aside {
