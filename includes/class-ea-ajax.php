@@ -186,6 +186,7 @@ class Ajax {
 					'type'   => 'expense',
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active'
 				)
 			)
 		);
@@ -208,6 +209,7 @@ class Ajax {
 					'type'   => 'income',
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active'
 				)
 			)
 		);
@@ -230,6 +232,7 @@ class Ajax {
 					'type'   => 'item',
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active'
 				)
 			)
 		);
@@ -474,6 +477,7 @@ class Ajax {
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
+					'status'  => 'active',
 				)
 			)
 		);
@@ -817,6 +821,7 @@ class Ajax {
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active',
 				)
 			)
 		);
@@ -898,6 +903,7 @@ class Ajax {
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active',
 				)
 			)
 		);
