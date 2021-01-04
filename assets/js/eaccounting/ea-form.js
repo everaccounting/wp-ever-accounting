@@ -511,6 +511,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 				if( json.success){
 					note.remove();
+					$('#ea-invoice-notes').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
@@ -611,7 +612,7 @@ jQuery(function ($) {
 				.on('click', '.delete_note', this.delete_note)
 				.on('click', '.add-payment', this.add_payment)
 
-			$(document).on('submit', '#invoice-note-insert', this.add_note);
+			$(document).on('submit', '#bill-note-insert', this.add_note);
 
 			$(document.body).on('ea_bill_updated', this.recalculate)
 		},
@@ -691,6 +692,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 				if( json.success){
 					note.remove();
+					$('#ea-bill-notes').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
@@ -740,11 +742,12 @@ jQuery(function ($) {
 			var data = $form.serializeObject();
 			$.post(ajaxurl, data, function (json) {
 				if( json.success) {
-					$('#ea-invoice-notes').replaceWith(json.data.notes);
+					$('#ea-bill-notes').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
-				eaccounting_unblock($form)
+				eaccounting_unblock($form);
+				$('#bill-note-insert textarea').val('');
 			});
 		},
 
