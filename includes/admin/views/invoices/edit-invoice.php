@@ -126,7 +126,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 							'wrapper_class' => 'ea-col-6',
 							'label'         => __( 'Terms', 'wp-ever-accounting' ),
 							'name'          => 'terms',
-							'value'         => $invoice->get_terms(),
+							'value'         => empty($invoice->get_terms()) ? eaccounting()->settings->get( 'invoice_terms' ) : $invoice->get_terms(),
 							'required'      => false,
 						)
 					);

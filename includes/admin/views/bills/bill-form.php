@@ -97,7 +97,7 @@ defined( 'ABSPATH' ) || exit();
 									'wrapper_class' => 'ea-col-12',
 									'label'         => __( 'Terms', 'wp-ever-accounting' ),
 									'name'          => 'terms',
-									'value'         => $bill->get_terms(),
+									'value'         => empty($bill->get_terms()) ? eaccounting()->settings->get( 'bill_terms' ) : $bill->get_terms(),
 									'required'      => false,
 								)
 							);
