@@ -114,7 +114,6 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 			'issue_date'  => __( 'Bill Date', 'wp-ever-accounting' ),
 			'due_date'    => __( 'Due Date', 'wp-ever-accounting' ),
 			'status'      => __( 'Status', 'wp-ever-accounting' ),
-			'actions'     => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
