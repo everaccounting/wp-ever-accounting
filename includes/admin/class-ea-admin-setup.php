@@ -316,8 +316,7 @@ class Setup_Wizard {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		//$currencies = Query_Currency::init()->get();
-		$currencies = eaccounting_get_currencies();
+		$currencies = eaccounting_get_currencies(array('return'=> 'array'));
 
 		?>
 		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
@@ -381,7 +380,7 @@ class Setup_Wizard {
 							array(
 								'name'    => 'code[custom]',
 								'options' => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
-								'id'      => '4-code',
+								'id'      => '6-code',
 							)
 						);
 						?>
@@ -393,7 +392,7 @@ class Setup_Wizard {
 							array(
 								'name'  => 'rate[custom]',
 								'value' => '',
-								'id'    => '4-rate',
+								'id'    => '6-rate',
 							)
 						);
 						?>
