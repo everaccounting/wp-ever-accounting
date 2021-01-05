@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 $invoice_actions = apply_filters(
 	'eaccounting_invoice_actions',
 	array(
-		'send_customer_invoice' => __( 'Email invoice to customer', 'wp-ever-accounting' ),
+		//'send_customer_invoice' => __( 'Email invoice to customer', 'wp-ever-accounting' ),
 		'status_pending'          => __( 'Status to "Pending', 'wp-ever-accounting' ),
 		'status_paid'             => __( 'Status to "paid"', 'wp-ever-accounting' ),
 		'status_overdue'          => __( 'Status to "Overdue"', 'wp-ever-accounting' ),
