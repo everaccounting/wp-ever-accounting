@@ -9,20 +9,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$edit_mode      = isset( $mode ) && $mode === 'edit';
 $items          = $bill->get_items();
 $item_label     = eaccounting()->settings->get( 'bill_item_label', __( 'Item', 'wp-ever-accounting' ) );
 $price_label    = eaccounting()->settings->get( 'bill_price_label', __( 'Unit Price', 'wp-ever-accounting' ) );
 $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quantity', 'wp-ever-accounting' ) );
 ?>
 <div class="ea-document__items-wrapper">
-	<h3 class="ea-document__items-title"><?php esc_html_e( 'Line Items', 'wp-ever-accounting' ); ?></h3>
 	<table cellpadding="0" cellspacing="0" class="ea-document__items">
 		<thead>
 		<tr>
-			<?php if ( $edit_mode ) : ?>
-				<th class="ea-document__line-actions">&nbsp;</th>
-			<?php endif; ?>
+			<th class="ea-document__line-actions">&nbsp;</th>
 			<th class="ea-document__line-name" colspan="2"><?php echo esc_html( $item_label ); ?></th>
 			<?php do_action( 'eaccounting_bill_items_headers', $bill ); ?>
 			<th class="ea-document__line-price"><?php echo esc_html( $price_label ); ?></th>
@@ -45,39 +41,36 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 		do_action( 'eaccounting_bill_items_after_line_items', $bill );
 		?>
 		</tbody>
-		<?php if ( $edit_mode ) : ?>
-			<tbody>
-			<script type="text/template" id="ea-bill-line-template">
-				<?php
-				$item_id = 9999;
-				$item    = new \EverAccounting\Models\DocumentItem();
-				include __DIR__ . '/bill-item.php';
-				?>
-			</script>
-			<script type="text/template" id="ea-bill-item-selector">
-				<?php
-				eaccounting_item_dropdown(
-					array(
-						'name'  => 'items[9999][item_id]',
-						'class' => 'select-item',
-					)
-				);
-				?>
-			</script>
-			</tbody>
-		<?php endif; ?>
+		<tbody>
+		<script type="text/template" id="ea-bill-line-template">
+			<?php
+			$item_id = 9999;
+			$item    = new \EverAccounting\Models\DocumentItem();
+			include __DIR__ . '/bill-item.php';
+			?>
+		</script>
+		<script type="text/template" id="ea-bill-item-selector">
+			<?php
+			eaccounting_item_dropdown(
+				array(
+					'name'  => 'items[9999][item_id]',
+					'class' => 'select-item',
+				)
+			);
+			?>
+		</script>
+		</tbody>
 	</table>
-	<?php if ( $edit_mode ) : ?>
-		<div class="ea-document__data-row ea-document__actions">
-			<div class="ea-document__actions-left">
-				<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
-				<button type="button" class="button button-secondary add-discount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></button>
-			</div>
-			<div class="ea-document__actions-right">
-				<button type="button" class="button button-secondary recalculate"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></button>
-			</div>
+
+	<div class="ea-document__data-row ea-document__actions">
+		<div class="ea-document__actions-left">
+			<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button button-secondary add-discount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></button>
 		</div>
-	<?php endif; ?>
+		<div class="ea-document__actions-right">
+			<button type="button" class="button button-secondary recalculate"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></button>
+		</div>
+	</div>
 
 	<div class="ea-document__data-row ea-bill__totals">
 		<table class="ea-document__total-items">
@@ -98,14 +91,27 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 			</tr>
 
 			<?php if ( eaccounting_tax_enabled() ) : ?>
-				<tr>
-					<td class="label"><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>:</td>
-					<td width="1%"></td>
-					<td class="total">
-						<?php echo eaccounting_price( $bill->get_total_tax(), $bill->get_currency_code() ); ?>
-					</td>
-				</tr>
+				<?php if ( 'total' === eaccounting()->settings->get( 'tax_display_totals', 'total' ) ) : ?>
+					<tr>
+						<td class="label"><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>:</td>
+						<td width="1%"></td>
+						<td class="total">
+							<?php echo eaccounting_price( $bill->get_total_tax(), $bill->get_currency_code() ); ?>
+						</td>
+					</tr>
+				<?php else : ?>
+					<?php foreach ( $bill->get_taxes()  as $tax ) : ?>
+						<tr>
+							<td class="label"><?php echo esc_html( __( 'Tax', 'wp-ever-accounting' ) . '(' . number_format_i18n( $tax['rate'] ) . '%)' ); ?>:</td>
+							<td width="1%"></td>
+							<td class="total">
+								<?php echo eaccounting_price( $tax['amount'], $bill->get_currency_code() ); ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php endif; ?>
 			<?php endif; ?>
+
 			<tr>
 				<td class="label"><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
@@ -123,7 +129,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 				</tr>
 			<?php endif; ?>
 			<?php if ( $bill->exists() && ! empty( $bill->get_total_due() ) ) : ?>
-				<tr>
+				<tr class="ea-document__due">
 					<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
 					<td width="1%"></td>
 					<td class="total">

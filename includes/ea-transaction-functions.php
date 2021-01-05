@@ -731,7 +731,7 @@ function eaccounting_get_total_receivable() {
 		$invoices_sql     = $wpdb->prepare(
 			"
 			SELECT SUM(total) amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
-			WHERE  status NOT IN ( 'draft', 'cancelled' )
+			WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
 			AND `status` <> 'paid'  AND type = %s GROUP BY currency_code, currency_rate
 			",
 			'invoice'
@@ -745,7 +745,7 @@ function eaccounting_get_total_receivable() {
 		  SELECT Sum(amount) amount, currency_code, currency_rate
 		  FROM   {$wpdb->prefix}ea_transactions
 		  WHERE  type = %s
-				 AND document_id IN (SELECT id FROM   {$wpdb->prefix}ea_documents WHERE  status NOT IN ( 'draft', 'cancelled' )
+				 AND document_id IN (SELECT id FROM   {$wpdb->prefix}ea_documents WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
 				 AND `status` <> 'paid'
 				 AND type = 'invoice')
 		  GROUP  BY currency_code,currency_rate
@@ -776,7 +776,7 @@ function eaccounting_get_total_payable() {
 		$bills_sql     = $wpdb->prepare(
 			"
 			SELECT SUM(total) amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
-			WHERE  status NOT IN ( 'draft', 'cancelled' )
+			WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
 			AND `status` <> 'paid'  AND type = %s GROUP BY currency_code, currency_rate
 			",
 			'bill'
@@ -790,7 +790,7 @@ function eaccounting_get_total_payable() {
 		  SELECT Sum(amount) amount, currency_code, currency_rate
 		  FROM   {$wpdb->prefix}ea_transactions
 		  WHERE  type = %s
-				 AND document_id IN (SELECT id FROM   {$wpdb->prefix}ea_documents WHERE  status NOT IN ( 'draft', 'cancelled' )
+				 AND document_id IN (SELECT id FROM   {$wpdb->prefix}ea_documents WHERE  status NOT IN ( 'draft', 'cancelled', 'refunded' )
 				 AND `status` <> 'paid'
 				 AND type = 'invoice')
 		  GROUP  BY currency_code,currency_rate

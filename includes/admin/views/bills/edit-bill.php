@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Bill Edit Page.
+ * Admin Bill Form.
  *
  * Page: Expenses
  * Tab: Bills
@@ -9,185 +9,186 @@
  * @subpackage  Admin/Views/Bills
  * @package     EverAccounting
  *
- * @var int $bill_id
+ * @var Bill $bill
  */
+
+use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 
-try {
-	$bill = new \EverAccounting\Models\Bill( $bill_id );
-} catch ( Exception $e ) {
-	wp_die( $e->getMessage() );
-}
 $bill->maybe_set_document_number();
 $title    = $bill->exists() ? __( 'Update Bill', 'wp-ever-accounting' ) : __( 'Add Bill', 'wp-ever-accounting' );
-$view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=bills&action=view&bill_id=' . $bill->get_id();
+$note     = eaccounting()->settings->get( 'bill_note' );
+$terms    = eaccounting()->settings->get( 'bill_terms' );
+$due      = eaccounting()->settings->get( 'bill_due', 15 );
+$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );
 ?>
-<form id="ea-bill-form" method="post" class="ea-documents">
-	<div class="ea-bill">
-		<div class="ea-card">
-			<div class="ea-card__header">
-				<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-				<div>
-					<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
-					<?php if ( $bill->exists() ) : ?>
-						<?php do_action( 'eaccounting_bill_header_actions', $bill ); ?>
-						<a class="button-secondary button" href="<?php echo esc_url( $view_url ); ?>"><?php _e( 'View Bill', 'wp-ever-accounting' ); ?></a>
-					<?php endif; ?>
-				</div>
-			</div>
+<div class="ea-row">
+	<div class="ea-col-7">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Bill', 'wp-ever-accounting' ); ?></h1>
+		<?php if ( $bill->exists() ) : ?>
+			<a href="<?php echo esc_url( add_query_arg( array('tab' => 'bills', 'page' => 'ea-expenses', 'action' => 'add'), admin_url('admin.php') ) );//phpcs:ignore ?>" class="page-title-action">
+				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+			</a>
+		<?php else : ?>
+			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+		<?php endif; ?>
+	</div>
 
-			<div class="ea-card__inside">
-				<div class="ea-row">
-					<?php
-					eaccounting_vendor_dropdown(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Vendor', 'wp-ever-accounting' ),
-							'name'          => 'vendor_id',
-							'placeholder'   => __( 'Select Vendor', 'wp-ever-accounting' ),
-							'value'         => $bill->get_vendor_id(),
-							'required'      => true,
-							'creatable'     => true,
-						)
-					);
-					eaccounting_currency_dropdown(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Currency', 'wp-ever-accounting' ),
-							'name'          => 'currency_code',
-							'value'         => $bill->get_currency_code(),
-							'required'      => true,
-							'creatable'     => true,
-						)
-					);
+	<div class="ea-col-5">
 
-					eaccounting_text_input(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Bill Date', 'wp-ever-accounting' ),
-							'name'          => 'issue_date',
-							'value'         => $bill->get_issue_date() ? eaccounting_format_datetime( $bill->get_issue_date(), 'Y-m-d' ) : null,
-							'required'      => true,
-							'data_type'     => 'date',
-						)
-					);
+	</div>
+</div>
+<hr class="wp-header-end">
 
-					eaccounting_text_input(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Due Date', 'wp-ever-accounting' ),
-							'name'          => 'due_date',
-							'value'         => $bill->get_due_date() ? eaccounting_format_datetime( $bill->get_due_date(), 'Y-m-d' ) : null,
-							'required'      => true,
-							'data_type'     => 'date',
-						)
-					);
-
-					eaccounting_text_input(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Bill Number', 'wp-ever-accounting' ),
-							'name'          => 'bill_number',
-							'value'         => empty( $bill->get_bill_number() ) ? $bill->get_bill_number() : $bill->get_bill_number(),
-							'required'      => true,
-						)
-					);
-
-					eaccounting_text_input(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Order Number', 'wp-ever-accounting' ),
-							'name'          => 'order_number',
-							'value'         => $bill->get_order_number(),
-							'required'      => false,
-						)
-					);
-
-					eaccounting_category_dropdown(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Category', 'wp-ever-accounting' ),
-							'name'          => 'category_id',
-							'value'         => $bill->get_category_id(),
-							'required'      => true,
-							'type'          => 'expense',
-							'creatable'     => true,
-							'ajax_action'   => 'eaccounting_get_expense_categories',
-							'modal_id'      => 'ea-modal-add-expense-category',
-						)
-					);
-
-					eaccounting_text_input(
-						array(
-							'wrapper_class' => 'ea-col-6',
-							'label'         => __( 'Terms', 'wp-ever-accounting' ),
-							'name'          => 'terms',
-							'value'         => $bill->get_terms(),
-							'required'      => false,
-						)
-					);
-
-					eaccounting_get_admin_template(
-						'bills/partials/items',
-						array(
-							'bill' => $bill,
-							'mode' => 'edit',
-						)
-					);
-
-					eaccounting_file_input(
-						array(
-							'label'         => __( 'Attachments', 'wp-ever-accounting' ),
-							'name'          => 'attachment_id',
-							'allowed-types' => 'jpg,jpeg,png,pdf',
-							'value'         => $bill->get_attachment_id(),
-							'wrapper_class' => 'ea-col-6',
-							'placeholder'   => __( 'Upload File', 'wp-ever-accounting' ),
-						)
-					);
-					eaccounting_hidden_input(
-						array(
-							'name'  => 'currency_rate',
-							'value' => $bill->get_currency_rate(),
-						)
-					);
-					eaccounting_hidden_input(
-						array(
-							'name'  => 'id',
-							'value' => $bill->get_id(),
-						)
-					);
-					eaccounting_hidden_input(
-						array(
-							'name'  => 'discount',
-							'value' => $bill->get_discount(),
-						)
-					);
-					eaccounting_hidden_input(
-						array(
-							'name'  => 'discount_type',
-							'value' => $bill->get_discount_type(),
-						)
-					);
-					eaccounting_hidden_input(
-						array(
-							'name'  => 'action',
-							'value' => 'eaccounting_edit_bill',
-						)
-					);
-					?>
-
-				</div><!--.ea-row-->
-
-			</div>
-			<div class="ea-card__footer">
-				<?php wp_nonce_field( 'ea_edit_bill' ); ?>
-				<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
+<form id="ea-bill-form" name="bill" method="post" class="ea-form">
+	<div class="ea-card">
+		<div class="ea-card__header">
+			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
+			<div>
+				<button class="button-secondary" onclick="history.go(-1);">
+					<span class="dashicons dashicons-undo"></span>
+					<?php esc_html_e( 'Back', 'wp-ever-accounting' ); ?>
+				</button>
+				<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
+					<span class="dashicons dashicons-visibility"></span>
+					<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
+				</a>
 			</div>
 		</div>
+		<div class="ea-card__inside">
+
+			<div class="ea-row">
+				<?php
+				eaccounting_vendor_dropdown(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Vendor', 'wp-ever-accounting' ),
+						'name'          => 'vendor_id',
+						'placeholder'   => __( 'Select Vendor', 'wp-ever-accounting' ),
+						'value'         => $bill->get_vendor_id(),
+						'required'      => true,
+						'creatable'     => true,
+					)
+				);
+				eaccounting_currency_dropdown(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Currency', 'wp-ever-accounting' ),
+						'name'          => 'currency_code',
+						'value'         => $bill->get_currency_code(),
+						'required'      => true,
+						'creatable'     => true,
+					)
+				);
+
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Bill Date', 'wp-ever-accounting' ),
+						'name'          => 'issue_date',
+						'value'         => $bill->get_issue_date() ? eaccounting_format_datetime( $bill->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
+						'required'      => true,
+						'data_type'     => 'date',
+					)
+				);
+
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Due Date', 'wp-ever-accounting' ),
+						'name'          => 'due_date',
+						'value'         => $bill->get_due_date() ? eaccounting_format_datetime( $bill->get_due_date(), 'Y-m-d' ) : $due_date,
+						'required'      => true,
+						'data_type'     => 'date',
+					)
+				);
+
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Bill Number', 'wp-ever-accounting' ),
+						'name'          => 'bill_number',
+						'value'         => empty( $bill->get_bill_number() ) ? $bill->get_bill_number() : $bill->get_bill_number(),
+						'required'      => true,
+					)
+				);
+
+				eaccounting_text_input(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Order Number', 'wp-ever-accounting' ),
+						'name'          => 'order_number',
+						'value'         => $bill->get_order_number(),
+						'required'      => false,
+					)
+				);
+
+				eaccounting_category_dropdown(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Category', 'wp-ever-accounting' ),
+						'name'          => 'category_id',
+						'value'         => $bill->get_category_id(),
+						'required'      => true,
+						'type'          => 'expense',
+						'creatable'     => true,
+						'ajax_action'   => 'eaccounting_get_expense_categories',
+						'modal_id'      => 'ea-modal-add-expense-category',
+					)
+				);
+				?>
+
+			</div>
+
+			<?php
+			eaccounting_get_admin_template(
+				'bills/bill-items',
+				array(
+					'bill' => $bill,
+				)
+			);
+			?>
+
+			<div class="ea-row ea-mt-20">
+				<?php
+				eaccounting_textarea(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Note', 'wp-ever-accounting' ),
+						'name'          => 'note',
+						'value'         => $bill->exists() ? $bill->get_note() : $note,
+						'required'      => false,
+					)
+				);
+				eaccounting_textarea(
+					array(
+						'wrapper_class' => 'ea-col-6',
+						'label'         => __( 'Terms & Conditions', 'wp-ever-accounting' ),
+						'name'          => 'terms',
+						'value'         => $bill->exists() ? $bill->get_terms() : $terms,
+						'required'      => false,
+					)
+				);
+				?>
+			</div>
+
+
+		</div>
+
+		<div class="ea-card__footer">
+			<?php submit_button( __( 'Submit', 'wp-ever-accounting' ) ); ?>
+		</div>
 	</div>
+
+	<?php eaccounting_hidden_input( 'currency_rate', $bill->get_currency_rate() ); ?>
+	<?php eaccounting_hidden_input( 'id', $bill->get_id() ); ?>
+	<?php eaccounting_hidden_input( 'discount', $bill->get_discount() ); ?>
+	<?php eaccounting_hidden_input( 'discount_type', $bill->get_discount_type() ); ?>
+	<?php eaccounting_hidden_input( 'action', 'eaccounting_edit_bill' ); ?>
+	<?php wp_nonce_field( 'ea_edit_bill' ); ?>
 </form>
+
 
 <script type="text/template" id="ea-modal-add-discount" data-title="<?php esc_html_e( 'Add Discount', 'wp-ever-accounting' ); ?>">
 	<form action="" method="post">

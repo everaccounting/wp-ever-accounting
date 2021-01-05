@@ -235,8 +235,26 @@ class EAccounting_Settings {
 							'type' => 'number',
 
 						),
+						'bill_due'            => array(
+							'name'    => __( 'Bill Due', 'wp-ever-accounting' ),
+							'std'     => '15',
+							'type'    => 'select',
+							'options' => array(
+								'7'  => __( 'Due within 7 days', 'wp-ever-accounting' ),
+								'15' => __( 'Due within 15 days', 'wp-ever-accounting' ),
+								'30' => __( 'Due within 30 days', 'wp-ever-accounting' ),
+								'45' => __( 'Due within 45 days', 'wp-ever-accounting' ),
+								'60' => __( 'Due within 60 days', 'wp-ever-accounting' ),
+								'90' => __( 'Due within 90 days', 'wp-ever-accounting' ),
+							),
+						),
+						'bill_note'           => array(
+							'name' => __( 'Bill Note', 'wp-ever-accounting' ),
+							'std'  => '',
+							'type' => 'textarea',
+						),
 						'bill_terms'          => array(
-							'name' => __( 'Bill Notes', 'wp-ever-accounting' ),
+							'name' => __( 'Bill Terms & Conditions', 'wp-ever-accounting' ),
 							'std'  => '',
 							'type' => 'textarea',
 						),
@@ -490,9 +508,9 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$id         = 'eaccounting_settings[' . $args['id'] . ']';
 		$html       = '<label for="' . $id . '">';
-		$html      .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
-		$html      .= $args['desc'];
-		$html      .= '</label>';
+		$html       .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html       .= $args['desc'];
+		$html       .= '</label>';
 
 		echo $html;
 	}
@@ -584,7 +602,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -627,7 +645,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -666,7 +684,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -706,7 +724,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -812,7 +830,7 @@ class EAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),

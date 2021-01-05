@@ -497,6 +497,7 @@ class EAccounting_Install {
             `total_discount` DOUBLE(15,4) DEFAULT 0,
             `total` DOUBLE(15,4) DEFAULT 0,
             `tax_inclusive` tinyINT(1) NOT NULL DEFAULT '0',
+  			`note` TEXT DEFAULT NULL,
   			`terms` TEXT DEFAULT NULL,
 			`attachment_id` INT(11) DEFAULT NULL,
 		  	`currency_code` varchar(3) NOT NULL DEFAULT 'USD',

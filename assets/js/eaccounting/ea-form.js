@@ -611,7 +611,7 @@ jQuery(function ($) {
 				.on('click', '.delete_note', this.delete_note)
 				.on('click', '.add-payment', this.add_payment)
 
-			$(document).on('submit', '#invoice-note-insert', this.add_note);
+			$(document).on('submit', '#bill-note-form', this.add_note);
 
 			$(document.body).on('ea_bill_updated', this.recalculate)
 		},
@@ -716,7 +716,6 @@ jQuery(function ($) {
 			e.preventDefault();
 			var $modal_selector = $('#ea-modal-add-bill-payment');
 			var code = $(this).data('currency');
-			console.log($modal_selector);
 
 			$modal_selector.ea_modal({
 				onReady: function (plugin) {
@@ -740,7 +739,7 @@ jQuery(function ($) {
 			var data = $form.serializeObject();
 			$.post(ajaxurl, data, function (json) {
 				if( json.success) {
-					$('#ea-invoice-notes').replaceWith(json.data.notes);
+					$('#ea-bill_notes-body').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);

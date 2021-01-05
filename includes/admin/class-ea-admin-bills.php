@@ -24,33 +24,58 @@ class EAccounting_Admin_Bills {
 	}
 
 	public function bill_action() {
-		$action  = eaccounting_clean( wp_unslash( $_POST['bill_action'] ) );
-		$bill_id = absint( wp_unslash( $_POST['bill_id'] ) );
+		$action  = eaccounting_clean( wp_unslash( $_REQUEST['bill_action'] ) );
+		$bill_id = absint( wp_unslash( $_REQUEST['bill_id'] ) );
 		$bill    = eaccounting_get_bill( $bill_id );
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) {
 			wp_die( 'no cheatin!' );
 		}
-
+		$redirect_url = add_query_arg(
+			array(
+				'page'    => 'ea-expenses',
+				'tab'     => 'bills',
+				'action'  => 'view',
+				'bill_id' => $bill_id,
+			),
+			admin_url( 'admin.php' )
+		);
 		switch ( $action ) {
 			case 'status_received':
-				$bill->update_status( 'received' );
+				$bill->set_status( 'received' );
+				$bill->save();
 				break;
 			case 'status_overdue':
-				$bill->update_status( 'overdue' );
+				$bill->set_status( 'overdue' );
 				$bill->save();
 				break;
 			case 'status_cancelled':
-				$bill->update_status( 'cancelled' );
+				$total_paid = eaccounting_price( abs( $bill->get_total_paid() ), $bill->get_currency_code() );
+				$bill->get_repository()->delete_transactions( $bill );
+				if ( ! empty( $bill->get_total_paid() ) ) {
+					$bill->add_note(
+						sprintf(
+						/* translators: %s amount */
+							__( 'Removed %s payment', 'wp-ever-accounting' ),
+							$total_paid
+						)
+					);
+				}
+				$bill->set_status( 'cancelled' );
 				$bill->save();
+				break;
+			case 'delete':
+				$bill->delete();
+				$redirect_url = remove_query_arg( array( 'action', 'bill_id' ), $redirect_url );
 				break;
 		}
 
 		if ( ! did_action( 'eaccounting_bill_action_' . sanitize_title( $action ) ) ) {
-			do_action( 'eaccounting_bill_action_' . sanitize_title( $action ), $bill );
+			do_action( 'eaccounting_bill_action_' . sanitize_title( $action ), $bill, $redirect_url );
 		}
 
-		wp_redirect( add_query_arg( array( 'action' => 'view' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) ) );
+		wp_redirect( $redirect_url ); //phpcs:ignore
+		exit();
 	}
 
 	/**
@@ -64,9 +89,9 @@ class EAccounting_Admin_Bills {
 			$this->view_bill( $bill_id );
 		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			$bill_id = isset( $_GET['bill_id'] ) ? absint( $_GET['bill_id'] ) : null;
-			$this->fill_form( $bill_id );
+			$this->edit_bill( $bill_id );
 		} else {
-			include dirname( __FILE__ ) . '/views/bills/bills.php';
+			include dirname( __FILE__ ) . '/views/bills/list-bill.php';
 		}
 	}
 
@@ -89,7 +114,7 @@ class EAccounting_Admin_Bills {
 		}
 
 		eaccounting_get_admin_template(
-			'bills/bill',
+			'bills/view-bill',
 			array(
 				'bill'   => $bill,
 				'action' => 'view',
@@ -98,17 +123,18 @@ class EAccounting_Admin_Bills {
 	}
 
 	/**
-	 * @param $bill_id
 	 * @since 1.1.0
+	 *
+	 * @param $bill_id
 	 */
-	public function fill_form( $bill_id = null ) {
+	public function edit_bill( $bill_id = null ) {
 		try {
 			$bill = new Bill( $bill_id );
 		} catch ( Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
 		eaccounting_get_admin_template(
-			'bills/bill-form',
+			'bills/edit-bill',
 			array(
 				'bill'   => $bill,
 				'action' => 'edit',
@@ -119,14 +145,29 @@ class EAccounting_Admin_Bills {
 	/**
 	 * Get bill notes.
 	 *
-	 * @param Bill $bill
 	 * @since 1.1.0
+	 *
+	 * @param Bill $bill
 	 */
 	public static function bill_notes( $bill ) {
 		if ( ! $bill->exists() ) {
 			return;
 		}
 		eaccounting_get_admin_template( 'bills/bill-notes', array( 'bill' => $bill ) );
+	}
+
+	/**
+	 * Get bill payments.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param Bill $bill
+	 */
+	public static function bill_payments( $bill ) {
+		if ( ! $bill->exists() ) {
+			return;
+		}
+		eaccounting_get_admin_template( 'bills/bill-payments', array( 'bill' => $bill ) );
 	}
 }
 

@@ -178,6 +178,7 @@ class Bill extends Document {
 
 	/**
 	 * Checks to see if the invoice requires payment.
+	 *
 	 * @since 1.1.0
 	 * @return bool
 	 */
@@ -187,25 +188,29 @@ class Bill extends Document {
 
 	/**
 	 * Checks if the invoice needs payment.
+	 *
 	 * @since 1.1.0
 	 * @return bool
 	 */
 	public function needs_payment() {
-		return ! $this->is_status( 'paid' ) && ! $this->is_free();
+		return ! empty( (int) eaccounting_round_number( $this->get_total_due(), 0 ) );
 	}
 
 	/**
 	 * Checks if the invoice is due.
+	 *
 	 * @since 1.1.0
 	 * @return bool
 	 */
 	public function is_due() {
 		$due_date = $this->get_due_date();
+
 		return empty( $due_date ) ? false : current_time( 'timestamp' ) > strtotime( $due_date ); //phpcs:ignore
 	}
 
 	/**
 	 * Checks if the invoice is draft.
+	 *
 	 * @since 1.1.0
 	 * @return bool
 	 */
@@ -221,7 +226,7 @@ class Bill extends Document {
 	 * @return bool
 	 */
 	public function is_editable() {
-		return ! $this->needs_payment();
+		return apply_filters( 'eaccounting_bill_is_editable', ! in_array( $this->get_status(), array( 'paid' ), true ), $this );
 	}
 
 	/*
@@ -310,15 +315,20 @@ class Bill extends Document {
 
 	/**
 	 * Conditionally change status
+	 *
 	 * @since 1.1.0
 	 */
 	public function maybe_change_status() {
-		if ( $this->needs_payment() && ( time() > strtotime( $this->get_due_date() ) ) ) {
-			$this->set_status( 'overdue' );
-		}
+//		if ( $this->needs_payment() && ! empty( $this->get_due_date() ) && ( time() > strtotime( $this->get_due_date() ) ) ) {
+//			$this->set_status( 'overdue' );
+//		}
+
 		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
 			$this->set_payment_date( time() );
+		} else {
+			$this->set_payment_date( '' );
 		}
+
 	}
 
 	/**
@@ -354,6 +364,7 @@ class Bill extends Document {
 		$saved = parent::save();
 		$this->save_items();
 		$this->status_transition();
+
 		return $saved;
 	}
 
@@ -397,6 +408,7 @@ class Bill extends Document {
 		if ( $due < 0 ) {
 			$due = 0;
 		}
+
 		return $due;
 	}
 
@@ -488,13 +500,15 @@ class Bill extends Document {
 				'vendor_id'      => $this->get_contact_id(),
 				'payment_method' => eaccounting_clean( $args['payment_method'] ),
 				'description'    => eaccounting_clean( $args['description'] ),
-				'reference'      => sprintf(__('Bill Payment #%d', 'wp-ever-accounting'), $this->get_id()),//phpcs:ignore
+				'reference'      => sprintf( __( 'Bill Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),//phpcs:ignore
 			)
 		);
 
 		$expense->save();
+		$methods = eaccounting_get_payment_methods();
+		$method  = $methods[ $expense->get_payment_method() ];
 		/* translators: %s amount */
-		$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), eaccounting_price( $args['amount'], $this->get_currency_code() ) ), false );
+		$this->add_note( sprintf( __( 'Paid %1$s by %2$s', 'wp-ever-accounting' ), eaccounting_price( $args['amount'], $this->get_currency_code() ), $method ), false );
 		wp_cache_flush();
 
 		if ( ( 0 < $this->get_total_paid() ) && ( $this->get_total_paid() < $this->get_total() ) ) {
@@ -504,23 +518,6 @@ class Bill extends Document {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Update status.
-	 *
-	 * @param $status
-	 * @since 1.1.0
-	 *
-	 * @return bool|\Exception|int
-	 */
-	public function update_status( $status ) {
-		try {
-			$this->set_status( $status );
-			return $this->save();
-		} catch ( \Exception $e ) {
-			return false;
-		}
 	}
 
 	/**
@@ -535,7 +532,7 @@ class Bill extends Document {
 			try {
 				do_action( 'eaccounting_bill_status_' . $status_transition['to'], $this->get_id(), $this );
 
-				if ( ! empty( $status_transition['from'] ) ) {
+				if ( $status_transition['from'] !== $status_transition['to'] ) {
 					/* translators: 1: old order status 2: new order status */
 					$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
 
@@ -552,12 +549,6 @@ class Bill extends Document {
 					) {
 						do_action( 'eaccounting_bill_payment_status_changed', $this, $status_transition );
 					}
-				} else {
-					/* translators: %s: new bill status */
-					$transition_note = sprintf( __( 'Status set to %s.', 'wp-ever-accounting' ), $status_transition['to'], $this );
-
-					// Note the transition occurred.
-					$this->add_note( trim( $status_transition['note'] . ' ' . $transition_note ), false );
 				}
 			} catch ( \Exception $e ) {
 				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );

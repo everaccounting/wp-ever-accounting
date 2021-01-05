@@ -64,6 +64,7 @@ class Documents extends ResourceRepository {
 		'total_discount'  => '%f',
 		'total'           => '%f',
 		'tax_inclusive'   => '%d',
+		'note'            => '%s',
 		'terms'           => '%s',
 		'attachment_id'   => '%d',
 		'key'             => '%s',
@@ -151,6 +152,7 @@ class Documents extends ResourceRepository {
 	public function delete_transactions( $item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . Transactions::TABLE, array( 'document_id' => $item->get_id() ) );
+		wp_cache_flush();
 	}
 
 	/**

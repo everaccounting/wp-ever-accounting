@@ -23,6 +23,18 @@ jQuery(function ($) {
 
 	$('#eaccounting_settings[financial_year_start]').datepicker({dateFormat: 'yy-mm-dd'});
 
+	//dropdwown
+	$( document )
+		.on( 'click', function () {
+			$( '.ea-dropdown' ).removeClass( 'open' );
+		} )
+		.on( 'click', '.ea-dropdown-trigger', function ( e ) {
+			e.preventDefault();
+			e.stopPropagation();
+			$( '.ea-dropdown' ).removeClass( 'open' );
+			$( this ).closest( '.ea-dropdown' ).toggleClass( 'open' );
+		} );
+
 	/**
 	 * Media selector
 	 * @type {boolean}

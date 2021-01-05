@@ -565,7 +565,7 @@ class Ajax {
 		self::check_permission( 'ea_manage_bill' );
 		$bill_id       = absint( $_REQUEST['bill_id'] );
 		$note          = eaccounting_clean( $_REQUEST['note'] );
-		$customer_note = isset( $_REQUEST['type'] ) && 'customer' === $_REQUEST['type'] ? true : false;
+		$customer_note = isset( $_REQUEST['type'] ) && 'customer' === $_REQUEST['type'];
 		if ( empty( $note ) ) {
 			wp_send_json_error(
 				array(
@@ -576,7 +576,7 @@ class Ajax {
 		try {
 			$bill = new Bill( $bill_id );
 			$bill->add_note( $note, $customer_note );
-			$notes = eaccounting_get_admin_template_html( 'bills/partials/notes', array( 'bill' => $bill ) );
+			$notes = eaccounting_get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
 			wp_send_json_success(
 				array(
 					'message' => __( 'Note Added.' ),

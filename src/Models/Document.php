@@ -78,6 +78,7 @@ abstract class Document extends ResourceModel {
 		'total_discount'  => 0.00,
 		'total'           => 0.00,
 		'tax_inclusive'   => 1,
+		'note'            => '',
 		'terms'           => '',
 		'attachment_id'   => null,
 		'currency_code'   => null,
@@ -556,6 +557,19 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
+	 * Return the note.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return string
+	 */
+	public function get_note( $context = 'edit' ) {
+		return $this->get_prop( 'note', $context );
+	}
+
+	/**
 	 * Return the terms.
 	 *
 	 * @since  1.1.0
@@ -691,13 +705,17 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_taxes() {
 		$taxes = array();
-		if ( empty( $this->get_items() ) ) {
+		if ( ! empty( $this->get_items() ) ) {
 			foreach ( $this->get_items() as $item ) {
-				$taxes[ $item->get_item_id() ] = $item->get_tax();
+				$taxes[] = array(
+					'item_id' => $item->get_item_id(),
+					'rate'    => $item->get_tax_rate(),
+					'amount'  => $item->get_tax(),
+				);
 			}
 		}
 
-		return array();
+		return $taxes;
 	}
 
 	/**
@@ -736,10 +754,12 @@ abstract class Document extends ResourceModel {
 	 * @return array
 	 */
 	public function get_data() {
-		return array_merge(
-			parent::get_data(),
-			array(
-				'line_items' => $this->get_items(),
+		return $this->to_array(
+			array_merge(
+				parent::get_data(),
+				array(
+					'line_items' => $this->get_items(),
+				)
 			)
 		);
 	}
@@ -1115,6 +1135,18 @@ abstract class Document extends ResourceModel {
 	 * @param string $note .
 	 *
 	 */
+	public function set_note( $note ) {
+		$this->set_prop( 'note', eaccounting_sanitize_textarea( $note ) );
+	}
+
+	/**
+	 * set the note.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $note .
+	 *
+	 */
 	public function set_terms( $terms ) {
 		$this->set_prop( 'terms', eaccounting_sanitize_textarea( $terms ) );
 	}
@@ -1382,23 +1414,6 @@ abstract class Document extends ResourceModel {
 		);
 	}
 
-	/**
-	 * Generate number.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param $number
-	 *
-	 * @return string
-	 */
-	public function generate_number( $number ) {
-		$prefix           = 'DOC-';
-		$padd             = 5;
-		$formatted_number = zeroise( absint( $number ), $padd );
-		$number           = apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_number', $prefix . $formatted_number );
-
-		return $number;
-	}
 
 	/**
 	 * Generate key.
@@ -1407,7 +1422,7 @@ abstract class Document extends ResourceModel {
 	 * @return string
 	 */
 	public function generate_key() {
-		$key = 'ea_' . apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_key', 'document_' . wp_generate_password( 19, false ) );
+		$key = 'ea_' . apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_key', $this->get_type() . '_' . wp_generate_password( 19, false ) );
 
 		return strtolower( $key );
 	}

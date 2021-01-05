@@ -6,20 +6,25 @@
 		box-sizing: border-box
 	}
 
-	a {
-		text-decoration: none;
-
-		&:focus {
-			outline: none;
-			box-shadow: none;
-		}
+	&__number {
+		font-size: 18px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		line-height: 1.1;
+		color: #1e1e1e;
 	}
 
-	&__items-title {
-		font-size: 14px;
-		margin-top: 0;
-		margin-bottom: 1rem;
-		padding-left: 12px;
+	&__logo {
+		max-width: 300px;
+		max-height: 70px;
+		overflow: hidden;
+		margin-bottom: 10px;
+		margin-top: 10px;
+
+		img {
+			max-height: 70px;
+			width: auto;
+		}
 	}
 
 	&__watermark {
@@ -33,7 +38,7 @@
 
 		p {
 			color: rgba(0, 0, 0, .04);
-			font-size: 150px;
+			font-size: 100px;
 			font-weight: 500;
 			transform: rotate(325deg);
 			text-align: center;
@@ -41,7 +46,75 @@
 		}
 	}
 
-	/* Line items table */
+	&__section {
+		@include clearfix();
+	}
+
+	&__column {
+
+	}
+
+	&__company-info,
+	&__billing-info {
+		margin-bottom: 20px;
+		font-style: normal;
+		line-height: 1.6em;
+		text-align: left;
+		max-width: 400px;
+
+		& > span {
+			display: block;
+			//color: #757575;
+		}
+	}
+
+	&__company-name {
+		font-weight: 600;
+		font-size: 14px;
+		line-height: 2em;
+		color: #1e1e1e !important;
+	}
+
+	&__to {
+		display: block;
+		text-align: right;
+		font-weight: 600;
+		font-size: 14px;
+		line-height: 2em;
+	}
+
+	&__billing-name {
+		font-weight: 600;
+	}
+
+	&__billing-info {
+		text-align: right !important;
+	}
+
+	&__meta {
+		border-collapse: collapse;
+		background-color: transparent;
+
+		td, th {
+			white-space: nowrap;
+			vertical-align: middle;
+			padding-top: 2px;
+			padding-bottom: 2px;
+		}
+
+		th {
+			text-align: left;
+			padding-right: 7px;
+		}
+
+		td {
+			text-align: right;
+
+			&:last-child {
+				padding-left: 7px;
+			}
+		}
+	}
 
 	&__items-wrapper {
 		margin: 1rem 0 0 0;
@@ -65,11 +138,13 @@
 
 		tr {
 			border-bottom: 1px solid #ddd;
+			border-left: 1px solid #ddd;
+			border-right: 1px solid #ddd;
 		}
 
 		th {
 			font-weight: 400;
-			color: #999;
+			color: #757575;
 			background: #f8f8f8;
 			user-select: none;
 		}
@@ -164,11 +239,12 @@
 
 	&__data-row {
 		width: 100%;
-		border-bottom: 1px solid #dfdfdf;
+		border: 1px solid #dfdfdf;
 		padding: 10px;
 		background: #f8f8f8;
 		box-sizing: border-box;
 		margin: 0;
+		border-top: 0;
 	}
 
 	&__total-items {
@@ -205,93 +281,103 @@
 		flex-wrap: wrap;
 	}
 
-	.add-line-item {
-		.dashicons {
-			vertical-align: middle;
-		}
-	}
-
-	&__section {
-		display: flex;
-		justify-content: space-between;
-		min-height: 40px;
-		align-items: center;
-		margin-bottom: 20px;
-		flex-direction: row;
+	&__note {
+		margin-top: 20px;
 		width: 100%;
-		padding: 15px;
+		display: block;
+		@include clearfix();
 
-		&.border-bottom {
-			border-bottom: 1px solid #e1e2e2;
+		&-label {
+			font-weight: bold;
+			display: block;
+			margin-bottom: 20px;
+		}
+
+		p {
+			font-size: 13px;
+			line-height: 1.5;
+			margin: 1em 0;
 		}
 	}
 
-	&__title {
-		text-align: right;
-		font-size: 2.5em;
+	&__terms {
+		padding-top: 1rem;
+		width: 100%;
+		display: block;
+		border-top: 1px solid #e1e2e2;
+		@include clearfix();
+
+		&-label {
+			font-weight: bold;
+			display: block;
+		}
+
+		p {
+			font-size: 13px;
+			line-height: 1.5;
+			margin: 1em 0;
+		}
+	}
+
+	&__status {
 		text-transform: uppercase;
+		font-weight: 400;
+		display: inline-block;
+		text-decoration: none;
+		font-size: 12px;
 		line-height: 1;
-	}
+		padding: 6px 18px;
+		margin: 0;
+		border-radius: 3px;
+		white-space: nowrap;
+		box-sizing: border-box;
+		background: 0 0;
+		color: #263238;
+		border: 1px solid #263238;
 
-	&__logo {
-		max-width: 300px;
-		max-height: 100px;
-		overflow: hidden;
+		&.sent {
 
-		img {
-			max-height: 100px;
-			width: auto;
 		}
 
-		h2 {
-			font-size: 1.75rem;
-			margin: 0;
-			padding: 0;
-			font-weight: normal;
+		&.partial {
+			background-color: #e0f7fa;
+			border: 1px solid #bbdefb;
+			color: #006064;
+		}
+
+		&.paid {
+			border: 1px solid #84c529;
+			color: #84c529
+		}
+
+		&.overdue {
+			border: 1px solid #bf360c;
+			color: #bf360c;
+		}
+
+		&.cancelled {
+			border: 1px solid #311b92;
+			color: #311b92;
+		}
+
+		&.refunded {
+			border: 1px solid #bf360c;
+			color: #bf360c;
 		}
 	}
 
-	&__company_address,
-	&__party_address{
-		max-width: 400px;
-		width: 100%;
+	&__due{
+		color: #e42e2e;
 	}
-
-	&__meta {
-		width: auto !important;
-		text-align: right;
-
-		&-content {
-			color: #757575;
-		}
-
-		td {
-			vertical-align: middle;
-			padding: 2px 0 0 10px;
-			white-space: nowrap;
-		}
-	}
-
-
-	&__company_address {
-		text-align: right;
-	}
-
-	&__company-name {
-		font-weight: bold;
-	}
-
 }
 
 .ea-document-notes {
-	padding: 2px 0 0;
 	list-style: none;
 	max-height: 300px;
 	overflow-x: hidden;
 	overflow-y: scroll;
 
 	&__item {
-		padding: 0 10px;
 		margin-bottom: 6px;
 
 
@@ -326,10 +412,8 @@
 		}
 	}
 
-	&__add {
-		border-top: 1px solid #ddd;
-		padding: 10px 10px 0;
-
+	&__form {
+		width: 100%;
 		p:first-child {
 			margin-top: 0;
 		}
@@ -343,6 +427,7 @@
 		textarea {
 			width: 100%;
 			height: 50px;
+			resize: none;
 		}
 
 		select {
@@ -352,67 +437,180 @@
 	}
 }
 
-.invoice-status {
-	background-color: #eceff1;
-	border: 1px solid #9e9e9e;
-	color: #263238;
-	padding-left: 15px;
-	padding-right: 15px;
-	margin: -.25em 0;
-	white-space: nowrap;
-	display: inline-block;
-	line-height: 1.8em;
-	max-width: 100%;
+//.ea-document {
+//	$self: &;
+//	box-sizing: border-box;
+//
+//	& *, & *::before, & *::after {
+//		box-sizing: border-box
+//	}
+//
+//	a {
+//		text-decoration: none;
+//
+//		&:focus {
+//			outline: none;
+//			box-shadow: none;
+//		}
+//	}
+//
+//	&__items-title {
+//		font-size: 14px;
+//		margin-top: 0;
+//		margin-bottom: 1rem;
+//		padding-left: 12px;
+//	}
+//
+//
+//
+//	/* Line items table */
 
-	&.pending {
-		background-color: #eceff1;
-		color: #263238;
-		border: 1px solid #9e9e9e;
-	}
+//
+//	.add-line-item {
+//		.dashicons {
+//			vertical-align: middle;
+//		}
+//	}
+//
+//	&__section {
+//		display: flex;
+//		justify-content: space-between;
+//		min-height: 40px;
+//		align-items: center;
+//		margin-bottom: 20px;
+//		flex-direction: row;
+//		width: 100%;
+//		padding: 15px;
+//
+//		&.border-bottom {
+//			border-bottom: 1px solid #e1e2e2;
+//		}
+//	}
+//
+//	&__title {
+//		text-align: right;
+//		font-size: 2.5em;
+//		text-transform: uppercase;
+//		line-height: 1;
+//		small{
+//			color: #757575;
+//			font-size: 70%;
+//		}
+//	}
+//
+//	&__logo {
+//		max-width: 300px;
+//		max-height: 100px;
+//		overflow: hidden;
+//
+//		img {
+//			max-height: 100px;
+//			width: auto;
+//		}
+//
+//		h2 {
+//			font-size: 1.75rem;
+//			margin: 0;
+//			padding: 0;
+//			font-weight: normal;
+//		}
+//	}
+//
+//	&__company_address,
+//	&__party_address{
+//		max-width: 400px;
+//		width: 100%;
+//	}
+//
+//	&__meta {
+//		width: auto !important;
+//		text-align: right;
+//
+//		&-content {
+//			color: #757575;
+//		}
+//
+//		td {
+//			vertical-align: middle;
+//			padding: 5px 0 0 10px;
+//			white-space: nowrap;
+//		}
+//	}
+//
+//
+//	&__company_address {
+//		text-align: right;
+//	}
+//
+//	&__company-name {
+//		font-weight: bold;
+//	}
+//
+//}
+//
 
-	&.sent {
-
-	}
-
-	&.partial {
-		background-color: #e0f7fa;
-		border: 1px solid #bbdefb;
-		color: #006064;
-	}
-
-	&.paid {
-		background-color: #f1f8e9;
-		border: 1px solid #dcedc8;
-		color: #33691e;
-	}
-
-	&.overdue {
-		background-color: #fff3e0;
-		border: 1px solid #ffe0b2;
-		color: #bf360c;
-	}
-
-	&.cancelled {
-		background-color: #ede7f6;
-		color: #311b92;
-		border: 1px solid #d1c4e9;
-	}
-
-	&.refunded {
-		background-color: #fff3e0;
-		border: 1px solid #ffe0b2;
-		color: #bf360c;
-	}
-
-	//&.partial{
-	//background: #ead503;
-	//}
-	//&.paid{
-	//background: #28a745;
-	//}
-}
-
-
-#ea-invoice .ea-document__items-wrapper {
-	margin-bottom: 0;
-}
+//
+//.document-status, .invoice-status {
+//	background-color: #eceff1;
+//	border: 1px solid #9e9e9e;
+//	color: #263238;
+//	padding-left: 15px;
+//	padding-right: 15px;
+//	margin: -.25em 0;
+//	white-space: nowrap;
+//	display: inline-block;
+//	line-height: 1.8em;
+//	max-width: 100%;
+//
+//	&.pending {
+//		background-color: #eceff1;
+//		color: #263238;
+//		border: 1px solid #9e9e9e;
+//	}
+//
+//	&.sent {
+//
+//	}
+//
+//	&.partial {
+//		background-color: #e0f7fa;
+//		border: 1px solid #bbdefb;
+//		color: #006064;
+//	}
+//
+//	&.paid {
+//		background-color: #f1f8e9;
+//		border: 1px solid #dcedc8;
+//		color: #33691e;
+//	}
+//
+//	&.overdue {
+//		background-color: #fff3e0;
+//		border: 1px solid #ffe0b2;
+//		color: #bf360c;
+//	}
+//
+//	&.cancelled {
+//		background-color: #ede7f6;
+//		color: #311b92;
+//		border: 1px solid #d1c4e9;
+//	}
+//
+//	&.refunded {
+//		background-color: #fff3e0;
+//		border: 1px solid #ffe0b2;
+//		color: #bf360c;
+//	}
+//
+//	//&.partial{
+//	//background: #ead503;
+//	//}
+//	//&.paid{
+//	//background: #28a745;
+//	//}
+//}
+//
+//
+//.ea-document__items-wrapper {
+//	margin-bottom: 0;
+//}

@@ -1,17 +1,14 @@
 <?php
 /**
  * Render Bill list table
- * Page: Sales
+ * Page: Expenses
  * Tab: Bills
  *
  * @since       1.1.0
  * @subpackage  Admin/Views/Bills
  * @package     EverAccounting
  */
-
-
 defined( 'ABSPATH' ) || exit();
-
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-bill-list-table.php' );
 $bill_table = new EAccounting_Bill_List_Table();
 $bill_table->prepare_items();
@@ -39,13 +36,11 @@ $add_url = eaccounting_admin_url(
 <?php do_action( 'eaccounting_bills_table_bottom' ); ?>
 <?php
 eaccounting_enqueue_js(
-	"
-	jQuery('.del').on('click',function(e){
-		if(confirm('Are you sure you want to delete?')){
-			return true;
-		} else {
-			return false;
-		}
-	});
-"
+	"jQuery('.del').on('click',function(e){
+							if(confirm('Are you sure you want to delete?')){
+								return true;
+							} else {
+								return false;
+							}
+						});"
 );
