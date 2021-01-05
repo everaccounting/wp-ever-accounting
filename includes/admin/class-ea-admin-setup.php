@@ -11,7 +11,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Query_Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -317,7 +316,8 @@ class Setup_Wizard {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		$currencies = Query_Currency::init()->get();
+		//$currencies = Query_Currency::init()->get();
+		$currencies = eaccounting_get_currencies();
 
 		?>
 		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
