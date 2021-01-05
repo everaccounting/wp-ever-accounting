@@ -14,10 +14,13 @@
 defined( 'ABSPATH' ) || exit();
 
 require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-transfer-list-table.php';
-$args       = array(
+$args = array(
 	'display_args' => array(
-		'columns_to_hide'      => array( 'actions', 'cb', 'from_account_id'),
+		'columns_to_hide'   => array( 'actions', 'cb', 'from_account_id' ),
 		'hide_bulk_options' => true,
+	),
+	'query_args'   => array(
+		'from_account_id' => $account->get_id(),
 	),
 );
 

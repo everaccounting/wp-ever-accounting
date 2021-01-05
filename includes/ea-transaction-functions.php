@@ -421,12 +421,12 @@ function eaccounting_get_transfers( $args = array() ) {
 
 	if ( ! empty( $qv['from_account_id'] ) ) {
 		$from_account_in = implode( ',', wp_parse_id_list( $qv['from_account_id'] ) );
-		$where          .= " AND expense.`from_account_id` IN ($from_account_in)";
+		$where          .= " AND expense.`account_id` IN ($from_account_in)";
 	}
 
 	if ( ! empty( $qv['to_account_id'] ) ) {
 		$to_account_in = implode( ',', wp_parse_id_list( $qv['to_account_id'] ) );
-		$where        .= " AND expense.`to_account_id` IN ($to_account_in)";
+		$where        .= " AND income.`account_id` IN ($to_account_in)";
 	}
 
 	$join  = " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
@@ -512,7 +512,7 @@ function eaccounting_get_transactions( $args = array() ) {
 			'search'      => '',
 			'transfer'    => true,
 			'fields'      => '*',
-			'orderby'     => 'id',
+			'orderby'     => 'payment_date',
 			'order'       => 'ASC',
 			'number'      => 20,
 			'offset'      => 0,

@@ -113,7 +113,7 @@ $edit_url        = eaccounting_admin_url(
 
 			<div class="ea-card__inside">
 				<div class="ea-avatar ea-center-block">
-					<img src="<?php echo esc_url( $customer->get_attachment_url() ); ?>" alt="<?php echo esc_html( $customer->get_name() ); ?>">
+					<img src="<?php echo esc_url( $customer->get_avatar_url() ); ?>" alt="<?php echo esc_html( $customer->get_name() ); ?>">
 				</div>
 			</div>
 
