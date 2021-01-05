@@ -29,7 +29,7 @@ class EAccounting_Admin_Bills {
 		$bill    = eaccounting_get_bill( $bill_id );
 
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_bill_action' ) || ! current_user_can( 'ea_manage_bill' ) || ! $bill->exists() ) {
-			wp_die( 'no cheatin!' );
+			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );
 		}
 
 		switch ( $action ) {
@@ -73,9 +73,10 @@ class EAccounting_Admin_Bills {
 	/**
 	 * View bill.
 	 *
+	 * @param $bill_id
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param $bill_id
 	 */
 	public function view_bill( $bill_id = null ) {
 		try {
@@ -99,6 +100,7 @@ class EAccounting_Admin_Bills {
 
 	/**
 	 * @param $bill_id
+	 *
 	 * @since 1.1.0
 	 */
 	public function fill_form( $bill_id = null ) {
@@ -120,6 +122,7 @@ class EAccounting_Admin_Bills {
 	 * Get bill notes.
 	 *
 	 * @param Bill $bill
+	 *
 	 * @since 1.1.0
 	 */
 	public static function bill_notes( $bill ) {
