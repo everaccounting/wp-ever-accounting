@@ -100,7 +100,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 			'cb'          => '<input type="checkbox" />',
 			'date'        => __( 'Date', 'wp-ever-accounting' ),
 			'amount'      => __( 'Amount', 'wp-ever-accounting' ),
-			'account_id'  => __( 'Account Name', 'wp-ever-accounting' ),
+			'account_id'  => __( 'Account', 'wp-ever-accounting' ),
 			'category_id' => __( 'Category', 'wp-ever-accounting' ),
 			'contact_id'  => __( 'Customer', 'wp-ever-accounting' ),
 			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
@@ -189,7 +189,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : '&mdash;';
+				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
@@ -197,7 +197,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value   = $contact ? $contact->get_name() : '&mdash;';
+				$value = $contact ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:enable
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(

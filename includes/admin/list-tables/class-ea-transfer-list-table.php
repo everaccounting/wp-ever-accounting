@@ -186,11 +186,12 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				break;
 			case 'from_account_id':
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() :'&mdash;';
+				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_from_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:enable
+
 				break;
 			case 'to_account_id':
 				$account = eaccounting_get_account( $transfer->get_to_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : '&mdash;';
+				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_to_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:enable
 				break;
 			case 'reference':
 				$value = !empty($transfer->get_reference()) ? $transfer->get_reference() : '&mdash;';

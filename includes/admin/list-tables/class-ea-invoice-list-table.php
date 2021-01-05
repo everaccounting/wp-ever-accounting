@@ -95,7 +95,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'An invoice functions as a commercial document that itemizes and records sales. The invoice specifies a transaction between a buyer and a seller and possesses all the necessary information about them. In the document, Taxes can be included or excluded.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'An invoice functions as a commercial document that itemizes and records sales. The invoice specifies a transaction between a buyer and a seller and possesses all the necessary information about them. In the document, Taxes can be included or excluded.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php
 			echo esc_url(
@@ -124,7 +124,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 			'cb'             => '<input type="checkbox" />',
 			'invoice_number' => __( 'Number', 'wp-ever-accounting' ),
 			'total'          => __( 'Total', 'wp-ever-accounting' ),
-			'name'           => __( 'Customer Name', 'wp-ever-accounting' ),
+			'name'           => __( 'Customer', 'wp-ever-accounting' ),
 			'issue_date'     => __( 'Invoice Date', 'wp-ever-accounting' ),
 			'due_date'       => __( 'Due Date', 'wp-ever-accounting' ),
 			'status'         => __( 'Status', 'wp-ever-accounting' ),
@@ -218,7 +218,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 				$value = eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() );
 				break;
 			case 'name':
-				$value = $invoice->get_name();
+				$value = sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:enable
 				break;
 			case 'issue_date':
 				$value = eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' );
@@ -339,26 +339,26 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 
 		$this->process_bulk_action();
 
-		$page    = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
-		$status  = isset( $_GET['status'] ) ? $_GET['status'] : '';
-		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
-		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
-		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
-		$customer_id = isset($_GET['customer_id']) ? $_GET['customer_id'] : '';
+		$page        = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
+		$status      = isset( $_GET['status'] ) ? $_GET['status'] : '';
+		$search      = isset( $_GET['s'] ) ? $_GET['s'] : '';
+		$order       = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
+		$orderby     = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
+		$customer_id = isset( $_GET['customer_id'] ) ? $_GET['customer_id'] : '';
 
 		$per_page = $this->per_page;
 
 		$args = wp_parse_args(
 			$this->query_args,
 			array(
-				'number'   => $per_page,
-				'offset'   => $per_page * ( $page - 1 ),
-				'per_page' => $per_page,
-				'page'     => $page,
-				'status'   => $status,
-				'search'   => $search,
-				'orderby'  => eaccounting_clean( $orderby ),
-				'order'    => eaccounting_clean( $order ),
+				'number'      => $per_page,
+				'offset'      => $per_page * ( $page - 1 ),
+				'per_page'    => $per_page,
+				'page'        => $page,
+				'status'      => $status,
+				'search'      => $search,
+				'orderby'     => eaccounting_clean( $orderby ),
+				'order'       => eaccounting_clean( $order ),
 				'customer_id' => $customer_id,
 			)
 		);
