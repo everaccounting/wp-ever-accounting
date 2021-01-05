@@ -20,7 +20,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 	<table cellpadding="0" cellspacing="0" class="ea-document__items">
 		<thead>
 		<tr>
-			<?php if ( $invoice->is_editable() && $edit_mode ) : ?>
+			<?php if ( $edit_mode ) : ?>
 				<th class="ea-document__line-actions">&nbsp;</th>
 			<?php endif; ?>
 			<th class="ea-document__line-name" colspan="2"><?php echo esc_html( $item_label ); ?></th>
@@ -45,7 +45,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 		do_action( 'eaccounting_invoice_items_after_line_items', $invoice );
 		?>
 		</tbody>
-		<?php if ( $invoice->is_editable() && $edit_mode ) : ?>
+		<?php if ( $edit_mode ) : ?>
 			<tbody>
 			<script type="text/template" id="ea-invoice-line-template">
 				<?php
@@ -67,7 +67,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			</tbody>
 		<?php endif; ?>
 	</table>
-	<?php if ( $invoice->is_editable() && $edit_mode ) : ?>
+	<?php if ( $edit_mode ) : ?>
 		<div class="ea-document__data-row ea-document__actions">
 			<div class="ea-document__actions-left">
 				<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>

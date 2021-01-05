@@ -51,7 +51,7 @@ class EAccounting_Admin_Reports {
 			'sales'    => __( 'Sales', 'wp-ever-accounting' ),
 			'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
 			'profits'  => __( 'Profits', 'wp-ever-accounting' ),
-			'cashflow'  => __( 'Chashflow', 'wp-ever-accounting' ),
+			'cashflow' => __( 'Cashflow', 'wp-ever-accounting' ),
 		);
 
 		return apply_filters( 'eaccounting_reports_tabs', $tabs );
@@ -59,16 +59,16 @@ class EAccounting_Admin_Reports {
 
 	public function get_tab_sections( $tab ) {
 		$sections = array();
-//		switch ( $tab ) {
-//			case 'sales':
-//				$sections = array(
-//					'by_date'     => __( 'Sales by date', 'wp-ever-accounting' ),
-//					'by_category' => __( 'Sales by category', 'wp-ever-accounting' ),
-//					'by_items'    => __( 'Sales by item', 'wp-ever-accounting' ),
-//					'by_accounts' => __( 'Sales by accounts', 'wp-ever-accounting' ),
-//				);
-//				break;
-//		}
+		//      switch ( $tab ) {
+		//          case 'sales':
+		//              $sections = array(
+		//                  'by_date'     => __( 'Sales by date', 'wp-ever-accounting' ),
+		//                  'by_category' => __( 'Sales by category', 'wp-ever-accounting' ),
+		//                  'by_items'    => __( 'Sales by item', 'wp-ever-accounting' ),
+		//                  'by_accounts' => __( 'Sales by accounts', 'wp-ever-accounting' ),
+		//              );
+		//              break;
+		//      }
 
 		return apply_filters( 'eaccounting_reports_tab_' . $tab . '_sections', $sections );
 	}
@@ -111,7 +111,7 @@ class EAccounting_Admin_Reports {
 		$report->output();
 	}
 
-	public function render_cashflow_report(){
+	public function render_cashflow_report() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
 		$report = new EAccounting_Report_CashFlow();
 		$report->output();

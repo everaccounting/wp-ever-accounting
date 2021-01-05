@@ -452,6 +452,7 @@ jQuery(function ($) {
 			console.log(e);
 			var line_item = $($('#ea-invoice-line-template').html());
 			var item_selector = $($('#ea-invoice-item-selector').html());
+			console.log(item_selector);
 			var item_selector_name = item_selector.attr('name');
 			var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
 			line_item.addClass('editing')
@@ -460,6 +461,7 @@ jQuery(function ($) {
 				name = name.replace(/\[(\d+)\]/, '[' + (index) + ']');
 				$(this).attr('name', name).attr('id', name);
 			});
+			console.log(item_selector_name);
 			item_selector_name = item_selector_name.replace(/\[(\d+)\]/, '[' + (index) + ']');
 			item_selector.attr('name', item_selector_name).attr('id', item_selector_name);
 			item_selector.css({width: '90%', maxWidth: 'none'})
@@ -511,6 +513,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 				if( json.success){
 					note.remove();
+					$('#ea-invoice-notes').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
@@ -691,6 +694,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 				if( json.success){
 					note.remove();
+					$('#ea-bill-notes').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
@@ -743,7 +747,8 @@ jQuery(function ($) {
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
-				eaccounting_unblock($form)
+				eaccounting_unblock($form);
+				$('#bill-note-insert textarea').val('');
 			});
 		},
 

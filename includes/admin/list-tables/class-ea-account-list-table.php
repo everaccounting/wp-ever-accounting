@@ -349,7 +349,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url();
+		$base           = eaccounting_admin_url(array( 'tab' => 'accounts' ));
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';

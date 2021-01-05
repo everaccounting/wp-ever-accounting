@@ -24,7 +24,7 @@ class EAccounting_Report_Profits extends EAccounting_Admin_Report {
 		$this->maybe_clear_cache( $args );
 		if ( empty( $args['year'] ) ) {
 			echo '<p>';
-			esc_html_e( 'Please select a year to generate the report.' );
+			esc_html_e( 'Please select a year to generate the report.','wp-ever-accounting' );
 			echo '</p>';
 
 			return false;
@@ -287,9 +287,7 @@ class EAccounting_Report_Profits extends EAccounting_Admin_Report {
 				</div>
 			<?php else : ?>
 				<div class="ea-card__inside">
-					<p>
-						Please select financial year.
-					</p>
+					<p><?php _e("Please select financial year.","wp-ever-accounting");?></p>
 				</div>
 			<?php endif; ?>
 		</div>

@@ -11,6 +11,7 @@ namespace EverAccounting;
 
 use EverAccounting\Models\Bill;
 use EverAccounting\Models\Invoice;
+use EverAccounting\Models\Note;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -186,6 +187,7 @@ class Ajax {
 					'type'   => 'expense',
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active'
 				)
 			)
 		);
@@ -208,6 +210,7 @@ class Ajax {
 					'type'   => 'income',
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active'
 				)
 			)
 		);
@@ -230,6 +233,7 @@ class Ajax {
 					'type'   => 'item',
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active'
 				)
 			)
 		);
@@ -322,7 +326,7 @@ class Ajax {
 		if ( empty( $note ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Note Content empty.' ),
+					'message' => __( 'Note Content empty.','wp-ever-accounting' ),
 				)
 			);
 		}
@@ -332,7 +336,7 @@ class Ajax {
 			$notes = eaccounting_get_admin_template_html( 'invoices/partials/notes', array( 'invoice' => $invoice ) );
 			wp_send_json_success(
 				array(
-					'message' => __( 'Note Added.' ),
+					'message' => __( 'Note Added.','wp-ever-accounting' ),
 					'notes'   => $notes,
 				)
 			);
@@ -474,6 +478,7 @@ class Ajax {
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
+					'status'  => 'active',
 				)
 			)
 		);
@@ -569,7 +574,7 @@ class Ajax {
 		if ( empty( $note ) ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Note Content empty.' ),
+					'message' => __( 'Note Content empty.','wp-ever-accounting' ),
 				)
 			);
 		}
@@ -579,7 +584,7 @@ class Ajax {
 			$notes = eaccounting_get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
 			wp_send_json_success(
 				array(
-					'message' => __( 'Note Added.' ),
+					'message' => __( 'Note Added.','wp-ever-accounting' ),
 					'notes'   => $notes,
 				)
 			);
@@ -658,9 +663,12 @@ class Ajax {
 						)
 					),
 					'line'     => array_map( 'strval', $bill->get_items() ),
+					'message' => !empty($posted['id']) ? __( 'Bill updated successfully!', 'wp-ever-accounting' ) : '',
 					'redirect' => empty($posted['id'])? $redirect : '',
+
 				)
 			);
+
 		} catch ( \Exception $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ) );
 		}
@@ -817,6 +825,7 @@ class Ajax {
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active',
 				)
 			)
 		);
@@ -898,6 +907,7 @@ class Ajax {
 					'search' => $search,
 					'page'   => $page,
 					'return' => 'raw',
+					'status' => 'active',
 				)
 			)
 		);
@@ -1019,17 +1029,29 @@ class Ajax {
 	public static function delete_note() {
 		self::verify_nonce( 'ea_delete_note' );
 		self::check_permission( 'ea_manage_invoice' );
+		$note = new Note($_REQUEST['id']);
+		$note = eaccounting_get_note($note);
 		$deleted = eaccounting_delete_note( absint( $_REQUEST['id'] ) );
 		if ( ! $deleted ) {
 			wp_send_json_error(
 				array(
-					'message' => __( 'Note could not be deleted.' ),
+					'message' => __( 'Note could not be deleted.','wp-ever-accounting' ),
 				)
 			);
 		}
+		if('invoice' == $note->get_type()) {
+			$invoice_id = $note->get_parent_id();
+			$invoice = new Invoice($invoice_id);
+			$notes = eaccounting_get_admin_template_html('invoices/partials/notes',array('invoice' => $invoice));
+		} elseif('bill' == $note->get_type()) {
+			$bill_id = $note->get_parent_id();
+			$bill = new Bill($bill_id);
+			$notes = eaccounting_get_admin_template_html('bills/partials/notes',array('bill' => $bill));
+		}
 		wp_send_json_success(
 			array(
-				'message' => __( 'Note deleted.' ),
+				'message' => __( 'Note deleted.','wp-ever-accounting' ),
+				'notes'   => $notes,
 			)
 		);
 	}

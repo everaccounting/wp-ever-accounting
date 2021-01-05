@@ -14,12 +14,12 @@ defined( 'ABSPATH' ) || exit;
 $invoice_actions = apply_filters(
 	'eaccounting_invoice_actions',
 	array(
-		'send_customer_invoice' => __( 'Email invoice to customer', 'wp-ever-accounting' ),
-		'mark_pending'          => __( 'Status to "Pending', 'wp-ever-accounting' ),
-		'mark_paid'             => __( 'Status to "paid"', 'wp-ever-accounting' ),
-		'mark_overdue'          => __( 'Status to "Overdue"', 'wp-ever-accounting' ),
-		'mark_cancelled'        => __( 'Status to "Cancelled"', 'wp-ever-accounting' ),
-		'mark_refunded'         => __( 'Status to "Refunded"', 'wp-ever-accounting' ),
+		//'send_customer_invoice' => __( 'Email invoice to customer', 'wp-ever-accounting' ),
+		'status_pending'          => __( 'Status to "Pending', 'wp-ever-accounting' ),
+		'status_paid'             => __( 'Status to "paid"', 'wp-ever-accounting' ),
+		'status_overdue'          => __( 'Status to "Overdue"', 'wp-ever-accounting' ),
+		'status_cancelled'        => __( 'Status to "Cancelled"', 'wp-ever-accounting' ),
+		'status_refunded'         => __( 'Status to "Refunded"', 'wp-ever-accounting' ),
 	)
 );
 $del_url         = wp_nonce_url( admin_url( 'admin.php?page=ea-sales&tab=invoices&action=delete&invoice_id=' . $invoice->get_id() ), 'invoice-nonce', '_wpnonce' );

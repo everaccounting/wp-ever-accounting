@@ -37,6 +37,7 @@ $accounts_table->prepare_items();
 	</h1>
 	<?php do_action( 'eaccounting_accounts_table_top' ); ?>
 	<form method="get" id="ea-accounts-table" action="<?php echo admin_url( 'admin.php' ); ?>">
+		<?php $accounts_table->views();?>
 		<?php $accounts_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-accounts' ); ?>
 		<?php $accounts_table->display(); ?>
 

@@ -254,7 +254,11 @@ class EAccounting_Settings {
 							'type' => 'textarea',
 						),
 						'bill_terms'          => array(
+<<<<<<< HEAD
 							'name' => __( 'Bill Terms & Conditions', 'wp-ever-accounting' ),
+=======
+							'name' => __( 'Bill Terms', 'wp-ever-accounting' ),
+>>>>>>> 85484834cb2fabb0d47b021004587f3f1e779551
 							'std'  => '',
 							'type' => 'textarea',
 						),

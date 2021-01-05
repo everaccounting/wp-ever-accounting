@@ -110,7 +110,7 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 			'cb'          => '<input type="checkbox" />',
 			'bill_number' => __( 'Number', 'wp-ever-accounting' ),
 			'total'       => __( 'Total', 'wp-ever-accounting' ),
-			'name'        => __( 'Customer Name', 'wp-ever-accounting' ),
+			'name'        => __( 'Vendor', 'wp-ever-accounting' ),
 			'issue_date'  => __( 'Bill Date', 'wp-ever-accounting' ),
 			'due_date'    => __( 'Due Date', 'wp-ever-accounting' ),
 			'status'      => __( 'Status', 'wp-ever-accounting' ),
@@ -205,7 +205,7 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 				$value = eaccounting_price( $bill->get_total(), $bill->get_currency_code() );
 				break;
 			case 'name':
-				$value = $bill->get_name();
+				$value = sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:enable
 				break;
 			case 'issue_date':
 				$value = eaccounting_format_datetime( $bill->get_issue_date(), 'Y-m-d' );

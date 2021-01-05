@@ -49,21 +49,21 @@ class InvoiceController extends Singleton {
 		}
 
 		switch ( $action ) {
-			case 'mark_received':
+			case 'status_pending':
 				$invoice->set_status( 'pending' );
 				$invoice->save();
 				break;
-			case 'mark_paid':
+			case 'status_paid':
 				$invoice->set_paid();
 				break;
-			case 'mark_refunded':
+			case 'status_refunded':
 				$invoice->set_refunded();
 				break;
-			case 'mark_overdue':
+			case 'status_overdue':
 				$invoice->set_status( 'overdue' );
 				$invoice->save();
 				break;
-			case 'mark_cancelled':
+			case 'status_cancelled':
 				$invoice->set_status( 'cancelled' );
 				$invoice->save();
 				break;

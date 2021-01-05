@@ -22,9 +22,9 @@ function eaccounting_get_settings_tabs() {
 			'general'    => __( 'General', 'wp-ever-accounting' ),
 			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 			'categories' => __( 'Categories', 'wp-ever-accounting' ),
-			'emails'     => __( 'Emails', 'wp-ever-accounting' ),
-			'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
-			'misc'       => __( 'Misc', 'wp-ever-accounting' ),
+			//'emails'     => __( 'Emails', 'wp-ever-accounting' ),
+			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+			//'misc'       => __( 'Misc', 'wp-ever-accounting' ),
 		)
 	);
 }

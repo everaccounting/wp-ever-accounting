@@ -6,9 +6,6 @@ jQuery(function ($) {
 
 	//initialize plugins
 	$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
-	$('body').on('click','.ea-modal__body .ea-input-date',function(e){
-		$(this).datepicker({dateFormat: 'yy-mm-dd'});
-	});
 
 	eaccounting.mask_amount('.ea-input-price');
 	eaccounting.mask_amount('#opening_balance');
@@ -20,8 +17,8 @@ jQuery(function ($) {
 	$(document.body).on('ea_modal_loaded', function () {
 		$(document.body).trigger('ea_select2_init');
 	});
-
-	$('#eaccounting_settings[financial_year_start]').datepicker({dateFormat: 'yy-mm-dd'});
+	$('.ea-financial-start input').datepicker({dateFormat: 'dd-mm'});
+	// $('#eaccounting_settings[financial_year_start]').datepicker({dateFormat: 'yy-mm-dd'});
 
 	//dropdwown
 	$( document )

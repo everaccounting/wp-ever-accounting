@@ -90,7 +90,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 			'date'        => __( 'Date', 'wp-ever-accounting' ),
 			'amount'      => __( 'Amount', 'wp-ever-accounting' ),
 			'type'        => __( 'Type', 'wp-ever-accounting' ),
-			'account_id'  => __( 'Account Name', 'wp-ever-accounting' ),
+			'account_id'  => __( 'Account', 'wp-ever-accounting' ),
 			'category_id' => __( 'Category', 'wp-ever-accounting' ),
 			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
 		);
@@ -167,7 +167,9 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
-				$value   = $account ? $account->get_name() : '&mdash;';
+				//$value   = $account ? $account->get_name() : '&mdash;';
+				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:enable
+
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $transaction->get_category_id( 'edit' ) );

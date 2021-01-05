@@ -654,7 +654,6 @@ function eaccounting_customer_dropdown( $field ) {
 			'return'  => 'raw',
 		)
 	);
-
 	$field = wp_parse_args(
 		array(
 			'value'        => $include,
