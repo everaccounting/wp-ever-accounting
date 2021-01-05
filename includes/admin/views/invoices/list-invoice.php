@@ -39,7 +39,7 @@ $add_url = eaccounting_admin_url(
 <?php do_action( 'eaccounting_invoices_table_bottom' ); ?>
 <?php
 eaccounting_enqueue_js(
-		"
+	"
 	jQuery('.del').on('click',function(e){
 		if(confirm('Are you sure you want to delete?')){
 			return true;

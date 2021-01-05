@@ -38,14 +38,14 @@ if ( $bill->exists() ) {
  */
 do_action( 'add_meta_boxes_ea_bill', $bill );
 ?>
-	<div class="ea-title-section">
-		<div>
-			<h1 class="wp-heading-inline"><?php esc_html_e( 'Bill', 'wp-ever-accounting' ); ?></h1>
-			<a href="<?php echo esc_url( 'admin.php?page=ea-expenses&tab=bills&action=add' ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
+<div class="ea-title-section">
+	<div>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
+		<a href="<?php echo esc_url( 'admin.php?page=ea-expenses&tab=bills&action=add' ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
 
-		</div>
 	</div>
-	<hr class="wp-header-end">
+</div>
+<hr class="wp-header-end">
 
 <?php if ( $bill->exists() && $bill->is_draft() ) : ?>
 	<div class="notice error">
@@ -80,9 +80,9 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 													wp_nonce_url(
 														add_query_arg(
 															array(
-																'action'  => 'eaccounting_bill_action',
+																'action'      => 'eaccounting_bill_action',
 																'bill_action' => $action,
-																'bill_id' => $bill->get_id(),
+																'bill_id'     => $bill->get_id(),
 															),
 															admin_url( 'admin-post.php' )
 														),

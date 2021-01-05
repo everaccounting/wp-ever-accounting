@@ -16,7 +16,7 @@ class EAccounting_Admin_Sales {
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 30 );
-		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ) );
+		//add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ) );
 		add_action( 'eaccounting_sales_page_tab_revenues', array( $this, 'render_revenues_tab' ) );
 		add_action( 'eaccounting_sales_page_tab_customers', array( $this, 'render_customers_tab' ) );
 	}

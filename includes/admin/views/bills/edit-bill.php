@@ -25,7 +25,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 ?>
 <div class="ea-row">
 	<div class="ea-col-7">
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Bill', 'wp-ever-accounting' ); ?></h1>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $bill->exists() ) : ?>
 			<a href="<?php echo esc_url( add_query_arg( array('tab' => 'bills', 'page' => 'ea-expenses', 'action' => 'add'), admin_url('admin.php') ) );//phpcs:ignore ?>" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
