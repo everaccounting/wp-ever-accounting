@@ -79,7 +79,7 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'A bill functions as a commercial document that itemizes and records purchases. Bill specifies a transaction between a buyer and a seller and possesses all the necessary information required. In the document, Taxes can be included or excluded.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'A bill functions as a commercial document that itemizes and records purchases. Bill specifies a transaction between a buyer and a seller and possesses all the necessary information required. In the document, Taxes can be included or excluded.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="
 			<?php
@@ -186,26 +186,25 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 		switch ( $column_name ) {
 			case 'bill_number':
 				$bill_number = $bill->get_bill_number();
+				$nonce       = wp_create_nonce( 'bill-nonce' );
+				$view_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'view', 'bill_id' => $bill_id ) );// phpcs:enable
+				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', 'bill_id' => $bill_id ) );// phpcs:enable
+				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'delete', 'bill_id' => $bill_id, '_wpnonce' => $nonce ) );// phpcs:enable
 
-				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'action'  => 'view',
-								'tab'     => 'bills',
-								'bill_id' => $bill_id,
-							)
-						)
-					),
-					$bill_number
-				);
+				$actions           = array();
+				$actions['view']   = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
+				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
+				if ( $bill->is_editable() ) {
+					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
+				}
+
+				$value = '<a href="' . esc_url( $view_url ) . '">' . $bill_number . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'total':
 				$value = eaccounting_price( $bill->get_total(), $bill->get_currency_code() );
 				break;
 			case 'name':
-				$value = sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:enable
+				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:enable
 				break;
 			case 'issue_date':
 				$value = eaccounting_format_datetime( $bill->get_issue_date(), 'Y-m-d' );
@@ -215,28 +214,6 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 				break;
 			case 'status':
 				$value = sprintf( '<span class="bill-status %s">%s</span>', $bill->get_status(), $bill->get_status_nicename() );
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'     => 'bills',
-						'action'  => 'edit',
-						'bill_id' => $bill_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'      => 'bills',
-						'action'   => 'delete',
-						'_wpnonce' => wp_create_nonce( 'bill-nonce' ),
-						'bill_id'  => $bill_id,
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
 				break;
 			default:
 				return parent::column_default( $bill, $column_name );

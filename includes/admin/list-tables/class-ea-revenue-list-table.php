@@ -104,7 +104,6 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 			'category_id' => __( 'Category', 'wp-ever-accounting' ),
 			'contact_id'  => __( 'Customer', 'wp-ever-accounting' ),
 			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
-			'actions'     => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -175,21 +174,22 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 		$revenue_id = $revenue->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$url   = eaccounting_admin_url(
-					array(
-						'tab'        => 'revenues',
-						'action'     => 'edit',
-						'revenue_id' => $revenue_id,
-					)
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'revenue_id' => $revenue_id, ), 'admin.php' );// phpcs:enable
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'revenue_id' => $revenue_id, '_wpnonce' => wp_create_nonce( 'revenue-nonce' ), ), 'admin.php' );// phpcs:enable
+
+				$actions = array(
+					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
-				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $revenue->get_payment_date() ) ) );
+
+				$value = '<a href="' . esc_url( $edit_url ) . '"><strong>' . esc_html( eaccounting_date( $revenue->get_payment_date() ) ) . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
 				$value = $revenue->format_amount( $revenue->get_amount() );
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
+				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
@@ -197,29 +197,7 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value = $contact ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:enable
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'        => 'revenues',
-						'action'     => 'edit',
-						'revenue_id' => $revenue_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'        => 'revenues',
-						'action'     => 'delete',
-						'revenue_id' => $revenue_id,
-						'_wpnonce'      => wp_create_nonce('revenue-nonce'),
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
+				$value = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:enable
 				break;
 			default:
 				return parent::column_default( $revenue, $column_name );

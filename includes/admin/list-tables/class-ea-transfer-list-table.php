@@ -68,6 +68,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 	 */
 	public function is_empty() {
 		global $wpdb;
+
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_transfers" );
 	}
 
@@ -81,10 +82,10 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'A transfer is basically when money is sent from one bank account to another bank account. Two different accounts participate in transferring balances that have either similar or different currencies. If the currencies are different, the conversion of the currencies follows the currency rates.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'A transfer is basically when money is sent from one bank account to another bank account. Two different accounts participate in transferring balances that have either similar or different currencies. If the currencies are different, the conversion of the currencies follows the currency rates.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array('page'=>'ea-banking','tab'=>'transfers','action'=>'edit') ));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Transfers','wp-ever-accounting');?></a>
-			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit' ) ) ); ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Transfers', 'wp-ever-accounting' ); ?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -103,7 +104,6 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 			'from_account_id' => __( 'From Account', 'wp-ever-accounting' ),
 			'to_account_id'   => __( 'To Account', 'wp-ever-accounting' ),
 			'reference'       => __( 'Reference', 'wp-ever-accounting' ),
-			'actions'         => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -171,14 +171,14 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 		$transfer_id = $transfer->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$url   = eaccounting_admin_url(
-					array(
-						'tab'         => 'transfers',
-						'action'      => 'edit',
-						'transfer_id' => $transfer_id,
-					)
+				$edit_url     = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', 'transfer_id' => $transfer_id, ) );// phpcs:enable
+				$del_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'delete', 'transfer_id' => $transfer_id, '_wpnonce' => wp_create_nonce( 'transfer-nonce' ), ) );// phpcs:enable
+
+				$actions  = array(
+					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' .  $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
-				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $transfer->get_date() ) ) );
+				$value   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), esc_html( eaccounting_date( $transfer->get_date() ) ) ).$this->row_actions($actions);
 				break;
 			case 'amount':
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
@@ -186,37 +186,15 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				break;
 			case 'from_account_id':
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
-				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_from_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:enable
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_from_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
 
 				break;
 			case 'to_account_id':
 				$account = eaccounting_get_account( $transfer->get_to_account_id( 'edit' ) );
-				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_to_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:enable
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transfer->get_to_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
 				break;
 			case 'reference':
-				$value = !empty($transfer->get_reference()) ? $transfer->get_reference() : '&mdash;';
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'         => 'transfers',
-						'action'      => 'edit',
-						'transfer_id' => $transfer_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'         => 'transfers',
-						'action'      => 'delete',
-						'transfer_id' => $transfer_id,
-						'_wpnonce'    => wp_create_nonce( 'transfer-nonce' ),
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
+				$value = ! empty( $transfer->get_reference() ) ? $transfer->get_reference() : '&mdash;';
 				break;
 			default:
 				return parent::column_default( $transfer, $column_name );
@@ -310,7 +288,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 		$search  = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
-		$from_id = isset($_GET['account_id']) ? $_GET['account_id'] : '';
+		$from_id = isset( $_GET['account_id'] ) ? $_GET['account_id'] : '';
 
 		$per_page = $this->per_page;
 
@@ -324,7 +302,7 @@ class EAccounting_Transfer_List_Table extends EAccounting_List_Table {
 				'search'   => $search,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
-				'from_id'      => $from_id,
+				'from_id'  => $from_id,
 			)
 		);
 

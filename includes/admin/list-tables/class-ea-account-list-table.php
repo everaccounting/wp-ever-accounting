@@ -202,18 +202,21 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 		$account_id = $account->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = admin_url( 'admin.php?page=ea-banking&tab=accounts&action=view&account_id=' . $account_id );
+				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:enable
 				$value    = '<a href="' . esc_url( $view_url ) . '">' . $account->get_attachment_image() . '</a>';
 				break;
 
 			case 'name':
-				$view_url = admin_url( 'admin.php?page=ea-banking&tab=accounts&action=view&account_id=' . $account_id );
 				$nonce    = wp_create_nonce( 'account-nonce' );
+				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:enable
+				$edit_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'edit','account_id'=>$account_id));// phpcs:enable
+				$del_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'delete','account_id'=>$account_id,'_wpnonce'=>$nonce));// phpcs:enable
+
 				$actions  = array(
 					'id'     => 'ID: ' . $account_id,
 					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
-					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&action=edit&account_id=' . $account->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
-					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-banking&tab=accounts&_wpnonce=' . $nonce . '&action=delete&account_id=' . $account->get_id() ) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
+					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
@@ -231,27 +234,6 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 				$value .= '<input type="checkbox" class="account-status" style="" value="true" data-id="' . $account->get_id() . '" ' . checked( $account->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'        => 'accounts',
-						'action'     => 'edit',
-						'account_id' => $account_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'        => 'accounts',
-						'action'     => 'delete',
-						'account_id' => $account_id,
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
 				break;
 			default:
 				return parent::column_default( $account, $column_name );

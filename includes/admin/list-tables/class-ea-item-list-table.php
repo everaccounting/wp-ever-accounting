@@ -83,6 +83,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 	 */
 	public function is_empty() {
 		global $wpdb;
+
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_items" );
 	}
 
@@ -96,10 +97,10 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( ' Items are especially products that can be sold or can be bought. You can create as many items as you want categorically and assign sale and purchase prices to use in your bills and invoices.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( ' Items are especially products that can be sold or can be bought. You can create as many items as you want categorically and assign sale and purchase prices to use in your bills and invoices.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-items','tab'=>'items','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e('Add Item','wp-ever-accounting');?></a>
-			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e('Learn More','wp-ever-accounting');?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit' ) ) ); ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Item', 'wp-ever-accounting' ); ?></a>
+			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -131,7 +132,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 	protected function define_sortable_columns() {
 		return array(
 			'name'           => array( 'name', false ),
-			'category_id'       => array( 'category_id', false ),
+			'category_id'    => array( 'category_id', false ),
 			'sale_price'     => array( 'sale_price', false ),
 			'purchase_price' => array( 'purchase_price', false ),
 			'enabled'        => array( 'enabled', false ),
@@ -190,16 +191,16 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 		$item_id = $item->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$edit_url = admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() );
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:enable
 				$value    = '<a href="' . esc_url( $edit_url ) . '">' . $item->get_attachment_image() . '</a>';
 				break;
 			case 'name':
-				$edit_url = admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() );
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:enable
 				$nonce    = wp_create_nonce( 'item-nonce' );
 				$actions  = array(
-					'id' => 'ID: '.$item_id,
-					'edit'   => '<a href="' . admin_url( 'admin.php?page=ea-items&tab=items&action=edit&item_id=' . $item->get_id() ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
-					'delete' => '<a href="' . admin_url( 'admin.php?page=ea-items&tab=items&_wpnonce=' . $nonce . '&action=delete&item_id=' . $item->get_id() ) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
+					'id'     => 'ID: ' . $item_id,
+					'edit'   => '<a href="' . eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) ) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'delete', 'item_id' => $item_id, '_wpnonce' => $nonce ) ) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 				$value    = '<a href="' . esc_url( $edit_url ) . '"><strong>' . $item->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
@@ -214,7 +215,7 @@ class EAccounting_Item_List_Table extends EAccounting_List_Table {
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'enabled':
-				$value  = '<label class="ea-toggle">';
+				$value = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="item-status" style="" value="true" data-id="' . $item->get_id() . '" ' . checked( $item->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';

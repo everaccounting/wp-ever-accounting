@@ -31,9 +31,6 @@
 .eaccounting{
   .wp-list-table{
 	.check-column{
-	  vertical-align: middle;
-	  padding-top: 0;
-	  padding-bottom: 0;
 	  @media only screen and (max-width: 782px) {
 		vertical-align: top;
 		padding-top: 10px;

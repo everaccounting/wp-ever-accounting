@@ -112,7 +112,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 			'rate'    => __( 'Rate', 'wp-ever-accounting' ),
 			'code'    => __( 'Code', 'wp-ever-accounting' ),
 			'symbol'  => __( 'Symbol', 'wp-ever-accounting' ),
-			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -179,23 +178,16 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 	 */
 	function column_default( $currency, $column_name ) {
 		$currency_code = $currency->get_code();
-
 		switch ( $column_name ) {
 			case 'name':
 				$name  = $currency->get_name();
-				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						add_query_arg(
-							array(
-								'currency_code' => $currency_code,
-								'action'        => 'edit',
-							)
-						),
-						$this->base_url
-					),
-					$name
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'edit', 'currency_code' => $currency_code, ) );// phpcs:enable
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'delete', 'currency_code' => $currency_code, '_wpnonce' => wp_create_nonce( 'currency-nonce' ), ) );// phpcs:enable
+				$actions  = array(
+					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ),__( 'Edit', 'wp-ever-accounting' ) ),
+					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ),__( 'Delete', 'wp-ever-accounting' ) ),
 				);
+				$value = '<a href="'.$edit_url.'">'.$name.'</a>'.$this->row_actions($actions);
 				break;
 			case 'code':
 				$value = esc_html( $currency->get_code() );
@@ -205,22 +197,6 @@ class EAccounting_Currency_List_Table extends EAccounting_List_Table {
 				break;
 			case 'rate':
 				$value = esc_html( $currency->get_rate() );
-				break;
-			case 'actions':
-				$nonce    = wp_create_nonce( 'currency-nonce' );
-				$edit_url = add_query_arg(
-					array(
-						'action'        => 'edit',
-						'currency_code' => $currency_code,
-					),
-					$this->base_url
-				);
-				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce, 'currency_code' => $currency_code ), $this->base_url ); //phpcs:ignore
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
 				break;
 			default:
 				return parent::column_default( $currency, $column_name );
