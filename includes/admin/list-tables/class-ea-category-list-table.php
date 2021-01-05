@@ -123,7 +123,6 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 			'type'    => __( 'Type', 'wp-ever-accounting' ),
 			'color'   => __( 'Color', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
-			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -198,11 +197,13 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 		switch ( $column_name ) {
 			case 'name':
 				$name = $category->get_name();
-				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url( add_query_arg( array( 'category_id' => $category_id, 'action' => 'edit' ) ), $this->base_url ),
-					$name
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit', 'category_id' => $category_id, ) );// phpcs:enable
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'delete', 'category_id' => $category_id, '_wpnonce' => wp_create_nonce( 'category-nonce' ), ) );// phpcs:enable
+				$actions  = array(
+					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ),__( 'Edit', 'wp-ever-accounting' ) ),
+					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ),__( 'Delete', 'wp-ever-accounting' ) ),
 				);
+				$value = '<a href="'.$edit_url.'">'.$name.'</a>'.$this->row_actions($actions);
 				break;
 			case 'type':
 				$type  = $category->get_type();
@@ -217,17 +218,6 @@ class EAccounting_Category_List_Table extends EAccounting_List_Table {
 				$value .= '<input type="checkbox" class="category-status" style="" value="true" data-id="' . $category->get_id() . '" ' . checked( $category->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
-				break;
-			case 'actions':
-				$base     = add_query_arg( array( 'category_id' => $category->get_id() ), $this->base_url );
-				$nonce    = wp_create_nonce( 'category-nonce' );
-				$edit_url = add_query_arg( array( 'action' => 'edit' ), $base );
-				$del_url  = add_query_arg( array( 'action' => 'delete', '_wpnonce' => $nonce ), $base ); //phpcs:ignore
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit">&nbsp;</a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del">&nbsp;</a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
 				break;
 			default:
 				return parent::column_default( $category, $column_name );

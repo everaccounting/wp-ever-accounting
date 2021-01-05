@@ -41,11 +41,12 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @since  1.0.2
+	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
 	 *
 	 * @see    WP_List_Table::__construct()
 	 *
-	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
+	 * @since  1.0.2
+	 *
 	 */
 	public function __construct( $args = array() ) {
 		$args = (array) wp_parse_args(
@@ -62,8 +63,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Check if there is contents in the database.
 	 *
-	 * @since 1.0.2
 	 * @return bool
+	 * @since 1.0.2
 	 */
 	public function is_empty() {
 		global $wpdb;
@@ -74,14 +75,14 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Render blank state.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	protected function render_blank_state() {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Payment is a disbursement of money in the form of cash or checks where tax is inapplicable. You can create and manage your business expenses in any currencies, and can also affix account, category, and vendor to each payment.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Payment is a disbursement of money in the form of cash or checks where tax is inapplicable. You can create and manage your business expenses in any currencies, and can also affix account, category, and vendor to each payment.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="
 			<?php
@@ -104,8 +105,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function define_columns() {
 		return array(
@@ -116,15 +117,14 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 			'category_id' => __( 'Category', 'wp-ever-accounting' ),
 			'contact_id'  => __( 'Vendor', 'wp-ever-accounting' ),
 			'reference'   => __( 'Reference', 'wp-ever-accounting' ),
-			'actions'     => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
 	/**
 	 * Define sortable columns.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function define_sortable_columns() {
 		return array(
@@ -140,8 +140,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Define bulk actions
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function define_bulk_actions() {
 		return array(
@@ -152,8 +152,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Define primary column.
 	 *
-	 * @since 1.0.2
 	 * @return string
+	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
 		return 'date';
@@ -162,11 +162,11 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the revenues list table.
 	 *
-	 * @since  1.0.2
-	 *
 	 * @param Payment $payment The current object.
 	 *
 	 * @return string Displays a checkbox.
+	 * @since  1.0.2
+	 *
 	 */
 	function column_cb( $payment ) {
 		return sprintf( '<input type="checkbox" name="payment_id[]" value="%d"/>', $payment->get_id() );
@@ -175,33 +175,34 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @since 1.0.2
-	 *
-	 * @param string   $column_name The name of the column
+	 * @param string $column_name The name of the column
 	 *
 	 * @param Payment $payment
 	 *
 	 * @return string The column value.
+	 * @since 1.0.2
+	 *
 	 */
 	function column_default( $payment, $column_name ) {
 		$payment_id = $payment->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$url   = eaccounting_admin_url(
-					array(
-						'tab'        => 'payments',
-						'action'     => 'edit',
-						'payment_id' => $payment_id,
-					)
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', 'payment_id' => $payment_id, ), 'admin.php' );// phpcs:enable
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'delete', 'payment_id' => $payment_id, '_wpnonce' => wp_create_nonce( 'payment-nonce' ), ), 'admin.php' );// phpcs:enable
+
+				$actions = array(
+					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
-				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $url ), esc_html( eaccounting_date( $payment->get_payment_date() ) ) );
+
+				$value = '<a href="' . esc_url( $edit_url ) . '"><strong>' . esc_html( eaccounting_date( $payment->get_payment_date() ) ) . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
 				$value = $payment->format_amount( $payment->get_amount() );
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );
-				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $payment->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $payment->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
@@ -209,29 +210,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_vendor( $payment->get_contact_id( 'edit' ) );
-				$value = $contact ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $payment->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:enable
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'        => 'payments',
-						'action'     => 'edit',
-						'payment_id' => $payment_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'        => 'payments',
-						'action'     => 'delete',
-						'payment_id' => $payment_id,
-						'_wpnonce'   => wp_create_nonce( 'payment-nonce' ),
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
+				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $payment->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:enable
 				break;
 			default:
 				return parent::column_default( $payment, $column_name );
@@ -243,8 +222,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @since  1.0.2
 	 * @return void
+	 * @since  1.0.2
 	 */
 	function no_items() {
 		_e( 'There is no payments found.', 'wp-ever-accounting' );
@@ -253,9 +232,10 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination.
 	 *
+	 * @param string $which
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $which
 	 */
 	protected function extra_tablenav_deprecated( $which ) {
 		if ( 'top' === $which ) {
@@ -316,8 +296,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
@@ -374,8 +354,8 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();

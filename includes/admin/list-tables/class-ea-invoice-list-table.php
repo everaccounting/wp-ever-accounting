@@ -128,7 +128,6 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 			'issue_date'     => __( 'Invoice Date', 'wp-ever-accounting' ),
 			'due_date'       => __( 'Due Date', 'wp-ever-accounting' ),
 			'status'         => __( 'Status', 'wp-ever-accounting' ),
-			'actions'        => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -201,24 +200,25 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 			case 'invoice_number':
 				$invoice_number = $invoice->get_invoice_number();
 
-				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'action'     => 'view',
-								'invoice_id' => $invoice_id,
-							)
-						)
-					),
-					$invoice_number
-				);
+				$nonce       = wp_create_nonce( 'invoice-nonce' );
+				$view_url    = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'view', 'invoice_id' => $invoice_id ) );// phpcs:enable
+				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'invoice_id' => $invoice_id ) );// phpcs:enable
+				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'invoice_id' => $invoice_id, '_wpnonce' => $nonce ) );// phpcs:enable
+
+				$actions           = array();
+				$actions['view']   = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
+				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
+				if ( $invoice->is_editable() ) {
+					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
+				}
+
+				$value = '<a href="' . esc_url( $view_url ) . '">' . $invoice_number . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'total':
 				$value = eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() );
 				break;
 			case 'name':
-				$value = sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:enable
+				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:enable
 				break;
 			case 'issue_date':
 				$value = eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' );
@@ -228,28 +228,6 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 				break;
 			case 'status':
 				$value = sprintf( '<span class="invoice-status %s">%s</span>', $invoice->get_status(), $invoice->get_status_nicename() );
-				break;
-			case 'actions':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'tab'        => 'invoices',
-						'action'     => 'edit',
-						'invoice_id' => $invoice_id,
-					)
-				);
-				$del_url  = eaccounting_admin_url(
-					array(
-						'tab'        => 'invoices',
-						'action'     => 'delete',
-						'_wpnonce'   => wp_create_nonce( 'invoice-nonce' ),
-						'invoice_id' => $invoice_id,
-					)
-				);
-				$actions  = array(
-					'edit'   => sprintf( '<a href="%s" class="dashicons dashicons-edit"></a>', esc_url( $edit_url ) ),
-					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
-				);
-				$value    = $this->row_actions( $actions );
 				break;
 			default:
 				return parent::column_default( $invoice, $column_name );

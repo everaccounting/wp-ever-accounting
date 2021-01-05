@@ -129,7 +129,6 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 			'city'    => __( 'Address', 'wp-ever-accounting' ),
 			'due'     => __( 'Due', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
-			'actions' => __( 'Actions', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -199,18 +198,27 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 	 */
 	function column_default( $customer, $column_name ) {
 		$customer_id = $customer->get_id();
-
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = admin_url( 'admin.php?page=ea-sales&tab=customers&action=view&customer_id=' . $customer->get_id() );
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:enable
 				$value    = '<a href="' . esc_url( $view_url ) . '">' . $customer->get_attachment_image() . '</a>';
 				break;
 			case 'name':
-				$view_url = admin_url( 'admin.php?page=ea-sales&tab=customers&action=view&customer_id=' . $customer->get_id() );
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:enable
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', 'customer_id' => $customer_id, ) );// phpcs:enable
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'delete', 'customer_id' => $customer_id, '_wpnonce' => wp_create_nonce( 'customer-nonce' ), ) );// phpcs:enable
+				$actions  = array(
+					'view' => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ),__( 'View', 'wp-ever-accounting' ) ),
+					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ),__( 'Edit', 'wp-ever-accounting' ) ),
+					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ),__( 'Delete', 'wp-ever-accounting' ) ),
+				);
+
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
-				$value   .= '<br>';
-				$value   .= '<small class=meta>' . $customer->get_company() . '</small>';
+				$value    .= '<br>';
+				$value    .= '<small class=meta>' . $customer->get_company() . '</small>';
+				$value    .= $this->row_actions( $actions );
 				break;
+
 			case 'email':
 				if ( ! empty( $customer->get_email() ) || ! empty( $customer->get_phone() ) ) {
 					$value  = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
