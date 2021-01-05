@@ -64,7 +64,7 @@
 
 		& > span {
 			display: block;
-			//color: #757575;
+			color: #3c434a;
 		}
 	}
 
@@ -332,37 +332,28 @@
 		white-space: nowrap;
 		box-sizing: border-box;
 		background: 0 0;
-		color: #263238;
-		border: 1px solid #263238;
+		color: #ffffff;
+		background: #63686f;
+		border: 1px solid #63686f;
 
-		&.sent {
-
+		&.sent, &.received {
+			border: 1px solid #deb100;
+			background: #deb100;
 		}
 
 		&.partial {
-			background-color: #e0f7fa;
-			border: 1px solid #bbdefb;
-			color: #006064;
+			border: 1px solid #007e65;
+			background: #007e65;
 		}
 
 		&.paid {
-			border: 1px solid #84c529;
-			color: #84c529
+			border: 1px solid #00a32a;
+			background: #00a32a
 		}
 
 		&.overdue {
-			border: 1px solid #bf360c;
-			color: #bf360c;
-		}
-
-		&.cancelled {
-			border: 1px solid #311b92;
-			color: #311b92;
-		}
-
-		&.refunded {
-			border: 1px solid #bf360c;
-			color: #bf360c;
+			border: 1px solid #d63638;
+			background: #d63638;
 		}
 	}
 
