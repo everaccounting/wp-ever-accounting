@@ -11,7 +11,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Query_Currency;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -317,8 +316,7 @@ class Setup_Wizard {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		$currencies = Query_Currency::init()->get();
-
+		$currencies = eaccounting_get_currencies(array('return'=> 'array'));
 		?>
 		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
 		<p>Default currency rate should be always 1 & additional currency rates should be equivalent of default currency. e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77</p>
@@ -381,7 +379,7 @@ class Setup_Wizard {
 							array(
 								'name'    => 'code[custom]',
 								'options' => [ '' => __( 'Select', 'wp-ever-accounting' ) ] + $options,
-								'id'      => '4-code',
+								'id'      => '6-code',
 							)
 						);
 						?>
@@ -393,7 +391,7 @@ class Setup_Wizard {
 							array(
 								'name'  => 'rate[custom]',
 								'value' => '',
-								'id'    => '4-rate',
+								'id'    => '6-rate',
 							)
 						);
 						?>
