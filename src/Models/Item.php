@@ -48,19 +48,19 @@ class Item extends ResourceModel {
 	 * @var array
 	 */
 	protected $data = array(
-		'name'              => '',
-		'sku'               => '',
-		'thumbnail_id'      => null,
-		'description'       => '',
-		'sale_price'        => 0.0000,
-		'purchase_price'    => 0.0000,
-		'quantity'          => 1,
-		'category_id'       => null,
-		'sales_tax'         => null,
-		'purchase_tax'      => null,
-		'enabled'           => 1,
-		'creator_id'        => null,
-		'date_created'      => null,
+		'name'           => '',
+		'sku'            => '',
+		'thumbnail_id'   => null,
+		'description'    => '',
+		'sale_price'     => 0.0000,
+		'purchase_price' => 0.0000,
+		'quantity'       => 1,
+		'category_id'    => null,
+		'sales_tax'      => null,
+		'purchase_tax'   => null,
+		'enabled'        => 1,
+		'creator_id'     => null,
+		'date_created'   => null,
 	);
 
 	/**
@@ -335,13 +335,6 @@ class Item extends ResourceModel {
 	 */
 	public function set_purchase_tax( $tax ) {
 		$this->set_prop( 'purchase_tax', floatval( $tax ) );
-	}
-
-	/**
-	 * Clears the subscription's cache.
-	 */
-	public function clear_cache() {
-		wp_cache_delete( $this->get_id(), $this->cache_group );
 	}
 
 	/*

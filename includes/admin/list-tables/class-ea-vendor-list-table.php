@@ -97,7 +97,19 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Vendors are the purveyors of goods or services. All the entities that lead up to the final delivery of goods to the customers are considered as vendors. Vendors can be assigned to payments and bills and can also be filtered out from the transactions you made with them.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit' ) ) ); ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Vendors', 'wp-ever-accounting' ); ?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				eaccounting_admin_url(
+					array(
+						'page'   => 'ea-expenses',
+						'tab'    => 'vendors',
+						'action' => 'edit',
+					)
+				)
+			);
+			?>
+						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Vendors', 'wp-ever-accounting' ); ?></a>
 			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -190,26 +202,26 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:enable
-				$value    = '<a href="' . esc_url( $view_url ) . '">' . $vendor->get_attachment_image() . '</a>';
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $vendor->get_avatar_url() . '" height="36" width="36" alt="' . $vendor->get_name() . '"></a>';
 				break;
 			case 'name':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:enable
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', 'vendor_id' => $vendor_id, ) );// phpcs:enable
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'delete', 'vendor_id' => $vendor_id, '_wpnonce' => wp_create_nonce( 'vendor-nonce' ), ) );// phpcs:enable
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', 'vendor_id' => $vendor_id, ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'delete', 'vendor_id' => $vendor_id, '_wpnonce' => wp_create_nonce( 'vendor-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
-					'view' => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ),__( 'View', 'wp-ever-accounting' ) ),
-					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ),__( 'Edit', 'wp-ever-accounting' ) ),
-					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ),__( 'Delete', 'wp-ever-accounting' ) ),
+					'view'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ), __( 'View', 'wp-ever-accounting' ) ),
+					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
+					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
-				$value    .= '<br>';
-				$value    .= '<small class=meta>' . $vendor->get_company() . '</small>';
-				$value    .= $this->row_actions( $actions );
+				$value   .= '<br>';
+				$value   .= '<small class=meta>' . $vendor->get_company() . '</small>';
+				$value   .= $this->row_actions( $actions );
 				break;
 			case 'email':
 				if ( ! empty( $vendor->get_email() ) || ! empty( $vendor->get_phone() ) ) {
-					$value = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
+					$value  = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
 					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . $vendor->get_phone() . '</span>' : '';
 				}
 				if ( empty( $vendor->get_email() ) && empty( $vendor->get_phone() ) ) {
@@ -226,7 +238,7 @@ class EAccounting_Vendor_List_Table extends EAccounting_List_Table {
 				);
 				break;
 			case 'enabled':
-				$value = '<label class="ea-toggle">';
+				$value  = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="vendor-status" style="" value="true" data-id="' . $vendor->get_id() . '" ' . checked( $vendor->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';

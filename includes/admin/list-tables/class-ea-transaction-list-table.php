@@ -168,7 +168,7 @@ class EAccounting_Transaction_List_Table extends EAccounting_List_Table {
 			case 'account_id':
 				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
 				//$value   = $account ? $account->get_name() : '&mdash;';
-				$value = $account ? sprintf( '<a href="%1$s" target="_blank">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:enable
+				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:ignore
 
 				break;
 			case 'category_id':

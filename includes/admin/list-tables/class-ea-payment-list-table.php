@@ -187,22 +187,22 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 		$payment_id = $payment->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', 'payment_id' => $payment_id, ), 'admin.php' );// phpcs:enable
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'delete', 'payment_id' => $payment_id, '_wpnonce' => wp_create_nonce( 'payment-nonce' ), ), 'admin.php' );// phpcs:enable
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'edit', 'payment_id' => $payment_id, ), 'admin.php' );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'payments', 'action' => 'delete', 'payment_id' => $payment_id, '_wpnonce' => wp_create_nonce( 'payment-nonce' ), ), 'admin.php' );// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 
-				$value = '<a href="' . esc_url( $edit_url ) . '"><strong>' . esc_html( eaccounting_date( $payment->get_payment_date() ) ) . '</strong></a>' . $this->row_actions( $actions );
+				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $payment->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
 				$value = $payment->format_amount( $payment->get_amount() );
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );
-				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $payment->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $payment->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $payment->get_category_id( 'edit' ) );
@@ -210,7 +210,7 @@ class EAccounting_Payment_List_Table extends EAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_vendor( $payment->get_contact_id( 'edit' ) );
-				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $payment->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:enable
+				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $payment->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			default:
 				return parent::column_default( $payment, $column_name );

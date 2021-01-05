@@ -71,7 +71,7 @@ class Invoice extends Document {
 			//'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
 			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
-			'customer_id'   => __( 'Customer', 'wp-ever-accounting' ),
+			'contact_id'    => __( 'Customer', 'wp-ever-accounting' ),
 			'issue_date'    => __( 'Issue date', 'wp-ever-accounting' ),
 			'due_date'      => __( 'Due date', 'wp-ever-accounting' ),
 		);
@@ -100,7 +100,6 @@ class Invoice extends Document {
 		return array(
 			'draft'     => __( 'Draft', 'wp-ever-accounting' ),
 			'pending'   => __( 'Pending', 'wp-ever-accounting' ),
-			'sent'      => __( 'Sent', 'wp-ever-accounting' ),
 			'partial'   => __( 'Partial', 'wp-ever-accounting' ),
 			'paid'      => __( 'Paid', 'wp-ever-accounting' ),
 			'overdue'   => __( 'Overdue', 'wp-ever-accounting' ),
@@ -162,8 +161,8 @@ class Invoice extends Document {
 				$getter = "get_{$prop}";
 				$setter = "set_{$prop}";
 				if ( is_callable( array( $contact, $getter ) )
-				     && is_callable( array( $this, $setter ) )
-				     && is_callable( array( $this, $getter ) ) ) {
+					 && is_callable( array( $this, $setter ) )
+					 && is_callable( array( $this, $getter ) ) ) {
 					$this->$setter( $contact->$getter() );
 				}
 			}
@@ -181,6 +180,7 @@ class Invoice extends Document {
 
 	/**
 	 * Checks to see if the invoice requires payment.
+	 *
 	 * @since 1.1.0
 	 * @return bool
 	 */
@@ -194,7 +194,7 @@ class Invoice extends Document {
 	 * @return bool
 	 */
 	public function needs_payment() {
-		return ! $this->is_status( 'paid' ) && ! $this->is_status( 'refunded' ) && ! $this->is_free();
+		return ! empty( (int) eaccounting_round_number( $this->get_total_due(), 0 ) );
 	}
 
 	/**
@@ -225,6 +225,126 @@ class Invoice extends Document {
 		return $this->is_status( 'draft' );
 	}
 
+	/**
+	 * Checks if the invoice is paid.
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_paid() {
+		return $this->is_status( 'paid' );
+	}
+
+	/**
+	 * Check if an invoice is editable.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_editable() {
+		return apply_filters( 'eaccounting_invoice_is_editable', ! in_array( $this->get_status(), array( 'paid' ), true ), $this );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Used for database transactions.
+	|
+	*/
+
+	/**
+	 * Adds an item to the invoice.
+	 *
+	 * @param array $args
+	 *
+	 * @return \WP_Error|Bool
+	 */
+	public function add_item( $args ) {
+		$args = wp_parse_args( $args, array( 'item_id' => null ) );
+		if ( empty( $args['item_id'] ) ) {
+			return false;
+		}
+		$product = new Item( $args['item_id'] );
+		if ( ! $product->exists() ) {
+			return false;
+		}
+
+		//convert the price from default to invoice currency.
+		$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
+		$default          = array(
+			'item_id'       => $product->get_id(),
+			'item_name'     => $product->get_name(),
+			'price'         => $product->get_sale_price(),
+			'currency_code' => $this->get_currency_code() ? $this->get_currency_code() : $default_currency,
+			'quantity'      => 1,
+			'tax_rate'      => eaccounting_tax_enabled() ? $product->get_sales_tax() : 0,
+		);
+		$item             = $this->get_item( $product->get_id() );
+		if ( ! $item ) {
+			$item = new DocumentItem();
+		}
+		$args = wp_parse_args( $args, $default );
+		$item->set_props( $args );
+
+		//Now prepare
+		$this->items[ $item->get_item_id() ] = $item;
+
+		return $item->get_item_id();
+	}
+
+	/**
+	 * Conditionally change status
+	 *
+	 * @since 1.1.0
+	 */
+	public function maybe_change_status() {
+		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
+			$this->set_payment_date( time() );
+		} else {
+			$this->set_payment_date( '' );
+		}
+
+	}
+
+	/**
+	 * Generate number.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $number
+	 *
+	 * @return string
+	 */
+	public function generate_number( $number ) {
+		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
+		$padd             = (int) eaccounting()->settings->get( 'invoice_digit', '5' );
+		$formatted_number = zeroise( absint( $number ), $padd );
+		$number           = apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_number', $prefix . $formatted_number );
+
+		return $number;
+	}
+
+	/**
+	 * Save object.
+	 *
+	 * @since 1.1.0
+	 * @return bool|\Exception|int
+	 */
+	public function save() {
+		$this->check_required_items();
+		$this->calculate_totals();
+		$this->maybe_set_document_number();
+		$this->maybe_set_key();
+		$this->maybe_change_status();
+		$saved = parent::save();
+		$this->save_items();
+		$this->status_transition();
+		return $saved;
+	}
+
+
 	/*
 	|--------------------------------------------------------------------------
 	| Additional methods
@@ -233,6 +353,121 @@ class Invoice extends Document {
 	| Used for various reasons.
 	|
 	*/
+
+	/**
+	 * Mark paid.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function set_paid() {
+		try {
+			$default_account = eaccounting()->settings->get( 'default_account' );
+			$payment_method  = eaccounting()->settings->get( 'default_payment_method', 'cash' );
+			if ( empty( $default_account ) ) {
+				return false;
+			}
+			$due = $this->get_total_due();
+			$this->add_payment(
+				array(
+					'payment_date'   => time(),
+					'account_id'     => absint( $default_account ),
+					'amount'         => $due,
+					'category_id'    => $this->get_category_id(),
+					'customer_id'    => $this->get_contact_id(),
+					'payment_method' => $payment_method,
+				)
+			);
+			return $this->save();
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * Refund.
+	 * @since 1.1.0
+	 */
+	public function set_refunded() {
+		$total_paid = eaccounting_price( abs( $this->get_total_paid() ), $this->get_currency_code() );
+		$payments   = $this->get_payments();
+		foreach ( $payments as $payment ) {
+			$payment->delete();
+		}
+		$this->set_status( 'refunded' );
+		if ( ! empty( $total_paid ) ) {
+			$this->add_note(
+				sprintf(
+				/* translators: %s amount */
+					__( 'Removed %s payment', 'wp-ever-accounting' ),
+					$total_paid
+				)
+			);
+		}
+		wp_cache_flush();
+		$this->save();
+	}
+
+	/**
+	 * Set status to cancel.
+	 *
+	 * @since 1.1.0
+	 */
+	public function set_cancelled() {
+		$total_paid = eaccounting_price( abs( $this->get_total_paid() ), $this->get_currency_code() );
+		$payments   = $this->get_payments();
+		foreach ( $payments as $payment ) {
+			$payment->delete();
+		}
+		$this->set_status( 'cancelled' );
+		if ( ! empty( $total_paid ) ) {
+			$this->add_note(
+				sprintf(
+				/* translators: %s amount */
+					__( 'Removed %s payment', 'wp-ever-accounting' ),
+					$total_paid
+				)
+			);
+		}
+		wp_cache_flush();
+		$this->save();
+	}
+
+	/**
+	 * Add note.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param       $note
+	 * @param false $customer_note
+	 *
+	 * @return Note|false|int|\WP_Error
+	 */
+	public function add_note( $note, $customer_note = false ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+		if ( $customer_note ) {
+			do_action( 'eaccounting_invoice_customer_note', $note, $this );
+		}
+
+		$creator_id = 0;
+		// If this is an admin comment or it has been added by the user.
+		if ( is_user_logged_in() ) {
+			$creator_id = get_current_user_id();
+		}
+
+		return eaccounting_insert_note(
+			array(
+				'parent_id'  => $this->get_id(),
+				'type'       => 'invoice',
+				'note'       => $note,
+				'extra'      => array( 'customer_note' => $customer_note ),
+				'creator_id' => $creator_id,
+			)
+		);
+	}
+
 	/**
 	 * Get payments.
 	 *
@@ -284,6 +519,18 @@ class Invoice extends Document {
 
 		return $total_paid;
 	}
+
+	/**
+	 * Conditionally set complete
+	 *
+	 * @since 1.1.0
+	 */
+	public function maybe_set_complete() {
+		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
+			$this->set_payment_date( time() );
+		}
+	}
+
 
 	/**
 	 * @since 1.1.0
@@ -363,53 +610,8 @@ class Invoice extends Document {
 		$income->save();
 		/* translators: %s amount */
 		$this->add_note( sprintf( __( 'Received payment %s', 'wp-ever-accounting' ), eaccounting_price( $args['amount'], $this->get_currency_code() ) ), false );
-		wp_cache_flush();
 
 		return true;
-	}
-
-	/**
-	 * Mark paid.
-	 *
-	 * @since 1.1.0
-	 * @return bool
-	 */
-	public function set_paid() {
-		try {
-			$default_account = eaccounting()->settings->get( 'default_account' );
-			$payment_method  = eaccounting()->settings->get( 'default_payment_method', 'cash' );
-			if ( empty( $default_account ) ) {
-				return false;
-			}
-			$due = $this->get_total_due();
-			$this->add_payment(
-				array(
-					'payment_date'   => time(),
-					'account_id'     => absint( $default_account ),
-					'amount'         => $due,
-					'category_id'    => $this->get_category_id(),
-					'customer_id'    => $this->get_contact_id(),
-					'payment_method' => $payment_method,
-				)
-			);
-			return $this->save();
-		} catch ( \Exception $e ) {
-			return false;
-		}
-	}
-
-	/**
-	 * Refund.
-	 * @since 1.1.0
-	 */
-	public function set_refunded() {
-		$payments = $this->get_payments();
-		foreach ( $payments as $payment ) {
-			$payment->delete();
-		}
-		$this->set_status('refunded');
-		wp_cache_flush();
-		$this->save();
 	}
 
 	/**
@@ -452,152 +654,5 @@ class Invoice extends Document {
 				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
 			}
 		}
-	}
-
-	/**
-	 *  Conditionally change status
-	 * @since 1.1.0
-	 */
-	public function maybe_change_status() {
-		if ( $this->needs_payment() && ( time() > strtotime( $this->get_due_date() ) ) ) {
-			$this->set_status( 'overdue' );
-		}
-		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
-			$this->set_payment_date( time() );
-		}
-	}
-
-
-	/**
-	 * Save object.
-	 *
-	 * @since 1.1.0
-	 * @return bool|\Exception|int
-	 */
-	public function save() {
-		$this->check_required_items();
-		$this->calculate_totals();
-		$this->maybe_set_document_number();
-		$this->maybe_set_key();
-		$this->maybe_change_status();
-		$saved = parent::save();
-		$this->save_items();
-		$this->status_transition();
-		return $saved;
-	}
-
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Used for database transactions.
-	|
-	*/
-
-	/**
-	 * Adds an item to the invoice.
-	 *
-	 * @param array $args
-	 *
-	 * @return \WP_Error|Bool
-	 */
-	public function add_item( $args ) {
-		$args = wp_parse_args( $args, array( 'item_id' => null ) );
-		if ( empty( $args['item_id'] ) ) {
-			return false;
-		}
-		$product = new Item( $args['item_id'] );
-		if ( ! $product->exists() ) {
-			return false;
-		}
-
-		//convert the price from default to invoice currency.
-		$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
-		$default          = array(
-			'item_id'       => $product->get_id(),
-			'item_name'     => $product->get_name(),
-			'price'         => $product->get_sale_price(),
-			'currency_code' => $this->get_currency_code() ? $this->get_currency_code() : $default_currency,
-			'quantity'      => 1,
-			'tax_rate'      => eaccounting_tax_enabled() ? $product->get_sales_tax() : 0,
-		);
-		$item             = $this->get_item( $product->get_id() );
-		if ( ! $item ) {
-			$item = new DocumentItem();
-		}
-		$args = wp_parse_args( $args, $default );
-		$item->set_props( $args );
-
-		//Now prepare
-		$this->items[ $item->get_item_id() ] = $item;
-
-		return $item->get_item_id();
-	}
-
-
-	/**
-	 * Add note.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param       $note
-	 * @param false $customer_note
-	 *
-	 * @return Note|false|int|\WP_Error
-	 */
-	public function add_note( $note, $customer_note = false ) {
-		if ( ! $this->exists() ) {
-			return false;
-		}
-		if ( $customer_note ) {
-			do_action( 'eaccounting_invoice_customer_note', $note, $this );
-		}
-
-		$creator_id = 0;
-		// If this is an admin comment or it has been added by the user.
-		if ( is_user_logged_in() ) {
-			$creator_id = get_current_user_id();
-		}
-
-		return eaccounting_insert_note(
-			array(
-				'parent_id'  => $this->get_id(),
-				'type'       => 'invoice',
-				'note'       => $note,
-				'extra'      => array( 'customer_note' => $customer_note ),
-				'creator_id' => $creator_id,
-			)
-		);
-	}
-
-	/**
-	 * Conditionally set complete
-	 *
-	 * @since 1.1.0
-	 */
-	public function maybe_set_complete() {
-		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
-			$this->set_payment_date( time() );
-		}
-	}
-
-	/**
-	 * Generate number.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param $number
-	 *
-	 * @return string
-	 */
-	public function generate_number( $number ) {
-		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
-		$padd             = (int) eaccounting()->settings->get( 'invoice_digit', '5' );
-		$formatted_number = zeroise( absint( $number ), $padd );
-		$number           = apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_number', $prefix . $formatted_number );
-
-		return $number;
 	}
 }

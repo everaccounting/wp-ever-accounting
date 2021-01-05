@@ -22,7 +22,6 @@ require_once EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-notes-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-sql-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
 require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
 require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
@@ -61,10 +60,10 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
 	$dt = new \EverAccounting\Core\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
-//	if ( $dt->copy()->addYear( 1 )->subDay( 1 )->getTimestamp() > strtotime(date_i18n('Y-m-d H:i')) ) {
-//		$today = new \EverAccounting\Core\DateTime( 'now' );
-//		return $today->date( $format );
-//	}
+	//  if ( $dt->copy()->addYear( 1 )->subDay( 1 )->getTimestamp() > strtotime(date_i18n('Y-m-d H:i')) ) {
+	//      $today = new \EverAccounting\Core\DateTime( 'now' );
+	//      return $today->date( $format );
+	//  }
 	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
 }
 
@@ -538,4 +537,13 @@ function eaccounting_list_pluck( $list, $callback_or_field, $index_key = null ) 
 		}
 	}
 	return $newlist;
+}
+
+/**
+ * Sets the last changed time for cache group.
+ * @return void
+ * @since 1.1.0
+ */
+function eaccounting_cache_set_last_changed( $group ) {
+	wp_cache_set( 'last_changed', microtime(), $group );
 }

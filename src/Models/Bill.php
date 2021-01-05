@@ -177,7 +177,7 @@ class Bill extends Document {
 	*/
 
 	/**
-	 * Checks to see if the invoice requires payment.
+	 * Checks to see if the bill requires payment.
 	 *
 	 * @since 1.1.0
 	 * @return bool
@@ -216,6 +216,15 @@ class Bill extends Document {
 	 */
 	public function is_draft() {
 		return $this->is_status( 'draft' );
+	}
+
+	/**
+	 * Checks if the bill is paid.
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function is_paid() {
+		return $this->is_status( 'paid' );
 	}
 
 	/**
@@ -276,41 +285,6 @@ class Bill extends Document {
 		$this->items[ $item->get_item_id() ] = $item;
 
 		return $item->get_item_id();
-	}
-
-	/**
-	 * Add note.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param       $note
-	 * @param false $vendor_note
-	 *
-	 * @return Note|false|int|\WP_Error
-	 */
-	public function add_note( $note, $vendor_note = false ) {
-		if ( ! $this->exists() ) {
-			return false;
-		}
-		if ( $vendor_note ) {
-			do_action( 'eaccounting_bill_vendor_note', $note, $this );
-		}
-
-		$creator_id = 0;
-		// If this is an admin comment or it has been added by the user.
-		if ( is_user_logged_in() ) {
-			$creator_id = get_current_user_id();
-		}
-
-		return eaccounting_insert_note(
-			array(
-				'parent_id'  => $this->get_id(),
-				'type'       => 'bill',
-				'note'       => $note,
-				'extra'      => array( 'vendor_note' => $vendor_note ),
-				'creator_id' => $creator_id,
-			)
-		);
 	}
 
 	/**
@@ -376,6 +350,72 @@ class Bill extends Document {
 	| Used for various reasons.
 	|
 	*/
+
+	/**
+	 * Mark paid.
+	 *
+	 * @since 1.1.0
+	 * @return bool
+	 */
+	public function set_paid() {
+		try {
+			$default_account = eaccounting()->settings->get( 'default_account' );
+			$payment_method  = eaccounting()->settings->get( 'default_payment_method', 'cash' );
+			if ( empty( $default_account ) ) {
+				return false;
+			}
+			$due = $this->get_total_due();
+			$this->add_payment(
+				array(
+					'payment_date'   => time(),
+					'account_id'     => absint( $default_account ),
+					'amount'         => $due,
+					'category_id'    => $this->get_category_id(),
+					'customer_id'    => $this->get_contact_id(),
+					'payment_method' => $payment_method,
+				)
+			);
+			return $this->save();
+		} catch ( \Exception $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * Add note.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param       $note
+	 * @param false $vendor_note
+	 *
+	 * @return Note|false|int|\WP_Error
+	 */
+	public function add_note( $note, $vendor_note = false ) {
+		if ( ! $this->exists() ) {
+			return false;
+		}
+		if ( $vendor_note ) {
+			do_action( 'eaccounting_bill_vendor_note', $note, $this );
+		}
+
+		$creator_id = 0;
+		// If this is an admin comment or it has been added by the user.
+		if ( is_user_logged_in() ) {
+			$creator_id = get_current_user_id();
+		}
+
+		return eaccounting_insert_note(
+			array(
+				'parent_id'  => $this->get_id(),
+				'type'       => 'bill',
+				'note'       => $note,
+				'extra'      => array( 'vendor_note' => $vendor_note ),
+				'creator_id' => $creator_id,
+			)
+		);
+	}
+
 	/**
 	 * Get payments.
 	 *
@@ -509,7 +549,6 @@ class Bill extends Document {
 		$method  = $methods[ $expense->get_payment_method() ];
 		/* translators: %s amount */
 		$this->add_note( sprintf( __( 'Paid %1$s by %2$s', 'wp-ever-accounting' ), eaccounting_price( $args['amount'], $this->get_currency_code() ), $method ), false );
-		wp_cache_flush();
 
 		if ( ( 0 < $this->get_total_paid() ) && ( $this->get_total_paid() < $this->get_total() ) ) {
 			$this->set_status( 'partial' );

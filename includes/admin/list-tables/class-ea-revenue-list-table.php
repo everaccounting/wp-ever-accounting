@@ -83,7 +83,19 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Revenue is a direct and independent record of income or deposit where tax is inapplicable. You can create and manage your business incomes in any currency and can also affix account, category, and customer to each revenue.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url(array('page'=>'ea-sales','tab'=>'revenues','action'=>'edit')));?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
+			<a href="
+			<?php
+			echo esc_url(
+				eaccounting_admin_url(
+					array(
+						'page'   => 'ea-sales',
+						'tab'    => 'revenues',
+						'action' => 'edit',
+					)
+				)
+			);
+			?>
+						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
 			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -174,30 +186,73 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 		$revenue_id = $revenue->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'revenue_id' => $revenue_id, ), 'admin.php' );// phpcs:enable
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'revenue_id' => $revenue_id, '_wpnonce' => wp_create_nonce( 'revenue-nonce' ), ), 'admin.php' );// phpcs:enable
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'revenues',
+						'action'     => 'edit',
+						'revenue_id' => $revenue_id,
+					),
+					'admin.php'
+				);// phpcs:ignore
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'revenues',
+						'action'     => 'delete',
+						'revenue_id' => $revenue_id,
+						'_wpnonce'   => wp_create_nonce( 'revenue-nonce' ),
+					),
+					'admin.php'
+				);// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 
-				$value = '<a href="' . esc_url( $edit_url ) . '"><strong>' . esc_html( eaccounting_date( $revenue->get_payment_date() ) ) . '</strong></a>' . $this->row_actions( $actions );
+				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $revenue->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
 				$value = $revenue->format_amount( $revenue->get_amount() );
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ) ) ) ), $account->get_name() ) : '&mdash;';// phpcs:enable
+				$value   = $account ? sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'       => 'ea-banking',
+								'tab'        => 'accounts',
+								'action'     => 'view',
+								'account_id' => $revenue->get_account_id( 'edit' ),
+							)
+						)
+					),
+					$account->get_name()
+				) : '&mdash;';// phpcs:ignore
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
-				$value   = $category ? $category->get_name() : '&mdash;';
+				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ) ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:enable
+				$value   = $contact ? sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'        => 'ea-sales',
+								'tab'         => 'customers',
+								'action'      => 'view',
+								'customer_id' => $revenue->get_contact_id( 'edit' ),
+							)
+						)
+					),
+					$contact->get_name()
+				) : '&mdash;';// phpcs:ignore
 				break;
 			default:
 				return parent::column_default( $revenue, $column_name );
@@ -242,13 +297,13 @@ class EAccounting_Revenue_List_Table extends EAccounting_List_Table {
 
 			eaccounting_account_dropdown(
 				array(
-					'name'    => 'account_id',
-					'value'   => $account_id,
-					'default' => '',
-					'attr'    => array(
+					'name'      => 'account_id',
+					'value'     => $account_id,
+					'default'   => '',
+					'attr'      => array(
 						'data-allow-clear' => true,
 					),
-					'creatable'	=> false,
+					'creatable' => false,
 				)
 			);
 

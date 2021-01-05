@@ -186,9 +186,9 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 			case 'bill_number':
 				$bill_number = $bill->get_bill_number();
 				$nonce       = wp_create_nonce( 'bill-nonce' );
-				$view_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'view', 'bill_id' => $bill_id ) );// phpcs:enable
-				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', 'bill_id' => $bill_id ) );// phpcs:enable
-				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'delete', 'bill_id' => $bill_id, '_wpnonce' => $nonce ) );// phpcs:enable
+				$view_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'view', 'bill_id' => $bill_id ) );// phpcs:ignore
+				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', 'bill_id' => $bill_id ) );// phpcs:ignore
+				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'delete', 'bill_id' => $bill_id, '_wpnonce' => $nonce ) );// phpcs:ignore
 
 				$actions           = array();
 				$actions['view']   = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
@@ -203,7 +203,7 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 				$value = eaccounting_price( $bill->get_total(), $bill->get_currency_code() );
 				break;
 			case 'name':
-				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:enable
+				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:ignore
 				break;
 			case 'issue_date':
 				$value = eaccounting_format_datetime( $bill->get_issue_date(), 'Y-m-d' );
@@ -212,7 +212,7 @@ class EAccounting_Bill_List_Table extends EAccounting_List_Table {
 				$value = eaccounting_format_datetime( $bill->get_due_date(), 'Y-m-d' );
 				break;
 			case 'status':
-				$value = sprintf( '<span class="bill-status %s">%s</span>', $bill->get_status(), $bill->get_status_nicename() );
+				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $bill->get_status(), $bill->get_status_nicename() );
 				break;
 			default:
 				return parent::column_default( $bill, $column_name );

@@ -179,7 +179,7 @@ function eaccounting_get_notes( $args = array() ) {
 	$from        = "FROM {$wpdb->prefix}$table $table";
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = md5( serialize( $qv ) );
+	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_notes' );
 	$results     = wp_cache_get( $cache_key, 'ea_notes' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 
@@ -189,7 +189,7 @@ function eaccounting_get_notes( $args = array() ) {
 			wp_cache_set( $cache_key, $results, 'ea_notes' );
 		} else {
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_notes' );
 				}

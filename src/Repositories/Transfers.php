@@ -182,6 +182,7 @@ class Transfers extends ResourceRepository {
 
 		// Maybe retrieve from the cache.
 		$raw_item = wp_cache_get( $item->get_id(), $item->get_cache_group() );
+
 		// If not found, retrieve from the db.
 		if ( false === $raw_item ) {
 			$raw_item = $wpdb->get_row(
@@ -190,7 +191,6 @@ class Transfers extends ResourceRepository {
 					$item->get_id()
 				)
 			);
-
 			// Update the cache with our data
 			wp_cache_set( $item->get_id(), $raw_item, $item->get_cache_group() );
 		}

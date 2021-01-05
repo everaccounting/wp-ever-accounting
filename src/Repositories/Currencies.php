@@ -175,7 +175,7 @@ class Currencies extends ResourceRepository {
 	 * @param array         $args Array of args to pass to the delete method.
 	 */
 	public function delete( &$item, $args = array() ) {
-		$code = $item->get_code();
+		$code       = $item->get_code();
 		$currencies = $this->get_currencies()->reject(
 			function ( $currency ) use ( $code ) {
 				return $currency['code'] === $code;

@@ -308,7 +308,7 @@ function eaccounting_get_documents( $args = array() ) {
 	}
 	if ( ! empty( $qv['customer_id'] ) ) {
 		$customer_id = implode( ',', wp_parse_id_list( $qv['customer_id'] ) );
-		$where     .= " AND $table.`contact_id` IN ($customer_id)";
+		$where      .= " AND $table.`contact_id` IN ($customer_id)";
 	}
 
 	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
@@ -328,7 +328,7 @@ function eaccounting_get_documents( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-	$cache_key   = md5( serialize( array_merge($clauses, array('count_total' => $qv['count_total'])) ) );
+	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_documents' );
 	$results     = wp_cache_get( $cache_key, 'ea_documents' );
 	if ( false === $results ) {
 		if ( $count_total ) {
@@ -336,7 +336,7 @@ function eaccounting_get_documents( $args = array() ) {
 			wp_cache_set( $cache_key, $results, 'ea_documents' );
 		} else {
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_documents' );
 				}

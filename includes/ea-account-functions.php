@@ -264,7 +264,7 @@ function eaccounting_get_accounts( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
-	$cache_key   = md5( serialize( array_merge( $clauses, array( 'count_total' => $qv['count_total'] ) ) ) );
+	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_accounts' );
 	$results     = wp_cache_get( $cache_key, 'ea_accounts' );
 	if ( false === $results ) {
 		if ( $count_total ) {
@@ -272,7 +272,7 @@ function eaccounting_get_accounts( $args = array() ) {
 			wp_cache_set( $cache_key, $results, 'ea_accounts' );
 		} else {
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_accounts' );
 					if ( true === $qv['balance'] ) {

@@ -31,13 +31,6 @@ class Customer extends Contact {
 	protected $object_type = 'customer';
 
 	/**
-	 * @since 1.1.0
-	 *
-	 * @var string
-	 */
-	public $cache_group = 'ea_customers';
-
-	/**
 	 * Get the customer if ID is passed, otherwise the customer is new and empty.
 	 *
 	 * @since 1.1.0

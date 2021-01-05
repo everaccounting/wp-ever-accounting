@@ -20,7 +20,53 @@ class EAccounting_Admin_Invoices {
 	 * EAccounting_Admin_Invoices constructor.
 	 */
 	public function __construct() {
+		add_action( 'admin_post_eaccounting_invoice_action', array( $this, 'invoice_action' ) );
 		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_tab' ), 20 );
+	}
+
+	public function invoice_action() {
+		$action     = eaccounting_clean( wp_unslash( $_REQUEST['invoice_action'] ) );
+		$invoice_id = absint( wp_unslash( $_REQUEST['invoice_id'] ) );
+		$invoice    = eaccounting_get_invoice( $invoice_id );
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
+			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );
+		}
+		$redirect_url = add_query_arg(
+			array(
+				'page'       => 'ea-sales',
+				'tab'        => 'invoices',
+				'action'     => 'view',
+				'invoice_id' => $invoice_id,
+			),
+			admin_url( 'admin.php' )
+		);
+		switch ( $action ) {
+			case 'status_pending':
+				$invoice->set_status( 'pending' );
+				$invoice->save();
+				break;
+			case 'status_overdue':
+				$invoice->set_status( 'overdue' );
+				$invoice->save();
+				break;
+			case 'status_cancelled':
+				$invoice->set_cancelled();
+				break;
+			case 'status_refunded':
+				$invoice->set_refunded();
+				break;
+			case 'delete':
+				$invoice->delete();
+				$redirect_url = remove_query_arg( array( 'action', 'invoice_id' ), $redirect_url );
+				break;
+		}
+
+		if ( ! did_action( 'eaccounting_invoice_action_' . sanitize_title( $action ) ) ) {
+			do_action( 'eaccounting_invoice_action_' . sanitize_title( $action ), $invoice, $redirect_url );
+		}
+		wp_redirect( $redirect_url ); //phpcs:ignore
+		exit();
 	}
 
 	/**

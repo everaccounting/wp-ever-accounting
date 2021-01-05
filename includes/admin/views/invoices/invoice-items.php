@@ -9,20 +9,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$edit_mode      = isset( $mode ) && $mode === 'edit';
 $items          = $invoice->get_items();
 $item_label     = eaccounting()->settings->get( 'invoice_item_label', __( 'Item', 'wp-ever-accounting' ) );
 $price_label    = eaccounting()->settings->get( 'invoice_price_label', __( 'Unit Price', 'wp-ever-accounting' ) );
 $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Quantity', 'wp-ever-accounting' ) );
 ?>
 <div class="ea-document__items-wrapper">
-	<h3 class="ea-document__items-title"><?php esc_html_e( 'Line Items', 'wp-ever-accounting' ); ?></h3>
 	<table cellpadding="0" cellspacing="0" class="ea-document__items">
 		<thead>
 		<tr>
-			<?php if ( $edit_mode ) : ?>
-				<th class="ea-document__line-actions">&nbsp;</th>
-			<?php endif; ?>
+			<th class="ea-document__line-actions">&nbsp;</th>
 			<th class="ea-document__line-name" colspan="2"><?php echo esc_html( $item_label ); ?></th>
 			<?php do_action( 'eaccounting_invoice_items_headers', $invoice ); ?>
 			<th class="ea-document__line-price"><?php echo esc_html( $price_label ); ?></th>
@@ -38,46 +34,43 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 		foreach ( $items as $item_id => $item ) {
 			do_action( 'eaccounting_before_invoice_item_html', $item_id, $item, $invoice );
 
-			include __DIR__ . '/item.php';
+			include __DIR__ . '/invoice-item.php';
 
 			do_action( 'eaccounting_invoice_item_html', $item_id, $item, $invoice );
 		}
 		do_action( 'eaccounting_invoice_items_after_line_items', $invoice );
 		?>
 		</tbody>
-		<?php if ( $edit_mode ) : ?>
-			<tbody>
-			<script type="text/template" id="ea-invoice-line-template">
-				<?php
-				$item_id = 9999;
-				$item    = new \EverAccounting\Models\DocumentItem();
-				include __DIR__ . '/item.php';
-				?>
-			</script>
-			<script type="text/template" id="ea-invoice-item-selector">
-				<?php
-				eaccounting_item_dropdown(
-					array(
-						'name'  => 'items[9999][item_id]',
-						'class' => 'select-item',
-					)
-				);
-				?>
-			</script>
-			</tbody>
-		<?php endif; ?>
+		<tbody>
+		<script type="text/template" id="ea-invoice-line-template">
+			<?php
+			$item_id = 9999;
+			$item    = new \EverAccounting\Models\DocumentItem();
+			include __DIR__ . '/invoice-item.php';
+			?>
+		</script>
+		<script type="text/template" id="ea-invoice-item-selector">
+			<?php
+			eaccounting_item_dropdown(
+				array(
+					'name'  => 'items[9999][item_id]',
+					'class' => 'select-item',
+				)
+			);
+			?>
+		</script>
+		</tbody>
 	</table>
-	<?php if ( $edit_mode ) : ?>
-		<div class="ea-document__data-row ea-document__actions">
-			<div class="ea-document__actions-left">
-				<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
-			</div>
-			<div class="ea-document__actions-right">
-				<button type="button" class="button button-secondary add-discount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></button>
-				<button type="button" class="button button-primary recalculate"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></button>
-			</div>
+
+	<div class="ea-document__data-row ea-document__actions">
+		<div class="ea-document__actions-left">
+			<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button button-secondary add-discount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></button>
 		</div>
-	<?php endif; ?>
+		<div class="ea-document__actions-right">
+			<button type="button" class="button button-secondary recalculate"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></button>
+		</div>
+	</div>
 
 	<div class="ea-document__data-row ea-invoice__totals">
 		<table class="ea-document__total-items">
@@ -98,14 +91,27 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			</tr>
 
 			<?php if ( eaccounting_tax_enabled() ) : ?>
-				<tr>
-					<td class="label"><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>:</td>
-					<td width="1%"></td>
-					<td class="total">
-						<?php echo eaccounting_price( $invoice->get_total_tax(), $invoice->get_currency_code() ); ?>
-					</td>
-				</tr>
+				<?php if ( 'total' === eaccounting()->settings->get( 'tax_display_totals', 'total' ) ) : ?>
+					<tr>
+						<td class="label"><?php esc_html_e( 'Tax', 'wp-ever-accounting' ); ?>:</td>
+						<td width="1%"></td>
+						<td class="total">
+							<?php echo eaccounting_price( $invoice->get_total_tax(), $invoice->get_currency_code() ); ?>
+						</td>
+					</tr>
+				<?php else : ?>
+					<?php foreach ( $invoice->get_taxes()  as $tax ) : ?>
+						<tr>
+							<td class="label"><?php echo esc_html( __( 'Tax', 'wp-ever-accounting' ) . '(' . number_format_i18n( $tax['rate'] ) . '%)' ); ?>:</td>
+							<td width="1%"></td>
+							<td class="total">
+								<?php echo eaccounting_price( $tax['amount'], $invoice->get_currency_code() ); ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				<?php endif; ?>
 			<?php endif; ?>
+
 			<tr>
 				<td class="label"><?php esc_html_e( 'Total', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
@@ -114,16 +120,16 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 				</td>
 			</tr>
 			<?php if ( $invoice->exists() ) : ?>
-			<tr>
-				<td class="label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?>:</td>
-				<td width="1%"></td>
-				<td class="total">
-					<?php echo eaccounting_price( $invoice->get_total_paid(), $invoice->get_currency_code() ); ?>
-				</td>
-			</tr>
+				<tr>
+					<td class="label"><?php esc_html_e( 'Paid', 'wp-ever-accounting' ); ?>:</td>
+					<td width="1%"></td>
+					<td class="total">
+						<?php echo eaccounting_price( $invoice->get_total_paid(), $invoice->get_currency_code() ); ?>
+					</td>
+				</tr>
 			<?php endif; ?>
 			<?php if ( $invoice->exists() && ! empty( $invoice->get_total_due() ) ) : ?>
-				<tr>
+				<tr class="ea-document__due">
 					<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
 					<td width="1%"></td>
 					<td class="total">

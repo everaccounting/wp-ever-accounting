@@ -10,7 +10,6 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Abstracts\ResourceRepository;
 use EverAccounting\Models\Transaction;
 

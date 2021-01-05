@@ -19,9 +19,9 @@ defined( 'ABSPATH' ) || exit();
 $invoice_actions = apply_filters(
 	'eaccounting_invoice_actions',
 	array(
-		'status_received'  => __( 'Mark as Received', 'wp-ever-accounting' ),
+		'status_pending'   => __( 'Mark Pending', 'wp-ever-accounting' ),
 		'status_overdue'   => __( 'Mark Overdue', 'wp-ever-accounting' ),
-		'status_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
+		'status_cancelled' => __( 'Mark Cancelled', 'wp-ever-accounting' ),
 		'delete'           => __( 'Delete', 'wp-ever-accounting' ),
 	)
 );
@@ -103,7 +103,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 									</a>
 								<?php endif; ?>
 								<?php if ( ! empty( $invoice->needs_payment() ) ) : ?>
-									<button class="button-primary add-payment">
+									<button class="button-primary receive-payment">
 										<span class="dashicons dashicons-money-alt"></span>
 										<?php esc_html_e( 'Add Payment', 'wp-ever-accounting' ); ?>
 									</button>

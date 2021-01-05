@@ -1141,6 +1141,7 @@ abstract class ResourceModel {
 	 * @since 1.1.0
 	 */
 	public function clear_cache() {
+		eaccounting_cache_set_last_changed( $this->cache_group );
 		wp_cache_delete( $this->get_id(), $this->cache_group );
 	}
 

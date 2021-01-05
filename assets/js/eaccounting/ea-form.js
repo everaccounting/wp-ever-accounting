@@ -428,7 +428,7 @@ jQuery(function ($) {
 				.on('click', '.delete_note', this.delete_note)
 				.on('click', '.receive-payment', this.receive_payment)
 
-			$(document).on('submit', '#invoice-note-insert', this.add_note);
+			$(document).on('submit', '#invoice-note-form', this.add_note);
 
 			$(document.body).on('ea_invoice_updated', this.recalculate)
 		},

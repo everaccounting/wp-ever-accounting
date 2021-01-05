@@ -21,7 +21,7 @@ $title    = $bill->exists() ? __( 'Update Bill', 'wp-ever-accounting' ) : __( 'A
 $note     = eaccounting()->settings->get( 'bill_note' );
 $terms    = eaccounting()->settings->get( 'bill_terms' );
 $due      = eaccounting()->settings->get( 'bill_due', 15 );
-$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );
+$due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );//phpcs:ignore
 ?>
 <div class="ea-row">
 	<div class="ea-col-7">
@@ -45,14 +45,9 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 	<div class="ea-card">
 		<div class="ea-card__header">
 			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-			<div>
-				<button class="button-secondary" onclick="history.go(-1);">
-					<span class="dashicons dashicons-undo"></span>
-					<?php esc_html_e( 'Back', 'wp-ever-accounting' ); ?>
-				</button>
+			<div
 				<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
-					<span class="dashicons dashicons-visibility"></span>
-					<?php esc_html_e( 'View', 'wp-ever-accounting' ); ?>
+					<?php esc_html_e( 'View Bill', 'wp-ever-accounting' ); ?>
 				</a>
 			</div>
 		</div>

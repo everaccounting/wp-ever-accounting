@@ -97,7 +97,8 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'An invoice functions as a commercial document that itemizes and records sales. The invoice specifies a transaction between a buyer and a seller and possesses all the necessary information about them. In the document, Taxes can be included or excluded.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php
+			<a href="
+			<?php
 			echo esc_url(
 				eaccounting_admin_url(
 					array(
@@ -107,7 +108,8 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 					)
 				)
 			);
-			?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
+			?>
+			" class="button-primary ea-empty-table__cta"><?php _e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
 			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
@@ -200,10 +202,32 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 			case 'invoice_number':
 				$invoice_number = $invoice->get_invoice_number();
 
-				$nonce       = wp_create_nonce( 'invoice-nonce' );
-				$view_url    = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'view', 'invoice_id' => $invoice_id ) );// phpcs:enable
-				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'invoice_id' => $invoice_id ) );// phpcs:enable
-				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'invoice_id' => $invoice_id, '_wpnonce' => $nonce ) );// phpcs:enable
+				$nonce    = wp_create_nonce( 'invoice-nonce' );
+				$view_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'invoices',
+						'action'     => 'view',
+						'invoice_id' => $invoice_id,
+					)
+				);// phpcs:ignore
+				$edit_url = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'invoices',
+						'action'     => 'edit',
+						'invoice_id' => $invoice_id,
+					)
+				);// phpcs:ignore
+				$del_url  = eaccounting_admin_url(
+					array(
+						'page'       => 'ea-sales',
+						'tab'        => 'invoices',
+						'action'     => 'delete',
+						'invoice_id' => $invoice_id,
+						'_wpnonce'   => $nonce,
+					)
+				);// phpcs:ignore
 
 				$actions           = array();
 				$actions['view']   = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
@@ -218,7 +242,20 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 				$value = eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() );
 				break;
 			case 'name':
-				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:enable
+				$value = sprintf(
+					'<a href="%1$s">%2$s</a>',
+					esc_url(
+						eaccounting_admin_url(
+							array(
+								'page'        => 'ea-sales',
+								'tab'         => 'customers',
+								'action'      => 'view',
+								'customer_id' => $invoice->get_contact_id(),
+							)
+						)
+					),
+					$invoice->get_name()
+				);// phpcs:ignore
 				break;
 			case 'issue_date':
 				$value = eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' );
@@ -227,7 +264,7 @@ class EAccounting_Invoice_List_Table extends EAccounting_List_Table {
 				$value = eaccounting_format_datetime( $invoice->get_due_date(), 'Y-m-d' );
 				break;
 			case 'status':
-				$value = sprintf( '<span class="invoice-status %s">%s</span>', $invoice->get_status(), $invoice->get_status_nicename() );
+				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $invoice->get_status(), $invoice->get_status_nicename() );
 				break;
 			default:
 				return parent::column_default( $invoice, $column_name );

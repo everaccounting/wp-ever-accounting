@@ -200,23 +200,23 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 		$customer_id = $customer->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:enable
-				$value    = '<a href="' . esc_url( $view_url ) . '">' . $customer->get_attachment_image() . '</a>';
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
+				$value    = '<a href="' . esc_url( $view_url ) . '"><img src="' . $customer->get_avatar_url() . '" height="36" width="36" alt="' . $customer->get_name() . '"></a>';
 				break;
 			case 'name':
-				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:enable
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', 'customer_id' => $customer_id, ) );// phpcs:enable
-				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'delete', 'customer_id' => $customer_id, '_wpnonce' => wp_create_nonce( 'customer-nonce' ), ) );// phpcs:enable
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $customer_id, ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', 'customer_id' => $customer_id, ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'delete', 'customer_id' => $customer_id, '_wpnonce' => wp_create_nonce( 'customer-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
-					'view' => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ),__( 'View', 'wp-ever-accounting' ) ),
-					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ),__( 'Edit', 'wp-ever-accounting' ) ),
-					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ),__( 'Delete', 'wp-ever-accounting' ) ),
+					'view'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $view_url ), __( 'View', 'wp-ever-accounting' ) ),
+					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
+					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 
-				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
-				$value    .= '<br>';
-				$value    .= '<small class=meta>' . $customer->get_company() . '</small>';
-				$value    .= $this->row_actions( $actions );
+				$value  = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
+				$value .= '<br>';
+				$value .= '<small class=meta>' . $customer->get_company() . '</small>';
+				$value .= $this->row_actions( $actions );
 				break;
 
 			case 'email':
@@ -244,7 +244,7 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 				$value .= '</label>';
 				break;
 			case 'due':
-				$value = eaccounting_format_price($customer->get_total_due());
+				$value = eaccounting_format_price( $customer->get_total_due() );
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
@@ -420,7 +420,7 @@ class EAccounting_Customer_List_Table extends EAccounting_List_Table {
 
 		$this->items = eaccounting_get_customers( $args );
 
-		$this->active_count = eaccounting_get_customers(
+		$this->active_count   = eaccounting_get_customers(
 			array_merge(
 				$args,
 				array(

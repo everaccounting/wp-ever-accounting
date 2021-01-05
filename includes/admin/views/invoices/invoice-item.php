@@ -10,29 +10,24 @@
 
 use EverAccounting\Models\DocumentItem;
 use EverAccounting\Models\Invoice;
-$edit_mode = isset( $mode ) && $mode === 'edit';
 
 defined( 'ABSPATH' ) || exit;
 ?>
 <tr class="ea-document__line" data-item_id="<?php echo esc_attr( $item_id ); ?>">
-	<?php if ( $edit_mode ) : ?>
-		<td class="ea-document__line-actions" width="1%">
-			<a class="save-line tips" href="#" data-tip="<?php esc_attr_e( 'Save item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-yes">&nbsp;</span></a>
-			<a class="edit-line tips" href="#" data-tip="<?php esc_attr_e( 'Edit item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-edit">&nbsp;</span></a>
-			<a class="delete-line tips" href="#" data-tip="<?php esc_attr_e( 'Delete item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-no">&nbsp;</span></a>
-		</td>
-	<?php endif; ?>
+	<td class="ea-document__line-actions" width="1%">
+		<a class="save-line tips" href="#" data-tip="<?php esc_attr_e( 'Save item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-yes">&nbsp;</span></a>
+		<a class="edit-line tips" href="#" data-tip="<?php esc_attr_e( 'Edit item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-edit">&nbsp;</span></a>
+		<a class="delete-line tips" href="#" data-tip="<?php esc_attr_e( 'Delete item', 'wp-ever-accounting' ); ?>"><span class="dashicons dashicons-no">&nbsp;</span></a>
+	</td>
 
 	<td class="ea-document__line-name" colspan="2">
 		<input type="hidden" class="line_item_id" name="items[<?php echo absint( $item_id ); ?>][item_id]" value="<?php echo esc_attr( $item->get_item_id() ); ?>"/>
 		<div class="view">
 			<?php echo esc_html( $item->get_item_name( 'view' ) ); ?>
 		</div>
-		<?php if ( $edit_mode ) : ?>
 		<div class="edit" style="display: none;">
 			<input type="text" class="line_item_name" name="items[<?php echo absint( $item_id ); ?>][item_name]" value="<?php echo esc_attr( $item->get_item_name() ); ?>" required/>
 		</div>
-		<?php endif; ?>
 	</td>
 	<?php do_action( 'eaccounting_invoice_item_values', $item_id, $item, $invoice ); ?>
 
@@ -40,33 +35,27 @@ defined( 'ABSPATH' ) || exit;
 		<div class="view">
 			<?php echo esc_html( eaccounting_price( $item->get_price(), $invoice->get_currency_code() ) ); ?>
 		</div>
-		<?php if ( $edit_mode ) : ?>
 		<div class="edit" style="display: none;">
 			<input type="number" step="0.05" min="0" class="line_item_price" name="items[<?php echo $item_id; ?>][price]" value="<?php echo esc_attr( $item->get_price() ); ?>" required/>
 		</div>
-		<?php endif; ?>
 	</td>
 
 	<td class="ea-document__line-quantity" width="1%" data-value="">
 		<div class="view">
 			<?php echo '<small class="times">&times;</small> ' . esc_html( $item->get_quantity() ); ?>
 		</div>
-		<?php if ( $edit_mode ) : ?>
 		<div class="edit" style="display: none;">
 			<input type="number" step="1" min="1"  autocomplete="off" name="items[<?php echo absint( $item_id ); ?>][quantity]" placeholder="0" value="<?php echo esc_attr( $item->get_quantity() ); ?>" size="4" class="line_item_quantity" required/>
 		</div>
-		<?php endif; ?>
 	</td>
 	<?php if ( eaccounting_tax_enabled() ) : ?>
 		<td class="ea-document__line-tax" width="1%">
 			<div class="view">
-				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $invoice->get_currency_code() ) ); ?>"><?php echo esc_html( $item->get_tax_rate() ); ?><small>%</small></abbr>
+				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $invoice->get_currency_code() ) ); ?>"><?php echo esc_html( number_format_i18n( $item->get_tax_rate(), 2 ) ); ?><small>%</small></abbr>
 			</div>
-			<?php if ( $edit_mode ) : ?>
 			<div class="edit" style="display: none;">
 				<input type="number" step="0.05" min="0" max="1000" class="line_item_tax" name="items[<?php echo absint( $item_id ); ?>][tax_rate]" value="<?php echo esc_attr( $item->get_tax_rate() ); ?>" required>
 			</div>
-			<?php endif; ?>
 		</td>
 	<?php endif; ?>
 

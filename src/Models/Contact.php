@@ -34,7 +34,7 @@ abstract class Contact extends ResourceModel {
 	 *
 	 * @var string
 	 */
-	protected $cache_group = 'ea_contact';
+	protected $cache_group = 'ea_contacts';
 
 	/**
 	 * Repository name.
@@ -545,8 +545,8 @@ abstract class Contact extends ResourceModel {
 	 * @return string
 	 */
 	public function get_avatar_url( $args = array() ) {
-		if ( ! empty( $this->get_thumbnail_id() ) && $this->get_attachment() ) {
-			return $this->get_attachment()->src;
+		if ( ! empty( $this->get_thumbnail_id() ) && $url = wp_get_attachment_thumb_url( $this->get_thumbnail_id() ) ) { //phpcs:ignore
+			return $url;
 		}
 
 		return get_avatar_url( $this->get_email(), wp_parse_args( $args, array( 'size' => '100' ) ) );

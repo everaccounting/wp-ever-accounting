@@ -135,11 +135,9 @@ abstract class ResourceRepository {
 		if ( false === $result ) {
 			throw new \Exception( $wpdb->last_error );
 		}
-
 		if ( $result ) {
 			$item->set_id( $wpdb->insert_id );
 			$item->apply_changes();
-			$item->clear_cache();
 			do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $values );
 
 			return true;

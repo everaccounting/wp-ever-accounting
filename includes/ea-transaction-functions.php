@@ -321,7 +321,7 @@ function eaccounting_insert_transfer( $args, $wp_error = true ) {
 		// The id will be provided when updating an item.
 		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-		if ( $args['from_account_id'] == $args['to_account_id'] ) {
+		if ( $args['from_account_id'] == $args['to_account_id'] ) { //phpcs:ignore
 			throw new \Exception( __( "Source and Destination account can't be same.", 'wp-ever-accounting' ) );
 		}
 
@@ -381,74 +381,108 @@ function eaccounting_delete_transfer( $transfer_id ) {
  * @return array|int
  */
 function eaccounting_get_transfers( $args = array() ) {
-	global $wpdb;
-	$search_cols  = array( 'income.description', 'income.reference' );
-	$orderby_cols = array(
-		'id',
-		'date',
-	);
-	$fields       = array(
-		'ea_transfers.*',
-		'expense.account_id from_account_id',
-		'income.account_id to_account_id',
-		'income.description description',
-		'income.reference reference',
-		'income.amount amount',
-	);
-
-	// Prepare args.
+	//Prepare args.
 	$args = wp_parse_args(
 		$args,
 		array(
-			'include'      => '',
-			'search'       => '',
-			'from_id'      => '',
-			'search_cols'  => $search_cols,
-			'orderby_cols' => $orderby_cols,
-			'fields'       => $fields,
-			'orderby'      => 'id',
-			'order'        => 'ASC',
-			'number'       => 20,
-			'offset'       => 0,
-			'paged'        => 1,
-			'return'       => 'objects',
-			'count_total'  => false,
+			'include'     => '',
+			'search'      => '',
+			'from_id'     => '',
+			'fields'      => '',
+			'orderby'     => 'date_created',
+			'order'       => 'ASC',
+			'number'      => 20,
+			'offset'      => 0,
+			'paged'       => 1,
+			'return'      => 'objects',
+			'count_total' => false,
 		)
 	);
+	global $wpdb;
+	$qv           = apply_filters( 'eaccounting_get_transfers_args', $args );
+	$table        = \EverAccounting\Repositories\Transfers::TABLE;
+	$columns      = \EverAccounting\Repositories\Transfers::get_columns();
+	$qv['fields'] = wp_parse_list( $qv['fields'] );
+	foreach ( $qv['fields'] as $index => $field ) {
+		if ( ! in_array( $field, $columns, true ) ) {
+			unset( $qv['fields'][ $index ] );
+		}
+	}
+	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : 'ea_transfers.*';
+	$where  = 'WHERE 1=1';
 
-	$qv    = apply_filters( 'eaccounting_get_transfer_args', $args );
-	$table = 'ea_transfers';
-
-	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
-	$query_from    = eaccounting_prepare_query_from( $table );
-	$query_where  = "WHERE 1=1";
-	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
-	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
-	$query_limit   = eaccounting_prepare_query_limit( $qv );
-	$query_join    = '';
-	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
-	$query_join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
-	if ( ! empty( $qv['from_id'] ) ) {
-		$from_id      = implode( ',', wp_parse_id_list( $qv['from_id'] ) );
-		$query_where .= " AND expense.`account_id` IN ($from_id)";
+	if ( ! empty( $qv['include'] ) ) {
+		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
+		$where  .= " AND $table.`id` IN ($include)";
+	} elseif ( ! empty( $qv['exclude'] ) ) {
+		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
+	if ( ! empty( $qv['from_account_id'] ) ) {
+		$from_account_in = implode( ',', wp_parse_id_list( $qv['from_account_id'] ) );
+		$where          .= " AND expense.`from_account_id` IN ($from_account_in)";
+	}
+
+	if ( ! empty( $qv['to_account_id'] ) ) {
+		$to_account_in = implode( ',', wp_parse_id_list( $qv['to_account_id'] ) );
+		$where        .= " AND expense.`to_account_id` IN ($to_account_in)";
+	}
+
+	$join  = " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
+	$join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
+
+	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
+		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
+		$where             .= $date_created_query->get_sql();
+	}
+
+	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
+		$date_created_query = new \WP_Date_Query( $qv['payment_date'], 'expense.payment_date' );
+		$where             .= $date_created_query->get_sql();
+	}
+
+	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
+	$orderby = empty( $qv['orderby'] ) ? 'date_created' : eaccounting_clean( $qv['orderby'] );
+	if ( in_array( $qv['orderby'], $columns, true ) ) {
+		$orderby = "$table." . $qv['orderby'];
+	} elseif ( in_array( $qv['orderby'], array( 'from_account_id' ), true ) ) {
+		$orderby = 'expense.account_id';
+	} elseif ( in_array( $qv['orderby'], array( 'amount', 'reference' ), true ) ) {
+		$orderby = 'expense.' . $qv['orderby'];
+	} elseif ( in_array( $qv['orderby'], array( 'to_account_id' ), true ) ) {
+		$orderby = 'income.account_id';
+	}else{
+		$orderby = "$table.id";
+	}
+
+	$limit = '';
+	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
+		if ( $qv['offset'] ) {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
+		} else {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
+		}
+	}
+	$select      = "SELECT {$fields}";
+	$from        = "FROM {$wpdb->prefix}$table $table";
+	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = md5( serialize( $qv ) );
-	$results     = wp_cache_get( $cache_key, 'eaccounting_transaction' );
-	$request     = "SELECT $query_fields $query_from $query_join $query_where $query_orderby $query_limit";
+	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
+	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transfers' );
+	$results     = wp_cache_get( $cache_key, 'ea_transfers' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( $request );
-			wp_cache_set( $cache_key, $results, 'eaccounting_transfer' );
+			$results = (int) $wpdb->get_var( "SELECT COUNT($table.id) $from $join $where" );
+			wp_cache_set( $cache_key, $results, 'ea_transfers' );
 		} else {
-			$results = $wpdb->get_results( $request );
-			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			if ( in_array( $fields, array( 'all', '*', 'ea_transfers.*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
-					wp_cache_set( $item->id, $item, 'eaccounting_transfer' );
+					wp_cache_set( $item->id, $item, 'ea_transfers' );
 				}
 			}
-			wp_cache_set( $cache_key, $results, 'eaccounting_transfer' );
+			wp_cache_set( $cache_key, $results, 'ea_transfers' );
 		}
 	}
 
@@ -592,7 +626,7 @@ function eaccounting_get_transactions( $args = array() ) {
 	$from        = "FROM {$wpdb->prefix}$table $table";
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
-	$cache_key   = md5( serialize( $qv ) );
+	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transactions' );
 	$results     = wp_cache_get( $cache_key, 'ea_transactions' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 
@@ -602,7 +636,7 @@ function eaccounting_get_transactions( $args = array() ) {
 			wp_cache_set( $cache_key, $results, 'ea_transactions' );
 		} else {
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
 					wp_cache_set( $item->id, $item, 'ea_transactions' );
 				}
@@ -643,8 +677,9 @@ function eaccounting_get_transactions( $args = array() ) {
 /**
  * Get total income.
  *
- * @param null $year
  * @since 1.1.0
+ *
+ * @param null $year
  *
  * @return float
  */
@@ -674,8 +709,9 @@ function eaccounting_get_total_income( $year = null ) {
 /**
  * Get total expense.
  *
- * @param null $year
  * @since 1.1.0
+ *
+ * @param null $year
  *
  * @return float
  */
@@ -705,8 +741,9 @@ function eaccounting_get_total_expense( $year = null ) {
 /**
  * Get total profit.
  *
- * @param null $year
  * @since 1.1.0
+ *
+ * @param null $year
  *
  * @return float
  */
@@ -809,6 +846,7 @@ function eaccounting_get_total_payable() {
 
 /**
  * Get total upcoming profit
+ *
  * @since 1.1.0
  * @return float
  */

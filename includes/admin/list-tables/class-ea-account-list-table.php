@@ -202,23 +202,25 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 		$account_id = $account->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:enable
-				$value    = '<a href="' . esc_url( $view_url ) . '">' . $account->get_attachment_image() . '</a>';
+				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:ignore
+				$thumb_url = wp_get_attachment_thumb_url( $account->get_thumbnail_id() );
+				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/images/placeholder-logo.png' ) : $thumb_url;
+				$value     = '<a href="' . esc_url( $view_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $account->get_name() . '"></a>';
 				break;
 
 			case 'name':
 				$nonce    = wp_create_nonce( 'account-nonce' );
-				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:enable
-				$edit_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'edit','account_id'=>$account_id));// phpcs:enable
-				$del_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'delete','account_id'=>$account_id,'_wpnonce'=>$nonce));// phpcs:enable
+				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'edit','account_id'=>$account_id));// phpcs:ignore
+				$del_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'delete','account_id'=>$account_id,'_wpnonce'=>$nonce));// phpcs:ignore
 
-				$actions  = array(
+				$actions = array(
 					'id'     => 'ID: ' . $account_id,
 					'view'   => '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>',
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
-				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
+				$value   = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'balance':
 				$value = $account->format_amount( $account->get_balance() );
@@ -331,7 +333,7 @@ class EAccounting_Account_List_Table extends EAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url(array( 'tab' => 'accounts' ));
+		$base           = eaccounting_admin_url( array( 'tab' => 'accounts' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';

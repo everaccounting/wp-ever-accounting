@@ -129,6 +129,7 @@ class Documents extends ResourceRepository {
 	public function delete_items( $item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . DocumentItems::TABLE, array( 'document_id' => $item->get_id() ) );
+		eaccounting_cache_set_last_changed( 'ea_document_items' );
 	}
 
 	/**
@@ -147,12 +148,17 @@ class Documents extends ResourceRepository {
 				'type'      => $item->get_type(),
 			)
 		);
+		eaccounting_cache_set_last_changed( 'ea_notes' );
 	}
 
+	/**
+	 * @param $item
+	 * @since 1.1.0 Delete all related transactions.
+	 */
 	public function delete_transactions( $item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . Transactions::TABLE, array( 'document_id' => $item->get_id() ) );
-		wp_cache_flush();
+		eaccounting_cache_set_last_changed( 'ea_transactions' );
 	}
 
 	/**
