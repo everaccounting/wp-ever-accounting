@@ -11,8 +11,8 @@
 defined( 'ABSPATH' ) || exit;
 
 function eaccounting_update_1_0_2() {
-	EAccounting_Install::create_tables();
-	EAccounting_Install::create_roles();
+	EverAccounting_Install::create_tables();
+	EverAccounting_Install::create_roles();
 
 	global $wpdb;
 	$prefix          = $wpdb->prefix;

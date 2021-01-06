@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-item-list-table.php' );
-$items_table = new EAccounting_Item_List_Table();
+$items_table = new EverAccounting_Item_List_Table();
 $items_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

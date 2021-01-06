@@ -8,7 +8,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
+class EverAccounting_Reports_Controller extends EverAccounting_REST_Controller {
 	/**
 	 * @var string
 	 */
@@ -433,7 +433,7 @@ class EAccounting_Reports_Controller extends EAccounting_REST_Controller {
 		$category_id     = ! empty( $request->category_id ) ? absint( $request->category_id ) : '';
 		$financial_start = eaccounting_get_financial_start( $year );
 
-		$transactions = EAccounting_Transactions::init();
+		$transactions = EverAccounting_Transactions::init();
 		global $wpdb;
 		$categories   = $wpdb->get_results( "SELECT id, name FROM $wpdb->ea_categories WHERE type='income' ORDER BY name ASC", ARRAY_A );
 		$category_ids = wp_list_pluck( $categories, 'id' );

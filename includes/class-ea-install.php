@@ -7,7 +7,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Install {
+class EverAccounting_Install {
 	/**
 	 * Updates and callbacks that need to be run per version.
 	 *
@@ -188,7 +188,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_options() {
-		$settings = new EAccounting_Settings();
+		$settings = new EverAccounting_Settings();
 		if ( empty( $settings->get( 'financial_year_start' ) ) ) {
 			$settings->set( array( 'financial_year_start' => '01-01' ) );
 		}
@@ -337,7 +337,7 @@ class EAccounting_Install {
 	 * @return void
 	 */
 	private static function create_defaults() {
-//		$settings = new EAccounting_Settings;
+//		$settings = new EverAccounting_Settings;
 //		$account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
 //		if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
 //			$settings->set( array( 'default_account' => $account->id ) );
@@ -859,4 +859,4 @@ class EAccounting_Install {
 
 }
 
-EAccounting_Install::init();
+EverAccounting_Install::init();

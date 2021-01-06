@@ -13,7 +13,7 @@
  * @since   1.0.2
  * @package EverAccounting\Admin
  */
-class EAccounting_Settings {
+class EverAccounting_Settings {
 	/**
 	 * Stores all settings.
 	 *

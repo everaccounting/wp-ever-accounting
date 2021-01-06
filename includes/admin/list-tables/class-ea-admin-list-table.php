@@ -14,7 +14,7 @@ if ( ! class_exists( '\WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
-abstract class EAccounting_List_Table extends \WP_List_Table {
+abstract class EverAccounting_List_Table extends \WP_List_Table {
 	/**
 	 * Optional arguments to pass when preparing items.
 	 *

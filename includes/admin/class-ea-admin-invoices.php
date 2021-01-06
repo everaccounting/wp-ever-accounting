@@ -14,10 +14,10 @@ use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Admin_Invoices {
+class EverAccounting_Admin_Invoices {
 
 	/**
-	 * EAccounting_Admin_Invoices constructor.
+	 * EverAccounting_Admin_Invoices constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eaccounting_invoice_action', array( $this, 'invoice_action' ) );
@@ -168,4 +168,4 @@ class EAccounting_Admin_Invoices {
 	}
 }
 
-return new \EAccounting_Admin_Invoices();
+return new \EverAccounting_Admin_Invoices();

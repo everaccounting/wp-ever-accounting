@@ -24,7 +24,7 @@ $args = array(
 	),
 );
 
-$list_table = new EAccounting_Transfer_List_Table( $args );
+$list_table = new EverAccounting_Transfer_List_Table( $args );
 $list_table->prepare_items();
 $list_table->views();
 $list_table->display();

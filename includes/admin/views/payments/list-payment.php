@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-payment-list-table.php' );
-$payments_table = new EAccounting_Payment_List_Table();
+$payments_table = new EverAccounting_Payment_List_Table();
 $payments_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

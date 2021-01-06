@@ -10,7 +10,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-bill-list-table.php' );
-$bill_table = new EAccounting_Bill_List_Table();
+$bill_table = new EverAccounting_Bill_List_Table();
 $bill_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(
@@ -24,6 +24,7 @@ $add_url = eaccounting_admin_url(
 	<a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
+	<hr class="wp-header-end">
 <?php do_action( 'eaccounting_bills_table_top' ); ?>
 	<form id="ea-bills-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 		<?php

@@ -12,9 +12,9 @@
 
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Admin_Item {
+class EverAccounting_Admin_Item {
 	/**
-	 * EAccounting_Admin_Banking constructor.
+	 * EverAccounting_Admin_Banking constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 20 );
@@ -81,4 +81,4 @@ class EAccounting_Admin_Item {
 
 }
 
-new EAccounting_Admin_Item();
+new EverAccounting_Admin_Item();

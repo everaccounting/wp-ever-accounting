@@ -4,17 +4,17 @@ use EverAccounting\Transaction;
 use EverAccounting\Account;
 
 /**
- * Class EAccounting_Tests_Revenue.
- * @package EAccounting\Tests\Revenue
+ * Class EverAccounting_Tests_Revenue.
+ * @package EverAccounting\Tests\Revenue
  */
-class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Revenue extends EverAccounting_Unit_Test_Case {
 	public function test_create_revenue() {
 
-		$account    = EAccounting_Helper_Account::create_account();
+		$account    = EverAccounting_Helper_Account::create_account();
 		$account_id = $account->get_id();
 		$this->assertNotFalse( $account->exists() );
 
-		$category    = EAccounting_Helper_Category::create_category( 'Income Category', 'income' );
+		$category    = EverAccounting_Helper_Category::create_category( 'Income Category', 'income' );
 		$category_id = $category->get_id();
 		$this->assertNotFalse( $category->exists() );
 
@@ -42,12 +42,12 @@ class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_update_revenue() {
-		$account    = EAccounting_Helper_Account::create_account();
+		$account    = EverAccounting_Helper_Account::create_account();
 		$account_id = $account->get_id();
 		$this->assertNotFalse( $account->exists() );
 
 		//create category for revenue
-		$category    = EAccounting_Helper_Category::create_category( 'Income Category', 'income' );
+		$category    = EverAccounting_Helper_Category::create_category( 'Income Category', 'income' );
 		$category_id = $category->get_id();
 		$this->assertNotFalse( $category->exists() );
 
@@ -99,7 +99,7 @@ class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_revenue() {
-		$revenue = EAccounting_Helper_Revenue::create_revenue();
+		$revenue = EverAccounting_Helper_Revenue::create_revenue();
 		$this->assertNotEquals( 0, $revenue->get_id() );
 		$this->assertNotFalse( eaccounting_delete_transaction( $revenue->get_id() ) );
 	}
@@ -140,8 +140,8 @@ class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
 		) );
 		$this->assertEquals( 'Account is required.', $revenue->get_error_message() );
 
-		$account  = EAccounting_Helper_Account::create_account();
-		$category = EAccounting_Helper_Category::create_category();
+		$account  = EverAccounting_Helper_Account::create_account();
+		$category = EverAccounting_Helper_Category::create_category();
 
 		$revenue = eaccounting_insert_transaction( array(
 			'account_id'     => $account->get_id(),
@@ -152,8 +152,8 @@ class EAccounting_Tests_Revenue extends EAccounting_Unit_Test_Case {
 		) );
 		$this->assertEquals( 'Transaction type and category type does not match.', $revenue->get_error_message() );
 
-		$contact = EAccounting_Helper_Contact::create_contact();
-		$category = EAccounting_Helper_Category::create_category('Income','income');
+		$contact = EverAccounting_Helper_Contact::create_contact();
+		$category = EverAccounting_Helper_Category::create_category('Income','income');
 
 		$revenue = eaccounting_insert_transaction( array(
 			'account_id'     => $account->get_id(),

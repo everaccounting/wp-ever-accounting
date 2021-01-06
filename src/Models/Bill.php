@@ -270,7 +270,7 @@ class Bill extends Document {
 			'item_id'       => $product->get_id(),
 			'item_name'     => $product->get_name(),
 			'price'         => $product->get_purchase_price(),
-			'currency_code' => $this->get_currency_code() ? $this->get_currency_code() : $default_currency,
+			'currency_code' => $default_currency,
 			'quantity'      => 1,
 			'tax_rate'      => eaccounting_tax_enabled() ? $product->get_purchase_tax() : 0,
 		);
@@ -280,6 +280,11 @@ class Bill extends Document {
 		}
 		$args = wp_parse_args( $args, $default );
 		$item->set_props( $args );
+		$item->set_props( $args );
+		if ( $item->get_currency_code() !== $this->get_currency_code() ) {
+			$converted = eaccounting_price_convert( $item->get_price(), $item->get_currency_code(), $this->get_currency_code() );
+			$item->set_price( $converted );
+		}
 
 		//Now prepare
 		$this->items[ $item->get_item_id() ] = $item;

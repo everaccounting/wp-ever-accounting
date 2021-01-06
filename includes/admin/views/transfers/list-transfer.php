@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-transfer-list-table.php' );
-$transfers_table = new EAccounting_Transfer_List_Table();
+$transfers_table = new EverAccounting_Transfer_List_Table();
 $transfers_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

@@ -65,6 +65,31 @@ function eaccounting_get_category( $category ) {
 }
 
 /**
+ * Get category by name.
+ *
+ * @param $name
+ * @param $type
+ * @since 1.1.0
+ *
+ * @return \EverAccounting\Models\Category|null
+ */
+function eaccounting_get_category_by_name( $name, $type ) {
+	global $wpdb;
+	$cache_key = "$name-$type";
+	$category  = wp_cache_get( $cache_key, 'ea_categories' );
+	if ( false === $category ) {
+		$category = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories where `name`=%s AND `type`=%s", eaccounting_clean( $name ), eaccounting_clean( $type ) ) );
+		wp_cache_set( $cache_key, $category, 'ea_categories' );
+	}
+	if ( $category ) {
+		wp_cache_set( $category->id, $category, 'ea_categories' );
+		return eaccounting_get_category( $category );
+	}
+
+	return null;
+}
+
+/**
  * Insert a category.
  *
  * @since 1.1.0

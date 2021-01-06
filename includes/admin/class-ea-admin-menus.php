@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 class Admin_Menus {
 
 	/**
-	 * EAccounting_Admin_Menus constructor.
+	 * EverAccounting_Admin_Menus constructor.
 	 *
 	 * @version 1.0.2
 	 */

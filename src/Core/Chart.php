@@ -11,7 +11,7 @@ namespace EverAccounting\Core;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * EAccounting_Graph Class
+ * EverAccounting_Graph Class
  *
  * @since 1.0.2
  */
@@ -153,7 +153,7 @@ class Chart {
 	 * Set line chart options.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return object
 	 */
 	public function set_line_options() {

@@ -13,7 +13,7 @@ $args       = array(
 		'hide_extra_table_nav' => true,
 	),
 );
-$list_table = new EAccounting_Payment_List_Table( $args );
+$list_table = new EverAccounting_Payment_List_Table( $args );
 $list_table->prepare_items();
 $list_table->views();
 $list_table->display();

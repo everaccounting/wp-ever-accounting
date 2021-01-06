@@ -11,15 +11,15 @@ use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit();
 
-if ( ! class_exists( '\EAccounting_List_Table' ) ) {
+if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 	require_once dirname( __FILE__ ) . '/class-ea-admin-list-table.php';
 }
 
 /**
- * Class EAccounting_Currency_List_Table
+ * Class EverAccounting_Currency_List_Table
  * @since 1.1.0
  */
-class EAccounting_Currency_List_Table extends EAccounting_List_Table {
+class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *

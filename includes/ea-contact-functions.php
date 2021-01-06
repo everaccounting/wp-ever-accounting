@@ -66,6 +66,35 @@ function eaccounting_get_customer( $customer ) {
 }
 
 /**
+ * Get customer by email.
+ *
+ * @since 1.1.0
+ *
+ * @param $email
+ *
+ * @return \EverAccounting\Models\Customer
+ */
+function eaccounting_get_customer_by_email( $email ) {
+	global $wpdb;
+	$email = sanitize_email( $email );
+	if ( empty( $email ) ) {
+		return null;
+	}
+	$cache_key = "customer-email-$email";
+	$customer  = wp_cache_get( $cache_key, 'ea_contacts' );
+	if ( false === $customer ) {
+		$customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='customer'", eaccounting_clean( $email ) ) );
+		wp_cache_set( $cache_key, $customer, 'ea_contacts' );
+	}
+	if ( $customer ) {
+		wp_cache_set( $customer->id, $customer, 'ea_contacts' );
+		return eaccounting_get_customer( $customer );
+	}
+
+	return null;
+}
+
+/**
  *  Create new customer programmatically.
  *
  *  Returns a new customer object on success.
@@ -189,6 +218,36 @@ function eaccounting_get_vendor( $vendor ) {
 		return null;
 	}
 }
+
+/**
+ * Get vendor by email.
+ *
+ * @since 1.1.0
+ *
+ * @param $email
+ *
+ * @return \EverAccounting\Models\Vendor
+ */
+function eaccounting_get_vendor_by_email( $email ) {
+	global $wpdb;
+	$email = sanitize_email( $email );
+	if ( empty( $email ) ) {
+		return null;
+	}
+	$cache_key = "vendor-email-$email";
+	$vendor    = wp_cache_get( $cache_key, 'ea_contacts' );
+	if ( false === $vendor ) {
+		$vendor = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='vendor'", eaccounting_clean( $email ) ) );
+		wp_cache_set( $cache_key, $vendor, 'ea_contacts' );
+	}
+	if ( $vendor ) {
+		wp_cache_set( $vendor->id, $vendor, 'ea_contacts' );
+		return eaccounting_get_vendor( $vendor );
+	}
+
+	return null;
+}
+
 
 /**
  *  Create new vendor programmatically.
@@ -424,6 +483,9 @@ function eaccounting_get_contacts( $args = array() ) {
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
+					if ( ! empty( $item->email ) ) {
+						wp_cache_set( $item->type . '-email-' . $item->email, $item, 'ea_contacts' );
+					}
 					wp_cache_set( $item->id, $item, 'ea_contacts' );
 				}
 			}

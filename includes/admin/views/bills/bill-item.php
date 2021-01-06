@@ -22,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<td class="ea-document__line-name" colspan="2">
 		<input type="hidden" class="line_item_id" name="items[<?php echo absint( $item_id ); ?>][item_id]" value="<?php echo esc_attr( $item->get_item_id() ); ?>"/>
+		<input type="hidden" class="line_item_currency" name="items[<?php echo absint( $item_id ); ?>][currency_code]" value="<?php echo esc_attr( $bill->get_currency_code() ); ?>"/>
 		<div class="view">
 			<?php echo esc_html( $item->get_item_name( 'view' ) ); ?>
 		</div>

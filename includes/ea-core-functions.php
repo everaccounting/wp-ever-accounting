@@ -284,6 +284,39 @@ function eaccounting_price_convert_between( $amount, $from_code, $from_rate, $to
 }
 
 /**
+ * Convert price convert between currency.
+ *
+ * @param      $amount
+ * @param      $from_currency
+ * @param null $to_currency
+ * @param null $from_rate
+ * @param null $to_rate
+ * @since 1.1.0
+ *
+ * @return float|int|string
+ */
+function eaccounting_price_convert( $amount, $from_currency, $to_currency = null, $from_rate = null, $to_rate = null ) {
+	$default = eaccounting()->settings->get( 'default_currency', 'USD' );
+	if ( is_null( $to_currency ) ) {
+		$to_currency = $default;
+	}
+	if ( is_null( $from_rate ) ) {
+		$from_currency = eaccounting_get_currency( $from_currency );
+		$from_rate     = $from_currency->get_rate();
+	}
+	if ( is_null( $to_rate ) ) {
+		$to_currency = eaccounting_get_currency( $to_currency );
+		$to_rate     = $to_currency->get_rate();
+	}
+
+	if ( $from_currency !== $default ) {
+		$default_amount = eaccounting_price_convert_to_default( $amount, $from_currency, $from_rate );
+	}
+
+	return eaccounting_price_convert_from_default( $default_amount, $to_currency, $to_rate, false, $from_currency );
+}
+
+/**
  * Get payment methods.
  *
  * @since 1.0.2
