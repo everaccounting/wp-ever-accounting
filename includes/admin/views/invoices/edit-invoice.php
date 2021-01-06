@@ -171,7 +171,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 			<?php submit_button( __( 'Submit', 'wp-ever-accounting' ), 'primary', 'submit' ); ?>
 		</div>
 	</div>
-	<?php eaccounting_hidden_input( 'currency_rate', $invoice->get_currency_rate() ); ?>
+	<?php //eaccounting_hidden_input( 'currency_rate', $invoice->get_currency_rate() ); ?>
 	<?php eaccounting_hidden_input( 'id', $invoice->get_id() ); ?>
 	<?php eaccounting_hidden_input( 'discount', $invoice->get_discount() ); ?>
 	<?php eaccounting_hidden_input( 'discount_type', $invoice->get_discount_type() ); ?>
