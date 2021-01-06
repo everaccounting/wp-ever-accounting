@@ -203,38 +203,16 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				$invoice_number = $invoice->get_invoice_number();
 
 				$nonce    = wp_create_nonce( 'invoice-nonce' );
-				$view_url = eaccounting_admin_url(
-					array(
-						'page'       => 'ea-sales',
-						'tab'        => 'invoices',
-						'action'     => 'view',
-						'invoice_id' => $invoice_id,
-					)
-				);// phpcs:ignore
-				$edit_url = eaccounting_admin_url(
-					array(
-						'page'       => 'ea-sales',
-						'tab'        => 'invoices',
-						'action'     => 'edit',
-						'invoice_id' => $invoice_id,
-					)
-				);// phpcs:ignore
-				$del_url  = eaccounting_admin_url(
-					array(
-						'page'       => 'ea-sales',
-						'tab'        => 'invoices',
-						'action'     => 'delete',
-						'invoice_id' => $invoice_id,
-						'_wpnonce'   => $nonce,
-					)
-				);// phpcs:ignore
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'view', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'delete', 'invoice_id' => $invoice_id, '_wpnonce' => $nonce, ) );// phpcs:ignore
 
-				$actions           = array();
-				$actions['view']   = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
-				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
+				$actions         = array();
+				$actions['view'] = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
 				if ( $invoice->is_editable() ) {
 					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 				}
+				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
 				$value = '<a href="' . esc_url( $view_url ) . '">' . $invoice_number . '</a>' . $this->row_actions( $actions );
 				break;
