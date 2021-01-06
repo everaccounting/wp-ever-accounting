@@ -20,11 +20,28 @@ try {
 
 $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add Item', 'wp-ever-accounting' );
 ?>
+	<div class="ea-row">
+		<div class="ea-col-7">
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Items', 'wp-ever-accounting' ); ?></h1>
+			<?php if ( $item->exists() ) : ?>
+				<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'items', 'page' => 'ea-items', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+					<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+				</a>
+			<?php else : ?>
+				<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+			<?php endif; ?>
+		</div>
+
+		<div class="ea-col-5">
+
+		</div>
+	</div>
+	<hr class="wp-header-end">
+
 	<form id="ea-item-form" method="post" enctype="multipart/form-data">
 		<div class="ea-card">
 			<div class="ea-card__header">
 				<h3 class="ea-card__title"><?php echo $title; ?></h3>
-				<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 			</div>
 			<div class="ea-card__inside">
 
@@ -94,8 +111,8 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 								'type'          => 'number',
 								'attr'          => array(
 									'step' => .1,
-									'min' => 0,
-									'max' => 100,
+									'min'  => 0,
+									'max'  => 100,
 								),
 							)
 						);
@@ -110,8 +127,8 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 								'type'          => 'number',
 								'attr'          => array(
 									'step' => .1,
-									'min' => 0,
-									'max' => 100,
+									'min'  => 0,
+									'max'  => 100,
 								),
 							)
 						);

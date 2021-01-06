@@ -51,19 +51,31 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-banking.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-sales.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-invoices.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-revenues.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-customers.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-expenses.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-items.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-bills.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-payments.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-vendors.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-transactions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-accounts.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-transfers.php';
 
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-reports.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-tools.php';
+
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) {
 			switch ( $_GET['page'] ) {
 				case 'ea-setup':
 					include_once dirname( __FILE__ ) . '/class-ea-admin-setup.php';
 					break;
+					case 'ea-release':
+					include_once dirname( __FILE__ ) . '/class-ea-admin-release.php';
+					break;
 			}
+
 		}
 	}
 

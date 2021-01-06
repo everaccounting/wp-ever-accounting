@@ -17,11 +17,25 @@ try {
 }
 $back_url = remove_query_arg( array( 'action', 'category_id' ) );
 ?>
+<div class="ea-title-section">
+	<div>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Categories', 'wp-ever-accounting' ); ?></h1>
+		<?php if ( $category->exists() ) : ?>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'categories', 'page' => 'ea-settings', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+			</a>
+		<?php else : ?>
+			<a href="<?php echo remove_query_arg( array( 'action', 'id' ) ); ?>" class="page-title-action"><?php esc_html_e( 'View All', 'wp-ever-accounting' ); ?></a>
+		<?php endif; ?>
+
+	</div>
+</div>
+<hr class="wp-header-end">
+
 <form id="ea-category-form" method="post">
 <div class="ea-card">
 	<div class="ea-card__header">
 		<h3 class="ea-card__title"><?php echo $category->exists() ? __( 'Update Category', 'wp-ever-accounting' ) : __( 'Add Category', 'wp-ever-accounting' ); ?></h3>
-		<button onclick="history.go(-1);" class="button-secondary"><?php _e( 'Go Back', 'wp-ever-accounting' ); ?></button>
 	</div>
 
 	<div class="ea-card__inside">

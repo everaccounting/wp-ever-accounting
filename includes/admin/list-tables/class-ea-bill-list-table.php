@@ -192,10 +192,10 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 
 				$actions           = array();
 				$actions['view']   = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
-				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 				if ( $bill->is_editable() ) {
 					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 				}
+				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
 
 				$value = '<a href="' . esc_url( $view_url ) . '">' . $bill_number . '</a>' . $this->row_actions( $actions );
 				break;

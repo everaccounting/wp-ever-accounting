@@ -36,6 +36,17 @@ $edit_url        = eaccounting_admin_url(
 );
 
 ?>
+<div class="ea-title-section">
+	<div>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Vendors', 'wp-ever-accounting' ); ?></h1>
+		<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'vendors', 'page' => 'ea-expenses', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+		</a>
+	</div>
+</div>
+
+<hr class="wp-header-end">
+
 <div class="ea-page-columns altered ea-single-vendor">
 	<div class="ea-page-columns__content ea-mt-20">
 		<div class="ea-row">
@@ -73,7 +84,7 @@ $edit_url        = eaccounting_admin_url(
 		</div>
 
 		<div class="ea-card">
-			<nav class="nav-tab-wrapper">
+			<nav class="ea-card__nav">
 				<?php foreach ( $sections as $section_id => $section_title ) : ?>
 					<?php
 					$url = eaccounting_admin_url(
@@ -95,7 +106,7 @@ $edit_url        = eaccounting_admin_url(
 				switch ( $current_section ) {
 					case 'transactions':
 					case 'bills':
-						include dirname( __FILE__ ) . '/vendor-sections/' . sanitize_file_name( $current_section ) . '.php';
+						include dirname( __FILE__ ) . '/vendors-' . sanitize_file_name( $current_section ) . '.php';
 						break;
 					default:
 						do_action( 'eaccounting_vendor_section_' . $current_section, $vendor );

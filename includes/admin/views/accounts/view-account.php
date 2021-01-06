@@ -34,6 +34,16 @@ $edit_url        = eaccounting_admin_url(
 	)
 );
 ?>
+<div class="ea-title-section">
+	<div>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Accounts', 'wp-ever-accounting' ); ?></h1>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'accounts', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+			</a>
+	</div>
+</div>
+<hr class="wp-header-end">
+
 <div class="ea-page-columns altered ea-single-account">
 	<div class="ea-page-columns__content">
 		<div class="ea-row">
@@ -70,7 +80,7 @@ $edit_url        = eaccounting_admin_url(
 
 		</div>
 		<div class="ea-card">
-			<nav class="nav-tab-wrapper">
+			<nav class="ea-card__nav">
 				<?php foreach ( $sections as $section_id => $section_title ) : ?>
 					<?php
 					$url = eaccounting_admin_url(
@@ -92,7 +102,7 @@ $edit_url        = eaccounting_admin_url(
 				switch ( $current_section ) {
 					case 'transactions':
 					case 'transfers':
-						include dirname( __FILE__ ) . '/account-sections/' . sanitize_file_name( $current_section ) . '.php';
+						include dirname( __FILE__ ) . '/accounts-' . sanitize_file_name( $current_section ) . '.php';
 						break;
 					default:
 						do_action( 'eaccounting_account_section_' . $current_section, $account );
@@ -109,6 +119,12 @@ $edit_url        = eaccounting_admin_url(
 			<div class="ea-card__header">
 				<h3 class="ea-card__title"><?php esc_html_e( 'Account Details', 'wp-ever-accounting' ); ?></h3>
 				<a href="<?php echo esc_url( $edit_url ); ?>" class="button-secondary"><?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?></a>
+			</div>
+
+			<div class="ea-card__inside">
+				<div class="ea-avatar ea-center-block">
+					<img src="<?php echo esc_url( $account->get_attachment_url() ); ?>" alt="<?php echo esc_html( $account->get_name() ); ?>">
+				</div>
 			</div>
 
 			<div class="ea-list-group">
