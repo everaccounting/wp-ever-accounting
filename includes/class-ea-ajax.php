@@ -1045,9 +1045,10 @@ class Ajax {
 			$bill    = new Bill( $bill_id );
 			$notes   = eaccounting_get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
 		}
+
 		wp_send_json_success(
 			array(
-				'message' => __( 'Note deleted.', 'wp-ever-accounting' ),
+				'message' => __( 'Note Deleted.', 'wp-ever-accounting' ),
 				'notes'   => $notes,
 			)
 		);

@@ -152,11 +152,26 @@
 		td {
 			white-space: nowrap;
 			vertical-align: middle;
+			@media only screen and (max-width: 420px) {
+				&:first-child {
+					white-space: normal;
+				}
+			}
 		}
 
 		th, td {
 			padding: 0.8em 1em;
 			vertical-align: middle;
+			@media only screen and (max-width: 420px) {
+				&:last-child {
+					padding: .8em .5em;
+				}
+			}
+			@media only screen and (max-width: 375px) {
+				&:last-child {
+					padding: .8em .2em;
+				}
+			}
 		}
 
 		.view {
@@ -193,6 +208,11 @@
 
 	&__line-name {
 		text-align: left;
+		.view {
+			@media only screen and (max-width: 420px){
+				white-space: normal;
+			}
+		}
 	}
 
 	&__line-quantity,
@@ -366,7 +386,7 @@
 	list-style: none;
 	max-height: 300px;
 	overflow-x: hidden;
-	overflow-y: scroll;
+	//overflow-y: scroll;
 
 	&__item {
 		margin-bottom: 6px;

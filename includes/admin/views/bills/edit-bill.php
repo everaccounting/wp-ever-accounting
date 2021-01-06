@@ -45,7 +45,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 	<div class="ea-card">
 		<div class="ea-card__header">
 			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
-			<div
+			<div>
 				<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
 					<?php esc_html_e( 'View Bill', 'wp-ever-accounting' ); ?>
 				</a>
@@ -176,7 +176,6 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 		</div>
 	</div>
 
-	<?php eaccounting_hidden_input( 'currency_rate', $bill->get_currency_rate() ); ?>
 	<?php eaccounting_hidden_input( 'id', $bill->get_id() ); ?>
 	<?php eaccounting_hidden_input( 'discount', $bill->get_discount() ); ?>
 	<?php eaccounting_hidden_input( 'discount_type', $bill->get_discount_type() ); ?>
