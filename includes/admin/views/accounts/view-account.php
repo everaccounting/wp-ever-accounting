@@ -121,6 +121,12 @@ $edit_url        = eaccounting_admin_url(
 				<a href="<?php echo esc_url( $edit_url ); ?>" class="button-secondary"><?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?></a>
 			</div>
 
+			<div class="ea-card__inside">
+				<div class="ea-avatar ea-center-block">
+					<img src="<?php echo esc_url( $account->get_attachment_url() ); ?>" alt="<?php echo esc_html( $account->get_name() ); ?>">
+				</div>
+			</div>
+
 			<div class="ea-list-group">
 				<div class="ea-list-group__item">
 					<div class="ea-list-group__title"><?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?></div>
