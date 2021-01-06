@@ -64,13 +64,18 @@ class Admin {
 
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-reports.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-tools.php';
+
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) {
 			switch ( $_GET['page'] ) {
 				case 'ea-setup':
 					include_once dirname( __FILE__ ) . '/class-ea-admin-setup.php';
 					break;
+					case 'ea-release':
+					include_once dirname( __FILE__ ) . '/class-ea-admin-release.php';
+					break;
 			}
+
 		}
 	}
 
