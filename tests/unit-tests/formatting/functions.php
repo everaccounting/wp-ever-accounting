@@ -10,7 +10,7 @@
  *
  * @since 1.0.2
  */
-class EverAccounting_Tests_Formatting_Functions extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Formatting_Functions extends EverAccounting_Unit_Test_Case {
 
 	/**
 	 * Set up.
@@ -137,7 +137,7 @@ class EverAccounting_Tests_Formatting_Functions extends EAccounting_Unit_Test_Ca
 	public function eaccounting_string_to_datetime() {
 		$data = eaccounting_string_to_datetime( '2014-10-04' );
 
-		$this->assertInstanceOf( 'EAccounting_DateTime', $data );
+		$this->assertInstanceOf( 'EverAccounting_DateTime', $data );
 		$this->assertEquals( 1412380800, $data->getTimestamp() );
 	}
 

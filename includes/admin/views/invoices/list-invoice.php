@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit();
 
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-invoice-list-table.php' );
-$invoice_table = new EAccounting_Invoice_List_Table();
+$invoice_table = new EverAccounting_Invoice_List_Table();
 $invoice_table->prepare_items();
 $add_url = eaccounting_admin_url(
 	array(

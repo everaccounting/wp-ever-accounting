@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit();
  */
 final class EverAccounting {
 	/**
-	 * EAccounting version.
+	 * EverAccounting version.
 	 *
 	 * @var string
 	 */
@@ -38,7 +38,7 @@ final class EverAccounting {
 
 	/**
 	 * @since 1.0.2
-	 * @var \EAccounting_Settings
+	 * @var \EverAccounting_Settings
 	 */
 	public $settings;
 
@@ -276,7 +276,7 @@ final class EverAccounting {
 	 * @return void
 	 */
 	private function init_hooks() {
-		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting_Install', 'install' ) );
+		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EverAccounting_Install', 'install' ) );
 		register_shutdown_function( array( $this, 'log_errors' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
@@ -298,7 +298,7 @@ final class EverAccounting {
 	}
 
 	/**
-	 * Init EAccounting when WordPress Initialises.
+	 * Init EverAccounting when WordPress Initialises.
 	 *
 	 * @since 1.0.2
 	 * @return void
@@ -321,7 +321,7 @@ final class EverAccounting {
 		\EverAccounting\REST\Manager::instance();
 		\EverAccounting\Core\Emails::instance();
 
-		$this->settings = new EAccounting_Settings();
+		$this->settings = new EverAccounting_Settings();
 		$this->utils    = new \EverAccounting\Utilities();
 
 		// Init action.

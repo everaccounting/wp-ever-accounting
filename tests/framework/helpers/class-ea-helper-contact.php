@@ -5,7 +5,7 @@
  *
  * This helper class should ONLY be used for unit tests!.
  */
-class EAccounting_Helper_Contact {
+class EverAccounting_Helper_Contact {
 	/**
 	 * Creates a account in the tests DB.
 	 */

@@ -27,7 +27,7 @@ $import_url = add_query_arg(
 	admin_url( 'admin.php' )
 );
 include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-account-list-table.php' );
-$accounts_table = new EAccounting_Account_List_Table();
+$accounts_table = new EverAccounting_Account_List_Table();
 $accounts_table->prepare_items();
 ?>
 	<h1>

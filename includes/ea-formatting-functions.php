@@ -143,7 +143,7 @@ function eaccounting_date_format() {
 }
 
 /**
- * EAccounting Time Format - Allows to change time format for everything.
+ * EverAccounting Time Format - Allows to change time format for everything.
  *
  * @since 1.0.2
  * @return string
@@ -412,7 +412,7 @@ function eaccounting_price( $amount, $code = null ) {
 }
 
 /**
- * Convert a date string to a EAccounting_DateTime.
+ * Convert a date string to a EverAccounting_DateTime.
  *
  * @since  1.0.2
  *

@@ -4,7 +4,7 @@
  *
  * @since       1.0.2
  * @package     EverAccounting
- * @class       EAccounting_Ajax
+ * @class       EverAccounting_Ajax
  */
 
 namespace EverAccounting;
@@ -16,14 +16,14 @@ use EverAccounting\Models\Note;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class EAccounting_Ajax
+ * Class EverAccounting_Ajax
  *
  * @since 1.0.2
  */
 class Ajax {
 
 	/**
-	 * EAccounting_Ajax constructor.
+	 * EverAccounting_Ajax constructor.
 	 *
 	 * @since 1.0.2
 	 */

@@ -13,10 +13,10 @@
  * @since   1.0.2
  * @package EverAccounting\Admin
  */
-class EAccounting_Admin_Settings {
+class EverAccounting_Admin_Settings {
 
 	/**
-	 * EAccounting_Admin_Settings constructor.
+	 * EverAccounting_Admin_Settings constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 100 );
@@ -731,4 +731,4 @@ class EAccounting_Admin_Settings {
 	}
 }
 
-return new EAccounting_Admin_Settings();
+return new EverAccounting_Admin_Settings();

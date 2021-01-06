@@ -9,9 +9,9 @@
 
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Admin_Overview {
+class EverAccounting_Admin_Overview {
 	/**
-	 * EAccounting_Admin_Overview constructor.
+	 * EverAccounting_Admin_Overview constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 1 );
@@ -146,7 +146,7 @@ class EAccounting_Admin_Overview {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
 		$year   = date_i18n( 'Y' );
-		$init   = new EAccounting_Report_CashFlow();
+		$init   = new EverAccounting_Report_CashFlow();
 		$report = $init->get_report( array( 'year' => $year ) );
 		?>
 		<div class="ea-card__inside" style="position: relative; height:300px;">
@@ -255,7 +255,7 @@ class EAccounting_Admin_Overview {
 	public static function render_incomes_categories() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
 		global $wpdb;
-		$report     = new EAccounting_Admin_Report();
+		$report     = new EverAccounting_Admin_Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(
@@ -346,7 +346,7 @@ class EAccounting_Admin_Overview {
 	public static function render_expenses_categories() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
 		global $wpdb;
-		$report     = new EAccounting_Admin_Report();
+		$report     = new EverAccounting_Admin_Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(
@@ -581,4 +581,4 @@ class EAccounting_Admin_Overview {
 	}
 }
 
-return new EAccounting_Admin_Overview();
+return new EverAccounting_Admin_Overview();

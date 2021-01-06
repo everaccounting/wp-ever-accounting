@@ -11,7 +11,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Admin_Report {
+class EverAccounting_Admin_Report {
 	/**
 	 * @param array $args
 	 * @since 1.1.0

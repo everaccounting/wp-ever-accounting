@@ -4,9 +4,9 @@ use EverAccounting\Account;
 
 /**
  * Class EverAccounting_Tests_account.
- * @package EAccounting\Tests\Customer
+ * @package EverAccounting\Tests\Customer
  */
-class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_account extends EverAccounting_Unit_Test_Case {
 	public function test_create_account() {
 		$account = eaccounting_insert_account(
 			array(
@@ -67,7 +67,7 @@ class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_account() {
-		$account = EAccounting_Helper_Account::create_account();
+		$account = EverAccounting_Helper_Account::create_account();
 		$this->assertNotEquals( 0, $account->get_id() );
 		$this->assertNotFalse( eaccounting_delete_account( $account->get_id() ) );
 	}

@@ -3,7 +3,7 @@
  * Handles logging for the plugin.
  *
  * @package        EverAccounting
- * @class          EAccounting_Logger
+ * @class          EverAccounting_Logger
  * @version        1.0.2
  */
 
@@ -12,7 +12,7 @@ namespace EverAccounting\Core;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * EAccounting_Logger class.
+ * EverAccounting_Logger class.
  */
 class Logger {
 
@@ -53,15 +53,15 @@ class Logger {
 	 * The file handler.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @var null
-	 * 
+	 *
 	 */
 	protected $handle = null;
 
 	/**
 	 * Log messages to be stored later.
-	 * 
+	 *
 	 * @since 1.0.2
 	 *
 	 * @var array
@@ -69,7 +69,7 @@ class Logger {
 	protected $cached_logs = array();
 
 	/**
-	 * EAccounting_Logger constructor.
+	 * EverAccounting_Logger constructor.
 	 *
 	 * @since 1.0.2
 	 */
@@ -94,7 +94,7 @@ class Logger {
 	 * Add a log entry.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $level   One of the following:
 	 *                        'emergency': System is unusable.
 	 *                        'alert': Action must be taken immediately.
@@ -121,7 +121,7 @@ class Logger {
 	 * Add a log entry to chosen file.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $entry Log entry text.
 	 *
 	 */
@@ -135,9 +135,9 @@ class Logger {
 
 	/**
 	 * Cache log to write later.
-	 * 
+	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $entry Log entry text.
 	 *
 	 */
@@ -149,7 +149,7 @@ class Logger {
 	 * Open log file for writing.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param resource|null $handle Log handle.
 	 * @param string        $name   Optional. Name of the log file.
 	 *
@@ -190,7 +190,7 @@ class Logger {
 	 * Close a handle.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param resource|string $handle Log handle.
 	 *
 	 * @return bool success
@@ -210,11 +210,11 @@ class Logger {
 	 * Get a log file path.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param $name
 	 *
 	 * @return bool|string The log file path or false if path cannot be determined.
-	 * 
+	 *
 	 */
 	public static function get_log_file_path( $name ) {
 		if ( function_exists( 'wp_hash' ) ) {
@@ -265,7 +265,7 @@ class Logger {
 	 * Get all log files in the log directory.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function get_log_files() {
@@ -289,7 +289,7 @@ class Logger {
 	 * Remove/delete the chosen file.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param $file_name
 	 *
 	 * @return bool
@@ -318,7 +318,7 @@ class Logger {
 	 * System is unusable.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
@@ -333,7 +333,7 @@ class Logger {
 	 * Example: Entire website down, database unavailable, etc.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
@@ -349,7 +349,7 @@ class Logger {
 	 * Example: Application component unavailable, unexpected exception.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
@@ -365,7 +365,7 @@ class Logger {
 	 * and monitored.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
@@ -383,7 +383,7 @@ class Logger {
 	 * necessarily wrong.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
@@ -398,7 +398,7 @@ class Logger {
 	 * Normal but significant events.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
@@ -414,7 +414,7 @@ class Logger {
 	 * Example: User logs in, SQL logs.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *
@@ -429,7 +429,7 @@ class Logger {
 	 * Detailed debug information.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 *

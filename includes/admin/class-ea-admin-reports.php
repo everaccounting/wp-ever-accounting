@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Admin_Reports {
+class EverAccounting_Admin_Reports {
 	/**
 	 * Class constructor.
 	 *
@@ -93,30 +93,30 @@ class EAccounting_Admin_Reports {
 
 	public function render_sales_report() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-sales.php';
-		$report = new EAccounting_Report_Sales();
+		$report = new EverAccounting_Report_Sales();
 		$report->output();
 	}
 
 
 	public function render_expenses_report() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-expenses.php';
-		$report = new EAccounting_Report_Expenses();
+		$report = new EverAccounting_Report_Expenses();
 		$report->output();
 	}
 
 
 	public function render_profits_report() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-profits.php';
-		$report = new EAccounting_Report_Profits();
+		$report = new EverAccounting_Report_Profits();
 		$report->output();
 	}
 
 	public function render_cashflow_report() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
-		$report = new EAccounting_Report_CashFlow();
+		$report = new EverAccounting_Report_CashFlow();
 		$report->output();
 	}
 
 }
 
-new EAccounting_Admin_Reports();
+new EverAccounting_Admin_Reports();

@@ -4,9 +4,9 @@ use EverAccounting\Contact;
 
 /**
  * Class EverAccounting_Tests_contact.
- * @package EAccounting\Tests\contact
+ * @package EverAccounting\Tests\contact
  */
-class EAccounting_Tests_contact extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_contact extends EverAccounting_Unit_Test_Case {
 
 	public function test_create_contact() {
 		$contact = eaccounting_insert_contact( array(
@@ -80,7 +80,7 @@ class EAccounting_Tests_contact extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_contact() {
-		$contact = EAccounting_Helper_Contact::create_contact();
+		$contact = EverAccounting_Helper_Contact::create_contact();
 		$this->assertNotEquals( 0, $contact->get_id() );
 		$this->assertNotFalse( eaccounting_delete_contact( $contact->get_id() ) );
 	}
@@ -214,16 +214,16 @@ class EAccounting_Tests_contact extends EAccounting_Unit_Test_Case {
 
 //
 //	public function test_delete_contact() {
-//		$contact = EAccounting_Helper_contact::create_contact();
+//		$contact = EverAccounting_Helper_contact::create_contact();
 //		$this->assertNotEquals( 0, $contact->get_id() );
 //		$this->assertNotFalse( eaccounting_delete_contact( $contact->get_id() ) );
 //	}
 
 
 //	public function test_exception_contact_number() {
-//		$contact = EAccounting_Helper_contact::create_contact( 'Another contact 1', 'income' );
+//		$contact = EverAccounting_Helper_contact::create_contact( 'Another contact 1', 'income' );
 //		try {
-//			EAccounting_Helper_contact::create_contact( 'Another contact 1', 'income' );
+//			EverAccounting_Helper_contact::create_contact( 'Another contact 1', 'income' );
 //		} catch ( Exception $e ) {
 //			$this->assertEquals( "Duplicate contact name.", $e->getMessage() );
 //		}

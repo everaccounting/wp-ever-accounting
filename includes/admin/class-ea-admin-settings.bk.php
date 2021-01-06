@@ -13,10 +13,10 @@
  * @since   1.0.2
  * @package EverAccounting\Admin
  */
-class EAccounting_Admin_Settings {
+class EverAccounting_Admin_Settings {
 
 	/**
-	 * EAccounting_Admin_Settings constructor.
+	 * EverAccounting_Admin_Settings constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 100 );
@@ -50,8 +50,8 @@ class EAccounting_Admin_Settings {
 	 * @return void
 	 */
 	public function display_settings_page() {
-		$tabs     = EAccounting_Settings::get_tabs();
-		$sections = EAccounting_Settings::get_sections();
+		$tabs     = EverAccounting_Settings::get_tabs();
+		$sections = EverAccounting_Settings::get_sections();
 		// Get current tab/section.
 		$current_tab       = empty( $_GET['tab'] ) ? 'general' : sanitize_title( wp_unslash( $_GET['tab'] ) ); // WPCS: input var okay, CSRF ok.
 		$current_section   = empty( $_REQUEST['section'] ) ? 'main' : sanitize_title( wp_unslash( $_REQUEST['section'] ) ); // WPCS: input var okay, CSRF ok.
@@ -867,4 +867,4 @@ class EAccounting_Admin_Settings {
 	}
 }
 
-return new EAccounting_Admin_Settings();
+return new EverAccounting_Admin_Settings();
