@@ -513,7 +513,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 				if( json.success){
 					note.remove();
-					$('#ea-invoice-notes').replaceWith(json.data.notes);
+					$('#ea-invoice_notes-body').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
@@ -695,7 +695,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 				if( json.success){
 					note.remove();
-					$('#ea-bill-notes').replaceWith(json.data.notes);
+					$('#ea-bill_notes-body').replaceWith(json.data.notes);
 				}
 			}).always(function (json) {
 				$.eaccounting_notice(json);
