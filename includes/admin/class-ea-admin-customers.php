@@ -24,7 +24,7 @@ class EverAccounting_Admin_Customers {
 	}
 
 	/**
-	 * Render revenues tab.
+	 * Render customers tab.
 	 *
 	 * @since 1.1.0
 	 */
