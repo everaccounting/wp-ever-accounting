@@ -51,6 +51,8 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-banking.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-sales.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-invoices.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-revenues.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-customers.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-expenses.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-items.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-bills.php';
