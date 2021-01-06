@@ -112,7 +112,30 @@
 			border-bottom: 1px solid #ffffff !important;
 		}
 	}
+	&__nav {
+		border-bottom: 1px solid #e1e2e2;
+		margin: 0;
+		padding-top: 9px;
+		padding-bottom: 0;
+		line-height: inherit;
 
+		.nav-tab {
+			background: #f8f8f8;
+			font-size: 13px;
+			color: #000;
+		}
+
+		.nav-tab-active {
+			background: #ffffff;
+			border-bottom: 1px solid #ffffff !important;
+			color: #777;
+		}
+		&::after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+	}
 	&__list-section{
 		list-style: none;
 		margin: 0;

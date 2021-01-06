@@ -84,7 +84,7 @@ $edit_url        = eaccounting_admin_url(
 		</div>
 
 		<div class="ea-card">
-			<nav class="nav-tab-wrapper">
+			<nav class="ea-card__nav">
 				<?php foreach ( $sections as $section_id => $section_title ) : ?>
 					<?php
 					$url = eaccounting_admin_url(
