@@ -3,10 +3,10 @@
 use EverAccounting\Category;
 
 /**
- * Class EAccounting_Tests_Category.
- * @package EAccounting\Tests\Category
+ * Class EverAccounting_Tests_Category.
+ * @package EverAccounting\Tests\Category
  */
-class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Category extends EverAccounting_Unit_Test_Case {
 
 	public function test_create_category() {
 		$category = eaccounting_insert_category( array(
@@ -53,7 +53,7 @@ class EAccounting_Tests_Category extends EAccounting_Unit_Test_Case {
 
 
 	public function test_delete_category() {
-		$category = EAccounting_Helper_Category::create_category();
+		$category = EverAccounting_Helper_Category::create_category();
 		$this->assertNotEquals( 0, $category->get_id() );
 		$this->assertNotFalse( eaccounting_delete_category( $category->get_id() ) );
 	}

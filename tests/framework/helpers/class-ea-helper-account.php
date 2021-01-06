@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Class EAccounting_Helper_Account.
+ * Class EverAccounting_Helper_Account.
  *
  * This helper class should ONLY be used for unit tests!.
  */
-class EAccounting_Helper_Account {
+class EverAccounting_Helper_Account {
 
 	/**
 	 * Create a mock account for testing purposes.

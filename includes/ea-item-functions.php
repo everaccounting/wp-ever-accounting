@@ -34,6 +34,35 @@ function eaccounting_get_item( $item ) {
 
 
 /**
+ * Get item by sku.
+ *
+ * @since 1.1.0
+ *
+ * @param $sku
+ *
+ * @return \EverAccounting\Models\Item
+ */
+function eaccounting_get_item_by_sku( $sku ) {
+	global $wpdb;
+	$sku = eaccounting_clean( $sku );
+	if ( empty( $sku ) ) {
+		return null;
+	}
+	$cache_key = "item-sku-$sku";
+	$item      = wp_cache_get( $cache_key, 'ea_items' );
+	if ( false === $item ) {
+		$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_items where `sku`=%s AND `type`='item'", eaccounting_clean( $sku ) ) );
+		wp_cache_set( $cache_key, $item, 'ea_items' );
+	}
+	if ( $item ) {
+		wp_cache_set( $item->id, $item, 'ea_items' );
+		return eaccounting_get_item( $item );
+	}
+
+	return null;
+}
+
+/**
  *  Create new item programmatically.
  *
  *  Returns a new item object on success.
@@ -167,7 +196,7 @@ function eaccounting_get_items( $args = array() ) {
 	$search_cols = array( 'name', 'sku', 'description' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    = ' AND (';
+		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -218,6 +247,9 @@ function eaccounting_get_items( $args = array() ) {
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
+					if ( ! empty( $item->sku ) ) {
+						wp_cache_set( 'item-sku-' . $item->sku, $item, 'ea_items' );
+					}
 					wp_cache_set( $item->id, $item, 'ea_items' );
 				}
 			}

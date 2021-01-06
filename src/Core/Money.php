@@ -26,14 +26,14 @@ class Money {
 
 	/**
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @var float|int
 	 */
 	protected $amount;
 
 	/**
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @var \EverAccounting\Models\Currency
 	 */
 	protected $currency;
@@ -42,7 +42,7 @@ class Money {
 	 * Money constructor.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $amount Amount to convert
 	 * @param string $code Currency object
 	 * @param bool   $convert
@@ -56,9 +56,9 @@ class Money {
 
 	/**
 	 * parseAmount.
-	 * 
+	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param mixed $amount
 	 * @param bool  $convert
 	 *
@@ -80,9 +80,9 @@ class Money {
 
 	/**
 	 * parseAmountFromCallable.
-	 * 
+	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param mixed $amount
 	 *
 	 * @return mixed
@@ -99,7 +99,7 @@ class Money {
 	 * parseAmountFromString.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param mixed $amount
 	 *
 	 * @return int|float|mixed
@@ -134,9 +134,9 @@ class Money {
 
 	/**
 	 * convertAmount.
-	 * 
+	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param int|float $amount
 	 * @param bool      $convert
 	 *
@@ -154,7 +154,7 @@ class Money {
 	 * __callStatic.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param string $method
 	 * @param array  $arguments
 	 *
@@ -170,7 +170,7 @@ class Money {
 	 * assertSameCurrency.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $other
 	 *
 	 * @throws \InvalidArgumentException
@@ -185,7 +185,7 @@ class Money {
 	 * assertOperand.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param int|float $operand
 	 *
 	 * @throws \InvalidArgumentException
@@ -200,7 +200,7 @@ class Money {
 	 * assertRoundingMode.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param int $roundingMode
 	 *
 	 * @throws \OutOfBoundsException
@@ -217,7 +217,7 @@ class Money {
 	 * getAmount.
 	 *
 	 * @since       1.0.2
-	 * 
+	 *
 	 * @return int|float
 	 */
 	public function getAmount() {
@@ -228,7 +228,7 @@ class Money {
 	 * getValue.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return float
 	 */
 	public function getValue() {
@@ -243,7 +243,7 @@ class Money {
 	 * getCurrency.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return Currency
 	 */
 	public function getCurrency() {
@@ -254,7 +254,7 @@ class Money {
 	 * isSameCurrency.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $other
 	 *
 	 * @return bool
@@ -267,7 +267,7 @@ class Money {
 	 * compare.
 	 *
 	 * @since       1.0.2
-	 * 
+	 *
 	 * @param Money $other
 	 *
 	 * @throws \InvalidArgumentException
@@ -291,9 +291,9 @@ class Money {
 	 * equals.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $other
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function equals( self $other ) {
@@ -304,7 +304,7 @@ class Money {
 	 * greaterThan.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $other
 	 *
 	 * @return bool
@@ -317,7 +317,7 @@ class Money {
 	 * greaterThanOrEqual.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $other
 	 *
 	 * @return bool
@@ -330,7 +330,7 @@ class Money {
 	 * lessThan.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $other
 	 *
 	 * @return bool
@@ -343,7 +343,7 @@ class Money {
 	 * lessThanOrEqual.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $other
 	 *
 	 * @return bool
@@ -354,7 +354,7 @@ class Money {
 
 	/**
 	 * convert.
-	 * 
+	 *
 	 * @since 1.0.2
 	 *
 	 * @param Currency  $currency
@@ -381,9 +381,9 @@ class Money {
 
 	/**
 	 * add.
-	 * 
+	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $addend
 	 *
 	 * @return Money
@@ -398,7 +398,7 @@ class Money {
 	 * subtract.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param Money $subtrahend
 	 *
 	 * @throws \InvalidArgumentException
@@ -414,7 +414,7 @@ class Money {
 	 * multiply.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param int|float $multiplier
 	 * @param int       $roundingMode
 	 *
@@ -431,7 +431,7 @@ class Money {
 	 * divide.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param int|float $divisor
 	 * @param int       $roundingMode
 	 *
@@ -456,7 +456,7 @@ class Money {
 	 * allocate.
 	 *
 	 * @since  1.0.2
-	 * 
+	 *
 	 * @param array $ratios
 	 *
 	 * @return array
@@ -484,7 +484,7 @@ class Money {
 	 * isZero.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function isZero() {
@@ -495,7 +495,7 @@ class Money {
 	 * isPositive.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function isPositive() {
@@ -506,7 +506,7 @@ class Money {
 	 * isNegative.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function isNegative() {
@@ -517,7 +517,7 @@ class Money {
 	 * formatSimple.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function format_simple() {
@@ -533,7 +533,7 @@ class Money {
 	 * format.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function format() {
@@ -553,7 +553,7 @@ class Money {
 	 * Get the instance as an array.
 	 *
 	 * @since  1.0.2
-	 * 
+	 *
 	 * @return array
 	 */
 	public function toArray() {
@@ -570,7 +570,7 @@ class Money {
 	 * @param int $options
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function toJson( $options = 0 ) {
@@ -581,7 +581,7 @@ class Money {
 	 * jsonSerialize.
 	 *
 	 * @since  1.0.2
-	 * 
+	 *
 	 * @return array
 	 */
 	public function jsonSerialize() {
@@ -592,7 +592,7 @@ class Money {
 	 * __toString.
 	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @return string
 	 */
 	public function __toString() {

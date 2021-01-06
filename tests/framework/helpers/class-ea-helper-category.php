@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Class EAccounting_Helper_Category.
+ * Class EverAccounting_Helper_Category.
  *
  * This helper class should ONLY be used for unit tests!.
  */
-class EAccounting_Helper_Category {
+class EverAccounting_Helper_Category {
 	/**
 	 * Creates a account in the tests DB.
 	 */

@@ -94,7 +94,6 @@ class Item extends ResourceModel {
 			'name'           => __( 'Item name', 'wp-ever-accounting' ),
 			'quantity'       => __( 'Item Quantity', 'wp-ever-accounting' ),
 			'sale_price'     => __( 'Item Sale Price', 'wp-ever-accounting' ),
-			'purchase_price' => __( 'Item Purchase Price', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -180,7 +179,11 @@ class Item extends ResourceModel {
 	 * @return mixed|null
 	 */
 	public function get_purchase_price( $context = 'edit' ) {
-		return $this->get_prop( 'purchase_price', $context );
+		$price = $this->get_prop( 'purchase_price', $context );
+		if( empty($price)){
+			$price = $this->get_sale_price();
+		}
+		return $price;
 	}
 
 	/**

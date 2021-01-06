@@ -14,9 +14,9 @@ use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Admin_Bills {
+class EverAccounting_Admin_Bills {
 	/**
-	 * EAccounting_Admin_Bill constructor.
+	 * EverAccounting_Admin_Bill constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eaccounting_bill_action', array( $this, 'bill_action' ) );
@@ -176,4 +176,4 @@ class EAccounting_Admin_Bills {
 	}
 }
 
-return new EAccounting_Admin_Bills();
+return new EverAccounting_Admin_Bills();

@@ -3,7 +3,7 @@
 use EverAccounting\Account;
 
 /**
- * Class EAccounting_Tests_account.
+ * Class EverAccounting_Tests_account.
  * @package EAccounting\Tests\Customer
  */
 class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {

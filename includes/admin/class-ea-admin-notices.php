@@ -8,12 +8,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class EAccounting_Admin_Notices {
+class EverAccounting_Admin_Notices {
 	/**
 	 * The single instance of the class.
 	 *
 	 * @since 1.0.0
-	 * @var EAccounting_Admin_Notices
+	 * @var EverAccounting_Admin_Notices
 	 */
 	protected static $instance = null;
 
@@ -42,7 +42,7 @@ class EAccounting_Admin_Notices {
 	 * Constructor.
 	 */
 	public static function init() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EAccounting_Admin_Notices ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EverAccounting_Admin_Notices ) ) {
 			self::$instance = new self();
 		}
 
@@ -51,7 +51,7 @@ class EAccounting_Admin_Notices {
 
 
 	/**
-	 * EAccounting_Admin_Notices constructor.
+	 * EverAccounting_Admin_Notices constructor.
 	 */
 	public function __construct() {
 		$this->notices = get_option( 'ea_admin_notices', array() );
@@ -156,4 +156,4 @@ class EAccounting_Admin_Notices {
 	}
 }
 
-//EAccounting_Admin_Notices::init();
+//EverAccounting_Admin_Notices::init();

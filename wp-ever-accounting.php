@@ -60,7 +60,7 @@ final class EverAccounting {
 	 * @return EverAccounting - Main instance.
 	 */
 	public static function init() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EverAccounting ) ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
 

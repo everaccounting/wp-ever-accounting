@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class EAccounting_Helper_Contact.
+ * Class EverAccounting_Helper_Contact.
  *
  * This helper class should ONLY be used for unit tests!.
  */

@@ -26,8 +26,8 @@ $invoice_actions = apply_filters(
 	)
 );
 if ( $invoice->exists() ) {
-	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( 'EAccounting_Admin_Invoices', 'invoice_payments' ), 'ea_invoice', 'side' );
-	add_meta_box( 'invoice_notes', __( 'Invoice Notes', 'wp-ever-accounting' ), array( 'EAccounting_Admin_Invoices', 'invoice_notes' ), 'ea_invoice', 'side' );
+	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Invoices', 'invoice_payments' ), 'ea_invoice', 'side' );
+	add_meta_box( 'invoice_notes', __( 'Invoice Notes', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Invoices', 'invoice_notes' ), 'ea_invoice', 'side' );
 }
 /**
  * Fires after all built-in meta boxes have been added, contextually for the given object.

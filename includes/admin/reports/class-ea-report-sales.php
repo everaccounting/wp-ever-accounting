@@ -11,7 +11,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Report_Sales extends EAccounting_Admin_Report {
+class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 	/**
 	 * @since 1.1.0
 	 *
