@@ -62,6 +62,8 @@ class Documents extends ResourceRepository {
 		'discount_type'   => '%s',
 		'total_tax'       => '%f',
 		'total_discount'  => '%f',
+		'total_fees'      => '%f',
+		'total_shipping'  => '%f',
 		'total'           => '%f',
 		'tax_inclusive'   => '%d',
 		'note'            => '%s',

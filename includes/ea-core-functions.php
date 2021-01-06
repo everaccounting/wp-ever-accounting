@@ -580,3 +580,8 @@ function eaccounting_list_pluck( $list, $callback_or_field, $index_key = null ) 
 function eaccounting_cache_set_last_changed( $group ) {
 	wp_cache_set( 'last_changed', microtime(), $group );
 }
+
+
+function eaccounting_get_percentage( $total, $number, $decimals = 2 ) {
+	return round( ( $number / $total ) * 100, $decimals );
+}
