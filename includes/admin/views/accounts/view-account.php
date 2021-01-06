@@ -34,6 +34,16 @@ $edit_url        = eaccounting_admin_url(
 	)
 );
 ?>
+<div class="ea-title-section">
+	<div>
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Accounts', 'wp-ever-accounting' ); ?></h1>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'accounts', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+			</a>
+	</div>
+</div>
+<hr class="wp-header-end">
+
 <div class="ea-page-columns altered ea-single-account">
 	<div class="ea-page-columns__content">
 		<div class="ea-row">
