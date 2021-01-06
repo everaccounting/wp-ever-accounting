@@ -102,7 +102,7 @@ $edit_url        = eaccounting_admin_url(
 				switch ( $current_section ) {
 					case 'transactions':
 					case 'transfers':
-						include dirname( __FILE__ ) . '/account-sections/' . sanitize_file_name( $current_section ) . '.php';
+						include dirname( __FILE__ ) . '/accounts-' . sanitize_file_name( $current_section ) . '.php';
 						break;
 					default:
 						do_action( 'eaccounting_account_section_' . $current_section, $account );

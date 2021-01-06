@@ -11,6 +11,8 @@
  * @package     EverAccounting
  */
 
+use EverAccounting\Models\Account;
+
 defined( 'ABSPATH' ) || exit();
 
 require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-transfer-list-table.php';

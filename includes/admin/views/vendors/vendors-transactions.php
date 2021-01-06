@@ -11,6 +11,7 @@ $args       = array(
 	'display_args' => array(
 		'columns_to_hide'      => array( 'actions', 'cb','contact_id' ),
 		'hide_extra_table_nav' => true,
+		'hide_bulk_options' => true,
 	),
 );
 $list_table = new EverAccounting_Payment_List_Table( $args );
