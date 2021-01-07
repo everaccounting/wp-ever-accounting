@@ -64,7 +64,7 @@ class EverAccounting_Settings {
 				'eaccounting_settings_general',
 				array(
 					/** General Main Section */
-					'main'     => array(
+					'general'     => array(
 						'company_settings'       => array(
 							'name' => __( 'Company Settings', 'wp-ever-accounting' ),
 							'desc' => '',

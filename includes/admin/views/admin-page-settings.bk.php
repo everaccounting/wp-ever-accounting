@@ -6,10 +6,14 @@
  * @var string $current_tab
  * @var string $current_section
  * @var string $current_tab_label
- * @var array  $sections
+ * @var array  $tab_sections
  */
 defined( 'ABSPATH' ) || exit;
-$section_keys = array_keys( $sections );
+$section_keys = array_keys( $tab_sections );
+
+//		$current_section   = array_key_exists( $requested_section, $sections[ $current_tab ] ) ? $requested_section : current( array_keys( $sections[ $current_tab ] ) );
+//		$current_tab_label = isset( $tabs[ $current_tab ] ) ? $tabs[ $current_tab ] : '';
+//		$tab_sections      = array_key_exists( $current_tab, $sections ) ? $sections[ $current_tab ] : array();
 ?>
 <div class="wrap ea-settings">
 	<nav class="nav-tab-wrapper ea-tab-wrapper">
@@ -20,12 +24,11 @@ $section_keys = array_keys( $sections );
 		?>
 		<?php do_action( 'eaccounting_settings_tabs' ); ?>
 	</nav>
-
-	<?php if ( sizeof( $sections ) > 1 ) : ?>
+	<?php if ( sizeof( $tab_sections ) > 1 ) : ?>
 		<ul class="subsubsub">
 			<?php
 			$links = array();
-			foreach ( $sections as $key => $section_title ) {
+			foreach ( $tab_sections as $key => $section_title ) {
 				$link = '<a href="admin.php?page=ea-settings&tab=' . urlencode( $current_tab ) . '&amp;section=' . urlencode( $key ) . '" class="';
 				if ( $key === $current_section ) {
 					$link .= 'current';
@@ -38,14 +41,18 @@ $section_keys = array_keys( $sections );
 		</ul>
 	<?php endif; ?>
 	<br class="clear"/>
+
 	<h1 class="screen-reader-text"><?php echo esc_html( $current_tab_label ); ?></h1>
 
 	<?php
 	if ( has_action( 'eaccounting_settings_tab_' . $current_tab ) ) {
 		do_action( 'eaccounting_settings_tab_' . $current_tab );
-	} elseif ( $current_section && has_action( 'eaccounting_settings_tab_' . $current_tab . '_section_' . $current_section ) ) {
+	} elseif ( has_action( 'eaccounting_settings_tab_' . $current_tab . '_section_' . $current_section ) ) {
 		do_action( 'eaccounting_settings_tab_' . $current_tab . '_section_' . $current_section );
-	}else {
+	} elseif ( empty( $current_section ) ) {
+		wp_safe_redirect( admin_url( 'admin.php?page=ea-settings' ) );
+		exit;
+	} else {
 		?>
 		<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 			<table class="form-table">
