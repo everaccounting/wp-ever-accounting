@@ -64,7 +64,7 @@ class EverAccounting_Report_Profits extends EverAccounting_Admin_Report {
 				}
 
 				foreach ( $results as $result ) {
-					$amount      = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+					$amount      = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 					$category_id = $result->category_id;
 					$amount      = (float) eaccounting_format_decimal( $amount );
 					$date        = $result->date;

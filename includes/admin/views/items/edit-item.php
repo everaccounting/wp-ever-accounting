@@ -184,7 +184,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 		</div>
 	</form>
 <?php
-$code     = eaccounting()->settings->get( 'default_currency', 'USD' );
+$code     = eaccounting_get_default_currency();
 $currency = eaccounting_get_currency( $code );
 eaccounting_enqueue_js(
 	"

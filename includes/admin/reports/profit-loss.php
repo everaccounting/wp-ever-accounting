@@ -65,7 +65,7 @@ function eaccounting_reports_profit_loss_tab() {
 				->get(
 					OBJECT,
 					function ( $expense ) {
-						$expense->amount = eaccounting_price_convert_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
+						$expense->amount = eaccounting_price_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
 
 						return $expense;
 					}

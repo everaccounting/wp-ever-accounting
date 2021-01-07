@@ -98,7 +98,7 @@ function eaccounting_reports_expense_summary_tab() {
 		);
 
 		foreach ( $transactions as $key => $transaction ) {
-			$transaction->amount = eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+			$transaction->amount = eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
 
 			$transactions[ $key ] = $transaction;
 		}

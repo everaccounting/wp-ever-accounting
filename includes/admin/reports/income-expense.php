@@ -110,7 +110,7 @@ function eaccounting_reports_income_expense_tab() {
 		");
 
 		foreach ( $transactions as $transaction ) {
-			$amount     = eaccounting_price_convert_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+			$amount     = eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
 			$month      = date( 'F', strtotime( $transaction->payment_date ) );
 			$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) );
 

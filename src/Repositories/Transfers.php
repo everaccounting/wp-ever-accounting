@@ -95,8 +95,9 @@ class Transfers extends ResourceRepository {
 			if ( $from_account->get_currency_code() !== $to_account->get_currency_code() ) {
 				$expense_currency = eaccounting_get_currency( $from_account->get_currency_code() );
 				$income_currency  = eaccounting_get_currency( $to_account->get_currency_code() );
-				$amount           = eaccounting_price_convert_to_default( $amount, $from_account->get_currency_code(), $expense_currency->get_rate() );
-				$amount           = eaccounting_price_convert_from_default( $amount, $to_account->get_currency_code(), $income_currency->get_rate() );
+				$amount           = eaccounting_price_convert( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency->get_rate(), $income_currency->get_rate() );
+				//$amount           = eaccounting_price_to_default( $amount, $from_account->get_currency_code(), $expense_currency->get_rate() );
+				//$amount           = eaccounting_price_convert_from_default( $amount, $to_account->get_currency_code(), $income_currency->get_rate() );
 			}
 
 			$income = new Revenue( $transfer->get_income_id() );

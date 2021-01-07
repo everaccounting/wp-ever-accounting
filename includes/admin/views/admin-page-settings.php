@@ -18,7 +18,6 @@ $section_keys = array_keys( $sections );
 			echo '<a href="' . esc_html( admin_url( 'admin.php?page=ea-settings&tab=' . esc_attr( $slug ) ) ) . '" class="nav-tab ' . ( $current_tab === $slug ? 'nav-tab-active' : '' ) . '">' . esc_html( $label ) . '</a>';
 		}
 		?>
-		<?php do_action( 'eaccounting_settings_tabs' ); ?>
 	</nav>
 
 	<?php if ( sizeof( $sections ) > 1 ) : ?>

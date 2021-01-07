@@ -1447,6 +1447,7 @@ abstract class Document extends ResourceModel {
 		$this->set_total_tax( $total_tax );
 		$this->set_total_discount( $total_discount );
 		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax() + $this->get_total_fees() + $this->get_total_shipping();
+		$total = eaccounting_money( $total, $this->get_currency_code(), true );
 		if ( $total < 0 ) {
 			$total = 0;
 		}

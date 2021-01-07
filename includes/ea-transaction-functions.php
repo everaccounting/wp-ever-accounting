@@ -698,7 +698,7 @@ function eaccounting_get_total_income( $year = null ) {
 		$results      = $wpdb->get_results( $sql );
 		$total_income = 0;
 		foreach ( $results as $result ) {
-			$total_income += eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$total_income += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}
 		wp_cache_add( 'total_income_' . $year, $total_income, 'ea_transactions' );
 	}
@@ -730,7 +730,7 @@ function eaccounting_get_total_expense( $year = null ) {
 		$results       = $wpdb->get_results( $sql );
 		$total_expense = 0;
 		foreach ( $results as $result ) {
-			$total_expense += eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$total_expense += eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}
 		wp_cache_add( 'total_expense_' . $year, $total_expense, 'ea_transactions' );
 	}
@@ -775,7 +775,7 @@ function eaccounting_get_total_receivable() {
 		);
 		$invoices         = $wpdb->get_results( $invoices_sql );
 		foreach ( $invoices as $invoice ) {
-			$total_receivable += eaccounting_price_convert_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
+			$total_receivable += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
 		}
 		$sql     = $wpdb->prepare(
 			"
@@ -791,7 +791,7 @@ function eaccounting_get_total_receivable() {
 		);
 		$results = $wpdb->get_results( $sql );
 		foreach ( $results as $result ) {
-			$total_receivable -= eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$total_receivable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}
 		wp_cache_add( 'total_receivable', $total_receivable, 'ea_transactions' );
 	}
@@ -820,7 +820,7 @@ function eaccounting_get_total_payable() {
 		);
 		$bills         = $wpdb->get_results( $bills_sql );
 		foreach ( $bills as $bill ) {
-			$total_payable += eaccounting_price_convert_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
+			$total_payable += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
 		}
 		$sql     = $wpdb->prepare(
 			"
@@ -836,7 +836,7 @@ function eaccounting_get_total_payable() {
 		);
 		$results = $wpdb->get_results( $sql );
 		foreach ( $results as $result ) {
-			$total_payable -= eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$total_payable -= eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 		}
 		wp_cache_add( 'total_payable', $total_payable, 'ea_transactions' );
 	}

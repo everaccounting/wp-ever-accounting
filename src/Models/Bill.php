@@ -193,7 +193,7 @@ class Bill extends Document {
 	 * @return bool
 	 */
 	public function needs_payment() {
-		return ! empty( (int) eaccounting_round_number( $this->get_total_due(), 0 ) );
+		return ! empty( eaccounting_money( $this->get_total_due(), $this->get_currency_code() ) );
 	}
 
 	/**
@@ -265,7 +265,7 @@ class Bill extends Document {
 		}
 
 		//convert the price from default to bill currency.
-		$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
+		$default_currency = eaccounting_get_default_currency();
 		$default          = array(
 			'item_id'       => $product->get_id(),
 			'item_name'     => $product->get_name(),
@@ -298,9 +298,9 @@ class Bill extends Document {
 	 * @since 1.1.0
 	 */
 	public function maybe_change_status() {
-//		if ( $this->needs_payment() && ! empty( $this->get_due_date() ) && ( time() > strtotime( $this->get_due_date() ) ) ) {
-//			$this->set_status( 'overdue' );
-//		}
+		//      if ( $this->needs_payment() && ! empty( $this->get_due_date() ) && ( time() > strtotime( $this->get_due_date() ) ) ) {
+		//          $this->set_status( 'overdue' );
+		//      }
 
 		if ( $this->is_status( 'paid' ) && empty( $this->get_payment_date() ) ) {
 			$this->set_payment_date( time() );
@@ -449,7 +449,7 @@ class Bill extends Document {
 	 * @return float|int
 	 */
 	public function get_total_due() {
-		$due = $this->get_total() - $this->get_total_paid();
+		$due = eaccounting_money( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
 		if ( $due < 0 ) {
 			$due = 0;
 		}
@@ -467,7 +467,7 @@ class Bill extends Document {
 	public function get_total_paid() {
 		$total_paid = 0;
 		foreach ( $this->get_payments() as $payment ) {
-			$total_paid += (float) eaccounting_price_convert_between( $payment->get_amount(), $payment->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_code(), $this->get_currency_rate() );
+			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $this->get_currency_code(), $payment->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
 		}
 
 		return $total_paid;
@@ -533,7 +533,7 @@ class Bill extends Document {
 		$amount           = (float) eaccounting_sanitize_number( $args['amount'], true );
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
-		$converted_amount = eaccounting_price_convert_between( $amount, $this->get_currency_code(), $this->get_currency_rate(), $currency->get_code(), $currency->get_rate() );
+		$converted_amount = eaccounting_price_convert( $amount, $this->get_currency_code(), $currency->get_code(), $this->get_currency_rate(), $currency->get_rate() );
 		$expense          = new Payment();
 		$expense->set_props(
 			array(
