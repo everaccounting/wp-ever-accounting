@@ -2,17 +2,16 @@
 /**
  * Displays company info.
  *
- * This template can be overridden by copying it to yourtheme/eaccounting/bill/company-info.php.
+ * This template can be overridden by copying it to yourtheme/eaccounting/invoice/company-info.php.
  *
- * @var $bill Bill
+ * @var $invoice Invoice
  * @version 1.1.0
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit;
 $company_details = array(
-	'logo'       => eaccounting()->settings->get( 'company_logo', eaccounting()->plugin_url( '/assets/images/document-logo.png' ) ),
 	'name'       => eaccounting()->settings->get( 'company_name' ),
 	'street'     => eaccounting()->settings->get( 'company_address' ),
 	'city'       => eaccounting()->settings->get( 'company_city' ),
@@ -23,9 +22,6 @@ $company_details = array(
 );
 $countries       = eaccounting_get_countries();
 ?>
-<div class="ea-document__logo">
-	<img src="<?php echo esc_url( $company_details['logo'] ); ?>" alt="<?php echo esc_html( $company_details['name'] ); ?>" height="100" width="100">
-</div>
 <address class="ea-document__company-info">
 	<span class="ea-document__company-name"><?php echo esc_html( $company_details['name'] ); ?></span>
 	<span class="ea-document__info-street"><?php echo esc_html( $company_details['street'] ); ?></span>

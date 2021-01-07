@@ -2,7 +2,7 @@
 /**
  * Displays invoice from information.
  *
- * This template can be overridden by copying it to yourtheme/eaccounting/bill/bill-from.php.
+ * This template can be overridden by copying it to yourtheme/eaccounting/invoice/invoice-to.php.
  *
  * @var $invoice Invoice
  * @version 1.1.0

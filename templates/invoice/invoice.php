@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php eaccounting_get_template( 'invoice/company-info.php', array( 'invoice' => $invoice ) ); ?>
 		</div>
 		<div class="ea-document__column alignright">
-			<span class="ea-document__to"><?php esc_html_e( 'To:', 'wp-ever-accounting' ); ?></span>
+			<span class="ea-document__to"><?php esc_html_e( 'Invoice To:', 'wp-ever-accounting' ); ?></span>
 			<?php eaccounting_get_template( 'invoice/invoice-to.php', array( 'invoice' => $invoice ) ); ?>
 			<?php eaccounting_get_template( 'invoice/invoice-meta.php', array( 'invoice' => $invoice ) ); ?>
 		</div>
@@ -34,5 +34,6 @@ defined( 'ABSPATH' ) || exit;
 	<?php eaccounting_get_template( 'invoice/invoice-items.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-note.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-terms.php', array( 'invoice' => $invoice ) ); ?>
+	<?php eaccounting_get_template( 'invoice/invoice-payments.php', array( 'invoice' => $invoice ) ); ?>
 
 </div>
