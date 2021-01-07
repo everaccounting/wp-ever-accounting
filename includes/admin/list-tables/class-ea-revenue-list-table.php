@@ -214,7 +214,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $revenue->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
-				$value = $revenue->format_amount( $revenue->get_amount() );
+				$value = eaccounting_format_price( $revenue->get_amount(), $revenue->get_currency_code() );
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );

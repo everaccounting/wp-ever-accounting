@@ -328,101 +328,6 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
 }
 
 /**
- * Sanitize price for inserting into database
- * since 1.0.0
- *
- * @since 1.0.2
- *
- * @param $amount
- *
- * @param $code
- *
- * @return float|int
- */
-function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
-	return eaccounting_money( $amount, $code, false )->getAmount();
-}
-
-/**
- * Format price with currency code & number format
- *
- * @since 1.0.2
- *
- * @param $amount
- *
- * @param $code
- *
- * @return string
- */
-function eaccounting_format_price( $amount, $code = null ) {
-	if ( $code === null ) {
-		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
-	}
-
-	$amount = eaccounting_money( $amount, $code, true );
-	if ( is_wp_error( $amount ) ) {
-		/* translators: %s currency code */
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-
-		return '00.00';
-	}
-
-	return $amount->format();
-}
-
-/**
- * Format price with currency code & number format
- *
- * @since 1.0.2
- *
- * @param $amount
- *
- * @param $code
- *
- * @return string
- */
-function eaccounting_price( $amount, $code = null ) {
-	if ( empty( $code ) ) {
-		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
-	}
-
-	$amount = eaccounting_money( $amount, $code, true );
-	if ( is_wp_error( $amount ) ) {
-		/* translators: %s currency code */
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-
-		return '00.00';
-	}
-
-	return $amount->format();
-}
-
-/**
- * Use the function for everywhere internal use without formatting.
- *
- * @param      $amount
- * @param null $code
- * @since 1.1.0
- *
- * @return float|int
- */
-function eaccounting_raw_price( $amount, $code = null ) {
-	if ( empty( $code ) ) {
-		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
-	}
-	$amount = eaccounting_money( $amount, $code, false );
-
-	if ( is_wp_error( $amount ) ) {
-		/* translators: %s currency code */
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-
-		return 0;
-	}
-
-	return $amount->getValue();
-}
-
-/**
  * Convert a date string to a EverAccounting_DateTime.
  *
  * @since  1.0.2
@@ -490,7 +395,7 @@ function eaccounting_hex_darker( $color, $factor = 30 ) {
 
 	foreach ( $base as $k => $v ) {
 		$amount      = $v / 100;
-		$amount      = eaccounting_round_number( $amount * $factor, 0 );
+		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
 		$new_decimal = $v - $amount;
 
 		$new_hex_component = dechex( $new_decimal );
@@ -519,7 +424,7 @@ function eaccounting_hex_lighter( $color, $factor = 30 ) {
 	foreach ( $base as $k => $v ) {
 		$amount      = 255 - $v;
 		$amount      = $amount / 100;
-		$amount      = eaccounting_round_number( $amount * $factor, 0 );
+		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
 		$new_decimal = $v + $amount;
 
 		$new_hex_component = dechex( $new_decimal );

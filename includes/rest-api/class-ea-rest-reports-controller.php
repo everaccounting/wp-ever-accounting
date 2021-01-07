@@ -142,7 +142,7 @@ class EverAccounting_Reports_Controller extends EverAccounting_REST_Controller {
 		);
 
 		foreach ( $incomes as $income ) {
-			$response['income'] += eaccounting_price_convert_to_default( $income->amount, $income->currency_code, $income->currency_rate );
+			$response['income'] += eaccounting_price_to_default( $income->amount, $income->currency_code, $income->currency_rate );
 		}
 
 		$expenses = eaccounting_get_transactions(
@@ -158,7 +158,7 @@ class EverAccounting_Reports_Controller extends EverAccounting_REST_Controller {
 		);
 
 		foreach ( $expenses as $expense ) {
-			$response['expense'] += eaccounting_price_convert_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
+			$response['expense'] += eaccounting_price_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
 		}
 
 		$response['profit'] = $response['income'] - $response['expense'];

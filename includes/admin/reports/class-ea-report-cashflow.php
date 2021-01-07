@@ -97,7 +97,7 @@ class EverAccounting_Report_CashFlow extends EverAccounting_Admin_Report {
 			if ( ! isset( $income[ $result->date ] ) ) {
 				$income[ $result->date ] = 0;
 			}
-			$amount                   = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                   = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$income[ $result->date ] += $amount;
 		}
 
@@ -122,7 +122,7 @@ class EverAccounting_Report_CashFlow extends EverAccounting_Admin_Report {
 			if ( ! isset( $expense[ $result->date ] ) ) {
 				$expense[ $result->date ] = 0;
 			}
-			$amount                    = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount                    = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			$expense[ $result->date ] += $amount;
 		}
 

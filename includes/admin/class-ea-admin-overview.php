@@ -47,7 +47,6 @@ class EverAccounting_Admin_Overview {
 			'eaccounting',
 			array( $this, 'render_page' )
 		);
-		//      error_log($overview);
 		add_action( 'load-' . $overview, array( __CLASS__, 'eaccounting_dashboard_setup' ) );
 	}
 
@@ -271,7 +270,7 @@ class EverAccounting_Admin_Overview {
 		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
-			$amount = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			if ( isset( $data[ $result->category ] ) ) {
 				$data[ $result->category_id ]['amount'] = (int) ( $data[ $result->category ]['amount'] + $amount );
 			} else {
@@ -362,7 +361,7 @@ class EverAccounting_Admin_Overview {
 		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
-			$amount = eaccounting_price_convert_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
 			if ( isset( $data[ $result->category ] ) ) {
 				$data[ $result->category_id ]['amount'] = (int) ( $data[ $result->category ]['amount'] + $amount );
 			} else {

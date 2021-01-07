@@ -352,7 +352,7 @@ class Setup_Wizard {
 							eaccounting_text_input(
 								array(
 									'name'     => "rate[$id]",
-									'value'    => eaccounting_round_number( $currency->rate ),
+									'value'    => eaccounting_format_decimal( $currency->rate ),
 									'required' => true,
 									'id'       => "$id-rate",
 								)

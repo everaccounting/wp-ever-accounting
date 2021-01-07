@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit();
 			array(
 				'label'       => __( 'Amount', 'wp-ever-accounting' ),
 				'name'        => 'amount',
-				'value'       => eaccounting_raw_price( $invoice->get_total_due(), $invoice->get_currency_code() ),
+				'value'       => $invoice->get_total_due(),
 				'data_type'   => 'price',
 				'required'    => true,
 				'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),

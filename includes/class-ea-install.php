@@ -29,6 +29,8 @@ class EverAccounting_Install {
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
+		add_action( 'plugins_loaded', array( __CLASS__, 'wpdb_table_fix' ), 0 );
+		add_action( 'switch_blog', array( __CLASS__, 'wpdb_table_fix' ), 0 );
 	}
 
 	/**
@@ -337,18 +339,18 @@ class EverAccounting_Install {
 	 * @return void
 	 */
 	private static function create_defaults() {
-//		$settings = new EverAccounting_Settings;
-//		$account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
-//		if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
-//			$settings->set( array( 'default_account' => $account->id ) );
-//		}
-//
-//		$currency = \EverAccounting\Query_Currency::init()->find( 'USD', 'code' );
-//		if ( ! empty( $currency ) && empty( $settings->get( 'default_currency' ) ) ) {
-//			$settings->set( array( 'default_currency' => $currency->code ) );
-//		}
-//
-//		$settings->set( array(), true );
+		//      $settings = new EverAccounting_Settings;
+		//      $account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
+		//      if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
+		//          $settings->set( array( 'default_account' => $account->id ) );
+		//      }
+		//
+		//      $currency = \EverAccounting\Query_Currency::init()->find( 'USD', 'code' );
+		//      if ( ! empty( $currency ) && empty( $settings->get( 'default_currency' ) ) ) {
+		//          $settings->set( array( 'default_currency' => $currency->code ) );
+		//      }
+		//
+		//      $settings->set( array(), true );
 	}
 
 	/**
@@ -376,8 +378,8 @@ class EverAccounting_Install {
 		$wpdb->hide_errors();
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
-		$collate = 'ENGINE=InnoDB DEFAULT CHARSET=utf8mb4';
+		$max_index_length = 191;
+		$collate          = $wpdb->get_charset_collate();
 
 		$tables = array(
 			"CREATE TABLE {$wpdb->prefix}ea_accounts(
@@ -438,6 +440,16 @@ class EverAccounting_Install {
 		    KEY `phone`(`phone`),
 		    KEY `type`(`type`)
             ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_contactmeta(
+			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
+			`contact_id` bigint(20) unsigned NOT NULL default '0',
+			`meta_key` varchar(255) default NULL,
+			`meta_value` longtext,
+			 PRIMARY KEY (`meta_id`),
+		    KEY `contact_id`(`contact_id`),
+			KEY `meta_key` (meta_key($max_index_length))
+			) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_transactions(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
@@ -606,6 +618,7 @@ class EverAccounting_Install {
 			"{$wpdb->prefix}ea_accounts",
 			"{$wpdb->prefix}ea_categories",
 			"{$wpdb->prefix}ea_contacts",
+			"{$wpdb->prefix}ea_contactmeta",
 			"{$wpdb->prefix}ea_transactions",
 			"{$wpdb->prefix}ea_transfers",
 			"{$wpdb->prefix}ea_documents",
@@ -619,6 +632,23 @@ class EverAccounting_Install {
 		$tables = apply_filters( 'eaccounting_install_get_tables', $tables );
 
 		return $tables;
+	}
+
+	/**
+	 * Register custom tables within $wpdb object.
+	 */
+	public static function wpdb_table_fix() {
+		global $wpdb;
+
+		// List of tables without prefixes.
+		$tables = array(
+			'contactmeta' => 'ea_contactmeta',
+		);
+
+		foreach ( $tables as $name => $table ) {
+			$wpdb->$name    = $wpdb->prefix . $table;
+			$wpdb->tables[] = $table;
+		}
 	}
 
 	/**

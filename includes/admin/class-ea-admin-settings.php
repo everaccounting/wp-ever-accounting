@@ -42,21 +42,32 @@ class EverAccounting_Admin_Settings {
 		);
 	}
 
-
+	/**
+	 * Get settings tabs.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
 	public function get_tabs() {
-		return apply_filters(
-			'eaccounting_settings_tabs',
-			array(
-				'general'    => __( 'General', 'wp-ever-accounting' ),
-				'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
-				'categories' => __( 'Categories', 'wp-ever-accounting' ),
-				//'emails'     => __( 'Emails', 'wp-ever-accounting' ),
-				//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
-				//'misc'       => __( 'Misc', 'wp-ever-accounting' ),
-			)
+		$tabs = array(
+			'general'    => __( 'General', 'wp-ever-accounting' ),
+			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+			'categories' => __( 'Categories', 'wp-ever-accounting' ),
+			//'emails'     => __( 'Emails', 'wp-ever-accounting' ),
+			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 		);
+
+		return apply_filters( 'eaccounting_settings_tabs', $tabs );
 	}
 
+	/**
+	 * Get settings sections.
+	 *
+	 * @param $tab
+	 * @since 1.1.0
+	 *
+	 * @return array
+	 */
 	public function get_tab_sections( $tab ) {
 		$sections = array();
 		switch ( $tab ) {
@@ -71,7 +82,7 @@ class EverAccounting_Admin_Settings {
 				}
 				break;
 		}
-		return apply_filters( 'eaccounting_settings_' . $tab . '_sections', $sections );
+		return apply_filters( 'eaccounting_settings_sections_' . $tab, $sections );
 	}
 
 	/**

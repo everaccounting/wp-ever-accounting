@@ -223,7 +223,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 				$value   = '<a href="' . esc_url( $view_url ) . '"><strong>' . $account->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
 			case 'balance':
-				$value = $account->format_amount( $account->get_balance() );
+				$value = eaccounting_format_price( $account->get_balance(), $account->get_currency_code() );
 				break;
 			case 'number':
 				$value = $account->get_number();

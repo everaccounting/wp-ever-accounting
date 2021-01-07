@@ -64,7 +64,7 @@ class EverAccounting_Settings {
 				'eaccounting_settings_general',
 				array(
 					/** General Main Section */
-					'general'     => array(
+					'general'  => array(
 						'company_settings'       => array(
 							'name' => __( 'Company Settings', 'wp-ever-accounting' ),
 							'desc' => '',
@@ -639,7 +639,7 @@ class EverAccounting_Settings {
 		// Saving the field empty will revert to std value, if it exists
 		$std   = ( isset( $args['std'] ) && ! is_null( $args['std'] ) && '' !== $args['std'] && floatval( $args['std'] ) >= 0 ) ? $args['std'] : null;
 		$value = ! is_null( $value ) ? $value : ( ! is_null( $std ) ? $std : null );
-		$value = eaccounting_round_number( $value );
+		$value = eaccounting_format_decimal( $value, false );
 
 		$size       = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
