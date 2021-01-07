@@ -19,7 +19,7 @@ class EverAccounting_Assets {
 	public function public_styles() {
 		error_log('public_styles');
 		$version = eaccounting()->get_version();
-		wp_register_style( 'ea-public-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array( 'common' ), $version );
+		wp_register_style( 'ea-public-styles', eaccounting()->plugin_url() . '/assets/css/public.css', array( 'common' ), $version );
 		wp_print_styles( 'ea-public-styles' );
 	}
 

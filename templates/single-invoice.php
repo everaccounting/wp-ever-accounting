@@ -20,13 +20,18 @@ if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
 }
 ?>
 <div class="ea-container">
-	<div class="ea-row">
-		<div class="ea-col-12">
-			<div class="ea-card">
-				<div class="ea-card__inside">
-					<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+	<?php eaccounting_get_template( 'global/header.php', array( 'invoice' => $invoice ) ); ?>
+	<div class="ea-document_description">
+		<div class="ea-row">
+			<div class="ea-col-12">
+				<div class="ea-card">
+					<div class="ea-card__inside">
+						<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<?php eaccounting_get_template( 'global/footer.php', array( 'invoice' => $invoice ) ); ?>
+
