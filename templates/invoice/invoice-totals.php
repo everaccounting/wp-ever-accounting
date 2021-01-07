@@ -90,7 +90,7 @@ defined( 'ABSPATH' ) || exit;
 				<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo eaccounting_price( abs( $invoice->get_total_due() ), $invoice->get_currency_code() ); ?>
+					<?php echo eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ); ?>
 				</td>
 			</tr>
 		<?php endif; ?>

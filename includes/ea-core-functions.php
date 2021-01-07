@@ -149,7 +149,7 @@ function eaccounting_get_current_user_id() {
  *
  * @return string|void
  */
-function eaccounting_get_username( $user_id ) {
+function eaccounting_get_full_name( $user_id ) {
 	$unknown = __( 'Unknown User', 'wp-ever-accounting' );
 	if ( empty( $user_id ) ) {
 		return $unknown;
@@ -170,9 +170,9 @@ function eaccounting_get_username( $user_id ) {
  * Instance of money class.
  *
  * For formatting with currency code
- * eaccounting_get_money( 100000, 'USD', true )->format()
+ * eaccounting_money( 100000, 'USD', true )->format()
  * For inserting into database
- * eaccounting_get_money( "$100,000", "USD", false )->getAmount()
+ * eaccounting_money( "$100,000", "USD", false )->getAmount()
  *
  * @since 1.0.2
  *
@@ -183,7 +183,7 @@ function eaccounting_get_username( $user_id ) {
  *
  * @return \EverAccounting\Core\Money|WP_Error
  */
-function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
+function eaccounting_money( $amount, $code = 'USD', $convert = false ) {
 	try {
 		return new \EverAccounting\Core\Money( $amount, $code, $convert );
 	} catch ( Exception $e ) {
@@ -208,7 +208,7 @@ function eaccounting_get_money( $amount, $code = 'USD', $convert = false ) {
  * @return float|int|string
  */
 function __eaccounting_convert_price( $method, $amount, $from, $to, $rate, $format = false ) {
-	$money = eaccounting_get_money( $amount, $to );
+	$money = eaccounting_money( $amount, $to );
 	// No need to convert same currency
 	if ( $from === $to ) {
 		return $format ? $money->format() : $money->getAmount();

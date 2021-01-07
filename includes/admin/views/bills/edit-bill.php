@@ -82,7 +82,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Bill Date', 'wp-ever-accounting' ),
 						'name'          => 'issue_date',
-						'value'         => $bill->get_issue_date() ? eaccounting_format_datetime( $bill->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
+						'value'         => $bill->get_issue_date() ? eaccounting_date( $bill->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
 						'required'      => true,
 						'data_type'     => 'date',
 					)
@@ -93,7 +93,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Due Date', 'wp-ever-accounting' ),
 						'name'          => 'due_date',
-						'value'         => $bill->get_due_date() ? eaccounting_format_datetime( $bill->get_due_date(), 'Y-m-d' ) : $due_date,
+						'value'         => $bill->get_due_date() ? eaccounting_date( $bill->get_due_date(), 'Y-m-d' ) : $due_date,
 						'required'      => true,
 						'data_type'     => 'date',
 					)

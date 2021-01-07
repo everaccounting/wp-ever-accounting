@@ -1,0 +1,21 @@
+<?php
+/**
+ * Single invoice page.
+ *
+ * This template can be overridden by copying it to yourtheme/eaccounting/single-invoice.php.
+ *
+ * @version 1.1.0
+ * @var int $invoice_id
+ * @var string $key
+ */
+
+if ( empty( $key ) || empty( $invoice_id ) ) {
+	eaccounting_get_template( 'unauthorized.php' );
+	exit();
+}
+$invoice = eaccounting_get_invoice( $invoice_id );
+if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
+	eaccounting_get_template( 'unauthorized.php' );
+	exit();
+}
+eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) );

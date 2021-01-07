@@ -75,7 +75,7 @@ class Export_Payments extends CSV_Exporter {
 			$value = null;
 			switch ( $column ) {
 				case 'payment_date':
-					$value = eaccounting_format_datetime( $item->get_payment_date() );
+					$value = eaccounting_date( $item->get_payment_date() );
 					break;
 				case 'amount':
 					$value = $item->get_amount();

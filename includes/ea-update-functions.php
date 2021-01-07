@@ -291,4 +291,5 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `paid_at` `payment_date` date NOT NULL;" );
+	flush_rewrite_rules();
 }

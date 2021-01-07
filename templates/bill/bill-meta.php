@@ -24,16 +24,16 @@ defined( 'ABSPATH' ) || exit;
 	<tr>
 		<th><?php esc_html_e( 'Issue Date', 'wp-ever-accounting' ); ?></th>
 		<td>:</td>
-		<td><?php echo empty( $bill->get_issue_date() ) ? '&mdash;' : eaccounting_format_datetime( $bill->get_issue_date(), 'M j, Y' ); ?></td>
+		<td><?php echo empty( $bill->get_issue_date() ) ? '&mdash;' : eaccounting_date( $bill->get_issue_date(), 'M j, Y' ); ?></td>
 	</tr>
 	<tr>
 		<th><?php esc_html_e( 'Due Date', 'wp-ever-accounting' ); ?></th>
 		<td>:</td>
-		<td><?php echo empty( $bill->get_due_date() ) ? '&mdash;' : eaccounting_format_datetime( $bill->get_due_date(), 'M j, Y' ); ?></td>
+		<td><?php echo empty( $bill->get_due_date() ) ? '&mdash;' : eaccounting_date( $bill->get_due_date(), 'M j, Y' ); ?></td>
 	</tr>
 	<tr>
 		<th><?php esc_html_e( 'Payment Date', 'wp-ever-accounting' ); ?></th>
 		<td>:</td>
-		<td><?php echo empty( $bill->get_payment_date() ) ? '&mdash;' : eaccounting_format_datetime( $bill->get_payment_date(), 'M j, Y' ); ?></td>
+		<td><?php echo empty( $bill->get_payment_date() ) ? '&mdash;' : eaccounting_date( $bill->get_payment_date(), 'M j, Y' ); ?></td>
 	</tr>
 </table>

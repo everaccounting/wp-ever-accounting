@@ -988,7 +988,7 @@ function eaccounting_input_date_range( $field ) {
 	$value       = __( 'Date range', 'wp-ever-accounting' );
 	$html        = '<div class="ea-date-range-picker">';
 	if ( ! empty( $field['start_date'] ) && ! empty( $field['end_date'] ) ) {
-		$value = sprintf( '%s >> %s', eaccounting_format_datetime( $field['start_date'], 'd M y' ), eaccounting_format_datetime( $field['start_date'], 'd M y' ) );
+		$value = sprintf( '%s >> %s', eaccounting_date( $field['start_date'], 'd M y' ), eaccounting_date( $field['start_date'], 'd M y' ) );
 	}
 
 	$html .= sprintf( '<span>%s</span>', eaccounting_clean( $value ) );

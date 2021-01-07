@@ -910,7 +910,7 @@ abstract class ResourceModel {
 	 * @param string         $format
 	 */
 	protected function set_date_prop( $prop, $value, $format = 'Y-m-d H:i:s' ) {
-		$value = eaccounting_format_datetime( $value, $format );
+		$value = eaccounting_date( $value, $format );
 		if ( empty( $value ) ) {
 			$this->set_prop( $prop, null );
 
