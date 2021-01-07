@@ -495,6 +495,8 @@ class EverAccounting_Install {
             `subtotal` DOUBLE(15,4) DEFAULT 0,
             `total_tax` DOUBLE(15,4) DEFAULT 0,
             `total_discount` DOUBLE(15,4) DEFAULT 0,
+            `total_fees` DOUBLE(15,4) DEFAULT 0,
+            `total_shipping` DOUBLE(15,4) DEFAULT 0,
             `total` DOUBLE(15,4) DEFAULT 0,
             `tax_inclusive` tinyINT(1) NOT NULL DEFAULT '0',
   			`note` TEXT DEFAULT NULL,

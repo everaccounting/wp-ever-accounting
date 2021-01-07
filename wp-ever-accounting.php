@@ -260,6 +260,8 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-settings.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-assets.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-rewrites.php';
 
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
 

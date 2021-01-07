@@ -452,7 +452,7 @@ function eaccounting_get_transfers( $args = array() ) {
 		$orderby = 'expense.' . $qv['orderby'];
 	} elseif ( in_array( $qv['orderby'], array( 'to_account_id' ), true ) ) {
 		$orderby = 'income.account_id';
-	}else{
+	} else {
 		$orderby = "$table.id";
 	}
 

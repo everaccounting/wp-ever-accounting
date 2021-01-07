@@ -30,6 +30,26 @@ defined( 'ABSPATH' ) || exit;
 			</td>
 		</tr>
 
+		<?php if ( ! empty( $invoice->get_total_fees() ) ) : ?>
+			<tr>
+				<td class="label"><?php esc_html_e( 'Fees:', 'wp-ever-accounting' ); ?></td>
+				<td width="1%"></td>
+				<td class="total">
+					<?php echo eaccounting_price( $invoice->get_total_fees(), $invoice->get_currency_code() ); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $invoice->get_total_shipping() ) ) : ?>
+			<tr>
+				<td class="label"><?php esc_html_e( 'Shipping:', 'wp-ever-accounting' ); ?></td>
+				<td width="1%"></td>
+				<td class="total">
+					<?php echo eaccounting_price( $invoice->get_total_shipping(), $invoice->get_currency_code() ); ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+
 		<?php if ( eaccounting_tax_enabled() ) : ?>
 			<?php if ( 'total' === eaccounting()->settings->get( 'tax_display_totals', 'total' ) ) : ?>
 				<tr>
@@ -70,7 +90,7 @@ defined( 'ABSPATH' ) || exit;
 				<td class="label"><?php esc_html_e( 'Due', 'wp-ever-accounting' ); ?>:</td>
 				<td width="1%"></td>
 				<td class="total">
-					<?php echo eaccounting_price( abs( $invoice->get_total_due() ), $invoice->get_currency_code() ); ?>
+					<?php echo eaccounting_price( $invoice->get_total_due(), $invoice->get_currency_code() ); ?>
 				</td>
 			</tr>
 		<?php endif; ?>

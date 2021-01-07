@@ -155,16 +155,14 @@ function eaccounting_time_format() {
 /**
  * Format a date for output.
  *
- * @since  1.0.2
+ * @since 1.1.0
  *
- * @param string                               $format Data format.
- *                                                     Defaults to the eaccounting_date_format function if not set.
- *
- * @param \EverAccounting\Core\DateTime|string $date   Instance of DateTime.
+ * @param string $format
+ * @param        $date
  *
  * @return string
  */
-function eaccounting_format_datetime( $date, $format = '' ) {
+function eaccounting_date( $date, $format = '' ) {
 
 	if ( empty( $date ) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date ) {
 		return '';
@@ -179,18 +177,6 @@ function eaccounting_format_datetime( $date, $format = '' ) {
 	}
 
 	return date_i18n( $format, $date );
-}
-
-/**
- * @since 1.1.0
- *
- * @param string $format
- * @param        $date
- *
- * @return string
- */
-function eaccounting_date( $date, $format = '' ) {
-	return eaccounting_format_datetime( $date, $format );
 }
 
 /**
@@ -320,18 +306,18 @@ function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
  *
  * @param      $number
  *
- * @param int  $precision
+ * @param int  $decimals
  * @param bool $trim_zeros
  *
  * @return int|float|null
  */
-function eaccounting_format_decimal( $number, $precision = 2, $trim_zeros = false ) {
+function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false ) {
 
 	// Convert multiple dots to just one.
 	$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
 
-	if ( $precision ) {
-		$number = number_format( floatval( $number ), $precision, '.', '' );
+	if ( is_numeric( $decimals ) ) {
+		$number = number_format( floatval( $number ), $decimals, '.', '' );
 	}
 
 	if ( $trim_zeros && strstr( $number, '.' ) ) {
@@ -354,7 +340,7 @@ function eaccounting_format_decimal( $number, $precision = 2, $trim_zeros = fals
  * @return float|int
  */
 function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
-	return eaccounting_get_money( $amount, $code, false )->getAmount();
+	return eaccounting_money( $amount, $code, false )->getAmount();
 }
 
 /**
@@ -373,7 +359,7 @@ function eaccounting_format_price( $amount, $code = null ) {
 		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
 	}
 
-	$amount = eaccounting_get_money( $amount, $code, true );
+	$amount = eaccounting_money( $amount, $code, true );
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */
 		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
@@ -400,7 +386,7 @@ function eaccounting_price( $amount, $code = null ) {
 		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
 	}
 
-	$amount = eaccounting_get_money( $amount, $code, true );
+	$amount = eaccounting_money( $amount, $code, true );
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */
 		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
@@ -409,6 +395,31 @@ function eaccounting_price( $amount, $code = null ) {
 	}
 
 	return $amount->format();
+}
+
+/**
+ * Use the function for everywhere internal use without formatting.
+ *
+ * @param      $amount
+ * @param null $code
+ * @since 1.1.0
+ *
+ * @return float|int
+ */
+function eaccounting_raw_price( $amount, $code = null ) {
+	if ( empty( $code ) ) {
+		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
+	}
+	$amount = eaccounting_money( $amount, $code, false );
+
+	if ( is_wp_error( $amount ) ) {
+		/* translators: %s currency code */
+		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
+
+		return 0;
+	}
+
+	return $amount->getValue();
 }
 
 /**

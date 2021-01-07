@@ -123,7 +123,7 @@ $edit_url = add_query_arg( array( 'action' => 'edit', 'payment_id' => $payment->
 										<?php
 										$date_format = get_option( 'date_format' ) ? get_option( 'date_format' ) : 'F j, Y';
 										?>
-										<div class="ea-voucher__value"><?php echo eaccounting_format_datetime( $payment->get_payment_date(), 'M j, Y' ); ?></div>
+										<div class="ea-voucher__value"><?php echo eaccounting_date( $payment->get_payment_date(), 'M j, Y' ); ?></div>
 									</td>
 								</tr>
 								<tr>

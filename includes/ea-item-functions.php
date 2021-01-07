@@ -51,7 +51,7 @@ function eaccounting_get_item_by_sku( $sku ) {
 	$cache_key = "item-sku-$sku";
 	$item      = wp_cache_get( $cache_key, 'ea_items' );
 	if ( false === $item ) {
-		$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_items where `sku`=%s AND `type`='item'", eaccounting_clean( $sku ) ) );
+		$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_items where `sku`=%s", eaccounting_clean( $sku ) ) );
 		wp_cache_set( $cache_key, $item, 'ea_items' );
 	}
 	if ( $item ) {

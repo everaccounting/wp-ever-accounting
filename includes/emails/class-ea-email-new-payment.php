@@ -62,7 +62,7 @@ class Email_New_Payment extends Email {
 
 		if ( $payment && $payment->exists() ) {
 			$this->object                         = $payment;
-			$this->placeholders['{payment_date}'] = eaccounting_format_datetime( $this->object->get_payment_date() );
+			$this->placeholders['{payment_date}'] = eaccounting_date( $this->object->get_payment_date() );
 			$this->placeholders['{payment_id}']   = $this->object->get_id();
 		}
 		if ( $this->is_enabled() && $this->get_recipient() ) {

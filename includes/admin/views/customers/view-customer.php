@@ -181,8 +181,8 @@ $edit_url        = eaccounting_admin_url(
 					echo sprintf(
 					/* translators: %s date and %s name */
 						esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
-						eaccounting_format_datetime( $customer->get_date_created(), 'F m, Y H:i a' ),
-						eaccounting_get_username( $customer->get_creator_id() )
+						eaccounting_date( $customer->get_date_created(), 'F m, Y H:i a' ),
+						eaccounting_get_full_name( $customer->get_creator_id() )
 					);
 					?>
 				</p>

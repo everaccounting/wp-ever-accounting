@@ -116,7 +116,7 @@ abstract class Transaction extends ResourceModel {
 	public function get_payment_date( $context = 'edit' ) {
 		$payment_date = $this->get_prop( 'payment_date', $context );
 
-		return $payment_date ? eaccounting_format_datetime( $payment_date, 'Y-m-d' ) : $payment_date;
+		return $payment_date ? eaccounting_date( $payment_date, 'Y-m-d' ) : $payment_date;
 	}
 
 	/**

@@ -236,10 +236,10 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				);// phpcs:ignore
 				break;
 			case 'issue_date':
-				$value = eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' );
+				$value = eaccounting_date( $invoice->get_issue_date(), 'Y-m-d' );
 				break;
 			case 'due_date':
-				$value = eaccounting_format_datetime( $invoice->get_due_date(), 'Y-m-d' );
+				$value = eaccounting_date( $invoice->get_due_date(), 'Y-m-d' );
 				break;
 			case 'status':
 				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $invoice->get_status(), $invoice->get_status_nicename() );

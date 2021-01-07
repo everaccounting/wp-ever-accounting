@@ -206,10 +206,10 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:ignore
 				break;
 			case 'issue_date':
-				$value = eaccounting_format_datetime( $bill->get_issue_date(), 'Y-m-d' );
+				$value = eaccounting_date( $bill->get_issue_date(), 'Y-m-d' );
 				break;
 			case 'due_date':
-				$value = eaccounting_format_datetime( $bill->get_due_date(), 'Y-m-d' );
+				$value = eaccounting_date( $bill->get_due_date(), 'Y-m-d' );
 				break;
 			case 'status':
 				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $bill->get_status(), $bill->get_status_nicename() );

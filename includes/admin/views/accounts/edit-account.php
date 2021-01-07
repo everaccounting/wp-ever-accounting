@@ -158,8 +158,8 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 						echo sprintf(
 						/* translators: %s date and %s name */
 							esc_html__( 'The account was created at %1$s by %2$s', 'wp-ever-accounting' ),
-							eaccounting_format_datetime( $account->get_date_created(), 'F m, Y H:i a' ),
-							eaccounting_get_username( $account->get_creator_id() )
+							eaccounting_date( $account->get_date_created(), 'F m, Y H:i a' ),
+							eaccounting_get_full_name( $account->get_creator_id() )
 						);
 						?>
 					</p>

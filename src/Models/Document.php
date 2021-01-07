@@ -76,6 +76,8 @@ abstract class Document extends ResourceModel {
 		'subtotal'        => 0.00,
 		'total_tax'       => 0.00,
 		'total_discount'  => 0.00,
+		'total_fees'      => 0.00,
+		'total_shipping'  => 0.00,
 		'total'           => 0.00,
 		'tax_inclusive'   => 1,
 		'note'            => '',
@@ -524,6 +526,32 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_total_discount( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_discount', $context );
+	}
+
+	/**
+	 * Get total fees.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context View or edit context.
+	 *
+	 * @return float
+	 */
+	public function get_total_fees( $context = 'view' ) {
+		return (float) $this->get_prop( 'total_fees', $context );
+	}
+
+	/**
+	 * Get total shipping.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context View or edit context.
+	 *
+	 * @return float
+	 */
+	public function get_total_shipping( $context = 'view' ) {
+		return (float) $this->get_prop( 'total_shipping', $context );
 	}
 
 	/**
@@ -1104,6 +1132,30 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
+	 * set the fees.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param float $fees .
+	 *
+	 */
+	public function set_total_fees( $fees ) {
+		$this->set_prop( 'total_fees', eaccounting_format_decimal( $fees, 2 ) );
+	}
+
+	/**
+	 * set the shipping.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param float $shipping .
+	 *
+	 */
+	public function set_total_shipping( $shipping ) {
+		$this->set_prop( 'total_shipping', eaccounting_format_decimal( $shipping, 2 ) );
+	}
+
+	/**
 	 * set the total.
 	 *
 	 * @since  1.1.0
@@ -1394,7 +1446,7 @@ abstract class Document extends ResourceModel {
 		$this->set_subtotal( $subtotal );
 		$this->set_total_tax( $total_tax );
 		$this->set_total_discount( $total_discount );
-		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax();
+		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax() + $this->get_total_fees() + $this->get_total_shipping();
 		if ( $total < 0 ) {
 			$total = 0;
 		}

@@ -84,7 +84,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Invoice Date', 'wp-ever-accounting' ),
 						'name'          => 'issue_date',
-						'value'         => $invoice->get_issue_date() ? eaccounting_format_datetime( $invoice->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
+						'value'         => $invoice->get_issue_date() ? eaccounting_date( $invoice->get_issue_date(), 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
 						'required'      => true,
 						'data_type'     => 'date',
 					)
@@ -95,7 +95,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Due Date', 'wp-ever-accounting' ),
 						'name'          => 'due_date',
-						'value'         => $invoice->get_due_date() ? eaccounting_format_datetime( $invoice->get_due_date(), 'Y-m-d' ) : $due_date,
+						'value'         => $invoice->get_due_date() ? eaccounting_date( $invoice->get_due_date(), 'Y-m-d' ) : $due_date,
 						'required'      => true,
 						'data_type'     => 'date',
 					)

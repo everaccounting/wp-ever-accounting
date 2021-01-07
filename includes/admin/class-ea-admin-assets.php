@@ -9,7 +9,6 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Core\DateTime;
 
 defined( 'ABSPATH' ) || exit();
 

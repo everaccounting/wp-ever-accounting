@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
 				'name'        => 'date',
 				'placeholder' => __( 'Enter Date', 'wp-ever-accounting' ),
 				'data_type'   => 'date',
-				'value'       => date( 'Y-m-d' ),
+				'value'       => date_i18n( 'Y-m-d' ),
 				'required'    => true,
 			)
 		);
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit();
 			array(
 				'label'       => __( 'Amount', 'wp-ever-accounting' ),
 				'name'        => 'amount',
-				'value'       => $invoice->get_total_due(),
+				'value'       => eaccounting_raw_price( $invoice->get_total_due(), $invoice->get_currency_code() ),
 				'data_type'   => 'price',
 				'required'    => true,
 				'placeholder' => __( 'Enter Amount', 'wp-ever-accounting' ),
