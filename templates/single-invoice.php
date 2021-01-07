@@ -18,4 +18,15 @@ if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
 	eaccounting_get_template( 'unauthorized.php' );
 	exit();
 }
-eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) );
+?>
+<div class="ea-container">
+	<div class="ea-row">
+		<div class="ea-col-12">
+			<div class="ea-card">
+				<div class="ea-card__inside">
+					<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
