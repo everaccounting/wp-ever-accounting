@@ -56,7 +56,6 @@ class EverAccounting_Admin_Release {
 		$title .= '<div class="ea-release_tag">';
 		$title .= '<h2 class="wp-heading-inline">'.esc_html__( 'Best WordPress Accounting Plugin', 'wp-ever-accounting' ).'</h2>';
 		$title .= '</div>';
-		error_log(print_r($title,true));
 		return $title;
 
 	}

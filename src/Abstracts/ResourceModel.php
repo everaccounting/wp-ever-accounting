@@ -289,7 +289,7 @@ abstract class ResourceModel {
 		} else {
 			$this->repository->insert( $this );
 		}
-
+		$this->save_meta_data();
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
 		 *

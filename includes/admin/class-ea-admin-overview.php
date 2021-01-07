@@ -47,7 +47,6 @@ class EverAccounting_Admin_Overview {
 			'eaccounting',
 			array( $this, 'render_page' )
 		);
-		//      error_log($overview);
 		add_action( 'load-' . $overview, array( __CLASS__, 'eaccounting_dashboard_setup' ) );
 	}
 

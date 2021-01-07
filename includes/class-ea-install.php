@@ -29,6 +29,8 @@ class EverAccounting_Install {
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
+		add_action( 'plugins_loaded', array( __CLASS__, 'wpdb_table_fix' ), 0 );
+		add_action( 'switch_blog', array( __CLASS__, 'wpdb_table_fix' ), 0 );
 	}
 
 	/**
@@ -616,6 +618,7 @@ class EverAccounting_Install {
 			"{$wpdb->prefix}ea_accounts",
 			"{$wpdb->prefix}ea_categories",
 			"{$wpdb->prefix}ea_contacts",
+			"{$wpdb->prefix}ea_contactmeta",
 			"{$wpdb->prefix}ea_transactions",
 			"{$wpdb->prefix}ea_transfers",
 			"{$wpdb->prefix}ea_documents",
@@ -629,6 +632,23 @@ class EverAccounting_Install {
 		$tables = apply_filters( 'eaccounting_install_get_tables', $tables );
 
 		return $tables;
+	}
+
+	/**
+	 * Register custom tables within $wpdb object.
+	 */
+	public static function wpdb_table_fix() {
+		global $wpdb;
+
+		// List of tables without prefixes.
+		$tables = array(
+			'contactmeta' => 'ea_contactmeta',
+		);
+
+		foreach ( $tables as $name => $table ) {
+			$wpdb->$name    = $wpdb->prefix . $table;
+			$wpdb->tables[] = $table;
+		}
 	}
 
 	/**
