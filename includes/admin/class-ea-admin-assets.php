@@ -35,6 +35,7 @@ class Admin_Assets {
 		$screen_id = $screen ? $screen->id : '';
 		// Register admin styles.
 		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
+		wp_register_style( 'ea-release-styles', eaccounting()->plugin_url() . '/assets/css/release.css', array(), $version );
 		wp_register_style( 'jquery-ui-style', eaccounting()->plugin_url() . '/assets/css/jquery-ui/jquery-ui.min.css', array(), $version );
 
 		// Add RTL support for admin styles.
