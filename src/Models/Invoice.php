@@ -194,7 +194,7 @@ class Invoice extends Document {
 	 * @return bool
 	 */
 	public function needs_payment() {
-		return ! empty( eaccounting_money( $this->get_total_due(), $this->get_currency_code() ) );
+		return ! empty( $this->get_total_due() );
 	}
 
 	/**
@@ -500,7 +500,7 @@ class Invoice extends Document {
 	 * @return float|int
 	 */
 	public function get_total_due() {
-		$due = eaccounting_money( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
+		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
 		if ( $due < 0 ) {
 			$due = 0;
 		}
@@ -518,7 +518,7 @@ class Invoice extends Document {
 	public function get_total_paid() {
 		$total_paid = 0;
 		foreach ( $this->get_payments() as $payment ) {
-			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $this->get_currency_code(), $payment->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
+			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $this->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
 		}
 
 		return $total_paid;

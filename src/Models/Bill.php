@@ -193,7 +193,7 @@ class Bill extends Document {
 	 * @return bool
 	 */
 	public function needs_payment() {
-		return ! empty( eaccounting_money( $this->get_total_due(), $this->get_currency_code() ) );
+		return ! empty( $this->get_total_due() );
 	}
 
 	/**
@@ -449,7 +449,7 @@ class Bill extends Document {
 	 * @return float|int
 	 */
 	public function get_total_due() {
-		$due = eaccounting_money( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
+		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
 		if ( $due < 0 ) {
 			$due = 0;
 		}
