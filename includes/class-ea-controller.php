@@ -25,7 +25,7 @@ class EverAccounting_Controller {
 		add_action( 'eaccounting_delete_account', array( $this, 'delete_default_account' ) );
 		add_action( 'eaccounting_delete_account', array( $this, 'update_transaction_account' ) );
 		//customers
-		add_action( 'eaccounting_validate_customer_data', array( $this, 'validate_customer_data' ), 10, 2 );
+
 		//vendors
 
 		//payments
@@ -107,20 +107,6 @@ class EverAccounting_Controller {
 		}
 	}
 
-	/**
-	 * Validate payment data.
-	 *
-	 * @param array $data
-	 * @param null $id
-	 * @param \WP_Error $errors
-	 *
-	 * @throws \Exception
-	 * @since 1.1.0
-	 *
-	 */
-	public static function validate_customer_data( $data, $id = null ) {
-
-	}
 
 	/**
 	 * Validate payment data.

@@ -16,9 +16,9 @@ defined( 'ABSPATH' ) || exit;
 	<meta name="robots" content="noindex,nofollow">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<?php do_action( 'eaccounting_header' ); ?>
+	<?php //do_action( 'eaccounting_header' ); ?>
 </head>
-<body <?php body_class('wp-core-ui eaccounting');?>>
+<body class="wp-core-ui eaccounting">
 <?php do_action( 'eaccounting_body' ); ?>
 <?php do_action( 'eaccounting_body_end' ); ?>
 <?php do_action( 'eaccounting_footer' ); ?>

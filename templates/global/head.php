@@ -16,14 +16,12 @@ defined( 'ABSPATH' ) || exit;
 	<meta name="robots" content="noindex,nofollow">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<?php wp_head(); ?>
 	<?php do_action( 'eaccounting_header' ); ?>
 </head>
-<body <?php body_class(); ?>>
+<body>
 
 <?php
 do_action( 'eaccounting_body_top' );
-wp_body_open();
 
 do_action( 'eaccounting_before_header' );
 
