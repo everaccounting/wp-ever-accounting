@@ -19,20 +19,19 @@ if ( empty( $bill ) || $key !== $bill->get_key() ) {
 	exit();
 }
 ?>
-<div class="ea-container">
-	<?php eaccounting_get_template( 'global/header.php', array( 'bill' => $bill ) ); ?>
-	<div class="ea-document_description">
-		<div class="ea-row">
-			<div class="ea-col-12">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						<?php eaccounting_get_template( 'bill/bill.php', array( 'bill' => $bill ) ); ?>
-					</div>
-				</div>
-			</div>
-		</div>
+<?php eaccounting_get_template( 'global/head.php' ); ?>
+<?php do_action( 'eaccounting_before_bill_top' ); ?>
+<?php do_action( 'eaccounting_bill_top', $bill ); ?>
+<?php do_action( 'eaccounting_after_bill_top' ); ?>
+
+<div class="ea-card">
+	<div class="ea-card__inside">
+		<?php do_action( 'eacounting_before_bill_content', $bill ); ?>
+		<?php do_action( 'eaccounting_bill_content', $bill ); ?>
+		<?php do_action( 'eacounting_after_bill_content', $bill ); ?>
 	</div>
 </div>
-<?php eaccounting_get_template( 'global/footer.php', array( 'bill' => $bill ) ); ?>
+<!-- /.ea-card -->
+<?php eaccounting_get_template( 'global/footer.php' ); ?>
 
 

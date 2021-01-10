@@ -12,7 +12,7 @@ use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit;
 ?>
-<table class="ea-document__meta alignright">
+<table class="ea-document__meta">
 	<?php if ( $bill->get_order_number() ) : ?>
 		<tr>
 			<th><?php esc_html_e( 'Order Number', 'wp-ever-accounting' ); ?></th>

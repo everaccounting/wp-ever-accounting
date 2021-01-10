@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<?php do_action( 'eaccounting_header' ); ?>
 </head>
-<body class="wp-core-ui eaccounting">
+<body <?php body_class('wp-core-ui eaccounting');?>>
 <?php do_action( 'eaccounting_body' ); ?>
 <?php do_action( 'eaccounting_body_end' ); ?>
 <?php do_action( 'eaccounting_footer' ); ?>

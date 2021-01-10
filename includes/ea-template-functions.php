@@ -221,7 +221,7 @@ function eaccounting_invoice_top( $invoice ) {
 				<?php esc_html_e( 'Download', 'wp-ever-accounting' ); ?>
 			</button>
 			<?php if ( is_user_logged_in() && current_user_can( 'ea_manage_invoice' ) && $invoice->is_editable() ) : ?>
-				<a class="button button-primary edit" href="<?php echo admin_url( 'admin.php?page=ea-sales&tab=invoices&action=edit&invoice_id=3', 'admin' ) ?>">
+				<a class="button button-primary edit" href="<?php echo admin_url( 'admin.php?page=ea-sales&tab=invoices&action=edit&invoice_id=' . $invoice->get_id(), 'admin' ) ?>">
 					<span class="dashicons dashicons-money-alt"></span>
 					<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
 				</a>
@@ -263,7 +263,37 @@ add_action( 'eaccounting_must_footer', 'eaccounting_must_footer_template' );
  *
  * @since 1.1.0
  */
-function eaccounting_get_parmalink_base(){
-	return apply_filters('eaccounting_parmalink_base', 'eaccounting');
+function eaccounting_get_parmalink_base() {
+	return apply_filters( 'eaccounting_parmalink_base', 'eaccounting' );
 }
 
+function eaccounting_bill_top( $bill ) {
+	?>
+	<div class="ea-bill-actions clearfix">
+		<div class="ea-bill-status alignleft">
+			<div class="ea-document__status <?php echo sanitize_html_class( $bill->get_status() ); ?>">
+				<span><?php echo esc_html( $bill->get_status_nicename() ); ?></span>
+			</div>
+		</div>
+		<div class="ea-bill-buttons alignright">
+			<button class="button button-secondary download">
+				<span class="dashicons dashicons-printer"></span>
+				<?php esc_html_e( 'Download', 'wp-ever-accounting' ); ?>
+			</button>
+			<?php if ( is_user_logged_in() && current_user_can( 'ea_manage_bill' ) && $bill->is_editable() ) : ?>
+				<a class="button button-primary edit" href="<?php echo admin_url( 'admin.php?page=ea-expenses&tab=bills&action=edit&invoice_id=' . $bill->get_id(), 'admin' ) ?>">
+					<span class="dashicons dashicons-money-alt"></span>
+					<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
+				</a>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+}
+
+add_action( 'eaccounting_bill_top', 'eaccounting_bill_top', 10 );
+
+function eaccounting_bill_content( $bill ) {
+	eaccounting_get_template( 'bill/bill.php', array( 'bill' => $bill ) );
+}
+add_action( 'eaccounting_bill_content', 'eaccounting_bill_content', 10 );

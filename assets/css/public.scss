@@ -20,7 +20,7 @@
 	}
 
 }
-.ea-invoice-actions {
+.ea-invoice-actions,.ea-bill-actions {
 	overflow: hidden;
 	padding-top: 20px;
 	&::after {
@@ -29,6 +29,15 @@
 		display: table-cell;
 		content: "";
 	}
+	.button {
+		position: relative;
+		padding-left: 30px;
+	}
+	.dashicons {
+		position: absolute;
+		top: 4px;
+		left: 5px;
+	}
 }
 .ea-card__inside {
 	@media only screen and (min-width: 768px) {
@@ -36,6 +45,9 @@
 	}
 }
 .ea-document {
+	&__logo {
+		display: none;
+	}
 	&__number {
 		font-weight: 600;
 	}
@@ -83,6 +95,9 @@
 		}
 		td {
 			border-bottom: 0 !important;
+		}
+		p {
+			padding: 0;
 		}
 
 	}

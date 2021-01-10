@@ -27,11 +27,12 @@ if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
 <?php do_action( 'eaccounting_after_invoice_top' ); ?>
 <div class="ea-card">
 	<div class="ea-card__inside">
-		<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+		<?php do_action( 'eacounting_before_invoice_content', $invoice ); ?>
+		<?php do_action( 'eaccounting_invoice_content', $invoice ); ?>
+		<?php do_action( 'eacounting_after_invoice_content', $invoice ); ?>
 	</div>
 </div>
-<?php do_action( 'eaccounting_invoice_after_main_content', $invoice ); ?>
-
+<!-- /.ea-card -->
 <?php eaccounting_get_template( 'global/footer.php' ); ?>
 
 
