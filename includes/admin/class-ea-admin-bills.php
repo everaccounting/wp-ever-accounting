@@ -45,24 +45,14 @@ class EverAccounting_Admin_Bills {
 				$bill->set_status( 'received' );
 				$bill->save();
 				break;
-			case 'status_overdue':
-				$bill->set_status( 'overdue' );
-				$bill->save();
-				break;
 			case 'status_cancelled':
-				$total_paid = eaccounting_price( abs( $bill->get_total_paid() ), $bill->get_currency_code() );
-				$bill->get_repository()->delete_transactions( $bill );
-				if ( ! empty( $bill->get_total_paid() ) ) {
-					$bill->add_note(
-						sprintf(
-						/* translators: %s amount */
-							__( 'Removed %s payment', 'wp-ever-accounting' ),
-							$total_paid
-						)
-					);
-				}
-				$bill->set_status( 'cancelled' );
-				$bill->save();
+				$bill->set_cancelled();
+				break;
+			case 'status_paid':
+				$bill->set_paid();
+				break;
+			case 'view_as_vendor':
+				$redirect_url = site_url( sprintf( 'eaccounting/bill/%d/%s/', $bill->get_id(), $bill->get_key() ) );
 				break;
 			case 'delete':
 				$bill->delete();

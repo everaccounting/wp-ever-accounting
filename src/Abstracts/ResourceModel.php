@@ -244,7 +244,6 @@ abstract class ResourceModel {
 		if ( $this->repository && $this->get_id() ) {
 			$this->repository->delete( $this, array( 'force_delete' => $force_delete ) );
 			$this->set_id( 0 );
-
 			return true;
 		}
 
@@ -289,6 +288,7 @@ abstract class ResourceModel {
 		} else {
 			$this->repository->insert( $this );
 		}
+
 		$this->save_meta_data();
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.

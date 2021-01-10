@@ -109,7 +109,6 @@ abstract class ResourceRepository {
 	 * @return int meta ID
 	 */
 	public function add_meta( &$object, $meta ) {
-		var_dump($this->meta_type);
 		return add_metadata( $this->meta_type, $object->get_id(), $meta->key, is_string( $meta->value ) ? wp_slash( $meta->value ) : $meta->value, false );
 	}
 
@@ -349,8 +348,7 @@ abstract class ResourceRepository {
 		$item->clear_cache();
 
 		// Fire a hook.
-		do_action( 'eaccounting_update_' . $item->get_object_type(), $changes, $item );
-
+		do_action( 'eaccounting_update_' . $item->get_object_type(), $item->get_id(), $item, $changes );
 	}
 
 	/**
@@ -366,8 +364,9 @@ abstract class ResourceRepository {
 		// Delete cache.
 		$item->clear_cache();
 		// Fire a hook.
-		do_action( 'eaccounting_delete_' . $item->get_object_type(), $item->get_id(), $item->get_data(), $item );
+		do_action( 'eaccounting_delete_' . $item->get_object_type(), $item->get_id(), $item );
 		$item->set_id( 0 );
+		$item->set_defaults();
 	}
 
 	/*

@@ -11,12 +11,22 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Repositories\Documents;
 use EverAccounting\Traits\AttachmentTrait;
 use EverAccounting\Traits\CurrencyTrait;
 
 abstract class Document extends ResourceModel {
 	use AttachmentTrait;
 	use CurrencyTrait;
+
+	/**
+	 * Contains a reference to the repository for this class.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var Documents
+	 */
+	protected $repository;
 
 	/**
 	 * This is the name of this object type.
@@ -92,7 +102,7 @@ abstract class Document extends ResourceModel {
 	);
 
 	/**
-	 * Order items will be stored here, sometimes before they persist in the DB.
+	 * document items will be stored here, sometimes before they persist in the DB.
 	 *
 	 * @since 1.1.0
 	 *
@@ -101,21 +111,13 @@ abstract class Document extends ResourceModel {
 	protected $items = array();
 
 	/**
-	 * Order items that need deleting are stored here.
+	 * document items that need deleting are stored here.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @var array
 	 */
 	protected $items_to_delete = array();
-
-	/**
-	 * @since 1.1.0
-	 *
-	 * @var array
-	 */
-	protected $status_transition = array();
-
 
 	/**
 	 * Get the document if ID is passed, otherwise the account is new and empty.
@@ -131,22 +133,80 @@ abstract class Document extends ResourceModel {
 		$this->repository = Repositories::load( $this->repository_name );
 	}
 
+	/**
+	 * Get all class data in array format.
+	 *
+	 * @since 3.0.0
+	 * @return array
+	 */
+	public function get_data() {
+		return $this->to_array(
+			array_merge(
+				parent::get_data(),
+				array(
+					'line_items' => $this->get_items(),
+				)
+			)
+		);
+	}
+
+	/**
+	 * Get supported statuses.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public function get_statuses() {
+		return array();
+	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| Object Specific data methods
+	| CRUD methods
 	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete documents from the database.
+	| Written in abstract fashion so that the way documents are stored can be
+	| changed more easily in the future.
+	|
+	| A save method is included for convenience (chooses update or create based
+	| on if the order exists yet).
+	|
 	*/
 
 	/**
-	 * All available statuses.
+	 * Save should create or update based on object existence.
 	 *
-	 * @since 1.0.1
+	 * @since  1.1.0
 	 *
-	 * @return array
+	 * @return \Exception|bool
 	 */
-	public static function get_statuses() {
-		return array();
+	public function save() {
+		parent::save();
+		$this->save_items();
+
+		return $this->exists();
+	}
+
+	/**
+	 * Save all document items which are part of this order.
+	 */
+	protected function save_items() {
+		foreach ( $this->items_to_delete as $item ) {
+			if ( $item->exists() ) {
+				$item->delete();
+			}
+		}
+
+		$this->items_to_delete = array();
+
+		$items = array_filter( $this->items );
+		// Add/save items.
+		foreach ( $items as $item ) {
+			$item->set_document_id( $this->get_id() );
+			$item->set_currency_code( $this->get_currency_code() );
+			$item->save();
+		}
 	}
 
 	/*
@@ -154,6 +214,7 @@ abstract class Document extends ResourceModel {
 	| Getters
 	|--------------------------------------------------------------------------
 	*/
+
 	/**
 	 * Return the document number.
 	 *
@@ -165,22 +226,6 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_document_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
-	}
-
-	/**
-	 * Generate document number.
-	 *
-	 * @since 1.1.0
-	 * @return void
-	 */
-	public function maybe_set_document_number() {
-		if ( empty( $this->get_document_number() ) ) {
-			$number = $this->get_id();
-			if ( empty( $number ) ) {
-				$number = $this->repository->get_next_number( $this );
-			}
-			$this->set_document_number( $this->generate_number( $number ) );
-		}
 	}
 
 	/**
@@ -218,17 +263,6 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
-	}
-
-	/**
-	 * Get invoice status nice name.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return mixed|string
-	 */
-	public function get_status_nicename() {
-		return isset( $this->get_statuses()[ $this->get_status() ] ) ? $this->get_statuses()[ $this->get_status() ] : $this->get_status();
 	}
 
 	/**
@@ -663,18 +697,6 @@ abstract class Document extends ResourceModel {
 	}
 
 	/**
-	 * Set the document key.
-	 *
-	 * @since 1.1.0
-	 */
-	public function maybe_set_key() {
-		$key = $this->get_key();
-		if ( empty( $key ) ) {
-			$this->set_key( $this->generate_key() );
-		}
-	}
-
-	/**
 	 * Return the parent id.
 	 *
 	 * @since  1.1.0
@@ -687,117 +709,11 @@ abstract class Document extends ResourceModel {
 		return $this->get_prop( 'parent_id', $context );
 	}
 
-	/**
-	 * Get the invoice items.
-	 *
-	 * @since 1.1.0
-	 *
-	 *
-	 * @return DocumentItem[]
-	 */
-	public function get_items() {
-		if ( $this->exists() && empty( $this->items ) ) {
-			$items = $this->repository->get_items( $this );
-			foreach ( $items as $item_id => $item ) {
-				if ( ! array_key_exists( $item_id, $this->items_to_delete ) ) {
-					$this->items[ $item_id ] = $item;
-				}
-			}
-		}
-
-		return $this->items;
-	}
-
-	/**
-	 * Get item ids.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return array
-	 */
-	public function get_item_ids() {
-		$ids = array();
-		foreach ( $this->get_items() as $item ) {
-			$ids[] = $item->get_item_id();
-		}
-
-		return $ids;
-	}
-
-	/**
-	 * Get the invoice items.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return array
-	 */
-	public function get_taxes() {
-		$taxes = array();
-		if ( ! empty( $this->get_items() ) ) {
-			foreach ( $this->get_items() as $item ) {
-				$taxes[] = array(
-					'item_id' => $item->get_item_id(),
-					'rate'    => $item->get_tax_rate(),
-					'amount'  => $item->get_tax(),
-				);
-			}
-		}
-
-		return $taxes;
-	}
-
-	/**
-	 * @since 1.1.0
-	 *
-	 * @param      $item_id
-	 * @param bool $by_line_id
-	 *
-	 * @return DocumentItem|int
-	 */
-	public function get_item( $item_id, $by_line_id = false ) {
-		$items = $this->get_items();
-
-		// Search for item id.
-		if ( ! empty( $items ) && ! $by_line_id ) {
-			foreach ( $items as $id => $item ) {
-				if ( isset( $items[ $item_id ] ) ) {
-					return $items[ $item_id ];
-				}
-			}
-		} elseif ( ! empty( $items ) && $by_line_id ) {
-			foreach ( $items as $item ) {
-				if ( $item->get_id() === absint( $item_id ) ) {
-					return $item;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get all class data in array format.
-	 *
-	 * @since 3.0.0
-	 * @return array
-	 */
-	public function get_data() {
-		return $this->to_array(
-			array_merge(
-				parent::get_data(),
-				array(
-					'line_items' => $this->get_items(),
-				)
-			)
-		);
-	}
-
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
 	|--------------------------------------------------------------------------
 	*/
-
 	/**
 	 * set the number.
 	 *
@@ -841,26 +757,24 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @param string $status .
 	 *
+	 * @return string[]
 	 */
 	public function set_status( $status ) {
-		$statuses   = $this->get_statuses();
 		$old_status = $this->get_status();
+		// If setting the status, ensure it's set to a valid status.
+		if ( true === $this->object_read ) {
+			// Only allow valid new status.
+			if ( ! array_key_exists( $status, $this->get_statuses() ) ) {
+				$status = 'draft';
+			}
 
-		if ( ! array_key_exists( $status, $statuses ) ) {
-			return array(
-				'from' => $old_status,
-				'to'   => $old_status,
-			);
+			// If the old status is set but unknown (e.g. draft) assume its pending for action usage.
+			if ( $old_status && ! array_key_exists( $old_status, $this->get_statuses() ) ) {
+				$old_status = 'draft';
+			}
 		}
 
-		$this->set_prop( 'status', eaccounting_clean( $status ) );
-
-		if ( true === $this->object_read && $old_status !== $status ) {
-			$this->status_transition = array(
-				'from' => ! empty( $this->status_transition['from'] ) ? $this->status_transition['from'] : $old_status,
-				'to'   => $status,
-			);
-		}
+		$this->set_prop( 'status', $status );
 
 		return array(
 			'from' => $old_status,
@@ -900,7 +814,9 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_payment_date( $payment_date ) {
-		$this->set_date_prop( 'payment_date', $payment_date );
+		if ( $payment_date && $this->is_paid() ) {
+			$this->set_date_prop( 'payment_date', $payment_date );
+		}
 	}
 
 	/**
@@ -1196,8 +1112,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param string $note .
-	 *
+	 * @param $terms
 	 */
 	public function set_terms( $terms ) {
 		$this->set_prop( 'terms', eaccounting_sanitize_textarea( $terms ) );
@@ -1233,6 +1148,7 @@ abstract class Document extends ResourceModel {
 			$this->set_currency_rate( $currency->get_rate() );
 		}
 	}
+
 
 	/**
 	 * set the currency rate.
@@ -1272,70 +1188,137 @@ abstract class Document extends ResourceModel {
 		$this->set_prop( 'key', substr( $key, 0, 30 ) );
 	}
 
-
 	/*
 	|--------------------------------------------------------------------------
-	| Boolean methods
+	| Non CRUD getter & Setter
 	|--------------------------------------------------------------------------
-	|
-	| Return true or false.
 	|
 	*/
 
 	/**
-	 * Checks if the invoice has a given status.
+	 * Get invoice status nice name.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $status
-	 *
-	 * @return bool
+	 * @return mixed|string
 	 */
-	public function is_status( $status ) {
-		return $this->get_status() === eaccounting_clean( $status );
+	public function get_status_nicename() {
+		return isset( $this->get_statuses()[ $this->get_status() ] ) ? $this->get_statuses()[ $this->get_status() ] : $this->get_status();
+	}
+
+	public function get_formatted_address() {
+
+	}
+
+
+
+	/**
+	 * Get item ids.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return array
+	 */
+	public function get_item_ids() {
+		$ids = array();
+		foreach ( $this->get_items() as $item ) {
+			$ids[] = $item->get_item_id();
+		}
+
+		return $ids;
 	}
 
 	/**
-	 * Check if an invoice is editable.
+	 * Get the invoice items.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @return bool
+	 * @return array
 	 */
-	public function is_editable() {
-		return ! in_array( $this->get_status(), array( 'paid' ), true );
-	}
+	public function get_taxes() {
+		$taxes = array();
+		if ( ! empty( $this->get_items() ) ) {
+			foreach ( $this->get_items() as $item ) {
+				$taxes[] = array(
+					'item_id' => $item->get_item_id(),
+					'rate'    => $item->get_tax_rate(),
+					'amount'  => $item->get_tax(),
+				);
+			}
+		}
 
-	/**
-	 * Check if tax inclusive or not.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return mixed|null
-	 */
-	public function is_tax_inclusive() {
-		return ! empty( $this->get_tax_inclusive() );
-	}
-
-	/**
-	 * Get the type of discount.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @return bool
-	 */
-	public function is_fixed_discount() {
-		return 'percentage' !== $this->get_discount_type();
+		return $taxes;
 	}
 
 	/*
 	|--------------------------------------------------------------------------
-	| CRUD methods
+	| Document Item Handling
 	|--------------------------------------------------------------------------
 	|
-	| Used for database transactions.
-	|
+	| document items are used for products, taxes, shipping, and fees within
+	| each order.
 	*/
+
+	/**
+	 * Remove all line items from the order.
+	 *
+	 */
+	public function remove_items() {
+		if ( $this->exists() ) {
+			$this->repository->delete_items( $this );
+			$this->items = array();
+		}
+	}
+
+	/**
+	 * Get the invoice items.
+	 *
+	 * @since 1.1.0
+	 *
+	 *
+	 * @return DocumentItem[]
+	 */
+	public function get_items() {
+		if ( $this->exists() && empty( $this->items ) ) {
+			$items = $this->repository->get_items( $this );
+			foreach ( $items as $item_id => $item ) {
+				if ( ! array_key_exists( $item_id, $this->items_to_delete ) ) {
+					$this->items[ $item_id ] = $item;
+				}
+			}
+		}
+
+		return $this->items;
+	}
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param      $item_id
+	 * @param bool $by_line_id
+	 *
+	 * @return DocumentItem|int
+	 */
+	public function get_item( $item_id, $by_line_id = false ) {
+		$items = $this->get_items();
+
+		// Search for item id.
+		if ( ! empty( $items ) && ! $by_line_id ) {
+			foreach ( $items as $id => $item ) {
+				if ( isset( $items[ $item_id ] ) ) {
+					return $items[ $item_id ];
+				}
+			}
+		} elseif ( ! empty( $items ) && $by_line_id ) {
+			foreach ( $items as $item ) {
+				if ( $item->get_id() === absint( $item_id ) ) {
+					return $item;
+				}
+			}
+		}
+
+		return false;
+	}
 
 	/**
 	 * Set the document items.
@@ -1343,10 +1326,11 @@ abstract class Document extends ResourceModel {
 	 * @since 1.1.0
 	 *
 	 * @param array|DocumentItem[] $items items.
+	 * @param bool                 $append
 	 */
 	public function set_items( $items, $append = false ) {
 		// Remove existing items.
-		$old_item_ids = $this->get_item_ids();
+		$old_items = $this->get_items();
 
 		// Ensure that we have an array.
 		if ( ! is_array( $items ) ) {
@@ -1354,11 +1338,13 @@ abstract class Document extends ResourceModel {
 		}
 		$new_item_ids = array();
 		foreach ( $items as $item ) {
-			$new_item_ids[] = $this->add_item( $item );
+			if ( $add = $this->add_item( $item ) ) { //phpcs:ignore
+				$new_item_ids[] = $add;
+			}
 		}
 
 		if ( ! $append ) {
-			$remove_item_ids = array_diff( $old_item_ids, $new_item_ids );
+			$remove_item_ids = array_diff( eaccounting_list_pluck( $old_items, 'get_item_id' ), $new_item_ids );
 			foreach ( $remove_item_ids as $remove_item_id ) {
 				$this->remove_item( $remove_item_id );
 			}
@@ -1368,9 +1354,9 @@ abstract class Document extends ResourceModel {
 	/**
 	 * Adds an item to the document.
 	 *
-	 * @param array $item
+	 * @param $args
 	 *
-	 * @return \WP_Error|Bool
+	 * @return false|int
 	 */
 	public abstract function add_item( $args );
 
@@ -1395,110 +1381,106 @@ abstract class Document extends ResourceModel {
 		unset( $this->items[ $item->get_item_id() ] );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Conditionals
+	|--------------------------------------------------------------------------
+	|
+	| Checks if a condition is true or false.
+	|
+	*/
 	/**
-	 * Calculate total.
+	 * Checks if the invoice has a given status.
 	 *
 	 * @since 1.1.0
-	 * @throws \Exception
+	 *
+	 * @param $status
+	 *
+	 * @return bool
 	 */
-	public function calculate_totals() {
-		$subtotal       = 0;
-		$total_tax      = 0;
-		$total_discount = 0;
-		$discount_rate  = $this->get_discount();
-
-		// before calculating need to know subtotal so we can apply fixed discount
-		if ( $this->is_fixed_discount() ) {
-			$subtotal_discount = 0;
-			foreach ( $this->get_items() as $item ) {
-				$subtotal_discount += ( $item->get_price() * $item->get_quantity() );
-			}
-			$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
-		}
-
-		foreach ( $this->get_items() as $item ) {
-			$item_subtotal         = ( $item->get_price() * $item->get_quantity() );
-			$item_discount         = $item_subtotal * ( $discount_rate / 100 );
-			$item_subtotal_for_tax = $item_subtotal - $item_discount;
-			$item_tax_rate         = ( $item->get_tax_rate() / 100 );
-			$item_tax              = eaccounting_calculate_tax( $item_subtotal_for_tax, $item_tax_rate, $this->is_tax_inclusive() );
-			if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
-				$item_tax = eaccounting_format_decimal( $item_tax, 2 );
-			}
-			if ( $this->is_tax_inclusive() ) {
-				$item_subtotal -= $item_tax;
-			}
-			$item_total = $item_subtotal - $item_discount + $item_tax;
-			if ( $item_total < 0 ) {
-				$item_total = 0;
-			}
-
-			$item->set_subtotal( $item_subtotal );
-			$item->set_discount( $item_discount );
-			$item->set_tax( $item_tax );
-			$item->set_total( $item_total );
-
-			$subtotal       += $item->get_subtotal();
-			$total_tax      += $item->get_tax();
-			$total_discount += $item->get_discount();
-		}
-
-		$this->set_subtotal( $subtotal );
-		$this->set_total_tax( $total_tax );
-		$this->set_total_discount( $total_discount );
-		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax() + $this->get_total_fees() + $this->get_total_shipping();
-		$total = eaccounting_price( $total, $this->get_currency_code(), true );
-		if ( $total < 0 ) {
-			$total = 0;
-		}
-		$this->set_total( $total );
-
-		if ( ( 0 < $this->get_total_paid() ) && ( $this->get_total_paid() < $this->get_total() ) ) {
-			$this->set_status( 'partial' );
-		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
-			$this->set_status( 'paid' );
-		}
-
-		return array(
-			'subtotal'       => $this->get_subtotal(),
-			'total_tax'      => $this->get_total_tax(),
-			'total_discount' => $this->get_total_discount(),
-			'total'          => $this->get_total(),
-		);
+	public function is_status( $status ) {
+		return $this->get_status() === eaccounting_clean( $status );
 	}
 
+	/**
+	 * Checks if an order can be edited, specifically for use on the Edit Order screen.
+	 *
+	 * @return bool
+	 */
+	public function is_editable() {
+		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
+	}
 
 	/**
-	 * Generate key.
+	 * Returns if an order has been paid for based on the order status.
+	 *
+	 * @since 1.10
+	 * @return bool
+	 */
+	public function is_paid() {
+		return $this->is_status( 'paid' );
+	}
+
+	/**
+	 * Checks if the invoice is draft.
 	 *
 	 * @since 1.1.0
-	 * @return string
+	 * @return bool
 	 */
-	public function generate_key() {
-		$key = 'ea_' . apply_filters( 'eaccounting_generate_' . sanitize_key( $this->get_type() ) . '_key', $this->get_type() . '_' . wp_generate_password( 19, false ) );
-
-		return strtolower( $key );
+	public function is_draft() {
+		return $this->is_status( 'draft' );
 	}
 
 	/**
-	 * Save all document items which are part of this order.
+	 * Checks if the invoice is due.
+	 *
+	 * @since 1.1.0
+	 * @return bool
 	 */
-	protected function save_items() {
-		foreach ( $this->items_to_delete as $item ) {
-			if ( $item->exists() ) {
-				$item->delete();
-			}
-		}
-
-		$this->items_to_delete = array();
-
-		$items = array_filter( $this->items );
-		// Add/save items.
-		foreach ( $items as $item ) {
-			$item->set_document_id( $this->get_id() );
-			$item->set_currency_code( $this->get_currency_code() );
-			$item->save();
-		}
+	public function is_due() {
+		$due_date = $this->get_due_date();
+		return empty( $due_date ) || $this->is_paid() ? false : strtotime( date_i18n('Y-m-d 23:59:00') ) > strtotime( date_i18n('Y-m-d 23:59:00', strtotime($due_date)) ); //phpcs:ignore
 	}
 
+	/**
+	 * Check if tax inclusive or not.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return mixed|null
+	 */
+	public function is_tax_inclusive() {
+		return ! empty( $this->get_tax_inclusive() );
+	}
+
+	/**
+	 * Get the type of discount.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return bool
+	 */
+	public function is_fixed_discount() {
+		return 'percentage' !== $this->get_discount_type();
+	}
+
+	/**
+	 * Check if an key is valid.
+	 *
+	 * @param string $key Order key.
+	 *
+	 * @return bool
+	 */
+	public function is_key_valid( $key ) {
+		return $key === $this->get_key( 'edit' );
+	}
+
+	/**
+	 * Checks if an order needs payment, based on status and order total.
+	 *
+	 * @return bool
+	 */
+	public function needs_payment() {
+		return ! $this->is_status( 'paid' ) && $this->get_total() > 0;
+	}
 }

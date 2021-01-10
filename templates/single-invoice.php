@@ -18,9 +18,10 @@ if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
 	eaccounting_get_template( 'unauthorized.php' );
 	exit();
 }
+
 ?>
+<?php eaccounting_get_template( 'global/header.php'); ?>
 <div class="ea-container">
-	<?php eaccounting_get_template( 'global/header.php', array( 'invoice' => $invoice ) ); ?>
 	<div class="ea-document_description">
 		<div class="ea-row">
 			<div class="ea-col-12">

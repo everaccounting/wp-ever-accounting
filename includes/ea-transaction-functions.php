@@ -627,9 +627,8 @@ function eaccounting_get_transactions( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transactions' );
-	$results     = wp_cache_get( $cache_key, 'ea_transactions' );
+	$results     = wp_cache_get( sanitize_key($cache_key), 'ea_transactions' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-
 	if ( false === $results ) {
 		if ( $count_total ) {
 			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );

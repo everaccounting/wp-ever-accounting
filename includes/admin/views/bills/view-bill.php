@@ -1,4 +1,4 @@
- <?php
+<?php
 /**
  * Admin view Bill.
  *
@@ -20,11 +20,14 @@ $bill_actions = apply_filters(
 	'eaccounting_bill_actions',
 	array(
 		'status_received'  => __( 'Mark as Received', 'wp-ever-accounting' ),
-		'status_overdue'   => __( 'Mark Overdue', 'wp-ever-accounting' ),
 		'status_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
-		'delete'           => __( 'Delete', 'wp-ever-accounting' ),
+		'view_as_vendor'   => __( 'View as Vendor', 'wp-ever-accounting' ),
 	)
 );
+if( $bill->needs_payment() ){
+	$bill_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
+}
+$bill_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $bill->exists() ) {
 	add_meta_box( 'bill_payments', __( 'Bill Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Bills', 'bill_payments' ), 'ea_bill', 'side' );
 	add_meta_box( 'bill_notes', __( 'Bill Notes', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Bills', 'bill_notes' ), 'ea_bill', 'side' );
@@ -38,14 +41,14 @@ if ( $bill->exists() ) {
  */
 do_action( 'add_meta_boxes_ea_bill', $bill );
 ?>
-<div class="ea-title-section">
-	<div>
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
-		<a href="<?php echo esc_url( 'admin.php?page=ea-expenses&tab=bills&action=add' ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
+	<div class="ea-title-section">
+		<div>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
+			<a href="<?php echo esc_url( 'admin.php?page=ea-expenses&tab=bills&action=add' ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
 
+		</div>
 	</div>
-</div>
-<hr class="wp-header-end">
+	<hr class="wp-header-end">
 
 <?php if ( $bill->exists() && $bill->is_draft() ) : ?>
 	<div class="notice error">
