@@ -36,9 +36,9 @@ class Bill extends Document {
 	/**
 	 * Get the bill if ID is passed, otherwise the account is new and empty.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param int|object|Bill $bill object to read.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function __construct( $bill = 0 ) {
@@ -79,8 +79,8 @@ class Bill extends Document {
 	/**
 	 * Get supported statuses.
 	 *
-	 * @since 1.1.0
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function get_statuses() {
 		return eaccounting_get_bill_statuses();
@@ -94,8 +94,8 @@ class Bill extends Document {
 	/**
 	 * Generate document number.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function maybe_set_bill_number() {
 		if ( empty( $this->get_bill_number() ) ) {
@@ -110,11 +110,11 @@ class Bill extends Document {
 	/**
 	 * Generate number.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $number
 	 *
 	 * @return string
+	 * @since 1.1.0
+	 *
 	 */
 	public function generate_number( $number ) {
 		$prefix           = eaccounting()->settings->get( 'bill_prefix', 'BILL-' );
@@ -140,11 +140,12 @@ class Bill extends Document {
 	/**
 	 * Generate key.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function generate_key() {
 		$key = 'ea-' . apply_filters( 'eaccounting_generate_bill_key', 'bill' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
+
 		return strtolower( sanitize_key( $key ) );
 	}
 
@@ -161,12 +162,13 @@ class Bill extends Document {
 		}
 
 	}
+
 	/**
 	 * Save should create or update based on object existence.
 	 *
+	 * @return \Exception|bool
 	 * @since  1.1.0
 	 *
-	 * @return \Exception|bool
 	 */
 	public function save() {
 		$this->maybe_set_bill_number();
@@ -174,6 +176,7 @@ class Bill extends Document {
 		$this->calculate_totals();
 		parent::save();
 		$this->status_transition();
+
 		return $this->exists();
 	}
 
@@ -189,11 +192,11 @@ class Bill extends Document {
 	/**
 	 * Return the document number.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
+	 *
 	 */
 	public function get_bill_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
@@ -202,11 +205,11 @@ class Bill extends Document {
 	/**
 	 * Return the vendor id.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
+	 *
 	 */
 	public function get_vendor_id( $context = 'edit' ) {
 		return parent::get_contact_id( $context );
@@ -225,9 +228,9 @@ class Bill extends Document {
 	/**
 	 * set the vendor id.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param int $vendor_id .
+	 *
+	 * @since  1.1.0
 	 *
 	 */
 	public function set_vendor_id( $vendor_id ) {
@@ -250,9 +253,10 @@ class Bill extends Document {
 	/**
 	 * Set bill status.
 	 *
-	 * @since 1.1.0
-	 * @param string $new_status    Status to change the order to. No internal prefix is required.
+	 * @param string $new_status Status to change the order to. No internal prefix is required.
+	 *
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function set_status( $new_status ) {
 		$result = parent::set_status( $new_status );
@@ -346,11 +350,11 @@ class Bill extends Document {
 	/**
 	 * Get bill notes.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param array $args
 	 *
 	 * @return array|int|void
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_notes( $args = array() ) {
 		if ( ! $this->exists() ) {
@@ -371,11 +375,11 @@ class Bill extends Document {
 	/**
 	 * Add bill note.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $note
 	 *
 	 * @return Note|false|int|\WP_Error
+	 * @since 1.1.0
+	 *
 	 */
 	public function add_note( $note ) {
 		if ( ! $this->exists() ) {
@@ -401,8 +405,8 @@ class Bill extends Document {
 	/**
 	 * Delete notes.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function delete_notes() {
 		if ( $this->exists() ) {
@@ -417,12 +421,12 @@ class Bill extends Document {
 	*/
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param array $args
 	 *
-	 * @throws \Exception
 	 * @return false
+	 * @throws \Exception
+	 * @since 1.1.0
+	 *
 	 */
 	public function add_payment( $args = array() ) {
 		if ( ! $this->needs_payment() ) {
@@ -493,12 +497,13 @@ class Bill extends Document {
 
 		return true;
 	}
+
 	/**
 	 * Get payments.
 	 *
+	 * @return Payment[]
 	 * @since 1.1.0
 	 *
-	 * @return Payment[]
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {
@@ -533,9 +538,9 @@ class Bill extends Document {
 	/**
 	 * Get total due.
 	 *
+	 * @return float|int
 	 * @since 1.1.0
 	 *
-	 * @return float|int
 	 */
 	public function get_total_due() {
 		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
@@ -549,9 +554,9 @@ class Bill extends Document {
 	/**
 	 * Get total paid
 	 *
+	 * @return float|int|string
 	 * @since 1.1.0
 	 *
-	 * @return float|int|string
 	 */
 	public function get_total_paid() {
 		$total_paid = 0;
@@ -565,8 +570,8 @@ class Bill extends Document {
 	/**
 	 * Calculate total.
 	 *
-	 * @since 1.1.0
 	 * @throws \Exception
+	 * @since 1.1.0
 	 */
 	public function calculate_totals() {
 		$subtotal       = 0;
@@ -582,7 +587,9 @@ class Bill extends Document {
 			foreach ( $this->get_items() as $item ) {
 				$subtotal_discount += ( $item->get_price() * $item->get_quantity() );
 			}
-			$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
+			if ( $subtotal_discount > 0 ) {
+				$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
+			}
 		}
 
 		foreach ( $this->get_items() as $item ) {
@@ -660,8 +667,8 @@ class Bill extends Document {
 	/**
 	 * Set paid.
 	 *
-	 * @since 1.1.0
 	 * @return bool|\Exception
+	 * @since 1.1.0
 	 */
 	public function set_paid() {
 		if ( ! $this->get_id() ) { // Order must exist.
@@ -689,6 +696,7 @@ class Bill extends Document {
 			}
 		} catch ( \Exception $e ) {
 			$this->add_note( $e->getMessage() );
+
 			return false;
 		}
 
@@ -698,8 +706,8 @@ class Bill extends Document {
 	/**
 	 * Set cancelled.
 	 *
-	 * @since 1.1.0
 	 * @return bool|\Exception
+	 * @since 1.1.0
 	 */
 	public function set_cancelled() {
 		if ( ! $this->get_id() ) { // Order must exist.
@@ -718,9 +726,11 @@ class Bill extends Document {
 			}
 			$this->delete_payments();
 			$this->set_status( 'cancelled' );
+
 			return $this->save();
 		} catch ( \Exception $e ) {
 			$this->add_note( $e->getMessage() );
+
 			return false;
 		}
 	}
@@ -768,25 +778,28 @@ class Bill extends Document {
 	*/
 	/**
 	 * @param string $action
-	 * @since 1.1.0
 	 *
 	 * @return string
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_admin_url( $action = 'view' ) {
 		$url = admin_url( 'admin.php?page=ea-expenses&tab=bills&bill_id=' . $this->get_id() );
+
 		return add_query_arg( 'action', $action, $url );
 	}
 
 	/**
 	 * Get bill url.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_url() {
 		$base = eaccounting_get_parmalink_base();
 		$url  = site_url( $base );
 		$url  = untrailingslashit( $url ) . '/bill/' . $this->get_id() . '/' . $this->get_key();
+
 		return $url;
 	}
 }
