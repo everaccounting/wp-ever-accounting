@@ -203,3 +203,43 @@
 		font-size: 18px;
 	}
 }
+
+/*------------------------------------------------------------------------------
+  Tooltip
+------------------------------------------------------------------------------*/
+.ea-help-tip{
+	color: #666;
+	display: inline-block;
+	font-size: 1.1em;
+	font-style: normal;
+	height: 16px;
+	line-height: 16px;
+	position: relative;
+	vertical-align: middle;
+	width: 16px;
+	padding: 0;
+	margin: -4px 0 0 5px;
+	cursor: help;
+	@include dashiconbefore('\f223');
+
+	.ea-label &{
+		margin: 0;
+		font-size: 15px;
+	}
+}
+.ea-ui-tooltip{
+	opacity: 1 !important;
+	font-size: .8em !important;
+	padding: .618em 1em !important;
+	position: absolute;
+	background: #333 !important;
+	border-width: 1px !important;
+	border-radius: 3px !important;
+	box-shadow: 1px 1px 2px 1px rgba(214,214,214,0.5) !important;
+	color: #dedede !important;
+	max-width: 200px !important;
+	text-rendering: optimizeLegibility;
+	text-shadow: none !important;
+	z-index: 9999 !important;
+	margin: -17px 0 0 -8px !important;
+}

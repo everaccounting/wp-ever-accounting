@@ -53,6 +53,7 @@ $title = $item->exists() ? __( 'Update Item', 'wp-ever-accounting' ) : __( 'Add 
 							'label'         => __( 'Name', 'wp-ever-accounting' ),
 							'name'          => 'name',
 							'placeholder'   => __( 'Enter Name', 'wp-ever-accounting' ),
+							'tip'           => __( 'Enter Name', 'wp-ever-accounting' ),
 							'value'         => $item->get_name(),
 							'required'      => true,
 						)

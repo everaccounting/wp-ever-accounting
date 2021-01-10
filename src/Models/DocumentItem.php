@@ -107,7 +107,7 @@ class DocumentItem extends ResourceModel {
 			array_merge(
 				$this->data,
 				$this->changes,
-				array( 'id' => $this->get_id() ),
+				array( 'id' => $this->get_id() )
 			)
 		);
 	}

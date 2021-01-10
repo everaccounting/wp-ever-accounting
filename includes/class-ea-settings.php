@@ -73,7 +73,6 @@ class EverAccounting_Settings {
 						'company_name'           => array(
 							'name'        => __( 'Name', 'wp-ever-accounting' ),
 							'type'        => 'text',
-							'tip'         => 'XYZ Company',
 							'required'    => 'required',
 							'placeholder' => __( 'XYZ Company', 'wp-ever-accounting' ),
 						),
@@ -124,6 +123,7 @@ class EverAccounting_Settings {
 						),
 						'financial_year_start'   => array(
 							'name'  => __( 'Financial Year Start', 'wp-ever-accounting' ),
+							'tip'   => __( 'Enter the company financial start date.', 'wp-ever-accounting' ),
 							'std'   => '01-01',
 							'class' => 'ea-financial-start',
 							'type'  => 'text',
@@ -141,6 +141,7 @@ class EverAccounting_Settings {
 						'default_account'        => array(
 							'name'        => __( 'Account', 'wp-ever-accounting' ),
 							'type'        => 'select',
+							'tip'         => __( 'Default account will be used for automatic transactions.', 'wp-ever-accounting' ),
 							'input_class' => 'ea-select2',
 							'options'     => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + wp_list_pluck( $accounts, 'name', 'id' ),
 							'attr'        => array(
@@ -380,7 +381,7 @@ class EverAccounting_Settings {
 					);
 
 					$callback = ! empty( $args['callback'] ) ? $args['callback'] : array( $this, $args['type'] . '_callback' );
-					$tip      = isset( $args['tip'] ) ? eaccounting_help_tip( $args['tip'] ) : '';
+					$tip      = ! empty( $args['tip'] ) ? eaccounting_help_tip( $args['tip'] ) : '';
 
 					if ( ! in_array( $args['type'], array( 'checkbox', 'multicheck', 'radio', 'header' ), true ) ) {
 						$args['name'] = sprintf( '<label for="eaccounting_settings[%1$s]">%2$s</label>%3$s', $id, $args['name'], $tip );

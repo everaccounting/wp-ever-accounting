@@ -50,7 +50,7 @@ function eaccounting_help_tip( $tip, $allow_html = false ) {
 		$tip = esc_attr( $tip );
 	}
 
-	return '<span class="ea-help-tip" data-tip="' . $tip . '"></span>';
+	return '<span class="ea-help-tip" title="' . $tip . '"></span>';
 }
 
 /**
@@ -143,7 +143,7 @@ function eaccounting_text_input( $field = array() ) {
 
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
-			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s %s</label>',
 			esc_attr( $field['id'] ),
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['id'] ),
@@ -221,7 +221,7 @@ function eaccounting_textarea( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 
 	echo sprintf(
-		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s %s</label>',
 		esc_attr( $field['id'] ),
 		esc_attr( $field['wrapper_class'] ),
 		esc_attr( $field['id'] ),
@@ -281,7 +281,7 @@ function eaccounting_wp_radio( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 
 	echo sprintf(
-		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s %s</label>',
 		esc_attr( $field['id'] ),
 		esc_attr( $field['wrapper_class'] ),
 		esc_attr( $field['id'] ),
@@ -346,7 +346,7 @@ function eaccounting_checkbox( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 
 	echo sprintf(
-		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+		'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s %s</label>',
 		esc_attr( $field['id'] ),
 		esc_attr( $field['wrapper_class'] ),
 		esc_attr( $field['id'] ),
@@ -415,7 +415,7 @@ function eaccounting_select( $field ) {
 	$desc       = ! empty( $field['desc'] ) ? sprintf( '<span class="desc">%s</span>', wp_kses_post( $field['desc'] ) ) : '';
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
-			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+			'<div class="ea-form-field %s_field %s"><label class="ea-label" for="%s">%s %s</label>',
 			esc_attr( $field['id'] ),
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['id'] ),
@@ -478,7 +478,7 @@ function eaccounting_file_input( $field ) {
 	$id   = ! isset( $attachment->ID ) ? '' : $attachment->ID;
 	if ( ! empty( $field['label'] ) ) {
 		echo sprintf(
-			'<div class="ea-form-field ea-file-field %s_field %s"><label class="ea-label" for="%s">%s</label>%s',
+			'<div class="ea-form-field ea-file-field %s_field %s"><label class="ea-label" for="%s">%s %s</label>',
 			esc_attr( $field['id'] ),
 			esc_attr( $field['wrapper_class'] ),
 			esc_attr( $field['id'] ),
@@ -654,7 +654,7 @@ function eaccounting_customer_dropdown( $field ) {
 			'return'  => 'raw',
 		)
 	);
-	$field = wp_parse_args(
+	$field    = wp_parse_args(
 		array(
 			'value'        => $include,
 			'options'      => wp_list_pluck( $contacts, 'name', 'id' ),

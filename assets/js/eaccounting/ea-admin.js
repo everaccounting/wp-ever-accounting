@@ -1,8 +1,8 @@
 /* global eaccounting_admin_i10n */
 jQuery(function ($) {
 	// Tooltips
-	var tooltips = $('.ea-help-tip');
-	eaccounting_tooltips(tooltips);
+// $('.ea-help-tip').tooltip();
+	eaccounting_tooltips('.ea-help-tip');
 
 	//initialize plugins
 	$('.ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
@@ -106,10 +106,7 @@ jQuery(function ($) {
 
 function eaccounting_tooltips(selector) {
 	// Tooltips
-	selector.tooltip({
-		content: function () {
-			return jQuery(this).data('tip');
-		},
+	jQuery(selector).tooltip({
 		tooltipClass: 'ea-ui-tooltip',
 		position: {
 			my: 'center top',
