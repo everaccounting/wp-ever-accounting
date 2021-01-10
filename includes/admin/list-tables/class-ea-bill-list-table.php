@@ -113,6 +113,8 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 			'name'        => __( 'Vendor', 'wp-ever-accounting' ),
 			'issue_date'  => __( 'Bill Date', 'wp-ever-accounting' ),
 			'due_date'    => __( 'Due Date', 'wp-ever-accounting' ),
+			'notes'          => __( 'Notes', 'wp-ever-accounting' ),
+			'terms'          => __( 'Terms', 'wp-ever-accounting' ),
 			'status'      => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
@@ -210,6 +212,12 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'due_date':
 				$value = eaccounting_date( $bill->get_due_date(), 'Y-m-d' );
+				break;
+			case 'notes':
+				$value = !empty($bill->get_note()) ? strlen( $bill->get_note() ) > 50 ? esc_html( substr( $bill->get_note(), 0, 50 ) . '...' ) : esc_html($bill->get_note()) : '&mdash;';
+				break;
+			case 'terms':
+				$value = !empty($bill->get_terms()) ? strlen( $bill->get_terms() ) > 50 ? esc_html( substr( $bill->get_terms(), 0, 50 ) . '...' ) : esc_html($bill->get_terms()) : '&mdash;';
 				break;
 			case 'status':
 				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $bill->get_status(), $bill->get_status_nicename() );

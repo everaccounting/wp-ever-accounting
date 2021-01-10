@@ -179,3 +179,12 @@ function eaccounting_get_admin_template_html( $template_name, $args = array() ) 
 
 	return ob_get_clean();
 }
+
+/**
+ * Get base slug.
+ *
+ * @since 1.1.0
+ */
+function eaccounting_get_parmalink_base(){
+	return apply_filters('eaccounting_parmalink_base', 'eaccounting');
+}

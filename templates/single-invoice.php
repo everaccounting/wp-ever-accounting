@@ -31,8 +31,13 @@ if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
 					</div>
 				</div>
 			</div>
+			<?php do_action( 'eaccounting_invoice_after_main_content', $invoice ); ?>
 		</div>
 	</div>
+	<!-- /.ea-document_content -->
+
+	<?php eaccounting_get_template( 'global/footer.php' ); ?>
 </div>
-<?php eaccounting_get_template( 'global/footer.php', array( 'invoice' => $invoice ) ); ?>
+<!-- /.ea-document-wrapper -->
+
 

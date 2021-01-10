@@ -425,7 +425,7 @@ class Bill extends Document {
 	 * @return false
 	 */
 	public function add_payment( $args = array() ) {
-		if( ! $this->needs_payment() ){
+		if ( ! $this->needs_payment() ) {
 			return false;
 		}
 		$args = wp_parse_args(
@@ -759,5 +759,34 @@ class Bill extends Document {
 				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
 			}
 		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| URLs.
+	|--------------------------------------------------------------------------
+	*/
+	/**
+	 * @param string $action
+	 * @since 1.1.0
+	 *
+	 * @return string
+	 */
+	public function get_admin_url( $action = 'view' ) {
+		$url = admin_url( 'admin.php?page=ea-expenses&tab=bills&bill_id=' . $this->get_id() );
+		return add_query_arg( 'action', $action, $url );
+	}
+
+	/**
+	 * Get bill url.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_url() {
+		$base = eaccounting_get_parmalink_base();
+		$url  = site_url( $base );
+		$url  = untrailingslashit( $url ) . '/bill/' . $this->get_id() . '/' . $this->get_key();
+		return $url;
 	}
 }

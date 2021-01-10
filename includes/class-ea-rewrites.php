@@ -18,7 +18,7 @@ class EverAccounting_Rewrites {
 	 * @return void
 	 */
 	function add_rewrite_rules() {
-		$eaccounting_slug = 'eaccounting';
+		$eaccounting_slug = eaccounting_get_parmalink_base();
 		//add_rewrite_rule( '^' . $eaccounting_slug . '/?$', 'index.php?eaccounting=true', 'top' );
 		add_rewrite_rule( '^' . $eaccounting_slug . '/invoice/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=invoice&invoice_id=$matches[1]&key=$matches[2]', 'top' );
 		add_rewrite_rule( '^' . $eaccounting_slug . '/bill/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=bill&bill_id=$matches[1]&key=$matches[2]', 'top' );

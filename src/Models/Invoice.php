@@ -238,8 +238,8 @@ class Invoice extends Document {
 				$getter = "get_{$prop}";
 				$setter = "set_{$prop}";
 				if ( is_callable( array( $contact, $getter ) )
-				     && is_callable( array( $this, $setter ) )
-				     && is_callable( array( $this, $getter ) ) ) {
+					 && is_callable( array( $this, $setter ) )
+					 && is_callable( array( $this, $getter ) ) ) {
 					$this->$setter( $contact->$getter() );
 				}
 			}
@@ -422,7 +422,7 @@ class Invoice extends Document {
 	 * @return false
 	 */
 	public function add_payment( $args = array() ) {
-		if( ! $this->needs_payment() ){
+		if ( ! $this->needs_payment() ) {
 			return false;
 		}
 		$args = wp_parse_args(
@@ -779,5 +779,35 @@ class Invoice extends Document {
 				$this->add_note( __( 'Error during status transition.', 'wp-ever-accounting' ) . ' ' . $e->getMessage() );
 			}
 		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| URLs.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * @param string $action
+	 * @since 1.1.0
+	 *
+	 * @return string
+	 */
+	public function get_admin_url( $action = 'view' ) {
+		$url = admin_url( 'admin.php?page=ea-sales&tab=invoices&invoice_id='. $this->get_id() );
+		return add_query_arg( 'action', $action, $url );
+	}
+
+	/**
+	 * Get invoice url.
+	 *
+	 * @since 1.1.0
+	 * @return string
+	 */
+	public function get_url() {
+		$base = eaccounting_get_parmalink_base();
+		$url  = site_url( $base );
+		$url  = untrailingslashit( $url ) . '/invoice/' . $this->get_id() . '/' . $this->get_key();
+		return $url;
 	}
 }
