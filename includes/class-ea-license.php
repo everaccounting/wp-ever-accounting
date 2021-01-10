@@ -23,18 +23,18 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		private $item_shortname;
 		private $version;
 		private $author;
-		private $api_url = 'https://wpeveraccounting.com/edd-sl-api/';
+		private $api_url = 'https://wpeveraccounting.com/';
 
 		/**
 		 * Class constructor
 		 *
-		 * @param string  $_file
-		 * @param string  $_item_name
-		 * @param string  $_version
-		 * @param string  $_author
-		 * @param string  $_optname
-		 * @param string  $_api_url
-		 * @param int     $_item_id
+		 * @param string $_file
+		 * @param string $_item_name
+		 * @param string $_version
+		 * @param string $_author
+		 * @param string $_optname
+		 * @param string $_api_url
+		 * @param int    $_item_id
 		 */
 		function __construct( $_file, $_item_name, $_version, $_author, $_optname = null, $_api_url = null, $_item_id = null ) {
 			$this->file      = $_file;
@@ -46,7 +46,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 
 			$this->item_shortname = 'ea_' . preg_replace( '/[^a-zA-Z0-9_\s]/', '', str_replace( ' ', '_', strtolower( $this->item_name ) ) );
 			$this->version        = $_version;
-			$this->license        = trim( edd_get_option( $this->item_shortname . '_license_key', '' ) );
+			$this->license        = trim( eaccounting()->settings->get( $this->item_shortname . '_license_key', '' ) );
 			$this->author         = $_author;
 			$this->api_url        = is_null( $_api_url ) ? $this->api_url : $_api_url;
 
@@ -57,7 +57,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 			 * user having to reactive their license.
 			 */
 			if ( ! empty( $_optname ) ) {
-				$opt = edd_get_option( $_optname, false );
+				$opt = eaccounting()->settings->get( $_optname, false );
 
 				if ( isset( $opt ) && empty( $this->license ) ) {
 					$this->license = trim( $opt );
@@ -98,28 +98,23 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 
 			// Activate license key on settings save
 			add_action( 'admin_init', array( $this, 'activate_license' ) );
-//
-//			// Deactivate license key
-//			add_action( 'admin_init', array( $this, 'deactivate_license' ) );
-//
-//			// Check that license is valid once per week
-//			if ( edd_doing_cron() ) {
-//				add_action( 'edd_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
-//			}
-//
-//			// For testing license notices, uncomment this line to force checks on every page load
-//			//add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
-//
-//			// Updater
-//			add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
-//
-//			// Display notices to admins
-//			add_action( 'admin_notices', array( $this, 'notices' ) );
-//
-//			add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
-//
-//			// Register plugins for beta support
-//			add_filter( 'edd_beta_enabled_extensions', array( $this, 'register_beta_support' ) );
+
+			// Deactivate license key
+			add_action( 'admin_init', array( $this, 'deactivate_license' ) );
+
+			// Check that license is valid once per week
+			add_action( 'eaccounting_weekly_scheduled_events', array( $this, 'weekly_license_check' ) );
+
+			// For testing license notices, uncomment this line to force checks on every page load
+			add_action( 'admin_init', array( $this, 'weekly_license_check' ) );
+
+			// Updater
+			add_action( 'admin_init', array( $this, 'auto_updater' ), 0 );
+
+			// Display notices to admins
+			add_action( 'admin_notices', array( $this, 'notices' ) );
+
+			add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
 		}
 
 		/**
@@ -129,13 +124,13 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 * @return  void
 		 */
 		public function auto_updater() {
-			$betas = edd_get_option( 'enabled_betas', array() );
+			$betas = eaccounting()->settings->get( 'enabled_betas', array() );
 
 			$args = array(
-				'version' => $this->version,
-				'license' => $this->license,
-				'author'  => $this->author,
-				'beta'    => function_exists( 'edd_extension_has_beta_support' ) && edd_extension_has_beta_support( $this->item_shortname ),
+				'version'   => $this->version,
+				'license'   => $this->license,
+				'item_name' => $this->item_name,
+				'author'    => $this->author,
 			);
 
 			if ( ! empty( $this->item_id ) ) {
@@ -145,7 +140,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 			}
 
 			// Setup the updater
-			$edd_updater = new EverAccounting_Plugin_Updater(
+			$updates = new EverAccounting_Plugin_Updater(
 				$this->api_url,
 				$this->file,
 				$args
@@ -156,19 +151,21 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		/**
 		 * Add license field to settings
 		 *
-		 * @param array   $settings
+		 * @param array $settings
+		 *
 		 * @return  array
 		 */
 		public function settings( $settings ) {
 			$edd_license_settings = array(
-				$this->item_shortname . '_license_key' => array(
-					'name' => sprintf( __( '%1$s', 'easy-digital-downloads' ), $this->item_name ),
+				array(
+					'id'   => $this->item_shortname,
+					'name' => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->item_name ), //phpcs:ignore
 					'desc' => '',
 					'type' => 'license_key',
-					'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
 					'size' => 'regular',
 				),
 			);
+
 			return array_merge( $settings, $edd_license_settings );
 		}
 
@@ -177,28 +174,20 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 * Display help text at the top of the Licenses tag
 		 *
 		 * @since   1.1.0
-		 * @param   string   $active_tab
+		 *
+		 * @param string $active_tab
+		 *
 		 * @return  void
 		 */
 		public function license_help_text( $active_tab = '' ) {
-
-			static $has_ran;
-
 			if ( 'licenses' !== $active_tab ) {
 				return;
 			}
 
-			if ( ! empty( $has_ran ) ) {
-				return;
-			}
-
 			echo '<p>' . sprintf(
-				__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'easy-digital-downloads' ),
+				__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'wp-ever-accounting' ),
 				'http://wpeveraccounting.com/license-renewal'
 			) . '</p>';
-
-			$has_ran = true;
-
 		}
 
 
@@ -208,17 +197,13 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 * @return  void
 		 */
 		public function activate_license() {
-
 			if ( ! isset( $_POST['eaccounting_settings'] ) ) {
 				return;
 			}
 
 			if ( ! isset( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ] ) || ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
-
 				return;
-
 			}
-
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -239,7 +224,6 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 			}
 
 			$details = get_option( $this->item_shortname . '_license_active' );
-
 			if ( is_object( $details ) && 'valid' === $details->license ) {
 				return;
 			}
@@ -293,21 +277,21 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 */
 		public function deactivate_license() {
 
-			if ( ! isset( $_POST['edd_settings'] ) ) {
+			if ( ! isset( $_POST['eaccounting_settings'] ) ) {
 				return;
 			}
 
-			if ( ! isset( $_POST['edd_settings'][ $this->item_shortname . '_license_key' ] ) ) {
+			if ( ! isset( $_POST['eaccounting_settings'][ $this->item_shortname . '_license_key' ] ) ) {
 				return;
 			}
 
 			if ( ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
 
-				wp_die( __( 'Nonce verification failed', 'easy-digital-downloads' ), __( 'Error', 'easy-digital-downloads' ), array( 'response' => 403 ) );
+				wp_die( __( 'Nonce verification failed', 'wp-ever-accounting' ), __( 'Error', 'wp-ever-accounting' ), array( 'response' => 403 ) );
 
 			}
 
-			if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
@@ -357,7 +341,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 */
 		public function weekly_license_check() {
 
-			if ( ! empty( $_POST['edd_settings'] ) ) {
+			if ( ! empty( $_POST['eaccounting_settings'] ) ) {
 				return; // Don't fire when saving settings
 			}
 
@@ -386,14 +370,12 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 					'body'      => $api_params,
 				)
 			);
-
 			// make sure the response came back okay
 			if ( is_wp_error( $response ) ) {
 				return false;
 			}
 
 			$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
 			update_option( $this->item_shortname . '_license_active', $license_data );
 
 		}
@@ -404,14 +386,11 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 * @return  void
 		 */
 		public function notices() {
-
-			static $showed_invalid_message;
-
 			if ( empty( $this->license ) ) {
 				return;
 			}
 
-			if ( ! current_user_can( 'manage_shop_settings' ) ) {
+			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
 
@@ -419,20 +398,16 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 
 			$license = get_option( $this->item_shortname . '_license_active' );
 
-			if ( is_object( $license ) && 'valid' !== $license->license && empty( $showed_invalid_message ) ) {
+			if ( is_object( $license ) && 'valid' !== $license->license ) {
 
 				if ( empty( $_GET['tab'] ) || 'licenses' !== $_GET['tab'] ) {
-
 					$messages[] = sprintf(
-						__( 'You have invalid or expired license keys for Easy Digital Downloads. Please go to the <a href="%s">Licenses page</a> to correct this issue.', 'easy-digital-downloads' ),
-						admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' )
+					/* translators: %s plugin link */
+						__( 'You have invalid or expired license keys for WP Ever Accounting. Please go to the <a href="%s">License page</a> to correct this issue.', 'wp-ever-accounting' ),
+						admin_url( 'admin.php?page=ea-settings&tab=licenses' )
 					);
-
-					$showed_invalid_message = true;
-
 				}
 			}
-
 			if ( ! empty( $messages ) ) {
 
 				foreach ( $messages as $message ) {
@@ -453,15 +428,9 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 * @return  void
 		 */
 		public function plugin_row_license_missing( $plugin_data, $version_info ) {
-
-			static $showed_imissing_key_message;
-
 			$license = get_option( $this->item_shortname . '_license_active' );
-
-			if ( ( ! is_object( $license ) || 'valid' !== $license->license ) && empty( $showed_imissing_key_message[ $this->item_shortname ] ) ) {
-
-				echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'edit.php?post_type=download&page=edd-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'easy-digital-downloads' ) . '</a></strong>';
-				$showed_imissing_key_message[ $this->item_shortname ] = true;
+			if ( ( ! is_object( $license ) || 'valid' !== $license->license ) ) {
+				echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'admin.php?page=ea-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'wp-ever-accounting' ) . '</a></strong>';
 			}
 
 		}
@@ -469,8 +438,10 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		/**
 		 * Adds this plugin to the beta page
 		 *
-		 * @param   array $products
 		 * @since   2.6.11
+		 *
+		 * @param array $products
+		 *
 		 * @return  void
 		 */
 		public function register_beta_support( $products ) {

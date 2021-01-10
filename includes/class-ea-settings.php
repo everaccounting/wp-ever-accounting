@@ -78,7 +78,7 @@ class EverAccounting_Settings {
 							'type'        => 'select',
 							'tip'         => __( 'Default account will be used for automatic transactions.', 'wp-ever-accounting' ),
 							'input_class' => 'ea-select2',
-							'options'     => $this->get_categories('income'),
+							'options'     => $this->get_categories( 'income' ),
 						),
 					),
 					'invoices' => array(),
@@ -717,46 +717,59 @@ class EverAccounting_Settings {
 		echo sprintf( '<div class="ea-settings-html %s">%s</div>', sanitize_html_class( $args['input_class'] ), wp_kses_post( $args['html'] ) );
 	}
 
-
+	/**
+	 * License key callback.
+	 *
+	 * @param $args
+	 * @since 1.1.0
+	 */
 	function license_key_callback( $args ) {
-		$value   = $this->settings[ $args['id'] ];
-		$license = get_option( $args['options']['is_valid_license_option'] );
+		$value    = $this->settings[ $args['id'] . '_license_key' ];
+		$license  = get_option( $args['id'] . '_license_active' );
+		var_dump($license);
+		$messages = array();
+		echo sprintf(
+			'<input type="password" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s_license_key]" id="eaccounting_settings[%4$s_license_key]" value="%5$s"/>',
+			esc_attr( $args['size'] ),
+			esc_attr( $args['input_class'] ),
+			esc_attr( $args['style'] ),
+			esc_attr( $args['id'] ),
+			esc_attr( stripslashes( $value ) )
+		);
+
 		if ( ! empty( $license ) && is_object( $license ) ) {
 			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
 			if ( false === $license->success ) {
 
 				switch ( $license->error ) {
-
 					case 'expired':
 						$class      = 'expired';
 						$messages[] = sprintf(
+							/* translators: %s extension name */
 							__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
-							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
 							'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 						);
-
 						$license_status = 'license-' . $class . '-notice';
 
 						break;
-
 					case 'revoked':
 						$class      = 'error';
 						$messages[] = sprintf(
+						/* translators: %s extension name */
 							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
 							'https://wpeveraccounting.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 						);
-
 						$license_status = 'license-' . $class . '-notice';
-
 						break;
 
 					case 'missing':
 						$class      = 'error';
 						$messages[] = sprintf(
+						/* translators: %s extension name */
 							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
 							'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 						);
-
 						$license_status = 'license-' . $class . '-notice';
 
 						break;
@@ -765,6 +778,7 @@ class EverAccounting_Settings {
 					case 'site_inactive':
 						$class      = 'error';
 						$messages[] = sprintf(
+						/* translators: %s extension name */
 							__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
 							$args['name'],
 							'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
@@ -775,7 +789,8 @@ class EverAccounting_Settings {
 						break;
 
 					case 'item_name_mismatch':
-						$class      = 'error';
+						$class = 'error';
+						/* translators: %s extension name */
 						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
 
 						$license_status = 'license-' . $class . '-notice';
@@ -783,7 +798,8 @@ class EverAccounting_Settings {
 						break;
 
 					case 'no_activations_left':
-						$class      = 'error';
+						$class = 'error';
+						/* translators: %s extension name */
 						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
 
 						$license_status = 'license-' . $class . '-notice';
@@ -798,90 +814,68 @@ class EverAccounting_Settings {
 						break;
 
 					default:
-						$class      = 'error';
-						$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'easy-digital-downloads' );
+						$class = 'error';
+						$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'easy-digital-downloads' );
+						/* translators: %s extension name */
 						$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownloads.com/support' );
 
 						$license_status = 'license-' . $class . '-notice';
 						break;
 				}
 			} else {
-
 				switch ( $license->license ) {
-
 					case 'valid':
 					default:
-						$class = 'valid';
-
-						$now        = current_time( 'timestamp' );
-						$expiration = strtotime( $license->expires, current_time( 'timestamp' ) );
-
+						$class      = 'valid';
+						$now        = current_time( 'timestamp' ); //phpcs:ignore
+						$expiration = strtotime( $license->expires, current_time( 'timestamp' ) ); //phpcs:ignore
 						if ( 'lifetime' === $license->expires ) {
-
-							$messages[] = __( 'License key never expires.', 'easy-digital-downloads' );
-
+							$messages[]     = __( 'License key never expires.', 'easy-digital-downloads' );
 							$license_status = 'license-lifetime-notice';
-
 						} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
-
 							$messages[] = sprintf(
+									/* translators: %s extension name */
 								__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
 								'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 							);
-
 							$license_status = 'license-expires-soon-notice';
-
 						} else {
-
 							$messages[] = sprintf(
+								/* translators: %s extension name */
 								__( 'Your license key expires on %s.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
+								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ) //phpcs:ignore
 							);
-
 							$license_status = 'license-expiration-date-notice';
-
 						}
-
 						break;
-
 				}
 			}
 		} else {
-			$class = 'empty';
-
 			$messages[] = sprintf(
+				/* translators: %s extension name */
 				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
-				$args['name']
+				strip_tags( $args['name'] )
 			);
-
-			$license_status = null;
 		}
 
-		$class .= ' ' . edd_sanitize_html_class( $args['field_class'] );
-
-		$size = ( isset( $args['size'] ) && ! is_null( $args['size'] ) ) ? $args['size'] : 'regular';
-		$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
-
-		if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) {
-			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
+		if ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) {
+			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_license_key_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
 		}
 
-		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
+		echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '_license_key]"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
-				$html .= '<p>' . $message . '</p>';
-				$html .= '</div>';
+				echo '<div class="edd-license-data edd-license-">';
+				echo '<p>' . $message . '</p>';
+				echo '</div>';
 
 			}
 		}
 
-		wp_nonce_field( sanitize_key( $args['id'] ) . '-nonce', sanitize_key( $args['id'] ) . '-nonce' );
-
-		echo $html;
+		wp_nonce_field( sanitize_key( $args['id'] ) . '_license_key-nonce', sanitize_key( $args['id'] ) . '_license_key-nonce' );
 	}
 
 	/**

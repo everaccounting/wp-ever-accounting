@@ -298,6 +298,12 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function on_plugins_loaded() {
+		\EverAccounting\REST\Manager::instance();
+		\EverAccounting\Core\Emails::instance();
+
+		$this->settings = new EverAccounting_Settings();
+		$this->utils    = new \EverAccounting\Utilities();
+
 		do_action( 'eaccounting_loaded' );
 	}
 
@@ -318,15 +324,10 @@ final class EverAccounting {
 //		\EverAccounting\Controllers\TaxController::instance();
 //		\EverAccounting\Controllers\ItemController::instance();
 //		\EverAccounting\Controllers\IncomeController::instance();
-		\EverAccounting\Controllers\CurrencyController::instance();
+//		\EverAccounting\Controllers\CurrencyController::instance();
 //		\EverAccounting\Controllers\ExpenseController::instance();
 //		\EverAccounting\Controllers\InvoiceController::instance();
 
-		\EverAccounting\REST\Manager::instance();
-		\EverAccounting\Core\Emails::instance();
-
-		$this->settings = new EverAccounting_Settings();
-		$this->utils    = new \EverAccounting\Utilities();
 
 		// Init action.
 		do_action( 'eaccounting_init' );

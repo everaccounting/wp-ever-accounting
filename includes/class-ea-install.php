@@ -31,6 +31,7 @@ class EverAccounting_Install {
 		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
 		add_action( 'plugins_loaded', array( __CLASS__, 'wpdb_table_fix' ), 0 );
 		add_action( 'switch_blog', array( __CLASS__, 'wpdb_table_fix' ), 0 );
+		add_action( 'admin_init', array( __CLASS__, 'schedule_events' ) );
 	}
 
 	/**
@@ -108,13 +109,19 @@ class EverAccounting_Install {
 	 * @return array
 	 */
 	public static function cron_schedules( $schedules ) {
-		$schedules['monthly']     = array(
+		$schedules['monthly'] = array(
 			'interval' => 2635200,
 			'display'  => __( 'Monthly', 'wp-ever-accounting' ),
 		);
+
 		$schedules['fifteendays'] = array(
 			'interval' => 1296000,
 			'display'  => __( 'Every 15 Days', 'wp-ever-accounting' ),
+		);
+
+		$schedules['weekly'] = array(
+			'interval' => 604800,
+			'display'  => __( 'Once Weekly', 'wp-ever-accounting' ),
 		);
 
 		return $schedules;
@@ -148,7 +155,6 @@ class EverAccounting_Install {
 		self::create_accounts();
 		self::create_defaults();
 		self::create_roles();
-		self::create_cron_jobs();
 		self::maybe_enable_setup_wizard();
 
 		eaccounting_protect_files( true );
@@ -781,8 +787,14 @@ class EverAccounting_Install {
 	 * @since 1.0.2
 	 * @return void
 	 */
-	private static function create_cron_jobs() {
-		wp_schedule_event( time() + ( 3 * HOUR_IN_SECONDS ), 'daily', 'eaccounting_cleanup_logs' );
+	public static function schedule_events() {
+		error_log('schedule_events');
+		if ( ! wp_next_scheduled( 'eaccounting_daily_scheduled_events' ) ) {
+			wp_schedule_event( current_time( 'timestamp', true ), 'daily', 'eaccounting_daily_scheduled_events' );
+		}
+		if ( ! wp_next_scheduled( 'eaccounting_weekly_scheduled_events' ) ) {
+			wp_schedule_event( current_time( 'timestamp', true ), 'weekly', 'eaccounting_weekly_scheduled_events' );
+		}
 	}
 
 	/**
@@ -890,5 +902,4 @@ class EverAccounting_Install {
 	}
 
 }
-
 EverAccounting_Install::init();
