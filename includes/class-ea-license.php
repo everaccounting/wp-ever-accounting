@@ -164,7 +164,8 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 				$this->item_shortname . '_license_key' => array(
 					'name' => sprintf( __( '%1$s', 'easy-digital-downloads' ), $this->item_name ),
 					'desc' => '',
-					'type' => 'text',
+					'type' => 'license_key',
+					'options' => array( 'is_valid_license_option' => $this->item_shortname . '_license_active' ),
 					'size' => 'regular',
 				),
 			);
@@ -212,11 +213,11 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 				return;
 			}
 
-//			if ( ! isset( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ] ) || ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
-//
-//				return;
-//
-//			}
+			if ( ! isset( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ] ) || ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
+
+				return;
+
+			}
 
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
@@ -229,8 +230,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 				return;
 
 			}
-			var_dump($_POST);
-			wp_die(1);
+
 			foreach ( $_POST as $key => $value ) {
 				if ( false !== strpos( $key, 'license_key_deactivate' ) ) {
 					// Don't activate a key when deactivating a different key
@@ -245,7 +245,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 			}
 
 			$license = sanitize_text_field( $_POST['eaccounting_settings'][ $this->item_shortname . '_license_key' ] );
-			var_dump($license);
+
 			if ( empty( $license ) ) {
 				return;
 			}

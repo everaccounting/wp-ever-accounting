@@ -45,50 +45,276 @@ class EverAccounting_Settings {
 	 * @return array
 	 */
 	function get_registered_settings() {
+		$currencies = eaccounting_get_currencies(
+			array(
+				'number' => - 1,
+				'return' => 'raw',
+			)
+		);
+		$accounts   = eaccounting_get_accounts(
+			array(
+				'include' => eaccounting()->settings->get( 'default_account' ),
+				'return'  => 'raw',
+			)
+		);
+
 		$settings = array(
 			/** General Settings */
 			'general'  => apply_filters(
 				'eaccounting_settings_general',
 				array(
-					'main'     => array(
-						array(
-							'id'   => 'company_settings',
+					/** General Main Section */
+					'general'  => array(
+						'company_settings'       => array(
 							'name' => __( 'Company Settings', 'wp-ever-accounting' ),
 							'desc' => '',
 							'type' => 'header',
 						),
-						array(
-							'id'          => 'company_name',
+						'company_name'           => array(
 							'name'        => __( 'Name', 'wp-ever-accounting' ),
 							'type'        => 'text',
 							'required'    => 'required',
 							'placeholder' => __( 'XYZ Company', 'wp-ever-accounting' ),
 						),
-						array(
-							'id'          => 'default_account',
-							'name'        => __( 'Account', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'tip'         => __( 'Default account will be used for automatic transactions.', 'wp-ever-accounting' ),
-							'input_class' => 'ea-select2',
-							'options'     => $this->get_accounts(),
+						'company_email'          => array(
+							'name'              => __( 'Email', 'wp-ever-accounting' ),
+							'type'              => 'email',
+							'std'               => get_option( 'admin_email' ),
+							'sanitize_callback' => 'sanitize_email',
 						),
-						array(
-							'id'          => 'default_category',
+						'company_phone'          => array(
+							'name' => __( 'Phone Number', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'company_vat_number'     => array(
+							'name' => __( 'VAT Number', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'company_address'        => array(
+							'name' => __( 'Street', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'company_city'           => array(
+							'name' => __( 'City', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'company_state'          => array(
+							'name' => __( 'State', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'company_postcode'       => array(
+							'name' => __( 'Postcode', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'company_country'        => array(
+							'name'        => __( 'Country', 'wp-ever-accounting' ),
+							'type'        => 'select',
+							'input_class' => 'ea-select2',
+							'options'     => array( '' => __( 'Select Country', 'wp-ever-accounting' ) ) + eaccounting_get_countries(),
+						),
+						'company_logo'           => array(
+							'name' => __( 'Logo', 'wp-ever-accounting' ),
+							'type' => 'upload',
+						),
+						'general_settings'       => array(
+							'name' => __( 'General Settings', 'wp-ever-accounting' ),
+							'desc' => '',
+							'type' => 'header',
+						),
+						'financial_year_start'   => array(
+							'name'  => __( 'Financial Year Start', 'wp-ever-accounting' ),
+							'tip'   => __( 'Enter the company financial start date.', 'wp-ever-accounting' ),
+							'std'   => '01-01',
+							'class' => 'ea-financial-start',
+							'type'  => 'text',
+						),
+						'tax_enabled'            => array(
+							'name' => __( 'Enable taxes', 'wp-ever-accounting' ),
+							'desc' => 'Enable tax rates and calculations',
+							'type' => 'checkbox',
+						),
+						'local_settings'         => array(
+							'name' => __( 'Default Settings', 'wp-ever-accounting' ),
+							'desc' => '',
+							'type' => 'header',
+						),
+						'default_account'        => array(
 							'name'        => __( 'Account', 'wp-ever-accounting' ),
 							'type'        => 'select',
 							'tip'         => __( 'Default account will be used for automatic transactions.', 'wp-ever-accounting' ),
 							'input_class' => 'ea-select2',
-							'options'     => $this->get_categories('income'),
+							'options'     => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + wp_list_pluck( $accounts, 'name', 'id' ),
+							'attr'        => array(
+								'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
+								'data-url'         => eaccounting()->ajax_url(),
+								'data-ajax_action' => 'eaccounting_get_accounts',
+								'data-nonce'       => wp_create_nonce( 'ea_get_accounts' ),
+								'data-map'         => 'return {text: option.name + " (" + option.currency_code +")"  , id:option.id}',
+								'data-modal_id'    => '#ea-modal-add-account',
+								'data-add_text'    => __( 'Add New', 'wp-ever-accounting' ),
+							),
+						),
+						'default_currency'       => array(
+							'name'        => __( 'Currency', 'wp-ever-accounting' ),
+							'type'        => 'select',
+							'std'         => 'USD',
+							'desc'        => __( 'Default currency rate will update to 1', 'wp-ever-accounting' ),
+							'input_class' => 'ea-select2',
+							'options'     => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck( array_values( $currencies ), 'name', 'code' ),
+							'attr'        => array(
+								'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
+								'data-url'         => eaccounting()->ajax_url(),
+								'data-ajax_action' => 'eaccounting_get_currencies',
+								'data-nonce'       => wp_create_nonce( 'ea_get_currencies' ),
+								'data-map'         => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code}',
+								'data-modal_id'    => '#ea-modal-add-currency',
+								'data-add_text'    => __( 'Add New', 'wp-ever-accounting' ),
+							),
+						),
+						'default_payment_method' => array(
+							'name'    => __( 'Payment Method', 'wp-ever-accounting' ),
+							'std'     => 'cash',
+							'type'    => 'select',
+							'options' => eaccounting_get_payment_methods(),
 						),
 					),
-					'invoices' => array(),
-					'bills'    => array(),
+					'invoices' => array(
+						'invoice_prefix'         => array(
+							'name' => __( 'Invoice Prefix', 'wp-ever-accounting' ),
+							'std'  => 'INV-',
+							'type' => 'text',
+						),
+						'invoice_digit'          => array(
+							'name' => __( 'Minimum Digits', 'wp-ever-accounting' ),
+							'std'  => '5',
+							'type' => 'number',
+						),
+						'invoice_terms'          => array(
+							'name' => __( 'Invoice Terms', 'wp-ever-accounting' ),
+							'std'  => '',
+							'type' => 'textarea',
+						),
+						'invoice_due'            => array(
+							'name'    => __( 'Invoice Due', 'wp-ever-accounting' ),
+							'std'     => '15',
+							'type'    => 'select',
+							'options' => array(
+								'7'  => __( 'Due within 7 days', 'wp-ever-accounting' ),
+								'15' => __( 'Due within 15 days', 'wp-ever-accounting' ),
+								'30' => __( 'Due within 30 days', 'wp-ever-accounting' ),
+								'45' => __( 'Due within 45 days', 'wp-ever-accounting' ),
+								'60' => __( 'Due within 60 days', 'wp-ever-accounting' ),
+								'90' => __( 'Due within 90 days', 'wp-ever-accounting' ),
+							),
+						),
+						'invoice_item_label'     => array(
+							'name' => __( 'Item Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Item', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'invoice_price_label'    => array(
+							'name' => __( 'Price Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Price', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'invoice_quantity_label' => array(
+							'name' => __( 'Quantity Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Quantity', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+					),
+					'bills'    => array(
+						'bill_prefix'         => array(
+							'name' => __( 'Bill Prefix', 'wp-ever-accounting' ),
+							'std'  => 'BILL-',
+							'type' => 'text',
+
+						),
+						'bill_digit'          => array(
+							'name' => __( 'Bill Digits', 'wp-ever-accounting' ),
+							'std'  => '5',
+							'type' => 'number',
+
+						),
+						'bill_due'            => array(
+							'name'    => __( 'Bill Due', 'wp-ever-accounting' ),
+							'std'     => '15',
+							'type'    => 'select',
+							'options' => array(
+								'7'  => __( 'Due within 7 days', 'wp-ever-accounting' ),
+								'15' => __( 'Due within 15 days', 'wp-ever-accounting' ),
+								'30' => __( 'Due within 30 days', 'wp-ever-accounting' ),
+								'45' => __( 'Due within 45 days', 'wp-ever-accounting' ),
+								'60' => __( 'Due within 60 days', 'wp-ever-accounting' ),
+								'90' => __( 'Due within 90 days', 'wp-ever-accounting' ),
+							),
+						),
+						'bill_note'           => array(
+							'name' => __( 'Bill Note', 'wp-ever-accounting' ),
+							'std'  => '',
+							'type' => 'textarea',
+						),
+						'bill_terms'          => array(
+							'name' => __( 'Bill Terms & Conditions', 'wp-ever-accounting' ),
+							'std'  => '',
+							'type' => 'textarea',
+						),
+						'bill_item_label'     => array(
+							'name' => __( 'Item Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Item', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'bill_price_label'    => array(
+							'name' => __( 'Price Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Price', 'wp-ever-accounting' ),
+							'type' => 'text',
+						),
+						'bill_quantity_label' => array(
+							'name' => __( 'Quantity Label', 'wp-ever-accounting' ),
+							'std'  => __( 'Quantity', 'wp-ever-accounting' ),
+							'type' => 'text',
+
+						),
+					),
+				)
+			),
+			'emails'   => apply_filters(
+				'eaccounting_settings_emails',
+				array(
+					'main' => array(),
 				)
 			),
 			'licenses' => array(
 				'main' => apply_filters( 'eaccounting_settings_licenses', array() ),
 			),
 		);
+		if ( eaccounting_tax_enabled() ) {
+			$settings['general']['taxes'] = array(
+				'tax_subtotal_rounding' => array(
+					'name' => __( 'Rounding', 'wp-ever-accounting' ),
+					'type' => 'checkbox',
+					'desc' => __( 'Round tax at subtotal level, instead of rounding per tax rate.', 'wp-ever-accounting' ),
+				),
+				'prices_include_tax'    => array(
+					'name'    => __( 'Prices entered with tax', 'wp-ever-accounting' ),
+					'type'    => 'select',
+					'std'     => 'yes',
+					'options' => array(
+						'yes' => __( 'Yes, I will enter prices inclusive of tax', 'wp-ever-accounting' ),
+						'no'  => __( 'No, I will enter prices exclusive of tax', 'wp-ever-accounting' ),
+					),
+				),
+				'tax_display_totals'    => array(
+					'name'    => __( 'Display tax totals	', 'wp-ever-accounting' ),
+					'type'    => 'select',
+					'std'     => 'total',
+					'options' => array(
+						'total'      => __( 'As a single total', 'wp-ever-accounting' ),
+						'individual' => __( 'As individual tax rates', 'wp-ever-accounting' ),
+					),
+				),
+			);
+		}
 
 		/**
 		 * Filters the entire default settings array.
@@ -111,11 +337,11 @@ class EverAccounting_Settings {
 	 * @return void
 	 */
 	function register_settings() {
-		$whitelisted = array();
 		foreach ( $this->get_registered_settings() as $tab => $sections ) {
 			if ( ! is_array( $sections ) ) {
 				continue;
 			}
+
 			foreach ( $sections as $section => $settings ) {
 
 				add_settings_section(
@@ -124,32 +350,14 @@ class EverAccounting_Settings {
 					'__return_false',
 					'eaccounting_settings_' . $tab
 				);
-				foreach ( $settings as $option ) {
-					// Without option not allowed.
-					if ( empty( $option['id'] ) ) {
-						continue;
-					}
-
-					// Restrict duplicate.
-					if ( in_array( $option['id'], $whitelisted, true ) ) {
-						eaccounting_doing_it_wrong(
-							__METHOD__,
-							sprintf(
-							/* translators: %s settings id name */
-								__( '%s settings field was registered earlier, duplicate settings key is not allowed.', 'wp-ever-accounting' ),
-								$option['id']
-							),
-							null
-						);
-						continue;
-					}
+				foreach ( $settings as  $option ) {
 
 					$args = wp_parse_args(
 						$option,
 						array(
 							'section'     => $section,
 							'desc'        => '',
-							'id'          => $option['id'],
+							'id'          => $id,
 							'tip'         => '',
 							'name'        => '',
 							'size'        => 'regular',
@@ -175,13 +383,13 @@ class EverAccounting_Settings {
 					$tip      = ! empty( $args['tip'] ) ? eaccounting_help_tip( $args['tip'] ) : '';
 
 					if ( ! in_array( $args['type'], array( 'checkbox', 'multicheck', 'radio', 'header' ), true ) ) {
-						$args['name'] = sprintf( '<label for="eaccounting_settings[%1$s]">%2$s</label>%3$s', $option['id'], $args['name'], $tip );
+						$args['name'] = sprintf( '<label for="eaccounting_settings[%1$s]">%2$s</label>%3$s', $id, $args['name'], $tip );
 					} elseif ( 'header' === $args['type'] ) {
 						$args['name'] = sprintf( '<h3>%s</h3>', esc_html( $args['name'] ) );
 					}
 
 					add_settings_field(
-						'eaccounting_settings[' . $option['id'] . ']',
+						'eaccounting_settings[' . $id . ']',
 						$args['name'],
 						is_callable( $callback ) ? $callback : array( $this, 'missing_callback' ),
 						'eaccounting_settings_' . $tab,
@@ -193,80 +401,6 @@ class EverAccounting_Settings {
 			}
 		}
 		register_setting( 'eaccounting_settings', 'eaccounting_settings', array( $this, 'sanitize_settings' ) );
-	}
-
-	/**
-	 * Load accounts on settings.
-	 *
-	 * @since 1.1.0
-	 * @return array|int
-	 */
-	function get_accounts() {
-		$accounts = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results    = eaccounting_get_accounts(
-				array(
-					'number' => - 1,
-					'return' => 'raw',
-				)
-			);
-			$accounts[] = __( 'Select account', 'wp-ever-accounting' );
-			foreach ( $results as $result ) {
-				$accounts[ $result->id ] = $result->name . '(' . $result->currency_code . ')';
-			}
-		}
-		return $accounts;
-	}
-
-	/**
-	 * Load categories on settings.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $type
-	 *
-	 * @return array|int
-	 */
-	function get_categories( $type = 'income' ) {
-		$categories = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = eaccounting_get_categories(
-				array(
-					'number' => - 1,
-					'type'   => $type,
-					'return' => 'raw',
-				)
-			);
-			$categories[] = __( 'Select category', 'wp-ever-accounting' );
-			$categories   = array_merge( $categories, wp_list_pluck( $results, 'name', 'id' ) );
-		}
-		return $categories;
-	}
-
-	/**
-	 * Load currencies
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $type
-	 *
-	 * @return array|int
-	 */
-	function get_currencies() {
-		$currencies = array();
-		if ( isset( $_GET['page'] ) && 'ea-settings' === $_GET['page'] ) {
-			$results      = eaccounting_get_currencies(
-				array(
-					'number' => - 1,
-					'return' => 'raw',
-				)
-			);
-			$currencies[] = __( 'Select currencies', 'wp-ever-accounting' );
-			foreach ( $results as $result ) {
-				$currencies[ $result->code ] = $result->name . '(' . $result->symbol . ')';
-			}
-		}
-		return $currencies;
 	}
 
 	/**
@@ -872,9 +1006,9 @@ class EverAccounting_Settings {
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {
 
-				$html .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
+				$html     .= '<div class="edd-license-data edd-license-' . $class . ' ' . $license_status . '">';
 				$html .= '<p>' . $message . '</p>';
-				$html .= '</div>';
+				$html     .= '</div>';
 
 			}
 		}

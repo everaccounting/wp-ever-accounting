@@ -24,7 +24,7 @@ $company_details = array(
 $countries       = eaccounting_get_countries();
 ?>
 <div class="ea-document__logo">
-	<img src="<?php echo esc_url( $company_details['logo'] ); ?>" alt="<?php echo esc_html( $company_details['name'] ); ?>" height="100" width="100">
+	<img src="<?php echo esc_url( $company_details['logo'] ); ?>" alt="<?php echo esc_html( $company_details['name'] ); ?>">
 </div>
 <address class="ea-document__company-info">
 	<span class="ea-document__company-name"><?php echo esc_html( $company_details['name'] ); ?></span>

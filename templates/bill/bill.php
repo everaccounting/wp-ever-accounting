@@ -34,5 +34,6 @@ defined( 'ABSPATH' ) || exit;
 	<?php eaccounting_get_template( 'bill/bill-items.php', array( 'bill' => $bill ) ); ?>
 	<?php eaccounting_get_template( 'bill/bill-note.php', array( 'bill' => $bill ) ); ?>
 	<?php eaccounting_get_template( 'bill/bill-terms.php', array( 'bill' => $bill ) ); ?>
+	<?php eaccounting_get_template( 'bill/bill-payments.php', array( 'bill' => $bill ) ); ?>
 
 </div>

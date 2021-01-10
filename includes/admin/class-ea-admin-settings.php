@@ -108,7 +108,7 @@ class EverAccounting_Admin_Settings {
 		switch ( $tab ) {
 			case 'general':
 				$sections = array(
-					'general'  => __( 'General', 'wp-ever-accounting' ),
+					'main'     => __( 'General', 'wp-ever-accounting' ),
 					'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
 					'bills'    => __( 'Bills', 'wp-ever-accounting' ),
 				);
