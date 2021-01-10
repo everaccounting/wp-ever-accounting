@@ -60,7 +60,7 @@ class EverAccounting_Settings {
 
 		$settings = array(
 			/** General Settings */
-			'general' => apply_filters(
+			'general'  => apply_filters(
 				'eaccounting_settings_general',
 				array(
 					/** General Main Section */
@@ -278,14 +278,16 @@ class EverAccounting_Settings {
 					),
 				)
 			),
-			'emails'  => apply_filters(
+			'emails'   => apply_filters(
 				'eaccounting_settings_emails',
 				array(
 					'main' => array(),
 				)
 			),
+			'licenses' => array(
+				'main' => apply_filters( 'eaccounting_settings_licenses', array() ),
+			),
 		);
-
 		if ( eaccounting_tax_enabled() ) {
 			$settings['general']['taxes'] = array(
 				'tax_subtotal_rounding' => array(
@@ -325,7 +327,6 @@ class EverAccounting_Settings {
 		 * @param array $settings Array of default settings.
 		 *
 		 */
-
 		return apply_filters( 'eaccounting_settings', $settings );
 	}
 
@@ -336,7 +337,6 @@ class EverAccounting_Settings {
 	 * @return void
 	 */
 	function register_settings() {
-
 		foreach ( $this->get_registered_settings() as $tab => $sections ) {
 			if ( ! is_array( $sections ) ) {
 				continue;
@@ -350,7 +350,6 @@ class EverAccounting_Settings {
 					'__return_false',
 					'eaccounting_settings_' . $tab
 				);
-
 				foreach ( $settings as $id => $option ) {
 
 					$args = wp_parse_args(

@@ -54,11 +54,16 @@ class EverAccounting_Admin_Settings {
 			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 			'categories' => __( 'Categories', 'wp-ever-accounting' ),
 			'extensions' => __( 'Extensions', 'wp-ever-accounting' ),
+			'licenses'   => __( 'Licenses', 'wp-ever-accounting' ),
 			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 		);
 
 		if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
 			unset( $tabs['extensions'] );
+		}
+
+		if ( ! has_filter( 'eaccounting_settings_licenses' ) ) {
+			unset( $tabs['licenses'] );
 		}
 
 		return apply_filters( 'eaccounting_settings_tabs', $tabs );
@@ -99,7 +104,7 @@ class EverAccounting_Admin_Settings {
 	 * @return array
 	 */
 	public function get_tab_sections( $tab ) {
-		$sections = array();
+		$sections = array( 'main' => '' );
 		switch ( $tab ) {
 			case 'general':
 				$sections = array(
@@ -142,7 +147,7 @@ class EverAccounting_Admin_Settings {
 			exit();
 		}
 		$sections          = $this->get_tab_sections( $current_tab );
-		$requested_section = isset( $_GET['section'] ) ? sanitize_title( $_GET['section'] ) : '';
+		$requested_section = isset( $_GET['section'] ) ? sanitize_title( $_GET['section'] ) : 'main';
 		$current_section   = isset( $sections[ $requested_section ] ) ? $requested_section : current( array_keys( $sections ) );
 		$current_tab_label = $tabs[ $current_tab ];
 		ob_start();

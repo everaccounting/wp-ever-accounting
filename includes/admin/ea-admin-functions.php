@@ -7,63 +7,6 @@
  * @package    EverAccounting
  */
 
-defined( 'ABSPATH' ) || exit();
-
-/**
- * Get registered settings.
- *
- * @return mixed|void
- * @since 1.1.0
- */
-function eaccounting_get_settings_tabs() {
-	return apply_filters(
-		'eaccounting_settings_tabs',
-		array(
-			'general'    => __( 'General', 'wp-ever-accounting' ),
-			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
-			'categories' => __( 'Categories', 'wp-ever-accounting' ),
-			//'emails'     => __( 'Emails', 'wp-ever-accounting' ),
-			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
-			//'misc'       => __( 'Misc', 'wp-ever-accounting' ),
-		)
-	);
-}
-
-/**
- * Get the settings sections for each tab
- * Uses a static to avoid running the filters on every request to this function
- *
- * @return array Array of tabs and sections
- * @since  1.1.0
- */
-function eaccounting_get_settings_sections() {
-	static $sections = false;
-
-	if ( false !== $sections ) {
-		return $sections;
-	}
-
-	$sections = array(
-		'general' => array(
-			'main'     => __( 'General', 'wp-ever-accounting' ),
-			'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
-			'bills'    => __( 'Bills', 'wp-ever-accounting' ),
-		),
-		'emails'  => array(
-			'main' => __( 'General', 'wp-ever-accounting' ),
-		),
-	);
-
-	if ( eaccounting_tax_enabled() ) {
-		$sections['general']['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
-	}
-
-	$sections = apply_filters( 'eaccounting_settings_sections', $sections );
-
-	return $sections;
-}
-
-
 /**
  * Get all EverAccounting screen ids.
  *

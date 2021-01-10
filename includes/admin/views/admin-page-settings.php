@@ -40,11 +40,13 @@ $section_keys = array_keys( $sections );
 	<h1 class="screen-reader-text"><?php echo esc_html( $current_tab_label ); ?></h1>
 
 	<?php
+	do_action( 'eaccounting_settings_top', $current_tab, $current_section );
+
 	if ( has_action( 'eaccounting_settings_tab_' . $current_tab ) ) {
 		do_action( 'eaccounting_settings_tab_' . $current_tab );
 	} elseif ( $current_section && has_action( 'eaccounting_settings_tab_' . $current_tab . '_section_' . $current_section ) ) {
 		do_action( 'eaccounting_settings_tab_' . $current_tab . '_section_' . $current_section );
-	}else {
+	} else {
 		?>
 		<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 			<table class="form-table">
