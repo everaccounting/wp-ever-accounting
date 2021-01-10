@@ -53,13 +53,43 @@ class EverAccounting_Admin_Settings {
 			'general'    => __( 'General', 'wp-ever-accounting' ),
 			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
 			'categories' => __( 'Categories', 'wp-ever-accounting' ),
-			//'emails'     => __( 'Emails', 'wp-ever-accounting' ),
+			'extensions' => __( 'Extensions', 'wp-ever-accounting' ),
 			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 		);
+
+		if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
+			unset( $tabs['extensions'] );
+		}
 
 		return apply_filters( 'eaccounting_settings_tabs', $tabs );
 	}
 
+	public function get_sections() {
+		static $sections = false;
+
+		if ( false !== $sections ) {
+			return $sections;
+		}
+
+		$sections = array(
+			'general' => array(
+				'general'  => __( 'General', 'wp-ever-accounting' ),
+				'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
+				'bills'    => __( 'Bills', 'wp-ever-accounting' ),
+			),
+			'emails'  => array(
+				'main' => __( 'General', 'wp-ever-accounting' ),
+			),
+		);
+
+		if ( eaccounting_tax_enabled() ) {
+			$sections['general']['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
+		}
+
+		$sections = apply_filters( 'eaccounting_settings_sections', $sections );
+
+		return $sections;
+	}
 	/**
 	 * Get settings sections.
 	 *
@@ -92,6 +122,16 @@ class EverAccounting_Admin_Settings {
 	 * @return void
 	 */
 	public function display_settings_page() {
+		$tabs     = $this->get_tabs();
+		$sections = array();
+		foreach ( $tabs as $tab_id => $title ) {
+			$tab_sections = $this->get_tab_sections( $tab_id );
+			if ( empty( $tab_sections ) && ! has_action( 'eaccounting_settings_tab_' . $tab_id ) ) {
+				unset( $tabs[ $tab_id ] );
+				continue;
+			}
+			$sections[ $tab_id ] = $tab_sections;
+		}
 		$tabs = $this->get_tabs();
 		// Get current tab/section.
 		$first_tab     = current( array_keys( $tabs ) );

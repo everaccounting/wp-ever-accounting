@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit();
 
 $due      = eaccounting()->settings->get( 'invoice_due', 15 );
 $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) );//phpcs:ignore
-$invoice->maybe_set_document_number();
+$invoice->maybe_set_invoice_number();
 $title    = $invoice->exists() ? __( 'Update Invoice', 'wp-ever-accounting' ) : __( 'Add Invoice', 'wp-ever-accounting' );
 $note     = eaccounting()->settings->get( 'invoice_note' );
 $terms    = eaccounting()->settings->get( 'invoice_terms' );

@@ -33,7 +33,7 @@ $payments = $invoice->get_payments();
 					</td>
 					<td>
 						<abbr title="<?php echo esc_attr( eaccounting_price( $payment->get_amount(), $payment->get_currency_code() ) ); ?>">
-							<?php echo esc_html( eaccounting_price( eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $payment->get_currency_rate(), $invoice->get_currency_code(), $invoice->get_currency_rate() ), $invoice->get_currency_code() ) ); ?>
+							<?php echo esc_html( eaccounting_price( eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $invoice->get_currency_code(), $payment->get_currency_rate(), $invoice->get_currency_rate() ), $invoice->get_currency_code() ) ); ?>
 						</abbr>
 					</td>
 				</tr>

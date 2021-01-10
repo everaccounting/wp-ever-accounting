@@ -15,7 +15,8 @@ class EverAccounting_Admin_Release {
 	 * EverAccounting_Admin_Sales constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_page' ), 30 );
+		add_action( 'admin_menu', array( $this, 'register_page' ) );
+//		add_action( 'admin_menu', array( $this, 'register_page' ), 30 );
 		//add_filter( 'admin_title', array( $this, 'admin_title' ), 10 );
 	}
 
@@ -24,13 +25,7 @@ class EverAccounting_Admin_Release {
 	 *
 	 */
 	public function register_page() {
-		add_options_page(
-			__( "What's New", 'wp-ever-accounting' ),
-			__( "What's New", 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'ea-release',
-			array( $this, 'render_page' )
-		);
+		add_dashboard_page( '', '', 'manage_options', 'ea-release', array( $this, 'render_page') );
 	}
 
 	/**
@@ -49,12 +44,12 @@ class EverAccounting_Admin_Release {
 	}
 
 	public function admin_title() {
-		$title = '';
+		$title  = '';
 		$title .= '<div class="ea-release_logo">';
-		$title .= '<img scr="'.eaccounting()->plugin_url( '/assets/images/everaccountinglogo.png' ).'" alt="ea-release-logo">';
+		$title .= '<img scr="' . eaccounting()->plugin_url( '/assets/images/everaccountinglogo.png' ) . '" alt="ea-release-logo">';
 		$title .= '</div>';
 		$title .= '<div class="ea-release_tag">';
-		$title .= '<h2 class="wp-heading-inline">'.esc_html__( 'Best WordPress Accounting Plugin', 'wp-ever-accounting' ).'</h2>';
+		$title .= '<h2 class="wp-heading-inline">' . esc_html__( 'Best WordPress Accounting Plugin', 'wp-ever-accounting' ) . '</h2>';
 		$title .= '</div>';
 		return $title;
 

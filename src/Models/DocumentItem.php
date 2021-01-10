@@ -48,7 +48,12 @@ class DocumentItem extends ResourceModel {
 		'tax'           => 0.00,
 		'total'         => 0.00,
 		'currency_code' => '',
-		'extra'         => array(),
+		'extra'         => array(
+			'shipping'     => 0.00,
+			'shipping_tax' => 0.00,
+			'fees'         => 0.00,
+			'fees_tax'     => 0.00,
+		),
 		'date_created'  => null,
 	);
 
@@ -87,6 +92,23 @@ class DocumentItem extends ResourceModel {
 			'item_name'     => __( 'Item name', 'wp-ever-accounting' ),
 			'document_id'   => __( 'Document ID', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency Code', 'wp-ever-accounting' ),
+		);
+	}
+
+	/**
+	 * Returns all data for this object.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @return array
+	 */
+	public function get_data() {
+		return $this->to_array(
+			array_merge(
+				$this->data,
+				$this->changes,
+				array( 'id' => $this->get_id() ),
+			)
 		);
 	}
 
@@ -251,6 +273,78 @@ class DocumentItem extends ResourceModel {
 		return $this->get_prop( 'extra' );
 	}
 
+	/**
+	 * Gets a prop for a getter method.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param string $prop    Name of prop to get.
+	 * @param string $context What the value is for. Valid values are view and edit.
+	 *
+	 * @return mixed
+	 */
+	protected function get_extra_prop( $prop, $context = 'view' ) {
+		$value = null;
+
+		if ( array_key_exists( $prop, $this->data['extra'] ) ) {
+			$value = isset( $this->changes['extra'][ $prop ] ) ? $this->changes['extra'][ $prop ] : $this->data['extra'][ $prop ];
+
+			if ( 'view' === $context ) {
+				$value = apply_filters( $this->get_hook_prefix() . 'extra' . '_' . $prop, $value, $this );
+			}
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Get shipping cost
+	 *
+	 * @param string $context
+	 * @since 1.1.0
+	 *
+	 * @return float
+	 */
+	public function get_shipping( $context = 'edit' ) {
+		return $this->get_extra_prop( 'shipping', $context );
+	}
+
+	/**
+	 * get shipping tax
+	 *
+	 * @param string $context
+	 * @since 1.1.0
+	 *
+	 * @return float
+	 */
+	public function get_shipping_tax( $context = 'edit' ) {
+		return $this->get_extra_prop( 'shipping_tax', $context );
+	}
+
+	/**
+	 * Get fees.
+	 *
+	 * @param string $context
+	 * @since 1.1.0
+	 *
+	 * @return float
+	 */
+	public function get_fees( $context = 'edit' ) {
+		return $this->get_extra_prop( 'fees', $context );
+	}
+
+	/**
+	 * Get fees tax.
+	 *
+	 * @param string $context
+	 * @since 1.1.0
+	 *
+	 * @return float
+	 */
+	public function get_fees_tax( $context = 'edit' ) {
+		return $this->get_extra_prop( 'fees_tax', $context );
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -408,39 +502,67 @@ class DocumentItem extends ResourceModel {
 	}
 
 	/**
-	 * Add extra data.
+	 * Sets a prop for a setter method.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $value
-	 * @param $key
+	 * @param string $prop  Name of prop to set.
+	 * @param mixed  $value Value of the prop.
 	 */
-	public function add_extra_data( $key, $value ) {
-		$key   = eaccounting_clean( $key );
-		$value = eaccounting_clean( $value );
-
-		if ( ! empty( $key ) ) {
-			$this->data['extra'] = array_merge( $this->data['extra'], array( $key => $value ) );
+	protected function set_extra_prop( $prop, $value ) {
+		if ( array_key_exists( $prop, $this->data['extra'] ) ) {
+			if ( true === $this->object_read ) {
+				if ( $value !== $this->data['extra'][ $prop ] || ( isset( $this->changes['extra'] ) && array_key_exists( $prop, $this->changes['extra'] ) ) ) {
+					$this->changes['extra'][ $prop ] = $value;
+				}
+			} else {
+				$this->data['extra'][ $prop ] = $value;
+			}
 		}
 	}
 
 	/**
-	 * Get extra data.
+	 * Set shipping.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param $key
-	 *
-	 * @return false|mixed
+	 * @param string $shipping shipping.
 	 */
-	public function get_extra_data( $key ) {
-		$key   = eaccounting_clean( $key );
-		$value = false;
-		if ( ! empty( $key ) && array_key_exists( $key, $this->data['extra'] ) ) {
-			$value = $this->data['extra'][ $key ];
-		}
+	public function set_shipping( $shipping ) {
+		$this->set_extra_prop( 'shipping', eaccounting_format_decimal( $shipping, 4 ) );
+	}
 
-		return $value;
+	/**
+	 * Set shipping_tax.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $shipping_tax shipping_tax.
+	 */
+	public function set_shipping_tax( $shipping_tax ) {
+		$this->set_extra_prop( 'shipping_tax', eaccounting_format_decimal( $shipping_tax, 4 ) );
+	}
+
+	/**
+	 * Set fees.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $fees fees.
+	 */
+	public function set_fees( $fees ) {
+		$this->set_extra_prop( 'fees', eaccounting_format_decimal( $fees, 4 ) );
+	}
+
+	/**
+	 * Set fees_tax.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $fees_tax fees_tax.
+	 */
+	public function set_fees_tax( $fees_tax ) {
+		$this->set_extra_prop( 'fees_tax', eaccounting_format_decimal( $fees_tax, 4 ) );
 	}
 
 	/**

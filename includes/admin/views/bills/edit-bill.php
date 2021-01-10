@@ -16,7 +16,7 @@ use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 
-$bill->maybe_set_document_number();
+$bill->maybe_set_bill_number();
 $title    = $bill->exists() ? __( 'Update Bill', 'wp-ever-accounting' ) : __( 'Add Bill', 'wp-ever-accounting' );
 $note     = eaccounting()->settings->get( 'bill_note' );
 $terms    = eaccounting()->settings->get( 'bill_terms' );

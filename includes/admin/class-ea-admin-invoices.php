@@ -46,15 +46,17 @@ class EverAccounting_Admin_Invoices {
 				$invoice->set_status( 'pending' );
 				$invoice->save();
 				break;
-			case 'status_overdue':
-				$invoice->set_status( 'overdue' );
-				$invoice->save();
-				break;
 			case 'status_cancelled':
 				$invoice->set_cancelled();
 				break;
 			case 'status_refunded':
 				$invoice->set_refunded();
+				break;
+			case 'status_paid':
+				$invoice->set_paid();
+				break;
+			case 'view_as_customer':
+				$redirect_url = site_url(sprintf('eaccounting/invoice/%d/%s/', $invoice->get_id(), $invoice->get_key()));
 				break;
 			case 'delete':
 				$invoice->delete();

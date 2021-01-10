@@ -81,7 +81,7 @@ class EverAccounting_Transactions_Controller extends EverAccounting_REST_Control
 			array(
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'handle_import' ],
+					'callback'            => array( $this, 'handle_import' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => $this->get_collection_params(),
 				),
@@ -325,8 +325,8 @@ class EverAccounting_Transactions_Controller extends EverAccounting_REST_Control
 		$data = array(
 			'id'             => $item->id,
 			'type'           => $item->type,
-			'payment_date'        => $item->payment_date,
-			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
+			'payment_date'   => $item->payment_date,
+			'amount'         => eaccounting_price( $item->amount, $item->currency_code, true ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
 			'account'        => self::get_rest_object( 'accounts', $item->account_id ),
@@ -404,7 +404,7 @@ class EverAccounting_Transactions_Controller extends EverAccounting_REST_Control
 					),
 					'required'    => true,
 				),
-				'payment_date'        => array(
+				'payment_date'   => array(
 					'description' => __( 'Payment Date of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',

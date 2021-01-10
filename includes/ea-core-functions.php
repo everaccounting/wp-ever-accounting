@@ -251,6 +251,7 @@ function eaccounting_price_convert( $amount, $from, $to = null, $from_rate = nul
 	if ( is_null( $to ) ) {
 		$to = $default;
 	}
+
 	if ( is_null( $from_rate ) ) {
 		$from      = eaccounting_get_currency( $from );
 		$from_rate = $from->get_rate();

@@ -20,11 +20,14 @@ $invoice_actions = apply_filters(
 	'eaccounting_invoice_actions',
 	array(
 		'status_pending'   => __( 'Mark Pending', 'wp-ever-accounting' ),
-		'status_overdue'   => __( 'Mark Overdue', 'wp-ever-accounting' ),
 		'status_cancelled' => __( 'Mark Cancelled', 'wp-ever-accounting' ),
-		'delete'           => __( 'Delete', 'wp-ever-accounting' ),
+		'view_as_customer' => __( 'View as Customer', 'wp-ever-accounting' ),
 	)
 );
+if( $invoice->needs_payment() ){
+	$invoice_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
+}
+$invoice_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $invoice->exists() ) {
 	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Invoices', 'invoice_payments' ), 'ea_invoice', 'side' );
 	add_meta_box( 'invoice_notes', __( 'Invoice Notes', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Invoices', 'invoice_notes' ), 'ea_invoice', 'side' );

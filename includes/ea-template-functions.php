@@ -181,6 +181,7 @@ function eaccounting_get_admin_template_html( $template_name, $args = array() ) 
 	return ob_get_clean();
 }
 
+<<<<<<< HEAD
 function eaccounting_must_head_template() {
 	?>
 	<div class="eaccounting_header">
@@ -257,3 +258,13 @@ function eaccounting_must_footer_template() {
 }
 
 add_action( 'eaccounting_must_footer', 'eaccounting_must_footer_template' );
+=======
+/**
+ * Get base slug.
+ *
+ * @since 1.1.0
+ */
+function eaccounting_get_parmalink_base(){
+	return apply_filters('eaccounting_parmalink_base', 'eaccounting');
+}
+>>>>>>> 4be640eb27a07281c162f43bf78ab12df0942184
