@@ -19,19 +19,30 @@ if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
 	exit();
 }
 ?>
-<div class="ea-container">
-	<?php eaccounting_get_template( 'global/header.php', array( 'invoice' => $invoice ) ); ?>
-	<div class="ea-document_description">
-		<div class="ea-row">
-			<div class="ea-col-12">
-				<div class="ea-card">
-					<div class="ea-card__inside">
-						<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+<div class="ea-document__wrapper">
+	<?php eaccounting_get_template( 'global/header.php' ); ?>
+	<div class="ea-document__content">
+		<div class="ea-container">
+			<?php do_action( 'eaccounting_invoice_before_main_content', $invoice ); ?>
+			<?php eaccounting_get_template( 'invoice/invoice-actions.php', array( 'invoice' => $invoice ) ); ?>
+			<div class="ea-document__description">
+				<div class="ea-row">
+					<div class="ea-col-12">
+						<div class="ea-card">
+							<div class="ea-card__inside">
+								<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
+			<?php do_action( 'eaccounting_invoice_after_main_content', $invoice ); ?>
 		</div>
 	</div>
+	<!-- /.ea-document_content -->
+
+	<?php eaccounting_get_template( 'global/footer.php' ); ?>
 </div>
-<?php eaccounting_get_template( 'global/footer.php', array( 'invoice' => $invoice ) ); ?>
+<!-- /.ea-document-wrapper -->
+
 
