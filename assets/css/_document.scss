@@ -22,7 +22,9 @@
 		margin-top: 10px;
 
 		img {
-			max-height: 70px;
+			display: block;
+			max-width: 100%;
+			height: auto;
 			width: auto;
 		}
 	}
@@ -94,7 +96,7 @@
 	&__meta {
 		border-collapse: collapse;
 		background-color: transparent;
-
+		float: right;
 		td, th {
 			white-space: nowrap;
 			vertical-align: middle;

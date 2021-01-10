@@ -2,7 +2,7 @@
 /**
  * Get template part.
  *
- * @param mixed $slug Template slug.
+ * @param mixed  $slug Template slug.
  * @param string $name Template name (default: '').
  */
 function eaccounting_get_template_part( $slug, $name = null ) {
@@ -49,7 +49,7 @@ function eaccounting_get_template_part( $slug, $name = null ) {
  *
  * @param string $template_name Template name.
  * @param string $template_path Template path. (default: '').
- * @param string $default_path Default path. (default: '').
+ * @param string $default_path  Default path. (default: '').
  *
  * @return string
  */
@@ -84,9 +84,9 @@ function eaccounting_locate_template( $template_name, $template_path = '', $defa
  * Get other templates passing attributes and including the file.
  *
  * @param string $template_name Template name.
- * @param array $args Arguments. (default: array).
+ * @param array  $args          Arguments. (default: array).
  * @param string $template_path Template path. (default: '').
- * @param string $default_path Default path. (default: '').
+ * @param string $default_path  Default path. (default: '').
  */
 function eaccounting_get_template( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	$template = eaccounting_locate_template( $template_name, $template_path, $default_path );
@@ -121,15 +121,16 @@ function eaccounting_get_template( $template_name, $args = array(), $template_pa
 /**
  * Like eaccounting_get_template, but returns the HTML instead of outputting.
  *
- * @param string $template_name Template name.
- * @param array $args Arguments. (default: array).
- * @param string $template_path Template path. (default: '').
- * @param string $default_path Default path. (default: '').
- *
- * @return string
+ * @since 1.0.2
  * @see   eaccounting_get_template
  *
- * @since 1.0.2
+ * @param string $template_path Template path. (default: '').
+ * @param string $default_path  Default path. (default: '').
+ *
+ * @param string $template_name Template name.
+ * @param array  $args          Arguments. (default: array).
+ *
+ * @return string
  */
 function eaccounting_get_template_html( $template_name, $args = array(), $template_path = '', $default_path = '' ) {
 	ob_start();
@@ -166,12 +167,13 @@ function eaccounting_get_admin_template( $template_name, $args = array() ) {
 /**
  * Render admin template.
  *
- * @param       $template_name
- * @param array $args
- *
- * @return string
  * @since 1.0.0
  *
+ * @param array $args
+ *
+ * @param       $template_name
+ *
+ * @return string
  */
 function eaccounting_get_admin_template_html( $template_name, $args = array() ) {
 	ob_start();
@@ -180,83 +182,6 @@ function eaccounting_get_admin_template_html( $template_name, $args = array() ) 
 
 	return ob_get_clean();
 }
-
-function eaccounting_must_head_template() {
-	?>
-	<div class="eaccounting_header">
-		<div class="ea-container">
-			<div class="ea-row">
-				<div class="ea-col-3">
-					<div class="ea-company-logo">
-						<img src="<?php echo eaccounting()->settings->get( 'company_logo', eaccounting()->plugin_url( '/assets/images/document-logo.png' ) ); ?>" alt="company-logo" class="company-logo">
-					</div>
-				</div>
-				<div class="ea-col-9">
-					<div class="ea-menu">
-						<?php //todo menu will come later?>
-					</div>
-				</div>
-			</div>
-			<!-- /.row -->
-
-		</div>
-		<!-- /.ea-container -->
-	</div>
-	<?php
-}
-
-add_action( 'eaccounting_must_head', 'eaccounting_must_head_template' );
-
-function eaccounting_invoice_top( $invoice ) {
-	?>
-	<div class="ea-invoice-actions clearfix">
-		<div class="ea-invoice-status alignleft">
-			<div class="ea-document__status <?php echo sanitize_html_class( $invoice->get_status() ); ?>">
-				<span><?php echo esc_html( $invoice->get_status_nicename() ); ?></span>
-			</div>
-		</div>
-		<div class="ea-invoice-buttons alignright">
-			<button class="button button-secondary download">
-				<span class="dashicons dashicons-printer"></span>
-				<?php esc_html_e( 'Download', 'wp-ever-accounting' ); ?>
-			</button>
-			<?php if ( is_user_logged_in() && current_user_can( 'ea_manage_invoice' ) && $invoice->is_editable() ) : ?>
-				<a class="button button-primary edit" href="<?php echo admin_url( 'admin.php?page=ea-sales&tab=invoices&action=edit&invoice_id=' . $invoice->get_id(), 'admin' ) ?>">
-					<span class="dashicons dashicons-money-alt"></span>
-					<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
-				</a>
-			<?php endif; ?>
-		</div>
-	</div>
-	<?php
-}
-
-add_action( 'eaccounting_invoice_top', 'eaccounting_invoice_top', 10 );
-
-function eaccounting_invoice_content( $invoice ) {
-	eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) );
-}
-
-add_action( 'eaccounting_invoice_content', 'eaccounting_invoice_content', 10 );
-
-function eaccounting_invoice_payment( $invoice ) {
-	eaccounting_get_template( 'invoice/invoice-payments.php', array( 'invoice' => $invoice ) );
-}
-
-add_action( 'eaccounting_invoice_payment', 'eaccounting_invoice_payment', 10 );
-
-function eaccounting_must_footer_template() {
-	?>
-	<div class="eaccounting_footer">
-		<div class="ea-container">
-			<p><?php echo __( ' Thanks for buying from ', 'wp-ever-accounting' ) . '<a href="' . get_site_url() . '">' . get_bloginfo( 'name' ) . '</a>'; ?></p>
-		</div>
-	</div>
-	<!-- /.eaccounting_footer -->
-	<?php
-}
-
-add_action( 'eaccounting_must_footer', 'eaccounting_must_footer_template' );
 
 /**
  * Get base slug.
@@ -267,33 +192,35 @@ function eaccounting_get_parmalink_base() {
 	return apply_filters( 'eaccounting_parmalink_base', 'eaccounting' );
 }
 
-function eaccounting_bill_top( $bill ) {
-	?>
-	<div class="ea-bill-actions clearfix">
-		<div class="ea-bill-status alignleft">
-			<div class="ea-document__status <?php echo sanitize_html_class( $bill->get_status() ); ?>">
-				<span><?php echo esc_html( $bill->get_status_nicename() ); ?></span>
-			</div>
-		</div>
-		<div class="ea-bill-buttons alignright">
-			<button class="button button-secondary download">
-				<span class="dashicons dashicons-printer"></span>
-				<?php esc_html_e( 'Download', 'wp-ever-accounting' ); ?>
-			</button>
-			<?php if ( is_user_logged_in() && current_user_can( 'ea_manage_bill' ) && $bill->is_editable() ) : ?>
-				<a class="button button-primary edit" href="<?php echo admin_url( 'admin.php?page=ea-expenses&tab=bills&action=edit&invoice_id=' . $bill->get_id(), 'admin' ) ?>">
-					<span class="dashicons dashicons-money-alt"></span>
-					<?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?>
-				</a>
-			<?php endif; ?>
-		</div>
-	</div>
-	<?php
+/**
+ * Conditionally render templates.
+ *
+ * @since 1.1.0
+ */
+function eaccounting_render_body() {
+	$ea_page = get_query_var( 'ea_page' );
+	$key     = get_query_var( 'key' );
+	switch ( $ea_page ) {
+		case 'invoice':
+			$id       = get_query_var( 'invoice_id' );
+			$template = 'single-invoice.php';
+			eaccounting_get_template( $template, array( 'invoice_id' => $id, 'key' => $key ) );
+			break;
+		case 'bill':
+			$id       = get_query_var( 'bill_id' );
+			$template = 'single-bill.php';
+			eaccounting_get_template( $template, array( 'bill_id' => $id, 'key' => $key ) );
+			break;
+		default:
+			eaccounting_get_template( 'restricted.php' );
+			break;
+	}
 }
 
-add_action( 'eaccounting_bill_top', 'eaccounting_bill_top', 10 );
+add_action( 'eaccounting_body', 'eaccounting_render_body' );
 
-function eaccounting_bill_content( $bill ) {
-	eaccounting_get_template( 'bill/bill.php', array( 'bill' => $bill ) );
+function eaccounting_public_invoice_actions( $invoice ) {
+	eaccounting_get_template( 'invoice-actions.php', array( 'invoice' => $invoice ) );
 }
-add_action( 'eaccounting_bill_content', 'eaccounting_bill_content', 10 );
+
+add_action( 'eaccounting_public_before_invoice', 'eaccounting_public_invoice_actions' );

@@ -7,61 +7,88 @@
 @import "grids";
 @import "card";
 @import "document";
+@import "utility";
 
-#eaccounting-body {
-	padding-bottom: 80px;
-	position: relative;
-}
-.eaccounting_header {
-	margin-top: 25px;
-	.ea-company-logo {
-		max-width: 70px;
-		width: auto;
-	}
+/*------------------------------------------------------------------------------
+  Overwrite
+------------------------------------------------------------------------------*/
 
-}
-.ea-invoice-actions,.ea-bill-actions {
-	overflow: hidden;
-	padding-top: 20px;
-	&::after {
-		clear: both;
-		float: none;
-		display: table-cell;
-		content: "";
-	}
-	.button {
-		position: relative;
-		padding-left: 30px;
-	}
-	.dashicons {
-		position: absolute;
-		top: 4px;
-		left: 5px;
-	}
-}
 .ea-card__inside {
 	@media only screen and (min-width: 768px) {
-		padding: 50px
+		padding: 20px 50px;
 	}
 }
-.ea-document {
-	&__logo {
+
+[class*=ea-] {
+	box-sizing: border-box;
+	//color: #314e73;
+}
+
+.ea-columns{
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 0;
+	margin: 0;
+	min-height: 25px;
+	//@include clearfix();
+}
+
+/*------------------------------------------------------------------------------
+  Header
+------------------------------------------------------------------------------*/
+.ea-header{
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+.ea-brand{
+	max-width: 300px;
+	max-height: 70px;
+	overflow: hidden;
+	img{
+		display: block;
+		max-width: 100%;
+		height: auto;
+		width: auto;
+	}
+}
+
+.ea-body{
+	padding-bottom: 90px;
+}
+
+/*------------------------------------------------------------------------------
+  Footer
+------------------------------------------------------------------------------*/
+.ea-footer{
+	bottom: 0;
+	margin-bottom: 0;
+	border-width: 1px 0 0;
+	position: fixed;
+	right: 0;
+	left: 0;
+	z-index: 1030;
+	background: #fff;
+	padding: 15px;
+	width: 100%;
+	height: 50px;
+	border-top: 1px solid #e4e5e7;
+	p{
+		margin: 0;
+		padding: 0;
+		text-align: center;
+	}
+}
+
+/*------------------------------------------------------------------------------
+  Document
+------------------------------------------------------------------------------*/
+.ea-document{
+	&__logo{
 		display: none;
 	}
 	&__number {
 		font-weight: 600;
-	}
-	&__meta {
-		border: none;
-		th,td {
-			border: none;
-		}
-		td {
-			text-align: right;
-			&:last-child {
-				padding-right: 0;
-			}
-		}
 	}
 	&__items{
 		th {
@@ -70,7 +97,7 @@
 		}
 	}
 	&__data-row{
-			background: none;
+		background: none;
 	}
 	&__total-items {
 		border: none;
@@ -82,194 +109,28 @@
 	&__note-label {
 		margin-bottom: 0;
 	}
-
-	&__payments-wrapper {
-		padding-top: 1rem;
-		width: 100%;
-		display: block;
-		border-top: 1px solid #e1e2e2;
-		table {
-			margin-top: 1em;
-			border: 1px solid #ddd !important;
-			box-shadow: none !important;
-		}
-		td {
-			border-bottom: 0 !important;
-		}
-		p {
-			padding: 0;
-		}
-
-	}
-	abbr,abbr[title] {
-		border: none;
-		text-decoration: none;
-	}
 }
-.eaccounting_footer {
-	position: fixed;
-	bottom: 0;
-	z-index: 1030;
+
+/*------------------------------------------------------------------------------
+  Restricted
+------------------------------------------------------------------------------*/
+.ea-restricted{
 	text-align: center;
-	width: 100%;
-	border-top: 1px solid #e4e5e7;
-	background: #fff;
-	height: 50px;
-	padding: 15px;
+	color: #F04124;
+	border: 2px solid #F04124;
+	h3{
+		color: inherit;
+	}
 }
 
-
-
-//.ea-document {
-//	&__wrapper {
-//		min-height: 100%;
-//		position: relative;
-//	}
-//
-//	&__top {
-//		margin-top: 25px;
-//
-//		.company-logo {
-//			max-width: 70px;
-//			width: auto;
-//		}
-//	}
-//
-//	&__column {
-//		@media only screen and (max-width: 380px) {
-//			float: none;
-//		}
-//	}
-//
-//
-//	&__header {
-//		display: flex;
-//		align-items: center;
-//		justify-content: space-between;
-//		padding: 8px 0;
-//		margin: 0;
-//		min-height: 25px;
-//
-//		.button {
-//			display: inline-block;
-//			text-decoration: none;
-//			font-size: 13px;
-//			line-height: 2.15384615;
-//			min-height: 30px;
-//			margin: 0;
-//			padding: 0 10px;
-//			cursor: pointer;
-//			border-width: 1px;
-//			border-style: solid;
-//			-webkit-appearance: none;
-//			border-radius: 3px;
-//			white-space: nowrap;
-//			box-sizing: border-box;
-//		}
-//
-//		.button-default {
-//			background: #f3f5f6;
-//			border-color: #7e8993;
-//			box-shadow: none;
-//			color: #016087;
-//		}
-//
-//		.button-primary {
-//			background: #00669b;
-//			border-color: #00669b;
-//			box-shadow: none;
-//			color: #fff;
-//		}
-//	}
-//
-//	&__content {
-//		padding-bottom: 80px;
-//	}
-//
-//	&__description {
-//		background: #fff;
-//		border: 1px solid #e4e5e7;
-//		border-radius: 4px;
-//		padding: 20px;
-//		position: relative;
-//		margin-top: 20px;
-//		@media only screen and (min-width: 768px) {
-//			padding: 50px
-//		}
-//		@media only screen and (max-width: 480px) {
-//			padding: 0;
-//		}
-//
-//		.ea-card {
-//			border: none;
-//		}
-//	}
-//
-//	&__items {
-//		margin-top: 25px;
-//
-//		th {
-//			background: #415164;
-//			color: #ffffff;
-//		}
-//	}
-//
-//	&__billing-info {
-//		@media only screen and (max-width: 380px) {
-//			text-align: left !important;
-//		}
-//	}
-//	&__to {
-//		@media only screen and (max-width: 380px) {
-//			text-align: left;
-//		}
-//	}
-//
-//	&__meta {
-//		@media only screen and (max-width: 380px) {
-//			float: none;
-//		}
-//	}
-//
-//	&__line-name {
-//		.view {
-//			color: #314e73;
-//			font-weight: 500;
-//		}
-//
-//	}
-//
-//	&__total-items {
-//		tr {
-//			border-bottom: 1px solid #dfdfdf;
-//		}
-//	}
-//
-//	&__data-row {
-//		background: none;
-//	}
-//
-//	&__bottom {
-//		text-align: center;
-//		background: #fff;
-//		padding: 15px;
-//		margin-top: 50px;
-//		position: fixed;
-//		bottom: 0;
-//		left: 0;
-//		right: 0;
-//		z-index: 1030;
-//		border-top: 1px solid #e4e5e7;
-//
-//		p {
-//			margin: 0;
-//			font-size: 15px;
-//		}
-//
-//		a {
-//			text-decoration: none;
-//		}
-//	}
-//
-//
-//}
+/*------------------------------------------------------------------------------
+  MISC
+------------------------------------------------------------------------------*/
+@media print{
+	.ea-noprint{
+		display:none;
+	}
+	.ea-card{
+		border: none;
+	}
+}

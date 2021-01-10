@@ -14,26 +14,17 @@ if ( empty( $key ) || empty( $invoice_id ) ) {
 	exit();
 }
 $invoice = eaccounting_get_invoice( $invoice_id );
-if ( empty( $invoice ) || $key !== $invoice->get_key() ) {
+if ( empty( $invoice ) || ! $invoice->is_key_valid( $key ) ) {
 	eaccounting_get_template( 'unauthorized.php' );
 	exit();
 }
-
 ?>
 
-<?php eaccounting_get_template( 'global/head.php' ); ?>
-<?php do_action( 'eaccounting_before_invoice_top' ); ?>
-<?php do_action( 'eaccounting_invoice_top', $invoice ); ?>
-<?php do_action( 'eaccounting_after_invoice_top' ); ?>
+
+<?php do_action( 'eaccounting_public_before_invoice', $invoice ); ?>
 <div class="ea-card">
 	<div class="ea-card__inside">
-		<?php do_action( 'eacounting_before_invoice_content', $invoice ); ?>
-		<?php do_action( 'eaccounting_invoice_content', $invoice ); ?>
-		<?php do_action( 'eacounting_after_invoice_content', $invoice ); ?>
+		<?php eaccounting_get_template( 'invoice/invoice.php', array( 'invoice' => $invoice ) ); ?>
 	</div>
 </div>
-<!-- /.ea-card -->
-<?php eaccounting_get_template( 'global/footer.php' ); ?>
-
-
-
+<?php do_action( 'eaccounting_public_after_invoice', $invoice ); ?>

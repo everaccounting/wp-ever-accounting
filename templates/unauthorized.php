@@ -1,4 +1,0 @@
-<div>
-	<h3>Access Denied</h3>
-	<p>You are not allowed to view the page.</p>
-</div>

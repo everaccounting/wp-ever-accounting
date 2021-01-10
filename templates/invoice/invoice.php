@@ -13,11 +13,6 @@ use EverAccounting\Models\Invoice;
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="ea-document ea-invoice">
-	<?php if ( ! $invoice->needs_payment() ) : ?>
-		<div class="ea-document__watermark">
-			<p><?php echo esc_html( $invoice->get_status_nicename() ); ?></p>
-		</div>
-	<?php endif; ?>
 
 	<div class="ea-document__section">
 		<div class="ea-document__column alignleft">
@@ -34,6 +29,5 @@ defined( 'ABSPATH' ) || exit;
 	<?php eaccounting_get_template( 'invoice/invoice-items.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-note.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-terms.php', array( 'invoice' => $invoice ) ); ?>
-	<?php eaccounting_get_template( 'invoice/invoice-payments.php', array( 'invoice' => $invoice ) ); ?>
 
 </div>

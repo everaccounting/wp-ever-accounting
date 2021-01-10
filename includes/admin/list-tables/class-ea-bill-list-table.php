@@ -190,8 +190,9 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 				$edit_url    = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', 'bill_id' => $bill_id ) );// phpcs:ignore
 				$del_url     = eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'delete', 'bill_id' => $bill_id, '_wpnonce' => $nonce ) );// phpcs:ignore
 
-				$actions           = array();
-				$actions['view']   = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
+				$actions          = array();
+				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
+				$actions['print'] = '<a href="' . $bill->get_url() . '">' . __( 'Print', 'wp-ever-accounting' ) . '</a>';
 				if ( $bill->is_editable() ) {
 					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 				}

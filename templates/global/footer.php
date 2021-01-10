@@ -10,16 +10,14 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-
+$host = eaccounting_get_site_name();
 ?>
-<?php do_action( 'eaccounting_after_main_content' ); ?>
-</div>
-</div>
-<?php
-do_action( 'eaccounting_before_footer' );
-do_action( 'eaccounting_must_footer' );
-do_action( 'eaccounting_after_footer' );
-?>
-
-</body>
-</html>
+</div><!--/ea-body-->
+<footer class="ea-footer ea-noprint">
+	<div class="ea-container">
+		<p class="ea-copyright-info">
+			<?php echo date_i18n( 'Y' ); ?>
+			<?php echo sprintf(esc_html__('Copyright %s', 'wp-ever-accounting'), $host);?>
+		</p>
+	</div>
+</footer>

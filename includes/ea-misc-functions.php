@@ -293,3 +293,8 @@ function eaccounting_get_date_ranges() {
 	);
 }
 
+
+function eaccounting_get_site_name(){
+	$parts = wp_parse_url(site_url());
+	return $parts['host'];
+}
