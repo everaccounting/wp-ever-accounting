@@ -576,7 +576,9 @@ class Invoice extends Document {
 			foreach ( $this->get_items() as $item ) {
 				$subtotal_discount += ( $item->get_price() * $item->get_quantity() );
 			}
-			$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
+			if($subtotal_discount > 0) {
+				$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
+			}
 		}
 
 		foreach ( $this->get_items() as $item ) {
