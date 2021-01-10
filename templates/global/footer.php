@@ -1,15 +1,25 @@
 <?php
 /**
- * Displays footer.
+ * The template for displaying the footer.
+ *
+ * Contains the closing of the #content div and all content after.
  *
  * This template can be overridden by copying it to yourtheme/eaccounting/global/footer.php.
- * @version 1.1.0
+ *
+ * @since 1.1.0
  */
+
+defined( 'ABSPATH' ) || exit;
+
+?>
+<?php do_action( 'eaccounting_after_main_content' ); ?>
+</div>
+</div>
+<?php
+do_action( 'eaccounting_before_footer' );
+do_action( 'eaccounting_must_footer' );
+do_action( 'eaccounting_after_footer' );
 ?>
 
-<div class="ea-document__bottom">
-	<div class="ea-container">
-		<p><?php echo __(' Thanks for buying from ','wp-ever-accounting').'<a href="'.get_site_url().'">'.get_bloginfo('name').'</a>';?></p>
-	</div>
-	<!-- /.ea-container -->
-</div>
+</body>
+</html>
