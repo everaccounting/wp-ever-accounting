@@ -129,8 +129,6 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			'name'           => __( 'Customer', 'wp-ever-accounting' ),
 			'issue_date'     => __( 'Invoice Date', 'wp-ever-accounting' ),
 			'due_date'       => __( 'Due Date', 'wp-ever-accounting' ),
-			'notes'          => __( 'Notes', 'wp-ever-accounting' ),
-			'terms'          => __( 'Terms', 'wp-ever-accounting' ),
 			'status'         => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
@@ -242,12 +240,6 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'due_date':
 				$value = eaccounting_date( $invoice->get_due_date(), 'Y-m-d' );
-				break;
-			case 'notes':
-				$value = ! empty( $invoice->get_note() ) ? strlen( $invoice->get_note() ) > 50 ? esc_html( substr( $invoice->get_note(), 0, 50 ) . '...' ) : esc_html( $invoice->get_note() ) : '&mdash;';
-				break;
-			case 'terms':
-				$value = ! empty( $invoice->get_terms() ) ? strlen( $invoice->get_terms() ) > 50 ? esc_html( substr( $invoice->get_terms(), 0, 50 ) . '...' ) : esc_html( $invoice->get_terms() ) : '&mdash;';
 				break;
 			case 'status':
 				$value = sprintf( '<div class="ea-document__status %s"><span>%s</span></div>', $invoice->get_status(), $invoice->get_status_nicename() );
