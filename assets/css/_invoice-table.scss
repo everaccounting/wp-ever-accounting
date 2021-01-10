@@ -1,17 +1,195 @@
-.ea-invoice-table-wrap {
-  overflow-x: visible;
-  min-height: .01%;
-  box-sizing: border-box;
-	.ea-invoice-items-table {
-	  font-size: 14px;
-	  font-weight: 400;
-	  border: 1px solid #f4f4f4;
-	  width: 100%;
-	  max-width: 100%;
-	  margin-bottom: 20px;
-	  border-spacing: 0;
-	  border-collapse: collapse;
-	  background-color: transparent;
-	  box-sizing: border-box;
-	}
-}
+//.ea-invoice-items-wrapper {
+//  padding-top: 20px;
+//  padding-bottom: 20px;
+//  box-sizing: border-box;
+//
+//  & *, & *::before, & *::after {
+//	box-sizing: border-box
+//  }
+//
+//  a {
+//	text-decoration: none;
+//	&:focus{
+//	  box-shadow: none;
+//	  outline: none;
+//	}
+//  }
+//
+//  .ea-invoice-items {
+//	margin-top: 0;
+//	margin-bottom: 0;
+//	padding-bottom: 0;
+//	border-collapse: collapse;
+//	width: 100%;
+//	background: #fff;
+//	border: 1px solid #ddd;
+//	table-layout: fixed;
+//	box-sizing: border-box;
+//	border-left: 0;
+//	border-right: 0;
+//
+//	tr {
+//	  border-bottom: 1px solid #ddd;
+//	}
+//
+//	th {
+//	  text-align: right;
+//	  padding: 0.8em 1em;
+//	  font-weight: 400;
+//	  color: #999;
+//	  background: #f8f8f8;
+//	  -webkit-touch-callout: none;
+//	  -webkit-user-select: none;
+//	  -moz-user-select: none;
+//	  -ms-user-select: none;
+//	  user-select: none;
+//	}
+//
+//	td {
+//	  text-align: right;
+//	  padding: 0.8em 1em;
+//	}
+//
+//	.line-name {
+//	  text-align: left;
+//	}
+//
+//	.line-actions {
+//	  width: 65px;
+//	  text-align: left;
+//	}
+//
+//	td.line-actions {
+//	  transition: opacity 0.3s;
+//	}
+//
+//	.save-line,
+//	.edit-line,
+//	.delete-line {
+//	  display: inline-block;
+//	  color: #ccc;
+//	  transition: color 0.1s ease-in;
+//
+//	  &:hover {
+//		color: #444;
+//	  }
+//	}
+//	.save-line{
+//	  display: none;
+//	}
+//
+//
+//	.dashicons {
+//	  width: 16px;
+//	  height: 16px;
+//	  font-size: 16px;
+//	}
+//
+//	//input
+//	.item-name {
+//	  width: 100%;
+//	}
+//
+//	.item-price,
+//	.item-quantity,
+//	.item-tax,
+//	.item-vat {
+//	  width: 100px;
+//	  text-align: right;
+//	}
+//
+//	.view {
+//	  white-space: nowrap;
+//	}
+//
+//	tr {
+//	  .edit {
+//		display: none;
+//	  }
+//
+//	  &.editing {
+//		.edit {
+//		  display: block;
+//		}
+//
+//		.view {
+//		  display: none;
+//		}
+//
+//		.save-line{
+//		  display: inline-block;
+//		}
+//		.edit-line{
+//		  display: none;
+//		}
+//	  }
+//	}
+//
+//	.add-item-column {
+//	  text-align: left !important;
+//	  color: #444;
+//	  padding: 0.5em 1em;
+//
+//	  button {
+//		font-size: 12px;
+//		min-height: 15px;
+//		line-height: 2;
+//	  }
+//
+//	  .dashicons {
+//		vertical-align: middle;
+//	  }
+//	}
+//
+//  }
+//
+//  .ea-invoice-data-row {
+//	width: 100%;
+//	border-bottom: 1px solid #dfdfdf;
+//	padding: 10px;
+//	background: #f8f8f8;
+//	box-sizing: border-box;
+//  }
+//
+//  .ea-invoice-totals {
+//	width: 100%;
+//	@media only screen and (min-width: 600px) {
+//	  padding-left: 50%;
+//	}
+//
+//	td {
+//	  text-align: right;
+//	}
+//
+//	.label {
+//	  vertical-align: top;
+//	  padding: 0.4em;
+//	}
+//
+//	.value {
+//	  font-size: 1em !important;
+//	  width: 14em;
+//	  margin: 0 0 0 .5em;
+//	  box-sizing: border-box;
+//	  font-weight: 700;
+//	  padding: 0.4em;
+//	}
+//
+//  }
+//
+//  .ea-invoice-tools{
+//	display: flex;
+//	align-items: center;
+//	justify-content: space-between;
+//	flex-wrap: wrap;
+//  }
+//
+//  .add-line-item{
+//	.dashicons{
+//	  vertical-align: middle;
+//	}
+//  }
+//
+//
+//}
+//

@@ -101,6 +101,14 @@ class Batch extends Registry {
 
 			)
 		);
+		$this->add_item(
+			'export-items',
+			array(
+				'class' => '\EverAccounting\Export\Export_Items',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-items.php',
+
+			)
+		);
 
 		$this->add_item(
 			'import-customers',
@@ -137,6 +145,14 @@ class Batch extends Registry {
 				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-accounts.php',
 			)
 		);
+		$this->add_item(
+			'import-items',
+			array(
+				'class' => '\EverAccounting\Import\Import_Items',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-items.php',
+			)
+		);
+
 		$this->add_item(
 			'import-currencies',
 			array(

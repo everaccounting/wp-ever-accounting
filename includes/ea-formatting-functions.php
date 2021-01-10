@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function eaccounting_string_to_bool( $string ) {
-	return is_bool( $string ) ? $string : ( 'yes' === strtolower( $string ) || 1 === $string || 'true' === strtolower( $string ) || '1' === $string );
+	return is_bool( $string ) ? $string : ( in_array( strtolower( $string ), array( 'yes', 'true', 'active', 'enabled' ), true ) || 1 === $string || '1' === $string );
 }
 
 /**
@@ -41,8 +41,9 @@ function eaccounting_bool_to_string( $bool ) {
 /**
  * Converts a bool to a 1 or 0.
  *
- * @param $bool
  * @since 1.1.0
+ *
+ * @param $bool
  *
  * @return int
  */
@@ -59,9 +60,9 @@ function eaccounting_bool_to_number( $bool ) {
  *
  * @since 1.0.2
  *
- * @param string       $delimiter Delimiter, defaults to ','.
- *
  * @param string|array $string    String to convert.
+ *
+ * @param string       $delimiter Delimiter, defaults to ','.
  *
  * @return array
  */
@@ -142,7 +143,7 @@ function eaccounting_date_format() {
 }
 
 /**
- * EAccounting Time Format - Allows to change time format for everything.
+ * EverAccounting Time Format - Allows to change time format for everything.
  *
  * @since 1.0.2
  * @return string
@@ -152,154 +153,30 @@ function eaccounting_time_format() {
 }
 
 /**
- * Convert mysql datetime to PHP timestamp, forcing UTC. Wrapper for strtotime.
- *
- * @since 1.0.2
- *
- * @param int|null $from_timestamp Timestamp to convert from.
- *
- * @param string   $time_string    Time string.
- *
- * @return int
- */
-function eaccounting_string_to_timestamp( $time_string, $from_timestamp = null ) {
-	$original_timezone = date_default_timezone_get();
-
-	date_default_timezone_set( 'UTC' );
-
-	if ( null === $from_timestamp ) {
-		$next_timestamp = strtotime( $time_string );
-	} else {
-		$next_timestamp = strtotime( $time_string, $from_timestamp );
-	}
-
-	date_default_timezone_set( $original_timezone );
-
-	return $next_timestamp;
-}
-
-/**
- * Convert a date string to a EAccounting_DateTime.
- *
- * @since  1.0.2
- *
- * @param string $time_string Time string.
- *
- * @throws Exception
- * @return \EverAccounting\Core\DateTime
- */
-function eaccounting_string_to_datetime( $time_string ) {
-	// Strings are defined in local WP timezone. Convert to UTC.
-	if ( 1 === preg_match( '/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|((-|\+)\d{2}:\d{2}))$/', $time_string, $date_bits ) ) {
-		$offset    = ! empty( $date_bits[7] ) ? iso8601_timezone_to_offset( $date_bits[7] ) : eaccounting_timezone_offset();
-		$timestamp = gmmktime( $date_bits[4], $date_bits[5], $date_bits[6], $date_bits[2], $date_bits[3], $date_bits[1] ) - $offset;
-	} else {
-		$timestamp = eaccounting_string_to_timestamp( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', eaccounting_string_to_timestamp( $time_string ) ) ) );
-	}
-	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
-
-	// Set local timezone or offset.
-	if ( get_option( 'timezone_string' ) ) {
-		$datetime->setTimezone( new DateTimeZone( eaccounting_timezone_string() ) );
-	} else {
-		$datetime->set_utc_offset( eaccounting_timezone_offset() );
-	}
-
-	return $datetime;
-}
-
-/**
- * EverAccounting Timezone - helper to retrieve the timezone string for a site until.
- * a WP core method exists (see https://core.trac.wordpress.org/ticket/24730).
- *
- * Adapted from https://secure.php.net/manual/en/function.timezone-name-from-abbr.php#89155.
- *
- * @since 1.0.2
- * @return string PHP timezone string for the site
- */
-function eaccounting_timezone_string() {
-	if ( function_exists( 'wp_timezone_string' ) ) {
-		return wp_timezone_string();
-	}
-
-	// If site timezone string exists, return it.
-	$timezone = get_option( 'timezone_string' );
-	if ( $timezone ) {
-		return $timezone;
-	}
-
-	// Get UTC offset, if it isn't set then return UTC.
-	$utc_offset = (float) get_option( 'gmt_offset', 0 );
-	if ( ! is_numeric( $utc_offset ) || 0.0 === $utc_offset ) {
-		return 'UTC';
-	}
-
-	// Adjust UTC offset from hours to seconds.
-	$utc_offset = (int) ( $utc_offset * 3600 );
-
-	// Attempt to guess the timezone string from the UTC offset.
-	$timezone = timezone_name_from_abbr( '', $utc_offset );
-	if ( $timezone ) {
-		return $timezone;
-	}
-
-	// Last try, guess timezone string manually.
-	foreach ( timezone_abbreviations_list() as $abbr ) {
-		foreach ( $abbr as $city ) {
-			// WordPress restrict the use of date(), since it's affected by timezone settings, but in this case is just what we need to guess the correct timezone.
-			if ( (bool) date( 'I' ) === (bool) $city['dst'] && $city['timezone_id'] && (int) $city['offset'] === $utc_offset ) { // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-				return $city['timezone_id'];
-			}
-		}
-	}
-
-	// Fallback to UTC.
-	return 'UTC';
-}
-
-/**
- * Get timezone offset in seconds.
- *
- * @since  1.0.2
- * @return float
- */
-function eaccounting_timezone_offset() {
-	$timezone = get_option( 'timezone_string' );
-
-	if ( $timezone ) {
-		$timezone_object = new DateTimeZone( $timezone );
-
-		return $timezone_object->getOffset( new DateTime( 'now' ) );
-	}
-
-	return (float) get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS;
-}
-
-/**
  * Format a date for output.
  *
- * @since  1.0.2
+ * @since 1.1.0
  *
- * @param \EverAccounting\Core\DateTime|string $date   Instance of DateTime.
- * @param string                          $format Data format.
- *                                                Defaults to the eaccounting_date_format function if not set.
+ * @param string $format
+ * @param        $date
  *
  * @return string
  */
-function eaccounting_format_datetime( $date, $format = '' ) {
+function eaccounting_date( $date, $format = '' ) {
+
+	if ( empty( $date ) || '0000-00-00 00:00:00' === $date || '0000-00-00' === $date ) {
+		return '';
+	}
+
 	if ( ! $format ) {
 		$format = eaccounting_date_format();
 	}
-	if ( ! is_a( $date, '\EverAccounting\Core\DateTime' ) ) {
-		try {
-			$date = eaccounting_string_to_datetime( $date );
 
-		} catch ( \EverAccounting\Exception $e ) {
-			return '';
-		}
+	if ( ! is_numeric( $date ) ) {
+		$date = strtotime( $date );
 	}
 
-	return $date->date_i18n( $format );
+	return date_i18n( $format, $date );
 }
 
 /**
@@ -385,9 +262,9 @@ function eaccounting_implode_html_attributes( $raw_attributes ) {
  *
  * @since 1.0.2
  *
- * @param bool   $html True if escaping for HTML text node, false for attributes. Determines how quotes are handled.
- *
  * @param string $json JSON to escape.
+ *
+ * @param bool   $html True if escaping for HTML text node, false for attributes. Determines how quotes are handled.
  *
  * @return string Escaped JSON.
  */
@@ -405,60 +282,339 @@ function eaccounting_esc_json( $json, $html = false ) {
  *
  * @since 1.0.2
  *
- * @param bool   $allow_decimal
- *
  * @param      $number
+ *
+ * @param bool $allow_decimal
  *
  * @return int|float|null
  */
-function eaccounting_sanitize_number( $number, $allow_decimal = false ) {
+function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
 	// Convert multiple dots to just one.
 	$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
 
 	if ( $allow_decimal ) {
-		return preg_replace( '/[^0-9.-]/', '', $number );
+		return (float) preg_replace( '/[^0-9.-]/', '', $number );
 	}
 
-	return preg_replace( '/[^0-9]/', '', $number );
+	return (int) preg_replace( '/[^0-9]/', '', $number );
 }
 
 /**
- * Sanitize price for inserting into database
- * since 1.0.0
+ * Get only numbers from the string.
  *
  * @since 1.0.2
  *
- * @param $code
+ * @param      $number
  *
- * @param $amount
+ * @param int  $decimals
+ * @param bool $trim_zeros
  *
- * @return float|int
+ * @return int|float|null
  */
-function eaccounting_sanitize_price( $amount, $code = 'USD' ) {
-	return eaccounting_get_money( $amount, $code, false )->getAmount();
+function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false ) {
+
+	// Convert multiple dots to just one.
+	$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+
+	if ( is_numeric( $decimals ) ) {
+		$number = number_format( floatval( $number ), $decimals, '.', '' );
+	}
+
+	if ( $trim_zeros && strstr( $number, '.' ) ) {
+		$number = rtrim( rtrim( $number, '0' ), '.' );
+	}
+
+	return $number;
 }
 
 /**
- * Format price with currency code & number format
+ * Convert a date string to a EverAccounting_DateTime.
  *
- * @since 1.0.2
+ * @since  1.0.2
  *
- * @param $code
+ * @param string $time_string Time string.
  *
- * @param $amount
+ * @throws Exception
+ * @return \EverAccounting\Core\DateTime
+ */
+function eaccounting_string_to_datetime( $time_string ) {
+	// Strings are defined in local WP timezone. Convert to UTC.
+	if ( 1 === preg_match( '/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|((-|\+)\d{2}:\d{2}))$/', $time_string, $date_bits ) ) {
+		$offset    = ! empty( $date_bits[7] ) ? iso8601_timezone_to_offset( $date_bits[7] ) : ( (float) get_option( 'gmt_offset', 0 ) * HOUR_IN_SECONDS );
+		$timestamp = gmmktime( $date_bits[4], $date_bits[5], $date_bits[6], $date_bits[2], $date_bits[3], $date_bits[1] ) - $offset;
+	} elseif ( is_numeric( $time_string ) ) {
+		$local_time = gmdate( 'Y-m-d H:i:s', $time_string );
+		$timezone   = wp_timezone();
+		$datetime   = date_create( $local_time, $timezone );
+		$timestamp  = $datetime->getTimestamp();
+	} else {
+		$original_timezone = date_default_timezone_get();
+		date_default_timezone_set( 'UTC' );
+		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
+		date_default_timezone_set( $original_timezone );
+	}
+	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+
+	return $datetime;
+}
+
+/**
+ * Convert RGB to HEX.
+ *
+ * @since 1.1.0
+ *
+ * @param mixed $color Color.
+ *
+ * @return array
+ */
+function eaccounting_rgb_from_hex( $color ) {
+	$color = str_replace( '#', '', $color );
+	// Convert shorthand colors to full format, e.g. "FFF" -> "FFFFFF".
+	$color = preg_replace( '~^(.)(.)(.)$~', '$1$1$2$2$3$3', $color );
+
+	$rgb      = array();
+	$rgb['R'] = hexdec( $color[0] . $color[1] );
+	$rgb['G'] = hexdec( $color[2] . $color[3] );
+	$rgb['B'] = hexdec( $color[4] . $color[5] );
+
+	return $rgb;
+}
+
+/**
+ * Make HEX color darker.
+ *
+ * @param mixed $color  Color.
+ * @param int   $factor Darker factor.
+ *                      Defaults to 30.
  *
  * @return string
  */
-function eaccounting_format_price( $amount, $code = null ) {
-	if ( $code === null ) {
-		$code = eaccounting()->settings->get( 'default_currency', 'USD' );
+function eaccounting_hex_darker( $color, $factor = 30 ) {
+	$base  = eaccounting_rgb_from_hex( $color );
+	$color = '#';
+
+	foreach ( $base as $k => $v ) {
+		$amount      = $v / 100;
+		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
+		$new_decimal = $v - $amount;
+
+		$new_hex_component = dechex( $new_decimal );
+		if ( strlen( $new_hex_component ) < 2 ) {
+			$new_hex_component = '0' . $new_hex_component;
+		}
+		$color .= $new_hex_component;
 	}
 
-	$amount = eaccounting_get_money( $amount, $code, true );
-	if ( is_wp_error( $amount ) ) {
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-		return '00.00';
-	}
-
-	return $amount->format();
+	return $color;
 }
+
+/**
+ * Make HEX color lighter.
+ *
+ * @param mixed $color  Color.
+ * @param int   $factor Lighter factor.
+ *                      Defaults to 30.
+ *
+ * @return string
+ */
+function eaccounting_hex_lighter( $color, $factor = 30 ) {
+	$base  = eaccounting_rgb_from_hex( $color );
+	$color = '#';
+
+	foreach ( $base as $k => $v ) {
+		$amount      = 255 - $v;
+		$amount      = $amount / 100;
+		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
+		$new_decimal = $v + $amount;
+
+		$new_hex_component = dechex( $new_decimal );
+		if ( strlen( $new_hex_component ) < 2 ) {
+			$new_hex_component = '0' . $new_hex_component;
+		}
+		$color .= $new_hex_component;
+	}
+
+	return $color;
+}
+
+/**
+ * Determine whether a hex color is light.
+ *
+ * @param mixed $color Color.
+ *
+ * @return bool  True if a light color.
+ */
+function eaccounting_hex_is_light( $color ) {
+	$hex = str_replace( '#', '', $color );
+
+	$c_r = hexdec( substr( $hex, 0, 2 ) );
+	$c_g = hexdec( substr( $hex, 2, 2 ) );
+	$c_b = hexdec( substr( $hex, 4, 2 ) );
+
+	$brightness = ( ( $c_r * 299 ) + ( $c_g * 587 ) + ( $c_b * 114 ) ) / 1000;
+
+	return $brightness > 155;
+}
+
+/**
+ * Detect if we should use a light or dark color on a background color.
+ *
+ * @param mixed  $color Color.
+ * @param string $dark  Darkest reference.
+ *                      Defaults to '#000000'.
+ * @param string $light Lightest reference.
+ *                      Defaults to '#FFFFFF'.
+ *
+ * @return string
+ */
+function eaccounting_light_or_dark( $color, $dark = '#000000', $light = '#FFFFFF' ) {
+	return eaccounting_hex_is_light( $color ) ? $dark : $light;
+}
+
+/**
+ * Format string as hex.
+ *
+ * @param string $hex HEX color.
+ *
+ * @return string|null
+ */
+function eaccounting_format_hex( $hex ) {
+	$hex = trim( str_replace( '#', '', $hex ) );
+
+	if ( strlen( $hex ) === 3 ) {
+		$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+	}
+
+	return $hex ? '#' . $hex : null;
+}
+
+/**
+ * Dictionary for amount to text converter
+ *
+ * @since 1.1.0
+ * @return array
+ */
+function eaccounting_number_dictionary() {
+	return apply_filters(
+		'ea_number_dictionary',
+		array(
+			0                   => __( 'Zero', 'wp-ever-accounting' ),
+			1                   => __( 'One', 'wp-ever-accounting' ),
+			2                   => __( 'Two', 'wp-ever-accounting' ),
+			3                   => __( 'Three', 'wp-ever-accounting' ),
+			4                   => __( 'Four', 'wp-ever-accounting' ),
+			5                   => __( 'Five', 'wp-ever-accounting' ),
+			6                   => __( 'Six', 'wp-ever-accounting' ),
+			7                   => __( 'Seven', 'wp-ever-accounting' ),
+			8                   => __( 'Eight', 'wp-ever-accounting' ),
+			9                   => __( 'Nine', 'wp-ever-accounting' ),
+			10                  => __( 'Ten', 'wp-ever-accounting' ),
+			11                  => __( 'Eleven', 'wp-ever-accounting' ),
+			12                  => __( 'Twelve', 'wp-ever-accounting' ),
+			13                  => __( 'Thirteen', 'wp-ever-accounting' ),
+			14                  => __( 'Fourteen', 'wp-ever-accounting' ),
+			15                  => __( 'Fifteen', 'wp-ever-accounting' ),
+			16                  => __( 'Sixteen', 'wp-ever-accounting' ),
+			17                  => __( 'Seventeen', 'wp-ever-accounting' ),
+			18                  => __( 'Eighteen', 'wp-ever-accounting' ),
+			19                  => __( 'Nineteen', 'wp-ever-accounting' ),
+			20                  => __( 'Twenty', 'wp-ever-accounting' ),
+			30                  => __( 'Thirty', 'wp-ever-accounting' ),
+			40                  => __( 'Fourty', 'wp-ever-accounting' ),
+			50                  => __( 'Fifty', 'wp-ever-accounting' ),
+			60                  => __( 'Sixty', 'wp-ever-accounting' ),
+			70                  => __( 'Seventy', 'wp-ever-accounting' ),
+			80                  => __( 'Eighty', 'wp-ever-accounting' ),
+			90                  => __( 'Ninety', 'wp-ever-accounting' ),
+			100                 => __( 'Hundred', 'wp-ever-accounting' ),
+			1000                => __( 'Thousand', 'wp-ever-accounting' ),
+			1000000             => __( 'Million', 'wp-ever-accounting' ),
+			1000000000          => __( 'Billion', 'wp-ever-accounting' ),
+			1000000000000       => __( 'Trillion', 'wp-ever-accounting' ),
+			1000000000000000    => __( 'Quadrillion', 'wp-ever-accounting' ),
+			1000000000000000000 => __( 'Quintillion', 'wp-ever-accounting' ),
+		)
+	);
+}
+
+/**
+ * Convert Number to words
+ *
+ * @since 1.1.0
+ *
+ * @param $amount
+ *
+ * @return string|null
+ *
+ */
+function eaccounting_numbers_to_words( $number ) {
+	$hyphen      = '-';
+	$conjunction = ' and ';
+	$separator   = ', ';
+	$negative    = 'negative ';
+	$decimal     = ' point ';
+
+	if ( ! is_numeric( $number ) ) {
+		return false;
+	}
+	$string = '';
+	switch ( true ) {
+		case $number < 21:
+			$string = eaccounting_number_dictionary()[ $number ];
+			break;
+		case $number < 100:
+			$tens   = ( (int) ( $number / 10 ) ) * 10;
+			$units  = $number % 10;
+			$string = eaccounting_number_dictionary()[ $tens ];
+			if ( $units ) {
+				$string .= ' ' . eaccounting_number_dictionary()[ $units ];
+			}
+			break;
+		case $number < 1000:
+			$hundreds  = $number / 100;
+			$remainder = $number % 100;
+			$string    = eaccounting_number_dictionary()[ $hundreds ] . ' ' . eaccounting_number_dictionary()[100];
+			if ( $remainder ) {
+				$string .= $conjunction . eaccounting_numbers_to_words( $remainder );
+			}
+			break;
+		default:
+			$baseUnit     = pow( 1000, floor( log( $number, 1000 ) ) );
+			$numBaseUnits = (int) ( $number / $baseUnit );
+			$remainder    = $number % $baseUnit;
+			$string       = eaccounting_numbers_to_words( $numBaseUnits ) . ' ' . eaccounting_number_dictionary()[ $baseUnit ];
+			if ( $remainder ) {
+				$string .= $remainder < 100 ? $conjunction : $separator;
+				$string .= eaccounting_numbers_to_words( $remainder );
+			}
+			break;
+	}
+
+	return $string;
+
+}
+
+function eaccounting_format_address( $address, $break = '<br>' ) {
+	$address   = wp_parse_args(
+		$address,
+		array(
+			'street'   => '',
+			'city'     => '',
+			'state'    => '',
+			'postcode' => '',
+			'country'  => '',
+		)
+	);
+	$countries = eaccounting_get_countries();
+	if ( ! empty( $address['country'] ) && isset( $countries[ $address['country'] ] ) ) {
+		$address['country'] = $countries[ $address['country'] ];
+	}
+
+	$line_1       = $address['street'];
+	$line_2       = implode( ' ', array_filter( array( $address['city'], $address['state'], $address['postcode'] ) ) );
+	$line_3       = $address['country'];
+	$full_address = array_filter( array( $line_1, $line_2, $line_3 ) );
+
+	return implode( $break, $full_address );
+}
+

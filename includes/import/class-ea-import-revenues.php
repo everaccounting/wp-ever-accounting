@@ -12,9 +12,7 @@ namespace EverAccounting\Import;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Query_Category;
-use EverAccounting\Query_Currency;
-use EverAccounting\Query_Account;
+use EverAccounting\Models\Currency;
 
 /**
  * Class Import_Revenues
@@ -41,7 +39,7 @@ class Import_Revenues extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	public function get_required() {
-		return array( 'paid_at', 'currency_code', 'account_name', 'category_name', 'payment_method' );
+		return array( 'payment_date', 'currency_code', 'account_name', 'category_name', 'payment_method' );
 	}
 
 	/**
@@ -52,12 +50,12 @@ class Import_Revenues extends CSV_Importer {
 	 */
 	protected function get_formatting_callback() {
 		return array(
-			'paid_at'        => array( $this, 'parse_date_field' ),
+			'payment_date'   => array( $this, 'parse_date_field' ),
 			'amount'         => array( $this, 'parse_text_field' ),
 			'currency_code'  => array( $this, 'parse_currency_code_field' ),
 			'currency_rate'  => array( $this, 'parse_float_field' ),
 			'account_name'   => array( $this, 'parse_text_field' ),
-			'vendor_name'    => array( $this, 'parse_text_field' ),
+			'customer_name'  => array( $this, 'parse_text_field' ),
 			'category_name'  => array( $this, 'parse_text_field' ),
 			'description'    => array( $this, 'parse_description_field' ),
 			'payment_method' => array( $this, 'parse_text_field' ),
@@ -73,7 +71,7 @@ class Import_Revenues extends CSV_Importer {
 	 * @return string|\WP_Error
 	 */
 	protected function import_item( $data ) {
-		if ( empty( $data['paid_at'] ) ) {
+		if ( empty( $data['payment_date'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Date', 'wp-ever-accounting' ) );
 		}
 		if ( empty( $data['account_name'] ) ) {
@@ -89,15 +87,24 @@ class Import_Revenues extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Payment Method', 'wp-ever-accounting' ) );
 		}
 
-		$category_id   = Query_Category::init()->select( 'id' )->where( 'name', $data['category_name'] )->value( 0 );
-		$currency_code = Query_Currency::init()->find( $data['currency_code'], 'code' );
-		$account_id    = Query_Account::init()->select( 'id' )->where( 'name', $data['account_name'] )->value( 0 );
+		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'income' ) );
+		$category_id = ! empty( $category ) ? $category[0]->get_id() : '';
+
+		$currency = new Currency( array( 'code' => $data['currency_code'] ) );
+
+		$account               = eaccounting_get_accounts( array( 'search' => $data['account_name'], 'search_cols' => array( 'name' ) ) );
+		$account_id            = ! empty( $account ) ? $account[0]->get_id() : '';
+		$account_currency_code = ! empty( $account ) ? $account[0]->get_currency_code() : '';
+
+		$customer    = ( '' != $data['customer_name'] ) ? eaccounting_get_customers( array( 'search' => $data['customer_name'], 'search_cols' => array( 'name' ) ) ) : '';
+		$customer    = ! empty( $customer ) ? reset( $customer ) : '';
+		$customer_id = ! empty( $customer ) ? $customer->get_id() : '';
 
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );
 		}
 
-		if ( empty( $currency_code ) ) {
+		if ( ! $currency->exists() ) {
 			return new \WP_Error( 'invalid_props', __( 'Currency Code not exists', 'wp-ever-accounting' ) );
 		}
 
@@ -105,11 +112,16 @@ class Import_Revenues extends CSV_Importer {
 			return new \WP_Error( 'invalid_props', __( 'Transaction associated account is not exist.', 'wp-ever-accounting' ) );
 		}
 
+		if ( $data['currency_code'] != $account_currency_code ) {
+			return new \WP_Error( 'invalid_props', __( 'Account currency does not match with provided currency code.', 'wp-ever-accounting' ) );
+		}
+
 		$data['category_id'] = $category_id;
 		$data['account_id']  = $account_id;
 		$data['type']        = 'income';
+		$data['contact_id']  = $customer_id;
 
-		return eaccounting_insert_transaction( $data );
+		return eaccounting_insert_revenue( $data );
 	}
 
 }

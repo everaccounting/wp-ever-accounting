@@ -1,6 +1,6 @@
 <?php
 
-class EAccounting_Tests_Money extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Money extends EverAccounting_Unit_Test_Case {
 	public function test_format_simple() {
 		$m1 = new \EverAccounting\Money( 1, 'USD' );
 		$m2 = new \EverAccounting\Money( 10, 'USD' );

@@ -12,7 +12,6 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Core\Exception;
 use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit;
@@ -36,36 +35,31 @@ class CategoryController extends Singleton {
 	/**
 	 * Validate category data.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param array $data
 	 * @param null $id
 	 * @param Category $category
 	 *
-	 * @throws \EverAccounting\Core\Exception
-	 * @since 1.1.0
+	 * @throws \Exception
 	 *
 	 */
 	public static function validate_category_data( $data, $id ) {
 		global $wpdb;
 
-		if ( empty( $data['name'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Category name is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['type'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Category type is required.', 'wp-ever-accounting' ) );
-		}
-
 		if ( $id != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name='%s'", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ) ) ) { // @codingStandardsIgnoreLine
-			throw new Exception( 'duplicate_item', __( 'Duplicate category.', 'wp-ever-accounting' ) );
+			throw new \Exception( __( 'Duplicate category.', 'wp-ever-accounting' ) );
 		}
 	}
 
 	/**
 	 * Delete category id from transactions.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @param $id
 	 *
 	 * @return bool
-	 * @since 1.1.0
 	 *
 	 */
 	public static function update_transaction_category( $id ) {

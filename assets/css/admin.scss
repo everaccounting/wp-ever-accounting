@@ -10,21 +10,146 @@
 @import "grids";
 @import "card";
 @import "form";
-@import "form-card";
 @import "pace";
 @import "blank-state";
-@import "_eaccounting-notice";
+@import "notice";
 @import "dropdown";
 @import "widgets";
 @import "daterangepicker";
 @import "table";
-@import "invoice-card";
+//@import "invoice";
 @import "utility";
-@import "invoice-table";
+//@import "invoice-table";
+@import "settings";
+@import "document";
+@import "admin-common";
 
-.eaccounting .nav-tab-wrapper {
-  margin-bottom: 20px !important;
+
+/*------------------------------------------------------------------------------
+  Adjust all list tables
+------------------------------------------------------------------------------*/
+.eaccounting{
+  .wp-list-table{
+	.check-column{
+	  @media only screen and (max-width: 782px) {
+		padding-top: 10px;
+	  }
+	}
+	.column-enabled{
+	  width: 150px;
+	}
+
+	.column-thumb {
+	  width: 40px;
+	  text-align: center;
+	  white-space: nowrap;
+	  .ea-thumb{
+		display: block;
+		position: relative;
+		height: 1em;
+		width: 1em;
+		margin: 0 auto;
+		font-size: 14px;
+	  }
+
+	  a{
+		overflow: hidden;
+		display: block;
+	  }
+
+	  img{
+		margin: 0;
+		vertical-align: middle;
+		border-radius: 4px;
+		width: 36px;
+		height: auto;
+	  }
+	}
+	th.column-actions{
+	  width: 150px;
+	}
+
+	td.column-actions{
+	  .row-actions{
+		left: 0;
+		a{
+		  display: inline-block;
+		  color: #757575;
+		  transition: color 0.1s ease-in;
+		  text-decoration: none;
+		  font-size: 16px;
+		  &:hover{
+			color: #444;
+		  }
+		}
+	  }
+	}
+	.meta {
+	  display: block;
+	  color: #999;
+	  font-size: inherit;
+	}
+	.row-actions {
+	  color: #999;
+	}
+	@media only screen and (max-width: 782px){
+	  &.items,&.customers,&.vendors,&.accounts {
+		.column-thumb {
+		  display: none;
+		  text-align: left;
+		}
+	  }
+	  &.customers .row-actions span,&.vendors .row-actions span,&.invoices .row-actions span {
+		padding-top: 0;
+	  }
+	  &.customers .row-actions span a,&.vendors .row-actions span a,&.invoices .row-actions span a {
+		padding-top: 0;
+		line-height: 1;
+	  }
+
+	}
+
+
+  }
 }
+
+
+.ea-admin-page {
+  margin-bottom: 20px;
+  padding-top: 10px;
+  min-width: 763px;
+  display: block;
+  position: relative;
+  box-sizing: border-box;
+  @media only screen and (max-width: 782px) {
+	min-width: auto;
+	position: inherit;
+  }
+
+  .columns-2 &{
+
+	&__content {
+	  width: calc(100% - 300px);
+	  min-width: 463px;
+	  float: left;
+	  @media only screen and (max-width: 850px) {
+		margin-right: 0;
+		width: 100%;
+	  }
+	}
+
+	&__sidebar {
+	  float: right;
+	  width: 280px;
+	  @media only screen and (max-width: 850px) {
+		margin-right: 0;
+		width: 100%;
+	  }
+	}
+  }
+
+}
+
 
 .eaccounting {
   .blockUI.blockOverlay {
@@ -184,92 +309,67 @@
   */
 
 .ea-modal {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100%;
+  height: 100%;
+  outline: 0;
 
   * {
 	box-sizing: border-box;
   }
 
-  .ea-modal-content {
-	position: fixed;
-	background: #fff;
-	z-index: 100000;
-	left: 50%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	max-width: 100%;
-	min-width: 500px;
-
-	@media (min-width: 956px) {
-	  min-width: 840px;
-	}
-
-	article {
-	  overflow: auto;
-	}
-  }
-
-  .wp-picker-input-wrap {
-	display: none;
-  }
-
-  .wp-picker-holder {
-	display: inline-block;
-	margin-left: 20px;
-  }
-
-  .select2-container {
-	width: 100% !important;
-  }
-}
-
-@media screen and (max-width: 782px) {
-
-  .ea-modal .ea-modal-content {
-	width: 100%;
-	height: 100%;
-	min-width: 100%;
-  }
-}
-
-
-.ea-modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  min-height: 360px;
-  background: #000;
-  opacity: 0.7;
-  z-index: 99;
-}
-
-.ea-modal-main {
-  padding-bottom: 55px;
-
-  header,
-  article {
-	display: block;
+  &__content {
+	max-width: 500px;
+	margin: 1.75rem auto;
+	min-height: calc(100% - 3.5rem);
+	display: flex;
+	align-items: center;
 	position: relative;
+	width: auto;
+	pointer-events: none;
+
+	&::before {
+	  content: "";
+	  display: block;
+	  height: calc(100vh - 3.5rem);
+	}
+
+	@media screen and (max-width: 782px) {
+	  width: 100%;
+	  height: 100%;
+	  min-width: 100%;
+	}
   }
 
-  .ea-modal-header {
+  &__inner {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	pointer-events: auto;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: .3rem;
+	outline: 0;
+	z-index: 9999;
+  }
+
+  &__header {
 	height: auto;
 	background: #fcfcfc;
 	padding: 1em 1.5em;
 	border-bottom: 1px solid #ddd;
+	position: relative;
 
-	h1 {
-	  margin: 0;
-	  font-size: 18px;
-	  font-weight: 700;
-	  line-height: 1.5em;
-	}
-
-	.modal-close-link {
+	.ea-modal__close {
 	  cursor: pointer;
 	  color: #777;
-	  height: 54px;
+	  height: 100%;
 	  width: 54px;
 	  padding: 0;
 	  position: absolute;
@@ -280,6 +380,7 @@
 	  border-left: 1px solid #ddd;
 	  background-color: transparent;
 	  transition: color 0.1s ease-in-out, background 0.1s ease-in-out;
+
 
 	  &::before {
 		font: normal 22px/50px "dashicons" !important;
@@ -300,10 +401,26 @@
 		outline: none;
 	  }
 	}
+
   }
 
-  article {
-	padding: 1.5em;
+  &__title {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1.5em;
+	padding: 0;
+  }
+
+  &__body {
+	position: relative;
+	flex: 1 1 auto;
+	padding: 1rem;
+
+
+	.submit {
+	  text-align: center;
+	}
 
 	p {
 	  margin: 1.5em 0;
@@ -315,6 +432,7 @@
 
 	p:last-child {
 	  margin-bottom: 0;
+	  padding: 0;
 	}
 
 	.pagination {
@@ -365,36 +483,49 @@
 	}
   }
 
-  footer {
-	position: absolute;
+  &__footer {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	padding: 1rem;
+	border-top: 1px solid #dee2e6;
+
+	& > :not(:last-child) {
+	  margin-right: .25rem;
+	}
+  }
+
+  &__backdrop {
+	position: fixed;
+	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	z-index: 100;
-	padding: 1em 1.5em;
-	background: #fcfcfc;
-	border-top: 1px solid #dfdfdf;
+	min-height: 360px;
+	background: #000;
+	opacity: 0.7;
+	z-index: 99;
+  }
 
-	.inner {
-	  text-align: right;
-	  line-height: 23px;
+  .wp-picker-input-wrap {
+	display: none;
+  }
 
-	  .button {
-		margin-bottom: 0;
-	  }
+  .wp-picker-holder {
+	display: inline-block;
+	margin-left: 20px;
+  }
+
+  .select2-container {
+	width: 100% !important;
+  }
+
+  .ea-modal-open & {
+	overflow-x: hidden;
+	overflow-y: auto;
+
+	.select2-container--open {
+	  z-index: 9999999 !important;
 	}
   }
 }
-
-.ea-modal-open {
-  .select2-container--open {
-	z-index: 9999999 !important;
-  }
-}
-
-.eaccounting .wp-list-table {
-  td {
-	padding: 0.75rem 1rem;
-  }
-}
-

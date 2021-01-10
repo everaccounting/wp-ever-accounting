@@ -8,7 +8,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
+class EverAccounting_Transactions_Controller extends EverAccounting_REST_Controller {
 	/**
 	 * @var string
 	 */
@@ -81,7 +81,7 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 			array(
 				array(
 					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => [ $this, 'handle_import' ],
+					'callback'            => array( $this, 'handle_import' ),
 					'permission_callback' => array( $this, 'get_item_permissions_check' ),
 					'args'                => $this->get_collection_params(),
 				),
@@ -276,8 +276,8 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 		if ( ! empty( $schema['properties']['type'] ) && isset( $request['type'] ) ) {
 			$prepared_item->type = $request['type'];
 		}
-		if ( ! empty( $schema['properties']['paid_at'] ) && isset( $request['paid_at'] ) ) {
-			$prepared_item->paid_at = $request['paid_at'];
+		if ( ! empty( $schema['properties']['payment_date'] ) && isset( $request['payment_date'] ) ) {
+			$prepared_item->payment_date = $request['payment_date'];
 		}
 		if ( ! empty( $schema['properties']['amount'] ) && isset( $request['amount'] ) ) {
 			$prepared_item->amount = $request['amount'];
@@ -325,8 +325,8 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 		$data = array(
 			'id'             => $item->id,
 			'type'           => $item->type,
-			'paid_at'        => $item->paid_at,
-			'amount'         => eaccounting_money( $item->amount, $item->currency_code, true )->format(),
+			'payment_date'   => $item->payment_date,
+			'amount'         => eaccounting_price( $item->amount, $item->currency_code, true ),
 			'currency_code'  => $item->currency_code,
 			'currency_rate'  => $item->currency_rate,
 			'account'        => self::get_rest_object( 'accounts', $item->account_id ),
@@ -404,7 +404,7 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 					),
 					'required'    => true,
 				),
-				'paid_at'        => array(
+				'payment_date'   => array(
 					'description' => __( 'Payment Date of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
@@ -538,7 +538,7 @@ class EAccounting_Transactions_Controller extends EAccounting_REST_Controller {
 		$params['orderby'] = array(
 			'description' => __( 'Sort collection by contact attribute.', 'wp-ever-accounting' ),
 			'type'        => 'string',
-			'default'     => 'paid_at',
+			'default'     => 'payment_date',
 		);
 
 		return $query_params;

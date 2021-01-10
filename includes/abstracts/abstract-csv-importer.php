@@ -315,6 +315,7 @@ abstract class CSV_Importer {
 			$default             = array_fill_keys( array_keys( $this->headers ), '' );
 			$this->parsed_data[] = wp_parse_args( $data, $default );
 		}
+
 	}
 
 

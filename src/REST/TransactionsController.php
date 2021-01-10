@@ -11,7 +11,7 @@ namespace EverAccounting\REST;
 
 use EverAccounting\Repositories\Transactions;
 
-defined( 'ABSPATH' ) || exit();
+defined( 'ABSPATH' ) || die();
 
 /**
  * Class TransactionController
@@ -25,6 +25,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 *
 	 */
@@ -34,6 +35,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
 	protected $entity_model = Transactions::class;
@@ -57,12 +59,12 @@ abstract class TransactionsController extends EntitiesController {
 
 		// Set before into date query. Date query must be specified as an array of an array.
 		if ( isset( $request['before'] ) ) {
-			$args['paid_at'][0]['before'] = $request['before'];
+			$args['payment_date'][0]['before'] = $request['before'];
 		}
 
 		// Set after into date query. Date query must be specified as an array of an array.
 		if ( isset( $request['after'] ) ) {
-			$args['paid_at'][0]['after'] = $request['after'];
+			$args['payment_date'][0]['after'] = $request['after'];
 		}
 		return eaccounting_get_transactions( $query_args );
 	}
@@ -71,6 +73,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since   1.1.0
+	 * 
 	 * @return array Item schema data.
 	 *
 	 */
@@ -89,7 +92,7 @@ abstract class TransactionsController extends EntitiesController {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'paid_at'          => array(
+				'payment_date'          => array(
 					'description' => __( 'Payment Date of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
@@ -163,7 +166,7 @@ abstract class TransactionsController extends EntitiesController {
 
 					),
 				),
-				'invoice_id'       => array(
+				'document_id'       => array(
 					'description' => __( 'Invoice id of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -317,6 +320,7 @@ abstract class TransactionsController extends EntitiesController {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since   1.1.0
+	 * 
 	 * @return array Collection parameters.
 	 *
 	 */
@@ -327,9 +331,9 @@ abstract class TransactionsController extends EntitiesController {
 				'orderby'    => array(
 					'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'default'     => 'paid_at',
+					'default'     => 'payment_date',
 					'enum'        => array(
-						'paid_at',
+						'payment_date',
 						'amount',
 						'account_id',
 						'type',

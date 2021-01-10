@@ -12,7 +12,6 @@ namespace EverAccounting\Export;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Exporter;
-use EverAccounting\Query_Currency;
 
 /**
  * Class Export_Currencies
@@ -54,10 +53,11 @@ class Export_Currencies extends CSV_Exporter {
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
+			'return'   => 'objects',
+			'number'      => -1,
 		);
-		$query             = Query_Currency::init()->where( $args );
-		$items             = $query->get( OBJECT, 'eaccounting_get_currency' );
-		$this->total_count = $query->count();
+		$args = apply_filters( 'eaccounting_currency_export_query_args', $args );
+		$items = eaccounting_get_currencies( $args );
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -71,7 +71,7 @@ class Export_Currencies extends CSV_Exporter {
 	/**
 	 * Take a currency and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Currency $item
+	 * @param \EverAccounting\Models\Currency $item
 	 *
 	 * @return array
 	 */

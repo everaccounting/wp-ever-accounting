@@ -9,10 +9,7 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Abstracts\ContactModel;
-use EverAccounting\Core\Exception;
-use EverAccounting\Core\Repositories;
-use EverAccounting\Repositories\Customers;
+use EverAccounting\Traits\AttachmentTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,20 +20,27 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Customer extends ContactModel {
-	/**
-	 * Type of the contact.
-	 */
-	const CONTACT_TYPE = 'customer';
+class Customer extends Contact {
+	use AttachmentTrait;
 
 	/**
-	 * Get the account if ID is passed, otherwise the account is new and empty.
+	 * This is the name of this object type.
 	 *
-	 * @since 1.0.2
+	 * @var string
+	 */
+	protected $object_type = 'customer';
+
+	/**
+	 * Get the customer if ID is passed, otherwise the customer is new and empty.
 	 *
-	 * @param int|object $data object to read.
+	 * @since 1.1.0
+	 *
+	 * @param int|object|Customer $data object to read.
+	 *
+	 * @throws \Exception
 	 */
 	public function __construct( $data = 0 ) {
+		$this->data = array_merge( $this->data, array( 'type' => 'customer' ) );
 		parent::__construct( $data );
 
 		if ( $data instanceof self ) {
@@ -51,30 +55,78 @@ class Customer extends ContactModel {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
-		$this->repository = Repositories::load( 'contact-customer' );
-
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
 
-		// If not vendor then reset to default
-		if ( self::CONTACT_TYPE !== $this->get_type() ) {
-			$this->set_id( 0 );
-			$this->set_defaults();
+		$this->required_props = array(
+			'name'          => __( 'Name', 'wp-ever-accounting' ),
+			'currency_code' => __( 'Currency Code', 'wp-ever-accounting' ),
+		);
+	}
+
+
+	/**
+	 * Get total paid by a customer.
+	 *
+	 * @since 1.1.0
+	 * @return float|int|string
+	 */
+	public function get_total_paid() {
+		global $wpdb;
+		$total = wp_cache_get( 'customer_total_total_paid_' . $this->get_id(), 'ea_customers' );
+		if ( false === $total ) {
+			$total        = 0;
+			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='income' AND contact_id=%d", $this->get_id() ) );
+			foreach ( $transactions as $transaction ) {
+				$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+			}
+			wp_cache_set( 'customer_total_total_paid_' . $this->get_id(), $total, 'ea_customers' );
 		}
+
+		return $total;
 	}
 
 	/**
-	 * Save should create or update based on object existence.
+	 * Get total paid by a customer.
 	 *
-	 * @since  1.1.0
-	 * @throws Exception
-	 * @return \Exception|bool
+	 * @since 1.1.0
+	 * @return float|int|string
 	 */
-	public function save() {
-		$this->set_type( self::CONTACT_TYPE );
+	public function get_total_due() {
+		global $wpdb;
+		$total = wp_cache_get( 'customer_total_total_due_' . $this->get_id(), 'ea_customers' );
+		if ( false === $total ) {
+			$invoices = $wpdb->get_results( $wpdb->prepare(
+				"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
+					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
+					   AND type = 'invoice' AND contact_id=%d",
+				$this->get_id()
+			) );
 
-		return parent::save();
+			$total = 0;
+			foreach ( $invoices as $invoice ) {
+				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
+			}
+			if( !empty( $total ) ) {
+				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
+				$revenues    = $wpdb->get_results( $wpdb->prepare(
+					"SELECT Sum(amount) amount, currency_code, currency_rate
+		  			   FROM   {$wpdb->prefix}ea_transactions
+		               WHERE  type = %s AND document_id IN ($invoice_ids)
+		  			   GROUP  BY currency_code,currency_rate",
+					'income'
+				) );
+
+				foreach ( $revenues as $revenue ) {
+					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
+				}
+			}
+			wp_cache_set( 'customer_total_total_due_' . $this->get_id(), $total, 'ea_customers' );
+		}
+
+		return $total;
 	}
+
+
 }

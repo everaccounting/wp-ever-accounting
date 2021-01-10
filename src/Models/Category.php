@@ -31,14 +31,16 @@ class Category extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 * 
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_category';
+	public $cache_group = 'ea_categories';
 
 	/**
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @var array
 	 */
 	protected $data = array(
@@ -53,7 +55,7 @@ class Category extends ResourceModel {
 	/**
 	 * Get the category if ID is passed, otherwise the category is new and empty.
 	 *
-	 * @param int|string|object|Item $item Item object to read.
+	 * @param int|object|Category $item Item object to read.
 	 */
 	public function __construct( $item = 0 ) {
 		parent::__construct( $item );
@@ -71,11 +73,16 @@ class Category extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'categories' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'name' => __( 'Category name', 'wp-ever-accounting' ),
+			'type' => __( 'Category type', 'wp-ever-accounting' ),
+		);
 	}
 
 	/*

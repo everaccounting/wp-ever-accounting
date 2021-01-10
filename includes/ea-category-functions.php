@@ -59,9 +59,34 @@ function eaccounting_get_category( $category ) {
 		$result = new EverAccounting\Models\Category( $category );
 
 		return $result->exists() ? $result : null;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return null;
 	}
+}
+
+/**
+ * Get category by name.
+ *
+ * @param $name
+ * @param $type
+ * @since 1.1.0
+ *
+ * @return \EverAccounting\Models\Category|null
+ */
+function eaccounting_get_category_by_name( $name, $type ) {
+	global $wpdb;
+	$cache_key = "$name-$type";
+	$category  = wp_cache_get( $cache_key, 'ea_categories' );
+	if ( false === $category ) {
+		$category = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories where `name`=%s AND `type`=%s", eaccounting_clean( $name ), eaccounting_clean( $type ) ) );
+		wp_cache_set( $cache_key, $category, 'ea_categories' );
+	}
+	if ( $category ) {
+		wp_cache_set( $category->id, $category, 'ea_categories' );
+		return eaccounting_get_category( $category );
+	}
+
+	return null;
 }
 
 /**
@@ -108,8 +133,8 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 		$item->save();
 
 		return $item;
-	} catch ( \EverAccounting\Core\Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error( 'category_error', $e->getMessage() ) : 0;
 	}
 }
 
@@ -127,7 +152,7 @@ function eaccounting_delete_category( $category_id ) {
 		$category = new EverAccounting\Models\Category( $category_id );
 
 		return $category->exists() ? $category->delete() : false;
-	} catch ( \EverAccounting\Core\Exception $e ) {
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }
@@ -147,51 +172,101 @@ function eaccounting_get_categories( $args = array() ) {
 	$args = wp_parse_args(
 		$args,
 		array(
-			'status'       => 'all',
-			'type'         => '',
-			'include'      => '',
-			'search'       => '',
-			'search_cols'  => array( 'name', 'type' ),
-			'orderby_cols' => array( 'name', 'type', 'color', 'enabled', 'date_created' ),
-			'fields'       => '*',
-			'orderby'      => 'id',
-			'order'        => 'ASC',
-			'number'       => 20,
-			'offset'       => 0,
-			'paged'        => 1,
-			'return'       => 'objects',
-			'count_total'  => false,
+			'status'      => 'all',
+			'type'        => '',
+			'include'     => '',
+			'search'      => '',
+			'fields'      => '*',
+			'orderby'     => 'id',
+			'order'       => 'ASC',
+			'number'      => 20,
+			'offset'      => 0,
+			'paged'       => 1,
+			'return'      => 'objects',
+			'count_total' => false,
 		)
 	);
 
-	$qv    = apply_filters( 'eaccounting_get_categories_args', $args );
-	$table = 'ea_categories';
+	$qv           = apply_filters( 'eaccounting_get_categories_args', $args );
+	$table        = \EverAccounting\Repositories\Categories::TABLE;
+	$columns      = \EverAccounting\Repositories\Categories::get_columns();
+	$qv['fields'] = wp_parse_list( $qv['fields'] );
+	$qv['fields'] = wp_parse_list( $qv['fields'] );
+	foreach ( $qv['fields'] as $index => $field ) {
+		if ( ! in_array( $field, $columns, true ) ) {
+			unset( $qv['fields'][ $index ] );
+		}
+	}
+	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
+	$where  = 'WHERE 1=1';
 
-	$query_fields  = eaccounting_prepare_query_fields( $qv, $table );
-	$query_from    = eaccounting_prepare_query_from( $table );
-	$query_where   = 'WHERE 1=1';
-	$query_where   .= eaccounting_prepare_query_where( $qv, $table );
-	$query_orderby = eaccounting_prepare_query_orderby( $qv, $table );
-	$query_limit   = eaccounting_prepare_query_limit( $qv );
-	$count_total   = true === $qv['count_total'];
-	$cache_key     = md5( serialize( $qv ) );
-	$results       = wp_cache_get( $cache_key, 'eaccounting_category' );
-	$request       = "SELECT $query_fields $query_from $query_where $query_orderby $query_limit";
+	if ( ! empty( $qv['include'] ) ) {
+		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
+		$where  .= " AND $table.`id` IN ($include)";
+	} elseif ( ! empty( $qv['exclude'] ) ) {
+		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
+	}
 
+	if ( ! empty( $qv['type'] ) ) {
+		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
+		$where .= " AND $table.`type` IN ('$types')";
+	}
 
+	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+		$status = eaccounting_string_to_bool( $qv['status'] );
+		$status = eaccounting_bool_to_number( $status );
+		$where .= " AND $table.`enabled` = ('$status')";
+	}
+
+	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
+		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
+		$where             .= $date_created_query->get_sql();
+	}
+
+	$search_cols = array( 'name', 'type' );
+	if ( ! empty( $qv['search'] ) ) {
+		$searches = array();
+		$where   .= ' AND (';
+		foreach ( $search_cols as $col ) {
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+		}
+		$where .= implode( ' OR ', $searches );
+		$where .= ')';
+	}
+
+	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
+	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
+
+	$limit = '';
+	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
+		if ( $qv['offset'] ) {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
+		} else {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
+		}
+	}
+
+	$select      = "SELECT {$fields}";
+	$from        = "FROM {$wpdb->prefix}$table $table";
+	$orderby     = "ORDER BY {$orderby} {$order}";
+	$count_total = true === $qv['count_total'];
+	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
+	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_categories' );
+	$results     = wp_cache_get( $cache_key, 'ea_categories' );
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( $request );
-			wp_cache_set( $cache_key, $results, 'eaccounting_category' );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			wp_cache_set( $cache_key, $results, 'ea_categories' );
 		} else {
-			$results = $wpdb->get_results( $request );
-			if ( in_array( $qv['fields'], array( 'all', '*' ), true ) ) {
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {
-					wp_cache_set( $item->id, $item, 'eaccounting_category' );
-					wp_cache_set( $item->name . '-' . $item->type, $item, 'eaccounting_category' );
+					wp_cache_set( $item->id, $item, 'ea_categories' );
+					wp_cache_set( $item->name . '-' . $item->type, $item, 'ea_categories' );
 				}
 			}
-			wp_cache_set( $cache_key, $results, 'eaccounting_category' );
+			wp_cache_set( $cache_key, $results, 'ea_categories' );
 		}
 	}
 
@@ -201,3 +276,13 @@ function eaccounting_get_categories( $args = array() ) {
 
 	return $results;
 }
+
+/**
+ * Get category by category name.
+ *
+ * @since 1.1.0
+ *
+ * @param array $args
+ *
+ * @return int|array|null
+ */

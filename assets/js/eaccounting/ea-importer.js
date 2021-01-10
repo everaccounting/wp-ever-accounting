@@ -75,6 +75,7 @@ jQuery(function ($) {
 						.find('.ea-importer-map-column')
 						.removeAttr('disabled');
 					plugin.$form.trigger('upload_complete', [res]);
+					console.log(res);
 				},
 				error: function (error) {
 					plugin.$form.find('.spinner').remove();
@@ -129,6 +130,7 @@ jQuery(function ($) {
 						);
 						plugin.process_step(parseInt(res.position, 10));
 					}
+					console.log(res);
 				},
 				error: function (error) {
 					$submit_btn.removeAttr('disabled');

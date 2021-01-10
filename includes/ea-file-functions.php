@@ -75,7 +75,7 @@ function eaccounting_protect_files( $force = false ) {
 
 		$htaccess = trailingslashit( $base_dir ) . '.htaccess';
 		if ( ! file_exists( $htaccess ) ) {
-			$rule  = "order deny,allow\n";
+			$rule = "order deny,allow\n";
 			$rule .= "deny from all\n";
 			$rule .= "allow from 127.0.0.1\n";
 			@file_put_contents( $htaccess, $rule );
@@ -100,133 +100,67 @@ function eaccounting_protect_files( $force = false ) {
 }
 
 /**
- * Prepares files for upload by standardizing them into an array. This adds support for multiple file upload fields.
+ * Conditionally change upload folder if accounting assets.
  *
- * @since 1.0.2
+ * @since 1.1.0
  *
- * @param array $file_data
+ * @param $pathdata
  *
- * @return array
+ * @return mixed
  */
-function eaccounting_prepare_uploaded_files( $file_data ) {
-	$files_to_upload = array();
+function eaccounting_handle_upload_folder( $pathdata ) {
+	if ( isset( $_POST['type'] ) && 'eaccounting_file' === $_POST['type'] ) { // WPCS: CSRF ok, input var ok.
+		if ( empty( $pathdata['subdir'] ) ) {
+			$pathdata['path']   = $pathdata['path'] . '/eaccounting';
+			$pathdata['url']    = $pathdata['url'] . '/eaccounting';
+			$pathdata['subdir'] = '/eaccounting';
+		} else {
+			$new_subdir = '/eaccounting' . $pathdata['subdir'];
 
-	if ( is_array( $file_data['name'] ) ) {
-		foreach ( $file_data['name'] as $file_data_key => $file_data_value ) {
-			if ( $file_data['name'][ $file_data_key ] ) {
-				$type              = wp_check_filetype( $file_data['name'][ $file_data_key ] ); // Map mime type to one WordPress recognises.
-				$files_to_upload[] = array(
-					'name'     => $file_data['name'][ $file_data_key ],
-					'type'     => $type['type'],
-					'tmp_name' => $file_data['tmp_name'][ $file_data_key ],
-					'error'    => $file_data['error'][ $file_data_key ],
-					'size'     => $file_data['size'][ $file_data_key ],
-				);
-			}
+			$pathdata['path']   = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['path'] );
+			$pathdata['url']    = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['url'] );
+			$pathdata['subdir'] = str_replace( $pathdata['subdir'], $new_subdir, $pathdata['subdir'] );
 		}
-	} else {
-		$type              = wp_check_filetype( $file_data['name'] ); // Map mime type to one WordPress recognises.
-		$file_data['type'] = $type['type'];
-		$files_to_upload[] = $file_data;
 	}
 
-	return apply_filters( 'eaccounting_prepare_uploaded_files', $files_to_upload );
+	return $pathdata;
 }
 
-/**
- * Returns mime types specifically for eaccounting
- *
- * @since 1.0.2
- *
- * @param string $field Field used.
- *
- * @return  array  Array of allowed mime types
- */
-function eaccounting_get_allowed_mime_types() {
-	$allowed_mime_types = array(
-		'jpg|jpeg|jpe' => 'image/jpeg',
-		'gif'          => 'image/gif',
-		'png'          => 'image/png',
-		'pdf'          => 'application/pdf',
-		'doc'          => 'application/msword',
-		'docx'         => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+add_filter( 'upload_dir', 'eaccounting_handle_upload_folder' );
+
+
+function eaccounting_handle_assets_name( $full_filename, $ext, $dir ) {
+	if ( ! isset( $_POST['type'] ) || ! 'eaccounting_file' === $_POST['type'] ) { // WPCS: CSRF ok, input var ok.
+		return $full_filename;
+	}
+
+	if ( ! strpos( $dir, 'eaccounting_uploads' ) ) {
+		return $full_filename;
+	}
+
+	$ideal_random_char_length = 6;   // Not going with a larger length because then downloaded filename will not be pretty.
+	$max_filename_length      = 255; // Max file name length for most file systems.
+	$length_to_prepend        = min( $ideal_random_char_length, $max_filename_length - strlen( $full_filename ) - 1 );
+
+	if ( 1 > $length_to_prepend ) {
+		return $full_filename;
+	}
+
+	$suffix   = strtolower( wp_generate_password( $length_to_prepend, false, false ) );
+	$filename = $full_filename;
+
+	if ( strlen( $ext ) > 0 ) {
+		$filename = substr( $filename, 0, strlen( $filename ) - strlen( $ext ) );
+	}
+
+	$full_filename = str_replace(
+		$filename,
+		"$filename-$suffix",
+		$full_filename
 	);
 
-	return apply_filters( 'eaccounting_mime_types', $allowed_mime_types );
+	return $full_filename;
 }
 
+add_filter( 'wp_unique_filename', 'eaccounting_handle_assets_name', 10, 3 );
 
-/**
- * Uploads a file using WordPress file API.
- *
- * @since 1.0.2
- *
- * @param string|array|object $args Optional arguments.
- *
- * @param array|WP_Error      $file Array of $_FILE data to upload.
- *
- * @return stdClass|WP_Error Object containing file information, or error.
- */
-function eaccounting_upload_file( $file, $args = array() ) {
-	include_once ABSPATH . 'wp-admin/includes/file.php';
-	include_once ABSPATH . 'wp-admin/includes/media.php';
-
-	$args = wp_parse_args( $args, array( 'allowed_mime_types' => '' ) );
-
-	$uploaded_file = new stdClass();
-	if ( '' === $args['allowed_mime_types'] ) {
-		$allowed_mime_types = eaccounting_get_allowed_mime_types();
-	} else {
-		$allowed_mime_types = $args['allowed_mime_types'];
-	}
-
-	$file = apply_filters( 'eaccounting_upload_file_pre_upload', $file, $args, $allowed_mime_types );
-
-	if ( is_wp_error( $file ) ) {
-		return $file;
-	}
-
-	if ( ! in_array( $file['type'], $allowed_mime_types, true ) ) {
-		// Replace pipe separating similar extensions (e.g. jpeg|jpg) to comma to match the list separator.
-		$allowed_file_extensions = implode( ', ', str_replace( '|', ', ', array_keys( $allowed_mime_types ) ) );
-
-		return new WP_Error( 'upload', sprintf( __( 'Uploaded files need to be one of the following file types: %s', 'wp-ever-accounting' ), $allowed_file_extensions ) );
-	} else {
-		$upload_dir = eaccounting_get_upload_dir();
-
-		// clean name
-		$original_name = str_replace( '\\', '/', $file['name'] );
-		$pos           = strrpos( $original_name, '/' );
-		$original_name = false === $pos ? $original_name : substr( $original_name, $pos + 1 );
-		$original_name = strlen( $original_name ) > 180 ? substr( $original_name, - 1, 180 ) : $original_name;
-		$file_name     = remove_accents( strtolower( $original_name ) );
-
-		// set folder if not exist
-		if ( ! is_dir( $upload_dir['path'] ) ) {
-			wp_mkdir_p( $upload_dir['path'] );
-		}
-
-		// if exist another change the name
-		if ( file_exists( trailingslashit( $upload_dir['path'] ) . $file_name ) ) {
-			$file_name = substr( md5( time() ), 0, 3 ) . '-' . $file_name;
-		}
-
-		$full_path = trailingslashit( $upload_dir['path'] ) . $file_name;
-		$uploaded  = move_uploaded_file( $file['tmp_name'], $full_path );
-
-		if ( ! $uploaded ) {
-			return new WP_Error( 'upload', __( 'Could not upload file', 'wp-ever-accounting' ) );
-		} else {
-			$upload_dir               = eaccounting_get_upload_dir();
-			$file_url                 = trailingslashit( $upload_dir['baseurl'] ) . ltrim( $upload_dir['subdir'], '/' ) . '/' . $file_name;
-			$uploaded_file->name      = $file_name;
-			$uploaded_file->path      = $upload_dir['subdir'];
-			$uploaded_file->mime_type = $file['type'];
-			$uploaded_file->size      = $file['size'];
-			$uploaded_file->url       = $file_url;
-			$uploaded_file->extension = substr( strrchr( $full_path, '.' ), 1 );
-		}
-	}
-
-	return $uploaded_file;
-}

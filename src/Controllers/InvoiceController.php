@@ -12,7 +12,9 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Core\Exception;
+use EverAccounting\Admin\Admin_Notices;
+use EverAccounting\Core\Emails;
+use EverAccounting\Core\Mailer;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,105 +31,54 @@ class InvoiceController extends Singleton {
 	 * RevenueController constructor.
 	 */
 	public function __construct() {
-		add_filter( 'eaccounting_prepare_invoice_data', array( __CLASS__, 'validate_invoice_data' ), 10, 2 );
-		add_filter( 'eaccounting_prepare_invoice_item_data', array( __CLASS__, 'validate_invoice_item_data' ), 10, 2 );
-		add_filter( 'eaccounting_prepare_invoice_history_data', array( __CLASS__, 'validate_invoice_history_data' ), 10, 2 );
+		add_action( 'admin_post_eaccounting_invoice_action', array( __CLASS__, 'invoice_action' ) );
 	}
 
 	/**
-	 * Validate invoice data.
-	 *
-	 * @param array $data
-	 * @param null $id
+	 * Handle invoice actions.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
-	public static function validate_invoice_data( $data, $id = null ) {
-		global $wpdb;
-		if ( empty( $data['invoice_number'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice Number is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['status'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice status is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['invoiced_at'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice date is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['due_at'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice due date is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['currency_code'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency code is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['currency_rate'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Currency rate is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['contact_id'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice contact id is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['contact_name'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice contact name is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['category_id'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice category id is required.', 'wp-ever-accounting' ) );
+	public static function invoice_action() {
+		$action     = eaccounting_clean( wp_unslash( $_POST['invoice_action'] ) );
+		$invoice_id = absint( wp_unslash( $_POST['invoice_id'] ) );
+		$invoice    = eaccounting_get_invoice( $invoice_id );
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
+			wp_die( 'no cheatin!' );
 		}
 
+		switch ( $action ) {
+			case 'status_pending':
+				$invoice->set_status( 'pending' );
+				$invoice->save();
+				break;
+			case 'status_paid':
+				$invoice->set_paid();
+				break;
+			case 'status_refunded':
+				$invoice->set_refunded();
+				break;
+			case 'status_overdue':
+				$invoice->set_status( 'overdue' );
+				$invoice->save();
+				break;
+			case 'status_cancelled':
+				$invoice->set_status( 'cancelled' );
+				$invoice->save();
+				break;
+			case 'send_customer_invoice':
+				Emails::send_customer_invoice( $invoice );
+				$invoice->set_status( 'sent' );
+				$invoice->save();
+				break;
+		}
+
+		if ( ! did_action( 'eaccounting_invoice_action_' . sanitize_title( $action ) ) ) {
+			do_action( 'eaccounting_invoice_action_' . sanitize_title( $action ), $invoice );
+		}
+
+		wp_redirect( add_query_arg( array( 'action' => 'view' ), eaccounting_clean( $_REQUEST['_wp_http_referer'] ) ) );
 	}
 
-	/**
-	 * Validate invoice item data.
-	 *
-	 * @param array $data
-	 * @param null $id
-	 *
-	 * @since 1.1.0
-	 *
-	 */
-	public static function validate_invoice_item_data( $data, $id = null ) {
-		global $wpdb;
-		if ( empty( $data['invoice_id'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice item invoice_id is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['name'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice item name is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['quantity'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice item quantity is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['price'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice item price is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['total'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice item total is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['tax'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice item tax is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['tax_id'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice item tax_id is required.', 'wp-ever-accounting' ) );
-		}
-	}
-
-	/**
-	 * Validate invoice history data.
-	 *
-	 * @param array $data
-	 * @param null $id
-	 *
-	 * @since 1.1.0
-	 *
-	 */
-	public static function validate_invoice_history_data( $data, $id = null ) {
-		global $wpdb;
-		if ( empty( $data['invoice_id'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice history invoice_id is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['status'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice history status is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['notify'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Invoice history notify is required.', 'wp-ever-accounting' ) );
-		}
-	}
 }

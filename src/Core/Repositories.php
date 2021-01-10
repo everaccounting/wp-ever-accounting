@@ -16,18 +16,13 @@ use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Categories;
 use EverAccounting\Repositories\Contacts;
 use EverAccounting\Repositories\Currencies;
-use EverAccounting\Repositories\Customers;
-use EverAccounting\Repositories\Expenses;
-use EverAccounting\Repositories\Incomes;
-use EverAccounting\Repositories\InvoiceHistories;
-use EverAccounting\Repositories\InvoiceItems;
-use EverAccounting\Repositories\Invoices;
+use EverAccounting\Repositories\Transactions;
+use EverAccounting\Repositories\Notes;
+use EverAccounting\Repositories\DocumentItems;
+use EverAccounting\Repositories\Documents;
 use EverAccounting\Repositories\Items;
 use EverAccounting\Abstracts\ResourceRepository;
-use EverAccounting\Repositories\Taxes;
-use EverAccounting\Repositories\Transactions;
 use EverAccounting\Repositories\Transfers;
-use EverAccounting\Repositories\Vendors;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -58,21 +53,16 @@ class Repositories {
 	 * @var array
 	 */
 	private $repositories = array(
-		'item'                => Items::class,
-		'category'            => Categories::class,
-		'currency'            => Currencies::class,
-		'contact'             => Contacts::class,
-		'contact-customer'    => Customers::class,
-		'contact-vendor'      => Vendors::class,
-		'transaction'         => Transactions::class,
-		'transaction-income'  => Incomes::class,
-		'transaction-expense' => Expenses::class,
-		'account'             => Accounts::class,
-		'tax'                 => Taxes::class,
-		'invoice'             => Invoices::class,
-		'invoice-item'        => InvoiceItems::class,
-		'invoice-history'     => InvoiceHistories::class,
-		'transfer'            => Transfers::class,
+		'items'          => Items::class,
+		'categories'     => Categories::class,
+		'contacts'       => Contacts::class,
+		'transactions'   => Transactions::class,
+		'accounts'       => Accounts::class,
+		'currencies'     => Currencies::class,
+		'documents'      => Documents::class,
+		'document-items' => DocumentItems::class,
+		'notes'          => Notes::class,
+		'transfers'      => Transfers::class,
 	);
 
 	/**
@@ -143,12 +133,13 @@ class Repositories {
 	/**
 	 * Loads a repository.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $object_type Name of object.
 	 *
-	 * @throws \Exception When validation fails.
 	 * @return Repositories
+	 * @throws \Exception When validation fails.
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public static function load( $object_type ) {
 		return new Repositories( $object_type );
@@ -157,8 +148,9 @@ class Repositories {
 	/**
 	 * Returns the class name of the current repository.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_repository_class() {
 		return $this->repository_class;
@@ -167,8 +159,9 @@ class Repositories {
 	/**
 	 * Returns the object type of the current repository.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_object_type() {
 		return $this->object_type;
@@ -177,9 +170,9 @@ class Repositories {
 	/**
 	 * Reads an object from the repository.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param ResourceModel $data model instance.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function read( &$data ) {
@@ -189,9 +182,9 @@ class Repositories {
 	/**
 	 * Create an object using repository.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param ResourceModel $data model instance.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function insert( &$data ) {
@@ -201,9 +194,9 @@ class Repositories {
 	/**
 	 * Update an object using repository.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param ResourceModel $data model instance.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function update( &$data ) {
@@ -213,11 +206,12 @@ class Repositories {
 	/**
 	 * Delete an object using repository.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param array         $args Array of args to pass to the delete method.
+	 * @param array $args Array of args to pass to the delete method.
 	 *
 	 * @param ResourceModel $data GetPaid data instance.
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public function delete( &$data, $args = array() ) {
 		$this->instance->delete( $data, $args );
@@ -228,11 +222,11 @@ class Repositories {
 	 * Repository can define additional function. This passes
 	 * through to the instance if that function exists.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $method Method.
 	 *
 	 * @return mixed
+	 * @since 1.1.0
+	 *
 	 */
 	public function __call( $method, $parameters ) {
 		if ( is_callable( array( $this->instance, $method ) ) ) {

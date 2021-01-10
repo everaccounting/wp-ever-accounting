@@ -10,8 +10,9 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Core\Exception;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,6 +24,9 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Account extends ResourceModel {
+	use CurrencyTrait;
+	use AttachmentTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -32,14 +36,16 @@ class Account extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_account';
+	public $cache_group = 'ea_accounts';
 
 	/**
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $data = array(
@@ -50,52 +56,49 @@ class Account extends ResourceModel {
 		'bank_name'       => null,
 		'bank_phone'      => null,
 		'bank_address'    => null,
+		'thumbnail_id'    => null,
 		'enabled'         => 1,
 		'creator_id'      => null,
 		'date_created'    => null,
 	);
 
+	protected $balance = null;
+
 	/**
 	 * Get the account if ID is passed, otherwise the account is new and empty.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param int|object|Account $data object to read.
 	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
-
 		if ( $data instanceof self ) {
 			$this->set_id( $data->get_id() );
 		} elseif ( is_numeric( $data ) ) {
 			$this->set_id( $data );
+		} elseif ( is_object( $data ) || is_array( $data ) ) {
+			$this->set_props( $data );
 		} elseif ( ! empty( $data->id ) ) {
 			$this->set_id( $data->id );
-		} elseif ( is_array( $data ) ) {
-			$this->set_props( $data );
 		} else {
 			$this->set_object_read( true );
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'accounts' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'name'   => __( 'Account name', 'wp-ever-accounting' ),
+			'number' => __( 'Account number', 'wp-ever-accounting' ),
+		);
 	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| CRUD methods
-	|--------------------------------------------------------------------------
-	|
-	| Methods which create, read, update and delete discounts from the database.
-	|
-	*/
-
-
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -109,10 +112,11 @@ class Account extends ResourceModel {
 	/**
 	 * Return the account name.
 	 *
+	 * @since  1.1.0
+	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
-	 * @since  1.1.0
 	 *
 	 */
 	public function get_name( $context = 'edit' ) {
@@ -122,10 +126,11 @@ class Account extends ResourceModel {
 	/**
 	 * Returns the account number.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_number( $context = 'edit' ) {
@@ -135,10 +140,11 @@ class Account extends ResourceModel {
 	/**
 	 * Returns account opening balance.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_opening_balance( $context = 'edit' ) {
@@ -148,10 +154,11 @@ class Account extends ResourceModel {
 	/**
 	 * Returns account currency code.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
@@ -161,10 +168,11 @@ class Account extends ResourceModel {
 	/**
 	 * Return account bank name.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_bank_name( $context = 'edit' ) {
@@ -174,10 +182,11 @@ class Account extends ResourceModel {
 	/**
 	 * Return account bank phone number.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_bank_phone( $context = 'edit' ) {
@@ -187,14 +196,28 @@ class Account extends ResourceModel {
 	/**
 	 * Return account bank address.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
-	 * @since 1.1.0
 	 *
 	 */
 	public function get_bank_address( $context = 'edit' ) {
 		return $this->get_prop( 'bank_address', $context );
+	}
+
+	/**
+	 * Get the thumbnail id.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return int
+	 */
+	public function get_thumbnail_id( $context = 'edit' ) {
+		return $this->get_prop( 'thumbnail_id', $context );
 	}
 
 	/*
@@ -210,9 +233,10 @@ class Account extends ResourceModel {
 	/**
 	 * Set account name.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $name Account name.
 	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public function set_name( $name ) {
@@ -222,9 +246,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set the account number.
 	 *
-	 * @param string $number bank account number
-	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $number bank account number
 	 *
 	 */
 	public function set_number( $number ) {
@@ -234,22 +258,22 @@ class Account extends ResourceModel {
 	/**
 	 * Returns account opening balance.
 	 *
-	 * @param string $opening_balance opening balance of the account.
-	 *
 	 * @since 1.1.0
 	 *
+	 * @param string $opening_balance opening balance of the account.
+	 *
 	 */
-	public function set_opening_balance( $opening_balance ) {
+	public function set_opening_balance( $amount ) {
 		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
-		$this->set_prop( 'opening_balance', eaccounting_sanitize_price( $opening_balance, $code ) );
+		$this->set_prop( 'opening_balance', (float) eaccounting_sanitize_number( $amount, true ) );
 	}
 
 	/**
 	 * Set account currency code.
 	 *
-	 * @param string $currency_code Bank currency code
-	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $currency_code Bank currency code
 	 *
 	 */
 	public function set_currency_code( $currency_code ) {
@@ -259,9 +283,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set account bank name.
 	 *
-	 * @param string $bank_name name of the bank
-	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $bank_name name of the bank
 	 *
 	 */
 	public function set_bank_name( $bank_name ) {
@@ -271,9 +295,9 @@ class Account extends ResourceModel {
 	/**
 	 * Set account bank phone number.
 	 *
-	 * @param string $bank_phone Bank phone number.
-	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $bank_phone Bank phone number.
 	 *
 	 */
 	public function set_bank_phone( $bank_phone ) {
@@ -283,13 +307,24 @@ class Account extends ResourceModel {
 	/**
 	 * Set account bank address.
 	 *
-	 * @param string $bank_address Bank physical address
-	 *
 	 * @since 1.1.0
+	 *
+	 * @param string $bank_address Bank physical address
 	 *
 	 */
 	public function set_bank_address( $bank_address ) {
 		$this->set_prop( 'bank_address', sanitize_textarea_field( $bank_address ) );
+	}
+
+	/**
+	 * Set the thumbnail id.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param int $thumbnail_id
+	 */
+	public function set_thumbnail_id( $thumbnail_id ) {
+		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
 	}
 
 	/*
@@ -302,60 +337,52 @@ class Account extends ResourceModel {
 	*/
 
 	/**
-	 * Get currency object.
-	 *
-	 * @since 1.1.0
-	 * @return Currency|null
-	 */
-	public function get_currency() {
-		try {
-			$currency = new Currency( $this->get_currency_code() );
-			$this->set_prop( 'currency', $currency );
-
-			return $currency;
-		} catch ( Exception $e ) {
-			return null;
-		}
-	}
-
-	/**
 	 * Set currency code from object.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @param array|object $currency
+	 *
 	 */
 	public function set_currency( $currency ) {
 		$this->set_object_prop( $currency, 'code', 'currency_code' );
 	}
 
 	/**
+	 * @since 1.1.0
 	 * @since 1.0.2
 	 *
 	 * @param bool $format
 	 *
 	 * @return float|string
-	 * @since 1.1.0
 	 *
 	 */
-	public function get_balance( $format = false ) {
-		if ( $format ) {
-			return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->format();
+	public function get_balance() {
+		if ( null !== $this->balance ) {
+			return $this->balance;
 		}
-
-		return eaccounting_get_money( $this->get_prop( 'balance' ), $this->get_currency_code( 'edit' ), true )->getValue();
+		global $wpdb;
+		$transaction_total = (float) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d",
+				$this->get_id()
+			)
+		);
+		$balance           = $this->get_opening_balance() + $transaction_total;
+		$this->set_balance( $balance );
+		return $balance;
 	}
 
 	/**
 	 * Set balance.
 	 *
-	 * @param $balance
-	 *
 	 * @since 1.1.0
+	 *
+	 * @param $balance
 	 *
 	 */
 	protected function set_balance( $balance ) {
-		$this->set_prop( 'balance', eaccounting_sanitize_price( $balance, $this->get_currency_code() ) );
+		$this->balance = $balance;
 	}
 
 	/*
@@ -366,5 +393,16 @@ class Account extends ResourceModel {
 	| Checks if a condition is true or false.
 	|
 	*/
+
+
+	/*
+	|--------------------------------------------------------------------------
+	| CRUD methods
+	|--------------------------------------------------------------------------
+	|
+	| Methods which create, read, update and delete discounts from the database.
+	|
+	*/
+
 
 }

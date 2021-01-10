@@ -37,6 +37,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * Get normalized rest base.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return string
 	 */
 	protected function get_normalized_rest_base() {
@@ -86,7 +87,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 * @param \WP_REST_Server  $wp_rest_server
 	 *
-	 * @return array()
+	 * @return array
 	 */
 	protected function batch_create_items( $items, $request, $wp_rest_server ) {
 
@@ -145,7 +146,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 * @param \WP_REST_Server  $wp_rest_server
 	 *
-	 * @return array()
+	 * @return array
 	 */
 	protected function batch_update_items( $items, $request, $wp_rest_server ) {
 
@@ -196,7 +197,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * @param array           $items Array of items to delete.
 	 * @param \WP_REST_Server $wp_rest_server
 	 *
-	 * @return array()
+	 * @return array
 	 */
 	protected function batch_delete_items( $items, $wp_rest_server ) {
 
@@ -270,6 +271,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * Get the batch schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return array
 	 */
 	public function get_public_batch_schema() {
@@ -312,6 +314,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * i.e Schema fields.
 	 *
 	 * @since 1.1.0
+	 * 
 	 * @return array
 	 */
 	protected function get_schema_properties() {

@@ -9,12 +9,66 @@
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Get registered settings.
+ *
+ * @return mixed|void
+ * @since 1.1.0
+ */
+function eaccounting_get_settings_tabs() {
+	return apply_filters(
+		'eaccounting_settings_tabs',
+		array(
+			'general'    => __( 'General', 'wp-ever-accounting' ),
+			'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
+			'categories' => __( 'Categories', 'wp-ever-accounting' ),
+			//'emails'     => __( 'Emails', 'wp-ever-accounting' ),
+			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+			//'misc'       => __( 'Misc', 'wp-ever-accounting' ),
+		)
+	);
+}
+
+/**
+ * Get the settings sections for each tab
+ * Uses a static to avoid running the filters on every request to this function
+ *
+ * @return array Array of tabs and sections
+ * @since  1.1.0
+ */
+function eaccounting_get_settings_sections() {
+	static $sections = false;
+
+	if ( false !== $sections ) {
+		return $sections;
+	}
+
+	$sections = array(
+		'general' => array(
+			'main'     => __( 'General', 'wp-ever-accounting' ),
+			'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
+			'bills'    => __( 'Bills', 'wp-ever-accounting' ),
+		),
+		'emails'  => array(
+			'main' => __( 'General', 'wp-ever-accounting' ),
+		),
+	);
+
+	if ( eaccounting_tax_enabled() ) {
+		$sections['general']['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
+	}
+
+	$sections = apply_filters( 'eaccounting_settings_sections', $sections );
+
+	return $sections;
+}
+
 
 /**
  * Get all EverAccounting screen ids.
  *
- * @since  1.0.2
  * @return array
+ * @since  1.0.2
  */
 function eaccounting_get_screen_ids() {
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
@@ -39,11 +93,11 @@ function eaccounting_get_screen_ids() {
 /**
  * Check current page if admin page.
  *
- * @since 1.0.2
- *
  * @param string $page
  *
  * @return mixed|void
+ * @since 1.0.2
+ *
  */
 function eaccounting_is_admin_page( $page = '' ) {
 	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
@@ -72,13 +126,13 @@ function eaccounting_is_admin_page( $page = '' ) {
 /**
  * Generates an EverAccounting admin URL based on the given type.
  *
- * @since 1.0.2
+ * @param string $type Optional Type of admin URL. Accepts 'transactions', 'sales', 'purchases', 'banking', 'reports', 'settings', 'tools', 'add-ons'.
  *
- * @param string $type       Optional Type of admin URL. Accepts 'transactions', 'sales', 'purchases', 'banking', 'reports', 'settings', 'tools', 'add-ons'.
- *
- * @param array  $query_args Optional. Query arguments to append to the admin URL. Default empty array.
+ * @param array $query_args Optional. Query arguments to append to the admin URL. Default empty array.
  *
  * @return string Constructed admin URL.
+ * @since 1.0.2
+ *
  */
 function eaccounting_admin_url( $query_args = array(), $page = null ) {
 	if ( null === $page ) {
@@ -100,12 +154,13 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 	/**
 	 * Filters the EverAccounting admin URL.
 	 *
+	 * @param string $type Admin URL type.
+	 * @param array $query_args Query arguments originally passed to eaccounting_admin_url().
+	 *
+	 * @param string $url Admin URL.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $type       Admin URL type.
-	 * @param array  $query_args Query arguments originally passed to eaccounting_admin_url().
-	 *
-	 * @param string $url        Admin URL.
 	 */
 	return apply_filters( 'eaccounting_admin_url', $url, $page, $query_args );
 }
@@ -113,13 +168,13 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 /**
  * Get activate tab.
  *
- * @since 1.0.2
- *
  * @param null $default
  *
  * @param      $tabs
  *
  * @return array|mixed|string
+ * @since 1.0.2
+ *
  */
 function eaccounting_get_active_tab( $tabs, $default = null ) {
 	if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ) {
@@ -137,14 +192,17 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
 /**
  * Outputs navigation tabs markup in core screens.
  *
- * @since 1.0.2
- *
+ * @param array $tabs Navigation tabs.
  * @param string $active_tab Active tab slug.
- * @param array  $query_args Optional. Query arguments used to build the tab URLs. Default empty array.
+ * @param array $query_args Optional. Query arguments used to build the tab URLs. Default empty array.
  *
- * @param array  $tabs       Navigation tabs.
+ * @param string $tab
+ *
+ * @since 1.0.2
+ * @since 1.1.0 add $tab argument.
+ *
  */
-function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array() ) {
+function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(), $tab = 'tab' ) {
 	$tabs = (array) $tabs;
 
 	if ( empty( $tabs ) ) {
@@ -154,7 +212,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array() 
 	$tabs = apply_filters( 'eaccounting_navigation_tabs', $tabs, $active_tab, $query_args );
 
 	foreach ( $tabs as $tab_id => $tab_name ) {
-		$args    = wp_parse_args( $query_args, array( 'tab' => $tab_id ) );
+		$args    = wp_parse_args( $query_args, array( $tab => $tab_id ) );
 		$tab_url = eaccounting_admin_url( $args );
 		printf(
 			'<a href="%1$s" alt="%2$s" class="%3$s">%4$s</a>',
@@ -171,24 +229,28 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array() 
 /**
  * Get current tab.
  *
- * @since 1.0.2
+ * @param string $tab
+ *
  * @return array|string
+ * @since 1.0.2
+ * @since 1.1.0 add $tab argument.
+ *
  */
-function eaccounting_get_current_tab() {
-	return ( isset( $_GET['tab'] ) ) ? eaccounting_clean( $_GET['tab'] ) : '';
+function eaccounting_get_current_tab( $tab = 'tab' ) {
+	return ( isset( $tab ) ) ? eaccounting_clean( $tab ) : '';
 }
 
 /**
  * Per page screen option value for the Affiliates list table
  *
- * @since  1.0.2
- *
- * @param string   $option
- * @param mixed    $value
+ * @param string $option
+ * @param mixed $value
  *
  * @param bool|int $status
  *
  * @return mixed
+ * @since  1.0.2
+ *
  */
 function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 	if ( in_array( $option, array( 'eaccounting_edit_accounts_per_page' ), true ) ) {
@@ -201,33 +263,15 @@ function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 
 add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3 );
 
-/**
- * Get admin view.
- *
- * since 1.0.2
- *
- * @param       $template_name
- * @param array         $args
- */
-function eaccounting_get_admin_template( $template_name, $args = array() ) {
-	if ( $args && is_array( $args ) ) {
-		extract( $args );
-	}
-
-	$file = apply_filters( 'eaccounting_admin_template', EACCOUNTING_ABSPATH . '/includes/admin/views/' . $template_name . '.php' );
-	if ( file_exists( $file ) ) {
-		include $file;
-	}
-}
 
 /**
  * Get import export headers.
  *
- * @since 1.0.2
- *
  * @param $type
  *
  * @return mixed|void
+ * @since 1.0.2
+ *
  */
 function eaccounting_get_io_headers( $type ) {
 	$headers = array();
@@ -236,16 +280,18 @@ function eaccounting_get_io_headers( $type ) {
 		case 'vendor':
 			$headers = array(
 				'name'          => 'Name',
+				'company'       => 'Company',
 				'email'         => 'Email',
 				'phone'         => 'Phone',
-				'fax'           => 'Fax',
 				'birth_date'    => 'Birth Date',
-				'address'       => 'Address',
+				'street'        => 'Street',
+				'city'          => 'City',
+				'state'         => 'State',
+				'postcode'      => 'Postcode',
 				'country'       => 'Country',
 				'website'       => 'Website',
-				'tax_number'    => 'Tax Number',
+				'vat_number'    => 'Vat Number',
 				'currency_code' => 'Currency Code',
-				'note'          => 'Note',
 			);
 			break;
 		case 'category':
@@ -263,13 +309,13 @@ function eaccounting_get_io_headers( $type ) {
 				'opening_balance' => 'Opening Balance',
 				'bank_name'       => 'Bank Name',
 				'bank_phone'      => 'Bank Phone',
-				'bank_address'    => 'BanK Address',
+				'bank_address'    => 'Bank Address',
 				'enabled'         => 'Enabled',
 			);
 			break;
 		case 'payment':
 			$headers = array(
-				'paid_at'        => 'Paid At',
+				'payment_date'   => 'Payment Date',
 				'amount'         => 'Amount',
 				'currency_code'  => 'Currency Code',
 				'currency_rate'  => 'Currency Rate',
@@ -284,7 +330,7 @@ function eaccounting_get_io_headers( $type ) {
 			break;
 		case 'revenue':
 			$headers = array(
-				'paid_at'        => 'Paid At',
+				'payment_date'   => 'Payment Date',
 				'amount'         => 'Amount',
 				'currency_code'  => 'Currency Code',
 				'currency_rate'  => 'Currency Rate',
@@ -308,6 +354,16 @@ function eaccounting_get_io_headers( $type ) {
 				'thousand_separator' => 'Thousand Separator',
 			);
 			break;
+		case 'item':
+			$headers = array(
+				'name'           => 'Name',
+				'category_name'  => 'Category',
+				'sale_price'     => 'Sale Price',
+				'purchase_price' => 'Purchase Price',
+				'sales_tax'      => 'Sales Tax',
+				'purchase_tax'   => 'Purchase Tax',
+			);
+			break;
 
 		default:
 			break;
@@ -319,9 +375,10 @@ function eaccounting_get_io_headers( $type ) {
 /**
  * Render the importer mapping table.
  *
+ * @param string $type
+ *
  * @since 1.0.2
  *
- * @param string $type
  */
 function eaccounting_do_import_fields( $type ) {
 	$fields = eaccounting_get_io_headers( $type );
@@ -342,4 +399,62 @@ function eaccounting_do_import_fields( $type ) {
 			<?php
 		}
 	}
+}
+
+
+/**
+ * Meta-Box template function.
+ *
+ * @since 1.1.0
+ *
+ * @global array $wp_meta_boxes
+ *
+ */
+function eaccounting_do_meta_boxes( $screen, $context, $object ) {
+	global $wp_meta_boxes;
+	if ( empty( $screen ) ) {
+		$screen = get_current_screen();
+	} elseif ( is_string( $screen ) ) {
+		$screen = convert_to_screen( $screen );
+	}
+	$page = $screen->id;
+	if ( isset( $wp_meta_boxes[ $page ][ $context ] ) ) {
+		foreach ( array( 'high', 'sorted', 'core', 'default', 'low' ) as $priority ) {
+			if ( isset( $wp_meta_boxes[ $page ][ $context ][ $priority ] ) ) {
+				foreach ( (array) $wp_meta_boxes[ $page ][ $context ][ $priority ] as $box ) {
+					$args         = wp_parse_args( $box['args'], array( 'col' => '' ) );
+					$col          = ! empty( $args['col'] ) ? "ea-col-{$args['col']}" : '';
+					$custom_class = isset( $args['class'] ) ? wp_parse_list( $args['class'] ) : array();
+					$custom_class = array_map( 'sanitize_html_class', $custom_class );
+					echo '<div id="ea-' . $box['id'] . '" class="ea-metabox ' . $col . '" ' . '>' . "\n";
+					echo '<div class="ea-card ' . implode( ' ', $custom_class ) . '" ' . '>' . "\n";
+					if ( ! empty( $box['title'] ) ) {
+						echo '<div class="ea-card__header">';
+						echo '<h3 class="ea-card__title">' . $box['title'] . '</h3>';
+						if ( isset( $args['toolbar_callback'] ) && is_callable( $args['toolbar_callback'] ) ) {
+							echo '<div class="ea-card__toolbar">';
+							call_user_func( $box['toolbar_callback'], $object, $box );
+							echo "</div>\n";
+						}
+						echo "</div>\n";
+					}
+					call_user_func( $box['callback'], $object, $box );
+					echo '</div>';
+					echo '</div>';
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Get report years.
+ *
+ * @return array
+ * @since 1.1.0
+ */
+function eaccounting_get_report_years() {
+	$years = range( date( 'Y' ), ( date( 'Y' ) - 5 ), 1 );
+
+	return array_combine( array_values( $years ), $years );
 }

@@ -12,7 +12,6 @@
 namespace EverAccounting\Controllers;
 
 use EverAccounting\Abstracts\Singleton;
-use EverAccounting\Core\Exception;
 use EverAccounting\Models\Item;
 use EverAccounting\Models\Tax;
 
@@ -30,43 +29,18 @@ class ItemController extends Singleton {
 	 * AccountController constructor.
 	 */
 	public function __construct() {
-		add_action( 'eaccounting_pre_save_item', array( __CLASS__, 'validate_item_data' ), 10, 2 );
 		add_action( 'eaccounting_delete_item', array( __CLASS__, 'update_invoice_item' ) );
 		add_action( 'eaccounting_delete_item', array( __CLASS__, 'update_bill_item' ) );
 	}
 
 	/**
-	 * Validate item data.
-	 *
-	 * @param array $data
-	 * @param int $id
-	 * @param Item $data
-	 *
-	 * @since 1.1.0
-	 */
-	public static function validate_item_data( $data, $id ) {
-		global $wpdb;
-		if ( empty( $data['name'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Item name is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['sale_price'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Item Sale Price is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['purchase_price'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Item Purchase Price is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['quantity'] ) ) {
-			throw new Exception( 'empty_prop', __( 'Item Quantity is required.', 'wp-ever-accounting' ) );
-		}
-	}
-
-	/**
 	 * Delete item id from invoice items.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param $id
 	 *
 	 * @return bool
-	 * @since 1.0.2
 	 */
 	public static function update_invoice_item( $id ) {
 		global $wpdb;
@@ -81,10 +55,11 @@ class ItemController extends Singleton {
 	/**
 	 * Delete tax id from bill items.
 	 *
+	 * @since 1.0.2
+	 * 
 	 * @param $id
 	 *
 	 * @return bool
-	 * @since 1.0.2
 	 */
 	public static function update_bill_item( $id ) {
 		global $wpdb;

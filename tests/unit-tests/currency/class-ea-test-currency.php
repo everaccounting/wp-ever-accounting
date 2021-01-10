@@ -3,10 +3,10 @@
 use EverAccounting\Currency;
 
 /**
- * Class EAccounting_Tests_Currency.
- * @package EAccounting\Tests\Currency
+ * Class EverAccounting_Tests_Currency.
+ * @package EverAccounting\Tests\Currency
  */
-class EAccounting_Tests_Currency extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Currency extends EverAccounting_Unit_Test_Case {
 	public function test_create_currency() {
 		$currency = eaccounting_insert_currency( array(
 			'name'               => 'Canadian Dollar',
@@ -126,7 +126,7 @@ class EAccounting_Tests_Currency extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_currency(){
-		$currency = EAccounting_Helper_Currency::create_currency();
+		$currency = EverAccounting_Helper_Currency::create_currency();
 		$this->assertNotEquals( 0, $currency->get_id() );
 		$this->assertNotFalse( eaccounting_delete_currency( $currency->get_id() ) );
 	}

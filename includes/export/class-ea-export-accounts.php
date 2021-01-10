@@ -12,7 +12,6 @@ namespace EverAccounting\Export;
 defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Exporter;
-use EverAccounting\Query_Account;
 
 /**
  * Class Export_Accounts
@@ -52,10 +51,11 @@ class Export_Accounts extends CSV_Exporter {
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
+			'return'   => 'objects',
+			'number'      => -1,
 		);
-		$query             = Query_Account::init()->where( $args );
-		$items             = $query->get( OBJECT, 'eaccounting_get_account' );
-		$this->total_count = $query->count();
+		$args = apply_filters( 'eaccounting_account_export_query_args', $args );
+		$items = eaccounting_get_accounts($args);
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -69,7 +69,7 @@ class Export_Accounts extends CSV_Exporter {
 	/**
 	 * Take a product and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Account $item
+	 * @param \EverAccounting\Models\Account $item
 	 *
 	 * @return array
 	 */

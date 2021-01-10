@@ -8,7 +8,7 @@
  */
 defined( 'ABSPATH' ) || exit();
 
-class EAccounting_Settings_Controller extends EAccounting_REST_Controller {
+class EverAccounting_Settings_Controller extends EverAccounting_REST_Controller {
 	/**
 	 * @var string
 	 */

@@ -11,6 +11,7 @@
 namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Models\Transaction;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,6 +28,7 @@ class Transactions extends ResourceRepository {
 	 * Name of the table.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
 	const TABLE = 'ea_transactions';
@@ -35,6 +37,7 @@ class Transactions extends ResourceRepository {
 	 * Table name.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -43,28 +46,69 @@ class Transactions extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $data_type = array(
 		'id'             => '%d',
 		'type'           => '%s',
-		'paid_at'        => '%s',
+		'payment_date'   => '%s',
 		'amount'         => '%f',
 		'currency_code'  => '%s', // protected
 		'currency_rate'  => '%f', // protected
 		'account_id'     => '%d',
-		'invoice_id'     => '%d',
+		'document_id'    => '%d',
 		'contact_id'     => '%d',
 		'category_id'    => '%d',
 		'description'    => '%s',
 		'payment_method' => '%s',
 		'reference'      => '%s',
-		'attachment'     => '%d',
+		'attachment_id'  => '%d',
 		'parent_id'      => '%d',
 		'reconciled'     => '%d',
 		'creator_id'     => '%d',
 		'date_created'   => '%s',
 	);
+
+	/**
+	 * Method to read a item from the database.
+	 *
+	 * @param Transaction $item Item object.
+	 *
+	 * @throws \Exception
+	 */
+	public function read( &$item ) {
+		global $wpdb;
+		$table = $wpdb->prefix . $this->table;
+
+		$item->set_defaults();
+
+		if ( ! $item->get_id() ) {
+			$item->set_id( 0 );
+			throw new \Exception( $wpdb->last_error );
+		}
+
+		// Get from cache if available.
+		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
+
+		if ( false === $data ) {
+			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d AND type =%s LIMIT 1;", $item->get_id(), $item->get_type() ) );
+			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );
+		}
+
+		if ( ! $data ) {
+			$item->set_id( 0 );
+			return;
+		}
+
+		foreach ( array_keys( $this->data_type ) as $key ) {
+			$method = "set_$key";
+			$item->$method( maybe_unserialize( $data->$key ) );
+		}
+
+		$item->set_object_read( true );
+		do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
+	}
 
 
 }

@@ -11,6 +11,8 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +24,8 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Item extends ResourceModel {
+	use AttachmentTrait;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -31,26 +35,29 @@ class Item extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
-	public $cache_group = 'eaccounting_items';
+	public $cache_group = 'ea_items';
 
 	/**
 	 * Item Data array.
 	 *
 	 * @since 1.0.4
+	 *
 	 * @var array
 	 */
 	protected $data = array(
 		'name'           => '',
 		'sku'            => '',
-		'image_id'       => null,
+		'thumbnail_id'   => null,
 		'description'    => '',
 		'sale_price'     => 0.0000,
 		'purchase_price' => 0.0000,
 		'quantity'       => 1,
 		'category_id'    => null,
-		'tax_id'         => null,
+		'sales_tax'      => null,
+		'purchase_tax'   => null,
 		'enabled'        => 1,
 		'creator_id'     => null,
 		'date_created'   => null,
@@ -77,11 +84,17 @@ class Item extends ResourceModel {
 		}
 
 		//Load repository
-		$this->repository = Repositories::load( $this->object_type );
+		$this->repository = Repositories::load( 'items' );
 
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
+
+		$this->required_props = array(
+			'name'           => __( 'Item name', 'wp-ever-accounting' ),
+			'quantity'       => __( 'Item Quantity', 'wp-ever-accounting' ),
+			'sale_price'     => __( 'Item Sale Price', 'wp-ever-accounting' ),
+		);
 	}
 
 	/*
@@ -132,8 +145,8 @@ class Item extends ResourceModel {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_image_id( $context = 'edit' ) {
-		return $this->get_prop( 'image_id', $context );
+	public function get_thumbnail_id( $context = 'edit' ) {
+		return $this->get_prop( 'thumbnail_id', $context );
 	}
 
 	/**
@@ -166,7 +179,11 @@ class Item extends ResourceModel {
 	 * @return mixed|null
 	 */
 	public function get_purchase_price( $context = 'edit' ) {
-		return $this->get_prop( 'purchase_price', $context );
+		$price = $this->get_prop( 'purchase_price', $context );
+		if( empty($price)){
+			$price = $this->get_sale_price();
+		}
+		return $price;
 	}
 
 	/**
@@ -198,8 +215,19 @@ class Item extends ResourceModel {
 	 *
 	 * @return mixed|null
 	 */
-	public function get_tax_id( $context = 'edit' ) {
-		return $this->get_prop( 'tax_id', $context );
+	public function get_sales_tax( $context = 'edit' ) {
+		return $this->get_prop( 'sales_tax', $context );
+	}
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param string $context
+	 *
+	 * @return mixed|null
+	 */
+	public function get_purchase_tax( $context = 'edit' ) {
+		return $this->get_prop( 'purchase_tax', $context );
 	}
 
 	/*
@@ -235,11 +263,11 @@ class Item extends ResourceModel {
 	/**
 	 * @since 1.1.0
 	 *
-	 * @param $image_id
+	 * @param $thumbnail_id
 	 *
 	 */
-	public function set_image_id( $image_id ) {
-		$this->set_prop( 'image_id', absint( $image_id ) );
+	public function set_thumbnail_id( $thumbnail_id ) {
+		$this->set_prop( 'thumbnail_id', absint( $thumbnail_id ) );
 	}
 
 	/**
@@ -259,7 +287,7 @@ class Item extends ResourceModel {
 	 *
 	 */
 	public function set_sale_price( $sale_price ) {
-		$this->set_prop( 'sale_price', eaccounting_sanitize_price( $sale_price ) );
+		$this->set_prop( 'sale_price', (float) eaccounting_sanitize_number( $sale_price, true ) );
 	}
 
 	/**
@@ -269,7 +297,7 @@ class Item extends ResourceModel {
 	 *
 	 */
 	public function set_purchase_price( $purchase_price ) {
-		$this->set_prop( 'purchase_price', eaccounting_sanitize_price( $purchase_price ) );
+		$this->set_prop( 'purchase_price', (float) eaccounting_sanitize_number( $purchase_price, true ) );
 	}
 
 	/**
@@ -295,18 +323,30 @@ class Item extends ResourceModel {
 	/**
 	 * @since 1.1.0
 	 *
-	 * @param $tax_id
+	 * @param $tax
 	 *
 	 */
-	public function set_tax_id( $tax_id ) {
-		$this->set_prop( 'tax_id', absint( $tax_id ) );
+	public function set_sales_tax( $tax ) {
+		$this->set_prop( 'sales_tax', floatval( $tax ) );
 	}
-
 
 	/**
-	 * Clears the subscription's cache.
+	 * @since 1.1.0
+	 *
+	 * @param $tax_ids
+	 *
 	 */
-	public function clear_cache() {
-		wp_cache_delete( $this->get_id(), $this->cache_group );
+	public function set_purchase_tax( $tax ) {
+		$this->set_prop( 'purchase_tax', floatval( $tax ) );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Additional methods
+	|--------------------------------------------------------------------------
+	|
+	| Does extra thing as helper functions.
+	|
+	*/
+
 }

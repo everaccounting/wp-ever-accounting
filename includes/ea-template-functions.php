@@ -137,3 +137,54 @@ function eaccounting_get_template_html( $template_name, $args = array(), $templa
 
 	return ob_get_clean();
 }
+
+
+/**
+ * Get admin view.
+ *
+ * since 1.0.2
+ *
+ * @param       $template_name
+ * @param array $args
+ */
+function eaccounting_get_admin_template( $template_name, $args = array() ) {
+
+	if ( $args && is_array( $args ) ) {
+		extract( $args );
+	}
+	$template_name = str_replace( '.php', '', $template_name );
+	$file          = apply_filters( 'eaccounting_admin_template', EACCOUNTING_ABSPATH . '/includes/admin/views/' . $template_name . '.php' );
+	if ( ! file_exists( $file ) ) {
+		/* Translators: %s file name */
+		eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Admin template %s does not exist', 'wp-ever-accounting' ), $file ), null );
+
+		return;
+	}
+	include $file;
+}
+
+/**
+ * Render admin template.
+ *
+ * @param       $template_name
+ * @param array $args
+ * @since 1.0.0
+ *
+ * @return string
+ */
+function eaccounting_get_admin_template_html( $template_name, $args = array() ) {
+	ob_start();
+
+	eaccounting_get_admin_template( $template_name, $args );
+
+	return ob_get_clean();
+}
+
+/**
+ * Get base slug.
+ *
+ * @since 1.1.0
+ */
+function eaccounting_get_parmalink_base(){
+	return apply_filters('eaccounting_parmalink_base', 'eaccounting');
+}

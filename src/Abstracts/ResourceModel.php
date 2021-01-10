@@ -2,15 +2,15 @@
 /**
  * Abstract Model.
  *
- * Handles generic data interaction which is implemented by
- * the different repository classes.
+ * Handles generic data interaction which is implemented by the different repository classes.
  *
  */
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\Core\Exception;
 use EverAccounting\Repositories\MetaData;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class ResourceModel
@@ -26,6 +26,7 @@ abstract class ResourceModel {
 	 * ID for this object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var int
 	 */
 	protected $id = 0;
@@ -34,6 +35,7 @@ abstract class ResourceModel {
 	 * Core data for this object. Name value pairs (name + default value).
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $data = array();
@@ -42,6 +44,7 @@ abstract class ResourceModel {
 	 * Core data changes for this object.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $changes = array();
@@ -50,6 +53,7 @@ abstract class ResourceModel {
 	 * This is false until the object is read from the DB.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var bool
 	 */
 	protected $object_read = false;
@@ -58,6 +62,7 @@ abstract class ResourceModel {
 	 * This is the name of this object type.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
 	protected $object_type = 'model';
@@ -68,6 +73,7 @@ abstract class ResourceModel {
 	 * additional information to an inherited class.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $extra_data = array();
@@ -76,6 +82,7 @@ abstract class ResourceModel {
 	 * Set to _data on construct so we can track and reset data if needed.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $default_data = array();
@@ -84,16 +91,17 @@ abstract class ResourceModel {
 	 * Contains a reference to the repository for this class.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var \EverAccounting\Abstracts\ResourceRepository
 	 */
 	protected $repository;
-
 
 	/**
 	 * Stores meta in cache for future reads.
 	 * A group must be set to to enable caching.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var string
 	 */
 	protected $cache_group = '';
@@ -102,9 +110,19 @@ abstract class ResourceModel {
 	 * Stores additional meta data.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @var array
 	 */
 	protected $meta_data = null;
+
+	/**
+	 * Array('prop' => readable text )
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array $required_props that will automatically check before saving.
+	 */
+	protected $required_props;
 
 	/**
 	 * ResourceModel constructor.
@@ -121,6 +139,7 @@ abstract class ResourceModel {
 	 * Only store the object ID to avoid serializing the data object instance.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return array
 	 */
 	public function __sleep() {
@@ -159,6 +178,7 @@ abstract class ResourceModel {
 	 * Get the repository.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return object
 	 */
 	public function get_repository() {
@@ -169,6 +189,7 @@ abstract class ResourceModel {
 	 * Get the object type.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return string
 	 */
 	public function get_object_type() {
@@ -179,6 +200,7 @@ abstract class ResourceModel {
 	 * get the cache group.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return string
 	 */
 	public function get_cache_group() {
@@ -189,6 +211,7 @@ abstract class ResourceModel {
 	 * Returns the unique ID for this object.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return int
 	 */
 	public function get_id() {
@@ -221,7 +244,6 @@ abstract class ResourceModel {
 		if ( $this->repository && $this->get_id() ) {
 			$this->repository->delete( $this, array( 'force_delete' => $force_delete ) );
 			$this->set_id( 0 );
-
 			return true;
 		}
 
@@ -232,7 +254,7 @@ abstract class ResourceModel {
 	 * Save should create or update based on object existence.
 	 *
 	 * @since  1.1.0
-	 * @throws Exception
+	 *
 	 * @return \Exception|bool
 	 */
 	public function save() {
@@ -246,6 +268,11 @@ abstract class ResourceModel {
 		if ( array_key_exists( 'creator_id', $this->data ) && ! $this->get_creator_id() ) {
 			$this->set_creator_id();
 		}
+
+		/**
+		 * Check for any required data if missing throw exception.
+		 */
+		$this->check_required_items();
 
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
@@ -262,6 +289,7 @@ abstract class ResourceModel {
 			$this->repository->insert( $this );
 		}
 
+		$this->save_meta_data();
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
 		 *
@@ -279,6 +307,7 @@ abstract class ResourceModel {
 	 * Change data to JSON format.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return string Data in JSON format.
 	 */
 	public function __toString() {
@@ -289,21 +318,51 @@ abstract class ResourceModel {
 	 * Returns all data for this object.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return array
 	 */
 	public function get_data() {
-		return array_merge(
-			array( 'id' => $this->get_id() ),
-			$this->data,
-			$this->changes,
-			array( 'meta_data' => $this->get_meta_data() )
+		return $this->to_array(
+			array_merge(
+				$this->data,
+				$this->changes,
+				array( 'id' => $this->get_id() ),
+				array( 'meta_data' => $this->get_meta_data() )
+			)
 		);
+	}
+
+	/**
+	 * Returns as pure array.
+	 * Does depth array casting.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return array
+	 */
+	public function to_array( $data = array() ) {
+		$output = array();
+		$value  = null;
+		foreach ( $data as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$output[ $key ] = $this->to_array( $value );
+			} elseif ( is_object( $value ) && method_exists( $value, 'get_data' ) ) {
+				$output[ $key ] = $value->get_data();
+			} elseif ( is_object( $value ) ) {
+				$output[ $key ] = get_object_vars( $value );
+			} else {
+				$output[ $key ] = $value;
+			}
+		}
+
+		return $output;
 	}
 
 	/**
 	 * Returns array of expected data keys for this object.
 	 *
 	 * @since   1.1.0
+	 *
 	 * @return array
 	 */
 	public function get_data_keys() {
@@ -314,6 +373,7 @@ abstract class ResourceModel {
 	 * Returns all "extra" data keys for an object (for sub objects like item types).
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return array
 	 */
 	public function get_extra_data_keys() {
@@ -337,6 +397,7 @@ abstract class ResourceModel {
 	 * Get All Meta Data.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return array of objects.
 	 */
 	public function get_meta_data() {
@@ -413,7 +474,7 @@ abstract class ResourceModel {
 
 			if ( 'post_type' !== $key ) {
 				/* translators: %s: $key Key to set */
-				eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'getpaid' ), $key ), '1.1.0' );
+				eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'wp-ever-accounting' ), $key ), '1.1.0' );
 			}
 
 			return call_user_func( array( $this, 'get_' . $key ) );
@@ -846,9 +907,10 @@ abstract class ResourceModel {
 	 *
 	 * @param string         $prop  Name of prop to set.
 	 * @param string|integer $value Value of the prop.
+	 * @param string         $format
 	 */
 	protected function set_date_prop( $prop, $value, $format = 'Y-m-d H:i:s' ) {
-		$value = eaccounting_format_datetime( $value, $format );
+		$value = eaccounting_date( $value, $format );
 		if ( empty( $value ) ) {
 			$this->set_prop( $prop, null );
 
@@ -864,19 +926,24 @@ abstract class ResourceModel {
 	 *
 	 * @param string       $property property of the object will be used
 	 * @param string       $prop     prop that will be assigned to
+	 * @param mixed        $default  default prop that will be assigned to
 	 * @param array|object $object   The object
 	 */
-	protected function set_object_prop( $object, $property, $prop ) {
-		if ( is_object( $object ) && is_callable( array( $object, 'get_data' ) ) ) {
-			$object = $object->get_data();
+	protected function set_object_prop( $object, $property, $prop, $default = null ) {
+		if ( is_object( $object ) && is_callable( array( $object, 'get_' . $property ) ) ) {
+			$method = "get_{$property}";
+			$value  = $object->$method();
 		} elseif ( is_object( $object ) ) {
 			$object = get_object_vars( $object );
+			if ( array_key_exists( $property, $object ) ) {
+				$value = $object[ $property ];
+			}
 		} else {
-			$object = array();
+			$value = $default;
 		}
 
-		if ( array_key_exists( $property, $object ) ) {
-			$this->set_prop( $prop, $object[ $property ] );
+		if ( isset( $value ) ) {
+			$this->set_prop( $prop, $value );
 		}
 	}
 
@@ -888,7 +955,7 @@ abstract class ResourceModel {
 	 * @param int $enabled
 	 */
 	public function set_enabled( $enabled ) {
-		$this->set_prop( 'enabled', absint( $enabled ) );
+		$this->set_prop( 'enabled', eaccounting_bool_to_number( $enabled ) );
 	}
 
 	/**
@@ -924,6 +991,7 @@ abstract class ResourceModel {
 	 * Return data changes only.
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return array
 	 */
 	public function get_changes() {
@@ -944,6 +1012,7 @@ abstract class ResourceModel {
 	 * Prefix for action and filter hooks on model.
 	 *
 	 * @since  1.1.0
+	 *
 	 * @return string
 	 */
 	protected function get_hook_prefix() {
@@ -992,6 +1061,26 @@ abstract class ResourceModel {
 	}
 
 	/**
+	 * Get prop from object.
+	 *
+	 * @since  1.1.0
+	 *
+	 * @param array|object $object   The object
+	 * @param string       $property property of the object will be used
+	 *
+	 * @return mixed|null
+	 */
+	protected function get_object_prop( $object, $property ) {
+		if ( is_object( $object ) && is_callable( array( $object, 'get_' . $property ) ) ) {
+			$method = "get_{$property}";
+
+			return $object->$method();
+		}
+
+		return null;
+	}
+
+	/**
 	 * get object status
 	 *
 	 * @since 1.0.2
@@ -1002,6 +1091,24 @@ abstract class ResourceModel {
 	 */
 	public function get_enabled( $context = 'edit' ) {
 		return $this->get_prop( 'enabled', $context );
+	}
+
+
+	/**
+	 * @since 1.1.0
+	 *
+	 * @param $required
+	 *
+	 * @throws \Exception
+	 */
+	public function check_required_items() {
+		foreach ( $this->required_props as $key => $title ) {
+			$method = "get_{$key}";
+			if ( empty( $this->$method( 'edit' ) ) ) {
+				/* translators: %s missing item title */
+				throw new \Exception( sprintf( __( '%s is required', 'wp-ever-accounting' ), $title ), 400 );
+			}
+		}
 	}
 
 	/**
@@ -1034,6 +1141,7 @@ abstract class ResourceModel {
 	 * @since 1.1.0
 	 */
 	public function clear_cache() {
+		eaccounting_cache_set_last_changed( $this->cache_group );
 		wp_cache_delete( $this->get_id(), $this->cache_group );
 	}
 
@@ -1041,6 +1149,7 @@ abstract class ResourceModel {
 	 * Checks if the object is saved in the database
 	 *
 	 * @since 1.1.0
+	 *
 	 * @return bool
 	 */
 	public function exists() {
@@ -1059,10 +1168,10 @@ abstract class ResourceModel {
 	 * @param int    $http_status_code
 	 * @param array  $data
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function error( $code, $message, $http_status_code = 400, $data = array() ) {
-		throw new Exception( $code, $message, $http_status_code, $data );
+		throw new \Exception( $message );
 	}
 
 }

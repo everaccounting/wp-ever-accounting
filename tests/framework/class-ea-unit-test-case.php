@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Class EAccounting_Unit_Test_Case
+ * Class EverAccounting_Unit_Test_Case
  * @since 1.0.2
  */
-class EAccounting_Unit_Test_Case extends \WP_UnitTestCase {
+class EverAccounting_Unit_Test_Case extends \WP_UnitTestCase {
 
 	/**
 	 * Setup test case.

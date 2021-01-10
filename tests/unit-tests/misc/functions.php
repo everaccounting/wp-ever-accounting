@@ -10,7 +10,7 @@
  *
  * @since 1.0.2
  */
-class EAccounting_Tests_Misc_Functions extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Misc_Functions extends EverAccounting_Unit_Test_Case {
 
 	/**
 	 * Set up.

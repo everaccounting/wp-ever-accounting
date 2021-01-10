@@ -11,8 +11,7 @@ namespace EverAccounting\Core;
 
 use EverAccounting\Interfaces\Arrayable;
 
-defined( 'ABSPATH' ) || exit();
-
+defined( 'ABSPATH' ) || exit;
 
 class Collection implements Arrayable {
 	/**
@@ -30,28 +29,24 @@ class Collection implements Arrayable {
 	 * @param mixed $items
 	 */
 	public function __construct( $items = array() ) {
-		$items = is_null( $items ) ? array() : $this->getArrayableItems( $items );
-
-		$this->items = (array) $items;
+		if ( $items instanceof Collection ) {
+			$this->items = $items->all();
+		} elseif ( $items instanceof Arrayable ) {
+			$this->items = $items->toArray();
+		} elseif ( is_array( $items ) ) {
+			$this->items = $items;
+		} else {
+			$this->items = array();
+		}
 	}
 
 	/**
-	 * Results array of items from Collection or Arrayable.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param $items
-	 *
-	 * @return mixed
+	 * Copy the collection
+	 * @since 1.1.0
+	 * @return $this
 	 */
-	protected function getArrayableItems( $items ) {
-		if ( $items instanceof Collection ) {
-			$items = $items->all();
-		} elseif ( $items instanceof Arrayable ) {
-			$items = $items->toArray();
-		}
-
-		return $items;
+	public function copy(){
+		return new static($this->items);
 	}
 
 	/**
@@ -71,23 +66,11 @@ class Collection implements Arrayable {
 	 * Get all of the items in the collection.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return array
 	 */
 	public function all() {
 		return $this->items;
-	}
-
-	/**
-	 * Diff the collection with the given items.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param Arrayable|array $items
-	 *
-	 * @return static
-	 */
-	public function diff( $items ) {
-		return new static( array_diff( $this->items, $this->getArrayableItems( $items ) ) );
 	}
 
 	/**
@@ -97,9 +80,9 @@ class Collection implements Arrayable {
 	 *
 	 * @param callable $callback
 	 *
-	 * @return $this
+	 * @return object
 	 */
-	public function each( callable $callback ) {
+	public function each( $callback ) {
 		return new static( array_map( $callback, $this->items ) );
 	}
 
@@ -112,7 +95,7 @@ class Collection implements Arrayable {
 	 *
 	 * @return static
 	 */
-	public function filter( callable $callback ) {
+	public function filter( $callback = null ) {
 		return new static( array_filter( $this->items, $callback ) );
 	}
 
@@ -123,7 +106,6 @@ class Collection implements Arrayable {
 	 *
 	 * @param mixed  $value
 	 * @param bool   $strict
-	 *
 	 * @param string $key
 	 *
 	 * @return static
@@ -131,8 +113,7 @@ class Collection implements Arrayable {
 	public function where( $key, $value, $strict = true ) {
 		return $this->filter(
 			function ( $item ) use ( $key, $value, $strict ) {
-				return $strict ? self::data_get( $item, $key ) === $value
-				: self::data_get( $item, $key ) == $value;
+				return $strict ? self::data_get( $item, $key ) === $value : self::data_get( $item, $key ) == $value; //phpcs:ignore
 			}
 		);
 	}
@@ -143,12 +124,11 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed  $value
-	 *
 	 * @param string $key
 	 *
 	 * @return static
 	 */
-	public function whereLoose( $key, $value ) {
+	public function where_loose( $key, $value ) {
 		return $this->where( $key, $value, false );
 	}
 
@@ -156,6 +136,7 @@ class Collection implements Arrayable {
 	 * Flip the items in the collection.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return static
 	 */
 	public function flip() {
@@ -181,7 +162,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed $default
-	 *
 	 * @param mixed $key
 	 *
 	 * @return mixed
@@ -208,45 +188,21 @@ class Collection implements Arrayable {
 	}
 
 	/**
-	 * Intersect the collection with the given items.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param Arrayable|array $items
-	 *
-	 * @return static
-	 */
-	public function intersect( $items ) {
-		return new static( array_intersect( $this->items, $this->getArrayableItems( $items ) ) );
-	}
-
-	/**
 	 * Determine if the collection is empty or not.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return bool
 	 */
-	public function isEmpty() {
+	public function is_empty() {
 		return empty( $this->items );
-	}
-
-	/**
-	 * Determine if the given value is callable, but not a string.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param mixed $value
-	 *
-	 * @return bool
-	 */
-	protected function useAsCallable( $value ) {
-		return ! is_string( $value ) && is_callable( $value );
 	}
 
 	/**
 	 * Get the keys of the collection items.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return static
 	 */
 	public function keys() {
@@ -263,6 +219,15 @@ class Collection implements Arrayable {
 	}
 
 	/**
+	 * Get the first item from the collection.
+	 *
+	 * @return mixed|null
+	 */
+	public function first() {
+		return count( $this->items ) > 0 ? current( $this->items ) : null;
+	}
+
+	/**
 	 * Run a map over each of the items.
 	 *
 	 * @since 1.0.2
@@ -271,27 +236,15 @@ class Collection implements Arrayable {
 	 *
 	 * @return static
 	 */
-	public function map( callable $callback ) {
+	public function map( $callback ) {
 		return new static( array_map( $callback, $this->items, array_keys( $this->items ) ) );
-	}
-
-	/**
-	 * Merge the collection with the given items.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param Arrayable|array $items
-	 *
-	 * @return static
-	 */
-	public function merge( $items ) {
-		return new static( array_merge( $this->items, $this->getArrayableItems( $items ) ) );
 	}
 
 	/**
 	 * Get and remove the last item from the collection.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return mixed|null
 	 */
 	public function pop() {
@@ -330,7 +283,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed $value
-	 *
 	 * @param mixed $key
 	 *
 	 * @return void
@@ -349,7 +301,7 @@ class Collection implements Arrayable {
 	 * @return mixed
 	 */
 	public function random( $amount = 1 ) {
-		if ( $this->isEmpty() ) {
+		if ( $this->is_empty() ) {
 			return array();
 		}
 
@@ -359,12 +311,25 @@ class Collection implements Arrayable {
 	}
 
 	/**
+	 * Merge the collection with the given items.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param Arrayable|array $items
+	 *
+	 * @return static
+	 */
+	public function merge( $items ) {
+		$items = new static( $items );
+		return new static( array_merge( $this->items, $items->all() ) );
+	}
+
+	/**
 	 * Reduce the collection to a single value.
 	 *
 	 * @since 1.0.2
 	 *
 	 * @param mixed    $initial
-	 *
 	 * @param callable $callback
 	 *
 	 * @return mixed
@@ -383,7 +348,7 @@ class Collection implements Arrayable {
 	 * @return static
 	 */
 	public function reject( $callback ) {
-		if ( $this->useAsCallable( $callback ) ) {
+		if ( $this->use_as_callable( $callback ) ) {
 			return $this->filter(
 				function ( $item ) use ( $callback ) {
 					return ! $callback( $item );
@@ -393,7 +358,7 @@ class Collection implements Arrayable {
 
 		return $this->filter(
 			function ( $item ) use ( $callback ) {
-				return $item != $callback;
+				return $callback != $item ; //phpcs:ignore
 			}
 		);
 	}
@@ -412,19 +377,31 @@ class Collection implements Arrayable {
 	}
 
 	/**
+	 * Determine if the given value is callable, but not a string.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param mixed $value
+	 *
+	 * @return bool
+	 */
+	protected function use_as_callable( $value ) {
+		return ! is_string( $value ) && is_callable( $value );
+	}
+
+	/**
 	 * Search the collection for a given value and return the corresponding key if successful.
 	 *
 	 * @since 1.0.2
 	 *
 	 * @param bool  $strict
-	 *
 	 * @param mixed $value
 	 *
 	 * @return mixed
 	 */
 	public function search( $value, $strict = false ) {
-		if ( ! $this->useAsCallable( $value ) ) {
-			return array_search( $value, $this->items, $strict );
+		if ( ! $this->use_as_callable( $value ) ) {
+			return array_search( $value, $this->items, $strict ); //phpcs:ignore
 		}
 
 		foreach ( $this->items as $key => $item ) {
@@ -436,73 +413,19 @@ class Collection implements Arrayable {
 		return false;
 	}
 
-	/**
-	 * Get and remove the first item from the collection.
-	 *
-	 * @since 1.0.2
-	 * @return mixed|null
-	 */
-	public function shift() {
-		return array_shift( $this->items );
-	}
-
-	/**
-	 * Shuffle the items in the collection.
-	 *
-	 * @since 1.0.2
-	 * @return $this
-	 */
-	public function shuffle() {
-		shuffle( $this->items );
-
-		return $this;
-	}
-
-	/**
-	 * Slice the underlying collection array.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param int  $length
-	 * @param bool $preserveKeys
-	 *
-	 * @param int  $offset
-	 *
-	 * @return static
-	 */
-	public function slice( $offset, $length = null, $preserveKeys = false ) {
-		return new static( array_slice( $this->items, $offset, $length, $preserveKeys ) );
-	}
-
-	/**
-	 * Chunk the underlying collection array.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param bool $preserveKeys
-	 *
-	 * @param int  $size
-	 *
-	 * @return static
-	 */
-	public function chunk( $size, $preserveKeys = false ) {
-		$chunks = array();
-
-		foreach ( array_chunk( $this->items, $size, $preserveKeys ) as $chunk ) {
-			$chunks[] = new static( $chunk );
-		}
-
-		return new static( $chunks );
-	}
 
 	/**
 	 * Sort through each item with a callback.
+	 * callback function($a, $b){
+	 *  return $a[key] > $b[key]; //ASC
+	 *  return $a[key] < $b[key]; //DESC
+	 * }
 	 *
 	 * @since 1.0.2
 	 *
 	 * @param callable|int|null $callback
 	 *
-	 * @return $this
+	 * @return static
 	 */
 	public function sort( $callback = null ) {
 		$items = $this->items;
@@ -515,34 +438,18 @@ class Collection implements Arrayable {
 	}
 
 	/**
-	 * Sort items in descending order.
+	 * Sort items in descending order by key.
 	 *
 	 * @param int $options
 	 *
 	 * @return static
 	 */
-	public function sortDesc( $options = SORT_REGULAR ) {
+	public function sort_desc( $options = SORT_REGULAR ) {
 		$items = $this->items;
 
 		arsort( $items, $options );
 
 		return new static( $items );
-	}
-
-	/**
-	 * Splice portion of the underlying collection array.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param int   $length
-	 * @param mixed $replacement
-	 *
-	 * @param int   $offset
-	 *
-	 * @return static
-	 */
-	public function splice( $offset, $length = 0, $replacement = array() ) {
-		return new static( array_splice( $this->items, $offset, $length, $replacement ) );
 	}
 
 	/**
@@ -563,24 +470,41 @@ class Collection implements Arrayable {
 	}
 
 	/**
-	 * Transform each item in the collection using a callback.
+	 * Slice the underlying collection array.
+	 * equivalent of offset.
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param callable $callback
+	 * @param int  $length
+	 * @param bool $preserve_keys
+	 * @param int  $offset
 	 *
-	 * @return $this
+	 * @return static
 	 */
-	public function transform( callable $callback ) {
-		$this->items = array_map( $callback, $this->items );
+	public function slice( $offset, $length = null, $preserve_keys = false ) {
+		return new static( array_slice( $this->items, $offset, $length, $preserve_keys ) );
+	}
 
-		return $this;
+	/**
+	 * Splice portion of the underlying collection array.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param int   $length
+	 * @param mixed $replacement
+	 * @param int   $offset
+	 *
+	 * @return static
+	 */
+	public function splice( $offset, $length = 0, $replacement = array() ) {
+		return new static( array_splice( $this->items, $offset, $length, $replacement ) );
 	}
 
 	/**
 	 * Return only unique items from the collection array.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return static
 	 */
 	public function unique() {
@@ -591,6 +515,7 @@ class Collection implements Arrayable {
 	 * Reset the keys on the underlying array.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return static
 	 */
 	public function values() {
@@ -601,6 +526,7 @@ class Collection implements Arrayable {
 	 * Count the number of items in the collection.
 	 *
 	 * @since 1.0.2
+	 *
 	 * @return int
 	 */
 	public function count() {
@@ -639,7 +565,6 @@ class Collection implements Arrayable {
 	 * @since 1.0.2
 	 *
 	 * @param mixed $value
-	 *
 	 * @param mixed $key
 	 *
 	 * @return void
@@ -650,6 +575,50 @@ class Collection implements Arrayable {
 		} else {
 			$this->items[ $key ] = $value;
 		}
+	}
+
+	/**
+	 * Get and remove the first item from the collection.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return mixed|null
+	 */
+	public function shift() {
+		return array_shift( $this->items );
+	}
+
+	/**
+	 * Shuffle the items in the collection.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return object
+	 */
+	public function shuffle() {
+		shuffle( $this->items );
+
+		return $this;
+	}
+
+	/**
+	 * Chunk the underlying collection array.
+	 *
+	 * @since 1.0.2
+	 *
+	 * @param bool $preserve_keys
+	 * @param int  $size
+	 *
+	 * @return static
+	 */
+	public function chunk( $size, $preserve_keys = false ) {
+		$chunks = array();
+
+		foreach ( array_chunk( $this->items, $size, $preserve_keys ) as $chunk ) {
+			$chunks[] = new static( $chunk );
+		}
+
+		return new static( $chunks );
 	}
 
 	/**
@@ -666,6 +635,56 @@ class Collection implements Arrayable {
 	}
 
 	/**
+	 * @since 1.0.2
+	 *
+	 * @param      $key
+	 * @param null   $default
+	 * @param      $target
+	 *
+	 * @return array
+	 */
+	public static function data_get( $target, $key, $default = null ) {
+		if ( is_null( $key ) ) {
+			return $target;
+		}
+
+		$key = is_array( $key ) ? $key : explode( '.', $key );
+
+		foreach ( $key as $i => $segment ) {
+			unset( $key[ $i ] );
+
+			if ( is_null( $segment ) ) {
+				return $target;
+			}
+
+			if ( $segment === '*' ) {
+				if ( $target instanceof Collection ) {
+					$target = $target->all();
+				} elseif ( ! is_array( $target ) ) {
+					return $default instanceof \Closure ? $default() : $default;
+				}
+				$result = array();
+
+				foreach ( $target as $item ) {
+					$result[] = self::data_get( $item, $key );
+				}
+
+				return in_array( '*', $key, true ) ? $result : $result;
+			}
+
+			if ( array_key_exists( $segment, $target ) ) {
+				$target = $target[ $segment ];
+			} elseif ( is_object( $target ) && isset( $target->{$segment} ) ) {
+				$target = $target->{$segment};
+			} else {
+				return $default instanceof \Closure ? $default() : $default;
+			}
+		}
+
+		return $target;
+	}
+
+	/**
 	 * Returns collection as pure array.
 	 * Does depth array casting.
 	 *
@@ -676,7 +695,7 @@ class Collection implements Arrayable {
 	public function __toArray() {
 		$output = array();
 		$value  = null;
-		foreach ( $this as $key => $value ) {
+		foreach ( $this->items as $key => $value ) {
 			$output[ $key ] = ! is_object( $value )
 				? $value
 				: ( method_exists( $value, '__toArray' )
@@ -712,91 +731,14 @@ class Collection implements Arrayable {
 	}
 
 	/**
-	 * Returns object as JSON string.
+	 * Returns collection as pure array.
+	 * Does depth array casting.
 	 *
 	 * @since 1.0.2
-	 *
-	 * @param int $depth   JSON encoding depth. See @link.
-	 *
-	 * @param int $options JSON encoding options. See @link.
-	 *
-	 * @return string
-	 * @link  http://php.net/manual/en/function.json-encode.php
-	 */
-	public function __toJSON( $options = 0, $depth = 512 ) {
-		return json_encode( $this->__toArray(), $options, $depth );
-	}
-
-	/**
-	 * Returns object as JSON string.
-	 *
-	 * @since 1.0.2
-	 *
-	 * @param int $depth   JSON encoding depth. See @link.
-	 *
-	 * @param int $options JSON encoding options. See @link.
-	 *
-	 * @return string
-	 * @link  http://php.net/manual/en/function.json-encode.php
-	 */
-	public function toJSON( $options = 0, $depth = 512 ) {
-		return $this->__toJSON( $options, $depth );
-	}
-
-
-	/**
-	 * @since 1.0.2
-	 *
-	 * @param      $key
-	 * @param null   $default
-	 *
-	 * @param      $target
 	 *
 	 * @return array
 	 */
-	public static function data_get( $target, $key, $default = null ) {
-		if ( is_null( $key ) ) {
-			return $target;
-		}
-
-		$key = is_array( $key ) ? $key : explode( '.', $key );
-
-		foreach ( $key as $i => $segment ) {
-			unset( $key[ $i ] );
-
-			if ( is_null( $segment ) ) {
-				return $target;
-			}
-
-			if ( $segment === '*' ) {
-				if ( $target instanceof Collection ) {
-					$target = $target->all();
-				} elseif ( ! is_array( $target ) ) {
-					return $default instanceof \Closure ? $default() : $default;
-				}
-				$result = array();
-
-				foreach ( $target as $item ) {
-					$result[] = self::data_get( $item, $key );
-				}
-
-				return in_array( '*', $key ) ? $result : $result;
-			}
-
-			if ( array_key_exists( $segment, $target ) ) {
-				$target = $target[ $segment ];
-			} elseif ( is_object( $target ) && isset( $target->{$segment} ) ) {
-				$target = $target->{$segment};
-			} else {
-				return $default instanceof \Closure ? $default() : $default;
-			}
-		}
-
-		return $target;
-	}
-
-
 	public function to_array() {
-		// TODO: Implement to_array() method.
+		return $this->__toArray();
 	}
 }

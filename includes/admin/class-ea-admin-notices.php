@@ -6,18 +6,24 @@
  * @version 1.0.2
  */
 
-namespace EverAccounting\Admin;
-
 defined( 'ABSPATH' ) || exit;
 
-class Admin_Notices {
+class EverAccounting_Admin_Notices {
+	/**
+	 * The single instance of the class.
+	 *
+	 * @since 1.0.0
+	 * @var EverAccounting_Admin_Notices
+	 */
+	protected static $instance = null;
+
 	/**
 	 * All notices.
 	 *
 	 * @since 1.0.2
 	 * @var array
 	 */
-	private static $notices = array();
+	private $notices = array();
 
 	/**
 	 * Array of notices - name => callback.
@@ -25,7 +31,7 @@ class Admin_Notices {
 	 * @since 1.0.2
 	 * @var array
 	 */
-	private static $core_notices = array(
+	private $core_notices = array(
 		'install'             => 'install_notice',
 		'update'              => 'update_notice',
 		'default_currency'    => 'default_currency_notice',
@@ -36,106 +42,31 @@ class Admin_Notices {
 	 * Constructor.
 	 */
 	public static function init() {
-		self::$notices = get_option( 'ea_admin_notices', array() );
-		add_action( 'wp_loaded', array( __CLASS__, 'hide_notices' ) );
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EverAccounting_Admin_Notices ) ) {
+			self::$instance = new self();
+		}
+
+		return self::$instance;
+	}
+
+
+	/**
+	 * EverAccounting_Admin_Notices constructor.
+	 */
+	public function __construct() {
+		$this->notices = get_option( 'ea_admin_notices', array() );
+		add_action( 'wp_loaded', array( $this, 'hide_notices' ) );
 		if ( current_user_can( 'manage_eaccounting' ) ) {
-			add_action( 'admin_print_styles', array( __CLASS__, 'add_notices' ) );
+			add_action( 'admin_print_styles', array( $this, 'maybe_show_notices' ) );
 		}
 	}
 
-	/**
-	 * Save notices to DB
-	 */
-	public static function save_notices() {
-		update_option( 'ea_admin_notices', self::get_notices() );
-	}
-
-	/**
-	 * Get notices
-	 *
-	 * @return array
-	 */
-	public static function get_notices() {
-		return self::$notices;
-	}
-
-	/**
-	 * Remove all notices.
-	 */
-	public static function remove_all_notices() {
-		self::$notices = array();
-	}
-
-	/**
-	 * Show a notice.
-	 *
-	 * @param string $name       Notice name.
-	 * @param bool   $force_save Force saving inside this method instead of at the 'shutdown'.
-	 */
-	public static function add_notice( $name, $force_save = false ) {
-		self::$notices = array_unique( array_merge( self::get_notices(), array( $name ) ) );
-
-		if ( $force_save ) {
-			// Adding early save to prevent more race conditions with notices.
-			self::save_notices();
-		}
-	}
-
-	/**
-	 * Remove a notice from being displayed.
-	 *
-	 * @param string $name       Notice name.
-	 * @param bool   $force_save Force saving inside this method instead of at the 'shutdown'.
-	 */
-	public static function remove_notice( $name, $force_save = false ) {
-		self::$notices = array_diff( self::get_notices(), array( $name ) );
-		delete_option( 'ea_admin_notice_' . $name );
-
-		if ( $force_save ) {
-			// Adding early save to prevent more race conditions with notices.
-			self::save_notices();
-		}
-	}
-
-	/**
-	 * See if a notice is being shown.
-	 *
-	 * @param string $name Notice name.
-	 *
-	 * @return boolean
-	 */
-	public static function has_notice( $name ) {
-		return in_array( $name, self::get_notices(), true );
-	}
-
-	/**
-	 * Hide a notice if the GET variable is set.
-	 */
-	public static function hide_notices() {
-		if ( isset( $_GET['ea-hide-notice'] ) && isset( $_GET['_ea_notice_nonce'] ) ) {
-			if ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_ea_notice_nonce'] ) ), 'eaccounting_hide_notices_nonce' ) ) {
-				wp_die( esc_html__( 'Action failed. Please refresh the page and retry.', 'wp-ever-accounting' ) );
-			}
-
-			if ( ! current_user_can( 'manage_eaccounting' ) ) {
-				wp_die( esc_html__( 'You don&#8217;t have permission to do this.', 'wp-ever-accounting' ) );
-			}
-
-			$hide_notice = sanitize_text_field( wp_unslash( $_GET['ea-hide-notice'] ) ); // WPCS: input var ok, CSRF ok.
-
-			self::remove_notice( $hide_notice );
-
-			update_user_meta( get_current_user_id(), 'dismissed_' . $hide_notice . '_notice', true );
-
-			do_action( 'eaccounting_hide_' . $hide_notice . '_notice' );
-		}
-	}
 
 	/**
 	 * Add notices + styles if needed.
 	 */
-	public static function add_notices() {
-		$notices = self::get_notices();
+	public  function maybe_show_notices() {
+		$notices = $this->notices;
 
 		if ( empty( $notices ) ) {
 			return;
@@ -154,10 +85,10 @@ class Admin_Notices {
 		}
 
 		foreach ( $notices as $notice ) {
-			if ( ! empty( self::$core_notices[ $notice ] ) && apply_filters( 'eaccounting_show_admin_notice', true, $notice ) ) {
-				add_action( 'admin_notices', array( __CLASS__, self::$core_notices[ $notice ] ) );
+			if ( ! empty( $this->$core_notices[ $notice ] ) && apply_filters( 'eaccounting_show_admin_notice', true, $notice ) ) {
+				add_action( 'admin_notices', array( $this, $this->core_notices[ $notice ] ) );
 			} else {
-				add_action( 'admin_notices', array( __CLASS__, 'output_custom_notices' ) );
+				add_action( 'admin_notices', array( $this, 'output_custom_notices' ) );
 			}
 		}
 	}
@@ -165,12 +96,11 @@ class Admin_Notices {
 	/**
 	 * Output any stored custom notices.
 	 */
-	public static function output_custom_notices() {
-		$notices = self::get_notices();
+	public function output_custom_notices() {
 
-		if ( ! empty( $notices ) ) {
-			foreach ( $notices as $notice ) {
-				if ( empty( self::$core_notices[ $notice ] ) ) {
+		if ( ! empty( $this->notices ) ) {
+			foreach ( $this->notices as $notice ) {
+				if ( empty( $this->core_notices[ $notice ] ) ) {
 					$notice_html = get_option( 'ea_admin_notice_' . $notice );
 
 					if ( $notice_html ) {
@@ -190,10 +120,10 @@ class Admin_Notices {
 	/**
 	 * If we have just installed, show a message with the install pages button.
 	 */
-	public static function install_notice() {
+	public function install_notice() {
 		?>
 		<div id="message" class="updated eaccounting-message">
-			<p><?php _e( '<strong>Welcome to Ever Accounting</strong> &#8211; You&lsquo;re almost ready to start selling :)', 'wp-ever-accounting' ); ?></p>
+			<p><?php _e( '<strong>Welcome to Ever Accounting</strong> &#8211; You&lsquo;re almost done :)', 'wp-ever-accounting' ); ?></p>
 			<p class="submit"><a href="<?php echo esc_url( admin_url( 'admin.php?page=ea-setup' ) ); ?>" class="button-primary"><?php _e( 'Run the Setup Wizard', 'wp-ever-accounting' ); ?></a> <a class="button-secondary skip" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'ea-hide-notice', 'install' ), 'eaccounting_hide_notices_nonce', '_ea_notice_nonce' ) ); ?>"><?php _e( 'Skip setup', 'wp-ever-accounting' ); ?></a></p>
 		</div>
 		<?php
@@ -203,7 +133,7 @@ class Admin_Notices {
 	/**
 	 * Notice about base tables missing.
 	 */
-	public static function base_tables_missing_notice() {
+	public function base_tables_missing_notice() {
 		$missing_tables = get_option( 'eaccounting_schema_missing_tables' );
 		?>
 		<div id="message" class="error eaccounting-message">
@@ -214,6 +144,7 @@ class Admin_Notices {
 				<?php
 				echo wp_kses_post(
 					sprintf(
+							/* translators: %1$s table names */
 						__( 'One or more tables required for Ever Accounting to function are missing, some features may not work as expected. Missing tables: %1$s.', 'wp-ever-accounting' ),
 						esc_html( implode( ', ', $missing_tables ) )
 					)
@@ -223,7 +154,6 @@ class Admin_Notices {
 		</div>
 		<?php
 	}
-
 }
 
-Admin_Notices::init();
+//EverAccounting_Admin_Notices::init();

@@ -51,8 +51,8 @@ function eaccounting_reports_profit_loss_tab() {
 		$dates        = $totals = $expenses = $graph = $categories = array();
 		$start        = eaccounting_get_financial_start( $year );
 		$transactions = \EverAccounting\Transactions\query()
-				->select( 'name, paid_at, currency_code, currency_rate, amount, ea_categories.id category_id' )
-				->where_raw( $wpdb->prepare( 'YEAR(paid_at) = %d', $year ) )
+				->select( 'name, payment_date, currency_code, currency_rate, amount, ea_categories.id category_id' )
+				->where_raw( $wpdb->prepare( 'YEAR(payment_date) = %d', $year ) )
 				->where(
 					array(
 						'contact_id'  => $vendor_id,
@@ -65,7 +65,7 @@ function eaccounting_reports_profit_loss_tab() {
 				->get(
 					OBJECT,
 					function ( $expense ) {
-						$expense->amount = eaccounting_price_convert_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
+						$expense->amount = eaccounting_price_to_default( $expense->amount, $expense->currency_code, $expense->currency_rate );
 
 						return $expense;
 					}
@@ -93,8 +93,8 @@ function eaccounting_reports_profit_loss_tab() {
 		}
 
 		foreach ( $transactions as $transaction ) {
-			$month      = date( 'F', strtotime( $transaction->paid_at ) );
-			$month_year = date( 'F-Y', strtotime( $transaction->paid_at ) );
+			$month      = date( 'F', strtotime( $transaction->payment_date ) );
+			$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) );
 			$expenses[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
 			$graph[ $month_year ]                                      += $transaction->amount;
 			$totals[ $month ]['amount']                                += $transaction->amount;

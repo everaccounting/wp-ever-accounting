@@ -1,0 +1,168 @@
+/**
+ * Imports
+ */
+@import "mixins";
+@import "variables";
+@import "fonts";
+@import "grids";
+@import "card";
+@import "document";
+
+.ea-document {
+	&__wrapper {
+		min-height: 100%;
+		position: relative;
+	}
+
+	&__top {
+		margin-top: 25px;
+
+		.company-logo {
+			max-width: 70px;
+			width: auto;
+		}
+	}
+
+	&__column {
+		@media only screen and (max-width: 380px) {
+			float: none;
+		}
+	}
+
+
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 8px 0;
+		margin: 0;
+		min-height: 25px;
+
+		.button {
+			display: inline-block;
+			text-decoration: none;
+			font-size: 13px;
+			line-height: 2.15384615;
+			min-height: 30px;
+			margin: 0;
+			padding: 0 10px;
+			cursor: pointer;
+			border-width: 1px;
+			border-style: solid;
+			-webkit-appearance: none;
+			border-radius: 3px;
+			white-space: nowrap;
+			box-sizing: border-box;
+		}
+
+		.button-default {
+			background: #f3f5f6;
+			border-color: #7e8993;
+			box-shadow: none;
+			color: #016087;
+		}
+
+		.button-primary {
+			background: #00669b;
+			border-color: #00669b;
+			box-shadow: none;
+			color: #fff;
+		}
+	}
+
+	&__content {
+		padding-bottom: 80px;
+	}
+
+	&__description {
+		background: #fff;
+		border: 1px solid #e4e5e7;
+		border-radius: 4px;
+		padding: 20px;
+		position: relative;
+		margin-top: 20px;
+		@media only screen and (min-width: 768px) {
+			padding: 50px
+		}
+		@media only screen and (max-width: 480px) {
+			padding: 0;
+		}
+
+		.ea-card {
+			border: none;
+		}
+	}
+
+	&__items {
+		margin-top: 25px;
+
+		th {
+			background: #415164;
+			color: #ffffff;
+		}
+	}
+
+	&__billing-info {
+		@media only screen and (max-width: 380px) {
+			text-align: left !important;
+		}
+	}
+	&__to {
+		@media only screen and (max-width: 380px) {
+			text-align: left;
+		}
+	}
+
+	&__meta {
+		@media only screen and (max-width: 380px) {
+			float: none;
+		}
+	}
+
+	&__meta td {
+		text-align: left;
+	}
+
+	&__line-name {
+		.view {
+			color: #314e73;
+			font-weight: 500;
+		}
+
+	}
+
+	&__total-items {
+		tr {
+			border-bottom: 1px solid #dfdfdf;
+		}
+	}
+
+	&__data-row {
+		background: none;
+	}
+
+	&__bottom {
+		text-align: center;
+		background: #fff;
+		padding: 15px;
+		margin-top: 50px;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		z-index: 1030;
+		border-top: 1px solid #e4e5e7;
+
+		p {
+			margin: 0;
+			font-size: 15px;
+		}
+
+		a {
+			text-decoration: none;
+		}
+	}
+
+
+}
+

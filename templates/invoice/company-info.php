@@ -1,0 +1,33 @@
+<?php
+/**
+ * Displays company info.
+ *
+ * This template can be overridden by copying it to yourtheme/eaccounting/invoice/company-info.php.
+ *
+ * @var $invoice Invoice
+ * @version 1.1.0
+ */
+
+use EverAccounting\Models\Invoice;
+
+defined( 'ABSPATH' ) || exit;
+$company_details = array(
+	'name'       => eaccounting()->settings->get( 'company_name' ),
+	'street'     => eaccounting()->settings->get( 'company_address' ),
+	'city'       => eaccounting()->settings->get( 'company_city' ),
+	'state'      => eaccounting()->settings->get( 'company_state' ),
+	'postcode'   => eaccounting()->settings->get( 'company_postcode' ),
+	'country'    => eaccounting()->settings->get( 'company_country' ),
+	'vat_number' => eaccounting()->settings->get( 'company_vat_number' ),
+);
+$countries       = eaccounting_get_countries();
+?>
+<address class="ea-document__company-info">
+	<span class="ea-document__company-name"><?php echo esc_html( $company_details['name'] ); ?></span>
+	<span class="ea-document__info-street"><?php echo esc_html( $company_details['street'] ); ?></span>
+	<span class="ea-document__info-city"><?php echo esc_html( implode( ' ', array_filter( array( $company_details['city'], $company_details['state'], $company_details['postcode'] ) ) ) ); ?></span>
+	<span class="ea-document__info-country"><?php echo isset( $countries[ $company_details['country'] ] ) ? esc_html( $countries[ $company_details['country'] ] ) : ''; ?></span>
+	<?php if ( $company_details['vat_number'] ) : ?>
+		<span class="ea-document__var-number"><?php _e( 'VAT Number', 'wp-ever-accounting' ); ?>: <span><?php echo esc_html( $company_details['vat_number'] ); ?></span></span>
+	<?php endif; ?>
+</address>
