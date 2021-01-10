@@ -25,8 +25,8 @@ class EverAccounting_Assets {
 	public function public_scripts(){
 		$suffix  = '';
 		$version = eaccounting()->get_version();
-		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_print_scripts( 'ea-admin' );
+//		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
+//		wp_print_scripts( 'ea-admin' );
 	}
 }
 
