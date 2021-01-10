@@ -34,5 +34,6 @@ defined( 'ABSPATH' ) || exit;
 	<?php eaccounting_get_template( 'invoice/invoice-items.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-note.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-terms.php', array( 'invoice' => $invoice ) ); ?>
+	<?php eaccounting_get_template( 'invoice/invoice-payments.php', array( 'invoice' => $invoice ) ); ?>
 
 </div>

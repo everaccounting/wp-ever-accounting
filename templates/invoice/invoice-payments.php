@@ -16,6 +16,7 @@ $payments = $invoice->get_payments();
 
 ?>
 <div class="ea-document__payments-wrapper">
+	<span class="ea-document__note-label"><?php esc_html_e( 'Payments', 'wp-ever-accounting' ); ?>:</span>
 	<?php if ( empty( $payments ) ) : ?>
 		<p class="ea-card__inside"><?php esc_html_e( 'There are no payments yet.', 'wp-ever-accounting' ); ?></p>
 
