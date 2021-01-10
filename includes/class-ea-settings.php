@@ -185,6 +185,12 @@ class EverAccounting_Settings {
 							'type' => 'textarea',
 						),
 						array(
+							'id'   => 'invoice_note',
+							'name' => __( 'Invoice Note', 'wp-ever-accounting' ),
+							'std'  => '',
+							'type' => 'textarea',
+						),
+						array(
 							'id'      => 'invoice_due',
 							'name'    => __( 'Invoice Due', 'wp-ever-accounting' ),
 							'std'     => '15',
