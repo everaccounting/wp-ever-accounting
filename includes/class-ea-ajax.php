@@ -404,18 +404,20 @@ class Ajax {
 				),
 				eaccounting_clean( $_REQUEST['_wp_http_referer'] )
 			);
-			wp_send_json_success(
-				array(
-					'items'    => eaccounting_get_admin_template_html(
-						'invoices/invoice-items',
-						array(
-							'invoice' => $invoice,
-						)
-					),
-					'line'     => array_map( 'strval', $invoice->get_items() ),
-					'redirect' => $redirect,
-				)
+			$response = array(
+				'items'    => eaccounting_get_admin_template_html(
+					'invoices/invoice-items',
+					array(
+						'invoice' => $invoice,
+					)
+				),
+				'line'     => array_map( 'strval', $invoice->get_items() ),
+				'redirect' => $redirect,
 			);
+			if ( empty( $posted['id'] ) ) {
+				$response['redirect'] = $redirect;
+			}
+			wp_send_json_success( $response );
 		} catch ( \Exception $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ) );
 		}

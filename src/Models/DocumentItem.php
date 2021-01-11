@@ -178,7 +178,7 @@ class DocumentItem extends ResourceModel {
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
-	 * @return string
+	 * @return int
 	 */
 	public function get_quantity( $context = 'edit' ) {
 		return $this->get_prop( 'quantity', $context );
@@ -563,6 +563,16 @@ class DocumentItem extends ResourceModel {
 	 */
 	public function set_fees_tax( $fees_tax ) {
 		$this->set_extra_prop( 'fees_tax', eaccounting_format_decimal( $fees_tax, 4 ) );
+	}
+
+	/**
+	 * Increment quantity.
+	 *
+	 * @param $increment
+	 * @since 1.1.0
+	 */
+	public function increment_quantity($increment){
+		$this->set_quantity( $this->get_quantity() + $increment );
 	}
 
 	/**

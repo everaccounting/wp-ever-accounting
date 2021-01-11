@@ -119,7 +119,7 @@ class Invoice extends Document {
 	 * @return string
 	 */
 	public function generate_number( $number ) {
-		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'BILL-' );
+		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
 		$padd             = (int) eaccounting()->settings->get( 'invoice_digit', '5' );
 		$formatted_number = zeroise( absint( $number ), $padd );
 		$number           = apply_filters( 'eaccounting_generate_invoice_number', $prefix . $formatted_number );
@@ -177,6 +177,7 @@ class Invoice extends Document {
 		$this->status_transition();
 		return $this->exists();
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -280,7 +281,7 @@ class Invoice extends Document {
 	 *
 	 * @param array $args
 	 *
-	 * @return false|int
+	 * @return bool
 	 */
 	public function add_item( $args ) {
 		$args = wp_parse_args(
@@ -297,13 +298,12 @@ class Invoice extends Document {
 		}
 
 		//first check if we get line id if so then its from database
-		$line_item = new DocumentItem( $args['line_id'] );
-		if ( $line_item->exists() && $line_item->get_document_id() !== $this->get_id() ) {
-			$line_item->set_id( 0 );
-			unset( $args['line_id'] );
+		$line_item = new DocumentItem();
+		if ( $this->get_item( $args['line_id'] ) ) {
+			$line_item = $this->items[ $args['line_id'] ];
 		}
 
-		if ( ! $line_item->exists() ) {
+		if ( ! empty( $args['item_id'] ) ) {
 			$product = new Item( $args['item_id'] );
 			if ( $product->exists() ) {
 				//convert the price from default to invoice currency.
@@ -320,19 +320,29 @@ class Invoice extends Document {
 				$args = wp_parse_args( $args, $default );
 			}
 		}
+
 		$line_item->set_props( $args );
+
+		if ( empty( $line_item->get_item_id() ) ) {
+			return false;
+		}
+
 		if ( $line_item->get_currency_code() && ( $line_item->get_currency_code() !== $this->get_currency_code() ) ) {
 			$converted = eaccounting_price_convert( $line_item->get_price(), $line_item->get_currency_code(), $this->get_currency_code() );
 			$line_item->set_price( $converted );
 		}
 
-		if ( $line_item->get_item_id() ) { //Now prepare
-			$this->items[ $line_item->get_item_id() ] = $line_item;
-
-			return $line_item->get_item_id();
+		foreach ( $this->get_items()  as $key => $item ) {
+			if ( ! $line_item->get_id() && ( $item->get_item_id() === $line_item->get_item_id() ) ) {
+				$item->increment_quantity( $line_item->get_quantity() );
+				return $key;
+			}
 		}
 
-		return false;
+		$key                 = $line_item->exists() ? $line_item->get_id() : 'new:' . count( $this->items );
+		$this->items[ $key ] = $line_item;
+
+		return $key;
 	}
 
 	/*
@@ -576,7 +586,7 @@ class Invoice extends Document {
 			foreach ( $this->get_items() as $item ) {
 				$subtotal_discount += ( $item->get_price() * $item->get_quantity() );
 			}
-			if($subtotal_discount > 0) {
+			if ( $subtotal_discount > 0 ) {
 				$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
 			}
 		}
@@ -796,7 +806,7 @@ class Invoice extends Document {
 	 * @return string
 	 */
 	public function get_admin_url( $action = 'view' ) {
-		$url = admin_url( 'admin.php?page=ea-sales&tab=invoices&invoice_id='. $this->get_id() );
+		$url = admin_url( 'admin.php?page=ea-sales&tab=invoices&invoice_id=' . $this->get_id() );
 		return add_query_arg( 'action', $action, $url );
 	}
 

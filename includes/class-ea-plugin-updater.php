@@ -107,7 +107,6 @@ class EverAccounting_Plugin_Updater {
 		}
 
 		$current = $this->get_repo_api_data();
-		error_log( print_r( $current, true ) );
 		if ( false !== $current && is_object( $current ) && isset( $current->new_version ) ) {
 			if ( version_compare( $this->version, $current->new_version, '<' ) ) {
 				$_transient_data->response[ $this->name ] = $current;
@@ -288,7 +287,6 @@ class EverAccounting_Plugin_Updater {
 	 * @return object $_data
 	 */
 	public function plugins_api_filter( $_data, $_action = '', $_args = null ) {
-		error_log( print_r( $_data, true ) );
 		if ( $_action != 'plugin_information' ) {
 
 			return $_data;

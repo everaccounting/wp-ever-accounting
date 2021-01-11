@@ -64,6 +64,7 @@ class Admin {
 
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-reports.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-tools.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-extensions.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) {

@@ -176,10 +176,8 @@ class Bill extends Document {
 		$this->calculate_totals();
 		parent::save();
 		$this->status_transition();
-
 		return $this->exists();
 	}
-
 
 	/*
 	|--------------------------------------------------------------------------
@@ -302,13 +300,12 @@ class Bill extends Document {
 		}
 
 		//first check if we get line id if so then its from database
-		$line_item = new DocumentItem( $args['line_id'] );
-		if ( $line_item->exists() && $line_item->get_document_id() !== $this->get_id() ) {
-			$line_item->set_id( 0 );
-			unset( $args['line_id'] );
+		$line_item = new DocumentItem();
+		if ( $this->get_item( $args['line_id'] ) ) {
+			$line_item = $this->items[ $args['line_id'] ];
 		}
 
-		if ( ! $line_item->exists() ) {
+		if ( ! empty( $args['item_id'] ) ) {
 			$product = new Item( $args['item_id'] );
 			if ( $product->exists() ) {
 				//convert the price from default to bill currency.
@@ -326,18 +323,28 @@ class Bill extends Document {
 			}
 		}
 		$line_item->set_props( $args );
+
+		if ( empty( $line_item->get_item_id() ) ) {
+			return false;
+		}
+
 		if ( $line_item->get_currency_code() && ( $line_item->get_currency_code() !== $this->get_currency_code() ) ) {
 			$converted = eaccounting_price_convert( $line_item->get_price(), $line_item->get_currency_code(), $this->get_currency_code() );
 			$line_item->set_price( $converted );
 		}
 
-		if ( $line_item->get_item_id() ) { //Now prepare
-			$this->items[ $line_item->get_item_id() ] = $line_item;
 
-			return $line_item->get_item_id();
+		foreach ( $this->get_items()  as $key => $item ) {
+			if ( ! $line_item->get_id() && ( $item->get_item_id() === $line_item->get_item_id() ) ) {
+				$item->increment_quantity( $line_item->get_quantity() );
+				return $key;
+			}
 		}
 
-		return false;
+		$key                 = $line_item->exists() ? $line_item->get_id() : 'new:' . count( $this->items );
+		$this->items[ $key ] = $line_item;
+
+		return $key;
 	}
 
 

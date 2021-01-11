@@ -606,9 +606,9 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$id         = 'eaccounting_settings[' . $args['id'] . ']';
 		$html       = '<label for="' . $id . '">';
-		$html      .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
-		$html      .= $args['desc'];
-		$html      .= '</label>';
+		$html       .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html       .= $args['desc'];
+		$html       .= '</label>';
 
 		echo $html;
 	}
@@ -700,7 +700,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -742,7 +742,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -781,7 +781,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -821,7 +821,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -927,7 +927,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html  = sprintf(
+		$html = sprintf(
 			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -956,9 +956,8 @@ class EverAccounting_Settings {
 	 * @since 1.1.0
 	 */
 	function license_key_callback( $args ) {
-		$value   = $this->settings[ $args['id'] . '_license_key' ];
-		$license = get_option( $args['id'] . '_license_active' );
-		var_dump( $license );
+		$value    = $this->settings[ $args['id'] . '_license_key' ];
+		$license  = get_option( $args['id'] . '_license_active' );
 		$messages = array();
 		echo sprintf(
 			'<input type="password" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s_license_key]" id="eaccounting_settings[%4$s_license_key]" value="%5$s"/>',
@@ -1195,17 +1194,17 @@ class EverAccounting_Settings {
 		// Ensure a value is always passed for every checkbox
 		if ( ! empty( $settings ) ) {
 
-			foreach ( $settings as $key => $setting ) {
+			foreach ( $settings as $setting ) {
 
 				// Single checkbox
 				if ( 'checkbox' === $setting['type'] ) {
-					$input[ $key ] = ! empty( $input[ $key ] );
+					$input[ $setting['id'] ] = ! empty( $input[ $setting['id'] ] );
 				}
 
 				// Multicheck list
-				if ( 'multicheck' === $settings[ $key ]['type'] ) {
-					if ( empty( $input[ $key ] ) ) {
-						$input[ $key ] = array();
+				if ( 'multicheck' === $setting['type'] ) {
+					if ( empty( $input[ $setting['id'] ] ) ) {
+						$input[ $setting['id'] ] = array();
 					}
 				}
 			}

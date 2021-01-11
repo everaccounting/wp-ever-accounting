@@ -360,6 +360,7 @@ abstract class ResourceRepository {
 	public function delete( &$item, $args = array() ) {
 		global $wpdb;
 		$table = $wpdb->prefix . $this->table;
+		error_log($wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ));
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ) );
 		// Delete cache.
 		$item->clear_cache();

@@ -144,7 +144,7 @@ abstract class Document extends ResourceModel {
 			array_merge(
 				parent::get_data(),
 				array(
-					'line_items' => $this->get_items(),
+					'items' => $this->get_items(),
 				)
 			)
 		);
@@ -192,6 +192,7 @@ abstract class Document extends ResourceModel {
 	 * Save all document items which are part of this order.
 	 */
 	protected function save_items() {
+
 		foreach ( $this->items_to_delete as $item ) {
 			if ( $item->exists() ) {
 				$item->delete();
@@ -1211,7 +1212,6 @@ abstract class Document extends ResourceModel {
 	}
 
 
-
 	/**
 	 * Get item ids.
 	 *
@@ -1222,10 +1222,10 @@ abstract class Document extends ResourceModel {
 	public function get_item_ids() {
 		$ids = array();
 		foreach ( $this->get_items() as $item ) {
-			$ids[] = $item->get_item_id();
+			$ids[] = $item->get_id();
 		}
 
-		return $ids;
+		return array_filter( $ids );
 	}
 
 	/**
@@ -1240,7 +1240,7 @@ abstract class Document extends ResourceModel {
 		if ( ! empty( $this->get_items() ) ) {
 			foreach ( $this->get_items() as $item ) {
 				$taxes[] = array(
-					'item_id' => $item->get_item_id(),
+					'line_id' => $item->get_item_id(),
 					'rate'    => $item->get_tax_rate(),
 					'amount'  => $item->get_tax(),
 				);
@@ -1280,10 +1280,11 @@ abstract class Document extends ResourceModel {
 	 */
 	public function get_items() {
 		if ( $this->exists() && empty( $this->items ) ) {
-			$items = $this->repository->get_items( $this );
-			foreach ( $items as $item_id => $item ) {
-				if ( ! array_key_exists( $item_id, $this->items_to_delete ) ) {
-					$this->items[ $item_id ] = $item;
+			$items      = $this->repository->get_items( $this );
+			$removables = array_keys( $this->items_to_delete );
+			foreach ( $items as $line_id => $item ) {
+				if ( ! in_array( $item->get_id(), $removables, true ) ) {
+					$this->items[ $line_id ] = $item;
 				}
 			}
 		}
@@ -1295,25 +1296,18 @@ abstract class Document extends ResourceModel {
 	 * @since 1.1.0
 	 *
 	 * @param      $item_id
-	 * @param bool $by_line_id
 	 *
 	 * @return DocumentItem|int
 	 */
-	public function get_item( $item_id, $by_line_id = false ) {
+	public function get_item( $item_id ) {
 		$items = $this->get_items();
+		if ( empty( absint( $item_id ) ) ) {
+			return false;
+		}
 
-		// Search for item id.
-		if ( ! empty( $items ) && ! $by_line_id ) {
-			foreach ( $items as $id => $item ) {
-				if ( isset( $items[ $item_id ] ) ) {
-					return $items[ $item_id ];
-				}
-			}
-		} elseif ( ! empty( $items ) && $by_line_id ) {
-			foreach ( $items as $item ) {
-				if ( $item->get_id() === absint( $item_id ) ) {
-					return $item;
-				}
+		foreach ( $items as $item ) {
+			if ( $item->get_id() === absint( $item_id ) ) {
+				return $item;
 			}
 		}
 
@@ -1329,24 +1323,24 @@ abstract class Document extends ResourceModel {
 	 * @param bool                 $append
 	 */
 	public function set_items( $items, $append = false ) {
-		// Remove existing items.
-		$old_items = $this->get_items();
-
 		// Ensure that we have an array.
 		if ( ! is_array( $items ) ) {
 			return;
 		}
-		$new_item_ids = array();
+		// Remove existing items.
+		$old_items = $this->get_items();
+		$new_ids   = array();
 		foreach ( $items as $item ) {
-			if ( $add = $this->add_item( $item ) ) { //phpcs:ignore
-				$new_item_ids[] = $add;
-			}
+			$new_ids[] = $this->add_item( $item );
 		}
 
 		if ( ! $append ) {
-			$remove_item_ids = array_diff( eaccounting_list_pluck( $old_items, 'get_item_id' ), $new_item_ids );
+			$new_ids      = array_values( array_filter( $new_ids ) );
+			$old_item_ids = array_keys( $old_items );
+			$remove_item_ids = array_diff( $old_item_ids, $new_ids );
 			foreach ( $remove_item_ids as $remove_item_id ) {
-				$this->remove_item( $remove_item_id );
+				$this->items_to_delete[] = $old_items[ $remove_item_id ];
+				unset( $this->items[ $remove_item_id ] );
 			}
 		}
 	}
@@ -1369,16 +1363,20 @@ abstract class Document extends ResourceModel {
 	 *
 	 * @return false|void
 	 */
-	public function remove_item( $item_id, $by_line_id = false ) {
-		$item = $this->get_item( $item_id, $by_line_id );
+	public function remove_item( $item_id ) {
+		if ( empty( $item_id ) ) {
+			return false;
+		}
+
+		$item = $this->get_item( $item_id );
 
 		if ( ! $item ) {
 			return false;
 		}
 
 		// Unset and remove later.
-		$this->items_to_delete[ $item->get_item_id() ] = $item;
-		unset( $this->items[ $item->get_item_id() ] );
+		$this->items_to_delete[] = $item;
+		unset( $this->items[ $item_id ] );
 	}
 
 	/*
@@ -1439,7 +1437,8 @@ abstract class Document extends ResourceModel {
 	 */
 	public function is_due() {
 		$due_date = $this->get_due_date();
-		return empty( $due_date ) || $this->is_paid() ? false : strtotime( date_i18n('Y-m-d 23:59:00') ) > strtotime( date_i18n('Y-m-d 23:59:00', strtotime($due_date)) ); //phpcs:ignore
+
+		return empty( $due_date ) || $this->is_paid() ? false : strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $due_date ) ) ); //phpcs:ignore
 	}
 
 	/**
