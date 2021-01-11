@@ -33,7 +33,7 @@ class EverAccounting_Settings {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_filter( 'eaccounting_settings_sanitize_text', 'sanitize_text_field' );
 		add_filter( 'eaccounting_settings_sanitize_url', 'wp_http_validate_url' );
-		add_filter( 'eaccounting_settings_sanitize_checkbox', 'eaccounting_bool_to_string' );
+		//add_filter( 'eaccounting_settings_sanitize_checkbox', 'eaccounting_bool_to_string' );
 		add_filter( 'eaccounting_settings_sanitize_number', 'absint' );
 		add_filter( 'eaccounting_settings_sanitize_rich_editor', 'wp_kses_post' );
 	}
@@ -1198,7 +1198,7 @@ class EverAccounting_Settings {
 
 				// Single checkbox
 				if ( 'checkbox' === $setting['type'] ) {
-					$input[ $setting['id'] ] = ! empty( $input[ $setting['id'] ] );
+					$input[ $setting['id'] ] = empty( $input[ $setting['id'] ] ) ? 'no' : 'yes';
 				}
 
 				// Multicheck list

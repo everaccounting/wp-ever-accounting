@@ -227,8 +227,7 @@ class Transfers extends ResourceRepository {
 			$item->set_object_read( true );
 			do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
 		} catch ( \Exception $e ) {
-			$item->delete();
-			throw new \Exception( $e->getCode(), $e->getMessage() );
+			throw new \Exception( $e->getMessage() );
 		}
 
 	}
