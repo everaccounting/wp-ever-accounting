@@ -322,6 +322,7 @@ class Bill extends Document {
 				$args = wp_parse_args( $args, $default );
 			}
 		}
+		error_log(print_r($args, true ));
 		$line_item->set_props( $args );
 
 		if ( empty( $line_item->get_item_id() ) ) {
