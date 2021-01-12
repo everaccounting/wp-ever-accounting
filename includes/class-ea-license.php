@@ -390,6 +390,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 				return;
 			}
 
+
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -418,6 +419,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 
 				}
 			}
+
 
 		}
 

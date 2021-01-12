@@ -19,7 +19,6 @@ $transactions_table->prepare_items();
 <?php do_action( 'eaccounting_transactions_table_top' ); ?>
 <form id="ea-transactions-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 	<?php
-	$transactions_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-transactions' );
 	$transactions_table->display();
 	?>
 	<input type="hidden" name="page" value="ea-banking"/>
