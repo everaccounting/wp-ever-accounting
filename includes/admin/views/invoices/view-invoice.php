@@ -21,7 +21,6 @@ $invoice_actions = apply_filters(
 	array(
 		'status_pending'   => __( 'Mark Pending', 'wp-ever-accounting' ),
 		'status_cancelled' => __( 'Mark Cancelled', 'wp-ever-accounting' ),
-		'view_as_customer' => __( 'View as Customer', 'wp-ever-accounting' ),
 	)
 );
 if( $invoice->needs_payment() ){
@@ -74,7 +73,8 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 							<div class="ea-card__header-right">
 								<?php if ( ! empty( $invoice_actions ) ) : ?>
 									<div class="ea-dropdown">
-										<button class="button-secondary ea-dropdown-trigger"><span class="dashicons dashicons-admin-generic"></span> More<span class="dashicons dashicons-arrow-down-alt2"></span></button>
+										<button class="button-secondary ea-dropdown-trigger"><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'More', 'wp-ever-accounting' ); ?><span class="dashicons dashicons-arrow-down-alt2"></span></button>
+										<a class="button-secondary" href="<?php echo esc_url( $invoice->get_url() ); ?>"><span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?></a>
 										<ul class="ea-dropdown-menu">
 											<?php
 											foreach ( $invoice_actions as $action => $title ) {

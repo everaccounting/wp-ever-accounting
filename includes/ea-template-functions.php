@@ -147,14 +147,19 @@ function eaccounting_get_template_html( $template_name, $args = array(), $templa
  *
  * @param       $template_name
  * @param array $args
+ * @param null  $path
  */
-function eaccounting_get_admin_template( $template_name, $args = array() ) {
+function eaccounting_get_admin_template( $template_name, $args = array(), $path = null ) {
 
 	if ( $args && is_array( $args ) ) {
 		extract( $args );
 	}
 	$template_name = str_replace( '.php', '', $template_name );
-	$file          = apply_filters( 'eaccounting_admin_template', EACCOUNTING_ABSPATH . '/includes/admin/views/' . $template_name . '.php' );
+	if ( is_null( $path ) ) {
+		$path = EACCOUNTING_ABSPATH . '/includes/admin/views/';
+	}
+	$template = apply_filters( 'eaccounting_admin_template', $template_name );
+	$file     = $path . $template . '.php';
 	if ( ! file_exists( $file ) ) {
 		/* Translators: %s file name */
 		eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Admin template %s does not exist', 'wp-ever-accounting' ), $file ), null );
@@ -204,12 +209,24 @@ function eaccounting_render_body() {
 		case 'invoice':
 			$id       = get_query_var( 'invoice_id' );
 			$template = 'single-invoice.php';
-			eaccounting_get_template( $template, array( 'invoice_id' => $id, 'key' => $key ) );
+			eaccounting_get_template(
+				$template,
+				array(
+					'invoice_id' => $id,
+					'key'        => $key,
+				)
+			);
 			break;
 		case 'bill':
 			$id       = get_query_var( 'bill_id' );
 			$template = 'single-bill.php';
-			eaccounting_get_template( $template, array( 'bill_id' => $id, 'key' => $key ) );
+			eaccounting_get_template(
+				$template,
+				array(
+					'bill_id' => $id,
+					'key'     => $key,
+				)
+			);
 			break;
 		default:
 			eaccounting_get_template( 'restricted.php' );

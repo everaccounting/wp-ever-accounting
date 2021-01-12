@@ -203,7 +203,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 *
 	 */
-	protected function extra_tablenav( $which ) {
+	public function extra_tablenav( $which ) {
 		if ( 'stop' === $which ) {
 			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$start_date = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';

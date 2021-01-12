@@ -21,10 +21,9 @@ $bill_actions = apply_filters(
 	array(
 		'status_received'  => __( 'Mark as Received', 'wp-ever-accounting' ),
 		'status_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
-		'view_as_vendor'   => __( 'View as Vendor', 'wp-ever-accounting' ),
 	)
 );
-if( $bill->needs_payment() ){
+if ( $bill->needs_payment() ) {
 	$bill_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
 }
 $bill_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
@@ -45,7 +44,6 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 		<div>
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
 			<a href="<?php echo esc_url( 'admin.php?page=ea-expenses&tab=bills&action=add' ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
-
 		</div>
 	</div>
 	<hr class="wp-header-end">
@@ -74,7 +72,8 @@ do_action( 'add_meta_boxes_ea_bill', $bill );
 							<div class="ea-card__header-right">
 								<?php if ( ! empty( $bill_actions ) ) : ?>
 									<div class="ea-dropdown">
-										<button class="button-secondary ea-dropdown-trigger"><span class="dashicons dashicons-admin-generic"></span> More<span class="dashicons dashicons-arrow-down-alt2"></span></button>
+										<button class="button-secondary ea-dropdown-trigger"><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'More', 'wp-ever-accounting' ); ?><span class="dashicons dashicons-arrow-down-alt2"></span></button>
+										<a class="button-secondary" href="<?php echo esc_url( $bill->get_url() ); ?>"><span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?></a>
 										<ul class="ea-dropdown-menu">
 											<?php
 											foreach ( $bill_actions as $action => $title ) {
