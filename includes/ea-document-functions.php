@@ -360,7 +360,7 @@ function eaccounting_get_documents( $args = array() ) {
 						$document->set_object_read( true );
 						break;
 					default:
-						$document = apply_filters( 'eaccounting_document_object_' . $item->type, null, $item );
+						$document = apply_filters( 'eaccounting_document_object_' . $item->type, $item );
 				}
 
 				return $document;
