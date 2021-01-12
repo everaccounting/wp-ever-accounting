@@ -31,20 +31,20 @@ abstract class ResourceRepository {
 	protected $data_type = array();
 
 	/**
-	 * This only needs set if you are using a custom metadata type.
-	 *
-	 * @var string
-	 */
-	protected $object_id_field_for_meta = '';
-
-	/**
 	 * Meta type. This should match up with
 	 * the types available at https://developer.wordpress.org/reference/functions/add_metadata/.
 	 * WP defines 'post', 'user', 'comment', and 'term'.
 	 *
 	 * @var string
 	 */
-	protected $meta_type = 'contact';
+	protected $meta_type = false;
+
+	/**
+	 * This only needs set if you are using a custom metadata type.
+	 *
+	 * @var string
+	 */
+	protected $object_id_field_for_meta = '';
 
 	/**
 	 * Data stored in meta keys, but not considered "meta" for an object.
@@ -65,6 +65,36 @@ abstract class ResourceRepository {
 	protected $must_exist_meta_keys = array();
 
 	/**
+	 * A map of meta keys to data props.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $meta_key_to_props = array();
+
+	/**
+	 * Get and store terms from a taxonomy.
+	 *
+	 * @since  1.1.0
+	 * @param  ResourceModel|integer $object object or object ID.
+	 * @param  string          $taxonomy Taxonomy name e.g. product_cat.
+	 * @return array of terms
+	 */
+	protected function get_term_ids( $object, $taxonomy ) {
+		if ( is_numeric( $object ) ) {
+			$object_id = $object;
+		} else {
+			$object_id = $object->get_id();
+		}
+		$terms = get_the_terms( $object_id, $taxonomy );
+		if ( false === $terms || is_wp_error( $terms ) ) {
+			return array();
+		}
+		return wp_list_pluck( $terms, 'term_id' );
+	}
+
+	/**
 	 * Returns an array of meta for an object.
 	 *
 	 * @since  1.10
@@ -72,21 +102,24 @@ abstract class ResourceRepository {
 	 * @return array
 	 */
 	public function read_meta( &$object ) {
-		global $wpdb;
-		$db_info       = $this->get_db_info();
-		$raw_meta_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT {$db_info['meta_id_field']} as meta_id, meta_key, meta_value
+		if( $this->meta_type ){
+			global $wpdb;
+			$db_info       = $this->get_db_info();
+			$raw_meta_data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT {$db_info['meta_id_field']} as meta_id, meta_key, meta_value
 				FROM {$db_info['table']}
 				WHERE {$db_info['object_id_field']} = %d
 				ORDER BY {$db_info['meta_id_field']}",
-				$object->get_id()
-			)
-		);
+					$object->get_id()
+				)
+			);
 
-		$this->internal_meta_keys = array_merge( array_map( array( $this, 'prefix_key' ), $object->get_data_keys() ), $this->internal_meta_keys );
-		$meta_data                = array_filter( $raw_meta_data, array( $this, 'exclude_internal_meta_keys' ) );
-		return apply_filters( "eaccounting_{$this->meta_type}_read_meta", $meta_data, $object, $this );
+			$this->internal_meta_keys = array_merge( array_map( array( $this, 'prefix_key' ), $object->get_data_keys() ), $this->internal_meta_keys );
+			$meta_data                = array_filter( $raw_meta_data, array( $this, 'exclude_internal_meta_keys' ) );
+			return apply_filters( "eaccounting_{$this->meta_type}_read_meta", $meta_data, $object, $this );
+		}
+		return array();
 	}
 
 	/**
@@ -183,18 +216,6 @@ abstract class ResourceRepository {
 		return ! in_array( $meta->meta_key, $this->internal_meta_keys, true ) && 0 !== stripos( $meta->meta_key, 'wp_' );
 	}
 
-
-	/**
-	 * Return list of internal meta keys.
-	 *
-	 * @since 1.1.0
-	 * @return array
-	 */
-	public function get_internal_meta_keys() {
-		return $this->internal_meta_keys;
-	}
-
-
 	/**
 	 * Gets a list of props and meta keys that need updated based on change state
 	 * or if they are present in the database or not.
@@ -205,7 +226,7 @@ abstract class ResourceRepository {
 	 *
 	 * @return array        A mapping of meta keys => prop names, filtered by ones that should be updated.
 	 */
-	protected function get_props_to_update( $object, $meta_key_to_props, $meta_type = 'contact' ) {
+	protected function get_props_to_update( $object, $meta_key_to_props, $meta_type ) {
 		$props_to_update = array();
 		$changed_props   = $object->get_changes();
 
@@ -217,6 +238,93 @@ abstract class ResourceRepository {
 		}
 
 		return $props_to_update;
+	}
+
+	/**
+	 * Update meta data in, or delete it from, the database.
+	 *
+	 * Avoids storing meta when it's either an empty string or empty array.
+	 * Other empty values such as numeric 0 and null should still be stored.
+	 * Data-stores can force meta to exist using `must_exist_meta_keys`.
+	 *
+	 * Note: WordPress `get_metadata` function returns an empty string when meta data does not exist.
+	 *
+	 * @param ResourceModel $object The object.
+	 * @param string  $meta_key Meta key to update.
+	 * @param mixed   $meta_value Value to save.
+	 *
+	 *
+	 * @return bool True if updated/deleted.
+	 */
+	protected function update_or_delete_post_meta( $object, $meta_key, $meta_value ) {
+		if ( in_array( $meta_value, array( array(), '' ), true ) && ! in_array( $meta_key, $this->must_exist_meta_keys, true ) ) {
+			$updated = delete_post_meta( $object->get_id(), $meta_key );
+		} else {
+			$updated = update_post_meta( $object->get_id(), $meta_key, $meta_value );
+		}
+
+		return (bool) $updated;
+	}
+
+	/**
+	 * Return list of internal meta keys.
+	 *
+	 * @since 1.1.0
+	 * @return array
+	 */
+	public function get_internal_meta_keys() {
+		return $this->internal_meta_keys;
+	}
+
+	/**
+	 * Read object data.
+	 *
+	 * @param ResourceModel $object object.
+	 * @since 1.1.0
+	 */
+	protected function read_object_meta( &$object ) {
+		$id    = $object->get_id();
+		$props = array();
+
+		foreach ( $this->meta_key_to_props as $meta_key => $prop ) {
+			$props[ $prop ] = get_post_meta( $id, $meta_key, true );
+		}
+
+		// Set object properties.
+		$object->set_props( $props );
+
+		// Gets extra data associated with the object if needed.
+		foreach ( $object->get_extra_data_keys() as $key ) {
+			$function = 'set_' . $key;
+			if ( is_callable( array( $object, $function ) ) ) {
+				$object->{$function}( get_post_meta( $object->get_id(), $key, true ) );
+			}
+		}
+	}
+
+	/**
+	 * Helper method that updates all the post meta for an object based on it's settings in the ResourceModel class.
+	 *
+	 * @param ResourceModel $object object.
+	 * @since 1.1.0
+	 */
+	protected function update_object_meta( &$object ) {
+
+		$updated_props   = array();
+		$props_to_update = $this->get_props_to_update( $object, $this->meta_key_to_props, $this->meta_type );
+		$object_type     = $object->get_object_type();
+
+		foreach ( $props_to_update as $meta_key => $prop ) {
+			$value   = $object->{"get_$prop"}( 'edit' );
+			$value   = is_string( $value ) ? wp_slash( $value ) : $value;
+			$updated = $this->update_or_delete_post_meta( $object, $meta_key, $value );
+
+			if ( $updated ) {
+				$updated_props[] = $prop;
+			}
+		}
+
+		do_action( "eaccounting_{$object_type}_object_updated_props", $object, $updated_props );
 	}
 
 	/*
@@ -253,6 +361,7 @@ abstract class ResourceRepository {
 		}
 		if ( $result ) {
 			$item->set_id( $wpdb->insert_id );
+			$item->save_meta_data();
 			$item->apply_changes();
 			do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $values );
 
@@ -297,7 +406,7 @@ abstract class ResourceRepository {
 			$method = "set_$key";
 			$item->$method( maybe_unserialize( $data->$key ) );
 		}
-
+		$item->read_meta_data();
 		$item->set_object_read( true );
 		do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
 	}
@@ -315,7 +424,7 @@ abstract class ResourceRepository {
 		$changes = $item->get_changes();
 		$values  = array();
 		$formats = array();
-
+		$item->save_meta_data();
 		foreach ( $this->data_type as $key => $format ) {
 			if ( array_key_exists( $key, $changes ) ) {
 				$method         = "get_$key";
@@ -346,7 +455,6 @@ abstract class ResourceRepository {
 
 		// Delete cache.
 		$item->clear_cache();
-
 		// Fire a hook.
 		do_action( 'eaccounting_update_' . $item->get_object_type(), $item->get_id(), $item, $changes );
 	}
@@ -355,12 +463,15 @@ abstract class ResourceRepository {
 	 * Method to delete a subscription from the database.
 	 *
 	 * @param ResourceModel $item
-	 * @param array         $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$item, $args = array() ) {
+	public function delete( &$item ) {
 		global $wpdb;
 		$table = $wpdb->prefix . $this->table;
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$table} WHERE id = %d", $item->get_id() ) );
+		if ( $this->meta_type ) {
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ea_{$this->meta_type}meta WHERE {$this->meta_type}_id = %d", $item->get_id() ) );
+		}
+
 		// Delete cache.
 		$item->clear_cache();
 		// Fire a hook.

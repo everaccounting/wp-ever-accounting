@@ -64,6 +64,57 @@ class Vendor extends Contact {
 		);
 	}
 
+	/**
+	 * Get due amount.
+	 *
+	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return float
+	 */
+	public function get_total_due( $context = 'view' ) {
+		return $this->get_meta( 'total_due', $context );
+	}
+
+	/**
+	 * Get paid amount.
+	 *
+	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return float
+	 */
+	public function get_total_paid( $context = 'view' ) {
+		return $this->get_meta( 'total_paid', $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Set due.
+	 *
+	 * @param string $value due amount.
+	 */
+	public function set_total_due( $value ) {
+		$this->update_meta_data( 'total_due', eaccounting_price( $value, null, true ) );
+	}
+
+	/**
+	 * Set paid.
+	 *
+	 * @param string $value paid amount.
+	 */
+	public function set_total_paid( $value ) {
+		$this->update_meta_data( 'total_paid', eaccounting_price( $value, null, true ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Non CRUD Methods
+	|--------------------------------------------------------------------------
+	*/
 
 	/**
 	 * Get total paid by a vendor.
@@ -71,7 +122,7 @@ class Vendor extends Contact {
 	 * @since 1.1.0
 	 * @return float|int|string
 	 */
-	public function get_total_paid() {
+	public function get_calculated_total_paid() {
 		global $wpdb;
 		$total = wp_cache_get( 'vendor_total_total_paid_' . $this->get_id(), 'ea_vendors' );
 		if ( false === $total ) {
@@ -92,30 +143,35 @@ class Vendor extends Contact {
 	 * @since 1.1.0
 	 * @return float|int|string
 	 */
-	public function get_total_due() {
+	public function get_calculated_total_due() {
 		global $wpdb;
 		$total = wp_cache_get( 'vendor_total_total_due_' . $this->get_id(), 'ea_vendors' );
 		if ( false === $total ) {
-			$invoices = $wpdb->get_results( $wpdb->prepare(
-				"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
+			$bills = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
 					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
 					   AND type = 'bill' AND contact_id=%d",
-				$this->get_id()
-			) );
+					$this->get_id()
+				)
+			);
 
 			$total = 0;
-			foreach ( $invoices as $invoice ) {
-				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
+			foreach ( $bills as $bill ) {
+				$total += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
 			}
-			if( !empty( $total ) ) {
-				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
-				$revenues    = $wpdb->get_results( $wpdb->prepare(
-					"SELECT Sum(amount) amount, currency_code, currency_rate
+
+			if ( ! empty( $total ) ) {
+				$bill_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $bills, 'id' ) ) );
+				$revenues = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT Sum(amount) amount, currency_code, currency_rate
 		  			   FROM   {$wpdb->prefix}ea_transactions
-		               WHERE  type = %s AND document_id IN ($invoice_ids)
+		               WHERE  type = %s AND document_id IN ($bill_ids)
 		  			   GROUP  BY currency_code,currency_rate",
-					'expense'
-				) );
+						'expense'
+					)
+				);
 
 				foreach ( $revenues as $revenue ) {
 					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );

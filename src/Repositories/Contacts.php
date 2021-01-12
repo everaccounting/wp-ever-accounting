@@ -40,6 +40,12 @@ class Contacts extends ResourceRepository {
 	protected $table = self::TABLE;
 
 	/**
+	 * Meta type.
+	 * @var string
+	 */
+	protected $meta_type = 'contact';
+
+	/**
 	 * Cache group.
 	 *
 	 * @since 1.1.0

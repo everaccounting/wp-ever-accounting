@@ -236,13 +236,12 @@ abstract class ResourceModel {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param bool $force_delete Should the data be deleted permanently.
 	 *
 	 * @return bool result
 	 */
-	public function delete( $force_delete = true ) {
+	public function delete() {
 		if ( $this->repository && $this->get_id() ) {
-			$this->repository->delete( $this, array( 'force_delete' => $force_delete ) );
+			$this->repository->delete( $this );
 			$this->set_id( 0 );
 			return true;
 		}
@@ -289,7 +288,6 @@ abstract class ResourceModel {
 			$this->repository->insert( $this );
 		}
 
-		$this->save_meta_data();
 		/**
 		 * Trigger action before saving to the DB. Allows you to adjust object props before save.
 		 *
@@ -752,7 +750,6 @@ abstract class ResourceModel {
 				);
 			}
 		}
-
 	}
 
 	/**
@@ -858,7 +855,6 @@ abstract class ResourceModel {
 	 * @param array  $props   Key value pairs to set. Key is the prop and should map to a setter function name.
 	 * @param string $context In what context to run this.
 	 *
-	 * @throws Exception
 	 */
 	public function set_props( $props, $context = 'set' ) {
 		foreach ( $props as $prop => $value ) {

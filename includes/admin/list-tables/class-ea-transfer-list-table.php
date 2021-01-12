@@ -19,6 +19,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Transfer_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
@@ -41,11 +42,11 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Get things started
 	 *
-	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
+	 * @since  1.0.2
 	 *
 	 * @see    WP_List_Table::__construct()
 	 *
-	 * @since  1.0.2
+	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
 	 *
 	 */
 	public function __construct( $args = array() ) {
@@ -63,8 +64,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Check if there is contents in the database.
 	 *
-	 * @return bool
 	 * @since 1.0.2
+	 * @return bool
 	 */
 	public function is_empty() {
 		global $wpdb;
@@ -75,8 +76,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Render blank state.
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	protected function render_blank_state() {
 		?>
@@ -105,8 +106,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define which columns to show on this screen.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function define_columns() {
 		return array(
@@ -122,8 +123,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define sortable columns.
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	protected function define_sortable_columns() {
 		return array(
@@ -138,8 +139,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define bulk actions
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function define_bulk_actions() {
 		return array(
@@ -150,8 +151,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Define primary column.
 	 *
-	 * @return string
 	 * @since 1.0.2
+	 * @return string
 	 */
 	public function get_primary_column_name() {
 		return 'date';
@@ -160,11 +161,11 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the transfers list table.
 	 *
+	 * @since  1.0.2
+	 *
 	 * @param Transfer $transfer The current object.
 	 *
 	 * @return string Displays a checkbox.
-	 * @since  1.0.2
-	 *
 	 */
 	function column_cb( $transfer ) {
 		return sprintf( '<input type="checkbox" name="transfer_id[]" value="%d"/>', $transfer->get_id() );
@@ -173,20 +174,20 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param string $column_name The name of the column
+	 * @since 1.0.2
 	 *
 	 * @param Transfer $transfer
 	 *
-	 * @return string The column value.
-	 * @since 1.0.2
+	 * @param string   $column_name The name of the column
 	 *
+	 * @return string The column value.
 	 */
 	function column_default( $transfer, $column_name ) {
 		$transfer_id = $transfer->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url     = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', 'transfer_id' => $transfer_id, ) );// phpcs:ignore
-				$del_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'delete', 'transfer_id' => $transfer_id, '_wpnonce' => wp_create_nonce( 'transfer-nonce' ), ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', 'transfer_id' => $transfer_id, ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'delete', 'transfer_id' => $transfer_id, '_wpnonce' => wp_create_nonce( 'transfer-nonce' ), ) );// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
@@ -196,7 +197,10 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'amount':
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
-				$value   = eaccounting_price( $transfer->get_amount(), $account->get_currency_code() );
+				$value   = '&mdash;';
+				if ( $account ) {
+					$value = eaccounting_price( $transfer->get_amount(), $account->get_currency_code() );
+				}
 				break;
 			case 'from_account_id':
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
@@ -220,8 +224,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
-	 * @return void
 	 * @since  1.0.2
+	 * @return void
 	 */
 	function no_items() {
 		_e( 'There is no transfers found.', 'wp-ever-accounting' );
@@ -230,8 +234,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
@@ -286,8 +290,8 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();

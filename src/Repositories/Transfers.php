@@ -96,8 +96,6 @@ class Transfers extends ResourceRepository {
 				$expense_currency = eaccounting_get_currency( $from_account->get_currency_code() );
 				$income_currency  = eaccounting_get_currency( $to_account->get_currency_code() );
 				$amount           = eaccounting_price_convert( $amount, $from_account->get_currency_code(), $to_account->get_currency_code(), $expense_currency->get_rate(), $income_currency->get_rate() );
-				//$amount           = eaccounting_price_to_default( $amount, $from_account->get_currency_code(), $expense_currency->get_rate() );
-				//$amount           = eaccounting_price_convert_from_default( $amount, $to_account->get_currency_code(), $income_currency->get_rate() );
 			}
 
 			$income = new Revenue( $transfer->get_income_id() );
@@ -178,6 +176,7 @@ class Transfers extends ResourceRepository {
 
 		if ( ! $item->get_id() ) {
 			$item->set_id( 0 );
+
 			return false;
 		}
 
@@ -208,22 +207,19 @@ class Transfers extends ResourceRepository {
 		}
 
 		try {
-			$income = new Revenue( $item->get_income_id() );
-			if ( ! $income->exists() ) {
-				throw new \Exception( __( 'Transfer data corrupted', 'wp-ever-accounting' ) );
+			$income  = eaccounting_get_revenue( $item->get_income_id() );
+			$expense = eaccounting_get_payment( $item->get_expense_id() );
+			if ( $income ) {
+				$item->set_to_account_id( $income->get_account_id() );
 			}
-			$expense = new Payment( $item->get_expense_id() );
-			if ( ! $expense->exists() ) {
-				throw new \Exception( __( 'Transfer data corrupted', 'wp-ever-accounting' ) );
+			if ( $expense ) {
+				$item->set_from_account_id( $expense->get_account_id() );
+				$item->set_amount( $expense->get_amount() );
+				$item->set_date( $expense->get_payment_date() );
+				$item->set_payment_method( $expense->get_payment_method() );
+				$item->set_description( $expense->get_description() );
+				$item->set_reference( $expense->get_reference() );
 			}
-			$item->set_from_account_id( $expense->get_account_id() );
-			$item->set_to_account_id( $income->get_account_id() );
-			$item->set_amount( $expense->get_amount() );
-			$item->set_date( $expense->get_payment_date() );
-			$item->set_payment_method( $expense->get_payment_method() );
-			$item->set_description( $expense->get_description() );
-			$item->set_reference( $expense->get_reference() );
-
 			$item->set_object_read( true );
 			do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
 		} catch ( \Exception $e ) {
@@ -248,13 +244,12 @@ class Transfers extends ResourceRepository {
 	 * Method to delete a subscription from the database.
 	 *
 	 * @param Transfer $item
-	 * @param array    $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$item, $args = array() ) {
+	public function delete( &$item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'ea_transactions', array( 'id' => $item->get_income_id() ) );
 		$wpdb->delete( $wpdb->prefix . 'ea_transactions', array( 'id' => $item->get_expense_id() ) );
 
-		parent::delete( $item, $args = array() );
+		parent::delete( $item );
 	}
 }

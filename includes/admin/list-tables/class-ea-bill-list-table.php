@@ -204,7 +204,10 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 				$value = eaccounting_price( $bill->get_total(), $bill->get_currency_code() );
 				break;
 			case 'name':
-				$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:ignore
+				$value = esc_html( $bill->get_name() );
+				if ( ! empty( $bill->get_contact_id() ) ) {
+					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'view', 'vendor_id' => $bill->get_contact_id() ) ) ), $bill->get_name() );// phpcs:ignore
+				}
 				break;
 			case 'issue_date':
 				$value = eaccounting_date( $bill->get_issue_date(), 'Y-m-d' );

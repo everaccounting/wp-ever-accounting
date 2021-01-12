@@ -26,9 +26,21 @@ class EverAccounting_Controller {
 		add_action( 'eaccounting_delete_account', array( $this, 'delete_account_reference' ) );
 
 		//customers
+		add_action( 'eaccounting_delete_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_update_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_update_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_delete_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_customer', array( $this, 'delete_customer_reference' ) );
 
 		//vendors
+		add_action( 'eaccounting_delete_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_update_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_update_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_delete_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_vendor', array( $this, 'delete_vendor_reference' ) );
 
 		//payments
@@ -38,7 +50,6 @@ class EverAccounting_Controller {
 		add_action( 'eaccounting_validate_revenue_data', array( $this, 'validate_revenue_data' ), 10, 2 );
 
 		//transactions
-		add_action( 'eaccounting_pre_save_transaction', array( $this, 'validate_transaction_data' ), 10, 2 );
 
 		//category
 		add_action( 'eaccounting_pre_save_category', array( $this, 'validate_category_data' ), 10, 2 );
@@ -116,6 +127,19 @@ class EverAccounting_Controller {
 	| Handle side effect of inserting, update, deleting customer
 	*/
 
+	public function update_customer_total_paid( $transaction_id, $transaction ) {
+		$customer = eaccounting_get_customer( $transaction->get_customer_id() );
+		if ( $customer ) {
+			eaccounting_insert_customer(
+				array(
+					'id'         => $customer->get_id(),
+					'total_paid' => $customer->get_calculated_total_paid(),
+					'total_due'  => $customer->get_calculated_total_due(),
+				)
+			);
+		}
+	}
+
 	public function delete_customer_reference( $customer_id ) {
 		global $wpdb;
 		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'contact_id' => null ), array( 'contact_id' => $customer_id ) );
@@ -129,6 +153,18 @@ class EverAccounting_Controller {
 	|
 	| Handle side effect of inserting, update, deleting vendor
 	*/
+	public function update_vendor_total_paid( $transaction_id, $transaction ) {
+		$vendor = eaccounting_get_vendor( $transaction->get_vendor_id() );
+		if ( $vendor ) {
+			eaccounting_insert_vendor(
+				array(
+					'id'         => $vendor->get_id(),
+					'total_paid' => $vendor->get_calculated_total_paid(),
+					'total_due'  => $vendor->get_calculated_total_due(),
+				)
+			);
+		}
+	}
 
 	public function delete_vendor_reference( $vendor_id ) {
 		global $wpdb;
@@ -242,46 +278,7 @@ class EverAccounting_Controller {
 	| Handle side effect of inserting, update, deleting account
 	*/
 
-	/**
-	 * Validate transaction data.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param null  $id
-	 *
-	 * @param array $data
-	 *
-	 * @throws \Exception
-	 *
-	 */
-	public static function validate_transaction_data( $data, $id ) {
-		if ( empty( $data['payment_date'] ) ) {
-			throw new \Exception( 'empty_prop', __( 'Transaction date is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['type'] ) ) {
-			throw new \Exception( 'empty_prop', __( 'Transaction type is required.', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $data['payment_method'] ) ) {
-			throw new \Exception( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
-		}
 
-		if ( empty( $data['category_id'] ) ) {
-			throw new \Exception( 'empty_prop', __( 'Category id is required.', 'wp-ever-accounting' ) );
-		}
-		$category = eaccounting_get_category( $data['category_id'] );
-		if ( empty( $category ) ) {
-			throw new \Exception( 'empty_prop', __( 'A valid transaction category is required.', 'wp-ever-accounting' ) );
-		}
-
-		$account = eaccounting_get_account( $data['account_id'] );
-		if ( empty( $account ) ) {
-			throw new \Exception( 'empty_prop', __( 'Account is required.', 'wp-ever-accounting' ) );
-		}
-
-		if ( empty( eaccounting_sanitize_number( $data['amount'] ) ) ) {
-			throw new \Exception( 'empty_prop', __( 'Transaction amount is required.', 'wp-ever-accounting' ) );
-		}
-	}
 
 	/*
 	|--------------------------------------------------------------------------
@@ -391,8 +388,12 @@ class EverAccounting_Controller {
 	*/
 
 	public static function update_bill_data( $payment_id, $payment ) {
-		if ( ! empty( $payment->get_document_id() ) && $bill = eaccounting_get_bill( $payment->get_document_id() ) ) { //phpcs:ignore
-			$bill->save();
+		try {
+			if ( ! empty( $payment->get_document_id() ) && $bill = eaccounting_get_bill( $payment->get_document_id() ) ) { //phpcs:ignore
+				$bill->save();
+			}
+		} catch ( \Exception  $e ) {
+
 		}
 	}
 
@@ -404,8 +405,12 @@ class EverAccounting_Controller {
 	| Handle side effect of inserting, update, deleting invoice
 	*/
 	public static function update_invoice_data( $payment_id, $revenue ) {
-		if ( ! empty( $revenue->get_document_id() ) && $invoice = eaccounting_get_invoice( $revenue->get_document_id() ) ) { //phpcs:ignore
-			$invoice->save();
+		try {
+			if ( ! empty( $revenue->get_document_id() ) && $invoice = eaccounting_get_invoice( $revenue->get_document_id() ) ) { //phpcs:ignore
+				$invoice->save();
+			}
+		} catch ( \Exception  $e ) {
+
 		}
 	}
 

@@ -221,20 +221,10 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				$value = eaccounting_price( $invoice->get_total(), $invoice->get_currency_code() );
 				break;
 			case 'name':
-				$value = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'page'        => 'ea-sales',
-								'tab'         => 'customers',
-								'action'      => 'view',
-								'customer_id' => $invoice->get_contact_id(),
-							)
-						)
-					),
-					$invoice->get_name()
-				);// phpcs:ignore
+				$value = esc_html( $invoice->get_name() );
+				if ( ! empty( $invoice->get_contact_id() ) ) {
+					$value = sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $invoice->get_contact_id() ) ) ), $invoice->get_name() );// phpcs:ignore
+				}
 				break;
 			case 'issue_date':
 				$value = eaccounting_date( $invoice->get_issue_date(), 'Y-m-d' );
