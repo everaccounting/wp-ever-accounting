@@ -244,13 +244,12 @@ class Transfers extends ResourceRepository {
 	 * Method to delete a subscription from the database.
 	 *
 	 * @param Transfer $item
-	 * @param array    $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$item, $args = array() ) {
+	public function delete( &$item ) {
 		global $wpdb;
 		$wpdb->delete( $wpdb->prefix . 'ea_transactions', array( 'id' => $item->get_income_id() ) );
 		$wpdb->delete( $wpdb->prefix . 'ea_transactions', array( 'id' => $item->get_expense_id() ) );
 
-		parent::delete( $item, $args = array() );
+		parent::delete( $item );
 	}
 }

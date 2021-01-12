@@ -170,13 +170,12 @@ class Documents extends ResourceRepository {
 	 * Delete items.
 	 *
 	 * @param \EverAccounting\Abstracts\ResourceModel $item
-	 * @param array                                   $args
 	 * @since 1.1.0
 	 */
-	public function delete( &$item, $args = array() ) {
+	public function delete( &$item ) {
 		$this->delete_items( $item );
 		$this->delete_notes( $item );
 		$this->delete_transactions( $item );
-		parent::delete( $item, $args );
+		parent::delete( $item );
 	}
 }

@@ -172,9 +172,8 @@ class Currencies extends ResourceRepository {
 	 * Method to delete a subscription from the database.
 	 *
 	 * @param ResourceModel $item
-	 * @param array         $args Array of args to pass to the delete method.
 	 */
-	public function delete( &$item, $args = array() ) {
+	public function delete( &$item ) {
 		$code       = $item->get_code();
 		$currencies = $this->get_currencies()->reject(
 			function ( $currency ) use ( $code ) {

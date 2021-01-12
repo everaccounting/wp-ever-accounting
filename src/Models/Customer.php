@@ -65,6 +65,11 @@ class Customer extends Contact {
 		);
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Getters
+	|--------------------------------------------------------------------------
+	*/
 
 	/**
 	 * Get total paid by a customer.
@@ -97,26 +102,30 @@ class Customer extends Contact {
 		global $wpdb;
 		$total = wp_cache_get( 'customer_total_total_due_' . $this->get_id(), 'ea_customers' );
 		if ( false === $total ) {
-			$invoices = $wpdb->get_results( $wpdb->prepare(
-				"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
+			$invoices = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
 					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
 					   AND type = 'invoice' AND contact_id=%d",
-				$this->get_id()
-			) );
+					$this->get_id()
+				)
+			);
 
 			$total = 0;
 			foreach ( $invoices as $invoice ) {
 				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
 			}
-			if( !empty( $total ) ) {
+			if ( ! empty( $total ) ) {
 				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
-				$revenues    = $wpdb->get_results( $wpdb->prepare(
-					"SELECT Sum(amount) amount, currency_code, currency_rate
+				$revenues    = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT Sum(amount) amount, currency_code, currency_rate
 		  			   FROM   {$wpdb->prefix}ea_transactions
 		               WHERE  type = %s AND document_id IN ($invoice_ids)
 		  			   GROUP  BY currency_code,currency_rate",
-					'income'
-				) );
+						'income'
+					)
+				);
 
 				foreach ( $revenues as $revenue ) {
 					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
@@ -127,6 +136,29 @@ class Customer extends Contact {
 
 		return $total;
 	}
+	/**
+	 * Get due amount.
+	 *
+	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return array
+	 */
+	public function get_due( $context = 'view' ) {
+		return $this->get_meta( 'due', $context );
+	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
 
+	/**
+	 * Set due.
+	 *
+	 * @param string $value due amount.
+	 */
+	public function set_due( $value ) {
+		$this->update_meta_data( 'due', eaccounting_clean( $value ) );
+	}
 }

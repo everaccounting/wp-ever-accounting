@@ -206,15 +206,14 @@ class Repositories {
 	/**
 	 * Delete an object using repository.
 	 *
-	 * @param array $args Array of args to pass to the delete method.
 	 *
-	 * @param ResourceModel $data GetPaid data instance.
+	 * @param ResourceModel $data data instance.
 	 *
 	 * @since 1.1.0
 	 *
 	 */
-	public function delete( &$data, $args = array() ) {
-		$this->instance->delete( $data, $args );
+	public function delete( &$data ) {
+		$this->instance->delete( $data );
 	}
 
 
