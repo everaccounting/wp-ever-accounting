@@ -12,6 +12,7 @@ use EverAccounting\Models\Category;
 
 /**
  * Class EverAccounting_Controller
+ *
  * @since 1.1.0
  */
 class EverAccounting_Controller {
@@ -22,40 +23,61 @@ class EverAccounting_Controller {
 	public function __construct() {
 		//accounts
 		add_action( 'eaccounting_pre_save_account', array( $this, 'validate_account_data' ), 10, 2 );
-		add_action( 'eaccounting_delete_account', array( $this, 'delete_default_account' ) );
-		add_action( 'eaccounting_delete_account', array( $this, 'update_transaction_account' ) );
+		add_action( 'eaccounting_delete_account', array( $this, 'delete_account_reference' ) );
+
 		//customers
+		add_action( 'eaccounting_delete_customer', array( $this, 'delete_customer_reference' ) );
 
 		//vendors
+		add_action( 'eaccounting_delete_vendor', array( $this, 'delete_vendor_reference' ) );
 
 		//payments
 		add_action( 'eaccounting_validate_payment_data', array( $this, 'validate_payment_data' ), 10, 2 );
+
 		//revenues
 		add_action( 'eaccounting_validate_revenue_data', array( $this, 'validate_revenue_data' ), 10, 2 );
+
 		//transactions
 		add_action( 'eaccounting_pre_save_transaction', array( $this, 'validate_transaction_data' ), 10, 2 );
 
 		//category
 		add_action( 'eaccounting_pre_save_category', array( $this, 'validate_category_data' ), 10, 2 );
-		add_action( 'eaccounting_delete_category', array( $this, 'update_transaction_category' ) );
+		add_action( 'eaccounting_delete_category', array( $this, 'delete_category_reference' ) );
+
 		//currency
 		add_action( 'update_option_eaccounting_settings', array( $this, 'update_default_currency' ), 10, 2 );
-		add_action( 'eaccounting_delete_currency', array( $this, 'delete_default_currency' ), 10, 2 );
+		add_action( 'eaccounting_delete_currency', array( $this, 'delete_currency_reference' ), 10, 2 );
+
 		//bill
-		add_action( 'eaccounting_delete_payment', array( $this, 'update_bill' ), 10, 2 );
-		add_action( 'eaccounting_update_payment', array( $this, 'update_bill' ), 10, 2 );
+		add_action( 'eaccounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		add_action( 'eaccounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
+
+		//invoice
+		add_action( 'eaccounting_delete_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
+		add_action( 'eaccounting_update_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
+
+		//thumbnail
+		add_action( 'delete_attachment', array( $this, 'delete_attachment_reference' ) );
 	}
+	/*
+	|--------------------------------------------------------------------------
+	| Account
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting account
+	*/
 
 	/**
 	 * Validate account data.
 	 *
-	 * @param array $data
-	 * @param int $id
-	 * @param Account $account
-	 *
-	 * @throws \Exception
 	 * @since 1.1.0
 	 *
+	 * @param int     $id
+	 * @param Account $account
+	 *
+	 * @param array   $data
+	 *
+	 * @throws \Exception
 	 */
 	public static function validate_account_data( $data, $id ) {
 		global $wpdb;
@@ -69,55 +91,70 @@ class EverAccounting_Controller {
 	 * When an account is deleted check if
 	 * default account need to be updated or not.
 	 *
-	 * @param $id
-	 *
 	 * @since 1.1.0
 	 *
+	 * @param $account_id
+	 *
 	 */
-	public static function delete_default_account( $id ) {
+	public static function delete_account_reference( $account_id ) {
+		global $wpdb;
+		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
+		$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
+
+		//delete default account
 		$default_account = eaccounting()->settings->get( 'default_account' );
-		if ( intval( $default_account ) === intval( $id ) ) {
+		if ( intval( $default_account ) === intval( $account_id ) ) {
 			eaccounting()->settings->set( array( array( 'default_account' => '' ) ), true );
 		}
 	}
 
-	/**
-	 * Delete account id from transactions.
-	 *
-	 * @param $id
-	 *
-	 * @return bool
-	 *
-	 * @since 1.0.2
-	 *
-	 */
-	public static function update_transaction_account( $id ) {
+	/*
+	|--------------------------------------------------------------------------
+	| Customer
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting customer
+	*/
+
+	public function delete_customer_reference( $customer_id ) {
 		global $wpdb;
-		$id = absint( $id );
-		if ( empty( $id ) ) {
-			return false;
-		}
-
-		return $wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'account_id' => '' ), array( 'account_id' => absint( $id ) ) );
+		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'contact_id' => null ), array( 'contact_id' => $customer_id ) );
+		$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'contact_id' => null ), array( 'contact_id' => $customer_id ) );
 	}
 
-	public static function update_bill( $payment_id, $payment ) {
-		if ( ! empty( $payment->get_document_id() ) && $bill = eaccounting_get_bill( $payment->get_document_id() ) ) {
-			$bill->save();
-		}
+	/*
+	|--------------------------------------------------------------------------
+	| Vendor
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting vendor
+	*/
+
+	public function delete_vendor_reference( $vendor_id ) {
+		global $wpdb;
+		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'contact_id' => null ), array( 'contact_id' => $vendor_id ) );
+		$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'contact_id' => null ), array( 'contact_id' => $vendor_id ) );
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Payment
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting payment
+	*/
 
 	/**
 	 * Validate payment data.
 	 *
-	 * @param array $data
-	 * @param null $id
-	 * @param \WP_Error $errors
-	 *
-	 * @throws \Exception
 	 * @since 1.1.0
 	 *
+	 * @param null      $id
+	 * @param \WP_Error $errors
+	 *
+	 * @param array     $data
+	 *
+	 * @throws \Exception
 	 */
 	public static function validate_payment_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {
@@ -148,16 +185,25 @@ class EverAccounting_Controller {
 		}
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Revenue
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting revenue
+	*/
+
 	/**
 	 * Validate expense data.
 	 *
-	 * @param array $data
-	 * @param null $id
-	 * @param \WP_Error $errors
-	 *
-	 * @throws \Exception
 	 * @since 1.1.0
 	 *
+	 * @param null      $id
+	 * @param \WP_Error $errors
+	 *
+	 * @param array     $data
+	 *
+	 * @throws \Exception
 	 */
 	public static function validate_revenue_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {
@@ -188,15 +234,24 @@ class EverAccounting_Controller {
 		}
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Transactions
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting account
+	*/
+
 	/**
 	 * Validate transaction data.
 	 *
+	 * @since 1.1.0
+	 *
+	 * @param null  $id
+	 *
 	 * @param array $data
-	 * @param null $id
 	 *
 	 * @throws \Exception
-	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public static function validate_transaction_data( $data, $id ) {
@@ -228,16 +283,25 @@ class EverAccounting_Controller {
 		}
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Category
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting category
+	*/
+
 	/**
 	 * Validate category data.
 	 *
-	 * @param array $data
-	 * @param null $id
+	 * @since 1.1.0
+	 *
+	 * @param null     $id
 	 * @param Category $category
 	 *
-	 * @throws \Exception
+	 * @param array    $data
 	 *
-	 * @since 1.1.0
+	 * @throws \Exception
 	 *
 	 */
 	public static function validate_category_data( $data, $id ) {
@@ -251,31 +315,35 @@ class EverAccounting_Controller {
 	/**
 	 * Delete category id from transactions.
 	 *
-	 * @param $id
-	 *
-	 * @return bool
-	 *
 	 * @since 1.1.0
 	 *
+	 * @param $id
+	 *
+	 *
 	 */
-	public static function update_transaction_category( $id ) {
+	public static function delete_category_reference( $id ) {
 		global $wpdb;
-		$id = absint( $id );
-		if ( empty( $id ) ) {
-			return false;
-		}
-
-		return $wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'category_id' => '' ), array( 'category_id' => absint( $id ) ) );
+		$wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'category_id' => null ), array( 'category_id' => absint( $id ) ) );
+		$wpdb->update( $wpdb->prefix . 'ea_documents', array( 'category_id' => null ), array( 'category_id' => absint( $id ) ) );
+		$wpdb->update( $wpdb->prefix . 'ea_items', array( 'category_id' => null ), array( 'category_id' => absint( $id ) ) );
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Currency
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting currency
+	*/
 
 	/**
 	 * Update default currency.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param $id
 	 *
 	 * @return bool
-	 *
-	 * @since 1.1.0
 	 *
 	 */
 	public static function update_default_currency( $value, $old_value ) {
@@ -301,19 +369,61 @@ class EverAccounting_Controller {
 	/**
 	 * Delete currency id from settings.
 	 *
-	 * @param $id
-	 * @param $data
-	 *
 	 * @since 1.1.0
 	 *
+	 * @param $data
+	 *
+	 * @param $id
 	 */
-	public static function delete_default_currency( $id, $data ) {
+	public static function delete_currency_reference( $id, $data ) {
 		$default_currency = eaccounting()->settings->get( 'default_currency' );
 		if ( $default_currency === $data['code'] ) {
 			eaccounting()->settings->set( array( array( 'default_currency' => '' ) ), true );
 		}
 	}
 
+	/*
+	|--------------------------------------------------------------------------
+	| Bill
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting Bill
+	*/
+
+	public static function update_bill_data( $payment_id, $payment ) {
+		if ( ! empty( $payment->get_document_id() ) && $bill = eaccounting_get_bill( $payment->get_document_id() ) ) { //phpcs:ignore
+			$bill->save();
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Invoice
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting invoice
+	*/
+	public static function update_invoice_data( $payment_id, $revenue ) {
+		if ( ! empty( $revenue->get_document_id() ) && $invoice = eaccounting_get_invoice( $revenue->get_document_id() ) ) { //phpcs:ignore
+			$invoice->save();
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Attachment
+	|--------------------------------------------------------------------------
+	|
+	| Handle side effect of inserting, update, deleting attachment
+	*/
+	public function delete_attachment_reference( $attachment_id ) {
+		global $wpdb;
+		$wpdb->update( $wpdb->prefix . 'ea_accounts', array( 'thumbnail_id' => null ), array( 'thumbnail_id' => absint( $attachment_id ) ) );
+		$wpdb->update( $wpdb->prefix . 'ea_contacts', array( 'thumbnail_id' => null ), array( 'thumbnail_id' => absint( $attachment_id ) ) );
+		$wpdb->update( $wpdb->prefix . 'ea_documents', array( 'attachment_id' => null ), array( 'attachment_id' => absint( $attachment_id ) ) );
+		$wpdb->update( $wpdb->prefix . 'ea_items', array( 'thumbnail_id' => null ), array( 'thumbnail_id' => absint( $attachment_id ) ) );
+		$wpdb->update( $wpdb->prefix . 'ea_transactions', array( 'attachment_id' => null ), array( 'attachment_id' => absint( $attachment_id ) ) );
+	}
 }
 
 new EverAccounting_Controller();

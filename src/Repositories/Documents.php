@@ -98,24 +98,27 @@ class Documents extends ResourceRepository {
 	 */
 	public function get_items( $document ) {
 		global $wpdb;
+		if ( ! $document->get_id() ) {
+			return array();
+		}
 
 		// Get from cache if available.
-		$items = 0 < $document->get_id() ? wp_cache_get( 'document-item-' . $document->get_id(), 'ea-document-items' ) : false;
-
+		$cache_key = 'query:document-items' . md5( $document->get_id() ) . ':' . wp_cache_get_last_changed( 'ea_document_items' );
+		$items     = wp_cache_get( $cache_key, 'ea_document_items' );
 		if ( false === $items ) {
 			$items = $wpdb->get_results(
 				$wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_document_items WHERE document_id = %d ORDER BY id;", $document->get_id() )
 			);
 			foreach ( $items as $item ) {
-				wp_cache_set( 'document-item-' . $item->id, $item, 'ea-document-items' );
+				wp_cache_set( 'document-item-' . $item->id, $item, 'ea_document_items' );
 			}
 			if ( 0 < $document->get_id() ) {
-				wp_cache_set( 'document-item' . $document->get_id(), $items, 'ea-document-items' );
+				wp_cache_set( $cache_key, $items, 'ea_document_items' );
 			}
 		}
 		$results = array();
 		foreach ( $items as $item ) {
-			$results[ absint( $item->item_id ) ] = new DocumentItem( $item );
+			$results[ $item->id ] = new DocumentItem( $item );
 		}
 
 		return $results;

@@ -788,7 +788,6 @@ class EverAccounting_Install {
 	 * @return void
 	 */
 	public static function schedule_events() {
-		error_log('schedule_events');
 		if ( ! wp_next_scheduled( 'eaccounting_daily_scheduled_events' ) ) {
 			wp_schedule_event( current_time( 'timestamp', true ), 'daily', 'eaccounting_daily_scheduled_events' );
 		}
@@ -807,17 +806,6 @@ class EverAccounting_Install {
 			// \EverAccounting\Admin\Admin_Notices::add_notice( 'install', true );
 			set_transient( '_eaccounting_activation_redirect', 1, 30 );
 		}
-	}
-
-	/**
-	 * Update version to current.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	private static function update_version() {
-		delete_option( 'eaccounting_version' );
-		add_option( 'eaccounting_version', EACCOUNTING_VERSION );
 	}
 
 	/**
@@ -886,6 +874,16 @@ class EverAccounting_Install {
 		}
 	}
 
+	/**
+	 * Update version to current.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string|null $version New version or null.
+	 */
+	public static function update_version( $version = null ) {
+		update_option( 'eaccounting_version', is_null( $version ) ? eaccounting()->version : $version );
+	}
 
 	/**
 	 * Is this a brand new install?
@@ -902,4 +900,5 @@ class EverAccounting_Install {
 	}
 
 }
+
 EverAccounting_Install::init();
