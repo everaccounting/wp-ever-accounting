@@ -299,7 +299,7 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( admin_url( 'admin.php?page=ea-reports&tab=sales&refresh_report=yes' ), 'refresh_report' ); ?>">
+					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg('refresh_report', 'yes'), 'refresh_report' ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>
