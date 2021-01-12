@@ -195,7 +195,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 				'value'    => 0.0000,
 				'required' => true,
 				'attr'     => array(
-					'step' => 0.1,
+					'step' => 0.01,
 					'min'  => 0,
 				),
 			)

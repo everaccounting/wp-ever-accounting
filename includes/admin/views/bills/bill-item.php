@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $bill->get_currency_code() ) ); ?>"><?php echo esc_html( number_format_i18n( $item->get_tax_rate(), 2 ) ); ?><small>%</small></abbr>
 			</div>
 			<div class="edit" style="display: none;">
-				<input type="number" step="0.05" min="0" max="1000" class="line_item_tax" name="items[<?php echo esc_attr( $item_id ); ?>][tax_rate]" value="<?php echo esc_attr( $item->get_tax_rate() ); ?>">
+				<input type="number" step="0.01" min="0" max="1000" class="line_item_tax" name="items[<?php echo esc_attr( $item_id ); ?>][tax_rate]" value="<?php echo esc_attr( $item->get_tax_rate() ); ?>">
 			</div>
 		</td>
 	<?php endif; ?>
