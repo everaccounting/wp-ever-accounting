@@ -128,7 +128,8 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Contact', 'wp-ever-accounting' ),
 			'city'    => __( 'Address', 'wp-ever-accounting' ),
-			'due'     => __( 'Due', 'wp-ever-accounting' ),
+			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
+			'due'     => __( 'Payable', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 		);
 	}
@@ -264,6 +265,12 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					'delete' => sprintf( '<a href="%s" class="dashicons dashicons-trash del"></a>', esc_url( $del_url ) ),
 				);
 				$value    = $this->row_actions( $actions );
+				break;
+			case 'due':
+				$value = eaccounting_format_price( $vendor->get_total_due() );
+				break;
+			case 'paid':
+				$value = eaccounting_format_price( $vendor->get_total_paid() );
 				break;
 			default:
 				return parent::column_default( $vendor, $column_name );

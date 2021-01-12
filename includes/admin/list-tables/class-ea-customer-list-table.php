@@ -127,7 +127,8 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Contact', 'wp-ever-accounting' ),
 			'city'    => __( 'Address', 'wp-ever-accounting' ),
-			'due'     => __( 'Due', 'wp-ever-accounting' ),
+			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
+			'due'     => __( 'Receivable', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 		);
 	}
@@ -245,6 +246,9 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'due':
 				$value = eaccounting_format_price( $customer->get_total_due() );
+				break;
+			case 'paid':
+				$value = eaccounting_format_price( $customer->get_total_paid() );
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(

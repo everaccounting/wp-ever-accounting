@@ -72,12 +72,64 @@ class Customer extends Contact {
 	*/
 
 	/**
+	 * Get due amount.
+	 *
+	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return float
+	 */
+	public function get_total_due( $context = 'view' ) {
+		return $this->get_meta( 'total_due', $context );
+	}
+
+	/**
+	 * Get paid amount.
+	 *
+	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 *
+	 * @return float
+	 */
+	public function get_total_paid( $context = 'view' ) {
+		return $this->get_meta( 'total_paid', $context );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Setters
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * Set due.
+	 *
+	 * @param string $value due amount.
+	 */
+	public function set_total_due( $value ) {
+		$this->update_meta_data( 'total_due', eaccounting_price( $value, null, true  ) );
+	}
+
+	/**
+	 * Set paid.
+	 *
+	 * @param string $value paid amount.
+	 */
+	public function set_total_paid( $value ) {
+		$this->update_meta_data( 'total_paid', eaccounting_price( $value, null, true ) );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Non CRUD Methods
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
 	 * Get total paid by a customer.
 	 *
 	 * @since 1.1.0
 	 * @return float|int|string
 	 */
-	public function get_total_paid() {
+	public function get_calculated_total_paid() {
 		global $wpdb;
 		$total = wp_cache_get( 'customer_total_total_paid_' . $this->get_id(), 'ea_customers' );
 		if ( false === $total ) {
@@ -98,7 +150,7 @@ class Customer extends Contact {
 	 * @since 1.1.0
 	 * @return float|int|string
 	 */
-	public function get_total_due() {
+	public function get_calculated_total_due() {
 		global $wpdb;
 		$total = wp_cache_get( 'customer_total_total_due_' . $this->get_id(), 'ea_customers' );
 		if ( false === $total ) {
@@ -110,7 +162,6 @@ class Customer extends Contact {
 					$this->get_id()
 				)
 			);
-
 			$total = 0;
 			foreach ( $invoices as $invoice ) {
 				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
@@ -135,30 +186,5 @@ class Customer extends Contact {
 		}
 
 		return $total;
-	}
-	/**
-	 * Get due amount.
-	 *
-	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
-	 *
-	 * @return array
-	 */
-	public function get_due( $context = 'view' ) {
-		return $this->get_meta( 'due', $context );
-	}
-
-	/*
-	|--------------------------------------------------------------------------
-	| Setters
-	|--------------------------------------------------------------------------
-	*/
-
-	/**
-	 * Set due.
-	 *
-	 * @param string $value due amount.
-	 */
-	public function set_due( $value ) {
-		$this->update_meta_data( 'due', eaccounting_clean( $value ) );
 	}
 }

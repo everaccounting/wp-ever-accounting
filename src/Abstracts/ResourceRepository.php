@@ -37,7 +37,7 @@ abstract class ResourceRepository {
 	 *
 	 * @var string
 	 */
-	protected $meta_type = '';
+	protected $meta_type = false;
 
 	/**
 	 * This only needs set if you are using a custom metadata type.
@@ -102,21 +102,24 @@ abstract class ResourceRepository {
 	 * @return array
 	 */
 	public function read_meta( &$object ) {
-		global $wpdb;
-		$db_info       = $this->get_db_info();
-		$raw_meta_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT {$db_info['meta_id_field']} as meta_id, meta_key, meta_value
+		if( $this->meta_type ){
+			global $wpdb;
+			$db_info       = $this->get_db_info();
+			$raw_meta_data = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT {$db_info['meta_id_field']} as meta_id, meta_key, meta_value
 				FROM {$db_info['table']}
 				WHERE {$db_info['object_id_field']} = %d
 				ORDER BY {$db_info['meta_id_field']}",
-				$object->get_id()
-			)
-		);
+					$object->get_id()
+				)
+			);
 
-		$this->internal_meta_keys = array_merge( array_map( array( $this, 'prefix_key' ), $object->get_data_keys() ), $this->internal_meta_keys );
-		$meta_data                = array_filter( $raw_meta_data, array( $this, 'exclude_internal_meta_keys' ) );
-		return apply_filters( "eaccounting_{$this->meta_type}_read_meta", $meta_data, $object, $this );
+			$this->internal_meta_keys = array_merge( array_map( array( $this, 'prefix_key' ), $object->get_data_keys() ), $this->internal_meta_keys );
+			$meta_data                = array_filter( $raw_meta_data, array( $this, 'exclude_internal_meta_keys' ) );
+			return apply_filters( "eaccounting_{$this->meta_type}_read_meta", $meta_data, $object, $this );
+		}
+		return array();
 	}
 
 	/**
@@ -452,7 +455,6 @@ abstract class ResourceRepository {
 
 		// Delete cache.
 		$item->clear_cache();
-
 		// Fire a hook.
 		do_action( 'eaccounting_update_' . $item->get_object_type(), $item->get_id(), $item, $changes );
 	}

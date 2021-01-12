@@ -45,14 +45,6 @@ class Contacts extends ResourceRepository {
 	 */
 	protected $meta_type = 'contact';
 
-	protected $internal_meta_keys = array(
-		'due',
-	);
-
-	protected $must_exist_meta_keys = array(
-		'due',
-	);
-
 	/**
 	 * Cache group.
 	 *
