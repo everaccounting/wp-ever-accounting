@@ -9,7 +9,7 @@
 defined( 'ABSPATH' ) || exit();
 ?>
 <script type="text/template" id="ea-modal-add-vendor" data-title="<?php esc_html_e( 'Add Vendor', 'wp-ever-accounting' ); ?>">
-	<form action="" method="post" >
+	<form action="" method="post">
 		<?php
 		eaccounting_text_input(
 			array(
@@ -28,15 +28,16 @@ defined( 'ABSPATH' ) || exit();
 				'ajax'        => true,
 				'type'        => 'currency',
 				'creatable'   => false,
+				'required'    => true,
 			)
 		);
 		eaccounting_text_input(
-				array(
-						'label'    => __( 'Company', 'wp-ever-accounting' ),
-						'name'     => 'company',
-						'value'    => '',
-						'required' => false,
-				)
+			array(
+				'label'    => __( 'Company', 'wp-ever-accounting' ),
+				'name'     => 'company',
+				'value'    => '',
+				'required' => false,
+			)
 		);
 		eaccounting_text_input(
 			array(
@@ -56,10 +57,10 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 		eaccounting_hidden_input(
-				array(
-						'name'  => 'action',
-						'value' => 'eaccounting_edit_vendor',
-				)
+			array(
+				'name'  => 'action',
+				'value' => 'eaccounting_edit_vendor',
+			)
 		);
 		wp_nonce_field( 'ea_edit_vendor' );
 		?>

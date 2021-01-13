@@ -28,6 +28,7 @@ defined( 'ABSPATH' ) || exit();
 						'ajax'        => true,
 						'type'        => 'currency',
 						'creatable'   => false,
+						'required' => true,
 				)
 		);
 		eaccounting_text_input(
