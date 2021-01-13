@@ -206,6 +206,7 @@ class Admin {
 			eaccounting_get_admin_template( 'js/modal-add-customer' );
 			eaccounting_get_admin_template( 'js/modal-add-vendor' );
 			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );
+			eaccounting_get_admin_template( 'js/modal-add-item' );
 		}
 	}
 }

@@ -11,7 +11,7 @@ namespace EverAccounting\Admin;
 defined( 'ABSPATH' ) || exit();
 
 
-use EverAccounting\EverAccounting_Ajax;
+use EverAccounting_Ajax;
 
 
 class Exporter {

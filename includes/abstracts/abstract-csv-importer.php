@@ -8,6 +8,7 @@
  */
 
 namespace EverAccounting\Abstracts;
+defined( 'ABSPATH' ) || exit();
 
 /**
  * Class CSV_Importer
@@ -111,8 +112,8 @@ abstract class CSV_Importer {
 	/**
 	 * Initialize importer.
 	 *
-	 * @param string $file   File to read.
-	 * @param array  $params Arguments for the parser.
+	 * @param string $file File to read.
+	 * @param array $params Arguments for the parser.
 	 */
 	public function __construct( $file, $params = array() ) {
 		$default_args = array(
@@ -140,24 +141,24 @@ abstract class CSV_Importer {
 	/**
 	 * Get database column and readable label.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	abstract protected function get_headers();
 
 	/**
 	 * Return the required key to import item.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	abstract public function get_required();
 
 	/**
 	 * Get formatting callback.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	abstract protected function get_formatting_callback();
 
@@ -173,9 +174,10 @@ abstract class CSV_Importer {
 	/**
 	 * Maps CSV columns to their corresponding import fields.
 	 *
+	 * @param array $mapping
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param array $mapping
 	 */
 	public function set_mapping( $mapping = array() ) {
 		if ( ! empty( $mapping ) && is_array( $mapping ) ) {
@@ -188,8 +190,8 @@ abstract class CSV_Importer {
 	/**
 	 * Can user import?
 	 *
-	 * @since  1.0.2
 	 * @return bool Whether the user can import or not
+	 * @since  1.0.2
 	 */
 	public function can_import() {
 		return (bool) current_user_can( apply_filters( 'eaccounting_import_capability', $this->capability ) );
@@ -198,8 +200,8 @@ abstract class CSV_Importer {
 	/**
 	 * Read CSV file.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	protected function read_file() {
 		$valid_filetypes = apply_filters(
@@ -322,8 +324,8 @@ abstract class CSV_Importer {
 	/**
 	 * Get formatting callback.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	protected function formatting_callback() {
 		/**
@@ -351,8 +353,8 @@ abstract class CSV_Importer {
 	/**
 	 * Import data.
 	 *
-	 * @since 1.0.2
 	 * @return int[]
+	 * @since 1.0.2
 	 */
 	public function import() {
 		$this->start_time = time();
@@ -421,8 +423,8 @@ abstract class CSV_Importer {
 	}
 
 	/**
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_sample() {
 		return current( $this->get_raw_data() );
@@ -518,11 +520,11 @@ abstract class CSV_Importer {
 	 * The exporter prepends a ' to escape fields that start with =, +, - or @.
 	 * Remove the prepended ' character preceding those characters.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $value A string that may or may not have been escaped with '.
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	protected function unescape_data( $value ) {
 		$active_content_triggers = array( "'=", "'+", "'-", "'@" );
@@ -537,11 +539,11 @@ abstract class CSV_Importer {
 	/**
 	 * Parse generalized text field.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param $value
 	 *
 	 * @return array|string
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_text_field( $value ) {
 		return eaccounting_clean( $this->unescape_data( $value ) );
@@ -550,11 +552,11 @@ abstract class CSV_Importer {
 	/**
 	 * Parse a field that is generally '1' or '0' but can be something else.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $value Field value.
 	 *
 	 * @return bool|string
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_bool_field( $value ) {
 		if ( '0' === $value ) {
@@ -572,11 +574,11 @@ abstract class CSV_Importer {
 	/**
 	 * Parse a float value field.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $value Field value.
 	 *
 	 * @return float|string
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_float_field( $value ) {
 		if ( '' === $value ) {
@@ -593,11 +595,11 @@ abstract class CSV_Importer {
 	 * Parse dates from a CSV.
 	 * Dates requires the format YYYY-MM-DD and time is optional.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $value Field value.
 	 *
 	 * @return string|null
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_date_field( $value ) {
 		if ( empty( $value ) ) {
@@ -618,11 +620,11 @@ abstract class CSV_Importer {
 	 * By default is applied eaccounting_clean() to all not listed fields
 	 * in self::get_formatting_callback(), use this method to skip any formatting.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $value Field value.
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_skip_field( $value ) {
 		return $value;
@@ -631,11 +633,11 @@ abstract class CSV_Importer {
 	/**
 	 * Parse an int value field
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param int $value field value.
 	 *
 	 * @return int
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_int_field( $value ) {
 		// Remove the ' prepended to fields that start with - if needed.
@@ -647,11 +649,11 @@ abstract class CSV_Importer {
 	/**
 	 * Parse a description value field
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $description field value.
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_description_field( $description ) {
 		$parts = explode( "\\\\n", $description );
@@ -665,11 +667,11 @@ abstract class CSV_Importer {
 	/**
 	 * Parse a country value field
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $country field value.
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_country_field( $country ) {
 		$country = eaccounting_clean( $country );
@@ -680,11 +682,11 @@ abstract class CSV_Importer {
 	/**
 	 * Parse a currency code value field
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $currency field value.
 	 *
 	 * @return string
+	 * @since 1.0.2
+	 *
 	 */
 	public function parse_currency_code_field( $currency ) {
 		$currency = eaccounting_clean( $currency );

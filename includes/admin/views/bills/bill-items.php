@@ -55,6 +55,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 				array(
 					'name'  => 'items[9999][item_id]',
 					'class' => 'select-item',
+					'creatable' => true
 				)
 			);
 			?>
