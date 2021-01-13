@@ -3,6 +3,11 @@
 namespace EverAccounting\Admin;
 
 
+defined( 'ABSPATH' ) || exit();
+
+use EverAccounting_Ajax;
+
+
 class Importer {
 
 	/**

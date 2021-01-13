@@ -895,17 +895,13 @@ function eaccounting_item_dropdown( $field ) {
 	$field = wp_parse_args(
 		$field,
 		array(
-			'value'        => '',
-			'creatable'    => true,
-			'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
-			'ajax'         => true,
-			'ajax_action'  => 'eaccounting_get_items',
-			'nonce_action' => 'ea_get_items',
-			'modal_id'     => '#ea-modal-add-item',
+			'value'       => '',
+			'creatable'   => true,
 		)
 	);
 
-	$items   = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : 0;
+	$items   = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : array();
+
 	$options = array();
 	if ( ! empty( $items ) ) {
 		$options = eaccounting_get_items(
@@ -918,10 +914,16 @@ function eaccounting_item_dropdown( $field ) {
 	$field = wp_parse_args(
 		$field,
 		array(
+			'value' => $items,
 			'options' => wp_list_pluck( $options, 'name', 'id' ),
+			'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
+			'modal_id'     => '#ea-modal-add-item',
+			'ajax'         => true,
+			'ajax_action'  => 'eaccounting_get_items',
+			'nonce_action' => 'ea_get_items',
 		)
 	);
-	var_dump( $field );
+
 	eaccounting_select2( apply_filters( 'eaccounting_item_dropdown', $field ) );
 }
 

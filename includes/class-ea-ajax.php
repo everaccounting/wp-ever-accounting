@@ -179,6 +179,7 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
+
 		wp_send_json_success(
 			eaccounting_get_categories(
 				array(
@@ -202,6 +203,7 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
+
 		wp_send_json_success(
 			eaccounting_get_categories(
 				array(
@@ -224,6 +226,7 @@ class EverAccounting_Ajax {
 		self::verify_nonce( 'ea_categories' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+
 
 		wp_send_json_success(
 			eaccounting_get_categories(
@@ -471,6 +474,7 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
+
 		wp_send_json_success(
 			eaccounting_get_customers(
 				array(
@@ -687,7 +691,7 @@ class EverAccounting_Ajax {
 			)
 		);
 
-		wp_send_json_success( $currencies );
+		 wp_send_json_success( $currencies );
 	}
 
 	/**
@@ -899,6 +903,7 @@ class EverAccounting_Ajax {
 		self::verify_nonce( 'ea_get_accounts' );
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
+
 
 		wp_send_json_success(
 			eaccounting_get_accounts(

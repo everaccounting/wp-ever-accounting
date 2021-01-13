@@ -76,7 +76,7 @@ $title = $customer->exists() ? __( 'Update Customer', 'wp-ever-accounting' ) : _
 							'label'         => __( 'Company', 'wp-ever-accounting' ),
 							'name'          => 'company',
 							'value'         => $customer->get_company(),
-							'required'      => true,
+							'required'      => false,
 						)
 					);
 

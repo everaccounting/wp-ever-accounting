@@ -81,7 +81,7 @@ $title = $vendor->exists() ? __( 'Update Vendor', 'wp-ever-accounting' ) : __( '
 							'label'         => __( 'Company', 'wp-ever-accounting' ),
 							'name'          => 'company',
 							'value'         => $vendor->get_company(),
-							'required'      => true,
+							'required'      => false,
 						)
 					);
 					eaccounting_text_input(

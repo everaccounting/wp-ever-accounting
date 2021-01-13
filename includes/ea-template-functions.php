@@ -180,10 +180,10 @@ function eaccounting_get_admin_template( $template_name, $args = array(), $path 
  * @since 1.0.0
  *
  */
-function eaccounting_get_admin_template_html( $template_name, $args = array(), $path = null ) {
+function eaccounting_get_admin_template_html( $template_name, $args = array() ) {
 	ob_start();
 
-	eaccounting_get_admin_template( $template_name, $args, $path );
+	eaccounting_get_admin_template( $template_name, $args );
 
 	return ob_get_clean();
 }
