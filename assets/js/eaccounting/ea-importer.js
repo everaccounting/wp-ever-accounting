@@ -75,7 +75,6 @@ jQuery(function ($) {
 						.find('.ea-importer-map-column')
 						.removeAttr('disabled');
 					plugin.$form.trigger('upload_complete', [res]);
-					console.log(res);
 				},
 				error: function (error) {
 					plugin.$form.find('.spinner').remove();
@@ -94,13 +93,6 @@ jQuery(function ($) {
 
 		this.process_step = function (position) {
 			var $submit_btn = plugin.$form.find('input[type="submit"]');
-			console.log({
-				nonce: plugin.nonce,
-				type: plugin.type,
-				position: position,
-				file: plugin.file,
-				mapping: plugin.mapping,
-			});
 			window.wp.ajax.send(plugin.action, {
 				data: {
 					nonce: plugin.nonce,
@@ -130,7 +122,6 @@ jQuery(function ($) {
 						);
 						plugin.process_step(parseInt(res.position, 10));
 					}
-					console.log(res);
 				},
 				error: function (error) {
 					$submit_btn.removeAttr('disabled');
@@ -145,7 +136,6 @@ jQuery(function ($) {
 							'</p></div></div>'
 						);
 					}
-					console.warn(error);
 				},
 			});
 		};
