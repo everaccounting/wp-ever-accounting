@@ -32,6 +32,7 @@ class EverAccounting_Admin_Invoices {
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
 			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );
 		}
+		eaccounting_admin_notices()->add_core_notice('install');
 		$redirect_url = add_query_arg(
 			array(
 				'page'       => 'ea-sales',
@@ -43,8 +44,14 @@ class EverAccounting_Admin_Invoices {
 		);
 		switch ( $action ) {
 			case 'status_pending':
-				$invoice->set_status( 'pending' );
-				$invoice->save();
+				try {
+					$invoice->set_status( 'pending' );
+					$invoice->save();
+					eaccounting_admin_notices()->add_success( __( 'Invoice status updated to status.', 'wp-ever-accounting' ) );
+				} catch ( Exception $e ) {
+					/* translators: %s reason */
+					eaccounting_admin_notices()->add_error( sprintf( __( 'Invoice status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+				}
 				break;
 			case 'status_cancelled':
 				$invoice->set_cancelled();
@@ -54,9 +61,6 @@ class EverAccounting_Admin_Invoices {
 				break;
 			case 'status_paid':
 				$invoice->set_paid();
-				break;
-			case 'view_as_customer':
-				$redirect_url = site_url(sprintf('eaccounting/invoice/%d/%s/', $invoice->get_id(), $invoice->get_key()));
 				break;
 			case 'delete':
 				$invoice->delete();
