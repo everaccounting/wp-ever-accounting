@@ -20,7 +20,7 @@ jQuery(function ($) {
 	var revenue_form = {
 		init: function () {
 			$(document)
-				.on('change', '#ea-revenue-form #account_id', this.update_amount_input)
+				.on('change', '#ea-revenue-form [name="account_id"]', this.update_amount_input)
 				.on('submit', '#ea-revenue-form', this.submit);
 		},
 
@@ -52,7 +52,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 
 				if (json.success) {
-					maskInput($('#ea-revenue-form #amount'), json.data);
+					maskInput($('#ea-revenue-form [name="amount"]'), json.data);
 				}
 
 			}).always(function (json) {
@@ -77,7 +77,7 @@ jQuery(function ($) {
 	var payment_form = {
 		init: function () {
 			$(document)
-				.on('change', '#ea-payment-form #account_id', this.update_amount_input)
+				.on('change', '#ea-payment-form [name="account_id"]', this.update_amount_input)
 				.on('submit', '#ea-payment-form', this.submit);
 		},
 
@@ -109,7 +109,7 @@ jQuery(function ($) {
 			$.post(ajaxurl, data, function (json) {
 
 				if (json.success) {
-					maskInput($('#ea-payment-form #amount'), json.data);
+					maskInput($('#ea-payment-form [name="amount"]'), json.data);
 				}
 
 			}).always(function (json) {
@@ -134,7 +134,7 @@ jQuery(function ($) {
 	var account_form = {
 		init: function () {
 			$('#ea-account-form')
-				.on('select2:select', '#currency_code', this.update_amount_input)
+				.on('select2:select', '[name="currency_code"]', this.update_amount_input)
 				.on('submit', this.submit);
 		},
 
@@ -159,7 +159,7 @@ jQuery(function ($) {
 				return false;
 			}
 			var currency = eaccounting_form_i10n.global_currencies[code];
-			maskInput($('#ea-account-form #opening_balance'), currency);
+			maskInput($('#ea-account-form [name="opening_balance"]'), currency);
 		},
 
 		submit: function (e) {
@@ -178,7 +178,7 @@ jQuery(function ($) {
 	var transfer_form = {
 		init: function () {
 			$('#ea-transfer-form')
-				.on('change', '#from_account_id', this.update_amount_input)
+				.on('change', '[name="from_account_id"]', this.update_amount_input)
 				.find('#from_account_id').trigger('change')
 				.end()
 				.on('submit', this.submit)
@@ -211,7 +211,7 @@ jQuery(function ($) {
 			}
 			$.post(ajaxurl, data, function (json) {
 				if (json.success) {
-					maskInput($('#ea-transfer-form #amount'), json.data);
+					maskInput($('#ea-transfer-form [name="amount"]'), json.data);
 				}
 
 			}).always(function (json) {
@@ -360,7 +360,7 @@ jQuery(function ($) {
 	var currency_form = {
 		init: function () {
 			$('#ea-currency-form')
-				.on('change', '#code', this.update_currency_props)
+				.on('change', '[name="code"]', this.update_currency_props)
 				.on('submit', this.submit);
 		},
 		block: function () {
@@ -383,14 +383,14 @@ jQuery(function ($) {
 				return false;
 			}
 			var currency = eaccounting_form_i10n.global_currencies[code];
-			$('#name', '#ea-currency-form').val(currency.name).change()
-			$('#precision', '#ea-currency-form').val(currency.precision).change();
-			$('#position', '#ea-currency-form').val(currency.position).change();
-			$('#symbol', '#ea-currency-form').val(currency.symbol).change();
-			$('#decimal_separator', '#ea-currency-form')
+			$('[name="name"]', '#ea-currency-form').val(currency.name).change()
+			$('[name="precision"]', '#ea-currency-form').val(currency.precision).change();
+			$('[name="position"]', '#ea-currency-form').val(currency.position).change();
+			$('[name="symbol"]', '#ea-currency-form').val(currency.symbol).change();
+			$('[name="decimal_separator"]', '#ea-currency-form')
 				.val(currency.decimal_separator)
 				.change();
-			$('#thousand_separator', '#ea-currency-form')
+			$('[name="thousand_separator"]', '#ea-currency-form')
 				.val(currency.thousand_separator)
 				.change();
 		},
@@ -416,7 +416,7 @@ jQuery(function ($) {
 				.on('click', '.delete-line', this.remove_line_item)
 				.on('click', '.edit-line, .save-line', this.edit_line_item)
 				.on('click', '.add-discount', this.add_discount)
-				.on('change', '#currency_code', this.recalculate)
+				.on('change', '[name="currency_code"]', this.recalculate)
 				.on('click', '.recalculate', this.recalculate)
 				.on('submit', this.submit);
 
@@ -535,7 +535,7 @@ jQuery(function ($) {
 
 			$modal_selector.ea_modal({
 				onReady: function (plugin) {
-					eaccounting_mask_amount($('#amount', plugin.$modal), code)
+					eaccounting_mask_amount($('[name="amount"]', plugin.$modal), code)
 				},
 				onSubmit: function (data, plugin) {
 					$.post(ajaxurl, data, function (json) {
@@ -599,7 +599,7 @@ jQuery(function ($) {
 				.on('click', '.delete-line', this.remove_line_item)
 				.on('click', '.edit-line, .save-line', this.edit_line_item)
 				.on('click', '.add-discount', this.add_discount)
-				.on('change', '#currency_code', this.recalculate)
+				.on('change', '[name="currency_code"]', this.recalculate)
 				.on('click', '.recalculate', this.recalculate)
 				.on('submit', this.submit);
 

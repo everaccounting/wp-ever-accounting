@@ -15,10 +15,10 @@ jQuery(function ($) {
 		e.target.value = e.target.value.replace(/[^0-9.]/g, '');
 	});
 	$(document.body).on('ea_modal_loaded', function () {
-		//$(document.body).trigger('ea_select2_init');
+		$(document.body).trigger('ea_select2_init');
 	});
 	$('.ea-financial-start input').datepicker({dateFormat: 'dd-mm'});
-	// $('#eaccounting_settings[financial_year_start]').datepicker({dateFormat: 'yy-mm-dd'});
+	$('#eaccounting_settings[financial_year_start]').datepicker({dateFormat: 'yy-mm-dd'});
 
 	//dropdwown
 	$( document )
