@@ -51,10 +51,8 @@ jQuery( function ( $ ) {
 
 		if ( this.options.modal_id ) {
 			this.$el.on( 'select2:open', function ( e ) {
-				var $results = $( '#select2-' + plugin.id + '-results' ).closest(
-					'.select2-results'
-				);
-				if ( ! $results.children( '.ea-select2-footer' ).length ) {
+				var $results = $(this).data('select2').$results;
+				if ( ! $results.siblings( '.ea-select2-footer' ).length ) {
 					var $footer = $(
 						'<a href="#" class="ea-select2-footer"><span class="dashicons dashicons-plus">&nbsp;</span>' +
 						plugin.options.add_text +
@@ -64,7 +62,7 @@ jQuery( function ( $ ) {
 						plugin.$el.select2( 'close' );
 						$(plugin.options.modal_id).ea_modal();
 					} );
-					$results.append( $footer );
+					$results.closest('.select2-results').append( $footer );
 				}
 			} );
 		}

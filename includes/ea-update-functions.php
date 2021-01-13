@@ -301,7 +301,7 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `city` VARCHAR(191) NOT NULL AFTER `street`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `state` VARCHAR(191) NOT NULL AFTER `city`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `postcode` VARCHAR(191) NOT NULL AFTER `state`;" );
-	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `attachment`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `type`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD INDEX enabled (`enabled`);" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD INDEX user_id (`user_id`);" );
 
@@ -318,3 +318,5 @@ function eaccounting_update_1_1_0() {
 	//todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
 }
+
+

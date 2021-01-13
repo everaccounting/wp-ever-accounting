@@ -16,6 +16,7 @@ class EverAccounting_Install {
 	 */
 	private static $updates = array(
 		'1.0.2' => 'eaccounting_update_1_0_2',
+		'1.1.0' => 'eaccounting_update_1_1_0',
 	);
 
 	/**
