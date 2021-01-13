@@ -48,17 +48,17 @@ class Export_Currencies extends CSV_Exporter {
 	 * @return array
 	 */
 	public function get_rows() {
-		$args              = array(
+		$args  = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
-			'number'      => -1,
+			'number'   => -1,
 		);
-		$args = apply_filters( 'eaccounting_currency_export_query_args', $args );
+		$args  = apply_filters( 'eaccounting_currency_export_query_args', $args );
 		$items = eaccounting_get_currencies( $args );
-		$rows              = array();
+		$rows  = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
@@ -76,7 +76,7 @@ class Export_Currencies extends CSV_Exporter {
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
-		$props = [];
+		$props = array();
 		foreach ( $this->get_columns() as $column => $label ) {
 			$value = null;
 			switch ( $column ) {

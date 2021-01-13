@@ -7,8 +7,6 @@
  * @class       EverAccounting_Ajax
  */
 
-namespace EverAccounting;
-
 use EverAccounting\Models\Bill;
 use EverAccounting\Models\Invoice;
 use EverAccounting\Models\Note;
@@ -181,7 +179,8 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		 wp_send_json_success(
+
+		wp_send_json_success(
 			eaccounting_get_categories(
 				array(
 					'search' => $search,
@@ -204,7 +203,8 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		 wp_send_json_success(
+
+		wp_send_json_success(
 			eaccounting_get_categories(
 				array(
 					'search' => $search,
@@ -227,7 +227,8 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		 wp_send_json_success(
+
+		wp_send_json_success(
 			eaccounting_get_categories(
 				array(
 					'search' => $search,
@@ -473,7 +474,8 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		 wp_send_json_success(
+
+		wp_send_json_success(
 			eaccounting_get_customers(
 				array(
 					'search' => $search,
@@ -820,7 +822,7 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		 wp_send_json_success(
+		wp_send_json_success(
 			eaccounting_get_vendors(
 				array(
 					'search' => $search,
@@ -902,7 +904,8 @@ class EverAccounting_Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		 wp_send_json_success(
+
+		wp_send_json_success(
 			eaccounting_get_accounts(
 				array(
 					'search' => $search,

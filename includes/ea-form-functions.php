@@ -892,6 +892,19 @@ function eaccounting_currency_dropdown( $field ) {
  * @return void
  */
 function eaccounting_item_dropdown( $field ) {
+	$field = wp_parse_args(
+		$field,
+		array(
+			'value'        => '',
+			'creatable'    => true,
+			'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
+			'ajax'         => true,
+			'ajax_action'  => 'eaccounting_get_items',
+			'nonce_action' => 'ea_get_items',
+			'modal_id'     => '#ea-modal-add-item',
+		)
+	);
+
 	$items   = ! empty( $field['value'] ) ? wp_parse_id_list( $field['value'] ) : 0;
 	$options = array();
 	if ( ! empty( $items ) ) {
@@ -905,14 +918,10 @@ function eaccounting_item_dropdown( $field ) {
 	$field = wp_parse_args(
 		$field,
 		array(
-			'options'      => wp_list_pluck( $options, 'name', 'id' ),
-			'placeholder'  => __( 'Select Item', 'wp-ever-accounting' ),
-			'ajax'         => true,
-			'ajax_action'  => 'eaccounting_get_items',
-			'nonce_action' => 'ea_get_items',
-			'modal_id'     => '#ea-modal-add-item',
+			'options' => wp_list_pluck( $options, 'name', 'id' ),
 		)
 	);
+	var_dump( $field );
 	eaccounting_select2( apply_filters( 'eaccounting_item_dropdown', $field ) );
 }
 

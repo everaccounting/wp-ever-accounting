@@ -53,8 +53,9 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 			<?php
 			eaccounting_item_dropdown(
 				array(
-					'name'  => 'items[9999][item_id]',
-					'class' => 'select-item',
+					'name'      => 'items[9999][item_id]',
+					'class'     => 'select-item',
+					'creatable' => true,
 				)
 			);
 			?>

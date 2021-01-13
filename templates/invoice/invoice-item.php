@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
 <tr class="ea-document__line" data-item_id="<?php echo esc_attr( $item_id ); ?>">
 
 	<td class="ea-document__line-name" colspan="2">
-		<input type="hidden" class="line_item_id" name="items[<?php echo absint( $item_id ); ?>][item_id]" value="<?php echo esc_attr( $item->get_item_id() ); ?>"/>
 		<div class="view">
 			<?php echo esc_html( $item->get_item_name( 'view' ) ); ?>
 		</div>

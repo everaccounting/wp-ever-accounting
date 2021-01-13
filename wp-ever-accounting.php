@@ -67,6 +67,192 @@ final class EverAccounting {
 		return self::$instance;
 	}
 
+	/**
+	 * Throw error on object clone
+	 *
+	 * The whole idea of the singleton design pattern is that there is a single
+	 * object therefore, we don't want the object to be cloned.
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+
+	public function __clone() {
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
+	}
+
+	/**
+	 * Disable unserializing of the class
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+
+	public function __wakeup() {
+		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
+	}
+
+	/**
+	 * EverAccounting constructor.
+	 */
+	public function __construct() {
+		$this->define_constants();
+		$this->define_tables();
+		$this->includes();
+		$this->init_hooks();
+	}
+
+	/**
+	 * define all required constants
+	 *
+	 * since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function define_constants() {
+		$upload_dir = wp_upload_dir( null, false );
+
+		define( 'EACCOUNTING_VERSION', $this->version );
+		define( 'EACCOUNTING_BASENAME', plugin_basename( __FILE__ ) );
+		define( 'EACCOUNTING_PLUGIN_FILE', __FILE__ );
+		define( 'EACCOUNTING_ABSPATH', dirname( EACCOUNTING_PLUGIN_FILE ) );
+		define( 'EACCOUNTING_URL', plugins_url( '', EACCOUNTING_PLUGIN_FILE ) );
+		define( 'EACCOUNTING_ASSETS_URL', EACCOUNTING_URL . '/assets' );
+		define( 'EACCOUNTING_TEMPLATES_DIR', EACCOUNTING_ABSPATH . '/templates' );
+		define( 'EACCOUNTING_LOG_DIR', $upload_dir['basedir'] . '/ea-logs/' );
+	}
+
+	/**
+	 * Register custom tables within $wpdb object.
+	 */
+	private function define_tables() {
+		global $wpdb;
+
+		// List of tables without prefixes.
+		$tables = array(
+			'contactmeta' => 'ea_contactmeta',
+		);
+
+		foreach ( $tables as $name => $table ) {
+			$wpdb->$name    = $wpdb->prefix . $table;
+			$wpdb->tables[] = $table;
+		}
+	}
+
+	/**
+	 * Include all required files
+	 *
+	 * since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function includes() {
+		require_once EACCOUNTING_ABSPATH . '/vendor/autoload.php';
+
+		// Abstract classes.
+		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php';
+
+		// Core classes.
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-settings.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-assets.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-rewrites.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-license.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-controller.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
+
+		//
+		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
+			require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php';
+		}
+
+
+		\EverAccounting\REST\Manager::instance();
+		\EverAccounting\Core\Emails::instance();
+
+		$this->settings = new EverAccounting_Settings();
+		$this->utils    = new \EverAccounting\Utilities();
+	}
+
+	/**
+	 * When WP has loaded all plugins, trigger the `eaccounting_loaded` hook.
+	 *
+	 * This ensures `eaccounting_loaded` is called only after all other plugins
+	 * are loaded, to avoid issues caused by plugin directory naming changing
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	public function on_plugins_loaded() {
+		do_action( 'eaccounting_loaded' );
+	}
+
+	/**
+	 * Hook into actions and filters.
+	 *
+	 * @since 1.0.0
+	 * @return void
+	 */
+	private function init_hooks() {
+		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EverAccounting_Install', 'install' ) );
+		register_shutdown_function( array( $this, 'log_errors' ) );
+
+		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
+		add_action( 'init', array( $this, 'localization_setup' ) );
+		add_action( 'switch_blog', array( $this, 'wpdb_table_fix' ), 0 );
+	}
+
+	/**
+	 * Ensures fatal errors are logged so they can be picked up in the status report.
+	 *
+	 * @since 1.0.2
+	 * @return void
+	 */
+	public function log_errors() {
+		$error = error_get_last();
+		if ( $error && in_array(
+				$error['type'],
+				array(
+					E_ERROR,
+					E_PARSE,
+					E_COMPILE_ERROR,
+					E_USER_ERROR,
+					E_RECOVERABLE_ERROR,
+				),
+				true
+			) ) {
+			$logger = eaccounting_logger();
+			$logger->critical(
+			/* translators: 1: error message 2: file name and path 3: line number */
+				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
+				array(
+					'source' => 'fatal-errors',
+				)
+			);
+		}
+	}
+
+	/**
+	 * Initialize plugin for localization
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	public function localization_setup() {
+		load_plugin_textdomain( 'wp-ever-accounting', false, plugin_basename( dirname( __FILE__ ) ) . '/i18n/languages' );
+	}
+
+	/**
+	 * Set table names inside WPDB object.
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function wpdb_table_fix() {
+		$this->define_tables();
+	}
 
 	/**
 	 * Return plugin version.
@@ -144,193 +330,6 @@ final class EverAccounting {
 	 */
 	public function ajax_url() {
 		return admin_url( 'admin-ajax.php', 'relative' );
-	}
-
-	/**
-	 * Initialize plugin for localization
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function localization_setup() {
-		load_plugin_textdomain( 'wp-ever-accounting', false, plugin_basename( dirname( __FILE__ ) ) . '/i18n/languages' );
-	}
-
-	/**
-	 * Throw error on object clone
-	 *
-	 * The whole idea of the singleton design pattern is that there is a single
-	 * object therefore, we don't want the object to be cloned.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-
-	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
-	}
-
-	/**
-	 * Disable unserializing of the class
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-
-	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
-	}
-
-	/**
-	 * Ensures fatal errors are logged so they can be picked up in the status report.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	public function log_errors() {
-		$error = error_get_last();
-		if ( $error && in_array(
-			$error['type'],
-			array(
-				E_ERROR,
-				E_PARSE,
-				E_COMPILE_ERROR,
-				E_USER_ERROR,
-				E_RECOVERABLE_ERROR,
-			),
-			true
-		) ) {
-			$logger = eaccounting_logger();
-			$logger->critical(
-			/* translators: 1: error message 2: file name and path 3: line number */
-				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
-				array(
-					'source' => 'fatal-errors',
-				)
-			);
-		}
-	}
-
-	/**
-	 * EverAccounting constructor.
-	 */
-	public function __construct() {
-		$this->define_constants();
-		$this->includes();
-		$this->init_hooks();
-	}
-
-	/**
-	 * define all required constants
-	 *
-	 * since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function define_constants() {
-		$upload_dir = wp_upload_dir( null, false );
-
-		define( 'EACCOUNTING_VERSION', $this->version );
-		define( 'EACCOUNTING_DB_VERSION', '20181123' );
-		define( 'EACCOUNTING_BASENAME', plugin_basename( __FILE__ ) );
-		define( 'EACCOUNTING_PLUGIN_FILE', __FILE__ );
-		define( 'EACCOUNTING_ABSPATH', dirname( EACCOUNTING_PLUGIN_FILE ) );
-		define( 'EACCOUNTING_URL', plugins_url( '', EACCOUNTING_PLUGIN_FILE ) );
-		define( 'EACCOUNTING_ASSETS_URL', EACCOUNTING_URL . '/assets' );
-		define( 'EACCOUNTING_TEMPLATES_DIR', EACCOUNTING_ABSPATH . '/templates' );
-		define( 'EACCOUNTING_LOG_DIR', $upload_dir['basedir'] . '/ea-logs/' );
-	}
-
-	/**
-	 * Include all required files
-	 *
-	 * since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function includes() {
-		require_once EACCOUNTING_ABSPATH . '/vendor/autoload.php';
-
-		// Abstract classes.
-		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php';
-
-		// Core classes.
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-settings.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-assets.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-rewrites.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-license.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-controller.php';
-
-		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
-
-		//
-		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php';
-		}
-	}
-
-	/**
-	 * Hook into actions and filters.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	private function init_hooks() {
-		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EverAccounting_Install', 'install' ) );
-		register_shutdown_function( array( $this, 'log_errors' ) );
-
-		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
-		add_action( 'init', array( $this, 'init_plugin' ), 0 );
-		add_action( 'init', array( $this, 'localization_setup' ) );
-	}
-
-	/**
-	 * When WP has loaded all plugins, trigger the `eaccounting_loaded` hook.
-	 *
-	 * This ensures `eaccounting_loaded` is called only after all other plugins
-	 * are loaded, to avoid issues caused by plugin directory naming changing
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function on_plugins_loaded() {
-		\EverAccounting\REST\Manager::instance();
-		\EverAccounting\Core\Emails::instance();
-
-		$this->settings = new EverAccounting_Settings();
-		$this->utils    = new \EverAccounting\Utilities();
-
-		do_action( 'eaccounting_loaded' );
-	}
-
-	/**
-	 * Init EverAccounting when WordPress Initialises.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	public function init_plugin() {
-		// Before init action.
-		do_action( 'before_eaccounting_init' );
-
-//		\EverAccounting\Controllers\AccountController::instance();
-//		\EverAccounting\Controllers\TransferController::instance();
-//		\EverAccounting\Controllers\CategoryController::instance();
-//		\EverAccounting\Controllers\TransactionController::instance();
-//		\EverAccounting\Controllers\TaxController::instance();
-//		\EverAccounting\Controllers\ItemController::instance();
-//		\EverAccounting\Controllers\IncomeController::instance();
-//		\EverAccounting\Controllers\CurrencyController::instance();
-//		\EverAccounting\Controllers\ExpenseController::instance();
-//		\EverAccounting\Controllers\InvoiceController::instance();
-
-
-		// Init action.
-		do_action( 'eaccounting_init' );
 	}
 
 	/**
