@@ -47,9 +47,11 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 		<div class="ea-card__header">
 			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
 			<div>
-				<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
-					<?php esc_html_e( 'View Invoice', 'wp-ever-accounting' ); ?>
-				</a>
+				<?php if ( $invoice->exists() ) : ?>
+					<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
+						<?php esc_html_e( 'View Invoice', 'wp-ever-accounting' ); ?>
+					</a>
+				<?php endif; ?>
 			</div>
 		</div>
 

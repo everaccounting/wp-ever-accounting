@@ -27,7 +27,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 	<div class="ea-col-7">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Bills', 'wp-ever-accounting' ); ?></h1>
 		<?php if ( $bill->exists() ) : ?>
-			<a href="<?php echo esc_url( add_query_arg( array('tab' => 'bills', 'page' => 'ea-expenses', 'action' => 'add'), admin_url('admin.php') ) );//phpcs:ignore ?>" class="page-title-action">
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'bills', 'page' => 'ea-expenses', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
 				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 			</a>
 		<?php else : ?>
@@ -46,9 +46,11 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 		<div class="ea-card__header">
 			<h3 class="ea-card__title"><?php echo esc_html( $title ); ?></h3>
 			<div>
-				<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
-					<?php esc_html_e( 'View Bill', 'wp-ever-accounting' ); ?>
-				</a>
+				<?php if ( $bill->exists() ) : ?>
+					<a href="<?php echo esc_url( add_query_arg( 'action', 'view' ) ); ?>" class="button-secondary">
+						<?php esc_html_e( 'View Bill', 'wp-ever-accounting' ); ?>
+					</a>
+				<?php endif; ?>
 			</div>
 		</div>
 		<div class="ea-card__inside">
