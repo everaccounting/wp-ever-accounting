@@ -2,7 +2,9 @@
 
 namespace EverAccounting\Admin;
 
-use EverAccounting\Ajax;
+defined( 'ABSPATH' ) || exit();
+
+use EverAccounting\EverAccounting_Ajax;
 
 class Importer {
 

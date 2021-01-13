@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since 1.0.2
  */
-class Ajax {
+class EverAccounting_Ajax {
 
 	/**
 	 * EverAccounting_Ajax constructor.
@@ -181,7 +181,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		return wp_send_json_success(
+		 wp_send_json_success(
 			eaccounting_get_categories(
 				array(
 					'search' => $search,
@@ -204,7 +204,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		return wp_send_json_success(
+		 wp_send_json_success(
 			eaccounting_get_categories(
 				array(
 					'search' => $search,
@@ -227,7 +227,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		return wp_send_json_success(
+		 wp_send_json_success(
 			eaccounting_get_categories(
 				array(
 					'search' => $search,
@@ -333,7 +333,7 @@ class Ajax {
 		}
 		try {
 			$invoice = new Invoice( $invoice_id );
-			$invoice->add_note( $note, $customer_note );
+			$invoice->add_note( $note );
 			$notes = eaccounting_get_admin_template_html( 'invoices/invoice-notes', array( 'invoice' => $invoice ) );
 			wp_send_json_success(
 				array(
@@ -473,7 +473,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		return wp_send_json_success(
+		 wp_send_json_success(
 			eaccounting_get_customers(
 				array(
 					'search' => $search,
@@ -581,7 +581,7 @@ class Ajax {
 		}
 		try {
 			$bill = new Bill( $bill_id );
-			$bill->add_note( $note, $customer_note );
+			$bill->add_note( $note );
 			$notes = eaccounting_get_admin_template_html( 'bills/bill-notes', array( 'bill' => $bill ) );
 			wp_send_json_success(
 				array(
@@ -689,7 +689,7 @@ class Ajax {
 			)
 		);
 
-		return wp_send_json_success( $currencies );
+		 wp_send_json_success( $currencies );
 	}
 
 	/**
@@ -820,7 +820,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		return wp_send_json_success(
+		 wp_send_json_success(
 			eaccounting_get_vendors(
 				array(
 					'search' => $search,
@@ -902,7 +902,7 @@ class Ajax {
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 		$page   = isset( $_REQUEST['page'] ) ? absint( $_REQUEST['page'] ) : 1;
 
-		return wp_send_json_success(
+		 wp_send_json_success(
 			eaccounting_get_accounts(
 				array(
 					'search' => $search,
@@ -1069,7 +1069,7 @@ class Ajax {
 
 		$search = isset( $_REQUEST['search'] ) ? eaccounting_clean( $_REQUEST['search'] ) : '';
 
-		return wp_send_json_success(
+		wp_send_json_success(
 			eaccounting_get_items(
 				array(
 					'search' => $search,
@@ -1157,4 +1157,4 @@ class Ajax {
 	}
 }
 
-return new Ajax();
+return new EverAccounting_Ajax();

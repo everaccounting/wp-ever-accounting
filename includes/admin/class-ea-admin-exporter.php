@@ -8,8 +8,9 @@
  */
 
 namespace EverAccounting\Admin;
+defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Ajax;
+use EverAccounting\EverAccounting_Ajax;
 
 class Exporter {
 
@@ -37,7 +38,7 @@ class Exporter {
 
 		$type = sanitize_key( $_REQUEST['type'] );
 
-		Ajax::verify_nonce( "{$type}_exporter_nonce" );
+		EverAccounting_Ajax::verify_nonce( "{$type}_exporter_nonce" );
 
 		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
 			wp_send_json_error(
@@ -133,8 +134,8 @@ class Exporter {
 	/**
 	 * Handle CSV file download.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function handle_csv_download() {
 		if ( isset( $_GET['action'], $_GET['nonce'] ) && wp_verify_nonce( wp_unslash( $_GET['nonce'] ), 'ea-download-file' ) && 'eaccounting_download_export_file' === wp_unslash( $_GET['action'] ) ) {
