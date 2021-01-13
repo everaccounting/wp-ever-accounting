@@ -117,7 +117,7 @@ class EverAccounting_Admin_Settings {
 				}
 				break;
 		}
-		return apply_filters( 'eaccounting_settings_sections_' . $tab, $sections );
+		return apply_filters( 'eaccounting_settings_sections_' . $tab, array_filter( $sections ) );
 	}
 
 	/**
@@ -149,6 +149,10 @@ class EverAccounting_Admin_Settings {
 		$sections          = $this->get_tab_sections( $current_tab );
 		$requested_section = isset( $_GET['section'] ) ? sanitize_title( $_GET['section'] ) : 'main';
 		$current_section   = isset( $sections[ $requested_section ] ) ? $requested_section : current( array_keys( $sections ) );
+		if ( ! empty( $sections ) && $current_section && empty( $_GET['section'] ) ) {
+			wp_redirect( add_query_arg( 'section', $current_section ) );
+			exit();
+		}
 		$current_tab_label = $tabs[ $current_tab ];
 		ob_start();
 		include dirname( __FILE__ ) . '/views/admin-page-settings.php';

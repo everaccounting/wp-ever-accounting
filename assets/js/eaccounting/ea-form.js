@@ -2,7 +2,6 @@ jQuery(function ($) {
 	'use strict';
 
 	var maskInput = function (el, json) {
-		console.log(json);
 		$(el).inputmask('decimal', {
 			alias: 'numeric',
 			groupSeparator: json.thousand_separator,
@@ -41,7 +40,6 @@ jQuery(function ($) {
 
 		update_amount_input: function (e) {
 			var account_id = parseInt(e.target.value, 10);
-			console.log(account_id)
 			if (isNaN(account_id)) {
 				return false;
 			}
@@ -99,7 +97,6 @@ jQuery(function ($) {
 
 		update_amount_input: function (e) {
 			var account_id = parseInt(e.target.value, 10);
-			console.log(account_id)
 			if (isNaN(account_id)) {
 				return false;
 			}
@@ -203,7 +200,6 @@ jQuery(function ($) {
 
 		update_amount_input: function (e) {
 			var account_id = parseInt(e.target.value, 10);
-			console.log(account_id)
 			if (isNaN(account_id)) {
 				return false;
 			}
@@ -449,10 +445,8 @@ jQuery(function ($) {
 
 		add_line_item: function (e) {
 			e.preventDefault();
-			console.log(e);
 			var line_item = $($('#ea-invoice-line-template').html());
 			var item_selector = $($('#ea-invoice-item-selector').html());
-			console.log(item_selector);
 			var item_selector_name = item_selector.attr('name');
 			var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
 			line_item.addClass('editing')
@@ -461,7 +455,6 @@ jQuery(function ($) {
 				name = name.replace(/\[(\d+)\]/, '[' + (index) + ']');
 				$(this).attr('name', name).attr('id', name);
 			});
-			console.log(item_selector_name);
 			item_selector_name = item_selector_name.replace(/\[(\d+)\]/, '[' + (index) + ']');
 			item_selector.attr('name', item_selector_name).attr('id', item_selector_name);
 			item_selector.css({width: '90%', maxWidth: 'none'})
@@ -590,7 +583,6 @@ jQuery(function ($) {
 			invoice_form.block();
 			var data = $('#ea-invoice-form').serializeObject();
 			$.post(ajaxurl, data, function (json) {
-				console.log(json);
 				$.eaccounting_redirect(json);
 			}).always(function (json) {
 				$.eaccounting_notice(json);
@@ -772,7 +764,6 @@ jQuery(function ($) {
 			bill_form.block();
 			var data = $('#ea-bill-form').serializeObject();
 			$.post(ajaxurl, data, function (json) {
-				console.log(json);
 				$.eaccounting_redirect(json);
 			}).always(function (json) {
 				$.eaccounting_notice(json);

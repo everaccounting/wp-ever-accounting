@@ -62,8 +62,6 @@ jQuery(function ($) {
 			frame.on('select', function () {
 				var attachment = frame.state().get('selection').first().toJSON();
 				var subtype = attachment.subtype;
-				console.log(allowed_types);
-				console.log(subtype);
 				if( !allowed_types.includes(subtype) ){
 					alert('Unsupported Media');
 					return false;
