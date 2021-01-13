@@ -51,25 +51,6 @@ class EverAccounting_Rewrites {
 		}
 	}
 
-//	public function render_page() {
-//		$ea_page = get_query_var( 'ea_page' );
-//		$key     = get_query_var( 'key' );
-//		switch ( $ea_page ) {
-//			case 'invoice':
-//				$id       = get_query_var( 'invoice_id' );
-//				$template = 'single-invoice.php';
-//				eaccounting_get_template($template, array('invoice_id' => $id, 'key' => $key ));
-//				break;
-//			case 'bill':
-//				$id       = get_query_var( 'bill_id' );
-//				$template = 'single-bill.php';
-//				eaccounting_get_template($template, array('bill_id' => $id, 'key' => $key ));
-//				break;
-//			default:
-//				wp_redirect(site_url());
-//				break;
-//		}
-//	}
 }
 
 new EverAccounting_Rewrites();

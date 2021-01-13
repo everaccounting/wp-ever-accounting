@@ -332,7 +332,7 @@ abstract class EverAccounting_List_Table extends \WP_List_Table {
 
 				<?php if ( $this->has_items() && true !== $this->display_args['hide_bulk_options'] ) : ?>
 					<div class="alignleft actions bulkactions">
-						<?php $this->bulk_actions(); ?>
+						<?php $this->bulk_actions($which); ?>
 					</div>
 					<?php
 				endif;

@@ -53,7 +53,10 @@
 	}
 
 	&__column {
-
+		max-width: 50%;
+		@media only screen and (max-width: 720px) {
+			max-width: 100%;
+		}
 	}
 
 	&__company-info,

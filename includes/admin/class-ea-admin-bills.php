@@ -42,17 +42,20 @@ class EverAccounting_Admin_Bills {
 		);
 		switch ( $action ) {
 			case 'status_received':
-				$bill->set_status( 'received' );
-				$bill->save();
+				try {
+					$bill->set_status( 'pending' );
+					$bill->save();
+					eaccounting_admin_notices()->add_success( __( 'Bill status updated to status.', 'wp-ever-accounting' ) );
+				} catch ( Exception $e ) {
+					/* translators: %s reason */
+					eaccounting_admin_notices()->add_error( sprintf( __( 'Bill status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+				}
 				break;
 			case 'status_cancelled':
 				$bill->set_cancelled();
 				break;
 			case 'status_paid':
 				$bill->set_paid();
-				break;
-			case 'view_as_vendor':
-				$redirect_url = site_url( sprintf( 'eaccounting/bill/%d/%s/', $bill->get_id(), $bill->get_key() ) );
 				break;
 			case 'delete':
 				$bill->delete();
