@@ -1094,7 +1094,7 @@ class EverAccounting_Settings {
 			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_license_key_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
 		}
 
-		echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '_license_key]"> ' . wp_kses_post( $args['desc'] ) . '</label>';
+		//echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '_license_key]"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {

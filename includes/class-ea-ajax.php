@@ -170,6 +170,7 @@ class Ajax {
 			add_action( 'wp_ajax_eaccounting_' . $ajax_event, array( __CLASS__, $ajax_event ) );
 		}
 	}
+
 	/**
 	 * Get expense categories.
 	 *
@@ -625,6 +626,7 @@ class Ajax {
 					'totals' => $totals,
 				)
 			);
+
 		} catch ( \Exception $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ) );
 		}
