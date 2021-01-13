@@ -29,9 +29,6 @@ class EverAccounting_Install {
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
-		add_action( 'plugins_loaded', array( __CLASS__, 'wpdb_table_fix' ), 0 );
-		add_action( 'switch_blog', array( __CLASS__, 'wpdb_table_fix' ), 0 );
-		add_action( 'admin_init', array( __CLASS__, 'schedule_events' ) );
 	}
 
 	/**
@@ -146,6 +143,13 @@ class EverAccounting_Install {
 		// If we made it till here nothing is running yet, lets set the transient now.
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
+		require_once dirname( __FILE__ ) . '/admin/class-ea-admin-notices.php';
+		require_once dirname( __FILE__ ) . '/class-ea-settings.php';
+
+		if ( ! eaccounting()->settings ) {
+			eaccounting()->settings = new \EverAccounting_Settings();
+		}
+
 		self::remove_admin_notices();
 		self::create_tables();
 		self::verify_base_tables();
@@ -155,6 +159,7 @@ class EverAccounting_Install {
 		self::create_accounts();
 		self::create_defaults();
 		self::create_roles();
+		self::schedule_events();
 		self::maybe_enable_setup_wizard();
 
 		eaccounting_protect_files( true );
@@ -180,10 +185,9 @@ class EverAccounting_Install {
 			}
 		}
 		if ( 0 < count( $missing_tables ) ) {
-			//\EverAccounting\Admin\Admin_Notices::add_notice( 'base_tables_missing' );
-			update_option( 'eaccounting_schema_missing_tables', $missing_tables );
+			eaccounting_admin_notices()->add_core_notice( 'tables_missing' );
 		} else {
-			delete_option( 'eaccounting_schema_missing_tables' );
+			eaccounting_admin_notices()->remove_notice( 'tables_missing' );
 		}
 
 		return $missing_tables;
@@ -345,18 +349,50 @@ class EverAccounting_Install {
 	 * @return void
 	 */
 	private static function create_defaults() {
-		//      $settings = new EverAccounting_Settings;
-		//      $account  = \EverAccounting\Query_Account::init()->find( 'Cash', 'name' );
-		//      if ( ! empty( $account ) && empty( $settings->get( 'default_account' ) ) ) {
-		//          $settings->set( array( 'default_account' => $account->id ) );
-		//      }
-		//
-		//      $currency = \EverAccounting\Query_Currency::init()->find( 'USD', 'code' );
-		//      if ( ! empty( $currency ) && empty( $settings->get( 'default_currency' ) ) ) {
-		//          $settings->set( array( 'default_currency' => $currency->code ) );
-		//      }
-		//
-		//      $settings->set( array(), true );
+		if ( empty( eaccounting()->settings->get( 'default_account' ) ) ) {
+			$accounts = eaccounting_get_accounts();
+			if ( ! empty( $accounts ) ) {
+				$account = array_pop( $accounts );
+				eaccounting()->settings->set( array( 'default_account' => $account->get_id() ), true );
+			}
+		}
+		if ( empty( eaccounting()->settings->get( 'default_currency' ) ) ) {
+			$currencies = eaccounting_get_currencies();
+			if ( ! empty( $currencies ) ) {
+				$currency = array_pop( $currencies );
+				eaccounting()->settings->set( array( 'default_currency' => $currency->get_code() ), true );
+			}
+		}
+
+		$defaults = array(
+			'default_payment_method' => 'cash',
+			'financial_year_start'   => '01-01',
+			'company_name'           => eaccounting_get_site_name(),
+			'company_email'          => get_option( 'admin_url' ),
+			'invoice_prefix'         => 'INV-',
+			'invoice_digit'          => '5',
+			'invoice_due'            => '15',
+			'invoice_item_label'     => __( 'Item', 'wp-ever-accounting' ),
+			'invoice_price_label'    => __( 'Price', 'wp-ever-accounting' ),
+			'invoice_quantity_label' => __( 'Quantity', 'wp-ever-accounting' ),
+			'bill_prefix'            => 'BILL-',
+			'bill_digit'             => '5',
+			'bill_due'               => '15',
+			'bill_item_label'        => __( 'Item', 'wp-ever-accounting' ),
+			'bill_price_label'       => __( 'Price', 'wp-ever-accounting' ),
+			'bill_quantity_label'    => __( 'Quantity', 'wp-ever-accounting' ),
+		);
+
+		foreach ( $defaults as $key => $value ) {
+			if ( empty( eaccounting()->settings->get( $key ) ) ) {
+				eaccounting()->settings->set(
+					array(
+						$key => $value,
+					)
+				);
+			}
+		}
+		eaccounting()->settings->set( array(), true );
 	}
 
 	/**
@@ -366,8 +402,7 @@ class EverAccounting_Install {
 	 * @return void
 	 */
 	private static function remove_admin_notices() {
-		// include_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
-		// \EverAccounting\Admin\Admin_Notices::remove_all_notices();
+		update_option( 'eaccounting_notices', array() );
 	}
 
 
@@ -402,7 +437,8 @@ class EverAccounting_Install {
 		   	`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY (`currency_code`),
+		    KEY `currency_code` (`currency_code`),
+		    KEY `enabled` (`enabled`),
 		    UNIQUE KEY (`number`),
 		    UNIQUE KEY (`name`, `number`)
             ) $collate",
@@ -416,6 +452,7 @@ class EverAccounting_Install {
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
 		    KEY `type` (`type`),
+		    KEY `enabled` (`enabled`),
 		    UNIQUE KEY (`name`, `type`)
             ) $collate",
 
@@ -441,9 +478,11 @@ class EverAccounting_Install {
 			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
+		    KEY `user_id`(`user_id`),
 		    KEY `name`(`name`),
 		    KEY `email`(`email`),
 		    KEY `phone`(`phone`),
+		    KEY `enabled`(`enabled`),
 		    KEY `type`(`type`)
             ) $collate",
 
@@ -477,11 +516,13 @@ class EverAccounting_Install {
 		    `creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
-		    KEY `account_id` (`account_id`),
 		    KEY `amount` (`amount`),
 		    KEY `currency_code` (`currency_code`),
 		    KEY `currency_rate` (`currency_rate`),
 		    KEY `type` (`type`),
+		    KEY `account_id` (`account_id`),
+		    KEY `document_id` (`document_id`),
+		    KEY `category_id` (`category_id`),
 		    KEY `contact_id` (`contact_id`)
             ) $collate",
 
@@ -527,10 +568,14 @@ class EverAccounting_Install {
   			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
 		    PRIMARY KEY (`id`),
+		    KEY `type` (`type`),
+		    KEY `status` (`status`),
+		    KEY `issue_date` (`issue_date`),
 		    KEY `contact_id` (`contact_id`),
 		    KEY `category_id` (`category_id`),
 		    KEY `total` (`total`),
-		    KEY `type` (`type`),
+		    KEY `currency_code` (`currency_code`),
+		    KEY `currency_rate` (`currency_rate`),
 		    UNIQUE KEY (`document_number`)
             ) $collate",
 
@@ -588,21 +633,6 @@ class EverAccounting_Install {
 		    KEY `category_id` (`category_id`),
 		    KEY `quantity` (`quantity`)
             ) $collate",
-
-			"CREATE TABLE {$wpdb->prefix}ea_api_keys (
-		    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-		  	`user_id` BIGINT UNSIGNED NOT NULL,
-		  	`description` VARCHAR(190) NULL,
-		  	`permission` VARCHAR(10) NOT NULL,
-		  	`api_key` VARCHAR(64) NOT NULL,
-		  	`api_secret` VARCHAR(74) NOT NULL,
-		  	`nonces` TEXT DEFAULT NULL,
-		  	`truncated_key` VARCHAR(7) NOT NULL,
-		  	`last_access` datetime NULL default null,
-		  	PRIMARY KEY  (id),
-		  	KEY `api_key` (`api_key`),
-		  	KEY `api_secret` (`api_secret`)
-		) $collate",
 		);
 
 		foreach ( $tables as $table ) {
@@ -631,30 +661,11 @@ class EverAccounting_Install {
 			"{$wpdb->prefix}ea_document_items",
 			"{$wpdb->prefix}ea_notes",
 			"{$wpdb->prefix}ea_items",
-			"{$wpdb->prefix}ea_api_keys",
-
 		);
 
 		$tables = apply_filters( 'eaccounting_install_get_tables', $tables );
 
 		return $tables;
-	}
-
-	/**
-	 * Register custom tables within $wpdb object.
-	 */
-	public static function wpdb_table_fix() {
-		global $wpdb;
-
-		// List of tables without prefixes.
-		$tables = array(
-			'contactmeta' => 'ea_contactmeta',
-		);
-
-		foreach ( $tables as $name => $table ) {
-			$wpdb->$name    = $wpdb->prefix . $table;
-			$wpdb->tables[] = $table;
-		}
 	}
 
 	/**
@@ -777,7 +788,7 @@ class EverAccounting_Install {
 		}
 
 		remove_role( 'ea_accountant' );
-		remove_role( 'ea_accountant' );
+		remove_role( 'ea_manager' );
 	}
 
 
@@ -788,12 +799,13 @@ class EverAccounting_Install {
 	 * @return void
 	 */
 	public static function schedule_events() {
-		if ( ! wp_next_scheduled( 'eaccounting_daily_scheduled_events' ) ) {
-			wp_schedule_event( current_time( 'timestamp', true ), 'daily', 'eaccounting_daily_scheduled_events' );
-		}
-		if ( ! wp_next_scheduled( 'eaccounting_weekly_scheduled_events' ) ) {
-			wp_schedule_event( current_time( 'timestamp', true ), 'weekly', 'eaccounting_weekly_scheduled_events' );
-		}
+		wp_clear_scheduled_hook( 'eaccounting_twicedaily_scheduled_events' );
+		wp_clear_scheduled_hook( 'eaccounting_daily_scheduled_events' );
+		wp_clear_scheduled_hook( 'eaccounting_weekly_scheduled_events' );
+
+		wp_schedule_event( time() + ( 6 * HOUR_IN_SECONDS ), 'twicedaily', 'eaccounting_twicedaily_scheduled_events' );
+		wp_schedule_event( time() + 10, 'daily', 'eaccounting_daily_scheduled_events' );
+		wp_schedule_event( time() + ( 3 * HOUR_IN_SECONDS ), 'weekly', 'eaccounting_weekly_scheduled_events' );
 	}
 
 	/**
@@ -898,7 +910,6 @@ class EverAccounting_Install {
 
 		return is_null( get_option( 'eaccounting_version', null ) ) || ( 0 === $transaction_count );
 	}
-
 }
 
 EverAccounting_Install::init();

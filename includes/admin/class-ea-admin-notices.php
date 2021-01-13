@@ -32,9 +32,9 @@ class EverAccounting_Admin_Notices {
 	 * @var array
 	 */
 	private $core_notices = array(
-		'install'             => 'install_notice',
-		'default_currency'    => 'default_currency_notice',
-		'base_tables_missing' => 'base_tables_missing_notice',
+		'install'          => 'install_notice',
+		'default_currency' => 'default_currency_notice',
+		'tables_missing'   => 'tables_missing_notice',
 	);
 
 	/**
@@ -280,7 +280,7 @@ class EverAccounting_Admin_Notices {
 	/**
 	 * Notice about base tables missing.
 	 */
-	public function base_tables_missing_notice() {
+	public function tables_missing_notice() {
 		$missing_tables = get_option( 'eaccounting_schema_missing_tables' );
 		?>
 		<div id="message" class="error ea-admin-notice">

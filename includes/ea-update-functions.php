@@ -57,7 +57,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'income',
-				'payment_date'        => $revenue->payment_date,
+				'payment_date'   => $revenue->payment_date,
 				'amount'         => $revenue->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected
@@ -82,7 +82,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'expense',
-				'payment_date'        => $expense->payment_date,
+				'payment_date'   => $expense->payment_date,
 				'amount'         => $expense->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected
@@ -129,7 +129,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'income',
-				'payment_date'        => $revenue->payment_date,
+				'payment_date'   => $revenue->payment_date,
 				'amount'         => $revenue->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected
@@ -161,7 +161,7 @@ function eaccounting_update_1_0_2() {
 			$prefix . 'ea_transactions',
 			array(
 				'type'           => 'expense',
-				'payment_date'        => $expense->payment_date,
+				'payment_date'   => $expense->payment_date,
 				'amount'         => $expense->amount,
 				'currency_code'  => $currency_code,
 				'currency_rate'  => 1, // protected
@@ -288,8 +288,33 @@ function eaccounting_update_1_1_0() {
 	$prefix = $wpdb->prefix;
 
 	//todo update attachment files
-	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
-	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_accounts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `bank_address`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_categories ADD INDEX enabled (`enabled`);" );
+
+	//$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `fax`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `note`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `company` VARCHAR(191) NOT NULL AFTER `name`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `website` VARCHAR(191) NOT NULL AFTER `phone`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `vat_number` VARCHAR(50) NOT NULL AFTER `birth_date`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `street` VARCHAR(191) NOT NULL AFTER `vat_number`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `city` VARCHAR(191) NOT NULL AFTER `street`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `state` VARCHAR(191) NOT NULL AFTER `city`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `postcode` VARCHAR(191) NOT NULL AFTER `state`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `attachment`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD INDEX enabled (`enabled`);" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD INDEX user_id (`user_id`);" );
+
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `paid_at` `payment_date` date NOT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `invoice_id` `document_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `parent_id` `parent_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX document_id (`document_id`);" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX category_id (`category_id`);" );
+
+	EverAccounting_Install::install();
+
+
+	//todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
 }
