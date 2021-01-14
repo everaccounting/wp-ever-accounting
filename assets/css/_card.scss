@@ -162,8 +162,28 @@
 			}
 		}
 	}
-}
 
+}
+#post-body-content {
+	.ea-card__header {
+		@media only screen and (max-width: 420px) {
+			display: block;
+		}
+		&-left {
+			@media only screen and (max-width: 420px) {
+				margin-bottom: 5px;
+			}
+		}
+		&-right {
+			.add-payment {
+				@media only screen and (max-width: 420px) {
+					margin-top: 5px;
+				}
+			}
+		}
+	}
+
+}
 
 .ea-widget-card {
 	$self: &;

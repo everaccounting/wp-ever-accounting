@@ -1,4 +1,5 @@
 node_modules
+wpcs
 .config.json
 /.vscode
 .idea
@@ -34,3 +35,4 @@ wp-cli.local.yml
 
 # Composer
 /vendor/
+
