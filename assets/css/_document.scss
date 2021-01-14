@@ -101,6 +101,7 @@
 		border-collapse: collapse;
 		background-color: transparent;
 		float: right;
+
 		td, th {
 			white-space: nowrap;
 			vertical-align: middle;
@@ -129,6 +130,10 @@
 		@include clearfix();
 	}
 
+	&__items-top {
+		overflow-x: auto;
+	}
+
 	&__items {
 		margin-top: 0;
 		margin-bottom: 0;
@@ -141,7 +146,9 @@
 		box-sizing: border-box;
 		border-left: 0;
 		border-right: 0;
-
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
 		tr {
 			border-bottom: 1px solid #ddd;
 			border-left: 1px solid #ddd;
@@ -214,8 +221,9 @@
 
 	&__line-name {
 		text-align: left;
+
 		.view {
-			@media only screen and (max-width: 420px){
+			@media only screen and (max-width: 420px) {
 				white-space: normal;
 			}
 		}
@@ -383,7 +391,7 @@
 		}
 	}
 
-	&__due{
+	&__due {
 		color: #e42e2e;
 	}
 }
@@ -431,6 +439,7 @@
 
 	&__form {
 		width: 100%;
+
 		p:first-child {
 			margin-top: 0;
 		}
