@@ -146,7 +146,9 @@
 		box-sizing: border-box;
 		border-left: 0;
 		border-right: 0;
-
+		@media only screen and (max-width: 768px) {
+			table-layout: auto !important;
+		}
 		tr {
 			border-bottom: 1px solid #ddd;
 			border-left: 1px solid #ddd;
@@ -189,13 +191,7 @@
 			white-space: nowrap;
 		}
 	}
-	&__items-top {
-		.ea-document__items {
-			@media only screen and (max-width: 768px) {
-				table-layout: auto !important;
-			}
-		}
-	}
+
 	&__line-actions {
 		width: 65px;
 		text-align: left;
