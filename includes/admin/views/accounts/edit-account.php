@@ -25,7 +25,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 		<div>
 			<h1 class="wp-heading-inline"><?php esc_html_e( 'Accounts', 'wp-ever-accounting' ); ?></h1>
 			<?php if ( $account->exists() ) : ?>
-				<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'accounts', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+				<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'accounts', 'page' => 'ea-banking', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
 					<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 				</a>
 			<?php else : ?>
