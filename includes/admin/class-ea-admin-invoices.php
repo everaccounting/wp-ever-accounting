@@ -32,7 +32,6 @@ class EverAccounting_Admin_Invoices {
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'ea_invoice_action' ) || ! current_user_can( 'ea_manage_invoice' ) || ! $invoice->exists() ) {
 			wp_die( __( 'no cheating!', 'wp-ever-accounting' ) );
 		}
-		eaccounting_admin_notices()->add_core_notice('install');
 		$redirect_url = add_query_arg(
 			array(
 				'page'       => 'ea-sales',

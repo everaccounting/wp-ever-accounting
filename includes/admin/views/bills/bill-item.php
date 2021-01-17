@@ -48,7 +48,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php echo '<small class="times">&times;</small> ' . esc_html( $item->get_quantity() ); ?>
 		</div>
 		<div class="edit" style="display: none;">
-			<input type="number" step=".01" min="1"  autocomplete="off" name="items[<?php echo esc_attr( $item_id ); ?>][quantity]" placeholder="0" value="<?php echo esc_attr( $item->get_quantity() ); ?>" size="4" class="line_item_quantity"/>
+			<input type="number" step=".01" min="1" autocomplete="off" name="items[<?php echo esc_attr( $item_id ); ?>][quantity]" placeholder="0" value="<?php echo esc_attr( $item->get_quantity() ); ?>" size="4" class="line_item_quantity"/>
 		</div>
 	</td>
 	<?php if ( eaccounting_tax_enabled() ) : ?>

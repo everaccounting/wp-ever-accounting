@@ -657,21 +657,21 @@ class EverAccounting_Ajax {
 				),
 				eaccounting_clean( $_REQUEST['_wp_http_referer'] )
 			);
-			wp_send_json_success(
-				array(
-					'items'    => eaccounting_get_admin_template_html(
-						'bills/bill-items',
-						array(
-							'bill' => $bill,
-						)
-					),
-					'line'     => array_map( 'strval', $bill->get_items() ),
-					'message'  => ! empty( $posted['id'] ) ? __( 'Bill updated successfully!', 'wp-ever-accounting' ) : '',
-					'redirect' => empty( $posted['id'] ) ? $redirect : '',
 
-				)
+			$response = array(
+				'items'    => eaccounting_get_admin_template_html(
+					'bills/bill-items',
+					array(
+						'bill' => $bill,
+					)
+				),
+				'line'     => array_map( 'strval', $bill->get_items() ),
+				'redirect' => $redirect,
 			);
-
+			if ( empty( $posted['id'] ) ) {
+				$response['redirect'] = $redirect;
+			}
+			wp_send_json_success( $response );
 		} catch ( \Exception $e ) {
 			wp_send_json_error( array( 'message' => $e->getMessage() ) );
 		}
@@ -691,7 +691,7 @@ class EverAccounting_Ajax {
 			)
 		);
 
-		 wp_send_json_success( $currencies );
+		wp_send_json_success( $currencies );
 	}
 
 	/**

@@ -112,6 +112,7 @@
 			border-bottom: 1px solid #ffffff !important;
 		}
 	}
+
 	&__nav {
 		border-bottom: 1px solid #e1e2e2;
 		margin: 0;
@@ -123,25 +124,33 @@
 			background: #f8f8f8;
 			font-size: 13px;
 			color: #000;
+			@media screen and (max-width: 768px) {
+				border-bottom: none !important;
+			}
 		}
 
 		.nav-tab-active {
 			background: #ffffff;
 			border-bottom: 1px solid #ffffff !important;
 			color: #777;
+			@media screen and (max-width: 768px){
+				border-bottom: none !important;
+			}
 		}
+
 		&::after {
 			content: "";
 			display: table;
 			clear: both;
 		}
 	}
-	&__list-section{
+
+	&__list-section {
 		list-style: none;
 		margin: 0;
 		padding: 0;
 
-		&__item{
+		&__item {
 			background: #fff;
 			border: 0;
 			cursor: pointer;
@@ -157,13 +166,38 @@
 			justify-content: space-between;
 			user-select: auto;
 			border-top: 1px solid rgba(0, 0, 0, 0.125);
-			&:first-child{
+
+			&:first-child {
 				border-top: 0;
 			}
 		}
 	}
+
 }
 
+#post-body-content {
+	.ea-card__header {
+		@media only screen and (max-width: 420px) {
+			display: block;
+		}
+
+		&-left {
+			@media only screen and (max-width: 420px) {
+				margin-bottom: 5px;
+			}
+		}
+
+		&-right {
+			.add-payment,.receive-payment {
+				@media only screen and (max-width: 420px) {
+					margin-top: 5px;
+					display: block;
+				}
+			}
+		}
+	}
+
+}
 
 .ea-widget-card {
 	$self: &;
@@ -819,9 +853,19 @@
 		}
 
 		.ea-card__toolbar .select2-container {
+			@media screen and (max-width: 1024px) {
+				margin-top: 5px;
+			}
 			@media screen and (max-width: 782px) {
 				display: block;
 				margin-bottom: 5px;
+			}
+
+		}
+
+		.button {
+			@media screen and (max-width: 1024px) {
+				vertical-align: bottom;
 			}
 		}
 	}

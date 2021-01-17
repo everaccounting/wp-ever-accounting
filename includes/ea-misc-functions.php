@@ -4,8 +4,8 @@
  *
  * Functions for extra support of the plugin.
  *
- * @package EverAccounting
  * @since   1.0.2
+ * @package EverAccounting
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -294,7 +294,33 @@ function eaccounting_get_date_ranges() {
 }
 
 
-function eaccounting_get_site_name(){
-	$parts = wp_parse_url(site_url());
+function eaccounting_get_site_name() {
+	$parts = wp_parse_url( site_url() );
+
 	return $parts['host'];
+}
+
+function eaccounting_file_to_attachment( $file ) {
+	$filename = basename( $file );
+
+	$upload_file = wp_upload_bits( $filename, null, file_get_contents( $file ) );
+	if ( ! $upload_file['error'] ) {
+		$wp_filetype   = wp_check_filetype( $filename, null );
+		$attachment    = array(
+			'post_mime_type' => $wp_filetype['type'],
+			'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
+			'post_content'   => '',
+			'post_status'    => 'inherit'
+		);
+		$attachment_id = wp_insert_attachment( $attachment, $upload_file['file'] );
+		if ( ! is_wp_error( $attachment_id ) ) {
+			require_once( ABSPATH . "wp-admin" . '/includes/image.php' );
+			$attachment_data = wp_generate_attachment_metadata( $attachment_id, $upload_file['file'] );
+			wp_update_attachment_metadata( $attachment_id, $attachment_data );
+
+			return $attachment_id;
+		}
+	}
+
+	return false;
 }

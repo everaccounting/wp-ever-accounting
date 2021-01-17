@@ -15,53 +15,55 @@ $price_label    = eaccounting()->settings->get( 'bill_price_label', __( 'Unit Pr
 $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quantity', 'wp-ever-accounting' ) );
 ?>
 <div class="ea-document__items-wrapper">
-	<table cellpadding="0" cellspacing="0" class="ea-document__items">
-		<thead>
-		<tr>
-			<th class="ea-document__line-actions">&nbsp;</th>
-			<th class="ea-document__line-name" colspan="2"><?php echo esc_html( $item_label ); ?></th>
-			<?php do_action( 'eaccounting_bill_items_headers', $bill ); ?>
-			<th class="ea-document__line-price"><?php echo esc_html( $price_label ); ?></th>
-			<th class="ea-document__line-quantity"><?php echo esc_html( $quantity_label ); ?></th>
-			<?php if ( eaccounting_tax_enabled() ) : ?>
-				<th class="ea-document__line-tax"><?php esc_html_e( 'Tax(%)', 'wp-ever-accounting' ); ?></th>
-			<?php endif; ?>
-			<th class="ea-document__line-subtotal"><?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?></th>
-		</tr>
-		</thead>
-		<tbody id="ea-document__line-items">
-		<?php
-		foreach ( $items as $item_id => $item ) {
-			do_action( 'eaccounting_before_bill_item_html', $item_id, $item, $bill );
-
-			include __DIR__ . '/bill-item.php';
-
-			do_action( 'eaccounting_bill_item_html', $item_id, $item, $bill );
-		}
-		do_action( 'eaccounting_bill_items_after_line_items', $bill );
-		?>
-		</tbody>
-		<tbody>
-		<script type="text/template" id="ea-bill-line-template">
+	<div class="ea-document__items-top">
+		<table cellpadding="0" cellspacing="0" class="ea-document__items">
+			<thead>
+			<tr>
+				<th class="ea-document__line-actions">&nbsp;</th>
+				<th class="ea-document__line-name" colspan="2"><?php echo esc_html( $item_label ); ?></th>
+				<?php do_action( 'eaccounting_bill_items_headers', $bill ); ?>
+				<th class="ea-document__line-price"><?php echo esc_html( $price_label ); ?></th>
+				<th class="ea-document__line-quantity"><?php echo esc_html( $quantity_label ); ?></th>
+				<?php if ( eaccounting_tax_enabled() ) : ?>
+					<th class="ea-document__line-tax"><?php esc_html_e( 'Tax(%)', 'wp-ever-accounting' ); ?></th>
+				<?php endif; ?>
+				<th class="ea-document__line-subtotal"><?php esc_html_e( 'Subtotal', 'wp-ever-accounting' ); ?></th>
+			</tr>
+			</thead>
+			<tbody id="ea-document__line-items">
 			<?php
-			$item_id = 9999;
-			$item    = new \EverAccounting\Models\DocumentItem();
-			include __DIR__ . '/bill-item.php';
+			foreach ( $items as $item_id => $item ) {
+				do_action( 'eaccounting_before_bill_item_html', $item_id, $item, $bill );
+
+				include __DIR__ . '/bill-item.php';
+
+				do_action( 'eaccounting_bill_item_html', $item_id, $item, $bill );
+			}
+			do_action( 'eaccounting_bill_items_after_line_items', $bill );
 			?>
-		</script>
-		<script type="text/template" id="ea-bill-item-selector">
-			<?php
-			eaccounting_item_dropdown(
-				array(
-					'name'  => 'items[9999][item_id]',
-					'class' => 'select-item',
-					'creatable' => true
-				)
-			);
-			?>
-		</script>
-		</tbody>
-	</table>
+			</tbody>
+			<tbody>
+			<script type="text/template" id="ea-bill-line-template">
+				<?php
+				$item_id = 9999;
+				$item    = new \EverAccounting\Models\DocumentItem();
+				include __DIR__ . '/bill-item.php';
+				?>
+			</script>
+			<script type="text/template" id="ea-bill-item-selector">
+				<?php
+				eaccounting_item_dropdown(
+					array(
+						'name'      => 'items[9999][item_id]',
+						'class'     => 'select-item',
+						'creatable' => true
+					)
+				);
+				?>
+			</script>
+			</tbody>
+		</table>
+	</div>
 
 	<div class="ea-document__data-row ea-document__actions">
 		<div class="ea-document__actions-left">
@@ -101,7 +103,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 						</td>
 					</tr>
 				<?php else : ?>
-					<?php foreach ( $bill->get_taxes()  as $tax ) : ?>
+					<?php foreach ( $bill->get_taxes() as $tax ) : ?>
 						<tr>
 							<td class="label"><?php echo esc_html( __( 'Tax', 'wp-ever-accounting' ) . '(' . number_format_i18n( $tax['rate'] ) . '%)' ); ?>:</td>
 							<td width="1%"></td>

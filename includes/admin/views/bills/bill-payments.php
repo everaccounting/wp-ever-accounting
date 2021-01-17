@@ -27,7 +27,7 @@ $payments = $bill->get_payments();
 			<?php foreach ( $payments as $payment ) : ?>
 				<tr>
 					<td>
-						<a href="<?php echo add_query_arg(array('page' => 'ea-expenses', 'tab' => 'payments', 'payment_id' => $payment->get_id(), 'action'=> 'edit'), admin_url('admin.php'));//phpcs:ignore?>">
+						<a href="<?php echo add_query_arg( array( 'page' => 'ea-expenses', 'tab' => 'bills', 's' => $bill->get_bill_number(), ), admin_url( 'admin.php' ) );//phpcs:ignore?>">
 							<?php echo esc_html( $payment->get_payment_date() ); ?>
 						</a>
 					</td>

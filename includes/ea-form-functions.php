@@ -400,8 +400,8 @@ function eaccounting_select( $field ) {
 			'attr'          => array(),
 		)
 	);
-
-	$field['id']                  = empty( $field['id'] ) ? $field['name'] : $field['id'];
+	static $instance = 1;
+	$field['id']                  = empty( $field['id'] ) ? $field['name'].'-'.$instance : $field['id'];
 	$field['value']               = empty( $field['value'] ) ? $field['default'] : $field['value'];
 	$field['wrapper_class']      .= ( true == $field['required'] ) ? ' required ' : '';
 	$field['attr']['required']    = ( true == $field['required'] ) ? ' required ' : '';
@@ -441,6 +441,7 @@ function eaccounting_select( $field ) {
 
 		echo '</div>';
 	}
+	$instance += 1;
 }
 
 /**

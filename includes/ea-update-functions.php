@@ -123,7 +123,7 @@ function eaccounting_update_1_0_2() {
 		);
 	}
 
-		$revenues = $wpdb->get_results( "SELECT * FROM {$prefix}ea_revenues order by id asc" );
+	$revenues = $wpdb->get_results( "SELECT * FROM {$prefix}ea_revenues order by id asc" );
 	foreach ( $revenues as $revenue ) {
 		$wpdb->insert(
 			$prefix . 'ea_transactions',
@@ -292,7 +292,7 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories ADD INDEX enabled (`enabled`);" );
 
 	//$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
-	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `tax_number` `vat_number` VARCHAR(50) NOT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `tax_number` `vat_number` VARCHAR(50) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `fax`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `note`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `company` VARCHAR(191) NOT NULL AFTER `name`;" );
@@ -301,7 +301,7 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `city` VARCHAR(191) NOT NULL AFTER `street`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `state` VARCHAR(191) NOT NULL AFTER `city`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `postcode` VARCHAR(191) NOT NULL AFTER `state`;" );
-	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `attachment`;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `thumbnail_id` INT(11) DEFAULT NULL AFTER `type`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD INDEX enabled (`enabled`);" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD INDEX user_id (`user_id`);" );
 
@@ -312,11 +312,31 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX document_id (`document_id`);" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX category_id (`category_id`);" );
 
+	//update currency table to options
+	$currencies = $wpdb->get_results( "SELECT * FROM {$prefix}ea_currencies order by id asc" );
 
+	if ( is_array( $currencies ) && count( $currencies ) ) {
+		foreach ( $currencies as $currency ) {
+			eaccounting_insert_currency(
+				array(
+					'name'               => $currency->name,
+					'code'               => $currency->code,
+					'rate'               => $currency->rate,
+					'precision'          => $currency->precision,
+					'symbol'             => $currency->symbol,
+					'position'           => $currency->position,
+					'decimal_separator'  => $currency->decimal_separator,
+					'thousand_separator' => $currency->thousand_separator,
+					'date_created'       => $currency->date_created,
+				)
+			);
+		}
+	}
 
 	EverAccounting_Install::install();
-
 
 	//todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
 }
+
+
