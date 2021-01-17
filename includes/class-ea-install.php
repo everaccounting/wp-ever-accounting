@@ -587,7 +587,7 @@ class EverAccounting_Install {
   			`item_name` VARCHAR(191) NOT NULL,
   			`price` double(15,4) NOT NULL,
   			`quantity` double(7,2) NOT NULL DEFAULT 0.00,
-  			`subtotal` double(7,2) NOT NULL DEFAULT 0.00,
+  			`subtotal` double(15,4) NOT NULL DEFAULT 0.00,
   			`tax_rate` double(15,4) NOT NULL DEFAULT 0.00,
   			`discount` double(15,4) NOT NULL DEFAULT 0.00,
   			`tax` double(15,4) NOT NULL DEFAULT 0.00,
