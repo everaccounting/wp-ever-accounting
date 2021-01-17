@@ -313,7 +313,8 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX category_id (`category_id`);" );
 
 	//update currency table to options
-	$currencies = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}ea_currencies order_by id asc" );
+	$currencies = $wpdb->get_results( "SELECT * FROM {$prefix}ea_currencies order by id asc" );
+
 	if ( is_array( $currencies ) && count( $currencies ) ) {
 		foreach ( $currencies as $currency ) {
 			eaccounting_insert_currency( array(
@@ -325,6 +326,7 @@ function eaccounting_update_1_1_0() {
 				'position'           => $currency->position,
 				'decimal_separator'  => $currency->decimal_separator,
 				'thousand_separator' => $currency->thousand_separator,
+				'date_created'       => $currency->date_created,
 			) );
 		}
 	}
