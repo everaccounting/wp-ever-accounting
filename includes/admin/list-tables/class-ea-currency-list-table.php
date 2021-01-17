@@ -107,11 +107,11 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	 */
 	public function define_columns() {
 		return array(
-			'cb'      => '<input type="checkbox" />',
-			'name'    => __( 'Name', 'wp-ever-accounting' ),
-			'rate'    => __( 'Rate', 'wp-ever-accounting' ),
-			'code'    => __( 'Code', 'wp-ever-accounting' ),
-			'symbol'  => __( 'Symbol', 'wp-ever-accounting' ),
+			'cb'     => '<input type="checkbox" />',
+			'name'   => __( 'Name', 'wp-ever-accounting' ),
+			'rate'   => __( 'Rate', 'wp-ever-accounting' ),
+			'code'   => __( 'Code', 'wp-ever-accounting' ),
+			'symbol' => __( 'Symbol', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -123,17 +123,17 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'name'   => array( 'name', false ),
-			'code'   => array( 'code', false ),
-			'rate'   => array( 'rate', false ),
+			'name' => array( 'name', false ),
+			'code' => array( 'code', false ),
+			'rate' => array( 'rate', false ),
 		);
 	}
 
 	/**
 	 * Define bulk actions
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function define_bulk_actions() {
 		return array(
@@ -144,11 +144,11 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Renders the checkbox column in the categories list table.
 	 *
-	 * @since  1.0.2
-	 *
 	 * @param Currency $currency The current object.
 	 *
 	 * @return string Displays a checkbox.
+	 * @since  1.0.2
+	 *
 	 */
 	function column_cb( $currency ) {
 		return sprintf( '<input type="checkbox" name="currency_code[]" value="%s"/>', $currency->get_code() );
@@ -180,14 +180,14 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 		$currency_code = $currency->get_code();
 		switch ( $column_name ) {
 			case 'name':
-				$name  = $currency->get_name();
+				$name     = $currency->get_name();
 				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'edit', 'currency_code' => $currency_code, ) );// phpcs:ignore
 				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'currencies', 'action' => 'delete', 'currency_code' => $currency_code, '_wpnonce' => wp_create_nonce( 'currency-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
-					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ),__( 'Edit', 'wp-ever-accounting' ) ),
-					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ),__( 'Delete', 'wp-ever-accounting' ) ),
+					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
+					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
-				$value = '<a href="'.$edit_url.'">'.$name.'</a>'.$this->row_actions($actions);
+				$value    = '<a href="' . $edit_url . '">' . $name . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'code':
 				$value = esc_html( $currency->get_code() );
@@ -231,7 +231,7 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 		}
 
 		$codes = isset( $_GET['currency_code'] ) ? $_GET['currency_code'] : false;
-		$codes = wp_parse_list($codes);
+		$codes = wp_parse_list( $codes );
 
 		$action = $this->current_action();
 		foreach ( $codes as $code ) {
@@ -305,11 +305,12 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 		$total_items       = count( $this->items );
 		$this->total_count = $total_items;
 
+		$pagination_total_items = eaccounting_get_currencies( array( 'count_total' => true ) );
 		$this->set_pagination_args(
 			array(
-				'total_items' => $total_items,
+				'total_items' => $pagination_total_items,
 				'per_page'    => $per_page,
-				'total_pages' => ceil( $total_items / $per_page ),
+				'total_pages' => ceil( $pagination_total_items / $per_page ),
 			)
 		);
 	}
