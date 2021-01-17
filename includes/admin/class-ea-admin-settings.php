@@ -55,7 +55,7 @@ class EverAccounting_Admin_Settings {
 			'categories' => __( 'Categories', 'wp-ever-accounting' ),
 			'extensions' => __( 'Extensions', 'wp-ever-accounting' ),
 			'licenses'   => __( 'Licenses', 'wp-ever-accounting' ),
-			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+			'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 		);
 
 		if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
@@ -77,14 +77,15 @@ class EverAccounting_Admin_Settings {
 		}
 
 		$sections = array(
-			'general' => array(
+			'general'  => array(
 				'general'  => __( 'General', 'wp-ever-accounting' ),
 				'invoices' => __( 'Invoices', 'wp-ever-accounting' ),
 				'bills'    => __( 'Bills', 'wp-ever-accounting' ),
 			),
-			'emails'  => array(
+			'emails'   => array(
 				'main' => __( 'General', 'wp-ever-accounting' ),
 			),
+			'licenses' => array(),
 		);
 
 		if ( eaccounting_tax_enabled() ) {
@@ -95,16 +96,18 @@ class EverAccounting_Admin_Settings {
 
 		return $sections;
 	}
+
 	/**
 	 * Get settings sections.
 	 *
-	 * @param $tab
 	 * @since 1.1.0
+	 *
+	 * @param $tab
 	 *
 	 * @return array
 	 */
 	public function get_tab_sections( $tab ) {
-		$sections = array( 'main' => '' );
+		$sections = array();
 		switch ( $tab ) {
 			case 'general':
 				$sections = array(
@@ -117,7 +120,8 @@ class EverAccounting_Admin_Settings {
 				}
 				break;
 		}
-		return apply_filters( 'eaccounting_settings_sections_' . $tab, array_filter( $sections ) );
+
+		return apply_filters( 'eaccounting_settings_sections_' . $tab, $sections );
 	}
 
 	/**
@@ -127,33 +131,16 @@ class EverAccounting_Admin_Settings {
 	 * @return void
 	 */
 	public function display_settings_page() {
-		$tabs     = $this->get_tabs();
-		$sections = array();
-		foreach ( $tabs as $tab_id => $title ) {
-			$tab_sections = $this->get_tab_sections( $tab_id );
-			if ( empty( $tab_sections ) && ! has_action( 'eaccounting_settings_tab_' . $tab_id ) ) {
-				unset( $tabs[ $tab_id ] );
-				continue;
-			}
-			$sections[ $tab_id ] = $tab_sections;
-		}
-		$tabs = $this->get_tabs();
+		$tabs = eaccounting_get_settings_tabs();
 		// Get current tab/section.
-		$first_tab     = current( array_keys( $tabs ) );
-		$requested_tab = isset( $_GET['tab'] ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
-		$current_tab   = array_key_exists( $requested_tab, $tabs ) ? $requested_tab : $first_tab;
+		$active_tab       = isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : current( array_keys( $tabs ) );
+		$sections         = eaccounting_get_settings_tab_sections( $active_tab );
+		$active_section   = isset( $_GET['section'] ) && array_key_exists( $_GET['section'], $sections ) ? sanitize_title( $_GET['section'] ) : current( array_keys( $sections ) );
+		$active_tab_label = $tabs[ $active_tab ];
 		if ( empty( $_GET['tab'] ) ) {
-			wp_redirect( add_query_arg( 'tab', $current_tab ) );
+			wp_redirect( add_query_arg( 'tab', $active_tab ) );
 			exit();
 		}
-		$sections          = $this->get_tab_sections( $current_tab );
-		$requested_section = isset( $_GET['section'] ) ? sanitize_title( $_GET['section'] ) : 'main';
-		$current_section   = isset( $sections[ $requested_section ] ) ? $requested_section : current( array_keys( $sections ) );
-		if ( ! empty( $sections ) && $current_section && empty( $_GET['section'] ) ) {
-			wp_redirect( add_query_arg( 'section', $current_section ) );
-			exit();
-		}
-		$current_tab_label = $tabs[ $current_tab ];
 		ob_start();
 		include dirname( __FILE__ ) . '/views/admin-page-settings.php';
 		echo ob_get_clean();

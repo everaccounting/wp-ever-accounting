@@ -292,11 +292,11 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_categories ADD INDEX enabled (`enabled`);" );
 
 	//$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `attachment` `avatar_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts CHANGE `tax_number` `vat_number` VARCHAR(50) NOT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `fax`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts DROP COLUMN `note`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `company` VARCHAR(191) NOT NULL AFTER `name`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `website` VARCHAR(191) NOT NULL AFTER `phone`;" );
-	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `vat_number` VARCHAR(50) NOT NULL AFTER `birth_date`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `street` VARCHAR(191) NOT NULL AFTER `vat_number`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `city` VARCHAR(191) NOT NULL AFTER `street`;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_contacts ADD `state` VARCHAR(191) NOT NULL AFTER `city`;" );
@@ -311,6 +311,8 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX document_id (`document_id`);" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX category_id (`category_id`);" );
+
+
 
 	EverAccounting_Install::install();
 

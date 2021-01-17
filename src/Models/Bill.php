@@ -619,12 +619,10 @@ class Bill extends Document {
 			if ( $item_total < 0 ) {
 				$item_total = 0;
 			}
-
 			$item->set_subtotal( $item_subtotal );
 			$item->set_discount( $item_discount );
 			$item->set_tax( $item_tax );
 			$item->set_total( $item_total );
-
 			$subtotal       += $item->get_subtotal();
 			$total_tax      += $item->get_tax();
 			$total_tax      += ( $item_fees_tax + $item_shipping_tax );

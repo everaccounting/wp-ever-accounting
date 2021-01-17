@@ -213,7 +213,6 @@ class EverAccounting_Admin_Notices {
 		if ( ! in_array( $screen_id, eaccounting_get_screen_ids(), true ) && ! in_array( $screen_id, $show_on_screens, true ) ) {
 			return;
 		}
-		error_log( print_r( $notices, true ) );
 		foreach ( array_keys( $notices ) as $notice ) {
 			if ( ! empty( $this->core_notices[ $notice ] ) ) {
 				add_action( 'admin_notices', array( $this, $this->core_notices[ $notice ] ) );

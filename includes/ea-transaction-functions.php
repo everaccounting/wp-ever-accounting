@@ -627,7 +627,7 @@ function eaccounting_get_transactions( $args = array() ) {
 	$orderby     = "ORDER BY {$orderby} {$order}";
 	$count_total = true === $qv['count_total'];
 	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transactions' );
-	$results     = wp_cache_get( sanitize_key($cache_key), 'ea_transactions' );
+	$results     = wp_cache_get( sanitize_key( $cache_key ), 'ea_transactions' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
 	if ( false === $results ) {
 		if ( $count_total ) {
@@ -749,8 +749,8 @@ function eaccounting_get_total_expense( $year = null ) {
 function eaccounting_get_total_profit( $year = null ) {
 	$total_income  = (float) eaccounting_get_total_income( $year );
 	$total_expense = (float) eaccounting_get_total_expense( $year );
-
-	return $total_income - $total_expense;
+	$profit        = $total_income - $total_expense;
+	return $profit < 0 ? 0 : $profit;
 }
 
 /**
@@ -852,6 +852,6 @@ function eaccounting_get_total_payable() {
 function eaccounting_get_total_upcoming_profit() {
 	$total_payable    = (float) eaccounting_get_total_payable();
 	$total_receivable = (float) eaccounting_get_total_receivable();
-
-	return $total_receivable - $total_payable;
+	$upcoming         = $total_receivable - $total_payable;
+	return $upcoming < 0 ? 0 : $upcoming;
 }

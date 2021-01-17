@@ -29,6 +29,35 @@ require_once( EACCOUNTING_ABSPATH . '/includes/ea-document-functions.php' );
 require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
 
 /**
+ * Get an option
+ *
+ * Looks to see if the specified setting exists, returns default if not
+ *
+ * @since 1.1.0
+ *
+ * @param string $key
+ * @param bool   $default
+ *
+ * @return mixed
+ */
+function eaccounting_get_option( $key = '', $default = false ) {
+	$value = eaccounting()->settings->get( $key, $default );
+	$value = apply_filters( 'eaccounting_get_option', $value, $key, $default );
+	return apply_filters( 'eaccounting_get_option_' . $key, $value, $key, $default );
+}
+
+/**
+ * Update option.
+ *
+ * @param $key
+ * @param $value
+ * @since 1.1.0
+ */
+function eaccounting_update_option( $key, $value ) {
+	return eaccounting()->settings->set( array( $key => $value ), true );
+}
+
+/**
  * Get financial Start
  *
  * @since 1.0.2

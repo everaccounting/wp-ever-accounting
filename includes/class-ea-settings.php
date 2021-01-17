@@ -348,11 +348,12 @@ class EverAccounting_Settings {
 			foreach ( $sections as $section => $settings ) {
 
 				add_settings_section(
-					$section,
+					'eaccounting_settings_' . $tab . '_' . $section,
 					__return_null(),
 					'__return_false',
-					'eaccounting_settings_' . $tab
+					'eaccounting_settings_' . $tab . '_' . $section
 				);
+
 				foreach ( $settings as $option ) {
 					// Without option not allowed.
 					if ( empty( $option['id'] ) ) {
@@ -372,7 +373,6 @@ class EverAccounting_Settings {
 						);
 						continue;
 					}
-
 					$args = wp_parse_args(
 						$option,
 						array(
@@ -381,6 +381,7 @@ class EverAccounting_Settings {
 							'id'          => $option['id'],
 							'tip'         => '',
 							'name'        => '',
+							'type'        => 'text',
 							'size'        => 'regular',
 							'options'     => array(),
 							'std'         => '',
@@ -413,8 +414,8 @@ class EverAccounting_Settings {
 						'eaccounting_settings[' . $option['id'] . ']',
 						$args['name'],
 						is_callable( $callback ) ? $callback : array( $this, 'missing_callback' ),
-						'eaccounting_settings_' . $tab,
-						$section,
+						'eaccounting_settings_' . $tab . '_' . $section,
+						'eaccounting_settings_' . $tab . '_' . $section,
 						$args
 					);
 
@@ -606,9 +607,9 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$id         = 'eaccounting_settings[' . $args['id'] . ']';
 		$html       = '<label for="' . $id . '">';
-		$html       .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
-		$html       .= $args['desc'];
-		$html       .= '</label>';
+		$html      .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html      .= $args['desc'];
+		$html      .= '</label>';
 
 		echo $html;
 	}
@@ -700,7 +701,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -742,7 +743,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -781,7 +782,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -821,7 +822,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -927,7 +928,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -956,11 +957,11 @@ class EverAccounting_Settings {
 	 * @since 1.1.0
 	 */
 	function license_key_callback( $args ) {
-		$value    = $this->settings[ $args['id'] . '_license_key' ];
-		$license  = get_option( $args['id'] . '_license_active' );
+		$value    = $this->get( $args['id'] );
+		$license  = $args['license'];
 		$messages = array();
 		echo sprintf(
-			'<input type="password" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s_license_key]" id="eaccounting_settings[%4$s_license_key]" value="%5$s"/>',
+			'<input type="text" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s]" id="eaccounting_settings[%4$s]" value="%5$s"/>',
 			esc_attr( $args['size'] ),
 			esc_attr( $args['input_class'] ),
 			esc_attr( $args['style'] ),
@@ -1091,14 +1092,13 @@ class EverAccounting_Settings {
 		}
 
 		if ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) {
-			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_license_key_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
+			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
 		}
 
-		//echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . '_license_key]"> ' . wp_kses_post( $args['desc'] ) . '</label>';
+		//echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
 
 		if ( ! empty( $messages ) ) {
 			foreach ( $messages as $message ) {
-
 				echo '<div class="edd-license-data edd-license-">';
 				echo '<p>' . $message . '</p>';
 				echo '</div>';
@@ -1106,7 +1106,7 @@ class EverAccounting_Settings {
 			}
 		}
 
-		wp_nonce_field( sanitize_key( $args['id'] ) . '_license_key-nonce', sanitize_key( $args['id'] ) . '_license_key-nonce' );
+		wp_nonce_field( sanitize_key( $args['id'] ) . '-nonce', sanitize_key( $args['id'] ) . '-nonce' );
 	}
 
 	/**

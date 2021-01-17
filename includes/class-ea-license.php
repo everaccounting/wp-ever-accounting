@@ -158,11 +158,12 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		public function settings( $settings ) {
 			$edd_license_settings = array(
 				array(
-					'id'   => $this->item_shortname,
-					'name' => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->item_name ), //phpcs:ignore
-					'desc' => '',
-					'type' => 'license_key',
-					'size' => 'regular',
+					'id'      => $this->item_shortname . '_license_key',
+					'name'    => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->item_name ), //phpcs:ignore
+					'license' => get_option( $this->item_shortname . '_license_active' ),
+					'desc'    => '',
+					'type'    => 'license_key',
+					'size'    => 'regular',
 				),
 			);
 
@@ -180,6 +181,11 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 		 * @return  void
 		 */
 		public function license_help_text( $active_tab = '' ) {
+			static $has_ran;
+			if ( ! empty( $has_ran ) ) {
+				return;
+			}
+
 			if ( 'licenses' !== $active_tab ) {
 				return;
 			}
@@ -188,6 +194,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 				__( 'Enter your extension license keys here to receive updates for purchased extensions. If your license key has expired, please <a href="%s" target="_blank">renew your license</a>.', 'wp-ever-accounting' ),
 				'http://wpeveraccounting.com/license-renewal'
 			) . '</p>';
+			$has_ran = true;
 		}
 
 
@@ -200,7 +207,6 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 			if ( ! isset( $_POST['eaccounting_settings'] ) ) {
 				return;
 			}
-
 			if ( ! isset( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ] ) || ! wp_verify_nonce( $_REQUEST[ $this->item_shortname . '_license_key-nonce' ], $this->item_shortname . '_license_key-nonce' ) ) {
 				return;
 			}
@@ -222,8 +228,8 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 					return;
 				}
 			}
-
 			$details = get_option( $this->item_shortname . '_license_active' );
+
 			if ( is_object( $details ) && 'valid' === $details->license ) {
 				return;
 			}
@@ -327,7 +333,7 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 
 				// Decode the license data
 				$license_data = json_decode( wp_remote_retrieve_body( $response ) );
-
+				eaccounting_update_option( $this->item_shortname . '_license_key', '' );
 				delete_option( $this->item_shortname . '_license_active' );
 
 			}
@@ -389,8 +395,6 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 			if ( empty( $this->license ) ) {
 				return;
 			}
-
-
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -419,7 +423,6 @@ if ( ! class_exists( 'EverAccounting_License' ) ) :
 
 				}
 			}
-
 
 		}
 
