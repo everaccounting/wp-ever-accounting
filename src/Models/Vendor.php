@@ -138,7 +138,7 @@ class Vendor extends Contact {
 	}
 
 	/**
-	 * Get total paid by a vendor.
+	 * Get total due by a vendor.
 	 *
 	 * @since 1.1.0
 	 * @return float|int|string
