@@ -124,12 +124,18 @@
 			background: #f8f8f8;
 			font-size: 13px;
 			color: #000;
+			@media screen and (max-width: 768px) {
+				border-bottom: none !important;
+			}
 		}
 
 		.nav-tab-active {
 			background: #ffffff;
 			border-bottom: 1px solid #ffffff !important;
 			color: #777;
+			@media screen and (max-width: 768px){
+				border-bottom: none !important;
+			}
 		}
 
 		&::after {
@@ -182,9 +188,10 @@
 		}
 
 		&-right {
-			.add-payment {
+			.add-payment,.receive-payment {
 				@media only screen and (max-width: 420px) {
 					margin-top: 5px;
+					display: block;
 				}
 			}
 		}

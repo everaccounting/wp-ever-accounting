@@ -294,7 +294,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 
 		$args              = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
 		$this->items       = eaccounting_get_transactions( $args );
-		$total_items       = $this->revenue_count + $this->payment_count + $this->others_count;
+		$total_items       = eaccounting_get_transactions( array_merge($args,array('count_total'=>true)) );
 		$this->total_count = $total_items;
 
 		$this->set_pagination_args(
