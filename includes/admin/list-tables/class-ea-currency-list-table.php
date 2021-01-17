@@ -302,15 +302,14 @@ class EverAccounting_Currency_List_Table extends EverAccounting_List_Table {
 		$args = apply_filters( 'eaccounting_currency_table_query_args', $args, $this );
 
 		$this->items       = eaccounting_get_currencies( $args );
-		$total_items       = count( $this->items );
+		$total_items       = eaccounting_get_currencies( array_merge($args,array( 'count_total' => true )) );
 		$this->total_count = $total_items;
 
-		$pagination_total_items = eaccounting_get_currencies( array( 'count_total' => true ) );
 		$this->set_pagination_args(
 			array(
-				'total_items' => $pagination_total_items,
+				'total_items' => $total_items,
 				'per_page'    => $per_page,
-				'total_pages' => ceil( $pagination_total_items / $per_page ),
+				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
 	}
