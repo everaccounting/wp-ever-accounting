@@ -118,13 +118,13 @@ class Setup_Wizard {
 	/**
 	 * Get the URL for the next step's screen.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $step slug (default: current step).
 	 *
 	 * @return string       URL for next step if a next step exists.
 	 *                      Admin URL if it's the last step.
 	 *                      Empty string on failure.
+	 * @since 1.0.2
+	 *
 	 */
 	public function get_next_step_link( $step = '' ) {
 		if ( ! $step ) {
@@ -316,7 +316,7 @@ class Setup_Wizard {
 			$options[ $code ] = sprintf( '%s (%s)', $props['code'], $props['symbol'] );
 		}
 
-		$currencies = eaccounting_get_currencies(array('return'=> 'array'));
+		$currencies = eaccounting_get_currencies( array( 'return' => 'array' ) );
 
 		?>
 		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
@@ -423,7 +423,7 @@ class Setup_Wizard {
 
 		$new_currency = false;
 		$default      = eaccounting_clean( $_REQUEST['default'] );
-
+		
 		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) {
 			$new_currency = eaccounting_insert_currency(
 				array(
