@@ -160,7 +160,7 @@ class EverAccounting_Report_Expenses extends EverAccounting_Admin_Report {
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 						<?php if ( isset( $_GET['filter'] ) ) : ?>
-							<a class="button-secondary" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=expenses' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
+							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=expenses' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>
 				</div>
