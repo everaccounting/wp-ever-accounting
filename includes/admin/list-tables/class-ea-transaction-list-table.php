@@ -38,6 +38,22 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	public $total_count;
 
 	/**
+	 * Number of income items found
+	 *
+	 * @since 1.0.2
+	 * @var string
+	 */
+	public $income_count;
+
+	/**
+	 *  Number of expense items found
+	 *
+	 * @since 1.0.2
+	 * @var string
+	 */
+	public $expense_count;
+
+	/**
 	 * Get things started
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
@@ -168,7 +184,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 			case 'account_id':
 				$account = eaccounting_get_account( $transaction->get_account_id( 'edit' ) );
 				//$value   = $account ? $account->get_name() : '&mdash;';
-				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) :'&mdash;';// phpcs:ignore
+				$value = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $transaction->get_account_id() ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 
 				break;
 			case 'category_id':
@@ -241,6 +257,29 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	}
 
 	/**
+	 * Retrieve the view types
+	 *
+	 * @access public
+	 * @return array $views All the views available
+	 * @since 1.0.2
+	 */
+	public function get_views() {
+		$base          = eaccounting_admin_url();
+		$current       = isset( $_GET['type'] ) ? $_GET['type'] : '';
+		$total_count   = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
+		$income_count  = '&nbsp;<span class="count">(' . $this->income_count . ')</span>';
+		$expense_count = '&nbsp;<span class="count">(' . $this->expense_count . ')</span>';
+
+		$views = array(
+			'all'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'type', $base ) ), $current === 'all' || $current == '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'income'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'income', $base ) ), $current === 'income' ? ' class="current"' : '', __( 'Income', 'wp-ever-accounting' ) . $income_count ),
+			'expense' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'type', 'expense', $base ) ), $current === 'expense' ? ' class="current"' : '', __( 'Expense', 'wp-ever-accounting' ) . $expense_count ),
+		);
+
+		return $views;
+	}
+
+	/**
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
@@ -266,12 +305,14 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 		$customer_id = ! empty( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
+		$type        = isset( $_GET['type'] ) ? $_GET['type'] : '';
 
 		$per_page = $this->per_page;
 
 		$args = wp_parse_args(
 			$this->query_args,
 			array(
+				'type'        => $type,
 				'per_page'    => $per_page,
 				'page'        => $page,
 				'number'      => $per_page,
@@ -292,10 +333,27 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 			);
 		}
 
-		$args              = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
-		$this->items       = eaccounting_get_transactions( $args );
-		$total_items       = eaccounting_get_transactions( array_merge($args,array('count_total'=>true)) );
-		$this->total_count = $total_items;
+		$args                = apply_filters( 'eaccounting_transaction_table_query_args', $args, $this );
+		$this->items         = eaccounting_get_transactions( $args );
+		$this->income_count  = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'income', 'count_total' => true ) ) );
+		$this->expense_count = eaccounting_get_transactions( array_merge( $args, array( 'type' => 'expense', 'count_total' => true ) ) );
+		$this->total_count   = $this->income_count + $this->expense_count;
+
+		$type = isset( $_GET['type'] ) ? $_GET['type'] : 'any';
+
+		switch ( $type ) {
+			case 'income':
+				$total_items = $this->income_count;
+				break;
+			case 'expense':
+				$total_items = $this->expense_count;
+				break;
+			case 'any':
+			default:
+				$total_items = $this->total_count;
+				break;
+		}
+
 
 		$this->set_pagination_args(
 			array(
