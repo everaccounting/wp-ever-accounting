@@ -207,7 +207,7 @@ function eaccounting_render_body() {
 	$key     = get_query_var( 'key' );
 	switch ( $ea_page ) {
 		case 'invoice':
-			$id       = get_query_var( 'invoice_id' );
+			$id       = get_query_var( 'id' );
 			$template = 'single-invoice.php';
 			eaccounting_get_template(
 				$template,
@@ -218,7 +218,7 @@ function eaccounting_render_body() {
 			);
 			break;
 		case 'bill':
-			$id       = get_query_var( 'bill_id' );
+			$id       = get_query_var( 'id' );
 			$template = 'single-bill.php';
 			eaccounting_get_template(
 				$template,
