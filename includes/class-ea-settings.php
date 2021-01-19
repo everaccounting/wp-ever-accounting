@@ -41,8 +41,8 @@ class EverAccounting_Settings {
 	/**
 	 * Retrieve the array of plugin settings
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	function get_registered_settings() {
 		$settings = array(
@@ -325,9 +325,9 @@ class EverAccounting_Settings {
 		 *
 		 * } )
 		 *
-		 * @param array $settings Array of default settings.
-		 *
 		 * @since 1.0.2
+		 *
+		 * @param array $settings Array of default settings.
 		 *
 		 */
 		return apply_filters( 'eaccounting_settings', $settings );
@@ -336,8 +336,8 @@ class EverAccounting_Settings {
 	/**
 	 * Add all settings sections and fields
 	 *
-	 * @return void
 	 * @since 1.0.2
+	 * @return void
 	 */
 	function register_settings() {
 		$whitelisted = array();
@@ -428,8 +428,8 @@ class EverAccounting_Settings {
 	/**
 	 * Load accounts on settings.
 	 *
-	 * @return array|int
 	 * @since 1.1.0
+	 * @return array|int
 	 */
 	protected function get_accounts() {
 		$accounts = array();
@@ -452,11 +452,11 @@ class EverAccounting_Settings {
 	/**
 	 * Load categories on settings.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $type
 	 *
 	 * @return array|int
-	 * @since 1.1.0
-	 *
 	 */
 	protected function get_categories( $type = 'income' ) {
 		$categories = array();
@@ -478,11 +478,11 @@ class EverAccounting_Settings {
 	/**
 	 * Load currencies
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param string $type
 	 *
 	 * @return array|int
-	 * @since 1.1.0
-	 *
 	 */
 	protected function get_currencies() {
 		$currencies = array();
@@ -507,11 +507,11 @@ class EverAccounting_Settings {
 	 *
 	 * Renders the header.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
 	 * @return void
-	 * @since 1.0.2
-	 *
 	 */
 	function header_callback( $args ) {
 		if ( ! empty( $args['desc'] ) ) {
@@ -524,11 +524,11 @@ class EverAccounting_Settings {
 	 *
 	 * Renders text fields.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
 	 * @return void
-	 * @since 1.0.2
-	 *
 	 */
 	function text_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
@@ -559,11 +559,11 @@ class EverAccounting_Settings {
 	 *
 	 * Renders text fields.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
 	 * @return void
-	 * @since 1.0.2
-	 *
 	 */
 	function email_callback( $args ) {
 		$default = isset( $args['std'] ) ? $args['std'] : '';
@@ -594,12 +594,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders checkboxes.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function checkbox_callback( $args ) {
 		$value      = $this->get( $args['id'] );
@@ -619,12 +619,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders multiple checkboxes.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function multicheck_callback( $args ) {
 
@@ -648,12 +648,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders radio boxes.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function radio_callback( $args ) {
 
@@ -682,12 +682,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders URL fields.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function url_callback( $args ) {
 
@@ -721,12 +721,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders number fields.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function number_callback( $args ) {
 
@@ -763,12 +763,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders textarea fields.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function textarea_callback( $args ) {
 
@@ -803,12 +803,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders password fields.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function password_callback( $args ) {
 
@@ -842,12 +842,12 @@ class EverAccounting_Settings {
 	 *
 	 * Renders select fields.
 	 *
-	 * @param array $args Arguments passed by the setting
-	 *
-	 * @return void
 	 * @since 1.0.2
 	 * @global      $this ->options Array of all the EverAccounting Options
 	 *
+	 * @param array $args Arguments passed by the setting
+	 *
+	 * @return void
 	 */
 	function select_callback( $args ) {
 
@@ -882,13 +882,13 @@ class EverAccounting_Settings {
 	 *
 	 * Renders rich editor fields.
 	 *
-	 * @param array $args Arguments passed by the setting
+	 * @since 1.0.2
+	 * @global        $this       ->options Array of all the EverAccounting Options
 	 *
 	 * @global string $wp_version WordPress Version
 	 *
-	 * @global        $this ->options Array of all the EverAccounting Options
+	 * @param array   $args       Arguments passed by the setting
 	 *
-	 * @since 1.0.2
 	 */
 	function rich_editor_callback( $args ) {
 
@@ -912,9 +912,9 @@ class EverAccounting_Settings {
 	 *
 	 * Renders file upload fields.
 	 *
-	 * @param array $args Arguements passed by the setting
-	 *
 	 * @since 1.0.2
+	 *
+	 * @param array $args Arguements passed by the setting
 	 *
 	 */
 	function upload_callback( $args ) {
@@ -953,13 +953,15 @@ class EverAccounting_Settings {
 	/**
 	 * License key callback.
 	 *
-	 * @param $args
 	 * @since 1.1.0
+	 *
+	 * @param $args
 	 */
 	function license_key_callback( $args ) {
-		$value    = $this->get( $args['id'] );
-		$license  = $args['license'];
+		$value    = $this->get( $args['id'], '' );
+		$license  = $args['license_status'];
 		$messages = array();
+
 		echo sprintf(
 			'<input type="text" class="%1$s-text %2$s" style="%3$s" name="eaccounting_settings[%4$s]" id="eaccounting_settings[%4$s]" value="%5$s"/>',
 			esc_attr( $args['size'] ),
@@ -969,130 +971,99 @@ class EverAccounting_Settings {
 			esc_attr( stripslashes( $value ) )
 		);
 
-		if ( ! empty( $license ) && is_object( $license ) ) {
-			// activate_license 'invalid' on anything other than valid, so if there was an error capture it
-			if ( false === $license->success ) {
+		$messages = array();
+		if ( is_object( $license ) && false === $license->success ) {
+			switch ( $license->error ) {
+				case 'expired':
+					$messages[] = sprintf(
+					/* translators: %s extension name */
+						__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'wp-ever-accounting' ),
+						date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
+						'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
+					);
+					break;
 
-				switch ( $license->error ) {
-					case 'expired':
-						$class      = 'expired';
-						$messages[] = sprintf(
-							/* translators: %s extension name */
-							__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
-							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
-							'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
-						);
-						$license_status = 'license-' . $class . '-notice';
+				case 'disabled':
+				case 'revoked':
+					$messages[] = sprintf(
+					/* translators: %s extension name */
+						__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'wp-ever-accounting' ),
+						'https://wpeveraccounting.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
+					);
+					break;
 
-						break;
-					case 'revoked':
-						$class      = 'error';
-						$messages[] = sprintf(
-						/* translators: %s extension name */
-							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
-							'https://wpeveraccounting.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
-						);
-						$license_status = 'license-' . $class . '-notice';
-						break;
+				case 'missing':
+					$messages[] = sprintf(
+					/* translators: %s extension name */
+						__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'wp-ever-accounting' ),
+						'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+					);
+					break;
 
-					case 'missing':
-						$class      = 'error';
-						$messages[] = sprintf(
-						/* translators: %s extension name */
-							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
-							'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
-						);
-						$license_status = 'license-' . $class . '-notice';
+				case 'invalid':
+				case 'site_inactive':
+					$messages[] = sprintf(
+					/* translators: %s extension name */
+						__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'wp-ever-accounting' ),
+						$args['name'],
+						'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+					);
+					break;
 
-						break;
+				case 'item_name_mismatch':
+					/* translators: %s extension name */
+					$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'wp-ever-accounting' ), $args['name'] );
 
-					case 'invalid':
-					case 'site_inactive':
-						$class      = 'error';
-						$messages[] = sprintf(
-						/* translators: %s extension name */
-							__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
-							$args['name'],
-							'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
-						);
+					break;
 
-						$license_status = 'license-' . $class . '-notice';
+				case 'no_activations_left':
+					/* translators: %s extension name */
+					$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'wp-ever-accounting' ), 'https://wpeveraccounting.com/your-account/' );
+					break;
 
-						break;
+				case 'license_not_activable':
+					$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'wp-ever-accounting' );
+					break;
 
-					case 'item_name_mismatch':
-						$class = 'error';
-						/* translators: %s extension name */
-						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
+				default:
+					$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'wp-ever-accounting' );
+					/* translators: %s extension name */
+					$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'wp-ever-accounting' ), $error, 'https://wpeveraccounting.com/support' );
+					break;
 
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'no_activations_left':
-						$class = 'error';
-						/* translators: %s extension name */
-						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
-
-						$license_status = 'license-' . $class . '-notice';
-
-						break;
-
-					case 'license_not_activable':
-						$class      = 'error';
-						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'easy-digital-downloads' );
-
-						$license_status = 'license-' . $class . '-notice';
-						break;
-
-					default:
-						$class = 'error';
-						$error = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'easy-digital-downloads' );
-						/* translators: %s extension name */
-						$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownloads.com/support' );
-
-						$license_status = 'license-' . $class . '-notice';
-						break;
-				}
-			} else {
-				switch ( $license->license ) {
-					case 'valid':
-					default:
-						$class      = 'valid';
-						$now        = current_time( 'timestamp' ); //phpcs:ignore
-						$expiration = strtotime( $license->expires, current_time( 'timestamp' ) ); //phpcs:ignore
-						if ( 'lifetime' === $license->expires ) {
-							$messages[]     = __( 'License key never expires.', 'easy-digital-downloads' );
-							$license_status = 'license-lifetime-notice';
-						} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
-							$messages[] = sprintf(
-									/* translators: %s extension name */
-								__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
-								'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
-							);
-							$license_status = 'license-expires-soon-notice';
-						} else {
-							$messages[] = sprintf(
-								/* translators: %s extension name */
-								__( 'Your license key expires on %s.', 'easy-digital-downloads' ),
-								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ) //phpcs:ignore
-							);
-							$license_status = 'license-expiration-date-notice';
-						}
-						break;
-				}
 			}
-		} else {
-			$messages[] = sprintf(
+		}
+
+		if ( is_object( $license ) && $license->success && $license->license ) {
+			$now        = current_time( 'timestamp' ); //phpcs:ignore
+			$expiration = strtotime( $license->expires, current_time( 'timestamp' ) ); //phpcs:ignore
+			if ( 'lifetime' === $license->expires ) {
+				$messages[] = __( 'License key never expires.', 'wp-ever-accounting' );
+			} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
+				$messages[] = sprintf(
 				/* translators: %s extension name */
-				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
+					__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'wp-ever-accounting' ),
+					date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ), //phpcs:ignore
+					'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
+				);
+			} else {
+				$messages[] = sprintf(
+				/* translators: %s extension name */
+					__( 'Your license key expires on %s.', 'wp-ever-accounting' ),
+					date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ) //phpcs:ignore
+				);
+			}
+		}
+		if ( empty( $messages ) ) {
+			$messages[] = sprintf(
+			/* translators: %s extension name */
+				__( 'To receive updates, please enter your valid %s license key.', 'wp-ever-accounting' ),
 				strip_tags( $args['name'] )
 			);
 		}
 
 		if ( ( is_object( $license ) && 'valid' === $license->license ) || 'valid' === $license ) {
-			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
+			echo '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'wp-ever-accounting' ) . '"/>';
 		}
 
 		//echo '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';
@@ -1114,11 +1085,11 @@ class EverAccounting_Settings {
 	 *
 	 * If a function is missing for settings callbacks alert the user.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $args Arguments passed by the setting
 	 *
 	 * @return void
-	 * @since 1.0.2
-	 *
 	 */
 	function missing_callback( $args ) {
 		/* translators: %s name of the callback */
@@ -1132,13 +1103,13 @@ class EverAccounting_Settings {
 	 * setting that needs to allow 0 as a valid value, but sure to add its
 	 * key to the filtered array seen in this method.
 	 *
-	 * @param string $key
-	 *
-	 * @param mixed $default (optional)
-	 *
-	 * @return mixed
 	 * @since  1.0.2
 	 *
+	 * @param mixed  $default (optional)
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
 	 */
 	public function get( $key, $default = false ) {
 
@@ -1169,8 +1140,8 @@ class EverAccounting_Settings {
 	/**
 	 * Retrieve the array of plugin settings
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	function sanitize_settings( $input = array() ) {
 		if ( empty( $_POST['_wp_http_referer'] ) ) {
@@ -1227,11 +1198,11 @@ class EverAccounting_Settings {
 				 *     `eaccounting_settings_sanitize_checkbox`
 				 *     `eaccounting_settings_sanitize_select`
 				 *
-				 * @param array $value The input array and settings key defined within.
-				 *
-				 * @param string $key The settings key.
-				 *
 				 * @since 1.0.2
+				 *
+				 * @param string $key   The settings key.
+				 *
+				 * @param array  $value The input array and settings key defined within.
 				 *
 				 */
 				$input[ $key ] = apply_filters( 'eaccounting_settings_sanitize_' . $type, $input[ $key ], $key );
@@ -1244,11 +1215,11 @@ class EverAccounting_Settings {
 			/**
 			 * General setting sanitization filter
 			 *
-			 * @param array $input [ $key ] The input array and settings key defined within.
-			 *
-			 * @param string $key The settings key.
-			 *
 			 * @since 1.0
+			 *
+			 * @param string $key   The settings key.
+			 *
+			 * @param array  $input [ $key ] The input array and settings key defined within.
 			 *
 			 */
 			$input[ $key ] = apply_filters( 'eaccounting_settings_sanitize', $input[ $key ], $key );
@@ -1262,14 +1233,14 @@ class EverAccounting_Settings {
 	/**
 	 * Sets an option (in memory).
 	 *
-	 * @param array $settings An array of `key => value` setting pairs to set.
-	 *
-	 * @param bool $save Optional. Whether to trigger saving the option or options. Default false.
-	 *
-	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
 	 * @since  1.0.2
 	 * @access public
 	 *
+	 * @param bool  $save     Optional. Whether to trigger saving the option or options. Default false.
+	 *
+	 * @param array $settings An array of `key => value` setting pairs to set.
+	 *
+	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
 	 */
 	public function set( $settings, $save = false ) {
 		foreach ( $settings as $option => $value ) {
@@ -1290,11 +1261,11 @@ class EverAccounting_Settings {
 	 * be called directly for direct saving to prevent memory pollution. Otherwise, this method
 	 * is only accessible via the optional `$save` parameter in the set() method.
 	 *
+	 * @since 1.0.2
+	 *
 	 * @param array $options Optional. Options to save/overwrite directly. Default empty array.
 	 *
 	 * @return bool False if the options were not updated (saved) successfully, true otherwise.
-	 * @since 1.0.2
-	 *
 	 */
 	protected function save( $options = array() ) {
 		$all_options = $this->get_all();
@@ -1314,8 +1285,8 @@ class EverAccounting_Settings {
 	/**
 	 * Get all settings
 	 *
-	 * @return array
 	 * @since 1.0.2
+	 * @return array
 	 */
 	public function get_all() {
 		return $this->settings;

@@ -40,31 +40,40 @@ class EverAccounting_Admin_Extensions {
 	 */
 	public function render_page() {
 		$extensions = $this->get_extensions();
-		var_dump($extensions);
 		?>
 		<div class="wrap">
-			<h2><?php esc_html_e('Extensions', 'wp-ever-accounting');?></h2>
-			<?php foreach ($extensions as $extension):?>
-			<div class="ea-extension">
-				<h3 class="ea-extension__title"></h3>
-				<?php //var_dump($extension);?>
+			<h2><?php esc_html_e( 'Extensions', 'wp-ever-accounting' ); ?></h2>
+			<div class="ea-extensions ea-row">
+			<?php foreach ( $extensions as $extension ) : ?>
+			<div class="ea-col-3">
+				<div class="ea-extension ea-card">
+					<div class="ea-card__inside">
+						<h3 class="ea-extension__title"><?php echo esc_html( $extension->info->title ); ?></h3>
+						<a href="<?php echo esc_url( $extension->info->link ); ?>" title="<?php echo esc_html( $extension->info->title ); ?>">
+							<img class="attachment-download-grid-thumb size-download-grid-thumb wp-post-image" src="<?php echo esc_url( $extension->info->thumbnail ); ?>">
+						</a>
+						<p><?php echo wp_kses_post( $extension->info->excerpt ); ?></p>
+						<a class="button-secondary" href="<?php echo esc_url( $extension->info->link ); ?>" target="_blank"><?php esc_html_e( 'Get this Extension', 'easy-digital-downloads' ); ?></a>
+					</div>
+				</div>
 			</div>
 			<?php endforeach; ?>
+			</div>
 		</div>
 		<?php
 	}
 
-	public function get_extensions(){
+	public function get_extensions() {
 		$cache = false;//get_transient( 'wpeveraccounting_extensions_feed' );
 
 		if ( false === $cache ) {
 			$url = 'https://wpeveraccounting.com/edd-api/products/';
 
 			$feed = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
-
 			if ( ! is_wp_error( $feed ) ) {
 				if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
-					$cache =  wp_remote_retrieve_body( $feed )->products ;
+					$body  = wp_remote_retrieve_body( $feed );
+					$cache = json_decode( $body )->products;
 					set_transient( 'wpeveraccounting_extensions_feed', $cache, 3600 );
 				}
 			} else {
@@ -72,7 +81,7 @@ class EverAccounting_Admin_Extensions {
 			}
 		}
 
-		return json_decode($cache);
+		return $cache;
 	}
 
 }

@@ -599,3 +599,4 @@ function eaccounting_get_full_name( $user_id ) {
 
 	return implode( ' ', $name );
 }
+
