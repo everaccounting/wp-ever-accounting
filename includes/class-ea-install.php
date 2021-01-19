@@ -424,7 +424,7 @@ class EverAccounting_Install {
 		$collate          = $wpdb->get_charset_collate();
 
 		$tables = array(
-			"CREATE TABLE {$wpdb->prefix}ea_accounts(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_accounts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
 		    `name` VARCHAR(191) NOT NULL COMMENT 'Account Name',
 		    `number` VARCHAR(191) NOT NULL COMMENT 'Account Number',
@@ -444,7 +444,7 @@ class EverAccounting_Install {
 		    UNIQUE KEY (`name`, `number`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_categories(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_categories(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   		  	`name` VARCHAR(191) NOT NULL,
 		  	`type` VARCHAR(50) NOT NULL,
@@ -457,7 +457,7 @@ class EverAccounting_Install {
 		    UNIQUE KEY (`name`, `type`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_contacts(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_contacts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `user_id` INT(11) DEFAULT NULL,
 			`name` VARCHAR(191) NOT NULL,
@@ -487,7 +487,7 @@ class EverAccounting_Install {
 		    KEY `type`(`type`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_contactmeta(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_contactmeta(
 			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
 			`contact_id` bigint(20) unsigned NOT NULL default '0',
 			`meta_key` varchar(255) default NULL,
@@ -497,7 +497,7 @@ class EverAccounting_Install {
 			KEY `meta_key` (meta_key($max_index_length))
 			) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_transactions(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transactions(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `type` VARCHAR(100) DEFAULT NULL,
 		  	`payment_date` date NOT NULL,
@@ -527,7 +527,7 @@ class EverAccounting_Install {
 		    KEY `contact_id` (`contact_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_transfers(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_transfers(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`income_id` INT(11) NOT NULL,
   			`expense_id` INT(11) NOT NULL,
@@ -538,7 +538,7 @@ class EverAccounting_Install {
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_documents(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_documents(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
             `type` VARCHAR(60) NOT NULL,
@@ -580,7 +580,7 @@ class EverAccounting_Install {
 		    UNIQUE KEY (`document_number`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_document_items(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_document_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`document_id` INT(11) DEFAULT NULL,
   			`item_id` INT(11) DEFAULT NULL,
@@ -600,7 +600,7 @@ class EverAccounting_Install {
 		    KEY `item_id` (`item_id`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_notes(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_notes(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`parent_id` INT(11) NOT NULL,
   			`type` VARCHAR(20) NOT NULL,
@@ -613,7 +613,7 @@ class EverAccounting_Install {
 		    KEY `type` (`type`)
             ) $collate",
 
-			"CREATE TABLE {$wpdb->prefix}ea_items(
+			"CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ea_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `name` VARCHAR(191) NOT NULL,
   			`sku` VARCHAR(100) NULL default '',

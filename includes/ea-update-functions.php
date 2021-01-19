@@ -333,6 +333,21 @@ function eaccounting_update_1_1_0() {
 		}
 	}
 
+	//update permissions
+	global $wp_roles;
+
+	if ( is_object( $wp_roles ) ) {
+		$wp_roles->add_cap( 'ea_manager', 'ea_manage_item' );
+		$wp_roles->add_cap( 'ea_manager', 'ea_manage_invoice' );
+		$wp_roles->add_cap( 'ea_manager', 'ea_manage_bill' );
+		$wp_roles->add_cap( 'ea_accountant', 'ea_manage_item' );
+		$wp_roles->add_cap( 'ea_accountant', 'ea_manage_invoice' );
+		$wp_roles->add_cap( 'ea_accountant', 'ea_manage_bill' );
+		$wp_roles->add_cap( 'administrator', 'ea_manage_item' );
+		$wp_roles->add_cap( 'administrator', 'ea_manage_invoice' );
+		$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
+	}
+
 	EverAccounting_Install::install();
 
 	//todo upload transaction files as attachment then update transaction table and delete attachment column
