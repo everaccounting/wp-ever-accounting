@@ -51,12 +51,9 @@ function eaccounting_tools_system_info_report() {
 	// EverAccounting
 	//
 
-	$settings      = eaccounting()->settings;
-	$account_id    = eaccounting()->settings->get( 'default_account' );
-	$currency_code = eaccounting()->settings->get( 'default_currency' );
-	$currency      = '';
-	$db_version    = get_option( 'eaccounting_version' );
-	$install_date  = get_option( 'eaccounting_install_date' );
+	$settings     = eaccounting()->settings;
+	$db_version   = get_option( 'eaccounting_version' );
+	$install_date = get_option( 'eaccounting_install_date' );
 	global $wpdb;
 	$tables = $wpdb->get_col( "SHOW TABLES LIKE '{$wpdb->prefix}ea_%'" );
 	$tables = preg_replace( "/^{$wpdb->prefix}/", '', $tables );
@@ -65,34 +62,39 @@ function eaccounting_tools_system_info_report() {
 	$return .= "\n" . '-- EverAccounting Configuration' . "\n\n";
 	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
-	$return .= 'Install Date:                     ' . ( $install_date ? date( 'Y-m-d H:i:s' ) . "\n" : "Unset\n" );
+	$return .= 'Install Date:                     ' . ( $install_date ? date_i18n( 'Y-m-d H:i:s', $install_date ) . "\n" : "Unset\n" );
 	$return .= 'Debug Mode:                       ' . ( $settings->get( 'debug_mode', false ) ? 'True' . "\n" : "False\n" );
-	$return .= 'Accounts Table:                   ' . ( in_array( 'ea_accounts', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Transactions Table:               ' . ( in_array( 'ea_transactions', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Contacts Table:                   ' . ( in_array( 'ea_contacts', $tables, true ) ? 'True' . "\n" : "False\n" );
-	$return .= 'Currencies Table:                 ' . ( in_array( 'ea_currencies', $tables, true ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Contactmeta Table:                ' . ( in_array( 'ea_contactmeta', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Transfers Table:                  ' . ( in_array( 'ea_transfers', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Categories Table:                 ' . ( in_array( 'ea_categories', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Documents Table:                  ' . ( in_array( 'ea_documents', $tables, true ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Document Item Table:              ' . ( in_array( 'ea_document_items', $tables, true ) ? 'True' . "\n" : "False\n" );
 	$return .= 'Items Table:                      ' . ( in_array( 'ea_items', $tables, true ) ? 'True' . "\n" : "False\n" );
 
 	// Misc Settings
-	$return .= "\n" . '-- EverAccounting Misc Settings' . "\n\n";
+	$currency_code = eaccounting_get_option( 'default_currency' );
+	$currency      = eaccounting_get_currency( $currency_code );
+	$return       .= "\n" . '-- EverAccounting Settings' . "\n\n";
+
+	$return .= 'Default currency:                  ' . $currency_code . "\n";
+	$return .= 'Default currency rate:             ' . $currency->get_rate() . "\n";
+	$return .= 'Default payment method:            ' . eaccounting_get_option( 'default_payment_method' ) . "\n";
+	$return .= 'Default Account:                   ' . eaccounting_get_option( 'default_account' ) . "\n";
 
 	// Object counts.
 	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
 	$return .= 'Items:                            ' . number_format( eaccounting_get_items( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Transactions:                     ' . number_format( eaccounting_get_transactions( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Accounts:                         ' . number_format( eaccounting_get_accounts( array( 'count_total' => true ) ) ) . "\n";
-	$return .= 'Customers:                        '. number_format( eaccounting_get_customers( array( 'count_total' => true ) ) ) . "\n";
+	$return .= 'Customers:                        ' . number_format( eaccounting_get_customers( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Vendors:                          ' . number_format( eaccounting_get_vendors( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Currencies:                       ' . number_format( eaccounting_get_currencies( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Categories:                       ' . number_format( eaccounting_get_categories( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Transfers:                        ' . number_format( eaccounting_get_transfers( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Invoices:                         ' . number_format( eaccounting_get_invoices( array( 'count_total' => true ) ) ) . "\n";
 	$return .= 'Bills:                            ' . number_format( eaccounting_get_bills( array( 'count_total' => true ) ) ) . "\n";
-
-
 
 	// Get plugins that have an update
 	$updates = get_plugin_updates();
@@ -119,7 +121,7 @@ function eaccounting_tools_system_info_report() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
@@ -131,7 +133,7 @@ function eaccounting_tools_system_info_report() {
 			continue;
 		}
 
-		$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+		$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
 		$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 	}
 
@@ -149,8 +151,8 @@ function eaccounting_tools_system_info_report() {
 				continue;
 			}
 
-			$update = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
-			$plugin = get_plugin_data( $plugin_path );
+			$update  = ( array_key_exists( $plugin_path, $updates ) ) ? ' (needs update - ' . $updates[ $plugin_path ]->update->new_version . ')' : '';
+			$plugin  = get_plugin_data( $plugin_path );
 			$return .= $plugin['Name'] . ': ' . $plugin['Version'] . $update . "\n";
 		}
 	}
