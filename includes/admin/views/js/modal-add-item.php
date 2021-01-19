@@ -43,6 +43,16 @@ defined( 'ABSPATH' ) || exit();
 			)
 		);
 
+		eaccounting_text_input(
+			array(
+				'wrapper_class' => 'ea-col-6',
+				'label'         => __( 'Purchase price', 'wp-ever-accounting' ),
+				'name'          => 'purchase_price',
+				'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
+				'required'      => true,
+			)
+		);
+
 		eaccounting_hidden_input(
 			array(
 				'name'  => 'action',
