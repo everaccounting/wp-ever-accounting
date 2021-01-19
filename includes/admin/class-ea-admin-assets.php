@@ -45,13 +45,6 @@ class Admin_Assets {
 			wp_enqueue_style( 'ea-admin-styles' );
 			wp_enqueue_style( 'jquery-ui-style' );
 		}
-
-		// React Styles
-		// wp_register_style( 'ea-components', self::get_asset_dist_url( 'components', 'css' ), array( 'wp-components' ), $version );
-		// wp_register_style( 'ea-invoice', self::get_asset_dist_url( 'invoice', 'css' ), array( 'ea-components', 'wp-components' ), $version );
-		// wp_register_style( 'ea-app', self::get_asset_dist_url( 'app', 'css' ), array( 'ea-components', 'wp-components' ), $version );
-		// wp_enqueue_style( 'ea-invoice' );
-		// wp_enqueue_style( 'ea-app' );
 	}
 
 
@@ -97,11 +90,9 @@ class Admin_Assets {
 			wp_enqueue_script( 'jquery-ui-datepicker' );
 			wp_enqueue_script( 'jquery-ui-tooltip' );
 			wp_enqueue_script( 'wp-color-picker' );
-			//wp_enqueue_script( 'jquery-tiptip' );
 			wp_enqueue_script( 'jquery-select2' );
 			wp_enqueue_script( 'jquery-inputmask' );
 			wp_enqueue_script( 'jquery-blockui' );
-			//wp_enqueue_script( 'ea-notice' );
 			wp_enqueue_script( 'ea-modal' );
 			wp_enqueue_script( 'ea-select' );
 			wp_enqueue_script( 'ea-creatable' );
@@ -129,57 +120,53 @@ class Admin_Assets {
 					),
 				)
 			);
-		}
 
-		// export page
-		if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' === $_GET['tab'] ) {
-			wp_enqueue_script( 'ea-exporter' );
-		}
+			// export page
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'export' === $_GET['tab'] ) {
+				wp_enqueue_script( 'ea-exporter' );
+			}
 
-		// import page
-		if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'import' === $_GET['tab'] ) {
+			// import page
+			if ( eaccounting_is_admin_page( 'ea-tools' ) && isset( $_GET['tab'] ) && 'import' === $_GET['tab'] ) {
+				wp_localize_script(
+					'ea-importer',
+					'eaccounting_importer_i10n',
+					array(
+						'uploaded_file_not_found' => esc_html__( 'Could not find the uploaded file, please try again', 'wp-ever-accounting' ),
+						'select_field_to_preview' => esc_html__( '  - Select field to preview data -', 'wp-ever-accounting' ),
+						'required'                => esc_html__( '(Required)', 'wp-ever-accounting' ),
+					)
+				);
+				wp_enqueue_script( 'ea-importer' );
+			}
+
+			// settings page
+			if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
+				wp_enqueue_media();
+				wp_enqueue_script( 'ea-settings' );
+			}
+
+			// report page
+			if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
+				wp_enqueue_script( 'jquery-chartjs' );
+				//wp_enqueue_script( 'jquery-chartjs-labels' );
+			}
+
+			$default_currency = eaccounting()->settings->get( 'default_currency', 'USD' );
 			wp_localize_script(
-				'ea-importer',
-				'eaccounting_importer_i10n',
+				'ea-admin',
+				'eaccountingi10n',
 				array(
-					'uploaded_file_not_found' => esc_html__( 'Could not find the uploaded file, please try again', 'wp-ever-accounting' ),
-					'select_field_to_preview' => esc_html__( '  - Select field to preview data -', 'wp-ever-accounting' ),
-					'required'                => esc_html__( '(Required)', 'wp-ever-accounting' ),
+					'site_url'   => site_url(),
+					'admin_url'  => admin_url(),
+					'asset_url'  => eaccounting()->plugin_url( '/assets' ),
+					'plugin_url' => eaccounting()->plugin_url(),
+					'currency'   => eaccounting_get_currency( $default_currency )->get_data(),
+					'currencies' => eaccounting_get_currencies(array('return' => 'raw', 'number' => -1 )) //phpcs:ignore
 				)
 			);
-			wp_enqueue_script( 'ea-importer' );
-		}
-
-		// settings page
-		if ( eaccounting_is_admin_page( 'ea-settings' ) ) {
 			wp_enqueue_media();
-			wp_enqueue_script( 'ea-settings' );
 		}
-
-		// report page
-		if ( eaccounting_is_admin_page( 'ea-reports' ) ) {
-			wp_enqueue_script( 'jquery-chartjs' );
-			//wp_enqueue_script( 'jquery-chartjs-labels' );
-		}
-
-		// React scripts
-		//self::register_react_script( 'ea-data', self::get_asset_dist_url( 'data' ) );
-		//self::register_react_script( 'ea-components', self::get_asset_dist_url( 'components' ) );
-		//self::register_react_script( 'ea-invoice', self::get_asset_dist_url( 'invoice' ), array( 'ea-data', 'ea-components' ) );
-		$default_currency = eaccounting()->settings->get('default_currency', 'USD');
-		wp_localize_script(
-			'ea-admin',
-			'eaccountingi10n',
-			array(
-				'site_url'   => site_url(),
-				'admin_url'  => admin_url(),
-				'asset_url'  => eaccounting()->plugin_url( '/assets' ),
-				'plugin_url' => eaccounting()->plugin_url(),
-				'currency'   => eaccounting_get_currency($default_currency)->get_data(),
-				'currencies' => eaccounting_get_currencies(array('return' => 'raw', 'number' => -1 )) //phpcs:ignore
-			)
-		);
-		wp_enqueue_media();
 	}
 
 
