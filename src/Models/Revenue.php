@@ -10,7 +10,6 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Traits\AttachmentTrait;
-use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,7 +21,6 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Revenue extends Transaction {
-	use CurrencyTrait;
 	use AttachmentTrait;
 	/**
 	 * This is the name of this object type.

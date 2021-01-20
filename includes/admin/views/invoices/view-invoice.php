@@ -19,13 +19,17 @@ defined( 'ABSPATH' ) || exit();
 $invoice_actions = apply_filters(
 	'eaccounting_invoice_actions',
 	array(
-		'status_pending'   => __( 'Mark Pending', 'wp-ever-accounting' ),
 		'status_cancelled' => __( 'Mark Cancelled', 'wp-ever-accounting' ),
 	)
 );
-if( $invoice->needs_payment() ){
+if ( $invoice->needs_payment() ) {
 	$invoice_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
 }
+
+if ( ! in_array( $invoice->get_status( 'edit' ), array( 'paid', 'partial' ) ) ) {
+	$invoice_actions['status_pending'] = __( 'Mark Pending', 'wp-ever-accounting' );
+}
+
 $invoice_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $invoice->exists() ) {
 	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Invoices', 'invoice_payments' ), 'ea_invoice', 'side' );
@@ -34,20 +38,21 @@ if ( $invoice->exists() ) {
 /**
  * Fires after all built-in meta boxes have been added, contextually for the given object.
  *
+ * @param Invoice $invoice object.
+ *
  * @since 1.1.0
  *
- * @param Invoice $invoice object.
  */
 do_action( 'add_meta_boxes_ea_invoice', $invoice );
 ?>
-<div class="ea-title-section">
-	<div>
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Invoices', 'wp-ever-accounting' ); ?></h1>
-		<a href="<?php echo esc_url( 'admin.php?page=ea-sales&tab=invoices&action=add' ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
+	<div class="ea-title-section">
+		<div>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Invoices', 'wp-ever-accounting' ); ?></h1>
+			<a href="<?php echo esc_url( 'admin.php?page=ea-sales&tab=invoices&action=add' ); ?>" class="page-title-action"><?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?></a>
 
+		</div>
 	</div>
-</div>
-<hr class="wp-header-end">
+	<hr class="wp-header-end">
 
 <?php if ( $invoice->exists() && $invoice->is_draft() ) : ?>
 	<div class="notice error">
@@ -55,7 +60,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 	</div>
 <?php endif; ?>
 
-<div id="ea-invoice" class="ea-clearfix">
+	<div id="ea-invoice" class="ea-clearfix">
 		<div id="poststuff">
 			<div id="post-body" class="metabox-holder columns-2">
 				<div id="post-body-content">
@@ -83,7 +88,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 													wp_nonce_url(
 														add_query_arg(
 															array(
-																'action'      => 'eaccounting_invoice_action',
+																'action'         => 'eaccounting_invoice_action',
 																'invoice_action' => $action,
 																'invoice_id'     => $invoice->get_id(),
 															),

@@ -19,13 +19,17 @@ defined( 'ABSPATH' ) || exit();
 $bill_actions = apply_filters(
 	'eaccounting_bill_actions',
 	array(
-		'status_received'  => __( 'Mark as Received', 'wp-ever-accounting' ),
 		'status_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
 	)
 );
 if ( $bill->needs_payment() ) {
 	$bill_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
 }
+
+if ( ! in_array( $bill->get_status( 'edit' ), array( 'paid', 'partial' ) ) ) {
+	$bill_actions['status_received'] = __( 'Mark as Received', 'wp-ever-accounting' );
+}
+
 $bill_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $bill->exists() ) {
 	add_meta_box( 'bill_payments', __( 'Bill Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Bills', 'bill_payments' ), 'ea_bill', 'side' );
@@ -34,9 +38,10 @@ if ( $bill->exists() ) {
 /**
  * Fires after all built-in meta boxes have been added, contextually for the given object.
  *
+ * @param Bill $bill object.
+ *
  * @since 1.1.0
  *
- * @param Bill $bill object.
  */
 do_action( 'add_meta_boxes_ea_bill', $bill );
 ?>

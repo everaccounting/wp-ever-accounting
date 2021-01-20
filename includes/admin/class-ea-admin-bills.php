@@ -43,9 +43,9 @@ class EverAccounting_Admin_Bills {
 		switch ( $action ) {
 			case 'status_received':
 				try {
-					$bill->set_status( 'pending' );
+					$bill->set_status( 'received' );
 					$bill->save();
-					eaccounting_admin_notices()->add_success( __( 'Bill status updated to status.', 'wp-ever-accounting' ) );
+					eaccounting_admin_notices()->add_success( __( 'Bill status updated to received.', 'wp-ever-accounting' ) );
 				} catch ( Exception $e ) {
 					/* translators: %s reason */
 					eaccounting_admin_notices()->add_error( sprintf( __( 'Bill status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
@@ -119,9 +119,10 @@ class EverAccounting_Admin_Bills {
 	/**
 	 * @param $bill_id
 	 *
+	 * @param $bill_id
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param $bill_id
 	 */
 	public function edit_bill( $bill_id = null ) {
 		try {
@@ -143,9 +144,10 @@ class EverAccounting_Admin_Bills {
 	 *
 	 * @param Bill $bill
 	 *
+	 * @param Bill $bill
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param Bill $bill
 	 */
 	public static function bill_notes( $bill ) {
 		if ( ! $bill->exists() ) {
@@ -157,9 +159,10 @@ class EverAccounting_Admin_Bills {
 	/**
 	 * Get bill payments.
 	 *
+	 * @param Bill $bill
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param Bill $bill
 	 */
 	public static function bill_payments( $bill ) {
 		if ( ! $bill->exists() ) {

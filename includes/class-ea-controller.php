@@ -83,14 +83,14 @@ class EverAccounting_Controller {
 	/**
 	 * Validate account data.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param int     $id
+	 * @param int $id
 	 * @param Account $account
 	 *
-	 * @param array   $data
+	 * @param array $data
 	 *
 	 * @throws \Exception
+	 * @since 1.1.0
+	 *
 	 */
 	public static function validate_account_data( $data, $id ) {
 		global $wpdb;
@@ -104,9 +104,9 @@ class EverAccounting_Controller {
 	 * When an account is deleted check if
 	 * default account need to be updated or not.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $account_id
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public static function delete_account_reference( $account_id ) {
@@ -185,14 +185,14 @@ class EverAccounting_Controller {
 	/**
 	 * Validate payment data.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param null      $id
+	 * @param null $id
 	 * @param \WP_Error $errors
 	 *
-	 * @param array     $data
+	 * @param array $data
 	 *
 	 * @throws \Exception
+	 * @since 1.1.0
+	 *
 	 */
 	public static function validate_payment_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {
@@ -234,14 +234,14 @@ class EverAccounting_Controller {
 	/**
 	 * Validate expense data.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param null      $id
+	 * @param null $id
 	 * @param \WP_Error $errors
 	 *
-	 * @param array     $data
+	 * @param array $data
 	 *
 	 * @throws \Exception
+	 * @since 1.1.0
+	 *
 	 */
 	public static function validate_revenue_data( $data, $id = null ) {
 		if ( empty( $data['payment_date'] ) ) {
@@ -281,7 +281,6 @@ class EverAccounting_Controller {
 	*/
 
 
-
 	/*
 	|--------------------------------------------------------------------------
 	| Category
@@ -293,19 +292,18 @@ class EverAccounting_Controller {
 	/**
 	 * Validate category data.
 	 *
-	 * @since 1.1.0
-	 *
-	 * @param null     $id
+	 * @param null $id
 	 * @param Category $category
 	 *
-	 * @param array    $data
+	 * @param array $data
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public static function validate_category_data( $data, $id ) {
 		global $wpdb;
-
 		if ( $id != (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name='%s'", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ) ) ) { // @codingStandardsIgnoreLine
 			throw new \Exception( __( 'Duplicate category.', 'wp-ever-accounting' ) );
 		}
@@ -314,10 +312,10 @@ class EverAccounting_Controller {
 	/**
 	 * Delete category id from transactions.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $id
 	 *
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public static function delete_category_reference( $id ) {
@@ -338,11 +336,11 @@ class EverAccounting_Controller {
 	/**
 	 * Update default currency.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $id
 	 *
 	 * @return bool
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public static function update_default_currency( $value, $old_value ) {
@@ -368,11 +366,12 @@ class EverAccounting_Controller {
 	/**
 	 * Delete currency id from settings.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param $data
 	 *
 	 * @param $id
+	 *
+	 * @since 1.1.0
+	 *
 	 */
 	public static function delete_currency_reference( $id, $data ) {
 		$default_currency = eaccounting()->settings->get( 'default_currency' );

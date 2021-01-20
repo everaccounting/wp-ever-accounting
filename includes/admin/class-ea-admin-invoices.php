@@ -46,7 +46,7 @@ class EverAccounting_Admin_Invoices {
 				try {
 					$invoice->set_status( 'pending' );
 					$invoice->save();
-					eaccounting_admin_notices()->add_success( __( 'Invoice status updated to status.', 'wp-ever-accounting' ) );
+					eaccounting_admin_notices()->add_success( __( 'Invoice status updated to pending.', 'wp-ever-accounting' ) );
 				} catch ( Exception $e ) {
 					/* translators: %s reason */
 					eaccounting_admin_notices()->add_error( sprintf( __( 'Invoice status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
@@ -124,9 +124,10 @@ class EverAccounting_Admin_Invoices {
 	/**
 	 * @param $invoice_id
 	 *
+	 * @param $invoice_id
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param $invoice_id
 	 */
 	public function edit_invoice( $invoice_id = null ) {
 		try {
@@ -142,14 +143,16 @@ class EverAccounting_Admin_Invoices {
 			)
 		);
 	}
+
 	/**
 	 * Get invoice notes.
 	 *
 	 * @param Invoice $invoice
 	 *
+	 * @param Invoice $invoice
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param Invoice $invoice
 	 */
 	public static function invoice_notes( $invoice ) {
 		if ( ! $invoice->exists() ) {
@@ -161,9 +164,10 @@ class EverAccounting_Admin_Invoices {
 	/**
 	 * Get invoice payments.
 	 *
+	 * @param Invoice $invoice
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param Invoice $invoice
 	 */
 	public static function invoice_payments( $invoice ) {
 		if ( ! $invoice->exists() ) {
