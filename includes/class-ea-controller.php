@@ -306,10 +306,8 @@ class EverAccounting_Controller {
 		global $wpdb;
 		$existing_category_id = (int) $wpdb->get_var( $wpdb->prepare( "SELECT id from {$wpdb->prefix}ea_categories WHERE type=%s AND name='%s'", eaccounting_clean( $data['type'] ), eaccounting_clean( $data['name'] ) ) );
 
-		if ( ! empty( $existing_category_id ) ) {
-			if ( ( $id != $existing_category_id ) || empty( $id ) ) {
-				throw new \Exception( __( 'Duplicate category.', 'wp-ever-accounting' ) );
-			}
+		if ( ! empty( $existing_category_id ) && ( $id != $existing_category_id ) ) {
+			throw new \Exception( __( 'Duplicate category.', 'wp-ever-accounting' ) );
 		}
 	}
 
