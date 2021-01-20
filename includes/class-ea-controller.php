@@ -62,10 +62,12 @@ class EverAccounting_Controller {
 		//bill
 		add_action( 'eaccounting_delete_payment', array( $this, 'update_bill_data' ), 10, 2 );
 		add_action( 'eaccounting_update_payment', array( $this, 'update_bill_data' ), 10, 2 );
+		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_bill_status' ) );
 
 		//invoice
 		add_action( 'eaccounting_delete_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
 		add_action( 'eaccounting_update_revenue', array( $this, 'update_invoice_data' ), 10, 2 );
+		add_action( 'eaccounting_daily_scheduled_events', array( $this, 'update_invoice_status' ) );
 
 		//thumbnail
 		add_action( 'delete_attachment', array( $this, 'delete_attachment_reference' ) );
@@ -397,6 +399,19 @@ class EverAccounting_Controller {
 		}
 	}
 
+	public static function update_bill_status() {
+		global $wpdb;
+		$current_time = date_i18n( 'Y-m-d H:i:s' );
+		$bill_ids     = $wpdb->get_col( $wpdb->prepare( "select id from {$wpdb->prefix}ea_documents where due_date != '' AND %s > due_date AND `type` ='bill' AND status not in ('paid', 'cancelled', 'draft', 'overdue')", $current_time ) );
+		foreach ( $bill_ids as $id ) {
+			$bill = eaccounting_get_bill( $id );
+			if ( $bill ) {
+				$bill->set_status( 'overdue' );
+				$bill->save();
+			}
+		}
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Invoice
@@ -411,6 +426,19 @@ class EverAccounting_Controller {
 			}
 		} catch ( \Exception  $e ) {
 
+		}
+	}
+
+	public static function update_invoice_status() {
+		global $wpdb;
+		$current_time = date_i18n( 'Y-m-d H:i:s' );
+		$invoice_ids  = $wpdb->get_col( $wpdb->prepare( "select id from {$wpdb->prefix}ea_documents where due_date != '' AND %s > due_date AND `type` ='invoice' AND status not in ('paid', 'cancelled', 'draft', 'overdue')", $current_time ) );
+		foreach ( $invoice_ids as $id ) {
+			$invoice = eaccounting_get_invoice( $id );
+			if ( $invoice ) {
+				$invoice->set_status( 'overdue' );
+				$invoice->save();
+			}
 		}
 	}
 

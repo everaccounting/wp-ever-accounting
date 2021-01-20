@@ -358,11 +358,13 @@ class EverAccounting_Install {
 			}
 		}
 		if ( empty( eaccounting()->settings->get( 'default_currency' ) ) ) {
-			$currencies = eaccounting_get_currencies();
-			if ( ! empty( $currencies ) ) {
-				$currency = array_pop( $currencies );
-				eaccounting()->settings->set( array( 'default_currency' => $currency->get_code() ), true );
+			$currencies = eaccounting_get_currencies( array( 'return' => 'raw' ) );
+			$currencies = wp_list_pluck( $currencies, 'code' );
+			$currency   = current( $currencies );
+			if ( in_array( 'USD', $currencies, true ) ) {
+				$currency = 'USD';
 			}
+			eaccounting()->settings->set( array( 'default_currency' => $currency ), true );
 		}
 
 		$defaults = array(

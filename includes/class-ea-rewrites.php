@@ -18,9 +18,13 @@ class EverAccounting_Rewrites {
 	 */
 	function add_rewrite_rules() {
 		$eaccounting_slug = eaccounting_get_parmalink_base();
-		//add_rewrite_rule( '^' . $eaccounting_slug . '/?$', 'index.php?eaccounting=true', 'top' );
-		add_rewrite_rule( '^' . $eaccounting_slug . '/invoice/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=invoice&invoice_id=$matches[1]&key=$matches[2]', 'top' );
-		add_rewrite_rule( '^' . $eaccounting_slug . '/bill/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=bill&bill_id=$matches[1]&key=$matches[2]', 'top' );
+		add_rewrite_rule( '^' . $eaccounting_slug . '/invoice/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=invoice&id=$matches[1]&key=$matches[2]', 'top' );
+		add_rewrite_rule( '^' . $eaccounting_slug . '/bill/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=bill&id=$matches[1]&key=$matches[2]', 'top' );
+//		add_rewrite_rule( '^' . $eaccounting_slug . '/?$', 'index.php?eaccounting=true&ea_page=dashboard', 'top' );
+//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&page=index', 'top' );
+//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)/page/([0-9]{1,5})?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&page=index&page=$matches[2]', 'top' );
+//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)?/([0-9]{1,5})?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&id=$matches[2]&page=single', 'top' );
+//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)?/([0-9]{1,5})?/(.*)?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&id=$matches[1]&key=$matches[2]&page=single', 'top' );
 	}
 
 	/**
@@ -33,9 +37,8 @@ class EverAccounting_Rewrites {
 	function register_query_var( $vars ) {
 		$vars[] = 'eaccounting';
 		$vars[] = 'ea_page';
+		$vars[] = 'id';
 		$vars[] = 'key';
-		$vars[] = 'invoice_id';
-		$vars[] = 'bill_id';
 		return $vars;
 	}
 
