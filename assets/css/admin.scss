@@ -232,20 +232,21 @@
 	//margin-right: -15px;
 	//margin-left: -15px;
 
-	.ea-extension{
+	.ea-extension {
 		border: 1px solid #ccc;
 		padding: 14px;
 
-		.ea-card__inside{
+		.ea-card__inside {
 			padding: 0;
 			margin: 0;
 		}
-		&__title{
+
+		&__title {
 			font-size: 14px;
 			margin: 0 0 8px;
 		}
 
-		.wp-post-image{
+		.wp-post-image {
 			width: 100%;
 			height: auto;
 			vertical-align: bottom;
@@ -567,3 +568,20 @@
 	}
 }
 
+.ea-overview {
+	@media only screen and (max-width: 1190px) {
+		.ea-col-4{
+			max-width: 100%;
+			flex: 0 0 100%;
+		}
+	}
+}
+
+.ea-single-customer,.ea-single-vendor,.ea-single-account {
+	@media only screen and (max-width: 1065px) {
+		.ea-row .ea-col {
+			flex-basis: 100%;
+			margin-bottom: 15px;
+		}
+	}
+}
