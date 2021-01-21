@@ -9,9 +9,10 @@
 
 namespace EverAccounting\Import;
 
+use EverAccounting\Abstracts\CSV_Importer;
+
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Importer;
 
 /**
  * Class Import_Accounts

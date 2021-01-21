@@ -7,11 +7,13 @@
  * @package    EverAccounting
  */
 
+defined( 'ABSPATH' ) || exit();
+
 /**
  * Get settings tabs.
  *
- * @since 1.1.0
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_settings_tabs() {
 	static $tabs = false;
@@ -45,8 +47,8 @@ function eaccounting_get_settings_tabs() {
  * Get the settings sections for each tab
  * Uses a static to avoid running the filters on every request to this function
  *
- * @since  1.1.0
  * @return array Array of tabs and sections
+ * @since  1.1.0
  */
 function eaccounting_get_settings_sections() {
 	static $sections = false;
@@ -86,11 +88,11 @@ function eaccounting_get_settings_sections() {
 /**
  * Retrieve settings tabs
  *
- * @since 1.1.0
- *
  * @param bool $tab
  *
  * @return array $section
+ * @since 1.1.0
+ *
  */
 function eaccounting_get_settings_tab_sections( $tab = false ) {
 	$tabs     = array();
@@ -108,8 +110,8 @@ function eaccounting_get_settings_tab_sections( $tab = false ) {
 /**
  * Get all EverAccounting screen ids.
  *
- * @since  1.0.2
  * @return array
+ * @since  1.0.2
  */
 function eaccounting_get_screen_ids() {
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
@@ -135,11 +137,11 @@ function eaccounting_get_screen_ids() {
 /**
  * Check current page if admin page.
  *
- * @since 1.0.2
- *
  * @param string $page
  *
  * @return mixed|void
+ * @since 1.0.2
+ *
  */
 function eaccounting_is_admin_page( $page = '' ) {
 	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
@@ -168,13 +170,13 @@ function eaccounting_is_admin_page( $page = '' ) {
 /**
  * Generates an EverAccounting admin URL based on the given type.
  *
- * @since 1.0.2
+ * @param array $query_args Optional. Query arguments to append to the admin URL. Default empty array.
  *
- * @param array  $query_args Optional. Query arguments to append to the admin URL. Default empty array.
- *
- * @param string $type       Optional Type of admin URL. Accepts 'transactions', 'sales', 'purchases', 'banking', 'reports', 'settings', 'tools', 'add-ons'.
+ * @param string $type Optional Type of admin URL. Accepts 'transactions', 'sales', 'purchases', 'banking', 'reports', 'settings', 'tools', 'add-ons'.
  *
  * @return string Constructed admin URL.
+ * @since 1.0.2
+ *
  */
 function eaccounting_admin_url( $query_args = array(), $page = null ) {
 	if ( null === $page ) {
@@ -196,13 +198,14 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 	/**
 	 * Filters the EverAccounting admin URL.
 	 *
+	 * @param array $query_args Query arguments originally passed to eaccounting_admin_url().
+	 *
+	 * @param string $url Admin URL.
+	 *
+	 * @param string $type Admin URL type.
+	 *
 	 * @since 1.0.2
 	 *
-	 * @param array  $query_args Query arguments originally passed to eaccounting_admin_url().
-	 *
-	 * @param string $url        Admin URL.
-	 *
-	 * @param string $type       Admin URL type.
 	 */
 	return apply_filters( 'eaccounting_admin_url', $url, $page, $query_args );
 }
@@ -210,13 +213,13 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 /**
  * Get activate tab.
  *
- * @since 1.0.2
- *
  * @param      $tabs
  *
  * @param null $default
  *
  * @return array|mixed|string
+ * @since 1.0.2
+ *
  */
 function eaccounting_get_active_tab( $tabs, $default = null ) {
 	if ( isset( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ) {
@@ -234,15 +237,16 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
 /**
  * Outputs navigation tabs markup in core screens.
  *
- * @since 1.0.2
- * @since 1.1.0 add $tab argument.
- *
- * @param array  $query_args Optional. Query arguments used to build the tab URLs. Default empty array.
+ * @param array $query_args Optional. Query arguments used to build the tab URLs. Default empty array.
  *
  * @param string $tab
  *
- * @param array  $tabs       Navigation tabs.
+ * @param array $tabs Navigation tabs.
  * @param string $active_tab Active tab slug.
+ *
+ * @since 1.0.2
+ * @since 1.1.0 add $tab argument.
+ *
  */
 function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(), $tab = 'tab' ) {
 	$tabs = (array) $tabs;
@@ -271,12 +275,12 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(),
 /**
  * Get current tab.
  *
- * @since 1.0.2
- * @since 1.1.0 add $tab argument.
- *
  * @param string $tab
  *
  * @return array|string
+ * @since 1.0.2
+ * @since 1.1.0 add $tab argument.
+ *
  */
 function eaccounting_get_current_tab( $tab = 'tab' ) {
 	return ( isset( $tab ) ) ? eaccounting_clean( $tab ) : '';
@@ -285,15 +289,15 @@ function eaccounting_get_current_tab( $tab = 'tab' ) {
 /**
  * Per page screen option value for the Affiliates list table
  *
- * @since  1.0.2
- *
- * @param mixed    $value
+ * @param mixed $value
  *
  * @param bool|int $status
  *
- * @param string   $option
+ * @param string $option
  *
  * @return mixed
+ * @since  1.0.2
+ *
  */
 function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 	if ( in_array( $option, array( 'eaccounting_edit_accounts_per_page' ), true ) ) {
@@ -310,11 +314,11 @@ add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3
 /**
  * Get import export headers.
  *
- * @since 1.0.2
- *
  * @param $type
  *
  * @return mixed|void
+ * @since 1.0.2
+ *
  */
 function eaccounting_get_io_headers( $type ) {
 	$headers = array();
@@ -418,9 +422,9 @@ function eaccounting_get_io_headers( $type ) {
 /**
  * Render the importer mapping table.
  *
- * @since 1.0.2
- *
  * @param string $type
+ *
+ * @since 1.0.2
  *
  */
 function eaccounting_do_import_fields( $type ) {
@@ -493,8 +497,8 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
 /**
  * Get report years.
  *
- * @since 1.1.0
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_report_years() {
 	$years = range( date( 'Y' ), ( date( 'Y' ) - 5 ), 1 );

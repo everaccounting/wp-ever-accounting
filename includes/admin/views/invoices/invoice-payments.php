@@ -4,10 +4,12 @@
  * Used in view invoice page.
  *
  * @package EverAccounting\Admin
- * @var Bill $invoice The item being used
+ * @var Invoice $invoice The item being used
  */
 
-use EverAccounting\Models\Bill;
+use EverAccounting\Models\Invoice;
+
+defined( 'ABSPATH' ) || exit();
 
 $payments = $invoice->get_payments();
 ?>

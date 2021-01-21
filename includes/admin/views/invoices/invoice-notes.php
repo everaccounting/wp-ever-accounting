@@ -9,6 +9,8 @@
 
 use EverAccounting\Models\Invoice;
 
+defined( 'ABSPATH' ) || exit();
+
 $notes = eaccounting_get_notes(
 	array(
 		'number'    => - 1,

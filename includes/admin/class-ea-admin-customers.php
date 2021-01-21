@@ -14,7 +14,6 @@ use EverAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || exit();
 
-
 class EverAccounting_Admin_Customers {
 	/**
 	 * EverAccounting_Admin_Customers constructor.

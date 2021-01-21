@@ -9,9 +9,10 @@
 
 namespace EverAccounting\Export;
 
+use EverAccounting\Abstracts\CSV_Exporter;
+
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Exporter;
 
 /**
  * Class Export_Revenues
@@ -34,8 +35,8 @@ class Export_Revenues extends CSV_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @since  1.0.2
 	 * @return array
+	 * @since  1.0.2
 	 */
 	public function get_columns() {
 		return eaccounting_get_io_headers( 'revenue' );
@@ -44,23 +45,23 @@ class Export_Revenues extends CSV_Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_rows() {
-		$args              = array(
+		$args  = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'type'     => 'income',
 			'return'   => 'objects',
-			'number'   => -1,
+			'number'   => - 1,
 		);
-		$args = apply_filters( 'eaccounting_revenue_export_query_args', $args );
+		$args  = apply_filters( 'eaccounting_revenue_export_query_args', $args );
 		$items = eaccounting_get_revenues( $args );
 
-		$rows              = array();
+		$rows = array();
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
 		}

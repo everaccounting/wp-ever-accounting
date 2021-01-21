@@ -1,7 +1,8 @@
 <?php
+defined( 'ABSPATH' ) || exit();
 
 class EverAccounting_Admin_Widget {
-	protected $widget_id   = null;
+	protected $widget_id = null;
 	protected $widget_size = null;
 
 	/**

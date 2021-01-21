@@ -12,7 +12,6 @@
 
 defined( 'ABSPATH' ) || exit();
 
-
 class EverAccounting_Admin_Transactions {
 	/**
 	 * EverAccounting_Admin_Transactions constructor.

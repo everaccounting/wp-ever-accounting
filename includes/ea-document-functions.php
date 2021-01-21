@@ -7,10 +7,10 @@
  * @since   1.1.0
  * @package EverAccounting
  */
-defined( 'ABSPATH' ) || exit;
 
 use EverAccounting\Models\Bill;
 use EverAccounting\Models\Invoice;
+defined( 'ABSPATH' ) || exit;
 
 
 /**

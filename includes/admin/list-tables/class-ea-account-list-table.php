@@ -83,6 +83,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 	 */
 	public function is_empty() {
 		global $wpdb;
+
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_accounts" );
 	}
 
@@ -96,7 +97,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'An account is a record in an accounting system that tracks the financial activities of a specific asset, revenue, or expense. You can create as many banks and cash accounts as you want and can track your opening and current balances in any currency.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'An account is a record in an accounting system that tracks the financial activities of a specific asset, revenue, or expense. You can create as many banks and cash accounts as you want and can track your opening and current balances in any currency.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="
 			<?php
@@ -202,7 +203,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		$account_id = $account->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:ignore
+				$view_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
 				$thumb_url = wp_get_attachment_thumb_url( $account->get_thumbnail_id() );
 				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/images/placeholder-logo.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $view_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $account->get_name() . '"></a>';
@@ -210,9 +211,9 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 
 			case 'name':
 				$nonce    = wp_create_nonce( 'account-nonce' );
-				$view_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'view','account_id'=>$account_id));// phpcs:ignore
-				$edit_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'edit','account_id'=>$account_id));// phpcs:ignore
-				$del_url = eaccounting_admin_url( array('page' => 'ea-banking','tab'=>'accounts','action'=>'delete','account_id'=>$account_id,'_wpnonce'=>$nonce));// phpcs:ignore
+				$view_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', 'account_id' => $account_id ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'delete', 'account_id' => $account_id, '_wpnonce' => $nonce ) );// phpcs:ignore
 
 				$actions = array(
 					'id'     => 'ID: ' . $account_id,
@@ -232,7 +233,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 				$value = ! empty( $account->get_bank_name() ) ? $account->get_bank_name() : '&mdash;';
 				break;
 			case 'enabled':
-				$value  = '<label class="ea-toggle">';
+				$value = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="account-status" style="" value="true" data-id="' . $account->get_id() . '" ' . checked( $account->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';

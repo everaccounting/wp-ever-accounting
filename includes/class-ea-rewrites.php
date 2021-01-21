@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit();
 
 class EverAccounting_Rewrites {
 
@@ -39,6 +40,7 @@ class EverAccounting_Rewrites {
 		$vars[] = 'ea_page';
 		$vars[] = 'id';
 		$vars[] = 'key';
+
 		return $vars;
 	}
 

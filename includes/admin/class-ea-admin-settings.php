@@ -7,6 +7,8 @@
  * @package     EverAccounting
  */
 
+defined( 'ABSPATH' ) || exit();
+
 /**
  * Class Settings
  *

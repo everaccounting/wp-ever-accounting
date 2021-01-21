@@ -9,9 +9,10 @@
 
 namespace EverAccounting\Export;
 
+use EverAccounting\Abstracts\CSV_Exporter;
+
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Exporter;
 
 /**
  * Class Export_Items
@@ -34,8 +35,8 @@ class Export_Items extends CSV_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @since  1.0.2
 	 * @return array
+	 * @since  1.0.2
 	 */
 	public function get_columns() {
 		return eaccounting_get_io_headers( 'item' );
@@ -46,17 +47,17 @@ class Export_Items extends CSV_Exporter {
 	 * @since 1.0.2
 	 */
 	public function get_rows() {
-		$args              = array(
+		$args  = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
-			'number'      => -1,
+			'number'   => - 1,
 		);
-		$args = apply_filters( 'eaccounting_item_export_query_args', $args );
-		$items = eaccounting_get_items($args);
-		$rows              = array();
+		$args  = apply_filters( 'eaccounting_item_export_query_args', $args );
+		$items = eaccounting_get_items( $args );
+		$rows  = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
@@ -82,8 +83,8 @@ class Export_Items extends CSV_Exporter {
 					$value = $item->get_name();
 					break;
 				case 'category_name':
-					$category = eaccounting_get_category($item->get_category_id());
-					$value = $category ? $category->get_name() : '';
+					$category = eaccounting_get_category( $item->get_category_id() );
+					$value    = $category ? $category->get_name() : '';
 					break;
 				case 'sale_price':
 					$value = $item->get_sale_price();

@@ -9,6 +9,8 @@
 
 use EverAccounting\Models\Bill;
 
+defined( 'ABSPATH' ) || exit();
+
 $payments = $bill->get_payments();
 ?>
 <div class="ea-card__body">

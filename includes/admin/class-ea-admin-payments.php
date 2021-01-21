@@ -14,7 +14,6 @@ use EverAccounting\Models\Payment;
 
 defined( 'ABSPATH' ) || exit();
 
-
 class EverAccounting_Admin_Payments {
 	/**
 	 * EverAccounting_Admin_Payments constructor.

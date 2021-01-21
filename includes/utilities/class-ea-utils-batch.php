@@ -9,9 +9,10 @@
 
 namespace EverAccounting\Utilities;
 
+use EverAccounting\Abstracts\Registry;
+
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\Registry;
 
 /**
  * Class Batch
@@ -175,7 +176,7 @@ class Batch extends Registry {
 	 *
 	 * @param string $batch_id Unique item name.
 	 *
-	 * @param array  $args {
+	 * @param array $args {
 	 *                               Arguments for registering a new item.
 	 *
 	 * @type string $class Item class.

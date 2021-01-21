@@ -9,6 +9,8 @@
  * @var string $key
  */
 
+defined( 'ABSPATH' ) || exit();
+
 if ( empty( $key ) || empty( $invoice_id ) ) {
 	eaccounting_get_template( 'unauthorized.php' );
 	exit();

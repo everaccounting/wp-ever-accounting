@@ -9,9 +9,10 @@
 
 namespace EverAccounting\Export;
 
+use EverAccounting\Abstracts\CSV_Exporter;
+
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Exporter;
 
 /**
  * Class Export_Customers

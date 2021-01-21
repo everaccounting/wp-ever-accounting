@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit();
 
 function eaccounting_reports_expense_summary_tab() {
 	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' );
@@ -76,7 +77,7 @@ function eaccounting_reports_expense_summary_tab() {
 		$start = eaccounting_get_financial_start( $year );
 		$end   = eaccounting_get_financial_end( $year );
 
-		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
+		$where = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
 		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $start, $end );
 		if ( ! empty( $account_id ) ) {
 			$where .= $wpdb->prepare( ' AND account_id=%d', $account_id );
@@ -126,8 +127,8 @@ function eaccounting_reports_expense_summary_tab() {
 
 		foreach ( $transactions as $transaction ) {
 			if ( isset( $expenses[ $transaction->category_id ] ) ) {
-				$month      = date( 'F', strtotime( $transaction->payment_date ) );
-				$month_year = date( 'F-Y', strtotime( $transaction->payment_date ) );
+				$month                                                     = date( 'F', strtotime( $transaction->payment_date ) );
+				$month_year                                                = date( 'F-Y', strtotime( $transaction->payment_date ) );
 				$expenses[ $transaction->category_id ][ $month ]['amount'] += $transaction->amount;
 				$graph[ $month_year ]                                      += $transaction->amount;
 				$totals[ $month ]['amount']                                += $transaction->amount;
@@ -139,17 +140,17 @@ function eaccounting_reports_expense_summary_tab() {
 			  ->height( 300 )
 			  ->set_line_options()
 			  ->labels( array_values( $dates ) )
-			->dataset(
-				array(
-					'label'           => __( 'Expense', 'wp-ever-accounting' ),
-					'data'            => array_values( $graph ),
-					'borderColor'     => '#f2385a',
-					'backgroundColor' => '#f2385a',
-					'borderWidth'     => 4,
-					'pointStyle'      => 'line',
-					'fill'            => false,
-				)
-			)
+			  ->dataset(
+				  array(
+					  'label'           => __( 'Expense', 'wp-ever-accounting' ),
+					  'data'            => array_values( $graph ),
+					  'borderColor'     => '#f2385a',
+					  'backgroundColor' => '#f2385a',
+					  'borderWidth'     => 4,
+					  'pointStyle'      => 'line',
+					  'fill'            => false,
+				  )
+			  )
 		?>
 		<div class="ea-report-graph">
 			<?php $chart->render(); ?>

@@ -9,9 +9,9 @@
 
 namespace EverAccounting\Export;
 
-defined( 'ABSPATH' ) || exit();
-
 use EverAccounting\Abstracts\CSV_Exporter;
+
+defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Export_Currencies
@@ -34,8 +34,8 @@ class Export_Currencies extends CSV_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @since  1.0.2
 	 * @return array
+	 * @since  1.0.2
 	 */
 	public function get_columns() {
 		return eaccounting_get_io_headers( 'currency' );
@@ -44,8 +44,8 @@ class Export_Currencies extends CSV_Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_rows() {
 		$args  = array(
@@ -54,7 +54,7 @@ class Export_Currencies extends CSV_Exporter {
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'return'   => 'objects',
-			'number'   => -1,
+			'number'   => - 1,
 		);
 		$args  = apply_filters( 'eaccounting_currency_export_query_args', $args );
 		$items = eaccounting_get_currencies( $args );

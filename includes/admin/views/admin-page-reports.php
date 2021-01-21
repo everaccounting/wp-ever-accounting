@@ -2,18 +2,21 @@
 /**
  * Admin View: Page - Reports
  *
- * @var array  $tabs
+ * @var array $tabs
  * @var string $current_tab
  * @var array $sections
  * @var string $current_section
  */
+
+defined( 'ABSPATH' ) || exit();
 ?>
 <style>
-	.ea-card{
+	.ea-card {
 		margin-top: 0 !important;
 	}
-	.wp-list-table{
-		border-bottom:0 !important;
+
+	.wp-list-table {
+		border-bottom: 0 !important;
 	}
 
 </style>

@@ -10,6 +10,8 @@
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Category;
 
+defined( 'ABSPATH' ) || exit();
+
 /**
  * Class EverAccounting_Controller
  *

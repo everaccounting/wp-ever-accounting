@@ -1,4 +1,6 @@
 <?php
+defined( 'ABSPATH' ) || exit();
+
 function eaccounting_reports_income_expense_tab() {
 	$year       = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' );
 	$account_id = isset( $_REQUEST['account_id'] ) ? intval( $_REQUEST['account_id'] ) : '';
@@ -96,18 +98,18 @@ function eaccounting_reports_income_expense_tab() {
 			$date->modify( '+1 month' )->format( 'Y-m' );
 		}
 
-		$where  = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
+		$where = "category_id NOT IN ( SELECT id from {$wpdb->prefix}ea_categories WHERE type='other')";
 		$where .= $wpdb->prepare( ' AND (payment_date BETWEEN %s AND %s)', $date_start, $end );
 		if ( ! empty( $account_id ) ) {
 			$where .= $wpdb->prepare( ' AND account_id=%d', $account_id );
 		}
 
-		$transactions = $wpdb->get_results("
+		$transactions = $wpdb->get_results( "
 
 		SELECT `type`, payment_date, currency_code, currency_rate, amount, category_id
 		FROM {$wpdb->prefix}ea_transactions
 		WHERE $where
-		");
+		" );
 
 		foreach ( $transactions as $transaction ) {
 			$amount     = eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
@@ -116,12 +118,12 @@ function eaccounting_reports_income_expense_tab() {
 
 			if ( $transaction->type == 'income' && isset( $compares['income'][ $transaction->category_id ] ) ) {
 				$compares['income'][ $transaction->category_id ][ $month ]['amount'] += $amount;
-				$graph[ $month_year ]       += $amount;
-				$totals[ $month ]['amount'] += $amount;
+				$graph[ $month_year ]                                                += $amount;
+				$totals[ $month ]['amount']                                          += $amount;
 			} elseif ( $transaction->type == 'expense' && isset( $compares['expense'][ $transaction->category_id ] ) ) {
 				$compares['expense'][ $transaction->category_id ][ $month ]['amount'] += $amount;
-				$graph[ $month_year ]       -= $amount;
-				$totals[ $month ]['amount'] -= $amount;
+				$graph[ $month_year ]                                                 -= $amount;
+				$totals[ $month ]['amount']                                           -= $amount;
 			}
 		}
 
@@ -131,17 +133,17 @@ function eaccounting_reports_income_expense_tab() {
 			  ->height( 300 )
 			  ->set_line_options()
 			  ->labels( array_values( $dates ) )
-			->dataset(
-				array(
-					'label'           => __( 'Profit', 'wp-ever-accounting' ),
-					'data'            => array_values( $graph ),
-					'borderColor'     => '#06d6a0',
-					'backgroundColor' => '#06d6a0',
-					'borderWidth'     => 4,
-					'pointStyle'      => 'line',
-					'fill'            => false,
-				)
-			);
+			  ->dataset(
+				  array(
+					  'label'           => __( 'Profit', 'wp-ever-accounting' ),
+					  'data'            => array_values( $graph ),
+					  'borderColor'     => '#06d6a0',
+					  'backgroundColor' => '#06d6a0',
+					  'borderWidth'     => 4,
+					  'pointStyle'      => 'line',
+					  'fill'            => false,
+				  )
+			  );
 		?>
 		<div class="ea-report-graph">
 			<?php $chart->render(); ?>

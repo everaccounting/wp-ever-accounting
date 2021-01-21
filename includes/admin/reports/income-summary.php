@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || exit();
 
 function eaccounting_reports_income_summary_tab() {
 	$year        = isset( $_REQUEST['year'] ) ? intval( $_REQUEST['year'] ) : date( 'Y' );
@@ -11,60 +12,60 @@ function eaccounting_reports_income_summary_tab() {
 		<form action="" class="ea-report-filter">
 			<?php
 			eaccounting_hidden_input(
-					array(
-							'name'  => 'page',
-							'value' => 'ea-reports',
-					)
+				array(
+					'name'  => 'page',
+					'value' => 'ea-reports',
+				)
 			);
 			eaccounting_hidden_input(
-					array(
-							'name'  => 'tab',
-							'value' => 'income_summary',
-					)
+				array(
+					'name'  => 'tab',
+					'value' => 'income_summary',
+				)
 			);
 
 			$years = range( date( 'Y' ), ( $year - 5 ), 1 );
 			eaccounting_select2(
-					array(
-							'placeholder' => __( 'Year', 'wp-ever-accounting' ),
-							'name'        => 'year',
-							'options'     => array_combine( array_values( $years ), $years ),
-							'value'       => $year,
-					)
+				array(
+					'placeholder' => __( 'Year', 'wp-ever-accounting' ),
+					'name'        => 'year',
+					'options'     => array_combine( array_values( $years ), $years ),
+					'value'       => $year,
+				)
 			);
 			eaccounting_account_dropdown(
-					array(
-							'placeholder' => __( 'Account', 'wp-ever-accounting' ),
-							'default'     => '',
-							'name'        => 'account_id',
-							'value'       => $account_id,
-							'attr'        => array(
-									'data-allow-clear' => true,
-							),
-					)
+				array(
+					'placeholder' => __( 'Account', 'wp-ever-accounting' ),
+					'default'     => '',
+					'name'        => 'account_id',
+					'value'       => $account_id,
+					'attr'        => array(
+						'data-allow-clear' => true,
+					),
+				)
 			);
 			eaccounting_contact_dropdown(
-					array(
-							'placeholder' => __( 'Customer', 'wp-ever-accounting' ),
-							'name'        => 'customer_id',
-							'type'        => 'customer',
-							'value'       => $customer_id,
-							'attr'        => array(
-									'data-allow-clear' => true,
-							),
-					)
+				array(
+					'placeholder' => __( 'Customer', 'wp-ever-accounting' ),
+					'name'        => 'customer_id',
+					'type'        => 'customer',
+					'value'       => $customer_id,
+					'attr'        => array(
+						'data-allow-clear' => true,
+					),
+				)
 			);
 			eaccounting_category_dropdown(
-					array(
-							'placeholder' => __( 'Category', 'wp-ever-accounting' ),
-							'name'        => 'category_id',
-							'default'     => '',
-							'type'        => 'income',
-							'value'       => $category_id,
-							'attr'        => array(
-									'data-allow-clear' => true,
-							),
-					)
+				array(
+					'placeholder' => __( 'Category', 'wp-ever-accounting' ),
+					'name'        => 'category_id',
+					'default'     => '',
+					'type'        => 'income',
+					'value'       => $category_id,
+					'attr'        => array(
+						'data-allow-clear' => true,
+					),
+				)
 			);
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
 			?>
@@ -89,7 +90,7 @@ function eaccounting_reports_income_summary_tab() {
 		}
 
 		$transactions = $wpdb->get_results(
-				"
+			"
 		SELECT name, payment_date, currency_code, currency_rate, amount, ea_categories.id category_id
 		FROM {$wpdb->prefix}ea_transactions ea_transactions
 		LEFT JOIN {$wpdb->prefix}ea_categories ea_categories ON ea_categories.id=ea_transactions.category_id
@@ -111,14 +112,14 @@ function eaccounting_reports_income_summary_tab() {
 			$graph[ $date->format( 'F-Y' ) ] = 0;
 			// Totals
 			$totals[ $dates[ $j ] ] = array(
-					'amount' => 0,
+				'amount' => 0,
 			);
 
 			foreach ( $categories as $cat_id => $category_name ) {
 				$incomes[ $cat_id ][ $dates[ $j ] ] = array(
-						'category_id' => $cat_id,
-						'name'        => $category_name,
-						'amount'      => 0,
+					'category_id' => $cat_id,
+					'name'        => $category_name,
+					'amount'      => 0,
 				);
 			}
 			$date->modify( '+1 month' )->format( 'Y-m' );
@@ -140,15 +141,15 @@ function eaccounting_reports_income_summary_tab() {
 			  ->set_line_options()
 			  ->labels( array_values( $dates ) )
 			  ->dataset(
-					  array(
-							  'label'           => __( 'Income', 'wp-ever-accounting' ),
-							  'data'            => array_values( $graph ),
-							  'borderColor'     => '#3644ff',
-							  'backgroundColor' => '#3644ff',
-							  'borderWidth'     => 4,
-							  'pointStyle'      => 'line',
-							  'fill'            => false,
-					  )
+				  array(
+					  'label'           => __( 'Income', 'wp-ever-accounting' ),
+					  'data'            => array_values( $graph ),
+					  'borderColor'     => '#3644ff',
+					  'backgroundColor' => '#3644ff',
+					  'borderWidth'     => 4,
+					  'pointStyle'      => 'line',
+					  'fill'            => false,
+				  )
 			  )
 		?>
 		<div class="ea-report-graph">

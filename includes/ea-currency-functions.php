@@ -8,7 +8,6 @@
  * @package EverAccounting
  */
 
-
 use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit();

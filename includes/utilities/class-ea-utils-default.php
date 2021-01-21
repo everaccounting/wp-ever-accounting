@@ -7,6 +7,8 @@
 
 namespace EverAccounting\Utilities;
 
+defined( 'ABSPATH' ) || exit();
+
 /**
  * Class Defaults
  *

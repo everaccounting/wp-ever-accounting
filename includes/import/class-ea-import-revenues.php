@@ -9,10 +9,11 @@
 
 namespace EverAccounting\Import;
 
-defined( 'ABSPATH' ) || exit();
-
 use EverAccounting\Abstracts\CSV_Importer;
 use EverAccounting\Models\Currency;
+
+defined( 'ABSPATH' ) || exit();
+
 
 /**
  * Class Import_Revenues

@@ -11,7 +11,6 @@
 
 namespace EverAccounting\Admin;
 
-
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -423,7 +422,7 @@ class Setup_Wizard {
 
 		$new_currency = false;
 		$default      = eaccounting_clean( $_REQUEST['default'] );
-		
+
 		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) {
 			$new_currency = eaccounting_insert_currency(
 				array(

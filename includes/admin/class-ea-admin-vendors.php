@@ -14,7 +14,6 @@ use EverAccounting\Models\Vendor;
 
 defined( 'ABSPATH' ) || exit();
 
-
 class EverAccounting_Admin_Vendors {
 	/**
 	 * EverAccounting_Admin_Vendors constructor.

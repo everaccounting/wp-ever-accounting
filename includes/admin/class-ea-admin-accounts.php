@@ -14,7 +14,6 @@ use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit();
 
-
 class EverAccounting_Admin_Accounts {
 	/**
 	 * EverAccounting_Admin_Accounts constructor.

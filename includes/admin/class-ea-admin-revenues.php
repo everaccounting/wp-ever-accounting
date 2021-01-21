@@ -14,7 +14,6 @@ use EverAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || exit();
 
-
 class EverAccounting_Admin_Revenues {
 	/**
 	 * EverAccounting_Admin_Revenues constructor.
