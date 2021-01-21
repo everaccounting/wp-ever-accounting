@@ -232,7 +232,6 @@ class EverAccounting_Report_CashFlow extends EverAccounting_Admin_Report {
 												titleFontColor: "#ffffff",
 												callbacks: {
 													label: function(tooltipItem, data) {
-														console.log(tooltipItem);
 														let label = data.labels[tooltipItem.index];
 														let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 														return ' ' + label + ': ' + eaccountingi10n.currency['symbol'] + Number((value).toFixed(1)).toLocaleString();
