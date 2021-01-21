@@ -81,6 +81,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	 */
 	public function is_empty() {
 		global $wpdb;
+
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_contacts WHERE type='customer'" );
 	}
 
@@ -94,7 +95,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo  esc_html__( 'Customers are individuals or businesses that buy goods or services from other businesses. Customers can be assigned to revenues and invoices and can also be filtered out from the transactions you made with them.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Customers are individuals or businesses that buy goods or services from other businesses. Customers can be assigned to revenues and invoices and can also be filtered out from the transactions you made with them.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="
 			<?php
@@ -126,7 +127,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 			'thumb'   => '<span class="ea-thumb">&nbsp;</span>',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Contact', 'wp-ever-accounting' ),
-			'city'    => __( 'Address', 'wp-ever-accounting' ),
+			'street'  => __( 'Address', 'wp-ever-accounting' ),
 			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
 			'due'     => __( 'Receivable', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
@@ -143,7 +144,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		return array(
 			'name'    => array( 'name', false ),
 			'email'   => array( 'email', false ),
-			'city'    => array( 'city', false ),
+			'street'  => array( 'street', false ),
 			'enabled' => array( 'enabled', false ),
 		);
 	}
@@ -214,7 +215,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 
-				$value  = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
+				$value = '<a href="' . esc_url( $view_url ) . '"><strong>' . $customer->get_name() . '</strong></a>';
 				$value .= '<br>';
 				$value .= '<small class=meta>' . $customer->get_company() . '</small>';
 				$value .= $this->row_actions( $actions );
@@ -222,7 +223,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 
 			case 'email':
 				if ( ! empty( $customer->get_email() ) || ! empty( $customer->get_phone() ) ) {
-					$value  = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
+					$value = ! empty( $customer->get_email() ) ? '<a href="mailto:' . sanitize_email( $customer->get_email() ) . '">' . sanitize_email( $customer->get_email() ) . '</a><br>' : '';
 					$value .= ! empty( $customer->get_phone() ) ? '<span class="contact_phone">' . $customer->get_phone() . '</span>' : '';
 				}
 				if ( empty( $customer->get_email() ) && empty( $customer->get_phone() ) ) {
@@ -235,11 +236,12 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 						'city'    => $customer->get_city(),
 						'state'   => $customer->get_state(),
 						'country' => $customer->get_country_nicename(),
-					)
+					),
+					','
 				);
 				break;
 			case 'enabled':
-				$value  = '<label class="ea-toggle">';
+				$value = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="customer-status" style="" value="true" data-id="' . $customer->get_id() . '" ' . checked( $customer->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
@@ -292,8 +294,8 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Process the bulk actions
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
@@ -382,12 +384,13 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 
 		return $views;
 	}
+
 	/**
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();

@@ -127,7 +127,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 			'thumb'   => '<span class="ea-thumb">&nbsp;</span>',
 			'name'    => __( 'Name', 'wp-ever-accounting' ),
 			'email'   => __( 'Contact', 'wp-ever-accounting' ),
-			'city'    => __( 'Address', 'wp-ever-accounting' ),
+			'street'  => __( 'Address', 'wp-ever-accounting' ),
 			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
 			'due'     => __( 'Payable', 'wp-ever-accounting' ),
 			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
@@ -144,7 +144,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 		return array(
 			'name'    => array( 'name', false ),
 			'email'   => array( 'email', false ),
-			'city'    => array( 'city', false ),
+			'street'  => array( 'street', false ),
 			'enabled' => array( 'enabled', false ),
 		);
 	}
@@ -216,13 +216,13 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
 				$value    = '<a href="' . esc_url( $view_url ) . '"><strong>' . $vendor->get_name() . '</strong></a>';
-				$value   .= '<br>';
-				$value   .= '<small class=meta>' . $vendor->get_company() . '</small>';
-				$value   .= $this->row_actions( $actions );
+				$value    .= '<br>';
+				$value    .= '<small class=meta>' . $vendor->get_company() . '</small>';
+				$value    .= $this->row_actions( $actions );
 				break;
 			case 'email':
 				if ( ! empty( $vendor->get_email() ) || ! empty( $vendor->get_phone() ) ) {
-					$value  = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
+					$value = ! empty( $vendor->get_email() ) ? '<a href="mailto:' . sanitize_email( $vendor->get_email() ) . '">' . sanitize_email( $vendor->get_email() ) . '</a><br>' : '';
 					$value .= ! empty( $vendor->get_phone() ) ? '<span class="contact_phone">' . $vendor->get_phone() . '</span>' : '';
 				}
 				if ( empty( $vendor->get_email() ) && empty( $vendor->get_phone() ) ) {
@@ -235,11 +235,12 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 						'city'    => $vendor->get_city(),
 						'state'   => $vendor->get_state(),
 						'country' => $vendor->get_country_nicename(),
-					)
+					),
+					','
 				);
 				break;
 			case 'enabled':
-				$value  = '<label class="ea-toggle">';
+				$value = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="vendor-status" style="" value="true" data-id="' . $vendor->get_id() . '" ' . checked( $vendor->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
