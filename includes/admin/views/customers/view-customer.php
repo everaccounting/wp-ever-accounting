@@ -192,3 +192,15 @@ $edit_url        = eaccounting_admin_url(
 	</div>
 
 </div>
+<?php
+eaccounting_enqueue_js(
+	"
+	jQuery('.del').on('click',function(e){
+		if(confirm('Are you sure you want to delete?')){
+			return true;
+		} else {
+			return false;
+		}
+	});
+"
+);
