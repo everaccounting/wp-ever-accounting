@@ -36,7 +36,7 @@ class EverAccounting_Admin_Settings {
 			'eaccounting',
 			__( 'Settings', 'wp-ever-accounting' ),
 			__( 'Settings', 'wp-ever-accounting' ),
-			'manage_options',
+			'ea_manage_options',
 			'ea-settings',
 			array( $this, 'display_settings_page' )
 		);
