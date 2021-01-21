@@ -238,6 +238,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 					),
 					','
 				);
+				$value = ( $value != '' ) ? $value : '&mdash;';
 				break;
 			case 'enabled':
 				$value = '<label class="ea-toggle">';

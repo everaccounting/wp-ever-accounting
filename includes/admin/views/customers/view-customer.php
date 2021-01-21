@@ -34,164 +34,165 @@ $edit_url        = eaccounting_admin_url(
 	)
 );
 ?>
-<div class="ea-title-section">
-	<div>
-		<h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'wp-ever-accounting' ); ?></h1>
-		<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'customers', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
-			<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-		</a>
-
-	</div>
-</div>
-<hr class="wp-header-end">
-
-<div class="ea-page-columns altered ea-single-customer">
-	<div class="ea-page-columns__content">
-		<div class="ea-row">
-			<div class="ea-col">
-				<div class="ea-widget-card">
-					<div class="ea-widget-card__icon">
-						<span class="dashicons dashicons-money-alt"></span>
-					</div>
-					<div class="ea-widget-card__content">
-						<div class="ea-widget-card__primary">
-							<span class="ea-widget-card__title"><?php esc_html_e( 'Total Paid', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_paid() ); ?></span>
-						</div>
-					</div>
-				</div><!--.ea-widget-card-->
-
-			</div>
-
-			<div class="ea-col">
-
-				<div class="ea-widget-card alert">
-					<div class="ea-widget-card__icon">
-						<span class="dashicons dashicons-money-alt"></span>
-					</div>
-					<div class="ea-widget-card__content">
-						<div class="ea-widget-card__primary">
-							<span class="ea-widget-card__title"><?php esc_html_e( 'Total Due', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_due() ); ?></span>
-						</div>
-					</div>
-				</div><!--.ea-widget-card-->
-
-			</div>
+	<div class="ea-title-section">
+		<div>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Customers', 'wp-ever-accounting' ); ?></h1>
+			<a href="<?php echo esc_url( add_query_arg( array( 'tab' => 'customers', 'page' => 'ea-sales', 'action' => 'add' ), admin_url( 'admin.php' ) ) );//phpcs:ignore ?>" class="page-title-action">
+				<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
+			</a>
 
 		</div>
-		<div class="ea-card">
-			<nav class="ea-card__nav">
-				<?php foreach ( $sections as $section_id => $section_title ) : ?>
-					<?php
-					$url = eaccounting_admin_url(
-						array(
-							'tab'         => 'customers',
-							'action'      => 'view',
-							'customer_id' => $customer_id,
-							'section'     => $section_id,
-						)
-					);
-					?>
-					<a class="nav-tab <?php echo $section_id === $current_section ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( $url ); ?>">
-						<?php echo esc_html( $section_title ); ?>
-					</a>
-				<?php endforeach; ?>
-			</nav>
-			<div class="ea-card__inside">
-				<?php
-				switch ( $current_section ) {
-					case 'transactions':
-					case 'invoices':
-						include dirname( __FILE__ ) . '/customers-' . sanitize_file_name( $current_section ) . '.php';
-						break;
-					default:
-						do_action( 'eaccounting_customer_section_' . $current_section, $customer );
-						break;
-				}
-				?>
-			</div>
-		</div>
-
 	</div>
+	<hr class="wp-header-end">
 
-	<div class="ea-page-columns__aside">
-		<div class="ea-card">
-			<div class="ea-card__header">
-				<h3 class="ea-card__title"><?php esc_html_e( 'Customer Details', 'wp-ever-accounting' ); ?></h3>
-				<a href="<?php echo esc_url( $edit_url ); ?>" class="button-secondary"><?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?></a>
+	<div class="ea-page-columns altered ea-single-customer">
+		<div class="ea-page-columns__content">
+			<div class="ea-row">
+				<div class="ea-col">
+					<div class="ea-widget-card">
+						<div class="ea-widget-card__icon">
+							<span class="dashicons dashicons-money-alt"></span>
+						</div>
+						<div class="ea-widget-card__content">
+							<div class="ea-widget-card__primary">
+								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Paid', 'wp-ever-accounting' ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_paid() ); ?></span>
+							</div>
+						</div>
+					</div><!--.ea-widget-card-->
+
+				</div>
+
+				<div class="ea-col">
+
+					<div class="ea-widget-card alert">
+						<div class="ea-widget-card__icon">
+							<span class="dashicons dashicons-money-alt"></span>
+						</div>
+						<div class="ea-widget-card__content">
+							<div class="ea-widget-card__primary">
+								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Due', 'wp-ever-accounting' ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_due() ); ?></span>
+							</div>
+						</div>
+					</div><!--.ea-widget-card-->
+
+				</div>
+
 			</div>
-
-			<div class="ea-card__inside">
-				<div class="ea-avatar ea-center-block">
-					<img src="<?php echo esc_url( $customer->get_avatar_url() ); ?>" alt="<?php echo esc_html( $customer->get_name() ); ?>">
-				</div>
-			</div>
-
-			<div class="ea-list-group">
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo esc_html( $customer->get_name() ); ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_currency_code() ) ? $customer->get_currency_code() : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Birthdate', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_birth_date() ) ? eaccounting_date( $customer->get_birth_date() ) : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Phone', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_phone() ) ? $customer->get_phone() : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_email() ) ? $customer->get_email() : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'VAT Number', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_vat_number() ) ? $customer->get_vat_number() : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Website', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text"><?php echo ! empty( $customer->get_website() ) ? $customer->get_website() : '&mdash;'; ?></div>
-				</div>
-				<div class="ea-list-group__item">
-					<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
-					<div class="ea-list-group__text">
+			<div class="ea-card">
+				<nav class="ea-card__nav">
+					<?php foreach ( $sections as $section_id => $section_title ) : ?>
 						<?php
-						echo eaccounting_format_address(
+						$url = eaccounting_admin_url(
 							array(
-								'street'   => $customer->get_street(),
-								'city'     => $customer->get_city(),
-								'state'    => $customer->get_state(),
-								'postcode' => $customer->get_postcode(),
-								'country'  => $customer->get_country_nicename(),
+								'tab'         => 'customers',
+								'action'      => 'view',
+								'customer_id' => $customer_id,
+								'section'     => $section_id,
 							)
 						);
 						?>
-					</div>
+						<a class="nav-tab <?php echo $section_id === $current_section ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( $url ); ?>">
+							<?php echo esc_html( $section_title ); ?>
+						</a>
+					<?php endforeach; ?>
+				</nav>
+				<div class="ea-card__inside">
+					<?php
+					switch ( $current_section ) {
+						case 'transactions':
+						case 'invoices':
+							include dirname( __FILE__ ) . '/customers-' . sanitize_file_name( $current_section ) . '.php';
+							break;
+						default:
+							do_action( 'eaccounting_customer_section_' . $current_section, $customer );
+							break;
+					}
+					?>
 				</div>
 			</div>
 
-			<div class="ea-card__footer">
-				<p class="description">
-					<?php
-					echo sprintf(
-					/* translators: %s date and %s name */
-						esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
-						eaccounting_date( $customer->get_date_created(), 'F m, Y H:i a' ),
-						eaccounting_get_full_name( $customer->get_creator_id() )
-					);
-					?>
-				</p>
-			</div>
-
 		</div>
-	</div>
 
-</div>
+		<div class="ea-page-columns__aside">
+			<div class="ea-card">
+				<div class="ea-card__header">
+					<h3 class="ea-card__title"><?php esc_html_e( 'Customer Details', 'wp-ever-accounting' ); ?></h3>
+					<a href="<?php echo esc_url( $edit_url ); ?>" class="button-secondary"><?php esc_html_e( 'Edit', 'wp-ever-accounting' ); ?></a>
+				</div>
+
+				<div class="ea-card__inside">
+					<div class="ea-avatar ea-center-block">
+						<img src="<?php echo esc_url( $customer->get_avatar_url() ); ?>" alt="<?php echo esc_html( $customer->get_name() ); ?>">
+					</div>
+				</div>
+
+				<div class="ea-list-group">
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'Name', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text"><?php echo esc_html( $customer->get_name() ); ?></div>
+					</div>
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'Currency', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_currency_code() ) ? $customer->get_currency_code() : '&mdash;'; ?></div>
+					</div>
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'Birthdate', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_birth_date() ) ? eaccounting_date( $customer->get_birth_date() ) : '&mdash;'; ?></div>
+					</div>
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'Phone', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_phone() ) ? $customer->get_phone() : '&mdash;'; ?></div>
+					</div>
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'Email', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_email() ) ? $customer->get_email() : '&mdash;'; ?></div>
+					</div>
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'VAT Number', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_vat_number() ) ? $customer->get_vat_number() : '&mdash;'; ?></div>
+					</div>
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'Website', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text"><?php echo ! empty( $customer->get_website() ) ? $customer->get_website() : '&mdash;'; ?></div>
+					</div>
+					<div class="ea-list-group__item">
+						<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
+						<div class="ea-list-group__text">
+							<?php
+							echo eaccounting_format_address(
+								array(
+									'street'   => $customer->get_street(),
+									'city'     => $customer->get_city(),
+									'state'    => $customer->get_state(),
+									'postcode' => $customer->get_postcode(),
+									'country'  => $customer->get_country_nicename(),
+								),
+								","
+							);
+							?>
+						</div>
+					</div>
+				</div>
+
+				<div class="ea-card__footer">
+					<p class="description">
+						<?php
+						echo sprintf(
+						/* translators: %s date and %s name */
+							esc_html__( 'The customer was created at %1$s by %2$s', 'wp-ever-accounting' ),
+							eaccounting_date( $customer->get_date_created(), 'F m, Y H:i a' ),
+							eaccounting_get_full_name( $customer->get_creator_id() )
+						);
+						?>
+					</p>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
 <?php
 eaccounting_enqueue_js(
 	"
