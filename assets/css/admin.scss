@@ -570,15 +570,15 @@
 
 .ea-overview {
 	@media only screen and (max-width: 1190px) {
-		.ea-col-4{
+		.ea-col-4 {
 			max-width: 100%;
 			flex: 0 0 100%;
 		}
 	}
 }
 
-.ea-single-customer,.ea-single-vendor,.ea-single-account {
-	@media only screen and (max-width: 1065px) {
+.ea-single-customer, .ea-single-vendor, .ea-single-account {
+	@media only screen and (max-width: 1233px) {
 		.ea-row .ea-col {
 			flex-basis: 100%;
 			margin-bottom: 15px;
