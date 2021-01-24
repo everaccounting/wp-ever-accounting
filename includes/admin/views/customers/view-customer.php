@@ -161,7 +161,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-list-group__title"><?php esc_html_e( 'Address', 'wp-ever-accounting' ); ?></div>
 						<div class="ea-list-group__text">
 							<?php
-							echo eaccounting_format_address(
+							$address = eaccounting_format_address(
 								array(
 									'street'   => $customer->get_street(),
 									'city'     => $customer->get_city(),
@@ -171,6 +171,7 @@ $edit_url        = eaccounting_admin_url(
 								),
 								","
 							);
+							echo ( $address != '' ) ? $address : '&mdash;';
 							?>
 						</div>
 					</div>
