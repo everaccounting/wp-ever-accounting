@@ -308,7 +308,8 @@ function eaccounting_update_1_1_0() {
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `paid_at` `payment_date` date NOT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `invoice_id` `document_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `parent_id` `parent_id` INT(11) DEFAULT NULL;" );
-	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD `attachment_id` INT(11) DEFAULT NULL AFTER `reference`;" );
+	//$wpdb->query( "ALTER TABLE {$prefix}ea_transactions CHANGE `attachment` `attachment_id` INT(11) DEFAULT NULL;" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX document_id (`document_id`);" );
 	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions ADD INDEX category_id (`category_id`);" );
 
@@ -352,6 +353,38 @@ function eaccounting_update_1_1_0() {
 
 	//todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
+
+
+	$attachments = $wpdb->get_results( "SELECT id, attachment url from {$wpdb->prefix}ea_transactions WHERE attachment != ''" );
+	$dir         = wp_get_upload_dir();
+
+	foreach ( $attachments as $attachment ) {
+		$path       = $attachment->url;
+		$site_url   = parse_url( $dir['url'] );
+		$image_path = parse_url( $path );
+
+		// Force the protocols to match if needed.
+		if ( isset( $image_path['scheme'] ) && ( $image_path['scheme'] !== $site_url['scheme'] ) ) {
+			$path = str_replace( $image_path['scheme'], $site_url['scheme'], $path );
+		}
+
+		if ( 0 === strpos( $path, $dir['baseurl'] . '/' ) ) {
+			$path = substr( $path, strlen( $dir['baseurl'] . '/' ) );
+		}
+
+		$path      = str_replace( 'axis.byteever.com', 'axis.test', $path );
+		$path      = str_replace( $dir['baseurl'], '', $path );
+		$full_path = untrailingslashit( $dir['basedir'] ) . '/' . ltrim( $path, '/' );
+
+		if ( ! file_exists( $full_path ) ) {
+			continue;
+		}
+		$attachment_id = eaccounting_file_to_attachment( $full_path );
+		if ( $attachment_id && is_numeric( $attachment_id ) ) {
+			$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'attachment_id' => $attachment_id ), array( 'id' => $attachment->id ) );
+		}
+	}
+	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions DROP COLUMN `attachment`;" );
 }
 
 
