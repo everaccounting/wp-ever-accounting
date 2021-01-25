@@ -413,33 +413,33 @@ function eaccounting_get_transfers( $args = array() ) {
 
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
+		$where  .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
 	if ( ! empty( $qv['from_account_id'] ) ) {
 		$from_account_in = implode( ',', wp_parse_id_list( $qv['from_account_id'] ) );
-		$where           .= " AND expense.`account_id` IN ($from_account_in)";
+		$where          .= " AND expense.`account_id` IN ($from_account_in)";
 	}
 
 	if ( ! empty( $qv['to_account_id'] ) ) {
 		$to_account_in = implode( ',', wp_parse_id_list( $qv['to_account_id'] ) );
-		$where         .= " AND income.`account_id` IN ($to_account_in)";
+		$where        .= " AND income.`account_id` IN ($to_account_in)";
 	}
 
-	$join = " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
+	$join  = " LEFT JOIN {$wpdb->prefix}ea_transactions expense ON (expense.id = ea_transfers.expense_id) ";
 	$join .= " LEFT JOIN {$wpdb->prefix}ea_transactions income ON (income.id = ea_transfers.income_id) ";
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['payment_date'], 'expense.payment_date' );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
@@ -535,16 +535,16 @@ function eaccounting_get_transactions( $args = array() ) {
 	$where  = 'WHERE 1=1';
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
+		$where  .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 	//search
 	$search_cols = array( 'description', 'reference' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    .= ' AND (';
+		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -553,57 +553,57 @@ function eaccounting_get_transactions( $args = array() ) {
 	}
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
 		$where .= " AND $table.`type` IN ('$types')";
 	}
 
 	if ( ! empty( $qv['currency_code'] ) ) {
 		$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-		$where         .= " AND $table.`currency_code` IN ('$currency_code')";
+		$where        .= " AND $table.`currency_code` IN ('$currency_code')";
 	}
 
 	if ( ! empty( $qv['payment_method'] ) ) {
 		$payment_method = implode( "','", wp_parse_list( $qv['payment_method'] ) );
-		$where          .= " AND $table.`payment_method` IN ('$payment_method')";
+		$where         .= " AND $table.`payment_method` IN ('$payment_method')";
 	}
 
 	if ( ! empty( $qv['account_id'] ) ) {
 		$account_id = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
-		$where      .= " AND $table.`account_id` IN ($account_id)";
+		$where     .= " AND $table.`account_id` IN ($account_id)";
 	}
 
 	if ( ! empty( $qv['document_id'] ) ) {
 		$document_id = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
-		$where       .= " AND $table.`document_id` IN ($document_id)";
+		$where      .= " AND $table.`document_id` IN ($document_id)";
 	}
 
 	if ( ! empty( $qv['category_id'] ) ) {
 		$category_in = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
-		$where       .= " AND $table.`category_id` IN ($category_in)";
+		$where      .= " AND $table.`category_id` IN ($category_in)";
 	}
 
 	if ( ! empty( $qv['contact_id'] ) ) {
 		$contact_id = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
-		$where      .= " AND $table.`contact_id` IN ($contact_id)";
+		$where     .= " AND $table.`contact_id` IN ($contact_id)";
 	}
 
 	if ( ! empty( $qv['parent_id'] ) ) {
 		$parent_id = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
-		$where     .= " AND $table.`parent_id` IN ($parent_id)";
+		$where    .= " AND $table.`parent_id` IN ($parent_id)";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 	if ( ! empty( $qv['creator_id'] ) ) {
 		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
-		$where      .= " AND $table.`creator_id` IN ($creator_id)";
+		$where     .= " AND $table.`creator_id` IN ($creator_id)";
 	}
 
 	if ( true === $qv['transfer'] ) {
@@ -686,10 +686,17 @@ function eaccounting_get_total_income( $year = null ) {
 	global $wpdb;
 	$total_income = wp_cache_get( 'total_income_' . $year, 'ea_transactions' );
 	if ( false === $total_income ) {
+		$where = '';
+		if ( absint( $year ) ) {
+			$financial_start = eaccounting_get_financial_start( $year );
+			$financial_end   = eaccounting_get_financial_end( $year );
+			$where          .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
+		}
+
 		$sql          = $wpdb->prepare(
 			" SELECT Sum(amount) amount,currency_code,currency_rate
 				FROM   {$wpdb->prefix}ea_transactions
-				WHERE  type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
+				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
 				GROUP  BY currency_code, currency_rate
 			",
 			'income'
@@ -718,10 +725,17 @@ function eaccounting_get_total_expense( $year = null ) {
 	global $wpdb;
 	$total_expense = wp_cache_get( 'total_expense_' . $year, 'ea_transactions' );
 	if ( false === $total_expense ) {
+		$where = '';
+		if ( absint( $year ) ) {
+			$financial_start = eaccounting_get_financial_start( $year );
+			$financial_end   = eaccounting_get_financial_end( $year );
+			$where          .= $wpdb->prepare( 'AND ( payment_date between %s AND %s )', $financial_start, $financial_end );
+		}
+
 		$sql           = $wpdb->prepare(
 			" SELECT Sum(amount) amount,currency_code,currency_rate
 				FROM   {$wpdb->prefix}ea_transactions
-				WHERE  type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
+				WHERE 1=1 $where AND type = %s AND category_id NOT IN (SELECT id FROM   {$wpdb->prefix}ea_categories WHERE  type = 'other')
 				GROUP  BY currency_code, currency_rate
 			",
 			'expense'

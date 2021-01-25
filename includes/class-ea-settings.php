@@ -148,6 +148,12 @@ class EverAccounting_Settings {
 							'type' => 'checkbox',
 						),
 						array(
+							'id'   => 'dashboard_transactions_limit',
+							'name' => __( 'Total Transactions', 'wp-ever-accounting' ),
+							'type' => 'checkbox',
+							'desc' => 'Limit dashboard total transactions to current financial year.',
+						),
+						array(
 							'id'   => 'local_settings',
 							'name' => __( 'Default Settings', 'wp-ever-accounting' ),
 							'desc' => '',

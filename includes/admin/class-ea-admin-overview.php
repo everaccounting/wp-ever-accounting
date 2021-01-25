@@ -72,8 +72,16 @@ class EverAccounting_Admin_Overview {
 		do_action( 'eaccounting_dashboard_setup' );
 	}
 
+	public static function get_dashboard_income_year() {
+		if ( 'yes' === eaccounting_get_option( 'dashboard_transactions_limit' ) ) {
+			return date_i18n( 'Y' );
+		}
+
+		return null;
+	}
+
 	public static function render_total_income_widget() {
-		$total_income     = eaccounting_get_total_income();
+		$total_income     = eaccounting_get_total_income( self::get_dashboard_income_year() );
 		$total_receivable = eaccounting_get_total_receivable();
 		?>
 		<div class="ea-widget-card">
@@ -96,7 +104,7 @@ class EverAccounting_Admin_Overview {
 	}
 
 	public static function render_total_expense_widget() {
-		$total_expense = eaccounting_get_total_expense();
+		$total_expense = eaccounting_get_total_expense( self::get_dashboard_income_year() );
 		$total_payable = eaccounting_get_total_payable();
 		?>
 		<div class="ea-widget-card alert">
@@ -119,7 +127,7 @@ class EverAccounting_Admin_Overview {
 	}
 
 	public static function render_total_profit_widget() {
-		$total_profit   = eaccounting_get_total_profit();
+		$total_profit   = eaccounting_get_total_profit( self::get_dashboard_income_year() );
 		$total_upcoming = eaccounting_get_total_upcoming_profit();
 		?>
 		<div class="ea-widget-card success">
