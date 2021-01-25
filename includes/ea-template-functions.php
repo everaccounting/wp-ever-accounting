@@ -243,3 +243,9 @@ function eaccounting_public_invoice_actions( $invoice ) {
 }
 
 add_action( 'eaccounting_public_before_invoice', 'eaccounting_public_invoice_actions' );
+
+function eaccounting_public_bill_actions( $bill ) {
+	eaccounting_get_template( 'bill-actions.php', array( 'bill' => $bill ) );
+}
+
+add_action( 'eaccounting_public_before_bill', 'eaccounting_public_bill_actions' );
