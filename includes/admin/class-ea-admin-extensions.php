@@ -27,7 +27,7 @@ class EverAccounting_Admin_Extensions {
 			'eaccounting',
 			__( 'Extensions', 'wp-ever-accounting' ),
 			__( 'Extensions', 'wp-ever-accounting' ),
-			'manage_eaccounting',
+			'manage_options',
 			'ea-extensions',
 			array( $this, 'render_page' )
 		);

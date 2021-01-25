@@ -31,12 +31,25 @@ class EverAccounting_Settings {
 		$this->settings = (array) get_option( 'eaccounting_settings', array() );
 
 		// Set up.
+		add_filter( 'option_page_capability_eaccounting_settings', array( $this, 'option_page_capability' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_filter( 'eaccounting_settings_sanitize_text', 'sanitize_text_field' );
 		add_filter( 'eaccounting_settings_sanitize_url', 'wp_http_validate_url' );
 		//add_filter( 'eaccounting_settings_sanitize_checkbox', 'eaccounting_bool_to_string' );
 		add_filter( 'eaccounting_settings_sanitize_number', 'absint' );
 		add_filter( 'eaccounting_settings_sanitize_rich_editor', 'wp_kses_post' );
+	}
+
+	/**
+	 * Let manager edit settings.
+	 *
+	 * @param $capability
+	 * @since 1.1.0
+	 *
+	 * @return string
+	 */
+	public function option_page_capability( $capability ) {
+		return 'ea_manage_options';
 	}
 
 	/**
@@ -608,9 +621,9 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$id         = 'eaccounting_settings[' . $args['id'] . ']';
 		$html       = '<label for="' . $id . '">';
-		$html       .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
-		$html       .= $args['desc'];
-		$html       .= '</label>';
+		$html      .= '<input type="checkbox" id="' . $id . '" name="' . $id . '" value="yes" ' . $checked . ' ' . $attributes . '/>&nbsp;';
+		$html      .= $args['desc'];
+		$html      .= '</label>';
 
 		echo $html;
 	}
@@ -702,7 +715,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="url" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -744,7 +757,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="number" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -783,7 +796,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<textarea type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" %s>%s</textarea>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -823,7 +836,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="password" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
@@ -929,7 +942,7 @@ class EverAccounting_Settings {
 		$attributes = eaccounting_implode_html_attributes( $args['attr'] );
 		$desc       = ! empty( $args['desc'] ) ? sprintf( '<p class="description">%s</p>', wp_kses_post( $args['desc'] ) ) : '';
 
-		$html = sprintf(
+		$html  = sprintf(
 			'<input type="text" class="%s-text %s" style="%s" name="eaccounting_settings[%s]" id="eaccounting_settings[%s]" value="%s" %s/>',
 			esc_attr( $size ),
 			esc_attr( $args['input_class'] ),
