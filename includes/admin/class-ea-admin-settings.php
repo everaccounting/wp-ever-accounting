@@ -57,7 +57,7 @@ class EverAccounting_Admin_Settings {
 			'categories' => __( 'Categories', 'wp-ever-accounting' ),
 			'extensions' => __( 'Extensions', 'wp-ever-accounting' ),
 			'licenses'   => __( 'Licenses', 'wp-ever-accounting' ),
-			'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+			//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 		);
 
 		if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
