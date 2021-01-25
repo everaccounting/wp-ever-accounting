@@ -69,7 +69,7 @@ class EverAccounting_Admin_Extensions {
 		if ( false === $cache ) {
 			$url = 'https://wpeveraccounting.com/edd-api/products/';
 
-			$feed = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => false ) );
+			$feed = wp_remote_get( esc_url_raw( $url ), array( 'sslverify' => true) );
 			if ( ! is_wp_error( $feed ) ) {
 				if ( isset( $feed['body'] ) && strlen( $feed['body'] ) > 0 ) {
 					$body  = wp_remote_retrieve_body( $feed );

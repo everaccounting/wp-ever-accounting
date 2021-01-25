@@ -95,7 +95,7 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 		$category_id    = empty( $_GET['category_id'] ) ? '' : intval( $_GET['category_id'] );
 		$account_id     = empty( $_GET['account_id'] ) ? '' : intval( $_GET['account_id'] );
 		$customer_id    = empty( $_GET['customer_id'] ) ? '' : intval( $_GET['customer_id'] );
-		$payment_method = empty( $_GET['payment_method'] ) ? '' : intval( $_GET['payment_method'] );
+		$payment_method = empty( $_GET['payment_method'] ) ? '' : filter_var( $_GET['payment_method'], FILTER_SANITIZE_STRING );
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,
