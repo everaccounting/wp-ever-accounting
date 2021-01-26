@@ -638,6 +638,8 @@ class Invoice extends Document {
 		$this->set_total( $total );
 		if ( ( ! empty( $this->get_total_paid() ) && $this->get_total_due() > 0 ) ) {
 			$this->set_status( 'partial' );
+		} elseif( in_array( $this->get_status(), array( 'paid', 'cancelled' ), true ) ) {
+			$this->set_status( 'cancelled' );
 		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
 			$this->set_status( 'paid' );
 		} elseif ( $this->is_due() ) {

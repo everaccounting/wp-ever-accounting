@@ -645,14 +645,17 @@ class Bill extends Document {
 		$this->set_total( $total );
 		if ( ( ! empty( $this->get_total_paid() ) && $this->get_total_due() > 0 ) ) {
 			$this->set_status( 'partial' );
+		} elseif( in_array( $this->get_status(), array( 'paid', 'cancelled' ), true ) ) {
+			$this->set_status( 'cancelled' );
 		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
 			$this->set_status( 'paid' );
 		} elseif ( $this->is_due() ) {
 			$this->set_status( 'overdue' );
 		} elseif ( in_array( $this->get_status(), array( 'partial', 'paid' ), true ) ) {
 			$this->set_status( 'received' );
-		}
-
+		} elseif( $this->get_total_paid() == $this->get_total() ){
+			$this->set_status( 'cancelled' );
+		} 
 		return array(
 			'subtotal'       => $this->get_subtotal(),
 			'total_tax'      => $this->get_total_tax(),
