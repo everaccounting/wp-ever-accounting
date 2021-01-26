@@ -864,7 +864,7 @@ class EverAccounting_Settings {
 					case 'expired':
 						$class      = 'expired';
 						$messages[] = sprintf(
-							__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'easy-digital-downloads' ),
+							__( 'Your license key expired on %1$s. Please <a href="%2$s" target="_blank">renew your license key</a>.', 'wp-ever-accounting' ),
 							date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 							'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=expired'
 						);
@@ -876,7 +876,7 @@ class EverAccounting_Settings {
 					case 'revoked':
 						$class      = 'error';
 						$messages[] = sprintf(
-							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'easy-digital-downloads' ),
+							__( 'Your license key has been disabled. Please <a href="%s" target="_blank">contact support</a> for more information.', 'wp-ever-accounting' ),
 							'https://wpeveraccounting.com/support?utm_campaign=admin&utm_source=licenses&utm_medium=revoked'
 						);
 
@@ -887,7 +887,7 @@ class EverAccounting_Settings {
 					case 'missing':
 						$class      = 'error';
 						$messages[] = sprintf(
-							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'easy-digital-downloads' ),
+							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'wp-ever-accounting' ),
 							'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 						);
 
@@ -899,7 +899,7 @@ class EverAccounting_Settings {
 					case 'site_inactive':
 						$class      = 'error';
 						$messages[] = sprintf(
-							__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'easy-digital-downloads' ),
+							__( 'Your %1$s is not active for this URL. Please <a href="%2$s" target="_blank">visit your account page</a> to manage your license key URLs.', 'wp-ever-accounting' ),
 							$args['name'],
 							'https://wpeveraccounting.com/your-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
 						);
@@ -910,7 +910,7 @@ class EverAccounting_Settings {
 
 					case 'item_name_mismatch':
 						$class      = 'error';
-						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'easy-digital-downloads' ), $args['name'] );
+						$messages[] = sprintf( __( 'This appears to be an invalid license key for %s.', 'wp-ever-accounting' ), $args['name'] );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -918,7 +918,7 @@ class EverAccounting_Settings {
 
 					case 'no_activations_left':
 						$class      = 'error';
-						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'easy-digital-downloads' ), 'https://easydigitaldownloads.com/your-account/' );
+						$messages[] = sprintf( __( 'Your license key has reached its activation limit. <a href="%s">View possible upgrades</a> now.', 'wp-ever-accounting' ), 'https://easydigitaldownloads.com/your-account/' );
 
 						$license_status = 'license-' . $class . '-notice';
 
@@ -926,15 +926,15 @@ class EverAccounting_Settings {
 
 					case 'license_not_activable':
 						$class      = 'error';
-						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'easy-digital-downloads' );
+						$messages[] = __( 'The key you entered belongs to a bundle, please use the product specific license key.', 'wp-ever-accounting' );
 
 						$license_status = 'license-' . $class . '-notice';
 						break;
 
 					default:
 						$class      = 'error';
-						$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'easy-digital-downloads' );
-						$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'easy-digital-downloads' ), $error, 'https://easydigitaldownloads.com/support' );
+						$error      = ! empty( $license->error ) ? $license->error : __( 'unknown_error', 'wp-ever-accounting' );
+						$messages[] = sprintf( __( 'There was an error with this license key: %1$s. Please <a href="%2$s">contact our support team</a>.', 'wp-ever-accounting' ), $error, 'https://easydigitaldownloads.com/support' );
 
 						$license_status = 'license-' . $class . '-notice';
 						break;
@@ -952,14 +952,14 @@ class EverAccounting_Settings {
 
 						if ( 'lifetime' === $license->expires ) {
 
-							$messages[] = __( 'License key never expires.', 'easy-digital-downloads' );
+							$messages[] = __( 'License key never expires.', 'wp-ever-accounting' );
 
 							$license_status = 'license-lifetime-notice';
 
 						} elseif ( $expiration > $now && $expiration - $now < ( DAY_IN_SECONDS * 30 ) ) {
 
 							$messages[] = sprintf(
-								__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'easy-digital-downloads' ),
+								__( 'Your license key expires soon! It expires on %1$s. <a href="%2$s" target="_blank">Renew your license key</a>.', 'wp-ever-accounting' ),
 								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) ),
 								'https://wpeveraccounting.com/checkout/?edd_license_key=' . $value . '&utm_campaign=admin&utm_source=licenses&utm_medium=renew'
 							);
@@ -969,7 +969,7 @@ class EverAccounting_Settings {
 						} else {
 
 							$messages[] = sprintf(
-								__( 'Your license key expires on %s.', 'easy-digital-downloads' ),
+								__( 'Your license key expires on %s.', 'wp-ever-accounting' ),
 								date_i18n( get_option( 'date_format' ), strtotime( $license->expires, current_time( 'timestamp' ) ) )
 							);
 
@@ -985,7 +985,7 @@ class EverAccounting_Settings {
 			$class = 'empty';
 
 			$messages[] = sprintf(
-				__( 'To receive updates, please enter your valid %s license key.', 'easy-digital-downloads' ),
+				__( 'To receive updates, please enter your valid %s license key.', 'wp-ever-accounting' ),
 				$args['name']
 			);
 
@@ -998,7 +998,7 @@ class EverAccounting_Settings {
 		$html = '<input type="text" class="' . sanitize_html_class( $size ) . '-text" id="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" name="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']" value="' . esc_attr( $value ) . '"/>';
 
 		if ( ( is_object( $license ) && 'valid' == $license->license ) || 'valid' == $license ) {
-			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'easy-digital-downloads' ) . '"/>';
+			$html .= '<input type="submit" class="button-secondary" name="' . $args['id'] . '_deactivate" value="' . __( 'Deactivate License', 'wp-ever-accounting' ) . '"/>';
 		}
 
 		$html .= '<label for="edd_settings[' . edd_sanitize_key( $args['id'] ) . ']"> ' . wp_kses_post( $args['desc'] ) . '</label>';

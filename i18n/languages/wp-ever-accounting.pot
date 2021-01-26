@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.0.4\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-01-19 07:18:38+00:00\n"
+"POT-Creation-Date: 2021-01-26 12:07:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,25 +29,25 @@ msgstr ""
 msgid "Invalid file type. The importer supports CSV and TXT file formats."
 msgstr ""
 
-#: includes/admin/class-ea-admin-assets.php:59
+#: includes/admin/class-ea-admin-assets.php:58
 #: includes/admin/class-ea-admin-menus.php:41
 #: includes/admin/class-ea-admin-overview.php:34
 #: includes/admin/class-ea-admin-overview.php:35
-#: includes/admin/ea-admin-functions.php:115
-#: includes/admin/ea-admin-functions.php:155
-#: includes/admin/ea-admin-functions.php:185
+#: includes/admin/ea-admin-functions.php:117
+#: includes/admin/ea-admin-functions.php:157
+#: includes/admin/ea-admin-functions.php:187
 msgid "Accounting"
 msgstr ""
 
-#: includes/admin/class-ea-admin-assets.php:135
+#: includes/admin/class-ea-admin-assets.php:134
 msgid "Could not find the uploaded file, please try again"
 msgstr ""
 
-#: includes/admin/class-ea-admin-assets.php:136
+#: includes/admin/class-ea-admin-assets.php:135
 msgid "  - Select field to preview data -"
 msgstr ""
 
-#: includes/admin/class-ea-admin-assets.php:137
+#: includes/admin/class-ea-admin-assets.php:136
 msgid "(Required)"
 msgstr ""
 
@@ -85,7 +85,7 @@ msgid "no cheating!"
 msgstr ""
 
 #: includes/admin/class-ea-admin-bills.php:48
-msgid "Bill status updated to status."
+msgid "Bill status updated to received."
 msgstr ""
 
 #: includes/admin/class-ea-admin-bills.php:51
@@ -104,12 +104,12 @@ msgid "Expenses"
 msgstr ""
 
 #: includes/admin/class-ea-admin-expenses.php:45
-#: includes/admin/class-ea-admin-settings.php:83
-#: includes/admin/class-ea-admin-settings.php:116
-#: includes/admin/ea-admin-functions.php:64
+#: includes/admin/class-ea-admin-settings.php:85
+#: includes/admin/class-ea-admin-settings.php:118
+#: includes/admin/ea-admin-functions.php:66
 #: includes/admin/views/bills/edit-bill.php:28
 #: includes/admin/views/bills/list-bill.php:23
-#: includes/admin/views/bills/view-bill.php:45
+#: includes/admin/views/bills/view-bill.php:50
 #: includes/admin/views/vendors/view-vendor.php:23
 msgid "Bills"
 msgstr ""
@@ -127,52 +127,52 @@ msgstr ""
 msgid "Vendors"
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:36
+#: includes/admin/class-ea-admin-exporter.php:33
 msgid "Export type must be present."
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:48
+#: includes/admin/class-ea-admin-exporter.php:45
 msgid "%s is an invalid export type."
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:59
-#: includes/admin/class-ea-admin-importer.php:58
+#: includes/admin/class-ea-admin-exporter.php:56
+#: includes/admin/class-ea-admin-importer.php:55
 msgid "An invalid file path is registered for the %1$s handler."
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:70
+#: includes/admin/class-ea-admin-exporter.php:67
 msgid "%1$s is an invalid exporter handler for the %2$s . Please try again."
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:86
-#: includes/admin/class-ea-admin-exporter.php:171
+#: includes/admin/class-ea-admin-exporter.php:83
+#: includes/admin/class-ea-admin-exporter.php:168
 msgid "You do not have enough privileges to export this."
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:113
+#: includes/admin/class-ea-admin-exporter.php:110
 msgid "Total %d items exported"
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:147
+#: includes/admin/class-ea-admin-exporter.php:144
 msgid "Invalid export type."
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:148
-#: includes/admin/class-ea-admin-exporter.php:158
-#: includes/admin/class-ea-admin-exporter.php:172
+#: includes/admin/class-ea-admin-exporter.php:145
+#: includes/admin/class-ea-admin-exporter.php:155
+#: includes/admin/class-ea-admin-exporter.php:169
 #: includes/class-ea-license.php:296 src/Core/License.php:454
 msgid "Error"
 msgstr ""
 
-#: includes/admin/class-ea-admin-exporter.php:157
+#: includes/admin/class-ea-admin-exporter.php:154
 msgid "Invalid export class."
 msgstr ""
 
 #: includes/admin/class-ea-admin-extensions.php:28
 #: includes/admin/class-ea-admin-extensions.php:29
 #: includes/admin/class-ea-admin-extensions.php:45
-#: includes/admin/class-ea-admin-settings.php:56
-#: includes/admin/ea-admin-functions.php:27
+#: includes/admin/class-ea-admin-settings.php:58
+#: includes/admin/ea-admin-functions.php:29
 msgid "Extensions"
 msgstr ""
 
@@ -186,44 +186,44 @@ msgid ""
 "try again later."
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:24
+#: includes/admin/class-ea-admin-importer.php:21
 msgid "Import type must be present."
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:47
+#: includes/admin/class-ea-admin-importer.php:44
 msgid "%s is an invalid import type."
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:69
+#: includes/admin/class-ea-admin-importer.php:66
 msgid "%1$s is an invalid importer handler for the %2$s . Please try again."
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:80
-#: includes/admin/class-ea-admin-importer.php:137
+#: includes/admin/class-ea-admin-importer.php:77
+#: includes/admin/class-ea-admin-importer.php:134
 msgid "Missing import file. Please provide an import file."
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:105
+#: includes/admin/class-ea-admin-importer.php:102
 msgid "The file you uploaded does not appear to be a CSV file."
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:114
-#: includes/admin/class-ea-admin-importer.php:125
+#: includes/admin/class-ea-admin-importer.php:111
+#: includes/admin/class-ea-admin-importer.php:122
 msgid "Something went wrong during the upload process, please try again."
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:145
+#: includes/admin/class-ea-admin-importer.php:142
 msgid "You do not have permission to import data"
 msgstr ""
 
-#: includes/admin/class-ea-admin-importer.php:152
+#: includes/admin/class-ea-admin-importer.php:149
 msgid ""
 "The file is empty or using a different encoding than UTF-8, please try "
 "again with a new file."
 msgstr ""
 
 #: includes/admin/class-ea-admin-invoices.php:49
-msgid "Invoice status updated to status."
+msgid "Invoice status updated to pending."
 msgstr ""
 
 #: includes/admin/class-ea-admin-invoices.php:52
@@ -283,7 +283,7 @@ msgstr ""
 #: includes/admin/class-ea-admin-overview.php:45
 #: includes/admin/views/admin-page-overview.php:9
 msgid "Overview"
-msgstr "Visión general"
+msgstr ""
 
 #: includes/admin/class-ea-admin-overview.php:66
 msgid "Cash Flow"
@@ -309,77 +309,77 @@ msgstr ""
 msgid "Account Balances"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:85
+#: includes/admin/class-ea-admin-overview.php:93
 msgid "Total Sales"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:90
-#: includes/admin/list-tables/class-ea-customer-list-table.php:131
+#: includes/admin/class-ea-admin-overview.php:98
+#: includes/admin/list-tables/class-ea-customer-list-table.php:132
 msgid "Receivable"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:108
+#: includes/admin/class-ea-admin-overview.php:116
 msgid "Total Expenses"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:113
+#: includes/admin/class-ea-admin-overview.php:121
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:132
 msgid "Payable"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:131
+#: includes/admin/class-ea-admin-overview.php:139
 msgid "Total Profit"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:136
+#: includes/admin/class-ea-admin-overview.php:144
 msgid "Upcoming"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:164
+#: includes/admin/class-ea-admin-overview.php:172
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:275
 #: includes/admin/reports/class-ea-report-cashflow.php:193
-#: includes/admin/reports/class-ea-report-cashflow.php:300
-#: includes/admin/reports/income-summary.php:144
+#: includes/admin/reports/class-ea-report-cashflow.php:299
+#: includes/admin/reports/income-summary.php:145
 #: includes/ea-category-functions.php:22
 #: includes/ea-transaction-functions.php:24
 msgid "Income"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:173
+#: includes/admin/class-ea-admin-overview.php:181
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:276
 #: includes/admin/reports/class-ea-report-cashflow.php:202
-#: includes/admin/reports/class-ea-report-cashflow.php:306
-#: includes/admin/reports/expense-summary.php:144
+#: includes/admin/reports/class-ea-report-cashflow.php:305
+#: includes/admin/reports/expense-summary.php:145
 #: includes/admin/reports/profit-loss.php:110
 #: includes/ea-category-functions.php:21
 #: includes/ea-transaction-functions.php:25
 msgid "Expense"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:182
+#: includes/admin/class-ea-admin-overview.php:190
 #: includes/admin/reports/class-ea-report-cashflow.php:211
-#: includes/admin/reports/class-ea-report-cashflow.php:324
-#: includes/admin/reports/income-expense.php:136
+#: includes/admin/reports/class-ea-report-cashflow.php:323
+#: includes/admin/reports/income-expense.php:138
 msgid "Profit"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:294
-#: includes/admin/class-ea-admin-overview.php:385
+#: includes/admin/class-ea-admin-overview.php:302
+#: includes/admin/class-ea-admin-overview.php:392
 msgid "Others"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:456
+#: includes/admin/class-ea-admin-overview.php:463
 msgid "There is no income records."
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:465
-#: includes/admin/class-ea-admin-overview.php:513
+#: includes/admin/class-ea-admin-overview.php:472
+#: includes/admin/class-ea-admin-overview.php:520
 #: includes/admin/list-tables/class-ea-payment-list-table.php:114
 #: includes/admin/list-tables/class-ea-revenue-list-table.php:113
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:106
 #: includes/admin/list-tables/class-ea-transfer-list-table.php:115
-#: includes/admin/views/bills/bill-payments.php:22
-#: includes/admin/views/invoices/invoice-payments.php:22
+#: includes/admin/views/bills/bill-payments.php:24
+#: includes/admin/views/invoices/invoice-payments.php:24
 #: includes/admin/views/js/modal-bill-payment.php:17
 #: includes/admin/views/js/modal-invoice-payment.php:17
 #: includes/admin/views/payments/edit-payment.php:53
@@ -388,14 +388,14 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:466
-#: includes/admin/class-ea-admin-overview.php:514
+#: includes/admin/class-ea-admin-overview.php:473
+#: includes/admin/class-ea-admin-overview.php:521
 #: includes/admin/list-tables/class-ea-item-list-table.php:133
 #: includes/admin/list-tables/class-ea-payment-list-table.php:117
 #: includes/admin/list-tables/class-ea-revenue-list-table.php:116
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:110
-#: includes/admin/reports/expense-summary.php:59
-#: includes/admin/reports/income-summary.php:59
+#: includes/admin/reports/expense-summary.php:60
+#: includes/admin/reports/income-summary.php:60
 #: includes/admin/views/bills/edit-bill.php:127
 #: includes/admin/views/invoices/edit-invoice.php:129
 #: includes/admin/views/items/edit-item.php:64
@@ -408,8 +408,8 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:467
-#: includes/admin/class-ea-admin-overview.php:515
+#: includes/admin/class-ea-admin-overview.php:474
+#: includes/admin/class-ea-admin-overview.php:522
 #: includes/admin/list-tables/class-ea-payment-list-table.php:115
 #: includes/admin/list-tables/class-ea-revenue-list-table.php:114
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:107
@@ -424,36 +424,36 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:503
+#: includes/admin/class-ea-admin-overview.php:510
 msgid "There is no expense records."
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:556
+#: includes/admin/class-ea-admin-overview.php:563
 msgid "There is not accounts."
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:566
+#: includes/admin/class-ea-admin-overview.php:573
 #: includes/admin/class-ea-admin-settings.bk.php:155
-#: includes/admin/class-ea-admin-settings.php:233
+#: includes/admin/class-ea-admin-settings.php:235
 #: includes/admin/list-tables/class-ea-payment-list-table.php:116
 #: includes/admin/list-tables/class-ea-revenue-list-table.php:115
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:109
-#: includes/admin/reports/expense-summary.php:37
-#: includes/admin/reports/income-expense.php:34
-#: includes/admin/reports/income-summary.php:37
+#: includes/admin/reports/expense-summary.php:38
+#: includes/admin/reports/income-expense.php:36
+#: includes/admin/reports/income-summary.php:38
 #: includes/admin/reports/profit-loss.php:39
 #: includes/admin/views/js/modal-bill-payment.php:39
 #: includes/admin/views/js/modal-invoice-payment.php:39
 #: includes/admin/views/payments/edit-payment.php:65
 #: includes/admin/views/reconciliations/edit-reconciliation.php:55
 #: includes/admin/views/revenues/edit-revenue.php:59
-#: includes/class-ea-settings.bk.php:142 includes/class-ea-settings.php:144
+#: includes/class-ea-settings.bk.php:142 includes/class-ea-settings.php:164
 #: src/REST/AccountsController.php:61
 msgid "Account"
 msgstr ""
 
-#: includes/admin/class-ea-admin-overview.php:567
-#: includes/admin/list-tables/class-ea-account-list-table.php:130
+#: includes/admin/class-ea-admin-overview.php:574
+#: includes/admin/list-tables/class-ea-account-list-table.php:131
 msgid "Balance"
 msgstr ""
 
@@ -486,13 +486,13 @@ msgid "Cashflow"
 msgstr ""
 
 #: includes/admin/class-ea-admin-sales.php:45
-#: includes/admin/class-ea-admin-settings.php:82
-#: includes/admin/class-ea-admin-settings.php:115
-#: includes/admin/ea-admin-functions.php:63
+#: includes/admin/class-ea-admin-settings.php:84
+#: includes/admin/class-ea-admin-settings.php:117
+#: includes/admin/ea-admin-functions.php:65
 #: includes/admin/views/customers/view-customer.php:23
 #: includes/admin/views/invoices/edit-invoice.php:29
 #: includes/admin/views/invoices/list-invoice.php:26
-#: includes/admin/views/invoices/view-invoice.php:45
+#: includes/admin/views/invoices/view-invoice.php:50
 msgid "Invoices"
 msgstr ""
 
@@ -511,24 +511,24 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:37
 #: includes/admin/class-ea-admin-settings.bk.php:38
-#: includes/admin/class-ea-admin-settings.php:37
-#: includes/admin/class-ea-admin-settings.php:38
+#: includes/admin/class-ea-admin-settings.php:39
+#: includes/admin/class-ea-admin-settings.php:40
 #: includes/class-ea-install.php:64
 msgid "Settings"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:85
-#: includes/admin/class-ea-admin-settings.php:163
-#: includes/class-ea-settings.bk.php:69 includes/class-ea-settings.php:56
+#: includes/admin/class-ea-admin-settings.php:165
+#: includes/class-ea-settings.bk.php:69 includes/class-ea-settings.php:70
 msgid "Company Settings"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:90
-#: includes/admin/class-ea-admin-settings.php:168
-#: includes/admin/list-tables/class-ea-account-list-table.php:129
+#: includes/admin/class-ea-admin-settings.php:170
+#: includes/admin/list-tables/class-ea-account-list-table.php:130
 #: includes/admin/list-tables/class-ea-category-list-table.php:122
 #: includes/admin/list-tables/class-ea-currency-list-table.php:111
-#: includes/admin/list-tables/class-ea-customer-list-table.php:127
+#: includes/admin/list-tables/class-ea-customer-list-table.php:128
 #: includes/admin/list-tables/class-ea-item-list-table.php:130
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:128
 #: includes/admin/views/accounts/view-account.php:132
@@ -543,120 +543,120 @@ msgstr ""
 #: includes/admin/views/reconciliations/reconciliations.php:23
 #: includes/admin/views/vendors/edit-vendor.php:60
 #: includes/admin/views/vendors/view-vendor.php:136
-#: includes/class-ea-settings.bk.php:74 includes/class-ea-settings.php:62
+#: includes/class-ea-settings.bk.php:74 includes/class-ea-settings.php:76
 #: src/Core/Emails.php:46 src/Models/Customer.php:63 src/Models/Vendor.php:62
 msgid "Name"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:95
-#: includes/admin/class-ea-admin-settings.php:173
-#: includes/class-ea-settings.bk.php:77 includes/class-ea-settings.php:65
+#: includes/admin/class-ea-admin-settings.php:175
+#: includes/class-ea-settings.bk.php:77 includes/class-ea-settings.php:79
 msgid "XYZ Company"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:99
 #: includes/admin/class-ea-admin-settings.bk.php:653
-#: includes/admin/class-ea-admin-settings.php:177
-#: includes/admin/class-ea-admin-settings.php:731
+#: includes/admin/class-ea-admin-settings.php:179
+#: includes/admin/class-ea-admin-settings.php:733
 #: includes/admin/views/customers/edit-customer.php:86
 #: includes/admin/views/customers/view-customer.php:149
 #: includes/admin/views/js/modal-add-customer.php:44
 #: includes/admin/views/js/modal-add-vendor.php:44
 #: includes/admin/views/vendors/edit-vendor.php:90
 #: includes/admin/views/vendors/view-vendor.php:152
-#: includes/class-ea-settings.bk.php:80 includes/class-ea-settings.php:69
+#: includes/class-ea-settings.bk.php:80 includes/class-ea-settings.php:83
 #: src/Core/Emails.php:51
 msgid "Email"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:105
-#: includes/admin/class-ea-admin-settings.php:183
-#: includes/class-ea-settings.bk.php:86 includes/class-ea-settings.php:76
+#: includes/admin/class-ea-admin-settings.php:185
+#: includes/class-ea-settings.bk.php:86 includes/class-ea-settings.php:90
 msgid "Phone Number"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:109
-#: includes/admin/class-ea-admin-settings.php:187
+#: includes/admin/class-ea-admin-settings.php:189
 msgid "Tax Number"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:113
-#: includes/admin/class-ea-admin-settings.php:191
+#: includes/admin/class-ea-admin-settings.php:193
 #: includes/admin/views/customers/edit-customer.php:134
 #: includes/admin/views/vendors/edit-vendor.php:138
-#: includes/class-ea-settings.bk.php:94 includes/class-ea-settings.php:86
+#: includes/class-ea-settings.bk.php:94 includes/class-ea-settings.php:100
 msgid "Street"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:117
-#: includes/admin/class-ea-admin-settings.php:195
+#: includes/admin/class-ea-admin-settings.php:197
 #: includes/admin/views/customers/edit-customer.php:143
 #: includes/admin/views/vendors/edit-vendor.php:147
-#: includes/class-ea-settings.bk.php:98 includes/class-ea-settings.php:91
+#: includes/class-ea-settings.bk.php:98 includes/class-ea-settings.php:105
 msgid "City"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:121
-#: includes/admin/class-ea-admin-settings.php:199
+#: includes/admin/class-ea-admin-settings.php:201
 #: includes/admin/views/customers/edit-customer.php:152
 #: includes/admin/views/vendors/edit-vendor.php:156
-#: includes/class-ea-settings.bk.php:102 includes/class-ea-settings.php:96
+#: includes/class-ea-settings.bk.php:102 includes/class-ea-settings.php:110
 msgid "State"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:125
-#: includes/admin/class-ea-admin-settings.php:203
+#: includes/admin/class-ea-admin-settings.php:205
 msgid "Zip/Postcode"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:129
-#: includes/admin/class-ea-admin-settings.php:207
-#: includes/admin/class-ea-admin-setup.php:273
+#: includes/admin/class-ea-admin-settings.php:209
+#: includes/admin/class-ea-admin-setup.php:272
 #: includes/admin/views/customers/edit-customer.php:170
 #: includes/admin/views/vendors/edit-vendor.php:174
-#: includes/class-ea-settings.bk.php:110 includes/class-ea-settings.php:106
+#: includes/class-ea-settings.bk.php:110 includes/class-ea-settings.php:120
 #: src/Core/Emails.php:49
 msgid "Country"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:132
-#: includes/admin/class-ea-admin-settings.php:210
-#: includes/class-ea-settings.bk.php:113 includes/class-ea-settings.php:109
+#: includes/admin/class-ea-admin-settings.php:212
+#: includes/class-ea-settings.bk.php:113 includes/class-ea-settings.php:123
 #: includes/ea-form-functions.php:975
 msgid "Select Country"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:135
-#: includes/admin/class-ea-admin-settings.php:213
-#: includes/class-ea-settings.bk.php:116 includes/class-ea-settings.php:113
+#: includes/admin/class-ea-admin-settings.php:215
+#: includes/class-ea-settings.bk.php:116 includes/class-ea-settings.php:127
 msgid "Logo"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:139
-#: includes/admin/class-ea-admin-settings.php:217
+#: includes/admin/class-ea-admin-settings.php:219
 msgid "Localisation Settings"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:144
-#: includes/admin/class-ea-admin-settings.php:222
-#: includes/class-ea-settings.bk.php:125 includes/class-ea-settings.php:124
+#: includes/admin/class-ea-admin-settings.php:224
+#: includes/class-ea-settings.bk.php:125 includes/class-ea-settings.php:138
 msgid "Financial Year Start"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:150
-#: includes/admin/class-ea-admin-settings.php:228
-#: includes/class-ea-settings.bk.php:137 includes/class-ea-settings.php:138
+#: includes/admin/class-ea-admin-settings.php:230
+#: includes/class-ea-settings.bk.php:137 includes/class-ea-settings.php:158
 msgid "Default Settings"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:158
-#: includes/admin/class-ea-admin-settings.php:236
+#: includes/admin/class-ea-admin-settings.php:238
 #: includes/class-ea-settings.bk.php:146
 msgid "Select default account"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:160
-#: includes/admin/class-ea-admin-settings.php:238
+#: includes/admin/class-ea-admin-settings.php:240
 #: includes/admin/reports/class-ea-report-expenses.php:127
 #: includes/admin/reports/class-ea-report-profits.php:125
 #: includes/admin/reports/class-ea-report-sales.php:127
@@ -672,14 +672,14 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:166
 #: includes/admin/class-ea-admin-settings.bk.php:183
-#: includes/admin/class-ea-admin-settings.php:244
-#: includes/admin/class-ea-admin-settings.php:261
+#: includes/admin/class-ea-admin-settings.php:246
+#: includes/admin/class-ea-admin-settings.php:263
 #: includes/admin/views/accounts/edit-account.php:29
 #: includes/admin/views/accounts/list-account.php:35
 #: includes/admin/views/accounts/view-account.php:41
 #: includes/admin/views/bills/edit-bill.php:31
 #: includes/admin/views/bills/list-bill.php:25
-#: includes/admin/views/bills/view-bill.php:46
+#: includes/admin/views/bills/view-bill.php:51
 #: includes/admin/views/categories/edit-category.php:25
 #: includes/admin/views/categories/list-category.php:32
 #: includes/admin/views/currencies/edit-currency.php:28
@@ -689,7 +689,7 @@ msgstr ""
 #: includes/admin/views/customers/view-customer.php:41
 #: includes/admin/views/invoices/edit-invoice.php:32
 #: includes/admin/views/invoices/list-invoice.php:28
-#: includes/admin/views/invoices/view-invoice.php:46
+#: includes/admin/views/invoices/view-invoice.php:51
 #: includes/admin/views/items/edit-item.php:28
 #: includes/admin/views/items/list-item.php:34
 #: includes/admin/views/payments/edit-payment.php:31
@@ -708,7 +708,7 @@ msgid "Add New"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:170
-#: includes/admin/class-ea-admin-settings.php:248
+#: includes/admin/class-ea-admin-settings.php:250
 #: includes/admin/views/accounts/view-account.php:140
 #: includes/admin/views/bills/edit-bill.php:74
 #: includes/admin/views/customers/edit-customer.php:66
@@ -718,26 +718,26 @@ msgstr ""
 #: includes/admin/views/js/modal-add-vendor.php:24
 #: includes/admin/views/vendors/edit-vendor.php:71
 #: includes/admin/views/vendors/view-vendor.php:140
-#: includes/class-ea-settings.bk.php:158 includes/class-ea-settings.php:152
+#: includes/class-ea-settings.bk.php:158 includes/class-ea-settings.php:172
 #: src/Models/Bill.php:71 src/Models/Invoice.php:71
 #: src/REST/CurrenciesController.php:61
 msgid "Currency"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:173
-#: includes/admin/class-ea-admin-settings.php:251
+#: includes/admin/class-ea-admin-settings.php:253
 #: includes/class-ea-settings.bk.php:161
 msgid "Default currency rate will update to 1"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:175
-#: includes/admin/class-ea-admin-settings.php:253
+#: includes/admin/class-ea-admin-settings.php:255
 #: includes/class-ea-settings.bk.php:163
 msgid "Select default currency"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:177
-#: includes/admin/class-ea-admin-settings.php:255
+#: includes/admin/class-ea-admin-settings.php:257
 #: includes/admin/views/js/modal-add-account.php:36
 #: includes/admin/views/js/modal-add-currency.php:16
 #: includes/admin/views/js/modal-add-customer.php:27
@@ -747,7 +747,7 @@ msgid "Select Currency"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:187
-#: includes/admin/class-ea-admin-settings.php:265
+#: includes/admin/class-ea-admin-settings.php:267
 #: includes/admin/views/js/modal-bill-payment.php:48
 #: includes/admin/views/js/modal-invoice-payment.php:48
 #: includes/admin/views/payments/edit-payment.php:115
@@ -755,63 +755,63 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:103
 #: includes/admin/views/revenues/view-income.php:102
 #: includes/admin/views/transfers/edit-transfer.php:92
-#: includes/class-ea-settings.bk.php:175 includes/class-ea-settings.php:160
-#: src/Models/Payment.php:68 src/Models/Revenue.php:67
+#: includes/class-ea-settings.bk.php:175 includes/class-ea-settings.php:180
+#: src/Models/Payment.php:66 src/Models/Revenue.php:65
 msgid "Payment Method"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:193
-#: includes/admin/class-ea-admin-settings.php:271
-#: includes/class-ea-settings.bk.php:183 includes/class-ea-settings.php:171
+#: includes/admin/class-ea-admin-settings.php:273
+#: includes/class-ea-settings.bk.php:183 includes/class-ea-settings.php:191
 msgid "Invoice Prefix"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:199
-#: includes/admin/class-ea-admin-settings.php:277
-#: includes/class-ea-settings.bk.php:188 includes/class-ea-settings.php:177
+#: includes/admin/class-ea-admin-settings.php:279
+#: includes/class-ea-settings.bk.php:188 includes/class-ea-settings.php:197
 msgid "Minimum Digits"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:205
-#: includes/admin/class-ea-admin-settings.php:283
+#: includes/admin/class-ea-admin-settings.php:285
 msgid "Invoice Title"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:211
-#: includes/admin/class-ea-admin-settings.php:289
+#: includes/admin/class-ea-admin-settings.php:291
 msgid "Invoice Subheading"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:217
-#: includes/admin/class-ea-admin-settings.php:295
-#: includes/admin/views/invoices/view-invoice.php:32
+#: includes/admin/class-ea-admin-settings.php:297
+#: includes/admin/views/invoices/view-invoice.php:36
 msgid "Invoice Notes"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:223
-#: includes/admin/class-ea-admin-settings.php:301
+#: includes/admin/class-ea-admin-settings.php:303
 msgid "Invoice Footer"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:229
 #: includes/admin/class-ea-admin-settings.bk.php:283
-#: includes/admin/class-ea-admin-settings.php:307
-#: includes/admin/class-ea-admin-settings.php:361
+#: includes/admin/class-ea-admin-settings.php:309
+#: includes/admin/class-ea-admin-settings.php:363
 #: includes/class-ea-settings.bk.php:211 includes/class-ea-settings.bk.php:263
-#: includes/class-ea-settings.php:209 includes/class-ea-settings.php:267
+#: includes/class-ea-settings.php:229 includes/class-ea-settings.php:287
 msgid "Item Label"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:230
 #: includes/admin/class-ea-admin-settings.bk.php:284
-#: includes/admin/class-ea-admin-settings.php:308
-#: includes/admin/class-ea-admin-settings.php:362
+#: includes/admin/class-ea-admin-settings.php:310
+#: includes/admin/class-ea-admin-settings.php:364
 #: includes/admin/views/bills/bill-items.php:13
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:16
-#: includes/class-ea-install.php:376 includes/class-ea-install.php:382
+#: includes/class-ea-install.php:378 includes/class-ea-install.php:384
 #: includes/class-ea-settings.bk.php:212 includes/class-ea-settings.bk.php:264
-#: includes/class-ea-settings.php:210 includes/class-ea-settings.php:268
+#: includes/class-ea-settings.php:230 includes/class-ea-settings.php:288
 #: includes/ea-category-functions.php:24 src/REST/ItemsController.php:357
 #: templates/bill/bill-items.php:15 templates/emails/invoice-details.php:27
 #: templates/invoice/invoice-items.php:15
@@ -820,223 +820,223 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:235
 #: includes/admin/class-ea-admin-settings.bk.php:289
-#: includes/admin/class-ea-admin-settings.php:313
-#: includes/admin/class-ea-admin-settings.php:367
+#: includes/admin/class-ea-admin-settings.php:315
+#: includes/admin/class-ea-admin-settings.php:369
 #: includes/class-ea-settings.bk.php:216 includes/class-ea-settings.bk.php:268
-#: includes/class-ea-settings.php:215 includes/class-ea-settings.php:273
+#: includes/class-ea-settings.php:235 includes/class-ea-settings.php:293
 msgid "Price Label"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:236
 #: includes/admin/class-ea-admin-settings.bk.php:290
-#: includes/admin/class-ea-admin-settings.php:314
-#: includes/admin/class-ea-admin-settings.php:368
+#: includes/admin/class-ea-admin-settings.php:316
+#: includes/admin/class-ea-admin-settings.php:370
 #: includes/admin/views/reconciliations/reconciliations.php:25
-#: includes/class-ea-install.php:377 includes/class-ea-install.php:383
+#: includes/class-ea-install.php:379 includes/class-ea-install.php:385
 #: includes/class-ea-settings.bk.php:217 includes/class-ea-settings.bk.php:269
-#: includes/class-ea-settings.php:216 includes/class-ea-settings.php:274
+#: includes/class-ea-settings.php:236 includes/class-ea-settings.php:294
 #: templates/emails/invoice-details.php:28
 msgid "Price"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:241
 #: includes/admin/class-ea-admin-settings.bk.php:295
-#: includes/admin/class-ea-admin-settings.php:319
-#: includes/admin/class-ea-admin-settings.php:373
+#: includes/admin/class-ea-admin-settings.php:321
+#: includes/admin/class-ea-admin-settings.php:375
 #: includes/class-ea-settings.bk.php:221 includes/class-ea-settings.bk.php:273
-#: includes/class-ea-settings.php:221 includes/class-ea-settings.php:279
+#: includes/class-ea-settings.php:241 includes/class-ea-settings.php:299
 msgid "Quantity Label"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:242
 #: includes/admin/class-ea-admin-settings.bk.php:296
-#: includes/admin/class-ea-admin-settings.php:320
-#: includes/admin/class-ea-admin-settings.php:374
+#: includes/admin/class-ea-admin-settings.php:322
+#: includes/admin/class-ea-admin-settings.php:376
 #: includes/admin/views/bills/bill-items.php:15
 #: includes/admin/views/invoices/invoice-items.php:15
 #: includes/admin/views/js/modal-add-invoice-item.php:17
 #: includes/admin/views/reconciliations/reconciliations.php:24
-#: includes/class-ea-install.php:378 includes/class-ea-install.php:384
+#: includes/class-ea-install.php:380 includes/class-ea-install.php:386
 #: includes/class-ea-settings.bk.php:222 includes/class-ea-settings.bk.php:274
-#: includes/class-ea-settings.php:222 includes/class-ea-settings.php:280
+#: includes/class-ea-settings.php:242 includes/class-ea-settings.php:300
 #: templates/bill/bill-items.php:17 templates/emails/invoice-details.php:29
 #: templates/invoice/invoice-items.php:17
 msgid "Quantity"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:247
-#: includes/admin/class-ea-admin-settings.php:325
-#: includes/class-ea-settings.bk.php:228 includes/class-ea-settings.php:229
+#: includes/admin/class-ea-admin-settings.php:327
+#: includes/class-ea-settings.bk.php:228 includes/class-ea-settings.php:249
 msgid "Bill Prefix"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:253
-#: includes/admin/class-ea-admin-settings.php:331
-#: includes/class-ea-settings.bk.php:234 includes/class-ea-settings.php:235
+#: includes/admin/class-ea-admin-settings.php:333
+#: includes/class-ea-settings.bk.php:234 includes/class-ea-settings.php:255
 msgid "Bill Digits"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:259
-#: includes/admin/class-ea-admin-settings.php:337
+#: includes/admin/class-ea-admin-settings.php:339
 msgid "Bill Title"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:265
-#: includes/admin/class-ea-admin-settings.php:343
+#: includes/admin/class-ea-admin-settings.php:345
 msgid "Bill Subheading"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:271
-#: includes/admin/class-ea-admin-settings.php:349
-#: includes/admin/views/bills/view-bill.php:32
+#: includes/admin/class-ea-admin-settings.php:351
+#: includes/admin/views/bills/view-bill.php:36
 msgid "Bill Notes"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:277
-#: includes/admin/class-ea-admin-settings.php:355
+#: includes/admin/class-ea-admin-settings.php:357
 msgid "Bill Footer"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:301
-#: includes/admin/class-ea-admin-settings.php:379
+#: includes/admin/class-ea-admin-settings.php:381
 msgid "Tax Settings"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:307
-#: includes/admin/class-ea-admin-settings.php:385
+#: includes/admin/class-ea-admin-settings.php:387
 msgid "Enable Taxes"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:310
-#: includes/admin/class-ea-admin-settings.php:388
+#: includes/admin/class-ea-admin-settings.php:390
 msgid "Enable tax rates and calculations."
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:314
-#: includes/admin/class-ea-admin-settings.php:392
-#: includes/class-ea-settings.bk.php:294 includes/class-ea-settings.php:295
+#: includes/admin/class-ea-admin-settings.php:394
+#: includes/class-ea-settings.bk.php:294 includes/class-ea-settings.php:315
 msgid "Rounding"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:316
-#: includes/admin/class-ea-admin-settings.php:394
-#: includes/class-ea-settings.bk.php:296 includes/class-ea-settings.php:297
+#: includes/admin/class-ea-admin-settings.php:396
+#: includes/class-ea-settings.bk.php:296 includes/class-ea-settings.php:317
 msgid "Round tax at subtotal level, instead of rounding per tax rate."
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:320
-#: includes/admin/class-ea-admin-settings.php:398
-#: includes/class-ea-settings.bk.php:299 includes/class-ea-settings.php:301
+#: includes/admin/class-ea-admin-settings.php:400
+#: includes/class-ea-settings.bk.php:299 includes/class-ea-settings.php:321
 msgid "Prices entered with tax"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:325
-#: includes/admin/class-ea-admin-settings.php:403
-#: includes/class-ea-settings.bk.php:303 includes/class-ea-settings.php:305
+#: includes/admin/class-ea-admin-settings.php:405
+#: includes/class-ea-settings.bk.php:303 includes/class-ea-settings.php:325
 msgid "Yes, I will enter prices inclusive of tax"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:326
-#: includes/admin/class-ea-admin-settings.php:404
-#: includes/class-ea-settings.bk.php:304 includes/class-ea-settings.php:306
+#: includes/admin/class-ea-admin-settings.php:406
+#: includes/class-ea-settings.bk.php:304 includes/class-ea-settings.php:326
 msgid "No, I will enter prices exclusive of tax"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:330
-#: includes/admin/class-ea-admin-settings.php:408
-#: includes/class-ea-settings.bk.php:308 includes/class-ea-settings.php:311
+#: includes/admin/class-ea-admin-settings.php:410
+#: includes/class-ea-settings.bk.php:308 includes/class-ea-settings.php:331
 msgid "Display tax totals\t"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:335
-#: includes/admin/class-ea-admin-settings.php:413
-#: includes/class-ea-settings.bk.php:312 includes/class-ea-settings.php:315
+#: includes/admin/class-ea-admin-settings.php:415
+#: includes/class-ea-settings.bk.php:312 includes/class-ea-settings.php:335
 msgid "As a single total"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:336
-#: includes/admin/class-ea-admin-settings.php:414
-#: includes/class-ea-settings.bk.php:313 includes/class-ea-settings.php:316
+#: includes/admin/class-ea-admin-settings.php:416
+#: includes/class-ea-settings.bk.php:313 includes/class-ea-settings.php:336
 msgid "As individual tax rates"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:361
-#: includes/admin/class-ea-admin-settings.php:439
+#: includes/admin/class-ea-admin-settings.php:441
 msgid "{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:362
-#: includes/admin/class-ea-admin-settings.php:440
+#: includes/admin/class-ea-admin-settings.php:442
 msgid "{invoice_total}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:363
-#: includes/admin/class-ea-admin-settings.php:441
+#: includes/admin/class-ea-admin-settings.php:443
 msgid "{invoice_due_date}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:364
-#: includes/admin/class-ea-admin-settings.php:442
+#: includes/admin/class-ea-admin-settings.php:444
 msgid "{invoice_admin_url}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:365
-#: includes/admin/class-ea-admin-settings.php:443
+#: includes/admin/class-ea-admin-settings.php:445
 msgid "{name}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:366
-#: includes/admin/class-ea-admin-settings.php:444
+#: includes/admin/class-ea-admin-settings.php:446
 msgid "{company_name}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:367
-#: includes/admin/class-ea-admin-settings.php:445
+#: includes/admin/class-ea-admin-settings.php:447
 msgid "{company_email}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:368
-#: includes/admin/class-ea-admin-settings.php:446
+#: includes/admin/class-ea-admin-settings.php:448
 msgid "{company_tax_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:369
-#: includes/admin/class-ea-admin-settings.php:447
+#: includes/admin/class-ea-admin-settings.php:449
 msgid "{company_phone}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:370
-#: includes/admin/class-ea-admin-settings.php:448
+#: includes/admin/class-ea-admin-settings.php:450
 msgid "{company_address}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:374
-#: includes/admin/class-ea-admin-settings.php:452
+#: includes/admin/class-ea-admin-settings.php:454
 msgid "Email sender options"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:379
-#: includes/admin/class-ea-admin-settings.php:457
+#: includes/admin/class-ea-admin-settings.php:459
 msgid "From Name"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:384
-#: includes/admin/class-ea-admin-settings.php:462
+#: includes/admin/class-ea-admin-settings.php:464
 msgid "From Email"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:389
-#: includes/admin/class-ea-admin-settings.php:467
+#: includes/admin/class-ea-admin-settings.php:469
 msgid "Admin Email"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:394
-#: includes/admin/class-ea-admin-settings.php:472
+#: includes/admin/class-ea-admin-settings.php:474
 msgid "Email notifications"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:395
-#: includes/admin/class-ea-admin-settings.php:473
+#: includes/admin/class-ea-admin-settings.php:475
 msgid ""
 "Email notifications sent from Ever Accounting are listed below. Click on an "
 "email to configure it."
@@ -1044,15 +1044,15 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:403
 #: includes/admin/class-ea-admin-settings.bk.php:641
-#: includes/admin/class-ea-admin-settings.php:481
-#: includes/admin/class-ea-admin-settings.php:719
+#: includes/admin/class-ea-admin-settings.php:483
+#: includes/admin/class-ea-admin-settings.php:721
 msgid "Customer Invoice"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:404
 #: includes/admin/class-ea-admin-settings.bk.php:441
-#: includes/admin/class-ea-admin-settings.php:482
-#: includes/admin/class-ea-admin-settings.php:519
+#: includes/admin/class-ea-admin-settings.php:484
+#: includes/admin/class-ea-admin-settings.php:521
 msgid "These emails are sent to the customer whenever an invoice is created."
 msgstr ""
 
@@ -1062,12 +1062,12 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.bk.php:520
 #: includes/admin/class-ea-admin-settings.bk.php:557
 #: includes/admin/class-ea-admin-settings.bk.php:594
-#: includes/admin/class-ea-admin-settings.php:487
-#: includes/admin/class-ea-admin-settings.php:524
-#: includes/admin/class-ea-admin-settings.php:561
-#: includes/admin/class-ea-admin-settings.php:598
-#: includes/admin/class-ea-admin-settings.php:635
-#: includes/admin/class-ea-admin-settings.php:672
+#: includes/admin/class-ea-admin-settings.php:489
+#: includes/admin/class-ea-admin-settings.php:526
+#: includes/admin/class-ea-admin-settings.php:563
+#: includes/admin/class-ea-admin-settings.php:600
+#: includes/admin/class-ea-admin-settings.php:637
+#: includes/admin/class-ea-admin-settings.php:674
 msgid "Enable/Disable"
 msgstr ""
 
@@ -1077,12 +1077,12 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.bk.php:523
 #: includes/admin/class-ea-admin-settings.bk.php:560
 #: includes/admin/class-ea-admin-settings.bk.php:597
-#: includes/admin/class-ea-admin-settings.php:490
-#: includes/admin/class-ea-admin-settings.php:527
-#: includes/admin/class-ea-admin-settings.php:564
-#: includes/admin/class-ea-admin-settings.php:601
-#: includes/admin/class-ea-admin-settings.php:638
-#: includes/admin/class-ea-admin-settings.php:675
+#: includes/admin/class-ea-admin-settings.php:492
+#: includes/admin/class-ea-admin-settings.php:529
+#: includes/admin/class-ea-admin-settings.php:566
+#: includes/admin/class-ea-admin-settings.php:603
+#: includes/admin/class-ea-admin-settings.php:640
+#: includes/admin/class-ea-admin-settings.php:677
 msgid "Enable this email notification"
 msgstr ""
 
@@ -1092,17 +1092,17 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.bk.php:526
 #: includes/admin/class-ea-admin-settings.bk.php:563
 #: includes/admin/class-ea-admin-settings.bk.php:600
-#: includes/admin/class-ea-admin-settings.php:493
-#: includes/admin/class-ea-admin-settings.php:530
-#: includes/admin/class-ea-admin-settings.php:567
-#: includes/admin/class-ea-admin-settings.php:604
-#: includes/admin/class-ea-admin-settings.php:641
-#: includes/admin/class-ea-admin-settings.php:678
+#: includes/admin/class-ea-admin-settings.php:495
+#: includes/admin/class-ea-admin-settings.php:532
+#: includes/admin/class-ea-admin-settings.php:569
+#: includes/admin/class-ea-admin-settings.php:606
+#: includes/admin/class-ea-admin-settings.php:643
+#: includes/admin/class-ea-admin-settings.php:680
 msgid "Subject"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:418
-#: includes/admin/class-ea-admin-settings.php:496
+#: includes/admin/class-ea-admin-settings.php:498
 msgid "[{site_title}] Customer Invoice #{invoice_number}"
 msgstr ""
 
@@ -1112,17 +1112,17 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.bk.php:532
 #: includes/admin/class-ea-admin-settings.bk.php:569
 #: includes/admin/class-ea-admin-settings.bk.php:606
-#: includes/admin/class-ea-admin-settings.php:499
-#: includes/admin/class-ea-admin-settings.php:536
-#: includes/admin/class-ea-admin-settings.php:573
-#: includes/admin/class-ea-admin-settings.php:610
-#: includes/admin/class-ea-admin-settings.php:647
-#: includes/admin/class-ea-admin-settings.php:684
+#: includes/admin/class-ea-admin-settings.php:501
+#: includes/admin/class-ea-admin-settings.php:538
+#: includes/admin/class-ea-admin-settings.php:575
+#: includes/admin/class-ea-admin-settings.php:612
+#: includes/admin/class-ea-admin-settings.php:649
+#: includes/admin/class-ea-admin-settings.php:686
 msgid "Email Heading"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:424
-#: includes/admin/class-ea-admin-settings.php:502
+#: includes/admin/class-ea-admin-settings.php:504
 msgid "Customer Invoice #{invoice_number}"
 msgstr ""
 
@@ -1132,17 +1132,17 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.bk.php:538
 #: includes/admin/class-ea-admin-settings.bk.php:575
 #: includes/admin/class-ea-admin-settings.bk.php:612
-#: includes/admin/class-ea-admin-settings.php:505
-#: includes/admin/class-ea-admin-settings.php:542
-#: includes/admin/class-ea-admin-settings.php:579
-#: includes/admin/class-ea-admin-settings.php:616
-#: includes/admin/class-ea-admin-settings.php:653
-#: includes/admin/class-ea-admin-settings.php:690
+#: includes/admin/class-ea-admin-settings.php:507
+#: includes/admin/class-ea-admin-settings.php:544
+#: includes/admin/class-ea-admin-settings.php:581
+#: includes/admin/class-ea-admin-settings.php:618
+#: includes/admin/class-ea-admin-settings.php:655
+#: includes/admin/class-ea-admin-settings.php:692
 msgid "Email Body"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:430
-#: includes/admin/class-ea-admin-settings.php:508
+#: includes/admin/class-ea-admin-settings.php:510
 msgid ""
 "Dear {name}, Your Invoice has been prepared {invoice_number}, You can see "
 "the invoice details below ,Best Regards,{company_name}"
@@ -1154,32 +1154,32 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.bk.php:544
 #: includes/admin/class-ea-admin-settings.bk.php:581
 #: includes/admin/class-ea-admin-settings.bk.php:618
-#: includes/admin/class-ea-admin-settings.php:511
-#: includes/admin/class-ea-admin-settings.php:548
-#: includes/admin/class-ea-admin-settings.php:585
-#: includes/admin/class-ea-admin-settings.php:622
-#: includes/admin/class-ea-admin-settings.php:659
-#: includes/admin/class-ea-admin-settings.php:696
+#: includes/admin/class-ea-admin-settings.php:513
+#: includes/admin/class-ea-admin-settings.php:550
+#: includes/admin/class-ea-admin-settings.php:587
+#: includes/admin/class-ea-admin-settings.php:624
+#: includes/admin/class-ea-admin-settings.php:661
+#: includes/admin/class-ea-admin-settings.php:698
 msgid "Available Tags"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:440
-#: includes/admin/class-ea-admin-settings.php:518
+#: includes/admin/class-ea-admin-settings.php:520
 msgid "Customer Invoice Note"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:455
-#: includes/admin/class-ea-admin-settings.php:533
+#: includes/admin/class-ea-admin-settings.php:535
 msgid "[{site_title}] Customer Invoice Note#{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:461
-#: includes/admin/class-ea-admin-settings.php:539
+#: includes/admin/class-ea-admin-settings.php:541
 msgid "Customer Invoice Note #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:467
-#: includes/admin/class-ea-admin-settings.php:545
+#: includes/admin/class-ea-admin-settings.php:547
 msgid ""
 "Dear {name}, Your Invoice has been prepared {invoice_number}, You can see "
 "the invoice notes below ,Best Regards,{company_name}"
@@ -1187,28 +1187,28 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:477
 #: includes/admin/class-ea-admin-settings.bk.php:643
-#: includes/admin/class-ea-admin-settings.php:555
-#: includes/admin/class-ea-admin-settings.php:721
+#: includes/admin/class-ea-admin-settings.php:557
+#: includes/admin/class-ea-admin-settings.php:723
 msgid "New Invoice Notification"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:478
-#: includes/admin/class-ea-admin-settings.php:556
+#: includes/admin/class-ea-admin-settings.php:558
 msgid "These emails are sent to the site admin whenever there is a new invoice."
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:492
-#: includes/admin/class-ea-admin-settings.php:570
+#: includes/admin/class-ea-admin-settings.php:572
 msgid "[{site_title}] New Invoice created #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:498
-#: includes/admin/class-ea-admin-settings.php:576
+#: includes/admin/class-ea-admin-settings.php:578
 msgid "New Invoice #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:504
-#: includes/admin/class-ea-admin-settings.php:582
+#: includes/admin/class-ea-admin-settings.php:584
 msgid ""
 "Hello, A New Invoice is placed for #{invoice_number}, Check invoice details "
 "here <a href=\"{invoice_admin_url}\">View</a> ,Best Regards,{company_name}"
@@ -1216,28 +1216,28 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:514
 #: includes/admin/class-ea-admin-settings.bk.php:644
-#: includes/admin/class-ea-admin-settings.php:592
-#: includes/admin/class-ea-admin-settings.php:722
+#: includes/admin/class-ea-admin-settings.php:594
+#: includes/admin/class-ea-admin-settings.php:724
 msgid "Cancelled Invoice Notification"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:515
-#: includes/admin/class-ea-admin-settings.php:593
+#: includes/admin/class-ea-admin-settings.php:595
 msgid "These emails are sent to the site admin whenever an invoice is cancelled."
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:529
-#: includes/admin/class-ea-admin-settings.php:607
+#: includes/admin/class-ea-admin-settings.php:609
 msgid "[{site_title}] Invoice cancelled #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:535
-#: includes/admin/class-ea-admin-settings.php:613
+#: includes/admin/class-ea-admin-settings.php:615
 msgid "Cancelled Invoice #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:541
-#: includes/admin/class-ea-admin-settings.php:619
+#: includes/admin/class-ea-admin-settings.php:621
 msgid ""
 "Hello, An Invoice get cancelled. Invoice Number #{invoice_number}, Check "
 "invoice details here <a href=\"{invoice_admin_url}\">View</a> ,Best "
@@ -1246,28 +1246,28 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:551
 #: includes/admin/class-ea-admin-settings.bk.php:645
-#: includes/admin/class-ea-admin-settings.php:629
-#: includes/admin/class-ea-admin-settings.php:723
+#: includes/admin/class-ea-admin-settings.php:631
+#: includes/admin/class-ea-admin-settings.php:725
 msgid "Failed Invoice Notification"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:552
-#: includes/admin/class-ea-admin-settings.php:630
+#: includes/admin/class-ea-admin-settings.php:632
 msgid "These emails are sent to the site admin whenever an invoice is failed."
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:566
-#: includes/admin/class-ea-admin-settings.php:644
+#: includes/admin/class-ea-admin-settings.php:646
 msgid "[{site_title}] Failed cancelled #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:572
-#: includes/admin/class-ea-admin-settings.php:650
+#: includes/admin/class-ea-admin-settings.php:652
 msgid "Failed Invoice #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:578
-#: includes/admin/class-ea-admin-settings.php:656
+#: includes/admin/class-ea-admin-settings.php:658
 msgid ""
 "Hello, Invoice #{invoice_number} get failed for the customer {name} with a "
 "total of {invoice_total}, Check invoice details here <a "
@@ -1276,28 +1276,28 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:588
 #: includes/admin/class-ea-admin-settings.bk.php:646
-#: includes/admin/class-ea-admin-settings.php:666
-#: includes/admin/class-ea-admin-settings.php:724
+#: includes/admin/class-ea-admin-settings.php:668
+#: includes/admin/class-ea-admin-settings.php:726
 msgid "Completed Invoice Notification"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:589
-#: includes/admin/class-ea-admin-settings.php:667
+#: includes/admin/class-ea-admin-settings.php:669
 msgid "These emails are sent to the site admin whenever an invoice is completed."
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:603
-#: includes/admin/class-ea-admin-settings.php:681
+#: includes/admin/class-ea-admin-settings.php:683
 msgid "[{site_title}] Invoice completed #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:609
-#: includes/admin/class-ea-admin-settings.php:687
+#: includes/admin/class-ea-admin-settings.php:689
 msgid "Completed Invoice #{invoice_number}"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:615
-#: includes/admin/class-ea-admin-settings.php:693
+#: includes/admin/class-ea-admin-settings.php:695
 msgid ""
 "Hello, Invoice #{invoice_number} is completed for the customer {name} with "
 "a total of {invoice_total}, Check invoice details here <a "
@@ -1305,12 +1305,12 @@ msgid ""
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:642
-#: includes/admin/class-ea-admin-settings.php:720
+#: includes/admin/class-ea-admin-settings.php:722
 msgid "Customer Note"
 msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:654
-#: includes/admin/class-ea-admin-settings.php:732
+#: includes/admin/class-ea-admin-settings.php:734
 #: includes/admin/list-tables/class-ea-bill-list-table.php:116
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:132
 msgid "Status"
@@ -1318,8 +1318,8 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:655
 #: includes/admin/class-ea-admin-settings.bk.php:694
-#: includes/admin/class-ea-admin-settings.php:733
-#: includes/admin/class-ea-admin-settings.php:772
+#: includes/admin/class-ea-admin-settings.php:735
+#: includes/admin/class-ea-admin-settings.php:774
 msgid "Manage"
 msgstr ""
 
@@ -1339,70 +1339,65 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: includes/admin/class-ea-admin-settings.php:53
-#: includes/admin/class-ea-admin-settings.php:81
-#: includes/admin/class-ea-admin-settings.php:86
-#: includes/admin/class-ea-admin-settings.php:114
-#: includes/admin/ea-admin-functions.php:24
-#: includes/admin/ea-admin-functions.php:62
+#: includes/admin/class-ea-admin-settings.php:55
+#: includes/admin/class-ea-admin-settings.php:83
+#: includes/admin/class-ea-admin-settings.php:88
+#: includes/admin/class-ea-admin-settings.php:116
+#: includes/admin/ea-admin-functions.php:26
+#: includes/admin/ea-admin-functions.php:64
 msgid "General"
 msgstr ""
 
-#: includes/admin/class-ea-admin-settings.php:54
-#: includes/admin/ea-admin-functions.php:25
+#: includes/admin/class-ea-admin-settings.php:56
+#: includes/admin/ea-admin-functions.php:27
 #: includes/admin/views/currencies/edit-currency.php:25
 #: includes/admin/views/currencies/list-currency.php:30
 msgid "Currencies"
 msgstr ""
 
-#: includes/admin/class-ea-admin-settings.php:55
-#: includes/admin/ea-admin-functions.php:26
-#: includes/admin/reports/class-ea-report-expenses.php:262
-#: includes/admin/reports/class-ea-report-profits.php:242
-#: includes/admin/reports/class-ea-report-sales.php:260
-#: includes/admin/reports/expense-summary.php:161
-#: includes/admin/reports/income-expense.php:153
-#: includes/admin/reports/income-summary.php:161
+#: includes/admin/class-ea-admin-settings.php:57
+#: includes/admin/ea-admin-functions.php:28
+#: includes/admin/reports/class-ea-report-expenses.php:261
+#: includes/admin/reports/class-ea-report-profits.php:241
+#: includes/admin/reports/class-ea-report-sales.php:259
+#: includes/admin/reports/expense-summary.php:162
+#: includes/admin/reports/income-expense.php:155
+#: includes/admin/reports/income-summary.php:162
 #: includes/admin/reports/profit-loss.php:127
 #: includes/admin/views/categories/edit-category.php:22
 #: includes/admin/views/categories/list-category.php:30
 msgid "Categories"
 msgstr ""
 
-#: includes/admin/class-ea-admin-settings.php:57
-#: includes/admin/ea-admin-functions.php:28
+#: includes/admin/class-ea-admin-settings.php:59
+#: includes/admin/ea-admin-functions.php:30
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/class-ea-admin-settings.php:58
-#: includes/admin/ea-admin-functions.php:29
-msgid "Advanced"
-msgstr ""
-
-#: includes/admin/class-ea-admin-settings.php:92
-#: includes/admin/class-ea-admin-settings.php:119
-#: includes/admin/ea-admin-functions.php:78
+#: includes/admin/class-ea-admin-settings.php:94
+#: includes/admin/class-ea-admin-settings.php:121
+#: includes/admin/ea-admin-functions.php:80
 msgid "Taxes"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:66
+#: includes/admin/class-ea-admin-setup.php:65
 msgid "Introduction"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:71
+#: includes/admin/class-ea-admin-setup.php:70
 msgid "Company setup"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:76
+#: includes/admin/class-ea-admin-setup.php:75
 msgid "Currency setup"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:81
-#: includes/admin/class-ea-admin-setup.php:452
+#: includes/admin/class-ea-admin-setup.php:80
+#: includes/admin/class-ea-admin-setup.php:451
 msgid "Finish!"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:162
+#: includes/admin/class-ea-admin-setup.php:161
 msgid "Ever Accounting &rsaquo; Setup Wizard"
 msgstr ""
 
@@ -1410,78 +1405,78 @@ msgstr ""
 msgid "Ever Accounting"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:229
+#: includes/admin/class-ea-admin-setup.php:228
 msgid "Welcome!"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:230
+#: includes/admin/class-ea-admin-setup.php:229
 msgid ""
 "Thank you for choosing WP Ever Accounting to manage your accounting! This "
 "quick setup wizard will help you configure the basic settings."
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:233
+#: includes/admin/class-ea-admin-setup.php:232
 msgid "Let's Go!"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:241
+#: includes/admin/class-ea-admin-setup.php:240
 msgid "Company Setup"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:247
+#: includes/admin/class-ea-admin-setup.php:246
 msgid "Company Name"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:255
+#: includes/admin/class-ea-admin-setup.php:254
 msgid "Company Email"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:266
+#: includes/admin/class-ea-admin-setup.php:265
 msgid "Company Address"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:283
-#: includes/admin/class-ea-admin-setup.php:413
+#: includes/admin/class-ea-admin-setup.php:282
+#: includes/admin/class-ea-admin-setup.php:412
 msgid "Continue"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:322
+#: includes/admin/class-ea-admin-setup.php:321
 msgid "Currency Setup"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:328
+#: includes/admin/class-ea-admin-setup.php:327
 #: includes/admin/list-tables/class-ea-currency-list-table.php:113
 msgid "Code"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:329
+#: includes/admin/class-ea-admin-setup.php:328
 #: includes/admin/list-tables/class-ea-currency-list-table.php:112
 msgid "Rate"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:330
+#: includes/admin/class-ea-admin-setup.php:329
 msgid "Default"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:341
-#: includes/admin/class-ea-admin-setup.php:382
+#: includes/admin/class-ea-admin-setup.php:340
+#: includes/admin/class-ea-admin-setup.php:381
 #: includes/admin/views/currencies/edit-currency.php:67
 msgid "Select"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:372
+#: includes/admin/class-ea-admin-setup.php:371
 msgid "Additional currency"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:453
+#: includes/admin/class-ea-admin-setup.php:452
 msgid "You are done with the basic setup of the plugin and ready to use."
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:455
+#: includes/admin/class-ea-admin-setup.php:454
 msgid "View Dashboard"
 msgstr ""
 
-#: includes/admin/class-ea-admin-tools.php:47 includes/admin/tools/tools.php:53
+#: includes/admin/class-ea-admin-tools.php:47 includes/admin/tools/tools.php:54
 #: includes/admin/views/accounts/list-account.php:36
 #: includes/admin/views/categories/list-category.php:35
 #: includes/admin/views/currencies/list-currency.php:35
@@ -1493,11 +1488,11 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: includes/admin/class-ea-admin-tools.php:50 includes/admin/tools/tools.php:56
-#: includes/admin/tools/tools.php:93 includes/admin/tools/tools.php:107
-#: includes/admin/tools/tools.php:121 includes/admin/tools/tools.php:135
-#: includes/admin/tools/tools.php:149 includes/admin/tools/tools.php:163
-#: includes/admin/tools/tools.php:177 includes/admin/views/tools/export.php:26
+#: includes/admin/class-ea-admin-tools.php:50 includes/admin/tools/tools.php:57
+#: includes/admin/tools/tools.php:94 includes/admin/tools/tools.php:108
+#: includes/admin/tools/tools.php:122 includes/admin/tools/tools.php:136
+#: includes/admin/tools/tools.php:150 includes/admin/tools/tools.php:164
+#: includes/admin/tools/tools.php:178 includes/admin/views/tools/export.php:26
 #: includes/admin/views/tools/export.php:40
 #: includes/admin/views/tools/export.php:54
 #: includes/admin/views/tools/export.php:68
@@ -1508,7 +1503,7 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: includes/admin/class-ea-admin-tools.php:52 includes/admin/tools/tools.php:58
+#: includes/admin/class-ea-admin-tools.php:52 includes/admin/tools/tools.php:59
 msgid "System Info"
 msgstr ""
 
@@ -1529,15 +1524,19 @@ msgstr ""
 msgid "Thank you for using with Ever Accounting."
 msgstr ""
 
-#: includes/admin/ea-admin-functions.php:437
+#: includes/admin/ea-admin-functions.php:31
+msgid "Advanced"
+msgstr ""
+
+#: includes/admin/ea-admin-functions.php:441
 msgid "- Do not import -"
 msgstr ""
 
-#: includes/admin/ea-admin-functions.php:440
+#: includes/admin/ea-admin-functions.php:444
 msgid "- Select field to preview data -"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:99
+#: includes/admin/list-tables/class-ea-account-list-table.php:100
 msgid ""
 "An account is a record in an accounting system that tracks the financial "
 "activities of a specific asset, revenue, or expense. You can create as many "
@@ -1545,16 +1544,16 @@ msgid ""
 "balances in any currency."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:113
+#: includes/admin/list-tables/class-ea-account-list-table.php:114
 #: includes/admin/views/accounts/edit-account.php:22
 #: includes/admin/views/js/modal-add-account.php:11
 msgid "Add Account"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:114
+#: includes/admin/list-tables/class-ea-account-list-table.php:115
 #: includes/admin/list-tables/class-ea-bill-list-table.php:97
 #: includes/admin/list-tables/class-ea-category-list-table.php:108
-#: includes/admin/list-tables/class-ea-customer-list-table.php:112
+#: includes/admin/list-tables/class-ea-customer-list-table.php:113
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:113
 #: includes/admin/list-tables/class-ea-item-list-table.php:115
 #: includes/admin/list-tables/class-ea-payment-list-table.php:100
@@ -1564,52 +1563,52 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:131
+#: includes/admin/list-tables/class-ea-account-list-table.php:132
 #: includes/admin/list-tables/class-ea-bill-list-table.php:111
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:127
 msgid "Number"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:132
+#: includes/admin/list-tables/class-ea-account-list-table.php:133
 #: includes/admin/views/accounts/edit-account.php:97
 #: includes/admin/views/accounts/view-account.php:144
 msgid "Bank Name"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:133
+#: includes/admin/list-tables/class-ea-account-list-table.php:134
 #: includes/admin/list-tables/class-ea-category-list-table.php:125
-#: includes/admin/list-tables/class-ea-customer-list-table.php:132
+#: includes/admin/list-tables/class-ea-customer-list-table.php:133
 #: includes/admin/list-tables/class-ea-item-list-table.php:134
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:133
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:161
+#: includes/admin/list-tables/class-ea-account-list-table.php:162
 #: includes/admin/list-tables/class-ea-category-list-table.php:152
-#: includes/admin/list-tables/class-ea-customer-list-table.php:159
+#: includes/admin/list-tables/class-ea-customer-list-table.php:160
 #: includes/admin/list-tables/class-ea-item-list-table.php:162
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:160
 msgid "Enable"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:162
+#: includes/admin/list-tables/class-ea-account-list-table.php:163
 #: includes/admin/list-tables/class-ea-category-list-table.php:153
-#: includes/admin/list-tables/class-ea-customer-list-table.php:160
+#: includes/admin/list-tables/class-ea-customer-list-table.php:161
 #: includes/admin/list-tables/class-ea-item-list-table.php:163
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:161
 msgid "Disable"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:163
-#: includes/admin/list-tables/class-ea-account-list-table.php:221
+#: includes/admin/list-tables/class-ea-account-list-table.php:164
+#: includes/admin/list-tables/class-ea-account-list-table.php:222
 #: includes/admin/list-tables/class-ea-bill-list-table.php:145
 #: includes/admin/list-tables/class-ea-bill-list-table.php:199
 #: includes/admin/list-tables/class-ea-category-list-table.php:154
 #: includes/admin/list-tables/class-ea-category-list-table.php:204
 #: includes/admin/list-tables/class-ea-currency-list-table.php:140
 #: includes/admin/list-tables/class-ea-currency-list-table.php:188
-#: includes/admin/list-tables/class-ea-customer-list-table.php:161
-#: includes/admin/list-tables/class-ea-customer-list-table.php:214
+#: includes/admin/list-tables/class-ea-customer-list-table.php:162
+#: includes/admin/list-tables/class-ea-customer-list-table.php:215
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:161
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:216
 #: includes/admin/list-tables/class-ea-item-list-table.php:164
@@ -1623,24 +1622,24 @@ msgstr ""
 #: includes/admin/list-tables/class-ea-transfer-list-table.php:194
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:162
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:216
-#: includes/admin/views/bills/view-bill.php:29
-#: includes/admin/views/invoices/view-invoice.php:29
+#: includes/admin/views/bills/view-bill.php:33
+#: includes/admin/views/invoices/view-invoice.php:33
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:219
+#: includes/admin/list-tables/class-ea-account-list-table.php:220
 #: includes/admin/list-tables/class-ea-bill-list-table.php:194
-#: includes/admin/list-tables/class-ea-customer-list-table.php:212
+#: includes/admin/list-tables/class-ea-customer-list-table.php:213
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:211
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:214
 msgid "View"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:220
+#: includes/admin/list-tables/class-ea-account-list-table.php:221
 #: includes/admin/list-tables/class-ea-bill-list-table.php:197
 #: includes/admin/list-tables/class-ea-category-list-table.php:203
 #: includes/admin/list-tables/class-ea-currency-list-table.php:187
-#: includes/admin/list-tables/class-ea-customer-list-table.php:213
+#: includes/admin/list-tables/class-ea-customer-list-table.php:214
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:214
 #: includes/admin/list-tables/class-ea-item-list-table.php:223
 #: includes/admin/list-tables/class-ea-payment-list-table.php:194
@@ -1648,9 +1647,9 @@ msgstr ""
 #: includes/admin/list-tables/class-ea-transfer-list-table.php:193
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:215
 #: includes/admin/views/accounts/view-account.php:121
-#: includes/admin/views/bills/view-bill.php:104
+#: includes/admin/views/bills/view-bill.php:109
 #: includes/admin/views/customers/view-customer.php:122
-#: includes/admin/views/invoices/view-invoice.php:105
+#: includes/admin/views/invoices/view-invoice.php:110
 #: includes/admin/views/payments/view-payment.php:35
 #: includes/admin/views/revenues/view-income.php:31
 #: includes/admin/views/vendors/view-vendor.php:125
@@ -1658,50 +1657,50 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:237
+#: includes/admin/list-tables/class-ea-account-list-table.php:238
 #: includes/admin/list-tables/class-ea-category-list-table.php:219
-#: includes/admin/list-tables/class-ea-customer-list-table.php:244
+#: includes/admin/list-tables/class-ea-customer-list-table.php:247
 #: includes/admin/list-tables/class-ea-item-list-table.php:249
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:244
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:246
 #: includes/ea-form-functions.php:578
 msgid "No"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:237
+#: includes/admin/list-tables/class-ea-account-list-table.php:238
 #: includes/admin/list-tables/class-ea-category-list-table.php:219
-#: includes/admin/list-tables/class-ea-customer-list-table.php:244
+#: includes/admin/list-tables/class-ea-customer-list-table.php:247
 #: includes/admin/list-tables/class-ea-item-list-table.php:249
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:244
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:246
 #: includes/ea-form-functions.php:579
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:254
+#: includes/admin/list-tables/class-ea-account-list-table.php:255
 msgid "There is no accounts found."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:343
+#: includes/admin/list-tables/class-ea-account-list-table.php:344
 #: includes/admin/list-tables/class-ea-category-list-table.php:327
-#: includes/admin/list-tables/class-ea-customer-list-table.php:378
+#: includes/admin/list-tables/class-ea-customer-list-table.php:381
 #: includes/admin/list-tables/class-ea-item-list-table.php:355
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:274
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:378
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:380
 msgid "All"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:344
+#: includes/admin/list-tables/class-ea-account-list-table.php:345
 #: includes/admin/list-tables/class-ea-category-list-table.php:328
-#: includes/admin/list-tables/class-ea-customer-list-table.php:379
+#: includes/admin/list-tables/class-ea-customer-list-table.php:382
 #: includes/admin/list-tables/class-ea-item-list-table.php:356
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:379
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:381
 msgid "Active"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:345
+#: includes/admin/list-tables/class-ea-account-list-table.php:346
 #: includes/admin/list-tables/class-ea-category-list-table.php:329
-#: includes/admin/list-tables/class-ea-customer-list-table.php:380
+#: includes/admin/list-tables/class-ea-customer-list-table.php:383
 #: includes/admin/list-tables/class-ea-item-list-table.php:357
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:380
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:382
 msgid "Inactive"
 msgstr ""
 
@@ -1719,12 +1718,12 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-bill-list-table.php:112
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:128
-#: includes/admin/reports/class-ea-report-expenses.php:292
-#: includes/admin/reports/class-ea-report-profits.php:272
-#: includes/admin/reports/class-ea-report-sales.php:290
-#: includes/admin/reports/expense-summary.php:188
-#: includes/admin/reports/income-expense.php:192
-#: includes/admin/reports/income-summary.php:188
+#: includes/admin/reports/class-ea-report-expenses.php:291
+#: includes/admin/reports/class-ea-report-profits.php:271
+#: includes/admin/reports/class-ea-report-sales.php:289
+#: includes/admin/reports/expense-summary.php:189
+#: includes/admin/reports/income-expense.php:194
+#: includes/admin/reports/income-summary.php:189
 #: includes/admin/reports/profit-loss.php:154
 #: includes/admin/views/bills/bill-items.php:119
 #: includes/admin/views/invoices/invoice-items.php:138
@@ -1737,7 +1736,7 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-bill-list-table.php:113
 #: includes/admin/list-tables/class-ea-payment-list-table.php:118
-#: includes/admin/reports/expense-summary.php:48
+#: includes/admin/reports/expense-summary.php:49
 #: includes/admin/views/bills/edit-bill.php:63
 #: includes/admin/views/payments/edit-payment.php:89
 #: includes/ea-contact-functions.php:24 src/Models/Bill.php:73
@@ -1759,10 +1758,11 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-bill-list-table.php:195
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:212
-#: includes/admin/views/bills/view-bill.php:76
-#: includes/admin/views/invoices/view-invoice.php:77
+#: includes/admin/views/bills/view-bill.php:81
+#: includes/admin/views/invoices/view-invoice.php:82
 #: includes/admin/views/payments/view-payment.php:38
 #: includes/admin/views/revenues/view-income.php:33
+#: templates/bill-actions.php:6 templates/invoice-actions.php:6
 msgid "Print"
 msgstr ""
 
@@ -1783,7 +1783,7 @@ msgstr ""
 #: includes/admin/list-tables/class-ea-category-list-table.php:123
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:108
 #: includes/admin/views/categories/edit-category.php:59
-#: src/Models/Payment.php:64 src/Models/Revenue.php:63
+#: src/Models/Payment.php:62 src/Models/Revenue.php:61
 msgid "Type"
 msgstr ""
 
@@ -1810,33 +1810,33 @@ msgstr ""
 msgid "There is no currencies found."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:97
+#: includes/admin/list-tables/class-ea-customer-list-table.php:98
 msgid ""
 "Customers are individuals or businesses that buy goods or services from "
 "other businesses. Customers can be assigned to revenues and invoices and "
 "can also be filtered out from the transactions you made with them."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:111
+#: includes/admin/list-tables/class-ea-customer-list-table.php:112
 #: includes/admin/views/customers/edit-customer.php:21
 #: includes/admin/views/js/modal-add-customer.php:11
 msgid "Add Customer"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:128
+#: includes/admin/list-tables/class-ea-customer-list-table.php:129
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:129
 #: src/REST/ContactsController.php:25
 msgid "Contact"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:129
+#: includes/admin/list-tables/class-ea-customer-list-table.php:130
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:130
 #: includes/admin/views/customers/view-customer.php:161
 #: includes/admin/views/vendors/view-vendor.php:164 src/Core/Emails.php:47
 msgid "Address"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:130
+#: includes/admin/list-tables/class-ea-customer-list-table.php:131
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:131
 #: includes/admin/views/bills/bill-items.php:127
 #: includes/admin/views/invoices/invoice-items.php:146
@@ -1847,7 +1847,7 @@ msgstr ""
 msgid "Paid"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:289
+#: includes/admin/list-tables/class-ea-customer-list-table.php:292
 msgid "There is no customers found."
 msgstr ""
 
@@ -1865,7 +1865,7 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:129
 #: includes/admin/list-tables/class-ea-revenue-list-table.php:117
-#: includes/admin/reports/income-summary.php:48
+#: includes/admin/reports/income-summary.php:49
 #: includes/admin/views/invoices/edit-invoice.php:64
 #: includes/admin/views/revenues/edit-revenue.php:81
 #: includes/ea-contact-functions.php:23 src/Models/Invoice.php:73
@@ -1940,8 +1940,8 @@ msgid ""
 msgstr ""
 
 #: includes/admin/list-tables/class-ea-payment-list-table.php:99
-#: includes/admin/views/bills/view-bill.php:110
-#: includes/admin/views/invoices/view-invoice.php:111
+#: includes/admin/views/bills/view-bill.php:115
+#: includes/admin/views/invoices/view-invoice.php:116
 #: includes/admin/views/js/modal-bill-payment.php:12
 #: includes/admin/views/js/modal-invoice-payment.php:12
 #: includes/admin/views/payments/edit-payment.php:23
@@ -1976,9 +1976,9 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-expenses.php:114
 #: includes/admin/reports/class-ea-report-profits.php:112
 #: includes/admin/reports/class-ea-report-sales.php:114
-#: includes/admin/reports/expense-summary.php:68
-#: includes/admin/reports/income-expense.php:44
-#: includes/admin/reports/income-summary.php:69
+#: includes/admin/reports/expense-summary.php:69
+#: includes/admin/reports/income-expense.php:46
+#: includes/admin/reports/income-summary.php:70
 #: includes/admin/reports/profit-loss.php:44
 msgid "Filter"
 msgstr ""
@@ -2048,7 +2048,7 @@ msgstr ""
 msgid "Add Vendors"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:289
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:291
 msgid "There is no vendors found."
 msgstr ""
 
@@ -2067,9 +2067,9 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-expenses.php:118
 #: includes/admin/reports/class-ea-report-profits.php:116
 #: includes/admin/reports/class-ea-report-sales.php:118
-#: includes/admin/reports/expense-summary.php:29
-#: includes/admin/reports/income-expense.php:25
-#: includes/admin/reports/income-summary.php:29
+#: includes/admin/reports/expense-summary.php:30
+#: includes/admin/reports/income-expense.php:27
+#: includes/admin/reports/income-summary.php:30
 #: includes/admin/reports/profit-loss.php:31
 msgid "Year"
 msgstr ""
@@ -2101,28 +2101,28 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: includes/admin/reports/class-ea-report-cashflow.php:314
-#: includes/admin/reports/class-ea-report-expenses.php:282
-#: includes/admin/reports/class-ea-report-profits.php:262
-#: includes/admin/reports/class-ea-report-sales.php:280
-#: includes/admin/reports/expense-summary.php:181
-#: includes/admin/reports/income-expense.php:185
-#: includes/admin/reports/income-summary.php:181
+#: includes/admin/reports/class-ea-report-cashflow.php:313
+#: includes/admin/reports/class-ea-report-expenses.php:281
+#: includes/admin/reports/class-ea-report-profits.php:261
+#: includes/admin/reports/class-ea-report-sales.php:279
+#: includes/admin/reports/expense-summary.php:182
+#: includes/admin/reports/income-expense.php:187
+#: includes/admin/reports/income-summary.php:182
 #: includes/admin/reports/profit-loss.php:147
 msgid "No records found"
 msgstr ""
 
-#: includes/admin/reports/class-ea-report-cashflow.php:337
-#: includes/admin/reports/class-ea-report-expenses.php:305
-#: includes/admin/reports/class-ea-report-profits.php:285
-#: includes/admin/reports/class-ea-report-sales.php:303
+#: includes/admin/reports/class-ea-report-cashflow.php:336
+#: includes/admin/reports/class-ea-report-expenses.php:304
+#: includes/admin/reports/class-ea-report-profits.php:284
+#: includes/admin/reports/class-ea-report-sales.php:302
 msgid "Reset Cache"
 msgstr ""
 
-#: includes/admin/reports/class-ea-report-cashflow.php:342
-#: includes/admin/reports/class-ea-report-expenses.php:310
-#: includes/admin/reports/class-ea-report-profits.php:290
-#: includes/admin/reports/class-ea-report-sales.php:308
+#: includes/admin/reports/class-ea-report-cashflow.php:341
+#: includes/admin/reports/class-ea-report-expenses.php:309
+#: includes/admin/reports/class-ea-report-profits.php:289
+#: includes/admin/reports/class-ea-report-sales.php:307
 msgid "Please select financial year."
 msgstr ""
 
@@ -2150,90 +2150,90 @@ msgstr ""
 msgid "Income vs Expense"
 msgstr ""
 
-#: includes/admin/tools/tools.php:86 includes/admin/views/tools/export.php:19
+#: includes/admin/tools/tools.php:87 includes/admin/views/tools/export.php:19
 msgid "Export Customers"
 msgstr ""
 
-#: includes/admin/tools/tools.php:92 includes/admin/views/tools/export.php:25
+#: includes/admin/tools/tools.php:93 includes/admin/views/tools/export.php:25
 msgid ""
 "Export customers from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:100 includes/admin/views/tools/export.php:33
+#: includes/admin/tools/tools.php:101 includes/admin/views/tools/export.php:33
 msgid "Export Vendors"
 msgstr ""
 
-#: includes/admin/tools/tools.php:106 includes/admin/views/tools/export.php:39
+#: includes/admin/tools/tools.php:107 includes/admin/views/tools/export.php:39
 msgid ""
 "Export vendors from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:114 includes/admin/views/tools/export.php:47
+#: includes/admin/tools/tools.php:115 includes/admin/views/tools/export.php:47
 msgid "Export Revenues"
 msgstr ""
 
-#: includes/admin/tools/tools.php:120 includes/admin/views/tools/export.php:53
+#: includes/admin/tools/tools.php:121 includes/admin/views/tools/export.php:53
 msgid ""
 "Export revenues from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:128 includes/admin/views/tools/export.php:61
+#: includes/admin/tools/tools.php:129 includes/admin/views/tools/export.php:61
 msgid "Export Payments"
 msgstr ""
 
-#: includes/admin/tools/tools.php:134 includes/admin/views/tools/export.php:67
+#: includes/admin/tools/tools.php:135 includes/admin/views/tools/export.php:67
 msgid ""
 "Export payments from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:142 includes/admin/views/tools/export.php:75
+#: includes/admin/tools/tools.php:143 includes/admin/views/tools/export.php:75
 msgid "Export Accounts"
 msgstr ""
 
-#: includes/admin/tools/tools.php:148 includes/admin/views/tools/export.php:81
+#: includes/admin/tools/tools.php:149 includes/admin/views/tools/export.php:81
 msgid ""
 "Export accounts from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:156 includes/admin/views/tools/export.php:103
+#: includes/admin/tools/tools.php:157 includes/admin/views/tools/export.php:103
 msgid "Export Currencies"
 msgstr ""
 
-#: includes/admin/tools/tools.php:162 includes/admin/views/tools/export.php:109
+#: includes/admin/tools/tools.php:163 includes/admin/views/tools/export.php:109
 msgid ""
 "Export currencies from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:170 includes/admin/views/tools/export.php:117
+#: includes/admin/tools/tools.php:171 includes/admin/views/tools/export.php:117
 msgid "Export Categories"
 msgstr ""
 
-#: includes/admin/tools/tools.php:176 includes/admin/views/tools/export.php:123
+#: includes/admin/tools/tools.php:177 includes/admin/views/tools/export.php:123
 msgid ""
 "Export categories from this site as CSV file. Exported file can be imported "
 "into other site."
 msgstr ""
 
-#: includes/admin/tools/tools.php:195 includes/admin/views/tools/import.php:18
+#: includes/admin/tools/tools.php:196 includes/admin/views/tools/import.php:18
 msgid "Import Customers"
 msgstr ""
 
-#: includes/admin/tools/tools.php:204 includes/admin/views/tools/import.php:27
+#: includes/admin/tools/tools.php:205 includes/admin/views/tools/import.php:27
 msgid ""
 "Import customers from CSV file. Download a <a href=\"%s\"> sample </a> file "
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:210 includes/admin/tools/tools.php:254
-#: includes/admin/tools/tools.php:298 includes/admin/tools/tools.php:342
-#: includes/admin/tools/tools.php:392 includes/admin/tools/tools.php:444
-#: includes/admin/tools/tools.php:493 includes/admin/views/tools/import.php:33
+#: includes/admin/tools/tools.php:211 includes/admin/tools/tools.php:255
+#: includes/admin/tools/tools.php:299 includes/admin/tools/tools.php:343
+#: includes/admin/tools/tools.php:393 includes/admin/tools/tools.php:445
+#: includes/admin/tools/tools.php:494 includes/admin/views/tools/import.php:33
 #: includes/admin/views/tools/import.php:77
 #: includes/admin/views/tools/import.php:121
 #: includes/admin/views/tools/import.php:165
@@ -2244,17 +2244,17 @@ msgstr ""
 msgid "Import CSV"
 msgstr ""
 
-#: includes/admin/tools/tools.php:215 includes/admin/views/tools/import.php:38
+#: includes/admin/tools/tools.php:216 includes/admin/views/tools/import.php:38
 msgid ""
 "Each column loaded from the CSV may be mapped to a customer field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:221 includes/admin/tools/tools.php:265
-#: includes/admin/tools/tools.php:309 includes/admin/tools/tools.php:353
-#: includes/admin/tools/tools.php:403 includes/admin/tools/tools.php:455
-#: includes/admin/tools/tools.php:504 includes/admin/views/tools/import.php:44
+#: includes/admin/tools/tools.php:222 includes/admin/tools/tools.php:266
+#: includes/admin/tools/tools.php:310 includes/admin/tools/tools.php:354
+#: includes/admin/tools/tools.php:404 includes/admin/tools/tools.php:456
+#: includes/admin/tools/tools.php:505 includes/admin/views/tools/import.php:44
 #: includes/admin/views/tools/import.php:88
 #: includes/admin/views/tools/import.php:132
 #: includes/admin/views/tools/import.php:176
@@ -2265,10 +2265,10 @@ msgstr ""
 msgid "Column name"
 msgstr ""
 
-#: includes/admin/tools/tools.php:222 includes/admin/tools/tools.php:266
-#: includes/admin/tools/tools.php:310 includes/admin/tools/tools.php:354
-#: includes/admin/tools/tools.php:404 includes/admin/tools/tools.php:456
-#: includes/admin/tools/tools.php:505 includes/admin/views/tools/import.php:45
+#: includes/admin/tools/tools.php:223 includes/admin/tools/tools.php:267
+#: includes/admin/tools/tools.php:311 includes/admin/tools/tools.php:355
+#: includes/admin/tools/tools.php:405 includes/admin/tools/tools.php:457
+#: includes/admin/tools/tools.php:506 includes/admin/views/tools/import.php:45
 #: includes/admin/views/tools/import.php:89
 #: includes/admin/views/tools/import.php:133
 #: includes/admin/views/tools/import.php:177
@@ -2279,10 +2279,10 @@ msgstr ""
 msgid "Map to field"
 msgstr ""
 
-#: includes/admin/tools/tools.php:223 includes/admin/tools/tools.php:267
-#: includes/admin/tools/tools.php:311 includes/admin/tools/tools.php:355
-#: includes/admin/tools/tools.php:405 includes/admin/tools/tools.php:457
-#: includes/admin/tools/tools.php:506 includes/admin/views/tools/import.php:46
+#: includes/admin/tools/tools.php:224 includes/admin/tools/tools.php:268
+#: includes/admin/tools/tools.php:312 includes/admin/tools/tools.php:356
+#: includes/admin/tools/tools.php:406 includes/admin/tools/tools.php:458
+#: includes/admin/tools/tools.php:507 includes/admin/views/tools/import.php:46
 #: includes/admin/views/tools/import.php:90
 #: includes/admin/views/tools/import.php:134
 #: includes/admin/views/tools/import.php:178
@@ -2293,10 +2293,10 @@ msgstr ""
 msgid "Data Preview"
 msgstr ""
 
-#: includes/admin/tools/tools.php:231 includes/admin/tools/tools.php:275
-#: includes/admin/tools/tools.php:319 includes/admin/tools/tools.php:363
-#: includes/admin/tools/tools.php:413 includes/admin/tools/tools.php:465
-#: includes/admin/tools/tools.php:514 includes/admin/views/tools/import.php:54
+#: includes/admin/tools/tools.php:232 includes/admin/tools/tools.php:276
+#: includes/admin/tools/tools.php:320 includes/admin/tools/tools.php:364
+#: includes/admin/tools/tools.php:414 includes/admin/tools/tools.php:466
+#: includes/admin/tools/tools.php:515 includes/admin/views/tools/import.php:54
 #: includes/admin/views/tools/import.php:98
 #: includes/admin/views/tools/import.php:142
 #: includes/admin/views/tools/import.php:186
@@ -2307,109 +2307,109 @@ msgstr ""
 msgid "Process"
 msgstr ""
 
-#: includes/admin/tools/tools.php:239 includes/admin/views/tools/import.php:62
+#: includes/admin/tools/tools.php:240 includes/admin/views/tools/import.php:62
 msgid "Import Vendors"
 msgstr ""
 
-#: includes/admin/tools/tools.php:248 includes/admin/views/tools/import.php:71
+#: includes/admin/tools/tools.php:249 includes/admin/views/tools/import.php:71
 msgid ""
 "Import vendors from CSV file. Download a <a href=\"%s\"> sample </a> file "
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:259 includes/admin/views/tools/import.php:82
+#: includes/admin/tools/tools.php:260 includes/admin/views/tools/import.php:82
 msgid ""
 "Each column loaded from the CSV may be mapped to a vendor field. Select the "
 "column that should be mapped to each field below. Any columns not needed, "
 "can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:283 includes/admin/views/tools/import.php:106
+#: includes/admin/tools/tools.php:284 includes/admin/views/tools/import.php:106
 msgid "Import Accounts"
 msgstr ""
 
-#: includes/admin/tools/tools.php:292 includes/admin/views/tools/import.php:115
+#: includes/admin/tools/tools.php:293 includes/admin/views/tools/import.php:115
 msgid ""
 "Import accounts from CSV file. Download a <a href=\"%s\"> sample </a> file "
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:303 includes/admin/views/tools/import.php:126
+#: includes/admin/tools/tools.php:304 includes/admin/views/tools/import.php:126
 msgid ""
 "Each column loaded from the CSV may be mapped to a account field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:327 includes/admin/views/tools/import.php:194
+#: includes/admin/tools/tools.php:328 includes/admin/views/tools/import.php:194
 msgid "Import Revenues"
 msgstr ""
 
-#: includes/admin/tools/tools.php:336 includes/admin/views/tools/import.php:203
+#: includes/admin/tools/tools.php:337 includes/admin/views/tools/import.php:203
 msgid ""
 "Import revenues from CSV file. Download a <a href=\"%s\"> sample </a> file "
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:347 includes/admin/views/tools/import.php:214
+#: includes/admin/tools/tools.php:348 includes/admin/views/tools/import.php:214
 msgid ""
 "Each column loaded from the CSV may be mapped to a revenue field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:372 includes/admin/views/tools/import.php:239
+#: includes/admin/tools/tools.php:373 includes/admin/views/tools/import.php:239
 msgid "Import Payments"
 msgstr ""
 
-#: includes/admin/tools/tools.php:383 includes/admin/views/tools/import.php:250
+#: includes/admin/tools/tools.php:384 includes/admin/views/tools/import.php:250
 msgid ""
 "Import payments from CSV file. Download a <a href=\"%s\"> sample </a> file "
 "to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:397 includes/admin/views/tools/import.php:264
+#: includes/admin/tools/tools.php:398 includes/admin/views/tools/import.php:264
 msgid ""
 "Each column loaded from the CSV may be mapped to a payment field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:421 includes/admin/views/tools/import.php:288
+#: includes/admin/tools/tools.php:422 includes/admin/views/tools/import.php:288
 msgid "Import Currencies"
 msgstr ""
 
-#: includes/admin/tools/tools.php:435 includes/admin/views/tools/import.php:300
+#: includes/admin/tools/tools.php:436 includes/admin/views/tools/import.php:300
 msgid ""
 "Import currencies from CSV file. Download a <a href=\"%s\"> sample </a> "
 "file to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:449 includes/admin/views/tools/import.php:314
+#: includes/admin/tools/tools.php:450 includes/admin/views/tools/import.php:314
 msgid ""
 "Each column loaded from the CSV may be mapped to a currency field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:473 includes/admin/views/tools/import.php:338
+#: includes/admin/tools/tools.php:474 includes/admin/views/tools/import.php:338
 msgid "Import Categories"
 msgstr ""
 
-#: includes/admin/tools/tools.php:484 includes/admin/views/tools/import.php:349
+#: includes/admin/tools/tools.php:485 includes/admin/views/tools/import.php:349
 msgid ""
 "Import categories from CSV file. Download a <a href=\"%s\"> sample </a> "
 "file to learn how to format the CSV file."
 msgstr ""
 
-#: includes/admin/tools/tools.php:498 includes/admin/views/tools/import.php:363
+#: includes/admin/tools/tools.php:499 includes/admin/views/tools/import.php:363
 msgid ""
 "Each column loaded from the CSV may be mapped to a category field. Select "
 "the column that should be mapped to each field below. Any columns not "
 "needed, can be ignored."
 msgstr ""
 
-#: includes/admin/tools/tools.php:542
+#: includes/admin/tools/tools.php:543
 #: includes/admin/views/tools/system_info.php:27
 msgid ""
 "To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
@@ -2582,17 +2582,17 @@ msgstr ""
 msgid " Five Star Review"
 msgstr ""
 
-#: includes/admin/views/bills/bill-item.php:18
+#: includes/admin/views/bills/bill-item.php:20
 #: includes/admin/views/invoices/invoice-item.php:18
 msgid "Save item"
 msgstr ""
 
-#: includes/admin/views/bills/bill-item.php:19
+#: includes/admin/views/bills/bill-item.php:21
 #: includes/admin/views/invoices/invoice-item.php:19
 msgid "Edit item"
 msgstr ""
 
-#: includes/admin/views/bills/bill-item.php:20
+#: includes/admin/views/bills/bill-item.php:22
 #: includes/admin/views/invoices/invoice-item.php:20
 msgid "Delete item"
 msgstr ""
@@ -2664,41 +2664,41 @@ msgstr ""
 msgid "Due"
 msgstr ""
 
-#: includes/admin/views/bills/bill-notes.php:25
-#: includes/admin/views/invoices/invoice-notes.php:25
+#: includes/admin/views/bills/bill-notes.php:27
+#: includes/admin/views/invoices/invoice-notes.php:27
 msgid "There are no notes yet."
 msgstr ""
 
-#: includes/admin/views/bills/bill-notes.php:39
-#: includes/admin/views/invoices/invoice-notes.php:39
+#: includes/admin/views/bills/bill-notes.php:41
+#: includes/admin/views/invoices/invoice-notes.php:41
 #. translators: %s note creator user
 msgid "added on %1$s at %2$s"
 msgstr ""
 
-#: includes/admin/views/bills/bill-notes.php:45
-#: includes/admin/views/invoices/invoice-notes.php:45
+#: includes/admin/views/bills/bill-notes.php:47
+#: includes/admin/views/invoices/invoice-notes.php:47
 msgid "Delete note"
 msgstr ""
 
-#: includes/admin/views/bills/bill-notes.php:57
-#: includes/admin/views/invoices/invoice-notes.php:57
+#: includes/admin/views/bills/bill-notes.php:59
+#: includes/admin/views/invoices/invoice-notes.php:59
 msgid "Add note"
 msgstr ""
 
-#: includes/admin/views/bills/bill-notes.php:61
-#: includes/admin/views/invoices/invoice-notes.php:61
+#: includes/admin/views/bills/bill-notes.php:63
+#: includes/admin/views/invoices/invoice-notes.php:63
 #: includes/admin/views/js/modal-add-category.php:65
 #: includes/admin/views/js/modal-income-category.php:65
 msgid "Add"
 msgstr ""
 
-#: includes/admin/views/bills/bill-payments.php:16
-#: includes/admin/views/invoices/invoice-payments.php:16
+#: includes/admin/views/bills/bill-payments.php:18
+#: includes/admin/views/invoices/invoice-payments.php:18
 msgid "There are no payments yet."
 msgstr ""
 
-#: includes/admin/views/bills/bill-payments.php:23
-#: includes/admin/views/invoices/invoice-payments.php:23
+#: includes/admin/views/bills/bill-payments.php:25
+#: includes/admin/views/invoices/invoice-payments.php:25
 msgid "Payment"
 msgstr ""
 
@@ -2756,30 +2756,30 @@ msgid "Fixed"
 msgstr ""
 
 #: includes/admin/views/bills/view-bill.php:22
-msgid "Mark as Received"
-msgstr ""
-
-#: includes/admin/views/bills/view-bill.php:23
 msgid "Mark as Cancelled"
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:27
-#: includes/admin/views/invoices/view-invoice.php:27
+#: includes/admin/views/bills/view-bill.php:26
+#: includes/admin/views/invoices/view-invoice.php:26
 msgid "Mark as Paid"
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:31
+#: includes/admin/views/bills/view-bill.php:30
+msgid "Mark as Received"
+msgstr ""
+
+#: includes/admin/views/bills/view-bill.php:35
 msgid "Bill Payments"
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:53
+#: includes/admin/views/bills/view-bill.php:58
 msgid ""
 "This is a <strong>DRAFT</strong> bill and will not be reflected until its "
 "marked as <strong>received</strong>."
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:75
-#: includes/admin/views/invoices/view-invoice.php:76
+#: includes/admin/views/bills/view-bill.php:80
+#: includes/admin/views/invoices/view-invoice.php:81
 msgid "More"
 msgstr ""
 
@@ -2900,7 +2900,7 @@ msgstr ""
 #: includes/admin/views/customers/view-customer.php:153
 #: includes/admin/views/vendors/edit-vendor.php:109
 #: includes/admin/views/vendors/view-vendor.php:156
-#: includes/class-ea-settings.bk.php:90 includes/class-ea-settings.php:81
+#: includes/class-ea-settings.bk.php:90 includes/class-ea-settings.php:95
 #: templates/bill/bill-from.php:22 templates/bill/company-info.php:35
 #: templates/invoice/company-info.php:35 templates/invoice/invoice-to.php:22
 msgid "VAT Number"
@@ -2950,7 +2950,7 @@ msgstr ""
 
 #: includes/admin/views/customers/edit-customer.php:161
 #: includes/admin/views/vendors/edit-vendor.php:165
-#: includes/class-ea-settings.bk.php:106 includes/class-ea-settings.php:101
+#: includes/class-ea-settings.bk.php:106 includes/class-ea-settings.php:115
 #: src/Core/Emails.php:48
 msgid "Postcode"
 msgstr ""
@@ -2983,7 +2983,7 @@ msgstr ""
 msgid "Birthdate"
 msgstr ""
 
-#: includes/admin/views/customers/view-customer.php:183
+#: includes/admin/views/customers/view-customer.php:185
 #. translators: %s date and %s name
 msgid "The customer was created at %1$s by %2$s"
 msgstr ""
@@ -3015,18 +3015,18 @@ msgid "Shipping:"
 msgstr ""
 
 #: includes/admin/views/invoices/view-invoice.php:22
-msgid "Mark Pending"
-msgstr ""
-
-#: includes/admin/views/invoices/view-invoice.php:23
 msgid "Mark Cancelled"
 msgstr ""
 
-#: includes/admin/views/invoices/view-invoice.php:31
+#: includes/admin/views/invoices/view-invoice.php:30
+msgid "Mark Pending"
+msgstr ""
+
+#: includes/admin/views/invoices/view-invoice.php:35
 msgid "Invoice Payments"
 msgstr ""
 
-#: includes/admin/views/invoices/view-invoice.php:54
+#: includes/admin/views/invoices/view-invoice.php:59
 msgid ""
 "This is a <strong>DRAFT</strong> Invoice and will not be reflected until "
 "its marked as <strong>pending</strong>."
@@ -3174,7 +3174,7 @@ msgstr ""
 
 #: includes/admin/views/payments/edit-payment.php:152
 #: includes/admin/views/revenues/edit-revenue.php:138
-#: includes/class-ea-settings.bk.php:842 includes/class-ea-settings.php:941
+#: includes/class-ea-settings.bk.php:842 includes/class-ea-settings.php:961
 msgid "Upload File"
 msgstr ""
 
@@ -3208,7 +3208,7 @@ msgid "Voucher Number"
 msgstr ""
 
 #: includes/admin/views/payments/view-payment.php:120
-#: includes/admin/views/revenues/view-income.php:115 src/Models/Payment.php:65
+#: includes/admin/views/revenues/view-income.php:115 src/Models/Payment.php:63
 #: templates/bill/bill-meta.php:35 templates/invoice/invoice-meta.php:35
 msgid "Payment Date"
 msgstr ""
@@ -3326,7 +3326,7 @@ msgstr ""
 msgid "Vendor Details"
 msgstr ""
 
-#: includes/admin/views/vendors/view-vendor.php:186
+#: includes/admin/views/vendors/view-vendor.php:188
 #. translators: %s date and %s name
 msgid "The vendor was created at %1$s by %2$s"
 msgstr ""
@@ -3451,65 +3451,66 @@ msgstr ""
 msgid "Error: Cheatin&#8217; huh?."
 msgstr ""
 
-#: includes/class-ea-controller.php:96 src/Controllers/AccountController.php:52
+#: includes/class-ea-controller.php:100
+#: src/Controllers/AccountController.php:52
 msgid "Duplicate account."
 msgstr ""
 
-#: includes/class-ea-controller.php:197
+#: includes/class-ea-controller.php:201
 msgid "Payment date is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:201 includes/class-ea-controller.php:250
+#: includes/class-ea-controller.php:205 includes/class-ea-controller.php:254
 #: src/Controllers/RevenueController.php:79
 #: src/Controllers/TransactionController.php:53
 msgid "Payment method is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:206
+#: includes/class-ea-controller.php:210
 #: src/Controllers/PaymentController.php:50
 msgid "A valid payment category is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:211
+#: includes/class-ea-controller.php:215
 #: src/Controllers/PaymentController.php:55
 msgid "Vendor is not valid."
 msgstr ""
 
-#: includes/class-ea-controller.php:216
+#: includes/class-ea-controller.php:220
 msgid "Account is not valid."
 msgstr ""
 
-#: includes/class-ea-controller.php:220
+#: includes/class-ea-controller.php:224
 msgid "Payment amount is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:246
+#: includes/class-ea-controller.php:250
 #: src/Controllers/RevenueController.php:75
 msgid "Revenue date is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:255
+#: includes/class-ea-controller.php:259
 #: src/Controllers/RevenueController.php:84
 msgid "A valid income category is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:260
+#: includes/class-ea-controller.php:264
 #: src/Controllers/RevenueController.php:89
 #: src/Controllers/TransactionController.php:66
 msgid "Account is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:265
+#: includes/class-ea-controller.php:269
 #: src/Controllers/RevenueController.php:94
 msgid "Customer is not valid."
 msgstr ""
 
-#: includes/class-ea-controller.php:269
+#: includes/class-ea-controller.php:273
 #: src/Controllers/RevenueController.php:98
 msgid "Revenue amount is required."
 msgstr ""
 
-#: includes/class-ea-controller.php:308
+#: includes/class-ea-controller.php:312
 #: src/Controllers/CategoryController.php:51
 msgid "Duplicate category."
 msgstr ""
@@ -3578,94 +3579,94 @@ msgstr ""
 msgid "Enter valid license key for automatic updates."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:120 includes/class-ea-settings.php:118
+#: includes/class-ea-settings.bk.php:120 includes/class-ea-settings.php:132
 msgid "General Settings"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:126 includes/class-ea-settings.php:125
+#: includes/class-ea-settings.bk.php:126 includes/class-ea-settings.php:139
 msgid "Enter the company financial start date."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:132 includes/class-ea-settings.php:132
+#: includes/class-ea-settings.bk.php:132 includes/class-ea-settings.php:146
 msgid "Enable taxes"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:144 includes/class-ea-settings.php:146
+#: includes/class-ea-settings.bk.php:144 includes/class-ea-settings.php:166
 msgid "Default account will be used for automatic transactions."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:193 includes/class-ea-settings.php:183
+#: includes/class-ea-settings.bk.php:193 includes/class-ea-settings.php:203
 msgid "Invoice Terms"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:198 includes/class-ea-settings.php:195
+#: includes/class-ea-settings.bk.php:198 includes/class-ea-settings.php:215
 msgid "Invoice Due"
 msgstr ""
 
 #: includes/class-ea-settings.bk.php:202 includes/class-ea-settings.bk.php:244
-#: includes/class-ea-settings.php:199 includes/class-ea-settings.php:257
+#: includes/class-ea-settings.php:219 includes/class-ea-settings.php:277
 msgid "Due within 7 days"
 msgstr ""
 
 #: includes/class-ea-settings.bk.php:203 includes/class-ea-settings.bk.php:245
-#: includes/class-ea-settings.php:200 includes/class-ea-settings.php:258
+#: includes/class-ea-settings.php:220 includes/class-ea-settings.php:278
 msgid "Due within 15 days"
 msgstr ""
 
 #: includes/class-ea-settings.bk.php:204 includes/class-ea-settings.bk.php:246
-#: includes/class-ea-settings.php:201 includes/class-ea-settings.php:259
+#: includes/class-ea-settings.php:221 includes/class-ea-settings.php:279
 msgid "Due within 30 days"
 msgstr ""
 
 #: includes/class-ea-settings.bk.php:205 includes/class-ea-settings.bk.php:247
-#: includes/class-ea-settings.php:202 includes/class-ea-settings.php:260
+#: includes/class-ea-settings.php:222 includes/class-ea-settings.php:280
 msgid "Due within 45 days"
 msgstr ""
 
 #: includes/class-ea-settings.bk.php:206 includes/class-ea-settings.bk.php:248
-#: includes/class-ea-settings.php:203 includes/class-ea-settings.php:261
+#: includes/class-ea-settings.php:223 includes/class-ea-settings.php:281
 msgid "Due within 60 days"
 msgstr ""
 
 #: includes/class-ea-settings.bk.php:207 includes/class-ea-settings.bk.php:249
-#: includes/class-ea-settings.php:204 includes/class-ea-settings.php:262
+#: includes/class-ea-settings.php:224 includes/class-ea-settings.php:282
 msgid "Due within 90 days"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:240 includes/class-ea-settings.php:253
+#: includes/class-ea-settings.bk.php:240 includes/class-ea-settings.php:273
 msgid "Bill Due"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:253 includes/class-ea-settings.php:247
+#: includes/class-ea-settings.bk.php:253 includes/class-ea-settings.php:267
 msgid "Bill Note"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:258 includes/class-ea-settings.php:241
+#: includes/class-ea-settings.bk.php:258 includes/class-ea-settings.php:261
 msgid "Bill Terms & Conditions"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:867 includes/class-ea-settings.php:980
+#: includes/class-ea-settings.bk.php:867 includes/class-ea-settings.php:1001
 #. translators: %s extension name
 msgid ""
 "Your license key expired on %1$s. Please <a href=\"%2$s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:879 includes/class-ea-settings.php:990
+#: includes/class-ea-settings.bk.php:879 includes/class-ea-settings.php:1011
 #. translators: %s extension name
 msgid ""
 "Your license key has been disabled. Please <a href=\"%s\" "
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:890 includes/class-ea-settings.php:998
+#: includes/class-ea-settings.bk.php:890 includes/class-ea-settings.php:1019
 #. translators: %s extension name
 msgid ""
 "Invalid license. Please <a href=\"%s\" target=\"_blank\">visit your account "
 "page</a> and verify it."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:902 includes/class-ea-settings.php:1007
+#: includes/class-ea-settings.bk.php:902 includes/class-ea-settings.php:1028
 #. translators: %s extension name
 msgid ""
 "Your %1$s is not active for this URL. Please <a href=\"%2$s\" "
@@ -3673,93 +3674,97 @@ msgid ""
 "URLs."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:913 includes/class-ea-settings.php:1015
+#: includes/class-ea-settings.bk.php:913 includes/class-ea-settings.php:1036
 #. translators: %s extension name
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:921 includes/class-ea-settings.php:1021
+#: includes/class-ea-settings.bk.php:921 includes/class-ea-settings.php:1042
 #. translators: %s extension name
 msgid ""
 "Your license key has reached its activation limit. <a href=\"%s\">View "
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:929 includes/class-ea-settings.php:1025
+#: includes/class-ea-settings.bk.php:929 includes/class-ea-settings.php:1046
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:936 includes/class-ea-settings.php:1029
+#: includes/class-ea-settings.bk.php:936 includes/class-ea-settings.php:1050
 msgid "unknown_error"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:937 includes/class-ea-settings.php:1031
+#: includes/class-ea-settings.bk.php:937 includes/class-ea-settings.php:1052
 #. translators: %s extension name
 msgid ""
 "There was an error with this license key: %1$s. Please <a "
 "href=\"%2$s\">contact our support team</a>."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:955 includes/class-ea-settings.php:1041
+#: includes/class-ea-settings.bk.php:955 includes/class-ea-settings.php:1062
 msgid "License key never expires."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:962 includes/class-ea-settings.php:1045
+#: includes/class-ea-settings.bk.php:962 includes/class-ea-settings.php:1066
 #. translators: %s extension name
 msgid ""
 "Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:972 includes/class-ea-settings.php:1052
+#: includes/class-ea-settings.bk.php:972 includes/class-ea-settings.php:1073
 #. translators: %s extension name
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:988 includes/class-ea-settings.php:1060
+#: includes/class-ea-settings.bk.php:988 includes/class-ea-settings.php:1081
 #. translators: %s extension name
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:1001 includes/class-ea-settings.php:1066
+#: includes/class-ea-settings.bk.php:1001 includes/class-ea-settings.php:1087
 msgid "Deactivate License"
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:1034 includes/class-ea-settings.php:1096
+#: includes/class-ea-settings.bk.php:1034 includes/class-ea-settings.php:1117
 #. translators: %s name of the callback
 msgid "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr ""
 
-#: includes/class-ea-settings.bk.php:1166 includes/class-ea-settings.php:1228
+#: includes/class-ea-settings.bk.php:1166 includes/class-ea-settings.php:1249
 msgid "Settings updated."
 msgstr ""
 
-#: includes/class-ea-settings.php:154 includes/class-ea-settings.php:163
+#: includes/class-ea-settings.php:152
+msgid "Total Transactions"
+msgstr ""
+
+#: includes/class-ea-settings.php:174 includes/class-ea-settings.php:183
 msgid "Default currency rate will update to 1."
 msgstr ""
 
-#: includes/class-ea-settings.php:189
+#: includes/class-ea-settings.php:209
 msgid "Invoice Note"
 msgstr ""
 
-#: includes/class-ea-settings.php:369
+#: includes/class-ea-settings.php:389
 #. translators: %s settings id name
 msgid ""
 "%s settings field was registered earlier, duplicate settings key is not "
 "allowed."
 msgstr ""
 
-#: includes/class-ea-settings.php:443
+#: includes/class-ea-settings.php:463
 msgid "Select account"
 msgstr ""
 
-#: includes/class-ea-settings.php:471
+#: includes/class-ea-settings.php:491
 msgid "Select category"
 msgstr ""
 
-#: includes/class-ea-settings.php:496
+#: includes/class-ea-settings.php:516
 msgid "Select currencies"
 msgstr ""
 
@@ -4024,7 +4029,7 @@ msgstr ""
 msgid "Custom"
 msgstr ""
 
-#: includes/ea-template-functions.php:165
+#: includes/ea-template-functions.php:167
 #. Translators: %s file name
 msgid "Admin template %s does not exist"
 msgstr ""
@@ -4033,135 +4038,107 @@ msgstr ""
 msgid "Source and Destination account can't be same."
 msgstr ""
 
-#: includes/import/class-ea-import-accounts.php:72
-#: includes/import/class-ea-import-payments.php:78
-#: includes/import/class-ea-import-revenues.php:78
-#: includes/import/old/class-ea-import-accounts_bk.php:72
-#: includes/import/old/class-ea-import-payments_bk.php:80
-#: includes/import/old/class-ea-import-revenues_bk.php:80
+#: includes/import/class-ea-import-accounts.php:73
+#: includes/import/class-ea-import-payments.php:79
+#: includes/import/class-ea-import-revenues.php:79
 msgid "Empty Account Name"
 msgstr ""
 
-#: includes/import/class-ea-import-accounts.php:76
-#: includes/import/old/class-ea-import-accounts_bk.php:76
+#: includes/import/class-ea-import-accounts.php:77
 msgid "Empty Account Number"
 msgstr ""
 
-#: includes/import/class-ea-import-accounts.php:80
-#: includes/import/class-ea-import-currencies.php:75
-#: includes/import/class-ea-import-customers.php:74
-#: includes/import/class-ea-import-payments.php:81
-#: includes/import/class-ea-import-revenues.php:81
-#: includes/import/class-ea-import-vendors.php:74
-#: includes/import/old/class-ea-import-accounts_bk.php:80
-#: includes/import/old/class-ea-import-customers_bk.php:76
-#: includes/import/old/class-ea-import-payments_bk.php:83
-#: includes/import/old/class-ea-import-revenues_bk.php:83
-#: includes/import/old/class-ea-import-vendors_bk.php:76
+#: includes/import/class-ea-import-accounts.php:81
+#: includes/import/class-ea-import-currencies.php:76
+#: includes/import/class-ea-import-customers.php:75
+#: includes/import/class-ea-import-payments.php:82
+#: includes/import/class-ea-import-revenues.php:82
+#: includes/import/class-ea-import-vendors.php:75
 msgid "Empty Currency Code"
 msgstr ""
 
-#: includes/import/class-ea-import-accounts.php:86
-#: includes/import/old/class-ea-import-accounts_bk.php:86
-#: includes/import/old/class-ea-import-customers_bk.php:82
-#: includes/import/old/class-ea-import-vendors_bk.php:83
+#: includes/import/class-ea-import-accounts.php:87
 msgid "Currency with provided code does not not exist."
 msgstr ""
 
-#: includes/import/class-ea-import-categories.php:67
-#: includes/import/class-ea-import-currencies.php:72
-#: includes/import/class-ea-import-customers.php:71
-#: includes/import/class-ea-import-vendors.php:71
-#: includes/import/old/class-ea-import-categories_bk.php:67
-#: includes/import/old/class-ea-import-customers_bk.php:73
-#: includes/import/old/class-ea-import-vendors_bk.php:73
+#: includes/import/class-ea-import-categories.php:68
+#: includes/import/class-ea-import-currencies.php:73
+#: includes/import/class-ea-import-customers.php:72
+#: includes/import/class-ea-import-vendors.php:72
 msgid "Empty Name"
 msgstr ""
 
-#: includes/import/class-ea-import-categories.php:70
-#: includes/import/old/class-ea-import-categories_bk.php:70
+#: includes/import/class-ea-import-categories.php:71
 msgid "Empty Type"
 msgstr ""
 
-#: includes/import/class-ea-import-categories.php:77
+#: includes/import/class-ea-import-categories.php:78
 msgid "Category already exists."
 msgstr ""
 
-#: includes/import/class-ea-import-currencies.php:80
+#: includes/import/class-ea-import-currencies.php:81
 msgid "Currency already exists"
 msgstr ""
 
-#: includes/import/class-ea-import-items.php:71
+#: includes/import/class-ea-import-items.php:72
 msgid "Empty Item Name"
 msgstr ""
 
-#: includes/import/class-ea-import-items.php:75
+#: includes/import/class-ea-import-items.php:76
 msgid "Empty Sale Price"
 msgstr ""
 
-#: includes/import/class-ea-import-items.php:79
+#: includes/import/class-ea-import-items.php:80
 msgid "Empty Purchase Price"
 msgstr ""
 
-#: includes/import/class-ea-import-payments.php:75
-#: includes/import/class-ea-import-revenues.php:75
-#: includes/import/old/class-ea-import-payments_bk.php:77
-#: includes/import/old/class-ea-import-revenues_bk.php:77
+#: includes/import/class-ea-import-payments.php:76
+#: includes/import/class-ea-import-revenues.php:76
 msgid "Empty Payment Date"
 msgstr ""
 
-#: includes/import/class-ea-import-payments.php:84
-#: includes/import/class-ea-import-revenues.php:84
-#: includes/import/old/class-ea-import-payments_bk.php:86
-#: includes/import/old/class-ea-import-revenues_bk.php:86
+#: includes/import/class-ea-import-payments.php:85
+#: includes/import/class-ea-import-revenues.php:85
 msgid "Empty Category Name"
 msgstr ""
 
-#: includes/import/class-ea-import-payments.php:87
-#: includes/import/class-ea-import-revenues.php:87
-#: includes/import/old/class-ea-import-payments_bk.php:89
-#: includes/import/old/class-ea-import-revenues_bk.php:89
+#: includes/import/class-ea-import-payments.php:88
+#: includes/import/class-ea-import-revenues.php:88
 msgid "Empty Payment Method"
 msgstr ""
 
-#: includes/import/class-ea-import-payments.php:107
-#: includes/import/class-ea-import-revenues.php:104
-#: includes/import/old/class-ea-import-payments_bk.php:97
-#: includes/import/old/class-ea-import-revenues_bk.php:97
+#: includes/import/class-ea-import-payments.php:108
+#: includes/import/class-ea-import-revenues.php:105
 msgid "Category does not exist."
 msgstr ""
 
-#: includes/import/class-ea-import-payments.php:111
-#: includes/import/class-ea-import-revenues.php:108
-#: includes/import/old/class-ea-import-payments_bk.php:101
-#: includes/import/old/class-ea-import-revenues_bk.php:101
+#: includes/import/class-ea-import-payments.php:112
+#: includes/import/class-ea-import-revenues.php:109
 msgid "Currency Code not exists"
 msgstr ""
 
-#: includes/import/class-ea-import-payments.php:115
-#: includes/import/class-ea-import-revenues.php:112
-#: includes/import/old/class-ea-import-payments_bk.php:105
-#: includes/import/old/class-ea-import-revenues_bk.php:105
+#: includes/import/class-ea-import-payments.php:116
+#: includes/import/class-ea-import-revenues.php:113
 msgid "Transaction associated account is not exist."
 msgstr ""
 
-#: includes/import/class-ea-import-payments.php:119
+#: includes/import/class-ea-import-payments.php:120
 msgid "Account currency code does not match with provided currency code."
 msgstr ""
 
-#: includes/import/class-ea-import-revenues.php:116
+#: includes/import/class-ea-import-revenues.php:117
 msgid "Account currency does not match with provided currency code."
 msgstr ""
 
-#: includes/utilities/class-ea-utils-batch.php:192
+#: includes/utilities/class-ea-utils-batch.php:193
 msgid "A batch item class must be specified."
 msgstr ""
 
-#: includes/utilities/class-ea-utils-batch.php:196
+#: includes/utilities/class-ea-utils-batch.php:197
 msgid "No batch class handler file has been supplied."
 msgstr ""
 
-#: includes/utilities/class-ea-utils-batch.php:201
+#: includes/utilities/class-ea-utils-batch.php:202
 msgid "Invalid batch class handler file has been supplied."
 msgstr ""
 
@@ -4353,15 +4330,15 @@ msgstr ""
 msgid "Note content"
 msgstr ""
 
-#: src/Models/Payment.php:66 src/Models/Revenue.php:65
+#: src/Models/Payment.php:64 src/Models/Revenue.php:63
 msgid "Account ID"
 msgstr ""
 
-#: src/Models/Payment.php:67 src/Models/Revenue.php:66
+#: src/Models/Payment.php:65 src/Models/Revenue.php:64
 msgid "Category ID"
 msgstr ""
 
-#: src/Models/Revenue.php:64
+#: src/Models/Revenue.php:62
 msgid "Revenue Date"
 msgstr ""
 
@@ -5436,7 +5413,7 @@ msgstr ""
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: wp-ever-accounting.php:229
+#: wp-ever-accounting.php:230
 #. translators: 1: error message 2: file name and path 3: line number
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
@@ -5453,12 +5430,12 @@ msgstr ""
 msgid "everaccounting"
 msgstr ""
 
-#: includes/class-ea-install.php:702
+#: includes/class-ea-install.php:704
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/class-ea-install.php:703
+#: includes/class-ea-install.php:705
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""

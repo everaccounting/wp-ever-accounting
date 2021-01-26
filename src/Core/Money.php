@@ -445,7 +445,7 @@ class Money {
 		$this->assertRoundingMode( $roundingMode );
 		if ( empty( $divisor ) ) {
 			/* translators: %s amount %s currency */
-			eaccounting_doing_it_wrong( __METHOD__, sprintf( __( 'Division by zero is not permitted amount %1$s currency %2$s' ), $this->amount, $this->currency ), null );
+			eaccounting_doing_it_wrong( __METHOD__, sprintf( __( 'Division by zero is not permitted amount %1$s currency %2$s','wp-ever-accounting' ), $this->amount, $this->currency ), null );
 			$divisor = 1;
 		}
 

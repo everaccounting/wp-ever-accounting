@@ -19,7 +19,7 @@ $site_name = eaccounting_get_site_name();
 						<img src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( $site_name ); ?>" height="100" width="100">
 					</a>
 				<?php else : ?>
-				<h1 class="ea-site-title"><?php esc_html_e( $site_name ); ?></h1>
+				<h1 class="ea-site-title"><?php esc_html_e( $site_name,'wp-ever-accounting' ); ?></h1>
 				<?php endif; ?>
 			</div>
 			<div class="ea-col-9"></div>

@@ -178,7 +178,7 @@ jQuery(function ($) {
 			$('form', plugin.$modal).on('submit', function (e) {
 				e.preventDefault();
 				plugin.block();
-				const data = $('form', plugin.$modal).serializeObject();
+				var data = $('form', plugin.$modal).serializeObject();
 
 				if (typeof plugin.options.onSubmit === 'function') {
 					return plugin.options.onSubmit(data, plugin);

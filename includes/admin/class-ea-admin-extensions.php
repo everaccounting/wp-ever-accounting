@@ -44,20 +44,20 @@ class EverAccounting_Admin_Extensions {
 		<div class="wrap">
 			<h2><?php esc_html_e( 'Extensions', 'wp-ever-accounting' ); ?></h2>
 			<div class="ea-extensions ea-row">
-			<?php foreach ( $extensions as $extension ) : ?>
-			<div class="ea-col-3">
-				<div class="ea-extension ea-card">
-					<div class="ea-card__inside">
-						<h3 class="ea-extension__title"><?php echo esc_html( $extension->info->title ); ?></h3>
-						<a href="<?php echo esc_url( $extension->info->link ); ?>" title="<?php echo esc_html( $extension->info->title ); ?>">
-							<img class="attachment-download-grid-thumb size-download-grid-thumb wp-post-image" src="<?php echo esc_url( $extension->info->thumbnail ); ?>">
-						</a>
-						<p><?php echo wp_kses_post( $extension->info->excerpt ); ?></p>
-						<a class="button-secondary" href="<?php echo esc_url( $extension->info->link ); ?>" target="_blank"><?php esc_html_e( 'Get this Extension', 'easy-digital-downloads' ); ?></a>
+				<?php foreach ( $extensions as $extension ) : ?>
+					<div class="ea-col-3">
+						<div class="ea-extension ea-card">
+							<div class="ea-card__inside">
+								<h3 class="ea-extension__title"><?php echo esc_html( $extension->info->title ); ?></h3>
+								<a href="<?php echo esc_url( $extension->info->link ); ?>" title="<?php echo esc_html( $extension->info->title ); ?>">
+									<img class="attachment-download-grid-thumb size-download-grid-thumb wp-post-image" src="<?php echo esc_url( $extension->info->thumbnail ); ?>">
+								</a>
+								<p><?php echo wp_kses_post( $extension->info->excerpt ); ?></p>
+								<a class="button-secondary" href="<?php echo esc_url( $extension->info->link ); ?>" target="_blank"><?php esc_html_e( 'Get this Extension', 'wp-ever-accounting' ); ?></a>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<?php endforeach; ?>
+				<?php endforeach; ?>
 			</div>
 		</div>
 		<?php
@@ -85,4 +85,5 @@ class EverAccounting_Admin_Extensions {
 	}
 
 }
+
 return new EverAccounting_Admin_Extensions();
