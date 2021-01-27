@@ -28,7 +28,7 @@ function eaccounting_get_settings_tabs() {
 		'categories' => __( 'Categories', 'wp-ever-accounting' ),
 		'extensions' => __( 'Extensions', 'wp-ever-accounting' ),
 		'licenses'   => __( 'Licenses', 'wp-ever-accounting' ),
-		'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
+		//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 	);
 
 	if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
