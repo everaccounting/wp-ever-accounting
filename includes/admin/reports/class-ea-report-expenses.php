@@ -41,11 +41,11 @@ class EverAccounting_Report_Expenses extends EverAccounting_Admin_Report {
 			$where            .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
 			$dates             = $this->get_dates_in_period( $start_date, $end_date );
 			$sql               = $wpdb->prepare(
-				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id, c.name category,c.color
+				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category,c.color
 					   FROM {$wpdb->prefix}ea_transactions t
 					   LEFT JOIN {$wpdb->prefix}ea_categories c on c.id=t.category_id
 					   WHERE c.type = %s AND t.payment_date BETWEEN %s AND %s $where
-					   GROUP BY t.currency_code,t.currency_rate, t.payment_date, t.category_id ",
+					   GROUP BY t.currency_code,t.currency_rate, t.payment_date, t.category_id, t.payment_method ",
 				'expense',
 				$start_date,
 				$end_date
@@ -95,7 +95,7 @@ class EverAccounting_Report_Expenses extends EverAccounting_Admin_Report {
 		$category_id    = empty( $_GET['category_id'] ) ? '' : intval( $_GET['category_id'] );
 		$account_id     = empty( $_GET['account_id'] ) ? '' : intval( $_GET['account_id'] );
 		$vendor_id      = empty( $_GET['vendor_id'] ) ? '' : intval( $_GET['vendor_id'] );
-		$payment_method = empty( $_GET['payment_method'] ) ? '' : intval( $_GET['payment_method'] );
+		$payment_method = empty( $_GET['payment_method'] ) ? '' :  $_GET['payment_method'] ;
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,

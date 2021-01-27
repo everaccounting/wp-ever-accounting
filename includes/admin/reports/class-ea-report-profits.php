@@ -13,18 +13,18 @@ defined( 'ABSPATH' ) || exit();
 
 class EverAccounting_Report_Profits extends EverAccounting_Admin_Report {
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param array $args
 	 *
 	 * @return array|mixed|void
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_report( $args = array() ) {
 		global $wpdb;
 		$this->maybe_clear_cache( $args );
 		if ( empty( $args['year'] ) ) {
 			echo '<p>';
-			esc_html_e( 'Please select a year to generate the report.','wp-ever-accounting' );
+			esc_html_e( 'Please select a year to generate the report.', 'wp-ever-accounting' );
 			echo '</p>';
 
 			return false;
@@ -36,14 +36,14 @@ class EverAccounting_Report_Profits extends EverAccounting_Admin_Report {
 			$start_date      = $this->get_start_date( $args['year'] );
 			$end_date        = $this->get_end_date( $args['year'] );
 			$where           = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
-			$where          .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
+			$where           .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
 			$dates           = $this->get_dates_in_period( $start_date, $end_date );
 			$sql             = $wpdb->prepare(
-				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.type, t.currency_code, t.currency_rate,t.category_id, c.name category
+				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.type, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category
 					   FROM {$wpdb->prefix}ea_transactions t
 					   LEFT JOIN {$wpdb->prefix}ea_categories c on c.id=t.category_id
 					   WHERE c.type != %s AND t.payment_date BETWEEN %s AND %s $where
-					   GROUP BY t.currency_code,t.currency_rate, t.payment_date, t.category_id, t.type ",
+					   GROUP BY t.currency_code,t.currency_rate, t.payment_date, t.category_id, t.type, t.payment_method ",
 				'other',
 				$start_date,
 				$end_date
@@ -89,13 +89,13 @@ class EverAccounting_Report_Profits extends EverAccounting_Admin_Report {
 	/**
 	 * Output report.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function output() {
 		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] );
 		$account_id     = empty( $_GET['account_id'] ) ? '' : intval( $_GET['account_id'] );
-		$payment_method = empty( $_GET['payment_method'] ) ? '' : intval( $_GET['payment_method'] );
+		$payment_method = empty( $_GET['payment_method'] ) ? '' : $_GET['payment_method'];
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,
@@ -154,79 +154,79 @@ class EverAccounting_Report_Profits extends EverAccounting_Admin_Report {
 						window.addEventListener('DOMContentLoaded', function () {
 							var ctx = document.getElementById('ea-expenses-chart').getContext('2d');
 							new Chart(
-									ctx,
-									{
-										type: 'line',
-										data: {
-											'labels': <?php echo json_encode( array_values( $report['dates'] ) ); ?>,
-											'datasets': [
-												{
-													label: '<?php echo __( 'Sales', 'wp-ever-accounting' ); ?>',
-													data: <?php echo json_encode( array_values( $report['data']['totals'] ) ); ?>,
-													backgroundColor: 'rgba(0, 198, 137, 0.1)',
-													borderColor: 'rgb(0, 198, 137)',
-													borderWidth: 4,
-													pointBackgroundColor: 'rgb(0, 198, 137)'
-												}
-											]
-										},
-										options: {
-											responsive: true,
-											maintainAspectRatio: false,
-											tooltips: {
-												YrPadding: 12,
-												backgroundColor: "#000000",
-												bodyFontColor: "#e5e5e5",
-												bodySpacing: 4,
-												intersect: 0,
-												mode: "nearest",
-												position: "nearest",
-												titleFontColor: "#ffffff",
-												callbacks: {
-													label: function(tooltipItem, data) {
-														let label = data.labels[tooltipItem.index];
-														let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-														return ' ' + label + ': ' + eaccountingi10n.currency['symbol'] + Number((value).toFixed(1)).toLocaleString();
-													}
-												}
-											},
-											scales: {
-												yAxes: [{
-													barPercentage: 1.6,
-													gridLines: {
-														// borderDash: [1],
-														// borderDashOffset: [2],
-														color: "rgba(29,140,248,0.1)",
-														drawBorder: false,
-														zeroLineColor: "transparent",
-													},
-													ticks: {
-														padding: 10,
-														fontColor: '#9e9e9e',
-														beginAtZero: true,
-														callback: function (value, index, values) {
-															return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-														}
-													}
-												}],
-												xAxes: [{
-													gridLines: {
-														color: "rgba(29,140,248,0.0)",
-														drawBorder: false,
-														zeroLineColor: "transparent",
-													},
-													ticks: {
-														fontColor: "#9e9e9e",
-														suggestedMax: 125,
-														suggestedMin: 60,
-													}
-												}]
-											},
-											legend: {
-												display: false
+								ctx,
+								{
+									type: 'line',
+									data: {
+										'labels': <?php echo json_encode( array_values( $report['dates'] ) ); ?>,
+										'datasets': [
+											{
+												label: '<?php echo __( 'Sales', 'wp-ever-accounting' ); ?>',
+												data: <?php echo json_encode( array_values( $report['data']['totals'] ) ); ?>,
+												backgroundColor: 'rgba(0, 198, 137, 0.1)',
+												borderColor: 'rgb(0, 198, 137)',
+												borderWidth: 4,
+												pointBackgroundColor: 'rgb(0, 198, 137)'
 											}
+										]
+									},
+									options: {
+										responsive: true,
+										maintainAspectRatio: false,
+										tooltips: {
+											YrPadding: 12,
+											backgroundColor: "#000000",
+											bodyFontColor: "#e5e5e5",
+											bodySpacing: 4,
+											intersect: 0,
+											mode: "nearest",
+											position: "nearest",
+											titleFontColor: "#ffffff",
+											callbacks: {
+												label: function (tooltipItem, data) {
+													let label = data.labels[tooltipItem.index];
+													let value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+													return ' ' + label + ': ' + eaccountingi10n.currency['symbol'] + Number((value).toFixed(1)).toLocaleString();
+												}
+											}
+										},
+										scales: {
+											yAxes: [{
+												barPercentage: 1.6,
+												gridLines: {
+													// borderDash: [1],
+													// borderDashOffset: [2],
+													color: "rgba(29,140,248,0.1)",
+													drawBorder: false,
+													zeroLineColor: "transparent",
+												},
+												ticks: {
+													padding: 10,
+													fontColor: '#9e9e9e',
+													beginAtZero: true,
+													callback: function (value, index, values) {
+														return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+													}
+												}
+											}],
+											xAxes: [{
+												gridLines: {
+													color: "rgba(29,140,248,0.0)",
+													drawBorder: false,
+													zeroLineColor: "transparent",
+												},
+												ticks: {
+													fontColor: "#9e9e9e",
+													suggestedMax: 125,
+													suggestedMin: 60,
+												}
+											}]
+										},
+										legend: {
+											display: false
 										}
 									}
+								}
 							);
 
 						})
@@ -280,13 +280,13 @@ class EverAccounting_Report_Profits extends EverAccounting_Admin_Report {
 				</div>
 
 				<div class="ea-card__footer">
-					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg('refresh_report', 'yes'), 'refresh_report' ); ?>">
+					<a class="button button-secondary" href="<?php echo wp_nonce_url( add_query_arg( 'refresh_report', 'yes' ), 'refresh_report' ); ?>">
 						<?php esc_html_e( 'Reset Cache', 'wp-ever-accounting' ); ?>
 					</a>
 				</div>
 			<?php else : ?>
 				<div class="ea-card__inside">
-					<p><?php _e("Please select financial year.","wp-ever-accounting");?></p>
+					<p><?php _e( "Please select financial year.", "wp-ever-accounting" ); ?></p>
 				</div>
 			<?php endif; ?>
 		</div>
