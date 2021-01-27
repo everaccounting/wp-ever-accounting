@@ -127,6 +127,9 @@
   MISC
 ------------------------------------------------------------------------------*/
 @media print{
+	html, body {
+		height: 99%;
+	}
 	.ea-noprint{
 		display:none;
 	}
@@ -137,7 +140,9 @@
 		display: block;
 	}
 	.ea-document__items th{
-		color: #444;
+		color: #fff;
 	}
+
 }
+
 
