@@ -448,8 +448,7 @@ jQuery(function ($) {
 			var line_item = $($('#ea-invoice-line-template').html());
 			var item_selector = $($('#ea-invoice-item-selector').html());
 			var item_selector_name = item_selector.attr('name');
-			//var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
-			var index = Array(1).fill(null).map( Math.random().toString(10).substr(2)).join('');
+			var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
 			line_item.addClass('editing')
 			$(line_item).find(":input").each(function () {
 				var name = $(this).attr('name');
@@ -630,8 +629,7 @@ jQuery(function ($) {
 			var line_item = $($('#ea-bill-line-template').html());
 			var item_selector = $($('#ea-bill-item-selector').html());
 			var item_selector_name = item_selector.attr('name');
-			//var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
-			var index = Array(1).fill(null).map( Math.random().toString(10).substr(2)).join('');
+			var index = Array(1).fill(null).map(() => Math.random().toString(10).substr(2)).join('');
 			line_item.addClass('editing');
 			$(line_item).find(":input").each(function () {
 				var name = $(this).attr('name');
