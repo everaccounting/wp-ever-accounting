@@ -399,6 +399,7 @@ class EverAccounting_Ajax {
 			$invoice = new Invoice( $posted['id'] );
 			$invoice->set_props( $posted );
 			$invoice->save();
+
 			$redirect = add_query_arg(
 				array(
 					'action'     => 'view',
@@ -418,6 +419,7 @@ class EverAccounting_Ajax {
 			);
 			if ( empty( $posted['id'] ) ) {
 				$response['redirect'] = $redirect;
+				$invoice->add_note( sprintf( __( '%s added', 'wp-ever-accounting' ), $invoice->get_document_number() ) );
 			}
 			wp_send_json_success( $response );
 		} catch ( \Exception $e ) {
@@ -670,6 +672,7 @@ class EverAccounting_Ajax {
 			);
 			if ( empty( $posted['id'] ) ) {
 				$response['redirect'] = $redirect;
+				$bill->add_note( sprintf( __( '%s added', 'wp-ever-accounting' ), $bill->get_document_number() ) );
 			}
 			wp_send_json_success( $response );
 		} catch ( \Exception $e ) {
