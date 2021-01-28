@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.0.4\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-01-26 12:07:12+00:00\n"
+"POT-Creation-Date: 2021-01-28 08:56:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -472,7 +472,7 @@ msgstr ""
 #: includes/admin/class-ea-admin-sales.php:29
 #: includes/admin/reports/class-ea-report-expenses.php:184
 #: includes/admin/reports/class-ea-report-profits.php:164
-#: includes/admin/reports/class-ea-report-sales.php:182
+#: includes/admin/reports/class-ea-report-sales.php:183
 #: includes/class-ea-install.php:248
 msgid "Sales"
 msgstr ""
@@ -659,7 +659,7 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.php:240
 #: includes/admin/reports/class-ea-report-expenses.php:127
 #: includes/admin/reports/class-ea-report-profits.php:125
-#: includes/admin/reports/class-ea-report-sales.php:127
+#: includes/admin/reports/class-ea-report-sales.php:128
 #: includes/admin/views/js/modal-bill-payment.php:42
 #: includes/admin/views/js/modal-invoice-payment.php:42
 #: includes/admin/views/payments/edit-payment.php:69
@@ -1359,7 +1359,7 @@ msgstr ""
 #: includes/admin/ea-admin-functions.php:28
 #: includes/admin/reports/class-ea-report-expenses.php:261
 #: includes/admin/reports/class-ea-report-profits.php:241
-#: includes/admin/reports/class-ea-report-sales.php:259
+#: includes/admin/reports/class-ea-report-sales.php:260
 #: includes/admin/reports/expense-summary.php:162
 #: includes/admin/reports/income-expense.php:155
 #: includes/admin/reports/income-summary.php:162
@@ -1522,10 +1522,6 @@ msgstr ""
 
 #: includes/admin/class-ea-admin.php:185
 msgid "Thank you for using with Ever Accounting."
-msgstr ""
-
-#: includes/admin/ea-admin-functions.php:31
-msgid "Advanced"
 msgstr ""
 
 #: includes/admin/ea-admin-functions.php:441
@@ -1720,7 +1716,7 @@ msgstr ""
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:128
 #: includes/admin/reports/class-ea-report-expenses.php:291
 #: includes/admin/reports/class-ea-report-profits.php:271
-#: includes/admin/reports/class-ea-report-sales.php:289
+#: includes/admin/reports/class-ea-report-sales.php:290
 #: includes/admin/reports/expense-summary.php:189
 #: includes/admin/reports/income-expense.php:194
 #: includes/admin/reports/income-summary.php:189
@@ -1975,7 +1971,7 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-cashflow.php:156
 #: includes/admin/reports/class-ea-report-expenses.php:114
 #: includes/admin/reports/class-ea-report-profits.php:112
-#: includes/admin/reports/class-ea-report-sales.php:114
+#: includes/admin/reports/class-ea-report-sales.php:115
 #: includes/admin/reports/expense-summary.php:69
 #: includes/admin/reports/income-expense.php:46
 #: includes/admin/reports/income-summary.php:70
@@ -2000,7 +1996,7 @@ msgid "There is no revenues found."
 msgstr ""
 
 #: includes/admin/list-tables/class-ea-revenue-list-table.php:326
-#: includes/admin/reports/class-ea-report-sales.php:135
+#: includes/admin/reports/class-ea-report-sales.php:136
 #: includes/admin/views/invoices/edit-invoice.php:66
 #: includes/admin/views/revenues/edit-revenue.php:85
 msgid "Select Customer"
@@ -2066,7 +2062,7 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-cashflow.php:160
 #: includes/admin/reports/class-ea-report-expenses.php:118
 #: includes/admin/reports/class-ea-report-profits.php:116
-#: includes/admin/reports/class-ea-report-sales.php:118
+#: includes/admin/reports/class-ea-report-sales.php:119
 #: includes/admin/reports/expense-summary.php:30
 #: includes/admin/reports/income-expense.php:27
 #: includes/admin/reports/income-summary.php:30
@@ -2077,7 +2073,7 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-cashflow.php:170
 #: includes/admin/reports/class-ea-report-expenses.php:161
 #: includes/admin/reports/class-ea-report-profits.php:141
-#: includes/admin/reports/class-ea-report-sales.php:159
+#: includes/admin/reports/class-ea-report-sales.php:160
 #: includes/admin/views/accounts/edit-account.php:150
 #: includes/admin/views/bills/edit-bill.php:177
 #: includes/admin/views/categories/edit-category.php:112
@@ -2097,14 +2093,14 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-cashflow.php:172
 #: includes/admin/reports/class-ea-report-expenses.php:163
 #: includes/admin/reports/class-ea-report-profits.php:143
-#: includes/admin/reports/class-ea-report-sales.php:161
+#: includes/admin/reports/class-ea-report-sales.php:162
 msgid "Reset"
 msgstr ""
 
 #: includes/admin/reports/class-ea-report-cashflow.php:313
 #: includes/admin/reports/class-ea-report-expenses.php:281
 #: includes/admin/reports/class-ea-report-profits.php:261
-#: includes/admin/reports/class-ea-report-sales.php:279
+#: includes/admin/reports/class-ea-report-sales.php:280
 #: includes/admin/reports/expense-summary.php:182
 #: includes/admin/reports/income-expense.php:187
 #: includes/admin/reports/income-summary.php:182
@@ -2115,14 +2111,14 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-cashflow.php:336
 #: includes/admin/reports/class-ea-report-expenses.php:304
 #: includes/admin/reports/class-ea-report-profits.php:284
-#: includes/admin/reports/class-ea-report-sales.php:302
+#: includes/admin/reports/class-ea-report-sales.php:303
 msgid "Reset Cache"
 msgstr ""
 
 #: includes/admin/reports/class-ea-report-cashflow.php:341
 #: includes/admin/reports/class-ea-report-expenses.php:309
 #: includes/admin/reports/class-ea-report-profits.php:289
-#: includes/admin/reports/class-ea-report-sales.php:307
+#: includes/admin/reports/class-ea-report-sales.php:308
 msgid "Please select financial year."
 msgstr ""
 
@@ -2134,7 +2130,7 @@ msgstr ""
 msgid "Profit report"
 msgstr ""
 
-#: includes/admin/reports/class-ea-report-sales.php:111
+#: includes/admin/reports/class-ea-report-sales.php:112
 msgid "Sales report"
 msgstr ""
 
@@ -3339,7 +3335,7 @@ msgstr ""
 msgid "Category created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:295 includes/class-ea-ajax.php:543
+#: includes/class-ea-ajax.php:295 includes/class-ea-ajax.php:545
 msgid "Invalid Invoice Item"
 msgstr ""
 
@@ -3347,107 +3343,111 @@ msgstr ""
 msgid "Invoice Payment saved"
 msgstr ""
 
-#: includes/class-ea-ajax.php:331 includes/class-ea-ajax.php:580
+#: includes/class-ea-ajax.php:331 includes/class-ea-ajax.php:582
 msgid "Note Content empty."
 msgstr ""
 
-#: includes/class-ea-ajax.php:341 includes/class-ea-ajax.php:590
+#: includes/class-ea-ajax.php:341 includes/class-ea-ajax.php:592
 msgid "Note Added."
 msgstr ""
 
-#: includes/class-ea-ajax.php:448
+#: includes/class-ea-ajax.php:422 includes/class-ea-ajax.php:675
+msgid "%s added"
+msgstr ""
+
+#: includes/class-ea-ajax.php:450
 msgid "Revenue updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:452
+#: includes/class-ea-ajax.php:454
 msgid "Revenue created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:510
+#: includes/class-ea-ajax.php:512
 msgid "Customer updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:514
+#: includes/class-ea-ajax.php:516
 msgid "Customer created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:550
+#: includes/class-ea-ajax.php:552
 msgid "Bill Payment saved"
 msgstr ""
 
-#: includes/class-ea-ajax.php:710
+#: includes/class-ea-ajax.php:713
 msgid "No code received"
 msgstr ""
 
-#: includes/class-ea-ajax.php:718 includes/class-ea-ajax.php:942
+#: includes/class-ea-ajax.php:721 includes/class-ea-ajax.php:945
 msgid "Could not find the currency"
 msgstr ""
 
-#: includes/class-ea-ajax.php:757
+#: includes/class-ea-ajax.php:760
 msgid "Currency updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:761
+#: includes/class-ea-ajax.php:764
 msgid "Currency created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:796
+#: includes/class-ea-ajax.php:799
 msgid "Payment updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:800
+#: includes/class-ea-ajax.php:803
 msgid "Payment created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:857
+#: includes/class-ea-ajax.php:860
 msgid "Vendor updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:861
+#: includes/class-ea-ajax.php:864
 msgid "Vendor created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:934
+#: includes/class-ea-ajax.php:937
 msgid "No account id received"
 msgstr ""
 
-#: includes/class-ea-ajax.php:970
+#: includes/class-ea-ajax.php:973
 msgid "Account updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:974
+#: includes/class-ea-ajax.php:977
 msgid "Account created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:1008
+#: includes/class-ea-ajax.php:1011
 msgid "Transfer updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:1012
+#: includes/class-ea-ajax.php:1015
 msgid "Transfer created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:1042
+#: includes/class-ea-ajax.php:1045
 msgid "Note could not be deleted."
 msgstr ""
 
-#: includes/class-ea-ajax.php:1058
+#: includes/class-ea-ajax.php:1061
 msgid "Note Deleted."
 msgstr ""
 
-#: includes/class-ea-ajax.php:1105
+#: includes/class-ea-ajax.php:1108
 msgid "Item updated successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:1109
+#: includes/class-ea-ajax.php:1112
 msgid "Item created successfully!"
 msgstr ""
 
-#: includes/class-ea-ajax.php:1132
+#: includes/class-ea-ajax.php:1135
 msgid "Error: You are not allowed to do this."
 msgstr ""
 
-#: includes/class-ea-ajax.php:1156
+#: includes/class-ea-ajax.php:1159
 msgid "Error: Cheatin&#8217; huh?."
 msgstr ""
 
@@ -4222,15 +4222,15 @@ msgstr ""
 msgid "Due date"
 msgstr ""
 
-#: src/Models/Bill.php:463 src/Models/Invoice.php:459
+#: src/Models/Bill.php:463 src/Models/Invoice.php:458
 msgid "Payment amount is required"
 msgstr ""
 
-#: src/Models/Bill.php:469 src/Models/Invoice.php:465
+#: src/Models/Bill.php:469 src/Models/Invoice.php:462
 msgid "Payment account is required"
 msgstr ""
 
-#: src/Models/Bill.php:475 src/Models/Invoice.php:471
+#: src/Models/Bill.php:475 src/Models/Invoice.php:466
 msgid "Payment method is required"
 msgstr ""
 
@@ -4238,7 +4238,7 @@ msgstr ""
 msgid "Bill Payment #%d"
 msgstr ""
 
-#: src/Models/Bill.php:502 src/Models/Invoice.php:498
+#: src/Models/Bill.php:502 src/Models/Invoice.php:492
 #. translators: %s amount
 msgid "Paid %1$s by %2$s"
 msgstr ""
@@ -4247,18 +4247,18 @@ msgstr ""
 msgid "Default account is not set bill status was not changed"
 msgstr ""
 
-#: src/Models/Bill.php:727 src/Models/Invoice.php:716
-#: src/Models/Invoice.php:746
+#: src/Models/Bill.php:727 src/Models/Invoice.php:710
+#: src/Models/Invoice.php:740
 #. translators: %s amount
 msgid "Removed %s payment"
 msgstr ""
 
-#: src/Models/Bill.php:757 src/Models/Invoice.php:774
+#: src/Models/Bill.php:757 src/Models/Invoice.php:768
 #. translators: 1: old order status 2: new order status
 msgid "Status changed from %1$s to %2$s."
 msgstr ""
 
-#: src/Models/Bill.php:774 src/Models/Invoice.php:791
+#: src/Models/Bill.php:774 src/Models/Invoice.php:785
 msgid "Error during status transition."
 msgstr ""
 
@@ -4306,11 +4306,11 @@ msgstr ""
 msgid "Document ID"
 msgstr ""
 
-#: src/Models/Invoice.php:490
+#: src/Models/Invoice.php:484
 msgid "Invoice Payment #%d"
 msgstr ""
 
-#: src/Models/Invoice.php:679
+#: src/Models/Invoice.php:673
 msgid "Default account is not set, invoice status was not changed"
 msgstr ""
 

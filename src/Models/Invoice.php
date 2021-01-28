@@ -455,21 +455,15 @@ class Invoice extends Document {
 		}
 
 		if ( empty( $args['amount'] ) ) {
-			throw new \Exception(
-				__( 'Payment amount is required', 'wp-ever-accounting' )
-			);
+			throw new \Exception( __( 'Payment amount is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $args['account_id'] ) ) {
-			throw new \Exception(
-				__( 'Payment account is required', 'wp-ever-accounting' )
-			);
+			throw new \Exception( __( 'Payment account is required', 'wp-ever-accounting' ) );
 		}
 
 		if ( empty( $args['payment_method'] ) ) {
-			throw new \Exception(
-				__( 'Payment method is required', 'wp-ever-accounting' )
-			);
+			throw new \Exception( __( 'Payment method is required', 'wp-ever-accounting' ) );
 		}
 
 		$amount           = eaccounting_price( $args['amount'], $this->get_currency_code(), true );
