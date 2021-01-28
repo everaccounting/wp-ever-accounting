@@ -99,20 +99,8 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( ' Items are especially products that can be sold or can be bought. You can create as many items as you want categorically and assign sale and purchase prices to use in your bills and invoices.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="
-			<?php
-			echo esc_url(
-				eaccounting_admin_url(
-					array(
-						'page'   => 'ea-items',
-						'tab'    => 'items',
-						'action' => 'edit',
-					)
-				)
-			);
-			?>
-						" class="button-primary ea-empty-table__cta"><?php _e( 'Add Item', 'wp-ever-accounting' ); ?></a>
-			<a href="" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Item', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/how-to-add-items/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -203,7 +191,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 		$item_id = $item->get_id();
 		switch ( $column_name ) {
 			case 'thumb':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
+				$edit_url  = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
 				$thumb_url = wp_get_attachment_thumb_url( $item->get_thumbnail_id() );
 				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/images/placeholder.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $edit_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $item->get_name() . '"></a>';
@@ -214,22 +202,22 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 				$actions  = array(
 					'id'     => 'ID: ' . $item_id,
 					'edit'   => '<a href="' . eaccounting_admin_url(
-						array(
-							'page'    => 'ea-items',
-							'tab'     => 'items',
-							'action'  => 'edit',
-							'item_id' => $item_id,
-						)
-					) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
+							array(
+								'page'    => 'ea-items',
+								'tab'     => 'items',
+								'action'  => 'edit',
+								'item_id' => $item_id,
+							)
+						) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
 					'delete' => '<a href="' . eaccounting_admin_url(
-						array(
-							'page'     => 'ea-items',
-							'tab'      => 'items',
-							'action'   => 'delete',
-							'item_id'  => $item_id,
-							'_wpnonce' => $nonce,
-						)
-					) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
+							array(
+								'page'     => 'ea-items',
+								'tab'      => 'items',
+								'action'   => 'delete',
+								'item_id'  => $item_id,
+								'_wpnonce' => $nonce,
+							)
+						) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
 				);
 				$value    = '<a href="' . esc_url( $edit_url ) . '"><strong>' . $item->get_name() . '</strong></a>' . $this->row_actions( $actions );
 				break;
@@ -244,7 +232,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 				$value    = $category ? $category->get_name() : '&mdash;';
 				break;
 			case 'enabled':
-				$value  = '<label class="ea-toggle">';
+				$value = '<label class="ea-toggle">';
 				$value .= '<input type="checkbox" class="item-status" style="" value="true" data-id="' . $item->get_id() . '" ' . checked( $item->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
