@@ -351,6 +351,9 @@ class EverAccounting_Controller {
 		if ( ! array_key_exists( 'default_currency', $value ) || $value['default_currency'] === $old_value['default_currency'] ) {
 			return;
 		}
+		if(empty(eaccounting_get_currency( $old_value['default_currency'] ))) {
+			return;
+		}
 
 		do_action( 'eaccounting_pre_change_default_currency', $value['default_currency'], $old_value['default_currency'] );
 		$new_currency          = eaccounting_get_currency( $old_value['default_currency'] );
