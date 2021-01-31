@@ -351,7 +351,8 @@ class EverAccounting_Controller {
 		if ( ! array_key_exists( 'default_currency', $value ) || $value['default_currency'] === $old_value['default_currency'] ) {
 			return;
 		}
-		if(empty(eaccounting_get_currency( $old_value['default_currency'] ))) {
+
+		if ( empty( eaccounting_get_currency( $old_value['default_currency'] ) ) ) {
 			return;
 		}
 
