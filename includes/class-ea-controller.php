@@ -352,6 +352,10 @@ class EverAccounting_Controller {
 			return;
 		}
 
+		if ( empty( eaccounting_get_currency( $old_value['default_currency'] ) ) ) {
+			return;
+		}
+
 		do_action( 'eaccounting_pre_change_default_currency', $value['default_currency'], $old_value['default_currency'] );
 		$new_currency          = eaccounting_get_currency( $old_value['default_currency'] );
 		$new_currency_old_rate = $new_currency->get_rate();

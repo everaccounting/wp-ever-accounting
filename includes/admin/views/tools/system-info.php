@@ -81,7 +81,7 @@ function eaccounting_tools_system_info_report() {
 	$return        .= "\n" . '-- EverAccounting Settings' . "\n\n";
 
 	$return .= 'Default currency:                  ' . $currency_code . "\n";
-	$return .= 'Default currency rate:             ' . $currency->get_rate() . "\n";
+	$return .= 'Default currency rate:             ' . ( ! empty( $currency ) ? $currency->get_rate() : "" ) . "\n";
 	$return .= 'Default payment method:            ' . eaccounting_get_option( 'default_payment_method' ) . "\n";
 	$return .= 'Default Account:                   ' . eaccounting_get_option( 'default_account' ) . "\n";
 
