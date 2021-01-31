@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.0.4\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-01-28 08:56:37+00:00\n"
+"POT-Creation-Date: 2021-01-31 11:33:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -109,7 +109,7 @@ msgstr ""
 #: includes/admin/ea-admin-functions.php:66
 #: includes/admin/views/bills/edit-bill.php:28
 #: includes/admin/views/bills/list-bill.php:23
-#: includes/admin/views/bills/view-bill.php:50
+#: includes/admin/views/bills/view-bill.php:51
 #: includes/admin/views/vendors/view-vendor.php:23
 msgid "Bills"
 msgstr ""
@@ -314,7 +314,7 @@ msgid "Total Sales"
 msgstr ""
 
 #: includes/admin/class-ea-admin-overview.php:98
-#: includes/admin/list-tables/class-ea-customer-list-table.php:132
+#: includes/admin/list-tables/class-ea-customer-list-table.php:120
 msgid "Receivable"
 msgstr ""
 
@@ -323,7 +323,7 @@ msgid "Total Expenses"
 msgstr ""
 
 #: includes/admin/class-ea-admin-overview.php:121
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:132
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:120
 msgid "Payable"
 msgstr ""
 
@@ -374,10 +374,10 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-overview.php:472
 #: includes/admin/class-ea-admin-overview.php:520
-#: includes/admin/list-tables/class-ea-payment-list-table.php:114
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:113
+#: includes/admin/list-tables/class-ea-payment-list-table.php:102
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:102
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:106
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:115
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:103
 #: includes/admin/views/bills/bill-payments.php:24
 #: includes/admin/views/invoices/invoice-payments.php:24
 #: includes/admin/views/js/modal-bill-payment.php:17
@@ -390,16 +390,16 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-overview.php:473
 #: includes/admin/class-ea-admin-overview.php:521
-#: includes/admin/list-tables/class-ea-item-list-table.php:133
-#: includes/admin/list-tables/class-ea-payment-list-table.php:117
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:116
+#: includes/admin/list-tables/class-ea-item-list-table.php:121
+#: includes/admin/list-tables/class-ea-payment-list-table.php:105
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:105
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:110
 #: includes/admin/reports/expense-summary.php:60
 #: includes/admin/reports/income-summary.php:60
 #: includes/admin/views/bills/edit-bill.php:127
 #: includes/admin/views/invoices/edit-invoice.php:129
 #: includes/admin/views/items/edit-item.php:64
-#: includes/admin/views/js/modal-add-item.php:27
+#: includes/admin/views/js/modal-add-item.php:48
 #: includes/admin/views/payments/edit-payment.php:102
 #: includes/admin/views/payments/view-payment.php:142
 #: includes/admin/views/revenues/edit-revenue.php:93
@@ -410,10 +410,10 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-overview.php:474
 #: includes/admin/class-ea-admin-overview.php:522
-#: includes/admin/list-tables/class-ea-payment-list-table.php:115
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:114
+#: includes/admin/list-tables/class-ea-payment-list-table.php:103
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:103
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:107
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:116
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:104
 #: includes/admin/views/js/modal-bill-payment.php:27
 #: includes/admin/views/js/modal-invoice-payment.php:27
 #: includes/admin/views/payments/edit-payment.php:76
@@ -435,8 +435,8 @@ msgstr ""
 #: includes/admin/class-ea-admin-overview.php:573
 #: includes/admin/class-ea-admin-settings.bk.php:155
 #: includes/admin/class-ea-admin-settings.php:235
-#: includes/admin/list-tables/class-ea-payment-list-table.php:116
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:115
+#: includes/admin/list-tables/class-ea-payment-list-table.php:104
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:104
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:109
 #: includes/admin/reports/expense-summary.php:38
 #: includes/admin/reports/income-expense.php:36
@@ -453,7 +453,7 @@ msgid "Account"
 msgstr ""
 
 #: includes/admin/class-ea-admin-overview.php:574
-#: includes/admin/list-tables/class-ea-account-list-table.php:131
+#: includes/admin/list-tables/class-ea-account-list-table.php:119
 msgid "Balance"
 msgstr ""
 
@@ -473,7 +473,7 @@ msgstr ""
 #: includes/admin/reports/class-ea-report-expenses.php:184
 #: includes/admin/reports/class-ea-report-profits.php:164
 #: includes/admin/reports/class-ea-report-sales.php:183
-#: includes/class-ea-install.php:248
+#: includes/class-ea-install.php:249
 msgid "Sales"
 msgstr ""
 
@@ -513,7 +513,7 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.bk.php:38
 #: includes/admin/class-ea-admin-settings.php:39
 #: includes/admin/class-ea-admin-settings.php:40
-#: includes/class-ea-install.php:64
+#: includes/class-ea-install.php:65
 msgid "Settings"
 msgstr ""
 
@@ -525,12 +525,12 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:90
 #: includes/admin/class-ea-admin-settings.php:170
-#: includes/admin/list-tables/class-ea-account-list-table.php:130
-#: includes/admin/list-tables/class-ea-category-list-table.php:122
+#: includes/admin/list-tables/class-ea-account-list-table.php:118
+#: includes/admin/list-tables/class-ea-category-list-table.php:123
 #: includes/admin/list-tables/class-ea-currency-list-table.php:111
-#: includes/admin/list-tables/class-ea-customer-list-table.php:128
-#: includes/admin/list-tables/class-ea-item-list-table.php:130
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:128
+#: includes/admin/list-tables/class-ea-customer-list-table.php:116
+#: includes/admin/list-tables/class-ea-item-list-table.php:118
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:116
 #: includes/admin/views/accounts/view-account.php:132
 #: includes/admin/views/categories/edit-category.php:48
 #: includes/admin/views/currencies/edit-currency.php:74
@@ -679,7 +679,7 @@ msgstr ""
 #: includes/admin/views/accounts/view-account.php:41
 #: includes/admin/views/bills/edit-bill.php:31
 #: includes/admin/views/bills/list-bill.php:25
-#: includes/admin/views/bills/view-bill.php:51
+#: includes/admin/views/bills/view-bill.php:52
 #: includes/admin/views/categories/edit-category.php:25
 #: includes/admin/views/categories/list-category.php:32
 #: includes/admin/views/currencies/edit-currency.php:28
@@ -809,7 +809,7 @@ msgstr ""
 #: includes/admin/views/bills/bill-items.php:13
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:16
-#: includes/class-ea-install.php:378 includes/class-ea-install.php:384
+#: includes/class-ea-install.php:379 includes/class-ea-install.php:385
 #: includes/class-ea-settings.bk.php:212 includes/class-ea-settings.bk.php:264
 #: includes/class-ea-settings.php:230 includes/class-ea-settings.php:288
 #: includes/ea-category-functions.php:24 src/REST/ItemsController.php:357
@@ -832,7 +832,7 @@ msgstr ""
 #: includes/admin/class-ea-admin-settings.php:316
 #: includes/admin/class-ea-admin-settings.php:370
 #: includes/admin/views/reconciliations/reconciliations.php:25
-#: includes/class-ea-install.php:379 includes/class-ea-install.php:385
+#: includes/class-ea-install.php:380 includes/class-ea-install.php:386
 #: includes/class-ea-settings.bk.php:217 includes/class-ea-settings.bk.php:269
 #: includes/class-ea-settings.php:236 includes/class-ea-settings.php:294
 #: templates/emails/invoice-details.php:28
@@ -856,7 +856,7 @@ msgstr ""
 #: includes/admin/views/invoices/invoice-items.php:15
 #: includes/admin/views/js/modal-add-invoice-item.php:17
 #: includes/admin/views/reconciliations/reconciliations.php:24
-#: includes/class-ea-install.php:380 includes/class-ea-install.php:386
+#: includes/class-ea-install.php:381 includes/class-ea-install.php:387
 #: includes/class-ea-settings.bk.php:222 includes/class-ea-settings.bk.php:274
 #: includes/class-ea-settings.php:242 includes/class-ea-settings.php:300
 #: templates/bill/bill-items.php:17 templates/emails/invoice-details.php:29
@@ -888,7 +888,7 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:271
 #: includes/admin/class-ea-admin-settings.php:351
-#: includes/admin/views/bills/view-bill.php:36
+#: includes/admin/views/bills/view-bill.php:37
 msgid "Bill Notes"
 msgstr ""
 
@@ -1311,8 +1311,8 @@ msgstr ""
 
 #: includes/admin/class-ea-admin-settings.bk.php:654
 #: includes/admin/class-ea-admin-settings.php:734
-#: includes/admin/list-tables/class-ea-bill-list-table.php:116
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:132
+#: includes/admin/list-tables/class-ea-bill-list-table.php:104
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:120
 msgid "Status"
 msgstr ""
 
@@ -1393,7 +1393,7 @@ msgid "Currency setup"
 msgstr ""
 
 #: includes/admin/class-ea-admin-setup.php:80
-#: includes/admin/class-ea-admin-setup.php:451
+#: includes/admin/class-ea-admin-setup.php:446
 msgid "Finish!"
 msgstr ""
 
@@ -1436,12 +1436,19 @@ msgid "Company Address"
 msgstr ""
 
 #: includes/admin/class-ea-admin-setup.php:282
-#: includes/admin/class-ea-admin-setup.php:412
+#: includes/admin/class-ea-admin-setup.php:410
 msgid "Continue"
 msgstr ""
 
 #: includes/admin/class-ea-admin-setup.php:321
 msgid "Currency Setup"
+msgstr ""
+
+#: includes/admin/class-ea-admin-setup.php:322
+msgid ""
+"Default currency rate should be always 1 & additional currency rates should "
+"be equivalent of default currency. e.g. If USD is your default currency "
+"then USD rate is 1 & GBP rate will be 0.77"
 msgstr ""
 
 #: includes/admin/class-ea-admin-setup.php:327
@@ -1468,11 +1475,11 @@ msgstr ""
 msgid "Additional currency"
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:452
+#: includes/admin/class-ea-admin-setup.php:447
 msgid "You are done with the basic setup of the plugin and ready to use."
 msgstr ""
 
-#: includes/admin/class-ea-admin-setup.php:454
+#: includes/admin/class-ea-admin-setup.php:449
 msgid "View Dashboard"
 msgstr ""
 
@@ -1534,116 +1541,115 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-account-list-table.php:100
 msgid ""
-"An account is a record in an accounting system that tracks the financial "
-"activities of a specific asset, revenue, or expense. You can create as many "
-"banks and cash accounts as you want and can track your opening and current "
-"balances in any currency."
+"Create unlimited bank and cash accounts and track their opening and current "
+"balances. You can use it with any currencies that you want. Ever Accounting "
+"will take care of the currency."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:114
+#: includes/admin/list-tables/class-ea-account-list-table.php:102
 #: includes/admin/views/accounts/edit-account.php:22
 #: includes/admin/views/js/modal-add-account.php:11
 msgid "Add Account"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:115
-#: includes/admin/list-tables/class-ea-bill-list-table.php:97
-#: includes/admin/list-tables/class-ea-category-list-table.php:108
-#: includes/admin/list-tables/class-ea-customer-list-table.php:113
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:113
-#: includes/admin/list-tables/class-ea-item-list-table.php:115
-#: includes/admin/list-tables/class-ea-payment-list-table.php:100
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:99
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:101
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:113
+#: includes/admin/list-tables/class-ea-account-list-table.php:103
+#: includes/admin/list-tables/class-ea-bill-list-table.php:85
+#: includes/admin/list-tables/class-ea-category-list-table.php:109
+#: includes/admin/list-tables/class-ea-customer-list-table.php:101
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:101
+#: includes/admin/list-tables/class-ea-item-list-table.php:103
+#: includes/admin/list-tables/class-ea-payment-list-table.php:88
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:88
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:89
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:101
 msgid "Learn More"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:132
-#: includes/admin/list-tables/class-ea-bill-list-table.php:111
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:127
+#: includes/admin/list-tables/class-ea-account-list-table.php:120
+#: includes/admin/list-tables/class-ea-bill-list-table.php:99
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:115
 msgid "Number"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:133
+#: includes/admin/list-tables/class-ea-account-list-table.php:121
 #: includes/admin/views/accounts/edit-account.php:97
 #: includes/admin/views/accounts/view-account.php:144
 msgid "Bank Name"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:134
-#: includes/admin/list-tables/class-ea-category-list-table.php:125
-#: includes/admin/list-tables/class-ea-customer-list-table.php:133
-#: includes/admin/list-tables/class-ea-item-list-table.php:134
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:133
+#: includes/admin/list-tables/class-ea-account-list-table.php:122
+#: includes/admin/list-tables/class-ea-category-list-table.php:126
+#: includes/admin/list-tables/class-ea-customer-list-table.php:121
+#: includes/admin/list-tables/class-ea-item-list-table.php:122
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:121
 msgid "Enabled"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:162
-#: includes/admin/list-tables/class-ea-category-list-table.php:152
-#: includes/admin/list-tables/class-ea-customer-list-table.php:160
-#: includes/admin/list-tables/class-ea-item-list-table.php:162
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:160
+#: includes/admin/list-tables/class-ea-account-list-table.php:150
+#: includes/admin/list-tables/class-ea-category-list-table.php:153
+#: includes/admin/list-tables/class-ea-customer-list-table.php:148
+#: includes/admin/list-tables/class-ea-item-list-table.php:150
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:148
 msgid "Enable"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:163
-#: includes/admin/list-tables/class-ea-category-list-table.php:153
-#: includes/admin/list-tables/class-ea-customer-list-table.php:161
-#: includes/admin/list-tables/class-ea-item-list-table.php:163
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:161
+#: includes/admin/list-tables/class-ea-account-list-table.php:151
+#: includes/admin/list-tables/class-ea-category-list-table.php:154
+#: includes/admin/list-tables/class-ea-customer-list-table.php:149
+#: includes/admin/list-tables/class-ea-item-list-table.php:151
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:149
 msgid "Disable"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:164
-#: includes/admin/list-tables/class-ea-account-list-table.php:222
-#: includes/admin/list-tables/class-ea-bill-list-table.php:145
-#: includes/admin/list-tables/class-ea-bill-list-table.php:199
-#: includes/admin/list-tables/class-ea-category-list-table.php:154
-#: includes/admin/list-tables/class-ea-category-list-table.php:204
+#: includes/admin/list-tables/class-ea-account-list-table.php:152
+#: includes/admin/list-tables/class-ea-account-list-table.php:210
+#: includes/admin/list-tables/class-ea-bill-list-table.php:133
+#: includes/admin/list-tables/class-ea-bill-list-table.php:187
+#: includes/admin/list-tables/class-ea-category-list-table.php:155
+#: includes/admin/list-tables/class-ea-category-list-table.php:205
 #: includes/admin/list-tables/class-ea-currency-list-table.php:140
 #: includes/admin/list-tables/class-ea-currency-list-table.php:188
-#: includes/admin/list-tables/class-ea-customer-list-table.php:162
-#: includes/admin/list-tables/class-ea-customer-list-table.php:215
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:161
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:216
-#: includes/admin/list-tables/class-ea-item-list-table.php:164
-#: includes/admin/list-tables/class-ea-item-list-table.php:232
+#: includes/admin/list-tables/class-ea-customer-list-table.php:150
+#: includes/admin/list-tables/class-ea-customer-list-table.php:203
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:149
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:204
+#: includes/admin/list-tables/class-ea-item-list-table.php:152
+#: includes/admin/list-tables/class-ea-item-list-table.php:220
 #: includes/admin/list-tables/class-ea-note-list-table.php:136
-#: includes/admin/list-tables/class-ea-payment-list-table.php:148
-#: includes/admin/list-tables/class-ea-payment-list-table.php:195
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:147
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:211
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:147
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:194
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:162
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:216
-#: includes/admin/views/bills/view-bill.php:33
+#: includes/admin/list-tables/class-ea-payment-list-table.php:136
+#: includes/admin/list-tables/class-ea-payment-list-table.php:183
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:136
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:200
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:135
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:182
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:150
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:204
+#: includes/admin/views/bills/view-bill.php:34
 #: includes/admin/views/invoices/view-invoice.php:33
 msgid "Delete"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:220
-#: includes/admin/list-tables/class-ea-bill-list-table.php:194
-#: includes/admin/list-tables/class-ea-customer-list-table.php:213
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:211
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:214
+#: includes/admin/list-tables/class-ea-account-list-table.php:208
+#: includes/admin/list-tables/class-ea-bill-list-table.php:182
+#: includes/admin/list-tables/class-ea-customer-list-table.php:201
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:199
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:202
 msgid "View"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:221
-#: includes/admin/list-tables/class-ea-bill-list-table.php:197
-#: includes/admin/list-tables/class-ea-category-list-table.php:203
+#: includes/admin/list-tables/class-ea-account-list-table.php:209
+#: includes/admin/list-tables/class-ea-bill-list-table.php:185
+#: includes/admin/list-tables/class-ea-category-list-table.php:204
 #: includes/admin/list-tables/class-ea-currency-list-table.php:187
-#: includes/admin/list-tables/class-ea-customer-list-table.php:214
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:214
-#: includes/admin/list-tables/class-ea-item-list-table.php:223
-#: includes/admin/list-tables/class-ea-payment-list-table.php:194
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:210
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:193
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:215
+#: includes/admin/list-tables/class-ea-customer-list-table.php:202
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:202
+#: includes/admin/list-tables/class-ea-item-list-table.php:211
+#: includes/admin/list-tables/class-ea-payment-list-table.php:182
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:199
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:181
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:203
 #: includes/admin/views/accounts/view-account.php:121
-#: includes/admin/views/bills/view-bill.php:109
+#: includes/admin/views/bills/view-bill.php:110
 #: includes/admin/views/customers/view-customer.php:122
 #: includes/admin/views/invoices/view-invoice.php:110
 #: includes/admin/views/payments/view-payment.php:35
@@ -1653,67 +1659,66 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:238
-#: includes/admin/list-tables/class-ea-category-list-table.php:219
-#: includes/admin/list-tables/class-ea-customer-list-table.php:247
-#: includes/admin/list-tables/class-ea-item-list-table.php:249
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:246
+#: includes/admin/list-tables/class-ea-account-list-table.php:226
+#: includes/admin/list-tables/class-ea-category-list-table.php:220
+#: includes/admin/list-tables/class-ea-customer-list-table.php:235
+#: includes/admin/list-tables/class-ea-item-list-table.php:237
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:234
 #: includes/ea-form-functions.php:578
 msgid "No"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:238
-#: includes/admin/list-tables/class-ea-category-list-table.php:219
-#: includes/admin/list-tables/class-ea-customer-list-table.php:247
-#: includes/admin/list-tables/class-ea-item-list-table.php:249
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:246
+#: includes/admin/list-tables/class-ea-account-list-table.php:226
+#: includes/admin/list-tables/class-ea-category-list-table.php:220
+#: includes/admin/list-tables/class-ea-customer-list-table.php:235
+#: includes/admin/list-tables/class-ea-item-list-table.php:237
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:234
 #: includes/ea-form-functions.php:579
 msgid "Yes"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:255
+#: includes/admin/list-tables/class-ea-account-list-table.php:243
 msgid "There is no accounts found."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:344
-#: includes/admin/list-tables/class-ea-category-list-table.php:327
-#: includes/admin/list-tables/class-ea-customer-list-table.php:381
-#: includes/admin/list-tables/class-ea-item-list-table.php:355
+#: includes/admin/list-tables/class-ea-account-list-table.php:332
+#: includes/admin/list-tables/class-ea-category-list-table.php:328
+#: includes/admin/list-tables/class-ea-customer-list-table.php:369
+#: includes/admin/list-tables/class-ea-item-list-table.php:343
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:274
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:380
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:368
 msgid "All"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:345
-#: includes/admin/list-tables/class-ea-category-list-table.php:328
-#: includes/admin/list-tables/class-ea-customer-list-table.php:382
-#: includes/admin/list-tables/class-ea-item-list-table.php:356
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:381
+#: includes/admin/list-tables/class-ea-account-list-table.php:333
+#: includes/admin/list-tables/class-ea-category-list-table.php:329
+#: includes/admin/list-tables/class-ea-customer-list-table.php:370
+#: includes/admin/list-tables/class-ea-item-list-table.php:344
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:369
 msgid "Active"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-account-list-table.php:346
-#: includes/admin/list-tables/class-ea-category-list-table.php:329
-#: includes/admin/list-tables/class-ea-customer-list-table.php:383
-#: includes/admin/list-tables/class-ea-item-list-table.php:357
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:382
+#: includes/admin/list-tables/class-ea-account-list-table.php:334
+#: includes/admin/list-tables/class-ea-category-list-table.php:330
+#: includes/admin/list-tables/class-ea-customer-list-table.php:371
+#: includes/admin/list-tables/class-ea-item-list-table.php:345
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:370
 msgid "Inactive"
 msgstr ""
 
 #: includes/admin/list-tables/class-ea-bill-list-table.php:82
 msgid ""
-"A bill functions as a commercial document that itemizes and records "
-"purchases. Bill specifies a transaction between a buyer and a seller and "
-"possesses all the necessary information required. In the document, Taxes "
-"can be included or excluded."
+"Create and manage bills so your finances are always accurate and healthy. "
+"Print and share bill with your vendor. Bill also support tax calculation & "
+"discount."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-bill-list-table.php:96
+#: includes/admin/list-tables/class-ea-bill-list-table.php:84
 msgid "Add Bills"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-bill-list-table.php:112
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:128
+#: includes/admin/list-tables/class-ea-bill-list-table.php:100
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:116
 #: includes/admin/reports/class-ea-report-expenses.php:291
 #: includes/admin/reports/class-ea-report-profits.php:271
 #: includes/admin/reports/class-ea-report-sales.php:290
@@ -1730,8 +1735,8 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-bill-list-table.php:113
-#: includes/admin/list-tables/class-ea-payment-list-table.php:118
+#: includes/admin/list-tables/class-ea-bill-list-table.php:101
+#: includes/admin/list-tables/class-ea-payment-list-table.php:106
 #: includes/admin/reports/expense-summary.php:49
 #: includes/admin/views/bills/edit-bill.php:63
 #: includes/admin/views/payments/edit-payment.php:89
@@ -1739,22 +1744,22 @@ msgstr ""
 msgid "Vendor"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-bill-list-table.php:114
+#: includes/admin/list-tables/class-ea-bill-list-table.php:102
 #: includes/admin/views/bills/edit-bill.php:85
 msgid "Bill Date"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-bill-list-table.php:115
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:131
+#: includes/admin/list-tables/class-ea-bill-list-table.php:103
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:119
 #: includes/admin/views/bills/edit-bill.php:96
 #: includes/admin/views/invoices/edit-invoice.php:98
 #: templates/bill/bill-meta.php:30 templates/invoice/invoice-meta.php:30
 msgid "Due Date"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-bill-list-table.php:195
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:212
-#: includes/admin/views/bills/view-bill.php:81
+#: includes/admin/list-tables/class-ea-bill-list-table.php:183
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:200
+#: includes/admin/views/bills/view-bill.php:82
 #: includes/admin/views/invoices/view-invoice.php:82
 #: includes/admin/views/payments/view-payment.php:38
 #: includes/admin/views/revenues/view-income.php:33
@@ -1762,28 +1767,29 @@ msgstr ""
 msgid "Print"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-bill-list-table.php:235
+#: includes/admin/list-tables/class-ea-bill-list-table.php:223
 msgid "There is no bills found."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-category-list-table.php:105
+#: includes/admin/list-tables/class-ea-category-list-table.php:106
 msgid ""
-"Create categories for incomes, expenses, items and see how your business "
-"flow at a glance."
+"Create categories for incomes, expenses, and see how your business's flow "
+"at a glance. Track which category is your business is spending most as well "
+"is making money."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-category-list-table.php:107
+#: includes/admin/list-tables/class-ea-category-list-table.php:108
 msgid "Add Categories"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-category-list-table.php:123
+#: includes/admin/list-tables/class-ea-category-list-table.php:124
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:108
 #: includes/admin/views/categories/edit-category.php:59
 #: src/Models/Payment.php:62 src/Models/Revenue.php:61
 msgid "Type"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-category-list-table.php:124
+#: includes/admin/list-tables/class-ea-category-list-table.php:125
 #: includes/admin/views/categories/edit-category.php:71
 #: includes/admin/views/js/modal-add-category.php:39
 #: includes/admin/views/js/modal-add-expense-category.php:27
@@ -1793,7 +1799,7 @@ msgstr ""
 msgid "Color"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-category-list-table.php:236
+#: includes/admin/list-tables/class-ea-category-list-table.php:237
 msgid "There is no categories found."
 msgstr ""
 
@@ -1808,32 +1814,32 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-customer-list-table.php:98
 msgid ""
-"Customers are individuals or businesses that buy goods or services from "
-"other businesses. Customers can be assigned to revenues and invoices and "
-"can also be filtered out from the transactions you made with them."
+"Create customers to assign revenues, and later you can filter the "
+"transactions you made with them. You can store the name, address, email, "
+"phone number, etc. of a customer."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:112
+#: includes/admin/list-tables/class-ea-customer-list-table.php:100
 #: includes/admin/views/customers/edit-customer.php:21
 #: includes/admin/views/js/modal-add-customer.php:11
 msgid "Add Customer"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:129
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:129
+#: includes/admin/list-tables/class-ea-customer-list-table.php:117
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:117
 #: src/REST/ContactsController.php:25
 msgid "Contact"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:130
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:130
+#: includes/admin/list-tables/class-ea-customer-list-table.php:118
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:118
 #: includes/admin/views/customers/view-customer.php:161
 #: includes/admin/views/vendors/view-vendor.php:164 src/Core/Emails.php:47
 msgid "Address"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:131
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:131
+#: includes/admin/list-tables/class-ea-customer-list-table.php:119
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:119
 #: includes/admin/views/bills/bill-items.php:127
 #: includes/admin/views/invoices/invoice-items.php:146
 #: includes/ea-document-functions.php:381
@@ -1843,24 +1849,22 @@ msgstr ""
 msgid "Paid"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-customer-list-table.php:292
+#: includes/admin/list-tables/class-ea-customer-list-table.php:280
 msgid "There is no customers found."
 msgstr ""
 
 #: includes/admin/list-tables/class-ea-invoice-list-table.php:98
 msgid ""
-"An invoice functions as a commercial document that itemizes and records "
-"sales. The invoice specifies a transaction between a buyer and a seller and "
-"possesses all the necessary information about them. In the document, Taxes "
-"can be included or excluded."
+"Crate professional invoices for your customers in their currency. Print and "
+"share invoice with easily. Invoice also support tax calculation & discount."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:112
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:100
 msgid "Add Invoices"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:129
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:117
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:117
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:106
 #: includes/admin/reports/income-summary.php:49
 #: includes/admin/views/invoices/edit-invoice.php:64
 #: includes/admin/views/revenues/edit-revenue.php:81
@@ -1868,37 +1872,36 @@ msgstr ""
 msgid "Customer"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:130
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:118
 #: includes/admin/views/invoices/edit-invoice.php:87
 msgid "Invoice Date"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-invoice-list-table.php:252
+#: includes/admin/list-tables/class-ea-invoice-list-table.php:240
 msgid "There is no invoices found."
 msgstr ""
 
 #: includes/admin/list-tables/class-ea-item-list-table.php:100
 msgid ""
-" Items are especially products that can be sold or can be bought. You can "
-"create as many items as you want categorically and assign sale and purchase "
-"prices to use in your bills and invoices."
+"Use items as products or services. You can use items when creating invoices "
+"and bills to have the price, tax etc fields."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-item-list-table.php:114
+#: includes/admin/list-tables/class-ea-item-list-table.php:102
 #: includes/admin/views/items/edit-item.php:21
 #: includes/admin/views/js/modal-add-item.php:11
 msgid "Add Item"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-item-list-table.php:131
+#: includes/admin/list-tables/class-ea-item-list-table.php:119
 msgid "Sale Price"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-item-list-table.php:132
+#: includes/admin/list-tables/class-ea-item-list-table.php:120
 msgid "Purchase Price"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-item-list-table.php:266
+#: includes/admin/list-tables/class-ea-item-list-table.php:254
 msgid "There is no items found."
 msgstr ""
 
@@ -1929,14 +1932,12 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-payment-list-table.php:85
 msgid ""
-"Payment is a disbursement of money in the form of cash or checks where tax "
-"is inapplicable. You can create and manage your business expenses in any "
-"currencies, and can also affix account, category, and vendor to each "
-"payment."
+"Create and manage your business expenses in any currency you want, so your "
+"finances are always accurate and healthy. Know what and when to pay."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-payment-list-table.php:99
-#: includes/admin/views/bills/view-bill.php:115
+#: includes/admin/list-tables/class-ea-payment-list-table.php:87
+#: includes/admin/views/bills/view-bill.php:116
 #: includes/admin/views/invoices/view-invoice.php:116
 #: includes/admin/views/js/modal-bill-payment.php:12
 #: includes/admin/views/js/modal-invoice-payment.php:12
@@ -1944,29 +1945,29 @@ msgstr ""
 msgid "Add Payment"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-payment-list-table.php:119
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:118
+#: includes/admin/list-tables/class-ea-payment-list-table.php:107
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:107
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:111
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:119
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:107
 #: includes/admin/views/payments/edit-payment.php:135
 #: includes/admin/views/revenues/edit-revenue.php:122
 #: includes/admin/views/transfers/edit-transfer.php:102
 msgid "Reference"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-payment-list-table.php:229
+#: includes/admin/list-tables/class-ea-payment-list-table.php:217
 msgid "There is no payments found."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-payment-list-table.php:284
+#: includes/admin/list-tables/class-ea-payment-list-table.php:272
 #: includes/admin/reports/class-ea-report-expenses.php:135
 #: includes/admin/views/bills/edit-bill.php:65
 #: includes/admin/views/payments/edit-payment.php:93
 msgid "Select Vendor"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-payment-list-table.php:289
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:331
+#: includes/admin/list-tables/class-ea-payment-list-table.php:277
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:320
 #: includes/admin/list-tables/class-ea-transaction-list-table.php:228
 #: includes/admin/reports/class-ea-report-cashflow.php:156
 #: includes/admin/reports/class-ea-report-expenses.php:114
@@ -1979,23 +1980,22 @@ msgstr ""
 msgid "Filter"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:84
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:85
 msgid ""
-"Revenue is a direct and independent record of income or deposit where tax "
-"is inapplicable. You can create and manage your business incomes in any "
-"currency and can also affix account, category, and customer to each revenue."
+"Create and manage your business incomes in any currency you want, so your "
+"finances are always accurate and healthy. Know what and when to get paid."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:98
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:87
 #: includes/admin/views/revenues/edit-revenue.php:39
 msgid "Add Revenue"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:271
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:260
 msgid "There is no revenues found."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-revenue-list-table.php:326
+#: includes/admin/list-tables/class-ea-revenue-list-table.php:315
 #: includes/admin/reports/class-ea-report-sales.php:136
 #: includes/admin/views/invoices/edit-invoice.php:66
 #: includes/admin/views/revenues/edit-revenue.php:85
@@ -2008,43 +2008,41 @@ msgstr ""
 
 #: includes/admin/list-tables/class-ea-transfer-list-table.php:86
 msgid ""
-"A transfer is basically when money is sent from one bank account to another "
-"bank account. Two different accounts participate in transferring balances "
-"that have either similar or different currencies. If the currencies are "
-"different, the conversion of the currencies follows the currency rates."
+"Add deposits to and transfers between accounts and keep the balance of your "
+"bank accounts active regardless of currency. The transferred amount will "
+"automatically adjust to the account currency."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:100
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:88
 msgid "Add Transfers"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:117
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:105
 #: includes/admin/views/transfers/edit-transfer.php:45
 msgid "From Account"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:118
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:106
 #: includes/admin/views/transfers/edit-transfer.php:57
 msgid "To Account"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-transfer-list-table.php:231
+#: includes/admin/list-tables/class-ea-transfer-list-table.php:219
 msgid "There is no transfers found."
 msgstr ""
 
 #: includes/admin/list-tables/class-ea-vendor-list-table.php:98
 msgid ""
-"Vendors are the purveyors of goods or services. All the entities that lead "
-"up to the final delivery of goods to the customers are considered as "
-"vendors. Vendors can be assigned to payments and bills and can also be "
-"filtered out from the transactions you made with them."
+"Create vendors to assign payments, and later you can filter the "
+"transactions you made with them. You can store the name, address, email, "
+"phone number, etc. of a vendor."
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:112
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:100
 msgid "Add Vendors"
 msgstr ""
 
-#: includes/admin/list-tables/class-ea-vendor-list-table.php:291
+#: includes/admin/list-tables/class-ea-vendor-list-table.php:279
 msgid "There is no vendors found."
 msgstr ""
 
@@ -2081,8 +2079,8 @@ msgstr ""
 #: includes/admin/views/customers/edit-customer.php:202
 #: includes/admin/views/invoices/edit-invoice.php:173
 #: includes/admin/views/items/edit-item.php:182
-#: includes/admin/views/js/modal-add-account.php:60
-#: includes/admin/views/js/modal-add-item.php:64
+#: includes/admin/views/js/modal-add-account.php:61
+#: includes/admin/views/js/modal-add-item.php:65
 #: includes/admin/views/payments/edit-payment.php:177
 #: includes/admin/views/revenues/edit-revenue.php:160
 #: includes/admin/views/transfers/edit-transfer.php:143
@@ -2460,7 +2458,7 @@ msgstr ""
 
 #: includes/admin/views/accounts/edit-account.php:88
 #: includes/admin/views/accounts/view-account.php:73
-#: includes/admin/views/js/modal-add-account.php:45
+#: includes/admin/views/js/modal-add-account.php:46
 msgid "Opening Balance"
 msgstr ""
 
@@ -2755,26 +2753,26 @@ msgstr ""
 msgid "Mark as Cancelled"
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:26
+#: includes/admin/views/bills/view-bill.php:28
+msgid "Mark as Received"
+msgstr ""
+
+#: includes/admin/views/bills/view-bill.php:32
 #: includes/admin/views/invoices/view-invoice.php:26
 msgid "Mark as Paid"
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:30
-msgid "Mark as Received"
-msgstr ""
-
-#: includes/admin/views/bills/view-bill.php:35
+#: includes/admin/views/bills/view-bill.php:36
 msgid "Bill Payments"
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:58
+#: includes/admin/views/bills/view-bill.php:59
 msgid ""
 "This is a <strong>DRAFT</strong> bill and will not be reflected until its "
 "marked as <strong>received</strong>."
 msgstr ""
 
-#: includes/admin/views/bills/view-bill.php:80
+#: includes/admin/views/bills/view-bill.php:81
 #: includes/admin/views/invoices/view-invoice.php:81
 msgid "More"
 msgstr ""
@@ -3033,24 +3031,24 @@ msgid "Update Item"
 msgstr ""
 
 #: includes/admin/views/items/edit-item.php:87
-#: includes/admin/views/js/modal-add-item.php:39
+#: includes/admin/views/js/modal-add-item.php:28
 msgid "Sale price"
 msgstr ""
 
 #: includes/admin/views/items/edit-item.php:89
 #: includes/admin/views/items/edit-item.php:110
-#: includes/admin/views/js/modal-add-item.php:41
+#: includes/admin/views/js/modal-add-item.php:30
 msgid "Enter Sale price"
 msgstr ""
 
 #: includes/admin/views/items/edit-item.php:97
-#: includes/admin/views/js/modal-add-item.php:49
+#: includes/admin/views/js/modal-add-item.php:38
 msgid "Purchase price"
 msgstr ""
 
 #: includes/admin/views/items/edit-item.php:99
 #: includes/admin/views/items/edit-item.php:126
-#: includes/admin/views/js/modal-add-item.php:51
+#: includes/admin/views/js/modal-add-item.php:40
 msgid "Enter Purchase price"
 msgstr ""
 
@@ -3515,39 +3513,39 @@ msgstr ""
 msgid "Duplicate category."
 msgstr ""
 
-#: includes/class-ea-install.php:64
+#: includes/class-ea-install.php:65
 msgid "View settings"
 msgstr ""
 
-#: includes/class-ea-install.php:84
+#: includes/class-ea-install.php:85
 msgid "View documentation"
 msgstr ""
 
-#: includes/class-ea-install.php:84
+#: includes/class-ea-install.php:85
 msgid "Docs"
 msgstr ""
 
-#: includes/class-ea-install.php:112
+#: includes/class-ea-install.php:113
 msgid "Monthly"
 msgstr ""
 
-#: includes/class-ea-install.php:117
+#: includes/class-ea-install.php:118
 msgid "Every 15 Days"
 msgstr ""
 
-#: includes/class-ea-install.php:122
+#: includes/class-ea-install.php:123
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-ea-install.php:232
+#: includes/class-ea-install.php:233
 msgid "Deposit"
 msgstr ""
 
-#: includes/class-ea-install.php:240 includes/ea-category-functions.php:23
+#: includes/class-ea-install.php:241 includes/ea-category-functions.php:23
 msgid "Other"
 msgstr ""
 
-#: includes/class-ea-install.php:259 includes/class-ea-install.php:267
+#: includes/class-ea-install.php:260 includes/class-ea-install.php:268
 #: src/Models/Transfer.php:399 src/Models/Transfer.php:402
 #: src/Models/Transfer.php:410 src/REST/TransfersController.php:60
 msgid "Transfer"
@@ -4247,18 +4245,18 @@ msgstr ""
 msgid "Default account is not set bill status was not changed"
 msgstr ""
 
-#: src/Models/Bill.php:727 src/Models/Invoice.php:710
-#: src/Models/Invoice.php:740
+#: src/Models/Bill.php:727 src/Models/Invoice.php:711
+#: src/Models/Invoice.php:741
 #. translators: %s amount
 msgid "Removed %s payment"
 msgstr ""
 
-#: src/Models/Bill.php:757 src/Models/Invoice.php:768
+#: src/Models/Bill.php:757 src/Models/Invoice.php:769
 #. translators: 1: old order status 2: new order status
 msgid "Status changed from %1$s to %2$s."
 msgstr ""
 
-#: src/Models/Bill.php:774 src/Models/Invoice.php:785
+#: src/Models/Bill.php:774 src/Models/Invoice.php:786
 msgid "Error during status transition."
 msgstr ""
 
@@ -4310,7 +4308,7 @@ msgstr ""
 msgid "Invoice Payment #%d"
 msgstr ""
 
-#: src/Models/Invoice.php:673
+#: src/Models/Invoice.php:674
 msgid "Default account is not set, invoice status was not changed"
 msgstr ""
 
@@ -5430,12 +5428,12 @@ msgstr ""
 msgid "everaccounting"
 msgstr ""
 
-#: includes/class-ea-install.php:704
+#: includes/class-ea-install.php:705
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/class-ea-install.php:705
+#: includes/class-ea-install.php:706
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
