@@ -10,6 +10,26 @@
 
 defined( 'ABSPATH' ) || exit;
 
+function eaccounting_add_background_updater($action){
+	if( empty( $action ) ){
+		return;
+	}
+	$updater = get_option( 'eaccounting_background_updater', array() );
+	$updater[] = $action;
+	update_option('eaccounting_background_updater', $updater);
+}
+
+function eaccounting_remove_background_updater($action){
+	if( empty( $action ) ){
+		return;
+	}
+	$updater = get_option( 'eaccounting_background_updater', array() );
+	if( in_array( $action, $updater) ){
+		unset( $updater[$action] );
+		update_option('eaccounting_background_updater', $updater);
+	}
+}
+
 function eaccounting_update_1_0_2() {
 	EverAccounting_Install::create_tables();
 	EverAccounting_Install::create_roles();
@@ -353,9 +373,18 @@ function eaccounting_update_1_1_0() {
 
 	//todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
+	eaccounting_add_background_updater('eaccounting_update_attachments_1_1_0');
+}
 
+function eaccounting_update_attachments_1_1_0() {
+	global $wpdb;
+	$prefix = $wpdb->prefix;
+	$attachments = $wpdb->get_results( "SELECT id, attachment url from {$wpdb->prefix}ea_transactions WHERE attachment_id != '', limit 5" );
+	if( empty( $attachments ) ){
+		eaccounting_remove_background_updater('eaccounting_update_attachments_1_1_0');
+		$wpdb->query( "ALTER TABLE {$prefix}ea_transactions DROP COLUMN `attachment`;" );
+	}
 
-	$attachments = $wpdb->get_results( "SELECT id, attachment url from {$wpdb->prefix}ea_transactions WHERE attachment != ''" );
 	$dir         = wp_get_upload_dir();
 
 	foreach ( $attachments as $attachment ) {
@@ -384,7 +413,4 @@ function eaccounting_update_1_1_0() {
 			$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'attachment_id' => $attachment_id ), array( 'id' => $attachment->id ) );
 		}
 	}
-	$wpdb->query( "ALTER TABLE {$prefix}ea_transactions DROP COLUMN `attachment`;" );
 }
-
-

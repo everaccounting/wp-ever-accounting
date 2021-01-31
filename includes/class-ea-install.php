@@ -30,6 +30,7 @@ class EverAccounting_Install {
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
+		add_action( 'init', array( __CLASS__, 'background_updater') );
 	}
 
 	/**
@@ -912,6 +913,17 @@ class EverAccounting_Install {
 		$transaction_count = eaccounting_get_transactions( array( 'count_total' => true ) );
 
 		return is_null( get_option( 'eaccounting_version', null ) ) || ( 0 === $transaction_count );
+	}
+
+	/**
+	 * Handle background updates.
+	 * @since 1.1.0
+	 */
+	public static function background_updater(){
+		$updater = get_option( 'eaccounting_background_updater', array() );
+		if( is_array( $updater ) && !empty( $updater ) && is_callable( $updater )){
+			$updater();
+		}
 	}
 }
 

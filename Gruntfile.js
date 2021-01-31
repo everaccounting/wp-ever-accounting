@@ -248,7 +248,13 @@ module.exports = function (grunt) {
                     src: ['<%= dirs.css %>/*.css'],
                 },
             },
-        }
+			apidoc: {
+				myapp: {
+					src: "src/",
+					dest: "dist/api"
+				}
+			}
+        },
     );
 
     // Load NPM tasks to be used here.
@@ -265,6 +271,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-wp-i18n');
+    grunt.loadNpmTasks('grunt-apidoc');
     grunt.loadNpmTasks('grunt-checktextdomain');
 
     // Register tasks.
