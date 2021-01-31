@@ -585,3 +585,17 @@
 		}
 	}
 }
+
+.ea-single-account {
+	@media only screen and (max-width: 375px) {
+		.ea-widget-card__icon {
+			width: 60px;
+			height: 60px;
+		}
+		.ea-widget-card__icon > * {
+			height: 30px;
+			width: 30px;
+			font-size: 30px;
+		}
+	}
+}
