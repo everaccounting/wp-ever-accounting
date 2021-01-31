@@ -501,7 +501,7 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
  * @since 1.1.0
  */
 function eaccounting_get_report_years() {
-	$years = range( date( 'Y' ), ( date( 'Y' ) - 5 ), 1 );
+	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 );
 
 	return array_combine( array_values( $years ), $years );
 }
