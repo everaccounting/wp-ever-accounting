@@ -97,7 +97,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'An account is a record in an accounting system that tracks the financial activities of a specific asset, revenue, or expense. You can create as many banks and cash accounts as you want and can track your opening and current balances in any currency.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Create unlimited bank and cash accounts and track their opening and current balances. You can use it with any currencies that you want. Ever Accounting will take care of the currency.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Account', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/how-to-add-accounts/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>

@@ -82,7 +82,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'Revenue is a direct and independent record of income or deposit where tax is inapplicable. You can create and manage your business incomes in any currency and can also affix account, category, and customer to each revenue.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Create and manage your business incomes in any currency you want, so your finances are always accurate and healthy. Know what and when to get paid.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', ) ) );//phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-revenues/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
