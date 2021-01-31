@@ -319,7 +319,7 @@ class Setup_Wizard {
 
 		?>
 		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
-		<p>Default currency rate should be always 1 & additional currency rates should be equivalent of default currency. e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77</p>
+		<p><?php esc_html__( "Default currency rate should be always 1 & additional currency rates should be equivalent of default currency. e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77", "wp-ever-accounting" ); ?></p>
 		<form action="" method="post">
 			<table class="wp-list-table widefat fixed stripes">
 				<thead>
@@ -360,7 +360,7 @@ class Setup_Wizard {
 						</td>
 
 						<td>
-							<input type="radio" name="default" value="<?php echo $currency->id; ?>" <?php checked( 'USD', $currency->code ); ?>>
+							<input type="radio" name="default" value="<?php echo $currency->code; ?>" <?php checked( 'USD', $currency->code ); ?>>
 						</td>
 					</tr>
 
@@ -407,9 +407,7 @@ class Setup_Wizard {
 			</table>
 
 			<p class="ea-setup-actions step">
-				<input type="submit"
-					   class="button-primary button button-large button-next"
-					   value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
+				<input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
 				<?php wp_nonce_field( 'currency_settings' ); ?>
 
 			</p>
@@ -419,10 +417,8 @@ class Setup_Wizard {
 
 	public function currency_settings_save() {
 		check_admin_referer( 'currency_settings' );
-
 		$new_currency = false;
 		$default      = eaccounting_clean( $_REQUEST['default'] );
-
 		if ( ! empty( $_REQUEST['code']['custom'] ) && ! empty( $_REQUEST['rate']['custom'] ) ) {
 			$new_currency = eaccounting_insert_currency(
 				array(
@@ -432,12 +428,11 @@ class Setup_Wizard {
 			);
 		}
 
-		if ( ! empty( $default ) && is_numeric( $default ) ) {
-			$currency = eaccounting_get_currency( absint( $default ) );
-			if ( ! empty( $currency ) && $currency->exists() ) {
-				eaccounting()->settings->set( array( 'default_currency' => $currency->get_code() ), true );
-			}
-		} elseif ( ! empty( $default ) && 'custom' == $default && $new_currency->exists() ) {
+		$currency = eaccounting_get_currency( $default );
+
+		if ( ! empty( $currency ) && $currency->exists() ) {
+			eaccounting()->settings->set( array( 'default_currency' => $currency->get_code() ), true );
+		} elseif ( 'custom' == $default && $new_currency->exists() ) {
 			eaccounting()->settings->set( array( 'default_currency' => $new_currency->get_code() ), true );
 		}
 
