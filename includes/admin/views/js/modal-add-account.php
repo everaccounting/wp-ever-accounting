@@ -37,6 +37,7 @@ defined( 'ABSPATH' ) || exit();
 				'ajax'        => true,
 				'type'        => 'currency',
 				'creatable'   => 'no',
+				'required' => true,
 			)
 		);
 
