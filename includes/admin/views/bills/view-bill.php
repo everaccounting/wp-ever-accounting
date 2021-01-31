@@ -22,14 +22,15 @@ $bill_actions = apply_filters(
 		'status_cancelled' => __( 'Mark as Cancelled', 'wp-ever-accounting' ),
 	)
 );
-if ( $bill->needs_payment() ) {
-	$bill_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
-}
+
 
 if ( ! in_array( $bill->get_status( 'edit' ), array( 'paid', 'partial' ) ) ) {
 	$bill_actions['status_received'] = __( 'Mark as Received', 'wp-ever-accounting' );
 }
 
+if ( $bill->needs_payment() ) {
+	$bill_actions['status_paid'] = __( 'Mark as Paid', 'wp-ever-accounting' );
+}
 $bill_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $bill->exists() ) {
 	add_meta_box( 'bill_payments', __( 'Bill Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Bills', 'bill_payments' ), 'ea_bill', 'side' );

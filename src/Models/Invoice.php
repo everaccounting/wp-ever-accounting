@@ -629,12 +629,13 @@ class Invoice extends Document {
 		if ( $total < 0 ) {
 			$total = 0;
 		}
+
 		$this->set_total( $total );
 		if ( ( ! empty( $this->get_total_paid() ) && $this->get_total_due() > 0 ) ) {
 			$this->set_status( 'partial' );
 		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
 			$this->set_status( 'paid' );
-		} elseif ( $this->is_due() ) {
+		} elseif ( $this->is_due() && $this->is_status('pending')) {
 			$this->set_status( 'overdue' );
 		} elseif ( in_array( $this->get_status(), array( 'partial', 'paid' ), true ) ) {
 			$this->set_status( 'received' );

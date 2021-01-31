@@ -920,9 +920,16 @@ class EverAccounting_Install {
 	 * @since 1.1.0
 	 */
 	public static function background_updater(){
-		$updater = get_option( 'eaccounting_background_updater', array() );
-		if( is_array( $updater ) && !empty( $updater ) && is_callable( $updater )){
-			$updater();
+		include_once EACCOUNTING_ABSPATH . '/includes/ea-update-functions.php';
+		$updaters = get_option( 'eaccounting_background_updater', array() );
+
+		if( is_array( $updaters ) && !empty( $updaters )){
+			foreach ( $updaters as $updater){
+				if( !is_callable( $updater ) ){
+					continue;
+				}
+				$updater();
+			}
 		}
 	}
 }

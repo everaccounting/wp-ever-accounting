@@ -379,7 +379,7 @@ function eaccounting_update_1_1_0() {
 function eaccounting_update_attachments_1_1_0() {
 	global $wpdb;
 	$prefix = $wpdb->prefix;
-	$attachments = $wpdb->get_results( "SELECT id, attachment url from {$wpdb->prefix}ea_transactions WHERE attachment_id != '', limit 5" );
+	$attachments = $wpdb->get_results( "SELECT id, attachment url from {$wpdb->prefix}ea_transactions WHERE attachment_id IS NULL AND attachment !='' limit 5" );
 	if( empty( $attachments ) ){
 		eaccounting_remove_background_updater('eaccounting_update_attachments_1_1_0');
 		$wpdb->query( "ALTER TABLE {$prefix}ea_transactions DROP COLUMN `attachment`;" );
