@@ -197,7 +197,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 
 				$actions          = array();
 				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
-				$actions['print'] = '<a href="' . $invoice->get_url() . '">' . __( 'Print', 'wp-ever-accounting' ) . '</a>';
+				$actions['print'] = '<a href="' . $invoice->get_url() . '" target="_blank">' . __( 'Print', 'wp-ever-accounting' ) . '</a>';
 				if ( $invoice->is_editable() ) {
 					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 				}
