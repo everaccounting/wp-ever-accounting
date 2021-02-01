@@ -2,10 +2,10 @@
 # This file is distributed under the GPL2+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ever Accounting 1.0.4\n"
+"Project-Id-Version: Ever Accounting 1.1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-01-31 11:33:07+00:00\n"
+"POT-Creation-Date: 2021-02-01 07:02:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2807,7 +2807,7 @@ msgstr ""
 #: includes/admin/views/currencies/edit-currency.php:43
 msgid ""
 "Default currency rate should be always 1 & additional currency rates should "
-"be equivalent of default currency.\r\n"
+"be equivalent of default currency.\n"
 "\t\te.g. If USD is your default currency then USD rate is 1 & GBP rate will "
 "be 0.77"
 msgstr ""
@@ -3450,7 +3450,6 @@ msgid "Error: Cheatin&#8217; huh?."
 msgstr ""
 
 #: includes/class-ea-controller.php:100
-#: src/Controllers/AccountController.php:52
 msgid "Duplicate account."
 msgstr ""
 
@@ -3459,18 +3458,14 @@ msgid "Payment date is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:205 includes/class-ea-controller.php:254
-#: src/Controllers/RevenueController.php:79
-#: src/Controllers/TransactionController.php:53
 msgid "Payment method is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:210
-#: src/Controllers/PaymentController.php:50
 msgid "A valid payment category is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:215
-#: src/Controllers/PaymentController.php:55
 msgid "Vendor is not valid."
 msgstr ""
 
@@ -3483,33 +3478,26 @@ msgid "Payment amount is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:250
-#: src/Controllers/RevenueController.php:75
 msgid "Revenue date is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:259
-#: src/Controllers/RevenueController.php:84
 msgid "A valid income category is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:264
-#: src/Controllers/RevenueController.php:89
-#: src/Controllers/TransactionController.php:66
 msgid "Account is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:269
-#: src/Controllers/RevenueController.php:94
 msgid "Customer is not valid."
 msgstr ""
 
 #: includes/class-ea-controller.php:273
-#: src/Controllers/RevenueController.php:98
 msgid "Revenue amount is required."
 msgstr ""
 
 #: includes/class-ea-controller.php:312
-#: src/Controllers/CategoryController.php:51
 msgid "Duplicate category."
 msgstr ""
 
@@ -4163,30 +4151,6 @@ msgstr ""
 msgid "Unserializing instances of this class is forbidden."
 msgstr ""
 
-#: src/Controllers/CurrencyController.php:70
-msgid "Duplicate currency."
-msgstr ""
-
-#: src/Controllers/TransactionController.php:47
-msgid "Transaction date is required."
-msgstr ""
-
-#: src/Controllers/TransactionController.php:50
-msgid "Transaction type is required."
-msgstr ""
-
-#: src/Controllers/TransactionController.php:57
-msgid "Category id is required."
-msgstr ""
-
-#: src/Controllers/TransactionController.php:61
-msgid "A valid transaction category is required."
-msgstr ""
-
-#: src/Controllers/TransactionController.php:70
-msgid "Transaction amount is required."
-msgstr ""
-
 #: src/Core/Logger.php:228
 msgid "This method should not be called before plugins_loaded."
 msgstr ""
@@ -4220,43 +4184,43 @@ msgstr ""
 msgid "Due date"
 msgstr ""
 
-#: src/Models/Bill.php:463 src/Models/Invoice.php:458
+#: src/Models/Bill.php:449 src/Models/Invoice.php:447
 msgid "Payment amount is required"
 msgstr ""
 
-#: src/Models/Bill.php:469 src/Models/Invoice.php:462
+#: src/Models/Bill.php:455 src/Models/Invoice.php:451
 msgid "Payment account is required"
 msgstr ""
 
-#: src/Models/Bill.php:475 src/Models/Invoice.php:466
+#: src/Models/Bill.php:461 src/Models/Invoice.php:455
 msgid "Payment method is required"
 msgstr ""
 
-#: src/Models/Bill.php:494
+#: src/Models/Bill.php:480
 msgid "Bill Payment #%d"
 msgstr ""
 
-#: src/Models/Bill.php:502 src/Models/Invoice.php:492
+#: src/Models/Bill.php:488 src/Models/Invoice.php:481
 #. translators: %s amount
 msgid "Paid %1$s by %2$s"
 msgstr ""
 
-#: src/Models/Bill.php:687
+#: src/Models/Bill.php:662
 msgid "Default account is not set bill status was not changed"
 msgstr ""
 
-#: src/Models/Bill.php:727 src/Models/Invoice.php:711
-#: src/Models/Invoice.php:741
+#: src/Models/Bill.php:702 src/Models/Invoice.php:691
+#: src/Models/Invoice.php:721
 #. translators: %s amount
 msgid "Removed %s payment"
 msgstr ""
 
-#: src/Models/Bill.php:757 src/Models/Invoice.php:769
+#: src/Models/Bill.php:732 src/Models/Invoice.php:751
 #. translators: 1: old order status 2: new order status
 msgid "Status changed from %1$s to %2$s."
 msgstr ""
 
-#: src/Models/Bill.php:774 src/Models/Invoice.php:786
+#: src/Models/Bill.php:749 src/Models/Invoice.php:768
 msgid "Error during status transition."
 msgstr ""
 
@@ -4304,11 +4268,11 @@ msgstr ""
 msgid "Document ID"
 msgstr ""
 
-#: src/Models/Invoice.php:484
+#: src/Models/Invoice.php:473
 msgid "Invoice Payment #%d"
 msgstr ""
 
-#: src/Models/Invoice.php:674
+#: src/Models/Invoice.php:654
 msgid "Default account is not set, invoice status was not changed"
 msgstr ""
 
