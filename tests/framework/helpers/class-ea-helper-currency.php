@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Class EAccounting_Helper_Currency.
+ * Class EverAccounting_Helper_Currency.
  *
  * This helper class should ONLY be used for unit tests!.
  */
-class EAccounting_Helper_Currency {
+class EverAccounting_Helper_Currency {
 	/**
 	 * Creates a currency in the tests DB.
 	 */

@@ -8,13 +8,15 @@
  */
 
 namespace EverAccounting\Import;
-defined( 'ABSPATH' ) || exit();
 
 use EverAccounting\Abstracts\CSV_Importer;
-use EverAccounting\Query_Currency;
+
+defined( 'ABSPATH' ) || exit();
+
 
 /**
  * Class Import_Customers
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Import
@@ -50,12 +52,11 @@ class Import_Customers extends CSV_Importer {
 	protected function get_formatting_callback() {
 		return array(
 			'email'         => 'sanitize_email',
+			'company'       => array( $this, 'parse_text_field' ),
 			'birth_date'    => array( $this, 'parse_date_field' ),
-			'address'       => array( $this, 'parse_description_field' ),
 			'country'       => array( $this, 'parse_country_field' ),
 			'website'       => 'esc_url_raw',
 			'currency_code' => array( $this, 'parse_currency_code_field' ),
-			'note'          => array( $this, 'parse_description_field' ),
 		);
 	}
 
@@ -74,13 +75,8 @@ class Import_Customers extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$exists        = Query_Currency::init()->find($data['currency_code'],'code');
-
-		if ( empty( $exists ) ) {
-			return new \WP_Error( 'invalid_prop', __( 'Currency with provided code does not not exist.', 'wp-ever-accounting' ) );
-		}
 		$data['type'] = 'customer';
 
-		return eaccounting_insert_contact( $data );
+		return eaccounting_insert_customer( $data );
 	}
 }

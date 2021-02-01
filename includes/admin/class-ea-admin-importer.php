@@ -1,9 +1,9 @@
 <?php
 
 namespace EverAccounting\Admin;
+use EverAccounting_Ajax;
 
-
-use EverAccounting\Ajax;
+defined( 'ABSPATH' ) || exit();
 
 class Importer {
 
@@ -16,9 +16,11 @@ class Importer {
 
 	public static function do_ajax_import() {
 		if ( ! isset( $_REQUEST['type'] ) ) {
-			wp_send_json_error( array(
-				'message' => __( 'Import type must be present.', 'wp-ever-accounting' )
-			) );
+			wp_send_json_error(
+				array(
+					'message' => __( 'Import type must be present.', 'wp-ever-accounting' ),
+				)
+			);
 		}
 		$params = array(
 			'delimiter'       => ! empty( $_REQUEST['delimiter'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['delimiter'] ) ) : ',',
@@ -29,45 +31,53 @@ class Importer {
 			'parse'           => true,
 		);
 
+		$step = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : '';
+		$type = sanitize_key( $_REQUEST['type'] );
+		$file = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';
 
-		$step   = isset( $_REQUEST['step'] ) ? eaccounting_clean( $_REQUEST['step'] ) : '';
-		$type   = sanitize_key( $_REQUEST['type'] );
-		$file   = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';
-
-		//verify nonce
-		Ajax::verify_nonce( "{$type}_importer_nonce" );
+		// verify nonce
+		EverAccounting_Ajax::verify_nonce( "{$type}_importer_nonce" );
 
 		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
-			wp_send_json_error( array(
-				'message' => sprintf( __( '%s is an invalid import type.', 'wp-ever-accounting' ), esc_html( $type ) )
-			) );
+			wp_send_json_error(
+				array(
+					'message' => sprintf( __( '%s is an invalid import type.', 'wp-ever-accounting' ), esc_html( $type ) ),
+				)
+			);
 		}
 
 		$class      = isset( $batch['class'] ) ? $batch['class'] : '';
 		$class_file = isset( $batch['file'] ) ? $batch['file'] : '';
 
 		if ( empty( $class_file ) ) {
-			wp_send_json_error( array(
-				'message' => sprintf( __( 'An invalid file path is registered for the %1$s handler.', 'wp-ever-accounting' ), "<code>{$type}</code>" )
-			) );
+			wp_send_json_error(
+				array(
+					'message' => sprintf( __( 'An invalid file path is registered for the %1$s handler.', 'wp-ever-accounting' ), "<code>{$type}</code>" ),
+				)
+			);
 		}
 
 		require_once $class_file;
 
 		if ( empty( $class ) || ! class_exists( $class ) ) {
-			wp_send_json_error( array(
-				'message' => sprintf( __( '%1$s is an invalid importer handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
-					"<code>{$class}</code>",
-					"<code>{$type}</code>"
+			wp_send_json_error(
+				array(
+					'message' => sprintf(
+						__( '%1$s is an invalid importer handler for the %2$s . Please try again.', 'wp-ever-accounting' ),
+						"<code>{$class}</code>",
+						"<code>{$type}</code>"
+					),
 				)
-			) );
+			);
 		}
 
 		if ( empty( $file ) && empty( $_FILES['upload'] ) ) {
-			wp_send_json_error( array(
-				'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
-				'request' => $_REQUEST
-			) );
+			wp_send_json_error(
+				array(
+					'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
+					'request' => $_REQUEST,
+				)
+			);
 		}
 
 		if ( ! empty( $_FILES['upload'] ) ) {
@@ -87,36 +97,44 @@ class Importer {
 			);
 
 			if ( empty( $_FILES['upload']['type'] ) || ! in_array( strtolower( $_FILES['upload']['type'] ), $accepted_mime_types ) ) {
-				wp_send_json_error( array(
-					'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ),
-					'request' => $_REQUEST
-				) );
+				wp_send_json_error(
+					array(
+						'message' => __( 'The file you uploaded does not appear to be a CSV file.', 'wp-ever-accounting' ),
+						'request' => $_REQUEST,
+					)
+				);
 			}
 
 			if ( ! file_exists( $_FILES['upload']['tmp_name'] ) ) {
-				wp_send_json_error( array(
-					'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
-					'error'   => $_FILES
-				) );
+				wp_send_json_error(
+					array(
+						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+						'error'   => $_FILES,
+					)
+				);
 			}
 
 			// Let WordPress import the file. We will remove it after import is complete
 			$import_file = wp_handle_upload( $_FILES['upload'], array( 'test_form' => false ) );
 			if ( ! empty( $import_file['error'] ) ) {
-				wp_send_json_error( array(
-					'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
-					'error'   => $import_file
-				) );
+				wp_send_json_error(
+					array(
+						'message' => __( 'Something went wrong during the upload process, please try again.', 'wp-ever-accounting' ),
+						'error'   => $import_file,
+					)
+				);
 			}
 
 			$file = $import_file['file'];
 		}
 
 		if ( empty( $file ) ) {
-			wp_send_json_error( array(
-				'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
-				'request' => $_REQUEST
-			) );
+			wp_send_json_error(
+				array(
+					'message' => __( 'Missing import file. Please provide an import file.', 'wp-ever-accounting' ),
+					'request' => $_REQUEST,
+				)
+			);
 		}
 
 		$importer = new $class( $file, $params );
@@ -132,16 +150,17 @@ class Importer {
 		}
 
 		if ( $step == 'upload' ) {
-			wp_send_json_success( array(
-				'position' => 0,
-				'headers'  => $headers,
-				'required' => $importer->get_required(),
-				'sample'   => $sample,
-				'step'     => $step,
-				'file'     => $file,
-			) );
+			wp_send_json_success(
+				array(
+					'position' => 0,
+					'headers'  => $headers,
+					'required' => $importer->get_required(),
+					'sample'   => $sample,
+					'step'     => $step,
+					'file'     => $file,
+				)
+			);
 		}
-
 
 		// Log failures.
 		if ( $params['position'] > 0 ) {
@@ -154,8 +173,8 @@ class Importer {
 
 		$results          = $importer->import();
 		$percent_complete = $importer->get_percent_complete();
-		$skipped          += (int) $results['skipped'];
-		$imported         += (int) $results['imported'];
+		$skipped         += (int) $results['skipped'];
+		$imported        += (int) $results['imported'];
 
 		update_user_option( get_current_user_id(), "{$type}_import_log_imported", $imported );
 		update_user_option( get_current_user_id(), "{$type}_import_log_skipped", $skipped );

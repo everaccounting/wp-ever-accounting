@@ -1,39 +1,15 @@
-/*global jQuery, Backbone, _ */
-( function ( $, Backbone, _ ) {
+jQuery(function ($) {
 	'use strict';
 
 	/**
-	 * WooCommerce Backbone Modal plugin
+	 * Ever Accounting Modal plugin
 	 *
 	 * @param {object} options
 	 */
-	$.fn.ea_modal = function ( options ) {
-		return this.each( function () {
-			new $.ea_modal( $( this ), options );
-		} );
-	};
-
-	/**
-	 * Initialize the Backbone Modal
-	 *
-	 * @param {object} element [description]
-	 * @param {object} options [description]
-	 */
-	$.ea_modal = function ( element, options ) {
-		// Set settings
-		var settings = $.extend(
-			{},
-			$.ea_modal.defaultOptions,
-			options
-		);
-		if ( settings.template ) {
-			new $.ea_modal.View( {
-				target: settings.template,
-				string: settings.variable,
-				onSubmit: options.onSubmit,
-				onReady: options.onReady,
-			} );
-		}
+	$.fn.ea_modal = function (options) {
+		return this.each(function () {
+			new $.ea_modal(this, $.extend({}, $(this).data(), options));
+		});
 	};
 
 	/**
@@ -41,145 +17,196 @@
 	 *
 	 * @type {object}
 	 */
-	$.ea_modal.defaultOptions = {
-		template: '',
-		variable: {},
-		onSubmit: undefined,
-		onReady: undefined,
+	var defaults = {
+		title: false,
+		onSubmit: false,
+		onReady: false,
+		submit: 'Submit',
+		url: false,
 	};
 
 	/**
-	 * Create the Backbone Modal
+	 * Initialize the Modal
 	 *
-	 * @return {null}
+	 * @param template
+	 * @param {object} options [description]
 	 */
-	$.ea_modal.View = Backbone.View.extend( {
-		tagName: 'div',
-		id: 'ea-modal-dialog',
-		_target: undefined,
-		_string: undefined,
-		onSubmit: undefined,
-		onReady: undefined,
-		events: {
-			'click .modal-close': 'closeButton',
-			'touchstart #btn-ok': 'addButton',
-			keydown: 'keyboardActions',
-		},
-		resizeContent: function () {
-			var $content = $( '.ea-modal-content' ).find( 'article' );
-			var max_h = $( window ).height() * 0.75;
+	$.ea_modal = function (template, options) {
+		var plugin = this;
+		this.template_id = template;
+		this.modal_id = $(template).attr('id');
+		this.$template = $(template);
+		this.options = $.extend(
+			{},
+			defaults,
+			options
+		);
 
-			$content.css( {
-				'max-height': max_h + 'px',
-			} );
-		},
-		initialize: function ( data ) {
-			var view = this;
-			this._target = data.target;
-			this._string = data.string;
-			this.onSubmit = data.onSubmit;
-			this.onReady = data.onReady;
-			_.bindAll( this, 'render' );
-			this.render();
+		var markup = '<div class="ea-modal" tabindex="-1" role="document">' +
+			'<div class="ea-modal__content">' +
+			'<div class="ea-modal__inner">' +
+			'<header class="ea-modal__header">' +
+			'<h1 class="ea-modal__title">' + this.options.title + '&nbsp;</h1>' +
+			'<button class="ea-modal__close dashicons">&nbsp;</button>' +
+			'</header>' +
+			'<div class="ea-modal__body">' + this.$template.html() + '</div>' +
+			'<div class="ea-modal__footer">' +
+			'<button type="button" class="button button-secondary ea-modal__close">Cancel</button>' +
+			'</div>' +
+			'</div>' +
+			'</div>' +
+			'<div class="ea-modal__backdrop ea-modal__close">&nbsp;</div>';
+		this.$modal = $(markup);
+		//if form and it have submit button then remove and make one.
+		this.$modal.find('form [type="submit"]').remove();
+		this.$modal.find('form').append('<input type="submit" value="submit" style="display: none;">');
 
-			$( window ).resize( function () {
-				view.resizeContent();
-			} );
-		},
-		render: function () {
-			var template = wp.template( this._target );
+		// need submit then make one
+		if (this.$modal.find('form') && this.options.submit) {
+			var $submit = $('<button type="button" class="button button-primary">').html(this.options.submit);
+			$submit.on('click', function () {
+				plugin.$modal.find('form [type="submit"]').trigger('click');
+			});
+			this.$modal.find('.ea-modal__footer').append($submit)
+		}
 
-			this.$el.append( template( this._string ) );
 
-			$( document.body )
-				.css( {
-					overflow: 'hidden',
-				} )
-				.append( this.$el )
-				.addClass( 'ea-modal-open' );
-
-			this.resizeContent();
-			this.$( '.ea-modal-content' )
-				.attr( 'tabindex', '0' )
-				.focus();
-
-			$( document.body ).trigger( 'init_tooltips' );
-
-			$( document.body ).trigger(
-				'ea_modal_loaded',
-				this._target
-			);
-			$( document.body ).trigger( this._target + '_loaded' );
-			var modal = this;
-			if ( typeof this.onReady === 'function' ) {
-				this.onReady( this.$el, this );
-			}
-			if ( typeof this.onSubmit === 'function' ) {
-				this.$el.find( 'form' ).on( 'submit', function ( e ) {
-					e.preventDefault();
-					modal.onSubmit( modal.getFormData(), modal );
-				} );
-			}
-		},
-		closeButton: function ( e ) {
-			e.preventDefault();
-			this.closeModal();
-		},
-		closeModal: function () {
-			$( document.body ).trigger(
-				'ea_modal_before_remove',
-				this._target
-			);
-			this.undelegateEvents();
-			$( document ).off( 'focusin' );
-			$( document.body )
-				.css( {
-					overflow: 'auto',
-				} )
-				.removeClass( 'ea-modal-open' );
-			this.remove();
-			$( document.body ).trigger(
-				'ea_modal_removed',
-				this._target
-			);
-		},
-		getFormData: function () {
-			var data = {};
-			$.each( $( 'form', this.$el ).serializeArray(), function (
-				index,
-				item
-			) {
-				if ( item.name.indexOf( '[]' ) !== -1 ) {
-					item.name = item.name.replace( '[]', '' );
-					data[ item.name ] = $.makeArray( data[ item.name ] );
-					data[ item.name ].push( item.value );
-				} else {
-					data[ item.name ] = item.value;
+		this.block = function () {
+			$('.ea-modal__body', plugin.$modal).block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
 				}
-			} );
+			});
+			$('.ea-modal__footer button', plugin.$modal).attr('disabled', 'disabled');
+		}
 
-			return data;
-		},
-		keyboardActions: function ( e ) {
+		this.unblock = function () {
+			$('.ea-modal__body', plugin.$modal).unblock();
+			$('.ea-modal__footer button', plugin.$modal).removeAttr('disabled');
+		}
+
+		this.delegate = function () {
+			$(window).bind('resize', plugin.resize);
+			$(document).bind('keydown', plugin.keyboard_events);
+		}
+
+		this.undelegate = function () {
+			$(window).unbind('resize', plugin.resize);
+			$(document).unbind('keydown', plugin.keyboard_events);
+		}
+
+		this.resize = function () {
+			// var $content = $('.ea-modal__inner', plugin.$modal);
+			// var max_h = $(window).height() * 0.75;
+			// $content.css({
+			// 	'max-height': max_h + 'px',
+			// });
+		}
+
+		$('.ea-modal__close', plugin.$modal).on('click', function (e) {
+			e.preventDefault();
+			plugin.close();
+		});
+
+
+		this.keyboard_events = function (e) {
 			var button = e.keyCode || e.which;
-
 			// Enter key
-			if ( 13 === button && this.$el.find( 'form' ).length ) {
+			if (13 === button && plugin.$modal.find('form').length) {
 				e.preventDefault();
-				this.$el.find( '[type="submit"]' ).trigger( 'click' );
+				plugin.$modal.find('[type="submit"]').trigger('click');
 				return false;
 			}
-
 			// ESC key
-			if ( 27 === button ) {
-				this.closeButton( e );
+			if (27 === button) {
+				plugin.close();
 			}
-		},
-		disableSubmit: function () {
-			this.$el.find( '*[type="submit"]' ).attr( 'disabled', 'disabled' );
-		},
-		enableSubmit: function () {
-			this.$el.find( '*[type="submit"]' ).removeAttr( 'disabled' );
-		},
-	} );
-} )( jQuery, Backbone, _ );
+		}
+
+
+		this.close = function () {
+			$(document.body).trigger(
+				'ea_modal_closed',
+				[plugin]
+			);
+
+			$(document).off('focusin');
+			$(document.body)
+				.css({
+					overflow: 'auto',
+				})
+				.removeClass('ea-modal-open');
+
+			plugin.undelegate();
+
+			$('.ea-modal').remove();
+
+			$(document.body).trigger(
+				'ea_modal_removed',
+				[plugin]
+			);
+		}
+
+		this.init = function () {
+			$(document.body)
+				.css({
+					overflow: 'hidden',
+				})
+				.append(this.$modal)
+				.addClass('ea-modal-open');
+
+			$('.ea-modal-content', this.$modal)
+				.attr('tabindex', '0')
+				.focus();
+
+			$('.ea-modal__content .ea-input-date').datepicker({dateFormat: 'yy-mm-dd'});
+
+			this.delegate();
+			this.resize();
+
+			$(document.body).trigger(
+				'ea_modal_loaded',
+				[plugin]
+			);
+
+			if (typeof this.options.onReady === 'function') {
+				this.options.onReady(this);
+			}
+
+			$('form', plugin.$modal).on('submit', function (e) {
+				e.preventDefault();
+				plugin.block();
+				var data = $('form', plugin.$modal).serializeObject();
+
+				if (typeof plugin.options.onSubmit === 'function') {
+					return plugin.options.onSubmit(data, plugin);
+				} else if ($('form #action', plugin.$modal).length) {
+					$.post(ajaxurl, data, function (json) {
+						$.eaccounting_notice(json);
+						if (json.success) {
+							plugin.close();
+							$(document.body).trigger(
+								'ea_modal_form_submitted',
+								[json, plugin, data]
+							);
+						}
+					}).always(function (json) {
+						plugin.unblock();
+					});
+				} else {
+					$(document.body).trigger(
+						'ea_modal_form_submitted',
+						[plugin, data]
+					);
+				}
+			});
+		}
+
+		this.init();
+
+		return this;
+	}
+
+});

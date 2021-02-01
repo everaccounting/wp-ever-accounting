@@ -3,11 +3,11 @@
 use EverAccounting\Contact;
 
 /**
- * Class EAccounting_Tests_Vendor.
- * @package EAccounting\Tests\Contact
+ * Class EverAccounting_Tests_Vendor.
+ * @package EverAccounting\Tests\Contact
  */
 
-class EAccounting_Tests_Vendor extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Vendor extends EverAccounting_Unit_Test_Case {
 	public function test_create_vendor() {
 		$vendors = eaccounting_insert_contact(
 			array(
@@ -78,7 +78,7 @@ class EAccounting_Tests_Vendor extends EAccounting_Unit_Test_Case {
 
 	}
 	public function test_delete_vendor(){
-		$vendor = EAccounting_Helper_Contact::create_contact();
+		$vendor = EverAccounting_Helper_Contact::create_contact();
 		$this->assertNotEquals( 0, $vendor->get_id() );
 		$this->assertNotFalse( eaccounting_delete_contact( $vendor->get_id() ) );
 	}

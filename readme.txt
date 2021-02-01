@@ -1,8 +1,8 @@
 === WP Ever Accounting - Accounting for small business ===
 Contributors: everaccounting
-Tags: accounting, income, expense, accounts, transfer, customer, vendor, company, SME, Business manager
+Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
-Tested up to: 5.5.1
+Tested up to: 5.6
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -16,6 +16,7 @@ Manage your business finances right from your WordPress dashboard. Keep track of
 
 Managing a small business has lots of challenges and the adoption of a proper tool can save you from some of the hardships and challenges. Keeping track of the cash flow is one of the most important tasks for all businesses.
 
+= Best WordPress Accounting Plugin =
 WP Ever Accounting will give you the opportunity to manage your income and expenses in the most professional way without any prior accounting knowledge. It will help you overcome the accounting related problems and allow you to focus more on other business operations.
 
 With the ability to create multiple types of expense or income you will be on top of your accounting tasks. Apart from that, creating multiple accounts and the ability to transfer funds between them will give you the ease of smooth accounting operations.
@@ -35,12 +36,14 @@ With the ability to create multiple types of expense or income you will be on to
 &#9989; Cash Flow
 &#9989; Expense Tracking
 &#9989; Income Tracking
-&#9989; Transaction Categories
-&#9989; Powerful Reporting
-&#9989; Customer Management
+&#9989; Easy Invoicing
+&#9989; Billable Expenses
 &#9989; Vendor Management
+&#9989; Customer Management
 &#9989; Bank Accounts
 &#9989; Deposits & Transfers
+&#9989; Transaction Categories
+&#9989; Powerful Reporting
 &#9989; Bulk Import
 &#9989; Bulk Export
 &#9989; Custom User Roles
@@ -51,41 +54,50 @@ Do business all over the world with multi-currency accounting. Track income or e
 === Cash Flow ===
 Get a realtime view of your Cashflow. Stay on top of your Cashflow and make smarter decisions about your business anytime. Know how your incomes, expenses & revenues are flowing in realtime.
 
+=== Easy Invoicing ===
+Create professional invoices for your customers in their currency. Print and share invoices easily. The invoice also supports tax calculation & discount.
+
+=== Billable Expenses ===
+Create and manage bills, so your finances are always accurate and healthy. Print and share the bill with your vendor. Bill also supports tax calculation & discount.
+
 === Expense Tracking ===
 Create and manage your business expenses in any currency you want, so your finances are always accurate and healthy. Know what and when to pay.
 
 === Income Tracking ===
 Create and manage your business incomes in any currency you want, so your finances are always accurate and healthy. Know what and when to get paid.
 
+=== Items as Product ===
+Use items as products or services. You can use items when creating invoices and bills to have the price, tax, etc., fields.
+
 === Transaction Categories ===
-Create categories for incomes, expenses, and see how your business's flow at a glance. Track which category is your business is spending most as well is making money.
+Create categories for incomes, expenses, and see how your business flow at a glance. Track which category is your business is spending most as well as making money.
 
 === Powerful Reporting ===
 Get detailed financial reports to help you better visualize all the information you need to improve your business. Tailor smart financial reports and budgets to understanding and track what matters most.
 
 === Customer Management ===
-Create customers to assign revenues, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a customer.
+Create customers to assign revenues, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc., of a customer.
 
 === Vendor Management ===
-Create vendors to assign payments, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a vendor.
+Create vendors to assign payments, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc., of a vendor.
 
 === Bank Accounts ===
-Create unlimited bank and cash accounts and track their opening and current balances. You can use it with any currencies that you want. Ever Accounting will take care of the currency
+Create unlimited bank and cash accounts and track their opening and current balances. You can use it with any currency that you want. Ever Accounting will take care of the currency.
 
 === Deposits & Transfers ===
 Add deposits to and transfers between accounts and keep the balance of your bank accounts active regardless of currency. The transferred amount will automatically adjust to the account currency.
 
 === Bulk Import ===
-Ever Accounting lets you export most of your accounting records like customers, vendors, revenues, payments, accounts in CSV format, which you can import later or analyze.
+Using bulk import, you can import customers, vendors, revenues, payments, accounts, etc., from any 3rd party application.
 
 === Bulk Export ===
-Using bulk import, you can import customers, vendors, revenues, payments, accounts, etc. from any 3rd party application.
+Ever Accounting lets you export most of your accounting records like customers, vendors, revenues, payments, accounts in CSV format, which you can import later or analyze.
 
 === User Roles ===
-WP Ever Accounting has builtin fine grained permissions setup. By default it support 2 user roles accounting manager & accountant. Control permissions to protect and simplify your management experience.
+WP Ever Accounting has a built-in fine-grained permissions setup. By default, it supports 2 user roles accounting manager & accountant. Control permissions to protect and simplify your management experience.
 
 === Open Source ===
-WP Ever Accounting is an open-source project and hosted on your space.You must be sure that data is safe, and nobody can abuse them. Open Source software provides you full privacy.
+WP Ever Accounting is an open-source project and hosted in your space. You must be sure that data is safe, and nobody can abuse them. Open Source software provides you full privacy.
 
 == How does WP Ever Accounting Work: ==
 WP Ever Accounting creates a new menu option called **Accounting** on the dashboard. Under this new menu, you will find several sub-menus titled as Dashboard, Transactions, Contacts, Payments, Revenues, Accounts, Transfers, Categories, and settings. The dashboard is dedicated to a detailed summary with highlights of the most important and recent accounting events.
@@ -106,24 +118,41 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 == Screenshots ==
 1. Overview of Transaction
-2. Transaction Listing
-3. Revenues Listing
-4. Customers Listing
-5. Payments Listing
-6. Vendors Listing
-7. Accounts Listing
-8. Transfers Listing
-9. Categories Listing
-10. Currencies Listing
-11. Export
-12. Import
-13. Expense Report
-14. Income Report
-15. Profit Report
-16. Settings
+2. Items Listing
+3. Invoices Listing
+4. Revenues Listing
+5. Customers Listing
+6. Bills Listing
+7. Payments Listing
+8. Vendors Listing
+9. Transactions Listing
+10. Accounts Listing
+11. Transfers Listing
+12. Currencies Listing
+13. Categories Listing
+14. Import
+15. Export
+16. Sales Report
+17. Expense Report
+18. Profit Report
+19. Cash flow Report
+20. Settings
 
 
 == Changelog ==
+= 1.1.0 (1 February,2021) =
+* Feature - Complete rewrite of the plugin
+* Feature - Add invoicing support
+* Feature - Add bill support
+* Feature - Add items support
+* Feature - Add tax support
+* Feature - Single details page for customer
+* Feature - Single details page for vendor
+* Feature - Single details page for Account
+* Feature - Customer & Vendor all time income and expense
+* Feature - Customer & Vendor all time income and expense
+* Feature - Add cash flow report.
+* Feature - Enhanced Settings.
 
 = 1.0.4 (31 October,2020) =
 * Fix - Translation not working

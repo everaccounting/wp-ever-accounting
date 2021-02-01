@@ -24,7 +24,7 @@ for ( $index = 1; $index <= 2; $index++ ) {
  * Check whether an output locale has been requested.
  */
 if ( isset( $argv[3] ) && 0 === stripos( $argv[3], 'lang=' ) ) {
-	$locale = substr( $argv[3], 5 );
+	$locale      = substr( $argv[3], 5 );
 	$target_file = preg_replace( '|\.pot?|', "-{$locale}.po", $argv[2] );
 } else {
 	$target_file = $argv[2];
@@ -33,7 +33,7 @@ if ( isset( $argv[3] ) && 0 === stripos( $argv[3], 'lang=' ) ) {
 /**
  * Parse a .pot file into an array.
  *
- * @param string $file_name Pot file name.
+ * @param  string $file_name Pot file name.
  * @return array
  */
 function eaccounting_admin_parse_pot( $file_name ) {
@@ -60,7 +60,7 @@ function eaccounting_admin_parse_pot( $file_name ) {
 		}
 
 		if ( $have_msgid ) {
-			$messages[]   = $line;
+			$messages[] = $line;
 		} else {
 			$references[] = $line;
 		}
@@ -91,12 +91,12 @@ foreach ( $originals_2 as $message => $original ) {
 	}
 
 	fwrite( $fh, implode( "\n", $original ) );
-	fwrite( $fh, "\n" . $message ."\n\n" );
+	fwrite( $fh, "\n" . $message . "\n\n" );
 }
 
 foreach ( $originals_1 as $message => $original ) {
 	fwrite( $fh, implode( "\n", $original ) );
-	fwrite( $fh, "\n" . $message ."\n\n" );
+	fwrite( $fh, "\n" . $message . "\n\n" );
 }
 
 fclose( $fh );

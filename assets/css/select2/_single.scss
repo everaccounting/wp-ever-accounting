@@ -4,8 +4,8 @@
   cursor: pointer;
   display: block;
 
-  height: 32px;
-
+  height: 32px !important;
+  border-radius: 0 !important;
   user-select: none;
   -webkit-user-select: none;
 

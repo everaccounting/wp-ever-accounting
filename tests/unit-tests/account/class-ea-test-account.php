@@ -3,10 +3,10 @@
 use EverAccounting\Account;
 
 /**
- * Class EAccounting_Tests_account.
- * @package EAccounting\Tests\Customer
+ * Class EverAccounting_Tests_account.
+ * @package EverAccounting\Tests\Customer
  */
-class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_account extends EverAccounting_Unit_Test_Case {
 	public function test_create_account() {
 		$account = eaccounting_insert_account(
 			array(
@@ -16,7 +16,7 @@ class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {
 				'opening_balance' => '10000.000',
 				'bank_name'       => 'Standard Chartered Bank',
 				'bank_phone'      => '+12375896',
-				'bank_address'    => 'Liverpool, United Kingdom'
+				'bank_address'    => 'Liverpool, United Kingdom',
 			)
 		);
 
@@ -32,11 +32,13 @@ class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_update_account() {
-		$account    = eaccounting_insert_account( array(
-			'name'          => 'Test Account',
-			'number'        => '12345678',
-			'currency_code' => 'USD'
-		) );
+		$account    = eaccounting_insert_account(
+			array(
+				'name'          => 'Test Account',
+				'number'        => '12345678',
+				'currency_code' => 'USD',
+			)
+		);
 		$account_id = $account->get_id();
 		$this->assertNotFalse( $account->exists() );
 
@@ -65,52 +67,63 @@ class EAccounting_Tests_account extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_account() {
-		$account = EAccounting_Helper_Account::create_account();
+		$account = EverAccounting_Helper_Account::create_account();
 		$this->assertNotEquals( 0, $account->get_id() );
 		$this->assertNotFalse( eaccounting_delete_account( $account->get_id() ) );
 	}
 
-	public function test_exception_account(){
-		$account = eaccounting_insert_account(array(
-			'name' => ''
-		));
+	public function test_exception_account() {
+		$account = eaccounting_insert_account(
+			array(
+				'name' => '',
+			)
+		);
 		$this->assertEquals( 'Account Name is required', $account->get_error_message() );
 
-		$account = eaccounting_insert_account(array(
-			'name' => 'New Account',
-			'number' => '',
-		));
+		$account = eaccounting_insert_account(
+			array(
+				'name'   => 'New Account',
+				'number' => '',
+			)
+		);
 		$this->assertEquals( 'Account Number is required', $account->get_error_message() );
 
-		$account = eaccounting_insert_account(array(
-			'name' => 'New Account',
-			'number' => '12345678',
-			'currency_code' => ''
-		));
+		$account = eaccounting_insert_account(
+			array(
+				'name'          => 'New Account',
+				'number'        => '12345678',
+				'currency_code' => '',
+			)
+		);
 		$this->assertEquals( 'Currency code is required', $account->get_error_message() );
 
-		$account = eaccounting_insert_account(array(
-			'name' => 'New Account',
-			'number' => '12345678',
-			'currency_code' => 'CAD',
-			'opening_balance'=> 100.0000
-		));
+		$account = eaccounting_insert_account(
+			array(
+				'name'            => 'New Account',
+				'number'          => '12345678',
+				'currency_code'   => 'CAD',
+				'opening_balance' => 100.0000,
+			)
+		);
 		$this->assertEquals( 'Currency with provided code does not not exist.', $account->get_error_message() );
 
-		$account = eaccounting_insert_account(array(
-			'name' => 'Test Bank Account',
-			'number' => '123456789',
-			'currency_code' => 'USD',
-			'opening_balance' => 100.0000
-		));
+		$account = eaccounting_insert_account(
+			array(
+				'name'            => 'Test Bank Account',
+				'number'          => '123456789',
+				'currency_code'   => 'USD',
+				'opening_balance' => 100.0000,
+			)
+		);
 
-		$account = eaccounting_insert_account(array(
-			'name' => 'Ever Bank Account',
-			'number' => '123456789',
-			'currency_code' => 'USD',
-			'opening_balance' => 100.0000
-		));
+		$account = eaccounting_insert_account(
+			array(
+				'name'            => 'Ever Bank Account',
+				'number'          => '123456789',
+				'currency_code'   => 'USD',
+				'opening_balance' => 100.0000,
+			)
+		);
 		$this->assertEquals( 'Duplicate account number.', $account->get_error_message() );
-
 	}
 }

@@ -4,29 +4,42 @@
  *
  * All category related function of the plugin.
  *
- * @since 1.0.2
+ * @since   1.1.0
  * @package EverAccounting
  */
 
-use EverAccounting\Category;
-use EverAccounting\Query_Category;
-use EverAccounting\Exception;
-
 defined( 'ABSPATH' ) || exit();
+
 /**
  * Get all the available type of category the plugin support.
  *
- * @since 1.0.2
  * @return array
+ * @since 1.1.0
  */
 function eaccounting_get_category_types() {
 	$types = array(
 		'expense' => __( 'Expense', 'wp-ever-accounting' ),
 		'income'  => __( 'Income', 'wp-ever-accounting' ),
 		'other'   => __( 'Other', 'wp-ever-accounting' ),
+		'item'    => __( 'Item', 'wp-ever-accounting' ),
 	);
 
 	return apply_filters( 'eaccounting_category_types', $types );
+}
+
+/**
+ * Get the category type label of a specific type.
+ *
+ * @param $type
+ *
+ * @return string
+ * @since 1.1.0
+ *
+ */
+function eaccounting_get_category_type( $type ) {
+	$types = eaccounting_get_category_types();
+
+	return array_key_exists( $type, $types ) ? $types[ $type ] : null;
 }
 
 /**
@@ -34,89 +47,97 @@ function eaccounting_get_category_types() {
  *
  * @param $category
  *
- * @since 1.0.2
+ * @return null|EverAccounting\Models\Category
+ * @since 1.1.0
  *
- * @return null|Category
  */
 function eaccounting_get_category( $category ) {
 	if ( empty( $category ) ) {
 		return null;
 	}
 	try {
-		if ( $category instanceof Category ) {
-			$_category = $category;
-		} elseif ( is_object( $category ) && ! empty( $category->id ) ) {
-			$_category = new Category( null );
-			$_category->populate( $category );
-		} else {
-			$_category = new Category( absint( $category ) );
-		}
+		$result = new EverAccounting\Models\Category( $category );
 
-		if ( ! $_category->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid category.', 'wp-ever-accounting' ) );
-		}
-
-		return $_category;
-	} catch ( Exception $exception ) {
+		return $result->exists() ? $result : null;
+	} catch ( \Exception $e ) {
 		return null;
 	}
 }
 
 /**
- * Insert a category.
+ * Get category by name.
  *
- * @param       $args {
+ * @param $name
+ * @param $type
  *
- * @type string $name Unique name of the category.
- * @type string $type Category type.
- * @type string $color Color of the category
- * }
+ * @return \EverAccounting\Models\Category|null
+ * @since 1.1.0
  *
- * @since 1.0.2
- *
- * @return WP_Error|Mixed
  */
-function eaccounting_insert_category( $args ) {
-	try {
-		$default_args = array(
-			'id' => null,
-		);
-		$args         = (array) wp_parse_args( $args, $default_args );
-		$category     = new Category( $args['id'] );
-		$category->set_props( $args );
+function eaccounting_get_category_by_name( $name, $type ) {
+	global $wpdb;
+	$cache_key = "$name-$type";
+	$category  = wp_cache_get( $cache_key, 'ea_categories' );
+	if ( false === $category ) {
+		$category = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories where `name`=%s AND `type`=%s", eaccounting_clean( $name ), eaccounting_clean( $type ) ) );
+		wp_cache_set( $cache_key, $category, 'ea_categories' );
+	}
+	if ( $category ) {
+		wp_cache_set( $category->id, $category, 'ea_categories' );
 
-		if ( null == $category->get_date_created() ) {
-			$category->set_date_created( time() );
-		}
-		if ( ! $category->get_creator_id() ) {
-			$category->set_creator_id();
-		}
-		if ( ! $category->get_color( 'edit' ) ) {
-			$category->set_color( eaccounting_get_random_color() );
-		}
-		if ( empty( $category->get_name( 'edit' ) ) ) {
-			throw new Exception( 'empty_props', __( 'Category name is required', 'wp-ever-accounting' ) );
-		}
-		if ( empty( $category->get_type( 'edit' ) ) ) {
-			throw new  Exception( 'empty_props', __( 'Category type is required', 'wp-ever-accounting' ) );
-		}
-		$existing_id = Query_Category::init()
-		                             ->where( 'type', $category->get_type() )
-		                             ->where( 'name', $category->get_name() )
-		                             ->value( 0 );
-		if ( $existing_id ) {
-			if ( ! empty( $existing_id ) && $existing_id != $category->get_id() ) {
-				throw new  Exception( 'duplicate_entry', __( 'Duplicate category name.', 'wp-ever-accounting' ) );
-			}
-		}
-
-		$category->save();
-
-	} catch ( Exception $e ) {
-		return new WP_Error( $e->getErrorCode(), $e->getMessage() );
+		return eaccounting_get_category( $category );
 	}
 
-	return $category;
+	return null;
+}
+
+/**
+ * Insert a category.
+ *
+ * @param bool $wp_error Whether to return false or WP_Error on failure.
+ *
+ * @param array $data {
+ *                            An array of elements that make up an category to update or insert.
+ *
+ * @type int $id The category ID. If equal to something other than 0, the category with that ID will be updated. Default 0.
+ *
+ * @type string $name Unique name of the category.
+ *
+ * @type string $type Category type.
+ *
+ * @type string $color Color of the category.
+ *
+ * @type int $enabled The status of the category. Default 1.
+ *
+ * @type string $date_created The date when the category is created. Default is current current time.
+ *
+ * }
+ *
+ * @return int|\WP_Error|\EverAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
+ * @since 1.1.0
+ *
+ */
+function eaccounting_insert_category( $data = array(), $wp_error = true ) {
+	// Ensure that we have data.
+	if ( empty( $data ) ) {
+		return false;
+	}
+	try {
+		// The  id will be provided when updating an item.
+		$data = wp_parse_args( $data, array( 'id' => null ) );
+
+		// Retrieve the category.
+		$item = new \EverAccounting\Models\Category( $data['id'] );
+
+		// Load new data.
+		$item->set_props( $data );
+
+		$item->save();
+
+		return $item;
+	} catch ( \Exception $e ) {
+		return $wp_error ? new WP_Error( 'insert_category', $e->getMessage() ) : 0;
+	}
 }
 
 /**
@@ -124,43 +145,146 @@ function eaccounting_insert_category( $args ) {
  *
  * @param $category_id
  *
- * @since 1.0.2
- *
  * @return bool
+ * @since 1.1.0
+ *
  */
 function eaccounting_delete_category( $category_id ) {
 	try {
-		$category = new Category( $category_id );
-		if ( ! $category->exists() ) {
-			throw new Exception( 'invalid_id', __( 'Invalid category.', 'wp-ever-accounting' ) );
-		}
+		$category = new EverAccounting\Models\Category( $category_id );
 
-		$category->delete();
-
-		return empty( $category->get_id() );
-
-	} catch ( Exception $exception ) {
+		return $category->exists() ? $category->delete() : false;
+	} catch ( \Exception $e ) {
 		return false;
 	}
 }
 
 /**
- * Delete category id from transactions.
+ * Get category items.
  *
- * @since 1.0.2
+ * @param array $args
  *
- * @param $id
+ * @return int|array|null
+ * @since 1.1.0
  *
- * @return bool
  */
-function eaccounting_update_transaction_category( $id ) {
-	$id = absint( $id );
-	if ( empty( $id ) ) {
-		return false;
-	}
-	$transactions = \EverAccounting\Query::init();
+function eaccounting_get_categories( $args = array() ) {
+	global $wpdb;
+	// Prepare args.
+	$args = wp_parse_args(
+		$args,
+		array(
+			'status'      => 'all',
+			'type'        => '',
+			'include'     => '',
+			'search'      => '',
+			'fields'      => '*',
+			'orderby'     => 'id',
+			'order'       => 'ASC',
+			'number'      => 20,
+			'offset'      => 0,
+			'paged'       => 1,
+			'return'      => 'objects',
+			'count_total' => false,
+		)
+	);
 
-	return $transactions->table( 'ea_transactions' )->where( 'category_id', absint( $id ) )->update( array( 'category_id' => '' ) );
+	$qv           = apply_filters( 'eaccounting_get_categories_args', $args );
+	$table        = \EverAccounting\Repositories\Categories::TABLE;
+	$columns      = \EverAccounting\Repositories\Categories::get_columns();
+	$qv['fields'] = wp_parse_list( $qv['fields'] );
+	$qv['fields'] = wp_parse_list( $qv['fields'] );
+	foreach ( $qv['fields'] as $index => $field ) {
+		if ( ! in_array( $field, $columns, true ) ) {
+			unset( $qv['fields'][ $index ] );
+		}
+	}
+	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
+	$where  = 'WHERE 1=1';
+
+	if ( ! empty( $qv['include'] ) ) {
+		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
+		$where   .= " AND $table.`id` IN ($include)";
+	} elseif ( ! empty( $qv['exclude'] ) ) {
+		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+		$where   .= " AND $table.`id` NOT IN ($exclude)";
+	}
+
+	if ( ! empty( $qv['type'] ) ) {
+		$types = implode( "','", wp_parse_list( $qv['type'] ) );
+		$where .= " AND $table.`type` IN ('$types')";
+	}
+
+	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
+		$status = eaccounting_string_to_bool( $qv['status'] );
+		$status = eaccounting_bool_to_number( $status );
+		$where  .= " AND $table.`enabled` = ('$status')";
+	}
+
+	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
+		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
+		$where              .= $date_created_query->get_sql();
+	}
+
+	$search_cols = array( 'name', 'type' );
+	if ( ! empty( $qv['search'] ) ) {
+		$searches = array();
+		$where    .= ' AND (';
+		foreach ( $search_cols as $col ) {
+			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
+		}
+		$where .= implode( ' OR ', $searches );
+		$where .= ')';
+	}
+
+	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
+	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
+
+	$limit = '';
+	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
+		if ( $qv['offset'] ) {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
+		} else {
+			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
+		}
+	}
+
+	$select      = "SELECT {$fields}";
+	$from        = "FROM {$wpdb->prefix}$table $table";
+	$orderby     = "ORDER BY {$orderby} {$order}";
+	$count_total = true === $qv['count_total'];
+	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
+	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_categories' );
+	$results     = wp_cache_get( $cache_key, 'ea_categories' );
+	if ( false === $results ) {
+		if ( $count_total ) {
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			wp_cache_set( $cache_key, $results, 'ea_categories' );
+		} else {
+			$results = $wpdb->get_results( implode( ' ', $clauses ) );
+			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
+				foreach ( $results as $key => $item ) {
+					wp_cache_set( $item->id, $item, 'ea_categories' );
+					wp_cache_set( $item->name . '-' . $item->type, $item, 'ea_categories' );
+				}
+			}
+			wp_cache_set( $cache_key, $results, 'ea_categories' );
+		}
+	}
+
+	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
+		$results = array_map( 'eaccounting_get_category', $results );
+	}
+
+	return $results;
 }
 
-add_action( 'eaccounting_delete_category', 'eaccounting_update_transaction_category' );
+/**
+ * Get category by category name.
+ *
+ * @param array $args
+ *
+ * @return int|array|null
+ * @since 1.1.0
+ *
+ */

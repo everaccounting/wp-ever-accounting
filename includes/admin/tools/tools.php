@@ -7,6 +7,7 @@
  * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
+
 require_once EACCOUNTING_ABSPATH . '/includes/admin/tools/system-info.php';
 /**
  * render tools page.
@@ -15,7 +16,7 @@ require_once EACCOUNTING_ABSPATH . '/includes/admin/tools/system-info.php';
  */
 function eaccounting_admin_tools_page() {
 	$tabs       = eaccounting_get_tools_tabs();
-	$active_tab = eaccounting_get_active_tab( $tabs, 'accounts' );
+	$active_tab = eaccounting_get_active_tab( $tabs, 'import' );
 
 	ob_start();
 	?>

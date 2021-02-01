@@ -79,6 +79,13 @@
   width: 100%;
   -webkit-overflow-scrolling: touch;
   overflow-x: auto !important;
+	.wp-list-table {
+		border-left: 0;
+		border-right: 0;
+		@media only screen and (max-width: 768px){
+			table-layout: auto !important;
+		}
+	}
 }
 
 .ea-report-graph {

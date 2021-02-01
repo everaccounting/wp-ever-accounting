@@ -3,13 +3,13 @@
 use EverAccounting\Transfer;
 
 /**
- * Class EAccounting_Tests_transfer.
- * @package EAccounting\Tests\Category
+ * Class EverAccounting_Tests_transfer.
+ * @package EverAccounting\Tests\Category
  */
-class EAccounting_Tests_transfer extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 	public function test_create_transfer() {
-		$from_account_id = EAccounting_Helper_Account::create_account( 'From Account', '001' )->get_id();
-		$to_account_id   = EAccounting_Helper_Account::create_account( 'To Account', '002' )->get_id();
+		$from_account_id = EverAccounting_Helper_Account::create_account( 'From Account', '001' )->get_id();
+		$to_account_id   = EverAccounting_Helper_Account::create_account( 'To Account', '002' )->get_id();
 		$transfer        = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
 			'to_account_id'   => $to_account_id,
@@ -30,8 +30,8 @@ class EAccounting_Tests_transfer extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_update_transfer() {
-		$from_account_id = EAccounting_Helper_Account::create_account( 'From Account', '001' )->get_id();
-		$to_account_id   = EAccounting_Helper_Account::create_account( 'To Account', '002' )->get_id();
+		$from_account_id = EverAccounting_Helper_Account::create_account( 'From Account', '001' )->get_id();
+		$to_account_id   = EverAccounting_Helper_Account::create_account( 'To Account', '002' )->get_id();
 		$transfer        = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
 			'to_account_id'   => $to_account_id,
@@ -64,7 +64,7 @@ class EAccounting_Tests_transfer extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_transfer() {
-		$transfer = EAccounting_Helper_Transfer::create_transfer();
+		$transfer = EverAccounting_Helper_Transfer::create_transfer();
 		$this->assertNotEquals( 0, $transfer->get_id() );
 		$this->assertNotFalse( eaccounting_delete_transfer( $transfer->get_id() ) );
 	}
@@ -75,14 +75,14 @@ class EAccounting_Tests_transfer extends EAccounting_Unit_Test_Case {
 		) );
 		$this->assertEquals( 'From account is required', $transfer->get_error_message() );
 
-		$from_account_id = EAccounting_Helper_Account::create_account( 'Sender Account ID', '001' )->get_id();
+		$from_account_id = EverAccounting_Helper_Account::create_account( 'Sender Account ID', '001' )->get_id();
 		$transfer        = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
 			'to_account_id'   => '',
 		) );
 		$this->assertEquals( 'To account is required', $transfer->get_error_message() );
 
-		$to_account_id = EAccounting_Helper_Account::create_account( 'Receiver Account ID', '002' )->get_id();
+		$to_account_id = EverAccounting_Helper_Account::create_account( 'Receiver Account ID', '002' )->get_id();
 
 		$transfer = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,

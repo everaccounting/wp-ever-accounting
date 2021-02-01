@@ -57,4 +57,90 @@ jQuery( document ).ready( function ( $ ) {
 
 	$( '.ea-financial-start' ).datepicker( 'destroy' );
 	$( '.ea-financial-start' ).datepicker( { dateFormat: 'dd-mm' } );
+
+	var currency_settings = {
+		init:function (){
+			$('#ea-currency-settings')
+				.on('change', '.ea_currencies_code select', this.populate_currency)
+				.on('click', '#ea_add_currency', this.add_currency)
+				.on('click', '.ea_remove_currency', this.remove_currency)
+				.on('submit', this.submit)
+		},
+		block: function () {
+			$('#ea-currency-settings').block({
+				message: null,
+				overlayCSS: {
+					background: '#fff',
+					opacity: 0.6
+				}
+			});
+			$('#ea-currency-settings button').attr('disabled','disabled');
+		},
+
+		unblock: function () {
+			$('#ea-currency-settings').unblock();
+			$('#ea-currency-settings button').removeAttr('disabled');
+		},
+		add_currency:function (e){
+			e.preventDefault();
+			$( '.ea-select2' ).select2('destroy');
+			var row = $('#ea_currencies tr:last');
+			var clone = row.clone();
+			var count = row.parent().find( 'tr' ).length;
+			clone.find( 'td input' ).not(':input[type=checkbox]').val( '' );
+			clone.find( 'td [type="checkbox"]' ).attr('checked', false);
+			clone.find( 'input, select' ).each(function() {
+				var name = $( this ).attr( 'name' );
+				if( name.includes('code')){
+					$(this).val('');
+				}
+				name = name.replace( /\[(\d+)\]/, '[' + parseInt( count ) + ']');
+				$( this ).attr( 'name', name ).attr( 'id', name );
+			});
+			clone.insertAfter( row );
+			$(document.body).trigger('ea_select2_init');
+			return false;
+		},
+		remove_currency:function (e){
+			e.preventDefault();
+			var count = $('#ea_currencies tbody tr').length;
+			if( count < 2){
+				$.eaccounting_notice({ message: 'Last item is not removable.'})
+				return false;
+			}else{
+				$(this).closest('tr').remove();
+			}
+		},
+		populate_currency:function (){
+			var code = $(this).val();
+			if( ! code ){
+				return;
+			}
+			var currency = eaccounting_codes[code];
+			$(this).closest('tr')
+				.find('.ea_currencies_rate input').val('1.0000')
+				.end()
+				.find('.ea_currencies_precision input').val(currency.precision)
+				.end()
+				.find('.ea_currencies_position select').val(currency.position)
+				.end()
+				.find('.ea_currencies_decimal_separator input').val(currency.decimal_separator)
+				.end()
+				.find('.ea_currencies_thousand_separator input').val(currency.thousand_separator)
+				.end()
+		},
+		submit:function (e){
+			e.preventDefault();
+			currency_settings.block();
+			var data = $('#ea-currency-settings').serializeObject();
+			$.post(ajaxurl, data, function (json) {
+
+			}).always(function (json) {
+				$.eaccounting_notice(json);
+				currency_settings.unblock();
+			});
+		}
+	}
+
+	currency_settings.init();
 } );

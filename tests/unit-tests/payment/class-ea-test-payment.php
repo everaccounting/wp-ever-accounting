@@ -3,14 +3,14 @@
 use EverAccounting\Transaction;
 
 /**
- * Class EAccounting_Tests_Payment.
- * @package EAccounting\Tests\Payment
+ * Class EverAccounting_Tests_Payment.
+ * @package EverAccounting\Tests\Payment
  */
-class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_Payment extends EverAccounting_Unit_Test_Case {
 	public function test_create_payment() {
-		$category = EAccounting_Helper_Category::create_category( 'Expense', 'expense' );
-		$account  = EAccounting_Helper_Account::create_account();
-		$vendor   = EAccounting_Helper_Contact::create_contact( 'John Doe', 'john@doe.com', 'vendor', 'USD' );
+		$category = EverAccounting_Helper_Category::create_category( 'Expense', 'expense' );
+		$account  = EverAccounting_Helper_Account::create_account();
+		$vendor   = EverAccounting_Helper_Contact::create_contact( 'John Doe', 'john@doe.com', 'vendor', 'USD' );
 
 		$payment = eaccounting_insert_transaction(
 			array(
@@ -25,16 +25,16 @@ class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
 		);
 		$this->assertNotFalse( $payment->exists() );
 		$this->assertNotNull( $payment->get_id() );
-		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_paid_at())));
+		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_payment_date())));
 		$this->assertEquals( 50, $payment->get_amount());
 		$this->assertEquals( 'cash', $payment->get_payment_method());
 		$this->assertEquals('expense', $payment->get_type());
 	}
 
 	public function test_update_payment(){
-		$category = EAccounting_Helper_Category::create_category( 'Expense', 'expense' );
-		$account  = EAccounting_Helper_Account::create_account();
-		$vendor   = EAccounting_Helper_Contact::create_contact( 'John Doe', 'john@doe.com', 'vendor', 'USD' );
+		$category = EverAccounting_Helper_Category::create_category( 'Expense', 'expense' );
+		$account  = EverAccounting_Helper_Account::create_account();
+		$vendor   = EverAccounting_Helper_Contact::create_contact( 'John Doe', 'john@doe.com', 'vendor', 'USD' );
 
 		$payment = eaccounting_insert_transaction(
 			array(
@@ -49,7 +49,7 @@ class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
 		);
 		$payment_id = $payment->get_id();
 		$this->assertNotFalse( $payment->exists() );
-		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_paid_at())));
+		$this->assertEquals( '2020-08-31', date('Y-m-d',strtotime($payment->get_payment_date())));
 		$this->assertEquals( 50, $payment->get_amount());
 		$this->assertEquals( 'cash', $payment->get_payment_method());
 		$this->assertEquals('expense', $payment->get_type());
@@ -73,7 +73,7 @@ class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_payment(){
-		$payment = EAccounting_Helper_Transaction::create_transaction(50,'cash','expense');
+		$payment = EverAccounting_Helper_Transaction::create_transaction(50,'cash','expense');
 		$this->assertNotEquals( 0, $payment->get_id() );
 		$this->assertNotFalse( eaccounting_delete_transaction( $payment->get_id() ) );
 	}
@@ -114,8 +114,8 @@ class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
 		));
 		$this->assertEquals( 'Account is required.', $payment->get_error_message() );
 
-		$account = EAccounting_Helper_Account::create_account();
-		$category = EAccounting_Helper_Category::create_category();
+		$account = EverAccounting_Helper_Account::create_account();
+		$category = EverAccounting_Helper_Category::create_category();
 
 		$payment = eaccounting_insert_transaction(array(
 			'account_id' => $account->get_id(),
@@ -126,7 +126,7 @@ class EAccounting_Tests_Payment extends EAccounting_Unit_Test_Case {
 		));
 		$this->assertEquals( 'Transaction type and category type does not match.', $payment->get_error_message() );
 
-		$contact = EAccounting_Helper_Contact::create_contact();
+		$contact = EverAccounting_Helper_Contact::create_contact();
 		$payment = eaccounting_insert_transaction(array(
 			'account_id' => $account->get_id(),
 			'paid_at' => '2020-09-01',

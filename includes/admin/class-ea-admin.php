@@ -40,22 +40,31 @@ class Admin {
 	 * @return void
 	 */
 	public function includes() {
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php' );
-		//require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-list-table.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/overview/overview.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/transactions/transactions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/sales/sales.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/expenses/expenses.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/banking/banking.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/misc/misc.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/reports/reports.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/tools/tools.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/settings/settings.php' );
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
+		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php' );
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-overview.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-banking.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-sales.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-invoices.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-revenues.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-customers.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-expenses.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-items.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-bills.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-payments.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-vendors.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-transactions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-accounts.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-transfers.php';
+
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-reports.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-tools.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-extensions.php';
 
 		// Setup/welcome.
 		if ( ! empty( $_GET['page'] ) ) {
@@ -63,7 +72,11 @@ class Admin {
 				case 'ea-setup':
 					include_once dirname( __FILE__ ) . '/class-ea-admin-setup.php';
 					break;
+					case 'ea-release':
+					include_once dirname( __FILE__ ) . '/class-ea-admin-release.php';
+					break;
 			}
+
 		}
 	}
 
@@ -100,7 +113,7 @@ class Admin {
 	 * @since 1.0.
 	 */
 	public function admin_redirects() {
-		if ( get_option('ea_setup_wizard_complete') !== 'yes' && get_transient( '_eaccounting_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
+		if ( get_option( 'ea_setup_wizard_complete' ) !== 'yes' && get_transient( '_eaccounting_activation_redirect' ) && apply_filters( 'eaccounting_enable_setup_wizard', true ) ) {
 			$do_redirect = true;
 
 			// On these pages, or during these events, postpone the redirect.
@@ -157,6 +170,7 @@ class Admin {
 			// Change the footer text.
 			if ( ! get_option( 'eaccounting_admin_footer_text_rated' ) ) {
 				$footer_text = sprintf(
+				/* translators: %s page */
 					__( 'If you like %1$s please leave us a %2$s rating. A huge thanks in advance!', 'wp-ever-accounting' ),
 					sprintf( '<strong>%s</strong>', esc_html__( 'Ever Accounting', 'wp-ever-accounting' ) ),
 					'<a href="https://wordpress.org/support/plugin/wp-ever-accounting/reviews?rate=5#new-post" target="_blank" class="ea-rating-link" aria-label="' . esc_attr__( 'five star', 'wp-ever-accounting' ) . '" data-rated="' . esc_attr__( 'Thanks :)', 'wp-ever-accounting' ) . '">&#9733;&#9733;&#9733;&#9733;&#9733;</a>'
@@ -183,15 +197,18 @@ class Admin {
 	public function load_js_templates() {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-		if ( in_array( $screen_id, eaccounting_get_screen_ids() ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ) ) ) {
+		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) && isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'add', 'edit' ), true ) ) {
 			eaccounting_get_admin_template( 'js/modal-add-account' );
 			eaccounting_get_admin_template( 'js/modal-add-currency' );
-			eaccounting_get_admin_template( 'js/modal-add-category' );
+			eaccounting_get_admin_template( 'js/modal-add-income-category' );
+			eaccounting_get_admin_template( 'js/modal-add-expense-category' );
+			eaccounting_get_admin_template( 'js/modal-add-item-category' );
 			eaccounting_get_admin_template( 'js/modal-add-customer' );
 			eaccounting_get_admin_template( 'js/modal-add-vendor' );
+			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );
+			eaccounting_get_admin_template( 'js/modal-add-item' );
 		}
 	}
-
 }
 
 return new Admin();

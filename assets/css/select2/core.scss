@@ -13,6 +13,10 @@
 
   @import "single";
   @import "multiple";
+
+  &.select2-container--focus .select2-selection{
+	box-shadow: none;
+  }
 }
 
 @import "dropdown";

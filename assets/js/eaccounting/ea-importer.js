@@ -93,13 +93,6 @@ jQuery(function ($) {
 
 		this.process_step = function (position) {
 			var $submit_btn = plugin.$form.find('input[type="submit"]');
-			console.log({
-				nonce: plugin.nonce,
-				type: plugin.type,
-				position: position,
-				file: plugin.file,
-				mapping: plugin.mapping,
-			});
 			window.wp.ajax.send(plugin.action, {
 				data: {
 					nonce: plugin.nonce,
@@ -143,7 +136,6 @@ jQuery(function ($) {
 							'</p></div></div>'
 						);
 					}
-					console.warn(error);
 				},
 			});
 		};

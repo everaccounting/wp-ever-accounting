@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: WP Ever Accounting
+ * Plugin Name: Ever Accounting
  * Plugin URI: https://wpeveraccounting.com/
  * Description: Manage your business finances right from your WordPress dashboard.
- * Version: 1.0.4
+ * Version: 1.1.0
  * Author: everaccounting
  * Author URI: https://wpeveraccounting.com/
  * Requires at least: 4.7.0
@@ -19,15 +19,16 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EverAccounting
+ *
  * @since 1.0.0
  */
 final class EverAccounting {
 	/**
-	 * EAccounting version.
+	 * EverAccounting version.
 	 *
 	 * @var string
 	 */
-	public $version = '1.0.4';
+	public $version = '1.1.0';
 
 	/**
 	 * @since 1.0.2
@@ -37,7 +38,7 @@ final class EverAccounting {
 
 	/**
 	 * @since 1.0.2
-	 * @var \EverAccounting\Admin\Settings
+	 * @var \EverAccounting_Settings
 	 */
 	public $settings;
 
@@ -55,104 +56,15 @@ final class EverAccounting {
 	 * Insures that only one instance of EverAccounting exists in memory at any one
 	 * time. Also prevents needing to define globals all over the place
 	 *
-	 * @since 1.0.0
 	 * @return EverAccounting - Main instance.
+	 * @since 1.0.0
 	 */
 	public static function init() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof EverAccounting ) ) {
+		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
 
 		return self::$instance;
-	}
-
-
-	/**
-	 * Return plugin version.
-	 *
-	 * @since 1.2.0
-	 **@return string
-	 */
-	public function get_version() {
-		return $this->version;
-	}
-
-	/**
-	 * Plugin URL getter.
-	 *
-	 * @since 1.2.0
-	 *
-	 * @param string $path
-	 *
-	 * @return string
-	 */
-	public function plugin_url( $path = '' ) {
-		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
-		if ( $path && is_string( $path ) ) {
-			$url  = trailingslashit( $url );
-			$url .= ltrim( $path, '/' );
-		}
-
-		return $url;
-	}
-
-	/**
-	 * Plugin path getter.
-	 *
-	 * @since 1.2.0
-	 *
-	 * @param string $path
-	 *
-	 * @return string
-	 */
-	public function plugin_path( $path = '' ) {
-		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
-		if ( $path && is_string( $path ) ) {
-			$plugin_path  = trailingslashit( $plugin_path );
-			$plugin_path .= ltrim( $path, '/' );
-		}
-
-		return $plugin_path;
-	}
-
-	/**
-	 * Plugin base path name getter.
-	 *
-	 * @since 1.2.0
-	 * @return string
-	 */
-	public function plugin_basename() {
-		return plugin_basename( __FILE__ );
-	}
-
-	/**
-	 * Get the template path.
-	 * @since 1.2.0
-	 * @return string
-	 */
-	public function template_path() {
-		return apply_filters( 'eaccounting_template_path', 'eaccounting/' );
-	}
-
-	/**
-	 * Get Ajax URL.
-	 *
-	 * @since 1.0.2
-	 * @return string
-	 */
-	public function ajax_url() {
-		return admin_url( 'admin-ajax.php', 'relative' );
-	}
-
-	/**
-	 * Initialize plugin for localization
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function localization_setup() {
-		load_plugin_textdomain( 'wp-ever-accounting', false, plugin_basename( dirname( __FILE__ ) ) . '/i18n/languages' );
 	}
 
 	/**
@@ -161,8 +73,8 @@ final class EverAccounting {
 	 * The whole idea of the singleton design pattern is that there is a single
 	 * object therefore, we don't want the object to be cloned.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 
 	public function __clone() {
@@ -172,8 +84,8 @@ final class EverAccounting {
 	/**
 	 * Disable unserializing of the class
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 
 	public function __wakeup() {
@@ -181,40 +93,11 @@ final class EverAccounting {
 	}
 
 	/**
-	 * Ensures fatal errors are logged so they can be picked up in the status report.
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	public function log_errors() {
-		$error = error_get_last();
-		if ( $error && in_array(
-			$error['type'],
-			array(
-				E_ERROR,
-				E_PARSE,
-				E_COMPILE_ERROR,
-				E_USER_ERROR,
-				E_RECOVERABLE_ERROR,
-			),
-			true
-		) ) {
-			$logger = eaccounting_logger();
-			$logger->critical(
-						/* translators: 1: error message 2: file name and path 3: line number */
-				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
-				array(
-					'source' => 'fatal-errors',
-				)
-			);
-		}
-	}
-
-	/**
 	 * EverAccounting constructor.
 	 */
 	public function __construct() {
 		$this->define_constants();
+		$this->define_tables();
 		$this->includes();
 		$this->init_hooks();
 	}
@@ -230,7 +113,6 @@ final class EverAccounting {
 		$upload_dir = wp_upload_dir( null, false );
 
 		define( 'EACCOUNTING_VERSION', $this->version );
-		define( 'EACCOUNTING_DB_VERSION', '20181123' );
 		define( 'EACCOUNTING_BASENAME', plugin_basename( __FILE__ ) );
 		define( 'EACCOUNTING_PLUGIN_FILE', __FILE__ );
 		define( 'EACCOUNTING_ABSPATH', dirname( EACCOUNTING_PLUGIN_FILE ) );
@@ -241,6 +123,23 @@ final class EverAccounting {
 	}
 
 	/**
+	 * Register custom tables within $wpdb object.
+	 */
+	private function define_tables() {
+		global $wpdb;
+
+		// List of tables without prefixes.
+		$tables = array(
+			'contactmeta' => 'ea_contactmeta',
+		);
+
+		foreach ( $tables as $name => $table ) {
+			$wpdb->$name    = $wpdb->prefix . $table;
+			$wpdb->tables[] = $table;
+		}
+	}
+
+	/**
 	 * Include all required files
 	 *
 	 * since 1.0.0
@@ -248,73 +147,34 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function includes() {
-		//Abstract classes.
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-base-object.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-widget.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/traits/trait-ea-where-query.php' );
+		require_once EACCOUNTING_ABSPATH . '/vendor/autoload.php';
 
-		//Core classes.
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-install.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-logger.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-datetime.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-exception.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-collection.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-account.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-currency.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transaction.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-contact.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-category.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-query-transfer.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-contact.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transaction.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-currency.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-account.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-category.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-transfer.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-money.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-chart.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-emails.php' );
+		// Abstract classes.
+		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php';
 
-		//REST API.
-		require_once( EACCOUNTING_ABSPATH . '/includes/class-ea-rest-api.php' );
+		// Core classes.
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-settings.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-assets.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-rewrites.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-license.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-controller.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-compatibility.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
 
-		//Functions.
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-transfer-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php' );
-		require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
-
+		//
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
-			require_once( EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php' );
+			require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php';
 		}
-	}
 
-	/**
-	 * Hook into actions and filters.
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	private function init_hooks() {
-		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EAccounting_Install', 'install' ) );
-		register_shutdown_function( array( $this, 'log_errors' ) );
 
-		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
-		add_action( 'init', array( $this, 'init_plugin' ), 0 );
-		add_action( 'init', array( $this, 'localization_setup' ) );
+		//\EverAccounting\REST\Manager::instance();
+		\EverAccounting\Core\Emails::instance();
+
+		$this->settings = new EverAccounting_Settings();
+		$this->utils    = new \EverAccounting\Utilities();
 	}
 
 	/**
@@ -323,57 +183,172 @@ final class EverAccounting {
 	 * This ensures `eaccounting_loaded` is called only after all other plugins
 	 * are loaded, to avoid issues caused by plugin directory naming changing
 	 *
-	 * @since 1.0.0
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function on_plugins_loaded() {
 		do_action( 'eaccounting_loaded' );
 	}
 
 	/**
-	 * Init EAccounting when WordPress Initialises.
+	 * Hook into actions and filters.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.0
 	 */
-	public function init_plugin() {
-		// Before init action.
-		do_action( 'before_eaccounting_init' );
+	private function init_hooks() {
+		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EverAccounting_Install', 'install' ) );
+		register_shutdown_function( array( $this, 'log_errors' ) );
 
-		$this->settings = new \EverAccounting\Admin\Settings();
-		$this->utils    = new \EverAccounting\Utilities();
-
-		// Init action.
-		do_action( 'eaccounting_init' );
+		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
+		add_action( 'init', array( $this, 'localization_setup' ) );
+		add_action( 'switch_blog', array( $this, 'wpdb_table_fix' ), 0 );
 	}
 
 	/**
-	 * Return the base query object.
+	 * Ensures fatal errors are logged so they can be picked up in the status report.
 	 *
+	 * @return void
 	 * @since 1.0.2
-	 *
-	 * @return \EverAccounting\Query
 	 */
-	public function query() {
-		return \EverAccounting\Query::init();
+	public function log_errors() {
+		$error = error_get_last();
+		if ( $error && in_array(
+				$error['type'],
+				array(
+					E_ERROR,
+					E_PARSE,
+					E_COMPILE_ERROR,
+					E_USER_ERROR,
+					E_RECOVERABLE_ERROR,
+				),
+				true
+			) ) {
+			$logger = eaccounting_logger();
+			$logger->critical(
+			/* translators: 1: error message 2: file name and path 3: line number */
+				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
+				array(
+					'source' => 'fatal-errors',
+				)
+			);
+		}
+	}
+
+	/**
+	 * Initialize plugin for localization
+	 *
+	 * @return void
+	 * @since 1.0.0
+	 *
+	 */
+	public function localization_setup() {
+		load_plugin_textdomain( 'wp-ever-accounting', false, plugin_basename( dirname( __FILE__ ) ) . '/i18n/languages' );
+	}
+
+	/**
+	 * Set table names inside WPDB object.
+	 * @return void
+	 * @since 1.1.0
+	 */
+	public function wpdb_table_fix() {
+		$this->define_tables();
+	}
+
+	/**
+	 * Return plugin version.
+	 *
+	 * @return string
+	 * @since 1.2.0
+	 */
+	public function get_version() {
+		return $this->version;
+	}
+
+	/**
+	 * Plugin URL getter.
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 * @since 1.2.0
+	 *
+	 */
+	public function plugin_url( $path = '' ) {
+		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
+		if ( $path && is_string( $path ) ) {
+			$url = trailingslashit( $url );
+			$url .= ltrim( $path, '/' );
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Plugin path getter.
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 * @since 1.2.0
+	 *
+	 */
+	public function plugin_path( $path = '' ) {
+		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
+		if ( $path && is_string( $path ) ) {
+			$plugin_path = trailingslashit( $plugin_path );
+			$plugin_path .= ltrim( $path, '/' );
+		}
+
+		return $plugin_path;
+	}
+
+	/**
+	 * Plugin base path name getter.
+	 *
+	 * @return string
+	 * @since 1.2.0
+	 */
+	public function plugin_basename() {
+		return plugin_basename( __FILE__ );
+	}
+
+	/**
+	 * Get the template path.
+	 *
+	 * @return string
+	 * @since 1.2.0
+	 */
+	public function template_path() {
+		return apply_filters( 'eaccounting_template_path', 'eaccounting/' );
+	}
+
+	/**
+	 * Get Ajax URL.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function ajax_url() {
+		return admin_url( 'admin-ajax.php', 'relative' );
 	}
 
 	/**
 	 * Email Class.
 	 *
+	 * @return \EverAccounting\Core\Mailer
 	 * @since 1.0.2
-	 * @return \EverAccounting\Emails
 	 */
 	public function mailer() {
-		return \EverAccounting\Emails::instance();
+		return new \EverAccounting\Core\Mailer();
 	}
 }
 
 /**
  * Returns the main instance of Plugin.
  *
- * @since  1.0.0
  * @return EverAccounting
+ * @since  1.0.0
  */
 function eaccounting() {
 	return EverAccounting::init();

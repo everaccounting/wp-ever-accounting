@@ -1,19 +1,22 @@
 <?php
 /**
  * Handle customers export.
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
+
 namespace EverAccounting\Export;
+
+use EverAccounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Exporter;
-use EverAccounting\Query_Contact;
 
 /**
  * Class Export_Customers
+ *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
@@ -31,8 +34,8 @@ class Export_Customers extends CSV_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @since  1.0.2
 	 * @return array
+	 * @since  1.0.2
 	 */
 	public function get_columns() {
 		return eaccounting_get_io_headers( 'customer' );
@@ -41,25 +44,30 @@ class Export_Customers extends CSV_Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.
 	 * @return array
+	 * @since 1.0.
 	 */
 	public function get_rows() {
-		$args              = array(
+		$args = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'type'     => 'customer',
+			'return'   => 'objects',
+			'number'   => - 1,
 		);
-		$query             = Query_Contact::init()->where( $args );
-		$items             = $query->get( OBJECT, 'eaccounting_get_contact' );
-		$this->total_count = $query->count();
-		$rows              = array();
+
+		$args = apply_filters( 'eaccounting_customer_export_query_args', $args );
+
+		$items = eaccounting_get_customers( $args );
+
+		$rows = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
 		}
+
 
 		return $rows;
 	}
@@ -68,18 +76,19 @@ class Export_Customers extends CSV_Exporter {
 	/**
 	 * Take a customer and generate row data from it for export.
 	 *
-	 *
-	 * @param \EverAccounting\Contact $item
+	 * @param \EverAccounting\Models\Customer $item
 	 *
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
 		$props = [];
 		foreach ( $this->get_columns() as $column => $label ) {
-			$value = null;
 			switch ( $column ) {
 				case 'name':
 					$value = $item->get_name();
+					break;
+				case 'company':
+					$value = $item->get_company();
 					break;
 				case 'email':
 					$value = $item->get_email();
@@ -87,29 +96,32 @@ class Export_Customers extends CSV_Exporter {
 				case 'phone':
 					$value = $item->get_phone();
 					break;
-				case 'fax':
-					$value = $item->get_fax();
-					break;
 				case 'birth_date':
 					$value = $item->get_birth_date();
 					break;
-				case 'address':
-					$value = $item->get_address();
+				case 'street':
+					$value = $item->get_street();
+					break;
+				case 'city':
+					$value = $item->get_city();
+					break;
+				case 'state':
+					$value = $item->get_street();
+					break;
+				case 'postcode':
+					$value = $item->get_postcode();
 					break;
 				case 'country':
-					$value = $item->get_country();
+					$value = $item->get_country_nicename();
 					break;
 				case 'website':
 					$value = $item->get_website();
 					break;
-				case 'tax_number':
-					$value = $item->get_tax_number();
+				case 'vat_number':
+					$value = $item->get_vat_number();
 					break;
 				case 'currency_code':
 					$value = $item->get_currency_code();
-					break;
-				case 'note':
-					$value = $item->get_note();
 					break;
 				default:
 					$value = apply_filters( 'eaccounting_customer_csv_row_item', '', $column, $item, $this );

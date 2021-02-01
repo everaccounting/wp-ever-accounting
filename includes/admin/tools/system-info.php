@@ -2,10 +2,13 @@
 /**
  * Displays the system info report.
  *
+ * @return string The compiled system info report.
  * @since 1.0.2
  *
- * @return string The compiled system info report.
  */
+
+defined( 'ABSPATH' ) || exit();
+
 function eaccounting_tools_system_info_report() {
 
 	global $wpdb;
@@ -51,7 +54,6 @@ function eaccounting_tools_system_info_report() {
 	// EverAccounting
 	//
 
-
 	$settings      = eaccounting()->settings;
 	$account_id    = eaccounting()->settings->get( 'default_account' );
 	$currency_code = eaccounting()->settings->get( 'default_currency' );
@@ -67,26 +69,24 @@ function eaccounting_tools_system_info_report() {
 	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );
 	$return .= 'Install Date:                     ' . ( $install_date ? date( 'Y-m-d H:i:s' ) . "\n" : "Unset\n" );
-	$return .= 'Debug Mode:                       ' . ( $settings->get( 'debug_mode', false ) ? "True" . "\n" : "False\n" );
-	$return .= 'Accounts Table:                   ' . ( in_array( 'ea_accounts', $tables, true ) ? "True" . "\n" : "False\n" );
-	$return .= 'Transactions Table:               ' . ( in_array( 'ea_transactions', $tables, true ) ? "True" . "\n" : "False\n" );
-	$return .= 'Contacts Table:                   ' . ( in_array( 'ea_contacts', $tables, true ) ? "True" . "\n" : "False\n" );
-	$return .= 'Currencies Table:                 ' . ( in_array( 'ea_currencies', $tables, true ) ? "True" . "\n" : "False\n" );
-	$return .= 'Transfers Table:                  ' . ( in_array( 'ea_transfers', $tables, true ) ? "True" . "\n" : "False\n" );
-	$return .= 'Categories Table:                 ' . ( in_array( 'ea_categories', $tables, true ) ? "True" . "\n" : "False\n" );
+	$return .= 'Debug Mode:                       ' . ( $settings->get( 'debug_mode', false ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Accounts Table:                   ' . ( in_array( 'ea_accounts', $tables, true ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Transactions Table:               ' . ( in_array( 'ea_transactions', $tables, true ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Contacts Table:                   ' . ( in_array( 'ea_contacts', $tables, true ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Currencies Table:                 ' . ( in_array( 'ea_currencies', $tables, true ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Transfers Table:                  ' . ( in_array( 'ea_transfers', $tables, true ) ? 'True' . "\n" : "False\n" );
+	$return .= 'Categories Table:                 ' . ( in_array( 'ea_categories', $tables, true ) ? 'True' . "\n" : "False\n" );
 
 	// Misc Settings
 	$return .= "\n" . '-- EverAccounting Misc Settings' . "\n\n";
 
-
 	// Object counts.
 	$return .= "\n" . '-- EverAccounting Object Counts' . "\n\n";
-	$return .= 'Transactions:                     ' . number_format( \EverAccounting\Query_Transaction::init()->count(), false ) . "\n";
-	$return .= 'Accounts:                         ' . number_format( \EverAccounting\Query_Account::init()->count(), false ) . "\n";
-	$return .= 'Contacts:                         ' . number_format( \EverAccounting\Query_Contact::init()->count(), false ) . "\n";
-	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Query_Currency::init()->count(), false ) . "\n";
-	$return .= 'Categories:                       ' . number_format( \EverAccounting\Query_Category::init()->count(), false ) . "\n";
-
+	$return .= 'Transactions:                     ' . number_format( \EverAccounting\Transactions\query()->count(), false ) . "\n";
+	$return .= 'Accounts:                         ' . number_format( \EverAccounting\Accounts\query()->count(), false ) . "\n";
+	$return .= 'Contacts:                         ' . number_format( \EverAccounting\Contacts\query()->count(), false ) . "\n";
+	$return .= 'Currencies:                       ' . number_format( \EverAccounting\Currencies\query()->count(), false ) . "\n";
+	$return .= 'Categories:                       ' . number_format( \EverAccounting\Categories\query()->count(), false ) . "\n";
 
 	// Get plugins that have an update
 	$updates = get_plugin_updates();

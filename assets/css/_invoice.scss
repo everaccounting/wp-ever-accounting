@@ -1,70 +1,513 @@
-.ea-transaction-table-wrap{
-	overflow-x: visible;
-	min-height: .01%;
+
+.ea-invoice {
+  box-sizing: border-box;
+
+  & *, & *::before, & *::after {
+	box-sizing: border-box
+  }
+
+  a {
+	text-decoration: none;
+
+	&:focus {
+	  outline: none;
+	  box-shadow: none;
+	}
+  }
+
+  /* Line items table */
+
+  &__items-wrapper {
+	margin: 20px 0 20px 0;
+  }
+
+  &__items {
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-collapse: collapse;
+	width: 100%;
+	background: #fff;
+	border: 1px solid #ddd;
+	table-layout: fixed;
 	box-sizing: border-box;
-	.ea-transaction-table{
-		font-size: 14px;
-		font-weight: 400;
-		border: 1px solid #f4f4f4;
-		width: 100%;
+	border-left: 0;
+	border-right: 0;
+
+	tr {
+	  border-bottom: 1px solid #ddd;
+	}
+
+	th {
+	  font-weight: 400;
+	  color: #999;
+	  background: #f8f8f8;
+	  -webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	  -moz-user-select: none;
+	  -ms-user-select: none;
+	  user-select: none;
+	}
+
+	td {
+	  white-space: nowrap;
+	  vertical-align: middle;
+	}
+
+	th, td {
+	  padding: 0.8em 1em;
+	  vertical-align: top;
+	}
+
+	.view {
+	  white-space: nowrap;
+	}
+  }
+
+  &__line-actions {
+	width: 65px;
+	text-align: left;
+
+	> a {
+	  display: inline-block;
+	  color: #ccc;
+	  transition: color 0.1s ease-in;
+	  text-decoration: none;
+
+	  &:hover {
+		color: #444;
+	  }
+
+	  .dashicons {
+		width: 16px;
+		height: 16px;
+		font-size: 16px;
+	  }
+	}
+
+	.save-invoice-item {
+	  display: none;
+	}
+
+  }
+
+  &__line-name {
+	text-align: left;
+  }
+
+  &__line-quantity,
+  &__line-price,
+  &__line-tax,
+  &__line-vat,
+  &__line-subtotal {
+	text-align: right;
+  }
+
+  &__line {
+	&.editing {
+	  .edit {
+		display: block !important;
+	  }
+
+	  .view {
+		display: none;
+	  }
+
+	  .save-invoice-item {
+		display: inline-block;
+	  }
+
+	  .edit-invoice-item {
+		display: none;
+	  }
+	}
+
+	.invoice_item_name {
+	  width: 90%;
+	}
+
+	.invoice_item_price,
+	.invoice_item_quantity,
+	.invoice_item_vat,
+	.invoice_item_tax {
+	  width: 90px;
+	}
+  }
+
+  &__data-row {
+	width: 100%;
+	border-bottom: 1px solid #dfdfdf;
+	padding: 10px;
+	background: #f8f8f8;
+	box-sizing: border-box;
+	margin: 0;
+  }
+
+  &__total-items {
+	width: 100%;
+
+	td {
+	  text-align: right;
+	}
+
+	.label {
+	  vertical-align: top;
+	  padding: 0.4em;
+	}
+
+	.total {
+	  font-size: 1em !important;
+	  width: 14em;
+	  margin: 0 0 0 .5em;
+	  box-sizing: border-box;
+	  font-weight: 700;
+	  padding: 0.4em;
+	}
+
+	@media only screen and (min-width: 600px) {
+	  padding-left: 50%;
+	}
+  }
+
+  &__actions {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+  }
+
+  .add-line-item{
+	.dashicons {
+	  vertical-align: middle;
+	}
+  }
+
+  /* NOTES */
+  &-notes {
+	padding: 2px 0 0;
+	list-style: none;
+	max-height: 300px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+
+    &__item {
+  	padding: 0 10px;
+  	margin-bottom: 6px;
+
+  	&-content {
+  	  padding: 10px;
+  	  background: #efefef;
+  	  position: relative;
+  	}
+
+  	&-meta {
+  	  padding: 10px;
+  	  color: #999;
+  	  margin: 0;
+  	  font-size: 11px;
+  	}
+    }
+
+    &__add {
+  	border-top: 1px solid #ddd;
+  	padding: 10px 10px 0;
+
+  	label {
+  	  display: block;
+  	  font-weight: 600;
+  	  margin-bottom: 5px;
+  	}
+
+  	textarea {
+  	  width: 100%;
+  	}
+
+  	select {
+  	  width: 70%;
+  	}
+
+    }
+  }
+
+  /*VIEW MODE*/
+  .view-mode &{
+
+	&__header {
+	  display: flex;
+	  justify-content: space-between;
+	  min-height: 40px;
+	  align-items: center;
+	  margin-bottom: 20px;
+	}
+
+	&__title {
+	  text-align: right;
+	  font-size: 2.5em;
+	  text-transform: uppercase;
+	  line-height: 1;
+	}
+
+	&__logo {
+	  max-width: 250px;
+	  max-height: 70px;
+
+	  img {
 		max-width: 100%;
-		margin-bottom: 20px;
-		border-spacing: 0;
-		border-collapse: collapse;
-		background-color: transparent;
+		height: auto;
+	  }
+	}
+
+	&__columns {
+	  box-sizing: border-box;
+	  display: flex;
+	  flex-wrap: wrap;
+	  justify-content: space-between;
+	  margin-bottom: 20px;
+
+	  & > div {
 		box-sizing: border-box;
-	}
-
-	thead{
-		tr{
-			background-color: #f9f9f9
+		@media (max-width: 768px) {
+		  width: 100%;
 		}
-		th{
-			border-bottom: 2px solid #f4f4f4;
-			vertical-align: middle;
-			&:nth-child(1){
-				width: 5%;
-				text-align: center;
-			}
-			&:nth-child(2){
-				width: 40%;
-				text-align: left;
-			}
-			&:nth-child(3){
-				width: 5%;
-				text-align: center;
-			}
-			&:nth-child(4){
-				width: 10%;
-				text-align: right;
-			}
-			&:nth-child(5){
-				width: 15%;
-				text-align: right;
-			}
-			&:nth-child(6){
-				width: 10%;
-				text-align: right;
-			}
-		}
-	}
-	th,td{
-		border-top: 0;
-		border: 1px solid #f4f4f4;
-		vertical-align: middle;
-		padding: 8px;
-		line-height: 1.42857143;
+	  }
+
 	}
 
-	.ea-form-control{
-		font-size: 14px !important;
-		min-height: 0 !important;
+	&__party {
+	  th, td {
+		vertical-align: top;
+		padding: 5px 10px;
+	  }
+
+	  th {
+		width: 60px;
+		text-align: left;
+	  }
 	}
 
-
-	#tr-subtotal, #tr-discount, #tr-tax, #tr-total{
-		td{
-			text-align: right;
-		}
+	&__subtitle {
+	  color: #888;
+	  letter-spacing: .2px;
+	  margin-bottom: 10px;
+	  text-transform: uppercase;
 	}
+
+	&__company {
+	  color: #444;
+	  margin-bottom: 10px;
+	  font-weight: 700;
+	}
+
+	&__address {
+	  margin-bottom: 10px;
+	  max-width: 250px;
+
+	  &-line {
+		display: block;
+		margin-bottom: 0;
+	  }
+	}
+
+	&__props {
+	  th {
+		text-align: right;
+	  }
+
+	  td {
+		text-align: left;
+	  }
+
+	  th, td {
+		border: 1px solid #dee2e6;
+		padding: 5px 10px;
+		vertical-align: top;
+	  }
+	}
+
+	&__terms {
+	  strong {
+		display: block;
+		color: #777;
+	  }
+	}
+
+	&__watermark {
+	  display: block;
+	  left: 0;
+	  right: 0;
+	  position: absolute;
+	  top: 15%;
+	  z-index: 2;
+	  pointer-events: none;
+
+	  p {
+		color: rgba(0,0,0,.04);
+		font-size: 150px;
+		font-weight: 500;
+		transform: rotate(325deg);
+		text-align: center;
+		font-family: monospace;
+	  }
+	}
+
+	&__line-actions,
+
+	&__actions{
+	  display: none;
+	}
+
+	&__items-wrapper{
+	  border-left: 1px solid #ddd;
+	  border-right: 1px solid #ddd;
+	}
+  }
+
 }
+//
+//.ea-invoice {
+//  padding: 20px;
+//
+//  .padding-zero {
+//	padding: 0;
+//  }
+//
+//  table {
+//	border-collapse: collapse;
+//	width: 100%;
+//	box-sizing: border-box;
+//
+//	th {
+//	  white-space: nowrap;
+//	}
+//
+//	th, td {
+//	  vertical-align: top;
+//	}
+//
+//	.text-right {
+//	  text-align: right;
+//	}
+//
+//	.text-left {
+//	  text-align: left;
+//	}
+//  }
+//
+//
+//  &__items {
+//	margin-bottom: 20px;
+//
+//	thead {
+//	  background: #444;
+//	  color: #fff;
+//	}
+//
+//	tbody {
+//	}
+//
+//	tr {
+//	  border-bottom: 1px solid #ddd;
+//	}
+//
+//	th {
+//	  padding: 5px 10px;
+//	}
+//
+//	td {
+//	  padding: 10px;
+//	}
+//
+//	tfoot tr:last-child {
+//	  border: 0 !important;
+//	}
+//
+//  }
+//
+//  &__totals {
+//	td, th {
+//	  padding: 10px;
+//	  text-align: right;
+//	}
+//  }
+//
+//
+//
+//  &__terms {
+//  }
+//
+//  &__attachment {
+//  }
+//
+//}
+
+//
+//.ea-transaction-table-wrap{
+//	overflow-x: visible;
+//	min-height: .01%;
+//	box-sizing: border-box;
+//	.ea-transaction-table{
+//		font-size: 14px;
+//		font-weight: 400;
+//		border: 1px solid #f4f4f4;
+//		width: 100%;
+//		max-width: 100%;
+//		margin-bottom: 20px;
+//		border-spacing: 0;
+//		border-collapse: collapse;
+//		background-color: transparent;
+//		box-sizing: border-box;
+//	}
+//
+//	thead{
+//		tr{
+//			background-color: #f9f9f9
+//		}
+//		th{
+//			border-bottom: 2px solid #f4f4f4;
+//			vertical-align: middle;
+//			&:nth-child(1){
+//				width: 5%;
+//				text-align: center;
+//			}
+//			&:nth-child(2){
+//				width: 40%;
+//				text-align: left;
+//			}
+//			&:nth-child(3){
+//				width: 5%;
+//				text-align: center;
+//			}
+//			&:nth-child(4){
+//				width: 10%;
+//				text-align: right;
+//			}
+//			&:nth-child(5){
+//				width: 15%;
+//				text-align: right;
+//			}
+//			&:nth-child(6){
+//				width: 10%;
+//				text-align: right;
+//			}
+//		}
+//	}
+//	th,td{
+//		border-top: 0;
+//		border: 1px solid #f4f4f4;
+//		vertical-align: middle;
+//		padding: 8px;
+//		line-height: 1.42857143;
+//	}
+//
+//	.ea-form-control{
+//		font-size: 14px !important;
+//		min-height: 0 !important;
+//	}
+//
+//
+//	#tr-subtotal, #tr-discount, #tr-tax, #tr-total{
+//		td{
+//			text-align: right;
+//		}
+//	}
+//}

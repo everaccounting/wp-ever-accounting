@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ruleset name="10up PHPCS">
+	<description>WP Ever Accounting.</description>
+
+	<rule ref="10up-Default" />
+</ruleset>

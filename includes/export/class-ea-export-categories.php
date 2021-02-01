@@ -8,12 +8,9 @@
  */
 
 namespace EverAccounting\Export;
+use EverAccounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
-
-use EverAccounting\Abstracts\CSV_Exporter;
-use EverAccounting\Query_Category;
-
 /**
  * Class Category_CSV_Export
  *
@@ -54,10 +51,11 @@ class Export_Categories extends CSV_Exporter {
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
+			'return'   => 'objects',
+			'number'      => -1,
 		);
-		$query             = Query_Category::init()->where( $args );
-		$items             = $query->get( OBJECT, 'eaccounting_get_category' );
-		$this->total_count = $query->count();
+		$args = apply_filters( 'eaccounting_category_export_query_args', $args );
+		$items = eaccounting_get_categories( $args );
 		$rows              = array();
 
 		foreach ( $items as $item ) {
@@ -71,8 +69,7 @@ class Export_Categories extends CSV_Exporter {
 	/**
 	 * Take a category and generate row data from it for export.
 	 *
-	 *
-	 * @param \EverAccounting\Category $item
+	 * @param \EverAccounting\Models\Category $item
 	 *
 	 * @return array
 	 */

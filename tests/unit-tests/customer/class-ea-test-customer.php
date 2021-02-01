@@ -3,10 +3,10 @@
 use EverAccounting\Contact;
 
 /**
- * Class EAccounting_Tests_customer.
- * @package EAccounting\Tests\Customer
+ * Class EverAccounting_Tests_customer.
+ * @package EverAccounting\Tests\Customer
  */
-class EAccounting_Tests_customer extends EAccounting_Unit_Test_Case {
+class EverAccounting_Tests_customer extends EverAccounting_Unit_Test_Case {
 	public function test_create_customer() {
 
 		$customer = eaccounting_insert_contact( array(
@@ -80,7 +80,7 @@ class EAccounting_Tests_customer extends EAccounting_Unit_Test_Case {
 	}
 
 	public function test_delete_customer(){
-		$customer = EAccounting_Helper_Contact::create_contact();
+		$customer = EverAccounting_Helper_Contact::create_contact();
 		$this->assertNotEquals( 0, $customer->get_id() );
 		$this->assertNotFalse( eaccounting_delete_contact( $customer->get_id() ) );
 	}

@@ -9,10 +9,9 @@
 
 namespace EverAccounting\Export;
 
-defined( 'ABSPATH' ) || exit();
-
 use EverAccounting\Abstracts\CSV_Exporter;
-use EverAccounting\Query_Currency;
+
+defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Export_Currencies
@@ -35,8 +34,8 @@ class Export_Currencies extends CSV_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @since  1.0.2
 	 * @return array
+	 * @since  1.0.2
 	 */
 	public function get_columns() {
 		return eaccounting_get_io_headers( 'currency' );
@@ -45,20 +44,21 @@ class Export_Currencies extends CSV_Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_rows() {
-		$args              = array(
+		$args  = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
+			'return'   => 'objects',
+			'number'   => - 1,
 		);
-		$query             = Query_Currency::init()->where( $args );
-		$items             = $query->get( OBJECT, 'eaccounting_get_currency' );
-		$this->total_count = $query->count();
-		$rows              = array();
+		$args  = apply_filters( 'eaccounting_currency_export_query_args', $args );
+		$items = eaccounting_get_currencies( $args );
+		$rows  = array();
 
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
@@ -71,13 +71,12 @@ class Export_Currencies extends CSV_Exporter {
 	/**
 	 * Take a currency and generate row data from it for export.
 	 *
-	 *
-	 * @param \EverAccounting\Currency $item
+	 * @param \EverAccounting\Models\Currency $item
 	 *
 	 * @return array
 	 */
 	protected function generate_row_data( $item ) {
-		$props = [];
+		$props = array();
 		foreach ( $this->get_columns() as $column => $label ) {
 			$value = null;
 			switch ( $column ) {

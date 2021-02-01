@@ -1,11 +1,18 @@
 <?php
+/**
+ * Handle payment export.
+ *
+ * @since   1.0.2
+ *
+ * @package EverAccounting\Export
+ */
 
 namespace EverAccounting\Export;
 
+use EverAccounting\Abstracts\CSV_Exporter;
+
 defined( 'ABSPATH' ) || exit();
 
-use EverAccounting\Abstracts\CSV_Exporter;
-use EverAccounting\Query_Transaction;
 
 class Export_Payments extends CSV_Exporter {
 
@@ -21,8 +28,8 @@ class Export_Payments extends CSV_Exporter {
 	/**
 	 * Return an array of columns to export.
 	 *
-	 * @since  1.0.2
 	 * @return array
+	 * @since  1.0.2
 	 */
 	public function get_columns() {
 		return eaccounting_get_io_headers( 'payment' );
@@ -31,21 +38,23 @@ class Export_Payments extends CSV_Exporter {
 	/**
 	 * Get export data.
 	 *
-	 * @since 1.0.2
 	 * @return array
+	 * @since 1.0.2
 	 */
 	public function get_rows() {
-		$args              = array(
+		$args  = array(
 			'per_page' => $this->limit,
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
 			'type'     => 'expense',
+			'return'   => 'objects',
+			'number'   => - 1,
 		);
-		$query             = Query_Transaction::init()->where( $args )->notTransfer();
-		$items             = $query->get( OBJECT, 'eaccounting_get_transaction' );
-		$this->total_count = $query->count();
-		$rows              = array();
+		$args  = apply_filters( 'eaccounting_payment_export_query_args', $args );
+		$items = eaccounting_get_payments( $args );
+
+		$rows = array();
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
 		}
@@ -57,8 +66,7 @@ class Export_Payments extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 *
-	 * @param \EverAccounting\Transaction $item
+	 * @param \EverAccounting\Models\Payment $item
 	 *
 	 * @return array
 	 */
@@ -67,8 +75,8 @@ class Export_Payments extends CSV_Exporter {
 		foreach ( $this->get_columns() as $column => $label ) {
 			$value = null;
 			switch ( $column ) {
-				case 'paid_at':
-					$value = eaccounting_format_datetime( $item->get_paid_at() );
+				case 'payment_date':
+					$value = eaccounting_date( $item->get_payment_date() );
 					break;
 				case 'amount':
 					$value = $item->get_amount();
@@ -84,8 +92,8 @@ class Export_Payments extends CSV_Exporter {
 					$value   = $account ? $account->get_name() : '';
 					break;
 				case 'vendor_name':
-					$vendor = eaccounting_get_contact( $item->get_contact_id() );
-					$value    = $vendor ? $vendor->get_name() : '';
+					$vendor = eaccounting_get_vendor( $item->get_contact_id() );
+					$value  = $vendor ? $vendor->get_name() : '';
 					break;
 				case 'category_name':
 					$category = eaccounting_get_category( $item->get_category_id() );
