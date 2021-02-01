@@ -83,7 +83,7 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'A transfer is basically when money is sent from one bank account to another bank account. Two different accounts participate in transferring balances that have either similar or different currencies. If the currencies are different, the conversion of the currencies follows the currency rates.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Add deposits to and transfers between accounts and keep the balance of your bank accounts active regardless of currency. The transferred amount will automatically adjust to the account currency.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'transfers', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Transfers', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-transfers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>

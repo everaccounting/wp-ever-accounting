@@ -95,7 +95,7 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'Customers are individuals or businesses that buy goods or services from other businesses. Customers can be assigned to revenues and invoices and can also be filtered out from the transactions you made with them.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Create customers to assign revenues, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a customer.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Customer', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-customers/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>

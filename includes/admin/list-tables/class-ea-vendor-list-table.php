@@ -95,7 +95,7 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'Vendors are the purveyors of goods or services. All the entities that lead up to the final delivery of goods to the customers are considered as vendors. Vendors can be assigned to payments and bills and can also be filtered out from the transactions you made with them.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Create vendors to assign payments, and later you can filter the transactions you made with them. You can store the name, address, email, phone number, etc. of a vendor.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'vendors', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Vendors', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-vendors/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>

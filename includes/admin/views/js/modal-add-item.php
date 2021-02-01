@@ -21,17 +21,6 @@ defined( 'ABSPATH' ) || exit();
 				'required'      => true,
 			)
 		);
-		eaccounting_category_dropdown(
-			array(
-				'wrapper_class' => 'ea-col-6',
-				'label'         => __( 'Category', 'wp-ever-accounting' ),
-				'name'          => 'category_id',
-				'required'      => false,
-				'type'          => 'item',
-				'creatable'     => false,
-				'ajax_action'   => 'eaccounting_get_item_categories',
-			)
-		);
 
 		eaccounting_text_input(
 			array(
@@ -50,6 +39,18 @@ defined( 'ABSPATH' ) || exit();
 				'name'          => 'purchase_price',
 				'placeholder'   => __( 'Enter Purchase price', 'wp-ever-accounting' ),
 				'required'      => true,
+			)
+		);
+
+		eaccounting_category_dropdown(
+			array(
+				'wrapper_class' => 'ea-col-6',
+				'label'         => __( 'Category', 'wp-ever-accounting' ),
+				'name'          => 'category_id',
+				'required'      => false,
+				'type'          => 'item',
+				'creatable'     => false,
+				'ajax_action'   => 'eaccounting_get_item_categories',
 			)
 		);
 

@@ -79,7 +79,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 								<?php if ( ! empty( $invoice_actions ) ) : ?>
 									<div class="ea-dropdown">
 										<button class="button-secondary ea-dropdown-trigger"><span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e( 'More', 'wp-ever-accounting' ); ?><span class="dashicons dashicons-arrow-down-alt2"></span></button>
-										<a class="button-secondary" href="<?php echo esc_url( $invoice->get_url() ); ?>"><span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?></a>
+										<a class="button-secondary" href="<?php echo esc_url( $invoice->get_url() ); ?>" target="_blank"><span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?></a>
 										<ul class="ea-dropdown-menu">
 											<?php
 											foreach ( $invoice_actions as $action => $title ) {
