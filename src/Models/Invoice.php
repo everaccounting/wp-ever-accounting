@@ -350,6 +350,7 @@ class Invoice extends Document {
 	| Notes
 	|--------------------------------------------------------------------------
 	*/
+
 	/**
 	 * Get invoice notes.
 	 *
@@ -403,18 +404,6 @@ class Invoice extends Document {
 				'creator_id' => $creator_id,
 			)
 		);
-	}
-
-	/**
-	 * Delete notes.
-	 *
-	 * @since 1.1.0
-	 * @return void
-	 */
-	public function delete_notes() {
-		if ( $this->exists() ) {
-			$this->repository->delete_notes( $this );
-		}
 	}
 
 	/*
@@ -513,16 +502,7 @@ class Invoice extends Document {
 		return array();
 	}
 
-	/**
-	 * Delete all transactions.
-	 *
-	 * @since 1.1.0
-	 */
-	public function delete_payments() {
-		if ( $this->exists() ) {
-			$this->repository->delete_transactions( $this );
-		}
-	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Calculations
@@ -745,9 +725,11 @@ class Invoice extends Document {
 			}
 			$this->delete_payments();
 			$this->set_status( 'cancelled' );
+
 			return $this->save();
 		} catch ( \Exception $e ) {
 			$this->add_note( $e->getMessage() );
+
 			return false;
 		}
 	}

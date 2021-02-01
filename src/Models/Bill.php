@@ -333,7 +333,6 @@ class Bill extends Document {
 			$line_item->set_price( $converted );
 		}
 
-
 		foreach ( $this->get_items()  as $key => $item ) {
 			if ( ! $line_item->get_id() && ( $item->get_item_id() === $line_item->get_item_id() ) ) {
 				$item->increment_quantity( $line_item->get_quantity() );
@@ -347,7 +346,6 @@ class Bill extends Document {
 		return $key;
 	}
 
-
 	/*
 	|--------------------------------------------------------------------------
 	| Notes
@@ -357,11 +355,11 @@ class Bill extends Document {
 	/**
 	 * Get bill notes.
 	 *
+	 * @since 1.1.0
+	 *
 	 * @param array $args
 	 *
 	 * @return array|int|void
-	 * @since 1.1.0
-	 *
 	 */
 	public function get_notes( $args = array() ) {
 		if ( ! $this->exists() ) {
@@ -407,18 +405,6 @@ class Bill extends Document {
 				'creator_id' => $creator_id,
 			)
 		);
-	}
-
-	/**
-	 * Delete notes.
-	 *
-	 * @return void
-	 * @since 1.1.0
-	 */
-	public function delete_notes() {
-		if ( $this->exists() ) {
-			$this->repository->delete_notes( $this );
-		}
 	}
 
 	/*
@@ -523,17 +509,6 @@ class Bill extends Document {
 		}
 
 		return array();
-	}
-
-	/**
-	 * Delete all transactions.
-	 *
-	 * @since 1.1.0
-	 */
-	public function delete_payments() {
-		if ( $this->exists() ) {
-			$this->repository->delete_transactions( $this );
-		}
 	}
 
 

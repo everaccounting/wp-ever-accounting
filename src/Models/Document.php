@@ -212,6 +212,29 @@ abstract class Document extends ResourceModel {
 		}
 	}
 
+	/**
+	 * Delete notes.
+	 *
+	 * @return void
+	 * @since 1.1.0
+	 */
+	public function delete_notes() {
+		if ( $this->exists() ) {
+			$this->repository->delete_notes( $this );
+		}
+	}
+
+	/**
+	 * Delete all transactions.
+	 *
+	 * @since 1.1.0
+	 */
+	public function delete_payments() {
+		if ( $this->exists() ) {
+			$this->repository->delete_transactions( $this );
+		}
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
