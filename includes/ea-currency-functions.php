@@ -199,7 +199,6 @@ function eaccounting_get_currencies( $args = array() ) {
 	);
 
 	$qv = apply_filters( 'eaccounting_get_currencies_args', $args );
-	//error_log( print_r( $qv, true ) );
 	$option     = \EverAccounting\Repositories\Currencies::OPTION;
 	$columns    = \EverAccounting\Repositories\Currencies::get_columns();
 	$currencies = wp_cache_get( 'ea_currencies', 'ea_currencies' );

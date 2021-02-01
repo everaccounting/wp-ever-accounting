@@ -113,6 +113,11 @@ if [ -f ".gitmodules" ]; then
 		done
 fi
 
+#install composer
+status "Installing PHP dependencies";
+cd $SVNPATH/trunk
+composer install --no-dev
+composer du -o
 
 # Support for the /assets folder on the .org repo, locally this will be /.wordpress-org
 status "Moving assets."
@@ -125,7 +130,8 @@ svn add --force $SVNPATH/assets/
 cd $SVNPATH
 status "Removing unwanted files"
 rm -Rf trunk/assets/css/*.scss
-rm -Rf trunk/assets/css/metabox/*.scss
+rm -Rf trunk/assets/css/select2
+rm -Rf trunk/assets/css/jquery-ui
 rm -Rf trunk/assets/*.scss
 rm -Rf trunk/bin
 rm -Rf trunk/**/.gitkeep
@@ -134,6 +140,22 @@ rm -Rf trunk/.babelrc
 rm -Rf trunk/yarn.lock
 rm -Rf trunk/.github
 rm -Rf trunk/.wordpress-org
+rm -f trunk/.editorconfig
+rm -f trunk/.eslintignore
+rm -f trunk/.eslintrc.js
+rm -f trunk/.gitattributes
+rm -f trunk/.gitignore
+rm -f trunk/.npmrc
+rm -f trunk/.phpcs.xml.dist
+rm -f trunk/.gitmodules
+rm -f trunk/.prettierrc
+rm -f trunk/.stylelintrc.json
+rm -f trunk/.jscrsrc
+rm -f trunk/.jshintrc
+rm -f trunk/.scrutinizer.yml
+rm -f trunk/.stylelintrc
+rm -f trunk/.coveralls.yml
+rm -f trunk/.travis.yml
 rm -Rf trunk/.svnignore
 rm -Rf trunk/apigen
 rm -Rf trunk/plugin-deploy.sh
@@ -141,16 +163,6 @@ rm -Rf trunk/babel.config.js
 rm -Rf trunk/postcss.config.js
 rm -Rf trunk/webpack.config.js
 rm -Rf trunk/tests
-rm -f trunk/.coveralls.yml
-rm -f trunk/.editorconfig
-rm -f trunk/.gitattributes
-rm -f trunk/.gitignore
-rm -f trunk/.gitmodules
-rm -f trunk/.jscrsrc
-rm -f trunk/.jshintrc
-rm -f trunk/.scrutinizer.yml
-rm -f trunk/.stylelintrc
-rm -f trunk/.travis.yml
 rm -f trunk/apigen.neon
 rm -f trunk/CHANGELOG.txt
 rm -f trunk/CODE_OF_CONDUCT.md
@@ -168,7 +180,6 @@ rm -f trunk/deploy.sh
 rm -f trunk/package-lock.json
 rm -f trunk/phpcs.xml.dist
 rm -f trunk/tmp
-rm -f trunk/.phpcs.xml.dist
 
 # DO THE ADD ALL NOT KNOWN FILES UNIX COMMAND
 svn add --force * --auto-props --parents --depth infinity -q
