@@ -41,11 +41,11 @@ class EverAccounting_Admin_Sales {
 	 */
 	public function get_tabs() {
 		$tabs = array();
-		if ( current_user_can( 'ea_manage_invoice' ) ) {
-			$tabs['invoices'] = __( 'Invoices', 'wp-ever-accounting' );
-		}
 		if ( current_user_can( 'ea_manage_revenue' ) ) {
 			$tabs['revenues'] = __( 'Revenues', 'wp-ever-accounting' );
+		}
+		if ( current_user_can( 'ea_manage_invoice' ) ) {
+			$tabs['invoices'] = __( 'Invoices', 'wp-ever-accounting' );
 		}
 		if ( current_user_can( 'ea_manage_customer' ) ) {
 			$tabs['customers'] = __( 'Customers', 'wp-ever-accounting' );

@@ -41,11 +41,11 @@ class EverAccounting_Admin_Expenses {
 	 */
 	public function get_tabs() {
 		$tabs = array();
-		if ( current_user_can( 'ea_manage_bill' ) ) {
-			$tabs['bills'] = __( 'Bills', 'wp-ever-accounting' );
-		}
 		if ( current_user_can( 'ea_manage_payment' ) ) {
 			$tabs['payments'] = __( 'Payments', 'wp-ever-accounting' );
+		}
+		if ( current_user_can( 'ea_manage_bill' ) ) {
+			$tabs['bills'] = __( 'Bills', 'wp-ever-accounting' );
 		}
 		if ( current_user_can( 'ea_manage_vendor' ) ) {
 			$tabs['vendors'] = __( 'Vendors', 'wp-ever-accounting' );
