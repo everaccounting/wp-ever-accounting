@@ -18,17 +18,26 @@ class CurrenciesController extends EntitiesController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 *
 	 */
 	protected $rest_base = 'currencies';
 
 	/**
+	 * Entity type.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 */
+	protected $entity_type = "currency";
+
+	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Currency::class;
@@ -51,7 +60,7 @@ class CurrenciesController extends EntitiesController {
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Item schema data.
 	 *
 	 */
@@ -142,19 +151,6 @@ class CurrenciesController extends EntitiesController {
 					),
 					'required'    => true,
 				),
-				'enabled'            => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-				'date_created'       => array(
-					'description' => __( 'Created date of the currency.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'date-time',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
-
 			),
 		);
 
@@ -165,7 +161,7 @@ class CurrenciesController extends EntitiesController {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Collection parameters.
 	 *
 	 */
