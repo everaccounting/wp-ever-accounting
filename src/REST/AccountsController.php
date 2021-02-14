@@ -18,17 +18,26 @@ class AccountsController extends EntitiesController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 *
 	 */
 	protected $rest_base = 'accounts';
 
 	/**
+	 * Entity type.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 */
+	protected $entity_type = "account";
+
+	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Account::class;
@@ -98,25 +107,11 @@ class AccountsController extends EntitiesController {
 					),
 					'required'    => true,
 				),
-				'currency'        => array(
+				'currency_code'        => array(
 					'description' => __( 'Currency code of the account', 'wp-ever-accounting' ),
-					'type'        => 'object',
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'code' => array(
-							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-
-					),
 				),
 				'bank_name'       => array(
 					'description' => __( 'Bank name of the account', 'wp-ever-accounting' ),
@@ -188,7 +183,7 @@ class AccountsController extends EntitiesController {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Collection parameters.
 	 *
 	 */
