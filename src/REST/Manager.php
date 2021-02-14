@@ -32,7 +32,7 @@ class Manager extends Singleton {
 				'\EverAccounting\Rest\CustomersController',
 				'\EverAccounting\Rest\VendorsController',
 				'\EverAccounting\Rest\ExpensesController',
-				'\EverAccounting\Rest\IncomesController',
+				'\EverAccounting\Rest\PaymentsController',
 				'\EverAccounting\Rest\CategoriesController',
 				'\EverAccounting\Rest\CurrenciesController',
 				'\EverAccounting\Rest\TransfersController',

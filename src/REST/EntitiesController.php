@@ -256,6 +256,7 @@ abstract class EntitiesController extends Controller {
 			if ( ! empty( $request['id'] ) ) {
 				throw new \Exception( __( 'Cannot create existing resource.', 'wp-ever-accounting' ), 400 );
 			}
+
 			$object = new $this->entity_model();
 			$object = $this->prepare_object_for_database( $object, $request );
 			$object->save();
@@ -270,7 +271,7 @@ abstract class EntitiesController extends Controller {
 			return $response;
 
 		} catch ( \Exception $e ) {
-			return new \WP_Error( 'create_ite', $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( 'create_item', $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 
 	}

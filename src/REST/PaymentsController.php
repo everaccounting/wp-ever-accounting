@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Transactions Rest Controller Class.
+ * Payments Rest Controller Class.
  *
  * @since       1.1.0
  * @subpackage  REST
@@ -31,6 +31,16 @@ class PaymentsController extends TransactionsController {
 	 *
 	 */
 	protected $rest_base = 'payments';
+
+	/**
+	 * Rest route.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 *
+	 */
+	protected $entity_type = 'payment';
 
 	/**
 	 * Entity model class.
