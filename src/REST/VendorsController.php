@@ -25,17 +25,27 @@ class VendorsController extends ContactsController {
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 *
 	 */
 	protected $rest_base = 'vendors';
 
 	/**
+	 * Entity Type.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 *
+	 */
+	protected $entity_type = 'vendor';
+
+	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Vendor::class;
