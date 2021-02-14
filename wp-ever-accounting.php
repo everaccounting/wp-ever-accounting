@@ -170,7 +170,7 @@ final class EverAccounting {
 		}
 
 
-		//\EverAccounting\REST\Manager::instance();
+		\EverAccounting\REST\Manager::instance();
 		\EverAccounting\Core\Emails::instance();
 
 		$this->settings = new EverAccounting_Settings();

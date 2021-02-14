@@ -22,10 +22,19 @@ class CategoriesController extends EntitiesController {
 	protected $rest_base = 'categories';
 
 	/**
+	 * Entity type.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 */
+	protected $entity_type = "category";
+
+	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Category::class;
@@ -46,9 +55,9 @@ class CategoriesController extends EntitiesController {
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
-	 * 
+	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Item schema data.
 	 *
 	 */
@@ -117,9 +126,9 @@ class CategoriesController extends EntitiesController {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Collection parameters.
-	 * 
+	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
