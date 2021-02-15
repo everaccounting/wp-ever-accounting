@@ -46,12 +46,12 @@ class TransfersController extends EntitiesController {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.0
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_transfers( $query_args );
@@ -60,9 +60,9 @@ class TransfersController extends EntitiesController {
 	/**
 	 * Retrieves the item's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Item schema data.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -71,7 +71,7 @@ class TransfersController extends EntitiesController {
 			'title'      => __( 'Transfer', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'           => array(
+				'id'              => array(
 					'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -80,7 +80,7 @@ class TransfersController extends EntitiesController {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'from_account_id'    => array(
+				'from_account_id' => array(
 					'description' => __( 'From Account ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -89,7 +89,7 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => true,
 				),
-				'to_account_id'    => array(
+				'to_account_id'   => array(
 					'description' => __( 'To Account ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -98,7 +98,7 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => true,
 				),
-				'amount' => array(
+				'amount'          => array(
 					'description' => __( 'Amount of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -107,14 +107,14 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => true,
 				),
-				'date'     => array(
+				'date'            => array(
 					'description' => __( 'Date of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
-				'payment_method' => array(
+				'payment_method'  => array(
 					'description' => __( 'Payment method of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -123,7 +123,7 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => true,
 				),
-				'income_id'    => array(
+				'income_id'       => array(
 					'description' => __( 'Income ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -132,7 +132,7 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => false,
 				),
-				'expense_id'   => array(
+				'expense_id'      => array(
 					'description' => __( 'Expense ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -141,7 +141,7 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => false,
 				),
-				'reference' => array(
+				'reference'       => array(
 					'description' => __( 'Reference of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -150,7 +150,7 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => false,
 				),
-				'description' => array(
+				'description'     => array(
 					'description' => __( 'Reference of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -159,7 +159,7 @@ class TransfersController extends EntitiesController {
 					),
 					'required'    => false,
 				),
-				'creator'      => array(
+				'creator'         => array(
 					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
@@ -182,7 +182,7 @@ class TransfersController extends EntitiesController {
 						),
 					),
 				),
-				'date_created' => array(
+				'date_created'    => array(
 					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
@@ -199,22 +199,24 @@ class TransfersController extends EntitiesController {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Collection parameters.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
 		$query_params['context']['default'] = 'view';
 
-		$params['orderby'] = array(
+		$query_params['orderby'] = array(
 			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
 			'type'              => 'string',
 			'default'           => 'id',
 			'enum'              => array(
+				'id',
 				'income_id',
 				'expense_id',
+				'date_created'
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
