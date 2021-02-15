@@ -255,7 +255,7 @@ class ItemsController extends EntitiesController {
 		$query_params                       = parent::get_collection_params();
 		$query_params['context']['default'] = 'view';
 
-		$params['orderby'] = array(
+		$query_params['orderby'] = array(
 			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
 			'type'              => 'string',
 			'default'           => 'id',
