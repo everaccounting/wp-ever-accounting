@@ -115,11 +115,12 @@ abstract class TransactionsController extends EntitiesController {
 				'currency_code'    => array(
 					'description' => __( 'Currency code for transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => true,
+					'required'    => false,
+					'readonly'    => true,
 //					'properties'  => array(
 //						'id'   => array(
 //							'description' => __( 'Currency Code ID.', 'wp-ever-accounting' ),
@@ -167,7 +168,7 @@ abstract class TransactionsController extends EntitiesController {
 //
 //					),
 				),
-				'contact_id' => array(
+				'contact_id'       => array(
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -233,26 +234,26 @@ abstract class TransactionsController extends EntitiesController {
 				),
 				'attachment_id'    => array(
 					'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'object',
+					'type'        => 'integer',
 					'context'     => array( 'embed', 'view' ),
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'src'  => array(
-							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name' => array(
-							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
+//					'properties'  => array(
+//						'id'   => array(
+//							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+//							'type'        => 'integer',
+//							'context'     => array( 'view', 'edit' ),
+//							'readonly'    => true,
+//						),
+//						'src'  => array(
+//							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
+//							'type'        => 'string',
+//							'context'     => array( 'view', 'edit' ),
+//						),
+//						'name' => array(
+//							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
+//							'type'        => 'string',
+//							'context'     => array( 'view', 'edit' ),
+//						),
+//					),
 				),
 				'reconciled'       => array(
 					'description' => __( 'Reconciliation of the transaction', 'wp-ever-accounting' ),
