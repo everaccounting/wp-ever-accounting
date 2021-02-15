@@ -51,7 +51,8 @@ class EverAccounting_Controller {
 		//revenues
 		add_action( 'eaccounting_validate_revenue_data', array( $this, 'validate_revenue_data' ), 10, 2 );
 
-		//transactions
+		//transfer
+		add_action( 'eaccounting_validate_transfer_data', array( $this, 'validate_transfer_data' ), 10, 2 );
 
 		//category
 		add_action( 'eaccounting_pre_save_category', array( $this, 'validate_category_data' ), 10, 2 );
@@ -274,6 +275,45 @@ class EverAccounting_Controller {
 		}
 	}
 
+	/**
+	 * Validate transfer data.
+	 *
+	 * @param null $id
+	 * @param \WP_Error $errors
+	 *
+	 * @param array $data
+	 *
+	 * @throws \Exception
+	 * @since 1.1.1
+	 *
+	 */
+	public static function validate_transfer_data( $data, $id = null ) {
+		if ( empty( $data['date'] ) ) {
+			throw new \Exception( 'empty_prop', __( 'Transfer date is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( $data['payment_method'] ) ) {
+			throw new \Exception( 'empty_prop', __( 'Payment method is required.', 'wp-ever-accounting' ) );
+		}
+
+		$from_account = eaccounting_get_account( $data['from_account_id'] );
+		if ( empty( $from_account ) ) {
+			throw new \Exception( 'empty_prop', __( 'From Account is required.', 'wp-ever-accounting' ) );
+		}
+
+		$to_account = eaccounting_get_account( $data['to_account_id'] );
+		if ( empty( $to_account ) ) {
+			throw new \Exception( 'empty_prop', __( 'To Account is required.', 'wp-ever-accounting' ) );
+		}
+
+		if ( $from_account === $to_account ) {
+			throw new \Exception( 'empty_prop', __( 'From Account and To Account can\'t be same.', 'wp-ever-accounting' ) );
+		}
+
+		if ( empty( eaccounting_sanitize_number( $data['amount'] ) ) ) {
+			throw new \Exception( 'empty_prop', __( 'Transfer amount is required.', 'wp-ever-accounting' ) );
+		}
+	}
 	/*
 	|--------------------------------------------------------------------------
 	| Transactions
