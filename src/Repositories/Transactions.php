@@ -53,7 +53,7 @@ class Transactions extends ResourceRepository {
 		'id'             => '%d',
 		'type'           => '%s',
 		'payment_date'   => '%s',
-		'amount'         => '%f',
+		'amount'         => '%.4f',
 		'currency_code'  => '%s', // protected
 		'currency_rate'  => '%.8f', // protected
 		'account_id'     => '%d',

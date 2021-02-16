@@ -1032,7 +1032,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_discount( $discount ) {
-		$this->set_prop( 'discount', abs( eaccounting_format_decimal( $discount, 2 ) ) );
+		$this->set_prop( 'discount', abs( eaccounting_format_decimal( $discount, 4 ) ) );
 	}
 
 	/**
@@ -1058,7 +1058,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_subtotal( $subtotal ) {
-		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 2 ) );
+		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 4 ) );
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_total_tax( $tax ) {
-		$this->set_prop( 'total_tax', eaccounting_format_decimal( $tax, 2 ) );
+		$this->set_prop( 'total_tax', eaccounting_format_decimal( $tax, 4 ) );
 	}
 
 	/**
@@ -1082,7 +1082,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_total_discount( $discount ) {
-		$this->set_prop( 'total_discount', eaccounting_format_decimal( $discount, 2 ) );
+		$this->set_prop( 'total_discount', eaccounting_format_decimal( $discount, 4 ) );
 	}
 
 	/**
@@ -1094,7 +1094,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_total_fees( $fees ) {
-		$this->set_prop( 'total_fees', eaccounting_format_decimal( $fees, 2 ) );
+		$this->set_prop( 'total_fees', eaccounting_format_decimal( $fees, 4 ) );
 	}
 
 	/**
@@ -1106,7 +1106,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_total_shipping( $shipping ) {
-		$this->set_prop( 'total_shipping', eaccounting_format_decimal( $shipping, 2 ) );
+		$this->set_prop( 'total_shipping', eaccounting_format_decimal( $shipping, 4 ) );
 	}
 
 	/**
@@ -1118,7 +1118,7 @@ abstract class Document extends ResourceModel {
 	 *
 	 */
 	public function set_total( $total ) {
-		$this->set_prop( 'total', eaccounting_format_decimal( $total, 2 ) );
+		$this->set_prop( 'total', eaccounting_format_decimal( $total, 4 ) );
 	}
 
 	/**

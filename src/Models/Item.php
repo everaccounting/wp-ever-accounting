@@ -91,9 +91,9 @@ class Item extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'name'           => __( 'Item name', 'wp-ever-accounting' ),
-			'quantity'       => __( 'Item Quantity', 'wp-ever-accounting' ),
-			'sale_price'     => __( 'Item Sale Price', 'wp-ever-accounting' ),
+			'name'       => __( 'Item name', 'wp-ever-accounting' ),
+			'quantity'   => __( 'Item Quantity', 'wp-ever-accounting' ),
+			'sale_price' => __( 'Item Sale Price', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -117,114 +117,115 @@ class Item extends ResourceModel {
 	*/
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_name( $context = 'edit' ) {
 		return $this->get_prop( 'name', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_sku( $context = 'edit' ) {
 		return $this->get_prop( 'sku', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_thumbnail_id( $context = 'edit' ) {
 		return $this->get_prop( 'thumbnail_id', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_sale_price( $context = 'edit' ) {
 		return $this->get_prop( 'sale_price', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_purchase_price( $context = 'edit' ) {
 		$price = $this->get_prop( 'purchase_price', $context );
-		if( empty($price)){
+		if ( empty( $price ) ) {
 			$price = $this->get_sale_price();
 		}
+
 		return $price;
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_quantity( $context = 'edit' ) {
 		return $this->get_prop( 'quantity', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_sales_tax( $context = 'edit' ) {
 		return $this->get_prop( 'sales_tax', $context );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param string $context
 	 *
 	 * @return mixed|null
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_purchase_tax( $context = 'edit' ) {
 		return $this->get_prop( 'purchase_tax', $context );
@@ -241,9 +242,9 @@ class Item extends ResourceModel {
 	*/
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $name
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_name( $name ) {
@@ -251,9 +252,9 @@ class Item extends ResourceModel {
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $sku
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_sku( $sku ) {
@@ -261,9 +262,9 @@ class Item extends ResourceModel {
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $thumbnail_id
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_thumbnail_id( $thumbnail_id ) {
@@ -271,9 +272,9 @@ class Item extends ResourceModel {
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $description
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_description( $description ) {
@@ -281,29 +282,29 @@ class Item extends ResourceModel {
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $sale_price
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_sale_price( $sale_price ) {
-		$this->set_prop( 'sale_price', (float) eaccounting_sanitize_number( $sale_price, true ) );
+		$this->set_prop( 'sale_price', eaccounting_format_decimal( $sale_price, 4 ) );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $purchase_price
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_purchase_price( $purchase_price ) {
-		$this->set_prop( 'purchase_price', (float) eaccounting_sanitize_number( $purchase_price, true ) );
+		$this->set_prop( 'purchase_price', eaccounting_format_decimal( $purchase_price, 4 ) );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $quantity
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_quantity( $quantity ) {
@@ -311,9 +312,9 @@ class Item extends ResourceModel {
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $category_id
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_category_id( $category_id ) {
@@ -321,23 +322,23 @@ class Item extends ResourceModel {
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $tax
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_sales_tax( $tax ) {
-		$this->set_prop( 'sales_tax', floatval( $tax ) );
+		$this->set_prop( 'sales_tax', eaccounting_format_decimal( $tax, 4 ) );
 	}
 
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param $tax_ids
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function set_purchase_tax( $tax ) {
-		$this->set_prop( 'purchase_tax', floatval( $tax ) );
+		$this->set_prop( 'purchase_tax', eaccounting_format_decimal( $tax, 4 ) );
 	}
 
 	/*
