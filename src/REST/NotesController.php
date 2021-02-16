@@ -31,7 +31,7 @@ class NotesController extends EntitiesController {
 	 *
 	 * @var string
 	 */
-	protected $entity_type = "invoice";
+	protected $entity_type = "note";
 
 	/**
 	 * Entity model class.

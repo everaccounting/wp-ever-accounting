@@ -722,6 +722,7 @@ class EverAccounting_Install {
 				'ea_manage_item'     => true,
 				'ea_manage_invoice'  => true,
 				'ea_manage_bill'     => true,
+				'ea_manage_note'     => true,
 				'read'               => true,
 			)
 		);
@@ -747,6 +748,7 @@ class EverAccounting_Install {
 				'ea_manage_item'     => true,
 				'ea_manage_invoice'  => true,
 				'ea_manage_bill'     => true,
+				'ea_manage_note'     => true,
 				'read'               => true,
 			)
 		);
@@ -771,6 +773,7 @@ class EverAccounting_Install {
 			$wp_roles->add_cap( 'administrator', 'ea_manage_item' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_invoice' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
+			$wp_roles->add_cap( 'administrator', 'ea_manage_note' );
 		}
 	}
 

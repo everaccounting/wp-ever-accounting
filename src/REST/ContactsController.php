@@ -132,29 +132,35 @@ abstract class ContactsController extends EntitiesController {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'currency'     => array(
-					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
-					'type'        => 'object',
+				'currency_code'        => array(
+					'description' => __( 'Currency code of the account', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
 					'required'    => true,
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'code' => array(
-							'description' => __( 'Currency code', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'enum'        => array_keys( eaccounting_get_global_currencies() ),
-						),
-					),
 				),
+//				'currency'     => array(
+//					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
+//					'type'        => 'object',
+//					'context'     => array( 'view', 'edit' ),
+//					'arg_options' => array(
+//						'sanitize_callback' => 'sanitize_text_field',
+//					),
+//					'required'    => true,
+//					'properties'  => array(
+//						'id'   => array(
+//							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
+//							'type'        => 'string',
+//							'context'     => array( 'view', 'edit' ),
+//							'readonly'    => true,
+//						),
+//						'code' => array(
+//							'description' => __( 'Currency code', 'wp-ever-accounting' ),
+//							'type'        => 'string',
+//							'context'     => array( 'view', 'edit' ),
+//							'enum'        => array_keys( eaccounting_get_global_currencies() ),
+//						),
+//					),
+//				),
 //				'note'         => array(
 //					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
 //					'type'        => 'string',
