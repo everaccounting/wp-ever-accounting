@@ -44,6 +44,7 @@ class Manager extends Singleton {
 				'\EverAccounting\Rest\CountriesController',
 				'\EverAccounting\Rest\DataController',
 				'\EverAccounting\Rest\TaxesController',
+				'\EverAccounting\Rest\NotesController',
 			)
 		);
 

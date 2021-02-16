@@ -132,28 +132,28 @@ abstract class ContactsController extends EntitiesController {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'currency_code'     => array(
+				'currency'     => array(
 					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
-					'type'        => 'string',
+					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
-//					'properties'  => array(
-//						'id'   => array(
-//							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'readonly'    => true,
-//						),
-//						'code' => array(
-//							'description' => __( 'Currency code', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//							'enum'        => array_keys( eaccounting_get_global_currencies() ),
-//						),
-//					),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'code' => array(
+							'description' => __( 'Currency code', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'enum'        => array_keys( eaccounting_get_global_currencies() ),
+						),
+					),
 				),
 //				'note'         => array(
 //					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
@@ -164,31 +164,31 @@ abstract class ContactsController extends EntitiesController {
 //						'sanitize_callback' => 'sanitize_textarea_field',
 //					),
 //				),
-				'thumbnail_id'   => array(
-					'description' => __( 'Photo of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+				'thumbnail'   => array(
+					'description' => __( 'Thumbnail of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-//					'properties'  => array(
-//						'id'   => array(
-//							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'readonly'    => true,
-//						),
-//						'src'  => array(
-//							'description' => __( 'Attachment Source.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//						'name' => array(
-//							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//					),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'src'  => array(
+							'description' => __( 'Thumbnail Source.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'name' => array(
+							'description' => __( 'Thumbnail Name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
 				),
 				'enabled'      => array(
 					'description' => __( 'Status of the contact.', 'wp-ever-accounting' ),
@@ -247,6 +247,7 @@ abstract class ContactsController extends EntitiesController {
 			'default'           => 'id',
 			'enum'              => array(
 				'name',
+				'id',
 				'email',
 				'phone',
 				'type',
