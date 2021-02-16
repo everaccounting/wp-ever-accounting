@@ -56,7 +56,7 @@ class Documents extends ResourceRepository {
 		'contact_id'      => '%d',
 		'address'         => '%s',
 		'currency_code'   => '%s',
-		'currency_rate'   => '%f',
+		'currency_rate'   => '%.8f',
 		'subtotal'        => '%f',
 		'discount'        => '%f',
 		'discount_type'   => '%s',
