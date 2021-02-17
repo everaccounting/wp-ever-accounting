@@ -249,7 +249,6 @@ abstract class EntitiesController extends Controller {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function create_item( $request ) {
-		error_log(print_r($request,true));
 		try {
 			if ( empty( $this->entity_model ) || ! class_exists( $this->entity_model ) ) {
 				throw new \Exception( __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );

@@ -9,6 +9,7 @@
 
 namespace EverAccounting\REST;
 
+use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || die();
@@ -80,23 +81,51 @@ class TransfersController extends EntitiesController {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'from_account_id' => array(
-					'description' => __( 'From Account ID of the transaction.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+				'from_account' => array(
+					'description' => __( 'From Account of the transaction.', 'wp-ever-accounting' ),
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
+					'readonly'    => true,
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'From Account ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name' => array(
+							'description' => __( 'From Account name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
 				),
-				'to_account_id'   => array(
+				'to_account'   => array(
 					'description' => __( 'To Account ID of the transaction.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
+					'readonly'    => true,
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'To Account ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name' => array(
+							'description' => __( 'To Account name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
 				),
 				'amount'          => array(
 					'description' => __( 'Amount of the transaction.', 'wp-ever-accounting' ),
@@ -130,6 +159,7 @@ class TransfersController extends EntitiesController {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'readonly' => false,
 					'required'    => false,
 				),
 				'expense_id'      => array(
@@ -139,6 +169,7 @@ class TransfersController extends EntitiesController {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'readonly' => false,
 					'required'    => false,
 				),
 				'reference'       => array(
@@ -163,6 +194,7 @@ class TransfersController extends EntitiesController {
 					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
+					'readonly' => true,
 					'properties'  => array(
 						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
@@ -222,5 +254,30 @@ class TransfersController extends EntitiesController {
 		);
 
 		return $query_params;
+	}
+
+	/**
+	 * Prepare a single object for create or update.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 *
+	 * @return ResourceModel|\WP_Error Data object or WP_Error.
+	 * @since 1.1.0
+	 *
+	 */
+	public function prepare_object_for_database( &$object, $request ) {
+		$object->set_date( $request['date'] );
+		$object->set_from_account_id( $request['from_account']['id'] );
+		$object->set_amount( $request['amount'] );
+		$object->set_to_account_id( $request['to_account']['id'] );
+		$object->set_income_id( $request['income_id'] );
+		$object->set_expense_id( $request['expense_id'] );
+		$object->set_payment_method( $request['payment_method'] );
+		$object->set_reference( $request['reference'] );
+		$object->set_description( $request['description'] );
+		$object->set_creator_id( $request['creator']['id'] );
+		$object->set_date_created( $request['date_created'] );
+
+		return $object;
 	}
 }

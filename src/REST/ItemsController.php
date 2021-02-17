@@ -9,6 +9,7 @@
 
 namespace EverAccounting\REST;
 
+use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || die();
@@ -93,31 +94,31 @@ class ItemsController extends EntitiesController {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'thumbnail_id'     => array(
-					'description' => __( 'Thumbnail ID of the item', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+				'thumbnail'     => array(
+					'description' => __( 'Thumbnail of the item', 'wp-ever-accounting' ),
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-//					'properties'  => array(
-//						'id'   => array(
-//							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'readonly'    => true,
-//						),
-//						'src'  => array(
-//							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//						'name' => array(
-//							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//					),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'src'  => array(
+							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'name' => array(
+							'description' => __( 'Thumbnail Name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
 				),
 				'description'    => array(
 					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
@@ -157,27 +158,28 @@ class ItemsController extends EntitiesController {
 					),
 					'required'    => false,
 				),
-				'category_id'    => array(
-					'description' => __( 'Category id of the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+				'category'    => array(
+					'description' => __( 'Category of the item.', 'wp-ever-accounting' ),
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => true,
-//					'properties'  => array(
-//						'id'   => array(
-//							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'readonly'    => true,
-//						),
-//						'type' => array(
-//							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//					),
+					'required'    => false,
+					'readonly'    => true,
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							//'readonly'    => true,
+						),
+						'type' => array(
+							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
 				),
 				'sales_tax' => array(
 					'description' => __( 'Sales tax of the item.', 'wp-ever-accounting' ),
@@ -202,7 +204,7 @@ class ItemsController extends EntitiesController {
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				'creator_id'        => array(
+				'creator'        => array(
 					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
@@ -210,24 +212,25 @@ class ItemsController extends EntitiesController {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => false,
-//					'properties'  => array(
-//						'id'    => array(
-//							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'readonly'    => true,
-//						),
-//						'name'  => array(
-//							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//						'email' => array(
-//							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//					),
+					'readonly'    => true,
+					'properties'  => array(
+						'id'    => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name'  => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
 				),
 				'date_created'   => array(
 					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
@@ -271,5 +274,32 @@ class ItemsController extends EntitiesController {
 		);
 
 		return $query_params;
+	}
+
+	/**
+	 * Prepare a single object for create or update.
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 *
+	 * @return ResourceModel|\WP_Error Data object or WP_Error.
+	 * @since 1.1.0
+	 *
+	 */
+	public function prepare_object_for_database( &$object, $request ) {
+		$object->set_name( $request['name'] );
+		$object->set_sku( $request['sku'] );
+		$object->set_thumbnail_id( $request['thumbnail']['id'] );
+		$object->set_description( $request['description'] );
+		$object->set_sale_price( $request['sale_price'] );
+		$object->set_purchase_price( $request['purchase_price'] );
+		$object->set_quantity( $request['quantity'] );
+		$object->set_category_id( $request['category']['id'] );
+		$object->set_sales_tax( $request['sales_tax'] );
+		$object->set_purchase_tax( $request['purchase_tax'] );
+		$object->set_enabled( $request['enabled'] );
+		$object->set_creator_id( $request['creator']['id'] );
+		$object->set_date_created( $request['date_created'] );
+
+		return $object;
 	}
 }
