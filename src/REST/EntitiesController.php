@@ -354,7 +354,7 @@ abstract class EntitiesController extends Controller {
 			$args['date_query'][0]['after'] = $request['after'];
 		}
 
-		// Filter the query arguments for a request.
+		// Filter the query arguments for a request.§
 		$args = apply_filters( "eaccounting_rest_{$this->entity_type}_query", $args, $request );
 
 		$results = $this->get_objects( $args, $request );
@@ -423,10 +423,9 @@ abstract class EntitiesController extends Controller {
 	protected function prepare_object_for_database( &$object, $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		// Handle all writable props.
+
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
-
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
 					case 'meta_data':
@@ -443,6 +442,10 @@ abstract class EntitiesController extends Controller {
 						}
 						break;
 				}
+			}
+
+			if( is_array( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ){
+				$object->{"set_{$key}_id"}( $value['id'] );
 			}
 		}
 

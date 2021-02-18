@@ -2,14 +2,13 @@
 /**
  * Items Rest Controller Class.
  *
- * @since       1.1.0
+ * @since       1.1.1
  * @subpackage  REST
  * @package     EverAccounting
  */
 
 namespace EverAccounting\REST;
 
-use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || die();
@@ -34,7 +33,7 @@ class ItemsController extends EntitiesController {
 	/**
 	 * Entity model class.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.1
 	 *
 	 * @var string
 	 */
@@ -43,23 +42,23 @@ class ItemsController extends EntitiesController {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.1
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_items( $query_args );
 	}
 
 	/**
-	 * Retrieves the items's schema, conforming to JSON Schema.
+	 * Retrieves the items schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.1
 	 *
 	 */
 	public function get_item_schema() {
@@ -94,29 +93,26 @@ class ItemsController extends EntitiesController {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'thumbnail'     => array(
+				'thumbnail'      => array(
 					'description' => __( 'Thumbnail of the item', 'wp-ever-accounting' ),
 					'type'        => 'object',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'readonly' => true,
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'properties'  => array(
-						'id'   => array(
+						'id'  => array(
 							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
 						),
-						'src'  => array(
+						'src' => array(
 							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name' => array(
-							'description' => __( 'Thumbnail Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
 						),
 					),
 				),
@@ -158,41 +154,42 @@ class ItemsController extends EntitiesController {
 					),
 					'required'    => false,
 				),
-				'category'    => array(
+				'category'       => array(
 					'description' => __( 'Category of the item.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
 					'required'    => false,
-					'readonly'    => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							//'readonly'    => true,
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
 						),
 						'type' => array(
 							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'esc_url',
+							),
 						),
 					),
 				),
-				'sales_tax' => array(
+				'sales_tax'      => array(
 					'description' => __( 'Sales tax of the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => false,
 				),
-				'purchase_tax' => array(
+				'purchase_tax'   => array(
 					'description' => __( 'Purchase tax of the item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
@@ -205,30 +202,35 @@ class ItemsController extends EntitiesController {
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'creator'        => array(
-					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
+					'description' => __( 'Creator of the item', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view' ),
 					'required'    => false,
 					'readonly'    => true,
 					'properties'  => array(
 						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
 						),
 						'name'  => array(
 							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
 						),
 						'email' => array(
 							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_email',
+							),
 						),
 					),
 				),
@@ -251,7 +253,7 @@ class ItemsController extends EntitiesController {
 	 *
 	 * @return array Collection parameters.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.1
 	 *
 	 */
 	public function get_collection_params() {
@@ -275,32 +277,4 @@ class ItemsController extends EntitiesController {
 
 		return $query_params;
 	}
-
-	/**
-	 * Prepare a single object for create or update.
-	 *
-	 * @param \WP_REST_Request $request Request object.
-	 *
-	 * @return ResourceModel|\WP_Error Data object or WP_Error.
-	 * @since 1.1.1
-	 *
-	 */
-	public function prepare_object_for_database( &$object, $request ) {
-		$object->set_name( $request['name'] );
-		$object->set_sku( $request['sku'] );
-		$object->set_thumbnail_id( $request['thumbnail']['id'] );
-		$object->set_description( $request['description'] );
-		$object->set_sale_price( $request['sale_price'] );
-		$object->set_purchase_price( $request['purchase_price'] );
-		$object->set_quantity( $request['quantity'] );
-		$object->set_category_id( $request['category']['id'] );
-		$object->set_sales_tax( $request['sales_tax'] );
-		$object->set_purchase_tax( $request['purchase_tax'] );
-		$object->set_enabled( $request['enabled'] );
-		$object->set_creator_id( $request['creator']['id'] );
-		$object->set_date_created( $request['date_created'] );
-
-		return $object;
-	}
-
 }
