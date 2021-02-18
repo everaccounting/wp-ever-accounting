@@ -101,12 +101,12 @@ class ItemsController extends EntitiesController {
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'readonly' => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
 						),
 						'src'  => array(
 							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
@@ -282,7 +282,7 @@ class ItemsController extends EntitiesController {
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return ResourceModel|\WP_Error Data object or WP_Error.
-	 * @since 1.1.0
+	 * @since 1.1.1
 	 *
 	 */
 	public function prepare_object_for_database( &$object, $request ) {
@@ -302,4 +302,5 @@ class ItemsController extends EntitiesController {
 
 		return $object;
 	}
+
 }
