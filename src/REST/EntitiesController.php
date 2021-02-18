@@ -286,13 +286,13 @@ abstract class EntitiesController extends Controller {
 	public function update_item( $request ) {
 		try {
 			if ( empty( $this->entity_model ) || ! class_exists( $this->entity_model ) ) {
-				throw new Exception( 'no_entity_model_class', __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( 'no_entity_model_class', __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
 			}
 
 			$id     = (int) $request['id'];
 			$object = new $this->entity_model( $id );
 			if ( ! $object->exists() ) {
-				throw new Exception( 'eaccounting_rest_invalid_id', __( 'Invalid resource ID.', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( 'eaccounting_rest_invalid_id', __( 'Invalid resource ID.', 'wp-ever-accounting' ), 400 );
 			}
 
 			$object = $this->prepare_object_for_database( $object, $request );
@@ -305,7 +305,7 @@ abstract class EntitiesController extends Controller {
 
 			return $response;
 
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			return new \WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 	}
@@ -423,7 +423,6 @@ abstract class EntitiesController extends Controller {
 	protected function prepare_object_for_database( &$object, $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
 			if ( ! is_null( $value ) ) {
@@ -435,7 +434,11 @@ abstract class EntitiesController extends Controller {
 							}
 						}
 						break;
-
+					case 'currency':
+						if ( ! empty( $request['currency'] ) && isset( $request['currency']['code'] ) && is_callable( array( $object, "set_currency_code" ) ) ) {
+							$object->set_currency_code( $request['currency']['code'] );
+						}
+						break;
 					default:
 						if ( is_callable( array( $object, "set_{$key}" ) ) ) {
 							$object->{"set_{$key}"}( $value );
@@ -444,7 +447,7 @@ abstract class EntitiesController extends Controller {
 				}
 			}
 
-			if( is_array( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ){
+			if ( is_array( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
 				$object->{"set_{$key}_id"}( $value['id'] );
 			}
 		}

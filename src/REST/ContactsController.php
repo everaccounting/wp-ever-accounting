@@ -9,8 +9,6 @@
 
 namespace EverAccounting\REST;
 
-use EverAccounting\Abstracts\ResourceModel;
-
 defined( 'ABSPATH' ) || die();
 
 abstract class ContactsController extends EntitiesController {
@@ -70,6 +68,9 @@ abstract class ContactsController extends EntitiesController {
 					'description' => __( 'The email address for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_email',
+					),
 				),
 				'phone'        => array(
 					'description' => __( 'Phone number for the contact.', 'wp-ever-accounting' ),
@@ -93,6 +94,9 @@ abstract class ContactsController extends EntitiesController {
 					'type'        => 'string',
 					'format'      => 'date',
 					'context'     => array( 'embed', 'view' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
 				'vat_number'   => array(
 					'description' => __( 'Vat number of the contact', 'wp-ever-accounting' ),
@@ -131,65 +135,46 @@ abstract class ContactsController extends EntitiesController {
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'sanitize_key',
 					),
 				),
 				'currency'     => array(
 					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
-					'readonly'    => true,
 					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
 						'code' => array(
 							'description' => __( 'Currency code', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view', 'edit' ),
 							'enum'        => array_keys( eaccounting_get_global_currencies() ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
 						),
 					),
 				),
-//				'note'         => array(
-//					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
-//					'type'        => 'string',
-//					'format'      => 'string',
-//					'context'     => array( 'embed', 'view', 'edit' ),
-//					'arg_options' => array(
-//						'sanitize_callback' => 'sanitize_textarea_field',
-//					),
-//				),
 				'thumbnail'    => array(
-					'description' => __( 'Thumbnail of the contact.', 'wp-ever-accounting' ),
+					'description' => __( 'Thumbnail of the item', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
 					'properties'  => array(
-						'id'   => array(
+						'id'  => array(
 							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
+							'context'     => array( 'embed', 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
 						),
-						'src'  => array(
-							'description' => __( 'Thumbnail Source.', 'wp-ever-accounting' ),
+						'src' => array(
+							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name' => array(
-							'description' => __( 'Thumbnail Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'esc_url_raw',
+							),
 						),
 					),
 				),
@@ -260,37 +245,4 @@ abstract class ContactsController extends EntitiesController {
 
 		return $query_params;
 	}
-
-	/**
-	 * Prepare a single object for create or update.
-	 *
-	 * @param \WP_REST_Request $request Request object.
-	 *
-	 * @return ResourceModel|\WP_Error Data object or WP_Error.
-	 * @since 1.1.0
-	 *
-	 */
-	public function prepare_object_for_database( &$object, $request ) {
-		$object->set_user_id( $request['user_id'] );
-		$object->set_name( $request['name'] );
-		$object->set_company( $request['company'] );
-		$object->set_email( $request['email'] );
-		$object->set_phone( $request['phone'] );
-		$object->set_birth_date( $request['birth_date'] );
-		$object->set_street( $request['street'] );
-		$object->set_city( $request['city'] );
-		$object->set_state( $request['state'] );
-		$object->set_postcode( $request['postcode'] );
-		$object->set_country( $request['country'] );
-		$object->set_website( $request['website'] );
-		$object->set_vat_number( $request['vat_number'] );
-		$object->set_currency_code( $request['currency']['code'] );
-		$object->set_thumbnail_id( $request['thumbnail']['id'] );
-		$object->set_enabled( $request['enabled'] );
-		$object->set_creator_id( $request['creator']['id'] );
-		$object->set_date_created( $request['date_created'] );
-
-		return $object;
-	}
-
 }

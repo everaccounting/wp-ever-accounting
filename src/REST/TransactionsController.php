@@ -100,6 +100,9 @@ abstract class TransactionsController extends EntitiesController {
 					'type'        => 'string',
 					'format'      => 'date',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 					'required'    => true,
 				),
 				'amount'           => array(
@@ -107,33 +110,32 @@ abstract class TransactionsController extends EntitiesController {
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
 				'formatted_amount' => array(
 					'description' => __( 'Amount of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
 					'readonly'    => true,
 				),
 				'currency'         => array(
 					'description' => __( 'Currency code for transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
 					'required'    => false,
-					'readonly'    => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Currency Code ID.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view' ),
 							'readonly'    => true,
 						),
 						'code' => array(
 							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed','view' ),
 						),
 
 					),
@@ -151,22 +153,23 @@ abstract class TransactionsController extends EntitiesController {
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'readonly'    => true,
 					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Account ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
 						),
 						'name' => array(
 							'description' => __( 'Account name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
 						),
 
 					),
@@ -183,22 +186,23 @@ abstract class TransactionsController extends EntitiesController {
 					'description' => __( 'Category of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
 					'required'    => true,
-					'readonly'    => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
 						),
 						'type' => array(
 							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
 						),
 					),
 				),
@@ -227,10 +231,10 @@ abstract class TransactionsController extends EntitiesController {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'attachment_id'    => array(
+				'attachment'    => array(
 					'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'object',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view','edit' ),
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
@@ -241,12 +245,7 @@ abstract class TransactionsController extends EntitiesController {
 						'src'  => array(
 							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name' => array(
-							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed','view', ),
 						),
 					),
 				),
@@ -293,20 +292,22 @@ abstract class TransactionsController extends EntitiesController {
 			'description' => __( 'Contact id of the transaction', 'wp-ever-accounting' ),
 			'type'        => 'object',
 			'context'     => array( 'embed', 'view', 'edit' ),
-			'arg_options' => array(
-				'sanitize_callback' => 'sanitize_text_field',
-			),
 			'properties'  => array(
 				'id'   => array(
 					'description' => __( 'Contact ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
-					'readonly'    => true,
+					"arg_options" => array(
+						'sanitize_callback' => 'intval',
+					)
 				),
 				'name' => array(
 					'description' => __( 'Contact name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					"arg_options" => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					)
 				),
 
 			),
@@ -358,39 +359,5 @@ abstract class TransactionsController extends EntitiesController {
 		);
 
 		return $query_params;
-	}
-
-	/**
-	 * Prepare a single object for create or update.
-	 *
-	 * @param \WP_REST_Request $request Request object.
-	 *
-	 * @return ResourceModel|\WP_Error Data object or WP_Error.
-	 * @since 1.1.0
-	 *
-	 */
-	public function prepare_object_for_database( &$object, $request ) {
-		$object->set_payment_date( $request['payment_date'] );
-		$object->set_amount( $request['amount'] );
-		$object->set_category_id( $request['category']['id'] );
-		$object->set_currency_code( $request['currency']['code'] );
-		$object->set_currency_rate( $request['currency_rate'] );
-		$object->set_account_id( $request['account']['id'] );
-		$object->set_document_id( $request['document_id'] );
-		$object->set_description( $request['description'] );
-		$object->set_payment_method( $request['payment_method'] );
-		$object->set_reference( $request['reference'] );
-		$object->set_attachment_id( $request['attachment_id']['id'] );
-		$object->set_reconciled( $request['reconciled'] );
-		$object->set_creator_id( $request['creator']['id'] );
-		$object->set_date_created( $request['date_created'] );
-
-		if ( 'payments' === $this->rest_base ) {
-			$object->set_contact_id( $request['vendor']['id'] );
-		} elseif ( 'revenues' === $this->rest_base ) {
-			$object->set_contact_id( $request['customer']['id'] );
-		}
-
-		return $object;
 	}
 }

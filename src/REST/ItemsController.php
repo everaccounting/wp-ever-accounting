@@ -111,7 +111,7 @@ class ItemsController extends EntitiesController {
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view' ),
 							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
+								'sanitize_callback' => 'esc_url_raw',
 							),
 						),
 					),
@@ -173,7 +173,7 @@ class ItemsController extends EntitiesController {
 							'type'        => 'string',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'arg_options' => array(
-								'sanitize_callback' => 'esc_url',
+								'sanitize_callback' => 'esc_url_raw',
 							),
 						),
 					),
