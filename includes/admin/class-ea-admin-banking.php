@@ -43,11 +43,11 @@ class EverAccounting_Admin_Banking {
 	 */
 	public function get_tabs() {
 		$tabs = array();
-		if ( current_user_can( 'ea_manage_payment' ) && current_user_can( 'ea_manage_revenue' ) ) {
-			$tabs['transactions'] = __( 'Transactions', 'wp-ever-accounting' );
-		}
 		if ( current_user_can( 'ea_manage_account' ) ) {
 			$tabs['accounts'] = __( 'Accounts', 'wp-ever-accounting' );
+		}
+		if ( current_user_can( 'ea_manage_payment' ) && current_user_can( 'ea_manage_revenue' ) ) {
+			$tabs['transactions'] = __( 'Transactions', 'wp-ever-accounting' );
 		}
 		if ( current_user_can( 'ea_manage_transfer' ) ) {
 			$tabs['transfers'] = __( 'Transfers', 'wp-ever-accounting' );
