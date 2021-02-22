@@ -54,7 +54,7 @@ class CategoriesController extends EntitiesController {
 	}
 
 	/**
-	 * Retrieves the items's schema, conforming to JSON Schema.
+	 * Retrieves the items schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
 	 *

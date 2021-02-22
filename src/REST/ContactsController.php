@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || die();
 
 abstract class ContactsController extends EntitiesController {
 	/**
-	 * Retrieves the items's schema, conforming to JSON Schema.
+	 * Retrieves the items schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
 	 * @since 1.1.0
