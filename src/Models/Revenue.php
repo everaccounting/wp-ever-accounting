@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\Customerable;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Revenue extends Transaction {
 	use AttachmentTrait;
+	use Customerable;
 	/**
 	 * This is the name of this object type.
 	 *
