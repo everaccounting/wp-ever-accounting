@@ -371,6 +371,7 @@ abstract class CSV_Importer {
 			if ( ! is_wp_error( $result ) && $result ) {
 				$data['imported'] = (int) $data['imported'] + 1;
 			} else {
+				error_log(print_r($result, true ));
 				$data['skipped'] = (int) $data['skipped'] + 1;
 			}
 
