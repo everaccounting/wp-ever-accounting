@@ -8,28 +8,24 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Manage your business finances right from your WordPress dashboard. Keep track of your payments, expenses in multi-currencies using WP Ever Accounting.
+Manage your business finances right from your WordPress dashboard. Keep track of your payments, expenses, send professional invoices in multi-currencies using WP Ever Accounting.
 
 == Description ==
 
-**[WP Ever Accounting](https://wpeveraccounting.com/?utm_source=product-page-wordpress.org&utm_medium=product-page-wordpress.org&utm_campaign=product-page-wordpress.org)** is a free WordPress plugin to offer a one-stop accounting solution for small businesses all over the world. The primary goal of this plugin is to provide an easy yet professional solution for a business to manage their finance and keep logs of their income and expenses.
+**WP Ever Accounting** is the best WordPress accounting plugin. Keep track of your income, expense, send professional invoices in multi-currencies. WP Ever Accounting offers everything you need to run your business confidently.
 
-Managing a small business has lots of challenges and the adoption of a proper tool can save you from some of the hardships and challenges. Keeping track of the cash flow is one of the most important tasks for all businesses.
+It offers a one-stop accounting solution for small businesses. The plugin's primary goal is to provide an easy yet professional solution for a business to manage finances, keep logs of income and expenses, and offer details and powerful reports to understand its financial position.
 
-= Best WordPress Accounting Plugin =
-WP Ever Accounting will give you the opportunity to manage your income and expenses in the most professional way without any prior accounting knowledge. It will help you overcome the accounting related problems and allow you to focus more on other business operations.
+The plugin will allow you to manage your income and expenses without any prior accounting knowledge. It will help you overcome the accounting related problems and focus more on other business operations.
 
-With the ability to create multiple types of expense or income you will be on top of your accounting tasks. Apart from that, creating multiple accounts and the ability to transfer funds between them will give you the ease of smooth accounting operations.
+Managing a small business has many challenges, and adopting a proper tool can save you from some of the hardships and challenges. Keeping track of the cash flow is one of the most important tasks for all businesses.
+
+With the ability to create your income & expenses in multi-currencies, you will be on top of your accounting tasks. Apart from that, creating multiple accounts and transferring funds between them will give you the ease of smooth accounting operations.
 
 = Visit our website to learn more =
 &#128073;[Plugin Demo](https://wpeveraccounting.com/demo)&#128072;
 &#128073;[Plugin Documentation](https://wpeveraccounting.com/docs)&#128072;
 
-== How will WP Ever Accounting Benefit you: ==
-&#9989; Manage your income and expense in the most professional way
-&#9989; No need to hire a person with accounting knowledge
-&#9989; Access your accounting information at any given moment.
-&#9989; Ability to extend features and make it more powerful
 
 == Features: ==
 &#9989; Multi-Currency
