@@ -11,12 +11,16 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\Accountable;
+use EverAccounting\Traits\Categoryable;
 use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
 abstract class Transaction extends ResourceModel {
 	use CurrencyTrait;
+	use Accountable;
+	use Categoryable;
 	/**
 	 * This is the name of this object type.
 	 *
