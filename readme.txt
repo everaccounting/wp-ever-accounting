@@ -2,7 +2,7 @@
 Contributors: everaccounting
 Tags: accounting, income, expense, invoice, bill, crm, accounts, transfer, customer, vendor, company, SME, Business manager
 Requires at least: 4.4
-Tested up to: 5.6
+Tested up to: 5.6.1
 Requires PHP: 5.6
 Stable tag: trunk
 License: GPLv2 or later
@@ -140,6 +140,10 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.1.1 (22 February,2021) =
+* Enhance - Tabs rearranged for better UX.
+* Fix 	  - Currency conversion precision is not correct.
+
 = 1.1.0 (1 February,2021) =
 * Feature - Complete rewrite of the plugin
 * Feature - Add invoicing support

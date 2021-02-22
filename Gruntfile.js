@@ -68,9 +68,6 @@ module.exports = function (grunt) {
                         '<%= dirs.js %>/select2/select2.min.js': [
                         '<%= dirs.js %>/select2/select2.js',
                         ],
-                        '<%= dirs.js %>/daterange/daterangepicker.min.js': [
-                        '<%= dirs.js %>/daterange/daterangepicker.js',
-                        ],
                         '<%= dirs.js %>/chartjs/chartjs.min.js': [
                         '<%= dirs.js %>/chartjs/chartjs.js',
                         ],

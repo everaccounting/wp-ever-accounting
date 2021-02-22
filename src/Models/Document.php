@@ -1199,7 +1199,7 @@ abstract class Document extends ResourceModel {
 	 */
 	public function set_currency_rate( $currency_rate ) {
 		if ( ! empty( $currency_rate ) ) {
-			$this->set_prop( 'currency_rate', eaccounting_format_decimal( $currency_rate, 4 ) );
+			$this->set_prop( 'currency_rate', eaccounting_format_decimal( $currency_rate, 7 ) );
 		}
 	}
 

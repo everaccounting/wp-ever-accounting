@@ -25,7 +25,7 @@ function eaccounting_remove_background_updater($action){
 	}
 	$updater = get_option( 'eaccounting_background_updater', array() );
 	if( in_array( $action, $updater) ){
-		unset( $updater[$action] );
+		unset( $updater[array_flip($updater)[$action]] );
 		update_option('eaccounting_background_updater', $updater);
 	}
 }
