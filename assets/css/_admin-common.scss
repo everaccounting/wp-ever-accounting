@@ -225,6 +225,9 @@
 	.ea-label &{
 		margin: 0;
 		font-size: 15px;
+		position: absolute;
+		top: 0;
+		right: 15px;
 	}
 }
 .ea-ui-tooltip{

@@ -2,10 +2,10 @@
 # This file is distributed under the GPL2+.
 msgid ""
 msgstr ""
-"Project-Id-Version: Ever Accounting 1.1.0\n"
+"Project-Id-Version: Ever Accounting 1.1.1\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-02-01 07:02:08+00:00\n"
+"POT-Creation-Date: 2021-02-22 09:26:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -57,19 +57,19 @@ msgid "Banking"
 msgstr ""
 
 #: includes/admin/class-ea-admin-banking.php:47
+#: includes/admin/views/accounts/edit-account.php:26
+#: includes/admin/views/accounts/list-account.php:34
+#: includes/admin/views/accounts/view-account.php:39
+msgid "Accounts"
+msgstr ""
+
+#: includes/admin/class-ea-admin-banking.php:50
 #: includes/admin/views/accounts/view-account.php:22
 #: includes/admin/views/customers/view-customer.php:22
 #: includes/admin/views/reconciliations/edit-reconciliation.php:65
 #: includes/admin/views/transactions/list-transactions.php:18
 #: includes/admin/views/vendors/view-vendor.php:22
 msgid "Transactions"
-msgstr ""
-
-#: includes/admin/class-ea-admin-banking.php:50
-#: includes/admin/views/accounts/edit-account.php:26
-#: includes/admin/views/accounts/list-account.php:34
-#: includes/admin/views/accounts/view-account.php:39
-msgid "Accounts"
 msgstr ""
 
 #: includes/admin/class-ea-admin-banking.php:53
@@ -104,6 +104,12 @@ msgid "Expenses"
 msgstr ""
 
 #: includes/admin/class-ea-admin-expenses.php:45
+#: includes/admin/views/payments/edit-payment.php:28
+#: includes/admin/views/payments/list-payment.php:32
+msgid "Payments"
+msgstr ""
+
+#: includes/admin/class-ea-admin-expenses.php:48
 #: includes/admin/class-ea-admin-settings.php:85
 #: includes/admin/class-ea-admin-settings.php:118
 #: includes/admin/ea-admin-functions.php:66
@@ -112,12 +118,6 @@ msgstr ""
 #: includes/admin/views/bills/view-bill.php:51
 #: includes/admin/views/vendors/view-vendor.php:23
 msgid "Bills"
-msgstr ""
-
-#: includes/admin/class-ea-admin-expenses.php:48
-#: includes/admin/views/payments/edit-payment.php:28
-#: includes/admin/views/payments/list-payment.php:32
-msgid "Payments"
 msgstr ""
 
 #: includes/admin/class-ea-admin-expenses.php:51
@@ -486,6 +486,12 @@ msgid "Cashflow"
 msgstr ""
 
 #: includes/admin/class-ea-admin-sales.php:45
+#: includes/admin/views/revenues/edit-revenue.php:22
+#: includes/admin/views/revenues/list-revenue.php:32
+msgid "Revenues"
+msgstr ""
+
+#: includes/admin/class-ea-admin-sales.php:48
 #: includes/admin/class-ea-admin-settings.php:84
 #: includes/admin/class-ea-admin-settings.php:117
 #: includes/admin/ea-admin-functions.php:65
@@ -494,12 +500,6 @@ msgstr ""
 #: includes/admin/views/invoices/list-invoice.php:26
 #: includes/admin/views/invoices/view-invoice.php:50
 msgid "Invoices"
-msgstr ""
-
-#: includes/admin/class-ea-admin-sales.php:48
-#: includes/admin/views/revenues/edit-revenue.php:22
-#: includes/admin/views/revenues/list-revenue.php:32
-msgid "Revenues"
 msgstr ""
 
 #: includes/admin/class-ea-admin-sales.php:51
@@ -1804,7 +1804,7 @@ msgid "There is no categories found."
 msgstr ""
 
 #: includes/admin/list-tables/class-ea-currency-list-table.php:114
-#: includes/admin/views/currencies/edit-currency.php:103
+#: includes/admin/views/currencies/edit-currency.php:104
 msgid "Symbol"
 msgstr ""
 
@@ -2075,7 +2075,7 @@ msgstr ""
 #: includes/admin/views/accounts/edit-account.php:150
 #: includes/admin/views/bills/edit-bill.php:177
 #: includes/admin/views/categories/edit-category.php:112
-#: includes/admin/views/currencies/edit-currency.php:163
+#: includes/admin/views/currencies/edit-currency.php:164
 #: includes/admin/views/customers/edit-customer.php:202
 #: includes/admin/views/invoices/edit-invoice.php:173
 #: includes/admin/views/items/edit-item.php:182
@@ -2827,27 +2827,31 @@ msgstr ""
 msgid "Currency Rate"
 msgstr ""
 
-#: includes/admin/views/currencies/edit-currency.php:93
+#: includes/admin/views/currencies/edit-currency.php:86
+msgid "For better precision use full conversion rate. Like 1 USD = 1.2635835 CAD"
+msgstr ""
+
+#: includes/admin/views/currencies/edit-currency.php:94
 msgid "Precision"
 msgstr ""
 
-#: includes/admin/views/currencies/edit-currency.php:112
+#: includes/admin/views/currencies/edit-currency.php:113
 msgid "Symbol Position"
 msgstr ""
 
-#: includes/admin/views/currencies/edit-currency.php:116
+#: includes/admin/views/currencies/edit-currency.php:117
 msgid "Before"
 msgstr ""
 
-#: includes/admin/views/currencies/edit-currency.php:117
+#: includes/admin/views/currencies/edit-currency.php:118
 msgid "After"
 msgstr ""
 
-#: includes/admin/views/currencies/edit-currency.php:125
+#: includes/admin/views/currencies/edit-currency.php:126
 msgid "Decimal Separator"
 msgstr ""
 
-#: includes/admin/views/currencies/edit-currency.php:134
+#: includes/admin/views/currencies/edit-currency.php:135
 msgid "Thousands Separator"
 msgstr ""
 
@@ -4421,7 +4425,7 @@ msgstr ""
 #: src/REST/AccountsController.php:200 src/REST/BillHistoriesController.php:430
 #: src/REST/BillItemsController.php:503 src/REST/BillsController.php:652
 #: src/REST/CategoriesController.php:129 src/REST/ContactsController.php:227
-#: src/REST/CurrenciesController.php:177 src/REST/EntitiesController.php:655
+#: src/REST/CurrenciesController.php:177 src/REST/EntitiesController.php:659
 #: src/REST/InvoiceHistoriesController.php:431
 #: src/REST/InvoiceItemsController.php:503 src/REST/InvoicesController.php:650
 #: src/REST/ItemsController.php:546 src/REST/TaxesController.php:128
@@ -4939,35 +4943,35 @@ msgstr ""
 msgid "The %s cannot be deleted."
 msgstr ""
 
-#: src/REST/EntitiesController.php:598
+#: src/REST/EntitiesController.php:602
 msgid "Current page of the collection."
 msgstr ""
 
-#: src/REST/EntitiesController.php:606
+#: src/REST/EntitiesController.php:610
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
-#: src/REST/EntitiesController.php:615
+#: src/REST/EntitiesController.php:619
 msgid "Limit results to those matching a string."
 msgstr ""
 
-#: src/REST/EntitiesController.php:621
+#: src/REST/EntitiesController.php:625
 msgid "Limit response to resources published after a given ISO8601 compliant date."
 msgstr ""
 
-#: src/REST/EntitiesController.php:627
+#: src/REST/EntitiesController.php:631
 msgid "Limit response to resources published before a given ISO8601 compliant date."
 msgstr ""
 
-#: src/REST/EntitiesController.php:633
+#: src/REST/EntitiesController.php:637
 msgid "Limit result set to specific ids."
 msgstr ""
 
-#: src/REST/EntitiesController.php:642
+#: src/REST/EntitiesController.php:646
 msgid "Offset the result set by a specific number of items."
 msgstr ""
 
-#: src/REST/EntitiesController.php:648
+#: src/REST/EntitiesController.php:652
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 

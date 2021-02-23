@@ -301,7 +301,7 @@ class Currency extends ResourceModel {
 	 * @param $value
 	 */
 	public function set_rate( $value ) {
-		$this->set_prop( 'rate', eaccounting_format_decimal( $value, 4 ) );
+		$this->set_prop( 'rate', eaccounting_format_decimal( $value, 7 ) );
 	}
 
 	/**

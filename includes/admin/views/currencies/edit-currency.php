@@ -83,6 +83,7 @@ foreach ( $currencies as $code => $props ) {
 						'wrapper_class' => 'ea-col-6',
 						'label'         => __( 'Currency Rate', 'wp-ever-accounting' ),
 						'name'          => 'rate',
+						'tooltip'       => __( 'For better precision use full conversion rate. Like 1 USD = 1.2635835 CAD', 'wp-ever-accounting'),
 						'value'         => $currency->get_rate( 'edit' ),
 						'required'      => true,
 					)

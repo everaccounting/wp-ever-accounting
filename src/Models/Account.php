@@ -265,7 +265,7 @@ class Account extends ResourceModel {
 	 */
 	public function set_opening_balance( $amount ) {
 		$code = empty( $this->get_currency_code() ) ? 'USD' : $this->get_currency_code();
-		$this->set_prop( 'opening_balance', (float) eaccounting_sanitize_number( $amount, true ) );
+		$this->set_prop( 'opening_balance',  eaccounting_format_decimal( $amount, 4 ) );
 	}
 
 	/**

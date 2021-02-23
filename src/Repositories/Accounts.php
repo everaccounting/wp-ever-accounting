@@ -48,7 +48,7 @@ class Accounts extends ResourceRepository {
 		'currency_code'   => '%s',
 		'name'            => '%s',
 		'number'          => '%s',
-		'opening_balance' => '%f',
+		'opening_balance' => '%.4f',
 		'bank_name'       => '%s',
 		'bank_phone'      => '%s',
 		'bank_address'    => '%s',

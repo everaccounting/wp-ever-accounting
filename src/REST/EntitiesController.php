@@ -447,7 +447,8 @@ abstract class EntitiesController extends Controller {
 				}
 			}
 
-			if ( is_array( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
+			if( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ){
+
 				$object->{"set_{$key}_id"}( $value['id'] );
 			}
 		}

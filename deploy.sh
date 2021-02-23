@@ -131,7 +131,6 @@ cd $SVNPATH
 status "Removing unwanted files"
 rm -Rf trunk/assets/css/*.scss
 rm -Rf trunk/assets/css/select2
-rm -Rf trunk/assets/css/jquery-ui
 rm -Rf trunk/assets/*.scss
 rm -Rf trunk/bin
 rm -Rf trunk/**/.gitkeep
