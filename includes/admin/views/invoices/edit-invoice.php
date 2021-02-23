@@ -191,7 +191,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 				'value'    => 0.0000,
 				'required' => true,
 				'attr'     => array(
-					'step' => 0.01,
+					'step' => 0.0001,
 					'min'  => 0,
 				),
 			)
