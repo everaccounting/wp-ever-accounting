@@ -45,12 +45,12 @@ class AccountsController extends EntitiesController {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.0
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_accounts( $query_args );
@@ -59,9 +59,9 @@ class AccountsController extends EntitiesController {
 	/**
 	 * Retrieves the items schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Item schema data.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -76,7 +76,7 @@ class AccountsController extends EntitiesController {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'absint',
 					),
 				),
 				'name'            => array(
@@ -91,7 +91,7 @@ class AccountsController extends EntitiesController {
 				'number'          => array(
 					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -100,18 +100,35 @@ class AccountsController extends EntitiesController {
 				'opening_balance' => array(
 					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'default'     => '0',
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
-				'currency_code'        => array(
-					'description' => __( 'Currency code of the account', 'wp-ever-accounting' ),
+				'balance'         => array(
+					'description' => __( 'Current balance of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
+					'context'     => array( 'embed', 'view' ),
+					'readonly'    => true,
+				),
+				'currency'        => array(
+					'description' => __( 'Currency code of the account', 'wp-ever-accounting' ),
+					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
+					'properties'  => array(
+						'code' => array(
+							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
+							'required'    => true,
+						)
+					),
 				),
 				'bank_name'       => array(
 					'description' => __( 'Bank name of the account', 'wp-ever-accounting' ),
@@ -124,7 +141,7 @@ class AccountsController extends EntitiesController {
 				'bank_phone'      => array(
 					'description' => __( 'Phone number of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view','edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -132,7 +149,7 @@ class AccountsController extends EntitiesController {
 				'bank_address'    => array(
 					'description' => __( 'Address of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
@@ -182,9 +199,9 @@ class AccountsController extends EntitiesController {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Collection parameters.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_collection_params() {
