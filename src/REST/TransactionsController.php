@@ -92,7 +92,7 @@ abstract class TransactionsController extends EntitiesController {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'absint',
 					),
 				),
 				'payment_date'     => array(
@@ -160,7 +160,7 @@ abstract class TransactionsController extends EntitiesController {
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'arg_options' => array(
-								'sanitize_callback' => 'intval',
+								'sanitize_callback' => 'absint',
 							),
 						),
 						'name' => array(
@@ -179,7 +179,7 @@ abstract class TransactionsController extends EntitiesController {
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'absint',
 					),
 				),
 				'category'         => array(
@@ -193,7 +193,7 @@ abstract class TransactionsController extends EntitiesController {
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'arg_options' => array(
-								'sanitize_callback' => 'intval',
+								'sanitize_callback' => 'absint',
 							),
 						),
 						'type' => array(
@@ -218,8 +218,9 @@ abstract class TransactionsController extends EntitiesController {
 					'description' => __( 'Method of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'enum'        => array( 'cash', 'bank_transfer', 'cheque'  ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_key',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
@@ -257,14 +258,13 @@ abstract class TransactionsController extends EntitiesController {
 				'creator'          => array(
 					'description' => __( 'Creator of the transactions', 'wp-ever-accounting' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'readonly'    => true,
 					'properties'  => array(
 						'id'    => array(
 							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
 						),
 						'name'  => array(
 							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
