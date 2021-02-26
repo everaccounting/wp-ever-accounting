@@ -130,6 +130,12 @@ function eaccounting_money( $amount, $code = 'USD', $convert = false ) {
 function eaccounting_get_default_currency() {
 	$currency = eaccounting()->settings->get( 'default_currency', 'USD' );
 
+	/**
+	 * Filter the default currency code.
+	 *
+	 * @hook eaccounting_default_currency
+	 * @param string $currency Default currency code.
+	 */
 	return apply_filters( 'eaccounting_default_currency', $currency );
 }
 

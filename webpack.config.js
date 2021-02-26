@@ -1,154 +1,194 @@
-const path                              = require( 'path' );
-const chalk                             = require( 'chalk' );
-const webpack                           = require( 'webpack' );
-const pkg                               = require( './package.json' );
-const { get }                           = require( 'lodash' );
-const TerserPlugin                      = require( 'terser-webpack-plugin' );
-const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-const ProgressBarPlugin                 = require( 'progress-bar-webpack-plugin' );
-const FixStyleOnlyEntriesPlugin         = require( 'webpack-fix-style-only-entries' );
-const CustomTemplatedPathPlugin         = require( '@wordpress/custom-templated-path-webpack-plugin' );
-const DuplicatePackageCheckerPlugin     = require( 'duplicate-package-checker-webpack-plugin' );
-const WebpackRTLPlugin 					= require( 'webpack-rtl-plugin' );
-const MomentTimezoneDataPlugin 			= require( 'moment-timezone-data-webpack-plugin' );
-const postcssPresetEnv     				= require( 'postcss-preset-env' );
-const postcssFocus         				= require( 'postcss-focus' );
-const postcssReporter      				= require( 'postcss-reporter' );
-const MiniCssExtractPlugin 				= require( 'mini-css-extract-plugin' );
-const NODE_ENV 							= process.env.NODE_ENV || 'development';
-const suffix 							= NODE_ENV === 'production' ? '.min' : '';
+/**
+ * WordPress dependencies
+ */
+const defaultConfig = require('@wordpress/scripts/config/webpack.config');
+const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
+const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
+const ImageminPlugin = require('imagemin-webpack-plugin').default;
+/**
+ * External dependencies
+ */
+const ESLintPlugin = require('eslint-webpack-plugin');
+const StyleLintPlugin = require('stylelint-webpack-plugin');
+const path = require('path');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { get } = require('lodash');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const webpack = require('webpack');
+const WebpackBar = require('webpackbar');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const UglifyJS = require('uglify-es');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const WebpackRTLPlugin = require('webpack-rtl-plugin');
+const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 
+/**
+ * Internal dependencies
+ */
+const pkg = require('./package.json');
+/**
+ * Settings
+ */
+const entries = {
+	'ea-admin': './assets/js/ea-admin.js',
+	// 'ea-select': './assets/js/ea-select.js',
+	// 'ea-creatable': './assets/js/ea-creatable.js',
+	// 'ea-exporter': './assets/js/ea-exporter.js',
+	// 'ea-form': './assets/js/ea-form.js',
+	// 'ea-helper': './assets/js/ea-helper.js',
+	// 'ea-importer': './assets/js/ea-importer.js',
+	// 'ea-modal': './assets/js/ea-modal.js',
+	// 'ea-overview': './assets/js/ea-overview.js',
+	// 'ea-settings': './assets/js/ea-settings.js',
+	// 'ea-setup': './assets/js/ea-setup.js',
+};
 
-const externals   = [];
-const entryPoints = {};
-const packages 	  = ['components', 'data'];
-packages.forEach( (name) => {
-    externals[`@eaccounting/${name}`] = {
-    	this: [
+/**
+ * Config
+ */
+
+const packages = ['utils', 'data'];
+const host = 'http://accounting.test';
+const isProduction = process.env.NODE_ENV === 'production';
+const externals = [];
+packages.forEach((name) => {
+	externals[`@eaccounting/${name}`] = {
+		this: [
 			'eaccounting',
-			name.replace( /-([a-z])/g, ( match, letter ) =>letter.toUpperCase() ),
-		]
-    };
-    entryPoints[name] = `./client/${name}`;
+			name.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase()),
+		],
+	};
+	entries[name] = `./packages/${name}`;
 });
 
+// eslint-disable-next-line no-unused-vars
+const minifyJs = (content) => {
+	return Promise.resolve(
+		Buffer.from(UglifyJS.minify(content.toString()).code)
+	);
+};
+
+/**
+ * Config
+ */
 const config = {
-	mode: NODE_ENV,
-	entry: {
-		invoice: './client/invoice',
-		...entryPoints,
-	},
+	...defaultConfig,
+	entry: entries,
 	output: {
-		filename: `[name].js`,
-		path: path.resolve( __dirname, 'assets/dist'),
+		...defaultConfig.output,
+		filename: '[name].js',
+		path: path.resolve(process.cwd(), 'dist'),
 		library: ['eaccounting', '[modulename]'],
-		libraryTarget: 'this',
-		jsonpFunction: '__eaccounting_webpackJsonp',
 	},
-	externals,
 	resolve: {
+		...defaultConfig.resolve,
 		extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
-		alias:{'@eaccounting': path.resolve(__dirname, 'client')},
-		modules: [path.resolve(__dirname, 'client'),  'node_modules'],
+		alias: { '@eaccounting': path.resolve(__dirname, 'packages') },
+		modules: [path.resolve(__dirname, 'packages'), 'node_modules'],
+	},
+	externals: {
+		...defaultConfig.externals,
+		externals,
 	},
 	module: {
-		rules: [
-			{
-				parser: {
-					amd: false,
-				},
-			},
-			{
-				test: /\.(js|jsx)$/,
-				loader: 'babel-loader',
-				exclude: /node_modules/,
-			},
-			{
-				test: /\.s?css$/,
-				exclude: /node_modules/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							config: {
-								path: 'postcss.config.js',
-							},
-						},
-					},
-					{
-						loader: 'sass-loader',
-					},
-				],
-			},
-			{
-				test: /\.(?:gif|jpg|jpeg|png|svg)$/,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							emitFile: true, // On the server side, don't actually copy files
-							name: '[name].[ext]',
-							outputPath: '/assets/dist',
-						},
-					},
-				],
-			},
-			{
-				test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							name: '[name].[ext]',
-							outputPath: '/assets/dist/',
-						},
-					},
-				],
-			},
-			{
-				test: /\.svg$/,
-				use: ['@svgr/webpack', 'url-loader'],
-			},
-		],
+		rules: [...defaultConfig.module.rules].filter(Boolean),
 	},
 	plugins: [
-		new ProgressBarPlugin({
-			format:
-				chalk.blue('Build core script') +
-				' [:bar] ' +
-				chalk.green(':percent') +
-				' :msg (:elapsed seconds)',
+		...defaultConfig.plugins
+			.filter(
+				(plugin) =>
+					plugin.constructor.name !==
+					'DependencyExtractionWebpackPlugin'
+			)
+			.filter((plugin) => plugin.constructor.name !== 'LiveReloadPlugin'),
+
+		// new ESLintPlugin({
+		// 	failOnError: false,
+		// 	fix: false,
+		// }),
+
+		// Copy vendor files to ensure 3rd party plugins relying on a script
+		// handle to exist continue to be enqueued.
+		new CopyWebpackPlugin({
+			patterns: [
+				// Styles.
+				// {
+				// 	from: 'assets/css/',
+				// 	to: 'css',
+				// },
+
+				// Scripts.
+				{
+					from: './node_modules/select2/dist/js/select2.js',
+					to: 'jquery-select2.js',
+					transform: (content) => minifyJs(content),
+				},
+				{
+					from: './node_modules/chart.js/dist/chart.bundle.min.js',
+					to: 'chartjs.js',
+					transform: (content) => minifyJs(content),
+				},
+				{
+					from:
+						'./node_modules/chartjs-plugin-labels/build/chartjs-plugin-labels.min.js',
+					to: 'chartjs-labels.js',
+					transform: (content) => minifyJs(content),
+				},
+				{
+					from: './node_modules/print-this/printThis.js',
+					to: 'print-this.js',
+					transform: (content) => minifyJs(content),
+				},
+				{
+					from: './node_modules/inputmask/dist/inputmask.min.js',
+					to: 'jquery-inputmask.js',
+					transform: (content) => minifyJs(content),
+				},
+				{
+					from: './node_modules/blockui/jquery.blockui.min.js',
+					to: 'jquery-blockui.js',
+					transform: (content) => minifyJs(content),
+				},
+			],
 		}),
-		new DependencyExtractionWebpackPlugin({
-			injectPolyfill: true,
-			requestToExternal: (request) => {
-				if ( externals[ request ] ) {
-					return externals[ request ]["this"];
-				}
-			},
-			requestToHandle: (request) => {
-				if ( externals[ request ] ) {
-					return request.replace('@eaccounting/', 'ea-');
-				}
-			}
+
+		// Remove the extra JS files Webpack creates for CSS entries.
+		// This should be fixed in Webpack 5.
+		new FixStyleOnlyEntriesPlugin(),
+
+		// MiniCSSExtractPlugin to extract the CSS thats gets imported into JavaScript.
+		new MiniCSSExtractPlugin({
+			filename: 'css/[name].css',
+			moduleFilename: ({ name }) =>
+				name.match(/-block$/)
+					? 'blocks/[name]/editor.css'
+					: '[name].css',
+			chunkFilename: '[id].css',
+			rtlEnabled: true,
 		}),
-		new WebpackRTLPlugin( {
-			minify: {
-				safe: true,
-			},
-		} ),
-		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
+
+		// RTL style support.
+		new WebpackRTLPlugin({
+			filename: [/(\.css)/i, '-rtl$1'],
+		}),
+
+		// Compress images
+		// Must happen after CopyWebpackPlugin
+		new ImageminPlugin({
+			disable: !isProduction,
+			test: /\.(jpe?g|png|gif|svg)$/i,
+		}),
+
+		//Set plugin information run build
+		new webpack.BannerPlugin(pkg.name + ' v' + pkg.version),
 		new webpack.DefinePlugin({
 			'process.env': {
-				NODE_ENV: JSON.stringify(
-					process.env.NODE_ENV || 'development'
-				),
+				NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
 			},
-			EACCOUNTING_VERSION: "'" + pkg.version + "'",
 		}),
-		new FixStyleOnlyEntriesPlugin(),
+
+		// Process custom modules.
 		new CustomTemplatedPathPlugin({
 			modulename(outputPath, data) {
 				const entryName = get(data, ['chunk', 'name']);
@@ -160,69 +200,54 @@ const config = {
 				return outputPath;
 			},
 		}),
-		new MomentTimezoneDataPlugin( {
-			startYear: 2000, // This strips out timezone data before the year 2000 to make a smaller file.
-		} ),
-		new DuplicatePackageCheckerPlugin(),
-		new webpack.LoaderOptionsPlugin({
-			options: {
-				postcss: [
-					postcssFocus(),
-					postcssPresetEnv({
-						browsers: ['last 2 versions', 'IE > 10'],
-					}),
-					postcssReporter({
-						clearMessages: true,
-					}),
-				],
+
+		// Adjust for custom modules.
+		new DependencyExtractionWebpackPlugin({
+			injectPolyfill: true,
+			requestToExternal: (request) => {
+				if (externals[request]) {
+					return externals[request].this;
+				}
 			},
-			output: {
-				path: path.join(__dirname),
+			requestToHandle: (request) => {
+				if (externals[request]) {
+					return request.replace('@eaccounting/', 'ea-');
+				}
 			},
 		}),
-		new MiniCssExtractPlugin({
-			filename: '[name].css',
-			chunkFilename: '[id].style.css',
-			rtlEnabled: true,
-		}),
-	],
-	stats: {
-		all: false,
-		assets: true,
-		builtAt: true,
-		colors: true,
-		errors: true,
-		hash: true,
-		timings: true,
-	},
-	optimization: {
-		minimize: NODE_ENV !== 'development',
-		minimizer: [ new TerserPlugin() ],
-		splitChunks: {
-			name: false,
-		},
-	},
-	watchOptions: {
-		ignored: [/node_modules/],
-	},
-	performance: {
-		hints: false,
-	},
-	watch: true,
+
+		!isProduction &&
+			new BrowserSyncPlugin(
+				{
+					host: 'localhost',
+					port: 3000,
+					proxy: host,
+					open: false,
+					files: [
+						'**/*.php',
+						'dist/js/**/*.js',
+						'dist/css/**/*.css',
+						'dist/svg/**/*.svg',
+						'dist/images/**/*.{jpg,jpeg,png,gif}',
+						'dist/fonts/**/*.{eot,ttf,woff,woff2,svg}',
+					],
+				},
+				{
+					injectCss: true,
+					reload: false,
+				}
+			),
+
+		// Lint CSS.
+		// new StyleLintPlugin({
+		// 	context: path.resolve(process.cwd(), './assets/css'),
+		// 	files: '**/*.scss',
+		// 	allowEmptyInput: true,
+		// }),
+
+		// Fancy WebpackBar.
+		new WebpackBar(),
+	].filter(Boolean),
 };
-
-if (NODE_ENV !== 'development') {
-	config.plugins.push(
-		new webpack.LoaderOptionsPlugin({minimize: true})
-	);
-	config.module.rules.push({
-		test: /\.js$/,
-		loader: 'webpack-remove-debug',
-		exclude: /node_modules/,
-	});
-}
-
-if (config.mode !== 'production') {
-	config.devtool = process.env.SOURCEMAP || 'inline-source-map';
-}
+console.log(config)
 module.exports = config;
