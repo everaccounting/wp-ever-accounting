@@ -170,7 +170,7 @@ final class EverAccounting {
 		}
 
 
-		//\EverAccounting\REST\Manager::instance();
+		\EverAccounting\REST\Manager::instance();
 		\EverAccounting\Core\Emails::instance();
 
 		$this->settings = new EverAccounting_Settings();
@@ -355,32 +355,3 @@ function eaccounting() {
 }
 
 eaccounting();
-
-
-/**
- * Registers all block assets so that they can be enqueued through Gutenberg in
- * the corresponding context.
- *
- * Passes translations to JavaScript.
- */
-function gutenberg_examples_01_register_block() {
-
-	if ( ! function_exists( 'register_block_type' ) ) {
-		// Gutenberg is not active.
-		return;
-	}
-
-	wp_register_script(
-		'gutenberg-examples-01',
-		plugins_url( 'dist/block.js', __FILE__ ),
-		array( 'wp-blocks', 'wp-i18n', 'wp-element' ),
-		null
-	);
-
-	register_block_type( 'gutenberg-examples/example-01-basic', array(
-		'editor_script' => 'gutenberg-examples-01',
-	) );
-
-
-}
-add_action( 'init', 'gutenberg_examples_01_register_block' );

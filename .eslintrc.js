@@ -4,6 +4,28 @@ const eslintConfig = {
 		browser: true,
 		es6: true,
 	},
+	rules: {
+		'@wordpress/i18n-translator-comments': 'warn',
+		'@wordpress/valid-sprintf': 'warn',
+		'jsdoc/check-tag-names': [
+			'error',
+			{ definedTags: ['jest-environment'] },
+		],
+		'jest/no-deprecated-functions': 'warn',
+		'@wordpress/dependency-group': 'error',
+		'@wordpress/no-unsafe-wp-apis': 'warn',
+		'jest/valid-title': 'warn',
+		'@wordpress/no-global-active-element': 'warn',
+		radix: 'error',
+		yoda: ['error', 'never'],
+		'import/no-unresolved': [
+			2,
+			{
+				ignore: ['^@wordpress/', '^@eaccounting/'],
+			},
+		],
+		'no-console': 0,
+	},
 	globals: {
 		ajaxurl: true,
 		document: true,

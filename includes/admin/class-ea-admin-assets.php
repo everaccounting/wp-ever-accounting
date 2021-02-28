@@ -68,8 +68,10 @@ class Admin_Assets extends Assets {
 		self::register_script( 'jquery-inputmask', null, ['jquery'] );
 		self::register_script( 'print-this', null, ['jquery'] );
 
+		self::register_script( 'ea-store', 'store.js' );
+//		self::register_script( 'ea-data', 'data.js' );
 		self::register_script( 'ea-utils', 'utils.js', ['jquery-blockui'] );
-		self::register_script( 'ea-admin' );
+		self::register_script( 'ea-admin', null, ['ea-store'] );
 		wp_enqueue_script('ea-utils');
 		wp_enqueue_script('ea-admin');
 	}

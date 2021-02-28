@@ -12,12 +12,15 @@
   },
   "main": "index.js",
   "dependencies": {
+    "@wordpress/library-export-default-webpack-plugin": "^2.0.1",
     "blockui": "^1.0.0",
     "chart.js": "^2.9.4",
     "chartjs-plugin-labels": "^1.1.0",
     "classnames": "^2.2.6",
+    "equivalent-key-map": "^0.2.2",
     "inputmask": "^5.0.5",
     "print-this": "^1.15.1",
+    "rememo": "^3.0.0",
     "select2": "^4.1.0-rc.0"
   },
   "devDependencies": {

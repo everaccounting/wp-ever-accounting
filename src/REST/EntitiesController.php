@@ -116,9 +116,9 @@ abstract class EntitiesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
-		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
-			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		}
+//		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
+//			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+//		}
 
 		return true;
 	}
@@ -131,9 +131,9 @@ abstract class EntitiesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function create_item_permissions_check( $request ) {
-		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
-			return new \WP_Error( 'eaccounting_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		}
+//		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
+//			return new \WP_Error( 'eaccounting_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+//		}
 
 		return true;
 	}
@@ -146,9 +146,9 @@ abstract class EntitiesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
-		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
-			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		}
+//		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
+//			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+//		}
 
 		return true;
 	}
@@ -161,9 +161,9 @@ abstract class EntitiesController extends Controller {
 	 * @return \WP_Error|boolean
 	 */
 	public function update_item_permissions_check( $request ) {
-		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
-			return new \WP_Error( 'eaccounting_rest_cannot_edit', __( 'Sorry, you are not allowed to edit this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		}
+//		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
+//			return new \WP_Error( 'eaccounting_rest_cannot_edit', __( 'Sorry, you are not allowed to edit this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+//		}
 
 		return true;
 	}
@@ -176,9 +176,9 @@ abstract class EntitiesController extends Controller {
 	 * @return bool|\WP_Error
 	 */
 	public function delete_item_permissions_check( $request ) {
-		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
-			return new \WP_Error( 'eaccounting_rest_cannot_delete', __( 'Sorry, you are not allowed to delete this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-		}
+//		if ( ! current_user_can( "ea_manage_{$this->entity_type}" ) ) {
+//			return new \WP_Error( 'eaccounting_rest_cannot_delete', __( 'Sorry, you are not allowed to delete this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+//		}
 
 		return true;
 	}

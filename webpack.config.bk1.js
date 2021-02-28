@@ -5,7 +5,8 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
 const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
-const LibraryExportDefaultPlugin = require( '@wordpress/library-export-default-webpack-plugin' );
+const LibraryExportDefaultPlugin = require('@wordpress/library-export-default-webpack-plugin');
+const {camelCaseDash} = require( '@wordpress/dependency-extraction-webpack-plugin/lib/util' );
 /**
  * External dependencies
  */
@@ -49,20 +50,16 @@ const entries = {
  * Config
  */
 
-const packages = ['utils', 'store'];
+const packages = ['utils', 'data'];
 const host = 'http://accounting.test';
 const isProduction = process.env.NODE_ENV === 'production';
 const externals = [];
 packages.forEach((name) => {
-	externals[`@eaccounting/${name}`] = {
-		this: [
-			'eaccounting',
-			name.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase()),
-		],
-	};
+	const packageName = camelCaseDash( name );
+	externals[`@eaccounting/${packageName}`] = { this: [ 'eaccounting', packageName]};
 	entries[name] = `./packages/${name}`;
 });
-
+// console.log(packages);
 // eslint-disable-next-line no-unused-vars
 const minifyJs = (content) => {
 	return Promise.resolve(
@@ -80,7 +77,7 @@ const config = {
 		...defaultConfig.output,
 		filename: '[name].js',
 		path: path.resolve(process.cwd(), 'dist'),
-		library: ['eaccounting', '[modulename]'],
+		library: ['eaccounting', '[name]'],
 	},
 	resolve: {
 		...defaultConfig.resolve,
@@ -125,34 +122,36 @@ const config = {
 					to: 'jquery-select2.js',
 					transform: (content) => minifyJs(content),
 				},
-				{
-					from: './node_modules/chart.js/dist/chart.bundle.min.js',
-					to: 'chartjs.js',
-					transform: (content) => minifyJs(content),
-				},
-				{
-					from:
-						'./node_modules/chartjs-plugin-labels/build/chartjs-plugin-labels.min.js',
-					to: 'chartjs-labels.js',
-					transform: (content) => minifyJs(content),
-				},
-				{
-					from: './node_modules/print-this/printThis.js',
-					to: 'print-this.js',
-					transform: (content) => minifyJs(content),
-				},
-				{
-					from: './node_modules/inputmask/dist/inputmask.min.js',
-					to: 'jquery-inputmask.js',
-					transform: (content) => minifyJs(content),
-				},
-				{
-					from: './node_modules/blockui/jquery.blockui.min.js',
-					to: 'jquery-blockui.js',
-					transform: (content) => minifyJs(content),
-				},
+				// {
+				// 	from: './node_modules/chart.js/dist/chart.bundle.min.js',
+				// 	to: 'chartjs.js',
+				// 	transform: (content) => minifyJs(content),
+				// },
+				// {
+				// 	from:
+				// 		'./node_modules/chartjs-plugin-labels/build/chartjs-plugin-labels.min.js',
+				// 	to: 'chartjs-labels.js',
+				// 	transform: (content) => minifyJs(content),
+				// },
+				// {
+				// 	from: './node_modules/print-this/printThis.js',
+				// 	to: 'print-this.js',
+				// 	transform: (content) => minifyJs(content),
+				// },
+				// {
+				// 	from: './node_modules/inputmask/dist/inputmask.min.js',
+				// 	to: 'jquery-inputmask.js',
+				// 	transform: (content) => minifyJs(content),
+				// },
+				// {
+				// 	from: './node_modules/blockui/jquery.blockui.min.js',
+				// 	to: 'jquery-blockui.js',
+				// 	transform: (content) => minifyJs(content),
+				// },
 			],
 		}),
+
+		new LibraryExportDefaultPlugin(['data'].map(camelCaseDash)),
 
 		// Remove the extra JS files Webpack creates for CSS entries.
 		// This should be fixed in Webpack 5.
@@ -190,32 +189,32 @@ const config = {
 		}),
 
 		// Process custom modules.
-		new CustomTemplatedPathPlugin({
-			modulename(outputPath, data) {
-				const entryName = get(data, ['chunk', 'name']);
-				if (entryName) {
-					return entryName.replace(/-([a-z])/g, (match, letter) =>
-						letter.toUpperCase()
-					);
-				}
-				return outputPath;
-			},
-		}),
+		// new CustomTemplatedPathPlugin({
+		// 	modulename(outputPath, data) {
+		// 		const entryName = get(data, ['chunk', 'name']);
+		// 		if (entryName) {
+		// 			return entryName.replace(/-([a-z])/g, (match, letter) =>
+		// 				letter.toUpperCase()
+		// 			);
+		// 		}
+		// 		return outputPath;
+		// 	},
+		// }),
 
 		// Adjust for custom modules.
-		new DependencyExtractionWebpackPlugin({
-			injectPolyfill: true,
-			requestToExternal: (request) => {
-				if (externals[request]) {
-					return externals[request].this;
-				}
-			},
-			requestToHandle: (request) => {
-				if (externals[request]) {
-					return request.replace('@eaccounting/', 'ea-');
-				}
-			},
-		}),
+		// new DependencyExtractionWebpackPlugin({
+		// 	injectPolyfill: true,
+		// 	requestToExternal: (request) => {
+		// 		if (externals[request]) {
+		// 			return externals[request].this;
+		// 		}
+		// 	},
+		// 	requestToHandle: (request) => {
+		// 		if (externals[request]) {
+		// 			return request.replace('@eaccounting/', 'ea-');
+		// 		}
+		// 	},
+		// }),
 
 		!isProduction &&
 			new BrowserSyncPlugin(
@@ -246,9 +245,11 @@ const config = {
 		// 	allowEmptyInput: true,
 		// }),
 
+		new DependencyExtractionWebpackPlugin( { injectPolyfill: true } ),
+
 		// Fancy WebpackBar.
 		new WebpackBar(),
 	].filter(Boolean),
 };
-console.log(config)
+// console.log(config)
 module.exports = config;
