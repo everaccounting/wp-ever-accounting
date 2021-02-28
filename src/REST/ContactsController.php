@@ -156,7 +156,7 @@ abstract class ContactsController extends EntitiesController {
 					),
 				),
 				'thumbnail'    => array(
-					'description' => __( 'Thumbnail of the item', 'wp-ever-accounting' ),
+					'description' => __( 'Thumbnail of the contact', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'properties'  => array(
@@ -165,7 +165,7 @@ abstract class ContactsController extends EntitiesController {
 							'type'        => 'integer',
 							'context'     => array( 'embed', 'view', 'edit' ),
 							'arg_options' => array(
-								'sanitize_callback' => 'intval',
+								'sanitize_callback' => 'absint',
 							),
 						),
 						'src' => array(

@@ -154,6 +154,29 @@ class AccountsController extends EntitiesController {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
+				'thumbnail'    => array(
+					'description' => __( 'Thumbnail id of the account', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view','edit' ),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'absint',
+							),
+						),
+						'src'  => array(
+							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'embed','view', ),
+							'arg_options' => array(
+								'sanitize_callback' => 'esc_url_raw',
+							),
+						),
+					),
+				),
 				'enabled'         => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
