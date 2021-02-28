@@ -84,8 +84,14 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage your business incomes in any currency you want, so your finances are always accurate and healthy. Know what and when to get paid.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', ) ) );//phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-revenues/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page'   => 'ea-sales',
+																	   'tab'    => 'revenues',
+																	   'action' => 'edit',
+			) ) );//phpcs:ignore?>"
+			   class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/add-revenues/?utm_source=listtable&utm_medium=link&utm_campaign=admin"
+			   class="button-secondary ea-empty-table__cta"
+			   target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -268,43 +274,41 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 *
 	 */
-	protected function extra_tablenav_depricated( $which ) {
+	protected function extra_tablenav( $which ) {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
-			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
-			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
-			eaccounting_input_date_range(
-				array(
-					'start_date' => $start_date,
-					'end_date'   => $end_date,
-				)
-			);
-
+//			eaccounting_select2(
+//				array(
+//					'placeholder' => __( 'Month', 'wp-ever-accounting' ),
+//					'name'        => 'month',
+//					'options'     => eaccounting_get_months(),
+//					'value'       => $month,
+//				)
+//			);
 			eaccounting_account_dropdown(
 				array(
 					'name'      => 'account_id',
 					'value'     => $account_id,
 					'default'   => '',
-					'attr'      => array(
-						'data-allow-clear' => true,
-					),
 					'creatable' => false,
+					'clearable' => false,
 				)
 			);
 
 			eaccounting_category_dropdown(
 				array(
-					'name'    => 'category_id',
-					'value'   => $category_id,
-					'default' => '',
-					'type'    => 'income',
-					'attr'    => array(
-						'data-allow-clear' => true,
-					),
+					'name'      => 'category_id',
+					'value'     => $category_id,
+					'default'   => '',
+					'type'      => 'income',
+					'creatable' => false,
+					'clearable' => false,
+
 				)
 			);
 			eaccounting_contact_dropdown(
@@ -314,6 +318,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 					'default'     => '',
 					'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
 					'type'        => 'customer',
+					'clearable'   => false,
 				)
 			);
 
@@ -402,8 +407,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 
-		$start_date  = ! empty( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
-		$end_date    = ! empty( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+		$month  = ! empty( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 		$customer_id = ! empty( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
@@ -426,12 +430,13 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 			)
 		);
 
-		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+		if ( ! empty( $month ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
-				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+				'before' => date( 'Y-m-01', strtotime( $month ) ),
+				'after'  => date( 'Y-m-t', strtotime( $month ) ),
 			);
 		}
+
 
 		$args        = apply_filters( 'eaccounting_revenue_table_query_args', $args, $this );
 		$this->items = eaccounting_get_revenues( $args );

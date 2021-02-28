@@ -601,6 +601,7 @@ function eaccounting_get_transactions( $args = array() ) {
 		$date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
 		$where             .= $date_created_query->get_sql();
 	}
+
 	if ( ! empty( $qv['creator_id'] ) ) {
 		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
 		$where     .= " AND $table.`creator_id` IN ($creator_id)";
@@ -629,6 +630,7 @@ function eaccounting_get_transactions( $args = array() ) {
 	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_transactions' );
 	$results     = wp_cache_get( sanitize_key( $cache_key ), 'ea_transactions' );
 	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
+
 	if ( false === $results ) {
 		if ( $count_total ) {
 			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
