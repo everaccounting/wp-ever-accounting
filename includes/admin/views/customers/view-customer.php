@@ -56,7 +56,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Paid', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_paid() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_paid(), $customer->get_currency_code() ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
@@ -72,7 +72,7 @@ $edit_url        = eaccounting_admin_url(
 						<div class="ea-widget-card__content">
 							<div class="ea-widget-card__primary">
 								<span class="ea-widget-card__title"><?php esc_html_e( 'Total Due', 'wp-ever-accounting' ); ?></span>
-								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_due() ); ?></span>
+								<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $customer->get_total_due(), $customer->get_currency_code() ); ?></span>
 							</div>
 						</div>
 					</div><!--.ea-widget-card-->
