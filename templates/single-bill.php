@@ -12,12 +12,12 @@
 defined( 'ABSPATH' ) || exit();
 
 if ( empty( $key ) || empty( $bill_id ) ) {
-	eaccounting_get_template( 'unauthorized.php' );
+	eaccounting_get_template( 'restricted.php' );
 	exit();
 }
 $bill = eaccounting_get_bill( $bill_id );
 if ( empty( $bill ) || ! $bill->is_key_valid( $key ) ) {
-	eaccounting_get_template( 'unauthorized.php' );
+	eaccounting_get_template( 'restricted.php' );
 	exit();
 }
 ?>

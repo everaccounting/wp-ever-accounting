@@ -12,12 +12,12 @@
 defined( 'ABSPATH' ) || exit();
 
 if ( empty( $key ) || empty( $invoice_id ) ) {
-	eaccounting_get_template( 'unauthorized.php' );
+	eaccounting_get_template( 'restricted.php' );
 	exit();
 }
 $invoice = eaccounting_get_invoice( $invoice_id );
 if ( empty( $invoice ) || ! $invoice->is_key_valid( $key ) ) {
-	eaccounting_get_template( 'unauthorized.php' );
+	eaccounting_get_template( 'restricted.php' );
 	exit();
 }
 ?>
