@@ -235,7 +235,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 
 			eaccounting_select2(
 				array(
-					'placeholder' => __( 'Month', 'wp-ever-accounting' ),
+					'placeholder' => __( 'Select Month', 'wp-ever-accounting' ),
 					'name'        => 'month',
 					'options'     => eaccounting_get_months(),
 					'value'       => $month,
