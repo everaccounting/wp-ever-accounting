@@ -84,14 +84,8 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 			<p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage your business incomes in any currency you want, so your finances are always accurate and healthy. Know what and when to get paid.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page'   => 'ea-sales',
-																	   'tab'    => 'revenues',
-																	   'action' => 'edit',
-			) ) );//phpcs:ignore?>"
-			   class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-revenues/?utm_source=listtable&utm_medium=link&utm_campaign=admin"
-			   class="button-secondary ea-empty-table__cta"
-			   target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', ) ) );//phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Revenue', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/add-revenues/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -181,25 +175,8 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 		$revenue_id = $revenue->get_id();
 		switch ( $column_name ) {
 			case 'date':
-				$edit_url = eaccounting_admin_url(
-					array(
-						'page'       => 'ea-sales',
-						'tab'        => 'revenues',
-						'action'     => 'edit',
-						'revenue_id' => $revenue_id,
-					),
-					'admin.php'
-				);// phpcs:ignore
-				$del_url  = eaccounting_admin_url(
-					array(
-						'page'       => 'ea-sales',
-						'tab'        => 'revenues',
-						'action'     => 'delete',
-						'revenue_id' => $revenue_id,
-						'_wpnonce'   => wp_create_nonce( 'revenue-nonce' ),
-					),
-					'admin.php'
-				);// phpcs:ignore
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'edit', 'revenue_id' => $revenue_id, ), 'admin.php' );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'revenues', 'action' => 'delete', 'revenue_id' => $revenue_id, '_wpnonce' => wp_create_nonce( 'revenue-nonce' ), ), 'admin.php' );// phpcs:ignore
 
 				$actions = array(
 					'edit'   => '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
@@ -213,20 +190,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $revenue->get_account_id( 'edit' ) );
-				$value   = $account ? sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'page'       => 'ea-banking',
-								'tab'        => 'accounts',
-								'action'     => 'view',
-								'account_id' => $revenue->get_account_id( 'edit' ),
-							)
-						)
-					),
-					$account->get_name()
-				) : '&mdash;';// phpcs:ignore
+				$value   = $account ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $revenue->get_account_id( 'edit' ), ) ) ), $account->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			case 'category_id':
 				$category = eaccounting_get_category( $revenue->get_category_id( 'edit' ) );
@@ -234,20 +198,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				break;
 			case 'contact_id':
 				$contact = eaccounting_get_customer( $revenue->get_contact_id( 'edit' ) );
-				$value   = $contact ? sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url(
-						eaccounting_admin_url(
-							array(
-								'page'        => 'ea-sales',
-								'tab'         => 'customers',
-								'action'      => 'view',
-								'customer_id' => $revenue->get_contact_id( 'edit' ),
-							)
-						)
-					),
-					$contact->get_name()
-				) : '&mdash;';// phpcs:ignore
+				$value   = $contact ? sprintf( '<a href="%1$s">%2$s</a>', esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'customers', 'action' => 'view', 'customer_id' => $revenue->get_contact_id( 'edit' ), ) ) ), $contact->get_name() ) : '&mdash;';// phpcs:ignore
 				break;
 			default:
 				return parent::column_default( $revenue, $column_name );
@@ -274,7 +225,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 *
 	 */
-	protected function extra_tablenav( $which ) {
+	public function extra_tablenav( $which ) {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
@@ -282,14 +233,15 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
-//			eaccounting_select2(
-//				array(
-//					'placeholder' => __( 'Month', 'wp-ever-accounting' ),
-//					'name'        => 'month',
-//					'options'     => eaccounting_get_months(),
-//					'value'       => $month,
-//				)
-//			);
+			eaccounting_select2(
+				array(
+					'placeholder' => __( 'Month', 'wp-ever-accounting' ),
+					'name'        => 'month',
+					'options'     => eaccounting_get_months(),
+					'value'       => $month,
+				)
+			);
+
 			eaccounting_account_dropdown(
 				array(
 					'name'      => 'account_id',
@@ -407,7 +359,7 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 
-		$month  = ! empty( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
+		$month       = ! empty( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 		$customer_id = ! empty( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : '';
@@ -436,7 +388,6 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				'after'  => date( 'Y-m-t', strtotime( $month ) ),
 			);
 		}
-
 
 		$args        = apply_filters( 'eaccounting_revenue_table_query_args', $args, $this );
 		$this->items = eaccounting_get_revenues( $args );
