@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\Vendorable;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Payment extends Transaction {
 	use AttachmentTrait;
+	use Vendorable;
 
 	/**
 	 * This is the name of this object type.

@@ -11,6 +11,8 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\ResourceModel;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,6 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 abstract class Contact extends ResourceModel {
+	use CurrencyTrait;
+	use AttachmentTrait;
 
 	/**
 	 * This is the name of this object type.

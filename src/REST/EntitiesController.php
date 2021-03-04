@@ -212,7 +212,7 @@ abstract class EntitiesController extends Controller {
 			}
 			$object = new $this->entity_model( $id );
 			if ( ! $object->exists() ) {
-				throw new \Exception(  __( 'Invalid ID.', 'wp-ever-accounting' ) );
+				throw new \Exception( __( 'Invalid ID.', 'wp-ever-accounting' ) );
 			}
 
 			return $object;
@@ -251,11 +251,12 @@ abstract class EntitiesController extends Controller {
 	public function create_item( $request ) {
 		try {
 			if ( empty( $this->entity_model ) || ! class_exists( $this->entity_model ) ) {
-				throw new \Exception(  __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
 			}
 			if ( ! empty( $request['id'] ) ) {
 				throw new \Exception( __( 'Cannot create existing resource.', 'wp-ever-accounting' ), 400 );
 			}
+
 			$object = new $this->entity_model();
 			$object = $this->prepare_object_for_database( $object, $request );
 			$object->save();
@@ -270,7 +271,7 @@ abstract class EntitiesController extends Controller {
 			return $response;
 
 		} catch ( \Exception $e ) {
-			return new \WP_Error( 'create_ite', $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( 'create_item', $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 
 	}
@@ -285,13 +286,13 @@ abstract class EntitiesController extends Controller {
 	public function update_item( $request ) {
 		try {
 			if ( empty( $this->entity_model ) || ! class_exists( $this->entity_model ) ) {
-				throw new Exception( 'no_entity_model_class', __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( 'no_entity_model_class', __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
 			}
 
 			$id     = (int) $request['id'];
 			$object = new $this->entity_model( $id );
 			if ( ! $object->exists() ) {
-				throw new Exception( 'eaccounting_rest_invalid_id', __( 'Invalid resource ID.', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( 'eaccounting_rest_invalid_id', __( 'Invalid resource ID.', 'wp-ever-accounting' ), 400 );
 			}
 
 			$object = $this->prepare_object_for_database( $object, $request );
@@ -304,7 +305,7 @@ abstract class EntitiesController extends Controller {
 
 			return $response;
 
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			return new \WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 	}
@@ -312,12 +313,12 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.0
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		// translators: %s: Class method name.
@@ -332,14 +333,14 @@ abstract class EntitiesController extends Controller {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$args             = array();
-		$args['offset']   = $request['offset'];
-		$args['order']    = $request['order'];
-		$args['orderby']  = $request['orderby'];
-		$args['paged']    = $request['page'];
-		$args['include']  = $request['include'];
-		$args['per_page'] = $request['per_page'];
-		$args['search']   = $request['search'];
+		$args            = array();
+		$args['offset']  = $request['offset'];
+		$args['order']   = $request['order'];
+		$args['orderby'] = $request['orderby'];
+		$args['paged']   = $request['page'];
+		$args['include'] = $request['include'];
+		$args['number']  = $request['per_page'];
+		$args['search']  = $request['search'];
 
 		$args['date_query'] = array();
 
@@ -353,8 +354,9 @@ abstract class EntitiesController extends Controller {
 			$args['date_query'][0]['after'] = $request['after'];
 		}
 
-		// Filter the query arguments for a request.
-		$args    = apply_filters( "eaccounting_rest_{$this->entity_type}_query", $args, $request );
+		// Filter the query arguments for a request.§
+		$args = apply_filters( "eaccounting_rest_{$this->entity_type}_query", $args, $request );
+
 		$results = $this->get_objects( $args, $request );
 		$total   = (int) $this->get_objects( array_merge( $args, array( 'count_total' => true ) ), $request );
 
@@ -368,7 +370,7 @@ abstract class EntitiesController extends Controller {
 			$items[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$max_pages = ceil( $total / (int) $args['per_page'] );
+		$max_pages = ceil( $total / (int) $args['number'] );
 		$response  = rest_ensure_response( $items );
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );
@@ -412,19 +414,18 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Prepare a single object for create or update.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return ResourceModel|\WP_Error Data object or WP_Error.
+	 * @since 1.1.0
+	 *
 	 */
 	protected function prepare_object_for_database( &$object, $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
-		// Handle all writable props.
+
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
-
 			if ( ! is_null( $value ) ) {
 				switch ( $key ) {
 					case 'meta_data':
@@ -434,7 +435,11 @@ abstract class EntitiesController extends Controller {
 							}
 						}
 						break;
-
+					case 'currency':
+						if ( ! empty( $request['currency'] ) && isset( $request['currency']['code'] ) && is_callable( array( $object, "set_currency_code" ) ) ) {
+							$object->set_currency_code( $request['currency']['code'] );
+						}
+						break;
 					default:
 						if ( is_callable( array( $object, "set_{$key}" ) ) ) {
 							$object->{"set_{$key}"}( $value );
@@ -443,7 +448,12 @@ abstract class EntitiesController extends Controller {
 				}
 			}
 
-			if( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ){
+//			if ( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
+//
+//				$object->{"set_{$key}_id"}( $value['id'] );
+//			}
+			if ( is_array( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
+
 				$object->{"set_{$key}_id"}( $value['id'] );
 			}
 		}
@@ -454,13 +464,13 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Retrieves data from a Model class.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param ResourceModel $object  model object.
-	 * @param array         $fields  Fields to include.
-	 * @param string        $context either view or edit.
+	 * @param ResourceModel $object model object.
+	 * @param array $fields Fields to include.
+	 * @param string $context either view or edit.
 	 *
 	 * @return array
+	 * @since  1.1.0
+	 *
 	 */
 	protected function prepare_object_for_response( $object, $fields, $context = 'view' ) {
 
@@ -511,12 +521,12 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Checks if a key should be included in a response.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param ResourceModel $object    Data object.
-	 * @param string        $field_key The key to check for.
+	 * @param ResourceModel $object Data object.
+	 * @param string $field_key The key to check for.
 	 *
 	 * @return bool
+	 * @since  1.1.0
+	 *
 	 */
 	public function object_supports_field( $object, $field_key ) {
 		return apply_filters( 'eaccounting_rest_object_supports_key', true, $object, $field_key );
@@ -525,11 +535,11 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Retrieves data from a Model class.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param MetaData[] $meta_data meta data objects.
 	 *
 	 * @return array
+	 * @since  1.1.0
+	 *
 	 */
 	protected function prepare_object_meta_data( $meta_data ) {
 		$meta = array();
@@ -544,7 +554,7 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param ResourceModel    $object  Object data.
+	 * @param ResourceModel $object Object data.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return array                   Links for the given post.
@@ -563,12 +573,12 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param ResourceModel    $object  Data object.
+	 * @param ResourceModel $object Data object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response
+	 * @since  1.1.0
+	 *
 	 */
 	public function prepare_item_for_response( $object, $request ) {
 		// Fetch the fields to include in this response.
@@ -677,8 +687,8 @@ abstract class EntitiesController extends Controller {
 		 * collection parameter. Use the
 		 * `rest_{$this->entity_type}_query` filter to set query parameters.
 		 *
-		 * @param array  $query_params JSON Schema-formatted collection parameters.
-		 * @param string $entity_type  Post type object.
+		 * @param array $query_params JSON Schema-formatted collection parameters.
+		 * @param string $entity_type Post type object.
 		 */
 		return apply_filters( "rest_{$this->entity_type}_collection_params", $params, $this->entity_type );
 	}

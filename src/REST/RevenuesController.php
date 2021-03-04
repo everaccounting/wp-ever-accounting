@@ -31,6 +31,17 @@ class RevenuesController extends TransactionsController {
 	 *
 	 */
 	protected $rest_base = 'revenues';
+
+	/**
+	 * Entity type.
+	 *
+	 * @since   1.1.1
+	 *
+	 * @var string
+	 *
+	 */
+	protected $entity_type = 'revenue';
+
 	/**
 	 * Entity model class.
 	 *
