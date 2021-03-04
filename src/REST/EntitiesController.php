@@ -423,6 +423,7 @@ abstract class EntitiesController extends Controller {
 	protected function prepare_object_for_database( &$object, $request ) {
 		$schema    = $this->get_item_schema();
 		$data_keys = array_keys( array_filter( $schema['properties'], array( $this, 'filter_writable_props' ) ) );
+
 		foreach ( $data_keys as $key ) {
 			$value = $request[ $key ];
 			if ( ! is_null( $value ) ) {
@@ -447,7 +448,11 @@ abstract class EntitiesController extends Controller {
 				}
 			}
 
-			if( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ){
+//			if ( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
+//
+//				$object->{"set_{$key}_id"}( $value['id'] );
+//			}
+			if ( is_array( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
 
 				$object->{"set_{$key}_id"}( $value['id'] );
 			}
