@@ -15,6 +15,7 @@
  * @package wp-ever-accounting
  */
 
+use EverAccounting\Controllers\Items;
 use EverAccounting\Logger;
 
 defined( 'ABSPATH' ) || exit();
@@ -23,6 +24,7 @@ defined( 'ABSPATH' ) || exit();
  * Class EverAccounting
  *
  * @property-read Logger $logger
+ * @property-read Items $items
  *
  * @since 1.0.0
  */
@@ -286,6 +288,7 @@ final class EverAccounting {
 		do_action( 'before_eaccounting_init' );
 
 		$this->container['logger'] = new Logger();
+		$this->container['items'] = new Items();
 
 		// Init action.
 		do_action( 'eaccounting_init' );
