@@ -273,12 +273,15 @@ class License {
 	 *
 	 */
 	public function plugins_api_filter( $data, $action = '', $args = null ) {
+		error_log(print_r($data, true ));
+		error_log(print_r($args, true ));
 		if ( 'plugin_information' !== $action ) {
 			return $data;
 		}
 
-		$data = $this->get_plugin_info();
-		if ( ! isset( $args->slug ) || ( $args->slug !== $data->slug ) ) {
+		$plugin_data = $this->get_plugin_info();
+		error_log(print_r($data, true ));
+		if ( ! isset( $args->slug ) || ( $args->slug !== $plugin_data->slug ) ) {
 			return $data;
 		}
 

@@ -3,11 +3,10 @@
  * Handles logging for the plugin.
  *
  * @package        EverAccounting
- * @class          EverAccounting_Logger
  * @version        1.0.2
  */
 
-namespace EverAccounting\Core;
+namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -86,7 +85,7 @@ class Logger {
 	 */
 	public function __destruct() {
 		if ( is_resource( $this->handle ) ) {
-            fclose( $this->handle ); // @codingStandardsIgnoreLine.
+			fclose( $this->handle ); // @codingStandardsIgnoreLine.
 		}
 	}
 
@@ -127,7 +126,7 @@ class Logger {
 	 */
 	protected function write_log( $entry ) {
 		if ( $this->open( $this->handle ) && is_resource( $this->handle ) ) {
-            fwrite( $this->handle, $entry . PHP_EOL ); // @codingStandardsIgnoreLine.
+			fwrite( $this->handle, $entry . PHP_EOL ); // @codingStandardsIgnoreLine.
 		} else {
 			$this->cache_log( $entry );
 		}
@@ -166,15 +165,15 @@ class Logger {
 			@wp_mkdir_p( dirname( $file ) );
 
 			if ( ! file_exists( $file ) ) {
-                $temphandle = @fopen( $file, 'wb+' ); // @codingStandardsIgnoreLine.
-                @fclose( $temphandle ); // @codingStandardsIgnoreLine.
+				$temphandle = @fopen( $file, 'wb+' ); // @codingStandardsIgnoreLine.
+				@fclose( $temphandle ); // @codingStandardsIgnoreLine.
 
 				if ( defined( 'FS_CHMOD_FILE' ) ) {
-                    @chmod( $file, FS_CHMOD_FILE ); // @codingStandardsIgnoreLine.
+					@chmod( $file, FS_CHMOD_FILE ); // @codingStandardsIgnoreLine.
 				}
 			}
 
-            $resource = @fopen( $file, 'ab' ); // @codingStandardsIgnoreLine.
+			$resource = @fopen( $file, 'ab' ); // @codingStandardsIgnoreLine.
 
 			if ( $resource ) {
 				$this->handle = $resource;
@@ -199,7 +198,7 @@ class Logger {
 		$result = false;
 
 		if ( is_resource( $handle ) ) {
-            $result = fclose( $this->handle ); // @codingStandardsIgnoreLine.
+			$result = fclose( $this->handle ); // @codingStandardsIgnoreLine.
 			unset( $this->handle );
 		}
 
@@ -217,17 +216,10 @@ class Logger {
 	 *
 	 */
 	public static function get_log_file_path( $name ) {
-		if ( function_exists( 'wp_hash' ) ) {
-			$date_suffix = date( 'Y-m-d', time() );
-			$hash_suffix = wp_hash( $name );
-			$name        = sanitize_file_name( implode( '-', array( $name, $date_suffix, $hash_suffix ) ) . '.log' );
+		$date_suffix = date( 'Y-m-d', time() );
+		$name       = sanitize_file_name( implode( '-', array( $name, $date_suffix ) ) . '.log' );
 
-			return trailingslashit( EACCOUNTING_LOG_DIR ) . $name;
-		}
-
-		_doing_it_wrong( __METHOD__, __( 'This method should not be called before plugins_loaded.', 'wp-ever-accounting' ), '1.0.2' );
-
-		return false;
+		return trailingslashit( EACCOUNTING_LOG_DIR ) . $name;
 	}
 
 	/**
@@ -256,7 +248,7 @@ class Logger {
 			$last_modified = filemtime( trailingslashit( EACCOUNTING_LOG_DIR ) . $log_file );
 
 			if ( $last_modified < $timestamp ) {
-                @unlink( trailingslashit( EACCOUNTING_LOG_DIR ) . $log_file ); // @codingStandardsIgnoreLine.
+				@unlink( trailingslashit( EACCOUNTING_LOG_DIR ) . $log_file ); // @codingStandardsIgnoreLine.
 			}
 		}
 	}
@@ -269,7 +261,7 @@ class Logger {
 	 * @return array
 	 */
 	public static function get_log_files() {
-        $files  = @scandir( EACCOUNTING_LOG_DIR ); // @codingStandardsIgnoreLine.
+		$files  = @scandir( EACCOUNTING_LOG_DIR ); // @codingStandardsIgnoreLine.
 		$result = array();
 
 		if ( ! empty( $files ) ) {
@@ -322,7 +314,7 @@ class Logger {
 	 * @param string $message Message to log.
 	 * @param array  $context Log context.
 	 */
-	public function emergency( $message, $context = array() ) {
+	public function log_emergency( $message, $context = array() ) {
 		$this->log( self::EMERGENCY, $message, $context );
 	}
 
@@ -338,7 +330,7 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 */
-	public function alert( $message, $context = array() ) {
+	public function log_alert( $message, $context = array() ) {
 		$this->log( self::ALERT, $message, $context );
 	}
 
@@ -354,7 +346,7 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 */
-	public function critical( $message, $context = array() ) {
+	public function log_critical( $message, $context = array() ) {
 		$this->log( self::CRITICAL, $message, $context );
 	}
 
@@ -370,7 +362,7 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 */
-	public function error( $message, $context = array() ) {
+	public function log_error( $message, $context = array() ) {
 		$this->log( self::ERROR, $message, $context );
 	}
 
@@ -388,7 +380,7 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 */
-	public function warning( $message, $context = array() ) {
+	public function log_warning( $message, $context = array() ) {
 		$this->log( self::WARNING, $message, $context );
 	}
 
@@ -403,7 +395,7 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 */
-	public function notice( $message, $context = array() ) {
+	public function log_notice( $message, $context = array() ) {
 		$this->log( self::NOTICE, $message, $context );
 	}
 
@@ -419,7 +411,7 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 */
-	public function info( $message, $context = array() ) {
+	public function log_info( $message, $context = array() ) {
 		$this->log( self::INFO, $message, $context );
 	}
 
@@ -434,7 +426,7 @@ class Logger {
 	 * @param array  $context Log context.
 	 *
 	 */
-	public function debug( $message, $context = array() ) {
+	public function log_debug( $message, $context = array() ) {
 		$this->log( self::DEBUG, $message, $context );
 	}
 }

@@ -153,7 +153,7 @@ function eaccounting_format_price( $amount, $code = null ) {
 	$amount = eaccounting_money( $amount, $code, true );
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
+		eaccounting()->logger->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
 
 		return '00.00';
 	}
@@ -176,7 +176,7 @@ function eaccounting_sanitize_price( $amount, $code = null ) {
 	$amount = eaccounting_money( $amount, $code, false );
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
+		eaccounting()->logger->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
 
 		return 0;
 	}
@@ -316,23 +316,12 @@ function eaccounting_get_payment_methods() {
 }
 
 /**
- * Get the logger of the plugin.
- *
- * @since 1.0.2
- * @return \EverAccounting\Core\Logger
- */
-function eaccounting_logger() {
-	return new \EverAccounting\Core\Logger();
-}
-
-/**
  * Trigger logging cleanup using the logging class.
  *
  * @since 1.0.2
  */
 function eaccounting_cleanup_logs() {
-	$logger = new \EverAccounting\Core\Logger();
-	$logger->clear_expired_logs();
+	eaccounting()->logger->clear_expired_logs();
 }
 
 /**

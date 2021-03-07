@@ -15,10 +15,14 @@
  * @package wp-ever-accounting
  */
 
+use EverAccounting\Logger;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EverAccounting
+ *
+ * @property-read Logger $logger
  *
  * @since 1.0.0
  */
@@ -43,6 +47,13 @@ final class EverAccounting {
 	public $settings;
 
 	/**
+	 * Holds various class instances
+	 *
+	 * @var array
+	 */
+	protected $container = [];
+
+	/**
 	 * The single instance of the class.
 	 *
 	 * @since 1.0.0
@@ -53,13 +64,14 @@ final class EverAccounting {
 	/**
 	 * Main EverAccounting Instance.
 	 *
-	 * Insures that only one instance of EverAccounting exists in memory at any one
-	 * time. Also prevents needing to define globals all over the place
+	 * Ensures only one instance of EverAccounting is loaded or can be loaded.
 	 *
-	 * @return EverAccounting - Main instance.
 	 * @since 1.0.0
+	 * @static
+	 * @see eaccounting()
+	 * @return EverAccounting - Main instance.
 	 */
-	public static function init() {
+	public static function instance() {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new self();
 		}
@@ -68,10 +80,7 @@ final class EverAccounting {
 	}
 
 	/**
-	 * Throw error on object clone
-	 *
-	 * The whole idea of the singleton design pattern is that there is a single
-	 * object therefore, we don't want the object to be cloned.
+	 * Cloning is forbidden.
 	 *
 	 * @return void
 	 * @since 1.0.2
@@ -82,7 +91,7 @@ final class EverAccounting {
 	}
 
 	/**
-	 * Disable unserializing of the class
+	 * Unserializing instances of this class is forbidden.
 	 *
 	 * @return void
 	 * @since 1.0.2
@@ -90,6 +99,20 @@ final class EverAccounting {
 
 	public function __wakeup() {
 		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
+	}
+
+	/**
+	 * Auto-load in-accessible properties on demand.
+	 *
+	 * @param mixed $key Key name.
+	 * @return mixed
+	 */
+	public function __get( $key ) {
+		if ( array_key_exists( $key, $this->container ) ) {
+			return $this->container[ $key ];
+		}
+
+		return $this->{$key};
 	}
 
 	/**
@@ -203,6 +226,7 @@ final class EverAccounting {
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );
 		add_action( 'init', array( $this, 'localization_setup' ) );
 		add_action( 'switch_blog', array( $this, 'wpdb_table_fix' ), 0 );
+		add_action( 'init', array( $this, 'init' ), 0 );
 	}
 
 	/**
@@ -224,8 +248,7 @@ final class EverAccounting {
 				),
 				true
 			) ) {
-			$logger = eaccounting_logger();
-			$logger->critical(
+			$this->logger->log_critical(
 			/* translators: 1: error message 2: file name and path 3: line number */
 				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
 				array(
@@ -253,6 +276,19 @@ final class EverAccounting {
 	 */
 	public function wpdb_table_fix() {
 		$this->define_tables();
+	}
+
+	/**
+	 * Init EverAccounting when WordPress Initialises.
+	 */
+	public function init() {
+		// Before init action.
+		do_action( 'before_eaccounting_init' );
+
+		$this->container['logger'] = new Logger();
+
+		// Init action.
+		do_action( 'eaccounting_init' );
 	}
 
 	/**
@@ -351,7 +387,7 @@ final class EverAccounting {
  * @since  1.0.0
  */
 function eaccounting() {
-	return EverAccounting::init();
+	return EverAccounting::instance();
 }
 
 eaccounting();
