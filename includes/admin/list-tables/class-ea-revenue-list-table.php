@@ -274,7 +274,19 @@ class EverAccounting_Revenue_List_Table extends EverAccounting_List_Table {
 				)
 			);
 
+			eaccounting_hidden_input(
+				array(
+					'name'  => 'filter',
+					'value' => 'true',
+				)
+			);
+
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
+
+			if ( isset( $_GET['filter'] ) ) : ?>
+				<a class="button-primary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-sales&tab=revenues' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
+			<?php endif;
+
 			echo "\n";
 
 			echo '</div>';

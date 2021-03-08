@@ -230,7 +230,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
-			$month = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
+			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
 			eaccounting_select2(
@@ -274,8 +274,19 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 					'clearable'   => false,
 				)
 			);
+			eaccounting_hidden_input(
+				array(
+					'name'  => 'filter',
+					'value' => 'true',
+				)
+			);
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
+
+			if ( isset( $_GET['filter'] ) ) : ?>
+				<a class="button-primary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-expenses&tab=payments' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
+			<?php endif;
+
 			echo "\n";
 
 			echo '</div>';
