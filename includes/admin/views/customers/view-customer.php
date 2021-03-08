@@ -46,7 +46,7 @@ $edit_url        = eaccounting_admin_url(
 	<hr class="wp-header-end">
 
 	<div class="ea-page-columns altered ea-single-customer">
-		<div class="ea-page-columns__content">
+		<div class="ea-page-columns__content ea-mt-20">
 			<div class="ea-row">
 				<div class="ea-col">
 					<div class="ea-widget-card">
