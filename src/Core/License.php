@@ -22,40 +22,21 @@ class License {
 	private $api_url = 'https://wpeveraccounting.com/';
 
 	/**
-	 * Plugin name.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var bool|string
-	 */
-	public $name = '';
-
-	/**
-	 * Plugin slug.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var string
-	 */
-	public $slug = '';
-
-	/**
-	 * Plugin path.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var string
-	 */
-	public $path = '';
-
-	/**
 	 * Plugin file.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
 	 */
-	public $plugin = '';
+	private $file = '';
+
+	/**
+	 * Item name.
+	 *
+	 * @since 1.0.0
+	 * @var int
+	 */
+	private $item_name;
 
 	/**
 	 * Version number.
@@ -76,20 +57,12 @@ class License {
 	private $short_name = '';
 
 	/**
-	 * Item ID.
-	 *
-	 * @since 1.0.0
-	 * @var int
-	 */
-	private $item_id;
-
-	/**
 	 * License key.
 	 *
 	 * @since 1.1.0
 	 * @var string
 	 */
-	private $license = '';
+	private $license_key = '';
 
 	/**
 	 * License status.
@@ -105,16 +78,27 @@ class License {
 	 */
 	private $cache_key;
 
+	/**
+	 * Plugin data.
+	 *
+	 * @var array
+	 */
+	private $plugin_data;
 
 	/**
 	 * License constructor.
 	 *
-	 * @param string $path
-	 * @param null   $item_id
+	 * @param $file
+	 * @param $item_name
 	 */
-	public function __construct( $path, $item_id = null ) {
-		$plugin_data = get_file_data(
-			$path,
+	public function __construct( $file, $item_name ) {
+		// bail out if it's a local server
+//		if ( $this->is_local_server() ) {
+//			return;
+//		}
+
+		$plugin_data          = get_file_data(
+			$file,
 			array(
 				'name'    => 'Plugin Name',
 				'version' => 'Version',
@@ -122,25 +106,20 @@ class License {
 			),
 			'plugin'
 		);
-
-		$short_name = basename( $path, '.php' );
-		$short_name = preg_replace( '/[^a-zA-Z0-9\s]/', '', $short_name );
-		$short_name = str_replace( 'wp_ever_accounting', '', $short_name );
-		$short_name = str_replace( 'ever_accounting', '', $short_name );
-		$short_name = str_replace( 'eaccounting', '', $short_name );
-		$short_name = str_replace( 'eaccounting_', '', $short_name );
-
+		$this->file           = $file;
+		$this->item_name      = $item_name;
+		$this->version        = $plugin_data['version'];
+		$short_name           = basename( $file, '.php' );
+		$short_name           = preg_replace( '/[^a-zA-Z0-9\s]/', '', $short_name );
+		$short_name           = str_replace( 'wp_ever_accounting', '', $short_name );
+		$short_name           = str_replace( 'ever_accounting', '', $short_name );
+		$short_name           = str_replace( 'eaccounting', '', $short_name );
+		$short_name           = str_replace( 'eaccounting_', '', $short_name );
 		$this->short_name     = "eaccounting_{$short_name}";
-		$this->name           = $plugin_data['name'];
-		$this->version        = $plugin_data['version'];
-		$this->version        = $plugin_data['version'];
-		$this->path           = $path;
-		$this->slug           = basename( $path );
-		$this->plugin         = plugin_basename( $path );
-		$this->license        = trim( eaccounting_get_option( $this->short_name . '_license_key' ) );
+		$this->license_key    = trim( eaccounting_get_option( $this->short_name . '_license_key' ) );
 		$this->license_status = get_option( $this->short_name . '_license_status' );
 		$this->cache_key      = 'eccounting_' . md5( serialize( $plugin_data ) );
-		$this->item_id        = $item_id;
+		$this->plugin_data    = $plugin_data;
 
 		$this->init();
 	}
@@ -155,16 +134,43 @@ class License {
 	public function init() {
 		// Register settings
 		add_filter( 'eaccounting_settings_licenses', array( $this, 'settings' ), 1 );
-		add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ) );
-		add_filter( 'plugins_api', array( $this, 'plugins_api_filter' ), 10, 3 );
-		add_action( 'in_plugin_update_message-' . plugin_basename( $this->plugin ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
-		add_filter( 'http_request_args', array( $this, 'http_request_args' ), 10, 2 );
-
+		add_action( 'admin_notices', array( $this, 'activation_notice' ) );
+		add_action( 'eaccounting_weekly_scheduled_events', array( $this, 'scheduled_license_check' ) );
+		add_action( 'in_plugin_update_message-' . plugin_basename( $this->file ), array( $this, 'plugin_row_license_missing' ), 10, 2 );
 		// Activate license key on settings save
 		add_action( 'admin_init', array( $this, 'activate_license' ) );
 
 		// Deactivate license key
 		add_action( 'admin_init', array( $this, 'deactivate_license' ) );
+
+		require_once EACCOUNTING_ABSPATH . '/includes/libraries/EDD_SL_Plugin_Updater.php';
+		// Setup the updater
+		$edd_updater = new \EDD_SL_Plugin_Updater(
+			$this->api_url,
+			$this->file,
+			[
+				'version'   => $this->version,
+				'license'   => $this->license_key,
+				'author'    => $this->plugin_data['author'],
+				'item_name' => $this->item_name,
+				'url'       => home_url(),
+			]
+		);
+	}
+
+
+	/**
+	 * Check if the current server is localhost
+	 *
+	 * @return bool
+	 */
+	private function is_local_server() {
+		$addr = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+
+		$is_local = ( in_array( $addr, [ '127.0.0.1', '::1' ] ) || substr( $host, - 4 ) == '.dev' );
+
+		return apply_filters( 'eaccounting_license_is_local_server', $is_local );
 	}
 
 	/**
@@ -178,7 +184,8 @@ class License {
 		$license_settings = array(
 			array(
 				'id'             => $this->short_name . '_license_key',
-				'name'           => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->name ), //phpcs:ignore
+				'name'           => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->plugin_data['name'] ),
+				//phpcs:ignore
 				'license_status' => $this->license_status,
 				'desc'           => '',
 				'type'           => 'license_key',
@@ -189,131 +196,46 @@ class License {
 		return array_merge( $settings, $license_settings );
 	}
 
-
 	/**
-	 * Check for Updates at the defined API endpoint and modify the update array.
+	 * Show license activation notice
 	 *
-	 * This function dives into the update API just when WordPress creates its update array,
-	 * then adds a custom API call and injects the custom plugin data retrieved from the API.
-	 * It is reassembled from parts of the native WordPress plugin update code.
-	 * See wp-includes/update.php line 121 for the original wp_update_plugins() function.
-	 *
-	 * @param array $_transient_data Update array build by WordPress.
-	 *
-	 * @return array Modified update array with custom plugin data.
-	 * @uses api_request()
-	 *
+	 * @return void
 	 */
-	public function check_update( $_transient_data = null ) {
-		global $pagenow;
-		if ( ! is_object( $_transient_data ) ) {
-			$_transient_data = new \stdClass;
-		}
-
-		if ( 'plugins.php' === $pagenow && is_multisite() ) {
-			return $_transient_data;
-		}
-
-		if ( trailingslashit( home_url() ) === $this->api_url ) {
-			return $_transient_data;
-		}
-
-		if ( ! empty( $_transient_data->response ) && ! empty( $_transient_data->response[ $this->plugin ] ) ) {
-			return $_transient_data;
-		}
-
-		$version_info = $this->get_plugin_info();
-		if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
-
-			if ( version_compare( $this->version, $version_info->new_version, '<' ) ) {
-				$_transient_data->response[ $this->plugin ] = $version_info;
-			} else {
-				// Populating the no_update information is required to support auto-updates in WordPress 5.5.
-				$_transient_data->no_update[ $this->plugin ] = $version_info;
-			}
-		}
-		$_transient_data->last_checked             = time();
-		$_transient_data->checked[ $this->plugin ] = $this->version;
-
-		return $_transient_data;
-	}
-
-	/**
-	 * show update nofication row -- needed for multisite subsites, because WP won't tell you otherwise!
-	 *
-	 * @param string $file
-	 * @param array  $plugin
-	 */
-	public function show_update_notification( $file, $plugin ) {
-		if ( ! current_user_can( 'update_plugins' ) ) {
-			return;
-		}
-		if ( ! is_multisite() ) {
+	public function activation_notice() {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
-		if ( $this->plugin !== $file ) {
+		if ( empty( $this->license_key ) || ( is_object( $this->license_status ) && 'valid' !== $this->license_status->license ) ) {
+			$notice = sprintf(__('You are not receiving critical updates and new features for %s. ', 'wp-ever-accounting'), '<strong>'.$this->plugin_data['name'].'</strong>');
+			$notice .= sprintf(__('Please <a href="%s">activate your license</a> to receive updates and priority support', 'wp-ever-accounting'), admin_url('admin.php?page=ea-settings&tab=licenses'));
+			echo wp_kses_post( '<div class="error"><p>'.$notice.'</p></div>' );
+		}
+	}
+
+	/**
+	 * Check license status periodically every week.
+	 * @return void
+	 */
+	public function scheduled_license_check() {
+		if ( empty( $this->license_key ) ) {
 			return;
 		}
-		// Remove our filter on the site transient
-		remove_filter( 'pre_set_site_transient_update_plugins', array( $this, 'check_update' ), 10 );
-		$update_cache = get_site_transient( 'update_plugins' );
-		$update_cache = is_object( $update_cache ) ? $update_cache : new \stdClass();
 
-	}
-
-	/**
-	 * Updates information on the "View version x.x details" page with custom data.
-	 *
-	 * @param mixed  $data
-	 * @param string $action
-	 * @param object $args
-	 *
-	 * @uses api_request()
-	 *
-	 */
-	public function plugins_api_filter( $data, $action = '', $args = null ) {
-		if ( 'plugin_information' !== $action ) {
-			return $data;
+		$response = $this->remote_request(
+			'activate_license',
+			array(
+				'license'   => $this->license_key,
+				'item_name' => $this->item_name,
+			)
+		);
+		if ( ! $response ) {
+			return;
 		}
 
-		$data = $this->get_plugin_info();
-		if ( ! isset( $args->slug ) || ( $args->slug !== $data->slug ) ) {
-			return $data;
-		}
-
-		// Convert sections into an associative array, since we're getting an object, but Core expects an array.
-		if ( isset( $data->sections ) && ! is_array( $data->sections ) ) {
-			$data->sections = get_object_vars( $data->sections );
-		}
-
-		// Convert banners into an associative array, since we're getting an object, but Core expects an array.
-		if ( isset( $data->banners ) && ! is_array( $data->banners ) ) {
-			$data->banners = get_object_vars( $data->banners );
-		}
-
-		// Convert icons into an associative array, since we're getting an object, but Core expects an array.
-		if ( isset( $data->icons ) && ! is_array( $data->icons ) ) {
-			$data->icons = get_object_vars( $data->icons );
-		}
-
-		// Convert contributors into an associative array, since we're getting an object, but Core expects an array.
-		if ( isset( $data->contributors ) && ! is_array( $data->contributors ) ) {
-			$data->contributors = get_object_vars( $data->contributors );
-		}
-
-		if ( ! isset( $data->plugin ) ) {
-			$data->plugin = $this->name;
-		}
-
-		return $data;
-	}
-
-	/**
-	 * If available, show the changelog for sites in a multisite install.
-	 */
-	public function show_changelog() {
-
+		// Tell WordPress to look for updates
+		set_site_transient( 'update_plugins', null );
+		update_option( $this->short_name . '_license_status', $response );
 	}
 
 	/**
@@ -327,55 +249,6 @@ class License {
 			echo '&nbsp;<strong><a href="' . esc_url( admin_url( 'admin.php?page=ea-settings&tab=licenses' ) ) . '">' . __( 'Enter valid license key for automatic updates.', 'wp-ever-accounting' ) . '</a></strong>';
 		}
 
-	}
-
-	/**
-	 * Disables SSL verification to prevent download package failures.
-	 *
-	 * @since 1.7.0
-	 *
-	 * @param array  $args Array of request args.
-	 * @param string $url  The URL to be pinged.
-	 *
-	 * @return array $args Amended array of request args.
-	 */
-	public function http_request_args( $args, $url ) {
-
-		// If this is an SSL request and we are performing an upgrade routine, disable SSL verification.
-		if ( strpos( $url, 'https://' ) !== false && strpos( $url, 'edd_action=package_download' ) ) {
-			$args['sslverify'] = false;
-		}
-
-		return $args;
-
-	}
-
-	/**
-	 * Get version info.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param bool $force
-	 *
-	 * @return bool|mixed|string
-	 */
-	public function get_plugin_info( $force = true ) {
-		$version_info = $this->get_cached_info();
-		if ( $force || false === $version_info ) {
-			$version_info = $this->remote_request(
-				'get_version',
-				array(
-					'license' => $this->license,
-					'version' => $this->version,
-					'url'     => home_url(),
-					'beta'    => false,
-					'item_id' => $this->item_id,
-				)
-			);
-			$this->set_cache_info( $version_info );
-		}
-
-		return $version_info;
 	}
 
 	/**
@@ -422,7 +295,7 @@ class License {
 			'activate_license',
 			array(
 				'license' => $license,
-				'item_id' => $this->item_id,
+				'item_name' => $this->item_name,
 			)
 		);
 		if ( ! $response ) {
@@ -464,8 +337,8 @@ class License {
 			$response = $this->remote_request(
 				'deactivate_license',
 				array(
-					'license' => $this->license,
-					'item_id' => $this->item_id,
+					'license' => $this->license_key,
+					'item_name' => $this->item_name,
 				)
 			);
 			if ( ! $response ) {
@@ -477,13 +350,14 @@ class License {
 		}
 	}
 
+
 	/**
 	 * Queries the remote URL via wp_remote_post and returns a json decoded response.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param string $action The name of the $_POST action var.
-	 * @param array  $body   The content to retrieve from the remote URL.
+	 * @param array $body The content to retrieve from the remote URL.
+	 *
+	 * @since 1.1.0
 	 *
 	 * @return string|bool          Json decoded response on success, false on failure.
 	 */
@@ -516,72 +390,7 @@ class License {
 
 		$response = json_decode( wp_remote_retrieve_body( $request ) );
 
-		if ( $response && isset( $response->sections ) ) {
-			$response->sections = maybe_unserialize( $response->sections );
-		}
-
-		if ( $response && isset( $response->banners ) ) {
-			$response->banners = maybe_unserialize( $response->banners );
-		}
-
-		if ( $response && isset( $response->icons ) ) {
-			$response->icons = maybe_unserialize( $response->icons );
-		}
-
-		if ( ! empty( $response->sections ) ) {
-			foreach ( $response->sections as $key => $section ) {
-				$response->$key = (array) $section;
-			}
-		}
-
 		return $response;
-	}
-
-	/**
-	 * Queries the remote URL via wp_remote_post and returns a json decoded response.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $cache_key Cache key.
-	 *
-	 * @return mixed|bool          Json decoded response on success, false on failure.
-	 */
-	public function get_cached_info( $cache_key = '' ) {
-
-		if ( empty( $cache_key ) ) {
-			$cache_key = $this->cache_key;
-		}
-
-		$cache = get_option( $cache_key );
-
-		if ( empty( $cache['timeout'] ) || current_time( 'timestamp' ) > $cache['timeout'] ) { // @codingStandardsIgnoreLine
-			return false; // Cache is expired.
-		}
-
-		return json_decode( $cache['value'] );
-
-	}
-
-	/**
-	 * Queries the remote URL via wp_remote_post and returns a json decoded response.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @param string $value     Value.
-	 * @param string $cache_key Cache key.
-	 */
-	public function set_cache_info( $value = '', $cache_key = '' ) {
-
-		if ( empty( $cache_key ) ) {
-			$cache_key = $this->cache_key;
-		}
-
-		$data = array(
-			'timeout' => strtotime( '+2 hours', current_time( 'timestamp' ) ), // @codingStandardsIgnoreLine
-			'value'   => wp_json_encode( $value ),
-		);
-
-		update_option( $cache_key, $data, 'no' );
 	}
 
 	/**

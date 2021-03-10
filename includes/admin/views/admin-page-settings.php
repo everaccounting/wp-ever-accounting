@@ -50,6 +50,8 @@ $section_keys = array_keys( $sections );
 		if ( empty( $active_section ) ) {
 			$active_section = 'main';
 		}
+		global $wp_settings_sections, $wp_settings_fields;
+		print_r($wp_settings_sections);
 		?>
 		<form method="post" id="mainform" action="options.php" enctype="multipart/form-data">
 			<table class="form-table">
