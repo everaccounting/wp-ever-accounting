@@ -4,6 +4,10 @@ namespace EverAccounting\Core;
 
 defined('ABSPATH') || exit;
 
+/**
+ * Class Mailer
+ * @package EverAccounting\Core
+ */
 class Mailer {
 	/**
 	 * Holds the from address
@@ -72,9 +76,9 @@ class Mailer {
 	 * Add new placeholders.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @param $placeholders
-	 * 
+	 *
 	 */
 	public function add_placeholders( $placeholders ) {
 		$this->placeholders = array_merge( $this->placeholders, $placeholders );
@@ -184,11 +188,11 @@ class Mailer {
 	 * We only inline CSS for html emails, and to do so we use Emogrifier library (if supported).
 	 *
 	 * @version 4.0.0
-	 * 
+	 *
 	 * @param string|null $content Content that will receive inline styles.
 	 *
 	 * @return string
-	 * 
+	 *
 	 */
 	public function style_inline( $content ) {
 		ob_start();

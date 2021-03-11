@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Abstracts
  */
-abstract class ResourceModel {
+abstract class Abstract_ResourceModel {
 	/**
 	 * ID for this object.
 	 *

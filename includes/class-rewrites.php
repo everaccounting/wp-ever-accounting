@@ -1,7 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Rewrites {
+class Rewrites {
 
 	/**
 	 * EverAccounting_Rewrites constructor.
@@ -57,5 +57,3 @@ class EverAccounting_Rewrites {
 	}
 
 }
-
-new EverAccounting_Rewrites();

@@ -13,6 +13,10 @@ use EverAccounting\Interfaces\Arrayable;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class Collection
+ * @package EverAccounting\Core
+ */
 class Collection implements Arrayable {
 	/**
 	 * The items contained in the collection.

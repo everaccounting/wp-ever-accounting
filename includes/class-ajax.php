@@ -6,6 +6,7 @@
  * @package     EverAccounting
  * @class       EverAccounting_Ajax
  */
+namespace EverAccounting;
 
 use EverAccounting\Models\Bill;
 use EverAccounting\Models\Invoice;
@@ -18,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since 1.0.2
  */
-class EverAccounting_Ajax {
+class Ajax {
 
 	/**
 	 * EverAccounting_Ajax constructor.
@@ -29,6 +30,16 @@ class EverAccounting_Ajax {
 		add_action( 'init', array( __CLASS__, 'define_ajax' ), 0 );
 		add_action( 'template_redirect', array( __CLASS__, 'do_ajax' ), 0 );
 		self::add_ajax_events();
+	}
+
+	/**
+	 * Get Ajax URL.
+	 *
+	 * @return string
+	 * @since 1.0.2
+	 */
+	public function get_url() {
+		return admin_url( 'admin-ajax.php', 'relative' );
 	}
 
 	/**
@@ -1162,5 +1173,3 @@ class EverAccounting_Ajax {
 
 	}
 }
-
-return new EverAccounting_Ajax();

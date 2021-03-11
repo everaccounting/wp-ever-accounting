@@ -4,7 +4,11 @@ namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit;
 
-abstract class Singleton {
+/**
+ * Class Singleton
+ * @package EverAccounting\Abstracts
+ */
+abstract class Abstract_Singleton {
 	/**
 	 * @var $this []
 	 */

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit();
  *
  * @since 1.1.0
  */
-class EverAccounting_Compatibility {
+class Compatibilities {
 	/**
 	 * EverAccounting_Compatibility constructor.
 	 */
@@ -38,5 +38,3 @@ class EverAccounting_Compatibility {
 		return true;
 	}
 }
-
-new EverAccounting_Compatibility();

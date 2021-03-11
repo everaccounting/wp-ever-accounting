@@ -11,6 +11,10 @@ namespace EverAccounting\Core;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class License
+ * @package EverAccounting\Core
+ */
 class License {
 	/**
 	 * Holds the update url.

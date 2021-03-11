@@ -100,31 +100,6 @@ class EverAccounting_Install {
 		return array_merge( $tables, self::get_tables() );
 	}
 
-	/**
-	 * Add more cron schedules.
-	 *
-	 * @param array $schedules List of WP scheduled cron jobs.
-	 *
-	 * @return array
-	 */
-	public static function cron_schedules( $schedules ) {
-		$schedules['monthly'] = array(
-			'interval' => 2635200,
-			'display'  => __( 'Monthly', 'wp-ever-accounting' ),
-		);
-
-		$schedules['fifteendays'] = array(
-			'interval' => 1296000,
-			'display'  => __( 'Every 15 Days', 'wp-ever-accounting' ),
-		);
-
-		$schedules['weekly'] = array(
-			'interval' => 604800,
-			'display'  => __( 'Once Weekly', 'wp-ever-accounting' ),
-		);
-
-		return $schedules;
-	}
 
 	/**
 	 * Install EverAccounting.
@@ -161,7 +136,6 @@ class EverAccounting_Install {
 		self::create_accounts();
 		self::create_defaults();
 		self::create_roles();
-		self::schedule_events();
 		self::maybe_enable_setup_wizard();
 
 		eaccounting_protect_files( true );
@@ -793,23 +767,6 @@ class EverAccounting_Install {
 
 		remove_role( 'ea_accountant' );
 		remove_role( 'ea_manager' );
-	}
-
-
-	/**
-	 * Create cron jobs (clear them first).
-	 *
-	 * @since 1.0.2
-	 * @return void
-	 */
-	public static function schedule_events() {
-		wp_clear_scheduled_hook( 'eaccounting_twicedaily_scheduled_events' );
-		wp_clear_scheduled_hook( 'eaccounting_daily_scheduled_events' );
-		wp_clear_scheduled_hook( 'eaccounting_weekly_scheduled_events' );
-
-		wp_schedule_event( time() + ( 6 * HOUR_IN_SECONDS ), 'twicedaily', 'eaccounting_twicedaily_scheduled_events' );
-		wp_schedule_event( time() + 10, 'daily', 'eaccounting_daily_scheduled_events' );
-		wp_schedule_event( time() + ( 3 * HOUR_IN_SECONDS ), 'weekly', 'eaccounting_weekly_scheduled_events' );
 	}
 
 	/**
