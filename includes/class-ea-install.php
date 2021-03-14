@@ -202,16 +202,12 @@ class EverAccounting_Install {
 	 * @return void
 	 */
 	private static function create_options() {
-		$settings = new EverAccounting_Settings();
-		if ( empty( $settings->get( 'financial_year_start' ) ) ) {
-			$settings->set( array( 'financial_year_start' => '01-01' ) );
+		if ( empty( eaccounting_get_option( 'financial_year_start' ) ) ) {
+			eaccounting_update_option('financial_year_start','01-01');
 		}
-
-		if ( empty( $settings->get( 'default_payment_method' ) ) ) {
-			$settings->set( array( 'default_payment_method' => 'cash' ) );
+		if ( empty( eaccounting_get_option( 'default_payment_method' ) ) ) {
+			eaccounting_update_option('default_payment_method','cash');
 		}
-
-		$settings->set( array(), true );
 
 		$installation_time = get_option( 'eaccounting_install_date' );
 		if ( empty( $installation_time ) ) {
@@ -351,21 +347,21 @@ class EverAccounting_Install {
 	 * @return void
 	 */
 	private static function create_defaults() {
-		if ( empty( eaccounting()->settings->get( 'default_account' ) ) ) {
+		if ( empty( eaccounting_get_option( 'default_account' ) ) ) {
 			$accounts = eaccounting_get_accounts();
 			if ( ! empty( $accounts ) ) {
 				$account = array_pop( $accounts );
-				eaccounting()->settings->set( array( 'default_account' => $account->get_id() ), true );
+				eaccounting_update_option('default_account', $account->get_id());
 			}
 		}
-		if ( empty( eaccounting()->settings->get( 'default_currency' ) ) ) {
+		if ( empty( eaccounting_get_option( 'default_currency' ) ) ) {
 			$currencies = eaccounting_get_currencies( array( 'return' => 'raw' ) );
 			$currencies = wp_list_pluck( $currencies, 'code' );
 			$currency   = current( $currencies );
 			if ( in_array( 'USD', $currencies, true ) ) {
 				$currency = 'USD';
 			}
-			eaccounting()->settings->set( array( 'default_currency' => $currency ), true );
+			eaccounting_update_option('default_currency', $currency);
 		}
 
 		$defaults = array(
@@ -388,15 +384,10 @@ class EverAccounting_Install {
 		);
 
 		foreach ( $defaults as $key => $value ) {
-			if ( empty( eaccounting()->settings->get( $key ) ) ) {
-				eaccounting()->settings->set(
-					array(
-						$key => $value,
-					)
-				);
+			if ( empty(eaccounting_get_option( $key ) ) ) {
+				eaccounting_update_option($key, $value);
 			}
 		}
-		eaccounting()->settings->set( array(), true );
 	}
 
 	/**

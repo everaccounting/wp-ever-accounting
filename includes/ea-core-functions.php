@@ -600,3 +600,12 @@ function eaccounting_get_full_name( $user_id ) {
 	return implode( ' ', $name );
 }
 
+/**
+ * @param $file
+ * @param $item_name
+ */
+function eaccounting_init_license( $file, $item_name ){
+	if ( is_admin() && class_exists( '\EverAccounting\Core\License' ) ) {
+		$license = new \EverAccounting\Core\License( $file, $item_name );
+	}
+}
