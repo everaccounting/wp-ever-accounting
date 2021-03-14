@@ -130,7 +130,10 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'delete' => __( 'Delete', 'wp-ever-accounting' ),
+			'cancel'   => __( 'Cancel', 'wp-ever-accounting' ),
+			'paid'     => __( 'Paid', 'wp-ever-accounting' ),
+			'received' => __( 'Received', 'wp-ever-accounting' ),
+			'delete'   => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -253,7 +256,21 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 		$action = $this->current_action();
 
 		foreach ( $ids as $id ) {
+			$bill = new Bill( $id );
 			switch ( $action ) {
+				case 'cancel':
+					$bill->delete_payments();
+					$bill->set_status( 'cancelled' );
+					$bill->save();
+					break;
+				case 'paid':
+					$bill->set_paid();
+					$bill->save();
+					break;
+				case 'received':
+					$bill->set_status( 'received' );
+					$bill->save();
+					break;
 				case 'delete':
 					eaccounting_delete_bill( $id );
 					break;
