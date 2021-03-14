@@ -54,7 +54,7 @@ function eaccounting_get_option( $key = '', $default = false ) {
  * @since 1.1.0
  */
 function eaccounting_update_option( $key, $value ) {
-	return eaccounting()->settings->set( array( $key => $value ), true );
+	return eaccounting()->options->set( array( $key => $value ), true );
 }
 
 /**

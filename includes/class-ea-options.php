@@ -74,4 +74,28 @@ class Options {
 	public function get_all() {
 		return $this->options;
 	}
+
+	/**
+	 * Sets an option (in memory).
+	 *
+	 * @param bool $save Optional. Whether to trigger saving the option or options. Default false.
+	 *
+	 * @param array $settings An array of `key => value` setting pairs to set.
+	 *
+	 * @return bool If `$save` is not false, whether the options were saved successfully. True otherwise.
+	 * @since  1.0.2
+	 * @access public
+	 *
+	 */
+	public function set( $options, $save = false ) {
+		foreach ( $options as $option => $value ) {
+			$this->options[ $option ] = $value;
+		}
+
+		if ( false !== $save ) {
+			return update_option( 'eaccounting_settings', $this->options );
+		}
+
+		return true;
+	}
 }
