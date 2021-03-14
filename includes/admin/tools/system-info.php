@@ -64,7 +64,7 @@ function eaccounting_tools_system_info_report() {
 	$tables = $wpdb->get_col( "SHOW TABLES LIKE '{$wpdb->prefix}ea_%'" );
 	$tables = preg_replace( "/^{$wpdb->prefix}/", '', $tables );
 
-	// Configariotn settings.
+	// Configuration settings.
 	$return .= "\n" . '-- EverAccounting Configuration' . "\n\n";
 	$return .= 'Version:                          ' . eaccounting()->get_version() . "\n";
 	$return .= 'DB Version:                       ' . ( $db_version ? "$db_version\n" : "Unset\n" );

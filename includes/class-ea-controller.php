@@ -113,13 +113,14 @@ class EverAccounting_Controller {
 	 */
 	public static function delete_account_reference( $account_id ) {
 		global $wpdb;
-		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
+		//$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
 		$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
 
 		//delete default account
+		//$default_account = eaccounting()->settings->get( 'default_account' );
 		$default_account = eaccounting()->settings->get( 'default_account' );
 		if ( intval( $default_account ) === intval( $account_id ) ) {
-			eaccounting()->settings->set( array( array( 'default_account' => '' ) ), true );
+			eaccounting_update_option( array( 'default_account' => '' ), true );
 		}
 	}
 
