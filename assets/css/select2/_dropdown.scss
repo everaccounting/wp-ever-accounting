@@ -1,7 +1,7 @@
 .select2-dropdown {
   background-color: white;
 
-  border: 1px solid #aaa;
+  border: 1px solid #aaa !important;
   //border-radius: 4px;
 
   box-sizing: border-box;
@@ -45,12 +45,14 @@
   border-bottom: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  box-shadow: none !important;
 }
 
 .select2-container--open .select2-dropdown--below {
   border-top: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  box-shadow: none !important;
 }
 
 .select2-search--dropdown {

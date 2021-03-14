@@ -15,7 +15,13 @@
   @import "multiple";
 
   &.select2-container--focus .select2-selection{
-	box-shadow: none;
+	box-shadow: none !important;
+    border-color: #ddd !important;
+  }
+  &.select2-container--open .select2-selection--single {
+    box-shadow: none !important;
+    border-color: #ddd !important;
+
   }
 }
 
