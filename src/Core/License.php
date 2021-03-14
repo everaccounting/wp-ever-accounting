@@ -180,20 +180,16 @@ class License {
 	 *
 	 * @return  array
 	 */
-	public function settings( $settings ) {
-		$license_settings = array(
-			array(
-				'id'             => $this->short_name . '_license_key',
-				'name'           => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->plugin_data['name'] ),
-				//phpcs:ignore
-				'license_status' => $this->license_status,
-				'desc'           => '',
-				'type'           => 'license_key',
-				'size'           => 'regular',
-			),
+	public function settings( $fields ) {
+		$fields[] = 	array(
+			'id'             => $this->short_name . '_license_key',
+			'title'           => sprintf( __( '%1$s', 'wp-ever-accounting' ), $this->plugin_data['name'] ),
+			'license_status' => $this->license_status,
+			'desc'           => '',
+			'type'           => 'license',
+			'size'           => 'regular',
 		);
-
-		return array_merge( $settings, $license_settings );
+		return $fields;
 	}
 
 	/**

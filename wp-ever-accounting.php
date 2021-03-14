@@ -15,13 +15,16 @@
  * @package wp-ever-accounting
  */
 
+use EverAccounting\Options;
+use EverAccounting\Utilities;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EverAccounting
  * @since 1.0.0
  * @property-read EverAccounting\Utilities $utils
- * @property-read EverAccounting_Settings $settings
+ * @property-read Options $options
  */
 final class EverAccounting {
 	/**
@@ -94,6 +97,10 @@ final class EverAccounting {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
+		if( $key == 'settings' ){
+			$key = 'options';
+		}
+
 		if ( array_key_exists( $key, $this->classes ) ) {
 			return $this->classes[ $key ];
 		}
@@ -180,11 +187,10 @@ final class EverAccounting {
 		// Core classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-settings.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-options.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-assets.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-rewrites.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-license.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-controller.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-compatibility.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
@@ -194,7 +200,7 @@ final class EverAccounting {
 			require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin.php';
 		}
 
-
+		$this->classes['options'] = new Options();
 		//\EverAccounting\REST\Manager::instance();
 		//\EverAccounting\Core\Emails::instance();
 	}
@@ -284,8 +290,7 @@ final class EverAccounting {
 	 * Initialize plugin classes.
 	 */
 	public function init_classes() {
-		$this->classes['utils']    = new \EverAccounting\Utilities();
-		$this->classes['settings'] = new EverAccounting_Settings();
+		$this->classes['utils']    = new Utilities();
 	}
 
 	/**

@@ -139,38 +139,13 @@ class EverAccounting_Settings {
 							'type' => 'header',
 						),
 						'default_account'        => array(
-							'name'        => __( 'Account', 'wp-ever-accounting' ),
+							'id'          => 'default_account',
+							'title'        => __( 'Account', 'wp-ever-accounting' ),
 							'type'        => 'select',
 							'tip'         => __( 'Default account will be used for automatic transactions.', 'wp-ever-accounting' ),
 							'input_class' => 'ea-select2',
-							'options'     => array( '' => __( 'Select default account', 'wp-ever-accounting' ) ) + wp_list_pluck( $accounts, 'name', 'id' ),
-							'attr'        => array(
-								'data-placeholder' => __( 'Select Account', 'wp-ever-accounting' ),
-								'data-url'         => eaccounting()->ajax_url(),
-								'data-ajax_action' => 'eaccounting_get_accounts',
-								'data-nonce'       => wp_create_nonce( 'ea_get_accounts' ),
-								'data-map'         => 'return {text: option.name + " (" + option.currency_code +")"  , id:option.id}',
-								'data-modal_id'    => '#ea-modal-add-account',
-								'data-add_text'    => __( 'Add New', 'wp-ever-accounting' ),
-							),
 						),
-						'default_currency'       => array(
-							'name'        => __( 'Currency', 'wp-ever-accounting' ),
-							'type'        => 'select',
-							'std'         => 'USD',
-							'desc'        => __( 'Default currency rate will update to 1', 'wp-ever-accounting' ),
-							'input_class' => 'ea-select2',
-							'options'     => array( '' => __( 'Select default currency', 'wp-ever-accounting' ) ) + wp_list_pluck( array_values( $currencies ), 'name', 'code' ),
-							'attr'        => array(
-								'data-placeholder' => __( 'Select Currency', 'wp-ever-accounting' ),
-								'data-url'         => eaccounting()->ajax_url(),
-								'data-ajax_action' => 'eaccounting_get_currencies',
-								'data-nonce'       => wp_create_nonce( 'ea_get_currencies' ),
-								'data-map'         => 'return {text: option.name + " (" + option.symbol +")"  , id:option.code}',
-								'data-modal_id'    => '#ea-modal-add-currency',
-								'data-add_text'    => __( 'Add New', 'wp-ever-accounting' ),
-							),
-						),
+
 						'default_payment_method' => array(
 							'name'    => __( 'Payment Method', 'wp-ever-accounting' ),
 							'std'     => 'cash',
@@ -530,7 +505,7 @@ class EverAccounting_Settings {
 	function multicheck_callback( $args ) {
 
 		if ( ! empty( $args['options'] ) ) {
-			foreach ( $args['options'] as $key => $option ) {
+			foreach ( $args['options'] as $key => $option )
 				if ( isset( $this->settings[ $args['id'] ][ $key ] ) ) {
 					$enabled = $option;
 				} else {

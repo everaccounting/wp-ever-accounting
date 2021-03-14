@@ -136,12 +136,12 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
 
 		// Retrieve the customer.
 		$item = new \EverAccounting\Models\Customer( $args['id'] );
-
+		var_dump($args);
 		// Load new data.
 		$item->set_props( $args );
 
 		// Save the item
-		$item->save();
+		var_dump($item->save());
 
 		return $item;
 	} catch ( \Exception $e ) {

@@ -41,7 +41,7 @@ require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
  * @return mixed
  */
 function eaccounting_get_option( $key = '', $default = false ) {
-	$value = eaccounting()->settings->get( $key, $default );
+	$value = eaccounting()->options->get( $key, $default );
 	$value = apply_filters( 'eaccounting_get_option', $value, $key, $default );
 	return apply_filters( 'eaccounting_get_option_' . $key, $value, $key, $default );
 }
