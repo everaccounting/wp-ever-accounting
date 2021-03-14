@@ -225,19 +225,20 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 *
 	 */
-	protected function extra_tablenav_deprecated( $which ) {
+	public function extra_tablenav( $which ) {
 		if ( 'top' === $which ) {
 			$account_id  = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 			$vendor_id   = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
-			$start_date  = isset( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
-			$end_date    = isset( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
+			$month       = isset( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 			echo '<div class="alignleft actions ea-table-filter">';
 
-			eaccounting_input_date_range(
+			eaccounting_select2(
 				array(
-					'start_date' => $start_date,
-					'end_date'   => $end_date,
+					'placeholder' => __( 'Select Month', 'wp-ever-accounting' ),
+					'name'        => 'month',
+					'options'     => eaccounting_get_months(),
+					'value'       => $month,
 				)
 			);
 
@@ -246,22 +247,20 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 					'name'      => 'account_id',
 					'value'     => $account_id,
 					'default'   => '',
-					'attr'      => array(
-						'data-allow-clear' => true,
-					),
 					'creatable' => false,
+					'clearable' => false,
 				)
 			);
 
 			eaccounting_category_dropdown(
 				array(
-					'name'    => 'category_id',
-					'value'   => $category_id,
-					'default' => '',
-					'type'    => 'expense',
-					'attr'    => array(
-						'data-allow-clear' => true,
-					),
+					'name'        => 'category_id',
+					'value'       => $category_id,
+					'default'     => '',
+					'type'        => 'expense',
+					'ajax_action' => 'eaccounting_get_expense_categories',
+					'creatable'   => false,
+					'clearable'   => false,
 				)
 			);
 			eaccounting_contact_dropdown(
@@ -271,10 +270,23 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 					'default'     => '',
 					'placeholder' => __( 'Select Vendor', 'wp-ever-accounting' ),
 					'type'        => 'vendor',
+					'creatable'   => false,
+					'clearable'   => false,
+				)
+			);
+			eaccounting_hidden_input(
+				array(
+					'name'  => 'filter',
+					'value' => 'true',
 				)
 			);
 
 			submit_button( __( 'Filter', 'wp-ever-accounting' ), 'action', false, false );
+
+			if ( isset( $_GET['filter'] ) ) : ?>
+				<a class="button-primary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-expenses&tab=payments' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
+			<?php endif;
+
 			echo "\n";
 
 			echo '</div>';
@@ -359,11 +371,10 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 		$order   = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 
-		$start_date  = ! empty( $_GET['start_date'] ) ? eaccounting_clean( $_GET['start_date'] ) : '';
-		$end_date    = ! empty( $_GET['end_date'] ) ? eaccounting_clean( $_GET['end_date'] ) : '';
 		$category_id = ! empty( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : '';
 		$account_id  = ! empty( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : '';
 		$vendor_id   = ! empty( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : '';
+		$month       = ! empty( $_GET['month'] ) ? eaccounting_clean( $_GET['month'] ) : '';
 
 		$per_page = $this->per_page;
 
@@ -383,10 +394,10 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 			)
 		);
 
-		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+		if ( ! empty( $month ) ) {
 			$args['payment_date'] = array(
-				'before' => date( 'Y-m-d', strtotime( $end_date ) ),
-				'after'  => date( 'Y-m-d', strtotime( $start_date ) ),
+				'before' => date( 'Y-m-01', strtotime( $month ) ),
+				'after'  => date( 'Y-m-t', strtotime( $month ) ),
 			);
 		}
 

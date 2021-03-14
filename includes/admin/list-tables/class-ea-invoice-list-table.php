@@ -95,7 +95,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'Crate professional invoices for your customers in their currency. Print and share invoice with easily. Invoice also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Create professional invoices for your customers in their currency. Print and share invoice with easily. Invoice also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
 			</p>
 			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Invoices', 'wp-ever-accounting' ); ?></a>
 			<a href="https://wpeveraccounting.com/docs/general/add-invoice/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
@@ -146,7 +146,10 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 */
 	public function define_bulk_actions() {
 		return array(
-			'delete' => __( 'Delete', 'wp-ever-accounting' ),
+			'cancel' => __( 'Cancel', 'wp-ever-accounting' ),
+			'paid'      => __( 'Paid', 'wp-ever-accounting' ),
+			'pending'   => __( 'Pending', 'wp-ever-accounting' ),
+			'delete'         => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -270,7 +273,21 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 		$action = $this->current_action();
 
 		foreach ( $ids as $id ) {
+			$invoice = new Invoice( $id );
 			switch ( $action ) {
+				case 'cancel':
+					$invoice->delete_payments();
+					$invoice->set_status( 'cancelled' );
+					$invoice->save();
+					break;
+				case 'paid':
+					$invoice->set_paid();
+					$invoice->save();
+					break;
+				case 'pending':
+					$invoice->set_status( 'pending' );
+					$invoice->save();
+					break;
 				case 'delete':
 					eaccounting_delete_invoice( $id );
 					break;

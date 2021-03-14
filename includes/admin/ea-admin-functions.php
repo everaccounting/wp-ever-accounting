@@ -155,7 +155,11 @@ function eaccounting_is_admin_page( $page = '' ) {
 	}
 	// When translate the page name becomes different so use translated
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-	$pages                 = str_replace( array( 'toplevel_page_', 'accounting_page_', $eaccounting_screen_id . '_page_' ), '', eaccounting_get_screen_ids() );
+	$pages                 = str_replace( array(
+		'toplevel_page_',
+		'accounting_page_',
+		$eaccounting_screen_id . '_page_'
+	), '', eaccounting_get_screen_ids() );
 
 	if ( ! empty( $page ) && in_array( $page, $pages ) ) {
 		$ret = true;
@@ -185,7 +189,11 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 
 	// When translate the page name becomes different so use translated
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-	$whitelist             = str_replace( array( 'toplevel_page_', 'accounting_page_', $eaccounting_screen_id . '_page_' ), '', eaccounting_get_screen_ids() );
+	$whitelist             = str_replace( array(
+		'toplevel_page_',
+		'accounting_page_',
+		$eaccounting_screen_id . '_page_'
+	), '', eaccounting_get_screen_ids() );
 
 	if ( ! in_array( $page, $whitelist, true ) ) {
 		$page = '';
@@ -504,4 +512,29 @@ function eaccounting_get_report_years() {
 	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 );
 
 	return array_combine( array_values( $years ), $years );
+}
+
+/**
+ * Get month of years
+ *
+ * return array
+ * @since 1.1.2
+ */
+function eaccounting_get_months() {
+	$months = array(
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	);
+
+	return array_combine( array_values( $months ), $months );
 }

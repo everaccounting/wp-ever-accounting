@@ -91,9 +91,10 @@ class Item extends ResourceModel {
 		}
 
 		$this->required_props = array(
-			'name'       => __( 'Item name', 'wp-ever-accounting' ),
-			'quantity'   => __( 'Item Quantity', 'wp-ever-accounting' ),
-			'sale_price' => __( 'Item Sale Price', 'wp-ever-accounting' ),
+			'name'           => __( 'Item name', 'wp-ever-accounting' ),
+			'quantity'       => __( 'Item Quantity', 'wp-ever-accounting' ),
+			'purchase_price' => __( 'Item Purchase Price', 'wp-ever-accounting' ),
+			'sale_price'     => __( 'Item Sale Price', 'wp-ever-accounting' ),
 		);
 	}
 
