@@ -35,7 +35,7 @@ class EverAccounting_Compatibility {
 			return false;
 		}
 
-		return true;
+		return false;
 	}
 }
 

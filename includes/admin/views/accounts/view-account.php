@@ -45,7 +45,7 @@ $edit_url        = eaccounting_admin_url(
 <hr class="wp-header-end">
 
 <div class="ea-page-columns altered ea-single-account">
-	<div class="ea-page-columns__content">
+	<div class="ea-page-columns__content ea-mt-20">
 		<div class="ea-row">
 			<div class="ea-col">
 				<div class="ea-widget-card success">
@@ -55,7 +55,7 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-widget-card__content">
 						<div class="ea-widget-card__primary">
 							<span class="ea-widget-card__title"><?php esc_html_e( 'Current Balance', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_balance() ); ?></span>
+							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_balance(), $account->get_currency_code() ); ?></span>
 						</div>
 					</div>
 				</div><!--.ea-widget-card-->
@@ -71,7 +71,7 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-widget-card__content">
 						<div class="ea-widget-card__primary">
 							<span class="ea-widget-card__title"><?php esc_html_e( 'Opening Balance', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_opening_balance() ); ?></span>
+							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ); ?></span>
 						</div>
 					</div>
 				</div><!--.ea-widget-card-->
