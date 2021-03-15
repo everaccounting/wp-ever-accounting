@@ -11,7 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;
-use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\Attachment;
 use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Account extends Resource_Model {
 	use CurrencyTrait;
-	use AttachmentTrait;
+	use Attachment;
 
 	/**
 	 * This is the name of this object type.

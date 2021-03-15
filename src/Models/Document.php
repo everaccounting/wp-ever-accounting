@@ -12,13 +12,13 @@ namespace EverAccounting\Models;
 use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Documents;
-use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\Attachment;
 use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
 abstract class Document extends Resource_Model {
-	use AttachmentTrait;
+	use Attachment;
 	use CurrencyTrait;
 
 	/**

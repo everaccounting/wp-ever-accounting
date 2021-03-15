@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Traits\AttachmentTrait;
+use EverAccounting\Traits\Attachment;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Payment extends Transaction {
-	use AttachmentTrait;
+	use Attachment;
 
 	/**
 	 * This is the name of this object type.

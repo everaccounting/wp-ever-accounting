@@ -7,7 +7,7 @@ namespace EverAccounting\Traits;
 
 defined( 'ABSPATH' ) || exit;
 
-trait AttachmentTrait {
+trait Attachment {
 	/**
 	 * Get attachment.
 	 *

@@ -9,6 +9,6 @@ use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
 
-trait ContactTrait {
+trait Contact {
 
 }
