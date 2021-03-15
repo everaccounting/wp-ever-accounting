@@ -1,4 +1,11 @@
 <?php
+/**
+ * Interface Resource_Repository loader.
+ *
+ * @since       1.1.0
+ * @subpackage  Interfaces
+ * @package     EverAccounting\Includes
+ */
 
 namespace EverAccounting\Interfaces;
 

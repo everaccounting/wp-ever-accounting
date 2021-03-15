@@ -1,4 +1,11 @@
 <?php
+/**
+ * Interface arrayable loader.
+ *
+ * @since       1.0.0
+ * @subpackage  Interfaces
+ * @package     EverAccounting\Includes
+ */
 
 namespace EverAccounting\Interfaces;
 
