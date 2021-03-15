@@ -10,9 +10,9 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Abstracts\Resource_Repository;
 use EverAccounting\Models\Document;
-use EverAccounting\Models\DocumentItem;
+use EverAccounting\Models\Document_Item;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Documents extends ResourceRepository {
+class Documents extends Resource_Repository {
 	/**
 	 * @var string
 	 */
@@ -118,7 +118,7 @@ class Documents extends ResourceRepository {
 		}
 		$results = array();
 		foreach ( $items as $item ) {
-			$results[ $item->id ] = new DocumentItem( $item );
+			$results[ $item->id ] = new Document_Item( $item );
 		}
 
 		return $results;
@@ -133,7 +133,7 @@ class Documents extends ResourceRepository {
 	 */
 	public function delete_items( $item ) {
 		global $wpdb;
-		$wpdb->delete( $wpdb->prefix . DocumentItems::TABLE, array( 'document_id' => $item->get_id() ) );
+		$wpdb->delete( $wpdb->prefix . Document_Items::TABLE, array( 'document_id' => $item->get_id() ) );
 		eaccounting_cache_set_last_changed( 'ea_document_items' );
 	}
 
@@ -169,7 +169,7 @@ class Documents extends ResourceRepository {
 	/**
 	 * Delete items.
 	 *
-	 * @param \EverAccounting\Abstracts\ResourceModel $item
+	 * @param \EverAccounting\Abstracts\Resource_Model $item
 	 * @since 1.1.0
 	 */
 	public function delete( &$item ) {

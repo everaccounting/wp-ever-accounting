@@ -298,7 +298,7 @@ class Invoice extends Document {
 		}
 
 		//first check if we get line id if so then its from database
-		$line_item = new DocumentItem();
+		$line_item = new Document_Item();
 		if ( $this->get_item( $args['line_id'] ) ) {
 			$line_item = $this->items[ $args['line_id'] ];
 		}

@@ -6,11 +6,11 @@
  *
  * @var $invoice Invoice
  * @var $item_id int
- * @var $item DocumentItem
+ * @var $item Document_Item
  * @version 1.1.0
  */
 use EverAccounting\Models\Invoice;
-use EverAccounting\Models\DocumentItem;
+use EverAccounting\Models\Document_Item;
 
 defined( 'ABSPATH' ) || exit;
 ?>

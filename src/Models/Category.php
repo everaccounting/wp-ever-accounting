@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Category extends ResourceModel {
+class Category extends Resource_Model {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -31,7 +31,7 @@ class Category extends ResourceModel {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_categories';
@@ -40,7 +40,7 @@ class Category extends ResourceModel {
 	 * Item Data array.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data = array(

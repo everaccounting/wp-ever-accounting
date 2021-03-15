@@ -2818,7 +2818,7 @@ msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:64
 #: includes/admin/views/js/modal-add-currency.php:25 src/Models/Customer.php:64
-#: src/Models/DocumentItem.php:94 src/Models/Vendor.php:63
+#: src/Models/Document_Item.php:94 src/Models/Vendor.php:63
 msgid "Currency Code"
 msgstr ""
 
@@ -4132,21 +4132,21 @@ msgstr ""
 msgid "Invalid batch class handler file has been supplied."
 msgstr ""
 
-#: src/Abstracts/ResourceModel.php:430
+#: src/Abstracts/Resource_Model.php:430
 #. translators: %s: $key Key to check
 msgid ""
 "Generic add/update/get meta methods should not be used for internal meta "
 "data, including \"%s\". Use getters and setters."
 msgstr ""
 
-#: src/Abstracts/ResourceModel.php:452 src/Abstracts/ResourceModel.php:475
+#: src/Abstracts/Resource_Model.php:452 src/Abstracts/Resource_Model.php:475
 #. translators: %s: $key Key to set
 msgid ""
 "Object data such as \"%s\" should not be accessed directly. Use getters and "
 "setters."
 msgstr ""
 
-#: src/Abstracts/ResourceModel.php:1105
+#: src/Abstracts/Resource_Model.php:1105
 #. translators: %s missing item title
 msgid "%s is required"
 msgstr ""
@@ -4260,15 +4260,15 @@ msgstr ""
 msgid "Currency thousand separator"
 msgstr ""
 
-#: src/Models/DocumentItem.php:91
+#: src/Models/Document_Item.php:91
 msgid "Item ID"
 msgstr ""
 
-#: src/Models/DocumentItem.php:92 src/Models/Item.php:94
+#: src/Models/Document_Item.php:92 src/Models/Item.php:94
 msgid "Item name"
 msgstr ""
 
-#: src/Models/DocumentItem.php:93 src/Models/Note.php:86
+#: src/Models/Document_Item.php:93 src/Models/Note.php:86
 msgid "Document ID"
 msgstr ""
 

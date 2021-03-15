@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Traits\AttachmentTrait;
 use EverAccounting\Traits\CurrencyTrait;
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Models
  */
-class Item extends ResourceModel {
+class Item extends Resource_Model {
 	use AttachmentTrait;
 
 	/**

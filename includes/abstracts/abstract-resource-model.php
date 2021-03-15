@@ -8,12 +8,12 @@
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\Repositories\MetaData;
+use EverAccounting\Repositories\Meta_Data;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class ResourceModel
+ * Class Resource_Model
  *
  * Implemented by classes using the same CRUD(s) pattern.
  *
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Abstracts
  */
-abstract class ResourceModel {
+abstract class Resource_Model {
 	/**
 	 * ID for this object.
 	 *
@@ -92,7 +92,7 @@ abstract class ResourceModel {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var \EverAccounting\Abstracts\ResourceRepository
+	 * @var \EverAccounting\Abstracts\Resource_Repository
 	 */
 	protected $repository;
 
@@ -125,7 +125,7 @@ abstract class ResourceModel {
 	protected $required_props;
 
 	/**
-	 * ResourceModel constructor.
+	 * Resource_Model constructor.
 	 *
 	 * @param int|object|array|string $read ID to load from the DB (optional) or already queried data.
 	 */
@@ -278,7 +278,7 @@ abstract class ResourceModel {
 		 *
 		 * @param array         $data The object data being saved.
 		 * @param int           $id   The ID of the object.
-		 * @param ResourceModel $this The object being saved.
+		 * @param Resource_Model $this The object being saved.
 		 */
 		do_action( 'eaccounting_pre_save_' . $this->object_type, $this->get_data(), $this->get_id(), $this );
 
@@ -293,7 +293,7 @@ abstract class ResourceModel {
 		 *
 		 * @param array         $data The object data being saved.
 		 * @param int           $id   The ID of the object.
-		 * @param ResourceModel $this The object being saved.
+		 * @param Resource_Model $this The object being saved.
 		 */
 		do_action( 'eaccounting_save_' . $this->object_type, $this->get_data(), $this->get_id(), $this );
 
@@ -561,7 +561,7 @@ abstract class ResourceModel {
 			foreach ( $data as $meta ) {
 				$meta = (array) $meta;
 				if ( isset( $meta['key'], $meta['value'], $meta['id'] ) ) {
-					$this->meta_data[] = new MetaData(
+					$this->meta_data[] = new Meta_Data(
 						array(
 							'id'    => $meta['id'],
 							'key'   => $meta['key'],
@@ -596,7 +596,7 @@ abstract class ResourceModel {
 		if ( $unique ) {
 			$this->delete_meta_data( $key );
 		}
-		$this->meta_data[] = new MetaData(
+		$this->meta_data[] = new Meta_Data(
 			array(
 				'key'   => $key,
 				'value' => $value,
@@ -741,7 +741,7 @@ abstract class ResourceModel {
 		if ( is_array( $raw_meta_data ) ) {
 
 			foreach ( $raw_meta_data as $meta ) {
-				$this->meta_data[] = new MetaData(
+				$this->meta_data[] = new Meta_Data(
 					array(
 						'id'    => (int) $meta->meta_id,
 						'key'   => $meta->meta_key,

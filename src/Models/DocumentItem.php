@@ -9,12 +9,12 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
-class DocumentItem extends ResourceModel {
+class Document_Item extends Resource_Model {
 	/**
 	 * This is the name of this object type.
 	 *
@@ -60,7 +60,7 @@ class DocumentItem extends ResourceModel {
 	/**
 	 * Get the line item if ID is passed, otherwise the account is new and empty.
 	 *
-	 * @param int|object|DocumentItem $data object to read.
+	 * @param int|object|Document_Item $data object to read.
 	 *
 	 * @since 1.1.0
 	 *

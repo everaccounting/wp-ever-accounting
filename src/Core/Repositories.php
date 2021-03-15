@@ -11,17 +11,17 @@
 
 namespace EverAccounting\Core;
 
-use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Repositories\Accounts;
 use EverAccounting\Repositories\Categories;
 use EverAccounting\Repositories\Contacts;
 use EverAccounting\Repositories\Currencies;
 use EverAccounting\Repositories\Transactions;
 use EverAccounting\Repositories\Notes;
-use EverAccounting\Repositories\DocumentItems;
+use EverAccounting\Repositories\Document_Items;
 use EverAccounting\Repositories\Documents;
 use EverAccounting\Repositories\Items;
-use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Abstracts\Resource_Repository;
 use EverAccounting\Repositories\Transfers;
 
 defined( 'ABSPATH' ) || exit;
@@ -37,7 +37,7 @@ class Repositories {
 	/**
 	 * Contains an instance of the resource repository class that we are working with.
 	 *
-	 * @var ResourceRepository
+	 * @var Resource_Repository
 	 */
 	private $instance = null;
 
@@ -60,7 +60,7 @@ class Repositories {
 		'accounts'       => Accounts::class,
 		'currencies'     => Currencies::class,
 		'documents'      => Documents::class,
-		'document-items' => DocumentItems::class,
+		'document-items' => Document_Items::class,
 		'notes'          => Notes::class,
 		'transfers'      => Transfers::class,
 	);
@@ -170,7 +170,7 @@ class Repositories {
 	/**
 	 * Reads an object from the repository.
 	 *
-	 * @param ResourceModel $data model instance.
+	 * @param Resource_Model $data model instance.
 	 *
 	 * @since 1.1.0
 	 *
@@ -182,7 +182,7 @@ class Repositories {
 	/**
 	 * Create an object using repository.
 	 *
-	 * @param ResourceModel $data model instance.
+	 * @param Resource_Model $data model instance.
 	 *
 	 * @since 1.1.0
 	 *
@@ -194,7 +194,7 @@ class Repositories {
 	/**
 	 * Update an object using repository.
 	 *
-	 * @param ResourceModel $data model instance.
+	 * @param Resource_Model $data model instance.
 	 *
 	 * @since 1.1.0
 	 *
@@ -207,7 +207,7 @@ class Repositories {
 	 * Delete an object using repository.
 	 *
 	 *
-	 * @param ResourceModel $data data instance.
+	 * @param Resource_Model $data data instance.
 	 *
 	 * @since 1.1.0
 	 *

@@ -4,11 +4,11 @@
  *
  * @package EverAccounting\Admin
  * @var Invoice      $invoice The item being displayed
- * @var DocumentItem $item    The item being displayed
+ * @var Document_Item $item    The item being displayed
  * @var int          $item_id The id of the item being displayed
  */
 
-use EverAccounting\Models\DocumentItem;
+use EverAccounting\Models\Document_Item;
 use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit;

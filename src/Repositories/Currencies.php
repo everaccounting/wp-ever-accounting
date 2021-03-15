@@ -10,8 +10,8 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\ResourceModel;
-use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Abstracts\Resource_Model;
+use EverAccounting\Abstracts\Resource_Repository;
 use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Currencies extends ResourceRepository {
+class Currencies extends Resource_Repository {
 	/**
 	 * Table name
 	 *
@@ -66,7 +66,7 @@ class Currencies extends ResourceRepository {
 	/**
 	 * Method to create a new item in the database.
 	 *
-	 * @param ResourceModel $item Item object.
+	 * @param Resource_Model $item Item object.
 	 *
 	 * @throws \Exception | @return bool
 	 */
@@ -138,7 +138,7 @@ class Currencies extends ResourceRepository {
 	/**
 	 * Method to update an item in the database.
 	 *
-	 * @param ResourceModel $item Subscription object.
+	 * @param Resource_Model $item Subscription object.
 	 *
 	 * @throws \Exception
 	 */
@@ -171,7 +171,7 @@ class Currencies extends ResourceRepository {
 	/**
 	 * Method to delete a subscription from the database.
 	 *
-	 * @param ResourceModel $item
+	 * @param Resource_Model $item
 	 */
 	public function delete( &$item ) {
 		$code       = $item->get_code();

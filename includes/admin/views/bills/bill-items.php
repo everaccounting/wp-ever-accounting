@@ -46,7 +46,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 			<script type="text/template" id="ea-bill-line-template">
 				<?php
 				$item_id = 9999;
-				$item    = new \EverAccounting\Models\DocumentItem();
+				$item    = new \EverAccounting\Models\Document_Item();
 				include __DIR__ . '/bill-item.php';
 				?>
 			</script>

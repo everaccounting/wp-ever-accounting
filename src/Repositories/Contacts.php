@@ -10,7 +10,7 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Abstracts\Resource_Repository;
 use EverAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Contacts extends ResourceRepository {
+class Contacts extends Resource_Repository {
 	/**
 	 * Name of the table.
 	 *

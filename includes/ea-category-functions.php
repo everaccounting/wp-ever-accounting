@@ -132,6 +132,11 @@ function eaccounting_insert_category( $data = array(), $wp_error = true ) {
 		// Load new data.
 		$item->set_props( $data );
 
+		// If no color set.
+		if( empty( $item->get_color() ) ){
+			$item->set_color( eaccounting_get_random_color() );
+		}
+
 		$item->save();
 
 		return $item;

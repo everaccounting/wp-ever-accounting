@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Models;
 
-use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;
 use EverAccounting\Repositories\Documents;
 use EverAccounting\Traits\AttachmentTrait;
@@ -17,7 +17,7 @@ use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
-abstract class Document extends ResourceModel {
+abstract class Document extends Resource_Model {
 	use AttachmentTrait;
 	use CurrencyTrait;
 
@@ -1312,7 +1312,7 @@ abstract class Document extends ResourceModel {
 	/**
 	 * Get the invoice items.
 	 *
-	 * @return DocumentItem[]
+	 * @return Document_Item[]
 	 * @since 1.1.0
 	 *
 	 *
@@ -1334,7 +1334,7 @@ abstract class Document extends ResourceModel {
 	/**
 	 * @param      $item_id
 	 *
-	 * @return DocumentItem|int
+	 * @return Document_Item|int
 	 * @since 1.1.0
 	 *
 	 */
@@ -1356,7 +1356,7 @@ abstract class Document extends ResourceModel {
 	/**
 	 * Set the document items.
 	 *
-	 * @param array|DocumentItem[] $items items.
+	 * @param array|Document_Item[] $items items.
 	 * @param bool $append
 	 *
 	 * @since 1.1.0

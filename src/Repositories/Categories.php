@@ -10,7 +10,7 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Abstracts\Resource_Repository;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Categories extends ResourceRepository {
+class Categories extends Resource_Repository {
 	/**
 	 * Table name
 	 *
@@ -31,7 +31,7 @@ class Categories extends ResourceRepository {
 
 	/**
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $table = self::TABLE;
@@ -40,7 +40,7 @@ class Categories extends ResourceRepository {
 	 * A map of database fields to data types.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $data_type = array(

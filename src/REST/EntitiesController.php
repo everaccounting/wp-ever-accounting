@@ -11,9 +11,9 @@
 
 namespace EverAccounting\REST;
 
-use EverAccounting\Abstracts\ResourceModel;
+use EverAccounting\Abstracts\Resource_Model;
 
-use EverAccounting\Repositories\MetaData;
+use EverAccounting\Repositories\Meta_Data;
 
 defined( 'ABSPATH' ) || die();
 
@@ -37,7 +37,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @var ResourceModel
+	 * @var Resource_Model
 	 */
 	protected $entity_model;
 
@@ -203,7 +203,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @param int $id Object ID.
 	 *
-	 * @return ResourceModel|\WP_Error ResourceModel object or WP_Error object.
+	 * @return Resource_Model|\WP_Error Resource_Model object or WP_Error object.
 	 */
 	protected function get_object( $id ) {
 		try {
@@ -416,7 +416,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @return ResourceModel|\WP_Error Data object or WP_Error.
+	 * @return Resource_Model|\WP_Error Data object or WP_Error.
 	 */
 	protected function prepare_object_for_database( &$object, $request ) {
 		$schema    = $this->get_item_schema();
@@ -456,7 +456,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param ResourceModel $object  model object.
+	 * @param Resource_Model $object  model object.
 	 * @param array         $fields  Fields to include.
 	 * @param string        $context either view or edit.
 	 *
@@ -513,7 +513,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param ResourceModel $object    Data object.
+	 * @param Resource_Model $object    Data object.
 	 * @param string        $field_key The key to check for.
 	 *
 	 * @return bool
@@ -527,7 +527,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param MetaData[] $meta_data meta data objects.
+	 * @param Meta_Data[] $meta_data meta data objects.
 	 *
 	 * @return array
 	 */
@@ -544,7 +544,7 @@ abstract class EntitiesController extends Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param ResourceModel    $object  Object data.
+	 * @param Resource_Model    $object  Object data.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return array                   Links for the given post.
@@ -565,7 +565,7 @@ abstract class EntitiesController extends Controller {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param ResourceModel    $object  Data object.
+	 * @param Resource_Model    $object  Data object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response

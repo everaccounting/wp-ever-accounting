@@ -182,7 +182,8 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/vendor/autoload.php';
 
 		// Abstract classes.
-		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-ea-registry.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-registry.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-assets.php';
 
 		// Core classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';

@@ -11,6 +11,10 @@ namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class Registry
+ * @package EverAccounting\Abstracts
+ */
 abstract class Registry extends \ArrayObject {
 	/**
 	 * Array of registry items.

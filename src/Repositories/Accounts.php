@@ -10,7 +10,7 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Abstracts\Resource_Repository;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class Accounts extends ResourceRepository {
+class Accounts extends Resource_Repository {
 	/**
 	 * Table name
 	 *

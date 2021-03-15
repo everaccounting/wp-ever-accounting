@@ -1,6 +1,6 @@
 <?php
 /**
- * DocumentItems repository.
+ * Document_Items repository.
  *
  * Handle Invoice Item insert, update, delete & retrieve from database.
  *
@@ -10,7 +10,7 @@
 
 namespace EverAccounting\Repositories;
 
-use EverAccounting\Abstracts\ResourceRepository;
+use EverAccounting\Abstracts\Resource_Repository;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @package EverAccounting\Repositories
  */
-class DocumentItems extends ResourceRepository {
+class Document_Items extends Resource_Repository {
 	/**
 	 * Table name
 	 *

@@ -1,6 +1,6 @@
 <?php
 /**
- * ResourceRepository
+ * Resource_Repository
  *
  * An Abstract class for repository class.
  *
@@ -14,13 +14,13 @@ namespace EverAccounting\Abstracts;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class ResourceRepository
+ * Class Resource_Repository
  *
  * @since   1.1.0
  *
  * @package EverAccounting\Abstracts
  */
-abstract class ResourceRepository {
+abstract class Resource_Repository {
 	/**
 	 * A map of database fields to data types.
 	 *
@@ -77,7 +77,7 @@ abstract class ResourceRepository {
 	 * Get and store terms from a taxonomy.
 	 *
 	 * @since  1.1.0
-	 * @param  ResourceModel|integer $object object or object ID.
+	 * @param  Resource_Model|integer $object object or object ID.
 	 * @param  string          $taxonomy Taxonomy name e.g. product_cat.
 	 * @return array of terms
 	 */
@@ -98,7 +98,7 @@ abstract class ResourceRepository {
 	 * Returns an array of meta for an object.
 	 *
 	 * @since  1.10
-	 * @param  ResourceModel $object object.
+	 * @param  Resource_Model $object object.
 	 * @return array
 	 */
 	public function read_meta( &$object ) {
@@ -126,7 +126,7 @@ abstract class ResourceRepository {
 	 * Deletes meta based on meta ID.
 	 *
 	 * @since  1.1.0
-	 * @param  ResourceModel $object object.
+	 * @param  Resource_Model $object object.
 	 * @param  \stdClass $meta (containing at least ->id).
 	 */
 	public function delete_meta( &$object, $meta ) {
@@ -137,7 +137,7 @@ abstract class ResourceRepository {
 	 * Add new piece of meta.
 	 *
 	 * @since  1.1.0
-	 * @param  ResourceModel  $object object.
+	 * @param  Resource_Model  $object object.
 	 * @param  \stdClass $meta (containing ->key and ->value).
 	 * @return int meta ID
 	 */
@@ -149,7 +149,7 @@ abstract class ResourceRepository {
 	 * Update meta.
 	 *
 	 * @since  1.1.0
-	 * @param  ResourceModel  $object object.
+	 * @param  Resource_Model  $object object.
 	 * @param  \stdClass $meta (containing ->id, ->key and ->value).
 	 */
 	public function update_meta( &$object, $meta ) {
@@ -220,7 +220,7 @@ abstract class ResourceRepository {
 	 * Gets a list of props and meta keys that need updated based on change state
 	 * or if they are present in the database or not.
 	 *
-	 * @param ResourceModel $object            The object.
+	 * @param Resource_Model $object            The object.
 	 * @param array         $meta_key_to_props A mapping of meta keys => prop names.
 	 * @param string        $meta_type         The internal WP meta type (post, user, etc).
 	 *
@@ -249,7 +249,7 @@ abstract class ResourceRepository {
 	 *
 	 * Note: WordPress `get_metadata` function returns an empty string when meta data does not exist.
 	 *
-	 * @param ResourceModel $object The object.
+	 * @param Resource_Model $object The object.
 	 * @param string  $meta_key Meta key to update.
 	 * @param mixed   $meta_value Value to save.
 	 *
@@ -279,7 +279,7 @@ abstract class ResourceRepository {
 	/**
 	 * Read object data.
 	 *
-	 * @param ResourceModel $object object.
+	 * @param Resource_Model $object object.
 	 * @since 1.1.0
 	 */
 	protected function read_object_meta( &$object ) {
@@ -303,9 +303,9 @@ abstract class ResourceRepository {
 	}
 
 	/**
-	 * Helper method that updates all the post meta for an object based on it's settings in the ResourceModel class.
+	 * Helper method that updates all the post meta for an object based on it's settings in the Resource_Model class.
 	 *
-	 * @param ResourceModel $object object.
+	 * @param Resource_Model $object object.
 	 * @since 1.1.0
 	 */
 	protected function update_object_meta( &$object ) {
@@ -335,7 +335,7 @@ abstract class ResourceRepository {
 	/**
 	 * Method to create a new item in the database.
 	 *
-	 * @param ResourceModel $item Item object.
+	 * @param Resource_Model $item Item object.
 	 *
 	 * @throws \Exception | @return bool
 	 */
@@ -374,7 +374,7 @@ abstract class ResourceRepository {
 	/**
 	 * Method to read a item from the database.
 	 *
-	 * @param ResourceModel $item Item object.
+	 * @param Resource_Model $item Item object.
 	 *
 	 * @throws \Exception
 	 */
@@ -414,7 +414,7 @@ abstract class ResourceRepository {
 	/**
 	 * Method to update an item in the database.
 	 *
-	 * @param ResourceModel $item Subscription object.
+	 * @param Resource_Model $item Subscription object.
 	 *
 	 * @throws \Exception
 	 */
@@ -462,7 +462,7 @@ abstract class ResourceRepository {
 	/**
 	 * Method to delete a subscription from the database.
 	 *
-	 * @param ResourceModel $item
+	 * @param Resource_Model $item
 	 */
 	public function delete( &$item ) {
 		global $wpdb;

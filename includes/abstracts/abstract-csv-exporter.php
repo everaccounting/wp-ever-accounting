@@ -11,6 +11,10 @@ namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class CSV_Exporter
+ * @package EverAccounting\Abstracts
+ */
 abstract class CSV_Exporter {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
