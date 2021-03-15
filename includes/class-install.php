@@ -5,9 +5,12 @@
  * @since       1.0.2
  * @package     EverAccounting
  */
+
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Install {
+class Install {
 	/**
 	 * Updates and callbacks that need to be run per version.
 	 *
@@ -925,4 +928,4 @@ class EverAccounting_Install {
 	}
 }
 
-EverAccounting_Install::init();
+Install::init();

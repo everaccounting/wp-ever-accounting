@@ -6,6 +6,9 @@
  * @subpackage  Classes
  * @package     EverAccounting
  */
+
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -14,7 +17,7 @@ defined( 'ABSPATH' ) || exit();
  * @since   1.0.2
  * @package EverAccounting\Admin
  */
-class EverAccounting_Settings {
+class Settings {
 	/**
 	 * Stores all settings.
 	 *

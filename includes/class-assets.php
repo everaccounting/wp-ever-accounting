@@ -5,12 +5,21 @@
  * @package     EverAccounting
  * @version     1.0.2
  */
+
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Assets {
+/**
+ * Class Assets
+ *
+ * @since 1.0.2
+ */
+
+class Assets {
 
 	/**
-	 * EverAccounting_Assets constructor.
+	 * Assets constructor.
 	 */
 	public function __construct() {
 		add_action( 'eaccounting_head', array( $this, 'public_styles' ) );
@@ -34,4 +43,4 @@ class EverAccounting_Assets {
 	}
 }
 
-new EverAccounting_Assets();
+new Assets();

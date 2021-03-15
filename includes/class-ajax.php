@@ -4,8 +4,10 @@
  *
  * @since       1.0.2
  * @package     EverAccounting
- * @class       EverAccounting_Ajax
+ * @class       Ajax
  */
+
+namespace EverAccounting;
 
 use EverAccounting\Models\Bill;
 use EverAccounting\Models\Invoice;
@@ -14,14 +16,14 @@ use EverAccounting\Models\Note;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class EverAccounting_Ajax
+ * Class Ajax
  *
  * @since 1.0.2
  */
-class EverAccounting_Ajax {
+class Ajax {
 
 	/**
-	 * EverAccounting_Ajax constructor.
+	 * Ajax constructor.
 	 *
 	 * @since 1.0.2
 	 */
@@ -1163,4 +1165,4 @@ class EverAccounting_Ajax {
 	}
 }
 
-return new EverAccounting_Ajax();
+return new Ajax();

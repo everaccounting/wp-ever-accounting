@@ -7,16 +7,18 @@
  * @version     1.1.0
  */
 
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class EverAccounting_Compatibility
+ * Class Compatibility
  *
  * @since 1.1.0
  */
-class EverAccounting_Compatibility {
+class Compatibility {
 	/**
-	 * EverAccounting_Compatibility constructor.
+	 * Compatibility constructor.
 	 */
 	public function __construct() {
 		//woocommerce
@@ -39,4 +41,4 @@ class EverAccounting_Compatibility {
 	}
 }
 
-new EverAccounting_Compatibility();
+new Compatibility();

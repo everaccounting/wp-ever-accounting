@@ -13,14 +13,14 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class EverAccounting_Controller
+ * Class Controller
  *
  * @since 1.1.0
  */
-class EverAccounting_Controller {
+class Controller {
 
 	/**
-	 * EverAccounting_Controller constructor.
+	 * Controller constructor.
 	 */
 	public function __construct() {
 		//accounts
@@ -466,4 +466,4 @@ class EverAccounting_Controller {
 	}
 }
 
-new EverAccounting_Controller();
+new Controller();

@@ -187,14 +187,14 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-background-process.php';
 
 		// Core classes.
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-install.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-utilities.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-options.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-ajax.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-assets.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-rewrites.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-controller.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/class-ea-compatibility.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-install.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-utilities.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-options.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-ajax.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-assets.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-rewrites.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-controller.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-compatibility.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
 
 		//

@@ -1,7 +1,17 @@
 <?php
+/**
+ * EverAccounting  Rewrites Event Handlers.
+ *
+ * @since       1.1.0
+ * @package     EverAccounting
+ * @class       Rewrites
+ */
+
+namespace EverAccounting;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Rewrites {
+class Rewrites {
 
 	/**
 	 * EverAccounting_Rewrites constructor.
@@ -58,4 +68,4 @@ class EverAccounting_Rewrites {
 
 }
 
-new EverAccounting_Rewrites();
+new Rewrites();
