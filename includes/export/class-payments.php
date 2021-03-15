@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle revenue export.
+ * Handle payment export.
  *
  * @since   1.0.2
  *
@@ -13,15 +13,15 @@ use EverAccounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
 
-
 /**
- * Class Export_Revenues
+ * Class Payments
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-class Export_Revenues extends CSV_Exporter {
+
+class Payments extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -29,7 +29,7 @@ class Export_Revenues extends CSV_Exporter {
 	 * @since 1.0.2
 	 * @var string
 	 */
-	public $export_type = 'revenues';
+	public $export_type = 'payments';
 
 
 	/**
@@ -39,7 +39,7 @@ class Export_Revenues extends CSV_Exporter {
 	 * @since  1.0.2
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'revenue' );
+		return eaccounting_get_io_headers( 'payment' );
 	}
 
 	/**
@@ -54,12 +54,12 @@ class Export_Revenues extends CSV_Exporter {
 			'page'     => $this->page,
 			'orderby'  => 'id',
 			'order'    => 'ASC',
-			'type'     => 'income',
+			'type'     => 'expense',
 			'return'   => 'objects',
 			'number'   => - 1,
 		);
-		$args  = apply_filters( 'eaccounting_revenue_export_query_args', $args );
-		$items = eaccounting_get_revenues( $args );
+		$args  = apply_filters( 'eaccounting_payment_export_query_args', $args );
+		$items = eaccounting_get_payments( $args );
 
 		$rows = array();
 		foreach ( $items as $item ) {
@@ -73,7 +73,7 @@ class Export_Revenues extends CSV_Exporter {
 	/**
 	 * Take a revenue and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Revenue $item
+	 * @param \EverAccounting\Models\Payment $item
 	 *
 	 * @return array
 	 */
@@ -98,9 +98,9 @@ class Export_Revenues extends CSV_Exporter {
 					$account = eaccounting_get_account( $item->get_account_id() );
 					$value   = $account ? $account->get_name() : '';
 					break;
-				case 'customer_name':
-					$customer = eaccounting_get_customer( $item->get_contact_id() );
-					$value    = $customer ? $customer->get_name() : '';
+				case 'vendor_name':
+					$vendor = eaccounting_get_vendor( $item->get_contact_id() );
+					$value  = $vendor ? $vendor->get_name() : '';
 					break;
 				case 'category_name':
 					$category = eaccounting_get_category( $item->get_category_id() );
@@ -119,7 +119,7 @@ class Export_Revenues extends CSV_Exporter {
 					$value = $item->get_reconciled();
 					break;
 				default:
-					$value = apply_filters( 'eaccounting_revenue_csv_row_item', '', $column, $item, $this );
+					$value = apply_filters( 'eaccounting_payment_csv_row_item', '', $column, $item, $this );
 			}
 			$props[ $column ] = $value;
 		}

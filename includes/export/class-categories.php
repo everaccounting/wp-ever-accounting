@@ -8,17 +8,19 @@
  */
 
 namespace EverAccounting\Export;
+
 use EverAccounting\Abstracts\CSV_Exporter;
 
 defined( 'ABSPATH' ) || exit();
+
 /**
- * Class Category_CSV_Export
+ * Class Categories
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-class Export_Categories extends CSV_Exporter {
+class Categories extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.

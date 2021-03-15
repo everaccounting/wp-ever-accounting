@@ -55,58 +55,58 @@ class Batch extends Registry {
 		$this->add_item(
 			'export-customers',
 			array(
-				'class' => '\EverAccounting\Export\Export_Customers',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-customers.php',
+				'class' => '\EverAccounting\Export\Customers',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-customers.php',
 			)
 		);
 		$this->add_item(
 			'export-vendors',
 			array(
-				'class' => '\EverAccounting\Export\Export_Vendors',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-vendors.php',
+				'class' => '\EverAccounting\Export\Vendors',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-vendors.php',
 			)
 		);
 		$this->add_item(
 			'export-accounts',
 			array(
-				'class' => '\EverAccounting\Export\Export_Accounts',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-accounts.php',
+				'class' => '\EverAccounting\Export\Accounts',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-accounts.php',
 			)
 		);
 		$this->add_item(
 			'export-categories',
 			array(
-				'class' => '\EverAccounting\Export\Export_Categories',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-categories.php',
+				'class' => '\EverAccounting\Export\Categories',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-categories.php',
 			)
 		);
 		$this->add_item(
 			'export-currencies',
 			array(
-				'class' => '\EverAccounting\Export\Export_Currencies',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-currencies.php',
+				'class' => '\EverAccounting\Export\Currencies',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-currencies.php',
 			)
 		);
 		$this->add_item(
 			'export-payments',
 			array(
-				'class' => '\EverAccounting\Export\Export_Payments',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-payments.php',
+				'class' => '\EverAccounting\Export\Payments',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-payments.php',
 			)
 		);
 		$this->add_item(
 			'export-revenues',
 			array(
-				'class' => '\EverAccounting\Export\Export_Revenues',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-revenues.php',
+				'class' => '\EverAccounting\Export\Revenues',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-revenues.php',
 
 			)
 		);
 		$this->add_item(
 			'export-items',
 			array(
-				'class' => '\EverAccounting\Export\Export_Items',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-ea-export-items.php',
+				'class' => '\EverAccounting\Export\Items',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-items.php',
 
 			)
 		);

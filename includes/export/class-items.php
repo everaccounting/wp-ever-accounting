@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit();
 
 
 /**
- * Class Export_Items
+ * Class Items
  *
  * @since   1.1.0
  *
  * @package EverAccounting\Export
  */
-class Export_Items extends CSV_Exporter {
+class Items extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.

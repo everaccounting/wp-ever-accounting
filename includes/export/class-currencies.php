@@ -14,13 +14,13 @@ use EverAccounting\Abstracts\CSV_Exporter;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class Export_Currencies
+ * Class Currencies
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Export
  */
-class Export_Currencies extends CSV_Exporter {
+class Currencies extends CSV_Exporter {
 
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
