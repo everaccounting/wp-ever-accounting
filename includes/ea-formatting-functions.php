@@ -496,7 +496,7 @@ function eaccounting_format_hex( $hex ) {
  */
 function eaccounting_number_dictionary() {
 	return apply_filters(
-		'ea_number_dictionary',
+		'eaccounting_number_dictionary',
 		array(
 			0                   => __( 'Zero', 'wp-ever-accounting' ),
 			1                   => __( 'One', 'wp-ever-accounting' ),
