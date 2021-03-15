@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle category import.
+ * Handle customer import.
  *
  * @since   1.0.2
  *
@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit();
 
 
 /**
- * Class Import_Categories
+ * Class Customers
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Import
  */
-class Import_Categories extends CSV_Importer {
+class Customers extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
@@ -29,8 +29,9 @@ class Import_Categories extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'category' );
+		return eaccounting_get_io_headers( 'customer' );
 	}
+
 
 	/**
 	 * Return the required key to import item.
@@ -39,7 +40,7 @@ class Import_Categories extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	public function get_required() {
-		return array( 'name', 'type' );
+		return array( 'name', 'currency_code' );
 	}
 
 	/**
@@ -50,9 +51,12 @@ class Import_Categories extends CSV_Importer {
 	 */
 	protected function get_formatting_callback() {
 		return array(
-			'name'  => array( $this, 'parse_text_field' ),
-			'type'  => array( $this, 'parse_text_field' ),
-			'color' => array( $this, 'parse_text_field' ),
+			'email'         => 'sanitize_email',
+			'company'       => array( $this, 'parse_text_field' ),
+			'birth_date'    => array( $this, 'parse_date_field' ),
+			'country'       => array( $this, 'parse_country_field' ),
+			'website'       => 'esc_url_raw',
+			'currency_code' => array( $this, 'parse_currency_code_field' ),
 		);
 	}
 
@@ -67,18 +71,12 @@ class Import_Categories extends CSV_Importer {
 		if ( empty( $data['name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Name', 'wp-ever-accounting' ) );
 		}
-		if ( empty( $data['type'] ) ) {
-			return new \WP_Error( 'empty_prop', __( 'Empty Type', 'wp-ever-accounting' ) );
+		if ( empty( $data['currency_code'] ) ) {
+			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$category_exists = eaccounting_get_categories( array( 'search' => $data['name'], 'type' => $data['type'] ) );
-		$category_id     = ! empty( $category_exists ) ? $category_exists[0]->get_id() : '';
+		$data['type'] = 'customer';
 
-		if ( ! empty( $category_id ) ) {
-			return new \WP_Error( 'invalid_props', __( 'Category already exists.', 'wp-ever-accounting' ) );
-		}
-
-		return eaccounting_insert_category( $data );
+		return eaccounting_insert_customer( $data );
 	}
-
 }

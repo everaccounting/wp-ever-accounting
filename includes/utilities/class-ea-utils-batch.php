@@ -114,58 +114,58 @@ class Batch extends Registry {
 		$this->add_item(
 			'import-customers',
 			array(
-				'class' => '\EverAccounting\Import\Import_Customers',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-customers.php',
+				'class' => '\EverAccounting\Import\Customers',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-customers.php',
 			)
 		);
 		$this->add_item(
 			'import-vendors',
 			array(
-				'class' => '\EverAccounting\Import\Import_Vendors',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-vendors.php',
+				'class' => '\EverAccounting\Import\Vendors',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-vendors.php',
 			)
 		);
 		$this->add_item(
 			'import-revenues',
 			array(
-				'class' => '\EverAccounting\Import\Import_Revenues',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-revenues.php',
+				'class' => '\EverAccounting\Import\Revenues',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-revenues.php',
 			)
 		);
 		$this->add_item(
 			'import-payments',
 			array(
-				'class' => '\EverAccounting\Import\Import_Payments',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-payments.php',
+				'class' => '\EverAccounting\Import\Payments',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-payments.php',
 			)
 		);
 		$this->add_item(
 			'import-accounts',
 			array(
-				'class' => '\EverAccounting\Import\Import_Accounts',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-accounts.php',
+				'class' => '\EverAccounting\Import\Accounts',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-accounts.php',
 			)
 		);
 		$this->add_item(
 			'import-items',
 			array(
-				'class' => '\EverAccounting\Import\Import_Items',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-items.php',
+				'class' => '\EverAccounting\Import\Items',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-items.php',
 			)
 		);
 
 		$this->add_item(
 			'import-currencies',
 			array(
-				'class' => '\EverAccounting\Import\Import_Currencies',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-currencies.php',
+				'class' => '\EverAccounting\Import\Currencies',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-currencies.php',
 			)
 		);
 		$this->add_item(
 			'import-categories',
 			array(
-				'class' => '\EverAccounting\Import\Import_Categories',
-				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-ea-import-categories.php',
+				'class' => '\EverAccounting\Import\Categories',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-categories.php',
 			)
 		);
 

@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit();
 
 
 /**
- * Class Import_Accounts
+ * Class Accounts
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Import
  */
-class Import_Accounts extends CSV_Importer {
+class Accounts extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *

@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle customer import.
+ * Handle vendors import.
  *
  * @since   1.0.2
  *
@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit();
 
 
 /**
- * Class Import_Customers
+ * Class Vendors
  *
  * @since   1.0.2
  *
  * @package EverAccounting\Import
  */
-class Import_Customers extends CSV_Importer {
+class Vendors extends CSV_Importer {
 	/**
 	 * Get supported key and readable label.
 	 *
@@ -29,7 +29,7 @@ class Import_Customers extends CSV_Importer {
 	 * @since 1.0.2
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'customer' );
+		return eaccounting_get_io_headers( 'vendor' );
 	}
 
 
@@ -52,8 +52,8 @@ class Import_Customers extends CSV_Importer {
 	protected function get_formatting_callback() {
 		return array(
 			'email'         => 'sanitize_email',
-			'company'       => array( $this, 'parse_text_field' ),
 			'birth_date'    => array( $this, 'parse_date_field' ),
+			'address'       => array( $this, 'parse_description_field' ),
 			'country'       => array( $this, 'parse_country_field' ),
 			'website'       => 'esc_url_raw',
 			'currency_code' => array( $this, 'parse_currency_code_field' ),
@@ -75,8 +75,8 @@ class Import_Customers extends CSV_Importer {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
 
-		$data['type'] = 'customer';
+		$data['type'] = 'vendor';
 
-		return eaccounting_insert_customer( $data );
+		return eaccounting_insert_vendor( $data );
 	}
 }
