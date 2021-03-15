@@ -77,7 +77,7 @@ function eaccounting_get_currency( $currency ) {
  * @since 1.1.0
  *
  */
-function eaccount_get_currency_rate( $currency ) {
+function eaccounting_get_currency_rate( $currency ) {
 	$exist = eaccounting_get_currency( $currency );
 	if ( $exist ) {
 		return $exist->get_rate();

@@ -38,7 +38,7 @@ function eaccounting_get_account( $account ) {
  *
  * @return mixed|null
  */
-function eaccount_get_account_currency_code( $account ) {
+function eaccounting_get_account_currency_code( $account ) {
 	$exist = eaccounting_get_account( $account );
 	if ( $exist ) {
 		return $exist->get_currency_code();

@@ -11,22 +11,22 @@
 defined( 'ABSPATH' ) || exit();
 
 // Functions.
+require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-misc-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-formatting-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-rest-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-form-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-file-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-currency-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-account-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-transaction-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-category-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-contact-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-notes-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
-require_once( EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php' );
-require_once( EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php' );
-require_once( EACCOUNTING_ABSPATH . '/includes/ea-document-functions.php' );
-require_once( EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php' );
+require_once EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php';
+require_once EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php';
+require_once EACCOUNTING_ABSPATH . '/includes/ea-document-functions.php';
+require_once EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php';
 
 /**
  * Get an option

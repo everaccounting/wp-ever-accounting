@@ -195,7 +195,7 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-rewrites.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-controller.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-compatibility.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/ea-core-functions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/core-functions.php';
 
 		//
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {

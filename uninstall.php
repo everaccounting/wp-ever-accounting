@@ -22,10 +22,10 @@ wp_clear_scheduled_hook( 'eaccounting_weekly_scheduled_events' );
  */
 if ( defined( 'EACCOUNTING_REMOVE_ALL_DATA' ) && true === EACCOUNTING_REMOVE_ALL_DATA ) {
 	// Roles.
-	EverAccounting_Install::remove_roles();
+	\EverAccounting\Install::remove_roles();
 
 	// Tables.
-	EverAccounting_Install::drop_tables();
+	\EverAccounting\Install::drop_tables();
 
 	// Delete options.
 	$wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE 'eaccounting\_%';" );

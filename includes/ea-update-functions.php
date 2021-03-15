@@ -31,8 +31,8 @@ function eaccounting_remove_background_updater($action){
 }
 
 function eaccounting_update_1_0_2() {
-	EverAccounting_Install::create_tables();
-	EverAccounting_Install::create_roles();
+	\EverAccounting\Install::create_tables();
+	\EverAccounting\Install::create_roles();
 
 	global $wpdb;
 	$prefix          = $wpdb->prefix;
@@ -369,7 +369,7 @@ function eaccounting_update_1_1_0() {
 		$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 	}
 
-	EverAccounting_Install::install();
+	\EverAccounting\Install::install();
 
 	//todo upload transaction files as attachment then update transaction table and delete attachment column
 	flush_rewrite_rules();
