@@ -63,7 +63,7 @@ class Utilities {
 	public function includes() {
 		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-data.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-batch.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-default.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/utilities/class-defaults.php';
 	}
 
 	/**
