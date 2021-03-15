@@ -11,7 +11,7 @@
 namespace EverAccounting\Repositories;
 
 use EverAccounting\Abstracts\Resource_Repository;
-use EverAccounting\Models\Document;
+use EverAccounting\Abstracts\Document;
 use EverAccounting\Models\Document_Item;
 
 defined( 'ABSPATH' ) || exit;

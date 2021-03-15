@@ -17,7 +17,7 @@ use EverAccounting\Models\Currency;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Accounts
+ * Class Currencies
  *
  * @since   1.1.0
  *
