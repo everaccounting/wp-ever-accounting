@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Traits\Attachment;
+use EverAccounting\Abstracts\Contact;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -3,7 +3,7 @@
  * Handle the order item object.
  *
  * @package     EverAccounting\Models
- * @class       Currency
+ * @class       Document_Item
  * @version     1.1.0
  */
 

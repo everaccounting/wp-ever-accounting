@@ -3,7 +3,7 @@
  * Handle the Bill object.
  *
  * @package     EverAccounting\Models
- * @class       Currency
+ * @class       Bill
  * @version     1.1.0
  */
 

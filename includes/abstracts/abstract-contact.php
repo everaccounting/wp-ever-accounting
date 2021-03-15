@@ -7,7 +7,7 @@
  * @version     1.0.2
  */
 
-namespace EverAccounting\Models;
+namespace EverAccounting\Abstracts;
 
 use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;

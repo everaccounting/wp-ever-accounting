@@ -3,7 +3,7 @@
  * Handle the history object.
  *
  * @package     EverAccounting\Models
- * @class       Currency
+ * @class       Note
  * @version     1.1.0
  */
 
@@ -15,7 +15,7 @@ use EverAccounting\Core\Repositories;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class InvoiceHistory
+ * Class Note
  *
  * @since   1.1.0
  *

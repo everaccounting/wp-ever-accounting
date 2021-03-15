@@ -2,12 +2,12 @@
 /**
  * Abstract class for document object.
  *
- * @package     EverAccounting\Models
- * @class       Currency
+ * @package     EverAccounting\Abstracts
+ * @class       Document
  * @version     1.1.0
  */
 
-namespace EverAccounting\Models;
+namespace EverAccounting\Abstracts;
 
 use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;

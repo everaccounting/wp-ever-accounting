@@ -3,12 +3,13 @@
  * Handle the vendor object.
  *
  * @package     EverAccounting\Models
- * @class       Customer
+ * @class       Vendor
  * @version     1.0.2
  */
 
 namespace EverAccounting\Models;
 
+use EverAccounting\Abstracts\Contact;
 use EverAccounting\Traits\Attachment;
 
 defined( 'ABSPATH' ) || exit;

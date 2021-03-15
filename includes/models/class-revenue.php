@@ -1,45 +1,45 @@
 <?php
 /**
- * Handle the Payment object.
+ * Handle the Revenue object.
  *
  * @package     EverAccounting\Models
- * @class       Payment
+ * @class       Revenue
  * @version     1.0.2
  */
 
 namespace EverAccounting\Models;
 
 use EverAccounting\Traits\Attachment;
+use EverAccounting\Abstracts\Transaction;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Payment
+ * Class Revenue
  *
  * @since   1.1.0
  *
  * @package EverAccounting\Models
  */
-class Payment extends Transaction {
+class Revenue extends Transaction {
 	use Attachment;
-
 	/**
 	 * This is the name of this object type.
 	 *
 	 * @var string
 	 */
-	protected $object_type = 'payment';
+	protected $object_type = 'revenue';
 
 	/**
-	 * Get the account if ID is passed, otherwise the account is new and empty.
+	 * Get the Revenue if ID is passed, otherwise the Revenue is new and empty.
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param int|object|Account $data object to read.
+	 * @param int|object|Revenue $data object to read.
 	 *
 	 */
 	public function __construct( $data = 0 ) {
-		$this->data = array_merge( $this->data, array( 'type' => 'expense' ) );
+		$this->data = array_merge( $this->data, array( 'type' => 'income' ) );
 		parent::__construct( $data );
 
 		if ( $data instanceof self ) {
@@ -60,7 +60,7 @@ class Payment extends Transaction {
 
 		$this->required_props = array(
 			'type'           => __( 'Type', 'wp-ever-accounting' ),
-			'payment_date'   => __( 'Payment Date', 'wp-ever-accounting' ),
+			'payment_date'   => __( 'Revenue Date', 'wp-ever-accounting' ),
 			'account_id'     => __( 'Account ID', 'wp-ever-accounting' ),
 			'category_id'    => __( 'Category ID', 'wp-ever-accounting' ),
 			'payment_method' => __( 'Payment Method', 'wp-ever-accounting' ),
@@ -72,8 +72,9 @@ class Payment extends Transaction {
 	| Getters
 	|--------------------------------------------------------------------------
 	*/
+
 	/**
-	 * Return the vendor id.
+	 * Return the customer id.
 	 *
 	 * @since  1.1.0
 	 *
@@ -81,7 +82,7 @@ class Payment extends Transaction {
 	 *
 	 * @return string
 	 */
-	public function get_vendor_id( $context = 'edit' ) {
+	public function get_customer_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
 	}
 
@@ -91,14 +92,14 @@ class Payment extends Transaction {
 	|--------------------------------------------------------------------------
 	*/
 	/**
-	 * set the vendor id.
+	 * set the customer id.
 	 *
 	 * @since  1.1.0
 	 *
-	 * @param int $vendor_id .
+	 * @param int $customer_id .
 	 *
 	 */
-	public function set_vendor_id( $vendor_id ) {
-		$this->set_prop( 'contact_id', absint( $vendor_id ) );
+	public function set_customer_id( $customer_id ) {
+		$this->set_prop( 'contact_id', absint( $customer_id ) );
 	}
 }

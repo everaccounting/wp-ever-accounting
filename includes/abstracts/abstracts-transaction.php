@@ -7,10 +7,11 @@
  * @version     1.0.2
  */
 
-namespace EverAccounting\Models;
+namespace EverAccounting\Abstracts;
 
-use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Core\Repositories;
+use EverAccounting\Models\Account;
+use EverAccounting\Models\Currency;
 use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;

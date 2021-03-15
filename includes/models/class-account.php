@@ -363,10 +363,7 @@ class Account extends Resource_Model {
 		}
 		global $wpdb;
 		$transaction_total = (float) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d",
-				$this->get_id()
-			)
+			$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->get_id() )
 		);
 		$balance           = $this->get_opening_balance() + $transaction_total;
 		$this->set_balance( $balance );

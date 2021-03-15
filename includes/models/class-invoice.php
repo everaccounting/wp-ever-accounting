@@ -3,11 +3,13 @@
  * Handle the invoice object.
  *
  * @package     EverAccounting\Models
- * @class       Currency
+ * @class       Invoice
  * @version     1.1.0
  */
 
 namespace EverAccounting\Models;
+
+Use \EverAccounting\Abstracts\Document;
 
 defined( 'ABSPATH' ) || exit;
 

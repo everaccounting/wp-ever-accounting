@@ -3,7 +3,7 @@
  * Handle the transfer object.
  *
  * @package     EverAccounting\Models
- * @class       Account
+ * @class       Transfer
  * @version     1.0.2
  */
 
