@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract WP_Background_Process class.
+ * Abstract Background_Process class.
  *
  * Uses https://github.com/A5hleyRich/wp-background-processing to handle DB
  * updates in the background.
@@ -22,7 +22,7 @@ if ( ! class_exists( '\WP_Background_Process', false ) ) {
 
 
 /**
- * EverAccounting_Background_Process class.
+ * Background_Process class.
  */
 abstract class Background_Process extends \WP_Background_Process {
 	/**

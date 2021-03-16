@@ -20,8 +20,8 @@ activate_plugin( 'wp-ever-accounting/wp-ever-accounting.php' );
 
 echo "Installing WP Ever Accounting...\n";
 
-// Install Easy Digital Downloads
-EverAccounting_Install::install();
+// Install WP Ever Accounting
+\EverAccounting\Install::install();
 
 global $current_user, $edd_options;
 

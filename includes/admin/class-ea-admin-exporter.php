@@ -8,7 +8,7 @@
  */
 
 namespace EverAccounting\Admin;
-use EverAccounting_Ajax;
+use EverAccounting\Ajax;
 defined( 'ABSPATH' ) || exit();
 
 class Exporter {
@@ -37,7 +37,7 @@ class Exporter {
 
 		$type = sanitize_key( $_REQUEST['type'] );
 
-		EverAccounting_Ajax::verify_nonce( "{$type}_exporter_nonce" );
+		Ajax::verify_nonce( "{$type}_exporter_nonce" );
 
 		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
 			wp_send_json_error(
