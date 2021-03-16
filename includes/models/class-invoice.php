@@ -519,7 +519,7 @@ class Invoice extends Document {
 	 */
 	public function get_total_due() {
 		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
-		if ( $due < 0 ) {
+		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) <= 0 ) {
 			$due = 0;
 		}
 
@@ -615,7 +615,7 @@ class Invoice extends Document {
 		$this->set_total( $total );
 		if ( ( ! empty( $this->get_total_paid() ) && $this->get_total_due() > 0 ) ) {
 			$this->set_status( 'partial' );
-		} elseif ( $this->get_total_paid() >= $this->get_total() ) { // phpcs:ignore
+		} elseif ( empty( $this->get_total_due() ) ) { // phpcs:ignore
 			$this->set_status( 'paid' );
 		} elseif ( $this->is_due() && $this->is_status('pending')) {
 			$this->set_status( 'overdue' );

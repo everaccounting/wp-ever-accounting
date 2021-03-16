@@ -15,6 +15,7 @@
  * @package wp-ever-accounting
  */
 
+use EverAccounting\Logger;
 use EverAccounting\Options;
 use EverAccounting\Utilities;
 
@@ -23,8 +24,9 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Class EverAccounting
  * @since 1.0.0
- * @property-read EverAccounting\Utilities $utils
+ * @property-read Utilities $utils
  * @property-read Options $options
+ * @property-read Logger $logger
  */
 final class EverAccounting {
 	/**
@@ -265,8 +267,7 @@ final class EverAccounting {
 				),
 				true
 			) ) {
-			$logger = eaccounting_logger();
-			$logger->critical(
+			$this->logger->log_critical(
 			/* translators: 1: error message 2: file name and path 3: line number */
 				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
 				array(
@@ -303,6 +304,7 @@ final class EverAccounting {
 	 */
 	public function init_classes() {
 		$this->classes['utils']    = new Utilities();
+		$this->classes['logger']    = new Logger();
 	}
 
 	/**

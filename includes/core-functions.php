@@ -153,7 +153,7 @@ function eaccounting_format_price( $amount, $code = null ) {
 	$amount = eaccounting_money( $amount, $code, true );
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
+		eaccounting_logger()->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
 
 		return '00.00';
 	}
@@ -176,7 +176,7 @@ function eaccounting_sanitize_price( $amount, $code = null ) {
 	$amount = eaccounting_money( $amount, $code, false );
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */
-		eaccounting_logger()->alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
+		eaccounting_logger()->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
 
 		return 0;
 	}
@@ -322,7 +322,7 @@ function eaccounting_get_payment_methods() {
  * @return \EverAccounting\Logger
  */
 function eaccounting_logger() {
-	return new \EverAccounting\Logger();
+	return eaccounting()->logger;
 }
 
 /**
