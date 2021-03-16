@@ -22,6 +22,7 @@ class Menu {
 		add_action( 'admin_menu', array( $this, 'register_items_page' ), 20 );
 		add_action( 'admin_menu', array( $this, 'register_sales_page' ), 30 );
 		add_action( 'admin_menu', array( $this, 'register_expenses_page' ), 40 );
+		add_action( 'admin_menu', array( $this, 'register_banking_page' ), 50 );
 
 		//Register tabs.
 		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_tab' ), 20 );
@@ -31,6 +32,9 @@ class Menu {
 		add_action( 'eaccounting_expenses_page_tab_payments', array( $this, 'render_payments_tab' ) );
 		add_action( 'eaccounting_expenses_page_tab_bills', array( $this, 'render_bills_tab' ), 20 );
 		add_action( 'eaccounting_expenses_page_tab_vendors', array( $this, 'render_vendors_tab' ) );
+		add_action( 'eaccounting_banking_page_tab_accounts', array( $this, 'render_accounts_tab' ) );
+		add_action( 'eaccounting_banking_page_tab_transactions', array( $this, 'render_transactions_tab' ), 20 );
+		add_action( 'eaccounting_banking_page_tab_transfers', array( $this, 'render_transfers_tab' ) );
 	}
 
 	/**
@@ -107,6 +111,21 @@ class Menu {
 			'manage_eaccounting',
 			'ea-expenses',
 			array( $this, 'render_expenses_page' )
+		);
+	}
+
+	/**
+	 * Registers the banking page.
+	 *
+	 */
+	public function register_banking_page() {
+		add_submenu_page(
+			'eaccounting',
+			__( 'Banking', 'wp-ever-accounting' ),
+			__( 'Banking', 'wp-ever-accounting' ),
+			'manage_eaccounting',
+			'ea-banking',
+			array( $this, 'render_banking_page' )
 		);
 	}
 
@@ -191,6 +210,30 @@ class Menu {
 			exit();
 		}
 		include dirname( __FILE__ ) . '/views/admin-page-expenses.php';
+	}
+
+	/**
+	 * Render banking page.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_banking_page() {
+		$tabs = array();
+		if ( current_user_can( 'ea_manage_account' ) ) {
+			$tabs['accounts'] = __( 'Accounts', 'wp-ever-accounting' );
+		}
+		if ( current_user_can( 'ea_manage_payment' ) && current_user_can( 'ea_manage_revenue' ) ) {
+			$tabs['transactions'] = __( 'Transactions', 'wp-ever-accounting' );
+		}
+		if ( current_user_can( 'ea_manage_transfer' ) ) {
+			$tabs['transfers'] = __( 'Transfers', 'wp-ever-accounting' );
+		}
+
+		$tabs =  apply_filters( 'eaccounting_banking_tabs', $tabs );
+
+		$first_tab   = current( array_keys( $tabs ) );
+		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
+		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
 	}
 
 	/**
@@ -307,6 +350,48 @@ class Menu {
 			include dirname( __FILE__ ) . '/views/vendors/edit-vendor.php';
 		} else {
 			include dirname( __FILE__ ) . '/views/vendors/list-vendor.php';
+		}
+	}
+
+	/**
+	 * Render accounts tab.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_accounts_tab(){
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['account_id'] ) ) {
+			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/accounts/view-account.php';
+		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/accounts/edit-account.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/accounts/list-account.php';
+		}
+	}
+
+	/**
+	 * Render transactions tab.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_transactions_tab(){
+		include dirname( __FILE__ ) . '/views/transactions/list-transactions.php';
+	}
+
+	/**
+	 * Render transfers tab.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_transfers_tab(){
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$transfer_id = isset( $_GET['transfer_id'] ) ? absint( $_GET['transfer_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/transfers/edit-transfer.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/transfers/list-transfer.php';
 		}
 	}
 
