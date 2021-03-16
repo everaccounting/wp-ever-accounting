@@ -7,59 +7,24 @@
  * @version     1.1.0
  */
 
+namespace EverAccounting\Admin;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Overview {
+/**
+ * Class Dashboard
+ * @package EverAccounting\Admin
+ */
+class Dashboard {
 	/**
-	 * EverAccounting_Admin_Overview constructor.
+	 * Dashboard constructor.
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_page' ), 1 );
+		add_action( 'load-toplevel_page_eaccounting', array( __CLASS__, 'dashboard_setup' ) );
 	}
 
-	/**
-	 * Registers the overview page.
-	 *
-	 * @since 1.1.0
-	 */
-	public function register_page() {
-		global $menu;
 
-		if ( current_user_can( 'manage_eaccounting' ) ) {
-			$menu[] = array( '', 'read', 'ea-separator', '', 'wp-menu-separator accounting' );
-		}
-		$icons = 'data:image/svg+xml;base64,' . base64_encode( file_get_contents( eaccounting()->plugin_path( 'assets/images/icon.svg' ) ) );
-
-		add_menu_page(
-			__( 'Accounting', 'wp-ever-accounting' ),
-			__( 'Accounting', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'eaccounting',
-			null,
-			$icons,
-			'54.5'
-		);
-		$overview = add_submenu_page(
-			'eaccounting',
-			__( 'Overview', 'wp-ever-accounting' ),
-			__( 'Overview', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'eaccounting',
-			array( $this, 'render_page' )
-		);
-		add_action( 'load-' . $overview, array( __CLASS__, 'eaccounting_dashboard_setup' ) );
-	}
-
-	/**
-	 * Render page.
-	 *
-	 * @since 1.1.0
-	 */
-	public function render_page() {
-		include dirname( __FILE__ ) . '/views/admin-page-overview.php';
-	}
-
-	public static function eaccounting_dashboard_setup() {
+	public static function dashboard_setup() {
 		add_meta_box( 'total-income', false, array( __CLASS__, 'render_total_income_widget' ), 'ea-overview', 'top', 'high', array( 'col' => '4' ) );
 		add_meta_box( 'total-expense', false, array( __CLASS__, 'render_total_expense_widget' ), 'ea-overview', 'top', 'high', array( 'col' => '4' ) );
 		add_meta_box( 'total-profit', false, array( __CLASS__, 'render_total_profit_widget' ), 'ea-overview', 'top', 'high', array( 'col' => '4' ) );
@@ -153,7 +118,7 @@ class EverAccounting_Admin_Overview {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
 		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
 		$year   = date_i18n( 'Y' );
-		$init   = new EverAccounting_Report_CashFlow();
+		$init   = new \EverAccounting_Report_CashFlow();
 		$report = $init->get_report( array( 'year' => $year ) );
 		?>
 		<div class="ea-card__inside" style="position: relative; height:300px;">
@@ -262,7 +227,7 @@ class EverAccounting_Admin_Overview {
 	public static function render_incomes_categories() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
 		global $wpdb;
-		$report     = new EverAccounting_Admin_Report();
+		$report     = new \EverAccounting_Admin_Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(
@@ -352,7 +317,7 @@ class EverAccounting_Admin_Overview {
 	public static function render_expenses_categories() {
 		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
 		global $wpdb;
-		$report     = new EverAccounting_Admin_Report();
+		$report     = new \EverAccounting_Admin_Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(
@@ -587,4 +552,4 @@ class EverAccounting_Admin_Overview {
 	}
 }
 
-return new EverAccounting_Admin_Overview();
+return new Dashboard();

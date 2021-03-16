@@ -9,6 +9,9 @@
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class EverAccounting_Admin_Expenses
+ */
 class EverAccounting_Admin_Expenses {
 
 	/**

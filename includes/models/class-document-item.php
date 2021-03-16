@@ -14,6 +14,10 @@ use EverAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class Document_Item
+ * @package EverAccounting\Models
+ */
 class Document_Item extends Resource_Model {
 	/**
 	 * This is the name of this object type.
