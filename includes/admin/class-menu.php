@@ -523,8 +523,8 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_sales_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-ea-report-sales.php';
-		$report = new \EverAccounting_Report_Sales();
+		require_once dirname( __FILE__ ) . '/reports/class-sales.php';
+		$report = new \EverAccounting\Admin\Report\Sales();
 		$report->output();
 	}
 
@@ -534,8 +534,8 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_expenses_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-ea-report-expenses.php';
-		$report = new \EverAccounting_Report_Expenses();
+		require_once dirname( __FILE__ ) . '/reports/class-expenses.php';
+		$report = new \EverAccounting\Admin\Report\Expenses();
 		$report->output();
 	}
 
@@ -545,8 +545,8 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_profits_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-ea-report-profits.php';
-		$report = new \EverAccounting_Report_Profits();
+		require_once dirname( __FILE__ ) . '/reports/class-profits.php';
+		$report = new \EverAccounting\Admin\Report\Profits();
 		$report->output();
 	}
 
@@ -556,8 +556,8 @@ class Menu {
 	 * @since 1.0.2
 	 */
 	public function render_cashflow_report_tab() {
-		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
-		$report = new \EverAccounting_Report_CashFlow();
+		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
+		$report = new \EverAccounting\Admin\Report\CashFlow();
 		$report->output();
 	}
 }

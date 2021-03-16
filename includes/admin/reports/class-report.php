@@ -9,9 +9,19 @@
  * @package     EverAccounting\Admin
  * @version     1.1.0
  */
+
+namespace EverAccounting\Admin\Report;
+
+use DatePeriod;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Report {
+/**
+ * Report Class
+ * @package EverAccounting\Admin\Report
+*/
+
+class Report {
 	/**
 	 * @param array $args
 	 * @since 1.1.0
@@ -52,7 +62,7 @@ class EverAccounting_Admin_Report {
 	 *
 	 * @param $year
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return string
 	 */
 	public function get_end_date( $year = null ) {
@@ -81,9 +91,9 @@ class EverAccounting_Admin_Report {
 	public function get_dates_in_period( $start_date, $end_date, $interval = 'M', $date_key = 'Y-m', $date_value = 'M y' ) {
 		$dates  = array();
 		$period = new DatePeriod(
-			new DateTime( $start_date ),
-			new DateInterval( "P1{$interval}" ),
-			new DateTime( $end_date )
+			new \DateTime( $start_date ),
+			new \DateInterval( "P1{$interval}" ),
+			new \DateTime( $end_date )
 		);
 		foreach ( $period as $key => $value ) {
 			$dates[ $value->format( $date_key ) ] = $value->format( $date_value );
@@ -101,7 +111,7 @@ class EverAccounting_Admin_Report {
 	 * @param null $end_date
 	 * @param      $column
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get_range_sql( $column, $start_date = null, $end_date = null ) {

@@ -9,9 +9,16 @@
  * @package     EverAccounting\Admin
  * @version     1.1.0
  */
+
+namespace EverAccounting\Admin\Report;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Report_CashFlow extends EverAccounting_Admin_Report {
+/**
+ * Cashflow Class
+ * @package EverAccounting\Admin\Report
+ */
+class CashFlow extends Report {
 	/**
 	 * @since 1.1.0
 	 *

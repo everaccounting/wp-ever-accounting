@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Report Sales By Date.
+ * Admin Report Expenses By Date.
  *
  * Extended by reports to show charts and stats in admin.
  *
@@ -9,9 +9,16 @@
  * @package     EverAccounting\Admin
  * @version     1.1.0
  */
+
+namespace EverAccounting\Admin\Report;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
+/**
+ * Profits Class
+ * @package EverAccounting\Admin\Report
+ */
+class Profits extends Report {
 	/**
 	 * @param array $args
 	 *
@@ -32,29 +39,25 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 
 		$report = false;// $this->get_cache( $args );
 		if ( empty( $report ) ) {
-			$report     = array();
-			$start_date = $this->get_start_date( $args['year'] );
-			$end_date   = $this->get_end_date( $args['year'] );
-			$where      = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
-			$where      .= empty( $args['category_id'] ) ? '' : $wpdb->prepare( ' AND t.category_id = %d', intval( $args['category_id'] ) );
-			$where      .= empty( $args['customer_id'] ) ? '' : $wpdb->prepare( ' AND t.contact_id = %d', intval( $args['customer_id'] ) );
-			$where      .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
-			$dates      = $this->get_dates_in_period( $start_date, $end_date );
-			$sql        = $wpdb->prepare(
-				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category, c.color
+			$report          = array();
+			$start_date      = $this->get_start_date( $args['year'] );
+			$end_date        = $this->get_end_date( $args['year'] );
+			$where           = empty( $args['account_id'] ) ? '' : $wpdb->prepare( ' AND t.account_id = %d', intval( $args['account_id'] ) );
+			$where           .= empty( $args['payment_method'] ) ? '' : $wpdb->prepare( ' AND t.payment_method = %s', sanitize_key( $args['payment_method'] ) );
+			$dates           = $this->get_dates_in_period( $start_date, $end_date );
+			$sql             = $wpdb->prepare(
+				"SELECT DATE_FORMAT(t.payment_date, '%Y-%m') `date`, SUM(t.amount) amount, t.type, t.currency_code, t.currency_rate,t.category_id,t.payment_method, c.name category
 					   FROM {$wpdb->prefix}ea_transactions t
 					   LEFT JOIN {$wpdb->prefix}ea_categories c on c.id=t.category_id
-					   WHERE c.type = %s AND t.payment_date BETWEEN %s AND %s $where
-					   GROUP BY t.currency_code,t.currency_rate, t.payment_date, t.category_id,t.payment_method ",
-				'income',
+					   WHERE c.type != %s AND t.payment_date BETWEEN %s AND %s $where
+					   GROUP BY t.currency_code,t.currency_rate, t.payment_date, t.category_id, t.type, t.payment_method ",
+				'other',
 				$start_date,
 				$end_date
 			);
-
-			$results           = $wpdb->get_results( $sql );
-			$report['results'] = $results;
-			$report['dates']   = $dates;
-			$report['data']    = array();
+			$results         = $wpdb->get_results( $sql );
+			$report['dates'] = $dates;
+			$report['data']  = array();
 			foreach ( array_keys( $dates ) as $date ) {
 				$report['data']['totals'][ $date ] = 0;
 			}
@@ -68,12 +71,17 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 				}
 
 				foreach ( $results as $result ) {
-					$amount                                              = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
-					$amount                                              = eaccounting_format_decimal( $amount );
-					$date                                                = $result->date;
-					$category_id                                         = $result->category_id;
-					$report['data']['totals'][ $date ]                   += eaccounting_format_decimal( $amount );
-					$report['data']['category'][ $category_id ][ $date ] += $amount;
+					$amount      = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+					$category_id = $result->category_id;
+					$amount      = (float) eaccounting_format_decimal( $amount );
+					$date        = $result->date;
+					if ( 'income' === $result->type ) {
+						$report['data']['totals'][ $date ]                   += $amount;
+						$report['data']['category'][ $category_id ][ $date ] += $amount;
+					} else {
+						$report['data']['totals'][ $date ]                   -= $amount;
+						$report['data']['category'][ $category_id ][ $date ] -= $amount;
+					}
 				}
 
 				$report['categories'] = $categories;
@@ -93,23 +101,19 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 	 */
 	public function output() {
 		$year           = empty( $_GET['year'] ) ? date_i18n( 'Y' ) : intval( $_GET['year'] );
-		$category_id    = empty( $_GET['category_id'] ) ? '' : intval( $_GET['category_id'] );
 		$account_id     = empty( $_GET['account_id'] ) ? '' : intval( $_GET['account_id'] );
-		$customer_id    = empty( $_GET['customer_id'] ) ? '' : intval( $_GET['customer_id'] );
 		$payment_method = empty( $_GET['payment_method'] ) ? '' : $_GET['payment_method'];
 		$report         = $this->get_report(
 			array(
 				'year'           => $year,
-				'category_id'    => $category_id,
 				'account_id'     => $account_id,
-				'customer_id'    => $customer_id,
 				'payment_method' => $payment_method,
 			)
 		);
 		?>
 		<div class="ea-card">
 			<div class="ea-card__header">
-				<h3 class="ea-card__title"><?php esc_html_e( 'Sales report', 'wp-ever-accounting' ); ?></h3>
+				<h3 class="ea-card__title"><?php esc_html_e( 'Profit report', 'wp-ever-accounting' ); ?></h3>
 				<div class="ea-card__toolbar">
 					<form action="<?php echo admin_url( 'admin.php?page=ea-reports' ); ?>>" method="get">
 						<?php esc_html_e( 'Filter', 'wp-ever-accounting' ); ?>
@@ -130,22 +134,6 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 								'value'       => $account_id,
 							)
 						);
-						eaccounting_customer_dropdown(
-							array(
-								'name'        => 'customer_id',
-								'placeholder' => __( 'Select Customer', 'wp-ever-accounting' ),
-								'value'       => $customer_id,
-								'creatable'   => false,
-							)
-						);
-						eaccounting_category_dropdown(
-							array(
-								'name'      => 'category_id',
-								'value'     => $category_id,
-								'type'      => 'income',
-								'creatable' => false,
-							)
-						);
 						eaccounting_payment_method_dropdown(
 							array(
 								'name'    => 'payment_method',
@@ -155,11 +143,11 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 						);
 						?>
 						<input type="hidden" name="page" value="ea-reports">
-						<input type="hidden" name="tab" value="sales">
+						<input type="hidden" name="tab" value="profits">
 						<input type="hidden" name="filter" value="true">
 						<button type="submit" class="button-primary button"><?php esc_html_e( 'Submit', 'wp-ever-accounting' ); ?></button>
 						<?php if ( isset( $_GET['filter'] ) ) : ?>
-							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=sales' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
+							<a class="button-secondary button" href="<?php echo esc_url( admin_url( 'admin.php?page=ea-reports&tab=profits' ) ); ?>"><?php esc_html_e( 'Reset', 'wp-ever-accounting' ); ?></a>
 						<?php endif; ?>
 					</form>
 				</div>
@@ -167,11 +155,11 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 			<?php if ( ! empty( $year ) ) : ?>
 				<div class="ea-card__inside">
 					<div class="chart-container" style="position: relative; height:300px; width:100%">
-						<canvas id="ea-sales-chart" height="300" width="0"></canvas>
+						<canvas id="ea-expenses-chart" height="300" width="0"></canvas>
 					</div>
 					<script>
 						window.addEventListener('DOMContentLoaded', function () {
-							var ctx = document.getElementById('ea-sales-chart').getContext('2d');
+							var ctx = document.getElementById('ea-expenses-chart').getContext('2d');
 							new Chart(
 								ctx,
 								{
@@ -182,10 +170,10 @@ class EverAccounting_Report_Sales extends EverAccounting_Admin_Report {
 											{
 												label: '<?php echo __( 'Sales', 'wp-ever-accounting' ); ?>',
 												data: <?php echo json_encode( array_values( $report['data']['totals'] ) ); ?>,
-												backgroundColor: 'rgba(54, 68, 255, 0.1)',
-												borderColor: 'rgb(54, 68, 255)',
+												backgroundColor: 'rgba(0, 198, 137, 0.1)',
+												borderColor: 'rgb(0, 198, 137)',
 												borderWidth: 4,
-												pointBackgroundColor: 'rgb(54, 68, 255)'
+												pointBackgroundColor: 'rgb(0, 198, 137)'
 											}
 										]
 									},
