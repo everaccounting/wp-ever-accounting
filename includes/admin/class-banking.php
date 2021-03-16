@@ -10,11 +10,13 @@
  * @version     1.1.10
  */
 
+namespace EverAccounting\Admin;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Banking {
+class Banking {
 	/**
-	 * EverAccounting_Admin_Banking constructor.
+	 * Banking constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 50 );
@@ -69,4 +71,4 @@ class EverAccounting_Admin_Banking {
 	}
 }
 
-new EverAccounting_Admin_Banking();
+return new \EverAccounting\Admin\Banking();

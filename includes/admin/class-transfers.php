@@ -10,13 +10,14 @@
  * @version     1.1.0
  */
 
+namespace EverAccounting\Admin;
 use EverAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Transfers {
+class Transfers {
 	/**
-	 * EverAccounting_Admin_Transfers constructor.
+	 * Transfers constructor.
 	 */
 	public function __construct() {
 		add_action( 'eaccounting_banking_page_tab_transfers', array( $this, 'render_tab' ) );
@@ -38,4 +39,4 @@ class EverAccounting_Admin_Transfers {
 	}
 }
 
-return new \EverAccounting_Admin_Transfers();
+return new \EverAccounting\Admin\Transfers();
