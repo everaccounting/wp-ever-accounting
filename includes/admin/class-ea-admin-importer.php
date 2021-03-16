@@ -1,7 +1,7 @@
 <?php
 
 namespace EverAccounting\Admin;
-use EverAccounting_Ajax;
+use EverAccounting\Ajax;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -36,7 +36,7 @@ class Importer {
 		$file = ! empty( $_REQUEST['file'] ) ? eaccounting_clean( wp_unslash( $_REQUEST['file'] ) ) : '';
 
 		// verify nonce
-		EverAccounting_Ajax::verify_nonce( "{$type}_importer_nonce" );
+		Ajax::verify_nonce( "{$type}_importer_nonce" );
 
 		if ( empty( $type ) || false === $batch = eaccounting()->utils->batch->get( $type ) ) {
 			wp_send_json_error(

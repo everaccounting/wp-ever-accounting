@@ -10,13 +10,14 @@
  * @version     1.1.10
  */
 
+namespace EverAccounting\Admin;
 use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Bills {
+class Bills {
 	/**
-	 * EverAccounting_Admin_Bill constructor.
+	 * Bills constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eaccounting_bill_action', array( $this, 'bill_action' ) );
@@ -46,7 +47,7 @@ class EverAccounting_Admin_Bills {
 					$bill->set_status( 'received' );
 					$bill->save();
 					eaccounting_admin_notices()->add_success( __( 'Bill status updated to received.', 'wp-ever-accounting' ) );
-				} catch ( Exception $e ) {
+				} catch ( \Exception $e ) {
 					/* translators: %s reason */
 					eaccounting_admin_notices()->add_error( sprintf( __( 'Bill status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
 				}
