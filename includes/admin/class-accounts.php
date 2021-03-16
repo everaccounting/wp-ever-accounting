@@ -10,13 +10,15 @@
  * @version     1.1.0
  */
 
+namespace EverAccounting\Admin;
+
 use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Accounts {
+class Accounts {
 	/**
-	 * EverAccounting_Admin_Accounts constructor.
+	 * Accounts constructor.
 	 */
 	public function __construct() {
 		add_action( 'eaccounting_banking_page_tab_accounts', array( $this, 'render_tab' ) );
@@ -41,4 +43,4 @@ class EverAccounting_Admin_Accounts {
 	}
 }
 
-return new \EverAccounting_Admin_Accounts();
+return new \EverAccounting\Admin\Accounts();
