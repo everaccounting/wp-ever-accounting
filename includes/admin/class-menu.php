@@ -23,6 +23,8 @@ class Menu {
 		add_action( 'admin_menu', array( $this, 'register_sales_page' ), 30 );
 		add_action( 'admin_menu', array( $this, 'register_expenses_page' ), 40 );
 		add_action( 'admin_menu', array( $this, 'register_banking_page' ), 50 );
+		add_action( 'admin_menu', array( $this, 'register_tools_page' ), 70 );
+		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 80 );
 
 		//Register tabs.
 		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_tab' ), 20 );
@@ -35,6 +37,13 @@ class Menu {
 		add_action( 'eaccounting_banking_page_tab_accounts', array( $this, 'render_accounts_tab' ) );
 		add_action( 'eaccounting_banking_page_tab_transactions', array( $this, 'render_transactions_tab' ), 20 );
 		add_action( 'eaccounting_banking_page_tab_transfers', array( $this, 'render_transfers_tab' ) );
+		add_action( 'eaccounting_tools_page_tab_export', array( $this, 'render_export_page' ), 20 );
+		add_action( 'eaccounting_tools_page_tab_import', array( $this, 'render_import_page' ), 20 );
+		add_action( 'eaccounting_tools_page_tab_system_info', array( $this, 'render_system_info_page' ), 20 );
+		add_action( 'eaccounting_reports_tab_sales', array( $this, 'render_sales_report_tab' ) );
+		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report_tab' ) );
+		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report_tab' ) );
+		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report_tab' ) );
 	}
 
 	/**
@@ -126,6 +135,36 @@ class Menu {
 			'manage_eaccounting',
 			'ea-banking',
 			array( $this, 'render_banking_page' )
+		);
+	}
+
+	/**
+	 * Registers the tools page.
+	 *
+	 */
+	public function register_tools_page() {
+		add_submenu_page(
+			'eaccounting',
+			__( 'Tools', 'wp-ever-accounting' ),
+			__( 'Tools', 'wp-ever-accounting' ),
+			'manage_eaccounting',
+			'ea-tools',
+			array( $this, 'render_tools_page' )
+		);
+	}
+
+	/**
+	 * Registers the reports page.
+	 *
+	 */
+	public function register_reports_page() {
+		add_submenu_page(
+			'eaccounting',
+			__( 'Reports', 'wp-ever-accounting' ),
+			__( 'Reports', 'wp-ever-accounting' ),
+			'ea_manage_report',
+			'ea-reports',
+			array( $this, 'render_reports_page' )
 		);
 	}
 
@@ -234,6 +273,61 @@ class Menu {
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
 		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
+	}
+
+	/**
+	 * Render tools page.
+	 *
+	 * @since 1.1.0
+	 */
+	public function render_tools_page() {
+		$tabs = array();
+		if ( current_user_can( 'ea_import' ) ) {
+			$tabs['import'] = __( 'Import', 'wp-ever-accounting' );
+		}
+		if ( current_user_can( 'ea_export' ) ) {
+			$tabs['export'] = __( 'Export', 'wp-ever-accounting' );
+		}
+		$tabs['system_info'] = __( 'System Info', 'wp-ever-accounting' );
+
+		$tabs =  apply_filters( 'eaccounting_tools_tabs', $tabs );
+
+		$first_tab   = current( array_keys( $tabs ) );
+		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
+		if ( empty( $_GET['tab'] ) ) {
+			wp_redirect(
+				add_query_arg(
+					array(
+						'page' => 'ea-tools',
+						'tab'  => $current_tab,
+					),
+					admin_url( 'admin.php' )
+				)
+			);
+			exit();
+		}
+		include dirname( __FILE__ ) . '/views/admin-page-tools.php';
+	}
+
+	/**
+	 * Render the reports page.
+	 *
+	 * @since 1.1.0
+	 * @return void
+	 */
+	public function render_reports_page() {
+		$tabs = array(
+			'sales'    => __( 'Sales', 'wp-ever-accounting' ),
+			'expenses' => __( 'Expenses', 'wp-ever-accounting' ),
+			'profits'  => __( 'Profits', 'wp-ever-accounting' ),
+			'cashflow' => __( 'Cashflow', 'wp-ever-accounting' ),
+		);
+
+		$tabs = apply_filters( 'eaccounting_reports_tabs', $tabs );
+
+		$first_tab       = current( array_keys( $tabs ) );
+		$current_tab     = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
+		include dirname( __FILE__ ) . '/views/admin-page-reports.php';
 	}
 
 	/**
@@ -395,6 +489,77 @@ class Menu {
 		}
 	}
 
+	/**
+	 * Render Export tab.
+	 *
+	 * @since 1.0.2
+	 */
+	public function render_export_page() {
+		include dirname( __FILE__ ) . '/views/tools/export.php';
+	}
+
+	/**
+	 * Render Import tab.
+	 *
+	 * @since 1.0.2
+	 */
+	public function render_import_page() {
+		include dirname( __FILE__ ) . '/views/tools/import.php';
+	}
+
+	/**
+	 * Render System Info tab.
+	 *
+	 * @since 1.0.2
+	 */
+	public function render_system_info_page() {
+		require_once dirname( __FILE__ ) . '/views/tools/system-info.php';
+		include dirname( __FILE__ ) . '/views/tools/system_info.php';
+	}
+
+	/**
+	 * Render sales report tab.
+	 *
+	 * @since 1.0.2
+	 */
+	public function render_sales_report_tab() {
+		require_once dirname( __FILE__ ) . '/reports/class-ea-report-sales.php';
+		$report = new \EverAccounting_Report_Sales();
+		$report->output();
+	}
+
+	/**
+	 * Render expenses report tab.
+	 *
+	 * @since 1.0.2
+	 */
+	public function render_expenses_report_tab() {
+		require_once dirname( __FILE__ ) . '/reports/class-ea-report-expenses.php';
+		$report = new \EverAccounting_Report_Expenses();
+		$report->output();
+	}
+
+	/**
+	 * Render profits report tab.
+	 *
+	 * @since 1.0.2
+	 */
+	public function render_profits_report_tab() {
+		require_once dirname( __FILE__ ) . '/reports/class-ea-report-profits.php';
+		$report = new \EverAccounting_Report_Profits();
+		$report->output();
+	}
+
+	/**
+	 * Render cashflow report tab.
+	 *
+	 * @since 1.0.2
+	 */
+	public function render_cashflow_report_tab() {
+		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
+		$report = new \EverAccounting_Report_CashFlow();
+		$report->output();
+	}
 }
 
 new Menu();

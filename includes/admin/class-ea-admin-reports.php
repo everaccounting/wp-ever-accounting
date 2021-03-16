@@ -18,27 +18,13 @@ class EverAccounting_Admin_Reports {
 	 *
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 80 );
 		add_action( 'eaccounting_reports_tab_sales', array( $this, 'render_sales_report' ) );
 		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report' ) );
 		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report' ) );
 		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report' ) );
 	}
 
-	/**
-	 * Registers the reports page.
-	 *
-	 */
-	public function register_reports_page() {
-		add_submenu_page(
-			'eaccounting',
-			__( 'Reports', 'wp-ever-accounting' ),
-			__( 'Reports', 'wp-ever-accounting' ),
-			'ea_manage_report',
-			'ea-reports',
-			array( $this, 'display_reports_page' )
-		);
-	}
+
 
 	/**
 	 * Get report tabs.
