@@ -42,12 +42,11 @@ class Admin {
 	public function includes() {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-menu.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-assets.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-settings.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-exporter.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-importer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-dashboard.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-invoice-actions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-bill-actions.php';

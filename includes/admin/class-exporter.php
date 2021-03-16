@@ -8,9 +8,15 @@
  */
 
 namespace EverAccounting\Admin;
+
 use EverAccounting\Ajax;
+
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class Exporter
+ * @package EverAccounting/Admin
+*/
 class Exporter {
 
 	/**

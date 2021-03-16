@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit();
  */
 class Settings {
 	/**
-	 * Contains registered fiels.
+	 * Contains registered fields.
 	 *
 	 * @var array
 	 */

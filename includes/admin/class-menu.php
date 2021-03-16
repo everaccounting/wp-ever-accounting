@@ -44,6 +44,9 @@ class Menu {
 		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report_tab' ) );
+		add_filter( 'eaccounting_settings_tabs', array( $this, 'add_setting_tabs') );
+		add_action( 'eaccounting_settings_tab_currencies', array( $this, 'render_currencies_tab' ) );
+		add_action( 'eaccounting_settings_tab_categories', array( $this, 'render_categories_tab' ) );
 	}
 
 	/**
@@ -559,6 +562,43 @@ class Menu {
 		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
 		$report = new \EverAccounting\Admin\Report\CashFlow();
 		$report->output();
+	}
+
+	/**
+	 * Register settings tabs
+	*/
+	public function add_setting_tabs($tabs){
+		$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
+		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
+		return $tabs;
+	}
+
+	/**
+	 * Render currencies tab
+	 * @since 1.1.0
+	 */
+	public function render_currencies_tab() {
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$currency_id = isset( $_GET['currency_id'] ) ? absint( $_GET['currency_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/currencies/edit-currency.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/currencies/list-currency.php';
+		}
+	}
+
+	/**
+	 * Render categories tab
+	 * @since 1.1.0
+	 */
+	public function render_categories_tab() {
+		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
+		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
+			$category_id = isset( $_GET['category_id'] ) ? absint( $_GET['category_id'] ) : null;
+			include dirname( __FILE__ ) . '/views/categories/edit-category.php';
+		} else {
+			include dirname( __FILE__ ) . '/views/categories/list-category.php';
+		}
 	}
 }
 

@@ -1,9 +1,22 @@
 <?php
+/**
+ * Handle import
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin
+ * @version     1.0.2
+ */
 
 namespace EverAccounting\Admin;
+
 use EverAccounting\Ajax;
 
 defined( 'ABSPATH' ) || exit();
+
+/**
+ * Class Importer
+ * @package EverAccounting/Admin
+ */
 
 class Importer {
 
