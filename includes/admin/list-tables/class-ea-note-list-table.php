@@ -259,6 +259,7 @@ class EverAccounting_Note_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
+		$ids = array_filter(  $ids );
 
 		if ( empty( $ids ) ) {
 			return;
