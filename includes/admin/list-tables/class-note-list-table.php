@@ -14,7 +14,7 @@ use EverAccounting\Models\Note;
 defined( 'ABSPATH' ) || exit();
 
 if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
-	require_once dirname( __FILE__ ) . '/class-ea-admin-list-table.php';
+	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**

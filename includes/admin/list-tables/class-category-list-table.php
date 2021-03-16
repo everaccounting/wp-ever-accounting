@@ -1,31 +1,30 @@
 <?php
 /**
- * Item list table
+ * Categories Admin List Table.
  *
- * Admin item list table, show all the item information.
- *
- * @since       1.1.0
+ * @since       1.0.2
  * @subpackage  EverAccounting\Admin\ListTables
  * @package     EverAccounting
  */
 
-use EverAccounting\Models\Item;
+use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || exit();
 
 if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
-	require_once dirname( __FILE__ ) . '/class-ea-admin-list-table.php';
+	require_once dirname( __FILE__ ) . '/class-list-table.php';
 }
 
 /**
- * Class EverAccounting_Item_List_Table
+ * Class EverAccounting_Category_List_Table
+ *
  * @since 1.1.0
  */
-class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
+class EverAccounting_Category_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Default number of items to show per page
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 * @var string
 	 */
 	public $per_page = 20;
@@ -33,7 +32,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Total number of item found
 	 *
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 * @var int
 	 */
 	public $total_count;
@@ -41,7 +40,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	/**
 	 * Number of active items found
 	 *
-	 * @since 1.1.0
+	 * @since 1.0
 	 * @var string
 	 */
 	public $active_count;
@@ -49,29 +48,36 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	/**
 	 *  Number of inactive items found
 	 *
-	 * @since 1.1.0
+	 * @since 1.0
 	 * @var string
 	 */
 	public $inactive_count;
+
+	/**
+	 * @since 1.1.0
+	 * @var string
+	 */
+	public $base_url;
 
 	/**
 	 * Get things started
 	 *
 	 * @param array $args Optional. Arbitrary display and query arguments to pass through the list table. Default empty array.
 	 *
-	 * @since  1.1.0
+	 * @see    WP_List_Table::__construct()
 	 *
-	 * @see WP_List_Table::__construct()
+	 * @since  1.0.2
+	 *
 	 */
 	public function __construct( $args = array() ) {
-		$args = (array) wp_parse_args(
+		$args           = (array) wp_parse_args(
 			$args,
 			array(
-				'singular' => 'item',
-				'plural'   => 'items',
+				'singular' => 'category',
+				'plural'   => 'categories',
 			)
 		);
-
+		$this->base_url = admin_url( 'admin.php?page=ea-settings&tab=categories' );
 		parent::__construct( $args );
 	}
 
@@ -79,28 +85,28 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 * Check if there is contents in the database.
 	 *
 	 * @return bool
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	public function is_empty() {
 		global $wpdb;
 
-		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_items" );
+		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_categories" );
 	}
 
 	/**
 	 * Render blank state.
 	 *
 	 * @return void
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	protected function render_blank_state() {
 		?>
 		<div class="ea-empty-table">
 			<p class="ea-empty-table__message">
-				<?php echo esc_html__( 'Use items as products or services. You can use items when creating invoices and bills to have the price, tax etc fields.', 'wp-ever-accounting' ); ?>
+				<?php echo esc_html__( 'Create categories for incomes, expenses, and see how your business\'s flow at a glance. Track which category is your business is spending most as well is making money.', 'wp-ever-accounting' ); ?>
 			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', ) ) ); //phpcs:ignore?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Item', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/how-to-add-items/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit' ) ) ); ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Categories', 'wp-ever-accounting' ); ?></a>
+			<a href="https://wpeveraccounting.com/docs/general/how-to-add-categories/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
 		</div>
 		<?php
 	}
@@ -109,17 +115,15 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 * Define which columns to show on this screen.
 	 *
 	 * @return array
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	public function define_columns() {
 		return array(
-			'cb'             => '<input type="checkbox" />',
-			'thumb'          => '<span class="ea-thumb dashicons dashicons-format-image">&nbsp;</span>',
-			'name'           => __( 'Name', 'wp-ever-accounting' ),
-			'sale_price'     => __( 'Sale Price', 'wp-ever-accounting' ),
-			'purchase_price' => __( 'Purchase Price', 'wp-ever-accounting' ),
-			'category_id'    => __( 'Category', 'wp-ever-accounting' ),
-			'enabled'        => __( 'Enabled', 'wp-ever-accounting' ),
+			'cb'      => '<input type="checkbox" />',
+			'name'    => __( 'Name', 'wp-ever-accounting' ),
+			'type'    => __( 'Type', 'wp-ever-accounting' ),
+			'color'   => __( 'Color', 'wp-ever-accounting' ),
+			'enabled' => __( 'Enabled', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -127,15 +131,14 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 * Define sortable columns.
 	 *
 	 * @return array
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	protected function define_sortable_columns() {
 		return array(
-			'name'           => array( 'name', false ),
-			'category_id'    => array( 'category_id', false ),
-			'sale_price'     => array( 'sale_price', false ),
-			'purchase_price' => array( 'purchase_price', false ),
-			'enabled'        => array( 'enabled', false ),
+			'name'    => array( 'name', false ),
+			'type'    => array( 'type', false ),
+			'color'   => array( 'color', false ),
+			'enabled' => array( 'enabled', false ),
 		);
 	}
 
@@ -143,7 +146,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 * Define bulk actions
 	 *
 	 * @return array
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	public function define_bulk_actions() {
 		return array(
@@ -153,123 +156,104 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 		);
 	}
 
+
 	/**
 	 * Define primary column.
 	 *
 	 * @return string
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	public function get_primary_column_name() {
 		return 'name';
 	}
 
+
 	/**
-	 * Renders the checkbox column in the items list table.
+	 * Renders the checkbox column in the categories list table.
 	 *
-	 * @param Item $item The current item object.
+	 * @param Category $category The current object.
 	 *
 	 * @return string Displays a checkbox.
-	 * @since  1.1.0
+	 * @since  1.0.2
 	 *
 	 */
-	function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" name="item_id[]" value="%d"/>', $item->get_id() );
+	function column_cb( $category ) {
+		return sprintf( '<input type="checkbox" name="category_id[]" value="%d"/>', $category->get_id() );
 	}
 
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
-	 * @param Item $column_name The name of the column
+	 * @param Category $category
 	 *
-	 * @param Item $item
+	 * @param string $column_name The name of the column
 	 *
 	 * @return string The column value.
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 *
 	 */
-	function column_default( $item, $column_name ) {
-		$item_id = $item->get_id();
+	function column_default( $category, $column_name ) {
+		$category_id = $category->get_id();
+
 		switch ( $column_name ) {
-			case 'thumb':
-				$edit_url  = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
-				$thumb_url = wp_get_attachment_thumb_url( $item->get_thumbnail_id() );
-				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/images/placeholder.png' ) : $thumb_url;
-				$value     = '<a href="' . esc_url( $edit_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $item->get_name() . '"></a>';
-				break;
 			case 'name':
-				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-items', 'tab' => 'items', 'action' => 'edit', 'item_id' => $item_id, ) );// phpcs:ignore
-				$nonce    = wp_create_nonce( 'item-nonce' );
+				$name     = $category->get_name();
+				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'edit', 'category_id' => $category_id, ) );// phpcs:ignore
+				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-settings', 'tab' => 'categories', 'action' => 'delete', 'category_id' => $category_id, '_wpnonce' => wp_create_nonce( 'category-nonce' ), ) );// phpcs:ignore
 				$actions  = array(
-					'id'     => 'ID: ' . $item_id,
-					'edit'   => '<a href="' . eaccounting_admin_url(
-							array(
-								'page'    => 'ea-items',
-								'tab'     => 'items',
-								'action'  => 'edit',
-								'item_id' => $item_id,
-							)
-						) . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>',
-					'delete' => '<a href="' . eaccounting_admin_url(
-							array(
-								'page'     => 'ea-items',
-								'tab'      => 'items',
-								'action'   => 'delete',
-								'item_id'  => $item_id,
-								'_wpnonce' => $nonce,
-							)
-						) . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>',
+					'edit'   => sprintf( '<a href="%1$s">%2$s</a>', esc_url( $edit_url ), __( 'Edit', 'wp-ever-accounting' ) ),
+					'delete' => sprintf( '<a href="%1$s" class="del">%2$s</a>', esc_url( $del_url ), __( 'Delete', 'wp-ever-accounting' ) ),
 				);
-				$value    = '<a href="' . esc_url( $edit_url ) . '"><strong>' . $item->get_name() . '</strong></a>' . $this->row_actions( $actions );
+				$value    = '<a href="' . $edit_url . '">' . $name . '</a>' . $this->row_actions( $actions );
 				break;
-			case 'sale_price':
-				$value = eaccounting_price( $item->get_sale_price() );
+			case 'type':
+				$type  = $category->get_type();
+				$types = eaccounting_get_category_types();
+				$value = array_key_exists( $type, $types ) ? $types[ $type ] : ucfirst( $type );
 				break;
-			case 'purchase_price':
-				$value = eaccounting_price( $item->get_purchase_price() );
-				break;
-			case 'category_id':
-				$category = eaccounting_get_category( $item->get_category_id() );
-				$value    = $category ? $category->get_name() : '&mdash;';
+			case 'color':
+				$value = sprintf( '<span class="dashicons dashicons-marker" style="color:%s;">&nbsp;</span>', $category->get_color() );
 				break;
 			case 'enabled':
 				$value = '<label class="ea-toggle">';
-				$value .= '<input type="checkbox" class="item-status" style="" value="true" data-id="' . $item->get_id() . '" ' . checked( $item->is_enabled(), true, false ) . '>';
+				$value .= '<input type="checkbox" class="category-status" style="" value="true" data-id="' . $category->get_id() . '" ' . checked( $category->is_enabled(), true, false ) . '>';
 				$value .= '<span data-label-off="' . __( 'No', 'wp-ever-accounting' ) . '" data-label-on="' . __( 'Yes', 'wp-ever-accounting' ) . '" class="ea-toggle-slider"></span>';
 				$value .= '</label>';
 				break;
 			default:
-				return parent::column_default( $item, $column_name );
+				return parent::column_default( $category, $column_name );
 		}
 
-		return apply_filters( 'eaccounting_item_list_table_' . $column_name, $value, $item );
+		return apply_filters( 'eaccounting_category_list_table_' . $column_name, $value, $category );
 	}
 
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
 	 * @return void
-	 * @since  1.1.0
+	 * @since  1.0.2
 	 */
 	function no_items() {
-		_e( 'There is no items found.', 'wp-ever-accounting' );
+		_e( 'There is no categories found.', 'wp-ever-accounting' );
 	}
 
 	/**
 	 * Process the bulk actions
 	 *
 	 * @return void
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	public function process_bulk_action() {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-items' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'item-nonce' ) ) {
+
+		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-categories' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'category-nonce' ) ) {
 			return;
 		}
 
-		$ids = isset( $_GET['item_id'] ) ? $_GET['item_id'] : false;
+		$ids = isset( $_GET['category_id'] ) ? $_GET['category_id'] : false;
 
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
@@ -286,7 +270,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 		foreach ( $ids as $id ) {
 			switch ( $action ) {
 				case 'enable':
-					eaccounting_insert_item(
+					eaccounting_insert_category(
 						array(
 							'id'      => $id,
 							'enabled' => '1',
@@ -294,7 +278,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'disable':
-					eaccounting_insert_item(
+					eaccounting_insert_category(
 						array(
 							'id'      => $id,
 							'enabled' => '0',
@@ -302,10 +286,10 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 					);
 					break;
 				case 'delete':
-					eaccounting_delete_item( $id );
+					eaccounting_delete_category( $id );
 					break;
 				default:
-					do_action( 'eaccounting_items_do_bulk_action_' . $this->current_action(), $id );
+					do_action( 'eaccounting_categories_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
 
@@ -313,11 +297,12 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 			wp_safe_redirect(
 				remove_query_arg(
 					array(
-						'item_id',
+						'category_id',
 						'action',
 						'_wpnonce',
 						'_wp_http_referer',
 						'action2',
+						'doaction',
 						'paged',
 					)
 				)
@@ -331,10 +316,10 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @access public
 	 * @return array $views All the views available
-	 * @since 1.1.0
+	 * @since  1.0.2
 	 */
 	public function get_views() {
-		$base           = eaccounting_admin_url();
+		$base           = eaccounting_admin_url( array( 'tab' => 'categories' ) );
 		$current        = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$total_count    = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$active_count   = '&nbsp;<span class="count">(' . $this->active_count . ')</span>';
@@ -354,7 +339,7 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 	 * Setup the final data for the table
 	 *
 	 * @return void
-	 * @since 1.1.0
+	 * @since 1.0.2
 	 */
 	public function prepare_items() {
 		$columns               = $this->get_columns();
@@ -379,38 +364,33 @@ class EverAccounting_Item_List_Table extends EverAccounting_List_Table {
 				'offset'   => $per_page * ( $page - 1 ),
 				'per_page' => $per_page,
 				'page'     => $page,
-				'status'   => $status,
 				'search'   => $search,
+				'status'   => $status,
 				'orderby'  => eaccounting_clean( $orderby ),
 				'order'    => eaccounting_clean( $order ),
 			)
 		);
-		eaccounting_get_currencies(
-			array(
-				'return' => 'raw',
-				'number' => '-1',
-			)
-		);
 
-		$args        = apply_filters( 'eaccounting_item_table_query_args', $args, $this );
-		$this->items = eaccounting_get_items( $args );
+		$args = apply_filters( 'eaccounting_category_table_query_args', $args, $this );
 
-		$this->active_count = eaccounting_get_items(
+		$this->items = eaccounting_get_categories( $args );
+
+		$this->active_count = eaccounting_get_categories(
 			array_merge(
 				$args,
 				array(
-					'status'      => 'active',
 					'count_total' => true,
+					'status'      => 'active',
 				)
 			)
 		);
 
-		$this->inactive_count = eaccounting_get_items(
+		$this->inactive_count = eaccounting_get_categories(
 			array_merge(
 				$args,
 				array(
-					'status'      => 'inactive',
 					'count_total' => true,
+					'status'      => 'inactive',
 				)
 			)
 		);

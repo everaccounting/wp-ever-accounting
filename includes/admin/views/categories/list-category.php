@@ -9,7 +9,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-category-list-table.php' );
+include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-category-list-table.php' );
 $category_table = new EverAccounting_Category_List_Table();
 $category_table->prepare_items();
 $add_url = eaccounting_admin_url(

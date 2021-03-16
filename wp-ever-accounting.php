@@ -237,7 +237,7 @@ final class EverAccounting {
 	 * @return void
 	 */
 	private function init_hooks() {
-		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EverAccounting_Install', 'install' ) );
+		register_activation_hook( EACCOUNTING_PLUGIN_FILE, array( 'EverAccounting\Install', 'install' ) );
 		register_shutdown_function( array( $this, 'log_errors' ) );
 
 		add_action( 'plugins_loaded', array( $this, 'on_plugins_loaded' ), - 1 );

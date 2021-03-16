@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-vendor-list-table.php' );
+include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-vendor-list-table.php' );
 $vendors_table = new EverAccounting_Vendor_List_Table();
 $vendors_table->prepare_items();
 $add_url = eaccounting_admin_url(
