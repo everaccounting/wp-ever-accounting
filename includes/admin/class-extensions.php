@@ -7,12 +7,20 @@
  * @package     EverAccounting
  */
 
+namespace EverAccounting\Admin;
+
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Extensions {
+/**
+ * Class Admin
+ *
+ * @since   1.1.0
+ */
+
+class Extensions {
 
 	/**
-	 * EverAccounting_Admin_Extensions constructor.
+	 * Extensions constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ), 999 );
@@ -86,4 +94,4 @@ class EverAccounting_Admin_Extensions {
 
 }
 
-return new EverAccounting_Admin_Extensions();
+new Extensions();

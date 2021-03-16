@@ -6,14 +6,16 @@
  * @version 1.0.2
  */
 
+namespace EverAccounting\Admin;
+
 defined( 'ABSPATH' ) || exit;
 
-class EverAccounting_Admin_Notices {
+class Notices {
 	/**
 	 * The single instance of the class.
 	 *
 	 * @since 1.0.0
-	 * @var EverAccounting_Admin_Notices
+	 * @var Notices
 	 */
 	protected static $instance = null;
 
@@ -41,7 +43,7 @@ class EverAccounting_Admin_Notices {
 	 * Constructor.
 	 */
 	public static function init() {
-		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EverAccounting_Admin_Notices ) ) {
+		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EverAccounting\Admin\Notices ) ) {
 			self::$instance = new self();
 		}
 
@@ -50,7 +52,7 @@ class EverAccounting_Admin_Notices {
 
 
 	/**
-	 * EverAccounting_Admin_Notices constructor.
+	 * Notices constructor.
 	 */
 	public function __construct() {
 		$this->notices = get_option( 'eaccounting_notices', array() );
@@ -306,10 +308,10 @@ class EverAccounting_Admin_Notices {
  * wrapper for admin notice.
  *
  * @since 1.1.0
- * @return EverAccounting_Admin_Notices|null
+ * @return \EverAccounting\Admin\Notices|null
  */
 function eaccounting_admin_notices() {
-	return EverAccounting_Admin_Notices::init();
+	return \EverAccounting\Admin\Notices::init();
 }
 
 eaccounting_admin_notices();
