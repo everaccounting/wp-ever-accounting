@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Abstracts;
 
-use EverAccounting\Core\Repositories;
+use EverAccounting\Repositories;
 use EverAccounting\Models\Account;
 use EverAccounting\Models\Currency;
 use EverAccounting\Traits\CurrencyTrait;

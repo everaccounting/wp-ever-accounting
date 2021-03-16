@@ -1,6 +1,6 @@
 <?php
 
-namespace EverAccounting\Core;
+namespace EverAccounting;
 
 use EverAccounting\Abstracts\Singleton;
 use EverAccounting\Models\Invoice;

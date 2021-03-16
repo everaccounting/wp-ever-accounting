@@ -17,21 +17,21 @@ defined( 'ABSPATH' ) || die();
  *
  * @since  1.1.0
  *
- * @param string|null|\EverAccounting\Core\DateTime $date Date.
+ * @param string|null|\EverAccounting\DateTime $date Date.
  * @param bool                                 $utc  Send false to get local/offset time.
  *
  * @return string|null ISO8601/RFC3339 formatted datetime.
  */
 function eaccounting_rest_date_response( $date, $utc = true ) {
 	if ( is_numeric( $date ) ) {
-		$date = new \EverAccounting\Core\DateTime( "@$date", new \DateTimeZone( 'UTC' ) );
+		$date = new \EverAccounting\DateTime( "@$date", new \DateTimeZone( 'UTC' ) );
 		$date->setTimezone( new DateTimeZone( eaccounting_timezone_string() ) );
 	} elseif ( is_string( $date ) ) {
-		$date = new \EverAccounting\Core\DateTime( $date, new \DateTimeZone( 'UTC' ) );
+		$date = new \EverAccounting\DateTime( $date, new \DateTimeZone( 'UTC' ) );
 		$date->setTimezone( new DateTimeZone( eaccounting_timezone_string() ) );
 	}
 
-	if ( ! is_a( $date, '\EverAccounting\Core\DateTime' ) ) {
+	if ( ! is_a( $date, '\EverAccounting\DateTime' ) ) {
 		return null;
 	}
 

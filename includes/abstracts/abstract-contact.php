@@ -10,7 +10,7 @@
 namespace EverAccounting\Abstracts;
 
 use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Core\Repositories;
+use EverAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 

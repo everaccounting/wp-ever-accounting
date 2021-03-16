@@ -70,7 +70,7 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
 	$month           = ! empty( $setting[1] ) ? $setting[1] : '01';
 	$year            = empty( $year ) ? date( 'Y' ) : $year;
 
-	$financial_year = new \EverAccounting\Core\DateTime();
+	$financial_year = new \EverAccounting\DateTime();
 	$financial_year->setDate( $year, $month, $day );
 
 	return $financial_year->format( $format );
@@ -88,9 +88,9 @@ function eaccounting_get_financial_start( $year = null, $format = 'Y-m-d' ) {
  * @return string
  */
 function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
-	$dt = new \EverAccounting\Core\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
+	$dt = new \EverAccounting\DateTime( eaccounting_get_financial_start( $year, 'Y-m-d' ) );
 	//  if ( $dt->copy()->addYear( 1 )->subDay( 1 )->getTimestamp() > strtotime(date_i18n('Y-m-d H:i')) ) {
-	//      $today = new \EverAccounting\Core\DateTime( 'now' );
+	//      $today = new \EverAccounting\DateTime( 'now' );
 	//      return $today->date( $format );
 	//  }
 	return $dt->addYear( 1 )->subDay( 1 )->date( $format );
@@ -111,11 +111,11 @@ function eaccounting_get_financial_end( $year = null, $format = 'Y-m-d' ) {
  *
  * @param mixed  $amount
  *
- * @return \EverAccounting\Core\Money|WP_Error
+ * @return \EverAccounting\Money|WP_Error
  */
 function eaccounting_money( $amount, $code = 'USD', $convert = false ) {
 	try {
-		return new \EverAccounting\Core\Money( $amount, $code, $convert );
+		return new \EverAccounting\Money( $amount, $code, $convert );
 	} catch ( Exception $e ) {
 		return new \WP_Error( 'invalid_action', $e->getMessage() );
 	}
@@ -319,10 +319,10 @@ function eaccounting_get_payment_methods() {
  * Get the logger of the plugin.
  *
  * @since 1.0.2
- * @return \EverAccounting\Core\Logger
+ * @return \EverAccounting\Logger
  */
 function eaccounting_logger() {
-	return new \EverAccounting\Core\Logger();
+	return new \EverAccounting\Logger();
 }
 
 /**
@@ -331,7 +331,7 @@ function eaccounting_logger() {
  * @since 1.0.2
  */
 function eaccounting_cleanup_logs() {
-	$logger = new \EverAccounting\Core\Logger();
+	$logger = new \EverAccounting\Logger();
 	$logger->clear_expired_logs();
 }
 
@@ -357,10 +357,10 @@ function eaccounting_maybe_define_constant( $name, $value ) {
  *
  * @param mixed $items
  *
- * @return \EverAccounting\Core\Collection
+ * @return \EverAccounting\Collection
  */
 function eaccounting_collect( $items ) {
-	return new \EverAccounting\Core\Collection( $items );
+	return new \EverAccounting\Collection( $items );
 }
 
 
@@ -605,7 +605,7 @@ function eaccounting_get_full_name( $user_id ) {
  * @param $item_name
  */
 function eaccounting_init_license( $file, $item_name ){
-	if ( is_admin() && class_exists( '\EverAccounting\Core\License' ) ) {
-		$license = new \EverAccounting\Core\License( $file, $item_name );
+	if ( is_admin() && class_exists( '\EverAccounting\License' ) ) {
+		$license = new \EverAccounting\License( $file, $item_name );
 	}
 }

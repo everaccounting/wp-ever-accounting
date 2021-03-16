@@ -10,7 +10,7 @@
 namespace EverAccounting\Abstracts;
 
 use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Core\Repositories;
+use EverAccounting\Repositories;
 use EverAccounting\Models\Document_Item;
 use EverAccounting\Repositories\Documents;
 use EverAccounting\Traits\Attachment;

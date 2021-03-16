@@ -9,7 +9,7 @@
  * @since 1.1.0
  */
 
-namespace EverAccounting\Core;
+namespace EverAccounting;
 
 use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Repositories\Accounts;

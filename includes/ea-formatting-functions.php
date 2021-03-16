@@ -335,7 +335,7 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
  * @param string $time_string Time string.
  *
  * @throws Exception
- * @return \EverAccounting\Core\DateTime
+ * @return \EverAccounting\DateTime
  */
 function eaccounting_string_to_datetime( $time_string ) {
 	// Strings are defined in local WP timezone. Convert to UTC.
@@ -353,7 +353,7 @@ function eaccounting_string_to_datetime( $time_string ) {
 		$timestamp = strtotime( get_gmt_from_date( gmdate( 'Y-m-d H:i:s', strtotime( $time_string ) ) ) );
 		date_default_timezone_set( $original_timezone );
 	}
-	$datetime = new \EverAccounting\Core\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
+	$datetime = new \EverAccounting\DateTime( "@{$timestamp}", new DateTimeZone( 'UTC' ) );
 
 	return $datetime;
 }

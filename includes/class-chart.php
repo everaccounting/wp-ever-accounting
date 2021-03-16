@@ -6,7 +6,7 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Core;
+namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit();
 

@@ -6,7 +6,7 @@
  * @version        1.0.2
  */
 
-namespace EverAccounting\Core;
+namespace EverAccounting;
 
 use EverAccounting\Models\Currency;
 
