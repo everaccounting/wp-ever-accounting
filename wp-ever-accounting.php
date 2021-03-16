@@ -195,6 +195,16 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-rewrites.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-controller.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/class-compatibility.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-chart.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-collection.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-datetime.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-emails.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-inflector.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-license.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-logger.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-money.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-repositories.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/class-mailer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/core-functions.php';
 
 		//
@@ -203,8 +213,8 @@ final class EverAccounting {
 		}
 
 		$this->classes['options'] = new Options();
-		//\EverAccounting\REST\Manager::instance();
-		//\EverAccounting\Core\Emails::instance();
+		//\EverAccounting\ReST\Manager::instance();
+		//\EverAccounting\Emails::instance();
 	}
 
 	/**

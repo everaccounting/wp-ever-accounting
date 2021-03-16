@@ -10,7 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\Resource_Model;
-use EverAccounting\Core\Repositories;
+use EverAccounting\Repositories;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -177,7 +177,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @param string $context
 	 *
-	 * @return \EverAccounting\Core\DateTime
+	 * @return \EverAccounting\DateTime
 	 */
 	public function get_date( $context = 'edit' ) {
 		return $this->get_prop( 'date', $context );
