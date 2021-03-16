@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Admin
- *
+ * @package EverAccounting\Admin
  * @since   1.1.0
  */
 

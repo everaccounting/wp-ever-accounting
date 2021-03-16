@@ -131,6 +131,15 @@ class Controller {
 	| Handle side effect of inserting, update, deleting customer
 	*/
 
+	/**
+	 * Update customer total paid
+	 *
+	 * @param int $transaction_id
+	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 *
+	 * @since 1.1.0
+	 *
+	 */
 	public function update_customer_total_paid( $transaction_id, $transaction ) {
 		$customer = eaccounting_get_customer( $transaction->get_customer_id() );
 		if ( $customer ) {
@@ -144,6 +153,15 @@ class Controller {
 		}
 	}
 
+	/**
+	 * When an customer is deleted check if
+	 * customer is associated with any document and transactions.
+	 *
+	 * @param int $customer_id
+	 *
+	 * @since 1.1.0
+	 *
+	 */
 	public function delete_customer_reference( $customer_id ) {
 		global $wpdb;
 		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'contact_id' => null ), array( 'contact_id' => $customer_id ) );
@@ -157,6 +175,16 @@ class Controller {
 	|
 	| Handle side effect of inserting, update, deleting vendor
 	*/
+
+	/**
+	 * Update vendor total paid
+	 *
+	 * @param int $transaction_id
+	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 *
+	 * @since 1.1.0
+	 *
+	 */
 	public function update_vendor_total_paid( $transaction_id, $transaction ) {
 		$vendor = eaccounting_get_vendor( $transaction->get_vendor_id() );
 		if ( $vendor ) {
@@ -170,6 +198,15 @@ class Controller {
 		}
 	}
 
+	/**
+	 * When a vendor is deleted check if
+	 * customer is associated with any document and transactions.
+	 *
+	 * @param int $vendor_id
+	 *
+	 * @since 1.1.0
+	 *
+	 */
 	public function delete_vendor_reference( $vendor_id ) {
 		global $wpdb;
 		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'contact_id' => null ), array( 'contact_id' => $vendor_id ) );
@@ -456,6 +493,16 @@ class Controller {
 	|
 	| Handle side effect of inserting, update, deleting attachment
 	*/
+
+	/**
+	 * When an attachments is deleted check if
+	 * customer is associated with any account or contacts or document  or items or transactions.
+	 *
+	 * @param int $attachment_id
+	 *
+	 * @since 1.1.0
+	 *
+	 */
 	public function delete_attachment_reference( $attachment_id ) {
 		global $wpdb;
 		$wpdb->update( $wpdb->prefix . 'ea_accounts', array( 'thumbnail_id' => null ), array( 'thumbnail_id' => absint( $attachment_id ) ) );

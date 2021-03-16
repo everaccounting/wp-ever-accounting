@@ -16,8 +16,13 @@ use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Invoice_Actions class
+ * @package EverAccounting\Admin
+ *
+ * @since 1.1.0
+ */
 class Invoice_Actions {
-
 	/**
 	 * Invoice_Actions constructor.
 	 */
@@ -25,6 +30,11 @@ class Invoice_Actions {
 		add_action( 'admin_post_eaccounting_invoice_action', array( $this, 'invoice_action' ) );
 	}
 
+	/**
+	 * Invoice actions
+	 *
+	 * @since 1.1.0
+	 */
 	public function invoice_action() {
 		$action     = eaccounting_clean( wp_unslash( $_REQUEST['invoice_action'] ) );
 		$invoice_id = absint( wp_unslash( $_REQUEST['invoice_id'] ) );

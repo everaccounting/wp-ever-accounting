@@ -10,6 +10,11 @@ namespace EverAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Notices Class
+ * @package EverAccounting\Admin
+ *
+ */
 class Notices {
 	/**
 	 * The single instance of the class.
@@ -40,7 +45,8 @@ class Notices {
 	);
 
 	/**
-	 * Constructor.
+	 * Init function
+     * @since 1.0.2.
 	 */
 	public static function init() {
 		if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \EverAccounting\Admin\Notices ) ) {
@@ -53,6 +59,7 @@ class Notices {
 
 	/**
 	 * Notices constructor.
+     * @since 1.0.2
 	 */
 	public function __construct() {
 		$this->notices = get_option( 'eaccounting_notices', array() );
@@ -226,6 +233,8 @@ class Notices {
 
 	/**
 	 * Output any stored custom notices.
+     *
+     * @since 1.1.0
 	 */
 	public function output_custom_notices() {
 		if ( ! empty( $this->notices ) ) {
@@ -260,6 +269,8 @@ class Notices {
 
 	/**
 	 * If we have just installed, show a message with the install pages button.
+     *
+     * @since 1.1.0
 	 */
 	public function install_notice() {
 		?>
@@ -280,6 +291,8 @@ class Notices {
 
 	/**
 	 * Notice about base tables missing.
+     *
+     * @since 1.1.0
 	 */
 	public function tables_missing_notice() {
 		$missing_tables = get_option( 'eaccounting_schema_missing_tables' );

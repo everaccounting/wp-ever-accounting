@@ -17,9 +17,7 @@ defined( 'ABSPATH' ) || exit();
  * Class Importer
  * @package EverAccounting/Admin
  */
-
 class Importer {
-
 	/**
 	 * Importer constructor.
 	 */
@@ -27,6 +25,11 @@ class Importer {
 		add_action( 'wp_ajax_eaccounting_do_ajax_import', array( __CLASS__, 'do_ajax_import' ) );
 	}
 
+	/**
+	 * Run the ajax import process
+	 *
+	 * @since 1.0.2
+	 */
 	public static function do_ajax_import() {
 		if ( ! isset( $_REQUEST['type'] ) ) {
 			wp_send_json_error(

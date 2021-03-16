@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit();
 
 class Bill_Actions {
 	/**
-	 * Bills constructor.
+	 * Bill_Actions constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eaccounting_bill_action', array( $this, 'bill_action' ) );
