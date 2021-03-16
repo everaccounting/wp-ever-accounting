@@ -3,17 +3,18 @@
  * Currencies Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
+use EverAccounting\Abstracts\Entities_Controller;
 use EverAccounting\Models\Currency;
 
 defined( 'ABSPATH' ) || die();
 
-class CurrenciesController extends EntitiesController {
+class Currencies_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *

@@ -5,11 +5,11 @@
  * entity listing, insert, update, get, bulk actions.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Abstracts
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Abstracts;
 
 use EverAccounting\Abstracts\Resource_Model;
 
@@ -22,9 +22,9 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\REST
+ * @package EverAccounting\Abstracts
  */
-abstract class EntitiesController extends Controller {
+abstract class Entities_Controller extends Controller {
 	/**
 	 * entity type.
 	 *
@@ -285,13 +285,13 @@ abstract class EntitiesController extends Controller {
 	public function update_item( $request ) {
 		try {
 			if ( empty( $this->entity_model ) || ! class_exists( $this->entity_model ) ) {
-				throw new Exception( 'no_entity_model_class', __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( 'no_entity_model_class', __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
 			}
 
 			$id     = (int) $request['id'];
 			$object = new $this->entity_model( $id );
 			if ( ! $object->exists() ) {
-				throw new Exception( 'eaccounting_rest_invalid_id', __( 'Invalid resource ID.', 'wp-ever-accounting' ), 400 );
+				throw new \Exception( 'eaccounting_rest_invalid_id', __( 'Invalid resource ID.', 'wp-ever-accounting' ), 400 );
 			}
 
 			$object = $this->prepare_object_for_database( $object, $request );
@@ -304,7 +304,7 @@ abstract class EntitiesController extends Controller {
 
 			return $response;
 
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			return new \WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 	}

@@ -1,23 +1,25 @@
 <?php
 /**
- * Bill Items Rest Controller Class.
+ * Accounts Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
+
+use EverAccounting\Abstracts\Controller;
 
 defined( 'ABSPATH' ) || die();
 
-class BillItemsController extends Controller {
+class Items_Controller extends Controller {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'bill_items';
+	protected $rest_base = 'items';
 
 	/**
 	 * Register our routes.
@@ -83,7 +85,7 @@ class BillItemsController extends Controller {
 	}
 
 	/**
-	 * Check whether a given request has permission to read accounts.
+	 * Check whether a given request has permission to read items.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -94,7 +96,7 @@ class BillItemsController extends Controller {
 	}
 
 	/**
-	 * Check if a given request has access create account.
+	 * Check if a given request has access create item.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
@@ -198,8 +200,7 @@ class BillItemsController extends Controller {
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
 	 * 
-	 **/
-
+	 */
 	public function create_item( $request ) {
 		$request->set_param( 'context', 'edit' );
 		$prepared = $this->prepare_item_for_database( $request );
@@ -227,7 +228,6 @@ class BillItemsController extends Controller {
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return mixed|\WP_Error|\WP_REST_Response
-	 * 
 	 */
 	public function get_item( $request ) {
 		$item_id = intval( $request['id'] );
@@ -244,10 +244,11 @@ class BillItemsController extends Controller {
 
 	/**
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param \WP_REST_Request $request
 	 *
 	 * @return int|mixed|\WP_Error|\WP_REST_Response|null
+	 * 
 	 */
 	public function update_item( $request ) {
 		$request->set_param( 'context', 'edit' );
@@ -309,9 +310,8 @@ class BillItemsController extends Controller {
 	}
 
 	/**
-	 *
 	 * @since 1.0.2
-	 * 
+	 *
 	 * @param \WP_REST_Request                 $request
 	 * @param \EverAccounting\Accounts\Account $item
 	 *
@@ -347,6 +347,7 @@ class BillItemsController extends Controller {
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
+	 *
 	 * @since 1.0.2
 	 * 
 	 * @return array Item schema data.
@@ -355,11 +356,11 @@ class BillItemsController extends Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Bill Items', 'wp-ever-accounting' ),
+			'title'      => __( 'Item', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'           => array(
-					'description' => __( 'Unique identifier for the bill item.', 'wp-ever-accounting' ),
+				'id'             => array(
+					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -367,27 +368,7 @@ class BillItemsController extends Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'bill_id'      => array(
-					'description' => __( 'Invoice id for the bill item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'readonly'    => true,
-					'required'    => true,
-				),
-				'item_id'      => array(
-					'description' => __( 'Item id for the bill item.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'readonly'    => true,
-					'required'    => true,
-				),
-				'name'         => array(
+				'name'           => array(
 					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -396,7 +377,7 @@ class BillItemsController extends Controller {
 					),
 					'required'    => true,
 				),
-				'sku'          => array(
+				'sku'            => array(
 					'description' => __( 'Sku of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -404,8 +385,59 @@ class BillItemsController extends Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'quantity'     => array(
-					'description' => __( 'Purchase price of the item.', 'wp-ever-accounting' ),
+				'attachment'     => array(
+					'description' => __( 'Attachment of the invoice', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view' ),
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'src'  => array(
+							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'name' => array(
+							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+					),
+				),
+				'description'    => array(
+					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+				),
+				'sale_price'     => array(
+					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'default'     => '0',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'purchase_price' => array(
+					'description' => __( 'Purchase price of the item', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'default'     => '0',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'quantity'       => array(
+					'description' => __( 'Quantity of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'default'     => '1',
@@ -414,27 +446,29 @@ class BillItemsController extends Controller {
 					),
 					'required'    => true,
 				),
-				'price'        => array(
-					'description' => __( 'Price of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
+				'category_id'    => array(
+					'description' => __( 'Category id of the item.', 'wp-ever-accounting' ),
+					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
-					'default'     => '0',
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'intval',
 					),
 					'required'    => true,
-				),
-				'total'        => array(
-					'description' => __( 'Total of the item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'default'     => '0',
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'type' => array(
+							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
 					),
-					'required'    => true,
 				),
-				'tax_id'       => array(
+				'tax_id'         => array(
 					'description' => __( 'Tax id of the item.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
@@ -456,24 +490,35 @@ class BillItemsController extends Controller {
 						),
 					),
 				),
-				'tax_name'     => array(
-					'description' => __( 'Tax name of the bill item', 'wp-ever-accounting' ),
-					'type'        => 'string',
+				'enabled'        => array(
+					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
+					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
 				),
-				'tax_total'    => array(
-					'description' => __( 'Tax name of the bill item', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+				'creator'        => array(
+					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+					'properties'  => array(
+						'id'    => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name'  => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
 					),
 				),
-				'date_created' => array(
+				'date_created'   => array(
 					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',

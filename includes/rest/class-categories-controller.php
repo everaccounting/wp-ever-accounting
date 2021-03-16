@@ -1,25 +1,26 @@
 <?php
 /**
- * Accounts Rest Controller Class.
+ * Categories Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
-use EverAccounting\Models\Tax;
+use EverAccounting\Abstracts\Entities_Controller;
+use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || die();
 
-class TaxesController extends EntitiesController {
+class CategoriesController extends Entities_Controller {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'taxes';
+	protected $rest_base = 'categories';
 
 	/**
 	 * Entity model class.
@@ -28,7 +29,7 @@ class TaxesController extends EntitiesController {
 	 * 
 	 * @var string
 	 */
-	protected $entity_model = Tax::class;
+	protected $entity_model = Category::class;
 
 	/**
 	 * Get objects.
@@ -41,25 +42,25 @@ class TaxesController extends EntitiesController {
 	 * @return array|int|\WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
-		return eaccounting_get_taxes( $query_args );
+		return eaccounting_get_categories( $query_args );
 	}
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 * 
-	 * @since 1.0.2
+	 * @since 1.1.0
 	 * 
 	 * @return array Item schema data.
-	 * 
+	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Tax', 'wp-ever-accounting' ),
+			'title'      => __( 'Category', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the tax.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the category.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -68,7 +69,7 @@ class TaxesController extends EntitiesController {
 					),
 				),
 				'name'         => array(
-					'description' => __( 'Name of the tax.', 'wp-ever-accounting' ),
+					'description' => __( 'Name of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -76,23 +77,23 @@ class TaxesController extends EntitiesController {
 					),
 					'required'    => true,
 				),
-				'rate'         => array(
-					'description' => __( 'Rate of the tax.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'required'    => true,
-				),
 				'type'         => array(
-					'description' => __( 'Type of the tax.', 'wp-ever-accounting' ),
+					'description' => __( 'Type of the category.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'required'    => true,
+					'enum'        => array_keys( eaccounting_get_category_types() ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => true,
+				),
+				'color'        => array(
+					'description' => __( 'Color of the category.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_hex_color',
+					),
 				),
 				'enabled'      => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
@@ -100,12 +101,13 @@ class TaxesController extends EntitiesController {
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_created' => array(
-					'description' => __( 'Created date of the tax.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
+
 			),
 		);
 
@@ -114,7 +116,7 @@ class TaxesController extends EntitiesController {
 
 	/**
 	 * Retrieves the query params for the items collection.
-	 * 
+	 *
 	 * @since 1.1.0
 	 * 
 	 * @return array Collection parameters.
@@ -131,9 +133,8 @@ class TaxesController extends EntitiesController {
 			'enum'              => array(
 				'name',
 				'id',
-				'number',
-				'opening_balance',
-				'bank_name',
+				'type',
+				'color',
 				'enabled',
 			),
 			'validate_callback' => 'rest_validate_request_arg',

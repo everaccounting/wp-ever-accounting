@@ -3,17 +3,18 @@
  * Accounts Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
+use EverAccounting\Abstracts\Entities_Controller;
 use EverAccounting\Models\Account;
 
 defined( 'ABSPATH' ) || die();
 
-class AccountsController extends EntitiesController {
+class Accounts_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *

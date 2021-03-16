@@ -1,17 +1,19 @@
 <?php
 /**
- * Invoice Hisotires Rest Controller Class.
+ * Invoice Histories Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
+
+use EverAccounting\Abstracts\Controller;
 
 defined( 'ABSPATH' ) || die();
 
-class InvoiceHistoriesController extends Controller {
+class Invoice_Histories_Controller extends Controller {
 	/**
 	 * Route base.
 	 *

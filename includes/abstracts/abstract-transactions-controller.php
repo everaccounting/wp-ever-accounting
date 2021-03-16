@@ -3,11 +3,11 @@
  * Transaction Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Abstracts
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Abstracts;
 
 use EverAccounting\Repositories\Transactions;
 
@@ -17,10 +17,10 @@ defined( 'ABSPATH' ) || die();
  * Class TransactionController
  *
  * @since   1.1.0
- * @package EverAccounting\REST
+ * @package EverAccounting\Abstracts
  *
  */
-abstract class TransactionsController extends EntitiesController {
+abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *

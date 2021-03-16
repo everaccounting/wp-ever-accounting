@@ -1,15 +1,15 @@
 <?php
-
 /**
- * Transactions Rest Controller Class.
+ * Revenues Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
+use EverAccounting\Abstracts\Transactions_Controller;
 use EverAccounting\Models\Revenue;
 
 defined( 'ABSPATH' ) || die();
@@ -19,9 +19,9 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\REST
+ * @package EverAccounting\Rest
  */
-class RevenuesController extends TransactionsController {
+class Revenues_Controller extends Transactions_Controller {
 	/**
 	 * Route base.
 	 *

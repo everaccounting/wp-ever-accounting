@@ -1,17 +1,26 @@
 <?php
+/**
+ * Settings Options Rest Controller Class.
+ *
+ * @since       1.0.2
+ * @subpackage  Rest
+ * @package     EverAccounting
+ */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
+
+use EverAccounting\Abstracts\Controller;
 
 defined( 'ABSPATH' ) || die();
 
-class SettingsController extends Controller {
+class Setting_Options_Controller extends Controller {
+
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'settings';
-
+	protected $rest_base = 'settings/(?P<group_id>[\w-]+)';
 
 
 	/**

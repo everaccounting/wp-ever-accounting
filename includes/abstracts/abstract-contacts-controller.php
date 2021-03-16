@@ -3,15 +3,15 @@
  * Contacts Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Abstracts
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || die();
 
-abstract class ContactsController extends EntitiesController {
+abstract class Contacts_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *

@@ -1,28 +1,27 @@
 <?php
 /**
- * Transfers Rest Controller Class.
+ * Accounts Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
-use EverAccounting\Models\Transfer;
+use EverAccounting\Models\Tax;
+use EverAccounting\Abstracts\Entities_Controller;
 
 defined( 'ABSPATH' ) || die();
 
-class TransfersController extends EntitiesController {
+class Taxes_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.0
-	 * 
 	 * @var string
-	 *
 	 */
-	protected $rest_base = 'transfers';
+	protected $rest_base = 'taxes';
+
 	/**
 	 * Entity model class.
 	 *
@@ -30,7 +29,7 @@ class TransfersController extends EntitiesController {
 	 * 
 	 * @var string
 	 */
-	protected $entity_model = Transfer::class;
+	protected $entity_model = Tax::class;
 
 	/**
 	 * Get objects.
@@ -43,25 +42,25 @@ class TransfersController extends EntitiesController {
 	 * @return array|int|\WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
-		return eaccounting_get_transfers( $query_args );
+		return eaccounting_get_taxes( $query_args );
 	}
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
-	 *
-	 * @since 1.1.0
+	 * 
+	 * @since 1.0.2
 	 * 
 	 * @return array Item schema data.
-	 *
+	 * 
 	 */
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Transfer', 'wp-ever-accounting' ),
+			'title'      => __( 'Tax', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the tax.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -69,55 +68,45 @@ class TransfersController extends EntitiesController {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'income_id'    => array(
-					'description' => __( 'Income ID of the transaction.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+				'name'         => array(
+					'description' => __( 'Name of the tax.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'rate'         => array(
+					'description' => __( 'Rate of the tax.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
-				'expense_id'   => array(
-					'description' => __( 'Expense ID of the transaction.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+				'type'         => array(
+					'description' => __( 'Type of the tax.', 'wp-ever-accounting' ),
+					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
-				'creator'      => array(
-					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'id'    => array(
-							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'name'  => array(
-							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'email' => array(
-							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
+				'enabled'      => array(
+					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
+					'type'        => 'boolean',
+					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_created' => array(
-					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the tax.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
 					'readonly'    => true,
 				),
-
 			),
 		);
 
@@ -126,11 +115,11 @@ class TransfersController extends EntitiesController {
 
 	/**
 	 * Retrieves the query params for the items collection.
-	 *
+	 * 
 	 * @since 1.1.0
 	 * 
 	 * @return array Collection parameters.
-	 *
+	 * 
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
@@ -141,8 +130,12 @@ class TransfersController extends EntitiesController {
 			'type'              => 'string',
 			'default'           => 'id',
 			'enum'              => array(
-				'income_id',
-				'expense_id',
+				'name',
+				'id',
+				'number',
+				'opening_balance',
+				'bank_name',
+				'enabled',
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);

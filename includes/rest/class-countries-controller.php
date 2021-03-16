@@ -3,15 +3,15 @@
  * Countries Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
 defined( 'ABSPATH' ) || die();
 
-class CountriesController extends DataController {
+class Countries_Controller extends Data_Controller {
 	/**
 	 * Route base.
 	 *

@@ -1,26 +1,29 @@
 <?php
 /**
- * Categories Rest Controller Class.
+ * Transfers Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
-use EverAccounting\Models\Category;
+use EverAccounting\Abstracts\Entities_Controller;
+use EverAccounting\Models\Transfer;
 
 defined( 'ABSPATH' ) || die();
 
-class CategoriesController extends EntitiesController {
+class Transfers_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *
+	 * @since 1.1.0
+	 * 
 	 * @var string
+	 *
 	 */
-	protected $rest_base = 'categories';
-
+	protected $rest_base = 'transfers';
 	/**
 	 * Entity model class.
 	 *
@@ -28,7 +31,7 @@ class CategoriesController extends EntitiesController {
 	 * 
 	 * @var string
 	 */
-	protected $entity_model = Category::class;
+	protected $entity_model = Transfer::class;
 
 	/**
 	 * Get objects.
@@ -41,12 +44,12 @@ class CategoriesController extends EntitiesController {
 	 * @return array|int|\WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
-		return eaccounting_get_categories( $query_args );
+		return eaccounting_get_transfers( $query_args );
 	}
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
-	 * 
+	 *
 	 * @since 1.1.0
 	 * 
 	 * @return array Item schema data.
@@ -55,11 +58,11 @@ class CategoriesController extends EntitiesController {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => __( 'Category', 'wp-ever-accounting' ),
+			'title'      => __( 'Transfer', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
 				'id'           => array(
-					'description' => __( 'Unique identifier for the category.', 'wp-ever-accounting' ),
+					'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
@@ -67,40 +70,49 @@ class CategoriesController extends EntitiesController {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'         => array(
-					'description' => __( 'Name of the category.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
+				'income_id'    => array(
+					'description' => __( 'Income ID of the transaction.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
-				'type'         => array(
-					'description' => __( 'Type of the category.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'required'    => true,
-					'enum'        => array_keys( eaccounting_get_category_types() ),
+				'expense_id'   => array(
+					'description' => __( 'Expense ID of the transaction.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'required'    => true,
 				),
-				'color'        => array(
-					'description' => __( 'Color of the category.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view', 'embed', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_hex_color',
+				'creator'      => array(
+					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
+					'properties'  => array(
+						'id'    => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'readonly'    => true,
+						),
+						'name'  => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+						),
 					),
-				),
-				'enabled'      => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_created' => array(
-					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
+					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
@@ -119,7 +131,7 @@ class CategoriesController extends EntitiesController {
 	 * @since 1.1.0
 	 * 
 	 * @return array Collection parameters.
-	 * 
+	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
@@ -130,11 +142,8 @@ class CategoriesController extends EntitiesController {
 			'type'              => 'string',
 			'default'           => 'id',
 			'enum'              => array(
-				'name',
-				'id',
-				'type',
-				'color',
-				'enabled',
+				'income_id',
+				'expense_id',
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);

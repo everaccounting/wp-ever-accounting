@@ -4,21 +4,23 @@
  *
  * Handles requests to the /data endpoint.
  *
- * @package EverAccounting\REST
+ * @package EverAccounting\Rest
  * @since   1.1.0
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
+
+use EverAccounting\Abstracts\Controller;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
  * REST API Data controller class.
  *
- * @package EverAccounting\REST
+ * @package EverAccounting\Rest
  * @extends Controller
  */
-class DataController extends Controller {
+class Data_Controller extends Controller {
 	/**
 	 * Route base.
 	 *

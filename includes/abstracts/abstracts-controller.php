@@ -3,11 +3,11 @@
  * Main Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Abstracts
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || die();
 
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\REST
+ * @package EverAccounting\Abstracts
  */
 abstract class Controller extends \WP_REST_Controller {
 	/**
@@ -116,7 +116,7 @@ abstract class Controller extends \WP_REST_Controller {
 			// Create the item.
 			$_response = $this->create_item( $_item );
 
-			// If an error occured...
+			// If an error occurred...
 			if ( is_wp_error( $_response ) ) {
 
 				$create[] = array(

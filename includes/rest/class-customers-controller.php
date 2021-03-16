@@ -1,26 +1,27 @@
 <?php
 /**
- * Contacts Rest Controller Class.
+ * Customers Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
-use EverAccounting\Models\Vendor;
+use EverAccounting\Abstracts\Contacts_Controller;
+use EverAccounting\Models\Customer;
 
 defined( 'ABSPATH' ) || die();
 
 /**
- * Class VendorController
+ * Class CustomerController
  *
  * @since   1.1.0
  *
- * @package EverAccounting\REST
+ * @package EverAccounting\Rest
  */
-class VendorsController extends ContactsController {
+class Customers_Controller extends Contacts_Controller {
 	/**
 	 * Route base.
 	 *
@@ -29,7 +30,7 @@ class VendorsController extends ContactsController {
 	 * @var string
 	 *
 	 */
-	protected $rest_base = 'vendors';
+	protected $rest_base = 'customers';
 
 	/**
 	 * Entity model class.
@@ -38,7 +39,7 @@ class VendorsController extends ContactsController {
 	 * 
 	 * @var string
 	 */
-	protected $entity_model = Vendor::class;
+	protected $entity_model = Customer::class;
 
 	/**
 	 * Get objects.
@@ -51,6 +52,6 @@ class VendorsController extends ContactsController {
 	 * @return array|int|\WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
-		return eaccounting_get_vendors( $query_args );
+		return eaccounting_get_customers( $query_args );
 	}
 }

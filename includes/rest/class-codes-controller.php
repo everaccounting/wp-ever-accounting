@@ -3,15 +3,15 @@
  * Currency codes Rest Controller Class.
  *
  * @since       1.1.0
- * @subpackage  REST
+ * @subpackage  Rest
  * @package     EverAccounting
  */
 
-namespace EverAccounting\REST;
+namespace EverAccounting\Rest;
 
 defined( 'ABSPATH' ) || die();
 
-class CodesController extends DataController {
+class CodesController extends Data_Controller {
 	/**
 	 * Route base.
 	 *
