@@ -11,9 +11,15 @@ namespace EverAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit();
 
-class Admin_Assets {
+/**
+ * Class Assets
+ *
+ * @since   1.0.2
+ */
+
+class Assets {
 	/**
-	 * Hook in tabs.
+	 * Assets constructor
 	 *
 	 * @version 1.0.2
 	 */
@@ -214,4 +220,4 @@ class Admin_Assets {
 	}
 }
 
-return new Admin_Assets();
+return new \EverAccounting\Admin\Assets();

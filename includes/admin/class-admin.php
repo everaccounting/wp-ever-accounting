@@ -43,7 +43,7 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/ea-admin-functions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-notices.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-menus.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-assets.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-assets.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-settings.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-exporter.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
