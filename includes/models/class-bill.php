@@ -8,6 +8,7 @@
  */
 
 namespace EverAccounting\Models;
+use EverAccounting\Abstracts\Document;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -100,7 +100,7 @@ class Bills {
 	public function view_bill( $bill_id = null ) {
 		try {
 			$bill = new Bill( $bill_id );
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
 
@@ -128,7 +128,7 @@ class Bills {
 	public function edit_bill( $bill_id = null ) {
 		try {
 			$bill = new Bill( $bill_id );
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
 		eaccounting_get_admin_template(
@@ -173,4 +173,4 @@ class Bills {
 	}
 }
 
-return new EverAccounting_Admin_Bills();
+return new \EverAccounting\Admin\Bills();
