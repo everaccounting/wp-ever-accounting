@@ -50,15 +50,8 @@ class Admin {
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-importer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-dashboard.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-banking.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-sales.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-invoices.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-revenues.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-customers.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-expenses.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-items.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-bills.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-payments.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-ea-admin-vendors.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-invoice-actions.php';
+		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-bill-actions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-transactions.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-accounts.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/admin/class-transfers.php';

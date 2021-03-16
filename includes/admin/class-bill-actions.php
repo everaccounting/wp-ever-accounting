@@ -15,13 +15,17 @@ use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit();
 
-class Bills {
+/**
+ * Class Bill_Actions
+ * @package EverAccounting\Admin
+ */
+
+class Bill_Actions {
 	/**
 	 * Bills constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eaccounting_bill_action', array( $this, 'bill_action' ) );
-		add_action( 'eaccounting_expenses_page_tab_bills', array( $this, 'render_tab' ), 20 );
 	}
 
 	public function bill_action() {
@@ -73,23 +77,6 @@ class Bills {
 	}
 
 	/**
-	 *
-	 * @since 1.1.0
-	 */
-	public function render_tab() {
-		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['bill_id'] ) ) {
-			$bill_id = isset( $_GET['bill_id'] ) ? absint( $_GET['bill_id'] ) : null;
-			$this->view_bill( $bill_id );
-		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			$bill_id = isset( $_GET['bill_id'] ) ? absint( $_GET['bill_id'] ) : null;
-			$this->edit_bill( $bill_id );
-		} else {
-			include dirname( __FILE__ ) . '/views/bills/list-bill.php';
-		}
-	}
-
-	/**
 	 * View bill.
 	 *
 	 * @param $bill_id
@@ -97,7 +84,7 @@ class Bills {
 	 * @since 1.1.0
 	 *
 	 */
-	public function view_bill( $bill_id = null ) {
+	public static function view_bill( $bill_id = null ) {
 		try {
 			$bill = new Bill( $bill_id );
 		} catch ( \Exception $e ) {
@@ -125,7 +112,7 @@ class Bills {
 	 * @since 1.1.0
 	 *
 	 */
-	public function edit_bill( $bill_id = null ) {
+	public static function edit_bill( $bill_id = null ) {
 		try {
 			$bill = new Bill( $bill_id );
 		} catch ( \Exception $e ) {
@@ -173,4 +160,4 @@ class Bills {
 	}
 }
 
-return new \EverAccounting\Admin\Bills();
+new Bill_Actions();

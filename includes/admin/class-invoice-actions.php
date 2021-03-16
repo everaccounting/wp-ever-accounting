@@ -10,18 +10,19 @@
  * @version     1.1.10
  */
 
+namespace EverAccounting\Admin;
+
 use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit();
 
-class EverAccounting_Admin_Invoices {
+class Invoice_Actions {
 
 	/**
-	 * EverAccounting_Admin_Invoices constructor.
+	 * Invoice_Actions constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_post_eaccounting_invoice_action', array( $this, 'invoice_action' ) );
-		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_tab' ), 20 );
 	}
 
 	public function invoice_action() {
@@ -47,7 +48,7 @@ class EverAccounting_Admin_Invoices {
 					$invoice->set_status( 'pending' );
 					$invoice->save();
 					eaccounting_admin_notices()->add_success( __( 'Invoice status updated to pending.', 'wp-ever-accounting' ) );
-				} catch ( Exception $e ) {
+				} catch ( \Exception $e ) {
 					/* translators: %s reason */
 					eaccounting_admin_notices()->add_error( sprintf( __( 'Invoice status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
 				}
@@ -75,25 +76,6 @@ class EverAccounting_Admin_Invoices {
 	}
 
 	/**
-	 * Render tab.
-	 *
-	 * @since 1.1.0
-	 */
-	public function render_tab() {
-		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
-		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['invoice_id'] ) ) {
-			$invoice_id = isset( $_GET['invoice_id'] ) ? absint( $_GET['invoice_id'] ) : null;
-			$this->view_invoice( $invoice_id );
-		} elseif ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
-			$invoice_id = isset( $_GET['invoice_id'] ) ? absint( $_GET['invoice_id'] ) : null;
-			$this->edit_invoice( $invoice_id );
-		} else {
-			include dirname( __FILE__ ) . '/views/invoices/list-invoice.php';
-		}
-	}
-
-
-	/**
 	 * View invoice.
 	 *
 	 * @param $invoice_id
@@ -101,10 +83,10 @@ class EverAccounting_Admin_Invoices {
 	 * @since 1.1.0
 	 *
 	 */
-	public function view_invoice( $invoice_id = null ) {
+	public static function view_invoice( $invoice_id = null ) {
 		try {
 			$invoice = new Invoice( $invoice_id );
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
 
@@ -129,10 +111,10 @@ class EverAccounting_Admin_Invoices {
 	 * @since 1.1.0
 	 *
 	 */
-	public function edit_invoice( $invoice_id = null ) {
+	public static function edit_invoice( $invoice_id = null ) {
 		try {
 			$invoice = new Invoice( $invoice_id );
-		} catch ( Exception $e ) {
+		} catch ( \Exception $e ) {
 			wp_die( $e->getMessage() );
 		}
 		eaccounting_get_admin_template(
@@ -177,4 +159,4 @@ class EverAccounting_Admin_Invoices {
 	}
 }
 
-return new \EverAccounting_Admin_Invoices();
+ new Invoice_Actions();
