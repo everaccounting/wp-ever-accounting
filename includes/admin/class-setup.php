@@ -222,7 +222,10 @@ class Setup_Wizard {
 		echo '</div>';
 	}
 
-
+	/**
+	 * Introducing the setup.
+     * @since 1.0.2
+	 */
 	public function setup_introduction() {
 		?>
 		<h1><?php _e( 'Welcome!', 'wp-ever-accounting' ); ?></h1>
@@ -234,7 +237,10 @@ class Setup_Wizard {
 		<?php
 	}
 
-
+	/**
+	 * Company info setup.
+	 * @since 1.0.2
+	 */
 	public function company_settings() {
 		?>
 		<h1><?php _e( 'Company Setup', 'wp-ever-accounting' ); ?></h1>
@@ -287,6 +293,10 @@ class Setup_Wizard {
 		<?php
 	}
 
+	/**
+	 * Company settings save.
+	 * @since 1.0.2
+	 */
 	public function company_settings_save() {
 		check_admin_referer( 'company-setup' );
 
@@ -307,7 +317,10 @@ class Setup_Wizard {
 		exit;
 	}
 
-
+	/**
+	 * Currency settings.
+	 * @since 1.0.2
+	 */
 	public function currency_settings() {
 		$codes   = eaccounting_get_global_currencies();
 		$options = array();
@@ -415,6 +428,10 @@ class Setup_Wizard {
 		<?php
 	}
 
+	/**
+	 * Currency settings save.
+	 * @since 1.0.2
+	 */
 	public function currency_settings_save() {
 		check_admin_referer( 'currency_settings' );
 		$new_currency = false;
@@ -441,6 +458,10 @@ class Setup_Wizard {
 		exit;
 	}
 
+	/**
+	 * Finishing the setup.
+	 * @since 1.0.2
+	 */
 	public function finish_setup() {
 		?>
 		<h1><?php _e( 'Finish!', 'wp-ever-accounting' ); ?></h1>

@@ -4,15 +4,21 @@
  *
  * @package    EverAccounting
  * @subpackage Admin
- * @version    1.0.2
+ * @version    1.1.0
  */
+
+namespace EverAccounting\Admin;
 
 defined( 'ABSPATH' ) || exit;
 
-class EverAccounting_Admin_Release {
+/**
+ * Class Release
+ * @package EverAccounting\Admin
+*/
+class Release {
 
 	/**
-	 * EverAccounting_Admin_Sales constructor.
+	 * Release constructor.
 	 */
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'register_page' ) );
@@ -56,4 +62,4 @@ class EverAccounting_Admin_Release {
 	}
 }
 
-new EverAccounting_Admin_Release();
+new Release();

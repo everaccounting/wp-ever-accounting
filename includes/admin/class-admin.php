@@ -56,10 +56,10 @@ class Admin {
 		if ( ! empty( $_GET['page'] ) ) {
 			switch ( $_GET['page'] ) {
 				case 'ea-setup':
-					include_once dirname( __FILE__ ) . '/class-ea-admin-setup.php';
+					include_once dirname( __FILE__ ) . '/class-setup.php';
 					break;
 					case 'ea-release':
-					include_once dirname( __FILE__ ) . '/class-ea-admin-release.php';
+					include_once dirname( __FILE__ ) . '/class-release.php';
 					break;
 			}
 
