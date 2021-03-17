@@ -9,7 +9,7 @@
  * @package     EverAccounting
  */
 defined( 'ABSPATH' ) || exit();
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-bill-list-table.php' );
+include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-bill-list-table.php' );
 $bill_table = new EverAccounting_Bill_List_Table();
 $bill_table->prepare_items();
 $add_url = eaccounting_admin_url(

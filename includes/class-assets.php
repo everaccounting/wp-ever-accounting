@@ -37,6 +37,11 @@ class Assets {
 		wp_print_styles( 'ea-public-styles' );
 	}
 
+	/**
+	 * Load public scripts
+	 * 
+	 * @since 1.1.0
+	*/
 	public function public_scripts() {
 		$suffix  = '';
 		$version = eaccounting()->get_version();

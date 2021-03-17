@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-bill-list-table.php';
+require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-bill-list-table.php';
 $args       = array(
 	'display_args' => array(
 		'columns_to_hide'      => array( 'actions', 'cb','name' ),

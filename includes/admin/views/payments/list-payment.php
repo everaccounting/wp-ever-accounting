@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-payment-list-table.php' );
+include( EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-payment-list-table.php' );
 $payments_table = new EverAccounting_Payment_List_Table();
 $payments_table->prepare_items();
 $add_url = eaccounting_admin_url(

@@ -32,8 +32,8 @@ if ( ! in_array( $invoice->get_status( 'edit' ), array( 'paid', 'partial' ) ) ) 
 
 $invoice_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $invoice->exists() ) {
-	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Invoices', 'invoice_payments' ), 'ea_invoice', 'side' );
-	add_meta_box( 'invoice_notes', __( 'Invoice Notes', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Invoices', 'invoice_notes' ), 'ea_invoice', 'side' );
+	add_meta_box( 'invoice_payments', __( 'Invoice Payments', 'wp-ever-accounting' ), array( '\EverAccounting\Admin\Invoice_Actions', 'invoice_payments' ), 'ea_invoice', 'side' );
+	add_meta_box( 'invoice_notes', __( 'Invoice Notes', 'wp-ever-accounting' ), array( '\EverAccounting\Admin\Invoice_Actions', 'invoice_notes' ), 'ea_invoice', 'side' );
 }
 /**
  * Fires after all built-in meta boxes have been added, contextually for the given object.
@@ -82,6 +82,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 										<a class="button-secondary" href="<?php echo esc_url( $invoice->get_url() ); ?>" target="_blank"><span class="dashicons dashicons-printer"></span> <?php esc_html_e( 'Print', 'wp-ever-accounting' ); ?></a>
 										<ul class="ea-dropdown-menu">
 											<?php
+											do_action('eaccounting_before_invoice_actions', $invoice );
 											foreach ( $invoice_actions as $action => $title ) {
 												echo sprintf(
 													'<li><a href="%s">%s</a></li>',
@@ -99,6 +100,7 @@ do_action( 'add_meta_boxes_ea_invoice', $invoice );
 													esc_html( $title )
 												);
 											}
+											do_action('eaccounting_after_invoice_actions', $invoice );
 											?>
 										</ul>
 									</div>

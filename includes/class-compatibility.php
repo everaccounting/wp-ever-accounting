@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Compatibility
+ * @package EverAccounting
  *
  * @since 1.1.0
  */

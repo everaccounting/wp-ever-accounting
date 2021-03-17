@@ -23,7 +23,10 @@ class Dashboard {
 		add_action( 'load-toplevel_page_eaccounting', array( __CLASS__, 'dashboard_setup' ) );
 	}
 
-
+	/**
+     * Setup the dashboard
+     * @since 1.1.0
+	*/
 	public static function dashboard_setup() {
 		add_meta_box( 'total-income', false, array( __CLASS__, 'render_total_income_widget' ), 'ea-overview', 'top', 'high', array( 'col' => '4' ) );
 		add_meta_box( 'total-expense', false, array( __CLASS__, 'render_total_expense_widget' ), 'ea-overview', 'top', 'high', array( 'col' => '4' ) );
@@ -37,6 +40,10 @@ class Dashboard {
 		do_action( 'eaccounting_dashboard_setup' );
 	}
 
+	/**
+     * Get dashboard income year
+     * @since 1.1.0
+	*/
 	public static function get_dashboard_income_year() {
 		if ( 'yes' === eaccounting_get_option( 'dashboard_transactions_limit' ) ) {
 			return date_i18n( 'Y' );
@@ -45,6 +52,10 @@ class Dashboard {
 		return null;
 	}
 
+	/**
+	 * Render total income
+	 * @since 1.1.0
+	 */
 	public static function render_total_income_widget() {
 		$total_income     = eaccounting_get_total_income( self::get_dashboard_income_year() );
 		$total_receivable = eaccounting_get_total_receivable();
@@ -68,6 +79,10 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Render total expense
+	 * @since 1.1.0
+	 */
 	public static function render_total_expense_widget() {
 		$total_expense = eaccounting_get_total_expense( self::get_dashboard_income_year() );
 		$total_payable = eaccounting_get_total_payable();
@@ -91,6 +106,10 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Render total profit
+	 * @since 1.1.0
+	 */
 	public static function render_total_profit_widget() {
 		$total_profit   = eaccounting_get_total_profit( self::get_dashboard_income_year() );
 		$total_upcoming = eaccounting_get_total_upcoming_profit();
@@ -114,11 +133,15 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Render cashflow
+	 * @since 1.1.0
+	 */
 	public static function render_cashflow() {
-		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
-		require_once dirname( __FILE__ ) . '/reports/class-ea-report-cashflow.php';
+		require_once dirname( __FILE__ ) . '/reports/class-report.php';
+		require_once dirname( __FILE__ ) . '/reports/class-cashflow.php';
 		$year   = date_i18n( 'Y' );
-		$init   = new \EverAccounting_Report_CashFlow();
+		$init   = new \EverAccounting\Admin\Report\CashFlow();
 		$report = $init->get_report( array( 'year' => $year ) );
 		?>
 		<div class="ea-card__inside" style="position: relative; height:300px;">
@@ -224,10 +247,14 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Render income categories
+	 * @since 1.1.0
+	 */
 	public static function render_incomes_categories() {
-		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
+		require_once dirname( __FILE__ ) . '/reports/class-report.php';
 		global $wpdb;
-		$report     = new \EverAccounting_Admin_Report();
+		$report     = new \EverAccounting\Admin\Report\Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(
@@ -314,10 +341,14 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Render expense categories
+	 * @since 1.1.0
+	 */
 	public static function render_expenses_categories() {
-		require_once dirname( __FILE__ ) . '/reports/class-ea-admin-report.php';
+		require_once dirname( __FILE__ ) . '/reports/class-report.php';
 		global $wpdb;
-		$report     = new \EverAccounting_Admin_Report();
+		$report     = new \EverAccounting\Admin\Report\Report();
 		$start_date = $report->get_start_date();
 		$end_date   = $report->get_end_date();
 		$sql        = $wpdb->prepare(
@@ -403,7 +434,11 @@ class Dashboard {
 		</script>
 		<?php
 	}
-
+	
+	/**
+	 * Render latest income
+	 * @since 1.1.0
+	 */
 	public static function render_latest_incomes() {
 		global $wpdb;
 		$incomes = $wpdb->get_results(
@@ -452,6 +487,10 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Render latest expense
+	 * @since 1.1.0
+	 */
 	public static function render_latest_expenses() {
 		global $wpdb;
 		$expenses = $wpdb->get_results(
@@ -500,6 +539,10 @@ class Dashboard {
 		<?php
 	}
 
+	/**
+	 * Render account balances
+	 * @since 1.1.0
+	 */
 	public static function render_account_balances() {
 		global $wpdb;
 		$accounts = $wpdb->get_results(
