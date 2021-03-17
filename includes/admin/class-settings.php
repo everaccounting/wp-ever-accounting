@@ -744,7 +744,7 @@ class Settings {
 							$class      = 'error';
 							$messages[] = sprintf(
 								__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'wp-ever-accounting' ),
-								'https://wpeveraccounting.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+								'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 							);
 
 							$license_status = 'license-' . $class . '-notice';
@@ -758,7 +758,7 @@ class Settings {
 							$messages[] = sprintf(
 								__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'wp-ever-accounting' ),
 								$field['title'],
-								'https://wpeveraccounting.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+								'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
 							);
 
 							$license_status = 'license-' . $class . '-notice';
@@ -854,7 +854,7 @@ class Settings {
 						$class      = 'error';
 						$messages[] = sprintf(
 							__( 'Invalid license. Please <a href="%s" target="_blank">visit your account page</a> and verify it.', 'wp-ever-accounting' ),
-							'https://wpeveraccounting.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
+							'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=missing'
 						);
 
 						$license_status = 'license-' . $class . '-notice';
@@ -868,7 +868,7 @@ class Settings {
 						$messages[] = sprintf(
 							__( 'Your %s is not active for this URL. Please <a href="%s" target="_blank">visit your account page</a> to manage your license key URLs.', 'wp-ever-accounting' ),
 							$field['title'],
-							'https://wpeveraccounting.com/account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
+							'https://wpeveraccounting.com/my-account?utm_campaign=admin&utm_source=licenses&utm_medium=invalid'
 						);
 
 						$license_status = 'license-' . $class . '-notice';
