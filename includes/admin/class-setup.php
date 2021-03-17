@@ -302,19 +302,15 @@ class Setup_Wizard {
 
 		if ( ! empty( $_REQUEST['company_name'] ) ) {
 			eaccounting_update_option( 'company_name', eaccounting_clean( $_REQUEST['company_name'] ) );
-//			eaccounting()->settings->set( array( 'company_name' => eaccounting_clean( $_REQUEST['company_name'] ) ), true );
 		}
 		if ( ! empty( $_REQUEST['company_email'] ) ) {
 			eaccounting_update_option( 'company_email', eaccounting_clean( $_REQUEST['company_email'] ) );
-			//eaccounting()->settings->set( array( 'company_email' => eaccounting_clean( $_REQUEST['company_email'] ) ), true );
 		}
 		if ( ! empty( $_REQUEST['company_address'] ) ) {
 			eaccounting_update_option( 'company_address', eaccounting_clean( $_REQUEST['company_address'] ) );
-			//eaccounting()->settings->set( array( 'company_address' => eaccounting_clean( $_REQUEST['company_address'] ) ), true );
 		}
 		if ( ! empty( $_REQUEST['company_country'] ) ) {
 			eaccounting_update_option( 'company_country', eaccounting_clean( $_REQUEST['company_country'] ) );
-			//eaccounting()->settings->set( array( 'company_country' => eaccounting_clean( $_REQUEST['company_country'] ) ), true );
 		}
 
 		wp_redirect( esc_url_raw( $this->get_next_step_link() ) );
