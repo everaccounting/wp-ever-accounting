@@ -8,8 +8,6 @@
 
 namespace EverAccounting;
 
-use function EverAccounting\Admin\eaccounting_admin_notices;
-
 defined( 'ABSPATH' ) || exit();
 
 class Install {
@@ -23,7 +21,7 @@ class Install {
 		'1.0.2' => 'eaccounting_update_1_0_2',
 		'1.1.0' => 'eaccounting_update_1_1_0',
 	);
-
+	
 	/**
 	 * Initialize all hooks.
 	 *
@@ -35,29 +33,29 @@ class Install {
 		add_filter( 'plugin_row_meta', array( __CLASS__, 'plugin_row_meta' ), 10, 2 );
 		add_filter( 'wpmu_drop_tables', array( __CLASS__, 'wpmu_drop_tables' ) );
 		add_filter( 'cron_schedules', array( __CLASS__, 'cron_schedules' ) );
-		add_action( 'init', array( __CLASS__, 'background_updater') );
+		add_action( 'init', array( __CLASS__, 'background_updater' ) );
 	}
-
+	
 	/**
 	 * Check EverAccounting version and run the updater is required.
 	 * This check is done on all requests and runs if the versions do not match.
 	 *
+	 * @return void
 	 * @since 1.0.2
 	 *
-	 * @return void
 	 */
 	public static function check_version() {
 		// todo remove on later version.
 		if ( false === get_option( 'eaccounting_version' ) && ! empty( get_option( 'eaccounting_localisation' ) ) ) {
 			update_option( 'eaccounting_version', '1.0.1.1' );
 		}
-
+		
 		if ( version_compare( get_option( 'eaccounting_version' ), eaccounting()->get_version(), '<' ) ) {
 			self::maybe_update();
 			do_action( 'eaccounting_updated' );
 		}
 	}
-
+	
 	/**
 	 * Show action links on the plugin screen.
 	 *
@@ -69,15 +67,15 @@ class Install {
 		$action_links = array(
 			'settings' => '<a href="' . admin_url( 'admin.php?page=ea-settings' ) . '" aria-label="' . esc_attr__( 'View settings', 'wp-ever-accounting' ) . '">' . esc_html__( 'Settings', 'wp-ever-accounting' ) . '</a>',
 		);
-
+		
 		return array_merge( $action_links, $links );
 	}
-
+	
 	/**
 	 * Show row meta on the plugin screen.
 	 *
 	 * @param mixed $links Plugin Row Meta.
-	 * @param mixed $file  Plugin Base file.
+	 * @param mixed $file Plugin Base file.
 	 *
 	 * @return array
 	 */
@@ -85,15 +83,15 @@ class Install {
 		if ( EACCOUNTING_BASENAME !== $file ) {
 			return $links;
 		}
-
+		
 		$row_meta = array(
 			'docs' => '<a href="' . esc_url( apply_filters( 'eaccounting_docs_url', 'https://wpeveraccounting.com/docs/' ) ) . '" aria-label="' . esc_attr__( 'View documentation', 'wp-ever-accounting' ) . '">' . esc_html__( 'Docs', 'wp-ever-accounting' ) . '</a>',
 		);
-
+		
 		return array_merge( $links, $row_meta );
 	}
-
-
+	
+	
 	/**
 	 * Uninstall tables when MU blog is deleted.
 	 *
@@ -104,7 +102,7 @@ class Install {
 	public static function wpmu_drop_tables( $tables ) {
 		return array_merge( $tables, self::get_tables() );
 	}
-
+	
 	/**
 	 * Add more cron schedules.
 	 *
@@ -117,46 +115,46 @@ class Install {
 			'interval' => 2635200,
 			'display'  => __( 'Monthly', 'wp-ever-accounting' ),
 		);
-
+		
 		$schedules['fifteendays'] = array(
 			'interval' => 1296000,
 			'display'  => __( 'Every 15 Days', 'wp-ever-accounting' ),
 		);
-
+		
 		$schedules['weekly'] = array(
 			'interval' => 604800,
 			'display'  => __( 'Once Weekly', 'wp-ever-accounting' ),
 		);
-
+		
 		return $schedules;
 	}
-
+	
 	/**
 	 * Install EverAccounting.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function install() {
 		if ( ! is_blog_installed() ) {
 			return;
 		}
-
+		
 		// Check if we are not already running this routine.
 		if ( 'yes' === get_transient( 'eaccounting_installing' ) ) {
 			return;
 		}
-
+		
 		// If we made it till here nothing is running yet, lets set the transient now.
 		set_transient( 'eaccounting_installing', 'yes', MINUTE_IN_SECONDS * 1 );
 		eaccounting_maybe_define_constant( 'EACCOUNTING_INSTALLING', true );
-		require_once dirname( __FILE__ ) . '/admin/class-ea-admin-notices.php';
-		require_once dirname( __FILE__ ) . '/class-ea-settings.php';
-
+		require_once dirname( __FILE__ ) . '/admin/class-notices.php';
+		require_once dirname( __FILE__ ) . '/class-settings.php';
+		
 		if ( ! eaccounting()->settings ) {
 			eaccounting()->settings = new \EverAccounting\Settings();
 		}
-
+		
 		self::remove_admin_notices();
 		self::create_tables();
 		self::verify_base_tables();
@@ -168,13 +166,13 @@ class Install {
 		self::create_roles();
 		self::schedule_events();
 		self::maybe_enable_setup_wizard();
-
+		
 		eaccounting_protect_files( true );
 		flush_rewrite_rules();
 		delete_transient( 'eaccounting_installing' );
 		do_action( 'eaccounting_installed' );
 	}
-
+	
 	/**
 	 * Check if all the base tables are present.
 	 *
@@ -182,49 +180,50 @@ class Install {
 	 */
 	public static function verify_base_tables() {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-
+		
 		global $wpdb;
 		$missing_tables = array();
 		$tables         = self::get_tables();
+		$notices        = \EverAccounting\Admin\Notices::init();
 		foreach ( $tables as $table ) {
 			if ( ! $wpdb->get_var( "SHOW TABLES LIKE '$table'" ) ) {
 				$missing_tables[] = $table;
 			}
 		}
 		if ( 0 < count( $missing_tables ) ) {
-			eaccounting_admin_notices()->add_core_notice( 'tables_missing' );
+			$notices->add_core_notice( 'tables_missing' );
 		} else {
-			eaccounting_admin_notices()->remove_notice( 'tables_missing' );
+			$notices->remove_notice( 'tables_missing' );
 		}
-
+		
 		return $missing_tables;
 	}
-
+	
 	/**
 	 * Create default options.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_options() {
 		if ( empty( eaccounting_get_option( 'financial_year_start' ) ) ) {
-			eaccounting_update_option('financial_year_start','01-01');
+			eaccounting_update_option( 'financial_year_start', '01-01' );
 		}
 		if ( empty( eaccounting_get_option( 'default_payment_method' ) ) ) {
-			eaccounting_update_option('default_payment_method','cash');
+			eaccounting_update_option( 'default_payment_method', 'cash' );
 		}
-
+		
 		$installation_time = get_option( 'eaccounting_install_date' );
 		if ( empty( $installation_time ) ) {
 			update_option( 'eaccounting_install_date', time() );
 		}
 	}
-
+	
 	/**
 	 * Create categories.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_categories() {
 		// If no categories then create default categories
@@ -236,7 +235,7 @@ class Install {
 					'enabled' => '1',
 				)
 			);
-
+			
 			eaccounting_insert_category(
 				array(
 					'name'    => __( 'Other', 'wp-ever-accounting' ),
@@ -244,7 +243,7 @@ class Install {
 					'enabled' => '1',
 				)
 			);
-
+			
 			eaccounting_insert_category(
 				array(
 					'name'    => __( 'Sales', 'wp-ever-accounting' ),
@@ -253,7 +252,7 @@ class Install {
 				)
 			);
 		}
-
+		
 		// create transfer category
 		if ( ! eaccounting_get_currencies(
 			array(
@@ -273,31 +272,31 @@ class Install {
 			);
 		}
 	}
-
+	
 	/**
 	 * Create currencies.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_currencies() {
 		// create currencies
 		if ( ! eaccounting_get_currencies( array( 'count_total' => true ) ) ) {
-
+			
 			eaccounting_insert_currency(
 				array(
 					'code' => 'USD',
 					'rate' => '1',
 				)
 			);
-
+			
 			eaccounting_insert_currency(
 				array(
 					'code' => 'EUR',
 					'rate' => '1.25',
 				)
 			);
-
+			
 			eaccounting_insert_currency(
 				array(
 					'code' => 'GBP',
@@ -324,12 +323,12 @@ class Install {
 			);
 		}
 	}
-
+	
 	/**
 	 * Create accounts.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_accounts() {
 		if ( ! eaccounting_get_accounts( array( 'count_total' => true ) ) ) {
@@ -344,19 +343,19 @@ class Install {
 			);
 		}
 	}
-
+	
 	/**
 	 * Create default data.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function create_defaults() {
 		if ( empty( eaccounting_get_option( 'default_account' ) ) ) {
 			$accounts = eaccounting_get_accounts();
 			if ( ! empty( $accounts ) ) {
 				$account = array_pop( $accounts );
-				eaccounting_update_option('default_account', $account->get_id());
+				eaccounting_update_option( 'default_account', $account->get_id() );
 			}
 		}
 		if ( empty( eaccounting_get_option( 'default_currency' ) ) ) {
@@ -366,9 +365,9 @@ class Install {
 			if ( in_array( 'USD', $currencies, true ) ) {
 				$currency = 'USD';
 			}
-			eaccounting_update_option('default_currency', $currency);
+			eaccounting_update_option( 'default_currency', $currency );
 		}
-
+		
 		$defaults = array(
 			'default_payment_method' => 'cash',
 			'financial_year_start'   => '01-01',
@@ -387,25 +386,25 @@ class Install {
 			'bill_price_label'       => __( 'Price', 'wp-ever-accounting' ),
 			'bill_quantity_label'    => __( 'Quantity', 'wp-ever-accounting' ),
 		);
-
+		
 		foreach ( $defaults as $key => $value ) {
-			if ( empty(eaccounting_get_option( $key ) ) ) {
-				eaccounting_update_option($key, $value);
+			if ( empty( eaccounting_get_option( $key ) ) ) {
+				eaccounting_update_option( $key, $value );
 			}
 		}
 	}
-
+	
 	/**
 	 * Reset any notices added to admin.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function remove_admin_notices() {
 		update_option( 'eaccounting_notices', array() );
 	}
-
-
+	
+	
 	/**
 	 * Get Table schema.
 	 *
@@ -415,13 +414,13 @@ class Install {
 	 */
 	public static function create_tables() {
 		global $wpdb;
-
+		
 		$wpdb->hide_errors();
-
+		
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		$max_index_length = 191;
 		$collate          = $wpdb->get_charset_collate();
-
+		
 		$tables = array(
 			"CREATE TABLE {$wpdb->prefix}ea_accounts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
@@ -442,7 +441,7 @@ class Install {
 		    UNIQUE KEY (`number`),
 		    UNIQUE KEY (`name`, `number`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_categories(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   		  	`name` VARCHAR(191) NOT NULL,
@@ -455,7 +454,7 @@ class Install {
 		    KEY `enabled` (`enabled`),
 		    UNIQUE KEY (`name`, `type`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_contacts(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `user_id` INT(11) DEFAULT NULL,
@@ -485,7 +484,7 @@ class Install {
 		    KEY `enabled`(`enabled`),
 		    KEY `type`(`type`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_contactmeta(
 			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
 			`contact_id` bigint(20) unsigned NOT NULL default '0',
@@ -495,7 +494,7 @@ class Install {
 		    KEY `contact_id`(`contact_id`),
 			KEY `meta_key` (meta_key($max_index_length))
 			) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_transactions(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `type` VARCHAR(100) DEFAULT NULL,
@@ -525,7 +524,7 @@ class Install {
 		    KEY `category_id` (`category_id`),
 		    KEY `contact_id` (`contact_id`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_transfers(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`income_id` INT(11) NOT NULL,
@@ -536,7 +535,7 @@ class Install {
 		    KEY `income_id` (`income_id`),
 		    KEY `expense_id` (`expense_id`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_documents(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `document_number` VARCHAR(100) NOT NULL,
@@ -578,7 +577,7 @@ class Install {
 		    KEY `currency_rate` (`currency_rate`),
 		    UNIQUE KEY (`document_number`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_document_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`document_id` INT(11) DEFAULT NULL,
@@ -598,7 +597,7 @@ class Install {
 		    KEY `document_id` (`document_id`),
 		    KEY `item_id` (`item_id`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_notes(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`parent_id` INT(11) NOT NULL,
@@ -611,7 +610,7 @@ class Install {
 		    KEY `parent_id` (`parent_id`),
 		    KEY `type` (`type`)
             ) $collate",
-
+			
 			"CREATE TABLE {$wpdb->prefix}ea_items(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
             `name` VARCHAR(191) NOT NULL,
@@ -634,12 +633,12 @@ class Install {
 		    KEY `quantity` (`quantity`)
             ) $collate",
 		);
-
+		
 		foreach ( $tables as $table ) {
 			dbDelta( $table );
 		}
 	}
-
+	
 	/**
 	 * Return a list of EverAccounting tables.
 	 * Used to make sure all EverAccounting tables are dropped when uninstalling the plugin
@@ -649,7 +648,7 @@ class Install {
 	 */
 	public static function get_tables() {
 		global $wpdb;
-
+		
 		$tables = array(
 			"{$wpdb->prefix}ea_accounts",
 			"{$wpdb->prefix}ea_categories",
@@ -662,12 +661,12 @@ class Install {
 			"{$wpdb->prefix}ea_notes",
 			"{$wpdb->prefix}ea_items",
 		);
-
+		
 		$tables = apply_filters( 'eaccounting_install_get_tables', $tables );
-
+		
 		return $tables;
 	}
-
+	
 	/**
 	 * Drop EverAccounting tables.
 	 *
@@ -675,32 +674,32 @@ class Install {
 	 */
 	public static function drop_tables() {
 		global $wpdb;
-
+		
 		$tables = self::get_tables();
-
+		
 		foreach ( $tables as $table ) {
 			$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
 		}
 	}
-
+	
 	/**
 	 * Create roles and capabilities.
 	 */
 	public static function create_roles() {
 		global $wp_roles;
-
+		
 		if ( ! class_exists( 'WP_Roles' ) ) {
 			return;
 		}
-
+		
 		if ( ! isset( $wp_roles ) ) {
-			$wp_roles = new WP_Roles();
+			$wp_roles = new \WP_Roles();
 		}
-
+		
 		// Dummy gettext calls to get strings in the catalog.
 		_x( 'Accounting Manager', 'User role', 'wp-ever-accounting' );
 		_x( 'Accountant', 'User role', 'wp-ever-accounting' );
-
+		
 		// Accountant role.
 		add_role(
 			'ea_accountant',
@@ -721,7 +720,7 @@ class Install {
 				'read'               => true,
 			)
 		);
-
+		
 		// Accounting manager role.
 		add_role(
 			'ea_manager',
@@ -746,10 +745,10 @@ class Install {
 				'read'               => true,
 			)
 		);
-
+		
 		// add caps to admin
 		global $wp_roles;
-
+		
 		if ( is_object( $wp_roles ) ) {
 			$wp_roles->add_cap( 'administrator', 'manage_eaccounting' );
 			$wp_roles->add_cap( 'administrator', 'ea_manage_report' );
@@ -769,45 +768,45 @@ class Install {
 			$wp_roles->add_cap( 'administrator', 'ea_manage_bill' );
 		}
 	}
-
+	
 	/**
 	 * Remove EverAccounting roles.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function remove_roles() {
 		global $wp_roles;
-
+		
 		if ( ! class_exists( 'WP_Roles' ) ) {
 			return;
 		}
-
+		
 		if ( ! isset( $wp_roles ) ) {
-			$wp_roles = new WP_Roles();
+			$wp_roles = new \WP_Roles();
 		}
-
+		
 		remove_role( 'ea_accountant' );
 		remove_role( 'ea_manager' );
 	}
-
-
+	
+	
 	/**
 	 * Create cron jobs (clear them first).
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	public static function schedule_events() {
 		wp_clear_scheduled_hook( 'eaccounting_twicedaily_scheduled_events' );
 		wp_clear_scheduled_hook( 'eaccounting_daily_scheduled_events' );
 		wp_clear_scheduled_hook( 'eaccounting_weekly_scheduled_events' );
-
+		
 		wp_schedule_event( time() + ( 6 * HOUR_IN_SECONDS ), 'twicedaily', 'eaccounting_twicedaily_scheduled_events' );
 		wp_schedule_event( time() + 10, 'daily', 'eaccounting_daily_scheduled_events' );
 		wp_schedule_event( time() + ( 3 * HOUR_IN_SECONDS ), 'weekly', 'eaccounting_weekly_scheduled_events' );
 	}
-
+	
 	/**
 	 * See if we need the wizard or not.
 	 *
@@ -819,12 +818,12 @@ class Install {
 			set_transient( '_eaccounting_activation_redirect', 1, 30 );
 		}
 	}
-
+	
 	/**
 	 * See if we need to show or run database updates during install.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function maybe_update() {
 		if ( self::needs_update() ) {
@@ -833,32 +832,32 @@ class Install {
 			self::update_version();
 		}
 	}
-
+	
 	/**
 	 * Is an update needed?
 	 *
-	 * @since  1.0.2
 	 * @return boolean
+	 * @since  1.0.2
 	 */
 	public static function needs_update() {
 		$current_version = get_option( 'eaccounting_version', null );
 		$updates         = self::$updates;
 		$update_versions = array_keys( $updates );
 		usort( $update_versions, 'version_compare' );
-
+		
 		return ! is_null( $current_version ) && version_compare( $current_version, end( $update_versions ), '<' );
 	}
-
+	
 	/**
 	 * Push all needed updates to the queue for processing.
 	 *
-	 * @since 1.0.2
 	 * @return void
+	 * @since 1.0.2
 	 */
 	private static function update() {
 		$current_version = get_option( 'eaccounting_version' );
 		foreach ( self::$updates as $version => $update_callbacks ) {
-
+			
 			if ( version_compare( $current_version, $version, '<' ) ) {
 				if ( is_array( $update_callbacks ) ) {
 					array_map( array( __CLASS__, 'run_update_callback' ), $update_callbacks );
@@ -869,13 +868,13 @@ class Install {
 			}
 		}
 	}
-
+	
 	/**
 	 * Run an update callback.
 	 *
-	 * @since 1.0.2
-	 *
 	 * @param string $callback Callback name.
+	 *
+	 * @since 1.0.2
 	 *
 	 */
 	public static function run_update_callback( $callback ) {
@@ -885,43 +884,44 @@ class Install {
 			call_user_func( $callback );
 		}
 	}
-
+	
 	/**
 	 * Update version to current.
 	 *
+	 * @param string|null $version New version or null.
+	 *
 	 * @since 1.1.0
 	 *
-	 * @param string|null $version New version or null.
 	 */
 	public static function update_version( $version = null ) {
 		update_option( 'eaccounting_version', is_null( $version ) ? eaccounting()->version : $version );
 	}
-
+	
 	/**
 	 * Is this a brand new install?
 	 *
 	 * A brand new install has no version yet. Also treat empty installs as 'new'.
 	 *
-	 * @since  1.0.2
 	 * @return boolean
+	 * @since  1.0.2
 	 */
 	public static function is_new_install() {
 		$transaction_count = eaccounting_get_transactions( array( 'count_total' => true ) );
-
+		
 		return is_null( get_option( 'eaccounting_version', null ) ) || ( 0 === $transaction_count );
 	}
-
+	
 	/**
 	 * Handle background updates.
 	 * @since 1.1.0
 	 */
-	public static function background_updater(){
+	public static function background_updater() {
 		include_once EACCOUNTING_ABSPATH . '/includes/ea-update-functions.php';
 		$updaters = get_option( 'eaccounting_background_updater', array() );
-
-		if( is_array( $updaters ) && !empty( $updaters )){
-			foreach ( $updaters as $updater){
-				if( !is_callable( $updater ) ){
+		
+		if ( is_array( $updaters ) && ! empty( $updaters ) ) {
+			foreach ( $updaters as $updater ) {
+				if ( ! is_callable( $updater ) ) {
 					continue;
 				}
 				$updater();
