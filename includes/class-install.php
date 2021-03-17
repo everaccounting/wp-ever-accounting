@@ -8,6 +8,8 @@
 
 namespace EverAccounting;
 
+use function EverAccounting\Admin\eaccounting_admin_notices;
+
 defined( 'ABSPATH' ) || exit();
 
 class Install {
@@ -152,7 +154,7 @@ class Install {
 		require_once dirname( __FILE__ ) . '/class-ea-settings.php';
 
 		if ( ! eaccounting()->settings ) {
-			eaccounting()->settings = new \EverAccounting_Settings();
+			eaccounting()->settings = new \EverAccounting\Settings();
 		}
 
 		self::remove_admin_notices();
