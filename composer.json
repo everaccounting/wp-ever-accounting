@@ -57,10 +57,7 @@
 	}
   },
   "autoload": {
-	"psr-4": {
-	  "EverAccounting\\": "src/"
-	},
-    "classmap": ["src/", "includes/"],
+    "classmap": ["includes/"],
 	"files": [
 
 	]
