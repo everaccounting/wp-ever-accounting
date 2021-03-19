@@ -21,6 +21,8 @@ wp_clear_scheduled_hook( 'eaccounting_weekly_scheduled_events' );
  * and to ensure only the site owner can perform this action.
  */
 if ( defined( 'EACCOUNTING_REMOVE_ALL_DATA' ) && true === EACCOUNTING_REMOVE_ALL_DATA ) {
+	global $wpdb;
+
 	// Roles.
 	\EverAccounting\Install::remove_roles();
 

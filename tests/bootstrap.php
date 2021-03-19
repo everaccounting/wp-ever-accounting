@@ -23,9 +23,7 @@ echo "Installing WP Ever Accounting...\n";
 // Install WP Ever Accounting
 \EverAccounting\Install::install();
 
-global $current_user, $edd_options;
-
-$edd_options = get_option( 'edd_settings' );
+global $current_user;
 
 $current_user = new WP_User( 1 );
 $current_user->set_role( 'administrator' );
