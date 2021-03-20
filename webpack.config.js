@@ -1,228 +1,179 @@
-const path                              = require( 'path' );
-const chalk                             = require( 'chalk' );
-const webpack                           = require( 'webpack' );
-const pkg                               = require( './package.json' );
-const { get }                           = require( 'lodash' );
-const TerserPlugin                      = require( 'terser-webpack-plugin' );
-const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
-const ProgressBarPlugin                 = require( 'progress-bar-webpack-plugin' );
-const FixStyleOnlyEntriesPlugin         = require( 'webpack-fix-style-only-entries' );
-const CustomTemplatedPathPlugin         = require( '@wordpress/custom-templated-path-webpack-plugin' );
-const DuplicatePackageCheckerPlugin     = require( 'duplicate-package-checker-webpack-plugin' );
-const WebpackRTLPlugin 					= require( 'webpack-rtl-plugin' );
-const MomentTimezoneDataPlugin 			= require( 'moment-timezone-data-webpack-plugin' );
-const postcssPresetEnv     				= require( 'postcss-preset-env' );
-const postcssFocus         				= require( 'postcss-focus' );
-const postcssReporter      				= require( 'postcss-reporter' );
-const MiniCssExtractPlugin 				= require( 'mini-css-extract-plugin' );
-const NODE_ENV 							= process.env.NODE_ENV || 'development';
-const suffix 							= NODE_ENV === 'production' ? '.min' : '';
+/**
+ * External dependencies
+ */
+const path = require( 'path' );
+const WebpackBar = require( 'webpackbar' );
+// eslint-disable-next-line import/no-extraneous-dependencies
+const TerserPlugin = require( 'terser-webpack-plugin' );
+const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
+// eslint-disable-next-line import/no-extraneous-dependencies
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+const ImageminPlugin = require( 'imagemin-webpack-plugin' ).default;
+const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
+const ESLintPlugin = require( 'eslint-webpack-plugin' );
+const StyleLintPlugin = require( 'stylelint-webpack-plugin' );
 
+/**
+ * WordPress dependencies
+ */
+const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
+/**
+ * Internal dependencies
+ */
+const pkg = require( './package.json' );
 
-const externals   = [];
-const entryPoints = {};
-const packages 	  = ['components', 'data'];
-packages.forEach( (name) => {
-    externals[`@eaccounting/${name}`] = {
-    	this: [
-			'eaccounting',
-			name.replace( /-([a-z])/g, ( match, letter ) =>letter.toUpperCase() ),
-		]
-    };
-    entryPoints[name] = `./client/${name}`;
-});
+const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
-	mode: NODE_ENV,
+	...defaultConfig,
 	entry: {
-		invoice: './client/invoice',
-		...entryPoints,
+		'ea-admin': './assets/js/admin/ea-admin.js',
 	},
 	output: {
-		filename: `[name].js`,
-		path: path.resolve( __dirname, 'assets/dist'),
-		library: ['eaccounting', '[modulename]'],
-		libraryTarget: 'this',
-		jsonpFunction: '__eaccounting_webpackJsonp',
+		...defaultConfig.output,
+		path: path.resolve( process.cwd(), 'dist' ),
 	},
-	externals,
-	resolve: {
-		extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
-		alias:{'@eaccounting': path.resolve(__dirname, 'client')},
-		modules: [path.resolve(__dirname, 'client'),  'node_modules'],
+	// Build rules to handle asset files.
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				default: false,
+			},
+		},
+		minimizer: [
+			isProduction &&
+				new TerserPlugin( {
+					cache: true,
+					parallel: true,
+					sourceMap: false,
+					terserOptions: {
+						parse: {
+							// We want terser to parse ecma 8 code. However, we don't want it
+							// to apply any minfication steps that turns valid ecma 5 code
+							// into invalid ecma 5 code. This is why the 'compress' and 'output'
+							// sections only apply transformations that are ecma 5 safe
+							// https://github.com/facebook/create-react-app/pull/4234
+							ecma: 8,
+						},
+						compress: {
+							ecma: 5,
+							warnings: false,
+							// Disabled because of an issue with Uglify breaking seemingly valid code:
+							// https://github.com/facebook/create-react-app/issues/2376
+							// Pending further investigation:
+							// https://github.com/mishoo/UglifyJS2/issues/2011
+							comparisons: false,
+							// Disabled because of an issue with Terser breaking valid code:
+							// https://github.com/facebook/create-react-app/issues/5250
+							// Pending futher investigation:
+							// https://github.com/terser-js/terser/issues/120
+							inline: 2,
+						},
+						output: {
+							ecma: 5,
+							comments: false,
+						},
+						ie8: false,
+					},
+				} ),
+		].filter( Boolean ),
 	},
 	module: {
 		rules: [
+			// Lint JS.
 			{
-				parser: {
-					amd: false,
+				test: /\.js$/,
+				enforce: 'pre',
+				loader: 'eslint-loader',
+				options: {
+					fix: true,
 				},
 			},
-			{
-				test: /\.(js|jsx)$/,
-				loader: 'babel-loader',
-				exclude: /node_modules/,
-			},
-			{
-				test: /\.s?css$/,
-				exclude: /node_modules/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					'css-loader',
-					{
-						loader: 'postcss-loader',
-						options: {
-							config: {
-								path: 'postcss.config.js',
-							},
-						},
-					},
-					{
-						loader: 'sass-loader',
-					},
-				],
-			},
-			{
-				test: /\.(?:gif|jpg|jpeg|png|svg)$/,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							emitFile: true, // On the server side, don't actually copy files
-							name: '[name].[ext]',
-							outputPath: '/assets/dist',
-						},
-					},
-				],
-			},
-			{
-				test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-				use: [
-					{
-						loader: 'file-loader',
-						options: {
-							name: '[name].[ext]',
-							outputPath: '/assets/dist/',
-						},
-					},
-				],
-			},
-			{
-				test: /\.svg$/,
-				use: ['@svgr/webpack', 'url-loader'],
-			},
-		],
+			...defaultConfig.module.rules,
+		].filter( Boolean ),
 	},
 	plugins: [
-		new ProgressBarPlugin({
-			format:
-				chalk.blue('Build core script') +
-				' [:bar] ' +
-				chalk.green(':percent') +
-				' :msg (:elapsed seconds)',
-		}),
-		new DependencyExtractionWebpackPlugin({
-			injectPolyfill: true,
-			requestToExternal: (request) => {
-				if ( externals[ request ] ) {
-					return externals[ request ]["this"];
-				}
-			},
-			requestToHandle: (request) => {
-				if ( externals[ request ] ) {
-					return request.replace('@eaccounting/', 'ea-');
-				}
-			}
-		}),
-		new WebpackRTLPlugin( {
-			minify: {
-				safe: true,
-			},
-		} ),
-		new webpack.BannerPlugin('WP Ever Accounting v' + pkg.version),
-		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: JSON.stringify(
-					process.env.NODE_ENV || 'development'
-				),
-			},
-			EACCOUNTING_VERSION: "'" + pkg.version + "'",
-		}),
-		new FixStyleOnlyEntriesPlugin(),
-		new CustomTemplatedPathPlugin({
-			modulename(outputPath, data) {
-				const entryName = get(data, ['chunk', 'name']);
-				if (entryName) {
-					return entryName.replace(/-([a-z])/g, (match, letter) =>
-						letter.toUpperCase()
-					);
-				}
-				return outputPath;
-			},
-		}),
-		new MomentTimezoneDataPlugin( {
-			startYear: 2000, // This strips out timezone data before the year 2000 to make a smaller file.
-		} ),
-		new DuplicatePackageCheckerPlugin(),
-		new webpack.LoaderOptionsPlugin({
-			options: {
-				postcss: [
-					postcssFocus(),
-					postcssPresetEnv({
-						browsers: ['last 2 versions', 'IE > 10'],
-					}),
-					postcssReporter({
-						clearMessages: true,
-					}),
-				],
-			},
-			output: {
-				path: path.join(__dirname),
-			},
-		}),
-		new MiniCssExtractPlugin({
+		...defaultConfig.plugins
+			.filter(
+				( plugin ) => plugin.constructor.name !== 'LiveReloadPlugin'
+			)
+			.filter(
+				( plugin ) =>
+					plugin.constructor.name !== 'FixStyleOnlyEntriesPlugin'
+			),
+		// MiniCSSExtractPlugin to extract the CSS thats gets imported into JavaScript.
+		new MiniCssExtractPlugin( {
+			esModule: false,
 			filename: '[name].css',
-			chunkFilename: '[id].style.css',
-			rtlEnabled: true,
-		}),
-	],
+			chunkFilename: '[id].css',
+		} ),
+
+		// MiniCSSExtractPlugin creates JavaScript assets for CSS that are
+		// obsolete and should be removed. Related webpack issue:
+		// https://github.com/webpack-contrib/mini-css-extract-plugin/issues/85
+		new FixStyleOnlyEntriesPlugin( {
+			silent: true,
+		} ),
+
+		// Compress images
+		// Must happen after CopyWebpackPlugin
+		new ImageminPlugin( {
+			disable: ! isProduction,
+			test: /\.(jpe?g|png|gif|svg)$/i,
+		} ),
+
+		! isProduction &&
+			new BrowserSyncPlugin(
+				{
+					host: 'localhost',
+					port: 3000,
+					proxy: pkg.localhost,
+					open: false,
+					files: [
+						'**/*.php',
+						'dist/js/**/*.js',
+						'dist/css/**/*.css',
+						'dist/svg/**/*.svg',
+						'dist/images/**/*.{jpg,jpeg,png,gif}',
+						'dist/fonts/**/*.{eot,ttf,woff,woff2,svg}',
+					],
+				},
+				{
+					injectCss: true,
+					reload: false,
+				}
+			),
+
+		// Lint CSS.
+		// ! isProduction &&
+		// 	new StyleLintPlugin( {
+		// 		context: path.resolve( process.cwd(), './assets/css/' ),
+		// 		fix: true,
+		// 		files: '**/**/*.scss',
+		// 		quiet: true,
+		// 	} ),
+
+		// Fancy WebpackBar.
+		new WebpackBar(),
+	].filter( Boolean ),
 	stats: {
+		// Copied from `'minimal'`.
 		all: false,
-		assets: true,
-		builtAt: true,
-		colors: true,
 		errors: true,
-		hash: true,
-		timings: true,
+		maxModules: 0,
+		modules: true,
+		warnings: true,
+		// Our additional options.
+		assets: true,
+		errorDetails: true,
+		excludeAssets: /\.(jpe?g|png|gif|svg|woff|woff2)$/i,
+		moduleTrace: true,
+		performance: true,
 	},
-	optimization: {
-		minimize: NODE_ENV !== 'development',
-		minimizer: [ new TerserPlugin() ],
-		splitChunks: {
-			name: false,
-		},
-	},
-	watchOptions: {
-		ignored: [/node_modules/],
-	},
+	// Performance settings.
 	performance: {
-		hints: false,
+		maxAssetSize: 100000,
 	},
-	watch: true,
 };
 
-if (NODE_ENV !== 'development') {
-	config.plugins.push(
-		new webpack.LoaderOptionsPlugin({minimize: true})
-	);
-	config.module.rules.push({
-		test: /\.js$/,
-		loader: 'webpack-remove-debug',
-		exclude: /node_modules/,
-	});
-}
-
-if (config.mode !== 'production') {
-	config.devtool = process.env.SOURCEMAP || 'inline-source-map';
-}
 module.exports = config;

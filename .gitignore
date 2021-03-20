@@ -1,38 +1,30 @@
 node_modules
-wpcs
-.config.json
-/.vscode
+bower_components
+release
+vendor
 .idea
-/dist
-/yarn-error.log
-/api-doc
-/assets/js/bundle.js
-/assets/js/bundle.js.map
 
-/assets/css/ever-accounting.css
-/assets/js/ever-crm.css.map
-.DS_Store
-package-lock.json
-
+# Project Files
 dist
 build
-build-module
-build-style
-languages/*
-!languages/README.md
-wp-ever-accounting.zip
+backstop_data
 
-# Directories/files that may appear in your environment
+# Editors
+*.esproj
+*.tmproj
+*.tmproject
+tmtags
+.*.sw[a-z]
+*.un~
+Session.vim
+*.swp
+
+# Mac OSX
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
 Thumbs.db
-wp-cli.local.yml
-*.sql
-*.tar.gz
-*.tgz
-*.zip
-.idea
-.vscode/
-
-# Composer
-/vendor/
-
+Desktop.ini
