@@ -103,21 +103,17 @@
   "lint-staged": {
     "*.php": [
       "php -d display_errors=1 -l",
-      "./vendor/bin/phpcs --extensions=php --warning-severity=8 -s",
-      "git add"
+      "./vendor/bin/phpcs --extensions=php --warning-severity=8 -s"
     ],
     "*.scss": [
-      "stylelint --syntax=scss --fix",
-      "git add"
+      "stylelint --syntax=scss --fix"
     ],
     "*.{js,jsx}": [
       "wp-scripts format-js",
-      "wp-scripts lint-js",
-      "git add"
+      "wp-scripts lint-js"
     ],
     "*.js": [
-      "eslint --fix",
-      "git add"
+      "eslint --fix"
     ]
   },
   "files": [
