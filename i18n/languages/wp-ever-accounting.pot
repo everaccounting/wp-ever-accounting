@@ -5405,3 +5405,20 @@ msgstr ""
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
+
+
+
+
+#: assets/js/admin/ea-admin.js:9
+#: assets/js/admin/ea-react.js:19
+#: assets/js/admin/ea-react.js:19
+#: assets/js/admin/ea-react.js:19
+#: assets/js/admin/ea-react.js:21
+#: assets/js/admin/ea-react.js:21
+#: assets/js/admin/ea-react.js:23
+#: assets/js/admin/ea-react.js:23
+msgid ""
+"Hello World!, I am assets->frontend->frontend.js file. Remove me to get "
+"started"
+msgstr ""
+

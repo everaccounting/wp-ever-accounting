@@ -967,7 +967,7 @@ class Settings {
 				   value="<?php esc_attr_e( 'Activate', 'wp-ever-accounting' ) ?>"/>
 		<?php } else { ?>
 			<input type="submit" name="submit" id="submit" class="button button-primary"
-				   value="<?php esc_attr_e( 'Re-Activate', 'w-ever-accounting' ) ?>"/>
+				   value="<?php esc_attr_e( 'Re-Activate', 'wp-ever-accounting' ) ?>"/>
 		<?php }
 
 		if ( ! empty( $messages ) ) {

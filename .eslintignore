@@ -1,6 +1,4 @@
-assets/js/vendor
-assets/js/admin/vendor
-assets/js/frontend/vendor
-assets/js/shared/vendor
+assets/js/admin
+assets/js/admin
 webpack.config.babel.js
 tests

@@ -11,6 +11,7 @@ const eslintConfig = {
 				ignore: [ '^@wordpress/' ],
 			},
 		],
+		'import/no-extraneous-dependencies': 0,
 		'no-console': 0,
 	},
 	globals: {
@@ -21,7 +22,8 @@ const eslintConfig = {
 		module: true,
 		process: true,
 		window: true,
-		eaccounting_addon_i18n: true,
+		eaccounting: true,
+		eaccounting_i18n: true,
 	},
 };
 
