@@ -4,7 +4,7 @@
  * @param {Object} api The bable API
  * @return {{presets: {Object}}} The babel configuration.
  */
-module.exports = (api) => {
+module.exports = ( api ) => {
 	/**
 	 * @see https://babeljs.io/docs/en/config-files#apicache
 	 */
@@ -45,7 +45,7 @@ module.exports = (api) => {
 				[
 					'@wordpress/babel-plugin-makepot',
 					{
-						output: 'i18n/languages/wp-ever-accounting.po',
+						output: 'languages/wp-ever-accounting.po',
 					},
 				],
 			],

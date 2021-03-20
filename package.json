@@ -77,7 +77,7 @@
     "postrelease": "grunt zip",
     "i18n": "npm run -s i18n:pot && npm run -s i18n:build",
     "i18n:pot": "grunt i18n",
-    "i18n:build": "php bin/combine-pot-files.php i18n/languages/wp-ever-accounting.po i18n/languages/wp-ever-accounting.pot",
+    "i18n:build": "php bin/combine-pot-files.php languages/wp-ever-accounting.po languages/wp-ever-accounting.pot",
     "lint": "npm run lint:js && npm run lint:css && npm run && npm run lint:php",
     "lint:js": "wp-scripts lint-js  --fix",
     "lint:css": "wp-scripts lint-style --fix",
