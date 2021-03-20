@@ -24,8 +24,8 @@ class Assets {
 	 * @version 1.0.2
 	 */
 	public function __construct() {
-//		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
-//		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
 	}
 
 	/**
@@ -38,9 +38,9 @@ class Assets {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
 		// Register admin styles.
-		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
-		wp_register_style( 'ea-release-styles', eaccounting()->plugin_url() . '/assets/css/release.css', array(), $version );
-		wp_register_style( 'jquery-ui-style', eaccounting()->plugin_url() . '/assets/css/jquery-ui/jquery-ui.min.css', array(), $version );
+		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/dist/css/admin.min.css', array(), $version );
+		wp_register_style( 'ea-release-styles', eaccounting()->plugin_url() . '/dist/css/release.min.css', array(), $version );
+		wp_register_style( 'jquery-ui-style', eaccounting()->plugin_url() . '/dist/css/jquery-ui.min.css', array(), $version );
 
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-admin-styles', 'rtl', 'replace' );
@@ -67,27 +67,27 @@ class Assets {
 		$version = eaccounting()->get_version();
 
 		// 3rd parties
-		wp_register_script( 'jquery-blockui', eaccounting()->plugin_url( '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js' ), array( 'jquery' ), '2.70', true );
+		wp_register_script( 'jquery-blockui', eaccounting()->plugin_url( '/dist/js/jquery.blockUI' . $suffix . '.js' ), array( 'jquery' ), '2.70', true );
 		//wp_register_script( 'jquery-tiptip', eaccounting()->plugin_url( '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js' ), array( 'jquery' ), $version, true );
-		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/assets/js/select2/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url( '/assets/js/inputmask/jquery.inputmask' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
-		wp_register_script( 'jquery-chartjs', eaccounting()->plugin_url( '/assets/js/chartjs/chart.bundle' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
-		wp_register_script( 'jquery-chartjs-labels', eaccounting()->plugin_url( '/assets/js/chartjs/chartjs-plugin-labels' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
-		wp_register_script( 'ea-print', eaccounting()->plugin_url( '/assets/js/printjs/printThis' . $suffix . '.js' ), array( 'jquery' ), $version, true );
+		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/dist/js/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'jquery-inputmask', eaccounting()->plugin_url( '/dist/js/jquery.inputmask' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
+		wp_register_script( 'jquery-chartjs', eaccounting()->plugin_url( '/dist/js/chart.bundle' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
+		wp_register_script( 'jquery-chartjs-labels', eaccounting()->plugin_url( '/dist/js/chartjs-plugin-labels' . $suffix . '.js' ), array( 'jquery' ), '1.0.2' );
+		wp_register_script( 'ea-print', eaccounting()->plugin_url( '/dist/js/printThis' . $suffix . '.js' ), array( 'jquery' ), $version, true );
 
 		// core plugins
-		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
-		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-creatable' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
-		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-modal' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-form', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-form' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-exporter', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-exporter' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-importer' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/dist/js/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
+		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/dist/js/ea-creatable' . $suffix . '.js' ), array( 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ), $version );
+		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/dist/js/ea-modal' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-form', eaccounting()->plugin_url( '/dist/js/ea-form' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-exporter', eaccounting()->plugin_url( '/dist/js/ea-exporter' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/dist/js/ea-importer' . $suffix . '.js' ), array( 'jquery' ), $version );
 
 		// core script
-		wp_register_script( 'ea-helper', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-helper' . $suffix . '.js' ), array( 'jquery', 'jquery-blockui' ), $version );
-		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-overview' . $suffix . '.js' ), array( 'jquery', 'jquery-daterange', 'jquery-chartjs' ), $version );
-		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-settings' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-helper', eaccounting()->plugin_url( '/dist/js/ea-helper' . $suffix . '.js' ), array( 'jquery', 'jquery-blockui' ), $version );
+		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/dist/js/ea-overview' . $suffix . '.js' ), array( 'jquery', 'jquery-daterange', 'jquery-chartjs' ), $version );
+		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/dist/js/ea-settings' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/dist/js/ea-admin' . $suffix . '.js' ), array( 'jquery' ), $version );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {

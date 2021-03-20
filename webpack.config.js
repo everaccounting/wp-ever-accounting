@@ -17,7 +17,7 @@ const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
  * Internal dependencies
  */
 const pkg = require( './package.json' );
-const { get } = require( 'lodash' );
+const { get, find } = require( 'lodash' );
 
 /**
  * WordPress dependencies
@@ -40,6 +40,7 @@ const config = {
 		public: './assets/css/public.scss',
 		release: './assets/css/release.scss',
 		setup: './assets/css/setup.scss',
+		'jquery-ui': './assets/css/jquery-ui/jquery-ui.css',
 		...glob.sync( './assets/js/admin/*.js' ).reduce( ( memo, filepath ) => {
 			memo[ path.parse( filepath ).name ] = filepath;
 			return memo;
@@ -56,6 +57,7 @@ const config = {
 	output: {
 		...defaultConfig.output,
 		filename: 'js/[name].js',
+		chunkFilename: `js/chunks/[name].js`,
 		library: [ 'eaccounting', '[modulename]' ],
 		libraryTarget: 'this',
 		path: path.resolve( process.cwd(), 'dist' ),
@@ -73,6 +75,11 @@ const config = {
 	},
 	module: {
 		rules: [
+			{
+				parser: {
+					amd: false,
+				},
+			},
 			// Lint JS.
 			{
 				test: /\.js$/,
@@ -82,7 +89,51 @@ const config = {
 					fix: true,
 				},
 			},
-			...defaultConfig.module.rules,
+			{
+				test: /\.jsx?$/,
+				exclude: /node_modules/,
+				use: [
+					require.resolve( 'thread-loader' ),
+					{
+						loader: require.resolve( 'babel-loader' ),
+						options: {
+							// Babel uses a directory within local node_modules
+							// by default. Use the environment variable option
+							// to enable more persistent caching.
+							cacheDirectory:
+								process.env.BABEL_CACHE_DIRECTORY || true,
+						},
+					},
+				],
+			},
+			{
+				test: /\.s?css$/,
+				use: [
+					{
+						loader: MiniCSSExtractPlugin.loader,
+					},
+					{
+						loader: require.resolve( 'css-loader' ),
+						options: {
+							sourceMap: ! isProduction,
+							url: false,
+						},
+					},
+					{
+						loader: require.resolve( 'postcss-loader' ),
+					},
+					{
+						loader: require.resolve( 'sass-loader' ),
+						options: {
+							sourceMap: ! isProduction,
+						},
+					},
+				],
+			},
+			{
+				test: /\.svg$/,
+				use: [ '@svgr/webpack', 'url-loader' ],
+			},
 		].filter( Boolean ),
 	},
 	plugins: [
@@ -121,6 +172,7 @@ const config = {
 		// handle to exist continue to be enqueued.
 		new CopyWebpackPlugin( {
 			patterns: [
+				// Styles.
 				// Scripts.
 				{
 					from: 'assets/js/admin-legacy',
@@ -132,7 +184,7 @@ const config = {
 				},
 				{
 					from: './node_modules/chart.js/dist/Chart.min.js',
-					to: 'js/chartjs.js',
+					to: 'js/chart.bundle.js',
 				},
 				{
 					from: './node_modules/moment/min/moment.min.js',
@@ -140,12 +192,25 @@ const config = {
 				},
 				{
 					from: './node_modules/select2/dist/js/select2.full.min.js',
-					to: 'js/select2.js',
+					to: 'js/select2.full.js',
 				},
 				{
 					from:
 						'./node_modules/inputmask/dist/jquery.inputmask.min.js',
 					to: 'js/jquery.inputmask.js',
+				},
+				//Fonts
+				{
+					from: 'assets/fonts',
+					to: 'fonts',
+				},
+				{
+					from: 'assets/images',
+					to: 'images',
+				},
+				{
+					from: 'assets/css/jquery-ui/images',
+					to: 'images',
 				},
 			],
 		} ),

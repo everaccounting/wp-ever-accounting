@@ -57,10 +57,10 @@ class Assets extends \EverAccounting\Abstracts\Assets {
 	 * @version 1.0.3
 	 */
 	public function admin_scripts() {
-		$this->register_script('ea-data', 'js/data.js');
-		$this->register_script('ea-components', 'js/components.js');
-		$this->register_script('ea-react', 'js/ea-react.js', ['ea-data', 'ea-components']);
-		wp_enqueue_script( 'ea-react' );
+//		$this->register_script('ea-data', 'js/data.js');
+//		$this->register_script('ea-components', 'js/components.js');
+//		$this->register_script('ea-react', 'js/ea-react.js', ['ea-data', 'ea-components']);
+//		wp_enqueue_script( 'ea-react' );
 	}
 
 }
