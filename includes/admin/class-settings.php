@@ -561,7 +561,7 @@ class Settings {
 
 			case 'radio':
 			case 'multicheck':
-				$type = 'multicheck' == $field['type'] ? 'check' : $field['type'];
+				$type = 'multicheck' == $field['type'] ? 'checkbox' : $field['type'];
 				?>
 				<fieldset>
 					<?php echo $description; ?>
@@ -571,13 +571,13 @@ class Settings {
 							?>
 							<li>
 								<label><input
-										name="<?php echo esc_attr( $field['id'] ); ?>"
+										name="eaccounting_settings[<?php echo esc_attr( $field['id'] ); ?>][<?php echo esc_attr( $key ); ?>]"
 										value="<?php echo esc_attr( $key ); ?>"
 										type="<?php echo esc_attr( $type ); ?>"
 										style="<?php echo esc_attr( $field['style'] ); ?>"
 										class="<?php echo esc_attr( $field['class'] ); ?>"
 										<?php echo implode( ' ', $attributes ) ?>
-										<?php checked( $key, $value ); ?>
+										<?php checked( $key, $val ); ?>
 									/> <?php echo esc_html( $val ); ?></label>
 							</li>
 							<?php
