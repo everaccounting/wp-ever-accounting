@@ -83,5 +83,21 @@
 		margin: -7px 0 0 0;
 	}
 
+  .edd-license-data.license-expires-soon-notice{
+	color: #00a0d2;
+  }
+
+  .edd-license-data.edd-license-valid{
+	color: #5abc55;
+  }
+  .edd-license-data.edd-license-error,
+  .edd-license-data.edd-license-missing,
+  .edd-license-data.edd-license-invalid,
+  .edd-license-data.edd-license-site_inactive,
+  .edd-license-data.edd-license-expired,
+  .edd-license-data.edd-license-item_name_mismatch {
+	color: #e24e4e;
+  }
+
 }
 
