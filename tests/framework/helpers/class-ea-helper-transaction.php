@@ -17,16 +17,16 @@ class EverAccounting_Helper_Transaction {
 		$account  = EverAccounting_Helper_Account::create_account();
 		$vendor   = EverAccounting_Helper_Contact::create_contact( 'John Doe', 'john@doe.com', 'vendor', 'USD' );
 
-		$transaction = eaccounting_insert_transaction( array(
+		$transaction = eaccounting_insert_payment( array(
 			'account_id'     => $account->get_id(),
-			'payment_date'        => '2020-09-01',
+			'payment_date'   => '2020-09-01',
 			'amount'         => $amount,
 			'vendor_id'      => $vendor->get_id(),
 			'category_id'    => $category->get_id(),
 			'payment_method' => $payment_method,
 			'type'           => $type
 		) );
-
+		
 		return $transaction;
 	}
 

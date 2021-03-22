@@ -1,6 +1,15 @@
 <?php
+/**
+ * Handle the currency test case.
+ *
+ * @package     EverAccounting\Test
+ * @class       EverAccounting_Tests_Currency
+ * @version     1.0.2
+ */
 
-use EverAccounting\Currency;
+use EverAccounting\Models\Currency;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class EverAccounting_Tests_Currency.
@@ -64,7 +73,6 @@ class EverAccounting_Tests_Currency extends EverAccounting_Unit_Test_Case {
 			'thousand_separator' => 'T'
 		) );
 		$this->assertNotFalse( $currency->exists() );
-
 		$this->assertEquals( 'Bulgarian Lev', $currency->get_name() );
 		$this->assertNotNull( $currency->get_id() );
 		$this->assertEquals( 'BGN', $currency->get_code() );
@@ -128,31 +136,27 @@ class EverAccounting_Tests_Currency extends EverAccounting_Unit_Test_Case {
 	public function test_delete_currency(){
 		$currency = EverAccounting_Helper_Currency::create_currency();
 		$this->assertNotEquals( 0, $currency->get_id() );
-		$this->assertNotFalse( eaccounting_delete_currency( $currency->get_id() ) );
+		$this->assertNotFalse( eaccounting_delete_currency( $currency->get_code() ) );
 	}
 
 	public function test_exception_currency(){
 		$currency = eaccounting_insert_currency(array(
 			'code' => ''
 		));
-		$this->assertEquals('Currency code is required.',$currency->get_error_message());
+		$this->assertEquals('Currency code is required',$currency->get_error_message());
 
 		$currency = eaccounting_insert_currency(array(
 			'code' => 'AUD',
 			'rate' => ''
 		));
-		$this->assertEquals('Currency rate is required.',$currency->get_error_message());
+		$this->assertEquals('Currency thousand separator is required',$currency->get_error_message());
 
-		$currency = eaccounting_insert_currency(array(
-			'code' => 'AUD',
-			'rate' => 1.12
+		$currency = eaccounting_insert_currency( array(
+			'name' 				 => 'Australian Dollar',
+			'code' 				 => 'AUD',
+			'rate' 				 => 1.12,
+			'thousand_separator' => ','
 		));
-		$this->assertNotFalse($currency->exists());
-
-		$currency = eaccounting_insert_currency(array(
-			'code' => 'EUR',
-			'rate' => 1.12
-		));
-		$this->assertEquals('Duplicate currency code.',$currency->get_error_message());
+		$this->assertNotFalse( $currency->exists() );
 	}
 }

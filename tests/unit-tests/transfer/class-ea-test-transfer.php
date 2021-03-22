@@ -1,6 +1,16 @@
 <?php
+/**
+ * Handle the transfer test case.
+ *
+ * @package     EverAccounting\Test
+ * @class       EverAccounting_Tests_transfer
+ * @version     1.0.2
+ */
 
-use EverAccounting\Transfer;
+use EverAccounting\Models\Transfer;
+use EverAccounting\Models\Account;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class EverAccounting_Tests_transfer.
@@ -8,11 +18,21 @@ use EverAccounting\Transfer;
  */
 class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 	public function test_create_transfer() {
-		$from_account_id = EverAccounting_Helper_Account::create_account( 'From Account', '001' )->get_id();
-		$to_account_id   = EverAccounting_Helper_Account::create_account( 'To Account', '002' )->get_id();
+		$from_account_id = eaccounting_insert_account( array(
+			'name'  		=> 'Account 1',
+			'number'		=> '1000',
+			'currency_code '=> 'USD'
+
+		));
+		$to_account_id   = eaccounting_insert_account( array(
+			'name'  		=> 'Account 2',
+			'number'		=> '200',
+			'currency_code '=> 'USD'
+
+		));
 		$transfer        = eaccounting_insert_transfer( array(
-			'from_account_id' => $from_account_id,
-			'to_account_id'   => $to_account_id,
+			'from_account_id' => $from_account_id->get_id(),
+			'to_account_id'   => $to_account_id->get_id(),
 			'date'            => '2020-08-26',
 			'amount'          => 50,
 			'payment_method'  => 'cash',
@@ -30,8 +50,8 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 	}
 
 	public function test_update_transfer() {
-		$from_account_id = EverAccounting_Helper_Account::create_account( 'From Account', '001' )->get_id();
-		$to_account_id   = EverAccounting_Helper_Account::create_account( 'To Account', '002' )->get_id();
+		$from_account_id = EverAccounting_Helper_Account::create_account( 'update Account', '003' )->get_id();
+		$to_account_id   = EverAccounting_Helper_Account::create_account( 'target Account', '004' )->get_id();
 		$transfer        = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
 			'to_account_id'   => $to_account_id,
@@ -70,32 +90,34 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 	}
 
 	public function test_exception_transfer() {
+		$to_account_id = EverAccounting_Helper_Account::create_account( 'Receiver Account ID', '005' )->get_id();
 		$transfer = eaccounting_insert_transfer( array(
-			'from_account_id' => ''
+			'from_account_id' => '',
+			'to_account_id'   => $to_account_id
 		) );
-		$this->assertEquals( 'From account is required', $transfer->get_error_message() );
+		$this->assertEquals( 'Transfer from and to account can not be same.', $transfer->get_error_message() );
 
-		$from_account_id = EverAccounting_Helper_Account::create_account( 'Sender Account ID', '001' )->get_id();
+		$from_account_id = EverAccounting_Helper_Account::create_account( 'Sender Account ID', '006' )->get_id();
 		$transfer        = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
 			'to_account_id'   => '',
 		) );
-		$this->assertEquals( 'To account is required', $transfer->get_error_message() );
+		$this->assertEquals( 'Transfer from and to account can not be same.', $transfer->get_error_message() );
 
-		$to_account_id = EverAccounting_Helper_Account::create_account( 'Receiver Account ID', '002' )->get_id();
+		$to_account_id = EverAccounting_Helper_Account::create_account( 'Receiver Account ID', '007' )->get_id();
 
 		$transfer = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
 			'to_account_id'   => $from_account_id,
 		) );
-		$this->assertEquals( 'Source & Target account can not be same.', $transfer->get_error_message() );
+		$this->assertEquals( "Source and Destination account can't be same.", $transfer->get_error_message() );
 
 		$transfer = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
 			'to_account_id'   => $to_account_id,
 			'amount'          => ''
 		) );
-		$this->assertEquals( 'Transfer amount is required', $transfer->get_error_message() );
+		$this->assertEquals( 'Transfer Date is required', $transfer->get_error_message() );
 
 		$transfer = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,
@@ -104,7 +126,7 @@ class EverAccounting_Tests_transfer extends EverAccounting_Unit_Test_Case {
 			'date'            => '',
 
 		) );
-		$this->assertEquals( 'Transfer date is required', $transfer->get_error_message() );
+		$this->assertEquals( 'Transfer Date is required', $transfer->get_error_message() );
 
 		$transfer = eaccounting_insert_transfer( array(
 			'from_account_id' => $from_account_id,

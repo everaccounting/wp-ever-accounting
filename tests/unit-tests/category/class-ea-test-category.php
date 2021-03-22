@@ -1,6 +1,16 @@
 <?php
+/**
+ * Handle the category test case.
+ *
+ * @package     EverAccounting\Test
+ * @class       EverAccounting_Tests_Category
+ * @version     1.1.0
+ */
 
-use EverAccounting\Category;
+
+use EverAccounting\Models\Category;
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Class EverAccounting_Tests_Category.
@@ -80,7 +90,8 @@ class EverAccounting_Tests_Category extends EverAccounting_Unit_Test_Case {
 			'name' => 'Expense',
 			'type' => 'expense',
 		) );
-		$this->assertEquals( 'Duplicate category name.', $category->get_error_message() );
+		
+		$this->assertEquals( 'Duplicate category.', $category->get_error_message() );
 
 	}
 }
