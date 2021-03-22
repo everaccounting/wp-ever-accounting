@@ -47,6 +47,7 @@
     "cssnano": "^4.1.10",
     "eslint-loader": "^4.0.2",
     "eslint-webpack-plugin": "^2.5.2",
+    "git-clone": "^0.1.0",
     "grunt-checktextdomain": "^1.0.1",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-compress": "^2.0.0",
@@ -62,6 +63,8 @@
     "postcss-css-variables": "^0.17.0",
     "postcss-editor-styles": "^0.3.0",
     "precss": "^4.0.0",
+    "promptly": "^3.2.0",
+    "replace-in-file": "^6.2.0",
     "stylelint-webpack-plugin": "^2.1.1",
     "webpack-fix-style-only-entries": "^0.4.0",
     "webpack-rtl-plugin": "^2.0.0",
@@ -91,7 +94,8 @@
     "lint:pkg-json": "wp-scripts lint-pkg-json",
     "packages-update": "wp-scripts packages-update",
     "test:e2e": "wp-scripts test-e2e",
-    "test:unit": "wp-scripts test-unit-js"
+    "test:unit": "wp-scripts test-unit-js",
+    "create-extension": "node ./bin/create-extension.js"
   },
   "husky": {
     "hooks": {
