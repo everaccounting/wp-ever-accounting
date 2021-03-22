@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.0\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-03-20 21:29:55+00:00\n"
+"POT-Creation-Date: 2021-03-22 08:28:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1317,32 +1317,32 @@ msgstr ""
 msgid "Select Country"
 msgstr ""
 
-#: includes/admin/class-settings.php:608
+#: includes/admin/class-settings.php:610
 #: includes/admin/views/payments/edit-payment.php:152
 #: includes/admin/views/revenues/edit-revenue.php:138
 #: includes/class-settings.php:964
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/class-settings.php:642 includes/class-settings.php:466
+#: includes/admin/class-settings.php:644 includes/class-settings.php:466
 msgid "Select account"
 msgstr ""
 
-#: includes/admin/class-settings.php:670 includes/class-settings.php:494
+#: includes/admin/class-settings.php:672 includes/class-settings.php:494
 msgid "Select category"
 msgstr ""
 
-#: includes/admin/class-settings.php:695 includes/class-settings.php:519
+#: includes/admin/class-settings.php:697 includes/class-settings.php:519
 msgid "Select currencies"
 msgstr ""
 
-#: includes/admin/class-settings.php:721 includes/admin/class-settings.php:831
+#: includes/admin/class-settings.php:723 includes/admin/class-settings.php:833
 msgid ""
 "Your license key expired on %s. Please <a href=\"%s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:734 includes/admin/class-settings.php:844
+#: includes/admin/class-settings.php:736 includes/admin/class-settings.php:846
 #: includes/class-settings.php:1014
 #. translators: %s extension name
 msgid ""
@@ -1350,7 +1350,7 @@ msgid ""
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/class-settings.php:746 includes/admin/class-settings.php:856
+#: includes/admin/class-settings.php:748 includes/admin/class-settings.php:858
 #: includes/class-settings.php:1022
 #. translators: %s extension name
 msgid ""
@@ -1358,20 +1358,20 @@ msgid ""
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/class-settings.php:759 includes/admin/class-settings.php:869
+#: includes/admin/class-settings.php:761 includes/admin/class-settings.php:871
 msgid ""
 "Your %s is not active for this URL. Please <a href=\"%s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/class-settings.php:771 includes/admin/class-settings.php:881
+#: includes/admin/class-settings.php:773 includes/admin/class-settings.php:883
 #: includes/class-settings.php:1039
 #. translators: %s extension name
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/class-settings.php:780 includes/admin/class-settings.php:890
+#: includes/admin/class-settings.php:782 includes/admin/class-settings.php:892
 #: includes/class-settings.php:1045
 #. translators: %s extension name
 msgid ""
@@ -1379,72 +1379,72 @@ msgid ""
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/class-settings.php:789 includes/admin/class-settings.php:899
+#: includes/admin/class-settings.php:791 includes/admin/class-settings.php:901
 #: includes/class-settings.php:1049
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/class-settings.php:797 includes/admin/class-settings.php:805
-#: includes/admin/class-settings.php:817 includes/class-settings.php:1053
+#: includes/admin/class-settings.php:799 includes/admin/class-settings.php:807
+#: includes/admin/class-settings.php:819 includes/class-settings.php:1053
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/class-settings.php:798 includes/admin/class-settings.php:806
+#: includes/admin/class-settings.php:800 includes/admin/class-settings.php:808
 msgid ""
 "There was an error with this license key: %s. Please <a href=\"%s\">contact "
 "our support team</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:819
+#: includes/admin/class-settings.php:821
 msgid ""
 "There was an error with this license key: %s%s. Please <a "
 "href=\"%s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:914 includes/class-settings.php:1065
+#: includes/admin/class-settings.php:916 includes/class-settings.php:1065
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/class-settings.php:921
+#: includes/admin/class-settings.php:923
 msgid ""
 "Your license key expires soon! It expires on %s. <a href=\"%s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:931 includes/class-settings.php:1076
+#: includes/admin/class-settings.php:933 includes/class-settings.php:1076
 #. translators: %s extension name
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/class-settings.php:948 includes/class-settings.php:1084
+#: includes/admin/class-settings.php:950 includes/class-settings.php:1084
 #. translators: %s extension name
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/class-settings.php:964
+#: includes/admin/class-settings.php:966
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/class-settings.php:967
+#: includes/admin/class-settings.php:969
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/class-settings.php:970
+#: includes/admin/class-settings.php:972
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/class-settings.php:1068 includes/class-settings.php:1252
+#: includes/admin/class-settings.php:1069 includes/class-settings.php:1252
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/class-settings.php:1080
-#: includes/admin/class-settings.php:1081 includes/class-install.php:68
+#: includes/admin/class-settings.php:1081
+#: includes/admin/class-settings.php:1082 includes/class-install.php:68
 msgid "Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:1127
+#: includes/admin/class-settings.php:1128
 msgid "Ever Accounting - Settings"
 msgstr ""
 
@@ -5006,10 +5006,3 @@ msgstr ""
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
-
-#: assets/js/admin/ea-react.js:23
-msgid ""
-"Hello World!, I am assets->frontend->frontend.js file. Remove me to get "
-"started"
-msgstr ""
-

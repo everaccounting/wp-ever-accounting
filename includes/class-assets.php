@@ -1,6 +1,6 @@
 <?php
 /**
- * Load assets.
+ * Load Public assets.
  *
  * @package     EverAccounting
  * @version     1.0.2
@@ -12,57 +12,40 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Assets
- * @since   1.0.2
- * @package EverAccounting\Admin
+ *
+ * @since 1.0.2
  */
-class Assets extends \EverAccounting\Abstracts\Assets {
+
+class Assets {
 
 	/**
 	 * Assets constructor.
 	 */
 	public function __construct() {
-		parent::__construct( EACCOUNTING_PLUGIN_FILE );
+		add_action( 'eaccounting_head', array( $this, 'public_styles' ) );
+		add_action( 'eaccounting_footer', array( $this, 'public_scripts' ) );
 	}
 
 	/**
-	 * Enqueue public styles.
+	 * Load public styles.
 	 *
-	 * @version 1.0.3
+	 * @since 1.1.0
 	 */
 	public function public_styles() {
-
+		$version = eaccounting()->get_version();
+		wp_register_style( 'ea-public-styles', eaccounting()->plugin_url() . '/assets/css/public.css', array( 'common', 'buttons' ), $version );
+		wp_print_styles( 'ea-public-styles' );
 	}
 
 	/**
-	 * Enqueue public scripts.
+	 * Load public scripts
 	 *
-	 * @version 1.0.3
+	 * @since 1.1.0
 	 */
 	public function public_scripts() {
-
+		$suffix  = '';
+		$version = eaccounting()->get_version();
 	}
-
-	/**
-	 * Enqueue admin styles.
-	 *
-	 * @version 1.0.3
-	 */
-	public function admin_styles() {
-
-	}
-
-	/**
-	 * Enqueue admin scripts.
-	 *
-	 * @version 1.0.3
-	 */
-	public function admin_scripts() {
-//		$this->register_script('ea-data', 'js/data.js');
-//		$this->register_script('ea-components', 'js/components.js');
-//		$this->register_script('ea-react', 'js/ea-react.js', ['ea-data', 'ea-components']);
-//		wp_enqueue_script( 'ea-react' );
-	}
-
 }
 
-return new \EverAccounting\Assets();
+new Assets();
