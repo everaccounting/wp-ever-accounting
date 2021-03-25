@@ -165,7 +165,6 @@ class Setup_Wizard {
         </head>
         <body class="ea-setup wp-core-ui <?php echo esc_attr( 'ea-setup-step__' . $this->step ); ?> <?php echo esc_attr( $wp_version_class ); ?>">
         <h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
-        <h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
 		<?php
 	}
 

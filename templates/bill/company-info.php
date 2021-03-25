@@ -12,7 +12,7 @@ use EverAccounting\Models\Bill;
 
 defined( 'ABSPATH' ) || exit;
 $company_details = array(
-	'logo'       => eaccounting()->settings->get( 'company_logo', eaccounting()->plugin_url( '/assets/images/document-logo.png' ) ),
+	'logo'       => eaccounting()->settings->get( 'company_logo', eaccounting()->plugin_url( '/dist/images/document-logo.png' ) ),
 	'name'       => eaccounting()->settings->get( 'company_name' ),
 	'street'     => eaccounting()->settings->get( 'company_address' ),
 	'city'       => eaccounting()->settings->get( 'company_city' ),
