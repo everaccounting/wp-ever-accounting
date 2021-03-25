@@ -136,6 +136,12 @@ Yes, of course. We do not create products for ourselves. You are always welcome 
 
 
 == Changelog ==
+= 1.1.2 (25 March,2021) =
+* Fix - Cross currency calculation
+* Fix - Invalid invoice status
+* Enhance - Optimize plugin code & structure.
+* Enhance - Add support for extensions.
+
 = 1.1.1 (22 February,2021) =
 * Enhance - Tabs rearranged for better UX.
 * Fix 	  - Currency conversion precision is not correct.
