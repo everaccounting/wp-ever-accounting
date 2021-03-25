@@ -88,16 +88,17 @@ class Setup_Wizard {
 
 		$version = eaccounting()->get_version();
 		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+		//$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.css', array(), $version );
-		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/assets/css/setup.css', array( 'install', 'common' ), $version );
+		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/dist/css/admin.min.css', array(), $version );
+		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url() . '/dist/css/setup.min.css', array( 'install', 'common' ), $version );
 
 		// Add RTL support for admin styles.
 		wp_style_add_data( 'ea-setup', 'rtl', 'replace' );
-		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/assets/js/select2/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_enqueue_script( 'ea-repeater', eaccounting()->plugin_url( '/assets/js/jquery-repeater/jquery.repeater' . $suffix . '.js' ), array( 'jquery' ), $version );
-		wp_enqueue_script( 'ea-select2', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
-		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/assets/js/eaccounting/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-repeater', 'ea-select2' ), $version );
+		wp_register_script( 'jquery-select2', eaccounting()->plugin_url( '/dist/js/select2.full' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_enqueue_script( 'ea-repeater', eaccounting()->plugin_url( '/dist/js/jquery.repeater' . $suffix . '.js' ), array( 'jquery' ), $version );
+		wp_enqueue_script( 'ea-select2', eaccounting()->plugin_url( '/dist/js/ea-select2' . $suffix . '.js' ), array( 'jquery', 'jquery-select2' ), $version );
+		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/dist/js/ea-setup' . $suffix . '.js' ), array( 'jquery', 'ea-repeater', 'ea-select2' ), $version );
 
 		// @codingStandardsIgnoreStart
 		if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
@@ -163,7 +164,8 @@ class Setup_Wizard {
 			<?php do_action( 'admin_print_styles' ); ?>
         </head>
         <body class="ea-setup wp-core-ui <?php echo esc_attr( 'ea-setup-step__' . $this->step ); ?> <?php echo esc_attr( $wp_version_class ); ?>">
-        <h1 class="ea-logo"><a href="https://wpeveraccounting.com/"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
+        <h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
+        <h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
 		<?php
 	}
 
