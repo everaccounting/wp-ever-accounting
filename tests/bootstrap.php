@@ -20,12 +20,10 @@ activate_plugin( 'wp-ever-accounting/wp-ever-accounting.php' );
 
 echo "Installing WP Ever Accounting...\n";
 
-// Install Easy Digital Downloads
-EverAccounting_Install::install();
+// Install WP Ever Accounting
+\EverAccounting\Install::install();
 
-global $current_user, $edd_options;
-
-$edd_options = get_option( 'edd_settings' );
+global $current_user;
 
 $current_user = new WP_User( 1 );
 $current_user->set_role( 'administrator' );

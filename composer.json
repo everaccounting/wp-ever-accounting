@@ -1,6 +1,5 @@
 {
   "name": "everaccounting/wp-ever-accounting",
-  "version": "1.0.4",
   "description": "WordPress Accounting plugin for small business!",
   "homepage": "https://wpeveraccounting.com",
   "type": "wordpress-plugin",
@@ -17,45 +16,45 @@
 	  "email": "support@wpeveraccounting.com"
 	}
   ],
+  "repositories": [
+    {
+      "url": "https://github.com/byteever/phpcs-composer.git",
+      "type": "git"
+    }
+  ],
   "require": {
 	"composer/installers": "^1.9.0",
-	"php": ">=5.6|>=7.0",
-    "squizlabs/php_codesniffer": "2.*"
-  },
-  "require-dev": {
-	"phpunit/phpunit": "7.5.20",
-	"suin/phpcs-psr4-sniff": "^2.2",
-	"10up/phpcs-composer": "dev-master"
-  },
-  "config": {
-	"platform": {
-	  "php": "7.1"
-	}
-  },
-  "scripts": {
-	"test": [
-	  "phpunit"
-	],
-	"phpcs": [
-	  "phpcs -s -p ./src"
-	],
-	"phpcbf": [
-	  "phpcbf -p ."
-	]
-  },
-  "extra": {
-	"scripts-description": {
-	  "test": "Run unit tests",
-	  "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
-	  "phpcbf": "Fix coding standards warnings/errors automatically with PHP Code Beautifier"
-	}
+	"php": ">=5.6|>=7.0"
   },
   "autoload": {
-	"psr-4": {
-	  "EverAccounting\\": "src/"
-	},
-	"files": [
-
-	]
+    "psr-4": {
+    },
+    "classmap": ["includes/"],
+    "files": [
+    ]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.5",
+    "byteever/phpcs-composer": "dev-master"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "7.0"
+    },
+    "sort-packages": true
+  },
+  "scripts": {
+    "pre-commit": [
+      "@phpcs"
+    ],
+    "phpcs": "phpcs -s -p .",
+    "phpcbf": "phpcbf -p ."
+  },
+  "extra": {
+    "scripts-description": {
+      "phpcs": "Analyze code against the WordPress coding standards with PHP_CodeSniffer",
+      "phpcbf": "Fix coding standards warnings/errors automatically with PHP Code Beautifier"
+    }
   }
 }

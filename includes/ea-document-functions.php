@@ -373,6 +373,9 @@ function eaccounting_get_documents( $args = array() ) {
 }
 
 
+/**
+ * @return mixed|void
+ */
 function eaccounting_get_bill_statuses() {
 	$statuses = array(
 		'draft'     => __( 'Draft', 'wp-ever-accounting' ),
@@ -386,6 +389,9 @@ function eaccounting_get_bill_statuses() {
 	return apply_filters( 'eaccounting_bill_statuses', $statuses );
 }
 
+/**
+ * @return mixed|void
+ */
 function eaccounting_get_invoice_statuses() {
 	$statuses = array(
 		'draft'     => __( 'Draft', 'wp-ever-accounting' ),

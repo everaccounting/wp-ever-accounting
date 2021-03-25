@@ -1,6 +1,6 @@
 <?php
 /**
- * Abstract WP_Background_Process class.
+ * Abstract Background_Process class.
  *
  * Uses https://github.com/A5hleyRich/wp-background-processing to handle DB
  * updates in the background.
@@ -8,21 +8,23 @@
  * @package EverAccounting\Classes
  */
 
+namespace EverAccounting\Abstracts;
+
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'WP_Async_Request', false ) ) {
+if ( ! class_exists( '\WP_Async_Request', false ) ) {
 	include_once EACCOUNTING_ABSPATH . '/includes/libraries/wp-async-request.php';
 }
 
-if ( ! class_exists( 'WP_Background_Process', false ) ) {
+if ( ! class_exists( '\WP_Background_Process', false ) ) {
 	include_once EACCOUNTING_ABSPATH . '/includes/libraries/wp-background-process.php';
 }
 
 
 /**
- * EverAccounting_Background_Process class.
+ * Background_Process class.
  */
-abstract class EverAccounting_Background_Process extends WP_Background_Process {
+abstract class Background_Process extends \WP_Background_Process {
 	/**
 	 * Is queue empty.
 	 *
@@ -49,7 +51,7 @@ abstract class EverAccounting_Background_Process extends WP_Background_Process {
 	/**
 	 * Get batch.
 	 *
-	 * @return stdClass Return the first batch from the queue.
+	 * @return \stdClass Return the first batch from the queue.
 	 */
 	protected function get_batch() {
 		global $wpdb;
@@ -178,7 +180,7 @@ abstract class EverAccounting_Background_Process extends WP_Background_Process {
 	/**
 	 * Delete all batches.
 	 *
-	 * @return EverAccounting_Background_Process
+	 * @return Background_Process
 	 */
 	public function delete_all_batches() {
 		global $wpdb;

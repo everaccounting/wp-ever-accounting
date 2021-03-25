@@ -33,8 +33,8 @@ if ( $bill->needs_payment() ) {
 }
 $bill_actions['delete'] = __( 'Delete', 'wp-ever-accounting' );
 if ( $bill->exists() ) {
-	add_meta_box( 'bill_payments', __( 'Bill Payments', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Bills', 'bill_payments' ), 'ea_bill', 'side' );
-	add_meta_box( 'bill_notes', __( 'Bill Notes', 'wp-ever-accounting' ), array( 'EverAccounting_Admin_Bills', 'bill_notes' ), 'ea_bill', 'side' );
+	add_meta_box( 'bill_payments', __( 'Bill Payments', 'wp-ever-accounting' ), array( '\EverAccounting\Admin\Bill_Actions', 'bill_payments' ), 'ea_bill', 'side' );
+	add_meta_box( 'bill_notes', __( 'Bill Notes', 'wp-ever-accounting' ), array( '\EverAccounting\Admin\Bill_Actions', 'bill_notes' ), 'ea_bill', 'side' );
 }
 /**
  * Fires after all built-in meta boxes have been added, contextually for the given object.

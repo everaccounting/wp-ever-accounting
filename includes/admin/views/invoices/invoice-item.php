@@ -4,11 +4,11 @@
  *
  * @package EverAccounting\Admin
  * @var Invoice      $invoice The item being displayed
- * @var DocumentItem $item    The item being displayed
+ * @var Document_Item $item    The item being displayed
  * @var int          $item_id The id of the item being displayed
  */
 
-use EverAccounting\Models\DocumentItem;
+use EverAccounting\Models\Document_Item;
 use EverAccounting\Models\Invoice;
 
 defined( 'ABSPATH' ) || exit;
@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 			<?php echo esc_html( eaccounting_price( $item->get_price(), $invoice->get_currency_code() ) ); ?>
 		</div>
 		<div class="edit" style="display: none;">
-			<input type="number" step="0.01" min="0" class="line_item_price" name="items[<?php echo $item_id; ?>][price]" value="<?php echo esc_attr( $item->get_price() ); ?>"/>
+			<input type="number" step="0.0001" min="0" class="line_item_price" name="items[<?php echo $item_id; ?>][price]" value="<?php echo esc_attr( $item->get_price() ); ?>"/>
 		</div>
 	</td>
 
@@ -53,10 +53,10 @@ defined( 'ABSPATH' ) || exit;
 	<?php if ( eaccounting_tax_enabled() ) : ?>
 		<td class="ea-document__line-tax" width="1%">
 			<div class="view">
-				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $invoice->get_currency_code() ) ); ?>"><?php echo esc_html( number_format_i18n( $item->get_tax_rate(), 2 ) ); ?><small>%</small></abbr>
+				<abbr title="<?php echo esc_html( eaccounting_price( $item->get_tax(), $invoice->get_currency_code() ) ); ?>"><?php echo esc_html( number_format_i18n( $item->get_tax_rate(), 4 ) ); ?><small>%</small></abbr>
 			</div>
 			<div class="edit" style="display: none;">
-				<input type="number" step="0.01" min="0" max="1000" class="line_item_tax" name="items[<?php echo esc_attr( $item_id ); ?>][tax_rate]" value="<?php echo esc_attr( $item->get_tax_rate() ); ?>">
+				<input type="number" step="0.0001" min="0" max="1000" class="line_item_tax" name="items[<?php echo esc_attr( $item_id ); ?>][tax_rate]" value="<?php echo esc_attr( $item->get_tax_rate() ); ?>">
 			</div>
 		</td>
 	<?php endif; ?>

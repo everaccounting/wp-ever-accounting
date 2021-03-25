@@ -13,7 +13,7 @@
 
 defined( 'ABSPATH' ) || exit();
 
-require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-ea-transaction-list-table.php';
+require_once EACCOUNTING_ABSPATH . '/includes/admin/list-tables/class-transaction-list-table.php';
 $args       = array(
 	'display_args' => array(
 		'columns_to_hide'      => array( 'actions', 'cb','account_id' ),

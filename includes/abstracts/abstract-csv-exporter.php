@@ -11,6 +11,10 @@ namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class CSV_Exporter
+ * @package EverAccounting\Abstracts
+ */
 abstract class CSV_Exporter {
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -252,7 +256,7 @@ abstract class CSV_Exporter {
 	 */
 	protected function format_data( $data ) {
 		if ( ! is_scalar( $data ) ) {
-			if ( is_a( $data, '\EverAccounting\Core\DateTime' ) ) {
+			if ( is_a( $data, '\EverAccounting\DateTime' ) ) {
 				$data = $data->date( 'Y-m-d G:i:s' );
 			} else {
 				$data = ''; // Not supported.
