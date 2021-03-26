@@ -193,7 +193,7 @@ class EverAccounting_Account_List_Table extends EverAccounting_List_Table {
 			case 'thumb':
 				$view_url  = eaccounting_admin_url( array( 'page' => 'ea-banking', 'tab' => 'accounts', 'action' => 'view', 'account_id' => $account_id ) );// phpcs:ignore
 				$thumb_url = wp_get_attachment_thumb_url( $account->get_thumbnail_id() );
-				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/assets/images/placeholder-logo.png' ) : $thumb_url;
+				$thumb_url = empty( $thumb_url ) ? eaccounting()->plugin_url( '/dist/images/placeholder-logo.png' ) : $thumb_url;
 				$value     = '<a href="' . esc_url( $view_url ) . '"><img src="' . $thumb_url . '" height="36" width="36" alt="' . $account->get_name() . '"></a>';
 				break;
 

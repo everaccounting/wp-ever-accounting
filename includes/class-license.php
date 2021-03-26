@@ -93,9 +93,9 @@ class License {
 	 */
 	public function __construct( $file, $item_name ) {
 		// bail out if it's a local server
-//		if ( $this->is_local_server() ) {
-//			return;
-//		}
+		if ( $this->is_local_server() ) {
+			return;
+		}
 
 		$plugin_data          = get_file_data(
 			$file,

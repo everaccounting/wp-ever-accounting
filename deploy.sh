@@ -116,6 +116,8 @@ fi
 #install composer
 status "Installing PHP dependencies";
 cd $SVNPATH/trunk
+npm install
+npm run build
 composer install --no-dev
 composer du -o
 
@@ -130,8 +132,11 @@ svn add --force $SVNPATH/assets/
 cd $SVNPATH
 status "Removing unwanted files"
 rm -Rf trunk/.wordpress-org
-rm -Rf trunk/assets
+rm -Rf trunk/assets/css
+rm -Rf trunk/assets/fonts
+rm -Rf trunk/assets/js
 rm -Rf trunk/bin
+rm -Rf trunk/node_modules
 
 #Config files
 rm -f trunk/.editorconfig
@@ -140,7 +145,7 @@ rm -f trunk/.eslintrc.js
 rm -f trunk/.gitignore
 rm -f trunk/.npmrc
 rm -f trunk/.nvmrc
-rm -f trunk/.prettierrc
+rm -f trunk/.prettierrc.js
 rm -f trunk/.stylelintignore
 rm -f trunk/.stylelintrc
 rm -Rf trunk/babel.config.js

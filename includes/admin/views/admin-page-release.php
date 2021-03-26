@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 <div class="ea-title-section">
 	<div class="ea-container">
 		<div class="ea-release_logo">
-			<a href="https://wpeveraccounting.com/"><img src="<?php echo eaccounting()->plugin_url( '/assets/images/everaccountinglogo.png' ); ?>" alt="ea-release-logo"></a>
+			<a href="https://wpeveraccounting.com/"><img src="<?php echo eaccounting()->plugin_url( '/dist/images/everaccountinglogo.png' ); ?>" alt="ea-release-logo"></a>
 		</div>
 		<div class="ea-release_tag">
 			<h2 class="wp-heading-inline"><?php esc_html_e( 'Best WordPress Accounting Plugin', 'wp-ever-accounting' ); ?></h2>
@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 						<h4><span class="dashicons dashicons-admin-customizer"></span><span><?php _e( ' WP Ever Accounting', 'wp-ever-accounting' ) ?></span></h4>
 					</div>
 					<div class="ea-card__inside">
-						<img src="<?php echo eaccounting()->plugin_url( '/assets/images/dashboard.png' ); ?>" alt="dashboard" class="ea-release__dashboard">
+						<img src="<?php echo eaccounting()->plugin_url( '/dist/images/dashboard.png' ); ?>" alt="dashboard" class="ea-release__dashboard">
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid animi blanditiis, culpa cupiditate debitis fuga fugiat harum illo illum laboriosam magnam molestiae nesciunt officiis perspiciatis quas sed sequi tenetur voluptatibus!</p>
 
 						<p><strong><?php _e( 'Why WP Ever Accounting?', 'wp-ever-accounting' ) ?></strong></p>
