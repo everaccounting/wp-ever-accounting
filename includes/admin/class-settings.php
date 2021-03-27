@@ -296,6 +296,44 @@ class Settings {
 				'currencies' => array(
 						'title' => __( 'Currencies', 'wp-ever-accounting' ),
 				),
+				'emails'     => array(
+						'title'         => __( 'Emails', 'wp-ever-accounting' ),
+						'fields'        => array(
+								array(
+										'id'      => 'email_from_name',
+										'title'   => __( 'From Name', 'wp-ever-accounting' ),
+										'default' => site_url(),
+										'type'    => 'text',
+								),
+								array(
+										'id'      => 'email_from_address',
+										'title'   => __( 'From Email', 'wp-ever-accounting' ),
+										'default' => get_option( 'admin_email' ),
+										'type'    => 'text',
+								),
+								array(
+										'id'      => 'admin_email',
+										'title'   => __( 'Admin Email', 'wp-ever-accounting' ),
+										'default' => get_option( 'admin_email' ),
+										'type'    => 'text',
+								)
+						),
+						'notifications' => apply_filters( 'eaccounting_email_notifications', array(
+								array(
+										'id'           => 'email_customer_invoice',
+										'title'         => __( 'Account Activation Email','wp-ever-accounting' ),
+										'subject'       => 'Please activate your account',
+										'body'          => 'Hi {display_name},<br /><br />' .
+														   'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
+														   '{account_activation_link} <br /><br />' .
+														   'If you have any problems, please contact us at {admin_email}<br /><br />' .
+														   'Thanks, <br />' .
+														   '{site_name}',
+										'description'   => __('Whether to send the user an email when his account needs e-mail activation','wp-ever-accounting'),
+										'recipient'   => 'user'
+								)
+						) )
+				),
 				'extensions' => array(
 						'title'    => __( 'Extensions', 'wp-ever-accounting' ),
 						'sections' => apply_filters( 'eaccounting_settings_extensions', array() ),
@@ -305,6 +343,7 @@ class Settings {
 						'fields' => apply_filters( 'eaccounting_settings_licenses', array() ),
 				),
 		);
+
 
 		if ( eaccounting_tax_enabled() ) {
 			$settings['general']['sections']['tax_settings'] = array(
@@ -561,8 +600,8 @@ class Settings {
 
 			case 'radio':
 			case 'multicheck':
-			$value = ! is_array( $value ) ? array() : $value;
-			$type = 'multicheck' == $field['type'] ? 'checkbox' : $field['type'];
+				$value = ! is_array( $value ) ? array() : $value;
+				$type = 'multicheck' == $field['type'] ? 'checkbox' : $field['type'];
 				?>
 				<fieldset>
 					<?php echo $description; ?>
@@ -580,7 +619,7 @@ class Settings {
 											class="<?php echo esc_attr( $field['class'] ); ?>"
 											<?php echo implode( ' ', $attributes ) ?>
 											<?php checked( 'yes', $checked ); ?>
-									/> <?php echo esc_html( $option ); ?></label>zz
+									/> <?php echo esc_html( $option ); ?></label>
 							</li>
 							<?php
 						}
@@ -1024,9 +1063,9 @@ class Settings {
 				case 'multicheck':
 					$raw_value      = ! is_array( $raw_value ) || empty( $raw_value ) ? array() : $raw_value;
 					$allowed_values = empty( $field['options'] ) ? array() : array_map( 'strval', array_keys( $field['options'] ) );
-					$value = array();
-					foreach ($allowed_values as $allowed_value){
-						$value[$allowed_value] = array_key_exists( $allowed_value, $raw_value) ? 'yes' : 'no';
+					$value          = array();
+					foreach ( $allowed_values as $allowed_value ) {
+						$value[ $allowed_value ] = array_key_exists( $allowed_value, $raw_value ) ? 'yes' : 'no';
 					}
 					break;
 				case 'select':
@@ -1143,7 +1182,8 @@ class Settings {
 			<?php endif; ?>
 			<br class="clear"/>
 			<h1 class="screen-reader-text"><?php echo esc_html( $tabs[ $current_tab ] ); ?></h1>
-			<?php do_action( "eaccounting_settings_page_before_" . $current_tab . "_" . $current_section . "_content" ); ?>
+			<?php var_dump( ( "eaccounting_settings_before_" . $current_tab . "_" . $current_section . "_content" ) );
+			do_action( "eaccounting_settings_before_" . $current_tab . "_" . $current_section . "_content" ); ?>
 			<?php
 			if ( has_action( 'eaccounting_settings_tab_' . $current_tab ) ) {
 				do_action( 'eaccounting_settings_tab_' . $current_tab );
@@ -1157,7 +1197,6 @@ class Settings {
 					<?php if ( empty( $GLOBALS['hide_save_button'] ) ) : ?>
 						<?php submit_button(); ?>
 					<?php endif; ?>
-
 				</form>
 			<?php } ?>
 

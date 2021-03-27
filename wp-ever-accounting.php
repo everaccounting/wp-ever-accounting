@@ -216,7 +216,7 @@ final class EverAccounting {
 
 		$this->classes['options'] = new Options();
 		//\EverAccounting\ReST\Manager::instance();
-		//\EverAccounting\Emails::instance();
+		\EverAccounting\Emails::instance();
 	}
 
 	/**

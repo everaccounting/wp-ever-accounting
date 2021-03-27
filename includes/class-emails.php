@@ -7,17 +7,44 @@ use EverAccounting\Models\Invoice;
 
 defined('ABSPATH') || exit;
 
+/**
+ * Class Emails
+ * @package EverAccounting
+ */
 class Emails extends Singleton {
 
 	/**
 	 * Emails constructor.
 	 */
 	public function __construct() {
+		// Register emails.
+
 		//invoice
 		//add_action( 'eacccounting_insert_invoice', array( __CLASS__, 'send_new_invoice_notification' ) );
 		//add_action( 'eaccounting_email_invoice_details', array( __CLASS__, 'invoice_details' ), 10, 2 );
 		//add_action( 'eaccounting_email_invoice_items', array( __CLASS__, 'invoice_items' ), 10, 2 );
 		//add_action( 'eaccounting_email_invoice_customer_details', array( __CLASS__, 'invoice_customer_details' ), 10, 2 );
+	}
+
+	/**
+	 * @param $emails
+	 */
+	public function register_emails($emails){
+		$emails = array(
+			array(
+				'id'           => 'email_customer_invoice',
+				'title'         => __( 'Account Activation Email','wp-ever-accounting' ),
+				'subject'       => 'Please activate your account',
+				'body'          => 'Hi {display_name},<br /><br />' .
+				                   'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
+				                   '{account_activation_link} <br /><br />' .
+				                   'If you have any problems, please contact us at {admin_email}<br /><br />' .
+				                   'Thanks, <br />' .
+				                   '{site_name}',
+				'description'   => __('Whether to send the user an email when his account needs e-mail activation','wp-ever-accounting'),
+				'recipient'   => 'user'
+			)
+		);
 	}
 
 	/**
