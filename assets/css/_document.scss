@@ -375,7 +375,7 @@
 			background: #007e65;
 		}
 
-		&.paid {
+		&.paid,&.accepted {
 			border: 1px solid #00a32a;
 			background: #00a32a
 		}
@@ -635,3 +635,4 @@
 //.ea-document__items-wrapper {
 //	margin-bottom: 0;
 //}
+
