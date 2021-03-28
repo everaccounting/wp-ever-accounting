@@ -23,5 +23,5 @@ $args       = array(
 );
 $list_table = new EverAccounting_Transaction_List_Table( $args );
 $list_table->prepare_items();
-$list_table->views();
+//$list_table->views();
 $list_table->display();

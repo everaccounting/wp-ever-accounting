@@ -264,7 +264,7 @@ class EverAccounting_Transaction_List_Table extends EverAccounting_List_Table {
 	 * @since 1.0.2
 	 */
 	public function get_views() {
-		$base          = eaccounting_admin_url();
+		$base          = eaccounting_admin_url( array( 'tab' => 'transactions' ) );
 		$current       = isset( $_GET['type'] ) ? $_GET['type'] : '';
 		$total_count   = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
 		$income_count  = '&nbsp;<span class="count">(' . $this->income_count . ')</span>';
