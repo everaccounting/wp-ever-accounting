@@ -1,17 +1,16 @@
 <?php
 /**
- * The template for displaying the footer.
+ * Main page for eaccounting.
  *
- * Contains the closing of the #content div and all content after.
+ * This template can be overridden by copying it to yourtheme/eaccounting/global/page-end.php.
  *
- * This template can be overridden by copying it to yourtheme/eaccounting/global/footer.php.
- *
- * @since 1.1.0
+ * @version 1.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
 $host = eaccounting_get_site_name();
 ?>
+</div><!--/ea-container-->
 </div><!--/ea-body-->
 <footer class="ea-footer ea-noprint">
 	<div class="ea-container">
@@ -21,3 +20,7 @@ $host = eaccounting_get_site_name();
 		</p>
 	</div>
 </footer>
+
+</body>
+
+</html>

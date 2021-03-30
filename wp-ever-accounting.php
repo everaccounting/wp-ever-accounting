@@ -18,6 +18,7 @@
 use EverAccounting\Logger;
 use EverAccounting\Options;
 use EverAccounting\Utilities;
+use EverAccounting\Gateways\Manager as GatewayManager;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -27,6 +28,7 @@ defined( 'ABSPATH' ) || exit();
  * @property-read Utilities $utils
  * @property-read Options $options
  * @property-read Logger $logger
+ * @property-read GatewayManager $gateways
  */
 final class EverAccounting {
 	/**
@@ -304,7 +306,10 @@ final class EverAccounting {
 	 */
 	public function init_classes() {
 		$this->classes['utils']    = new Utilities();
-		$this->classes['logger']    = new Logger();
+		$this->classes['logger']   = new Logger();
+		$this->classes['gateways'] = new GatewayManager();
+//		new \EverAccounting\Gateways\Paypal();
+//		new \EverAccounting\Gateways\Cheque();
 	}
 
 	/**

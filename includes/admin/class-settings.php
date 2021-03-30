@@ -296,6 +296,10 @@ class Settings {
 				'currencies' => array(
 						'title' => __( 'Currencies', 'wp-ever-accounting' ),
 				),
+				'gateways'   => array(
+						'title'    => __( 'Gateways', 'wp-ever-accounting' ),
+						'sections' => apply_filters( 'eaccounting_settings_gateways', array() )
+				),
 				'emails'     => array(
 						'title'         => __( 'Emails', 'wp-ever-accounting' ),
 						'fields'        => array(
@@ -320,16 +324,16 @@ class Settings {
 						),
 						'notifications' => apply_filters( 'eaccounting_email_notifications', array(
 								array(
-										'id'           => 'email_customer_invoice',
-										'title'         => __( 'Account Activation Email','wp-ever-accounting' ),
-										'subject'       => 'Please activate your account',
-										'body'          => 'Hi {display_name},<br /><br />' .
-														   'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
-														   '{account_activation_link} <br /><br />' .
-														   'If you have any problems, please contact us at {admin_email}<br /><br />' .
-														   'Thanks, <br />' .
-														   '{site_name}',
-										'description'   => __('Whether to send the user an email when his account needs e-mail activation','wp-ever-accounting'),
+										'id'          => 'email_customer_invoice',
+										'title'       => __( 'Account Activation Email', 'wp-ever-accounting' ),
+										'subject'     => 'Please activate your account',
+										'body'        => 'Hi {display_name},<br /><br />' .
+														 'Thank you for signing up with {site_name}! To activate your account, please click the link below to confirm your email address:<br /><br />' .
+														 '{account_activation_link} <br /><br />' .
+														 'If you have any problems, please contact us at {admin_email}<br /><br />' .
+														 'Thanks, <br />' .
+														 '{site_name}',
+										'description' => __( 'Whether to send the user an email when his account needs e-mail activation', 'wp-ever-accounting' ),
 										'recipient'   => 'user'
 								)
 						) )
@@ -405,10 +409,16 @@ class Settings {
 					continue;
 				}
 
+				$settings_title = empty( $section['title'] )? '' : esc_html( $section['title'] );
+
 				add_settings_section(
 						$section_id,
-						__return_null(),
-						'__return_false',
+						$settings_title,
+						function () use ($section){
+							if( !empty( $section['desc']) ){
+								echo wp_kses_post( wpautop( $section['desc'] ));
+							}
+						},
 						'eaccounting_settings_' . $tab . '_' . $section_id
 				);
 
@@ -1182,8 +1192,7 @@ class Settings {
 			<?php endif; ?>
 			<br class="clear"/>
 			<h1 class="screen-reader-text"><?php echo esc_html( $tabs[ $current_tab ] ); ?></h1>
-			<?php var_dump( ( "eaccounting_settings_before_" . $current_tab . "_" . $current_section . "_content" ) );
-			do_action( "eaccounting_settings_before_" . $current_tab . "_" . $current_section . "_content" ); ?>
+			<?php do_action( "eaccounting_settings_before_" . $current_tab . "_" . $current_section . "_content" ); ?>
 			<?php
 			if ( has_action( 'eaccounting_settings_tab_' . $current_tab ) ) {
 				do_action( 'eaccounting_settings_tab_' . $current_tab );

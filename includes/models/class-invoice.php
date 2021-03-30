@@ -796,9 +796,9 @@ class Invoice extends Document {
 	 * @return string
 	 */
 	public function get_url() {
-		$base = eaccounting_get_parmalink_base();
+		$base = eaccounting_get_base_url();
 		$url  = site_url( $base );
-		$url  = untrailingslashit( $url ) . '/invoice/' . $this->get_id() . '/' . $this->get_key();
-		return $url;
+		$url  = untrailingslashit( $url ) . '/invoices/' . $this->get_id();
+		return add_query_arg( 'key',  $this->get_key(), $url );
 	}
 }

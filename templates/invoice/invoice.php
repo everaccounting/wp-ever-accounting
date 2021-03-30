@@ -13,7 +13,6 @@ use EverAccounting\Models\Invoice;
 defined( 'ABSPATH' ) || exit;
 ?>
 <div class="ea-document ea-invoice">
-
 	<div class="ea-document__section">
 		<div class="ea-document__column alignleft">
 			<h4 class="ea-document__number"><?php echo esc_html( $invoice->get_invoice_number() ); ?></h4>
@@ -29,5 +28,4 @@ defined( 'ABSPATH' ) || exit;
 	<?php eaccounting_get_template( 'invoice/invoice-items.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-note.php', array( 'invoice' => $invoice ) ); ?>
 	<?php eaccounting_get_template( 'invoice/invoice-terms.php', array( 'invoice' => $invoice ) ); ?>
-
 </div>

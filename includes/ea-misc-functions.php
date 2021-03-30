@@ -324,3 +324,34 @@ function eaccounting_file_to_attachment( $file ) {
 
 	return false;
 }
+
+/**
+ * Redirect user to specific page.
+ *
+ * @param string $url Redirected url.
+ */
+function eaccounting_redirect( $url ) {
+	if ( headers_sent() || empty( $url ) ) {
+		//for blank redirects
+		if ( '' == $url ) {
+			$url = set_url_scheme( '//' . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] );
+		}
+
+		register_shutdown_function( function ( $url ) {
+			echo '<script data-cfasync="false" type="text/javascript">window.location = "' . esc_js( $url ) . '"</script>';
+		}, $url );
+
+		if ( 1 < ob_get_level() ) {
+			while ( ob_get_level() > 1 ) {
+				ob_end_clean();
+			}
+		} ?>
+		<script data-cfasync='false' type="text/javascript">
+			window.location = '<?php echo esc_js( $url ); ?>';
+		</script>
+		<?php exit;
+	} else {
+		wp_redirect( $url );
+	}
+	exit;
+}

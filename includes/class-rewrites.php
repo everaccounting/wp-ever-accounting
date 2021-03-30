@@ -11,15 +11,47 @@ namespace EverAccounting;
 
 defined( 'ABSPATH' ) || exit();
 
+/**
+ * Class Rewrites
+ * @package EverAccounting
+ */
 class Rewrites {
+	/**
+	 * Url base.
+	 *
+	 * @var string
+	 */
+	public $url_base;
 
 	/**
 	 * EverAccounting_Rewrites constructor.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'add_rewrite_rules' ) );
-		add_filter( 'query_vars', array( $this, 'register_query_var' ) );
-		add_action( 'template_redirect', array( $this, 'rewrite_templates' ) );
+		$this->url_base = apply_filters( 'eaccounting_url_base', 'eaccounting' );
+		add_action( 'init', array( $this, 'add_endpoints' ) );
+		if ( ! is_admin() ) {
+			add_filter( 'query_vars', array( $this, 'add_query_vars' ), 0 );
+			add_action( 'template_redirect', array( $this, 'rewrite_templates' ), -1 );
+		}
+	}
+
+
+	/**
+	 * Get query vars.
+	 *
+	 * @return array
+	 */
+	public function get_query_vars() {
+		return apply_filters( 'eaccounting_get_query_vars', array(
+			$this->url_base,
+			'invoices',
+			'bills',
+			'singular',
+			'id',
+			'gateway',
+			'paged',
+			'endpoint'
+		) );
 	}
 
 	/**
@@ -27,32 +59,29 @@ class Rewrites {
 	 *
 	 * @return void
 	 */
-	function add_rewrite_rules() {
-		$eaccounting_slug = eaccounting_get_parmalink_base();
-		add_rewrite_rule( '^' . $eaccounting_slug . '/invoice/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=invoice&id=$matches[1]&key=$matches[2]', 'top' );
-		add_rewrite_rule( '^' . $eaccounting_slug . '/bill/([0-9]{1,})/(.*)?/?$', 'index.php?eaccounting=true&ea_page=bill&id=$matches[1]&key=$matches[2]', 'top' );
-//		add_rewrite_rule( '^' . $eaccounting_slug . '/?$', 'index.php?eaccounting=true&ea_page=dashboard', 'top' );
-//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&page=index', 'top' );
-//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)/page/([0-9]{1,5})?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&page=index&page=$matches[2]', 'top' );
-//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)?/([0-9]{1,5})?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&id=$matches[2]&page=single', 'top' );
-//		add_rewrite_rule( '^' . $eaccounting_slug . '/([a-z]+?)?/([0-9]{1,5})?/(.*)?/?$', 'index.php?eaccounting=true&ea_page=$matches[1]&id=$matches[1]&key=$matches[2]&page=single', 'top' );
+	function add_endpoints() {
+		add_rewrite_rule( "^{$this->url_base}/?$", 'index.php?eaccounting=true&endpoint=dashboard', 'top' );
+		add_rewrite_rule( "^{$this->url_base}/([^/]+)?/?$", 'index.php?eaccounting=true&endpoint=$matches[1]', 'top' );
+		add_rewrite_rule( "^{$this->url_base}/([^/]+)/([0-9]+)/(.*)?/?$", 'index.php?eaccounting=true&endpoint=$matches[1]&id=$matches[2]&singular=true', 'top' );
+		add_rewrite_rule( "^{$this->url_base}/([^/]+)/([0-9]+)/?$", 'index.php?eaccounting=true&endpoint=$matches[1]&id=$matches[2]&singular=true', 'top' );
+		add_rewrite_rule( "^{$this->url_base}/([^/]+)/page/([0-9]+)?/?$", 'index.php?eaccounting=true&endpoint=$matches[1]&paged=$matches[2]', 'top' );
 	}
 
 	/**
-	 * Register our query vars
+	 * Add query vars.
 	 *
-	 * @param array $vars
+	 * @param array $vars Query vars.
 	 *
 	 * @return array
 	 */
-	function register_query_var( $vars ) {
-		$vars[] = 'eaccounting';
-		$vars[] = 'ea_page';
-		$vars[] = 'id';
-		$vars[] = 'key';
+	public function add_query_vars( $vars ) {
+		foreach ( $this->get_query_vars() as $var ) {
+			$vars[] = $var;
+		}
 
 		return $vars;
 	}
+
 
 	/**
 	 * Load our template on our rewrite rule
@@ -61,7 +90,26 @@ class Rewrites {
 	 */
 	public function rewrite_templates() {
 		if ( 'true' === get_query_var( 'eaccounting' ) ) {
-			eaccounting_get_template( 'eaccounting.php' );
+			ob_start();
+
+			$endpoint = get_query_var('endpoint', 'dashboard');
+
+			do_action('eaccounting_redirect', $endpoint);
+
+			do_action('eaccounting_page_header', $endpoint);
+
+			do_action('eaccounting_page_header_'.$endpoint );
+
+			if (  has_action( 'eaccounting_page_content_' . $endpoint ) ) {
+				do_action( 'eaccounting_page_content_' . $endpoint );
+			}else{
+				do_action( 'eaccounting_page_content_unauthorized' );
+			}
+
+			do_action('eaccounting_page_footer_'.$endpoint );
+
+			do_action('eaccounting_page_footer', $endpoint);
+
 			exit();
 		}
 	}

@@ -777,7 +777,7 @@ class Bill extends Document {
 	 * @since 1.1.0
 	 */
 	public function get_url() {
-		$base = eaccounting_get_parmalink_base();
+		$base = eaccounting_get_base_url();
 		$url  = site_url( $base );
 		$url  = untrailingslashit( $url ) . '/bill/' . $this->get_id() . '/' . $this->get_key();
 
