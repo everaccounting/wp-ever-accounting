@@ -236,10 +236,10 @@ class EverAccounting_Customer_List_Table extends EverAccounting_List_Table {
 				$value .= '</label>';
 				break;
 			case 'due':
-				$value = eaccounting_format_price( $customer->get_total_due() );
+				$value = eaccounting_format_price( $customer->get_total_due(), $customer->get_currency_code() );
 				break;
 			case 'paid':
-				$value = eaccounting_format_price( $customer->get_total_paid() );
+				$value = eaccounting_format_price( $customer->get_total_paid(),$customer->get_currency_code() );
 				break;
 			case 'actions':
 				$edit_url = eaccounting_admin_url(
