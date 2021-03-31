@@ -257,10 +257,10 @@ class EverAccounting_Vendor_List_Table extends EverAccounting_List_Table {
 				$value    = $this->row_actions( $actions );
 				break;
 			case 'due':
-				$value = eaccounting_format_price( $vendor->get_total_due() );
+				$value = eaccounting_format_price( $vendor->get_total_due(),$vendor->get_currency_code() );
 				break;
 			case 'paid':
-				$value = eaccounting_format_price( $vendor->get_total_paid() );
+				$value = eaccounting_format_price( $vendor->get_total_paid(),$vendor->get_currency_code() );
 				break;
 			default:
 				return parent::column_default( $vendor, $column_name );

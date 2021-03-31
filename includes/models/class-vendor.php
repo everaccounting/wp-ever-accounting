@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Vendor extends Contact {
 	use Attachment;
+
 	/**
 	 * This is the name of this object type.
 	 *
@@ -33,11 +34,11 @@ class Vendor extends Contact {
 	/**
 	 * Get the vendor if ID is passed, otherwise the vendor is new and empty.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param int|object|Customer $data object to read.
 	 *
 	 * @throws \Exception
+	 * @since 1.1.0
+	 *
 	 */
 	public function __construct( $data = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'vendor' ) );
@@ -68,7 +69,7 @@ class Vendor extends Contact {
 	/**
 	 * Get due amount.
 	 *
-	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 */
@@ -79,7 +80,7 @@ class Vendor extends Contact {
 	/**
 	 * Get paid amount.
 	 *
-	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return float
 	 */
@@ -120,8 +121,8 @@ class Vendor extends Contact {
 	/**
 	 * Get total paid by a vendor.
 	 *
-	 * @since 1.1.0
 	 * @return float|int|string
+	 * @since 1.1.0
 	 */
 	public function get_calculated_total_paid() {
 		global $wpdb;
@@ -130,7 +131,8 @@ class Vendor extends Contact {
 			$total        = 0;
 			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='expense' AND contact_id=%d", $this->get_id() ) );
 			foreach ( $transactions as $transaction ) {
-				$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+				//$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+				$total += eaccounting_price_convert( $transaction->amount, $transaction->currency_code, $this->get_currency_code() );
 			}
 			wp_cache_set( 'vendor_total_total_paid_' . $this->get_id(), $total, 'ea_vendors' );
 		}
@@ -141,8 +143,8 @@ class Vendor extends Contact {
 	/**
 	 * Get total due by a vendor.
 	 *
-	 * @since 1.1.0
 	 * @return float|int|string
+	 * @since 1.1.0
 	 */
 	public function get_calculated_total_due() {
 		global $wpdb;
@@ -159,7 +161,8 @@ class Vendor extends Contact {
 
 			$total = 0;
 			foreach ( $bills as $bill ) {
-				$total += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
+				//$total += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
+				$total += eaccounting_price_convert( $bill->amount, $bill->currency_code, $this->get_currency_code() );
 			}
 
 			if ( ! empty( $total ) ) {
@@ -175,7 +178,8 @@ class Vendor extends Contact {
 				);
 
 				foreach ( $revenues as $revenue ) {
-					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
+					//$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
+					$total -= eaccounting_price_convert( $revenue->amount, $revenue->currency_code, $this->get_currency_code() );
 				}
 			}
 			wp_cache_set( 'vendor_total_total_due_' . $this->get_id(), $total, 'ea_vendors' );

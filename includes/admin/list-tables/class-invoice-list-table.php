@@ -8,6 +8,7 @@
  */
 
 use EverAccounting\Models\Invoice;
+use function EverAccounting\Admin\eaccounting_admin_notices;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -265,7 +266,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;
@@ -277,17 +278,29 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			$invoice = new Invoice( $id );
 			switch ( $action ) {
 				case 'cancel':
-					$invoice->delete_payments();
-					$invoice->set_status( 'cancelled' );
-					$invoice->save();
+					try {
+						$invoice->delete_payments();
+						$invoice->set_status( 'cancelled' );
+						$invoice->save();
+					} catch ( \Exception $e ) {
+						eaccounting_admin_notices()->add_error( sprintf( __( 'Invoice status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+					}
 					break;
 				case 'paid':
-					$invoice->set_paid();
-					$invoice->save();
+					try {
+						$invoice->set_paid();
+						$invoice->save();
+					} catch ( \Exception $e ) {
+						eaccounting_admin_notices()->add_error( sprintf( __( 'Invoice status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+					}
 					break;
 				case 'pending':
-					$invoice->set_status( 'pending' );
-					$invoice->save();
+					try {
+						$invoice->set_status( 'pending' );
+						$invoice->save();
+					} catch ( \Exception $e ) {
+						eaccounting_admin_notices()->add_error( sprintf( __( 'Invoice status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+					}
 					break;
 				case 'delete':
 					eaccounting_delete_invoice( $id );

@@ -28,19 +28,19 @@ class Controller {
 		add_action( 'eaccounting_delete_account', array( $this, 'delete_account_reference' ) );
 
 		//customers
-		add_action( 'eaccounting_delete_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_revenue', array( $this, 'insert_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_update_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_delete_revenue', array( $this, 'update_customer_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_invoice', array( $this, 'insert_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_update_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_invoice', array( $this, 'update_customer_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_customer', array( $this, 'delete_customer_reference' ) );
 
 		//vendors
-		add_action( 'eaccounting_delete_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_payment', array( $this, 'insert_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_update_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
-		add_action( 'eaccounting_insert_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_delete_payment', array( $this, 'update_vendor_total_paid' ), 10, 2 );
+		add_action( 'eaccounting_insert_bill', array( $this, 'insert_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_update_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_bill', array( $this, 'update_vendor_total_paid' ), 10, 2 );
 		add_action( 'eaccounting_delete_vendor', array( $this, 'delete_vendor_reference' ) );
@@ -131,6 +131,29 @@ class Controller {
 	| Handle side effect of inserting, update, deleting customer
 	*/
 
+
+	/**
+	 * Update customer total paid when insert
+	 *
+	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param array $values
+	 *
+	 * @since 1.1.2
+	 *
+	 */
+	public function insert_customer_total_paid( $transaction, $values ) {
+		$customer = eaccounting_get_customer( $transaction->get_customer_id() );
+		if ( $customer ) {
+			eaccounting_insert_customer(
+				array(
+					'id'         => $customer->get_id(),
+					'total_paid' => $customer->get_calculated_total_paid(),
+					'total_due'  => $customer->get_calculated_total_due(),
+				)
+			);
+		}
+	}
+
 	/**
 	 * Update customer total paid
 	 *
@@ -175,6 +198,28 @@ class Controller {
 	|
 	| Handle side effect of inserting, update, deleting vendor
 	*/
+
+	/**
+	 * Update vendor total paid when payment inserted
+	 *
+	 * @param \EverAccounting\Abstracts\Transaction $transaction
+	 * @param array $values
+	 *
+	 * @since 1.1.2
+	 *
+	 */
+	public function insert_vendor_total_paid( $transaction, $values ) {
+		$vendor = eaccounting_get_vendor( $transaction->get_vendor_id() );
+		if ( $vendor ) {
+			eaccounting_insert_vendor(
+				array(
+					'id'         => $vendor->get_id(),
+					'total_paid' => $vendor->get_calculated_total_paid(),
+					'total_due'  => $vendor->get_calculated_total_due(),
+				)
+			);
+		}
+	}
 
 	/**
 	 * Update vendor total paid

@@ -8,6 +8,7 @@
  */
 
 use EverAccounting\Models\Bill;
+use function EverAccounting\Admin\eaccounting_admin_notices;
 
 defined( 'ABSPATH' ) || exit();
 
@@ -77,13 +78,13 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 	 */
 	protected function render_blank_state() {
 		?>
-		<div class="ea-empty-table">
-			<p class="ea-empty-table__message">
+        <div class="ea-empty-table">
+            <p class="ea-empty-table__message">
 				<?php echo esc_html__( 'Create and manage bills so your finances are always accurate and healthy. Print and share bill with your vendor. Bill also support tax calculation & discount.', 'wp-ever-accounting' ); ?>
-			</p>
-			<a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Bills', 'wp-ever-accounting' ); ?></a>
-			<a href="https://wpeveraccounting.com/docs/general/add-bills/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
-		</div>
+            </p>
+            <a href="<?php echo esc_url( eaccounting_admin_url( array( 'page' => 'ea-expenses', 'tab' => 'bills', 'action' => 'edit', ) ) ); //phpcs:ignore ?>" class="button-primary ea-empty-table__cta"><?php _e( 'Add Bills', 'wp-ever-accounting' ); ?></a>
+            <a href="https://wpeveraccounting.com/docs/general/add-bills/?utm_source=listtable&utm_medium=link&utm_campaign=admin" class="button-secondary ea-empty-table__cta" target="_blank"><?php _e( 'Learn More', 'wp-ever-accounting' ); ?></a>
+        </div>
 		<?php
 	}
 
@@ -248,7 +249,7 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 		}
 
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
+		$ids = array_filter( $ids );
 
 		if ( empty( $ids ) ) {
 			return;
@@ -260,17 +261,30 @@ class EverAccounting_Bill_List_Table extends EverAccounting_List_Table {
 			$bill = new Bill( $id );
 			switch ( $action ) {
 				case 'cancel':
-					$bill->delete_payments();
-					$bill->set_status( 'cancelled' );
-					$bill->save();
+				    try {
+					    $bill->delete_payments();
+					    $bill->set_status( 'cancelled' );
+					    $bill->save();
+				    } catch (\Exception $e) {
+					    eaccounting_admin_notices()->add_error( sprintf( __( 'Bill status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+                    }
+
 					break;
 				case 'paid':
-					$bill->set_paid();
-					$bill->save();
+					try {
+						$bill->set_paid();
+						$bill->save();
+					} catch ( \Exception $e ) {
+						eaccounting_admin_notices()->add_error( sprintf( __( 'Bill status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+					}
 					break;
 				case 'received':
-					$bill->set_status( 'received' );
-					$bill->save();
+					try {
+						$bill->set_status( 'received' );
+						$bill->save();
+					} catch ( \Exception $e ) {
+						eaccounting_admin_notices()->add_error( sprintf( __( 'Bill status was not changes : %s ', 'wp-ever-accounting' ), $e->getMessage() ) );
+					}
 					break;
 				case 'delete':
 					eaccounting_delete_bill( $id );
