@@ -1,0 +1,46 @@
+@import "@wordpress/base-styles/colors.native.scss";
+.ea-autocomplete{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  align-content: center;
+  height: auto;
+  position: relative;
+  box-sizing: border-box;
+  overflow: visible;
+
+  &__input-wrap{
+	overflow: visible;
+	width: 100%;
+	position: relative;
+	box-sizing: border-box;
+  }
+
+  &__input{
+	width: 100%;
+  }
+
+  &__btn{
+	background: transparent;
+	border: none;
+	border-radius: 0;
+	box-shadow: none;
+	color: #32373c;
+	display: block;
+	position: absolute;
+	height: 100%;
+	text-shadow: none;
+	right: 0;
+	cursor: pointer;
+	transition: all 0.3s;
+
+	&:focus, &:hover{
+	  outline: none;
+	  color: $blue-wordpress;
+	}
+
+	svg{
+	  color: currentColor;
+	}
+  }
+}
