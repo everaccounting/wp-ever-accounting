@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Rest;
+namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Contacts_Controller;
 use EverAccounting\Models\Vendor;
@@ -19,14 +19,14 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Rest
+ * @package EverAccounting\REST
  */
 class Vendors_Controller extends Contacts_Controller {
 	/**
 	 * Route base.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 *
 	 */
@@ -36,7 +36,7 @@ class Vendors_Controller extends Contacts_Controller {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Vendor::class;

@@ -7,12 +7,16 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Rest;
+namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Controller;
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Class SettingsController
+ * @package EverAccounting\REST
+ */
 class SettingsController extends Controller {
 	/**
 	 * Route base.

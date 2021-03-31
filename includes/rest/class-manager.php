@@ -7,12 +7,16 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Rest;
+namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Singleton;
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Class Manager
+ * @package EverAccounting\REST
+ */
 class Manager extends Singleton {
 	/**
 	 * Manager constructor.
@@ -28,18 +32,17 @@ class Manager extends Singleton {
 		$rest_handlers = apply_filters(
 			'eaccounting_rest_controllers',
 			array(
-				'\EverAccounting\Rest\Accounts_Controller',
-				'\EverAccounting\Rest\Customers_Controller',
-				'\EverAccounting\Rest\Vendors_Controller',
-				'\EverAccounting\Rest\Expenses_Controller',
-				'\EverAccounting\Rest\Incomes_Controller',
-				'\EverAccounting\Rest\Categories_Controller',
-				'\EverAccounting\Rest\Currencies_Controller',
-				'\EverAccounting\Rest\Transfers_Controller',
-				'\EverAccounting\Rest\Codes_Controller',
-				'\EverAccounting\Rest\Countries_Controller',
-				'\EverAccounting\Rest\Data_Controller',
-				'\EverAccounting\Rest\Taxes_Controller',
+				'\EverAccounting\REST\Accounts_Controller',
+				'\EverAccounting\REST\Customers_Controller',
+				'\EverAccounting\REST\Vendors_Controller',
+				'\EverAccounting\REST\Expenses_Controller',
+				'\EverAccounting\REST\Incomes_Controller',
+				'\EverAccounting\REST\Categories_Controller',
+				'\EverAccounting\REST\Currencies_Controller',
+				'\EverAccounting\REST\Transfers_Controller',
+				'\EverAccounting\REST\Codes_Controller',
+				'\EverAccounting\REST\Countries_Controller',
+				'\EverAccounting\REST\Data_Controller',
 			)
 		);
 

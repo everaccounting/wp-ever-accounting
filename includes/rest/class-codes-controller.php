@@ -7,10 +7,14 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Rest;
+namespace EverAccounting\REST;
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Class CodesController
+ * @package EverAccounting\REST
+ */
 class CodesController extends Data_Controller {
 	/**
 	 * Route base.
@@ -150,7 +154,7 @@ class CodesController extends Data_Controller {
 	 * Get the location schema, conforming to JSON Schema.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_item_schema() {

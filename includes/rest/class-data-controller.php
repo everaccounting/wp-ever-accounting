@@ -4,11 +4,11 @@
  *
  * Handles requests to the /data endpoint.
  *
- * @package EverAccounting\Rest
+ * @package EverAccounting\REST
  * @since   1.1.0
  */
 
-namespace EverAccounting\Rest;
+namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Controller;
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * REST API Data controller class.
  *
- * @package EverAccounting\Rest
+ * @package EverAccounting\REST
  * @extends Controller
  */
 class Data_Controller extends Controller {
@@ -79,9 +79,9 @@ class Data_Controller extends Controller {
 	 * Return the list of data resources.
 	 *
 	 * @since  1.1.0
-	 * 
+	 *
 	 * @param  \WP_REST_Request $request Request data.
-	 * 
+	 *
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_items( $request ) {
@@ -110,7 +110,7 @@ class Data_Controller extends Controller {
 	 *
 	 * @param \\stdClass        $resource Resource data.
 	 * @param \WP_REST_Request $request  Request object.
-	 * 
+	 *
 	 * @return \WP_REST_Response $response Response data.
 	 */
 	public function prepare_item_for_response( $resource, $request ) {
@@ -133,7 +133,7 @@ class Data_Controller extends Controller {
 	 * Prepare links for the request.
 	 *
 	 * @param object $item Data object.
-	 * 
+	 *
 	 * @return array Links for the given country.
 	 */
 	protected function prepare_links( $item ) {
@@ -153,7 +153,7 @@ class Data_Controller extends Controller {
 	 * Get the data index schema, conforming to JSON Schema.
 	 *
 	 * @since  3.5.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_item_schema() {

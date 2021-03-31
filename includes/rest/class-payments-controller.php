@@ -7,7 +7,7 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Rest;
+namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Transactions_Controller;
 use EverAccounting\Models\Payment;
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.0
  *
- * @package EverAccounting\Rest
+ * @package EverAccounting\REST
  */
 class Payments_Controller extends Transactions_Controller {
 	/**

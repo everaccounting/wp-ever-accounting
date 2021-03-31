@@ -7,13 +7,17 @@
  * @package     EverAccounting
  */
 
-namespace EverAccounting\Rest;
+namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Entities_Controller;
 use EverAccounting\Models\Category;
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Class CategoriesController
+ * @package EverAccounting\REST
+ */
 class CategoriesController extends Entities_Controller {
 	/**
 	 * Route base.
@@ -26,7 +30,7 @@ class CategoriesController extends Entities_Controller {
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $entity_model = Category::class;
@@ -47,9 +51,9 @@ class CategoriesController extends Entities_Controller {
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
-	 * 
+	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Item schema data.
 	 *
 	 */
@@ -118,9 +122,9 @@ class CategoriesController extends Entities_Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Collection parameters.
-	 * 
+	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
