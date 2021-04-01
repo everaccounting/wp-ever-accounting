@@ -172,6 +172,9 @@ class Assets {
 			);
 			wp_enqueue_media();
 		}
+
+		$data_file = include plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) . '/dist/js/data.asset.php';
+		wp_enqueue_script('ea-data', plugins_url( 'dist/js/data.js', EACCOUNTING_PLUGIN_FILE), $data_file['dependencies'], $data_file['version'], true );
 	}
 
 

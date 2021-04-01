@@ -6,7 +6,6 @@ import { render } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import { __ } from '@wordpress/i18n';
 import {STORE_NAME} from '@eaccounting/data';
-import {Lorem} from '@eaccounting/components';
 
 /**
  * External dependencies
@@ -19,12 +18,7 @@ function App() {
 	console.log(STORE_NAME);
 	return (
 		<div className="remove-me">
-			<Lorem/>
-			{ __(
-				'Hello World!, I am assets->frontend->frontend.js file. Remove me to get started',
-				'eaccounting-addon'
-			) }
-			<image src={'../images/logo.png'} />
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad dolore dolores est et neque! A accusantium, aliquid autem consequuntur earum hic inventore nobis non quasi quibusdam, recusandae rem suscipit voluptas.
 		</div>
 	);
 }
