@@ -374,6 +374,7 @@ final class EverAccounting {
 	public function ajax_url() {
 		return admin_url( 'admin-ajax.php', 'relative' );
 	}
+	
 }
 
 /**
