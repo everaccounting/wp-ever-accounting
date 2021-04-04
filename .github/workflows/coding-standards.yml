@@ -63,7 +63,7 @@ jobs:
         run: |
           composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
       - name: Log PHPCS debug information
-        run: phpcs -i
+        run: ./vendor/bin/phpcs -i
 
       - name: Run PHPCS
         run: ./vendor/bin/phpcs -q -n --report=checkstyle | cs2pr
