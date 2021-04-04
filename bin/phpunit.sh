@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -ex
+
 WORKING_DIR="$PWD"
 ls
 cd "$WP_CORE_DIR/wp-content/plugins/wp-ever-accounting/"
