@@ -61,7 +61,7 @@ class REST_UnitTestCase extends UnitTestCase{
 	/**
 	 * Perform a GET REST request.
 	 *
-	 * @param string     $url The endpopint url, if it doesn't start with '/' it'll be prepended with '/wc/v3/'.
+	 * @param string     $url The endpopint url, if it doesn't start with '/' it'll be prepended with '/ea/v1/'.
 	 * @param array|null $query_params Query string parameters for the request, null if none are required.
 	 * @return \WP_REST_Response Response returned by the callback.
 	 */

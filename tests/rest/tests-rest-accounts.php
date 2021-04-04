@@ -23,8 +23,8 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 	}
 
 	public function test_account_fields(){
-		global $current_user;
-		var_export($current_user);
+		set_current_user( $this->user );
+		$this->writeln(current_user_can( "ea_manage_account" ));
 		$expected_response_fields = $this->get_expected_response_fields();
 		$account = \EverAccounting\Tests\Framework\Helpers\Account_Helper::create_account(true );
 		$response = $this->do_rest_get_request('/ea/v1/accounts/'.$account->get_id());
