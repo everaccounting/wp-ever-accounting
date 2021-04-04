@@ -12,7 +12,7 @@ class Account_Factory extends \WP_UnitTest_Factory_For_Thing {
 		$this->default_generation_definitions = array(
 			'name'            => new \WP_UnitTest_Generator_Sequence( 'Account %s' ),
 			'number'          => new \WP_UnitTest_Generator_Sequence( 'acc-%s-%d' ),
-			'currency_code'   => Currency_Helper::create_currency( 'USD', '$' ),
+			'currency_code'   => Currency_Helper::create_currency(),
 			'opening_balance' => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'bank_name'       => new \WP_UnitTest_Generator_Sequence( 'Bank %s' ),
 			'bank_phone'      => new \WP_UnitTest_Generator_Sequence( 'Bank %d' ),

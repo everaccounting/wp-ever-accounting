@@ -24,27 +24,28 @@ tests_add_filter( 'muplugins_loaded', function () use ( $plugin_dir, $plugins_di
 	require_once $plugins_dir . '/wp-ever-accounting/wp-ever-accounting.php';
 } );
 
-// load the WP testing environment.
-require_once $wp_tests_dir . '/includes/bootstrap.php';
-
 // Setup plugin.
-activate_plugin( 'wp-ever-accounting/wp-ever-accounting.php' );
-
-// install dependencies.
 tests_add_filter( 'setup_theme', function () use ( $plugin_dir, $plugins_dir ) {
+	var_dump($plugin_dir);
 	define( 'WP_UNINSTALL_PLUGIN', true );
 	define( 'EACCOUNTING_REMOVE_ALL_DATA', true );
-	include $this->plugin_dir . '/uninstall.php';
+	include $plugin_dir . '/uninstall.php';
 	echo esc_html( 'Installing EverAccounting ...' . PHP_EOL );
 	EverAccounting\Install::install();
-	$GLOBALS['wp_roles']->reinit();
+	echo esc_html( 'Initiating Tests ...' . PHP_EOL );
 });
 
 
+// load the WP testing environment.
+require_once $wp_tests_dir . '/includes/bootstrap.php';
+
 // Includes core files.
+
+require_once $tests_dir . '/framework/helpers/account-helper.php';
+require_once $tests_dir . '/framework/helpers/currency-helper.php';
+
 require_once $tests_dir . '/framework/class-unit-test-factory.php';
 require_once $tests_dir . '/framework/class-unittestcase.php';
 require_once $tests_dir . '/framework/class-rest-unittestcase.php';
 
-require_once $tests_dir . '/framework/helpers/account-helper.php';
 
