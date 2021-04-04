@@ -60,7 +60,6 @@ jobs:
           sudo /etc/init.d/mysql start
           bash bin/ci/gh-install-wp-tests.sh eaccounting_admin_test root 'root' localhost
           cd "$WP_CORE_DIR/wp-content/plugins/wp-ever-accounting/"
-          composer install
           node --version
           npm --version
           timedatectl
