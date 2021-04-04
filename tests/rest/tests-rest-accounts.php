@@ -26,7 +26,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 		$expected_response_fields = $this->get_expected_response_fields();
 		$account = \EverAccounting\Tests\Framework\Helpers\Account_Helper::create_account(true );
 		$response = $this->do_rest_get_request('/ea/v1/accounts/'.$account->get_id());
-		$this->assertEquals( 200, $response->get_status(), $response );
+		$this->assertEquals( 200, $response->get_status(), var_export( $response, true ) );
 		$response_fields = array_keys( $response->get_data() );
 
 		$this->assertEmpty( array_diff( $expected_response_fields, $response_fields ), 'These fields were expected but not present in API response: ' . print_r( array_diff( $expected_response_fields, $response_fields ), true ) );
