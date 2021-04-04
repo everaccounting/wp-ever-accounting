@@ -75,7 +75,7 @@ class UnitTestCase extends \WP_UnitTestCase{
 	/**
 	 * @param $message
 	 */
-	public function log( $message ){
+	public function writeln( $message ){
 		fwrite(STDERR, print_r($message, TRUE));
 	}
 }
