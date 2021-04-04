@@ -1,6 +1,6 @@
 name: Coding Standards
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   # Runs PHP coding standards checks.
@@ -66,5 +66,5 @@ jobs:
 
       - name: Run PHPCS on all Core files
         continue-on-error: true
-        run: ./vendor/bin/phpcs --report-full -n --report=checkstyle | cs2pr
+        run: ./vendor/bin/phpcs -q -n --report=checkstyle | cs2pr
 
