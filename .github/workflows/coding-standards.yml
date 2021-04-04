@@ -48,6 +48,15 @@ jobs:
         run: |
           php --version
           composer --version
+
+      - name: Setup token
+        run: composer config -g github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Configure git
+        run: git config --global url."https://${TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
+        env:
+          TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
       - name: Install Composer dependencies
         run: |
           composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
