@@ -127,6 +127,8 @@ install_deps() {
   php wp-cli.phar plugin activate wp-ever-accounting
 
 	# Back to original dir
+	pwd
+	ls
 	cd "$WORKING_DIR"
 
 	echo "::endgroup::"
