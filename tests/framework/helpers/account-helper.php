@@ -19,7 +19,7 @@ class Account_Helper {
 		);
 		$props = array_merge( $default, $props );
 		if ( $save ) {
-			return eaccounting_insert_account( $props );
+			return eaccounting_insert_account( $props, false  );
 		}
 
 		return $props;

@@ -22,6 +22,7 @@ require_once dirname( __FILE__ ) . '/factories/class-category-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-item-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-revenue-factory.php';
 
+
 class Factory extends \WP_UnitTest_Factory {
 
 	/**
