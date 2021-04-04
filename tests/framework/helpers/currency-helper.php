@@ -2,21 +2,19 @@
 
 namespace EverAccounting\Tests\Framework\Helpers;
 
-class Account_Helper {
+class Currency_Helper {
 
-	public static function create_account( $currency = 'USD' ) {
+	public static function create_currency( $code = 'USD', $symbol = '$' ) {
 		return eaccounting_insert_account(
 			array(
-				'name'            => 'John Doe',
-				'number'          => '000001',
-				'currency_code'   => $currency,
-				'opening_balance' => '100',
-				'bank_name'       => 'Bank of america',
-				'bank_phone'      => '0123456789',
-				'bank_address'    => '',
-				'thumbnail_id'    => null,
-				'enabled'         => true,
-				'date_created'    => date('Y-m-d'),
+				'name'               => $code,
+				'code'               => $code,
+				'rate'               => 1.0,
+				'symbol'             => $symbol,
+				'position'           => 'before',
+				'precision'          => 4,
+				'decimal_separator'  => '.',
+				'thousand_separator' => ','
 			),
 			false
 		);
