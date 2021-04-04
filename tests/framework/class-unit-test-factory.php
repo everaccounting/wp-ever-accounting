@@ -14,6 +14,9 @@ use EverAccounting\Tests\Framework\Factories\Customer_Factory;
 use EverAccounting\Tests\Framework\Factories\Vendor_Factory;
 
 require_once dirname( __FILE__ ) . '/factories/class-customer-factory.php';
+require_once dirname( __FILE__ ) . '/factories/class-vendor-factory.php';
+require_once dirname( __FILE__ ) . '/factories/class-account-factory.php';
+require_once dirname( __FILE__ ) . '/factories/class-category-factory.php';
 
 class Factory extends \WP_UnitTest_Factory {
 
