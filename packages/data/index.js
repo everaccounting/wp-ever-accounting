@@ -12,7 +12,6 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import * as resolvers from './resolvers';
 import customControls from './controls';
-// import * as locksSelectors from './locks/selectors';
 import { STORE_KEY } from './constants';
 import { defaultEntities, getMethodName } from './entities';
 
@@ -72,7 +71,7 @@ const storeConfig = {
  */
 registerStore( STORE_KEY, storeConfig );
 
-export const STORE_NAME = STORE_KEY;
-
+export { STORE_KEY as STORE_NAME } from './constants';
 export { default as EntityProvider } from './entity-provider';
 export * from './entity-provider';
+export * from './use-select-with-refresh';

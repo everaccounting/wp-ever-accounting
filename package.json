@@ -23,9 +23,13 @@
   },
   "main": "index.js",
   "dependencies": {
+    "@automattic/color-studio": "^2.5.0",
     "chart.js": "2.9.3",
+    "classnames": "^2.3.0",
+    "cuid": "^2.1.8",
     "inputmask": "^5.0.5",
     "moment": "2.22.2",
+    "react-select": "^4.3.0",
     "select2": "~4.0"
   },
   "devDependencies": {
@@ -64,6 +68,7 @@
     "postcss-editor-styles": "^0.3.0",
     "precss": "^4.0.0",
     "promptly": "^3.2.0",
+    "prop-types": "^15.7.2",
     "replace-in-file": "^6.2.0",
     "stylelint-webpack-plugin": "^2.1.1",
     "webpack-fix-style-only-entries": "^0.4.0",

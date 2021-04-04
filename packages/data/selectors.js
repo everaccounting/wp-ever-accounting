@@ -2,21 +2,18 @@
  * External dependencies
  */
 import createSelector from 'rememo';
-import { set, map, find, get, filter, compact, defaultTo } from 'lodash';
+import { set, map, find, get, filter } from 'lodash';
 
 /**
  * WordPress dependencies
  */
-import { createRegistrySelector } from '@wordpress/data';
-import deprecated from '@wordpress/deprecated';
+import { select } from '@wordpress/data';
 import { addQueryArgs } from '@wordpress/url';
-
 /**
  * Internal dependencies
  */
-import { STORE_NAME } from './constants';
+import { STORE_KEY } from './constants';
 import { getQueriedItems, getQueriedTotal } from './queried-data';
-import { DEFAULT_ENTITY_KEY } from './entities';
 import { getNormalizedCommaSeparable } from './utils';
 
 /**
@@ -38,7 +35,7 @@ const EMPTY_ARRAY = [];
  *                                 include with request.
  * @return {Array} Authors list.
  */
-export function getUsers( state, query ) {
+export function getUsers( state, query={} ) {
 	const path = addQueryArgs( '/wp/v2/users/?per_page=100', query );
 	return getUserQueryResults( state, path );
 }
@@ -107,7 +104,7 @@ export function getEntities( state, name ) {
  *
  * @return {Object?} Record.
  */
-export function getEntityRecord( state, name, key = '', query ) {
+export function getEntityRecord( state, name, key = '', query={} ) {
 	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
 	if ( ! queriedState ) {
 		return undefined;
@@ -179,7 +176,7 @@ export const getRawEntityRecord = createSelector(
  *
  * @return {boolean} Whether entity records have been received.
  */
-export function hasEntityRecords( state, name, query ) {
+export function hasEntityRecords( state, name, query={} ) {
 	return Array.isArray( getEntityRecords( state, name, query ) );
 }
 
@@ -192,7 +189,7 @@ export function hasEntityRecords( state, name, query ) {
  *
  * @return {?Array} Records.
  */
-export function getEntityRecords( state, name, query ) {
+export function getEntityRecords( state, name, query={} ) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
@@ -213,7 +210,7 @@ export function getEntityRecords( state, name, query ) {
  *
  * @return {?Array} Records.
  */
-export function getEntityTotal( state, name, query ) {
+export function getEntityTotal( state, name, query={} ) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
@@ -361,4 +358,19 @@ export function getLastEntitySaveError( state, name, recordId ) {
  */
 export function getLastEntityDeleteError( state, name, recordId ) {
 	return get( state.entities.data, [ name, 'deleting', recordId, 'error' ] );
+}
+
+/**
+ * Helper indicating whether the given resourceName, selectorName, and queryString
+ * is being resolved or not.
+ *
+ * @param {Object} state
+ * @param {string} selectorName
+ * @param {Object} query
+ * @return {boolean} Returns true if the selector is currently requesting items.
+ */
+export function isRequesting( state, selectorName, query = {} ) {
+	return (
+		select( STORE_KEY ).getIsResolving( selectorName, [ query ] )
+	);
 }

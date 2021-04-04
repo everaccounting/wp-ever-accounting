@@ -1,0 +1,63 @@
+@import "~@automattic/color-studio";
+
+.ea-popover__arrows {
+	position: absolute;
+	width: 100%;
+
+	&::after,
+	&::before {
+		content: "";
+		box-shadow: 0 3px 30px rgba($studio-gray-90, 0.1);
+		position: absolute;
+		height: 0;
+		width: 0;
+		line-height: 0;
+		margin-left: 10px;
+	}
+
+	&::before {
+		border: 8px solid $studio-gray-40;
+		border-bottom-style: solid;
+		border-left-color: transparent;
+		border-right-color: transparent;
+		border-top: none;
+		top: -8px;
+	}
+
+	&::after {
+		border: 8px solid $studio-white;
+		border-bottom-style: solid;
+		border-left-color: transparent;
+		border-right-color: transparent;
+		border-top: none;
+		top: -6px;
+		z-index: 10003;
+	}
+
+	&.ea-popover__arrows__right {
+		&::after,
+		&::before {
+			right: 0;
+			margin-right: 10px;
+		}
+	}
+
+	&.ea-popover__arrows__centre {
+		&::after,
+		&::before {
+			left: calc(50% - 16px);
+		}
+	}
+}
+
+.ea-popover__content {
+	box-shadow: 0 3px 30px rgba($studio-gray-90, 0.1);
+	border: 1px solid $studio-gray-40;
+	background: $studio-white;
+	min-width: 150px;
+	max-height: 400px;
+	position: absolute;
+	z-index: 10002;
+	height: auto;
+	overflow-y: auto;
+}

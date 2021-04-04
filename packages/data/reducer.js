@@ -15,8 +15,6 @@ import { ifMatchingAction, replaceAction } from './utils';
 import { reducer as queriedDataReducer } from './queried-data';
 import { DEFAULT_ENTITY_KEY, defaultEntities } from './entities';
 
-import { reducer as locksReducer } from './locks';
-
 /**
  * Reducer managing authors state. Keyed by id.
  *
@@ -267,5 +265,4 @@ export default combineReducers( {
 	users,
 	currentUser,
 	entities,
-	locks: locksReducer,
 } );

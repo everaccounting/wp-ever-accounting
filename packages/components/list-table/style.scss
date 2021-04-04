@@ -1,0 +1,33 @@
+.ea-list-table-wrapper{
+  form.search-box{
+	float: right;
+	margin: 0;
+  }
+
+  .bulkactions{
+	.select{
+	  float: left;
+	  margin-right: 6px;
+	  max-width: 12.5rem;
+	}
+  }
+
+  .ea-table-filter {
+	vertical-align: middle;
+	&__item{
+	  vertical-align: middle;
+	  display: inline-block;
+	  margin-left: 10px;
+	  &:first-child{
+		margin-left: 0;
+	  }
+	}
+
+	.components-base-control__field{
+	  margin-bottom: 0;
+	}
+  }
+
+
+}
+

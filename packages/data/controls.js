@@ -150,6 +150,7 @@ const customControls = {
 					selectorName,
 					args
 				);
+			console.log(hasFinished(), reducerKey, selectorName, args)
 			const getResult = () =>
 				selectData( reducerKey )[ selectorName ].apply( null, args );
 
