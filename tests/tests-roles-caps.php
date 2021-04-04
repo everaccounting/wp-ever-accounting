@@ -37,10 +37,7 @@ class Tests_Roles_Caps extends UnitTestCase {
 
 	public function test_manager_caps(){
 		global $current_user;
-		$current_user = new \WP_User(1);
 		$current_user->set_role('ea_manager');
-		wp_set_current_user( 1 );
-
 		$this->assertEquals(current_user_can('manage_eaccounting'), true);
 		$this->assertEquals(current_user_can('ea_manage_report'), true);
 		$this->assertEquals(current_user_can('ea_manage_options'), true);
@@ -58,13 +55,12 @@ class Tests_Roles_Caps extends UnitTestCase {
 		$this->assertEquals(current_user_can('ea_manage_invoice'), true);
 		$this->assertEquals(current_user_can('ea_manage_bill'), true);
 		$this->assertEquals(current_user_can('read'), true);
+		$current_user->set_role('administrator');
 	}
 
 	public function test_accountant_caps(){
 		global $current_user;
-		$current_user = new \WP_User(1);
 		$current_user->set_role('ea_accountant');
-		wp_set_current_user( 1 );
 		$this->assertEquals(current_user_can('manage_eaccounting'), true);
 		$this->assertEquals(current_user_can('ea_manage_report'), false);
 		$this->assertEquals(current_user_can('ea_manage_options'), false);
@@ -82,5 +78,6 @@ class Tests_Roles_Caps extends UnitTestCase {
 		$this->assertEquals(current_user_can('ea_manage_invoice'), true);
 		$this->assertEquals(current_user_can('ea_manage_bill'), true);
 		$this->assertEquals(current_user_can('read'), true);
+		$current_user->set_role('administrator');
 	}
 }
