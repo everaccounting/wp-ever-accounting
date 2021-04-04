@@ -31,6 +31,15 @@ tests_add_filter( 'setup_theme', function () use ( $plugin_dir, $plugins_dir ) {
 	include $plugin_dir . '/uninstall.php';
 	echo esc_html( 'Installing EverAccounting ...' . PHP_EOL );
 	EverAccounting\Install::install();
+
+	// Reload capabilities after install, see https://core.trac.wordpress.org/ticket/28374.
+	if ( version_compare( $GLOBALS['wp_version'], '4.7', '<' ) ) {
+		$GLOBALS['wp_roles']->reinit();
+	} else {
+		$GLOBALS['wp_roles'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		wp_roles();
+	}
+
 	echo esc_html( 'Initiating Tests ...' . PHP_EOL );
 });
 
