@@ -72,4 +72,10 @@ class UnitTestCase extends \WP_UnitTestCase{
 		throw new \Exception( $message, $code );
 	}
 
+	/**
+	 * @param $message
+	 */
+	public function log( $message ){
+		fwrite(STDERR, print_r($message, TRUE));
+	}
 }

@@ -26,7 +26,6 @@ tests_add_filter( 'muplugins_loaded', function () use ( $plugin_dir, $plugins_di
 
 // Setup plugin.
 tests_add_filter( 'setup_theme', function () use ( $plugin_dir, $plugins_dir ) {
-	var_dump($plugin_dir);
 	define( 'WP_UNINSTALL_PLUGIN', true );
 	define( 'EACCOUNTING_REMOVE_ALL_DATA', true );
 	include $plugin_dir . '/uninstall.php';
@@ -43,6 +42,7 @@ require_once $wp_tests_dir . '/includes/bootstrap.php';
 
 require_once $tests_dir . '/framework/helpers/account-helper.php';
 require_once $tests_dir . '/framework/helpers/currency-helper.php';
+require_once $tests_dir . '/framework/helpers/category-helper.php';
 
 require_once $tests_dir . '/framework/class-unit-test-factory.php';
 require_once $tests_dir . '/framework/class-unittestcase.php';

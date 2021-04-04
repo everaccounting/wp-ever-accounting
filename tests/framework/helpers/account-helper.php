@@ -6,8 +6,8 @@ class Account_Helper {
 
 	public static function create_account( $save = true, $props = array() ) {
 		$default = array(
-			'name'            => 'John Doe',
-			'number'          => '000001',
+			'name'            => 'Bank of america',
+			'number'          => '1000',
 			'currency_code'   => 'USD',
 			'opening_balance' => '100',
 			'bank_name'       => 'Bank of america',
@@ -18,6 +18,7 @@ class Account_Helper {
 			'date_created'    => date('Y-m-d'),
 		);
 		$props = array_merge( $default, $props );
+
 		if ( $save ) {
 			return eaccounting_insert_account( $props, false  );
 		}

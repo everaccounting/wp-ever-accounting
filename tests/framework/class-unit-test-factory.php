@@ -27,17 +27,32 @@ class Factory extends \WP_UnitTest_Factory {
 
 	/**
 	 * @var Customer_Factory
-	 * @var Vendor_Factory
-	 * @var Account_Factory
-	 * @var Category_Factory
-	 * @var Item_Factory
-	 * @var Revenue_Factory
 	 */
 	public $customer;
+
+	/**
+	 * @var Vendor_Factory
+	 */
 	public $vendor;
+
+	/**
+	 * @var Account_Factory
+	 */
 	public $account;
+
+	/**
+	 * @var Category_Factory
+	 */
 	public $category;
+
+	/**
+	 * @var Item_Factory
+	 */
 	public $item;
+
+	/**
+	 * @var Revenue_Factory
+	 */
 	public $revenue;
 
 	/**
@@ -51,6 +66,6 @@ class Factory extends \WP_UnitTest_Factory {
 		$this->account = new Account_Factory( $this );
 		$this->category = new Category_Factory( $this );
 		$this->item = new Item_Factory( $this );
-		$this->revenue = new Revenue_Factory( $this );
+//		$this->revenue = new Revenue_Factory( $this );
 	}
 }
