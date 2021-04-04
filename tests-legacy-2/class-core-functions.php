@@ -6,13 +6,16 @@
  * @package EverAccounting\Tests
  */
 
+use EverAccounting\Tests\Framework\Unit_Test_Case;
+
 /**
  * Plugin Core Functions Class
  *
  * @since 1.0.0
  * @package EverAccounting\Tests
  */
-class Tests_Core_Functions extends \WP_UnitTestCase {
+class Tests_Core_Functions extends Unit_Test_Case {
+
 	public function test_get_options() {
 		$company_name = wp_hash_password( 10 );
 		eaccounting_update_option( 'company_name', $company_name );

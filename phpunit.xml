@@ -11,7 +11,7 @@
 
 	<testsuites>
 		<testsuite name="WP Ever Accounting">
-			<directory suffix=".php">./tests/php</directory>
+			<directory prefix="tests-" suffix=".php">./tests</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
@@ -20,11 +20,19 @@
 			<file>wp-ever-accounting.php</file>
 			<file>uninstall.php</file>
 			<exclude>
-				<directory suffix=".php">./legacy/</directory>
+				<directory suffix=".php">./tests/framework</directory>
 			</exclude>
 		</whitelist>
 	</filter>
 	<listeners>
-		<listener class="SpeedTrapListener" file="tests/framework/helpers/listener-loader.php" />
+		<listener class="SpeedTrapListener" file="tests/framework/library/listener-loader.php" >
+		<arguments>
+			<array>
+				<element key="slowThreshold">
+					<integer>150</integer>
+				</element>
+			</array>
+		</arguments>
+		</listener>
 	</listeners>
 </phpunit>

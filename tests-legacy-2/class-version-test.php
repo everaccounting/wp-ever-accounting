@@ -6,13 +6,17 @@
  * @since 1.0.0
  */
 
+namespace EverAccounting\Tests;
+
+use EverAccounting\Tests\Framework\Unit_Test_Case;
+
 /**
  * Plugin Version Tests Class
  *
- * @package EverAccounting\Tests
  * @since 1.0.0
+ *@package EverAccounting\Tests
  */
-class Tests_Plugin_Version extends \WP_UnitTestCase {
+class Test_Plugin_Version extends Unit_Test_Case {
 	/**
 	 * Ensure that all version numbers match.
 	 */
