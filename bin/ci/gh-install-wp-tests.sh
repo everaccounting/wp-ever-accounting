@@ -111,6 +111,24 @@ install_deps() {
 
 	php wp-cli.phar core config --dbname=$DB_NAME --dbuser=root --dbpass=$DB_PASS --dbhost=localhost --dbprefix=wptests_ --allow-root
 	php wp-cli.phar core install --url="$WP_SITE_URL" --title="Example" --admin_user=admin --admin_password=password --admin_email=info@example.com --path=$WP_CORE_DIR --skip-email --allow-root
+
+ # Install plugin
+  cd "$WP_CORE_DIR/wp-content/plugins"
+  cp -R $GITHUB_WORKSPACE ./
+
+  # Install dependencies
+	composer self-update $COMPOSER_VERSION
+	cd "wp-ever-accounting"
+ 	composer install
+	composer self-update 2.0.6
+
+  # Activate Ever Accounting
+	cd "$WP_CORE_DIR"
+  php wp-cli.phar plugin activate wp-ever-accounting
+
+	# Back to original dir
+	cd "$WORKING_DIR"
+
 	echo "::endgroup::"
 }
 
