@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || die();
  */
 class Accounts_Controller extends Entities_Controller {
 	/**
+	 * entity type.
+	 *
+	 * @var string
+	 */
+	protected $entity_type = 'account';
+
+	/**
 	 * Route base.
 	 *
 	 * @since 1.1.0

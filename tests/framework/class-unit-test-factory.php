@@ -13,6 +13,8 @@ use EverAccounting\Tests\Framework\Factories\Category_Factory;
 use EverAccounting\Tests\Framework\Factories\Customer_Factory;
 use EverAccounting\Tests\Framework\Factories\Vendor_Factory;
 
+require_once dirname( __FILE__ ) . '/factories/class-customer-factory.php';
+
 class Factory extends \WP_UnitTest_Factory {
 
 	/**

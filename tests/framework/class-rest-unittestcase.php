@@ -18,7 +18,7 @@ class REST_UnitTestCase extends UnitTestCase{
 		$GLOBALS['wp_rewrite']->init();
 		flush_rewrite_rules( false );
 
-		$wp_rest_server = new WP_Test_REST_Server();
+		$wp_rest_server = new \WP_REST_Server();
 		$this->server   = $wp_rest_server;
 		do_action( 'rest_api_init' );
 	}

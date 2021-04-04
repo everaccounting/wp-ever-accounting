@@ -2,8 +2,6 @@
 
 namespace EverAccounting\Tests\Framework;
 
-use EverAccounting\Install;
-
 class UnitTestCase extends \WP_UnitTestCase{
 	/**
 	 * Holds the WC_Unit_Test_Factory instance.
@@ -27,10 +25,8 @@ class UnitTestCase extends \WP_UnitTestCase{
 
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-		Install::install();
 
 		global $current_user;
-
 		$current_user = new \WP_User(1);
 		$current_user->set_role('administrator');
 		wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );

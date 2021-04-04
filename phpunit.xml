@@ -21,6 +21,7 @@
 			<file>uninstall.php</file>
 			<exclude>
 				<directory suffix=".php">./tests/framework</directory>
+				<directory suffix=".php">./tests-legacy</directory>
 			</exclude>
 		</whitelist>
 	</filter>
