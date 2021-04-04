@@ -10,6 +10,8 @@ namespace EverAccounting\Tests\Framework;
 
 use EverAccounting\Tests\Framework\Factories\Customer_Factory;
 
+require_once dirname( __FILE__ ) . '/factories/class-customer-factory.php';
+
 class Factory extends \WP_UnitTest_Factory {
 
 	/**

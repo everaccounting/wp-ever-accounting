@@ -34,7 +34,7 @@
     ]
   },
   "autoload-dev": {
-    "classmap": ["tests/framework/"]
+    "classmap": []
   },
   "require-dev": {
     "phpunit/phpunit": "^6.5",
