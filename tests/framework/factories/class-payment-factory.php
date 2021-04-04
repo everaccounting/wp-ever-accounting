@@ -13,7 +13,7 @@ class Payment_Factory extends \WP_UnitTest_Factory_For_Thing {
 
 		$payment_date   = mt_rand( 1000, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
 		$account        = Account_Helper::create_account();
-		$category       = Category_Helper::create_category( true, array( 'name' => 'Expense Factory' ) );
+		$category       = Category_Helper::create_category( true, array( 'name' => 'Expense Factory', 'type' => 'expense' ) );
 		$payment_method = array_keys( eaccounting_get_payment_methods() );
 		$payment_method = array_rand( $payment_method );
 

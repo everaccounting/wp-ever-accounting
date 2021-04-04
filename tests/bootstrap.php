@@ -47,4 +47,5 @@ require_once $tests_dir . '/framework/class-unittestcase.php';
 require_once $tests_dir . '/framework/class-rest-unittestcase.php';
 
 require_once $tests_dir . '/framework/helpers/account-helper.php';
+require_once $tests_dir . '/framework/helpers/category-helper.php';
 
