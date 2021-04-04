@@ -35,7 +35,8 @@
   },
   "require-dev": {
     "phpunit/phpunit": "^6.5",
-    "byteever/phpcs-composer": "dev-master"
+    "byteever/phpcs-composer": "dev-master",
+    "bamarni/composer-bin-plugin": "^1.4"
   },
   "config": {
     "optimize-autoloader": true,
@@ -49,7 +50,8 @@
       "@phpcs"
     ],
     "phpcs": "phpcs -s -p .",
-    "phpcbf": "phpcbf -p ."
+    "phpcbf": "phpcbf -p .",
+    "bin": "echo 'bin not installed'"
   },
   "extra": {
     "scripts-description": {
