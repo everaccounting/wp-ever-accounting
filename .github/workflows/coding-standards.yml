@@ -1,6 +1,6 @@
 name: Coding Standards
 
-on: [pull_request]
+on: [push,pull_request]
 
 jobs:
   # Runs PHP coding standards checks.
@@ -20,6 +20,8 @@ jobs:
   phpcs:
     name: PHP coding standards
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -60,11 +62,9 @@ jobs:
       - name: Install Composer dependencies
         run: |
           composer install --prefer-dist --no-suggest --no-progress --no-ansi --no-interaction
-          echo "vendor/bin" >> $GITHUB_PATH
       - name: Log PHPCS debug information
         run: phpcs -i
 
-      - name: Run PHPCS on all Core files
-        continue-on-error: true
+      - name: Run PHPCS
         run: ./vendor/bin/phpcs -q -n --report=checkstyle | cs2pr
 
