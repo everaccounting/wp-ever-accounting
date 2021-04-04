@@ -11,7 +11,7 @@
 
 	<testsuites>
 		<testsuite name="WP Ever Accounting">
-			<directory suffix=".php">./tests/unit-tests</directory>
+			<directory suffix=".php">./tests/php</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
@@ -20,8 +20,7 @@
 			<file>wp-ever-accounting.php</file>
 			<file>uninstall.php</file>
 			<exclude>
-				<directory suffix=".php">./includes/</directory>
-
+				<directory suffix=".php">./legacy/</directory>
 			</exclude>
 		</whitelist>
 	</filter>

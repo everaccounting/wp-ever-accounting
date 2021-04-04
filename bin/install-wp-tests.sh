@@ -55,7 +55,7 @@ set -ex
 
 install_wp() {
 
-	if [ -f $WP_CORE_DIR/index.php ]; then
+	if [ -d $WP_CORE_DIR ]; then
 		return;
 	fi
 
@@ -103,13 +103,13 @@ install_test_suite() {
 		local ioption='-i'
 	fi
 
-	# set up testing suite if it doesn't yet exist
-	if [ ! -d $WP_TESTS_DIR ]; then
-		# set up testing suite
-		mkdir -p $WP_TESTS_DIR
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
-		svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
-	fi
+	# removes testing suite
+	rm -rf $WP_TESTS_DIR
+
+	# set up testing suite
+	mkdir -p $WP_TESTS_DIR
+	svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/includes/ $WP_TESTS_DIR/includes
+	svn co --quiet https://develop.svn.wordpress.org/${WP_TESTS_TAG}/tests/phpunit/data/ $WP_TESTS_DIR/data
 
 	if [ ! -f wp-tests-config.php ]; then
 		download https://develop.svn.wordpress.org/${WP_TESTS_TAG}/wp-tests-config-sample.php "$WP_TESTS_DIR"/wp-tests-config.php
@@ -145,6 +145,9 @@ install_db() {
 			EXTRA=" --host=$DB_HOSTNAME --protocol=tcp"
 		fi
 	fi
+
+	# drop existing database
+	mysqladmin drop -f $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA 2>/dev/null || true
 
 	# create database
 	mysqladmin create $DB_NAME --user="$DB_USER" --password="$DB_PASS"$EXTRA

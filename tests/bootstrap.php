@@ -1,4 +1,13 @@
 <?php
+/**
+ * PHPUnit bootstrap file
+ *
+ * @package EverAccounting
+ */
+
+ini_set( 'display_errors', 'on' );
+error_reporting( E_ALL );
+
 $_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.1';
 $_SERVER['SERVER_NAME']     = '';
 $PHP_SELF                   = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
@@ -6,41 +15,45 @@ $PHP_SELF                   = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/in
 $wp_tests_dir = getenv( 'WP_TESTS_DIR' ) ? getenv( 'WP_TESTS_DIR' ) : sys_get_temp_dir() . '/wordpress-tests-lib';
 $tests_dir    = dirname( __FILE__ );
 $plugin_dir   = dirname( $tests_dir );
+$plugins_dir  = dirname( $plugin_dir );
 
+// load test function so tests_add_filter() is available.
 require_once $wp_tests_dir . '/includes/functions.php';
-function _manually_load_plugin() {
-	require dirname( __FILE__ ) . '/../wp-ever-accounting.php';
-}
+// load dependencies.
+tests_add_filter( 'muplugins_loaded', function () use ( $plugin_dir, $plugins_dir ) {
+	require_once $plugins_dir . '/wp-ever-accounting/wp-ever-accounting.php';
+} );
 
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+// install dependencies.
+tests_add_filter( 'setup_theme', function () use ( $plugin_dir, $plugins_dir ) {
+	// Clean existing install first.
+	define( 'WP_UNINSTALL_PLUGIN', true );
+	define( 'EACCOUNTING_REMOVE_ALL_DATA', true );
+	include $plugins_dir . '/wp-ever-accounting/uninstall.php';
 
-require $wp_tests_dir . '/includes/bootstrap.php';
+	EverAccounting\Install::install();
 
-activate_plugin( 'wp-ever-accounting/wp-ever-accounting.php' );
+	// Reload capabilities after install, see https://core.trac.wordpress.org/ticket/28374.
+	if ( version_compare( $GLOBALS['wp_version'], '4.7', '<' ) ) {
+		$GLOBALS['wp_roles']->reinit();
+	} else {
+		$GLOBALS['wp_roles'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		wp_roles();
+	}
 
-echo "Installing WP Ever Accounting...\n";
+	echo esc_html( 'Installing EverAccounting ...' . PHP_EOL );
 
-// Install WP Ever Accounting
-\EverAccounting\Install::install();
+	global $current_user;
 
-global $current_user;
+	$current_user = new WP_User( 1 );
+	$current_user->set_role( 'administrator' );
+	wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
+} );
 
-$current_user = new WP_User( 1 );
-$current_user->set_role( 'administrator' );
-wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
-
-function _disable_reqs( $status = false, $args = array(), $url = '' ) {
+tests_add_filter( 'pre_http_request', function ( $status = false, $args = array(), $url = '' ) {
 	return new WP_Error( 'no_reqs_in_unit_tests', __( 'HTTP Requests disabled for unit tests', 'wp-ever-accounting' ) );
-}
+} );
 
-add_filter( 'pre_http_request', '_disable_reqs' );
 
-// Include helpers
-require_once 'framework/helpers/class-ea-helper-account.php';
-require_once 'framework/helpers/class-ea-helper-contact.php';
-require_once 'framework/helpers/class-ea-helper-category.php';
-require_once 'framework/helpers/class-ea-helper-currency.php';
-require_once 'framework/helpers/class-ea-helper-revenue.php';
-require_once 'framework/helpers/class-ea-helper-transfer.php';
-require_once 'framework/helpers/class-ea-helper-transaction.php';
-require_once 'framework/class-ea-unit-test-case.php';
+// load the WP testing environment.
+require_once $wp_tests_dir . '/includes/bootstrap.php';
