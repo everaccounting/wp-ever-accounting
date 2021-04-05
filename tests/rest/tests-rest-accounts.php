@@ -1,17 +1,8 @@
 <?php
-
-use EverAccounting\REST\Accounts_Controller;
 use EverAccounting\Tests\Framework\Helpers\Account_Helper;
 use EverAccounting\Tests\Framework\REST_UnitTestCase;
 
 class Tests_REST_Accounts extends REST_UnitTestCase {
-	/**
-	 * Setup our test server, endpoints, and user info.
-	 */
-	public function setUp() {
-		parent::setUp();
-		$this->endpoint = new Accounts_Controller();
-	}
 
 	/**
 	 * Test route registration.
@@ -35,8 +26,8 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 		$response = $this->do_rest_get_request( '/ea/v1/accounts' );
 		$accounts = $response->get_data();
 		// One created by default.
-		$this->assertEquals( 11, count( $accounts ) );
 		$this->assertEquals( 200, $response->get_status() );
+		$this->assertEquals( 11, count( $accounts ) );
 	}
 
 	/**
@@ -175,7 +166,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 		wp_set_current_user( 0 );
 		$account      = Account_Helper::create_account();
 		$updated_data = [
-			'name'            => 'will not change account',
+			'name'            => 'will not change',
 		];
 		$request      = $this->do_rest_put_request( '/ea/v1/accounts/' . $account->get_id(), $updated_data );
 		$this->assertEquals( 401, $request->get_status() );
