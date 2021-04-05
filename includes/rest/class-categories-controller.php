@@ -18,13 +18,22 @@ defined( 'ABSPATH' ) || die();
  * Class CategoriesController
  * @package EverAccounting\REST
  */
-class CategoriesController extends Entities_Controller {
+class Categories_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
 	protected $rest_base = 'categories';
+
+	/**
+	 * Entity type.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var string
+	 */
+	protected $entity_type = 'category';
 
 	/**
 	 * Entity model class.
@@ -38,23 +47,24 @@ class CategoriesController extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.0
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
+		error_log(print_r($query_args,true));
 		return eaccounting_get_categories( $query_args );
 	}
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Item schema data.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -121,27 +131,34 @@ class CategoriesController extends Entities_Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Collection parameters.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_collection_params() {
-		$query_params                       = parent::get_collection_params();
-		$query_params['context']['default'] = 'view';
-
-		$params['orderby'] = array(
-			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
-			'type'              => 'string',
-			'default'           => 'id',
-			'enum'              => array(
-				'name',
-				'id',
-				'type',
-				'color',
-				'enabled',
-			),
-			'validate_callback' => 'rest_validate_request_arg',
+		$query_params = array_merge(
+			parent::get_collection_params(),
+			array(
+				'orderby'    => array(
+					'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'default'     => 'id',
+					'enum'        => array(
+						'name',
+						'id',
+						'type',
+						'color',
+						'enabled',
+					),
+				),
+				'type' => array(
+					'description'       => __( 'Limit results to those matching types.', 'wp-ever-accounting' ),
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_text_field',
+					'validate_callback' => 'rest_validate_request_arg',
+				),
+			)
 		);
 
 		return $query_params;
