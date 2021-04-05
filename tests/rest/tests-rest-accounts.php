@@ -32,7 +32,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 	public function test_get_accounts() {
 		wp_set_current_user( $this->user->ID );
 		$this->factory->account->create_many( 10 );
-		$response = $this->do_rest_get_request( '/ea/v1/accounts' );
+		$response = $this->do_rest_get_request( '/ea/v1/accounts', [ 'per_page' => 20 ] );
 		$accounts = $response->get_data();
 		// One created by default.
 		$this->assertEquals( 200, $response->get_status() );
@@ -58,7 +58,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 	 */
 	public function test_get_account() {
 		wp_set_current_user( $this->user->ID );
-		$expected_response_fields = array_keys($this->endpoint->get_public_item_schema()['properties']);
+		$expected_response_fields = array_keys( $this->endpoint->get_public_item_schema()['properties'] );
 		$account                  = Account_Helper::create_account();
 		$response                 = $this->do_rest_get_request( '/ea/v1/accounts/' . $account->get_id() );
 		$this->assertEquals( 200, $response->get_status(), var_export( $response, true ) );
@@ -164,7 +164,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 		wp_set_current_user( 0 );
 		$account      = Account_Helper::create_account();
 		$updated_data = [
-			'name'            => 'will not change',
+			'name' => 'will not change',
 		];
 		$request      = $this->do_rest_put_request( '/ea/v1/accounts/' . $account->get_id(), $updated_data );
 		$this->assertEquals( 401, $request->get_status() );
@@ -193,7 +193,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 	 */
 	public function test_delete_account_without_permission() {
 		wp_set_current_user( 0 );
-		$account = Account_Helper::create_account();
+		$account  = Account_Helper::create_account();
 		$response = $this->do_rest_request( '/ea/v1/accounts/' . $account->get_id(), 'DELETE' );
 		$this->assertEquals( 401, $response->get_status() );
 	}

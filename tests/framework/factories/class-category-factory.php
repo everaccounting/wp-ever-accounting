@@ -9,7 +9,7 @@ class Category_Factory extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 
 		$types                                = array_keys( eaccounting_get_category_types() );
-		$types                                = array_rand( $types );
+		array_rand( $types );
 
 		$this->default_generation_definitions = array(
 			'name' => new \WP_UnitTest_Generator_Sequence( 'Category %s' ),

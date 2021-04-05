@@ -4,13 +4,26 @@ namespace EverAccounting\Tests\Framework\Factories;
 
 use EverAccounting\Models\Customer;
 
-class Customer_Factory extends \WP_UnitTest_Factory_For_Thing{
+class Customer_Factory extends \WP_UnitTest_Factory_For_Thing {
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
 
+		$birth_date = mt_rand( 1900, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
+		$country    = array_keys( eaccounting_get_countries() );
+		array_rand( $country );
+		$currency                             = Currency_Helper::create_currency( array( 'code' => 'USD' ) );
 		$this->default_generation_definitions = array(
-			'name'  => new \WP_UnitTest_Generator_Sequence( 'User %s' ),
-			'email' => new \WP_UnitTest_Generator_Sequence( 'user%d@local.test' ),
+			'name'          => new \WP_UnitTest_Generator_Sequence( 'Customer %s' ),
+			'email'         => new \WP_UnitTest_Generator_Sequence( 'customer%d@email.com' ),
+			'phone'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'fax'           => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'birth_date'    => $birth_date,
+			'address'       => new \WP_UnitTest_Generator_Sequence( 'Customer Address %s' ),
+			'country'       => $country[0],
+			'website'       => new \WP_UnitTest_Generator_Sequence( 'Customer%s.test.com' ),
+			'tax_number'    => new \WP_UnitTest_Generator_Sequence( 'Customer Tax %d' ),
+			'currency_code' => $currency->get_code(),
+
 		);
 	}
 
@@ -18,7 +31,7 @@ class Customer_Factory extends \WP_UnitTest_Factory_For_Thing{
 	 * Stub out copy of parent method for IDE type hinting purposes.
 	 *
 	 * @param array $args
-	 * @param null  $generation_definitions
+	 * @param null $generation_definitions
 	 *
 	 * @return Customer |false
 	 */
@@ -42,7 +55,7 @@ class Customer_Factory extends \WP_UnitTest_Factory_For_Thing{
 	 * @return bool|Customer|int|\WP_Error
 	 */
 	function update_object( $customer_id, $fields ) {
-		return eaccounting_insert_customer( array_merge(['id' => $customer_id], $fields) );
+		return eaccounting_insert_customer( array_merge( [ 'id' => $customer_id ], $fields ) );
 	}
 
 	/**

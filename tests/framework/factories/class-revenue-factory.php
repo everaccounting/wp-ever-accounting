@@ -15,8 +15,7 @@ class Revenue_Factory extends \WP_UnitTest_Factory_For_Thing {
 		$account        = Account_Helper::create_account(['number' => rand() ]);
 		$category       = Category_Helper::create_category( true, array( 'name' => 'Income Factory', 'type' => 'income' ) );
 		$payment_method = array_keys( eaccounting_get_payment_methods() );
-		$payment_method = array_rand( $payment_method );
-		var_dump($account);
+		array_rand( $payment_method );
 		$this->default_generation_definitions = array(
 			'payment_date'   => $payment_date,
 			'account_id'     => $account->get_id(),
