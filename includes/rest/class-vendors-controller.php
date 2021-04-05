@@ -2,7 +2,7 @@
 /**
  * Contacts Rest Controller Class.
  *
- * @since       1.1.0
+ * @since       1.1.2
  * @subpackage  Rest
  * @package     EverAccounting
  */
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || die();
 /**
  * Class Vendors_Controller
  *
- * @since   1.1.0
+ * @since   1.1.2
  *
  * @package EverAccounting\REST
  */
@@ -25,7 +25,7 @@ class Vendors_Controller extends Contacts_Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.2
 	 *
 	 * @var string
 	 *
@@ -33,9 +33,19 @@ class Vendors_Controller extends Contacts_Controller {
 	protected $rest_base = 'vendors';
 
 	/**
+	 * Entity Type.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 *
+	 */
+	protected $entity_type = 'vendor';
+
+	/**
 	 * Entity model class.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.2
 	 *
 	 * @var string
 	 */
@@ -44,12 +54,12 @@ class Vendors_Controller extends Contacts_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.2
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_vendors( $query_args );

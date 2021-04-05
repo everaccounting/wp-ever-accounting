@@ -10,6 +10,7 @@
 namespace EverAccounting\Models;
 
 use EverAccounting\Traits\Attachment;
+use EverAccounting\Traits\Vendor;
 use EverAccounting\Abstracts\Transaction;
 
 defined( 'ABSPATH' ) || exit;
@@ -23,6 +24,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Payment extends Transaction {
 	use Attachment;
+	use Vendor;
 
 	/**
 	 * This is the name of this object type.

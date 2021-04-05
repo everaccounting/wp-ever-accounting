@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\Contact;
 use EverAccounting\Traits\Attachment;
+use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,6 +24,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Vendor extends Contact {
 	use Attachment;
+	use CurrencyTrait;
 	/**
 	 * This is the name of this object type.
 	 *

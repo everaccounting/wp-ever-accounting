@@ -2,7 +2,7 @@
 /**
  * Categories Rest Controller Class.
  *
- * @since       1.1.0
+ * @since       1.1.2
  * @subpackage  Rest
  * @package     EverAccounting
  */
@@ -15,16 +15,25 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || die();
 
 /**
- * Class CategoriesController
+ * Class Categories_Controller
  * @package EverAccounting\REST
  */
-class CategoriesController extends Entities_Controller {
+class Categories_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *
 	 * @var string
 	 */
 	protected $rest_base = 'categories';
+
+	/**
+	 * Entity type.
+	 *
+	 * @since 1.1.2
+	 *
+	 * @var string
+	 */
+	protected $entity_type = "category";
 
 	/**
 	 * Entity model class.

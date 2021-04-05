@@ -25,6 +25,7 @@ class Menu {
 		add_action( 'admin_menu', array( $this, 'register_banking_page' ), 50 );
 		add_action( 'admin_menu', array( $this, 'register_tools_page' ), 70 );
 		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 80 );
+		add_action( 'admin_menu', array( $this, 'register_react_page' ), 90 );
 
 		//Register tabs.
 		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_tab' ), 20 );
@@ -168,6 +169,27 @@ class Menu {
 			'ea_manage_report',
 			'ea-reports',
 			array( $this, 'render_reports_page' )
+		);
+	}
+
+	/**
+	 * Registers the reports page.
+	 *
+	 */
+	public function register_react_page() {
+		add_submenu_page(
+			'eaccounting',
+			__( 'React', 'wp-ever-accounting' ),
+			__( 'React', 'wp-ever-accounting' ),
+			'manage_eaccounting',
+			'ea-react',
+			function (){
+				?>
+				<div class="wrap">
+					<div id="ea-react"></div>
+				</div>
+				<?php
+			}
 		);
 	}
 

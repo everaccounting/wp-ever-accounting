@@ -1,4 +1,5 @@
 assets/js/admin
 assets/js/admin
+packages
 webpack.config.babel.js
 tests

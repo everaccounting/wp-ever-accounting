@@ -30,6 +30,15 @@ class Currencies_Controller extends Entities_Controller {
 	protected $rest_base = 'currencies';
 
 	/**
+	 * entity type.
+	 *
+	 * @var string
+	 *
+	 * @since 1.1.2
+	 */
+	protected $entity_type = 'currency';
+
+	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0
@@ -41,12 +50,12 @@ class Currencies_Controller extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.0
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_currencies( $query_args );
@@ -55,9 +64,9 @@ class Currencies_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Item schema data.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -169,9 +178,9 @@ class Currencies_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Collection parameters.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_collection_params() {

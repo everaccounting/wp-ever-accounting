@@ -33,6 +33,16 @@ class Payments_Controller extends Transactions_Controller {
 	protected $rest_base = 'payments';
 
 	/**
+	 * Rest route.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 *
+	 */
+	protected $entity_type = 'payment';
+
+	/**
 	 * Entity model class.
 	 *
 	 * @since 1.1.0

@@ -19,34 +19,13 @@ abstract class Assets {
 	 *
 	 * @var string
 	 */
-	protected $text_domain = null;
-
-	/**
-	 * Plugin path.
-	 *
-	 * @var string
-	 */
-	protected $plugin_file = null;
-
-	/**
-	 * Plugin version.
-	 *
-	 * @var string
-	 */
-	protected $plugin_version = null;
+	protected $text_domain = 'wp-ever-accounting';
 
 	/**
 	 * Assets constructor.
 	 *
-	 * @param string|null $plugin_file
 	 */
-	public function __construct( $plugin_file = null ) {
-		$plugin_file = is_null( $plugin_file ) ? EACCOUNTING_PLUGIN_FILE : $plugin_file;
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-		$plugin_data = get_plugin_data( $plugin_file );
-		$this->text_domain    = $plugin_data['TextDomain'];
-		$this->plugin_version = $plugin_data['Version'];
-		$this->plugin_file    = $plugin_file;
+	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'public_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'public_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
@@ -99,9 +78,9 @@ abstract class Assets {
 	 */
 	protected function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
 		$filename = is_null( $file_path ) ? $handle : $file_path;
-		$filename = str_replace( [ '.min', '.css' ], '', $filename );
-		$file_url = $this->get_asset_dist_url( $filename, '.css' );
-		$version  = $this->plugin_version;
+		$file_url = $this->get_asset_dist_url( $filename, 'css' );
+		$version  = eaccounting()->get_version();
+
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$version = time();
 		}
@@ -126,8 +105,8 @@ abstract class Assets {
 	 */
 	protected function register_script( $handle, $file_path = null, $dependencies = array(), $has_i18n = true ) {
 		$filename             = is_null( $file_path ) ? $handle : $file_path;
-		$filename             = str_replace( [ '.min', '.js' ], '', $filename );
 		$file_url             = $this->get_asset_dist_url( $filename );
+		$filename             = str_replace( [ '.min', '.js' ], '', $filename );
 		$dependency_file_path = $this->get_asset_dist_path( $filename . '.asset', 'php' );
 		$version              = false;
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
@@ -155,7 +134,7 @@ abstract class Assets {
 	 * @return  string The generated path.
 	 */
 	protected function get_asset_dist_url( $filename, $type = 'js' ) {
-		return plugins_url( "/dist/$filename.$type", $this->plugin_file );
+		return eaccounting()->plugin_url("/dist/$type/$filename");
 	}
 
 	/**
@@ -167,8 +146,6 @@ abstract class Assets {
 	 * @return  string The generated path.
 	 */
 	protected function get_asset_dist_path( $filename, $type = 'js' ) {
-		$plugin_path = untrailingslashit( plugin_dir_path( $this->plugin_file ) );
-
-		return $plugin_path . "/dist/$filename.$type";
+		return eaccounting()->plugin_path("/dist/$type/$filename");
 	}
 }

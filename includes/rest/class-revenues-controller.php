@@ -2,7 +2,7 @@
 /**
  * Revenues Rest Controller Class.
  *
- * @since       1.1.0
+ * @since       1.1.2
  * @subpackage  Rest
  * @package     EverAccounting
  */
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || die();
 /**
  * Class RevenuesController
  *
- * @since   1.1.0
+ * @since   1.1.2
  *
  * @package EverAccounting\REST
  */
@@ -25,7 +25,7 @@ class Revenues_Controller extends Transactions_Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since   1.1.0
+	 * @since   1.1.2
 	 *
 	 * @var string
 	 *
@@ -34,11 +34,21 @@ class Revenues_Controller extends Transactions_Controller {
 	/**
 	 * Entity model class.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.2
 	 *
 	 * @var string
 	 */
 	protected $entity_model = Revenue::class;
+
+	/**
+	 * Entity type.
+	 *
+	 * @since   1.1.2
+	 *
+	 * @var string
+	 *
+	 */
+	protected $entity_type = 'revenue';
 
 	/**
 	 * Get objects.
@@ -47,7 +57,7 @@ class Revenues_Controller extends Transactions_Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
-	 * @since  1.1.0
+	 * @since  1.1.2
 	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
