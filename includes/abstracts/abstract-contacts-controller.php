@@ -11,12 +11,19 @@ namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Main class for Contacts
+ *
+ * @since   1.1.4
+ *
+ * @package EverAccounting\Abstracts
+ */
 abstract class Contacts_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
@@ -25,7 +32,7 @@ abstract class Contacts_Controller extends Entities_Controller {
 			'title'      => __( 'Contact', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'           => array(
+				'id'               => array(
 					'description' => __( 'Unique identifier for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -34,7 +41,7 @@ abstract class Contacts_Controller extends Entities_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'user_id'      => array(
+				'user_id'          => array(
 					'description' => __( 'WP user ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed' ),
@@ -44,7 +51,7 @@ abstract class Contacts_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'name'         => array(
+				'name'             => array(
 					'description' => __( 'Name for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -54,12 +61,25 @@ abstract class Contacts_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'email'        => array(
+				'company'          => array(
+					'description' => __( 'Company for the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'embed', 'edit' ),
+					'default'     => '',
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => false,
+				),
+				'email'            => array(
 					'description' => __( 'The email address for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_email',
+					),
 				),
-				'phone'        => array(
+				'phone'            => array(
 					'description' => __( 'Phone number for the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -67,37 +87,7 @@ abstract class Contacts_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'fax'          => array(
-					'description' => __( 'Fax number for the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'birth_date'   => array(
-					'description' => __( 'Birth date', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'date',
-					'context'     => array( 'embed', 'view' ),
-				),
-				'address'      => array(
-					'description' => __( 'Address 1 of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'country'      => array(
-					'description' => __( 'Country of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-				),
-				'website'      => array(
+				'website'          => array(
 					'description' => __( 'website of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'uri',
@@ -106,25 +96,63 @@ abstract class Contacts_Controller extends Entities_Controller {
 						'sanitize_callback' => 'esc_url_raw',
 					),
 				),
-				'tax_number'   => array(
-					'description' => __( 'Tax number of the contact', 'wp-ever-accounting' ),
+				'birth_date'       => array(
+					'description' => __( 'Birth date', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date',
+					'context'     => array( 'embed', 'view' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'vat_number'       => array(
+					'description' => __( 'Vat number of the contact', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'currency'     => array(
-					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+				'street'           => array(
+					'description' => __( 'Street Address of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
+				),
+				'state'            => array(
+					'description' => __( 'State Address of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'postcode'         => array(
+					'description' => __( 'Postcode of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'country'          => array(
+					'description' => __( 'Country of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_key',
+					),
+				),
+				'currency'         => array(
+					'description' => __( 'Currency code for customer.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
-							'description' => __( 'Currency ID.', 'wp-ever-accounting' ),
+							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
@@ -132,81 +160,72 @@ abstract class Contacts_Controller extends Entities_Controller {
 						'code' => array(
 							'description' => __( 'Currency code', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view', 'edit' ),
 							'enum'        => array_keys( eaccounting_get_global_currencies() ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
 						),
 					),
 				),
-				'note'         => array(
-					'description' => __( 'Note for the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'string',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_textarea_field',
-					),
-				),
-				'attachment'   => array(
-					'description' => __( 'Photo of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'src'  => array(
-							'description' => __( 'Attachment Source.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name' => array(
-							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
-				),
-				'enabled'      => array(
+//				'thumbnail'        => array(
+//					'description' => __( 'Thumbnail of the contact', 'wp-ever-accounting' ),
+//					'type'        => 'object',
+//					'context'     => array( 'embed', 'view', 'edit' ),
+//					'properties'  => array(
+//						'id'  => array(
+//							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
+//							'type'        => 'integer',
+//							'context'     => array( 'embed', 'view', 'edit' ),
+//							'arg_options' => array(
+//								'sanitize_callback' => 'absint',
+//							),
+//						),
+//						'src' => array(
+//							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
+//							'type'        => 'string',
+//							'context'     => array( 'embed', 'view' ),
+//							'arg_options' => array(
+//								'sanitize_callback' => 'esc_url_raw',
+//							),
+//						),
+//					),
+//				),
+				'enabled'          => array(
 					'description' => __( 'Status of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				'creator'      => array(
-					'description' => __( 'Creator of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'id'    => array(
-							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'name'  => array(
-							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'email' => array(
-							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
+				// 'creator'      => array(
+				// 'description' => __( 'Creator of the contact.', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'properties'  => array(
+				// 'id'    => array(
+				// 'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+				// 'type'        => 'integer',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'readonly'    => true,
+				// ),
+				// 'name'  => array(
+				// 'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// 'email' => array(
+				// 'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// ),
+				// ),
+					'date_created' => array(
+						'description' => __( 'Created date of the contact.', 'wp-ever-accounting' ),
+						'type'        => 'string',
+						'format'      => 'date-time',
+						'context'     => array( 'view' ),
+						'readonly'    => true,
 					),
-				),
-				'date_created' => array(
-					'description' => __( 'Created date of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'date-time',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
 			),
 		);
 
@@ -217,17 +236,18 @@ abstract class Contacts_Controller extends Entities_Controller {
 	 * Retrieves the query params for the items collection.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array Collection parameters.
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
 		$query_params['context']['default'] = 'view';
-		$params['orderby']                  = array(
+		$query_params['orderby']            = array(
 			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
 			'type'              => 'string',
 			'default'           => 'id',
 			'enum'              => array(
+				'id',
 				'name',
 				'email',
 				'phone',

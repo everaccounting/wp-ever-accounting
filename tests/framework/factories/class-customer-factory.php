@@ -3,6 +3,7 @@
 namespace EverAccounting\Tests\Framework\Factories;
 
 use EverAccounting\Models\Customer;
+use EverAccounting\Tests\Framework\Helpers\Currency_Helper;
 
 class Customer_Factory extends \WP_UnitTest_Factory_For_Thing {
 	function __construct( $factory = null ) {

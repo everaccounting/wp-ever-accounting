@@ -41,7 +41,7 @@ tests_add_filter( 'setup_theme', function () use ( $plugin_dir, $plugins_dir ) {
 	}
 
 	echo esc_html( 'Initiating Tests ...' . PHP_EOL );
-});
+} );
 
 
 // load the WP testing environment.
@@ -52,6 +52,8 @@ require_once $wp_tests_dir . '/includes/bootstrap.php';
 require_once $tests_dir . '/framework/helpers/account-helper.php';
 require_once $tests_dir . '/framework/helpers/currency-helper.php';
 require_once $tests_dir . '/framework/helpers/category-helper.php';
+require_once $tests_dir . '/framework/helpers/customer-helper.php';
+require_once $tests_dir . '/framework/helpers/vendor-helper.php';
 
 require_once $tests_dir . '/framework/class-unit-test-factory.php';
 require_once $tests_dir . '/framework/class-unittestcase.php';
