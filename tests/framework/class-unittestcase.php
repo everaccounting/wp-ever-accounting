@@ -38,6 +38,13 @@ class UnitTestCase extends \WP_UnitTestCase{
 		$this->setOutputCallback( array( $this, 'filter_output' ) );
 	}
 
+	/**
+	 * tearDown.
+	 */
+	public function tearDown() {
+		parent::tearDown();
+	}
+
 
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();

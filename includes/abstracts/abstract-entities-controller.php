@@ -305,7 +305,7 @@ abstract class Entities_Controller extends Controller {
 			return $response;
 
 		} catch ( \Exception $e ) {
-			return new \WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( $e->getCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 	}
 

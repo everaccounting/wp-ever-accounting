@@ -1,6 +1,6 @@
 name: Coding Standards
 
-on: [push,pull_request]
+on: [pull_request]
 
 jobs:
   # Runs PHP coding standards checks.
@@ -15,7 +15,6 @@ jobs:
   # - Installs Composer dependencies (from cache if possible).
   # - Logs PHP_CodeSniffer debug information.
   # - Runs PHPCS on the full codebase with warnings suppressed.
-  # - Runs PHPCS on the `tests` directory without warnings suppressed.
   # - todo: Configure Slack notifications for failing scans.
   phpcs:
     name: PHP coding standards

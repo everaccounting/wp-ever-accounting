@@ -113,7 +113,6 @@ class Controller {
 	 */
 	public static function delete_account_reference( $account_id ) {
 		global $wpdb;
-		$wpdb->update( "{$wpdb->prefix}ea_documents", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
 		$wpdb->update( "{$wpdb->prefix}ea_transactions", array( 'account_id' => null ), array( 'account_id' => $account_id ) );
 
 		//delete default account
