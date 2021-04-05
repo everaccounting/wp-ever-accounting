@@ -149,7 +149,7 @@ class Transfers extends Resource_Repository {
 			}
 			$transfer->apply_changes();
 			$transfer->clear_cache();
-			do_action( 'eacccounting_insert_' . $transfer->get_object_type(), $transfer, $values );
+			do_action( 'eaccounting_insert_' . $transfer->get_object_type(),  $wpdb->insert_id, $transfer, $values );
 			$wpdb->query( 'COMMIT' );
 
 			return true;
