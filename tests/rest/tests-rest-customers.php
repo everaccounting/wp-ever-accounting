@@ -93,6 +93,43 @@ class Tests_REST_Customers extends REST_UnitTestCase {
 		$this->assertEquals( 401, $response->get_status() );
 	}
 
+
+	/**
+	 * Test creating a single customer.
+	 *
+	 * @since 1.1.4
+	 */
+	public function test_insert_customer() {
+		wp_set_current_user( $this->user->ID );
+		$data                     = Customer_Helper::create_customer( false );
+		$data['currency']['code'] = $data['currency_code'];
+		unset( $data['currency_code'] );
+		$response = $this->do_rest_post_request( '/ea/v1/customers', $data );
+		$customer  = $response->get_data();
+		$this->assertEquals( 201, $response->get_status() );
+		unset( $customer['id'] );
+		foreach ( $customer as $key => $value ) {
+			if ( ! is_scalar( $value ) ) {
+				continue;
+			}
+			$this->assertEquals( $value, $data[ $key ] );
+		}
+	}
+
+	/**
+	 * Test creating customer without permission.
+	 *
+	 * @since 1.1.4
+	 */
+	public function test_insert_account_without_permission() {
+		wp_set_current_user( 0 );
+		$data                     = Customer_Helper::create_customer( false );
+		$data['currency']['code'] = $data['currency_code'];
+		$response                 = $this->do_rest_post_request( '/ea/v1/customers', $data );
+		$this->assertEquals( 401, $response->get_status() );
+	}
+
+
 	/**
 	 * Test editing a single customer. Tests multiple customer types.
 	 *
