@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class CategoriesController
+ *
  * @package EverAccounting\REST
  */
 class Categories_Controller extends Entities_Controller {
@@ -47,15 +48,15 @@ class Categories_Controller extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
 	 * @since  1.1.0
-	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
-		error_log(print_r($query_args,true));
+		$query_args['type'] = $request['type'];
+
 		return eaccounting_get_categories( $query_args );
 	}
 
@@ -65,7 +66,6 @@ class Categories_Controller extends Entities_Controller {
 	 * @return array Item schema data.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -134,13 +134,12 @@ class Categories_Controller extends Entities_Controller {
 	 * @return array Collection parameters.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params = array_merge(
 			parent::get_collection_params(),
 			array(
-				'orderby'    => array(
+				'orderby' => array(
 					'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'default'     => 'id',
@@ -152,7 +151,7 @@ class Categories_Controller extends Entities_Controller {
 						'enabled',
 					),
 				),
-				'type' => array(
+				'type'    => array(
 					'description'       => __( 'Limit results to those matching types.', 'wp-ever-accounting' ),
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_text_field',
