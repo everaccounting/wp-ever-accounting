@@ -33,6 +33,9 @@
     "files": [
     ]
   },
+  "autoload-dev": {
+    "classmap": []
+  },
   "require-dev": {
     "phpunit/phpunit": "^6.5",
     "byteever/phpcs-composer": "dev-master"
