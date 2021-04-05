@@ -13,11 +13,7 @@ import { STORE_KEY } from './constants';
 import { addQueryArgs } from '@wordpress/url';
 import { apiFetch } from '@wordpress/data-controls';
 import { DEFAULT_ENTITY_KEY } from './entities';
-
-import {
-	__unstableAcquireStoreLock,
-	__unstableReleaseStoreLock,
-} from './locks';
+import {createBatch} from "./batch";
 
 /**
  * Returns an action object used in signalling that authors have been received.
@@ -399,4 +395,71 @@ export function* saveEditedEntityRecord( name, recordId, options ) {
 
 	const record = { id: recordId, ...edits };
 	return yield saveEntityRecord( name, record, options );
+}
+
+
+/**
+ * Runs multiple core-data actions at the same time using one API request.
+ *
+ * Example:
+ *
+ * ```
+ * const [ savedRecord, updatedRecord, deletedRecord ] =
+ *   await dispatch( 'ea/data' ).batchRequest( [
+ *     ( { saveEntityRecord } ) => saveEntityRecord( 'account', 10 ),
+ *     ( { saveEditedEntityRecord } ) => saveEntityRecord( 'account', 123 ),
+ *     ( { deleteEntityRecord } ) => deleteEntityRecord( 'account', 123, null ),
+ *   ] );
+ * ```
+ *
+ * @param {Array} requests Array of functions which are invoked simultaneously.
+ *                         Each function is passed an object containing
+ *                         `saveEntityRecord`, `saveEditedEntityRecord`, and
+ *                         `deleteEntityRecord`.
+ *
+ * @return {Promise} A promise that resolves to an array containing the return
+ *                   values of each function given in `requests`.
+ */
+export function* batchRequest( requests ) {
+	const batch = createBatch();
+	const api = {
+		saveEntityRecord( kind, name, record, options ) {
+			return batch.add( ( add ) =>
+				dispatch( STORE_KEY ).saveEntityRecord( name, record, {
+					...options,
+					__unstableFetch: add,
+				} )
+			);
+		},
+		saveEditedEntityRecord( kind, name, recordId, options ) {
+			return batch.add( ( add ) =>
+				dispatch( STORE_KEY ).saveEditedEntityRecord(
+					name,
+					recordId,
+					{
+						...options,
+						__unstableFetch: add,
+					}
+				)
+			);
+		},
+		deleteEntityRecord( name, recordId, query, options ) {
+			return batch.add( ( add ) =>
+				dispatch( STORE_KEY ).deleteEntityRecord(
+					name,
+					recordId,
+					query,
+					{
+						...options,
+						__unstableFetch: add,
+					}
+				)
+			);
+		},
+	};
+	const resultPromises = requests.map( ( request ) => request( api ) );
+	const [ , ...results ] = yield select(
+		Promise.all( [ batch.run(), ...resultPromises ] )
+	);
+	return results;
 }
