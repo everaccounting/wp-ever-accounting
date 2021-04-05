@@ -1,24 +1,20 @@
 <?php
 /**
- * Formatting functions
+ * Plugin formatting function tests
  *
- * @package EverAccounting\Tests\Formatting
+ * @since 1.0.0
+ * @package EverAccounting\Tests
  */
+
+use EverAccounting\Tests\Framework\UnitTestCase;
 
 /**
- * Class Functions.
+ * Plugin Formatting Functions Class
  *
- * @since 1.0.2
+ * @since 1.0.0
+ * @package EverAccounting\Tests
  */
-class EverAccounting_Tests_Formatting_Functions extends EverAccounting_Unit_Test_Case {
-
-	/**
-	 * Set up.
-	 */
-	public function setUp() {
-		parent::setUp();
-	}
-
+class Tests_Formatting_Functions extends UnitTestCase {
 	/**
 	 * Test eaccounting_string_to_bool().
 	 *
@@ -46,10 +42,26 @@ class EverAccounting_Tests_Formatting_Functions extends EverAccounting_Unit_Test
 	 *
 	 * @since 1.0.2
 	 */
-	public function eaccounting_bool_to_string() {
+	public function test_eaccounting_bool_to_string() {
 		$this->assertEquals( array( 'yes', 'no' ), array(
 			eaccounting_bool_to_string( true ),
 			eaccounting_bool_to_string( false )
+		) );
+	}
+
+	/**
+	 * Test eaccounting_bool_to_number().
+	 *
+	 * @since 1.0.2
+	 */
+	public function test_eaccounting_bool_to_number() {
+		$this->assertEquals( array( 1, 0 ), array(
+			eaccounting_bool_to_number( true ),
+			eaccounting_bool_to_number( false )
+		) );
+		$this->assertEquals( array( 0, 1 ), array(
+			eaccounting_bool_to_number( false ),
+			eaccounting_bool_to_number( true )
 		) );
 	}
 
@@ -225,7 +237,7 @@ class EverAccounting_Tests_Formatting_Functions extends EverAccounting_Unit_Test
 					'w' => 1,
 				),
 			),
-			eaccounting_array_merge_recursive_numeric( $a, $b, $c )
+			eaccounting_array_merge_recursive( $a, $b, $c )
 		);
 	}
 
@@ -236,5 +248,4 @@ class EverAccounting_Tests_Formatting_Functions extends EverAccounting_Unit_Test
 		$this->assertEquals( '99.9', eaccounting_sanitize_number( '9...9....9', true  ) );
 		$this->assertEquals( '-9.99', eaccounting_sanitize_number( '-9.99', true  ) );
 	}
-
 }

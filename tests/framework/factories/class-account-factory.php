@@ -8,11 +8,11 @@ use EverAccounting\Tests\Framework\Helpers\Currency_Helper;
 class Account_Factory extends \WP_UnitTest_Factory_For_Thing {
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
-
+		$currency = Currency_Helper::create_currency();
 		$this->default_generation_definitions = array(
 			'name'            => new \WP_UnitTest_Generator_Sequence( 'Account %s' ),
-			'number'          => new \WP_UnitTest_Generator_Sequence( 'acc-%s-%d' ),
-			'currency_code'   => Currency_Helper::create_currency( 'USD', '$' ),
+			'number'          => new \WP_UnitTest_Generator_Sequence( 'acc-%d' ),
+			'currency_code'   => $currency->get_code(),
 			'opening_balance' => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'bank_name'       => new \WP_UnitTest_Generator_Sequence( 'Bank %s' ),
 			'bank_phone'      => new \WP_UnitTest_Generator_Sequence( 'Bank %d' ),

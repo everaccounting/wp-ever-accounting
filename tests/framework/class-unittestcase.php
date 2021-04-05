@@ -4,11 +4,18 @@ namespace EverAccounting\Tests\Framework;
 
 class UnitTestCase extends \WP_UnitTestCase{
 	/**
-	 * Holds the WC_Unit_Test_Factory instance.
+	 * Holds the Unit_Test_Factory instance.
 	 *
 	 * @var Factory
 	 */
 	protected $factory;
+
+	/**
+	 * Holds the admin user object.
+	 *
+	 * @var \WP_User
+	 */
+	protected $user;
 
 	/**
 	 * Setup test case.
@@ -19,20 +26,23 @@ class UnitTestCase extends \WP_UnitTestCase{
 		parent::setUp();
 		// Add custom factories.
 		$this->factory = new Factory();
+
+
+		global $current_user;
+		$current_user = new \WP_User(1);
+		$current_user->set_role('administrator');
+		wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
+		wp_set_current_user( 1 );
+		$this->user = $current_user;
+
 		$this->setOutputCallback( array( $this, 'filter_output' ) );
 	}
 
 
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
-
-		global $current_user;
-		$current_user = new \WP_User(1);
-		$current_user->set_role('administrator');
-		wp_update_user( array( 'ID' => 1, 'first_name' => 'Admin', 'last_name' => 'User' ) );
-
-		wp_set_current_user( 1 );
 	}
+
 
 	public static function tearDownAfterClass() {
 		// Clean existing install first.
@@ -72,4 +82,10 @@ class UnitTestCase extends \WP_UnitTestCase{
 		throw new \Exception( $message, $code );
 	}
 
+	/**
+	 * @param $message
+	 */
+	public function writeln( $message ){
+		fwrite(STDERR, print_r($message, TRUE));
+	}
 }

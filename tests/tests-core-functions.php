@@ -45,4 +45,5 @@ class Tests_Core_Functions extends UnitTestCase {
 		$this->assertEquals( eaccounting_get_financial_start( $year - 1 ), ( $year - 1 ) . '-07-01' );
 		$this->assertEquals( eaccounting_get_financial_start( $year + 1 ), ( $year + 1 ) . '-07-01' );
 	}
+
 }

@@ -17,6 +17,7 @@ use EverAccounting\Tests\Framework\Factories\Vendor_Factory;
 use EverAccounting\Tests\Framework\Factories\Payment_Factory;
 use EverAccounting\Tests\Framework\Factories\Currency_Factory;
 
+
 require_once dirname( __FILE__ ) . '/factories/class-customer-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-vendor-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-account-factory.php';
@@ -25,6 +26,7 @@ require_once dirname( __FILE__ ) . '/factories/class-item-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-revenue-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-payment-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-currency-factory.php';
+
 
 
 class Factory extends \WP_UnitTest_Factory {
@@ -38,12 +40,33 @@ class Factory extends \WP_UnitTest_Factory {
 	 * @var Revenue_Factory
 	 * @var Payment_Factory
 	 * @var Currency_Factory
+
 	 */
 	public $customer;
+
+	/**
+	 * @var Vendor_Factory
+	 */
 	public $vendor;
+
+	/**
+	 * @var Account_Factory
+	 */
 	public $account;
+
+	/**
+	 * @var Category_Factory
+	 */
 	public $category;
+
+	/**
+	 * @var Item_Factory
+	 */
 	public $item;
+
+	/**
+	 * @var Revenue_Factory
+	 */
 	public $revenue;
 	public $payment;
 	public $currency;
@@ -62,5 +85,6 @@ class Factory extends \WP_UnitTest_Factory {
 		$this->revenue  = new Revenue_Factory( $this );
 		$this->payment  = new Payment_Factory( $this );
 		$this->currency  = new Currency_Factory( $this );
+
 	}
 }
