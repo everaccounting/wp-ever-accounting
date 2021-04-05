@@ -14,7 +14,7 @@ class Emails extends Singleton {
 	 */
 	public function __construct() {
 		//invoice
-		//add_action( 'eacccounting_insert_invoice', array( __CLASS__, 'send_new_invoice_notification' ) );
+		//add_action( 'eaccounting_insert_invoice', array( __CLASS__, 'send_new_invoice_notification' ) );
 		//add_action( 'eaccounting_email_invoice_details', array( __CLASS__, 'invoice_details' ), 10, 2 );
 		//add_action( 'eaccounting_email_invoice_items', array( __CLASS__, 'invoice_items' ), 10, 2 );
 		//add_action( 'eaccounting_email_invoice_customer_details', array( __CLASS__, 'invoice_customer_details' ), 10, 2 );

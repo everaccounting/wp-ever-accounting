@@ -91,7 +91,7 @@ class Currencies extends Resource_Repository {
 			$item->apply_changes();
 			$item->clear_cache();
 			$item->set_object_read( true );
-			do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $values );
+			do_action( 'eaccounting_insert_' . $item->get_object_type(), $item, $values );
 			return true;
 		}
 	}
