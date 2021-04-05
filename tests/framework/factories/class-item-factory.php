@@ -12,7 +12,7 @@ class Item_Factory extends \WP_UnitTest_Factory_For_Thing {
 		$category                             = Category_Helper::create_category( true, array( 'name' => 'Item', 'type' => 'item' ) );
 		$this->default_generation_definitions = array(
 			'name'           => new \WP_UnitTest_Generator_Sequence( 'Item %s' ),
-			'sku'            => new \WP_UnitTest_Generator_Sequence( '%s-%d' ),
+			'sku'            => new \WP_UnitTest_Generator_Sequence( 'item-%d' ),
 			'category_id'    => $category->get_id(),
 			'description'    => new \WP_UnitTest_Generator_Sequence( 'Item Description %s' ),
 			'sale_price'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
