@@ -28,6 +28,17 @@ class Transfers_Controller extends Entities_Controller {
 	 *
 	 */
 	protected $rest_base = 'transfers';
+
+	/**
+	 * Entity type.
+	 *
+	 * @since 1.1.1
+	 *
+	 * @var string
+	 *
+	 */
+	protected $entity_type = 'transfer';
+
 	/**
 	 * Entity model class.
 	 *
@@ -40,12 +51,12 @@ class Transfers_Controller extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
-	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param array $query_args Query args.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.0
+	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_transfers( $query_args );
@@ -54,9 +65,9 @@ class Transfers_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Item schema data.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_item_schema() {
@@ -65,7 +76,7 @@ class Transfers_Controller extends Entities_Controller {
 			'title'      => __( 'Transfer', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'           => array(
+				'id'             => array(
 					'description' => __( 'Unique identifier for the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -74,25 +85,118 @@ class Transfers_Controller extends Entities_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'income_id'    => array(
+				'date'           => array(
+					'description' => __( 'Date of the transfer', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'from_account'   => array(
+					'description' => __( 'From Account of the transaction.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'required'    => true,
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'From Account ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
+						),
+						'name' => array(
+							'description' => __( 'From Account name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
+						),
+					),
+				),
+				'to_account'     => array(
+					'description' => __( 'To Account ID of the transaction.', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'required'    => true,
+					'properties'  => array(
+						'id'   => array(
+							'description' => __( 'To Account ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
+						),
+						'name' => array(
+							'description' => __( 'To Account name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
+						),
+					),
+				),
+				'amount'         => array(
+					'description' => __( 'Amount of the transaction.', 'wp-ever-accounting' ),
+					'type'        => 'integer',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'payment_method' => array(
+					'description' => __( 'Method of the payment', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'enum'        => array( 'cash', 'bank_transfer', 'cheque' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+					'required'    => true,
+				),
+				'income_id'      => array(
 					'description' => __( 'Income ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => true,
+					'required'    => false,
 				),
-				'expense_id'   => array(
+				'expense_id'     => array(
 					'description' => __( 'Expense ID of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
-					'required'    => true,
+					'required'    => false,
 				),
-				'creator'      => array(
+				'reference'      => array(
+					'description' => __( 'Reference of the transaction', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'description'    => array(
+					'description' => __( 'Description of the transaction', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+				),
+				'creator'        => array(
 					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
@@ -115,8 +219,8 @@ class Transfers_Controller extends Entities_Controller {
 						),
 					),
 				),
-				'date_created' => array(
-					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
+				'date_created'   => array(
+					'description' => __( 'Created date of the transfer.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'view' ),
@@ -132,9 +236,9 @@ class Transfers_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @return array Collection parameters.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function get_collection_params() {
@@ -146,11 +250,14 @@ class Transfers_Controller extends Entities_Controller {
 			'type'              => 'string',
 			'default'           => 'id',
 			'enum'              => array(
+				'id',
 				'income_id',
 				'expense_id',
+				'date_created'
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
+
 
 		return $query_params;
 	}

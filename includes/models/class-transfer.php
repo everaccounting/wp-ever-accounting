@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Repositories;
+use EverAccounting\Traits\Account;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Transfer extends Resource_Model {
+	use Account;
 	/**
 	 * This is the name of this object type.
 	 *
