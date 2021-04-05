@@ -9,6 +9,11 @@ class REST_UnitTestCase extends UnitTestCase{
 	protected $server;
 
 	/**
+	 * @var \WP_REST_Controller
+	 */
+	protected $endpoint;
+
+	/**
 	 * Setup our test server.
 	 */
 	public function setUp() {

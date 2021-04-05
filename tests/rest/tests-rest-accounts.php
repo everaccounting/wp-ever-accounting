@@ -1,8 +1,17 @@
 <?php
+
+use EverAccounting\REST\Accounts_Controller;
 use EverAccounting\Tests\Framework\Helpers\Account_Helper;
 use EverAccounting\Tests\Framework\REST_UnitTestCase;
 
 class Tests_REST_Accounts extends REST_UnitTestCase {
+	/**
+	 * Setup our test server, endpoints, and user info.
+	 */
+	public function setUp() {
+		parent::setUp();
+		$this->endpoint = new Accounts_Controller();
+	}
 
 	/**
 	 * Test route registration.
@@ -49,18 +58,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 	 */
 	public function test_get_account() {
 		wp_set_current_user( $this->user->ID );
-		$expected_response_fields = array(
-			'id',
-			'name',
-			'number',
-			'opening_balance',
-			'currency',
-			'bank_name',
-			'bank_phone',
-			'bank_address',
-			'enabled',
-			'date_created',
-		);
+		$expected_response_fields = array_keys($this->endpoint->get_public_item_schema()['properties']);
 		$account                  = Account_Helper::create_account();
 		$response                 = $this->do_rest_get_request( '/ea/v1/accounts/' . $account->get_id() );
 		$this->assertEquals( 200, $response->get_status(), var_export( $response, true ) );
@@ -196,7 +194,6 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 	public function test_delete_account_without_permission() {
 		wp_set_current_user( 0 );
 		$account = Account_Helper::create_account();
-
 		$response = $this->do_rest_request( '/ea/v1/accounts/' . $account->get_id(), 'DELETE' );
 		$this->assertEquals( 401, $response->get_status() );
 	}

@@ -92,29 +92,29 @@ class Transfers_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'creator'      => array(
-					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'properties'  => array(
-						'id'    => array(
-							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'name'  => array(
-							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'email' => array(
-							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-					),
-				),
+//				'creator'      => array(
+//					'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
+//					'type'        => 'object',
+//					'context'     => array( 'view', 'edit' ),
+//					'properties'  => array(
+//						'id'    => array(
+//							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+//							'type'        => 'integer',
+//							'context'     => array( 'view', 'edit' ),
+//							'readonly'    => true,
+//						),
+//						'name'  => array(
+//							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+//							'type'        => 'string',
+//							'context'     => array( 'view', 'edit' ),
+//						),
+//						'email' => array(
+//							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+//							'type'        => 'string',
+//							'context'     => array( 'view', 'edit' ),
+//						),
+//					),
+//				),
 				'date_created' => array(
 					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
