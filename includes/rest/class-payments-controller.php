@@ -1,6 +1,6 @@
 <?php
 /**
- * Transactions Rest Controller Class.
+ * Payments Rest Controller Class.
  *
  * @since       1.1.0
  * @subpackage  Rest
@@ -23,12 +23,20 @@ defined( 'ABSPATH' ) || die();
  */
 class Payments_Controller extends Transactions_Controller {
 	/**
+	 * Rest route.
+	 *
+	 * @since 1.1.4
+	 *
+	 * @var string
+	 */
+	protected $entity_type = 'payment';
+
+	/**
 	 * Route base.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'payments';
 
