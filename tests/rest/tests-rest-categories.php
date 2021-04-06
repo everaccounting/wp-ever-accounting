@@ -59,7 +59,7 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 	public function test_get_categories_without_permission() {
 		wp_set_current_user( 0 );
 		$response = $this->do_rest_get_request( '/ea/v1/categories/' );
-		$this->assertEquals( 401, $response->get_status() );
+		$this->assertEquals( 404, $response->get_status() );
 	}
 
 	/**
