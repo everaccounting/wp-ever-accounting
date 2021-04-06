@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Manager
+ *
  * @package EverAccounting\REST
  */
 class Manager extends Singleton {
@@ -28,6 +29,11 @@ class Manager extends Singleton {
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
 	}
 
+	/**
+	 * Register routes
+	 *
+	 * @since 1.0.2
+	 */
 	public function register_rest_routes() {
 		$rest_handlers = apply_filters(
 			'eaccounting_rest_controllers',
@@ -43,6 +49,7 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Codes_Controller',
 				'\EverAccounting\REST\Countries_Controller',
 				'\EverAccounting\REST\Data_Controller',
+				'\EverAccounting\REST\Items_Controller',
 			)
 		);
 

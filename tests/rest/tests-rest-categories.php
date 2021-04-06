@@ -43,7 +43,7 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 			if ( 'income' === $key ) {
 				$this->assertEquals( 7, count( $categories ) );
 			} else if ( 'item' === $key ) {
-				$this->assertEquals( 5, count( $categories ) );
+				$this->assertEquals( 6, count( $categories ) );
 			} else {
 				$this->assertEquals( 6, count( $categories ) );
 
@@ -178,7 +178,7 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 		}
 
 		// check update item category
-		$category     = Category_Helper::create_category( true, [ 'name' => 'Item', 'type' => 'item', 'color' => '#9caf80', 'enabled' => 0 ] );
+		$category     = Category_Helper::create_category( true, [ 'name' => 'Item Category', 'type' => 'item', 'color' => '#9caf80', 'enabled' => 0 ] );
 		$updated_data = [
 			'name'    => 'Item Category',
 			'color'   => '#8480af',
@@ -242,7 +242,7 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$response = $this->do_rest_get_request( '/ea/v1/categories' );
-		$this->assertEquals( 4, $response->get_headers()['X-WP-Total'] );
+		$this->assertEquals( 5, $response->get_headers()['X-WP-Total'] );
 	}
 
 	/**

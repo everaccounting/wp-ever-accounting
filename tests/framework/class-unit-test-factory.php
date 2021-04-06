@@ -19,7 +19,7 @@ require_once dirname( __FILE__ ) . '/factories/class-customer-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-vendor-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-account-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-category-factory.php';
-//require_once dirname( __FILE__ ) . '/factories/class-item-factory.php';
+require_once dirname( __FILE__ ) . '/factories/class-item-factory.php';
 //require_once dirname( __FILE__ ) . '/factories/class-revenue-factory.php';
 
 
@@ -65,7 +65,7 @@ class Factory extends \WP_UnitTest_Factory {
 		$this->vendor = new Vendor_Factory( $this );
 		$this->account = new Account_Factory( $this );
 		$this->category = new Category_Factory( $this );
-//		$this->item = new Item_Factory( $this );
+		$this->item = new Item_Factory( $this );
 //		$this->revenue = new Revenue_Factory( $this );
 	}
 }

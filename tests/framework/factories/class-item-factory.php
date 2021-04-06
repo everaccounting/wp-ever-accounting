@@ -17,7 +17,7 @@ class Item_Factory extends \WP_UnitTest_Factory_For_Thing {
 			'description'    => new \WP_UnitTest_Generator_Sequence( 'Item Description %s' ),
 			'sale_price'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'purchase_price' => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'quantity'       => 1,
+			'quantity'       => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'sales_tax'      => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'purchase_tax'   => new \WP_UnitTest_Generator_Sequence( '%d' ),
 		);

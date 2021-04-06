@@ -54,6 +54,7 @@ require_once $tests_dir . '/framework/helpers/currency-helper.php';
 require_once $tests_dir . '/framework/helpers/category-helper.php';
 require_once $tests_dir . '/framework/helpers/customer-helper.php';
 require_once $tests_dir . '/framework/helpers/vendor-helper.php';
+require_once $tests_dir . '/framework/helpers/item-helper.php';
 
 require_once $tests_dir . '/framework/class-unit-test-factory.php';
 require_once $tests_dir . '/framework/class-unittestcase.php';
