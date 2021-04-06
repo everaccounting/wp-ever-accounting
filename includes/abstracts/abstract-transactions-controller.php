@@ -118,9 +118,6 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'description' => __( 'Currency code for transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
-					),
 					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
@@ -150,9 +147,6 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'description' => __( 'Account id of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
 					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
@@ -179,16 +173,13 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'absint',
 					),
 				),
 				'category'         => array(
 					'description' => __( 'Category of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'arg_options' => array(
-						'sanitize_callback' => 'intval',
-					),
 					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
@@ -230,34 +221,34 @@ abstract class Transactions_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'attachment'       => array(
-					'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'src'  => array(
-							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name' => array(
-							'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
+				// 'attachment'       => array(
+				// 'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'embed', 'view', 'edit' ),
+				// 'properties'  => array(
+				// 'id'   => array(
+				// 'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+				// 'type'        => 'integer',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'readonly'    => true,
+				// ),
+				// 'src'  => array(
+				// 'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// 'name' => array(
+				// 'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// ),
+				// ),
+					'reconciled'   => array(
+						'description' => __( 'Reconciliation of the transaction', 'wp-ever-accounting' ),
+						'type'        => 'boolean',
+						'context'     => array( 'embed', 'view', 'edit' ),
 					),
-				),
-				'reconciled'       => array(
-					'description' => __( 'Reconciliation of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
 				// 'creator'          => array(
 				// 'description' => __( 'Creator of the transactions', 'wp-ever-accounting' ),
 				// 'type'        => 'object',
@@ -295,9 +286,6 @@ abstract class Transactions_Controller extends Entities_Controller {
 			'description' => __( 'Contact id of the transaction', 'wp-ever-accounting' ),
 			'type'        => 'object',
 			'context'     => array( 'embed', 'view', 'edit' ),
-			'arg_options' => array(
-				'sanitize_callback' => 'sanitize_text_field',
-			),
 			'properties'  => array(
 				'id'   => array(
 					'description' => __( 'Contact ID.', 'wp-ever-accounting' ),
@@ -311,6 +299,9 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'description' => __( 'Contact name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
 				),
 
 			),

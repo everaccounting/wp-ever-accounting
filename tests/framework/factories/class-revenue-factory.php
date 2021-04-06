@@ -5,6 +5,7 @@ namespace EverAccounting\Tests\Framework\Factories;
 use EverAccounting\Models\Revenue;
 use EverAccounting\Tests\Framework\Helpers\Account_Helper;
 use EverAccounting\Tests\Framework\Helpers\Category_Helper;
+use EverAccounting\Tests\Framework\Helpers\Customer_Helper;
 
 
 class Revenue_Factory extends \WP_UnitTest_Factory_For_Thing {
@@ -12,16 +13,22 @@ class Revenue_Factory extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 
 		$payment_date   = mt_rand( 1000, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
-		$account        = Account_Helper::create_account(['number' => rand() ]);
+		$account        = Account_Helper::create_account( true, [ 'number' => rand() ] );
 		$category       = Category_Helper::create_category( true, array( 'name' => 'Income Factory', 'type' => 'income' ) );
 		$payment_method = array_keys( eaccounting_get_payment_methods() );
 		array_rand( $payment_method );
+		$currency_code                        = $account->get_currency_code();
+		$currency_rate                        = $account->get_currency_rate();
+		$customer                             = Customer_Helper::create_customer();
 		$this->default_generation_definitions = array(
 			'payment_date'   => $payment_date,
+			'amount'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'currency_code'  => $currency_code,
+			'currency_rate'  => $currency_rate,
 			'account_id'     => $account->get_id(),
+			'contact_id'     => $customer->get_id(),
 			'category_id'    => $category->get_id(),
 			'payment_method' => $payment_method[0],
-			'amount'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
 		);
 	}
 

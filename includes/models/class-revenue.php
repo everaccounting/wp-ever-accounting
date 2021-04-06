@@ -12,6 +12,7 @@ namespace EverAccounting\Models;
 use EverAccounting\Traits\Attachment;
 use EverAccounting\Traits\Category;
 use EverAccounting\Traits\Customer;
+use EverAccounting\Traits\Account;
 use EverAccounting\Abstracts\Transaction;
 
 defined( 'ABSPATH' ) || exit;
@@ -27,6 +28,7 @@ class Revenue extends Transaction {
 	use Attachment;
 	use Category;
 	use Customer;
+	use Account;
 	/**
 	 * This is the name of this object type.
 	 *

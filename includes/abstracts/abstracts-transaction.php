@@ -16,6 +16,11 @@ use EverAccounting\Traits\CurrencyTrait;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Transactions abstract class
+ *
+ * Main class which will be extended in payment and revenues
+ */
 abstract class Transaction extends Resource_Model {
 	use CurrencyTrait;
 
@@ -27,6 +32,8 @@ abstract class Transaction extends Resource_Model {
 	protected $object_type = 'transaction';
 
 	/**
+	 * Cache group for transactions
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -75,11 +82,10 @@ abstract class Transaction extends Resource_Model {
 	 * @param int|object $data object to read.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( $this->repository_name );
 	}
 
@@ -95,13 +101,13 @@ abstract class Transaction extends Resource_Model {
 
 
 	/**
-	 * Transaction type.
+	 * Transaction type
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
-	 * @since 1.0.2
 	 *
+	 * @since 1.0.2
 	 */
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
@@ -110,11 +116,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Paid at time.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_payment_date( $context = 'edit' ) {
 		$payment_date = $this->get_prop( 'payment_date', $context );
@@ -125,11 +130,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction Amount.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_amount( $context = 'edit' ) {
 		return $this->get_prop( 'amount', $context );
@@ -140,7 +144,6 @@ abstract class Transaction extends Resource_Model {
 	 *
 	 * @return string
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_formatted_amount() {
 		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
@@ -149,11 +152,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Currency code.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
@@ -162,11 +164,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Currency rate.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_currency_rate( $context = 'edit' ) {
 		return $this->get_prop( 'currency_rate', $context );
@@ -175,22 +176,22 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction from account id.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_account_id( $context = 'edit' ) {
 		return $this->get_prop( 'account_id', $context );
 	}
 
 	/**
-	 * @param string $context
+	 * Document ID
+	 *
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_document_id( $context = 'edit' ) {
 		return $this->get_prop( 'document_id', $context );
@@ -199,11 +200,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Contact id.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_contact_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
@@ -212,11 +212,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Contact id.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_customer_id( $context = 'edit' ) {
 		return $this->get_contact_id( $context );
@@ -225,11 +224,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Category ID.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
@@ -238,11 +236,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Description.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_description( $context = 'edit' ) {
 		return $this->get_prop( 'description', $context );
@@ -251,11 +248,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction payment methods.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_payment_method( $context = 'edit' ) {
 		return $this->get_prop( 'payment_method', $context );
@@ -264,11 +260,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Transaction reference.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_reference( $context = 'edit' ) {
 		return $this->get_prop( 'reference', $context );
@@ -277,11 +272,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Get attachment url.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_attachment_id( $context = 'edit' ) {
 		return $this->get_prop( 'attachment_id', $context );
@@ -290,11 +284,10 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Get associated parent payment id.
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return mixed|null
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_parent_id( $context = 'edit' ) {
 		return $this->get_prop( 'parent_id', $context );
@@ -303,15 +296,15 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Get if reconciled
 	 *
-	 * @param string $context
+	 * @param string $context for which it will be used
 	 *
 	 * @return bool
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_reconciled( $context = 'edit' ) {
 		return (bool) $this->get_prop( 'reconciled', $context );
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -325,10 +318,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set contact's email.
 	 *
-	 * @param string $value Email.
+	 * @param string $value transaction_type.
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_type( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_transaction_types() ) ) {
@@ -339,10 +331,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set transaction paid.
 	 *
-	 * @param $value
+	 * @param string $value payment_date
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_payment_date( $value ) {
 		$this->set_date_prop( 'payment_date', $value );
@@ -351,10 +342,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set transaction amount.
 	 *
-	 * @param $value
+	 * @param string $value transaction_amount
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_amount( $value ) {
 		$this->set_prop( 'amount', eaccounting_format_decimal( $value, 4 ) );
@@ -363,10 +353,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set currency code.
 	 *
-	 * @param $value
+	 * @param string $value currency_code
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_currency_code( $value ) {
 		$this->set_prop( 'currency_code', eaccounting_clean( $value ) );
@@ -375,10 +364,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set currency rate.
 	 *
-	 * @param $value
+	 * @param double $value currency_rate
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_currency_rate( $value ) {
 		$this->set_prop( 'currency_rate', eaccounting_format_decimal( $value, 8 ) );
@@ -387,10 +375,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set account id.
 	 *
-	 * @param $value
+	 * @param int $value account_id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_account_id( $value ) {
 		$this->set_prop( 'account_id', absint( $value ) );
@@ -399,10 +386,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set invoice id.
 	 *
-	 * @param $value
+	 * @param int $value document_id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_document_id( $value ) {
 		$this->set_prop( 'document_id', absint( $value ) );
@@ -411,10 +397,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set contact id.
 	 *
-	 * @param $value
+	 * @param int $value customer or vendor id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_contact_id( $value ) {
 		$this->set_prop( 'contact_id', absint( $value ) );
@@ -423,10 +408,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set category id.
 	 *
-	 * @param $value
+	 * @param int $value income or expense id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_category_id( $value ) {
 		$this->set_prop( 'category_id', absint( $value ) );
@@ -435,10 +419,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set description.
 	 *
-	 * @param $value
+	 * @param string $value description
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -447,10 +430,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set payment method.
 	 *
-	 * @param $value
+	 * @param string $value payment_method
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_payment_method( $value ) {
 		if ( array_key_exists( $value, eaccounting_get_payment_methods() ) ) {
@@ -461,10 +443,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set reference.
 	 *
-	 * @param $value
+	 * @param string $value reference
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -473,10 +454,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set attachment.
 	 *
-	 * @param $value
+	 * @param int $value attachment id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_attachment_id( $value ) {
 		$this->set_prop( 'attachment_id', intval( $value ) );
@@ -485,10 +465,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set parent id.
 	 *
-	 * @param $value
+	 * @param int $value parent_id
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_parent_id( $value ) {
 		$this->set_prop( 'parent_id', absint( $value ) );
@@ -497,10 +476,9 @@ abstract class Transaction extends Resource_Model {
 	/**
 	 * Set if reconciled.
 	 *
-	 * @param $value
+	 * @param boolean $value true of false
 	 *
 	 * @since 1.0.2
-	 *
 	 */
 	public function set_reconciled( $value ) {
 		$this->set_prop( 'reconciled', absint( $value ) );
@@ -518,13 +496,12 @@ abstract class Transaction extends Resource_Model {
 	 * Save should create or update based on object existence.
 	 *
 	 * @return bool
-	 * @throws \Exception
+	 * @throws \Exception If any error occurs
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function save() {
-		//If account id is changing need to update currency.
+		// If account id is changing need to update currency.
 		if ( array_key_exists( 'account_id', $this->get_changes() ) || ! $this->exists() ) {
 			$account = new Account( $this->get_account_id() );
 			$this->set_currency_code( $account->get_currency_code() );
@@ -535,7 +512,7 @@ abstract class Transaction extends Resource_Model {
 			$this->set_currency_rate( $currency->get_rate() );
 		}
 
-		//saving same
+		// saving same
 		return parent::save();
 	}
 }
