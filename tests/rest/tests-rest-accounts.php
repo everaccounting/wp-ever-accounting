@@ -36,7 +36,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 		$accounts = $response->get_data();
 		// One created by default.
 		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEquals( 12, count( $accounts ) );
+		$this->assertEquals( 13, count( $accounts ) );
 	}
 
 	/**
@@ -183,7 +183,7 @@ class Tests_REST_Accounts extends REST_UnitTestCase {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$response = $this->do_rest_get_request( '/ea/v1/accounts' );
-		$this->assertEquals( 2, $response->get_headers()['X-WP-Total'] );
+		$this->assertEquals( 3, $response->get_headers()['X-WP-Total'] );
 	}
 
 	/**

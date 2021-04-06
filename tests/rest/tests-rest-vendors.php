@@ -35,10 +35,10 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 
 		wp_set_current_user( $this->user->ID );
 		$this->factory->vendor->create_many( 5 );
-		$response  = $this->do_rest_get_request( '/ea/v1/vendors' );
-		$vendors = $response->get_data();
+		$response = $this->do_rest_get_request( '/ea/v1/vendors' );
+		$vendors  = $response->get_data();
 		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEquals( 5, count( $vendors ) );
+		$this->assertEquals( 6, count( $vendors ) );
 	}
 
 	/**
@@ -60,8 +60,8 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 	public function test_get_vendor() {
 		wp_set_current_user( $this->user->ID );
 		$expected_response_fields = array_keys( $this->endpoint->get_public_item_schema()['properties'] );
-		$vendor = Vendor_Helper::create_vendor();
-		$response = $this->do_rest_get_request( '/ea/v1/vendors/' . $vendor->get_id() );
+		$vendor                   = Vendor_Helper::create_vendor();
+		$response                 = $this->do_rest_get_request( '/ea/v1/vendors/' . $vendor->get_id() );
 		$this->assertEquals( 200, $response->get_status(), var_export( $response, true ) );
 		$response_fields = array_keys( $response->get_data() );
 
@@ -88,7 +88,7 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 	 */
 	public function test_get_vendor_without_permission() {
 		wp_set_current_user( 0 );
-		$vendor  = Vendor_Helper::create_vendor();
+		$vendor   = Vendor_Helper::create_vendor();
 		$response = $this->do_rest_get_request( '/ea/v1/vendors/' . $vendor->get_id() );
 		$this->assertEquals( 401, $response->get_status() );
 	}
@@ -102,8 +102,8 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 		wp_set_current_user( $this->user->ID );
 		$data                     = Vendor_Helper::create_vendor( false );
 		$data['currency']['code'] = $data['currency_code'];
-		$response = $this->do_rest_post_request('/ea/v1/vendors', $data );
-		$vendor = $response->get_data();
+		$response                 = $this->do_rest_post_request( '/ea/v1/vendors', $data );
+		$vendor                   = $response->get_data();
 		$this->assertEquals( 201, $response->get_status() );
 		unset( $vendor['id'] );
 		foreach ( $vendor as $key => $value ) {
@@ -134,15 +134,15 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 	 */
 	public function test_update_vendor() {
 		wp_set_current_user( $this->user->ID );
-		$vendor = Vendor_Helper::create_vendor();
+		$vendor       = Vendor_Helper::create_vendor();
 		$updated_data = [
-			'name'         => 'Matt Mullenweg SR',
-			'email'        => 'mattsr@email.com',
-			'country'       => 'AE',
-			'vat_number'   => 'vt-124578',
-			'enabled'      => 0,
+			'name'       => 'Matt Mullenweg SR',
+			'email'      => 'mattsr@email.com',
+			'country'    => 'AE',
+			'vat_number' => 'vt-124578',
+			'enabled'    => 0,
 		];
-		$request = $this->do_rest_put_request( '/ea/v1/vendors/' . $vendor->get_id(), $updated_data );
+		$request      = $this->do_rest_put_request( '/ea/v1/vendors/' . $vendor->get_id(), $updated_data );
 		$this->assertEquals( 200, $request->get_status() );
 		$response = $this->do_rest_get_request( '/ea/v1/vendors/' . $vendor->get_id() );
 		$data     = $response->get_data();
@@ -160,7 +160,7 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 	 */
 	public function test_update_vendor_without_permission() {
 		wp_set_current_user( 0 );
-		$vendor = Vendor_Helper::create_vendor();
+		$vendor       = Vendor_Helper::create_vendor();
 		$updated_data = [
 			'name' => 'Can not change',
 		];
@@ -175,13 +175,13 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 	 */
 	public function test_delete_vendor() {
 		wp_set_current_user( $this->user->ID );
-		$vendor     = Vendor_Helper::create_vendor();
+		$vendor = Vendor_Helper::create_vendor();
 
 		$response = $this->do_rest_request( '/ea/v1/vendors/' . $vendor->get_id(), 'DELETE' );
 		$this->assertEquals( 200, $response->get_status() );
 
 		$response = $this->do_rest_get_request( '/ea/v1/vendors' );
-		$this->assertEquals( 0, $response->get_headers()['X-WP-Total'] );
+		$this->assertEquals( 1, $response->get_headers()['X-WP-Total'] );
 	}
 
 	/**
@@ -191,7 +191,7 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 	 */
 	public function test_delete_vendor_without_permission() {
 		wp_set_current_user( 0 );
-		$vendor     = Vendor_Helper::create_vendor();
+		$vendor   = Vendor_Helper::create_vendor();
 		$response = $this->do_rest_request( '/ea/v1/vendors/' . $vendor->get_id(), 'DELETE' );
 		$this->assertEquals( 401, $response->get_status() );
 	}

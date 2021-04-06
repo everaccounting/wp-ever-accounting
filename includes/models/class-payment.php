@@ -9,6 +9,7 @@
 
 namespace EverAccounting\Models;
 
+use EverAccounting\Traits\Account;
 use EverAccounting\Traits\Attachment;
 use EverAccounting\Traits\Vendor;
 use EverAccounting\Traits\Category;
@@ -27,6 +28,7 @@ class Payment extends Transaction {
 	use Attachment;
 	use Vendor;
 	use Category;
+	use Account;
 
 	/**
 	 * This is the name of this object type.

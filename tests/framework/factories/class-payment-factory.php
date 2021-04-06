@@ -2,32 +2,33 @@
 
 namespace EverAccounting\Tests\Framework\Factories;
 
+use EverAccounting\Models\Payment;
 use EverAccounting\Models\Revenue;
 use EverAccounting\Tests\Framework\Helpers\Account_Helper;
 use EverAccounting\Tests\Framework\Helpers\Category_Helper;
-use EverAccounting\Tests\Framework\Helpers\Customer_Helper;
+use EverAccounting\Tests\Framework\Helpers\Vendor_Helper;
 
 
-class Revenue_Factory extends \WP_UnitTest_Factory_For_Thing {
+class Payment_Factory extends \WP_UnitTest_Factory_For_Thing {
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
 
 		$payment_date   = mt_rand( 1000, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
 		$account        = Account_Helper::create_account( true, [ 'number' => rand() ] );
-		$category       = Category_Helper::create_category( true, array( 'name' => 'Income Factory', 'type' => 'income' ) );
+		$category       = Category_Helper::create_category( true, array( 'name' => 'Payment Factory', 'type' => 'expense' ) );
 		$payment_method = array_keys( eaccounting_get_payment_methods() );
 		array_rand( $payment_method );
 		$currency_code                        = $account->get_currency_code();
 		$currency_rate                        = $account->get_currency_rate();
-		$customer                             = Customer_Helper::create_customer();
+		$vendor                               = Vendor_Helper::create_vendor();
 		$this->default_generation_definitions = array(
-			'type'           => 'income',
+			'type'           => 'expense',
 			'payment_date'   => $payment_date,
 			'amount'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'currency_code'  => $currency_code,
 			'currency_rate'  => $currency_rate,
 			'account_id'     => $account->get_id(),
-			'contact_id'     => $customer->get_id(),
+			'contact_id'     => $vendor->get_id(),
 			'category_id'    => $category->get_id(),
 			'payment_method' => $payment_method[0],
 		);
@@ -51,43 +52,43 @@ class Revenue_Factory extends \WP_UnitTest_Factory_For_Thing {
 	 * @return bool|Revenue|int|\WP_Error
 	 */
 	function create_object( $args ) {
-		return eaccounting_insert_revenue( $args );
+		return eaccounting_insert_payment( $args );
 	}
 
 	/**
-	 * @param $revenue_id
+	 * @param $payment_id
 	 * @param $fields
 	 *
 	 * @return bool|Revenue|int|\WP_Error
 	 */
-	function update_object( $revenue_id, $fields ) {
-		return eaccounting_insert_revenue( array_merge( [ 'id' => $revenue_id ], $fields ) );
+	function update_object( $payment_id, $fields ) {
+		return eaccounting_insert_payment( array_merge( [ 'id' => $payment_id ], $fields ) );
 	}
 
 	/**
-	 * @param $revenue_id
+	 * @param $payment_id
 	 */
-	public function delete( $revenue_id ) {
-		eaccounting_delete_revenue( $revenue_id );
+	public function delete( $payment_id ) {
+		eaccounting_delete_payment( $payment_id );
 	}
 
 	/**
-	 * @param $revenues
+	 * @param $payments
 	 */
-	public function delete_many( $revenues ) {
-		foreach ( $revenues as $revenue ) {
-			$this->delete( $revenue );
+	public function delete_many( $payments ) {
+		foreach ( $payments as $payment ) {
+			$this->delete( $payment );
 		}
 	}
 
 	/**
 	 * Stub out copy of parent method for IDE type hinting purposes.
 	 *
-	 * @param $revenue_id Revenue ID.
+	 * @param $payment_id Payment ID.
 	 *
-	 * @return Revenue|false
+	 * @return Payment|false
 	 */
-	function get_object_by_id( $revenue_id ) {
-		return eaccounting_get_revenue( $revenue_id );
+	function get_object_by_id( $payment_id ) {
+		return eaccounting_get_payment( $payment_id );
 	}
 }

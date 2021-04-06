@@ -44,9 +44,10 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 				$this->assertEquals( 8, count( $categories ) );
 			} else if ( 'item' === $key ) {
 				$this->assertEquals( 6, count( $categories ) );
+			} else if('expense' === $key){
+				$this->assertEquals( 7, count( $categories ) );
 			} else {
 				$this->assertEquals( 6, count( $categories ) );
-
 			}
 		}
 	}
@@ -242,7 +243,7 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$response = $this->do_rest_get_request( '/ea/v1/categories' );
-		$this->assertEquals( 6, $response->get_headers()['X-WP-Total'] );
+		$this->assertEquals( 7, $response->get_headers()['X-WP-Total'] );
 	}
 
 	/**
