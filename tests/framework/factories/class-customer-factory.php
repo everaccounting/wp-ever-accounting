@@ -17,12 +17,13 @@ class Customer_Factory extends \WP_UnitTest_Factory_For_Thing {
 			'name'          => new \WP_UnitTest_Generator_Sequence( 'Customer %s' ),
 			'email'         => new \WP_UnitTest_Generator_Sequence( 'customer%d@email.com' ),
 			'phone'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'fax'           => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'birth_date'    => $birth_date,
-			'address'       => new \WP_UnitTest_Generator_Sequence( 'Customer Address %s' ),
+			'city'       => new \WP_UnitTest_Generator_Sequence( '%s' ),
+			'state'       => new \WP_UnitTest_Generator_Sequence( '%s' ),
+			'postcode'       => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'country'       => $country[0],
 			'website'       => new \WP_UnitTest_Generator_Sequence( 'Customer%s.test.com' ),
-			'tax_number'    => new \WP_UnitTest_Generator_Sequence( 'Customer Tax %d' ),
+			'vat_number'    => new \WP_UnitTest_Generator_Sequence( 'Vat-%d' ),
 			'currency_code' => $currency->get_code(),
 
 		);

@@ -15,7 +15,7 @@ class Customer_Helper {
 			'street'        => '6th',
 			'state'         => 'New York',
 			'postcode'      => '1216',
-			'country'       => '',
+			'country'       => 'US',
 			'website'       => 'http://john@local.com',
 			'currency_code' => 'USD',
 			'enabled'       => true,

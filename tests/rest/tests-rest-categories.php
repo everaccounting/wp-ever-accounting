@@ -1,6 +1,6 @@
 <?php
 
-use EverAccounting\Rest\Categories_Controller;
+use EverAccounting\REST\Categories_Controller;
 use EverAccounting\Tests\Framework\Helpers\Category_Helper;
 use EverAccounting\Tests\Framework\REST_UnitTestCase;
 
@@ -58,8 +58,7 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 	 */
 	public function test_get_categories_without_permission() {
 		wp_set_current_user( 0 );
-		$category = Category_Helper::create_category();
-		$response = $this->do_rest_get_request( '/ea/v1/categories/' . $category->get_id() );
+		$response = $this->do_rest_get_request( '/ea/v1/categories/' );
 		$this->assertEquals( 401, $response->get_status() );
 	}
 

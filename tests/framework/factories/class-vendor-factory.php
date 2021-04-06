@@ -3,25 +3,27 @@
 namespace EverAccounting\Tests\Framework\Factories;
 
 use EverAccounting\Models\Vendor;
+use EverAccounting\Tests\Framework\Helpers\Currency_Helper;
 
-class Vendor_Factory extends \WP_UnitTest_Factory_For_Thing{
+class Vendor_Factory extends \WP_UnitTest_Factory_For_Thing {
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
 
-		$birth_date                           = mt_rand( 1900, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
-		$country                              = array_keys( eaccounting_get_countries() );
+		$birth_date = mt_rand( 1900, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
+		$country    = array_keys( eaccounting_get_countries() );
 		array_rand( $country );
 		$currency                             = Currency_Helper::create_currency( array( 'code' => 'USD' ) );
 		$this->default_generation_definitions = array(
 			'name'          => new \WP_UnitTest_Generator_Sequence( 'Vendor %s' ),
 			'email'         => new \WP_UnitTest_Generator_Sequence( 'vendor%d@email.com' ),
 			'phone'         => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'fax'           => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'birth_date'    => $birth_date,
-			'address'       => new \WP_UnitTest_Generator_Sequence( 'Vendor Address %s' ),
+			'city'          => new \WP_UnitTest_Generator_Sequence( '%s' ),
+			'state'         => new \WP_UnitTest_Generator_Sequence( '%s' ),
+			'postcode'      => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'country'       => $country[0],
 			'website'       => new \WP_UnitTest_Generator_Sequence( 'Vendor%s.test.com' ),
-			'tax_number'    => new \WP_UnitTest_Generator_Sequence( 'Vendor Tax %d' ),
+			'vat_number'    => new \WP_UnitTest_Generator_Sequence( 'vat-%d' ),
 			'currency_code' => $currency->get_code(),
 
 		);
@@ -31,7 +33,7 @@ class Vendor_Factory extends \WP_UnitTest_Factory_For_Thing{
 	 * Stub out copy of parent method for IDE type hinting purposes.
 	 *
 	 * @param array $args
-	 * @param null  $generation_definitions
+	 * @param null $generation_definitions
 	 *
 	 * @return Vendor |false
 	 */
@@ -55,7 +57,7 @@ class Vendor_Factory extends \WP_UnitTest_Factory_For_Thing{
 	 * @return bool|Vendor|int|\WP_Error
 	 */
 	function update_object( $vendor_id, $fields ) {
-		return eaccounting_insert_vendor( array_merge(['id' => $vendor_id], $fields) );
+		return eaccounting_insert_vendor( array_merge( [ 'id' => $vendor_id ], $fields ) );
 	}
 
 	/**

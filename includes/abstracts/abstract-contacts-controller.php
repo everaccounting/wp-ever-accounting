@@ -142,7 +142,7 @@ abstract class Contacts_Controller extends Entities_Controller {
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_key',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'currency'         => array(

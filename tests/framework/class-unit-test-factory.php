@@ -16,7 +16,7 @@ use EverAccounting\Tests\Framework\Factories\Revenue_Factory;
 use EverAccounting\Tests\Framework\Factories\Vendor_Factory;
 
 require_once dirname( __FILE__ ) . '/factories/class-customer-factory.php';
-//require_once dirname( __FILE__ ) . '/factories/class-vendor-factory.php';
+require_once dirname( __FILE__ ) . '/factories/class-vendor-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-account-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-category-factory.php';
 //require_once dirname( __FILE__ ) . '/factories/class-item-factory.php';
@@ -62,7 +62,7 @@ class Factory extends \WP_UnitTest_Factory {
 		parent::__construct();
 
 		$this->customer = new Customer_Factory( $this );
-//		$this->vendor = new Vendor_Factory( $this );
+		$this->vendor = new Vendor_Factory( $this );
 		$this->account = new Account_Factory( $this );
 		$this->category = new Category_Factory( $this );
 //		$this->item = new Item_Factory( $this );
