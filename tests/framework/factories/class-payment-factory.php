@@ -13,9 +13,15 @@ class Payment_Factory extends \WP_UnitTest_Factory_For_Thing {
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
 
-		$payment_date   = mt_rand( 1000, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
-		$account        = Account_Helper::create_account( true, [ 'number' => rand() ] );
-		$category       = Category_Helper::create_category( true, array( 'name' => 'Payment-' . rand( 0, 10000 ), 'type' => 'expense', 'color' => eaccounting_get_random_color() ) );
+		$payment_date = mt_rand( 1000, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
+		$account      = Account_Helper::create_account( true, [ 'number' => rand() ] );
+		$category     = Category_Helper::create_category( true, array( 'name' => 'Payment-' . rand( 0, 10000 ), 'type' => 'expense', 'color' => eaccounting_get_random_color() ) );
+
+		if ( empty( $category ) ):
+			$category = eaccounting_get_categories( array( 'type' => 'expense' ) );
+			$category = $category[0];
+		endif;
+
 
 		$payment_method = array_keys( eaccounting_get_payment_methods() );
 		array_rand( $payment_method );

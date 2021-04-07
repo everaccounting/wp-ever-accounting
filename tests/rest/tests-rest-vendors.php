@@ -33,7 +33,6 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 	public function test_get_vendors() {
 		wp_set_current_user( $this->user->ID );
 
-		wp_set_current_user( $this->user->ID );
 		$this->factory->vendor->create_many( 5 );
 		$response = $this->do_rest_get_request( '/ea/v1/vendors' );
 		$vendors  = $response->get_data();
