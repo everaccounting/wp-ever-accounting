@@ -50,6 +50,8 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Countries_Controller',
 				'\EverAccounting\REST\Data_Controller',
 				'\EverAccounting\REST\Items_Controller',
+				'\EverAccounting\REST\Invoices_Controller',
+				'\EverAccounting\REST\Bills_Controller',
 			)
 		);
 
