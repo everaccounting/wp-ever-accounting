@@ -181,7 +181,7 @@ class Tests_REST_Categories extends REST_UnitTestCase {
 		// check update item category
 		$category     = Category_Helper::create_category( true, [ 'name' => 'Item Category', 'type' => 'item', 'color' => '#9caf80', 'enabled' => 0 ] );
 		$updated_data = [
-			'name'    => 'Item Category',
+			'name'    => 'Item Category Updated',
 			'color'   => '#8480af',
 			'enabled' => 1,
 		];

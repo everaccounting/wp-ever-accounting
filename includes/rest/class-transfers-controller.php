@@ -91,7 +91,7 @@ class Transfers_Controller extends Entities_Controller {
 						'id'   => array(
 							'description' => __( 'From Account ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'embed', 'view', 'edit' ),
+							'context'     => array( 'view', 'edit' ),
 							'arg_options' => array(
 								'sanitize_callback' => 'absint',
 							),
@@ -99,7 +99,7 @@ class Transfers_Controller extends Entities_Controller {
 						'name' => array(
 							'description' => __( 'From Account name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'embed', 'view', 'edit' ),
+							'context'     => array( 'view', 'edit' ),
 							'arg_options' => array(
 								'sanitize_callback' => 'sanitize_text_field',
 							),
@@ -115,7 +115,7 @@ class Transfers_Controller extends Entities_Controller {
 						'id'   => array(
 							'description' => __( 'To Account ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
-							'context'     => array( 'embed', 'view', 'edit' ),
+							'context'     => array( 'view', 'edit' ),
 							'arg_options' => array(
 								'sanitize_callback' => 'absint',
 							),
@@ -123,7 +123,7 @@ class Transfers_Controller extends Entities_Controller {
 						'name' => array(
 							'description' => __( 'To Account name.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'embed', 'view', 'edit' ),
+							'context'     => array( 'view', 'edit' ),
 							'arg_options' => array(
 								'sanitize_callback' => 'sanitize_text_field',
 							),
@@ -160,7 +160,7 @@ class Transfers_Controller extends Entities_Controller {
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'absint',
 					),
 					'required'    => false,
 				),
@@ -169,9 +169,25 @@ class Transfers_Controller extends Entities_Controller {
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_text_field',
+						'sanitize_callback' => 'absint',
 					),
 					'required'    => false,
+				),
+				'reference'      => array(
+					'description' => __( 'Reference of the transfer', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
+				),
+				'description'      => array(
+					'description' => __( 'Description of the transfer', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_textarea_field',
+					),
 				),
 				// 'creator'      => array(
 				// 'description' => __( 'Creator of the transfer', 'wp-ever-accounting' ),
@@ -220,7 +236,7 @@ class Transfers_Controller extends Entities_Controller {
 		$query_params = array_merge(
 			parent::get_collection_params(),
 			array(
-				'orderby'         => array(
+				'orderby' => array(
 					'description' => __( 'Sort collection by transaction attribute.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'default'     => 'id',

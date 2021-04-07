@@ -38,7 +38,7 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 		$response = $this->do_rest_get_request( '/ea/v1/vendors' );
 		$vendors  = $response->get_data();
 		$this->assertEquals( 200, $response->get_status() );
-		$this->assertEquals( 6, count( $vendors ) );
+		$this->assertEquals( 10, count( $vendors ) );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$response = $this->do_rest_get_request( '/ea/v1/vendors' );
-		$this->assertEquals( 1, $response->get_headers()['X-WP-Total'] );
+		$this->assertEquals( 9, $response->get_headers()['X-WP-Total'] );
 	}
 
 	/**

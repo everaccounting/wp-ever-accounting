@@ -14,12 +14,13 @@ class Revenue_Factory extends \WP_UnitTest_Factory_For_Thing {
 
 		$payment_date   = mt_rand( 1000, date( "Y" ) ) . '-' . mt_rand( 1, 12 ) . '-' . mt_rand( 1, 31 );
 		$account        = Account_Helper::create_account( true, [ 'number' => rand() ] );
-		$category       = Category_Helper::create_category( true, array( 'name' => 'Income Factory', 'type' => 'income' ) );
+		$category       = Category_Helper::create_category( true, array( 'name' => 'Income-' . rand( 0, 10000 ), 'type' => 'income', 'color' => eaccounting_get_random_color() ) );
 		$payment_method = array_keys( eaccounting_get_payment_methods() );
 		array_rand( $payment_method );
-		$currency_code                        = $account->get_currency_code();
-		$currency_rate                        = $account->get_currency_rate();
-		$customer                             = Customer_Helper::create_customer();
+		$currency_code = $account->get_currency_code();
+		$currency_rate = $account->get_currency_rate();
+		$customer      = Customer_Helper::create_customer();
+
 		$this->default_generation_definitions = array(
 			'type'           => 'income',
 			'payment_date'   => $payment_date,
