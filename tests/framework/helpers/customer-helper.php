@@ -6,7 +6,7 @@ class Customer_Helper {
 
 	public static function create_customer( $save = true, $props = array() ) {
 		$default = array(
-			'name'          => 'John DOe',
+			'name'          => 'John Doe',
 			'company'       => 'Automattic',
 			'email'         => 'john@email.com',
 			'phone'         => '+12340974',

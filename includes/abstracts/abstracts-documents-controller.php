@@ -76,7 +76,7 @@ abstract class Documents_Controller extends Entities_Controller {
 			'title'      => __( 'Document', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'               => array(
+				'id'              => array(
 					'description' => __( 'Unique identifier for the Document.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -85,7 +85,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'document_number'  => array(
+				'document_number' => array(
 					'description' => __( 'Number of Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -95,7 +95,7 @@ abstract class Documents_Controller extends Entities_Controller {
 					'readonly'    => true,
 					'required'    => false,
 				),
-				'order_number'     => array(
+				'order_number'    => array(
 					'description' => __( 'Order Number of Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -105,7 +105,7 @@ abstract class Documents_Controller extends Entities_Controller {
 					'readonly'    => true,
 					'required'    => false,
 				),
-				'status'           => array(
+				'status'          => array(
 					'description' => __( 'Status of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'default'     => 'draft',
@@ -115,27 +115,27 @@ abstract class Documents_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'issue_date'       => array(
+				'issue_date'      => array(
 					'description' => __( 'Issue Date of Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
-				'due_date'         => array(
+				'due_date'        => array(
 					'description' => __( 'Due Date of Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'required'    => true,
 				),
-				'payment_date'     => array(
+				'payment_date'    => array(
 					'description' => __( 'Payment Date of Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date-time',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				'category'         => array(
+				'category'        => array(
 					'description' => __( 'Category id of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -159,98 +159,98 @@ abstract class Documents_Controller extends Entities_Controller {
 						),
 					),
 				),
-				'address'          => array(
-					'description' => __( 'Address of the Document.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'required'    => false,
-					'readonly'    => true,
-					'properties'  => array(
-						'name'       => array(
-							'description' => __( 'Name', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'company'    => array(
-							'description' => __( 'Company', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'street'     => array(
-							'description' => __( 'Street', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'city'       => array(
-							'description' => __( 'City', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'state'      => array(
-							'description' => __( 'State', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'postcode'   => array(
-							'description' => __( 'Postcode', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'country'    => array(
-							'description' => __( 'Country', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'email'      => array(
-							'description' => __( 'Email', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_email',
-							),
-						),
-						'phone'      => array(
-							'description' => __( 'Phone', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'vat_number' => array(
-							'description' => __( 'Vat Number', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-
-					),
-
-				),
-				'discount'         => array(
+				// 'address'          => array(
+				// 'description' => __( 'Address of the Document.', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'embed', 'view', 'edit' ),
+				// 'required'    => false,
+				// 'readonly'    => true,
+				// 'properties'  => array(
+				// 'name'       => array(
+				// 'description' => __( 'Name', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'company'    => array(
+				// 'description' => __( 'Company', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'street'     => array(
+				// 'description' => __( 'Street', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'city'       => array(
+				// 'description' => __( 'City', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'state'      => array(
+				// 'description' => __( 'State', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'postcode'   => array(
+				// 'description' => __( 'Postcode', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'country'    => array(
+				// 'description' => __( 'Country', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'email'      => array(
+				// 'description' => __( 'Email', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_email',
+				// ),
+				// ),
+				// 'phone'      => array(
+				// 'description' => __( 'Phone', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				// 'vat_number' => array(
+				// 'description' => __( 'Vat Number', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'sanitize_text_field',
+				// ),
+				// ),
+				//
+				// ),
+				//
+				// ),
+				'discount'        => array(
 					'description' => __( 'Discount of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -259,7 +259,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'discount_type'    => array(
+				'discount_type'   => array(
 					'description' => __( 'Discount type of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -269,7 +269,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'subtotal'         => array(
+				'subtotal'        => array(
 					'description' => __( 'Subtotal of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -279,7 +279,7 @@ abstract class Documents_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'total_tax'        => array(
+				'total_tax'       => array(
 					'description' => __( 'Total Tax of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -288,7 +288,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'total_discount'   => array(
+				'total_discount'  => array(
 					'description' => __( 'Total Discount of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -297,7 +297,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'total_fees'       => array(
+				'total_fees'      => array(
 					'description' => __( 'Total Fees of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -306,7 +306,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'total_shipping'   => array(
+				'total_shipping'  => array(
 					'description' => __( 'Total Shipping of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -315,7 +315,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'total'            => array(
+				'total'           => array(
 					'description' => __( 'Total of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -325,7 +325,7 @@ abstract class Documents_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'tax_inclusive'    => array(
+				'tax_inclusive'   => array(
 					'description' => __( 'Total of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view' ),
@@ -335,7 +335,7 @@ abstract class Documents_Controller extends Entities_Controller {
 					),
 					'required'    => false,
 				),
-				'note'             => array(
+				'note'            => array(
 					'description' => __( 'Note for the Document', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -343,7 +343,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'terms'            => array(
+				'terms'           => array(
 					'description' => __( 'Terms for the Document', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -351,47 +351,47 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'attachment'       => array(
-					'description' => __( 'Attachment id of the Document', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'properties'  => array(
-						'id'  => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'intval',
+				// 'attachment'       => array(
+				// 'description' => __( 'Attachment id of the Document', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'embed', 'view', 'edit' ),
+				// 'properties'  => array(
+				// 'id'  => array(
+				// 'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+				// 'type'        => 'integer',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'intval',
+				// ),
+				// ),
+				// 'src' => array(
+				// 'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'embed', 'view' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'esc_url_raw',
+				// ),
+				// ),
+				// ),
+				// ),
+					'currency'    => array(
+						'description' => __( 'Currency code of the Document.', 'wp-ever-accounting' ),
+						'type'        => 'object',
+						'context'     => array( 'view', 'edit' ),
+						'required'    => true,
+						'properties'  => array(
+							'code' => array(
+								'description' => __( 'Currency code.', 'wp-ever-accounting' ),
+								'type'        => 'string',
+								'context'     => array( 'view', 'edit' ),
+								'arg_options' => array(
+									'sanitize_callback' => 'sanitize_text_field',
+								),
 							),
-						),
-						'src' => array(
-							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed', 'view' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'esc_url_raw',
-							),
-						),
-					),
-				),
-				'currency'         => array(
-					'description' => __( 'Currency code of the Document.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
-					'required'    => true,
-					'properties'  => array(
-						'code' => array(
-							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
 
+						),
 					),
-				),
-				'currency_rate'    => array(
+				'currency_rate'   => array(
 					'description' => __( 'Currency rate of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -399,7 +399,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'key'              => array(
+				'key'             => array(
 					'description' => __( 'Key of the Document.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -407,7 +407,7 @@ abstract class Documents_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'parent_id'        => array(
+				'parent_id'       => array(
 					'description' => __( 'Creator of the Document', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
@@ -446,13 +446,13 @@ abstract class Documents_Controller extends Entities_Controller {
 				// ),
 				// ),
 				// ),
-					'date_created' => array(
-						'description' => __( 'Created date of the Document.', 'wp-ever-accounting' ),
-						'type'        => 'string',
-						'format'      => 'date-time',
-						'context'     => array( 'view' ),
-						'readonly'    => true,
-					),
+				'date_created'    => array(
+					'description' => __( 'Created date of the Document.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date-time',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
 
 			),
 		);

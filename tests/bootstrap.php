@@ -58,6 +58,7 @@ require_once $tests_dir . '/framework/helpers/item-helper.php';
 require_once $tests_dir . '/framework/helpers/revenue-helper.php';
 require_once $tests_dir . '/framework/helpers/payment-helper.php';
 require_once $tests_dir . '/framework/helpers/transfer-helper.php';
+require_once $tests_dir . '/framework/helpers/document-helper.php';
 
 require_once $tests_dir . '/framework/class-unit-test-factory.php';
 require_once $tests_dir . '/framework/class-unittestcase.php';

@@ -6,13 +6,16 @@ namespace EverAccounting\Tests\Framework\Helpers;
 class Document_Helper {
 
 	public static function create_document( $save = true, $props = array() ) {
+		$date     = date( "Y-m-d 00:00:00" );// current date
+		$due_date = strtotime( date( "Y-m-d 00:00:00", strtotime( $date ) ) . " +2 week" );
+
 		$default = array(
 			'document_number' => '',
 			'type'            => 'invoice',
 			'order_number'    => '',
 			'status'          => 'draft',
-			'issue_date'      => date( 'Y-m-d' ),
-			'due_date'        => strtotime( '+15 days', date( 'Y-m-d' ) ),
+			'issue_date'      => $date,
+			'due_date'        => date( 'Y-m-d 00:00:00', $due_date ),
 			'payment_date'    => null,
 			'category_id'     => null,
 			'contact_id'      => null,
@@ -28,14 +31,14 @@ class Document_Helper {
 				'phone'      => '',
 				'vat_number' => '',
 			),
-			'discount'        => 0.00,
+			'discount'        => '0.00',
 			'discount_type'   => 'percentage',
-			'subtotal'        => 0.00,
-			'total_tax'       => 0.00,
-			'total_discount'  => 0.00,
-			'total_fees'      => 0.00,
-			'total_shipping'  => 0.00,
-			'total'           => 0.00,
+			'subtotal'        => '0.00',
+			'total_tax'       => '0.00',
+			'total_discount'  => '0.00',
+			'total_fees'      => '0.00',
+			'total_shipping'  => '0.00',
+			'total'           => '0.00',
 			'tax_inclusive'   => 1,
 			'note'            => '',
 			'terms'           => '',
@@ -72,6 +75,13 @@ class Document_Helper {
 			$default['currency_code'] = $currency->get_code();
 			$default['currency_rate'] = $currency->get_rate();
 		}
+
+		if ( is_null( $default['category_id'] ) ) {
+			$category               = Category_Helper::create_category( true, array( 'name' => 'inv-category', 'type' => 'income' ) );
+			$default['category_id'] = $category->get_id();
+		}
+
+
 
 		$props = array_merge( $default, $props );
 
