@@ -49,47 +49,56 @@ class Document_Helper {
 			'parent_id'       => null,
 			'date_created'    => date( 'Y-m-d' )
 		);
-		if ( is_null( $default['contact_id'] ) ) {
-			if ( 'invoice' == $default['type'] ) {
-				$contact               = Customer_Helper::create_customer();
-				$default['contact_id'] = $contact->get_id();
-			}
-			if ( 'bill' == $default['type'] ) {
-				$contact               = Vendor_Helper::create_vendor();
-				$default['contact_id'] = $contact->get_id();
-			}
-			$default['address']['name']       = $contact->get_name();
-			$default['address']['company']    = $contact->get_company();
-			$default['address']['street']     = $contact->get_street();
-			$default['address']['city']       = $contact->get_city();
-			$default['address']['state']      = $contact->get_state();
-			$default['address']['postcode']   = $contact->get_postcode();
-			$default['address']['country']    = $contact->get_country();
-			$default['address']['email']      = $contact->get_email();
-			$default['address']['phone']      = $contact->get_phone();
-			$default['address']['vat_number'] = $contact->get_vat_number();
-		}
-
-		if ( is_null( $default['currency_code'] ) ) {
-			$currency                 = Currency_Helper::create_currency();
-			$default['currency_code'] = $currency->get_code();
-			$default['currency_rate'] = $currency->get_rate();
-		}
-
-		if ( is_null( $default['category_id'] ) ) {
-			$category               = Category_Helper::create_category( true, array( 'name' => 'inv-category', 'type' => 'income' ) );
-			$default['category_id'] = $category->get_id();
-		}
-
-
 
 		$props = array_merge( $default, $props );
 
+		if ( is_null( $props['contact_id'] ) ) {
+			if ( 'invoice' == $props['type'] ) {
+				$contact               = Customer_Helper::create_customer();
+				$props['contact_id'] = $contact->get_id();
+			}
+			else if ( 'bill' == $props['type'] ) {
+				$contact               = Vendor_Helper::create_vendor();
+				$props['contact_id'] = $contact->get_id();
+			}
+
+			$props['address']['name']       = $contact->get_name();
+			$props['address']['company']    = $contact->get_company();
+			$props['address']['street']     = $contact->get_street();
+			$props['address']['city']       = $contact->get_city();
+			$props['address']['state']      = $contact->get_state();
+			$props['address']['postcode']   = $contact->get_postcode();
+			$props['address']['country']    = $contact->get_country();
+			$props['address']['email']      = $contact->get_email();
+			$props['address']['phone']      = $contact->get_phone();
+			$props['address']['vat_number'] = $contact->get_vat_number();
+		}
+
+
+		if ( is_null( $props['currency_code'] ) ) {
+			$currency                 = Currency_Helper::create_currency();
+			$props['currency_code'] = $currency->get_code();
+			$props['currency_rate'] = $currency->get_rate();
+		}
+
+		if ( is_null( $props['category_id'] ) ) {
+			if('invoice' == $props['type']){
+				$category               = Category_Helper::create_category( true, array( 'name' => 'inv-category', 'type' => 'income' ) );
+				$props['category_id'] = $category->get_id();
+			}
+
+			else if('bill' == $props['type']){
+				$category               = Category_Helper::create_category( true, array( 'name' => 'bill-category', 'type' => 'expense' ) );
+				$props['category_id'] = $category->get_id();
+
+			}
+		}
+
 		if ( $save ) {
-			if ( 'invoice' == $default['type'] ) {
+			if ( 'invoice' == $props['type'] ) {
 				return eaccounting_insert_invoice( $props, false );
 			}
-			if ( 'bill' == $default['type'] ) {
+			else if ( 'bill' == $props['type'] ) {
 				return eaccounting_insert_bill( $props, false );
 			}
 		}

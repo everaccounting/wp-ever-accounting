@@ -12,25 +12,25 @@ class Bill_Factory extends \WP_UnitTest_Factory_For_Thing {
 		parent::__construct( $factory );
 		$currency = Currency_Helper::create_currency();
 		$category = Category_Helper::create_category( true, array( 'name' => 'Bill-' . rand( 0, 10000 ) ) );
-		$vendor = Vendor_Helper::create_vendor( true, array( 'name' => 'Bill Vendor' ) );
+		$vendor   = Vendor_Helper::create_vendor( true, array( 'name' => 'Bill Vendor' ) );
 		$date     = date( "Y-m-d" );// current date
 		$due_date = strtotime( date( "Y-m-d", strtotime( $date ) ) . " +2 week" );
 
 		$this->default_generation_definitions = array(
-			'bill_number' => '',
-			'order_number'   => new \WP_UnitTest_Generator_Sequence( 'Order-%d' ),
-			'status'         => 'draft',
-			'issue_date'     => $date,
-			'due_date'       => $due_date,
-			'payment_date'   => null,
-			'category_id'    => $category->get_id(),
-			'vendor_id'    => $vendor->get_id(),
-			'currency_code'  => $currency->get_code(),
-			'discount'       => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'discount_type'  => 'percentage',
-			'total_tax'      => wp_rand( 0, 15 ),
-			'note'           => new \WP_UnitTest_Generator_Sequence( 'Bill Notes-%s' ),
-			'terms'          => new \WP_UnitTest_Generator_Sequence( 'Bill terms-%d' ),
+			'bill_number'   => '',
+			'order_number'  => new \WP_UnitTest_Generator_Sequence( 'Order-%d' ),
+			'status'        => 'draft',
+			'issue_date'    => $date,
+			'due_date'      => date( 'Y-m-d', $due_date ),
+			'payment_date'  => null,
+			'category_id'   => $category->get_id(),
+			'vendor_id'     => $vendor->get_id(),
+			'currency_code' => $currency->get_code(),
+			'discount'      => new \WP_UnitTest_Generator_Sequence( '%d' ),
+			'discount_type' => 'percentage',
+			'total_tax'     => wp_rand( 0, 15 ),
+			'note'          => new \WP_UnitTest_Generator_Sequence( 'Bill Notes-%s' ),
+			'terms'         => new \WP_UnitTest_Generator_Sequence( 'Bill terms-%d' ),
 		);
 	}
 

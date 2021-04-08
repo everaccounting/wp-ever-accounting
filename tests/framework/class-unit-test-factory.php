@@ -17,8 +17,7 @@ use EverAccounting\Tests\Framework\Factories\Revenue_Factory;
 use EverAccounting\Tests\Framework\Factories\Vendor_Factory;
 use EverAccounting\Tests\Framework\Factories\Transfer_Factory;
 use EverAccounting\Tests\Framework\Factories\Invoice_Factory;
-
-//use EverAccounting\Tests\Framework\Factories\Bill_Factory;
+use EverAccounting\Tests\Framework\Factories\Bill_Factory;
 
 require_once dirname( __FILE__ ) . '/factories/class-customer-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-vendor-factory.php';
@@ -29,8 +28,7 @@ require_once dirname( __FILE__ ) . '/factories/class-revenue-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-payment-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-transfer-factory.php';
 require_once dirname( __FILE__ ) . '/factories/class-invoice-factory.php';
-
-//require_once dirname( __FILE__ ) . '/factories/class-bill-factory.php';
+require_once dirname( __FILE__ ) . '/factories/class-bill-factory.php';
 
 
 class Factory extends \WP_UnitTest_Factory {
@@ -80,6 +78,11 @@ class Factory extends \WP_UnitTest_Factory {
 	 */
 	public $invoice;
 
+	/**
+	 * @var Bill_Factory
+	 */
+	public $bill;
+
 
 	/**
 	 * Setup factories.
@@ -96,5 +99,6 @@ class Factory extends \WP_UnitTest_Factory {
 		$this->payment  = new Payment_Factory( $this );
 		$this->transfer = new Transfer_Factory( $this );
 		$this->invoice  = new Invoice_Factory( $this );
+		$this->bill     = new Bill_Factory( $this );
 	}
 }
