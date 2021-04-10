@@ -11,6 +11,7 @@ namespace EverAccounting\Abstracts;
 
 /**
  * Class Assets
+ *
  * @package EverAccounting\Abstracts
  */
 abstract class Assets {
@@ -19,34 +20,12 @@ abstract class Assets {
 	 *
 	 * @var string
 	 */
-	protected $text_domain = null;
-
-	/**
-	 * Plugin path.
-	 *
-	 * @var string
-	 */
-	protected $plugin_file = null;
-
-	/**
-	 * Plugin version.
-	 *
-	 * @var string
-	 */
-	protected $plugin_version = null;
+	protected $text_domain = 'wp-ever-accounting';
 
 	/**
 	 * Assets constructor.
-	 *
-	 * @param string|null $plugin_file
 	 */
-	public function __construct( $plugin_file = null ) {
-		$plugin_file = is_null( $plugin_file ) ? EACCOUNTING_PLUGIN_FILE : $plugin_file;
-		require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-		$plugin_data = get_plugin_data( $plugin_file );
-		$this->text_domain    = $plugin_data['TextDomain'];
-		$this->plugin_version = $plugin_data['Version'];
-		$this->plugin_file    = $plugin_file;
+	public function __construct() {
 		add_action( 'wp_enqueue_scripts', array( $this, 'public_styles' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'public_scripts' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_styles' ) );
@@ -94,14 +73,13 @@ abstract class Assets {
 	 *
 	 * @param string $handle style handler.
 	 * @param string $file_path style file path.
-	 * @param array $dependencies style dependencies.
-	 * @param bool $has_rtl support RTL?
+	 * @param array  $dependencies style dependencies.
+	 * @param bool   $has_rtl support RTL?
 	 */
 	protected function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
 		$filename = is_null( $file_path ) ? $handle : $file_path;
-		$filename = str_replace( [ '.min', '.css' ], '', $filename );
-		$file_url = $this->get_asset_dist_url( $filename, '.css' );
-		$version  = $this->plugin_version;
+		$file_url = $this->get_asset_dist_url( $filename, 'css' );
+		$version  = $this->get_plugin_version();
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$version = time();
 		}
@@ -118,18 +96,17 @@ abstract class Assets {
 	 *
 	 * @param string $handle Name of the script. Should be unique.
 	 * @param string $file_path file path from dist directory
-	 * @param array $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
-	 * @param bool $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
+	 * @param array  $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
+	 * @param bool   $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
 	 *
 	 * @since 1.0.0
-	 *
 	 */
 	protected function register_script( $handle, $file_path = null, $dependencies = array(), $has_i18n = true ) {
 		$filename             = is_null( $file_path ) ? $handle : $file_path;
-		$filename             = str_replace( [ '.min', '.js' ], '', $filename );
 		$file_url             = $this->get_asset_dist_url( $filename );
+		$filename             = str_replace( [ '.min', '.js' ], '', $filename );
 		$dependency_file_path = $this->get_asset_dist_path( $filename . '.asset', 'php' );
-		$version              = false;
+		$version              = $this->get_plugin_version();
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$version = time();
 		}
@@ -155,7 +132,7 @@ abstract class Assets {
 	 * @return  string The generated path.
 	 */
 	protected function get_asset_dist_url( $filename, $type = 'js' ) {
-		return plugins_url( "/dist/$filename.$type", $this->plugin_file );
+		return plugins_url( "/dist/$type/$filename", $this->get_plugin_file() );
 	}
 
 	/**
@@ -167,8 +144,26 @@ abstract class Assets {
 	 * @return  string The generated path.
 	 */
 	protected function get_asset_dist_path( $filename, $type = 'js' ) {
-		$plugin_path = untrailingslashit( plugin_dir_path( $this->plugin_file ) );
+		$plugin_path = untrailingslashit( plugin_dir_path( $this->get_plugin_file() ) );
 
-		return $plugin_path . "/dist/$filename.$type";
+		return $plugin_path . "/dist/$type/$filename";
+	}
+
+	/**
+	 * Get the plugin absolute path
+	 *
+	 * @return string
+	 */
+	protected function get_plugin_file() {
+		return EACCOUNTING_PLUGIN_FILE;
+	}
+
+	/**
+	 * Get the plugin version
+	 *
+	 * @return string
+	 */
+	protected function get_plugin_version() {
+		return EACCOUNTING_VERSION;
 	}
 }

@@ -23,8 +23,8 @@ class Menu {
 		add_action( 'admin_menu', array( $this, 'register_sales_page' ), 30 );
 		add_action( 'admin_menu', array( $this, 'register_expenses_page' ), 40 );
 		add_action( 'admin_menu', array( $this, 'register_banking_page' ), 50 );
-		add_action( 'admin_menu', array( $this, 'register_tools_page' ), 70 );
-		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 80 );
+		add_action( 'admin_menu', array( $this, 'register_tools_page' ), 900 );
+		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 950 );
 
 		//Register tabs.
 		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_tab' ), 20 );
@@ -44,7 +44,7 @@ class Menu {
 		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report_tab' ) );
-		add_filter( 'eaccounting_settings_tabs', array( $this, 'add_setting_tabs') );
+		add_filter( 'eaccounting_settings_tabs', array( $this, 'add_setting_tabs' ) );
 		add_action( 'eaccounting_settings_tab_currencies', array( $this, 'render_currencies_tab' ) );
 		add_action( 'eaccounting_settings_tab_categories', array( $this, 'render_categories_tab' ) );
 	}

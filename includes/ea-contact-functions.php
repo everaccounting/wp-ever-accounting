@@ -497,7 +497,6 @@ function eaccounting_get_contacts( $args = array() ) {
 			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $join $where" );
 			wp_cache_set( $cache_key, $results, 'ea_contacts' );
 		} else {
-			var_dump(implode( ' ', $clauses ));
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );
 			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
 				foreach ( $results as $key => $item ) {

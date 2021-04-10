@@ -49,12 +49,6 @@ require_once $wp_tests_dir . '/includes/bootstrap.php';
 
 // Includes core files.
 
-require_once $tests_dir . '/framework/helpers/account-helper.php';
-require_once $tests_dir . '/framework/helpers/currency-helper.php';
-require_once $tests_dir . '/framework/helpers/category-helper.php';
-
-require_once $tests_dir . '/framework/class-unit-test-factory.php';
-require_once $tests_dir . '/framework/class-unittestcase.php';
-require_once $tests_dir . '/framework/class-rest-unittestcase.php';
+require_once $tests_dir . '/include-files.php';
 
 
