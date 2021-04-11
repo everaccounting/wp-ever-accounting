@@ -2,7 +2,7 @@
 /**
  * Categories Rest Controller Class.
  *
- * @since       1.1.0
+ * @since       1.1.2
  * @subpackage  Rest
  * @package     EverAccounting
  */
@@ -15,7 +15,7 @@ use EverAccounting\Models\Category;
 defined( 'ABSPATH' ) || die();
 
 /**
- * Class CategoriesController
+ * Class Categories_Controller
  *
  * @package EverAccounting\REST
  */
@@ -30,7 +30,7 @@ class Categories_Controller extends Entities_Controller {
 	/**
 	 * Entity type.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.4
 	 *
 	 * @var string
 	 */

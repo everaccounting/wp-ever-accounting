@@ -1,6 +1,9 @@
 <?php
 /**
  * Handles admin related menus.
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin
  */
 
 namespace EverAccounting\Admin;
@@ -9,6 +12,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class Menu
+ *
  * @package EverAccounting\Admin
  */
 class Menu {
@@ -17,7 +21,7 @@ class Menu {
 	 * Menu constructor.
 	 */
 	public function __construct() {
-		//Register menus.
+		// Register menus.
 		add_action( 'admin_menu', array( $this, 'register_parent_page' ), 1 );
 		add_action( 'admin_menu', array( $this, 'register_items_page' ), 20 );
 		add_action( 'admin_menu', array( $this, 'register_sales_page' ), 30 );
@@ -26,7 +30,7 @@ class Menu {
 		add_action( 'admin_menu', array( $this, 'register_tools_page' ), 70 );
 		add_action( 'admin_menu', array( $this, 'register_reports_page' ), 80 );
 
-		//Register tabs.
+		// Register tabs.
 		add_action( 'eaccounting_items_page_tab_items', array( $this, 'render_items_tab' ), 20 );
 		add_action( 'eaccounting_sales_page_tab_revenues', array( $this, 'render_revenues_tab' ) );
 		add_action( 'eaccounting_sales_page_tab_invoices', array( $this, 'render_invoices_tab' ), 20 );
@@ -44,7 +48,7 @@ class Menu {
 		add_action( 'eaccounting_reports_tab_expenses', array( $this, 'render_expenses_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_profits', array( $this, 'render_profits_report_tab' ) );
 		add_action( 'eaccounting_reports_tab_cashflow', array( $this, 'render_cashflow_report_tab' ) );
-		add_filter( 'eaccounting_settings_tabs', array( $this, 'add_setting_tabs') );
+		add_filter( 'eaccounting_settings_tabs', array( $this, 'add_setting_tabs' ) );
 		add_action( 'eaccounting_settings_tab_currencies', array( $this, 'render_currencies_tab' ) );
 		add_action( 'eaccounting_settings_tab_categories', array( $this, 'render_categories_tab' ) );
 	}
@@ -83,7 +87,6 @@ class Menu {
 
 	/**
 	 * Registers the items page.
-	 *
 	 */
 	public function register_items_page() {
 		add_submenu_page(
@@ -98,7 +101,6 @@ class Menu {
 
 	/**
 	 * Registers the sales page.
-	 *
 	 */
 	public function register_sales_page() {
 		add_submenu_page(
@@ -113,7 +115,6 @@ class Menu {
 
 	/**
 	 * Registers the expenses page.
-	 *
 	 */
 	public function register_expenses_page() {
 		add_submenu_page(
@@ -128,7 +129,6 @@ class Menu {
 
 	/**
 	 * Registers the banking page.
-	 *
 	 */
 	public function register_banking_page() {
 		add_submenu_page(
@@ -143,7 +143,6 @@ class Menu {
 
 	/**
 	 * Registers the tools page.
-	 *
 	 */
 	public function register_tools_page() {
 		add_submenu_page(
@@ -158,7 +157,6 @@ class Menu {
 
 	/**
 	 * Registers the reports page.
-	 *
 	 */
 	public function register_reports_page() {
 		add_submenu_page(
@@ -168,6 +166,26 @@ class Menu {
 			'ea_manage_report',
 			'ea-reports',
 			array( $this, 'render_reports_page' )
+		);
+	}
+
+	/**
+	 * Registers the reports page.
+	 */
+	public function register_react_page() {
+		add_submenu_page(
+			'eaccounting',
+			__( 'React', 'wp-ever-accounting' ),
+			__( 'React', 'wp-ever-accounting' ),
+			'manage_eaccounting',
+			'ea-react',
+			function () {
+				?>
+                <div class="wrap">
+                    <div id="ea-react"></div>
+                </div>
+				<?php
+			}
 		);
 	}
 
@@ -235,7 +253,7 @@ class Menu {
 		if ( current_user_can( 'ea_manage_vendor' ) ) {
 			$tabs['vendors'] = __( 'Vendors', 'wp-ever-accounting' );
 		}
-		$tabs =  apply_filters( 'eaccounting_expenses_tabs', $tabs );
+		$tabs = apply_filters( 'eaccounting_expenses_tabs', $tabs );
 
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
@@ -271,7 +289,7 @@ class Menu {
 			$tabs['transfers'] = __( 'Transfers', 'wp-ever-accounting' );
 		}
 
-		$tabs =  apply_filters( 'eaccounting_banking_tabs', $tabs );
+		$tabs = apply_filters( 'eaccounting_banking_tabs', $tabs );
 
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
@@ -293,7 +311,7 @@ class Menu {
 		}
 		$tabs['system_info'] = __( 'System Info', 'wp-ever-accounting' );
 
-		$tabs =  apply_filters( 'eaccounting_tools_tabs', $tabs );
+		$tabs = apply_filters( 'eaccounting_tools_tabs', $tabs );
 
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
@@ -315,8 +333,8 @@ class Menu {
 	/**
 	 * Render the reports page.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function render_reports_page() {
 		$tabs = array(
@@ -328,8 +346,8 @@ class Menu {
 
 		$tabs = apply_filters( 'eaccounting_reports_tabs', $tabs );
 
-		$first_tab       = current( array_keys( $tabs ) );
-		$current_tab     = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
+		$first_tab   = current( array_keys( $tabs ) );
+		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
 		include dirname( __FILE__ ) . '/views/admin-page-reports.php';
 	}
 
@@ -386,7 +404,7 @@ class Menu {
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_customers_tab(){
+	public function render_customers_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['customer_id'] ) ) {
 			$customer_id = isset( $_GET['customer_id'] ) ? absint( $_GET['customer_id'] ) : null;
@@ -404,7 +422,7 @@ class Menu {
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_payments_tab(){
+	public function render_payments_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			$payment_id = isset( $_GET['payment_id'] ) ? absint( $_GET['payment_id'] ) : null;
@@ -437,7 +455,7 @@ class Menu {
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_vendors_tab(){
+	public function render_vendors_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['vendor_id'] ) ) {
 			$vendor_id = isset( $_GET['vendor_id'] ) ? absint( $_GET['vendor_id'] ) : null;
@@ -455,7 +473,7 @@ class Menu {
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_accounts_tab(){
+	public function render_accounts_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'view' ), true ) && ! empty( $_GET['account_id'] ) ) {
 			$account_id = isset( $_GET['account_id'] ) ? absint( $_GET['account_id'] ) : null;
@@ -473,7 +491,7 @@ class Menu {
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_transactions_tab(){
+	public function render_transactions_tab() {
 		include dirname( __FILE__ ) . '/views/transactions/list-transactions.php';
 	}
 
@@ -482,7 +500,7 @@ class Menu {
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_transfers_tab(){
+	public function render_transfers_tab() {
 		$requested_view = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : '';
 		if ( in_array( $requested_view, array( 'add', 'edit' ), true ) ) {
 			$transfer_id = isset( $_GET['transfer_id'] ) ? absint( $_GET['transfer_id'] ) : null;
@@ -566,15 +584,17 @@ class Menu {
 
 	/**
 	 * Register settings tabs
-	*/
-	public function add_setting_tabs($tabs){
+	 */
+	public function add_setting_tabs( $tabs ) {
 		$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
+
 		return $tabs;
 	}
 
 	/**
 	 * Render currencies tab
+	 *
 	 * @since 1.1.0
 	 */
 	public function render_currencies_tab() {
@@ -589,6 +609,7 @@ class Menu {
 
 	/**
 	 * Render categories tab
+	 *
 	 * @since 1.1.0
 	 */
 	public function render_categories_tab() {

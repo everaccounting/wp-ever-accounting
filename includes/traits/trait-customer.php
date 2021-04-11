@@ -1,10 +1,13 @@
 <?php
 /**
  * Customer Trait
+<<<<<<< HEAD
  *
  * Handles the customer trait
  *
  * @package Traits
+=======
+>>>>>>> develop
  */
 
 namespace EverAccounting\Traits;
@@ -17,9 +20,11 @@ trait Customer {
 	 * Get customer object.
 	 *
 	 * @return \EverAccounting\Models\Customer|\stdClass
+
 	 * @since 1.1.4
 	 */
 	public function get_customer() {
+
 		if ( ! is_callable( array( $this, 'get_customer_id' ) ) ) {
 			return new \stdClass();
 		}
@@ -27,6 +32,7 @@ trait Customer {
 		$customer_id = $this->get_customer_id();
 
 		$customer = eaccounting_get_customer( $customer_id );
+
 		return empty( $customer ) ? new \stdClass() : $customer;
 	}
 
@@ -34,6 +40,7 @@ trait Customer {
 	 * Set customer object.
 	 *
 	 * @param array|object $customer the customer object.
+
 	 * @since 1.1.4
 	 */
 	public function set_customer( $customer = null ) {
@@ -51,3 +58,4 @@ trait Customer {
 		$this->set_customer_id( absint( $customer['id'] ) );
 	}
 }
+

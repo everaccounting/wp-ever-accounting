@@ -1,10 +1,13 @@
 <?php
 /**
  * Vendor Trait
+<<<<<<< HEAD
  *
  * Controls the vendor trait
  *
  * @package Trait
+=======
+>>>>>>> develop
  */
 
 namespace EverAccounting\Traits;
@@ -20,6 +23,7 @@ trait Vendor {
 	 * @since 1.1.2
 	 */
 	public function get_vendor() {
+
 		if ( ! is_callable( array( $this, 'get_vendor_id' ) ) ) {
 			return new \stdClass();
 		}
@@ -27,6 +31,7 @@ trait Vendor {
 		$vendor_id = $this->get_vendor_id();
 
 		$vendor = eaccounting_get_vendor( $vendor_id );
+
 		return empty( $vendor ) ? new \stdClass() : $vendor;
 	}
 
@@ -51,3 +56,4 @@ trait Vendor {
 		$this->set_vendor_id( absint( $vendor['id'] ) );
 	}
 }
+

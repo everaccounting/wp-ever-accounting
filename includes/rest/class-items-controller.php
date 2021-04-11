@@ -1,9 +1,9 @@
 <?php
 /**
- * Accounts Rest Controller Class.
+ * Items Rest Controller Class.
  *
- * @since       1.1.0
- * @subpackage  Rest
+ * @since       1.1.2
+ * @subpackage  REST
  * @package     EverAccounting
  */
 
@@ -71,7 +71,7 @@ class Items_Controller extends Entities_Controller {
 			'title'      => __( 'Item', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'               => array(
+				'id'             => array(
 					'description' => __( 'Unique identifier for the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -80,7 +80,7 @@ class Items_Controller extends Entities_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'             => array(
+				'name'           => array(
 					'description' => __( 'Name of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -89,7 +89,7 @@ class Items_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'sku'              => array(
+				'sku'            => array(
 					'description' => __( 'Sku of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -97,7 +97,7 @@ class Items_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'thumbnail'        => array(
+				'thumbnail'      => array(
 					'description' => __( 'Thumbnail of the item', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -120,7 +120,7 @@ class Items_Controller extends Entities_Controller {
 						),
 					),
 				),
-				'description'      => array(
+				'description'    => array(
 					'description' => __( 'Description of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -128,7 +128,7 @@ class Items_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'sale_price'       => array(
+				'sale_price'     => array(
 					'description' => __( 'Sale price of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -138,7 +138,7 @@ class Items_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'purchase_price'   => array(
+				'purchase_price' => array(
 					'description' => __( 'Purchase price of the item', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -148,7 +148,7 @@ class Items_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'quantity'         => array(
+				'quantity'       => array(
 					'description' => __( 'Quantity of the item.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -158,7 +158,7 @@ class Items_Controller extends Entities_Controller {
 					),
 					'required'    => false,
 				),
-				'category'         => array(
+				'category'       => array(
 					'description' => __( 'Category of the item.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -182,7 +182,7 @@ class Items_Controller extends Entities_Controller {
 						),
 					),
 				),
-				'sales_tax'        => array(
+				'sales_tax'      => array(
 					'description' => __( 'Sales tax of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -191,7 +191,7 @@ class Items_Controller extends Entities_Controller {
 					),
 					'required'    => false,
 				),
-				'purchase_tax'     => array(
+				'purchase_tax'   => array(
 					'description' => __( 'Purchase tax of the item.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -200,51 +200,52 @@ class Items_Controller extends Entities_Controller {
 					),
 					'required'    => false,
 				),
-				'enabled'          => array(
+				'enabled'        => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-				// 'creator'        => array(
-				// 'description' => __( 'Creator of the item', 'wp-ever-accounting' ),
-				// 'type'        => 'object',
-				// 'context'     => array( 'embed', 'view' ),
-				// 'required'    => false,
-				// 'readonly'    => true,
-				// 'properties'  => array(
-				// 'id'    => array(
-				// 'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-				// 'type'        => 'integer',
-				// 'context'     => array( 'embed', 'view' ),
-				// 'arg_options' => array(
-				// 'sanitize_callback' => 'intval',
-				// ),
-				// ),
-				// 'name'  => array(
-				// 'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-				// 'type'        => 'string',
-				// 'context'     => array( 'embed', 'view' ),
-				// 'arg_options' => array(
-				// 'sanitize_callback' => 'sanitize_text_field',
-				// ),
-				// ),
-				// 'email' => array(
-				// 'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-				// 'type'        => 'string',
-				// 'context'     => array( 'embed', 'view' ),
-				// 'arg_options' => array(
-				// 'sanitize_callback' => 'sanitize_email',
-				// ),
-				// ),
-				// ),
-				// ),
-					'date_created' => array(
-						'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
-						'type'        => 'string',
-						'format'      => 'date-time',
-						'context'     => array( 'view' ),
-						'readonly'    => true,
+
+				'creator'        => array(
+					'description' => __( 'Creator of the item', 'wp-ever-accounting' ),
+					'type'        => 'object',
+					'context'     => array( 'embed', 'view' ),
+					'required'    => false,
+					'readonly'    => true,
+					'properties'  => array(
+						'id'    => array(
+							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+							'type'        => 'integer',
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'intval',
+							),
+						),
+						'name'  => array(
+							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
+						),
+						'email' => array(
+							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+							'type'        => 'string',
+							'context'     => array( 'embed', 'view' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_email',
+							),
+						),
 					),
+				),
+				'date_created'   => array(
+					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'format'      => 'date-time',
+					'context'     => array( 'view' ),
+					'readonly'    => true,
+				),
 
 			),
 		);

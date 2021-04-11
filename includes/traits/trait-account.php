@@ -1,10 +1,13 @@
 <?php
 /**
  * Account Trait
+<<<<<<< HEAD
  *
  * Handles the account trait
  *
  * @package Traits
+=======
+>>>>>>> develop
  */
 
 namespace EverAccounting\Traits;
@@ -25,6 +28,7 @@ trait Account {
 
 		$account_id = $this->get_account_id();
 		$account    = eaccounting_get_account( $account_id );
+
 		return empty( $account ) ? new \stdClass() : $account;
 	}
 
@@ -117,5 +121,5 @@ trait Account {
 
 		$this->set_to_account_id( absint( $account['id'] ) );
 	}
-
 }
+

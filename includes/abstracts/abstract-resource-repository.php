@@ -78,7 +78,7 @@ abstract class Resource_Repository {
 	 *
 	 * @since  1.1.0
 	 * @param  Resource_Model|integer $object object or object ID.
-	 * @param  string          $taxonomy Taxonomy name e.g. product_cat.
+	 * @param  string                 $taxonomy Taxonomy name e.g. product_cat.
 	 * @return array of terms
 	 */
 	protected function get_term_ids( $object, $taxonomy ) {
@@ -102,7 +102,7 @@ abstract class Resource_Repository {
 	 * @return array
 	 */
 	public function read_meta( &$object ) {
-		if( $this->meta_type ){
+		if ( $this->meta_type ) {
 			global $wpdb;
 			$db_info       = $this->get_db_info();
 			$raw_meta_data = $wpdb->get_results(
@@ -127,7 +127,7 @@ abstract class Resource_Repository {
 	 *
 	 * @since  1.1.0
 	 * @param  Resource_Model $object object.
-	 * @param  \stdClass $meta (containing at least ->id).
+	 * @param  \stdClass      $meta (containing at least ->id).
 	 */
 	public function delete_meta( &$object, $meta ) {
 		delete_metadata_by_mid( $this->meta_type, $meta->id );
@@ -137,8 +137,8 @@ abstract class Resource_Repository {
 	 * Add new piece of meta.
 	 *
 	 * @since  1.1.0
-	 * @param  Resource_Model  $object object.
-	 * @param  \stdClass $meta (containing ->key and ->value).
+	 * @param  Resource_Model $object object.
+	 * @param  \stdClass      $meta (containing ->key and ->value).
 	 * @return int meta ID
 	 */
 	public function add_meta( &$object, $meta ) {
@@ -149,8 +149,8 @@ abstract class Resource_Repository {
 	 * Update meta.
 	 *
 	 * @since  1.1.0
-	 * @param  Resource_Model  $object object.
-	 * @param  \stdClass $meta (containing ->id, ->key and ->value).
+	 * @param  Resource_Model $object object.
+	 * @param  \stdClass      $meta (containing ->id, ->key and ->value).
 	 */
 	public function update_meta( &$object, $meta ) {
 		update_metadata_by_mid( $this->meta_type, $meta->id, $meta->value, $meta->key );
@@ -221,8 +221,8 @@ abstract class Resource_Repository {
 	 * or if they are present in the database or not.
 	 *
 	 * @param Resource_Model $object            The object.
-	 * @param array         $meta_key_to_props A mapping of meta keys => prop names.
-	 * @param string        $meta_type         The internal WP meta type (post, user, etc).
+	 * @param array          $meta_key_to_props A mapping of meta keys => prop names.
+	 * @param string         $meta_type         The internal WP meta type (post, user, etc).
 	 *
 	 * @return array        A mapping of meta keys => prop names, filtered by ones that should be updated.
 	 */
@@ -250,9 +250,8 @@ abstract class Resource_Repository {
 	 * Note: WordPress `get_metadata` function returns an empty string when meta data does not exist.
 	 *
 	 * @param Resource_Model $object The object.
-	 * @param string  $meta_key Meta key to update.
-	 * @param mixed   $meta_value Value to save.
-	 *
+	 * @param string         $meta_key Meta key to update.
+	 * @param mixed          $meta_value Value to save.
 	 *
 	 * @return bool True if updated/deleted.
 	 */
@@ -363,7 +362,7 @@ abstract class Resource_Repository {
 			$item->set_id( $wpdb->insert_id );
 			$item->save_meta_data();
 			$item->apply_changes();
-			do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $values );
+			do_action( 'eaccounting_insert_' . $item->get_object_type(), $wpdb->insert_id, $item, $values );
 
 			return true;
 		}
@@ -376,7 +375,7 @@ abstract class Resource_Repository {
 	 *
 	 * @param Resource_Model $item Item object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If any.
 	 */
 	public function read( &$item ) {
 		global $wpdb;
@@ -408,7 +407,7 @@ abstract class Resource_Repository {
 		}
 		$item->read_meta_data();
 		$item->set_object_read( true );
-		do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
+		do_action( 'eaccounting_read_' . $item->get_object_type(), $item->get_id(), $item );
 	}
 
 	/**
@@ -416,7 +415,7 @@ abstract class Resource_Repository {
 	 *
 	 * @param Resource_Model $item Subscription object.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If any.
 	 */
 	public function update( &$item ) {
 		global $wpdb;
@@ -462,7 +461,7 @@ abstract class Resource_Repository {
 	/**
 	 * Method to delete a subscription from the database.
 	 *
-	 * @param Resource_Model $item
+	 * @param Resource_Model $item Item.
 	 */
 	public function delete( &$item ) {
 		global $wpdb;
@@ -486,7 +485,7 @@ abstract class Resource_Repository {
 	|--------------------------------------------------------------------------
 	*/
 	public static function get_columns() {
-		$self = new static;
+		$self = new static();
 		return array_keys( $self->data_type );
 	}
 }

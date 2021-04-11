@@ -2,7 +2,7 @@
 /**
  * Transaction Rest Controller Class.
  *
- * @since       1.1.0
+ * @since       1.1.2
  * @subpackage  Abstracts
  * @package     EverAccounting
  */
@@ -16,14 +16,12 @@ defined( 'ABSPATH' ) || die();
 /**
  * Class TransactionController
  *
- * @since   1.1.0
+ * @since   1.1.2
  * @package EverAccounting\Abstracts
  */
 abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Route base.
-	 *
-	 * @since 1.1.0
 	 *
 	 * @var string
 	 */
@@ -32,7 +30,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Entity model class.
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.2
 	 *
 	 * @var string
 	 */
@@ -41,18 +39,18 @@ abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param array            $query_args Query args.
-	 * @param \WP_REST_Request $request    Full details about the request.
+	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
+	 * @since  1.1.2
 	 */
 	protected function get_objects( $query_args, $request ) {
 		$query_args['account_id']     = $request['account_id'];
 		$query_args['category_id']    = $request['category_id'];
 		$query_args['currency_code']  = $request['currency_code'];
 		$query_args['vendor_id']      = $request['vendor_id'];
+		$query_args['customer_id']    = $request['customer_id'];
 		$query_args['payment_method'] = $request['payment_method'];
 
 		// Set before into date query. Date query must be specified as an array of an array.
@@ -64,15 +62,16 @@ abstract class Transactions_Controller extends Entities_Controller {
 		if ( isset( $request['after'] ) ) {
 			$args['payment_date'][0]['after'] = $request['after'];
 		}
+
 		return eaccounting_get_transactions( $query_args );
 	}
 
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
-	 * @since   1.1.0
-	 *
 	 * @return array Item schema data.
+	 *
+	 * @since   1.1.2
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -86,7 +85,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'absint',
 					),
 				),
 				'payment_date'     => array(
@@ -122,14 +121,14 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Currency Code ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
+							'type'        => 'string',
+							'context'     => array( 'embed', 'view' ),
 							'readonly'    => true,
 						),
 						'code' => array(
 							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
+							'context'     => array( 'embed', 'view' ),
 						),
 
 					),
@@ -186,12 +185,17 @@ abstract class Transactions_Controller extends Entities_Controller {
 							'description' => __( 'Category ID.', 'wp-ever-accounting' ),
 							'type'        => 'integer',
 							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
+							'arg_options' => array(
+								'sanitize_callback' => 'absint',
+							),
 						),
 						'type' => array(
 							'description' => __( 'Category Type.', 'wp-ever-accounting' ),
 							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
+							'arg_options' => array(
+								'sanitize_callback' => 'sanitize_text_field',
+							),
 						),
 					),
 				),
@@ -209,7 +213,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'enum'        => array( 'cash', 'bank_transfer', 'cheque' ),
 					'arg_options' => array(
-						'sanitize_callback' => 'sanitize_key',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
 				),
@@ -303,7 +307,6 @@ abstract class Transactions_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-
 			),
 		);
 
@@ -321,9 +324,9 @@ abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @since   1.1.0
+	 * @return array.
 	 *
-	 * @return array Collection parameters.
+	 * @since   1.1.2
 	 */
 	public function get_collection_params() {
 		$query_params = array_merge(

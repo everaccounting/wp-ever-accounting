@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EverAccounting
+ *
  * @since 1.0.0
  * @property-read Utilities $utils
  * @property-read Options $options
@@ -37,9 +38,10 @@ final class EverAccounting {
 	public $version = '1.1.2';
 
 	/**
+	 * Core Classes
+	 *
 	 * @var array all plugin's classes
 	 * @since 1.1.2
-	 * @var array
 	 */
 	protected $classes = [];
 
@@ -75,9 +77,8 @@ final class EverAccounting {
 	 * @since 1.0.2
 	 * @return void
 	 */
-
 	public function __clone() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
 	}
 
 	/**
@@ -86,9 +87,8 @@ final class EverAccounting {
 	 * @since 1.0.2
 	 * @return void
 	 */
-
 	public function __wakeup() {
-		_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'Cheatin&#8217; huh?', 'wp-ever-accounting' ), '1.0.0' );
 	}
 
 	/**
@@ -99,7 +99,7 @@ final class EverAccounting {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		if( $key == 'settings' ){
+		if ( 'settings' === $key ) {
 			$key = 'options';
 		}
 
@@ -114,15 +114,14 @@ final class EverAccounting {
 	 * Function for add classes to $this->classes
 	 * for run using eaccounting()
 	 *
-	 * @param string $class_name
-	 * @param bool $instance
+	 * @param string $class_name Class Name.
+	 * @param bool   $instance Instance.
 	 *
 	 * @since 1.1.2
-	 *
 	 */
 	public function set_class( $class_name, $instance = false ) {
 		if ( empty( $this->classes[ $class_name ] ) ) {
-			$this->classes[ $class_name ] = $instance ? $class_name::instance() : new $class_name;
+			$this->classes[ $class_name ] = $instance ? $class_name::instance() : new $class_name();
 		}
 	}
 
@@ -185,7 +184,6 @@ final class EverAccounting {
 
 		// Abstract classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-registry.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-assets.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-background-process.php';
 
 		// Core classes.
@@ -209,14 +207,13 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-mailer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/core-functions.php';
 
-		//
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EACCOUNTING_ABSPATH . '/includes/admin/class-admin.php';
 		}
 
 		$this->classes['options'] = new Options();
 		\EverAccounting\REST\Manager::instance();
-		//\EverAccounting\Emails::instance();
+		// \EverAccounting\Emails::instance();
 	}
 
 	/**
@@ -257,16 +254,16 @@ final class EverAccounting {
 	public function log_errors() {
 		$error = error_get_last();
 		if ( $error && in_array(
-				$error['type'],
-				array(
-					E_ERROR,
-					E_PARSE,
-					E_COMPILE_ERROR,
-					E_USER_ERROR,
-					E_RECOVERABLE_ERROR,
-				),
-				true
-			) ) {
+			$error['type'],
+			array(
+				E_ERROR,
+				E_PARSE,
+				E_COMPILE_ERROR,
+				E_USER_ERROR,
+				E_RECOVERABLE_ERROR,
+			),
+			true
+		) ) {
 			$this->logger->log_critical(
 			/* translators: 1: error message 2: file name and path 3: line number */
 				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
@@ -285,13 +282,14 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function localization_setup() {
-		$locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
+		$locale = ( get_locale() !== '' ) ? get_locale() : 'en_US';
 		load_textdomain( 'wp-ever-accounting', WP_LANG_DIR . '/plugins/wp-ever-accounting-' . $locale . '.mo' );
 		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
 	 * Set table names inside WPDB object.
+	 *
 	 * @since 1.1.0
 	 * @return void
 	 */
@@ -303,8 +301,8 @@ final class EverAccounting {
 	 * Initialize plugin classes.
 	 */
 	public function init_classes() {
-		$this->classes['utils']    = new Utilities();
-		$this->classes['logger']    = new Logger();
+		$this->classes['utils']  = new Utilities();
+		$this->classes['logger'] = new Logger();
 	}
 
 	/**
@@ -320,7 +318,7 @@ final class EverAccounting {
 	/**
 	 * Plugin URL getter.
 	 *
-	 * @param string $path
+	 * @param string $path plugin url.
 	 *
 	 * @since 1.2.0
 	 *
@@ -329,7 +327,7 @@ final class EverAccounting {
 	public function plugin_url( $path = '' ) {
 		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$url = trailingslashit( $url );
+			$url  = trailingslashit( $url );
 			$url .= ltrim( $path, '/' );
 		}
 
@@ -339,7 +337,7 @@ final class EverAccounting {
 	/**
 	 * Plugin path getter.
 	 *
-	 * @param string $path
+	 * @param string $path plugin path.
 	 *
 	 * @since 1.2.0
 	 *
@@ -348,7 +346,7 @@ final class EverAccounting {
 	public function plugin_path( $path = '' ) {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$plugin_path = trailingslashit( $plugin_path );
+			$plugin_path  = trailingslashit( $plugin_path );
 			$plugin_path .= ltrim( $path, '/' );
 		}
 

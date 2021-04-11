@@ -22,7 +22,7 @@ import isOutside from './is-outside';
  *
  * @param {Object} props - Component props
  * @param {Object} props.children - Child components
- * @param {String} props.className - Class name for the wrapper
+ * @param {string} props.className - Class name for the wrapper
  * @param {requestCallback} props.onOutside - Callback when user clicks outside of the wrapper
  */
 function ClickOutside( props ) {

@@ -4,7 +4,7 @@
  * @param {Event} ev - Click event
  * @param {HTMLElement|null} containerRef - DOM node for the wrapper
  * @listens click
- * @returns {boolean}}
+ * @return {boolean}}
  */
 export default function isOutside( ev, containerRef ) {
 	if ( ! containerRef ) {

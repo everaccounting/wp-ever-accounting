@@ -119,6 +119,6 @@ class Contacts extends Resource_Repository {
 		}
 
 		$item->set_object_read( true );
-		do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
+		do_action( 'eaccounting_read_' . $item->get_object_type(), $item->get_id(), $item );
 	}
 }

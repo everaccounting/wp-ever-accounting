@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Accounts_Controller
+ *
  * @package EverAccounting\REST
  */
 class Accounts_Controller extends Entities_Controller {
@@ -32,7 +33,6 @@ class Accounts_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'accounts';
 
@@ -65,7 +65,6 @@ class Accounts_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @return array Item schema data.
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -73,7 +72,7 @@ class Accounts_Controller extends Entities_Controller {
 			'title'      => __( 'Account', 'wp-ever-accounting' ),
 			'type'       => 'object',
 			'properties' => array(
-				'id'              => array(
+				'id'               => array(
 					'description' => __( 'Unique identifier for the account.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'embed', 'edit' ),
@@ -82,7 +81,7 @@ class Accounts_Controller extends Entities_Controller {
 						'sanitize_callback' => 'intval',
 					),
 				),
-				'name'            => array(
+				'name'             => array(
 					'description' => __( 'Name of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -91,7 +90,7 @@ class Accounts_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'number'          => array(
+				'number'           => array(
 					'description' => __( 'Number of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -100,7 +99,7 @@ class Accounts_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'opening_balance' => array(
+				'opening_balance'  => array(
 					'description' => __( 'Opening balance of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view' ),
@@ -110,7 +109,7 @@ class Accounts_Controller extends Entities_Controller {
 					),
 					'required'    => true,
 				),
-				'currency'        => array(
+				'currency'         => array(
 					'description' => __( 'Currency code of the account', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
@@ -130,7 +129,7 @@ class Accounts_Controller extends Entities_Controller {
 
 					),
 				),
-				'bank_name'       => array(
+				'bank_name'        => array(
 					'description' => __( 'Bank name of the account', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -138,7 +137,7 @@ class Accounts_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_phone'      => array(
+				'bank_phone'       => array(
 					'description' => __( 'Phone number of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -146,7 +145,7 @@ class Accounts_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'bank_address'    => array(
+				'bank_address'     => array(
 					'description' => __( 'Address of the bank', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
@@ -154,41 +153,41 @@ class Accounts_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
 				),
-				'enabled'         => array(
+				'enabled'          => array(
 					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-//				'creator'         => array(
-//					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
-//					'type'        => 'object',
-//					'context'     => array( 'view', 'edit' ),
-//					'properties'  => array(
-//						'id'    => array(
-//							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'readonly'    => true,
-//						),
-//						'name'  => array(
-//							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//						'email' => array(
-//							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//					),
-//				),
-				'date_created'    => array(
-					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'date-time',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
+				// 'creator'         => array(
+				// 'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'properties'  => array(
+				// 'id'    => array(
+				// 'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+				// 'type'        => 'integer',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'readonly'    => true,
+				// ),
+				// 'name'  => array(
+				// 'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// 'email' => array(
+				// 'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// ),
+				// ),
+					'date_created' => array(
+						'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
+						'type'        => 'string',
+						'format'      => 'date-time',
+						'context'     => array( 'view' ),
+						'readonly'    => true,
+					),
 
 			),
 		);
@@ -202,7 +201,6 @@ class Accounts_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @return array Collection parameters.
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

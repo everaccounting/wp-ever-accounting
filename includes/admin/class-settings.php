@@ -31,7 +31,7 @@ class Settings {
 	public function __construct() {
 		add_action( 'admin_init', array( $this, 'init_settings' ) );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
-		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 100 );
+		add_action( 'admin_menu', array( $this, 'register_settings_page' ), 999 );
 	}
 
 	/**
