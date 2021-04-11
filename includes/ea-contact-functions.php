@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit();
 /**
  * Get contact types.
  *
- * @return array
  * @since 1.1.0
+ * @return array
  */
 function eaccounting_get_contact_types() {
 	return apply_filters(
@@ -32,9 +32,9 @@ function eaccounting_get_contact_types() {
  *
  * @param $type
  *
- * @return string
  * @since 1.1.0
  *
+ * @return string
  */
 function eaccounting_get_contact_type( $type ) {
 	$types = eaccounting_get_contact_types();
@@ -48,9 +48,9 @@ function eaccounting_get_contact_type( $type ) {
  *
  * @param $customer
  *
- * @return \EverAccounting\Models\Customer|null
  * @since 1.1.0
  *
+ * @return \EverAccounting\Models\Customer|null
  */
 function eaccounting_get_customer( $customer ) {
 	if ( empty( $customer ) ) {
@@ -68,9 +68,9 @@ function eaccounting_get_customer( $customer ) {
 /**
  * Get customer by email.
  *
- * @since 1.1.0
- *
  * @param $email
+ *
+ * @since 1.1.0
  *
  * @return \EverAccounting\Models\Customer
  */
@@ -88,6 +88,7 @@ function eaccounting_get_customer_by_email( $email ) {
 	}
 	if ( $customer ) {
 		wp_cache_set( $customer->id, $customer, 'ea_contacts' );
+
 		return eaccounting_get_customer( $customer );
 	}
 
@@ -121,9 +122,9 @@ function eaccounting_get_customer_by_email( $email ) {
  *
  * }
  *
- * @return EverAccounting\Models\Customer|\WP_Error|bool
  * @since 1.1.0
  *
+ * @return EverAccounting\Models\Customer|\WP_Error|bool
  */
 function eaccounting_insert_customer( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -154,9 +155,9 @@ function eaccounting_insert_customer( $args, $wp_error = true ) {
  *
  * @param $customer_id
  *
- * @return bool
  * @since 1.1.0
  *
+ * @return bool
  */
 function eaccounting_delete_customer( $customer_id ) {
 	try {
@@ -189,22 +190,22 @@ function eaccounting_delete_customer( $customer_id ) {
  *
  * }
  *
- *
- * @return array|int
  * @since 1.1.0
  *
+ * @return array|int
  */
 function eaccounting_get_customers( $args = array() ) {
 	return eaccounting_get_contacts( array_merge( $args, array( 'type' => 'customer' ) ) );
 }
+
 /**
  * Get vendor.
  *
  * @param $vendor
  *
- * @return \EverAccounting\Models\Vendor|null
  * @since 1.1.0
  *
+ * @return \EverAccounting\Models\Vendor|null
  */
 function eaccounting_get_vendor( $vendor ) {
 	if ( empty( $vendor ) ) {
@@ -222,9 +223,9 @@ function eaccounting_get_vendor( $vendor ) {
 /**
  * Get vendor by email.
  *
- * @since 1.1.0
- *
  * @param $email
+ *
+ * @since 1.1.0
  *
  * @return \EverAccounting\Models\Vendor
  */
@@ -242,6 +243,7 @@ function eaccounting_get_vendor_by_email( $email ) {
 	}
 	if ( $vendor ) {
 		wp_cache_set( $vendor->id, $vendor, 'ea_contacts' );
+
 		return eaccounting_get_vendor( $vendor );
 	}
 
@@ -276,9 +278,9 @@ function eaccounting_get_vendor_by_email( $email ) {
  *
  * }
  *
- * @return EverAccounting\Models\Vendor|\WP_Error|bool
  * @since 1.1.0
  *
+ * @return EverAccounting\Models\Vendor|\WP_Error|bool
  */
 function eaccounting_insert_vendor( $args, $wp_error = true ) {
 	// Ensure that we have data.
@@ -309,9 +311,9 @@ function eaccounting_insert_vendor( $args, $wp_error = true ) {
  *
  * @param $vendor_id
  *
- * @return bool
  * @since 1.1.0
  *
+ * @return bool
  */
 function eaccounting_delete_vendor( $vendor_id ) {
 	try {
@@ -344,10 +346,9 @@ function eaccounting_delete_vendor( $vendor_id ) {
  *
  * }
  *
- *
- * @return array|int
  * @since 1.1.0
  *
+ * @return array|int
  */
 function eaccounting_get_vendors( $args = array() ) {
 	return eaccounting_get_contacts( array_merge( $args, array( 'type' => 'vendor' ) ) );
@@ -355,7 +356,6 @@ function eaccounting_get_vendors( $args = array() ) {
 
 /**
  * Get customers items.
- *
  *
  * @param array $args {
  *
@@ -375,33 +375,38 @@ function eaccounting_get_vendors( $args = array() ) {
  *
  * }
  *
- * @return array|int
  * @since 1.1.0
  *
+ * @return array|int
  */
 function eaccounting_get_contacts( $args = array() ) {
 	// Prepare args.
 	$args = wp_parse_args(
 		$args,
 		array(
-			'type'        => '',
-			'include'     => '',
-			'search'      => '',
-			'transfer'    => true,
-			'fields'      => '*',
-			'orderby'     => 'id',
-			'order'       => 'ASC',
-			'number'      => 20,
-			'offset'      => 0,
-			'paged'       => 1,
-			'return'      => 'objects',
-			'count_total' => false,
+			'type'         => '',
+			'include'      => '',
+			'search'       => '',
+			'transfer'     => true,
+			'fields'       => '*',
+			'orderby'      => 'id',
+			'order'        => 'ASC',
+			'number'       => 20,
+			'offset'       => 0,
+			'paged'        => 1,
+			'meta_key'     => '',
+			'meta_value'   => '',
+			'meta_compare' => '',
+			'return'       => 'objects',
+			'count_total'  => false,
 		)
 	);
 	global $wpdb;
-	$qv           = apply_filters( 'eaccounting_get_contact_args', $args );
-	$table        = \EverAccounting\Repositories\Contacts::TABLE;
-	$columns      = \EverAccounting\Repositories\Contacts::get_columns();
+	$qv         = apply_filters( 'eaccounting_get_contact_args', $args );
+	$table      = \EverAccounting\Repositories\Contacts::TABLE;
+	$columns    = \EverAccounting\Repositories\Contacts::get_columns();
+	$meta_query = new WP_Meta_Query();
+	$meta_query->parse_query_vars( $qv );
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
 		if ( ! in_array( $field, $columns, true ) ) {
@@ -417,7 +422,7 @@ function eaccounting_get_contacts( $args = array() ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
 		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
-	//search
+	// search
 	$search_cols = array( 'id', 'name', 'email', 'phone', 'street', 'country' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
@@ -455,6 +460,18 @@ function eaccounting_get_contacts( $args = array() ) {
 		$where             .= $date_created_query->get_sql();
 	}
 
+	// Meta query.
+	$join = '';
+	if ( ! empty( $meta_query->queries ) ) {
+		$clauses = $meta_query->get_sql( 'contact', $table, 'id' );
+		$join   .= $clauses['join'];
+		$where  .= $clauses['where'];
+
+		if ( $meta_query->has_or_relation() ) {
+			$fields = 'DISTINCT ' . $fields;
+		}
+	}
+
 	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
 	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
 
@@ -473,11 +490,11 @@ function eaccounting_get_contacts( $args = array() ) {
 	$count_total = true === $qv['count_total'];
 	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_contacts' );
 	$results     = wp_cache_get( $cache_key, 'ea_contacts' );
-	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
+	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
 
 	if ( false === $results ) {
 		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
+			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $join $where" );
 			wp_cache_set( $cache_key, $results, 'ea_contacts' );
 		} else {
 			$results = $wpdb->get_results( implode( ' ', $clauses ) );

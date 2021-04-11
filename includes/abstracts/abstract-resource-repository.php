@@ -363,7 +363,7 @@ abstract class Resource_Repository {
 			$item->set_id( $wpdb->insert_id );
 			$item->save_meta_data();
 			$item->apply_changes();
-			do_action( 'eacccounting_insert_' . $item->get_object_type(), $item, $values );
+			do_action( 'eaccounting_insert_' . $item->get_object_type(), $wpdb->insert_id, $item, $values );
 
 			return true;
 		}
@@ -408,7 +408,7 @@ abstract class Resource_Repository {
 		}
 		$item->read_meta_data();
 		$item->set_object_read( true );
-		do_action( 'eaccounting_read_' . $item->get_object_type(), $item );
+		do_action( 'eaccounting_read_' . $item->get_object_type(), $item->get_id(), $item );
 	}
 
 	/**

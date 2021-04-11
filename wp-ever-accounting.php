@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit();
 
 /**
  * Class EverAccounting
+ *
  * @since 1.0.0
  * @property-read Utilities $utils
  * @property-read Options $options
@@ -99,7 +100,7 @@ final class EverAccounting {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		if( $key == 'settings' ){
+		if ( $key == 'settings' ) {
 			$key = 'options';
 		}
 
@@ -115,14 +116,13 @@ final class EverAccounting {
 	 * for run using eaccounting()
 	 *
 	 * @param string $class_name
-	 * @param bool $instance
+	 * @param bool   $instance
 	 *
 	 * @since 1.1.2
-	 *
 	 */
 	public function set_class( $class_name, $instance = false ) {
 		if ( empty( $this->classes[ $class_name ] ) ) {
-			$this->classes[ $class_name ] = $instance ? $class_name::instance() : new $class_name;
+			$this->classes[ $class_name ] = $instance ? $class_name::instance() : new $class_name();
 		}
 	}
 
@@ -185,7 +185,6 @@ final class EverAccounting {
 
 		// Abstract classes.
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-registry.php';
-		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-assets.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-background-process.php';
 
 		// Core classes.
@@ -209,7 +208,6 @@ final class EverAccounting {
 		require_once EACCOUNTING_ABSPATH . '/includes/class-mailer.php';
 		require_once EACCOUNTING_ABSPATH . '/includes/core-functions.php';
 
-		//
 		if ( is_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			require_once EACCOUNTING_ABSPATH . '/includes/admin/class-admin.php';
 		}
@@ -257,16 +255,16 @@ final class EverAccounting {
 	public function log_errors() {
 		$error = error_get_last();
 		if ( $error && in_array(
-				$error['type'],
-				array(
-					E_ERROR,
-					E_PARSE,
-					E_COMPILE_ERROR,
-					E_USER_ERROR,
-					E_RECOVERABLE_ERROR,
-				),
-				true
-			) ) {
+			$error['type'],
+			array(
+				E_ERROR,
+				E_PARSE,
+				E_COMPILE_ERROR,
+				E_USER_ERROR,
+				E_RECOVERABLE_ERROR,
+			),
+			true
+		) ) {
 			$this->logger->log_critical(
 			/* translators: 1: error message 2: file name and path 3: line number */
 				sprintf( __( '%1$s in %2$s on line %3$s', 'wp-ever-accounting' ), $error['message'], $error['file'], $error['line'] ) . PHP_EOL,
@@ -285,13 +283,14 @@ final class EverAccounting {
 	 * @return void
 	 */
 	public function localization_setup() {
-		$locale = ( get_locale() != '' ) ? get_locale() : 'en_US';
+		$locale = ( get_locale() !== '' ) ? get_locale() : 'en_US';
 		load_textdomain( 'wp-ever-accounting', WP_LANG_DIR . '/plugins/wp-ever-accounting-' . $locale . '.mo' );
 		load_plugin_textdomain( 'wp-ever-accounting', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
 	 * Set table names inside WPDB object.
+	 *
 	 * @since 1.1.0
 	 * @return void
 	 */
@@ -303,8 +302,8 @@ final class EverAccounting {
 	 * Initialize plugin classes.
 	 */
 	public function init_classes() {
-		$this->classes['utils']    = new Utilities();
-		$this->classes['logger']    = new Logger();
+		$this->classes['utils']  = new Utilities();
+		$this->classes['logger'] = new Logger();
 	}
 
 	/**
@@ -320,7 +319,7 @@ final class EverAccounting {
 	/**
 	 * Plugin URL getter.
 	 *
-	 * @param string $path
+	 * @param string $path plugin url.
 	 *
 	 * @since 1.2.0
 	 *
@@ -329,7 +328,7 @@ final class EverAccounting {
 	public function plugin_url( $path = '' ) {
 		$url = untrailingslashit( plugins_url( '/', EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$url = trailingslashit( $url );
+			$url  = trailingslashit( $url );
 			$url .= ltrim( $path, '/' );
 		}
 
@@ -339,7 +338,7 @@ final class EverAccounting {
 	/**
 	 * Plugin path getter.
 	 *
-	 * @param string $path
+	 * @param string $path plugin path.
 	 *
 	 * @since 1.2.0
 	 *
@@ -348,7 +347,7 @@ final class EverAccounting {
 	public function plugin_path( $path = '' ) {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 		if ( $path && is_string( $path ) ) {
-			$plugin_path = trailingslashit( $plugin_path );
+			$plugin_path  = trailingslashit( $plugin_path );
 			$plugin_path .= ltrim( $path, '/' );
 		}
 

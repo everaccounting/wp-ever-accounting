@@ -28,7 +28,6 @@ class Customers_Controller extends Contacts_Controller {
 	 * @since 1.1.2
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'customers';
 
