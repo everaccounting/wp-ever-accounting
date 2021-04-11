@@ -37,17 +37,6 @@ class Customers_Controller extends Contacts_Controller {
 	 */
 	protected $rest_base = 'customers';
 
-
-	/**
-	 * Entity type.
-	 *
-	 * @since 1.1.1
-	 *
-	 * @var string
-	 *
-	 */
-	protected $entity_type = 'customer';
-
 	/**
 	 * Entity model class.
 	 *
