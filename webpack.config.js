@@ -2,6 +2,7 @@
  * External dependencies
  */
 const path = require('path');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const webpack = require('webpack');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const glob = require('glob');
