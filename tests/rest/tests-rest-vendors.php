@@ -180,7 +180,7 @@ class Tests_REST_Vendors extends REST_UnitTestCase {
 		$this->assertEquals( 200, $response->get_status() );
 
 		$response = $this->do_rest_get_request( '/ea/v1/vendors' );
-		$this->assertEquals( 9, $response->get_headers()['X-WP-Total'] );
+		$this->assertEquals( 18, $response->get_headers()['X-WP-Total'] );
 	}
 
 	/**

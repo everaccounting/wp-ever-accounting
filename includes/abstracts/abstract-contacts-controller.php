@@ -162,34 +162,34 @@ abstract class Contacts_Controller extends Entities_Controller {
 						),
 					),
 				),
-				'thumbnail'        => array(
-					'description' => __( 'Thumbnail of the contact', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'properties'  => array(
-						'id'  => array(
-							'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'embed', 'view', 'edit' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'absint',
-							),
-						),
-						'src' => array(
-							'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed', 'view' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'esc_url_raw',
-							),
-						),
+				// 'thumbnail'        => array(
+				// 'description' => __( 'Thumbnail of the contact', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'embed', 'view', 'edit' ),
+				// 'properties'  => array(
+				// 'id'  => array(
+				// 'description' => __( 'Thumbnail ID.', 'wp-ever-accounting' ),
+				// 'type'        => 'integer',
+				// 'context'     => array( 'embed', 'view', 'edit' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'absint',
+				// ),
+				// ),
+				// 'src' => array(
+				// 'description' => __( 'Thumbnail src.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'embed', 'view' ),
+				// 'arg_options' => array(
+				// 'sanitize_callback' => 'esc_url_raw',
+				// ),
+				// ),
+				// ),
+				// ),
+					'enabled'      => array(
+						'description' => __( 'Status of the contact.', 'wp-ever-accounting' ),
+						'type'        => 'boolean',
+						'context'     => array( 'embed', 'view', 'edit' ),
 					),
-				),
-				'enabled'          => array(
-					'description' => __( 'Status of the contact.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
 				// 'creator'      => array(
 				// 'description' => __( 'Creator of the contact.', 'wp-ever-accounting' ),
 				// 'type'        => 'object',

@@ -29,7 +29,6 @@ class Revenue extends Transaction {
 	use Category;
 	use Customer;
 	use Account;
-	use Customer;
 	/**
 	 * This is the name of this object type.
 	 *
