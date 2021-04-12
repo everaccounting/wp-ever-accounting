@@ -54,6 +54,7 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Bills_Controller',
 			)
 		);
+
 		foreach ( $rest_handlers as $controller ) {
 			if ( class_exists( $controller ) ) {
 				$this->$controller = new $controller();
