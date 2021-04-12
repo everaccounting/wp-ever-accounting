@@ -23,24 +23,20 @@ defined( 'ABSPATH' ) || die();
  */
 class Vendors_Controller extends Contacts_Controller {
 	/**
+	 * entity type.
+	 *
+	 * @var string
+	 */
+	protected $entity_type = 'vendor';
+
+	/**
 	 * Route base.
 	 *
 	 * @since 1.1.2
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'vendors';
-
-	/**
-	 * Entity Type.
-	 *
-	 * @since 1.1.1
-	 *
-	 * @var string
-	 *
-	 */
-	protected $entity_type = 'vendor';
 
 	/**
 	 * Entity model class.
@@ -54,12 +50,11 @@ class Vendors_Controller extends Contacts_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
 	 * @since  1.1.2
-	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_vendors( $query_args );

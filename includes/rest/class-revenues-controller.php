@@ -23,12 +23,19 @@ defined( 'ABSPATH' ) || die();
  */
 class Revenues_Controller extends Transactions_Controller {
 	/**
+	 * Entity type.
+	 *
+	 * @since   1.1.4
+	 *
+	 * @var string
+	 */
+	protected $entity_type = 'revenue';
+	/**
 	 * Route base.
 	 *
 	 * @since   1.1.2
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'revenues';
 	/**
@@ -41,24 +48,14 @@ class Revenues_Controller extends Transactions_Controller {
 	protected $entity_model = Revenue::class;
 
 	/**
-	 * Entity type.
-	 *
-	 * @since   1.1.2
-	 *
-	 * @var string
-	 *
-	 */
-	protected $entity_type = 'revenue';
-
-	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
-	 * @since  1.1.2
 	 *
+	 * @since  1.1.2
 	 */
 	protected function get_objects( $query_args, $request ) {
 		$query_args['account_id']     = $request['account_id'];

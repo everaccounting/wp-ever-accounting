@@ -201,7 +201,7 @@ abstract class Entities_Controller extends Controller {
 	 *
 	 * @param int $id Object ID.
 	 *
-	 * @return Resource_Model|\WP_Error Resource_Model object or WP_Error object.
+	 * @return Resource_Model|\WP_Error ResourceModel object or WP_Error object.
 	 */
 	protected function get_object( $id ) {
 		try {
@@ -254,6 +254,7 @@ abstract class Entities_Controller extends Controller {
 			if ( ! empty( $request['id'] ) ) {
 				throw new \Exception( __( 'Cannot create existing resource.', 'wp-ever-accounting' ), 400 );
 			}
+
 			$object = new $this->entity_model();
 			$object = $this->prepare_object_for_database( $object, $request );
 			$object->save();
@@ -268,7 +269,7 @@ abstract class Entities_Controller extends Controller {
 			return $response;
 
 		} catch ( \Exception $e ) {
-			return new \WP_Error( 'create_ite', $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( 'create_item', $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 
 	}
@@ -303,7 +304,7 @@ abstract class Entities_Controller extends Controller {
 			return $response;
 
 		} catch ( \Exception $e ) {
-			return new \WP_Error( $e->getCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( $e->getErrorCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
 		}
 	}
 
@@ -330,14 +331,14 @@ abstract class Entities_Controller extends Controller {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$args             = array();
-		$args['offset']   = $request['offset'];
-		$args['order']    = $request['order'];
-		$args['orderby']  = $request['orderby'];
-		$args['paged']    = $request['page'];
-		$args['include']  = $request['include'];
-		$args['per_page'] = $request['per_page'];
-		$args['search']   = $request['search'];
+		$args            = array();
+		$args['offset']  = $request['offset'];
+		$args['order']   = $request['order'];
+		$args['orderby'] = $request['orderby'];
+		$args['paged']   = $request['page'];
+		$args['include'] = $request['include'];
+		$args['number']  = $request['per_page'];
+		$args['search']  = $request['search'];
 
 		$args['date_query'] = array();
 
@@ -351,8 +352,9 @@ abstract class Entities_Controller extends Controller {
 			$args['date_query'][0]['after'] = $request['after'];
 		}
 
-		// Filter the query arguments for a request.
-		$args    = apply_filters( "eaccounting_rest_{$this->entity_type}_query", $args, $request );
+		// Filter the query arguments for a request.§
+		$args = apply_filters( "eaccounting_rest_{$this->entity_type}_query", $args, $request );
+
 		$results = $this->get_objects( $args, $request );
 		$total   = (int) $this->get_objects( array_merge( $args, array( 'count_total' => true ) ), $request );
 
@@ -366,7 +368,7 @@ abstract class Entities_Controller extends Controller {
 			$items[] = $this->prepare_response_for_collection( $data );
 		}
 
-		$max_pages = ceil( $total / (int) $args['per_page'] );
+		$max_pages = ceil( $total / (int) $args['number'] );
 		$response  = rest_ensure_response( $items );
 		$response->header( 'X-WP-Total', (int) $total );
 		$response->header( 'X-WP-TotalPages', (int) $max_pages );

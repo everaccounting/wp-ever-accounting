@@ -8,7 +8,9 @@
  */
 
 namespace EverAccounting\Models;
+
 use EverAccounting\Abstracts\Document;
+use EverAccounting\Traits\Vendor;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -20,6 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Bill extends Document {
+	use Vendor;
 	/**
 	 * This is the name of this object type.
 	 *
@@ -28,6 +31,8 @@ class Bill extends Document {
 	protected $object_type = 'bill';
 
 	/**
+	 * Status transition
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var array
@@ -40,7 +45,6 @@ class Bill extends Document {
 	 * @param int|object|Bill $bill object to read.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function __construct( $bill = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'bill' ) );
@@ -68,7 +72,7 @@ class Bill extends Document {
 		}
 
 		$this->required_props = array(
-			//'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
+			// 'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
 			'category_id'   => __( 'Category', 'wp-ever-accounting' ),
 			'contact_id'    => __( 'Vendor', 'wp-ever-accounting' ),
@@ -86,12 +90,14 @@ class Bill extends Document {
 	public function get_statuses() {
 		return eaccounting_get_bill_statuses();
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD methods
 	|--------------------------------------------------------------------------
 	|
 	*/
+
 	/**
 	 * Generate document number.
 	 *
@@ -111,11 +117,10 @@ class Bill extends Document {
 	/**
 	 * Generate number.
 	 *
-	 * @param $number
+	 * @param string $number document-number
 	 *
 	 * @return string
 	 * @since 1.1.0
-	 *
 	 */
 	public function generate_number( $number ) {
 		$prefix           = eaccounting()->settings->get( 'bill_prefix', 'BILL-' );
@@ -169,7 +174,6 @@ class Bill extends Document {
 	 *
 	 * @return \Exception|bool
 	 * @since  1.1.0
-	 *
 	 */
 	public function save() {
 		$this->maybe_set_bill_number();
@@ -195,7 +199,6 @@ class Bill extends Document {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_bill_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
@@ -208,7 +211,6 @@ class Bill extends Document {
 	 *
 	 * @return string
 	 * @since  1.1.0
-	 *
 	 */
 	public function get_vendor_id( $context = 'edit' ) {
 		return parent::get_contact_id( $context );
@@ -230,7 +232,6 @@ class Bill extends Document {
 	 * @param int $vendor_id .
 	 *
 	 * @since  1.1.0
-	 *
 	 */
 	public function set_vendor_id( $vendor_id ) {
 		parent::set_contact_id( $vendor_id );
@@ -282,7 +283,7 @@ class Bill extends Document {
 	/**
 	 * Adds an item to the bill.
 	 *
-	 * @param array $args
+	 * @param array $args array of item
 	 *
 	 * @return false|int
 	 */
@@ -295,12 +296,12 @@ class Bill extends Document {
 			)
 		);
 
-		//check if we have item id or line_id
+		// check if we have item id or line_id
 		if ( empty( $args['item_id'] ) && empty( $args['line_id'] ) ) {
 			return false;
 		}
 
-		//first check if we get line id if so then its from database
+		// first check if we get line id if so then its from database
 		$line_item = new Document_Item();
 		if ( $this->get_item( $args['line_id'] ) ) {
 			$line_item = $this->items[ $args['line_id'] ];
@@ -309,7 +310,7 @@ class Bill extends Document {
 		if ( ! empty( $args['item_id'] ) ) {
 			$product = new Item( $args['item_id'] );
 			if ( $product->exists() ) {
-				//convert the price from default to bill currency.
+				// convert the price from default to bill currency.
 				$default_currency = eaccounting_get_default_currency();
 				$default          = array(
 					'item_id'       => $product->get_id(),
@@ -358,7 +359,7 @@ class Bill extends Document {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @param array $args
+	 * @param array $args array of notes
 	 *
 	 * @return array|int|void
 	 */
@@ -381,11 +382,10 @@ class Bill extends Document {
 	/**
 	 * Add bill note.
 	 *
-	 * @param string $note
+	 * @param string $note single note
 	 *
 	 * @return Note|false|int|\WP_Error
 	 * @since 1.1.0
-	 *
 	 */
 	public function add_note( $note ) {
 		if ( ! $this->exists() ) {
@@ -415,12 +415,13 @@ class Bill extends Document {
 	*/
 
 	/**
-	 * @param array $args
+	 * Add payments
+	 *
+	 * @param array $args payment arguments
 	 *
 	 * @return false
-	 * @throws \Exception
+	 * @throws \Exception If any error occurs
 	 * @since 1.1.0
-	 *
 	 */
 	public function add_payment( $args = array() ) {
 		if ( ! $this->needs_payment() ) {
@@ -497,7 +498,6 @@ class Bill extends Document {
 	 *
 	 * @return Payment[]
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {
@@ -523,11 +523,10 @@ class Bill extends Document {
 	 *
 	 * @return float|int
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_total_due() {
 		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
-		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) < 0 ) {
+		if ( eaccounting_price_to_default( $due, $this->get_currency_code(), $this->get_currency_rate() ) < 0 ) {
 			$due = 0;
 		}
 
@@ -539,7 +538,6 @@ class Bill extends Document {
 	 *
 	 * @return float|int|string
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_total_paid() {
 		$total_paid = 0;
@@ -553,7 +551,7 @@ class Bill extends Document {
 	/**
 	 * Calculate total.
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If any error occurs
 	 * @since 1.1.0
 	 */
 	public function calculate_totals() {
@@ -623,7 +621,7 @@ class Bill extends Document {
 			$this->set_status( 'partial' );
 		} elseif ( empty( $this->get_total_due() )) { // phpcs:ignore
 			$this->set_status( 'paid' );
-		} elseif ( $this->is_due()  && $this->is_status('received')) {
+		} elseif ( $this->is_due() && $this->is_status( 'received' ) ) {
 			$this->set_status( 'overdue' );
 		} elseif ( in_array( $this->get_status(), array( 'partial', 'paid' ), true ) ) {
 			$this->set_status( 'received' );
@@ -649,6 +647,7 @@ class Bill extends Document {
 	 * Set paid.
 	 *
 	 * @return bool|\Exception
+	 * @throws \Exception If any error occurs
 	 * @since 1.1.0
 	 */
 	public function set_paid() {
@@ -757,12 +756,14 @@ class Bill extends Document {
 	| URLs.
 	|--------------------------------------------------------------------------
 	*/
+
 	/**
-	 * @param string $action
+	 * Get admin urls
+	 *
+	 * @param string $action get view
 	 *
 	 * @return string
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_admin_url( $action = 'view' ) {
 		$url = admin_url( 'admin.php?page=ea-expenses&tab=bills&bill_id=' . $this->get_id() );

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Singleton Class.
+ *
+ * @since       1.1.0
+ * @subpackage  Abstracts
+ * @package     EverAccounting
+ */
+
 namespace EverAccounting\Abstracts;
 
 defined( 'ABSPATH' ) || exit;

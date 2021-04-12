@@ -9,15 +9,17 @@ class Item_Factory extends \WP_UnitTest_Factory_For_Thing {
 	function __construct( $factory = null ) {
 		parent::__construct( $factory );
 
-		$category                             = Category_Helper::create_category( true, array( 'name' => 'Item', 'type' => 'item' ) );
+
+		$category     = Category_Helper::create_category( true, array( 'name' => 'Item-' . rand( 0, 10000 ), 'type' => 'item', 'color' => eaccounting_get_random_color() ) );
+
 		$this->default_generation_definitions = array(
 			'name'           => new \WP_UnitTest_Generator_Sequence( 'Item %s' ),
-			'sku'            => new \WP_UnitTest_Generator_Sequence( '%s-%d' ),
+			'sku'            => new \WP_UnitTest_Generator_Sequence( 'SKU-%d' ),
 			'category_id'    => $category->get_id(),
 			'description'    => new \WP_UnitTest_Generator_Sequence( 'Item Description %s' ),
 			'sale_price'     => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'purchase_price' => new \WP_UnitTest_Generator_Sequence( '%d' ),
-			'quantity'       => 1,
+			'quantity'       => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'sales_tax'      => new \WP_UnitTest_Generator_Sequence( '%d' ),
 			'purchase_tax'   => new \WP_UnitTest_Generator_Sequence( '%d' ),
 		);

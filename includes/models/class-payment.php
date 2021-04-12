@@ -9,8 +9,10 @@
 
 namespace EverAccounting\Models;
 
+use EverAccounting\Traits\Account;
 use EverAccounting\Traits\Attachment;
 use EverAccounting\Traits\Vendor;
+use EverAccounting\Traits\Category;
 use EverAccounting\Abstracts\Transaction;
 
 defined( 'ABSPATH' ) || exit;
@@ -25,6 +27,8 @@ defined( 'ABSPATH' ) || exit;
 class Payment extends Transaction {
 	use Attachment;
 	use Vendor;
+	use Category;
+	use Account;
 
 	/**
 	 * This is the name of this object type.
@@ -39,7 +43,6 @@ class Payment extends Transaction {
 	 * @since 1.1.0
 	 *
 	 * @param int|object|Account $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'expense' ) );
@@ -99,7 +102,6 @@ class Payment extends Transaction {
 	 * @since  1.1.0
 	 *
 	 * @param int $vendor_id .
-	 *
 	 */
 	public function set_vendor_id( $vendor_id ) {
 		$this->set_prop( 'contact_id', absint( $vendor_id ) );

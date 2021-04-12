@@ -119,7 +119,7 @@ class Admin {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $classes
+	 * @param array $classes Classes
 	 *
 	 * @return string
 	 */

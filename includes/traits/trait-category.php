@@ -1,6 +1,13 @@
 <?php
 /**
  * Category Trait
+<<<<<<< HEAD
+ *
+ * Handles the category trait
+ *
+ * @package Traits
+=======
+>>>>>>> develop
  */
 
 namespace EverAccounting\Traits;
@@ -15,13 +22,13 @@ trait Category {
 	 * @return \EverAccounting\Models\Category|\stdClass
 	 */
 	public function get_category() {
+
 		if ( ! is_callable( array( $this, 'get_category_id' ) ) ) {
 			return new \stdClass();
 		}
 
 		$category_id = $this->get_category_id();
 		$category    = eaccounting_get_category( $category_id );
-
 		return empty( $category ) ? new \stdClass() : $category;
 	}
 

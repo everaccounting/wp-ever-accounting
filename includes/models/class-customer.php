@@ -108,7 +108,7 @@ class Customer extends Contact {
 	 * @param string $value due amount.
 	 */
 	public function set_total_due( $value ) {
-		$this->update_meta_data( 'total_due', eaccounting_price( $value, null, true  ) );
+		$this->update_meta_data( 'total_due', eaccounting_price( $value, null, true ) );
 	}
 
 	/**
@@ -165,7 +165,7 @@ class Customer extends Contact {
 					$this->get_id()
 				)
 			);
-			$total = 0;
+			$total    = 0;
 			foreach ( $invoices as $invoice ) {
 				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
 			}

@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Currencies_Controller
+ *
  * @package EverAccounting\REST
  */
 class Currencies_Controller extends Entities_Controller {
@@ -25,7 +26,6 @@ class Currencies_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'currencies';
 
@@ -50,12 +50,11 @@ class Currencies_Controller extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
 	 * @since  1.1.0
-	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_currencies( $query_args );
@@ -67,7 +66,6 @@ class Currencies_Controller extends Entities_Controller {
 	 * @return array Item schema data.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -181,13 +179,12 @@ class Currencies_Controller extends Entities_Controller {
 	 * @return array Collection parameters.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
 		$query_params['context']['default'] = 'view';
 
-		$params['orderby'] = array(
+		$query_params['orderby'] = array(
 			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
 			'type'              => 'string',
 			'default'           => 'id',

@@ -18,16 +18,12 @@ defined( 'ABSPATH' ) || die();
  *
  * @since   1.1.2
  * @package EverAccounting\Abstracts
- *
  */
 abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Route base.
 	 *
-	 * @since 1.1.2
-	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'transactions';
 
@@ -43,12 +39,11 @@ abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
 	 * @since  1.1.2
-	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		$query_args['account_id']     = $request['account_id'];
@@ -77,7 +72,6 @@ abstract class Transactions_Controller extends Entities_Controller {
 	 * @return array Item schema data.
 	 *
 	 * @since   1.1.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -123,7 +117,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'description' => __( 'Currency code for transaction.', 'wp-ever-accounting' ),
 					'type'        => 'object',
 					'context'     => array( 'embed', 'view' ),
-					'required'    => false,
+					'required'    => true,
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Currency Code ID.', 'wp-ever-accounting' ),
@@ -134,7 +128,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 						'code' => array(
 							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
 							'type'        => 'string',
-							'context'     => array( 'embed','view' ),
+							'context'     => array( 'embed', 'view' ),
 						),
 
 					),
@@ -217,7 +211,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'description' => __( 'Method of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'enum'        => array( 'cash', 'bank_transfer', 'cheque'  ),
+					'enum'        => array( 'cash', 'bank_transfer', 'cheque' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -231,59 +225,64 @@ abstract class Transactions_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'attachment'    => array(
-					'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view','edit' ),
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'src'  => array(
-							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed','view', ),
-						),
+				// 'attachment'       => array(
+				// 'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'embed', 'view', 'edit' ),
+				// 'properties'  => array(
+				// 'id'   => array(
+				// 'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
+				// 'type'        => 'integer',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'readonly'    => true,
+				// ),
+				// 'src'  => array(
+				// 'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// 'name' => array(
+				// 'description' => __( 'Attachment Name.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// ),
+				// ),
+					'reconciled'   => array(
+						'description' => __( 'Reconciliation of the transaction', 'wp-ever-accounting' ),
+						'type'        => 'boolean',
+						'context'     => array( 'embed', 'view', 'edit' ),
 					),
-				),
-				'reconciled'       => array(
-					'description' => __( 'Reconciliation of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
-				),
-				'creator'          => array(
-					'description' => __( 'Creator of the transactions', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'readonly'    => true,
-					'properties'  => array(
-						'id'    => array(
-							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'name'  => array(
-							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
-						'email' => array(
-							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'view', 'edit' ),
-						),
+				// 'creator'          => array(
+				// 'description' => __( 'Creator of the transactions', 'wp-ever-accounting' ),
+				// 'type'        => 'object',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'properties'  => array(
+				// 'id'    => array(
+				// 'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
+				// 'type'        => 'integer',
+				// 'context'     => array( 'view', 'edit' ),
+				// 'readonly'    => true,
+				// ),
+				// 'name'  => array(
+				// 'description' => __( 'Creator name.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// 'email' => array(
+				// 'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
+				// 'type'        => 'string',
+				// 'context'     => array( 'view', 'edit' ),
+				// ),
+				// ),
+				// ),
+					'date_created' => array(
+						'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
+						'type'        => 'string',
+						'format'      => 'date-time',
+						'context'     => array( 'view' ),
+						'readonly'    => true,
 					),
-				),
-				'date_created'     => array(
-					'description' => __( 'Created date of the transaction.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'format'      => 'date-time',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
 			),
 		);
 
@@ -296,19 +295,18 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'description' => __( 'Contact ID.', 'wp-ever-accounting' ),
 					'type'        => 'integer',
 					'context'     => array( 'view', 'edit' ),
-					"arg_options" => array(
+					'arg_options' => array(
 						'sanitize_callback' => 'intval',
-					)
+					),
 				),
 				'name' => array(
 					'description' => __( 'Contact name.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit' ),
-					"arg_options" => array(
+					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
-					)
+					),
 				),
-
 			),
 		);
 
@@ -326,10 +324,9 @@ abstract class Transactions_Controller extends Entities_Controller {
 	/**
 	 * Retrieves the query params for the items collection.
 	 *
-	 * @return array Collection parameters.
+	 * @return array.
 	 *
 	 * @since   1.1.2
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params = array_merge(

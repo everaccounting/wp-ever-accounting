@@ -41,7 +41,7 @@ tests_add_filter( 'setup_theme', function () use ( $plugin_dir, $plugins_dir ) {
 	}
 
 	echo esc_html( 'Initiating Tests ...' . PHP_EOL );
-});
+} );
 
 
 // load the WP testing environment.
@@ -49,6 +49,23 @@ require_once $wp_tests_dir . '/includes/bootstrap.php';
 
 // Includes core files.
 
+
+require_once $tests_dir . '/framework/helpers/account-helper.php';
+require_once $tests_dir . '/framework/helpers/currency-helper.php';
+require_once $tests_dir . '/framework/helpers/category-helper.php';
+require_once $tests_dir . '/framework/helpers/customer-helper.php';
+require_once $tests_dir . '/framework/helpers/vendor-helper.php';
+require_once $tests_dir . '/framework/helpers/item-helper.php';
+require_once $tests_dir . '/framework/helpers/revenue-helper.php';
+require_once $tests_dir . '/framework/helpers/payment-helper.php';
+require_once $tests_dir . '/framework/helpers/transfer-helper.php';
+require_once $tests_dir . '/framework/helpers/document-helper.php';
+
+require_once $tests_dir . '/framework/class-unit-test-factory.php';
+require_once $tests_dir . '/framework/class-unittestcase.php';
+require_once $tests_dir . '/framework/class-rest-unittestcase.php';
+
 require_once $tests_dir . '/include-files.php';
+
 
 

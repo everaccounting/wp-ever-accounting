@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Manager
+ *
  * @package EverAccounting\REST
  */
 class Manager extends Singleton {
@@ -28,6 +29,11 @@ class Manager extends Singleton {
 		add_action( 'rest_api_init', array( $this, 'register_rest_routes' ), 10 );
 	}
 
+	/**
+	 * Register routes
+	 *
+	 * @since 1.0.2
+	 */
 	public function register_rest_routes() {
 		$rest_handlers = apply_filters(
 			'eaccounting_rest_controllers',
@@ -44,16 +50,17 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Countries_Controller',
 				'\EverAccounting\REST\Data_Controller',
 				'\EverAccounting\REST\Items_Controller',
+				'\EverAccounting\REST\Invoices_Controller',
+				'\EverAccounting\REST\Bills_Controller',
 			)
 		);
-		error_log(print_r($rest_handlers, true ));
+
 		foreach ( $rest_handlers as $controller ) {
 			if ( class_exists( $controller ) ) {
 				$this->$controller = new $controller();
 				$this->$controller->register_routes();
-			}else{
-				error_log('NOT EXIST');
-				error_log($controller);
+			} else {
+				eaccounting()->logger->log_error( __( 'Controller Not Found', 'wp-ever-accounting' ) );
 			}
 		}
 	}

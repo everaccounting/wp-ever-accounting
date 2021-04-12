@@ -14,6 +14,11 @@ use EverAccounting\Models\Item;
 
 defined( 'ABSPATH' ) || die();
 
+/**
+ * Class Items_Controller
+ *
+ * @package EverAccounting\REST
+ */
 class Items_Controller extends Entities_Controller {
 	/**
 	 * Route base.
@@ -29,7 +34,7 @@ class Items_Controller extends Entities_Controller {
 	 *
 	 * @var string
 	 */
-	protected $entity_type = "item";
+	protected $entity_type = 'item';
 
 	/**
 	 * Entity model class.
@@ -43,12 +48,11 @@ class Items_Controller extends Entities_Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
 	 * @since  1.1.1
-	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_items( $query_args );
@@ -60,7 +64,6 @@ class Items_Controller extends Entities_Controller {
 	 * @return array Item schema data.
 	 *
 	 * @since 1.1.1
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -202,7 +205,7 @@ class Items_Controller extends Entities_Controller {
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-<<<<<<< HEAD
+
 				'creator'        => array(
 					'description' => __( 'Creator of the item', 'wp-ever-accounting' ),
 					'type'        => 'object',
@@ -236,31 +239,6 @@ class Items_Controller extends Entities_Controller {
 						),
 					),
 				),
-=======
-//				'creator'        => array(
-//					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
-//					'type'        => 'object',
-//					'context'     => array( 'view', 'edit' ),
-//					'properties'  => array(
-//						'id'    => array(
-//							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-//							'type'        => 'integer',
-//							'context'     => array( 'view', 'edit' ),
-//							'readonly'    => true,
-//						),
-//						'name'  => array(
-//							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//						'email' => array(
-//							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-//							'type'        => 'string',
-//							'context'     => array( 'view', 'edit' ),
-//						),
-//					),
-//				),
->>>>>>> develop
 				'date_created'   => array(
 					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
@@ -281,7 +259,6 @@ class Items_Controller extends Entities_Controller {
 	 * @return array Collection parameters.
 	 *
 	 * @since 1.1.1
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

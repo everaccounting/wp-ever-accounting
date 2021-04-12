@@ -23,6 +23,12 @@ defined( 'ABSPATH' ) || die();
  */
 class Customers_Controller extends Contacts_Controller {
 	/**
+	 * entity type.
+	 *
+	 * @var string
+	 */
+	protected $entity_type = 'customer';
+	/**
 	 * Route base.
 	 *
 	 * @since 1.1.2
@@ -30,16 +36,6 @@ class Customers_Controller extends Contacts_Controller {
 	 * @var string
 	 */
 	protected $rest_base = 'customers';
-
-	/**
-	 * Entity type.
-	 *
-	 * @since 1.1.1
-	 *
-	 * @var string
-	 *
-	 */
-	protected $entity_type = 'customer';
 
 	/**
 	 * Entity model class.

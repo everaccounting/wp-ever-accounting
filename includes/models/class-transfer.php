@@ -11,6 +11,7 @@ namespace EverAccounting\Models;
 
 use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Repositories;
+use EverAccounting\Traits\Account;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @package EverAccounting\Models
  */
 class Transfer extends Resource_Model {
+	use Account;
 	/**
 	 * This is the name of this object type.
 	 *
@@ -30,6 +32,8 @@ class Transfer extends Resource_Model {
 	protected $object_type = 'transfer';
 
 	/**
+	 * Cache group
+	 *
 	 * @since 1.1.0
 	 *
 	 * @var string
@@ -46,8 +50,8 @@ class Transfer extends Resource_Model {
 	protected $data = array(
 		'date'            => null,
 		'from_account_id' => null,
-		'amount'          => null,
 		'to_account_id'   => null,
+		'amount'          => null,
 		'income_id'       => null,
 		'expense_id'      => null,
 		'payment_method'  => null,
@@ -57,6 +61,13 @@ class Transfer extends Resource_Model {
 		'date_created'    => null,
 	);
 
+	/**
+	 * Category id
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var string
+	 */
 	protected $category_id;
 
 	/**
@@ -65,8 +76,6 @@ class Transfer extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param int|object|Account $data object to read.
-	 *
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
@@ -83,7 +92,7 @@ class Transfer extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'transfers' );
 
 		if ( $this->get_id() > 0 ) {
@@ -98,6 +107,7 @@ class Transfer extends Resource_Model {
 			'payment_method'  => __( 'Payment method', 'wp-ever-accounting' ),
 		);
 	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -109,7 +119,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -122,7 +132,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -135,7 +145,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -149,7 +159,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -162,7 +172,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -175,7 +185,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return \EverAccounting\DateTime
 	 */
@@ -188,7 +198,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -201,7 +211,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -214,7 +224,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return mixed|null
 	 */
@@ -227,7 +237,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $context
+	 * @param string $context where it will be used
 	 *
 	 * @return string
 	 */
@@ -279,7 +289,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $account_id
+	 * @param int $account_id from_account_id
 	 */
 	public function set_from_account_id( $account_id ) {
 		$this->set_prop( 'from_account_id', absint( $account_id ) );
@@ -290,7 +300,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param int $account_id
+	 * @param int $account_id to_account_id
 	 */
 	public function set_to_account_id( $account_id ) {
 		$this->set_prop( 'to_account_id', absint( $account_id ) );
@@ -301,7 +311,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $date
+	 * @param string $date transfer_date
 	 */
 	public function set_date( $date ) {
 		$this->set_date_prop( 'date', eaccounting_clean( $date ) );
@@ -312,7 +322,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $amount
+	 * @param string $amount transfer amount
 	 */
 	public function set_amount( $amount ) {
 		$this->set_prop( 'amount', (float) eaccounting_sanitize_number( $amount, true ) );
@@ -323,7 +333,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param string $payment_method
+	 * @param string $payment_method method used for transfers
 	 */
 	public function set_payment_method( $payment_method ) {
 		$this->set_prop( 'payment_method', eaccounting_clean( $payment_method ) );
@@ -334,7 +344,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value transfer reference
 	 */
 	public function set_reference( $value ) {
 		$this->set_prop( 'reference', eaccounting_clean( $value ) );
@@ -345,7 +355,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.0.2
 	 *
-	 * @param $value
+	 * @param string $value transfer description
 	 */
 	public function set_description( $value ) {
 		$this->set_prop( 'description', eaccounting_clean( $value ) );
@@ -373,7 +383,7 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since  1.1.0
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If any error occurs
 	 * @return \Exception|bool
 	 */
 	public function save() {
@@ -392,7 +402,8 @@ class Transfer extends Resource_Model {
 	 *
 	 * @since 1.1.0
 	 *
-	 * @throws \Exception
+	 * @throws \Exception If any error occurs
+	 * @return void
 	 */
 	protected function maybe_set_transfer_category() {
 		global $wpdb;

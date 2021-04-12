@@ -1,6 +1,9 @@
 <?php
 /**
  * Handles admin related menus.
+ *
+ * @package     EverAccounting
+ * @subpackage  Admin
  */
 
 namespace EverAccounting\Admin;
@@ -178,9 +181,9 @@ class Menu {
 			'ea-react',
 			function () {
 				?>
-				<div class="wrap">
-					<div id="ea-react"></div>
-				</div>
+                <div class="wrap">
+                    <div id="ea-react"></div>
+                </div>
 				<?php
 			}
 		);
@@ -330,8 +333,8 @@ class Menu {
 	/**
 	 * Render the reports page.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function render_reports_page() {
 		$tabs = array(
@@ -585,6 +588,7 @@ class Menu {
 	public function add_setting_tabs( $tabs ) {
 		$tabs['currencies'] = __( 'Currencies', 'wp-ever-accounting' );
 		$tabs['categories'] = __( 'Categories', 'wp-ever-accounting' );
+
 		return $tabs;
 	}
 
