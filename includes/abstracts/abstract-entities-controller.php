@@ -215,7 +215,7 @@ abstract class Entities_Controller extends Controller {
 
 			return $object;
 		} catch ( \Exception $e ) {
-			return new \WP_Error( 'get_object', $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( 'get_object', $e->getMessage() );
 		}
 	}
 
@@ -268,7 +268,7 @@ abstract class Entities_Controller extends Controller {
 			return $response;
 
 		} catch ( \Exception $e ) {
-			return new \WP_Error( 'create_ite', $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( 'create_item', $e->getMessage() );
 		}
 
 	}
@@ -303,7 +303,7 @@ abstract class Entities_Controller extends Controller {
 			return $response;
 
 		} catch ( \Exception $e ) {
-			return new \WP_Error( $e->getCode(), $e->getMessage(), array( 'status' => $e->getCode() ) );
+			return new \WP_Error( $e->getCode(), $e->getMessage() );
 		}
 	}
 
@@ -615,7 +615,7 @@ abstract class Entities_Controller extends Controller {
 		$params['per_page'] = array(
 			'description'       => __( 'Maximum number of items to be returned in result set.', 'wp-ever-accounting' ),
 			'type'              => 'integer',
-			'default'           => 10,
+			'default'           => 20,
 			'minimum'           => 1,
 			'maximum'           => 100,
 			'sanitize_callback' => 'absint',

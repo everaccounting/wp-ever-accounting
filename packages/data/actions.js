@@ -1,7 +1,18 @@
 /**
  * External dependencies
  */
-import { castArray, isEqual } from 'lodash';
+import { castArray, isEqual, isEmpty } from 'lodash';
+import { v4 as uuid } from 'uuid';
+
+/**
+ * WordPress dependencies
+ */
+import { addQueryArgs } from '@wordpress/url';
+import { apiFetch } from '@wordpress/data-controls';
+
+/**
+ * Internal dependencies
+ */
 import {
 	receiveItems,
 	receiveItemTotal,
@@ -10,10 +21,12 @@ import {
 } from './queried-data';
 import { select, dispatch } from './controls';
 import { STORE_KEY } from './constants';
-import { addQueryArgs } from '@wordpress/url';
-import { apiFetch } from '@wordpress/data-controls';
 import { DEFAULT_ENTITY_KEY } from './entities';
-import {createBatch} from "./batch";
+import { createBatch } from './batch';
+import {
+	__unstableAcquireStoreLock,
+	__unstableReleaseStoreLock,
+} from './locks';
 
 /**
  * Returns an action object used in signalling that authors have been received.
@@ -23,10 +36,10 @@ import {createBatch} from "./batch";
  *
  * @return {Object} Action object.
  */
-export function receiveUserQuery( queryID, users ) {
+export function receiveUserQuery(queryID, users) {
 	return {
 		type: 'RECEIVE_USER_QUERY',
-		users: castArray( users ),
+		users: castArray(users),
 		queryID,
 	};
 }
@@ -38,7 +51,7 @@ export function receiveUserQuery( queryID, users ) {
  *
  * @return {Object} Action object.
  */
-export function receiveCurrentUser( currentUser ) {
+export function receiveCurrentUser(currentUser) {
 	return {
 		type: 'RECEIVE_CURRENT_USER',
 		currentUser,
@@ -54,7 +67,7 @@ export function receiveCurrentUser( currentUser ) {
  *
  * @return {Object} Action object.
  */
-export function receiveUserPermission( key, isAllowed ) {
+export function receiveUserPermission(key, isAllowed) {
 	return {
 		type: 'RECEIVE_USER_PERMISSION',
 		key,
@@ -62,17 +75,30 @@ export function receiveUserPermission( key, isAllowed ) {
 	};
 }
 
+// /**
+//  * Returns an action object used in adding new entities.
+//  *
+//  * @param {Array} entities  Entities received.
+//  *
+//  * @return {Object} Action object.
+//  */
+// export function addEntities(entities) {
+// 	return {
+// 		type: 'ADD_ENTITIES',
+// 		entities,
+// 	};
+// }
 /**
- * Returns an action object used in adding new entities.
+ * Returns an action object used in adding new routes.
  *
- * @param {Array} entities  Entities received.
+ * @param {Array} routes  Routes received.
  *
  * @return {Object} Action object.
  */
-export function addEntities( entities ) {
+export function receiveRoutes(routes) {
 	return {
-		type: 'ADD_ENTITIES',
-		entities,
+		type: 'RECEIVE_ROUTES',
+		routes,
 	};
 }
 
@@ -94,11 +120,13 @@ export function receiveEntityRecords(
 	edits
 ) {
 	let action;
-	if ( query ) {
-		action = receiveQueriedItems( records, query, edits );
+	if (query) {
+		console.log()
+		action = receiveQueriedItems(records, query, edits);
 	} else {
-		action = receiveItems( records, edits );
+		action = receiveItems(records, edits);
 	}
+
 	return {
 		...action,
 		name,
@@ -113,9 +141,17 @@ export function receiveEntityTotal(
 	invalidateCache = false
 ) {
 	return {
-		...receiveItemTotal( total, query ),
+		...receiveItemTotal(total, query),
 		name,
 		invalidateCache,
+	};
+}
+
+export function receiveEntitySchema(name, properties){
+	return {
+		type: 'RECEIVE_ENTITY_SCHEMA',
+		name,
+		properties,
 	};
 }
 
@@ -137,21 +173,21 @@ export function* deleteEntityRecord(
 	query,
 	{ __unstableFetch = null } = {}
 ) {
-	const entity = yield select( STORE_KEY, 'getEntity', name );
-	if ( ! entity ) {
+	const entity = yield select(STORE_KEY, 'getEntity', name);
+	if (!entity) {
 		return;
 	}
 	let error;
 	let deletedRecord = false;
-	if ( ! entity ) {
+	if (!entity) {
 		return;
 	}
 
-	// const lock = yield* __unstableAcquireStoreLock(
-	// 	'ea/store',
-	// 	[ 'entities', 'data', name, recordId ],
-	// 	{ exclusive: true }
-	// );
+	const lock = yield* __unstableAcquireStoreLock(
+		STORE_KEY,
+		['entities', 'data', name, recordId],
+		{ exclusive: true }
+	);
 	try {
 		yield {
 			type: 'DELETE_ENTITY_RECORD_START',
@@ -160,24 +196,24 @@ export function* deleteEntityRecord(
 		};
 
 		try {
-			let path = `${ entity.endpoint }/${ recordId }`;
+			let path = `${entity.endpoint}/${recordId}`;
 
-			if ( query ) {
-				path = addQueryArgs( path, query );
+			if (query) {
+				path = addQueryArgs(path, query);
 			}
 
 			const options = {
 				path,
 				method: 'DELETE',
 			};
-			if ( __unstableFetch ) {
-				deletedRecord = yield dispatch( __unstableFetch( options ) );
+			if (__unstableFetch) {
+				deletedRecord = yield dispatch(__unstableFetch(options));
 			} else {
-				deletedRecord = yield apiFetch( options );
+				deletedRecord = yield apiFetch(options);
 			}
 
-			yield removeItems( name, recordId, true );
-		} catch ( _error ) {
+			yield removeItems(name, recordId, true);
+		} catch (_error) {
 			error = _error;
 		}
 
@@ -190,7 +226,7 @@ export function* deleteEntityRecord(
 
 		return deletedRecord;
 	} finally {
-		// yield* __unstableReleaseStoreLock( lock );
+		yield* __unstableReleaseStoreLock(lock);
 	}
 }
 
@@ -206,11 +242,11 @@ export function* deleteEntityRecord(
  *
  * @return {Object} Action object.
  */
-export function* editEntityRecord( name, recordId, edits, options = {} ) {
-	const entity = yield select( STORE_KEY, 'getEntity', name );
-	if ( ! entity ) {
+export function* editEntityRecord(name, recordId, edits, options = {}) {
+	const entity = yield select(STORE_KEY, 'getEntity', name);
+	if (!entity) {
 		throw new Error(
-			`The entity being edited ${ name }), does not have a loaded config.`
+			`The entity being edited ${name}), does not have a loaded config.`
 		);
 	}
 
@@ -233,30 +269,20 @@ export function* editEntityRecord( name, recordId, edits, options = {} ) {
 		recordId,
 		// Clear edits when they are equal to their persisted counterparts
 		// so that the property is not considered dirty.
-		edits: Object.keys( edits ).reduce( ( acc, key ) => {
-			const recordValue = record[ key ];
-			const editedRecordValue = editedRecord[ key ];
-			const value = mergedEdits[ key ]
-				? { ...editedRecordValue, ...edits[ key ] }
-				: edits[ key ];
-			acc[ key ] = isEqual( recordValue, value ) ? undefined : value;
+		edits: Object.keys(edits).reduce((acc, key) => {
+			const recordValue = record[key];
+			const editedRecordValue = editedRecord[key];
+			const value = mergedEdits[key]
+				? { ...editedRecordValue, ...edits[key] }
+				: edits[key];
+			acc[key] = isEqual(recordValue, value) ? undefined : value;
 			return acc;
-		}, {} ),
+		}, {}),
 		transientEdits,
 	};
 	return {
 		type: 'EDIT_ENTITY_RECORD',
 		...edit,
-		meta: {
-			undo: ! options.undoIgnore && {
-				...edit,
-				// Send the current values for things like the first undo stack entry.
-				edits: Object.keys( edits ).reduce( ( acc, key ) => {
-					acc[ key ] = editedRecord[ key ];
-					return acc;
-				}, {} ),
-			},
-		},
 	};
 }
 
@@ -270,24 +296,25 @@ export function* editEntityRecord( name, recordId, edits, options = {} ) {
  *                                              Must return a control
  *                                              descriptor.
  */
-export function* saveEntityRecord( name, record, __unstableFetch = null ) {
-	const entity = yield select( STORE_KEY, 'getEntity', name );
-	if ( ! entity ) {
+export function* saveEntityRecord(name, record, __unstableFetch = null) {
+	const entity = yield select(STORE_KEY, 'getEntity', name);
+	if (!entity) {
 		return;
 	}
 	const entityIdKey = entity.key || DEFAULT_ENTITY_KEY;
-	const recordId = record[ entityIdKey ];
+	const recordId = record[entityIdKey];
+	const invalidateCache = !isEmpty(recordId);
+	const lock = yield* __unstableAcquireStoreLock(
+		STORE_KEY,
+		['entities', 'data', name, recordId || uuid()],
+		{ exclusive: true }
+	);
 
-	// const lock = yield* __unstableAcquireStoreLock(
-	// 	'core',
-	// 	[ 'entities', 'data', kind, name, recordId || uuid() ],
-	// 	{ exclusive: true }
-	// );
 	try {
 		// Evaluate optimized edits.
 		// (Function edits that should be evaluated on save to avoid expensive computations on every edit.)
-		for ( const [ key, value ] of Object.entries( record ) ) {
-			if ( typeof value === 'function' ) {
+		for (const [key, value] of Object.entries(record)) {
+			if (typeof value === 'function') {
 				const evaluatedValue = value(
 					yield select(
 						STORE_KEY,
@@ -300,11 +327,11 @@ export function* saveEntityRecord( name, record, __unstableFetch = null ) {
 					name,
 					recordId,
 					{
-						[ key ]: evaluatedValue,
+						[key]: evaluatedValue,
 					},
 					{ undoIgnore: true }
 				);
-				record[ key ] = evaluatedValue;
+				record[key] = evaluatedValue;
 			}
 		}
 
@@ -316,9 +343,7 @@ export function* saveEntityRecord( name, record, __unstableFetch = null ) {
 		let updatedRecord;
 		let error;
 		try {
-			const path = `${ entity.endpoint }${
-				recordId ? '/' + recordId : ''
-			}`;
+			const path = `${entity.endpoint}${recordId ? '/' + recordId : ''}`;
 
 			const persistedRecord = yield select(
 				STORE_KEY,
@@ -327,10 +352,10 @@ export function* saveEntityRecord( name, record, __unstableFetch = null ) {
 				recordId
 			);
 			let edits = record;
-			if ( entity.__unstablePrePersist ) {
+			if (entity.__unstablePrePersist) {
 				edits = {
 					...edits,
-					...entity.__unstablePrePersist( persistedRecord, edits ),
+					...entity.__unstablePrePersist(persistedRecord, edits),
 				};
 			}
 			const options = {
@@ -338,21 +363,21 @@ export function* saveEntityRecord( name, record, __unstableFetch = null ) {
 				method: recordId ? 'PUT' : 'POST',
 				data: edits,
 			};
-			if ( __unstableFetch ) {
-				// updatedRecord = yield __unstableAwaitPromise(
-				// 	__unstableFetch( options )
-				// );
+			if (__unstableFetch) {
+				updatedRecord = yield __unstableAwaitPromise(
+					__unstableFetch(options)
+				);
 			} else {
-				updatedRecord = yield apiFetch( options );
+				updatedRecord = yield apiFetch(options);
 			}
 			yield receiveEntityRecords(
 				name,
 				updatedRecord,
 				undefined,
-				true,
+				invalidateCache,
 				edits
 			);
-		} catch ( _error ) {
+		} catch (_error) {
 			error = _error;
 		}
 		yield {
@@ -364,7 +389,7 @@ export function* saveEntityRecord( name, record, __unstableFetch = null ) {
 
 		return updatedRecord;
 	} finally {
-		// yield* __unstableReleaseStoreLock( lock );
+		yield* __unstableReleaseStoreLock(lock);
 	}
 }
 
@@ -375,15 +400,8 @@ export function* saveEntityRecord( name, record, __unstableFetch = null ) {
  * @param {Object} recordId ID of the record.
  * @param {Object} options  Saving options.
  */
-export function* saveEditedEntityRecord( name, recordId, options ) {
-	if (
-		! ( yield select(
-			STORE_KEY,
-			'hasEditsForEntityRecord',
-			name,
-			recordId
-		) )
-	) {
+export function* saveEditedEntityRecord(name, recordId, options) {
+	if (!(yield select(STORE_KEY, 'hasEditsForEntityRecord', name, recordId))) {
 		return;
 	}
 	const edits = yield select(
@@ -394,9 +412,8 @@ export function* saveEditedEntityRecord( name, recordId, options ) {
 	);
 
 	const record = { id: recordId, ...edits };
-	return yield saveEntityRecord( name, record, options );
+	return yield saveEntityRecord(name, record, options);
 }
-
 
 /**
  * Runs multiple core-data actions at the same time using one API request.
@@ -420,46 +437,37 @@ export function* saveEditedEntityRecord( name, recordId, options ) {
  * @return {Promise} A promise that resolves to an array containing the return
  *                   values of each function given in `requests`.
  */
-export function* batchRequest( requests ) {
+export function* batchRequest(requests) {
 	const batch = createBatch();
 	const api = {
-		saveEntityRecord( kind, name, record, options ) {
-			return batch.add( ( add ) =>
-				dispatch( STORE_KEY ).saveEntityRecord( name, record, {
+		saveEntityRecord(kind, name, record, options) {
+			return batch.add((add) =>
+				dispatch(STORE_KEY).saveEntityRecord(name, record, {
 					...options,
 					__unstableFetch: add,
-				} )
+				})
 			);
 		},
-		saveEditedEntityRecord( kind, name, recordId, options ) {
-			return batch.add( ( add ) =>
-				dispatch( STORE_KEY ).saveEditedEntityRecord(
-					name,
-					recordId,
-					{
-						...options,
-						__unstableFetch: add,
-					}
-				)
+		saveEditedEntityRecord(kind, name, recordId, options) {
+			return batch.add((add) =>
+				dispatch(STORE_KEY).saveEditedEntityRecord(name, recordId, {
+					...options,
+					__unstableFetch: add,
+				})
 			);
 		},
-		deleteEntityRecord( name, recordId, query, options ) {
-			return batch.add( ( add ) =>
-				dispatch( STORE_KEY ).deleteEntityRecord(
-					name,
-					recordId,
-					query,
-					{
-						...options,
-						__unstableFetch: add,
-					}
-				)
+		deleteEntityRecord(name, recordId, query, options) {
+			return batch.add((add) =>
+				dispatch(STORE_KEY).deleteEntityRecord(name, recordId, query, {
+					...options,
+					__unstableFetch: add,
+				})
 			);
 		},
 	};
-	const resultPromises = requests.map( ( request ) => request( api ) );
-	const [ , ...results ] = yield select(
-		Promise.all( [ batch.run(), ...resultPromises ] )
+	const resultPromises = requests.map((request) => request(api));
+	const [, ...results] = yield select(
+		Promise.all([batch.run(), ...resultPromises])
 	);
 	return results;
 }

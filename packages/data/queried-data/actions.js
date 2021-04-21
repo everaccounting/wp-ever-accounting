@@ -11,10 +11,10 @@ import { castArray } from 'lodash';
  *
  * @return {Object} Action object.
  */
-export function receiveItems( items, edits ) {
+export function receiveItems(items, edits) {
 	return {
 		type: 'RECEIVE_ITEMS',
-		items: castArray( items ),
+		items: castArray(items),
 		persistedEdits: edits,
 	};
 }
@@ -28,10 +28,10 @@ export function receiveItems( items, edits ) {
  * @param {boolean}      invalidateCache  Controls whether we want to invalidate the cache.
  * @return {Object} Action object.
  */
-export function removeItems( name, records, invalidateCache = false ) {
+export function removeItems(name, records, invalidateCache = false) {
 	return {
 		type: 'REMOVE_ITEMS',
-		itemIds: castArray( records ),
+		itemIds: castArray(records),
 		name,
 		invalidateCache,
 	};
@@ -47,9 +47,9 @@ export function removeItems( name, records, invalidateCache = false ) {
  *
  * @return {Object} Action object.
  */
-export function receiveQueriedItems( items, query = {}, edits ) {
+export function receiveQueriedItems(items, query = {}, edits) {
 	return {
-		...receiveItems( items, edits ),
+		...receiveItems(items, edits),
 		query,
 	};
 }
@@ -62,10 +62,10 @@ export function receiveQueriedItems( items, query = {}, edits ) {
  *
  * @return {Object} Action object.
  */
-export function receiveItemTotal( total, query = {} ) {
+export function receiveItemTotal(total, query = {}) {
 	return {
 		type: 'RECEIVE_TOTAL',
-		total: parseInt( total, 10 ),
+		total: parseInt(total, 10),
 		query,
 	};
 }

@@ -1,15 +1,21 @@
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
+/**
+ * WordPress dependencies
+ */
 import { TextControl } from '@wordpress/components';
 
-function TextFilter( { filter, onFilterChange, className } ) {
+function TextFilter({ filter, onFilterChange, className }) {
 	const { input } = filter;
 
 	return (
 		<TextControl
-			{ ...input }
-			className={ className }
-			isClearable={ true }
-			onChange={ onFilterChange }
+			{...input}
+			className={className}
+			isClearable={true}
+			onChange={onFilterChange}
 		/>
 	);
 }
@@ -18,10 +24,10 @@ TextFilter.propTypes = {
 	/**
 	 * The activeFilter handed down by AdvancedFilters.
 	 */
-	filter: PropTypes.shape( {
+	filter: PropTypes.shape({
 		key: PropTypes.string,
 		value: PropTypes.string,
-	} ).isRequired,
+	}).isRequired,
 	/**
 	 * Function to be called on update.
 	 */

@@ -2,19 +2,19 @@
  * External dependencies
  */
 import createSelector from 'rememo';
-import { set, map, find, get, filter } from 'lodash';
+import {set, map, find, get} from 'lodash';
 
 /**
  * WordPress dependencies
  */
-import { select } from '@wordpress/data';
-import { addQueryArgs } from '@wordpress/url';
+import {select} from '@wordpress/data';
+import {addQueryArgs} from '@wordpress/url';
 /**
  * Internal dependencies
  */
-import { STORE_KEY } from './constants';
-import { getQueriedItems, getQueriedTotal } from './queried-data';
-import { getNormalizedCommaSeparable } from './utils';
+import {STORE_KEY} from './constants';
+import {getQueriedItems, getQueriedTotal} from './queried-data';
+import {getNormalizedCommaSeparable} from './utils';
 
 /**
  * Shared reference to an empty array for cases where it is important to avoid
@@ -35,9 +35,9 @@ const EMPTY_ARRAY = [];
  *                                 include with request.
  * @return {Array} Authors list.
  */
-export function getUsers( state, query={} ) {
-	const path = addQueryArgs( '/wp/v2/users/?per_page=100', query );
-	return getUserQueryResults( state, path );
+export function getUsers(state, query = {}) {
+	const path = addQueryArgs('/wp/v2/users/?per_page=100', query);
+	return getUserQueryResults(state, path);
 }
 
 /**
@@ -47,7 +47,7 @@ export function getUsers( state, query={} ) {
  *
  * @return {Object} Current user object.
  */
-export function getCurrentUser( state ) {
+export function getCurrentUser(state) {
 	return state.currentUser;
 }
 
@@ -60,12 +60,12 @@ export function getCurrentUser( state ) {
  * @return {Array} Users list.
  */
 export const getUserQueryResults = createSelector(
-	( state, queryID ) => {
-		const queryResults = state.users.queries[ queryID ];
+	(state, queryID) => {
+		const queryResults = state.users.queries[queryID];
 
-		return map( queryResults, ( id ) => state.users.byId[ id ] );
+		return map(queryResults, (id) => state.users.byId[id]);
 	},
-	( state, queryID ) => [ state.users.queries[ queryID ], state.users.byId ]
+	(state, queryID) => [state.users.queries[queryID], state.users.byId]
 );
 
 /**
@@ -76,20 +76,19 @@ export const getUserQueryResults = createSelector(
  *
  * @return {Object} Entity
  */
-export function getEntity( state, name ) {
-	return find( state.entities.config, { name } );
+export function getRoute(state, name) {
+	return find(state.entities.config, {name});
 }
 
 /**
  * Returns whether the entities for the give kind are loaded.
  *
  * @param {Object} state   Data state.
- * @param {string} name  Entity kind.
  *
  * @return {boolean} Whether the entities are loaded
  */
-export function getEntities( state, name ) {
-	return filter( state.entities.config, { name } );
+export function getRoutes(state) {
+	return state.entities.config;
 }
 
 /**
@@ -104,29 +103,29 @@ export function getEntities( state, name ) {
  *
  * @return {Object?} Record.
  */
-export function getEntityRecord( state, name, key = '', query={} ) {
-	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
-	if ( ! queriedState ) {
+export function getEntityRecord(state, name, key = '', query = {}) {
+	const queriedState = get(state.entities.data, [name, 'queriedData']);
+	if (!queriedState) {
 		return undefined;
 	}
 
-	if ( query === undefined ) {
+	if (query === undefined) {
 		// If expecting a complete item, validate that completeness.
-		if ( ! queriedState.itemIsComplete[ key ] ) {
+		if (!queriedState.itemIsComplete[key]) {
 			return undefined;
 		}
 
-		return queriedState.items[ key ];
+		return queriedState.items[key];
 	}
 
-	const item = queriedState.items[ key ];
-	if ( item && query._fields ) {
+	const item = queriedState.items[key];
+	if (item && query._fields) {
 		const filteredItem = {};
-		const fields = getNormalizedCommaSeparable( query._fields );
-		for ( let f = 0; f < fields.length; f++ ) {
-			const field = fields[ f ].split( '.' );
-			const value = get( item, field );
-			set( filteredItem, field, value );
+		const fields = getNormalizedCommaSeparable(query._fields);
+		for (let f = 0; f < fields.length; f++) {
+			const field = fields[f].split('.');
+			const value = get(item, field);
+			set(filteredItem, field, value);
 		}
 		return filteredItem;
 	}
@@ -146,24 +145,20 @@ export function getEntityRecord( state, name, key = '', query={} ) {
  * @return {Object?} Object with the entity's raw attributes.
  */
 export const getRawEntityRecord = createSelector(
-	( state, name, key ) => {
-		const record = getEntityRecord( state, name, key );
+	(state, name, key) => {
+		const record = getEntityRecord(state, name, key);
 		return (
 			record &&
-			Object.keys( record ).reduce( ( accumulator, _key ) => {
+			Object.keys(record).reduce((accumulator, _key) => {
 				// Because edits are the "raw" attribute values,
 				// we return those from record selectors to make rendering,
 				// comparisons, and joins with edits easier.
-				accumulator[ _key ] = get(
-					record[ _key ],
-					'raw',
-					record[ _key ]
-				);
+				accumulator[_key] = get(record[_key], 'raw', record[_key]);
 				return accumulator;
-			}, {} )
+			}, {})
 		);
 	},
-	( state ) => [ state.entities.data ]
+	(state) => [state.entities.data]
 );
 
 /**
@@ -176,8 +171,8 @@ export const getRawEntityRecord = createSelector(
  *
  * @return {boolean} Whether entity records have been received.
  */
-export function hasEntityRecords( state, name, query={} ) {
-	return Array.isArray( getEntityRecords( state, name, query ) );
+export function hasEntityRecords(state, name, query = {}) {
+	return Array.isArray(getEntityRecords(state, name, query));
 }
 
 /**
@@ -189,16 +184,16 @@ export function hasEntityRecords( state, name, query={} ) {
  *
  * @return {?Array} Records.
  */
-export function getEntityRecords( state, name, query={} ) {
+export function getEntityRecords(state, name, query = {}) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
 	// otherwise used to represent an unknown state).
-	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
-	if ( ! queriedState ) {
+	const queriedState = get(state.entities.data, [name, 'queriedData']);
+	if (!queriedState) {
 		return EMPTY_ARRAY;
 	}
-	return getQueriedItems( queriedState, query );
+	return getQueriedItems(queriedState, query);
 }
 
 /**
@@ -208,18 +203,19 @@ export function getEntityRecords( state, name, query={} ) {
  * @param {string}  name  Entity name.
  * @param {?Object} query Optional terms query.
  *
+ * @param defaults
  * @return {?Array} Records.
  */
-export function getEntityTotal( state, name, query={} ) {
+export function getEntityTotal(state, name, query = {}, defaults = 0) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
 	// otherwise used to represent an unknown state).
-	const queriedState = get( state.entities.data, [ name, 'queriedData' ] );
-	if ( ! queriedState ) {
-		return EMPTY_ARRAY;
+	const queriedState = get(state.entities.data, [name, 'queriedData']);
+	if (!queriedState) {
+		return defaults;
 	}
-	return getQueriedTotal( queriedState, query );
+	return getQueriedTotal(queriedState, query);
 }
 
 /**
@@ -231,8 +227,8 @@ export function getEntityTotal( state, name, query={} ) {
  *
  * @return {Object?} The entity record's edits.
  */
-export function getEntityRecordEdits( state, name, recordId ) {
-	return get( state.entities.data, [ name, 'edits', recordId ] );
+export function getEntityRecordEdits(state, name, recordId) {
+	return get(state.entities.data, [name, 'edits', recordId]);
 }
 
 /**
@@ -249,20 +245,20 @@ export function getEntityRecordEdits( state, name, recordId ) {
  * @return {Object?} The entity record's non transient edits.
  */
 export const getEntityRecordNonTransientEdits = createSelector(
-	( state, name, recordId ) => {
-		const { transientEdits } = getEntity( state, name ) || {};
-		const edits = getEntityRecordEdits( state, name, recordId ) || {};
-		if ( ! transientEdits ) {
+	(state, name, recordId) => {
+		const {transientEdits} = getEntity(state, name) || {};
+		const edits = getEntityRecordEdits(state, name, recordId) || {};
+		if (!transientEdits) {
 			return edits;
 		}
-		return Object.keys( edits ).reduce( ( acc, key ) => {
-			if ( ! transientEdits[ key ] ) {
-				acc[ key ] = edits[ key ];
+		return Object.keys(edits).reduce((acc, key) => {
+			if (!transientEdits[key]) {
+				acc[key] = edits[key];
 			}
 			return acc;
-		}, {} );
+		}, {});
 	},
-	( state ) => [ state.entities.config, state.entities.data ]
+	(state) => [state.entities.config, state.entities.data]
 );
 
 /**
@@ -275,10 +271,10 @@ export const getEntityRecordNonTransientEdits = createSelector(
  *
  * @return {boolean} Whether the entity record has edits or not.
  */
-export function hasEditsForEntityRecord( state, name, recordId ) {
+export function hasEditsForEntityRecord(state, name, recordId) {
 	return (
-		isSavingEntityRecord( state, name, recordId ) ||
-		Object.keys( getEntityRecordNonTransientEdits( state, name, recordId ) )
+		isSavingEntityRecord(state, name, recordId) ||
+		Object.keys(getEntityRecordNonTransientEdits(state, name, recordId))
 			.length > 0
 	);
 }
@@ -293,11 +289,11 @@ export function hasEditsForEntityRecord( state, name, recordId ) {
  * @return {Object?} The entity record, merged with its edits.
  */
 export const getEditedEntityRecord = createSelector(
-	( state, name, recordId ) => ( {
-		...getRawEntityRecord( state, name, recordId ),
-		...getEntityRecordEdits( state, name, recordId ),
-	} ),
-	( state ) => [ state.entities.data ]
+	(state, name, recordId) => ({
+		...getRawEntityRecord(state, name, recordId),
+		...getEntityRecordEdits(state, name, recordId),
+	}),
+	(state) => [state.entities.data]
 );
 
 /**
@@ -309,10 +305,10 @@ export const getEditedEntityRecord = createSelector(
  *
  * @return {boolean} Whether the entity record is saving or not.
  */
-export function isSavingEntityRecord( state, name, recordId ) {
+export function isSavingEntityRecord(state, name, recordId) {
 	return get(
 		state.entities.data,
-		[ name, 'saving', recordId, 'pending' ],
+		[name, 'saving', recordId, 'pending'],
 		false
 	);
 }
@@ -326,10 +322,10 @@ export function isSavingEntityRecord( state, name, recordId ) {
  *
  * @return {boolean} Whether the entity record is deleting or not.
  */
-export function isDeletingEntityRecord( state, name, recordId ) {
+export function isDeletingEntityRecord(state, name, recordId) {
 	return get(
 		state.entities.data,
-		[ name, 'deleting', recordId, 'pending' ],
+		[name, 'deleting', recordId, 'pending'],
 		false
 	);
 }
@@ -343,8 +339,8 @@ export function isDeletingEntityRecord( state, name, recordId ) {
  *
  * @return {Object?} The entity record's save error.
  */
-export function getLastEntitySaveError( state, name, recordId ) {
-	return get( state.entities.data, [ name, 'saving', recordId, 'error' ] );
+export function getLastEntitySaveError(state, name, recordId) {
+	return get(state.entities.data, [name, 'saving', recordId, 'error']);
 }
 
 /**
@@ -356,8 +352,8 @@ export function getLastEntitySaveError( state, name, recordId ) {
  *
  * @return {Object?} The entity record's save error.
  */
-export function getLastEntityDeleteError( state, name, recordId ) {
-	return get( state.entities.data, [ name, 'deleting', recordId, 'error' ] );
+export function getLastEntityDeleteError(state, name, recordId) {
+	return get(state.entities.data, [name, 'deleting', recordId, 'error']);
 }
 
 /**
@@ -369,8 +365,7 @@ export function getLastEntityDeleteError( state, name, recordId ) {
  * @param {Object} query
  * @return {boolean} Returns true if the selector is currently requesting items.
  */
-export function isRequesting( state, selectorName, query = {} ) {
-	return (
-		select( STORE_KEY ).getIsResolving( selectorName, [ query ] )
-	);
+export function isRequesting(state, selectorName, query = {}) {
+	return select(STORE_KEY).getIsResolving(selectorName, [query]);
 }
+

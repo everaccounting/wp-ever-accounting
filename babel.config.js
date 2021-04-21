@@ -4,11 +4,11 @@
  * @param {Object} api The bable API
  * @return {{presets: {Object}}} The babel configuration.
  */
-module.exports = ( api ) => {
+module.exports = (api) => {
 	/**
 	 * @see https://babeljs.io/docs/en/config-files#apicache
 	 */
-	api.cache.using( () => process.env.NODE_ENV === 'development' );
+	api.cache.using(() => process.env.NODE_ENV === 'development');
 
 	/**
 	 * Presets
@@ -16,7 +16,7 @@ module.exports = ( api ) => {
 	 * @see https://babeljs.io/docs/en/presets
 	 * @type {Array}
 	 */
-	const presets = [ '@wordpress/babel-preset-default' ];
+	const presets = ['@wordpress/babel-preset-default'];
 
 	/**
 	 * Plugins

@@ -28,12 +28,12 @@ const OFFSET_ARROW = 5;
  * @param {number} popoverWidth - width of popover.
  * @param {string} align - alignment.
  */
-function adjustForAlignment( toggleLeftPos, toggleWidth, popoverWidth, align ) {
-	if ( align === 'right' ) {
+function adjustForAlignment(toggleLeftPos, toggleWidth, popoverWidth, align) {
+	if (align === 'right') {
 		return toggleLeftPos + toggleWidth - popoverWidth;
 	}
 
-	if ( align === 'centre' ) {
+	if (align === 'centre') {
 		return toggleLeftPos - popoverWidth / 2;
 	}
 
@@ -56,11 +56,11 @@ export function getAdjustedPosition(
 	popoverRef,
 	hasArrow
 ) {
-	if ( position === null || togglePosition === null ) {
+	if (position === null || togglePosition === null) {
 		return {};
 	}
 
-	if ( ! popoverRef ) {
+	if (!popoverRef) {
 		return {
 			...position,
 			visibility: 'hidden', // Hide until ready otherwise we get a flicker
@@ -80,7 +80,7 @@ export function getAdjustedPosition(
 
 	return {
 		...position,
-		left: Math.min( minLeftPos, adjustedLeft ),
+		left: Math.min(minLeftPos, adjustedLeft),
 		top: hasArrow ? position.top + OFFSET_ARROW : position.top,
 	};
 }
@@ -91,8 +91,8 @@ export function getAdjustedPosition(
  * @param {ClientRect|null} togglePosition - Toggle client rect.
  * @return {DropdownPosition|null} Position
  */
-export function getPosition( togglePosition ) {
-	if ( togglePosition === null ) {
+export function getPosition(togglePosition) {
+	if (togglePosition === null) {
 		return null;
 	}
 
@@ -109,8 +109,8 @@ export function getPosition( togglePosition ) {
  * @param {Object} style - Style object.
  * @param {HTMLElement|null} ref - DOM node.
  */
-export function adjustArrowStyle( style, ref ) {
-	if ( ref ) {
+export function adjustArrowStyle(style, ref) {
+	if (ref) {
 		return {
 			...style,
 			width: ref.getBoundingClientRect().width,

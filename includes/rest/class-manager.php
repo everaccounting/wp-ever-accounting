@@ -44,16 +44,14 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Countries_Controller',
 				'\EverAccounting\REST\Data_Controller',
 				'\EverAccounting\REST\Items_Controller',
+				'\EverAccounting\REST\SettingsController',
 			)
 		);
-		error_log(print_r($rest_handlers, true ));
+
 		foreach ( $rest_handlers as $controller ) {
 			if ( class_exists( $controller ) ) {
 				$this->$controller = new $controller();
 				$this->$controller->register_routes();
-			}else{
-				error_log('NOT EXIST');
-				error_log($controller);
 			}
 		}
 	}

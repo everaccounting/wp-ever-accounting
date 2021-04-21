@@ -10,12 +10,9 @@ import PropTypes from 'prop-types';
 /**
  * WordPress dependencies
  */
-import { BaseControl, Dashicon } from '@wordpress/components';
+import { BaseControl } from '@wordpress/components';
 import classnames from 'classnames';
-import { __ } from '@wordpress/i18n';
-import isShallowEqual from '@wordpress/is-shallow-equal';
 import cuid from 'cuid';
-import { components } from 'react-select';
 
 export default class AsyncSelect extends Component {
 	static propTypes = {
@@ -41,8 +38,7 @@ export default class AsyncSelect extends Component {
 		addIcon: PropTypes.string,
 	};
 
-	static defaultProps = {
-	};
+	static defaultProps = {};
 
 	constructor(props) {
 		super(props);
@@ -51,7 +47,7 @@ export default class AsyncSelect extends Component {
 		};
 	}
 
-	onInputChange = value => {
+	onInputChange = (value) => {
 		return value.replace(/\W/g, '');
 	};
 
@@ -62,25 +58,34 @@ export default class AsyncSelect extends Component {
 			className,
 			required,
 			loadOptions,
+			innerRef,
 			...props
 		} = this.props;
-		const classes = classnames('ea-form-group', 'ea-select-field async', className, {
-			required: !!required,
-		});
+		const classes = classnames(
+			'ea-form-group',
+			'ea-select-field async',
+			className,
+			{
+				required: !!required,
+			}
+		);
 
 		const id = cuid();
 		return (
-			<BaseControl label={label} help={help} required={required} className={classes}>
+			<BaseControl
+				label={label}
+				help={help}
+				required={required}
+				className={classes}
+			>
 				<div className="ea-input-group">
 					<Async
-						// DropdownIndicator={false}
-						// openMenuOnFocus={false}
-						// openMenuOnClick={false}
 						classNamePrefix="ea-react-select"
 						className="ea-react-select"
 						id={id}
 						required={required}
 						loadOptions={loadOptions}
+						ref={innerRef}
 						{...props}
 					/>
 				</div>

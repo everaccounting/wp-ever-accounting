@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Currencies_Controller
+ *
  * @package EverAccounting\REST
  */
 class Currencies_Controller extends Entities_Controller {
@@ -25,7 +26,6 @@ class Currencies_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @var string
-	 *
 	 */
 	protected $rest_base = 'currencies';
 
@@ -48,14 +48,104 @@ class Currencies_Controller extends Entities_Controller {
 	protected $entity_model = Currency::class;
 
 	/**
+	 * Registers the routes for the objects of the controller.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @see register_rest_route()
+	 */
+	public function register_routes() {
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base,
+			array(
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_items' ),
+					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'args'                => $this->get_collection_params(),
+					'primary' => 'id',
+				),
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'create_item' ),
+					'permission_callback' => array( $this, 'create_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
+				),
+				'schema'  => array( $this, 'get_public_item_schema' ),
+			)
+		);
+		$get_item_args = array(
+			'context' => $this->get_context_param( array( 'default' => 'view' ) ),
+		);
+
+		register_rest_route(
+			$this->namespace,
+			'/' . $this->rest_base . '/(?P<code>[\w-]+)',
+			array(
+				'args'   => array(
+					'id' => array(
+						'description' => __( 'Unique identifier for the entity.', 'wp-ever-accounting' ),
+						'type'        => 'string',
+					),
+				),
+				array(
+					'methods'             => \WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'get_item' ),
+					'permission_callback' => array( $this, 'get_item_permissions_check' ),
+					'args'                => $get_item_args,
+				),
+				array(
+					'methods'             => \WP_REST_Server::EDITABLE,
+					'callback'            => array( $this, 'update_item' ),
+					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::DELETABLE,
+					'callback'            => array( $this, 'delete_item' ),
+					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+				),
+				'schema' => array( $this, 'get_public_item_schema' ),
+			)
+		);
+	}
+
+	/**
+	 * Check if a given request has access to read items.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_Error|boolean
+	 */
+	public function get_items_permissions_check( $request ) {
+		if ( ! current_user_can( 'manage_eaccounting' ) ) {
+			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check if a given request has access to read an item.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_Error|boolean
+	 */
+	public function get_item_permissions_check( $request ) {
+		return $this->get_items_permissions_check( $request );
+	}
+
+
+	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
 	 * @since  1.1.0
-	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_currencies( $query_args );
@@ -67,7 +157,6 @@ class Currencies_Controller extends Entities_Controller {
 	 * @return array Item schema data.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -181,7 +270,6 @@ class Currencies_Controller extends Entities_Controller {
 	 * @return array Collection parameters.
 	 *
 	 * @since 1.1.0
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

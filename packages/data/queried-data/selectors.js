@@ -28,12 +28,10 @@ const queriedTotalCacheByState = new WeakMap();
  *
  * @return {?Array} Query items.
  */
-function getQueriedItemsUncached( state, query ) {
-	const { stableKey, page, perPage, include, fields } = getQueryParts(
-		query
-	);
+function getQueriedItemsUncached(state, query) {
+	const { stableKey, page, perPage, include, fields } = getQueryParts(query);
 	let itemIds;
-	if ( Array.isArray( include ) && ! stableKey ) {
+	if (Array.isArray(include) && !stableKey) {
 		// If the parsed query yields a set of IDs, but otherwise no filtering,
 		// it's safe to consider targeted item IDs as the include set. This
 		// doesn't guarantee that those objects have been queried, which is
@@ -41,53 +39,52 @@ function getQueriedItemsUncached( state, query ) {
 		itemIds = include;
 		// TODO: Avoid storing the empty stable string in reducer, since it
 		// can be computed dynamically here always.
-	} else if ( state.queries[ stableKey ] ) {
-		itemIds = state.queries[ stableKey ];
+	} else if (state.queries[stableKey]) {
+		itemIds = state.queries[stableKey];
 	}
 
-	if ( ! itemIds ) {
+	if (!itemIds) {
 		return null;
 	}
-
-	const startOffset = perPage === -1 ? 0 : ( page - 1 ) * perPage;
+	const startOffset = perPage === -1 ? 0 : (page - 1) * perPage;
 	const endOffset =
 		perPage === -1
 			? itemIds.length
-			: Math.min( startOffset + perPage, itemIds.length );
+			: Math.min(startOffset + perPage, itemIds.length);
 
 	const items = [];
-	for ( let i = startOffset; i < endOffset; i++ ) {
-		const itemId = itemIds[ i ];
-		if ( Array.isArray( include ) && ! include.includes( itemId ) ) {
+	for (let i = startOffset; i < endOffset; i++) {
+		const itemId = itemIds[i];
+		if (Array.isArray(include) && !include.includes(itemId)) {
 			continue;
 		}
 
-		if ( ! state.items.hasOwnProperty( itemId ) ) {
+		if (!state.items.hasOwnProperty(itemId)) {
 			return null;
 		}
 
-		const item = state.items[ itemId ];
+		const item = state.items[itemId];
 
 		let filteredItem;
-		if ( Array.isArray( fields ) ) {
+		if (Array.isArray(fields)) {
 			filteredItem = {};
 
-			for ( let f = 0; f < fields.length; f++ ) {
-				const field = fields[ f ].split( '.' );
-				const value = get( item, field );
-				set( filteredItem, field, value );
+			for (let f = 0; f < fields.length; f++) {
+				const field = fields[f].split('.');
+				const value = get(item, field);
+				set(filteredItem, field, value);
 			}
 		} else {
 			// If expecting a complete item, validate that completeness, or
 			// otherwise abort.
-			if ( ! state.itemIsComplete[ itemId ] ) {
+			if (!state.itemIsComplete[itemId]) {
 				return null;
 			}
 
 			filteredItem = item;
 		}
 
-		items.push( filteredItem );
+		items.push(filteredItem);
 	}
 
 	return items;
@@ -106,22 +103,22 @@ function getQueriedItemsUncached( state, query ) {
  *
  * @return {?Array} Query items.
  */
-export const getQueriedItems = createSelector( ( state, query = {} ) => {
-	let queriedItemsCache = queriedItemsCacheByState.get( state );
-	if ( queriedItemsCache ) {
-		const queriedItems = queriedItemsCache.get( query );
-		if ( queriedItems !== undefined ) {
+export const getQueriedItems = createSelector((state, query = {}) => {
+	let queriedItemsCache = queriedItemsCacheByState.get(state);
+	if (queriedItemsCache) {
+		const queriedItems = queriedItemsCache.get(query);
+		if (queriedItems !== undefined) {
 			return queriedItems;
 		}
 	} else {
 		queriedItemsCache = new EquivalentKeyMap();
-		queriedItemsCacheByState.set( state, queriedItemsCache );
+		queriedItemsCacheByState.set(state, queriedItemsCache);
 	}
 
-	const items = getQueriedItemsUncached( state, query );
-	queriedItemsCache.set( query, items );
+	const items = getQueriedItemsUncached(state, query);
+	queriedItemsCache.set(query, items);
 	return items;
-} );
+});
 
 /**
  * @param {Object}  state State object.
@@ -129,22 +126,22 @@ export const getQueriedItems = createSelector( ( state, query = {} ) => {
  *
  * @return {?number} Query total.
  */
-export const getQueriedTotal = createSelector( ( state, query = {} ) => {
-	let queriedTotalCache = queriedTotalCacheByState.get( state );
-	if ( queriedTotalCache ) {
-		const queriedItems = queriedTotalCache.get( query );
-		if ( queriedItems !== undefined ) {
+export const getQueriedTotal = createSelector((state, query = {}) => {
+	let queriedTotalCache = queriedTotalCacheByState.get(state);
+	if (queriedTotalCache) {
+		const queriedItems = queriedTotalCache.get(query);
+		if (queriedItems !== undefined) {
 			return queriedItems;
 		}
 	} else {
 		queriedTotalCache = new EquivalentKeyMap();
-		queriedTotalCacheByState.set( state, queriedTotalCache );
+		queriedTotalCacheByState.set(state, queriedTotalCache);
 	}
-	const { stableKey } = getQueryParts( query );
+	const { stableKey } = getQueryParts(query);
 	let total = 0;
-	if ( state.totals[ stableKey ] ) {
-		total = state.totals[ stableKey ];
+	if (state.totals[stableKey]) {
+		total = state.totals[stableKey];
 	}
-	queriedTotalCache.set( query, total );
+	queriedTotalCache.set(query, total);
 	return total;
-} );
+});

@@ -1,40 +1,46 @@
+/**
+ * WordPress dependencies
+ */
 import { useState } from '@wordpress/element';
 import { SelectControl, Button } from '@wordpress/components';
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
 import { find } from 'lodash';
 import { __, concat } from '@wordpress/i18n';
 
-function BulkActions( { actions, isDisabled, onAction, value = '' } ) {
-	const [ selected, setSelected ] = useState( value );
-	const placeholder = { value: '', label: __( 'Bulk Actions' ) };
-	if ( ! find( actions, placeholder ) ) {
-		actions.unshift( placeholder );
+function BulkActions({ actions, isDisabled, onAction, value = '' }) {
+	const [selected, setSelected] = useState(value);
+	const placeholder = { value: '', label: __('Bulk Actions') };
+	if (!find(actions, placeholder)) {
+		actions.unshift(placeholder);
 	}
 
-	const click = ( e ) => {
+	const click = (e) => {
 		e.preventDefault();
-		selected && onAction && onAction( selected );
-		setSelected( '' );
+		selected && onAction && onAction(selected);
+		setSelected('');
 	};
 
 	return (
 		<div className="alignleft actions bulkactions">
 			<SelectControl
 				className="select"
-				value={ selected }
-				style={ {
+				value={selected}
+				style={{
 					display: 'inline-block',
 					marginRight: '6px',
-				} }
-				onChange={ setSelected }
-				options={ actions }
+				}}
+				onChange={setSelected}
+				options={actions}
 			/>
 			<button
 				className="button action"
-				disabled={ ! selected || !! isDisabled }
-				onClick={ click }
+				disabled={!selected || !!isDisabled}
+				onClick={click}
 			>
-				{ __( 'Apply' ) }
+				{__('Apply')}
 			</button>
 		</div>
 	);
@@ -42,10 +48,10 @@ function BulkActions( { actions, isDisabled, onAction, value = '' } ) {
 
 BulkActions.propTypes = {
 	actions: PropTypes.arrayOf(
-		PropTypes.shape( {
+		PropTypes.shape({
 			label: PropTypes.string,
 			value: PropTypes.string,
-		} )
+		})
 	),
 	onAction: PropTypes.func,
 	isDisabled: PropTypes.bool,

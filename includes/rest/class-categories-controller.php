@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Categories_Controller
+ *
  * @package EverAccounting\REST
  */
 class Categories_Controller extends Entities_Controller {
@@ -33,7 +34,7 @@ class Categories_Controller extends Entities_Controller {
 	 *
 	 * @var string
 	 */
-	protected $entity_type = "category";
+	protected $entity_type = 'category';
 
 	/**
 	 * Entity model class.
@@ -64,7 +65,6 @@ class Categories_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @return array Item schema data.
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -133,7 +133,6 @@ class Categories_Controller extends Entities_Controller {
 	 * @since 1.1.0
 	 *
 	 * @return array Collection parameters.
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

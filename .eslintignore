@@ -1,6 +1,4 @@
 assets/js/admin
-assets/js/admin
 packages
-assets/js/admin-legacy
-webpack.config.babel.js
-tests
+#webpack.config.babel.js
+#tests

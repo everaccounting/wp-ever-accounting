@@ -5,3 +5,4 @@
  * @type {string}
  */
 export const STORE_KEY = 'ea/data';
+export const API_NAMESPACE = '/ea/v1';

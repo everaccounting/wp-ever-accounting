@@ -17,7 +17,6 @@ abstract class Contacts_Controller extends Entities_Controller {
 	 *
 	 * @return array Item schema data.
 	 * @since 1.1.2
-	 *
 	 */
 	public function get_item_schema() {
 		$schema = array(
@@ -178,6 +177,18 @@ abstract class Contacts_Controller extends Entities_Controller {
 						),
 					),
 				),
+				'total_paid'   => array(
+					'description' => __( 'Total amount paid by the customer.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
+				'total_due'    => array(
+					'description' => __( 'Total amount due by the customer.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'readonly'    => true,
+				),
 				'enabled'      => array(
 					'description' => __( 'Status of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'boolean',
@@ -224,7 +235,6 @@ abstract class Contacts_Controller extends Entities_Controller {
 	 *
 	 * @return array Collection parameters.
 	 * @since 1.1.2
-	 *
 	 */
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();

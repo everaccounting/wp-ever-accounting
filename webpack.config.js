@@ -2,77 +2,65 @@
  * External dependencies
  */
 const path = require('path');
-// eslint-disable-next-line import/no-extraneous-dependencies
-const webpack = require('webpack');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const glob = require('glob');
+const UglifyJS = require('uglify-es');
+const webpack = require('webpack');
 const WebpackBar = require('webpackbar');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const WebpackRTLPlugin = require('webpack-rtl-plugin');
-const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-/**
- * Internal dependencies
- */
-const pkg = require('./package.json');
-const { get, find } = require('lodash');
-
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+	.BundleAnalyzerPlugin;
+const { get } = require('lodash');
 /**
  * WordPress dependencies
  */
 const CustomTemplatedPathPlugin = require('@wordpress/custom-templated-path-webpack-plugin');
-const defaultConfig = require('@wordpress/scripts/config/webpack.config.js');
-const DependencyExtractionWebpackPlugin = require('@wordpress/dependency-extraction-webpack-plugin');
-const {
-	camelCaseDash,
-} = require('@wordpress/dependency-extraction-webpack-plugin/lib/util');
+
+/**
+ * Internal dependencies
+ */
+const pkg = require('./package.json');
+const DependencyExtractionWebpackPlugin = require('./bin/dependency-extraction-webpack-plugin/src/index');
 
 const isProduction = process.env.NODE_ENV === 'production';
-const externals = [];
+const NODE_ENV = process.env.NODE_ENV || 'development';
 
-// Webpack configuration.
-const config = {
-	...defaultConfig,
+const packages = [];
+
+const minifyJs = (content) => {
+	return Promise.resolve(
+		Buffer.from(UglifyJS.minify(content.toString()).code)
+	);
+};
+
+const webpackConfig = {
+	mode: NODE_ENV,
 	entry: {
+		app: './client/index.js',
 		admin: './assets/css/admin.scss',
 		public: './assets/css/public.scss',
 		release: './assets/css/release.scss',
 		setup: './assets/css/setup.scss',
-		'jquery-ui': './assets/css/jquery-ui/jquery-ui.css',
-		...glob.sync('./assets/js/admin/*.js').reduce((memo, filepath) => {
-			memo[path.parse(filepath).name] = filepath;
+		'jquery-ui': './assets/css/jquery-ui.scss',
+		...glob.sync('./packages/*/index.js').reduce((memo, filepath) => {
+			const name = path.basename(path.dirname(filepath));
+			memo[name] = filepath;
+			packages.push(name);
 			return memo;
 		}, {}),
-		// ...glob.sync( './packages/**/index.js' ).reduce( ( memo, filepath ) => {
-		// 	const name = path.basename( path.dirname( filepath ) );
-		// 	externals[ `@eaccounting/${ name }` ] = {
-		// 		this: [ 'eaccounting', camelCaseDash( name ) ],
-		// 	};
-		// 	memo[ name ] = filepath;
-		// 	return memo;
-		// }, {} ),
 	},
 	output: {
-		...defaultConfig.output,
-		filename: 'js/[name].js',
-		chunkFilename: `js/chunks/[name].js`,
+		filename: '[name]/index.js',
+		chunkFilename: `chunks/[name].js`,
+		path: path.join(__dirname, 'dist'),
 		library: ['eaccounting', '[modulename]'],
 		libraryTarget: 'this',
-		path: path.resolve(process.cwd(), 'dist'),
-	},
-	externals: {
-		jquery: 'jQuery',
-		$: 'jQuery',
-		...externals,
-	},
-	resolve: {
-		...defaultConfig.resolve,
-		alias: { '@eaccounting': path.resolve(__dirname, 'packages') },
-		// modules: [ `${ __dirname }/assets/js/admin`, 'node_modules' ],
-		modules: [path.resolve(__dirname, 'packages'), 'node_modules'],
+		jsonpFunction: '__eaccounting_webpackJsonp',
 	},
 	module: {
 		rules: [
@@ -81,7 +69,6 @@ const config = {
 					amd: false,
 				},
 			},
-			// Lint JS.
 			{
 				test: /\.js$/,
 				enforce: 'pre',
@@ -108,6 +95,10 @@ const config = {
 				],
 			},
 			{
+				test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/,
+				loader: 'url-loader',
+			},
+			{
 				test: /\.s?css$/,
 				use: [
 					{
@@ -131,132 +122,30 @@ const config = {
 					},
 				],
 			},
-			{
-				test: /\.svg$/,
-				use: ['@svgr/webpack', 'url-loader'],
-			},
 		].filter(Boolean),
 	},
+	resolve: {
+		extensions: ['.json', '.js', '.jsx', '.ts', '.tsx'],
+		alias: {
+			'~': path.resolve(__dirname + '/client'),
+			'lodash-es': 'lodash',
+		},
+	},
 	plugins: [
-		...defaultConfig.plugins.filter(
-			(plugin) =>
-				![
-					'MiniCssExtractPlugin',
-					'FixStyleOnlyEntriesPlugin',
-					'LiveReloadPlugin',
-					'DependencyExtractionWebpackPlugin',
-				].includes(plugin.constructor.name)
-		),
+		// During rebuilds, all webpack assets that are not used anymore will be
+		// removed automatically. There is an exception added in watch mode for
+		// fonts and images. It is a known limitations:
+		// https://github.com/johnagan/clean-webpack-plugin/issues/159
+		new CleanWebpackPlugin({
+			cleanAfterEveryBuildPatterns: ['!fonts/**', '!images/**'],
+		}),
 
-		// MiniCSSExtractPlugin to extract the CSS thats gets imported into JavaScript.
-		new MiniCSSExtractPlugin({
-			esModule: false,
-			moduleFilename: (chunk) =>
-				`css/${chunk.name.replace('-style', '')}.min.css`,
-		}),
-		new WebpackRTLPlugin({
-			filename: [/(\.min\.css)/i, '-rtl$1'],
-		}),
 		// MiniCSSExtractPlugin creates JavaScript assets for CSS that are
 		// obsolete and should be removed. Related webpack issue:
 		// https://github.com/webpack-contrib/mini-css-extract-plugin/issues/85
 		new FixStyleOnlyEntriesPlugin({
 			silent: true,
 		}),
-
-		new webpack.ProvidePlugin({
-			$: 'jquery',
-			jQuery: 'jquery',
-		}),
-
-		// Copy vendor files to ensure 3rd party plugins relying on a script
-		// handle to exist continue to be enqueued.
-		new CopyWebpackPlugin({
-			patterns: [
-				// Styles.
-				// Scripts.
-				{
-					from: 'assets/js/admin-legacy',
-					to: 'js',
-				},
-				{
-					from: 'assets/js/vendor',
-					to: 'js',
-				},
-				{
-					from: './node_modules/chart.js/dist/Chart.min.js',
-					to: 'js/chart.bundle.js',
-				},
-				{
-					from: './node_modules/moment/min/moment.min.js',
-					to: 'js/moment.js',
-				},
-				{
-					from: './node_modules/select2/dist/js/select2.full.min.js',
-					to: 'js/select2.full.js',
-				},
-				{
-					from:
-						'./node_modules/inputmask/dist/jquery.inputmask.min.js',
-					to: 'js/jquery.inputmask.js',
-				},
-				//Fonts
-				{
-					from: 'assets/fonts',
-					to: 'fonts',
-				},
-				{
-					from: 'assets/images',
-					to: 'images',
-				},
-				{
-					from: 'assets/css/jquery-ui/images',
-					to: 'images',
-				},
-			],
-		}),
-
-		// Compress images
-		// Must happen after CopyWebpackPlugin
-		new ImageminPlugin({
-			disable: !isProduction,
-			test: /\.(jpe?g|png|gif|svg)$/i,
-		}),
-
-		// Browser sync.
-		!isProduction &&
-			new BrowserSyncPlugin(
-				{
-					host: 'localhost',
-					port: 3000,
-					proxy: pkg.localhost,
-					open: false,
-					files: [
-						'**/*.php',
-						'dist/js/**/*.js',
-						'dist/css/**/*.css',
-						'dist/svg/**/*.svg',
-						'dist/images/**/*.{jpg,jpeg,png,gif}',
-						'dist/fonts/**/*.{eot,ttf,woff,woff2,svg}',
-					],
-				},
-				{
-					injectCss: true,
-					reload: false,
-				}
-			),
-
-		new DependencyExtractionWebpackPlugin({ injectPolyfill: true }),
-
-		//Set plugin information run build
-		new webpack.BannerPlugin(pkg.name + ' v' + pkg.version),
-		new webpack.DefinePlugin({
-			'process.env': {
-				NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
-			},
-		}),
-
-		// Process custom modules.
 		new CustomTemplatedPathPlugin({
 			modulename(outputPath, data) {
 				const entryName = get(data, ['chunk', 'name']);
@@ -269,9 +158,96 @@ const config = {
 			},
 		}),
 
+		// MiniCSSExtractPlugin to extract the CSS thats gets imported into JavaScript.
+		new MiniCSSExtractPlugin({
+			filename: ({ chunk }) =>
+				packages.includes(chunk.name)
+					? `./[name]/style.css`
+					: '../assets/css/[name].css',
+			chunkFilename: './chunks/[id].style.css',
+		}),
+
+		new WebpackRTLPlugin({
+			filename: [/(\.css)/i, '-rtl$1'],
+		}),
+
+		new CopyWebpackPlugin(
+			glob.sync('./assets/js/admin/!(*.min.js|*.map)').map((file) => ({
+				from: file,
+				to: path.resolve(
+					__dirname,
+					'./assets/js/admin/[name].min.[ext]'
+				),
+				transform: (content) => minifyJs(content),
+			}))
+		),
+		process.env.ANALYZE && new BundleAnalyzerPlugin(),
+
+		// WP_NO_EXTERNALS global variable controls whether scripts' assets get
+		// generated, and the default externals set.
+		!process.env.WP_NO_EXTERNALS && new DependencyExtractionWebpackPlugin(),
+
+		//Set plugin information run build
+		new webpack.BannerPlugin(pkg.name + ' v' + pkg.version + '\n'),
+		new webpack.DefinePlugin({
+			'process.env': {
+				NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+			},
+		}),
+		// Browser sync.
+		!isProduction &&
+			new BrowserSyncPlugin(
+				{
+					host: 'localhost',
+					port: 3000,
+					proxy: pkg.localhost,
+					open: false,
+					files: [
+						// '**/*.php',
+						'dist/js/**/*.js',
+						'dist/css/**/*.css',
+						'dist/svg/**/*.svg',
+						'dist/images/**/*.{jpg,jpeg,png,gif}',
+						'dist/fonts/**/*.{eot,ttf,woff,woff2,svg}',
+					],
+				},
+				{
+					injectCss: true,
+					reload: false,
+				}
+			),
 		// Fancy WebpackBar.
 		new WebpackBar(),
 	].filter(Boolean),
+	optimization: {
+		minimize: NODE_ENV !== 'development',
+		// Only concatenate modules in production, when not analyzing bundles.
+		concatenateModules: isProduction && !process.env.WP_BUNDLE_ANALYZER,
+		splitChunks: {
+			cacheGroups: {
+				default: false,
+			},
+		},
+		minimizer: [
+			new TerserPlugin({
+				cache: true,
+				parallel: true,
+				sourceMap: !isProduction,
+				terserOptions: {
+					output: {
+						comments: /translators:/i,
+					},
+					compress: {
+						passes: 2,
+					},
+					mangle: {
+						reserved: ['__', '_n', '_nx', '_x'],
+					},
+				},
+				extractComments: false,
+			}),
+		],
+	},
 	stats: {
 		// Copied from `'minimal'`.
 		all: false,
@@ -288,11 +264,18 @@ const config = {
 	},
 	// Performance settings.
 	performance: {
-		maxAssetSize: 100000,
+		maxAssetSize: 500000,
 	},
 };
-
-// Remove automatic split of style- imports.
-// @link https://github.com/WordPress/gutenberg/blob/master/packages/scripts/config/webpack.config.js#L67-L77
-delete config.optimization.splitChunks.cacheGroups;
-module.exports = config;
+if (!isProduction) {
+	// WP_DEVTOOL global variable controls how source maps are generated.
+	// See: https://webpack.js.org/configuration/devtool/#devtool.
+	webpackConfig.devtool = process.env.WP_DEVTOOL || 'source-map';
+	webpackConfig.module.rules.unshift({
+		test: /\.js$/,
+		exclude: [/node_modules/],
+		use: require.resolve('source-map-loader'),
+		enforce: 'pre',
+	});
+}
+module.exports = webpackConfig;

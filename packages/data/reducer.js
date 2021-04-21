@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { flowRight, get, isEqual, keyBy, map } from 'lodash';
+import { flowRight, get, isEqual, keyBy, map} from 'lodash';
 
 /**
  * WordPress dependencies
@@ -13,7 +13,8 @@ import { combineReducers } from '@wordpress/data';
  */
 import { ifMatchingAction, replaceAction } from './utils';
 import { reducer as queriedDataReducer } from './queried-data';
-import { DEFAULT_ENTITY_KEY, defaultEntities } from './entities';
+import { DEFAULT_ENTITY_KEY } from './entities';
+import { reducer as locksReducer } from './locks';
 
 /**
  * Reducer managing authors state. Keyed by id.
@@ -23,20 +24,17 @@ import { DEFAULT_ENTITY_KEY, defaultEntities } from './entities';
  *
  * @return {Object} Updated state.
  */
-export function users( state = { byId: {}, queries: {} }, action ) {
-	switch ( action.type ) {
+export function users(state = { byId: {}, queries: {} }, action) {
+	switch (action.type) {
 		case 'RECEIVE_USER_QUERY':
 			return {
 				byId: {
 					...state.byId,
-					...keyBy( action.users, 'id' ),
+					...keyBy(action.users, 'id'),
 				},
 				queries: {
 					...state.queries,
-					[ action.queryID ]: map(
-						action.users,
-						( user ) => user.id
-					),
+					[action.queryID]: map(action.users, (user) => user.id),
 				},
 			};
 	}
@@ -52,8 +50,8 @@ export function users( state = { byId: {}, queries: {} }, action ) {
  *
  * @return {Object} Updated state.
  */
-export function currentUser( state = {}, action ) {
-	switch ( action.type ) {
+export function currentUser(state = {}, action) {
+	switch (action.type) {
 		case 'RECEIVE_CURRENT_USER':
 			return action.currentUser;
 	}
@@ -72,72 +70,68 @@ export function currentUser( state = {}, action ) {
  *
  * @return {Function} Reducer.
  */
-function entity( entityConfig ) {
-	return flowRight( [
+function entity(entityConfig) {
+	return flowRight([
 		// Limit to matching action type so we don't attempt to replace action on
 		// an unhandled action.
 		ifMatchingAction(
-			( action ) => action.name && action.name === entityConfig.name
+			(action) => action.name && action.name === entityConfig.name
 		),
 
 		// Inject the entity config into the action.
-		replaceAction( ( action ) => {
+		replaceAction((action) => {
 			return {
 				...action,
 				key: entityConfig.key || DEFAULT_ENTITY_KEY,
 			};
-		} ),
-	] )(
-		combineReducers( {
+		}),
+	])(
+		combineReducers({
 			queriedData: queriedDataReducer,
 
-			edits: ( state = {}, action ) => {
-				switch ( action.type ) {
+			edits: (state = {}, action) => {
+				switch (action.type) {
 					case 'RECEIVE_ITEMS':
 						const nextState = { ...state };
 
-						for ( const record of action.items ) {
-							const recordId = record[ action.key ];
-							const edits = nextState[ recordId ];
-							if ( ! edits ) {
+						for (const record of action.items) {
+							const recordId = record[action.key];
+							const edits = nextState[recordId];
+							if (!edits) {
 								continue;
 							}
 
-							const nextEdits = Object.keys( edits ).reduce(
-								( acc, key ) => {
+							const nextEdits = Object.keys(edits).reduce(
+								(acc, key) => {
 									// If the edited value is still different to the persisted value,
 									// keep the edited value in edits.
 									if (
 										// Edits are the "raw" attribute values, but records may have
 										// objects with more properties, so we use `get` here for the
 										// comparison.
-										! isEqual(
-											edits[ key ],
-											get(
-												record[ key ],
-												'raw',
-												record[ key ]
-											)
+										!isEqual(
+											edits[key],
+											get(record[key], 'raw', record[key])
 										) &&
 										// Sometimes the server alters the sent value which means
 										// we need to also remove the edits before the api request.
-										( ! action.persistedEdits ||
-											! isEqual(
-												edits[ key ],
-												action.persistedEdits[ key ]
-											) )
+										(!action.persistedEdits ||
+											!isEqual(
+												edits[key],
+												action.persistedEdits[key]
+											))
 									) {
-										acc[ key ] = edits[ key ];
+										acc[key] = edits[key];
 									}
 									return acc;
 								},
 								{}
 							);
 
-							if ( Object.keys( nextEdits ).length ) {
-								nextState[ recordId ] = nextEdits;
+							if (Object.keys(nextEdits).length) {
+								nextState[recordId] = nextEdits;
 							} else {
-								delete nextState[ recordId ];
+								delete nextState[recordId];
 							}
 						}
 
@@ -145,36 +139,35 @@ function entity( entityConfig ) {
 
 					case 'EDIT_ENTITY_RECORD':
 						const nextEdits = {
-							...state[ action.recordId ],
+							...state[action.recordId],
 							...action.edits,
 						};
-						Object.keys( nextEdits ).forEach( ( key ) => {
+						Object.keys(nextEdits).forEach((key) => {
 							// Delete cleared edits so that the properties
 							// are not considered dirty.
-							if ( nextEdits[ key ] === undefined ) {
-								delete nextEdits[ key ];
+							if (nextEdits[key] === undefined) {
+								delete nextEdits[key];
 							}
-						} );
+						});
 						return {
 							...state,
-							[ action.recordId ]: nextEdits,
+							[action.recordId]: nextEdits,
 						};
 				}
 
 				return state;
 			},
 
-			saving: ( state = {}, action ) => {
-				switch ( action.type ) {
+			saving: (state = {}, action) => {
+				switch (action.type) {
 					case 'SAVE_ENTITY_RECORD_START':
 					case 'SAVE_ENTITY_RECORD_FINISH':
 						return {
 							...state,
-							[ action.recordId ]: {
+							[action.recordId]: {
 								pending:
 									action.type === 'SAVE_ENTITY_RECORD_START',
 								error: action.error,
-								isAutosave: action.isAutosave,
 							},
 						};
 				}
@@ -182,13 +175,13 @@ function entity( entityConfig ) {
 				return state;
 			},
 
-			deleting: ( state = {}, action ) => {
-				switch ( action.type ) {
+			deleting: (state = {}, action) => {
+				switch (action.type) {
 					case 'DELETE_ENTITY_RECORD_START':
 					case 'DELETE_ENTITY_RECORD_FINISH':
 						return {
 							...state,
-							[ action.recordId ]: {
+							[action.recordId]: {
 								pending:
 									action.type ===
 									'DELETE_ENTITY_RECORD_START',
@@ -199,7 +192,7 @@ function entity( entityConfig ) {
 
 				return state;
 			},
-		} )
+		})
 	);
 }
 
@@ -211,10 +204,10 @@ function entity( entityConfig ) {
  *
  * @return {Object} Updated state.
  */
-export function entitiesConfig( state = defaultEntities, action ) {
-	switch ( action.type ) {
-		case 'ADD_ENTITIES':
-			return [ ...state, ...action.entities ];
+export function entitiesConfig(state = [], action) {
+	switch (action.type) {
+		case 'RECEIVE_ROUTES':
+			return [...state, ...action.routes];
 	}
 
 	return state;
@@ -228,24 +221,24 @@ export function entitiesConfig( state = defaultEntities, action ) {
  *
  * @return {Object} Updated state.
  */
-export const entities = ( state = {}, action ) => {
-	const newConfig = entitiesConfig( state.config, action );
+export const entities = (state = {}, action) => {
+	const newConfig = entitiesConfig(state.config, action);
 
 	// Generates a dynamic reducer for the entities
 	let entitiesDataReducer = state.reducer;
-	if ( ! entitiesDataReducer || newConfig !== state.config ) {
+	if (!entitiesDataReducer || newConfig !== state.config) {
 		entitiesDataReducer = combineReducers(
-			Object.values( newConfig ).reduce(
-				( memo, entityConfig ) => ( {
+			Object.values(newConfig).reduce(
+				(memo, entityConfig) => ({
 					...memo,
-					[ entityConfig.name ]: entity( entityConfig ),
-				} ),
+					[entityConfig.name]: entity(entityConfig),
+				}),
 				{}
 			)
 		);
 	}
 
-	const newData = entitiesDataReducer( state.data, action );
+	const newData = entitiesDataReducer(state.data, action);
 
 	if (
 		newData === state.data &&
@@ -261,8 +254,10 @@ export const entities = ( state = {}, action ) => {
 	};
 };
 
-export default combineReducers( {
+
+export default combineReducers({
 	users,
 	currentUser,
 	entities,
-} );
+	locks: locksReducer,
+});

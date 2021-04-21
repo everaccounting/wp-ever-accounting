@@ -15,32 +15,12 @@ export const DEFAULT_ENTITY_KEY = 'id';
 
 export const defaultEntities = [
 	{
-		name: 'product',
-		endpoint: 'wc/v3/products',
-		plural: 'products',
-		label: __( 'Products' ),
-		key: 'id',
-	},
-	{
-		name: 'category',
-		endpoint: '/wp/v2/users',
-		plural: 'categories',
-		label: __( 'Category' ),
-		key: 'id',
-	},
-	{
-		name: 'account',
-		endpoint: '/ea/v1/accounts',
-		plural: 'accounts',
-		label: __( 'Accounts' ),
-		key: 'id',
-	},
-	{
-		name: 'currency',
-		endpoint: '/ea/v1/currencies',
-		plural: 'currencies',
-		label: __( 'Currency' ),
+		name: 'currencies',
 		key: 'code',
+	},
+	{
+		name: 'settings',
+		key: 'option',
 	},
 ];
 
@@ -53,11 +33,11 @@ export const defaultEntities = [
  *
  * @return {string} Method name
  */
-export const getMethodName = ( name, prefix = 'get', usePlural = false ) => {
-	const entity = find( defaultEntities, { name } );
+export const getMethodName = (name, prefix = 'get', usePlural = false) => {
+	const entity = find(defaultEntities, { name });
 	const methodName =
 		usePlural && entity.plural
-			? upperFirst( camelCase( entity.plural ) )
-			: upperFirst( camelCase( name ) );
-	return `${ prefix }${ methodName }`;
+			? upperFirst(camelCase(entity.plural))
+			: upperFirst(camelCase(name));
+	return `${prefix}${methodName}`;
 };

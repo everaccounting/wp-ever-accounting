@@ -1,10 +1,19 @@
+/**
+ * WordPress dependencies
+ */
 import { Component } from '@wordpress/element';
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
+/**
+ * Internal dependencies
+ */
 import SelectControl from '../select-control';
 
 class SelectFilter extends Component {
-	constructor( { props } ) {
-		super( props );
+	constructor({ props }) {
+		super(props);
 	}
 
 	render() {
@@ -12,10 +21,10 @@ class SelectFilter extends Component {
 		const { input } = filter;
 		return (
 			<SelectControl.Customer
-				{ ...input }
-				className={ className }
-				isClearable={ true }
-				onChange={ onFilterChange }
+				{...input}
+				className={className}
+				isClearable={true}
+				onChange={onFilterChange}
 			/>
 		);
 	}
@@ -25,10 +34,10 @@ SelectFilter.propTypes = {
 	/**
 	 * The activeFilter handed down by AdvancedFilters.
 	 */
-	filter: PropTypes.shape( {
+	filter: PropTypes.shape({
 		key: PropTypes.string,
 		value: PropTypes.string,
-	} ).isRequired,
+	}).isRequired,
 	/**
 	 * Function to be called on update.
 	 */

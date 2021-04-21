@@ -2,15 +2,11 @@
   "name": "wp-ever-accounting",
   "title": "WP Ever Accounting",
   "version": "1.1.2",
+  "homepage": "https://www.wpeveraccounting.com",
   "description": "The Best WordPress Accounting Plugin ever made!",
-  "author": {
-    "name": "Sultan Nasir Uddin",
-    "email": "sultan@byteever.com",
-    "url": "https://www.byteever.com"
-  },
+  "author": "byteever",
   "license": "GPL-2.0-or-later",
   "keywords": [],
-  "homepage": "https://www.wpeveraccounting.com",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/everaccounting/wp-ever-accounting.git"
@@ -18,42 +14,59 @@
   "bugs": {
     "url": "https://github.com/everaccounting/wp-ever-accounting/issues"
   },
+  "files": [
+    "dist/**/*.{js,scss,php}",
+    "includes/**/*.php",
+    "languages/**/*.json",
+    "license.txt",
+    "wp-ever-accounting.php"
+  ],
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=8.0.0",
+    "npm": ">=6.14.2"
   },
-  "main": "index.js",
   "dependencies": {
-    "@automattic/color-studio": "^2.5.0",
-    "chart.js": "2.9.3",
-    "classnames": "^2.3.0",
-    "cuid": "^2.1.8",
+    "chart.js": "^3.1.1",
     "inputmask": "^5.0.5",
-    "moment": "2.22.2",
-    "react-select": "^4.3.0",
+    "moment": "^2.29.1",
     "select2": "~4.0"
   },
   "devDependencies": {
+    "@automattic/color-studio": "^2.5.0",
+    "@babel/core": "^7.13.15",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-transform-runtime": "^7.13.10",
+    "@babel/plugin-transform-runtime": "^7.13.15",
     "@byteever/eslint-plugin": "^1.0.0",
-    "@wordpress/babel-plugin-makepot": "^4.0.1",
-    "@wordpress/browserslist-config": "^3.0.1",
-    "@wordpress/components": "^12.0.8",
-    "@wordpress/custom-templated-path-webpack-plugin": "^2.0.1",
-    "@wordpress/dom-ready": "^2.12.1",
-    "@wordpress/element": "^2.19.1",
-    "@wordpress/i18n": "^3.18.0",
-    "@wordpress/scripts": "^13.0.3",
+    "@eaccounting/components": "file:packages/components",
+    "@eaccounting/data": "file:packages/data",
+    "@eaccounting/dependency-extraction-webpack-plugin": "file:packages/dependency-extraction-webpack-plugin",
+    "@wordpress/babel-plugin-makepot": "^4.1.2",
+    "@wordpress/babel-preset-default": "^5.2.1",
+    "@wordpress/browserslist-config": "^3.0.3",
+    "@wordpress/custom-templated-path-webpack-plugin": "^2.0.3",
+    "@wordpress/dom-ready": "^2.13.2",
+    "@wordpress/element": "^2.20.2",
+    "@wordpress/icons": "^2.10.2",
+    "@wordpress/prettier-config": "^1.0.3",
+    "@wordpress/stylelint-config": "^19.0.3",
+    "babel-loader": "^8.2.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "browser-sync": "^2.26.14",
     "browser-sync-webpack-plugin": "^2.3.0",
     "caniuse-db": "^1.0.30001196",
-    "copy-webpack-plugin": "^6.4.1",
+    "chalk": "^4.1.0",
+    "classnames": "^2.3.1",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "concurrently": "^6.0.2",
+    "copy-webpack-plugin": "5.1.2",
     "cross-env": "^7.0.3",
-    "cssnano": "^4.1.10",
+    "css-loader": "^5.2.2",
+    "cssnano": "^5.0.1",
+    "eslint-config-keystone": "^3.0.0",
+    "eslint-config-keystone-react": "^1.0.0",
     "eslint-loader": "^4.0.2",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-webpack-plugin": "^2.5.2",
     "git-clone": "^0.1.0",
+    "glob": "^7.1.6",
     "grunt-checktextdomain": "^1.0.1",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-compress": "^2.0.0",
@@ -61,28 +74,38 @@
     "grunt-wp-i18n": "^1.0.3",
     "grunt-wp-readme-to-markdown": "^2.0.1",
     "husky": "^4.3.8",
-    "imagemin-webpack-plugin": "^2.4.2",
     "lint-staged": "^10.5.4",
+    "lodash": "^4.17.21",
     "matchdep": "^2.0.0",
-    "path": "^0.12.7",
+    "mini-css-extract-plugin": "^1.5.0",
+    "mkdirp": "^1.0.4",
+    "node-sass": "^4.14.1",
+    "node-watch": "^0.7.1",
+    "postcss": "^8.2.10",
     "postcss-color-function": "^4.1.0",
-    "postcss-css-variables": "^0.17.0",
-    "postcss-editor-styles": "^0.3.0",
+    "postcss-loader": "^4.2.0",
     "precss": "^4.0.0",
-    "prettier": "^2.2.1",
     "promptly": "^3.2.0",
-    "prop-types": "^15.7.2",
     "replace-in-file": "^6.2.0",
-    "stylelint-webpack-plugin": "^2.1.1",
-    "webpack-fix-style-only-entries": "^0.4.0",
+    "sass-loader": "^10.1.1",
+    "source-map-loader": "^0.2.4",
+    "stylelint": "^13.12.0",
+    "terser-webpack-plugin": "^3.1.0",
+    "thread-loader": "^3.0.3",
+    "uglify-es": "^3.3.9",
+    "url-loader": "^4.1.1",
+    "webpack": "^4.46.0",
+    "webpack-bundle-analyzer": "^4.4.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-fix-style-only-entries": "^0.6.1",
     "webpack-rtl-plugin": "^2.0.0",
     "webpackbar": "^5.0.0-3"
   },
   "scripts": {
-    "start": "composer install && npm install && npm -s run watch",
+    "start": "composer install && npm install && npm -s run build:packages && npm -s run watch",
     "prestart": "php ./bin/update-version.php",
-    "watch": "cross-env NODE_ENV=develop wp-scripts start",
-    "build": "cross-env NODE_ENV=production wp-scripts build  && npm run i18n",
+    "watch": "cross-env NODE_ENV=development webpack --watch",
+    "build": "cross-env NODE_ENV=production webpack  && npm run i18n",
     "prerelease": "npm install && composer install --no-dev -o",
     "release": "npm run build",
     "postrelease": "grunt zip",
@@ -103,7 +126,7 @@
     "packages-update": "wp-scripts packages-update",
     "test:e2e": "wp-scripts test-e2e",
     "test:unit": "wp-scripts test-unit-js",
-    "create-extension": "node ./bin/create-extension.js"
+    "extension": "node ./bin/create-extension.js"
   },
   "husky": {
     "hooks": {
@@ -128,18 +151,11 @@
       "eslint --fix"
     ]
   },
-  "files": [
-    "assets/**/*.{js,scss,php}",
-    "includes/**/*.php",
-    "i18n/**/*.json",
-    "license.txt",
-    "wp-ever-accounting.php"
-  ],
   "browserslist": [
     "extends @wordpress/browserslist-config"
   ],
   "eslintConfig": {
     "extends": "@byteever/eslint-plugin/recommended"
   },
-  "localhost": "http://accounting.test"
+  "localhost": "http://eaccounting.test"
 }

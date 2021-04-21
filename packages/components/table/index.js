@@ -1,63 +1,79 @@
+/**
+ * WordPress dependencies
+ */
 import { useState, useEffect } from '@wordpress/element';
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+/**
+ * Internal dependencies
+ */
 import TableHeader from './header';
 import TableBody from './body';
 import { normalizeColumns } from './utils';
 
 import './style.scss';
 
-function Table( props ) {
-	const { className, data = [], defaultSort = {}, isLoading, noResult } = props;
-	const [ columns, setColumns ] = useState( [] );
-	const [ sort, setSort ] = useState( defaultSort );
-	const [ selected, setSelected ] = useState( [] );
+function Table(props) {
+	const {
+		className,
+		data = [],
+		defaultSort = {},
+		isLoading,
+		noResult,
+	} = props;
+	const [columns, setColumns] = useState([]);
+	const [sort, setSort] = useState(defaultSort);
+	const [selected, setSelected] = useState([]);
 
-	useEffect( () => {
-		setColumns( normalizeColumns( props.columns ) );
-		handleSelectAll( false );
-	}, [ props.columns, data ] );
+	useEffect(() => {
+		setColumns(normalizeColumns(props.columns));
+		handleSelectAll(false);
+	}, [props.columns, data]);
 
-	const handleSelectAll = ( isSelected ) => {
+	const handleSelectAll = (isSelected) => {
 		let selected = data;
-		if ( ! isSelected ) {
+		if (!isSelected) {
 			selected = [];
 		}
-		setSelected( selected );
-		dispatchEvent( 'onSelectAll', selected );
-		dispatchEvent( 'onSelectChange', selected );
+		setSelected(selected);
+		dispatchEvent('onSelectAll', selected);
+		dispatchEvent('onSelectChange', selected);
 	};
 
-	const handleSelection = ( row, isSelected ) => {
+	const handleSelection = (row, isSelected) => {
 		const selectedRows = selected.slice();
-		const rowIndex = selectedRows.indexOf( row );
-		if ( isSelected !== undefined ) {
-			if ( isSelected ) {
-				rowIndex === -1 && selectedRows.push( row );
+		const rowIndex = selectedRows.indexOf(row);
+		if (isSelected !== undefined) {
+			if (isSelected) {
+				rowIndex === -1 && selectedRows.push(row);
 			} else {
-				rowIndex !== -1 && selectedRows.splice( rowIndex, 1 );
+				rowIndex !== -1 && selectedRows.splice(rowIndex, 1);
 			}
 		} else {
 			rowIndex === -1
-				? selectedRows.push( row )
-				: selectedRows.splice( rowIndex, 1 );
+				? selectedRows.push(row)
+				: selectedRows.splice(rowIndex, 1);
 		}
 
-		setSelected( selectedRows );
-		dispatchEvent( 'onSelect', selected, row );
-		dispatchEvent( 'onSelectChange', selected );
+		setSelected(selectedRows);
+		dispatchEvent('onSelect', selected, row);
+		dispatchEvent('onSelectChange', selected);
 	};
 
-	const handleSort = ( sort ) => {
-		setSort( sort );
-		dispatchEvent( 'onSortChange', sort );
+	const handleSort = (sort) => {
+		setSort(sort);
+		dispatchEvent('onSortChange', sort);
 	};
 
-	const isAllSelected = data && data.length !== 0 && data.length === selected.length;
+	const isAllSelected =
+		(data && data.length !== 0 && data.length === selected.length) === true;
 
-	const dispatchEvent = ( name, ...args ) => {
-		const fn = props[ name ];
-		fn && fn( ...args );
+	const dispatchEvent = (name, ...args) => {
+		const fn = props[name];
+		fn && fn(...args);
 	};
 
 	const classes = classNames(
@@ -71,39 +87,39 @@ function Table( props ) {
 	);
 
 	return (
-		<table className={ classes }>
+		<table className={classes}>
 			<thead>
 				<TableHeader
 					className="table-header"
-					columns={ columns }
-					sort={ sort }
-					setSort={ handleSort }
-					isAllSelected={ isAllSelected }
-					isLoading={ isLoading }
-					onSelectAll={ handleSelectAll }
+					columns={columns}
+					sort={sort}
+					setSort={handleSort}
+					isAllSelected={isAllSelected}
+					isLoading={isLoading}
+					onSelectAll={handleSelectAll}
 				/>
 			</thead>
 
 			<tbody>
 				<TableBody
-					data={ data }
-					columns={ columns }
-					isLoading={ isLoading }
-					noResult={ noResult }
-					selected={ selected }
-					onSelect={ handleSelection }
+					data={data}
+					columns={columns}
+					isLoading={isLoading}
+					noResult={noResult}
+					selected={selected}
+					onSelect={handleSelection}
 				/>
 			</tbody>
 
 			<tfoot>
 				<TableHeader
 					className="table-header"
-					columns={ columns }
-					sort={ sort }
-					setSort={ handleSort }
-					isAllSelected={ isAllSelected }
-					isLoading={ isLoading }
-					onSelectAll={ handleSelectAll }
+					columns={columns}
+					sort={sort}
+					setSort={handleSort}
+					isAllSelected={isAllSelected}
+					isLoading={isLoading}
+					onSelectAll={handleSelectAll}
 				/>
 			</tfoot>
 		</table>
@@ -112,7 +128,7 @@ function Table( props ) {
 
 Table.propTypes = {
 	columns: PropTypes.arrayOf(
-		PropTypes.shape( {
+		PropTypes.shape({
 			//type of the column. If set to selection, the column will display checkbox
 			type: PropTypes.string,
 			//column label
@@ -130,22 +146,22 @@ Table.propTypes = {
 			//is sortable or not
 			sortable: PropTypes.bool,
 			//alignment
-			align: PropTypes.oneOf( [ 'left', 'center', 'right' ] ),
+			align: PropTypes.oneOf(['left', 'center', 'right']),
 			//header alignment
-			headerAlign: PropTypes.oneOf( [ 'left', 'center', 'right' ] ),
+			headerAlign: PropTypes.oneOf(['left', 'center', 'right']),
 			//classname
 			className: PropTypes.string,
-		} )
+		})
 	),
 	//table data
-	data: PropTypes.arrayOf( PropTypes.object ),
+	data: PropTypes.arrayOf(PropTypes.object),
 	//weather to show header or not
 	showHeader: PropTypes.bool,
 	//default sort
-	defaultSort: PropTypes.shape( {
+	defaultSort: PropTypes.shape({
 		orderby: PropTypes.string,
-		order: PropTypes.oneOf( [ 'asc', 'desc' ] ),
-	} ),
+		order: PropTypes.oneOf(['asc', 'desc']),
+	}),
 	//on sort change
 	onSortChange: PropTypes.func,
 	//on select item
@@ -157,7 +173,7 @@ Table.propTypes = {
 	//is loading
 	isLoading: PropTypes.bool,
 	//no result
-	noResult: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ),
+	noResult: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 };
 
 export default Table;

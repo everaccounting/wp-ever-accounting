@@ -18,7 +18,7 @@ import {
  * @param {Object} request
  * @return {{type: string, request: Object}} An action object
  */
-export function fetch( request ) {
+export function fetch(request) {
 	return {
 		type: 'FETCH_FROM_API',
 		request,
@@ -33,7 +33,7 @@ export function fetch( request ) {
  *
  * @return {Object} The control action descriptor.
  */
-export const fetchFromAPIWithTotal = ( path ) => {
+export const fetchFromAPIWithTotal = (path) => {
 	return {
 		type: 'FETCH_FROM_API_WITH_TOTAL',
 		path,
@@ -49,7 +49,7 @@ export const fetchFromAPIWithTotal = ( path ) => {
  * @return {{type: string, reducerKey: string, selectorName: string, args: *[]}}
  * Returns an action object.
  */
-export function select( reducerKey, selectorName, ...args ) {
+export function select(reducerKey, selectorName, ...args) {
 	return {
 		type: 'SELECT',
 		reducerKey,
@@ -66,7 +66,7 @@ export function select( reducerKey, selectorName, ...args ) {
  * @param {Array} args
  * @return {Object} An action object.
  */
-export function resolveSelect( reducerKey, selectorName, ...args ) {
+export function resolveSelect(reducerKey, selectorName, ...args) {
 	return {
 		type: 'RESOLVE_SELECT',
 		reducerKey,
@@ -84,7 +84,7 @@ export function resolveSelect( reducerKey, selectorName, ...args ) {
  * @return {{type: string, reducerKey: string, dispatchName: string, args: *[]}}
  * An action object
  */
-export function dispatch( reducerKey, dispatchName, ...args ) {
+export function dispatch(reducerKey, dispatchName, ...args) {
 	return {
 		type: 'DISPATCH',
 		reducerKey,
@@ -101,7 +101,7 @@ export function dispatch( reducerKey, dispatchName, ...args ) {
  * @param {Array} args
  * @return {Object} The action object.
  */
-export function resolveDispatch( reducerKey, dispatchName, ...args ) {
+export function resolveDispatch(reducerKey, dispatchName, ...args) {
 	return {
 		type: 'RESOLVE_DISPATCH',
 		reducerKey,
@@ -111,62 +111,61 @@ export function resolveDispatch( reducerKey, dispatchName, ...args ) {
 }
 
 const customControls = {
-	FETCH_FROM_API( { request } ) {
-		return apiFetch( request );
+	FETCH_FROM_API({ request }) {
+		return apiFetch(request);
 	},
-	SELECT( { reducerKey, selectorName, args } ) {
-		return selectData( reducerKey )[ selectorName ]( ...args );
+	SELECT({ reducerKey, selectorName, args }) {
+		return selectData(reducerKey)[selectorName](...args);
 	},
-	DISPATCH( { reducerKey, dispatchName, args } ) {
-		return dispatchData( reducerKey )[ dispatchName ]( ...args );
+	DISPATCH({ reducerKey, dispatchName, args }) {
+		return dispatchData(reducerKey)[dispatchName](...args);
 	},
-	async RESOLVE_DISPATCH( { reducerKey, dispatchName, args } ) {
-		return await dispatchData( reducerKey )[ dispatchName ]( ...args );
+	async RESOLVE_DISPATCH({ reducerKey, dispatchName, args }) {
+		return await dispatchData(reducerKey)[dispatchName](...args);
 	},
-	FETCH_FROM_API_WITH_TOTAL( { path } ) {
-		return new Promise( ( resolve, reject ) => {
-			apiFetch( { path, parse: false } )
-				.then( ( response ) => {
-					response.json().then( ( items ) => {
-						resolve( {
+	FETCH_FROM_API_WITH_TOTAL({ path }) {
+		return new Promise((resolve, reject) => {
+			apiFetch({ path, parse: false })
+				.then((response) => {
+					response.json().then((items) => {
+						resolve({
 							items,
 							total: parseInt(
-								response.headers.get( 'x-wp-total' ),
+								response.headers.get('x-wp-total'),
 								10
 							),
-						} );
-					} );
-				} )
-				.catch( ( error ) => {
-					reject( error );
-				} );
-		} );
+						});
+					});
+				})
+				.catch((error) => {
+					reject(error);
+				});
+		});
 	},
-	RESOLVE_SELECT( { reducerKey, selectorName, args } ) {
-		return new Promise( ( resolve ) => {
+	RESOLVE_SELECT({ reducerKey, selectorName, args }) {
+		return new Promise((resolve) => {
 			const hasFinished = () =>
-				selectData( 'core/data' ).hasFinishedResolution(
+				selectData('core/data').hasFinishedResolution(
 					reducerKey,
 					selectorName,
 					args
 				);
-			console.log(hasFinished(), reducerKey, selectorName, args)
-			const getResult = () =>
-				selectData( reducerKey )[ selectorName ].apply( null, args );
+
+			const getResult = () => selectData(reducerKey)[selectorName].apply(null, args);
 
 			// trigger the selector (to trigger the resolver)
 			const result = getResult();
-			if ( hasFinished() ) {
-				return resolve( result );
+			if (hasFinished()) {
+				return resolve(result);
 			}
 
-			const unsubscribe = subscribe( () => {
-				if ( hasFinished() ) {
+			const unsubscribe = subscribe(() => {
+				if (hasFinished()) {
 					unsubscribe();
-					resolve( getResult() );
+					resolve(getResult());
 				}
-			} );
-		} );
+			});
+		});
 	},
 };
 

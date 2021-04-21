@@ -1,4 +1,10 @@
+/**
+ * WordPress dependencies
+ */
 import { useState } from '@wordpress/element';
+/**
+ * External dependencies
+ */
 import PropTypes from 'prop-types';
 import { __ } from '@wordpress/i18n';
 
@@ -9,19 +15,19 @@ import { __ } from '@wordpress/i18n';
  * @return {*}
  * @class
  */
-function SearchBox( props ) {
+function SearchBox(props) {
 	const { isDisabled = false, onSearch } = props;
-	const [ search, setSearch ] = useState( '' );
+	const [search, setSearch] = useState('');
 
-	const handleSubmit = ( ev ) => {
+	const handleSubmit = (ev) => {
 		ev && ev.preventDefault();
-		onSearch && onSearch( search );
+		onSearch && onSearch(search);
 	};
 
-	const handleChange = ( ev ) => {
-		setSearch( ev.target.value );
-		if ( ev.target.value === '' ) {
-			onSearch( '' );
+	const handleChange = (ev) => {
+		setSearch(ev.target.value);
+		if (ev.target.value === '') {
+			onSearch('');
 		}
 	};
 
@@ -30,16 +36,16 @@ function SearchBox( props ) {
 			<input
 				type="search"
 				name="s"
-				value={ search }
-				onChange={ handleChange }
-				disabled={ !! isDisabled }
+				value={search}
+				onChange={handleChange}
+				disabled={!!isDisabled}
 			/>
 			<input
 				type="submit"
 				className="button"
-				value={ __( 'Search' ) }
-				onClick={ handleSubmit }
-				disabled={ isDisabled || ! search }
+				value={__('Search')}
+				onClick={handleSubmit}
+				disabled={isDisabled || !search}
 			/>
 		</p>
 	);

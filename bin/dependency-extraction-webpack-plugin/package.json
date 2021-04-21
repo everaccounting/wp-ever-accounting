@@ -1,0 +1,26 @@
+{
+  "name": "@eaccounting/dependency-extraction-webpack-plugin",
+  "version": "1.0.0",
+  "description": "Ever Accounting Dependency Extraction Webpack Plugin",
+  "author": "byteever",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "ever accounting"
+  ],
+  "homepage": "https://github.com/everaccounting/everaccounting/tree/main/packages/dependency-extraction-webpack-plugin/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/everaccounting/everaccounting.git"
+  },
+  "bugs": {
+    "url": "https://github.com/everaccounting/everaccounting/issues"
+  },
+  "main": "src/index.js",
+  "dependencies": {
+    "@wordpress/dependency-extraction-webpack-plugin": "^2.8.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

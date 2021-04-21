@@ -7,7 +7,14 @@ vendor
 # Project Files
 dist
 build
+build-module
+build-style
 backstop_data
+assets/js/admin/*.min.js
+assets/js/admin/*.map.js
+assets/css/*.css
+assets/css/*-rtl.css
+assets/css/*.map
 
 # Editors
 *.esproj

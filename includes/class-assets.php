@@ -56,9 +56,9 @@ class Assets {
 	public function admin_styles() {
 		$screen    = get_current_screen();
 		$screen_id = $screen ? $screen->id : '';
-		$this->register_style( 'ea-admin-styles', 'admin.min.css' );
-		$this->register_style( 'ea-release-styles', 'release.min.css' );
-		$this->register_style( 'jquery-ui-styles', 'jquery-ui.min.css' );
+		self::register_style( 'ea-admin-styles', 'admin.min.css' );
+		self::register_style( 'ea-release-styles', 'release.min.css' );
+		self::register_style( 'jquery-ui-styles', 'jquery-ui.min.css' );
 		// Admin styles for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'ea-admin-styles' );
@@ -76,16 +76,16 @@ class Assets {
 		$screen_id             = $screen ? $screen->id : '';
 		$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 		// 3rd parties.
-		$this->register_script( 'jquery-blockui', 'jquery.blockUI.min.js', array( 'jquery' ), false );
-		$this->register_script( 'jquery-select2', 'select2.full.js', array( 'jquery' ), false );
-		$this->register_script( 'jquery-inputmask', 'jquery.inputmask.js', array( 'jquery' ), false );
-		$this->register_script( 'chartjs', 'chart.bundle.js', array(), false );
-		$this->register_script( 'chartjs-labels', 'chartjs-plugin-labels.js', array( 'chartjs' ), false );
-		$this->register_script( 'jquery-print-this', 'printThis.js', array( 'jquery' ), false );
+		self::register_script( 'jquery-blockui', 'jquery.blockUI.min.js', array( 'jquery' ), false );
+		self::register_script( 'jquery-select2', 'select2.full.js', array( 'jquery' ), false );
+		self::register_script( 'jquery-inputmask', 'jquery.inputmask.js', array( 'jquery' ), false );
+		self::register_script( 'chartjs', 'chart.bundle.js', array(), false );
+		self::register_script( 'chartjs-labels', 'chartjs-plugin-labels.js', array( 'chartjs' ), false );
+		self::register_script( 'jquery-print-this', 'printThis.js', array( 'jquery' ), false );
 
 		// Core plugins.
-		$this->register_script( 'ea-select', 'ea-select2.js', array( 'jquery', 'jquery-select2' ), false );
-		$this->register_script(
+		self::register_script( 'ea-select', 'ea-select2.js', array( 'jquery', 'jquery-select2' ), false );
+		self::register_script(
 			'ea-creatable',
 			'ea-creatable.js',
 			array(
@@ -97,14 +97,14 @@ class Assets {
 			),
 			false
 		);
-		$this->register_script( 'ea-modal', 'ea-modal.js', array( 'jquery' ), false );
-		$this->register_script( 'ea-form', 'ea-form.js', array( 'jquery' ), false );
-		$this->register_script( 'ea-exporter', 'ea-exporter.js', array( 'jquery' ), false );
-		$this->register_script( 'ea-importer', 'ea-importer.js', array( 'jquery' ), false );
+		self::register_script( 'ea-modal', 'ea-modal.js', array( 'jquery' ), false );
+		self::register_script( 'ea-form', 'ea-form.js', array( 'jquery' ), false );
+		self::register_script( 'ea-exporter', 'ea-exporter.js', array( 'jquery' ), false );
+		self::register_script( 'ea-importer', 'ea-importer.js', array( 'jquery' ), false );
 
 		// Core script.
-		$this->register_script( 'ea-helper', 'ea-helper.js', array( 'jquery', 'jquery-blockui' ), false );
-		$this->register_script(
+		self::register_script( 'ea-helper', 'ea-helper.js', array( 'jquery', 'jquery-blockui' ), false );
+		self::register_script(
 			'ea-overview',
 			'ea-overview.js',
 			array(
@@ -114,8 +114,8 @@ class Assets {
 			),
 			false
 		);
-		$this->register_script( 'ea-settings', 'ea-settings.js', array( 'jquery' ), false );
-		$this->register_script( 'ea-admin', 'ea-admin.js', array( 'jquery' ), false );
+		self::register_script( 'ea-settings', 'ea-settings.js', array( 'jquery' ), false );
+		self::register_script( 'ea-admin', 'ea-admin.js', array( 'jquery' ), false );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
@@ -245,9 +245,9 @@ class Assets {
 	 * @param array  $dependencies style dependencies.
 	 * @param bool   $has_rtl support RTL?
 	 */
-	protected function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
+	public static function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
 		$filename = is_null( $file_path ) ? $handle : $file_path;
-		$file_url = $this->get_asset_dist_url( $filename, 'css' );
+		$file_url = self::get_asset_dist_url( $filename, 'css' );
 		$version  = EACCOUNTING_VERSION;
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$version = time();
@@ -270,11 +270,12 @@ class Assets {
 	 *
 	 * @since 1.0.0
 	 */
-	protected function register_script( $handle, $file_path = null, $dependencies = array(), $has_i18n = true ) {
+	public static function register_script( $handle, $file_path = null, $dependencies = array(), $has_i18n = true ) {
 		$filename             = is_null( $file_path ) ? $handle : $file_path;
-		$file_url             = $this->get_asset_dist_url( $filename );
+		$file_url             = self::get_asset_dist_url( $filename );
 		$filename             = str_replace( [ '.min', '.js' ], '', $filename );
-		$dependency_file_path = $this->get_asset_dist_path( $filename . '.asset', 'php' );
+		$relative_path        = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
+		$dependency_file_path = $relative_path . "/dist/$filename.asset.php";
 		$version              = EACCOUNTING_VERSION;
 		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 			$version = time();
@@ -299,8 +300,8 @@ class Assets {
 	 *
 	 * @return  string The generated path.
 	 */
-	protected function get_asset_dist_url( $filename, $type = 'js' ) {
-		return plugins_url( "/dist/$type/$filename", EACCOUNTING_PLUGIN_FILE );
+	public static function get_asset_dist_url( $filename, $type = 'js' ) {
+		return plugins_url( "/dist/$filename", EACCOUNTING_PLUGIN_FILE );
 	}
 
 	/**
@@ -311,10 +312,10 @@ class Assets {
 	 *
 	 * @return  string The generated path.
 	 */
-	protected function get_asset_dist_path( $filename, $type = 'js' ) {
+	public static function get_asset_dist_path( $filename, $type = 'js' ) {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 
-		return $plugin_path . "/dist/$type/$filename";
+		return $plugin_path . "/dist/$filename";
 	}
 }
 

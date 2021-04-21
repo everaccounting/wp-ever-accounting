@@ -1,6 +1,15 @@
+/**
+ * External dependencies
+ */
 import classnames from 'classnames';
+/**
+ * WordPress dependencies
+ */
 import { useEffect, Fragment } from '@wordpress/element';
 import PropTypes from 'prop-types';
+/**
+ * Internal dependencies
+ */
 import Table from '../table';
 import Pagination from '../pagination';
 import SearchBox from '../searchbox';
@@ -9,7 +18,7 @@ import TableFilter from './table-filter';
 
 import './style.scss';
 
-function ListTable( props ) {
+function ListTable(props) {
 	const {
 		className,
 		isLoading,
@@ -24,89 +33,86 @@ function ListTable( props ) {
 
 	const {
 		page = 1,
-		per_page = 20,
+		perPage = 20,
 		orderby = 'id',
 		order = 'desc',
 		search = '',
 	} = query;
 
-	const handleSearch = ( search ) => {
-		dispatchEvent( 'onQueryChange', { ...query, search } );
+	const handleSearch = (search) => {
+		dispatchEvent('onQueryChange', { ...query, search });
 	};
 
-	const handleFilter = ( filters ) => {
-		dispatchEvent( 'onQueryChange', { ...query, ...filters } );
+	const handleFilter = (filters) => {
+		dispatchEvent('onQueryChange', { ...query, ...filters });
 	};
 
-	const handleSort = ( sort ) => {
-		dispatchEvent( 'onQueryChange', { ...query, ...sort } );
+	const handleSort = (sort) => {
+		dispatchEvent('onQueryChange', { ...query, ...sort });
 	};
 
-	const handlePagination = ( page ) => {
-		dispatchEvent( 'onQueryChange', { ...query, page } );
+	const handlePagination = (page) => {
+		dispatchEvent('onQueryChange', { ...query, page });
 	};
 
-	const handleActions = ( action ) => {
-		dispatchEvent( 'onAction', action );
+	const handleActions = (action) => {
+		dispatchEvent('onAction', action);
 	};
 
-	const dispatchEvent = ( name, ...args ) => {
-		const fn = props[ name ];
-		fn && fn( ...args );
+	const dispatchEvent = (name, ...args) => {
+		const fn = props[name];
+		fn && fn(...args);
 	};
 
-	const classes = classnames( 'ea-list-table-wrapper', className );
+	const classes = classnames('ea-list-table-wrapper', className);
 
 	return (
 		<Fragment>
-			<div className={ classes }>
-				{ title && <h1>{ title }</h1> }
+			<div className={classes}>
+				{title && <h1>{title}</h1>}
 
-				<SearchBox
-					isDisabled={ !! isLoading }
-					onSearch={ handleSearch }
-				/>
+				<SearchBox isDisabled={!!isLoading} onSearch={handleSearch} />
 
 				<div className="tablenav top">
-					{ actions && (
+					{actions && (
 						<BulkActions
-							onAction={ handleActions }
-							actions={ actions }
+							onAction={handleActions}
+							actions={actions}
 						/>
-					) }
+					)}
 
-					{ filters && (
+					{filters && (
 						<TableFilter
-							onFilter={ handleFilter }
-							filters={ filters }
+							onFilter={handleFilter}
+							filters={filters}
 						/>
-					) }
+					)}
 
 					<Pagination
-						onPageChange={ handlePagination }
-						total={ total }
-						page={ page }
-						per_page={ per_page }
-						isDisabled={ !! isLoading }
+						onPageChange={handlePagination}
+						total={total}
+						page={page}
+						perPage={perPage}
+						isDisabled={!!isLoading}
 					/>
 				</div>
 
 				<Table
-					columns={ columns }
-					data={ data }
-					isLoading={ !! isLoading }
-					onSortChange={ handleSort }
+					columns={columns}
+					data={data}
+					isLoading={!!isLoading}
+					onSortChange={handleSort}
 				/>
 
 				<div className="tablenav bottom">
-					{ actions && <BulkActions actions={ actions } /> }
+					{actions && <BulkActions actions={actions} />}
 
 					<Pagination
-						onPageChange={ handlePagination }
-						total={ total }
-						page={ page }
-						per_page={ per_page }
-						isDisabled={ !! isLoading }
+						onPageChange={handlePagination}
+						total={total}
+						page={page}
+						perPage={perPage}
+						isDisabled={!!isLoading}
 					/>
 				</div>
 			</div>
@@ -138,7 +144,7 @@ ListTable.propTypes = {
 	/**
 	 * An array of columns data (see `Table` props).
 	 */
-	data: PropTypes.arrayOf( PropTypes.object ),
+	data: PropTypes.arrayOf(PropTypes.object),
 
 	/**
 	 * A function which returns a callback function to update the query string for a given `param`.
@@ -159,10 +165,10 @@ ListTable.propTypes = {
 	 * Table Action.
 	 */
 	actions: PropTypes.arrayOf(
-		PropTypes.shape( {
+		PropTypes.shape({
 			key: PropTypes.string,
 			label: PropTypes.string,
-		} )
+		})
 	),
 	/**
 	 * Bulk action

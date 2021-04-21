@@ -2,6 +2,9 @@
  * External dependencies
  */
 
+/**
+ * WordPress dependencies
+ */
 import { useEffect, createPortal } from '@wordpress/element';
 import classnames from 'classnames';
 
@@ -47,7 +50,7 @@ import './style.scss';
  * @param {} props.popoverPosition - Position where the popover should be shown
  * @param {Object | null} [props.style=null] - Additional style params
  */
-function Popover( props ) {
+function Popover(props) {
 	const {
 		children,
 		className,
@@ -63,9 +66,9 @@ function Popover( props ) {
 	 *
 	 * @param {Event} ev - Event
 	 */
-	function onOutside( ev ) {
+	function onOutside(ev) {
 		if (
-			ClickOutside.isOutside( ev, popoverPosition.ref ) === false &&
+			ClickOutside.isOutside(ev, popoverPosition.ref) === false &&
 			ev.key !== 'Escape'
 		) {
 			return;
@@ -75,30 +78,30 @@ function Popover( props ) {
 	}
 
 	// Close popover when window resized
-	useEffect( () => {
-		window.addEventListener( 'resize', onClose );
+	useEffect(() => {
+		window.addEventListener('resize', onClose);
 
 		return () => {
-			window.removeEventListener( 'resize', onClose );
+			window.removeEventListener('resize', onClose);
 		};
-	}, [] );
+	}, []);
 
 	return createPortal(
 		<ClickOutside
-			className={ classnames( 'ea-popover', className ) }
-			onOutside={ onOutside }
+			className={classnames('ea-popover', className)}
+			onOutside={onOutside}
 		>
 			<PopoverContainer
-				position={ getPosition( popoverPosition ) }
-				popoverPosition={ popoverPosition }
-				align={ align }
-				hasArrow={ hasArrow }
-				style={ style }
+				position={getPosition(popoverPosition)}
+				popoverPosition={popoverPosition}
+				align={align}
+				hasArrow={hasArrow}
+				style={style}
 			>
-				{ children }
+				{children}
 			</PopoverContainer>
 		</ClickOutside>,
-		getPortal( 'ea-dropdown-portal' )
+		getPortal('ea-dropdown-portal')
 	);
 }
 
@@ -107,9 +110,9 @@ function Popover( props ) {
  *
  * @param {HTMLElement|null} ref - The dom node.
  */
-export function getPopoverPosition( ref ) {
-	const parentNode = document.getElementById( 'wpwrap' );
-	if ( ref === null || parentNode === null ) {
+export function getPopoverPosition(ref) {
+	const parentNode = document.getElementById('wpwrap');
+	if (ref === null || parentNode === null) {
 		return {};
 	}
 

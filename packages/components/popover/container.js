@@ -2,12 +2,18 @@
  * External dependencies
  */
 
+/**
+ * WordPress dependencies
+ */
 import { useState, useCallback } from '@wordpress/element';
 
 /**
  * Local dependencies
  */
 
+/**
+ * Internal dependencies
+ */
 import {
 	getAdjustedPosition,
 	adjustArrowStyle,
@@ -27,15 +33,15 @@ import PopoverArrow from './arrow';
  * @param {Object} props.children - Child components to show inside the popover.
  * @param {Object | null} [props.style=null] - Additional style params
  */
-function PopoverContainer( props ) {
+function PopoverContainer(props) {
 	const { position, children, popoverPosition, align, hasArrow } = props;
-	const [ style, setStyle ] = useState( {
+	const [style, setStyle] = useState({
 		arrow: {},
 		content: { visibility: 'none', ...position },
-	} );
+	});
 	const popoverRef = useCallback(
-		( node ) => {
-			if ( node ) {
+		(node) => {
+			if (node) {
 				const content = getAdjustedPosition(
 					position,
 					popoverPosition,
@@ -44,32 +50,30 @@ function PopoverContainer( props ) {
 					hasArrow
 				);
 
-				setStyle( {
+				setStyle({
 					content,
-					arrow: adjustArrowStyle( content, node ),
-				} );
+					arrow: adjustArrowStyle(content, node),
+				});
 			}
 		},
-		[ position ]
+		[position]
 	);
 
 	return (
 		<>
-			{ hasArrow && (
-				<PopoverArrow style={ style.arrow } align={ align } />
-			) }
+			{hasArrow && <PopoverArrow style={style.arrow} align={align} />}
 
 			<div
 				className="ea-popover__content"
-				style={ {
+				style={{
 					...style.content,
 					visibility:
 						position && position.left ? 'visible' : 'hidden',
-					...( props.style !== null ? props.style : {} ),
-				} }
-				ref={ popoverRef }
+					...(props.style !== null ? props.style : {}),
+				}}
+				ref={popoverRef}
 			>
-				{ children }
+				{children}
 			</div>
 		</>
 	);

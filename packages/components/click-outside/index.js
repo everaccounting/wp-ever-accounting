@@ -2,6 +2,9 @@
  * External dependencies
  */
 
+/**
+ * WordPress dependencies
+ */
 import { useRef, useEffect } from '@wordpress/element';
 
 /**
@@ -25,28 +28,28 @@ import isOutside from './is-outside';
  * @param {string} props.className - Class name for the wrapper
  * @param {requestCallback} props.onOutside - Callback when user clicks outside of the wrapper
  */
-function ClickOutside( props ) {
-	const containerRef = useRef( null );
+function ClickOutside(props) {
+	const containerRef = useRef(null);
 	const { children, onOutside, className } = props;
-	const outside = ( ev ) => {
-		if ( isOutside( ev, containerRef.current ) || ev.key === 'Escape' ) {
-			onOutside( ev );
+	const outside = (ev) => {
+		if (isOutside(ev, containerRef.current) || ev.key === 'Escape') {
+			onOutside(ev);
 		}
 	};
 
-	useEffect( () => {
-		addEventListener( 'mousedown', outside );
-		addEventListener( 'keydown', outside );
+	useEffect(() => {
+		addEventListener('mousedown', outside);
+		addEventListener('keydown', outside);
 
 		return () => {
-			removeEventListener( 'mousedown', outside );
-			removeEventListener( 'keydown', outside );
+			removeEventListener('mousedown', outside);
+			removeEventListener('keydown', outside);
 		};
-	}, [] );
+	}, []);
 
 	return (
-		<div className={ className } ref={ containerRef }>
-			{ children }
+		<div className={className} ref={containerRef}>
+			{children}
 		</div>
 	);
 }

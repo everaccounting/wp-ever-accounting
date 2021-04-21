@@ -15,11 +15,11 @@ import { controls } from '@wordpress/data';
  *
  * @return {Function} Enhanced resolver.
  */
-const ifNotResolved = ( resolver, selectorName ) =>
+const ifNotResolved = (resolver, selectorName) =>
 	/**
 	 * @param {...any} args Original resolver arguments.
 	 */
-	function* resolveIfNotResolved( ...args ) {
+	function* resolveIfNotResolved(...args) {
 		const hasStartedResolution = yield controls.select(
 			'ea/store',
 			'hasStartedResolution',
@@ -27,8 +27,8 @@ const ifNotResolved = ( resolver, selectorName ) =>
 			args
 		);
 
-		if ( ! hasStartedResolution ) {
-			yield* resolver( ...args );
+		if (!hasStartedResolution) {
+			yield* resolver(...args);
 		}
 	};
 

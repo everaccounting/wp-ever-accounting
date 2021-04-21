@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-04-03 19:02:30+00:00\n"
+"POT-Creation-Date: 2021-04-18 11:28:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -36,151 +36,137 @@ msgstr ""
 msgid "Every %d minutes"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:25
+#: includes/abstracts/abstract-contacts-controller.php:24
 #: includes/admin/list-tables/class-customer-list-table.php:117
 #: includes/admin/list-tables/class-vendor-list-table.php:117
 msgid "Contact"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:29
+#: includes/abstracts/abstract-contacts-controller.php:28
 msgid "Unique identifier for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:38
+#: includes/abstracts/abstract-contacts-controller.php:37
 msgid "WP user ID."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:48
+#: includes/abstracts/abstract-contacts-controller.php:47
 msgid "Name for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:58
+#: includes/abstracts/abstract-contacts-controller.php:57
+msgid "Company for the contact."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:67
 msgid "The email address for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:63
+#: includes/abstracts/abstract-contacts-controller.php:75
 msgid "Phone number for the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:71
-msgid "Fax number for the contact."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:79
-msgid "Birth date"
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:85
-msgid "Address 1 of the contact."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:93
-msgid "Country of the contact."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:101
+#: includes/abstracts/abstract-contacts-controller.php:83
 msgid "website of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:110
-msgid "Tax number of the contact"
+#: includes/abstracts/abstract-contacts-controller.php:92
+msgid "Birth date"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:118
-msgid "Currency code for customer."
+#: includes/abstracts/abstract-contacts-controller.php:101
+msgid "Vat number of the contact"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:127
-msgid "Currency ID."
+#: includes/abstracts/abstract-contacts-controller.php:109
+msgid "Street Address of the contact."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:117
+msgid "State Address of the contact."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:125
+msgid "Postcode of the contact."
 msgstr ""
 
 #: includes/abstracts/abstract-contacts-controller.php:133
+msgid "Country of the contact."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:141
+msgid "Currency code for customer."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:147
 #: includes/models/class-currency.php:88
 msgid "Currency code"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:141
-msgid "Note for the contact."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:150
-msgid "Photo of the contact."
-msgstr ""
-
 #: includes/abstracts/abstract-contacts-controller.php:158
-#: includes/abstracts/abstract-transactions-controller.php:230
-#: includes/rest/class-bills-controller.php:590
-#: includes/rest/class-invoices-controller.php:589
-#: includes/rest/class-items-controller.php:398
-msgid "Attachment ID."
+msgid "Thumbnail of the contact"
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:164
-msgid "Attachment Source."
+#: includes/abstracts/abstract-contacts-controller.php:163
+#: includes/rest/class-items-controller.php:101
+msgid "Thumbnail ID."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:169
-#: includes/abstracts/abstract-transactions-controller.php:241
-#: includes/rest/class-bills-controller.php:601
-#: includes/rest/class-invoices-controller.php:600
-#: includes/rest/class-items-controller.php:409
-msgid "Attachment Name."
-msgstr ""
-
-#: includes/abstracts/abstract-contacts-controller.php:176
-msgid "Status of the contact."
+#: includes/abstracts/abstract-contacts-controller.php:171
+#: includes/rest/class-items-controller.php:109
+msgid "Thumbnail src."
 msgstr ""
 
 #: includes/abstracts/abstract-contacts-controller.php:181
+msgid "Total amount paid by the customer."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:187
+msgid "Total amount due by the customer."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:193
+msgid "Status of the contact."
+msgstr ""
+
+#: includes/abstracts/abstract-contacts-controller.php:198
 msgid "Creator of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:186
-#: includes/abstracts/abstract-transactions-controller.php:258
-#: includes/rest/class-accounts-controller.php:161
-#: includes/rest/class-bills-controller.php:613
-#: includes/rest/class-invoices-controller.php:612
-#: includes/rest/class-items-controller.php:508
-#: includes/rest/class-transfers-controller.php:101
+#: includes/abstracts/abstract-contacts-controller.php:203
+#: includes/abstracts/abstract-transactions-controller.php:264
+#: includes/rest/class-items-controller.php:211
 msgid "Creator ID."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:192
-#: includes/abstracts/abstract-transactions-controller.php:264
-#: includes/rest/class-accounts-controller.php:167
-#: includes/rest/class-bills-controller.php:619
-#: includes/rest/class-invoices-controller.php:618
-#: includes/rest/class-items-controller.php:514
-#: includes/rest/class-transfers-controller.php:107
+#: includes/abstracts/abstract-contacts-controller.php:209
+#: includes/abstracts/abstract-transactions-controller.php:269
+#: includes/rest/class-items-controller.php:219
 msgid "Creator name."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:197
-#: includes/abstracts/abstract-transactions-controller.php:269
-#: includes/rest/class-accounts-controller.php:172
-#: includes/rest/class-bills-controller.php:624
-#: includes/rest/class-invoices-controller.php:623
-#: includes/rest/class-items-controller.php:519
-#: includes/rest/class-transfers-controller.php:112
+#: includes/abstracts/abstract-contacts-controller.php:214
+#: includes/abstracts/abstract-transactions-controller.php:274
+#: includes/rest/class-items-controller.php:227
 msgid "Creator Email."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:204
+#: includes/abstracts/abstract-contacts-controller.php:221
 msgid "Created date of the contact."
 msgstr ""
 
-#: includes/abstracts/abstract-contacts-controller.php:227
-#: includes/abstracts/abstract-entities-controller.php:659
-#: includes/rest/class-accounts-controller.php:205
+#: includes/abstracts/abstract-contacts-controller.php:243
+#: includes/abstracts/abstract-entities-controller.php:665
+#: includes/rest/class-accounts-controller.php:214
 #: includes/rest/class-bill-histories-controller.php:436
 #: includes/rest/class-bill-items-controller.php:509
 #: includes/rest/class-bills-controller.php:657
-#: includes/rest/class-categories-controller.php:134
-#: includes/rest/class-currencies-controller.php:182
+#: includes/rest/class-categories-controller.php:142
+#: includes/rest/class-currencies-controller.php:191
 #: includes/rest/class-invoice-histories-controller.php:437
 #: includes/rest/class-invoice-items-controller.php:509
 #: includes/rest/class-invoices-controller.php:656
-#: includes/rest/class-items-controller.php:552
+#: includes/rest/class-items-controller.php:262
 #: includes/rest/class-transfers-controller.php:145
 msgid "Sort collection by object attribute."
 msgstr ""
@@ -189,92 +175,92 @@ msgstr ""
 msgid "Invalid file type. The importer supports CSV and TXT file formats."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:84
+#: includes/abstracts/abstract-entities-controller.php:82
 #: includes/rest/class-codes-controller.php:57
 msgid "Unique identifier for the entity."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:120
+#: includes/abstracts/abstract-entities-controller.php:118
 msgid "Sorry, you cannot list resources."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:135
+#: includes/abstracts/abstract-entities-controller.php:133
 msgid "Sorry, you are not allowed to create resources."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:150
+#: includes/abstracts/abstract-entities-controller.php:148
 msgid "Sorry, you cannot view this resource."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:165
+#: includes/abstracts/abstract-entities-controller.php:163
 msgid "Sorry, you are not allowed to edit this resource."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:180
+#: includes/abstracts/abstract-entities-controller.php:178
 msgid "Sorry, you are not allowed to delete this resource."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:195
+#: includes/abstracts/abstract-entities-controller.php:193
 msgid "Sorry, you are not allowed to batch manipulate this resource."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:211
-#: includes/abstracts/abstract-entities-controller.php:254
-#: includes/abstracts/abstract-entities-controller.php:288
+#: includes/abstracts/abstract-entities-controller.php:209
+#: includes/abstracts/abstract-entities-controller.php:252
+#: includes/abstracts/abstract-entities-controller.php:286
 msgid "You need to specify a entity model class for this controller"
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:215
+#: includes/abstracts/abstract-entities-controller.php:213
 msgid "Invalid ID."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:257
+#: includes/abstracts/abstract-entities-controller.php:255
 msgid "Cannot create existing resource."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:294
+#: includes/abstracts/abstract-entities-controller.php:292
 msgid "Invalid resource ID."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:324
+#: includes/abstracts/abstract-entities-controller.php:322
 #. translators: %s: Class method name.
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:398
+#: includes/abstracts/abstract-entities-controller.php:396
 #. translators: %s: post type
 msgid "The %s cannot be deleted."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:602
+#: includes/abstracts/abstract-entities-controller.php:608
 msgid "Current page of the collection."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:610
+#: includes/abstracts/abstract-entities-controller.php:616
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:619
+#: includes/abstracts/abstract-entities-controller.php:625
 msgid "Limit results to those matching a string."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:625
+#: includes/abstracts/abstract-entities-controller.php:631
 msgid "Limit response to resources published after a given ISO8601 compliant date."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:631
+#: includes/abstracts/abstract-entities-controller.php:637
 msgid "Limit response to resources published before a given ISO8601 compliant date."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:637
+#: includes/abstracts/abstract-entities-controller.php:643
 msgid "Limit result set to specific ids."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:646
+#: includes/abstracts/abstract-entities-controller.php:652
 msgid "Offset the result set by a specific number of items."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:652
+#: includes/abstracts/abstract-entities-controller.php:658
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
@@ -298,135 +284,140 @@ msgstr ""
 msgid "%s is required"
 msgstr ""
 
-#: includes/abstracts/abstract-singleton.php:40
+#: includes/abstracts/abstract-singleton.php:53
 msgid "Unserializing instances of this class is forbidden."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:83
+#: includes/abstracts/abstract-transactions-controller.php:85
 msgid "Transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:87
+#: includes/abstracts/abstract-transactions-controller.php:89
 msgid "Unique identifier for the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:96
+#: includes/abstracts/abstract-transactions-controller.php:98
 msgid "Payment Date of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:103
-#: includes/abstracts/abstract-transactions-controller.php:109
+#: includes/abstracts/abstract-transactions-controller.php:108
+#: includes/abstracts/abstract-transactions-controller.php:117
 msgid "Amount of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:115
+#: includes/abstracts/abstract-transactions-controller.php:123
 msgid "Currency code for transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:124
+#: includes/abstracts/abstract-transactions-controller.php:129
 msgid "Currency Code ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:130
-#: includes/rest/class-accounts-controller.php:119
+#: includes/abstracts/abstract-transactions-controller.php:135
+#: includes/rest/class-accounts-controller.php:128
 #: includes/rest/class-bills-controller.php:474
 #: includes/rest/class-invoices-controller.php:473
 msgid "Currency code."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:138
+#: includes/abstracts/abstract-transactions-controller.php:143
 msgid "Currency rate of the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:147
+#: includes/abstracts/abstract-transactions-controller.php:152
 msgid "Account id of the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:156
+#: includes/abstracts/abstract-transactions-controller.php:158
 msgid "Account ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:162
+#: includes/abstracts/abstract-transactions-controller.php:166
 msgid "Account name."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:170
+#: includes/abstracts/abstract-transactions-controller.php:177
 msgid "Invoice id of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:178
+#: includes/abstracts/abstract-transactions-controller.php:185
 msgid "Category of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:187
+#: includes/abstracts/abstract-transactions-controller.php:191
 #: includes/rest/class-bills-controller.php:499
 #: includes/rest/class-invoices-controller.php:498
-#: includes/rest/class-items-controller.php:463
+#: includes/rest/class-items-controller.php:163
 msgid "Category ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:193
+#: includes/abstracts/abstract-transactions-controller.php:199
 #: includes/rest/class-bills-controller.php:505
 #: includes/rest/class-invoices-controller.php:504
-#: includes/rest/class-items-controller.php:469
+#: includes/rest/class-items-controller.php:171
 msgid "Category Type."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:200
+#: includes/abstracts/abstract-transactions-controller.php:209
 msgid "Description of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:208
+#: includes/abstracts/abstract-transactions-controller.php:217
 msgid "Method of the payment"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:217
+#: includes/abstracts/abstract-transactions-controller.php:227
 msgid "Reference of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:225
+#: includes/abstracts/abstract-transactions-controller.php:235
 msgid "Attachment url of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:236
+#: includes/abstracts/abstract-transactions-controller.php:240
+#: includes/rest/class-bills-controller.php:590
+#: includes/rest/class-invoices-controller.php:589
+msgid "Attachment ID."
+msgstr ""
+
+#: includes/abstracts/abstract-transactions-controller.php:246
 #: includes/rest/class-bills-controller.php:596
 #: includes/rest/class-invoices-controller.php:595
-#: includes/rest/class-items-controller.php:404
 msgid "Attachment src."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:248
+#: includes/abstracts/abstract-transactions-controller.php:253
 msgid "Reconciliation of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:253
+#: includes/abstracts/abstract-transactions-controller.php:258
 msgid "Creator of the transactions"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:276
+#: includes/abstracts/abstract-transactions-controller.php:281
 #: includes/rest/class-transfers-controller.php:119
 msgid "Created date of the transaction."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:286
+#: includes/abstracts/abstract-transactions-controller.php:291
 msgid "Contact id of the transaction"
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:294
+#: includes/abstracts/abstract-transactions-controller.php:296
 #: includes/rest/class-bills-controller.php:521
 #: includes/rest/class-invoices-controller.php:520
 msgid "Contact ID."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:300
+#: includes/abstracts/abstract-transactions-controller.php:304
 msgid "Contact name."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:332
+#: includes/abstracts/abstract-transactions-controller.php:339
 msgid "Sort collection by transaction attribute."
 msgstr ""
 
-#: includes/abstracts/abstract-transactions-controller.php:345
+#: includes/abstracts/abstract-transactions-controller.php:352
 msgid "Limit results to those matching accounts."
 msgstr ""
 
@@ -447,7 +438,7 @@ msgstr ""
 msgid "List of delete resources."
 msgstr ""
 
-#: includes/admin/class-admin.php:160
+#: includes/admin/class-admin.php:159
 #. translators: %s page
 msgid "If you like %1$s please leave us a %2$s rating. A huge thanks in advance!"
 msgstr ""
@@ -456,35 +447,16 @@ msgstr ""
 msgid "Ever Accounting"
 msgstr ""
 
-#: includes/admin/class-admin.php:162
+#: includes/admin/class-admin.php:161
 msgid "five star"
 msgstr ""
 
-#: includes/admin/class-admin.php:162
+#: includes/admin/class-admin.php:161
 msgid "Thanks :)"
 msgstr ""
 
-#: includes/admin/class-admin.php:171
+#: includes/admin/class-admin.php:170
 msgid "Thank you for using with Ever Accounting."
-msgstr ""
-
-#: includes/admin/class-assets.php:64 includes/admin/class-menu.php:67
-#: includes/admin/class-menu.php:68 includes/admin/ea-admin-functions.php:117
-#: includes/admin/ea-admin-functions.php:157
-#: includes/admin/ea-admin-functions.php:191
-msgid "Accounting"
-msgstr ""
-
-#: includes/admin/class-assets.php:140
-msgid "Could not find the uploaded file, please try again"
-msgstr ""
-
-#: includes/admin/class-assets.php:141
-msgid "  - Select field to preview data -"
-msgstr ""
-
-#: includes/admin/class-assets.php:142
-msgid "(Required)"
 msgstr ""
 
 #: includes/admin/class-bill-actions.php:37
@@ -625,7 +597,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:93
 #: includes/admin/views/revenues/view-income.php:137
 #: includes/models/class-bill.php:73 includes/models/class-invoice.php:74
-#: includes/rest/class-categories-controller.php:63
+#: includes/rest/class-categories-controller.php:72
 msgid "Category"
 msgstr ""
 
@@ -667,7 +639,7 @@ msgstr ""
 #: includes/admin/views/reconciliations/edit-reconciliation.php:55
 #: includes/admin/views/revenues/edit-revenue.php:59
 #: includes/class-settings.php:167
-#: includes/rest/class-accounts-controller.php:66
+#: includes/rest/class-accounts-controller.php:75
 msgid "Account"
 msgstr ""
 
@@ -778,56 +750,62 @@ msgstr ""
 msgid "Sorry, Invoice does not exist"
 msgstr ""
 
+#: includes/admin/class-menu.php:67 includes/admin/class-menu.php:68
+#: includes/admin/ea-admin-functions.php:117
+#: includes/admin/ea-admin-functions.php:157
+#: includes/admin/ea-admin-functions.php:191 includes/class-assets.php:77
+msgid "Accounting"
+msgstr ""
+
 #: includes/admin/class-menu.php:77 includes/admin/class-menu.php:78
 #: includes/admin/views/admin-page-overview.php:9
 msgid "Overview"
 msgstr ""
 
-#: includes/admin/class-menu.php:92 includes/admin/class-menu.php:93
-#: includes/admin/class-menu.php:213
+#: includes/admin/class-menu.php:91 includes/admin/class-menu.php:92
+#: includes/admin/class-menu.php:206
 #: includes/admin/views/items/edit-item.php:25
 #: includes/admin/views/items/list-item.php:32
 #: includes/admin/views/reconciliations/reconciliations.php:17
 msgid "Items"
 msgstr ""
 
-#: includes/admin/class-menu.php:107 includes/admin/class-menu.php:108
-#: includes/admin/class-menu.php:345
+#: includes/admin/class-menu.php:105 includes/admin/class-menu.php:106
+#: includes/admin/class-menu.php:338
 #: includes/admin/reports/class-expenses.php:191
 #: includes/admin/reports/class-profits.php:171
-#: includes/admin/reports/class-sales.php:190 includes/class-install.php:249
-#: assets/js/admin/table/index.js:59
+#: includes/admin/reports/class-sales.php:190 includes/class-install.php:246
 msgid "Sales"
 msgstr ""
 
-#: includes/admin/class-menu.php:122 includes/admin/class-menu.php:123
-#: includes/admin/class-menu.php:346
+#: includes/admin/class-menu.php:119 includes/admin/class-menu.php:120
+#: includes/admin/class-menu.php:339
 msgid "Expenses"
 msgstr ""
 
-#: includes/admin/class-menu.php:137 includes/admin/class-menu.php:138
+#: includes/admin/class-menu.php:133 includes/admin/class-menu.php:134
 msgid "Banking"
 msgstr ""
 
-#: includes/admin/class-menu.php:152 includes/admin/class-menu.php:153
+#: includes/admin/class-menu.php:147 includes/admin/class-menu.php:148
 msgid "Tools"
 msgstr ""
 
-#: includes/admin/class-menu.php:167 includes/admin/class-menu.php:168
+#: includes/admin/class-menu.php:161 includes/admin/class-menu.php:162
 msgid "Reports"
 msgstr ""
 
-#: includes/admin/class-menu.php:182 includes/admin/class-menu.php:183
+#: includes/admin/class-menu.php:175 includes/admin/class-menu.php:176
 msgid "React"
 msgstr ""
 
-#: includes/admin/class-menu.php:229
+#: includes/admin/class-menu.php:222
 #: includes/admin/views/revenues/edit-revenue.php:22
 #: includes/admin/views/revenues/list-revenue.php:32
 msgid "Revenues"
 msgstr ""
 
-#: includes/admin/class-menu.php:232 includes/admin/class-settings.php:170
+#: includes/admin/class-menu.php:225 includes/admin/class-settings.php:170
 #: includes/admin/ea-admin-functions.php:65
 #: includes/admin/views/customers/view-customer.php:23
 #: includes/admin/views/invoices/edit-invoice.php:29
@@ -836,20 +814,20 @@ msgstr ""
 msgid "Invoices"
 msgstr ""
 
-#: includes/admin/class-menu.php:235
+#: includes/admin/class-menu.php:228
 #: includes/admin/views/customers/edit-customer.php:25
 #: includes/admin/views/customers/list-customer.php:32
 #: includes/admin/views/customers/view-customer.php:39
 msgid "Customers"
 msgstr ""
 
-#: includes/admin/class-menu.php:252
+#: includes/admin/class-menu.php:245
 #: includes/admin/views/payments/edit-payment.php:28
 #: includes/admin/views/payments/list-payment.php:32
 msgid "Payments"
 msgstr ""
 
-#: includes/admin/class-menu.php:255 includes/admin/class-settings.php:231
+#: includes/admin/class-menu.php:248 includes/admin/class-settings.php:231
 #: includes/admin/ea-admin-functions.php:66
 #: includes/admin/views/bills/edit-bill.php:28
 #: includes/admin/views/bills/list-bill.php:23
@@ -858,21 +836,21 @@ msgstr ""
 msgid "Bills"
 msgstr ""
 
-#: includes/admin/class-menu.php:258
+#: includes/admin/class-menu.php:251
 #: includes/admin/views/vendors/edit-vendor.php:29
 #: includes/admin/views/vendors/list-vendor.php:32
 #: includes/admin/views/vendors/view-vendor.php:41
 msgid "Vendors"
 msgstr ""
 
-#: includes/admin/class-menu.php:287
+#: includes/admin/class-menu.php:280
 #: includes/admin/views/accounts/edit-account.php:26
 #: includes/admin/views/accounts/list-account.php:34
 #: includes/admin/views/accounts/view-account.php:39
 msgid "Accounts"
 msgstr ""
 
-#: includes/admin/class-menu.php:290
+#: includes/admin/class-menu.php:283
 #: includes/admin/views/accounts/view-account.php:22
 #: includes/admin/views/customers/view-customer.php:22
 #: includes/admin/views/reconciliations/edit-reconciliation.php:65
@@ -881,14 +859,14 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: includes/admin/class-menu.php:293
+#: includes/admin/class-menu.php:286
 #: includes/admin/views/accounts/view-account.php:23
 #: includes/admin/views/transfers/edit-transfer.php:20
 #: includes/admin/views/transfers/list-transfer.php:23
 msgid "Transfers"
 msgstr ""
 
-#: includes/admin/class-menu.php:311 includes/admin/tools/tools.php:54
+#: includes/admin/class-menu.php:304 includes/admin/tools/tools.php:54
 #: includes/admin/views/accounts/list-account.php:36
 #: includes/admin/views/categories/list-category.php:35
 #: includes/admin/views/currencies/list-currency.php:35
@@ -900,7 +878,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: includes/admin/class-menu.php:314 includes/admin/tools/tools.php:57
+#: includes/admin/class-menu.php:307 includes/admin/tools/tools.php:57
 #: includes/admin/tools/tools.php:94 includes/admin/tools/tools.php:108
 #: includes/admin/tools/tools.php:122 includes/admin/tools/tools.php:136
 #: includes/admin/tools/tools.php:150 includes/admin/tools/tools.php:164
@@ -915,26 +893,26 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: includes/admin/class-menu.php:316 includes/admin/tools/tools.php:59
+#: includes/admin/class-menu.php:309 includes/admin/tools/tools.php:59
 msgid "System Info"
 msgstr ""
 
-#: includes/admin/class-menu.php:347
+#: includes/admin/class-menu.php:340
 msgid "Profits"
 msgstr ""
 
-#: includes/admin/class-menu.php:348
+#: includes/admin/class-menu.php:341
 msgid "Cashflow"
 msgstr ""
 
-#: includes/admin/class-menu.php:593 includes/admin/class-settings.php:297
+#: includes/admin/class-menu.php:586 includes/admin/class-settings.php:297
 #: includes/admin/ea-admin-functions.php:27
 #: includes/admin/views/currencies/edit-currency.php:25
 #: includes/admin/views/currencies/list-currency.php:30
 msgid "Currencies"
 msgstr ""
 
-#: includes/admin/class-menu.php:594 includes/admin/class-settings.php:294
+#: includes/admin/class-menu.php:587 includes/admin/class-settings.php:294
 #: includes/admin/ea-admin-functions.php:28
 #: includes/admin/reports/class-expenses.php:268
 #: includes/admin/reports/class-profits.php:248
@@ -1012,8 +990,7 @@ msgstr ""
 #: includes/admin/views/vendors/edit-vendor.php:60
 #: includes/admin/views/vendors/view-vendor.php:136
 #: includes/class-emails.php:46 includes/class-settings.php:79
-#: includes/models/class-customer.php:64 includes/models/class-vendor.php:63
-#: assets/js/admin/table/index.js:49
+#: includes/models/class-customer.php:66 includes/models/class-vendor.php:65
 msgid "Name"
 msgstr ""
 
@@ -1126,7 +1103,7 @@ msgstr ""
 #: includes/admin/views/vendors/view-vendor.php:140
 #: includes/class-settings.php:175 includes/models/class-bill.php:72
 #: includes/models/class-invoice.php:73
-#: includes/rest/class-currencies-controller.php:66
+#: includes/rest/class-currencies-controller.php:75
 msgid "Currency"
 msgstr ""
 
@@ -1143,8 +1120,8 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:103
 #: includes/admin/views/revenues/view-income.php:102
 #: includes/admin/views/transfers/edit-transfer.php:92
-#: includes/class-settings.php:183 includes/models/class-payment.php:67
-#: includes/models/class-revenue.php:66
+#: includes/class-settings.php:183 includes/models/class-payment.php:69
+#: includes/models/class-revenue.php:68
 msgid "Payment Method"
 msgstr ""
 
@@ -1207,11 +1184,11 @@ msgstr ""
 #: includes/admin/views/bills/bill-items.php:13
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:16
-#: includes/class-install.php:379 includes/class-install.php:385
+#: includes/class-install.php:376 includes/class-install.php:382
 #: includes/class-settings.php:233 includes/class-settings.php:291
 #: includes/ea-category-functions.php:24
-#: includes/rest/class-items-controller.php:363
-#: templates/bill/bill-items.php:15 templates/emails/invoice-details.php:27
+#: includes/rest/class-items-controller.php:66 templates/bill/bill-items.php:15
+#: templates/emails/invoice-details.php:27
 #: templates/invoice/invoice-items.php:15
 msgid "Item"
 msgstr ""
@@ -1223,7 +1200,7 @@ msgstr ""
 
 #: includes/admin/class-settings.php:219 includes/admin/class-settings.php:280
 #: includes/admin/views/reconciliations/reconciliations.php:25
-#: includes/class-install.php:380 includes/class-install.php:386
+#: includes/class-install.php:377 includes/class-install.php:383
 #: includes/class-settings.php:239 includes/class-settings.php:297
 #: templates/emails/invoice-details.php:28
 msgid "Price"
@@ -1239,7 +1216,7 @@ msgstr ""
 #: includes/admin/views/invoices/invoice-items.php:15
 #: includes/admin/views/js/modal-add-invoice-item.php:17
 #: includes/admin/views/reconciliations/reconciliations.php:24
-#: includes/class-install.php:381 includes/class-install.php:387
+#: includes/class-install.php:378 includes/class-install.php:384
 #: includes/class-settings.php:245 includes/class-settings.php:303
 #: templates/bill/bill-items.php:17 templates/emails/invoice-details.php:29
 #: templates/invoice/invoice-items.php:17
@@ -1834,7 +1811,7 @@ msgstr ""
 #: includes/admin/list-tables/class-category-list-table.php:124
 #: includes/admin/list-tables/class-transaction-list-table.php:108
 #: includes/admin/views/categories/edit-category.php:59
-#: includes/models/class-payment.php:63 includes/models/class-revenue.php:62
+#: includes/models/class-payment.php:65 includes/models/class-revenue.php:64
 msgid "Type"
 msgstr ""
 
@@ -2906,9 +2883,9 @@ msgstr ""
 
 #: includes/admin/views/currencies/edit-currency.php:64
 #: includes/admin/views/js/modal-add-currency.php:25
-#: includes/models/class-customer.php:65
+#: includes/models/class-customer.php:67
 #: includes/models/class-document-item.php:98
-#: includes/models/class-vendor.php:64
+#: includes/models/class-vendor.php:66
 msgid "Currency Code"
 msgstr ""
 
@@ -3287,7 +3264,7 @@ msgstr ""
 
 #: includes/admin/views/payments/view-payment.php:120
 #: includes/admin/views/revenues/view-income.php:115
-#: includes/models/class-payment.php:64 templates/bill/bill-meta.php:35
+#: includes/models/class-payment.php:66 templates/bill/bill-meta.php:35
 #: templates/invoice/invoice-meta.php:35
 msgid "Payment Date"
 msgstr ""
@@ -3534,55 +3511,67 @@ msgstr ""
 msgid "Error: Cheatin&#8217; huh?."
 msgstr ""
 
-#: includes/class-controller.php:100
+#: includes/class-assets.php:168
+msgid "Could not find the uploaded file, please try again"
+msgstr ""
+
+#: includes/class-assets.php:169
+msgid "  - Select field to preview data -"
+msgstr ""
+
+#: includes/class-assets.php:170
+msgid "(Required)"
+msgstr ""
+
+#: includes/class-controller.php:99
 msgid "Duplicate account."
 msgstr ""
 
-#: includes/class-controller.php:238
+#: includes/class-controller.php:233
 msgid "Payment date is required."
 msgstr ""
 
-#: includes/class-controller.php:242 includes/class-controller.php:291
+#: includes/class-controller.php:237 includes/class-controller.php:285
 msgid "Payment method is required."
 msgstr ""
 
-#: includes/class-controller.php:247
+#: includes/class-controller.php:242
 msgid "A valid payment category is required."
 msgstr ""
 
-#: includes/class-controller.php:252
+#: includes/class-controller.php:247
 msgid "Vendor is not valid."
 msgstr ""
 
-#: includes/class-controller.php:257
+#: includes/class-controller.php:252
 msgid "Account is not valid."
 msgstr ""
 
-#: includes/class-controller.php:261
+#: includes/class-controller.php:256
 msgid "Payment amount is required."
 msgstr ""
 
-#: includes/class-controller.php:287
+#: includes/class-controller.php:281
 msgid "Revenue date is required."
 msgstr ""
 
-#: includes/class-controller.php:296
+#: includes/class-controller.php:290
 msgid "A valid income category is required."
 msgstr ""
 
-#: includes/class-controller.php:301
+#: includes/class-controller.php:295
 msgid "Account is required."
 msgstr ""
 
-#: includes/class-controller.php:306
+#: includes/class-controller.php:300
 msgid "Customer is not valid."
 msgstr ""
 
-#: includes/class-controller.php:310
+#: includes/class-controller.php:304
 msgid "Revenue amount is required."
 msgstr ""
 
-#: includes/class-controller.php:349
+#: includes/class-controller.php:342
 msgid "Duplicate category."
 msgstr ""
 
@@ -3590,35 +3579,35 @@ msgstr ""
 msgid "View settings"
 msgstr ""
 
-#: includes/class-install.php:88
+#: includes/class-install.php:87
 msgid "View documentation"
 msgstr ""
 
-#: includes/class-install.php:88
+#: includes/class-install.php:87
 msgid "Docs"
 msgstr ""
 
-#: includes/class-install.php:116
+#: includes/class-install.php:113
 msgid "Monthly"
 msgstr ""
 
-#: includes/class-install.php:121
+#: includes/class-install.php:118
 msgid "Every 15 Days"
 msgstr ""
 
-#: includes/class-install.php:126
+#: includes/class-install.php:123
 msgid "Once Weekly"
 msgstr ""
 
-#: includes/class-install.php:233
+#: includes/class-install.php:230
 msgid "Deposit"
 msgstr ""
 
-#: includes/class-install.php:241 includes/ea-category-functions.php:23
+#: includes/class-install.php:238 includes/ea-category-functions.php:23
 msgid "Other"
 msgstr ""
 
-#: includes/class-install.php:260 includes/class-install.php:268
+#: includes/class-install.php:257 includes/class-install.php:265
 #: includes/models/class-transfer.php:399
 #: includes/models/class-transfer.php:402
 #: includes/models/class-transfer.php:410
@@ -4071,11 +4060,11 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/models/class-account.php:98
+#: includes/models/class-account.php:99
 msgid "Account name"
 msgstr ""
 
-#: includes/models/class-account.php:99
+#: includes/models/class-account.php:100
 msgid "Account number"
 msgstr ""
 
@@ -4195,15 +4184,15 @@ msgstr ""
 msgid "Note content"
 msgstr ""
 
-#: includes/models/class-payment.php:65 includes/models/class-revenue.php:64
+#: includes/models/class-payment.php:67 includes/models/class-revenue.php:66
 msgid "Account ID"
 msgstr ""
 
-#: includes/models/class-payment.php:66 includes/models/class-revenue.php:65
+#: includes/models/class-payment.php:68 includes/models/class-revenue.php:67
 msgid "Category ID"
 msgstr ""
 
-#: includes/models/class-revenue.php:63
+#: includes/models/class-revenue.php:65
 msgid "Revenue Date"
 msgstr ""
 
@@ -4242,67 +4231,61 @@ msgstr ""
 msgid "Transfer data corrupted"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:70
+#: includes/rest/class-accounts-controller.php:79
 #: includes/rest/class-bill-histories-controller.php:64
 #: includes/rest/class-bill-items-controller.php:64
 #: includes/rest/class-invoice-histories-controller.php:64
 #: includes/rest/class-invoice-items-controller.php:64
 #: includes/rest/class-invoices-controller.php:64
-#: includes/rest/class-items-controller.php:64
 msgid "Unique identifier for the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:79
+#: includes/rest/class-accounts-controller.php:88
 msgid "Name of the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:88
+#: includes/rest/class-accounts-controller.php:97
 msgid "Number of the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:97
+#: includes/rest/class-accounts-controller.php:106
 msgid "Opening balance of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:107
+#: includes/rest/class-accounts-controller.php:116
 msgid "Currency code of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:113
+#: includes/rest/class-accounts-controller.php:122
 #: includes/rest/class-bills-controller.php:468
 #: includes/rest/class-invoices-controller.php:467
 msgid "Currency code ID."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:127
+#: includes/rest/class-accounts-controller.php:136
 msgid "Bank name of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:135
+#: includes/rest/class-accounts-controller.php:144
 msgid "Phone number of the bank"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:143
+#: includes/rest/class-accounts-controller.php:152
 msgid "Address of the bank"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:151
-#: includes/rest/class-categories-controller.php:103
-#: includes/rest/class-currencies-controller.php:151
-#: includes/rest/class-items-controller.php:498
+#: includes/rest/class-accounts-controller.php:160
+#: includes/rest/class-categories-controller.php:112
+#: includes/rest/class-currencies-controller.php:160
+#: includes/rest/class-items-controller.php:199
 msgid "Status of the item."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:156
-#: includes/rest/class-items-controller.php:503
-msgid "Creator of the account"
-msgstr ""
-
-#: includes/rest/class-accounts-controller.php:179
+#: includes/rest/class-accounts-controller.php:188
 #: includes/rest/class-bill-items-controller.php:483
-#: includes/rest/class-categories-controller.php:108
+#: includes/rest/class-categories-controller.php:117
 #: includes/rest/class-invoice-items-controller.php:484
-#: includes/rest/class-items-controller.php:526
+#: includes/rest/class-items-controller.php:237
 msgid "Created date of the account."
 msgstr ""
 
@@ -4318,8 +4301,6 @@ msgstr ""
 #: includes/rest/class-invoice-items-controller.php:297
 #: includes/rest/class-invoices-controller.php:241
 #: includes/rest/class-invoices-controller.php:293
-#: includes/rest/class-items-controller.php:241
-#: includes/rest/class-items-controller.php:295
 msgid "Could not find the account"
 msgstr ""
 
@@ -4329,7 +4310,6 @@ msgstr ""
 #: includes/rest/class-invoice-histories-controller.php:263
 #: includes/rest/class-invoice-items-controller.php:263
 #: includes/rest/class-invoices-controller.php:261
-#: includes/rest/class-items-controller.php:262
 msgid "Could not find the vendor"
 msgstr ""
 
@@ -4339,7 +4319,6 @@ msgstr ""
 #: includes/rest/class-invoice-histories-controller.php:303
 #: includes/rest/class-invoice-items-controller.php:304
 #: includes/rest/class-invoices-controller.php:300
-#: includes/rest/class-items-controller.php:302
 msgid "This account cannot be deleted."
 msgstr ""
 
@@ -4389,13 +4368,13 @@ msgstr ""
 
 #: includes/rest/class-bill-items-controller.php:397
 #: includes/rest/class-invoice-items-controller.php:398
-#: includes/rest/class-items-controller.php:376
+#: includes/rest/class-items-controller.php:79
 msgid "Name of the item."
 msgstr ""
 
 #: includes/rest/class-bill-items-controller.php:406
 #: includes/rest/class-invoice-items-controller.php:407
-#: includes/rest/class-items-controller.php:385
+#: includes/rest/class-items-controller.php:88
 msgid "Sku of the item."
 msgstr ""
 
@@ -4416,19 +4395,16 @@ msgstr ""
 
 #: includes/rest/class-bill-items-controller.php:444
 #: includes/rest/class-invoice-items-controller.php:445
-#: includes/rest/class-items-controller.php:476
 msgid "Tax id of the item."
 msgstr ""
 
 #: includes/rest/class-bill-items-controller.php:452
 #: includes/rest/class-invoice-items-controller.php:453
-#: includes/rest/class-items-controller.php:484
 msgid "Tax ID."
 msgstr ""
 
 #: includes/rest/class-bill-items-controller.php:458
 #: includes/rest/class-invoice-items-controller.php:459
-#: includes/rest/class-items-controller.php:490
 msgid "Tax Rate."
 msgstr ""
 
@@ -4534,27 +4510,28 @@ msgstr ""
 msgid "Attachment url of the bill."
 msgstr ""
 
-#: includes/rest/class-bills-controller.php:608
-msgid "Creator of the bill."
+#: includes/rest/class-bills-controller.php:601
+#: includes/rest/class-invoices-controller.php:600
+msgid "Attachment Name."
 msgstr ""
 
 #: includes/rest/class-bills-controller.php:631
 msgid "Created date of the bill."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:67
+#: includes/rest/class-categories-controller.php:76
 msgid "Unique identifier for the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:76
+#: includes/rest/class-categories-controller.php:85
 msgid "Name of the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:85
+#: includes/rest/class-categories-controller.php:94
 msgid "Type of the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:95
+#: includes/rest/class-categories-controller.php:104
 msgid "Color of the category."
 msgstr ""
 
@@ -4575,7 +4552,7 @@ msgid "Currency symbol."
 msgstr ""
 
 #: includes/rest/class-codes-controller.php:186
-#: includes/rest/class-currencies-controller.php:106
+#: includes/rest/class-currencies-controller.php:115
 msgid "Precision count."
 msgstr ""
 
@@ -4603,39 +4580,39 @@ msgstr ""
 msgid "Full name of country."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:70
+#: includes/rest/class-currencies-controller.php:79
 msgid "Unique identifier for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:79
+#: includes/rest/class-currencies-controller.php:88
 msgid "Name of the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:88
+#: includes/rest/class-currencies-controller.php:97
 msgid "Unique code for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:97
+#: includes/rest/class-currencies-controller.php:106
 msgid "Current rate for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:114
+#: includes/rest/class-currencies-controller.php:123
 msgid "Currency Sumbol."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:123
+#: includes/rest/class-currencies-controller.php:132
 msgid "Position."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:133
+#: includes/rest/class-currencies-controller.php:142
 msgid "Decimal separator count."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:142
+#: includes/rest/class-currencies-controller.php:151
 msgid "Thousand separator count."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:156
+#: includes/rest/class-currencies-controller.php:165
 msgid "Created date of the currency."
 msgstr ""
 
@@ -4706,7 +4683,6 @@ msgid "Tax name of the invoice item"
 msgstr ""
 
 #: includes/rest/class-invoices-controller.php:360
-#: assets/js/admin/table/index.js:38
 msgid "Invoice"
 msgstr ""
 
@@ -4802,40 +4778,48 @@ msgstr ""
 msgid "Attachment url of the invoice"
 msgstr ""
 
-#: includes/rest/class-invoices-controller.php:607
-msgid "Creator of the invoice"
-msgstr ""
-
 #: includes/rest/class-invoices-controller.php:630
 msgid "Created date of the invoice."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:367
+#: includes/rest/class-items-controller.php:70
 msgid "Unique identifier for the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:393
-msgid "Attachment of the invoice"
+#: includes/rest/class-items-controller.php:96
+msgid "Thumbnail of the item"
 msgstr ""
 
-#: includes/rest/class-items-controller.php:416
+#: includes/rest/class-items-controller.php:119
 msgid "Description of the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:424
+#: includes/rest/class-items-controller.php:127
 msgid "Sale price of the item"
 msgstr ""
 
-#: includes/rest/class-items-controller.php:434
+#: includes/rest/class-items-controller.php:137
 msgid "Purchase price of the item"
 msgstr ""
 
-#: includes/rest/class-items-controller.php:444
+#: includes/rest/class-items-controller.php:147
 msgid "Quantity of the item."
 msgstr ""
 
-#: includes/rest/class-items-controller.php:454
-msgid "Category id of the item."
+#: includes/rest/class-items-controller.php:157
+msgid "Category of the item."
+msgstr ""
+
+#: includes/rest/class-items-controller.php:181
+msgid "Sales tax of the item."
+msgstr ""
+
+#: includes/rest/class-items-controller.php:190
+msgid "Purchase tax of the item."
+msgstr ""
+
+#: includes/rest/class-items-controller.php:204
+msgid "Creator of the item"
 msgstr ""
 
 #: includes/rest/class-setting-options-controller.php:42
@@ -4902,10 +4886,6 @@ msgstr ""
 msgid "Expense ID of the transaction."
 msgstr ""
 
-#: includes/rest/class-transfers-controller.php:96
-msgid "Creator of the transfer"
-msgstr ""
-
 #: includes/utilities/class-batch.php:193
 msgid "A batch item class must be specified."
 msgstr ""
@@ -4960,11 +4940,11 @@ msgstr ""
 msgid "Invoice To:"
 msgstr ""
 
-#: wp-ever-accounting.php:80 wp-ever-accounting.php:91
+#: wp-ever-accounting.php:81 wp-ever-accounting.php:92
 msgid "Cheatin&#8217; huh?"
 msgstr ""
 
-#: wp-ever-accounting.php:272
+#: wp-ever-accounting.php:270
 #. translators: 1: error message 2: file name and path 3: line number
 msgid "%1$s in %2$s on line %3$s"
 msgstr ""
@@ -4981,21 +4961,17 @@ msgstr ""
 msgid "everaccounting"
 msgstr ""
 
-#: includes/class-install.php:700
+#: includes/class-install.php:697
 msgctxt "User role"
 msgid "Accounting Manager"
 msgstr ""
 
-#: includes/class-install.php:701
+#: includes/class-install.php:698
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
 
-#: assets/js/admin/table/index.js:64
-msgid "SKU"
-msgstr ""
-
-#: assets/js/admin/table/index.js:69
-msgid "Update"
+#: packages/components/src/list-table/table-filter.js:86
+msgid "Clear all filters"
 msgstr ""
 

@@ -1,46 +1,55 @@
+/**
+ * WordPress dependencies
+ */
 import { __ } from '@wordpress/i18n';
 import { useState, useEffect } from '@wordpress/element';
 import { Button } from '@wordpress/components';
+/**
+ * External dependencies
+ */
 import { get, isEmpty, partial, pickBy } from 'lodash';
 import PropTypes from 'prop-types';
+/**
+ * Internal dependencies
+ */
 import SelectFilter from './select-filter';
 import TextFilter from './text-filter';
 
 import './style.scss';
 // import Select from '../select';
 
-function TableFilter( { filters, onFilter, value = {} } ) {
-	const [ applied, setApplied ] = useState( value );
+function TableFilter({ filters, onFilter, value = {} }) {
+	const [applied, setApplied] = useState(value);
 
-	const setFilter = ( property, value ) => {
-		setApplied( ( applied ) => ( { ...applied, [ property ]: value } ) );
+	const setFilter = (property, value) => {
+		setApplied((applied) => ({ ...applied, [property]: value }));
 	};
 
 	const reset = () => {
-		setApplied( {} );
+		setApplied({});
 	};
 
-	useEffect( () => {
+	useEffect(() => {
 		const values = {};
-		Object.keys( filters ).map( ( key, idx ) => {
-			const filter = filters[ key ];
-			const { transform = ( x ) => x } = filter;
-			const value = applied[ key ] && transform( applied[ key ] );
+		Object.keys(filters).map((key, idx) => {
+			const filter = filters[key];
+			const { transform = (x) => x } = filter;
+			const value = applied[key] && transform(applied[key]);
 			const { input } = filter;
 			const { defaultVal } = input;
-			values[ key ] = value || defaultVal;
-		} );
-		onFilter( values );
-	}, [ applied ] );
+			values[key] = value || defaultVal;
+		});
+		onFilter(values);
+	}, [applied]);
 
-	const flatten = ( values ) => {
+	const flatten = (values) => {
 		const FilterValue = {};
-		Object.keys( filters ).map( ( key, idx ) => {
-			const filter = filters[ key ];
-			const { transform = ( x ) => x } = filter;
-			FilterValue[ key ] = values[ key ] && transform( values[ key ] );
-		} );
-		return pickBy( FilterValue, ( value ) => ! isEmpty( value ) );
+		Object.keys(filters).map((key, idx) => {
+			const filter = filters[key];
+			const { transform = (x) => x } = filter;
+			FilterValue[key] = values[key] && transform(values[key]);
+		});
+		return pickBy(FilterValue, (value) => !isEmpty(value));
 	};
 
 	const componentMap = {
@@ -51,32 +60,32 @@ function TableFilter( { filters, onFilter, value = {} } ) {
 
 	return (
 		<div className="ea-table-filter alignleft actions">
-			{ Object.keys( filters ).map( ( key, idx ) => {
-				const filter = filters[ key ];
+			{Object.keys(filters).map((key, idx) => {
+				const filter = filters[key];
 				const { component, input } = filter;
-				const FilterComponent = componentMap[ component ];
+				const FilterComponent = componentMap[component];
 				const { defaultVal } = input;
 				return (
 					<FilterComponent
-						key={ key + idx }
+						key={key + idx}
 						className="ea-table-filter__item"
-						filter={ {
+						filter={{
 							...filter,
 							input: {
 								...filter.input,
-								value: get( applied, [ key ], defaultVal ),
+								value: get(applied, [key], defaultVal),
 							},
-						} }
-						onFilterChange={ partial( setFilter, key ) }
+						}}
+						onFilterChange={partial(setFilter, key)}
 					/>
 				);
-			} ) }
+			})}
 
-			{ ! isEmpty( flatten( applied ) ) && (
-				<Button onClick={ reset } isSecondary>
-					{ __( 'Clear all filters', 'wp-ever-accounting' ) }
+			{!isEmpty(flatten(applied)) && (
+				<Button onClick={reset} isSecondary>
+					{__('Clear all filters', 'wp-ever-accounting')}
 				</Button>
-			) }
+			)}
 		</div>
 	);
 }
@@ -155,11 +164,11 @@ function TableFilter( { filters, onFilter, value = {} } ) {
 
 TableFilter.propTypes = {
 	filters: PropTypes.objectOf(
-		PropTypes.shape( {
+		PropTypes.shape({
 			input: PropTypes.object,
 			component: PropTypes.string,
 			transform: PropTypes.func,
-		} )
+		})
 	).isRequired,
 	onFilter: PropTypes.func,
 };

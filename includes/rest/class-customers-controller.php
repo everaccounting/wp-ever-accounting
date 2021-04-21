@@ -37,7 +37,6 @@ class Customers_Controller extends Contacts_Controller {
 	 * @since 1.1.1
 	 *
 	 * @var string
-	 *
 	 */
 	protected $entity_type = 'customer';
 
