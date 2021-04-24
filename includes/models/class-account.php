@@ -13,7 +13,6 @@ use EverAccounting\Abstracts\Resource_Model;
 use EverAccounting\Repositories;
 use EverAccounting\Traits\Attachment;
 use EverAccounting\Traits\CurrencyTrait;
-use EverAccounting\Traits\Creator;
 
 defined( 'ABSPATH' ) || exit;
 

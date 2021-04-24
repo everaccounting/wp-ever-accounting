@@ -202,41 +202,6 @@ class Items_Controller extends Entities_Controller {
 					'type'        => 'boolean',
 					'context'     => array( 'embed', 'view', 'edit' ),
 				),
-<<<<<<< HEAD
-				'creator'        => array(
-					'description' => __( 'Creator of the item', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view' ),
-					'required'    => false,
-					'readonly'    => true,
-					'properties'  => array(
-						'id'    => array(
-							'description' => __( 'Creator ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'embed', 'view' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'intval',
-							),
-						),
-						'name'  => array(
-							'description' => __( 'Creator name.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed', 'view' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_text_field',
-							),
-						),
-						'email' => array(
-							'description' => __( 'Creator Email.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed', 'view' ),
-							'arg_options' => array(
-								'sanitize_callback' => 'sanitize_email',
-							),
-						),
-					),
-				),
-=======
 //				'creator'        => array(
 //					'description' => __( 'Creator of the account', 'wp-ever-accounting' ),
 //					'type'        => 'object',
@@ -260,7 +225,6 @@ class Items_Controller extends Entities_Controller {
 //						),
 //					),
 //				),
->>>>>>> develop
 				'date_created'   => array(
 					'description' => __( 'Created date of the account.', 'wp-ever-accounting' ),
 					'type'        => 'string',
