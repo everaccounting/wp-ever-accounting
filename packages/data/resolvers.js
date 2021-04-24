@@ -14,14 +14,14 @@ import {addQueryArgs} from '@wordpress/url';
  */
 import {
 	receiveCurrentUser,
-	receiveEntityRecords,
+	receiveEntities,
 	receiveEntityTotal,
 	receiveUserQuery,
 	receiveRoutes,
 } from './actions';
 import {fetchFromAPIWithTotal, select, resolveSelect} from './controls';
 import {STORE_KEY, API_NAMESPACE} from './constants';
-import {DEFAULT_ENTITY_KEY, defaultEntities } from './entities';
+import {DEFAULT_ENTITY_KEY, defaultRoutes } from './entities';
 
 import {getNormalizedCommaSeparable} from './utils';
 
@@ -53,7 +53,7 @@ export function* getUsers(query = {}) {
  * @param {Object|undefined} query Optional object of query parameters to
  *                                 include with request.
  */
-export function* getEntityRecord(name, key = '', query = {}) {
+export function* getEntity(name, key = '', query = {}) {
 	const route = yield resolveSelect(STORE_KEY, 'getRoute', name);
 	if (!route) {
 		return;
@@ -89,10 +89,10 @@ export function* getEntityRecord(name, key = '', query = {}) {
 
 		// The resolution cache won't consider query as reusable based on the
 		// fields, so it's tested here, prior to initiating the REST request,
-		// and without causing `getEntityRecords` resolution to occur.
+		// and without causing `getEntities` resolution to occur.
 		const hasRecords = yield select(
 			STORE_KEY,
-			'hasEntityRecords',
+			'hasEntities',
 			name,
 			query
 		);
@@ -104,7 +104,7 @@ export function* getEntityRecord(name, key = '', query = {}) {
 	const record = yield apiFetch({path});
 	console.log(record);
 	console.log({name, record, query});
-	yield receiveEntityRecords(name, record, query);
+	yield receiveEntities(name, record, query);
 }
 
 /**
@@ -113,7 +113,7 @@ export function* getEntityRecord(name, key = '', query = {}) {
  * @param {string}  name   Entity name.
  * @param {Object?} query  Query Object.
  */
-export function* getEntityRecords(name, query = {}) {
+export function* getEntities(name, query = {}) {
 	const route = yield resolveSelect(STORE_KEY, 'getRoute', name);
 	if (!route) {
 		return;
@@ -153,10 +153,10 @@ export function* getEntityRecords(name, query = {}) {
 		});
 	}
 
-	yield receiveEntityRecords(name, records, query);
+	yield receiveEntities(name, records, query);
 	yield receiveEntityTotal(name, total, query);
 	// When requesting all fields, the list of results can be used to
-	// resolve the `getEntityRecord` selector in addition to `getEntityRecords`.
+	// resolve the `getEntity` selector in addition to `getEntities`.
 	// See https://github.com/WordPress/gutenberg/pull/26575
 	if (!query?._fields) {
 		const key = route.key || DEFAULT_ENTITY_KEY;
@@ -164,12 +164,12 @@ export function* getEntityRecords(name, query = {}) {
 			if (record[key]) {
 				yield {
 					type: 'START_RESOLUTION',
-					selectorName: 'getEntityRecord',
+					selectorName: 'getEntity',
 					args: [name, record[key]],
 				};
 				yield {
 					type: 'FINISH_RESOLUTION',
-					selectorName: 'getEntityRecord',
+					selectorName: 'getEntity',
 					args: [name, record[key]],
 				};
 			}
@@ -177,7 +177,7 @@ export function* getEntityRecords(name, query = {}) {
 	}
 }
 
-getEntityRecords.shouldInvalidate = (action, name) => {
+getEntities.shouldInvalidate = (action, name) => {
 	return (
 		(action.type === 'RECEIVE_ITEMS' || action.type === 'REMOVE_ITEMS') &&
 		action.invalidateCache &&
@@ -193,11 +193,11 @@ getEntityRecords.shouldInvalidate = (action, name) => {
  * @param defaults
  * @return {number}
  */
-export function* getEntityTotal(name, query = {}, defaults = 0) {
-	yield resolveSelect(STORE_KEY, 'getEntityRecords', name, query);
+export function* getTotal(name, query = {}, defaults = undefined) {
+	yield resolveSelect(STORE_KEY, 'getEntities', name, query);
 	return yield select(
 		STORE_KEY,
-		'getEntityTotal',
+		'getTotal',
 		name,
 		query,
 		defaults
@@ -224,7 +224,7 @@ export function* getRoutes() {
 	const routes = yield Object.values(schemaRoutes.reduce((memo, route) => {
 		const endpoint = route.replace(/\/\(\?P\<[a-z_]*\>\[\\*[a-z]\-?\]\+\)/g, '');
 		const name = endpoint.replace(`${API_NAMESPACE}/`, '');
-		const setup = find(defaultEntities, {name}) || {key: 'id'}
+		const setup = find(defaultRoutes, {name}) || {key: 'id'}
 		if (name && name !== API_NAMESPACE && !memo[name]) {
 			memo[name] = {name, endpoint: endpoint, ...setup}
 		}

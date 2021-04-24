@@ -50,4 +50,4 @@ module.exports = ( { file, options, env } ) => ( { /* eslint-disable-line */
 				  }
 				: false,
 	},
-} );
+});

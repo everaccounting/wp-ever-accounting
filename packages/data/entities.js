@@ -13,7 +13,7 @@ import { __ } from '@wordpress/i18n';
  */
 export const DEFAULT_ENTITY_KEY = 'id';
 
-export const defaultEntities = [
+export const defaultRoutes = [
 	{
 		name: 'currencies',
 		key: 'code',
@@ -34,7 +34,7 @@ export const defaultEntities = [
  * @return {string} Method name
  */
 export const getMethodName = (name, prefix = 'get', usePlural = false) => {
-	const entity = find(defaultEntities, { name });
+	const entity = find(defaultRoutes, { name });
 	const methodName =
 		usePlural && entity.plural
 			? upperFirst(camelCase(entity.plural))

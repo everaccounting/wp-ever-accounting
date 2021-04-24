@@ -204,7 +204,7 @@ function entity(entityConfig) {
  *
  * @return {Object} Updated state.
  */
-export function entitiesConfig(state = [], action) {
+export function routes(state = [], action) {
 	switch (action.type) {
 		case 'RECEIVE_ROUTES':
 			return [...state, ...action.routes];
@@ -222,11 +222,11 @@ export function entitiesConfig(state = [], action) {
  * @return {Object} Updated state.
  */
 export const entities = (state = {}, action) => {
-	const newConfig = entitiesConfig(state.config, action);
+	const newConfig = routes(state.routes, action);
 
 	// Generates a dynamic reducer for the entities
 	let entitiesDataReducer = state.reducer;
-	if (!entitiesDataReducer || newConfig !== state.config) {
+	if (!entitiesDataReducer || newConfig !== state.routes) {
 		entitiesDataReducer = combineReducers(
 			Object.values(newConfig).reduce(
 				(memo, entityConfig) => ({
@@ -242,7 +242,7 @@ export const entities = (state = {}, action) => {
 
 	if (
 		newData === state.data &&
-		newConfig === state.config &&
+		newConfig === state.routes &&
 		entitiesDataReducer === state.reducer
 	) {
 		return state;
@@ -250,7 +250,7 @@ export const entities = (state = {}, action) => {
 	return {
 		reducer: entitiesDataReducer,
 		data: newData,
-		config: newConfig,
+		routes: newConfig,
 	};
 };
 

@@ -1,6 +1,6 @@
 # Store locks
 
-Operations mutating the store (resolvers, saveEntityRecord) interfere with each other by changing the state used by other "concurrent" operations. The solution is to enable these operations to lock parts of the state tree that are expected to remain constant for the duration of the operation. For example `saveEntityRecord("postType", "book", 3)` would acquire a lock on a book with id=3 and nothing else.
+Operations mutating the store (resolvers, saveEntity) interfere with each other by changing the state used by other "concurrent" operations. The solution is to enable these operations to lock parts of the state tree that are expected to remain constant for the duration of the operation. For example `saveEntity("postType", "book", 3)` would acquire a lock on a book with id=3 and nothing else.
 
 More generally, interfering store operations should run sequentially. Each operation acquires a lock scoped to its state dependencies. If a lock cannot be acquired, the operation is delayed until a lock can be acquired. Locks are either exclusive or shared. If all operations request a shared lock, everything is executed concurrently. If any operation requests an exclusive lock, is it run only after all other locks (shared or exclusive) acting on the same scope are released.
 
@@ -23,7 +23,7 @@ Locks are stored like this:
 ```
 
 A more complete, but still simplified, tree looks like this:
- 
+
 ```jsx
 {
 	"locks": [],

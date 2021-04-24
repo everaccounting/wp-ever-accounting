@@ -77,7 +77,7 @@ export const getUserQueryResults = createSelector(
  * @return {Object} Entity
  */
 export function getRoute(state, name) {
-	return find(state.entities.config, {name});
+	return find(state.entities.routes, {name});
 }
 
 /**
@@ -88,7 +88,7 @@ export function getRoute(state, name) {
  * @return {boolean} Whether the entities are loaded
  */
 export function getRoutes(state) {
-	return state.entities.config;
+	return state.entities.routes;
 }
 
 /**
@@ -103,7 +103,7 @@ export function getRoutes(state) {
  *
  * @return {Object?} Record.
  */
-export function getEntityRecord(state, name, key = '', query = {}) {
+export function getEntity(state, name, key = '', query = {}) {
 	const queriedState = get(state.entities.data, [name, 'queriedData']);
 	if (!queriedState) {
 		return undefined;
@@ -144,9 +144,9 @@ export function getEntityRecord(state, name, key = '', query = {}) {
  *
  * @return {Object?} Object with the entity's raw attributes.
  */
-export const getRawEntityRecord = createSelector(
+export const getRawEntity = createSelector(
 	(state, name, key) => {
-		const record = getEntityRecord(state, name, key);
+		const record = getEntity(state, name, key);
 		return (
 			record &&
 			Object.keys(record).reduce((accumulator, _key) => {
@@ -171,8 +171,8 @@ export const getRawEntityRecord = createSelector(
  *
  * @return {boolean} Whether entity records have been received.
  */
-export function hasEntityRecords(state, name, query = {}) {
-	return Array.isArray(getEntityRecords(state, name, query));
+export function hasEntities(state, name, query = {}) {
+	return Array.isArray(getEntities(state, name, query));
 }
 
 /**
@@ -184,7 +184,7 @@ export function hasEntityRecords(state, name, query = {}) {
  *
  * @return {?Array} Records.
  */
-export function getEntityRecords(state, name, query = {}) {
+export function getEntities(state, name, query = {}) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
@@ -206,7 +206,7 @@ export function getEntityRecords(state, name, query = {}) {
  * @param defaults
  * @return {?Array} Records.
  */
-export function getEntityTotal(state, name, query = {}, defaults = 0) {
+export function getTotal(state, name, query = {}, defaults = undefined) {
 	// Queried data state is prepopulated for all known entities. If this is not
 	// assigned for the given parameters, then it is known to not exist. Thus, a
 	// return value of an empty array is used instead of `null` (where `null` is
@@ -227,7 +227,7 @@ export function getEntityTotal(state, name, query = {}, defaults = 0) {
  *
  * @return {Object?} The entity record's edits.
  */
-export function getEntityRecordEdits(state, name, recordId) {
+export function getEntityEdits(state, name, recordId) {
 	return get(state.entities.data, [name, 'edits', recordId]);
 }
 
@@ -244,10 +244,10 @@ export function getEntityRecordEdits(state, name, recordId) {
  *
  * @return {Object?} The entity record's non transient edits.
  */
-export const getEntityRecordNonTransientEdits = createSelector(
+export const getEntityNonTransientEdits = createSelector(
 	(state, name, recordId) => {
 		const {transientEdits} = getEntity(state, name) || {};
-		const edits = getEntityRecordEdits(state, name, recordId) || {};
+		const edits = getEntityEdits(state, name, recordId) || {};
 		if (!transientEdits) {
 			return edits;
 		}
@@ -258,7 +258,7 @@ export const getEntityRecordNonTransientEdits = createSelector(
 			return acc;
 		}, {});
 	},
-	(state) => [state.entities.config, state.entities.data]
+	(state) => [state.entities.routes, state.entities.data]
 );
 
 /**
@@ -271,10 +271,10 @@ export const getEntityRecordNonTransientEdits = createSelector(
  *
  * @return {boolean} Whether the entity record has edits or not.
  */
-export function hasEditsForEntityRecord(state, name, recordId) {
+export function hasEditsForEntity(state, name, recordId) {
 	return (
-		isSavingEntityRecord(state, name, recordId) ||
-		Object.keys(getEntityRecordNonTransientEdits(state, name, recordId))
+		isSavingEntity(state, name, recordId) ||
+		Object.keys(getEntityNonTransientEdits(state, name, recordId))
 			.length > 0
 	);
 }
@@ -288,10 +288,10 @@ export function hasEditsForEntityRecord(state, name, recordId) {
  *
  * @return {Object?} The entity record, merged with its edits.
  */
-export const getEditedEntityRecord = createSelector(
+export const getEditedEntity = createSelector(
 	(state, name, recordId) => ({
-		...getRawEntityRecord(state, name, recordId),
-		...getEntityRecordEdits(state, name, recordId),
+		...getRawEntity(state, name, recordId),
+		...getEntityEdits(state, name, recordId),
 	}),
 	(state) => [state.entities.data]
 );
@@ -305,7 +305,7 @@ export const getEditedEntityRecord = createSelector(
  *
  * @return {boolean} Whether the entity record is saving or not.
  */
-export function isSavingEntityRecord(state, name, recordId) {
+export function isSavingEntity(state, name, recordId) {
 	return get(
 		state.entities.data,
 		[name, 'saving', recordId, 'pending'],
@@ -322,7 +322,7 @@ export function isSavingEntityRecord(state, name, recordId) {
  *
  * @return {boolean} Whether the entity record is deleting or not.
  */
-export function isDeletingEntityRecord(state, name, recordId) {
+export function isDeletingEntity(state, name, recordId) {
 	return get(
 		state.entities.data,
 		[name, 'deleting', recordId, 'pending'],
@@ -365,7 +365,7 @@ export function getLastEntityDeleteError(state, name, recordId) {
  * @param {Object} query
  * @return {boolean} Returns true if the selector is currently requesting items.
  */
-export function isRequesting(state, selectorName, query = {}) {
-	return select(STORE_KEY).getIsResolving(selectorName, [query]);
+export function isRequesting(state, selectorName,name, query = {}) {
+	return select(STORE_KEY).getIsResolving(selectorName, [name, query]);
 }
 

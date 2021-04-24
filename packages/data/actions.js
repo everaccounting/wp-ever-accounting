@@ -112,7 +112,7 @@ export function receiveRoutes(routes) {
  * @param {?Object}      edits           Edits to reset.
  * @return {Object} Action object.
  */
-export function receiveEntityRecords(
+export function receiveEntities(
 	name,
 	records,
 	query,
@@ -167,13 +167,13 @@ export function receiveEntitySchema(name, properties){
  *                                             call instead of `apiFetch()`.
  *                                             Must return a control descriptor.
  */
-export function* deleteEntityRecord(
+export function* deleteEntity(
 	name,
 	recordId,
 	query,
 	{ __unstableFetch = null } = {}
 ) {
-	const entity = yield select(STORE_KEY, 'getEntity', name);
+	const entity = yield select(STORE_KEY, 'getRoute', name);
 	if (!entity) {
 		return;
 	}
@@ -242,8 +242,11 @@ export function* deleteEntityRecord(
  *
  * @return {Object} Action object.
  */
-export function* editEntityRecord(name, recordId, edits, options = {}) {
-	const entity = yield select(STORE_KEY, 'getEntity', name);
+export function* editEntity(name, recordId, edits, options = {}) {
+	const entity = yield select(STORE_KEY, 'getRoute', name);
+	console.log(entity);
+	console.log(recordId);
+	console.log(edits);
 	if (!entity) {
 		throw new Error(
 			`The entity being edited ${name}), does not have a loaded config.`
@@ -253,14 +256,14 @@ export function* editEntityRecord(name, recordId, edits, options = {}) {
 	const { transientEdits = {}, mergedEdits = {} } = entity;
 	const record = yield select(
 		STORE_KEY,
-		'getRawEntityRecord',
+		'getRawEntity',
 		name,
 		recordId
 	);
 
 	const editedRecord = yield select(
 		STORE_KEY,
-		'getEditedEntityRecord',
+		'getEditedEntity',
 		name,
 		recordId
 	);
@@ -296,8 +299,8 @@ export function* editEntityRecord(name, recordId, edits, options = {}) {
  *                                              Must return a control
  *                                              descriptor.
  */
-export function* saveEntityRecord(name, record, __unstableFetch = null) {
-	const entity = yield select(STORE_KEY, 'getEntity', name);
+export function* saveEntity(name, record, __unstableFetch = null) {
+	const entity = yield select(STORE_KEY, 'getRoute', name);
 	if (!entity) {
 		return;
 	}
@@ -318,12 +321,12 @@ export function* saveEntityRecord(name, record, __unstableFetch = null) {
 				const evaluatedValue = value(
 					yield select(
 						STORE_KEY,
-						'getEditedEntityRecord',
+						'getEditedEntity',
 						name,
 						recordId
 					)
 				);
-				yield editEntityRecord(
+				yield editEntity(
 					name,
 					recordId,
 					{
@@ -347,7 +350,7 @@ export function* saveEntityRecord(name, record, __unstableFetch = null) {
 
 			const persistedRecord = yield select(
 				STORE_KEY,
-				'getRawEntityRecord',
+				'getRawEntity',
 				name,
 				recordId
 			);
@@ -370,7 +373,7 @@ export function* saveEntityRecord(name, record, __unstableFetch = null) {
 			} else {
 				updatedRecord = yield apiFetch(options);
 			}
-			yield receiveEntityRecords(
+			yield receiveEntities(
 				name,
 				updatedRecord,
 				undefined,
@@ -400,19 +403,19 @@ export function* saveEntityRecord(name, record, __unstableFetch = null) {
  * @param {Object} recordId ID of the record.
  * @param {Object} options  Saving options.
  */
-export function* saveEditedEntityRecord(name, recordId, options) {
-	if (!(yield select(STORE_KEY, 'hasEditsForEntityRecord', name, recordId))) {
+export function* saveEditedEntity(name, recordId, options) {
+	if (!(yield select(STORE_KEY, 'hasEditsForEntity', name, recordId))) {
 		return;
 	}
 	const edits = yield select(
 		STORE_KEY,
-		'getEntityRecordNonTransientEdits',
+		'getEntityNonTransientEdits',
 		name,
 		recordId
 	);
 
 	const record = { id: recordId, ...edits };
-	return yield saveEntityRecord(name, record, options);
+	return yield saveEntity(name, record, options);
 }
 
 /**
@@ -423,16 +426,16 @@ export function* saveEditedEntityRecord(name, recordId, options) {
  * ```
  * const [ savedRecord, updatedRecord, deletedRecord ] =
  *   await dispatch( 'ea/data' ).batchRequest( [
- *     ( { saveEntityRecord } ) => saveEntityRecord( 'account', 10 ),
- *     ( { saveEditedEntityRecord } ) => saveEntityRecord( 'account', 123 ),
- *     ( { deleteEntityRecord } ) => deleteEntityRecord( 'account', 123, null ),
+ *     ( { saveEntity } ) => saveEntity( 'account', 10 ),
+ *     ( { saveEditedEntity } ) => saveEntity( 'account', 123 ),
+ *     ( { deleteEntity } ) => deleteEntity( 'account', 123, null ),
  *   ] );
  * ```
  *
  * @param {Array} requests Array of functions which are invoked simultaneously.
  *                         Each function is passed an object containing
- *                         `saveEntityRecord`, `saveEditedEntityRecord`, and
- *                         `deleteEntityRecord`.
+ *                         `saveEntity`, `saveEditedEntity`, and
+ *                         `deleteEntity`.
  *
  * @return {Promise} A promise that resolves to an array containing the return
  *                   values of each function given in `requests`.
@@ -440,25 +443,25 @@ export function* saveEditedEntityRecord(name, recordId, options) {
 export function* batchRequest(requests) {
 	const batch = createBatch();
 	const api = {
-		saveEntityRecord(kind, name, record, options) {
+		saveEntity(kind, name, record, options) {
 			return batch.add((add) =>
-				dispatch(STORE_KEY).saveEntityRecord(name, record, {
+				dispatch(STORE_KEY).saveEntity(name, record, {
 					...options,
 					__unstableFetch: add,
 				})
 			);
 		},
-		saveEditedEntityRecord(kind, name, recordId, options) {
+		saveEditedEntity(kind, name, recordId, options) {
 			return batch.add((add) =>
-				dispatch(STORE_KEY).saveEditedEntityRecord(name, recordId, {
+				dispatch(STORE_KEY).saveEditedEntity(name, recordId, {
 					...options,
 					__unstableFetch: add,
 				})
 			);
 		},
-		deleteEntityRecord(name, recordId, query, options) {
+		deleteEntity(name, recordId, query, options) {
 			return batch.add((add) =>
-				dispatch(STORE_KEY).deleteEntityRecord(name, recordId, query, {
+				dispatch(STORE_KEY).deleteEntity(name, recordId, query, {
 					...options,
 					__unstableFetch: add,
 				})

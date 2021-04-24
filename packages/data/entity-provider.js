@@ -2,30 +2,11 @@
  * WordPress dependencies
  */
 import { createContext, useContext } from '@wordpress/element';
+import {getRoute} from "./selectors";
 
 /**
  * Internal dependencies
  */
-import { defaultEntities } from './entities';
-
-// const entities = {
-// 	...defaultEntities.reduce((acc, entity) => {
-// 		acc[entity.name] = { context: createContext() };
-// 		return acc;
-// 	}, {}),
-// };
-
-// const getEntity = (name) => {
-// 	if (!entities[name]) {
-// 		throw new Error(`Missing entity config for name: ${name}.`);
-// 	}
-//
-// 	if (!entities[name]) {
-// 		entities[name] = { context: createContext() };
-// 	}
-//
-// 	return entities[name];
-// };
 
 /**
  * Context provider component for providing
@@ -40,7 +21,7 @@ import { defaultEntities } from './entities';
  *                   the entity's context provider.
  */
 export default function EntityProvider({ name, id, children }) {
-	const Provider = getEntity(name).context.Provider;
+	const Provider = getRoute(name).context.Provider;
 	return <Provider value={id}>{children}</Provider>;
 }
 
@@ -51,5 +32,5 @@ export default function EntityProvider({ name, id, children }) {
  * @param {string} name The entity name.
  */
 export function useEntityId(name) {
-	return useContext(getEntity(name).context);
+	return useContext(getRoute(name).context);
 }

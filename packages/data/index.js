@@ -15,43 +15,43 @@ import * as locksSelectors from './locks/selectors';
 import * as locksActions from './locks/actions';
 import customControls from './controls';
 import { STORE_KEY } from './constants';
-import { defaultEntities, getMethodName } from './entities';
+import { defaultRoutes, getMethodName } from './entities';
 
 // The entity selectors/resolvers and actions are shortcuts to their generic equivalents
-// (getEntityRecord, getEntityRecords, updateEntityRecord, updateEntityRecordss)
-// Instead of getEntityRecord, the consumer could use more user-frieldly named selector: getPostType, getTaxonomy...
+// (getEntity, getEntities, updateEntity, updateEntitiess)
+// Instead of getEntity, the consumer could use more user-frieldly named selector: getPostType, getTaxonomy...
 // The "kind" and the "name" of the entity are combined to generate these shortcuts.
 
-// const entitySelectors = defaultEntities.reduce((result, entity) => {
+// const entitySelectors = defaultRoutes.reduce((result, entity) => {
 // 	const { name } = entity;
 // 	result[getMethodName(name)] = (state, key) =>
-// 		selectors.getEntityRecord(state, name, key);
+// 		selectors.getEntity(state, name, key);
 // 	result[getMethodName(name, 'get', true)] = (state, ...args) =>
-// 		selectors.getEntityRecords(state, name, ...args);
+// 		selectors.getEntities(state, name, ...args);
 // 	result[getMethodName(name, 'getTotal', true)] = (state, ...args) =>
-// 		selectors.getEntityTotal(state, name, ...args);
+// 		selectors.getTotal(state, name, ...args);
 // 	return result;
 // }, {});
 //
-// const entityResolvers = defaultEntities.reduce((result, entity) => {
+// const entityResolvers = defaultRoutes.reduce((result, entity) => {
 // 	const { name } = entity;
-// 	result[getMethodName(name)] = (key) => resolvers.getEntityRecord(name, key);
+// 	result[getMethodName(name)] = (key) => resolvers.getEntity(name, key);
 // 	const pluralMethodName = getMethodName(name, 'get', true);
 // 	result[pluralMethodName] = (...args) =>
-// 		resolvers.getEntityRecords(name, ...args);
+// 		resolvers.getEntities(name, ...args);
 // 	result[pluralMethodName].shouldInvalidate = (action, ...args) =>
-// 		resolvers.getEntityRecords.shouldInvalidate(action, name, ...args);
+// 		resolvers.getEntities.shouldInvalidate(action, name, ...args);
 // 	result[getMethodName(name, 'getTotal', true)] = (...args) =>
-// 		resolvers.getEntityTotal(name, ...args);
+// 		resolvers.getTotal(name, ...args);
 // 	return result;
 // }, {});
 //
-// const entityActions = defaultEntities.reduce((result, entity) => {
+// const entityActions = defaultRoutes.reduce((result, entity) => {
 // 	const { name } = entity;
 // 	result[getMethodName(name, 'save')] = (key) =>
-// 		actions.saveEntityRecord(name, key);
+// 		actions.saveEntity(name, key);
 // 	result[getMethodName(name, 'delete')] = (key, query) =>
-// 		actions.deleteEntityRecord(name, key, query);
+// 		actions.deleteEntity(name, key, query);
 // 	return result;
 // }, {});
 
@@ -76,3 +76,4 @@ export { STORE_KEY as STORE_NAME } from './constants';
 export { default as EntityProvider } from './entity-provider';
 export * from './entity-provider';
 export * from './use-select-with-refresh';
+export * from './use-entities';

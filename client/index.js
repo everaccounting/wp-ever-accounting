@@ -6,15 +6,15 @@ import domReady from '@wordpress/dom-ready';
 /**
  * External dependencies
  */
-import { Loading, EntitySelect } from '@eaccounting/components';
-
+// import { Loading } from '@eaccounting/components';
+/**
+ * Internal dependencies
+ */
 function App() {
 	return (
 		<>
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias,
-			expedita!
-			{/*<EntitySelect entity={'category'} query={{ type: 'income' }} />*/}
-			<Loading />
+			expedita hello new a!
 		</>
 	);
 }

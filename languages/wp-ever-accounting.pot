@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-04-18 11:28:22+00:00\n"
+"POT-Creation-Date: 2021-04-22 16:47:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -162,7 +162,7 @@ msgstr ""
 #: includes/rest/class-bill-items-controller.php:509
 #: includes/rest/class-bills-controller.php:657
 #: includes/rest/class-categories-controller.php:142
-#: includes/rest/class-currencies-controller.php:191
+#: includes/rest/class-currencies-controller.php:279
 #: includes/rest/class-invoice-histories-controller.php:437
 #: includes/rest/class-invoice-items-controller.php:509
 #: includes/rest/class-invoices-controller.php:656
@@ -177,10 +177,13 @@ msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:82
 #: includes/rest/class-codes-controller.php:57
+#: includes/rest/class-currencies-controller.php:88
 msgid "Unique identifier for the entity."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:118
+#: includes/rest/class-currencies-controller.php:123
+#: includes/rest/class-settings-controller.php:85
 msgid "Sorry, you cannot list resources."
 msgstr ""
 
@@ -625,7 +628,7 @@ msgstr ""
 msgid "There is not accounts."
 msgstr ""
 
-#: includes/admin/class-dashboard.php:581 includes/admin/class-settings.php:144
+#: includes/admin/class-dashboard.php:581 includes/admin/class-settings.php:147
 #: includes/admin/list-tables/class-payment-list-table.php:104
 #: includes/admin/list-tables/class-revenue-list-table.php:104
 #: includes/admin/list-tables/class-transaction-list-table.php:109
@@ -688,7 +691,7 @@ msgstr ""
 
 #: includes/admin/class-extensions.php:36
 #: includes/admin/class-extensions.php:37
-#: includes/admin/class-extensions.php:53 includes/admin/class-settings.php:300
+#: includes/admin/class-extensions.php:53 includes/admin/class-settings.php:303
 #: includes/admin/ea-admin-functions.php:29
 msgid "Extensions"
 msgstr ""
@@ -805,7 +808,7 @@ msgstr ""
 msgid "Revenues"
 msgstr ""
 
-#: includes/admin/class-menu.php:225 includes/admin/class-settings.php:170
+#: includes/admin/class-menu.php:225 includes/admin/class-settings.php:173
 #: includes/admin/ea-admin-functions.php:65
 #: includes/admin/views/customers/view-customer.php:23
 #: includes/admin/views/invoices/edit-invoice.php:29
@@ -827,7 +830,7 @@ msgstr ""
 msgid "Payments"
 msgstr ""
 
-#: includes/admin/class-menu.php:248 includes/admin/class-settings.php:231
+#: includes/admin/class-menu.php:248 includes/admin/class-settings.php:234
 #: includes/admin/ea-admin-functions.php:66
 #: includes/admin/views/bills/edit-bill.php:28
 #: includes/admin/views/bills/list-bill.php:23
@@ -905,14 +908,14 @@ msgstr ""
 msgid "Cashflow"
 msgstr ""
 
-#: includes/admin/class-menu.php:586 includes/admin/class-settings.php:297
+#: includes/admin/class-menu.php:586 includes/admin/class-settings.php:300
 #: includes/admin/ea-admin-functions.php:27
 #: includes/admin/views/currencies/edit-currency.php:25
 #: includes/admin/views/currencies/list-currency.php:30
 msgid "Currencies"
 msgstr ""
 
-#: includes/admin/class-menu.php:587 includes/admin/class-settings.php:294
+#: includes/admin/class-menu.php:587 includes/admin/class-settings.php:297
 #: includes/admin/ea-admin-functions.php:28
 #: includes/admin/reports/class-expenses.php:268
 #: includes/admin/reports/class-profits.php:248
@@ -960,17 +963,17 @@ msgstr ""
 msgid "Best WordPress Accounting Plugin"
 msgstr ""
 
-#: includes/admin/class-settings.php:44 includes/admin/class-settings.php:47
+#: includes/admin/class-settings.php:47 includes/admin/class-settings.php:50
 #: includes/admin/ea-admin-functions.php:26
 #: includes/admin/ea-admin-functions.php:64
 msgid "General"
 msgstr ""
 
-#: includes/admin/class-settings.php:51 includes/class-settings.php:73
+#: includes/admin/class-settings.php:54 includes/class-settings.php:73
 msgid "Company Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:57
+#: includes/admin/class-settings.php:60
 #: includes/admin/list-tables/class-account-list-table.php:118
 #: includes/admin/list-tables/class-category-list-table.php:123
 #: includes/admin/list-tables/class-currency-list-table.php:111
@@ -994,11 +997,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: includes/admin/class-settings.php:60 includes/class-settings.php:82
+#: includes/admin/class-settings.php:63 includes/class-settings.php:82
 msgid "XYZ Company"
 msgstr ""
 
-#: includes/admin/class-settings.php:64
+#: includes/admin/class-settings.php:67
 #: includes/admin/views/customers/edit-customer.php:86
 #: includes/admin/views/customers/view-customer.php:149
 #: includes/admin/views/js/modal-add-customer.php:44
@@ -1009,11 +1012,11 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#: includes/admin/class-settings.php:71 includes/class-settings.php:93
+#: includes/admin/class-settings.php:74 includes/class-settings.php:93
 msgid "Phone Number"
 msgstr ""
 
-#: includes/admin/class-settings.php:76
+#: includes/admin/class-settings.php:79
 #: includes/admin/views/customers/edit-customer.php:105
 #: includes/admin/views/customers/view-customer.php:153
 #: includes/admin/views/vendors/edit-vendor.php:109
@@ -1024,74 +1027,74 @@ msgstr ""
 msgid "VAT Number"
 msgstr ""
 
-#: includes/admin/class-settings.php:81
+#: includes/admin/class-settings.php:84
 #: includes/admin/views/customers/edit-customer.php:134
 #: includes/admin/views/vendors/edit-vendor.php:138
 #: includes/class-settings.php:103
 msgid "Street"
 msgstr ""
 
-#: includes/admin/class-settings.php:86
+#: includes/admin/class-settings.php:89
 #: includes/admin/views/customers/edit-customer.php:143
 #: includes/admin/views/vendors/edit-vendor.php:147
 #: includes/class-settings.php:108
 msgid "City"
 msgstr ""
 
-#: includes/admin/class-settings.php:91
+#: includes/admin/class-settings.php:94
 #: includes/admin/views/customers/edit-customer.php:152
 #: includes/admin/views/vendors/edit-vendor.php:156
 #: includes/class-settings.php:113
 msgid "State"
 msgstr ""
 
-#: includes/admin/class-settings.php:96
+#: includes/admin/class-settings.php:99
 #: includes/admin/views/customers/edit-customer.php:161
 #: includes/admin/views/vendors/edit-vendor.php:165
 #: includes/class-emails.php:48 includes/class-settings.php:118
 msgid "Postcode"
 msgstr ""
 
-#: includes/admin/class-settings.php:101 includes/admin/class-setup.php:278
+#: includes/admin/class-settings.php:104 includes/admin/class-setup.php:278
 #: includes/admin/views/customers/edit-customer.php:170
 #: includes/admin/views/vendors/edit-vendor.php:174
 #: includes/class-emails.php:49 includes/class-settings.php:123
 msgid "Country"
 msgstr ""
 
-#: includes/admin/class-settings.php:107 includes/class-settings.php:130
+#: includes/admin/class-settings.php:110 includes/class-settings.php:130
 msgid "Logo"
 msgstr ""
 
-#: includes/admin/class-settings.php:112 includes/class-settings.php:135
+#: includes/admin/class-settings.php:115 includes/class-settings.php:135
 msgid "General Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:118 includes/class-settings.php:141
+#: includes/admin/class-settings.php:121 includes/class-settings.php:141
 msgid "Financial Year Start"
 msgstr ""
 
-#: includes/admin/class-settings.php:119 includes/class-settings.php:142
+#: includes/admin/class-settings.php:122 includes/class-settings.php:142
 msgid "Enter the company financial start date."
 msgstr ""
 
-#: includes/admin/class-settings.php:126 includes/class-settings.php:149
+#: includes/admin/class-settings.php:129 includes/class-settings.php:149
 msgid "Enable taxes"
 msgstr ""
 
-#: includes/admin/class-settings.php:132 includes/class-settings.php:155
+#: includes/admin/class-settings.php:135 includes/class-settings.php:155
 msgid "Total Transactions"
 msgstr ""
 
-#: includes/admin/class-settings.php:138 includes/class-settings.php:161
+#: includes/admin/class-settings.php:141 includes/class-settings.php:161
 msgid "Default Settings"
 msgstr ""
 
-#: includes/admin/class-settings.php:146 includes/class-settings.php:169
+#: includes/admin/class-settings.php:149 includes/class-settings.php:169
 msgid "Default account will be used for automatic transactions."
 msgstr ""
 
-#: includes/admin/class-settings.php:152
+#: includes/admin/class-settings.php:155
 #: includes/admin/views/accounts/view-account.php:140
 #: includes/admin/views/bills/edit-bill.php:74
 #: includes/admin/views/customers/edit-customer.php:66
@@ -1103,16 +1106,16 @@ msgstr ""
 #: includes/admin/views/vendors/view-vendor.php:140
 #: includes/class-settings.php:175 includes/models/class-bill.php:72
 #: includes/models/class-invoice.php:73
-#: includes/rest/class-currencies-controller.php:75
+#: includes/rest/class-currencies-controller.php:164
 msgid "Currency"
 msgstr ""
 
-#: includes/admin/class-settings.php:154 includes/admin/class-settings.php:163
+#: includes/admin/class-settings.php:157 includes/admin/class-settings.php:166
 #: includes/class-settings.php:177 includes/class-settings.php:186
 msgid "Default currency rate will update to 1."
 msgstr ""
 
-#: includes/admin/class-settings.php:160
+#: includes/admin/class-settings.php:163
 #: includes/admin/views/js/modal-bill-payment.php:48
 #: includes/admin/views/js/modal-invoice-payment.php:48
 #: includes/admin/views/payments/edit-payment.php:115
@@ -1125,62 +1128,62 @@ msgstr ""
 msgid "Payment Method"
 msgstr ""
 
-#: includes/admin/class-settings.php:174 includes/class-settings.php:194
+#: includes/admin/class-settings.php:177 includes/class-settings.php:194
 msgid "Invoice Prefix"
 msgstr ""
 
-#: includes/admin/class-settings.php:180 includes/class-settings.php:200
+#: includes/admin/class-settings.php:183 includes/class-settings.php:200
 msgid "Minimum Digits"
 msgstr ""
 
-#: includes/admin/class-settings.php:186 includes/class-settings.php:206
+#: includes/admin/class-settings.php:189 includes/class-settings.php:206
 msgid "Invoice Terms"
 msgstr ""
 
-#: includes/admin/class-settings.php:192 includes/class-settings.php:212
+#: includes/admin/class-settings.php:195 includes/class-settings.php:212
 msgid "Invoice Note"
 msgstr ""
 
-#: includes/admin/class-settings.php:198 includes/class-settings.php:218
+#: includes/admin/class-settings.php:201 includes/class-settings.php:218
 msgid "Invoice Due"
 msgstr ""
 
-#: includes/admin/class-settings.php:202 includes/admin/class-settings.php:263
+#: includes/admin/class-settings.php:205 includes/admin/class-settings.php:266
 #: includes/class-settings.php:222 includes/class-settings.php:280
 msgid "Due within 7 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:203 includes/admin/class-settings.php:264
+#: includes/admin/class-settings.php:206 includes/admin/class-settings.php:267
 #: includes/class-settings.php:223 includes/class-settings.php:281
 msgid "Due within 15 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:204 includes/admin/class-settings.php:265
+#: includes/admin/class-settings.php:207 includes/admin/class-settings.php:268
 #: includes/class-settings.php:224 includes/class-settings.php:282
 msgid "Due within 30 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:205 includes/admin/class-settings.php:266
+#: includes/admin/class-settings.php:208 includes/admin/class-settings.php:269
 #: includes/class-settings.php:225 includes/class-settings.php:283
 msgid "Due within 45 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:206 includes/admin/class-settings.php:267
+#: includes/admin/class-settings.php:209 includes/admin/class-settings.php:270
 #: includes/class-settings.php:226 includes/class-settings.php:284
 msgid "Due within 60 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:207 includes/admin/class-settings.php:268
+#: includes/admin/class-settings.php:210 includes/admin/class-settings.php:271
 #: includes/class-settings.php:227 includes/class-settings.php:285
 msgid "Due within 90 days"
 msgstr ""
 
-#: includes/admin/class-settings.php:212 includes/admin/class-settings.php:273
+#: includes/admin/class-settings.php:215 includes/admin/class-settings.php:276
 #: includes/class-settings.php:232 includes/class-settings.php:290
 msgid "Item Label"
 msgstr ""
 
-#: includes/admin/class-settings.php:213 includes/admin/class-settings.php:274
+#: includes/admin/class-settings.php:216 includes/admin/class-settings.php:277
 #: includes/admin/views/bills/bill-items.php:13
 #: includes/admin/views/invoices/invoice-items.php:13
 #: includes/admin/views/js/modal-add-invoice-item.php:16
@@ -1193,12 +1196,12 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
-#: includes/admin/class-settings.php:218 includes/admin/class-settings.php:279
+#: includes/admin/class-settings.php:221 includes/admin/class-settings.php:282
 #: includes/class-settings.php:238 includes/class-settings.php:296
 msgid "Price Label"
 msgstr ""
 
-#: includes/admin/class-settings.php:219 includes/admin/class-settings.php:280
+#: includes/admin/class-settings.php:222 includes/admin/class-settings.php:283
 #: includes/admin/views/reconciliations/reconciliations.php:25
 #: includes/class-install.php:377 includes/class-install.php:383
 #: includes/class-settings.php:239 includes/class-settings.php:297
@@ -1206,12 +1209,12 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: includes/admin/class-settings.php:224 includes/admin/class-settings.php:285
+#: includes/admin/class-settings.php:227 includes/admin/class-settings.php:288
 #: includes/class-settings.php:244 includes/class-settings.php:302
 msgid "Quantity Label"
 msgstr ""
 
-#: includes/admin/class-settings.php:225 includes/admin/class-settings.php:286
+#: includes/admin/class-settings.php:228 includes/admin/class-settings.php:289
 #: includes/admin/views/bills/bill-items.php:15
 #: includes/admin/views/invoices/invoice-items.php:15
 #: includes/admin/views/js/modal-add-invoice-item.php:17
@@ -1223,32 +1226,32 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: includes/admin/class-settings.php:235 includes/class-settings.php:252
+#: includes/admin/class-settings.php:238 includes/class-settings.php:252
 msgid "Bill Prefix"
 msgstr ""
 
-#: includes/admin/class-settings.php:241 includes/class-settings.php:258
+#: includes/admin/class-settings.php:244 includes/class-settings.php:258
 msgid "Bill Digits"
 msgstr ""
 
-#: includes/admin/class-settings.php:247 includes/class-settings.php:264
+#: includes/admin/class-settings.php:250 includes/class-settings.php:264
 msgid "Bill Terms & Conditions"
 msgstr ""
 
-#: includes/admin/class-settings.php:253 includes/class-settings.php:270
+#: includes/admin/class-settings.php:256 includes/class-settings.php:270
 msgid "Bill Note"
 msgstr ""
 
-#: includes/admin/class-settings.php:259 includes/class-settings.php:276
+#: includes/admin/class-settings.php:262 includes/class-settings.php:276
 msgid "Bill Due"
 msgstr ""
 
-#: includes/admin/class-settings.php:304
+#: includes/admin/class-settings.php:307
 #: includes/admin/ea-admin-functions.php:30
 msgid "Licenses"
 msgstr ""
 
-#: includes/admin/class-settings.php:311
+#: includes/admin/class-settings.php:314
 #: includes/admin/views/bills/bill-items.php:99
 #: includes/admin/views/bills/bill-items.php:108
 #: includes/admin/views/invoices/invoice-items.php:118
@@ -1261,69 +1264,71 @@ msgstr ""
 msgid "Tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:315 includes/class-settings.php:318
+#: includes/admin/class-settings.php:318 includes/class-settings.php:318
 msgid "Rounding"
 msgstr ""
 
-#: includes/admin/class-settings.php:317 includes/class-settings.php:320
+#: includes/admin/class-settings.php:320 includes/class-settings.php:320
 msgid "Round tax at subtotal level, instead of rounding per tax rate."
 msgstr ""
 
-#: includes/admin/class-settings.php:321 includes/class-settings.php:324
+#: includes/admin/class-settings.php:324 includes/class-settings.php:324
 msgid "Prices entered with tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:325 includes/class-settings.php:328
+#: includes/admin/class-settings.php:328 includes/class-settings.php:328
 msgid "Yes, I will enter prices inclusive of tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:326 includes/class-settings.php:329
+#: includes/admin/class-settings.php:329 includes/class-settings.php:329
 msgid "No, I will enter prices exclusive of tax"
 msgstr ""
 
-#: includes/admin/class-settings.php:331 includes/class-settings.php:334
+#: includes/admin/class-settings.php:334 includes/class-settings.php:334
 msgid "Display tax totals\t"
 msgstr ""
 
-#: includes/admin/class-settings.php:335 includes/class-settings.php:338
+#: includes/admin/class-settings.php:338 includes/class-settings.php:338
 msgid "As a single total"
 msgstr ""
 
-#: includes/admin/class-settings.php:336 includes/class-settings.php:339
+#: includes/admin/class-settings.php:339 includes/class-settings.php:339
 msgid "As individual tax rates"
 msgstr ""
 
-#: includes/admin/class-settings.php:519 includes/class-settings.php:126
+#: includes/admin/class-settings.php:530 includes/class-settings.php:126
 #: includes/ea-form-functions.php:975
 msgid "Select Country"
 msgstr ""
 
-#: includes/admin/class-settings.php:610
+#: includes/admin/class-settings.php:621
 #: includes/admin/views/payments/edit-payment.php:152
 #: includes/admin/views/revenues/edit-revenue.php:138
 #: includes/class-settings.php:964
 msgid "Upload File"
 msgstr ""
 
-#: includes/admin/class-settings.php:644 includes/class-settings.php:466
+#: includes/admin/class-settings.php:655 includes/class-settings.php:466
 msgid "Select account"
 msgstr ""
 
-#: includes/admin/class-settings.php:672 includes/class-settings.php:494
+#: includes/admin/class-settings.php:683 includes/class-settings.php:494
 msgid "Select category"
 msgstr ""
 
-#: includes/admin/class-settings.php:697 includes/class-settings.php:519
+#: includes/admin/class-settings.php:708 includes/class-settings.php:519
 msgid "Select currencies"
 msgstr ""
 
-#: includes/admin/class-settings.php:723 includes/admin/class-settings.php:833
+#: includes/admin/class-settings.php:733 includes/admin/class-settings.php:834
+#: includes/class-settings.php:1004
+#. translators: %s extension name
 msgid ""
-"Your license key expired on %s. Please <a href=\"%s\" "
+"Your license key expired on %1$s. Please <a href=\"%2$s\" "
 "target=\"_blank\">renew your license key</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:736 includes/admin/class-settings.php:846
+#: includes/admin/class-settings.php:745 includes/admin/class-settings.php:846
 #: includes/class-settings.php:1014
 #. translators: %s extension name
 msgid ""
@@ -1331,7 +1336,7 @@ msgid ""
 "target=\"_blank\">contact support</a> for more information."
 msgstr ""
 
-#: includes/admin/class-settings.php:748 includes/admin/class-settings.php:858
+#: includes/admin/class-settings.php:756 includes/admin/class-settings.php:857
 #: includes/class-settings.php:1022
 #. translators: %s extension name
 msgid ""
@@ -1339,20 +1344,22 @@ msgid ""
 "page</a> and verify it."
 msgstr ""
 
-#: includes/admin/class-settings.php:761 includes/admin/class-settings.php:871
+#: includes/admin/class-settings.php:768 includes/admin/class-settings.php:869
+#: includes/class-settings.php:1031
+#. translators: %s extension name
 msgid ""
-"Your %s is not active for this URL. Please <a href=\"%s\" "
+"Your %1$s is not active for this URL. Please <a href=\"%2$s\" "
 "target=\"_blank\">visit your account page</a> to manage your license key "
 "URLs."
 msgstr ""
 
-#: includes/admin/class-settings.php:773 includes/admin/class-settings.php:883
+#: includes/admin/class-settings.php:779 includes/admin/class-settings.php:880
 #: includes/class-settings.php:1039
 #. translators: %s extension name
 msgid "This appears to be an invalid license key for %s."
 msgstr ""
 
-#: includes/admin/class-settings.php:782 includes/admin/class-settings.php:892
+#: includes/admin/class-settings.php:787 includes/admin/class-settings.php:888
 #: includes/class-settings.php:1045
 #. translators: %s extension name
 msgid ""
@@ -1360,68 +1367,71 @@ msgid ""
 "possible upgrades</a> now."
 msgstr ""
 
-#: includes/admin/class-settings.php:791 includes/admin/class-settings.php:901
+#: includes/admin/class-settings.php:795 includes/admin/class-settings.php:896
 #: includes/class-settings.php:1049
 msgid ""
 "The key you entered belongs to a bundle, please use the product specific "
 "license key."
 msgstr ""
 
-#: includes/admin/class-settings.php:799 includes/admin/class-settings.php:807
-#: includes/admin/class-settings.php:819 includes/class-settings.php:1053
+#: includes/admin/class-settings.php:802 includes/admin/class-settings.php:810
+#: includes/admin/class-settings.php:821 includes/class-settings.php:1053
 msgid "unknown_error"
 msgstr ""
 
-#: includes/admin/class-settings.php:800 includes/admin/class-settings.php:808
+#: includes/admin/class-settings.php:803 includes/admin/class-settings.php:811
+#: includes/class-settings.php:1055
+#. translators: %s extension name
 msgid ""
-"There was an error with this license key: %s. Please <a href=\"%s\">contact "
-"our support team</a>."
+"There was an error with this license key: %1$s. Please <a "
+"href=\"%2$s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:821
+#: includes/admin/class-settings.php:823
 msgid ""
-"There was an error with this license key: %s%s. Please <a "
-"href=\"%s\">contact our support team</a>."
+"There was an error with this license key: %1$s%2$s. Please <a "
+"href=\"%3$s\">contact our support team</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:916 includes/class-settings.php:1065
+#: includes/admin/class-settings.php:910 includes/class-settings.php:1065
 msgid "License key never expires."
 msgstr ""
 
-#: includes/admin/class-settings.php:923
+#: includes/admin/class-settings.php:917 includes/class-settings.php:1069
+#. translators: %s extension name
 msgid ""
-"Your license key expires soon! It expires on %s. <a href=\"%s\" "
+"Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" "
 "target=\"_blank\">Renew your license key</a>."
 msgstr ""
 
-#: includes/admin/class-settings.php:933 includes/class-settings.php:1076
+#: includes/admin/class-settings.php:927 includes/class-settings.php:1076
 #. translators: %s extension name
 msgid "Your license key expires on %s."
 msgstr ""
 
-#: includes/admin/class-settings.php:950 includes/class-settings.php:1084
+#: includes/admin/class-settings.php:942 includes/class-settings.php:1084
 #. translators: %s extension name
 msgid "To receive updates, please enter your valid %s license key."
 msgstr ""
 
-#: includes/admin/class-settings.php:966
+#: includes/admin/class-settings.php:958
 msgid "Clear License"
 msgstr ""
 
-#: includes/admin/class-settings.php:969
+#: includes/admin/class-settings.php:961
 msgid "Activate"
 msgstr ""
 
-#: includes/admin/class-settings.php:972
+#: includes/admin/class-settings.php:964
 msgid "Re-Activate"
 msgstr ""
 
-#: includes/admin/class-settings.php:1069 includes/class-settings.php:1252
+#: includes/admin/class-settings.php:1065 includes/class-settings.php:1252
 msgid "Settings updated."
 msgstr ""
 
-#: includes/admin/class-settings.php:1081
-#: includes/admin/class-settings.php:1082 includes/class-install.php:68
+#: includes/admin/class-settings.php:1076
+#: includes/admin/class-settings.php:1077 includes/class-install.php:68
 msgid "Settings"
 msgstr ""
 
@@ -3657,35 +3667,6 @@ msgid ""
 "allowed."
 msgstr ""
 
-#: includes/class-settings.php:1004
-#. translators: %s extension name
-msgid ""
-"Your license key expired on %1$s. Please <a href=\"%2$s\" "
-"target=\"_blank\">renew your license key</a>."
-msgstr ""
-
-#: includes/class-settings.php:1031
-#. translators: %s extension name
-msgid ""
-"Your %1$s is not active for this URL. Please <a href=\"%2$s\" "
-"target=\"_blank\">visit your account page</a> to manage your license key "
-"URLs."
-msgstr ""
-
-#: includes/class-settings.php:1055
-#. translators: %s extension name
-msgid ""
-"There was an error with this license key: %1$s. Please <a "
-"href=\"%2$s\">contact our support team</a>."
-msgstr ""
-
-#: includes/class-settings.php:1069
-#. translators: %s extension name
-msgid ""
-"Your license key expires soon! It expires on %1$s. <a href=\"%2$s\" "
-"target=\"_blank\">Renew your license key</a>."
-msgstr ""
-
 #: includes/class-settings.php:1090
 msgid "Deactivate License"
 msgstr ""
@@ -4276,7 +4257,7 @@ msgstr ""
 
 #: includes/rest/class-accounts-controller.php:160
 #: includes/rest/class-categories-controller.php:112
-#: includes/rest/class-currencies-controller.php:160
+#: includes/rest/class-currencies-controller.php:249
 #: includes/rest/class-items-controller.php:199
 msgid "Status of the item."
 msgstr ""
@@ -4552,7 +4533,7 @@ msgid "Currency symbol."
 msgstr ""
 
 #: includes/rest/class-codes-controller.php:186
-#: includes/rest/class-currencies-controller.php:115
+#: includes/rest/class-currencies-controller.php:204
 msgid "Precision count."
 msgstr ""
 
@@ -4580,39 +4561,39 @@ msgstr ""
 msgid "Full name of country."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:79
+#: includes/rest/class-currencies-controller.php:168
 msgid "Unique identifier for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:88
+#: includes/rest/class-currencies-controller.php:177
 msgid "Name of the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:97
+#: includes/rest/class-currencies-controller.php:186
 msgid "Unique code for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:106
+#: includes/rest/class-currencies-controller.php:195
 msgid "Current rate for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:123
+#: includes/rest/class-currencies-controller.php:212
 msgid "Currency Sumbol."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:132
+#: includes/rest/class-currencies-controller.php:221
 msgid "Position."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:142
+#: includes/rest/class-currencies-controller.php:231
 msgid "Decimal separator count."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:151
+#: includes/rest/class-currencies-controller.php:240
 msgid "Thousand separator count."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:165
+#: includes/rest/class-currencies-controller.php:254
 msgid "Created date of the currency."
 msgstr ""
 
@@ -4822,53 +4803,60 @@ msgstr ""
 msgid "Creator of the item"
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:42
-#: includes/rest/class-settings-controller.php:42
+#: includes/rest/class-settings-controller.php:55
+msgid "Unique identifier for the resource."
+msgstr ""
+
+#: includes/rest/class-settings-controller.php:125
+#: includes/rest/class-settings-controller.php:163
+msgid "Invalid setting field."
+msgstr ""
+
+#: includes/rest/class-settings-controller.php:145
+msgid "Sorry, you cannot edit this resource."
+msgstr ""
+
+#: includes/rest/class-settings-controller.php:353
 msgid "A unique identifier for the setting."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:51
-#: includes/rest/class-settings-controller.php:51
-msgid "An identifier for the group this setting belongs to."
+#: includes/rest/class-settings-controller.php:362
+msgid "An identifier for the field this setting belongs to tab."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:60
-#: includes/rest/class-settings-controller.php:60
+#: includes/rest/class-settings-controller.php:371
+msgid "An identifier for the feild this setting belongs to section."
+msgstr ""
+
+#: includes/rest/class-settings-controller.php:380
 msgid "A human readable label for the setting used in interfaces."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:69
-#: includes/rest/class-settings-controller.php:69
+#: includes/rest/class-settings-controller.php:389
 msgid "A human readable description for the setting used in interfaces."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:78
-#: includes/rest/class-settings-controller.php:78
+#: includes/rest/class-settings-controller.php:398
 msgid "Setting value."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:83
-#: includes/rest/class-settings-controller.php:83
+#: includes/rest/class-settings-controller.php:403
 msgid "Default value for the setting."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:89
-#: includes/rest/class-settings-controller.php:89
+#: includes/rest/class-settings-controller.php:409
 msgid "Additional help text shown to the user about the setting."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:98
-#: includes/rest/class-settings-controller.php:98
+#: includes/rest/class-settings-controller.php:418
 msgid "Placeholder text to be displayed in text inputs."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:107
-#: includes/rest/class-settings-controller.php:107
+#: includes/rest/class-settings-controller.php:427
 msgid "Type of setting."
 msgstr ""
 
-#: includes/rest/class-setting-options-controller.php:117
-#: includes/rest/class-settings-controller.php:117
+#: includes/rest/class-settings-controller.php:449
 msgid ""
 "Array of options (key value pairs) for inputs such as select, multiselect, "
 "and radio buttons."
@@ -4970,8 +4958,3 @@ msgstr ""
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
-
-#: packages/components/src/list-table/table-filter.js:86
-msgid "Clear all filters"
-msgstr ""
-
