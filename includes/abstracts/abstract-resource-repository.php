@@ -78,7 +78,7 @@ abstract class Resource_Repository {
 	 *
 	 * @since  1.1.0
 	 * @param  Resource_Model|integer $object object or object ID.
-	 * @param  string          $taxonomy Taxonomy name e.g. product_cat.
+	 * @param  string                 $taxonomy Taxonomy name e.g. product_cat.
 	 * @return array of terms
 	 */
 	protected function get_term_ids( $object, $taxonomy ) {
@@ -95,6 +95,24 @@ abstract class Resource_Repository {
 	}
 
 	/**
+	 * Set object terms.
+	 *
+	 * @param  Resource_Model|integer $object object or object ID.
+	 * @param array                  $terms Terms array
+	 * @param  string                 $taxonomy Taxonomy name e.g. product_cat.
+	 * @param false                  $append Append or not.
+	 */
+	protected function set_term_ids( $object, $terms, $taxonomy, $append = false ) {
+		if ( is_numeric( $object ) ) {
+			$object_id = $object;
+		} else {
+			$object_id = $object->get_id();
+		}
+
+		wp_set_object_terms( $object_id, $terms, $taxonomy, $append );
+	}
+
+	/**
 	 * Returns an array of meta for an object.
 	 *
 	 * @since  1.10
@@ -102,7 +120,7 @@ abstract class Resource_Repository {
 	 * @return array
 	 */
 	public function read_meta( &$object ) {
-		if( $this->meta_type ){
+		if ( $this->meta_type ) {
 			global $wpdb;
 			$db_info       = $this->get_db_info();
 			$raw_meta_data = $wpdb->get_results(
@@ -127,7 +145,7 @@ abstract class Resource_Repository {
 	 *
 	 * @since  1.1.0
 	 * @param  Resource_Model $object object.
-	 * @param  \stdClass $meta (containing at least ->id).
+	 * @param  \stdClass      $meta (containing at least ->id).
 	 */
 	public function delete_meta( &$object, $meta ) {
 		delete_metadata_by_mid( $this->meta_type, $meta->id );
@@ -137,8 +155,8 @@ abstract class Resource_Repository {
 	 * Add new piece of meta.
 	 *
 	 * @since  1.1.0
-	 * @param  Resource_Model  $object object.
-	 * @param  \stdClass $meta (containing ->key and ->value).
+	 * @param  Resource_Model $object object.
+	 * @param  \stdClass      $meta (containing ->key and ->value).
 	 * @return int meta ID
 	 */
 	public function add_meta( &$object, $meta ) {
@@ -149,8 +167,8 @@ abstract class Resource_Repository {
 	 * Update meta.
 	 *
 	 * @since  1.1.0
-	 * @param  Resource_Model  $object object.
-	 * @param  \stdClass $meta (containing ->id, ->key and ->value).
+	 * @param  Resource_Model $object object.
+	 * @param  \stdClass      $meta (containing ->id, ->key and ->value).
 	 */
 	public function update_meta( &$object, $meta ) {
 		update_metadata_by_mid( $this->meta_type, $meta->id, $meta->value, $meta->key );
@@ -221,8 +239,8 @@ abstract class Resource_Repository {
 	 * or if they are present in the database or not.
 	 *
 	 * @param Resource_Model $object            The object.
-	 * @param array         $meta_key_to_props A mapping of meta keys => prop names.
-	 * @param string        $meta_type         The internal WP meta type (post, user, etc).
+	 * @param array          $meta_key_to_props A mapping of meta keys => prop names.
+	 * @param string         $meta_type         The internal WP meta type (post, user, etc).
 	 *
 	 * @return array        A mapping of meta keys => prop names, filtered by ones that should be updated.
 	 */
@@ -250,17 +268,16 @@ abstract class Resource_Repository {
 	 * Note: WordPress `get_metadata` function returns an empty string when meta data does not exist.
 	 *
 	 * @param Resource_Model $object The object.
-	 * @param string  $meta_key Meta key to update.
-	 * @param mixed   $meta_value Value to save.
-	 *
+	 * @param string         $meta_key Meta key to update.
+	 * @param mixed          $meta_value Value to save.
 	 *
 	 * @return bool True if updated/deleted.
 	 */
-	protected function update_or_delete_post_meta( $object, $meta_key, $meta_value ) {
+	protected function update_or_delete_meta( $object, $meta_key, $meta_value ) {
 		if ( in_array( $meta_value, array( array(), '' ), true ) && ! in_array( $meta_key, $this->must_exist_meta_keys, true ) ) {
-			$updated = delete_post_meta( $object->get_id(), $meta_key );
+			$updated = delete_metadata( $this->meta_type, $object->get_id(), $meta_key );
 		} else {
-			$updated = update_post_meta( $object->get_id(), $meta_key, $meta_value );
+			$updated = update_metadata( $this->meta_type, $object->get_id(), $meta_key, $meta_value );
 		}
 
 		return (bool) $updated;
@@ -287,7 +304,7 @@ abstract class Resource_Repository {
 		$props = array();
 
 		foreach ( $this->meta_key_to_props as $meta_key => $prop ) {
-			$props[ $prop ] = get_post_meta( $id, $meta_key, true );
+			$props[ $prop ] = get_metadata( $this->meta_type,  $id, $meta_key, true );
 		}
 
 		// Set object properties.
@@ -297,7 +314,7 @@ abstract class Resource_Repository {
 		foreach ( $object->get_extra_data_keys() as $key ) {
 			$function = 'set_' . $key;
 			if ( is_callable( array( $object, $function ) ) ) {
-				$object->{$function}( get_post_meta( $object->get_id(), $key, true ) );
+				$object->{$function}( get_metadata( $this->meta_type, $object->get_id(), $key, true ) );
 			}
 		}
 	}
@@ -317,7 +334,7 @@ abstract class Resource_Repository {
 		foreach ( $props_to_update as $meta_key => $prop ) {
 			$value   = $object->{"get_$prop"}( 'edit' );
 			$value   = is_string( $value ) ? wp_slash( $value ) : $value;
-			$updated = $this->update_or_delete_post_meta( $object, $meta_key, $value );
+			$updated = $this->update_or_delete_meta( $object, $meta_key, $value );
 
 			if ( $updated ) {
 				$updated_props[] = $prop;
@@ -486,7 +503,7 @@ abstract class Resource_Repository {
 	|--------------------------------------------------------------------------
 	*/
 	public static function get_columns() {
-		$self = new static;
+		$self = new static();
 		return array_keys( $self->data_type );
 	}
 }

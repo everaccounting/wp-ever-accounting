@@ -310,12 +310,11 @@ abstract class Entities_Controller extends Controller {
 	/**
 	 * Get objects.
 	 *
-	 * @param array $query_args Query args.
+	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return array|int|\WP_Error
 	 * @since  1.1.0
-	 *
 	 */
 	protected function get_objects( $query_args, $request ) {
 		// translators: %s: Class method name.
@@ -414,7 +413,6 @@ abstract class Entities_Controller extends Controller {
 	 *
 	 * @return Resource_Model|\WP_Error Data object or WP_Error.
 	 * @since 1.1.0
-	 *
 	 */
 	protected function prepare_object_for_database( &$object, $request ) {
 		$schema    = $this->get_item_schema();
@@ -432,7 +430,7 @@ abstract class Entities_Controller extends Controller {
 						}
 						break;
 					case 'currency':
-						if ( ! empty( $request['currency'] ) && isset( $request['currency']['code'] ) && is_callable( array( $object, "set_currency_code" ) ) ) {
+						if ( ! empty( $request['currency'] ) && isset( $request['currency']['code'] ) && is_callable( array( $object, 'set_currency_code' ) ) ) {
 							$object->set_currency_code( $request['currency']['code'] );
 						}
 						break;
@@ -444,10 +442,10 @@ abstract class Entities_Controller extends Controller {
 				}
 			}
 
-//			if ( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
-//
-//				$object->{"set_{$key}_id"}( $value['id'] );
-//			}
+			// if ( is_object( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
+			//
+			// $object->{"set_{$key}_id"}( $value['id'] );
+			// }
 			if ( is_array( $value ) && isset( $value['id'] ) && is_callable( array( $object, "set_{$key}_id" ) ) ) {
 
 				$object->{"set_{$key}_id"}( $value['id'] );
@@ -461,12 +459,11 @@ abstract class Entities_Controller extends Controller {
 	 * Retrieves data from a Model class.
 	 *
 	 * @param Resource_Model $object model object.
-	 * @param array $fields Fields to include.
-	 * @param string $context either view or edit.
+	 * @param array          $fields Fields to include.
+	 * @param string         $context either view or edit.
 	 *
 	 * @return array
 	 * @since  1.1.0
-	 *
 	 */
 	protected function prepare_object_for_response( $object, $fields, $context = 'view' ) {
 
@@ -518,11 +515,10 @@ abstract class Entities_Controller extends Controller {
 	 * Checks if a key should be included in a response.
 	 *
 	 * @param Resource_Model $object Data object.
-	 * @param string $field_key The key to check for.
+	 * @param string         $field_key The key to check for.
 	 *
 	 * @return bool
 	 * @since  1.1.0
-	 *
 	 */
 	public function object_supports_field( $object, $field_key ) {
 		return apply_filters( 'eaccounting_rest_object_supports_key', true, $object, $field_key );
@@ -535,7 +531,6 @@ abstract class Entities_Controller extends Controller {
 	 *
 	 * @return array
 	 * @since  1.1.0
-	 *
 	 */
 	protected function prepare_object_meta_data( $meta_data ) {
 		$meta = array();
@@ -550,7 +545,7 @@ abstract class Entities_Controller extends Controller {
 	/**
 	 * Prepare links for the request.
 	 *
-	 * @param Resource_Model $object Object data.
+	 * @param Resource_Model   $object Object data.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return array                   Links for the given post.
@@ -569,12 +564,11 @@ abstract class Entities_Controller extends Controller {
 	/**
 	 * Prepare a single object output for response.
 	 *
-	 * @param Resource_Model $object Data object.
+	 * @param Resource_Model   $object Data object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
 	 * @return \WP_REST_Response
 	 * @since  1.1.0
-	 *
 	 */
 	public function prepare_item_for_response( $object, $request ) {
 		// Fetch the fields to include in this response.
