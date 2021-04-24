@@ -95,6 +95,24 @@ abstract class Resource_Repository {
 	}
 
 	/**
+	 * Set object terms.
+	 *
+	 * @param  Resource_Model|integer $object object or object ID.
+	 * @param array                  $terms Terms array
+	 * @param  string                 $taxonomy Taxonomy name e.g. product_cat.
+	 * @param false                  $append Append or not.
+	 */
+	protected function set_term_ids( $object, $terms, $taxonomy, $append = false ) {
+		if ( is_numeric( $object ) ) {
+			$object_id = $object;
+		} else {
+			$object_id = $object->get_id();
+		}
+
+		wp_set_object_terms( $object_id, $terms, $taxonomy, $append );
+	}
+
+	/**
 	 * Returns an array of meta for an object.
 	 *
 	 * @since  1.10
@@ -255,11 +273,11 @@ abstract class Resource_Repository {
 	 *
 	 * @return bool True if updated/deleted.
 	 */
-	protected function update_or_delete_post_meta( $object, $meta_key, $meta_value ) {
+	protected function update_or_delete_meta( $object, $meta_key, $meta_value ) {
 		if ( in_array( $meta_value, array( array(), '' ), true ) && ! in_array( $meta_key, $this->must_exist_meta_keys, true ) ) {
-			$updated = delete_post_meta( $object->get_id(), $meta_key );
+			$updated = delete_metadata( $this->meta_type, $object->get_id(), $meta_key );
 		} else {
-			$updated = update_post_meta( $object->get_id(), $meta_key, $meta_value );
+			$updated = update_metadata( $this->meta_type, $object->get_id(), $meta_key, $meta_value );
 		}
 
 		return (bool) $updated;
@@ -286,7 +304,7 @@ abstract class Resource_Repository {
 		$props = array();
 
 		foreach ( $this->meta_key_to_props as $meta_key => $prop ) {
-			$props[ $prop ] = get_post_meta( $id, $meta_key, true );
+			$props[ $prop ] = get_metadata( $this->meta_type,  $id, $meta_key, true );
 		}
 
 		// Set object properties.
@@ -296,7 +314,7 @@ abstract class Resource_Repository {
 		foreach ( $object->get_extra_data_keys() as $key ) {
 			$function = 'set_' . $key;
 			if ( is_callable( array( $object, $function ) ) ) {
-				$object->{$function}( get_post_meta( $object->get_id(), $key, true ) );
+				$object->{$function}( get_metadata( $this->meta_type, $object->get_id(), $key, true ) );
 			}
 		}
 	}
@@ -316,7 +334,7 @@ abstract class Resource_Repository {
 		foreach ( $props_to_update as $meta_key => $prop ) {
 			$value   = $object->{"get_$prop"}( 'edit' );
 			$value   = is_string( $value ) ? wp_slash( $value ) : $value;
-			$updated = $this->update_or_delete_post_meta( $object, $meta_key, $value );
+			$updated = $this->update_or_delete_meta( $object, $meta_key, $value );
 
 			if ( $updated ) {
 				$updated_props[] = $prop;
