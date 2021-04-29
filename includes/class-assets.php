@@ -62,7 +62,7 @@ class Assets {
 		// Admin styles for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'ea-admin-styles' );
-			wp_enqueue_style( 'jquery-ui-style' );
+			wp_enqueue_style( 'jquery-ui-styles' );
 		}
 	}
 
