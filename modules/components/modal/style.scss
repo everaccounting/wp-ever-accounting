@@ -1,0 +1,12 @@
+.ea-modal-overlay {
+  .components-modal__frame{
+	overflow-y: visible !important;
+	overflow: inherit;
+  }
+}
+
+@media (min-width: 956px) {
+	.ea-modal {
+		min-width: 662px;
+	}
+}

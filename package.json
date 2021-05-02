@@ -37,7 +37,7 @@
     "@babel/core": "^7.13.16",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@babel/plugin-transform-runtime": "^7.13.15",
-    "@byteever/eslint-plugin": "^1.0.0",
+    "@byteever/eslint-plugin": "file:packages/eslint-plugin",
     "@eaccounting/dependency-extraction-webpack-plugin": "file:packages/dependency-extraction-webpack-plugin",
     "@wordpress/babel-plugin-makepot": "^4.1.2",
     "@wordpress/babel-preset-default": "^5.2.1",
@@ -68,6 +68,7 @@
     "eslint-config-keystone": "^3.0.0",
     "eslint-config-keystone-react": "^1.0.0",
     "eslint-loader": "^4.0.2",
+    "fast-glob": "^3.2.5",
     "git-clone": "^0.1.0",
     "glob": "^7.1.6",
     "grunt-checktextdomain": "^1.0.1",
@@ -89,6 +90,7 @@
     "postcss-loader": "^4.2.0",
     "precss": "^4.0.0",
     "promptly": "^3.2.0",
+    "react-number-format": "^4.5.5",
     "react-select": "^4.3.0",
     "rememo": "^3.0.0",
     "replace-in-file": "^6.2.0",
@@ -107,6 +109,7 @@
     "webpackbar": "^5.0.0-3"
   },
   "scripts": {
+    "analyze-bundles": "npm run build -- --webpack-bundle-analyzer",
     "start": "composer install && npm install && npm -s run build:packages && npm -s run watch",
     "prestart": "php ./bin/update-version.php",
     "watch": "cross-env NODE_ENV=development webpack --watch",

@@ -1,0 +1,16 @@
+.ea-notices__snackbar {
+  position: fixed;
+  left: 0;
+  bottom: 20px;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  .components-snackbar__content {
+	display: flex;
+	align-items: baseline;
+	justify-content: right;
+  }
+  .components-snackbar-list{
+	z-index: 99999999;
+  }
+}

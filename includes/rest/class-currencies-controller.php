@@ -64,7 +64,6 @@ class Currencies_Controller extends Entities_Controller {
 					'callback'            => array( $this, 'get_items' ),
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 					'args'                => $this->get_collection_params(),
-					'primary' => 'id',
 				),
 				array(
 					'methods'             => \WP_REST_Server::CREATABLE,
@@ -72,7 +71,7 @@ class Currencies_Controller extends Entities_Controller {
 					'permission_callback' => array( $this, 'create_item_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
 				),
-				'schema'  => array( $this, 'get_public_item_schema' ),
+				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 		$get_item_args = array(
@@ -137,6 +136,25 @@ class Currencies_Controller extends Entities_Controller {
 		return $this->get_items_permissions_check( $request );
 	}
 
+	/**
+	 * Get a single object.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function get_item( $request ) {
+
+		// Fetch the item.
+		$object = $this->get_object( $request['code'] );
+
+		if ( is_wp_error( $object ) ) {
+			return $object;
+		}
+
+		// Generate a response.
+		return rest_ensure_response( $this->prepare_item_for_response( $object, $request ) );
+	}
 
 	/**
 	 * Get objects.

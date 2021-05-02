@@ -1,13 +1,13 @@
 /**
  * Imports
  */
-@import "mixins";
-@import "variables";
-@import "fonts";
-@import "grids";
-@import "card";
-@import "document";
-@import "utility";
+@import "partials/mixins";
+@import "partials/variables";
+@import "partials/fonts";
+@import "partials/grids";
+@import "partials/card";
+@import "partials/document";
+@import "partials/utility";
 
 /*------------------------------------------------------------------------------
   Overwrite

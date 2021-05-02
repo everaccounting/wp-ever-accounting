@@ -1,0 +1,41 @@
+{
+  "name": "@byteever/eslint-plugin",
+  "version": "1.0.0",
+  "description": "ESLint plugin for ByteEver projects.",
+  "author": "byteever",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "byteever",
+    "eslint",
+    "plugin"
+  ],
+  "homepage": "https://github.com/byteever/eslint-plugin/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/byteever/eslint-plugin.git",
+    "directory": "packages/eslint-plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/byteever/eslint-plugin/issues"
+  },
+  "files": [
+    "configs",
+    "rules",
+    "index.js"
+  ],
+  "main": "index.js",
+  "dependencies": {
+    "@wordpress/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "eslint": "^7",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "eslint-plugin-testing-library": "^3.10.1",
+    "requireindex": "^1.2.0",
+    "prettier": "^2.2.1",
+    "typescript": "^4.1.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

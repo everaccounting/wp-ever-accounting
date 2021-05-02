@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-04-22 16:47:57+00:00\n"
+"POT-Creation-Date: 2021-04-24 22:35:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -156,8 +156,8 @@ msgid "Created date of the contact."
 msgstr ""
 
 #: includes/abstracts/abstract-contacts-controller.php:243
-#: includes/abstracts/abstract-entities-controller.php:665
-#: includes/rest/class-accounts-controller.php:214
+#: includes/abstracts/abstract-entities-controller.php:659
+#: includes/rest/class-accounts-controller.php:206
 #: includes/rest/class-bill-histories-controller.php:436
 #: includes/rest/class-bill-items-controller.php:509
 #: includes/rest/class-bills-controller.php:657
@@ -182,6 +182,7 @@ msgid "Unique identifier for the entity."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:118
+#: includes/abstracts/abstract-posts-controller.php:39
 #: includes/rest/class-currencies-controller.php:123
 #: includes/rest/class-settings-controller.php:85
 msgid "Sorry, you cannot list resources."
@@ -192,18 +193,22 @@ msgid "Sorry, you are not allowed to create resources."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:148
+#: includes/abstracts/abstract-posts-controller.php:53
 msgid "Sorry, you cannot view this resource."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:163
+#: includes/abstracts/abstract-posts-controller.php:70
 msgid "Sorry, you are not allowed to edit this resource."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:178
+#: includes/abstracts/abstract-posts-controller.php:87
 msgid "Sorry, you are not allowed to delete this resource."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:193
+#: includes/abstracts/abstract-posts-controller.php:101
 msgid "Sorry, you are not allowed to batch manipulate this resource."
 msgstr ""
 
@@ -225,45 +230,45 @@ msgstr ""
 msgid "Invalid resource ID."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:322
+#: includes/abstracts/abstract-entities-controller.php:321
 #. translators: %s: Class method name.
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:396
+#: includes/abstracts/abstract-entities-controller.php:395
 #. translators: %s: post type
 msgid "The %s cannot be deleted."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:608
+#: includes/abstracts/abstract-entities-controller.php:602
 msgid "Current page of the collection."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:616
+#: includes/abstracts/abstract-entities-controller.php:610
 msgid "Maximum number of items to be returned in result set."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:625
+#: includes/abstracts/abstract-entities-controller.php:619
 msgid "Limit results to those matching a string."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:631
+#: includes/abstracts/abstract-entities-controller.php:625
 msgid "Limit response to resources published after a given ISO8601 compliant date."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:637
+#: includes/abstracts/abstract-entities-controller.php:631
 msgid "Limit response to resources published before a given ISO8601 compliant date."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:643
+#: includes/abstracts/abstract-entities-controller.php:637
 msgid "Limit result set to specific ids."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:652
+#: includes/abstracts/abstract-entities-controller.php:646
 msgid "Offset the result set by a specific number of items."
 msgstr ""
 
-#: includes/abstracts/abstract-entities-controller.php:658
+#: includes/abstracts/abstract-entities-controller.php:652
 msgid "Order sort attribute ascending or descending."
 msgstr ""
 
@@ -317,7 +322,7 @@ msgid "Currency Code ID."
 msgstr ""
 
 #: includes/abstracts/abstract-transactions-controller.php:135
-#: includes/rest/class-accounts-controller.php:128
+#: includes/rest/class-accounts-controller.php:120
 #: includes/rest/class-bills-controller.php:474
 #: includes/rest/class-invoices-controller.php:473
 msgid "Currency code."
@@ -642,7 +647,7 @@ msgstr ""
 #: includes/admin/views/reconciliations/edit-reconciliation.php:55
 #: includes/admin/views/revenues/edit-revenue.php:59
 #: includes/class-settings.php:167
-#: includes/rest/class-accounts-controller.php:75
+#: includes/rest/class-accounts-controller.php:67
 msgid "Account"
 msgstr ""
 
@@ -4041,11 +4046,11 @@ msgstr ""
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: includes/models/class-account.php:99
+#: includes/models/class-account.php:98
 msgid "Account name"
 msgstr ""
 
-#: includes/models/class-account.php:100
+#: includes/models/class-account.php:99
 msgid "Account number"
 msgstr ""
 
@@ -4212,7 +4217,7 @@ msgstr ""
 msgid "Transfer data corrupted"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:79
+#: includes/rest/class-accounts-controller.php:71
 #: includes/rest/class-bill-histories-controller.php:64
 #: includes/rest/class-bill-items-controller.php:64
 #: includes/rest/class-invoice-histories-controller.php:64
@@ -4221,48 +4226,48 @@ msgstr ""
 msgid "Unique identifier for the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:88
+#: includes/rest/class-accounts-controller.php:80
 msgid "Name of the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:97
+#: includes/rest/class-accounts-controller.php:89
 msgid "Number of the account."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:106
+#: includes/rest/class-accounts-controller.php:98
 msgid "Opening balance of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:116
+#: includes/rest/class-accounts-controller.php:108
 msgid "Currency code of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:122
+#: includes/rest/class-accounts-controller.php:114
 #: includes/rest/class-bills-controller.php:468
 #: includes/rest/class-invoices-controller.php:467
 msgid "Currency code ID."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:136
+#: includes/rest/class-accounts-controller.php:128
 msgid "Bank name of the account"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:144
+#: includes/rest/class-accounts-controller.php:136
 msgid "Phone number of the bank"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:152
+#: includes/rest/class-accounts-controller.php:144
 msgid "Address of the bank"
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:160
+#: includes/rest/class-accounts-controller.php:152
 #: includes/rest/class-categories-controller.php:112
 #: includes/rest/class-currencies-controller.php:249
 #: includes/rest/class-items-controller.php:199
 msgid "Status of the item."
 msgstr ""
 
-#: includes/rest/class-accounts-controller.php:188
+#: includes/rest/class-accounts-controller.php:180
 #: includes/rest/class-bill-items-controller.php:483
 #: includes/rest/class-categories-controller.php:117
 #: includes/rest/class-invoice-items-controller.php:484

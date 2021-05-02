@@ -1,27 +1,29 @@
 /**
 * Imports
 */
-@import "mixins";
-@import "variables";
-@import "animation";
-@import "fonts";
-@import "icons";
+@import "partials/mixins";
+@import "partials/variables";
+@import "partials/animation";
+@import "partials/fonts";
+@import "partials/icons";
 @import "select2/core";
-@import "grids";
-@import "card";
-@import "form";
-@import "blank-state";
-@import "notice";
-@import "dropdown";
-@import "widgets";
-@import "daterangepicker";
-@import "table";
-//@import "invoice";
-@import "utility";
-//@import "invoice-table";
-@import "settings";
-@import "document";
-@import "admin-common";
+@import "partials/grids";
+@import "partials/card";
+@import "partials/form";
+@import "partials/blank-state";
+@import "partials/notice";
+@import "partials/dropdown";
+@import "partials/widgets";
+@import "partials/daterangepicker";
+@import "partials/table";
+//@import "partials/invoice";
+@import "partials/utility";
+//@import "partials/invoice-table";
+@import "partials/settings";
+@import "partials/document";
+@import "partials/admin-common";
+
+
 
 
 /*------------------------------------------------------------------------------

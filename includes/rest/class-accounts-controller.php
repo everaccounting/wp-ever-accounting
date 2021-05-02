@@ -29,6 +29,14 @@ class Accounts_Controller extends Entities_Controller {
 	 */
 	protected $rest_base = 'accounts';
 
+	/**
+	 * entity type.
+	 *
+	 * @var string
+	 *
+	 * @since 1.1.2
+	 */
+	protected $entity_type = 'account';
 
 	/**
 	 * Entity model class.
