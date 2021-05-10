@@ -71,7 +71,7 @@ $edit_url        = eaccounting_admin_url(
 					<div class="ea-widget-card__content">
 						<div class="ea-widget-card__primary">
 							<span class="ea-widget-card__title"><?php esc_html_e( 'Opening Balance', 'wp-ever-accounting' ); ?></span>
-							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( $account->get_opening_balance(), $account->get_currency_code() ); ?></span>
+							<span class="ea-widget-card__amount"><?php echo eaccounting_format_price( eaccounting_format_decimal_for_currency($account->get_opening_balance(), 4, $account->get_currency_code()),  $account->get_currency_code() ); ?></span>
 						</div>
 					</div>
 				</div><!--.ea-widget-card-->
