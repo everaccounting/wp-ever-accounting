@@ -289,7 +289,7 @@ class Item extends Resource_Model {
 	 *
 	 */
 	public function set_sale_price( $sale_price ) {
-		$this->set_prop( 'sale_price', eaccounting_format_decimal( $sale_price, 4 ) );
+		$this->set_prop( 'sale_price', eaccounting_format_decimal_for_currency( $sale_price, 4, eaccounting_get_default_currency() ) );
 	}
 
 	/**
@@ -299,7 +299,7 @@ class Item extends Resource_Model {
 	 *
 	 */
 	public function set_purchase_price( $purchase_price ) {
-		$this->set_prop( 'purchase_price', eaccounting_format_decimal( $purchase_price, 4 ) );
+		$this->set_prop( 'purchase_price', eaccounting_format_decimal_for_currency( $purchase_price, 4, eaccounting_get_default_currency() ) );
 	}
 
 	/**

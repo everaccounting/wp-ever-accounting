@@ -284,7 +284,7 @@ function eaccounting_esc_json( $json, $html = false ) {
  *
  * @param      $number
  *
- * @param bool $allow_decimal
+ * @param bool   $allow_decimal
  *
  * @return int|float|null
  */
@@ -306,8 +306,8 @@ function eaccounting_sanitize_number( $number, $allow_decimal = true ) {
  *
  * @param      $number
  *
- * @param int  $decimals
- * @param bool $trim_zeros
+ * @param int    $decimals
+ * @param bool   $trim_zeros
  *
  * @return int|float|null
  */
@@ -322,6 +322,52 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
 
 	if ( $trim_zeros && strstr( $number, '.' ) ) {
 		$number = rtrim( rtrim( $number, '0' ), '.' );
+	}
+
+	return $number;
+}
+
+/**
+ * Get only currency numbers from the string.
+ *
+ * @since 1.1.3
+ *
+ * @param      $number
+ *
+ * @param int    $decimals
+ * @param string $currency_code
+ * @param bool   $trim_zeros
+ *
+ * @return int|float|null
+ */
+function eaccounting_format_decimal_for_currency( $number, $decimals = 4, $currency_code = 'USD', $trim_zeros = false ) {
+	$currency          = eaccounting_get_currency( $currency_code );
+	$decimal_separator = $currency->get_decimal_separator();
+
+	if ( '.' === $decimal_separator ) {
+		// Convert multiple dots to just one.
+		$number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+
+		if ( is_numeric( $decimals ) ) {
+			$number = number_format( floatval( $number ), $decimals, '.', '' );
+		}
+
+		if ( $trim_zeros && strstr( $number, '.' ) ) {
+			$number = rtrim( rtrim( $number, '0' ), '.' );
+		}
+	} elseif ( ',' === $decimal_separator ) {
+		// Convert multiple commas to just one.
+		// $number = preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $number ) );
+
+		if ( is_numeric( $decimals ) ) {
+
+			$number = number_format( floatval( $number ), $decimals, ',', '' );
+
+		}
+
+		if ( $trim_zeros && strstr( $number, ',' ) ) {
+			$number = rtrim( rtrim( $number, '0' ), ',' );
+		}
 	}
 
 	return $number;
@@ -395,7 +441,7 @@ function eaccounting_hex_darker( $color, $factor = 30 ) {
 
 	foreach ( $base as $k => $v ) {
 		$amount      = $v / 100;
-		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
+		$amount      = eaccounting_format_decimal( ( $amount * $factor ), false );
 		$new_decimal = $v - $amount;
 
 		$new_hex_component = dechex( $new_decimal );
@@ -424,7 +470,7 @@ function eaccounting_hex_lighter( $color, $factor = 30 ) {
 	foreach ( $base as $k => $v ) {
 		$amount      = 255 - $v;
 		$amount      = $amount / 100;
-		$amount      = eaccounting_format_decimal( ($amount * $factor), false );
+		$amount      = eaccounting_format_decimal( ( $amount * $factor ), false );
 		$new_decimal = $v + $amount;
 
 		$new_hex_component = dechex( $new_decimal );
@@ -545,7 +591,6 @@ function eaccounting_number_dictionary() {
  * @param $amount
  *
  * @return string|null
- *
  */
 function eaccounting_numbers_to_words( $number ) {
 	$hyphen      = '-';
