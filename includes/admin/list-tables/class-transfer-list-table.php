@@ -187,7 +187,7 @@ class EverAccounting_Transfer_List_Table extends EverAccounting_List_Table {
 				$account = eaccounting_get_account( $transfer->get_from_account_id( 'edit' ) );
 				$value   = '&mdash;';
 				if ( $account ) {
-					$value = eaccounting_price( $transfer->get_amount(), $account->get_currency_code() );
+				    $value = eaccounting_price( $transfer->get_amount(), $account->get_currency_code() );
 				}
 				break;
 			case 'from_account_id':

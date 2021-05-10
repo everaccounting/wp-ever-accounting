@@ -138,8 +138,6 @@ class Controller {
 	 * @since 1.1.0
 	 */
 	public function update_customer_total_paid( $transaction_id, $transaction ) {
-		error_log( print_r( $transaction_id, true ) );
-		error_log( print_r( $transaction, true ) );
 		$customer = eaccounting_get_customer( $transaction->get_customer_id() );
 		if ( $customer ) {
 			eaccounting_insert_customer(

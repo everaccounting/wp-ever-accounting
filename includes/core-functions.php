@@ -157,7 +157,7 @@ function eaccounting_format_price( $amount, $code = null ) {
 
 		return '00.00';
 	}
-
+	
 	return $amount->format();
 }
 

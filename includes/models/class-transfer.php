@@ -364,7 +364,7 @@ class Transfer extends Resource_Model {
 	 * @return string
 	 */
 	public function get_formatted_amount() {
-		return eaccounting_format_price( $this->get_amount(), $this->get_currency_code() );
+		return eaccounting_format_price( eaccounting_format_decimal_for_currency( $this->get_amount(), 4,  $this->get_currency_code() ), $this->get_currency_code() );
 	}
 
 
