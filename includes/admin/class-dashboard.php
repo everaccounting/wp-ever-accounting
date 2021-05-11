@@ -270,7 +270,8 @@ class Dashboard {
 		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
-			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			/** $amount = eaccounting_price_to_default(  $result->amount,$result->currency_code,  $result->currency_rate ); */
+			$amount = eaccounting_price_to_default( eaccounting_format_decimal_for_currency( $result->amount, 4, $result->currency_code) ,$result->currency_code,  $result->currency_rate );
 			if ( isset( $data[ $result->category ] ) ) {
 				$data[ $result->category_id ]['amount'] = (int) ( $data[ $result->category ]['amount'] + $amount );
 			} else {
@@ -364,7 +365,8 @@ class Dashboard {
 		$results    = $wpdb->get_results( $sql );
 		$data       = array();
 		foreach ( $results as $result ) {
-			$amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate );
+			/** $amount = eaccounting_price_to_default( $result->amount, $result->currency_code, $result->currency_rate ); */
+			$amount = eaccounting_price_to_default( eaccounting_format_decimal_for_currency( $result->amount, 4, $result->currency_code ) , $result->currency_code, $result->currency_rate );
 			if ( isset( $data[ $result->category ] ) ) {
 				$data[ $result->category_id ]['amount'] = (int) ( $data[ $result->category ]['amount'] + $amount );
 			} else {
@@ -479,7 +481,11 @@ class Dashboard {
 				<tr>
 					<td><?php echo esc_html( $income->payment_date ); ?></td>
 					<td><?php echo esc_html( $income->name ); ?></td>
-					<td><?php echo eaccounting_format_price( $income->amount, $income->currency_code ); ?></td>
+					<td><?php
+                        /** echo eaccounting_format_price( $income->amount,$income->currency_code);*/
+                        echo eaccounting_format_price( eaccounting_format_decimal_for_currency( $income->amount, 4, $income->currency_code),$income->currency_code );
+                        ?>
+                    </td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
@@ -531,7 +537,7 @@ class Dashboard {
 				<tr>
 					<td><?php echo esc_html( $expense->payment_date ); ?></td>
 					<td><?php echo esc_html( $expense->name ); ?></td>
-					<td><?php echo eaccounting_format_price( $expense->amount, $expense->currency_code ); ?></td>
+					<td><?php /** echo eaccounting_format_price( $expense->amount,$expense->currency_code);*/ echo eaccounting_format_price( eaccounting_format_decimal_for_currency( $expense->amount, 4, $expense->currency_code ), $expense->currency_code ); ?></td>
 				</tr>
 			<?php endforeach; ?>
 			</tbody>
