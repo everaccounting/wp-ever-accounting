@@ -340,7 +340,10 @@ function eaccounting_format_decimal( $number, $decimals = 4, $trim_zeros = false
  *
  * @return int|float|null
  */
-function eaccounting_format_decimal_for_currency( $number, $decimals = 4, $currency_code = 'USD', $trim_zeros = false ) {
+function eaccounting_format_decimal_for_currency( $number, $decimals = 4, $currency_code = null, $trim_zeros = false ) {
+	if ( is_null( $currency_code ) ) {
+		$currency_code = eaccounting_get_default_currency();
+	}
 	$currency          = eaccounting_get_currency( $currency_code );
 	$decimal_separator = $currency->get_decimal_separator();
 

@@ -519,10 +519,10 @@ class Invoice extends Document {
 	 */
 	public function get_total_due() {
 		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
-		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) <= 0 ) {
+		if ( eaccounting_price_to_default($due,$this->get_currency_code(), $this->get_currency_rate()) <= 0 ) {
 			$due = 0;
 		}
-
+		
 		return $due;
 	}
 
@@ -538,7 +538,7 @@ class Invoice extends Document {
 		foreach ( $this->get_payments() as $payment ) {
 			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $this->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
 		}
-
+		
 		return $total_paid;
 	}
 
