@@ -69,7 +69,7 @@ try {
 						array(
 							'label'         => __( 'Amount', 'wp-ever-accounting' ),
 							'name'          => 'amount',
-							'value'         => $revenue->get_amount(),
+							'value'         => eaccounting_format_decimal_for_currency($revenue->get_amount(),4, $revenue->get_currency_code()),
 							'required'      => true,
 							'wrapper_class' => 'ea-col-6',
 							'placeholder'   => __( 'Enter Amount', 'wp-ever-accounting' ),

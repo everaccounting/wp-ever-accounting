@@ -75,8 +75,7 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 						array(
 							'label'         => __( 'Amount', 'wp-ever-accounting' ),
 							'name'          => 'amount',
-							'value'         => $payment->get_amount(),
-							'data_type'     => 'price',
+							'value'         => eaccounting_format_decimal_for_currency($payment->get_amount(),4, $payment->get_currency_code()),
 							'required'      => true,
 							'wrapper_class' => 'ea-col-6',
 							'placeholder'   => __( 'Enter amount', 'wp-ever-accounting' ),

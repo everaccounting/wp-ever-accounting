@@ -132,7 +132,7 @@ class Vendor extends Contact {
 			$total        = 0;
 			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='expense' AND contact_id=%d", $this->get_id() ) );
 			foreach ( $transactions as $transaction ) {
-				$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
+				$total += eaccounting_price_to_default( eaccounting_format_decimal_for_currency( $transaction->amount, 4, $transaction->currency_code ),$transaction->currency_code,  $transaction->currency_rate );
 			}
 			wp_cache_set( 'vendor_total_total_paid_' . $this->get_id(), $total, 'ea_vendors' );
 		}
@@ -161,7 +161,7 @@ class Vendor extends Contact {
 
 			$total = 0;
 			foreach ( $bills as $bill ) {
-				$total += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
+				$total += eaccounting_price_to_default( eaccounting_format_decimal_for_currency( $bill->amount, 4, $bill->currency_code ),$bill->currency_code, $bill->currency_rate );
 			}
 
 			if ( ! empty( $total ) ) {
@@ -177,7 +177,7 @@ class Vendor extends Contact {
 				);
 
 				foreach ( $revenues as $revenue ) {
-					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
+					$total -= eaccounting_price_to_default( eaccounting_format_decimal_for_currency( $revenue->amount, 4, $revenue->currency_code),$revenue->currency_code, $revenue->currency_rate );
 				}
 			}
 			wp_cache_set( 'vendor_total_total_due_' . $this->get_id(), $total, 'ea_vendors' );

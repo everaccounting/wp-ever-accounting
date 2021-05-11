@@ -186,7 +186,7 @@ class EverAccounting_Payment_List_Table extends EverAccounting_List_Table {
 				$value = '<a href="' . esc_url( $edit_url ) . '">' . esc_html( eaccounting_date( $payment->get_payment_date() ) ) . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'amount':
-				$value = eaccounting_format_price( $payment->get_amount(), $payment->get_currency_code() );
+				$value = eaccounting_format_price( eaccounting_format_decimal_for_currency( $payment->get_amount(), 4, $payment->get_currency_code() ), $payment->get_currency_code() );
 				break;
 			case 'account_id':
 				$account = eaccounting_get_account( $payment->get_account_id( 'edit' ) );

@@ -336,9 +336,7 @@ abstract class Transaction extends Resource_Model {
 	 * @since 1.0.2
 	 */
 	public function set_amount( $value ) {
-		$account = eaccounting_get_account( $this->get_account_id() );
-		$code    = ( $account ) ? $account->get_currency_code() : eaccounting_get_default_currency();
-		$this->set_prop( 'amount', eaccounting_format_decimal_for_currency( $value, 4, $code ) );
+		$this->set_prop( 'amount',  $value );
 	}
 
 	/**
