@@ -546,7 +546,7 @@ class Bill extends Document {
 		foreach ( $this->get_payments() as $payment ) {
 			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $this->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
 		}
-
+		
 		return $total_paid;
 	}
 

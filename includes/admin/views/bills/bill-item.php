@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<td class="ea-document__line-price" width="1%" data-value="<?php echo $item->get_price(); ?>">
 		<div class="view">
-			<?php echo esc_html( eaccounting_price( $item->get_price(), $bill->get_currency_code() ) ); ?>
+			<?php echo esc_html( eaccounting_price( eaccounting_format_decimal_for_currency( $item->get_price(),4, $bill->get_currency_code() ), $bill->get_currency_code() ) ); ?>
 		</div>
 		<div class="edit" style="display: none;">
 			<input type="number" step=".0001" min="0" class="line_item_price" name="items[<?php echo $item_id; ?>][price]" value="<?php echo esc_attr( $item->get_price() ); ?>"/>
@@ -66,7 +66,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<td class="ea-document__line-subtotal" width="1%">
 		<div class="view">
-			<span class="line_item_subtotal"><?php echo esc_html( eaccounting_format_price( $item->get_subtotal(), $bill->get_currency_code() ) ); ?></span>
+			<span class="line_item_subtotal"><?php echo esc_html( eaccounting_format_price( eaccounting_format_decimal_for_currency( $item->get_subtotal(), 4, $bill->get_currency_code() ), $bill->get_currency_code() ) ); ?></span>
 		</div>
 	</td>
 
