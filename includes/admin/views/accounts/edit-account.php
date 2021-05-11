@@ -84,10 +84,11 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 						);
 						eaccounting_text_input(
 							array(
-								'wrapper_class' => 'ea-col-6',
 								'label'         => __( 'Opening Balance', 'wp-ever-accounting' ),
-								'name'          => 'opening_balance',
-								'value'         => $account->get_opening_balance(),
+								'name'          => 'opening-balance',
+								'value'         => eaccounting_format_decimal_for_currency( $account->get_opening_balance(),4, $account->get_currency_code()),
+								'wrapper_class' => 'ea-col-6',
+								'placeholder'   => __( 'Enter Amount', 'wp-ever-accounting' ),
 								'default'       => '0.00',
 							)
 						);
@@ -172,7 +173,7 @@ $title = $account->exists() ? __( 'Update Account', 'wp-ever-accounting' ) : __(
 <?php
 eaccounting_enqueue_js(
 	"
-	jQuery('#ea-account-form #opening_balance').inputmask('decimal', {
+	jQuery('#ea-account-form #opening-balance').inputmask('decimal', {
 			alias: 'numeric',
 			groupSeparator: '" . $account->get_currency_thousand_separator() . "',
 			autoGroup: true,
