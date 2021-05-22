@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
  */
 import { addQueryArgs } from '@wordpress/url';
 import { apiFetch } from '@wordpress/data-controls';
-
+import { __unstableAwaitPromise } from '@wordpress/data-controls';
 /**
  * Internal dependencies
  */
@@ -75,19 +75,6 @@ export function receiveUserPermission(key, isAllowed) {
 	};
 }
 
-// /**
-//  * Returns an action object used in adding new entities.
-//  *
-//  * @param {Array} entities  Entities received.
-//  *
-//  * @return {Object} Action object.
-//  */
-// export function addEntities(entities) {
-// 	return {
-// 		type: 'ADD_ENTITIES',
-// 		entities,
-// 	};
-// }
 
 /**
  * Returns an action object used in adding new routes.
@@ -304,6 +291,7 @@ export function* editEntity(name, recordId, edits, options = {}) {
 export function* saveEntity(name, record, __unstableFetch = null) {
 	const entity = yield select(STORE_KEY, 'getRoute', name);
 	if (!entity) {
+		console.warn(`Route was not found for ${name}.`)
 		return;
 	}
 	const entityIdKey = entity.key || DEFAULT_ENTITY_KEY;
@@ -344,7 +332,6 @@ export function* saveEntity(name, record, __unstableFetch = null) {
 		let error;
 		try {
 			const path = `${entity.endpoint}${recordId ? '/' + recordId : ''}`;
-
 			const persistedRecord = yield select(
 				STORE_KEY,
 				'getRawEntity',

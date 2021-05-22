@@ -14,6 +14,7 @@ import Form from '../form'
 import TextControl from '../text-control'
 import {CurrencySelect} from './currency-form'
 import {createNoticesFromResponse} from '../lib'
+import EntitySelect from '../select-control/entity-select'
 
 export function validateContactForm(values) {
 	const errors = {};
@@ -58,7 +59,9 @@ export function ContactForm({onSave, item = {}, type = 'customers'}) {
 		name: type,
 	});
 	const onSubmit = async (item) => {
-		const res = await saveEntity({...item.currency, ...item});
+		console.log(item);
+		const res = await saveEntity({...item});
+		console.log(res);
 		const {id} = item;
 		const error = onSaveError(id);
 		createNoticesFromResponse(error);
@@ -101,12 +104,35 @@ export function ContactForm({onSave, item = {}, type = 'customers'}) {
 	);
 }
 
-export function ContactModal({onSave, item = {}, onClose, title = __('Save Contact')}) {
+export function ContactModal({onSave, item = {}, onClose, title = __('Save Contact') }, type='customers') {
 	return (
 		<>
 			<Modal title={title} onClose={onClose}>
-				<ContactForm item={item} onSave={onSave}/>
+				<ContactForm item={item} onSave={onSave} type={type}/>
 			</Modal>
 		</>
 	);
+}
+
+/**
+ *
+ * @param label
+ * @param creatable
+ * @param type
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function ContactSelect({label, creatable, type = 'customers', ...props }){
+	return(
+		<>
+		<EntitySelect
+			label={label}
+			entity={type}
+			creatable={creatable}
+			modal={ <ContactModal title={ __('Add New')} type={type}/>}
+			{...props}
+			/>
+		</>
+	)
 }

@@ -1,18 +1,19 @@
 /**
  * WordPress dependencies
  */
-import { Button } from '@wordpress/components';
+import {Button} from '@wordpress/components';
 /**
  * External dependencies
  */
-import { useEntity } from '@eaccounting/data';
-import { __ } from '@wordpress/i18n';
-import { isEmpty } from 'lodash';
+import {useEntity} from '@eaccounting/data';
+import {__} from '@wordpress/i18n';
+import {isEmpty} from 'lodash';
 
 import Modal from '../modal'
 import Form from '../form'
 import TextControl from '../text-control'
 import {createNoticesFromResponse} from '../lib'
+import EntitySelect from '../select-control/entity-select'
 
 export function validateCategoryForm(values) {
 	const errors = {};
@@ -26,7 +27,7 @@ export function validateCategoryForm(values) {
 }
 
 export function CategoryFormFields(props) {
-	const { getInputProps } = props;
+	const {getInputProps} = props;
 	return (
 		<>
 			<TextControl label={__('Name')} {...getInputProps('name')} />
@@ -34,13 +35,13 @@ export function CategoryFormFields(props) {
 	);
 }
 
-export function CategoryForm({ onSave, item = {} }) {
-	const { saveEntity, onSaveError } = useEntity({
+export function CategoryForm({onSave, item = {}}) {
+	const {saveEntity, onSaveError} = useEntity({
 		name: 'categories',
 	});
 	const onSubmit = async (item) => {
-		const res = await saveEntity({ ...item.currency, ...item });
-		const { id } = item;
+		const res = await saveEntity({...item.currency, ...item});
+		const {id} = item;
 		const error = onSaveError(id);
 		createNoticesFromResponse(error);
 		if (!error && res && res.id && onSave) {
@@ -52,14 +53,13 @@ export function CategoryForm({ onSave, item = {} }) {
 			<Form
 				initialValues={{
 					name: '',
-					currency: {},
-					rate: '',
+					type: '',
 					...item,
 				}}
 				onSubmitCallback={onSubmit}
 				validate={validateCategoryForm}
 			>
-				{({ getInputProps, isValidForm, handleSubmit, setValue }) => (
+				{({getInputProps, isValidForm, handleSubmit, setValue}) => (
 					<>
 						<CategoryFormFields
 							getInputProps={getInputProps}
@@ -80,75 +80,27 @@ export function CategoryForm({ onSave, item = {} }) {
 	);
 }
 
-export function CategoryModal({
-								  onSave,
-								  item = {},
-								  onClose,
-								  title = __('Save Category'),
-							  }) {
+export function CategoryModal({onSave, item = {}, onClose, title = __('Save Category'),type ='income'}) {
 	return (
 		<>
 			<Modal title={title} onClose={onClose}>
-				<CategoryForm item={item} onSave={onSave} />
+				<CategoryForm item={{...item, type}} onSave={onSave}/>
 			</Modal>
 		</>
 	);
 }
 
-export function IncomeCategoryModal({
-										onSave,
-										item = {},
-										onClose,
-										title = __('Save Category'),
-									}) {
+export function CategorySelect({ label, creatable, type = 'income', ...props }) {
 	return (
 		<>
-			<Modal title={title} onClose={onClose}>
-				<CategoryForm
-					item={{ ...item, type: 'income' }}
-					onSave={onSave}
-				/>
-			</Modal>
+		<EntitySelect
+			label={label}
+			entity={'categories'}
+			creatable={creatable}
+			modal={<CategoryModal title={ __('Add Category')} type={type} />}
+			query={{type:type}}
+			{...props}
+			/>
 		</>
 	);
-}
-
-export function ExpenseCategoryModal({
-										 onSave,
-										 item = {},
-										 onClose,
-										 title = __('Save Category'),
-									 }) {
-	return (
-		<>
-			<Modal title={title} onClose={onClose}>
-				<CategoryForm
-					item={{ ...item, type: 'expense' }}
-					onSave={onSave}
-				/>
-			</Modal>
-		</>
-	);
-}
-
-export function ItemCategoryModal({
-									  onSave,
-									  item = {},
-									  onClose,
-									  title = __('Save Category'),
-								  }) {
-	return (
-		<>
-			<Modal title={title} onClose={onClose}>
-				<CategoryForm
-					item={{ ...item, type: 'item' }}
-					onSave={onSave}
-				/>
-			</Modal>
-		</>
-	);
-}
-
-export function CategorySelect() {
-	return <>Category Select</>;
 }

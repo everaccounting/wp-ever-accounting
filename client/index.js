@@ -11,8 +11,10 @@ import domReady from '@wordpress/dom-ready';
  */
 import {
 	NoticeContainer,
-	EntitySelect,
-	ContactModal,
+	ContactSelect,
+	CurrencySelect,
+	CategorySelect,
+	ItemSelect,
 } from '@eaccounting/components';
 
 /**
@@ -21,13 +23,29 @@ import {
 function App() {
 	return (
 		<>
-			<EntitySelect
+			<ContactSelect
 				creatable={true}
-				modal={<ContactModal />}
 				label={'Customer'}
-				entity={'customers'}
-				modalItem={{ type: 'customer' }}
+				type={'customers'}
 			/>
+
+			<CategorySelect
+				creatable={true}
+				label={'Item category'}
+				type={'item'}
+			/>
+			<CategorySelect
+				creatable={true}
+				label={'Income category'}
+				type={'income'}
+			/>
+			<CategorySelect
+				creatable={true}
+				label={'Expense category'}
+				type={'expense'}
+			/>
+			<CurrencySelect creatable={true} />
+			<ItemSelect creatable={true} label={'Item'} />
 			<NoticeContainer />
 			{/*<CurrencyModal />*/}
 			{/*<CurrencyForm />*/}
@@ -41,5 +59,5 @@ function App() {
 
 domReady(() => {
 	const root = document.getElementById('ea-react');
-	return render(<App />, root);
+	return root ? render(<App />, root) : null;
 });

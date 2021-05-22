@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: Ever Accounting 1.1.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/wp-ever-accounting\n"
-"POT-Creation-Date: 2021-05-22 13:05:24+00:00\n"
+"POT-Creation-Date: 2021-05-22 15:43:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -161,8 +161,8 @@ msgstr ""
 #: includes/rest/class-bill-histories-controller.php:436
 #: includes/rest/class-bill-items-controller.php:509
 #: includes/rest/class-bills-controller.php:657
-#: includes/rest/class-categories-controller.php:142
-#: includes/rest/class-currencies-controller.php:297
+#: includes/rest/class-categories-controller.php:143
+#: includes/rest/class-currencies-controller.php:309
 #: includes/rest/class-invoice-histories-controller.php:437
 #: includes/rest/class-invoice-items-controller.php:509
 #: includes/rest/class-invoices-controller.php:656
@@ -176,13 +176,13 @@ msgid "Invalid file type. The importer supports CSV and TXT file formats."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:82
-#: includes/rest/class-currencies-controller.php:87
+#: includes/rest/class-currencies-controller.php:88
 msgid "Unique identifier for the entity."
 msgstr ""
 
 #: includes/abstracts/abstract-entities-controller.php:118
 #: includes/abstracts/abstract-posts-controller.php:39
-#: includes/rest/class-currencies-controller.php:122
+#: includes/rest/class-currencies-controller.php:123
 #: includes/rest/class-settings-controller.php:85
 msgid "Sorry, you cannot list resources."
 msgstr ""
@@ -604,7 +604,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:93
 #: includes/admin/views/revenues/view-income.php:137
 #: includes/models/class-bill.php:73 includes/models/class-invoice.php:74
-#: includes/rest/class-categories-controller.php:72
+#: includes/rest/class-categories-controller.php:73
 msgid "Category"
 msgstr ""
 
@@ -760,7 +760,7 @@ msgstr ""
 #: includes/admin/class-menu.php:67 includes/admin/class-menu.php:68
 #: includes/admin/ea-admin-functions.php:117
 #: includes/admin/ea-admin-functions.php:157
-#: includes/admin/ea-admin-functions.php:191 includes/class-assets.php:88
+#: includes/admin/ea-admin-functions.php:191 includes/class-assets.php:87
 msgid "Accounting"
 msgstr ""
 
@@ -998,6 +998,7 @@ msgstr ""
 #: includes/admin/views/vendors/view-vendor.php:136
 #: includes/class-emails.php:46 includes/class-settings.php:79
 #: includes/models/class-customer.php:66 includes/models/class-vendor.php:65
+#: modules/components/forms/category-form.js:33
 msgid "Name"
 msgstr ""
 
@@ -1110,7 +1111,7 @@ msgstr ""
 #: includes/admin/views/vendors/view-vendor.php:140
 #: includes/class-settings.php:175 includes/models/class-bill.php:72
 #: includes/models/class-invoice.php:73
-#: includes/rest/class-currencies-controller.php:182
+#: includes/rest/class-currencies-controller.php:194
 msgid "Currency"
 msgstr ""
 
@@ -2129,6 +2130,7 @@ msgstr ""
 #: includes/admin/views/revenues/edit-revenue.php:160
 #: includes/admin/views/transfers/edit-transfer.php:143
 #: includes/admin/views/vendors/edit-vendor.php:212
+#: modules/components/forms/category-form.js:74
 msgid "Submit"
 msgstr ""
 
@@ -2858,6 +2860,7 @@ msgstr ""
 #: includes/admin/views/categories/edit-category.php:38
 #: includes/admin/views/js/modal-add-category.php:18
 #: includes/admin/views/js/modal-income-category.php:18
+#: modules/components/forms/category-form.js:100
 msgid "Add Category"
 msgstr ""
 
@@ -3525,15 +3528,15 @@ msgstr ""
 msgid "Error: Cheatin&#8217; huh?."
 msgstr ""
 
-#: includes/class-assets.php:186
+#: includes/class-assets.php:160
 msgid "Could not find the uploaded file, please try again"
 msgstr ""
 
-#: includes/class-assets.php:187
+#: includes/class-assets.php:161
 msgid "  - Select field to preview data -"
 msgstr ""
 
-#: includes/class-assets.php:188
+#: includes/class-assets.php:162
 msgid "(Required)"
 msgstr ""
 
@@ -3541,51 +3544,51 @@ msgstr ""
 msgid "Duplicate account."
 msgstr ""
 
-#: includes/class-controller.php:233
+#: includes/class-controller.php:231
 msgid "Payment date is required."
 msgstr ""
 
-#: includes/class-controller.php:237 includes/class-controller.php:285
+#: includes/class-controller.php:235 includes/class-controller.php:283
 msgid "Payment method is required."
 msgstr ""
 
-#: includes/class-controller.php:242
+#: includes/class-controller.php:240
 msgid "A valid payment category is required."
 msgstr ""
 
-#: includes/class-controller.php:247
+#: includes/class-controller.php:245
 msgid "Vendor is not valid."
 msgstr ""
 
-#: includes/class-controller.php:252
+#: includes/class-controller.php:250
 msgid "Account is not valid."
 msgstr ""
 
-#: includes/class-controller.php:256
+#: includes/class-controller.php:254
 msgid "Payment amount is required."
 msgstr ""
 
-#: includes/class-controller.php:281
+#: includes/class-controller.php:279
 msgid "Revenue date is required."
 msgstr ""
 
-#: includes/class-controller.php:290
+#: includes/class-controller.php:288
 msgid "A valid income category is required."
 msgstr ""
 
-#: includes/class-controller.php:295
+#: includes/class-controller.php:293
 msgid "Account is required."
 msgstr ""
 
-#: includes/class-controller.php:300
+#: includes/class-controller.php:298
 msgid "Customer is not valid."
 msgstr ""
 
-#: includes/class-controller.php:304
+#: includes/class-controller.php:302
 msgid "Revenue amount is required."
 msgstr ""
 
-#: includes/class-controller.php:342
+#: includes/class-controller.php:340
 msgid "Duplicate category."
 msgstr ""
 
@@ -4260,15 +4263,15 @@ msgid "Address of the bank"
 msgstr ""
 
 #: includes/rest/class-accounts-controller.php:160
-#: includes/rest/class-categories-controller.php:112
-#: includes/rest/class-currencies-controller.php:267
+#: includes/rest/class-categories-controller.php:113
+#: includes/rest/class-currencies-controller.php:279
 #: includes/rest/class-items-controller.php:199
 msgid "Status of the item."
 msgstr ""
 
 #: includes/rest/class-accounts-controller.php:188
 #: includes/rest/class-bill-items-controller.php:483
-#: includes/rest/class-categories-controller.php:117
+#: includes/rest/class-categories-controller.php:118
 #: includes/rest/class-invoice-items-controller.php:484
 #: includes/rest/class-items-controller.php:237
 msgid "Created date of the account."
@@ -4504,20 +4507,24 @@ msgstr ""
 msgid "Created date of the bill."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:76
+#: includes/rest/class-categories-controller.php:77
 msgid "Unique identifier for the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:85
+#: includes/rest/class-categories-controller.php:86
 msgid "Name of the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:94
+#: includes/rest/class-categories-controller.php:95
 msgid "Type of the category."
 msgstr ""
 
-#: includes/rest/class-categories-controller.php:104
+#: includes/rest/class-categories-controller.php:105
 msgid "Color of the category."
+msgstr ""
+
+#: includes/rest/class-categories-controller.php:156
+msgid "."
 msgstr ""
 
 #: includes/rest/class-countries-controller.php:104
@@ -4528,44 +4535,44 @@ msgstr ""
 msgid "Full name of country."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:186
+#: includes/rest/class-currencies-controller.php:198
 msgid "Unique identifier for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:195
+#: includes/rest/class-currencies-controller.php:207
 msgid "Name of the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:204
+#: includes/rest/class-currencies-controller.php:216
 msgid "Unique code for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:213
+#: includes/rest/class-currencies-controller.php:225
 msgid "Current rate for the currency."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:222
+#: includes/rest/class-currencies-controller.php:234
 #: includes/rest/class-data-currencies-controller.php:140
 msgid "Precision count."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:230
+#: includes/rest/class-currencies-controller.php:242
 msgid "Currency Sumbol."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:239
+#: includes/rest/class-currencies-controller.php:251
 msgid "Position."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:249
+#: includes/rest/class-currencies-controller.php:261
 msgid "Decimal separator count."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:258
+#: includes/rest/class-currencies-controller.php:270
 msgid "Thousand separator count."
 msgstr ""
 
-#: includes/rest/class-currencies-controller.php:272
+#: includes/rest/class-currencies-controller.php:284
 msgid "Created date of the currency."
 msgstr ""
 
@@ -4962,3 +4969,16 @@ msgstr ""
 msgctxt "User role"
 msgid "Accountant"
 msgstr ""
+
+#: modules/components/forms/category-form.js:21
+msgid "Name is required"
+msgstr ""
+
+#: modules/components/forms/category-form.js:24
+msgid "Category type is required"
+msgstr ""
+
+#: modules/components/forms/category-form.js:83
+msgid "Save Category"
+msgstr ""
+

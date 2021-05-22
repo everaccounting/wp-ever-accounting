@@ -56,6 +56,7 @@ class Categories_Controller extends Entities_Controller {
 	 * @return array|int|\WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
+		$query_args['type'] = $request['type'];
 		return eaccounting_get_categories( $query_args );
 	}
 
@@ -149,6 +150,13 @@ class Categories_Controller extends Entities_Controller {
 				'color',
 				'enabled',
 			),
+			'validate_callback' => 'rest_validate_request_arg',
+		);
+		$params['type']    = array(
+			'description'       => __( '.', 'wp-ever-accounting' ),
+			'type'              => 'string',
+			'default'           => 'income',
+			'enum'              => array_keys( eaccounting_get_category_types() ),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
 

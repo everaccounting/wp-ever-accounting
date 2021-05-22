@@ -5,13 +5,13 @@ import { Button } from '@wordpress/components';
 /**
  * External dependencies
  */
-import {
-	Modal,
-	Form,
-	TextControl,
-	EntitySelect,
-	PriceControl,
-} from '@eaccounting/components';
+import Modal from '../modal'
+import Form from '../form'
+import TextControl from '../text-control'
+import PriceControl from '../price-control'
+import EntitySelect from '../select-control/entity-select'
+import {CategorySelect} from './category-form'
+import {createNoticesFromResponse} from '../lib'
 import { useEntity } from '@eaccounting/data';
 import { __ } from '@wordpress/i18n';
 import { isEmpty } from 'lodash';
@@ -46,10 +46,10 @@ export function ItemFormFields(props) {
 				label={__('Purchase price')}
 				{...getInputProps('purchase_price')}
 			/>
-			<EntitySelect
+			<CategorySelect
 				label={__('Category')}
-				entity={'categories'}
-				query={{ type: 'item' }}
+				type={'item'}
+				creatable={true}
 				{...getInputProps('category')}
 			/>
 		</>
@@ -57,9 +57,12 @@ export function ItemFormFields(props) {
 }
 
 export function ItemForm({ onSave, item = {} }) {
-	const { saveEntity } = useEntity({ name: 'items' });
+	const { saveEntity, onSaveError } = useEntity({ name: 'items' });
 	const onSubmit = async (item) => {
 		const res = await saveEntity({ ...item.currency, ...item });
+		const {id} = res;
+		const error = onSaveError(id);
+		createNoticesFromResponse(error);
 		if (res && res.id && onSave) {
 			onSave(item);
 		}
@@ -111,4 +114,18 @@ export function ItemModal({
 			</Modal>
 		</>
 	);
+}
+
+export function ItemSelect({ label, creatable, ...props }){
+	return(
+		<>
+		<EntitySelect
+			label={label}
+			entity={'items'}
+			creatable={creatable}
+			modal={<ItemModal title={__('Add new item')}/>}
+			{...props}
+			/>
+		</>
+	)
 }

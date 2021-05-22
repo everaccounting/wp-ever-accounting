@@ -10,6 +10,7 @@ import { useCallback } from '@wordpress/element';
 import { STORE_KEY } from './constants';
 
 export function useEntity({name, query = {}, id = null }) {
+	console.log(name);
 	const { entities, schema, entity, total, isLoading, getLastEntitySaveError } = useSelect(
 		(select) => {
 			const { getEntities, getEntity, getSchema, getTotal, isRequesting, getLastEntitySaveError } = select(STORE_KEY);
@@ -28,7 +29,7 @@ export function useEntity({name, query = {}, id = null }) {
 
 	const { saveEntity : saveItem, deleteEntity:deleteItem} =useDispatch(STORE_KEY)
 
-	const saveEntity = useCallback( (edits) => saveItem( name, edits ), [
+	const saveEntity = useCallback( (edits, customHandler = null) => saveItem( name, edits, customHandler ), [
 		name
 	] );
 

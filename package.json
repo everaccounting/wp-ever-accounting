@@ -15,11 +15,9 @@
     "url": "https://github.com/everaccounting/wp-ever-accounting/issues"
   },
   "files": [
-    "dist/**/*.{js,scss,php}",
-    "includes/**/*.php",
+    "dist/**/*.{js,scss}",
     "languages/**/*.json",
-    "license.txt",
-    "wp-ever-accounting.php"
+    "license.txt"
   ],
   "engines": {
     "node": ">=8.0.0",

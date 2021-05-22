@@ -2,6 +2,7 @@
  * WordPress dependencies
  */
 import { Button } from '@wordpress/components';
+import apiFetch from '@wordpress/api-fetch';
 /**
  * External dependencies
  */
@@ -60,9 +61,12 @@ export function CurrencyFormFields(props) {
 export function CurrencyForm({ onSave, item = {} }) {
 	const { saveEntity, onSaveError } = useEntity({ name: 'currencies' });
 	const onSubmit = async (item) => {
-		const res = await saveEntity({ ...item.currency, ...item });
-		const { id } = item;
-		const error = onSaveError(id);
+		const res = await saveEntity({ ...item.currency, ...item }, (request) => {
+			const path = isEmpty(item.id) ? '/ea/v1/currencies': request.path
+			return apiFetch({...request, path});
+		});
+		const { code } = item;
+		const error = onSaveError(code);
 		createNoticesFromResponse(error);
 		if (res && res.id && onSave) {
 			onSave(item);
@@ -120,7 +124,7 @@ export function CurrencySelect({ label, creatable, ...props }) {
 	return (
 		<EntitySelect
 			label={label}
-			entity={'items'}
+			entity={'currencies'}
 			creatable={creatable}
 			modal={<CurrencyModal title={__('Add new currency')}/>}
 			{...props}

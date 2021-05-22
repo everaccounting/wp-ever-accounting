@@ -193,7 +193,7 @@ function eaccounting_get_categories( $args = array() ) {
 			'count_total' => false,
 		)
 	);
-
+	error_log(print_r($args, true));
 	$qv           = apply_filters( 'eaccounting_get_categories_args', $args );
 	$table        = \EverAccounting\Repositories\Categories::TABLE;
 	$columns      = \EverAccounting\Repositories\Categories::get_columns();

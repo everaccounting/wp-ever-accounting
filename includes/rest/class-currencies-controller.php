@@ -11,6 +11,7 @@ namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Entities_Controller;
 use EverAccounting\Models\Currency;
+use WP_Error;
 
 defined( 'ABSPATH' ) || die();
 
@@ -83,7 +84,7 @@ class Currencies_Controller extends Entities_Controller {
 			'/' . $this->rest_base . '/(?P<code>[\w-]+)',
 			array(
 				'args'   => array(
-					'id' => array(
+					'code' => array(
 						'description' => __( 'Unique identifier for the entity.', 'wp-ever-accounting' ),
 						'type'        => 'string',
 					),
@@ -115,11 +116,11 @@ class Currencies_Controller extends Entities_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_Error|boolean
+	 * @return WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
 		if ( ! current_user_can( 'manage_eaccounting' ) ) {
-			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		return true;
@@ -130,7 +131,7 @@ class Currencies_Controller extends Entities_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_Error|boolean
+	 * @return WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
 		return $this->get_items_permissions_check( $request );
@@ -141,7 +142,7 @@ class Currencies_Controller extends Entities_Controller {
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return \WP_Error|\WP_REST_Response
+	 * @return WP_Error|\WP_REST_Response
 	 */
 	public function get_item( $request ) {
 
@@ -157,13 +158,24 @@ class Currencies_Controller extends Entities_Controller {
 	}
 
 	/**
+	 * Create a single object.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return WP_Error|\WP_REST_Response
+	 */
+	public function create_item( $request ) {
+		wp_send_json($request);
+	}
+
+	/**
 	 * Get objects.
 	 *
 	 * @param array            $query_args Query args.
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
-	 * @return array|int|\WP_Error
 	 * @since  1.1.0
+	 *@return array|int|WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_currencies( $query_args );
