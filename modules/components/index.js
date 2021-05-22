@@ -1,12 +1,13 @@
 export {default as Card} from './card';
 export {default as ClickOutside} from './click-outside';
 export {default as Form} from './form';
+export * from './forms';
 export {default as ImageUpload} from './image-upload';
 export * from './lib';
 export {default as ListTable} from './list-table';
 export {default as Loading} from './loading';
 export {default as Modal} from './modal';
-export {default as NoticeContainer} from './notice';
+export {default as NoticeContainer} from './notice-container';
 export {default as Pagination} from './pagination';
 export {default as Placeholder} from './placeholder';
 export {default as Popover} from './popover';

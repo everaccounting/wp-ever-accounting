@@ -6,31 +6,27 @@ import domReady from '@wordpress/dom-ready';
 /**
  * Internal dependencies
  */
-import { IncomeCategoryModal } from './forms/category';
-import { ItemModal } from './forms/item';
 /**
  * External dependencies
  */
-import { NoticeContainer, EntitySelect } from '@eaccounting/components';
+import {
+	NoticeContainer,
+	EntitySelect,
+	ContactModal,
+} from '@eaccounting/components';
 
 /**
  * Internal dependencies
  */
 function App() {
-	// addSnackbar('Settings Updated', 'updated_user');
 	return (
 		<>
 			<EntitySelect
-				label={'Category'}
-				entity={'categories'}
 				creatable={true}
-				modal={IncomeCategoryModal}
-			/>
-			<EntitySelect
-				label={'Item'}
-				entity={'items'}
-				creatable={true}
-				modal={ItemModal}
+				modal={<ContactModal />}
+				label={'Customer'}
+				entity={'customers'}
+				modalItem={{ type: 'customer' }}
 			/>
 			<NoticeContainer />
 			{/*<CurrencyModal />*/}

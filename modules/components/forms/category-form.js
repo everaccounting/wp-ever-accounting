@@ -5,15 +5,14 @@ import { Button } from '@wordpress/components';
 /**
  * External dependencies
  */
-import {
-	Modal,
-	Form,
-	TextControl,
-	createNoticesFromResponse,
-} from '@eaccounting/components';
 import { useEntity } from '@eaccounting/data';
 import { __ } from '@wordpress/i18n';
 import { isEmpty } from 'lodash';
+
+import Modal from '../modal'
+import Form from '../form'
+import TextControl from '../text-control'
+import {createNoticesFromResponse} from '../lib'
 
 export function validateCategoryForm(values) {
 	const errors = {};

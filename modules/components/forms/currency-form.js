@@ -5,20 +5,18 @@ import { Button } from '@wordpress/components';
 /**
  * External dependencies
  */
-import {
-	SelectControl,
-	Modal,
-	Form,
-	TextControl,
-	EntitySelect,
-} from '@eaccounting/components';
 import { useEntity } from '@eaccounting/data';
 import { __ } from '@wordpress/i18n';
 import { isEmpty } from 'lodash';
 /**
  * Internal dependencies
  */
-import { ItemModal } from './item';
+import Modal from '../modal'
+import Form from '../form'
+import TextControl from '../text-control'
+import SelectControl from '../select-control'
+import EntitySelect from '../select-control/entity-select'
+import {createNoticesFromResponse} from '../lib'
 
 export function validateCurrencyForm(values) {
 	const errors = {};
@@ -54,16 +52,18 @@ export function CurrencyFormFields(props) {
 				options={currencies}
 				{...getInputProps('currency')}
 			/>
-			<EntitySelect label={__('Currency Code')} entity={'accounts'} />
 			<TextControl label={__('Rate')} {...getInputProps('rate')} />
 		</>
 	);
 }
 
 export function CurrencyForm({ onSave, item = {} }) {
-	const { saveEntity } = useEntity({ name: 'currencies' });
+	const { saveEntity, onSaveError } = useEntity({ name: 'currencies' });
 	const onSubmit = async (item) => {
 		const res = await saveEntity({ ...item.currency, ...item });
+		const { id } = item;
+		const error = onSaveError(id);
+		createNoticesFromResponse(error);
 		if (res && res.id && onSave) {
 			onSave(item);
 		}
@@ -122,7 +122,7 @@ export function CurrencySelect({ label, creatable, ...props }) {
 			label={label}
 			entity={'items'}
 			creatable={creatable}
-			modal={ItemModal}
+			modal={<CurrencyModal title={__('Add new currency')}/>}
 			{...props}
 		/>
 	);

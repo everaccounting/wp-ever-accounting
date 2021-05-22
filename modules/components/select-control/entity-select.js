@@ -10,7 +10,7 @@ import Modal from '../modal';
 import {__} from '@wordpress/i18n';
 import {addQueryArgs} from '@wordpress/url';
 import apiFetch from '@wordpress/api-fetch';
-import {useState, createRef} from '@wordpress/element';
+import {useState, createRef, cloneElement} from '@wordpress/element';
 import {useSelect} from '@wordpress/data';
 /**
  * External dependencies
@@ -21,12 +21,12 @@ import PropTypes from 'prop-types';
 import {get} from 'lodash';
 
 function EntitySelect(props) {
-	const {entity, query = {}, values, valueKey, labelKey, creatable, modal, ...restProps} = props;
+	const {entity, query = {}, values, valueKey, labelKey, creatable, modal, modalItem, modalTitle, ...restProps} = props;
 	const [isModalOpen, setModalOpen] = useState(false);
 	const selectInputRef = createRef();
 	const route = useSelect((select) => select(STORE_NAME).getRoute(entity));
 	const items = useSelect((select) => select(STORE_NAME).getEntities(entity, query));
-	const Modal = modal;
+	// const Modal = modal;
 
 	const fetchAPI = async (params) => {
 		return await apiFetch({
@@ -54,7 +54,6 @@ function EntitySelect(props) {
 		return <Icon icon="plus" style={style} onClick={onClick}/>
 	}
 
-
 	return(
 		<>
 			<SelectControl
@@ -72,7 +71,7 @@ function EntitySelect(props) {
 						: __('Type to search', 'wp-ever-accounting');
 				}}
 			/>
-			{ isModalOpen && (<Modal onClose={toggleModal} onSave={handleCreate}/>) }
+			{isModalOpen && cloneElement(modal, {onClose:toggleModal, onSave:handleCreate})}
 		</>
 	)
 }
@@ -84,8 +83,9 @@ EntitySelect.propTypes = {
 	query: PropTypes.object,
 	values: PropTypes.any,
 	creatable: PropTypes.bool,
-	modal: PropTypes.any,
+	modal: PropTypes.node,
 };
+
 EntitySelect.defaultProps = {
 	valueKey: 'id',
 	labelKey: 'name',

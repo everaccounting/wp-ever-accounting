@@ -12,7 +12,6 @@ function SelectControl(props){
 		help,
 		className,
 		required,
-		options,
 		isMulti = false,
 		before,
 		after,
