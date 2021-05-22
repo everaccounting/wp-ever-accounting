@@ -1,8 +1,8 @@
-module.exports = function ( grunt ) {
+module.exports = function (grunt) {
 	'use strict';
-	const pkg = grunt.file.readJSON( 'package.json' );
+	const pkg = grunt.file.readJSON('package.json');
 	// Project configuration
-	grunt.initConfig( {
+	grunt.initConfig({
 		addtextdomain: {
 			options: {
 				textdomain: 'wp-ever-accounting',
@@ -60,7 +60,7 @@ module.exports = function ( grunt ) {
 			target: {
 				options: {
 					domainPath: '/languages',
-					exclude: [ '.git/*', 'bin/*', 'node_modules/*', 'tests/*' ],
+					exclude: ['.git/*', 'bin/*', 'node_modules/*', 'tests/*'],
 					mainFile: 'wp-ever-accounting.php',
 					potFilename: 'wp-ever-accounting.pot',
 					potHeaders: {
@@ -83,7 +83,7 @@ module.exports = function ( grunt ) {
 
 		// Clean up build directory
 		clean: {
-			main: [ 'build/' ],
+			main: ['build/'],
 		},
 		copy: {
 			main: {
@@ -136,23 +136,19 @@ module.exports = function ( grunt ) {
 				},
 				expand: true,
 				cwd: 'build/',
-				src: [ '**/*' ],
+				src: ['**/*'],
 				dest: pkg.name,
 			},
 		},
-	} );
+	});
 
 	// Saves having to declare each dependency
-	require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
+	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-	grunt.registerTask( 'default', [ 'i18n', 'readme' ] );
-	grunt.registerTask( 'build', [ 'i18n', 'readme' ] );
-	grunt.registerTask( 'i18n', [
-		'addtextdomain',
-		'checktextdomain',
-		'makepot',
-	] );
-	grunt.registerTask( 'readme', [ 'wp_readme_to_markdown' ] );
-	grunt.registerTask( 'zip', [ 'clean', 'copy', 'compress' ] );
+	grunt.registerTask('default', ['i18n', 'readme']);
+	grunt.registerTask('build', ['i18n', 'readme']);
+	grunt.registerTask('i18n', ['addtextdomain', 'checktextdomain', 'makepot']);
+	grunt.registerTask('readme', ['wp_readme_to_markdown']);
+	grunt.registerTask('zip', ['clean', 'copy', 'compress']);
 	grunt.util.linefeed = '\n';
 };
