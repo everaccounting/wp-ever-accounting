@@ -145,12 +145,13 @@ function eaccounting_get_default_currency() {
  *
  * @return string
  */
-function eaccounting_format_price( $amount, $code = null ) {
+function eaccounting_format_price( $amount, $code = 'USD' ) {
 	if ( is_null( $code ) ) {
 		$code = eaccounting_get_default_currency();
 	}
 
 	$amount = eaccounting_money( $amount, $code, true );
+
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */
 		eaccounting_logger()->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
@@ -173,6 +174,9 @@ function eaccounting_format_price( $amount, $code = null ) {
  * @return float|int
  */
 function eaccounting_sanitize_price( $amount, $code = null ) {
+	if ( is_null( $code ) ) {
+		$code = eaccounting_get_default_currency();
+	}
 	$amount = eaccounting_money( $amount, $code, false );
 	if ( is_wp_error( $amount ) ) {
 		/* translators: %s currency code */

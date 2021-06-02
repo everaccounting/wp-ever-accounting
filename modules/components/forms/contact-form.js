@@ -59,9 +59,7 @@ export function ContactForm({onSave, item = {}, type = 'customers'}) {
 		name: type,
 	});
 	const onSubmit = async (item) => {
-		console.log(item);
 		const res = await saveEntity({...item});
-		console.log(res);
 		const {id} = item;
 		const error = onSaveError(id);
 		createNoticesFromResponse(error);
@@ -132,6 +130,52 @@ export function ContactSelect({label, creatable, type = 'customers', ...props })
 			creatable={creatable}
 			modal={ <ContactModal title={ __('Add New')} type={type}/>}
 			{...props}
+			/>
+		</>
+	)
+}
+
+/**
+ *
+ * @param label
+ * @param creatable
+ * @param type
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function CustomerSelect({label, creatable, ...props }){
+	return(
+		<>
+			<EntitySelect
+				label={label}
+				entity={'customers'}
+				creatable={creatable}
+				modal={ <ContactModal title={ __('Add New Customer')} type={'customers'}/>}
+				{...props}
+			/>
+		</>
+	)
+}
+
+/**
+ *
+ * @param label
+ * @param creatable
+ * @param type
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export function VendorSelect({label, creatable, ...props }){
+	return(
+		<>
+			<EntitySelect
+				label={label}
+				entity={'vendors'}
+				creatable={creatable}
+				modal={ <ContactModal title={ __('Add New Vendor')} type={'vendors'}/>}
+				{...props}
 			/>
 		</>
 	)

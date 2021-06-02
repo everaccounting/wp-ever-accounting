@@ -120,7 +120,7 @@ class Accounts_Controller extends Entities_Controller {
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
+							'type'        => 'string',
 							'context'     => array( 'view', 'edit' ),
 							'readonly'    => true,
 						),

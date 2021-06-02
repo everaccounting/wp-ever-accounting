@@ -59,8 +59,4 @@ class Items extends Resource_Repository {
 		'creator_id'     => '%d',
 		'date_created'   => '%s',
 	);
-
-
-
-
 }

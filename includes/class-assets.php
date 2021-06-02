@@ -109,6 +109,7 @@ class Assets {
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/admin/ea-settings.min.js' ), [ 'jquery' ], $this->version, true );
 		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/admin/ea-admin.min.js' ), [ 'jquery' ], $this->version, true );
 
+
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 			// Globally needed scripts.

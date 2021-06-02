@@ -2,7 +2,8 @@
  * WordPress dependencies
  */
 import { dispatch } from '@wordpress/data';
-
+import moment from 'moment';
+import { __ } from '@wordpress/i18n';
 /**
  * Get a portal node, or create it if it doesn't exist.
  *
@@ -83,3 +84,20 @@ export function createNoticesFromResponse(response) {
 	}
 }
 
+/**
+ * Convert a string to Moment object
+ *
+ * @param {string} format - localized date string format
+ * @param {string} str - date string
+ * @return {Object|null} - Moment object representing given string
+ */
+export function toMoment( format, str ) {
+	if ( moment.isMoment( str ) ) {
+		return str.isValid() ? str : null;
+	}
+	if ( typeof str === 'string' ) {
+		const date = moment( str, [ 'YYYY-MM-DD', format ], true );
+		return date.isValid() ? date : null;
+	}
+	throw new Error( 'toMoment requires a string to be passed as an argument' );
+}

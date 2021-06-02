@@ -1,5 +1,6 @@
 export {default as Card} from './card';
 export {default as ClickOutside} from './click-outside';
+export {default as DatePicker} from './calendar/date-picker'
 export {default as Form} from './form';
 export * from './forms';
 export {default as ImageUpload} from './image-upload';
@@ -14,11 +15,9 @@ export {default as Popover} from './popover';
 export {default as PriceControl} from './price-control';
 export {default as SearchBox} from './searchbox';
 export {default as SelectControl} from './select-control';
-// export {default as AsyncSelect} from './select-control/async';
 export {default as EntitySelect} from './select-control/entity-select';
 export {default as SubSub} from './subsub';
 export {default as Table} from './table';
 export {default as TextControl} from './text-control';
 export {default as TextareaControl} from './textarea-control';
-export {default as CategoryForm} from './forms/category-form';
 import './styles.scss';

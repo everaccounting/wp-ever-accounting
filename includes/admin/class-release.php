@@ -52,7 +52,7 @@ class Release {
 	public function admin_title() {
 		$title = '';
 		$title .= '<div class="ea-release_logo">';
-		$title .= '<img scr="' . eaccounting()->plugin_url( '/dist/images/everaccountinglogo.png' ) . '" alt="ea-release-logo">';
+		$title .= '<img scr="' . eaccounting()->plugin_url( '/assets/images/everaccountinglogo.png' ) . '" alt="ea-release-logo">';
 		$title .= '</div>';
 		$title .= '<div class="ea-release_tag">';
 		$title .= '<h2 class="wp-heading-inline">' . esc_html__( 'Best WordPress Accounting Plugin', 'wp-ever-accounting' ) . '</h2>';

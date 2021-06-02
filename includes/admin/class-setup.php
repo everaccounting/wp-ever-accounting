@@ -11,6 +11,8 @@
 
 namespace EverAccounting\Admin;
 
+use EverAccounting\Assets;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -21,21 +23,6 @@ defined( 'ABSPATH' ) || exit();
  * @package EverAccounting\Admin
  */
 class Setup_Wizard {
-
-	/**
-	 * Current step
-	 *
-	 * @var string
-	 */
-	private $step = '';
-
-	/**
-	 * Steps for the setup wizard
-	 *
-	 * @var array
-	 */
-	private $steps = array();
-
 	/**
 	 * Hook in tabs.
 	 */
@@ -57,58 +44,48 @@ class Setup_Wizard {
 	 * Show the setup wizard.
 	 */
 	public function setup_wizard() {
-		if ( empty( $_GET['page'] ) || 'ea-setup' !== $_GET['page'] ) {
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		if ( 'ea-setup' !== $page ) {
 			return;
 		}
-		$default_steps = array(
-			'introduction' => array(
-				'name'    => __( 'Introduction', 'wp-ever-accounting' ),
-				'view'    => array( $this, 'setup_introduction' ),
-				'handler' => '',
-			),
-			'company'      => array(
-				'name'    => __( 'Company setup', 'wp-ever-accounting' ),
-				'view'    => array( $this, 'company_settings' ),
-				'handler' => array( $this, 'company_settings_save' ),
-			),
-			'currency'     => array(
-				'name'    => __( 'Currency setup', 'wp-ever-accounting' ),
-				'view'    => array( $this, 'currency_settings' ),
-				'handler' => array( $this, 'currency_settings_save' ),
-			),
-			'finish'       => array(
-				'name'    => __( 'Finish!', 'wp-ever-accounting' ),
-				'view'    => array( $this, 'finish_setup' ),
-				'handler' => '',
-			),
+		wp_enqueue_media();
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		Assets::register_script( 'ea-router', 'router/index.js' );
+		Assets::register_script( 'ea-components', 'components/index.js' );
+		Assets::register_script( 'ea-data', 'data/index.js' );
+		Assets::register_style( 'ea-components', 'components/style.css' );
+		Assets::register_style( 'ea-setup', 'setup/style.css', [ 'install', 'common', 'ea-components', 'wp-components' ] );
+		Assets::register_script( 'ea-setup', 'setup/index.js', ['ea-router'] );
+		wp_enqueue_script( 'ea-setup' );
+		wp_enqueue_style( 'ea-setup' );
+		wp_localize_script(
+			'ea-setup',
+			'ea_setupi10n',
+			[
+				'logo_url' => esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ),
+				'dist_url' => esc_url( eaccounting()->plugin_url( '/dist' ) ),
+			]
 		);
-
-		$this->steps = apply_filters( 'eaccounting_setup_wizard_steps', $default_steps );
-		$this->step  = isset( $_GET['step'] ) ? sanitize_key( $_GET['step'] ) : current( array_keys( $this->steps ) ); // WPCS: CSRF ok, input var ok.
-
-		$version = eaccounting()->get_version();
-		$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-		//$suffix  = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		wp_enqueue_style( 'ea-admin-styles', eaccounting()->plugin_url() . '/assets/css/admin.min.css', array(), $version );
-		wp_enqueue_style( 'ea-setup', eaccounting()->plugin_url('/assets/css/setup.min.css'), array( 'install', 'common' ), $version );
-
-		// Add RTL support for admin styles.
-		wp_style_add_data( 'ea-setup', 'rtl', 'replace' );
-		wp_enqueue_script( 'ea-setup', eaccounting()->plugin_url( '/assets/js/admin/ea-setup.min.js' ), array( 'jquery', 'ea-select2' ), $version, true );
-
-		// @codingStandardsIgnoreStart
-		if ( ! empty( $_POST['save_step'] ) && isset( $this->steps[ $this->step ]['handler'] ) ) {
-			call_user_func( $this->steps[ $this->step ]['handler'], $this );
-		}
-
 		// @codingStandardsIgnoreEnd
 		header( 'Content-Type: text/html; charset=utf-8' );
 		ob_start();
-		$this->setup_wizard_header();
-		$this->setup_wizard_steps();
-		$this->setup_wizard_content();
-		$this->setup_wizard_footer();
+		// same as default WP from wp-admin/admin-header.php.
+		$wp_version_class = 'branch-' . str_replace( array( '.', ',' ), '-', floatval( get_bloginfo( 'version' ) ) );
+		?>
+		<!DOCTYPE html>
+		<html <?php language_attributes(); ?>>
+		<head>
+			<meta name="viewport" content="width=device-width"/>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+			<title><?php esc_html_e( 'Ever Accounting &rsaquo; Setup Wizard', 'wp-ever-accounting' ); ?></title>
+			<?php wp_print_scripts( array( 'ea-setup' ) ); ?>
+			<?php do_action( 'admin_print_styles' ); ?>
+		</head>
+		<body class="ea-setup wp-core-ui <?php echo esc_attr( $wp_version_class ); ?>">
+			<div id="ea-setup-wizard"></div>
+		</body>
+		</html>
+		<?php
 		exit;
 	}
 
@@ -121,7 +98,6 @@ class Setup_Wizard {
 	 *                      Admin URL if it's the last step.
 	 *                      Empty string on failure.
 	 * @since 1.0.2
-	 *
 	 */
 	public function get_next_step_link( $step = '' ) {
 		if ( ! $step ) {
@@ -151,17 +127,19 @@ class Setup_Wizard {
 
 		set_current_screen();
 		?>
-        <!DOCTYPE html>
-        <html <?php language_attributes(); ?>>
-        <head>
-            <meta name="viewport" content="width=device-width"/>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-            <title><?php esc_html_e( 'Ever Accounting &rsaquo; Setup Wizard', 'wp-ever-accounting' ); ?></title>
+		<!DOCTYPE html>
+		<html <?php language_attributes(); ?>>
+		<head>
+			<meta name="viewport" content="width=device-width"/>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+			<title><?php esc_html_e( 'Ever Accounting &rsaquo; Setup Wizard', 'wp-ever-accounting' ); ?></title>
 			<?php wp_print_scripts( array( 'ea-setup' ) ); ?>
 			<?php do_action( 'admin_print_styles' ); ?>
-        </head>
-        <body class="ea-setup wp-core-ui <?php echo esc_attr( 'ea-setup-step__' . $this->step ); ?> <?php echo esc_attr( $wp_version_class ); ?>">
-        <h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
+		</head>
+		<body class="ea-setup wp-core-ui <?php echo esc_attr( 'ea-setup-step__' . $this->step ); ?> <?php echo esc_attr( $wp_version_class ); ?>">
+		<h1 class="ea-logo"><a href="https://wpeveraccounting.com/" target="_blank"><img src="<?php echo esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ); ?>" alt="<?php esc_attr_e( 'Ever Accounting', 'wp-ever-accounting' ); ?>"/></a></h1>
+		</body>
+		</html>
 		<?php
 	}
 
@@ -172,8 +150,8 @@ class Setup_Wizard {
 		$current_step = $this->step;
 		?>
 		<?php do_action( 'eaccounting_setup_footer' ); ?>
-        </body>
-        </html>
+		</body>
+		</html>
 		<?php
 	}
 
@@ -183,29 +161,29 @@ class Setup_Wizard {
 	public function setup_wizard_steps() {
 		$output_steps = $this->steps;
 		?>
-        <ol class="ea-setup-steps">
+		<ol class="ea-setup-steps">
 			<?php
 			foreach ( $output_steps as $step_key => $step ) {
 				$is_completed = array_search( $this->step, array_keys( $this->steps ), true ) > array_search( $step_key, array_keys( $this->steps ), true );
 
 				if ( $step_key === $this->step ) {
 					?>
-                    <li class="active"><?php echo esc_html( $step['name'] ); ?></li>
+					<li class="active"><?php echo esc_html( $step['name'] ); ?></li>
 					<?php
 				} elseif ( $is_completed ) {
 					?>
-                    <li class="done">
-                        <a href="<?php echo esc_url( add_query_arg( 'step', $step_key, remove_query_arg( 'activate_error' ) ) ); ?>"><?php echo esc_html( $step['name'] ); ?></a>
-                    </li>
+					<li class="done">
+						<a href="<?php echo esc_url( add_query_arg( 'step', $step_key, remove_query_arg( 'activate_error' ) ) ); ?>"><?php echo esc_html( $step['name'] ); ?></a>
+					</li>
 					<?php
 				} else {
 					?>
-                    <li><?php echo esc_html( $step['name'] ); ?></li>
+					<li><?php echo esc_html( $step['name'] ); ?></li>
 					<?php
 				}
 			}
 			?>
-        </ol>
+		</ol>
 		<?php
 	}
 
@@ -222,27 +200,29 @@ class Setup_Wizard {
 
 	/**
 	 * Introducing the setup.
+	 *
 	 * @since 1.0.2
 	 */
 	public function setup_introduction() {
 		?>
-        <h1><?php _e( 'Welcome!', 'wp-ever-accounting' ); ?></h1>
-        <p><?php _e( 'Thank you for choosing WP Ever Accounting to manage your accounting! This quick setup wizard will help you configure the basic settings.', 'wp-ever-accounting' ); ?></p>
-        <p class="ea-setup-actions step">
-            <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>"
-               class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'wp-ever-accounting' ); ?></a>
-        </p>
+		<h1><?php _e( 'Welcome!', 'wp-ever-accounting' ); ?></h1>
+		<p><?php _e( 'Thank you for choosing WP Ever Accounting to manage your accounting! This quick setup wizard will help you configure the basic settings.', 'wp-ever-accounting' ); ?></p>
+		<p class="ea-setup-actions step">
+			<a href="<?php echo esc_url( $this->get_next_step_link() ); ?>"
+			   class="button-primary button button-large button-next"><?php _e( 'Let\'s Go!', 'wp-ever-accounting' ); ?></a>
+		</p>
 		<?php
 	}
 
 	/**
 	 * Company info setup.
+	 *
 	 * @since 1.0.2
 	 */
 	public function company_settings() {
 		?>
-        <h1><?php _e( 'Company Setup', 'wp-ever-accounting' ); ?></h1>
-        <form method="post">
+		<h1><?php _e( 'Company Setup', 'wp-ever-accounting' ); ?></h1>
+		<form method="post">
 			<?php
 
 			eaccounting_text_input(
@@ -280,19 +260,20 @@ class Setup_Wizard {
 			);
 			?>
 
-            <p class="ea-setup-actions step">
-                <input type="submit"
-                       class="button-primary button button-large button-next"
-                       value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
+			<p class="ea-setup-actions step">
+				<input type="submit"
+					   class="button-primary button button-large button-next"
+					   value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
 				<?php wp_nonce_field( 'company-setup' ); ?>
 
-            </p>
-        </form>
+			</p>
+		</form>
 		<?php
 	}
 
 	/**
 	 * Company settings save.
+	 *
 	 * @since 1.0.2
 	 */
 	public function company_settings_save() {
@@ -317,6 +298,7 @@ class Setup_Wizard {
 
 	/**
 	 * Currency settings.
+	 *
 	 * @since 1.0.2
 	 */
 	public function currency_settings() {
@@ -329,21 +311,21 @@ class Setup_Wizard {
 		$currencies = eaccounting_get_currencies( array( 'return' => 'array' ) );
 
 		?>
-        <h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
-        <p><?php esc_html__( "Default currency rate should be always 1 & additional currency rates should be equivalent of default currency. e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77", "wp-ever-accounting" ); ?></p>
-        <form action="" method="post">
-            <table class="wp-list-table widefat fixed stripes">
-                <thead>
-                <tr>
-                    <th style="width: 50%;"><?php _e( 'Code', 'wp-ever-accounting' ); ?></th>
-                    <th style="width: 30%;"><?php _e( 'Rate', 'wp-ever-accounting' ); ?></th>
-                    <th style="width: 20%;"><?php _e( 'Default', 'wp-ever-accounting' ); ?></th>
-                </tr>
-                </thead>
-                <tbody>
+		<h1><?php _e( 'Currency Setup', 'wp-ever-accounting' ); ?></h1>
+		<p><?php esc_html__( 'Default currency rate should be always 1 & additional currency rates should be equivalent of default currency. e.g. If USD is your default currency then USD rate is 1 & GBP rate will be 0.77', 'wp-ever-accounting' ); ?></p>
+		<form action="" method="post">
+			<table class="wp-list-table widefat fixed stripes">
+				<thead>
+				<tr>
+					<th style="width: 50%;"><?php _e( 'Code', 'wp-ever-accounting' ); ?></th>
+					<th style="width: 30%;"><?php _e( 'Rate', 'wp-ever-accounting' ); ?></th>
+					<th style="width: 20%;"><?php _e( 'Default', 'wp-ever-accounting' ); ?></th>
+				</tr>
+				</thead>
+				<tbody>
 				<?php foreach ( $currencies as $id => $currency ) : ?>
-                    <tr>
-                        <td>
+					<tr>
+						<td>
 							<?php
 							eaccounting_select2(
 								array(
@@ -355,9 +337,9 @@ class Setup_Wizard {
 								)
 							);
 							?>
-                        </td>
+						</td>
 
-                        <td>
+						<td>
 							<?php
 							eaccounting_text_input(
 								array(
@@ -368,23 +350,23 @@ class Setup_Wizard {
 								)
 							);
 							?>
-                        </td>
+						</td>
 
-                        <td>
-                            <input type="radio" name="default" value="<?php echo $currency->code; ?>" <?php checked( 'USD', $currency->code ); ?>>
-                        </td>
-                    </tr>
+						<td>
+							<input type="radio" name="default" value="<?php echo $currency->code; ?>" <?php checked( 'USD', $currency->code ); ?>>
+						</td>
+					</tr>
 
 				<?php endforeach; ?>
 
-                <tr>
-                    <td colspan="3">
-                        <strong><?php _e( 'Additional currency', 'wp-ever-accounting' ); ?></strong>
-                    </td>
-                </tr>
+				<tr>
+					<td colspan="3">
+						<strong><?php _e( 'Additional currency', 'wp-ever-accounting' ); ?></strong>
+					</td>
+				</tr>
 
-                <tr>
-                    <td>
+				<tr>
+					<td>
 						<?php
 						eaccounting_select2(
 							array(
@@ -394,9 +376,9 @@ class Setup_Wizard {
 							)
 						);
 						?>
-                    </td>
+					</td>
 
-                    <td>
+					<td>
 						<?php
 						eaccounting_text_input(
 							array(
@@ -406,28 +388,29 @@ class Setup_Wizard {
 							)
 						);
 						?>
-                    </td>
+					</td>
 
-                    <td>
-                        <input type="radio" name="default" value="custom">
-                    </td>
-                </tr>
+					<td>
+						<input type="radio" name="default" value="custom">
+					</td>
+				</tr>
 
-                </tbody>
+				</tbody>
 
-            </table>
+			</table>
 
-            <p class="ea-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
+			<p class="ea-setup-actions step">
+				<input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'wp-ever-accounting' ); ?>" name="save_step"/>
 				<?php wp_nonce_field( 'currency_settings' ); ?>
 
-            </p>
-        </form>
+			</p>
+		</form>
 		<?php
 	}
 
 	/**
 	 * Currency settings save.
+	 *
 	 * @since 1.0.2
 	 */
 	public function currency_settings_save() {
@@ -458,15 +441,16 @@ class Setup_Wizard {
 
 	/**
 	 * Finishing the setup.
+	 *
 	 * @since 1.0.2
 	 */
 	public function finish_setup() {
 		?>
-        <h1><?php _e( 'Finish!', 'wp-ever-accounting' ); ?></h1>
-        <p><?php _e( 'You are done with the basic setup of the plugin and ready to use.', 'wp-ever-accounting' ); ?></p>
-        <p class="ea-setup-actions step">
-            <a href="<?php echo esc_url( admin_url( 'admin.php?page=eaccounting' ) ); ?>" class="button button-primary"><?php _e( 'View Dashboard', 'wp-ever-accounting' ); ?></a>
-        </p>
+		<h1><?php _e( 'Finish!', 'wp-ever-accounting' ); ?></h1>
+		<p><?php _e( 'You are done with the basic setup of the plugin and ready to use.', 'wp-ever-accounting' ); ?></p>
+		<p class="ea-setup-actions step">
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=eaccounting' ) ); ?>" class="button button-primary"><?php _e( 'View Dashboard', 'wp-ever-accounting' ); ?></a>
+		</p>
 		<?php
 	}
 }

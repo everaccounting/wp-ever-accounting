@@ -158,15 +158,52 @@ class Currencies_Controller extends Entities_Controller {
 	}
 
 	/**
+	 * Check if a given request has access to create an item.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_Error|boolean
+	 */
+	public function create_item_permissions_check( $request ) {
+		if ( ! current_user_can( 'manage_eaccounting' ) ) {
+			return new \WP_Error( 'eaccounting_rest_cannot_create', __( 'Sorry, you are not allowed to create resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+
+		return true;
+	}
+
+	/**
 	 * Create a single object.
 	 *
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @return WP_Error|\WP_REST_Response
 	 */
-	public function create_item( $request ) {
-		wp_send_json($request);
-	}
+	// public function create_item( $request ) {
+	// try {
+	// if ( empty( $this->entity_model ) || ! class_exists( $this->entity_model ) ) {
+	// throw new \Exception( __( 'You need to specify a entity model class for this controller', 'wp-ever-accounting' ), 400 );
+	// }
+	// if ( ! empty( $request['id'] ) ) {
+	// throw new \Exception( __( 'Cannot create existing resource.', 'wp-ever-accounting' ), 400 );
+	// }
+	// $object = new $this->entity_model();
+	// $object = $this->prepare_object_for_database( $object, $request );
+	// $object->save();
+	// $this->update_additional_fields_for_object( (array) $object, $request );
+	//
+	// $request->set_param( 'context', 'edit' );
+	// $response = $this->prepare_item_for_response( $object, $request );
+	// $response = rest_ensure_response( $response );
+	// $response->set_status( 201 );
+	// $response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object->get_id() ) ) );
+	//
+	// return $response;
+	//
+	// } catch ( \Exception $e ) {
+	// return new \WP_Error( 'create_item', $e->getMessage() );
+	// }
+	// }
 
 	/**
 	 * Get objects.
@@ -175,7 +212,7 @@ class Currencies_Controller extends Entities_Controller {
 	 * @param \WP_REST_Request $request Full details about the request.
 	 *
 	 * @since  1.1.0
-	 *@return array|int|WP_Error
+	 * @return array|int|WP_Error
 	 */
 	protected function get_objects( $query_args, $request ) {
 		return eaccounting_get_currencies( $query_args );
@@ -196,11 +233,11 @@ class Currencies_Controller extends Entities_Controller {
 			'properties' => array(
 				'id'                 => array(
 					'description' => __( 'Unique identifier for the currency.', 'wp-ever-accounting' ),
-					'type'        => 'integer',
+					'type'        => 'string',
 					'context'     => array( 'view', 'embed', 'edit' ),
 					'readonly'    => true,
 					'arg_options' => array(
-						'sanitize_callback' => 'intval',
+						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
 				'name'               => array(
@@ -274,11 +311,6 @@ class Currencies_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 					'required'    => true,
-				),
-				'enabled'            => array(
-					'description' => __( 'Status of the item.', 'wp-ever-accounting' ),
-					'type'        => 'boolean',
-					'context'     => array( 'embed', 'view', 'edit' ),
 				),
 				'date_created'       => array(
 					'description' => __( 'Created date of the currency.', 'wp-ever-accounting' ),

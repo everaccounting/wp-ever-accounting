@@ -8,7 +8,7 @@ import apiFetch from '@wordpress/api-fetch';
  */
 import { useEntity } from '@eaccounting/data';
 import { __ } from '@wordpress/i18n';
-import { isEmpty } from 'lodash';
+import {get, isEmpty} from 'lodash';
 /**
  * Internal dependencies
  */
@@ -63,7 +63,8 @@ export function CurrencyForm({ onSave, item = {} }) {
 	const onSubmit = async (item) => {
 		const res = await saveEntity({ ...item.currency, ...item }, (request) => {
 			const path = isEmpty(item.id) ? '/ea/v1/currencies': request.path
-			return apiFetch({...request, path});
+			const method = isEmpty(item.id) ? 'POST': request.method
+			return apiFetch({...request, path, method});
 		});
 		const { code } = item;
 		const error = onSaveError(code);
@@ -126,6 +127,7 @@ export function CurrencySelect({ label, creatable, ...props }) {
 			label={label}
 			entity={'currencies'}
 			creatable={creatable}
+			renderLabel={(option) => `${option.name} (${option.symbol})`}
 			modal={<CurrencyModal title={__('Add new currency')}/>}
 			{...props}
 		/>

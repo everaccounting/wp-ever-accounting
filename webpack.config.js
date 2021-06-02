@@ -13,6 +13,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 /**
  * WordPress dependencies
@@ -56,11 +57,13 @@ const config = {
 	mode: NODE_ENV,
 	entry: {
 		app: './client/index.js',
+		setup: './client/setup/index.js',
 		...modules,
 	},
 	output: {
 		filename: '[name]/index.js',
 		path: path.join(__dirname, 'dist'),
+		chunkFilename: 'chunks/[name].js',
 		library: ['eaccounting', '[camelName]'],
 	},
 	resolve: {
@@ -129,6 +132,7 @@ const config = {
 		].filter(Boolean),
 	},
 	plugins: [
+		new CleanWebpackPlugin(),
 		// MiniCSSExtractPlugin creates JavaScript assets for CSS that are
 		// obsolete and should be removed. Related webpack issue:
 		// https://github.com/webpack-contrib/mini-css-extract-plugin/issues/85

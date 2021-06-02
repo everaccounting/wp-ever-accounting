@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"X-Generator: babel-plugin-makepot\n"
+
+#: modules/components/forms/account-form.js:107
+#: modules/components/forms/contact-form.js:96
+#: modules/components/forms/currency-form.js:100
+msgid "Submit"
+msgstr ""
+
+#: modules/components/forms/account-form.js:126
+msgid "Save Account"
+msgstr ""
+
+#: modules/components/forms/account-form.js:153
+msgid "Add Account"
+msgstr ""
+
+#: modules/components/forms/account-form.js:29
+#: modules/components/forms/contact-form.js:22
+#: modules/components/forms/currency-form.js:25
+msgid "Name is required"
+msgstr ""
+
+#: modules/components/forms/account-form.js:32
+msgid "Account number is required"
+msgstr ""
+
+#: modules/components/forms/account-form.js:35
+msgid "Account currency is required"
+msgstr ""
+
+#: modules/components/forms/account-form.js:51
+#: modules/components/forms/contact-form.js:35
+#: modules/components/forms/currency-form.js:44
+msgid "Name"
+msgstr ""
+
+#: modules/components/forms/account-form.js:52
+msgid "Account Number"
+msgstr ""
+
+#: modules/components/forms/account-form.js:53
+msgid "Account currency"
+msgstr ""
+
+#: modules/components/forms/account-form.js:54
+msgid "Opening Balance"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:105
+msgid "Save Contact"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:131
+msgid "Add New"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:154
+msgid "Add New Customer"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:177
+msgid "Add New Vendor"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:25
+msgid "Currency is required"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:39
+msgid "Currency"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:43
+msgid "Company"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:46
+msgid "Email"
+msgstr ""
+
+#: modules/components/forms/contact-form.js:50
+msgid "Phone"
+msgstr ""
+
+#: modules/components/forms/currency-form.js:113
+msgid "Save Currency"
+msgstr ""
+
+#: modules/components/forms/currency-form.js:131
+msgid "Add new currency"
+msgstr ""
+
+#: modules/components/forms/currency-form.js:28
+msgid "Currency code is required"
+msgstr ""
+
+#: modules/components/forms/currency-form.js:31
+msgid "Currency rate is required"
+msgstr ""
+
+#: modules/components/forms/currency-form.js:46
+msgid "Currency Code"
+msgstr ""
+
+#: modules/components/forms/currency-form.js:56
+msgid "Rate"
+msgstr ""

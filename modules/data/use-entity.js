@@ -10,7 +10,6 @@ import { useCallback } from '@wordpress/element';
 import { STORE_KEY } from './constants';
 
 export function useEntity({name, query = {}, id = null }) {
-	console.log(name);
 	const { entities, schema, entity, total, isLoading, getLastEntitySaveError } = useSelect(
 		(select) => {
 			const { getEntities, getEntity, getSchema, getTotal, isRequesting, getLastEntitySaveError } = select(STORE_KEY);

@@ -67,7 +67,6 @@ class Money {
 	 */
 	protected function parseAmount( $amount, $convert = false ) {
 		$amount = $this->parseAmountFromString( $this->parseAmountFromCallable( $amount ) );
-
 		if ( is_int( $amount ) ) {
 			return (int) $this->convertAmount( $amount, $convert );
 		}

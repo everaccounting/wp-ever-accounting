@@ -256,11 +256,12 @@ abstract class Entities_Controller extends Controller {
 			}
 			$object = new $this->entity_model();
 			$object = $this->prepare_object_for_database( $object, $request );
+			error_log(print_r($object->get_data(), true));
 			$object->save();
 			$this->update_additional_fields_for_object( (array) $object, $request );
-
 			$request->set_param( 'context', 'edit' );
 			$response = $this->prepare_item_for_response( $object, $request );
+//			error_log(print_r($response, true));
 			$response = rest_ensure_response( $response );
 			$response->set_status( 201 );
 			$response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object->get_id() ) ) );
@@ -507,7 +508,6 @@ abstract class Entities_Controller extends Controller {
 				continue;
 			}
 		}
-
 		return $data;
 	}
 

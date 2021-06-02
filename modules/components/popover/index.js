@@ -57,7 +57,7 @@ function Popover(props) {
 		align = 'left',
 		onClose,
 		hasArrow = false,
-		popoverPosition,
+		popoverPosition = null,
 		style = null,
 	} = props;
 

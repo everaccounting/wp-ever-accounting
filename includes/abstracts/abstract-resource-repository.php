@@ -408,7 +408,6 @@ abstract class Resource_Repository {
 
 		// Get from cache if available.
 		$data = wp_cache_get( $item->get_id(), $item->get_cache_group() );
-
 		if ( false === $data ) {
 			$data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d LIMIT 1;", $item->get_id() ) );
 			wp_cache_set( $item->get_id(), $data, $item->get_cache_group() );

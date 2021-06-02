@@ -95,7 +95,6 @@ export function getPosition(togglePosition) {
 	if (togglePosition === null) {
 		return null;
 	}
-
 	const { left, top, height } = togglePosition;
 	return {
 		left,

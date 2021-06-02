@@ -6,5 +6,6 @@ module.exports = {
 			{ ignore: ['^@wordpress/', '^@eaccounting/'] },
 		],
 		'no-shadow': 0,
+		camelcase: 0,
 	},
 };
