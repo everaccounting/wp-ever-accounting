@@ -35,8 +35,8 @@ require_once EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php';
  *
  * @since 1.1.0
  *
- * @param string $key
- * @param bool   $default
+ * @param string $key option key.
+ * @param bool   $default default value.
  *
  * @return mixed
  */
@@ -49,8 +49,8 @@ function eaccounting_get_option( $key = '', $default = false ) {
 /**
  * Update option.
  *
- * @param $key
- * @param $value
+ * @param string $key option key.
+ * @param mixed  $value option value.
  * @since 1.1.0
  */
 function eaccounting_update_option( $key, $value ) {
@@ -138,7 +138,7 @@ function eaccounting_get_default_currency() {
  * Format price with currency code & number format
  *
  * @since 1.0.2
- *
+ * @deprecatd 1.0.4
  * @param string $amount
  *
  * @param string $code If not passed will be used default currency.
@@ -146,19 +146,7 @@ function eaccounting_get_default_currency() {
  * @return string
  */
 function eaccounting_format_price( $amount, $code = null ) {
-	if ( is_null( $code ) ) {
-		$code = eaccounting_get_default_currency();
-	}
-
-	$amount = eaccounting_money( $amount, $code, true );
-	if ( is_wp_error( $amount ) ) {
-		/* translators: %s currency code */
-		eaccounting_logger()->log_alert( sprintf( __( 'invalid currency code %s', 'wp-ever-accounting' ), $code ) );
-
-		return '00.00';
-	}
-
-	return $amount->format();
+	return eaccounting_price( $amount, $code );
 }
 
 /**
@@ -171,9 +159,8 @@ function eaccounting_format_price( $amount, $code = null ) {
  *
  * @return float|int
  * @since 1.0.2
- *
  */
-function eaccounting_sanitize_price( $amount, $from_code = null ) {
+function eaccounting_sanitize_price( $amount, $from_code = null, $decimals = 4 ) {
 	if ( is_null( $from_code ) ) {
 		$from_code = eaccounting_get_default_currency();
 	}
@@ -194,14 +181,13 @@ function eaccounting_sanitize_price( $amount, $from_code = null ) {
 			$amount
 		);
 	}
-
 	if ( preg_match( '/^([\-\+])?\d+$/', $amount ) ) {
 		$amount = (int) $amount;
 	} elseif ( preg_match( '/^([\-\+])?\d+\.\d+$/', $amount ) ) {
 		$amount = (float) $amount;
 	}
-
 	return $amount;
+	return number_format( (float) $amount, $decimals, '.', '' );
 }
 
 /**
@@ -210,19 +196,18 @@ function eaccounting_sanitize_price( $amount, $from_code = null ) {
  * This function is used for displaying a formatted
  * amount like $10,00.00
  *
- * @since 1.1.0
- *
- * @param string $code
- * @param float  $amount
+ * @param string|null $code
+ * @param float       $amount
  *
  * @return string
+ * @since 1.1.0
  */
-function eaccounting_price( $amount, $code = null ) {
+function eaccounting_price( $amount, string $code = null ) {
 	if ( is_null( $code ) ) {
 		$code = eaccounting_get_default_currency();
 	}
 	$currency = new \EverAccounting\Models\Currency( $code );
-	$amount = (float) preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $amount ) );
+	$amount   = (float) preg_replace( '/\.(?![^.]+$)|[^0-9.-]/', '', eaccounting_clean( $amount ) );
 
 	$negative = $amount < 0;
 	$amount   = $negative ? ( $amount * -1 ) : $amount;
@@ -243,20 +228,19 @@ function eaccounting_price( $amount, $code = null ) {
  * @return float|int|string
  */
 function eaccounting_price_from_default( $amount, $to, $to_rate ) {
-	$default = eaccounting_get_default_currency();
-	$money   = eaccounting_money( $amount, $to );
+	$default     = eaccounting_get_default_currency();
+	$to_currency = new \EverAccounting\Models\Currency( $to );
+	$amount      = eaccounting_sanitize_price( $amount, $to );
 	// No need to convert same currency
 	if ( $default === $to ) {
-		return $money->getAmount();
+		return $amount;
 	}
 
-	try {
-		$money = $money->multiply( (float) $to_rate );
-	} catch ( Exception $e ) {
-		return 0;
+	if ( is_numeric( $to_rate ) && $to_rate > 0 ) {
+		$amount = round( $amount * (float) $to_rate, $to_currency->get_precision(), PHP_ROUND_HALF_UP );
 	}
 
-	return $money->getAmount();
+	return $amount;
 }
 
 /**
@@ -269,23 +253,22 @@ function eaccounting_price_from_default( $amount, $to, $to_rate ) {
  * @param      $from
  * @param      $from_rate
  *
- * @return float|int|string
+ * @return float|int
  */
 function eaccounting_price_to_default( $amount, $from, $from_rate ) {
-	$default = eaccounting_get_default_currency();
-	$money   = eaccounting_money( $amount, $from );
+	$default  = eaccounting_get_default_currency();
+	$currency = new \EverAccounting\Models\Currency( $default );
+	$amount   = eaccounting_sanitize_price( $amount, $from );
 	// No need to convert same currency
 	if ( $default === $from ) {
-		return $money->getAmount();
+		return $amount;
 	}
 
-	try {
-		$money = $money->divide( (float) $from_rate );
-	} catch ( Exception $e ) {
-		return 0;
+	if ( is_numeric( $from_rate ) && $from_rate > 0 ) {
+		$amount = round( $amount / (float) $from_rate, $currency->get_precision(), PHP_ROUND_HALF_UP );
 	}
 
-	return $money->getAmount();
+	return $amount;
 }
 
 /**
