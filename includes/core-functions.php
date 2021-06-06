@@ -181,12 +181,7 @@ function eaccounting_sanitize_price( $amount, $from_code = null, $decimals = 4 )
 			$amount
 		);
 	}
-	if ( preg_match( '/^([\-\+])?\d+$/', $amount ) ) {
-		$amount = (int) $amount;
-	} elseif ( preg_match( '/^([\-\+])?\d+\.\d+$/', $amount ) ) {
-		$amount = (float) $amount;
-	}
-	return $amount;
+
 	return number_format( (float) $amount, $decimals, '.', '' );
 }
 

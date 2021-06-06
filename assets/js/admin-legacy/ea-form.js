@@ -3,11 +3,11 @@ jQuery( function ( $ ) {
 
 	const maskInput = function ( el, json ) {
 		$( el ).inputmask( 'decimal', {
-			alias: 'numeric',
-			groupSeparator: json.thousand_separator,
+			alias: 'currency',
+			groupSeparator: '',
 			autoGroup: true,
 			digits: json.precision,
-			radixPoint: json.decimal_separator,
+			radixPoint: '.',
 			digitsOptional: false,
 			allowMinus: false,
 			prefix: json.symbol,

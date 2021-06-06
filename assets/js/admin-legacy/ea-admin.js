@@ -171,15 +171,15 @@ function eaccounting_mask_amount(el, currency) {
 		}
 	}
 
-	jQuery(el).inputmask('decimal', {
-		alias: 'numeric',
-		groupSeparator: currency.thousand_separator,
+	jQuery(el).inputmask({
+		alias: 'currency',
+		groupSeparator: '',
 		autoGroup: true,
-		digits: currency.precision,
-		radixPoint: currency.decimal_separator,
+		digits: json.precision,
+		radixPoint: '.',
 		digitsOptional: false,
 		allowMinus: false,
-		prefix: currency.symbol,
+		prefix: json.symbol,
 		placeholder: '0.000',
 		rightAlign: 0,
 		autoUnmask: true,
