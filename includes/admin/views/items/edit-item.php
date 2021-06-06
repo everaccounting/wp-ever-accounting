@@ -189,18 +189,19 @@ $code     = eaccounting_get_default_currency();
 $currency = eaccounting_get_currency( $code );
 eaccounting_enqueue_js(
 	"
-	jQuery('#ea-item-form #purchase_price, #ea-item-form #sale_price').inputmask('decimal', {
-			alias: 'numeric',
-			groupSeparator: '" . $currency->get_thousand_separator() . "',
+	jQuery('#ea-item-form #purchase_price, #ea-item-form #sale_price').inputmask({
+			alias: 'currency',
+			groupSeparator: '',
 			autoGroup: true,
 			digits: '" . $currency->get_precision() . "',
-			radixPoint: '" . $currency->get_decimal_separator() . "',
+			radixPoint: '.',
 			digitsOptional: false,
 			allowMinus: false,
 			prefix: '" . $currency->get_symbol() . "',
-			placeholder: '0.000',
+			placeholder: '0',
 			rightAlign: 0,
-			autoUnmask: true
+			autoUnmask: true,
+			clearMaskOnLostFocus: false
 		});
 "
 );
