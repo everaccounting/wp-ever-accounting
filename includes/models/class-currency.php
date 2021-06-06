@@ -77,7 +77,7 @@ class Currency extends Resource_Model {
 			$this->set_object_read( true );
 		}
 
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( 'currencies' );
 
 		if ( ! empty( $this->get_code() ) ) {
@@ -85,12 +85,11 @@ class Currency extends Resource_Model {
 		}
 
 		$this->required_props = array(
-			'code'               => __( 'Currency code', 'wp-ever-accounting' ),
-			'rate'               => __( 'Currency rate', 'wp-ever-accounting' ),
-			'symbol'             => __( 'Currency symbol', 'wp-ever-accounting' ),
-			'position'           => __( 'Currency position', 'wp-ever-accounting' ),
-			'decimal_separator'  => __( 'Currency decimal separator', 'wp-ever-accounting' ),
-			'thousand_separator' => __( 'Currency thousand separator', 'wp-ever-accounting' ),
+			'code'              => __( 'Currency code', 'wp-ever-accounting' ),
+			'rate'              => __( 'Currency rate', 'wp-ever-accounting' ),
+			'symbol'            => __( 'Currency symbol', 'wp-ever-accounting' ),
+			'position'          => __( 'Currency position', 'wp-ever-accounting' ),
+			'decimal_separator' => __( 'Currency decimal separator', 'wp-ever-accounting' ),
 		);
 	}
 
@@ -111,7 +110,7 @@ class Currency extends Resource_Model {
 	 * @return int
 	 */
 	public function get_id() {
-//		eaccounting_doing_it_wrong( __METHOD__, __( 'For currency get_id() calling is discoursed use get_code()', 'wp-ever-accounting' ), 'Currency::get_code' );
+		// eaccounting_doing_it_wrong( __METHOD__, __( 'For currency get_id() calling is discoursed use get_code()', 'wp-ever-accounting' ), 'Currency::get_code' );
 		return parent::get_id();
 	}
 
