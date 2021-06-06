@@ -527,7 +527,7 @@ class Bill extends Document {
 	 */
 	public function get_total_due() {
 		$due = eaccounting_sanitize_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code() );
-		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) < 0 ) {
+		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) <= 0 ) {
 			$due = 0;
 		}
 
