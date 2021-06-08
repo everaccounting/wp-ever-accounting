@@ -166,17 +166,18 @@ try {
 eaccounting_enqueue_js(
 	"
 	jQuery('#ea-revenue-form #amount').inputmask('decimal', {
-			alias: 'numeric',
-			groupSeparator: '" . $revenue->get_currency_thousand_separator() . "',
+			alias: 'currency',
+			groupSeparator: '',
 			autoGroup: true,
 			digits: '" . $revenue->get_currency_precision() . "',
-			radixPoint: '" . $revenue->get_currency_decimal_separator() . "',
+			radixPoint: '.',
 			digitsOptional: false,
 			allowMinus: false,
 			prefix: '" . $revenue->get_currency_symbol() . "',
-			placeholder: '0.000',
+			placeholder: '0',
 			rightAlign: 0,
-			autoUnmask: true
+			autoUnmask: true,
+			clearMaskOnLostFocus: false
 		});
 "
 );

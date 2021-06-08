@@ -76,7 +76,6 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 							'label'         => __( 'Amount', 'wp-ever-accounting' ),
 							'name'          => 'amount',
 							'value'         => $payment->get_amount(),
-							'data_type'     => 'price',
 							'required'      => true,
 							'wrapper_class' => 'ea-col-6',
 							'placeholder'   => __( 'Enter amount', 'wp-ever-accounting' ),
@@ -183,17 +182,18 @@ $title    = $payment->exists() ? __( 'Update Payment', 'wp-ever-accounting' ) : 
 eaccounting_enqueue_js(
 	"
 	jQuery('#ea-payment-form #amount').inputmask('decimal', {
-			alias: 'numeric',
-			groupSeparator: '" . $payment->get_currency_thousand_separator() . "',
+			alias: 'currency',
+			groupSeparator: '',
 			autoGroup: true,
 			digits: '" . $payment->get_currency_precision() . "',
-			radixPoint: '" . $payment->get_currency_decimal_separator() . "',
+			radixPoint: '.',
 			digitsOptional: false,
 			allowMinus: false,
 			prefix: '" . $payment->get_currency_symbol() . "',
-			placeholder: '0.000',
+			placeholder: '0',
 			rightAlign: 0,
-			autoUnmask: true
+			autoUnmask: true,
+			clearMaskOnLostFocus: false
 		});
 "
 );
