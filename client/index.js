@@ -3,64 +3,29 @@
  */
 import { render } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
+import '@wordpress/notices';
+
 /**
  * Internal dependencies
  */
+import { PageLayout } from './layout';
 /**
  * External dependencies
  */
-import {
-	NoticeContainer,
-	// ContactSelect,
-	// CurrencySelect,
-	// CategorySelect,
-	// ItemSelect,
-	// AccountSelect,
-	DatePicker,
-} from '@eaccounting/components';
-import Invoice from './invoice';
-/**
- * Internal dependencies
- */
-function App() {
-	return (
-		<>
-			{/*<ContactSelect*/}
-			{/*	creatable={true}*/}
-			{/*	label={'Customer'}*/}
-			{/*	type={'customers'}*/}
-			{/*/>*/}
+import { withCurrentUser, withSettings } from '@eaccounting/data';
 
-			{/*<CategorySelect*/}
-			{/*	creatable={true}*/}
-			{/*	label={'Item category'}*/}
-			{/*	type={'item'}*/}
-			{/*/>*/}
-			{/*<CategorySelect*/}
-			{/*	creatable={true}*/}
-			{/*	label={'Income category'}*/}
-			{/*	type={'income'}*/}
-			{/*/>*/}
-			{/*<CategorySelect*/}
-			{/*	creatable={true}*/}
-			{/*	label={'Expense category'}*/}
-			{/*	type={'expense'}*/}
-			{/*/>*/}
-			{/*<AccountSelect creatable={true} label={'Account'} />*/}
-			{/*<CurrencySelect creatable={true} label={'Currency'} />*/}
-			{/*<ItemSelect creatable={true} label={'Item'} />*/}
-			<DatePicker
-				label={'Date'}
-				dateFormat={'YYYY-MM-DD'}
-				onUpdate={(val) => console.log(val)}
-			/>
-			{/*<Invoice />*/}
-			<NoticeContainer />
-		</>
-	);
+// Modify webpack pubilcPath at runtime based on location of WordPress Plugin.
+// eslint-disable-next-line no-undef,camelcase
+__webpack_public_path__ = window.eaccountingi10n.dist_url;
+const current_user = window.eaccountingi10n.current_user;
+
+const root = document.getElementById( 'eaccounting-root' );
+let HydratedPageLayout = PageLayout;
+if ( current_user ) {
+	HydratedPageLayout = withCurrentUser( current_user )( PageLayout );
 }
+HydratedPageLayout = withSettings()( HydratedPageLayout );
 
-domReady(() => {
-	const root = document.getElementById('ea-react');
-	return root ? render(<App />, root) : null;
-});
+domReady( () => {
+	return root ? render( <HydratedPageLayout />, root ) : null;
+} );

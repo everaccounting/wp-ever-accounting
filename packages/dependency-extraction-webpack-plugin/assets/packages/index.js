@@ -2,5 +2,7 @@ module.exports = [
 	// ea-admin packages
 	'@eaccounting/components',
 	'@eaccounting/data',
-	'@eaccounting/router',
+	'@eaccounting/navigation',
+	'@eaccounting/number',
+	'@eaccounting/currency',
 ];

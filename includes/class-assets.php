@@ -70,9 +70,14 @@ class Assets {
 		wp_register_style( 'ea-admin-styles', eaccounting()->plugin_url( '/assets/css/admin.min.css' ), [ 'jquery-ui-styles' ], $this->version );
 		wp_register_style( 'ea-release-styles', eaccounting()->plugin_url( '/assets/css/release.min.css' ), [], $this->version );
 
+		// React script
+		self::register_style( 'ea-components', 'components/style.css' );
+		self::register_style( 'ea-app', 'app/style.css', [ 'ea-components' ] );
+
 		// Admin styles for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
 			wp_enqueue_style( 'ea-admin-styles' );
+			wp_enqueue_style( 'ea-app' );
 		}
 	}
 
@@ -109,6 +114,13 @@ class Assets {
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/admin/ea-settings.min.js' ), [ 'jquery' ], $this->version, true );
 		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/admin/ea-admin.min.js' ), [ 'jquery' ], $this->version, true );
 
+		// React script
+		self::register_script( 'ea-components', 'components/index.js' );
+		self::register_script( 'ea-data', 'data/index.js' );
+		self::register_script( 'ea-navigation', 'navigation/index.js' );
+		self::register_script( 'ea-number', 'number/index.js' );
+		self::register_script( 'ea-currency', 'currency/index.js' );
+		self::register_script( 'ea-app', 'app/index.js', [ 'ea-navigation', 'ea-data', 'ea-data', 'ea-number', 'ea-currency' ] );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
@@ -182,13 +194,14 @@ class Assets {
 				'ea-admin',
 				'eaccountingi10n',
 				array(
-					'site_url'   => site_url(),
-					'admin_url'  => admin_url(),
-					'asset_url'  => eaccounting()->plugin_url( '/assets' ),
-					'dist_url'   => eaccounting()->plugin_url( '/dist' ),
-					'plugin_url' => eaccounting()->plugin_url(),
-					'currency'   => eaccounting_get_currency( $default_currency )->get_data(),
-					'currencies' => eaccounting_get_currencies(
+					'site_url'       => site_url(),
+					'admin_url'      => admin_url(),
+					'asset_url'      => eaccounting()->plugin_url( '/assets' ),
+					'dist_url'       => eaccounting()->plugin_url( '/dist' ),
+					'plugin_url'     => eaccounting()->plugin_url(),
+					'currency_codes' => eaccounting_get_data( 'currencies' ),
+					'currency'       => eaccounting_get_currency( $default_currency )->get_data(),
+					'currencies'     => eaccounting_get_currencies(
 						array(
 							'return' => 'raw',
 							'number' => - 1,
@@ -198,6 +211,17 @@ class Assets {
 				)
 			);
 			wp_enqueue_media();
+
+			wp_enqueue_script( 'ea-app' );
+			wp_localize_script(
+				'ea-app',
+				'eaccountingi10n',
+				[
+					'logo_url'     => esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ),
+					'dist_url'     => trailingslashit( self::get_asset_dist_url( '' ) ),
+					'current_user' => self::get_user_data(),
+				]
+			);
 		}
 	}
 
@@ -309,6 +333,19 @@ class Assets {
 		$plugin_path = untrailingslashit( plugin_dir_path( EACCOUNTING_PLUGIN_FILE ) );
 
 		return $plugin_path . "/dist/$filename";
+	}
+
+	/**
+	 * Get current user data.
+	 *
+	 * @return object
+	 */
+	public static function get_user_data() {
+		$user_controller = new \WP_REST_Users_Controller();
+		$request         = new \WP_REST_Request();
+		$request->set_query_params( array( 'context' => 'edit' ) );
+		$user_response = $user_controller->get_current_item( $request );
+		return is_wp_error( $user_response ) ? (object) array() : $user_response->get_data();
 	}
 }
 

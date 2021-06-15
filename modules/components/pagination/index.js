@@ -38,7 +38,6 @@ const Nav = (props) => {
 };
 
 const PageLinks = (props) => {
-	console.log(props);
 	const { total, perPage, current, onSetPage, isDisabled } = props;
 	const max = Math.ceil(total / perPage);
 

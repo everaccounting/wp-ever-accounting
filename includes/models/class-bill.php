@@ -526,7 +526,7 @@ class Bill extends Document {
 	 *
 	 */
 	public function get_total_due() {
-		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
+		$due = eaccounting_sanitize_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code() );
 		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) < 0 ) {
 			$due = 0;
 		}
@@ -613,7 +613,7 @@ class Bill extends Document {
 		$this->set_total_shipping( $total_shipping );
 		$this->set_total_fees( $total_fees );
 		$total = $this->get_subtotal() - $this->get_total_discount() + $this->get_total_tax() + $this->get_total_fees() + $this->get_total_shipping();
-		$total = eaccounting_price( $total, $this->get_currency_code(), true );
+		$total = eaccounting_sanitize_price( $total, $this->get_currency_code(), true );
 		if ( $total < 0 ) {
 			$total = 0;
 		}

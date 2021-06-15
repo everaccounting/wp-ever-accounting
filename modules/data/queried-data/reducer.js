@@ -17,7 +17,7 @@ import {
 	onSubKey,
 	replaceAction,
 } from '../utils';
-import { DEFAULT_ENTITY_KEY } from '../entities';
+import { DEFAULT_ENTITY_KEY } from '../entities/entities';
 import getQueryParts from './get-query-parts';
 
 /**

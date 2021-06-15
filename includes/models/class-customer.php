@@ -108,7 +108,7 @@ class Customer extends Contact {
 	 * @param string $value due amount.
 	 */
 	public function set_total_due( $value ) {
-		$this->update_meta_data( 'total_due', eaccounting_price( $value, null, true  ) );
+		$this->update_meta_data( 'total_due', eaccounting_sanitize_price( $value ) );
 	}
 
 	/**
@@ -117,7 +117,7 @@ class Customer extends Contact {
 	 * @param string $value paid amount.
 	 */
 	public function set_total_paid( $value ) {
-		$this->update_meta_data( 'total_paid', eaccounting_price( $value, null, true ) );
+		$this->update_meta_data( 'total_paid', eaccounting_sanitize_price( $value ) );
 	}
 
 	/*

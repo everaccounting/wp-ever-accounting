@@ -9,37 +9,37 @@ import apiFetch from '@wordpress/api-fetch';
  * @param {Array} requests List of API requests to perform at once.
  *
  * @return {Promise} Promise that resolves to a list of objects containing
- *                   either `output` (if that request was successful) or `error`
+ *                   either `output` (if that request was succesful) or `error`
  *                   (if not ).
  */
-export default async function defaultProcessor(requests) {
-	const batchResponse = await apiFetch({
-		path: '/v1/batch',
+export default async function defaultProcessor( requests ) {
+	const batchResponse = await apiFetch( {
+		path: '/batch/v1',
 		method: 'POST',
 		data: {
 			validation: 'require-all-validate',
-			requests: requests.map((request) => ({
+			requests: requests.map( ( request ) => ( {
 				path: request.path,
 				body: request.data, // Rename 'data' to 'body'.
 				method: request.method,
 				headers: request.headers,
-			})),
+			} ) ),
 		},
-	});
+	} );
 
-	if (batchResponse.failed) {
-		return batchResponse.responses.map((response) => ({
+	if ( batchResponse.failed ) {
+		return batchResponse.responses.map( ( response ) => ( {
 			error: response?.body,
-		}));
+		} ) );
 	}
 
-	return batchResponse.responses.map((response) => {
+	return batchResponse.responses.map( ( response ) => {
 		const result = {};
-		if (response.status >= 200 && response.status < 300) {
+		if ( response.status >= 200 && response.status < 300 ) {
 			result.output = response.body;
 		} else {
 			result.error = response.body;
 		}
 		return result;
-	});
+	} );
 }

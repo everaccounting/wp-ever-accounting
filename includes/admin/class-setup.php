@@ -50,12 +50,12 @@ class Setup_Wizard {
 		}
 		wp_enqueue_media();
 		wp_enqueue_script( 'jquery-ui-datepicker' );
-		Assets::register_script( 'ea-router', 'router/index.js' );
+		Assets::register_script( 'ea-navigation', 'navigation/index.js' );
 		Assets::register_script( 'ea-components', 'components/index.js' );
 		Assets::register_script( 'ea-data', 'data/index.js' );
 		Assets::register_style( 'ea-components', 'components/style.css' );
 		Assets::register_style( 'ea-setup', 'setup/style.css', [ 'install', 'common', 'ea-components', 'wp-components' ] );
-		Assets::register_script( 'ea-setup', 'setup/index.js', ['ea-router'] );
+		Assets::register_script( 'ea-setup', 'setup/index.js', ['ea-navigation'] );
 		wp_enqueue_script( 'ea-setup' );
 		wp_enqueue_style( 'ea-setup' );
 		wp_localize_script(

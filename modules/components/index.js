@@ -15,6 +15,8 @@ export {default as Popover} from './popover';
 export {default as PriceControl} from './price-control';
 export {default as SearchBox} from './searchbox';
 export {default as SelectControl} from './select-control';
+export {default as Snackbar} from './snackbar';
+export {default as SnackbarList} from './snackbar/list';
 export {default as EntitySelect} from './select-control/entity-select';
 export {default as SubSub} from './subsub';
 export {default as Table} from './table';

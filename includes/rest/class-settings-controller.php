@@ -11,6 +11,7 @@ namespace EverAccounting\REST;
 
 use EverAccounting\Abstracts\Controller;
 use EverAccounting\Admin\Settings;
+use function cli\err;
 
 defined( 'ABSPATH' ) || die();
 
@@ -39,8 +40,14 @@ class SettingsController extends Controller {
 			array(
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => array( $this, 'get_options' ),
+					'permission_callback' => array( $this, 'get_options_permissions_check' ),
+				),
+				array(
+					'methods'             => \WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'update_options' ),
+					'permission_callback' => array( $this, 'update_options_permissions_check' ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
 			)
@@ -52,19 +59,19 @@ class SettingsController extends Controller {
 			array(
 				'args'   => array(
 					'id' => array(
-						'description' => __( 'Unique identifier for the resource.', 'wp-ever-accounting' ),
+						'description' => __( 'Unique identifier for settings option.', 'wp-ever-accounting' ),
 						'type'        => 'string',
 					),
 				),
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => array( $this, 'get_option' ),
+					'permission_callback' => array( $this, 'get_options_permissions_check' ),
 				),
 				array(
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'update_items_permissions_check' ),
+					'callback'            => array( $this, 'update_option' ),
+					'permission_callback' => array( $this, 'update_options_permissions_check' ),
 					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::EDITABLE ),
 				),
 				'schema' => array( $this, 'get_public_item_schema' ),
@@ -77,10 +84,10 @@ class SettingsController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full data about the request.
 	 *
-	 * @since  1.5.0
 	 * @return \WP_Error|boolean
+	 * @since  1.5.0
 	 */
-	public function get_items_permissions_check( $request ) {
+	public function get_options_permissions_check( $request ) {
 		if ( ! current_user_can( 'manage_eaccounting' ) ) {
 			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
 		}
@@ -93,10 +100,10 @@ class SettingsController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request data.
 	 *
-	 * @since  1.5.0
 	 * @return \WP_Error|\WP_REST_Response
+	 * @since  1.5.0
 	 */
-	public function get_items( $request ) {
+	public function get_options( $request ) {
 		$settings          = $this->get_settings();
 		$filtered_settings = array();
 		foreach ( $settings as $setting ) {
@@ -106,9 +113,8 @@ class SettingsController extends Controller {
 				$filtered_settings[] = $rest_field;
 			}
 		}
-		$response = rest_ensure_response( $filtered_settings );
 
-		return $response;
+		return rest_ensure_response( $filtered_settings );
 	}
 
 	/**
@@ -119,7 +125,7 @@ class SettingsController extends Controller {
 	 *
 	 * @since  1.5.0
 	 */
-	public function get_item( $request ) {
+	public function get_option( $request ) {
 		$settings = $this->get_settings();
 		if ( ! array_key_exists( $request['id'], $settings ) ) {
 			return new \WP_Error( 'rest_setting_field_invalid', __( 'Invalid setting field.', 'wp-ever-accounting' ), array( 'status' => 404 ) );
@@ -137,10 +143,10 @@ class SettingsController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Full data about the request.
 	 *
-	 * @since  1.5.0
 	 * @return \WP_Error|boolean
+	 * @since  1.5.0
 	 */
-	public function update_items_permissions_check( $request ) {
+	public function update_options_permissions_check( $request ) {
 		if ( ! current_user_can( 'ea_manage_options' ) ) {
 			return new \WP_Error( 'rest_cannot_edit', __( 'Sorry, you cannot edit this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
 		}
@@ -154,10 +160,10 @@ class SettingsController extends Controller {
 	 *
 	 * @param \WP_REST_Request $request Request data.
 	 *
-	 * @since  1.5.0
 	 * @return \WP_Error|\WP_REST_Response
+	 * @since  1.5.0
 	 */
-	public function update_item( $request ) {
+	public function update_option( $request ) {
 		$settings = $this->get_settings();
 		if ( ! array_key_exists( $request['id'], $settings ) ) {
 			return new \WP_Error( 'rest_setting_field_invalid', __( 'Invalid setting field.', 'wp-ever-accounting' ), array( 'status' => 404 ) );
@@ -180,7 +186,44 @@ class SettingsController extends Controller {
 		return rest_ensure_response( $response );
 	}
 
+
 	/**
+	 * Update options.
+	 *
+	 * @param \WP_REST_Request $request Request body
+	 *
+	 * @return \WP_Error|\WP_REST_Response
+	 */
+	public function update_options( $request ) {
+		$options  = $request->get_body_params();
+		$settings = $this->get_settings();
+		foreach ( $options as $option => $value ) {
+			if ( ! array_key_exists( $option, $settings ) ) {
+				return new \WP_Error( 'rest_setting_field_invalid', __( 'Invalid setting field.', 'wp-ever-accounting' ), array( 'status' => 404 ) );
+			}
+
+			$setting = $settings[ $option ];
+			if ( is_callable( array( $this, 'validate_setting_' . $setting['type'] . '_field' ) ) ) {
+				$value = $this->{'validate_setting_' . $setting['type'] . '_field'}( $value, $setting );
+			} else {
+				$value = eaccounting_clean( $value );
+			}
+
+			if ( is_wp_error( $value ) ) {
+				return $value;
+			}
+			eaccounting_update_option( $option, $value );
+		}
+
+		$settings = $this->get_settings();
+		$response = $this->prepare_item_for_response( (object) $settings, $request );
+
+		return rest_ensure_response( $response );
+	}
+
+	/**
+	 * Get all settings options.
+	 *
 	 * @return array
 	 */
 	public function get_settings() {
@@ -231,8 +274,8 @@ class SettingsController extends Controller {
 	 *
 	 * @param string $type Type.
 	 *
-	 * @since  1.5.0
 	 * @return bool
+	 * @since  1.5.0
 	 */
 	public function is_setting_type_valid( $type ) {
 		return in_array(
@@ -259,8 +302,8 @@ class SettingsController extends Controller {
 	 * @param object           $item Setting object.
 	 * @param \WP_REST_Request $request Request object.
 	 *
-	 * @since  1.5.0
 	 * @return \WP_REST_Response $response Response data.
+	 * @since  1.5.0
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		$data     = $this->filter_setting( (array) $item );
@@ -277,8 +320,8 @@ class SettingsController extends Controller {
 	 *
 	 * @param string $setting_id Setting ID.
 	 *
-	 * @since  1.5.0
 	 * @return array Links for the given setting.
+	 * @since  1.5.0
 	 */
 	protected function prepare_links( $setting_id ) {
 		$base  = str_replace( '(?P<group_id>[\w-]+)', $setting_id, $this->rest_base );
@@ -297,8 +340,8 @@ class SettingsController extends Controller {
 	 *
 	 * @param string $key Key to check.
 	 *
-	 * @since  1.5.0
 	 * @return boolean
+	 * @since  1.5.0
 	 */
 	public function allowed_setting_keys( $key ) {
 		return in_array(
@@ -326,8 +369,8 @@ class SettingsController extends Controller {
 	 *
 	 * @param array $setting Settings.
 	 *
-	 * @since 1.5.0
 	 * @return array
+	 * @since 1.5.0
 	 */
 	public function filter_setting( $setting ) {
 		$setting = array_intersect_key(

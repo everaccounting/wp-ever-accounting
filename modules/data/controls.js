@@ -1,17 +1,10 @@
 /**
- * External imports
+ * External dependencies
  */
+import { controls as dataControls } from '@wordpress/data-controls';
 
-/**
- * WordPress dependencies
- */
 import apiFetch from '@wordpress/api-fetch';
-import {
-	select as selectData,
-	dispatch as dispatchData,
-	subscribe,
-} from '@wordpress/data';
-
+import {dispatch as dispatchData, select as selectData, subscribe} from "@wordpress/data";
 /**
  * Returns the action object for a fetch control.
  *
@@ -24,19 +17,18 @@ export function fetch(request) {
 		request,
 	};
 }
-
 /**
  * Dispatched a control action for triggering an api fetch call with no parsing.
  * Typically this would be used in scenarios where headers are needed.
  *
- * @param {string} path  The path for the request.
+ * @param {object} options  The path for the request.
  *
  * @return {Object} The control action descriptor.
  */
-export const fetchFromAPIWithTotal = (path) => {
+export const fetchWithHeaders = ( options ) => {
 	return {
-		type: 'FETCH_FROM_API_WITH_TOTAL',
-		path,
+		type: 'FETCH_WITH_HEADERS',
+		options,
 	};
 };
 
@@ -110,30 +102,19 @@ export function resolveDispatch(reducerKey, dispatchName, ...args) {
 	};
 }
 
-const customControls = {
+const controls = {
+	...dataControls,
 	FETCH_FROM_API({ request }) {
 		return apiFetch(request);
 	},
-	SELECT({ reducerKey, selectorName, args }) {
-		return selectData(reducerKey)[selectorName](...args);
-	},
-	DISPATCH({ reducerKey, dispatchName, args }) {
-		return dispatchData(reducerKey)[dispatchName](...args);
-	},
-	async RESOLVE_DISPATCH({ reducerKey, dispatchName, args }) {
-		return await dispatchData(reducerKey)[dispatchName](...args);
-	},
-	FETCH_FROM_API_WITH_TOTAL({ path }) {
+	FETCH_WITH_HEADERS( { options } ) {
 		return new Promise((resolve, reject) => {
-			apiFetch({ path, parse: false })
+			apiFetch({ ...options, parse: false })
 				.then((response) => {
-					response.json().then((items) => {
+					response.json().then((data) => {
 						resolve({
-							items,
-							total: parseInt(
-								response.headers.get('x-wp-total'),
-								10
-							),
+							data,
+							headers: response.headers,
 						});
 					});
 				})
@@ -141,6 +122,12 @@ const customControls = {
 					reject(error);
 				});
 		});
+	},
+	SELECT({ reducerKey, selectorName, args }) {
+		return selectData(reducerKey)[selectorName](...args);
+	},
+	DISPATCH({ reducerKey, dispatchName, args }) {
+		return dispatchData(reducerKey)[dispatchName](...args);
 	},
 	RESOLVE_SELECT({ reducerKey, selectorName, args }) {
 		return new Promise((resolve) => {
@@ -168,6 +155,9 @@ const customControls = {
 			});
 		});
 	},
+	async RESOLVE_DISPATCH({ reducerKey, dispatchName, args }) {
+		return await dispatchData(reducerKey)[dispatchName](...args);
+	},
 };
 
-export default customControls;
+export default controls;

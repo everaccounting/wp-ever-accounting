@@ -21,7 +21,7 @@ class Data_Currencies_Controller extends Data_Controller {
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'data/currencies';
+	protected $rest_base = 'data/currency-codes';
 
 	/**
 	 * Return the list of all currencies.

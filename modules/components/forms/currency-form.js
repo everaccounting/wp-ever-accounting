@@ -36,16 +36,17 @@ export function validateCurrencyForm(values) {
 export function CurrencyFormFields(props) {
 	const { getInputProps } = props;
 	const { entities: currencies } = useEntity({
-		name: 'data/currencies',
+		name: 'data/currency-codes',
 		query: { perPage: -1 },
 	});
+
 	return (
 		<>
 			<TextControl label={__('Name')} {...getInputProps('name')} />
 			<SelectControl
 				label={__('Currency Code')}
 				getOptionLabel={(option) =>
-					option && option.name && `${option.name} (${option.code})`
+					option && option.name && `${option.name} (${option.code} ${option.symbol} )`
 				}
 				getOptionValue={(option) =>
 					option && option.code && option.code

@@ -57,7 +57,7 @@ export function receiveQueriedItems(items, query = {}, edits) {
 /**
  * Returns an action object used in signalling that items total have been received.
  *
- * @param {Array}   total Queried item total received.
+ * @param {Number}   total Queried item total received.
  * @param {?Object} query Optional query object.
  *
  * @return {Object} Action object.

@@ -219,6 +219,18 @@ class Currencies_Controller extends Entities_Controller {
 	}
 
 	/**
+	 * Delete a single item.
+	 *
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function delete_item( $request ) {
+		$request['id'] = $request['code'];
+		return parent::delete_item($request);
+	}
+
+	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.
