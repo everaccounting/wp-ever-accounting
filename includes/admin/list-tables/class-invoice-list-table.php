@@ -17,6 +17,7 @@ if ( ! class_exists( '\EverAccounting_List_Table' ) ) {
 
 /**
  * Class EverAccounting_Invoice_List_Table
+ *
  * @since 1.1.0
  */
 class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
@@ -27,7 +28,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 * @var string
 	 */
 	public $per_page = 20;
-
+	
 	/**
 	 * Total number of item found
 	 *
@@ -35,23 +36,63 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 * @var int
 	 */
 	public $total_count;
-
+	
 	/**
-	 * Number of active items found
+	 * Number of draft items found
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.3
 	 * @var string
 	 */
-	public $active_count;
-
+	public $draft_count;
+	
 	/**
-	 *  Number of inactive items found
+	 * Number of pending items found
 	 *
-	 * @since 1.1.0
+	 * @since 1.1.3
 	 * @var string
 	 */
-	public $inactive_count;
-
+	public $pending_count;
+	
+	/**
+	 * Number of partial items found
+	 *
+	 * @since 1.1.3
+	 * @var string
+	 */
+	public $partial_count;
+	
+	/**
+	 * Number of paid items found
+	 *
+	 * @since 1.1.3
+	 * @var string
+	 */
+	public $paid_count;
+	
+	/**
+	 * Number of overdue items found
+	 *
+	 * @since 1.1.3
+	 * @var string
+	 */
+	public $overdue_count;
+	
+	/**
+	 * Number of cancelled items found
+	 *
+	 * @since 1.1.3
+	 * @var string
+	 */
+	public $cancelled_count;
+	
+	/**
+	 * Number of refunded items found
+	 *
+	 * @since 1.1.3
+	 * @var string
+	 */
+	public $refunded_count;
+	
 	/**
 	 * Get things started
 	 *
@@ -69,10 +110,10 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				'plural'   => 'invoices',
 			)
 		);
-
+		
 		parent::__construct( $args );
 	}
-
+	
 	/**
 	 * Check if there is contents in the database.
 	 *
@@ -81,10 +122,10 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 */
 	public function is_empty() {
 		global $wpdb;
-
+		
 		return ! (int) $wpdb->get_var( "SELECT COUNT(id) from {$wpdb->prefix}ea_documents where type='invoice'" );
 	}
-
+	
 	/**
 	 * Render blank state.
 	 *
@@ -102,7 +143,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
         </div>
 		<?php
 	}
-
+	
 	/**
 	 * Define which columns to show on this screen.
 	 *
@@ -120,7 +161,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			'status'         => __( 'Status', 'wp-ever-accounting' ),
 		);
 	}
-
+	
 	/**
 	 * Define sortable columns.
 	 *
@@ -137,7 +178,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			'status'         => array( 'status', false ),
 		);
 	}
-
+	
 	/**
 	 * Define bulk actions
 	 *
@@ -152,7 +193,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
-
+	
 	/**
 	 * Define primary column.
 	 *
@@ -162,7 +203,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	public function get_primary_column_name() {
 		return 'invoice_number';
 	}
-
+	
 	/**
 	 * Renders the checkbox column in the accounts list table.
 	 *
@@ -170,12 +211,11 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string Displays a checkbox.
 	 * @since  1.1.0
-	 *
 	 */
 	function column_cb( $invoice ) {
 		return sprintf( '<input type="checkbox" name="invoice_id[]" value="%d"/>', $invoice->get_id() );
 	}
-
+	
 	/**
 	 * This function renders most of the columns in the list table.
 	 *
@@ -185,19 +225,18 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	 *
 	 * @return string The column value.
 	 * @since 1.1.0
-	 *
 	 */
 	function column_default( $invoice, $column_name ) {
 		$invoice_id = $invoice->get_id();
 		switch ( $column_name ) {
 			case 'invoice_number':
 				$invoice_number = $invoice->get_invoice_number();
-
+				
 				$nonce    = wp_create_nonce( 'invoice-nonce' );
 				$view_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'view', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
 				$edit_url = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'edit', 'invoice_id' => $invoice_id, ) );// phpcs:ignore
 				$del_url  = eaccounting_admin_url( array( 'page' => 'ea-sales', 'tab' => 'invoices', 'action' => 'delete', 'invoice_id' => $invoice_id, '_wpnonce' => $nonce, ) );// phpcs:ignore
-
+				
 				$actions          = array();
 				$actions['view']  = '<a href="' . $view_url . '">' . __( 'View', 'wp-ever-accounting' ) . '</a>';
 				$actions['print'] = '<a href="' . $invoice->get_url() . '" target="_blank">' . __( 'Print', 'wp-ever-accounting' ) . '</a>';
@@ -205,7 +244,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 					$actions['edit'] = '<a href="' . $edit_url . '">' . __( 'Edit', 'wp-ever-accounting' ) . '</a>';
 				}
 				$actions['delete'] = '<a href="' . $del_url . '" class="del">' . __( 'Delete', 'wp-ever-accounting' ) . '</a>';
-
+				
 				$value = '<a href="' . esc_url( $view_url ) . '">' . $invoice_number . '</a>' . $this->row_actions( $actions );
 				break;
 			case 'total':
@@ -229,10 +268,10 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			default:
 				return parent::column_default( $invoice, $column_name );
 		}
-
+		
 		return apply_filters( 'eaccounting_invoice_list_table_' . $column_name, $value, $invoice );
 	}
-
+	
 	/**
 	 * Renders the message to be displayed when there are no items.
 	 *
@@ -242,7 +281,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 	function no_items() {
 		_e( 'There is no invoices found.', 'wp-ever-accounting' );
 	}
-
+	
 	/**
 	 * Process the bulk actions
 	 *
@@ -253,26 +292,26 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 		if ( empty( $_REQUEST['_wpnonce'] ) ) {
 			return;
 		}
-
+		
 		if ( ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-invoices' ) && ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'invoice-nonce' ) ) {
 			return;
 		}
-
+		
 		$ids = isset( $_GET['invoice_id'] ) ? $_GET['invoice_id'] : false;
-
+		
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}
-
+		
 		$ids = array_map( 'absint', $ids );
-		$ids = array_filter(  $ids );
-
+		$ids = array_filter( $ids );
+		
 		if ( empty( $ids ) ) {
 			return;
 		}
-
+		
 		$action = $this->current_action();
-
+		
 		foreach ( $ids as $id ) {
 			$invoice = new Invoice( $id );
 			switch ( $action ) {
@@ -296,7 +335,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 					do_action( 'eaccounting_invoices_do_bulk_action_' . $this->current_action(), $id );
 			}
 		}
-
+		
 		if ( isset( $_GET['_wpnonce'] ) ) {
 			wp_safe_redirect(
 				remove_query_arg(
@@ -313,7 +352,41 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			exit();
 		}
 	}
-
+	
+	/**
+	 * Retrieve the view types
+	 *
+	 * @access public
+	 * @return array $views All the views available
+	 * @since 1.1.3
+	 */
+	public function get_views() {
+		$base            = eaccounting_admin_url( array( 'tab' => 'invoices' ) );
+		$status          = filter_input( INPUT_GET, 'status', FILTER_DEFAULT );
+		$current         = isset( $status ) ? $status : '';
+		$total_count     = '&nbsp;<span class="count">(' . $this->total_count . ')</span>';
+		$draft_count     = '&nbsp;<span class="count">(' . $this->draft_count . ')</span>';
+		$pending_count   = '&nbsp;<span class="count">(' . $this->pending_count . ')</span>';
+		$partial_count   = '&nbsp;<span class="count">(' . $this->partial_count . ')</span>';
+		$paid_count      = '&nbsp;<span class="count">(' . $this->paid_count . ')</span>';
+		$overdue_count   = '&nbsp;<span class="count">(' . $this->overdue_count . ')</span>';
+		$cancelled_count = '&nbsp;<span class="count">(' . $this->cancelled_count . ')</span>';
+		$refunded_count  = '&nbsp;<span class="count">(' . $this->refunded_count . ')</span>';
+		
+		$views = array(
+			'all'       => sprintf( '<a href="%s"%s>%s</a>', esc_url( remove_query_arg( 'status', $base ) ), $current === 'all' || $current === '' ? ' class="current"' : '', __( 'All', 'wp-ever-accounting' ) . $total_count ),
+			'paid'      => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'paid', $base ) ), $current === 'paid' ? ' class="current"' : '', __( 'Paid', 'wp-ever-accounting' ) . $paid_count ),
+			'draft'     => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'draft', $base ) ), $current === 'draft' ? ' class="current"' : '', __( 'Draft', 'wp-ever-accounting' ) . $draft_count ),
+			'pending'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'pending', $base ) ), $current === 'pending' ? ' class="current"' : '', __( 'Pending', 'wp-ever-accounting' ) . $pending_count ),
+			'partial'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'partial', $base ) ), $current === 'partial' ? ' class="current"' : '', __( 'Partial', 'wp-ever-accounting' ) . $partial_count ),
+			'cancelled' => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'cancelled', $base ) ), $current === 'cancelled' ? ' class="current"' : '', __( 'Cancelled', 'wp-ever-accounting' ) . $cancelled_count ),
+			'overdue'   => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'overdue', $base ) ), $current === 'overdue' ? ' class="current"' : '', __( 'Overdue', 'wp-ever-accounting' ) . $overdue_count ),
+			'refunded'  => sprintf( '<a href="%s"%s>%s</a>', esc_url( add_query_arg( 'status', 'refunded', $base ) ), $current === 'refunded' ? ' class="current"' : '', __( 'Refunded', 'wp-ever-accounting' ) . $refunded_count ),
+		);
+		
+		return $views;
+	}
+	
 	/**
 	 * Retrieve all the data for the table.
 	 * Setup the final data for the table
@@ -326,18 +399,18 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 		$hidden                = array();
 		$sortable              = $this->get_sortable_columns();
 		$this->_column_headers = array( $columns, $hidden, $sortable );
-
+		
 		$this->process_bulk_action();
-
+		
 		$page        = isset( $_GET['paged'] ) ? absint( $_GET['paged'] ) : 1;
 		$status      = isset( $_GET['status'] ) ? $_GET['status'] : '';
 		$search      = isset( $_GET['s'] ) ? $_GET['s'] : '';
 		$order       = isset( $_GET['order'] ) ? $_GET['order'] : 'DESC';
 		$orderby     = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'id';
 		$customer_id = isset( $_GET['customer_id'] ) ? $_GET['customer_id'] : '';
-
+		
 		$per_page = $this->per_page;
-
+		
 		$args = wp_parse_args(
 			$this->query_args,
 			array(
@@ -352,15 +425,107 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				'customer_id' => $customer_id,
 			)
 		);
-
-		$args              = apply_filters( 'eaccounting_invoice_table_query_args', $args, $this );
-		$this->items       = eaccounting_get_invoices( $args );
-		$this->total_count = eaccounting_get_invoices( array_merge( $args, array( 'count_total' => true ) ) );
+		
+		$args        = apply_filters( 'eaccounting_invoice_table_query_args', $args, $this );
+		$this->items = eaccounting_get_invoices( $args );
+		
+		/**
+		 * Add invoice status count
+		 * @since 1.1.3
+		 */
+		$this->draft_count = eaccounting_get_invoices( array_merge(
+			$args,
+			array(
+				'status'      => 'draft',
+				'count_total' => true,
+			)
+		) );
+		
+		$this->pending_count = eaccounting_get_invoices( array_merge(
+			$args,
+			array(
+				'status'      => 'pending',
+				'count_total' => true,
+			)
+		) );
+		
+		$this->partial_count = eaccounting_get_invoices( array_merge(
+			$args,
+			array(
+				'status'      => 'partial',
+				'count_total' => true,
+			)
+		) );
+		
+		$this->paid_count = eaccounting_get_invoices( array_merge(
+			$args,
+			array(
+				'status'      => 'paid',
+				'count_total' => true,
+			)
+		) );
+		
+		$this->overdue_count = eaccounting_get_invoices( array_merge(
+			$args,
+			array(
+				'status'      => 'overdue',
+				'count_total' => true,
+			)
+		) );
+		
+		$this->cancelled_count = eaccounting_get_invoices( array_merge(
+			$args,
+			array(
+				'status'      => 'cancelled',
+				'count_total' => true,
+			)
+		) );
+		
+		$this->refunded_count = eaccounting_get_invoices( array_merge(
+			$args,
+			array(
+				'status'      => 'refunded',
+				'count_total' => true,
+			)
+		) );
+		
+		$this->total_count = $this->draft_count + $this->pending_count + $this->partial_count + $this->paid_count + $this->overdue_count + $this->cancelled_count + $this->refunded_count;
+		$status            = filter_input( INPUT_GET, 'status', FILTER_DEFAULT );
+		$status            = isset( $status ) ? $status : 'any';
+		
+		switch ( $status ) {
+			case 'draft':
+				$total_items = $this->draft_count;
+				break;
+			case 'pending':
+				$total_items = $this->pending_count;
+				break;
+			case 'partial':
+				$total_items = $this->partial_count;
+				break;
+			case 'paid':
+				$total_items = $this->paid_count;
+				break;
+			case 'overdue':
+				$total_items = $this->paid_count;
+				break;
+			case 'cancelled':
+				$total_items = $this->cancelled_count;
+				break;
+			case 'refunded':
+				$total_items = $this->refunded;
+				break;
+			case 'any':
+			default:
+				$total_items = $this->total_count;
+				break;
+		}
+		
 		$this->set_pagination_args(
 			array(
-				'total_items' => $this->total_count,
+				'total_items' => $total_items,
 				'per_page'    => $per_page,
-				'total_pages' => ceil( $this->total_count / $per_page ),
+				'total_pages' => ceil( $total_items / $per_page ),
 			)
 		);
 	}

@@ -20,20 +20,22 @@ $add_url = eaccounting_admin_url(
 	)
 );
 ?>
-	<h1 class="wp-heading-inline"><?php _e( 'Bills', 'wp-ever-accounting' ); ?></h1>
-	<a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
+    <h1 class="wp-heading-inline"><?php _e( 'Bills', 'wp-ever-accounting' ); ?></h1>
+    <a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
-	</a>
-	<hr class="wp-header-end">
+    </a>
+    <hr class="wp-header-end">
 <?php do_action( 'eaccounting_bills_table_top' ); ?>
-	<form id="ea-bills-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
+    <form id="ea-bills-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 		<?php
+		/* views added in from version 1.1.3 */
+		$bill_table->views();
 		$bill_table->search_box( __( 'Search', 'wp-ever-accounting' ), 'ea-bills' );
 		$bill_table->display();
 		?>
-		<input type="hidden" name="page" value="ea-expenses"/>
-		<input type="hidden" name="tab" value="bills"/>
-	</form>
+        <input type="hidden" name="page" value="ea-expenses"/>
+        <input type="hidden" name="tab" value="bills"/>
+    </form>
 <?php do_action( 'eaccounting_bills_table_bottom' ); ?>
 <?php
 eaccounting_enqueue_js(
