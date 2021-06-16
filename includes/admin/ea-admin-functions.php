@@ -17,11 +17,11 @@ defined( 'ABSPATH' ) || exit();
  */
 function eaccounting_get_settings_tabs() {
 	static $tabs = false;
-
+	
 	if ( false !== $tabs ) {
 		return $tabs;
 	}
-
+	
 	$tabs = array(
 		'general'    => __( 'General', 'wp-ever-accounting' ),
 		'currencies' => __( 'Currencies', 'wp-ever-accounting' ),
@@ -30,15 +30,15 @@ function eaccounting_get_settings_tabs() {
 		'licenses'   => __( 'Licenses', 'wp-ever-accounting' ),
 		//'advanced'   => __( 'Advanced', 'wp-ever-accounting' ),
 	);
-
+	
 	if ( ! has_filter( 'eaccounting_settings_sections_extensions' ) ) {
 		unset( $tabs['extensions'] );
 	}
-
+	
 	if ( ! has_filter( 'eaccounting_settings_licenses' ) ) {
 		unset( $tabs['licenses'] );
 	}
-
+	
 	return apply_filters( 'eaccounting_settings_tabs', $tabs );
 }
 
@@ -52,11 +52,11 @@ function eaccounting_get_settings_tabs() {
  */
 function eaccounting_get_settings_sections() {
 	static $sections = false;
-
+	
 	if ( false !== $sections ) {
 		return $sections;
 	}
-
+	
 	$sections = array(
 		'general'    => apply_filters(
 			'eaccounting_settings_sections_general',
@@ -75,13 +75,13 @@ function eaccounting_get_settings_sections() {
 			array()
 		),
 	);
-
+	
 	if ( eaccounting_tax_enabled() ) {
 		$sections['general']['taxes'] = __( 'Taxes', 'wp-ever-accounting' );
 	}
-
+	
 	$sections = apply_filters( 'eaccounting_settings_sections', $sections );
-
+	
 	return $sections;
 }
 
@@ -102,7 +102,7 @@ function eaccounting_get_settings_tab_sections( $tab = false ) {
 	} elseif ( $tab ) {
 		$tabs = array();
 	}
-
+	
 	return $tabs;
 }
 
@@ -115,7 +115,7 @@ function eaccounting_get_settings_tab_sections( $tab = false ) {
  */
 function eaccounting_get_screen_ids() {
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
-
+	
 	$screen_ids = array(
 		'toplevel_page_' . $eaccounting_screen_id,
 		$eaccounting_screen_id . '_page_ea-transactions',
@@ -130,7 +130,7 @@ function eaccounting_get_screen_ids() {
 		$eaccounting_screen_id . '_page_ea-extensions',
 		'toplevel_page_eaccounting',
 	);
-
+	
 	return apply_filters( 'eaccounting_screen_ids', $screen_ids );
 }
 
@@ -147,7 +147,7 @@ function eaccounting_is_admin_page( $page = '' ) {
 	if ( ! is_admin() || ! did_action( 'wp_loaded' ) ) {
 		$ret = false;
 	}
-
+	
 	if ( empty( $page ) && isset( $_GET['page'] ) ) {
 		$page = eaccounting_clean( $_GET['page'] );
 	} else {
@@ -160,13 +160,13 @@ function eaccounting_is_admin_page( $page = '' ) {
 		'accounting_page_',
 		$eaccounting_screen_id . '_page_'
 	), '', eaccounting_get_screen_ids() );
-
+	
 	if ( ! empty( $page ) && in_array( $page, $pages ) ) {
 		$ret = true;
 	} else {
 		$ret = in_array( $page, $pages );
 	}
-
+	
 	return apply_filters( 'eaccounting_is_admin_page', $ret );
 }
 
@@ -186,7 +186,7 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 	if ( null === $page ) {
 		$page = isset( $_GET['page'] ) ? eaccounting_clean( $_GET['page'] ) : '';
 	}
-
+	
 	// When translate the page name becomes different so use translated
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 	$whitelist             = str_replace( array(
@@ -194,15 +194,15 @@ function eaccounting_admin_url( $query_args = array(), $page = null ) {
 		'accounting_page_',
 		$eaccounting_screen_id . '_page_'
 	), '', eaccounting_get_screen_ids() );
-
+	
 	if ( ! in_array( $page, $whitelist, true ) ) {
 		$page = '';
 	}
-
+	
 	$admin_query_args = array_merge( array( 'page' => $page ), $query_args );
-
+	
 	$url = add_query_arg( $admin_query_args, admin_url( 'admin.php' ) );
-
+	
 	/**
 	 * Filters the EverAccounting admin URL.
 	 *
@@ -238,7 +238,7 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
 		$array      = array_keys( $tabs );
 		$active_tab = reset( $array );
 	}
-
+	
 	return $active_tab;
 }
 
@@ -258,13 +258,13 @@ function eaccounting_get_active_tab( $tabs, $default = null ) {
  */
 function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(), $tab = 'tab' ) {
 	$tabs = (array) $tabs;
-
+	
 	if ( empty( $tabs ) ) {
 		return;
 	}
-
+	
 	$tabs = apply_filters( 'eaccounting_navigation_tabs', $tabs, $active_tab, $query_args );
-
+	
 	foreach ( $tabs as $tab_id => $tab_name ) {
 		$args    = wp_parse_args( $query_args, array( $tab => $tab_id ) );
 		$tab_url = eaccounting_admin_url( $args );
@@ -276,7 +276,7 @@ function eaccounting_navigation_tabs( $tabs, $active_tab, $query_args = array(),
 			esc_html( $tab_name )
 		);
 	}
-
+	
 	do_action( 'eaccounting_after_navigation_tabs', $tabs, $active_tab, $query_args );
 }
 
@@ -311,9 +311,9 @@ function eaccounting_accounts_set_screen_option( $status, $option, $value ) {
 	if ( in_array( $option, array( 'eaccounting_edit_accounts_per_page' ), true ) ) {
 		return $value;
 	}
-
+	
 	return $status;
-
+	
 }
 
 add_filter( 'set-screen-option', 'eaccounting_accounts_set_screen_option', 10, 3 );
@@ -419,11 +419,32 @@ function eaccounting_get_io_headers( $type ) {
 				'purchase_tax'   => 'Purchase Tax',
 			);
 			break;
-
+		case 'invoice':
+			$headers = array(
+				'document_number' => 'Document Number',
+				'order_number'    => 'Order Number',
+				'status'          => 'Status',
+				'issue_date'      => 'Issue Date',
+				'due_date'        => 'Due Date',
+				'payment_date'    => 'Payment Date',
+				'category_name'   => 'Category Name',
+				'customer_name'   => 'Customer Name',
+				'items'           => 'Items',
+				'discount'        => 'Discount',
+				'subtotal'        => 'Subtotal',
+				'total_shipping'  => 'Total Shipping',
+				'total'           => 'Total',
+				'paid'            => 'Paid',
+				'due'             => 'Due',
+				'key'             => 'Key',
+				'note'            => 'Note',
+			);
+			break;
+		
 		default:
 			break;
 	}
-
+	
 	return apply_filters( 'eaccounting_get_io_headers_' . $type, $headers );
 }
 
@@ -437,20 +458,20 @@ function eaccounting_get_io_headers( $type ) {
  */
 function eaccounting_do_import_fields( $type ) {
 	$fields = eaccounting_get_io_headers( $type );
-
+	
 	if ( ! empty( $fields ) ) {
-
+		
 		foreach ( $fields as $key => $label ) {
 			?>
-			<tr>
-				<td><?php echo esc_html( $label ); ?></td>
-				<td>
-					<select name="mapping[<?php echo esc_attr( $key ); ?>]" class="ea-importer-map-column">
-						<option value=""><?php esc_html_e( '- Do not import -', 'wp-ever-accounting' ); ?></option>
-					</select>
-				</td>
-				<td class="ea-importer-preview-field"><?php esc_html_e( '- Select field to preview data -', 'wp-ever-accounting' ); ?></td>
-			</tr>
+            <tr>
+                <td><?php echo esc_html( $label ); ?></td>
+                <td>
+                    <select name="mapping[<?php echo esc_attr( $key ); ?>]" class="ea-importer-map-column">
+                        <option value=""><?php esc_html_e( '- Do not import -', 'wp-ever-accounting' ); ?></option>
+                    </select>
+                </td>
+                <td class="ea-importer-preview-field"><?php esc_html_e( '- Select field to preview data -', 'wp-ever-accounting' ); ?></td>
+            </tr>
 			<?php
 		}
 	}
@@ -510,7 +531,7 @@ function eaccounting_do_meta_boxes( $screen, $context, $object ) {
  */
 function eaccounting_get_report_years() {
 	$years = range( date( 'Y' ), ( date( 'Y' ) - 10 ), 1 );
-
+	
 	return array_combine( array_values( $years ), $years );
 }
 
@@ -535,6 +556,6 @@ function eaccounting_get_months() {
 		'November',
 		'December'
 	);
-
+	
 	return array_combine( array_values( $months ), $months );
 }

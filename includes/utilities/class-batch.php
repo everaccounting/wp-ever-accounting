@@ -110,6 +110,13 @@ class Batch extends Registry {
 
 			)
 		);
+		$this->add_item(
+			'export-invoices',
+			array(
+				'class' => '\EverAccounting\Export\Invoices',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-invoices.php',
+			)
+		);
 
 		$this->add_item(
 			'import-customers',
@@ -176,8 +183,8 @@ class Batch extends Registry {
 	 *
 	 * @param string $batch_id Unique item name.
 	 *
-	 * @param array $args {
-	 *                               Arguments for registering a new item.
+	 * @param array  $args {
+	 *                                Arguments for registering a new item.
 	 *
 	 * @type string $class Item class.
 	 * @type string $file Item file containing the class.
