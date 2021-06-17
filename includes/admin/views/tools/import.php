@@ -430,3 +430,52 @@ defined( 'ABSPATH' ) || exit();
         </form>
     </div>
 </div>
+
+<div class="ea-card">
+    <div class="ea-card__header is-compact">
+        <h3 class="ea-card__title"><?php _e( 'Import Bills', 'wp-ever-accounting' ); ?></h3>
+    </div>
+
+    <div class="ea-card__inside">
+        <form action="" method="post" enctype="multipart/form-data" class="ea-importer ea-batch"
+              data-type="import-bills"
+              data-nonce="<?php echo wp_create_nonce( 'import-bills_importer_nonce' ); ?>">
+            <p>
+				<?php
+				echo wp_kses_post(
+					sprintf(
+						__( 'Import bills from CSV file. Download a <a href="%s"> sample </a> file to learn how to format the CSV file.', 'wp-ever-accounting' ),
+						eaccounting()->plugin_url( '/sample-data/import/bills.csv' )
+					)
+				);
+				?>
+            </p>
+
+            <div class="ea-importer-top">
+                <input name="upload" type="file" required="required" accept="text/csv">
+				<?php submit_button( esc_html__( 'Import CSV', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+            </div>
+
+            <div class="ea-importer-bottom">
+                <p>
+					<?php esc_html_e( 'Each column loaded from the CSV may be mapped to a category field. Select the column that should be mapped to each field below. Any columns not needed, can be ignored.', 'wp-ever-accounting' ); ?>
+                </p>
+
+                <table class="widefat striped fixed">
+                    <thead>
+                    <tr>
+                        <th><strong><?php esc_html_e( 'Column name', 'wp-ever-accounting' ); ?></strong></th>
+                        <th><strong><?php esc_html_e( 'Map to field', 'wp-ever-accounting' ); ?></strong></th>
+                        <th><strong><?php esc_html_e( 'Data Preview', 'wp-ever-accounting' ); ?></strong></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+					<?php eaccounting_do_import_fields( 'bill' ); ?>
+                    </tbody>
+                </table>
+				
+				<?php submit_button( esc_attr__( 'Process', 'wp-ever-accounting' ), 'primary', null, true ); ?>
+            </div>
+        </form>
+    </div>
+</div>

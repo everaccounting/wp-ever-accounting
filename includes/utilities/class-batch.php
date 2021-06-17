@@ -192,6 +192,14 @@ class Batch extends Registry {
 			)
 		);
 		
+		$this->add_item(
+			'import-bills',
+			array(
+				'class' => '\EverAccounting\Import\Bills',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-bills.php',
+			)
+		);
+		
 	}
 	
 	/**

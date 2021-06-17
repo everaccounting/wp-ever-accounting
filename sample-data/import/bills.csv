@@ -1,0 +1,4 @@
+﻿"Document Number","Order Number",Status,"Issue Date","Due Date","Payment Date","Category Name","Vendor Name",Items,Discount,"Discount Type","Currency Code",Subtotal,"Total Shipping",Total,Paid,Due,Key,Note
+BILL-00001,,draft,"2021-06-06 00:00:00","2021-06-21 00:00:00",,Bill,"Arg vendor","new item",0,percentage,USD,900,0,900,0,900,ea-bill-446349649add42b39a1deb,"bill note"
+BILL-00002,ORDER-3103196,draft,"2021-06-16 10:02:11","2021-06-25 10:02:11",,Bill,"Dr. Joan Hoeger","Gorgeous Paper Clock,Sleek Bronze Coat",7,percentage,USD,49,0,45.57,0,45.57,ea-bill-72b8673895bb4cdb81c454,"The Rabbit Sends in a deep, hollow tone: 'sit down, both of you, and don't speak a word till I've."
+BILL-00007,ORDER-1809198,draft,"2021-06-16 10:02:11","2021-06-24 10:02:11",,Bill,"Dr. Joan Hoeger","Gorgeous Paper Clock,new item",8,percentage,USD,900,0,828,0,828,ea-bill-02f7b5701a564b79a3af92,"And certainly there was no one to listen to me! I'LL soon make you a present of everything I've."

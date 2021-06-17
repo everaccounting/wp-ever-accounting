@@ -127,7 +127,7 @@ class Invoices extends CSV_Importer {
 				'status'         => $data['status'],
 				'issue_date'     => $data['issue_date'] ? eaccounting_date( $data['issue_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
 				'due_date'       => $data['due_date'] ? eaccounting_date( $data['issue_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) ), //phpcs:ignore,
-				'payment_date'   => $data['payment_date'] ? eaccounting_date( $data['payment_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
+				'payment_date'   => $data['payment_date'],
 				'category_id'    => $category_id,
 				'customer_id'    => $customer_id,
 				'currency_code'  => $data['currency_code'],
@@ -138,14 +138,19 @@ class Invoices extends CSV_Importer {
 			)
 		);
 		
-		$items         = $data['items'];
-		$items         = eaccounting_get_items( array( 'search' => $data['items'], 'search_cols' => array( 'name' ), ) ); //phpcs:ignore
+		$items       = $data['items'];
+		$all_items   = explode( ',', $items );
+		$items_array = array();
+		foreach ( $all_items as $item ) {
+			$items_array[] = eaccounting_get_items( array( 'search' => $item, 'search_cols' => array( 'name' ) ) ); //phpcs:ignore
+		}
+		
 		$invoice_items = array();
-		if ( is_array( $items ) && ! empty( $items ) ) {
-			foreach ( $items as $item ) {
+		if ( is_array( $items_array ) && ! empty( $items_array ) ) {
+			foreach ( $items_array as $item ) {
 				$invoice_items[] = array(
-					'item_id'       => $item->get_id(),
-					'item_name'     => $item->get_name(),
+					'item_id'       => $item[0]->get_id(),
+					'item_name'     => $item[0]->get_name(),
 					'document_id'   => $invoice->get_id(),
 					'currency_code' => $invoice->get_currency_code(),
 				);
