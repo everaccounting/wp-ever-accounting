@@ -126,6 +126,7 @@ defined( 'ABSPATH' ) || exit();
 	</div>
 </div>
 
+<!-- Invoice export section -->
 <div class="ea-card">
     <div class="ea-card__header is-compact">
         <h3 class="ea-card__title"><?php _e( 'Export Invoices', 'wp-ever-accounting' ); ?></h3>
@@ -135,6 +136,21 @@ defined( 'ABSPATH' ) || exit();
         <form method="post" class="ea-exporter ea-batch" data-type="export-invoices"
               data-nonce="<?php echo wp_create_nonce( 'export-invoices_exporter_nonce' ); ?>">
             <p><?php esc_html_e( 'Export invoices from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
+			<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
+        </form>
+    </div>
+</div>
+
+<!-- Bill export section -->
+<div class="ea-card">
+    <div class="ea-card__header is-compact">
+        <h3 class="ea-card__title"><?php _e( 'Export Bills', 'wp-ever-accounting' ); ?></h3>
+    </div>
+
+    <div class="ea-card__inside">
+        <form method="post" class="ea-exporter ea-batch" data-type="export-bills"
+              data-nonce="<?php echo wp_create_nonce( 'export-bills_exporter_nonce' ); ?>">
+            <p><?php esc_html_e( 'Export bills from this site as CSV file. Exported file can be imported into other site.', 'wp-ever-accounting' ); ?></p>
 			<?php submit_button( esc_html__( 'Export', 'wp-ever-accounting' ), 'secondary', null, true ); ?>
         </form>
     </div>

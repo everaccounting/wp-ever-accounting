@@ -1,6 +1,6 @@
 <?php
 /**
- * Handle invoices export.
+ * Handle bills export.
  *
  * @since   1.1.3
  *
@@ -14,13 +14,13 @@ use EverAccounting\Abstracts\CSV_Exporter;
 defined( 'ABSPATH' ) || exit();
 
 /**
- * Class Invoices
+ * Class Bills
  *
  * @since   1.1.3
  *
  * @package EverAccounting\Export
  */
-class Invoices extends CSV_Exporter {
+class Bills extends CSV_Exporter {
 	
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
@@ -28,7 +28,7 @@ class Invoices extends CSV_Exporter {
 	 * @since 1.1.3
 	 * @var string
 	 */
-	public $export_type = 'invoices';
+	public $export_type = 'bills';
 	
 	
 	/**
@@ -38,7 +38,7 @@ class Invoices extends CSV_Exporter {
 	 * @since  1.1.3
 	 */
 	public function get_columns() {
-		return eaccounting_get_io_headers( 'invoice' );
+		return eaccounting_get_io_headers( 'bill' );
 	}
 	
 	/**
@@ -54,8 +54,8 @@ class Invoices extends CSV_Exporter {
 			'return'   => 'objects',
 			'number'   => - 1,
 		);
-		$args  = apply_filters( 'eaccounting_invoice_export_query_args', $args );
-		$items = eaccounting_get_invoices( $args );
+		$args  = apply_filters( 'eaccounting_bill_export_query_args', $args );
+		$items = eaccounting_get_bills( $args );
 		$rows  = array();
 		
 		foreach ( $items as $item ) {
@@ -69,7 +69,7 @@ class Invoices extends CSV_Exporter {
 	/**
 	 * Take a product and generate row data from it for export.
 	 *
-	 * @param \EverAccounting\Models\Invoice $item
+	 * @param \EverAccounting\Models\Bill $item
 	 *
 	 * @return array
 	 */
@@ -101,10 +101,10 @@ class Invoices extends CSV_Exporter {
 					$category    = eaccounting_get_category( $category_id );
 					$value       = ( $category->exists() ) ? $category->get_name() : '';
 					break;
-				case 'customer_name':
-					$customer_id = $item->get_contact_id();
-					$customer    = eaccounting_get_customer( $customer_id );
-					$value       = ( $customer->exists() ) ? $customer->get_name() : '';
+				case 'vendor_name':
+					$vendor_id = $item->get_contact_id();
+					$vendor    = eaccounting_get_vendor( $vendor_id );
+					$value     = ( $vendor->exists() ) ? $vendor->get_name() : '';
 					break;
 				case 'items':
 					$items = $item->get_item_ids();
