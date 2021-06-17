@@ -107,8 +107,12 @@ class Bills extends CSV_Exporter {
 					$value     = ( $vendor->exists() ) ? $vendor->get_name() : '';
 					break;
 				case 'items':
-					$items = $item->get_item_ids();
-					$value = implode( ',', $items );
+					$document_items = $item->get_items();
+					$item_names     = array();
+					foreach ( $document_items as $single ) {
+						$item_names[] = $single->get_item_name();
+					}
+					$value = implode( ',', $item_names );
 					break;
 				case 'discount':
 					$value = $item->get_discount();
