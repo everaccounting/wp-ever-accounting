@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit();
  * @package EverAccounting\Export
  */
 class Invoices extends CSV_Exporter {
-	
+
 	/**
 	 * Our export type. Used for export-type specific filters/actions.
 	 *
@@ -29,8 +29,8 @@ class Invoices extends CSV_Exporter {
 	 * @var string
 	 */
 	public $export_type = 'invoices';
-	
-	
+
+
 	/**
 	 * Return an array of columns to export.
 	 *
@@ -40,7 +40,7 @@ class Invoices extends CSV_Exporter {
 	public function get_columns() {
 		return eaccounting_get_io_headers( 'invoice' );
 	}
-	
+
 	/**
 	 *
 	 * @since 1.1.3
@@ -57,15 +57,15 @@ class Invoices extends CSV_Exporter {
 		$args  = apply_filters( 'eaccounting_invoice_export_query_args', $args );
 		$items = eaccounting_get_invoices( $args );
 		$rows  = array();
-		
+
 		foreach ( $items as $item ) {
 			$rows[] = $this->generate_row_data( $item );
 		}
-		
+
 		return $rows;
 	}
-	
-	
+
+
 	/**
 	 * Take a product and generate row data from it for export.
 	 *
@@ -111,9 +111,10 @@ class Invoices extends CSV_Exporter {
 					$value = implode( ',', $items );
 					break;
 				case 'discount':
-					$discount      = $item->get_discount();
-					$discount_type = $item->get_discount_type();
-					$value         = $discount . ' (' . $discount_type . ') ';
+					$value = $item->get_discount();
+					break;
+				case 'discount_type':
+					$value = $item->get_discount_type();
 					break;
 				case 'subtotal':
 					$value = $item->get_subtotal();
@@ -121,7 +122,7 @@ class Invoices extends CSV_Exporter {
 				case 'total_shipping':
 					$value = $item->get_total_shipping();
 					break;
-				case 'currency':
+				case 'currency_code':
 					$value = $item->get_currency_code();
 					break;
 				case 'total':
@@ -142,10 +143,10 @@ class Invoices extends CSV_Exporter {
 				default:
 					$value = apply_filters( 'eaccounting_invoice_csv_row_item', '', $column, $item, $this );
 			}
-			
+
 			$props[ $column ] = $value;
 		}
-		
+
 		return $props;
 	}
 }
