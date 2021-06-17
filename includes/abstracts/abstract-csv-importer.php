@@ -367,7 +367,7 @@ abstract class CSV_Importer {
 			'imported' => 0,
 			'skipped'  => 0,
 		);
-		error_log( print_r( $this->get_parsed_data(), true ) );
+		
 		foreach ( $this->parsed_data as $parsed_data_key => $parsed_data ) {
 			$result = $this->import_item( $parsed_data );
 			if ( ! is_wp_error( $result ) && $result ) {

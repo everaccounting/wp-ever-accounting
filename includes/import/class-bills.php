@@ -30,7 +30,7 @@ class Invoices extends CSV_Importer {
 	 * @since 1.1.3
 	 */
 	protected function get_headers() {
-		return eaccounting_get_io_headers( 'invoice' );
+		return eaccounting_get_io_headers( 'invoices' );
 	}
 	
 	
@@ -103,11 +103,11 @@ class Invoices extends CSV_Importer {
 		}
 		
 		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'income', ) ); //phpcs:ignore
-		$category    = ( $category ) ? reset( $category ) : '';
+		$category    = ! ( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
 		
 		$customer    = eaccounting_get_customers( array( 'search' => $data['customer_name'], 'search_cols' => array( 'name' ), ) ); //phpcs:ignore
-		$customer    = ( $customer ) ? reset( $customer ) : $customer;
+		$customer    = ! ( $customer ) ? reset( $customer ) : '';
 		$customer_id = ! empty( $customer ) ? $customer->get_id() : '';
 		
 		if ( empty( $category_id ) ) {
@@ -118,16 +118,15 @@ class Invoices extends CSV_Importer {
 			return new \WP_Error( 'invalid_props', __( 'Customer does not exist.', 'wp-ever-accounting' ) );
 		}
 		
-		$due     = eaccounting()->settings->get( 'invoice_due', 15 );
-		$invoice = new \EverAccounting\Models\Invoice();
+		$invoice = new Invoice();
 		$invoice->set_props(
 			array(
 				'invoice_number' => $data['document_number'],
 				'order_number'   => $data['order_number'],
 				'status'         => $data['status'],
-				'issue_date'     => $data['issue_date'] ? eaccounting_date( $data['issue_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
-				'due_date'       => $data['due_date'] ? eaccounting_date( $data['issue_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) ), //phpcs:ignore,
-				'payment_date'   => $data['payment_date'] ? eaccounting_date( $data['payment_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
+				'issue_date'     => $data['issue_date'],
+				'due_date'       => $data['due_date'],
+				'payment_date'   => $data['payment_date'],
 				'category_id'    => $category_id,
 				'customer_id'    => $customer_id,
 				'currency_code'  => $data['currency_code'],
@@ -138,9 +137,10 @@ class Invoices extends CSV_Importer {
 			)
 		);
 		
-		$items         = $data['items'];
-		$items         = eaccounting_get_items( array( 'search' => $data['items'], 'search_cols' => array( 'name' ), ) ); //phpcs:ignore
-		$invoice_items = array();
+		$items = $data['items'];
+		$items = eaccounting_get_items( array( 'search' => $data['items'], 'search_cols' => 'id', ) ); //phpcs:ignore
+		$items = ! ( $items ) ? reset( $items ) : '';
+		
 		if ( is_array( $items ) && ! empty( $items ) ) {
 			foreach ( $items as $item ) {
 				$invoice_items[] = array(
@@ -153,9 +153,7 @@ class Invoices extends CSV_Importer {
 			}
 		}
 		
-		
 		$invoice->set_items( $invoice_items );
-		
 		$totals = $invoice->calculate_totals();
 		$invoice->set_subtotal( $totals['subtotal'] );
 		$invoice->set_total_tax( $totals['total_tax'] );
@@ -164,6 +162,7 @@ class Invoices extends CSV_Importer {
 		$invoice->set_total_discount( $totals['total_discount'] );
 		$invoice->set_total( $totals['total'] );
 		$invoice->save();
+		error_log( print_r( $invoice, true ) );
 		
 		return $invoice;
 	}
