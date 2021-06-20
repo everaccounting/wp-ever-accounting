@@ -176,6 +176,7 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 	<?php eaccounting_hidden_input( 'id', $invoice->get_id() ); ?>
 	<?php eaccounting_hidden_input( 'discount', $invoice->get_discount() ); ?>
 	<?php eaccounting_hidden_input( 'discount_type', $invoice->get_discount_type() ); ?>
+	<?php eaccounting_hidden_input( 'shipping', $invoice->get_shipping() ); ?>
 	<?php eaccounting_hidden_input( 'action', 'eaccounting_edit_invoice' ); ?>
 	<?php wp_nonce_field( 'ea_edit_invoice' ); ?>
 </form>
@@ -209,4 +210,24 @@ $view_url = admin_url( 'admin.php' ) . '?page=ea-sales&tab=invoices&action=view&
 		);
 		?>
 	</form>
+</script>
+
+<script type="text/template" id="ea-modal-add-shipping" data-title="<?php esc_html_e( 'Add Shipping', 'wp-ever-accounting' ); ?>">
+    <form action="" method="post">
+		<?php
+		eaccounting_text_input(
+			array(
+				'label'    => __( 'Shipping Amount', 'wp-ever-accounting' ),
+				'name'     => 'shipping',
+				'type'     => 'number',
+				'value'    => 0.0000,
+				'required' => true,
+				'attr'     => array(
+					'step' => 0.0001,
+					'min'  => 0,
+				),
+			)
+		);
+		?>
+    </form>
 </script>

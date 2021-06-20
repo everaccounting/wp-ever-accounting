@@ -9,7 +9,7 @@
 
 namespace EverAccounting\Models;
 
-Use \EverAccounting\Abstracts\Document;
+use \EverAccounting\Abstracts\Document;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -27,26 +27,26 @@ class Invoice extends Document {
 	 * @var string
 	 */
 	protected $object_type = 'invoice';
-
+	
 	/**
 	 * @since 1.1.0
 	 *
 	 * @var array
 	 */
 	protected $status_transition = array();
-
+	
 	/**
 	 * Get the invoice if ID is passed, otherwise the account is new and empty.
 	 *
-	 * @since 1.1.0
-	 *
 	 * @param int|object|Invoice $invoice object to read.
+	 *
+	 * @since 1.1.0
 	 *
 	 */
 	public function __construct( $invoice = 0 ) {
 		$this->data = array_merge( $this->data, array( 'type' => 'invoice' ) );
 		parent::__construct( $invoice );
-
+		
 		if ( $invoice instanceof self ) {
 			$this->set_id( $invoice->get_id() );
 		} elseif ( is_numeric( $invoice ) ) {
@@ -58,16 +58,16 @@ class Invoice extends Document {
 		} else {
 			$this->set_object_read( true );
 		}
-
+		
 		if ( $this->get_id() > 0 ) {
 			$this->repository->read( $this );
 		}
-
+		
 		if ( 'invoice' !== $this->get_type() ) {
 			$this->set_id( 0 );
 			$this->set_defaults();
 		}
-
+		
 		$this->required_props = array(
 			//'line_items'    => __( 'Line Items', 'wp-ever-accounting' ),
 			'currency_code' => __( 'Currency', 'wp-ever-accounting' ),
@@ -77,29 +77,29 @@ class Invoice extends Document {
 			'due_date'      => __( 'Due date', 'wp-ever-accounting' ),
 		);
 	}
-
+	
 	/**
 	 * Get supported statuses.
 	 *
-	 * @since 1.1.0
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function get_statuses() {
 		return eaccounting_get_invoice_statuses();
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD methods
 	|--------------------------------------------------------------------------
 	|
 	*/
-
+	
 	/**
 	 * Generate document number.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function maybe_set_invoice_number() {
 		if ( empty( $this->get_invoice_number() ) ) {
@@ -110,24 +110,25 @@ class Invoice extends Document {
 			$this->set_document_number( $this->generate_number( $number ) );
 		}
 	}
-
+	
 	/**
 	 * Generate number.
-	 *
-	 * @since 1.1.0
 	 *
 	 * @param $number
 	 *
 	 * @return string
+	 * @since 1.1.0
+	 *
 	 */
 	public function generate_number( $number ) {
 		$prefix           = eaccounting()->settings->get( 'invoice_prefix', 'INV-' );
 		$padd             = (int) eaccounting()->settings->get( 'invoice_digit', '5' );
 		$formatted_number = zeroise( absint( $number ), $padd );
 		$number           = apply_filters( 'eaccounting_generate_invoice_number', $prefix . $formatted_number );
-
+		
 		return $number;
 	}
+	
 	/**
 	 * Set the document key.
 	 *
@@ -139,18 +140,19 @@ class Invoice extends Document {
 			$this->set_key( $this->generate_key() );
 		}
 	}
-
+	
 	/**
 	 * Generate key.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function generate_key() {
 		$key = 'ea-' . apply_filters( 'eaccounting_generate_invoice_key', 'invoice' . '-' . str_replace( '-', '', wp_generate_uuid4() ) );
+		
 		return strtolower( sanitize_key( $key ) );
 	}
-
+	
 	/**
 	 * Conditionally change status
 	 *
@@ -162,14 +164,15 @@ class Invoice extends Document {
 		} else {
 			$this->set_payment_date( '' );
 		}
-
+		
 	}
+	
 	/**
 	 * Save should create or update based on object existence.
 	 *
+	 * @return \Exception|bool
 	 * @since  1.1.0
 	 *
-	 * @return \Exception|bool
 	 */
 	public function save() {
 		$this->maybe_set_invoice_number();
@@ -177,9 +180,10 @@ class Invoice extends Document {
 		$this->calculate_totals();
 		parent::save();
 		$this->status_transition();
+		
 		return $this->exists();
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
@@ -191,29 +195,29 @@ class Invoice extends Document {
 	/**
 	 * Return the document number.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
+	 *
 	 */
 	public function get_invoice_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
 	}
-
+	
 	/**
 	 * Return the customer id.
-	 *
-	 * @since  1.1.0
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
 	 * @return string
+	 * @since  1.1.0
+	 *
 	 */
 	public function get_customer_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -227,9 +231,9 @@ class Invoice extends Document {
 	/**
 	 * set the customer id.
 	 *
-	 * @since  1.1.0
-	 *
 	 * @param int $customer_id .
+	 *
+	 * @since  1.1.0
 	 *
 	 */
 	public function set_customer_id( $customer_id ) {
@@ -241,20 +245,21 @@ class Invoice extends Document {
 				$getter = "get_{$prop}";
 				$setter = "set_{$prop}";
 				if ( is_callable( array( $contact, $getter ) )
-					 && is_callable( array( $this, $setter ) )
-					 && is_callable( array( $this, $getter ) ) ) {
+				     && is_callable( array( $this, $setter ) )
+				     && is_callable( array( $this, $getter ) ) ) {
 					$this->$setter( $contact->$getter() );
 				}
 			}
 		}
 	}
-
+	
 	/**
 	 * Set invoice status.
 	 *
-	 * @since 1.1.0
-	 * @param string $new_status    Status to change the order to. No internal prefix is required.
+	 * @param string $new_status Status to change the order to. No internal prefix is required.
+	 *
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function set_status( $new_status ) {
 		$result = parent::set_status( $new_status );
@@ -265,10 +270,10 @@ class Invoice extends Document {
 			);
 			$this->maybe_set_payment_date();
 		}
-
+		
 		return $result;
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Invoice Item Handling
@@ -277,7 +282,7 @@ class Invoice extends Document {
 	| Invoice items are used for products, taxes, shipping, and fees within
 	| each order.
 	*/
-
+	
 	/**
 	 * Adds an item to the invoice.
 	 *
@@ -293,18 +298,18 @@ class Invoice extends Document {
 				'line_id' => null,
 			)
 		);
-
+		
 		//check if we have item id or line_id
 		if ( empty( $args['item_id'] ) && empty( $args['line_id'] ) ) {
 			return false;
 		}
-
+		
 		//first check if we get line id if so then its from database
 		$line_item = new Document_Item();
 		if ( $this->get_item( $args['line_id'] ) ) {
 			$line_item = $this->items[ $args['line_id'] ];
 		}
-
+		
 		if ( ! empty( $args['item_id'] ) ) {
 			$product = new Item( $args['item_id'] );
 			if ( $product->exists() ) {
@@ -318,55 +323,56 @@ class Invoice extends Document {
 					'quantity'      => 1,
 					'tax_rate'      => eaccounting_tax_enabled() ? $product->get_purchase_tax() : 0,
 				);
-
+				
 				$args = wp_parse_args( $args, $default );
 			}
 		}
-
+		
 		$line_item->set_props( $args );
-
+		
 		if ( empty( $line_item->get_item_id() ) ) {
 			return false;
 		}
-
+		
 		if ( $line_item->get_currency_code() && ( $line_item->get_currency_code() !== $this->get_currency_code() ) ) {
 			$converted = eaccounting_price_convert( $line_item->get_price(), $line_item->get_currency_code(), $this->get_currency_code() );
 			$line_item->set_price( $converted );
 		}
-
-		foreach ( $this->get_items()  as $key => $item ) {
+		
+		foreach ( $this->get_items() as $key => $item ) {
 			if ( ! $line_item->get_id() && ( $item->get_item_id() === $line_item->get_item_id() ) ) {
 				$item->increment_quantity( $line_item->get_quantity() );
+				
 				return $key;
 			}
 		}
-
+		
 		$key                 = $line_item->exists() ? $line_item->get_id() : 'new:' . count( $this->items );
 		$this->items[ $key ] = $line_item;
-
+		
 		return $key;
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Notes
 	|--------------------------------------------------------------------------
 	*/
-
+	
 	/**
 	 * Get invoice notes.
-	 *
-	 * @since 1.1.0
 	 *
 	 * @param array $args
 	 *
 	 * @return array|int|void
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_notes( $args = array() ) {
 		if ( ! $this->exists() ) {
 			return array();
 		}
-
+		
 		return eaccounting_get_notes(
 			array_merge(
 				$args,
@@ -377,27 +383,27 @@ class Invoice extends Document {
 			)
 		);
 	}
-
+	
 	/**
 	 * Add invoice note.
-	 *
-	 * @since 1.1.0
 	 *
 	 * @param string $note
 	 *
 	 * @return Note|false|int|\WP_Error
+	 * @since 1.1.0
+	 *
 	 */
 	public function add_note( $note ) {
 		if ( ! $this->exists() ) {
 			return false;
 		}
-
+		
 		$creator_id = 0;
 		// If this is an admin comment or it has been added by the user.
 		if ( is_user_logged_in() ) {
 			$creator_id = get_current_user_id();
 		}
-
+		
 		return eaccounting_insert_note(
 			array(
 				'parent_id'  => $this->get_id(),
@@ -407,20 +413,20 @@ class Invoice extends Document {
 			)
 		);
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Payments
 	|--------------------------------------------------------------------------
 	*/
-
+	
 	/**
-	 * @since 1.1.0
-	 *
 	 * @param array $args
 	 *
-	 * @throws \Exception
 	 * @return false
+	 * @throws \Exception
+	 * @since 1.1.0
+	 *
 	 */
 	public function add_payment( $args = array() ) {
 		if ( ! $this->needs_payment() ) {
@@ -436,27 +442,27 @@ class Invoice extends Document {
 				'description'    => '',
 			)
 		);
-
+		
 		if ( ! $this->exists() ) {
 			return false;
 		}
-
+		
 		if ( empty( $args['date'] ) ) {
 			$args['date'] = current_time( 'mysql' );
 		}
-
+		
 		if ( empty( $args['amount'] ) ) {
 			throw new \Exception( __( 'Payment amount is required', 'wp-ever-accounting' ) );
 		}
-
+		
 		if ( empty( $args['account_id'] ) ) {
 			throw new \Exception( __( 'Payment account is required', 'wp-ever-accounting' ) );
 		}
-
+		
 		if ( empty( $args['payment_method'] ) ) {
 			throw new \Exception( __( 'Payment method is required', 'wp-ever-accounting' ) );
 		}
-
+		
 		$amount           = eaccounting_price( $args['amount'], $this->get_currency_code(), true );
 		$account          = eaccounting_get_account( $args['account_id'] );
 		$currency         = eaccounting_get_currency( $account->get_currency_code() );
@@ -475,21 +481,23 @@ class Invoice extends Document {
 				'reference'      => sprintf( __( 'Invoice Payment #%d', 'wp-ever-accounting' ), $this->get_id() ),//phpcs:ignore
 			)
 		);
-
+		
 		$income->save();
 		$methods = eaccounting_get_payment_methods();
 		$method  = $methods[ $income->get_payment_method() ];
 		/* translators: %s amount */
 		$this->add_note( sprintf( __( 'Paid %1$s by %2$s', 'wp-ever-accounting' ), eaccounting_price( $args['amount'], $this->get_currency_code() ), $method ) );
 		$this->save();
+		
 		return true;
 	}
+	
 	/**
 	 * Get payments.
 	 *
+	 * @return Payment[]
 	 * @since 1.1.0
 	 *
-	 * @return Payment[]
 	 */
 	public function get_payments() {
 		if ( $this->exists() ) {
@@ -500,11 +508,11 @@ class Invoice extends Document {
 				)
 			);
 		}
-
+		
 		return array();
 	}
-
-
+	
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Calculations
@@ -513,40 +521,40 @@ class Invoice extends Document {
 	/**
 	 * Get total due.
 	 *
+	 * @return float|int
 	 * @since 1.1.0
 	 *
-	 * @return float|int
 	 */
 	public function get_total_due() {
 		$due = eaccounting_price( ( $this->get_total() - $this->get_total_paid() ), $this->get_currency_code(), true );
-		if ( eaccounting_price_to_default($due, $this->get_currency_code(), $this->get_currency_rate()) <= 0 ) {
+		if ( eaccounting_price_to_default( $due, $this->get_currency_code(), $this->get_currency_rate() ) <= 0 ) {
 			$due = 0;
 		}
-
+		
 		return $due;
 	}
-
+	
 	/**
 	 * Get total paid
 	 *
+	 * @return float|int|string
 	 * @since 1.1.0
 	 *
-	 * @return float|int|string
 	 */
 	public function get_total_paid() {
 		$total_paid = 0;
 		foreach ( $this->get_payments() as $payment ) {
 			$total_paid += (float) eaccounting_price_convert( $payment->get_amount(), $payment->get_currency_code(), $this->get_currency_code(), $payment->get_currency_rate(), $this->get_currency_rate() );
 		}
-
+		
 		return $total_paid;
 	}
-
+	
 	/**
 	 * Calculate total.
 	 *
-	 * @since 1.1.0
 	 * @throws \Exception
+	 * @since 1.1.0
 	 */
 	public function calculate_totals() {
 		$subtotal       = 0;
@@ -555,7 +563,8 @@ class Invoice extends Document {
 		$total_fees     = 0;
 		$total_shipping = 0;
 		$discount_rate  = $this->get_discount();
-
+		$shipping       = $this->get_shipping();
+		
 		// before calculating need to know subtotal so we can apply fixed discount
 		if ( $this->is_fixed_discount() ) {
 			$subtotal_discount = 0;
@@ -566,17 +575,30 @@ class Invoice extends Document {
 				$discount_rate = ( ( $this->get_discount() * 100 ) / $subtotal_discount );
 			}
 		}
-
+		
+		//implement shipping
+		if ( ! empty( $this->get_shipping() ) ) {
+			$subtotal_shipping = 0;
+			foreach ( $this->get_items() as $item ) {
+				$subtotal_shipping += ( $item->get_price() * $item->get_quantity() );
+			}
+			
+			if ( $subtotal_shipping > 0 ) {
+				$shipping = ( ( $this->get_shipping() * 100 ) / $subtotal_shipping );
+			}
+		}
+		
 		foreach ( $this->get_items() as $item ) {
 			$item_subtotal         = ( $item->get_price() * $item->get_quantity() );
 			$item_discount         = $item_subtotal * ( $discount_rate / 100 );
 			$item_subtotal_for_tax = $item_subtotal - $item_discount;
 			$item_tax_rate         = ( $item->get_tax_rate() / 100 );
 			$item_tax              = eaccounting_calculate_tax( $item_subtotal_for_tax, $item_tax_rate, $this->is_tax_inclusive() );
-			$item_shipping         = $item->get_shipping();
-			$item_shipping_tax     = $item->get_shipping_tax();
-			$item_fees             = $item->get_fees();
-			$item_fees_tax         = $item->get_fees_tax();
+			// $item_shipping         = $item->get_shipping();
+			$item_shipping     = $item_subtotal * ( $shipping / 100 );
+			$item_shipping_tax = $item->get_shipping_tax();
+			$item_fees         = $item->get_fees();
+			$item_fees_tax     = $item->get_fees_tax();
 			if ( 'tax_subtotal_rounding' !== eaccounting()->settings->get( 'tax_subtotal_rounding', 'tax_subtotal_rounding' ) ) {
 				$item_tax = eaccounting_format_decimal( $item_tax, 2 );
 			}
@@ -587,12 +609,13 @@ class Invoice extends Document {
 			if ( $item_total < 0 ) {
 				$item_total = 0;
 			}
-
+			
 			$item->set_subtotal( $item_subtotal );
 			$item->set_discount( $item_discount );
+			$item->set_shipping( $item_shipping );
 			$item->set_tax( $item_tax );
 			$item->set_total( $item_total );
-
+			
 			$subtotal       += $item->get_subtotal();
 			$total_tax      += $item->get_tax();
 			$total_tax      += ( $item_fees_tax + $item_shipping_tax );
@@ -600,7 +623,7 @@ class Invoice extends Document {
 			$total_shipping += $item_shipping;
 			$total_fees     += $item_fees;
 		}
-
+		
 		$this->set_subtotal( $subtotal );
 		$this->set_total_tax( $total_tax );
 		$this->set_total_discount( $total_discount );
@@ -611,18 +634,18 @@ class Invoice extends Document {
 		if ( $total < 0 ) {
 			$total = 0;
 		}
-
+		
 		$this->set_total( $total );
 		if ( ( ! empty( $this->get_total_paid() ) && $this->get_total_due() > 0 ) ) {
 			$this->set_status( 'partial' );
 		} elseif ( empty( $this->get_total_due() ) ) { // phpcs:ignore
 			$this->set_status( 'paid' );
-		} elseif ( $this->is_due() && $this->is_status('pending')) {
+		} elseif ( $this->is_due() && $this->is_status( 'pending' ) ) {
 			$this->set_status( 'overdue' );
 		} elseif ( in_array( $this->get_status(), array( 'partial', 'paid' ), true ) ) {
 			$this->set_status( 'received' );
 		}
-
+		
 		return array(
 			'subtotal'       => $this->get_subtotal(),
 			'total_tax'      => $this->get_total_tax(),
@@ -632,7 +655,7 @@ class Invoice extends Document {
 			'total'          => $this->get_total(),
 		);
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Status handling.
@@ -641,14 +664,14 @@ class Invoice extends Document {
 	/**
 	 * Set paid.
 	 *
-	 * @since 1.1.0
 	 * @return bool|\Exception
+	 * @since 1.1.0
 	 */
 	public function set_paid() {
 		if ( ! $this->get_id() ) { // Order must exist.
 			return false;
 		}
-
+		
 		try {
 			$default_account = eaccounting()->settings->get( 'default_account' );
 			$payment_method  = eaccounting()->settings->get( 'default_payment_method', 'cash' );
@@ -670,12 +693,13 @@ class Invoice extends Document {
 			}
 		} catch ( \Exception $e ) {
 			$this->add_note( $e->getMessage() );
+			
 			return false;
 		}
-
+		
 		return true;
 	}
-
+	
 	/**
 	 * Refund.
 	 * @since 1.1.0
@@ -684,7 +708,7 @@ class Invoice extends Document {
 		if ( ! $this->get_id() ) { // Order must exist.
 			return false;
 		}
-
+		
 		try {
 			if ( $this->get_total_paid() > 0 ) {
 				$this->add_note(
@@ -697,24 +721,26 @@ class Invoice extends Document {
 			}
 			$this->delete_payments();
 			$this->set_status( 'refunded' );
+			
 			return $this->save();
 		} catch ( \Exception $e ) {
 			$this->add_note( $e->getMessage() );
+			
 			return false;
 		}
 	}
-
+	
 	/**
 	 * Set cancelled.
 	 *
-	 * @since 1.1.0
 	 * @return bool|\Exception
+	 * @since 1.1.0
 	 */
 	public function set_cancelled() {
 		if ( ! $this->get_id() ) { // Order must exist.
 			return false;
 		}
-
+		
 		try {
 			if ( $this->get_total_paid() > 0 ) {
 				$this->add_note(
@@ -727,37 +753,37 @@ class Invoice extends Document {
 			}
 			$this->delete_payments();
 			$this->set_status( 'cancelled' );
-
+			
 			return $this->save();
 		} catch ( \Exception $e ) {
 			$this->add_note( $e->getMessage() );
-
+			
 			return false;
 		}
 	}
-
+	
 	/**
 	 * Handle the status transition.
 	 */
 	protected function status_transition() {
 		$status_transition = $this->status_transition;
-
+		
 		// Reset status transition variable.
 		$this->status_transition = false;
 		if ( $status_transition ) {
 			try {
 				do_action( 'eaccounting_invoice_status_' . $status_transition['to'], $this->get_id(), $this );
-
+				
 				if ( $status_transition['from'] !== $status_transition['to'] ) {
 					/* translators: 1: old order status 2: new order status */
 					$transition_note = sprintf( __( 'Status changed from %1$s to %2$s.', 'wp-ever-accounting' ), $status_transition['from'], $status_transition['to'] );
-
+					
 					// Note the transition occurred.
 					$this->add_note( $transition_note );
-
+					
 					do_action( 'eaccounting_invoice_status_' . $status_transition['from'] . '_to_' . $status_transition['to'], $this->get_id(), $this );
 					do_action( 'eaccounting_invoice_status_changed', $this->get_id(), $status_transition['from'], $status_transition['to'], $this );
-
+					
 					// Work out if this was for a payment, and trigger a payment_status hook instead.
 					if (
 						in_array( $status_transition['from'], array( 'cancelled', 'pending', 'viewed', 'approved', 'overdue', 'unpaid' ), true )
@@ -771,34 +797,37 @@ class Invoice extends Document {
 			}
 		}
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| URLs.
 	|--------------------------------------------------------------------------
 	*/
-
+	
 	/**
 	 * @param string $action
-	 * @since 1.1.0
 	 *
 	 * @return string
+	 * @since 1.1.0
+	 *
 	 */
 	public function get_admin_url( $action = 'view' ) {
 		$url = admin_url( 'admin.php?page=ea-sales&tab=invoices&invoice_id=' . $this->get_id() );
+		
 		return add_query_arg( 'action', $action, $url );
 	}
-
+	
 	/**
 	 * Get invoice url.
 	 *
-	 * @since 1.1.0
 	 * @return string
+	 * @since 1.1.0
 	 */
 	public function get_url() {
 		$base = eaccounting_get_parmalink_base();
 		$url  = site_url( $base );
 		$url  = untrailingslashit( $url ) . '/invoice/' . $this->get_id() . '/' . $this->get_key();
+		
 		return $url;
 	}
 }

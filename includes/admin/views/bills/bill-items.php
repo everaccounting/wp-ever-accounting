@@ -69,6 +69,7 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 		<div class="ea-document__actions-left">
 			<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
 			<button type="button" class="button button-secondary add-discount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button button-secondary add-shipping"><?php esc_html_e( 'Shipping', 'wp-ever-accounting' ); ?></button>
 		</div>
 		<div class="ea-document__actions-right">
 			<button type="button" class="button button-secondary recalculate"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></button>
@@ -92,7 +93,17 @@ $quantity_label = eaccounting()->settings->get( 'bill_quantity_label', __( 'Quan
 					<?php echo eaccounting_price( $bill->get_total_discount(), $bill->get_currency_code() ); ?>
 				</td>
 			</tr>
-
+			
+			<?php if ( ! empty( $bill->get_total_shipping() ) ) : ?>
+                <tr>
+                    <td class="label"><?php esc_html_e( 'Shipping:', 'wp-ever-accounting' ); ?></td>
+                    <td width="1%"></td>
+                    <td class="total">
+						<?php echo eaccounting_price( $bill->get_total_shipping(), $bill->get_currency_code() ); ?>
+                    </td>
+                </tr>
+			<?php endif; ?>
+   
 			<?php if ( eaccounting_tax_enabled() ) : ?>
 				<?php if ( 'total' === eaccounting()->settings->get( 'tax_display_totals', 'total' ) ) : ?>
 					<tr>

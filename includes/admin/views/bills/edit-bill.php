@@ -181,6 +181,7 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 	<?php eaccounting_hidden_input( 'id', $bill->get_id() ); ?>
 	<?php eaccounting_hidden_input( 'discount', $bill->get_discount() ); ?>
 	<?php eaccounting_hidden_input( 'discount_type', $bill->get_discount_type() ); ?>
+	<?php eaccounting_hidden_input( 'shipping', $bill->get_shipping() ); ?>
 	<?php eaccounting_hidden_input( 'action', 'eaccounting_edit_bill' ); ?>
 	<?php wp_nonce_field( 'ea_edit_bill' ); ?>
 </form>
@@ -215,4 +216,24 @@ $due_date = date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timesta
 		);
 		?>
 	</form>
+</script>
+
+<script type="text/template" id="ea-modal-add-shipping" data-title="<?php esc_html_e( 'Add Shipping', 'wp-ever-accounting' ); ?>">
+    <form action="" method="post">
+		<?php
+		eaccounting_text_input(
+			array(
+				'label'    => __( 'Shipping Amount', 'wp-ever-accounting' ),
+				'name'     => 'shipping',
+				'type'     => 'number',
+				'value'    => 0.0000,
+				'required' => true,
+				'attr'     => array(
+					'step' => 0.0001,
+					'min'  => 0,
+				),
+			)
+		);
+		?>
+    </form>
 </script>

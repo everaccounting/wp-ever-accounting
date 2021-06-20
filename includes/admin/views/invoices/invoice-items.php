@@ -68,6 +68,7 @@ $quantity_label = eaccounting()->settings->get( 'invoice_quantity_label', __( 'Q
 		<div class="ea-document__actions-left">
 			<button type="button" class="button add-line-item btn-secondary"><?php esc_html_e( 'Add Line Item', 'wp-ever-accounting' ); ?></button>
 			<button type="button" class="button button-secondary add-discount"><?php esc_html_e( 'Discount', 'wp-ever-accounting' ); ?></button>
+			<button type="button" class="button button-secondary add-shipping"><?php esc_html_e( 'Shipping', 'wp-ever-accounting' ); ?></button>
 		</div>
 		<div class="ea-document__actions-right">
 			<button type="button" class="button button-secondary recalculate"><?php esc_html_e( 'Recalculate', 'wp-ever-accounting' ); ?></button>
