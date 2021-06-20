@@ -35,7 +35,21 @@ class Documents extends Resource_Repository {
 	 * @var string
 	 */
 	protected $table = self::TABLE;
-
+	
+	/**
+	 * Get the next available number.
+	 *
+	 * @param Document $document
+	 * @since 1.1.0
+	 * @return int
+	 */
+	public function get_next_number( &$document ) {
+		global $wpdb;
+		$max = (int) $wpdb->get_var( $wpdb->prepare( "select max(id) from {$wpdb->prefix}ea_documents WHERE type=%s", $document->get_type() ) );
+		return $max + 1;
+	}
+	
+	
 	/**
 	 * A map of database fields to data types.
 	 *
@@ -59,6 +73,7 @@ class Documents extends Resource_Repository {
 		'currency_rate'   => '%.8f',
 		'discount'        => '%.4f',
 		'discount_type'   => '%s',
+		'shipping'        => '%.4f',
 		'subtotal'        => '%.4f',
 		'total_tax'       => '%.4f',
 		'total_discount'  => '%.4f',
@@ -74,21 +89,7 @@ class Documents extends Resource_Repository {
 		'creator_id'      => '%d',
 		'date_created'    => '%s',
 	);
-
-
-	/**
-	 * Get the next available number.
-	 *
-	 * @param Document $document
-	 * @since 1.1.0
-	 * @return int
-	 */
-	public function get_next_number( &$document ) {
-		global $wpdb;
-		$max = (int) $wpdb->get_var( $wpdb->prepare( "select max(id) from {$wpdb->prefix}ea_documents WHERE type=%s", $document->get_type() ) );
-		return $max + 1;
-	}
-
+	
 	/**
 	 * Read order items of a specific type from the database for this order.
 	 *

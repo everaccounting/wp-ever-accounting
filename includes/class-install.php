@@ -547,6 +547,7 @@ class Install {
   			`address` longtext DEFAULT NULL,
             `discount` DOUBLE(15,4) DEFAULT 0,
             `discount_type`  ENUM('percentage', 'fixed') DEFAULT 'percentage',
+            `shipping` DOUBLE(15,4) DEFAULT 0,
             `subtotal` DOUBLE(15,4) DEFAULT 0,
             `total_tax` DOUBLE(15,4) DEFAULT 0,
             `total_discount` DOUBLE(15,4) DEFAULT 0,

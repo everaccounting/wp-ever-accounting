@@ -444,6 +444,7 @@ jQuery( function ( $ ) {
 				.on( 'click', '.delete-line', this.remove_line_item )
 				.on( 'click', '.edit-line, .save-line', this.edit_line_item )
 				.on( 'click', '.add-discount', this.add_discount )
+				.on( 'click', '.add-shipping', this.add_shipping )
 				.on( 'change', '[name="currency_code"]', this.recalculate )
 				.on( 'click', '.recalculate', this.recalculate )
 				.on( 'submit', this.submit );
@@ -580,7 +581,20 @@ jQuery( function ( $ ) {
 				},
 			} );
 		},
-
+		add_shipping ( e ) {
+			$( '#ea-modal-add-shipping' ).ea_modal( {
+				onReady( plugin ) {
+					$( '#shipping', plugin.$modal ).val(
+						$( '#ea-invoice-form #shipping' ).val()
+					);
+				},
+				onSubmit( data, modal ) {
+					$( '#ea-invoice-form #shipping' ).val( data.shipping );
+					modal.close();
+					invoice_form.recalculate();
+				},
+			} );
+		},
 		receive_payment( e ) {
 			e.preventDefault();
 			const $modal_selector = $( '#ea-modal-add-invoice-payment' );
@@ -664,6 +678,7 @@ jQuery( function ( $ ) {
 				.on( 'click', '.delete-line', this.remove_line_item )
 				.on( 'click', '.edit-line, .save-line', this.edit_line_item )
 				.on( 'click', '.add-discount', this.add_discount )
+				.on( 'click', '.add-shipping', this.add_shipping )
 				.on( 'change', '[name="currency_code"]', this.recalculate )
 				.on( 'click', '.recalculate', this.recalculate )
 				.on( 'submit', this.submit );
@@ -795,6 +810,21 @@ jQuery( function ( $ ) {
 					bill_form.recalculate();
 				},
 			} );
+		},
+
+		add_shipping( e ) {
+			$( '#ea-modal-add-shipping' ).ea_modal({
+				onReady( plugin ) {
+					$( '#shipping', plugin.$modal ).val(
+						$( '#ea-bill-form #shipping' ).val()
+					);
+				},
+				onSubmit( data, modal ) {
+					$( '#ea-bill-form #shipping' ).val( data.shipping );
+					modal.close();
+					bill_form.recalculate();
+				},
+			});
 		},
 
 		add_payment( e ) {

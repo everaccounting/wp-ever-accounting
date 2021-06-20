@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 abstract class Document extends Resource_Model {
 	use Attachment;
 	use CurrencyTrait;
-
+	
 	/**
 	 * Contains a reference to the repository for this class.
 	 *
@@ -33,21 +33,21 @@ abstract class Document extends Resource_Model {
 	 * @var Documents
 	 */
 	protected $repository;
-
+	
 	/**
 	 * This is the name of this object type.
 	 *
 	 * @var string
 	 */
 	protected $object_type = 'document';
-
+	
 	/**
 	 * @since 1.1.0
 	 *
 	 * @var string
 	 */
 	public $cache_group = 'ea_documents';
-
+	
 	/**
 	 * The name of the repository.
 	 *
@@ -56,8 +56,26 @@ abstract class Document extends Resource_Model {
 	 * @var
 	 */
 	protected $repository_name = 'documents';
-
-
+	
+	
+	/**
+	 * document items will be stored here, sometimes before they persist in the DB.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $items = array();
+	
+	/**
+	 * document items that need deleting are stored here.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var array
+	 */
+	protected $items_to_delete = array();
+	
 	/**
 	 * Item Data array.
 	 *
@@ -89,6 +107,7 @@ abstract class Document extends Resource_Model {
 		),
 		'discount'        => 0.00,
 		'discount_type'   => 'percentage',
+		'shipping'        => 0.00,
 		'subtotal'        => 0.00,
 		'total_tax'       => 0.00,
 		'total_discount'  => 0.00,
@@ -106,25 +125,7 @@ abstract class Document extends Resource_Model {
 		'creator_id'      => null,
 		'date_created'    => null,
 	);
-
-	/**
-	 * document items will be stored here, sometimes before they persist in the DB.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var array
-	 */
-	protected $items = array();
-
-	/**
-	 * document items that need deleting are stored here.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @var array
-	 */
-	protected $items_to_delete = array();
-
+	
 	/**
 	 * Get the document if ID is passed, otherwise the account is new and empty.
 	 *
@@ -138,12 +139,12 @@ abstract class Document extends Resource_Model {
 		//Load repository
 		$this->repository = Repositories::load( $this->repository_name );
 	}
-
+	
 	/**
 	 * Get all class data in array format.
 	 *
-	 * @since 3.0.0
 	 * @return array
+	 * @since 3.0.0
 	 */
 	public function get_data() {
 		return $this->to_array(
@@ -155,17 +156,17 @@ abstract class Document extends Resource_Model {
 			)
 		);
 	}
-
+	
 	/**
 	 * Get supported statuses.
 	 *
-	 * @since 1.1.0
 	 * @return array
+	 * @since 1.1.0
 	 */
 	public function get_statuses() {
 		return array();
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| CRUD methods
@@ -179,34 +180,34 @@ abstract class Document extends Resource_Model {
 	| on if the order exists yet).
 	|
 	*/
-
+	
 	/**
 	 * Save should create or update based on object existence.
 	 *
+	 * @return \Exception|bool
 	 * @since  1.1.0
 	 *
-	 * @return \Exception|bool
 	 */
 	public function save() {
 		parent::save();
 		$this->save_items();
-
+		
 		return $this->exists();
 	}
-
+	
 	/**
 	 * Save all document items which are part of this order.
 	 */
 	protected function save_items() {
-
+		
 		foreach ( $this->items_to_delete as $item ) {
 			if ( $item->exists() ) {
 				$item->delete();
 			}
 		}
-
+		
 		$this->items_to_delete = array();
-
+		
 		$items = array_filter( $this->items );
 		// Add/save items.
 		foreach ( $items as $item ) {
@@ -215,19 +216,19 @@ abstract class Document extends Resource_Model {
 			$item->save();
 		}
 	}
-
+	
 	/**
 	 * Delete notes.
 	 *
-	 * @since 1.1.0
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function delete_notes() {
 		if ( $this->exists() ) {
 			$this->repository->delete_notes( $this );
 		}
 	}
-
+	
 	/**
 	 * Delete all transactions.
 	 *
@@ -238,26 +239,26 @@ abstract class Document extends Resource_Model {
 			$this->repository->delete_transactions( $this );
 		}
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Getters
 	|--------------------------------------------------------------------------
 	*/
-
+	
 	/**
 	 * Return the document number.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_document_number( $context = 'edit' ) {
 		return $this->get_prop( 'document_number', $context );
 	}
-
+	
 	/**
 	 * Get internal type.
 	 *
@@ -268,477 +269,489 @@ abstract class Document extends Resource_Model {
 	public function get_type( $context = 'edit' ) {
 		return $this->get_prop( 'type', $context );
 	}
-
+	
 	/**
 	 * Return the order number.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_order_number( $context = 'edit' ) {
 		return $this->get_prop( 'order_number', $context );
 	}
-
+	
 	/**
 	 * Return the status.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_status( $context = 'edit' ) {
 		return $this->get_prop( 'status', $context );
 	}
-
+	
 	/**
 	 * Return the issued at.
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_issue_date( $context = 'edit' ) {
 		return $this->get_prop( 'issue_date', $context );
 	}
-
+	
 	/**
 	 * Return the due at.
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_due_date( $context = 'edit' ) {
 		return $this->get_prop( 'due_date', $context );
 	}
-
+	
 	/**
 	 * Return the due at.
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_payment_date( $context = 'edit' ) {
 		return $this->get_prop( 'payment_date', $context );
 	}
-
+	
 	/**
 	 * Return the category id.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
 	}
-
+	
 	/**
 	 * Return the contact id.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_contact_id( $context = 'edit' ) {
 		return $this->get_prop( 'contact_id', $context );
 	}
-
+	
 	/**
 	 * Return the address.
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_address( $context = 'edit' ) {
 		return $this->get_prop( 'address', $context );
 	}
-
+	
 	/**
 	 * Gets a prop for a getter method.
 	 *
 	 * @param string $prop Name of prop to get.
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return mixed
 	 * @since  1.1.0
 	 *
-	 * @return mixed
 	 */
 	protected function get_address_prop( $prop, $context = 'view' ) {
 		$value = null;
-
+		
 		if ( array_key_exists( $prop, $this->data['address'] ) ) {
 			$value = isset( $this->changes['address'][ $prop ] ) ? $this->changes['address'][ $prop ] : $this->data['address'][ $prop ];
-
+			
 			if ( 'view' === $context ) {
 				$value = apply_filters( $this->get_hook_prefix() . 'address' . '_' . $prop, $value, $this );
 			}
 		}
-
+		
 		return $value;
 	}
-
+	
 	/**
 	 * Get name.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_name( $context = 'view' ) {
 		return $this->get_address_prop( 'name', $context );
 	}
-
+	
 	/**
 	 * Get company.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_company( $context = 'view' ) {
 		return $this->get_address_prop( 'company', $context );
 	}
-
+	
 	/**
 	 * Get street.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_street( $context = 'view' ) {
 		return $this->get_address_prop( 'street', $context );
 	}
-
+	
 	/**
 	 * Get city.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_city( $context = 'view' ) {
 		return $this->get_address_prop( 'city', $context );
 	}
-
+	
 	/**
 	 * Get state.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_state( $context = 'view' ) {
 		return $this->get_address_prop( 'state', $context );
 	}
-
+	
 	/**
 	 * Get postcode.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_postcode( $context = 'view' ) {
 		return $this->get_address_prop( 'postcode', $context );
 	}
-
+	
 	/**
 	 * Get country.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_country( $context = 'view' ) {
 		return $this->get_address_prop( 'country', $context );
 	}
-
+	
 	/**
 	 * Get email.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_email( $context = 'view' ) {
 		return $this->get_address_prop( 'email', $context );
 	}
-
+	
 	/**
 	 * Get phone.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_phone( $context = 'view' ) {
 		return $this->get_address_prop( 'phone', $context );
 	}
-
+	
 	/**
 	 * Get vat_number.
 	 *
 	 * @param string $context What the value is for. Valid values are view and edit.
 	 *
+	 * @return string
 	 * @since 1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_vat_number( $context = 'view' ) {
 		return $this->get_address_prop( 'vat_number', $context );
 	}
-
+	
 	/**
 	 * Get the invoice discount total.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_discount( $context = 'view' ) {
 		return $this->get_prop( 'discount', $context );
 	}
-
+	
 	/**
 	 * Get the invoice discount type.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_discount_type( $context = 'view' ) {
 		return $this->get_prop( 'discount_type', $context );
 	}
-
+	
+	/**
+	 * Get the invoice shipping rate.
+	 *
+	 * @param string $context View or edit context.
+	 *
+	 * @return float
+	 * @since 1.1.3
+	 */
+	public function get_shipping( $context = 'view' ) {
+		return $this->get_prop( 'shipping', $context );
+	}
+	
 	/**
 	 * Get the invoice subtotal.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_subtotal( $context = 'view' ) {
 		return (float) $this->get_prop( 'subtotal', $context );
 	}
-
+	
 	/**
 	 * Get the invoice tax total.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_total_tax( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_tax', $context );
 	}
-
+	
 	/**
 	 * Get the invoice discount total.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_total_discount( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_discount', $context );
 	}
-
+	
 	/**
 	 * Get total fees.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_total_fees( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_fees', $context );
 	}
-
+	
 	/**
 	 * Get total shipping.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_total_shipping( $context = 'view' ) {
 		return (float) $this->get_prop( 'total_shipping', $context );
 	}
-
+	
 	/**
 	 * Get the document total.
 	 *
 	 * @param string $context View or edit context.
 	 *
+	 * @return float
 	 * @since 1.1.0
 	 *
-	 * @return float
 	 */
 	public function get_total( $context = 'view' ) {
 		return (float) $this->get_prop( 'total', $context );
 	}
-
+	
 	/**
 	 * Get tax inclusive or not.
 	 *
 	 * @param string $context
 	 *
+	 * @return mixed|null
 	 * @since 1.1.0
 	 *
-	 * @return mixed|null
 	 */
 	public function get_tax_inclusive( $context = 'edit' ) {
 		if ( ! $this->exists() ) {
 			return eaccounting_prices_include_tax();
 		}
-
+		
 		return $this->get_prop( 'tax_inclusive', $context );
 	}
-
+	
 	/**
 	 * Return the note.
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_note( $context = 'edit' ) {
 		return $this->get_prop( 'note', $context );
 	}
-
+	
 	/**
 	 * Return the terms.
 	 *
 	 * @param string $context
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_terms( $context = 'edit' ) {
 		return $this->get_prop( 'terms', $context );
 	}
-
+	
 	/**
 	 * Return the attachment.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_attachment_id( $context = 'edit' ) {
 		return $this->get_prop( 'attachment_id', $context );
 	}
-
+	
 	/**
 	 * Return the currency code.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_currency_code( $context = 'edit' ) {
 		return $this->get_prop( 'currency_code', $context );
 	}
-
+	
 	/**
 	 * Return the currency rate.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_currency_rate( $context = 'edit' ) {
 		return $this->get_prop( 'currency_rate', $context );
 	}
-
+	
 	/**
 	 * Return the invoice key.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_key( $context = 'edit' ) {
 		return $this->get_prop( 'key', $context );
 	}
-
+	
 	/**
 	 * Return the parent id.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
 	 *
+	 * @return string
 	 * @since  1.1.0
 	 *
-	 * @return string
 	 */
 	public function get_parent_id( $context = 'edit' ) {
 		return $this->get_prop( 'parent_id', $context );
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -755,7 +768,7 @@ abstract class Document extends Resource_Model {
 	public function set_document_number( $document_number ) {
 		$this->set_prop( 'document_number', eaccounting_clean( $document_number ) );
 	}
-
+	
 	/**
 	 * set the number.
 	 *
@@ -767,7 +780,7 @@ abstract class Document extends Resource_Model {
 	public function set_order_number( $order_number ) {
 		$this->set_prop( 'order_number', eaccounting_clean( $order_number ) );
 	}
-
+	
 	/**
 	 * set the number.
 	 *
@@ -779,15 +792,15 @@ abstract class Document extends Resource_Model {
 	public function set_type( $type ) {
 		$this->set_prop( 'type', eaccounting_clean( $type ) );
 	}
-
+	
 	/**
 	 * set the status.
 	 *
 	 * @param string $status .
 	 *
+	 * @return string[]
 	 * @since  1.1.0
 	 *
-	 * @return string[]
 	 */
 	public function set_status( $status ) {
 		$old_status = $this->get_status();
@@ -797,21 +810,21 @@ abstract class Document extends Resource_Model {
 			if ( ! array_key_exists( $status, $this->get_statuses() ) ) {
 				$status = 'draft';
 			}
-
+			
 			// If the old status is set but unknown (e.g. draft) assume its pending for action usage.
 			if ( $old_status && ! array_key_exists( $old_status, $this->get_statuses() ) ) {
 				$old_status = 'draft';
 			}
 		}
-
+		
 		$this->set_prop( 'status', $status );
-
+		
 		return array(
 			'from' => $old_status,
 			'to'   => $status,
 		);
 	}
-
+	
 	/**
 	 * Set date when the invoice was created.
 	 *
@@ -823,7 +836,7 @@ abstract class Document extends Resource_Model {
 	public function set_issue_date( $date ) {
 		$this->set_date_prop( 'issue_date', $date );
 	}
-
+	
 	/**
 	 * set the due at.
 	 *
@@ -835,7 +848,7 @@ abstract class Document extends Resource_Model {
 	public function set_due_date( $due_date ) {
 		$this->set_date_prop( 'due_date', $due_date );
 	}
-
+	
 	/**
 	 * set the completed at.
 	 *
@@ -849,7 +862,7 @@ abstract class Document extends Resource_Model {
 			$this->set_date_prop( 'payment_date', $payment_date );
 		}
 	}
-
+	
 	/**
 	 * set the category id.
 	 *
@@ -861,7 +874,7 @@ abstract class Document extends Resource_Model {
 	public function set_category_id( $category_id ) {
 		$this->set_prop( 'category_id', absint( $category_id ) );
 	}
-
+	
 	/**
 	 * set the customer_id.
 	 *
@@ -873,7 +886,7 @@ abstract class Document extends Resource_Model {
 	public function set_contact_id( $contact_id ) {
 		$this->set_prop( 'contact_id', absint( $contact_id ) );
 	}
-
+	
 	/**
 	 * set the address.
 	 *
@@ -885,7 +898,7 @@ abstract class Document extends Resource_Model {
 	public function set_address( $address ) {
 		$this->set_prop( 'address', maybe_unserialize( $address ) );
 	}
-
+	
 	/**
 	 * Sets a prop for a setter method.
 	 *
@@ -906,7 +919,7 @@ abstract class Document extends Resource_Model {
 			}
 		}
 	}
-
+	
 	/**
 	 * Set name.
 	 *
@@ -918,7 +931,7 @@ abstract class Document extends Resource_Model {
 	public function set_name( $name ) {
 		$this->set_address_prop( 'name', eaccounting_clean( $name ) );
 	}
-
+	
 	/**
 	 * Set company.
 	 *
@@ -930,7 +943,7 @@ abstract class Document extends Resource_Model {
 	public function set_company( $company ) {
 		$this->set_address_prop( 'company', eaccounting_clean( $company ) );
 	}
-
+	
 	/**
 	 * Set street.
 	 *
@@ -942,7 +955,7 @@ abstract class Document extends Resource_Model {
 	public function set_street( $street ) {
 		$this->set_address_prop( 'street', eaccounting_clean( $street ) );
 	}
-
+	
 	/**
 	 * Set city.
 	 *
@@ -954,7 +967,7 @@ abstract class Document extends Resource_Model {
 	public function set_city( $city ) {
 		$this->set_address_prop( 'city', eaccounting_clean( $city ) );
 	}
-
+	
 	/**
 	 * Set state.
 	 *
@@ -966,7 +979,7 @@ abstract class Document extends Resource_Model {
 	public function set_state( $state ) {
 		$this->set_address_prop( 'state', eaccounting_clean( $state ) );
 	}
-
+	
 	/**
 	 * Set postcode.
 	 *
@@ -978,7 +991,7 @@ abstract class Document extends Resource_Model {
 	public function set_postcode( $postcode ) {
 		$this->set_address_prop( 'postcode', eaccounting_clean( $postcode ) );
 	}
-
+	
 	/**
 	 * Set country.
 	 *
@@ -990,7 +1003,7 @@ abstract class Document extends Resource_Model {
 	public function set_country( $country ) {
 		$this->set_address_prop( 'country', eaccounting_clean( $country ) );
 	}
-
+	
 	/**
 	 * Set email.
 	 *
@@ -1002,7 +1015,7 @@ abstract class Document extends Resource_Model {
 	public function set_email( $email ) {
 		$this->set_address_prop( 'email', sanitize_email( $email ) );
 	}
-
+	
 	/**
 	 * Set phone.
 	 *
@@ -1014,7 +1027,7 @@ abstract class Document extends Resource_Model {
 	public function set_phone( $phone ) {
 		$this->set_address_prop( 'phone', eaccounting_clean( $phone ) );
 	}
-
+	
 	/**
 	 * Set vat_number.
 	 *
@@ -1026,7 +1039,7 @@ abstract class Document extends Resource_Model {
 	public function set_vat_number( $vat_number ) {
 		$this->set_address_prop( 'vat_number', eaccounting_clean( $vat_number ) );
 	}
-
+	
 	/**
 	 * set the discount.
 	 *
@@ -1038,7 +1051,7 @@ abstract class Document extends Resource_Model {
 	public function set_discount( $discount ) {
 		$this->set_prop( 'discount', abs( eaccounting_format_decimal( $discount, 4 ) ) );
 	}
-
+	
 	/**
 	 * set the discount type.
 	 *
@@ -1052,7 +1065,18 @@ abstract class Document extends Resource_Model {
 			$this->set_prop( 'discount_type', $discount_type );
 		}
 	}
-
+	
+	/**
+	 * set the shipping.
+	 *
+	 * @param float $shipping .
+	 *
+	 * @since  1.1.3
+	 */
+	public function set_shipping( $shipping ) {
+		$this->set_prop( 'shipping', eaccounting_format_decimal( $shipping, 4 ) );
+	}
+	
 	/**
 	 * set the subtotal.
 	 *
@@ -1064,7 +1088,7 @@ abstract class Document extends Resource_Model {
 	public function set_subtotal( $subtotal ) {
 		$this->set_prop( 'subtotal', eaccounting_format_decimal( $subtotal, 4 ) );
 	}
-
+	
 	/**
 	 * set the tax.
 	 *
@@ -1076,7 +1100,7 @@ abstract class Document extends Resource_Model {
 	public function set_total_tax( $tax ) {
 		$this->set_prop( 'total_tax', eaccounting_format_decimal( $tax, 4 ) );
 	}
-
+	
 	/**
 	 * set the tax.
 	 *
@@ -1088,7 +1112,7 @@ abstract class Document extends Resource_Model {
 	public function set_total_discount( $discount ) {
 		$this->set_prop( 'total_discount', eaccounting_format_decimal( $discount, 4 ) );
 	}
-
+	
 	/**
 	 * set the fees.
 	 *
@@ -1100,7 +1124,7 @@ abstract class Document extends Resource_Model {
 	public function set_total_fees( $fees ) {
 		$this->set_prop( 'total_fees', eaccounting_format_decimal( $fees, 4 ) );
 	}
-
+	
 	/**
 	 * set the shipping.
 	 *
@@ -1112,7 +1136,7 @@ abstract class Document extends Resource_Model {
 	public function set_total_shipping( $shipping ) {
 		$this->set_prop( 'total_shipping', eaccounting_format_decimal( $shipping, 4 ) );
 	}
-
+	
 	/**
 	 * set the total.
 	 *
@@ -1124,7 +1148,7 @@ abstract class Document extends Resource_Model {
 	public function set_total( $total ) {
 		$this->set_prop( 'total', eaccounting_format_decimal( $total, 4 ) );
 	}
-
+	
 	/**
 	 * set the note.
 	 *
@@ -1136,7 +1160,7 @@ abstract class Document extends Resource_Model {
 	public function set_tax_inclusive( $type ) {
 		$this->set_prop( 'tax_inclusive', eaccounting_bool_to_number( $type ) );
 	}
-
+	
 	/**
 	 * set the note.
 	 *
@@ -1148,7 +1172,7 @@ abstract class Document extends Resource_Model {
 	public function set_note( $note ) {
 		$this->set_prop( 'note', eaccounting_sanitize_textarea( $note ) );
 	}
-
+	
 	/**
 	 * set the note.
 	 *
@@ -1160,7 +1184,7 @@ abstract class Document extends Resource_Model {
 	public function set_terms( $terms ) {
 		$this->set_prop( 'terms', eaccounting_sanitize_textarea( $terms ) );
 	}
-
+	
 	/**
 	 * set the attachment.
 	 *
@@ -1172,7 +1196,7 @@ abstract class Document extends Resource_Model {
 	public function set_attachment_id( $attachment ) {
 		$this->set_prop( 'attachment_id', absint( $attachment ) );
 	}
-
+	
 	/**
 	 * set the currency code.
 	 *
@@ -1185,14 +1209,14 @@ abstract class Document extends Resource_Model {
 		if ( eaccounting_sanitize_currency_code( $currency_code ) ) {
 			$this->set_prop( 'currency_code', eaccounting_clean( $currency_code ) );
 		}
-
+		
 		if ( $this->get_currency_code() && ( ! $this->exists() || array_key_exists( 'currency_code', $this->changes ) ) ) {
 			$currency = eaccounting_get_currency( $this->get_currency_code() );
 			$this->set_currency_rate( $currency->get_rate() );
 		}
 	}
-
-
+	
+	
 	/**
 	 * set the currency rate.
 	 *
@@ -1206,7 +1230,7 @@ abstract class Document extends Resource_Model {
 			$this->set_prop( 'currency_rate', eaccounting_format_decimal( $currency_rate, 7 ) );
 		}
 	}
-
+	
 	/**
 	 * set the parent id.
 	 *
@@ -1218,7 +1242,7 @@ abstract class Document extends Resource_Model {
 	public function set_parent_id( $parent_id ) {
 		$this->set_prop( 'parent_id', absint( $parent_id ) );
 	}
-
+	
 	/**
 	 * Set the invoice key.
 	 *
@@ -1231,52 +1255,52 @@ abstract class Document extends Resource_Model {
 		$key = strtolower( eaccounting_clean( $value ) );
 		$this->set_prop( 'key', substr( $key, 0, 30 ) );
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Non CRUD getter & Setter
 	|--------------------------------------------------------------------------
 	|
 	*/
-
+	
 	/**
 	 * Get invoice status nice name.
 	 *
+	 * @return mixed|string
 	 * @since 1.1.0
 	 *
-	 * @return mixed|string
 	 */
 	public function get_status_nicename() {
 		return isset( $this->get_statuses()[ $this->get_status() ] ) ? $this->get_statuses()[ $this->get_status() ] : $this->get_status();
 	}
-
+	
 	public function get_formatted_address() {
-
+	
 	}
-
-
+	
+	
 	/**
 	 * Get item ids.
 	 *
+	 * @return array
 	 * @since 1.1.0
 	 *
-	 * @return array
 	 */
 	public function get_item_ids() {
 		$ids = array();
 		foreach ( $this->get_items() as $item ) {
 			$ids[] = $item->get_id();
 		}
-
+		
 		return array_filter( $ids );
 	}
-
+	
 	/**
 	 * Get the invoice items.
 	 *
+	 * @return array
 	 * @since 1.1.0
 	 *
-	 * @return array
 	 */
 	public function get_taxes() {
 		$taxes = array();
@@ -1289,10 +1313,10 @@ abstract class Document extends Resource_Model {
 				);
 			}
 		}
-
+		
 		return $taxes;
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Document Item Handling
@@ -1301,7 +1325,7 @@ abstract class Document extends Resource_Model {
 	| document items are used for products, taxes, shipping, and fees within
 	| each order.
 	*/
-
+	
 	/**
 	 * Remove all line items from the order.
 	 * @deprecatd 1.1.3
@@ -1309,7 +1333,7 @@ abstract class Document extends Resource_Model {
 	public function remove_items() {
 		$this->delete_items();
 	}
-
+	
 	/**
 	 * Delete items.
 	 * @since 1.1.3
@@ -1320,14 +1344,14 @@ abstract class Document extends Resource_Model {
 			$this->items = array();
 		}
 	}
-
+	
 	/**
 	 * Get the invoice items.
 	 *
+	 * @return Document_Item[]
 	 * @since 1.1.0
 	 *
 	 *
-	 * @return Document_Item[]
 	 */
 	public function get_items() {
 		if ( $this->exists() && empty( $this->items ) ) {
@@ -1339,32 +1363,32 @@ abstract class Document extends Resource_Model {
 				}
 			}
 		}
-
+		
 		return $this->items;
 	}
-
+	
 	/**
 	 * @param      $item_id
 	 *
+	 * @return Document_Item|int
 	 * @since 1.1.0
 	 *
-	 * @return Document_Item|int
 	 */
 	public function get_item( $item_id ) {
 		$items = $this->get_items();
 		if ( empty( absint( $item_id ) ) ) {
 			return false;
 		}
-
+		
 		foreach ( $items as $item ) {
 			if ( $item->get_id() === absint( $item_id ) ) {
 				return $item;
 			}
 		}
-
+		
 		return false;
 	}
-
+	
 	/**
 	 * Set the document items.
 	 *
@@ -1385,7 +1409,7 @@ abstract class Document extends Resource_Model {
 		foreach ( $items as $item ) {
 			$new_ids[] = $this->add_item( $item );
 		}
-
+		
 		if ( ! $append ) {
 			$new_ids         = array_values( array_filter( $new_ids ) );
 			$old_item_ids    = array_keys( $old_items );
@@ -1396,7 +1420,7 @@ abstract class Document extends Resource_Model {
 			}
 		}
 	}
-
+	
 	/**
 	 * Adds an item to the document.
 	 *
@@ -1405,7 +1429,7 @@ abstract class Document extends Resource_Model {
 	 * @return false|int
 	 */
 	public abstract function add_item( $args );
-
+	
 	/**
 	 * Remove item from the order.
 	 *
@@ -1419,18 +1443,18 @@ abstract class Document extends Resource_Model {
 		if ( empty( $item_id ) ) {
 			return false;
 		}
-
+		
 		$item = $this->get_item( $item_id );
-
+		
 		if ( ! $item ) {
 			return false;
 		}
-
+		
 		// Unset and remove later.
 		$this->items_to_delete[] = $item;
 		unset( $this->items[ $item_id ] );
 	}
-
+	
 	/*
 	|--------------------------------------------------------------------------
 	| Conditionals
@@ -1444,14 +1468,14 @@ abstract class Document extends Resource_Model {
 	 *
 	 * @param $status
 	 *
+	 * @return bool
 	 * @since 1.1.0
 	 *
-	 * @return bool
 	 */
 	public function is_status( $status ) {
 		return $this->get_status() === eaccounting_clean( $status );
 	}
-
+	
 	/**
 	 * Checks if an order can be edited, specifically for use on the Edit Order screen.
 	 *
@@ -1460,61 +1484,61 @@ abstract class Document extends Resource_Model {
 	public function is_editable() {
 		return ! in_array( $this->get_status(), array( 'partial', 'paid' ), true );
 	}
-
+	
 	/**
 	 * Returns if an order has been paid for based on the order status.
 	 *
-	 * @since 1.10
 	 * @return bool
+	 * @since 1.10
 	 */
 	public function is_paid() {
 		return $this->is_status( 'paid' );
 	}
-
+	
 	/**
 	 * Checks if the invoice is draft.
 	 *
-	 * @since 1.1.0
 	 * @return bool
+	 * @since 1.1.0
 	 */
 	public function is_draft() {
 		return $this->is_status( 'draft' );
 	}
-
+	
 	/**
 	 * Checks if the invoice is due.
 	 *
-	 * @since 1.1.0
 	 * @return bool
+	 * @since 1.1.0
 	 */
 	public function is_due() {
 		$due_date = $this->get_due_date();
-
+		
 		return empty( $due_date ) || $this->is_paid() ? false : strtotime( date_i18n( 'Y-m-d 23:59:00' ) ) > strtotime( date_i18n( 'Y-m-d 23:59:00', strtotime( $due_date ) ) ); //phpcs:ignore
 	}
-
+	
 	/**
 	 * Check if tax inclusive or not.
 	 *
+	 * @return mixed|null
 	 * @since 1.1.0
 	 *
-	 * @return mixed|null
 	 */
 	public function is_tax_inclusive() {
 		return ! empty( $this->get_tax_inclusive() );
 	}
-
+	
 	/**
 	 * Get the type of discount.
 	 *
+	 * @return bool
 	 * @since 1.1.0
 	 *
-	 * @return bool
 	 */
 	public function is_fixed_discount() {
 		return 'percentage' !== $this->get_discount_type();
 	}
-
+	
 	/**
 	 * Check if an key is valid.
 	 *
@@ -1525,7 +1549,7 @@ abstract class Document extends Resource_Model {
 	public function is_key_valid( $key ) {
 		return $key === $this->get_key( 'edit' );
 	}
-
+	
 	/**
 	 * Checks if an order needs payment, based on status and order total.
 	 *
