@@ -22,11 +22,21 @@ $add_url = eaccounting_admin_url(
 		'action' => 'add',
 	)
 );
+$import_url = eaccounting_admin_url(
+	array(
+		'page' => 'ea-tools',
+		'tab' => 'import'
+	),
+	admin_url( 'admin.php' )
+);
 ?>
 	<h1 class="wp-heading-inline"><?php _e( 'Invoices', 'wp-ever-accounting' ); ?></h1>
 	<a class="page-title-action" href="<?php echo esc_url( $add_url ); ?>">
 		<?php esc_html_e( 'Add New', 'wp-ever-accounting' ); ?>
 	</a>
+    <a class="page-title-action" href="<?php echo esc_url( $import_url ); ?>">
+		<?php esc_html_e( 'Import', 'wp-ever-accounting' ); ?>
+    </a>
 <?php do_action( 'eaccounting_invoices_table_top' ); ?>
 	<form id="ea-invoices-table" method="get" action="<?php echo admin_url( 'admin.php' ); ?>">
 		<?php
