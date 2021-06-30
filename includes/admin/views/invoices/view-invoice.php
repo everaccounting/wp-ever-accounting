@@ -20,6 +20,7 @@ $invoice_actions = apply_filters(
 	'eaccounting_invoice_actions',
 	array(
 		'status_cancelled' => __( 'Mark Cancelled', 'wp-ever-accounting' ),
+		'status_refunded' => __( 'Mark Refunded', 'wp-ever-accounting' ),
 	)
 );
 if ( $invoice->needs_payment() ) {

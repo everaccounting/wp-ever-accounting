@@ -149,6 +149,7 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 			'cancel'  => __( 'Cancel', 'wp-ever-accounting' ),
 			'paid'    => __( 'Paid', 'wp-ever-accounting' ),
 			'pending' => __( 'Pending', 'wp-ever-accounting' ),
+			'refund' => __( 'Refund', 'wp-ever-accounting' ),
 			'delete'  => __( 'Delete', 'wp-ever-accounting' ),
 		);
 	}
@@ -288,6 +289,9 @@ class EverAccounting_Invoice_List_Table extends EverAccounting_List_Table {
 				case 'pending':
 					$invoice->set_status( 'pending' );
 					$invoice->save();
+					break;
+				case 'refund':
+					$invoice->set_refunded();
 					break;
 				case 'delete':
 					eaccounting_delete_invoice( $id );
