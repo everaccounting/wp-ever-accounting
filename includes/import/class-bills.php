@@ -32,8 +32,8 @@ class Bills extends CSV_Importer {
 	protected function get_headers() {
 		return eaccounting_get_io_headers( 'bill' );
 	}
-	
-	
+
+
 	/**
 	 * Return the required key to import item.
 	 *
@@ -41,9 +41,9 @@ class Bills extends CSV_Importer {
 	 * @since 1.1.3
 	 */
 	public function get_required() {
-		return array( 'currency_code', 'category_name', 'customer_name', 'issue_date', 'due_date' );
+		return array( 'currency_code', 'category_name', 'vendor_name', 'issue_date', 'due_date' );
 	}
-	
+
 	/**
 	 * Get formatting callback.
 	 *
@@ -73,7 +73,7 @@ class Bills extends CSV_Importer {
 			'note'            => array( $this, 'parse_description_field' ),
 		);
 	}
-	
+
 	/**
 	 * Process a single item and save.
 	 *
@@ -82,14 +82,15 @@ class Bills extends CSV_Importer {
 	 * @return string|\WP_Error
 	 */
 	protected function import_item( $data ) {
+		error_log( print_r( $data, true ) );
 		if ( empty( $data['currency_code'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Currency Code', 'wp-ever-accounting' ) );
 		}
-		
+
 		if ( empty( $data['category_name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Category Name', 'wp-ever-accounting' ) );
 		}
-		
+
 		if ( empty( $data['vendor_name'] ) ) {
 			return new \WP_Error( 'empty_prop', __( 'Empty Vendor Name', 'wp-ever-accounting' ) );
 		}
@@ -99,25 +100,25 @@ class Bills extends CSV_Importer {
 		}
 
 		if ( empty( $data['due_date'] ) ) {
-			return new \WP_Error( 'empty_prop', __( 'Empty Issue Date', 'wp-ever-accounting' ) );
+			return new \WP_Error( 'empty_prop', __( 'Empty Due Date', 'wp-ever-accounting' ) );
 		}
-		
+
 		$category    = eaccounting_get_categories( array( 'search' => $data['category_name'], 'search_cols' => array( 'name' ), 'type' => 'expense', ) ); //phpcs:ignore
 		$category    = ( $category ) ? reset( $category ) : '';
 		$category_id = ! empty( $category ) ? $category->get_id() : '';
-		
+
 		$vendor    = eaccounting_get_vendors( array( 'search' => $data['vendor_name'], 'search_cols' => array( 'name' ), ) ); //phpcs:ignore
 		$vendor    = ( $vendor ) ? reset( $vendor ) : '';
 		$vendor_id = ! empty( $vendor ) ? $vendor->get_id() : '';
-		
+
 		if ( empty( $category_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Category does not exist.', 'wp-ever-accounting' ) );
 		}
-		
+
 		if ( empty( $vendor_id ) ) {
 			return new \WP_Error( 'invalid_props', __( 'Vendor does not exist.', 'wp-ever-accounting' ) );
 		}
-		
+
 		$due  = eaccounting()->settings->get( 'bill_due', 15 );
 		$bill = new Bill();
 		$bill->set_props(
@@ -126,8 +127,8 @@ class Bills extends CSV_Importer {
 				'order_number'   => $data['order_number'],
 				'status'         => $data['status'],
 				'issue_date'     => $data['issue_date'] ? eaccounting_date( $data['issue_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d' ),
-				'due_date'       => $data['due_date'] ? eaccounting_date( $data['issue_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) ), //phpcs:ignore,
-				'payment_date'   => $data['payment_date'],
+				'due_date'       => $data['due_date'] ? eaccounting_date( $data['due_date'], 'Y-m-d' ) : date_i18n( 'Y-m-d', strtotime( "+ $due days", current_time( 'timestamp' ) ) ), //phpcs:ignore,
+				'payment_date'   => eaccounting_date( $data['payment_date'], 'Y-m-d' ),
 				'category_id'    => $category_id,
 				'vendor_id'      => $vendor_id,
 				'currency_code'  => $data['currency_code'],
@@ -137,17 +138,14 @@ class Bills extends CSV_Importer {
 				'note'           => $data['note'],
 			)
 		);
-		
 		$items       = $data['items'];
 		$all_items   = explode( ',', $items );
 		$items_array = array();
 		foreach ( $all_items as $item ) {
 			$items_array[] = eaccounting_get_items( array( 'search' => $item, 'search_cols' => array( 'name' ) ) ); //phpcs:ignore
 		}
-		
-		
 		$bill_items = array();
-		
+
 		if ( is_array( $items_array ) && ! empty( $items_array ) ) {
 			foreach ( $items_array as $item ) {
 				$bill_items[] = array(
@@ -156,11 +154,10 @@ class Bills extends CSV_Importer {
 					'document_id'   => $bill->get_id(),
 					'currency_code' => $bill->get_currency_code(),
 				);
-				
+
 			}
 		}
-		
-		
+
 		$bill->set_items( $bill_items );
 		$totals = $bill->calculate_totals();
 		$bill->set_subtotal( $totals['subtotal'] );
@@ -170,7 +167,11 @@ class Bills extends CSV_Importer {
 		$bill->set_total_discount( $totals['total_discount'] );
 		$bill->set_total( $totals['total'] );
 		$bill->save();
-		
+
+		if ( ! empty( $data['payment_date'] ) && ! empty( $data['paid'] ) ) {
+			$bill->add_payment( array( 'date' => $data['payment_date'], 'amount' => $data['paid'], 'account_id' => eaccounting()->settings->get( 'default_account' ), 'payment_method' => eaccounting()->settings->get( 'default_payment_method' ) ) );
+		}
+
 		return $bill;
 	}
 }
