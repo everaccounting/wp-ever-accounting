@@ -28,12 +28,12 @@ class Batch extends Registry {
 	 * @since 1.0.2
 	 */
 	public function init() {
-
+		
 		$this->includes();
 		$this->register_items();
 		do_action( 'eaccounting_batch_process_init', $this );
 	}
-
+	
 	/**
 	 * Brings in the files.
 	 *
@@ -45,7 +45,7 @@ class Batch extends Registry {
 		// importers
 		require_once EACCOUNTING_ABSPATH . '/includes/abstracts/abstract-csv-importer.php';
 	}
-
+	
 	/**
 	 * Register items.
 	 *
@@ -99,7 +99,7 @@ class Batch extends Registry {
 			array(
 				'class' => '\EverAccounting\Export\Revenues',
 				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-revenues.php',
-
+			
 			)
 		);
 		$this->add_item(
@@ -107,10 +107,25 @@ class Batch extends Registry {
 			array(
 				'class' => '\EverAccounting\Export\Items',
 				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-items.php',
-
+			
 			)
 		);
-
+		$this->add_item(
+			'export-invoices',
+			array(
+				'class' => '\EverAccounting\Export\Invoices',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-invoices.php',
+			)
+		);
+		
+		$this->add_item(
+			'export-bills',
+			array(
+				'class' => '\EverAccounting\Export\Bills',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/export/class-bills.php',
+			)
+		);
+		
 		$this->add_item(
 			'import-customers',
 			array(
@@ -153,7 +168,7 @@ class Batch extends Registry {
 				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-items.php',
 			)
 		);
-
+		
 		$this->add_item(
 			'import-currencies',
 			array(
@@ -168,16 +183,32 @@ class Batch extends Registry {
 				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-categories.php',
 			)
 		);
-
+		
+		$this->add_item(
+			'import-invoices',
+			array(
+				'class' => '\EverAccounting\Import\Invoices',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-invoices.php',
+			)
+		);
+		
+		$this->add_item(
+			'import-bills',
+			array(
+				'class' => '\EverAccounting\Import\Bills',
+				'file'  => EACCOUNTING_ABSPATH . '/includes/import/class-bills.php',
+			)
+		);
+		
 	}
-
+	
 	/**
 	 * Add item.
 	 *
 	 * @param string $batch_id Unique item name.
 	 *
 	 * @param array $args {
-	 *                               Arguments for registering a new item.
+	 *                                Arguments for registering a new item.
 	 *
 	 * @type string $class Item class.
 	 * @type string $file Item file containing the class.
@@ -188,21 +219,21 @@ class Batch extends Registry {
 	 */
 	public function add_item( $batch_id, $args ) {
 		$args = wp_parse_args( $args, array_fill_keys( array( 'class', 'file' ), '' ) );
-
+		
 		if ( empty( $args['class'] ) ) {
 			return new \WP_Error( 'invalid_batch_class', __( 'A batch item class must be specified.', 'wp-ever-accounting' ) );
 		}
-
+		
 		if ( empty( $args['file'] ) ) {
 			return new \WP_Error( 'missing_batch_class_file', __( 'No batch class handler file has been supplied.', 'wp-ever-accounting' ) );
 		}
-
+		
 		// 2 if Windows path.
 		if ( ! in_array( validate_file( $args['file'] ), array( 0, 2 ), true ) ) {
 			return new \WP_Error( 'invalid_batch_class_file', __( 'Invalid batch class handler file has been supplied.', 'wp-ever-accounting' ) );
 		}
-
+		
 		return parent::add_item( $batch_id, $args );
 	}
-
+	
 }
