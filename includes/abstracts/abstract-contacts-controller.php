@@ -9,9 +9,28 @@
 
 namespace EverAccounting\Abstracts;
 
+use function cli\err;
+
 defined( 'ABSPATH' ) || die();
 
 abstract class Contacts_Controller extends Entities_Controller {
+
+	/**
+	 * Retrieves data from a Model class.
+	 *
+	 * @param Resource_Model $object model object.
+	 * @param array          $fields Fields to include.
+	 * @param string         $context either view or edit.
+	 *
+	 * @return array
+	 * @since  1.1.0
+	 */
+	protected function prepare_object_for_response( $object, $fields, $context = 'view' ) {
+		$object              = parent::prepare_object_for_response( $object, $fields, $context );
+		$object['thumbnail'] = ! empty( $object['thumbnail_id'] ) ? get_post( (int) $object['thumbnail_id'] ) : [];
+		return $object;
+	}
+
 	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
@@ -92,7 +111,7 @@ abstract class Contacts_Controller extends Entities_Controller {
 					'description' => __( 'Birth date', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'format'      => 'date',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -107,6 +126,14 @@ abstract class Contacts_Controller extends Entities_Controller {
 				),
 				'street'       => array(
 					'description' => __( 'Street Address of the contact.', 'wp-ever-accounting' ),
+					'type'        => 'string',
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+				'city'         => array(
+					'description' => __( 'City Address of the contact.', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
@@ -239,11 +266,12 @@ abstract class Contacts_Controller extends Entities_Controller {
 	public function get_collection_params() {
 		$query_params                       = parent::get_collection_params();
 		$query_params['context']['default'] = 'view';
-		$params['orderby']                  = array(
+		$query_params['orderby']            = array(
 			'description'       => __( 'Sort collection by object attribute.', 'wp-ever-accounting' ),
 			'type'              => 'string',
 			'default'           => 'id',
 			'enum'              => array(
+				'id',
 				'name',
 				'email',
 				'phone',
@@ -251,7 +279,7 @@ abstract class Contacts_Controller extends Entities_Controller {
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
-
+		error_log(print_r($query_params, true));
 		return $query_params;
 	}
 }

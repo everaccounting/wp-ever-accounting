@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class Contact
+ *
  * @since   1.1.0
  *
  * @package EverAccounting\Models
@@ -79,11 +80,10 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.1.0
 	 *
 	 * @param int|object $data object to read.
-	 *
 	 */
 	public function __construct( $data = 0 ) {
 		parent::__construct( $data );
-		//Load repository
+		// Load repository
 		$this->repository = Repositories::load( $this->repository_name );
 	}
 
@@ -320,6 +320,8 @@ abstract class Contact extends Resource_Model {
 		return $this->get_prop( 'thumbnail_id', $context );
 	}
 
+
+
 	/*
 	|--------------------------------------------------------------------------
 	| Setters
@@ -336,7 +338,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $id
-	 *
 	 */
 	public function set_user_id( $id ) {
 		$this->set_prop( 'user_id', absint( $id ) );
@@ -348,7 +349,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $name
-	 *
 	 */
 	public function set_name( $name ) {
 		$this->set_prop( 'name', eaccounting_clean( $name ) );
@@ -360,7 +360,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $company
-	 *
 	 */
 	public function set_company( $company ) {
 		$this->set_prop( 'company', eaccounting_clean( $company ) );
@@ -372,7 +371,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param string $value Email.
-	 *
 	 */
 	public function set_email( $value ) {
 		if ( $value && is_email( $value ) ) {
@@ -386,7 +384,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_phone( $value ) {
 		$this->set_prop( 'phone', eaccounting_clean( $value ) );
@@ -399,7 +396,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $date
-	 *
 	 */
 	public function set_birth_date( $date ) {
 		$this->set_date_prop( 'birth_date', $date );
@@ -411,7 +407,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_website( $value ) {
 		$this->set_prop( 'website', esc_url( $value ) );
@@ -423,7 +418,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_street( $value ) {
 		$this->set_prop( 'street', sanitize_text_field( $value ) );
@@ -435,7 +429,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $city
-	 *
 	 */
 	public function set_city( $city ) {
 		$this->set_prop( 'city', sanitize_text_field( $city ) );
@@ -447,7 +440,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $state
-	 *
 	 */
 	public function set_state( $state ) {
 		$this->set_prop( 'state', sanitize_text_field( $state ) );
@@ -459,7 +451,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $postcode
-	 *
 	 */
 	public function set_postcode( $postcode ) {
 		$this->set_prop( 'postcode', sanitize_text_field( $postcode ) );
@@ -471,7 +462,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $country
-	 *
 	 */
 	public function set_country( $country ) {
 		if ( array_key_exists( $country, eaccounting_get_countries() ) ) {
@@ -485,7 +475,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_vat_number( $value ) {
 		$this->set_prop( 'vat_number', eaccounting_clean( $value ) );
@@ -497,7 +486,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $value
-	 *
 	 */
 	public function set_currency_code( $value ) {
 		if ( eaccounting_get_currency( $value ) ) {
@@ -511,7 +499,6 @@ abstract class Contact extends Resource_Model {
 	 * @since 1.0.2
 	 *
 	 * @param $type
-	 *
 	 */
 	public function set_type( $type ) {
 		if ( array_key_exists( $type, eaccounting_get_contact_types() ) ) {
@@ -538,7 +525,6 @@ abstract class Contact extends Resource_Model {
 
 	/**
 	 * Return this customer's avatar.
-	 *
 	 *
 	 * @param array $args
 	 *

@@ -48,24 +48,24 @@ class Setup_Wizard {
 		if ( 'ea-setup' !== $page ) {
 			return;
 		}
-		wp_enqueue_media();
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		Assets::register_script( 'ea-navigation', 'navigation/index.js' );
-		Assets::register_script( 'ea-components', 'components/index.js' );
-		Assets::register_script( 'ea-data', 'data/index.js' );
-		Assets::register_style( 'ea-components', 'components/style.css' );
-		Assets::register_style( 'ea-setup', 'setup/style.css', [ 'install', 'common', 'ea-components', 'wp-components' ] );
-		Assets::register_script( 'ea-setup', 'setup/index.js', ['ea-navigation'] );
-		wp_enqueue_script( 'ea-setup' );
-		wp_enqueue_style( 'ea-setup' );
-		wp_localize_script(
-			'ea-setup',
-			'ea_setupi10n',
-			[
-				'logo_url' => esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ),
-				'dist_url' => esc_url( eaccounting()->plugin_url( '/dist' ) ),
-			]
-		);
+//		wp_enqueue_media();
+//		wp_enqueue_script( 'jquery-ui-datepicker' );
+//		Assets::register_script( 'ea-navigation', 'navigation/index.js' );
+//		Assets::register_script( 'ea-components', 'components/index.js' );
+//		Assets::register_script( 'ea-data', 'data/index.js' );
+//		Assets::register_style( 'ea-components', 'components/style.css' );
+//		Assets::register_style( 'ea-setup', 'setup/style.css', [ 'install', 'common', 'ea-components', 'wp-components' ] );
+//		Assets::register_script( 'ea-setup', 'setup/index.js', ['ea-navigation'] );
+//		wp_enqueue_script( 'ea-setup' );
+//		wp_enqueue_style( 'ea-setup' );
+//		wp_localize_script(
+//			'ea-setup',
+//			'ea_setupi10n',
+//			[
+//				'logo_url' => esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ),
+//				'dist_url' => esc_url( eaccounting()->plugin_url( '/dist' ) ),
+//			]
+//		);
 		// @codingStandardsIgnoreEnd
 		header( 'Content-Type: text/html; charset=utf-8' );
 		ob_start();
@@ -78,11 +78,17 @@ class Setup_Wizard {
 			<meta name="viewport" content="width=device-width"/>
 			<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 			<title><?php esc_html_e( 'Ever Accounting &rsaquo; Setup Wizard', 'wp-ever-accounting' ); ?></title>
-			<?php wp_print_scripts( array( 'ea-setup' ) ); ?>
+			<?php do_action( 'admin_enqueue_scripts' ); ?>
 			<?php do_action( 'admin_print_styles' ); ?>
+			<?php do_action( 'admin_head' ); ?>
+			<?php wp_print_styles( 'ea-app' ); ?>
+			<?php wp_print_styles( 'install' ); ?>
+			<?php wp_print_styles( 'common' ); ?>
+			<?php wp_print_scripts( 'ea-app' ); ?>
 		</head>
 		<body class="ea-setup wp-core-ui <?php echo esc_attr( $wp_version_class ); ?>">
-			<div id="ea-setup-wizard"></div>
+			<div id="eaccounting-root"></div>
+			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Repellendus, vel?
 		</body>
 		</html>
 		<?php

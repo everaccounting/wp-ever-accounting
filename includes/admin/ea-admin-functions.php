@@ -128,7 +128,10 @@ function eaccounting_get_screen_ids() {
 		$eaccounting_screen_id . '_page_ea-tools',
 		$eaccounting_screen_id . '_page_ea-settings',
 		$eaccounting_screen_id . '_page_ea-extensions',
+		$eaccounting_screen_id . '_page_ea-setup',
+		$eaccounting_screen_id . '_page_ea-onboarding',
 		'toplevel_page_eaccounting',
+		'toplevel_page_ea-setup',
 	);
 
 	return apply_filters( 'eaccounting_screen_ids', $screen_ids );
@@ -168,6 +171,19 @@ function eaccounting_is_admin_page( $page = '' ) {
 	}
 
 	return apply_filters( 'eaccounting_is_admin_page', $ret );
+}
+
+/**
+ * Check if the current page is a react page.
+ * @return bool
+ */
+function eaccounting_is_react_page(){
+	global $current_screen;
+	if( ! eaccounting_is_admin_page() || ! is_object( $current_screen ) || ! isset( $current_screen->base ) ){
+		return  false;
+	}
+
+	return 'toplevel_page_eaccounting' === $current_screen->base;
 }
 
 

@@ -13,8 +13,8 @@ const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 const { BundleAnalyzerPlugin } = require( 'webpack-bundle-analyzer' );
 const MiniCSSExtractPlugin = require( 'mini-css-extract-plugin' );
 const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
-const { CleanWebpackPlugin } = require( 'clean-webpack-plugin' );
 const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
+const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 /**
  * WordPress dependencies
  */
@@ -83,6 +83,7 @@ const config = {
 				test: /\.js$/,
 				enforce: 'pre',
 				loader: 'eslint-loader',
+				exclude: /node_modules/,
 				options: {
 					fix: true,
 				},
@@ -128,6 +129,15 @@ const config = {
 						loader: require.resolve( 'sass-loader' ),
 						options: {
 							sourceMap: ! isProduction,
+							sassOptions: {
+								indentWidth: 4,
+								includePaths: [ 'client/styles/variables' ],
+							},
+							prependData:
+								'@import "_colors"; ' +
+								'@import "_variables"; ' +
+								'@import "_breakpoints"; ' +
+								'@import "_mixins"; ',
 						},
 					},
 				],
@@ -135,7 +145,6 @@ const config = {
 		].filter( Boolean ),
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
 		// MiniCSSExtractPlugin creates JavaScript assets for CSS that are
 		// obsolete and should be removed. Related webpack issue:
 		// https://github.com/webpack-contrib/mini-css-extract-plugin/issues/85
@@ -209,6 +218,7 @@ const config = {
 			),
 
 		new DependencyExtractionWebpackPlugin(),
+		new DuplicatePackageCheckerPlugin(),
 		// Fancy WebpackBar.
 		new WebpackBar(),
 	].filter( Boolean ),

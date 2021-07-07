@@ -3,108 +3,102 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: modules/components/forms/account-form.js:107
-#: modules/components/forms/contact-form.js:96
-#: modules/components/forms/currency-form.js:100
-msgid "Submit"
+#: client/app/header/index.js:104
+msgid "Bill"
 msgstr ""
 
-#: modules/components/forms/account-form.js:126
-msgid "Save Account"
+#: client/app/header/index.js:114
+msgid "Vendor"
 msgstr ""
 
-#: modules/components/forms/account-form.js:153
-msgid "Add Account"
+#: client/app/header/index.js:130
+msgid "Payment"
 msgstr ""
 
-#: modules/components/forms/account-form.js:29
-#: modules/components/forms/contact-form.js:22
-#: modules/components/forms/currency-form.js:25
-msgid "Name is required"
+#: client/app/header/index.js:146
+msgid "Accounting"
 msgstr ""
 
-#: modules/components/forms/account-form.js:32
-msgid "Account number is required"
+#: client/app/header/index.js:74
+msgid "New"
 msgstr ""
 
-#: modules/components/forms/account-form.js:35
-msgid "Account currency is required"
+#: client/app/header/index.js:84
+msgid "Invoice"
 msgstr ""
 
-#: modules/components/forms/account-form.js:51
-#: modules/components/forms/contact-form.js:35
-#: modules/components/forms/currency-form.js:44
+#: client/app/header/index.js:94
+msgid "Customer"
+msgstr ""
+
+#: modules/components/advaced-filters/index.js:161
+msgid "Filter"
+msgstr ""
+
+#: modules/components/advaced-filters/index.js:167
+msgid "Filters"
+msgstr ""
+
+#: modules/components/advaced-filters/index.js:246
+msgid "Clear Filter"
+msgstr ""
+
+#: modules/components/currency-modal/index.js:113
 msgid "Name"
 msgstr ""
 
-#: modules/components/forms/account-form.js:52
-msgid "Account Number"
+#: modules/components/currency-modal/index.js:117
+msgid "Rate"
 msgstr ""
 
-#: modules/components/forms/account-form.js:53
-msgid "Account currency"
+#: modules/components/currency-modal/index.js:131
+msgid "Details"
 msgstr ""
 
-#: modules/components/forms/account-form.js:54
-msgid "Opening Balance"
+#: modules/components/currency-modal/index.js:137
+msgid "Symbol"
 msgstr ""
 
-#: modules/components/forms/contact-form.js:105
-msgid "Save Contact"
+#: modules/components/currency-modal/index.js:145
+msgid "Position"
 msgstr ""
 
-#: modules/components/forms/contact-form.js:131
-msgid "Add New"
+#: modules/components/currency-modal/index.js:150
+msgid "Before"
 msgstr ""
 
-#: modules/components/forms/contact-form.js:154
-msgid "Add New Customer"
+#: modules/components/currency-modal/index.js:157
+msgid "After"
 msgstr ""
 
-#: modules/components/forms/contact-form.js:177
-msgid "Add New Vendor"
+#: modules/components/currency-modal/index.js:169
+msgid "Decimal Separator"
 msgstr ""
 
-#: modules/components/forms/contact-form.js:25
-msgid "Currency is required"
+#: modules/components/currency-modal/index.js:177
+msgid "Thousand Separator"
 msgstr ""
 
-#: modules/components/forms/contact-form.js:39
-msgid "Currency"
+#: modules/components/currency-modal/index.js:201
+msgid "Submit"
 msgstr ""
 
-#: modules/components/forms/contact-form.js:43
-msgid "Company"
-msgstr ""
-
-#: modules/components/forms/contact-form.js:46
-msgid "Email"
-msgstr ""
-
-#: modules/components/forms/contact-form.js:50
-msgid "Phone"
-msgstr ""
-
-#: modules/components/forms/currency-form.js:113
+#: modules/components/currency-modal/index.js:24
 msgid "Save Currency"
 msgstr ""
 
-#: modules/components/forms/currency-form.js:131
-msgid "Add new currency"
+#: modules/components/currency-modal/index.js:44
+msgid "Account Name is required"
 msgstr ""
 
-#: modules/components/forms/currency-form.js:28
+#: modules/components/currency-modal/index.js:47
 msgid "Currency code is required"
 msgstr ""
 
-#: modules/components/forms/currency-form.js:31
+#: modules/components/currency-modal/index.js:50
 msgid "Currency rate is required"
 msgstr ""
 
-#: modules/components/forms/currency-form.js:46
+#: modules/components/currency-modal/index.js:80
 msgid "Currency Code"
-msgstr ""
-
-#: modules/components/forms/currency-form.js:56
-msgid "Rate"
 msgstr ""

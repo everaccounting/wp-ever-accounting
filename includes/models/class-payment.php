@@ -88,6 +88,21 @@ class Payment extends Transaction {
 		return $this->get_prop( 'contact_id', $context );
 	}
 
+	/**
+	 * Get vendor object.
+	 *
+	 * @param string $context
+	 *
+	 * @return \EverAccounting\Models\Vendor
+	 */
+	public function get_vendor( $context = 'edit' ){
+		if( !empty( $this->get_vendor_id() ) && $vendor = eaccounting_get_vendor( $this->get_vendor_id() ) ){
+			return $vendor;
+		}
+
+		return null;
+	}
+
 	/*
 	|--------------------------------------------------------------------------
 	| Setters

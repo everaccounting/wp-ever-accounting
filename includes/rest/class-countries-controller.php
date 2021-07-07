@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class Countries_Controller
+ *
  * @package EverAccounting\REST
  */
 class Countries_Controller extends Data_Controller {
@@ -21,7 +22,7 @@ class Countries_Controller extends Data_Controller {
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'data/countries';
+	protected $rest_base = 'countries';
 
 	/**
 	 * Register routes.

@@ -12,6 +12,7 @@
 namespace EverAccounting\Abstracts;
 
 use EverAccounting\Repositories\Meta_Data;
+use function cli\err;
 
 defined( 'ABSPATH' ) || die();
 
@@ -256,12 +257,11 @@ abstract class Entities_Controller extends Controller {
 			}
 			$object = new $this->entity_model();
 			$object = $this->prepare_object_for_database( $object, $request );
-			error_log(print_r($object->get_data(), true));
 			$object->save();
 			$this->update_additional_fields_for_object( (array) $object, $request );
 			$request->set_param( 'context', 'edit' );
 			$response = $this->prepare_item_for_response( $object, $request );
-//			error_log(print_r($response, true));
+			// error_log(print_r($response, true));
 			$response = rest_ensure_response( $response );
 			$response->set_status( 201 );
 			$response->header( 'Location', rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->rest_base, $object->get_id() ) ) );
@@ -334,7 +334,7 @@ abstract class Entities_Controller extends Controller {
 		$args['offset']   = $request['offset'];
 		$args['order']    = $request['order'];
 		$args['orderby']  = $request['orderby'];
-		$args['paged']    = $request['page'];
+		$args['paged']    = $request['paged'];
 		$args['include']  = $request['include'];
 		$args['per_page'] = $request['per_page'];
 		$args['search']   = $request['search'];
@@ -350,7 +350,7 @@ abstract class Entities_Controller extends Controller {
 		if ( isset( $request['after'] ) ) {
 			$args['date_query'][0]['after'] = $request['after'];
 		}
-
+		error_log( print_r( $args, true ) );
 		// Filter the query arguments for a request.
 		$args    = apply_filters( "eaccounting_rest_{$this->entity_type}_query", $args, $request );
 		$results = $this->get_objects( $args, $request );
@@ -598,7 +598,7 @@ abstract class Entities_Controller extends Controller {
 		$params['context']            = $this->get_context_param();
 		$params['context']['default'] = 'view';
 
-		$params['page']     = array(
+		$params['paged']    = array(
 			'description'       => __( 'Current page of the collection.', 'wp-ever-accounting' ),
 			'type'              => 'integer',
 			'default'           => 1,

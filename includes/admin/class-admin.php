@@ -31,6 +31,7 @@ class Admin {
 		add_action( 'admin_footer', 'eaccounting_print_js', 25 );
 		add_action( 'admin_footer', array( $this, 'load_js_templates' ) );
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
+		add_action( 'in_admin_header', array( $this, 'embed_page_header' ) );
 	}
 
 	/**
@@ -125,7 +126,10 @@ class Admin {
 	 */
 	public function admin_body_class( $classes ) {
 		if ( eaccounting_is_admin_page() ) {
-			$classes .= ' eaccounting ';
+			$classes .= ' eaccounting eaccounting-page ';
+		}
+		if ( !eaccounting_is_react_page()) {
+			$classes .= ' eaccounting-embed-page ';
 		}
 
 		return $classes;
@@ -194,6 +198,23 @@ class Admin {
 			eaccounting_get_admin_template( 'js/modal-add-invoice-item' );
 			eaccounting_get_admin_template( 'js/modal-add-item' );
 		}
+	}
+
+	/**
+	 * If its not a react page render embedded header.
+	 */
+	public function embed_page_header(){
+		if( eaccounting_is_react_page()){
+			return;
+		}
+
+		?>
+		<div id="eaccounting-embedded-root" class="is-embed-loading">
+			<div class="eaccounting-layout">
+				<div class="eaccounting-layout__header is-embed-loading"></div>
+			</div>
+		</div>
+		<?php
 	}
 }
 

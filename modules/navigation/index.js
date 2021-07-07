@@ -1,9 +1,12 @@
 /**
  * External dependencies
  */
+/**
+ * WordPress dependencies
+ */
 import { addQueryArgs } from '@wordpress/url';
 import { parse } from 'qs';
-import { uniq } from 'lodash';
+import { identity, omit, pickBy, uniq } from 'lodash';
 
 /**
  * Internal dependencies
@@ -22,6 +25,20 @@ export { getHistory };
  */
 export const getPath = () => getHistory().location.pathname;
 
+/**
+ * Get the page from history.
+ *
+ * @return {string} Query String
+ */
+export const getPage = () => {
+	const search = getHistory().location.search;
+	if ( search.length ) {
+		const query = parse( search.substring( 1 ) ) || {};
+		const { page } = query;
+		return page;
+	}
+	return null;
+};
 
 /**
  * Retrieve a string 'name' representing the current screen
@@ -32,7 +49,7 @@ export const getPath = () => getHistory().location.pathname;
 export const getScreenFromPath = ( path = getPath() ) => {
 	return path === '/'
 		? 'homescreen'
-		: path.replace( '/eaccounting', '' ).replace( '/', '' );
+		: path.replace( '/ea-react', '' ).replace( '/', '' );
 };
 
 /**
@@ -48,6 +65,17 @@ export function getIdsFromQuery( queryString = '' ) {
 			.map( ( id ) => parseInt( id, 10 ) )
 			.filter( Boolean )
 	);
+}
+
+/**
+ * Get an ID from a query parameter.
+ *
+ * @return {Array} List of IDs converted to numbers.
+ */
+export function getIdFromQuery( query = getQuery() ) {
+	const { id } = query;
+
+	return parseInt( id, 10 );
 }
 
 /**
@@ -82,20 +110,23 @@ export function getSearchWords( query = navUtils.getQuery() ) {
  * @param {Object} query object of params to be updated.
  * @param {string} path Relative path (defaults to current path).
  * @param {Object} currentQuery object of current query params (defaults to current querystring).
- * @param {string} page Page key (defaults to "eaccounting")
  * @return {string}  Updated URL merging query params into existing params.
  */
-export function getPermalink(
+export function generatePath(
 	query,
 	path = getPath(),
-	currentQuery = getQuery(),
-	page = 'eaccounting'
+	currentQuery = getQuery()
 ) {
-	const args = { page, ...currentQuery, ...query };
-	// if ( path !== '/' ) {
+	const page = getPage();
+	const args = { page };
+	if ( path !== '/' ) {
 		args.path = path;
-	// }
-	return addQueryArgs( 'admin.php', args );
+	}
+
+	return addQueryArgs(
+		'admin.php',
+		pickBy( { ...args, ...currentQuery, ...query }, identity )
+	);
 }
 
 /**
@@ -106,9 +137,30 @@ export function getPermalink(
 export function getQuery() {
 	const search = getHistory().location.search;
 	if ( search.length ) {
-		return parse( search.substring( 1 ) ) || {};
+		return omit( parse( search.substring( 1 ) ) || {}, [ 'page', 'path' ] );
 	}
 	return {};
+}
+
+/**
+ * Get table query.
+ *
+ * @param {Function} filter Extra params.
+ * @return {{}} query.
+ */
+export function getTableQuery( filter = ( x ) => x ) {
+	const query = getQuery();
+
+	return filter(
+		pickBy(
+			{
+				...query,
+				paged: parseInt( query.paged, 10 ) || 1,
+				per_page: query.per_page || 20,
+			},
+			identity
+		)
+	);
 }
 
 /**
@@ -122,22 +174,10 @@ export function getQuery() {
 export function onQueryChange( param, path = getPath(), query = getQuery() ) {
 	switch ( param ) {
 		case 'sort':
-			return ( key, dir ) =>
-				Redirect( { orderby: key, order: dir }, path, query );
-		case 'compare':
-			return ( key, queryParam, ids ) =>
-				Redirect(
-					{
-						[ queryParam ]: `compare-${ key }`,
-						[ key ]: ids,
-						search: undefined,
-					},
-					path,
-					query
-				);
+			return ( sort ) => updateQueryString( sort, path, query );
 		default:
 			return ( value ) =>
-				Redirect( { [ param ]: value }, path, query );
+				updateQueryString( { [ param ]: value }, path, query );
 	}
 }
 
@@ -147,16 +187,24 @@ export function onQueryChange( param, path = getPath(), query = getQuery() ) {
  * @param {Object} query object of params to be updated.
  * @param {string} path Relative path (defaults to current path).
  * @param {Object} currentQuery object of current query params (defaults to current querystring).
- * @param {string} page Page key (defaults to "eaccounting")
  */
-export function Redirect(
+export function updateQueryString(
 	query,
 	path = getPath(),
-	currentQuery = getQuery(),
-	page = 'eaccounting'
+	currentQuery = getQuery()
 ) {
-	const newPath = getPermalink( query, path, currentQuery, page );
+	const newPath = generatePath( query, path, currentQuery );
 	getHistory().push( newPath );
+}
+
+/**
+ * Remove query ags
+ *
+ * @param {string | Array}key
+ * @param {Object} query
+ */
+export function removeQueryArgs( key, query = getQuery() ) {
+	return omit( query, Array.isArray( key ) ? key : [ key ] );
 }
 
 /**
@@ -189,7 +237,7 @@ export const addHistoryListener = ( listener ) => {
 			window.wcNavigation.historyPatched = true;
 		} )( window.history );
 	}
-
+	/*eslint-disable @wordpress/no-global-event-listener */
 	window.addEventListener( 'popstate', listener );
 	window.addEventListener( 'pushstate', listener );
 	window.addEventListener( 'replacestate', listener );
@@ -199,4 +247,8 @@ export const addHistoryListener = ( listener ) => {
 		window.removeEventListener( 'pushstate', listener );
 		window.removeEventListener( 'replacestate', listener );
 	};
+
+	/* eslint-enable @wordpress/no-global-event-listener */
 };
+
+export * from './filters';

@@ -113,36 +113,19 @@ abstract class Transactions_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'formatted_amount' => array(
-					'description' => __( 'Amount of the transaction', 'wp-ever-accounting' ),
+				'currency_code'    => array(
+					'description' => __( 'Currency code of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
-					'readonly'    => true,
-				),
-				'currency'         => array(
-					'description' => __( 'Currency code for transaction.', 'wp-ever-accounting' ),
-					'type'        => 'object',
-					'context'     => array( 'embed', 'view' ),
-					'required'    => false,
-					'properties'  => array(
-						'id'   => array(
-							'description' => __( 'Currency Code ID.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed', 'view' ),
-							'readonly'    => true,
-						),
-						'code' => array(
-							'description' => __( 'Currency code.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed','view' ),
-						),
-
+					'context'     => array( 'embed', 'view', 'edit' ),
+					'arg_options' => array(
+						'sanitize_callback' => 'sanitize_text_field',
 					),
+					'readonly'    => true,
 				),
 				'currency_rate'    => array(
 					'description' => __( 'Currency rate of the transaction.', 'wp-ever-accounting' ),
 					'type'        => 'double',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'doubleval',
 					),
@@ -217,7 +200,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 					'description' => __( 'Method of the payment', 'wp-ever-accounting' ),
 					'type'        => 'string',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'enum'        => array( 'cash', 'bank_transfer', 'cheque'  ),
+					'enum'        => array_keys(eaccounting_get_payment_methods()),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),
@@ -226,7 +209,7 @@ abstract class Transactions_Controller extends Entities_Controller {
 				'reference'        => array(
 					'description' => __( 'Reference of the transaction', 'wp-ever-accounting' ),
 					'type'        => 'string',
-					'context'     => array( 'embed', 'view' ),
+					'context'     => array( 'embed', 'view', 'edit' ),
 					'arg_options' => array(
 						'sanitize_callback' => 'sanitize_text_field',
 					),

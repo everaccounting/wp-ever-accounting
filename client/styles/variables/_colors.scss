@@ -1,0 +1,53 @@
+/**
+ * EverAccounting CSS Variables
+ */
+
+$eaccounting:   			#77B82E !default;
+$eaccounting_dark:   		#6ba629 !default;
+$blue:         				#3644ff !default;
+$red:           			#f2385a !default;
+$aqua:        				#06d6a0 !default;
+
+$primary:           		#77B82E !default;                                    // Primary color for buttons (alt)
+$primarytext:       		desaturate(lighten($primary, 50%), 18%) !default;    // Text on primary color bg
+
+$secondary:         		desaturate(lighten($primary, 40%), 21%) !default;    // Secondary buttons
+$secondarytext:     		desaturate(darken($secondary, 60%), 21%) !default;   // Text on secondary color bg
+
+$highlight:         		adjust-hue($primary, 150deg) !default;               // Prices
+$highlightext:      		desaturate(lighten($highlight, 50%), 18%) !default;  // Text on highlight color bg
+
+$contentbg:         		#fff !default;                                       // Content BG - Tabs (active state)
+$subtext:           		#767676 !default;                                    // small, breadcrumbs etc
+
+$income						:$blue;
+$expense					:$red;
+$profit						:$aqua;
+
+
+//form
+$border_color: 				#d2d6de !default;
+
+
+// WordPress grays.
+$black: #000;			// Use only when you truly need pure black. For UI, use $gray-900.
+$gray-900: #1e1e1e;
+$gray-800: #2f2f2f;
+$gray-700: #757575;		// Meets 4.6:1 text contrast against white.
+$gray-600: #949494;		// Meets 3:1 UI or large text contrast against white.
+$gray-400: #ccc;
+$gray-300: #ddd;		// Used for most borders.
+$gray-200: #e0e0e0;		// Used sparingly for light borders.
+$gray-100: #f0f0f0;		// Used for light gray backgrounds.
+$white: #fff;
+
+// Opacities & additional colors.
+$dark-theme-focus: $white;	// Focus color when the theme is dark.
+$dark-gray-placeholder: rgba($gray-900, 0.62);
+$medium-gray-placeholder: rgba($gray-900, 0.55);
+$light-gray-placeholder: rgba($white, 0.65);
+
+// Alert colors.
+$alert-yellow: #f0b849;
+$alert-red: #cc1818;
+$alert-green: #4ab866;

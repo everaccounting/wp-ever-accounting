@@ -71,12 +71,11 @@ class Assets {
 		wp_register_style( 'ea-release-styles', eaccounting()->plugin_url( '/assets/css/release.min.css' ), [], $this->version );
 
 		// React script
-		self::register_style( 'ea-components', 'components/style.css' );
+		self::register_style( 'ea-components', 'components/style.css', [ 'wp-components' ] );
 		self::register_style( 'ea-app', 'app/style.css', [ 'ea-components' ] );
-
 		// Admin styles for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
-			wp_enqueue_style( 'ea-admin-styles' );
+			// wp_enqueue_style( 'ea-admin-styles' );
 			wp_enqueue_style( 'ea-app' );
 		}
 	}
@@ -88,7 +87,8 @@ class Assets {
 	 */
 	public function admin_scripts() {
 		$screen                = get_current_screen();
-		$screen_id             = $screen ? $screen->id : '';
+		$page                  = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		$screen_id             = $screen && $screen->id ? $screen->id : 'toplevel_page_' . $page;
 		$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 
 		// 3rd parties.
@@ -100,7 +100,10 @@ class Assets {
 		wp_register_script( 'jquery-print-this', eaccounting()->plugin_url( '/assets/js/admin/printThis.min.js' ), [ 'jquery' ], $this->version, true );
 
 		// Core plugins.
-		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/assets/js/admin/ea-select2.min.js' ), [ 'jquery', 'jquery-select2' ], $this->version, true );
+		wp_register_script( 'ea-select', eaccounting()->plugin_url( '/assets/js/admin/ea-select2.min.js' ), [
+			'jquery',
+			'jquery-select2'
+		], $this->version, true );
 		$creatable_deps = [ 'jquery', 'ea-select', 'wp-util', 'ea-modal', 'jquery-blockui' ];
 		wp_register_script( 'ea-creatable', eaccounting()->plugin_url( '/assets/js/admin/ea-creatable.min.js' ), $creatable_deps, $this->version, true );
 		wp_register_script( 'ea-modal', eaccounting()->plugin_url( '/assets/js/admin/ea-modal.min.js' ), [ 'jquery' ], $this->version, true );
@@ -109,18 +112,23 @@ class Assets {
 		wp_register_script( 'ea-importer', eaccounting()->plugin_url( '/assets/js/admin/ea-importer.min.js' ), [ 'jquery' ], $this->version, true );
 
 		// Core script.
-		wp_register_script( 'ea-helper', eaccounting()->plugin_url( '/assets/js/admin/ea-helper.min.js' ), [ 'jquery', 'jquery-blockui' ], $this->version, true );
-		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/assets/js/admin/ea-overview.min.js' ), [ 'jquery', 'chartjs' ], $this->version, true );
+		wp_register_script( 'ea-helper', eaccounting()->plugin_url( '/assets/js/admin/ea-helper.min.js' ), [
+			'jquery',
+			'jquery-blockui'
+		], $this->version, true );
+		wp_register_script( 'ea-overview', eaccounting()->plugin_url( '/assets/js/admin/ea-overview.min.js' ), [
+			'jquery',
+			'chartjs'
+		], $this->version, true );
 		wp_register_script( 'ea-settings', eaccounting()->plugin_url( '/assets/js/admin/ea-settings.min.js' ), [ 'jquery' ], $this->version, true );
 		wp_register_script( 'ea-admin', eaccounting()->plugin_url( '/assets/js/admin/ea-admin.min.js' ), [ 'jquery' ], $this->version, true );
 
 		// React script
 		self::register_script( 'ea-components', 'components/index.js' );
 		self::register_script( 'ea-data', 'data/index.js' );
-		self::register_script( 'ea-navigation', 'navigation/index.js' );
-		self::register_script( 'ea-number', 'number/index.js' );
-		self::register_script( 'ea-currency', 'currency/index.js' );
-		self::register_script( 'ea-app', 'app/index.js', [ 'ea-navigation', 'ea-data', 'ea-data', 'ea-number', 'ea-currency' ] );
+		self::register_script( 'ea-navigation', 'navigation/index.js' );;
+		self::register_script( 'ea-app', 'app/index.js', [ 'ea-navigation', 'ea-data' ] );
+//		self::register_script( 'ea-app', 'app/index.js', [ 'ea-data' ] );
 
 		// Admin scripts for Accounting pages only.
 		if ( in_array( $screen_id, eaccounting_get_screen_ids(), true ) ) {
@@ -214,12 +222,25 @@ class Assets {
 
 			wp_enqueue_script( 'ea-app' );
 			wp_localize_script(
-				'ea-app',
-				'eaccountingi10n',
+				'ea-data',
+				'eaccountingApp',
 				[
-					'logo_url'     => esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ),
-					'dist_url'     => trailingslashit( self::get_asset_dist_url( '' ) ),
-					'current_user' => self::get_user_data(),
+					'site_url'          => site_url(),
+					'admin_url'         => admin_url(),
+					'logo_url'          => esc_url( eaccounting()->plugin_url( '/assets/images/logo.svg' ) ),
+					'dist_url'          => trailingslashit( self::get_asset_dist_url( '' ) ),
+					'user_data'         => self::get_user_data(),
+					'codes'             => array_values( eaccounting_get_data( 'currencies' ) ),
+					'date_format'       => eaccounting_date_format(),
+					'time_format'       => eaccounting_time_format(),
+					'countries'         => eaccounting_get_countries(),
+					'continents'        => eaccounting_get_data( 'continents' ),
+					'states'            => eaccounting_get_data( 'states' ),
+					'address_formats'   => eaccounting_get_data( 'address-formats' ),
+					'default_currency'  => eaccounting_get_default_currency(),
+					'payment_methods'   => eaccounting_get_payment_methods(),
+					'category_types'    => eaccounting_get_category_types(),
+					'transaction_types' => eaccounting_get_transaction_types(),
 				]
 			);
 		}
@@ -259,8 +280,8 @@ class Assets {
 	 *
 	 * @param string $handle style handler.
 	 * @param string $file_path style file path.
-	 * @param array  $dependencies style dependencies.
-	 * @param bool   $has_rtl support RTL?
+	 * @param array $dependencies style dependencies.
+	 * @param bool $has_rtl support RTL?
 	 */
 	public static function register_style( $handle, $file_path, $dependencies = array(), $has_rtl = true ) {
 		$filename = is_null( $file_path ) ? $handle : $file_path;
@@ -282,8 +303,8 @@ class Assets {
 	 *
 	 * @param string $handle Name of the script. Should be unique.
 	 * @param string $file_path file path from dist directory
-	 * @param array  $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
-	 * @param bool   $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
+	 * @param array $dependencies Optional. An array of registered script handles this script depends on. Default empty array.
+	 * @param bool $has_i18n Optional. Whether to add a script translation call to this file. Default 'true'.
 	 *
 	 * @since 1.0.0
 	 */
@@ -345,6 +366,7 @@ class Assets {
 		$request         = new \WP_REST_Request();
 		$request->set_query_params( array( 'context' => 'edit' ) );
 		$user_response = $user_controller->get_current_item( $request );
+
 		return is_wp_error( $user_response ) ? (object) array() : $user_response->get_data();
 	}
 }

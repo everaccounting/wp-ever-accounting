@@ -37,7 +37,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * Get normalized rest base.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return string
 	 */
 	protected function get_normalized_rest_base() {
@@ -271,7 +271,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * Get the batch schema, conforming to JSON Schema.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	public function get_public_batch_schema() {
@@ -314,7 +314,7 @@ abstract class Controller extends \WP_REST_Controller {
 	 * i.e Schema fields.
 	 *
 	 * @since 1.1.0
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function get_schema_properties() {
@@ -532,5 +532,28 @@ abstract class Controller extends \WP_REST_Controller {
 	 */
 	protected function filter_writable_props( $schema ) {
 		return empty( $schema['readonly'] );
+	}
+
+	/**
+	 * Retrieves the query params for the collections.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @return array Query parameters for the collection.
+	 */
+	public function get_collection_params() {
+		$query_params                       = parent::get_collection_params();
+		$query_params['context']['default'] = 'view';
+
+		$query_params['paged'] = array(
+			'description'       => __( 'Current page of the collection.', 'wp-ever-accounting' ),
+			'type'              => 'integer',
+			'default'           => 1,
+			'sanitize_callback' => 'absint',
+			'validate_callback' => 'rest_validate_request_arg',
+			'minimum'           => 1,
+		);
+
+		return $query_params;
 	}
 }

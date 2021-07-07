@@ -186,6 +186,21 @@ abstract class Transaction extends Resource_Model {
 	}
 
 	/**
+	 * Get account object.
+	 *
+	 * @param string $context
+	 *
+	 * @return Account|null
+	 */
+	public function get_account( $context = 'edit' ){
+		if( !empty( $this->get_account_id() ) && $account = eaccounting_get_account( $this->get_account_id() ) ){
+			return $account;
+		}
+
+		return null;
+	}
+
+	/**
 	 * @param string $context
 	 *
 	 * @return mixed|null
@@ -233,6 +248,20 @@ abstract class Transaction extends Resource_Model {
 	 */
 	public function get_category_id( $context = 'edit' ) {
 		return $this->get_prop( 'category_id', $context );
+	}
+
+	/**
+	 * Get category object.
+	 * @param string $context
+	 *
+	 * @return \EverAccounting\Models\Category|null
+	 */
+	public function get_category( $context = 'edit' ){
+		if( !empty( $this->get_category_id() ) && $category = eaccounting_get_category( $this->get_category_id() ) ){
+			return $category;
+		}
+
+		return null;
 	}
 
 	/**

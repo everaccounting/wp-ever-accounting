@@ -1,6 +1,8 @@
 {
   "extends": [ "@wordpress/stylelint-config/scss" ],
   "rules": {
+	"indentation": 4,
+	"number-leading-zero": null
   },
   "ignoreFiles": [
 	"dist/*"

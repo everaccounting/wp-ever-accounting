@@ -45,7 +45,7 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Data_Controller',
 				'\EverAccounting\REST\Items_Controller',
 				'\EverAccounting\REST\SettingsController',
-				'\EverAccounting\REST\Data_Currencies_Controller',
+				'\EverAccounting\REST\Currency_Codes_Controller',
 			)
 		);
 

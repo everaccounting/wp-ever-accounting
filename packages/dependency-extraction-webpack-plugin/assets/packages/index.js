@@ -5,4 +5,5 @@ module.exports = [
 	'@eaccounting/navigation',
 	'@eaccounting/number',
 	'@eaccounting/currency',
+	'@eaccounting/store',
 ];

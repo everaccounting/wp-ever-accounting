@@ -192,8 +192,12 @@ class Menu {
 	 * @since 1.1.0
 	 */
 	public function render_overview_page() {
-		echo '<div id="eaccounting-root"></div>';
-		include dirname( __FILE__ ) . '/views/admin-page-overview.php';
+		?>
+		<div class="wrap">
+			<div id="eaccounting-root"></div>
+		</div>
+		<?php
+		//include dirname( __FILE__ ) . '/views/admin-page-overview.php';
 	}
 
 	/**
@@ -209,7 +213,6 @@ class Menu {
 		$tabs        = apply_filters( 'eaccounting_item_tabs', $tabs );
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
-		echo '<div id="eaccounting-root"></div>';
 		include dirname( __FILE__ ) . '/views/admin-page-items.php';
 	}
 
@@ -233,7 +236,6 @@ class Menu {
 
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
-		echo '<div id="eaccounting-root"></div>';
 		include dirname( __FILE__ ) . '/views/admin-page-sales.php';
 	}
 
@@ -269,7 +271,6 @@ class Menu {
 			);
 			exit();
 		}
-		echo '<div id="eaccounting-root"></div>';
 		include dirname( __FILE__ ) . '/views/admin-page-expenses.php';
 	}
 
@@ -294,7 +295,6 @@ class Menu {
 
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
-		echo '<div id="eaccounting-root"></div>';
 		include dirname( __FILE__ ) . '/views/admin-page-banking.php';
 	}
 
@@ -329,7 +329,6 @@ class Menu {
 			);
 			exit();
 		}
-		echo '<div id="eaccounting-root"></div>';
 		include dirname( __FILE__ ) . '/views/admin-page-tools.php';
 	}
 
@@ -351,7 +350,6 @@ class Menu {
 
 		$first_tab   = current( array_keys( $tabs ) );
 		$current_tab = ! empty( $_GET['tab'] ) && array_key_exists( $_GET['tab'], $tabs ) ? sanitize_title( $_GET['tab'] ) : $first_tab;
-		echo '<div id="eaccounting-root"></div>';
 		include dirname( __FILE__ ) . '/views/admin-page-reports.php';
 	}
 

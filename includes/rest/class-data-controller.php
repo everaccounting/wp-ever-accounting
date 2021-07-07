@@ -26,7 +26,7 @@ class Data_Controller extends Controller {
 	 *
 	 * @var string
 	 */
-	protected $rest_base = 'data';
+	protected $rest_base = 'get_data';
 
 	/**
 	 * Register routes.
@@ -40,10 +40,9 @@ class Data_Controller extends Controller {
 			array(
 				array(
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
+					'callback'            => array( $this, 'get_data' ),
+					'permission_callback' => array( $this, 'get_data_permissions_check' ),
 				),
-				'schema' => array( $this, 'get_public_item_schema' ),
 			)
 		);
 	}
@@ -54,24 +53,7 @@ class Data_Controller extends Controller {
 	 * @param  \WP_REST_Request $request Full details about the request.
 	 * @return \WP_Error|boolean
 	 */
-	public function get_items_permissions_check( $request ) {
-//		if ( ! current_user_can( 'manage_eaccounting' ) ) {
-//			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot list resources.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-//		}
-
-		return true;
-	}
-
-	/**
-	 * Check whether a given request has permission to read site settings.
-	 *
-	 * @param  \WP_REST_Request $request Full details about the request.
-	 * @return \WP_Error|boolean
-	 */
-	public function get_item_permissions_check( $request ) {
-//		if ( ! current_user_can( 'manage_eaccounting' ) ) {
-//			return new \WP_Error( 'eaccounting_rest_cannot_view', __( 'Sorry, you cannot view this resource.', 'wp-ever-accounting' ), array( 'status' => rest_authorization_required_code() ) );
-//		}
+	public function get_data_permissions_check( $request ) {
 		return true;
 	}
 
@@ -85,21 +67,15 @@ class Data_Controller extends Controller {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		$data      = array();
-		$resources = array(
-			array(
-				'slug'        => 'countries',
-				'description' => __( 'List of countries.', 'wp-ever-accounting' ),
-			),
-			array(
-				'slug'        => 'currencies',
-				'description' => __( 'List of currencies.', 'wp-ever-accounting' ),
-			),
-		);
+		$type = $request['type'];
 
-		foreach ( $resources as $resource ) {
-			$item   = $this->prepare_item_for_response( (object) $resource, $request );
-			$data[] = $this->prepare_response_for_collection( $item );
+		if( empty( $type ) ){
+			return new \WP_Error('rest_data_type_invalid', __('Please assign a data type', 'wp-ever-accounting'));
+		}
+		$data = [];
+		switch ($type){
+			case 'codes':
+				$data = eaccounting_get_data( 'currencies' );
 		}
 
 		return rest_ensure_response( $data );
@@ -129,54 +105,5 @@ class Data_Controller extends Controller {
 		return $response;
 	}
 
-	/**
-	 * Prepare links for the request.
-	 *
-	 * @param object $item Data object.
-	 *
-	 * @return array Links for the given country.
-	 */
-	protected function prepare_links( $item ) {
-		$links = array(
-			'self'       => array(
-				'href' => rest_url( sprintf( '/%s/%s/%s', $this->namespace, $this->rest_base, $item->slug ) ),
-			),
-			'collection' => array(
-				'href' => rest_url( sprintf( '%s/%s', $this->namespace, $this->rest_base ) ),
-			),
-		);
 
-		return $links;
-	}
-
-	/**
-	 * Get the data index schema, conforming to JSON Schema.
-	 *
-	 * @since  3.5.0
-	 *
-	 * @return array
-	 */
-	public function get_item_schema() {
-		$schema = array(
-			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'data_index',
-			'type'       => 'object',
-			'properties' => array(
-				'slug'        => array(
-					'description' => __( 'Data resource ID.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
-				'description' => array(
-					'description' => __( 'Data resource description.', 'wp-ever-accounting' ),
-					'type'        => 'string',
-					'context'     => array( 'view' ),
-					'readonly'    => true,
-				),
-			),
-		);
-
-		return $this->add_additional_fields_schema( $schema );
-	}
 }
