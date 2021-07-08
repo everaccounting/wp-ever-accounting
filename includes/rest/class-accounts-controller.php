@@ -117,6 +117,7 @@ class Accounts_Controller extends Entities_Controller {
 					'type'        => 'object',
 					'context'     => array( 'view', 'edit' ),
 					'required'    => true,
+					'default'     => new \StdClass(),
 					'properties'  => array(
 						'id'   => array(
 							'description' => __( 'Currency code ID.', 'wp-ever-accounting' ),

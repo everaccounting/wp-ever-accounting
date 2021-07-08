@@ -14,7 +14,7 @@ const { BundleAnalyzerPlugin } = require( 'webpack-bundle-analyzer' );
 const MiniCSSExtractPlugin = require( 'mini-css-extract-plugin' );
 const BrowserSyncPlugin = require( 'browser-sync-webpack-plugin' );
 const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
-const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
+const DuplicatePackageCheckerPlugin = require( 'duplicate-package-checker-webpack-plugin' );
 /**
  * WordPress dependencies
  */
@@ -133,7 +133,7 @@ const config = {
 								indentWidth: 4,
 								includePaths: [ 'client/styles/variables' ],
 							},
-							prependData:
+							additionalData:
 								'@import "_colors"; ' +
 								'@import "_variables"; ' +
 								'@import "_breakpoints"; ' +

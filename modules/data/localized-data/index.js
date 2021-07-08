@@ -6,6 +6,14 @@
 export const localizedData = window.eaccountingApp || {};
 
 /**
+ * The api name space for the app.
+ * eg. '/ea/v1'
+ *
+ * @type { string }
+ */
+export const API_NAMESPACE = localizedData.api_root || '/ea/v1';
+
+/**
  * The base url for the site this js is loaded on.
  * eg. 'https://mysite.com/'
  *

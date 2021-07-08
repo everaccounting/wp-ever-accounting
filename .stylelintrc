@@ -2,7 +2,8 @@
   "extends": [ "@wordpress/stylelint-config/scss" ],
   "rules": {
 	"indentation": 4,
-	"number-leading-zero": null
+	"number-leading-zero": null,
+	"convention": "hyphenatedbem"
   },
   "ignoreFiles": [
 	"dist/*"

@@ -1,7 +1,6 @@
 module.exports = ( { file, options, env } ) => ( { /* eslint-disable-line */
 	plugins: {
 		precss: {},
-		'postcss-color-function': {},
 		// Prefix editor styles with class `editor-styles-wrapper`.
 		'postcss-editor-styles':
 			file.basename === 'editor-style.css'
@@ -50,4 +49,4 @@ module.exports = ( { file, options, env } ) => ( { /* eslint-disable-line */
 				  }
 				: false,
 	},
-});
+} );

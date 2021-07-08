@@ -26,5 +26,6 @@ module.exports = {
 		camelcase: 0,
 		'jsdoc/require-param': 'off',
 		'no-console': 'off',
+		'jsdoc/require-returns-description': 'off',
 	},
 };

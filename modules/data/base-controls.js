@@ -5,7 +5,7 @@
 /**
  * WordPress dependencies
  */
-import apiFetch from '@wordpress/api-fetch';
+import { default as wpFetch } from '@wordpress/api-fetch';
 import {
 	select as selectData,
 	dispatch as dispatchData,
@@ -18,7 +18,7 @@ import {
  * @param {Object} request
  * @return {{type: string, request: Object}} An action object
  */
-export function fetch( request ) {
+export function apiFetch( request ) {
 	return {
 		type: 'FETCH_FROM_API',
 		request,
@@ -29,14 +29,14 @@ export function fetch( request ) {
  * Dispatched a control action for triggering an api fetch call with no parsing.
  * Typically this would be used in scenarios where headers are needed.
  *
- * @param {string} path  The path for the request.
+ * @param {Object} options  The path for the request.
  *
  * @return {Object} The control action descriptor.
  */
-export const fetchFromAPIWithTotal = ( path ) => {
+export const apiFetchWithHeaders = ( options ) => {
 	return {
-		type: 'FETCH_FROM_API_WITH_TOTAL',
-		path,
+		type: 'API_FETCH_WITH_HEADERS',
+		options,
 	};
 };
 
@@ -112,7 +112,7 @@ export function resolveDispatch( reducerKey, dispatchName, ...args ) {
 
 const controls = {
 	FETCH_FROM_API( { request } ) {
-		return apiFetch( request );
+		return wpFetch( request );
 	},
 	SELECT( { reducerKey, selectorName, args } ) {
 		return selectData( reducerKey )[ selectorName ]( ...args );
@@ -123,22 +123,21 @@ const controls = {
 	async RESOLVE_DISPATCH( { reducerKey, dispatchName, args } ) {
 		return await dispatchData( reducerKey )[ dispatchName ]( ...args );
 	},
-	FETCH_FROM_API_WITH_TOTAL( { path } ) {
+	API_FETCH_WITH_HEADERS( { options } ) {
 		return new Promise( ( resolve, reject ) => {
-			apiFetch( { path, parse: false } )
+			wpFetch( { ...options, parse: false } )
 				.then( ( response ) => {
-					response.json().then( ( items ) => {
+					response.json().then( ( data ) => {
 						resolve( {
-							items,
-							total: parseInt(
-								response.headers.get( 'x-wp-total' ),
-								10
-							),
+							data,
+							headers: response.headers,
 						} );
 					} );
 				} )
 				.catch( ( error ) => {
-					reject( error );
+					error.json().then( ( json ) => {
+						reject( json );
+					} );
 				} );
 		} );
 	},

@@ -1,1 +1,1 @@
-export const APP = 'TEST';
+export { default as SelectControl } from './select-control';
