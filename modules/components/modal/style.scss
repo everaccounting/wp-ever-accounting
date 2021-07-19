@@ -1,0 +1,21 @@
+.ea-modal-overlay {
+  .components-modal__frame {
+	overflow-y: scroll !important;
+	overflow: inherit;
+  }
+}
+
+.ea-modal {
+  max-width: 675px;
+
+  .components-modal__header-heading {
+	border: 0;
+	padding: 0;
+  }
+}
+
+@media (min-width: 956px) {
+  .ea-modal {
+	min-width: 662px;
+  }
+}

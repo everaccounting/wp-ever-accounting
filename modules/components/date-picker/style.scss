@@ -1,0 +1,29 @@
+.ea-date-picker {
+  display: block;
+  position: relative;
+}
+
+.ea-calendar__react-dates {
+  width: 100%;
+  overflow-x: hidden;
+
+  .components-datetime__date {
+  border-top: 0 !important;
+  }
+
+  // Make exceptions for wp Core DatePicker.
+  &.is-core-datepicker {
+  .components-datetime__date {
+    padding-left: 0;
+  }
+
+  .CalendarDay__default {
+    background-color: transparent;
+  }
+
+  .CalendarDay__selected {
+    background: #007cba;
+    border: none;
+  }
+  }
+}

@@ -572,6 +572,16 @@ function eaccounting_get_transactions( $args = array() ) {
 		$where      .= " AND $table.`account_id` IN ($account_id)";
 	}
 
+	if ( ! empty( $qv['account__in'] ) ) {
+		$account_in = implode( ',', wp_parse_id_list( $qv['account__in'] ) );
+		$where      .= " AND $table.`account_id` IN ($account_in)";
+	}
+
+	if ( ! empty( $qv['account__not_in'] ) ) {
+		$account_not_in = implode( ',', wp_parse_id_list( $qv['account__not_in'] ) );
+		$where      .= " AND $table.`account_id` NOT IN ($account_not_in)";
+	}
+
 	if ( ! empty( $qv['document_id'] ) ) {
 		$document_id = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
 		$where       .= " AND $table.`document_id` IN ($document_id)";
@@ -580,6 +590,16 @@ function eaccounting_get_transactions( $args = array() ) {
 	if ( ! empty( $qv['category_id'] ) ) {
 		$category_in = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
 		$where       .= " AND $table.`category_id` IN ($category_in)";
+	}
+
+	if ( ! empty( $qv['category__in'] ) ) {
+		$category_in = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
+		$where      .= " AND $table.`contact_id` IN ($category_in)";
+	}
+
+	if ( ! empty( $qv['category__not_in'] ) ) {
+		$category_not_in = implode( ',', wp_parse_id_list( $qv['category__not_in'] ) );
+		$where      .= " AND $table.`contact_id` NOT IN ($category_not_in)";
 	}
 
 	if ( ! empty( $qv['contact_id'] ) ) {
@@ -592,20 +612,28 @@ function eaccounting_get_transactions( $args = array() ) {
 		$where     .= " AND $table.`parent_id` IN ($parent_id)";
 	}
 
+	if ( ! empty( $qv['amount_min'] ) ) {
+		$where     .= $wpdb->prepare(" AND $table.`amount` >= (%f)", (float) $qv['amount_min'] );
+	}
+
+	if ( ! empty( $qv['amount_max'] ) ) {
+		$where     .= $wpdb->prepare(" AND $table.`amount` <= (%f)", (float) $qv['amount_max'] );
+	}
+
+	if ( ! empty( $qv['amount_between'] ) && is_array( $qv['amount_between'] )) {
+		$min = min($qv['amount_between'] );
+		$max = max($qv['amount_between'] );
+		$where     .= $wpdb->prepare(" AND $table.`amount` >= (%f) AND $table.`amount` <= (%f) ", (float) $min, (float)$max );
+	}
+
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
 		$where              .= $date_created_query->get_sql();
 	}
 
-//	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
-//		$date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
-//		$where             .= $date_created_query->get_sql();
-//	}
-
 	if ( ! empty( $qv['payment_date'] ) && is_array( $qv['payment_date'] ) ) {
-		$before = $qv['payment_date']['before'];
-		$after  = $qv['payment_date']['after'];
-		$where  .= " AND $table.`payment_date` BETWEEN '$before' AND '$after'";
+		$date_created_query = new \WP_Date_Query( $qv['payment_date'], "{$table}.payment_date" );
+		$where             .= $date_created_query->get_sql();
 	}
 
 	if ( ! empty( $qv['creator_id'] ) ) {

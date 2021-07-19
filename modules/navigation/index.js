@@ -156,7 +156,7 @@ export function getTableQuery( filter = ( x ) => x ) {
 			{
 				...query,
 				paged: parseInt( query.paged, 10 ) || 1,
-				per_page: query.per_page || 20,
+				per_page: parseInt( query.per_page, 10 ) || 20,
 			},
 			identity
 		)

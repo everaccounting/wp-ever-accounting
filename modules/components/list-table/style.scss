@@ -1,0 +1,33 @@
+.ea-list-table-wrapper {
+
+    // Bulk Action.
+    .bulkactions .components-base-control {
+        display: inline-block;
+        float: left;
+        margin-right: 6px;
+        max-width: 12.5rem;
+    }
+
+    .components-button:not(.is-link) {
+        height: 30px;
+    }
+
+    .ea-table-filter {
+        vertical-align: middle;
+
+        &__item {
+            vertical-align: middle;
+            display: inline-block;
+            margin-left: 10px;
+            min-width: 150px;
+
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+
+        .components-base-control__field {
+            margin-bottom: 0;
+        }
+    }
+}

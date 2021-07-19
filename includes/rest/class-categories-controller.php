@@ -46,28 +46,6 @@ class Categories_Controller extends Entities_Controller {
 	protected $entity_model = Category::class;
 
 	/**
-	 * Registers the routes for the objects of the controller.
-	 *
-	 * @since 1.1.0
-	 *
-	 * @see register_rest_route()
-	 */
-	public function register_routes() {
-		register_rest_route(
-			$this->namespace,
-			'/' . $this->rest_base . '/get_types',
-			array(
-				array(
-					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_types' ),
-					'permission_callback' => '__return_true',
-				),
-			)
-		);
-		parent::register_routes();
-	}
-
-	/**
 	 * Get objects.
 	 *
 	 * @since  1.1.0
@@ -80,17 +58,6 @@ class Categories_Controller extends Entities_Controller {
 	protected function get_objects( $query_args, $request ) {
 		$query_args['type'] = $request['type'];
 		return eaccounting_get_categories( $query_args );
-	}
-
-	/**
-	 * @param $query_args
-	 * @param $request
-	 *
-	 * @return \WP_Error|\WP_HTTP_Response|\WP_REST_Response
-	 */
-	protected function get_types( $query_args, $request ) {
-		$types = eaccounting_get_category_types();
-		return rest_ensure_response( $types );
 	}
 
 	/**

@@ -110,6 +110,22 @@ export function resolveDispatch( reducerKey, dispatchName, ...args ) {
 	};
 }
 
+/**
+ * Dispatches a control action for awaiting on a promise to be resolved.
+ *
+ * @param {Object} promise Promise to wait for.
+ *
+ *
+ * @return {Object} The control descriptor.
+ */
+
+export const awaitPromise = function ( promise ) {
+	return {
+		type: 'AWAIT_PROMISE',
+		promise,
+	};
+};
+
 const controls = {
 	FETCH_FROM_API( { request } ) {
 		return wpFetch( request );
@@ -166,6 +182,7 @@ const controls = {
 			} );
 		} );
 	},
+	AWAIT_PROMISE: ( { promise } ) => promise,
 };
 
 export default controls;

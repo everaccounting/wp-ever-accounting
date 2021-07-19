@@ -9,8 +9,6 @@
 
 namespace EverAccounting\Abstracts;
 
-use function cli\err;
-
 defined( 'ABSPATH' ) || die();
 
 abstract class Contacts_Controller extends Entities_Controller {
@@ -279,7 +277,6 @@ abstract class Contacts_Controller extends Entities_Controller {
 			),
 			'validate_callback' => 'rest_validate_request_arg',
 		);
-		error_log(print_r($query_params, true));
 		return $query_params;
 	}
 }

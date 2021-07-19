@@ -3,7 +3,6 @@
  */
 import PropTypes from 'prop-types';
 import Select, { components } from 'react-select';
-import Async from 'react-select/async';
 /**
  * WordPress dependencies
  */
@@ -16,16 +15,15 @@ import { withInstanceId } from '@wordpress/compose';
 import './style.scss';
 function SelectControl( props ) {
 	const {
-		async = false,
 		label,
 		help,
 		className,
 		required,
-		isMulti = false,
 		before,
 		after,
 		setRef,
 		instanceId,
+		button,
 		...restProps
 	} = props;
 
@@ -43,22 +41,15 @@ function SelectControl( props ) {
 		has__after: !! after,
 	} );
 
-	const Control = async ? Async : Select;
-
 	const id = `inspector-ea-input-group-${ instanceId }`;
 	const describedby = [];
 	if ( help ) {
 		describedby.push( `${ id }__help` );
 	}
-	if ( before ) {
-		describedby.push( `${ id }__before` );
-	}
-	if ( after ) {
-		describedby.push( `${ id }__after` );
-	}
-	const SelectContainer = ( { children, ...containerProps } ) => {
+	// eslint-disable-next-line no-unused-vars
+	const SelectContainer = ( { children, ...innerProps } ) => {
 		return (
-			<components.SelectContainer { ...containerProps }>
+			<components.SelectContainer { ...innerProps }>
 				{ !! before && (
 					<span
 						id={ `${ id }__before` }
@@ -67,8 +58,7 @@ function SelectControl( props ) {
 						{ before }
 					</span>
 				) }
-
-				{ children }
+				<>{ children }</>
 				{ !! after && (
 					<span
 						id={ `${ id }__after` }
@@ -85,6 +75,17 @@ function SelectControl( props ) {
 		return <components.DropdownIndicator { ...dropDownProps } />;
 	};
 
+	const Menu = ( menuProps ) => {
+		return (
+			<components.Menu { ...menuProps }>
+				<div>
+					{ menuProps.children }
+					{ !! button && <>{ button }</> }
+				</div>
+			</components.Menu>
+		);
+	};
+
 	return (
 		<BaseControl
 			id={ id }
@@ -92,13 +93,10 @@ function SelectControl( props ) {
 			help={ help }
 			className={ classes }
 		>
-			<Control
-				{ ...restProps }
+			<Select
 				classNamePrefix="ea-advance-select"
 				className={ selectorClasses }
 				required={ required }
-				isMulti={ isMulti }
-				components={ { SelectContainer, DropdownIndicator } }
 				ref={ setRef }
 				aria-describedby={ describedby.join( ' ' ) }
 				styles={ {
@@ -108,13 +106,14 @@ function SelectControl( props ) {
 					'eaccounting-root'
 				) }
 				menuPosition={ 'fixed' }
+				{ ...restProps }
+				components={ { Menu, DropdownIndicator } }
 			/>
 		</BaseControl>
 	);
 }
 
 SelectControl.propTypes = {
-	async: PropTypes.bool,
 	className: PropTypes.string,
 	label: PropTypes.string,
 	name: PropTypes.string,
@@ -130,7 +129,6 @@ SelectControl.propTypes = {
 	before: PropTypes.node,
 	after: PropTypes.node,
 	required: PropTypes.bool,
-	loadOptions: PropTypes.func,
 };
 
 export default withInstanceId( SelectControl );

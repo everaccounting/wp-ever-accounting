@@ -12,7 +12,6 @@
 namespace EverAccounting\Abstracts;
 
 use EverAccounting\Repositories\Meta_Data;
-use function cli\err;
 
 defined( 'ABSPATH' ) || die();
 
@@ -350,7 +349,7 @@ abstract class Entities_Controller extends Controller {
 		if ( isset( $request['after'] ) ) {
 			$args['date_query'][0]['after'] = $request['after'];
 		}
-		error_log( print_r( $args, true ) );
+
 		// Filter the query arguments for a request.
 		$args    = apply_filters( "eaccounting_rest_{$this->entity_type}_query", $args, $request );
 		$results = $this->get_objects( $args, $request );
@@ -471,8 +470,8 @@ abstract class Entities_Controller extends Controller {
 		$data = array();
 
 		// Handle all writable props.
-		foreach ( array_keys( $this->get_schema_properties() ) as $key ) {
-
+		$properties = $this->get_schema_properties();
+		foreach ( array_keys( $properties ) as $key ) {
 			// Abort if it is not included.
 			if ( ! empty( $fields ) && ! $this->is_field_included( $key, $fields ) ) {
 				continue;

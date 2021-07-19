@@ -221,6 +221,22 @@ class Assets {
 			wp_enqueue_media();
 
 			wp_enqueue_script( 'ea-app' );
+			$default_currency = [
+				'name'               => 'US Dollar',
+				'code'               => 'USD',
+				'rate'               => 1.0000,
+				'precision'          => 2,
+				'subunit'            => 100,
+				'symbol'             => '$',
+				'position'           => 'before',
+				'decimal_separator'  => '.',
+				'thousand_separator' => ',',
+			];
+			$default_code = eaccounting_get_default_currency();
+			if( !empty( $default_code )  && eaccounting_get_currency($default_code)){
+				$default_currency = eaccounting_get_currency($default_code)->get_data();
+			}
+
 			wp_localize_script(
 				'ea-data',
 				'eaccountingApp',
@@ -237,10 +253,11 @@ class Assets {
 					'continents'        => eaccounting_get_data( 'continents' ),
 					'states'            => eaccounting_get_data( 'states' ),
 					'address_formats'   => eaccounting_get_data( 'address-formats' ),
-					'default_currency'  => eaccounting_get_default_currency(),
+					'default_currency'  => $default_currency,
 					'payment_methods'   => eaccounting_get_payment_methods(),
 					'category_types'    => eaccounting_get_category_types(),
 					'transaction_types' => eaccounting_get_transaction_types(),
+					'currencies'        => eaccounting_rest_request('currencies', ['per_page' => 100 ]),
 				]
 			);
 		}

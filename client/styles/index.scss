@@ -1,3 +1,298 @@
 @import "reset";
 @import "global";
 @import "embed";
+// Bright colors
+$valid-green: #4ab866;
+$notice-yellow: #ffb900;
+$error-red: #d94f4f;
+$box-shadow-blue: #5b9dd9;
+$core-orange: #ca4a1f;
+
+$studio-white:#fff;
+$studio-black:#000;
+$fallback-gutter: 24px;
+$fallback-gutter-large: 40px;
+$gutter: var(--main-gap);
+$gutter-large: var(--large-gap);
+
+$gap-largest: 40px;
+$gap-larger: 36px;
+$gap-large: 24px;
+$gap: 16px;
+$gap-small: 12px;
+$gap-smaller: 8px;
+$gap-smallest: 4px;
+
+// Header
+$header-height: 60px;
+$header-scroll-shadow: 0 8px 8px 0 rgba(85, 93, 102, 0.3);
+
+// Sidebar
+$sidebar-width: 272px;
+
+// @todo Remove this spacing variable
+$spacing: 16px;
+
+// Gutenberg variable overrides.
+$white: $studio-white;
+$black: $studio-black;
+$alert-red: $error-red;
+$alert-yellow: $notice-yellow;
+$alert-green: $valid-green;
+
+// WordPress defaults
+$adminbar-height: 32px;
+$adminbar-height-mobile: 46px;
+
+// wp-admin colors
+$wp-admin-background: #f1f1f1;
+$wp-admin-sidebar: #24292d;
+
+// Muriel
+$muriel-box-shadow-1dp: 0 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0 1px 1px 0 rgba(0, 0, 0, 0.14), 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+$muriel-box-shadow-6dp: 0 3px 5px rgba(0, 0, 0, 0.2),
+    0 1px 18px rgba(0, 0, 0, 0.12), 0 6px 10px rgba(0, 0, 0, 0.14);
+$muriel-box-shadow-8dp: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+
+
+$transparent: rgba(255, 255, 255, 0);
+
+$gray-text: $gray-700;
+$gray-text-hover: $gray-900;
+
+// Gutenberg
+$button-hover: #fafafa;
+$button-hover-border: #999;
+$button-disabled: #a0a5aa;
+$button-disabled-border: #ddd;
+$button-focus-inner: #00435d;
+$button-focus-outer: #bfe7f3;
+$input-active-border: #00a0d2;
+$input-active-inner: $button-focus-inner;
+$input-active-outer: $button-focus-outer;
+$table-border: #e2e4e7;
+
+
+$button: #f0f2f4;
+$button-border: darken($button, 20%);
+
+// Blues
+$core-blue-dark-900: #0071a1;
+
+// WooCommerce brand colors
+$woocommerce-brand-purple: #3c2861;
+
+
+// Rem output with px fallback
+@mixin font-size( $sizeValue: 16, $lineHeight: false ) {
+  font-size: $sizeValue + px;
+  font-size: ( $sizeValue / 16 ) + rem;
+  @if ( $lineHeight ) {
+	line-height: $lineHeight;
+  }
+}
+
+@function url-friendly-colour( $color ) {
+  @return '%23' + str-slice( '#{ $color }', 2, -1 );
+}
+
+@mixin hover-state {
+  &:hover,
+  &:active,
+  &:focus {
+	@content;
+  }
+}
+
+// Adds animation to placeholder section
+@mixin placeholder( $lighten-percentage: 30% ) {
+  animation: loading-fade 1.6s ease-in-out infinite;
+  background-color: $gray-100;
+  color: transparent;
+
+  &::after {
+	content: '\00a0';
+  }
+
+  @media screen and ( prefers-reduced-motion: reduce ) {
+	animation: none;
+  }
+}
+
+// Adds animation to transforms
+@mixin animate-transform( $duration: 0.2s ) {
+  transition: transform ease $duration;
+
+  @media screen and ( prefers-reduced-motion: reduce ) {
+	transition: none;
+  }
+}
+
+// Gutenberg mixins. These are temporary until Gutenberg's mixins are exposed.
+/**
+ * Breakpoint mixins
+ */
+
+@mixin break-huge() {
+  @media (min-width: #{ ($break-huge) }) {
+	@content;
+  }
+}
+
+@mixin break-wide() {
+  @media (min-width: #{ ($break-wide) }) {
+	@content;
+  }
+}
+
+@mixin break-xlarge() {
+  @media (min-width: #{ ($break-xlarge) }) {
+	@content;
+  }
+}
+
+@mixin break-large() {
+  @media (min-width: #{ ($break-large) }) {
+	@content;
+  }
+}
+
+@mixin break-medium() {
+  @media (min-width: #{ ($break-medium) }) {
+	@content;
+  }
+}
+
+@mixin break-small() {
+  @media (min-width: #{ ($break-small) }) {
+	@content;
+  }
+}
+
+@mixin break-mobile() {
+  @media (min-width: #{ ($break-mobile) }) {
+	@content;
+  }
+}
+
+@mixin break-zoomed-in() {
+  @media (min-width: #{ ($break-zoomed-in) }) {
+	@content;
+  }
+}
+
+// Buttons with rounded corners.
+@mixin button-style__disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@mixin button-style__hover {
+  background-color: $studio-white;
+  color: $gray-900;
+  box-shadow: inset 0 0 0 1px $gray-400, inset 0 0 0 2px $studio-white,
+  0 1px 1px rgba($gray-900, 0.2);
+}
+
+@mixin button-style__active() {
+  outline: none;
+  background-color: $studio-white;
+  color: $gray-900;
+  box-shadow: inset 0 0 0 1px $gray-400, inset 0 0 0 2px $studio-white;
+}
+
+@mixin button-style__focus-active() {
+  background-color: $studio-white;
+  color: $gray-900;
+  box-shadow: inset 0 0 0 1px $gray-700, inset 0 0 0 2px $studio-white;
+
+  // Windows High Contrast mode will show this outline, but not the box-shadow.
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+}
+
+/* stylelint-disable block-closing-brace-newline-after */
+@mixin reduce-motion( $property: '' ) {
+  @if $property == 'transition' {
+	@media ( prefers-reduced-motion: reduce ) {
+	  transition-duration: 0s;
+	}
+  }
+  @else if $property == 'animation' {
+	@media ( prefers-reduced-motion: reduce ) {
+	  animation-duration: 1ms;
+	}
+  }
+  @else {
+	@media ( prefers-reduced-motion: reduce ) {
+	  transition-duration: 0s;
+	  animation-duration: 1ms;
+	}
+  }
+}
+/* stylelint-enable */
+
+@mixin break-small() {
+  @media (min-width: #{ ($break-small) }) {
+	@content;
+  }
+}
+
+// Gutenberg Switch.
+@mixin switch-style__focus-active() {
+  box-shadow: 0 0 0 2px $studio-white, 0 0 0 3px $gray-700;
+
+  // Windows High Contrast mode will show this outline, but not the box-shadow.
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+// Sets positions for children of grid elements
+@mixin set-grid-item-position( $wrap-after, $number-of-items ) {
+  @for $i from 1 through $number-of-items {
+	&:nth-child(#{$i}) {
+	  grid-column-start: #{($i - 1) % $wrap-after + 1};
+	  grid-column-end: #{($i - 1) % $wrap-after + 2};
+	  grid-row-start: #{floor(( $i - 1 ) / $wrap-after) + 1};
+	  grid-row-end: #{floor(( $i - 1 ) / $wrap-after) + 2};
+	}
+  }
+}
+
+// Hide an element from sighted users, but availble to screen reader users.
+@mixin visually-hidden() {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  overflow: hidden;
+  /* Many screen reader and browser combinations announce broken words as they would appear visually. */
+  overflow-wrap: normal !important;
+  word-wrap: normal !important;
+}
+
+// Unhide a visually hidden element
+@mixin visually-shown() {
+  clip: auto;
+  clip-path: none;
+  height: auto;
+  width: auto;
+  margin: unset;
+  overflow: hidden;
+}
+
+// Create a string-repeat function
+@function str-repeat( $character, $n ) {
+  @if $n == 0 {
+	@return '';
+  }
+  $c: '';
+  @for $i from 1 through $n {
+	$c: $c + $character;
+  }
+  @return $c;
+}
+

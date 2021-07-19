@@ -1,3 +1,4 @@
+
 .ea-advance-select {
     display: inline-flex;
     flex-direction: row;
@@ -175,5 +176,16 @@
     .ea-input-group__after {
         margin-left: -1px;
         border-radius: 0 2px 2px 0;
+    }
+
+    &__add-new-entity {
+        background-color: #fff;
+        border: 1px double #eee;
+        color: rgb(41, 146, 208);
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        cursor: pointer;
     }
 }

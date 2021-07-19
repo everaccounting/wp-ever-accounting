@@ -1,0 +1,64 @@
+.eaccounting-layout__header {
+  background: #fff;
+  box-sizing: border-box;
+  position: fixed;
+  width: calc(100% - 160px);
+  top: $adminbar-height;
+  z-index: 1001; /* on top of #wp-content-editor-tools */
+  padding: 0 30px;
+
+  @include breakpoint( '<782px' ) {
+	flex-flow: row wrap;
+	top: $adminbar-height-mobile;
+	width: 100%;
+  }
+
+  @include breakpoint( '782px-960px' ) {
+	width: calc(100% - 36px);
+  }
+
+  &.is-scrolled {
+	box-shadow: 0 8px 8px 0 rgba(85, 93, 102, 0.3);
+  }
+
+  &-wrapper {
+	display: flex;
+	align-items: center;
+	min-height:  60px;
+  }
+
+  &-heading {
+	display: flex;
+	align-items: center;
+	flex: 1 auto;
+	height: $header-height;
+	background: #fff;
+	font-weight: 600;
+	font-size: 14px;
+  }
+
+  &-navbar{
+	&-inner{}
+	&-menu{}
+	&-menu-item{}
+  }
+
+
+}
+
+.is-wp-toolbar-disabled .eaccounting-layout__header {
+  top: 0;
+}
+
+.eaccounting-page {
+  #contextual-help-link-wrap,
+  #screen-options-link-wrap {
+	margin-top: -1px;
+  }
+}
+
+.wp-responsive-open {
+  .eaccounting-layout__header {
+	margin-left: 2px;
+  }
+}

@@ -1,0 +1,18 @@
+.eaccounting_tab_panel {
+
+  .components-tab-panel__tabs {
+	box-shadow: inset 0 0 0 var(--wp-admin-border-width-focus) transparent, inset 0 -2px 0 0 #cfcfcf;
+	margin: 0 0 20px;
+
+	.components-tab-panel__tabs-item {
+	  font-weight: normal;
+	  color: #999;
+	  &.is-active {
+		color: #1e1e1e;
+		box-shadow: inset 0 0 0 var(--wp-admin-border-width-focus) transparent, inset 0 -2px 0 0 var(--wp-admin-theme-color);
+	  }
+	}
+  }
+
+
+}
