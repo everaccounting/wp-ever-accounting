@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $bank_phone
  * @property string $bank_address
  * @property int $thumbnail_id
- * @property string $enabled
+ * @property boolean $enabled
  * @property int $creator_id
  * @property string $date_created
  */
@@ -52,7 +52,7 @@ class Account {
 	 * Account balance
 	 *
 	 * @since 1.2.1
-	 * @var mixed|string
+	 * @var float
 	 */
 	protected $balance = null;
 
@@ -143,8 +143,7 @@ class Account {
 	/**
 	 * Magic method for setting account fields.
 	 *
-	 * This method does not update custom fields in the database. It only stores
-	 * the value on the WP_User instance.
+	 * This method does not update custom fields in the database.
 	 *
 	 * @param string $key Account key.
 	 * @param mixed  $value Account value.
@@ -162,7 +161,7 @@ class Account {
 	/**
 	 * Magic method for accessing custom fields.
 	 *
-	 * @param string $key User field to retrieve.
+	 * @param string $key Account field to retrieve.
 	 *
 	 * @return mixed Value of the given Account field (if set).
 	 * @since 1.2.1
@@ -232,7 +231,7 @@ class Account {
 	 * @return float|string
 	 * @since 1.0.2
 	 */
-	public function get_balance() {
+	public function get_calculated_balance() {
 		if ( null !== $this->balance ) {
 			return $this->balance;
 		}
