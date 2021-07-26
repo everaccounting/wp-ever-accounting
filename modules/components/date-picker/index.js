@@ -37,7 +37,6 @@ const dateValidationMessages = {
 class DatePicker extends Component {
 	constructor( props ) {
 		super( props );
-		console.log( props );
 		this.onDateChange = this.onDateChange.bind( this );
 		this.onInputChange = this.onInputChange.bind( this );
 	}

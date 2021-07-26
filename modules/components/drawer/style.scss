@@ -1,0 +1,113 @@
+@keyframes tabSwitch {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(100px);
+    }
+}
+
+@mixin activity-panel-slide {
+    transition-property: transform box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+
+    @media screen and ( prefers-reduced-motion: reduce ) {
+        transition-duration: 1ms;
+    }
+}
+
+.eaccounting-drawer__wrapper {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - #{$header-height + $adminbar-height-mobile});
+    background: #fff;
+    width: 510px;
+
+    @include breakpoint( "<782px" ) {
+        width: 100%;
+    }
+    transform: translateX(100%);
+
+    @include activity-panel-slide();
+    position: fixed;
+    right: 0;
+    top: #{$header-height + $adminbar-height-mobile};
+    z-index: 1000;
+
+    @include breakpoint( ">782px" ) {
+        //height: calc(100vh - #{$header-height + $adminbar-height});
+        height: calc(100vh - #{$adminbar-height});
+        //top: #{$header-height + $adminbar-height};
+        top: #{$adminbar-height};
+    }
+
+    &.is-open {
+        transform: initial;
+        box-shadow: 0 12px 12px 0 rgba(85, 93, 102, 0.3);
+    }
+
+    &.is-switching {
+        animation: tabSwitch;
+        animation-duration: 300ms;
+
+        @media screen and ( prefers-reduced-motion: reduce ) {
+            animation: none;
+        }
+    }
+}
+
+.eaccounting-drawer {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 1px;
+
+    &__header {
+        align-items: center;
+        box-sizing: border-box;
+        display: flex;
+        flex-shrink: 0;
+        background-color: #f8f8f8;
+        border-bottom: 1px solid #eaeaea;
+        padding: 16px 24px;
+    }
+
+    &__toolbar {
+        display: inline-flex;
+    }
+
+    &__title {
+        flex-grow: 1;
+        min-width: 1px;
+        margin-right: 8px;
+        overflow-y: hidden;
+    }
+
+    &__body {
+        padding: 16px 24px;
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 1px;
+        position: relative;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    &__footer {
+        padding: 16px 24px;
+        flex-shrink: 0;
+        background: #f6f8f9;
+        border-top: 1px solid #eaeaea;
+        display: flex;
+        align-items: center;
+
+        .components-button + .components-button {
+            margin-left: 10px;
+        }
+    }
+}

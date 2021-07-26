@@ -25,7 +25,7 @@ function getHistory() {
 		const browserHistory = createBrowserHistory( {
 			basename: path.substring( 0, path.lastIndexOf( '/' ) ),
 		} );
-
+		console.log( browserHistory );
 		_history = {
 			get length() {
 				return browserHistory.length;

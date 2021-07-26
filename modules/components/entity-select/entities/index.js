@@ -7,11 +7,15 @@ import CustomerModal from '../../forms/customer';
 import VendorModal from '../../forms/vendor';
 import ItemModal from '../../forms/item';
 import CategoryModal from '../../forms/category';
+/**
+ * External dependencies
+ */
+import { get } from 'lodash';
 
 export const accounts = {
 	entityName: 'accounts',
 	getOptionLabel: ( account ) =>
-		`${ account.name } (${ account.currency.code })`,
+		`${ account.name } (${ get( account, [ 'currency', 'code' ] ) })`,
 	getOptionValue: ( account ) => account && account.id,
 	modal: <AccountModal />,
 };

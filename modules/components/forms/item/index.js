@@ -119,7 +119,7 @@ export default function ItemModal( props ) {
 							<EntitySelect
 								required
 								label={ __( 'Category' ) }
-								type={ 'itemCategories' }
+								entityName={ 'itemCategories' }
 								creatable={ true }
 								{ ...getInputProps( 'category' ) }
 							/>

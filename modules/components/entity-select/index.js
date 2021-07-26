@@ -1,7 +1,7 @@
 /**
  * External dependencies
  */
-import { castArray, isEqual } from 'lodash';
+import { castArray, isEqual, isEmpty } from 'lodash';
 /**
  * WordPress dependencies
  */
@@ -69,7 +69,7 @@ export default function EntitySelect( args ) {
 	const selected_entities = useSelect(
 		( select ) => {
 			return (
-				!! entity_ids &&
+				! isEmpty( entity_ids ) &&
 				select( CORE_STORE_NAME ).getEntityRecords( entityName, {
 					include: entity_ids,
 				} )
@@ -77,26 +77,33 @@ export default function EntitySelect( args ) {
 		},
 		[ entity_ids ]
 	);
-
+	const prevSelected = useRef( selected_entities ).current;
 	const options = useSelect(
 		( select ) =>
-			entityName &&
+			! isEmpty( entityName ) &&
 			select( CORE_STORE_NAME ).getEntityRecords( entityName, query ),
 		[ query ]
 	);
 
 	const isLoading = useSelect(
-		( select ) =>
-			entityName &&
-			select( CORE_STORE_NAME ).isResolving( 'getEntityRecords', [
-				entityName,
-				query,
-			] ),
+		( select ) => {
+			const { isResolving } = select( CORE_STORE_NAME );
+			const include = {
+				include: entity_ids,
+			};
+			return (
+				isEmpty( entityName ) &&
+				( isResolving( 'getEntityRecords', [ entityName, query ] ) ||
+					isResolving( 'getEntityRecords', [ entityName, include ] ) )
+			);
+		},
 		[ query ]
 	);
 
 	useEffect( () => {
-		handleChange( selected_entities );
+		if ( ! isEqual( selected_entities, prevSelected ) ) {
+			handleChange( selected_entities );
+		}
 	}, [ selected_entities ] );
 
 	const handleChange = ( val ) => {

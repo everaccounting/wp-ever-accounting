@@ -56,14 +56,7 @@ export function getQueryParts( query = {} ) {
 				break;
 
 			case 'per_page':
-				parts.per_page = Number( value );
-				if ( parts.per_page > 20 ) {
-					parts.stableKey +=
-						( parts.stableKey ? '&' : '' ) +
-						addQueryArgs( '', { [ key ]: parts.per_page } ).slice(
-							1
-						);
-				}
+				parts.perPage = Number( value );
 				break;
 
 			case 'include':
@@ -83,6 +76,7 @@ export function getQueryParts( query = {} ) {
 					// Make sure to normalize value for `stableKey`
 					value = parts.fields.join();
 				}
+
 				// While it could be any deterministic string, for simplicity's
 				// sake mimic querystring encoding for stable key.
 				//

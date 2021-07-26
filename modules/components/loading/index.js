@@ -57,6 +57,8 @@ export default class Loading extends Component {
 		if ( loading ) {
 			return {
 				position: 'relative',
+				width: '100%',
+				height: '100%',
 			};
 		}
 		return {};

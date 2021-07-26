@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { getTableQuery, updateQueryString } from '@eaccounting/navigation';
-import { Date, ListTable, Amount } from '@eaccounting/components';
+import { Date, ListTable } from '@eaccounting/components';
 
 /**
  * WordPress dependencies
@@ -19,7 +19,6 @@ import { getItems, CORE_STORE_NAME } from '@eaccounting/data';
  */
 
 // eslint-disable-next-line no-unused-vars
-import Panel from './panel';
 export default function Payments( props ) {
 	const query = getTableQuery();
 	const { items, total, isRequesting } = useSelect( ( select ) =>
@@ -29,7 +28,6 @@ export default function Payments( props ) {
 	return (
 		<>
 			<h2>Payments</h2>
-			<Panel />
 			<ListTable
 				query={ query }
 				rows={ items }

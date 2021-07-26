@@ -35,6 +35,7 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Accounts_Controller',
 				'\EverAccounting\REST\Customers_Controller',
 				'\EverAccounting\REST\Vendors_Controller',
+				'\EverAccounting\REST\Transactions_Controller',
 				'\EverAccounting\REST\Payments_Controller',
 				'\EverAccounting\REST\Revenues_Controller',
 				'\EverAccounting\REST\Categories_Controller',
@@ -44,6 +45,8 @@ class Manager extends Singleton {
 				'\EverAccounting\REST\Countries_Controller',
 				'\EverAccounting\REST\Data_Controller',
 				'\EverAccounting\REST\Items_Controller',
+				'\EverAccounting\REST\Bills_Controller',
+				'\EverAccounting\REST\Invoices_Controller',
 				'\EverAccounting\REST\SettingsController',
 				'\EverAccounting\REST\Currency_Codes_Controller',
 			)

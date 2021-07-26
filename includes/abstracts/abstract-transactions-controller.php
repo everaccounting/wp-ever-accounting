@@ -215,22 +215,12 @@ abstract class Transactions_Controller extends Entities_Controller {
 						'sanitize_callback' => 'sanitize_text_field',
 					),
 				),
-				'attachment'     => array(
-					'description' => __( 'Attachment url of the transaction', 'wp-ever-accounting' ),
-					'type'        => 'object',
+				'attachment_id'     => array(
+					'description' => __( 'Attachment ID', 'wp-ever-accounting' ),
+					'type'        => 'integer',
 					'context'     => array( 'embed', 'view', 'edit' ),
-					'properties'  => array(
-						'id'  => array(
-							'description' => __( 'Attachment ID.', 'wp-ever-accounting' ),
-							'type'        => 'integer',
-							'context'     => array( 'view', 'edit' ),
-							'readonly'    => true,
-						),
-						'src' => array(
-							'description' => __( 'Attachment src.', 'wp-ever-accounting' ),
-							'type'        => 'string',
-							'context'     => array( 'embed', 'view', ),
-						),
+					'arg_options' => array(
+						'sanitize_callback' => 'absint',
 					),
 				),
 				'reconciled'     => array(

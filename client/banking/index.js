@@ -10,7 +10,6 @@ import { lazy } from '@wordpress/element';
 import { Tabs } from '@eaccounting/components';
 
 const AccountsTab = lazy( () => import( './accounts' ) );
-const TransactionsTab = lazy( () => import( './transactions' ) );
 const Transfers = lazy( () => import( './transfers' ) );
 
 export default function ( props ) {
@@ -19,12 +18,6 @@ export default function ( props ) {
 			key: 'accounts',
 			container: AccountsTab,
 			label: __( 'Accounts' ),
-			capability: 'manage_options',
-		},
-		{
-			key: 'transactions',
-			container: TransactionsTab,
-			label: __( 'Transactions' ),
 			capability: 'manage_options',
 		},
 		{

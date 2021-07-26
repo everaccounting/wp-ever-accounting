@@ -6,7 +6,7 @@
  */
 import { addQueryArgs } from '@wordpress/url';
 import { parse } from 'qs';
-import { identity, omit, pickBy, uniq } from 'lodash';
+import { identity, omit, pickBy, uniq, isArray, has, isEqual } from 'lodash';
 
 /**
  * Internal dependencies
@@ -48,8 +48,8 @@ export const getPage = () => {
  */
 export const getScreenFromPath = ( path = getPath() ) => {
 	return path === '/'
-		? 'homescreen'
-		: path.replace( '/ea-react', '' ).replace( '/', '' );
+		? 'overview'
+		: path.replace( '/eaccounting', '' ).replace( '/', '' );
 };
 
 /**
@@ -70,12 +70,10 @@ export function getIdsFromQuery( queryString = '' ) {
 /**
  * Get an ID from a query parameter.
  *
- * @return {Array} List of IDs converted to numbers.
+ * @return {number} List of IDs converted to numbers.
  */
-export function getIdFromQuery( query = getQuery() ) {
-	const { id } = query;
-
-	return parseInt( id, 10 );
+export function getIdFromQuery( key = 'id', query = getQuery() ) {
+	return parseInt( query[ key ] || 0, 10 );
 }
 
 /**
@@ -145,22 +143,62 @@ export function getQuery() {
 /**
  * Get table query.
  *
+ * @param {Array|Object} whitelists Extra params.
+ * @param {Object} defaults Extra params.
  * @param {Function} filter Extra params.
+ * @param {Object} query Extra params.
  * @return {{}} query.
  */
-export function getTableQuery( filter = ( x ) => x ) {
-	const query = getQuery();
+export function getTableQuery(
+	whitelists = {},
+	defaults = {},
+	filter = ( x ) => x,
+	query = getQuery()
+) {
+	if ( isArray( whitelists ) ) {
+		whitelists = whitelists.reduce( ( acc, whitelist ) => {
+			// eslint-disable-next-line no-unused-vars
+			return { ...acc, [ whitelist ]: ( x, query ) => x };
+		}, {} );
+	}
 
-	return filter(
-		pickBy(
-			{
-				...query,
-				paged: parseInt( query.paged, 10 ) || 1,
-				per_page: parseInt( query.per_page, 10 ) || 20,
-			},
-			identity
-		)
-	);
+	defaults = {
+		...defaults,
+		orderby: 'id',
+		order: 'desc',
+		per_page: 20,
+		paged: 1,
+	};
+
+	whitelists = {
+		...whitelists,
+		search: ( search, query ) => query.search || '',
+		paged: ( paged, query ) => parseInt( query.paged, 10 ) || 1,
+		orderby: ( orderby, query ) => query.orderby || defaults.orderby,
+		order: ( order, query ) =>
+			query.order === 'asc' ? 'asc' : defaults.order,
+	};
+	query = Object.keys( query ).reduce( ( acc, queryKey ) => {
+		if ( has( whitelists, [ queryKey ] ) ) {
+			const queryValue = whitelists[ queryKey ](
+				query[ queryKey ],
+				query
+			);
+			if (
+				has( defaults, [ queryKey ] ) &&
+				isEqual( defaults[ queryKey ], queryValue )
+			) {
+				return acc;
+			}
+			acc = {
+				...acc,
+				[ queryKey ]: queryValue,
+			};
+		}
+
+		return acc;
+	}, {} );
+	return filter( pickBy( query, identity ) );
 }
 
 /**

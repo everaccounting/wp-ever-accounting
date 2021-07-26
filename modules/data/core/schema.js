@@ -18,4 +18,9 @@ export const defaultSchemas = [
 		primaryKey: 'code',
 		route: '/ea/v1/currencies',
 	},
+	{
+		name: 'media',
+		primaryKey: 'id',
+		route: '/wp/v2/media',
+	},
 ].map( ( item ) => ( { ...defaultSchemaProperties, ...item } ) );

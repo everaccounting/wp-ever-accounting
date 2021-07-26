@@ -29,21 +29,34 @@ export const withCurrencyHydration = ( currencies ) =>
 					finishResolution,
 					receiveEntityRecords,
 				} = registry.dispatch( STORE_NAME );
-				if (
-					! isResolving( 'getEntityRecords', [ 'currencies' ] ) &&
-					! hasFinishedResolution( 'getEntityRecords', [
-						'currencies',
-					] )
-				) {
-					startResolution( 'getEntityRecords', [ 'currencies' ] );
-					receiveEntityRecords(
-						'currencies',
-						currencies,
-						{ per_page: -1 },
-						'code'
-					);
-					finishResolution( 'getEntityRecords', [ 'currencies' ] );
-				}
+				currencies.forEach( ( currency ) => {
+					const code = currency.code;
+					if (
+						! isResolving( 'getEntityRecord', [
+							'currencies',
+							code,
+						] ) &&
+						! hasFinishedResolution( 'getEntityRecord', [
+							'currencies',
+							code,
+						] )
+					) {
+						startResolution( 'getEntityRecord', [
+							'currencies',
+							code,
+						] );
+						receiveEntityRecords(
+							'currencies',
+							currency,
+							{},
+							'code'
+						);
+						finishResolution( 'getEntityRecord', [
+							'currencies',
+							code,
+						] );
+					}
+				} );
 			} );
 
 			return <OriginalComponent { ...props } />;

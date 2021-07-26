@@ -115,9 +115,11 @@ function eaccounting_get_settings_tab_sections( $tab = false ) {
  */
 function eaccounting_get_screen_ids() {
 	$eaccounting_screen_id = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
+	$eaccounting_screen_id_alt = sanitize_title( __( 'Accounting', 'wp-ever-accounting' ) );
 
 	$screen_ids = array(
 		'toplevel_page_' . $eaccounting_screen_id,
+		'toplevel_page_' . $eaccounting_screen_id_alt,
 		$eaccounting_screen_id . '_page_ea-transactions',
 		$eaccounting_screen_id . '_page_ea-sales',
 		$eaccounting_screen_id . '_page_ea-expenses',

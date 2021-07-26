@@ -1,9 +1,10 @@
 /**
  * External dependencies
  */
-import { omit } from 'lodash';
+import { omit, isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { getActiveFiltersFromQuery } from '@eaccounting/navigation';
 /**
  * WordPress dependencies
  */
@@ -18,6 +19,8 @@ import TableSearch from './table-search';
 import BulkActions from './bulk-actions';
 import AdvancedFilters from '../advaced-filters';
 import './style.scss';
+import { Button, Icon } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 function ListTable( props ) {
 	const {
@@ -33,7 +36,8 @@ function ListTable( props ) {
 
 	const { paged = 1, per_page = 20 } = query;
 	const [ selected, setSelected ] = useState( [] );
-
+	const [ isFilterActive, setFilterActive ] = useState( false );
+	const activeFilters = getActiveFiltersFromQuery( filters, query );
 	const classes = classnames( 'ea-list-table-wrapper', className );
 
 	const handleSearch = ( search ) => {
@@ -73,7 +77,7 @@ function ListTable( props ) {
 
 	return (
 		<div className={ classes }>
-			{ filters && (
+			{ filters && ( ! isEmpty( activeFilters ) || isFilterActive ) && (
 				<AdvancedFilters
 					onUpdateFilter={ handleFilter }
 					filters={ filters }
@@ -93,6 +97,17 @@ function ListTable( props ) {
 						onAction={ handleBulkAction }
 					/>
 				) }
+
+				{ ! isEmpty( Object.keys( filters ) ) && (
+					<Button
+						isSecondary
+						onClick={ () => setFilterActive( ! isFilterActive ) }
+					>
+						<Icon icon="filter" />
+						{ __( 'Filter' ) }
+					</Button>
+				) }
+
 				<TableNav
 					onPageChange={ handlePagination }
 					total={ total }

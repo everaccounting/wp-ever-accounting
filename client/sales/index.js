@@ -13,6 +13,7 @@ const Revenues = lazy( () => import( './revenues' ) );
 const Customers = lazy( () => import( './customers' ) );
 
 export default function ( props ) {
+	console.log( props );
 	const tabs = applyFilters( 'EACCOUNTING_SALES_TABS', [
 		{
 			key: 'revenues',

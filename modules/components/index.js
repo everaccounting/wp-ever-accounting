@@ -7,6 +7,7 @@ export { default as Amount } from './amount';
 export { default as ClickOutside } from './click-outside';
 export { default as Date } from './date';
 export { default as DatePicker } from './date-picker';
+export { default as Drawer } from './drawer';
 export { default as EntitySelect } from './entity-select';
 export { default as Form } from './form';
 export { default as Gravatar } from './gravatar';

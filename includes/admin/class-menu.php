@@ -78,7 +78,7 @@ class Menu {
 			__( 'Overview', 'wp-ever-accounting' ),
 			'manage_eaccounting',
 			'eaccounting',
-			array( $this, 'render_overview_page' )
+			array( $this, 'render_root_page' )
 		);
 	}
 
@@ -91,8 +91,8 @@ class Menu {
 			__( 'Items', 'wp-ever-accounting' ),
 			__( 'Items', 'wp-ever-accounting' ),
 			'manage_eaccounting',
-			'ea-items',
-			array( $this, 'render_items_page' )
+			'eaccounting&path=/items',
+			array( $this, 'render_root_page' )
 		);
 	}
 
@@ -105,8 +105,8 @@ class Menu {
 			__( 'Sales', 'wp-ever-accounting' ),
 			__( 'Sales', 'wp-ever-accounting' ),
 			'manage_eaccounting',
-			'ea-sales',
-			array( $this, 'render_sales_page' )
+				'eaccounting&path=/sales',
+			array( $this, 'render_root_page' )
 		);
 	}
 
@@ -119,8 +119,8 @@ class Menu {
 			__( 'Expenses', 'wp-ever-accounting' ),
 			__( 'Expenses', 'wp-ever-accounting' ),
 			'manage_eaccounting',
-			'ea-expenses',
-			array( $this, 'render_expenses_page' )
+				'eaccounting&path=/expenses',
+			array( $this, 'render_root_page' )
 		);
 	}
 
@@ -133,8 +133,8 @@ class Menu {
 			__( 'Banking', 'wp-ever-accounting' ),
 			__( 'Banking', 'wp-ever-accounting' ),
 			'manage_eaccounting',
-			'ea-banking',
-			array( $this, 'render_banking_page' )
+				'eaccounting&path=/banking',
+				array( $this, 'render_root_page' )
 		);
 	}
 
@@ -165,39 +165,17 @@ class Menu {
 			array( $this, 'render_reports_page' )
 		);
 	}
-
-	/**
-	 * Registers the reports page.
-	 */
-	public function register_react_page() {
-		add_submenu_page(
-			'eaccounting',
-			__( 'React', 'wp-ever-accounting' ),
-			__( 'React', 'wp-ever-accounting' ),
-			'manage_eaccounting',
-			'eaccounting-root',
-			function () {
-				?>
-				<div class="wrap">
-					<div id="eaccounting-root"></div>
-				</div>
-				<?php
-			}
-		);
-	}
-
 	/**
 	 * Render overview page.
 	 *
 	 * @since 1.1.0
 	 */
-	public function render_overview_page() {
+	public function render_root_page() {
 		?>
 		<div class="wrap">
 			<div id="eaccounting-root"></div>
 		</div>
 		<?php
-		//include dirname( __FILE__ ) . '/views/admin-page-overview.php';
 	}
 
 	/**

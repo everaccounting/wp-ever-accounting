@@ -1,12 +1,24 @@
 // Set up animation
 @keyframes loading-fade {
-  0% {
-	opacity: 0.7;
-  }
-  50% {
-	opacity: 1;
-  }
-  100% {
-	opacity: 0.7;
-  }
+
+    0% {
+        opacity: 0.7;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.7;
+    }
+}
+
+.wrap .wp-heading-inline {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.wrap .page-title-action {
+    height: auto !important;
 }

@@ -32,6 +32,7 @@ function ClickOutside( props ) {
 	const containerRef = useRef( null );
 	const { children, onOutside, className } = props;
 	const outside = ( ev ) => {
+		console.log( ev );
 		if ( isOutside( ev, containerRef.current ) || ev.key === 'Escape' ) {
 			onOutside( ev );
 		}

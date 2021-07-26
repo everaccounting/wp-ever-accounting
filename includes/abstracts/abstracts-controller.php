@@ -535,6 +535,27 @@ abstract class Controller extends \WP_REST_Controller {
 	}
 
 	/**
+	 * Checks the post_date_gmt or modified_gmt and prepare any post or
+	 * modified date for single post output.
+	 *
+	 * @param string|null $date Optional. Local publication time. Default null.
+	 *
+	 * @return string|null ISO8601/RFC3339 formatted datetime.
+	 *@since 4.7.0
+	 *
+	 */
+	protected function prepare_date_response( $date = null ) {
+
+		// Return null if $date is empty/zeros.
+		if ( empty($date) || '0000-00-00 00:00:00' === $date ) {
+			return null;
+		}
+
+		// Return the formatted datetime.
+		return mysql_to_rfc3339( $date );
+	}
+
+	/**
 	 * Retrieves the query params for the collections.
 	 *
 	 * @since 4.7.0

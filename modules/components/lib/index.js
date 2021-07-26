@@ -96,7 +96,6 @@ export function createNoticesFromResponse( response ) {
  * @return {Object|null} - Moment object representing given string
  */
 export function toMoment( str ) {
-	console.log( str );
 	if ( isEmpty( str ) ) {
 		return str;
 	}

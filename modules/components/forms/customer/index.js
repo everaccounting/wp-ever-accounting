@@ -109,7 +109,7 @@ export default function CustomerModal( props ) {
 							<EntitySelect
 								required
 								label={ __( 'Currency' ) }
-								type={ 'currencies' }
+								entityName={ 'currencies' }
 								creatable={ true }
 								{ ...getInputProps( 'currency' ) }
 							/>

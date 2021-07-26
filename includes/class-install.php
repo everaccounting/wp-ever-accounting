@@ -435,8 +435,7 @@ class Install {
 		    PRIMARY KEY (`id`),
 		    KEY `currency_code` (`currency_code`),
 		    KEY `enabled` (`enabled`),
-		    UNIQUE KEY (`number`),
-		    UNIQUE KEY (`name`, `number`)
+		    UNIQUE KEY (`number`)
             ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_categories(

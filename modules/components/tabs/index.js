@@ -22,7 +22,6 @@ export default function Tabs( props ) {
 	const tabs = components.filter(
 		( tab ) => ! tab.capability || currentUserCan( tab.capability )
 	);
-
 	const getCurrentTab = () => {
 		const { tab } = props.query;
 		const currentTab = tabs.find( ( s ) => s.key === tab );
@@ -42,7 +41,6 @@ export default function Tabs( props ) {
 		...props,
 		currentTab,
 	} );
-
 	const classes = classnames( 'eaccounting-tabs', `tab-${ currentTab.key }` );
 
 	return (

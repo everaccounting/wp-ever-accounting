@@ -14,22 +14,6 @@ defined( 'ABSPATH' ) || die();
 abstract class Contacts_Controller extends Entities_Controller {
 
 	/**
-	 * Retrieves data from a Model class.
-	 *
-	 * @param Resource_Model $object model object.
-	 * @param array          $fields Fields to include.
-	 * @param string         $context either view or edit.
-	 *
-	 * @return array
-	 * @since  1.1.0
-	 */
-	protected function prepare_object_for_response( $object, $fields, $context = 'view' ) {
-		$object              = parent::prepare_object_for_response( $object, $fields, $context );
-		$object['thumbnail'] = ! empty( $object['thumbnail_id'] ) ? get_post( (int) $object['thumbnail_id'] ) : [];
-		return $object;
-	}
-
-	/**
 	 * Retrieves the items's schema, conforming to JSON Schema.
 	 *
 	 * @return array Item schema data.

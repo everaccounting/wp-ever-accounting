@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
  */
 import { useSelect } from '@wordpress/data';
 import { formatAmount, CORE_STORE_NAME } from '@eaccounting/data';
+import { isObject } from 'lodash';
 /**
  * Internal dependencies
  */
@@ -16,14 +17,15 @@ import { formatAmount, CORE_STORE_NAME } from '@eaccounting/data';
  *
  * @param {Object} props
  * @param {string} props.amount
- * @param {string} props.currency_code
+ * @param {string|Object} props.currency
  * @return {Object} -
  */
-const Amount = ( { amount, currency_code } ) => {
-	const { currency, isRequesting = true } = useSelect( ( select ) => {
+const Amount = ( { amount, currency } ) => {
+	const { AmountCurrency, isRequesting = true } = useSelect( ( select ) => {
+		const currency_code = isObject( currency ) ? currency.code : currency;
 		const { getEntityRecord, isResolving } = select( CORE_STORE_NAME );
 		return {
-			currency: getEntityRecord( 'currencies', currency_code ),
+			AmountCurrency: getEntityRecord( 'currencies', currency_code ),
 			isRequesting: isResolving( 'getEntityRecord', [
 				'currencies',
 				currency_code,
@@ -33,9 +35,9 @@ const Amount = ( { amount, currency_code } ) => {
 
 	return (
 		<span className="ea-amount" data-amount={ amount }>
-			{ isRequesting || ! currency
+			{ isRequesting || ! AmountCurrency
 				? '....'
-				: formatAmount( amount, currency ) }
+				: formatAmount( amount, AmountCurrency ) }
 		</span>
 	);
 };

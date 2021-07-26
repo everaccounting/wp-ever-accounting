@@ -28,18 +28,16 @@ const getQuery = ( searchString ) => {
 	return parse( search );
 };
 
-const PanelSlot = () => {
+const DrawerSlot = () => {
 	return (
-		<Slot name="panel">
+		<Slot name="drawer">
 			{ ( fills ) => {
 				return fills.length > 0 ? (
-					<div className="woocommerce-layout__activity-panel-wrapper is-open">
+					<div className="eaccounting-drawer__wrapper is-open">
 						{ fills }
 					</div>
 				) : (
-					<div className="woocommerce-layout__activity-panel-wrapper">
-						{ fills }
-					</div>
+					<div className="eaccounting-drawer__wrapper">{ fills }</div>
 				);
 			} }
 		</Slot>
@@ -72,7 +70,7 @@ export const Layout = ( props ) => {
 				) }
 			</div>
 			<Popover.Slot />
-			<PanelSlot />
+			<DrawerSlot />
 		</SlotFillProvider>
 	);
 };
@@ -105,7 +103,7 @@ export function App() {
 							);
 						} ) }
 
-					<Redirect to={ generatePath( {}, '/sales' ) } />
+					<Redirect to={ generatePath( {}, '/overview' ) } />
 				</Switch>
 			</Router>
 		</>

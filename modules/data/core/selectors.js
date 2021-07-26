@@ -190,16 +190,17 @@ export function getEntityFetchError(
  *
  * @param {Object} state    State tree.
  * @param {string} name     Entity name.
- * @param {number} recordId Record ID.
  *
- * @return {boolean} Whether the entity record is saving or not.
+ * @return {Function} Whether the entity record is saving or not.
  */
-export function isSavingEntityRecord( state, name, recordId ) {
-	return get(
-		state.entities.data,
-		[ name, 'saving', recordId, 'pending' ],
-		false
-	);
+export function isSavingEntityRecord( state, name ) {
+	return ( recordId ) => {
+		return get(
+			state,
+			[ 'entities', 'data', name, 'saving', recordId, 'pending' ],
+			false
+		);
+	};
 }
 
 /**

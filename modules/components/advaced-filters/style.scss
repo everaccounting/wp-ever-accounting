@@ -85,6 +85,10 @@
             max-width: none;
         }
 
+        &.display--none {
+            display: none;
+        }
+
         &:last-child {
             flex: 1;
         }

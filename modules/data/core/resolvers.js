@@ -21,6 +21,7 @@ import {
 	includes,
 	pickBy,
 	uniq,
+	isEmpty,
 } from 'lodash';
 import {
 	receiveSchema,
@@ -92,6 +93,9 @@ export function* getSchemas() {
  *                                 include with request.
  */
 export function* getEntityRecord( name, key = '', query = {} ) {
+	if ( isEmpty( key ) ) {
+		return {};
+	}
 	const schema = yield resolveSelect( STORE_NAME, 'getSchema', name );
 	if ( ! schema ) {
 		throw `Could not find any schema named "${ name }" please check schema config`;
@@ -224,27 +228,6 @@ getEntityRecords.shouldInvalidate = ( action, name ) => {
  */
 export function* getTotalEntityRecords( name, query = {} ) {
 	yield resolveSelect( STORE_NAME, 'getEntityRecords', name, query );
-}
-
-/**
- * Returns the Entity record error.
- *
- * @param {string}  name  Entity name.
- * @param {?Object} query Optional terms query.
- * @param {number | string} recordId Key.
- */
-export function* getEntityFetchError( name, query = {}, recordId = null ) {
-	if ( recordId ) {
-		yield resolveSelect(
-			STORE_NAME,
-			'getTotalEntityRecord',
-			name,
-			recordId,
-			query
-		);
-	} else {
-		yield resolveSelect( STORE_NAME, 'getTotalEntityRecords', name, query );
-	}
 }
 
 /**

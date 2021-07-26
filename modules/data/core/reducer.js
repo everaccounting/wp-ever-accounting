@@ -26,6 +26,7 @@ export const schemaReducer = ( state = defaultSchemas, action ) => {
 	switch ( action.type ) {
 		case 'RECEIVE_SCHEMA':
 			return [
+				...defaultSchemas,
 				...action.schema.map( ( schema ) => ( {
 					...defaultSchemaProperties,
 					...schema,

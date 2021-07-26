@@ -234,7 +234,7 @@ class Assets {
 			];
 			$default_code = eaccounting_get_default_currency();
 			if( !empty( $default_code )  && eaccounting_get_currency($default_code)){
-				$default_currency = eaccounting_get_currency($default_code)->get_data();
+				$default_currency = eaccounting_get_currency($default_code)->to_array();
 			}
 
 			wp_localize_script(
