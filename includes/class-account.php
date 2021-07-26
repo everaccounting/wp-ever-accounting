@@ -127,9 +127,9 @@ class Account {
 	/**
 	 * Magic method for checking the existence of a certain field.
 	 *
-	 * @param string $key Contact field to check if set.
+	 * @param string $key Account field to check if set.
 	 *
-	 * @return bool Whether the given Contact field is set.
+	 * @return bool Whether the given Account field is set.
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
