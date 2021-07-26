@@ -18,7 +18,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
- * @property int $user_id
  * @property string $name
  * @property string $type
  * @property string $color
