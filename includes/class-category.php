@@ -1,9 +1,9 @@
 <?php
 /**
- * Handle the Account object.
+ * Handle the Category object.
  *
  * @package     EverAccounting
- * @class       Account
+ * @class       Category
  * @version     1.2.1
  */
 
@@ -12,28 +12,21 @@ namespace EverAccounting;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Core class used to implement the Account object.
+ * Core class used to implement the Category object.
  *
  * @package EverAccounting
  *
  * @since 1.2.1
  *
- * @property int $user_id
- * @property string $currency_code
  * @property string $name
- * @property string $number
- * @property float $opening_balance
- * @property string $bank_name
- * @property string $bank_phone
- * @property string $bank_address
- * @property int $thumbnail_id
+ * @property string $type
+ * @property string $color
  * @property boolean $enabled
- * @property int $creator_id
  * @property string $date_created
  */
-class Account {
+class Category {
 	/**
-	 * Account data container.
+	 * Category data container.
 	 *
 	 * @since 1.2.1
 	 * @var \stdClass
@@ -41,7 +34,7 @@ class Account {
 	public $data;
 
 	/**
-	 * Account id.
+	 * Category id.
 	 *
 	 * @since 1.2.1
 	 * @var int
@@ -49,28 +42,20 @@ class Account {
 	public $id = null;
 
 	/**
-	 * Account balance
+	 * Category constructor.
 	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	protected $balance = null;
-
-	/**
-	 * Account constructor.
-	 *
-	 * @param object $account Account Object
+	 * @param object $category Category Object
 	 *
 	 * @return void
 	 * @since 1.2.1
 	 */
-	public function __construct( $account ) {
-		if ( $account instanceof self ) {
-			$this->id = (int) $account->id;
-		} elseif ( is_numeric( $account ) ) {
-			$this->id = $account;
-		} elseif ( ! empty( $account->id ) ) {
-			$this->id = (int) $account->id;
+	public function __construct( $category ) {
+		if ( $category instanceof self ) {
+			$this->id = (int) $category->id;
+		} elseif ( is_numeric( $category ) ) {
+			$this->id = $category;
+		} elseif ( ! empty( $category->id ) ) {
+			$this->id = (int) $category->id;
 		} else {
 			$this->id = 0;
 		}
@@ -88,11 +73,11 @@ class Account {
 	}
 
 	/**
-	 * Return only the main account fields
+	 * Return only the main category fields
 	 *
-	 * @param int $id The id of the account
+	 * @param int $id The id of the category
 	 *
-	 * @return object|false Raw account object
+	 * @return object|false Raw category object
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.2.1
 	 */
@@ -103,14 +88,14 @@ class Account {
 			return false;
 		}
 
-		$data = wp_cache_get( $id, 'ea_accounts' );
+		$data = wp_cache_get( $id, 'ea_categories' );
 		if ( $data ) {
 			return $data;
 		}
 
 		$data = $wpdb->get_row(
 			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d LIMIT 1",
+				"SELECT * FROM {$wpdb->prefix}ea_categories WHERE id = %d LIMIT 1",
 				$id
 			)
 		);
@@ -119,17 +104,16 @@ class Account {
 			return false;
 		}
 
-		eaccounting_set_cache( 'ea_accounts', $data );
+		eaccounting_set_cache( 'ea_categories', $data );
 
 		return $data;
 	}
-
 	/**
 	 * Magic method for checking the existence of a certain field.
 	 *
-	 * @param string $key Account field to check if set.
+	 * @param string $key Category field to check if set.
 	 *
-	 * @return bool Whether the given Account field is set.
+	 * @return bool Whether the given Category field is set.
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
@@ -141,12 +125,12 @@ class Account {
 	}
 
 	/**
-	 * Magic method for setting account fields.
+	 * Magic method for setting category fields.
 	 *
 	 * This method does not update custom fields in the database.
 	 *
-	 * @param string $key Account key.
-	 * @param mixed  $value Account value.
+	 * @param string $key Category key.
+	 * @param mixed  $value Category value.
 	 *
 	 * @since 1.2.1
 	 */
@@ -161,9 +145,9 @@ class Account {
 	/**
 	 * Magic method for accessing custom fields.
 	 *
-	 * @param string $key Account field to retrieve.
+	 * @param string $key Category field to retrieve.
 	 *
-	 * @return mixed Value of the given Account field (if set).
+	 * @return mixed Value of the given Category field (if set).
 	 * @since 1.2.1
 	 */
 	public function __get( $key ) {
@@ -180,7 +164,7 @@ class Account {
 	/**
 	 * Magic method for unsetting a certain field.
 	 *
-	 * @param string $key Account key to unset.
+	 * @param string $key Category key to unset.
 	 *
 	 * @since 1.2.1
 	 */
@@ -193,7 +177,7 @@ class Account {
 	/**
 	 * Determine whether a property or meta key is set
 	 *
-	 * Consults the accounts.
+	 * Consults the categories.
 	 *
 	 * @param string $key Property
 	 *
@@ -205,9 +189,9 @@ class Account {
 	}
 
 	/**
-	 * Determine whether the account exists in the database.
+	 * Determine whether the category exists in the database.
 	 *
-	 * @return bool True if account exists in the database, false if not.
+	 * @return bool True if category exists in the database, false if not.
 	 * @since 1.2.1
 	 */
 	public function exists() {
@@ -222,35 +206,5 @@ class Account {
 	 */
 	public function to_array() {
 		return get_object_vars( $this->data );
-	}
-
-
-	/**
-	 * Get account balance
-	 *
-	 * @return float|string
-	 * @since 1.0.2
-	 */
-	public function get_calculated_balance() {
-		if ( null !== $this->balance ) {
-			return $this->balance;
-		}
-		global $wpdb;
-		$transaction_total = (float) $wpdb->get_var(
-			$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
-		);
-		$balance           = $this->opening_balance + $transaction_total;
-		$this->set_balance( $balance );
-		return $balance;
-	}
-
-	/**
-	 * Set balance.
-	 *
-	 * @param string $balance Account balance
-	 * @since 1.1.0
-	 */
-	protected function set_balance( string $balance ) {
-		$this->balance = $balance;
 	}
 }
