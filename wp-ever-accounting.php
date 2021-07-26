@@ -165,6 +165,7 @@ final class EverAccounting {
 		// List of tables without prefixes.
 		$tables = array(
 			'contactmeta' => 'ea_contactmeta',
+			'transactionmeta' => 'ea_transactionmeta',
 		);
 
 		foreach ( $tables as $name => $table ) {

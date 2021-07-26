@@ -435,8 +435,7 @@ class Install {
 		    PRIMARY KEY (`id`),
 		    KEY `currency_code` (`currency_code`),
 		    KEY `enabled` (`enabled`),
-		    UNIQUE KEY (`number`),
-		    UNIQUE KEY (`name`, `number`)
+		    UNIQUE KEY (`number`)
             ) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_categories(
@@ -521,6 +520,16 @@ class Install {
 		    KEY `category_id` (`category_id`),
 		    KEY `contact_id` (`contact_id`)
             ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_transactionmeta(
+			`meta_id` bigINT(20) NOT NULL AUTO_INCREMENT,
+			`transaction_id` bigint(20) unsigned NOT NULL default '0',
+			`meta_key` varchar(255) default NULL,
+			`meta_value` longtext,
+			 PRIMARY KEY (`meta_id`),
+		    KEY `transaction_id`(`transaction_id`),
+			KEY `meta_key` (meta_key($max_index_length))
+			) $collate",
 
 			"CREATE TABLE {$wpdb->prefix}ea_transfers(
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
