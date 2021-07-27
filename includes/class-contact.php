@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
  * @property string $type
  * @property string $currency_code
  * @property string $thumbnail_id
- * @property string $enabled
+ * @property boolean $enabled
  * @property int $creator_id
  * @property string $date_created
  */
