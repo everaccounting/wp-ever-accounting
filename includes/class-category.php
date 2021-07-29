@@ -51,15 +51,14 @@ class Category {
 	 */
 	public function __construct( $category ) {
 		if ( $category instanceof self ) {
-			$this->id = (int) $category->id;
-		} elseif ( is_numeric( $category ) ) {
-			$this->id = $category;
-		} elseif ( ! empty( $category->id ) ) {
-			$this->id = (int) $category->id;
+			$this->id = absint( $category->id );
+		} elseif ( is_object( $category ) && ! empty( $category->id ) ) {
+			$this->id = absint( $category->id );
+		} elseif ( is_array( $category ) && ! empty( $category['id'] ) ) {
+			$this->id = absint( $category['id'] );
 		} else {
-			$this->id = 0;
+			$this->id = absint( $category );
 		}
-
 		if ( $this->id > 0 ) {
 			$data = self::load( $this->id );
 			if ( ! $data ) {
@@ -93,21 +92,24 @@ class Category {
 			return $data;
 		}
 
-		$data = $wpdb->get_row(
+		$_data = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->prefix}ea_categories WHERE id = %d LIMIT 1",
 				$id
 			)
 		);
 
-		if ( ! $data ) {
+		if ( ! $_data ) {
 			return false;
 		}
+
+		$data = eaccounting_sanitize_category( $_data, 'raw' );
 
 		eaccounting_set_cache( 'ea_categories', $data );
 
 		return $data;
 	}
+
 	/**
 	 * Magic method for checking the existence of a certain field.
 	 *
@@ -172,6 +174,28 @@ class Category {
 		if ( isset( $this->data->$key ) ) {
 			unset( $this->data->$key );
 		}
+	}
+
+	/**
+	 * Filter category object based on context.
+	 *
+	 * @param string $filter Filter.
+	 *
+	 * @return Category|Object
+	 * @since 1.2.1
+	 */
+	public function filter( $filter ) {
+		if ( $this->filter === $filter ) {
+			return $this;
+		}
+
+		if ( 'raw' === $filter ) {
+			return self::load( $this->id );
+		}
+
+		$this->data = eaccounting_sanitize_category( $this->data, $filter );
+
+		return $this;
 	}
 
 	/**

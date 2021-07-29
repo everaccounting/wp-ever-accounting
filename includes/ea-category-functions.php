@@ -8,7 +8,13 @@
  * @package EverAccounting
  */
 
+use EverAccounting\Category;
+
 defined( 'ABSPATH' ) || exit();
+
+// Sanitization and escaping filters
+add_filter( 'eaccounting_pre_category_enabled', 'eaccounting_bool_to_number', 10, 1 );
+add_filter( 'eaccounting_edit_category_enabled', 'eaccounting_string_to_bool', 10, 1 );
 
 /**
  * Get all the available type of category the plugin support.
@@ -34,7 +40,6 @@ function eaccounting_get_category_types() {
  *
  * @return string
  * @since 1.1.0
- *
  */
 function eaccounting_get_category_type( $type ) {
 	$types = eaccounting_get_category_types();
@@ -43,36 +48,35 @@ function eaccounting_get_category_type( $type ) {
 }
 
 /**
- * Get category.
+ * Retrieves category data given a category id or category object.
  *
- * @param $category
+ * @param int|array|object|Category $category category to retrieve
+ * @param string                    $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return null|EverAccounting\Models\Category
+ * @return array|Category|null
  * @since 1.1.0
- *
  */
-function eaccounting_get_category( $category ) {
+function eaccounting_get_category( $category, $filter = 'raw' ) {
 	if ( empty( $category ) ) {
 		return null;
 	}
-	try {
-		$result = new EverAccounting\Models\Category( $category );
 
-		return $result->exists() ? $result : null;
-	} catch ( \Exception $e ) {
+	$category = new Category( $category );
+	if ( ! $category->exists() ) {
 		return null;
 	}
+
+	return $category->filter( $filter );
 }
 
 /**
  * Get category by name.
  *
- * @param $name
- * @param $type
+ * @param string $name Category Name
+ * @param string $type Category type
  *
- * @return \EverAccounting\Models\Category|null
+ * @return Category|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_category_by_name( $name, $type ) {
 	global $wpdb;
@@ -85,84 +89,348 @@ function eaccounting_get_category_by_name( $name, $type ) {
 	if ( $category ) {
 		wp_cache_set( $category->id, $category, 'ea_categories' );
 
-		return eaccounting_get_category( $category );
+		return eaccounting_get_category( $category, 'raw' );
 	}
 
 	return null;
 }
 
 /**
- * Insert a category.
+ * Add or update a new category to the database.
  *
- * @param bool $wp_error Whether to return false or WP_Error on failure.
+ * @param array|object|Category $category_data An array, object, or Category object of data arguments.
  *
- * @param array $data {
- *                            An array of elements that make up an category to update or insert.
- *
- * @type int $id The category ID. If equal to something other than 0, the category with that ID will be updated. Default 0.
- *
- * @type string $name Unique name of the category.
- *
- * @type string $type Category type.
- *
- * @type string $color Color of the category.
- *
- * @type int $enabled The status of the category. Default 1.
- *
- * @type string $date_created The date when the category is created. Default is current current time.
- *
- * }
- *
- * @return int|\WP_Error|\EverAccounting\Models\Category|bool The value 0 or WP_Error on failure. The Category object on success.
+ * @return Category|WP_Error The Category object or WP_Error otherwise.
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
- *
  */
-function eaccounting_insert_category( $data = array(), $wp_error = true ) {
-	// Ensure that we have data.
-	if ( empty( $data ) ) {
-		return false;
+function eaccounting_insert_category( $category_data ) {
+	global $wpdb;
+	if ( $category_data instanceof Category ) {
+		$category_data = $category_data->to_array();
+	} elseif ( $category_data instanceof stdClass ) {
+		$category_data = get_object_vars( $category_data );
 	}
-	try {
-		// The  id will be provided when updating an item.
-		$data = wp_parse_args( $data, array( 'id' => null ) );
 
-		// Retrieve the category.
-		$item = new \EverAccounting\Models\Category( $data['id'] );
+	$defaults = array(
+		'name'         => '',
+		'type'         => '',
+		'color'        => '',
+		'enabled'      => true,
+		'date_created' => '',
+	);
 
-		// Load new data.
-		$item->set_props( $data );
+	// Are we updating or creating?
+	$id      = null;
+	$update  = false;
+	$changes = $category_data;
+	if ( ! empty( $category_data['id'] ) ) {
+		$update = true;
+		$id     = absint( $category_data['id'] );
+		$before = eaccounting_get_category( $id );
 
-		// If no color set.
-		if( empty( $item->get_color() ) ){
-			$item->set_color( eaccounting_get_random_color() );
+		if ( is_null( $before ) ) {
+			return new WP_Error( 'invalid_category_id', __( 'Invalid category id to update.' ) );
+		}
+		// Store changes value.
+		$changes = array_diff_assoc( $category_data, $before->to_array() );
+
+		// Merge old and new fields with new fields overwriting old ones.
+		$category_data = array_merge( $before->to_array(), $category_data );
+	}
+
+	$data_arr = wp_parse_args( $category_data, $defaults );
+	$data_arr = eaccounting_sanitize_category( $data_arr, 'db' );
+
+	if ( empty( $data_arr['name'] ) ) {
+		return new WP_Error( 'invalid_category_name', esc_html__( 'Category name is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['type'] ) ) {
+		return new WP_Error( 'invalid_category_type', esc_html__( 'Category type is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
+		$data_arr['date_created'] = current_time( 'mysql' );
+	}
+
+	// Compute fields.
+	$name         = $data_arr['name'];
+	$type         = $data_arr['type'];
+	$color        = $data_arr['color'];
+	$enabled      = (int) $data_arr['enabled'];
+	$date_created = $data_arr['date_created'];
+	$data         = compact( 'name', 'type', 'color', 'enabled', 'date_created' );
+
+	/**
+	 * Filters category data before it is inserted into the database.
+	 *
+	 * @param array $data Category data to be inserted.
+	 * @param array $data_arr Sanitized category data.
+	 * @param array $category_data Category data as originally passed to the function.
+	 *
+	 * @since 1.2.1
+	 */
+	$data = apply_filters( 'eaccounting_insert_category_data', $data, $data_arr, $category_data );
+
+	$data  = wp_unslash( $data );
+	$where = array( 'id' => $id );
+
+	if ( $update ) {
+
+		/**
+		 * Fires immediately before an existing category is updated in the database.
+		 *
+		 * @param int $id Category id.
+		 * @param array $data Category data to be inserted.
+		 * @param array $changes Category data to be updated.
+		 * @param array $data_arr Sanitized category data.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_update_category', $id, $data, $changes, $data_arr );
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_categories', $data, $where ) ) {
+			new WP_Error( 'db_update_error', __( 'Could not update category in the database.' ), $wpdb->last_error );
 		}
 
-		$item->save();
+		/**
+		 * Fires immediately after an existing category is updated in the database.
+		 *
+		 * @param int $id Category id.
+		 * @param array $data Category data to be inserted.
+		 * @param array $changes Category data to be updated.
+		 * @param array $data_arr Sanitized category data.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_update_category', $id, $data, $changes, $data_arr );
+	} else {
 
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( 'insert_category', $e->getMessage() ) : 0;
+		/**
+		 * Fires immediately before an existing category is inserted in the database.
+		 *
+		 * @param array $data Category data to be inserted.
+		 * @param string $data_arr Sanitized category data.
+		 * @param array $category_data Category data as originally passed to the function.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_insert_category', $data, $data_arr, $category_data );
+
+		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_categories', $data ) ) {
+			new WP_Error( 'db_insert_error', __( 'Could not insert category into the database.' ), $wpdb->last_error );
+		}
+
+		$id = (int) $wpdb->insert_id;
+
+		/**
+		 * Fires immediately after an existing category is inserted in the database.
+		 *
+		 * @param int $id Category id.
+		 * @param array $data Category has been inserted.
+		 * @param array $data_arr Sanitized category data.
+		 * @param array $category_data Category data as originally passed to the function.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_insert_category', $id, $data, $data_arr, $category_data );
 	}
+
+	// Clear cache.
+	eaccounting_delete_cache( 'ea_categories', $id );
+
+	// Get new category object.
+	$category = eaccounting_get_category( $id );
+
+	/**
+	 * Fires once an category has been saved.
+	 *
+	 * @param int $id Category id.
+	 * @param Category $category Category object.
+	 * @param bool $update Whether this is an existing category being updated.
+	 *
+	 * @since 1.2.1
+	 */
+	do_action( 'eaccounting_saved_category', $id, $data_arr, $update );
+
+	return $category;
 }
 
 /**
- * Delete a category.
+ * Delete an category.
  *
- * @param $category_id
+ * @param int $category_id Category id.
  *
- * @return bool
+ * @return Category|false|null Note data on success, false or null on failure.
  * @since 1.1.0
- *
  */
 function eaccounting_delete_category( $category_id ) {
-	try {
-		$category = new EverAccounting\Models\Category( $category_id );
+	global $wpdb;
 
-		return $category->exists() ? $category->delete() : false;
-	} catch ( \Exception $e ) {
+	$category = eaccounting_get_category( $category_id );
+	if ( ! $category->exists() ) {
 		return false;
 	}
+
+	/**
+	 * Filters whether an category delete should take place.
+	 *
+	 * @param bool|null $delete Whether to go forward with deletion.
+	 * @param Category $category category object.
+	 *
+	 * @since 1.2.1
+	 */
+	$check = apply_filters( 'eaccounting_pre_delete_category', null, $category );
+	if ( null !== $check ) {
+		return $check;
+	}
+
+	/**
+	 * Fires before an category is deleted.
+	 *
+	 * @param int $category_id Category id.
+	 * @param Category $category Category object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_category()
+	 */
+	do_action( 'eaccounting_before_delete_category', $category_id, $category );
+
+	$result = $wpdb->delete( $wpdb->prefix . 'ea_categories', array( 'id' => $category_id ) );
+	if ( ! $result ) {
+		return false;
+	}
+
+	eaccounting_delete_cache( 'ea_categories', $category_id );
+
+	/**
+	 * Fires after an category is deleted.
+	 *
+	 * @param int $category_id category id.
+	 * @param Category $category category object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_category()
+	 */
+	do_action( 'eaccounting_delete_category', $category_id, $category );
+
+	return $category;
 }
+
+/**
+ * Sanitizes every category field.
+ *
+ * If the context is 'raw', then the category object or array will get minimal
+ * sanitization of the integer fields.
+ *
+ * @param object|array $category The category object or array
+ * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ *
+ * @return object|Category|array The now sanitized category object or array
+ * @see eaccounting_sanitize_category_field()
+ *
+ * @since 1.2.1
+ */
+function eaccounting_sanitize_category( $category, $context = 'raw' ) {
+	if ( is_object( $category ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $category->filter ) && $context == $category->filter ) {
+			return $category;
+		}
+		if ( ! isset( $category->id ) ) {
+			$category->id = 0;
+		}
+		foreach ( array_keys( get_object_vars( $category ) ) as $field ) {
+			$category->$field = eaccounting_sanitize_category_field( $field, $category->$field, $category->id, $context );
+		}
+		$category->filter = $context;
+	} elseif ( is_array( $category ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $category['filter'] ) && $context == $category['filter'] ) { //phpcs:ignore
+			return $category;
+		}
+		if ( ! isset( $category['id'] ) ) {
+			$category['id'] = 0;
+		}
+		foreach ( array_keys( $category ) as $field ) {
+			$category[ $field ] = eaccounting_sanitize_category_field( $field, $category[ $field ], $category['id'], $context );
+		}
+		$category['filter'] = $context;
+	}
+
+	return $category;
+}
+
+/**
+ * Sanitizes a category field based on context.
+ *
+ * Possible context values are:  'raw', 'edit', 'db', 'display'.
+ *
+ * @param string $field The category Object field name.
+ * @param mixed  $value The category Object value.
+ * @param int    $category_id Category id.
+ * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
+ *
+ * @return mixed Sanitized value.
+ * @since 1.2.1
+ */
+function eaccounting_sanitize_category_field( $field, $value, $category_id, $context ) {
+	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) { //phpcs:ignore
+		$value = absint( $value );
+	}
+
+	$context = strtolower( $context );
+
+	if ( 'raw' === $context ) {
+		return $value;
+	}
+
+	if ( 'edit' === $context ) {
+
+		/**
+		 * Filters an category field to edit before it is sanitized.
+		 *
+		 * @param mixed $value Value of the category field.
+		 * @param int $category_id Category id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_edit_category_{$field}", $value, $category_id );
+
+	} elseif ( 'db' === $context ) {
+
+		/**
+		 * Filters a category field value before it is sanitized.
+		 *
+		 * @param mixed $value Value of the category field.
+		 * @param int $category_id Category id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_pre_category_{$field}", $value, $category_id );
+
+	} else {
+		// Use display filters by default.
+
+		/**
+		 * Filters the category field sanitized for display.
+		 *
+		 * The dynamic portion of the filter name, `$field`, refers to the category field name.
+		 *
+		 * @param mixed $value Value of the category field.
+		 * @param int $category_id category id.
+		 * @param string $context Context to retrieve the category field value.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_category_{$field}", $value, $category_id, $context );
+	}
+
+	return $value;
+}
+
 
 /**
  * Get category items.
@@ -171,7 +439,6 @@ function eaccounting_delete_category( $category_id ) {
  *
  * @return int|array|null
  * @since 1.1.0
- *
  */
 function eaccounting_get_categories( $args = array() ) {
 	global $wpdb;
@@ -209,32 +476,32 @@ function eaccounting_get_categories( $args = array() ) {
 
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where   .= " AND $table.`id` IN ($include)";
+		$where  .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where   .= " AND $table.`id` NOT IN ($exclude)";
+		$where  .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
 		$where .= " AND $table.`type` IN ('$types')";
 	}
 
 	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
 		$status = eaccounting_string_to_bool( $qv['status'] );
 		$status = eaccounting_bool_to_number( $status );
-		$where  .= " AND $table.`enabled` = ('$status')";
+		$where .= " AND $table.`enabled` = ('$status')";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where              .= $date_created_query->get_sql();
+		$where             .= $date_created_query->get_sql();
 	}
 
 	$search_cols = array( 'name', 'type' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where    .= ' AND (';
+		$where   .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -291,5 +558,4 @@ function eaccounting_get_categories( $args = array() ) {
  *
  * @return int|array|null
  * @since 1.1.0
- *
  */
