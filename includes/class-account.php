@@ -65,13 +65,13 @@ class Account {
 	 */
 	public function __construct( $account ) {
 		if ( $account instanceof self ) {
-			$this->id = (int) $account->id;
-		} elseif ( is_numeric( $account ) ) {
-			$this->id = $account;
-		} elseif ( ! empty( $account->id ) ) {
-			$this->id = (int) $account->id;
+			$this->id = absint( $account->id );
+		} elseif ( is_object( $account ) && ! empty( $account->id ) ) {
+			$this->id = absint( $account->id );
+		} elseif ( is_array( $account ) && ! empty( $account['id'] ) ) {
+			$this->id = absint( $account['id'] );
 		} else {
-			$this->id = 0;
+			$this->id = absint( $account );
 		}
 
 		if ( $this->id > 0 ) {
@@ -107,16 +107,18 @@ class Account {
 			return $data;
 		}
 
-		$data = $wpdb->get_row(
+		$_data = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d LIMIT 1",
 				$id
 			)
 		);
 
-		if ( ! $data ) {
+		if ( ! $_data ) {
 			return false;
 		}
+
+		$data = eaccounting_sanitize_account( $_data, 'raw' );
 
 		eaccounting_set_cache( 'ea_accounts', $data );
 
@@ -145,7 +147,7 @@ class Account {
 	 * This method does not update custom fields in the database.
 	 *
 	 * @param string $key Account key.
-	 * @param mixed  $value Account value.
+	 * @param mixed $value Account value.
 	 *
 	 * @since 1.2.1
 	 */
@@ -187,6 +189,29 @@ class Account {
 		if ( isset( $this->data->$key ) ) {
 			unset( $this->data->$key );
 		}
+	}
+
+	/**
+	 * Filter account object based on context.
+	 *
+	 * @param string $filter Filter.
+	 *
+	 * @return Account|Object
+	 * @since 1.2.1
+	 *
+	 */
+	public function filter( $filter ) {
+		if ( $this->filter === $filter ) {
+			return $this;
+		}
+
+		if ( 'raw' === $filter ) {
+			return self::load( $this->id );
+		}
+
+		$this->data = eaccounting_sanitize_account( $this->data, $filter );
+
+		return $this;
 	}
 
 	/**
