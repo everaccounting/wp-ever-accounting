@@ -59,13 +59,13 @@ class Item {
 	 */
 	public function __construct( $item ) {
 		if ( $item instanceof self ) {
-			$this->id = (int) $item->id;
-		} elseif ( is_numeric( $item ) ) {
-			$this->id = $item;
-		} elseif ( ! empty( $item->id ) ) {
-			$this->id = (int) $item->id;
+			$this->id = absint( $item->id );
+		} elseif ( is_object( $item ) && ! empty( $item->id ) ) {
+			$this->id = absint( $item->id );
+		} elseif ( is_array( $item ) && ! empty( $item['id'] ) ) {
+			$this->id = absint( $item['id'] );
 		} else {
-			$this->id = 0;
+			$this->id = absint( $item );
 		}
 
 		if ( $this->id > 0 ) {
@@ -101,16 +101,17 @@ class Item {
 			return $data;
 		}
 
-		$data = $wpdb->get_row(
+		$_data = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->prefix}ea_items WHERE id = %d LIMIT 1",
 				$id
 			)
 		);
 
-		if ( ! $data ) {
+		if ( ! $_data ) {
 			return false;
 		}
+		$data = eaccounting_sanitize_item( $_data, 'raw' );
 
 		eaccounting_set_cache( 'ea_items', $data );
 
@@ -181,6 +182,28 @@ class Item {
 		if ( isset( $this->data->$key ) ) {
 			unset( $this->data->$key );
 		}
+	}
+
+	/**
+	 * Filter item object based on context.
+	 *
+	 * @param string $filter Filter.
+	 *
+	 * @return Item|Object
+	 * @since 1.2.1
+	 */
+	public function filter( $filter ) {
+		if ( $this->filter === $filter ) {
+			return $this;
+		}
+
+		if ( 'raw' === $filter ) {
+			return self::load( $this->id );
+		}
+
+		$this->data = eaccounting_sanitize_item( $this->data, $filter );
+
+		return $this;
 	}
 
 	/**
