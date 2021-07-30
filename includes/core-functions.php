@@ -631,6 +631,7 @@ function eaccounting_set_cache( $type, $object ) {
 				wp_cache_add( $object->email, $object->id, $type);
 			}
 			break;
+		case 'ea_transactions':
 		case 'ea_accounts':
 		case 'ea_notes':
 			wp_cache_add( $object->id, $object, $type );

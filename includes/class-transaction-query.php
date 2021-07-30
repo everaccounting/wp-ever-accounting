@@ -1,19 +1,8 @@
 <?php
-/**
- * Account Query class.
- *
- *
- * @since   1.2.1
- * @package   EverAccounting
- */
 
 namespace EverAccounting;
 
-/**
- * Class Account_Query
- * @package EverAccounting
- */
-class Account_Query {
+class Transaction_Query {
 	/**
 	 * Query vars set by the user
 	 *
@@ -29,6 +18,14 @@ class Account_Query {
 	 * @var array
 	 */
 	public $query_vars = array();
+
+	/**
+	 * Date query container
+	 *
+	 * @since 1.2.1
+	 * @var \WP_Date_Query A date query instance.
+	 */
+	public $date_query = false;
 
 	/**
 	 * SQL fields clauses
@@ -81,26 +78,29 @@ class Account_Query {
 	public $request;
 
 	/**
-	 * Array of accounts objects or accounts ids.
+	 * Array of transactions objects or transactions ids.
 	 *
 	 * @since 1.2.1
-	 * @var Account[]|int[]
+	 * @var Transaction[]|int[]
 	 */
 	public $results = [];
 
 	/**
-	 * The number of accounts found for the current query.
+	 * The amount of transactions for the current query.
 	 *
 	 * @since 1.2.1
 	 * @var int
 	 */
 	public $total = 0;
 
-
 	/**
-	 * Sets up the accounts query, based on the query vars passed.
+	 * Constructor.
 	 *
-	 * @param string|array $query Array or query string of account query parameters. Default empty.
+	 * Sets up the WordPress query, if parameter is not empty.
+	 *
+	 * @param string|array $query URL query string or array of vars.
+	 *
+	 * @see Transaction_Query::parse_query() for all available arguments.
 	 *
 	 * @since 1.2.1
 	 *
@@ -179,7 +179,7 @@ class Account_Query {
 	 */
 	public function prepare_query( $query = array() ) {
 		global $wpdb;
-		$this->table = $wpdb->prefix . 'ea_accounts';
+		$this->table = $wpdb->prefix . 'ea_transactions';
 
 		if ( empty( $this->query_vars ) || ! empty( $query ) ) {
 			$this->query_limit = null;
@@ -187,19 +187,19 @@ class Account_Query {
 		}
 
 		/**
-		 * Fires before the Account_Query has been parsed.
+		 * Fires before the Transaction_Query has been parsed.
 		 *
-		 * The passed Account_Query object contains the query variables,
+		 * The passed Transaction_Query object contains the query variables,
 		 * not yet passed into SQL.
 		 *
-		 * @param Account_Query $query Current instance of Account_Query (passed by reference).
+		 * @param Transaction_Query $query Current instance of Transaction_Query (passed by reference).
 		 *
 		 * @since 4.0.0
 		 *
 		 */
-		do_action_ref_array( 'eaccounting_pre_get_accounts', array( &$this ) );
+		do_action_ref_array( 'eaccounting_pre_get_transactions', array( &$this ) );
 
-		// Ensure that query vars are filled after 'eaccounting_pre_get_accounts'.
+		// Ensure that query vars are filled after 'pre_get_users'.
 		$qv =& $this->query_vars;
 		$qv = self::fill_query_vars( $qv );
 
@@ -233,29 +233,88 @@ class Account_Query {
 		}
 
 		// fields
-		if ( $qv['orderby'] === 'balance' || ! empty( $qv['balance_min'] ) || empty( $qv['balance_max'] ) || ! empty( $qv['balance_between'] ) ) {
+		if( $qv['orderby'] === 'amount' || !empty($qv['amount_min']) || empty( $qv['amount_max']) || !empty( $qv['amount_between'] )){
 			$this->query_from .= " LEFT OUTER JOIN (
-				SELECT account_id, SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) balance, currency_code code
-				FROM {$wpdb->prefix}ea_transactions
-				group by account_id, currency_code
-			) transactions ON ({$this->table}.id = transactions.account_id)
+				SELECT id, ($this->table.amount/$this->table.currency_rate) as default_amount
+				FROM $this->table
+			) a ON ({$this->table}.id = a.id)
 			";
 		}
 
 		// where
 
-		if ( ! empty( $qv['balance_min'] ) ) {
-			$this->query_where .= $wpdb->prepare( " AND transactions >= (%f)", (float) $qv['balance_min'] );
+		if ( ! empty( $qv['type'] ) && $qv['type'] !== 'all' ) {
+			$types             = implode( "','", wp_parse_list( $qv['type'] ) );
+			$this->query_where .= " AND $this->table.`type` IN ('$types')";
 		}
 
-		if ( ! empty( $qv['balance_max'] ) ) {
-			$this->query_where .= $wpdb->prepare( " AND transactions <= (%f)", (float) $qv['balance_max'] );
+		if ( ! empty( $qv['currency_code'] ) ) {
+			$currency_code     = implode( "','", wp_parse_list( $qv['currency_code'] ) );
+			$this->query_where .= " AND $this->table.`currency_code` IN ('$currency_code')";
 		}
 
-		if ( ! empty( $qv['balance_between'] ) && is_array( $qv['balance_between'] ) ) {
-			$min               = min( $qv['balance_between'] );
-			$max               = max( $qv['balance_between'] );
-			$this->query_where .= $wpdb->prepare( " AND transactions >= (%f) AND transactions <= (%f) ", (float) $min, (float) $max );
+		if ( ! empty( $qv['payment_method'] ) ) {
+			$payment_method    = implode( "','", wp_parse_list( $qv['payment_method'] ) );
+			$this->query_where .= " AND $this->table.`payment_method` IN ('$payment_method')";
+		}
+
+		if ( ! empty( $qv['account_id'] ) ) {
+			$account_id        = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
+			$this->query_where .= " AND $this->table.`account_id` IN ($account_id)";
+		}
+
+		if ( ! empty( $qv['account__in'] ) ) {
+			$account_in        = implode( ',', wp_parse_id_list( $qv['account__in'] ) );
+			$this->query_where .= " AND $this->table.`account_id` IN ($account_in)";
+		}
+
+		if ( ! empty( $qv['account__not_in'] ) ) {
+			$account_not_in    = implode( ',', wp_parse_id_list( $qv['account__not_in'] ) );
+			$this->query_where .= " AND $this->table.`account_id` NOT IN ($account_not_in)";
+		}
+
+		if ( ! empty( $qv['document_id'] ) ) {
+			$document_id       = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
+			$this->query_where .= " AND $this->table.`document_id` IN ($document_id)";
+		}
+
+		if ( ! empty( $qv['category_id'] ) ) {
+			$category_in       = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
+			$this->query_where .= " AND $this->table.`category_id` IN ($category_in)";
+		}
+
+		if ( ! empty( $qv['category__in'] ) ) {
+			$category_in       = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
+			$this->query_where .= " AND $this->table.`contact_id` IN ($category_in)";
+		}
+
+		if ( ! empty( $qv['category__not_in'] ) ) {
+			$category_not_in   = implode( ',', wp_parse_id_list( $qv['category__not_in'] ) );
+			$this->query_where .= " AND $this->table.`contact_id` NOT IN ($category_not_in)";
+		}
+
+		if ( ! empty( $qv['contact_id'] ) ) {
+			$contact_id        = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
+			$this->query_where .= " AND $this->table.`contact_id` IN ($contact_id)";
+		}
+
+		if ( ! empty( $qv['parent_id'] ) ) {
+			$parent_id         = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
+			$this->query_where .= " AND $this->table.`parent_id` IN ($parent_id)";
+		}
+
+		if ( ! empty( $qv['amount_min'] ) ) {
+			$this->query_where .= $wpdb->prepare( " AND default_amount >= (%f)", (float) $qv['amount_min'] );
+		}
+
+		if ( ! empty( $qv['amount_max'] ) ) {
+			$this->query_where .= $wpdb->prepare( " AND default_amount <= (%f)", (float) $qv['amount_max'] );
+		}
+
+		if ( ! empty( $qv['amount_between'] ) && is_array( $qv['amount_between'] ) ) {
+			$min               = min( $qv['amount_between'] );
+			$max               = max( $qv['amount_between'] );
+			$this->query_where .= $wpdb->prepare( " AND default_amount >= (%f) AND default_amount <= (%f) ", (float) $min, (float) $max );
 		}
 
 		// Sorting.
@@ -336,30 +395,24 @@ class Account_Query {
 
 			$search_columns = array();
 			if ( $qv['search_columns'] ) {
-				$search_columns = array_intersect( $qv['search_columns'], array(
-					'name',
-					'number',
-					'bank_name',
-					'bank_phone',
-					'bank_address'
-				) );
+				$search_columns = array_intersect( $qv['search_columns'], array( 'reference', 'description' ) );
 			}
 			if ( ! $search_columns ) {
-				$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
+				$search_columns = array( 'reference', 'description' );
 			}
 
 			/**
-			 * Filters the columns to search in a Account_Query search.
+			 * Filters the columns to search in a Transaction_Query search.
 			 *
 			 *
 			 * @param string[] $search_columns Array of column names to be searched.
 			 * @param string $search Text being searched.
-			 * @param Account_Query $query The current Account_Query instance.
+			 * @param Transaction_Query $query The current Transaction_Query instance.
 			 *
-			 * @since 1.2.1
+			 * @since 3.6.0
 			 *
 			 */
-			$search_columns = apply_filters( 'eaccounting_account_search_columns', $search_columns, $search, $this );
+			$search_columns = apply_filters( 'eaccounting_transaction_search_columns', $search_columns, $search, $this );
 
 			$this->query_where .= $this->get_search_sql( $search, $search_columns, $wild );
 		}
@@ -373,19 +426,22 @@ class Account_Query {
 			$this->query_where .= " AND $this->table.id NOT IN ($ids)";
 		}
 
+		// Date queries are allowed for the user_registered field.
+
+
 		/**
-		 * Fires after the Account_Query has been parsed, and before
+		 * Fires after the Transaction_Query has been parsed, and before
 		 * the query is executed.
 		 *
-		 * The passed Account_Query object contains SQL parts formed
+		 * The passed Transaction_Query object contains SQL parts formed
 		 * from parsing the given query.
 		 *
-		 * @param Account_Query $query Current instance of Account_Query (passed by reference).
+		 * @param Transaction_Query $query Current instance of Transaction_Query (passed by reference).
 		 *
 		 * @since 1.2.1
 		 *
 		 */
-		do_action_ref_array( 'eaccounting_pre_account_query', array( &$this ) );
+		do_action_ref_array( 'eaccounting_pre_transaction_query', array( &$this ) );
 
 	}
 
@@ -394,7 +450,7 @@ class Account_Query {
 	 *
 	 * @since 1.2.1
 	 *
-	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 */
 	public function query() {
 		global $wpdb;
@@ -407,18 +463,18 @@ class Account_Query {
 		 * Return a non-null value to bypass WordPress' default user queries.
 		 *
 		 * Filtering functions that require pagination information are encouraged to set
-		 * the `total_users` property of the Account_Query object, passed to the filter
-		 * by reference. If Account_Query does not perform a database query, it will not
+		 * the `total_users` property of the Transaction_Query object, passed to the filter
+		 * by reference. If Transaction_Query does not perform a database query, it will not
 		 * have enough information to generate these values itself.
 		 *
 		 * @param array|null $results Return an array of user data to short-circuit WP's user query
 		 *                               or null to allow WP to run its normal queries.
-		 * @param Account_Query $query The Account_Query instance (passed by reference).
+		 * @param Transaction_Query $query The Transaction_Query instance (passed by reference).
 		 *
 		 * @since 5.1.0
 		 *
 		 */
-		$this->results = apply_filters_ref_array( 'eaccounting_accounts_pre_query', array( null, &$this ) );
+		$this->results = apply_filters_ref_array( 'eaccounting_transactions_pre_query', array( null, &$this ) );
 
 		if ( null === $this->results ) {
 			$this->request = "SELECT $this->query_fields $this->query_from $this->query_where $this->query_orderby $this->query_limit";
@@ -431,10 +487,10 @@ class Account_Query {
 
 			if ( isset( $qv['count_total'] ) && $qv['count_total'] ) {
 				/**
-				 * Filters SELECT FOUND_ROWS() query for the current Account_Query instance.
+				 * Filters SELECT FOUND_ROWS() query for the current Transaction_Query instance.
 				 *
-				 * @param string $sql The SELECT FOUND_ROWS() query for the current Account_Query.
-				 * @param Account_Query $query The current Account_Query instance.
+				 * @param string $sql The SELECT FOUND_ROWS() query for the current Transaction_Query.
+				 * @param Transaction_Query $query The current Transaction_Query instance.
 				 *
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
@@ -442,7 +498,7 @@ class Account_Query {
 				 * @since 5.1.0 Added the `$this` parameter.
 				 *
 				 */
-				$found_users_query = apply_filters( 'eaccounting_found_accounts_query', 'SELECT FOUND_ROWS()', $this );
+				$found_users_query = apply_filters( 'eaccounting_found_transactions_query', 'SELECT FOUND_ROWS()', $this );
 
 				$this->total = (int) $wpdb->get_var( $found_users_query );
 			}
@@ -451,13 +507,10 @@ class Account_Query {
 		if ( ! $this->results ) {
 			return;
 		}
-
 		if ( 'all' === $qv['fields'] ) {
-			foreach ( $this->results as $key => $data ) {
-				eaccounting_set_cache( 'ea_accounts', $data );
-				$account = new Account( null );
-				$account->init( $data );
-				$this->results[ $key ] = $account;
+			foreach ( $this->results as $key => $transaction ) {
+				eaccounting_set_cache( 'ea_transactions', $transaction );
+				$this->results[ $key ] = new Transaction( $transaction );
 			}
 		}
 	}
@@ -467,7 +520,8 @@ class Account_Query {
 	 *
 	 * @param string $string
 	 * @param array $cols
-	 * @param bool $wild Whether to allow wildcard searches.
+	 * @param bool $wild Whether to allow wildcard searches. Default is false for Network Admin, true for single site.
+	 *                       Single site allows leading and trailing wildcards, Network Admin only trailing.
 	 *
 	 * @return string
 	 * @since 1.2.1
@@ -511,16 +565,40 @@ class Account_Query {
 
 		$_orderby = '';
 		if ( in_array( $orderby, array(
-			'name',
-			'number',
+			'type',
+			'payment_date',
 			'currency_code',
-			'bank_name',
-			'bank_phone',
-			'bank_address'
+			'currency_rate',
+			'description',
+			'payment_method',
+			'reference',
+			'reconciled',
+			'date_created'
 		), true ) ) {
 			$_orderby = $orderby;
-		} elseif ( $orderby === 'opening_balance' ) {
-			$_orderby = $orderby;
+		} elseif ( $orderby === 'amount' ) {
+			$_orderby = 'default_amount';
+		} elseif ( 'account_id' === $orderby || 'account' === $orderby ) {
+			$this->query_from .= " LEFT OUTER JOIN (
+				SELECT id, name as account_name
+				FROM {$wpdb->prefix}ea_accounts
+			) accounts ON ({$this->table}.account_id = accounts.id)
+			";
+			$_orderby = 'account_name';
+		} elseif ( 'category_id' === $orderby || 'category' === $orderby ) {
+			$this->query_from .= " LEFT OUTER JOIN (
+				SELECT id, name as category_name
+				FROM {$wpdb->prefix}ea_categories
+			) categories ON ({$this->table}.category_id = ea_categories.id)
+			";
+			$_orderby = 'category_name';
+		}  elseif ( 'contact_id' === $orderby || 'contact' === $orderby ) {
+			$this->query_from .= " LEFT OUTER JOIN (
+				SELECT id, name as contact_name
+				FROM {$wpdb->prefix}ea_contacts
+			) contacts ON ({$this->table}.contact_id = ea_contacts.id)
+			";
+			$_orderby = 'contact_name';
 		} elseif ( 'id' === $orderby ) {
 			$_orderby = 'id';
 		} elseif ( 'include' === $orderby && ! empty( $this->query_vars['include'] ) ) {
@@ -554,7 +632,7 @@ class Account_Query {
 	}
 
 	/**
-	 * Return the list of accounts.
+	 * Return the list of users.
 	 *
 	 * @return array Array of results.
 	 * @since 1.2.1
@@ -565,9 +643,9 @@ class Account_Query {
 	}
 
 	/**
-	 * Return the total number of items for the current query.
+	 * Return the total number of users for the current query.
 	 *
-	 * @return int Number of total accounts.
+	 * @return int Number of total users.
 	 * @since 1.2.1
 	 *
 	 */

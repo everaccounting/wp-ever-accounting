@@ -48,14 +48,6 @@ class Account {
 	public $id = null;
 
 	/**
-	 * Account balance
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	protected $balance = null;
-
-	/**
 	 * Account constructor.
 	 *
 	 * @param object $account Account Object
@@ -81,9 +73,24 @@ class Account {
 
 				return;
 			}
-			$this->data = $data;
-			$this->id   = (int) $data->id;
+			$this->init( $data );
 		}
+	}
+
+	/**
+	 * Sets up object properties.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param object $data DB row object.
+	 */
+	public function init( $data ) {
+		if ( empty( $data->id ) ) {
+			$data->id = 0;
+		}
+		$data = eaccounting_sanitize_account($data);
+		$this->data = $data;
+		$this->id   = (int) $data->id;
 	}
 
 	/**
@@ -117,8 +124,6 @@ class Account {
 		if ( ! $_data ) {
 			return false;
 		}
-
-		$data = eaccounting_sanitize_account( $_data, 'raw' );
 
 		eaccounting_set_cache( 'ea_accounts', $data );
 
@@ -263,18 +268,7 @@ class Account {
 		$transaction_total = (float) $wpdb->get_var(
 			$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
 		);
-		$balance           = $this->opening_balance + $transaction_total;
-		$this->set_balance( $balance );
-		return $balance;
-	}
-
-	/**
-	 * Set balance.
-	 *
-	 * @param string $balance Account balance
-	 * @since 1.1.0
-	 */
-	protected function set_balance( string $balance ) {
-		$this->balance = $balance;
+		$this->balance           = $this->opening_balance + $transaction_total;
+		return $this->balance;
 	}
 }
