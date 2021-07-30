@@ -608,7 +608,7 @@ class Install {
             `id` bigINT(20) NOT NULL AUTO_INCREMENT,
   			`parent_id` INT(11) NOT NULL,
   			`type` VARCHAR(20) NOT NULL,
-  			`note` TEXT DEFAULT NULL,
+  			`content` TEXT DEFAULT NULL,
   			`extra` longtext DEFAULT NULL,
   			`creator_id` INT(11) DEFAULT NULL,
 		    `date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',

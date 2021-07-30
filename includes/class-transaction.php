@@ -43,7 +43,7 @@ class Transaction {
 	 * @since 1.2.1
 	 * @var \stdClass
 	 */
-	public $data;
+	protected $data;
 
 	/**
 	 * Transaction id.
@@ -79,9 +79,23 @@ class Transaction {
 
 				return;
 			}
-			$this->data = $data;
-			$this->id   = (int) $data->id;
+			$this->init($data);
 		}
+	}
+
+	/**
+	 * Sets up object properties.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @param object $data DB row object.
+	 */
+	public function init( $data ) {
+		if ( empty( $data->id ) ) {
+			$data->id = 0;
+		}
+		$this->data = $data;
+		$this->id   = (int) $data->id;
 	}
 
 	/**
@@ -111,7 +125,6 @@ class Transaction {
 				$id
 			)
 		);
-
 		if ( ! $data ) {
 			return false;
 		}
@@ -150,10 +163,8 @@ class Transaction {
 	public function __set( $key, $value ) {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
-		} elseif ( isset( $this->data->$key ) ) {
+		} else{
 			$this->data->$key = $value;
-		} else {
-			$this->update_meta( $key, $value );
 		}
 	}
 
