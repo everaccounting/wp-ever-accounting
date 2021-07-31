@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\MetaData;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,44 +20,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
- * @property string $document_number
- * @property string $type
- * @property string $order_number
- * @property string $status
- * @property string $issue_date
- * @property string $due_date
- * @property string $payment_date
- * @property int $category_id
- * @property int $contact_id
- * @property string $address
- * @property string $currency_code
- * @property float $currency_rate
- * @property float $discount
- * @property string $discount_type
- * @property float $subtotal
- * @property float $total_tax
- * @property float $total_discount
- * @property float $total_fees
- * @property float $total_shipping
- * @property float $total
- * @property boolean $tax_inclusive
- * @property string $note
- * @property string $terms
- * @property int $attachment_id
- * @property string $key
- * @property int $parent_id
- * @property int $creator_id
- * @property string $date_created
  */
-class Invoice {
-	/**
-	 * Invoice data container.
-	 *
-	 * @since 1.2.1
-	 * @var \stdClass
-	 */
-	public $data;
-
+class Invoice extends MetaData {
 	/**
 	 * Invoice id.
 	 *
@@ -65,83 +31,277 @@ class Invoice {
 	public $id = null;
 
 	/**
-	 * Invoice constructor.
 	 *
-	 * @param object $invoice Invoice Object
 	 *
-	 * @return void
 	 * @since 1.2.1
+	 * @var string
 	 */
-	public function __construct( $invoice ) {
-		if ( $invoice instanceof self ) {
-			$this->id = (int) $invoice->id;
-		} elseif ( is_numeric( $invoice ) ) {
-			$this->id = $invoice;
-		} elseif ( ! empty( $invoice->id ) ) {
-			$this->id = (int) $invoice->id;
-		} else {
-			$this->id = 0;
+	public $document_number = '';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $type = '';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $order_number = '';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $status = '';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $issue_date = '0000-00-00 00:00:00';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $due_date = '0000-00-00 00:00:00';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $payment_date = '0000-00-00 00:00:00';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $category_id = null;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $contact_id = null;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $address = '';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $discount = 0.00;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $discount_type = 'fixed';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $subtotal = 0.00;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $total_tax = 0.00;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $total_discount = 0.00;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $total_fees = 0.00;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $total_shipping = 0.00;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $total = 0.00;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $tax_inclusive = 0;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $note = '';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $terms = '';
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $attachment_id = null;
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $currency_code = '';
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $currency_rate = 1;
+
+	/**
+	 *
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $parent_id = null;
+
+	/**
+	 * Transaction creator user id.
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $creator_id = 0;
+
+	/**
+	 * Invoice created date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
+
+	/**
+	 * Stores the transaction object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $filter;
+
+	/**
+	 * Meta type.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	protected $meta_type = 'invoice';
+
+	/**
+	 * Retrieve Invoice instance.
+	 *
+	 * @param int $invoice_id Invoice id.
+	 *
+	 * @return Invoice|false Invoice object, false otherwise.
+	 * @since 1.2.1
+	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
+	 */
+	public static function get_instance( $invoice_id ) {
+		global $wpdb;
+
+		$invoice_id = (int) $invoice_id;
+		if ( ! $invoice_id ) {
+			return false;
 		}
 
-		if ( $this->id > 0 ) {
-			$data = self::load( $this->id );
-			if ( ! $data ) {
-				$this->id = null;
+		$_item = wp_cache_get( $invoice_id, 'ea_invoices' );
 
-				return;
+		if ( ! $_item ) {
+			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_invoices WHERE id = %d LIMIT 1", $invoice_id ) );
+
+			if ( ! $_item ) {
+				return false;
 			}
-			$this->data = $data;
-			$this->id   = (int) $data->id;
+
+			$_item = eaccounting_sanitize_invoice( $_item, 'raw' );
+			wp_cache_add( $_item->id, $_item, 'ea_invoices' );
+		} elseif ( empty( $_item->filter ) ) {
+			$_item = eaccounting_sanitize_invoice( $_item, 'raw' );
 		}
+
+		return new Invoice( $_item );
 	}
 
 	/**
-	 * Return only the main invoice fields
+	 * Account constructor.
 	 *
-	 * @param int $id The id of the invoice
+	 * @param $invoice
 	 *
-	 * @return object|false Raw invoice object
-	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.2.1
 	 */
-	public static function load( $id ) {
-		global $wpdb;
-
-		if ( ! absint( $id ) ) {
-			return false;
+	public function __construct( $invoice ) {
+		foreach ( get_object_vars( $invoice ) as $key => $value ) {
+			$this->$key = $value;
 		}
-
-		$data = wp_cache_get( $id, 'ea_invoices' );
-		if ( $data ) {
-			return $data;
-		}
-
-		$data = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}ea_documents WHERE id = %d LIMIT 1",
-				$id
-			)
-		);
-
-		if ( ! $data ) {
-			return false;
-		}
-
-		eaccounting_set_cache( 'ea_invoices', $data );
-
-		return $data;
 	}
 
 	/**
 	 * Magic method for checking the existence of a certain field.
 	 *
-	 * @param string $key Invoice field to check if set.
+	 * @param string $key Account field to check if set.
 	 *
-	 * @return bool Whether the given Contact field is set.
+	 * @return bool Whether the given Account field is set.
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
-		if ( isset( $this->data->$key ) ) {
+		if ( isset( $this->$key ) ) {
 			return true;
 		}
 
@@ -151,10 +311,10 @@ class Invoice {
 	/**
 	 * Magic method for setting invoice fields.
 	 *
-	 * This method does not update custom fields in the database..
+	 * This method does not update custom fields in the database.
 	 *
-	 * @param string $key Invoice key.
-	 * @param mixed  $value Invoice value.
+	 * @param string $key Account key.
+	 * @param mixed $value Account value.
 	 *
 	 * @since 1.2.1
 	 */
@@ -162,24 +322,28 @@ class Invoice {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
 		} else {
-			$this->data->$key = $value;
+			$this->$key = $value;
 		}
 	}
 
 	/**
 	 * Magic method for accessing custom fields.
 	 *
-	 * @param string $key Invoice field to retrieve.
+	 * @param string $key Account field to retrieve.
 	 *
-	 * @return mixed Value of the given Invoice field (if set).
+	 * @return mixed Value of the given Account field (if set).
 	 * @since 1.2.1
 	 */
 	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} else {
-			$value = $this->data->$key;
+		$value = '';
+		if ( method_exists( $this, 'get_' . $key ) ) {
+			eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'wp-ever-accounting' ), $key ), '1.1.0' );
+			$value = $this->{'get_' . $key}();
+		} else if ( property_exists( $this, $key ) && is_callable( array( $this, $key ) ) ) {
+			$value = $this->$key;
+		} else if ( $this->meta_exists( $key ) ) {
+			$value = $this->get_meta( $key );
+			$value = eaccounting_sanitize_contact_field( $key, $value, $this->id, $this->filter );
 		}
 
 		return $value;
@@ -188,20 +352,41 @@ class Invoice {
 	/**
 	 * Magic method for unsetting a certain field.
 	 *
-	 * @param string $key Invoice key to unset.
+	 * @param string $key Account key to unset.
 	 *
 	 * @since 1.2.1
 	 */
 	public function __unset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			unset( $this->data->$key );
+		if ( isset( $this->$key ) ) {
+			unset( $this->$key );
 		}
+	}
+
+	/**
+	 * Filter invoice object based on context.
+	 *
+	 * @param string $filter Filter.
+	 *
+	 * @return Account|Object
+	 * @since 1.2.1
+	 *
+	 */
+	public function filter( $filter ) {
+		if ( $this->filter === $filter ) {
+			return $this;
+		}
+
+		if ( 'raw' === $filter ) {
+			return self::get_instance( $this->id );
+		}
+
+		return eaccounting_sanitize_invoice( $this, $filter );
 	}
 
 	/**
 	 * Determine whether a property or meta key is set
 	 *
-	 * Consults the documents tables.
+	 * Consults the invoices.
 	 *
 	 * @param string $key Property
 	 *
@@ -229,6 +414,7 @@ class Invoice {
 	 * @since 1.2.1
 	 */
 	public function to_array() {
-		return get_object_vars( $this->data );
+		return get_object_vars( $this );
 	}
+
 }

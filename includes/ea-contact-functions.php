@@ -8,6 +8,8 @@
  * @package EverAccounting
  */
 
+use EverAccounting\Contact;
+
 defined( 'ABSPATH' ) || exit();
 
 /**
@@ -28,507 +30,412 @@ function eaccounting_get_contact_types() {
 
 
 /**
- * Get the contact type label of a specific type.
+ * Main function for returning contact.
  *
- * @param $type
+ * @param int|object|Contact $contact contact to retrieve
+ * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
+ * @return Contact|null
  * @since 1.1.0
- *
- * @return string
  */
-function eaccounting_get_contact_type( $type ) {
-	$types = eaccounting_get_contact_types();
-
-	return array_key_exists( $type, $types ) ? $types[ $type ] : null;
-}
-
-
-/**
- * Get customer.
- *
- * @param $customer
- *
- * @since 1.1.0
- *
- * @return \EverAccounting\Models\Customer|null
- */
-function eaccounting_get_customer( $customer ) {
-	if ( empty( $customer ) ) {
+function eaccounting_get_contact( $contact, $filter = 'raw' ) {
+	if ( empty( $contact ) ) {
 		return null;
 	}
-	try {
-		$result = new EverAccounting\Models\Customer( $customer );
 
-		return $result->exists() ? $result : null;
-	} catch ( \Exception $e ) {
+	if ( $contact instanceof Contact ) {
+		$_contact = $contact;
+	} elseif ( is_object( $contact ) ) {
+		$_contact = new Contact( $contact );
+	} else {
+		$_contact = Contact::get_data_by( $contact );
+	}
+
+	if ( ! $_contact ) {
 		return null;
 	}
+
+	return $_contact->filter( $filter );
 }
 
 /**
- * Get customer by email.
+ *  Create new contact programmatically.
  *
- * @param $email
+ * @param array|object|Contact $contact_data An array, object, or Contact object of data arguments.
  *
+ * @return Contact|WP_Error The Contact object or WP_Error otherwise.
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @since 1.1.0
- *
- * @return \EverAccounting\Models\Customer
  */
-function eaccounting_get_customer_by_email( $email ) {
+function eaccounting_insert_contact( $contact_data ) {
 	global $wpdb;
-	$email = sanitize_email( $email );
-	if ( empty( $email ) ) {
-		return null;
-	}
-	$cache_key = "customer-email-$email";
-	$customer  = wp_cache_get( $cache_key, 'ea_contacts' );
-	if ( false === $customer ) {
-		$customer = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='customer'", eaccounting_clean( $email ) ) );
-		wp_cache_set( $cache_key, $customer, 'ea_contacts' );
-	}
-	if ( $customer ) {
-		wp_cache_set( $customer->id, $customer, 'ea_contacts' );
-
-		return eaccounting_get_customer( $customer );
+	$user_id = get_current_user_id();
+	if ( $contact_data instanceof Contact ) {
+		$contact_data = $contact_data->to_array();
+	} elseif ( $contact_data instanceof stdClass ) {
+		$contact_data = get_object_vars( $contact_data );
 	}
 
-	return null;
+	$defaults = array(
+		'name'           => '',
+		'sku'            => '',
+		'thumbnail_id'   => '',
+		'description'    => '',
+		'sale_price'     => 0.0000,
+		'purchase_price' => 0.0000,
+		'quantity'       => 1,
+		'category_id'    => '',
+		'sales_tax'      => '',
+		'purchase_tax'   => '',
+		'enabled'        => true,
+		'creator_id'     => $user_id,
+		'date_created'   => '',
+	);
+
+	// Are we updating or creating?
+	$id      = null;
+	$update  = false;
+	$changes = $contact_data;
+	if ( ! empty( $contact_data['id'] ) ) {
+		$update = true;
+		$id     = absint( $contact_data['id'] );
+		$before = eaccounting_get_contact( $id );
+
+		if ( is_null( $before ) ) {
+			return new WP_Error( 'invalid_contact_id', __( 'Invalid item id to update.' ) );
+		}
+		// Store changes value.
+		$changes = array_diff_assoc( $contact_data, $before->to_array() );
+
+		// Merge old and new fields with new fields overwriting old ones.
+		$contact_data = array_merge( $before->to_array(), $contact_data );
+	}
+
+	$data_arr = wp_parse_args( $contact_data, $defaults );
+	$data_arr = eaccounting_sanitize_contact( $data_arr, 'db' );
+
+	if ( empty( $data_arr['name'] ) ) {
+		return new WP_Error( 'invalid_contact_name', esc_html__( 'Contact name is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
+		$data_arr['date_created'] = current_time( 'mysql' );
+	}
+
+	// Compute fields.
+	$name           = $data_arr['name'];
+	$sku            = $data_arr['sku'];
+	$description    = $data_arr['description'];
+	$sale_price     = $data_arr['sale_price'];
+	$purchase_price = $data_arr['purchase_price'];
+	$quantity       = $data_arr['quantity'];
+	$category_id    = $data_arr['category_id'];
+	$sales_tax      = $data_arr['sales_tax'];
+	$purchase_tax   = $data_arr['purchase_tax'];
+	$thumbnail_id   = (int) $data_arr['thumbnail_id'];
+	$enabled        = (int) $data_arr['enabled'];
+	$creator_id     = (int) $data_arr['creator_id'];
+	$date_created   = $data_arr['date_created'];
+	$data           = compact( 'name', 'sku', 'description', 'sale_price', 'purchase_price', 'quantity', 'category_id', 'sales_tax', 'purchase_tax', 'thumbnail_id', 'enabled', 'creator_id', 'date_created' );
+
+	/**
+	 * Filters contact data before it is inserted into the database.
+	 *
+	 * @param array $data Contact data to be inserted.
+	 * @param array $data_arr Sanitized account data.
+	 * @param array $contact_data Contact data as originally passed to the function.
+	 *
+	 * @since 1.2.1
+	 */
+	$data = apply_filters( 'eaccounting_insert_contact_data', $data, $data_arr, $contact_data );
+
+	$data  = wp_unslash( $data );
+	$where = array( 'id' => $id );
+
+	if ( $update ) {
+
+		/**
+		 * Fires immediately before an existing contact is updated in the database.
+		 *
+		 * @param int $id Contact id.
+		 * @param array $data Contact data to be inserted.
+		 * @param array $changes Contact data to be updated.
+		 * @param array $data_arr Sanitized contact data.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_update_contact', $id, $data, $changes, $data_arr );
+		if ( false === $wpdb->update( $wpdb->prefix . 'ea_contacts', $data, $where ) ) {
+			new WP_Error( 'db_update_error', __( 'Could not update contact in the database.' ), $wpdb->last_error );
+		}
+
+		/**
+		 * Fires immediately after an existing contact is updated in the database.
+		 *
+		 * @param int $id Contact id.
+		 * @param array $data Contact data to be inserted.
+		 * @param array $changes Contact data to be updated.
+		 * @param array $data_arr Sanitized contact data.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_update_contact', $id, $data, $changes, $data_arr );
+	} else {
+
+		/**
+		 * Fires immediately before an existing contact is inserted in the database.
+		 *
+		 * @param array $data Contact data to be inserted.
+		 * @param string $data_arr Sanitized contact data.
+		 * @param array $contact_data Contact data as originally passed to the function.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_pre_insert_contact', $data, $data_arr, $contact_data );
+
+		if ( false === $wpdb->insert( $wpdb->prefix . 'ea_contacts', $data ) ) {
+			new WP_Error( 'db_insert_error', __( 'Could not insert contact into the database.' ), $wpdb->last_error );
+		}
+
+		$id = (int) $wpdb->insert_id;
+
+		/**
+		 * Fires immediately after an existing contact is inserted in the database.
+		 *
+		 * @param int $id Contact id.
+		 * @param array $data Contact has been inserted.
+		 * @param array $data_arr Sanitized contact data.
+		 * @param array $contact_data Contact data as originally passed to the function.
+		 *
+		 * @since 1.2.1
+		 */
+		do_action( 'eaccounting_insert_contact', $id, $data, $data_arr, $contact_data );
+	}
+
+	// Clear cache.
+	wp_cache_delete( $id, 'ea_contacts' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_contacts' );
+
+	// Get new contact object.
+	$contact = eaccounting_get_contact( $id );
+
+	/**
+	 * Fires once an contact has been saved.
+	 *
+	 * @param int $id Contact id.
+	 * @param Contact $contact Contact object.
+	 * @param bool $update Whether this is an existing contact being updated.
+	 *
+	 * @since 1.2.1
+	 */
+	do_action( 'eaccounting_saved_contact', $id, $contact, $update );
+
+	return $contact;
 }
 
 /**
- *  Create new customer programmatically.
+ * Delete an contact.
  *
- *  Returns a new customer object on success.
+ * @param int $contact_id Contact ID
  *
- * @param array $args {
- *                             An array of elements that make up an customer to update or insert.
- *
- * @type int $id ID of the contact. If equal to something other than 0,
- *                               the post with that ID will be updated. Default 0.
- * @type int $user_id user_id of the contact. Default null.
- * @type string $name name of the contact. Default not null.
- * @type string $email email of the contact. Default null.
- * @type string $phone phone of the contact. Default null.
- * @type string $fax fax of the contact. Default null.
- * @type string $fax fax of the contact. Default null.
- * @type string $birth_date date of birth of the contact. Default null.
- * @type string $address address of the contact. Default null.
- * @type string $country country of the contact. Default null.
- * @type string $website website of the contact. Default null.
- * @type string $tax_number tax_number of the contact. Default null.
- * @type string $currency_code currency_code of the contact. Default null.
- * @type string $note Additional note of the contact. Default null.
- * @type string $attachment Attachment attached with contact. Default null.
- *
- * }
- *
+ * @return Contact |false|null Contact data on success, false or null on failure.
  * @since 1.1.0
- *
- * @return EverAccounting\Models\Customer|\WP_Error|bool
  */
-function eaccounting_insert_customer( $args, $wp_error = true ) {
-	// Ensure that we have data.
-	if ( empty( $args ) ) {
-		return false;
-	}
-	try {
-		// The  id will be provided when updating an item.
-		$args = wp_parse_args( $args, array( 'id' => null ) );
-
-		// Retrieve the customer.
-		$item = new \EverAccounting\Models\Customer( $args['id'] );
-
-		// Load new data.
-		$item->set_props( $args );
-
-		// Save the item
-		$item->save();
-
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( 'insert_customer', $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
-	}
-}
-
-/**
- * Delete a customer.
- *
- * @param $customer_id
- *
- * @since 1.1.0
- *
- * @return bool
- */
-function eaccounting_delete_customer( $customer_id ) {
-	try {
-		$customer = new EverAccounting\Models\Customer( $customer_id );
-
-		return $customer->exists() ? $customer->delete() : false;
-	} catch ( \Exception $e ) {
-		return false;
-	}
-}
-
-/**
- * Get customers items.
- *
- * @param array $args {
- *
- * @type int $id ID of the contact.
- * @type int $user_id user_id of the contact.
- * @type string $name name of the contact.
- * @type string $email email of the contact.
- * @type string $phone phone of the contact.
- * @type string $fax fax of the contact.
- * @type string $fax fax of the contact.
- * @type string $birth_date date of birth of the contact.
- * @type string $address address of the contact.
- * @type string $country country of the contact.
- * @type string $website website of the contact.
- * @type string $tax_number tax_number of the contact.
- * @type string $currency_code currency_code of the contact.
- *
- * }
- *
- * @since 1.1.0
- *
- * @return array|int
- */
-function eaccounting_get_customers( $args = array() ) {
-	return eaccounting_get_contacts( array_merge( $args, array( 'type' => 'customer' ) ) );
-}
-
-/**
- * Get vendor.
- *
- * @param $vendor
- *
- * @since 1.1.0
- *
- * @return \EverAccounting\Models\Vendor|null
- */
-function eaccounting_get_vendor( $vendor ) {
-	if ( empty( $vendor ) ) {
-		return null;
-	}
-	try {
-		$result = new EverAccounting\Models\Vendor( $vendor );
-
-		return $result->exists() ? $result : null;
-	} catch ( \Exception $e ) {
-		return null;
-	}
-}
-
-/**
- * Get vendor by email.
- *
- * @param $email
- *
- * @since 1.1.0
- *
- * @return \EverAccounting\Models\Vendor
- */
-function eaccounting_get_vendor_by_email( $email ) {
+function eaccounting_delete_contact( $contact_id ) {
 	global $wpdb;
-	$email = sanitize_email( $email );
-	if ( empty( $email ) ) {
-		return null;
-	}
-	$cache_key = "vendor-email-$email";
-	$vendor    = wp_cache_get( $cache_key, 'ea_contacts' );
-	if ( false === $vendor ) {
-		$vendor = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts where `email`=%s AND `type`='vendor'", eaccounting_clean( $email ) ) );
-		wp_cache_set( $cache_key, $vendor, 'ea_contacts' );
-	}
-	if ( $vendor ) {
-		wp_cache_set( $vendor->id, $vendor, 'ea_contacts' );
 
-		return eaccounting_get_vendor( $vendor );
-	}
-
-	return null;
-}
-
-
-/**
- *  Create new vendor programmatically.
- *
- *  Returns a new vendor object on success.
- *
- * @param array $args {
- *                             An array of elements that make up a vendor to update or insert.
- *
- * @type int $id ID of the contact. If equal to something other than 0,
- *                               the post with that ID will be updated. Default 0.
- * @type int $user_id user_id of the contact. Default null.
- * @type string $name name of the contact. Default not null.
- * @type string $email email of the contact. Default null.
- * @type string $phone phone of the contact. Default null.
- * @type string $fax fax of the contact. Default null.
- * @type string $fax fax of the contact. Default null.
- * @type string $birth_date date of birth of the contact. Default null.
- * @type string $address address of the contact. Default null.
- * @type string $country country of the contact. Default null.
- * @type string $website website of the contact. Default null.
- * @type string $tax_number tax_number of the contact. Default null.
- * @type string $currency_code currency_code of the contact. Default null.
- * @type string $note Additional note of the contact. Default null.
- * @type string $attachment Attachment attached with contact. Default null.
- *
- * }
- *
- * @since 1.1.0
- *
- * @return EverAccounting\Models\Vendor|\WP_Error|bool
- */
-function eaccounting_insert_vendor( $args, $wp_error = true ) {
-	// Ensure that we have data.
-	if ( empty( $args ) ) {
+	$contact = eaccounting_get_contact( $contact_id );
+	if ( ! $contact || ! $contact->exists() ) {
 		return false;
 	}
-	try {
-		// The  id will be provided when updating an item.
-		$args = wp_parse_args( $args, array( 'id' => null ) );
 
-		// Retrieve the vendor.
-		$item = new \EverAccounting\Models\Vendor( $args['id'] );
-
-		// Load new data.
-		$item->set_props( $args );
-
-		// Save the item
-		$item->save();
-
-		return $item;
-	} catch ( \Exception $e ) {
-		return $wp_error ? new WP_Error( $e->getMessage(), array( 'status' => $e->getCode() ) ) : 0;
+	/**
+	 * Filters whether an contact delete should take place.
+	 *
+	 * @param bool|null $delete Whether to go forward with deletion.
+	 * @param Contact $contact contact object.
+	 *
+	 * @since 1.2.1
+	 */
+	$check = apply_filters( 'eaccounting_pre_delete_contact', null, $contact );
+	if ( null !== $check ) {
+		return $check;
 	}
-}
 
-/**
- * Delete a vendor.
- *
- * @param $vendor_id
- *
- * @since 1.1.0
- *
- * @return bool
- */
-function eaccounting_delete_vendor( $vendor_id ) {
-	try {
-		$vendor = new EverAccounting\Models\Vendor( $vendor_id );
+	/**
+	 * Fires before an item is deleted.
+	 *
+	 * @param int $contact_id Contact id.
+	 * @param Contact $contact Contact object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_contact()
+	 */
+	do_action( 'eaccounting_before_delete_contact', $contact_id, $contact );
 
-		return $vendor->exists() ? $vendor->delete() : false;
-	} catch ( \Exception $e ) {
+	$result = $wpdb->delete( $wpdb->prefix . 'ea_contacts', array( 'id' => $contact_id ) );
+	if ( ! $result ) {
 		return false;
 	}
+
+	wp_cache_delete( $contact_id, 'ea_contacts' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_contacts' );
+
+	/**
+	 * Fires after an contact is deleted.
+	 *
+	 * @param int $contact_id contact id.
+	 * @param Contact $contact contact object.
+	 *
+	 * @since 1.2.1
+	 *
+	 * @see eaccounting_delete_contact()
+	 */
+	do_action( 'eaccounting_delete_contact', $contact_id, $contact );
+
+	return $contact;
 }
 
 /**
- * Get vendors items.
+ * Sanitizes every contact field.
  *
- * @param array $args {
+ * If the context is 'raw', then the contact object or array will get minimal
+ * sanitization of the integer fields.
  *
- * @type int $id ID of the contact.
- * @type int $user_id user_id of the contact.
- * @type string $name name of the contact.
- * @type string $email email of the contact.
- * @type string $phone phone of the contact.
- * @type string $fax fax of the contact.
- * @type string $fax fax of the contact.
- * @type string $birth_date date of birth of the contact.
- * @type string $address address of the contact.
- * @type string $country country of the contact.
- * @type string $website website of the contact.
- * @type string $tax_number tax_number of the contact.
- * @type string $currency_code currency_code of the contact.
+ * @param object|array $contact The contact object or array
+ * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
- * }
+ * @return object|Contact|array The now sanitized contact object or array
+ * @see eaccounting_sanitize_contact_field()
  *
- * @since 1.1.0
- *
- * @return array|int
+ * @since 1.2.1
  */
-function eaccounting_get_vendors( $args = array() ) {
-	return eaccounting_get_contacts( array_merge( $args, array( 'type' => 'vendor' ) ) );
+function eaccounting_sanitize_contact( $contact, $context = 'raw' ) {
+	if ( is_object( $contact ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $contact->filter ) && $context == $contact->filter ) {
+			return $contact;
+		}
+		if ( ! isset( $contact->id ) ) {
+			$contact->id = 0;
+		}
+		foreach ( array_keys( get_object_vars( $contact ) ) as $field ) {
+			$contact->$field = eaccounting_sanitize_contact_field( $field, $contact->$field, $contact->id, $context );
+		}
+		$contact->filter = $context;
+	} elseif ( is_array( $contact ) ) {
+		// Check if post already filtered for this context.
+		if ( isset( $contact['filter'] ) && $context == $contact['filter'] ) { //phpcs:ignore
+			return $contact;
+		}
+		if ( ! isset( $contact['id'] ) ) {
+			$contact['id'] = 0;
+		}
+		foreach ( array_keys( $contact ) as $field ) {
+			$contact[ $field ] = eaccounting_sanitize_contact_field( $field, $contact[ $field ], $contact['id'], $context );
+		}
+		$contact['filter'] = $context;
+	}
+
+	return $contact;
 }
 
 /**
- * Get customers items.
+ * Sanitizes a contact field based on context.
  *
- * @param array $args {
+ * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
- * @type int $id ID of the contact.
- * @type int $user_id user_id of the contact.
- * @type string $name name of the contact.
- * @type string $email email of the contact.
- * @type string $phone phone of the contact.
- * @type string $fax fax of the contact.
- * @type string $fax fax of the contact.
- * @type string $birth_date date of birth of the contact.
- * @type string $address address of the contact.
- * @type string $country country of the contact.
- * @type string $website website of the contact.
- * @type string $tax_number tax_number of the contact.
- * @type string $currency_code currency_code of the contact.
+ * @param string $field The contact Object field name.
+ * @param mixed $value The contact Object value.
+ * @param int $contact_id contact id.
+ * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
- * }
+ * @return mixed Sanitized value.
+ * @since 1.2.1
+ */
+function eaccounting_sanitize_contact_field( $field, $value, $contact_id, $context ) {
+	if ( false !== strpos( $field, '_id' ) || $field === 'id' ) { //phpcs:ignore
+		$value = absint( $value );
+	}
+
+	$context = strtolower( $context );
+
+	if ( 'raw' === $context ) {
+		return $value;
+	}
+
+	if ( 'edit' === $context ) {
+
+		/**
+		 * Filters an contact field to edit before it is sanitized.
+		 *
+		 * @param mixed $value Value of the contact field.
+		 * @param int $contact_id Contact id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_edit_contact_{$field}", $value, $contact_id );
+
+	} elseif ( 'db' === $context ) {
+
+		/**
+		 * Filters a contact field value before it is sanitized.
+		 *
+		 * @param mixed $value Value of the contact field.
+		 * @param int $contact_id Contact id.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_pre_contact_{$field}", $value, $contact_id );
+
+	} else {
+		// Use display filters by default.
+
+		/**
+		 * Filters the contact field sanitized for display.
+		 *
+		 * The dynamic portion of the filter name, `$field`, refers to the contact field name.
+		 *
+		 * @param mixed $value Value of the item field.
+		 * @param int $contact_id contact id.
+		 * @param string $context Context to retrieve the contact field value.
+		 *
+		 * @since 1.2.1
+		 */
+		$value = apply_filters( "eaccounting_contact_{$field}", $value, $contact_id, $context );
+	}
+
+	return $value;
+}
+
+/**
+ * Retrieves an array of the contacts matching the given criteria.
  *
+ * @param array $args Arguments to retrieve contacts.
+ *
+ * @return Contact[]|int Array of contact objects or count.
  * @since 1.1.0
  *
- * @return array|int
  */
 function eaccounting_get_contacts( $args = array() ) {
-	// Prepare args.
-	$args = wp_parse_args(
-		$args,
-		array(
-			'type'         => '',
-			'include'      => '',
-			'search'       => '',
-			'transfer'     => true,
-			'fields'       => '*',
-			'orderby'      => 'id',
-			'order'        => 'ASC',
-			'number'       => 20,
-			'offset'       => 0,
-			'paged'        => 1,
-			'meta_key'     => '',
-			'meta_value'   => '',
-			'meta_compare' => '',
-			'return'       => 'objects',
-			'count_total'  => false,
-		)
+	$defaults = array(
+		'number'        => 20,
+		'orderby'       => 'name',
+		'order'         => 'DESC',
+		'include'       => array(),
+		'exclude'       => array(),
+		'no_found_rows' => false,
+		'count_total'   => false,
 	);
-	global $wpdb;
-	$qv         = apply_filters( 'eaccounting_get_contact_args', $args );
-	$table      = \EverAccounting\Repositories\Contacts::TABLE;
-	$columns    = \EverAccounting\Repositories\Contacts::get_columns();
-	$meta_query = new WP_Meta_Query();
-	$meta_query->parse_query_vars( $qv );
-	$qv['fields'] = wp_parse_list( $qv['fields'] );
-	foreach ( $qv['fields'] as $index => $field ) {
-		if ( ! in_array( $field, $columns, true ) ) {
-			unset( $qv['fields'][ $index ] );
-		}
-	}
-	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
-	$where  = 'WHERE 1=1';
-	if ( ! empty( $qv['include'] ) ) {
-		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where  .= " AND $table.`id` IN ($include)";
-	} elseif ( ! empty( $qv['exclude'] ) ) {
-		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where  .= " AND $table.`id` NOT IN ($exclude)";
-	}
-	// search
-	$search_cols = array( 'id', 'name', 'email', 'phone', 'street', 'country' );
-	if ( ! empty( $qv['search'] ) ) {
-		$searches = array();
-		$where   .= ' AND (';
-		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
-		}
-		$where .= implode( ' OR ', $searches );
-		$where .= ')';
+
+	$parsed_args = wp_parse_args( $args, $defaults );
+	$query       = new \EverAccounting\Contact_Query( $parsed_args );
+
+	if ( true === $parsed_args['count_total'] ) {
+		return $query->get_total();
 	}
 
-	if ( ! empty( $qv['type'] ) ) {
-		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
-		$where .= " AND $table.`type` IN ('$types')";
-	}
 
-	if ( ! empty( $qv['currency_code'] ) ) {
-		$currency_code = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-		$where        .= " AND $table.`currency_code` IN ('$currency_code')";
-	}
-
-	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
-		$status = eaccounting_string_to_bool( $qv['status'] );
-		$status = eaccounting_bool_to_number( $status );
-		$where .= " AND $table.`enabled` = ('$status')";
-	}
-
-	if ( ! empty( $qv['creator_id'] ) ) {
-		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
-		$where     .= " AND $table.`creator_id` IN ($creator_id)";
-	}
-
-	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
-		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where             .= $date_created_query->get_sql();
-	}
-
-	// Meta query.
-	$join = '';
-	if ( ! empty( $meta_query->queries ) ) {
-		$clauses = $meta_query->get_sql( 'contact', $table, 'id' );
-		$join   .= $clauses['join'];
-		$where  .= $clauses['where'];
-
-		if ( $meta_query->has_or_relation() ) {
-			$fields = 'DISTINCT ' . $fields;
-		}
-	}
-
-	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
-
-	$limit = '';
-	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
-		if ( $qv['offset'] ) {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
-		} else {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
-		}
-	}
-
-	$select      = "SELECT {$fields}";
-	$from        = "FROM {$wpdb->prefix}$table $table";
-	$orderby     = "ORDER BY {$orderby} {$order}";
-	$count_total = true === $qv['count_total'];
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_contacts' );
-	$results     = wp_cache_get( $cache_key, 'ea_contacts' );
-	$clauses     = compact( 'select', 'from', 'join', 'where', 'orderby', 'limit' );
-
-	if ( false === $results ) {
-		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $join $where" );
-			wp_cache_set( $cache_key, $results, 'ea_contacts' );
-		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
-				foreach ( $results as $key => $item ) {
-					if ( ! empty( $item->email ) ) {
-						wp_cache_set( $item->type . '-email-' . $item->email, $item, 'ea_contacts' );
-					}
-					wp_cache_set( $item->id, $item, 'ea_contacts' );
-				}
-			}
-			wp_cache_set( $cache_key, $results, 'ea_contacts' );
-		}
-	}
-
-	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-		$results = array_map(
-			function ( $item ) {
-				switch ( $item->type ) {
-					case 'customer':
-						$contact = eaccounting_get_customer( $item );
-						break;
-					case 'vendor':
-						$contact = eaccounting_get_vendor( $item );
-						break;
-					default:
-						$contact = apply_filters( 'eaccounting_get_contact_callback_' . $item->type, null, $item );
-				}
-
-				return $contact;
-			},
-			$results
-		);
-	}
-
-	return $results;
+	return $query->get_results();
 }

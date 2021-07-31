@@ -18,29 +18,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
- * @property string $name
- * @property string $sku
- * @property string $description
- * @property float $sale_price
- * @property float $purchase_price
- * @property float $quantity
- * @property int $category_id
- * @property float $sales_tax
- * @property int $purchase_tax
- * @property float $thumbnail_id
- * @property boolean $enabled
- * @property int $creator_id
- * @property string $date_created
  */
 class Item {
-	/**
-	 * Item data container.
-	 *
-	 * @since 1.2.1
-	 * @var \stdClass
-	 */
-	public $data;
-
 	/**
 	 * Item id.
 	 *
@@ -50,72 +29,169 @@ class Item {
 	public $id = null;
 
 	/**
-	 * Item constructor.
+	 * Name of the item.
 	 *
-	 * @param object $item Item Object
-	 *
-	 * @return void
 	 * @since 1.2.1
+	 * @var string
 	 */
-	public function __construct( $item ) {
-		if ( $item instanceof self ) {
-			$this->id = absint( $item->id );
-		} elseif ( is_object( $item ) && ! empty( $item->id ) ) {
-			$this->id = absint( $item->id );
-		} elseif ( is_array( $item ) && ! empty( $item['id'] ) ) {
-			$this->id = absint( $item['id'] );
-		} else {
-			$this->id = absint( $item );
+	public $name = '';
+
+	/**
+	 * Item SKU
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $sku = '';
+
+	/**
+	 * Item description
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $description = '';
+
+
+	/**
+	 * Item sale price.
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $sale_price = 0.00;
+
+
+	/**
+	 * Item purchase price
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $purchase_price = 0.00;
+
+	/**
+	 * Item stock quantity
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $quantity = 0;
+
+	/**
+	 * Item category id
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $category_id = 0;
+
+	/**
+	 * Item sales tax
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $sales_tax = 0.00;
+
+	/**
+	 * Item purchase tax
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $purchase_tax = 0.00;
+
+	/**
+	 * Item thumbnail id.
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $thumbnail_id = null;
+
+	/**
+	 * Item status
+	 *
+	 * @since 1.2.1
+	 * @var bool
+	 */
+	public $enabled = true;
+
+	/**
+	 * Item creator user id.
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $creator_id = 0;
+
+	/**
+	 * Item created date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
+
+	/**
+	 * Stores the item object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $filter;
+
+	/**
+	 * Retrieve Item instance.
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return Item|false Item object, false otherwise.
+	 * @since 1.2.1
+	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
+	 */
+	public static function get_instance( $item_id ) {
+		global $wpdb;
+
+		$item_id = (int) $item_id;
+		if ( ! $item_id ) {
+			return false;
 		}
 
-		if ( $this->id > 0 ) {
-			$data = self::load( $this->id );
-			if ( ! $data ) {
-				$this->id = null;
+		$_item = wp_cache_get( $item_id, 'ea_items' );
 
-				return;
+		if ( ! $_item ) {
+			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_items WHERE id = %d LIMIT 1", $item_id ) );
+
+			if ( ! $_item ) {
+				return false;
 			}
-			$this->data = $data;
-			$this->id   = (int) $data->id;
+
+			$_item = eaccounting_sanitize_item( $_item, 'raw' );
+			wp_cache_add( $_item->id, $_item, 'ea_items' );
+		} elseif ( empty( $_item->filter ) ) {
+			$_item = eaccounting_sanitize_item( $_item, 'raw' );
 		}
+
+		return new Item( $_item );
 	}
 
 	/**
-	 * Return only the main item fields
+	 * Item constructor.
 	 *
-	 * @param int $id The id of the item
+	 * @param $item
 	 *
-	 * @return object|false Raw item object
-	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.2.1
 	 */
-	public static function load( $id ) {
-		global $wpdb;
-
-		if ( ! absint( $id ) ) {
-			return false;
+	public function __construct( $item ) {
+		foreach ( get_object_vars( $item ) as $key => $value ) {
+			$this->$key = $value;
 		}
-
-		$data = wp_cache_get( $id, 'ea_items' );
-		if ( $data ) {
-			return $data;
-		}
-
-		$_data = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}ea_items WHERE id = %d LIMIT 1",
-				$id
-			)
-		);
-
-		if ( ! $_data ) {
-			return false;
-		}
-		$data = eaccounting_sanitize_item( $_data, 'raw' );
-
-		eaccounting_set_cache( 'ea_items', $data );
-
-		return $data;
 	}
 
 	/**
@@ -127,7 +203,7 @@ class Item {
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
-		if ( isset( $this->data->$key ) ) {
+		if ( isset( $this->$key ) ) {
 			return true;
 		}
 
@@ -135,12 +211,12 @@ class Item {
 	}
 
 	/**
-	 * Magic method for setting item fields.
+	 * Magic method for setting Item fields.
 	 *
 	 * This method does not update custom fields in the database.
 	 *
 	 * @param string $key Item key.
-	 * @param mixed  $value Item value.
+	 * @param mixed $value Item value.
 	 *
 	 * @since 1.2.1
 	 */
@@ -148,16 +224,16 @@ class Item {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
 		} else {
-			$this->data->$key = $value;
+			$this->$key = $value;
 		}
 	}
 
 	/**
 	 * Magic method for accessing custom fields.
 	 *
-	 * @param string $key Item field to retrieve.
+	 * @param string $key item field to retrieve.
 	 *
-	 * @return mixed Value of the given Item field (if set).
+	 * @return mixed Value of the given item field (if set).
 	 * @since 1.2.1
 	 */
 	public function __get( $key ) {
@@ -165,7 +241,7 @@ class Item {
 		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
 			$value = $this->$key();
 		} else {
-			$value = $this->data->$key;
+			$value = $this->$key;
 		}
 
 		return $value;
@@ -174,13 +250,13 @@ class Item {
 	/**
 	 * Magic method for unsetting a certain field.
 	 *
-	 * @param string $key Item key to unset.
+	 * @param string $key item key to unset.
 	 *
 	 * @since 1.2.1
 	 */
 	public function __unset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			unset( $this->data->$key );
+		if ( isset( $this->$key ) ) {
+			unset( $this->$key );
 		}
 	}
 
@@ -198,18 +274,14 @@ class Item {
 		}
 
 		if ( 'raw' === $filter ) {
-			return self::load( $this->id );
+			return self::get_instance( $this->id );
 		}
 
-		$this->data = eaccounting_sanitize_item( $this->data, $filter );
-
-		return $this;
+		return eaccounting_sanitize_item( $this, $filter );
 	}
 
 	/**
 	 * Determine whether a property or meta key is set
-	 *
-	 * Consults the items.
 	 *
 	 * @param string $key Property
 	 *
@@ -237,6 +309,6 @@ class Item {
 	 * @since 1.2.1
 	 */
 	public function to_array() {
-		return get_object_vars( $this->data );
+		return get_object_vars( $this );
 	}
 }

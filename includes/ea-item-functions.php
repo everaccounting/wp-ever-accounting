@@ -14,16 +14,24 @@ defined( 'ABSPATH' ) || exit;
 
 
 // Sanitization and escaping filters
-add_filter( 'eaccounting_pre_item_enabled', 'eaccounting_bool_to_number', 10, 1 );
-add_filter( 'eaccounting_edit_item_enabled', 'eaccounting_string_to_bool', 10, 1 );
+add_filter( 'eaccounting_pre_item_enabled', 'eaccounting_bool_to_number' );
+add_filter( 'eaccounting_pre_item_quantity', 'intval' );
+add_filter( 'eaccounting_pre_item_sale_price', 'floatval' );
+add_filter( 'eaccounting_pre_item_purchase_price', 'floatval' );
+add_filter( 'eaccounting_pre_item_sales_tax', 'floatval' );
+add_filter( 'eaccounting_pre_item_purchase_tax', 'floatval' );
+add_filter( 'eaccounting_pre_item_sku', 'sanitize_key' );
+add_filter( 'eaccounting_pre_item_title', 'sanitize_title' );
+add_filter( 'eaccounting_pre_item_description', 'sanitize_textarea_field' );
+add_filter( 'eaccounting_edit_item_enabled', 'eaccounting_string_to_bool' );
 
 /**
  * Main function for returning item.
  *
- * @param int|array|object|Item $item item to retrieve
- * @param string                $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param int|object|Item $item item to retrieve
+ * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
- * @return array|Item|null
+ * @return Item|null
  * @since 1.1.0
  */
 function eaccounting_get_item( $item, $filter = 'raw' ) {
@@ -31,42 +39,19 @@ function eaccounting_get_item( $item, $filter = 'raw' ) {
 		return null;
 	}
 
-	$item = new Item( $item );
-	if ( ! $item->exists() ) {
+	if ( $item instanceof Item ) {
+		$_item = $item;
+	} elseif ( is_object( $item ) ) {
+		$_item = new Item( $item );
+	} else {
+		$_item = Item::get_instance( $item );
+	}
+
+	if ( ! $_item ) {
 		return null;
 	}
 
-	return $item->filter( $filter );
-}
-
-
-/**
- * Get item by sku.
- *
- * @param string $sku Item sku
- *
- * @return array|Item|null
- * @since 1.1.0
- */
-function eaccounting_get_item_by_sku( $sku ) {
-	global $wpdb;
-	$sku = eaccounting_clean( $sku );
-	if ( empty( $sku ) ) {
-		return null;
-	}
-	$cache_key = "item-sku-$sku";
-	$item      = wp_cache_get( $cache_key, 'ea_items' );
-	if ( false === $item ) {
-		$item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_items where `sku`=%s", eaccounting_clean( $sku ) ) );
-		wp_cache_set( $cache_key, $item, 'ea_items' );
-	}
-	if ( $item ) {
-		wp_cache_set( $item->id, $item, 'ea_items' );
-
-		return eaccounting_get_item( $item, 'raw' );
-	}
-
-	return null;
+	return $_item->filter( $filter );
 }
 
 /**
@@ -127,18 +112,6 @@ function eaccounting_insert_item( $item_data ) {
 
 	if ( empty( $data_arr['name'] ) ) {
 		return new WP_Error( 'invalid_item_name', esc_html__( 'Item name is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['quantity'] ) ) {
-		return new WP_Error( 'invalid_item_quantity', esc_html__( 'Item quantity is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['purchase_price'] ) ) {
-		return new WP_Error( 'invalid_item_purchase_price', esc_html__( 'Item purchase price is required', 'wp-ever-accounting' ) );
-	}
-
-	if ( empty( $data_arr['sale_price'] ) ) {
-		return new WP_Error( 'invalid_item_sale_price', esc_html__( 'Item sale price is required', 'wp-ever-accounting' ) );
 	}
 
 	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
@@ -236,7 +209,8 @@ function eaccounting_insert_item( $item_data ) {
 	}
 
 	// Clear cache.
-	eaccounting_delete_cache( 'ea_items', $id );
+	wp_cache_delete( $id, 'ea_items' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_items' );
 
 	// Get new item object.
 	$item = eaccounting_get_item( $id );
@@ -260,14 +234,14 @@ function eaccounting_insert_item( $item_data ) {
  *
  * @param int $item_id Item ID
  *
- * @return @return Item |false|null Note data on success, false or null on failure.
+ * @return Item |false|null Item data on success, false or null on failure.
  * @since 1.1.0
  */
 function eaccounting_delete_item( $item_id ) {
 	global $wpdb;
 
 	$item = eaccounting_get_item( $item_id );
-	if ( ! $item->exists() ) {
+	if ( ! $item || ! $item->exists() ) {
 		return false;
 	}
 
@@ -275,7 +249,7 @@ function eaccounting_delete_item( $item_id ) {
 	 * Filters whether an item delete should take place.
 	 *
 	 * @param bool|null $delete Whether to go forward with deletion.
-	 * @param Item $item account object.
+	 * @param Item $item item object.
 	 *
 	 * @since 1.2.1
 	 */
@@ -301,7 +275,8 @@ function eaccounting_delete_item( $item_id ) {
 		return false;
 	}
 
-	eaccounting_delete_cache( 'ea_items', $item_id );
+	wp_cache_delete( $item_id, 'ea_items' );
+	wp_cache_set( 'last_changed', microtime(), 'ea_items' );
 
 	/**
 	 * Fires after an item is deleted.
@@ -325,7 +300,7 @@ function eaccounting_delete_item( $item_id ) {
  * sanitization of the integer fields.
  *
  * @param object|array $item The item object or array
- * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
  * @return object|Item|array The now sanitized item object or array
  * @see eaccounting_sanitize_item_field()
@@ -368,8 +343,8 @@ function eaccounting_sanitize_item( $item, $context = 'raw' ) {
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
  * @param string $field The item Object field name.
- * @param mixed  $value The item Object value.
- * @param int    $item_id Item id.
+ * @param mixed $value The item Object value.
+ * @param int $item_id Item id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
@@ -431,132 +406,31 @@ function eaccounting_sanitize_item_field( $field, $value, $item_id, $context ) {
 }
 
 /**
- * Get items.
+ * Retrieves an array of the items matching the given criteria.
  *
- * @param array $args {
+ * @param array $args Arguments to retrieve items.
  *
- * @type string $name The name of the item.
- * @type string $sku The sku of the item.
- * @type int $image_id The image_id for the item.
- * @type string $description The description of the item.
- * @type double $sale_price The sale_price of the item.
- * @type double $purchase_price The purchase_price for the item.
- * @type int $quantity The quantity of the item.
- * @type int $category_id The category_id of the item.
- * @type int $tax_id The tax_id of the item.
- * @type int $enabled The enabled of the item.
- * }
- *
- * @return array|int
+ * @return Item[]|int Array of item objects or count.
  * @since 1.1.0
+ *
  */
 function eaccounting_get_items( $args = array() ) {
-	// Prepare args.
-	$args = wp_parse_args(
-		$args,
-		array(
-			'status'      => 'all',
-			'include'     => '',
-			'search'      => '',
-			'fields'      => '*',
-			'orderby'     => 'id',
-			'order'       => 'ASC',
-			'number'      => 20,
-			'offset'      => 0,
-			'paged'       => 1,
-			'return'      => 'objects',
-			'count_total' => false,
-		)
+	$defaults = array(
+		'number'        => 20,
+		'orderby'       => 'name',
+		'order'         => 'DESC',
+		'include'       => array(),
+		'exclude'       => array(),
+		'no_found_rows' => false,
+		'count_total'   => false,
 	);
-	global $wpdb;
-	$qv           = apply_filters( 'eaccounting_get_items_args', $args );
-	$table        = \EverAccounting\Repositories\Items::TABLE;
-	$columns      = \EverAccounting\Repositories\Items::get_columns();
-	$qv['fields'] = wp_parse_list( $qv['fields'] );
-	foreach ( $qv['fields'] as $index => $field ) {
-		if ( ! in_array( $field, $columns, true ) ) {
-			unset( $qv['fields'][ $index ] );
-		}
-	}
-	$fields = is_array( $qv['fields'] ) && ! empty( $qv['fields'] ) ? implode( ',', $qv['fields'] ) : '*';
-	$where  = 'WHERE 1=1';
 
-	if ( ! empty( $qv['include'] ) ) {
-		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where  .= " AND $table.`id` IN ($include)";
-	} elseif ( ! empty( $qv['exclude'] ) ) {
-		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where  .= " AND $table.`id` NOT IN ($exclude)";
+	$parsed_args = wp_parse_args( $args, $defaults );
+	$query       = new \EverAccounting\Item_Query( $parsed_args );
+	if ( true === $parsed_args['count_total'] ) {
+		return $query->get_total();
 	}
 
-	// search
-	$search_cols = array( 'name', 'sku', 'description' );
-	if ( ! empty( $qv['search'] ) ) {
-		$searches = array();
-		$where   .= ' AND (';
-		foreach ( $search_cols as $col ) {
-			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
-		}
-		$where .= implode( ' OR ', $searches );
-		$where .= ')';
-	}
 
-	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
-		$status = eaccounting_string_to_bool( $qv['status'] );
-		$status = eaccounting_bool_to_number( $status );
-		$where .= " AND $table.`enabled` = ('$status')";
-	}
-
-	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
-		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where             .= $date_created_query->get_sql();
-	}
-
-	if ( ! empty( $qv['creator_id'] ) ) {
-		$creator_id = implode( ',', wp_parse_id_list( $qv['creator_id'] ) );
-		$where     .= " AND $table.`creator_id` IN ($creator_id)";
-	}
-
-	$order   = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : 'ASC';
-	$orderby = isset( $qv['orderby'] ) && in_array( $qv['orderby'], $columns, true ) ? eaccounting_clean( $qv['orderby'] ) : "{$table}.id";
-
-	$limit = '';
-	if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
-		if ( $qv['offset'] ) {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
-		} else {
-			$limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
-		}
-	}
-
-	$select      = "SELECT {$fields}";
-	$from        = "FROM {$wpdb->prefix}$table $table";
-	$orderby     = "ORDER BY {$orderby} {$order}";
-	$count_total = true === $qv['count_total'];
-	$cache_key   = 'query:' . md5( serialize( $qv ) ) . ':' . wp_cache_get_last_changed( 'ea_items' );
-	$results     = wp_cache_get( $cache_key, 'ea_items' );
-	$clauses     = compact( 'select', 'from', 'where', 'orderby', 'limit' );
-	if ( false === $results ) {
-		if ( $count_total ) {
-			$results = (int) $wpdb->get_var( "SELECT COUNT(id) $from $where" );
-			wp_cache_set( $cache_key, $results, 'ea_items' );
-		} else {
-			$results = $wpdb->get_results( implode( ' ', $clauses ) );
-			if ( in_array( $fields, array( 'all', '*' ), true ) ) {
-				foreach ( $results as $key => $item ) {
-					if ( ! empty( $item->sku ) ) {
-						wp_cache_set( 'item-sku-' . $item->sku, $item, 'ea_items' );
-					}
-					wp_cache_set( $item->id, $item, 'ea_items' );
-				}
-			}
-			wp_cache_set( $cache_key, $results, 'ea_items' );
-		}
-	}
-
-	if ( 'objects' === $qv['return'] && true !== $qv['count_total'] ) {
-		$results = array_map( 'eaccounting_get_item', $results );
-	}
-
-	return $results;
+	return $query->get_results();
 }

@@ -9,6 +9,8 @@
 
 namespace EverAccounting;
 
+use EverAccounting\Abstracts\MetaData;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -18,35 +20,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
- * @property int $user_id
- * @property string $name
- * @property string $company
- * @property string $email
- * @property string $phone
- * @property string $website
- * @property string $vat_number
- * @property string $birth_date
- * @property string $street
- * @property string $city
- * @property string $state
- * @property string $postcode
- * @property string $country
- * @property string $type
- * @property string $currency_code
- * @property string $thumbnail_id
- * @property boolean $enabled
- * @property int $creator_id
- * @property string $date_created
  */
-class Contact {
-	/**
-	 * Contact data container.
-	 *
-	 * @since 1.2.1
-	 * @var \stdClass
-	 */
-	public $data;
-
+class Contact extends MetaData {
 	/**
 	 * Contact id.
 	 *
@@ -55,128 +30,295 @@ class Contact {
 	 */
 	public $id = null;
 
+	/**
+	 * Contact WP user ID.
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $user_id = null;
+
+	/**
+	 * Contact name.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $name = '';
+
+	/**
+	 * Contact company.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $company = '';
+
+	/**
+	 * Contact email.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $email = '';
+
+	/**
+	 * Contact phone.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $phone = '';
+
+	/**
+	 * Contact website.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $website = '';
+
+	/**
+	 * Contact birthdate
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $birth_date = '';
+
+	/**
+	 * Contact vat number.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $vat_number = '';
+
+	/**
+	 * Contact vat number.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $street = '';
+
+	/**
+	 * Contact street.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $city = '';
+
+	/**
+	 * Contact city.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $state = '';
+
+	/**
+	 * Contact postcode.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $postcode = '';
+
+	/**
+	 * Contact country.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $country = '';
+
+	/**
+	 * Contact currency code.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $currency_code = '';
+
+	/**
+	 * Contact type.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $type = '';
+
+
+	/**
+	 * Contact thumbnail id.
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $thumbnail_id = null;
+
+	/**
+	 * Contact status
+	 *
+	 * @since 1.2.1
+	 * @var bool
+	 */
+	public $enabled = true;
+
+	/**
+	 * Contact creator user id.
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $creator_id = 0;
+
+	/**
+	 * Contact created date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
+
+	/**
+	 * Stores the contact object's sanitization level.
+	 *
+	 * Does not correspond to a DB field.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $filter;
+
+	/**
+	 * Meta type.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	protected $meta_type = 'contact';
+
+	/**
+	 * Get contact by field
+	 *
+	 * @param int|string $value
+	 * @param string $field
+	 * @param string $type
+	 *
+	 * @return object|false Raw currency object
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 */
+	public static function get_data_by( $value, $field = 'id' ) {
+		global $wpdb;
+		if ( 'id' === $field ) {
+			$value = (int) $value;
+		} else {
+			$value = trim( $value );
+		}
+		if ( ! $value ) {
+			return false;
+		}
+		switch ( $field ) {
+			case 'user_id':
+				$value    = (int) $value;
+				$db_field = 'user_id';
+				break;
+			case 'id':
+			default:
+				$db_field = 'id';
+				break;
+		}
+
+		$_item = wp_cache_get( "{$db_field}_{$value}", 'ea_contacts' );
+
+		if ( ! $_item ) {
+			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_contacts WHERE $db_field = %s LIMIT 1", $value ) );
+
+			if ( ! $_item ) {
+				return false;
+			}
+
+			$_item = eaccounting_sanitize_contact( $_item, 'raw' );
+			wp_cache_add( $_item->id, $_item, 'ea_contacts' );
+			wp_cache_add( "{$_item->type}_id_{$_item->id}", $_item, 'ea_contacts' );
+			if ( ! empty( $_item->user_id ) ) {
+				wp_cache_add( "{$_item->type}_user_id_{$_item->user_id}", $_item, 'ea_contacts' );
+			}
+		} elseif ( empty( $_item->filter ) ) {
+			$_item = eaccounting_sanitize_contact( $_item, 'raw' );
+		}
+
+		return new Contact( $_item );
+	}
 
 	/**
 	 * Contact constructor.
 	 *
-	 * @param object $contact Contact Object
+	 * @param $contact
 	 *
-	 * @return void
 	 * @since 1.2.1
 	 */
 	public function __construct( $contact ) {
-		if ( $contact instanceof self ) {
-			$this->id = (int) $contact->id;
-		} elseif ( is_numeric( $contact ) ) {
-			$this->id = $contact;
-		} elseif ( ! empty( $contact->id ) ) {
-			$this->id = (int) $contact->id;
-		} else {
-			$this->id = 0;
+		foreach ( get_object_vars( $contact ) as $key => $value ) {
+			$this->$key = $value;
 		}
-
-		if ( $this->id > 0 ) {
-			$data = self::load( $this->id );
-			if ( ! $data ) {
-				$this->id = null;
-
-				return;
-			}
-			$this->data = $data;
-			$this->id   = (int) $data->id;
-		}
-	}
-
-	/**
-	 * Return only the main contact fields
-	 *
-	 * @param int $id The id of the contact
-	 *
-	 * @return object|false Raw contact object
-	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 * @since 1.2.1
-	 */
-	public static function load( $id ) {
-		global $wpdb;
-
-		if ( ! absint( $id ) ) {
-			return false;
-		}
-
-		$data = wp_cache_get( $id, 'ea_contacts' );
-		if ( $data ) {
-			return $data;
-		}
-
-		$data = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}ea_contacts WHERE id = %d LIMIT 1",
-				$id
-			)
-		);
-
-		if ( ! $data ) {
-			return false;
-		}
-
-		eaccounting_set_cache( 'ea_contacts', $data );
-
-		return $data;
 	}
 
 	/**
 	 * Magic method for checking the existence of a certain field.
 	 *
-	 * @param string $key Contact field to check if set.
+	 * @param string $key Item field to check if set.
 	 *
-	 * @return bool Whether the given Contact field is set.
+	 * @return bool Whether the given Item field is set.
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
-		if ( isset( $this->data->$key ) ) {
+		if ( isset( $this->$key ) ) {
 			return true;
 		}
 
-		return metadata_exists( 'contact', $this->id, $key );
+		return false;
 	}
 
 	/**
-	 * Magic method for setting contact fields.
+	 * Magic method for setting Item fields.
 	 *
-	 * This method does not update custom fields in the database. It only stores
-	 * the value on the WP_User instance.
+	 * This method does not update custom fields in the database.
 	 *
-	 * @param string $key Contact key.
-	 * @param mixed  $value Contact value.
+	 * @param string $key Item key.
+	 * @param mixed $value Item value.
 	 *
 	 * @since 1.2.1
 	 */
 	public function __set( $key, $value ) {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
-		} elseif ( isset( $this->data->$key ) ) {
-			$this->data->$key = $value;
 		} else {
-			$this->update_meta( $key, $value );
+			$this->$key = $value;
 		}
 	}
 
 	/**
 	 * Magic method for accessing custom fields.
 	 *
-	 * @param string $key User field to retrieve.
+	 * @param string $key contact field to retrieve.
 	 *
-	 * @return mixed Value of the given Contact field (if set).
+	 * @return mixed Value of the given contact field (if set).
 	 * @since 1.2.1
 	 */
 	public function __get( $key ) {
-
-		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
-			$value = $this->$key();
-		} elseif ( isset( $this->data->$key ) ) {
-			$value = $this->data->$key;
-		} else {
-			$value = $this->get_meta( $key, true );
+		$value = '';
+		if ( method_exists( $this, 'get_' . $key ) ) {
+			eaccounting_doing_it_wrong( __FUNCTION__, sprintf( __( 'Object data such as "%s" should not be accessed directly. Use getters and setters.', 'wp-ever-accounting' ), $key ), '1.1.0' );
+			$value = $this->{'get_' . $key}();
+		} else if ( property_exists( $this, $key ) && is_callable( array( $this, $key ) ) ) {
+			$value = $this->$key;
+		} else if ( $this->meta_exists( $key ) ) {
+			$value = $this->get_meta( $key );
+			$value = eaccounting_sanitize_contact_field( $key, $value, $this->id, $this->filter );
 		}
 
 		return $value;
@@ -185,47 +327,38 @@ class Contact {
 	/**
 	 * Magic method for unsetting a certain field.
 	 *
-	 * @param string $key Contact key to unset.
+	 * @param string $key contact key to unset.
 	 *
 	 * @since 1.2.1
 	 */
 	public function __unset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			unset( $this->data->$key );
+		if ( isset( $this->$key ) ) {
+			unset( $this->$key );
 		}
 	}
 
 	/**
-	 * Get meta data.
+	 * Filter contact object based on context.
 	 *
-	 * @param string  $meta_key Meta key
-	 * @param boolean $single Single
+	 * @param string $filter Filter.
 	 *
-	 * @return array|false|mixed
+	 * @return Contact|Object
 	 * @since 1.2.1
 	 */
-	protected function get_meta( string $meta_key = '', bool $single = true ) {
-		return get_metadata( 'contact', $this->id, $meta_key, $single );
-	}
+	public function filter( $filter ) {
+		if ( $this->filter === $filter ) {
+			return $this;
+		}
 
-	/**
-	 * Update meta value.
-	 *
-	 * @param string $meta_key Meta key
-	 * @param string $meta_value Meta value
-	 * @param string $prev_value Previous value
-	 *
-	 * @return bool|int
-	 * @since 1.2.1
-	 */
-	protected function update_meta( string $meta_key, string $meta_value, string $prev_value = '' ) {
-		return update_metadata( 'contact', $this->id, $meta_key, $meta_value, $prev_value );
+		if ( 'raw' === $filter ) {
+			return self::get_data_by( $this->id );
+		}
+
+		return eaccounting_sanitize_contact( $this, $filter );
 	}
 
 	/**
 	 * Determine whether a property or meta key is set
-	 *
-	 * Consults the users and contact_meta tables.
 	 *
 	 * @param string $key Property
 	 *
@@ -253,152 +386,7 @@ class Contact {
 	 * @since 1.2.1
 	 */
 	public function to_array() {
-		return get_object_vars( $this->data );
+		return get_object_vars( $this );
 	}
 
-	/**
-	 * Get contact's country.
-	 *
-	 * @param string $context Context
-	 *
-	 * @return string
-	 * @since 1.0.2
-	 */
-	public function get_country_nicename( $context = 'edit' ) {
-		$countries = eaccounting_get_countries();
-
-		return isset( $countries[ $this->country ] ) ? $countries[ $this->country ] : $this->country;
-	}
-
-	/**
-	 * Get total paid by a customer.
-	 *
-	 * @since 1.1.0
-	 * @return float|int|string
-	 */
-	public function get_customer_calculated_total_paid() {
-		global $wpdb;
-		$total = wp_cache_get( 'total_paid_' . $this->id, 'ea_contacts' );
-		if ( false === $total ) {
-			$total        = 0;
-			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='income' AND contact_id=%d", $this->id ) );
-			foreach ( $transactions as $transaction ) {
-				$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
-			}
-			wp_cache_set( 'total_paid_' . $this->id, $total, 'ea_contacts' );
-		}
-
-		return $total;
-	}
-
-	/**
-	 * Get total paid by a customer.
-	 *
-	 * @since 1.1.0
-	 * @return float|int|string
-	 */
-	public function get_customer_calculated_total_due() {
-		global $wpdb;
-		$total = wp_cache_get( 'total_due_' . $this->id, 'ea_contacts' );
-		if ( false === $total ) {
-			$invoices = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
-					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
-					   AND type = 'invoice' AND contact_id=%d",
-					$this->id
-				)
-			);
-			$total    = 0;
-			foreach ( $invoices as $invoice ) {
-				$total += eaccounting_price_to_default( $invoice->amount, $invoice->currency_code, $invoice->currency_rate );
-			}
-			if ( ! empty( $total ) ) {
-				$invoice_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $invoices, 'id' ) ) );
-				$revenues    = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT Sum(amount) amount, currency_code, currency_rate
-		  			   FROM   {$wpdb->prefix}ea_transactions
-		               WHERE  type = %s AND document_id IN ($invoice_ids)
-		  			   GROUP  BY currency_code,currency_rate",
-						'income'
-					)
-				);
-
-				foreach ( $revenues as $revenue ) {
-					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
-				}
-			}
-			wp_cache_set( 'total_due' . $this->id, $total, 'ea_contacts' );
-		}
-
-		return $total;
-	}
-
-	/**
-	 * Get total paid by a vendor.
-	 *
-	 * @since 1.1.0
-	 * @return float|int|string
-	 */
-	public function get_vendor_calculated_total_paid() {
-		global $wpdb;
-		$total = wp_cache_get( 'vendor_total_total_paid_' . $this->id, 'ea_contacts' );
-		if ( false === $total ) {
-			$total        = 0;
-			$transactions = $wpdb->get_results( $wpdb->prepare( "SELECT amount, currency_code, currency_rate FROM {$wpdb->prefix}ea_transactions WHERE type='expense' AND contact_id=%d", $this->id ) );
-			foreach ( $transactions as $transaction ) {
-				$total += eaccounting_price_to_default( $transaction->amount, $transaction->currency_code, $transaction->currency_rate );
-			}
-			wp_cache_set( 'vendor_total_total_paid_' . $this->id, $total, 'ea_contacts' );
-		}
-
-		return $total;
-	}
-
-	/**
-	 * Get total due by a vendor.
-	 *
-	 * @since 1.1.0
-	 * @return float|int|string
-	 */
-	public function get_calculated_total_due() {
-		global $wpdb;
-		$total = wp_cache_get( 'vendor_total_total_due_' . $this->id, 'ea_contacts' );
-		if ( false === $total ) {
-			$bills = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT id, total amount, currency_code, currency_rate  FROM   {$wpdb->prefix}ea_documents
-					   WHERE  status NOT IN ( 'draft', 'cancelled', 'paid' )
-					   AND type = 'bill' AND contact_id=%d",
-					$this->id
-				)
-			);
-
-			$total = 0;
-			foreach ( $bills as $bill ) {
-				$total += eaccounting_price_to_default( $bill->amount, $bill->currency_code, $bill->currency_rate );
-			}
-
-			if ( ! empty( $total ) ) {
-				$bill_ids = implode( ',', wp_parse_id_list( wp_list_pluck( $bills, 'id' ) ) );
-				$revenues = $wpdb->get_results(
-					$wpdb->prepare(
-						"SELECT Sum(amount) amount, currency_code, currency_rate
-		  			   FROM   {$wpdb->prefix}ea_transactions
-		               WHERE  type = %s AND document_id IN ($bill_ids)
-		  			   GROUP  BY currency_code,currency_rate",
-						'expense'
-					)
-				);
-
-				foreach ( $revenues as $revenue ) {
-					$total -= eaccounting_price_to_default( $revenue->amount, $revenue->currency_code, $revenue->currency_rate );
-				}
-			}
-			wp_cache_set( 'vendor_total_total_due_' . $this->id, $total, 'ea_contacts' );
-		}
-
-		return $total;
-	}
 }

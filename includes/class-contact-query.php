@@ -1,76 +1,27 @@
 <?php
+/**
+ * Contact Query class.
+ * @since   1.2.1
+ * @package   EverAccounting
+ */
 
 namespace EverAccounting;
 
+/**
+ * Contact Query class.
+ * @since   1.2.1
+ * @package   EverAccounting
+ */
+
+namespace EverAccounting;
+
+/**
+ * Class Contact_Query
+ * @package EverAccounting
+ */
 class Contact_Query {
 	/**
-	 * Query vars set by the user
-	 *
-	 * @since 1.2.1
-	 * @var array
-	 */
-	public $query;
-
-	/**
-	 * Query vars, after parsing
-	 *
-	 * @since 1.2.1
-	 * @var array
-	 */
-	public $query_vars = array();
-
-	/**
-	 * Date query container
-	 *
-	 * @since 1.2.1
-	 * @var \WP_Date_Query A date query instance.
-	 */
-	public $date_query = false;
-
-	/**
-	 * SQL fields clauses
-	 * @since 1.2.1
-	 * @var array
-	 */
-	public $query_fields;
-
-	/**
-	 * SQL from clauses
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $query_from;
-
-	/**
-	 * SQL where clauses
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $query_where;
-
-	/**
-	 * SQL orderby clauses
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $query_orderby;
-
-	/**
-	 * SQL limit clauses
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $query_limit;
-
-	/**
-	 * Table name
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $table;
-
-	/**
-	 * SQL for the database query.
+	 * SQL string used to perform database query.
 	 *
 	 * @since 1.2.1
 	 * @var string
@@ -78,15 +29,48 @@ class Contact_Query {
 	public $request;
 
 	/**
-	 * Array of transactions objects or transactions ids.
+	 * SQL query clauses.
 	 *
 	 * @since 1.2.1
-	 * @var Transaction[]|int[]
+	 * @var array
+	 */
+	protected $sql_clauses = array(
+		'fields'  => '',
+		'from'    => '',
+		'join'    => '',
+		'where'   => '',
+		'groupby' => '',
+		'having'  => '',
+		'orderby' => '',
+		'limit'   => '',
+	);
+
+	/**
+	 * Query vars set by the user.
+	 *
+	 * @since 1.2.1
+	 * @var array
+	 */
+	public $query_vars;
+
+	/**
+	 * Default values for query vars.
+	 *
+	 * @since 1.2.1
+	 * @var array
+	 */
+	public $query_var_defaults;
+
+	/**
+	 * List of items located by the query.
+	 *
+	 * @since 1.2.1
+	 * @var array
 	 */
 	public $results = [];
 
 	/**
-	 * The amount of transactions for the current query.
+	 * The number of items found for the current query.
 	 *
 	 * @since 1.2.1
 	 * @var int
@@ -94,22 +78,49 @@ class Contact_Query {
 	public $total = 0;
 
 	/**
-	 * Constructor.
-	 *
-	 * Sets up the WordPress query, if parameter is not empty.
-	 *
-	 * @param string|array $query URL query string or array of vars.
-	 *
-	 * @see Transaction_Query::parse_query() for all available arguments.
+	 * Table name without prefix.
+	 * @since 1.2.1
+	 * @var string
+	 */
+	const TABLE_NAME = 'ea_contacts';
+
+	/**
+	 * Table name with prefix.
 	 *
 	 * @since 1.2.1
+	 * @var string
+	 */
+	public $table;
+
+	/**
+	 * Constructor.
 	 *
+	 * Sets up the Item query, if parameter is not empty.
+	 *
+	 * @param string|array $query Query string or array of vars.
+	 *
+	 *
+	 * @since 1.2.1
 	 */
 	public function __construct( $query = '' ) {
+		$this->query_var_defaults = array(
+			'include'                => array(),
+			'exclude'                => array(),
+			'search'                 => '',
+			'search_columns'         => array(),
+			'orderby'                => 'name',
+			'order'                  => 'ASC',
+			'offset'                 => '',
+			'number'                 => 20,
+			'paged'                  => 1,
+			'no_found_rows'          => false,
+			'fields'                 => 'all',
+		);
+
 		if ( ! empty( $query ) ) {
-			$this->prepare_query( $query );
-			$this->query();
+			$this->query( $query );
 		}
+
 	}
 
 	/**
@@ -118,7 +129,7 @@ class Contact_Query {
 	 * @param string $query_var Query variable key.
 	 *
 	 * @return mixed
-	 * @since 3.5.0
+	 * @since 1.2.1
 	 *
 	 */
 	public function get( $query_var ) {
@@ -135,39 +146,45 @@ class Contact_Query {
 	 * @param string $query_var Query variable key.
 	 * @param mixed $value Query variable value.
 	 *
-	 * @since 3.5.0
+	 * @since 1.2.1
 	 *
 	 */
 	public function set( $query_var, $value ) {
 		$this->query_vars[ $query_var ] = $value;
 	}
 
+
 	/**
-	 * Fills in missing query variables with default values.
+	 * Parse arguments passed to the query with default query parameters.
 	 *
-	 * @param array $args Query vars, as passed to class.
+	 * @param string|array $query Query arguments.
 	 *
-	 * @return array Complete query variables with undefined ones filled in with defaults.
 	 * @since 1.2.1
 	 *
 	 */
-	public static function fill_query_vars( $args ) {
-		$defaults = array(
-			'type'           => '',
-			'include'        => array(),
-			'exclude'        => array(),
-			'search'         => '',
-			'search_columns' => array(),
-			'orderby'        => 'payment_date',
-			'order'          => 'ASC',
-			'offset'         => '',
-			'number'         => 20,
-			'paged'          => 1,
-			'count_total'    => true,
-			'fields'         => 'all',
-		);
+	public function parse_query( $query = '' ) {
+		if ( empty( $query ) ) {
+			$query = $this->query_vars;
+		}
 
-		return wp_parse_args( $args, $defaults );
+		$query = wp_parse_args( $query, $this->query_var_defaults );
+
+		// Parse args.
+		$query['number']        = absint( $query['number'] );
+		$query['offset']        = absint( $query['offset'] );
+		$query['no_found_rows'] = (bool) $query['no_found_rows'];
+
+		$this->query_vars = $query;
+
+		/**
+		 * Fires after term query vars have been parsed.
+		 *
+		 * @param Contact_Query $this Current instance of Query.
+		 *
+		 * @since 1.2.1
+		 *
+		 */
+		do_action( 'eaccounting_parse_contact_query', $this );
 	}
 
 	/**
@@ -177,160 +194,107 @@ class Contact_Query {
 	 *
 	 * @since 1.2.1
 	 */
-	public function prepare_query( $query = array() ) {
+	public function prepare_query() {
 		global $wpdb;
-		$this->table = $wpdb->prefix . 'ea_transactions';
-
-		if ( empty( $this->query_vars ) || ! empty( $query ) ) {
-			$this->query_limit = null;
-			$this->query_vars  = self::fill_query_vars( $query );
-		}
+		$args = &$this->query_vars;
 
 		/**
-		 * Fires before the Transaction_Query has been parsed.
+		 * Filters the query arguments.
 		 *
-		 * The passed Transaction_Query object contains the query variables,
-		 * not yet passed into SQL.
+		 * @param array $args An array of arguments.
 		 *
-		 * @param Transaction_Query $query Current instance of Transaction_Query (passed by reference).
-		 *
-		 * @since 4.0.0
+		 * @since 1.2.1
 		 *
 		 */
-		do_action_ref_array( 'eaccounting_pre_get_transactions', array( &$this ) );
+		$qv = apply_filters( 'eaccounting_get_contacts_args', $args );
 
-		// Ensure that query vars are filled after 'pre_get_users'.
-		$qv =& $this->query_vars;
-		$qv = self::fill_query_vars( $qv );
+		// Setup table.
+		$this->table = $wpdb->prefix . self::TABLE_NAME;
 
+		// Fields setup.
 		if ( is_array( $qv['fields'] ) ) {
 			$qv['fields'] = array_unique( $qv['fields'] );
 
-			$this->query_fields = array();
+			$fields = array();
 			foreach ( $qv['fields'] as $field ) {
-				$field                = 'id' === $field ? 'id' : sanitize_key( $field );
-				$this->query_fields[] = "$this->table.$field";
+				$field    = 'id' === $field ? 'id' : sanitize_key( $field );
+				$fields[] = "$this->table.$field";
 			}
-			$this->query_fields = implode( ',', $this->query_fields );
+			$this->sql_clauses['fields'] .= implode( ',', $fields );
 		} elseif ( 'all' === $qv['fields'] ) {
-			$this->query_fields = "$this->table.* ";
+			$this->sql_clauses['fields'] .= "$this->table.* ";
 		} else {
-			$this->query_fields = "$this->table.id";
+			$this->sql_clauses['fields'] .= "$this->table.id";
 		}
 
-		if ( isset( $qv['count_total'] ) && $qv['count_total'] ) {
-			$this->query_fields = 'SQL_CALC_FOUND_ROWS ' . $this->query_fields;
+		if ( false === $args['no_found_rows'] ) {
+			$this->sql_clauses['fields'] = 'SQL_CALC_FOUND_ROWS ' . $this->sql_clauses['fields'];
 		}
 
-		$this->query_from  = "FROM $this->table";
-		$this->query_where = 'WHERE 1=1';
+		$this->sql_clauses['from']  .= "FROM $this->table";
+		$this->sql_clauses['where'] .= 'WHERE 1=1';
 
-		// Parse and sanitize 'include', for use by 'orderby' as well as 'include' below.
+
+		// Where
 		if ( ! empty( $qv['include'] ) ) {
-			$include = wp_parse_id_list( $qv['include'] );
-		} else {
-			$include = false;
+			// Sanitized earlier.
+			$ids                        = implode( ',', wp_parse_id_list( $qv['include'] ) );
+			$this->sql_clauses['where'] .= " AND $this->table.id IN ($ids)";
+		} elseif ( ! empty( $qv['exclude'] ) ) {
+			$ids                        = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+			$this->sql_clauses['where'] .= " AND $this->table.id NOT IN ($ids)";
 		}
 
-		// fields
-		if( $qv['orderby'] === 'amount' || !empty($qv['amount_min']) || empty( $qv['amount_max']) || !empty( $qv['amount_between'] )){
-			$this->query_from .= " LEFT OUTER JOIN (
-				SELECT id, ($this->table.amount/$this->table.currency_rate) as default_amount
-				FROM $this->table
-			) a ON ({$this->table}.id = a.id)
-			";
+		// Search
+		$search         = '';
+		$search_columns = array( 'name', 'number', 'bank_name', 'bank_phone', 'bank_address' );
+		if ( ! empty( $args['search'] ) ) {
+			$search = trim( $args['search'] );
+		}
+		if ( ! empty( $args['search_columns'] ) ) {
+			$search_columns = array_intersect( $args['search_columns'], $search_columns );
+		}
+		if ( ! empty( $search ) ) {
+			$leading_wild  = ( ltrim( $search, '*' ) != $search );
+			$trailing_wild = ( rtrim( $search, '*' ) != $search );
+			if ( $leading_wild && $trailing_wild ) {
+				$wild = 'both';
+			} elseif ( $leading_wild ) {
+				$wild = 'leading';
+			} elseif ( $trailing_wild ) {
+				$wild = 'trailing';
+			} else {
+				$wild = false;
+			}
+			if ( $wild ) {
+				$search = trim( $search, '*' );
+			}
+
+			/**
+			 * Filters the columns to search in a Contact_Query search.
+			 *
+			 *
+			 * @param string[] $search_columns Array of column names to be searched.
+			 * @param string $search Text being searched.
+			 * @param Contact_Query $query The current Contact_Query instance.
+			 *
+			 * @since 1.2.1
+			 *
+			 */
+			$search_columns = apply_filters( 'eaccounting_contact_search_columns', $search_columns, $search, $this );
+
+			$this->sql_clauses['where'] .= $this->get_search_sql( $search, $search_columns, $wild );
 		}
 
-		// where
 
-		if ( ! empty( $qv['type'] ) && $qv['type'] !== 'all' ) {
-			$types             = implode( "','", wp_parse_list( $qv['type'] ) );
-			$this->query_where .= " AND $this->table.`type` IN ('$types')";
-		}
-
-		if ( ! empty( $qv['currency_code'] ) ) {
-			$currency_code     = implode( "','", wp_parse_list( $qv['currency_code'] ) );
-			$this->query_where .= " AND $this->table.`currency_code` IN ('$currency_code')";
-		}
-
-		if ( ! empty( $qv['payment_method'] ) ) {
-			$payment_method    = implode( "','", wp_parse_list( $qv['payment_method'] ) );
-			$this->query_where .= " AND $this->table.`payment_method` IN ('$payment_method')";
-		}
-
-		if ( ! empty( $qv['account_id'] ) ) {
-			$account_id        = implode( ',', wp_parse_id_list( $qv['account_id'] ) );
-			$this->query_where .= " AND $this->table.`account_id` IN ($account_id)";
-		}
-
-		if ( ! empty( $qv['account__in'] ) ) {
-			$account_in        = implode( ',', wp_parse_id_list( $qv['account__in'] ) );
-			$this->query_where .= " AND $this->table.`account_id` IN ($account_in)";
-		}
-
-		if ( ! empty( $qv['account__not_in'] ) ) {
-			$account_not_in    = implode( ',', wp_parse_id_list( $qv['account__not_in'] ) );
-			$this->query_where .= " AND $this->table.`account_id` NOT IN ($account_not_in)";
-		}
-
-		if ( ! empty( $qv['document_id'] ) ) {
-			$document_id       = implode( ',', wp_parse_id_list( $qv['document_id'] ) );
-			$this->query_where .= " AND $this->table.`document_id` IN ($document_id)";
-		}
-
-		if ( ! empty( $qv['category_id'] ) ) {
-			$category_in       = implode( ',', wp_parse_id_list( $qv['category_id'] ) );
-			$this->query_where .= " AND $this->table.`category_id` IN ($category_in)";
-		}
-
-		if ( ! empty( $qv['category__in'] ) ) {
-			$category_in       = implode( ',', wp_parse_id_list( $qv['category__in'] ) );
-			$this->query_where .= " AND $this->table.`contact_id` IN ($category_in)";
-		}
-
-		if ( ! empty( $qv['category__not_in'] ) ) {
-			$category_not_in   = implode( ',', wp_parse_id_list( $qv['category__not_in'] ) );
-			$this->query_where .= " AND $this->table.`contact_id` NOT IN ($category_not_in)";
-		}
-
-		if ( ! empty( $qv['contact_id'] ) ) {
-			$contact_id        = implode( ',', wp_parse_id_list( $qv['contact_id'] ) );
-			$this->query_where .= " AND $this->table.`contact_id` IN ($contact_id)";
-		}
-
-		if ( ! empty( $qv['parent_id'] ) ) {
-			$parent_id         = implode( ',', wp_parse_id_list( $qv['parent_id'] ) );
-			$this->query_where .= " AND $this->table.`parent_id` IN ($parent_id)";
-		}
-
-		if ( ! empty( $qv['amount_min'] ) ) {
-			$this->query_where .= $wpdb->prepare( " AND default_amount >= (%f)", (float) $qv['amount_min'] );
-		}
-
-		if ( ! empty( $qv['amount_max'] ) ) {
-			$this->query_where .= $wpdb->prepare( " AND default_amount <= (%f)", (float) $qv['amount_max'] );
-		}
-
-		if ( ! empty( $qv['amount_between'] ) && is_array( $qv['amount_between'] ) ) {
-			$min               = min( $qv['amount_between'] );
-			$max               = max( $qv['amount_between'] );
-			$this->query_where .= $wpdb->prepare( " AND default_amount >= (%f) AND default_amount <= (%f) ", (float) $min, (float) $max );
-		}
-
-		// Sorting.
-		$qv['order'] = isset( $qv['order'] ) ? strtoupper( $qv['order'] ) : '';
-		$order       = $this->parse_order( $qv['order'] );
-
-		if ( empty( $qv['orderby'] ) ) {
-			// Default order is by 'payment_date'.
-			$ordersby = array( 'payment_date' => $order );
-		} elseif ( is_array( $qv['orderby'] ) ) {
-			$ordersby = $qv['orderby'];
+		// Order
+		$order = $this->parse_order( $args['order'] );
+		if ( is_array( $args['orderby'] ) ) {
+			$ordersby = $args['orderby'];
 		} else {
 			// 'orderby' values may be a comma- or space-separated list.
-			$ordersby = preg_split( '/[,\s]+/', $qv['orderby'] );
+			$ordersby = preg_split( '/[,\s]+/', $args['orderby'] );
 		}
-
 		$orderby_array = array();
 		foreach ( $ordersby as $_key => $_value ) {
 			if ( ! $_value ) {
@@ -356,172 +320,108 @@ class Contact_Query {
 			$orderby_array[] = $parsed . ' ' . $this->parse_order( $_order );
 		}
 
-		// If no valid clauses were found, order by payment_date.
+		// If no valid clauses were found, order by name.
 		if ( empty( $orderby_array ) ) {
-			$orderby_array[] = "payment_date $order";
+			$orderby_array[] = "id $order";
 		}
-
-		$this->query_orderby = 'ORDER BY ' . implode( ', ', $orderby_array );
+		$this->sql_clauses['orderby'] = 'ORDER BY ' . implode( ', ', $orderby_array );
 
 		// Limit.
-		if ( isset( $qv['number'] ) && $qv['number'] > 0 ) {
-			if ( $qv['offset'] ) {
-				$this->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['offset'], $qv['number'] );
+		if ( isset( $args['number'] ) && $args['number'] > 0 ) {
+			if ( $args['offset'] ) {
+				$this->sql_clauses['limit'] = $wpdb->prepare( 'LIMIT %d, %d', $args['offset'], $args['number'] );
 			} else {
-				$this->query_limit = $wpdb->prepare( 'LIMIT %d, %d', $qv['number'] * ( $qv['paged'] - 1 ), $qv['number'] );
+				$this->sql_clauses['limit'] = $wpdb->prepare( 'LIMIT %d, %d', $args['number'] * ( $args['paged'] - 1 ), $args['number'] );
 			}
 		}
+	}
 
-		$search = '';
-		if ( isset( $qv['search'] ) ) {
-			$search = trim( $qv['search'] );
+	/**
+	 * Run the query and retrieves the results.
+	 *
+	 * @param string $query
+	 *
+	 * @return array|object|null
+	 */
+	public function query( $query = '' ) {
+		global $wpdb;
+		if ( ! empty( $query ) ) {
+			$this->parse_query( $query );
 		}
 
-		if ( $search ) {
-			$leading_wild  = ( ltrim( $search, '*' ) != $search );
-			$trailing_wild = ( rtrim( $search, '*' ) != $search );
-			if ( $leading_wild && $trailing_wild ) {
-				$wild = 'both';
-			} elseif ( $leading_wild ) {
-				$wild = 'leading';
-			} elseif ( $trailing_wild ) {
-				$wild = 'trailing';
-			} else {
-				$wild = false;
-			}
-			if ( $wild ) {
-				$search = trim( $search, '*' );
-			}
+		$key          = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) );
+		$last_changed = wp_cache_get_last_changed( 'ea_contacts' );
+		$cache_key    = "ea_contacts:$key:$last_changed";
+		$cache        = wp_cache_get( $cache_key, 'ea_contacts' );
 
-			$search_columns = array();
-			if ( $qv['search_columns'] ) {
-				$search_columns = array_intersect( $qv['search_columns'], array( 'reference', 'description' ) );
-			}
-			if ( ! $search_columns ) {
-				$search_columns = array( 'reference', 'description' );
-			}
+		if ( false !== $cache ) {
+			$this->results = $cache->results;
+			$this->total   = $cache->total;
 
-			/**
-			 * Filters the columns to search in a Transaction_Query search.
-			 *
-			 *
-			 * @param string[] $search_columns Array of column names to be searched.
-			 * @param string $search Text being searched.
-			 * @param Transaction_Query $query The current Transaction_Query instance.
-			 *
-			 * @since 3.6.0
-			 *
-			 */
-			$search_columns = apply_filters( 'eaccounting_transaction_search_columns', $search_columns, $search, $this );
-
-			$this->query_where .= $this->get_search_sql( $search, $search_columns, $wild );
+			return $this->results;
 		}
 
-		if ( ! empty( $include ) ) {
-			// Sanitized earlier.
-			$ids               = implode( ',', $include );
-			$this->query_where .= " AND $this->table.id IN ($ids)";
-		} elseif ( ! empty( $qv['exclude'] ) ) {
-			$ids               = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-			$this->query_where .= " AND $this->table.id NOT IN ($ids)";
-		}
-
-		// Date queries are allowed for the user_registered field.
-
+		// Prepare out query.
+		$this->prepare_query();
 
 		/**
-		 * Fires after the Transaction_Query has been parsed, and before
+		 * Fires after the Contact_Query has been parsed, and before
 		 * the query is executed.
 		 *
-		 * The passed Transaction_Query object contains SQL parts formed
+		 * The passed Contact_Query object contains SQL parts formed
 		 * from parsing the given query.
 		 *
-		 * @param Transaction_Query $query Current instance of Transaction_Query (passed by reference).
+		 * @param Contact_Query $query Current instance of Contact_Query (passed by reference).
 		 *
 		 * @since 1.2.1
 		 *
 		 */
-		do_action_ref_array( 'eaccounting_pre_transaction_query', array( &$this ) );
+		do_action_ref_array( 'eaccounting_pre_contact_query', array( &$this ) );
 
-	}
+		if ( empty( $this->results ) ) {
+			$this->request = "SELECT {$this->sql_clauses['fields']} {$this->sql_clauses['from']} {$this->sql_clauses['join']} {$this->sql_clauses['where']} {$this->sql_clauses['groupby']} {$this->sql_clauses['having']} {$this->sql_clauses['orderby']} {$this->sql_clauses['limit']}";
 
-	/**
-	 * Execute the query, with the current variables.
-	 *
-	 * @since 1.2.1
-	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 */
-	public function query() {
-		global $wpdb;
-
-		$qv =& $this->query_vars;
-
-		/**
-		 * Filters the users array before the query takes place.
-		 *
-		 * Return a non-null value to bypass WordPress' default user queries.
-		 *
-		 * Filtering functions that require pagination information are encouraged to set
-		 * the `total_users` property of the Transaction_Query object, passed to the filter
-		 * by reference. If Transaction_Query does not perform a database query, it will not
-		 * have enough information to generate these values itself.
-		 *
-		 * @param array|null $results Return an array of user data to short-circuit WP's user query
-		 *                               or null to allow WP to run its normal queries.
-		 * @param Transaction_Query $query The Transaction_Query instance (passed by reference).
-		 *
-		 * @since 5.1.0
-		 *
-		 */
-		$this->results = apply_filters_ref_array( 'eaccounting_transactions_pre_query', array( null, &$this ) );
-
-		if ( null === $this->results ) {
-			$this->request = "SELECT $this->query_fields $this->query_from $this->query_where $this->query_orderby $this->query_limit";
-
-			if ( is_array( $qv['fields'] ) || 'all' === $qv['fields'] ) {
-				$this->results = $wpdb->get_results( $this->request );
+			if ( is_array( $this->query_vars['fields'] ) || 'all' === $this->query_vars['fields'] ) {
+				$results       = $wpdb->get_results( $this->request );
+				$this->results = ! empty( $results ) ? array_map( 'eaccounting_get_contact', $results ) : [];
 			} else {
 				$this->results = $wpdb->get_col( $this->request );
 			}
 
-			if ( isset( $qv['count_total'] ) && $qv['count_total'] ) {
+			if ( ! $this->query_vars['no_found_rows'] ) {
 				/**
-				 * Filters SELECT FOUND_ROWS() query for the current Transaction_Query instance.
+				 * Filters SELECT FOUND_ROWS() query for the current Contact_Query instance.
 				 *
-				 * @param string $sql The SELECT FOUND_ROWS() query for the current Transaction_Query.
-				 * @param Transaction_Query $query The current Transaction_Query instance.
+				 * @param string $sql The SELECT FOUND_ROWS() query for the current Contact_Query.
+				 * @param Contact_Query $query The current Contact_Query instance.
 				 *
 				 * @global \wpdb $wpdb WordPress database abstraction object.
 				 *
-				 * @since 3.2.0
-				 * @since 5.1.0 Added the `$this` parameter.
+				 * @since 1.2.1
 				 *
 				 */
-				$found_users_query = apply_filters( 'eaccounting_found_transactions_query', 'SELECT FOUND_ROWS()', $this );
-
-				$this->total = (int) $wpdb->get_var( $found_users_query );
+				$count_query = apply_filters( 'eaccounting_count_contacts_query', 'SELECT FOUND_ROWS()', $this );
+				$this->total = (int) $wpdb->get_var( $count_query );
 			}
 		}
 
-		if ( ! $this->results ) {
-			return;
-		}
-		if ( 'all' === $qv['fields'] ) {
-			foreach ( $this->results as $key => $transaction ) {
-				eaccounting_set_cache( 'ea_transactions', $transaction );
-				$this->results[ $key ] = new Transaction( $transaction );
-			}
-		}
+		$cache          = new \StdClass;
+		$cache->results = $this->results;
+		$cache->total   = $this->total;
+
+
+		wp_cache_add( $cache_key, $cache, 'ea_contacts' );
+
+		return $this->results;
 	}
+
 
 	/**
 	 * Used internally to generate an SQL string for searching across multiple columns
 	 *
 	 * @param string $string
 	 * @param array $cols
-	 * @param bool $wild Whether to allow wildcard searches. Default is false for Network Admin, true for single site.
-	 *                       Single site allows leading and trailing wildcards, Network Admin only trailing.
+	 * @param bool $wild Whether to allow wildcard searches.
 	 *
 	 * @return string
 	 * @since 1.2.1
@@ -538,7 +438,7 @@ class Contact_Query {
 		$like          = $leading_wild . $wpdb->esc_like( $string ) . $trailing_wild;
 
 		foreach ( $cols as $col ) {
-			if ( 'ID' === $col ) {
+			if ( 'id' === $col ) {
 				$searches[] = $wpdb->prepare( "$col = %s", $string );
 			} else {
 				$searches[] = $wpdb->prepare( "$col LIKE %s", $like );
@@ -562,45 +462,24 @@ class Contact_Query {
 	 */
 	protected function parse_orderby( $orderby ) {
 		global $wpdb;
-
 		$_orderby = '';
 		if ( in_array( $orderby, array(
-			'type',
-			'payment_date',
-			'currency_code',
-			'currency_rate',
-			'description',
-			'payment_method',
-			'reference',
-			'reconciled',
-			'date_created'
+			'name',
+			'sku',
+			'sale_price',
+			'purchase_price',
 		), true ) ) {
 			$_orderby = $orderby;
-		} elseif ( $orderby === 'amount' ) {
-			$_orderby = 'default_amount';
-		} elseif ( 'account_id' === $orderby || 'account' === $orderby ) {
-			$this->query_from .= " LEFT OUTER JOIN (
-				SELECT id, name as account_name
-				FROM {$wpdb->prefix}ea_accounts
-			) accounts ON ({$this->table}.account_id = accounts.id)
-			";
-			$_orderby = 'account_name';
-		} elseif ( 'category_id' === $orderby || 'category' === $orderby ) {
-			$this->query_from .= " LEFT OUTER JOIN (
-				SELECT id, name as category_name
-				FROM {$wpdb->prefix}ea_categories
-			) categories ON ({$this->table}.category_id = ea_categories.id)
-			";
-			$_orderby = 'category_name';
-		}  elseif ( 'contact_id' === $orderby || 'contact' === $orderby ) {
-			$this->query_from .= " LEFT OUTER JOIN (
-				SELECT id, name as contact_name
-				FROM {$wpdb->prefix}ea_contacts
-			) contacts ON ({$this->table}.contact_id = ea_contacts.id)
-			";
-			$_orderby = 'contact_name';
 		} elseif ( 'id' === $orderby ) {
 			$_orderby = 'id';
+		} elseif ( 'category_id' === $orderby ) {
+			$this->sql_clauses['join'] .= " LEFT JOIN (
+				SELECT category_name,
+				FROM {$wpdb->prefix}ea_categories
+				WHERE type='item'
+			) category ON ({$this->table}.category_id = category.id)
+			";
+			$_orderby                  = 'category_name';
 		} elseif ( 'include' === $orderby && ! empty( $this->query_vars['include'] ) ) {
 			$include     = wp_parse_id_list( $this->query_vars['include'] );
 			$include_sql = implode( ',', $include );
@@ -632,7 +511,7 @@ class Contact_Query {
 	}
 
 	/**
-	 * Return the list of users.
+	 * Return the list of items.
 	 *
 	 * @return array Array of results.
 	 * @since 1.2.1
@@ -643,9 +522,9 @@ class Contact_Query {
 	}
 
 	/**
-	 * Return the total number of users for the current query.
+	 * Return the total number of items for the current query.
 	 *
-	 * @return int Number of total users.
+	 * @return int Number of total items.
 	 * @since 1.2.1
 	 *
 	 */

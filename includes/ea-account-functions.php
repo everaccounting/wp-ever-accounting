@@ -414,9 +414,9 @@ function eaccounting_sanitize_account_field( $field, $value, $account_id, $conte
 /**
  * Retrieves an array of the accounts matching the given criteria.
  *
- * @param array $args  Arguments to retrieve accounts.}
+ * @param array $args Arguments to retrieve accounts.
  *
- * @return Account[]|int[] Array of account objects or account IDs.
+ * @return Account[]|int Array of account objects or account IDs.
  * @since 1.1.0
  *
  */
@@ -427,12 +427,16 @@ function eaccounting_get_accounts( $args = array() ) {
 		'order'         => 'DESC',
 		'include'       => array(),
 		'exclude'       => array(),
-		'no_found_rows' => true,
+		'no_found_rows' => false,
+		'count_total'   => false,
 	);
 
 	$parsed_args = wp_parse_args( $args, $defaults );
+	$query       = new \EverAccounting\Account_Query( $parsed_args );
+	if ( true === $parsed_args['count_total'] ) {
+		return $query->get_total();
+	}
 
-	$query = new \EverAccounting\Account_Query( $parsed_args );
 
 	return $query->get_results();
 }

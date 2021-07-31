@@ -25,7 +25,7 @@ require_once EACCOUNTING_ABSPATH . '/includes/ea-notes-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-deprecated-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-item-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-tax-functions.php';
-require_once EACCOUNTING_ABSPATH . '/includes/ea-document-functions.php';
+require_once EACCOUNTING_ABSPATH . '/includes/ea-invoice-functions.php';
 require_once EACCOUNTING_ABSPATH . '/includes/ea-template-functions.php';
 
 /**
@@ -628,7 +628,7 @@ function eaccounting_set_cache( $type, $object ) {
 		case 'ea_contacts':
 			wp_cache_add( $object->id, $object, $type );
 			if ( ! empty( $object->email ) ) {
-				wp_cache_add( $object->email, $object->id, $type);
+				wp_cache_add( $object->email, $object->id, $type );
 			}
 			break;
 		case 'ea_transactions':
@@ -636,6 +636,9 @@ function eaccounting_set_cache( $type, $object ) {
 		case 'ea_notes':
 			wp_cache_add( $object->id, $object, $type );
 			break;
+		case 'ea_currencies':
+			wp_cache_add( "id_{$object->id}", $object, $type );
+			wp_cache_add( "code_{$object->code}", $object, $type );
 	}
 }
 
@@ -651,6 +654,7 @@ function eaccounting_delete_cache( $type, $id ) {
 	switch ( $type ) {
 		case 'ea_notes':
 		case 'ea_accounts':
+		default:
 			wp_cache_delete( $id, $type );
 			wp_cache_set( 'last_changed', microtime(), $type );
 			break;

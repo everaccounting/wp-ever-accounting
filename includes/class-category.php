@@ -18,21 +18,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
- * @property string $name
- * @property string $type
- * @property string $color
- * @property boolean $enabled
- * @property string $date_created
  */
 class Category {
-	/**
-	 * Category data container.
-	 *
-	 * @since 1.2.1
-	 * @var \stdClass
-	 */
-	public $data;
-
 	/**
 	 * Category id.
 	 *
@@ -42,72 +29,102 @@ class Category {
 	public $id = null;
 
 	/**
-	 * Category constructor.
+	 * Category name.
 	 *
-	 * @param object $category Category Object
-	 *
-	 * @return void
 	 * @since 1.2.1
+	 * @var string
 	 */
-	public function __construct( $category ) {
-		if ( $category instanceof self ) {
-			$this->id = absint( $category->id );
-		} elseif ( is_object( $category ) && ! empty( $category->id ) ) {
-			$this->id = absint( $category->id );
-		} elseif ( is_array( $category ) && ! empty( $category['id'] ) ) {
-			$this->id = absint( $category['id'] );
-		} else {
-			$this->id = absint( $category );
-		}
-		if ( $this->id > 0 ) {
-			$data = self::load( $this->id );
-			if ( ! $data ) {
-				$this->id = null;
+	public $name = '';
 
-				return;
-			}
-			$this->data = $data;
-			$this->id   = (int) $data->id;
+	/**
+	 * Category type.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $type = '';
+
+	/**
+	 * Category color.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $color = '';
+
+	/**
+	 * Item status.
+	 *
+	 * @since 1.2.1
+	 * @var bool
+	 */
+	public $enabled = true;
+
+	/**
+	 * Item creator user id.
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $creator_id = 0;
+
+	/**
+	 * Item created date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
+
+
+	/**
+	 * Retrieve Category instance.
+	 *
+	 * @param int $category_id Category id.
+	 *
+	 * @return Category|false Category object, false otherwise.
+	 * @since 1.2.1
+	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
+	 */
+	public static function get_instance( $category_id ) {
+		global $wpdb;
+
+		$category_id = (int) $category_id;
+		if ( ! $category_id ) {
+			return false;
 		}
+
+		$_item = wp_cache_get( $category_id, 'ea_categories' );
+
+		if ( ! $_item ) {
+			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_categories WHERE id = %d LIMIT 1", $category_id ) );
+
+			if ( ! $_item ) {
+				return false;
+			}
+
+			$_item = eaccounting_sanitize_category( $_item, 'raw' );
+			wp_cache_add( $_item->id, $_item, 'ea_categories' );
+		} elseif ( empty( $_item->filter ) ) {
+			$_item = eaccounting_sanitize_category( $_item, 'raw' );
+		}
+
+		return new Category( $_item );
 	}
 
 	/**
-	 * Return only the main category fields
+	 * Category constructor.
 	 *
-	 * @param int $id The id of the category
+	 * @param $category
 	 *
-	 * @return object|false Raw category object
-	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.2.1
 	 */
-	public static function load( $id ) {
-		global $wpdb;
-
-		if ( ! absint( $id ) ) {
-			return false;
+	public function __construct( $category ) {
+		foreach ( get_object_vars( $category ) as $key => $value ) {
+			$this->$key = $value;
 		}
-
-		$data = wp_cache_get( $id, 'ea_categories' );
-		if ( $data ) {
-			return $data;
-		}
-
-		$_data = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}ea_categories WHERE id = %d LIMIT 1",
-				$id
-			)
-		);
-
-		if ( ! $_data ) {
-			return false;
-		}
-
-		$data = eaccounting_sanitize_category( $_data, 'raw' );
-
-		eaccounting_set_cache( 'ea_categories', $data );
-
-		return $data;
 	}
 
 	/**
@@ -119,7 +136,7 @@ class Category {
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
-		if ( isset( $this->data->$key ) ) {
+		if ( isset( $this->$key ) ) {
 			return true;
 		}
 
@@ -132,7 +149,7 @@ class Category {
 	 * This method does not update custom fields in the database.
 	 *
 	 * @param string $key Category key.
-	 * @param mixed  $value Category value.
+	 * @param mixed $value Category value.
 	 *
 	 * @since 1.2.1
 	 */
@@ -140,7 +157,7 @@ class Category {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
 		} else {
-			$this->data->$key = $value;
+			$this->$key = $value;
 		}
 	}
 
@@ -157,7 +174,7 @@ class Category {
 		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
 			$value = $this->$key();
 		} else {
-			$value = $this->data->$key;
+			$value = $this->$key;
 		}
 
 		return $value;
@@ -171,8 +188,8 @@ class Category {
 	 * @since 1.2.1
 	 */
 	public function __unset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			unset( $this->data->$key );
+		if ( isset( $this->$key ) ) {
+			unset( $this->$key );
 		}
 	}
 
@@ -190,12 +207,10 @@ class Category {
 		}
 
 		if ( 'raw' === $filter ) {
-			return self::load( $this->id );
+			return self::get_instance( $this->id );
 		}
 
-		$this->data = eaccounting_sanitize_category( $this->data, $filter );
-
-		return $this;
+		return eaccounting_sanitize_category( $this, $filter );
 	}
 
 	/**
@@ -229,6 +244,6 @@ class Category {
 	 * @since 1.2.1
 	 */
 	public function to_array() {
-		return get_object_vars( $this->data );
+		return get_object_vars( $this );
 	}
 }

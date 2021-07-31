@@ -21,14 +21,6 @@ defined( 'ABSPATH' ) || exit;
  */
 class Currency {
 	/**
-	 * Currency data container.
-	 *
-	 * @since 1.2.1
-	 * @var \stdClass
-	 */
-	public $data;
-
-	/**
 	 * Currency id.
 	 *
 	 * @since 1.2.1
@@ -36,126 +28,181 @@ class Currency {
 	 */
 	public $id = null;
 
+	/**
+	 * Currency friendly name.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $name = '';
 
 	/**
-	 * Currency constructor.
+	 * Currency ISO code.
+	 *
+	 * @since 1.2.1
+	 * @var string
 	 */
-	public function __construct( $currency ) {
-		if ( $currency instanceof self ) {
-			$this->id = (int) $currency->id;
-		} elseif ( is_numeric( $currency ) ) {
-			$this->id = $currency;
-		} elseif ( ! empty( $currency->id ) ) {
-			$this->id = (int) $currency->id;
-		} else {
-			$this->id = 0;
-		}
+	public $code = '';
 
-		if ( $this->id > 0 ) {
-			$data = self::load( $this->id );
-			if ( ! $data ) {
-				$this->id = null;
+	/**
+	 * Currency Rate
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $rate = 1;
 
-				return;
-			}
-			$this->data = $data;
-			$this->id   = (int) $data->id;
-		}
-	}
+	/**
+	 * Currency precision.
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $precision = 2;
+
+	/**
+	 * Currency Decimal separator.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $decimal_separator = '.';
+
+	/**
+	 * Thousand separator.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $thousand_separator = '.';
+
+	/**
+	 * Item status
+	 *
+	 * @since 1.2.1
+	 * @var bool
+	 */
+	public $enabled = true;
+
+	/**
+	 * Currency created date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
 
 	/**
 	 * Return only the main currency fields
 	 *
-	 * @param int $id The id of the currency
+	 * @param int|string $value
+	 * @param string $field
 	 *
 	 * @return object|false Raw currency object
 	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 */
-	public static function load( $id ) {
+	public static function get_data_by( $value, $field = 'code' ) {
 		global $wpdb;
-
-		if ( ! absint( $id ) ) {
+		if ( 'id' === $field ) {
+			$value = (int) $value;
+		} else {
+			$value = trim( $value );
+		}
+		if ( ! $value ) {
 			return false;
 		}
-
-		$data = wp_cache_get( $id, 'ea_currencys' );
-		if ( $data ) {
-			return $data;
+		switch ( $field ) {
+			case 'code':
+				$value    = eaccounting_sanitize_currency_code( $value );
+				$db_field = 'code';
+				break;
+			case 'id':
+			default:
+				$db_field = 'id';
+				break;
 		}
 
-		$data = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}ea_currencys WHERE id = %d LIMIT 1",
-				$id
-			)
-		);
+		$_item = wp_cache_get( "{$db_field}_{$value}", 'ea_items' );
 
-		if ( ! $data ) {
-			return false;
+		if ( ! $_item ) {
+			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_currencies WHERE $db_field = %s LIMIT 1", $value ) );
+
+			if ( ! $_item ) {
+				return false;
+			}
+
+			$_item = eaccounting_sanitize_currency( $_item, 'raw' );
+			wp_cache_add( "id_{$_item->id}", $_item, 'ea_items' );
+			wp_cache_add( "code_{$_item->code}", $_item, 'ea_items' );
+		} elseif ( empty( $_item->filter ) ) {
+			$_item = eaccounting_sanitize_currency( $_item, 'raw' );
 		}
 
-		eaccounting_set_cache( 'currency', $data );
+		return new Currency( $_item );
+	}
 
-		return $data;
+	/**
+	 * Item constructor.
+	 *
+	 * @param $item
+	 *
+	 * @since 1.2.1
+	 */
+	public function __construct( $item ) {
+		foreach ( get_object_vars( $item ) as $key => $value ) {
+			$this->$key = $value;
+		}
 	}
 
 	/**
 	 * Magic method for checking the existence of a certain field.
 	 *
-	 * @param string $key Contact field to check if set.
+	 * @param string $key Item field to check if set.
 	 *
-	 * @return bool Whether the given Contact field is set.
+	 * @return bool Whether the given Item field is set.
 	 * @since 1.2.1
-	 *
 	 */
 	public function __isset( $key ) {
-		if ( isset( $this->data->$key ) ) {
+		if ( isset( $this->$key ) ) {
 			return true;
 		}
 
-		return metadata_exists( 'currency', $this->id, $key );
+		return false;
 	}
 
 	/**
-	 * Magic method for setting currency fields.
+	 * Magic method for setting Item fields.
 	 *
-	 * This method does not update custom fields in the database. It only stores
-	 * the value on the WP_User instance.
+	 * This method does not update custom fields in the database.
 	 *
-	 * @param string $key Contact key.
-	 * @param mixed $value Contact value.
+	 * @param string $key Item key.
+	 * @param mixed $value Item value.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
 	public function __set( $key, $value ) {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
-		} else if ( isset( $this->data->$key ) ) {
-			$this->data->$key = $value;
 		} else {
-			$this->update_meta( $key, $value );
+			$this->$key = $value;
 		}
 	}
 
 	/**
 	 * Magic method for accessing custom fields.
 	 *
-	 * @param string $key User field to retrieve.
+	 * @param string $key item field to retrieve.
 	 *
-	 * @return mixed Value of the given Contact field (if set).
+	 * @return mixed Value of the given item field (if set).
 	 * @since 1.2.1
-	 *
 	 */
 	public function __get( $key ) {
 
 		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
 			$value = $this->$key();
-		} else if ( isset( $this->data->$key ) ) {
-			$value = $this->data->$key;
 		} else {
-			$value = $this->get_meta( $key, true );
+			$value = $this->$key;
 		}
 
 		return $value;
@@ -164,42 +211,38 @@ class Currency {
 	/**
 	 * Magic method for unsetting a certain field.
 	 *
-	 * @param string $key Contact key to unset.
+	 * @param string $key item key to unset.
 	 *
 	 * @since 1.2.1
-	 *
 	 */
 	public function __unset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			unset( $this->data->$key );
+		if ( isset( $this->$key ) ) {
+			unset( $this->$key );
 		}
 	}
 
 	/**
-	 * Get meta data.
+	 * Filter category object based on context.
 	 *
-	 * @param string $meta_key
-	 * @param false $single
+	 * @param string $filter Filter.
 	 *
-	 * @return array|false|mixed
+	 * @return Category|Object
 	 * @since 1.2.1
 	 */
-	protected function get_meta( $meta_key = '', $single = true ) {
-		return get_metadata( 'currency', $this->id, $meta_key, $single );
-	}
+	public function filter( $filter ) {
+		if ( $this->filter === $filter ) {
+			return $this;
+		}
 
-	/**
-	 * Update meta value.
-	 *
-	 * @param $meta_key
-	 * @param $meta_value
-	 * @param string $prev_value
-	 *
-	 * @return bool|int
-	 * @since 1.2.1
-	 */
-	protected function update_meta( $meta_key, $meta_value, $prev_value = '' ) {
-		return update_metadata( 'currency', $this->id, $meta_key, $meta_value, $prev_value );
+		if ( 'raw' === $filter ) {
+			return self::load( $this->id );
+		}
+
+		if ( 'raw' === $filter ) {
+			return self::get_instance( $this->id );
+		}
+
+		return eaccounting_sanitize_currency( $this, $filter );
 	}
 
 	/**
@@ -236,6 +279,6 @@ class Currency {
 	 *
 	 */
 	public function to_array() {
-		return get_object_vars( $this->data );
+		return get_object_vars( $this );
 	}
 }

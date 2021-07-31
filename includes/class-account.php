@@ -18,27 +18,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
- * @property string $currency_code
- * @property string $name
- * @property string $number
- * @property float $opening_balance
- * @property string $bank_name
- * @property string $bank_phone
- * @property string $bank_address
- * @property int $thumbnail_id
- * @property boolean $enabled
- * @property int $creator_id
- * @property string $date_created
  */
 class Account {
-	/**
-	 * Account data container.
-	 *
-	 * @since 1.2.1
-	 * @var \stdClass
-	 */
-	public $data;
-
 	/**
 	 * Account id.
 	 *
@@ -47,87 +28,136 @@ class Account {
 	 */
 	public $id = null;
 
+
+	/**
+	 * Account name
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $name = '';
+	/**
+	 * Account number.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $number = '';
+	/**
+	 * Account opening balance.
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $opening_balance = 0.00;
+	/**
+	 * Account currency code.
+	 *
+	 * @since 1.2.1
+	 * @var float
+	 */
+	public $currency_code = 0.00;
+	/**
+	 * Account bank name.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $bank_name = '';
+	/**
+	 * Account bank phone.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $bank_phone = '';
+	/**
+	 * Account Address.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $bank_address = '';
+	/**
+	 * Account thumbnail id.
+	 *
+	 * @since 1.2.1
+	 * @var null
+	 */
+	public $thumbnail_id = null;
+
+	/**
+	 * Account status
+	 *
+	 * @since 1.2.1
+	 * @var bool
+	 */
+	public $enabled = true;
+
+	/**
+	 * Account creator user id.
+	 *
+	 * @since 1.2.1
+	 * @var int
+	 */
+	public $creator_id = 0;
+
+	/**
+	 * Account created date.
+	 *
+	 * @since 1.2.1
+	 * @var string
+	 */
+	public $date_created = '0000-00-00 00:00:00';
+
+	/**
+	 * Retrieve Account instance.
+	 *
+	 * @param int $account_id Account id.
+	 *
+	 * @return Account|false Account object, false otherwise.
+	 * @since 1.2.1
+	 *
+	 * @global \wpdb $wpdb WordPress database abstraction object.
+	 *
+	 */
+	public static function get_instance( $account_id ) {
+		global $wpdb;
+
+		$account_id = (int) $account_id;
+		if ( ! $account_id ) {
+			return false;
+		}
+
+		$_item = wp_cache_get( $account_id, 'ea_accounts' );
+
+		if ( ! $_item ) {
+			$_item = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d LIMIT 1", $account_id ) );
+
+			if ( ! $_item ) {
+				return false;
+			}
+
+			$_item = eaccounting_sanitize_account( $_item, 'raw' );
+			wp_cache_add( $_item->id, $_item, 'ea_accounts' );
+		} elseif ( empty( $_item->filter ) ) {
+			$_item = eaccounting_sanitize_account( $_item, 'raw' );
+		}
+
+		return new Account( $_item );
+	}
+
 	/**
 	 * Account constructor.
 	 *
-	 * @param object $account Account Object
+	 * @param $account
 	 *
-	 * @return void
 	 * @since 1.2.1
 	 */
 	public function __construct( $account ) {
-		if ( $account instanceof self ) {
-			$this->id = absint( $account->id );
-		} elseif ( is_object( $account ) && ! empty( $account->id ) ) {
-			$this->id = absint( $account->id );
-		} elseif ( is_array( $account ) && ! empty( $account['id'] ) ) {
-			$this->id = absint( $account['id'] );
-		} else {
-			$this->id = absint( $account );
+		foreach ( get_object_vars( $account ) as $key => $value ) {
+			$this->$key = $value;
 		}
-
-		if ( $this->id > 0 ) {
-			$data = self::load( $this->id );
-			if ( ! $data ) {
-				$this->id = null;
-
-				return;
-			}
-			$this->init( $data );
-		}
-	}
-
-	/**
-	 * Sets up object properties.
-	 *
-	 * @since 1.2.1
-	 *
-	 * @param object $data DB row object.
-	 */
-	public function init( $data ) {
-		if ( empty( $data->id ) ) {
-			$data->id = 0;
-		}
-		$data = eaccounting_sanitize_account($data);
-		$this->data = $data;
-		$this->id   = (int) $data->id;
-	}
-
-	/**
-	 * Return only the main account fields
-	 *
-	 * @param int $id The id of the account
-	 *
-	 * @return object|false Raw account object
-	 * @global \wpdb $wpdb WordPress database abstraction object.
-	 * @since 1.2.1
-	 */
-	public static function load( $id ) {
-		global $wpdb;
-
-		if ( ! absint( $id ) ) {
-			return false;
-		}
-
-		$data = wp_cache_get( $id, 'ea_accounts' );
-		if ( $data ) {
-			return $data;
-		}
-
-		$_data = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$wpdb->prefix}ea_accounts WHERE id = %d LIMIT 1",
-				$id
-			)
-		);
-
-		if ( ! $_data ) {
-			return false;
-		}
-
-		eaccounting_set_cache( 'ea_accounts', $data );
-
-		return $data;
 	}
 
 	/**
@@ -139,7 +169,7 @@ class Account {
 	 * @since 1.2.1
 	 */
 	public function __isset( $key ) {
-		if ( isset( $this->data->$key ) ) {
+		if ( isset( $this->$key ) ) {
 			return true;
 		}
 
@@ -160,7 +190,7 @@ class Account {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
 		} else {
-			$this->data->$key = $value;
+			$this->$key = $value;
 		}
 	}
 
@@ -177,7 +207,7 @@ class Account {
 		if ( is_callable( array( $this, 'get_' . $key ) ) ) {
 			$value = $this->$key();
 		} else {
-			$value = $this->data->$key;
+			$value = $this->$key;
 		}
 
 		return $value;
@@ -191,8 +221,8 @@ class Account {
 	 * @since 1.2.1
 	 */
 	public function __unset( $key ) {
-		if ( isset( $this->data->$key ) ) {
-			unset( $this->data->$key );
+		if ( isset( $this->$key ) ) {
+			unset( $this->$key );
 		}
 	}
 
@@ -211,12 +241,10 @@ class Account {
 		}
 
 		if ( 'raw' === $filter ) {
-			return self::load( $this->id );
+			return self::get_instance( $this->id );
 		}
 
-		$this->data = eaccounting_sanitize_account( $this->data, $filter );
-
-		return $this;
+		return eaccounting_sanitize_account( $this, $filter );
 	}
 
 	/**
@@ -250,7 +278,7 @@ class Account {
 	 * @since 1.2.1
 	 */
 	public function to_array() {
-		return get_object_vars( $this->data );
+		return get_object_vars( $this );
 	}
 
 
@@ -268,7 +296,8 @@ class Account {
 		$transaction_total = (float) $wpdb->get_var(
 			$wpdb->prepare( "SELECT SUM(CASE WHEN type='income' then amount WHEN type='expense' then - amount END) as total from {$wpdb->prefix}ea_transactions WHERE account_id=%d", $this->id )
 		);
-		$this->balance           = $this->opening_balance + $transaction_total;
+		$this->balance     = $this->opening_balance + $transaction_total;
+
 		return $this->balance;
 	}
 }

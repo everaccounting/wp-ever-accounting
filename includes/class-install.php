@@ -638,6 +638,24 @@ class Install {
 		    KEY `category_id` (`category_id`),
 		    KEY `quantity` (`quantity`)
             ) $collate",
+
+			"CREATE TABLE {$wpdb->prefix}ea_currencies(
+            `id` bigint(20) NOT NULL AUTO_INCREMENT,
+			`name` varchar(100) NOT NULL,
+			`code` varchar(3) NOT NULL,
+			`rate` double(15,8) NOT NULL,
+			`precision` varchar(2) DEFAULT NULL,
+  			`symbol` varchar(5) DEFAULT NULL,
+  			`position` ENUM ('before', 'after') DEFAULT 'before',
+  			`decimal_separator` varchar(1) DEFAULT '.',
+ 			`thousand_separator` varchar(1) DEFAULT ',',
+			`enabled` tinyint(1) NOT NULL DEFAULT '1',
+	   		`date_created` DATETIME NULL DEFAULT NULL COMMENT 'Create Date',
+		    PRIMARY KEY (`id`),
+		    KEY `rate` (`rate`),
+		    KEY `code` (`code`),
+		    UNIQUE KEY (`name`, `code`)
+            ) $collate",
 		);
 
 		foreach ( $tables as $table ) {

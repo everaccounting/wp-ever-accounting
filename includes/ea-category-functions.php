@@ -34,24 +34,10 @@ function eaccounting_get_category_types() {
 }
 
 /**
- * Get the category type label of a specific type.
- *
- * @param $type
- *
- * @return string
- * @since 1.1.0
- */
-function eaccounting_get_category_type( $type ) {
-	$types = eaccounting_get_category_types();
-
-	return array_key_exists( $type, $types ) ? $types[ $type ] : null;
-}
-
-/**
  * Retrieves category data given a category id or category object.
  *
  * @param int|array|object|Category $category category to retrieve
- * @param string                    $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
+ * @param string $filter Optional. Type of filter to apply. Accepts 'raw', 'edit', 'db', or 'display'. Default 'raw'.
  *
  * @return array|Category|null
  * @since 1.1.0
@@ -148,6 +134,10 @@ function eaccounting_insert_category( $category_data ) {
 
 	if ( empty( $data_arr['type'] ) ) {
 		return new WP_Error( 'invalid_category_type', esc_html__( 'Category type is required', 'wp-ever-accounting' ) );
+	}
+
+	if ( empty( $data_arr['color'] ) ) {
+		$data_arr['color'] = eaccounting_get_random_color();
 	}
 
 	if ( empty( $data_arr['date_created'] ) || '0000-00-00 00:00:00' === $data_arr['date_created'] ) {
@@ -326,7 +316,7 @@ function eaccounting_delete_category( $category_id ) {
  * sanitization of the integer fields.
  *
  * @param object|array $category The category object or array
- * @param string       $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
+ * @param string $context Optional. How to sanitize post fields. Accepts 'raw', 'edit', 'db', 'display'. Default 'display'.
  *
  * @return object|Category|array The now sanitized category object or array
  * @see eaccounting_sanitize_category_field()
@@ -369,8 +359,8 @@ function eaccounting_sanitize_category( $category, $context = 'raw' ) {
  * Possible context values are:  'raw', 'edit', 'db', 'display'.
  *
  * @param string $field The category Object field name.
- * @param mixed  $value The category Object value.
- * @param int    $category_id Category id.
+ * @param mixed $value The category Object value.
+ * @param int $category_id Category id.
  * @param string $context Optional. How to sanitize the field. Possible values are 'raw', 'edit','db', 'display'. Default 'display'.
  *
  * @return mixed Sanitized value.
@@ -462,8 +452,8 @@ function eaccounting_get_categories( $args = array() ) {
 	);
 
 	$qv           = apply_filters( 'eaccounting_get_categories_args', $args );
-	$table        = \EverAccounting\Repositories\Categories::TABLE;
-	$columns      = \EverAccounting\Repositories\Categories::get_columns();
+	$table        = $wpdb->prefix . 'ea_categories';
+	$columns      = [ 'name', 'type', 'color', 'enabled', 'date_created'];
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	$qv['fields'] = wp_parse_list( $qv['fields'] );
 	foreach ( $qv['fields'] as $index => $field ) {
@@ -476,32 +466,32 @@ function eaccounting_get_categories( $args = array() ) {
 
 	if ( ! empty( $qv['include'] ) ) {
 		$include = implode( ',', wp_parse_id_list( $qv['include'] ) );
-		$where  .= " AND $table.`id` IN ($include)";
+		$where   .= " AND $table.`id` IN ($include)";
 	} elseif ( ! empty( $qv['exclude'] ) ) {
 		$exclude = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
-		$where  .= " AND $table.`id` NOT IN ($exclude)";
+		$where   .= " AND $table.`id` NOT IN ($exclude)";
 	}
 
 	if ( ! empty( $qv['type'] ) ) {
-		$types  = implode( "','", wp_parse_list( $qv['type'] ) );
+		$types = implode( "','", wp_parse_list( $qv['type'] ) );
 		$where .= " AND $table.`type` IN ('$types')";
 	}
 
 	if ( ! empty( $qv['status'] ) && ! in_array( $qv['status'], array( 'all', 'any' ), true ) ) {
 		$status = eaccounting_string_to_bool( $qv['status'] );
 		$status = eaccounting_bool_to_number( $status );
-		$where .= " AND $table.`enabled` = ('$status')";
+		$where  .= " AND $table.`enabled` = ('$status')";
 	}
 
 	if ( ! empty( $qv['date_created'] ) && is_array( $qv['date_created'] ) ) {
 		$date_created_query = new \WP_Date_Query( $qv['date_created'], "{$table}.date_created" );
-		$where             .= $date_created_query->get_sql();
+		$where              .= $date_created_query->get_sql();
 	}
 
 	$search_cols = array( 'name', 'type' );
 	if ( ! empty( $qv['search'] ) ) {
 		$searches = array();
-		$where   .= ' AND (';
+		$where    .= ' AND (';
 		foreach ( $search_cols as $col ) {
 			$searches[] = $wpdb->prepare( $col . ' LIKE %s', '%' . $wpdb->esc_like( $qv['search'] ) . '%' );
 		}
@@ -550,12 +540,3 @@ function eaccounting_get_categories( $args = array() ) {
 
 	return $results;
 }
-
-/**
- * Get category by category name.
- *
- * @param array $args
- *
- * @return int|array|null
- * @since 1.1.0
- */

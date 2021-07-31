@@ -18,8 +18,33 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.2.1
  *
+ * @property string $type
+ * @property string $payment_date
+ * @property float $amount
+ * @property string $currency_code
+ * @property float $currency_rate
+ * @property int $account_id
+ * @property int $document_id
+ * @property int $contact_id
+ * @property int $category_id
+ * @property string $description
+ * @property string $payment_method
+ * @property string $reference
+ * @property int $attachment_id
+ * @property int $parent_id
+ * @property boolean $reconciled
+ * @property int $creator_id
+ * @property string $date_created
  */
-class Transaction {
+class Transaction_BK {
+	/**
+	 * Transaction data container.
+	 *
+	 * @since 1.2.1
+	 * @var \stdClass
+	 */
+	protected $data;
+
 	/**
 	 * Transaction id.
 	 *
@@ -29,137 +54,85 @@ class Transaction {
 	public $id = null;
 
 	/**
+	 * Transaction constructor.
 	 *
+	 * @param object $transaction Transaction Object
 	 *
+	 * @return void
 	 * @since 1.2.1
-	 * @var string
 	 */
-	public $type = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $payment_date = '0000-00-00 00:00:00';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var float
-	 */
-	public $amount = 0.00;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $currency_code = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var int
-	 */
-	public $currency_rate = 1;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $account_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $document_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $contact_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $category_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $description = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $payment_method = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $reference = '';
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $attachment_id = null;
-	/**
-	 *
-	 *
-	 * @since 1.2.1
-	 * @var null
-	 */
-	public $parent_id = null;
+	public function __construct( $transaction ) {
+		if ( $transaction instanceof self ) {
+			$this->id = (int) $transaction->id;
+		} elseif ( is_numeric( $transaction ) ) {
+			$this->id = $transaction;
+		} elseif ( ! empty( $transaction->id ) ) {
+			$this->id = (int) $transaction->id;
+		} else {
+			$this->id = 0;
+		}
+
+		if ( $this->id > 0 ) {
+			$data = self::load( $this->id );
+			if ( ! $data ) {
+				$this->id = null;
+
+				return;
+			}
+			$this->init($data);
+		}
+	}
 
 	/**
-	 *
+	 * Sets up object properties.
 	 *
 	 * @since 1.2.1
-	 * @var int
+	 *
+	 * @param object $data DB row object.
 	 */
-	public $reconciled = 0;
+	public function init( $data ) {
+		if ( empty( $data->id ) ) {
+			$data->id = 0;
+		}
+		$this->data = $data;
+		$this->id   = (int) $data->id;
+	}
 
 	/**
-	 * Transaction creator user id.
+	 * Return only the main transaction fields
 	 *
+	 * @param int $id The id of the transaction
+	 *
+	 * @return object|false Raw transaction object
+	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 * @since 1.2.1
-	 * @var int
 	 */
-	public $creator_id = 0;
+	public static function load( $id ) {
+		global $wpdb;
 
-	/**
-	 * Transaction created date.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $date_created = '0000-00-00 00:00:00';
+		if ( ! absint( $id ) ) {
+			return false;
+		}
 
-	/**
-	 * Stores the transaction object's sanitization level.
-	 *
-	 * Does not correspond to a DB field.
-	 *
-	 * @since 1.2.1
-	 * @var string
-	 */
-	public $filter;
+		$data = wp_cache_get( $id, 'ea_transactions' );
+		if ( $data ) {
+			return $data;
+		}
+
+		$data = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->prefix}ea_transactions WHERE id = %d LIMIT 1",
+				$id
+			)
+		);
+		if ( ! $data ) {
+			return false;
+		}
+
+		eaccounting_set_cache( 'ea_transactions', $data );
+
+		return $data;
+	}
 
 	/**
 	 * Magic method for checking the existence of a certain field.
@@ -183,14 +156,14 @@ class Transaction {
 	 * This method does not update custom fields in the database.
 	 *
 	 * @param string $key Transaction key.
-	 * @param mixed $value Transaction value.
+	 * @param mixed  $value Transaction value.
 	 *
 	 * @since 1.2.1
 	 */
 	public function __set( $key, $value ) {
 		if ( is_callable( array( $this, 'set_' . $key ) ) ) {
 			$this->$key( $value );
-		} else {
+		} else{
 			$this->data->$key = $value;
 		}
 	}
@@ -232,7 +205,7 @@ class Transaction {
 	/**
 	 * Get meta data.
 	 *
-	 * @param string $meta_key Meta key
+	 * @param string  $meta_key Meta key
 	 * @param boolean $single Single
 	 *
 	 * @return array|false|mixed
